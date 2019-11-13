@@ -91,6 +91,20 @@ export const constantRoutes = [
         meta: { title: '字典数据', icon: '' }
       }
     ]
+  },
+
+  {
+    path: '/gen',
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: 'edit',
+        component: () => import('@/views/tool/gen/edit'),
+        name: 'genEdit',
+        meta: { title: '修改生成配置' }
+      }
+    ]
   }
 ]
 
