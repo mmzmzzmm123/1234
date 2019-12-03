@@ -21,21 +21,6 @@ create table sys_dept (
 ) engine=innodb auto_increment=200 comment = '部门表';
 
 -- ----------------------------
--- 初始化-部门表数据
--- ----------------------------
-insert into sys_dept values(100,  0,   '0',          '若依科技',   0, '若依', '15888888888', 'ry@qq.com', '0', '0', 'admin', '2018-03-16 11-33-00', 'ry', '2018-03-16 11-33-00');
-insert into sys_dept values(101,  100, '0,100',      '深圳总公司', 1, '若依', '15888888888', 'ry@qq.com', '0', '0', 'admin', '2018-03-16 11-33-00', 'ry', '2018-03-16 11-33-00');
-insert into sys_dept values(102,  100, '0,100',      '长沙分公司', 2, '若依', '15888888888', 'ry@qq.com', '0', '0', 'admin', '2018-03-16 11-33-00', 'ry', '2018-03-16 11-33-00');
-insert into sys_dept values(103,  101, '0,100,101',  '研发部门',   1, '若依', '15888888888', 'ry@qq.com', '0', '0', 'admin', '2018-03-16 11-33-00', 'ry', '2018-03-16 11-33-00');
-insert into sys_dept values(104,  101, '0,100,101',  '市场部门',   2, '若依', '15888888888', 'ry@qq.com', '0', '0', 'admin', '2018-03-16 11-33-00', 'ry', '2018-03-16 11-33-00');
-insert into sys_dept values(105,  101, '0,100,101',  '测试部门',   3, '若依', '15888888888', 'ry@qq.com', '0', '0', 'admin', '2018-03-16 11-33-00', 'ry', '2018-03-16 11-33-00');
-insert into sys_dept values(106,  101, '0,100,101',  '财务部门',   4, '若依', '15888888888', 'ry@qq.com', '0', '0', 'admin', '2018-03-16 11-33-00', 'ry', '2018-03-16 11-33-00');
-insert into sys_dept values(107,  101, '0,100,101',  '运维部门',   5, '若依', '15888888888', 'ry@qq.com', '0', '0', 'admin', '2018-03-16 11-33-00', 'ry', '2018-03-16 11-33-00');
-insert into sys_dept values(108,  102, '0,100,102',  '市场部门',   1, '若依', '15888888888', 'ry@qq.com', '0', '0', 'admin', '2018-03-16 11-33-00', 'ry', '2018-03-16 11-33-00');
-insert into sys_dept values(109,  102, '0,100,102',  '财务部门',   2, '若依', '15888888888', 'ry@qq.com', '0', '0', 'admin', '2018-03-16 11-33-00', 'ry', '2018-03-16 11-33-00');
-
-
--- ----------------------------
 -- 2、用户信息表
 -- ----------------------------
 drop table if exists sys_user;
@@ -65,8 +50,7 @@ create table sys_user (
 -- ----------------------------
 -- 初始化-用户信息表数据
 -- ----------------------------
-insert into sys_user values(1,  103, 'admin', '若依', '00', 'ry@163.com', '15888888888', '1', '', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '0', '0', '127.0.0.1', '2018-03-16 11-33-00', 'admin', '2018-03-16 11-33-00', 'ry', '2018-03-16 11-33-00', '管理员');
-insert into sys_user values(2,  105, 'ry',    '若依', '00', 'ry@qq.com',  '15666666666', '1', '', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '0', '0', '127.0.0.1', '2018-03-16 11-33-00', 'admin', '2018-03-16 11-33-00', 'ry', '2018-03-16 11-33-00', '测试员');
+insert into sys_user values(1,  null, 'admin', '系统管理员', '00', '', '', '2', '', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '0', '0', '', null, null, null, null, null, null);
 
 
 -- ----------------------------
@@ -87,15 +71,6 @@ create table sys_post
   remark        varchar(500)    default null               comment '备注',
   primary key (post_id)
 ) engine=innodb comment = '岗位信息表';
-
--- ----------------------------
--- 初始化-岗位信息表数据
--- ----------------------------
-insert into sys_post values(1, 'ceo',  '董事长',    1, '0', 'admin', '2018-03-16 11-33-00', 'ry', '2018-03-16 11-33-00', '');
-insert into sys_post values(2, 'se',   '项目经理',  2, '0', 'admin', '2018-03-16 11-33-00', 'ry', '2018-03-16 11-33-00', '');
-insert into sys_post values(3, 'hr',   '人力资源',  3, '0', 'admin', '2018-03-16 11-33-00', 'ry', '2018-03-16 11-33-00', '');
-insert into sys_post values(4, 'user', '普通员工',  4, '0', 'admin', '2018-03-16 11-33-00', 'ry', '2018-03-16 11-33-00', '');
-
 
 -- ----------------------------
 -- 4、角色信息表
@@ -120,8 +95,8 @@ create table sys_role (
 -- ----------------------------
 -- 初始化-角色信息表数据
 -- ----------------------------
-insert into sys_role values('1', '管理员',   'admin',  1, 1, '0', '0', 'admin', '2018-03-16 11-33-00', 'ry', '2018-03-16 11-33-00', '管理员');
-insert into sys_role values('2', '普通角色', 'common', 2, 2, '0', '0', 'admin', '2018-03-16 11-33-00', 'ry', '2018-03-16 11-33-00', '普通角色');
+insert into sys_role values('1', '管理员',   'admin',  1, 1, '0', '0', null, null, null, null, null);
+insert into sys_role values('2', '普通角色', 'common', 2, 2, '0', '0', null, null, null, null, null);
 
 
 -- ----------------------------
@@ -265,7 +240,6 @@ create table sys_user_role (
 -- 初始化-用户和角色关联表数据
 -- ----------------------------
 insert into sys_user_role values ('1', '1');
-insert into sys_user_role values ('2', '2');
 
 
 -- ----------------------------
@@ -279,93 +253,6 @@ create table sys_role_menu (
 ) engine=innodb comment = '角色和菜单关联表';
 
 -- ----------------------------
--- 初始化-角色和菜单关联表数据
--- ----------------------------
-insert into sys_role_menu values ('2', '1');
-insert into sys_role_menu values ('2', '2');
-insert into sys_role_menu values ('2', '3');
-insert into sys_role_menu values ('2', '4');
-insert into sys_role_menu values ('2', '100');
-insert into sys_role_menu values ('2', '101');
-insert into sys_role_menu values ('2', '102');
-insert into sys_role_menu values ('2', '103');
-insert into sys_role_menu values ('2', '104');
-insert into sys_role_menu values ('2', '105');
-insert into sys_role_menu values ('2', '106');
-insert into sys_role_menu values ('2', '107');
-insert into sys_role_menu values ('2', '108');
-insert into sys_role_menu values ('2', '109');
-insert into sys_role_menu values ('2', '110');
-insert into sys_role_menu values ('2', '111');
-insert into sys_role_menu values ('2', '112');
-insert into sys_role_menu values ('2', '113');
-insert into sys_role_menu values ('2', '114');
-insert into sys_role_menu values ('2', '115');
-insert into sys_role_menu values ('2', '500');
-insert into sys_role_menu values ('2', '501');
-insert into sys_role_menu values ('2', '1000');
-insert into sys_role_menu values ('2', '1001');
-insert into sys_role_menu values ('2', '1002');
-insert into sys_role_menu values ('2', '1003');
-insert into sys_role_menu values ('2', '1004');
-insert into sys_role_menu values ('2', '1005');
-insert into sys_role_menu values ('2', '1006');
-insert into sys_role_menu values ('2', '1007');
-insert into sys_role_menu values ('2', '1008');
-insert into sys_role_menu values ('2', '1009');
-insert into sys_role_menu values ('2', '1010');
-insert into sys_role_menu values ('2', '1011');
-insert into sys_role_menu values ('2', '1012');
-insert into sys_role_menu values ('2', '1013');
-insert into sys_role_menu values ('2', '1014');
-insert into sys_role_menu values ('2', '1015');
-insert into sys_role_menu values ('2', '1016');
-insert into sys_role_menu values ('2', '1017');
-insert into sys_role_menu values ('2', '1018');
-insert into sys_role_menu values ('2', '1019');
-insert into sys_role_menu values ('2', '1020');
-insert into sys_role_menu values ('2', '1021');
-insert into sys_role_menu values ('2', '1022');
-insert into sys_role_menu values ('2', '1023');
-insert into sys_role_menu values ('2', '1024');
-insert into sys_role_menu values ('2', '1025');
-insert into sys_role_menu values ('2', '1026');
-insert into sys_role_menu values ('2', '1027');
-insert into sys_role_menu values ('2', '1028');
-insert into sys_role_menu values ('2', '1029');
-insert into sys_role_menu values ('2', '1030');
-insert into sys_role_menu values ('2', '1031');
-insert into sys_role_menu values ('2', '1032');
-insert into sys_role_menu values ('2', '1033');
-insert into sys_role_menu values ('2', '1034');
-insert into sys_role_menu values ('2', '1035');
-insert into sys_role_menu values ('2', '1036');
-insert into sys_role_menu values ('2', '1037');
-insert into sys_role_menu values ('2', '1038');
-insert into sys_role_menu values ('2', '1039');
-insert into sys_role_menu values ('2', '1040');
-insert into sys_role_menu values ('2', '1041');
-insert into sys_role_menu values ('2', '1042');
-insert into sys_role_menu values ('2', '1043');
-insert into sys_role_menu values ('2', '1044');
-insert into sys_role_menu values ('2', '1045');
-insert into sys_role_menu values ('2', '1046');
-insert into sys_role_menu values ('2', '1047');
-insert into sys_role_menu values ('2', '1048');
-insert into sys_role_menu values ('2', '1049');
-insert into sys_role_menu values ('2', '1050');
-insert into sys_role_menu values ('2', '1051');
-insert into sys_role_menu values ('2', '1052');
-insert into sys_role_menu values ('2', '1053');
-insert into sys_role_menu values ('2', '1054');
-insert into sys_role_menu values ('2', '1055');
-insert into sys_role_menu values ('2', '1056');
-insert into sys_role_menu values ('2', '1057');
-insert into sys_role_menu values ('2', '1058');
-insert into sys_role_menu values ('2', '1059');
-insert into sys_role_menu values ('2', '1060');
-
--- ----------------------------
 -- 8、角色和部门关联表  角色1-N部门
 -- ----------------------------
 drop table if exists sys_role_dept;
@@ -374,13 +261,6 @@ create table sys_role_dept (
   dept_id   bigint(20) not null comment '部门ID',
   primary key(role_id, dept_id)
 ) engine=innodb comment = '角色和部门关联表';
-
--- ----------------------------
--- 初始化-角色和部门关联表数据
--- ----------------------------
-insert into sys_role_dept values ('2', '100');
-insert into sys_role_dept values ('2', '101');
-insert into sys_role_dept values ('2', '105');
 
 
 -- ----------------------------
@@ -393,12 +273,6 @@ create table sys_user_post
   post_id   bigint(20) not null comment '岗位ID',
   primary key (user_id, post_id)
 ) engine=innodb comment = '用户与岗位关联表';
-
--- ----------------------------
--- 初始化-用户与岗位关联表数据
--- ----------------------------
-insert into sys_user_post values ('1', '1');
-insert into sys_user_post values ('2', '2');
 
 
 -- ----------------------------
@@ -611,13 +485,6 @@ create table sys_notice (
   remark            varchar(255)    default null               comment '备注',
   primary key (notice_id)
 ) engine=innodb auto_increment=10 comment = '通知公告表';
-
--- ----------------------------
--- 初始化-公告信息表数据
--- ----------------------------
-insert into sys_notice values('1', '温馨提醒：2018-07-01 若依新版本发布啦', '2', '新版本内容', '0', 'admin', '2018-03-16 11-33-00', 'ry', '2018-03-16 11-33-00', '管理员');
-insert into sys_notice values('2', '维护通知：2018-07-01 若依系统凌晨维护', '1', '维护内容',   '0', 'admin', '2018-03-16 11-33-00', 'ry', '2018-03-16 11-33-00', '管理员');
-
 
 -- ----------------------------
 -- 18、代码生成业务表
