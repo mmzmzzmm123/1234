@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.mr.mapper.BaseCompanyMapper">
+    
+    <resultMap type="BaseCompany" id="BaseCompanyResult">
+        <result property="id"    column="ID"    />
+        <result property="sort"    column="Sort"    />
+        <result property="codeid"    column="CodeID"    />
+        <result property="name"    column="Name"    />
+        <result property="enabled"    column="Enabled"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectBaseCompanyVo">
+        select ID, Sort, CodeID, Name, Enabled, create_by, create_time, update_by, update_time, remark from base_company
+    </sql>
+
+    <select id="selectBaseCompanyList" parameterType="BaseCompany" resultMap="BaseCompanyResult">
+        <include refid="selectBaseCompanyVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and Name like concat('%', #{name}, '%')</if>
+            <if test="enabled != null  and enabled != ''"> and Enabled = #{enabled}</if>
+            <if test="createTime != null "> and create_time = #{createTime}</if>
+            <if test="remark != null  and remark != ''"> and remark like concat('%', #{remark}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectBaseCompanyById" parameterType="String" resultMap="BaseCompanyResult">
+        <include refid="selectBaseCompanyVo"/>
+        where ID = #{id}
+    </select>
+        
+    <insert id="insertBaseCompany" parameterType="BaseCompany">
+        insert into base_company
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null  and id != ''">ID,</if>
+            <if test="sort != null ">Sort,</if>
+            <if test="codeid != null  and codeid != ''">CodeID,</if>
+            <if test="name != null  and name != ''">Name,</if>
+            <if test="enabled != null  and enabled != ''">Enabled,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="remark != null  and remark != ''">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null  and id != ''">#{id},</if>
+            <if test="sort != null ">#{sort},</if>
+            <if test="codeid != null  and codeid != ''">#{codeid},</if>
+            <if test="name != null  and name != ''">#{name},</if>
+            <if test="enabled != null  and enabled != ''">#{enabled},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="remark != null  and remark != ''">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBaseCompany" parameterType="BaseCompany">
+        update base_company
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="sort != null ">Sort = #{sort},</if>
+            <if test="codeid != null  and codeid != ''">CodeID = #{codeid},</if>
+            <if test="name != null  and name != ''">Name = #{name},</if>
+            <if test="enabled != null  and enabled != ''">Enabled = #{enabled},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+        </trim>
+        where ID = #{id}
+    </update>
+
+    <delete id="deleteBaseCompanyById" parameterType="String">
+        delete from base_company where ID = #{id}
+    </delete>
+
+    <delete id="deleteBaseCompanyByIds" parameterType="String">
+        delete from base_company where ID in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

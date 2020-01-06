@@ -16,19 +16,20 @@ import javax.imageio.ImageIO;
 
 /**
  * 验证码工具类
- * 
+ *
  * @author ruoyi
  */
 public class VerifyCodeUtils
 {
     // 使用到Algerian字体，系统里没有的话需要安装字体，字体只显示大写，去掉了1,0,i,o几个容易混淆的字符
-    public static final String VERIFY_CODES = "123456789ABCDEFGHJKLMNPQRSTUVWXYZ";
+//    public static final String VERIFY_CODES = "123456789ABCDEFGHJKLMNPQRSTUVWXYZ";
+    public static final String VERIFY_CODES = "123456789";
 
     private static Random random = new SecureRandom();
 
     /**
      * 使用系统默认字符源生成验证码
-     * 
+     *
      * @param verifySize 验证码长度
      * @return
      */
@@ -39,7 +40,7 @@ public class VerifyCodeUtils
 
     /**
      * 使用指定源生成验证码
-     * 
+     *
      * @param verifySize 验证码长度
      * @param sources 验证码字符源
      * @return
@@ -62,7 +63,7 @@ public class VerifyCodeUtils
 
     /**
      * 输出指定验证码图片流
-     * 
+     *
      * @param w
      * @param h
      * @param os
