@@ -104,7 +104,6 @@ public class BaseCompanyServiceImpl implements IBaseCompanyService
     @Override
     public int updateBaseCompanyEnabled(BaseCompany baseCompany)
     {
-        baseCompany.setUpdateTime(DateUtils.getNowDate());
         return baseCompanyMapper.updateBaseCompany(baseCompany);
     }
 
