@@ -86,10 +86,10 @@
 
     <el-table v-loading="loading" stripe border fit highlight-current-row :data="companyList" @selection-change="handleSelectionChange" @sort-change='tableSortChange'>
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="编号" width="80" align="center">
+      <el-table-column label="行号" width="80" align="center">
               <template slot-scope="scope">{{scope.$index + 1}}</template>
       </el-table-column>
-      <el-table-column label="UUID" align="center" prop="id" v-if = "show" />
+      <el-table-column label="UUID" align="center" prop="id" v-if = "false" />
       <el-table-column label="排序" align="center" prop="sort" sortable='custom' :sort-orders="['ascending', 'descending']" />
       <el-table-column label="公司代码" align="center" prop="codeid" sortable='custom' :sort-orders="['ascending', 'descending']"  />
       <el-table-column label="公司简称" align="center" prop="name" sortable='custom' :sort-orders="['ascending', 'descending']"  />
@@ -225,7 +225,7 @@ export default {
   },
   methods: {
     /** 公司管理排序 */
-    tableSortChange(column, prop, order) {
+    tableSortChange(column) {
           this.queryParams.pageNum = 1;
           if (column.order === 'descending') {
             this.queryParams.orderByColumn = column.prop;
