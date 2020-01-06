@@ -84,7 +84,7 @@
       </el-col>
     </el-row>
 
-    <el-table v-loading="loading" stripe border fit highlight-current-row :data="companyList" @selection-change="handleSelectionChange" @sort-change='tableSortChange'>
+    <el-table v-loading="loading" stripe border fit highlight-current-row :data="companyList" @selection-change="handleSelectionChange" @sort-change='tableSortChange' @row-dblclick="rowdblclick">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="行号" width="80" align="center">
               <template slot-scope="scope">{{scope.$index + 1}}</template>
@@ -224,6 +224,16 @@ export default {
     });
   },
   methods: {
+    // 双击行编辑
+    rowdblclick(row) {
+      this.reset();
+      const id = row.id || this.ids
+      getCompany(id).then(response => {
+        this.form = response.data;
+        this.open = true;
+        this.title = "修改公司管理";
+      });
+    },
     /** 公司管理排序 */
     tableSortChange(column) {
           this.queryParams.pageNum = 1;
@@ -268,11 +278,6 @@ export default {
          }).catch(function() {
            row.enabled = row.enabled === "0" ? "1" : "0";
          });
-     },
-     // 取消按钮
-     cancel() {
-       this.open = false;
-       this.reset();
      },
     // 表单重置
     reset() {
