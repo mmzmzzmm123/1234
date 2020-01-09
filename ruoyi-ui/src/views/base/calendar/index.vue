@@ -1,10 +1,10 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
-      <el-form-item label="公司简称" prop="name">
+      <el-form-item label="日历简称" prop="name">
         <el-input
           v-model="queryParams.name"
-          placeholder="请输入公司简称"
+          placeholder="请输入日历简称"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
@@ -20,23 +20,6 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="创建时间" prop="createTime">
-        <el-date-picker clearable size="small" style="width: 200px"
-          v-model="queryParams.createTime"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="选择创建时间">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item label="备注" prop="remark">
-        <el-input
-          v-model="queryParams.remark"
-          placeholder="请输入备注"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -50,7 +33,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['base:company:add']"
+          v-hasPermi="['base:calendar:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -60,7 +43,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['base:company:edit']"
+          v-hasPermi="['base:calendar:edit']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -70,7 +53,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['base:company:remove']"
+          v-hasPermi="['base:calendar:remove']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -79,39 +62,29 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['base:company:export']"
+          v-hasPermi="['base:calendar:export']"
         >导出</el-button>
       </el-col>
     </el-row>
 
-    <el-table v-loading="loading" stripe border fit highlight-current-row :data="companyList" @selection-change="handleSelectionChange" @sort-change='tableSortChange' @row-dblclick="handleUpdate">
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="行号" width="80" align="center">
-              <template slot-scope="scope">{{scope.$index + 1}}</template>
-      </el-table-column>
+    <el-table v-loading="loading" stripe border fit highlight-current-row :data="calendarList" @selection-change="handleSelectionChange" @sort-change='tableSortChange' @row-dblclick="handleUpdate">
+    <el-table-column type="selection" width="55" align="center" />
+        <el-table-column label="行号" width="80" align="center">
+            <template slot-scope="scope">{{scope.$index + 1}}</template>
+    </el-table-column>
       <el-table-column label="UUID" align="center" prop="id" v-if = "false" />
-      <el-table-column label="排序" align="center" prop="sort" sortable='custom' :sort-orders="['ascending', 'descending']" />
-      <el-table-column label="公司代码" align="center" prop="codeid" sortable='custom' :sort-orders="['ascending', 'descending']"  />
-      <el-table-column label="公司简称" align="center" prop="name" sortable='custom' :sort-orders="['ascending', 'descending']" />
-      <el-table-column label="状态" align="center">
-                  <template slot-scope="scope">
-                    <el-switch
-                      v-model="scope.row.enabled"
-                      active-value="0"
-                      inactive-value="1"
-                      @change="handleStatusChange(scope.row)"
-                    ></el-switch>
-                  </template>
-       </el-table-column>
-      <el-table-column label="备注" align="center" prop="remark" />
-      <el-table-column label="操作" align="center" width="300">
+      <el-table-column label="日历代码" align="center" prop="codeid" sortable='custom' :sort-orders="['ascending', 'descending']"  />
+      <el-table-column label="日历简称" align="center" prop="name" sortable='custom' :sort-orders="['ascending', 'descending']"  />
+      <el-table-column label="状态" align="center" prop="enabled" :formatter="enabledFormat" />
+      <el-table-column label="备注" align="center" prop="remark" sortable='custom' :sort-orders="['ascending', 'descending']"  />
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
             type="primary"
             icon="el-icon-plus"
             size="small"
             @click="handleAddCalendar(scope.row)"
-            v-hasPermi="['base:company:add']"
+            v-hasPermi="['base:calendar:edit']"
           >考勤</el-button>
           <el-button
             plain
@@ -119,7 +92,7 @@
             type="primary"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['base:company:edit']"
+            v-hasPermi="['base:calendar:edit']"
           >修改</el-button>
           <el-button
             plain
@@ -127,7 +100,7 @@
             type="primary"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['base:company:remove']"
+            v-hasPermi="['base:calendar:remove']"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -141,17 +114,14 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改公司管理对话框 -->
+    <!-- 添加或修改考勤日历对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px">
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="排序" prop="sort">
-          <el-input v-model="form.sort" placeholder="请输入排序" />
+        <el-form-item label="日历代码" prop="codeid">
+          <el-input v-model="form.codeid" placeholder="请输入日历代码" />
         </el-form-item>
-        <el-form-item label="公司代码" prop="codeid">
-          <el-input v-model="form.codeid" placeholder="请输入公司代码" />
-        </el-form-item>
-        <el-form-item label="公司简称" prop="name">
-          <el-input v-model="form.name" placeholder="请输入公司简称" />
+        <el-form-item label="日历简称" prop="name">
+          <el-input v-model="form.name" placeholder="请输入日历简称" />
         </el-form-item>
         <el-form-item label="状态">
           <el-select v-model="form.enabled" placeholder="请选择状态">
@@ -171,19 +141,27 @@
     </el-dialog>
 
     <!-- 添加或修改日历对话框 -->
-    <el-dialog :title="calendar" :visible.sync="copen" width="800px" >
+    <el-dialog :title="calendar" :visible.sync="calendarOpen" width="800px" >
       <el-calendar >
+        <template
+          slot="dateCell"
+          slot-scope="{date, data}">
+          <p :class="data.isSelected ? 'is-selected' : ''">
+            {{ data.day.split('-').slice(2).join('-') }} {{ data.isSelected ? '休息' : '上班'}}
+          </p>
+        </template>
       </el-calendar>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" >确 定</el-button>
-        <el-button @click="cancelcalendar">取 消</el-button>
+        <el-button type="primary" @click="submitCalendarForm">确 定</el-button>
+        <el-button @click="cancelCalendar">取 消</el-button>
       </div>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import { listCompany, getCompany, delCompany, addCompany, updateCompany,changeCompanyEnabled, exportCompany } from "@/api/base/company";
+import { listCalendar, getCalendar, delCalendar, addCalendar, updateCalendar, exportCalendar } from "@/api/base/calendar";
+import { listCalendarItem, getCalendarItem, addCalendarItem, updateCalendarItem } from "@/api/base/calendarItem";
 
 export default {
   data() {
@@ -196,48 +174,60 @@ export default {
       single: true,
       // 非多个禁用
       multiple: true,
-      // 弹出日历框标题
-      calendar: "",
       // 总条数
       total: 0,
-      // 公司管理表格数据
-      companyList: [],
+      // 考勤日历表格数据
+      calendarList: [],
       // 弹出层标题
       title: "",
+      // 弹出日历框标题
+      calendar: "",
       // 是否显示弹出层
       open: false,
-      // 是否显示弹出层(日历)
-      copen: false,
+      // 是否显示弹出层
+      calendarOpen: false,
       // 状态字典
       enabledOptions: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
         pageSize: 10,
+        orderByColumn: undefined,
+        isAsc: undefined,
         name: undefined,
         enabled: undefined,
+      },
+      // 日历表单参数
+      calendarForm: {
+        id: undefined,
+        parentId: undefined,
+        work: undefined,
+        workDay: undefined,
+        createBy: undefined,
         createTime: undefined,
-        remark: undefined,
-        orderByColumn:'sort',
-        isAsc:'desc',
+        updateBy: undefined,
+        updateTime: undefined
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
-        sort: [
-          { required: true, message: "排序不能为空", trigger: "blur" }
-        ],        codeid: [
-          { required: true, message: "公司代码不能为空", trigger: "blur" }
-        ],        name: [
-          { required: true, message: "公司简称不能为空", trigger: "blur" }
-        ],        enabled: [
+        codeid: [
+          { required: true, message: "日历代码不能为空", trigger: "blur" }
+        ],
+        name: [
+          { required: true, message: "日历简称不能为空", trigger: "blur" }
+        ],
+        enabled: [
           { required: true, message: "状态（0正常 1停用）不能为空", trigger: "blur" }
-        ],        createBy: [
+        ],
+        createBy: [
           { required: true, message: "创建者不能为空", trigger: "blur" }
-        ],        createTime: [
+        ],
+        createTime: [
           { required: true, message: "创建时间不能为空", trigger: "blur" }
-        ],      }
+        ],
+      }
     };
   },
   created() {
@@ -247,29 +237,29 @@ export default {
     });
   },
   methods: {
-    /** 公司管理排序 */
-    tableSortChange(column) {
+      /** 通用考勤日历排序 */
+      tableSortChange(column) {
           this.queryParams.pageNum = 1;
           if (column.order === 'descending') {
-            this.queryParams.orderByColumn = column.prop;
-            this.queryParams.isAsc = 'desc';
+              this.queryParams.orderByColumn = column.prop;
+              this.queryParams.isAsc = 'desc';
           } else {
-            this.queryParams.orderByColumn = column.prop;
-            this.queryParams.isAsc = 'asc';
+              this.queryParams.orderByColumn = column.prop;
+              this.queryParams.isAsc = 'asc';
           }
           this.getList();
-     },
-    /** 查询公司管理列表 */
+      },
+    /** 查询考勤日历列表 */
     getList() {
       this.loading = true;
-      listCompany(this.queryParams).then(response => {
-        this.companyList = response.rows;
+      listCalendar(this.queryParams).then(response => {
+        this.calendarList = response.rows;
         this.total = response.total;
         this.loading = false;
       });
     },
     // 状态字典翻译
-    enabledFormat(row) {
+    enabledFormat(row, column) {
       return this.selectDictLabel(this.enabledOptions, row.enabled);
     },
     // 取消按钮
@@ -277,31 +267,15 @@ export default {
       this.open = false;
       this.reset();
     },
-    // 取消按钮
-    cancelcalendar() {
-      this.copen = false;
+    // 日历取消按钮
+    cancelCalendar() {
+      this.calendarOpen = false;
       this.reset();
     },
-    // 用户状态修改
-     handleStatusChange(row) {
-       let text = row.enabled === "0" ? "启用" : "停用";
-       this.$confirm('确认要"' + text + '""' + row.name + '"公司吗?', "警告", {
-           confirmButtonText: "确定",
-           cancelButtonText: "取消",
-           type: "warning"
-         }).then(function() {
-           return changeCompanyEnabled(row.id, row.enabled);
-         }).then(() => {
-           this.msgSuccess(text + "成功");
-         }).catch(function() {
-           row.enabled = row.enabled === "0" ? "1" : "0";
-         });
-     },
     // 表单重置
     reset() {
       this.form = {
         id: undefined,
-        sort: undefined,
         codeid: undefined,
         name: undefined,
         enabled: undefined,
@@ -329,13 +303,16 @@ export default {
       this.single = selection.length!=1
       this.multiple = !selection.length
     },
+    handleSelected(day) {
+      console.log(day);
+    },
     /** 新增日历操作 */
     handleAddCalendar(row) {
       this.reset();
-      const id = row.id || this.ids
-      getCompany(id).then(response => {
-        this.form = response.data;
-        this.copen = true;
+      const id = row.id || this.ids;
+      getCalendarItem(id).then(response => {
+        this.calendarForm = response.data;
+        this.calendarOpen = true;
         this.calendar = "考勤日历";
       });
     },
@@ -343,16 +320,16 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加公司管理";
+      this.title = "添加考勤日历";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids
-      getCompany(id).then(response => {
+      getCalendar(id).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改公司管理";
+        this.title = "修改考勤日历";
       });
     },
     /** 提交按钮 */
@@ -360,7 +337,7 @@ export default {
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.id != undefined) {
-            updateCompany(this.form).then(response => {
+            updateCalendar(this.form).then(response => {
               if (response.code === 200) {
                 this.msgSuccess("修改成功");
                 this.open = false;
@@ -370,7 +347,7 @@ export default {
               }
             });
           } else {
-            addCompany(this.form).then(response => {
+            addCalendar(this.form).then(response => {
               if (response.code === 200) {
                 this.msgSuccess("新增成功");
                 this.open = false;
@@ -383,15 +360,18 @@ export default {
         }
       });
     },
+    /** 提交日历明细按钮 */
+    submitCalendarForm: function() {
+    },
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$confirm('是否确认删除公司管理编号为"' + ids + '"的数据项?', "警告", {
+      this.$confirm('是否确认删除考勤日历编号为"' + ids + '"的数据项?', "警告", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
         }).then(function() {
-          return delCompany(ids);
+          return delCalendar(ids);
         }).then(() => {
           this.getList();
           this.msgSuccess("删除成功");
@@ -400,12 +380,12 @@ export default {
     /** 导出按钮操作 */
     handleExport() {
       const queryParams = this.queryParams;
-      this.$confirm('是否确认导出所有公司管理数据项?', "警告", {
+      this.$confirm('是否确认导出所有考勤日历数据项?', "警告", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
         }).then(function() {
-          return exportCompany(queryParams);
+          return exportCalendar(queryParams);
         }).then(response => {
           this.download(response.msg);
         }).catch(function() {});

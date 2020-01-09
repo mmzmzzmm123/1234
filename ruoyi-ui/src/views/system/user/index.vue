@@ -20,7 +20,7 @@
             :expand-on-click-node="false"
             :filter-node-method="filterNode"
             ref="tree"
-            default-expand-all
+            :default-expand-all="isExpand"
             @node-click="handleNodeClick"
           />
         </div>
