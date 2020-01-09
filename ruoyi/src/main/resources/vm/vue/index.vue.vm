@@ -97,7 +97,7 @@
       </el-col>
     </el-row>
 
-    <el-table v-loading="loading" stripe border fit highlight-current-row :data="${businessName}List" @selection-change="handleSelectionChange" @sort-change='tableSortChange'>
+    <el-table v-loading="loading" stripe border fit highlight-current-row :data="${businessName}List" @selection-change="handleSelectionChange" @sort-change='tableSortChange' @row-dblclick="handleUpdate">
     <el-table-column type="selection" width="55" align="center" />
         <el-table-column label="行号" width="80" align="center">
             <template slot-scope="scope">{{scope.$index + 1}}</template>
@@ -127,15 +127,17 @@
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
-            size="mini"
-            type="text"
+            plain
+            size="small"
+            type="primary"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['${moduleName}:${businessName}:edit']"
           >修改</el-button>
           <el-button
-            size="mini"
-            type="text"
+            plain
+            size="small"
+            type="primary"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['${moduleName}:${businessName}:remove']"
