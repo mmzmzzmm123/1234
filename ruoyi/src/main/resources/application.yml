@@ -89,7 +89,7 @@ xss:
   # 排除链接（多个用逗号分隔）
   excludes: /system/notice/*
   # 匹配链接
-  urlPatterns: /system/*,/monitor/*,/tool/*,/base/*
+  urlPatterns: /system/*,/monitor/*,/tool/*,/base/*,/data/*
 
 # 代码生成
 gen:

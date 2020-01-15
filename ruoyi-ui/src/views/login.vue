@@ -67,8 +67,8 @@ export default {
       loginForm: {
         username: "admin",
         password: "admin123",
-        rememberMe: false,
-        code: "",
+        rememberMe: true,
+        code: "6666",
         uuid: ""
       },
       loginRules: {

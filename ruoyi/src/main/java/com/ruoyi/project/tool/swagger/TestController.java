@@ -23,8 +23,8 @@ public class TestController extends BaseController
 {
     private final static Map<Integer, UserEntity> users = new LinkedHashMap<Integer, UserEntity>();
     {
-        users.put(1, new UserEntity(1, "admin", "admin123", "15888888888"));
-        users.put(2, new UserEntity(2, "ry", "admin123", "15666666666"));
+        users.put(1, new UserEntity(1, "admin", "admin123", "15888888888","头像1"));
+        users.put(2, new UserEntity(2, "ry", "admin123", "15666666666","头像2"));
     }
 
     @ApiOperation("获取用户列表")
@@ -111,17 +111,21 @@ class UserEntity
     @ApiModelProperty("用户手机")
     private String mobile;
 
+    @ApiModelProperty("用户头像")
+    private String avatar;
+
     public UserEntity()
     {
 
     }
 
-    public UserEntity(Integer userId, String username, String password, String mobile)
+    public UserEntity(Integer userId, String username, String password, String mobile,String  avatar)
     {
         this.userId = userId;
         this.username = username;
         this.password = password;
         this.mobile = mobile;
+        this.avatar = avatar;
     }
 
     public Integer getUserId()
@@ -162,5 +166,13 @@ class UserEntity
     public void setMobile(String mobile)
     {
         this.mobile = mobile;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 }
