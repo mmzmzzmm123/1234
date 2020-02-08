@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.mr.data.mapper.DataCurrentinventoryMapper">
+
+    <resultMap type="DataCurrentinventory" id="DataCurrentinventoryResult">
+        <result property="id"    column="ID"    />
+        <result property="accountdate"    column="AccountDate"    />
+        <result property="billnumber"    column="Billnumber"    />
+        <result property="companyuuid"    column="CompanyUUID"    />
+        <result property="companyid"    column="CompanyID"    />
+        <result property="companyname"    column="CompanyName"    />
+        <result property="factoryuuid"    column="FactoryUUID"    />
+        <result property="factoryid"    column="FactoryID"    />
+        <result property="factoryname"    column="FactoryName"    />
+        <result property="warehouseuuid"    column="WarehouseUUID"    />
+        <result property="warehouseid"    column="WarehouseID"    />
+        <result property="warehousename"    column="WarehouseName"    />
+        <result property="locationuuid"    column="LocationUUID"    />
+        <result property="locationid"    column="LocationID"    />
+        <result property="locationname"    column="LocationName"    />
+        <result property="gooduuid"    column="GoodUUID"    />
+        <result property="goodid"    column="GoodID"    />
+        <result property="goodname"    column="GoodName"    />
+        <result property="unitname"    column="UnitName"    />
+        <result property="standard"    column="Standard"    />
+        <result property="inamount"    column="InAmount"    />
+        <result property="outamount"    column="OutAmount"    />
+        <result property="amount"    column="Amount"    />
+        <result property="freezeamount"    column="FreezeAmount"    />
+        <result property="isbatch"    column="IsBatch"    />
+        <result property="batchbillnumber"    column="BatchBillnumber"    />
+        <result property="specialnumber"    column="SpecialNumber"    />
+        <result property="type"    column="Type"    />
+        <result property="billtype"    column="BillType"    />
+        <result property="remark"    column="Remark"    />
+        <result property="createuserid"    column="CreateUserID"    />
+        <result property="createusername"    column="CreateUserName"    />
+        <result property="createtime"    column="CreateTime"    />
+        <result property="billtypename"    column="BillTypeName"    />
+        <result property="typename"    column="TypeName"    />
+        <result property="productdate"    column="ProductDate"    />
+        <result property="salebillnumber"    column="SaleBillnumber"    />
+        <result property="productionarea"    column="ProductionArea"    />
+        <result property="versionnumber"    column="VersionNumber"    />
+        <result property="customeruuid"    column="CustomerUUID"    />
+        <result property="customerid"    column="CustomerID"    />
+        <result property="customername"    column="CustomerName"    />
+        <result property="detailuuid"    column="DetailUUID"    />
+        <result property="specialcode"    column="SpecialCode"    />
+        <result property="billstatus"    column="BillStatus"    />
+        <result property="storedate"    column="StoreDate"    />
+        <result property="availableamount"    column="AvailableAmount"    />
+    </resultMap>
+
+    <sql id="selectDataCurrentinventoryVo">
+        select ID, AccountDate, Billnumber, CompanyUUID, CompanyID, CompanyName, FactoryUUID, FactoryID, FactoryName, WarehouseUUID, WarehouseID, WarehouseName, LocationUUID, LocationID, LocationName, GoodUUID, GoodID, GoodName, UnitName, Standard, InAmount, OutAmount, Amount, FreezeAmount, IsBatch, BatchBillnumber, SpecialNumber, Type, BillType, Remark, CreateUserID, CreateUserName, CreateTime, BillTypeName, TypeName, ProductDate, SaleBillnumber, ProductionArea, VersionNumber, CustomerUUID, CustomerID, CustomerName, DetailUUID, SpecialCode, BillStatus, StoreDate from data_currentinventory
+    </sql>
+
+    <select id="selectDataCurrentinventoryList" parameterType="DataCurrentinventory" resultMap="DataCurrentinventoryResult">
+        <include refid="selectDataCurrentinventoryVo"/>
+        <where>
+            <if test="params.beginAccountdate != null and params.beginAccountdate != '' and params.endAccountdate != null and params.endAccountdate != ''"> and AccountDate between #{params.beginAccountdate} and #{params.endAccountdate}</if>
+            <if test="billnumber != null  and billnumber != ''"> and Billnumber = #{billnumber}</if>
+            <if test="companyname != null  and companyname != ''"> and CompanyName like concat('%', #{companyname}, '%')</if>
+            <if test="factoryname != null  and factoryname != ''"> and FactoryName like concat('%', #{factoryname}, '%')</if>
+            <if test="warehousename != null  and warehousename != ''"> and WarehouseName like concat('%', #{warehousename}, '%')</if>
+            <if test="locationname != null  and locationname != ''"> and LocationName like concat('%', #{locationname}, '%')</if>
+            <if test="goodname != null  and goodname != ''"> and GoodName like concat('%', #{goodname}, '%')</if>
+            <if test="batchbillnumber != null  and batchbillnumber != ''"> and BatchBillnumber like concat('%', #{batchbillnumber}, '%')</if>
+            <if test="specialnumber != null  and specialnumber != ''"> and SpecialNumber like concat('%', #{specialnumber}, '%')</if>
+            <if test="remark != null  and remark != ''"> and Remark like concat('%', #{remark}, '%')</if>
+            <if test="typename != null  and typename != ''"> and TypeName = #{typename}</if>
+            <if test="customername != null  and customername != ''"> and CustomerName like concat('%', #{customername}, '%')</if>
+        </where>
+    </select>
+
+    <!-- 当前库存整合数据 -->
+    <select id="selectDataCurrentinventorySum" parameterType="DataCurrentinventory" resultMap="DataCurrentinventoryResult">
+        select MAX(ID) ID,MAX(WarehouseName) WarehouseName,MAX(GoodID) GoodID, MAX(GoodName) GoodName, MAX(UnitName) UnitName, MAX(Standard) Standard, SUM(Amount) Amount, SUM(FreezeAmount) FreezeAmount,SUM(Amount) - SUM(FreezeAmount) AS AvailableAmount from data_currentinventory
+        <where>
+            <if test="params.beginAccountdate != null and params.beginAccountdate != '' and params.endAccountdate != null and params.endAccountdate != ''"> and AccountDate between #{params.beginAccountdate} and #{params.endAccountdate}</if>
+            <if test="billnumber != null  and billnumber != ''"> and Billnumber = #{billnumber}</if>
+            <if test="companyname != null  and companyname != ''"> and CompanyName like concat('%', #{companyname}, '%')</if>
+            <if test="factoryname != null  and factoryname != ''"> and FactoryName like concat('%', #{factoryname}, '%')</if>
+            <if test="warehousename != null  and warehousename != ''"> and WarehouseName like concat('%', #{warehousename}, '%')</if>
+            <if test="locationname != null  and locationname != ''"> and LocationName like concat('%', #{locationname}, '%')</if>
+            <if test="goodname != null  and goodname != ''"> and GoodName like concat('%', #{goodname}, '%')</if>
+            <if test="batchbillnumber != null  and batchbillnumber != ''"> and BatchBillnumber like concat('%', #{batchbillnumber}, '%')</if>
+            <if test="specialnumber != null  and specialnumber != ''"> and SpecialNumber like concat('%', #{specialnumber}, '%')</if>
+            <if test="remark != null  and remark != ''"> and Remark like concat('%', #{remark}, '%')</if>
+            <if test="typename != null  and typename != ''"> and TypeName = #{typename}</if>
+            <if test="customername != null  and customername != ''"> and CustomerName like concat('%', #{customername}, '%')</if>
+        </where>
+        group by WarehouseUUID,GoodUUID
+    </select>
+
+    <select id="selectDataCurrentinventoryById" parameterType="String" resultMap="DataCurrentinventoryResult">
+        <include refid="selectDataCurrentinventoryVo"/>
+        where ID = #{id}
+    </select>
+
+    <insert id="insertDataCurrentinventory" parameterType="DataCurrentinventory">
+        insert into data_currentinventory
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null  and id != ''">ID,</if>
+            <if test="accountdate != null ">AccountDate,</if>
+            <if test="billnumber != null  and billnumber != ''">Billnumber,</if>
+            <if test="companyuuid != null  and companyuuid != ''">CompanyUUID,</if>
+            <if test="companyid != null  and companyid != ''">CompanyID,</if>
+            <if test="companyname != null  and companyname != ''">CompanyName,</if>
+            <if test="factoryuuid != null  and factoryuuid != ''">FactoryUUID,</if>
+            <if test="factoryid != null  and factoryid != ''">FactoryID,</if>
+            <if test="factoryname != null  and factoryname != ''">FactoryName,</if>
+            <if test="warehouseuuid != null  and warehouseuuid != ''">WarehouseUUID,</if>
+            <if test="warehouseid != null  and warehouseid != ''">WarehouseID,</if>
+            <if test="warehousename != null  and warehousename != ''">WarehouseName,</if>
+            <if test="locationuuid != null  and locationuuid != ''">LocationUUID,</if>
+            <if test="locationid != null  and locationid != ''">LocationID,</if>
+            <if test="locationname != null  and locationname != ''">LocationName,</if>
+            <if test="gooduuid != null  and gooduuid != ''">GoodUUID,</if>
+            <if test="goodid != null  and goodid != ''">GoodID,</if>
+            <if test="goodname != null  and goodname != ''">GoodName,</if>
+            <if test="unitname != null  and unitname != ''">UnitName,</if>
+            <if test="standard != null  and standard != ''">Standard,</if>
+            <if test="inamount != null ">InAmount,</if>
+            <if test="outamount != null ">OutAmount,</if>
+            <if test="amount != null ">Amount,</if>
+            <if test="freezeamount != null ">FreezeAmount,</if>
+            <if test="isbatch != null ">IsBatch,</if>
+            <if test="batchbillnumber != null  and batchbillnumber != ''">BatchBillnumber,</if>
+            <if test="specialnumber != null  and specialnumber != ''">SpecialNumber,</if>
+            <if test="type != null  and type != ''">Type,</if>
+            <if test="billtype != null  and billtype != ''">BillType,</if>
+            <if test="remark != null  and remark != ''">Remark,</if>
+            <if test="createuserid != null  and createuserid != ''">CreateUserID,</if>
+            <if test="createusername != null  and createusername != ''">CreateUserName,</if>
+            <if test="createtime != null ">CreateTime,</if>
+            <if test="billtypename != null  and billtypename != ''">BillTypeName,</if>
+            <if test="typename != null  and typename != ''">TypeName,</if>
+            <if test="productdate != null ">ProductDate,</if>
+            <if test="salebillnumber != null  and salebillnumber != ''">SaleBillnumber,</if>
+            <if test="productionarea != null  and productionarea != ''">ProductionArea,</if>
+            <if test="versionnumber != null  and versionnumber != ''">VersionNumber,</if>
+            <if test="customeruuid != null  and customeruuid != ''">CustomerUUID,</if>
+            <if test="customerid != null  and customerid != ''">CustomerID,</if>
+            <if test="customername != null  and customername != ''">CustomerName,</if>
+            <if test="detailuuid != null  and detailuuid != ''">DetailUUID,</if>
+            <if test="specialcode != null  and specialcode != ''">SpecialCode,</if>
+            <if test="billstatus != null  and billstatus != ''">BillStatus,</if>
+            <if test="storedate != null ">StoreDate,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null  and id != ''">#{id},</if>
+            <if test="accountdate != null ">#{accountdate},</if>
+            <if test="billnumber != null  and billnumber != ''">#{billnumber},</if>
+            <if test="companyuuid != null  and companyuuid != ''">#{companyuuid},</if>
+            <if test="companyid != null  and companyid != ''">#{companyid},</if>
+            <if test="companyname != null  and companyname != ''">#{companyname},</if>
+            <if test="factoryuuid != null  and factoryuuid != ''">#{factoryuuid},</if>
+            <if test="factoryid != null  and factoryid != ''">#{factoryid},</if>
+            <if test="factoryname != null  and factoryname != ''">#{factoryname},</if>
+            <if test="warehouseuuid != null  and warehouseuuid != ''">#{warehouseuuid},</if>
+            <if test="warehouseid != null  and warehouseid != ''">#{warehouseid},</if>
+            <if test="warehousename != null  and warehousename != ''">#{warehousename},</if>
+            <if test="locationuuid != null  and locationuuid != ''">#{locationuuid},</if>
+            <if test="locationid != null  and locationid != ''">#{locationid},</if>
+            <if test="locationname != null  and locationname != ''">#{locationname},</if>
+            <if test="gooduuid != null  and gooduuid != ''">#{gooduuid},</if>
+            <if test="goodid != null  and goodid != ''">#{goodid},</if>
+            <if test="goodname != null  and goodname != ''">#{goodname},</if>
+            <if test="unitname != null  and unitname != ''">#{unitname},</if>
+            <if test="standard != null  and standard != ''">#{standard},</if>
+            <if test="inamount != null ">#{inamount},</if>
+            <if test="outamount != null ">#{outamount},</if>
+            <if test="amount != null ">#{amount},</if>
+            <if test="freezeamount != null ">#{freezeamount},</if>
+            <if test="isbatch != null ">#{isbatch},</if>
+            <if test="batchbillnumber != null  and batchbillnumber != ''">#{batchbillnumber},</if>
+            <if test="specialnumber != null  and specialnumber != ''">#{specialnumber},</if>
+            <if test="type != null  and type != ''">#{type},</if>
+            <if test="billtype != null  and billtype != ''">#{billtype},</if>
+            <if test="remark != null  and remark != ''">#{remark},</if>
+            <if test="createuserid != null  and createuserid != ''">#{createuserid},</if>
+            <if test="createusername != null  and createusername != ''">#{createusername},</if>
+            <if test="createtime != null ">#{createtime},</if>
+            <if test="billtypename != null  and billtypename != ''">#{billtypename},</if>
+            <if test="typename != null  and typename != ''">#{typename},</if>
+            <if test="productdate != null ">#{productdate},</if>
+            <if test="salebillnumber != null  and salebillnumber != ''">#{salebillnumber},</if>
+            <if test="productionarea != null  and productionarea != ''">#{productionarea},</if>
+            <if test="versionnumber != null  and versionnumber != ''">#{versionnumber},</if>
+            <if test="customeruuid != null  and customeruuid != ''">#{customeruuid},</if>
+            <if test="customerid != null  and customerid != ''">#{customerid},</if>
+            <if test="customername != null  and customername != ''">#{customername},</if>
+            <if test="detailuuid != null  and detailuuid != ''">#{detailuuid},</if>
+            <if test="specialcode != null  and specialcode != ''">#{specialcode},</if>
+            <if test="billstatus != null  and billstatus != ''">#{billstatus},</if>
+            <if test="storedate != null ">#{storedate},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDataCurrentinventory" parameterType="DataCurrentinventory">
+        update data_currentinventory
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="accountdate != null ">AccountDate = #{accountdate},</if>
+            <if test="billnumber != null  and billnumber != ''">Billnumber = #{billnumber},</if>
+            <if test="companyuuid != null  and companyuuid != ''">CompanyUUID = #{companyuuid},</if>
+            <if test="companyid != null  and companyid != ''">CompanyID = #{companyid},</if>
+            <if test="companyname != null  and companyname != ''">CompanyName = #{companyname},</if>
+            <if test="factoryuuid != null  and factoryuuid != ''">FactoryUUID = #{factoryuuid},</if>
+            <if test="factoryid != null  and factoryid != ''">FactoryID = #{factoryid},</if>
+            <if test="factoryname != null  and factoryname != ''">FactoryName = #{factoryname},</if>
+            <if test="warehouseuuid != null  and warehouseuuid != ''">WarehouseUUID = #{warehouseuuid},</if>
+            <if test="warehouseid != null  and warehouseid != ''">WarehouseID = #{warehouseid},</if>
+            <if test="warehousename != null  and warehousename != ''">WarehouseName = #{warehousename},</if>
+            <if test="locationuuid != null  and locationuuid != ''">LocationUUID = #{locationuuid},</if>
+            <if test="locationid != null  and locationid != ''">LocationID = #{locationid},</if>
+            <if test="locationname != null  and locationname != ''">LocationName = #{locationname},</if>
+            <if test="gooduuid != null  and gooduuid != ''">GoodUUID = #{gooduuid},</if>
+            <if test="goodid != null  and goodid != ''">GoodID = #{goodid},</if>
+            <if test="goodname != null  and goodname != ''">GoodName = #{goodname},</if>
+            <if test="unitname != null  and unitname != ''">UnitName = #{unitname},</if>
+            <if test="standard != null  and standard != ''">Standard = #{standard},</if>
+            <if test="inamount != null ">InAmount = #{inamount},</if>
+            <if test="outamount != null ">OutAmount = #{outamount},</if>
+            <if test="amount != null ">Amount = #{amount},</if>
+            <if test="freezeamount != null ">FreezeAmount = #{freezeamount},</if>
+            <if test="isbatch != null ">IsBatch = #{isbatch},</if>
+            <if test="batchbillnumber != null  and batchbillnumber != ''">BatchBillnumber = #{batchbillnumber},</if>
+            <if test="specialnumber != null  and specialnumber != ''">SpecialNumber = #{specialnumber},</if>
+            <if test="type != null  and type != ''">Type = #{type},</if>
+            <if test="billtype != null  and billtype != ''">BillType = #{billtype},</if>
+            <if test="remark != null  and remark != ''">Remark = #{remark},</if>
+            <if test="createuserid != null  and createuserid != ''">CreateUserID = #{createuserid},</if>
+            <if test="createusername != null  and createusername != ''">CreateUserName = #{createusername},</if>
+            <if test="createtime != null ">CreateTime = #{createtime},</if>
+            <if test="billtypename != null  and billtypename != ''">BillTypeName = #{billtypename},</if>
+            <if test="typename != null  and typename != ''">TypeName = #{typename},</if>
+            <if test="productdate != null ">ProductDate = #{productdate},</if>
+            <if test="salebillnumber != null  and salebillnumber != ''">SaleBillnumber = #{salebillnumber},</if>
+            <if test="productionarea != null  and productionarea != ''">ProductionArea = #{productionarea},</if>
+            <if test="versionnumber != null  and versionnumber != ''">VersionNumber = #{versionnumber},</if>
+            <if test="customeruuid != null  and customeruuid != ''">CustomerUUID = #{customeruuid},</if>
+            <if test="customerid != null  and customerid != ''">CustomerID = #{customerid},</if>
+            <if test="customername != null  and customername != ''">CustomerName = #{customername},</if>
+            <if test="detailuuid != null  and detailuuid != ''">DetailUUID = #{detailuuid},</if>
+            <if test="specialcode != null  and specialcode != ''">SpecialCode = #{specialcode},</if>
+            <if test="billstatus != null  and billstatus != ''">BillStatus = #{billstatus},</if>
+            <if test="storedate != null ">StoreDate = #{storedate},</if>
+        </trim>
+        where ID = #{id}
+    </update>
+
+    <delete id="deleteDataCurrentinventoryById" parameterType="String">
+        delete from data_currentinventory where ID = #{id}
+    </delete>
+
+    <delete id="deleteDataCurrentinventoryByIds" parameterType="String">
+        delete from data_currentinventory where ID in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

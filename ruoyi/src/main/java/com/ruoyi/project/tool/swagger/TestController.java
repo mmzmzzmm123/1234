@@ -1,28 +1,19 @@
 package com.ruoyi.project.tool.swagger;
 
+import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.framework.web.controller.BaseController;
+import com.ruoyi.framework.web.domain.AjaxResult;
+import io.swagger.annotations.*;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import com.ruoyi.common.utils.StringUtils;
-import com.ruoyi.framework.web.controller.BaseController;
-import com.ruoyi.framework.web.domain.AjaxResult;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-import io.swagger.annotations.ApiOperation;
 
 /**
  * swagger 用户测试方法
- * 
+ *
  * @author ruoyi
  */
 @Api("用户信息管理")
@@ -32,8 +23,8 @@ public class TestController extends BaseController
 {
     private final static Map<Integer, UserEntity> users = new LinkedHashMap<Integer, UserEntity>();
     {
-        users.put(1, new UserEntity(1, "admin", "admin123", "15888888888"));
-        users.put(2, new UserEntity(2, "ry", "admin123", "15666666666"));
+        users.put(1, new UserEntity(1, "admin", "admin123", "15888888888","头像1"));
+        users.put(2, new UserEntity(2, "ry", "admin123", "15666666666","头像2"));
     }
 
     @ApiOperation("获取用户列表")
@@ -120,17 +111,21 @@ class UserEntity
     @ApiModelProperty("用户手机")
     private String mobile;
 
+    @ApiModelProperty("用户头像")
+    private String avatar;
+
     public UserEntity()
     {
 
     }
 
-    public UserEntity(Integer userId, String username, String password, String mobile)
+    public UserEntity(Integer userId, String username, String password, String mobile,String  avatar)
     {
         this.userId = userId;
         this.username = username;
         this.password = password;
         this.mobile = mobile;
+        this.avatar = avatar;
     }
 
     public Integer getUserId()
@@ -171,5 +166,13 @@ class UserEntity
     public void setMobile(String mobile)
     {
         this.mobile = mobile;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 }

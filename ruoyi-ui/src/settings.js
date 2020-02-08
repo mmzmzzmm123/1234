@@ -1,5 +1,5 @@
 module.exports = {
-  title: '若依管理系统',
+  title: '明仁管理系统',
 
   /**
    * 是否系统布局配置
@@ -19,7 +19,7 @@ module.exports = {
   /**
    * 是否显示logo
    */
-  sidebarLogo: true,
+  sidebarLogo: false,
 
   /**
    * @type {string | array} 'production' | ['production', 'development']

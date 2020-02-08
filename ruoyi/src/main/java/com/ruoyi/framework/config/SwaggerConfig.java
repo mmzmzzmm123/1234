@@ -1,27 +1,24 @@
 package com.ruoyi.framework.config;
 
-import java.util.ArrayList;
-import java.util.List;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import io.swagger.annotations.ApiOperation;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.service.ApiInfo;
-import springfox.documentation.service.ApiKey;
-import springfox.documentation.service.AuthorizationScope;
-import springfox.documentation.service.Contact;
-import springfox.documentation.service.SecurityReference;
+import springfox.documentation.service.*;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Swagger2的接口配置
- * 
+ *
  * @author ruoyi
  */
 @Configuration
@@ -39,7 +36,7 @@ public class SwaggerConfig
     public Docket createRestApi()
     {
         return new Docket(DocumentationType.SWAGGER_2)
-                .pathMapping("/dev-api")
+                .pathMapping(DEV_PRD())
                 // 用来创建该API的基本信息，展示在文档的页面中（自定义展示的信息）
                 .apiInfo(apiInfo())
                 // 设置哪些接口暴露给Swagger展示
@@ -65,7 +62,7 @@ public class SwaggerConfig
         apiKeyList.add(new ApiKey("Authorization", "Authorization", "header"));
         return apiKeyList;
     }
-    
+
     /**
      * 安全上下文
      */
@@ -79,7 +76,7 @@ public class SwaggerConfig
                         .build());
         return securityContexts;
     }
-    
+
     /**
      * 默认的安全上引用
      */
@@ -101,13 +98,23 @@ public class SwaggerConfig
         // 用ApiInfoBuilder进行定制
         return new ApiInfoBuilder()
                 // 设置标题
-                .title("标题：若依管理系统_接口文档")
+                .title("标题：明仁管理系统_接口文档")
                 // 描述
-                .description("描述：用于管理集团旗下公司的人员信息,具体包括XXX,XXX模块...")
+                .description("描述：明仁管理系统_接口文档系统对外接口")
                 // 作者信息
-                .contact(new Contact(ruoyiConfig.getName(), null, null))
+                .contact(new Contact(ruoyiConfig.getName(), "http://erp.jzmryy.com", ""))
                 // 版本
                 .version("版本号:" + ruoyiConfig.getVersion())
                 .build();
+    }
+
+    /**
+     * 判断是测试生产环境
+     */
+    private String DEV_PRD()
+    {
+        String str = System.getProperty("os.name").toLowerCase().contains("windows 10") ? "/dev-api" : "";
+
+        return str;
     }
 }

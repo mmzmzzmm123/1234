@@ -1,8 +1,8 @@
 {
   "name": "ruoyi",
   "version": "2.0.0",
-  "description": "若依管理系统",
-  "author": "若依",
+  "description": "明仁管理系统",
+  "author": "明仁",
   "license": "MIT",
   "scripts": {
     "dev": "vue-cli-service serve",
@@ -67,7 +67,7 @@
     "@vue/cli-plugin-unit-jest": "3.5.3",
     "@vue/cli-service": "3.5.3",
     "@vue/test-utils": "1.0.0-beta.29",
-    "autoprefixer": "^9.5.1",
+    "autoprefixer": "^9.7.4",
     "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "10.0.1",
     "babel-jest": "23.6.0",
@@ -99,5 +99,6 @@
   "browserslist": [
     "> 1%",
     "last 2 versions"
-  ]
+  ],
+  "main": ".eslintrc.js"
 }

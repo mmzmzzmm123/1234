@@ -67,15 +67,10 @@
       </el-col>
     </el-row>
 
-    <el-table v-loading="loading" :data="noticeList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" stripe border fit highlight-current-row :data="noticeList" @selection-change="handleSelectionChange" @row-dblclick="handleUpdate">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="序号" align="center" prop="noticeId" width="100" />
-      <el-table-column
-        label="公告标题"
-        align="center"
-        prop="noticeTitle"
-        :show-overflow-tooltip="true"
-      />
+      <el-table-column label="公告标题" align="center" prop="noticeTitle" :show-overflow-tooltip="true"/>
       <el-table-column
         label="公告类型"
         align="center"
@@ -99,15 +94,17 @@
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
-            size="mini"
-            type="text"
+            plain
+            size="small"
+            type="primary"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['system:notice:edit']"
           >修改</el-button>
           <el-button
-            size="mini"
-            type="text"
+            plain
+            size="small"
+            type="primary"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['system:notice:remove']"
@@ -196,6 +193,8 @@ export default {
       noticeList: [],
       // 弹出层标题
       title: "",
+      // 是否显示弹出层
+      open: false,
       // 是否显示弹出层
       open: false,
       // 类型数据字典
