@@ -1,18 +1,5 @@
 package com.ruoyi.project.system.controller;
 
-import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.ServletUtils;
@@ -25,10 +12,18 @@ import com.ruoyi.framework.security.service.TokenService;
 import com.ruoyi.framework.web.controller.BaseController;
 import com.ruoyi.framework.web.domain.AjaxResult;
 import com.ruoyi.framework.web.page.TableDataInfo;
+import com.ruoyi.project.mr.base.service.IBaseAttendanceGroupService;
 import com.ruoyi.project.system.domain.SysUser;
 import com.ruoyi.project.system.service.ISysPostService;
 import com.ruoyi.project.system.service.ISysRoleService;
 import com.ruoyi.project.system.service.ISysUserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 /**
  * 用户信息
@@ -49,6 +44,9 @@ public class SysUserController extends BaseController
     private ISysPostService postService;
 
     @Autowired
+    private IBaseAttendanceGroupService groupService;
+
+    @Autowired
     private TokenService tokenService;
 
     /**
@@ -61,6 +59,16 @@ public class SysUserController extends BaseController
         startPage();
         List<SysUser> list = userService.selectUserList(user);
         return getDataTable(list);
+    }
+
+    /**
+     * 获取用户
+     */
+    @GetMapping("/userSelect")
+    public AjaxResult userSelect(SysUser user)
+    {
+        List<SysUser> users = userService.selectUserList(user);
+        return AjaxResult.success(userService.buildUserSelect(users));
     }
 
     @Log(title = "用户管理", businessType = BusinessType.EXPORT)
@@ -103,6 +111,7 @@ public class SysUserController extends BaseController
         AjaxResult ajax = AjaxResult.success();
         ajax.put("roles", roleService.selectRoleAll());
         ajax.put("posts", postService.selectPostAll());
+        ajax.put("groups", groupService.selectGroupAll());
         if (StringUtils.isNotNull(userId))
         {
             ajax.put(AjaxResult.DATA_TAG, userService.selectUserById(userId));

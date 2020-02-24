@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.mr.base.mapper.BaseAttendanceGroupMapper">
+
+    <resultMap type="BaseAttendanceGroup" id="BaseAttendanceGroupResult">
+        <result property="id"    column="ID"    />
+        <result property="attendanceName"    column="attendance_name"    />
+        <result property="attendancePeople"    column="attendance_people"    />
+        <result property="calendarId"    column="calendar_id"    />
+        <result property="address"    column="address"    />
+        <result property="addError"    column="add_error"    />
+        <result property="photoSet"    column="photo_set"    />
+        <result property="classType"    column="class_type"    />
+        <result property="classes"    column="classes"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectBaseAttendanceGroupVo">
+        select ID, attendance_name, attendance_people, calendar_id, address, add_error, photo_set, class_type, classes, create_by, create_time, update_by, update_time, remark from base_attendance_group
+    </sql>
+
+    <select id="selectBaseAttendanceGroupList" parameterType="BaseAttendanceGroup" resultMap="BaseAttendanceGroupResult">
+        <include refid="selectBaseAttendanceGroupVo"/>
+        <where>
+            <if test="attendanceName != null  and attendanceName != ''"> and attendance_name like concat('%', #{attendanceName}, '%')</if>
+            <if test="photoSet != null  and photoSet != ''"> and photo_set = #{photoSet}</if>
+            <if test="classType != null  and classType != ''"> and class_type = #{classType}</if>
+            <if test="classes != null  and classes != ''"> and classes = #{classes}</if>
+        </where>
+    </select>
+
+    <select id="selectGroupAll" resultMap="BaseAttendanceGroupResult">
+        <include refid="selectBaseAttendanceGroupVo"/>
+    </select>
+
+    <select id="selectBaseAttendanceGroupById" parameterType="String" resultMap="BaseAttendanceGroupResult">
+        <include refid="selectBaseAttendanceGroupVo"/>
+        where ID = #{id}
+    </select>
+
+    <insert id="insertBaseAttendanceGroup" parameterType="BaseAttendanceGroup">
+        insert into base_attendance_group
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null  and id != ''">ID,</if>
+            <if test="attendanceName != null  and attendanceName != ''">attendance_name,</if>
+            <if test="attendancePeople != null  and attendancePeople != ''">attendance_people,</if>
+            <if test="calendarId != null  and calendarId != ''">calendar_id,</if>
+            <if test="address != null  and address != ''">address,</if>
+            <if test="addError != null  and addError != ''">add_error,</if>
+            <if test="photoSet != null  and photoSet != ''">photo_set,</if>
+            <if test="classType != null  and classType != ''">class_type,</if>
+            <if test="classes != null  and classes != ''">classes,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="remark != null  and remark != ''">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null  and id != ''">#{id},</if>
+            <if test="attendanceName != null  and attendanceName != ''">#{attendanceName},</if>
+            <if test="attendancePeople != null  and attendancePeople != ''">#{attendancePeople},</if>
+            <if test="calendarId != null  and calendarId != ''">#{calendarId},</if>
+            <if test="address != null  and address != ''">#{address},</if>
+            <if test="addError != null  and addError != ''">#{addError},</if>
+            <if test="photoSet != null  and photoSet != ''">#{photoSet},</if>
+            <if test="classType != null  and classType != ''">#{classType},</if>
+            <if test="classes != null  and classes != ''">#{classes},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="remark != null  and remark != ''">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBaseAttendanceGroup" parameterType="BaseAttendanceGroup">
+        update base_attendance_group
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="attendanceName != null  and attendanceName != ''">attendance_name = #{attendanceName},</if>
+            <if test="attendancePeople != null  and attendancePeople != ''">attendance_people = #{attendancePeople},</if>
+            <if test="calendarId != null  and calendarId != ''">calendar_id = #{calendarId},</if>
+            <if test="address != null  and address != ''">address = #{address},</if>
+            <if test="addError != null  and addError != ''">add_error = #{addError},</if>
+            <if test="photoSet != null  and photoSet != ''">photo_set = #{photoSet},</if>
+            <if test="classType != null  and classType != ''">class_type = #{classType},</if>
+            <if test="classes != null  and classes != ''">classes = #{classes},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+        </trim>
+        where ID = #{id}
+    </update>
+
+    <delete id="deleteBaseAttendanceGroupById" parameterType="String">
+        delete from base_attendance_group where ID = #{id}
+    </delete>
+
+    <delete id="deleteBaseAttendanceGroupByIds" parameterType="String">
+        delete from base_attendance_group where ID in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

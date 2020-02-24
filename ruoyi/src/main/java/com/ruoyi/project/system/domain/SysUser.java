@@ -15,7 +15,7 @@ import com.ruoyi.framework.web.domain.BaseEntity;
 
 /**
  * 用户对象 sys_user
- * 
+ *
  * @author ruoyi
  */
 public class SysUser extends BaseEntity
@@ -30,12 +30,16 @@ public class SysUser extends BaseEntity
     @Excel(name = "部门编号", type = Type.IMPORT)
     private Long deptId;
 
+    /** 部门ID */
+    @Excel(name = "考勤组标识", type = Type.IMPORT)
+    private String groupId;
+
     /** 用户账号 */
     @Excel(name = "登录名称")
     private String userName;
 
-    /** 用户昵称 */
-    @Excel(name = "用户名称")
+    /** 用户姓名 */
+    @Excel(name = "用户姓名")
     private String nickName;
 
     /** 用户邮箱 */
@@ -130,7 +134,17 @@ public class SysUser extends BaseEntity
         this.deptId = deptId;
     }
 
-    @Size(min = 0, max = 30, message = "用户昵称长度不能超过30个字符")
+    public String getGroupId()
+    {
+        return groupId;
+    }
+
+    public void setGroupId(String groupId)
+    {
+        this.groupId = groupId;
+    }
+
+    @Size(min = 0, max = 30, message = "用户名称长度不能超过30个字符")
     public String getNickName()
     {
         return nickName;
@@ -295,12 +309,13 @@ public class SysUser extends BaseEntity
     {
         this.postIds = postIds;
     }
-    
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
             .append("userId", getUserId())
             .append("deptId", getDeptId())
+            .append("groupId", getGroupId())
             .append("userName", getUserName())
             .append("nickName", getNickName())
             .append("email", getEmail())
