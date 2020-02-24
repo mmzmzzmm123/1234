@@ -20,7 +20,6 @@
             :expand-on-click-node="false"
             :filter-node-method="filterNode"
             ref="tree"
-            :default-expand-all="isExpand"
             @node-click="handleNodeClick"
           />
         </div>
@@ -135,8 +134,8 @@
         <el-table v-loading="loading" :data="userList" @selection-change="handleSelectionChange">
           <el-table-column type="selection" width="40" align="center" />
           <el-table-column label="用户编号" align="center" prop="userId" />
-          <el-table-column label="用户名称" align="center" prop="userName" :show-overflow-tooltip="true" />
-          <el-table-column label="用户昵称" align="center" prop="nickName" :show-overflow-tooltip="true" />
+          <el-table-column label="用户账号" align="center" prop="userName" :show-overflow-tooltip="true" />
+          <el-table-column label="用户姓名" align="center" prop="nickName" :show-overflow-tooltip="true" />
           <el-table-column label="部门" align="center" prop="dept.deptName" :show-overflow-tooltip="true" />
           <el-table-column label="手机号码" align="center" prop="phonenumber" width="120" />
           <el-table-column label="状态" align="center">
@@ -202,8 +201,8 @@
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-row>
           <el-col :span="12">
-            <el-form-item label="用户昵称" prop="nickName">
-              <el-input v-model="form.nickName" placeholder="请输入用户昵称" />
+            <el-form-item label="用户姓名" prop="nickName">
+              <el-input v-model="form.nickName" placeholder="请输入用户姓名" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -222,8 +221,8 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="用户名称" prop="userName">
-              <el-input v-model="form.userName" placeholder="请输入用户名称" />
+            <el-form-item label="用户账号" prop="userName">
+              <el-input v-model="form.userName" placeholder="请输入用户账号" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -277,6 +276,18 @@
                   :label="item.roleName"
                   :value="item.roleId"
                   :disabled="item.status == 1"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="考勤组" prop="groupId">
+              <el-select v-model="form.groupId" clearable placeholder="请选择考勤组">
+                <el-option
+                  v-for="item in groupOptions"
+                  :key="item.id"
+                  :label="item.attendanceName"
+                  :value="item.id"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -371,6 +382,8 @@ export default {
       postOptions: [],
       // 角色选项
       roleOptions: [],
+      // 考勤组选项
+      groupOptions: [],
       // 表单参数
       form: {},
       defaultProps: {
@@ -404,10 +417,10 @@ export default {
       // 表单校验
       rules: {
         userName: [
-          { required: true, message: "用户名称不能为空", trigger: "blur" }
+          { required: true, message: "用户账号不能为空", trigger: "blur" }
         ],
         nickName: [
-          { required: true, message: "用户昵称不能为空", trigger: "blur" }
+          { required: true, message: "用户姓名不能为空", trigger: "blur" }
         ],
         deptId: [
           { required: true, message: "归属部门不能为空", trigger: "blur" }
@@ -503,6 +516,7 @@ export default {
       this.form = {
         userId: undefined,
         deptId: undefined,
+        groupId: undefined,
         userName: undefined,
         nickName: undefined,
         password: undefined,
@@ -540,6 +554,7 @@ export default {
       getUser().then(response => {
         this.postOptions = response.posts;
         this.roleOptions = response.roles;
+        this.groupOptions = response.groups;
         this.open = true;
         this.title = "添加用户";
         this.form.password = this.initPassword;
@@ -554,6 +569,7 @@ export default {
         this.form = response.data;
         this.postOptions = response.posts;
         this.roleOptions = response.roles;
+        this.groupOptions = response.groups;
         this.form.postIds = response.postIds;
         this.form.roleIds = response.roleIds;
         this.open = true;

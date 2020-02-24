@@ -125,3 +125,11 @@ export function importTemplate() {
     method: 'get'
   })
 }
+
+// 查询用户
+export function userSelect() {
+  return request({
+    url: '/system/user/userSelect',
+    method: 'get'
+  })
+}
