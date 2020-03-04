@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.mr.base.mapper.DataIdiomMapper">
+
+    <resultMap type="DataIdiom" id="DataIdiomResult">
+        <result property="id"    column="id"    />
+        <result property="idiomName"    column="idiom_name"    />
+        <result property="idiomPinyin"    column="idiom_pinyin"    />
+        <result property="idiomDesc"    column="idiom_desc"    />
+        <result property="idiomLevel"    column="idiom_level"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectDataIdiomVo">
+        select id, idiom_name, idiom_pinyin, idiom_desc, idiom_level, create_by, create_time, update_by, update_time, remark from data_idiom
+    </sql>
+
+    <select id="selectDataIdiomList" parameterType="DataIdiom" resultMap="DataIdiomResult">
+        <include refid="selectDataIdiomVo"/>
+        <where>
+            <if test="idiomName != null  and idiomName != ''"> and idiom_name like concat('%', #{idiomName}, '%')</if>
+            <if test="idiomDesc != null  and idiomDesc != ''"> and idiom_desc like concat('%', #{idiomDesc}, '%')</if>
+            <if test="idiomLevel != null "> and idiom_level &gt;= #{idiomLevel}</if>
+        </where>
+    </select>
+
+    <select id="selectDataIdiomById" parameterType="Long" resultMap="DataIdiomResult">
+        <include refid="selectDataIdiomVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectDataIdiomByName" parameterType="String" resultMap="DataIdiomResult">
+        <include refid="selectDataIdiomVo"/>
+        where idiom_name like concat('%', #{name}, '%') LIMIT 1
+    </select>
+
+    <insert id="insertDataIdiom" parameterType="DataIdiom" useGeneratedKeys="true" keyProperty="id">
+        insert into data_idiom
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null ">id,</if>
+            <if test="idiomName != null  and idiomName != ''">idiom_name,</if>
+            <if test="idiomPinyin != null  and idiomPinyin != ''">idiom_pinyin,</if>
+            <if test="idiomDesc != null  and idiomDesc != ''">idiom_desc,</if>
+            <if test="idiomLevel != null ">idiom_level,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="remark != null  and remark != ''">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null ">#{id},</if>
+            <if test="idiomName != null  and idiomName != ''">#{idiomName},</if>
+            <if test="idiomPinyin != null  and idiomPinyin != ''">#{idiomPinyin},</if>
+            <if test="idiomDesc != null  and idiomDesc != ''">#{idiomDesc},</if>
+            <if test="idiomLevel != null ">#{idiomLevel},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="remark != null  and remark != ''">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDataIdiom" parameterType="DataIdiom">
+        update data_idiom
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="idiomName != null  and idiomName != ''">idiom_name = #{idiomName},</if>
+            <if test="idiomPinyin != null  and idiomPinyin != ''">idiom_pinyin = #{idiomPinyin},</if>
+            <if test="idiomDesc != null  and idiomDesc != ''">idiom_desc = #{idiomDesc},</if>
+            <if test="idiomLevel != null ">idiom_level = #{idiomLevel},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteDataIdiomById" parameterType="Long">
+        delete from data_idiom where id = #{id}
+    </delete>
+
+    <delete id="deleteDataIdiomByIds" parameterType="String">
+        delete from data_idiom where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
