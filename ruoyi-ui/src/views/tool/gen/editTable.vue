@@ -196,7 +196,7 @@ export default {
     /** 关闭按钮 */
     close() {
       this.$store.dispatch("tagsView/delView", this.$route);
-      this.$router.push({ path: "/tool/gen", query: { t: Date.now()}})
+      this.$router.go(-1)
     }
   }
 };
