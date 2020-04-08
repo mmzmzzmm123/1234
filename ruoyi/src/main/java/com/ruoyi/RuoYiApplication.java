@@ -16,6 +16,8 @@ public class RuoYiApplication
     {
         System.setProperty("spring.devtools.restart.enabled", "false");
         SpringApplication.run(RuoYiApplication.class, args);
-        System.out.println("BenYi Startup success");
+        System.out.println("-------^&^-------" +
+                "BenYi Startup success" +
+                "-------^&^-------");
     }
 }

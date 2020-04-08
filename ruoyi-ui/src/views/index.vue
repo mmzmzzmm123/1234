@@ -1,6 +1,5 @@
 <template>
   <div class="dashboard-editor-container">
-
     <el-row :gutter="32">
       <el-col :xs="24" :sm="24" :lg="8">
         <div class="chart-wrapper">
@@ -18,31 +17,26 @@
         </div>
       </el-col>
     </el-row>
-    
   </div>
 </template>
 
 <script>
-import RaddarChart from './dashboard/RaddarChart'
-import PieChart from './dashboard/PieChart'
-import BarChart from './dashboard/BarChart'
+import RaddarChart from "./dashboard/RaddarChart";
+import PieChart from "./dashboard/PieChart";
+import BarChart from "./dashboard/BarChart";
 
 export default {
-  name: 'Index',
+  name: "Index",
   components: {
     RaddarChart,
     PieChart,
     BarChart
   },
   data() {
-    return {
-
-    }
+    return {};
   },
-  methods: {
-
-  }
-}
+  methods: {}
+};
 </script>
 
 <style lang="scss" scoped>
@@ -58,7 +52,7 @@ export default {
   }
 }
 
-@media (max-width:1024px) {
+@media (max-width: 1024px) {
   .chart-wrapper {
     padding: 8px;
   }
