@@ -135,9 +135,24 @@
         <el-table v-loading="loading" :data="userList" @selection-change="handleSelectionChange">
           <el-table-column type="selection" width="40" align="center" />
           <el-table-column label="用户编号" align="center" prop="userId" />
-          <el-table-column label="用户名称" align="center" prop="userName" :show-overflow-tooltip="true" />
-          <el-table-column label="用户昵称" align="center" prop="nickName" :show-overflow-tooltip="true" />
-          <el-table-column label="部门" align="center" prop="dept.deptName" :show-overflow-tooltip="true" />
+          <el-table-column
+            label="用户名称"
+            align="center"
+            prop="userName"
+            :show-overflow-tooltip="true"
+          />
+          <el-table-column
+            label="用户昵称"
+            align="center"
+            prop="nickName"
+            :show-overflow-tooltip="true"
+          />
+          <el-table-column
+            label="部门"
+            align="center"
+            prop="dept.deptName"
+            :show-overflow-tooltip="true"
+          />
           <el-table-column label="手机号码" align="center" prop="phonenumber" width="120" />
           <el-table-column label="状态" align="center">
             <template slot-scope="scope">
@@ -328,7 +343,17 @@
 </template>
 
 <script>
-import { listUser, getUser, delUser, addUser, updateUser, exportUser, resetUserPwd, changeUserStatus, importTemplate } from "@/api/system/user";
+import {
+  listUser,
+  getUser,
+  delUser,
+  addUser,
+  updateUser,
+  exportUser,
+  resetUserPwd,
+  changeUserStatus,
+  importTemplate
+} from "@/api/system/user";
 import { getToken } from "@/utils/auth";
 import { treeselect } from "@/api/system/dept";
 import Treeselect from "@riophae/vue-treeselect";
@@ -457,7 +482,8 @@ export default {
     /** 查询用户列表 */
     getList() {
       this.loading = true;
-      listUser(this.addDateRange(this.queryParams, this.dateRange)).then(response => {
+      listUser(this.addDateRange(this.queryParams, this.dateRange)).then(
+        response => {
           this.userList = response.rows;
           this.total = response.total;
           this.loading = false;
@@ -483,15 +509,22 @@ export default {
     // 用户状态修改
     handleStatusChange(row) {
       let text = row.status === "0" ? "启用" : "停用";
-      this.$confirm('确认要"' + text + '""' + row.userName + '"用户吗?', "警告", {
+      this.$confirm(
+        '确认要"' + text + '""' + row.userName + '"用户吗?',
+        "警告",
+        {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
-        }).then(function() {
+        }
+      )
+        .then(function() {
           return changeUserStatus(row.userId, row.status);
-        }).then(() => {
+        })
+        .then(() => {
           this.msgSuccess(text + "成功");
-        }).catch(function() {
+        })
+        .catch(function() {
           row.status = row.status === "0" ? "1" : "0";
         });
     },
@@ -568,7 +601,8 @@ export default {
       this.$prompt('请输入"' + row.userName + '"的新密码', "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消"
-      }).then(({ value }) => {
+      })
+        .then(({ value }) => {
           resetUserPwd(row.userId, value).then(response => {
             if (response.code === 200) {
               this.msgSuccess("修改成功，新密码是：" + value);
@@ -576,7 +610,8 @@ export default {
               this.msgError(response.msg);
             }
           });
-        }).catch(() => {});
+        })
+        .catch(() => {});
     },
     /** 提交按钮 */
     submitForm: function() {
@@ -609,29 +644,39 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const userIds = row.userId || this.ids;
-      this.$confirm('是否确认删除用户编号为"' + userIds + '"的数据项?', "警告", {
+      this.$confirm(
+        '是否确认删除用户编号为"' + userIds + '"的数据项?',
+        "警告",
+        {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
-        }).then(function() {
+        }
+      )
+        .then(function() {
           return delUser(userIds);
-        }).then(() => {
+        })
+        .then(() => {
           this.getList();
           this.msgSuccess("删除成功");
-        }).catch(function() {});
+        })
+        .catch(function() {});
     },
     /** 导出按钮操作 */
     handleExport() {
       const queryParams = this.queryParams;
-      this.$confirm('是否确认导出所有用户数据项?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
+      this.$confirm("是否确认导出所有用户数据项?", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(function() {
           return exportUser(queryParams);
-        }).then(response => {
+        })
+        .then(response => {
           this.download(response.msg);
-        }).catch(function() {});
+        })
+        .catch(function() {});
     },
     /** 导入按钮操作 */
     handleImport() {

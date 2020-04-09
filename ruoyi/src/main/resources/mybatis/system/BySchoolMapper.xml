@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.mapper.BySchoolMapper">
+    
+    <resultMap type="BySchool" id="BySchoolResult">
+        <result property="id"    column="id"    />
+        <result property="schoolName"    column="school_name"    />
+        <result property="nameShort"    column="name_short"    />
+        <result property="type"    column="type"    />
+        <result property="parentId"    column="parent_id"    />
+        <result property="province"    column="province"    />
+        <result property="provincename"    column="provincename"    />
+        <result property="regionid"    column="regionid"    />
+        <result property="regionname"    column="regionname"    />
+        <result property="area"    column="area"    />
+        <result property="areaname"    column="areaname"    />
+        <result property="address"    column="address"    />
+        <result property="mastername"    column="mastername"    />
+        <result property="tel"    column="tel"    />
+        <result property="emMan"    column="em_man"    />
+        <result property="emTel"    column="em_tel"    />
+        <result property="status"    column="status"    />
+        <result property="scale"    column="scale"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createUser"    column="create_user"    />
+        <result property="approvalUser"    column="approval_user"    />
+        <result property="approvalTime"    column="approval_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="location"    column="location"    />
+        <result property="isDemonstr"    column="is_demonstr"    />
+        <result property="businesslicenseimg"    column="businesslicenseimg"    />
+        <result property="openBook"    column="open_book"    />
+        <result property="feeStatus"    column="fee_status"    />
+        <result property="openDeadline"    column="open_deadline"    />
+        <result property="dqxn"    column="dqxn"    />
+        <result property="dqxq"    column="dqxq"    />
+    </resultMap>
+
+    <sql id="selectBySchoolVo">
+        select id, school_name, name_short, type, parent_id, province, provincename, regionid, regionname, area, areaname, address, mastername, tel, em_man, em_tel, status, scale, create_time, create_user, approval_user, approval_time, remark, location, is_demonstr, businesslicenseimg, open_book, fee_status, open_deadline, dqxn, dqxq from by_school
+    </sql>
+
+    <select id="selectBySchoolList" parameterType="BySchool" resultMap="BySchoolResult">
+        <include refid="selectBySchoolVo"/>
+        <where>  
+            <if test="schoolName != null  and schoolName != ''"> and school_name like concat('%', #{schoolName}, '%')</if>
+            <if test="nameShort != null  and nameShort != ''"> and name_short = #{nameShort}</if>
+            <if test="type != null "> and type = #{type}</if>
+            <if test="parentId != null "> and parent_id = #{parentId}</if>
+            <if test="province != null  and province != ''"> and province = #{province}</if>
+            <if test="provincename != null  and provincename != ''"> and provincename like concat('%', #{provincename}, '%')</if>
+            <if test="regionid != null  and regionid != ''"> and regionid = #{regionid}</if>
+            <if test="regionname != null  and regionname != ''"> and regionname like concat('%', #{regionname}, '%')</if>
+            <if test="area != null  and area != ''"> and area = #{area}</if>
+            <if test="areaname != null  and areaname != ''"> and areaname like concat('%', #{areaname}, '%')</if>
+            <if test="address != null  and address != ''"> and address = #{address}</if>
+            <if test="mastername != null  and mastername != ''"> and mastername like concat('%', #{mastername}, '%')</if>
+            <if test="tel != null  and tel != ''"> and tel = #{tel}</if>
+            <if test="emMan != null  and emMan != ''"> and em_man = #{emMan}</if>
+            <if test="emTel != null  and emTel != ''"> and em_tel = #{emTel}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="scale != null "> and scale = #{scale}</if>
+            <if test="createUser != null "> and create_user = #{createUser}</if>
+            <if test="approvalUser != null "> and approval_user = #{approvalUser}</if>
+            <if test="approvalTime != null "> and approval_time = #{approvalTime}</if>
+            <if test="location != null  and location != ''"> and location = #{location}</if>
+            <if test="isDemonstr != null "> and is_demonstr = #{isDemonstr}</if>
+            <if test="businesslicenseimg != null  and businesslicenseimg != ''"> and businesslicenseimg = #{businesslicenseimg}</if>
+            <if test="openBook != null "> and open_book = #{openBook}</if>
+            <if test="feeStatus != null "> and fee_status = #{feeStatus}</if>
+            <if test="openDeadline != null "> and open_deadline = #{openDeadline}</if>
+            <if test="dqxn != null  and dqxn != ''"> and dqxn = #{dqxn}</if>
+            <if test="dqxq != null  and dqxq != ''"> and dqxq = #{dqxq}</if>
+        </where>
+    </select>
+    
+    <select id="selectBySchoolById" parameterType="Long" resultMap="BySchoolResult">
+        <include refid="selectBySchoolVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertBySchool" parameterType="BySchool" useGeneratedKeys="true" keyProperty="id">
+        insert into by_school
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="schoolName != null  and schoolName != ''">school_name,</if>
+            <if test="nameShort != null  and nameShort != ''">name_short,</if>
+            <if test="type != null ">type,</if>
+            <if test="parentId != null ">parent_id,</if>
+            <if test="province != null  and province != ''">province,</if>
+            <if test="provincename != null  and provincename != ''">provincename,</if>
+            <if test="regionid != null  and regionid != ''">regionid,</if>
+            <if test="regionname != null  and regionname != ''">regionname,</if>
+            <if test="area != null  and area != ''">area,</if>
+            <if test="areaname != null  and areaname != ''">areaname,</if>
+            <if test="address != null  and address != ''">address,</if>
+            <if test="mastername != null  and mastername != ''">mastername,</if>
+            <if test="tel != null  and tel != ''">tel,</if>
+            <if test="emMan != null  and emMan != ''">em_man,</if>
+            <if test="emTel != null  and emTel != ''">em_tel,</if>
+            <if test="status != null ">status,</if>
+            <if test="scale != null ">scale,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="createUser != null ">create_user,</if>
+            <if test="approvalUser != null ">approval_user,</if>
+            <if test="approvalTime != null ">approval_time,</if>
+            <if test="remark != null  and remark != ''">remark,</if>
+            <if test="location != null  and location != ''">location,</if>
+            <if test="isDemonstr != null ">is_demonstr,</if>
+            <if test="businesslicenseimg != null  and businesslicenseimg != ''">businesslicenseimg,</if>
+            <if test="openBook != null ">open_book,</if>
+            <if test="feeStatus != null ">fee_status,</if>
+            <if test="openDeadline != null ">open_deadline,</if>
+            <if test="dqxn != null  and dqxn != ''">dqxn,</if>
+            <if test="dqxq != null  and dqxq != ''">dqxq,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="schoolName != null  and schoolName != ''">#{schoolName},</if>
+            <if test="nameShort != null  and nameShort != ''">#{nameShort},</if>
+            <if test="type != null ">#{type},</if>
+            <if test="parentId != null ">#{parentId},</if>
+            <if test="province != null  and province != ''">#{province},</if>
+            <if test="provincename != null  and provincename != ''">#{provincename},</if>
+            <if test="regionid != null  and regionid != ''">#{regionid},</if>
+            <if test="regionname != null  and regionname != ''">#{regionname},</if>
+            <if test="area != null  and area != ''">#{area},</if>
+            <if test="areaname != null  and areaname != ''">#{areaname},</if>
+            <if test="address != null  and address != ''">#{address},</if>
+            <if test="mastername != null  and mastername != ''">#{mastername},</if>
+            <if test="tel != null  and tel != ''">#{tel},</if>
+            <if test="emMan != null  and emMan != ''">#{emMan},</if>
+            <if test="emTel != null  and emTel != ''">#{emTel},</if>
+            <if test="status != null ">#{status},</if>
+            <if test="scale != null ">#{scale},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="createUser != null ">#{createUser},</if>
+            <if test="approvalUser != null ">#{approvalUser},</if>
+            <if test="approvalTime != null ">#{approvalTime},</if>
+            <if test="remark != null  and remark != ''">#{remark},</if>
+            <if test="location != null  and location != ''">#{location},</if>
+            <if test="isDemonstr != null ">#{isDemonstr},</if>
+            <if test="businesslicenseimg != null  and businesslicenseimg != ''">#{businesslicenseimg},</if>
+            <if test="openBook != null ">#{openBook},</if>
+            <if test="feeStatus != null ">#{feeStatus},</if>
+            <if test="openDeadline != null ">#{openDeadline},</if>
+            <if test="dqxn != null  and dqxn != ''">#{dqxn},</if>
+            <if test="dqxq != null  and dqxq != ''">#{dqxq},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBySchool" parameterType="BySchool">
+        update by_school
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="schoolName != null  and schoolName != ''">school_name = #{schoolName},</if>
+            <if test="nameShort != null  and nameShort != ''">name_short = #{nameShort},</if>
+            <if test="type != null ">type = #{type},</if>
+            <if test="parentId != null ">parent_id = #{parentId},</if>
+            <if test="province != null  and province != ''">province = #{province},</if>
+            <if test="provincename != null  and provincename != ''">provincename = #{provincename},</if>
+            <if test="regionid != null  and regionid != ''">regionid = #{regionid},</if>
+            <if test="regionname != null  and regionname != ''">regionname = #{regionname},</if>
+            <if test="area != null  and area != ''">area = #{area},</if>
+            <if test="areaname != null  and areaname != ''">areaname = #{areaname},</if>
+            <if test="address != null  and address != ''">address = #{address},</if>
+            <if test="mastername != null  and mastername != ''">mastername = #{mastername},</if>
+            <if test="tel != null  and tel != ''">tel = #{tel},</if>
+            <if test="emMan != null  and emMan != ''">em_man = #{emMan},</if>
+            <if test="emTel != null  and emTel != ''">em_tel = #{emTel},</if>
+            <if test="status != null ">status = #{status},</if>
+            <if test="scale != null ">scale = #{scale},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="createUser != null ">create_user = #{createUser},</if>
+            <if test="approvalUser != null ">approval_user = #{approvalUser},</if>
+            <if test="approvalTime != null ">approval_time = #{approvalTime},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+            <if test="location != null  and location != ''">location = #{location},</if>
+            <if test="isDemonstr != null ">is_demonstr = #{isDemonstr},</if>
+            <if test="businesslicenseimg != null  and businesslicenseimg != ''">businesslicenseimg = #{businesslicenseimg},</if>
+            <if test="openBook != null ">open_book = #{openBook},</if>
+            <if test="feeStatus != null ">fee_status = #{feeStatus},</if>
+            <if test="openDeadline != null ">open_deadline = #{openDeadline},</if>
+            <if test="dqxn != null  and dqxn != ''">dqxn = #{dqxn},</if>
+            <if test="dqxq != null  and dqxq != ''">dqxq = #{dqxq},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBySchoolById" parameterType="Long">
+        delete from by_school where id = #{id}
+    </delete>
+
+    <delete id="deleteBySchoolByIds" parameterType="String">
+        delete from by_school where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

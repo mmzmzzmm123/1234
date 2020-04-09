@@ -128,6 +128,7 @@
       <el-table-column label="联系人" align="center" prop="mastername" />
       <el-table-column label="电话" align="center" prop="tel" />
       <el-table-column label="状态" align="center" prop="status" />
+      <el-table-column label="创建人" align="center" prop="createUser" />
       <!--<el-table-column label="幼儿园规模" align="center" prop="scale" />-->
       <el-table-column label="创建时间" align="center" prop="createTime" />
       <!--
@@ -180,21 +181,25 @@
     />
 
     <!-- 添加或修改幼儿园机构对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px">
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="机构名称" prop="schoolName">
-          <el-input v-model="form.schoolName" placeholder="请输入机构名称" />
+    <el-dialog :title="title" :visible.sync="open" width="600px">
+      <el-form ref="form" :model="form" :rules="rules" label-width="120px">
+        <el-form-item label="幼儿园名称" prop="schoolName">
+          <el-input v-model="form.schoolName" placeholder="请输入幼儿园名称" />
         </el-form-item>
         <el-form-item label="幼儿园简称" prop="nameShort">
           <el-input v-model="form.nameShort" placeholder="请输入幼儿园简称" />
         </el-form-item>
-        <el-form-item label="幼儿园类型1、独立2、集团3、集团下属">
-          <el-select v-model="form.type" placeholder="请选择幼儿园类型1、独立2、集团3、集团下属">
-            <el-option label="请选择字典生成" value />
-          </el-select>
+        <el-form-item label="幼儿园类型">
+          <el-radio-group v-model="form.type" placeholder="请选择类型" @change="changeHandle">
+            <el-radio
+              v-for="dict in typeOptions"
+              :key="dict.dictValue"
+              :label="dict.dictValue"
+            >{{dict.dictLabel}}</el-radio>
+          </el-radio-group>
         </el-form-item>
-        <el-form-item label="集团下属有parentid" prop="parentId">
-          <el-input v-model="form.parentId" placeholder="请输入集团下属有parentid" />
+        <el-form-item label="集团下属ID" prop="parentId" v-show="flag1">
+          <el-input v-model="form.parentId" placeholder="请输入集团下属id" />
         </el-form-item>
         <el-form-item label="所在省" prop="province">
           <el-input v-model="form.province" placeholder="请输入所在省" />
@@ -237,9 +242,9 @@
         <el-form-item label="幼儿园规模" prop="scale">
           <el-input v-model="form.scale" placeholder="请输入幼儿园规模" />
         </el-form-item>
-        <el-form-item label="创建人ID" prop="createUser">
-          <el-input v-model="form.createUser" placeholder="请输入创建人ID" />
-        </el-form-item>
+        <!--<el-form-item label="创建人ID" prop="createUser">-->
+        <el-input v-model="form.createUser" placeholder="请输入创建人ID" type="hidden" />
+        <!--</el-form-item>-->
         <el-form-item label="最后审核人ID" prop="approvalUser">
           <el-input v-model="form.approvalUser" placeholder="请输入最后审核人ID" />
         </el-form-item>
@@ -311,6 +316,7 @@ export default {
   name: "School",
   data() {
     return {
+      flag1: false,
       // 遮罩层
       loading: true,
       // 选中数组
@@ -334,6 +340,7 @@ export default {
         schoolName: undefined,
         nameShort: undefined,
         type: undefined,
+        typeOptions: [],
         parentId: undefined,
         province: undefined,
         provincename: undefined,
@@ -373,7 +380,11 @@ export default {
   },
   created() {
     this.getList();
+    this.getDicts("sys_yeylx").then(response => {
+      this.typeOptions = response.data;
+    });
   },
+  watch: {},
   methods: {
     /** 查询幼儿园机构列表 */
     getList() {
@@ -522,6 +533,13 @@ export default {
           this.download(response.msg);
         })
         .catch(function() {});
+    },
+    changeHandle(val) {
+      if (val == 3) {
+        this.flag1 = true;
+      } else {
+        this.flag1 = false;
+      }
     }
   }
 };
