@@ -316,7 +316,7 @@ export default {
   name: "School",
   data() {
     return {
-      //显示集团属性的标志
+      //显示集团属性的标志  测试
       flag1: false,
       // 遮罩层
       loading: true,
