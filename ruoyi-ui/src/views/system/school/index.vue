@@ -244,7 +244,14 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="幼儿园规模" prop="scale">
-          <el-input v-model="form.scale" placeholder="请输入幼儿园规模" />
+          <el-select v-model="form.scale" placeholder="请选择">
+            <el-option
+              v-for="dict in scaleOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <!--<el-form-item label="创建人ID" prop="createUser">-->
         <el-input v-model="form.createUser" placeholder="请输入创建人ID" type="hidden" />
@@ -307,6 +314,7 @@
 </template>
 
 <script>
+//导入省市区三级联动库
 import VDistpicker from "v-distpicker";
 import {
   listSchool,
@@ -345,6 +353,7 @@ export default {
         schoolName: undefined,
         nameShort: undefined,
         type: undefined,
+        //幼儿园类型开关
         typeOptions: [],
         parentId: undefined,
         province: undefined,
@@ -359,8 +368,11 @@ export default {
         emMan: undefined,
         emTel: undefined,
         status: undefined,
+        //幼儿园状态开关数组
         statusOptions: [],
         scale: undefined,
+        //幼儿园规模选项
+        scaleOptions: [],
         createUser: undefined,
         createTime: undefined,
         approvalUser: undefined,
@@ -386,14 +398,20 @@ export default {
   },
   created() {
     this.getList();
+    //幼儿园类型选择开关
     this.getDicts("sys_yeylx").then(response => {
       this.typeOptions = response.data;
     });
+    //幼儿园状态开关
     this.getDicts("sys_normal_disable").then(response => {
       this.statusOptions = response.data;
     });
+    this.getDicts("sys_yeygm").then(response => {
+      this.scaleOptions = response.data;
+    });
   },
   components: {
+    //省市区三级联动全局组件
     VDistpicker
   },
   methods: {
@@ -545,6 +563,7 @@ export default {
         })
         .catch(function() {});
     },
+    //幼儿园类型中集团下属显示和隐藏切换方法
     changeHandle(val) {
       if (val == 3) {
         this.flag1 = true;
@@ -552,6 +571,7 @@ export default {
         this.flag1 = false;
       }
     },
+    //所在省市区触发联动方法
     onSelected(date) {
       this.form.province = date.province.value;
       this.form.regionname = date.regionname.value;
