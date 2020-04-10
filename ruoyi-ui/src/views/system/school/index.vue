@@ -201,24 +201,24 @@
         <el-form-item label="集团下属ID" prop="parentId" v-show="flag1">
           <el-input v-model="form.parentId" placeholder="请输入集团下属id" />
         </el-form-item>
-        <el-form-item label="所在省" prop="province">
+        <!--<el-form-item label="所在省" prop="province">
           <el-input v-model="form.province" placeholder="请输入所在省" />
-        </el-form-item>
+        </el-form-item>-->
         <el-form-item label="所在省" prop="provincename">
-          <el-input v-model="form.provincename" placeholder="请输入所在省" />
+          <v-distpicker v-model="form.province" @selected="onSelected"></v-distpicker>
         </el-form-item>
-        <el-form-item label="所在城市" prop="regionid">
+        <!--<el-form-item label="所在城市" prop="regionid">
           <el-input v-model="form.regionid" placeholder="请输入所在城市" />
-        </el-form-item>
-        <el-form-item label="所在城市" prop="regionname">
-          <el-input v-model="form.regionname" placeholder="请输入所在城市" />
-        </el-form-item>
-        <el-form-item label="所在区" prop="area">
+        </el-form-item>-->
+        <!--<el-form-item label="所在城市" prop="regionname">
+          <v-distpicker v-model="form.regionname" @selected="onSelected"></v-distpicker>
+        </el-form-item>-->
+        <!--<el-form-item label="所在区" prop="area">
           <el-input v-model="form.area" placeholder="请输入所在区" />
-        </el-form-item>
-        <el-form-item label="所在区" prop="areaname">
-          <el-input v-model="form.areaname" placeholder="请输入所在区" />
-        </el-form-item>
+        </el-form-item>-->
+        <!--<el-form-item label="所在区" prop="areaname">
+          <v-distpicker v-model="form.areaname" @selected="onSelected"></v-distpicker>
+        </el-form-item>-->
         <el-form-item label="详细地址" prop="address">
           <el-input v-model="form.address" placeholder="请输入详细地址" />
         </el-form-item>
@@ -303,6 +303,7 @@
 </template>
 
 <script>
+import VDistpicker from "v-distpicker";
 import {
   listSchool,
   getSchool,
@@ -316,7 +317,7 @@ export default {
   name: "School",
   data() {
     return {
-      //显示集团属性的标志  测试测试测试
+      //显示集团属性的标志
       // 遮罩层
       loading: true,
       // 选中数组
@@ -384,7 +385,9 @@ export default {
       this.typeOptions = response.data;
     });
   },
-  watch: {},
+  components: {
+    VDistpicker
+  },
   methods: {
     /** 查询幼儿园机构列表 */
     getList() {
@@ -540,6 +543,11 @@ export default {
       } else {
         this.flag1 = false;
       }
+    },
+    onSelected(date) {
+      this.form.province = date.province.value;
+      this.form.regionname = date.regionname.value;
+      this.form.areaname = date.areaname.value;
     }
   }
 };
