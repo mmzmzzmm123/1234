@@ -236,7 +236,11 @@
         </el-form-item>
         <el-form-item label="状态">
           <el-radio-group v-model="form.status">
-            <el-radio label="1">请选择字典生成</el-radio>
+            <el-radio
+              v-for="dict in statusOptions"
+              :key="dict.dictValue"
+              :label="dict.dictValue"
+            >{{dict.dictLabel}}</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="幼儿园规模" prop="scale">
@@ -355,6 +359,7 @@ export default {
         emMan: undefined,
         emTel: undefined,
         status: undefined,
+        statusOptions: [],
         scale: undefined,
         createUser: undefined,
         createTime: undefined,
@@ -383,6 +388,9 @@ export default {
     this.getList();
     this.getDicts("sys_yeylx").then(response => {
       this.typeOptions = response.data;
+    });
+    this.getDicts("sys_normal_disable").then(response => {
+      this.statusOptions = response.data;
     });
   },
   components: {
