@@ -80,6 +80,7 @@ public class BySchoolController extends BaseController
     public AjaxResult add(@RequestBody BySchool bySchool)
     {
         bySchool.setCreateUser(SecurityUtils.getLoginUser().getUser().getUserId());
+        bySchool.setApprovalUser(SecurityUtils.getLoginUser().getUser().getUserId());
         bySchool.setCreateTime(new Date());
         return toAjax(bySchoolService.insertBySchool(bySchool));
     }
