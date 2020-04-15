@@ -206,7 +206,7 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="幼儿园规模" prop="scale">
-          <el-select v-model="form.scale" placeholder="请选择">
+          <el-select v-model="form.scale">
             <el-option
               v-for="dict in scaleOptions"
               :key="dict.dictValue"
@@ -334,6 +334,7 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
+        xxdm: undefined,
         schoolName: undefined,
         nameShort: undefined,
         type: undefined,
@@ -428,6 +429,7 @@ export default {
     reset() {
       this.form = {
         id: undefined,
+        xxdm: undefined,
         schoolName: undefined,
         nameShort: undefined,
         type: "1",

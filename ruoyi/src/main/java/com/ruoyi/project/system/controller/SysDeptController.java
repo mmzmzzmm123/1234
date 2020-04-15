@@ -1,6 +1,8 @@
 package com.ruoyi.project.system.controller;
 
 import java.util.List;
+
+import com.ruoyi.project.system.service.IBySchoolService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -32,6 +34,7 @@ public class SysDeptController extends BaseController
 {
     @Autowired
     private ISysDeptService deptService;
+
 
     /**
      * 获取部门列表

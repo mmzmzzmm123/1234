@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.project.system.service.ISysDeptService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,6 +23,7 @@ import com.ruoyi.framework.web.controller.BaseController;
 import com.ruoyi.framework.web.domain.AjaxResult;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.framework.web.page.TableDataInfo;
+import com.ruoyi.project.system.domain.SysDept;
 
 /**
  * 幼儿园机构Controller
@@ -35,6 +37,11 @@ public class BySchoolController extends BaseController
 {
     @Autowired
     private IBySchoolService bySchoolService;
+
+    @Autowired
+    private ISysDeptService deptService;
+
+
 
     /**
      * 查询幼儿园机构列表
@@ -79,9 +86,27 @@ public class BySchoolController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody BySchool bySchool)
     {
+        String uuid = getUUID32();
+
+        //将UUID赋值给xxdm
+        bySchool.setXxdm(uuid);
         bySchool.setCreateUser(SecurityUtils.getLoginUser().getUser().getUserId());
         bySchool.setApprovalUser(SecurityUtils.getLoginUser().getUser().getUserId());
         bySchool.setCreateTime(new Date());
+        //bySchoolService.insertBySchool(bySchool);
+
+        SysDept dept = new SysDept();
+        dept.setSchoolId(bySchool.getXxdm());
+        dept.setCreateBy(SecurityUtils.getUsername());
+        //dept.setDeptId(bySchool.getDept().getDeptId());
+        dept.setParentId(200L);
+        dept.setAncestors("0,100,200");
+        dept.setDeptName(bySchool.getSchoolName());
+        //dept.setPhone(bySchool.getTel());
+        //dept.setOrderNum(String.valueOf(bySchool.getId()));
+        dept.setLeader(SecurityUtils.getUsername());
+        deptService.insertDept(dept);
+
         return toAjax(bySchoolService.insertBySchool(bySchool));
     }
 
