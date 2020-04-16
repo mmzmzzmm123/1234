@@ -57,6 +57,7 @@
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
+            v-if="scope.row.parentId != 200"
             size="mini"
             type="text"
             icon="el-icon-edit"
@@ -64,6 +65,7 @@
             v-hasPermi="['system:dept:edit']"
           >修改</el-button>
           <el-button
+            v-if="scope.row.deptId < 200"
             size="mini"
             type="text"
             icon="el-icon-plus"
@@ -71,7 +73,7 @@
             v-hasPermi="['system:dept:add']"
           >新增</el-button>
           <el-button
-            v-if="scope.row.parentId != 0"
+            v-if="scope.row.parentId != 0 && scope.row.parentId != 200"
             size="mini"
             type="text"
             icon="el-icon-delete"
@@ -158,6 +160,7 @@ export default {
   components: { Treeselect },
   data() {
     return {
+      sh: false,
       // 遮罩层
       loading: true,
       // 表格树数据

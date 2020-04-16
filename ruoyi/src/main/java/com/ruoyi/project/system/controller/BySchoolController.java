@@ -147,6 +147,29 @@ public class BySchoolController extends BaseController
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)
     {
+        //遍历ids
+        for (int i=0;i<ids.length;i++)
+        {
+            //循环找出school表的id
+            Long bySchId = ids[i];
+            //用school表ID获取xxdm的值
+            //将值赋给dept中的schoolID
+            SysDept dept = new SysDept();
+            dept.setSchoolId(bySchoolService.selectBySchoolById(bySchId).getXxdm());
+            //通过dept表的schoolID来找出dept的List
+            deptService.deleteDeptById(deptService.selectDeptList(dept).get(0).getDeptId());
+    }
         return toAjax(bySchoolService.deleteBySchoolByIds(ids));
     }
 }
+
+
+
+
+
+
+
+
+
+
+
