@@ -188,7 +188,7 @@
           <el-input v-model="form.mastername" placeholder="请输入联系人" />
         </el-form-item>
         <el-form-item label="电话" prop="tel">
-          <el-input v-model="form.tel" placeholder="请输入电话" />
+          <el-input v-model="form.tel" placeholder="请输入电话" maxlength="11" />
         </el-form-item>
         <el-form-item label="紧急联系人" prop="emMan">
           <el-input v-model="form.emMan" placeholder="请输入紧急联系人" />
@@ -370,7 +370,19 @@ export default {
       // 表单校验
       rules: {
         schoolName: [
-          { required: true, message: "机构名称不能为空", trigger: "blur" }
+          {
+            required: true,
+            message: "机构名称不能为空",
+            trigger: "blur"
+          }
+        ],
+        tel: [
+          {
+            required: true,
+            pattern: /^1[3|4|5|6|7|8|9][0-9]\d{8}$/,
+            message: "请输入正确的手机号码",
+            trigger: "blur"
+          }
         ]
       }
     };
