@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.project.common.SchoolCommon;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,6 +36,8 @@ import com.ruoyi.framework.web.page.TableDataInfo;
 public class ByClassController extends BaseController {
     @Autowired
     private IByClassService byClassService;
+    @Autowired
+    private SchoolCommon schoolCommon;
 
     /**
      * 查询班级信息列表
@@ -74,11 +78,19 @@ public class ByClassController extends BaseController {
     @Log(title = "班级信息", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody ByClass byClass) {
+
+        //首先判断 当前用户是否为学校
+        if(schoolCommon.isSchool()){
         String strBjbh = UUID.randomUUID().toString().replace("-","");
         System.out.println("bjbh:==" + strBjbh);
         byClass.setBjbh(strBjbh);
+        byClass.setDeptId(SecurityUtils.getLoginUser().getUser().getDept().getDeptId());
+        byClass.setXn(schoolCommon.getCurrentXn());
         byClass.setCreatetime(new Date());
-        return toAjax(byClassService.insertByClass(byClass));
+        return toAjax(byClassService.insertByClass(byClass));}
+        else {
+            return AjaxResult.error("当前用户非幼儿园，无法创建班级");
+        }
     }
 
     /**
@@ -88,7 +100,11 @@ public class ByClassController extends BaseController {
     @Log(title = "班级信息", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody ByClass byClass) {
-        return toAjax(byClassService.updateByClass(byClass));
+        //首先判断 当前用户是否为学校
+        if(schoolCommon.isSchool()) {
+            return toAjax(byClassService.updateByClass(byClass));
+        }
+        return AjaxResult.error("当前用户非幼儿园，无法编辑班级");
     }
 
     /**
@@ -98,6 +114,11 @@ public class ByClassController extends BaseController {
     @Log(title = "班级信息", businessType = BusinessType.DELETE)
     @DeleteMapping("/{bjbhs}")
     public AjaxResult remove(@PathVariable String[] bjbhs) {
-        return toAjax(byClassService.deleteByClassByIds(bjbhs));
+        //首先判断 当前用户是否为学校
+        if(schoolCommon.isSchool()) {
+            return toAjax(byClassService.deleteByClassByIds(bjbhs));
+        }
+        return AjaxResult.error("当前用户非幼儿园，无法删除班级");
+
     }
 }

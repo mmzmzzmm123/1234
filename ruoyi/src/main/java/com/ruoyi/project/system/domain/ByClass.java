@@ -1,5 +1,6 @@
 package com.ruoyi.project.system.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.framework.aspectj.lang.annotation.Excel;
@@ -25,7 +26,7 @@ public class ByClass extends BaseEntity {
      * 学校代码
      */
     @Excel(name = "学校代码")
-    private String schoolid;
+    private Long deptId;
 
     /**
      * 班级类型
@@ -91,7 +92,7 @@ public class ByClass extends BaseEntity {
     /**
      * 创建时间
      */
-    @Excel(name = "创建时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createtime;
 
     public void setBjbh(String bjbh) {
@@ -102,12 +103,12 @@ public class ByClass extends BaseEntity {
         return bjbh;
     }
 
-    public void setSchoolid(String schoolid) {
-        this.schoolid = schoolid;
+    public void setDeptId(Long deptId) {
+        this.deptId = deptId;
     }
 
-    public String getSchoolid() {
-        return schoolid;
+    public Long getDeptId() {
+        return deptId;
     }
 
     public void setBjtype(String bjtype) {
@@ -202,7 +203,7 @@ public class ByClass extends BaseEntity {
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
                 .append("bjbh", getBjbh())
-                .append("schoolid", getSchoolid())
+                .append("deptId", getDeptId())
                 .append("bjtype", getBjtype())
                 .append("bhxh", getBhxh())
                 .append("xn", getXn())

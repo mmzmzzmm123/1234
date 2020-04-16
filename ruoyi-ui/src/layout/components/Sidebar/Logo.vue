@@ -26,7 +26,7 @@ export default {
   },
   data() {
     return {
-      title: '本一智慧平台管理系统',
+      title: '本一智慧平台',
       logo: logoImg
     }
   }

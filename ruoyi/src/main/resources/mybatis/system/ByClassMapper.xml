@@ -5,41 +5,44 @@
 <mapper namespace="com.ruoyi.project.system.mapper.ByClassMapper">
 
     <resultMap type="ByClass" id="ByClassResult">
-        <result property="bjbh"    column="bjbh"    />
-        <result property="schoolid"    column="schoolid"    />
-        <result property="bjtype"    column="bjtype"    />
-        <result property="bhxh"    column="bhxh"    />
-        <result property="xn"    column="xn"    />
-        <result property="bjmc"    column="bjmc"    />
-        <result property="bjrych"    column="bjrych"    />
-        <result property="jbny"    column="jbny"    />
-        <result property="zbjs"    column="zbjs"    />
-        <result property="pbjs"    column="pbjs"    />
-        <result property="zljs"    column="zljs"    />
-        <result property="isdel"    column="isdel"    />
-        <result property="createtime"    column="createtime"    />
+        <result property="bjbh" column="bjbh"/>
+        <result property="deptId" column="dept_id"/>
+        <result property="bjtype" column="bjtype"/>
+        <result property="bhxh" column="bhxh"/>
+        <result property="xn" column="xn"/>
+        <result property="bjmc" column="bjmc"/>
+        <result property="bjrych" column="bjrych"/>
+        <result property="jbny" column="jbny"/>
+        <result property="zbjs" column="zbjs"/>
+        <result property="pbjs" column="pbjs"/>
+        <result property="zljs" column="zljs"/>
+        <result property="isdel" column="isdel"/>
+        <result property="createtime" column="createtime"/>
     </resultMap>
 
     <sql id="selectByClassVo">
-        select bjbh, schoolid, bjtype, bhxh, xn, bjmc, bjrych, jbny, zbjs, pbjs, zljs, isdel, createtime from by_class
+        select bjbh, dept_id, bjtype, bhxh, xn, bjmc, bjrych, jbny, zbjs, pbjs, zljs, isdel, createtime from by_class d
     </sql>
 
     <select id="selectByClassList" parameterType="ByClass" resultMap="ByClassResult">
         <include refid="selectByClassVo"/>
-        <where>
-            <if test="schoolid != null  and schoolid != ''"> and schoolid = #{schoolid}</if>
-            <if test="bjtype != null  and bjtype != ''"> and bjtype = #{bjtype}</if>
-            <if test="bhxh != null "> and bhxh = #{bhxh}</if>
-            <if test="xn != null  and xn != ''"> and xn = #{xn}</if>
-            <if test="bjmc != null  and bjmc != ''"> and bjmc = #{bjmc}</if>
-            <if test="bjrych != null  and bjrych != ''"> and bjrych = #{bjrych}</if>
-            <if test="jbny != null "> and jbny = #{jbny}</if>
-            <if test="zbjs != null "> and zbjs = #{zbjs}</if>
-            <if test="pbjs != null "> and pbjs = #{pbjs}</if>
-            <if test="zljs != null "> and zljs = #{zljs}</if>
-            <if test="isdel != null  and isdel != ''"> and isdel = #{isdel}</if>
-            <if test="createtime != null "> and createtime = #{createtime}</if>
-        </where>
+        where isdel='0'
+        <if test="deptId != null  and deptId != ''">and dept_id = #{deptId}</if>
+        <if test="bjtype != null  and bjtype != ''">and bjtype = #{bjtype}</if>
+        <if test="bhxh != null ">and bhxh = #{bhxh}</if>
+        <if test="xn != null  and xn != ''">and xn = #{xn}</if>
+        <if test="bjmc != null  and bjmc != ''">and bjmc like concat('%', #{bjmc}, '%')</if>
+        <if test="bjrych != null  and bjrych != ''">and bjrych = #{bjrych}</if>
+        <if test="jbny != null ">and jbny = #{jbny}</if>
+        <if test="zbjs != null ">and zbjs = #{zbjs}</if>
+        <if test="pbjs != null ">and pbjs = #{pbjs}</if>
+        <if test="zljs != null ">and zljs = #{zljs}</if>
+        <if test="isdel != null  and isdel != ''">and isdel = #{isdel}</if>
+        <if test="createtime != null ">and createtime = #{createtime}</if>
+        <!-- 数据范围过滤 -->
+        ${dataScope}
+
+        order by createtime desc
     </select>
 
     <select id="selectByClassById" parameterType="String" resultMap="ByClassResult">
@@ -51,7 +54,7 @@
         insert into by_class
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="bjbh != null  and bjbh != ''">bjbh,</if>
-            <if test="schoolid != null  and schoolid != ''">schoolid,</if>
+            <if test="deptId != null  and deptId != ''">dept_id,</if>
             <if test="bjtype != null  and bjtype != ''">bjtype,</if>
             <if test="bhxh != null ">bhxh,</if>
             <if test="xn != null  and xn != ''">xn,</if>
@@ -66,7 +69,7 @@
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="bjbh != null  and bjbh != ''">#{bjbh},</if>
-            <if test="schoolid != null  and schoolid != ''">#{schoolid},</if>
+            <if test="deptId != null  and deptId != ''">#{deptId},</if>
             <if test="bjtype != null  and bjtype != ''">#{bjtype},</if>
             <if test="bhxh != null ">#{bhxh},</if>
             <if test="xn != null  and xn != ''">#{xn},</if>
@@ -84,7 +87,7 @@
     <update id="updateByClass" parameterType="ByClass">
         update by_class
         <trim prefix="SET" suffixOverrides=",">
-            <if test="schoolid != null  and schoolid != ''">schoolid = #{schoolid},</if>
+            <if test="deptId != null  and deptId != ''">dept_id = #{deptId},</if>
             <if test="bjtype != null  and bjtype != ''">bjtype = #{bjtype},</if>
             <if test="bhxh != null ">bhxh = #{bhxh},</if>
             <if test="xn != null  and xn != ''">xn = #{xn},</if>
@@ -101,11 +104,11 @@
     </update>
 
     <delete id="deleteByClassById" parameterType="String">
-        delete from by_class where bjbh = #{bjbh}
+        update by_class set isdel='1'where bjbh = #{bjbh}
     </delete>
 
     <delete id="deleteByClassByIds" parameterType="String">
-        delete from by_class where bjbh in
+        update by_class set isdel='1' where bjbh in
         <foreach item="bjbh" collection="array" open="(" separator="," close=")">
             #{bjbh}
         </foreach>

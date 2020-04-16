@@ -1,6 +1,8 @@
 package com.ruoyi.project.system.service.impl;
 
 import java.util.List;
+
+import com.ruoyi.framework.aspectj.lang.annotation.DataScope;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.project.system.mapper.ByClassMapper;
@@ -38,6 +40,7 @@ public class ByClassServiceImpl implements IByClassService
      * @return 班级信息
      */
     @Override
+    @DataScope(deptAlias = "d")
     public List<ByClass> selectByClassList(ByClass byClass)
     {
         return byClassMapper.selectByClassList(byClass);

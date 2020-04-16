@@ -96,24 +96,12 @@
 
     <el-table v-loading="loading" :data="classList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="班级编号" align="center" prop="bjbh" />
-      <el-table-column label="学校代码" align="center" prop="schoolid" />
-      <el-table-column label="班级类型" align="center" :formatter="bjtypeFormat" prop="bjtype" />
-      <el-table-column label="班级序号" align="center" prop="bhxh" />
-      <el-table-column label="学年" align="center" prop="xn" />
+      <el-table-column label="班级编号" align="center" prop="bjbh" v-if="false" />>
+      <el-table-column label="班级类型" align="center" :formatter="bjtypeFormat" prop="bjtype" /> 
       <el-table-column label="班级名称" align="center" prop="bjmc" />
-      <el-table-column label="班级荣誉称号" align="center" prop="bjrych" />
-      <el-table-column label="建班年月" align="center" prop="jbny" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.jbny) }}</span>
-        </template>
-      </el-table-column>
       <el-table-column label="主班教师" align="center" prop="zbjs" />
       <el-table-column label="配班教师" align="center" prop="pbjs" />
       <el-table-column label="助理教师" align="center" prop="zljs" />
-      <el-table-column label="是否删除
-            1:删除
-            0:正常" align="center" prop="isdel" />
       <el-table-column label="创建时间" align="center" prop="createtime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createtime) }}</span>
@@ -217,17 +205,12 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        schoolid: undefined,
-        bjtype: undefined,
-        bhxh: undefined,
-        xn: undefined,
-        bjmc: undefined,
-        bjrych: undefined,
-        jbny: undefined,
+        deptId: undefined,
+        bjtype: undefined, 
+        bjmc: undefined,       
         zbjs: undefined,
         pbjs: undefined,
         zljs: undefined,
-        isdel: undefined,
         createtime: undefined
       },
       // 表单参数
@@ -270,17 +253,12 @@ export default {
     reset() {
       this.form = {
         bjbh: undefined,
-        schoolid: undefined,
+        deptId: undefined,
         bjtype: undefined,
-        bhxh: undefined,
-        xn: undefined,
         bjmc: undefined,
-        bjrych: undefined,
-        jbny: undefined,
         zbjs: undefined,
         pbjs: undefined,
-        zljs: undefined,
-        isdel: undefined,
+        zljs: undefined, 
         createtime: undefined
       };
       this.resetForm("form");
@@ -349,7 +327,7 @@ export default {
     handleDelete(row) {
       const bjbhs = row.bjbh || this.ids;
       this.$confirm(
-        '是否确认删除班级信息编号为"' + bjbhs + '"的数据项?',
+        '是否确认删除选中的班级信息?',
         "警告",
         {
           confirmButtonText: "确定",
