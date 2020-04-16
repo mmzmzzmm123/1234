@@ -3,6 +3,10 @@ package com.ruoyi.framework.web.controller;
 import java.beans.PropertyEditorSupport;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
+
+import com.ruoyi.project.system.domain.BySchool;
+import com.ruoyi.project.system.domain.SysDept;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.WebDataBinder;
@@ -26,6 +30,11 @@ import com.ruoyi.framework.web.page.TableSupport;
 public class BaseController
 {
     protected final Logger logger = LoggerFactory.getLogger(BaseController.class);
+
+    public static String getUUID32()
+    {
+        return UUID.randomUUID().toString().replace("-", "").toLowerCase();
+    }
 
     /**
      * 将前台传递过来的日期格式的字符串，自动转化为Date类型

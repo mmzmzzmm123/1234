@@ -188,7 +188,7 @@
           <el-input v-model="form.mastername" placeholder="请输入联系人" />
         </el-form-item>
         <el-form-item label="电话" prop="tel">
-          <el-input v-model="form.tel" placeholder="请输入电话" />
+          <el-input v-model="form.tel" placeholder="请输入电话" maxlength="11" />
         </el-form-item>
         <el-form-item label="紧急联系人" prop="emMan">
           <el-input v-model="form.emMan" placeholder="请输入紧急联系人" />
@@ -206,7 +206,7 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="幼儿园规模" prop="scale">
-          <el-select v-model="form.scale" placeholder="请选择">
+          <el-select v-model="form.scale">
             <el-option
               v-for="dict in scaleOptions"
               :key="dict.dictValue"
@@ -334,6 +334,7 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
+        xxdm: undefined,
         schoolName: undefined,
         nameShort: undefined,
         type: undefined,
@@ -369,7 +370,19 @@ export default {
       // 表单校验
       rules: {
         schoolName: [
-          { required: true, message: "机构名称不能为空", trigger: "blur" }
+          {
+            required: true,
+            message: "机构名称不能为空",
+            trigger: "blur"
+          }
+        ],
+        tel: [
+          {
+            required: true,
+            pattern: /^1[3|4|5|6|7|8|9][0-9]\d{8}$/,
+            message: "请输入正确的手机号码",
+            trigger: "blur"
+          }
         ]
       }
     };
@@ -428,6 +441,7 @@ export default {
     reset() {
       this.form = {
         id: undefined,
+        xxdm: undefined,
         schoolName: undefined,
         nameShort: undefined,
         type: "1",

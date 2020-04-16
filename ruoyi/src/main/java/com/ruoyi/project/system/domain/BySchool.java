@@ -4,6 +4,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.framework.aspectj.lang.annotation.Excel;
 import com.ruoyi.framework.web.domain.BaseEntity;
+
 import java.util.Date;
 
 /**
@@ -12,12 +13,20 @@ import java.util.Date;
  * @author tsbz
  * @date 2020-04-08
  */
+
+
+
 public class BySchool extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
+
+
     /** 幼儿园ID */
     private Long id;
+
+//    学校代码（与dept相关联）
+    private String xxdm;
 
     /** 机构名称 */
     @Excel(name = "机构名称")
@@ -130,6 +139,17 @@ public class BySchool extends BaseEntity
     /** 当前学期 */
     @Excel(name = "当前学期")
     private String dqxq;
+
+    //部门
+    private SysDept dept;
+
+    public SysDept getDept() {
+        return dept;
+    }
+
+    public void setDept(SysDept dept) {
+        this.dept = dept;
+    }
 
     public void setId(Long id) 
     {
@@ -393,10 +413,21 @@ public class BySchool extends BaseEntity
         return dqxq;
     }
 
+    public String getXxdm() {
+        return xxdm;
+    }
+
+    public void setXxdm(String xxdm) {
+        this.xxdm = xxdm;
+    }
+
+
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
             .append("id", getId())
+            .append("xxdm",getXxdm())
             .append("schoolName", getSchoolName())
             .append("nameShort", getNameShort())
             .append("type", getType())
@@ -427,6 +458,9 @@ public class BySchool extends BaseEntity
             .append("openDeadline", getOpenDeadline())
             .append("dqxn", getDqxn())
             .append("dqxq", getDqxq())
+            .append("dept", getDept())
             .toString();
     }
+
+
 }

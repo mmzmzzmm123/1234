@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.List;
 
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.project.system.service.ISysDeptService;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,6 +24,9 @@ import com.ruoyi.framework.web.controller.BaseController;
 import com.ruoyi.framework.web.domain.AjaxResult;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.framework.web.page.TableDataInfo;
+import com.ruoyi.project.system.domain.SysDept;
+
+import javax.annotation.Resource;
 
 /**
  * 幼儿园机构Controller
@@ -29,12 +34,22 @@ import com.ruoyi.framework.web.page.TableDataInfo;
  * @author tsbz
  * @date 2020-04-08
  */
+
+
+
+
+
 @RestController
 @RequestMapping("/system/school")
 public class BySchoolController extends BaseController
 {
     @Autowired
     private IBySchoolService bySchoolService;
+
+    @Autowired
+    private ISysDeptService deptService;
+
+
 
     /**
      * 查询幼儿园机构列表
@@ -71,17 +86,45 @@ public class BySchoolController extends BaseController
         return AjaxResult.success(bySchoolService.selectBySchoolById(id));
     }
 
+
+
     /**
      * 新增幼儿园机构
      */
+
+    //调取jdbctemplate方法  读取数据库中的ID值
+    @Resource
+    private JdbcTemplate jdbcTemplate;
+
     @PreAuthorize("@ss.hasPermi('system:school:add')")
     @Log(title = "幼儿园机构", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody BySchool bySchool)
     {
+        //从school表中取出当前最大的ID值  并且将其赋值给dept中的ordernumber
+        String maxId = jdbcTemplate.queryForObject(String.format("select MAX(id) from by_school"),String.class);
+
+        String uuid = getUUID32();
+
+        //将UUID赋值给xxdm
+        bySchool.setXxdm(uuid);
         bySchool.setCreateUser(SecurityUtils.getLoginUser().getUser().getUserId());
         bySchool.setApprovalUser(SecurityUtils.getLoginUser().getUser().getUserId());
         bySchool.setCreateTime(new Date());
+
+        //创建dept实例  并且向要添加的dept中设置各个参数
+        SysDept dept = new SysDept();
+        dept.setSchoolId(bySchool.getXxdm());
+        dept.setCreateBy(SecurityUtils.getUsername());
+        dept.setParentId(200L);
+        dept.setAncestors("0,100,200");
+        dept.setDeptName(bySchool.getSchoolName());
+        dept.setOrderNum(maxId);
+        dept.setPhone(bySchool.getTel());
+        dept.setLeader(SecurityUtils.getUsername());
+        //插入数据
+        deptService.insertDept(dept);
+
         return toAjax(bySchoolService.insertBySchool(bySchool));
     }
 

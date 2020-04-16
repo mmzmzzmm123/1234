@@ -6,6 +6,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
     <resultMap type="BySchool" id="BySchoolResult">
         <result property="id"    column="id"    />
+        <result property="xxdm"    column="xxdm"    />
         <result property="schoolName"    column="school_name"    />
         <result property="nameShort"    column="name_short"    />
         <result property="type"    column="type"    />
@@ -39,12 +40,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectBySchoolVo">
-        select id, school_name, name_short, type, parent_id, province, provincename, regionid, regionname, area, areaname, address, mastername, tel, em_man, em_tel, status, scale, create_time, create_user, approval_user, approval_time, remark, location, is_demonstr, businesslicenseimg, open_book, fee_status, open_deadline, dqxn, dqxq from by_school
+        select id, xxdm, school_name, name_short, type, parent_id, province, provincename, regionid, regionname, area, areaname, address, mastername, tel, em_man, em_tel, status, scale, create_time, create_user, approval_user, approval_time, remark, location, is_demonstr, businesslicenseimg, open_book, fee_status, open_deadline, dqxn, dqxq from by_school
     </sql>
 
     <select id="selectBySchoolList" parameterType="BySchool" resultMap="BySchoolResult">
         <include refid="selectBySchoolVo"/>
-        <where>  
+        <where>
+            <if test="xxdm != null  and xxdm != ''"> and xxdm like concat('%', #{xxdm}, '%')</if>
             <if test="schoolName != null  and schoolName != ''"> and school_name like concat('%', #{schoolName}, '%')</if>
             <if test="nameShort != null  and nameShort != ''"> and name_short = #{nameShort}</if>
             <if test="type != null "> and type = #{type}</if>
@@ -84,6 +86,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <insert id="insertBySchool" parameterType="BySchool" useGeneratedKeys="true" keyProperty="id">
         insert into by_school
         <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="xxdm != null  and xxdm != ''">xxdm,</if>
             <if test="schoolName != null  and schoolName != ''">school_name,</if>
             <if test="nameShort != null  and nameShort != ''">name_short,</if>
             <if test="type != null ">type,</if>
@@ -116,6 +119,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="dqxq != null  and dqxq != ''">dqxq,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="xxdm != null  and xxdm != ''">#{xxdm},</if>
             <if test="schoolName != null  and schoolName != ''">#{schoolName},</if>
             <if test="nameShort != null  and nameShort != ''">#{nameShort},</if>
             <if test="type != null ">#{type},</if>
@@ -152,6 +156,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <update id="updateBySchool" parameterType="BySchool">
         update by_school
         <trim prefix="SET" suffixOverrides=",">
+            <if test="xxdm != null  and schoolName != ''">xxdm = #{xxdm},</if>
             <if test="schoolName != null  and schoolName != ''">school_name = #{schoolName},</if>
             <if test="nameShort != null  and nameShort != ''">name_short = #{nameShort},</if>
             <if test="type != null ">type = #{type},</if>

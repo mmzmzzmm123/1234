@@ -54,6 +54,17 @@ public class SysDept extends BaseEntity
     /** 子部门 */
     private List<SysDept> children = new ArrayList<SysDept>();
 
+    /** 学校ID（与school表关联） */
+    private String schoolId;
+
+    public String getSchoolId() {
+        return schoolId;
+    }
+
+    public void setSchoolId(String schoolId) {
+        this.schoolId = schoolId;
+    }
+
     public Long getDeptId()
     {
         return deptId;
@@ -197,6 +208,9 @@ public class SysDept extends BaseEntity
             .append("createTime", getCreateTime())
             .append("updateBy", getUpdateBy())
             .append("updateTime", getUpdateTime())
+            .append("school_id", getSchoolId())
             .toString();
     }
+
+
 }
