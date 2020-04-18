@@ -107,7 +107,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -137,6 +137,15 @@
             >{{dict.dictLabel}}</el-radio>
           </el-radio-group>
         </el-form-item>
+        <el-form-item label="岗位用途" prop="purp">
+          <el-radio-group v-model="form.purp">
+            <el-radio
+              v-for="dict in purpOptions"
+              :key="dict.dictValue"
+              :label="dict.dictValue"
+            >{{dict.dictLabel}}</el-radio>
+          </el-radio-group>
+        </el-form-item>
         <el-form-item label="备注" prop="remark">
           <el-input v-model="form.remark" type="textarea" placeholder="请输入内容" />
         </el-form-item>
@@ -150,7 +159,14 @@
 </template>
 
 <script>
-import { listPost, getPost, delPost, addPost, updatePost, exportPost } from "@/api/system/post";
+import {
+  listPost,
+  getPost,
+  delPost,
+  addPost,
+  updatePost,
+  exportPost
+} from "@/api/system/post";
 
 export default {
   name: "Post",
@@ -174,13 +190,16 @@ export default {
       open: false,
       // 状态数据字典
       statusOptions: [],
+      // 岗位用途
+      purpOptions: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
         pageSize: 10,
         postCode: undefined,
         postName: undefined,
-        status: undefined
+        status: undefined,
+        purp: undefined
       },
       // 表单参数
       form: {},
@@ -202,6 +221,9 @@ export default {
     this.getList();
     this.getDicts("sys_normal_disable").then(response => {
       this.statusOptions = response.data;
+    });
+    this.getDicts("sys_purpose").then(response => {
+      this.purpOptions = response.data;
     });
   },
   methods: {
@@ -231,6 +253,7 @@ export default {
         postName: undefined,
         postSort: 0,
         status: "0",
+        purp: "1",
         remark: undefined
       };
       this.resetForm("form");
@@ -247,9 +270,9 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.postId)
-      this.single = selection.length!=1
-      this.multiple = !selection.length
+      this.ids = selection.map(item => item.postId);
+      this.single = selection.length != 1;
+      this.multiple = !selection.length;
     },
     /** 新增按钮操作 */
     handleAdd() {
@@ -260,7 +283,7 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const postId = row.postId || this.ids
+      const postId = row.postId || this.ids;
       getPost(postId).then(response => {
         this.form = response.data;
         this.open = true;
@@ -298,29 +321,39 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const postIds = row.postId || this.ids;
-      this.$confirm('是否确认删除岗位编号为"' + postIds + '"的数据项?', "警告", {
+      this.$confirm(
+        '是否确认删除岗位编号为"' + postIds + '"的数据项?',
+        "警告",
+        {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
-        }).then(function() {
+        }
+      )
+        .then(function() {
           return delPost(postIds);
-        }).then(() => {
+        })
+        .then(() => {
           this.getList();
           this.msgSuccess("删除成功");
-        }).catch(function() {});
+        })
+        .catch(function() {});
     },
     /** 导出按钮操作 */
     handleExport() {
       const queryParams = this.queryParams;
-      this.$confirm('是否确认导出所有岗位数据项?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
+      this.$confirm("是否确认导出所有岗位数据项?", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(function() {
           return exportPost(queryParams);
-        }).then(response => {
+        })
+        .then(response => {
           this.download(response.msg);
-        }).catch(function() {});
+        })
+        .catch(function() {});
     }
   }
 };

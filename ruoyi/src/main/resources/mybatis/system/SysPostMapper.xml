@@ -15,10 +15,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="updateBy"      column="update_by"     />
 		<result property="updateTime"    column="update_time"   />
 		<result property="remark"        column="remark"        />
+		<result property="purp"        column="purp"        />
 	</resultMap>
 	
 	<sql id="selectPostVo">
-        select post_id, post_code, post_name, post_sort, status, create_by, create_time, remark 
+        select post_id, post_code, post_name, post_sort, status, create_by, create_time, remark, purp
 		from sys_post
     </sql>
 	
@@ -79,6 +80,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  			<if test="postName != null and postName != ''">post_name = #{postName},</if>
  			<if test="postSort != null and postSort != ''">post_sort = #{postSort},</if>
  			<if test="status != null and status != ''">status = #{status},</if>
+			<if test="purp != null and purp != ''">purp = #{purp},</if>
  			<if test="remark != null">remark = #{remark},</if>
  			<if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
  			update_time = sysdate()
@@ -93,6 +95,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  			<if test="postName != null and postName != ''">post_name,</if>
  			<if test="postSort != null and postSort != ''">post_sort,</if>
  			<if test="status != null and status != ''">status,</if>
+ 		    <if test="purp != null and purp != ''">purp,</if>
  			<if test="remark != null and remark != ''">remark,</if>
  			<if test="createBy != null and createBy != ''">create_by,</if>
  			create_time
@@ -102,6 +105,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  			<if test="postName != null and postName != ''">#{postName},</if>
  			<if test="postSort != null and postSort != ''">#{postSort},</if>
  			<if test="status != null and status != ''">#{status},</if>
+		    <if test="purp != null and purp != ''">#{purp},</if>
  			<if test="remark != null and remark != ''">#{remark},</if>
  			<if test="createBy != null and createBy != ''">#{createBy},</if>
  			sysdate()

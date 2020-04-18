@@ -103,7 +103,7 @@ public class BySchoolController extends BaseController
     {
         //从school表中取出当前最大的ID值  并且将其赋值给dept中的ordernumber
         String maxId = jdbcTemplate.queryForObject(String.format("select MAX(id) from by_school"),String.class);
-
+        //生成32位UUID
         String uuid = getUUID32();
 
         //将UUID赋值给xxdm
@@ -114,12 +114,19 @@ public class BySchoolController extends BaseController
 
         //创建dept实例  并且向要添加的dept中设置各个参数
         SysDept dept = new SysDept();
+        if (maxId != "0")
+        {
+            dept.setOrderNum(maxId);
+            System.out.println("------------" + maxId);
+        }else
+            {
+                dept.setOrderNum("6");
+            }
         dept.setSchoolId(bySchool.getXxdm());
         dept.setCreateBy(SecurityUtils.getUsername());
         dept.setParentId(200L);
         dept.setAncestors("0,100,200");
         dept.setDeptName(bySchool.getSchoolName());
-        dept.setOrderNum(maxId);
         dept.setPhone(bySchool.getTel());
         dept.setLeader(SecurityUtils.getUsername());
         //插入数据
@@ -136,6 +143,16 @@ public class BySchoolController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody BySchool bySchool)
     {
+        //创建dept实例  并且向要添加的dept中设置各个参数
+        SysDept dept = new SysDept();
+
+        //设置schoolID为xxdm
+        dept.setSchoolId(bySchool.getXxdm());
+
+        //通过selectdeptlist来获取deptid
+        dept.setDeptId(deptService.selectDeptList(dept).get(0).getDeptId());
+        dept.setStatus(bySchool.getStatus());
+        deptService.updateDept(dept);
         return toAjax(bySchoolService.updateBySchool(bySchool));
     }
 
@@ -147,6 +164,31 @@ public class BySchoolController extends BaseController
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)
     {
+        //遍历ids
+        for (int i=0;i<ids.length;i++)
+        {
+            //循环找出school表的id
+            Long bySchId = ids[i];
+
+            //用school表ID获取xxdm的值
+            //将值赋给dept中的schoolID
+            SysDept dept = new SysDept();
+            dept.setSchoolId(bySchoolService.selectBySchoolById(bySchId).getXxdm());
+
+            //通过dept表的schoolID来找出dept的List
+            deptService.deleteDeptById(deptService.selectDeptList(dept).get(0).getDeptId());
+    }
         return toAjax(bySchoolService.deleteBySchoolByIds(ids));
     }
 }
+
+
+
+
+
+
+
+
+
+
+

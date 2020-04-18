@@ -88,9 +88,9 @@ public class BySchool extends BaseEntity
     @Excel(name = "紧急联系电话")
     private String emTel;
 
-    /** 状态（0试用，1开通，2停用,3禁用） */
-    @Excel(name = "状态", readConverterExp = "0=试用，1开通，2停用,3禁用")
-    private Long status;
+    /** 状态（0正常，1停用） */
+    @Excel(name = "状态", readConverterExp = "0=正常，1停用")
+    private String status;
 
     /** 幼儿园规模 */
     @Excel(name = "幼儿园规模")
@@ -139,6 +139,12 @@ public class BySchool extends BaseEntity
     /** 当前学期 */
     @Excel(name = "当前学期")
     private String dqxq;
+
+
+
+
+    /** 删除标志（0代表存在 2代表删除） */
+    private String isDel;
 
     //部门
     private SysDept dept;
@@ -295,12 +301,12 @@ public class BySchool extends BaseEntity
     {
         return emTel;
     }
-    public void setStatus(Long status) 
+    public void setStatus(String status)
     {
         this.status = status;
     }
 
-    public Long getStatus() 
+    public String getStatus()
     {
         return status;
     }
@@ -421,7 +427,13 @@ public class BySchool extends BaseEntity
         this.xxdm = xxdm;
     }
 
+    public String getIsDel() {
+        return isDel;
+    }
 
+    public void setIsDel(String isDel) {
+        this.isDel = isDel;
+    }
 
     @Override
     public String toString() {
@@ -459,6 +471,7 @@ public class BySchool extends BaseEntity
             .append("dqxn", getDqxn())
             .append("dqxq", getDqxq())
             .append("dept", getDept())
+            .append("isDel",getIsDel())
             .toString();
     }
 

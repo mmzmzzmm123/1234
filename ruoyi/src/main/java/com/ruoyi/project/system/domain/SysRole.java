@@ -53,6 +53,9 @@ public class SysRole extends BaseEntity
     /** 部门组（数据权限） */
     private Long[] deptIds;
 
+    /** 角色用途 (1代表幼儿园  2代表系统) */
+    private String purpose;
+
     public SysRole()
     {
 
@@ -192,6 +195,15 @@ public class SysRole extends BaseEntity
             .append("updateBy", getUpdateBy())
             .append("updateTime", getUpdateTime())
             .append("remark", getRemark())
+            .append("purpose", getPurpose())
             .toString();
+    }
+
+    public String getPurpose() {
+        return purpose;
+    }
+
+    public void setPurpose(String purpose) {
+        this.purpose = purpose;
     }
 }
