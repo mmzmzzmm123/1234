@@ -53,7 +53,7 @@ public class SysRole extends BaseEntity
     /** 部门组（数据权限） */
     private Long[] deptIds;
 
-    /** 角色用途 */
+    /** 角色用途 (1代表幼儿园  2代表系统) */
     private String purpose;
 
     public SysRole()
