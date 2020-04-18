@@ -173,6 +173,15 @@
             >{{dict.dictLabel}}</el-radio>
           </el-radio-group>
         </el-form-item>
+        <el-form-item label="用途">
+          <el-radio-group v-model="form.purpose">
+            <el-radio
+              v-for="dict in purposeOptions"
+              :key="dict.dictValue"
+              :label="dict.dictValue"
+            >{{dict.dictLabel}}</el-radio>
+          </el-radio-group>
+        </el-form-item>
         <el-form-item label="菜单权限">
           <el-tree
             :data="menuOptions"
@@ -233,9 +242,24 @@
 </template>
 
 <script>
-import { listRole, getRole, delRole, addRole, updateRole, exportRole, dataScope, changeRoleStatus } from "@/api/system/role";
-import { treeselect as menuTreeselect, roleMenuTreeselect } from "@/api/system/menu";
-import { treeselect as deptTreeselect, roleDeptTreeselect } from "@/api/system/dept";
+import {
+  listRole,
+  getRole,
+  delRole,
+  addRole,
+  updateRole,
+  exportRole,
+  dataScope,
+  changeRoleStatus
+} from "@/api/system/role";
+import {
+  treeselect as menuTreeselect,
+  roleMenuTreeselect
+} from "@/api/system/menu";
+import {
+  treeselect as deptTreeselect,
+  roleDeptTreeselect
+} from "@/api/system/dept";
 
 export default {
   name: "Role",
@@ -263,6 +287,8 @@ export default {
       dateRange: [],
       // 状态数据字典
       statusOptions: [],
+      // 用途数据字典
+      purposeOptions: [],
       // 数据范围选项
       dataScopeOptions: [
         {
@@ -296,7 +322,8 @@ export default {
         pageSize: 10,
         roleName: undefined,
         roleKey: undefined,
-        status: undefined
+        status: undefined,
+        purpose: undefined
       },
       // 表单参数
       form: {},
@@ -322,6 +349,9 @@ export default {
     this.getList();
     this.getDicts("sys_normal_disable").then(response => {
       this.statusOptions = response.data;
+    });
+    this.getDicts("sys_purpose").then(response => {
+      this.purposeOptions = response.data;
     });
   },
   methods: {
@@ -383,15 +413,22 @@ export default {
     // 角色状态修改
     handleStatusChange(row) {
       let text = row.status === "0" ? "启用" : "停用";
-      this.$confirm('确认要"' + text + '""' + row.roleName + '"角色吗?', "警告", {
+      this.$confirm(
+        '确认要"' + text + '""' + row.roleName + '"角色吗?',
+        "警告",
+        {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
-        }).then(function() {
+        }
+      )
+        .then(function() {
           return changeRoleStatus(row.roleId, row.status);
-        }).then(() => {
+        })
+        .then(() => {
           this.msgSuccess(text + "成功");
-        }).catch(function() {
+        })
+        .catch(function() {
           row.status = row.status === "0" ? "1" : "0";
         });
     },
@@ -418,7 +455,8 @@ export default {
         status: "0",
         menuIds: [],
         deptIds: [],
-        remark: undefined
+        remark: undefined,
+        purpose: "1"
       };
       this.resetForm("form");
     },
@@ -435,9 +473,9 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.roleId)
-      this.single = selection.length!=1
-      this.multiple = !selection.length
+      this.ids = selection.map(item => item.roleId);
+      this.single = selection.length != 1;
+      this.multiple = !selection.length;
     },
     /** 新增按钮操作 */
     handleAdd() {
@@ -449,7 +487,7 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const roleId = row.roleId || this.ids
+      const roleId = row.roleId || this.ids;
       this.$nextTick(() => {
         this.getRoleMenuTreeselect(roleId);
       });
@@ -519,29 +557,39 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const roleIds = row.roleId || this.ids;
-      this.$confirm('是否确认删除角色编号为"' + roleIds + '"的数据项?', "警告", {
+      this.$confirm(
+        '是否确认删除角色编号为"' + roleIds + '"的数据项?',
+        "警告",
+        {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
-        }).then(function() {
+        }
+      )
+        .then(function() {
           return delRole(roleIds);
-        }).then(() => {
+        })
+        .then(() => {
           this.getList();
           this.msgSuccess("删除成功");
-        }).catch(function() {});
+        })
+        .catch(function() {});
     },
     /** 导出按钮操作 */
     handleExport() {
       const queryParams = this.queryParams;
-      this.$confirm('是否确认导出所有角色数据项?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
+      this.$confirm("是否确认导出所有角色数据项?", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(function() {
           return exportRole(queryParams);
-        }).then(response => {
+        })
+        .then(response => {
           this.download(response.msg);
-        }).catch(function() {});
+        })
+        .catch(function() {});
     }
   }
 };

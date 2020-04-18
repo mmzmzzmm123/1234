@@ -37,45 +37,46 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="openDeadline"    column="open_deadline"    />
         <result property="dqxn"    column="dqxn"    />
         <result property="dqxq"    column="dqxq"    />
+        <result property="isDel"    column="is_del"    />
+
     </resultMap>
 
     <sql id="selectBySchoolVo">
-        select id, xxdm, school_name, name_short, type, parent_id, province, provincename, regionid, regionname, area, areaname, address, mastername, tel, em_man, em_tel, status, scale, create_time, create_user, approval_user, approval_time, remark, location, is_demonstr, businesslicenseimg, open_book, fee_status, open_deadline, dqxn, dqxq from by_school
+        select id, xxdm, school_name, name_short, type, parent_id, province, provincename, regionid, regionname, area, areaname, address, mastername, tel, em_man, em_tel, status, scale, create_time, create_user, approval_user, approval_time, remark, location, is_demonstr, businesslicenseimg, open_book, fee_status, open_deadline, dqxn, dqxq, is_del from by_school
     </sql>
 
     <select id="selectBySchoolList" parameterType="BySchool" resultMap="BySchoolResult">
         <include refid="selectBySchoolVo"/>
-        <where>
-            <if test="xxdm != null  and xxdm != ''"> and xxdm like concat('%', #{xxdm}, '%')</if>
-            <if test="schoolName != null  and schoolName != ''"> and school_name like concat('%', #{schoolName}, '%')</if>
-            <if test="nameShort != null  and nameShort != ''"> and name_short = #{nameShort}</if>
-            <if test="type != null "> and type = #{type}</if>
-            <if test="parentId != null "> and parent_id = #{parentId}</if>
-            <if test="province != null  and province != ''"> and province = #{province}</if>
-            <if test="provincename != null  and provincename != ''"> and provincename like concat('%', #{provincename}, '%')</if>
-            <if test="regionid != null  and regionid != ''"> and regionid = #{regionid}</if>
-            <if test="regionname != null  and regionname != ''"> and regionname like concat('%', #{regionname}, '%')</if>
-            <if test="area != null  and area != ''"> and area = #{area}</if>
-            <if test="areaname != null  and areaname != ''"> and areaname like concat('%', #{areaname}, '%')</if>
-            <if test="address != null  and address != ''"> and address = #{address}</if>
-            <if test="mastername != null  and mastername != ''"> and mastername like concat('%', #{mastername}, '%')</if>
-            <if test="tel != null  and tel != ''"> and tel = #{tel}</if>
-            <if test="emMan != null  and emMan != ''"> and em_man = #{emMan}</if>
-            <if test="emTel != null  and emTel != ''"> and em_tel = #{emTel}</if>
-            <if test="status != null "> and status = #{status}</if>
-            <if test="scale != null "> and scale = #{scale}</if>
-            <if test="createUser != null "> and create_user = #{createUser}</if>
-            <if test="approvalUser != null "> and approval_user = #{approvalUser}</if>
-            <if test="approvalTime != null "> and approval_time = #{approvalTime}</if>
-            <if test="location != null  and location != ''"> and location = #{location}</if>
-            <if test="isDemonstr != null "> and is_demonstr = #{isDemonstr}</if>
-            <if test="businesslicenseimg != null  and businesslicenseimg != ''"> and businesslicenseimg = #{businesslicenseimg}</if>
-            <if test="openBook != null "> and open_book = #{openBook}</if>
-            <if test="feeStatus != null "> and fee_status = #{feeStatus}</if>
-            <if test="openDeadline != null "> and open_deadline = #{openDeadline}</if>
-            <if test="dqxn != null  and dqxn != ''"> and dqxn = #{dqxn}</if>
-            <if test="dqxq != null  and dqxq != ''"> and dqxq = #{dqxq}</if>
-        </where>
+        where is_del = '0'
+        <if test="xxdm != null  and xxdm != ''"> and xxdm like concat('%', #{xxdm}, '%')</if>
+        <if test="schoolName != null  and schoolName != ''"> and school_name like concat('%', #{schoolName}, '%')</if>
+        <if test="nameShort != null  and nameShort != ''"> and name_short = #{nameShort}</if>
+        <if test="type != null "> and type = #{type}</if>
+        <if test="parentId != null "> and parent_id = #{parentId}</if>
+        <if test="province != null  and province != ''"> and province = #{province}</if>
+        <if test="provincename != null  and provincename != ''"> and provincename like concat('%', #{provincename}, '%')</if>
+        <if test="regionid != null  and regionid != ''"> and regionid = #{regionid}</if>
+        <if test="regionname != null  and regionname != ''"> and regionname like concat('%', #{regionname}, '%')</if>
+        <if test="area != null  and area != ''"> and area = #{area}</if>
+        <if test="areaname != null  and areaname != ''"> and areaname like concat('%', #{areaname}, '%')</if>
+        <if test="address != null  and address != ''"> and address = #{address}</if>
+        <if test="mastername != null  and mastername != ''"> and mastername like concat('%', #{mastername}, '%')</if>
+        <if test="tel != null  and tel != ''"> and tel = #{tel}</if>
+        <if test="emMan != null  and emMan != ''"> and em_man = #{emMan}</if>
+        <if test="emTel != null  and emTel != ''"> and em_tel = #{emTel}</if>
+        <if test="status != null "> and status = #{status}</if>
+        <if test="scale != null "> and scale = #{scale}</if>
+        <if test="createUser != null "> and create_user = #{createUser}</if>
+        <if test="approvalUser != null "> and approval_user = #{approvalUser}</if>
+        <if test="approvalTime != null "> and approval_time = #{approvalTime}</if>
+        <if test="location != null  and location != ''"> and location = #{location}</if>
+        <if test="isDemonstr != null "> and is_demonstr = #{isDemonstr}</if>
+        <if test="businesslicenseimg != null  and businesslicenseimg != ''"> and businesslicenseimg = #{businesslicenseimg}</if>
+        <if test="openBook != null "> and open_book = #{openBook}</if>
+        <if test="feeStatus != null "> and fee_status = #{feeStatus}</if>
+        <if test="openDeadline != null "> and open_deadline = #{openDeadline}</if>
+        <if test="dqxn != null  and dqxn != ''"> and dqxn = #{dqxn}</if>
+        <if test="dqxq != null  and dqxq != ''"> and dqxq = #{dqxq}</if>
     </select>
     
     <select id="selectBySchoolById" parameterType="Long" resultMap="BySchoolResult">
@@ -196,7 +197,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteBySchoolByIds" parameterType="String">
-        delete from by_school where id in 
+        update by_school set is_del = '2' where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
