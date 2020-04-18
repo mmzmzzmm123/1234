@@ -37,6 +37,9 @@ public class SysPost extends BaseEntity
     @Excel(name = "状态", readConverterExp = "0=正常,1=停用")
     private String status;
 
+    /** 用途（1幼儿园 2系统） */
+    private String purp;
+
     /** 用户是否存在此岗位标识 默认不存在 */
     private boolean flag = false;
 
@@ -104,6 +107,14 @@ public class SysPost extends BaseEntity
     {
         this.flag = flag;
     }
+
+    public String getPurp() {
+        return purp;
+    }
+
+    public void setPurp(String purp) {
+        this.purp = purp;
+    }
     
     @Override
     public String toString() {
@@ -118,6 +129,9 @@ public class SysPost extends BaseEntity
             .append("updateBy", getUpdateBy())
             .append("updateTime", getUpdateTime())
             .append("remark", getRemark())
+            .append("purp", getPurp())
             .toString();
     }
+
+
 }
