@@ -98,8 +98,15 @@
 
     <el-table v-loading="loading" :data="roleList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="角色编号" prop="roleId" width="120" />
+      <el-table-column label="角色编号" prop="roleId" width="100" />
       <el-table-column label="角色名称" prop="roleName" :show-overflow-tooltip="true" width="150" />
+      <el-table-column
+        label="角色用途"
+        prop="purpose"
+        :show-overflow-tooltip="true"
+        width="120"
+        :formatter="purposeFormat"
+      />
       <el-table-column label="权限字符" prop="roleKey" :show-overflow-tooltip="true" width="150" />
       <el-table-column label="显示顺序" prop="roleSort" width="100" />
       <el-table-column label="状态" align="center" width="100">
@@ -409,6 +416,10 @@ export default {
         this.deptOptions = response.depts;
         this.$refs.dept.setCheckedKeys(response.checkedKeys);
       });
+    },
+    // 角色用途字典翻译
+    purposeFormat(row, column) {
+      return this.selectDictLabel(this.purposeOptions, row.purpose);
     },
     // 角色状态修改
     handleStatusChange(row) {

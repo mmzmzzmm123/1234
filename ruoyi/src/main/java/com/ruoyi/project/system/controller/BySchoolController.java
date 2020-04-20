@@ -105,13 +105,11 @@ public class BySchoolController extends BaseController
         String maxId = jdbcTemplate.queryForObject(String.format("select MAX(id) from by_school"),String.class);
         //生成32位UUID
         String uuid = getUUID32();
-
         //将UUID赋值给xxdm
         bySchool.setXxdm(uuid);
         bySchool.setCreateUser(SecurityUtils.getLoginUser().getUser().getUserId());
         bySchool.setApprovalUser(SecurityUtils.getLoginUser().getUser().getUserId());
         bySchool.setCreateTime(new Date());
-
         //创建dept实例  并且向要添加的dept中设置各个参数
         SysDept dept = new SysDept();
         if (maxId != "0")
@@ -131,7 +129,6 @@ public class BySchoolController extends BaseController
         dept.setLeader(SecurityUtils.getUsername());
         //插入数据
         deptService.insertDept(dept);
-
         return toAjax(bySchoolService.insertBySchool(bySchool));
     }
 
@@ -145,10 +142,8 @@ public class BySchoolController extends BaseController
     {
         //创建dept实例  并且向要添加的dept中设置各个参数
         SysDept dept = new SysDept();
-
         //设置schoolID为xxdm
         dept.setSchoolId(bySchool.getXxdm());
-
         //通过selectdeptlist来获取deptid
         dept.setDeptId(deptService.selectDeptList(dept).get(0).getDeptId());
         dept.setStatus(bySchool.getStatus());
@@ -169,12 +164,10 @@ public class BySchoolController extends BaseController
         {
             //循环找出school表的id
             Long bySchId = ids[i];
-
             //用school表ID获取xxdm的值
             //将值赋给dept中的schoolID
             SysDept dept = new SysDept();
             dept.setSchoolId(bySchoolService.selectBySchoolById(bySchId).getXxdm());
-
             //通过dept表的schoolID来找出dept的List
             deptService.deleteDeptById(deptService.selectDeptList(dept).get(0).getDeptId());
     }

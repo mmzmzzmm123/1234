@@ -81,6 +81,7 @@
       <el-table-column label="岗位编号" align="center" prop="postId" />
       <el-table-column label="岗位编码" align="center" prop="postCode" />
       <el-table-column label="岗位名称" align="center" prop="postName" />
+      <el-table-column label="岗位用途" align="center" prop="purp" :formatter="purpFormat" />
       <el-table-column label="岗位排序" align="center" prop="postSort" />
       <el-table-column label="状态" align="center" prop="status" :formatter="statusFormat" />
       <el-table-column label="创建时间" align="center" prop="createTime" width="180">
@@ -239,6 +240,10 @@ export default {
     // 岗位状态字典翻译
     statusFormat(row, column) {
       return this.selectDictLabel(this.statusOptions, row.status);
+    },
+    //岗位用途字典翻译
+    purpFormat(row, column) {
+      return this.selectDictLabel(this.purpOptions, row.purp);
     },
     // 取消按钮
     cancel() {
