@@ -6,10 +6,12 @@ import com.ruoyi.project.system.domain.BySchool;
 import com.ruoyi.project.system.domain.SysDept;
 import com.ruoyi.project.system.service.IBySchoolService;
 import com.ruoyi.project.system.service.ISysDeptService;
+import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -83,9 +85,28 @@ public class SchoolCommon {
         String strNxNq = "";
 
         if (iMonth < 9) {
-            strNxNq = (iYear - 1) + "-" + iYear + "2";
+            strNxNq = (iYear - 1) + "" + iYear + "2";
         } else {
-            strNxNq = iYear + "-" + (iYear + 1) + "1";
+            strNxNq = iYear + "" + (iYear + 1) + "1";
+        }
+        return strNxNq;
+
+    }
+
+    //根据时间 生成学年学期
+    public String getCurrentXnXq(Date date) {
+        String year=String.format("%tY", date);
+        Integer iYear = Integer.parseInt(year);
+        System.out.println("当前年======:" + iYear);
+        String mon=String.format("%tm", date);
+        Integer iMonth = Integer.parseInt(mon);
+        System.out.println("当前月======:" + iMonth);
+        String strNxNq = "";
+
+        if (iMonth < 9) {
+            strNxNq = (iYear - 1) + "" + iYear + "2";
+        } else {
+            strNxNq = iYear + "" + (iYear + 1) + "1";
         }
         return strNxNq;
 

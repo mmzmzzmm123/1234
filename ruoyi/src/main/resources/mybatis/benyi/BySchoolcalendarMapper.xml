@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.benyi.mapper.BySchoolcalendarMapper">
+
+    <resultMap type="BySchoolcalendar" id="BySchoolcalendarResult">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="type" column="type"/>
+        <result property="scope" column="scope"/>
+        <result property="xnxq" column="xnxq"/>
+        <result property="deptid" column="dept_id"/>
+        <result property="activitytime" column="activitytime"/>
+        <result property="createuserid" column="createuserid"/>
+        <result property="createtime" column="createtime"/>
+    </resultMap>
+
+    <sql id="selectBySchoolcalendarVo">
+        select id, name, type, scope, xnxq, dept_id, activitytime, createuserid, createtime from by_schoolcalendar d
+    </sql>
+
+    <select id="selectBySchoolcalendarList" parameterType="BySchoolcalendar" resultMap="BySchoolcalendarResult">
+        <include refid="selectBySchoolcalendarVo"/>
+        where 1=1
+        <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
+        <if test="type != null  and type != ''">and type = #{type}</if>
+        <if test="scope != null  and scope != ''">and scope like concat('%', #{scope}, '%')</if>
+        <if test="xnxq != null  and xnxq != ''">and xnxq = #{xnxq}</if>
+        <if test="deptid != null ">and dept_id = #{deptid}</if>
+        <if test="activitytime != null ">and activitytime = #{activitytime}</if>
+        <if test="createuserid != null ">and createuserid = #{createuserid}</if>
+        <if test="createtime != null ">and createtime = #{createtime}</if>
+        <!-- 数据范围过滤 -->
+        ${dataScope}
+
+        order by activitytime
+    </select>
+
+    <select id="selectBySchoolcalendarById" parameterType="Long" resultMap="BySchoolcalendarResult">
+        <include refid="selectBySchoolcalendarVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertBySchoolcalendar" parameterType="BySchoolcalendar" useGeneratedKeys="true" keyProperty="id">
+        insert into by_schoolcalendar
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null  and name != ''">name,</if>
+            <if test="type != null  and type != ''">type,</if>
+            <if test="scope != null  and scope != ''">scope,</if>
+            <if test="xnxq != null  and xnxq != ''">xnxq,</if>
+            <if test="deptid != null ">dept_id,</if>
+            <if test="activitytime != null ">activitytime,</if>
+            <if test="createuserid != null ">createuserid,</if>
+            <if test="createtime != null ">createtime,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null  and name != ''">#{name},</if>
+            <if test="type != null  and type != ''">#{type},</if>
+            <if test="scope != null  and scope != ''">#{scope},</if>
+            <if test="xnxq != null  and xnxq != ''">#{xnxq},</if>
+            <if test="deptid != null ">#{deptid},</if>
+            <if test="activitytime != null ">#{activitytime},</if>
+            <if test="createuserid != null ">#{createuserid},</if>
+            <if test="createtime != null ">#{createtime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateBySchoolcalendar" parameterType="BySchoolcalendar">
+        update by_schoolcalendar
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null  and name != ''">name = #{name},</if>
+            <if test="type != null  and type != ''">type = #{type},</if>
+            <if test="scope != null  and scope != ''">scope = #{scope},</if>
+            <if test="xnxq != null  and xnxq != ''">xnxq = #{xnxq},</if>
+            <if test="deptid != null ">dept_id = #{deptid},</if>
+            <if test="activitytime != null ">activitytime = #{activitytime},</if>
+            <if test="createuserid != null ">createuserid = #{createuserid},</if>
+            <if test="createtime != null ">createtime = #{createtime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBySchoolcalendarById" parameterType="Long">
+        delete from by_schoolcalendar where id = #{id}
+    </delete>
+
+    <delete id="deleteBySchoolcalendarByIds" parameterType="String">
+        delete from by_schoolcalendar where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
