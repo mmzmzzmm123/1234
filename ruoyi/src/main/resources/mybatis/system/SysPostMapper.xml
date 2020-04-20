@@ -41,6 +41,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="selectPostAll" resultMap="SysPostResult">
 		<include refid="selectPostVo"/>
 	</select>
+
+	<select id="selectYeyPostAll" resultMap="SysPostResult">
+		<include refid="selectPostVo"/>
+		where purp = '1'
+	</select>
 	
 	<select id="selectPostById" parameterType="Long" resultMap="SysPostResult">
 		<include refid="selectPostVo"/>
@@ -53,6 +58,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	        left join sys_user_post up on up.post_id = p.post_id
 	        left join sys_user u on u.user_id = up.user_id
 	    where u.user_id = #{userId}
+	</select>
+
+	<select id="selectYeyPostListByUserId" parameterType="Long" resultType="Integer">
+		select p.post_id
+        from sys_post p
+	        left join sys_user_post up on up.post_id = p.post_id
+	        left join sys_user u on u.user_id = up.user_id
+	    where p.purp = '1' and u.user_id = #{userId}
 	</select>
 	
 	<select id="selectPostsByUserName" parameterType="String" resultMap="SysPostResult">

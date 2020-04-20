@@ -142,7 +142,7 @@
             align="center"
             prop="dept.deptName"
             :show-overflow-tooltip="true"
-          /> 
+          />
           <el-table-column label="状态" align="center">
             <template slot-scope="scope">
               <el-switch
@@ -217,7 +217,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="登录账号" prop="userName">
-              <el-input v-model="form.userName" placeholder="请输入手机号码" maxlength="11"/>
+              <el-input v-model="form.userName" placeholder="请输入手机号码" maxlength="11" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -407,10 +407,12 @@ export default {
       // 表单校验
       rules: {
         userName: [
-          { required: true,
+          {
+            required: true,
             pattern: /^1[3|4|5|6|7|8|9][0-9]\d{8}$/,
             message: "请输入正确的手机号码",
-            trigger: "blur" }
+            trigger: "blur"
+          }
         ],
         nickName: [
           { required: true, message: "用户昵称不能为空", trigger: "blur" }

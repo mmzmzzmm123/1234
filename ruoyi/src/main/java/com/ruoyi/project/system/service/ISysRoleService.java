@@ -35,12 +35,22 @@ public interface ISysRoleService
     public List<SysRole> selectRoleAll();
 
     /**
+     * 查询所有幼儿园用途标识角色
+     *
+     * @return 角色列表
+     */
+    public List<SysRole> selectYeyRoleAll();
+
+    /**
      * 根据用户ID获取角色选择框列表
      * 
      * @param userId 用户ID
      * @return 选中角色ID列表
      */
     public List<Integer> selectRoleListByUserId(Long userId);
+
+    //根据用户id获取幼儿园角色选择框
+    public List<Integer> selectYeyRoleListByUserId(Long userId);
 
     /**
      * 通过角色ID查询角色

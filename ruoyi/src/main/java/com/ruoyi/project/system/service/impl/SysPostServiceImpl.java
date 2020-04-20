@@ -48,6 +48,12 @@ public class SysPostServiceImpl implements ISysPostService
         return postMapper.selectPostAll();
     }
 
+    @Override
+    public List<SysPost> selectYeyPostAll()
+    {
+        return postMapper.selectYeyPostAll();
+    }
+
     /**
      * 通过岗位ID查询岗位信息
      * 
@@ -69,6 +75,12 @@ public class SysPostServiceImpl implements ISysPostService
     public List<Integer> selectPostListByUserId(Long userId)
     {
         return postMapper.selectPostListByUserId(userId);
+    }
+
+    @Override
+    public List<Integer> selectYeyPostListByUserId(Long userId)
+    {
+        return postMapper.selectYeyPostListByUserId(userId);
     }
 
     /**

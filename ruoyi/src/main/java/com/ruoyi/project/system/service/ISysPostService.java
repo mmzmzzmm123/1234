@@ -25,6 +25,9 @@ public interface ISysPostService
      */
     public List<SysPost> selectPostAll();
 
+    //查询所有幼儿园岗位
+    public List<SysPost> selectYeyPostAll();
+
     /**
      * 通过岗位ID查询岗位信息
      * 
@@ -40,6 +43,9 @@ public interface ISysPostService
      * @return 选中岗位ID列表
      */
     public List<Integer> selectPostListByUserId(Long userId);
+
+    //根据用户id获取幼儿园岗位
+    public List<Integer> selectYeyPostListByUserId(Long userId);
 
     /**
      * 校验岗位名称
