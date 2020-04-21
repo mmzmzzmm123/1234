@@ -248,7 +248,6 @@
               </el-radio-group>
             </el-form-item>
           </el-col>
-
           <el-col :span="12">
             <el-form-item label="岗位">
               <el-select v-model="form.postIds" multiple placeholder="请选择">

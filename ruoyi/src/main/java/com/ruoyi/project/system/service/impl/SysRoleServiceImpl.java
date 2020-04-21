@@ -110,7 +110,7 @@ public class SysRoleServiceImpl implements ISysRoleService
     @Override
     public List<Integer> selectYeyRoleListByUserId(Long userId)
     {
-        return selectYeyRoleListByUserId(userId);
+        return roleMapper.selectYeyRoleListByUserId(userId);
     }
 
     /**
