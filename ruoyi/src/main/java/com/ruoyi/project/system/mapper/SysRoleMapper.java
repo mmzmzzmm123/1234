@@ -33,6 +33,9 @@ public interface SysRoleMapper
      */
     public List<SysRole> selectRoleAll();
 
+    //查询所有幼儿园角色
+    public List<SysRole> selectYeyRoleAll();
+
     /**
      * 根据用户ID获取角色选择框列表
      * 
@@ -40,6 +43,9 @@ public interface SysRoleMapper
      * @return 选中角色ID列表
      */
     public List<Integer> selectRoleListByUserId(Long userId);
+
+    //根据用户ID获取幼儿园角色
+    public List<Integer> selectYeyRoleListByUserId(Long userId);
 
     /**
      * 通过角色ID查询角色

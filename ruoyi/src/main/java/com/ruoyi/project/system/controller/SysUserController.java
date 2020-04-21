@@ -1,6 +1,8 @@
 package com.ruoyi.project.system.controller;
 
 import java.util.List;
+
+import com.ruoyi.project.common.SchoolCommon;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -50,6 +52,9 @@ public class SysUserController extends BaseController
 
     @Autowired
     private TokenService tokenService;
+
+    @Autowired
+    private SchoolCommon schoolCommon;
 
     /**
      * 获取用户列表
@@ -101,10 +106,25 @@ public class SysUserController extends BaseController
     public AjaxResult getInfo(@PathVariable(value = "userId", required = false) Long userId)
     {
         AjaxResult ajax = AjaxResult.success();
-        ajax.put("roles", roleService.selectRoleAll());
-        ajax.put("posts", postService.selectPostAll());
+        if(schoolCommon.isSchool()==true)
+        {
+            ajax.put("roles", roleService.selectYeyRoleAll());
+            ajax.put("posts", postService.selectYeyPostAll());
+        }else {
+            ajax.put("roles", roleService.selectRoleAll());
+            ajax.put("posts", postService.selectPostAll());
+        }
+
         if (StringUtils.isNotNull(userId))
         {
+            if (schoolCommon.isSchool()==true)
+            {
+                ajax.put(AjaxResult.DATA_TAG, userService.selectUserById(userId));
+                ajax.put("postIds", postService.selectYeyPostListByUserId(userId));
+                ajax.put("roleIds", roleService.selectYeyRoleListByUserId(userId));
+            }else {
+
+            }
             ajax.put(AjaxResult.DATA_TAG, userService.selectUserById(userId));
             ajax.put("postIds", postService.selectPostListByUserId(userId));
             ajax.put("roleIds", roleService.selectRoleListByUserId(userId));

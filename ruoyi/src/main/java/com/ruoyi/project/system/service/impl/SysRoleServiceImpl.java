@@ -86,6 +86,16 @@ public class SysRoleServiceImpl implements ISysRoleService
     }
 
     /**
+     * 查询所有幼儿园角色
+     *
+     * @return 角色列表
+     */
+    public List<SysRole> selectYeyRoleAll()
+    {
+        return roleMapper.selectYeyRoleAll();
+    }
+
+    /**
      * 根据用户ID获取角色选择框列表
      * 
      * @param userId 用户ID
@@ -94,6 +104,13 @@ public class SysRoleServiceImpl implements ISysRoleService
     public List<Integer> selectRoleListByUserId(Long userId)
     {
         return roleMapper.selectRoleListByUserId(userId);
+    }
+
+    //根据用户id获取幼儿园角色
+    @Override
+    public List<Integer> selectYeyRoleListByUserId(Long userId)
+    {
+        return selectYeyRoleListByUserId(userId);
     }
 
     /**

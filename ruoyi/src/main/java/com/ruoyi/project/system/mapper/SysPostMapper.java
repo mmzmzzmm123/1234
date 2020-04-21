@@ -25,6 +25,9 @@ public interface SysPostMapper
      */
     public List<SysPost> selectPostAll();
 
+    //查询所有幼儿园岗位
+    public List<SysPost> selectYeyPostAll();
+
     /**
      * 通过岗位ID查询岗位信息
      * 
@@ -33,6 +36,8 @@ public interface SysPostMapper
      */
     public SysPost selectPostById(Long postId);
 
+
+
     /**
      * 根据用户ID获取岗位选择框列表
      * 
@@ -40,6 +45,9 @@ public interface SysPostMapper
      * @return 选中岗位ID列表
      */
     public List<Integer> selectPostListByUserId(Long userId);
+
+    //根据用户id获取幼儿园岗位
+    public List<Integer> selectYeyPostListByUserId(Long userId);
 
     /**
      * 查询用户所属岗位组

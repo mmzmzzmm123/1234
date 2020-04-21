@@ -59,6 +59,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="selectRoleAll" resultMap="SysRoleResult">
 		<include refid="selectRoleVo"/>
 	</select>
+
+	<select id="selectYeyRoleAll" resultMap="SysRoleResult">
+		<include refid="selectRoleVo"/>
+		where r.purpose = '1'
+	</select>
 	
 	<select id="selectRoleListByUserId" parameterType="Long" resultType="Integer">
 		select r.role_id
@@ -66,6 +71,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	        left join sys_user_role ur on ur.role_id = r.role_id
 	        left join sys_user u on u.user_id = ur.user_id
 	    where u.user_id = #{userId}
+	</select>
+
+	<select id="selectYeyRoleListByUserId" parameterType="Long" resultType="Integer">
+		select r.role_id
+        from sys_role r
+	        left join sys_user_role ur on ur.role_id = r.role_id
+	        left join sys_user u on u.user_id = ur.user_id
+	    where r.purpose = '1' and u.user_id = #{userId}
 	</select>
 	
 	<select id="selectRoleById" parameterType="Long" resultMap="SysRoleResult">
