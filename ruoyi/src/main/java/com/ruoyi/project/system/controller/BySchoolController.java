@@ -49,8 +49,6 @@ public class BySchoolController extends BaseController
     @Autowired
     private ISysDeptService deptService;
 
-
-
     /**
      * 查询幼儿园机构列表
      */
@@ -85,8 +83,6 @@ public class BySchoolController extends BaseController
     {
         return AjaxResult.success(bySchoolService.selectBySchoolById(id));
     }
-
-
 
     /**
      * 新增幼儿园机构
