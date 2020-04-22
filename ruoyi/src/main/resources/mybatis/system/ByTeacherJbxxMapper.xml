@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.mapper.ByTeacherJbxxMapper">
+    
+    <resultMap type="ByTeacherJbxx" id="ByTeacherJbxxResult">
+        <result property="id"    column="id"    />
+        <result property="userid"    column="userid"    />
+        <result property="zjhm"    column="zjhm"    />
+        <result property="csrq"    column="csrq"    />
+        <result property="byyx"    column="byyx"    />
+        <result property="zy"    column="zy"    />
+        <result property="xl"    column="xl"    />
+        <result property="xw"    column="xw"    />
+        <result property="cjgzrq"    column="cjgzrq"    />
+        <result property="zgzs"    column="zgzs"    />
+        <result property="createuserid"    column="createuserid"    />
+        <result property="createtime"    column="createtime"    />
+        <association property="user"    column="user_id" javaType="SysUser" resultMap="SysUserResult" />
+    </resultMap>
+
+    <resultMap type="SysUser" id="SysUserResult">
+        <id     property="userId"       column="user_id"      />
+        <result property="deptId"       column="dept_id"      />
+        <result property="userName"     column="user_name"    />
+        <result property="nickName"     column="nick_name"    />
+        <result property="email"        column="email"        />
+        <result property="phonenumber"  column="phonenumber"  />
+        <result property="sex"          column="sex"          />
+        <result property="avatar"       column="avatar"       />
+        <result property="password"     column="password"     />
+        <result property="status"       column="status"       />
+        <result property="delFlag"      column="del_flag"     />
+        <result property="loginIp"      column="login_ip"     />
+        <result property="loginDate"    column="login_date"   />
+        <result property="createBy"     column="create_by"    />
+        <result property="createTime"   column="create_time"  />
+        <result property="updateBy"     column="update_by"    />
+        <result property="updateTime"   column="update_time"  />
+        <result property="remark"       column="remark"       />
+    </resultMap>
+
+    <sql id="selectByTeacherJbxxVo">
+        select t.id, t.userid, t.zjhm, t.csrq, t.byyx, t.zy, t.xl, t.xw, t.cjgzrq, t.zgzs, t.createuserid, t.createtime,
+        u.user_id, u.dept_id, u.user_name, u.nick_name, u.email, u.phonenumber, u.sex, u.status as user_status
+        from by_teacher_jbxx t
+            left join sys_user u on t.userid = u.user_id
+    </sql>
+
+    <select id="selectByTeacherJbxxList" parameterType="ByTeacherJbxx" resultMap="ByTeacherJbxxResult">
+        select t.id, t.userid, t.zjhm, t.csrq, t.byyx, t.zy, t.xl, t.xw, t.cjgzrq, t.zgzs, t.createuserid, t.createtime,
+        u.user_id, u.nick_name
+        from by_teacher_jbxx t
+        left join sys_user u on t.userid = u.user_id
+        <if test="userid != null "> and userid = #{userid}</if>
+        <if test="zjhm != null  and zjhm != ''"> and zjhm = #{zjhm}</if>
+        <if test="csrq != null "> and csrq = #{csrq}</if>
+        <if test="byyx != null  and byyx != ''"> and byyx = #{byyx}</if>
+        <if test="zy != null  and zy != ''"> and zy = #{zy}</if>
+        <if test="xl != null  and xl != ''"> and xl = #{xl}</if>
+        <if test="xw != null  and xw != ''"> and xw = #{xw}</if>
+        <if test="cjgzrq != null "> and cjgzrq = #{cjgzrq}</if>
+        <if test="zgzs != null  and zgzs != ''"> and zgzs = #{zgzs}</if>
+        <if test="createuserid != null "> and createuserid = #{createuserid}</if>
+        <if test="createtime != null "> and createtime = #{createtime}</if>
+
+        <!-- 数据范围过滤 -->
+        ${dataScope}
+    </select>
+    
+    <select id="selectByTeacherJbxxById" parameterType="Long" resultMap="ByTeacherJbxxResult">
+        <include refid="selectByTeacherJbxxVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertByTeacherJbxx" parameterType="ByTeacherJbxx" useGeneratedKeys="true" keyProperty="id">
+        insert into by_teacher_jbxx
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userid != null ">userid,</if>
+            <if test="zjhm != null  and zjhm != ''">zjhm,</if>
+            <if test="csrq != null ">csrq,</if>
+            <if test="byyx != null  and byyx != ''">byyx,</if>
+            <if test="zy != null  and zy != ''">zy,</if>
+            <if test="xl != null  and xl != ''">xl,</if>
+            <if test="xw != null  and xw != ''">xw,</if>
+            <if test="cjgzrq != null ">cjgzrq,</if>
+            <if test="zgzs != null  and zgzs != ''">zgzs,</if>
+            <if test="createuserid != null ">createuserid,</if>
+            <if test="createtime != null ">createtime,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userid != null ">#{userid},</if>
+            <if test="zjhm != null  and zjhm != ''">#{zjhm},</if>
+            <if test="csrq != null ">#{csrq},</if>
+            <if test="byyx != null  and byyx != ''">#{byyx},</if>
+            <if test="zy != null  and zy != ''">#{zy},</if>
+            <if test="xl != null  and xl != ''">#{xl},</if>
+            <if test="xw != null  and xw != ''">#{xw},</if>
+            <if test="cjgzrq != null ">#{cjgzrq},</if>
+            <if test="zgzs != null  and zgzs != ''">#{zgzs},</if>
+            <if test="createuserid != null ">#{createuserid},</if>
+            <if test="createtime != null ">#{createtime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateByTeacherJbxx" parameterType="ByTeacherJbxx">
+        update by_teacher_jbxx
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userid != null ">userid = #{userid},</if>
+            <if test="zjhm != null  and zjhm != ''">zjhm = #{zjhm},</if>
+            <if test="csrq != null ">csrq = #{csrq},</if>
+            <if test="byyx != null  and byyx != ''">byyx = #{byyx},</if>
+            <if test="zy != null  and zy != ''">zy = #{zy},</if>
+            <if test="xl != null  and xl != ''">xl = #{xl},</if>
+            <if test="xw != null  and xw != ''">xw = #{xw},</if>
+            <if test="cjgzrq != null ">cjgzrq = #{cjgzrq},</if>
+            <if test="zgzs != null  and zgzs != ''">zgzs = #{zgzs},</if>
+            <if test="createuserid != null ">createuserid = #{createuserid},</if>
+            <if test="createtime != null ">createtime = #{createtime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteByTeacherJbxxById" parameterType="Long">
+        delete from by_teacher_jbxx where id = #{id}
+    </delete>
+
+    <delete id="deleteByTeacherJbxxByIds" parameterType="String">
+        delete from by_teacher_jbxx where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>
