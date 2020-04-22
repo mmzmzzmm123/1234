@@ -96,7 +96,7 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="标识" align="center" prop="id" />
+      <el-table-column label="编号" align="center" prop="id" />
       <el-table-column label="名称" align="center" prop="name" />
       <el-table-column
         label="活动类型"
@@ -292,7 +292,9 @@ export default {
     /** 查询园历管理列表 */
     getList() {
       this.loading = true;
-      listSchoolcalendar(this.queryParams).then(response => {
+      listSchoolcalendar(
+        this.addDateRange(this.queryParams, this.dateRange)
+      ).then(response => {
         this.schoolcalendarList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -321,6 +323,7 @@ export default {
     },
     /** 重置按钮操作 */
     resetQuery() {
+      this.dateRange = [];
       this.resetForm("queryForm");
       this.handleQuery();
     },
@@ -342,6 +345,8 @@ export default {
       const id = row.id || this.ids;
       getSchoolcalendar(id).then(response => {
         this.form = response.data;
+        this.scopeOptions = response.scopes;
+        this.form.scope = response.scopeIds;
         this.open = true;
         this.title = "修改园历管理";
       });

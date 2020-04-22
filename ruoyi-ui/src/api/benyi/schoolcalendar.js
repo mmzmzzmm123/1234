@@ -9,6 +9,15 @@ export function listSchoolcalendar(query) {
   })
 }
 
+// 查询园历列表
+export function getSchoolCalendars(query) {
+  return request({
+    url: '/benyi/schoolcalendar/getSchoolCalendars',
+    method: 'get',
+    params: query
+  })
+}
+
 // 查询园历管理详细
 export function getSchoolcalendar(id) {
   return request({

@@ -1,10 +1,14 @@
 package com.ruoyi.project.benyi.controller;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.project.benyi.domain.ByThings;
 import com.ruoyi.project.common.SchoolCommon;
+import com.ruoyi.project.system.service.ISysDictDataService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,6 +41,8 @@ public class BySchoolcalendarController extends BaseController {
     private IBySchoolcalendarService bySchoolcalendarService;
     @Autowired
     private SchoolCommon schoolCommon;
+    @Autowired
+    private ISysDictDataService dictDataService;
 
     /**
      * 查询园历管理列表
@@ -47,6 +53,36 @@ public class BySchoolcalendarController extends BaseController {
         startPage();
         List<BySchoolcalendar> list = bySchoolcalendarService.selectBySchoolcalendarList(bySchoolcalendar);
         return getDataTable(list);
+    }
+
+    /**
+     * 查询园历管理列表
+     */
+    @PreAuthorize("@ss.hasPermi('benyi:schoolcalendar:list')")
+    @GetMapping("/getSchoolCalendars")
+    public AjaxResult getSchoolCalendars(BySchoolcalendar bySchoolcalendar) {
+        AjaxResult ajax = AjaxResult.success();
+        bySchoolcalendar.setXnxq(schoolCommon.getCurrentXn());
+        List<BySchoolcalendar> list = bySchoolcalendarService.selectBySchoolcalendarList(bySchoolcalendar);
+        ByThings byThings=null;
+        List<ByThings> listThings=new ArrayList<>();
+        if(list!=null&&list.size()>0){
+            for (int i=0;i<list.size();i++){
+                byThings=new ByThings();
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+                String strActivitytime= formatter.format(list.get(i).getActivitytime());
+                System.out.println("活动时间==="+strActivitytime);
+                byThings.setYears(strActivitytime.split("-")[0]);
+                byThings.setMonths(strActivitytime.split("-")[1]);
+                byThings.setDays(strActivitytime.split("-")[2]);
+                byThings.setThings(list.get(i).getName());
+
+                listThings.add(byThings);
+            }
+        }
+
+        ajax.put("calendarData",listThings);
+        return ajax;
     }
 
     /**
@@ -67,7 +103,14 @@ public class BySchoolcalendarController extends BaseController {
     @PreAuthorize("@ss.hasPermi('benyi:schoolcalendar:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id) {
-        return AjaxResult.success(bySchoolcalendarService.selectBySchoolcalendarById(id));
+        AjaxResult ajax = AjaxResult.success();
+        BySchoolcalendar bySchoolcalendar = bySchoolcalendarService.selectBySchoolcalendarById(id);
+        ajax.put(AjaxResult.DATA_TAG, bySchoolcalendar);
+        String dictType = "sys_yebjlx";
+        ajax.put("scopes", dictDataService.selectDictDataByType(dictType));
+        String strScope=bySchoolcalendar.getScope();
+        ajax.put("scopeIds", strScope.split(";"));
+        return ajax;
     }
 
     /**

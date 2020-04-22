@@ -26,11 +26,16 @@
         <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
         <if test="type != null  and type != ''">and type = #{type}</if>
         <if test="scope != null  and scope != ''">and scope like concat('%', #{scope}, '%')</if>
-        <if test="xnxq != null  and xnxq != ''">and xnxq = #{xnxq}</if>
+        <if test="xnxq != null  and xnxq != ''">and xnxq like concat('%', #{xnxq}, '%')</if>
         <if test="deptid != null ">and dept_id = #{deptid}</if>
         <if test="activitytime != null ">and activitytime = #{activitytime}</if>
         <if test="createuserid != null ">and createuserid = #{createuserid}</if>
-        <if test="createtime != null ">and createtime = #{createtime}</if>
+        <if test="beginTime != null and beginTime != ''"><!-- 开始时间检索 -->
+            AND date_format(activitytime,'%y%m%d') &gt;= date_format(#{beginTime},'%y%m%d')
+        </if>
+        <if test="endTime != null and endTime != ''"><!-- 结束时间检索 -->
+            AND date_format(activitytime,'%y%m%d') &lt;= date_format(#{endTime},'%y%m%d')
+        </if>
         <!-- 数据范围过滤 -->
         ${dataScope}
 
