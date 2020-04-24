@@ -109,7 +109,7 @@
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['system:teacher:remove']"
-          >删除</el-button>
+          >清空</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -373,7 +373,7 @@ export default {
     handleDelete(row) {
       const ids = row.id || this.ids;
       this.$confirm(
-        '是否确认删除教师基本信息编号为"' + ids + '"的数据项?',
+        '是否确认清空教师基本信息编号为"' + ids + '"的数据项?',
         "警告",
         {
           confirmButtonText: "确定",

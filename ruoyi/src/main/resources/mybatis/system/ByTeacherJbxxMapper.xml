@@ -122,15 +122,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </update>
 
-    <delete id="deleteByTeacherJbxxById" parameterType="Long">
-        delete from by_teacher_jbxx where id = #{id}
-    </delete>
 
-    <delete id="deleteByTeacherJbxxByIds" parameterType="String">
-        delete from by_teacher_jbxx where id in 
+
+    <update id="deleteByTeacherJbxxById" parameterType="Long">
+        update by_teacher_jbxx
+        set zjhm=null, csrq=null, byyx=null, zy=null, xl=null, xw=null, cjgzrq=null, zgzs=null, createuserid=null
+        where id = #{id}
+    </update>
+
+    <update id="deleteByTeacherJbxxByIds" parameterType="String">
+        update by_teacher_jbxx
+        set zjhm=null, csrq=null, byyx=null, zy=null, xl=null, xw=null, cjgzrq=null, zgzs=null, createuserid=null
+        where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
-    </delete>
+    </update>
     
 </mapper>
