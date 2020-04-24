@@ -50,9 +50,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectByTeacherJbxxList" parameterType="ByTeacherJbxx" resultMap="ByTeacherJbxxResult">
         select t.id, t.userid, t.zjhm, t.csrq, t.byyx, t.zy, t.xl, t.xw, t.cjgzrq, t.zgzs, t.createuserid, t.createtime,
-        u.user_id, u.nick_name
+        u.user_id, u.nick_name,u.dept_id,u.del_flag
         from by_teacher_jbxx t
         left join sys_user u on t.userid = u.user_id
+        where u.del_flag='0'
         <if test="userid != null "> and userid = #{userid}</if>
         <if test="zjhm != null  and zjhm != ''"> and zjhm = #{zjhm}</if>
         <if test="csrq != null "> and csrq = #{csrq}</if>

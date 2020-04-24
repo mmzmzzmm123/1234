@@ -6,7 +6,6 @@ import java.util.List;
 import com.ruoyi.project.common.SchoolCommon;
 import com.ruoyi.project.system.domain.ByTeacherJbxx;
 import com.ruoyi.project.system.service.*;
-import com.ruoyi.project.system.service.impl.ByTeacherJbxxServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -173,6 +172,7 @@ public class SysUserController extends BaseController
         {
             ByTeacherJbxx byTeacherJbxx = new ByTeacherJbxx();
             //并赋值给教师userid
+            //user可以直接获取出入数据的主键值
             byTeacherJbxx.setUserid(user.getUserId());
             byTeacherJbxx.setCreatetime(new Date());
             //插入数据到教师表
