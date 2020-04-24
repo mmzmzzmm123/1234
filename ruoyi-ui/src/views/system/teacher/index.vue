@@ -36,7 +36,7 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
+      <el-col :span="1.5" v-show="false">
         <el-button
           type="primary"
           icon="el-icon-plus"
@@ -79,29 +79,21 @@
     <el-table v-loading="loading" :data="teacherList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="用户名称" align="center" prop="user.nickName" />
-      <!--<el-table-column label="标识" align="center" prop="id" />
-      <el-table-column label="证件号码" align="center" prop="zjhm" />
-      <el-table-column label="出生日期" align="center" prop="csrq" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.csrq) }}</span>
-        </template>
-      </el-table-column>
+      <el-table-column label="出生日期" align="center" prop="csrq" width="180"></el-table-column>
       <el-table-column label="毕业院校" align="center" prop="byyx" />
-      <el-table-column label="专业" align="center" prop="zy" />-->
-      <el-table-column label="学历" align="center" prop="xl" :formatter="xlFormat" />
-      <el-table-column label="学位" align="center" prop="xw" :formatter="xwFormat" />
-      <!--<el-table-column label="参加工作日期" align="center" prop="cjgzrq" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.cjgzrq) }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="资格证书" align="center" prop="zgzs" :formatter="zgzsFormat" />
-      <el-table-column label="创建人" align="center" prop="createuserid" />-->
+      <el-table-column label="专业" align="center" prop="zy" />
+      <el-table-column label="参加工作日期" align="center" prop="cjgzrq" width="180"></el-table-column>
       <el-table-column label="创建时间" align="center" prop="createtime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createtime) }}</span>
         </template>
       </el-table-column>
+      <!--<el-table-column label="标识" align="center" prop="id" />
+      <el-table-column label="证件号码" align="center" prop="zjhm" />
+      <el-table-column label="学历" align="center" prop="xl" :formatter="xlFormat" />
+      <el-table-column label="学位" align="center" prop="xw" :formatter="xwFormat" />
+      <el-table-column label="资格证书" align="center" prop="zgzs" :formatter="zgzsFormat" />
+      <el-table-column label="创建人" align="center" prop="createuserid" />-->
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -133,8 +125,11 @@
     <!-- 添加或修改教师基本信息对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px">
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="用户id" prop="userid">
-          <el-input v-model="form.userid" placeholder="请输入用户id" />
+        <el-form-item label="id" prop="id" v-show="false">
+          <el-input v-model="form.id" />
+        </el-form-item>
+        <el-form-item label="用户id" prop="userid" v-show="false">
+          <el-input v-model="form.userid" />
         </el-form-item>
         <el-form-item label="证件号码" prop="zjhm">
           <el-input v-model="form.zjhm" placeholder="请输入证件号码" />
@@ -357,7 +352,7 @@ export default {
                 this.open = false;
                 this.getList();
               } else {
-                this.msgError(response.msg);
+                // this.msgError(response.msg);
               }
             });
           } else {
@@ -367,7 +362,7 @@ export default {
                 this.open = false;
                 this.getList();
               } else {
-                this.msgError(response.msg);
+                //this.msgError(response.msg);
               }
             });
           }

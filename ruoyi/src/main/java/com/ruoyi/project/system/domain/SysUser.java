@@ -91,6 +91,9 @@ public class SysUser extends BaseEntity
     /** 岗位组 */
     private Long[] postIds;
 
+    /**教师对象*/
+    private ByTeacherJbxx byTeacherJbxx;
+
     public SysUser()
     {
 
@@ -321,6 +324,15 @@ public class SysUser extends BaseEntity
             .append("updateTime", getUpdateTime())
             .append("remark", getRemark())
             .append("dept", getDept())
+            .append("byTeacherJbxx", getByTeacherJbxx())
             .toString();
+    }
+
+    public ByTeacherJbxx getByTeacherJbxx() {
+        return byTeacherJbxx;
+    }
+
+    public void setByTeacherJbxx(ByTeacherJbxx byTeacherJbxx) {
+        this.byTeacherJbxx = byTeacherJbxx;
     }
 }

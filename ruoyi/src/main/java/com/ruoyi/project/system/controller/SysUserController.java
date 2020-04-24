@@ -1,8 +1,12 @@
 package com.ruoyi.project.system.controller;
 
+import java.util.Date;
 import java.util.List;
 
 import com.ruoyi.project.common.SchoolCommon;
+import com.ruoyi.project.system.domain.ByTeacherJbxx;
+import com.ruoyi.project.system.service.*;
+import com.ruoyi.project.system.service.impl.ByTeacherJbxxServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -28,9 +32,6 @@ import com.ruoyi.framework.web.controller.BaseController;
 import com.ruoyi.framework.web.domain.AjaxResult;
 import com.ruoyi.framework.web.page.TableDataInfo;
 import com.ruoyi.project.system.domain.SysUser;
-import com.ruoyi.project.system.service.ISysPostService;
-import com.ruoyi.project.system.service.ISysRoleService;
-import com.ruoyi.project.system.service.ISysUserService;
 
 /**
  * 用户信息
@@ -48,6 +49,9 @@ public class SysUserController extends BaseController
     private ISysRoleService roleService;
 
     @Autowired
+    private IByTeacherJbxxService byTeacherJbxxService;
+
+    @Autowired
     private ISysPostService postService;
 
     @Autowired
@@ -55,6 +59,11 @@ public class SysUserController extends BaseController
 
     @Autowired
     private SchoolCommon schoolCommon;
+
+
+
+
+
 
     /**
      * 获取用户列表
@@ -106,8 +115,10 @@ public class SysUserController extends BaseController
     public AjaxResult getInfo(@PathVariable(value = "userId", required = false) Long userId)
     {
         AjaxResult ajax = AjaxResult.success();
+        //在添加用户时判断是否为幼儿园平台
         if(schoolCommon.isSchool()==true)
         {
+            //只显示幼儿园相关的岗位和角色
             ajax.put("roles", roleService.selectYeyRoleAll());
             ajax.put("posts", postService.selectYeyPostAll());
         }else {
@@ -115,6 +126,7 @@ public class SysUserController extends BaseController
             ajax.put("posts", postService.selectPostAll());
         }
 
+        //在修改用户时判断是否为幼儿园平台
         if (StringUtils.isNotNull(userId))
         {
             if (schoolCommon.isSchool()==true)
@@ -156,7 +168,18 @@ public class SysUserController extends BaseController
         user.setEmail(user.getUserName()+"@benyi.com");
         user.setCreateBy(SecurityUtils.getUsername());
         user.setPassword(SecurityUtils.encryptPassword(user.getPassword()));
-        return toAjax(userService.insertUser(user));
+        int bl = userService.insertUser(user);
+        if (bl>0)
+        {
+            ByTeacherJbxx byTeacherJbxx = new ByTeacherJbxx();
+            //并赋值给教师userid
+            byTeacherJbxx.setUserid(user.getUserId());
+            byTeacherJbxx.setCreatetime(new Date());
+            //插入数据到教师表
+            byTeacherJbxxService.insertByTeacherJbxx(byTeacherJbxx);
+        }
+        return toAjax(bl);
+
     }
 
     /**

@@ -1,11 +1,13 @@
 package com.ruoyi.project.system.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.framework.aspectj.lang.annotation.Excel;
 import com.ruoyi.framework.web.domain.BaseEntity;
 import java.util.Date;
+
 
 /**
  * 教师基本信息对象 by_teacher_jbxx
@@ -30,6 +32,7 @@ public class ByTeacherJbxx extends BaseEntity
 
     /** 出生日期 */
     @Excel(name = "出生日期", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date csrq;
 
     /** 毕业院校 */
@@ -50,6 +53,7 @@ public class ByTeacherJbxx extends BaseEntity
 
     /** 参加工作日期 */
     @Excel(name = "参加工作日期", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date cjgzrq;
 
     /** 资格证书 */
@@ -62,6 +66,7 @@ public class ByTeacherJbxx extends BaseEntity
 
     //创建时间
     @Excel(name = "创建时间")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createtime;
 
     /** user对象 */

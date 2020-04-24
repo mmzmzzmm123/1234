@@ -43,9 +43,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <sql id="selectByTeacherJbxxVo">
         select t.id, t.userid, t.zjhm, t.csrq, t.byyx, t.zy, t.xl, t.xw, t.cjgzrq, t.zgzs, t.createuserid, t.createtime,
-        u.user_id, u.dept_id, u.user_name, u.nick_name, u.email, u.phonenumber, u.sex, u.status as user_status
+        u.user_id, u.nick_name, u.status as user_status
         from by_teacher_jbxx t
-            left join sys_user u on t.userid = u.user_id
+            right join sys_user u on t.userid = u.user_id
     </sql>
 
     <select id="selectByTeacherJbxxList" parameterType="ByTeacherJbxx" resultMap="ByTeacherJbxxResult">
