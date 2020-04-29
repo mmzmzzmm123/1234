@@ -8,6 +8,8 @@ import java.util.List;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.project.benyi.domain.ByThings;
 import com.ruoyi.project.common.SchoolCommon;
+import com.ruoyi.project.system.domain.ByTeacherJbxx;
+import com.ruoyi.project.system.service.IByTeacherJbxxService;
 import com.ruoyi.project.system.service.ISysDictDataService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +45,8 @@ public class BySchoolcalendarController extends BaseController {
     private SchoolCommon schoolCommon;
     @Autowired
     private ISysDictDataService dictDataService;
+    @Autowired
+    private IByTeacherJbxxService byTeacherJbxxService;
 
     /**
      * 查询园历管理列表
@@ -63,15 +67,20 @@ public class BySchoolcalendarController extends BaseController {
     public AjaxResult getSchoolCalendars(BySchoolcalendar bySchoolcalendar) {
         AjaxResult ajax = AjaxResult.success();
         bySchoolcalendar.setXnxq(schoolCommon.getCurrentXn());
+        //系统内设置的园历信息
         List<BySchoolcalendar> list = bySchoolcalendarService.selectBySchoolcalendarList(bySchoolcalendar);
-        ByThings byThings=null;
-        List<ByThings> listThings=new ArrayList<>();
-        if(list!=null&&list.size()>0){
-            for (int i=0;i<list.size();i++){
-                byThings=new ByThings();
+        //系统内员工生日信息  系统内员工入职日期
+        ByTeacherJbxx byTeacherJbxx = new ByTeacherJbxx();
+        List<ByTeacherJbxx> listTeacherBirth = byTeacherJbxxService.selectByTeacherJbxxList(byTeacherJbxx);
+        ByThings byThings = null;
+        List<ByThings> listThings = new ArrayList<>();
+        //系统内设置的园历信息
+        if (list != null && list.size() > 0) {
+            for (int i = 0; i < list.size(); i++) {
+                byThings = new ByThings();
                 SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-                String strActivitytime= formatter.format(list.get(i).getActivitytime());
-                System.out.println("活动时间==="+strActivitytime);
+                String strActivitytime = formatter.format(list.get(i).getActivitytime());
+                System.out.println("活动时间===" + strActivitytime);
                 byThings.setYears(strActivitytime.split("-")[0]);
                 byThings.setMonths(strActivitytime.split("-")[1]);
                 byThings.setDays(strActivitytime.split("-")[2]);
@@ -81,7 +90,43 @@ public class BySchoolcalendarController extends BaseController {
             }
         }
 
-        ajax.put("calendarData",listThings);
+        //系统内员工的生日、入职日期信息
+        if (listTeacherBirth != null && listTeacherBirth.size() > 0) {
+            for (int i = 0; i < listTeacherBirth.size(); i++) {
+
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+                //创建一个教师实体类，并赋值
+                byTeacherJbxx=listTeacherBirth.get(i);
+                String strCurrentYear=schoolCommon.getCurrentYear();
+                System.out.println("当前年===" + strCurrentYear);
+
+                //参加工作日期
+                if(byTeacherJbxx.getCjgzrq()!=null){
+                    byThings = new ByThings();
+                    byThings.setYears(strCurrentYear);
+                    System.out.println("参加工作日期==="+sdf.format(byTeacherJbxx.getCjgzrq()));
+                    byThings.setMonths(sdf.format(byTeacherJbxx.getCjgzrq()).split("-")[1]);//2020-04-12  月
+                    byThings.setDays(sdf.format(byTeacherJbxx.getCjgzrq()).split("-")[2]);//2020-04-12  日
+                    byThings.setThings(listTeacherBirth.get(i).getUser().getNickName()+"-合同满年期限");
+
+                    listThings.add(byThings);
+                }
+                //生日
+                if(byTeacherJbxx.getCsrq()!=null){
+                    byThings = new ByThings();
+                    byThings.setYears(strCurrentYear);
+                    byThings.setMonths(sdf.format(byTeacherJbxx.getCsrq()).split("-")[1]);//2020-04-12  月
+                    byThings.setDays(sdf.format(byTeacherJbxx.getCsrq()).split("-")[2]);//2020-04-12  日
+                    byThings.setThings(listTeacherBirth.get(i).getUser().getNickName()+"-生日");
+
+                    listThings.add(byThings);
+                }
+
+            }
+        }
+
+        ajax.put("calendarData", listThings);
         return ajax;
     }
 
@@ -108,7 +153,7 @@ public class BySchoolcalendarController extends BaseController {
         ajax.put(AjaxResult.DATA_TAG, bySchoolcalendar);
         String dictType = "sys_yebjlx";
         ajax.put("scopes", dictDataService.selectDictDataByType(dictType));
-        String strScope=bySchoolcalendar.getScope();
+        String strScope = bySchoolcalendar.getScope();
         ajax.put("scopeIds", strScope.split(";"));
         return ajax;
     }
