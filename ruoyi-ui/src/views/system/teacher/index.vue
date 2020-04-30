@@ -2,13 +2,14 @@
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
       <el-form-item label="用户id" prop="userid">
-        <el-input
-          v-model="queryParams.userid"
-          placeholder="请输入用户id"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+         <el-select v-model="queryParams.userid" filterable  placeholder="请选择用户" >
+          <el-option
+            v-for="item in teacherListAll"
+            :key="item.userid"
+            :label="item.user.nickName"
+            :value="item.userid"
+          />
+        </el-select>
       </el-form-item>
       <!--<el-form-item label="证件号码" prop="zjhm">
         <el-input
@@ -63,7 +64,7 @@
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['system:teacher:remove']"
-        >删除</el-button>
+        >清空</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -81,7 +82,7 @@
       <el-table-column label="用户名称" align="center" prop="user.nickName" />
       <el-table-column label="出生日期" align="center" prop="csrq" width="180"></el-table-column>
       <el-table-column label="毕业院校" align="center" prop="byyx" />
-      <el-table-column label="专业" align="center" prop="zy" />
+      <el-table-column label="学历" align="center" prop="xl" :formatter="xlFormat" />
       <el-table-column label="参加工作日期" align="center" prop="cjgzrq" width="180"></el-table-column>
       <el-table-column label="创建时间" align="center" prop="createtime" width="180">
         <template slot-scope="scope">
@@ -90,7 +91,7 @@
       </el-table-column>
       <!--<el-table-column label="标识" align="center" prop="id" />
       <el-table-column label="证件号码" align="center" prop="zjhm" />
-      <el-table-column label="学历" align="center" prop="xl" :formatter="xlFormat" />
+      <el-table-column label="专业" align="center" prop="zy" />
       <el-table-column label="学位" align="center" prop="xw" :formatter="xwFormat" />
       <el-table-column label="资格证书" align="center" prop="zgzs" :formatter="zgzsFormat" />
       <el-table-column label="创建人" align="center" prop="createuserid" />-->
@@ -128,8 +129,8 @@
         <el-form-item label="id" prop="id" v-show="false">
           <el-input v-model="form.id" />
         </el-form-item>
-        <el-form-item label="用户id" prop="userid" v-show="false">
-          <el-input v-model="form.userid" />
+        <el-form-item label="用户名称" prop="teacherMingCheng" >
+          <el-input v-model="teacherMingCheng" :disabled="true"/>
         </el-form-item>
         <el-form-item label="证件号码" prop="zjhm">
           <el-input v-model="form.zjhm" placeholder="请输入证件号码" />
@@ -197,6 +198,7 @@
 <script>
 import {
   listTeacher,
+  listTeacher2,
   getTeacher,
   delTeacher,
   addTeacher,
@@ -220,6 +222,8 @@ export default {
       total: 0,
       // 教师基本信息表格数据
       teacherList: [],
+      //查询教师不分页
+      teacherListAll: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -230,6 +234,8 @@ export default {
       xwOptions: [],
       // 资格证书字典
       zgzsOptions: [],
+      //教师名称
+      teacherMingCheng: "",
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -254,6 +260,7 @@ export default {
   },
   created() {
     this.getList();
+    this.getList2();
     this.getDicts("sys_jsxl").then(response => {
       this.xlOptions = response.data;
     });
@@ -270,10 +277,17 @@ export default {
       this.loading = true;
       listTeacher(this.queryParams).then(response => {
         this.teacherList = response.rows;
+        console.log(response);
         this.total = response.total;
         this.loading = false;
       });
     },
+    getList2() {
+      listTeacher2(this.queryParams).then(response => {
+        this.teacherListAll = response.rows;
+      });
+    },
+
     // 学历字典翻译
     xlFormat(row, column) {
       return this.selectDictLabel(this.xlOptions, row.xl);
@@ -337,6 +351,7 @@ export default {
       const id = row.id || this.ids;
       getTeacher(id).then(response => {
         this.form = response.data;
+        this.teacherMingCheng = this.form.user.nickName;
         this.open = true;
         this.title = "修改教师基本信息";
       });

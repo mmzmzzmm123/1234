@@ -9,6 +9,15 @@ export function listTeacher(query) {
   })
 }
 
+//不分页
+export function listTeacher2(query) {
+  return request({
+    url: '/system/teacher/list2',
+    method: 'get',
+    params: query
+  })
+}
+
 // 查询教师基本信息详细
 export function getTeacher(id) {
   return request({

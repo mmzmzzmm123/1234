@@ -26,6 +26,7 @@ public class ByTeacherJbxx extends BaseEntity
     @Excel(name = "用户id")
     private Long userid;
 
+
     /** 证件号码 */
     @Excel(name = "证件号码")
     private String zjhm;
@@ -208,4 +209,5 @@ public class ByTeacherJbxx extends BaseEntity
     public void setUser(SysUser user) {
         this.user = user;
     }
+
 }

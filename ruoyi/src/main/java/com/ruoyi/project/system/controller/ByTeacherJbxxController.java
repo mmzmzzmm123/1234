@@ -52,6 +52,15 @@ public class ByTeacherJbxxController extends BaseController
         return getDataTable(list);
     }
 
+    //不分页查询教师信息列表
+    @PreAuthorize("@ss.hasPermi('system:teacher:list')")
+    @GetMapping("/list2")
+    public TableDataInfo list2(ByTeacherJbxx byTeacherJbxx)
+    {
+        List<ByTeacherJbxx> list2 = byTeacherJbxxService.selectByTeacherJbxxList(byTeacherJbxx);
+        return getDataTable(list2);
+    }
+
     /**
      * 导出教师基本信息列表
      */
