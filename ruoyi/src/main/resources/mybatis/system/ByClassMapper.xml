@@ -14,14 +14,21 @@
         <result property="bjrych" column="bjrych"/>
         <result property="jbny" column="jbny"/>
         <result property="zbjs" column="zbjs"/>
+        <result property="zbjsxm" column="zbjsxm"/>
         <result property="pbjs" column="pbjs"/>
+        <result property="pbjsxm" column="pbjsxm"/>
         <result property="zljs" column="zljs"/>
+        <result property="zljsxm" column="zljsxm"/>
         <result property="isdel" column="isdel"/>
         <result property="createtime" column="createtime"/>
     </resultMap>
 
     <sql id="selectByClassVo">
-        select bjbh, dept_id, bjtype, bhxh, xn, bjmc, bjrych, jbny, zbjs, pbjs, zljs, isdel, createtime from by_class d
+        select bjbh, dept_id, bjtype, bhxh, xn, bjmc, bjrych, jbny,
+        zbjs,(select nick_name from sys_user where sys_user.user_id=zbjs) zbjsxm,
+        pbjs, (select nick_name from sys_user where sys_user.user_id=pbjs) pbjsxm,
+        zljs, (select nick_name from sys_user where sys_user.user_id=zljs) zljsxm,
+        isdel, createtime from by_class d
     </sql>
 
     <select id="selectByClassList" parameterType="ByClass" resultMap="ByClassResult">
@@ -37,6 +44,9 @@
         <if test="zbjs != null ">and zbjs = #{zbjs}</if>
         <if test="pbjs != null ">and pbjs = #{pbjs}</if>
         <if test="zljs != null ">and zljs = #{zljs}</if>
+        <if test="zbjsxm != null and zbjsxm != ''" >and zbjsxm like concat('%', #{zbjsxm}, '%')</if>
+        <if test="pbjsxm != null and pbjsxm != ''" >and pbjsxm like concat('%', #{pbjsxm}, '%')</if>
+        <if test="zljsxm != null and zljsxm != ''" >and zljsxm like concat('%', #{zljsxm}, '%')</if>
         <if test="isdel != null  and isdel != ''">and isdel = #{isdel}</if>
         <if test="createtime != null ">and createtime = #{createtime}</if>
         <!-- 数据范围过滤 -->

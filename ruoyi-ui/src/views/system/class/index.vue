@@ -21,31 +21,37 @@
         />
       </el-form-item>
       <el-form-item label="主班教师" prop="zbjs">
-        <el-input
-          v-model="queryParams.zbjs"
-          placeholder="请输入主班教师"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+        <el-select v-model="queryParams.zbjs" filterable placeholder="请选择主班教师">
+          <el-option
+            v-for="item in zbjsOptions"
+            :key="item.userId"
+            :label="item.nickName"
+            :value="item.userId"
+            :disabled="item.status == 1"
+          ></el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="配班教师" prop="pbjs">
-        <el-input
-          v-model="queryParams.pbjs"
-          placeholder="请输入配班教师"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+         <el-select v-model="queryParams.pbjs" filterable placeholder="请选择配班教师">
+          <el-option
+            v-for="item in pbjsOptions"
+            :key="item.userId"
+            :label="item.nickName"
+            :value="item.userId"
+            :disabled="item.status == 1"
+          ></el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="助理教师" prop="zljs">
-        <el-input
-          v-model="queryParams.zljs"
-          placeholder="请输入助理教师"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+         <el-select v-model="queryParams.zljs" filterable placeholder="请选择助理教师">
+          <el-option
+            v-for="item in zljsOptions"
+            :key="item.userId"
+            :label="item.nickName"
+            :value="item.userId"
+            :disabled="item.status == 1"
+          ></el-option>
+        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -97,11 +103,11 @@
     <el-table v-loading="loading" :data="classList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="班级编号" align="center" prop="bjbh" v-if="false" />>
-      <el-table-column label="班级类型" align="center" :formatter="bjtypeFormat" prop="bjtype" /> 
+      <el-table-column label="班级类型" align="center" :formatter="bjtypeFormat" prop="bjtype" />
       <el-table-column label="班级名称" align="center" prop="bjmc" />
-      <el-table-column label="主班教师" align="center" prop="zbjs" />
-      <el-table-column label="配班教师" align="center" prop="pbjs" />
-      <el-table-column label="助理教师" align="center" prop="zljs" />
+      <el-table-column label="主班教师" align="center" prop="zbjsxm" />
+      <el-table-column label="配班教师" align="center" prop="pbjsxm" />
+      <el-table-column label="助理教师" align="center" prop="zljsxm" />
       <el-table-column label="创建时间" align="center" prop="createtime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createtime) }}</span>
@@ -152,13 +158,37 @@
           <el-input v-model="form.bjmc" placeholder="请输入班级名称" />
         </el-form-item>
         <el-form-item label="主班教师" prop="zbjs">
-          <el-input v-model="form.zbjs" placeholder="请输入主班教师" />
+          <el-select v-model="form.zbjs" placeholder="请选择主班教师">
+            <el-option
+              v-for="item in zbjsOptions"
+              :key="item.userId"
+              :label="item.nickName"
+              :value="item.userId"
+              :disabled="item.status == 1"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="配班教师" prop="pbjs">
-          <el-input v-model="form.pbjs" placeholder="请输入配班教师" />
+          <el-select v-model="form.pbjs" placeholder="请选择配班教师">
+            <el-option
+              v-for="item in pbjsOptions"
+              :key="item.userId"
+              :label="item.nickName"
+              :value="item.userId"
+              :disabled="item.status == 1"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="助理教师" prop="zljs">
-          <el-input v-model="form.zljs" placeholder="请输入助理教师" />
+          <el-select v-model="form.zljs" placeholder="请选择助理教师">
+            <el-option
+              v-for="item in zljsOptions"
+              :key="item.userId"
+              :label="item.nickName"
+              :value="item.userId"
+              :disabled="item.status == 1"
+            ></el-option>
+          </el-select>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -178,6 +208,7 @@ import {
   updateClass,
   exportClass
 } from "@/api/system/class";
+import { getUsersByRoleId } from "@/api/system/user";
 
 export default {
   name: "Class",
@@ -201,16 +232,25 @@ export default {
       open: false,
       //班级类型 字典
       bjtypeOptions: [],
+      //主班教师角色用户
+      zbjsOptions: [],
+      //配班教师角色用户
+      pbjsOptions: [],
+      //助理教师角色用户
+      zljsOptions: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
         pageSize: 10,
         deptId: undefined,
-        bjtype: undefined, 
-        bjmc: undefined,       
+        bjtype: undefined,
+        bjmc: undefined,
         zbjs: undefined,
         pbjs: undefined,
         zljs: undefined,
+        zbjsxm: undefined,
+        pbjsxm: undefined,
+        zljsxm: undefined,
         createtime: undefined
       },
       // 表单参数
@@ -228,6 +268,12 @@ export default {
     this.getList();
     this.getDicts("sys_yebjlx").then(response => {
       this.bjtypeOptions = response.data;
+    });
+    //获取主班教师角色用户列表
+    getUsersByRoleId().then(response => {
+      this.zbjsOptions = response.zbjs;
+      this.pbjsOptions = response.pbjs;
+      this.zljsOptions = response.zljs;
     });
   },
   methods: {
@@ -258,7 +304,7 @@ export default {
         bjmc: undefined,
         zbjs: undefined,
         pbjs: undefined,
-        zljs: undefined, 
+        zljs: undefined,
         createtime: undefined
       };
       this.resetForm("form");
@@ -284,6 +330,12 @@ export default {
       this.reset();
       this.open = true;
       this.title = "添加班级信息";
+      //获取主班教师角色用户列表
+      getUsersByRoleId().then(response => {
+        this.zbjsOptions = response.zbjs;
+        this.pbjsOptions = response.pbjs;
+        this.zljsOptions = response.zljs;
+      });
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -293,6 +345,13 @@ export default {
         this.form = response.data;
         this.open = true;
         this.title = "修改班级信息";
+
+        //获取主班教师角色用户列表
+        getUsersByRoleId().then(response => {
+          this.zbjsOptions = response.zbjs;
+          this.pbjsOptions = response.pbjs;
+          this.zljsOptions = response.zljs;
+        });
       });
     },
     /** 提交按钮 */
@@ -326,15 +385,11 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const bjbhs = row.bjbh || this.ids;
-      this.$confirm(
-        '是否确认删除选中的班级信息?',
-        "警告",
-        {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }
-      )
+      this.$confirm("是否确认删除选中的班级信息?", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
         .then(function() {
           return delClass(bjbhs);
         })

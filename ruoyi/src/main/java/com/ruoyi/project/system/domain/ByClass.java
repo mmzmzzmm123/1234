@@ -71,16 +71,31 @@ public class ByClass extends BaseEntity {
     private Long zbjs;
 
     /**
+     * 主班教师名称
+     */
+    private String zbjsxm;
+
+    /**
      * 配班教师
      */
     @Excel(name = "配班教师")
     private Long pbjs;
 
     /**
+     * 配班教师名称
+     */
+    private String pbjsxm;
+
+    /**
      * 助理教师
      */
     @Excel(name = "助理教师")
     private Long zljs;
+
+    /**
+     * 助理教师名称
+     */
+    private String zljsxm;
 
     /**
      * 是否删除
@@ -166,6 +181,13 @@ public class ByClass extends BaseEntity {
     public Long getZbjs() {
         return zbjs;
     }
+    public void setZbjsxm(String zbjsxm) {
+        this.zbjsxm = zbjsxm;
+    }
+
+    public String getZbjsxm() {
+        return zbjsxm;
+    }
 
     public void setPbjs(Long pbjs) {
         this.pbjs = pbjs;
@@ -174,6 +196,13 @@ public class ByClass extends BaseEntity {
     public Long getPbjs() {
         return pbjs;
     }
+    public void setPbjsxm(String pbjsxm) {
+        this.pbjsxm = pbjsxm;
+    }
+
+    public String getPbjsxm() {
+        return pbjsxm;
+    }
 
     public void setZljs(Long zljs) {
         this.zljs = zljs;
@@ -181,6 +210,13 @@ public class ByClass extends BaseEntity {
 
     public Long getZljs() {
         return zljs;
+    }
+    public void setZljsxm(String zljsxm) {
+        this.zljsxm = zljsxm;
+    }
+
+    public String getZljsxm() {
+        return zljsxm;
     }
 
     public void setIsdel(String isdel) {
@@ -211,8 +247,11 @@ public class ByClass extends BaseEntity {
                 .append("bjrych", getBjrych())
                 .append("jbny", getJbny())
                 .append("zbjs", getZbjs())
+                .append("zbjsxm", getZbjsxm())
                 .append("pbjs", getPbjs())
+                .append("pbjsxm", getPbjsxm())
                 .append("zljs", getZljs())
+                .append("zljsxm", getZljsxm())
                 .append("isdel", getIsdel())
                 .append("createtime", getCreatetime())
                 .toString();

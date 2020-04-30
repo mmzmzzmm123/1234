@@ -18,6 +18,15 @@ export function getUser(userId) {
   })
 }
 
+// 查询用户列表根据roleId
+export function getUsersByRoleId() {
+  return request({
+    url: '/system/user/listbyroleid',
+    method: 'get'
+  })
+}
+
+
 // 新增用户
 export function addUser(data) {
   return request({

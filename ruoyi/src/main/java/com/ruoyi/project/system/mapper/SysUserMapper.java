@@ -38,6 +38,14 @@ public interface SysUserMapper
     public SysUser selectUserById(Long userId);
 
     /**
+     * 根据roleId查询用户列表
+     *
+     * @param sysUser 用户信息
+     * @return 用户信息集合信息
+     */
+    public List<SysUser> selectUserListByRoleId(SysUser user);
+
+    /**
      * 新增用户信息
      * 
      * @param user 用户信息
