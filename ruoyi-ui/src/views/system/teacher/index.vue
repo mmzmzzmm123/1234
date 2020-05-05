@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
-      <el-form-item label="用户id" prop="userid">
+      <el-form-item label="用户名称" prop="userid">
          <el-select v-model="queryParams.userid" filterable  placeholder="请选择用户" >
           <el-option
             v-for="item in teacherListAll"
@@ -37,15 +37,6 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5" v-show="false">
-        <el-button
-          type="primary"
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['system:teacher:add']"
-        >新增</el-button>
-      </el-col>
       <el-col :span="1.5">
         <el-button
           type="success"
@@ -101,6 +92,13 @@
             size="mini"
             type="text"
             icon="el-icon-edit"
+            @click="handleDetail(scope.row)"
+            v-hasPermi="['system:teacher:edit']"
+          >详情</el-button>
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['system:teacher:edit']"
           >修改</el-button>
@@ -125,7 +123,7 @@
 
     <!-- 添加或修改教师基本信息对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px">
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+      <el-form ref="form" :model="form" :rules="rules" label-width="80px" :disabled="flag">
         <el-form-item label="id" prop="id" v-show="false">
           <el-input v-model="form.id" />
         </el-form-item>
@@ -236,6 +234,8 @@ export default {
       zgzsOptions: [],
       //教师名称
       teacherMingCheng: "",
+      //修改和查看详情的标志  当查看详情时不允许编辑页面
+      flag: "",
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -353,9 +353,23 @@ export default {
         this.form = response.data;
         this.teacherMingCheng = this.form.user.nickName;
         this.open = true;
+        this.flag = false;
         this.title = "修改教师基本信息";
       });
     },
+    /** 详情按钮 */
+    handleDetail(row) {
+      this.reset();
+      const id = row.id;
+      getTeacher(id).then(response => {
+        this.form = response.data;
+        this.teacherMingCheng = this.form.user.nickName;
+        this.open = true;
+        //详情页不允许编辑页面
+        this.flag = true;
+        this.title = "教师基本信息详情";
+      });
+  },
     /** 提交按钮 */
     submitForm: function() {
       this.$refs["form"].validate(valid => {
