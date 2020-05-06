@@ -62,7 +62,7 @@ export default {
         },
         xAxis: [{
           type: 'category',
-          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+          data: ['班级A', '班级B', '班级C', '班级D', '班级E', '班级F', '班级G'],
           axisTick: {
             alignWithLabel: true
           }
@@ -74,25 +74,18 @@ export default {
           }
         }],
         series: [{
-          name: 'pageA',
+          name: '幼儿出勤率',
           type: 'bar',
           stack: 'vistors',
           barWidth: '60%',
-          data: [79, 52, 200, 334, 390, 330, 220],
+          data: [30, 29, 28, 31, 33, 18, 20],
           animationDuration
         }, {
-          name: 'pageB',
+          name: '教师出勤率',
           type: 'bar',
           stack: 'vistors',
           barWidth: '60%',
-          data: [80, 52, 200, 334, 390, 330, 220],
-          animationDuration
-        }, {
-          name: 'pageC',
-          type: 'bar',
-          stack: 'vistors',
-          barWidth: '60%',
-          data: [30, 52, 200, 334, 390, 330, 220],
+          data: [3, 3, 3, 3, 2, 3, 3],
           animationDuration
         }]
       })

@@ -18,6 +18,15 @@ export function listTeacher2(query) {
   })
 }
 
+// 查询教师基本信息列表
+export function listTeacherGroupXw() {
+  return request({
+    url: '/system/teacher/listgroupxw',
+    method: 'get',
+    params: ''
+  })
+}
+
 // 查询教师基本信息详细
 export function getTeacher(id) {
   return request({

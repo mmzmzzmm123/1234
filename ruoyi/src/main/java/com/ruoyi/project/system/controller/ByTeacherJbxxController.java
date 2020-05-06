@@ -62,6 +62,17 @@ public class ByTeacherJbxxController extends BaseController
     }
 
     /**
+     * 查询教师基本信息列表
+     */
+    @PreAuthorize("@ss.hasPermi('system:teacher:list')")
+    @GetMapping("/listgroupxw")
+    public TableDataInfo listGroupXw(ByTeacherJbxx byTeacherJbxx)
+    {
+        List<ByTeacherJbxx> list = byTeacherJbxxService.selectByTeacherJbGroupXw(byTeacherJbxx);
+        return getDataTable(list);
+    }
+
+    /**
      * 导出教师基本信息列表
      */
     @PreAuthorize("@ss.hasPermi('system:teacher:export')")
