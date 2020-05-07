@@ -95,7 +95,7 @@
       :data="schoolcalendarList"
       @selection-change="handleSelectionChange"
     >
-      <el-table-column type="selection" width="55" align="center" />
+      <el-table-column type="selection" width="55" align="center" :selectable="checkSelectable" />
       <el-table-column label="编号" align="center" prop="id" />
       <el-table-column label="名称" align="center" prop="name" />
       <el-table-column
@@ -120,6 +120,7 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['benyi:schoolcalendar:edit']"
+            :disabled="!checkSelectable(scope.row)"
           >修改</el-button>
           <el-button
             size="mini"
@@ -127,6 +128,7 @@
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['benyi:schoolcalendar:remove']"
+            :disabled="!checkSelectable(scope.row)"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -224,6 +226,8 @@ export default {
       scopeOptions: [],
       //学年学期
       xnxqOptions: [],
+      //声明方法
+      selectable: Function,
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -270,6 +274,16 @@ export default {
     // 学校园历类型--字典状态字典翻译
     schoolcalendartypeFormat(row, column) {
       return this.selectDictLabel(this.schoolcalendartypeOptions, row.type);
+    },
+    //控制按钮可用
+    checkSelectable(row) {
+      var date = new Date();
+      //console.log(date.toLocaleDateString());
+      return this.CompareDate(row.activitytime, date.toLocaleDateString());
+    },
+    //比较日期大小
+    CompareDate(d1, d2) {
+      return new Date(d1.replace(/-/g, "/")) > new Date(d2.replace(/-/g, "/"));
     },
     // 适用范围类型--字典状态字典翻译
     scopeFormat(row, column) {

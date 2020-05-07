@@ -187,6 +187,7 @@ public class BySchoolcalendarController extends BaseController {
     public AjaxResult edit(@RequestBody BySchoolcalendar bySchoolcalendar) {
         //首先判断 当前用户是否为学校
         if (schoolCommon.isSchool()) {
+            //应该判断记录是否在修改的时间范围内
             return toAjax(bySchoolcalendarService.updateBySchoolcalendar(bySchoolcalendar));
         } else {
             return AjaxResult.error("当前用户非幼儿园，无法编辑园历");
@@ -202,6 +203,7 @@ public class BySchoolcalendarController extends BaseController {
     public AjaxResult remove(@PathVariable Long[] ids) {
         //首先判断 当前用户是否为学校
         if (schoolCommon.isSchool()) {
+            //应该判断记录是否在删除的时间范围内
             return toAjax(bySchoolcalendarService.deleteBySchoolcalendarByIds(ids));
         } else {
             return AjaxResult.error("当前用户非幼儿园，无法删除园历");
