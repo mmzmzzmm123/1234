@@ -25,7 +25,7 @@
 
     <sql id="selectByClassVo">
         select bjbh, dept_id, bjtype, bhxh, xn, bjmc, bjrych, jbny,
-        zbjs,(select nick_name from sys_user where sys_user.user_id=zbjs) zbjsxm,
+        zbjs, (select nick_name from sys_user where sys_user.user_id=zbjs) zbjsxm,
         pbjs, (select nick_name from sys_user where sys_user.user_id=pbjs) pbjsxm,
         zljs, (select nick_name from sys_user where sys_user.user_id=zljs) zljsxm,
         isdel, createtime from by_class d
@@ -58,6 +58,17 @@
     <select id="selectByClassById" parameterType="String" resultMap="ByClassResult">
         <include refid="selectByClassVo"/>
         where bjbh = #{bjbh}
+    </select>
+
+    <select id="selectByClassByUserId" parameterType="ByClass" resultMap="ByClassResult">
+        <include refid="selectByClassVo"/>
+        <where>
+            <if test="zbjs != null ">and zbjs = #{zbjs}</if>
+            <if test="pbjs != null ">and pbjs = #{pbjs}</if>
+            <if test="zljs != null ">and zljs = #{zljs}</if>
+        </where>
+        <!-- 数据范围过滤 -->
+        ${dataScope}
     </select>
 
     <insert id="insertByClass" parameterType="ByClass">

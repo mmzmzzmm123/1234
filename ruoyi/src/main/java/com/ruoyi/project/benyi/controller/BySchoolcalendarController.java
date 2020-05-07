@@ -172,6 +172,7 @@ public class BySchoolcalendarController extends BaseController {
             bySchoolcalendar.setXnxq(strXnxq);
             bySchoolcalendar.setCreateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
             bySchoolcalendar.setDeptid(SecurityUtils.getLoginUser().getUser().getDept().getDeptId());
+
             return toAjax(bySchoolcalendarService.insertBySchoolcalendar(bySchoolcalendar));
         } else {
             return AjaxResult.error("当前用户非幼儿园，无法创建园历");

@@ -2,10 +2,15 @@ package com.ruoyi.project.common;
 
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.framework.security.LoginUser;
+import com.ruoyi.framework.web.domain.server.Sys;
+import com.ruoyi.project.system.domain.ByClass;
 import com.ruoyi.project.system.domain.BySchool;
 import com.ruoyi.project.system.domain.SysDept;
+import com.ruoyi.project.system.domain.SysUser;
+import com.ruoyi.project.system.service.IByClassService;
 import com.ruoyi.project.system.service.IBySchoolService;
 import com.ruoyi.project.system.service.ISysDeptService;
+import com.ruoyi.project.system.service.ISysUserService;
 import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,7 +25,11 @@ public class SchoolCommon {
     @Autowired
     private ISysDeptService deptService;
     @Autowired
+    private ISysUserService userService;
+    @Autowired
     private IBySchoolService schoolService;
+    @Autowired
+    private IByClassService byClassService;
 
     /**
      * 部门id转学校id
@@ -58,6 +67,15 @@ public class SchoolCommon {
         return sysDept;
     }
 
+    public SysUser getUser() {
+        LoginUser loginUser = SecurityUtils.getLoginUser();
+        Long userId = loginUser.getUser().getUserId();
+        System.out.println("用户id======:" + userId);
+        System.out.println("sys_user.user_id======:" + loginUser.getUser().getUserId());
+        SysUser sysUser = userService.selectUserById(userId);
+        return sysUser;
+    }
+
     /**
      * 判断当前用户是否为学校
      **/
@@ -75,6 +93,20 @@ public class SchoolCommon {
             }
         }
         return false;
+    }
+
+    public String getClassId() {
+        SysUser sysUser = getUser();
+        ByClass byClass = new ByClass();
+        byClass.setZbjs(sysUser.getUserId());
+        byClass.setPbjs(sysUser.getUserId());
+        byClass.setZljs(sysUser.getUserId());
+        ByClass byClass1 = byClassService.selectByClassByUserId(byClass);
+        if(byClass1 != null) {
+            return byClass1.getBjbh();
+        } else {
+            return "";
+        }
     }
 
     public String getCurrentXnXq() {

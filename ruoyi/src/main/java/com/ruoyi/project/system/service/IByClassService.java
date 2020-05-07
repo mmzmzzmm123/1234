@@ -19,6 +19,9 @@ public interface IByClassService
      */
     public ByClass selectByClassById(String bjbh);
 
+    //查询通过userid查询班级信息
+    public ByClass selectByClassByUserId(ByClass byClass);
+
     /**
      * 查询班级信息列表
      *

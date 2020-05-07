@@ -35,7 +35,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="leader"   column="leader"      />
 		<result property="status"   column="dept_status" />
 	</resultMap>
-	
+
+
 	<resultMap id="RoleResult" type="SysRole">
 		<id     property="roleId"       column="role_id"        />
 		<result property="roleName"     column="role_name"      />

@@ -33,6 +33,11 @@ public class ByClassServiceImpl implements IByClassService
         return byClassMapper.selectByClassById(bjbh);
     }
 
+    @Override
+    public ByClass selectByClassByUserId(ByClass byClass) {
+        return byClassMapper.selectByClassByUserId(byClass);
+    }
+
     /**
      * 查询班级信息列表
      *
