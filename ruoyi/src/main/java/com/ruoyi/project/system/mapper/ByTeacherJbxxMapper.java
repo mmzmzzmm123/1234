@@ -28,6 +28,14 @@ public interface ByTeacherJbxxMapper
     public List<ByTeacherJbxx> selectByTeacherJbxxList(ByTeacherJbxx byTeacherJbxx);
 
     /**
+     * 查询教师基本信息列表
+     *
+     *
+     * @return 教师基本信息集合
+     */
+    public List<ByTeacherJbxx> selectByTeacherJbGroupXw(ByTeacherJbxx byTeacherJbxx);
+
+    /**
      * 新增教师基本信息
      * 
      * @param byTeacherJbxx 教师基本信息
