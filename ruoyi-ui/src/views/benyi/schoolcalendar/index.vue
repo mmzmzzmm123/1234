@@ -176,6 +176,7 @@
             v-model="form.activitytime"
             type="date"
             value-format="yyyy-MM-dd"
+            :picker-options="pickerOptions0"
             placeholder="选择活动时间"
           ></el-date-picker>
         </el-form-item>
@@ -228,6 +229,12 @@ export default {
       xnxqOptions: [],
       //声明方法
       selectable: Function,
+      //禁止添加今天以前的日期
+      pickerOptions0: {
+        disabledDate(time) {
+          return time.getTime() < Date.now() - 8.64e7;
+        }
+      },
       // 查询参数
       queryParams: {
         pageNum: 1,

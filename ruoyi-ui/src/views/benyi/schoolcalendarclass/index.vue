@@ -11,7 +11,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="所属班级" prop="classid">
+      <!--<el-form-item label="所属班级" prop="classid">
         <el-select v-model="queryParams.classid"  placeholder="请选择班级" >
           <el-option
             v-for="item in classListAll"
@@ -20,7 +20,7 @@
             :value="item.classid"
           />
         </el-select>
-      </el-form-item>
+      </el-form-item>-->
       <el-form-item label="学年学期" prop="xnxq">
         <el-select v-model="queryParams.xnxq" placeholder="请选择学年学期" clearable size="small">
           <el-option
@@ -87,7 +87,7 @@
     </el-row>
 
     <el-table v-loading="loading" :data="schoolcalendarclassList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
+      <el-table-column type="selection" width="55" align="center" :selectable="checkSelectable"/>
       <el-table-column label="编号" align="center" prop="id" />
       <el-table-column label="名称" align="center" prop="name" />
       <el-table-column label="活动类型" align="center" prop="type" :formatter="typeFormat" />
@@ -107,6 +107,7 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['benyi:schoolcalendarclass:edit']"
+            :disabled="!checkSelectable(scope.row)"
           >修改</el-button>
           <el-button
             size="mini"
@@ -114,6 +115,7 @@
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['benyi:schoolcalendarclass:remove']"
+            :disabled="!checkSelectable(scope.row)"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -148,6 +150,7 @@
             v-model="form.activitytime"
             type="date"
             value-format="yyyy-MM-dd"
+            :picker-options="pickerOptions0"
             placeholder="选择活动时间">
           </el-date-picker>
         </el-form-item>
@@ -196,6 +199,14 @@ export default {
       typeOptions: [],
       //学年学期
       xnxqOptions: [],
+      //声明方法
+      selectable: Function,
+      //禁止添加今天以前的日期
+      pickerOptions0: {
+        disabledDate(time) {
+          return time.getTime() < Date.now() - 8.64e7;
+        }
+      },
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -250,6 +261,18 @@ export default {
     xnxqFormat(row, column) {
       return this.selectDictLabel(this.xnxqOptions, row.xnxq);
     },
+
+    //控制按钮可用
+    checkSelectable(row) {
+      var date = new Date();
+      //console.log(date.toLocaleDateString());
+      return this.CompareDate(row.activitytime, date.toLocaleDateString());
+    },
+    //比较日期大小
+    CompareDate(d1, d2) {
+      return new Date(d1.replace(/-/g, "/")) > new Date(d2.replace(/-/g, "/"));
+    },
+
     // 取消按钮
     cancel() {
       this.open = false;

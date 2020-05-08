@@ -50,6 +50,7 @@ import RaddarChart from "./dashboard/RaddarChart";
 import PieChart from "./dashboard/PieChart";
 import BarChart from "./dashboard/BarChart";
 import { getSchoolCalendars } from "@/api/benyi/schoolcalendar";
+//备用进行班级园历显示操作import { getSchoolCalendarsClass } from "@/api/benyi/schoolcalendarclass";
 
 export default {
   name: "Index",

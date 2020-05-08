@@ -44,10 +44,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectBySchoolcalendarClassList" parameterType="BySchoolcalendarClass" resultMap="BySchoolcalendarClassResult">
         select sc.id, sc.name, sc.type, sc.classid, sc.xnxq, sc.deptId, sc.activitytime, sc.createuserid, sc.createtime,
         c.bjbh, c.bjmc
-        from by_schoolcalendar_class sc
-        left join by_class c on sc.classid = c.bjbh
+        from by_schoolcalendar_class sc, by_class c
         <where>
-            sc.classid = c.bjbh
+
             <if test="name != null  and name != ''"> and sc.name like concat('%', #{name}, '%')</if>
             <if test="type != null  and type != ''"> and sc.type = #{type}</if>
             <if test="classid != null  and classid != ''"> and sc.classid = #{classid}</if>

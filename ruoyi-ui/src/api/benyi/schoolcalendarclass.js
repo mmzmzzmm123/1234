@@ -18,6 +18,15 @@ export function listSchoolcalendarclassAll(query) {
     })
 }
 
+// 用于显示到首页的园历信息查询 暂时不写备用状态
+// export function getSchoolCalendarsClass(query) {
+//     return request({
+//         url: '/benyi/schoolcalendarclass/getSchoolCalendarsClass',
+//         method: 'get',
+//         params: query
+//     })
+// }
+
 // 查询园历管理(班级)详细
 export function getSchoolcalendarclass(id) {
     return request({
