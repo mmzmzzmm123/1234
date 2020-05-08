@@ -95,13 +95,18 @@ public class SchoolCommon {
         return false;
     }
 
+    /**
+     * 判断当前用户是否拥有班级
+     **/
     public String getClassId() {
         SysUser sysUser = getUser();
         ByClass byClass = new ByClass();
         byClass.setZbjs(sysUser.getUserId());
         byClass.setPbjs(sysUser.getUserId());
         byClass.setZljs(sysUser.getUserId());
+        //新的返回byclass1返回整条数据
         ByClass byClass1 = byClassService.selectByClassByUserId(byClass);
+        System.out.println("--------------------"+ byClass1);
         if(byClass1 != null) {
             return byClass1.getBjbh();
         } else {

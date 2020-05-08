@@ -50,7 +50,20 @@ public class BySchoolcalendarClassController extends BaseController
     {
         startPage();
         List<BySchoolcalendarClass> list = bySchoolcalendarClassService.selectBySchoolcalendarClassList(bySchoolcalendarClass);
+        System.out.println("---------------------分页"+list);
         return getDataTable(list);
+    }
+
+    /**
+     * 不分页查询园历管理(班级)列表
+     */
+    @PreAuthorize("@ss.hasPermi('benyi:schoolcalendarclass:list')")
+    @GetMapping("/listAll")
+    public TableDataInfo listAll(BySchoolcalendarClass bySchoolcalendarClass)
+    {
+        List<BySchoolcalendarClass> listAll = bySchoolcalendarClassService.selectBySchoolcalendarClassList(bySchoolcalendarClass);
+        System.out.println("---------------------没有分页"+listAll);
+        return getDataTable(listAll);
     }
 
     /**

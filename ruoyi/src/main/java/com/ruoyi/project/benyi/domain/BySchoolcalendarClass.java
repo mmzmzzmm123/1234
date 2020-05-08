@@ -1,6 +1,7 @@
 package com.ruoyi.project.benyi.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.ruoyi.project.system.domain.ByClass;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.framework.aspectj.lang.annotation.Excel;
@@ -52,6 +53,8 @@ public class BySchoolcalendarClass extends BaseEntity
     @Excel(name = "创建时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createtime;
+
+    private ByClass byClass;
 
 
 
@@ -142,6 +145,7 @@ public class BySchoolcalendarClass extends BaseEntity
             .append("activitytime", getActivitytime())
             .append("createuserid", getCreateuserid())
             .append("createtime", getCreatetime())
+            .append("byClass", getByClass())
             .toString();
     }
 
@@ -151,5 +155,13 @@ public class BySchoolcalendarClass extends BaseEntity
 
     public void setCreatetime(Date createtime) {
         this.createtime = createtime;
+    }
+
+    public ByClass getByClass() {
+        return byClass;
+    }
+
+    public void setByClass(ByClass byClass) {
+        this.byClass = byClass;
     }
 }

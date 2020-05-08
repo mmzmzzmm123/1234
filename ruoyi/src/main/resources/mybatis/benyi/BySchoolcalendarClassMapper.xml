@@ -14,23 +14,48 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="activitytime"    column="activitytime"    />
         <result property="createuserid"    column="createuserid"    />
         <result property="createtime"    column="createtime"    />
+        <association property="byClass"    column="bjbh" javaType="ByClass" resultMap="ByClassResult" />
+    </resultMap>
+
+    <resultMap type="ByClass" id="ByClassResult">
+        <result property="bjbh" column="bjbh"/>
+        <result property="deptId" column="dept_id"/>
+        <result property="bjtype" column="bjtype"/>
+        <result property="bhxh" column="bhxh"/>
+        <result property="xn" column="xn"/>
+        <result property="bjmc" column="bjmc"/>
+        <result property="bjrych" column="bjrych"/>
+        <result property="jbny" column="jbny"/>
+        <result property="zbjs" column="zbjs"/>
+        <result property="zbjsxm" column="zbjsxm"/>
+        <result property="pbjs" column="pbjs"/>
+        <result property="pbjsxm" column="pbjsxm"/>
+        <result property="zljs" column="zljs"/>
+        <result property="zljsxm" column="zljsxm"/>
+        <result property="isdel" column="isdel"/>
+        <result property="createtime" column="createtime"/>
     </resultMap>
 
     <sql id="selectBySchoolcalendarClassVo">
-        select id, name, type, classid, xnxq, deptId, activitytime, createuserid, createtime from by_schoolcalendar_class
+        select id, name, type, classid, xnxq, deptId, activitytime, createuserid, createtime
+        from by_schoolcalendar_class
     </sql>
 
     <select id="selectBySchoolcalendarClassList" parameterType="BySchoolcalendarClass" resultMap="BySchoolcalendarClassResult">
-        <include refid="selectBySchoolcalendarClassVo"/>
-        <where>  
-            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
-            <if test="type != null  and type != ''"> and type = #{type}</if>
-            <if test="classid != null  and classid != ''"> and classid = #{classid}</if>
-            <if test="xnxq != null  and xnxq != ''"> and xnxq = #{xnxq}</if>
-            <if test="deptid != null "> and deptId = #{deptid}</if>
-            <if test="activitytime != null "> and activitytime = #{activitytime}</if>
-            <if test="createuserid != null "> and createuserid = #{createuserid}</if>
-            <if test="createtime != null "> and createtime = #{createtime}</if>
+        select sc.id, sc.name, sc.type, sc.classid, sc.xnxq, sc.deptId, sc.activitytime, sc.createuserid, sc.createtime,
+        c.bjbh, c.bjmc
+        from by_schoolcalendar_class sc
+        left join by_class c on sc.classid = c.bjbh
+        <where>
+            sc.classid = c.bjbh
+            <if test="name != null  and name != ''"> and sc.name like concat('%', #{name}, '%')</if>
+            <if test="type != null  and type != ''"> and sc.type = #{type}</if>
+            <if test="classid != null  and classid != ''"> and sc.classid = #{classid}</if>
+            <if test="xnxq != null  and xnxq != ''"> and sc.xnxq = #{xnxq}</if>
+            <if test="deptid != null "> and sc.deptId = #{deptid}</if>
+            <if test="activitytime != null "> and sc.activitytime = #{activitytime}</if>
+            <if test="createuserid != null "> and sc.createuserid = #{createuserid}</if>
+            <if test="createtime != null "> and sc.createtime = #{createtime}</if>
         </where>
     </select>
     

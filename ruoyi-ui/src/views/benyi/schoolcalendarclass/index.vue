@@ -12,13 +12,14 @@
         </el-select>
       </el-form-item>
       <el-form-item label="所属班级" prop="classid">
-        <el-input
-          v-model="queryParams.classid"
-          placeholder="请输入所属班级"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+        <el-select v-model="queryParams.classid"  placeholder="请选择班级" >
+          <el-option
+            v-for="item in classListAll"
+            :key="item.classid"
+            :label="item.byClass.bjmc"
+            :value="item.classid"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item label="学年学期" prop="xnxq">
         <el-select v-model="queryParams.xnxq" placeholder="请选择学年学期" clearable size="small">
@@ -90,7 +91,7 @@
       <el-table-column label="编号" align="center" prop="id" />
       <el-table-column label="名称" align="center" prop="name" />
       <el-table-column label="活动类型" align="center" prop="type" :formatter="typeFormat" />
-      <el-table-column label="所属班级" align="center" prop="classid" />
+      <el-table-column label="所属班级" align="center" prop="byClass.bjmc" />
       <el-table-column label="学年学期" align="center" prop="xnxq" :formatter="xnxqFormat" />
       <el-table-column label="活动时间" align="center" prop="activitytime" width="180"/>
       <el-table-column label="创建时间" align="center" prop="createtime" width="180">
@@ -160,7 +161,14 @@
 </template>
 
 <script>
-import { listSchoolcalendarclass, getSchoolcalendarclass, delSchoolcalendarclass, addSchoolcalendarclass, updateSchoolcalendarclass, exportSchoolcalendarclass } from "@/api/benyi/schoolcalendarclass";
+import { 
+  listSchoolcalendarclass, 
+  listSchoolcalendarclassAll,
+  getSchoolcalendarclass, 
+  delSchoolcalendarclass, 
+  addSchoolcalendarclass, 
+  updateSchoolcalendarclass, 
+  exportSchoolcalendarclass } from "@/api/benyi/schoolcalendarclass";
 
 export default {
   name: "Schoolcalendarclass",
@@ -178,6 +186,8 @@ export default {
       total: 0,
       // 园历管理(班级)表格数据
       schoolcalendarclassList: [],
+      // 园历班级名称列表
+      classListAll: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -208,6 +218,7 @@ export default {
   },
   created() {
     this.getList();
+    this.getListAll();
     this.getDicts("sys_schoolcalendartype").then(response => {
       this.typeOptions = response.data;
     });
@@ -223,6 +234,12 @@ export default {
         this.schoolcalendarclassList = response.rows;
         this.total = response.total;
         this.loading = false;
+      });
+    },
+    /** 查询所有班级名称列表 */
+    getListAll(){
+      listSchoolcalendarclassAll(this.queryParams).then(response => {
+        this.classListAll = response.rows;
       });
     },
     // 活动类型字典翻译

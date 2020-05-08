@@ -58,6 +58,7 @@ public class ByTeacherJbxxController extends BaseController
     public TableDataInfo list2(ByTeacherJbxx byTeacherJbxx)
     {
         List<ByTeacherJbxx> list2 = byTeacherJbxxService.selectByTeacherJbxxList(byTeacherJbxx);
+        System.out.println("-------------------"+list2);
         return getDataTable(list2);
     }
 
