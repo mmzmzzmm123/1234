@@ -131,7 +131,7 @@
           <el-input v-model="teacherMingCheng" :disabled="true"/>
         </el-form-item>
         <el-form-item label="证件号码" prop="zjhm">
-          <el-input v-model="form.zjhm" placeholder="请输入证件号码" />
+          <el-input v-model="form.zjhm" placeholder="请输入证件号码" maxlength="18" />
         </el-form-item>
         <el-form-item label="出生日期" prop="csrq">
           <el-date-picker
@@ -140,6 +140,7 @@
             style="width: 200px"
             v-model="form.csrq"
             type="date"
+            :picker-options="pickerOptions0"
             value-format="yyyy-MM-dd"
             placeholder="选择出生日期"
           ></el-date-picker>
@@ -178,6 +179,7 @@
             v-model="form.cjgzrq"
             type="date"
             value-format="yyyy-MM-dd"
+            :picker-options="pickerOptions0"
             placeholder="选择参加工作日期"
           ></el-date-picker>
         </el-form-item>
@@ -234,6 +236,12 @@ export default {
       zgzsOptions: [],
       //教师名称
       teacherMingCheng: "",
+      //禁止添加今天以后的日期
+      pickerOptions0: {
+        disabledDate(time) {
+          return time.getTime() > Date.now() - 8.64e7;
+        }
+      },
       //修改和查看详情的标志  当查看详情时不允许编辑页面
       flag: "",
       // 查询参数
@@ -255,7 +263,16 @@ export default {
       // 表单参数
       form: {},
       // 表单校验
-      rules: {}
+      rules: {
+        zjhm: [
+          {
+            required: false,
+            pattern: /^\d{18}$/,
+            message: "请输入正确的身份证号",
+            trigger: "blur"
+          }
+        ],
+      }
     };
   },
   created() {
