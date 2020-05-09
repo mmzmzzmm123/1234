@@ -1,0 +1,17 @@
+**/node_modules/
+**/dist/
+**/*.log
+**/tests/
+
+# Editor directories and files
+**/.vscode/
+
+**/package-lock.json
+
+### IntelliJ IDEA ###
+**/.idea/
+**/*.iml
+
+!*/build/*.java
+!*/build/*.html
+!*/build/*.xml
