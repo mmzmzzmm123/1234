@@ -51,7 +51,7 @@ public class BySchoolcalendarClassController extends BaseController
         String strClassId = schoolCommon.getClassId();
         if(!schoolCommon.isStringEmpty(strClassId)){
             startPage();
-            bySchoolcalendarClass.setClassid(schoolCommon.getClassId());
+            bySchoolcalendarClass.setClassid(strClassId);
             List<BySchoolcalendarClass> list = bySchoolcalendarClassService.selectBySchoolcalendarClassList(bySchoolcalendarClass);
             System.out.println("---------------------分页"+list);
             return getDataTable(list);
@@ -105,6 +105,7 @@ public class BySchoolcalendarClassController extends BaseController
     public AjaxResult add(@RequestBody BySchoolcalendarClass bySchoolcalendarClass)
     {
         String strClassId = schoolCommon.getClassId();
+        //判断当前用户是否有班级
         if(!schoolCommon.isStringEmpty(strClassId)) {
             //设置创建时间为当前时间
             bySchoolcalendarClass.setCreatetime(new Date());
@@ -130,7 +131,11 @@ public class BySchoolcalendarClassController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody BySchoolcalendarClass bySchoolcalendarClass)
     {
-        return toAjax(bySchoolcalendarClassService.updateBySchoolcalendarClass(bySchoolcalendarClass));
+        if(!schoolCommon.isStringEmpty(schoolCommon.getClassId())){
+            return toAjax(bySchoolcalendarClassService.updateBySchoolcalendarClass(bySchoolcalendarClass));
+        }else{
+            return AjaxResult.error("当前用户下没有班级，无法修改园历");
+        }
     }
 
     /**
@@ -141,6 +146,12 @@ public class BySchoolcalendarClassController extends BaseController
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)
     {
-        return toAjax(bySchoolcalendarClassService.deleteBySchoolcalendarClassByIds(ids));
+        //判断当前用户下是否有班级
+        if(!schoolCommon.isStringEmpty(schoolCommon.getClassId())) {
+            return toAjax(bySchoolcalendarClassService.deleteBySchoolcalendarClassByIds(ids));
+        }else {
+            return AjaxResult.error("当前用户下没有班级,无法删除园历");
+        }
+
     }
 }

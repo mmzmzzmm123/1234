@@ -67,6 +67,7 @@ public class SchoolCommon {
         return sysDept;
     }
 
+    //获取用户信息
     public SysUser getUser() {
         LoginUser loginUser = SecurityUtils.getLoginUser();
         Long userId = loginUser.getUser().getUserId();
@@ -101,14 +102,16 @@ public class SchoolCommon {
     public String getClassId() {
         SysUser sysUser = getUser();
         ByClass byClass = new ByClass();
+        //根据用户id来设置主班教师,配班教师,助理教师的教师id
         byClass.setZbjs(sysUser.getUserId());
         byClass.setPbjs(sysUser.getUserId());
         byClass.setZljs(sysUser.getUserId());
-        //新的返回byclass1返回整条数据
-        ByClass byClass1 = byClassService.selectByClassByUserId(byClass);
-        System.out.println("--------------------"+ byClass1);
-        if(byClass1 != null) {
-            return byClass1.getBjbh();
+        //新的返回byclassNew返回整条数据
+        ByClass byClassNew = byClassService.selectByClassByUserId(byClass);
+        System.out.println("--------------------"+ byClassNew);
+        if(byClassNew != null) {
+            //如果实体byclassnew不为空,那么取出它的班级编号
+            return byClassNew.getBjbh();
         } else {
             return "";
         }

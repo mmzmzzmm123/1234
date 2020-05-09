@@ -46,7 +46,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         c.bjbh, c.bjmc
         from by_schoolcalendar_class sc, by_class c
         <where>
-
             <if test="name != null  and name != ''"> and sc.name like concat('%', #{name}, '%')</if>
             <if test="type != null  and type != ''"> and sc.type = #{type}</if>
             <if test="classid != null  and classid != ''"> and sc.classid = #{classid}</if>
