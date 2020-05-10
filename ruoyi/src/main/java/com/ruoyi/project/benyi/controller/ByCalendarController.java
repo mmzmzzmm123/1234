@@ -1,6 +1,10 @@
 package com.ruoyi.project.benyi.controller;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
+
+import com.ruoyi.project.benyi.domain.ByCalendarShow;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -99,5 +103,35 @@ public class ByCalendarController extends BaseController
     public AjaxResult remove(@PathVariable Long[] ids)
     {
         return toAjax(byCalendarService.deleteByCalendarByIds(ids));
+    }
+
+    @PreAuthorize("@ss.hasPermi('benyi:schoolcalendar:list')")
+    @GetMapping("/getAllSchoolCalendars")
+    public AjaxResult getAllSchoolCalendars(ByCalendar byCalendar) {
+
+
+        List<ByCalendarShow> listvi= new ArrayList<>();
+        SimpleDateFormat formatter=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        //加载本一园历
+        List<ByCalendar> list = byCalendarService.selectByCalendarList(byCalendar);
+        for (ByCalendar calendar:list) {
+            ByCalendarShow by = new ByCalendarShow();
+            by.setId(calendar.getId());
+            by.setTitle(calendar.getName());
+            by.setStart(formatter.format(calendar.getActivitytime()));
+            by.setEnd(formatter.format(calendar.getActivityendtime()));
+            by.setColor(calendar.getStylecolor());
+            listvi.add(by);
+        }
+        //加载幼儿园园历
+
+        //接在班级园历
+
+
+
+        AjaxResult ajax = AjaxResult.success();
+        ajax.put("calendarData", listvi);
+        return ajax;
+
     }
 }

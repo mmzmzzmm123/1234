@@ -51,3 +51,12 @@ export function exportCalendar(query) {
     params: query
   })
 }
+
+// 查询园历列表
+export function getAllSchoolCalendars(query) {
+  return request({
+    url: '/benyi/calendar/getAllSchoolCalendars',
+    method: 'get',
+    params: query
+  })
+}
