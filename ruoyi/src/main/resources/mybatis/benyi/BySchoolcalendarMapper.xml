@@ -12,12 +12,14 @@
         <result property="xnxq" column="xnxq"/>
         <result property="deptid" column="dept_id"/>
         <result property="activitytime" column="activitytime"/>
+        <result property="activityendtime"    column="activityendtime"    />
+        <result property="stylecolor"    column="stylecolor"    />
         <result property="createuserid" column="createuserid"/>
         <result property="createtime" column="createtime"/>
     </resultMap>
 
     <sql id="selectBySchoolcalendarVo">
-        select id, name, type, scope, xnxq, dept_id, activitytime, createuserid, createtime from by_schoolcalendar d
+        select id, name, type, scope, xnxq, dept_id, activitytime, activityendtime, stylecolor, createuserid, createtime from by_schoolcalendar d
     </sql>
 
     <select id="selectBySchoolcalendarList" parameterType="BySchoolcalendar" resultMap="BySchoolcalendarResult">
@@ -29,6 +31,8 @@
         <if test="xnxq != null  and xnxq != ''">and xnxq like concat('%', #{xnxq}, '%')</if>
         <if test="deptid != null ">and dept_id = #{deptid}</if>
         <if test="activitytime != null ">and activitytime = #{activitytime}</if>
+        <if test="activityendtime != null "> and activityendtime = #{activityendtime}</if>
+        <if test="stylecolor != null  and stylecolor != ''"> and stylecolor = #{stylecolor}</if>
         <if test="createuserid != null ">and createuserid = #{createuserid}</if>
         <if test="beginTime != null and beginTime != ''"><!-- 开始时间检索 -->
             AND date_format(activitytime,'%y%m%d') &gt;= date_format(#{beginTime},'%y%m%d')
@@ -56,6 +60,8 @@
             <if test="xnxq != null  and xnxq != ''">xnxq,</if>
             <if test="deptid != null ">dept_id,</if>
             <if test="activitytime != null ">activitytime,</if>
+            <if test="activityendtime != null ">activityendtime,</if>
+            <if test="stylecolor != null  and stylecolor != ''">stylecolor,</if>
             <if test="createuserid != null ">createuserid,</if>
             <if test="createtime != null ">createtime,</if>
         </trim>
@@ -66,6 +72,8 @@
             <if test="xnxq != null  and xnxq != ''">#{xnxq},</if>
             <if test="deptid != null ">#{deptid},</if>
             <if test="activitytime != null ">#{activitytime},</if>
+            <if test="activityendtime != null ">#{activityendtime},</if>
+            <if test="stylecolor != null  and stylecolor != ''">#{stylecolor},</if>
             <if test="createuserid != null ">#{createuserid},</if>
             <if test="createtime != null ">#{createtime},</if>
         </trim>
@@ -80,6 +88,8 @@
             <if test="xnxq != null  and xnxq != ''">xnxq = #{xnxq},</if>
             <if test="deptid != null ">dept_id = #{deptid},</if>
             <if test="activitytime != null ">activitytime = #{activitytime},</if>
+            <if test="activityendtime != null ">activityendtime = #{activityendtime},</if>
+            <if test="stylecolor != null  and stylecolor != ''">stylecolor = #{stylecolor},</if>
             <if test="createuserid != null ">createuserid = #{createuserid},</if>
             <if test="createtime != null ">createtime = #{createtime},</if>
         </trim>

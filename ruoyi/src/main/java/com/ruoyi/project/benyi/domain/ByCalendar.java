@@ -8,12 +8,12 @@ import com.ruoyi.framework.web.domain.BaseEntity;
 import java.util.Date;
 
 /**
- * 园历管理(班级)对象 by_schoolcalendar_class
+ * 园历管理(本一)对象 by_calendar
  * 
  * @author tsbz
- * @date 2020-05-06
+ * @date 2020-05-10
  */
-public class BySchoolcalendarClass extends BaseEntity
+public class ByCalendar extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
@@ -28,32 +28,27 @@ public class BySchoolcalendarClass extends BaseEntity
     @Excel(name = "活动类型")
     private String type;
 
-    /** 所属班级 */
-    @Excel(name = "所属班级")
-    private String classid;
-
-    /** 学年学期 */
-    @Excel(name = "学年学期")
-    private String xnxq;
-
-    /** 所属学校 */
-    @Excel(name = "所属学校")
-    private Long deptid;
-
     /** 活动时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "活动时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date activitytime;
+
+    /** 活动结束时间 */
+    @Excel(name = "活动结束时间", width = 30, dateFormat = "yyyy-MM-dd")
+    private Date activityendtime;
+
+    /** 活动样式颜色 */
+    @Excel(name = "活动样式颜色")
+    private String stylecolor;
 
     /** 创建人 */
     @Excel(name = "创建人")
     private Long createuserid;
 
-    /** 创建时间 */
-    @Excel(name = "创建时间")
+    /**
+     * 创建时间
+     */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createtime;
-
-
 
     public void setId(Long id) 
     {
@@ -82,33 +77,6 @@ public class BySchoolcalendarClass extends BaseEntity
     {
         return type;
     }
-    public void setClassid(String classid) 
-    {
-        this.classid = classid;
-    }
-
-    public String getClassid() 
-    {
-        return classid;
-    }
-    public void setXnxq(String xnxq) 
-    {
-        this.xnxq = xnxq;
-    }
-
-    public String getXnxq() 
-    {
-        return xnxq;
-    }
-    public void setDeptid(Long deptid) 
-    {
-        this.deptid = deptid;
-    }
-
-    public Long getDeptid() 
-    {
-        return deptid;
-    }
     public void setActivitytime(Date activitytime) 
     {
         this.activitytime = activitytime;
@@ -117,6 +85,24 @@ public class BySchoolcalendarClass extends BaseEntity
     public Date getActivitytime() 
     {
         return activitytime;
+    }
+    public void setActivityendtime(Date activityendtime) 
+    {
+        this.activityendtime = activityendtime;
+    }
+
+    public Date getActivityendtime() 
+    {
+        return activityendtime;
+    }
+    public void setStylecolor(String stylecolor) 
+    {
+        this.stylecolor = stylecolor;
+    }
+
+    public String getStylecolor() 
+    {
+        return stylecolor;
     }
     public void setCreateuserid(Long createuserid) 
     {
@@ -127,8 +113,13 @@ public class BySchoolcalendarClass extends BaseEntity
     {
         return createuserid;
     }
+    public void setCreatetime(Date createtime) {
+        this.createtime = createtime;
+    }
 
-
+    public Date getCreatetime() {
+        return createtime;
+    }
 
     @Override
     public String toString() {
@@ -136,20 +127,11 @@ public class BySchoolcalendarClass extends BaseEntity
             .append("id", getId())
             .append("name", getName())
             .append("type", getType())
-            .append("classid", getClassid())
-            .append("xnxq", getXnxq())
-            .append("deptid", getDeptid())
             .append("activitytime", getActivitytime())
+            .append("activityendtime", getActivityendtime())
+            .append("stylecolor", getStylecolor())
             .append("createuserid", getCreateuserid())
             .append("createtime", getCreatetime())
             .toString();
-    }
-
-    public Date getCreatetime() {
-        return createtime;
-    }
-
-    public void setCreatetime(Date createtime) {
-        this.createtime = createtime;
     }
 }

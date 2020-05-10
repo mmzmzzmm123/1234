@@ -2,53 +2,50 @@
 <!DOCTYPE mapper
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ruoyi.project.benyi.mapper.BySchoolcalendarClassMapper">
+<mapper namespace="com.ruoyi.project.benyi.mapper.ByCalendarMapper">
     
-    <resultMap type="BySchoolcalendarClass" id="BySchoolcalendarClassResult">
+    <resultMap type="ByCalendar" id="ByCalendarResult">
         <result property="id"    column="id"    />
         <result property="name"    column="name"    />
         <result property="type"    column="type"    />
-        <result property="classid"    column="classid"    />
-        <result property="xnxq"    column="xnxq"    />
-        <result property="deptid"    column="deptId"    />
         <result property="activitytime"    column="activitytime"    />
+        <result property="activityendtime"    column="activityendtime"    />
+        <result property="stylecolor"    column="stylecolor"    />
         <result property="createuserid"    column="createuserid"    />
         <result property="createtime"    column="createtime"    />
     </resultMap>
 
-    <sql id="selectBySchoolcalendarClassVo">
-        select id, name, type, classid, xnxq, deptId, activitytime, createuserid, createtime from by_schoolcalendar_class
+    <sql id="selectByCalendarVo">
+        select id, name, type, activitytime, activityendtime, stylecolor, createuserid, createtime from by_calendar
     </sql>
 
-    <select id="selectBySchoolcalendarClassList" parameterType="BySchoolcalendarClass" resultMap="BySchoolcalendarClassResult">
-        <include refid="selectBySchoolcalendarClassVo"/>
+    <select id="selectByCalendarList" parameterType="ByCalendar" resultMap="ByCalendarResult">
+        <include refid="selectByCalendarVo"/>
         <where>  
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
             <if test="type != null  and type != ''"> and type = #{type}</if>
-            <if test="classid != null  and classid != ''"> and classid = #{classid}</if>
-            <if test="xnxq != null  and xnxq != ''"> and xnxq = #{xnxq}</if>
-            <if test="deptid != null "> and deptId = #{deptid}</if>
             <if test="activitytime != null "> and activitytime = #{activitytime}</if>
+            <if test="activityendtime != null "> and activityendtime = #{activityendtime}</if>
+            <if test="stylecolor != null  and stylecolor != ''"> and stylecolor = #{stylecolor}</if>
             <if test="createuserid != null "> and createuserid = #{createuserid}</if>
             <if test="createtime != null "> and createtime = #{createtime}</if>
         </where>
     </select>
     
-    <select id="selectBySchoolcalendarClassById" parameterType="Long" resultMap="BySchoolcalendarClassResult">
-        <include refid="selectBySchoolcalendarClassVo"/>
+    <select id="selectByCalendarById" parameterType="Long" resultMap="ByCalendarResult">
+        <include refid="selectByCalendarVo"/>
         where id = #{id}
     </select>
         
-    <insert id="insertBySchoolcalendarClass" parameterType="BySchoolcalendarClass">
-        insert into by_schoolcalendar_class
+    <insert id="insertByCalendar" parameterType="ByCalendar">
+        insert into by_calendar
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null ">id,</if>
             <if test="name != null  and name != ''">name,</if>
             <if test="type != null  and type != ''">type,</if>
-            <if test="classid != null  and classid != ''">classid,</if>
-            <if test="xnxq != null  and xnxq != ''">xnxq,</if>
-            <if test="deptid != null ">deptId,</if>
             <if test="activitytime != null ">activitytime,</if>
+            <if test="activityendtime != null ">activityendtime,</if>
+            <if test="stylecolor != null  and stylecolor != ''">stylecolor,</if>
             <if test="createuserid != null ">createuserid,</if>
             <if test="createtime != null ">createtime,</if>
          </trim>
@@ -56,36 +53,34 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="id != null ">#{id},</if>
             <if test="name != null  and name != ''">#{name},</if>
             <if test="type != null  and type != ''">#{type},</if>
-            <if test="classid != null  and classid != ''">#{classid},</if>
-            <if test="xnxq != null  and xnxq != ''">#{xnxq},</if>
-            <if test="deptid != null ">#{deptid},</if>
             <if test="activitytime != null ">#{activitytime},</if>
+            <if test="activityendtime != null ">#{activityendtime},</if>
+            <if test="stylecolor != null  and stylecolor != ''">#{stylecolor},</if>
             <if test="createuserid != null ">#{createuserid},</if>
             <if test="createtime != null ">#{createtime},</if>
          </trim>
     </insert>
 
-    <update id="updateBySchoolcalendarClass" parameterType="BySchoolcalendarClass">
-        update by_schoolcalendar_class
+    <update id="updateByCalendar" parameterType="ByCalendar">
+        update by_calendar
         <trim prefix="SET" suffixOverrides=",">
             <if test="name != null  and name != ''">name = #{name},</if>
             <if test="type != null  and type != ''">type = #{type},</if>
-            <if test="classid != null  and classid != ''">classid = #{classid},</if>
-            <if test="xnxq != null  and xnxq != ''">xnxq = #{xnxq},</if>
-            <if test="deptid != null ">deptId = #{deptid},</if>
             <if test="activitytime != null ">activitytime = #{activitytime},</if>
+            <if test="activityendtime != null ">activityendtime = #{activityendtime},</if>
+            <if test="stylecolor != null  and stylecolor != ''">stylecolor = #{stylecolor},</if>
             <if test="createuserid != null ">createuserid = #{createuserid},</if>
             <if test="createtime != null ">createtime = #{createtime},</if>
         </trim>
         where id = #{id}
     </update>
 
-    <delete id="deleteBySchoolcalendarClassById" parameterType="Long">
-        delete from by_schoolcalendar_class where id = #{id}
+    <delete id="deleteByCalendarById" parameterType="Long">
+        delete from by_calendar where id = #{id}
     </delete>
 
-    <delete id="deleteBySchoolcalendarClassByIds" parameterType="String">
-        delete from by_schoolcalendar_class where id in 
+    <delete id="deleteByCalendarByIds" parameterType="String">
+        delete from by_calendar where id in 
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
