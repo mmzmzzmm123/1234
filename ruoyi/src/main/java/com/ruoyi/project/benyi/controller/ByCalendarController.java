@@ -2,9 +2,17 @@ package com.ruoyi.project.benyi.controller;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import com.ruoyi.project.benyi.domain.ByCalendarShow;
+import com.ruoyi.project.benyi.domain.BySchoolcalendar;
+import com.ruoyi.project.benyi.domain.BySchoolcalendarClass;
+import com.ruoyi.project.benyi.service.IBySchoolcalendarClassService;
+import com.ruoyi.project.benyi.service.IBySchoolcalendarService;
+import com.ruoyi.project.common.SchoolCommon;
+import com.ruoyi.project.system.domain.SysDictData;
+import com.ruoyi.project.system.service.ISysDictDataService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,7 +34,7 @@ import com.ruoyi.framework.web.page.TableDataInfo;
 
 /**
  * 园历管理(本一)Controller
- * 
+ *
  * @author tsbz
  * @date 2020-05-10
  */
@@ -36,6 +44,12 @@ public class ByCalendarController extends BaseController
 {
     @Autowired
     private IByCalendarService byCalendarService;
+    @Autowired
+    private IBySchoolcalendarService bySchoolcalendarService;
+    @Autowired
+    private IBySchoolcalendarClassService bySchoolcalendarClassService;
+    @Autowired
+    private ISysDictDataService dictDataService;
 
     /**
      * 查询园历管理(本一)列表
@@ -108,25 +122,62 @@ public class ByCalendarController extends BaseController
     @PreAuthorize("@ss.hasPermi('benyi:schoolcalendar:list')")
     @GetMapping("/getAllSchoolCalendars")
     public AjaxResult getAllSchoolCalendars(ByCalendar byCalendar) {
-
-
+        //将类型颜色样式加载到字典
+        HashMap<String, String> hashMap = new HashMap<>();
+        for (SysDictData calendartype : dictDataService.selectDictDataByType("sys_schoolcalendartype")) {
+            System.out.println("====sys_yebjlx.getDictValue()"+calendartype.getDictValue());
+            System.out.println("=====calendartype.getCssClass()"+calendartype.getCssClass());
+            hashMap.put(calendartype.getDictValue(),calendartype.getCssClass());
+        }
+        //定义返回列表
         List<ByCalendarShow> listvi= new ArrayList<>();
         SimpleDateFormat formatter=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         //加载本一园历
         List<ByCalendar> list = byCalendarService.selectByCalendarList(byCalendar);
-        for (ByCalendar calendar:list) {
-            ByCalendarShow by = new ByCalendarShow();
-            by.setId(calendar.getId());
-            by.setTitle(calendar.getName());
-            by.setStart(formatter.format(calendar.getActivitytime()));
-            by.setEnd(formatter.format(calendar.getActivityendtime()));
-            by.setColor(calendar.getStylecolor());
-            listvi.add(by);
+        if(list.size()>0){
+            for (ByCalendar calendar:list) {
+                ByCalendarShow by = new ByCalendarShow();
+                by.setId(calendar.getId());
+                by.setTitle(calendar.getName());
+                by.setStart(formatter.format(calendar.getActivitytime()));
+                by.setEnd(formatter.format(calendar.getActivityendtime()));
+                by.setColor(hashMap.get(calendar.getType()));
+                listvi.add(by);
+            }
         }
-        //加载幼儿园园历
 
-        //接在班级园历
-
+        //根据不同的幼儿园加载幼儿园园历
+        BySchoolcalendar bySchoolcalendar = new BySchoolcalendar();
+            //设置幼儿园
+            //bySchoolcalendar.setDeptid();
+        List<BySchoolcalendar> bySchoolcalendarList = bySchoolcalendarService.selectBySchoolcalendarList(bySchoolcalendar);
+        if(bySchoolcalendarList.size()>0){
+            for (BySchoolcalendar bsc:bySchoolcalendarList) {
+                ByCalendarShow by = new ByCalendarShow();
+                by.setId(bsc.getId());
+                by.setTitle(bsc.getName());
+                by.setStart(formatter.format(bsc.getActivitytime()));
+                by.setEnd(formatter.format(bsc.getActivityendtime()));
+                by.setColor(hashMap.get(bsc.getType()));
+                listvi.add(by);
+            }
+        }
+        //根据不同的班级记载班级园历
+        BySchoolcalendarClass bySchoolcalendarClass = new BySchoolcalendarClass();
+            //设置班级
+            //bySchoolcalendarClass.setClassid();
+        List<BySchoolcalendarClass> bySchoolcalendarClassList = bySchoolcalendarClassService.selectBySchoolcalendarClassList(bySchoolcalendarClass);
+        if(bySchoolcalendarClassList.size()>0){
+            for (BySchoolcalendarClass bscc:bySchoolcalendarClassList) {
+                ByCalendarShow by = new ByCalendarShow();
+                by.setId(bscc.getId());
+                by.setTitle(bscc.getName());
+                by.setStart(formatter.format(bscc.getActivitytime()));
+                by.setEnd(formatter.format(bscc.getActivityendtime()));
+                by.setColor(hashMap.get(bscc.getType()));
+                listvi.add(by);
+            }
+        }
 
 
         AjaxResult ajax = AjaxResult.success();

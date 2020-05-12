@@ -9,7 +9,7 @@ import java.util.Date;
 
 /**
  * 园历管理(班级)对象 by_schoolcalendar_class
- * 
+ *
  * @author tsbz
  * @date 2020-05-06
  */
@@ -44,6 +44,18 @@ public class BySchoolcalendarClass extends BaseEntity
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date activitytime;
 
+    /**
+     * 活动结束时间
+     */
+    @Excel(name = "活动结束时间", width = 30, dateFormat = "yyyy-MM-dd")
+    private Date activityendtime;
+
+    /**
+     * 活动样式颜色
+     */
+    @Excel(name = "活动样式颜色")
+    private String stylecolor;
+
     /** 创建人 */
     @Excel(name = "创建人")
     private Long createuserid;
@@ -55,75 +67,89 @@ public class BySchoolcalendarClass extends BaseEntity
 
 
 
-    public void setId(Long id) 
+    public void setId(Long id)
     {
         this.id = id;
     }
 
-    public Long getId() 
+    public Long getId()
     {
         return id;
     }
-    public void setName(String name) 
+    public void setName(String name)
     {
         this.name = name;
     }
 
-    public String getName() 
+    public String getName()
     {
         return name;
     }
-    public void setType(String type) 
+    public void setType(String type)
     {
         this.type = type;
     }
 
-    public String getType() 
+    public String getType()
     {
         return type;
     }
-    public void setClassid(String classid) 
+    public void setClassid(String classid)
     {
         this.classid = classid;
     }
 
-    public String getClassid() 
+    public String getClassid()
     {
         return classid;
     }
-    public void setXnxq(String xnxq) 
+    public void setXnxq(String xnxq)
     {
         this.xnxq = xnxq;
     }
 
-    public String getXnxq() 
+    public String getXnxq()
     {
         return xnxq;
     }
-    public void setDeptid(Long deptid) 
+    public void setDeptid(Long deptid)
     {
         this.deptid = deptid;
     }
 
-    public Long getDeptid() 
+    public Long getDeptid()
     {
         return deptid;
     }
-    public void setActivitytime(Date activitytime) 
+    public void setActivitytime(Date activitytime)
     {
         this.activitytime = activitytime;
     }
 
-    public Date getActivitytime() 
+    public void setActivityendtime(Date activityendtime) {
+        this.activityendtime = activityendtime;
+    }
+    public Date getActivityendtime() {
+        return activityendtime;
+    }
+
+    public void setStylecolor(String stylecolor) {
+        this.stylecolor = stylecolor;
+    }
+    public String getStylecolor() {
+        return stylecolor;
+    }
+
+    public Date getActivitytime()
     {
         return activitytime;
     }
-    public void setCreateuserid(Long createuserid) 
+    public void setCreateuserid(Long createuserid)
     {
         this.createuserid = createuserid;
     }
 
-    public Long getCreateuserid() 
+    public Long getCreateuserid()
     {
         return createuserid;
     }
@@ -140,6 +166,8 @@ public class BySchoolcalendarClass extends BaseEntity
             .append("xnxq", getXnxq())
             .append("deptid", getDeptid())
             .append("activitytime", getActivitytime())
+            .append("activityendtime", getActivityendtime())
+            .append("stylecolor", getStylecolor())
             .append("createuserid", getCreateuserid())
             .append("createtime", getCreatetime())
             .toString();

@@ -77,11 +77,11 @@ export default {
       ],
       calendarWeekends: true,
       calendarEvents: [ // initial event data
-        {
-          title: 'Event Now',
-          start: new Date(),
-          color: '#A61000'
-        }
+        // {
+        //   title: 'Event Now',
+        //   start: new Date(),
+        //   color: '#A61000'
+        // }
       ],
       calendarApi: null,
       calendarData: [],
