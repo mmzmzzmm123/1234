@@ -71,7 +71,7 @@ export default {
       },
       calendarPlugins: [ // plugins must be defined in the JS
         dayGridPlugin,
-        // timeGridPlugin,
+        timeGridPlugin,
         interactionPlugin,// needed for dateClick
         listPlugin 
       ],
