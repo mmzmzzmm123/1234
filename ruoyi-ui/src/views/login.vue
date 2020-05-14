@@ -147,7 +147,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100%;
+  height: 100%; 
   background-image: url("../assets/image/login-background.jpg");
   background-size: cover;
 }
