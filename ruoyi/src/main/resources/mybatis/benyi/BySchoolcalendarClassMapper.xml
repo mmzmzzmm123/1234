@@ -16,6 +16,26 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="stylecolor"    column="stylecolor"    />
         <result property="createuserid"    column="createuserid"    />
         <result property="createtime"    column="createtime"    />
+        <association property="byClass"    column="bjbh" javaType="ByClass" resultMap="ByClassResult" />
+    </resultMap>
+
+    <resultMap type="ByClass" id="ByClassResult">
+        <result property="bjbh" column="bjbh"/>
+        <result property="deptId" column="dept_id"/>
+        <result property="bjtype" column="bjtype"/>
+        <result property="bhxh" column="bhxh"/>
+        <result property="xn" column="xn"/>
+        <result property="bjmc" column="bjmc"/>
+        <result property="bjrych" column="bjrych"/>
+        <result property="jbny" column="jbny"/>
+        <result property="zbjs" column="zbjs"/>
+        <result property="zbjsxm" column="zbjsxm"/>
+        <result property="pbjs" column="pbjs"/>
+        <result property="pbjsxm" column="pbjsxm"/>
+        <result property="zljs" column="zljs"/>
+        <result property="zljsxm" column="zljsxm"/>
+        <result property="isdel" column="isdel"/>
+        <result property="createtime" column="createtime"/>
     </resultMap>
 
     <sql id="selectBySchoolcalendarClassVo">

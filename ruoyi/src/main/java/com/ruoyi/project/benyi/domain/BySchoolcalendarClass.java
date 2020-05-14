@@ -1,6 +1,7 @@
 package com.ruoyi.project.benyi.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.ruoyi.project.system.domain.ByClass;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.framework.aspectj.lang.annotation.Excel;
@@ -65,6 +66,8 @@ public class BySchoolcalendarClass extends BaseEntity
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createtime;
 
+    private ByClass byClass;
+
 
 
     public void setId(Long id)
@@ -126,9 +129,14 @@ public class BySchoolcalendarClass extends BaseEntity
         this.activitytime = activitytime;
     }
 
+    public Date getActivitytime()
+    {
+        return activitytime;
+    }
     public void setActivityendtime(Date activityendtime) {
         this.activityendtime = activityendtime;
     }
+
     public Date getActivityendtime() {
         return activityendtime;
     }
@@ -136,13 +144,9 @@ public class BySchoolcalendarClass extends BaseEntity
     public void setStylecolor(String stylecolor) {
         this.stylecolor = stylecolor;
     }
+
     public String getStylecolor() {
         return stylecolor;
-    }
-
-    public Date getActivitytime()
-    {
-        return activitytime;
     }
     public void setCreateuserid(Long createuserid)
     {
@@ -159,18 +163,19 @@ public class BySchoolcalendarClass extends BaseEntity
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("id", getId())
-            .append("name", getName())
-            .append("type", getType())
-            .append("classid", getClassid())
-            .append("xnxq", getXnxq())
-            .append("deptid", getDeptid())
-            .append("activitytime", getActivitytime())
-            .append("activityendtime", getActivityendtime())
-            .append("stylecolor", getStylecolor())
-            .append("createuserid", getCreateuserid())
-            .append("createtime", getCreatetime())
-            .toString();
+                .append("id", getId())
+                .append("name", getName())
+                .append("type", getType())
+                .append("classid", getClassid())
+                .append("xnxq", getXnxq())
+                .append("deptid", getDeptid())
+                .append("activitytime", getActivitytime())
+                .append("activityendtime", getActivityendtime())
+                .append("stylecolor", getStylecolor())
+                .append("createuserid", getCreateuserid())
+                .append("createtime", getCreatetime())
+                .append("byClass", getByClass())
+                .toString();
     }
 
     public Date getCreatetime() {
@@ -179,5 +184,13 @@ public class BySchoolcalendarClass extends BaseEntity
 
     public void setCreatetime(Date createtime) {
         this.createtime = createtime;
+    }
+
+    public ByClass getByClass() {
+        return byClass;
+    }
+
+    public void setByClass(ByClass byClass) {
+        this.byClass = byClass;
     }
 }
