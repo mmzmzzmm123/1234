@@ -8,7 +8,7 @@ import settings from './modules/settings'
 import getters from './getters'
 
 Vue.use(Vuex)
-
+Vue.config.devtools = process.env.NODE_ENV === 'development'
 const store = new Vuex.Store({
   modules: {
     app,

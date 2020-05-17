@@ -9,6 +9,19 @@ function resolve(dir) {
 const name = defaultSettings.title || '若依管理系统' // 标题
 
 const port = process.env.port || process.env.npm_config_port || 80 // 端口
+//monaco webpack 插件
+const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
+
+const minify = process.env.NODE_ENV === 'development' ? false : {
+  collapseWhitespace: true,
+  removeComments: true,
+  removeRedundantAttributes: true,
+  removeScriptTypeAttributes: true,
+  removeStyleLinkTypeAttributes: true,
+  useShortDoctype: true,
+  minifyCSS: true,
+  minifyJS: true
+}
 
 // vue.config.js 配置说明
 //官方vue.config.js 参考文档 https://cli.vuejs.org/zh/config/#css-loaderoptions
@@ -26,6 +39,25 @@ module.exports = {
   lintOnSave: process.env.NODE_ENV === 'development',
   // 如果你不需要生产环境的 source map，可以将其设置为 false 以加速生产环境构建。
   productionSourceMap: false,
+  //运行时编译
+  runtimeCompiler: true,
+  //构建多页面配置
+  pages: {
+    index: {
+      entry: 'src/main.js',
+      template: 'public/index.html',
+      filename: 'index.html',
+      chunks: ['chunk-vendors', 'chunk-common', 'index'],
+      minify
+    },
+    preview: {
+      entry: 'src/views/tool/build/preview/main.js',
+      template: 'public/preview.html',
+      filename: 'preview.html',
+      chunks: ['chunk-vendors', 'chunk-common', 'preview'],
+      minify
+    }
+  },
   // webpack-dev-server 相关配置
   devServer: {
     host: '0.0.0.0',
@@ -33,7 +65,7 @@ module.exports = {
     proxy: {
       // detail: https://cli.vuejs.org/config/#devserver-proxy
       [process.env.VUE_APP_BASE_API]: {
-        target: `http://localhost:8080`,
+        target: `http://localhost:8888`,
         changeOrigin: true,
         pathRewrite: {
           ['^' + process.env.VUE_APP_BASE_API]: ''
@@ -48,7 +80,10 @@ module.exports = {
       alias: {
         '@': resolve('src')
       }
-    }
+    }, 
+    plugins: [
+      new MonacoWebpackPlugin()
+    ]
   },
   chainWebpack(config) {
     config.plugins.delete('preload') // TODO: need test
@@ -81,7 +116,6 @@ module.exports = {
         return options
       })
       .end()
-
     config
       // https://webpack.js.org/configuration/devtool/#development
       .when(process.env.NODE_ENV === 'development',
