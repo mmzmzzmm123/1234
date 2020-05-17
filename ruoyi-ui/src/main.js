@@ -47,7 +47,6 @@ Vue.prototype.msgInfo = function (msg) {
 Vue.component('Pagination', Pagination)
 
 Vue.use(permission)
-
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api

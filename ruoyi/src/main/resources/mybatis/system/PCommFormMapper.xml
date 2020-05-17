@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.mapper.PCommFormMapper">
+    
+    <resultMap type="PCommForm" id="PCommFormResult">
+        <result property="formId"    column="form_id"    />
+        <result property="formName"    column="form_name"    />
+        <result property="formComment"    column="form_comment"    />
+        <result property="tableName"    column="table_name"    />
+        <result property="options"    column="options"    />
+        <result property="versionName"    column="version_name"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectPCommFormVo">
+        select form_id, form_name, form_comment, table_name, options, version_name, create_by, create_time, update_by, update_time, remark from p_comm_form
+    </sql>
+
+    <select id="selectPCommFormList" parameterType="PCommForm" resultMap="PCommFormResult">
+        <include refid="selectPCommFormVo"/>
+        <where>  
+            <if test="formName != null  and formName != ''"> and form_name like concat('%', #{formName}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectPCommFormById" parameterType="Long" resultMap="PCommFormResult">
+        <include refid="selectPCommFormVo"/>
+        where form_id = #{formId}
+    </select>
+        
+    <insert id="insertPCommForm" parameterType="PCommForm" useGeneratedKeys="true" keyProperty="formId">
+        insert into p_comm_form
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="formName != null  and formName != ''">form_name,</if>
+            <if test="formComment != null  and formComment != ''">form_comment,</if>
+            <if test="tableName != null  and tableName != ''">table_name,</if>
+            <if test="options != null  and options != ''">options,</if>
+            <if test="versionName != null  and versionName != ''">version_name,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="remark != null  and remark != ''">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="formName != null  and formName != ''">#{formName},</if>
+            <if test="formComment != null  and formComment != ''">#{formComment},</if>
+            <if test="tableName != null  and tableName != ''">#{tableName},</if>
+            <if test="options != null  and options != ''">#{options},</if>
+            <if test="versionName != null  and versionName != ''">#{versionName},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="remark != null  and remark != ''">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePCommForm" parameterType="PCommForm">
+        update p_comm_form
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="formName != null  and formName != ''">form_name = #{formName},</if>
+            <if test="formComment != null  and formComment != ''">form_comment = #{formComment},</if>
+            <if test="tableName != null  and tableName != ''">table_name = #{tableName},</if>
+            <if test="options != null  and options != ''">options = #{options},</if>
+            <if test="versionName != null  and versionName != ''">version_name = #{versionName},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+        </trim>
+        where form_id = #{formId}
+    </update>
+
+    <delete id="deletePCommFormById" parameterType="Long">
+        delete from p_comm_form where form_id = #{formId}
+    </delete>
+
+    <delete id="deletePCommFormByIds" parameterType="String">
+        delete from p_comm_form where form_id in 
+        <foreach item="formId" collection="array" open="(" separator="," close=")">
+            #{formId}
+        </foreach>
+    </delete>
+    
+</mapper>
