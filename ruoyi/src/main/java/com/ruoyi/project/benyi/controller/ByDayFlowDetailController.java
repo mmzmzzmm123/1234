@@ -30,7 +30,7 @@ import com.ruoyi.framework.web.page.TableDataInfo;
  * @date 2020-05-07
  */
 @RestController
-@RequestMapping("/benyi/dayflowmanger")
+@RequestMapping("/benyi/dayflow/dayflowmanger")
 public class ByDayFlowDetailController extends BaseController
 {
     @Autowired
@@ -45,6 +45,7 @@ public class ByDayFlowDetailController extends BaseController
     {
         startPage();
         List<ByDayFlowDetail> list = byDayFlowDetailService.selectByDayFlowDetailList(byDayFlowDetail);
+        System.out.println("-------------------------------"+list);
         return getDataTable(list);
     }
 

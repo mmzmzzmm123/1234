@@ -25,103 +25,111 @@ import Layout from '@/layout'
  */
 
 // 公共路由
-export const constantRoutes = [
-  {
-    path: '/redirect',
-    component: Layout,
-    hidden: true,
-    children: [
-      {
-        path: '/redirect/:path(.*)',
-        component: () => import('@/views/redirect')
-      }
-    ]
-  },
-  {
-    path: '/login',
-    component: () => import('@/views/login'),
-    hidden: true
-  },
-  {
-    path: '/404',
-    component: () => import('@/views/error/404'),
-    hidden: true
-  },
-  {
-    path: '/401',
-    component: () => import('@/views/error/401'),
-    hidden: true
-  },
-  {
-    path: '',
-    component: Layout,
-    redirect: 'index',
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/index'),
-        name: '首页',
-        meta: { title: '首页', icon: 'dashboard', noCache: true, affix: true }
-      }
-    ]
-  },
-  {
-    path: '/user',
-    component: Layout,
-    hidden: true,
-    redirect: 'noredirect',
-    children: [
-      {
-        path: 'profile',
-        component: () => import('@/views/system/user/profile/index'),
-        name: 'Profile',
-        meta: { title: '个人中心', icon: 'user' }
-      }
-    ]
-  },
-  {
-    path: '/dict',
-    component: Layout,
-    hidden: true,
-    children: [
-      {
-        path: 'type/data/:dictId(\\d+)',
-        component: () => import('@/views/system/dict/data'),
-        name: 'Data',
-        meta: { title: '字典数据', icon: '' }
-      }
-    ]
-  },
-  {
-    path: '/job',
-    component: Layout,
-    hidden: true,
-    children: [
-      {
-        path: 'log',
-        component: () => import('@/views/monitor/job/log'),
-        name: 'JobLog',
-        meta: { title: '调度日志' }
-      }
-    ]
-  },
-  {
-    path: '/gen',
-    component: Layout,
-    hidden: true,
-    children: [
-      {
-        path: 'edit',
-        component: () => import('@/views/tool/gen/editTable'),
-        name: 'GenEdit',
-        meta: { title: '修改生成配置' }
-      }
-    ]
-  }
+export const constantRoutes = [{
+        path: '/redirect',
+        component: Layout,
+        hidden: true,
+        children: [{
+            path: '/redirect/:path(.*)',
+            component: () =>
+                import ('@/views/redirect')
+        }]
+    },
+    {
+        path: '/login',
+        component: () =>
+            import ('@/views/login'),
+        hidden: true
+    },
+    {
+        path: '/404',
+        component: () =>
+            import ('@/views/error/404'),
+        hidden: true
+    },
+    {
+        path: '/401',
+        component: () =>
+            import ('@/views/error/401'),
+        hidden: true
+    },
+    {
+        path: '',
+        component: Layout,
+        redirect: 'index',
+        children: [{
+            path: 'index',
+            component: () =>
+                import ('@/views/index'),
+            name: '首页',
+            meta: { title: '首页', icon: 'dashboard', noCache: true, affix: true }
+        }]
+    },
+    {
+        path: '/user',
+        component: Layout,
+        hidden: true,
+        redirect: 'noredirect',
+        children: [{
+            path: 'profile',
+            component: () =>
+                import ('@/views/system/user/profile/index'),
+            name: 'Profile',
+            meta: { title: '个人中心', icon: 'user' }
+        }]
+    },
+    {
+        path: '/dict',
+        component: Layout,
+        hidden: true,
+        children: [{
+            path: 'type/data/:dictId(\\d+)',
+            component: () =>
+                import ('@/views/system/dict/data'),
+            name: 'Data',
+            meta: { title: '字典数据', icon: '' }
+        }]
+    },
+    {
+        path: '/dayflow',
+        component: Layout,
+        hidden: true,
+        children: [{
+            path: 'dayflowmanger/dayflowtask/:id(\\d+)',
+            component: () =>
+                import ('@/views/benyi/dayflow/task'),
+            name: 'Task',
+            meta: { title: '一日流程任务', icon: '' }
+        }]
+    },
+    {
+        path: '/job',
+        component: Layout,
+        hidden: true,
+        children: [{
+            path: 'log',
+            component: () =>
+                import ('@/views/monitor/job/log'),
+            name: 'JobLog',
+            meta: { title: '调度日志' }
+        }]
+    },
+    {
+        path: '/gen',
+        component: Layout,
+        hidden: true,
+        children: [{
+            path: 'edit',
+            component: () =>
+                import ('@/views/tool/gen/editTable'),
+            name: 'GenEdit',
+            meta: { title: '修改生成配置' }
+        }]
+    }
 ]
 
 export default new Router({
-  mode: 'history', // 去掉url中的#
-  scrollBehavior: () => ({ y: 0 }),
-  routes: constantRoutes
+    mode: 'history', // 去掉url中的#
+    scrollBehavior: () => ({ y: 0 }),
+    routes: constantRoutes
 })
