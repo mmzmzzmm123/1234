@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.benyi.mapper.ByDayFlowTaskMapper">
+    
+    <resultMap type="ByDayFlowTask" id="ByDayFlowTaskResult">
+        <result property="code"    column="code"    />
+        <result property="taskLable"    column="task_lable"    />
+        <result property="taskValue"    column="task_value"    />
+        <result property="detailName"    column="detail_name"    />
+        <result property="taskTarget"    column="task_target"    />
+        <result property="taskContent"    column="task_content"    />
+        <result property="taskSort"    column="task_sort"    />
+        <result property="cssClass"    column="css_class"    />
+        <result property="listClass"    column="list_class"    />
+        <result property="createuser"    column="createuser"    />
+        <result property="updateuser"    column="updateuser"    />
+        <result property="createtime"    column="createtime"    />
+        <result property="updatetime"    column="updatetime"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectByDayFlowTaskVo">
+        select code, task_lable, task_value, detail_name, task_target, task_content, task_sort, css_class, list_class, createuser, updateuser, createtime, updatetime, remark
+        from by_day_flow_task
+    </sql>
+
+    <select id="selectByDayFlowTaskList" parameterType="ByDayFlowTask" resultMap="ByDayFlowTaskResult">
+        <include refid="selectByDayFlowTaskVo"/>
+        <where>  
+            <if test="taskLable != null  and taskLable != ''"> and task_lable like concat('%', #{taskLable}, '%')</if>
+            <if test="taskValue != null  and taskValue != ''"> and task_value = #{taskValue}</if>
+            <if test="detailName != null  and detailName != ''"> and detail_name = #{detailName}</if>
+            <if test="taskTarget != null  and taskTarget != ''"> and task_target = #{taskTarget}</if>
+            <if test="taskContent != null  and taskContent != ''"> and task_content = #{taskContent}</if>
+            <if test="taskSort != null "> and task_sort = #{taskSort}</if>
+            <if test="cssClass != null  and cssClass != ''"> and css_class = #{cssClass}</if>
+            <if test="listClass != null  and listClass != ''"> and list_class = #{listClass}</if>
+            <if test="createuser != null "> and createuser = #{createuser}</if>
+            <if test="updateuser != null "> and updateuser = #{updateuser}</if>
+        </where>
+        order by task_sort
+    </select>
+    
+    <select id="selectByDayFlowTaskByCode" parameterType="Long" resultMap="ByDayFlowTaskResult">
+        <include refid="selectByDayFlowTaskVo"/>
+        where code = #{code}
+    </select>
+        
+    <insert id="insertByDayFlowTask" parameterType="ByDayFlowTask" useGeneratedKeys="true" keyProperty="code">
+        insert into by_day_flow_task
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="taskLable != null  and taskLable != ''">task_lable,</if>
+            <if test="taskValue != null  and taskValue != ''">task_value,</if>
+            <if test="detailName != null  and detailName != ''">detail_name,</if>
+            <if test="taskTarget != null  and taskTarget != ''">task_target,</if>
+            <if test="taskContent != null  and taskContent != ''">task_content,</if>
+            <if test="taskSort != null ">task_sort,</if>
+            <if test="cssClass != null  and cssClass != ''">css_class,</if>
+            <if test="listClass != null  and listClass != ''">list_class,</if>
+            <if test="createuser != null ">createuser,</if>
+            <if test="updateuser != null ">updateuser,</if>
+            <if test="createtime != null ">createtime,</if>
+            <if test="updatetime != null ">updatetime,</if>
+            <if test="remark != null  and remark != ''">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="taskLable != null  and taskLable != ''">#{taskLable},</if>
+            <if test="taskValue != null  and taskValue != ''">#{taskValue},</if>
+            <if test="detailName != null  and detailName != ''">#{detailName},</if>
+            <if test="taskTarget != null  and taskTarget != ''">#{taskTarget},</if>
+            <if test="taskContent != null  and taskContent != ''">#{taskContent},</if>
+            <if test="taskSort != null ">#{taskSort},</if>
+            <if test="cssClass != null  and cssClass != ''">#{cssClass},</if>
+            <if test="listClass != null  and listClass != ''">#{listClass},</if>
+            <if test="createuser != null ">#{createuser},</if>
+            <if test="updateuser != null ">#{updateuser},</if>
+            <if test="createtime != null ">#{createtime},</if>
+            <if test="updatetime != null ">#{updatetime},</if>
+            <if test="remark != null  and remark != ''">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateByDayFlowTask" parameterType="ByDayFlowTask">
+        update by_day_flow_task
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="taskLable != null  and taskLable != ''">task_lable = #{taskLable},</if>
+            <if test="taskValue != null  and taskValue != ''">task_value = #{taskValue},</if>
+            <if test="detailName != null  and detailName != ''">detail_name = #{detailName},</if>
+            <if test="taskTarget != null  and taskTarget != ''">task_target = #{taskTarget},</if>
+            <if test="taskContent != null  and taskContent != ''">task_content = #{taskContent},</if>
+            <if test="taskSort != null ">task_sort = #{taskSort},</if>
+            <if test="cssClass != null  and cssClass != ''">css_class = #{cssClass},</if>
+            <if test="listClass != null  and listClass != ''">list_class = #{listClass},</if>
+            <if test="createuser != null ">createuser = #{createuser},</if>
+            <if test="updateuser != null ">updateuser = #{updateuser},</if>
+            <if test="createtime != null ">createtime = #{createtime},</if>
+            <if test="updatetime != null ">updatetime = #{updatetime},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+        </trim>
+        where code = #{code}
+    </update>
+
+    <delete id="deleteByDayFlowTaskByCode" parameterType="Long">
+        delete from by_day_flow_task where code = #{code}
+    </delete>
+
+    <delete id="deleteByDayFlowTaskByCodes" parameterType="String">
+        delete from by_day_flow_task where code in
+        <foreach item="code" collection="array" open="(" separator="," close=")">
+            #{code}
+        </foreach>
+    </delete>
+    
+</mapper>
