@@ -103,6 +103,18 @@ export const constantRoutes = [{
         }]
     },
     {
+        path: '/dayflow',
+        component: Layout,
+        hidden: true,
+        children: [{
+            path: 'dayflowmanger/dayflowtask/standard/:code(\\d+)',
+            component: () =>
+                import ('@/views/benyi/dayflow/standard'),
+            name: 'Standard',
+            meta: { title: '一日流程标准', icon: '' }
+        }]
+    },
+    {
         path: '/job',
         component: Layout,
         hidden: true,
