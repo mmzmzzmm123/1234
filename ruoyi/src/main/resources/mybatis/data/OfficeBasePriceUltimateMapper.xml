@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.data.price.compute.mapper.OfficeBasePriceUltimateMapper">
+
+    <resultMap type="com.ruoyi.project.data.price.compute.domain.OfficeBasePriceUltimate"
+               id="OfficeBasePriceUltimateResult">
+        <result property="id" column="id"/>
+        <result property="yearMonth" column="ITEM_YEARMONTH"/>
+        <result property="buildingId" column="ITEM_BUILDINGID_P"/>
+        <result property="communityId" column="ITEM_PROJECTID_P"/>
+        <result property="mainPrice" column="ITEM_MAINPRICE"/>
+        <result property="mainPriceRent" column="ITEM_MAINPRICERENT"/>
+        <result property="mainPricePst" column="ITEM_MAINPRICEPST"/>
+        <result property="mainPriceRentPst" column="ITEM_MAINPRICERENTPST"/>
+        <result property="mainPriceType" column="ITEM_MAINPRICETYPE"/>
+        <result property="mainPriceRentType" column="ITEM_MAINPRICERENTTYPE"/>
+        <result property="updateDate" column="ITEM_MODIFYDATE"/>
+        <result property="status" column="ITEM_STATUS"/>
+        <result property="isStandardBuilding" column="ITEM_BUILDINGSTD"/>
+        <result property="adjustPriceComment" column="ITEM_ADJEVD"/>
+    </resultMap>
+
+    <sql id="selectOfficeBasePriceUltimateVo">
+        select ITEM_YEARMONTH,ITEM_BUILDINGID,ITEM_UNIFIEDID,ITEM_PROJECTID,ITEM_BUILDINGID_P,ITEM_PROJECTID_P,ITEM_MAINPRICE,ITEM_MAINPRICERENT,ITEM_MAINPRICEPST,ITEM_MAINPRICERENTPST,ITEM_MAINPRICETYPE,ITEM_MAINPRICERENTTYPE,ITEM_MODIFYDATE,ITEM_STATUS,ITEM_BUILDINGSTD,ITEM_ADJEVD,ID from TLK_计价办公核准基价
+    </sql>
+
+    <select id="selectOfficeBasePriceUltimateListCount" parameterType="OfficeBasePriceUltimate" resultType="int">
+        select count(1) from TLK_计价办公核准基价
+        <where>
+            <if test="yearMonth != null">
+                AND ITEM_YEARMONTH = #{yearMonth}
+            </if>
+            <if test="communityId != null">
+                AND ITEM_PROJECTID_P = #{communityId}
+            </if>
+            <if test="buildingId != null">
+                AND ITEM_BUILDINGID_P = #{buildingId}
+            </if>
+            <if test="status != null">
+                AND ITEM_STATUS = #{status}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectOfficeBasePriceUltimateList" parameterType="OfficeBasePriceUltimate"
+            resultMap="OfficeBasePriceUltimateResult">
+        <include refid="selectOfficeBasePriceUltimateVo"/>
+        <where>
+            <if test="yearMonth != null">
+                AND ITEM_YEARMONTH = #{yearMonth}
+            </if>
+            <if test="communityId != null">
+                AND ITEM_PROJECTID_P = #{communityId}
+            </if>
+            <if test="buildingId != null">
+                AND ITEM_BUILDINGID_P = #{buildingId}
+            </if>
+        </where>
+        order by ITEM_YEARMONTH DESC,ID DESC OFFSET #{pageIndex} rows fetch next #{pageSize} rows only;
+    </select>
+
+    <select id="selectOfficeBasePriceUltimateById" parameterType="String" resultMap="OfficeBasePriceUltimateResult">
+        <include refid="selectOfficeBasePriceUltimateVo"/>
+        where id = #{id}
+    </select>
+
+    <!--    <insert id="insertOfficeBasePriceUltimate" parameterType="OfficeBasePriceUltimate" useGeneratedKeys="true"-->
+    <!--            keyProperty="id">-->
+    <!--        insert into office_base_price_ultimate-->
+    <!--        <trim prefix="(" suffix=")" suffixOverrides=",">-->
+    <!--        </trim>-->
+    <!--        <trim prefix="values (" suffix=")" suffixOverrides=",">-->
+    <!--        </trim>-->
+    <!--    </insert>-->
+
+    <update id="updateOfficeBasePriceUltimate" parameterType="OfficeBasePriceUltimate">
+        update TLK_计价办公核准基价 set ITEM_YEARMONTH=ITEM_YEARMONTH
+        <trim prefix="SET" suffixOverrides=",">
+        </trim>
+        where id = #{id}
+    </update>
+
+    <!--    <delete id="deleteOfficeBasePriceUltimateById" parameterType="Integer">-->
+    <!--        delete from office_base_price_ultimate where id = #{id}-->
+    <!--    </delete>-->
+
+    <!--    <delete id="deleteOfficeBasePriceUltimateByIds" parameterType="String">-->
+    <!--        delete from office_base_price_ultimate where id in-->
+    <!--        <foreach item="id" collection="array" open="(" separator="," close=")">-->
+    <!--            #{id}-->
+    <!--        </foreach>-->
+    <!--    </delete>-->
+
+</mapper>
