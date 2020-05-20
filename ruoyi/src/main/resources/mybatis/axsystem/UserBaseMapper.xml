@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.axsystem.mapper.UserBaseMapper">
+    
+    <resultMap type="UserBase" id="UserBaseResult">
+        <result property="uid"    column="uid"    />
+        <result property="userRole"    column="user_role"    />
+        <result property="registerSource"    column="register_source"    />
+        <result property="userName"    column="user_name"    />
+        <result property="nickName"    column="nick_name"    />
+        <result property="gender"    column="gender"    />
+        <result property="birthday"    column="birthday"    />
+        <result property="signature"    column="signature"    />
+        <result property="mobile"    column="mobile"    />
+        <result property="mobileBindTime"    column="mobile_bind_time"    />
+        <result property="email"    column="email"    />
+        <result property="emailBindTime"    column="email_bind_time"    />
+        <result property="face"    column="face"    />
+        <result property="face200"    column="face200"    />
+        <result property="srcface"    column="srcface"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="pushToken"    column="push_token"    />
+    </resultMap>
+
+    <sql id="selectUserBaseVo">
+        select uid, user_role, register_source, user_name, nick_name, gender, birthday, signature, mobile, mobile_bind_time, email, email_bind_time, face, face200, srcface, create_time, update_time, push_token from user_base
+    </sql>
+
+    <select id="selectUserBaseList" parameterType="UserBase" resultMap="UserBaseResult">
+        <include refid="selectUserBaseVo"/>
+        <where>  
+            <if test="userRole != null "> and user_role = #{userRole}</if>
+            <if test="registerSource != null "> and register_source = #{registerSource}</if>
+            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
+            <if test="nickName != null  and nickName != ''"> and nick_name like concat('%', #{nickName}, '%')</if>
+            <if test="gender != null "> and gender = #{gender}</if>
+            <if test="birthday != null "> and birthday = #{birthday}</if>
+            <if test="mobile != null  and mobile != ''"> and mobile = #{mobile}</if>
+            <if test="email != null  and email != ''"> and email = #{email}</if>
+            <if test="pushToken != null  and pushToken != ''"> and push_token = #{pushToken}</if>
+        </where>
+    </select>
+    
+    <select id="selectUserBaseById" parameterType="Long" resultMap="UserBaseResult">
+        <include refid="selectUserBaseVo"/>
+        where uid = #{uid}
+    </select>
+        
+    <insert id="insertUserBase" parameterType="UserBase">
+        insert into user_base
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="uid != null ">uid,</if>
+            <if test="userRole != null ">user_role,</if>
+            <if test="registerSource != null ">register_source,</if>
+            <if test="userName != null  and userName != ''">user_name,</if>
+            <if test="nickName != null  and nickName != ''">nick_name,</if>
+            <if test="gender != null ">gender,</if>
+            <if test="birthday != null ">birthday,</if>
+            <if test="signature != null  and signature != ''">signature,</if>
+            <if test="mobile != null  and mobile != ''">mobile,</if>
+            <if test="mobileBindTime != null ">mobile_bind_time,</if>
+            <if test="email != null  and email != ''">email,</if>
+            <if test="emailBindTime != null ">email_bind_time,</if>
+            <if test="face != null  and face != ''">face,</if>
+            <if test="face200 != null  and face200 != ''">face200,</if>
+            <if test="srcface != null  and srcface != ''">srcface,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="pushToken != null  and pushToken != ''">push_token,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="uid != null ">#{uid},</if>
+            <if test="userRole != null ">#{userRole},</if>
+            <if test="registerSource != null ">#{registerSource},</if>
+            <if test="userName != null  and userName != ''">#{userName},</if>
+            <if test="nickName != null  and nickName != ''">#{nickName},</if>
+            <if test="gender != null ">#{gender},</if>
+            <if test="birthday != null ">#{birthday},</if>
+            <if test="signature != null  and signature != ''">#{signature},</if>
+            <if test="mobile != null  and mobile != ''">#{mobile},</if>
+            <if test="mobileBindTime != null ">now(),</if>
+            <if test="email != null  and email != ''">#{email},</if>
+            <if test="emailBindTime != null ">now(),</if>
+            <if test="face != null  and face != ''">#{face},</if>
+            <if test="face200 != null  and face200 != ''">#{face200},</if>
+            <if test="srcface != null  and srcface != ''">#{srcface},</if>
+            <if test="createTime != null ">now(),</if>
+            <if test="updateTime != null ">now()</if>
+            <if test="pushToken != null  and pushToken != ''">#{pushToken},</if>
+         </trim>
+    </insert>
+
+    <update id="updateUserBase" parameterType="UserBase">
+        update user_base
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userRole != null ">user_role = #{userRole},</if>
+            <if test="registerSource != null ">register_source = #{registerSource},</if>
+            <if test="userName != null  and userName != ''">user_name = #{userName},</if>
+            <if test="nickName != null  and nickName != ''">nick_name = #{nickName},</if>
+            <if test="gender != null ">gender = #{gender},</if>
+            <if test="birthday != null ">birthday = #{birthday},</if>
+            <if test="signature != null  and signature != ''">signature = #{signature},</if>
+            <if test="mobile != null  and mobile != ''">mobile = #{mobile},</if>
+            <if test="mobileBindTime != null ">mobile_bind_time = #{mobileBindTime},</if>
+            <if test="email != null  and email != ''">email = #{email},</if>
+            <if test="emailBindTime != null ">email_bind_time = #{emailBindTime},</if>
+            <if test="face != null  and face != ''">face = #{face},</if>
+            <if test="face200 != null  and face200 != ''">face200 = #{face200},</if>
+            <if test="srcface != null  and srcface != ''">srcface = #{srcface},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateTime != null ">update_time = now(),</if>
+            <if test="pushToken != null  and pushToken != ''">push_token = #{pushToken},</if>
+        </trim>
+        where uid = #{uid}
+    </update>
+
+    <delete id="deleteUserBaseById" parameterType="Long">
+        delete from user_base where uid = #{uid}
+    </delete>
+
+    <delete id="deleteUserBaseByIds" parameterType="String">
+        delete from user_base where uid in 
+        <foreach item="uid" collection="array" open="(" separator="," close=")">
+            #{uid}
+        </foreach>
+    </delete>
+    
+</mapper>

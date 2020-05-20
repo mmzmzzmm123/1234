@@ -84,7 +84,6 @@ public final class UUID implements java.io.Serializable, Comparable<UUID>
     {
         return randomUUID(true);
     }
-
     /**
      * 获取类型 4（伪随机生成的）UUID 的静态工厂。 使用加密的强伪随机数生成器生成该 UUID。
      * 
