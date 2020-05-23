@@ -111,52 +111,8 @@ export default {
     });
   },
   methods: {
-    getCalendarEvents(info, successCallback, failureCallback) {
-      // const events = this.getSchoolCalendarList();
-      console.log("ceshi11111111");
-      getAllSchoolCalendars(this.queryParams).then(response => {
-        this.calendarData = response.calendarData;
-      });
-      console.log("ceshi22222222");
-      const events = this.calendarData;
-      console.log(this.calendarData);
-      console.log(events);
-      // const events = [
-      //   ...this.calendarEvents,
-      //   {
-      //     title: '五一劳动节',
-      //     start: '2020-05-01 00:00:00',
-      //     end: '2020-05-06 00:00:00',
-      //     color:'orange'
-      //   },
-      //   {
-      //     start: '2020-05-02 10:00:00',
-      //     end: '2020-05-02 14:00:00',
-      //     title: '东南大学计算机学术会议',
-      //     color:'green'
-      //   }
-      // ]
-      successCallback(events);
-    },
-    toggleWeekends() {
-      this.calendarWeekends = !this.calendarWeekends; // update a property
-    },
-    gotoPast() {
-      this.calendarApi.gotoDate("2019-08-01"); // call a method on the Calendar object
-    },
-    handleDateClick(arg) {
-      if (confirm("Would you like to add an event to " + arg.dateStr + " ?")) {
-        this.calendarEvents.push({
-          // add new event data
-          title: "New Event",
-          start: arg.date,
-          allDay: arg.allDay
-        });
-      }
-      this.calendarApi.refetchEvents();
-    },
     handleEventClick(info) {
-      alert("活动: " + info.event.title);
+       this.msgSuccess("活动: " + info.event.title);
     }
   },
   mounted() {
@@ -195,5 +151,12 @@ export default {
 }
 .no-border-btn {
   border: none;
+}
+.fc-header-toolbar {
+  @media screen and (max-width: 768px) {
+    .fc-left > .fc-today-button, .fc-right > .fc-listWeek-button {
+      display: none;
+    }
+  }
 }
 </style>

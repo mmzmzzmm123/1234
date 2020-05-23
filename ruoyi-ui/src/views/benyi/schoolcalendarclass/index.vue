@@ -32,12 +32,15 @@
         </el-select>
       </el-form-item>
       <el-form-item label="活动时间" prop="activitytime">
-        <el-date-picker clearable size="small" style="width: 200px"
+        <el-date-picker
+          clearable
+          size="small"
+          style="width: 200px"
           v-model="queryParams.activitytime"
           type="date"
           value-format="yyyy-MM-dd"
-          placeholder="选择活动时间">
-        </el-date-picker>
+          placeholder="选择活动时间"
+        ></el-date-picker>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -86,14 +89,18 @@
       </el-col>
     </el-row>
 
-    <el-table v-loading="loading" :data="schoolcalendarclassList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" :selectable="checkSelectable"/>
+    <el-table
+      v-loading="loading"
+      :data="schoolcalendarclassList"
+      @selection-change="handleSelectionChange"
+    >
+      <el-table-column type="selection" width="55" align="center" :selectable="checkSelectable" />
       <el-table-column label="编号" align="center" prop="id" />
       <el-table-column label="名称" align="center" prop="name" />
       <el-table-column label="活动类型" align="center" prop="type" :formatter="typeFormat" />
       <el-table-column label="所属班级" align="center" prop="byClass.bjmc" />
       <el-table-column label="学年学期" align="center" prop="xnxq" :formatter="xnxqFormat" />
-      <el-table-column label="活动时间" align="center" prop="activitytime" width="180"/>
+      <el-table-column label="活动时间" align="center" prop="activitytime" width="180" />
       <el-table-column label="创建时间" align="center" prop="createtime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createtime) }}</span>
@@ -120,7 +127,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -135,7 +142,7 @@
         <el-form-item label="名称" prop="name">
           <el-input v-model="form.name" type="textarea" placeholder="请输入内容" />
         </el-form-item>
-        <el-form-item label="活动类型">
+        <el-form-item label="活动类型" prop="type">
           <el-select v-model="form.type" placeholder="请选择活动类型">
             <el-option
               v-for="dict in typeOptions"
@@ -146,13 +153,19 @@
           </el-select>
         </el-form-item>
         <el-form-item label="活动时间" prop="activitytime">
-          <el-date-picker clearable size="small" style="width: 200px"
+          <el-date-picker
+            clearable
+            size="small"
+            style="width: 240px"
             v-model="form.activitytime"
-            type="date"
+            type="daterange"
             value-format="yyyy-MM-dd"
             :picker-options="pickerOptions0"
-            placeholder="选择活动时间">
-          </el-date-picker>
+            range-separator="-"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+          ></el-date-picker>
+          <el-input v-model="form.activityendtime" v-if="false" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -164,14 +177,15 @@
 </template>
 
 <script>
-import { 
-  listSchoolcalendarclass, 
+import {
+  listSchoolcalendarclass,
   listSchoolcalendarclassAll,
-  getSchoolcalendarclass, 
-  delSchoolcalendarclass, 
-  addSchoolcalendarclass, 
-  updateSchoolcalendarclass, 
-  exportSchoolcalendarclass } from "@/api/benyi/schoolcalendarclass";
+  getSchoolcalendarclass,
+  delSchoolcalendarclass,
+  addSchoolcalendarclass,
+  updateSchoolcalendarclass,
+  exportSchoolcalendarclass
+} from "@/api/benyi/schoolcalendarclass";
 
 export default {
   name: "Schoolcalendarclass",
@@ -223,7 +237,15 @@ export default {
       // 表单参数
       form: {},
       // 表单校验
+      // 表单校验
       rules: {
+        name: [{ required: true, message: "名称不能为空", trigger: "blur" }],
+        type: [
+          { required: true, message: "活动类型不能为空", trigger: "blur" }
+        ],
+        activitytime: [
+          { required: true, message: "活动时间不能为空", trigger: "blur" }
+        ]
       }
     };
   },
@@ -248,7 +270,7 @@ export default {
       });
     },
     /** 查询所有班级名称列表 */
-    getListAll(){
+    getListAll() {
       listSchoolcalendarclassAll(this.queryParams).then(response => {
         this.classListAll = response.rows;
       });
@@ -305,9 +327,9 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.id)
-      this.single = selection.length!=1
-      this.multiple = !selection.length
+      this.ids = selection.map(item => item.id);
+      this.single = selection.length != 1;
+      this.multiple = !selection.length;
     },
     /** 新增按钮操作 */
     handleAdd() {
@@ -318,9 +340,14 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const id = row.id || this.ids
+      const id = row.id || this.ids;
+      var myArray = new Array(2);
       getSchoolcalendarclass(id).then(response => {
         this.form = response.data;
+        myArray[0] = response.data.activitytime;
+        myArray[1] = response.data.activityendtime;
+        //console.log(myArray);
+        this.form.activitytime = myArray;
         this.open = true;
         this.title = "修改园历管理(班级)";
       });
@@ -329,6 +356,11 @@ export default {
     submitForm: function() {
       this.$refs["form"].validate(valid => {
         if (valid) {
+          var v1 = this.form.activitytime[0];
+          var v2 = this.form.activitytime[1];
+          this.form.activitytime = v1;
+          this.form.activityendtime = v2;
+
           if (this.form.id != undefined) {
             updateSchoolcalendarclass(this.form).then(response => {
               if (response.code === 200) {
@@ -356,29 +388,39 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$confirm('是否确认删除园历管理(班级)编号为"' + ids + '"的数据项?', "警告", {
+      this.$confirm(
+        '是否确认删除园历管理(班级)编号为"' + ids + '"的数据项?',
+        "警告",
+        {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
-        }).then(function() {
+        }
+      )
+        .then(function() {
           return delSchoolcalendarclass(ids);
-        }).then(() => {
+        })
+        .then(() => {
           this.getList();
           this.msgSuccess("删除成功");
-        }).catch(function() {});
+        })
+        .catch(function() {});
     },
     /** 导出按钮操作 */
     handleExport() {
       const queryParams = this.queryParams;
-      this.$confirm('是否确认导出所有园历管理(班级)数据项?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
+      this.$confirm("是否确认导出所有园历管理(班级)数据项?", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(function() {
           return exportSchoolcalendarclass(queryParams);
-        }).then(response => {
+        })
+        .then(response => {
           this.download(response.msg);
-        }).catch(function() {});
+        })
+        .catch(function() {});
     }
   }
 };
