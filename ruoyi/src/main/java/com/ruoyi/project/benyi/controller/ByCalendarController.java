@@ -101,7 +101,7 @@ public class ByCalendarController extends BaseController
     public AjaxResult add(@RequestBody ByCalendar byCalendar)
     {
         byCalendar.setCreateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
-        byCalendar.setStylecolor("red");
+        byCalendar.setStylecolor("#eb2f96");
         byCalendar.setCreatetime(new Date());
         return toAjax(byCalendarService.insertByCalendar(byCalendar));
     }
