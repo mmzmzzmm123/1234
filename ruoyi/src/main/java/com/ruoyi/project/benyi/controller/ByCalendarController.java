@@ -7,9 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.ruoyi.common.utils.SecurityUtils;
-import com.ruoyi.common.utils.ServletUtils;
-import com.ruoyi.framework.security.LoginUser;
-import com.ruoyi.framework.security.service.TokenService;
 import com.ruoyi.project.benyi.domain.*;
 import com.ruoyi.project.benyi.service.IBySchoolcalendarClassService;
 import com.ruoyi.project.benyi.service.IBySchoolcalendarService;
@@ -63,7 +60,7 @@ public class ByCalendarController extends BaseController
     /**
      * 查询园历管理(本一)列表
      */
-    @PreAuthorize("@ss.hasPermi('system:calendar:list')")
+    @PreAuthorize("@ss.hasPermi('benyi:calendar:list')")
     @GetMapping("/list")
     public TableDataInfo list(ByCalendar byCalendar)
     {
@@ -75,7 +72,7 @@ public class ByCalendarController extends BaseController
     /**
      * 导出园历管理(本一)列表
      */
-    @PreAuthorize("@ss.hasPermi('system:calendar:export')")
+    @PreAuthorize("@ss.hasPermi('benyi:calendar:export')")
     @Log(title = "园历管理(本一)", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
     public AjaxResult export(ByCalendar byCalendar)
@@ -88,7 +85,7 @@ public class ByCalendarController extends BaseController
     /**
      * 获取园历管理(本一)详细信息
      */
-    @PreAuthorize("@ss.hasPermi('system:calendar:query')")
+    @PreAuthorize("@ss.hasPermi('benyi:calendar:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
@@ -98,18 +95,21 @@ public class ByCalendarController extends BaseController
     /**
      * 新增园历管理(本一)
      */
-    @PreAuthorize("@ss.hasPermi('system:calendar:add')")
+    @PreAuthorize("@ss.hasPermi('benyi:calendar:add')")
     @Log(title = "园历管理(本一)", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody ByCalendar byCalendar)
     {
+        byCalendar.setCreateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
+        byCalendar.setStylecolor("red");
+        byCalendar.setCreatetime(new Date());
         return toAjax(byCalendarService.insertByCalendar(byCalendar));
     }
 
     /**
      * 修改园历管理(本一)
      */
-    @PreAuthorize("@ss.hasPermi('system:calendar:edit')")
+    @PreAuthorize("@ss.hasPermi('benyi:calendar:edit')")
     @Log(title = "园历管理(本一)", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody ByCalendar byCalendar)
@@ -120,7 +120,7 @@ public class ByCalendarController extends BaseController
     /**
      * 删除园历管理(本一)
      */
-    @PreAuthorize("@ss.hasPermi('system:calendar:remove')")
+    @PreAuthorize("@ss.hasPermi('benyi:calendar:remove')")
     @Log(title = "园历管理(本一)", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)
@@ -131,7 +131,7 @@ public class ByCalendarController extends BaseController
     /**
      * 园历展示(本一)
      */
-    @PreAuthorize("@ss.hasPermi('benyi:schoolcalendar:list')")
+    //@PreAuthorize("@ss.hasPermi('benyi:schoolcalendar:list')")
     @GetMapping("/getAllSchoolCalendars")
     public AjaxResult getAllSchoolCalendars(ByCalendar byCalendar) {
         //将类型颜色样式加载到字典
@@ -151,6 +151,7 @@ public class ByCalendarController extends BaseController
                 ByCalendarShow by = new ByCalendarShow();
                 by.setId(calendar.getId());
                 by.setTitle(calendar.getName());
+                System.out.println("title:"+calendar.getName());
                 by.setStart(formatter.format(calendar.getActivitytime()));
                 by.setEnd(formatter.format(calendar.getActivityendtime()));
                 by.setColor(hashMap.get(calendar.getType()));
@@ -242,7 +243,7 @@ public class ByCalendarController extends BaseController
                     by.setStart(timefor);
                     by.setEnd(timefor);
                     //教师生日颜色
-                    by.setColor("aqua");
+                    by.setColor("#13c2c2");
                     listvi.add(by);
                     System.out.println("当前年工作日期timefor===" + timefor+"====="+listTeacherBirth.get(i).getUser().getNickName()+"-合同满年期限");
                 }
@@ -257,7 +258,7 @@ public class ByCalendarController extends BaseController
                     by.setStart(timefor);
                     by.setEnd(timefor);
                     //教师生日颜色
-                    by.setColor("aqua");
+                    by.setColor("#722ed1");
                     listvi.add(by);
                     System.out.println("当前年生日timefor===" + timefor+"====="+listTeacherBirth.get(i).getUser().getNickName()+"-生日");
                 }

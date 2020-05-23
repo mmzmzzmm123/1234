@@ -3,50 +3,24 @@
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
       <el-form-item label="活动类型" prop="type">
         <el-select v-model="queryParams.type" placeholder="请选择活动类型" clearable size="small">
-          <el-option label="请选择字典生成" value="" />
+          <el-option
+            v-for="dict in calendartypeOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
         </el-select>
       </el-form-item>
       <el-form-item label="活动时间" prop="activitytime">
-        <el-date-picker clearable size="small" style="width: 200px"
+        <el-date-picker
+          clearable
+          size="small"
+          style="width: 200px"
           v-model="queryParams.activitytime"
           type="date"
           value-format="yyyy-MM-dd"
-          placeholder="选择活动时间">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item label="活动结束时间" prop="activityendtime">
-        <el-date-picker clearable size="small" style="width: 200px"
-          v-model="queryParams.activityendtime"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="选择活动结束时间">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item label="活动样式颜色" prop="stylecolor">
-        <el-input
-          v-model="queryParams.stylecolor"
-          placeholder="请输入活动样式颜色"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="创建人" prop="createuserid">
-        <el-input
-          v-model="queryParams.createuserid"
-          placeholder="请输入创建人"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="创建时间" prop="createtime">
-        <el-date-picker clearable size="small" style="width: 200px"
-          v-model="queryParams.createtime"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="选择创建时间">
-        </el-date-picker>
+          placeholder="选择活动时间"
+        ></el-date-picker>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -61,7 +35,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['system:calendar:add']"
+          v-hasPermi="['benyi:calendar:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -71,7 +45,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['system:calendar:edit']"
+          v-hasPermi="['benyi:calendar:edit']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -81,7 +55,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['system:calendar:remove']"
+          v-hasPermi="['benyi:calendar:remove']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -90,7 +64,7 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['system:calendar:export']"
+          v-hasPermi="['benyi:calendar:export']"
         >导出</el-button>
       </el-col>
     </el-row>
@@ -99,19 +73,15 @@
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="标识" align="center" prop="id" />
       <el-table-column label="名称" align="center" prop="name" />
-      <el-table-column label="活动类型" align="center" prop="type" />
-      <el-table-column label="活动时间" align="center" prop="activitytime" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.activitytime) }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="活动结束时间" align="center" prop="activityendtime" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.activityendtime) }}</span>
-        </template>
-      </el-table-column>
+      <el-table-column
+        label="活动类型"
+        align="center"
+        :formatter="calendartypeFormat"
+        prop="type"
+      />
+      <el-table-column label="活动开始时间" align="center" prop="activitytime" width="180"></el-table-column>
+      <el-table-column label="活动结束时间" align="center" prop="activityendtime" width="180"></el-table-column>
       <el-table-column label="活动样式颜色" align="center" prop="stylecolor" />
-      <el-table-column label="创建人" align="center" prop="createuserid" />
       <el-table-column label="创建时间" align="center" prop="createtime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createtime) }}</span>
@@ -124,19 +94,19 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['system:calendar:edit']"
+            v-hasPermi="['benyi:calendar:edit']"
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['system:calendar:remove']"
+            v-hasPermi="['benyi:calendar:remove']"
           >删除</el-button>
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -152,31 +122,36 @@
           <el-input v-model="form.name" type="textarea" placeholder="请输入内容" />
         </el-form-item>
         <el-form-item label="活动类型">
-          <el-select v-model="form.type" placeholder="请选择活动类型">
-            <el-option label="请选择字典生成" value="" />
-          </el-select>
+          <el-select v-model="form.type" placeholder="请选择活动类型" clearable size="small">
+          <el-option
+            v-for="dict in calendartypeOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
+        </el-select>
         </el-form-item>
-        <el-form-item label="活动时间" prop="activitytime">
-          <el-date-picker clearable size="small" style="width: 200px"
+        <el-form-item label="起始时间" prop="activitytime">
+          <el-date-picker
+            clearable
+            size="small"
+            style="width: 200px"
             v-model="form.activitytime"
             type="date"
             value-format="yyyy-MM-dd"
-            placeholder="选择活动时间">
-          </el-date-picker>
+            placeholder="选择活动起始时间"
+          ></el-date-picker>
         </el-form-item>
-        <el-form-item label="活动结束时间" prop="activityendtime">
-          <el-date-picker clearable size="small" style="width: 200px"
+        <el-form-item label="结束时间" prop="activityendtime">
+          <el-date-picker
+            clearable
+            size="small"
+            style="width: 200px"
             v-model="form.activityendtime"
             type="date"
             value-format="yyyy-MM-dd"
-            placeholder="选择活动结束时间">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="活动样式颜色" prop="stylecolor">
-          <el-input v-model="form.stylecolor" placeholder="请输入活动样式颜色" />
-        </el-form-item>
-        <el-form-item label="创建人" prop="createuserid">
-          <el-input v-model="form.createuserid" placeholder="请输入创建人" />
+            placeholder="选择活动结束时间"
+          ></el-date-picker>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -188,7 +163,14 @@
 </template>
 
 <script>
-import { listCalendar, getCalendar, delCalendar, addCalendar, updateCalendar, exportCalendar } from "@/api/benyi/calendar";
+import {
+  listCalendar,
+  getCalendar,
+  delCalendar,
+  addCalendar,
+  updateCalendar,
+  exportCalendar
+} from "@/api/benyi/calendar";
 
 export default {
   name: "Calendar",
@@ -206,6 +188,8 @@ export default {
       total: 0,
       // 园历管理(本一)表格数据
       calendarList: [],
+      //活动类型
+      calendartypeOptions: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -225,14 +209,20 @@ export default {
       // 表单参数
       form: {},
       // 表单校验
-      rules: {
-      }
+      rules: {}
     };
   },
   created() {
     this.getList();
+    this.getDicts("sys_schoolcalendartype").then(response => {
+      this.calendartypeOptions = response.data;
+    });
   },
   methods: {
+       // 学校园历类型--字典状态字典翻译
+    calendartypeFormat(row, column) {
+      return this.selectDictLabel(this.calendartypeOptions, row.type);
+    },
     /** 查询园历管理(本一)列表 */
     getList() {
       this.loading = true;
@@ -273,9 +263,9 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.id)
-      this.single = selection.length!=1
-      this.multiple = !selection.length
+      this.ids = selection.map(item => item.id);
+      this.single = selection.length != 1;
+      this.multiple = !selection.length;
     },
     /** 新增按钮操作 */
     handleAdd() {
@@ -286,7 +276,7 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const id = row.id || this.ids
+      const id = row.id || this.ids;
       getCalendar(id).then(response => {
         this.form = response.data;
         this.open = true;
@@ -324,29 +314,39 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$confirm('是否确认删除园历管理(本一)编号为"' + ids + '"的数据项?', "警告", {
+      this.$confirm(
+        '是否确认删除园历管理(本一)编号为"' + ids + '"的数据项?',
+        "警告",
+        {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
-        }).then(function() {
+        }
+      )
+        .then(function() {
           return delCalendar(ids);
-        }).then(() => {
+        })
+        .then(() => {
           this.getList();
           this.msgSuccess("删除成功");
-        }).catch(function() {});
+        })
+        .catch(function() {});
     },
     /** 导出按钮操作 */
     handleExport() {
       const queryParams = this.queryParams;
-      this.$confirm('是否确认导出所有园历管理(本一)数据项?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
+      this.$confirm("是否确认导出所有园历管理(本一)数据项?", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(function() {
           return exportCalendar(queryParams);
-        }).then(response => {
+        })
+        .then(response => {
           this.download(response.msg);
-        }).catch(function() {});
+        })
+        .catch(function() {});
     }
   }
 };

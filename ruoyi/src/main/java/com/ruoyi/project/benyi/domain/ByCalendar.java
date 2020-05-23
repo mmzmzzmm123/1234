@@ -29,11 +29,11 @@ public class ByCalendar extends BaseEntity
     private String type;
 
     /** 活动时间 */
-    @Excel(name = "活动时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date activitytime;
 
     /** 活动结束时间 */
-    @Excel(name = "活动结束时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date activityendtime;
 
     /** 活动样式颜色 */

@@ -106,7 +106,8 @@
       />
       <el-table-column label="适用范围" align="center" :formatter="scopeFormat" prop="scope" />
       <el-table-column label="学年学期" align="center" :formatter="xnxqFormat" prop="xnxq" />
-      <el-table-column label="活动时间" align="center" prop="activitytime" width="180" />
+      <el-table-column label="活动开始时间" align="center" prop="activitytime" width="180" />
+      <el-table-column label="活动截止时间" align="center" prop="activityendtime" width="180" />
       <el-table-column label="创建时间" align="center" prop="createtime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createtime) }}</span>
@@ -172,13 +173,16 @@
           <el-date-picker
             clearable
             size="small"
-            style="width: 200px"
+            style="width: 240px"
             v-model="form.activitytime"
-            type="date"
+            type="daterange"
             value-format="yyyy-MM-dd"
             :picker-options="pickerOptions0"
-            placeholder="选择活动时间"
+            range-separator="-"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
           ></el-date-picker>
+          <el-input v-model="form.activityendtime" v-if="false" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -364,8 +368,13 @@ export default {
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids;
+      var myArray=new Array(2);
       getSchoolcalendar(id).then(response => {
         this.form = response.data;
+        myArray[0]=response.data.activitytime;
+        myArray[1]=response.data.activityendtime;
+        //console.log(myArray);
+        this.form.activitytime = myArray;
         this.scopeOptions = response.scopes;
         this.form.scope = response.scopeIds;
         this.open = true;
@@ -378,6 +387,12 @@ export default {
         if (valid) {
           var arrscope = this.form.scope;
           this.form.scope = arrscope.join(";");
+
+          var v1 = this.form.activitytime[0];
+          var v2 = this.form.activitytime[1];
+          this.form.activitytime = v1;
+          this.form.activityendtime = v2;
+
           if (this.form.id != undefined) {
             updateSchoolcalendar(this.form).then(response => {
               if (response.code === 200) {
@@ -389,6 +404,7 @@ export default {
               }
             });
           } else {
+            //console.log(this.form.activitytime[1]);
             addSchoolcalendar(this.form).then(response => {
               if (response.code === 200) {
                 this.msgSuccess("新增成功");

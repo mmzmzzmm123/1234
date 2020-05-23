@@ -1,5 +1,6 @@
 package com.ruoyi.project.benyi.controller;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -53,10 +54,11 @@ public class BySchoolcalendarClassController extends BaseController
             startPage();
             bySchoolcalendarClass.setClassid(strClassId);
             List<BySchoolcalendarClass> list = bySchoolcalendarClassService.selectBySchoolcalendarClassList(bySchoolcalendarClass);
-            System.out.println("---------------------分页"+list);
+            //System.out.println("---------------------分页"+list);
             return getDataTable(list);
         }else{
-            return null;
+            List<BySchoolcalendarClass> list =new ArrayList<>();
+            return getDataTable(list);
         }
 
     }
@@ -69,7 +71,7 @@ public class BySchoolcalendarClassController extends BaseController
     public TableDataInfo listAll(BySchoolcalendarClass bySchoolcalendarClass)
     {
         List<BySchoolcalendarClass> listAll = bySchoolcalendarClassService.selectBySchoolcalendarClassList(bySchoolcalendarClass);
-        System.out.println("---------------------没有分页"+listAll);
+        //System.out.println("---------------------没有分页"+listAll);
         return getDataTable(listAll);
     }
 

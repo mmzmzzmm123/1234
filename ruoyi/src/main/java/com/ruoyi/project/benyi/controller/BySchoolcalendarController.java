@@ -168,6 +168,7 @@ public class BySchoolcalendarController extends BaseController {
         //首先判断 当前用户是否为学校
         if (schoolCommon.isSchool()) {
             bySchoolcalendar.setCreatetime(new Date());
+            //System.out.println("activitytime="+bySchoolcalendar.getActivitytime());
             String strXnxq = schoolCommon.getCurrentXnXq(bySchoolcalendar.getActivitytime());
             bySchoolcalendar.setXnxq(strXnxq);
             bySchoolcalendar.setCreateuserid(SecurityUtils.getLoginUser().getUser().getUserId());

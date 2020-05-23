@@ -48,7 +48,7 @@ public class BySchoolcalendarClass extends BaseEntity
     /**
      * 活动结束时间
      */
-    @Excel(name = "活动结束时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date activityendtime;
 
     /**

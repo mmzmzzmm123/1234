@@ -55,6 +55,7 @@ export default {
   & .sidebar-logo-link {
     height: 100%;
     width: 100%;
+    background: #fff;
 
     & .sidebar-logo {
       width: 32px;
@@ -66,7 +67,7 @@ export default {
     & .sidebar-title {
       display: inline-block;
       margin: 0;
-      color: #fff;
+      color: #333;
       font-weight: 600;
       line-height: 50px;
       font-size: 14px;

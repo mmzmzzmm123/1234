@@ -3,7 +3,7 @@ import request from '@/utils/request'
 // 查询园历管理(本一)列表
 export function listCalendar(query) {
   return request({
-    url: '/system/calendar/list',
+    url: '/benyi/calendar/list',
     method: 'get',
     params: query
   })
@@ -12,7 +12,7 @@ export function listCalendar(query) {
 // 查询园历管理(本一)详细
 export function getCalendar(id) {
   return request({
-    url: '/system/calendar/' + id,
+    url: '/benyi/calendar/' + id,
     method: 'get'
   })
 }
@@ -20,7 +20,7 @@ export function getCalendar(id) {
 // 新增园历管理(本一)
 export function addCalendar(data) {
   return request({
-    url: '/system/calendar',
+    url: '/benyi/calendar',
     method: 'post',
     data: data
   })
@@ -29,7 +29,7 @@ export function addCalendar(data) {
 // 修改园历管理(本一)
 export function updateCalendar(data) {
   return request({
-    url: '/system/calendar',
+    url: '/benyi/calendar',
     method: 'put',
     data: data
   })
@@ -38,7 +38,7 @@ export function updateCalendar(data) {
 // 删除园历管理(本一)
 export function delCalendar(id) {
   return request({
-    url: '/system/calendar/' + id,
+    url: '/benyi/calendar/' + id,
     method: 'delete'
   })
 }
@@ -46,7 +46,7 @@ export function delCalendar(id) {
 // 导出园历管理(本一)
 export function exportCalendar(query) {
   return request({
-    url: '/system/calendar/export',
+    url: '/benyi/calendar/export',
     method: 'get',
     params: query
   })
