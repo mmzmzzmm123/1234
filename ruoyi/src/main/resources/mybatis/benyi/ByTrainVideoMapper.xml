@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.benyi.mapper.ByTrainVideoMapper">
+    
+    <resultMap type="ByTrainVideo" id="ByTrainVideoResult">
+        <result property="id"    column="id"    />
+        <result property="title"    column="title"    />
+        <result property="information"    column="information"    />
+        <result property="lecturer"    column="lecturer"    />
+        <result property="videourl"    column="videourl"    />
+        <result property="type"    column="type"    />
+        <result property="classtype"    column="classtype"    />
+        <result property="createuserid"    column="createuserid"    />
+        <result property="createtime"    column="createtime"    />
+    </resultMap>
+
+    <sql id="selectByTrainVideoVo">
+        select id, title, information, lecturer, videourl, type, classtype, createuserid, createtime from by_train_video
+    </sql>
+
+    <select id="selectByTrainVideoList" parameterType="ByTrainVideo" resultMap="ByTrainVideoResult">
+        <include refid="selectByTrainVideoVo"/>
+        <where>  
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="information != null  and information != ''"> and information = #{information}</if>
+            <if test="lecturer != null  and lecturer != ''"> and lecturer = #{lecturer}</if>
+            <if test="videourl != null  and videourl != ''"> and videourl = #{videourl}</if>
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+            <if test="classtype != null  and classtype != ''"> and classtype = #{classtype}</if>
+            <if test="createuserid != null "> and createuserid = #{createuserid}</if>
+            <if test="createtime != null "> and createtime = #{createtime}</if>
+        </where>
+    </select>
+    
+    <select id="selectByTrainVideoById" parameterType="Long" resultMap="ByTrainVideoResult">
+        <include refid="selectByTrainVideoVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertByTrainVideo" parameterType="ByTrainVideo" useGeneratedKeys="true" keyProperty="id">
+        insert into by_train_video
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="title != null  and title != ''">title,</if>
+            <if test="information != null  and information != ''">information,</if>
+            <if test="lecturer != null  and lecturer != ''">lecturer,</if>
+            <if test="videourl != null  and videourl != ''">videourl,</if>
+            <if test="type != null  and type != ''">type,</if>
+            <if test="classtype != null  and classtype != ''">classtype,</if>
+            <if test="createuserid != null ">createuserid,</if>
+            <if test="createtime != null ">createtime,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="title != null  and title != ''">#{title},</if>
+            <if test="information != null  and information != ''">#{information},</if>
+            <if test="lecturer != null  and lecturer != ''">#{lecturer},</if>
+            <if test="videourl != null  and videourl != ''">#{videourl},</if>
+            <if test="type != null  and type != ''">#{type},</if>
+            <if test="classtype != null  and classtype != ''">#{classtype},</if>
+            <if test="createuserid != null ">#{createuserid},</if>
+            <if test="createtime != null ">#{createtime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateByTrainVideo" parameterType="ByTrainVideo">
+        update by_train_video
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null  and title != ''">title = #{title},</if>
+            <if test="information != null  and information != ''">information = #{information},</if>
+            <if test="lecturer != null  and lecturer != ''">lecturer = #{lecturer},</if>
+            <if test="videourl != null  and videourl != ''">videourl = #{videourl},</if>
+            <if test="type != null  and type != ''">type = #{type},</if>
+            <if test="classtype != null  and classtype != ''">classtype = #{classtype},</if>
+            <if test="createuserid != null ">createuserid = #{createuserid},</if>
+            <if test="createtime != null ">createtime = #{createtime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteByTrainVideoById" parameterType="Long">
+        delete from by_train_video where id = #{id}
+    </delete>
+
+    <delete id="deleteByTrainVideoByIds" parameterType="String">
+        delete from by_train_video where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

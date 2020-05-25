@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.benyi.mapper.ByLecturerMapper">
+    
+    <resultMap type="ByLecturer" id="ByLecturerResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="information"    column="information"    />
+        <result property="imgurl"    column="imgurl"    />
+        <result property="createuserid"    column="createuserid"    />
+        <result property="createtime"    column="createtime"    />
+    </resultMap>
+
+    <sql id="selectByLecturerVo">
+        select id, name, information, imgurl, createuserid, createtime from by_lecturer
+    </sql>
+
+    <select id="selectByLecturerList" parameterType="ByLecturer" resultMap="ByLecturerResult">
+        <include refid="selectByLecturerVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="information != null  and information != ''"> and information = #{information}</if>
+            <if test="imgurl != null  and imgurl != ''"> and imgurl = #{imgurl}</if>
+            <if test="createuserid != null "> and createuserid = #{createuserid}</if>
+            <if test="createtime != null "> and createtime = #{createtime}</if>
+        </where>
+    </select>
+    
+    <select id="selectByLecturerById" parameterType="Long" resultMap="ByLecturerResult">
+        <include refid="selectByLecturerVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertByLecturer" parameterType="ByLecturer">
+        insert into by_lecturer
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null ">id,</if>
+            <if test="name != null  and name != ''">name,</if>
+            <if test="information != null  and information != ''">information,</if>
+            <if test="imgurl != null  and imgurl != ''">imgurl,</if>
+            <if test="createuserid != null ">createuserid,</if>
+            <if test="createtime != null ">createtime,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null ">#{id},</if>
+            <if test="name != null  and name != ''">#{name},</if>
+            <if test="information != null  and information != ''">#{information},</if>
+            <if test="imgurl != null  and imgurl != ''">#{imgurl},</if>
+            <if test="createuserid != null ">#{createuserid},</if>
+            <if test="createtime != null ">#{createtime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateByLecturer" parameterType="ByLecturer">
+        update by_lecturer
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null  and name != ''">name = #{name},</if>
+            <if test="information != null  and information != ''">information = #{information},</if>
+            <if test="imgurl != null  and imgurl != ''">imgurl = #{imgurl},</if>
+            <if test="createuserid != null ">createuserid = #{createuserid},</if>
+            <if test="createtime != null ">createtime = #{createtime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteByLecturerById" parameterType="Long">
+        delete from by_lecturer where id = #{id}
+    </delete>
+
+    <delete id="deleteByLecturerByIds" parameterType="String">
+        delete from by_lecturer where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

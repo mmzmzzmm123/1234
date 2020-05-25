@@ -18,11 +18,11 @@
       </el-col>
     </el-row>
     <el-row :gutter="32">
-      <el-calendar v-model="value" id="calendar">
+      <!-- <el-calendar v-model="value" id="calendar">-->
         <!-- 这里使用的是 2.5 slot 语法，对于新项目请使用 2.6 slot 语法-->
-        <template slot="dateCell" slot-scope="{date, data}">
+         <!--<template slot="dateCell" slot-scope="{date, data}">-->
           <!--自定义内容-->
-          <div>
+           <!--<div>
             <div class="calendar-day">{{ data.day.split('-').slice(2).join('-') }}</div>
             <div v-for="(item,index) in calendarData" :key="index">
               <div v-if="(item.years).indexOf(data.day.split('-').slice(0)[0])!=-1">
@@ -40,7 +40,7 @@
             </div>
           </div>
         </template>
-      </el-calendar>
+      </el-calendar> -->
     </el-row>
   </div>
 </template>
@@ -49,7 +49,7 @@
 import RaddarChart from "./dashboard/RaddarChart";
 import PieChart from "./dashboard/PieChart";
 import BarChart from "./dashboard/BarChart";
-import { getSchoolCalendars } from "@/api/benyi/schoolcalendar";
+//import { getSchoolCalendars } from "@/api/benyi/schoolcalendar";
 //备用进行班级园历显示操作import { getSchoolCalendarsClass } from "@/api/benyi/schoolcalendarclass";
 
 export default {
@@ -69,15 +69,15 @@ export default {
     };
   },
   created() {
-    this.getSchoolCalendarList();
+    //this.getSchoolCalendarList();
   },
   methods: {
     /** 查询园历列表 */
-    getSchoolCalendarList() {
-      getSchoolCalendars(this.queryParams).then(response => {
-        this.calendarData = response.calendarData;
-      });
-    }
+    // getSchoolCalendarList() {
+    //   getSchoolCalendars(this.queryParams).then(response => {
+    //     this.calendarData = response.calendarData;
+    //   });
+    // }
   }
 };
 </script>

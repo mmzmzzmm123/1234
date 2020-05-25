@@ -21,6 +21,9 @@ import { getConfigKey } from "@/api/system/config";
 import { parseTime, resetForm, addDateRange, selectDictLabel, download, handleTree } from "@/utils/ruoyi";
 import Pagination from "@/components/Pagination";
 
+import Video from 'video.js'
+import 'video.js/dist/video-js.css'
+
 // 全局方法挂载
 Vue.prototype.getDicts = getDicts
 Vue.prototype.getConfigKey = getConfigKey
@@ -30,6 +33,8 @@ Vue.prototype.addDateRange = addDateRange
 Vue.prototype.selectDictLabel = selectDictLabel
 Vue.prototype.download = download
 Vue.prototype.handleTree = handleTree
+
+Vue.prototype.$video = Video
 
 Vue.prototype.msgSuccess = function (msg) {
   this.$message({ showClose: true, message: msg, type: "success" });

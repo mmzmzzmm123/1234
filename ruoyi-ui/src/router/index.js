@@ -90,30 +90,30 @@ export const constantRoutes = [{
             meta: { title: '字典数据', icon: '' }
         }]
     },
-    {
-        path: '/dayflow',
-        component: Layout,
-        hidden: true,
-        children: [{
-            path: 'dayflowmanger/dayflowtask/:id(\\d+)',
-            component: () =>
-                import ('@/views/benyi/dayflow/task'),
-            name: 'Task',
-            meta: { title: '一日流程任务', icon: '' }
-        }]
-    },
-    {
-        path: '/dayflow',
-        component: Layout,
-        hidden: true,
-        children: [{
-            path: 'dayflowmanger/dayflowtask/standard/:code(\\d+)',
-            component: () =>
-                import ('@/views/benyi/dayflow/standard'),
-            name: 'Standard',
-            meta: { title: '一日流程标准', icon: '' }
-        }]
-    },
+    // {
+    //     path: '/dayflow',
+    //     component: Layout,
+    //     hidden: true,
+    //     children: [{
+    //         path: 'dayflowmanger/dayflowtask/:id(\\d+)',
+    //         component: () =>
+    //             import ('@/views/benyi/dayflow/task'),
+    //         name: 'Task',
+    //         meta: { title: '一日流程任务', icon: '' }
+    //     }]
+    // },
+    // {
+    //     path: '/dayflow',
+    //     component: Layout,
+    //     hidden: true,
+    //     children: [{
+    //         path: 'dayflowmanger/dayflowtask/standard/:code(\\d+)',
+    //         component: () =>
+    //             import ('@/views/benyi/dayflow/standard'),
+    //         name: 'Standard',
+    //         meta: { title: '一日流程标准', icon: '' }
+    //     }]
+    // },
     {
         path: '/job',
         component: Layout,
