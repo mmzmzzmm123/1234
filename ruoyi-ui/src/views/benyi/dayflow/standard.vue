@@ -144,7 +144,7 @@
 </template>
 
 <script>
-import { listStandard, getStandard, delStandard, addStandard, updateStandard, exportStandard } from "@/api/benyi/dayflow/standard";
+import { listStandard, getStandard, delStandard, addStandard, updateStandard, exportStandard } from "@/api/benyi/dayflow/biaozhun/standard";
 import { listDayflowtask, getDayflowtask } from "@/api/benyi/dayflow/dayflowtask";
 
 export default {

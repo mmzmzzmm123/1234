@@ -19,7 +19,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectByDayFlowDetailVo">
-        select id, sort_number, target_count, name, content, note, flow_type, create_user, update_user, create_time, update_time from by_day_flow_detail
+        select id, sort_number, target_count, name, content, note, flow_type, create_user, update_user, create_time, update_time
+        from by_day_flow_detail
     </sql>
 
     <select id="selectByDayFlowDetailList" parameterType="ByDayFlowDetail" resultMap="ByDayFlowDetailResult">

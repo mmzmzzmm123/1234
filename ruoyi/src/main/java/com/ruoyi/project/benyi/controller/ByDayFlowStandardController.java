@@ -30,7 +30,7 @@ import com.ruoyi.framework.web.page.TableDataInfo;
  * @date 2020-05-18
  */
 @RestController
-@RequestMapping("/benyi/dayflow/standard")
+@RequestMapping("/benyi/dayflow/biaozhun/standard")
 public class ByDayFlowStandardController extends BaseController
 {
     @Autowired

@@ -128,7 +128,6 @@
               v-for="dict in dayflowtypeOptions"
               :key="dict.dictValue"
               :label="dict.dictLabel"
-              :value="dict.dictValue"
             />
           </el-select>
         </el-form-item>
