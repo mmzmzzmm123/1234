@@ -129,7 +129,19 @@
           <el-input-number v-model="form.standardSort" controls-position="right" :min="0" />
         </el-form-item>
         <el-form-item label="照片" prop="picture">
-          <el-input v-model="form.picture" type="textarea" placeholder="请输入内容" />
+          <el-upload
+            class="avatar-uploader"
+            action="uploadImgUrl"
+            list-type="picture-card"
+            :headers="headers"
+            :show-file-list="false"
+            :on-success="handleAvatarSuccess"
+            :before-upload="beforeAvatarUpload"
+            accept=".jpg"
+          >  
+            <img width="100%" v-if="imageUrl" :src="imageUrl" class="avatar" >
+            <i v-else class="el-icon-plus avatar-uploader-icon" ></i>
+          </el-upload>
         </el-form-item>
         <el-form-item label="视频" prop="video">
           <el-input v-model="form.video" type="textarea" placeholder="请输入内容" />
@@ -146,11 +158,15 @@
 <script>
 import { listStandard, getStandard, delStandard, addStandard, updateStandard, exportStandard } from "@/api/benyi/dayflow/biaozhun/standard";
 import { listDayflowtask, getDayflowtask } from "@/api/benyi/dayflow/dayflowtask";
+import { getToken } from "@/utils/auth";
 
 export default {
   name: "Standard",
   data() {
     return {
+      //显示上传的图片，清空
+      imageUrl: "",
+      dialogVisible: false,
       // 遮罩层
       loading: true,
       // 选中数组
@@ -195,6 +211,11 @@ export default {
         sname: [
           { required: true, message: "标准名称不能为空", trigger: "blur" }
         ],
+      },
+      // 上传的图片服务器地址
+      uploadImgUrl: process.env.VUE_APP_BASE_API + "/common/upload",
+      headers: {
+        Authorization: "Bearer " + getToken()
       }
     };
   },
@@ -205,6 +226,28 @@ export default {
     this.getTaskList();
   },
   methods: {
+    /**上传照片 */
+    handleAvatarSuccess(res, file) {
+      this.imageUrl = URL.createObjectURL(file.raw);
+      console.log(res);
+      if (res.code == "200") {
+        this.form.picture = res.fileName;
+      } else {
+        this.msgError(res.msg);
+      }
+    },
+    beforeAvatarUpload(file) {
+      const isJPG = file.type === "image/jpeg";
+      const isLt2M = file.size / 1024 / 1024 < 2;
+
+      if (!isJPG) {
+        this.$message.error("上传图片只能是 JPG 格式!");
+      }
+      if (!isLt2M) {
+        this.$message.error("上传图片大小不能超过 2MB!");
+      }
+      return isJPG && isLt2M;
+    },
     /**查询任务名称详细 */
     getDayflowtask(taskId) {
       getDayflowtask(taskId).then(response => {
@@ -271,6 +314,7 @@ export default {
     },
     /** 新增按钮操作 */
     handleAdd() {
+      this.imageUrl = ""; //清空图片
       this.reset();
       this.open = true;
       this.title = "添加标准";
@@ -278,10 +322,17 @@ export default {
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
+      this.imageUrl = ""; //清空图片
       this.reset();
       const sid = row.sid || this.ids
       getStandard(sid).then(response => {
         this.form = response.data;
+        console.log(process.env.VUE_APP_BASE_API + response.data.picture);
+        if (response.data.picture) {
+          this.imageUrl = process.env.VUE_APP_BASE_API + response.data.picture;
+        }else {
+          this.imageUrl = "";
+        };
         this.open = true;
         this.title = "修改标准";
       });
