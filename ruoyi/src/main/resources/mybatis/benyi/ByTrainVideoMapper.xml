@@ -9,6 +9,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="title"    column="title"    />
         <result property="information"    column="information"    />
         <result property="lecturer"    column="lecturer"    />
+        <result property="lecturername"    column="lecturername"    />
         <result property="videourl"    column="videourl"    />
         <result property="type"    column="type"    />
         <result property="classtype"    column="classtype"    />
@@ -17,7 +18,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectByTrainVideoVo">
-        select id, title, information, lecturer, videourl, type, classtype, createuserid, createtime from by_train_video
+        select id, title, information, lecturer,(select name from by_lecturer where lecturer=by_lecturer.id) as lecturername, videourl, type, classtype, createuserid, createtime from by_train_video
     </sql>
 
     <select id="selectByTrainVideoList" parameterType="ByTrainVideo" resultMap="ByTrainVideoResult">
@@ -25,7 +26,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <where>  
             <if test="title != null  and title != ''"> and title = #{title}</if>
             <if test="information != null  and information != ''"> and information = #{information}</if>
-            <if test="lecturer != null  and lecturer != ''"> and lecturer = #{lecturer}</if>
+            <if test="lecturer != null "> and lecturer = #{lecturer}</if>
             <if test="videourl != null  and videourl != ''"> and videourl = #{videourl}</if>
             <if test="type != null  and type != ''"> and type = #{type}</if>
             <if test="classtype != null  and classtype != ''"> and classtype = #{classtype}</if>
@@ -44,7 +45,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="title != null  and title != ''">title,</if>
             <if test="information != null  and information != ''">information,</if>
-            <if test="lecturer != null  and lecturer != ''">lecturer,</if>
+            <if test="lecturer != null ">lecturer,</if>
             <if test="videourl != null  and videourl != ''">videourl,</if>
             <if test="type != null  and type != ''">type,</if>
             <if test="classtype != null  and classtype != ''">classtype,</if>
@@ -54,7 +55,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="title != null  and title != ''">#{title},</if>
             <if test="information != null  and information != ''">#{information},</if>
-            <if test="lecturer != null  and lecturer != ''">#{lecturer},</if>
+            <if test="lecturer != null ">#{lecturer},</if>
             <if test="videourl != null  and videourl != ''">#{videourl},</if>
             <if test="type != null  and type != ''">#{type},</if>
             <if test="classtype != null  and classtype != ''">#{classtype},</if>
@@ -68,7 +69,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="SET" suffixOverrides=",">
             <if test="title != null  and title != ''">title = #{title},</if>
             <if test="information != null  and information != ''">information = #{information},</if>
-            <if test="lecturer != null  and lecturer != ''">lecturer = #{lecturer},</if>
+            <if test="lecturer != null ">lecturer = #{lecturer},</if>
             <if test="videourl != null  and videourl != ''">videourl = #{videourl},</if>
             <if test="type != null  and type != ''">type = #{type},</if>
             <if test="classtype != null  and classtype != ''">classtype = #{classtype},</if>

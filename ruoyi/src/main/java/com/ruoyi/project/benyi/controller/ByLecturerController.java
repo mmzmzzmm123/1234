@@ -49,6 +49,18 @@ public class ByLecturerController extends BaseController
     }
 
     /**
+     * 根据岗位id获取用户信息列表
+     */
+    @GetMapping("/listAll")
+    public AjaxResult getAllLecturerList(ByLecturer byLecturer) {
+        AjaxResult ajax = AjaxResult.success();
+        List<ByLecturer> list = byLecturerService.selectByLecturerList(byLecturer);
+        ajax.put("lecturer", list);
+
+        return ajax;
+    }
+
+    /**
      * 导出讲师列表
      */
     @PreAuthorize("@ss.hasPermi('benyi:lecturer:export')")

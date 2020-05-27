@@ -138,7 +138,7 @@ public class VelocityUtils
         {
             fileName = StringUtils.format("{}/service/I{}Service.java", javaPath, className);
         }
-        else if (template.contains("serviceImpl.java.vm"))
+        else if (template.contains("service.java.vm"))
         {
             fileName = StringUtils.format("{}/service/impl/{}ServiceImpl.java", javaPath, className);
         }

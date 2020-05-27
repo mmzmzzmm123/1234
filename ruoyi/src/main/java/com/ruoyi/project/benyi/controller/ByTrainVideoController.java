@@ -1,6 +1,11 @@
 package com.ruoyi.project.benyi.controller;
 
+import java.util.Date;
 import java.util.List;
+
+import com.qiniu.util.Auth;
+import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.framework.config.FileConfig;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,6 +37,7 @@ public class ByTrainVideoController extends BaseController
 {
     @Autowired
     private IByTrainVideoService byTrainVideoService;
+
 
     /**
      * 查询培训列表
@@ -76,6 +82,8 @@ public class ByTrainVideoController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody ByTrainVideo byTrainVideo)
     {
+        byTrainVideo.setCreatetime(new Date());
+        byTrainVideo.setCreateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
         return toAjax(byTrainVideoService.insertByTrainVideo(byTrainVideo));
     }
 

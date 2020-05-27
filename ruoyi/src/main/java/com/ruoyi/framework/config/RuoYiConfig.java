@@ -113,4 +113,12 @@ public class RuoYiConfig
     {
         return getProfile() + "/upload";
     }
+
+    /**
+     * 获取视频上传路径
+     */
+    public static String getUploadVideoPath()
+    {
+        return getProfile() + "/video";
+    }
 }

@@ -26,6 +26,15 @@ export function addVideo(data) {
   })
 }
 
+// 获取七牛云token
+export function getQiNiuToken(data) {
+  return request({
+    url: '/common/getQiNiuToken',
+    method: 'post',
+    data: data
+  })
+}
+
 // 修改培训
 export function updateVideo(data) {
   return request({

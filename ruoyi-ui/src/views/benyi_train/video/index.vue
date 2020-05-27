@@ -2,21 +2,17 @@
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
       <el-form-item label="讲师姓名" prop="lecturer">
-        <el-input
-          v-model="queryParams.lecturer"
-          placeholder="请输入讲师姓名"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+        <el-select v-model="queryParams.lecturer" filterable placeholder="请选择讲师">
+          <el-option
+            v-for="item in lecturerOptions"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item label="所属类别" prop="type">
         <el-select v-model="queryParams.type" placeholder="请选择所属类别" clearable size="small">
-          <el-option label="请选择字典生成" value />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="适用班级" prop="classtype">
-        <el-select v-model="queryParams.classtype" placeholder="请选择适用班级" clearable size="small">
           <el-option label="请选择字典生成" value />
         </el-select>
       </el-form-item>
@@ -67,27 +63,15 @@
           v-hasPermi="['benyi:video:remove']"
         >删除</el-button>
       </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['benyi:video:export']"
-        >导出</el-button>
-      </el-col>
     </el-row>
 
     <el-table v-loading="loading" :data="videoList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="编号" align="center" prop="id" />
       <el-table-column label="培训视频标题" align="center" prop="title" />
-      <el-table-column label="简介" align="center" prop="information" />
-      <el-table-column label="讲师" align="center" prop="lecturer" />
-      <el-table-column label="视频路径" align="center" prop="videourl" />
+      <el-table-column label="视频简介" align="center" prop="information" />
+      <el-table-column label="培训讲师" align="center" prop="lecturername" />
       <el-table-column label="所属类别" align="center" prop="type" />
-      <el-table-column label="适用班级" align="center" prop="classtype" />
-      <el-table-column label="上传人员" align="center" prop="createuserid" />
       <el-table-column label="创建时间" align="center" prop="createtime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createtime) }}</span>
@@ -124,53 +108,58 @@
     <!-- 添加或修改培训对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px">
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="标题" prop="title">
+        <el-form-item label="视频标题" prop="title">
           <el-input v-model="form.title" type="textarea" placeholder="请输入内容" />
         </el-form-item>
-        <el-form-item label="简介" prop="information">
+        <el-form-item label="视频简介" prop="information">
           <el-input v-model="form.information" type="textarea" placeholder="请输入内容" />
         </el-form-item>
-        <el-form-item label="讲师" prop="lecturer">
-          <el-input v-model="form.lecturer" placeholder="请选择讲师" />
+        <el-form-item label="培训讲师" prop="lecturer">
+          <el-select v-model="form.lecturer" placeholder="请选择讲师">
+            <el-input v-model="form.videourl" v-if="false" />
+            <el-option
+              v-for="item in lecturerOptions"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
+            ></el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="视频" prop="videourl">
-          <!-- <el-input v-model="form.videourl" type="textarea" placeholder="请输入内容" /> -->
-          <!-- action必选参数, 上传的地址 -->
-          <el-upload
-            class="avatar-uploader el-upload--text"
-            :action="uploadUrl"
-            :headers="headers"
-            :show-file-list="false"
-            :on-success="handleVideoSuccess"
-            :before-upload="beforeUploadVideo"
-            :on-progress="uploadVideoProcess"
-          >
-            <video
-              v-if="videoForm.Video !='' && videoFlag == false"
-              :src="videoForm.Video"
-              class="avatar"
-              controls="controls"
-            >您的浏览器不支持视频播放</video>
-            <i
-              v-else-if="videoForm.Video =='' && videoFlag == false"
-              class="el-icon-plus avatar-uploader-icon"
-            ></i>
-            <el-progress
-              v-if="videoFlag == true"
-              type="circle"
-              :percentage="videoUploadPercent"
-              style="margin-top:30px;"
-            ></el-progress>
-          </el-upload>
-          <P class="text">请保证视频格式正确，且不超过500M</P>
+        <el-form-item label="选择视频" prop="videourl">
+          <div id="app">
+            <el-upload
+              class="avatar-uploader"
+              :data="dataObj"
+              action="http://upload.qiniup.com"
+              list-type="picture-card"
+              :show-file-list="false"
+              :on-error="handleError"
+              :on-success="handleSuccessVideo"
+              :on-progress="uploadProcess"
+              :before-upload="videoBeforeUpload"
+              :on-remove="handleRemove"
+            >
+              <video
+                v-if="imageUrl.length > 1 && imgFlag == false"
+                controls="controls"
+                :src="[qiniuUrl + '/' + imageUrl]"
+                class="avatar"
+              ></video>
+              <i
+                v-else-if="imageUrl.length < 1 && imgFlag == false"
+                class="el-icon-plus avatar-uploader-icon"
+              ></i>
+              <el-progress
+                v-if="imgFlag == true"
+                type="circle"
+                :percentage="percent"
+                style="margin-top: 20px"
+              ></el-progress>
+            </el-upload>
+          </div>
         </el-form-item>
         <el-form-item label="所属类别">
           <el-select v-model="form.type" placeholder="请选择所属类别">
-            <el-option label="请选择字典生成" value />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="适用班级">
-          <el-select v-model="form.classtype" placeholder="请选择适用班级">
             <el-option label="请选择字典生成" value />
           </el-select>
         </el-form-item>
@@ -183,6 +172,8 @@
   </div>
 </template>
 
+<script src="//unpkg.com/vue/dist/vue.js"></script>
+<script src="//unpkg.com/element-ui@2.9.1/lib/index.js"></script>
 <script>
 import {
   listVideo,
@@ -190,15 +181,24 @@ import {
   delVideo,
   addVideo,
   updateVideo,
-  exportVideo
+  getQiNiuToken
 } from "@/api/benyi_train/video";
-
-import { getToken } from "@/utils/auth";
+import { listAllLecturer } from "@/api/benyi_train/lecturer";
 
 export default {
   name: "Video",
   data() {
     return {
+      qiniuUrl: "https://files.benyiedu.com/", // 个人七牛访问前缀
+      imgFlag: false,
+      imageUrl: [],
+      percent: 0,
+      dialogImageUrl: "",
+      dialogVisible: false,
+      listObj: {},
+      dataObj: {
+        token: ""
+      }, // 此处七牛token写成常量方便调试，正式环境需要获取token
       // 遮罩层
       loading: true,
       // 选中数组
@@ -213,16 +213,10 @@ export default {
       videoList: [],
       // 弹出层标题
       title: "",
+      //讲师列表
+      lecturerOptions: [],
       // 是否显示弹出层
       open: false,
-      uploadUrl: process.env.VUE_APP_BASE_API + "/common/upload", // 上传的图片服务器地址
-      headers: {
-        Authorization: "Bearer " + getToken()
-      },
-      videoForm: [],
-      //上传进度
-      videoFlag:"",
-      videoUploadPercent:"",
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -244,45 +238,64 @@ export default {
   },
   created() {
     this.getList();
+    listAllLecturer().then(response => {
+      console.log(response.lecturer);
+      this.lecturerOptions = response.lecturer;
+    });
+    getQiNiuToken().then(res => {
+      console.log(res.token);
+      this.dataObj.token = res.token;
+    });
   },
   methods: {
-    //上传
-    beforeUploadVideo(file) {
-      const isLt500M = file.size / 1024 / 1024 < 500;
-      if (
-        [
-          "video/mp4",
-          "video/ogg",
-          "video/flv",
-          "video/avi",
-          "video/wmv",
-          "video/rmvb"
-        ].indexOf(file.type) == -1
-      ) {
-        this.msgError("请上传正确的视频格式");
-        return false;
+    handleRemove(file, fileList) {
+      this.imageUrl = "";
+    },
+    handleSuccessVideo(response) {
+      console.log(123, response);
+      this.imgFlag = false;
+      this.percent = 0;
+      if (response.hash) {
+        this.imageUrl = response.hash;
+      } else {
+        this.msgError("视频上传失败，请重新上传！");
       }
-      if (!isLt500M) {
-        this.msgError("上传视频大小不能超过500MB哦!");
+    },
+    handleError(err, file, fileList) {
+      // 上传失败异常处理
+      const error = JSON.parse(JSON.stringify(err));
+      console.log(err);
+      console.log(error);
+      this.msgError(error.status.toString());
+      this.imgFlag = false;
+      this.percent = 0;
+    },
+    videoBeforeUpload(file) {
+      console.log(file);
+      const _self = this;
+      const isVideo =
+        file.type === "video/mp4" ||
+        file.type === "video/ogg" ||
+        file.type === "video/flv" ||
+        file.type === "video/avi" ||
+        file.type === "video/wmv" ||
+        file.type === "video/rmvb";
+      const isLt500M = file.size / 1024 / 1024 < 500;
+      if (!isVideo) {
+        this.msgError("请上传正确格式的视频！");
         return false;
+      } else {
+        if (!isLt500M) {
+          this.msgError("上传视频文件大小不能超过 500MB!");
+          return false;
+        }
       }
     },
     //上传进度
-    uploadVideoProcess(event, file, fileList) {
-      this.videoFlag = true;
-      this.videoUploadPercent = file.percentage.toFixed(0);
-    },
-    //上传后获取路径
-    handleVideoSuccess(res, file) {
-      //获取上传图片地址
-      this.videoFlag = false;
-      this.videoUploadPercent = 0;
-      if (res.status == 200) {
-        this.videoForm.videoUploadId = res.data.uploadId;
-        this.videoForm.Video = res.data.uploadUrl;
-      } else {
-        this.$message.error("视频上传失败，请重新上传！");
-      }
+    uploadProcess(event, file, fileList) {
+      this.imgFlag = true;
+      console.log(event.percent);
+      this.percent = Math.floor(event.percent);
     },
     /** 查询培训列表 */
     getList() {
@@ -331,24 +344,39 @@ export default {
     },
     /** 新增按钮操作 */
     handleAdd() {
+      this.imageUrl="";
       this.reset();
       this.open = true;
       this.title = "添加培训";
+      //获取讲师列表
+      listAllLecturer().then(response => {
+        //console.log(response.lecturer);
+        this.lecturerOptions = response.lecturer;
+      });
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
+      this.imageUrl="";
       this.reset();
       const id = row.id || this.ids;
       getVideo(id).then(response => {
         this.form = response.data;
         this.open = true;
         this.title = "修改培训";
+        this.imageUrl = response.data.videourl;
+        console.log(this.imageUrl);
+        //获取讲师列表
+        listAllLecturer().then(response => {
+          //console.log(response.lecturer);
+          this.lecturerOptions = response.lecturer;
+        });
       });
     },
     /** 提交按钮 */
     submitForm: function() {
       this.$refs["form"].validate(valid => {
         if (valid) {
+          this.form.videourl = this.imageUrl;
           if (this.form.id != undefined) {
             updateVideo(this.form).then(response => {
               if (response.code === 200) {
@@ -389,23 +417,85 @@ export default {
           this.msgSuccess("删除成功");
         })
         .catch(function() {});
-    },
-    /** 导出按钮操作 */
-    handleExport() {
-      const queryParams = this.queryParams;
-      this.$confirm("是否确认导出所有培训数据项?", "警告", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      })
-        .then(function() {
-          return exportVideo(queryParams);
-        })
-        .then(response => {
-          this.download(response.msg);
-        })
-        .catch(function() {});
     }
   }
 };
 </script>
+
+<style scoped>
+@import url("//unpkg.com/element-ui@2.9.1/lib/theme-chalk/index.css");
+.avatar-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  width: 178px;
+  height: 178px;
+}
+
+.avatar-uploader .el-upload:hover {
+  border-color: #409eff;
+}
+
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 178px;
+  height: 178px;
+  line-height: 178px;
+  text-align: center;
+}
+
+.avatar {
+  width: 178px;
+  height: 178px;
+  display: block;
+}
+
+.image-preview {
+  width: 178px;
+  height: 178px;
+  position: relative;
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  float: left;
+}
+
+.image-preview .image-preview-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.image-preview .image-preview-wrapper img {
+  width: 100%;
+  height: 100%;
+}
+
+.image-preview .image-preview-action {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  cursor: default;
+  text-align: center;
+  color: #fff;
+  opacity: 0;
+  font-size: 20px;
+  background-color: rgba(0, 0, 0, 0.5);
+  transition: opacity 0.3s;
+  cursor: pointer;
+  text-align: center;
+  line-height: 200px;
+}
+
+.image-preview .image-preview-action .el-icon-delete {
+  font-size: 32px;
+}
+
+.image-preview:hover .image-preview-action {
+  opacity: 1;
+}
+</style>

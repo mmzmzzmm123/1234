@@ -98,14 +98,14 @@
     <!-- 添加或修改讲师对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px">
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="姓名" prop="name">
+        <el-form-item label="讲师姓名" prop="name">
           <el-input v-model="form.name" placeholder="请输入姓名" />
         </el-form-item>
-        <el-form-item label="简介" prop="information">
+        <el-form-item label="讲师简介" prop="information">
           <el-input v-model="form.information" type="textarea" placeholder="请输入内容" />
           <el-input v-model="form.imgurl" v-if="false" />
         </el-form-item>
-        <el-form-item label="照片" prop="imgurl">
+        <el-form-item label="选择照片" prop="imgurl">
           <el-upload
             class="avatar-uploader"
             :action="uploadImgUrl"

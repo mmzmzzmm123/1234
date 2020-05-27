@@ -10,42 +10,63 @@ import java.util.Date;
 
 /**
  * 培训对象 by_train_video
- * 
+ *
  * @author tsbz
  * @date 2020-05-25
  */
-public class ByTrainVideo extends BaseEntity
-{
+public class ByTrainVideo extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
-    /** 编号 */
+    /**
+     * 编号
+     */
     private Long id;
 
-    /** 培训视频标题 */
+    /**
+     * 培训视频标题
+     */
     @Excel(name = "培训视频标题")
     private String title;
 
-    /** 简介 */
+    /**
+     * 简介
+     */
     @Excel(name = "简介")
     private String information;
 
-    /** 讲师 */
+    /**
+     * 讲师
+     */
     @Excel(name = "讲师")
-    private String lecturer;
+    private Long lecturer;
 
-    /** 视频路径 */
+    /**
+     * 讲师
+     */
+    @Excel(name = "讲师")
+    private String lecturername;
+
+    /**
+     * 视频路径
+     */
     @Excel(name = "视频路径")
     private String videourl;
 
-    /** 所属类别 */
+    /**
+     * 所属类别
+     */
     @Excel(name = "所属类别")
     private String type;
 
-    /** 适用班级 */
+    /**
+     * 适用班级
+     */
     @Excel(name = "适用班级")
     private String classtype;
 
-    /** 上传人员 */
+    /**
+     * 上传人员
+     */
     @Excel(name = "上传人员")
     private Long createuserid;
 
@@ -55,76 +76,75 @@ public class ByTrainVideo extends BaseEntity
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createtime;
 
-    public void setId(Long id) 
-    {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public Long getId() 
-    {
+    public Long getId() {
         return id;
     }
-    public void setTitle(String title) 
-    {
+
+    public void setTitle(String title) {
         this.title = title;
     }
 
-    public String getTitle() 
-    {
+    public String getTitle() {
         return title;
     }
-    public void setInformation(String information) 
-    {
+
+    public void setInformation(String information) {
         this.information = information;
     }
 
-    public String getInformation() 
-    {
+    public String getInformation() {
         return information;
     }
-    public void setLecturer(String lecturer) 
-    {
+
+    public void setLecturer(Long lecturer) {
         this.lecturer = lecturer;
     }
 
-    public String getLecturer() 
-    {
+    public Long getLecturer() {
         return lecturer;
     }
-    public void setVideourl(String videourl) 
-    {
+
+    public void setLecturername(String lecturername) {
+        this.lecturername = lecturername;
+    }
+
+    public String getLecturername() {
+        return lecturername;
+    }
+
+    public void setVideourl(String videourl) {
         this.videourl = videourl;
     }
 
-    public String getVideourl() 
-    {
+    public String getVideourl() {
         return videourl;
     }
-    public void setType(String type) 
-    {
+
+    public void setType(String type) {
         this.type = type;
     }
 
-    public String getType() 
-    {
+    public String getType() {
         return type;
     }
-    public void setClasstype(String classtype) 
-    {
+
+    public void setClasstype(String classtype) {
         this.classtype = classtype;
     }
 
-    public String getClasstype() 
-    {
+    public String getClasstype() {
         return classtype;
     }
-    public void setCreateuserid(Long createuserid) 
-    {
+
+    public void setCreateuserid(Long createuserid) {
         this.createuserid = createuserid;
     }
 
-    public Long getCreateuserid() 
-    {
+    public Long getCreateuserid() {
         return createuserid;
     }
 
@@ -138,16 +158,17 @@ public class ByTrainVideo extends BaseEntity
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("id", getId())
-            .append("title", getTitle())
-            .append("information", getInformation())
-            .append("lecturer", getLecturer())
-            .append("videourl", getVideourl())
-            .append("type", getType())
-            .append("classtype", getClasstype())
-            .append("createuserid", getCreateuserid())
-            .append("createtime", getCreatetime())
-            .toString();
+        return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
+                .append("id", getId())
+                .append("title", getTitle())
+                .append("information", getInformation())
+                .append("lecturer", getLecturer())
+                .append("lecturername", getLecturername())
+                .append("videourl", getVideourl())
+                .append("type", getType())
+                .append("classtype", getClasstype())
+                .append("createuserid", getCreateuserid())
+                .append("createtime", getCreatetime())
+                .toString();
     }
 }

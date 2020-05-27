@@ -9,6 +9,15 @@ export function listLecturer(query) {
   })
 }
 
+// 查询讲师列表
+export function listAllLecturer(query) {
+  return request({
+    url: '/benyi/lecturer/listAll',
+    method: 'get',
+    params: query
+  })
+}
+
 // 查询讲师详细
 export function getLecturer(id) {
   return request({

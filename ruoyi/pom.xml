@@ -249,6 +249,32 @@
             <version>5.1.5.RELEASE</version>
         </dependency>
 
+		<!-- 网络连接相关 -->
+		<dependency>
+			<groupId>com.squareup.okhttp3</groupId>
+			<artifactId>okhttp</artifactId>
+			<version>3.10.0</version>
+		</dependency>
+
+		<!-- 七牛云包 -->
+		<dependency>
+			<groupId>com.qiniu</groupId>
+			<artifactId>qiniu-java-sdk</artifactId>
+			<version>7.2.8</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>okhttp</artifactId>
+					<groupId>com.squareup.okhttp3</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<!-- 其他工具包 -->
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+		</dependency>
+
     </dependencies>
 
 	<build>
