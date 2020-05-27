@@ -127,19 +127,19 @@
         </el-form-item>
         <el-form-item label="标准排序" prop="standardSort">
           <el-input-number v-model="form.standardSort" controls-position="right" :min="0" />
+          <el-input v-model="form.picture" v-if="false" />
         </el-form-item>
         <el-form-item label="照片" prop="picture">
           <el-upload
             class="avatar-uploader"
-            action="uploadImgUrl"
-            list-type="picture-card"
+            :action="uploadImgUrl"
             :headers="headers"
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
             :before-upload="beforeAvatarUpload"
-            accept=".jpg"
+            accept=".jpg,.png"
           >  
-            <img width="100%" v-if="imageUrl" :src="imageUrl" class="avatar" >
+            <img  v-if="imageUrl" :src="imageUrl" class="avatar" >
             <i v-else class="el-icon-plus avatar-uploader-icon" ></i>
           </el-upload>
         </el-form-item>
@@ -324,15 +324,13 @@ export default {
     handleUpdate(row) {
       this.imageUrl = ""; //清空图片
       this.reset();
-      const sid = row.sid || this.ids
+      const sid = row.sid || this.ids;
       getStandard(sid).then(response => {
         this.form = response.data;
         console.log(process.env.VUE_APP_BASE_API + response.data.picture);
         if (response.data.picture) {
           this.imageUrl = process.env.VUE_APP_BASE_API + response.data.picture;
-        }else {
-          this.imageUrl = "";
-        };
+        }
         this.open = true;
         this.title = "修改标准";
       });
