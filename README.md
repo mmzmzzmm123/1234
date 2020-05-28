@@ -1,6 +1,6 @@
 ## 平台简介
 
-* 前端采用Vue、Element UI。
+* 前端采用Vue、Element UI、Vue-Element-Admin。
 * 后端采用Spring Boot、Spring Security、Redis & Jwt。
 * 权限认证使用Jwt，支持多终端认证系统。
 * 支持加载动态权限菜单，多方式轻松权限控制。
