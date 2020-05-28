@@ -24,11 +24,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectByTrainVideoList" parameterType="ByTrainVideo" resultMap="ByTrainVideoResult">
         <include refid="selectByTrainVideoVo"/>
         <where>  
-            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="title != null  and title != ''"> and title like concat('%', #{title}, '%')</if>
             <if test="information != null  and information != ''"> and information = #{information}</if>
             <if test="lecturer != null "> and lecturer = #{lecturer}</if>
             <if test="videourl != null  and videourl != ''"> and videourl = #{videourl}</if>
-            <if test="type != null  and type != ''"> and type = #{type}</if>
+            <if test="type != null  and type != ''"> and type like concat('', #{type}, '%')</if>
             <if test="classtype != null  and classtype != ''"> and classtype = #{classtype}</if>
             <if test="createuserid != null "> and createuserid = #{createuserid}</if>
             <if test="createtime != null "> and createtime = #{createtime}</if>

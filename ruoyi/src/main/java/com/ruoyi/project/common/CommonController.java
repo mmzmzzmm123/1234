@@ -96,7 +96,7 @@ public class CommonController {
     }
 
     /**
-     * 通用上传请求
+     * 通用上传请求 wuyong
      */
     @PostMapping("/common/uploadqiniu")
     public AjaxResult uploadFileQiNiu(MultipartFile file) throws Exception {

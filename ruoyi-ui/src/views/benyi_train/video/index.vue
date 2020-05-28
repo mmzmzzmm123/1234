@@ -1,6 +1,15 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
+      <el-form-item label="视频标题" prop="title">
+        <el-input
+          v-model="queryParams.title"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+          placeholder="请输入培训视频标题"
+        />
+      </el-form-item>
       <el-form-item label="讲师姓名" prop="lecturer">
         <el-select v-model="queryParams.lecturer" filterable placeholder="请选择讲师">
           <el-option
@@ -12,20 +21,13 @@
         </el-select>
       </el-form-item>
       <el-form-item label="所属类别" prop="type">
-        <el-select v-model="queryParams.type" placeholder="请选择所属类别" clearable size="small">
-          <el-option label="请选择字典生成" value />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="创建时间" prop="createtime">
-        <el-date-picker
+        <el-cascader
+          placeholder="请选择所属类别"
+          v-model="queryParams.type"
+          :options="optionTypes"
+          :props="{ checkStrictly: true, value: 'id', label: 'name' }"
           clearable
-          size="small"
-          style="width: 200px"
-          v-model="queryParams.createtime"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="选择创建时间"
-        ></el-date-picker>
+        ></el-cascader>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -71,7 +73,7 @@
       <el-table-column label="培训视频标题" align="center" prop="title" />
       <el-table-column label="视频简介" align="center" prop="information" />
       <el-table-column label="培训讲师" align="center" prop="lecturername" />
-      <el-table-column label="所属类别" align="center" prop="type" />
+      <el-table-column label="所属类别" align="center" prop="type" :formatter="typeFormat" />
       <el-table-column label="创建时间" align="center" prop="createtime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createtime) }}</span>
@@ -126,42 +128,39 @@
           </el-select>
         </el-form-item>
         <el-form-item label="选择视频" prop="videourl">
-          <div id="app">
-            <el-upload
-              class="avatar-uploader"
-              :data="dataObj"
-              action="http://upload.qiniup.com"
-              list-type="picture-card"
-              :show-file-list="false"
-              :on-error="handleError"
-              :on-success="handleSuccessVideo"
-              :on-progress="uploadProcess"
-              :before-upload="videoBeforeUpload"
-              :on-remove="handleRemove"
-            >
-              <video
-                v-if="imageUrl.length > 1 && imgFlag == false"
-                controls="controls"
-                :src="[qiniuUrl + '/' + imageUrl]"
-                class="avatar"
-              ></video>
-              <i
-                v-else-if="imageUrl.length < 1 && imgFlag == false"
-                class="el-icon-plus avatar-uploader-icon"
-              ></i>
-              <el-progress
-                v-if="imgFlag == true"
-                type="circle"
-                :percentage="percent"
-                style="margin-top: 20px"
-              ></el-progress>
-            </el-upload>
-          </div>
+          <el-upload
+            class="avatar-uploader"
+            :data="dataObj"
+            action="http://upload.qiniup.com"
+            list-type="picture-card"
+            :show-file-list="false"
+            :on-error="handleError"
+            :on-success="handleSuccessVideo"
+            :on-progress="uploadProcess"
+            :before-upload="videoBeforeUpload"
+            :on-remove="handleRemove"
+          >
+            <video
+              v-if="imageUrl.length > 1 && imgFlag == false"
+              controls="controls"
+              :src="[qiniuUrl + '/' + imageUrl]"
+              class="avatar"
+            ></video>
+            <i
+              v-else-if="imageUrl.length < 1 && imgFlag == false"
+              class="el-icon-plus avatar-uploader-icon"
+            ></i>
+            <el-progress v-if="imgFlag == true" type="circle" :percentage="percent"></el-progress>
+          </el-upload>
         </el-form-item>
-        <el-form-item label="所属类别">
-          <el-select v-model="form.type" placeholder="请选择所属类别">
-            <el-option label="请选择字典生成" value />
-          </el-select>
+        <el-form-item label="所属类别" prop="type">
+          <el-cascader
+            placeholder="请选择所属类别"
+            v-model="form.type"
+            :options="optionTypes"
+            :props="{ checkStrictly: true, value: 'id', label: 'name' }"
+            clearable
+          ></el-cascader>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -172,8 +171,6 @@
   </div>
 </template>
 
-<script src="//unpkg.com/vue/dist/vue.js"></script>
-<script src="//unpkg.com/element-ui@2.9.1/lib/index.js"></script>
 <script>
 import {
   listVideo,
@@ -184,12 +181,13 @@ import {
   getQiNiuToken
 } from "@/api/benyi_train/video";
 import { listAllLecturer } from "@/api/benyi_train/lecturer";
+import { listMoedata } from "@/api/system/moedata";
 
 export default {
   name: "Video",
   data() {
     return {
-      qiniuUrl: "https://files.benyiedu.com/", // 个人七牛访问前缀
+      qiniuUrl: "https://files.benyiedu.com", // 个人七牛访问前缀
       imgFlag: false,
       imageUrl: [],
       percent: 0,
@@ -199,6 +197,8 @@ export default {
       dataObj: {
         token: ""
       }, // 此处七牛token写成常量方便调试，正式环境需要获取token
+      optionTypes: [],
+      optionListTypes: [],
       // 遮罩层
       loading: true,
       // 选中数组
@@ -233,21 +233,69 @@ export default {
       // 表单参数
       form: {},
       // 表单校验
-      rules: {}
+      rules: {
+        title: [
+          { required: true, message: "视频标题不能为空", trigger: "blur" }
+        ],
+        information: [
+          { required: true, message: "视频简介不能为空", trigger: "blur" }
+        ],
+        videourl: [
+          { required: true, message: "培训视频不能为空", trigger: "blur" }
+        ],
+        lecturer: [
+          { required: true, message: "培训讲师不能为空", trigger: "blur" }
+        ],
+        type: [{ required: true, message: "所属类别不能为空", trigger: "blur" }]
+      }
     };
   },
   created() {
     this.getList();
     listAllLecturer().then(response => {
-      console.log(response.lecturer);
+      //console.log(response.lecturer);
       this.lecturerOptions = response.lecturer;
     });
     getQiNiuToken().then(res => {
-      console.log(res.token);
+      //console.log(res.token);
       this.dataObj.token = res.token;
+    });
+    listMoedata(this.queryParams).then(response => {
+      //用户遍历展示table中type的数据显示
+      this.optionListTypes = response.data;
+      //console.log(this.optionListTypes);
+      //第一步转换数组
+      this.optionTypes = this.handleTree(response.data, "id", "pid");
+      //第二步移除children为0的数组，也就是将children为0 设置为undefined
+      this.optionTypes = this.getTreeData(this.optionTypes);
     });
   },
   methods: {
+    // 字典状态字典翻译
+    typeFormat(row, column) {
+      var actions = [];
+      var ary = row.type.split(",");
+      var lab = "";
+      for (var j = 0; j < ary.length; j++) {
+        actions.push(this.selectMoeDictLabel(this.optionListTypes, ary[j]));
+      }
+
+      return actions.join(" / ");
+    },
+    // 递归判断列表，把最后的children设为undefined
+    getTreeData(data) {
+      for (var i = 0; i < data.length; i++) {
+        if (data[i].children.length < 1) {
+          // children若为空数组，则将children设为undefined
+          data[i].children = undefined;
+        } else {
+          // children若不为空数组，则继续 递归调用 本方法
+          this.getTreeData(data[i].children);
+        }
+      }
+      //console.log(data);
+      return data;
+    },
     handleRemove(file, fileList) {
       this.imageUrl = "";
     },
@@ -328,6 +376,11 @@ export default {
     },
     /** 搜索按钮操作 */
     handleQuery() {
+      if (this.queryParams.type == null) {
+        this.queryParams.type = "";
+      } else {
+        this.queryParams.type = this.queryParams.type.toString();
+      }
       this.queryParams.pageNum = 1;
       this.getList();
     },
@@ -344,7 +397,7 @@ export default {
     },
     /** 新增按钮操作 */
     handleAdd() {
-      this.imageUrl="";
+      this.imageUrl = "";
       this.reset();
       this.open = true;
       this.title = "添加培训";
@@ -356,15 +409,22 @@ export default {
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
-      this.imageUrl="";
+      this.imageUrl = "";
       this.reset();
       const id = row.id || this.ids;
       getVideo(id).then(response => {
         this.form = response.data;
+        var actions = [];
+        var ary = response.data.type.split(",");
+        for (var j = 0; j < ary.length; j++) {
+          actions.push(parseInt(ary[j]));
+        }
+        this.form.type = actions;
+        //console.log(this.form.type);
         this.open = true;
         this.title = "修改培训";
         this.imageUrl = response.data.videourl;
-        console.log(this.imageUrl);
+        //console.log(this.imageUrl);
         //获取讲师列表
         listAllLecturer().then(response => {
           //console.log(response.lecturer);
@@ -374,9 +434,14 @@ export default {
     },
     /** 提交按钮 */
     submitForm: function() {
+      //上传完成 赋值给from表单
+      this.form.videourl = this.imageUrl;
       this.$refs["form"].validate(valid => {
         if (valid) {
-          this.form.videourl = this.imageUrl;
+          //提交将type arry转字符串
+          //console.log(this.form.type.toString());
+          this.form.type = this.form.type.toString();
+
           if (this.form.id != undefined) {
             updateVideo(this.form).then(response => {
               if (response.code === 200) {
@@ -423,13 +488,14 @@ export default {
 </script>
 
 <style scoped>
-@import url("//unpkg.com/element-ui@2.9.1/lib/theme-chalk/index.css");
-.avatar-uploader .el-upload {
+.avatar-uploader ::v-deep .el-upload {
   border: 1px dashed #d9d9d9;
   border-radius: 6px;
   cursor: pointer;
   position: relative;
-  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 178px;
   height: 178px;
 }
@@ -441,15 +507,10 @@ export default {
 .avatar-uploader-icon {
   font-size: 28px;
   color: #8c939d;
-  width: 178px;
-  height: 178px;
-  line-height: 178px;
-  text-align: center;
 }
 
 .avatar {
-  width: 178px;
-  height: 178px;
+  width: 100%;
   display: block;
 }
 
