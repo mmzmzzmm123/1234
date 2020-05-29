@@ -39,7 +39,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectBySchoolcalendarClassVo">
-        select id, name, type, classid, xnxq, deptId, activitytime, activityendtime, stylecolor, createuserid, createtime from by_schoolcalendar_class
+        select s.id, s.name, s.type, s.classid, s.xnxq, s.deptId, s.activitytime, s.activityendtime, s.stylecolor, s.createuserid, s.createtime,
+               c.bjmc
+        from by_schoolcalendar_class s, by_class c
     </sql>
 
     <select id="selectBySchoolcalendarClassList" parameterType="BySchoolcalendarClass" resultMap="BySchoolcalendarClassResult">

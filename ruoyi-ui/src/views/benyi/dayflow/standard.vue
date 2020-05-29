@@ -6,7 +6,7 @@
           <el-option
             v-for="item in taskOptions"
             :key="item.code"
-            :label="item.taskLable" 
+            :label="item.taskLable"
             :value="item.taskLable"
           />
         </el-select>
@@ -101,7 +101,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -137,10 +137,10 @@
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
             :before-upload="beforeAvatarUpload"
-            accept=".jpg,.png"
-          >  
-            <img  v-if="imageUrl" :src="imageUrl" class="avatar" >
-            <i v-else class="el-icon-plus avatar-uploader-icon" ></i>
+            accept=".jpg, .png"
+          >
+            <img width="100%" v-if="imageUrl" :src="imageUrl" class="avatar" />
+            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
         </el-form-item>
         <el-form-item label="视频" prop="video">
@@ -156,8 +156,18 @@
 </template>
 
 <script>
-import { listStandard, getStandard, delStandard, addStandard, updateStandard, exportStandard } from "@/api/benyi/dayflow/biaozhun/standard";
-import { listDayflowtask, getDayflowtask } from "@/api/benyi/dayflow/dayflowtask";
+import {
+  listStandard,
+  getStandard,
+  delStandard,
+  addStandard,
+  updateStandard,
+  exportStandard
+} from "@/api/benyi/dayflow/biaozhun/standard";
+import {
+  listDayflowtask,
+  getDayflowtask
+} from "@/api/benyi/dayflow/dayflowtask";
 import { getToken } from "@/utils/auth";
 
 export default {
@@ -166,7 +176,6 @@ export default {
     return {
       //显示上传的图片，清空
       imageUrl: "",
-      dialogVisible: false,
       // 遮罩层
       loading: true,
       // 选中数组
@@ -182,7 +191,7 @@ export default {
       // 任务名称集合
       taskOptions: [],
       // 默认任务名称
-      defaultTaskName: '',
+      defaultTaskName: "",
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -210,7 +219,7 @@ export default {
       rules: {
         sname: [
           { required: true, message: "标准名称不能为空", trigger: "blur" }
-        ],
+        ]
       },
       // 上传的图片服务器地址
       uploadImgUrl: process.env.VUE_APP_BASE_API + "/common/upload",
@@ -226,7 +235,6 @@ export default {
     this.getTaskList();
   },
   methods: {
-    /**上传照片 */
     handleAvatarSuccess(res, file) {
       this.imageUrl = URL.createObjectURL(file.raw);
       console.log(res);
@@ -237,16 +245,11 @@ export default {
       }
     },
     beforeAvatarUpload(file) {
-      const isJPG = file.type === "image/jpeg";
       const isLt2M = file.size / 1024 / 1024 < 2;
-
-      if (!isJPG) {
-        this.$message.error("上传图片只能是 JPG 格式!");
-      }
       if (!isLt2M) {
         this.$message.error("上传图片大小不能超过 2MB!");
       }
-      return isJPG && isLt2M;
+      return isLt2M;
     },
     /**查询任务名称详细 */
     getDayflowtask(taskId) {
@@ -254,7 +257,7 @@ export default {
         this.queryParams.taskLable = response.data.taskLable;
         this.defaultTaskName = response.data.taskLable;
         this.getList();
-      })
+      });
     },
     /** 查询一日流程标准列表 */
     getList() {
@@ -269,7 +272,7 @@ export default {
     getTaskList() {
       listDayflowtask().then(response => {
         this.taskOptions = response.rows;
-      })
+      });
     },
     // 取消按钮
     cancel() {
@@ -308,9 +311,9 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.sid)
-      this.single = selection.length!=1
-      this.multiple = !selection.length
+      this.ids = selection.map(item => item.sid);
+      this.single = selection.length != 1;
+      this.multiple = !selection.length;
     },
     /** 新增按钮操作 */
     handleAdd() {
@@ -327,7 +330,6 @@ export default {
       const sid = row.sid || this.ids;
       getStandard(sid).then(response => {
         this.form = response.data;
-        console.log(process.env.VUE_APP_BASE_API + response.data.picture);
         if (response.data.picture) {
           this.imageUrl = process.env.VUE_APP_BASE_API + response.data.picture;
         }
@@ -339,6 +341,7 @@ export default {
     submitForm: function() {
       this.$refs["form"].validate(valid => {
         if (valid) {
+          console.log(this.form.imageUrl);
           if (this.form.sid != undefined) {
             updateStandard(this.form).then(response => {
               if (response.code === 200) {
@@ -366,30 +369,66 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const sids = row.sid || this.ids;
-      this.$confirm('是否确认删除一日流程标准编号为"' + sids + '"的数据项?', "警告", {
+      this.$confirm(
+        '是否确认删除一日流程标准编号为"' + sids + '"的数据项?',
+        "警告",
+        {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
-        }).then(function() {
+        }
+      )
+        .then(function() {
           return delStandard(sids);
-        }).then(() => {
+        })
+        .then(() => {
           this.getList();
           this.msgSuccess("删除成功");
-        }).catch(function() {});
+        })
+        .catch(function() {});
     },
     /** 导出按钮操作 */
     handleExport() {
       const queryParams = this.queryParams;
-      this.$confirm('是否确认导出所有一日流程标准数据项?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
+      this.$confirm("是否确认导出所有一日流程标准数据项?", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(function() {
           return exportStandard(queryParams);
-        }).then(response => {
+        })
+        .then(response => {
           this.download(response.msg);
-        }).catch(function() {});
+        })
+        .catch(function() {});
     }
   }
 };
 </script>
+
+<style>
+.avatar-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+  border-color: #409eff;
+}
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 178px;
+  height: 178px;
+  line-height: 178px;
+  text-align: center;
+}
+.avatar {
+  width: 178px;
+  height: 178px;
+  display: block;
+}
+</style>
