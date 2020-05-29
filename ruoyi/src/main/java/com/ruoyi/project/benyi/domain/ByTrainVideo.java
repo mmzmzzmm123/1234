@@ -53,6 +53,12 @@ public class ByTrainVideo extends BaseEntity {
     private String videourl;
 
     /**
+     * 文件类型
+     */
+    @Excel(name = "文件类型")
+    private String filetype;
+
+    /**
      * 所属类别
      */
     @Excel(name = "所属类别")
@@ -124,6 +130,14 @@ public class ByTrainVideo extends BaseEntity {
         return videourl;
     }
 
+    public void setFiletype(String filetype) {
+        this.filetype = filetype;
+    }
+
+    public String getFiletype() {
+        return filetype;
+    }
+
     public void setType(String type) {
         this.type = type;
     }
@@ -165,6 +179,7 @@ public class ByTrainVideo extends BaseEntity {
                 .append("lecturer", getLecturer())
                 .append("lecturername", getLecturername())
                 .append("videourl", getVideourl())
+                .append("filetype", getFiletype())
                 .append("type", getType())
                 .append("classtype", getClasstype())
                 .append("createuserid", getCreateuserid())

@@ -70,8 +70,8 @@
     <el-table v-loading="loading" :data="videoList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="编号" align="center" prop="id" />
-      <el-table-column label="培训视频标题" align="center" prop="title" />
-      <el-table-column label="视频简介" align="center" prop="information" />
+      <el-table-column label="培训视频标题" align="center" prop="title" :show-overflow-tooltip="true" />
+      <el-table-column label="视频简介" align="center" prop="information" :show-overflow-tooltip="true" />
       <el-table-column label="培训讲师" align="center" prop="lecturername" />
       <el-table-column label="所属类别" align="center" prop="type" :formatter="typeFormat" />
       <el-table-column label="创建时间" align="center" prop="createtime" width="180">
@@ -119,6 +119,7 @@
         <el-form-item label="培训讲师" prop="lecturer">
           <el-select v-model="form.lecturer" placeholder="请选择讲师">
             <el-input v-model="form.videourl" v-if="false" />
+            <el-input v-model="form.filetype" v-if="false" />
             <el-option
               v-for="item in lecturerOptions"
               :key="item.id"
@@ -300,7 +301,7 @@ export default {
       this.imageUrl = "";
     },
     handleSuccessVideo(response) {
-      console.log(123, response);
+      console.log("上传完成", response);
       this.imgFlag = false;
       this.percent = 0;
       if (response.hash) {
@@ -333,6 +334,7 @@ export default {
         this.msgError("请上传正确格式的视频！");
         return false;
       } else {
+        this.form.filetype = file.type;
         if (!isLt500M) {
           this.msgError("上传视频文件大小不能超过 500MB!");
           return false;

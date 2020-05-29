@@ -11,6 +11,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="lecturer"    column="lecturer"    />
         <result property="lecturername"    column="lecturername"    />
         <result property="videourl"    column="videourl"    />
+        <result property="filetype"    column="filetype"    />
         <result property="type"    column="type"    />
         <result property="classtype"    column="classtype"    />
         <result property="createuserid"    column="createuserid"    />
@@ -18,7 +19,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectByTrainVideoVo">
-        select id, title, information, lecturer,(select name from by_lecturer where lecturer=by_lecturer.id) as lecturername, videourl, type, classtype, createuserid, createtime from by_train_video
+        select id, title, information, lecturer,(select name from by_lecturer where lecturer=by_lecturer.id) as lecturername, videourl,filetype, type, classtype, createuserid, createtime from by_train_video
     </sql>
 
     <select id="selectByTrainVideoList" parameterType="ByTrainVideo" resultMap="ByTrainVideoResult">
@@ -28,6 +29,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="information != null  and information != ''"> and information = #{information}</if>
             <if test="lecturer != null "> and lecturer = #{lecturer}</if>
             <if test="videourl != null  and videourl != ''"> and videourl = #{videourl}</if>
+            <if test="filetype != null  and filetype != ''"> and filetype = #{filetype}</if>
             <if test="type != null  and type != ''"> and type like concat('', #{type}, '%')</if>
             <if test="classtype != null  and classtype != ''"> and classtype = #{classtype}</if>
             <if test="createuserid != null "> and createuserid = #{createuserid}</if>
@@ -47,6 +49,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="information != null  and information != ''">information,</if>
             <if test="lecturer != null ">lecturer,</if>
             <if test="videourl != null  and videourl != ''">videourl,</if>
+            <if test="filetype != null  and filetype != ''">filetype,</if>
             <if test="type != null  and type != ''">type,</if>
             <if test="classtype != null  and classtype != ''">classtype,</if>
             <if test="createuserid != null ">createuserid,</if>
@@ -57,6 +60,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="information != null  and information != ''">#{information},</if>
             <if test="lecturer != null ">#{lecturer},</if>
             <if test="videourl != null  and videourl != ''">#{videourl},</if>
+            <if test="filetype != null  and filetype != ''">#{filetype},</if>
             <if test="type != null  and type != ''">#{type},</if>
             <if test="classtype != null  and classtype != ''">#{classtype},</if>
             <if test="createuserid != null ">#{createuserid},</if>
@@ -71,6 +75,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="information != null  and information != ''">information = #{information},</if>
             <if test="lecturer != null ">lecturer = #{lecturer},</if>
             <if test="videourl != null  and videourl != ''">videourl = #{videourl},</if>
+            <if test="filetype != null  and filetype != ''">filetype = #{filetype},</if>
             <if test="type != null  and type != ''">type = #{type},</if>
             <if test="classtype != null  and classtype != ''">classtype = #{classtype},</if>
             <if test="createuserid != null ">createuserid = #{createuserid},</if>

@@ -35,22 +35,24 @@
       </el-form-item>
     </el-form>
     <el-row v-loading="loading">
-      <el-col :span="6" v-for="(o, index) in videoList" :key="index" style="padding: 10px;">
+      <el-col :xs="12" :sm="6" v-for="(o, index) in videoList" :key="index" style="padding: 10px;">
         <el-card :body-style="{ padding: '2px' }">
-          <video
-            controls="controls"
-            controlslist="nodownload"
-            oncontextmenu="return false"
-            :src="[qiniuUrl + '/' + o.videourl]"
-            class="videoavatar"
-          ></video>
-          <div style="padding: 14px;">
+          <video-player
+            class="vjs-custom-skin"
+            :playsinline="true"
+            :options="playerOptions[index]"
+            ref="videoPlayer"
+          ></video-player>
+          <div class="to-detail" @click="toDetail(o)">
             <el-tooltip effect="dark" :content="o.title" placement="bottom">
-              <el-button class="info-title">{{o.title+" (讲师:"+o.lecturername+")"}}</el-button>
+              <div>
+                <p class="info-title">{{o.title}}</p>
+              </div>
             </el-tooltip>
-            <div class="bottom clearfix">
+            <p class="info-title info-title-name">讲师:{{o.lecturername}}</p>
+            <div class="bottom">
               <time class="time">{{ parseTime(o.createtime) }}</time>
-              <el-button type="text" class="button">进入详情页</el-button>
+              <!-- <el-button type="text" class="button">进入详情页</el-button> -->
             </div>
           </div>
         </el-card>
@@ -88,15 +90,16 @@ export default {
       lecturerOptions: [],
       //视频类别
       optionTypes: [],
+      playerOptions: [],
       // 是否显示弹出层
       open: false,
       // 查询参数
       queryParams: {
-        pageNum: 1,
-        pageSize: 8,
         title: undefined,
         lecturer: undefined,
-        type: undefined
+        type: undefined,
+        pageNum: 1,
+        pageSize: 8
       }
     };
   },
@@ -114,6 +117,9 @@ export default {
     });
   },
   methods: {
+    toDetail(arg) {
+      console.log(arg);
+    },
     // 递归判断列表，把最后的children设为undefined
     getTreeData(data) {
       for (var i = 0; i < data.length; i++) {
@@ -133,6 +139,30 @@ export default {
       this.loading = true;
       listVideo(this.queryParams).then(response => {
         this.videoList = response.rows;
+        this.playerOptions = response.rows.map(ele => {
+          return {
+            autoplay: false,
+            muted: true,
+            language: "zh-CN",
+            playbackRates: [0.7, 1.0, 1.5, 2.0],
+            fluid: true,
+            sources: [
+              {
+                type: ele.filetype,
+                // mp4
+                src: "https://files.benyiedu.com/" + ele.videourl
+              }
+            ],
+            notSupportedMessage: "此视频暂无法播放，请稍后再试",
+            poster: "",
+            controlBar: {
+              timeDivider: true,
+              durationDisplay: false,
+              remainingTimeDisplay: false,
+              fullscreenToggle: true //全屏按钮
+            }
+          };
+        });
         this.total = response.total;
         this.loading = false;
       });
@@ -158,39 +188,31 @@ export default {
 
 <style>
 .time {
-  font-size: 13px;
+  line-height: 12px;
+  font-size: 12px;
   color: #999;
 }
 
 .bottom {
   margin-top: 13px;
-  line-height: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.button {
-  padding: 0;
-  float: right;
+.to-detail {
+  cursor: pointer;
+  padding: 14px;
 }
 
-.info-title{
-	width: 100%;    /*根据自己项目进行定义宽度*/
-	overflow: hidden;     /*设置超出的部分进行影藏*/
-	text-overflow: ellipsis;     /*设置超出部分使用省略号*/
-	white-space:nowrap ;    /*设置为单行*/
+.info-title {
+  width: 100%; /*根据自己项目进行定义宽度*/
+  overflow: hidden; /*设置超出的部分进行影藏*/
+  text-overflow: ellipsis; /*设置超出部分使用省略号*/
+  white-space: nowrap; /*设置为单行*/
 }
 
-.videoavatar {
-  width: 100%;
-  display: block;
-}
-
-.clearfix:before,
-.clearfix:after {
-  display: table;
-  content: "";
-}
-
-.clearfix:after {
-  clear: both;
+.info-title-name {
+  font-size: 12px;
 }
 </style>

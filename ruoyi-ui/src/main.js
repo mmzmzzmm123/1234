@@ -20,10 +20,12 @@ import { getDicts } from "@/api/system/dict/data";
 import { getConfigKey } from "@/api/system/config";
 import { parseTime, resetForm, addDateRange, selectDictLabel,selectMoeDictLabel, download, handleTree } from "@/utils/ruoyi";
 import Pagination from "@/components/Pagination";
-
+import VideoPlayer from 'vue-video-player';
 import Video from 'video.js'
-import 'video.js/dist/video-js.css'
-
+// import 'video.js/dist/video-js.css'
+// require videojs style
+import 'video.js/dist/video-js.css';
+import 'vue-video-player/src/custom-theme.css';
 
 // 全局方法挂载
 Vue.prototype.getDicts = getDicts
@@ -37,6 +39,7 @@ Vue.prototype.download = download
 Vue.prototype.handleTree = handleTree
 
 Vue.prototype.$video = Video
+Vue.use(VideoPlayer);
 
 Vue.prototype.msgSuccess = function (msg) {
   this.$message({ showClose: true, message: msg, type: "success" });
