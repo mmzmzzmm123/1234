@@ -36,7 +36,7 @@ public class SysDictMoedataController extends BaseController {
     /**
      * 查询多级字典管理列表
      */
-    @PreAuthorize("@ss.hasPermi('system:moedata:list')")
+    @PreAuthorize("@ss.hasPermi('system:moedata:list')"+ "||@ss.hasPermi('benyi:video:list')")
     @GetMapping("/list")
     public AjaxResult list(SysDictMoedata sysDictMoedata) {
 
