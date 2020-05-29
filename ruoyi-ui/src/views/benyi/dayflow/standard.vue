@@ -139,7 +139,7 @@
             :before-upload="beforeAvatarUpload"
             accept=".jpg, .png"
           >
-            <img v-if="imageUrl" :src="imageUrl" class="avatar" />
+            <img width="100%" v-if="imageUrl" :src="imageUrl" class="avatar" />
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
         </el-form-item>
@@ -176,9 +176,6 @@ export default {
     return {
       //显示上传的图片，清空
       imageUrl: "",
-      dialogVisible: false,
-      file:"",
-
       // 遮罩层
       loading: true,
       // 选中数组
@@ -238,7 +235,6 @@ export default {
     this.getTaskList();
   },
   methods: {
-   
     handleAvatarSuccess(res, file) {
       this.imageUrl = URL.createObjectURL(file.raw);
       console.log(res);
@@ -255,7 +251,6 @@ export default {
       }
       return isLt2M;
     },
-
     /**查询任务名称详细 */
     getDayflowtask(taskId) {
       getDayflowtask(taskId).then(response => {
@@ -337,7 +332,7 @@ export default {
         this.form = response.data;
         if (response.data.picture) {
           this.imageUrl = process.env.VUE_APP_BASE_API + response.data.picture;
-        };
+        }
         this.open = true;
         this.title = "修改标准";
       });
@@ -411,3 +406,29 @@ export default {
   }
 };
 </script>
+
+<style>
+.avatar-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+  border-color: #409eff;
+}
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 178px;
+  height: 178px;
+  line-height: 178px;
+  text-align: center;
+}
+.avatar {
+  width: 178px;
+  height: 178px;
+  display: block;
+}
+</style>
