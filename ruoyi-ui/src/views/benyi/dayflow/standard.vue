@@ -233,6 +233,7 @@ export default {
     const taskId = this.$route.params && this.$route.params.code;
     this.getDayflowtask(taskId);
     this.getTaskList();
+    
   },
   methods: {
     handleAvatarSuccess(res, file) {
