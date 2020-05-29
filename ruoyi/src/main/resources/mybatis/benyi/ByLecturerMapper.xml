@@ -9,6 +9,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="name"    column="name"    />
         <result property="information"    column="information"    />
         <result property="imgurl"    column="imgurl"    />
+        <result property="isdel"    column="isdel"    />
         <result property="createuserid"    column="createuserid"    />
         <result property="createtime"    column="createtime"    />
     </resultMap>
@@ -19,13 +20,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectByLecturerList" parameterType="ByLecturer" resultMap="ByLecturerResult">
         <include refid="selectByLecturerVo"/>
-        <where>  
+        where isdel='0'
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
             <if test="information != null  and information != ''"> and information = #{information}</if>
             <if test="imgurl != null  and imgurl != ''"> and imgurl = #{imgurl}</if>
             <if test="createuserid != null "> and createuserid = #{createuserid}</if>
             <if test="createtime != null "> and createtime = #{createtime}</if>
-        </where>
     </select>
     
     <select id="selectByLecturerById" parameterType="Long" resultMap="ByLecturerResult">
@@ -42,6 +42,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="imgurl != null  and imgurl != ''">imgurl,</if>
             <if test="createuserid != null ">createuserid,</if>
             <if test="createtime != null ">createtime,</if>
+            <if test="isdel != null  and isdel != ''">isdel,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null ">#{id},</if>
@@ -50,6 +51,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="imgurl != null  and imgurl != ''">#{imgurl},</if>
             <if test="createuserid != null ">#{createuserid},</if>
             <if test="createtime != null ">#{createtime},</if>
+            <if test="isdel != null  and isdel != ''">#{isdel},</if>
          </trim>
     </insert>
 
@@ -66,11 +68,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deleteByLecturerById" parameterType="Long">
-        delete from by_lecturer where id = #{id}
+        update by_lecturer set isdel='1' where id = #{id}
     </delete>
 
     <delete id="deleteByLecturerByIds" parameterType="String">
-        delete from by_lecturer where id in 
+        update by_lecturer set isdel='1' where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

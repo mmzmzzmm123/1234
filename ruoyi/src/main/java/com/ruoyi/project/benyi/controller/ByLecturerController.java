@@ -25,14 +25,13 @@ import com.ruoyi.framework.web.page.TableDataInfo;
 
 /**
  * 讲师Controller
- * 
+ *
  * @author tsbz
  * @date 2020-05-25
  */
 @RestController
 @RequestMapping("/benyi/lecturer")
-public class ByLecturerController extends BaseController
-{
+public class ByLecturerController extends BaseController {
     @Autowired
     private IByLecturerService byLecturerService;
 
@@ -41,8 +40,7 @@ public class ByLecturerController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('benyi:lecturer:list')")
     @GetMapping("/list")
-    public TableDataInfo list(ByLecturer byLecturer)
-    {
+    public TableDataInfo list(ByLecturer byLecturer) {
         startPage();
         List<ByLecturer> list = byLecturerService.selectByLecturerList(byLecturer);
         return getDataTable(list);
@@ -66,8 +64,7 @@ public class ByLecturerController extends BaseController
     @PreAuthorize("@ss.hasPermi('benyi:lecturer:export')")
     @Log(title = "讲师", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
-    public AjaxResult export(ByLecturer byLecturer)
-    {
+    public AjaxResult export(ByLecturer byLecturer) {
         List<ByLecturer> list = byLecturerService.selectByLecturerList(byLecturer);
         ExcelUtil<ByLecturer> util = new ExcelUtil<ByLecturer>(ByLecturer.class);
         return util.exportExcel(list, "lecturer");
@@ -78,8 +75,7 @@ public class ByLecturerController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('benyi:lecturer:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
-    {
+    public AjaxResult getInfo(@PathVariable("id") Long id) {
         return AjaxResult.success(byLecturerService.selectByLecturerById(id));
     }
 
@@ -89,10 +85,10 @@ public class ByLecturerController extends BaseController
     @PreAuthorize("@ss.hasPermi('benyi:lecturer:add')")
     @Log(title = "讲师", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody ByLecturer byLecturer)
-    {
+    public AjaxResult add(@RequestBody ByLecturer byLecturer) {
         byLecturer.setCreatetime(new Date());
         byLecturer.setCreateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
+        byLecturer.setIsdel("0");
         return toAjax(byLecturerService.insertByLecturer(byLecturer));
     }
 
@@ -102,8 +98,7 @@ public class ByLecturerController extends BaseController
     @PreAuthorize("@ss.hasPermi('benyi:lecturer:edit')")
     @Log(title = "讲师", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody ByLecturer byLecturer)
-    {
+    public AjaxResult edit(@RequestBody ByLecturer byLecturer) {
         return toAjax(byLecturerService.updateByLecturer(byLecturer));
     }
 
@@ -112,9 +107,8 @@ public class ByLecturerController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('benyi:lecturer:remove')")
     @Log(title = "讲师", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
-    {
+    @DeleteMapping("/{ids}")
+    public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(byLecturerService.deleteByLecturerByIds(ids));
     }
 }

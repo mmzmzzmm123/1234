@@ -42,12 +42,15 @@
             controlslist="nodownload"
             oncontextmenu="return false"
             :src="[qiniuUrl + '/' + o.videourl]"
-            class="avatar"
+            class="videoavatar"
           ></video>
           <div style="padding: 14px;">
-            <span class="word-space-ellipsis" :title="o.title">{{o.title+" (讲师:"+o.lecturer+")"}}</span>
+            <el-tooltip effect="dark" :content="o.title" placement="bottom">
+              <el-button class="info-title">{{o.title+" (讲师:"+o.lecturername+")"}}</el-button>
+            </el-tooltip>
             <div class="bottom clearfix">
               <time class="time">{{ parseTime(o.createtime) }}</time>
+              <el-button type="text" class="button">进入详情页</el-button>
             </div>
           </div>
         </el-card>
@@ -159,7 +162,24 @@ export default {
   color: #999;
 }
 
-.avatar {
+.bottom {
+  margin-top: 13px;
+  line-height: 12px;
+}
+
+.button {
+  padding: 0;
+  float: right;
+}
+
+.info-title{
+	width: 100%;    /*根据自己项目进行定义宽度*/
+	overflow: hidden;     /*设置超出的部分进行影藏*/
+	text-overflow: ellipsis;     /*设置超出部分使用省略号*/
+	white-space:nowrap ;    /*设置为单行*/
+}
+
+.videoavatar {
   width: 100%;
   display: block;
 }

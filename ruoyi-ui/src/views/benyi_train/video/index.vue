@@ -1,14 +1,14 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
-      <el-form-item label="视频标题" prop="title">
-        <el-input
-          v-model="queryParams.title"
+      <el-form-item label="所属类别" prop="type">
+        <el-cascader
+          placeholder="请选择所属类别"
+          v-model="queryParams.type"
+          :options="optionTypes"
+          :props="{ checkStrictly: true, value: 'id', label: 'name' }"
           clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-          placeholder="请输入培训视频标题"
-        />
+        ></el-cascader>
       </el-form-item>
       <el-form-item label="讲师姓名" prop="lecturer">
         <el-select v-model="queryParams.lecturer" filterable placeholder="请选择讲师">
@@ -20,14 +20,14 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="所属类别" prop="type">
-        <el-cascader
-          placeholder="请选择所属类别"
-          v-model="queryParams.type"
-          :options="optionTypes"
-          :props="{ checkStrictly: true, value: 'id', label: 'name' }"
+      <el-form-item label="视频标题" prop="title">
+        <el-input
+          v-model="queryParams.title"
           clearable
-        ></el-cascader>
+          size="small"
+          @keyup.enter.native="handleQuery"
+          placeholder="请输入培训视频标题"
+        />
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>

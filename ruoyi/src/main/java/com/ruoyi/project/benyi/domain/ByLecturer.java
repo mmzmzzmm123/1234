@@ -43,6 +43,10 @@ public class ByLecturer extends BaseEntity
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createtime;
 
+    /** 是否删除 */
+    @Excel(name = "是否删除")
+    private String isdel;
+
     public void setId(Long id) 
     {
         this.id = id;
@@ -96,6 +100,15 @@ public class ByLecturer extends BaseEntity
     public Date getCreatetime() {
         return createtime;
     }
+    public void setIsdel(String isdel)
+    {
+        this.isdel = isdel;
+    }
+
+    public String getIsdel()
+    {
+        return isdel;
+    }
 
     @Override
     public String toString() {
@@ -106,6 +119,7 @@ public class ByLecturer extends BaseEntity
             .append("imgurl", getImgurl())
             .append("createuserid", getCreateuserid())
             .append("createtime", getCreatetime())
+                .append("isdel", getIsdel())
             .toString();
     }
 }
