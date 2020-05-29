@@ -1,4 +1,4 @@
-package com.ruoyi.project.data.price.compute.controller;
+package com.ruoyi.project.data.price.controller;
 
 import java.util.List;
 
@@ -6,15 +6,13 @@ import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.framework.security.LoginUser;
 import com.ruoyi.framework.security.service.TokenService;
 import com.ruoyi.framework.web.page.TableSupport;
-import com.ruoyi.project.data.price.compute.domain.OfficeBasePriceUltimate;
-import com.ruoyi.project.data.price.compute.service.IOfficeBasePriceUltimateService;
-import com.ruoyi.project.system.domain.SysUser;
+import com.ruoyi.project.data.price.domain.UltimateOfficeBasePrice;
+import com.ruoyi.project.data.price.service.IUltimateOfficeBasePriceService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,9 +33,9 @@ import org.springframework.web.multipart.MultipartFile;
  */
 @RestController
 @RequestMapping("/data/compute/price/office")
-public class OfficeBasePriceUltimateController extends BaseController {
+public class ComputeOfficeBasePriceController extends BaseController {
     @Autowired
-    private IOfficeBasePriceUltimateService officeBasePriceUltimateService;
+    private IUltimateOfficeBasePriceService officeBasePriceUltimateService;
     @Autowired
     private TokenService tokenService;
 
@@ -46,12 +44,12 @@ public class OfficeBasePriceUltimateController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('system:user:list')")
     @GetMapping("/list")
-    public TableDataInfo list(OfficeBasePriceUltimate officeBasePriceUltimate) {
+    public TableDataInfo list(UltimateOfficeBasePrice officeBasePriceUltimate) {
         int pageIndex = ServletUtils.getParameterToInt(TableSupport.PAGE_NUM);
         int pageSize = ServletUtils.getParameterToInt(TableSupport.PAGE_SIZE);
         officeBasePriceUltimate.setPageIndex(pageIndex <= 1 ? 0 : (pageIndex - 1) * pageSize);
         officeBasePriceUltimate.setPageSize(pageSize);
-        List<OfficeBasePriceUltimate> list =
+        List<UltimateOfficeBasePrice> list =
                 officeBasePriceUltimateService.selectOfficeBasePriceUltimateList(officeBasePriceUltimate);
         int total = officeBasePriceUltimateService.selectOfficeBasePriceUltimateListCount(officeBasePriceUltimate);
         return getDataTable(list, total);
@@ -73,7 +71,7 @@ public class OfficeBasePriceUltimateController extends BaseController {
     @PreAuthorize("@ss.hasPermi('system:user:edit')")
     @Log(title = "办公基价", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody OfficeBasePriceUltimate officeBasePriceUltimate) {
+    public AjaxResult edit(@RequestBody UltimateOfficeBasePrice officeBasePriceUltimate) {
         return toAjax(officeBasePriceUltimateService.updateOfficeBasePriceUltimate(officeBasePriceUltimate));
     }
 
@@ -83,18 +81,19 @@ public class OfficeBasePriceUltimateController extends BaseController {
     @PreAuthorize("@ss.hasPermi('system:user:export')")
     @Log(title = "办公基价", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
-    public AjaxResult export(OfficeBasePriceUltimate officeBasePriceUltimate) {
+    public AjaxResult export(UltimateOfficeBasePrice officeBasePriceUltimate) {
         int total = officeBasePriceUltimateService.selectOfficeBasePriceUltimateListCount(officeBasePriceUltimate);
         officeBasePriceUltimate.setPageIndex(0);
         officeBasePriceUltimate.setPageSize(total);
-        List<OfficeBasePriceUltimate> list =
+        List<UltimateOfficeBasePrice> list =
                 officeBasePriceUltimateService.selectOfficeBasePriceUltimateList(officeBasePriceUltimate);
-        ExcelUtil<OfficeBasePriceUltimate> util = new ExcelUtil<OfficeBasePriceUltimate>(OfficeBasePriceUltimate.class);
+        ExcelUtil<UltimateOfficeBasePrice> util = new ExcelUtil<>(UltimateOfficeBasePrice.class);
         return util.exportExcel(list, "办公基价");
     }
 
     /**
      * 办公基价导入
+     *
      * @param file
      * @return
      * @throws Exception
@@ -103,13 +102,12 @@ public class OfficeBasePriceUltimateController extends BaseController {
     @PreAuthorize("@ss.hasPermi('system:user:import')")
     @PostMapping("/importData")
     public AjaxResult importData(MultipartFile file) throws Exception {
-        ExcelUtil<OfficeBasePriceUltimate> util = new ExcelUtil<>(OfficeBasePriceUltimate.class);
-        List<OfficeBasePriceUltimate> officeBasePriceUltimates = util.importExcel(file.getInputStream());
+        ExcelUtil<UltimateOfficeBasePrice> util = new ExcelUtil<>(UltimateOfficeBasePrice.class);
+        List<UltimateOfficeBasePrice> officeBasePriceUltimates = util.importExcel(file.getInputStream());
         LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
         String operName = loginUser.getUsername();
         String message = officeBasePriceUltimateService.batchImport(officeBasePriceUltimates, operName);
         return AjaxResult.success(message);
     }
-
 }
 

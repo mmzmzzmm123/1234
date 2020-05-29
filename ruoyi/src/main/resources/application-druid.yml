@@ -48,7 +48,7 @@ spring:
                 # 主库数据源
                 master:
                     driver-class-name: com.mysql.jdbc.Driver
-                    url: jdbc:mysql://localhost:6060/ruoyi?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+                    url: jdbc:mysql://172.16.30.243:6060/ruoyi?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
                     username: root
                     password: LOLm2dI2UQF#RxOf
                 # 从库数据源
@@ -61,5 +61,10 @@ spring:
                 teemlink:
                     driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
                     url: jdbc:sqlserver://172.16.30.233:1433;DatabaseName=obpm_LianCheng_Data
+                    username: sa
+                    password: Lcdatacenter_888
+                compute:
+                    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+                    url: jdbc:sqlserver://172.16.30.233:1433;DatabaseName=uv_compute
                     username: sa
                     password: Lcdatacenter_888

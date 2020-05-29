@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.data.price.mapper.ComputeResidenceRentPriceMapper">
+
+    <resultMap type="com.ruoyi.project.data.price.domain.ComputeResidenceRentBasePrice"
+               id="MainMappingResult">
+        <result property="id" column="id"/>
+        <result property="communityId" column="ProjectID"/>
+        <result property="communityName" column="ProjectName"/>
+        <result property="communityAddress" column="ProjectAddr"/>
+        <result property="county" column="county"/>
+        <result property="block" column="block"/>
+        <result property="loop" column="loopLine"/>
+        <result property="isIndxGen" column="isIndxGen"/>
+        <result property="isPstCalc" column="isPstCalc"/>
+        <result property="statusRun" column="statusRun"/>
+        <result property="propertyType" column="propertyType"/>
+        <result property="projectType" column="projectType"/>
+        <result property="projectTypeDtl" column="projectTypeDtl"/>
+        <result property="projectLevel" column="projectLevel"/>
+        <result property="propertyDevPeriod" column="propertyDevPeriod"/>
+        <result property="bindClassID" column="bindClassID"/>
+        <result property="mainCoefficientRent" column="mainCoffRent"/>
+        <result property="rentPriceDft" column="rentPriceDft"/>
+        <result property="mainRentPriceDft" column="mainRentPriceDft"/>
+        <result property="rentPrice_1" column="rentPrice_1"/>
+        <result property="priceDealMean_1" column="priceDealMean_1"/>
+        <result property="priceDealMax_1" column="priceDealMax_1"/>
+        <result property="sumDeal_1" column="sumDeal_1"/>
+        <result property="priceDeal_1_ToAI_Pst" column="priceDeal_1_ToAI_Pst"/>
+        <result property="priceDealMean" column="priceDealMean"/>
+        <result property="priceDealMax" column="priceDealMax"/>
+        <result property="sumDeal" column="sumDeal"/>
+        <result property="priceDeal_ToAI_Pst" column="priceDeal_ToAI_Pst"/>
+        <result property="priceDeal_ToLst_Pst" column="priceDeal_ToLst_Pst"/>
+        <result property="priceCaseOff" column="priceCaseOff"/>
+        <result property="priceCaseOff_ToLst_Pst" column="priceCaseOff_ToLst_Pst"/>
+        <result property="priceListedMin" column="priceListedMin"/>
+        <result property="priceLstMn_ToAI_Pst" column="priceLstMn_ToAI_Pst"/>
+        <result property="priceCase1_ToAI_Pst" column="priceCase1_ToAI_Pst"/>
+        <result property="priceCase2_ToAI_Pst" column="priceCase2_ToAI_Pst"/>
+        <result property="priceCase1_ToLst_Pst" column="priceCase1_ToLst_Pst"/>
+        <result property="priceCase2_ToLst_Pst" column="priceCase2_ToLst_Pst"/>
+        <result property="priceCase1" column="priceCase1"/>
+        <result property="priceCase1AdjPst" column="priceCase1AdjPst"/>
+        <result property="sumCase1" column="sumCase1"/>
+        <result property="priceCase2" column="priceCase2"/>
+        <result property="priceCase2AdjPst" column="priceCase2AdjPst"/>
+        <result property="sumCase2" column="sumCase2"/>
+        <result property="voppbt" column="voppbt"/>
+        <result property="voppb" column="voppb"/>
+        <result property="bindProjID" column="bindProjID"/>
+        <result property="bind_Proj_Pst" column="bind_Proj_Pst"/>
+        <result property="bind_Block_Class" column="bind_Block_Class"/>
+        <result property="bind_Block_Class_Pst" column="bind_Block_Class_Pst"/>
+        <result property="bind_Block_Plevel" column="bind_Block_Plevel"/>
+        <result property="bind_Block_Plevel_Pst" column="bind_Block_Plevel_Pst"/>
+        <result property="bind_Block_PType" column="bind_Block_PType"/>
+        <result property="bind_Block_Ptype_Pst" column="bind_Block_Ptype_Pst"/>
+        <result property="bind_County_PType" column="bind_County_PType"/>
+        <result property="bind_County_Ptype_Pst" column="bind_County_Ptype_Pst"/>
+        <result property="bind_MixProject_PType" column="bind_MixProject_PType"/>
+        <result property="bind_MixProject_Pst" column="bind_MixProject_Pst"/>
+        <result property="voppat" column="voppat"/>
+        <result property="voppa" column="voppa"/>
+    </resultMap>
+
+    <sql id="selectOfficeBasePriceUltimateVo">
+        SELECT ID
+          ,ProjectID
+          ,ProjectName
+          ,ProjectAddr
+          ,County
+          ,Block
+          ,Loop
+          ,IsIndxGen
+          ,IsPstCalc
+          ,StatusRun
+          ,PropertyType
+          ,ProjectType
+          ,ProjectTypeDtl
+          ,ProjectLevel
+          ,PropertyDevPeriod
+          ,BindClassID
+          ,MainCoff_Rent
+          ,RentPriceDft
+          ,MainRentPriceDft
+          ,RentPrice_1
+          ,PriceDealMean_1
+          ,PriceDealMax_1
+          ,SumDeal_1
+          ,PriceDeal_1_ToAI_Pst
+          ,PriceDealMean
+          ,PriceDealMax
+          ,SumDeal
+          ,PriceDeal_ToAI_Pst
+          ,PriceDeal_ToLst_Pst
+          ,PriceCaseOff
+          ,PriceCaseOff_ToLst_Pst
+          ,PriceListedMin
+          ,PriceLstMn_ToAI_Pst
+          ,PriceCase1_ToAI_Pst
+          ,PriceCase2_ToAI_Pst
+          ,PriceCase1_ToLst_Pst
+          ,PriceCase2_ToLst_Pst
+          ,PriceCase1
+          ,PriceCase1AdjPst
+          ,SumCase1
+          ,PriceCase2
+          ,PriceCase2AdjPst
+          ,SumCase2
+          ,VOPPBT
+          ,VOPPB
+          ,BindProjID
+          ,Bind_Proj_Pst
+          ,Bind_Block_Class
+          ,Bind_Block_Class_Pst
+          ,Bind_Block_Plevel
+          ,Bind_Block_Plevel_Pst
+          ,Bind_Block_PType
+          ,Bind_Block_Ptype_Pst
+          ,Bind_County_PType
+          ,Bind_County_Ptype_Pst
+          ,Bind_MixProject_PType
+          ,Bind_MixProject_Pst
+          ,VOPPAT
+          ,VOPPA
+        FROM dbo.DWA_PROJECTBASEPRICE_RENT_IMDT_${yearMonth}
+    </sql>
+
+    <select id="selectComputeResidenceRentBasePriceListCount"
+            parameterType="com.ruoyi.project.data.price.domain.ComputeResidenceRentBasePrice" resultType="int">
+        select count(1) from DWA_PROJECTBASEPRICE_RENT_IMDT_${yearMonth}
+        <where>
+            <if test="communityId != null">
+                AND ProjectID = #{communityId}
+            </if>
+        </where>
+    </select>
+    <!-- 分页   -->
+    <select id="selectComputeResidenceRentBasePriceList"
+            parameterType="com.ruoyi.project.data.price.domain.ComputeResidenceRentBasePrice"
+            resultMap="MainMappingResult">
+        <![CDATA[ SELECT ID,ProjectID,ProjectName,ProjectAddr,County,Block,[Loop] as loopLine,IsIndxGen,IsPstCalc,StatusRun,PropertyType,ProjectType,ProjectTypeDtl,ProjectLevel,PropertyDevPeriod,BindClassID,MainCoff_Rent,RentPriceDft,MainRentPriceDft,RentPrice_1,PriceDealMean_1,PriceDealMax_1,SumDeal_1,PriceDeal_1_ToAI_Pst,PriceDealMean,PriceDealMax,SumDeal,PriceDeal_ToAI_Pst,PriceDeal_ToLst_Pst,PriceCaseOff,PriceCaseOff_ToLst_Pst,PriceListedMin,PriceLstMn_ToAI_Pst,PriceCase1_ToAI_Pst,PriceCase2_ToAI_Pst,PriceCase1_ToLst_Pst,PriceCase2_ToLst_Pst,PriceCase1,PriceCase1AdjPst,SumCase1,PriceCase2,PriceCase2AdjPst,SumCase2,VOPPBT,VOPPB,BindProjID,Bind_Proj_Pst,Bind_Block_Class,Bind_Block_Class_Pst,Bind_Block_Plevel,Bind_Block_Plevel_Pst,Bind_Block_PType,Bind_Block_Ptype_Pst,Bind_County_PType,Bind_County_Ptype_Pst,Bind_MixProject_PType,Bind_MixProject_Pst,VOPPAT,VOPPA ]]>
+                FROM dbo.DWA_PROJECTBASEPRICE_RENT_IMDT_${yearMonth}
+                order by ProjectID ASC OFFSET #{pageIndex} rows fetch next #{pageSize} rows only
+    </select>
+
+    <!--    -->
+    <select id="selectComputeResidenceRentBasePriceById" parameterType="String" resultMap="MainMappingResult">
+        <include refid="selectOfficeBasePriceUltimateVo"/>
+        where id = #{id}
+    </select>
+
+
+    <!--    <update id="updateComputeResidenceRentBasePrice" parameterType="com.ruoyi.project.data.price.domain.UltimateOfficeBasePrice">-->
+    <!--        update TLK_计价办公核准基价 set ITEM_YEARMONTH=ITEM_YEARMONTH-->
+    <!--        <trim prefix="SET" suffixOverrides=",">-->
+    <!--        </trim>-->
+    <!--        where id = #{id}-->
+    <!--    </update>-->
+
+</mapper>

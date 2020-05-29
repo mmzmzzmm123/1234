@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ruoyi.project.data.price.compute.mapper.OfficeBasePriceUltimateMapper">
+<mapper namespace="com.ruoyi.project.data.price.mapper.UltimateOfficeBasePriceMapper">
 
-    <resultMap type="com.ruoyi.project.data.price.compute.domain.OfficeBasePriceUltimate"
+    <resultMap type="com.ruoyi.project.data.price.domain.UltimateOfficeBasePrice"
                id="OfficeBasePriceUltimateResult">
         <result property="id" column="id"/>
         <result property="yearMonth" column="ITEM_YEARMONTH"/>
@@ -26,7 +26,7 @@
         select ITEM_YEARMONTH,ITEM_BUILDINGID,ITEM_UNIFIEDID,ITEM_PROJECTID,ITEM_BUILDINGID_P,ITEM_PROJECTID_P,ITEM_MAINPRICE,ITEM_MAINPRICERENT,ITEM_MAINPRICEPST,ITEM_MAINPRICERENTPST,ITEM_MAINPRICETYPE,ITEM_MAINPRICERENTTYPE,ITEM_MODIFYDATE,ITEM_STATUS,ITEM_BUILDINGSTD,ITEM_ADJEVD,ID from TLK_计价办公核准基价
     </sql>
 
-    <select id="selectOfficeBasePriceUltimateListCount" parameterType="OfficeBasePriceUltimate" resultType="int">
+    <select id="selectOfficeBasePriceUltimateListCount" parameterType="com.ruoyi.project.data.price.domain.UltimateOfficeBasePrice" resultType="int">
         select count(1) from TLK_计价办公核准基价
         <where>
             <if test="yearMonth != null">
@@ -44,7 +44,7 @@
         </where>
     </select>
 
-    <select id="selectOfficeBasePriceUltimateList" parameterType="OfficeBasePriceUltimate"
+    <select id="selectOfficeBasePriceUltimateList" parameterType="com.ruoyi.project.data.price.domain.UltimateOfficeBasePrice"
             resultMap="OfficeBasePriceUltimateResult">
         <include refid="selectOfficeBasePriceUltimateVo"/>
         <where>
@@ -75,22 +75,11 @@
     <!--        </trim>-->
     <!--    </insert>-->
 
-    <update id="updateOfficeBasePriceUltimate" parameterType="OfficeBasePriceUltimate">
+    <update id="updateOfficeBasePriceUltimate" parameterType="com.ruoyi.project.data.price.domain.UltimateOfficeBasePrice">
         update TLK_计价办公核准基价 set ITEM_YEARMONTH=ITEM_YEARMONTH
         <trim prefix="SET" suffixOverrides=",">
         </trim>
         where id = #{id}
     </update>
-
-    <!--    <delete id="deleteOfficeBasePriceUltimateById" parameterType="Integer">-->
-    <!--        delete from office_base_price_ultimate where id = #{id}-->
-    <!--    </delete>-->
-
-    <!--    <delete id="deleteOfficeBasePriceUltimateByIds" parameterType="String">-->
-    <!--        delete from office_base_price_ultimate where id in-->
-    <!--        <foreach item="id" collection="array" open="(" separator="," close=")">-->
-    <!--            #{id}-->
-    <!--        </foreach>-->
-    <!--    </delete>-->
 
 </mapper>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.data.price.mapper.ArtificialResidenceRentPriceMapper">
+
+    <resultMap type="com.ruoyi.project.data.price.domain.ArtificialResidenceRentBasePrice"
+               id="MainMappingResult">
+        <result property="id" column="id"/>
+        <result property="communityId" column="ProjectID"/>
+        <result property="mainRentCoefficient" column="MainCoff_Rent"/>
+        <result property="mainRentPrice" column="MainRentPrice"/>
+        <result property="rentPrice" column="RentPrice"/>
+        <result property="rentPrice_1" column="rentPrice_1"/>
+        <result property="voppat" column="voppat"/>
+        <result property="voppa" column="voppa"/>
+    </resultMap>
+
+    <select id="selectArtificialResidenceRentBasePriceListCount"
+            parameterType="com.ruoyi.project.data.price.domain.ArtificialResidenceRentBasePrice" resultType="int">
+        select count(1) from DWA_PROJECTBASEPRICE_RENT_IMDT_${yearMonth}
+        <where>
+            <if test="communityId != null">
+                AND ProjectID = #{communityId}
+            </if>
+        </where>
+    </select>
+    <!-- 分页   -->
+    <select id="selectArtificialResidenceRentBasePriceList"
+            parameterType="com.ruoyi.project.data.price.domain.ArtificialResidenceRentBasePrice"
+            resultMap="MainMappingResult">
+        <![CDATA[ SELECT ID,ProjectID,MainCoff_Rent,RentPrice,MainRentPrice,RentPrice_1,VOPPAT,VOPPA ]]>
+            FROM dbo.DWA_PROJECTBASEPRICE_RENT_MANU_${yearMonth}
+            order by ProjectID ASC OFFSET #{pageIndex} rows fetch next #{pageSize} rows only
+    </select>
+
+</mapper>

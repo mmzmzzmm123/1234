@@ -1,8 +1,6 @@
-package com.ruoyi.project.data.price.compute.domain;
+package com.ruoyi.project.data.price.domain;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.framework.aspectj.lang.annotation.Excel;
 import com.ruoyi.framework.web.domain.BaseEntity;
 
@@ -14,15 +12,15 @@ import java.util.Date;
  * @author ruoyi
  * @date 2020-05-20
  */
-public class OfficeBasePriceUltimate extends BaseEntity {
+public class ComputeResidenceSaleBasePrice extends BaseEntity {
 
     private Integer pageIndex;
     private Integer pageSize;
+    @JSONField(serialize = false)
+    private Integer yearMonth;
 
     @Excel(name = "ID")
     private String id;
-    @JSONField(serialize = false)
-    private Integer yearMonth;
     @Excel(name = "楼栋ID")
     private String buildingId;
     @Excel(name = "小区ID")
