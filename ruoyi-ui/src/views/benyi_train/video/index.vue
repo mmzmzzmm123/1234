@@ -71,9 +71,20 @@
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="编号" align="center" prop="id" />
       <el-table-column label="培训视频标题" align="center" prop="title" :show-overflow-tooltip="true" />
-      <el-table-column label="视频简介" align="center" prop="information" :show-overflow-tooltip="true" />
+      <el-table-column
+        label="视频简介"
+        align="center"
+        prop="information"
+        :show-overflow-tooltip="true"
+      />
       <el-table-column label="培训讲师" align="center" prop="lecturername" />
-      <el-table-column label="所属类别" align="center" prop="type" :formatter="typeFormat" />
+      <el-table-column
+        label="所属类别"
+        align="center"
+        prop="type"
+        :formatter="typeFormat"
+        :show-overflow-tooltip="true"
+      />
       <el-table-column label="创建时间" align="center" prop="createtime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createtime) }}</span>
@@ -110,6 +121,17 @@
     <!-- 添加或修改培训对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px">
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+        <el-form-item label="所属类别" prop="type">
+          <el-cascader
+            ref="typeCascader"
+            placeholder="请选择所属类别"
+            v-model="form.type"
+            :options="optionTypes"
+            :props="{ checkStrictly: true, value: 'id', label: 'name' }"
+            clearable
+            @change="getLastChildName"
+          ></el-cascader>
+        </el-form-item>
         <el-form-item label="视频标题" prop="title">
           <el-input v-model="form.title" type="textarea" placeholder="请输入内容" />
         </el-form-item>
@@ -153,15 +175,6 @@
             ></i>
             <el-progress v-if="imgFlag == true" type="circle" :percentage="percent"></el-progress>
           </el-upload>
-        </el-form-item>
-        <el-form-item label="所属类别" prop="type">
-          <el-cascader
-            placeholder="请选择所属类别"
-            v-model="form.type"
-            :options="optionTypes"
-            :props="{ checkStrictly: true, value: 'id', label: 'name' }"
-            clearable
-          ></el-cascader>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -272,6 +285,13 @@ export default {
     });
   },
   methods: {
+    //获取选中节点的label用作标题
+    getLastChildName(val) {
+      //console.log(val[val.length-1]);
+      //console.log(this.$refs.myCascader.getCheckedNodes()[0].pathLabels[val.length-1]);
+      var lastLable=this.$refs.typeCascader.getCheckedNodes()[0].pathLabels[val.length-1];
+      this.form.title=lastLable;
+    },
     // 字典状态字典翻译
     typeFormat(row, column) {
       var actions = [];

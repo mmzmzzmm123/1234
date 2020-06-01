@@ -78,11 +78,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deleteSysDictMoedataById" parameterType="Long">
-        update from sys_dict_moedata set isdel='1' where id = #{id}
+        update sys_dict_moedata set isdel='1' where id = #{id}
     </delete>
 
     <delete id="deleteSysDictMoedataByIds" parameterType="String">
-        update from sys_dict_moedata set isdel='1' where id in
+        update sys_dict_moedata set isdel='1' where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

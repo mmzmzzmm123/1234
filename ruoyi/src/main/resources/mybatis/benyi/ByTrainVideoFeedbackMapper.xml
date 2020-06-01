@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.benyi.mapper.ByTrainVideoFeedbackMapper">
+    
+    <resultMap type="ByTrainVideoFeedback" id="ByTrainVideoFeedbackResult">
+        <result property="id"    column="id"    />
+        <result property="videoid"    column="videoid"    />
+        <result property="content"    column="content"    />
+        <result property="createuserid"    column="createuserid"    />
+        <result property="createtime"    column="createtime"    />
+    </resultMap>
+
+    <sql id="selectByTrainVideoFeedbackVo">
+        select id, videoid, content, createuserid, createtime from by_train_video_feedback
+    </sql>
+
+    <select id="selectByTrainVideoFeedbackList" parameterType="ByTrainVideoFeedback" resultMap="ByTrainVideoFeedbackResult">
+        <include refid="selectByTrainVideoFeedbackVo"/>
+        <where>  
+            <if test="videoid != null "> and videoid = #{videoid}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="createuserid != null "> and createuserid = #{createuserid}</if>
+            <if test="createtime != null "> and createtime = #{createtime}</if>
+        </where>
+    </select>
+    
+    <select id="selectByTrainVideoFeedbackById" parameterType="Long" resultMap="ByTrainVideoFeedbackResult">
+        <include refid="selectByTrainVideoFeedbackVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertByTrainVideoFeedback" parameterType="ByTrainVideoFeedback">
+        insert into by_train_video_feedback
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null ">id,</if>
+            <if test="videoid != null ">videoid,</if>
+            <if test="content != null  and content != ''">content,</if>
+            <if test="createuserid != null ">createuserid,</if>
+            <if test="createtime != null ">createtime,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null ">#{id},</if>
+            <if test="videoid != null ">#{videoid},</if>
+            <if test="content != null  and content != ''">#{content},</if>
+            <if test="createuserid != null ">#{createuserid},</if>
+            <if test="createtime != null ">#{createtime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateByTrainVideoFeedback" parameterType="ByTrainVideoFeedback">
+        update by_train_video_feedback
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="videoid != null ">videoid = #{videoid},</if>
+            <if test="content != null  and content != ''">content = #{content},</if>
+            <if test="createuserid != null ">createuserid = #{createuserid},</if>
+            <if test="createtime != null ">createtime = #{createtime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteByTrainVideoFeedbackById" parameterType="Long">
+        delete from by_train_video_feedback where id = #{id}
+    </delete>
+
+    <delete id="deleteByTrainVideoFeedbackByIds" parameterType="String">
+        delete from by_train_video_feedback where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

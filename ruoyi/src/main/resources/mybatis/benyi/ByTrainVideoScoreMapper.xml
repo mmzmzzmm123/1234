@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.benyi.mapper.ByTrainVideoScoreMapper">
+    
+    <resultMap type="ByTrainVideoScore" id="ByTrainVideoScoreResult">
+        <result property="id"    column="id"    />
+        <result property="videoid"    column="videoid"    />
+        <result property="lecturerid"    column="lecturerid"    />
+        <result property="score"    column="score"    />
+        <result property="createuserid"    column="createuserid"    />
+        <result property="createtime"    column="createtime"    />
+    </resultMap>
+
+    <sql id="selectByTrainVideoScoreVo">
+        select id, videoid, lecturerid, score, createuserid, createtime from by_train_video_score
+    </sql>
+
+    <select id="selectByTrainVideoScoreList" parameterType="ByTrainVideoScore" resultMap="ByTrainVideoScoreResult">
+        <include refid="selectByTrainVideoScoreVo"/>
+        <where>  
+            <if test="videoid != null "> and videoid = #{videoid}</if>
+            <if test="lecturerid != null "> and lecturerid = #{lecturerid}</if>
+            <if test="score != null "> and score = #{score}</if>
+            <if test="createuserid != null "> and createuserid = #{createuserid}</if>
+            <if test="createtime != null "> and createtime = #{createtime}</if>
+        </where>
+    </select>
+    
+    <select id="selectByTrainVideoScoreById" parameterType="Long" resultMap="ByTrainVideoScoreResult">
+        <include refid="selectByTrainVideoScoreVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertByTrainVideoScore" parameterType="ByTrainVideoScore">
+        insert into by_train_video_score
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null ">id,</if>
+            <if test="videoid != null ">videoid,</if>
+            <if test="lecturerid != null ">lecturerid,</if>
+            <if test="score != null ">score,</if>
+            <if test="createuserid != null ">createuserid,</if>
+            <if test="createtime != null ">createtime,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null ">#{id},</if>
+            <if test="videoid != null ">#{videoid},</if>
+            <if test="lecturerid != null ">#{lecturerid},</if>
+            <if test="score != null ">#{score},</if>
+            <if test="createuserid != null ">#{createuserid},</if>
+            <if test="createtime != null ">#{createtime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateByTrainVideoScore" parameterType="ByTrainVideoScore">
+        update by_train_video_score
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="videoid != null ">videoid = #{videoid},</if>
+            <if test="lecturerid != null ">lecturerid = #{lecturerid},</if>
+            <if test="score != null ">score = #{score},</if>
+            <if test="createuserid != null ">createuserid = #{createuserid},</if>
+            <if test="createtime != null ">createtime = #{createtime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteByTrainVideoScoreById" parameterType="Long">
+        delete from by_train_video_score where id = #{id}
+    </delete>
+
+    <delete id="deleteByTrainVideoScoreByIds" parameterType="String">
+        delete from by_train_video_score where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

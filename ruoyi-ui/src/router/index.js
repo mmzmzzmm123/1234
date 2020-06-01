@@ -115,6 +115,18 @@ export const constantRoutes = [{
         }]
     },
     {
+        path: '/video_study',
+        component: Layout,
+        hidden: true,
+        children: [{
+            path: 'study/detail/:id(\\d+)',
+            component: () =>
+                import ('@/views/benyi_train/video_study/detail'),
+            name: 'Detail',
+            meta: { title: '培训视频详情', icon: '' }
+        }]
+    },
+    {
         path: '/job',
         component: Layout,
         hidden: true,

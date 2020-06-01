@@ -10,7 +10,8 @@
           clearable
         ></el-cascader>
       </el-form-item>
-      <el-form-item label="讲师姓名" prop="lecturer">
+      <!-- 博士要求注释掉，不需要该过滤条件 2020-05-30 zlp -->
+      <!-- <el-form-item label="讲师姓名" prop="lecturer">
         <el-select v-model="queryParams.lecturer" filterable placeholder="请选择讲师">
           <el-option
             v-for="item in lecturerOptions"
@@ -28,7 +29,7 @@
           @keyup.enter.native="handleQuery"
           placeholder="请输入培训视频标题"
         />
-      </el-form-item>
+      </el-form-item>-->
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -43,10 +44,12 @@
             :options="playerOptions[index]"
             ref="videoPlayer"
           ></video-player>
-          <div class="to-detail" @click="toDetail(o)">
+          <div class="to-detail">
             <el-tooltip effect="dark" :content="o.title" placement="bottom">
               <div>
-                <p class="info-title">{{o.title}}</p>
+                <router-link :to="'/video_study/study/detail/' + o.id" class="link-type">
+                  <p class="info-title">{{o.title}}</p>
+                </router-link>
               </div>
             </el-tooltip>
             <p class="info-title info-title-name">讲师:{{o.lecturername}}</p>
@@ -79,7 +82,6 @@ export default {
   name: "VideoStudy",
   data() {
     return {
-      qiniuUrl: "https://files.benyiedu.com", // 个人七牛访问前缀
       // 遮罩层
       loading: true,
       // 总条数
@@ -117,9 +119,6 @@ export default {
     });
   },
   methods: {
-    toDetail(arg) {
-      console.log(arg);
-    },
     // 递归判断列表，把最后的children设为undefined
     getTreeData(data) {
       for (var i = 0; i < data.length; i++) {
@@ -201,7 +200,7 @@ export default {
 }
 
 .to-detail {
-  cursor: pointer;
+  /*cursor: pointer;*/
   padding: 14px;
 }
 

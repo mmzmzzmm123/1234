@@ -30,7 +30,7 @@ import com.ruoyi.project.tool.gen.service.IGenTableService;
 
 /**
  * 代码生成 操作处理
- * 
+ *
  * @author ruoyi
  */
 @RestController
@@ -124,6 +124,9 @@ public class GenController extends BaseController
         return AjaxResult.success();
     }
 
+    /**
+     * 删除代码生成
+     */
     @PreAuthorize("@ss.hasPermi('tool:gen:remove')")
     @Log(title = "代码生成", businessType = BusinessType.DELETE)
     @DeleteMapping("/{tableIds}")

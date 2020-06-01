@@ -85,8 +85,8 @@ public class SysDictMoedataController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('system:moedata:remove')")
     @Log(title = "多级字典管理", businessType = BusinessType.DELETE)
-    @DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids) {
-        return toAjax(sysDictMoedataService.deleteSysDictMoedataByIds(ids));
+    @DeleteMapping("/{id}")
+    public AjaxResult remove(@PathVariable Long  id) {
+        return toAjax(sysDictMoedataService.deleteSysDictMoedataById(id));
     }
 }

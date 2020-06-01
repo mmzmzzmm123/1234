@@ -21,7 +21,7 @@ public class VelocityUtils
 
     /**
      * 设置模板变量信息
-     * 
+     *
      * @return 模板列表
      */
     public static VelocityContext prepareContext(GenTable genTable)
@@ -81,7 +81,7 @@ public class VelocityUtils
 
     /**
      * 获取模板信息
-     * 
+     *
      * @return 模板列表
      */
     public static List<String> getTemplateList(String tplCategory)
@@ -138,7 +138,7 @@ public class VelocityUtils
         {
             fileName = StringUtils.format("{}/service/I{}Service.java", javaPath, className);
         }
-        else if (template.contains("service.java.vm"))
+        else if (template.contains("serviceImpl.java.vm"))
         {
             fileName = StringUtils.format("{}/service/impl/{}ServiceImpl.java", javaPath, className);
         }
@@ -171,7 +171,7 @@ public class VelocityUtils
 
     /**
      * 获取包前缀
-     * 
+     *
      * @param packageName 包名称
      * @return 包前缀名称
      */
@@ -184,7 +184,7 @@ public class VelocityUtils
 
     /**
      * 根据列类型获取导入包
-     * 
+     *
      * @param column 列集合
      * @return 返回需要导入的包列表
      */
@@ -196,6 +196,7 @@ public class VelocityUtils
             if (!column.isSuperColumn() && GenConstants.TYPE_DATE.equals(column.getJavaType()))
             {
                 importList.add("java.util.Date");
+                importList.add("com.fasterxml.jackson.annotation.JsonFormat");
             }
             else if (!column.isSuperColumn() && GenConstants.TYPE_BIGDECIMAL.equals(column.getJavaType()))
             {
@@ -207,7 +208,7 @@ public class VelocityUtils
 
     /**
      * 获取权限前缀
-     * 
+     *
      * @param moduleName 模块名称
      * @param businessName 业务名称
      * @return 返回权限前缀
@@ -220,7 +221,7 @@ public class VelocityUtils
 
     /**
      * 获取树编码
-     * 
+     *
      * @param options 生成其他选项
      * @return 树编码
      */
@@ -235,7 +236,7 @@ public class VelocityUtils
 
     /**
      * 获取树父编码
-     * 
+     *
      * @param options 生成其他选项
      * @return 树父编码
      */
@@ -250,7 +251,7 @@ public class VelocityUtils
 
     /**
      * 获取树名称
-     * 
+     *
      * @param options 生成其他选项
      * @return 树名称
      */
@@ -265,7 +266,7 @@ public class VelocityUtils
 
     /**
      * 获取需要在哪一列上面显示展开按钮
-     * 
+     *
      * @param genTable 业务表对象
      * @return 展开按钮列序号
      */
