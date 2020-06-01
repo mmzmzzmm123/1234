@@ -17,6 +17,14 @@ export function getFeedback(id) {
   })
 }
 
+// // 查询培训视频评价反馈详细
+// export function getFeedbackByVideo(vid) {
+//   return request({
+//     url: '/benyi/feedback/video/' + vid,
+//     method: 'get'
+//   })
+// }
+
 // 新增培训视频评价反馈
 export function addFeedback(data) {
   return request({

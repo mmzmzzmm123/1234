@@ -72,16 +72,26 @@ export default {
           noEventsMessage: "暂无日程"
         }
       },
-      header: {
+      // header: {
+      //   left: "prev,next today",
+      //   center: "title",
+      //   right: "dayGridMonth,timeGridWeek,timeGridDay listWeek"
+      // },
+      // buttonText: {
+      //   today: "今天",
+      //   month: "月",
+      //   week: "周",
+      //   day: "日",
+      //   list: "周列表"
+      // },
+       header: {
         left: "prev,next today",
         center: "title",
-        right: "dayGridMonth,timeGridWeek,timeGridDay listWeek"
+        right: "dayGridMonth, listWeek"
       },
       buttonText: {
         today: "今天",
         month: "月",
-        week: "周",
-        day: "日",
         list: "周列表"
       },
       calendarPlugins: [

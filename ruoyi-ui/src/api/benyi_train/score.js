@@ -17,6 +17,14 @@ export function getScore(id) {
   })
 }
 
+// 查询培训视频评分详细
+export function getScoreByVideo(vid) {
+  return request({
+    url: '/benyi/score/video/' + vid,
+    method: 'get'
+  })
+}
+
 // 新增培训视频评分
 export function addScore(data) {
   return request({

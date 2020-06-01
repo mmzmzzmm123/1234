@@ -7,19 +7,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <resultMap type="ByTrainVideoFeedback" id="ByTrainVideoFeedbackResult">
         <result property="id"    column="id"    />
         <result property="videoid"    column="videoid"    />
+        <result property="lecturerid"    column="lecturerid"    />
         <result property="content"    column="content"    />
         <result property="createuserid"    column="createuserid"    />
         <result property="createtime"    column="createtime"    />
     </resultMap>
 
     <sql id="selectByTrainVideoFeedbackVo">
-        select id, videoid, content, createuserid, createtime from by_train_video_feedback
+        select id, videoid, lecturerid, content, createuserid, createtime from by_train_video_feedback
     </sql>
 
     <select id="selectByTrainVideoFeedbackList" parameterType="ByTrainVideoFeedback" resultMap="ByTrainVideoFeedbackResult">
         <include refid="selectByTrainVideoFeedbackVo"/>
         <where>  
             <if test="videoid != null "> and videoid = #{videoid}</if>
+            <if test="lecturerid != null "> and lecturerid = #{lecturerid}</if>
             <if test="content != null  and content != ''"> and content = #{content}</if>
             <if test="createuserid != null "> and createuserid = #{createuserid}</if>
             <if test="createtime != null "> and createtime = #{createtime}</if>
@@ -36,6 +38,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null ">id,</if>
             <if test="videoid != null ">videoid,</if>
+            <if test="lecturerid != null ">lecturerid,</if>
             <if test="content != null  and content != ''">content,</if>
             <if test="createuserid != null ">createuserid,</if>
             <if test="createtime != null ">createtime,</if>
@@ -43,6 +46,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null ">#{id},</if>
             <if test="videoid != null ">#{videoid},</if>
+            <if test="lecturerid != null ">#{lecturerid},</if>
             <if test="content != null  and content != ''">#{content},</if>
             <if test="createuserid != null ">#{createuserid},</if>
             <if test="createtime != null ">#{createtime},</if>
@@ -53,6 +57,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         update by_train_video_feedback
         <trim prefix="SET" suffixOverrides=",">
             <if test="videoid != null ">videoid = #{videoid},</if>
+            <if test="lecturerid != null ">lecturerid = #{lecturerid},</if>
             <if test="content != null  and content != ''">content = #{content},</if>
             <if test="createuserid != null ">createuserid = #{createuserid},</if>
             <if test="createtime != null ">createtime = #{createtime},</if>

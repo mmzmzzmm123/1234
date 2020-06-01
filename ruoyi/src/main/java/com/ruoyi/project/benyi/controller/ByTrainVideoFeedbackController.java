@@ -1,6 +1,9 @@
 package com.ruoyi.project.benyi.service.impl;
 
+import java.util.Date;
 import java.util.List;
+
+import com.ruoyi.common.utils.SecurityUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -68,14 +71,35 @@ public class ByTrainVideoFeedbackController extends BaseController
         return AjaxResult.success(byTrainVideoFeedbackService.selectByTrainVideoFeedbackById(id));
     }
 
+//    /**
+//     * 获取培训视频评价反馈详细信息
+//     */
+//    @PreAuthorize("@ss.hasPermi('benyi:feedback:query')"+ "||@ss.hasPermi('benyi:video:query')")
+//    @GetMapping(value = "/video/{vid}")
+//    public AjaxResult getInfoByVideo(@PathVariable("vid") Long vid)
+//    {
+//
+//        ByTrainVideoFeedback byTrainVideoFeedback=new ByTrainVideoFeedback();
+//        byTrainVideoFeedback.setCreateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
+//        byTrainVideoFeedback.setVideoid(vid);
+//        List<ByTrainVideoFeedback> list=byTrainVideoFeedbackService.selectByTrainVideoFeedbackList(byTrainVideoFeedback);
+//        if(list!=null&&list.size()>0){
+//            return AjaxResult.success(list.get(0));
+//        }else{
+//            return AjaxResult.success(null);
+//        }
+//    }
+
     /**
      * 新增培训视频评价反馈
      */
-    @PreAuthorize("@ss.hasPermi('benyi:feedback:add')")
+    @PreAuthorize("@ss.hasPermi('benyi:feedback_score:add')")
     @Log(title = "培训视频评价反馈", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody ByTrainVideoFeedback byTrainVideoFeedback)
     {
+        byTrainVideoFeedback.setCreateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
+        byTrainVideoFeedback.setCreatetime(new Date());
         return toAjax(byTrainVideoFeedbackService.insertByTrainVideoFeedback(byTrainVideoFeedback));
     }
 
