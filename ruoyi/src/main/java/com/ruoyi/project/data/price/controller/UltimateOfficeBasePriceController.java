@@ -6,6 +6,7 @@ import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.framework.security.LoginUser;
 import com.ruoyi.framework.security.service.TokenService;
 import com.ruoyi.framework.web.page.TableSupport;
+import com.ruoyi.project.common.VueSelectModel;
 import com.ruoyi.project.data.price.domain.UltimateOfficeBasePrice;
 import com.ruoyi.project.data.price.service.IUltimateOfficeBasePriceService;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -26,21 +27,21 @@ import com.ruoyi.framework.web.page.TableDataInfo;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
- * 【请填写功能名称】Controller
+ * 办公基价Controller
  *
  * @author ruoyi
  * @date 2020-05-20
  */
 @RestController
 @RequestMapping("/data/compute/price/office")
-public class ComputeOfficeBasePriceController extends BaseController {
+public class UltimateOfficeBasePriceController extends BaseController {
     @Autowired
     private IUltimateOfficeBasePriceService officeBasePriceUltimateService;
     @Autowired
     private TokenService tokenService;
 
     /**
-     * 查询【请填写功能名称】列表
+     * 查询办公基价列表
      */
     @PreAuthorize("@ss.hasPermi('system:user:list')")
     @GetMapping("/list")
@@ -55,28 +56,38 @@ public class ComputeOfficeBasePriceController extends BaseController {
         return getDataTable(list, total);
     }
 
+    /**
+     * 查询 年月
+     */
+    @PreAuthorize("@ss.hasPermi('system:user:list')")
+    @GetMapping("/yearmonth")
+    public AjaxResult yearMonthList() {
+        List<VueSelectModel> list = officeBasePriceUltimateService.getYearMonthList();
+
+        return AjaxResult.success(list);
+    }
 
     /**
-     * 获取【请填写功能名称】详细信息
+     * 获取办公基价详细信息
      */
     @PreAuthorize("@ss.hasPermi('system:user:query')")
-    @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") String id) {
-        return AjaxResult.success(officeBasePriceUltimateService.selectOfficeBasePriceUltimateById(id));
+    @GetMapping(value = "/{yearMonth}/{id}")
+    public AjaxResult getInfo(@PathVariable("yearMonth") Integer yearMonth, @PathVariable("id") Integer id) {
+        return AjaxResult.success(officeBasePriceUltimateService.getById(yearMonth, id));
     }
 
-    /**
-     * 修改【请填写功能名称】
-     */
-    @PreAuthorize("@ss.hasPermi('system:user:edit')")
-    @Log(title = "办公基价", businessType = BusinessType.UPDATE)
-    @PutMapping
-    public AjaxResult edit(@RequestBody UltimateOfficeBasePrice officeBasePriceUltimate) {
-        return toAjax(officeBasePriceUltimateService.updateOfficeBasePriceUltimate(officeBasePriceUltimate));
-    }
+//    /**
+//     * 修改办公基价
+//     */
+//    @PreAuthorize("@ss.hasPermi('system:user:edit')")
+//    @Log(title = "办公基价", businessType = BusinessType.UPDATE)
+//    @PutMapping
+//    public AjaxResult edit(@RequestBody UltimateOfficeBasePrice officeBasePriceUltimate) {
+//        return toAjax(officeBasePriceUltimateService.updateOfficeBasePriceUltimate(officeBasePriceUltimate));
+//    }
 
     /**
-     * 导出【请填写功能名称】列表
+     * 导出办公基价列表
      */
     @PreAuthorize("@ss.hasPermi('system:user:export')")
     @Log(title = "办公基价", businessType = BusinessType.EXPORT)
@@ -100,13 +111,14 @@ public class ComputeOfficeBasePriceController extends BaseController {
      */
     @Log(title = "办公基价", businessType = BusinessType.IMPORT)
     @PreAuthorize("@ss.hasPermi('system:user:import')")
-    @PostMapping("/importData")
-    public AjaxResult importData(MultipartFile file) throws Exception {
+    @PostMapping("/importData/{yearMonth}")
+    public AjaxResult importData(@PathVariable("yearMonth") Integer yearMonth, MultipartFile file) throws Exception {
+        // 修改计价
         ExcelUtil<UltimateOfficeBasePrice> util = new ExcelUtil<>(UltimateOfficeBasePrice.class);
         List<UltimateOfficeBasePrice> officeBasePriceUltimates = util.importExcel(file.getInputStream());
         LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
         String operName = loginUser.getUsername();
-        String message = officeBasePriceUltimateService.batchImport(officeBasePriceUltimates, operName);
+        String message = officeBasePriceUltimateService.batchImport(yearMonth, officeBasePriceUltimates, operName);
         return AjaxResult.success(message);
     }
 }

@@ -68,3 +68,8 @@ spring:
                     url: jdbc:sqlserver://172.16.30.233:1433;DatabaseName=uv_compute
                     username: sa
                     password: Lcdatacenter_888
+                clean:
+                    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+                    url: jdbc:sqlserver://172.16.30.233:1433;DatabaseName=uv_clean
+                    username: sa
+                    password: Lcdatacenter_888

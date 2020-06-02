@@ -153,7 +153,13 @@
         <include refid="selectOfficeBasePriceUltimateVo"/>
         where id = #{id}
     </select>
-
+    <!-- 获取表名   -->
+    <select id="yearMonthList" resultType="com.ruoyi.project.common.VueSelectModel">
+        SELECT right(name,6) as value, right(name,6) as label
+        FROM sys.tables
+        where name like 'DWA_PROJECTBASEPRICE_RENT_IMDT_%'
+        order by cast(right(name,6) as int) desc
+    </select>
 
     <!--    <update id="updateComputeResidenceRentBasePrice" parameterType="com.ruoyi.project.data.price.domain.UltimateOfficeBasePrice">-->
     <!--        update TLK_计价办公核准基价 set ITEM_YEARMONTH=ITEM_YEARMONTH-->

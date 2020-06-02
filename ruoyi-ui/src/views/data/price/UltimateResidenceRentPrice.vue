@@ -5,6 +5,7 @@
         <el-date-picker
           v-model="queryParams.yearMonth"
           format="yyyyMM"
+          value-format="yyyyMM"
           type="month"
           placeholder="选择年月"
           @keyup.enter.native="handleQuery"
@@ -18,21 +19,6 @@
           size="small"
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
-      <el-form-item label="联城楼栋ID" prop="buildingId" clearable>
-        <el-input
-          v-model="queryParams.buildingId"
-          placeholder="请输入联城楼栋ID"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="状态">
-        <el-select v-model="queryParams.status" clearable>
-          <el-option label="正常" value="1"></el-option>
-          <el-option label="失效" value="0"></el-option>
-        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -48,7 +34,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['system:ultimate:edit']"
+          v-hasPermi="['system:user:edit']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -71,26 +57,39 @@
       </el-col>
     </el-row>
 
-    <el-table v-loading="loading" :data="ultimateList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="dataList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="年月" align="center" prop="yearMonth" />
       <el-table-column label="小区ID" align="center" prop="communityId" />
-      <el-table-column label="楼栋ID" align="center" prop="buildingId" />
-      <el-table-column label="主力基价" align="center" prop="mainPrice" />
-      <el-table-column label="主力租金" align="center" prop="mainPriceRent" />
-      <el-table-column label="主力基价涨跌幅" align="center" prop="mainPricePst" />
-      <el-table-column label="主力租金涨跌幅" align="center" prop="mainPriceRentPst" />
-      <el-table-column label="主力基价类型" align="center" prop="mainPriceType" />
-      <el-table-column label="主力租金类型" align="center" prop="mainPriceRentType" />
+      <el-table-column label="小区名称" align="center" prop="communityName" />
+      <el-table-column label="小区地址" align="center" prop="communityAddress" />
+
+      <el-table-column label="区域" align="center" prop="county" />
+      <el-table-column label="板块" align="center" prop="block" />
+      <el-table-column label="环线" align="center" prop="loop" />
+      <el-table-column label="国际社区分" align="center" prop="loop" />
+      <el-table-column label="重点小学名称" align="center" prop="loop" />
+      <el-table-column label="物业档次" align="center" prop="loop" />
+      <el-table-column label="室数量-AI" align="center" prop="loop" />
+
+      <el-table-column label="标准基价（元/㎡·月）" align="center" prop="rentPrice" />
+      <el-table-column label="平均租金（元/㎡·月）" align="center" prop="rentPrice" />
+      <el-table-column label="散租挂牌案例" align="center" prop="散租挂牌案例" />
+      <el-table-column label="租金涨跌幅" align="center" prop="voppa" />
+      <el-table-column label="租金-工房1室" align="center" prop="gf_1Room" />
+      <el-table-column label="租金-工房2室" align="center" prop="gf_2Room" />
+      <el-table-column label="租金-公寓2室" align="center" prop="gy_2Room" />
+      <el-table-column label="租金-公寓3室" align="center" prop="gy_3Room" />
+      <el-table-column label="租金-1房" align="center" prop="one_Room" />
+      <el-table-column label="租金-2房" align="center" prop="two_Room" />
+      <el-table-column label="租金-3房" align="center" prop="three_Room" />
+      <el-table-column label="整租比" align="center" prop="entireRentRatio" />
+      <el-table-column label="整租案例" align="center" prop="entireRentNum" />
+      <el-table-column label="分租比" align="center" prop="shareRentRatio" />
+      <el-table-column label="分租案例" align="center" prop="shareRentNum" />
+      <el-table-column label="租售比" align="center" prop="saleRentRatio" />
       <el-table-column label="状态" align="center" prop="status" :formatter="statusFormatter" />
-      <el-table-column
-        label="标准楼栋"
-        align="center"
-        prop="standardBuilding"
-        :formatter="yesOrNotFormatter"
-      />
-      <el-table-column label="价格更改说明" align="center" prop="adjustPriceComment" />
-      <el-table-column label="更新日期" align="center" prop="updateDate" :formatter="dateFormatter" />
+
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -114,13 +113,13 @@
     <pagination
       v-show="total>0"
       :total="total"
-      :page.sync="queryParams.pageNum"
+      :page.sync="queryParams.pageIndex"
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
     />
 
     <!-- 添加或修改办公基价对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="800px" append-to-body>
+    <!-- <el-dialog :title="title" :visible.sync="open" width="800px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="160px">
         <el-row :gutter="20">
           <el-col :span="12">
@@ -201,22 +200,32 @@
         <el-button type="primary" @click="submitFileForm">确 定</el-button>
         <el-button @click="upload.open = false">取 消</el-button>
       </div>
-    </el-dialog>
+    </el-dialog>-->
   </div>
 </template>
 
 <script>
 import { getToken } from "@/utils/auth";
 import {
-  listUltimate,
-  getUltimate,
-  updateUltimate,
-  exportUltimate
-} from "@/api/data/ultimateOfficeBasePrice";
+  list,
+  get,
+  update,
+  export2File
+} from "@/api/data/ultimateResidenceRentPrice";
 
 export default {
-  name: "Ultimate",
+  name: "computeResidenceRentBasePrice",
   data() {
+    // 年月
+    var checkYearMonth = (rule, value, callback) => {
+      console.log(value);
+      if (value === "" || !isNaN(parseInt(value))) {
+        callback(new Error("请输入年月"));
+      } else {
+        callback();
+      }
+    };
+
     return {
       // 遮罩层
       loading: true,
@@ -229,7 +238,7 @@ export default {
       // 总条数
       total: 0,
       // 办公基价表格数据
-      ultimateList: [],
+      dataList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -238,8 +247,8 @@ export default {
       queryParams: {
         yearMonth: undefined,
         communityId: undefined,
-        buildingId: undefined,
-        pageNum: 1,
+        communityName: undefined,
+        pageIndex: 1,
         pageSize: 10
       },
       statusOptions: [
@@ -257,16 +266,20 @@ export default {
         headers: { Authorization: "Bearer " + getToken() },
         // 上传的地址
         url:
-          process.env.VUE_APP_BASE_API + "/data/compute/price/office/importData"
+          process.env.VUE_APP_BASE_API +
+          "/data/rentprice/residence/ultimate/importData"
       },
       // 表单参数
       form: {},
       // 表单校验
-      rules: {}
+      rules: {
+        yearMonth: [{ validator: checkYearMonth, trigger: "blur" }]
+      }
     };
   },
   created() {
-    this.getList();
+    this.loading = false;
+    // this.getList();
   },
   methods: {
     yesOrNotFormatter: function(row, column, cellValue, index) {
@@ -286,10 +299,14 @@ export default {
     /** 查询办公基价列表 */
     getList() {
       this.loading = true;
-      listUltimate(this.queryParams).then(response => {
-        this.ultimateList = response.rows;
-        this.total = response.total;
-        this.loading = false;
+      this.$refs["queryForm"].validate(valid => {
+        if (valid) {
+          list(this.queryParams).then(response => {
+            this.dataList = response.rows;
+            this.total = response.total;
+            this.loading = false;
+          });
+        }
       });
     },
     // 取消按钮
@@ -306,7 +323,7 @@ export default {
     },
     /** 搜索按钮操作 */
     handleQuery() {
-      this.queryParams.pageNum = 1;
+      this.queryParams.pageIndex = 1;
       this.getList();
     },
     /** 重置按钮操作 */
@@ -330,7 +347,7 @@ export default {
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids;
-      getUltimate(id).then(response => {
+      get(id).then(response => {
         this.form = response.data;
         this.open = true;
         this.title = "修改办公基价";
@@ -341,7 +358,7 @@ export default {
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.id != undefined) {
-            updateUltimate(this.form).then(response => {
+            update(this.form).then(response => {
               if (response.code === 200) {
                 this.msgSuccess("修改成功");
                 this.open = false;
@@ -351,15 +368,15 @@ export default {
               }
             });
           } else {
-            addUltimate(this.form).then(response => {
-              if (response.code === 200) {
-                this.msgSuccess("新增成功");
-                this.open = false;
-                this.getList();
-              } else {
-                this.msgError(response.msg);
-              }
-            });
+            // addUltimate(this.form).then(response => {
+            //   if (response.code === 200) {
+            //     this.msgSuccess("新增成功");
+            //     this.open = false;
+            //     this.getList();
+            //   } else {
+            //     this.msgError(response.msg);
+            //   }
+            // });
           }
         }
       });
@@ -367,13 +384,13 @@ export default {
     /** 导出按钮操作 */
     handleExport() {
       const queryParams = this.queryParams;
-      this.$confirm("是否确认导出所有办公基价数据项?", "警告", {
+      this.$confirm("是否确认导出所有住宅租赁基价数据项?", "警告", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
       })
         .then(function() {
-          return exportUltimate(queryParams);
+          return export2File(queryParams);
         })
         .then(response => {
           this.download(response.msg);

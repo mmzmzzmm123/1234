@@ -1,46 +1,77 @@
 package com.ruoyi.project.data.price.mapper;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.ruoyi.project.common.VueSelectModel;
 import com.ruoyi.project.data.price.domain.UltimateOfficeBasePrice;
 
 /**
- * 【请填写功能名称】Mapper接口
- * 
+ * 办公基价Mapper接口
+ *
  * @author ruoyi
  * @date 2020-05-20
  */
-@DS("teemlink")
-public interface UltimateOfficeBasePriceMapper
-{
+@DS("compute")
+public interface UltimateOfficeBasePriceMapper {
 
     /**
-     *
+     * @param yearMonth
      * @param id
      * @return
      */
-    UltimateOfficeBasePrice selectOfficeBasePriceUltimateById(String id);
+    UltimateOfficeBasePrice getById(Integer yearMonth, Integer id);
 
     /**
-     * 查询【请填写功能名称】列表
-     * 
-     * @param officeBasePriceUltimate 【请填写功能名称】
-     * @return 【请填写功能名称】集合
+     * @param yearMonth
+     * @param buildingId
+     * @return
      */
-    List<UltimateOfficeBasePrice> selectOfficeBasePriceUltimateList(UltimateOfficeBasePrice officeBasePriceUltimate);
+    UltimateOfficeBasePrice getByBuildingId(Integer yearMonth, String buildingId);
+
+    /**
+     * 查询办公基价列表
+     *
+     * @param officeBasePriceUltimate 办公基价
+     * @return 办公基价集合
+     */
+    List<UltimateOfficeBasePrice> getList(UltimateOfficeBasePrice officeBasePriceUltimate);
 
     /**
      * 求和
+     *
      * @param officeBasePriceUltimate
      * @return
      */
-    Integer selectOfficeBasePriceUltimateListCount(UltimateOfficeBasePrice officeBasePriceUltimate);
+    Integer getCount(UltimateOfficeBasePrice officeBasePriceUltimate);
 
     /**
      * 更新
-     * @param officeBasePriceUltimate
+     *
+     * @param yearMonth
+     * @param id
+     * @param mainPrice
+     * @param mainPriceRent
      * @return
      */
-    int updateOfficeBasePriceUltimate(UltimateOfficeBasePrice officeBasePriceUltimate);
+    int update(Integer yearMonth, Integer lastYearMonth, int id, BigDecimal mainPrice, BigDecimal mainPriceRent);
+
+
+    /**
+     * 年月
+     *
+     * @return
+     */
+    List<VueSelectModel> getYearMonthList();
+
+    /**
+     * 更新
+     *
+     * @param yearMonth
+     * @param id
+     * @return
+     */
+    int copyCreate(Integer yearMonth, Integer id);
+
 }

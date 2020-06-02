@@ -1,29 +1,37 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" :rules="rules" ref="queryForm" :inline="true" label-width="100px">
-      <el-form-item label="年月" prop="yearMonth">
-        <el-select v-model="queryParams.yearMonth" placeholder="请选择年月">
-          <el-option
-            v-for="item in yearMonthList"
-            :value="item.value"
-            :label="item.label"
-            :key="item.value"
-          ></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="联城小区ID" prop="communityId" clearable>
+    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="100px">
+      <el-form-item label="链家小区ID" prop="lianJiaCommunityId" clearable>
         <el-input
-          v-model="queryParams.communityId"
-          placeholder="请输入案例小区名称"
+          v-model="queryParams.lianJiaCommunityId"
+          placeholder="请输入链家小区ID"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="联城小区名称" prop="communityName" clearable>
+      <el-form-item label="联城小区ID" prop="communityId" clearable>
         <el-input
-          v-model="queryParams.communityName"
-          placeholder="请输入小区名称"
+          v-model="queryParams.communityId"
+          placeholder="请输入联城小区ID"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="楼栋ID" prop="buildingId" clearable>
+        <el-input
+          v-model="queryParams.buildingId"
+          placeholder="请输入楼栋ID"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="案例URL" prop="lianJiaUrl" clearable>
+        <el-input
+          v-model="queryParams.lianJiaUrl"
+          placeholder="请输入案例URL"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
@@ -68,77 +76,26 @@
 
     <el-table v-loading="loading" :data="dataList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="年月" align="center" prop="yearMonth" />
-      <el-table-column label="小区ID" align="center" prop="communityId" />
-      <el-table-column label="小区名称" align="center" prop="communityName" />
-      <el-table-column label="小区地址" align="center" prop="communityAddress" />
+      <el-table-column label="案例小区ID" align="center" prop="lianJiaCommunityId" />
+      <el-table-column label="案例小区名称" align="center" prop="lianJiaCommunityName" />
+      <el-table-column label="案例小区地址" align="center" prop="lianJiaCommunityAddress" />
+      <el-table-column label="链家小区url" align="center" prop="lianJiaCommunityUrl" width="400">
+        <template slot-scope="scope">
+          <a :href="scope.row.lianJiaCommunityUrl" target="_blank">{{scope.row.lianJiaCommunityUrl}}</a>
+        </template>
+      </el-table-column>
+      <el-table-column label="链家案例url" align="center" prop="lianJiaUrl" width="400">
+        <template slot-scope="scope">
+          <a :href="scope.row.lianJiaUrl" target="_blank">{{scope.row.lianJiaUrl}}</a>
+        </template>
+      </el-table-column>
+      <el-table-column label="联城小区id" align="center" prop="communityId" />
+      <el-table-column label="联城楼栋id" align="center" prop="buildingId" />
+      <el-table-column label="小区名称（不带特殊符号的）" align="center" prop="cleanCommunityName" />
+      <el-table-column label="小区地址（不带特殊符号的）" align="center" prop="cleanCommunityAddress" />
+      <el-table-column label="楼栋地址（不带特殊符号的）" align="center" prop="cleanBuildingAddress" />
+      <el-table-column label="是否有效" align="center" prop="enable" :formatter="yesOrNotFormatter" />
 
-      <el-table-column label="区域" align="center" prop="county" />
-      <el-table-column label="板块" align="center" prop="block" />
-      <el-table-column label="环线" align="center" prop="loop" />
-
-      <el-table-column
-        label="是否生成索引"
-        align="center"
-        prop="isIndxGen"
-        :formatter="yesOrNotFormatter"
-      />
-      <el-table-column
-        label="参与涨幅计算"
-        align="center"
-        prop="isPstCalc"
-        :formatter="yesOrNotFormatter"
-      />
-      <el-table-column label="运行状态" align="center" prop="statusRun" />
-      <el-table-column label="物业类型" align="center" prop="propertyType" />
-      <el-table-column label="小区类型" align="center" prop="projectType" />
-      <el-table-column label="小区类型细分" align="center" prop="projectTypeDtl" />
-      <el-table-column label="物业档次" align="center" prop="projectLevel" />
-      <el-table-column label="物业开发期数" align="center" prop="propertyDevPeriod" />
-      <el-table-column label="绑定聚类ID" align="center" prop="bindClassID" />
-      <el-table-column label="租金主力面积系数" align="center" prop="mainCoefficientRent" />
-      <el-table-column label="AI租金(草稿)" align="center" prop="rentPriceDft" />
-      <el-table-column label="主力面积租金(草稿)" align="center" prop="mainRentPriceDft" />
-      <el-table-column label="上月AI租金" align="center" prop="rentPrice_1" />
-      <el-table-column label="成交均价(上周期)" align="center" prop="priceDealMean_1" />
-      <el-table-column label="成交最大价(上周期)" align="center" prop="priceDealMax_1" />
-      <el-table-column label="成交数量(上周期)" align="center" prop="sumDeal_1" />
-      <el-table-column label="成交均价相对AI租金涨跌幅(上周期)" align="center" prop="priceDeal_1_ToAI_Pst" />
-      <el-table-column label="成交均价" align="center" prop="priceDealMean" />
-      <el-table-column label="成交最大价" align="center" prop="priceDealMax" />
-      <el-table-column label="成交数量" align="center" prop="sumDeal" />
-      <el-table-column label="成交均价相对AI租金涨跌幅" align="center" prop="priceDeal_ToAI_Pst" />
-      <el-table-column label="当月比上月成交案例价调整比例" align="center" prop="priceDeal_ToLst_Pst" />
-      <el-table-column label="挂牌下架案例均价" align="center" prop="priceCaseOff" />
-      <el-table-column label="当月比上月挂牌下架案例价调整比例" align="center" prop="priceCaseOff_ToLst_Pst" />
-      <el-table-column label="挂牌最低价" align="center" prop="priceListedMin" />
-      <el-table-column label="挂牌最低价相对AI租金涨跌幅" align="center" prop="priceLstMn_ToAI_Pst" />
-      <el-table-column label="与上月AI租金比链家1案例价格价调整比例" align="center" prop="priceCase1_ToAI_Pst" />
-      <el-table-column label="与上月AI租金比链家2案例价格价调整比例" align="center" prop="priceCase2_ToAI_Pst" />
-      <el-table-column label="当月比上月链家1案例价调整比例" align="center" prop="priceCase1_ToLst_Pst" />
-      <el-table-column label="当月比上月链家2案例价调整比例" align="center" prop="priceCase2_ToLst_Pst" />
-      <el-table-column label="链家1案例价" align="center" prop="priceCase1" />
-      <el-table-column label="链家1调价幅度" align="center" prop="priceCase1AdjPst" />
-      <el-table-column label="链家1案例总量" align="center" prop="sumCase1" />
-      <el-table-column label="链家2案例价" align="center" prop="priceCase2" />
-      <el-table-column label="链家2调价幅度" align="center" prop="priceCase2AdjPst" />
-      <el-table-column label="链家2案例总量" align="center" prop="sumCase2" />
-      <el-table-column label="价格涨跌幅类型-调整前" align="center" prop="voppbt" />
-      <el-table-column label="价格涨跌幅-调整前" align="center" prop="voppb" />
-      <el-table-column label="绑定小区编号" align="center" prop="bindProjID" />
-      <el-table-column label="绑定小区涨跌幅" align="center" prop="bind_Proj_Pst" />
-      <el-table-column label="绑定板块+聚类ID" align="center" prop="bind_Block_Class" />
-      <el-table-column label="绑定板块+聚类ID的涨跌幅" align="center" prop="bind_Block_Class_Pst" />
-      <el-table-column label="绑定板块+物业档次" align="center" prop="bind_Block_Plevel" />
-      <el-table-column label="绑定板块+物业档次的涨跌幅" align="center" prop="bind_Block_Plevel_Pst" />
-      <el-table-column label="绑定板块+小区类型" align="center" prop="bind_Block_PType" />
-      <el-table-column label="绑定板块+小区类型的涨跌幅" align="center" prop="bind_Block_Ptype_Pst" />
-      <el-table-column label="绑定区县+小区类型" align="center" prop="bind_County_PType" />
-      <el-table-column label="绑定区县+小区类型的涨跌幅" align="center" prop="bind_County_Ptype_Pst" />
-      <el-table-column label="绑定混合小区ID" align="center" prop="bind_MixProject_PType" />
-      <el-table-column label="绑定混合小区涨跌幅" align="center" prop="bind_MixProject_Pst" />
-      <el-table-column label="价格涨跌幅类型-调整后" align="center" prop="voppat" />
-      <el-table-column label="价格涨跌幅-调整后" align="center" prop="voppa" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -255,22 +212,15 @@
 
 <script>
 import { getToken } from "@/utils/auth";
-import {
-  list,
-  get,
-  update,
-  export2File,
-  getYearMonthList
-} from "@/api/data/computeResidenceRentPrice";
+import { list, get, update, export2File } from "@/api/data/lianJiaCommunity";
 
 export default {
-  name: "computeResidenceRentBasePrice",
+  name: "lianJiaCommunity",
   data() {
     // 年月
     var checkYearMonth = (rule, value, callback) => {
-      if (!value) {
-        callback(new Error("请输入年月"));
-      } else if (value === "" || isNaN(parseInt(value))) {
+      console.log(value);
+      if (value === "" || !isNaN(parseInt(value))) {
         callback(new Error("请输入年月"));
       } else {
         callback();
@@ -296,13 +246,14 @@ export default {
       open: false,
       // 查询参数
       queryParams: {
-        yearMonth: undefined,
+        lianJiaCommunityId: undefined,
+        lianJiaUrl: undefined,
         communityId: undefined,
-        communityName: undefined,
+        buildingId: undefined,
+        lianJiaUrl: undefined,
         pageIndex: 1,
         pageSize: 10
       },
-      yearMonthList: [],
       statusOptions: [
         { value: 1, text: "正常" },
         { value: 1, text: "失效" }
@@ -319,24 +270,19 @@ export default {
         // 上传的地址
         url:
           process.env.VUE_APP_BASE_API +
-          "/data/compute/rentprice/residence/importData"
+          "/data/rentprice/residence/ultimate/importData"
       },
       // 表单参数
-      form: {},
+      form: {}
       // 表单校验
-      rules: {
-        yearMonth: [
-          { validator: checkYearMonth, trigger: "blur" },
-          { validator: checkYearMonth, trigger: "change" }
-        ]
-      }
+      // rules: {
+      //   yearMonth: [{ validator: checkYearMonth, trigger: "blur" }]
+      // }
     };
   },
   created() {
     this.loading = false;
-    getYearMonthList().then(response => {
-      this.yearMonthList = response.data;
-    });
+    this.getList();
   },
   methods: {
     yesOrNotFormatter: function(row, column, cellValue, index) {
@@ -354,17 +300,22 @@ export default {
       return "";
     },
     /** 查询办公基价列表 */
-    getList(formName) {
-      this.$refs[formName].validate(valid => {
-        if (valid) {
-          this.loading = true;
-          list(this.queryParams).then(response => {
-            this.dataList = response.rows;
-            this.total = response.total;
-            this.loading = false;
-          });
-        }
+    getList() {
+      this.loading = true;
+      list(this.queryParams).then(response => {
+        this.dataList = response.rows;
+        this.total = response.total;
+        this.loading = false;
       });
+      // this.$refs["queryForm"].validate(valid => {
+      //   if (valid) {
+      //     list(this.queryParams).then(response => {
+      //       this.dataList = response.rows;
+      //       this.total = response.total;
+      //       this.loading = false;
+      //     });
+      //   }
+      // });
     },
     // 取消按钮
     cancel() {
@@ -381,7 +332,7 @@ export default {
     /** 搜索按钮操作 */
     handleQuery() {
       this.queryParams.pageIndex = 1;
-      this.getList("queryForm");
+      this.getList();
     },
     /** 重置按钮操作 */
     resetQuery() {

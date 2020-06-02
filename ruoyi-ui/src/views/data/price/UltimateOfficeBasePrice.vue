@@ -1,14 +1,15 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="100px">
-      <el-form-item label="年月" prop="yearMonth" clearable>
-        <el-date-picker
-          v-model="queryParams.yearMonth"
-          format="yyyyMM"
-          type="month"
-          placeholder="选择年月"
-          @keyup.enter.native="handleQuery"
-        ></el-date-picker>
+    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="100px" :rules="rules">
+      <el-form-item label="年月" prop="yearMonth">
+        <el-select v-model="queryParams.yearMonth" placeholder="请选择年月">
+          <el-option
+            v-for="item in yearMonthList"
+            :value="item.value"
+            :label="item.label"
+            :key="item.value"
+          ></el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="联城小区ID" prop="communityId" clearable>
         <el-input
@@ -71,11 +72,23 @@
       </el-col>
     </el-row>
 
-    <el-table v-loading="loading" :data="ultimateList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="dataList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="年月" align="center" prop="yearMonth" />
       <el-table-column label="小区ID" align="center" prop="communityId" />
       <el-table-column label="楼栋ID" align="center" prop="buildingId" />
+      <el-table-column label="项目名称" align="center" prop="communityName" />
+      <el-table-column label="办公项目地址" align="center" prop="communityAddress" />
+      <el-table-column label="楼栋地址" align="center" prop="buildingAddress" />
+      <el-table-column label="区域-板块-环线-街道" align="center" :formatter="regionFormatter" width="300" />
+      <el-table-column label="建成年代" align="center" prop="year" />
+      <el-table-column label="平均面积" align="center" prop="avgArea" />
+      <el-table-column label="总层数" align="center" prop="totalFloorSum" />
+      <el-table-column label="地上层数" align="center" prop="upperFloorSum" />
+      <el-table-column label="办公分类" align="center" prop="officeClass" />
+      <el-table-column label="办公等级" align="center" prop="officeLevel" />
+      <el-table-column label="主力基价(上期)" align="center" prop="mainPrice_1" />
+      <el-table-column label="主力租金(上期)" align="center" prop="mainPriceRent_1" />
       <el-table-column label="主力基价" align="center" prop="mainPrice" />
       <el-table-column label="主力租金" align="center" prop="mainPriceRent" />
       <el-table-column label="主力基价涨跌幅" align="center" prop="mainPricePst" />
@@ -208,15 +221,27 @@
 <script>
 import { getToken } from "@/utils/auth";
 import {
-  listUltimate,
-  getUltimate,
-  updateUltimate,
-  exportUltimate
+  list,
+  getById,
+  update,
+  export2File,
+  getYearMonthList
 } from "@/api/data/ultimateOfficeBasePrice";
 
 export default {
   name: "Ultimate",
   data() {
+    // 年月
+    var checkYearMonth = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error("请输入年月"));
+      } else if (value === "" || isNaN(parseInt(value))) {
+        callback(new Error("请输入年月"));
+      } else {
+        callback();
+      }
+    };
+
     return {
       // 遮罩层
       loading: true,
@@ -234,6 +259,7 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
+      yearMonthList: [],
       // 查询参数
       queryParams: {
         yearMonth: undefined,
@@ -262,13 +288,33 @@ export default {
       // 表单参数
       form: {},
       // 表单校验
-      rules: {}
+      rules: {
+        yearMonth: [
+          { validator: checkYearMonth, trigger: "blur" },
+          { validator: checkYearMonth, trigger: "change" }
+        ]
+      }
     };
   },
   created() {
-    this.getList();
+    this.loading = false;
+    getYearMonthList().then(response => {
+      this.yearMonthList = response.data;
+    });
   },
   methods: {
+    regionFormatter: function(row, column, cellValue, index) {
+      // 区域-板块-环线-街道
+      return (
+        row["countyName"] +
+        "-" +
+        row["blockName"] +
+        "-" +
+        row["loopName"] +
+        "-" +
+        row["streetName"]
+      );
+    },
     yesOrNotFormatter: function(row, column, cellValue, index) {
       if (cellValue) return "是";
       return "否";
@@ -285,11 +331,15 @@ export default {
     },
     /** 查询办公基价列表 */
     getList() {
-      this.loading = true;
-      listUltimate(this.queryParams).then(response => {
-        this.ultimateList = response.rows;
-        this.total = response.total;
-        this.loading = false;
+      this.$refs["queryForm"].validate(valid => {
+        if (valid) {
+          this.loading = true;
+          list(this.queryParams).then(response => {
+            this.dataList = response.rows;
+            this.total = response.total;
+            this.loading = false;
+          });
+        }
       });
     },
     // 取消按钮
@@ -320,17 +370,12 @@ export default {
       this.single = selection.length != 1;
       this.multiple = !selection.length;
     },
-    /** 新增按钮操作 */
-    // handleAdd() {
-    //   this.reset();
-    //   this.open = true;
-    //   this.title = "添加办公基价";
-    // },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids;
-      getUltimate(id).then(response => {
+      const yearMonth = row.yearMonth;
+      getById(yearMonth, id).then(response => {
         this.form = response.data;
         this.open = true;
         this.title = "修改办公基价";
@@ -340,27 +385,15 @@ export default {
     submitForm: function() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          if (this.form.id != undefined) {
-            updateUltimate(this.form).then(response => {
-              if (response.code === 200) {
-                this.msgSuccess("修改成功");
-                this.open = false;
-                this.getList();
-              } else {
-                this.msgError(response.msg);
-              }
-            });
-          } else {
-            addUltimate(this.form).then(response => {
-              if (response.code === 200) {
-                this.msgSuccess("新增成功");
-                this.open = false;
-                this.getList();
-              } else {
-                this.msgError(response.msg);
-              }
-            });
-          }
+          update(this.form).then(response => {
+            if (response.code === 200) {
+              this.msgSuccess("修改成功");
+              this.open = false;
+              this.getList();
+            } else {
+              this.msgError(response.msg);
+            }
+          });
         }
       });
     },
@@ -373,7 +406,7 @@ export default {
         type: "warning"
       })
         .then(function() {
-          return exportUltimate(queryParams);
+          return export2File(queryParams);
         })
         .then(response => {
           this.download(response.msg);

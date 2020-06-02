@@ -1,5 +1,6 @@
 package com.ruoyi.project.data.price.service;
 
+import com.ruoyi.project.common.VueSelectModel;
 import com.ruoyi.project.data.price.domain.ComputeResidenceRentBasePrice;
 import com.ruoyi.project.data.price.domain.UltimateOfficeBasePrice;
 import org.apache.ibatis.annotations.Param;
@@ -47,6 +48,12 @@ public interface IComputeResidenceRentPriceService {
      */
     String batchImport(List<ComputeResidenceRentBasePrice> officeBasePriceUltimates, String operName);
 
+    /**
+     * 获取表名
+     *
+     * @return
+     */
+    List<VueSelectModel> getYearMonth();
 }
 
 

@@ -1,11 +1,12 @@
 package com.ruoyi.project.data.price.service;
 
+import com.ruoyi.project.common.VueSelectModel;
 import com.ruoyi.project.data.price.domain.UltimateOfficeBasePrice;
 
 import java.util.List;
 
 /**
- * 【请填写功能名称】Service接口
+ * 办公基价Service接口
  *
  * @author ruoyi
  * @date 2020-05-20
@@ -13,19 +14,28 @@ import java.util.List;
 public interface IUltimateOfficeBasePriceService {
 
     /**
-     * 查询【请填写功能名称】列表
+     * 查询办公基价列表
      *
-     * @param officeBasePriceUltimate 【请填写功能名称】
-     * @return 【请填写功能名称】集合
+     * @param officeBasePriceUltimate 办公基价
+     * @return 办公基价集合
      */
     List<UltimateOfficeBasePrice> selectOfficeBasePriceUltimateList(UltimateOfficeBasePrice officeBasePriceUltimate);
 
     int selectOfficeBasePriceUltimateListCount(UltimateOfficeBasePrice officeBasePriceUltimate);
 
+    /**
+     *
+     * @param id
+     * @return
+     */
+    UltimateOfficeBasePrice getById(Integer yearMonth, Integer id);
 
-    UltimateOfficeBasePrice selectOfficeBasePriceUltimateById(String id);
-
-    int updateOfficeBasePriceUltimate(UltimateOfficeBasePrice officeBasePriceUltimate);
+//    /**
+//     *
+//     * @param officeBasePriceUltimate
+//     * @return
+//     */
+//    int updateOfficeBasePriceUltimate(UltimateOfficeBasePrice officeBasePriceUltimate);
 
     /**
      *
@@ -33,7 +43,13 @@ public interface IUltimateOfficeBasePriceService {
      * @param operName
      * @return
      */
-    String batchImport(List<UltimateOfficeBasePrice> officeBasePriceUltimates,String operName);
+    String batchImport(Integer yearMonth, List<UltimateOfficeBasePrice> officeBasePriceUltimates,String operName);
+
+    /**
+     *
+     * @return
+     */
+    List<VueSelectModel> getYearMonthList();
 
 }
 

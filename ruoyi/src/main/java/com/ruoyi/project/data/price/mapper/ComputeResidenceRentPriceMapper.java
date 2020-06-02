@@ -1,6 +1,7 @@
 package com.ruoyi.project.data.price.mapper;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.ruoyi.project.common.VueSelectModel;
 import com.ruoyi.project.data.price.domain.ComputeResidenceRentBasePrice;
 
 import java.util.List;
@@ -40,4 +41,9 @@ public interface ComputeResidenceRentPriceMapper {
      * @return
      */
     int updateComputeResidenceRentBasePrice(ComputeResidenceRentBasePrice ComputeResidenceRentBasePrice);
+
+    /**
+     * @return
+     */
+    List<VueSelectModel> yearMonthList();
 }

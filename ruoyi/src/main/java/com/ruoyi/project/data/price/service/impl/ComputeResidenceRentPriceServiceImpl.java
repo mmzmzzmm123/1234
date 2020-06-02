@@ -1,5 +1,6 @@
 package com.ruoyi.project.data.price.service.impl;
 
+import com.ruoyi.project.common.VueSelectModel;
 import com.ruoyi.project.data.price.domain.ComputeResidenceRentBasePrice;
 import com.ruoyi.project.data.price.mapper.ComputeResidenceRentPriceMapper;
 import com.ruoyi.project.data.price.service.IComputeResidenceRentPriceService;
@@ -47,5 +48,10 @@ public class ComputeResidenceRentPriceServiceImpl implements IComputeResidenceRe
     @Override
     public String batchImport(List<ComputeResidenceRentBasePrice> officeBasePriceUltimates, String operName) {
         return null;
+    }
+
+    @Override
+    public List<VueSelectModel> getYearMonth() {
+        return computeResidenceRentPriceMapper.yearMonthList();
     }
 }

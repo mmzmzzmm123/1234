@@ -19,9 +19,11 @@ public class UltimateOfficeBasePrice extends BaseEntity {
     private Integer pageSize;
 
     @Excel(name = "ID")
-    private String id;
-    @JSONField(serialize = false)
+    private Integer id;
+//    @JSONField(serialize = false)
     private Integer yearMonth;
+    @JSONField(serialize = false)
+    private Integer lastYearMonth;
     @Excel(name = "楼栋ID")
     private String buildingId;
     @Excel(name = "小区ID")
@@ -83,6 +85,14 @@ public class UltimateOfficeBasePrice extends BaseEntity {
     @Excel(name = "更改价格说明")
     private String adjustPriceComment;
 
+    public Integer getLastYearMonth() {
+        return lastYearMonth;
+    }
+
+    public void setLastYearMonth(Integer lastYearMonth) {
+        this.lastYearMonth = lastYearMonth;
+    }
+
     public Integer getPageIndex() {
         return pageIndex;
     }
@@ -99,11 +109,11 @@ public class UltimateOfficeBasePrice extends BaseEntity {
         this.pageSize = pageSize;
     }
 
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

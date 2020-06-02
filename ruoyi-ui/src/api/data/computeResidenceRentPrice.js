@@ -34,3 +34,10 @@ export function export2File(query) {
     params: query
   })
 }
+
+export function getYearMonthList() {
+  return request({
+    url: '/data/rentprice/residence/compute/yearmonth',
+    method: 'get'
+  })
+}

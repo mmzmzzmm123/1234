@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.data.basis.mapper.LianJiaCommunityDictMapper">
+
+    <select id="selectPageOfList" resultType="com.ruoyi.project.data.basis.domain.LianJiaCommunityDict">
+        SELECT  id
+          ,lianjia_community_id AS lianJiaCommunityid
+          ,lianjia_community_name as lianJiaCommunityName
+          ,lianjia_community_address as lianJiaCommunityAddress
+          ,lianjia_url as lianJiaUrl
+          ,lianjia_community_url as lianJiaCommunityUrl
+          ,community_id as communityId
+          ,building_id as buildingId
+          ,clean_community_name as cleanCommunityName
+          ,clean_community_address as cleanCommunityAddress
+          ,clean_building_address as cleanBuildingAddress
+          ,enable
+          ,create_time as createTime
+        FROM lianjia_dictionary
+        <where>
+            <if test="lianJiaCommunityId != null">
+                lianjia_community_id = #{lianJiaCommunityId}
+            </if>
+            <if test="enable != null">
+                AND enable = #{enable}
+            </if>
+            <if test="communityId != null">
+                AND community_id = #{communityId}
+            </if>
+            <if test="buildingId != null">
+                AND building_id = #{buildingId}
+            </if>
+            <if test="lianJiaUrl != null">
+                AND lianjia_url = #{lianJiaUrl}
+            </if>
+        </where>
+        order by create_time DESC OFFSET #{pageIndex} rows fetch next #{pageSize} rows only
+    </select>
+
+    <select id="selectPageOfTotal" resultType="int">
+        select count(1) from lianjia_dictionary
+        <where>
+            <if test="lianJiaCommunityId != null">
+                lianjia_community_id = #{lianJiaCommunityId}
+            </if>
+            <if test="enable != null">
+                AND enable = #{enable}
+            </if>
+            <if test="communityId != null">
+                AND community_id = #{communityId}
+            </if>
+            <if test="buildingId != null">
+                AND building_id = #{buildingId}
+            </if>
+            <if test="lianJiaUrl != null">
+                AND lianjia_url = #{lianJiaUrl}
+            </if>
+        </where>
+    </select>
+    <select id="selectById" resultType="com.ruoyi.project.data.basis.domain.LianJiaCommunityDict">
+        SELECT  id
+          ,lianjia_community_id AS lianJiaCommunityid
+          ,lianjia_community_name as lianJiaCommunityName
+          ,lianjia_community_address as lianJiaCommunityAddress
+          ,lianjia_url as lianJiaUrl
+          ,lianjia_community_url as lianJiaCommunityUrl
+          ,community_id as communityId
+          ,building_id as buildingId
+          ,clean_community_name as cleanCommunityName
+          ,clean_community_address as cleanCommunityAddress
+          ,clean_building_address as cleanBuildingAddress
+          ,enable
+          ,create_time as createTime
+        FROM lianjia_dictionary
+        where id=#{id}
+    </select>
+</mapper>

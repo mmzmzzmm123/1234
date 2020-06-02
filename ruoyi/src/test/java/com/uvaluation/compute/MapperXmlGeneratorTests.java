@@ -2,12 +2,11 @@ package com.uvaluation.compute;
 
 import com.ruoyi.project.data.price.domain.ComputeResidenceRentBasePrice;
 import com.ruoyi.project.data.price.domain.UltimateResidenceRentBasePrice;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class MapperXmlGeneratorTests {
 
@@ -28,5 +27,14 @@ public class MapperXmlGeneratorTests {
             sb.append("<result property=\""+name+"\" column=\""+name+"\"/>\r\n");
         }
         System.out.println(sb.toString());
+    }
+
+    @Test
+    public void testDate(){
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(202006 / 100, 202006 % 100, 1);
+        Integer lastYearMonth =  new Integer(String.format("%d%02d", calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH)-1));
+        Assert.assertTrue(Objects.equals(lastYearMonth,202005));
     }
 }
