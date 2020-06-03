@@ -16,178 +16,92 @@ import java.util.Date;
  */
 public class ByDayFlowStandard extends BaseEntity
 {
-    private static final long serialVersionUID = 1L;
-
     /** 标识 */
-    private Long sid;
+    private Long id;
 
-    /** 任务名称 */
-    @Excel(name = "任务名称")
-    private String taskLable;
+    /** 任务id */
+    @Excel(name = "任务id")
+    private Long taskCode;
 
     /** 标准的名称 */
     @Excel(name = "标准的名称")
-    private String sname;
-
-    /** 标准的内容 */
-    @Excel(name = "标准的内容")
-    private String standardContent;
-
-    /** 标准的解读 */
-    @Excel(name = "标准的解读")
-    private String standardJiedu;
+    private String standardTitle;
 
     /** 标准排序 */
     @Excel(name = "标准排序")
     private Long standardSort;
 
-    /** 照片 */
-    @Excel(name = "照片")
-    private String picture;
-
-    /** 视频 */
-    @Excel(name = "视频")
-    private String video;
-
     /** 创建人 */
     @Excel(name = "创建人")
     private Long createuser;
+
+    /** 更新者 */
+    @Excel(name = "更新者")
+    private Long updateuser;
 
     /** 创建时间 */
     @Excel(name = "创建时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createtime;
 
-    /** 更新者 */
-    @Excel(name = "更新者")
-    private Long updateuser;
-
     /** 更新时间 */
     @Excel(name = "更新时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updatetime;
 
-    /** 备用字段 */
-    @Excel(name = "备用字段")
-    private Long beiyong;
-
-    public void setSid(Long sid) 
+    public void setId(Long id)
     {
-        this.sid = sid;
+        this.id = id;
     }
 
-    public Long getSid() 
+    public Long getId()
     {
-        return sid;
+        return id;
     }
-    public void setTaskLable(String taskLable) 
+    public void setTaskCode(Long taskCode)
     {
-        this.taskLable = taskLable;
-    }
-
-    public String getTaskLable() 
-    {
-        return taskLable;
-    }
-    public void setSname(String sname) 
-    {
-        this.sname = sname;
+        this.taskCode = taskCode;
     }
 
-    public String getSname() 
+    public Long getTaskCode()
     {
-        return sname;
+        return taskCode;
     }
-    public void setStandardContent(String standardContent) 
+    public void setStandardTitle(String standardTitle)
     {
-        this.standardContent = standardContent;
-    }
-
-    public String getStandardContent() 
-    {
-        return standardContent;
-    }
-    public void setStandardJiedu(String standardJiedu) 
-    {
-        this.standardJiedu = standardJiedu;
+        this.standardTitle = standardTitle;
     }
 
-    public String getStandardJiedu() 
+    public String getStandardTitle()
     {
-        return standardJiedu;
+        return standardTitle;
     }
-    public void setStandardSort(Long standardSort) 
+    public void setStandardSort(Long standardSort)
     {
         this.standardSort = standardSort;
     }
 
-    public Long getStandardSort() 
+    public Long getStandardSort()
     {
         return standardSort;
     }
-    public void setPicture(String picture) 
-    {
-        this.picture = picture;
-    }
-
-    public String getPicture() 
-    {
-        return picture;
-    }
-    public void setVideo(String video) 
-    {
-        this.video = video;
-    }
-
-    public String getVideo() 
-    {
-        return video;
-    }
-    public void setCreateuser(Long createuser) 
+    public void setCreateuser(Long createuser)
     {
         this.createuser = createuser;
     }
 
-    public Long getCreateuser() 
+    public Long getCreateuser()
     {
         return createuser;
     }
-    public void setUpdateuser(Long updateuser) 
+    public void setUpdateuser(Long updateuser)
     {
         this.updateuser = updateuser;
     }
 
-    public Long getUpdateuser() 
+    public Long getUpdateuser()
     {
         return updateuser;
-    }
-    public void setBeiyong(Long beiyong) 
-    {
-        this.beiyong = beiyong;
-    }
-
-    public Long getBeiyong() 
-    {
-        return beiyong;
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("sid", getSid())
-            .append("taskLable", getTaskLable())
-            .append("sname", getSname())
-            .append("standardContent", getStandardContent())
-            .append("standardJiedu", getStandardJiedu())
-            .append("standardSort", getStandardSort())
-            .append("picture", getPicture())
-            .append("video", getVideo())
-            .append("createuser", getCreateuser())
-            .append("createtime", getCreatetime())
-            .append("updateuser", getUpdateuser())
-            .append("updatetime", getUpdatetime())
-            .append("beiyong", getBeiyong())
-            .toString();
     }
 
     public Date getCreatetime() {
@@ -205,4 +119,19 @@ public class ByDayFlowStandard extends BaseEntity
     public void setUpdatetime(Date updatetime) {
         this.updatetime = updatetime;
     }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
+            .append("sid", getId())
+                .append("taskCode", getTaskCode())
+                .append("standardTitle", getStandardTitle())
+                .append("standardSort", getStandardSort())
+                .append("createuser", getCreateuser())
+                .append("createtime", getCreatetime())
+                .append("updateuser", getUpdateuser())
+                .append("updatetime", getUpdatetime())
+            .toString();
+    }
+
 }

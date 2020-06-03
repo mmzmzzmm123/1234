@@ -25,17 +25,9 @@ public class ByDayFlowTask extends BaseEntity
     @Excel(name = "任务名称(标签)")
     private String taskLable;
 
-    /** 任务键值 */
-    @Excel(name = "任务键值")
-    private String taskValue;
-
-    /** 流程名称 */
-    @Excel(name = "流程名称")
-    private String detailName;
-
-    /** 任务目的 */
-    @Excel(name = "任务目的")
-    private String taskTarget;
+    /** 一日流程id */
+    @Excel(name = "一日流程id")
+    private Long detailId;
 
     /** 任务解读 */
     @Excel(name = "任务解读")
@@ -45,13 +37,9 @@ public class ByDayFlowTask extends BaseEntity
     @Excel(name = "任务排序")
     private Integer taskSort;
 
-    /** 样式属性（其他样式扩展) */
-    @Excel(name = "样式属性", readConverterExp = "样式属性（其他样式扩展)")
-    private String cssClass;
-
-    /** 表格回显样式 */
-    @Excel(name = "表格回显样式")
-    private String listClass;
+    /** 标签 */
+    @Excel(name = "标签")
+    private String label;
 
     /** 创建人 */
     @Excel(name = "创建人")
@@ -80,117 +68,73 @@ public class ByDayFlowTask extends BaseEntity
     {
         return code;
     }
-    public void setTaskLable(String taskLable) 
+    public void setTaskLable(String taskLable)
     {
         this.taskLable = taskLable;
     }
 
-    public String getTaskLable() 
+    public String getTaskLable()
     {
         return taskLable;
     }
-    public void setTaskValue(String taskValue) 
+
+    public void setDetailId(Long detailId)
     {
-        this.taskValue = taskValue;
+        this.detailId = detailId;
     }
 
-    public String getTaskValue() 
+    public Long getDetailId()
     {
-        return taskValue;
-    }
-    public void setDetailName(String detailName) 
-    {
-        this.detailName = detailName;
+        return detailId;
     }
 
-    public String getDetailName() 
-    {
-        return detailName;
-    }
-    public void setTaskTarget(String taskTarget) 
-    {
-        this.taskTarget = taskTarget;
-    }
-
-    public String getTaskTarget() 
-    {
-        return taskTarget;
-    }
-    public void setTaskContent(String taskContent) 
+    public void setTaskContent(String taskContent)
     {
         this.taskContent = taskContent;
     }
 
-    public String getTaskContent() 
+    public String getTaskContent()
     {
         return taskContent;
     }
-    public void setTaskSort(Integer taskSort) 
+    public void setTaskSort(Integer taskSort)
     {
         this.taskSort = taskSort;
     }
 
-    public Integer getTaskSort() 
+    public Integer getTaskSort()
     {
         return taskSort;
     }
-    public void setCssClass(String cssClass) 
+
+    public void setLabel(String label)
     {
-        this.cssClass = cssClass;
+        this.label = label;
     }
 
-    public String getCssClass() 
+    public String getLabel()
     {
-        return cssClass;
-    }
-    public void setListClass(String listClass) 
-    {
-        this.listClass = listClass;
+        return label;
     }
 
-    public String getListClass() 
-    {
-        return listClass;
-    }
-    public void setCreateuser(Long createuser) 
+    public void setCreateuser(Long createuser)
     {
         this.createuser = createuser;
     }
 
-    public Long getCreateuser() 
+    public Long getCreateuser()
     {
         return createuser;
     }
-    public void setUpdateuser(Long updateuser) 
+    public void setUpdateuser(Long updateuser)
     {
         this.updateuser = updateuser;
     }
 
-    public Long getUpdateuser() 
+    public Long getUpdateuser()
     {
         return updateuser;
     }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("code", getCode())
-            .append("taskLable", getTaskLable())
-            .append("taskValue", getTaskValue())
-            .append("detailName", getDetailName())
-            .append("taskTarget", getTaskTarget())
-            .append("taskContent", getTaskContent())
-            .append("taskSort", getTaskSort())
-            .append("cssClass", getCssClass())
-            .append("listClass", getListClass())
-            .append("createuser", getCreateuser())
-            .append("updateuser", getUpdateuser())
-            .append("createtime", getCreatetime())
-            .append("updatetime", getUpdatetime())
-            .append("remark", getRemark())
-            .toString();
-    }
-
     public Date getCreatetime() {
         return createtime;
     }
@@ -206,4 +150,22 @@ public class ByDayFlowTask extends BaseEntity
     public void setUpdatetime(Date updatetime) {
         this.updatetime = updatetime;
     }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
+                .append("code", getCode())
+                .append("taskLable", getTaskLable())
+                .append("detailId", getDetailId())
+                .append("taskContent", getTaskContent())
+                .append("taskSort", getTaskSort())
+                .append("label", getLabel())
+                .append("createuser", getCreateuser())
+                .append("updateuser", getUpdateuser())
+                .append("createtime", getCreatetime())
+                .append("updatetime", getUpdatetime())
+                .append("remark", getRemark())
+            .toString();
+    }
+
 }

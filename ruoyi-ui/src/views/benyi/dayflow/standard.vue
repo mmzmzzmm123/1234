@@ -56,15 +56,6 @@
           v-hasPermi="['benyi:standard:remove']"
         >删除</el-button>
       </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['benyi:standard:export']"
-        >导出</el-button>
-      </el-col>
     </el-row>
 
     <el-table v-loading="loading" :data="standardList" @selection-change="handleSelectionChange">
@@ -161,8 +152,7 @@ import {
   getStandard,
   delStandard,
   addStandard,
-  updateStandard,
-  exportStandard
+  updateStandard
 } from "@/api/benyi/dayflow/biaozhun/standard";
 import {
   listDayflowtask,
@@ -387,49 +377,7 @@ export default {
           this.msgSuccess("删除成功");
         })
         .catch(function() {});
-    },
-    /** 导出按钮操作 */
-    handleExport() {
-      const queryParams = this.queryParams;
-      this.$confirm("是否确认导出所有一日流程标准数据项?", "警告", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      })
-        .then(function() {
-          return exportStandard(queryParams);
-        })
-        .then(response => {
-          this.download(response.msg);
-        })
-        .catch(function() {});
     }
   }
 };
 </script>
-
-<style>
-.avatar-uploader .el-upload {
-  border: 1px dashed #d9d9d9;
-  border-radius: 6px;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-}
-.avatar-uploader .el-upload:hover {
-  border-color: #409eff;
-}
-.avatar-uploader-icon {
-  font-size: 28px;
-  color: #8c939d;
-  width: 178px;
-  height: 178px;
-  line-height: 178px;
-  text-align: center;
-}
-.avatar {
-  width: 178px;
-  height: 178px;
-  display: block;
-}
-</style>

@@ -56,27 +56,21 @@
           v-hasPermi="['benyi:dayflowmanger:remove']"
         >删除</el-button>
       </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['benyi:dayflowmanger:export']"
-        >导出</el-button>
-      </el-col>
     </el-row>
 
     <el-table v-loading="loading" :data="detailList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="流程ID" align="center" prop="id" />
       <el-table-column label="流程名称" align="center" :show-overflow-tooltip="true">
-        <template slot-scope="scope" >
-          <router-link :to="'/dayflow/dayflowmanger/dayflowtask/' + scope.row.id" class="link-dayflow">
+        <template slot-scope="scope">
+          <router-link
+            :to="'/dayflow/dayflowmanger/dayflowtask/' + scope.row.id"
+            class="link-dayflow"
+          >
             <span>{{ scope.row.name }}</span>
           </router-link>
         </template>
-      </el-table-column>  
+      </el-table-column>
       <el-table-column label="流程序号" align="center" prop="sortNumber" />
       <el-table-column label="流程任务数量" align="center" prop="targetCount" />
       <el-table-column label="类型" align="center" prop="flowType" :formatter="dayflowtypeFormat" />
@@ -128,11 +122,12 @@
               v-for="dict in dayflowtypeOptions"
               :key="dict.dictValue"
               :label="dict.dictLabel"
+              :value="dict.dictValue"
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="导言" prop="content">
-          <el-input v-model="form.content" type="textarea" placeholder="请输入导言" />
+        <el-form-item label="导言" prop="content">          
+           <Editor v-model="form.content" />
         </el-form-item>
 
         <el-form-item label="目的" prop="note">
@@ -153,8 +148,7 @@ import {
   getDetail,
   delDetail,
   addDetail,
-  updateDetail,
-  exportDetail
+  updateDetail
 } from "@/api/benyi/dayflow/dayflowmanger";
 import Editor from "@/components/Editor";
 
@@ -328,22 +322,6 @@ export default {
         .then(() => {
           this.getList();
           this.msgSuccess("删除成功");
-        })
-        .catch(function() {});
-    },
-    /** 导出按钮操作 */
-    handleExport() {
-      const queryParams = this.queryParams;
-      this.$confirm("是否确认导出所有一日流程数据项?", "警告", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      })
-        .then(function() {
-          return exportDetail(queryParams);
-        })
-        .then(response => {
-          this.download(response.msg);
         })
         .catch(function() {});
     }

@@ -3,111 +3,85 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.project.benyi.mapper.ByDayFlowStandardMapper">
-    
+
     <resultMap type="ByDayFlowStandard" id="ByDayFlowStandardResult">
-        <result property="sid"    column="sid"    />
-        <result property="taskLable"    column="task_lable"    />
-        <result property="sname"    column="sname"    />
-        <result property="standardContent"    column="standard_content"    />
-        <result property="standardJiedu"    column="standard_jiedu"    />
+        <result property="id"    column="id"    />
+        <result property="taskCode"    column="task_code"    />
+        <result property="standardTitle"    column="standard_title"    />
         <result property="standardSort"    column="standard_sort"    />
-        <result property="picture"    column="picture"    />
-        <result property="video"    column="video"    />
         <result property="createuser"    column="createuser"    />
         <result property="createtime"    column="createtime"    />
         <result property="updateuser"    column="updateuser"    />
         <result property="updatetime"    column="updatetime"    />
-        <result property="beiyong"    column="beiyong"    />
     </resultMap>
 
     <sql id="selectByDayFlowStandardVo">
-        select sid, task_lable, sname, standard_content, standard_jiedu, standard_sort, picture, video, createuser, createtime, updateuser, updatetime, beiyong from by_day_flow_standard
+        select id, task_code, standard_title, standard_sort, createuser, createtime, updateuser, updatetime from by_day_flow_standard
     </sql>
 
     <select id="selectByDayFlowStandardList" parameterType="ByDayFlowStandard" resultMap="ByDayFlowStandardResult">
         <include refid="selectByDayFlowStandardVo"/>
-        <where>  
-            <if test="taskLable != null  and taskLable != ''"> and task_lable = #{taskLable}</if>
-            <if test="sname != null  and sname != ''"> and sname like concat('%', #{sname}, '%')</if>
-            <if test="standardContent != null  and standardContent != ''"> and standard_content = #{standardContent}</if>
-            <if test="standardJiedu != null  and standardJiedu != ''"> and standard_jiedu = #{standardJiedu}</if>
+        <where>
+            <if test="taskCode != null "> and task_code = #{taskCode}</if>
+            <if test="standardTitle != null  and standardTitle != ''"> and standard_title = #{standardTitle}</if>
             <if test="standardSort != null "> and standard_sort = #{standardSort}</if>
-            <if test="picture != null  and picture != ''"> and picture = #{picture}</if>
-            <if test="video != null  and video != ''"> and video = #{video}</if>
             <if test="createuser != null "> and createuser = #{createuser}</if>
             <if test="createtime != null "> and createtime = #{createtime}</if>
             <if test="updateuser != null "> and updateuser = #{updateuser}</if>
             <if test="updatetime != null "> and updatetime = #{updatetime}</if>
-            <if test="beiyong != null "> and beiyong = #{beiyong}</if>
         </where>
-        order by standard_sort
     </select>
-    
+
     <select id="selectByDayFlowStandardById" parameterType="Long" resultMap="ByDayFlowStandardResult">
         <include refid="selectByDayFlowStandardVo"/>
-        where sid = #{sid}
+        where id = #{id}
     </select>
-        
-    <insert id="insertByDayFlowStandard" parameterType="ByDayFlowStandard" useGeneratedKeys="true" keyProperty="sid">
+
+    <insert id="insertByDayFlowStandard" parameterType="ByDayFlowStandard" useGeneratedKeys="true" keyProperty="id">
         insert into by_day_flow_standard
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="taskLable != null  and taskLable != ''">task_lable,</if>
-            <if test="sname != null  and sname != ''">sname,</if>
-            <if test="standardContent != null  and standardContent != ''">standard_content,</if>
-            <if test="standardJiedu != null  and standardJiedu != ''">standard_jiedu,</if>
+            <if test="taskCode != null ">task_code,</if>
+            <if test="standardTitle != null  and standardTitle != ''">standard_title,</if>
             <if test="standardSort != null ">standard_sort,</if>
-            <if test="picture != null  and picture != ''">picture,</if>
-            <if test="video != null  and video != ''">video,</if>
             <if test="createuser != null ">createuser,</if>
             <if test="createtime != null ">createtime,</if>
             <if test="updateuser != null ">updateuser,</if>
             <if test="updatetime != null ">updatetime,</if>
-            <if test="beiyong != null ">beiyong,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="taskLable != null  and taskLable != ''">#{taskLable},</if>
-            <if test="sname != null  and sname != ''">#{sname},</if>
-            <if test="standardContent != null  and standardContent != ''">#{standardContent},</if>
-            <if test="standardJiedu != null  and standardJiedu != ''">#{standardJiedu},</if>
+            <if test="taskCode != null ">#{taskCode},</if>
+            <if test="standardTitle != null  and standardTitle != ''">#{standardTitle},</if>
             <if test="standardSort != null ">#{standardSort},</if>
-            <if test="picture != null  and picture != ''">#{picture},</if>
-            <if test="video != null  and video != ''">#{video},</if>
             <if test="createuser != null ">#{createuser},</if>
             <if test="createtime != null ">#{createtime},</if>
             <if test="updateuser != null ">#{updateuser},</if>
             <if test="updatetime != null ">#{updatetime},</if>
-            <if test="beiyong != null ">#{beiyong},</if>
-         </trim>
+        </trim>
     </insert>
 
     <update id="updateByDayFlowStandard" parameterType="ByDayFlowStandard">
         update by_day_flow_standard
         <trim prefix="SET" suffixOverrides=",">
-            <if test="taskLable != null  and taskLable != ''">task_lable = #{taskLable},</if>
-            <if test="sname != null  and sname != ''">sname = #{sname},</if>
-            <if test="standardContent != null  and standardContent != ''">standard_content = #{standardContent},</if>
-            <if test="standardJiedu != null  and standardJiedu != ''">standard_jiedu = #{standardJiedu},</if>
+            <if test="taskCode != null ">task_code = #{taskCode},</if>
+            <if test="standardTitle != null  and standardTitle != ''">standard_title = #{standardTitle},</if>
             <if test="standardSort != null ">standard_sort = #{standardSort},</if>
-            <if test="picture != null  and picture != ''">picture = #{picture},</if>
-            <if test="video != null  and video != ''">video = #{video},</if>
             <if test="createuser != null ">createuser = #{createuser},</if>
             <if test="createtime != null ">createtime = #{createtime},</if>
             <if test="updateuser != null ">updateuser = #{updateuser},</if>
             <if test="updatetime != null ">updatetime = #{updatetime},</if>
-            <if test="beiyong != null ">beiyong = #{beiyong},</if>
         </trim>
-        where sid = #{sid}
+        where id = #{id}
     </update>
 
     <delete id="deleteByDayFlowStandardById" parameterType="Long">
-        delete from by_day_flow_standard where sid = #{sid}
+        delete from by_day_flow_standard where id = #{id}
     </delete>
 
     <delete id="deleteByDayFlowStandardByIds" parameterType="String">
-        delete from by_day_flow_standard where sid in 
-        <foreach item="sid" collection="array" open="(" separator="," close=")">
-            #{sid}
+        delete from by_day_flow_standard where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
         </foreach>
     </delete>
-    
+
 </mapper>

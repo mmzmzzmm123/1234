@@ -1,13 +1,13 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
-      <el-form-item label="流程名称" prop="detailName">
-        <el-select v-model="queryParams.detailName" size="small">
+      <el-form-item label="流程名称" prop="detailId">
+        <el-select v-model="queryParams.detailId" size="small">
           <el-option
             v-for="item in detailOptions"
             :key="item.id"
             :label="item.name"
-            :value="item.name"
+            :value="item.id"
           />
         </el-select>
       </el-form-item>
@@ -56,31 +56,29 @@
           v-hasPermi="['benyi:dayflowtask:remove']"
         >删除</el-button>
       </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['benyi:dayflowtask:export']"
-        >导出</el-button>
-      </el-col>
     </el-row>
 
     <el-table v-loading="loading" :data="dayflowtaskList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="任务名称" align="center" :show-overflow-tooltip="true">
-        <template slot-scope="scope" >
-          <router-link :to="'/dayflow/dayflowmanger/dayflowtask/standard/' + scope.row.code" class="link-dayflow">
+        <template slot-scope="scope">
+          <router-link
+            :to="'/dayflow/dayflowmanger/dayflowtask/standard/' + scope.row.code"
+            class="link-dayflow"
+          >
             <span>{{ scope.row.taskLable }}</span>
           </router-link>
         </template>
       </el-table-column>
-      <el-table-column label="所属流程" align="center" prop="detailName" />
+      <el-table-column
+        label="任务解读"
+        align="center"
+        prop="taskContent"
+        :show-overflow-tooltip="true"
+      />
       <el-table-column label="任务排序" align="center" prop="taskSort" />
-      <el-table-column label="创建时间" align="center" prop="createtime" />
-      <el-table-column label="更新时间" align="center" prop="updatetime" />
       <el-table-column label="备注" align="center" prop="remark" />
+      <el-table-column label="创建时间" align="center" prop="createtime" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -100,7 +98,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -112,14 +110,18 @@
     <!-- 添加或修改一日流程任务对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px">
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="流程名称" prop="detailName" >
-          <el-input v-model="form.detailName" :disabled="true" />
+        <el-form-item label="流程名称" prop="detailId">
+          <el-select v-model="form.detailId" size="small" :disabled="true">
+            <el-option
+              v-for="item in detailOptions"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
+            />
+          </el-select>
         </el-form-item>
         <el-form-item label="任务名称" prop="taskLable">
           <el-input v-model="form.taskLable" placeholder="请输入任务名称" />
-        </el-form-item>
-        <el-form-item label="任务目的" prop="taskTarget">
-          <el-input v-model="form.taskTarget" type="textarea" placeholder="请输入内容" />
         </el-form-item>
         <el-form-item label="任务解读" prop="taskContent">
           <el-input v-model="form.taskContent" type="textarea" placeholder="请输入内容" />
@@ -140,8 +142,14 @@
 </template>
 
 <script>
-import { listDayflowtask, getDayflowtask, delDayflowtask, addDayflowtask, updateDayflowtask, exportDayflowtask } from "@/api/benyi/dayflow/dayflowtask";
-import {listDetail, getDetail} from "@/api/benyi/dayflow/dayflowmanger";
+import {
+  listDayflowtask,
+  getDayflowtask,
+  delDayflowtask,
+  addDayflowtask,
+  updateDayflowtask
+} from "@/api/benyi/dayflow/dayflowtask";
+import { listDetail, getDetail } from "@/api/benyi/dayflow/dayflowmanger";
 
 export default {
   name: "Dayflowtask",
@@ -172,15 +180,11 @@ export default {
         pageNum: 1,
         pageSize: 10,
         taskLable: undefined,
-        taskValue: undefined,
-        detailName: undefined,
-        taskTarget: undefined,
+        detailId: undefined,
         taskContent: undefined,
-        taskSort: undefined,
-        cssClass: undefined,
-        listClass: undefined,
+        taskSort: null,
         createuser: undefined,
-        updateuser: undefined,
+        updateuser: undefined
       },
       // 表单参数
       form: {},
@@ -189,6 +193,9 @@ export default {
         taskLable: [
           { required: true, message: "任务名称(标签)不能为空", trigger: "blur" }
         ],
+        taskSort: [
+           { required: true, message: "任务排序不能为空", trigger: "blur" }
+        ]
       }
     };
   },
@@ -202,16 +209,17 @@ export default {
     /**查询流程名称详细 */
     getDetail(detailId) {
       getDetail(detailId).then(response => {
-        this.queryParams.detailName = response.data.name;
-        this.defaultDetailName = response.data.name;
+        console.log(response.data);
+        this.queryParams.detailId = response.data.id;
+        this.defaultDetailName = response.data.id;
         this.getList();
-      })
+      });
     },
     /**查询流程名称列表 */
     getDetailList() {
       listDetail().then(response => {
         this.detailOptions = response.rows;
-      })
+      });
     },
     /** 查询一日流程任务列表 */
     getList() {
@@ -233,12 +241,9 @@ export default {
         code: undefined,
         taskLable: undefined,
         taskValue: undefined,
-        detailName: undefined,
-        taskTarget: undefined,
+        detailId: undefined,
         taskContent: undefined,
-        taskSort: undefined,
-        cssClass: undefined,
-        listClass: undefined,
+        taskSort: 0,
         createuser: undefined,
         updateuser: undefined,
         createtime: undefined,
@@ -255,14 +260,14 @@ export default {
     /** 重置按钮操作 */
     resetQuery() {
       this.resetForm("queryForm");
-      this.queryParams.detailName = this.defaultDetailName;
+      this.queryParams.detailId = this.defaultDetailName;
       this.handleQuery();
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.codes = selection.map(item => item.code)
-      this.single = selection.length!=1
-      this.multiple = !selection.length
+      this.codes = selection.map(item => item.code);
+      this.single = selection.length != 1;
+      this.multiple = !selection.length;
     },
     /** 新增按钮操作 */
     handleAdd() {
@@ -270,12 +275,12 @@ export default {
       this.open = true;
       this.title = "添加一日流程任务";
       //有可能是name
-      this.form.detailName = this.queryParams.detailName;
+      this.form.detailId = this.queryParams.detailId;
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const code = row.code || this.codes
+      const code = row.code || this.codes;
       getDayflowtask(code).then(response => {
         this.form = response.data;
         this.open = true;
@@ -313,29 +318,23 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const codes = row.code || this.codes;
-      this.$confirm('是否确认删除一日流程任务编号为"' + codes + '"的数据项?', "警告", {
+      this.$confirm(
+        '是否确认删除一日流程任务编号为"' + codes + '"的数据项?',
+        "警告",
+        {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
-        }).then(function() {
+        }
+      )
+        .then(function() {
           return delDayflowtask(codes);
-        }).then(() => {
+        })
+        .then(() => {
           this.getList();
           this.msgSuccess("删除成功");
-        }).catch(function() {});
-    },
-    /** 导出按钮操作 */
-    handleExport() {
-      const queryParams = this.queryParams;
-      this.$confirm('是否确认导出所有一日流程任务数据项?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
-          return exportDayflowtask(queryParams);
-        }).then(response => {
-          this.download(response.msg);
-        }).catch(function() {});
+        })
+        .catch(function() {});
     }
   }
 };
