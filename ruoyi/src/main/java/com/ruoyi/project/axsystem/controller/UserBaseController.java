@@ -98,14 +98,10 @@ public class UserBaseController extends BaseController
     @PreAuthorize("@ss.hasPermi('axsystem:base:remove')")
     @Log(title = "用户基础信息", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{uids}")
-    public AjaxResult remove(@PathVariable Long[] uids)
+    public AjaxResult remove(@PathVariable String[] uids)
     {
         return toAjax(userBaseService.deleteUserBaseByIds(uids));
     }
 
-    public static void main(String[] args) {
-        String s = UUID.randomUUID().toString();
-        System.out.println(s);
-    }
 
 }

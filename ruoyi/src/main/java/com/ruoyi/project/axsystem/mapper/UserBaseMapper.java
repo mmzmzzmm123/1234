@@ -49,7 +49,7 @@ public interface UserBaseMapper
      * @param uid 用户基础信息ID
      * @return 结果
      */
-    public int deleteUserBaseById(Long uid);
+    public int deleteUserBaseById(String uid);
 
     /**
      * 批量删除用户基础信息
@@ -57,5 +57,5 @@ public interface UserBaseMapper
      * @param uids 需要删除的数据ID
      * @return 结果
      */
-    public int deleteUserBaseByIds(Long[] uids);
+    public int deleteUserBaseByIds(String[] uids);
 }

@@ -81,7 +81,7 @@ public class UserBaseServiceImpl implements IUserBaseService
      * @return 结果
      */
     @Override
-    public int deleteUserBaseByIds(Long[] uids)
+    public int deleteUserBaseByIds(String[] uids)
     {
         return userBaseMapper.deleteUserBaseByIds(uids);
     }
@@ -93,7 +93,7 @@ public class UserBaseServiceImpl implements IUserBaseService
      * @return 结果
      */
     @Override
-    public int deleteUserBaseById(Long uid)
+    public int deleteUserBaseById(String uid)
     {
         return userBaseMapper.deleteUserBaseById(uid);
     }

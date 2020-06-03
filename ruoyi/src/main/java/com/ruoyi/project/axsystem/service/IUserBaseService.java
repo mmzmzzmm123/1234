@@ -49,7 +49,7 @@ public interface IUserBaseService
      * @param uids 需要删除的用户基础信息ID
      * @return 结果
      */
-    public int deleteUserBaseByIds(Long[] uids);
+    public int deleteUserBaseByIds(String[] uids);
 
     /**
      * 删除用户基础信息信息
@@ -57,5 +57,5 @@ public interface IUserBaseService
      * @param uid 用户基础信息ID
      * @return 结果
      */
-    public int deleteUserBaseById(Long uid);
+    public int deleteUserBaseById(String uid);
 }
