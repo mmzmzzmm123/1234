@@ -1,34 +1,37 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.project.benyi.mapper.ByDayFlowStandardMapper">
 
     <resultMap type="ByDayFlowStandard" id="ByDayFlowStandardResult">
-        <result property="id"    column="id"    />
-        <result property="taskCode"    column="task_code"    />
-        <result property="standardTitle"    column="standard_title"    />
-        <result property="standardSort"    column="standard_sort"    />
-        <result property="createuser"    column="createuser"    />
-        <result property="createtime"    column="createtime"    />
-        <result property="updateuser"    column="updateuser"    />
-        <result property="updatetime"    column="updatetime"    />
+        <result property="id" column="id"/>
+        <result property="taskCode" column="task_code"/>
+        <result property="standardTitle" column="standard_title"/>
+        <result property="standardSort" column="standard_sort"/>
+        <result property="unscrambleCount" column="unscramble_count"/>
+        <result property="createuser" column="createuser"/>
+        <result property="createtime" column="createtime"/>
+        <result property="updateuser" column="updateuser"/>
+        <result property="updatetime" column="updatetime"/>
     </resultMap>
 
     <sql id="selectByDayFlowStandardVo">
-        select id, task_code, standard_title, standard_sort, createuser, createtime, updateuser, updatetime from by_day_flow_standard
+        select id, task_code, standard_title, standard_sort,(select count(*) from by_day_flow_unscramble where standard_id=by_day_flow_standard.id) unscramble_count, createuser, createtime, updateuser, updatetime from by_day_flow_standard
     </sql>
 
     <select id="selectByDayFlowStandardList" parameterType="ByDayFlowStandard" resultMap="ByDayFlowStandardResult">
         <include refid="selectByDayFlowStandardVo"/>
         <where>
-            <if test="taskCode != null "> and task_code = #{taskCode}</if>
-            <if test="standardTitle != null  and standardTitle != ''"> and standard_title = #{standardTitle}</if>
-            <if test="standardSort != null "> and standard_sort = #{standardSort}</if>
-            <if test="createuser != null "> and createuser = #{createuser}</if>
-            <if test="createtime != null "> and createtime = #{createtime}</if>
-            <if test="updateuser != null "> and updateuser = #{updateuser}</if>
-            <if test="updatetime != null "> and updatetime = #{updatetime}</if>
+            <if test="taskCode != null ">and task_code = #{taskCode}</if>
+            <if test="standardTitle != null  and standardTitle != ''">and standard_title like concat('%',
+                #{standardTitle}, '%')
+            </if>
+            <if test="standardSort != null ">and standard_sort = #{standardSort}</if>
+            <if test="createuser != null ">and createuser = #{createuser}</if>
+            <if test="createtime != null ">and createtime = #{createtime}</if>
+            <if test="updateuser != null ">and updateuser = #{updateuser}</if>
+            <if test="updatetime != null ">and updatetime = #{updatetime}</if>
         </where>
     </select>
 

@@ -1,47 +1,47 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.project.benyi.mapper.ByDayFlowDetailMapper">
-    
+
     <resultMap type="ByDayFlowDetail" id="ByDayFlowDetailResult">
-        <result property="id"    column="id"    />
-        <result property="sortNumber"    column="sort_number"    />
-        <result property="targetCount"    column="target_count"    />
-        <result property="name"    column="name"    />
-        <result property="content"    column="content"    />
-        <result property="note"    column="note"    />
-        <result property="flowType"    column="flow_type"    />
-        <result property="createUser"    column="create_user"    />
-        <result property="updateUser"    column="update_user"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="updateTime"    column="update_time"    />
+        <result property="id" column="id"/>
+        <result property="sortNumber" column="sort_number"/>
+        <result property="targetCount" column="target_count"/>
+        <result property="name" column="name"/>
+        <result property="content" column="content"/>
+        <result property="note" column="note"/>
+        <result property="flowType" column="flow_type"/>
+        <result property="createUser" column="create_user"/>
+        <result property="updateUser" column="update_user"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
     </resultMap>
 
     <sql id="selectByDayFlowDetailVo">
-        select id, sort_number, target_count, name, content, note, flow_type, create_user, update_user, create_time, update_time
+        select id, sort_number, (select count(*) from by_day_flow_task where detail_id=id) target_count, name, content, note, flow_type, create_user, update_user, create_time, update_time
         from by_day_flow_detail
     </sql>
 
     <select id="selectByDayFlowDetailList" parameterType="ByDayFlowDetail" resultMap="ByDayFlowDetailResult">
         <include refid="selectByDayFlowDetailVo"/>
-        <where>  
-            <if test="sortNumber != null "> and sort_number = #{sortNumber}</if>
-            <if test="targetCount != null "> and target_count = #{targetCount}</if>
-            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
-            <if test="content != null  and content != ''"> and content = #{content}</if>
-            <if test="note != null  and note != ''"> and note = #{note}</if>
-            <if test="flowType != null "> and flow_type = #{flowType}</if>
-            <if test="createUser != null "> and create_user = #{createUser}</if>
-            <if test="updateUser != null "> and update_user = #{updateUser}</if>
+        <where>
+            <if test="sortNumber != null ">and sort_number = #{sortNumber}</if>
+            <if test="targetCount != null ">and target_count = #{targetCount}</if>
+            <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
+            <if test="content != null  and content != ''">and content = #{content}</if>
+            <if test="note != null  and note != ''">and note = #{note}</if>
+            <if test="flowType != null ">and flow_type = #{flowType}</if>
+            <if test="createUser != null ">and create_user = #{createUser}</if>
+            <if test="updateUser != null ">and update_user = #{updateUser}</if>
         </where>
     </select>
-    
+
     <select id="selectByDayFlowDetailById" parameterType="Long" resultMap="ByDayFlowDetailResult">
         <include refid="selectByDayFlowDetailVo"/>
         where id = #{id}
     </select>
-        
+
     <insert id="insertByDayFlowDetail" parameterType="ByDayFlowDetail" useGeneratedKeys="true" keyProperty="id">
         insert into by_day_flow_detail
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -55,7 +55,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateUser != null ">update_user,</if>
             <if test="createTime != null ">create_time,</if>
             <if test="updateTime != null ">update_time,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="sortNumber != null ">#{sortNumber},</if>
             <if test="targetCount != null ">#{targetCount},</if>
@@ -67,7 +67,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateUser != null ">#{updateUser},</if>
             <if test="createTime != null ">#{createTime},</if>
             <if test="updateTime != null ">#{updateTime},</if>
-         </trim>
+        </trim>
     </insert>
 
     <update id="updateByDayFlowDetail" parameterType="ByDayFlowDetail">
@@ -92,10 +92,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteByDayFlowDetailByIds" parameterType="String">
-        delete from by_day_flow_detail where id in 
+        delete from by_day_flow_detail where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>
-    
+
 </mapper>

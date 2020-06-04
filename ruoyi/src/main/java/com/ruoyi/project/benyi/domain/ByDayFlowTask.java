@@ -37,6 +37,10 @@ public class ByDayFlowTask extends BaseEntity
     @Excel(name = "任务排序")
     private Integer taskSort;
 
+    /** 标准数量 */
+    @Excel(name = "标准数量")
+    private Long standardCount;
+
     /** 标签 */
     @Excel(name = "标签")
     private String label;
@@ -107,6 +111,16 @@ public class ByDayFlowTask extends BaseEntity
         return taskSort;
     }
 
+    public void setStandardCount(Long standardCount)
+    {
+        this.standardCount = standardCount;
+    }
+
+    public Long getStandardCount()
+    {
+        return standardCount;
+    }
+
     public void setLabel(String label)
     {
         this.label = label;
@@ -159,6 +173,7 @@ public class ByDayFlowTask extends BaseEntity
                 .append("detailId", getDetailId())
                 .append("taskContent", getTaskContent())
                 .append("taskSort", getTaskSort())
+                .append("standardCount", getStandardCount())
                 .append("label", getLabel())
                 .append("createuser", getCreateuser())
                 .append("updateuser", getUpdateuser())

@@ -10,97 +10,119 @@ import java.util.Date;
 
 /**
  * 一日流程标准对象 by_day_flow_standard
- * 
+ *
  * @author tsbz
  * @date 2020-05-18
  */
-public class ByDayFlowStandard extends BaseEntity
-{
-    /** 标识 */
+public class ByDayFlowStandard extends BaseEntity {
+    /**
+     * 标识
+     */
     private Long id;
 
-    /** 任务id */
+    /**
+     * 任务id
+     */
     @Excel(name = "任务id")
     private Long taskCode;
 
-    /** 标准的名称 */
+    /**
+     * 标准的名称
+     */
     @Excel(name = "标准的名称")
     private String standardTitle;
 
-    /** 标准排序 */
+    /**
+     * 标准排序
+     */
     @Excel(name = "标准排序")
     private Long standardSort;
 
-    /** 创建人 */
+    /**
+     * 标准数量
+     */
+    @Excel(name = "解读数量")
+    private Long unscrambleCount;
+
+    /**
+     * 创建人
+     */
     @Excel(name = "创建人")
     private Long createuser;
 
-    /** 更新者 */
+    /**
+     * 更新者
+     */
     @Excel(name = "更新者")
     private Long updateuser;
 
-    /** 创建时间 */
+    /**
+     * 创建时间
+     */
     @Excel(name = "创建时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createtime;
 
-    /** 更新时间 */
+    /**
+     * 更新时间
+     */
     @Excel(name = "更新时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updatetime;
 
-    public void setId(Long id)
-    {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public Long getId()
-    {
+    public Long getId() {
         return id;
     }
-    public void setTaskCode(Long taskCode)
-    {
+
+    public void setTaskCode(Long taskCode) {
         this.taskCode = taskCode;
     }
 
-    public Long getTaskCode()
-    {
+    public Long getTaskCode() {
         return taskCode;
     }
-    public void setStandardTitle(String standardTitle)
-    {
+
+    public void setStandardTitle(String standardTitle) {
         this.standardTitle = standardTitle;
     }
 
-    public String getStandardTitle()
-    {
+    public String getStandardTitle() {
         return standardTitle;
     }
-    public void setStandardSort(Long standardSort)
-    {
+
+    public void setStandardSort(Long standardSort) {
         this.standardSort = standardSort;
     }
 
-    public Long getStandardSort()
-    {
+    public Long getStandardSort() {
         return standardSort;
     }
-    public void setCreateuser(Long createuser)
-    {
+
+    public void setUnscrambleCount(Long unscrambleCount) {
+        this.unscrambleCount = unscrambleCount;
+    }
+
+    public Long getUnscrambleCount() {
+        return unscrambleCount;
+    }
+
+    public void setCreateuser(Long createuser) {
         this.createuser = createuser;
     }
 
-    public Long getCreateuser()
-    {
+    public Long getCreateuser() {
         return createuser;
     }
-    public void setUpdateuser(Long updateuser)
-    {
+
+    public void setUpdateuser(Long updateuser) {
         this.updateuser = updateuser;
     }
 
-    public Long getUpdateuser()
-    {
+    public Long getUpdateuser() {
         return updateuser;
     }
 
@@ -122,16 +144,17 @@ public class ByDayFlowStandard extends BaseEntity
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("sid", getId())
+        return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
+                .append("sid", getId())
                 .append("taskCode", getTaskCode())
                 .append("standardTitle", getStandardTitle())
                 .append("standardSort", getStandardSort())
+                .append("unscrambleCount", getUnscrambleCount())
                 .append("createuser", getCreateuser())
                 .append("createtime", getCreatetime())
                 .append("updateuser", getUpdateuser())
                 .append("updatetime", getUpdatetime())
-            .toString();
+                .toString();
     }
 
 }

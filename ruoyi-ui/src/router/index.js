@@ -115,6 +115,18 @@ export const constantRoutes = [{
         }]
     },
     {
+        path: '/dayflow/dayflowmanger/dayflowtask',
+        component: Layout,
+        hidden: true,
+        children: [{
+            path: 'standard/unscramble/:id(\\d+)',
+            component: () =>
+                import ('@/views/benyi/dayflow/unscramble'),
+            name: 'unscramble',
+            meta: { title: '一日流程标准解读', icon: '' }
+        }]
+    },
+    {
         path: '/video_study',
         component: Layout,
         hidden: true,

@@ -10,6 +10,7 @@
         <result property="detailId"    column="detail_id"    />
         <result property="taskContent"    column="task_content"    />
         <result property="taskSort"    column="task_sort"    />
+        <result property="standardCount" column="standard_count"/>
         <result property="label"    column="label"    />
         <result property="createuser"    column="createuser"    />
         <result property="updateuser"    column="updateuser"    />
@@ -19,7 +20,7 @@
     </resultMap>
 
     <sql id="selectByDayFlowTaskVo">
-        select code, task_lable, detail_id, task_content, task_sort, label, createuser, updateuser, createtime, updatetime, remark from by_day_flow_task
+        select code, task_lable, detail_id, task_content, task_sort,(select count(*) from by_day_flow_standard where task_code=code) standard_count, label, createuser, updateuser, createtime, updatetime, remark from by_day_flow_task
     </sql>
 
     <select id="selectByDayFlowTaskList" parameterType="ByDayFlowTask" resultMap="ByDayFlowTaskResult">

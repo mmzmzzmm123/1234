@@ -80,9 +80,9 @@ public class ByDayFlowStandardController extends BaseController
     public AjaxResult add(@RequestBody ByDayFlowStandard byDayFlowStandard)
     {
         byDayFlowStandard.setCreateuser(SecurityUtils.getLoginUser().getUser().getUserId());
-        byDayFlowStandard.setUpdateuser(SecurityUtils.getLoginUser().getUser().getUserId());
+        //byDayFlowStandard.setUpdateuser(SecurityUtils.getLoginUser().getUser().getUserId());
         byDayFlowStandard.setCreatetime(new Date());
-        byDayFlowStandard.setUpdatetime(new Date());
+        //byDayFlowStandard.setUpdatetime(new Date());
         return toAjax(byDayFlowStandardService.insertByDayFlowStandard(byDayFlowStandard));
     }
 

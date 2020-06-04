@@ -1,19 +1,19 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
-      <el-form-item label="任务名称" prop="taskLable">
-        <el-select v-model="queryParams.taskLable" size="small">
+      <el-form-item label="任务名称" prop="taskCode">
+        <el-select v-model="queryParams.taskCode" size="small">
           <el-option
             v-for="item in taskOptions"
             :key="item.code"
             :label="item.taskLable"
-            :value="item.taskLable"
+            :value="item.code"
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="标准名称" prop="sname">
+      <el-form-item label="标准名称" prop="standardTitle">
         <el-input
-          v-model="queryParams.sname"
+          v-model="queryParams.standardTitle"
           placeholder="请输入标准名称"
           clearable
           size="small"
@@ -60,17 +60,21 @@
 
     <el-table v-loading="loading" :data="standardList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="标准名称" align="center" prop="sname" />
-      <el-table-column label="所属任务" align="center" prop="taskLable" />
+      <el-table-column label="标准名称" align="center" prop="standardTitle" >
+         <template slot-scope="scope">
+          <router-link
+            :to="'/dayflow/dayflowmanger/dayflowtask/standard/unscramble/' + scope.row.id"
+            class="link-dayflow"
+          >
+            <span>{{ scope.row.standardTitle }}</span>
+          </router-link>
+        </template>
+      </el-table-column>
       <el-table-column label="标准排序" align="center" prop="standardSort" />
+       <el-table-column label="解读数量" align="center" prop="unscrambleCount" />
       <el-table-column label="创建时间" align="center" prop="createtime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createtime) }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="更新时间" align="center" prop="updatetime" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.updatetime) }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -104,38 +108,21 @@
     <!-- 添加或修改一日流程标准对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px">
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="任务名称" prop="taskLable">
-          <el-input v-model="form.taskLable" :disabled="true" />
+        <el-form-item label="任务名称" prop="taskCode">
+          <el-select v-model="form.taskCode" :disabled="true" size="small">
+            <el-option
+              v-for="item in taskOptions"
+              :key="item.code"
+              :label="item.taskLable"
+              :value="item.code"
+            />
+          </el-select>
         </el-form-item>
-        <el-form-item label="标准名称" prop="sname">
-          <el-input v-model="form.sname" placeholder="请输入标准的名称" />
-        </el-form-item>
-        <el-form-item label="标准内容" prop="standardContent">
-          <el-input v-model="form.standardContent" type="textarea" placeholder="请输入标准的内容" />
-        </el-form-item>
-        <el-form-item label="标准解读" prop="standardJiedu">
-          <el-input v-model="form.standardJiedu" type="textarea" placeholder="请输入标准的解读" />
+        <el-form-item label="标准名称" prop="standardTitle">
+          <el-input v-model="form.standardTitle" type="textarea" placeholder="请输入标准的名称" />
         </el-form-item>
         <el-form-item label="标准排序" prop="standardSort">
           <el-input-number v-model="form.standardSort" controls-position="right" :min="0" />
-          <el-input v-model="form.picture" v-if="false" />
-        </el-form-item>
-        <el-form-item label="照片" prop="picture">
-          <el-upload
-            class="avatar-uploader"
-            :action="uploadImgUrl"
-            :headers="headers"
-            :show-file-list="false"
-            :on-success="handleAvatarSuccess"
-            :before-upload="beforeAvatarUpload"
-            accept=".jpg, .png"
-          >
-            <img width="100%" v-if="imageUrl" :src="imageUrl" class="avatar" />
-            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-          </el-upload>
-        </el-form-item>
-        <el-form-item label="视频" prop="video">
-          <el-input v-model="form.video" type="textarea" placeholder="请输入内容" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -158,14 +145,11 @@ import {
   listDayflowtask,
   getDayflowtask
 } from "@/api/benyi/dayflow/dayflowtask";
-import { getToken } from "@/utils/auth";
 
 export default {
   name: "Standard",
   data() {
     return {
-      //显示上传的图片，清空
-      imageUrl: "",
       // 遮罩层
       loading: true,
       // 选中数组
@@ -190,31 +174,24 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        taskLable: undefined,
-        sname: undefined,
-        standardContent: undefined,
-        standardJiedu: undefined,
+        taskCode: undefined,
+        standardTitle: undefined,
         standardSort: undefined,
-        picture: undefined,
-        video: undefined,
         createuser: undefined,
         createtime: undefined,
         updateuser: undefined,
-        updatetime: undefined,
-        beiyong: undefined
+        updatetime: undefined
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
-        sname: [
+        standardTitle: [
           { required: true, message: "标准名称不能为空", trigger: "blur" }
+        ],
+        standardSort: [
+          { required: true, message: "标准排序不能为空", trigger: "blur" }
         ]
-      },
-      // 上传的图片服务器地址
-      uploadImgUrl: process.env.VUE_APP_BASE_API + "/common/upload",
-      headers: {
-        Authorization: "Bearer " + getToken()
       }
     };
   },
@@ -223,30 +200,13 @@ export default {
     const taskId = this.$route.params && this.$route.params.code;
     this.getDayflowtask(taskId);
     this.getTaskList();
-    
   },
   methods: {
-    handleAvatarSuccess(res, file) {
-      this.imageUrl = URL.createObjectURL(file.raw);
-      console.log(res);
-      if (res.code == "200") {
-        this.form.picture = res.fileName;
-      } else {
-        this.msgError(res.msg);
-      }
-    },
-    beforeAvatarUpload(file) {
-      const isLt2M = file.size / 1024 / 1024 < 2;
-      if (!isLt2M) {
-        this.$message.error("上传图片大小不能超过 2MB!");
-      }
-      return isLt2M;
-    },
     /**查询任务名称详细 */
     getDayflowtask(taskId) {
       getDayflowtask(taskId).then(response => {
-        this.queryParams.taskLable = response.data.taskLable;
-        this.defaultTaskName = response.data.taskLable;
+        this.queryParams.taskCode = response.data.code;
+        this.defaultTaskName = response.data.code;
         this.getList();
       });
     },
@@ -273,19 +233,14 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        sid: undefined,
-        taskLable: undefined,
-        sname: undefined,
-        standardContent: undefined,
-        standardJiedu: undefined,
-        standardSort: undefined,
-        picture: undefined,
-        video: undefined,
+        id: undefined,
+        taskCode: undefined,
+        standardTitle: undefined,
+        standardSort: 0,
         createuser: undefined,
         createtime: undefined,
         updateuser: undefined,
-        updatetime: undefined,
-        beiyong: undefined
+        updatetime: undefined
       };
       this.resetForm("form");
     },
@@ -297,33 +252,28 @@ export default {
     /** 重置按钮操作 */
     resetQuery() {
       this.resetForm("queryForm");
-      this.queryParams.taskLable = this.defaultTaskName;
+      this.queryParams.taskCode = this.defaultTaskName;
       this.handleQuery();
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.sid);
+      this.ids = selection.map(item => item.id);
       this.single = selection.length != 1;
       this.multiple = !selection.length;
     },
     /** 新增按钮操作 */
     handleAdd() {
-      this.imageUrl = ""; //清空图片
       this.reset();
       this.open = true;
       this.title = "添加标准";
-      this.form.taskLable = this.queryParams.taskLable;
+      this.form.taskCode = this.queryParams.taskCode;
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
-      this.imageUrl = ""; //清空图片
       this.reset();
-      const sid = row.sid || this.ids;
+      const sid = row.id || this.ids;
       getStandard(sid).then(response => {
         this.form = response.data;
-        if (response.data.picture) {
-          this.imageUrl = process.env.VUE_APP_BASE_API + response.data.picture;
-        }
         this.open = true;
         this.title = "修改标准";
       });
@@ -332,8 +282,7 @@ export default {
     submitForm: function() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          console.log(this.form.imageUrl);
-          if (this.form.sid != undefined) {
+          if (this.form.id != undefined) {
             updateStandard(this.form).then(response => {
               if (response.code === 200) {
                 this.msgSuccess("修改成功");
@@ -359,7 +308,7 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const sids = row.sid || this.ids;
+      const sids = row.id || this.ids;
       this.$confirm(
         '是否确认删除一日流程标准编号为"' + sids + '"的数据项?',
         "警告",

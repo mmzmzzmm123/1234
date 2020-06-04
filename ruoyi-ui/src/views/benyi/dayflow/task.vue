@@ -77,6 +77,7 @@
         :show-overflow-tooltip="true"
       />
       <el-table-column label="任务排序" align="center" prop="taskSort" />
+       <el-table-column label="标准数量" align="center" prop="standardCount" />
       <el-table-column label="备注" align="center" prop="remark" />
       <el-table-column label="创建时间" align="center" prop="createtime" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -209,7 +210,7 @@ export default {
     /**查询流程名称详细 */
     getDetail(detailId) {
       getDetail(detailId).then(response => {
-        console.log(response.data);
+        //console.log(response.data);
         this.queryParams.detailId = response.data.id;
         this.defaultDetailName = response.data.id;
         this.getList();
