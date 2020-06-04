@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.ruoyi.project.common.VueSelectModel;
+import com.ruoyi.project.data.price.domain.OfficeBasePriceModifyModel;
 import com.ruoyi.project.data.price.domain.UltimateOfficeBasePrice;
 
 /**
@@ -21,7 +22,14 @@ public interface UltimateOfficeBasePriceMapper {
      * @param id
      * @return
      */
-    UltimateOfficeBasePrice getById(Integer yearMonth, Integer id);
+    UltimateOfficeBasePrice getById(Integer yearMonth, Integer lastYearMonth, Integer id);
+
+    /**
+     * @param yearMonth
+     * @param id
+     * @return
+     */
+    UltimateOfficeBasePrice getByRouteId(Integer yearMonth, Integer id);
 
     /**
      * @param yearMonth
@@ -47,16 +55,12 @@ public interface UltimateOfficeBasePriceMapper {
     Integer getCount(UltimateOfficeBasePrice officeBasePriceUltimate);
 
     /**
-     * 更新
+     * 更新当期基价
      *
-     * @param yearMonth
-     * @param id
-     * @param mainPrice
-     * @param mainPriceRent
+     * @param officeBasePriceModifyModel
      * @return
      */
-    int update(Integer yearMonth, Integer lastYearMonth, int id, BigDecimal mainPrice, BigDecimal mainPriceRent);
-
+    int updateBasePrice(OfficeBasePriceModifyModel officeBasePriceModifyModel);
 
     /**
      * 年月
@@ -64,14 +68,5 @@ public interface UltimateOfficeBasePriceMapper {
      * @return
      */
     List<VueSelectModel> getYearMonthList();
-
-    /**
-     * 更新
-     *
-     * @param yearMonth
-     * @param id
-     * @return
-     */
-    int copyCreate(Integer yearMonth, Integer id);
 
 }

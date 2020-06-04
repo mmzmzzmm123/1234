@@ -7,6 +7,7 @@ import java.util.List;
 import com.ruoyi.common.exception.CustomException;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.project.common.VueSelectModel;
+import com.ruoyi.project.data.price.domain.OfficeBasePriceModifyModel;
 import com.ruoyi.project.data.price.domain.UltimateOfficeBasePrice;
 import com.ruoyi.project.data.price.mapper.UltimateOfficeBasePriceMapper;
 import com.ruoyi.project.data.price.service.IUltimateOfficeBasePriceService;
@@ -56,7 +57,8 @@ public class UltimateOfficeBasePriceServiceImpl implements IUltimateOfficeBasePr
 
     @Override
     public UltimateOfficeBasePrice getById(Integer yearMonth, Integer id) {
-        return officeBasePriceUltimateMapper.getById(yearMonth, id);
+        Integer lastYearMonth = getLastYearMonth(yearMonth);
+        return officeBasePriceUltimateMapper.getById(yearMonth, lastYearMonth, id);
     }
 
     @Override
@@ -72,32 +74,29 @@ public class UltimateOfficeBasePriceServiceImpl implements IUltimateOfficeBasePr
         StringBuilder failureMsg = new StringBuilder();
         Integer lastYearMonth = getLastYearMonth(yearMonth);
 
-        for (UltimateOfficeBasePrice officeBasePriceUltimate : officeBasePriceUltimates) {
+        for (UltimateOfficeBasePrice inputModel : officeBasePriceUltimates) {
             try {
                 // 验证是否存在这个用户
-                UltimateOfficeBasePrice officeBasePriceUltimateInDb =
-                        officeBasePriceUltimateMapper.getById(yearMonth, officeBasePriceUltimate.getId());
+                UltimateOfficeBasePrice currentUltimateOfficeBasePrice =
+                        officeBasePriceUltimateMapper.getById(yearMonth, lastYearMonth,
+                                inputModel.getId());
                 UltimateOfficeBasePrice lastUltimateOfficeBasePrice =
                         officeBasePriceUltimateMapper.getByBuildingId(lastYearMonth,
-                                officeBasePriceUltimate.getBuildingId());
-                if (!StringUtils.isNotNull(officeBasePriceUltimateInDb)) {
-                    if (officeBasePriceUltimateInDb.getMainPrice().subtract(officeBasePriceUltimate.getMainPrice()).compareTo(BigDecimal.ZERO) != 0
-                            || officeBasePriceUltimateInDb.getMainPriceRent().subtract(officeBasePriceUltimate.getMainPriceRent()).compareTo(BigDecimal.ZERO) != 0) {
-                        int id = officeBasePriceUltimateMapper.copyCreate(yearMonth, officeBasePriceUltimate.getId());
-
-                        officeBasePriceUltimateMapper.update(yearMonth, lastYearMonth, id,
-                                officeBasePriceUltimate.getMainPrice(),
-                                officeBasePriceUltimate.getMainPriceRent());
+                                inputModel.getBuildingId());
+                if (!StringUtils.isNotNull(currentUltimateOfficeBasePrice)) {
+                    if (currentUltimateOfficeBasePrice.getMainPrice().subtract(inputModel.getMainPrice()).compareTo(BigDecimal.ZERO) != 0
+                            || currentUltimateOfficeBasePrice.getMainPriceRent().subtract(inputModel.getMainPriceRent()).compareTo(BigDecimal.ZERO) != 0) {
+                        updateBasePrice(inputModel, currentUltimateOfficeBasePrice, lastUltimateOfficeBasePrice);
                         successNum++;
-                        successMsg.append("<br/>" + successNum + "、ID= " + officeBasePriceUltimate.getId() + " 更新成功");
+                        successMsg.append("<br/>" + successNum + "、ID= " + inputModel.getId() + " 更新成功");
                     }
                 } else {
                     failureNum++;
-                    failureMsg.append("<br/>" + failureNum + "、ID= " + officeBasePriceUltimate.getId() + " 失败");
+                    failureMsg.append("<br/>" + failureNum + "、ID= " + inputModel.getId() + " 失败");
                 }
             } catch (Exception e) {
                 failureNum++;
-                String msg = "<br/>" + failureNum + "、ID= " + officeBasePriceUltimate.getId() + " 导入失败：";
+                String msg = "<br/>" + failureNum + "、ID= " + inputModel.getId() + " 导入失败：";
                 failureMsg.append(msg + e.getMessage());
                 log.error(msg, e);
             }
@@ -114,5 +113,79 @@ public class UltimateOfficeBasePriceServiceImpl implements IUltimateOfficeBasePr
     @Override
     public List<VueSelectModel> getYearMonthList() {
         return officeBasePriceUltimateMapper.getYearMonthList();
+    }
+
+    /**
+     * 更新
+     *
+     * @param officeBasePriceUltimate
+     * @return
+     */
+    @Override
+    public int update(UltimateOfficeBasePrice officeBasePriceUltimate) {
+        // 当期价格
+        Integer lastYearMonth = getLastYearMonth(officeBasePriceUltimate.getYearMonth());
+        UltimateOfficeBasePrice ultimateOfficeBasePrice =
+                officeBasePriceUltimateMapper.getByRouteId(officeBasePriceUltimate.getYearMonth(),
+                        officeBasePriceUltimate.getId());
+        // 上期价格
+        UltimateOfficeBasePrice lastUltimateOfficeBasePrice =
+                officeBasePriceUltimateMapper.getByBuildingId(lastYearMonth,
+                        officeBasePriceUltimate.getBuildingId());
+
+        updateBasePrice(officeBasePriceUltimate, ultimateOfficeBasePrice, lastUltimateOfficeBasePrice);
+
+        return 1;
+    }
+
+    /**
+     * 基价更新
+     *
+     * @param inputModel
+     * @param currentUltimateOfficeBasePrice
+     * @param lastUltimateOfficeBasePrice
+     */
+    private void updateBasePrice(UltimateOfficeBasePrice inputModel,
+                                 UltimateOfficeBasePrice currentUltimateOfficeBasePrice,
+                                 UltimateOfficeBasePrice lastUltimateOfficeBasePrice) {
+        // 上期价格比较
+        if (StringUtils.isNotNull(lastUltimateOfficeBasePrice) &&
+                StringUtils.isNotNull(lastUltimateOfficeBasePrice.getMainPrice()) &&
+                StringUtils.isNotNull(lastUltimateOfficeBasePrice.getMainPriceRent()) &&
+                (lastUltimateOfficeBasePrice.getMainPrice().compareTo(inputModel.getMainPrice_1()) != 0 ||
+                        lastUltimateOfficeBasePrice.getMainPriceRent().compareTo(inputModel.getMainPriceRent_1()) != 0)) {
+            OfficeBasePriceModifyModel officeBasePriceModifyModel =
+                    new OfficeBasePriceModifyModel(lastUltimateOfficeBasePrice.getId(),
+                            lastUltimateOfficeBasePrice.getYearMonth());
+            officeBasePriceModifyModel.setMainPrice(inputModel.getMainPrice_1());
+            officeBasePriceModifyModel.setMainPricePst(lastUltimateOfficeBasePrice.getMainPricePst());
+            officeBasePriceModifyModel.setMainPriceRent(inputModel.getMainPriceRent_1());
+            officeBasePriceModifyModel.setMainPriceRentPst(lastUltimateOfficeBasePrice.getMainPriceRentPst());
+            // 上期价格
+            officeBasePriceUltimateMapper.updateBasePrice(officeBasePriceModifyModel);
+        }
+
+        // 本期价格比较
+        if (StringUtils.isNotNull(currentUltimateOfficeBasePrice) &&
+                StringUtils.isNotNull(currentUltimateOfficeBasePrice.getMainPrice()) &&
+                StringUtils.isNotNull(currentUltimateOfficeBasePrice.getMainPriceRent()) &&
+                (currentUltimateOfficeBasePrice.getMainPrice().compareTo(inputModel.getMainPrice()) != 0 ||
+                        currentUltimateOfficeBasePrice.getMainPriceRent().compareTo(inputModel.getMainPriceRent()) != 0)) {
+            OfficeBasePriceModifyModel officeBasePriceModifyModel = new OfficeBasePriceModifyModel(inputModel.getId()
+                    , inputModel.getYearMonth());
+            officeBasePriceModifyModel.setMainPrice(inputModel.getMainPrice());
+            BigDecimal mainPricePst =
+                    inputModel.getMainPrice().divide(lastUltimateOfficeBasePrice.getMainPrice(), 4);
+            officeBasePriceModifyModel.setMainPricePst(mainPricePst);
+            officeBasePriceModifyModel.setMainPriceRent(inputModel.getMainPriceRent());
+            BigDecimal mainPriceRentPst =
+                    inputModel.getMainPriceRent().divide(lastUltimateOfficeBasePrice.getMainPriceRent(),
+                            4);
+            officeBasePriceModifyModel.setMainPriceRentPst(mainPriceRentPst);
+            if(StringUtils.isNotNull(inputModel.getAdjustPriceComment()))
+                officeBasePriceModifyModel.setComment(inputModel.getAdjustPriceComment());
+            // 上期价格
+            officeBasePriceUltimateMapper.updateBasePrice(officeBasePriceModifyModel);
+        }
     }
 }

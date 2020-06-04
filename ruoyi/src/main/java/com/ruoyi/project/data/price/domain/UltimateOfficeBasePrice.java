@@ -34,13 +34,13 @@ public class UltimateOfficeBasePrice extends BaseEntity {
     private String communityAddress;
     @Excel(name = "楼栋地址")
     private String buildingAddress;
-    @Excel(name = "楼栋地址")
+    @Excel(name = "区域")
     private String countyName;
-    @Excel(name = "板块地址")
+    @Excel(name = "板块")
     private String blockName;
-    @Excel(name = "街道地址")
+    @Excel(name = "街道")
     private String streetName;
-    @Excel(name = "环线地址")
+    @Excel(name = "环线")
     private String loopName;
     @Excel(name = "建成年代")
     private Integer year;

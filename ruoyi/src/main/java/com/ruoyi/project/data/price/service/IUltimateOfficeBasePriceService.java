@@ -24,29 +24,27 @@ public interface IUltimateOfficeBasePriceService {
     int selectOfficeBasePriceUltimateListCount(UltimateOfficeBasePrice officeBasePriceUltimate);
 
     /**
-     *
      * @param id
      * @return
      */
     UltimateOfficeBasePrice getById(Integer yearMonth, Integer id);
 
-//    /**
-//     *
-//     * @param officeBasePriceUltimate
-//     * @return
-//     */
-//    int updateOfficeBasePriceUltimate(UltimateOfficeBasePrice officeBasePriceUltimate);
+    /**
+     * 可能修改当期的价格、也可能修改往期
+     *
+     * @param officeBasePriceUltimate
+     * @return
+     */
+    int update(UltimateOfficeBasePrice officeBasePriceUltimate);
 
     /**
-     *
      * @param officeBasePriceUltimates
      * @param operName
      * @return
      */
-    String batchImport(Integer yearMonth, List<UltimateOfficeBasePrice> officeBasePriceUltimates,String operName);
+    String batchImport(Integer yearMonth, List<UltimateOfficeBasePrice> officeBasePriceUltimates, String operName);
 
     /**
-     *
      * @return
      */
     List<VueSelectModel> getYearMonthList();

@@ -33,16 +33,13 @@ spring:
                 testOnReturn: false
                 webStatFilter:
                     enabled: true
-                filter:
-                    stat:
-                        enabled: true
-                        # 慢SQL记录
-                        log-slow-sql: true
-                        slow-sql-millis: 1000
-                        merge-sql: true
-                    wall:
-                        config:
-                            multi-statement-allow: true
+                filters: stat,wall
+                wall:
+                    multiStatementAllow: true
+                stat:
+                    log-slow-sql: true
+                    slow-sql-millis: 1000
+                    merge-sql: true
             primary: master
             datasource:
                 # 主库数据源

@@ -44,16 +44,6 @@
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
-          type="success"
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['system:ultimate:edit']"
-        >修改</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
           type="warning"
           icon="el-icon-download"
           size="mini"
@@ -72,11 +62,11 @@
       </el-col>
     </el-row>
 
-    <el-table v-loading="loading" :data="dataList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
+    <el-table v-loading="loading" :data="dataList">
+      <!-- <el-table-column type="selection" width="55" align="center" /> -->
       <el-table-column label="年月" align="center" prop="yearMonth" />
-      <el-table-column label="小区ID" align="center" prop="communityId" />
-      <el-table-column label="楼栋ID" align="center" prop="buildingId" />
+      <el-table-column label="小区ID" align="center" prop="communityId" width="110" />
+      <el-table-column label="楼栋ID" align="center" prop="buildingId" width="110" />
       <el-table-column label="项目名称" align="center" prop="communityName" />
       <el-table-column label="办公项目地址" align="center" prop="communityAddress" />
       <el-table-column label="楼栋地址" align="center" prop="buildingAddress" />
@@ -104,7 +94,12 @@
       />
       <el-table-column label="价格更改说明" align="center" prop="adjustPriceComment" />
       <el-table-column label="更新日期" align="center" prop="updateDate" :formatter="dateFormatter" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column
+        label="操作"
+        align="center"
+        class-name="small-padding fixed-width"
+        fixed="right"
+      >
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -113,13 +108,6 @@
             @click="handleUpdate(scope.row)"
             v-hasPermi="['system:user:edit']"
           >修改</el-button>
-          <!-- <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['system:user:remove']"
-          >删除</el-button>-->
         </template>
       </el-table-column>
     </el-table>
@@ -134,52 +122,149 @@
 
     <!-- 添加或修改办公基价对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="800px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="160px">
+      <el-form ref="form" :model="form" :rules="updateRules" label-width="160px">
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item label="小区ID">
-              <el-input v-model="form.communityId" disabled="true" readonly />
+              <el-input v-model="form.communityId" disabled readonly />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="楼栋ID">
-              <el-input v-model="form.buildingId" disabled="true" readonly />
+              <el-input v-model="form.buildingId" disabled readonly />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item label="主力基价（元/㎡）">
-              <el-input v-model="form.mainPrice" />
+            <el-form-item label="项目名称">
+              <el-input v-model="form.communityName" disabled readonly />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="主力租金（元/月·㎡）">
-              <el-input v-model="form.mainPriceRent" />
+            <el-form-item label="办公项目地址">
+              <el-input v-model="form.communityAddress" disabled readonly />
             </el-form-item>
           </el-col>
         </el-row>
+        <el-row :gutter="20">
+          <!-- <el-col :span="24">
+            <el-form-item label="楼栋地址">
+              <el-input v-model="form.buildingAddress" disabled readonly />
+            </el-form-item>
+          </el-col>-->
+          <el-col :span="24">
+            <el-form-item label="楼栋地址">
+              <el-input v-model="form.complexRegion" disabled readonly />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item label="建成年代">
+              <el-input v-model="form.year" disabled readonly />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="年份修正系数">
+              <el-input v-model="form.yearCoefficient" disabled readonly />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item label="平均面积">
+              <el-input v-model="form.avgArea" disabled readonly />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="面积修正系数">
+              <el-input v-model="form.areaCoefficient" disabled readonly />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item label="地上层数/总层数">
+              <el-input v-model="form.complexFloorInfo" disabled readonly />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="办公分类-办公等级">
+              <el-input v-model="form.complexOfficeInfo" disabled readonly />
+            </el-form-item>
+          </el-col>
+        </el-row>
+
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item label="主力基价涨跌幅">
-              <el-input v-model="form.mainPricePst" />
+              <el-input v-model="form.mainPricePst" disabled readonly />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="主力租金涨跌幅">
-              <el-input v-model="form.mainPriceRentPst" />
+              <el-input v-model="form.mainPriceRentPst" disabled readonly />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item label="主力基价类型">
-              <el-input v-model="form.mainPriceType" />
+              <el-input v-model="form.mainPriceType" disabled readonly />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="主力租金类型">
-              <el-input v-model="form.mainPriceRentType" />
+              <el-input v-model="form.mainPriceRentType" disabled readonly />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item label="基价楼栋系数">
+              <el-input v-model="form.buildingCoefficient" disabled readonly />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="是否标准楼栋">
+              <el-input
+                v-model="form.standardBuilding"
+                disabled
+                readonly
+                :formatter="yesOrNotFormatter"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item label="主力基价(上期)" prop="mainPrice_1">
+              <el-input v-model="form.mainPrice_1" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="主力租金(上期)" prop="mainPriceRent_1">
+              <el-input v-model="form.mainPriceRent_1" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item label="主力基价（元/㎡）" prop="mainPrice">
+              <el-input v-model="form.mainPrice" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="主力租金（元/月·㎡）" prop="mainPriceRent">
+              <el-input v-model="form.mainPriceRent" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="24">
+            <el-form-item label="更改价格说明">
+              <el-input v-model="form.adjustPriceComment" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -190,7 +275,13 @@
       </div>
     </el-dialog>
 
-    <el-dialog :title="upload.title" :visible.sync="upload.open" width="400px" append-to-body>
+    <el-dialog
+      :title="upload.title"
+      :visible.sync="upload.open"
+      width="80%"
+      top="10vh"
+      append-to-body
+    >
       <el-upload
         ref="upload"
         :limit="1"
@@ -241,6 +332,19 @@ export default {
         callback();
       }
     };
+    var checkPrice = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error("请输入价格"));
+      } else if (value === "" || isNaN(parseFloat(value))) {
+        callback(new Error("请输入价格"));
+      } else {
+        if (value <= 0) {
+          callback(new Error("请输入合理价格"));
+        } else {
+          callback();
+        }
+      }
+    };
 
     return {
       // 遮罩层
@@ -254,7 +358,7 @@ export default {
       // 总条数
       total: 0,
       // 办公基价表格数据
-      ultimateList: [],
+      dataList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -292,6 +396,28 @@ export default {
         yearMonth: [
           { validator: checkYearMonth, trigger: "blur" },
           { validator: checkYearMonth, trigger: "change" }
+        ]
+      },
+      updateRules: {
+        yearMonth: [
+          { validator: checkYearMonth, trigger: "blur" },
+          { validator: checkYearMonth, trigger: "change" }
+        ],
+        mainPrice: [
+          { validator: checkPrice, trigger: "blur" },
+          { validator: checkPrice, trigger: "change" }
+        ],
+        mainPriceRent: [
+          { validator: checkPrice, trigger: "blur" },
+          { validator: checkPrice, trigger: "change" }
+        ],
+        mainPrice_1: [
+          { validator: checkPrice, trigger: "blur" },
+          { validator: checkPrice, trigger: "change" }
+        ],
+        mainPriceRent_1: [
+          { validator: checkPrice, trigger: "blur" },
+          { validator: checkPrice, trigger: "change" }
         ]
       }
     };
@@ -375,7 +501,25 @@ export default {
       this.reset();
       const id = row.id || this.ids;
       const yearMonth = row.yearMonth;
+      console.log(yearMonth);
       getById(yearMonth, id).then(response => {
+        // 复合信息
+        response.data.complexRegion =
+          response.data.countyName +
+          "-" +
+          response.data.blockName +
+          "-" +
+          response.data.loopName +
+          "-" +
+          response.data.streetName +
+          "-" +
+          response.data.buildingAddress;
+        // 办公信息
+        response.data.complexOfficeInfo =
+          response.data.officeClass + "-" + response.data.officeLevel;
+        // 层数信息
+        response.data.complexFloorInfo =
+          response.data.upperFloorSum + "-" + response.data.totalFloorSum;
         this.form = response.data;
         this.open = true;
         this.title = "修改办公基价";

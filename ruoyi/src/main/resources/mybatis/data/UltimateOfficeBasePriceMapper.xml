@@ -23,7 +23,6 @@
         <result property="areaCoefficient" column="AreaCoff"/>
         <result property="yearCoefficient" column="YearCoff"/>
         <result property="buildingCoefficient" column="BuildingCoff"/>
-
         <result property="communityName" column="ProjectName"/>
         <result property="communityAddress" column="ProjectAddr"/>
         <result property="buildingAddress" column="BuildingAddr"/>
@@ -41,7 +40,7 @@
         <result property="mainPriceRent_1" column="mainPriceRent_1"/>
     </resultMap>
 
-    <sql id="selectOfficeBasePriceUltimateVo">
+    <sql id="getById">
         SELECT a.ID
                 ,a.BuildingID_P
                 ,a.ProjectID_P
@@ -77,68 +76,81 @@
         FROM ODS_OFFICE_BUILDING_PRICE_INFO_${yearMonth} a
         left join DIM_OFFICE_PROJECT_BUILDING_201909 b on a.BuildingID_P=b.BuildingID_P
         left join ODS_OFFICE_BUILDING_PRICE_INFO_${lastYearMonth} c on a.BuildingID_P = c.BuildingID_P
-        WHERE b.EffDate <![CDATA[ <= ]]> getdate() AND b.ExpirDate <![CDATA[ > ]]> getdate() AND A.STATUS=1 AND
-        c.Status=1
+        WHERE b.EffDate <![CDATA[ <= ]]> getdate() AND b.ExpirDate <![CDATA[ > ]]> getdate() AND c.Status=1
     </sql>
 
     <select id="getCount" parameterType="com.ruoyi.project.data.price.domain.UltimateOfficeBasePrice" resultType="int">
         select count(1) FROM ODS_OFFICE_BUILDING_PRICE_INFO_${yearMonth} a
         left join DIM_OFFICE_PROJECT_BUILDING_201909 b on a.BuildingID_P=b.BuildingID_P
         left join ODS_OFFICE_BUILDING_PRICE_INFO_${lastYearMonth} c on a.BuildingID_P = c.BuildingID_P
-        WHERE b.EffDate <![CDATA[ <= ]]> getdate() AND b.ExpirDate <![CDATA[ > ]]> getdate() AND A.STATUS=1 AND
-        c.Status=1
-        <where>
-            <if test="communityId != null">
-               AND a.PROJECTID_P = #{communityId}
-            </if>
-            <if test="buildingId != null">
-                AND a.BUILDINGID_P = #{buildingId}
-            </if>
-            <if test="status != null">
-                AND a.STATUS = #{status}
-            </if>
-        </where>
+        WHERE b.EffDate <![CDATA[ <= ]]> getdate() AND b.ExpirDate <![CDATA[ > ]]> getdate() AND c.Status=1
+        <if test="communityId != null">
+           AND a.PROJECTID_P = #{communityId}
+        </if>
+        <if test="buildingId != null">
+            AND a.BUILDINGID_P = #{buildingId}
+        </if>
+        <if test="status != null">
+            AND a.STATUS = #{status}
+        </if>
     </select>
 
     <select id="getList" parameterType="com.ruoyi.project.data.price.domain.UltimateOfficeBasePrice"
             resultMap="OfficeBasePriceUltimateResult">
-        <include refid="selectOfficeBasePriceUltimateVo"/>
-        <where>
-            <if test="communityId != null">
-               AND a.PROJECTID_P = #{communityId}
-            </if>
-            <if test="buildingId != null">
-                AND a.BUILDINGID_P = #{buildingId}
-            </if>
-            <if test="status != null">
-                AND a.STATUS = #{status}
-            </if>
-        </where>
+        <include refid="getById"/>
+        <if test="communityId != null">
+           AND a.PROJECTID_P = #{communityId}
+        </if>
+        <if test="buildingId != null">
+            AND a.BUILDINGID_P = #{buildingId}
+        </if>
+        <if test="status != null">
+            AND a.STATUS = #{status}
+        </if>
         order by a.BUILDINGID_P ASC,a.ID DESC OFFSET #{pageIndex} rows fetch next #{pageSize} rows only;
     </select>
 
-    <select id="getById" parameterType="String" resultMap="OfficeBasePriceUltimateResult">
-        <include refid="selectOfficeBasePriceUltimateVo"/>
-        where id = #{id}
+    <select id="getById" resultMap="OfficeBasePriceUltimateResult">
+        <include refid="getById"/>
+        <if test="id != null">
+            AND a.id=#{id}
+        </if>
     </select>
 
-    <insert id="copyCreate">
-        <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
-            SELECT LAST_INSERT_ID()
-        </selectKey>
-        insert into
-        dbo.ODS_OFFICE_BUILDING_PRICE_INFO_${yearMonth}(BuildingID,UnifiedID,ProjectID,BuildingID_P,ProjectID_P,MainPrice,MainPriceRent,MainPricePst,MainPriceRentPst,MainPriceType,MainPriceRentType,ModifyDate,Status,BuildingStd,AdjEvd)
-        select BuildingID,UnifiedID,ProjectID,BuildingID_P,ProjectID_P,MainPrice,MainPriceRent,MainPricePst,MainPriceRentPst,MainPriceType,MainPriceRentType,ModifyDate,0,BuildingStd,AdjEvd
-        from ODS_OFFICE_BUILDING_PRICE_INFO_${yearMonth}
-        where id=#{id}
-    </insert>
-    <!-- 更新 -->
-    <update id="update">
-        update a set ModifyDate=getdate(), mainPrice=#{mainPrice}, mainPriceRent=#{mainPriceRent},
-        mainPricePst = #{mainPrice} * 1.0 / b.mainPrice, mainPriceRentPst = #{mainPriceRentPst} * 1.0 / b.mainPriceRentPst
-        from ODS_OFFICE_BUILDING_PRICE_INFO_${yearMonth} a join ODS_OFFICE_BUILDING_PRICE_INFO_${lastYearMonth} b on
-        a.BuildingID_p=b.BuildingID_P
-        where a.Status=1 and b.Status=1 and a.id=#{id}
+    <!-- 更新基价 -->
+    <update id="updateBasePrice" parameterType="com.ruoyi.project.data.price.domain.OfficeBasePriceModifyModel">
+          update ODS_OFFICE_BUILDING_PRICE_INFO_${yearMonth} set Status=0 where id=#{id};
+          insert into ODS_OFFICE_BUILDING_PRICE_INFO_${yearMonth}(BuildingID
+              ,UnifiedID
+              ,ProjectID
+              ,BuildingID_P
+              ,ProjectID_P
+              ,MainPrice
+              ,MainPriceRent
+              ,MainPricePst
+              ,MainPriceRentPst
+              ,MainPriceType
+              ,MainPriceRentType
+              ,ModifyDate
+              ,Status
+              ,BuildingStd
+              ,AdjEvd)
+          select BuildingID
+              ,UnifiedID
+              ,ProjectID
+              ,BuildingID_P
+              ,ProjectID_P
+              ,#{mainPrice}
+              ,#{mainPriceRent}
+              ,#{mainPricePst}
+              ,#{mainPriceRentPst}
+              ,MainPriceType
+              ,MainPriceRentType
+              ,getdate()
+              ,1
+              ,BuildingStd
+              ,#{comment}
+            from ODS_OFFICE_BUILDING_PRICE_INFO_${yearMonth} where id=#{id};
     </update>
 
     <!-- 获取表名   -->
@@ -149,9 +161,39 @@
         order by cast(right(name,6) as int) desc
     </select>
     <!--    -->
-    <select id="getByBuildingId" resultType="com.ruoyi.project.data.price.controller.UltimateOfficeBasePriceController">
-        select id,MainPrice,MainPriceRent
+    <select id="getByBuildingId" resultType="com.ruoyi.project.data.price.domain.UltimateOfficeBasePrice">
+        select ID
+              ,BuildingID_P as buildingId
+              ,ProjectID_P as communityId
+              ,MainPrice as mainPrice
+              ,MainPriceRent as mainPriceRent
+              ,MainPricePst as mainPricePst
+              ,MainPriceRentPst as mainPriceRentPst
+              ,MainPriceType as mainPriceType
+              ,MainPriceRentType as mainPriceRentType
+              ,Status as status
+              ,BuildingStd as isStandardBuilding
+              ,AdjEvd as adjustPriceComment
+              ,${yearMonth} as yearMonth
         from ODS_OFFICE_BUILDING_PRICE_INFO_${yearMonth}
-        where BuildingID_P=#{buildingI}
+        where BuildingID_P=#{buildingId} AND status= 1
+    </select>
+    <!-- 查询价格 -->
+    <select id="getByRouteId" resultType="com.ruoyi.project.data.price.domain.UltimateOfficeBasePrice">
+        SELECT ID
+              ,BuildingID_P as buildingId
+              ,ProjectID_P as communityId
+              ,MainPrice as mainPrice
+              ,MainPriceRent as mainPriceRent
+              ,MainPricePst as mainPricePst
+              ,MainPriceRentPst as mainPriceRentPst
+              ,MainPriceType as mainPriceType
+              ,MainPriceRentType as mainPriceRentType
+              ,Status as status
+              ,BuildingStd as isStandardBuilding
+              ,AdjEvd as adjustPriceComment
+              ,${yearMonth} as yearMonth
+        FROM dbo.ODS_OFFICE_BUILDING_PRICE_INFO_${yearMonth}
+        WHERE ID=#{id}
     </select>
 </mapper>
