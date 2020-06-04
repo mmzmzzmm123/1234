@@ -23,6 +23,8 @@ router.beforeEach((to, from, next) => {
           // 拉取user_info
           const roles = res.roles
           store.dispatch('GenerateRoutes', { roles }).then(accessRoutes => {
+            //添加404跳转
+            accessRoutes.push({path: '*', redirect: '/404', hidden: true})
           // 测试 默认静态页面
           // store.dispatch('permission/generateRoutes', { roles }).then(accessRoutes => {
             // 根据roles权限生成可访问的路由表
