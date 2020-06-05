@@ -85,7 +85,7 @@
         left join ODS_OFFICE_BUILDING_PRICE_INFO_${lastYearMonth} c on a.BuildingID_P = c.BuildingID_P
         WHERE b.EffDate <![CDATA[ <= ]]> getdate() AND b.ExpirDate <![CDATA[ > ]]> getdate() AND c.Status=1
         <if test="communityId != null">
-           AND a.PROJECTID_P = #{communityId}
+            AND a.PROJECTID_P = #{communityId}
         </if>
         <if test="buildingId != null">
             AND a.BUILDINGID_P = #{buildingId}
@@ -99,7 +99,7 @@
             resultMap="OfficeBasePriceUltimateResult">
         <include refid="getById"/>
         <if test="communityId != null">
-           AND a.PROJECTID_P = #{communityId}
+            AND a.PROJECTID_P = #{communityId}
         </if>
         <if test="buildingId != null">
             AND a.BUILDINGID_P = #{buildingId}
@@ -157,7 +157,7 @@
     <select id="getYearMonthList" resultType="com.ruoyi.project.common.VueSelectModel">
         SELECT right(name,6) as value, right(name,6) as label
         FROM sys.tables
-        where name like 'ODS_OFFICE_BUILDING_PRICE_INFO_%'
+        where name like 'ODS_OFFICE_BUILDING_PRICE_INFO_%' and name not like '%_bak'
         order by cast(right(name,6) as int) desc
     </select>
     <!--    -->
@@ -196,4 +196,10 @@
         FROM dbo.ODS_OFFICE_BUILDING_PRICE_INFO_${yearMonth}
         WHERE ID=#{id}
     </select>
+    <!-- 插入人工修正办公基价  -->
+    <insert id="insertArtificialOfficeBasePrice"
+            parameterType="com.ruoyi.project.data.price.domain.UltimateOfficeBasePrice">
+        insert into
+        dbo.DWA_PROJECTBASEPRICE_OFFICE_MANU_${yearMonth}(ID,BuildingID,ProjectID,County,"Loop",Block,ProjectAddr,ProjectName,Year,AvgArea,TotalFloorSum,UpperFloorSum,OfficeClass,Grade,MainPrice_1,MainPriceRent_1,MainPrice,MainPriceRent,ModifyDate) values(#{id},#{buildingId},#{communityId},#{countyName},#{loopName},#{blockName},#{communityAddress},#{communityName},#{year},#{avgArea},#{totalFloorSum},#{upperFloorSum},#{officeClass},#{officeLevel},#{mainPrice_1},#{mainPriceRent_1},#{mainPrice},#{mainPriceRent},getdate())
+    </insert>
 </mapper>

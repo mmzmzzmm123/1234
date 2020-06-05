@@ -3,6 +3,7 @@ package com.ruoyi.project.data.price.service.impl;
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Objects;
 
 import com.ruoyi.common.exception.CustomException;
 import com.ruoyi.common.utils.StringUtils;
@@ -56,7 +57,7 @@ public class UltimateOfficeBasePriceServiceImpl implements IUltimateOfficeBasePr
     }
 
     @Override
-    public UltimateOfficeBasePrice getById(Integer yearMonth, Integer id) {
+    public UltimateOfficeBasePrice getById(Integer yearMonth, String id) {
         Integer lastYearMonth = getLastYearMonth(yearMonth);
         return officeBasePriceUltimateMapper.getById(yearMonth, lastYearMonth, id);
     }
@@ -74,8 +75,12 @@ public class UltimateOfficeBasePriceServiceImpl implements IUltimateOfficeBasePr
         StringBuilder failureMsg = new StringBuilder();
         Integer lastYearMonth = getLastYearMonth(yearMonth);
 
+        // 批量插入
+
         for (UltimateOfficeBasePrice inputModel : officeBasePriceUltimates) {
             try {
+                inputModel.setYearMonth(yearMonth);
+                officeBasePriceUltimateMapper.insertArtificialOfficeBasePrice(inputModel);
                 // 验证是否存在这个用户
                 UltimateOfficeBasePrice currentUltimateOfficeBasePrice =
                         officeBasePriceUltimateMapper.getById(yearMonth, lastYearMonth,
@@ -83,13 +88,10 @@ public class UltimateOfficeBasePriceServiceImpl implements IUltimateOfficeBasePr
                 UltimateOfficeBasePrice lastUltimateOfficeBasePrice =
                         officeBasePriceUltimateMapper.getByBuildingId(lastYearMonth,
                                 inputModel.getBuildingId());
-                if (!StringUtils.isNotNull(currentUltimateOfficeBasePrice)) {
-                    if (currentUltimateOfficeBasePrice.getMainPrice().subtract(inputModel.getMainPrice()).compareTo(BigDecimal.ZERO) != 0
-                            || currentUltimateOfficeBasePrice.getMainPriceRent().subtract(inputModel.getMainPriceRent()).compareTo(BigDecimal.ZERO) != 0) {
-                        updateBasePrice(inputModel, currentUltimateOfficeBasePrice, lastUltimateOfficeBasePrice);
-                        successNum++;
-                        successMsg.append("<br/>" + successNum + "、ID= " + inputModel.getId() + " 更新成功");
-                    }
+                if (StringUtils.isNotNull(currentUltimateOfficeBasePrice)) {
+                    updateBasePrice(inputModel, currentUltimateOfficeBasePrice, lastUltimateOfficeBasePrice);
+                    successNum++;
+                    successMsg.append("<br/>" + successNum + "、ID= " + inputModel.getId() + " 更新成功");
                 } else {
                     failureNum++;
                     failureMsg.append("<br/>" + failureNum + "、ID= " + inputModel.getId() + " 失败");
@@ -148,44 +150,82 @@ public class UltimateOfficeBasePriceServiceImpl implements IUltimateOfficeBasePr
     private void updateBasePrice(UltimateOfficeBasePrice inputModel,
                                  UltimateOfficeBasePrice currentUltimateOfficeBasePrice,
                                  UltimateOfficeBasePrice lastUltimateOfficeBasePrice) {
-        // 上期价格比较
-        if (StringUtils.isNotNull(lastUltimateOfficeBasePrice) &&
-                StringUtils.isNotNull(lastUltimateOfficeBasePrice.getMainPrice()) &&
-                StringUtils.isNotNull(lastUltimateOfficeBasePrice.getMainPriceRent()) &&
-                (lastUltimateOfficeBasePrice.getMainPrice().compareTo(inputModel.getMainPrice_1()) != 0 ||
-                        lastUltimateOfficeBasePrice.getMainPriceRent().compareTo(inputModel.getMainPriceRent_1()) != 0)) {
-            OfficeBasePriceModifyModel officeBasePriceModifyModel =
-                    new OfficeBasePriceModifyModel(lastUltimateOfficeBasePrice.getId(),
-                            lastUltimateOfficeBasePrice.getYearMonth());
-            officeBasePriceModifyModel.setMainPrice(inputModel.getMainPrice_1());
-            officeBasePriceModifyModel.setMainPricePst(lastUltimateOfficeBasePrice.getMainPricePst());
-            officeBasePriceModifyModel.setMainPriceRent(inputModel.getMainPriceRent_1());
-            officeBasePriceModifyModel.setMainPriceRentPst(lastUltimateOfficeBasePrice.getMainPriceRentPst());
-            // 上期价格
+
+        OfficeBasePriceModifyModel officeBasePriceModifyModel = compareYearMonth(inputModel,
+                currentUltimateOfficeBasePrice, lastUltimateOfficeBasePrice);
+        if (null != officeBasePriceModifyModel) {
             officeBasePriceUltimateMapper.updateBasePrice(officeBasePriceModifyModel);
         }
 
-        // 本期价格比较
-        if (StringUtils.isNotNull(currentUltimateOfficeBasePrice) &&
-                StringUtils.isNotNull(currentUltimateOfficeBasePrice.getMainPrice()) &&
-                StringUtils.isNotNull(currentUltimateOfficeBasePrice.getMainPriceRent()) &&
-                (currentUltimateOfficeBasePrice.getMainPrice().compareTo(inputModel.getMainPrice()) != 0 ||
-                        currentUltimateOfficeBasePrice.getMainPriceRent().compareTo(inputModel.getMainPriceRent()) != 0)) {
-            OfficeBasePriceModifyModel officeBasePriceModifyModel = new OfficeBasePriceModifyModel(inputModel.getId()
-                    , inputModel.getYearMonth());
-            officeBasePriceModifyModel.setMainPrice(inputModel.getMainPrice());
+        officeBasePriceModifyModel = compareLastYearMonth(inputModel, lastUltimateOfficeBasePrice);
+        if (null != officeBasePriceModifyModel) {
+            officeBasePriceUltimateMapper.updateBasePrice(officeBasePriceModifyModel);
+        }
+    }
+
+    /**
+     * 上期价格
+     *
+     * @param inputModel
+     * @param ultimateOfficeBasePrice
+     * @return
+     */
+    private OfficeBasePriceModifyModel compareYearMonth(UltimateOfficeBasePrice inputModel,
+                                                        UltimateOfficeBasePrice ultimateOfficeBasePrice,
+                                                        UltimateOfficeBasePrice lastUltimateOfficeBasePrice) {
+        BigDecimal inputMainPrice = inputModel.getMainPrice();
+        BigDecimal mainPrice = ultimateOfficeBasePrice.getMainPrice();
+        BigDecimal inputMainPriceRent = inputModel.getMainPriceRent();
+        BigDecimal mainPriceRent = ultimateOfficeBasePrice.getMainPriceRent();
+        if (Objects.equals(inputMainPrice, mainPrice) && Objects.equals(inputMainPriceRent, mainPriceRent)) {
+            return null;
+        }
+
+        OfficeBasePriceModifyModel officeBasePriceModifyModel =
+                new OfficeBasePriceModifyModel(inputModel.getId(),
+                        inputModel.getYearMonth());
+        officeBasePriceModifyModel.setMainPrice(inputModel.getMainPrice_1());
+        if (null != lastUltimateOfficeBasePrice.getMainPrice() && lastUltimateOfficeBasePrice.getMainPrice().compareTo(BigDecimal.ZERO) != 0) {
             BigDecimal mainPricePst =
                     inputModel.getMainPrice().divide(lastUltimateOfficeBasePrice.getMainPrice(), 4);
             officeBasePriceModifyModel.setMainPricePst(mainPricePst);
-            officeBasePriceModifyModel.setMainPriceRent(inputModel.getMainPriceRent());
-            BigDecimal mainPriceRentPst =
-                    inputModel.getMainPriceRent().divide(lastUltimateOfficeBasePrice.getMainPriceRent(),
-                            4);
-            officeBasePriceModifyModel.setMainPriceRentPst(mainPriceRentPst);
-            if(StringUtils.isNotNull(inputModel.getAdjustPriceComment()))
-                officeBasePriceModifyModel.setComment(inputModel.getAdjustPriceComment());
-            // 上期价格
-            officeBasePriceUltimateMapper.updateBasePrice(officeBasePriceModifyModel);
         }
+
+        officeBasePriceModifyModel.setMainPriceRent(inputModel.getMainPriceRent_1());
+        if (null != lastUltimateOfficeBasePrice.getMainPriceRent() && lastUltimateOfficeBasePrice.getMainPriceRent().compareTo(BigDecimal.ZERO) != 0) {
+            BigDecimal mainPriceRentPst =
+                    inputModel.getMainPriceRent().divide(lastUltimateOfficeBasePrice.getMainPriceRent(), 4);
+            officeBasePriceModifyModel.setMainPriceRentPst(mainPriceRentPst);
+        }
+
+        return officeBasePriceModifyModel;
+    }
+
+    /**
+     * 上期价格
+     *
+     * @param inputModel
+     * @param lastUltimateOfficeBasePrice
+     * @return
+     */
+    private OfficeBasePriceModifyModel compareLastYearMonth(UltimateOfficeBasePrice inputModel,
+                                                            UltimateOfficeBasePrice lastUltimateOfficeBasePrice) {
+        BigDecimal inputMainPrice = inputModel.getMainPrice_1();
+        BigDecimal mainPrice_1 = lastUltimateOfficeBasePrice.getMainPrice();
+        BigDecimal inputMainPriceRent = inputModel.getMainPriceRent_1();
+        BigDecimal mainPriceRent_1 = lastUltimateOfficeBasePrice.getMainPriceRent();
+        if (Objects.equals(inputMainPrice, mainPrice_1) && Objects.equals(inputMainPriceRent, mainPriceRent_1)) {
+            return null;
+        }
+
+        OfficeBasePriceModifyModel officeBasePriceModifyModel =
+                new OfficeBasePriceModifyModel(lastUltimateOfficeBasePrice.getId(),
+                        lastUltimateOfficeBasePrice.getYearMonth());
+        officeBasePriceModifyModel.setMainPrice(inputModel.getMainPrice_1());
+        officeBasePriceModifyModel.setMainPricePst(lastUltimateOfficeBasePrice.getMainPricePst());
+        officeBasePriceModifyModel.setMainPriceRent(inputModel.getMainPriceRent_1());
+        officeBasePriceModifyModel.setMainPriceRentPst(lastUltimateOfficeBasePrice.getMainPriceRentPst());
+
+        return officeBasePriceModifyModel;
     }
 }

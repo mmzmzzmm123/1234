@@ -2,7 +2,11 @@
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="100px" :rules="rules">
       <el-form-item label="年月" prop="yearMonth">
-        <el-select v-model="queryParams.yearMonth" placeholder="请选择年月">
+        <el-select
+          v-model="queryParams.yearMonth"
+          placeholder="请选择年月"
+          @change="yearMonthChange(queryParams.yearMonth)"
+        >
           <el-option
             v-for="item in yearMonthList"
             :value="item.value"
@@ -300,6 +304,7 @@
           <em>点击上传</em>
         </div>
         <div class="el-upload__tip" style="color:red" slot="tip">提示：仅允许导入“xls”或“xlsx”格式文件！</div>
+        <div class="el-upload__tip" style="color:red" slot="tip">基价年月：{{ queryParams.yearMonth }}</div>
       </el-upload>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitFileForm">确 定</el-button>
@@ -429,6 +434,10 @@ export default {
     });
   },
   methods: {
+    yearMonthChange: function(yearMonth) {
+      this.upload.url += "/" + yearMonth;
+      console.log(this.upload.url);
+    },
     regionFormatter: function(row, column, cellValue, index) {
       // 区域-板块-环线-街道
       return (

@@ -3,7 +3,7 @@ package com.ruoyi.project.data.price.domain;
 import java.math.BigDecimal;
 
 public class OfficeBasePriceModifyModel {
-    private Integer id;
+    private String id;
     private Integer yearMonth;
     private BigDecimal mainPrice;
     private BigDecimal mainPricePst;
@@ -11,13 +11,13 @@ public class OfficeBasePriceModifyModel {
     private BigDecimal mainPriceRentPst;
     private String comment;
 
-    public OfficeBasePriceModifyModel(Integer id, Integer yearMonth) {
+    public OfficeBasePriceModifyModel(String id, Integer yearMonth) {
         this.id = id;
         this.yearMonth = yearMonth;
     }
 
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 

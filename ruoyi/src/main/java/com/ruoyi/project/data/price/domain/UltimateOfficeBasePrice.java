@@ -18,15 +18,15 @@ public class UltimateOfficeBasePrice extends BaseEntity {
     private Integer pageIndex;
     private Integer pageSize;
 
-    @Excel(name = "ID")
-    private Integer id;
+    @Excel(name = "id")
+    private String id;
 //    @JSONField(serialize = false)
     private Integer yearMonth;
     @JSONField(serialize = false)
     private Integer lastYearMonth;
-    @Excel(name = "楼栋ID")
+    @Excel(name = "楼栋ID-平台")
     private String buildingId;
-    @Excel(name = "小区ID")
+    @Excel(name = "小区ID-平台")
     private String communityId;
     @Excel(name = "项目名称")
     private String communityName;
@@ -76,9 +76,9 @@ public class UltimateOfficeBasePrice extends BaseEntity {
     private BigDecimal yearCoefficient;
     @Excel(name = "基价楼栋系数")
     private BigDecimal buildingCoefficient;
-    @Excel(name = "更新日期")
+//    @Excel(name = "更新日期")
     private Date updateDate;
-    @Excel(name = "状态")
+//    @Excel(name = "状态")
     private Boolean status;
     @Excel(name = "是否标准楼栋")
     private Boolean isStandardBuilding;
@@ -109,11 +109,11 @@ public class UltimateOfficeBasePrice extends BaseEntity {
         this.pageSize = pageSize;
     }
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -364,4 +364,5 @@ public class UltimateOfficeBasePrice extends BaseEntity {
     public void setAdjustPriceComment(String adjustPriceComment) {
         this.adjustPriceComment = adjustPriceComment;
     }
+
 }

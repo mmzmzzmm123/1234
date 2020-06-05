@@ -22,14 +22,14 @@ public interface UltimateOfficeBasePriceMapper {
      * @param id
      * @return
      */
-    UltimateOfficeBasePrice getById(Integer yearMonth, Integer lastYearMonth, Integer id);
+    UltimateOfficeBasePrice getById(Integer yearMonth, Integer lastYearMonth, String id);
 
     /**
      * @param yearMonth
      * @param id
      * @return
      */
-    UltimateOfficeBasePrice getByRouteId(Integer yearMonth, Integer id);
+    UltimateOfficeBasePrice getByRouteId(Integer yearMonth, String id);
 
     /**
      * @param yearMonth
@@ -68,5 +68,13 @@ public interface UltimateOfficeBasePriceMapper {
      * @return
      */
     List<VueSelectModel> getYearMonthList();
+
+    /**
+     * 插入人工修正的办公基价
+     *
+     * @param ultimateOfficeBasePrice
+     * @return
+     */
+    int insertArtificialOfficeBasePrice(UltimateOfficeBasePrice ultimateOfficeBasePrice);
 
 }

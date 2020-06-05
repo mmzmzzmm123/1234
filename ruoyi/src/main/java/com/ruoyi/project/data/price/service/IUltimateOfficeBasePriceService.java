@@ -21,13 +21,18 @@ public interface IUltimateOfficeBasePriceService {
      */
     List<UltimateOfficeBasePrice> selectOfficeBasePriceUltimateList(UltimateOfficeBasePrice officeBasePriceUltimate);
 
+    /**
+     *
+     * @param officeBasePriceUltimate
+     * @return
+     */
     int selectOfficeBasePriceUltimateListCount(UltimateOfficeBasePrice officeBasePriceUltimate);
 
     /**
      * @param id
      * @return
      */
-    UltimateOfficeBasePrice getById(Integer yearMonth, Integer id);
+    UltimateOfficeBasePrice getById(Integer yearMonth, String id);
 
     /**
      * 可能修改当期的价格、也可能修改往期

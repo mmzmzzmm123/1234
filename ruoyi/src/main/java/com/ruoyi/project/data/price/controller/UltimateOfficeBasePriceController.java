@@ -72,7 +72,7 @@ public class UltimateOfficeBasePriceController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('system:user:query')")
     @GetMapping(value = "/{yearMonth}/{id}")
-    public AjaxResult getInfo(@PathVariable("yearMonth") Integer yearMonth, @PathVariable("id") Integer id) {
+    public AjaxResult getInfo(@PathVariable("yearMonth") Integer yearMonth, @PathVariable("id") String id) {
         return AjaxResult.success(officeBasePriceUltimateService.getById(yearMonth, id));
     }
 
@@ -115,7 +115,7 @@ public class UltimateOfficeBasePriceController extends BaseController {
     public AjaxResult importData(@PathVariable("yearMonth") Integer yearMonth, MultipartFile file) throws Exception {
         // 修改计价
         ExcelUtil<UltimateOfficeBasePrice> util = new ExcelUtil<>(UltimateOfficeBasePrice.class);
-        List<UltimateOfficeBasePrice> officeBasePriceUltimates = util.importExcel(file.getInputStream());
+        List<UltimateOfficeBasePrice> officeBasePriceUltimates = util.importExcel("主表",file.getInputStream());
         LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
         String operName = loginUser.getUsername();
         String message = officeBasePriceUltimateService.batchImport(yearMonth, officeBasePriceUltimates, operName);
