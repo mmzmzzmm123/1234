@@ -107,7 +107,7 @@
         <if test="status != null">
             AND a.STATUS = #{status}
         </if>
-        order by a.BUILDINGID_P ASC,a.ID DESC OFFSET #{pageIndex} rows fetch next #{pageSize} rows only;
+        order by a.ModifyDate DESC,a.BUILDINGID_P ASC OFFSET #{pageIndex} rows fetch next #{pageSize} rows only;
     </select>
 
     <select id="getById" resultMap="OfficeBasePriceUltimateResult">
@@ -120,7 +120,18 @@
     <!-- 更新基价 -->
     <update id="updateBasePrice" parameterType="com.ruoyi.project.data.price.domain.OfficeBasePriceModifyModel">
           update ODS_OFFICE_BUILDING_PRICE_INFO_${yearMonth} set Status=0 where id=#{id};
-          insert into ODS_OFFICE_BUILDING_PRICE_INFO_${yearMonth}(BuildingID
+    </update>
+    <insert id="batchInsertArtificialOfficeBase" >
+        insert into
+        dbo.DWA_PROJECTBASEPRICE_OFFICE_MANU_${yearMonth}(ID,BuildingID,ProjectID,County,"Loop",Block,ProjectAddr,ProjectName,Year,AvgArea,TotalFloorSum,UpperFloorSum,OfficeClass,Grade,MainPrice_1,MainPriceRent_1,MainPrice,MainPriceRent,ModifyDate)
+        values
+      <foreach collection="list" item="item" separator="," >
+          (#{item.id},#{item.buildingId},#{item.communityId},#{item.countyName},#{item.loopName},#{item.blockName},#{item.communityAddress},#{item.communityName},#{item.year},#{item.avgArea},#{item.totalFloorSum},#{item.upperFloorSum},#{item.officeClass},#{item.officeLevel},#{item.mainPrice_1},#{item.mainPriceRent_1},#{item.mainPrice},#{item.mainPriceRent},getdate())
+      </foreach>
+    </insert>
+    <!-- 更新基价 -->
+    <insert id="updateBasePriceCopyNew" parameterType="com.ruoyi.project.data.price.domain.OfficeBasePriceModifyModel">
+        insert into ODS_OFFICE_BUILDING_PRICE_INFO_${yearMonth}(BuildingID
               ,UnifiedID
               ,ProjectID
               ,BuildingID_P
@@ -151,7 +162,7 @@
               ,BuildingStd
               ,#{comment}
             from ODS_OFFICE_BUILDING_PRICE_INFO_${yearMonth} where id=#{id};
-    </update>
+    </insert>
 
     <!-- 获取表名   -->
     <select id="getYearMonthList" resultType="com.ruoyi.project.common.VueSelectModel">

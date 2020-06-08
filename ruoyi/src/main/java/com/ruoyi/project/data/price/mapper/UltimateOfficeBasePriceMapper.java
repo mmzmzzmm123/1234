@@ -7,6 +7,7 @@ import com.baomidou.dynamic.datasource.annotation.DS;
 import com.ruoyi.project.common.VueSelectModel;
 import com.ruoyi.project.data.price.domain.OfficeBasePriceModifyModel;
 import com.ruoyi.project.data.price.domain.UltimateOfficeBasePrice;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 办公基价Mapper接口
@@ -60,7 +61,15 @@ public interface UltimateOfficeBasePriceMapper {
      * @param officeBasePriceModifyModel
      * @return
      */
-    int updateBasePrice(OfficeBasePriceModifyModel officeBasePriceModifyModel);
+    int updateBasePriceStatus(OfficeBasePriceModifyModel officeBasePriceModifyModel);
+
+    /**
+     * 更新当前基价
+     *
+     * @param officeBasePriceModifyModel
+     * @return
+     */
+    int updateBasePriceCopyNew(OfficeBasePriceModifyModel officeBasePriceModifyModel);
 
     /**
      * 年月
@@ -77,4 +86,12 @@ public interface UltimateOfficeBasePriceMapper {
      */
     int insertArtificialOfficeBasePrice(UltimateOfficeBasePrice ultimateOfficeBasePrice);
 
+    /**
+     * 批量插入人工修正办公基价
+     *
+     * @param ultimateOfficeBasePrices
+     * @return
+     */
+    int batchInsertArtificialOfficeBase(@Param("yearMonth") Integer yearMonth,
+                                        @Param("list") List<UltimateOfficeBasePrice> ultimateOfficeBasePrices);
 }

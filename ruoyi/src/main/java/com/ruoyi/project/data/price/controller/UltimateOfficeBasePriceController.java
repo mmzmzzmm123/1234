@@ -50,9 +50,9 @@ public class UltimateOfficeBasePriceController extends BaseController {
         int pageSize = ServletUtils.getParameterToInt(TableSupport.PAGE_SIZE);
         officeBasePriceUltimate.setPageIndex(pageIndex <= 1 ? 0 : (pageIndex - 1) * pageSize);
         officeBasePriceUltimate.setPageSize(pageSize);
+        int total = officeBasePriceUltimateService.selectOfficeBasePriceUltimateListCount(officeBasePriceUltimate);
         List<UltimateOfficeBasePrice> list =
                 officeBasePriceUltimateService.selectOfficeBasePriceUltimateList(officeBasePriceUltimate);
-        int total = officeBasePriceUltimateService.selectOfficeBasePriceUltimateListCount(officeBasePriceUltimate);
         return getDataTable(list, total);
     }
 

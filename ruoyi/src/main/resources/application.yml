@@ -12,6 +12,9 @@ ruoyi:
   profile: D:/ruoyi/uploadPath
   # 获取ip地址开关
   addressEnabled: false
+uv:
+  dataUrl: http://172.16.30.74:9500/api
+  aitificialOfficeBasePriceUrl: /price/office/artificial?yearMonth=%d&lastYearMonth=%d
 
 # 开发环境配置
 server:

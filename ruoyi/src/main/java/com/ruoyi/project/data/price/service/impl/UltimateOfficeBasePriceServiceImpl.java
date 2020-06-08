@@ -1,12 +1,13 @@
 package com.ruoyi.project.data.price.service.impl;
 
 import java.math.BigDecimal;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 import com.ruoyi.common.exception.CustomException;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.common.utils.file.FileUtils;
+import com.ruoyi.framework.config.UVConfig;
+import com.ruoyi.project.common.UVResponse;
 import com.ruoyi.project.common.VueSelectModel;
 import com.ruoyi.project.data.price.domain.OfficeBasePriceModifyModel;
 import com.ruoyi.project.data.price.domain.UltimateOfficeBasePrice;
@@ -16,7 +17,11 @@ import com.ruoyi.project.system.service.impl.SysUserServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 /**
  * 办公基价Service业务层处理
@@ -31,6 +36,9 @@ public class UltimateOfficeBasePriceServiceImpl implements IUltimateOfficeBasePr
 
     @Autowired
     private UltimateOfficeBasePriceMapper officeBasePriceUltimateMapper;
+    @Autowired
+    private UVConfig uvConfig;
+
 
     private static Integer getLastYearMonth(Integer yearMonth) {
         Calendar calendar = Calendar.getInstance();
@@ -68,47 +76,22 @@ public class UltimateOfficeBasePriceServiceImpl implements IUltimateOfficeBasePr
         if (StringUtils.isNull(officeBasePriceUltimates) || officeBasePriceUltimates.size() == 0) {
             throw new CustomException("导入办公数据不能为空！");
         }
-        int successNum = 0;
+        int successNum = officeBasePriceUltimates.size();
         int failureNum = 0;
-        int insertNum = 0;
         StringBuilder successMsg = new StringBuilder();
         StringBuilder failureMsg = new StringBuilder();
         Integer lastYearMonth = getLastYearMonth(yearMonth);
 
         // 批量插入
+        officeBasePriceUltimates.stream().parallel().forEach(inputModel -> {
+            inputModel.setYearMonth(yearMonth);
+            officeBasePriceUltimateMapper.insertArtificialOfficeBasePrice(inputModel);
+        });
 
-        for (UltimateOfficeBasePrice inputModel : officeBasePriceUltimates) {
-            try {
-                inputModel.setYearMonth(yearMonth);
-                officeBasePriceUltimateMapper.insertArtificialOfficeBasePrice(inputModel);
-                // 验证是否存在这个用户
-                UltimateOfficeBasePrice currentUltimateOfficeBasePrice =
-                        officeBasePriceUltimateMapper.getById(yearMonth, lastYearMonth,
-                                inputModel.getId());
-                UltimateOfficeBasePrice lastUltimateOfficeBasePrice =
-                        officeBasePriceUltimateMapper.getByBuildingId(lastYearMonth,
-                                inputModel.getBuildingId());
-                if (StringUtils.isNotNull(currentUltimateOfficeBasePrice)) {
-                    updateBasePrice(inputModel, currentUltimateOfficeBasePrice, lastUltimateOfficeBasePrice);
-                    successNum++;
-                    successMsg.append("<br/>" + successNum + "、ID= " + inputModel.getId() + " 更新成功");
-                } else {
-                    failureNum++;
-                    failureMsg.append("<br/>" + failureNum + "、ID= " + inputModel.getId() + " 失败");
-                }
-            } catch (Exception e) {
-                failureNum++;
-                String msg = "<br/>" + failureNum + "、ID= " + inputModel.getId() + " 导入失败：";
-                failureMsg.append(msg + e.getMessage());
-                log.error(msg, e);
-            }
-        }
-        if (failureNum > 0) {
-            failureMsg.insert(0, "很抱歉，导入失败！共 " + failureNum + " 条数据格式不正确，错误如下：");
-            throw new CustomException(failureMsg.toString());
-        } else {
-            successMsg.insert(0, "恭喜您，数据已全部导入成功！共 " + successNum + " 条，数据如下：");
-        }
+        RestTemplate restTemplate = new RestTemplate();
+        String url = String.format(uvConfig.getAitificialOfficeBasePriceUrl(), yearMonth, lastYearMonth);
+        UVResponse<Integer> affectCount = restTemplate.getForObject(url, UVResponse.class);
+        successMsg.insert(0, "恭喜您，数据已全部导入成功！共 " + successNum + " 条，修改数据：" + affectCount.getData() + "条");
         return successMsg.toString();
     }
 
@@ -147,19 +130,21 @@ public class UltimateOfficeBasePriceServiceImpl implements IUltimateOfficeBasePr
      * @param currentUltimateOfficeBasePrice
      * @param lastUltimateOfficeBasePrice
      */
-    private void updateBasePrice(UltimateOfficeBasePrice inputModel,
-                                 UltimateOfficeBasePrice currentUltimateOfficeBasePrice,
-                                 UltimateOfficeBasePrice lastUltimateOfficeBasePrice) {
+    public void updateBasePrice(UltimateOfficeBasePrice inputModel,
+                                UltimateOfficeBasePrice currentUltimateOfficeBasePrice,
+                                UltimateOfficeBasePrice lastUltimateOfficeBasePrice) {
 
         OfficeBasePriceModifyModel officeBasePriceModifyModel = compareYearMonth(inputModel,
                 currentUltimateOfficeBasePrice, lastUltimateOfficeBasePrice);
         if (null != officeBasePriceModifyModel) {
-            officeBasePriceUltimateMapper.updateBasePrice(officeBasePriceModifyModel);
+            officeBasePriceUltimateMapper.updateBasePriceStatus(officeBasePriceModifyModel);
+            officeBasePriceUltimateMapper.updateBasePriceCopyNew(officeBasePriceModifyModel);
         }
 
         officeBasePriceModifyModel = compareLastYearMonth(inputModel, lastUltimateOfficeBasePrice);
         if (null != officeBasePriceModifyModel) {
-            officeBasePriceUltimateMapper.updateBasePrice(officeBasePriceModifyModel);
+            officeBasePriceUltimateMapper.updateBasePriceStatus(officeBasePriceModifyModel);
+            officeBasePriceUltimateMapper.updateBasePriceCopyNew(officeBasePriceModifyModel);
         }
     }
 
