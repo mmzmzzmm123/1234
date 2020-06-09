@@ -64,6 +64,15 @@
           v-hasPermi="['system:user:import']"
         >导入</el-button>
       </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="success"
+          icon="el-icon-druid"
+          size="mini"
+          @click="handleImport"
+          v-hasPermi="['system:user:import']"
+        >基价变化一览</el-button>
+      </el-col>
     </el-row>
 
     <el-table v-loading="loading" :data="dataList">

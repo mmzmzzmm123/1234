@@ -354,8 +354,8 @@ export default {
       return "";
     },
     /** 查询办公基价列表 */
-    getList(formName) {
-      this.$refs[formName].validate(valid => {
+    getList() {
+      this.$refs['queryForm'].validate(valid => {
         if (valid) {
           this.loading = true;
           list(this.queryParams).then(response => {
@@ -381,7 +381,7 @@ export default {
     /** 搜索按钮操作 */
     handleQuery() {
       this.queryParams.pageIndex = 1;
-      this.getList("queryForm");
+      this.getList();
     },
     /** 重置按钮操作 */
     resetQuery() {

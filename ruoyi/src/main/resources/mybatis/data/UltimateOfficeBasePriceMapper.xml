@@ -54,36 +54,30 @@
                 ,a.Status
                 ,a.BuildingStd
                 ,a.AdjEvd
-                ,b.AreaCoff
-                ,b.YearCoff
-                ,b.BuildingCoff
-                ,b.ProjectName
-                ,b.ProjectAddr
-                ,b.BuildingAddr
-                ,b.County
-                ,b.Loop
-                ,b.Block
-                ,b.Street
-                ,b.Year
-                ,b.AvgArea
-                ,b.TotalFloorSum
-                ,b.UpperFloorSum
-                ,b.OfficeClass
-                ,b.Grade
-                ,c.MainPrice AS mainPrice_1
-                ,c.MainPriceRent as mainPriceRent_1
+                ,a.AreaCoff
+                ,a.YearCoff
+                ,a.BuildingCoff
+                ,a.ProjectName
+                ,a.ProjectAddr
+                ,a.BuildingAddr
+                ,a.County
+                ,a.Loop
+                ,a.Block
+                ,a.Street
+                ,a.Year
+                ,a.AvgArea
+                ,a.TotalFloorSum
+                ,a.UpperFloorSum
+                ,a.OfficeClass
+                ,a.Grade
+                ,a.mainPrice_1
+                ,a.mainPriceRent_1
                 , ${yearMonth} as yearMonth
         FROM ODS_OFFICE_BUILDING_PRICE_INFO_${yearMonth} a
-        left join DIM_OFFICE_PROJECT_BUILDING_201909 b on a.BuildingID_P=b.BuildingID_P
-        left join ODS_OFFICE_BUILDING_PRICE_INFO_${lastYearMonth} c on a.BuildingID_P = c.BuildingID_P
-        WHERE b.EffDate <![CDATA[ <= ]]> getdate() AND b.ExpirDate <![CDATA[ > ]]> getdate() AND c.Status=1
     </sql>
 
     <select id="getCount" parameterType="com.ruoyi.project.data.price.domain.UltimateOfficeBasePrice" resultType="int">
         select count(1) FROM ODS_OFFICE_BUILDING_PRICE_INFO_${yearMonth} a
-        left join DIM_OFFICE_PROJECT_BUILDING_201909 b on a.BuildingID_P=b.BuildingID_P
-        left join ODS_OFFICE_BUILDING_PRICE_INFO_${lastYearMonth} c on a.BuildingID_P = c.BuildingID_P
-        WHERE b.EffDate <![CDATA[ <= ]]> getdate() AND b.ExpirDate <![CDATA[ > ]]> getdate() AND c.Status=1
         <if test="communityId != null">
             AND a.PROJECTID_P = #{communityId}
         </if>
@@ -107,7 +101,7 @@
         <if test="status != null">
             AND a.STATUS = #{status}
         </if>
-        order by a.ModifyDate DESC,a.BUILDINGID_P ASC OFFSET #{pageIndex} rows fetch next #{pageSize} rows only;
+        order by a.id desc OFFSET #{pageIndex} rows fetch next #{pageSize} rows only;
     </select>
 
     <select id="getById" resultMap="OfficeBasePriceUltimateResult">

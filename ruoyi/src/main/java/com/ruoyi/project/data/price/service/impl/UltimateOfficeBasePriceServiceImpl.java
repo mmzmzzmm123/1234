@@ -5,7 +5,6 @@ import java.util.*;
 
 import com.ruoyi.common.exception.CustomException;
 import com.ruoyi.common.utils.StringUtils;
-import com.ruoyi.common.utils.file.FileUtils;
 import com.ruoyi.framework.config.UVConfig;
 import com.ruoyi.project.common.UVResponse;
 import com.ruoyi.project.common.VueSelectModel;
@@ -17,10 +16,7 @@ import com.ruoyi.project.system.service.impl.SysUserServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 /**
