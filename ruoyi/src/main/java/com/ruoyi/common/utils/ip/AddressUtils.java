@@ -23,6 +23,9 @@ public class AddressUtils
     // 未知地址
     public static final String UNKNOWN = "XX XX";
 
+    // ip对应城市缓存
+    public static Map<String, String> ipCache = new HashMap<>();
+
     public static String getRealAddressByIP(String ip)
     {
         String address = UNKNOWN;
@@ -35,6 +38,9 @@ public class AddressUtils
         {
             try
             {
+            	if (StringUtils.isNotEmpty(ipCache.get(ip))) {//如果ip对应城市缓存不为空直接返回结果
+                	return ipCache.get(ip);
+				}
                 String rspStr = HttpUtils.sendGet(IP_URL, "ip=" + ip + "&json=true", Constants.GBK);
                 if (StringUtils.isEmpty(rspStr))
                 {
@@ -44,7 +50,11 @@ public class AddressUtils
                 JSONObject obj = JSONObject.parseObject(rspStr);
                 String region = obj.getString("pro");
                 String city = obj.getString("city");
-                return String.format("%s %s", region, city);
+                address = String.format("%s %s", region, city);
+                if (StringUtils.isEmpty(ipCache.get(ip))) {//如果ip对应城市缓存为空
+                	ipCache.put(ip, address);
+				}
+                return address;
             }
             catch (Exception e)
             {
