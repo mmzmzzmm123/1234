@@ -41,6 +41,12 @@ Vue.prototype.handleTree = handleTree
 Vue.prototype.$video = Video
 Vue.use(VideoPlayer);
 
+
+import LunarFullCalendar from "vue-lunar-full-calendar";
+Vue.use(LunarFullCalendar);
+
+
+
 Vue.prototype.msgSuccess = function (msg) {
   this.$message({ showClose: true, message: msg, type: "success" });
 }

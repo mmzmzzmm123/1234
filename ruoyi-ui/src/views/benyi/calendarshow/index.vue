@@ -97,8 +97,8 @@ export default {
       calendarPlugins: [
         // plugins must be defined in the JS
         dayGridPlugin,
-        timeGridPlugin,
-        interactionPlugin, // needed for dateClick
+        //timeGridPlugin,
+        //interactionPlugin, // needed for dateClick
         listPlugin
       ],
       calendarWeekends: true,
@@ -140,7 +140,15 @@ export default {
 @import "~@fullcalendar/list/main.css";
 .calendar {
   width: 820px;
+  height: 100%;
 }
+.fc-widget-content {
+          .fc-sun,
+          .fc-sat {
+            background: rgba(245, 246, 248, 0.6);
+            //background: rgba(109, 113, 121, 0.6);
+          }
+		}
 .xs-btns-style {
   @media screen and (max-width: 768px) {
     display: flex;
