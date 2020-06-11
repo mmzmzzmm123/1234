@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.project.common.CommonController;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,16 +26,17 @@ import com.ruoyi.framework.web.page.TableDataInfo;
 
 /**
  * 培训Controller
- * 
+ *
  * @author tsbz
  * @date 2020-05-25
  */
 @RestController
 @RequestMapping("/benyi/video")
-public class ByTrainVideoController extends BaseController
-{
+public class ByTrainVideoController extends BaseController {
     @Autowired
     private IByTrainVideoService byTrainVideoService;
+    @Autowired
+    private CommonController commonController;
 
 
     /**
@@ -42,10 +44,16 @@ public class ByTrainVideoController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('benyi:video:list')")
     @GetMapping("/list")
-    public TableDataInfo list(ByTrainVideo byTrainVideo)
-    {
+    public TableDataInfo list(ByTrainVideo byTrainVideo) {
         startPage();
         List<ByTrainVideo> list = byTrainVideoService.selectByTrainVideoList(byTrainVideo);
+
+        if (list != null && list.size() > 0) {
+            for (int i = 0; i < list.size(); i++) {
+                list.get(i).setVideourl(commonController.privateDownloadUrl(list.get(i).getVideourl()));
+            }
+        }
+
         return getDataTable(list);
     }
 
@@ -55,8 +63,7 @@ public class ByTrainVideoController extends BaseController
     @PreAuthorize("@ss.hasPermi('benyi:video:export')")
     @Log(title = "培训", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
-    public AjaxResult export(ByTrainVideo byTrainVideo)
-    {
+    public AjaxResult export(ByTrainVideo byTrainVideo) {
         List<ByTrainVideo> list = byTrainVideoService.selectByTrainVideoList(byTrainVideo);
         ExcelUtil<ByTrainVideo> util = new ExcelUtil<ByTrainVideo>(ByTrainVideo.class);
         return util.exportExcel(list, "video");
@@ -67,9 +74,10 @@ public class ByTrainVideoController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('benyi:video:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
-    {
-        return AjaxResult.success(byTrainVideoService.selectByTrainVideoById(id));
+    public AjaxResult getInfo(@PathVariable("id") Long id) {
+        ByTrainVideo byTrainVideo = byTrainVideoService.selectByTrainVideoById(id);
+        byTrainVideo.setVideourl(commonController.privateDownloadUrl(byTrainVideo.getVideourl()));
+        return AjaxResult.success(byTrainVideo);
     }
 
     /**
@@ -78,8 +86,7 @@ public class ByTrainVideoController extends BaseController
     @PreAuthorize("@ss.hasPermi('benyi:video:add')")
     @Log(title = "培训", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody ByTrainVideo byTrainVideo)
-    {
+    public AjaxResult add(@RequestBody ByTrainVideo byTrainVideo) {
         byTrainVideo.setCreatetime(new Date());
         byTrainVideo.setCreateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
         return toAjax(byTrainVideoService.insertByTrainVideo(byTrainVideo));
@@ -91,8 +98,7 @@ public class ByTrainVideoController extends BaseController
     @PreAuthorize("@ss.hasPermi('benyi:video:edit')")
     @Log(title = "培训", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody ByTrainVideo byTrainVideo)
-    {
+    public AjaxResult edit(@RequestBody ByTrainVideo byTrainVideo) {
         return toAjax(byTrainVideoService.updateByTrainVideo(byTrainVideo));
     }
 
@@ -101,9 +107,8 @@ public class ByTrainVideoController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('benyi:video:remove')")
     @Log(title = "培训", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
-    {
+    @DeleteMapping("/{ids}")
+    public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(byTrainVideoService.deleteByTrainVideoByIds(ids));
     }
 }

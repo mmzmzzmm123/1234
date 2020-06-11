@@ -74,7 +74,7 @@
 </template>
 
 <script>
-import { listVideo, getVideo } from "@/api/benyi_train/video";
+import { listVideo, getVideo, privateDownloadUrl } from "@/api/benyi_train/video";
 import { listAllLecturer } from "@/api/benyi_train/lecturer";
 import { listMoedata } from "@/api/system/moedata";
 
@@ -149,7 +149,7 @@ export default {
               {
                 type: ele.filetype,
                 // mp4
-                src: "https://files.benyiedu.com/" + ele.videourl
+                src:  ele.videourl
               }
             ],
             notSupportedMessage: "此视频暂无法播放，请稍后再试",

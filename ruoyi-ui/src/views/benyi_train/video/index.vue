@@ -349,14 +349,14 @@ export default {
         file.type === "video/avi" ||
         file.type === "video/wmv" ||
         file.type === "video/rmvb";
-      const isLt500M = file.size / 1024 / 1024 < 500;
+      const isLt1000M = file.size / 1024 / 1024 < 1000;
       if (!isVideo) {
         this.msgError("请上传正确格式的视频！");
         return false;
       } else {
         this.form.filetype = file.type;
-        if (!isLt500M) {
-          this.msgError("上传视频文件大小不能超过 500MB!");
+        if (!isLt1000M) {
+          this.msgError("上传视频文件大小不能超过 1000MB!");
           return false;
         }
       }

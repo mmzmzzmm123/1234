@@ -4,10 +4,11 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import javax.servlet.http.HttpServletRequest;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.common.utils.html.EscapeUtil;
 
 /**
  * 获取IP方法
- * 
+ *
  * @author ruoyi
  */
 public class IpUtils
@@ -40,7 +41,7 @@ public class IpUtils
         {
             ip = request.getRemoteAddr();
         }
-
+        ip = EscapeUtil.clean(ip);// 清除Xss特殊字符
         return "0:0:0:0:0:0:0:1".equals(ip) ? "127.0.0.1" : ip;
     }
 
@@ -89,7 +90,7 @@ public class IpUtils
 
     /**
      * 将IPv4地址转换成字节
-     * 
+     *
      * @param text IPv4地址
      * @return byte 字节
      */

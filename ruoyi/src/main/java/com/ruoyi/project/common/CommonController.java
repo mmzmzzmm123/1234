@@ -44,7 +44,7 @@ public class CommonController {
     @Resource
     private FileConfig fileConfig;
     @Autowired
-    private  FileConfig constantQiniu;
+    private FileConfig constantQiniu;
 
     /**
      * 通用下载请求
@@ -133,7 +133,17 @@ public class CommonController {
         System.out.println("auth:" + auth);
         String upToken = auth.uploadToken(constantQiniu.getBucket());
         ajax.put("token", upToken);
+
         return ajax;
+    }
+
+    public String privateDownloadUrl(String URL) {
+
+        Auth auth = Auth.create(constantQiniu.getAccessKey(), constantQiniu.getSecretKey());
+        String downloadURL = auth.privateDownloadUrl(constantQiniu.getDomain() + URL, 60);
+        //System.out.println("test=" + downloadURL);
+
+        return downloadURL;
     }
 
     /**
