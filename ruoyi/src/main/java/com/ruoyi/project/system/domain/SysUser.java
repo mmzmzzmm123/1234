@@ -91,6 +91,9 @@ public class SysUser extends BaseEntity
     /** 岗位组 */
     private Long[] postIds;
 
+    /** 部门组 */
+    private Long[] deptIds;
+
     /**教师对象*/
     private ByTeacherJbxx byTeacherJbxx;
 
@@ -299,6 +302,15 @@ public class SysUser extends BaseEntity
     public void setPostIds(Long[] postIds)
     {
         this.postIds = postIds;
+    }
+    public Long[] getDeptIds()
+    {
+        return deptIds;
+    }
+
+    public void setDeptIds(Long[] deptIds)
+    {
+        this.deptIds = deptIds;
     }
     
     @Override

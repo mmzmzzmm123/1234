@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.ruoyi.project.common.SchoolCommon;
 import com.ruoyi.project.system.domain.ByTeacherJbxx;
+import com.ruoyi.project.system.domain.SysDept;
 import com.ruoyi.project.system.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -58,6 +59,9 @@ public class SysUserController extends BaseController {
     @Autowired
     private SchoolCommon schoolCommon;
 
+    @Autowired
+    private ISysDeptService deptService;
+
 
     /**
      * 获取用户列表
@@ -104,14 +108,21 @@ public class SysUserController extends BaseController {
     @GetMapping(value = {"/", "/{userId}"})
     public AjaxResult getInfo(@PathVariable(value = "userId", required = false) Long userId) {
         AjaxResult ajax = AjaxResult.success();
+
+        SysDept dept = new SysDept();
+        dept.setParentId((long) 200);
+
         //在添加用户时判断是否为幼儿园平台
         if (schoolCommon.isSchool() == true) {
             //只显示幼儿园相关的岗位和角色
             ajax.put("roles", roleService.selectYeyRoleAll());
             ajax.put("posts", postService.selectYeyPostAll());
+            ajax.put("isSchool", "1");
         } else {
             ajax.put("roles", roleService.selectRoleAll());
             ajax.put("posts", postService.selectPostAll());
+            ajax.put("isSchool", "0");
+            ajax.put("kindergartens", deptService.selectDeptList(dept));
         }
 
         //在修改用户时判断是否为幼儿园平台
@@ -120,12 +131,14 @@ public class SysUserController extends BaseController {
                 ajax.put(AjaxResult.DATA_TAG, userService.selectUserById(userId));
                 ajax.put("postIds", postService.selectYeyPostListByUserId(userId));
                 ajax.put("roleIds", roleService.selectYeyRoleListByUserId(userId));
+                ajax.put("isSchool", "1");
             } else {
-
+                ajax.put(AjaxResult.DATA_TAG, userService.selectUserById(userId));
+                ajax.put("postIds", postService.selectPostListByUserId(userId));
+                ajax.put("roleIds", roleService.selectRoleListByUserId(userId));
+                ajax.put("isSchool", "0");
+                ajax.put("kindergartenIds", deptService.selectDeptListByUserId(userId));
             }
-            ajax.put(AjaxResult.DATA_TAG, userService.selectUserById(userId));
-            ajax.put("postIds", postService.selectPostListByUserId(userId));
-            ajax.put("roleIds", roleService.selectRoleListByUserId(userId));
         }
         return ajax;
     }
@@ -137,20 +150,20 @@ public class SysUserController extends BaseController {
     @GetMapping("/listbyroleid")
     public AjaxResult getUserList() {
         AjaxResult ajax = AjaxResult.success();
-        Long deptId=SecurityUtils.getLoginUser().getUser().getDept().getDeptId();
-        SysUser user=new SysUser();
+        Long deptId = SecurityUtils.getLoginUser().getUser().getDept().getDeptId();
+        SysUser user = new SysUser();
         //主班教师
-        user.setUserId((long)102);
+        user.setUserId((long) 102);
         user.setDeptId(deptId);
         ajax.put("zbjs", userService.selectUserListByRoleId(user));
         //配班教师
-        user=new SysUser();
-        user.setUserId((long)104);
+        user = new SysUser();
+        user.setUserId((long) 104);
         user.setDeptId(deptId);
         ajax.put("pbjs", userService.selectUserListByRoleId(user));
         //助理教师
-        user=new SysUser();
-        user.setUserId((long)105);
+        user = new SysUser();
+        user.setUserId((long) 105);
         user.setDeptId(deptId);
         ajax.put("zljs", userService.selectUserListByRoleId(user));
 

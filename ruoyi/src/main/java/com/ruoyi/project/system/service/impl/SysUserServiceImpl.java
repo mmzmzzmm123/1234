@@ -3,6 +3,8 @@ package com.ruoyi.project.system.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ruoyi.project.system.domain.*;
+import com.ruoyi.project.system.mapper.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,16 +15,6 @@ import com.ruoyi.common.exception.CustomException;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.framework.aspectj.lang.annotation.DataScope;
-import com.ruoyi.project.system.domain.SysPost;
-import com.ruoyi.project.system.domain.SysRole;
-import com.ruoyi.project.system.domain.SysUser;
-import com.ruoyi.project.system.domain.SysUserPost;
-import com.ruoyi.project.system.domain.SysUserRole;
-import com.ruoyi.project.system.mapper.SysPostMapper;
-import com.ruoyi.project.system.mapper.SysRoleMapper;
-import com.ruoyi.project.system.mapper.SysUserMapper;
-import com.ruoyi.project.system.mapper.SysUserPostMapper;
-import com.ruoyi.project.system.mapper.SysUserRoleMapper;
 import com.ruoyi.project.system.service.ISysConfigService;
 import com.ruoyi.project.system.service.ISysUserService;
 
@@ -49,6 +41,9 @@ public class SysUserServiceImpl implements ISysUserService {
 
     @Autowired
     private SysUserPostMapper userPostMapper;
+
+    @Autowired
+    private SysUserDeptMapper userDeptMapper;
 
     @Autowired
     private ISysConfigService configService;
@@ -209,6 +204,8 @@ public class SysUserServiceImpl implements ISysUserService {
         insertUserPost(user);
         // 新增用户与角色管理
         insertUserRole(user);
+        //新增用户与部门管理
+        insertUserDept(user);
         return rows;
     }
 
@@ -230,6 +227,10 @@ public class SysUserServiceImpl implements ISysUserService {
         userPostMapper.deleteUserPostByUserId(userId);
         // 新增用户与岗位管理
         insertUserPost(user);
+        // 删除用户与部门关联
+        userDeptMapper.deleteUserDeptByUserId(userId);
+        // 新增用户与角色管理
+        insertUserDept(user);
         return userMapper.updateUser(user);
     }
 
@@ -329,6 +330,28 @@ public class SysUserServiceImpl implements ISysUserService {
             }
             if (list.size() > 0) {
                 userPostMapper.batchUserPost(list);
+            }
+        }
+    }
+
+    /**
+     * 新增用户部门信息
+     *
+     * @param user 用户对象
+     */
+    public void insertUserDept(SysUser user) {
+        Long[] depts = user.getDeptIds();
+        if (StringUtils.isNotNull(depts)) {
+            // 新增用户与部门管理
+            List<SysUserDept> list = new ArrayList<SysUserDept>();
+            for (Long deptId : depts) {
+                SysUserDept ud = new SysUserDept();
+                ud.setUserId(user.getUserId());
+                ud.setDeptId(deptId);
+                list.add(ud);
+            }
+            if (list.size() > 0) {
+                userDeptMapper.batchUserDept(list);
             }
         }
     }

@@ -29,6 +29,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="ordersum != null "> and ordersum = #{ordersum}</if>
             <if test="keyword != null  and keyword != ''"> and keyword = #{keyword}</if>
             <if test="status != null  and status != ''"> and status = #{status}</if>
+
+        order by ordersum
     </select>
     
     <select id="selectSysDictMoedataById" parameterType="Long" resultMap="SysDictMoedataResult">

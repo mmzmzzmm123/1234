@@ -274,6 +274,19 @@
               </el-select>
             </el-form-item>
           </el-col>
+          <el-col :span="12">
+            <el-form-item v-if="isSchool" label="多幼儿园">
+              <el-select v-model="form.deptIds" multiple placeholder="请选择">
+                <el-option
+                  v-for="item in kindergartenOptions"
+                  :key="item.deptId"
+                  :label="item.deptName"
+                  :value="item.deptId"
+                  :disabled="item.status == 1"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
           <el-col :span="24">
             <el-form-item label="备注">
               <el-input v-model="form.remark" type="textarea" placeholder="请输入内容"></el-input>
@@ -374,6 +387,10 @@ export default {
       postOptions: [],
       // 角色选项
       roleOptions: [],
+      //多幼儿园选项
+      kindergartenOptions: [],
+      //是否幼儿园
+      isSchool:undefined,
       // 表单参数
       form: {},
       defaultProps: {
@@ -539,6 +556,13 @@ export default {
       getUser().then(response => {
         this.postOptions = response.posts;
         this.roleOptions = response.roles;
+        //console.log("school="+response.isSchool);
+        if (response.isSchool=="0") {
+          this.isSchool=true;
+          this.kindergartenOptions = response.kindergartens;
+        }else{
+          this.isSchool=false;
+        }
         this.open = true;
         this.title = "添加用户";
         this.form.password = this.initPassword;
@@ -555,6 +579,14 @@ export default {
         this.roleOptions = response.roles;
         this.form.postIds = response.postIds;
         this.form.roleIds = response.roleIds;
+        this.form.deptIds=response.kindergartenIds;
+        //console.log("school="+response.isSchool);
+        if (response.isSchool=="0") {
+          this.isSchool=true;
+          this.kindergartenOptions = response.kindergartens;
+        }else{
+          this.isSchool=false;
+        }
         this.open = true;
         this.title = "修改用户";
         this.form.password = "";

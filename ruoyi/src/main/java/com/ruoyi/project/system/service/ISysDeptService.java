@@ -20,6 +20,14 @@ public interface ISysDeptService
     public List<SysDept> selectDeptList(SysDept dept);
 
     /**
+     * 根据用户ID获取岗位选择框列表
+     *
+     * @param userId 用户ID
+     * @return 选中岗位ID列表
+     */
+    public List<Integer> selectDeptListByUserId(Long userId);
+
+    /**
      * 构建前端所需要树结构
      * 
      * @param depts 部门列表

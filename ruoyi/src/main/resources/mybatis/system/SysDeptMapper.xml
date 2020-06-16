@@ -27,6 +27,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select d.dept_id, d.parent_id, d.ancestors, d.dept_name, d.order_num, d.leader, d.phone, d.email, d.status, d.del_flag, d.create_by, d.create_time, d.school_id
         from sys_dept d
     </sql>
+
+
+	<select id="selectDeptListByUserId" parameterType="Long" resultType="Integer">
+		select p.dept_id
+        from sys_dept p
+	        left join sys_user_dept up on up.dept_id = p.dept_id
+	        left join sys_user u on u.user_id = up.user_id
+	    where u.user_id = #{userId} and p.parent_id = 200
+	</select>
     
 	<select id="selectDeptList" parameterType="SysDept" resultMap="SysDeptResult">
         <include refid="selectDeptVo"/>
