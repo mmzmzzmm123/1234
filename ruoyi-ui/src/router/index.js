@@ -79,6 +79,19 @@ export const constantRoutes = [{
         }]
     },
     {
+        path: '/user/change',
+        component: Layout,
+        hidden: true,
+        redirect: 'noredirect',
+        children: [{
+            path: 'dept',
+            component: () =>
+                import ('@/views/system/user/change/dept/index'),
+            name: 'Changedept',
+            meta: { title: '切换岗位', icon: 'user' }
+        }]
+    },
+    {
         path: '/dict',
         component: Layout,
         hidden: true,

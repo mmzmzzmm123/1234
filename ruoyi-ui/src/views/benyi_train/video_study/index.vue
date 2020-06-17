@@ -171,8 +171,9 @@ export default {
       if (this.queryParams.type == null) {
         this.queryParams.type = "";
       } else {
-        this.queryParams.type = this.queryParams.type.toString();
+        this.queryParams.type = this.queryParams.type.toString()+",";
       }
+      //console.log(this.queryParams.type);
       this.queryParams.pageNum = 1;
       this.getList();
     },

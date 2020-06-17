@@ -36,6 +36,14 @@ public interface ISysDeptService
     public List<SysDept> buildDeptTree(List<SysDept> depts);
 
     /**
+     * 根据角色ID查询部门
+     *
+     * @param userId 角色ID
+     * @return 选中部门列表
+     */
+    public List<SysDept> selectSysDeptList(Long userId);
+
+    /**
      * 构建前端所需要下拉树结构
      * 
      * @param depts 部门列表

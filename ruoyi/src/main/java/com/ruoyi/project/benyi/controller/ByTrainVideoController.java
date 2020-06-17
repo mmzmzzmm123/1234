@@ -77,6 +77,7 @@ public class ByTrainVideoController extends BaseController {
     public AjaxResult getInfo(@PathVariable("id") Long id) {
         ByTrainVideo byTrainVideo = byTrainVideoService.selectByTrainVideoById(id);
         byTrainVideo.setVideourl(commonController.privateDownloadUrl(byTrainVideo.getVideourl()));
+        byTrainVideo.setType(byTrainVideo.getType().substring(0, byTrainVideo.getType().length() - 1));//去掉后缀的,号
         return AjaxResult.success(byTrainVideo);
     }
 

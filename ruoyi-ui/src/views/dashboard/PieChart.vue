@@ -46,7 +46,7 @@ export default {
   methods: {
     async getData() {
       await listTeacherGroupXw().then(response => {
-        console.log(response);
+        //console.log(response);
         let name = [];
         let value = [];
         let len = response.rows;

@@ -12,7 +12,12 @@
       </el-form-item>
       <el-form-item label="幼儿园类型" prop="type">
         <el-select v-model="queryParams.type" placeholder="请选择幼儿园类型" clearable size="small">
-          <el-option label="请选择字典生成" value />
+          <el-option
+            v-for="dict in typeOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
         </el-select>
       </el-form-item>
       <el-form-item label="所在省" prop="provincename">
@@ -43,20 +48,14 @@
         />
       </el-form-item>
       <el-form-item label="状态" prop="status">
-        <el-select v-model="queryParams.status" placeholder="请选择状态" clearable size="small">
-          <el-option label="请选择字典生成" value />
+        <el-select v-model="queryParams.status" placeholder="状态" clearable size="small">
+          <el-option
+            v-for="dict in statusOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
         </el-select>
-      </el-form-item>
-      <el-form-item label="创建时间" prop="approvalTime">
-        <el-date-picker
-          clearable
-          size="small"
-          style="width: 200px"
-          v-model="queryParams.approvalTime"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="选择创建时间"
-        ></el-date-picker>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -169,18 +168,6 @@
         <el-form-item label="所在省" prop="provincename">
           <v-distpicker v-model="form.provincename" @selected="onSelected"></v-distpicker>
         </el-form-item>
-        <!--<el-form-item label="所在城市" prop="regionid">
-          <el-input v-model="form.regionid" placeholder="请输入所在城市" />
-        </el-form-item>-->
-        <!--<el-form-item label="所在城市" prop="regionname">
-          <v-distpicker v-model="form.regionname" @selected="onSelected"></v-distpicker>
-        </el-form-item>-->
-        <!--<el-form-item label="所在区" prop="area">
-          <el-input v-model="form.area" placeholder="请输入所在区" />
-        </el-form-item>-->
-        <!--<el-form-item label="所在区" prop="areaname">
-          <v-distpicker v-model="form.areaname" @selected="onSelected"></v-distpicker>
-        </el-form-item>-->
         <el-form-item label="详细地址" prop="address">
           <el-input v-model="form.address" placeholder="请输入详细地址" />
         </el-form-item>
@@ -223,18 +210,7 @@
         </el-form-item>
         <el-form-item label="创建时间" prop="createTime" v-show="false">
           <el-input v-model="form.createTime"></el-input>
-        </el-form-item>
-        <el-form-item label="审核时间" prop="approvalTime">
-          <el-date-picker
-            clearable
-            size="small"
-            style="width: 200px"
-            v-model="form.approvalTime"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="选择审核时间"
-          ></el-date-picker>
-        </el-form-item>
+        </el-form-item>   
         <el-form-item label="园所会员性质" prop="isDemonstr">
           <el-select v-model="form.isDemonstr" placeholder="请选择">
             <el-option
@@ -244,10 +220,7 @@
               :value="dict.dictValue"
             ></el-option>
           </el-select>
-        </el-form-item>
-        <el-form-item label="营业执照图片" prop="businesslicenseimg">
-          <el-input v-model="form.businesslicenseimg" type="textarea" placeholder="请输入内容" />
-        </el-form-item>
+        </el-form-item> 
         <el-form-item label="家长手册发布状态" prop="openBook" v-show="false">
           <el-input v-model="form.openBook" placeholder="请输入家长手册发布状态" />
         </el-form-item>
@@ -270,12 +243,6 @@
             value-format="yyyy-MM-dd"
             placeholder="选择开通截至日期"
           ></el-date-picker>
-        </el-form-item>
-        <el-form-item label="当前学年" prop="dqxn">
-          <el-input v-model="form.dqxn" placeholder="请输入当前学年" />
-        </el-form-item>
-        <el-form-item label="当前学期" prop="dqxq">
-          <el-input v-model="form.dqxq" placeholder="请输入当前学期" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">

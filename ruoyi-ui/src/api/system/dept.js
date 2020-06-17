@@ -9,6 +9,23 @@ export function listDept(query) {
   })
 }
 
+// 查询多幼儿园列表
+export function getDeptsInfo() {
+  return request({
+    url: '/system/dept/getDeptsInfo',
+    method: 'get'
+  })
+}
+
+
+// 切换部门
+export function changeDept(deptId) {
+  return request({
+    url: '/system/dept/changeDept/'+deptId,
+    method: 'post'
+  })
+}
+
 // 查询部门详细
 export function getDept(deptId) {
   return request({

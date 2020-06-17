@@ -166,7 +166,7 @@
             <video
               v-if="imageUrl.length > 1 && imgFlag == false"
               controls="controls"
-              :src="[qiniuUrl + '/' + imageUrl]"
+              :src="[imageUrl]"
               class="avatar"
             ></video>
             <i
@@ -201,7 +201,7 @@ export default {
   name: "Video",
   data() {
     return {
-      qiniuUrl: "https://files.benyiedu.com", // 个人七牛访问前缀
+      qiniuUrl: "https://files.benyiedu.com/", // 个人七牛访问前缀
       imgFlag: false,
       imageUrl: [],
       percent: 0,
@@ -287,10 +287,16 @@ export default {
   methods: {
     //获取选中节点的label用作标题
     getLastChildName(val) {
-      //console.log(val[val.length-1]);
-      //console.log(this.$refs.myCascader.getCheckedNodes()[0].pathLabels[val.length-1]);
-      var lastLable=this.$refs.typeCascader.getCheckedNodes()[0].pathLabels[val.length-1];
-      this.form.title=lastLable;
+      //console.log(val == undefined);
+      if (val == undefined) {
+      } else {
+        //console.log(val[val.length-1]);
+        //console.log(this.$refs.myCascader.getCheckedNodes()[0].pathLabels[val.length-1]);
+        var lastLable = this.$refs.typeCascader.getCheckedNodes()[0].pathLabels[
+          val.length - 1
+        ];
+        this.form.title = lastLable;
+      }
     },
     // 字典状态字典翻译
     typeFormat(row, column) {
@@ -325,7 +331,7 @@ export default {
       this.imgFlag = false;
       this.percent = 0;
       if (response.hash) {
-        this.imageUrl = response.hash;
+        this.imageUrl = this.qiniuUrl + response.hash + "?e=";
       } else {
         this.msgError("视频上传失败，请重新上传！");
       }
@@ -401,7 +407,7 @@ export default {
       if (this.queryParams.type == null) {
         this.queryParams.type = "";
       } else {
-        this.queryParams.type = this.queryParams.type.toString();
+        this.queryParams.type = this.queryParams.type.toString() + ",";
       }
       this.queryParams.pageNum = 1;
       this.getList();
@@ -446,6 +452,10 @@ export default {
         this.open = true;
         this.title = "修改培训";
         this.imageUrl = response.data.videourl;
+        // console.log(response.data.videourl);
+        // console.log(
+        //   response.data.videourl.split("benyiedu.com/")[1].split("?e=")[0]
+        // );
         //console.log(this.imageUrl);
         //获取讲师列表
         listAllLecturer().then(response => {
@@ -457,12 +467,20 @@ export default {
     /** 提交按钮 */
     submitForm: function() {
       //上传完成 赋值给from表单
-      this.form.videourl = this.imageUrl;
+      if (this.imageUrl) {
+        this.form.videourl = this.imageUrl
+          .split("benyiedu.com/")[1]
+          .split("?e=")[0];
+      } else {
+        this.msgError("等待视频上传");
+        return;
+      }
+
       this.$refs["form"].validate(valid => {
         if (valid) {
           //提交将type arry转字符串
           //console.log(this.form.type.toString());
-          this.form.type = this.form.type.toString();
+          this.form.type = this.form.type.toString() + ",";
 
           if (this.form.id != undefined) {
             updateVideo(this.form).then(response => {

@@ -28,6 +28,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         from sys_dept d
     </sql>
 
+	<select id="selectSysDeptList" parameterType="Long" resultMap="SysDeptResult">
+      select * from sys_dept where dept_id in (
+select dept_id from (
+select dept_id,user_id from sys_user
+union all
+select dept_id,user_id from sys_user_dept) t
+where t.user_id=#{userId})
+    </select>
+
 
 	<select id="selectDeptListByUserId" parameterType="Long" resultType="Integer">
 		select p.dept_id
