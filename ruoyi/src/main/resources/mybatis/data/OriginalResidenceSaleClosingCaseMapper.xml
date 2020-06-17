@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.data.cases.mapper.OriginalResidenceSaleClosingCaseMapper">
+    <!-- 外部数据重复问题   -->
+    <update id="createTable">
+        <bind name="targetTableName" value="'dbo.original_residence_sale_closing_case_' + yearMonth"/>
+        IF OBJECT_ID(#{targetTableName}, 'U') IS NOT NULL
+            drop table ${targetTableName};
+
+        CREATE TABLE ${targetTableName}
+        (
+            id bigint identity (1,1) not null primary key,
+            case_id varchar(32) not null,
+            case_county_name nvarchar(20) null,
+            case_block_name nvarchar(20) null,
+            case_loopline_name nvarchar(20) null,
+            case_community_name nvarchar(200) null,
+            case_address nvarchar(500) not null,
+            case_area decimal(18, 2) not null,
+            case_unit_price decimal(18, 2) not null,
+            case_total_price decimal(18, 2) not null,
+            case_house_type nvarchar(20) null,
+            case_signing_date date null,
+            case_register_date date null,
+            case_current_floor int null,
+            case_house_property nvarchar(20) null,
+            case_apartment_layout nvarchar(20) null,
+            case_compute_unit_price decimal(18, 2) null,
+            case_compute_total_price decimal(18, 2) null,
+            case_ref_unit_price decimal(18, 2) null,
+            case_ref_total_price decimal(18, 2) null,
+            case_agency_name nvarchar(200) null,
+            case_agency_type nvarchar(50) null,
+            case_seller_type nvarchar(20) null,
+            case_buyer_type nvarchar(20) null,
+            case_birthday date null,
+            case_deal_type int not null,
+            clean_condo_id nvarchar(20) null,
+            clean_building_id nvarchar(20) null,
+            clean_community_id nvarchar(20) null,
+            clean_condo_address nvarchar(500) null,
+            clean_property_type nvarchar(20) not null,
+            create_time datetime not null,
+            clean_current_floor int null,
+            clean_building_address nvarchar(200) null
+        );
+    </update>
+
+    <update id="createCleanTable">
+        <bind name="targetTableName" value="'dbo.ODS_HOUSINGCASE_DEAL_' + yearMonth"/>
+        IF OBJECT_ID(#{targetTableName}, 'U') IS NOT NULL
+            drop table ${targetTableName};
+
+        CREATE TABLE ${targetTableName}
+        (
+            SID int NOT NULL IDENTITY(1, 1) ,
+            case_id varchar(32) not null,
+            ProjectID bigint NULL,
+            BuildingID bigint NULL,
+            Area decimal (18, 2) NULL,
+            UpperFloorSum nvarchar (32) null,
+            UpperFloorNum nvarchar (32) NULL,
+            AreaCoff decimal (7, 4) NULL,
+            FloorCoff decimal (7, 4) NULL,
+            BuildingCoff decimal (7, 4) NULL,
+            PriceTotal decimal (18, 2) NOT NULL,
+            PriceUnit decimal (18, 2) NOT NULL,
+            PriceUnitAdj decimal (18, 2) NOT NULL,
+            DateContract date NULL
+        );
+    </update>
+</mapper>

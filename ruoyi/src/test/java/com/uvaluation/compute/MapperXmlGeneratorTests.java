@@ -37,4 +37,13 @@ public class MapperXmlGeneratorTests {
                 calendar.get(Calendar.MONTH)-1));
         Assert.assertTrue(Objects.equals(lastYearMonth,202005));
     }
+
+    @Test
+    public void testDemo(){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        Integer computeTableRoute = new Integer(String.format("%d%02d", calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH) + 1));
+        System.out.println(computeTableRoute);
+    }
 }

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.data.cases.mapper.sync.SyncOriginalResidenceSaleOpeningCaseMapper">
+    <update id="createTable">
+        <bind name="targetTableName" value="'dbo.ODS_HOUSINGCASELISTED_LJ_' + yearMonth + '_RAW'"/>
+        IF OBJECT_ID(#{targetTableName}, 'U') IS NULL
+            CREATE TABLE ${targetTableName}
+            (
+            SID int NOT NULL IDENTITY(1, 1) primary key,
+            llid bigint NULL,
+            lcid bigint NULL,
+            Name nvarchar (1024) NULL,
+            Roomtype nvarchar (50) NULL,
+            Area decimal (18, 2) NULL,
+            Towards nvarchar (50) NULL,
+            Storey nvarchar (50) NULL,
+            Lastdeal date NULL,
+            Condoelev nvarchar (50) NULL,
+            Decoration nvarchar (50) NULL,
+            Year int NULL,
+            Address nvarchar (1024) NULL,
+            Price decimal (18, 2) NULL,
+            Cname nvarchar (1024) NULL,
+            Visited_Num int NULL,
+            First_Visit_Time date NULL,
+            Visited_Num_15 int NULL,
+            Visited_Num_30 int NULL,
+            Url nvarchar (512) NULL,
+            Curl nvarchar (512) NULL,
+            CurlDate date NULL
+            );
+
+        truncate table ${targetTableName}
+    </update>
+
+    <insert id="insert" parameterType="com.ruoyi.project.data.cases.domain.OriginalResidenceSaleOpeningCase">
+        insert into dbo.ODS_HOUSINGCASELISTED_LJ_${yearMonth}_RAW
+        (
+            llid
+          , lcid
+          , Name
+          , Roomtype
+          , Area
+          , Towards
+          , Storey
+          , Lastdeal
+          , Condoelev
+          , Decoration
+          , Year
+          , Address
+          , Price
+          , Cname
+          , Visited_Num
+          , First_Visit_Time
+          , Visited_Num_15
+          , Visited_Num_30
+          , Url
+          , Curl
+          , CurlDate
+        ) values
+        (
+            #{caseLianJiaId},
+            #{caseLianJiaCommunityId},
+            #{caseTitle},
+            #{caseApartmentLayout},
+            #{caseArea},
+            #{caseToward},
+            #{caseStorey},
+            #{caseLastDeal,jdbcType=DATE},
+            #{caseElevator},
+            #{caseDecoration},
+            #{caseYear},
+            #{caseAddress},
+            #{casePrice},
+            #{caseCommunityName},
+            #{caseVisitedNum},
+            #{caseFirstVisitTime,jdbcType=DATE},
+            #{caseVisitedNum15},
+            #{caseVisitedNum30},
+            #{caseUrl},
+            #{caseCommunityUrl},
+            #{caseGetDate,jdbcType=DATE}
+            )
+    </insert>
+</mapper>

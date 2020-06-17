@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.data.cases.mapper.sync.DownloadOriginalResidenceSaleClosingCaseMapper">
+    <resultMap id="resultMapping" type="com.ruoyi.project.data.cases.domain.OriginalResidenceSaleClosingCase">
+        <result property="caseCountyName" column="区域"/>
+        <result property="caseBlockName" column="板块"/>
+        <result property="caseLoopName" column="环线"/>
+        <result property="caseCommunityName" column="小区名称"/>
+        <result property="caseAddress" column="房屋地址"/>
+        <result property="caseArea" column="面积" javaType="java.math.BigDecimal"/>
+        <result property="caseHouseType" column="房屋类型"/>
+        <result property="caseTotalPrice" column="总价" javaType="java.math.BigDecimal"/>
+        <result property="caseUnitPrice" column="单价" javaType="java.math.BigDecimal"/>
+        <result property="caseRegisterDate" column="登记日期" javaType="java.sql.Date"/>
+        <result property="caseSigningDate" column="签约日期" javaType="java.sql.Date"/>
+        <result property="agencyName" column="中介公司"/>
+        <result property="agencyType" column="中介类型"/>
+        <result property="sellerType" column="卖家类型"/>
+        <result property="buyerType" column="买家类型"/>
+        <result property="birthday" column="出生年月日" javaType="java.sql.Date"/>
+        <!-- 成交类型（二手）-->
+        <result property="cleanCaseType" column="cleanCaseType"/>
+    </resultMap>
+    <select id="download" parameterType="int" resultMap="resultMapping">
+        select
+            区域
+            ,板块
+            ,环线
+            ,小区名称
+            ,房屋地址
+            ,面积
+            ,房屋类型
+            ,总价
+            ,单价
+            ,登记日期
+            ,签约日期
+            ,中介公司
+            ,中介类型
+            ,卖家类型
+            ,买家类型
+            ,出生年月日
+            , 2 as cleanCaseType
+        from dbo.二手房成交数据${yearMonth};
+    </select>
+</mapper>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.data.basis.mapper.UVBasePriceMapper">
+    <!--    <resultMap id="resultMapping" type="com.ruoyi.project.data.basis.domain.UVBasePrice">-->
+    <!--        -->
+    <!--    </resultMap>-->
+    <select id="pageCount"
+            parameterType="com.ruoyi.project.data.basis.domain.UVBasePriceQueryModel"
+            resultType="int">
+        select count(1) from dbo.TLK_基价信息
+        <where>
+            <if test="communityId != null">
+                ITEM_AIRAID=#{communityId}
+            </if>
+            <if test="valuePoint != null">
+                AND ITEM_VALUEPOINT=#{valuePoint}
+            </if>
+            <if test="communityType != null">
+                AND ITEM_PROJECTTYPE=#{communityType}
+            </if>
+            <if test="priceType != null">
+                AND ITEM_PRICETYPE=#{priceType}
+            </if>
+        </where>
+    </select>
+    <select id="pageList"
+            parameterType="com.ruoyi.project.data.basis.domain.UVBasePriceQueryModel"
+            resultType="com.ruoyi.project.data.basis.domain.UVBasePrice">
+<!--        <bind name="skip" value=" (pageIndex - 1) * pageSize "></bind>-->
+        SELECT ITEM_AIRAID as communityId
+        ,ITEM_PROJECTTYPE as communityType
+        ,ITEM_PRICETYPE as priceType
+        ,ITEM_STANDARDPRICE as standardPrice
+        ,ITEM_MAINAREAPRICE as mainAreaPrice
+        ,ITEM_VALUEPOINT as valuePoint
+        ,ITEM_PRICEEXPLAIN as comment
+        ,ITEM_PRICECHG
+        FROM dbo.TLK_基价信息
+        <where>
+            <if test="communityId != null">
+                ITEM_AIRAID=#{communityId}
+            </if>
+            <if test="valuePoint != null">
+                AND ITEM_VALUEPOINT=#{valuePoint}
+            </if>
+            <if test="communityType != null">
+                AND ITEM_PROJECTTYPE=#{communityType}
+            </if>
+            <if test="priceType != null">
+                AND ITEM_PRICETYPE=#{priceType}
+            </if>
+        </where>
+        order by ITEM_VALUEPOINT desc,ITEM_AIRAID asc offset #{pageIndex} ROW FETCH NEXT #{pageSize} ROWS ONLY;
+    </select>
+</mapper>

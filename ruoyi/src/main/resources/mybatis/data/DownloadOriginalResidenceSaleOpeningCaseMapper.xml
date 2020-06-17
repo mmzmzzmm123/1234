@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.data.cases.mapper.sync.DownloadOriginalResidenceSaleOpeningCaseMapper">
+    <resultMap id="resultMapping" type="com.ruoyi.project.data.cases.domain.OriginalResidenceSaleOpeningCase">
+        <result property="caseLianJiaId" column="llid"/>
+        <result property="caseLianJiaCommunityId" column="lcid"/>
+        <result property="caseTitle" column="name"/>
+        <result property="caseApartmentLayout" column="roomtype"/>
+        <result property="caseArea" column="area" javaType="java.math.BigDecimal"/>
+        <result property="caseToward" column="towards"/>
+        <result property="caseStorey" column="storey"/>
+        <result property="caseLastDeal" column="lastDeal" javaType="java.sql.Date"/>
+        <result property="caseElevator" column="condoElev"/>
+        <result property="caseDecoration" column="decoration"/>
+        <result property="caseYear" column="year"/>
+        <result property="caseAddress" column="address"/>
+        <result property="casePrice" column="price" javaType="java.math.BigDecimal"/>
+        <result property="caseCommunityName" column="cname"/>
+        <result property="caseVisitedNum" column="visited_num"/>
+        <result property="caseFirstVisitTime" column="first_visit_time" javaType="java.sql.Date"/>
+        <result property="caseVisitedNum15" column="visited_num_15"/>
+        <result property="caseVisitedNum30" column="visited_num_30"/>
+        <result property="caseUrl" column="url"/>
+        <result property="caseCommunityUrl" column="curl"/>
+        <result property="caseGetDate" column="getCaseTime" javaType="java.sql.Date"/>
+        <result property="caseProvider" column="caseProvider"/>
+    </resultMap>
+    <select id="download" resultMap="resultMapping">
+        select llid
+             , lcid
+             , name
+             , type
+             , roomtype
+             , area
+             , towards
+             , storey
+             , lastDeal
+             , dealToNow
+             , condoElev
+             , decoration
+             , year
+             , address
+             , vid
+             , dataType
+             , price
+             , cname
+             , visited_num
+             , first_visit_time
+             , visited_num_15
+             , visited_num_30
+             , url
+             , curl
+             , getCaseTime
+             , '链家'             as caseProvider
+        from dbo.Listing_Lianjia;
+    </select>
+</mapper>
