@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.project.common.CommonController;
+import com.ruoyi.project.common.SchoolCommon;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,6 +38,8 @@ public class ByTrainVideoController extends BaseController {
     private IByTrainVideoService byTrainVideoService;
     @Autowired
     private CommonController commonController;
+    @Autowired
+    private SchoolCommon schoolCommon;
 
 
     /**
@@ -46,6 +49,10 @@ public class ByTrainVideoController extends BaseController {
     @GetMapping("/list")
     public TableDataInfo list(ByTrainVideo byTrainVideo) {
         startPage();
+        //判断type是否为空
+        if (!schoolCommon.isStringEmpty(byTrainVideo.getType())) {
+            byTrainVideo.setType(byTrainVideo.getType() + ",");
+        }
         List<ByTrainVideo> list = byTrainVideoService.selectByTrainVideoList(byTrainVideo);
 
         if (list != null && list.size() > 0) {

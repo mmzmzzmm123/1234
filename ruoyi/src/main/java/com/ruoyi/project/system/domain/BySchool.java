@@ -38,7 +38,7 @@ public class BySchool extends BaseEntity
 
     /** 幼儿园类型1、独立2、集团3、集团下属 */
     @Excel(name = "幼儿园类型1、独立2、集团3、集团下属")
-    private Long type;
+    private String type;
 
     /** 集团下属有parentid */
     @Excel(name = "集团下属有parentid")
@@ -94,7 +94,7 @@ public class BySchool extends BaseEntity
 
     /** 幼儿园规模 */
     @Excel(name = "幼儿园规模")
-    private Long scale;
+    private String scale;
 
     /** 创建人ID */
     @Excel(name = "创建人ID")
@@ -114,7 +114,7 @@ public class BySchool extends BaseEntity
 
     /** 园所会员性质 */
     @Excel(name = "园所会员性质")
-    private Long isDemonstr;
+    private String isDemonstr;
 
     /** 营业执照图片 */
     @Excel(name = "营业执照图片")
@@ -126,7 +126,7 @@ public class BySchool extends BaseEntity
 
     /** 幼儿园缴费状态（0未缴费，1已缴费，2已到期） */
     @Excel(name = "幼儿园缴费状态", readConverterExp = "0=未缴费，1已缴费，2已到期")
-    private Long feeStatus;
+    private String feeStatus;
 
     /** 开通截至日期 */
     @Excel(name = "开通截至日期", width = 30, dateFormat = "yyyy-MM-dd")
@@ -184,12 +184,12 @@ public class BySchool extends BaseEntity
     {
         return nameShort;
     }
-    public void setType(Long type) 
+    public void setType(String type)
     {
         this.type = type;
     }
 
-    public Long getType() 
+    public String getType()
     {
         return type;
     }
@@ -310,12 +310,12 @@ public class BySchool extends BaseEntity
     {
         return status;
     }
-    public void setScale(Long scale) 
+    public void setScale(String scale)
     {
         this.scale = scale;
     }
 
-    public Long getScale() 
+    public String getScale()
     {
         return scale;
     }
@@ -355,12 +355,12 @@ public class BySchool extends BaseEntity
     {
         return location;
     }
-    public void setIsDemonstr(Long isDemonstr) 
+    public void setIsDemonstr(String isDemonstr)
     {
         this.isDemonstr = isDemonstr;
     }
 
-    public Long getIsDemonstr() 
+    public String getIsDemonstr()
     {
         return isDemonstr;
     }
@@ -382,12 +382,12 @@ public class BySchool extends BaseEntity
     {
         return openBook;
     }
-    public void setFeeStatus(Long feeStatus) 
+    public void setFeeStatus(String feeStatus)
     {
         this.feeStatus = feeStatus;
     }
 
-    public Long getFeeStatus() 
+    public String getFeeStatus()
     {
         return feeStatus;
     }

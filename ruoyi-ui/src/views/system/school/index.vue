@@ -145,106 +145,156 @@
     />
 
     <!-- 添加或修改幼儿园机构对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="600px">
-      <el-form ref="form" :model="form" :rules="rules" label-width="120px">
-        <el-form-item label="幼儿园名称" prop="schoolName">
-          <el-input v-model="form.schoolName" placeholder="请输入幼儿园名称" />
-        </el-form-item>
-        <el-form-item label="幼儿园简称" prop="nameShort">
-          <el-input v-model="form.nameShort" placeholder="请输入幼儿园简称" />
-        </el-form-item>
-        <el-form-item label="幼儿园类型" props="type">
-          <el-radio-group v-model="form.type" @change="changeHandle">
-            <el-radio
-              v-for="dict in typeOptions"
-              :key="dict.dictValue"
-              :label="dict.dictValue"
-            >{{dict.dictLabel}}</el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="集团下属ID" prop="parentId" v-show="flag1">
-          <el-input v-model="form.parentId" placeholder="请输入集团下属id" />
-        </el-form-item>
-        <el-form-item label="所在省" prop="provincename">
-          <v-distpicker v-model="form.provincename" @selected="onSelected"></v-distpicker>
-        </el-form-item>
-        <el-form-item label="详细地址" prop="address">
-          <el-input v-model="form.address" placeholder="请输入详细地址" />
-        </el-form-item>
-        <el-form-item label="联系人" prop="mastername">
-          <el-input v-model="form.mastername" placeholder="请输入联系人" />
-        </el-form-item>
-        <el-form-item label="电话" prop="tel">
-          <el-input v-model="form.tel" placeholder="请输入电话" maxlength="11" />
-        </el-form-item>
-        <el-form-item label="紧急联系人" prop="emMan">
-          <el-input v-model="form.emMan" placeholder="请输入紧急联系人" />
-        </el-form-item>
-        <el-form-item label="紧急联系电话" prop="emTel">
-          <el-input v-model="form.emTel" placeholder="请输入紧急联系电话" />
-        </el-form-item>
-        <el-form-item label="状态" props="status">
-          <el-radio-group v-model="form.status">
-            <el-radio
-              v-for="dict in statusOptions"
-              :key="dict.dictValue"
-              :label="dict.dictValue"
-            >{{dict.dictLabel}}</el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="幼儿园规模" prop="scale">
-          <el-select v-model="form.scale">
-            <el-option
-              v-for="dict in scaleOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="创建人ID" prop="createUser" v-show="false">
-          <el-input v-model="form.createUser" placeholder="请输入创建人ID" />
-        </el-form-item>
-        <el-form-item label="最后审核人ID" prop="approvalUser" v-show="false">
-          <el-input v-model="form.approvalUser" placeholder="请输入最后审核人ID" />
-        </el-form-item>
-        <el-form-item label="创建时间" prop="createTime" v-show="false">
-          <el-input v-model="form.createTime"></el-input>
-        </el-form-item>   
-        <el-form-item label="园所会员性质" prop="isDemonstr">
-          <el-select v-model="form.isDemonstr" placeholder="请选择">
-            <el-option
-              v-for="dict in isDemonstrOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            ></el-option>
-          </el-select>
-        </el-form-item> 
-        <el-form-item label="家长手册发布状态" prop="openBook" v-show="false">
-          <el-input v-model="form.openBook" placeholder="请输入家长手册发布状态" />
-        </el-form-item>
-        <el-form-item label="幼儿园缴费状态" prop="feeStatus">
-          <el-radio-group v-model="form.feeStatus">
-            <el-radio
-              v-for="dict in feeStatusOptions"
-              :key="dict.dictValue"
-              :label="dict.dictValue"
-            >{{dict.dictLabel}}</el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="开通截至日期" prop="openDeadline">
-          <el-date-picker
-            clearable
-            size="small"
-            style="width: 200px"
-            v-model="form.openDeadline"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="选择开通截至日期"
-          ></el-date-picker>
-        </el-form-item>
-      </el-form>
+    <el-dialog :title="title" :visible.sync="open" width="800px">
+      <el-row :gutter="15">
+        <el-form ref="form" :model="form" :rules="rules" label-width="120px">
+          <el-col :span="12">
+            <el-form-item label="幼儿园名称" prop="schoolName">
+              <el-input v-model="form.schoolName" placeholder="请输入幼儿园名称" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="幼儿园简称" prop="nameShort">
+              <el-input v-model="form.nameShort" placeholder="请输入幼儿园简称" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="幼儿园类型" props="type">
+              <el-radio-group v-model="form.type" @change="changeHandle">
+                <el-radio
+                  v-for="dict in typeOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictValue"
+                >{{dict.dictLabel}}</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="选择集团园" prop="parentId" v-show="flag1">
+              <!-- <el-input v-model="form.parentId" placeholder="请选择集团园" /> -->
+              <el-select v-model="form.parentId" filterable placeholder="请选择集团园">
+                <el-option
+                  v-for="item in schoolOptions"
+                  :key="item.id"
+                  :label="item.schoolName"
+                  :value="item.id"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="所在省" prop="provincename">
+              <v-distpicker
+                v-model="form.provincename"
+                :placeholders="placeholders"
+                :province="diglogForm.province"
+                :city="diglogForm.city"
+                :area="diglogForm.area"
+                @selected="onSelected"
+              ></v-distpicker>
+              <el-input v-model="form.province" v-if="false" />
+              <el-input v-model="form.regionid" v-if="false" />
+              <el-input v-model="form.area" v-if="false" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="详细地址" prop="address">
+              <el-input v-model="form.address" placeholder="请输入详细地址" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="联系人" prop="mastername">
+              <el-input v-model="form.mastername" placeholder="请输入联系人" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="电话" prop="tel">
+              <el-input v-model="form.tel" placeholder="请输入电话" maxlength="11" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="紧急联系人" prop="emMan">
+              <el-input v-model="form.emMan" placeholder="请输入紧急联系人" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="紧急联系电话" prop="emTel">
+              <el-input v-model="form.emTel" placeholder="请输入紧急联系电话" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="状态" props="status">
+              <el-radio-group v-model="form.status">
+                <el-radio
+                  v-for="dict in statusOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictValue"
+                >{{dict.dictLabel}}</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="幼儿园规模" prop="scale">
+              <el-select v-model="form.scale">
+                <el-option
+                  v-for="dict in scaleOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="创建人ID" prop="createUser" v-show="false">
+              <el-input v-model="form.createUser" placeholder="请输入创建人ID" />
+            </el-form-item>
+            <el-form-item label="最后审核人ID" prop="approvalUser" v-show="false">
+              <el-input v-model="form.approvalUser" placeholder="请输入最后审核人ID" />
+            </el-form-item>
+            <el-form-item label="创建时间" prop="createTime" v-show="false">
+              <el-input v-model="form.createTime"></el-input>
+            </el-form-item>
+            <el-form-item label="园所会员性质" prop="isDemonstr">
+              <el-select v-model="form.isDemonstr" placeholder="请选择">
+                <el-option
+                  v-for="dict in isDemonstrOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="家长手册发布状态" prop="openBook" v-show="false">
+              <el-input v-model="form.openBook" placeholder="请输入家长手册发布状态" />
+            </el-form-item>
+            <el-form-item label="幼儿园缴费状态" prop="feeStatus">
+              <el-radio-group v-model="form.feeStatus">
+                <el-radio
+                  v-for="dict in feeStatusOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictValue"
+                >{{dict.dictLabel}}</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="开通截至日期" prop="openDeadline">
+              <el-date-picker
+                clearable
+                size="small"
+                style="width: 200px"
+                v-model="form.openDeadline"
+                type="date"
+                value-format="yyyy-MM-dd"
+                placeholder="选择开通截至日期"
+              ></el-date-picker>
+            </el-form-item>
+          </el-col>
+        </el-form>
+      </el-row>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
@@ -269,6 +319,16 @@ export default {
   name: "School",
   data() {
     return {
+      placeholders: {
+        province: "请选择省",
+        city: "请选择市",
+        area: "请选择区"
+      },
+      diglogForm: {
+        province: null,
+        city: null,
+        area: null
+      },
       //显示集团属性的标志
       flag1: false,
       // 遮罩层
@@ -297,6 +357,8 @@ export default {
       isDemonstrOptions: [],
       //幼儿园规模选项
       scaleOptions: [],
+      //幼儿园列表
+      schoolOptions: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -350,6 +412,48 @@ export default {
             message: "请输入正确的手机号码",
             trigger: "blur"
           }
+        ],
+        provincename: [
+          {
+            required: true,
+            message: "省市区不能为空",
+            trigger: "blur"
+          }
+        ],
+        address: [
+          {
+            required: true,
+            message: "详细地址不能为空",
+            trigger: "blur"
+          }
+        ],
+        mastername: [
+          {
+            required: true,
+            message: "联系人不能为空",
+            trigger: "blur"
+          }
+        ],
+        emMan: [
+          {
+            required: true,
+            message: "紧急联系人不能为空",
+            trigger: "blur"
+          }
+        ],
+        emTel: [
+          {
+            required: true,
+            message: "紧急联系人电话不能为空",
+            trigger: "blur"
+          }
+        ],
+        openDeadline: [
+          {
+            required: true,
+            message: "开通截止日期不能为空",
+            trigger: "blur"
+          }
         ]
       }
     };
@@ -375,6 +479,9 @@ export default {
     //幼儿园缴费状态
     this.getDicts("sys_yeyjfzt").then(response => {
       this.feeStatusOptions = response.data;
+    });
+    listSchool(null).then(response => {
+      this.schoolOptions = response.rows;
     });
   },
   components: {
@@ -415,10 +522,10 @@ export default {
         parentId: undefined,
         province: undefined,
         provincename: undefined,
-        // regionid: undefined,
-        // regionname: undefined,
-        // area: undefined,
-        // areaname: undefined,
+        regionid: undefined,
+        regionname: undefined,
+        area: undefined,
+        areaname: undefined,
         address: undefined,
         mastername: undefined,
         tel: undefined,
@@ -440,6 +547,12 @@ export default {
         dqxn: undefined,
         dqxq: undefined
       };
+
+      this.diglogForm.province = "";
+      this.diglogForm.city = "";
+      this.diglogForm.area = "";
+      this.flag1 = false;
+
       this.resetForm("form");
     },
     /** 搜索按钮操作 */
@@ -470,6 +583,13 @@ export default {
       const id = row.id || this.ids;
       getSchool(id).then(response => {
         this.form = response.data;
+        this.diglogForm.province = response.data.provincename;
+        this.diglogForm.city = response.data.regionname;
+        this.diglogForm.area = response.data.areaname;
+        //判断是否下属园
+        if (response.data.type == "3") {
+          this.flag1 = true;
+        }
         this.open = true;
         this.title = "修改幼儿园机构";
       });
@@ -549,9 +669,21 @@ export default {
     },
     //所在省市区触发联动方法
     onSelected(data) {
-      this.form.provincename = data.province.value;
-      this.form.regionname = data.city.value;
-      this.form.areaname = data.area.value;
+      //console.log(data);
+      if (
+        data.province.code == undefined ||
+        data.city.code == undefined ||
+        data.area.code == undefined
+      ) {
+        this.form.provincename = undefined;
+      } else {
+        this.form.provincename = data.province.value;
+        this.form.province = data.province.code;
+        this.form.regionname = data.city.value;
+        this.form.regionid = data.city.code;
+        this.form.areaname = data.area.value;
+        this.form.area = data.area.code;
+      }
     }
   }
 };

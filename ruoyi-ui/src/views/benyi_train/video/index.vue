@@ -407,7 +407,7 @@ export default {
       if (this.queryParams.type == null) {
         this.queryParams.type = "";
       } else {
-        this.queryParams.type = this.queryParams.type.toString() + ",";
+        this.queryParams.type = this.queryParams.type.toString();
       }
       this.queryParams.pageNum = 1;
       this.getList();
