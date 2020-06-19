@@ -6,7 +6,7 @@ import com.ruoyi.project.data.price.domain.ArtificialResidenceRentBasePrice;
 import java.util.List;
 
 /**
- * 【请填写功能名称】Mapper接口
+ * Mapper接口
  *
  * @author ruoyi
  * @date 2020-05-20

@@ -33,6 +33,19 @@ public interface OriginalResidenceSaleOpeningCaseMapper {
      * @return
      */
     int createAssembleTable(@Param("yearMonth") Integer yearMonth);
+    /**
+     * 作价表
+     * @param yearMonth
+     * @return
+     */
+    int createComputePriceTable(@Param("yearMonth") Integer yearMonth);
+
+    /**
+     * 人工修正价格表
+     * @param yearMonth
+     * @return
+     */
+    int createArtificialPriceTable(@Param("yearMonth") Integer yearMonth);
 
     /**
      * 分页总数

@@ -26,6 +26,11 @@ spring:
           url: jdbc:sqlserver://172.16.30.233:1433;DatabaseName=obpm_LianCheng_Data
           username: sa
           password: Lcdatacenter_888
+        oldProd:
+          driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+          url: jdbc:sqlserver://139.196.201.83:8433;DatabaseName=LC_DataCenter
+          username: sa
+          password: lc1234
         compute:
           driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
           url: jdbc:sqlserver://172.16.30.233:1433;DatabaseName=uv_compute
@@ -36,6 +41,11 @@ spring:
           url: jdbc:sqlserver://172.16.30.233:1433;DatabaseName=uv_clean
           username: sa
           password: Lcdatacenter_888
+        calc:
+          driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+          url: jdbc:sqlserver://139.196.201.83:1433;DatabaseName=CALC
+          username: purple
+          password: liancheng
 
 #        druid:
 #            statViewServlet:

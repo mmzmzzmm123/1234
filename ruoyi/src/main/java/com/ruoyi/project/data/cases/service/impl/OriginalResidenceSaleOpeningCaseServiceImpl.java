@@ -17,6 +17,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -50,6 +51,8 @@ public class OriginalResidenceSaleOpeningCaseServiceImpl implements IOriginalRes
                 calendar.get(Calendar.MONTH)));
         Integer lastYearMonth = new Integer(String.format("%d%02d", calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH) + 1));
+        calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), 1);
+        Date valuePoint = calendar.getTime();
         calendar.add(Calendar.MONTH, 1);
         Integer computeTableRoute = new Integer(String.format("%d%02d", calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH) + 1));
@@ -59,11 +62,10 @@ public class OriginalResidenceSaleOpeningCaseServiceImpl implements IOriginalRes
         list.parallelStream().forEach(originalResidenceOpeningCase -> {
             originalResidenceOpeningCase.clear();
             originalResidenceOpeningCase.setYearMonth(syncTableRoute);
-//            logger.debug(originalResidenceOpeningCase.toString());
             syncOriginalResidenceSaleOpeningCaseMapper.insert(originalResidenceOpeningCase);
         });
-        running(computeTableRoute, syncTableRoute, list);
-        after(computeTableRoute, lastYearMonth);
+        running(computeTableRoute, list);
+        after(computeTableRoute, lastYearMonth, valuePoint);
     }
 
     /**
@@ -75,6 +77,10 @@ public class OriginalResidenceSaleOpeningCaseServiceImpl implements IOriginalRes
     public void prepare(Integer computeTableRoute, Integer syncTableRoute) {
         originalResidenceSaleOpeningCaseMapper.createTable(computeTableRoute);
         originalResidenceSaleOpeningCaseMapper.createCleanTable(computeTableRoute);
+        originalResidenceSaleOpeningCaseMapper.createAssembleTable(computeTableRoute);
+        originalResidenceSaleOpeningCaseMapper.createComputePriceTable(computeTableRoute);
+        originalResidenceSaleOpeningCaseMapper.createArtificialPriceTable(computeTableRoute);
+
         syncOriginalResidenceSaleOpeningCaseMapper.createTable(syncTableRoute);
     }
 
@@ -84,7 +90,7 @@ public class OriginalResidenceSaleOpeningCaseServiceImpl implements IOriginalRes
      * @param computeTableRoute
      * @param list
      */
-    public void running(Integer computeTableRoute, Integer syncTableRoute, List<OriginalResidenceSaleOpeningCase> list) {
+    public void running(Integer computeTableRoute, List<OriginalResidenceSaleOpeningCase> list) {
         SqlParameterSource[] batchParams = SqlParameterSourceUtils.createBatch(list.toArray());
         int[] updateCounts = namedParameterJdbcTemplate.batchUpdate("insert into dbo" +
                         ".original_residence_sale_opening_case_" + computeTableRoute + "(case_id, case_lianjia_id, " +
@@ -108,15 +114,27 @@ public class OriginalResidenceSaleOpeningCaseServiceImpl implements IOriginalRes
 
     /**
      * 匹配数据
+     * 计算基价
      *
      * @param yearMonth
+     * @param lastYearMonth
+     * @param valuePoint
      */
-    public void after(Integer yearMonth, Integer lastYearMonth) {
+    public void after(Integer yearMonth, Integer lastYearMonth, Date valuePoint) {
         // 清洗挂牌案例
-        String rawSql = LoadUtil.loadContent("sql-template/clear_opening_case.sql");
+        String rawSql = LoadUtil.loadContent("sql-template/clear_residence_sale_opening_case.sql");
         String sql = rawSql.replace("#yearMonth#", yearMonth.toString())
                 .replace("#lastYearMonth#", lastYearMonth.toString());
         jdbcTemplate.update(sql);
+
         // 作价
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        rawSql = LoadUtil.loadContent("sql-template/compute_residence_sale_base_price.sql");
+        sql = rawSql.replace("#yearMonth#", yearMonth.toString())
+                .replace("#lastYearMonth#", lastYearMonth.toString())
+                .replace("#valuePoint#", simpleDateFormat.format(valuePoint));
+        jdbcTemplate.update(sql);
+
+        logger.debug("#作价完成#");
     }
 }

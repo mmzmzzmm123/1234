@@ -102,7 +102,7 @@ public class OriginalResidenceSaleClosingCaseServiceImpl implements IOriginalRes
      */
     public void after(Integer yearMonth) {
         // 清洗挂牌案例
-        String rawSql = LoadUtil.loadContent("sql-template/clear_closing_case.sql");
+        String rawSql = LoadUtil.loadContent("sql-template/clear_residence_sale_closing_case.sql");
         String sql = rawSql.replace("#yearMonth#", yearMonth.toString());
         jdbcTemplate.update(sql);
     }

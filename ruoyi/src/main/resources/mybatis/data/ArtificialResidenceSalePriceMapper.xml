@@ -1,0 +1,429 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.data.price.mapper.ArtificialResidenceSaleBasePriceMapper">
+
+    <resultMap type="com.ruoyi.project.data.price.domain.ArtificialResidenceSaleBasePrice"
+               id="MainMappingResult">
+        <result property="communityId" column="ProjectID"/>
+        <result property="communityName" column="ProjectName"/>
+        <result property="communityAddress" column="ProjectAddr"/>
+        <result property="countyName" column="county"/>
+        <result property="blockName" column="block"/>
+        <result property="loopName" column="loop"/>
+        <result property="hasIndex" column="isIndxGen"/>
+        <result property="isPstCalc" column="isPstCalc"/>
+        <result property="status" column="statusRun"/>
+        <result property="label" column="ProjectSPLabel"/>
+        <result property="propertyType" column="propertyType"/>
+        <result property="projectType" column="projectType"/>
+        <result property="projectTypeDtl" column="projectTypeDtl"/>
+        <result property="propertyLevel" column="projectLevel"/>
+        <result property="year" column="year"/>
+        <result property="area" column="mainArea"/>
+        <result property="yearCoefficient" column="yearCoff"/>
+        <result property="areaCoefficient" column="areaCoff"/>
+        <result property="comment" column="priceNote"/>
+        <result property="basePriceDraft" column="basePriceDft"/>
+        <result property="mainPriceDraft" column="mainPriceDft"/>
+        <result property="basePrice_1" column="basePrice_1"/>
+        <result property="voppat" column="voppat"/>
+        <result property="voppa" column="voppa"/>
+        <!-- 案例均价 -->
+        <result property="priceUnitAdj" column="PriceUnitAdj"/>
+        <result property="visitedNum" column="Visited_Num"/>
+        <result property="firstVisitTime" column="First_Visit_Time"/>
+        <result property="visitedNum15" column="Visited_Num_15"/>
+        <result property="visitedNum30" column="Visited_Num_30"/>
+        <!-- 上周期 -->
+        <result property="priceDealMean_1" column="priceDealMean_1"/>
+        <result property="priceDealMax_1" column="priceDealMax_1"/>
+        <result property="sumDeal_1" column="sumDeal_1"/>
+        <!-- 本周期 -->
+        <result property="priceDealMean" column="priceDealMean"/>
+        <result property="priceDealMax" column="priceDealMax"/>
+        <result property="sumDeal" column="sumDeal"/>
+        <!-- 挂牌最低价 -->
+        <result property="priceListedMin" column="priceListedMin"/>
+        <result property="priceCase1_ToAI_Pst" column="priceCase1_ToAI_Pst"/>
+        <result property="priceCase2_ToAI_Pst" column="priceCase2_ToAI_Pst"/>
+        <result property="priceCase1_ToLst_Pst" column="priceCase1_ToLst_Pst"/>
+        <result property="priceCase2_ToLst_Pst" column="priceCase2_ToLst_Pst"/>
+        <result property="priceCase1" column="priceCase1"/>
+        <result property="priceCase1AdjPst" column="priceCase1AdjPst"/>
+        <result property="sumCase1" column="sumCase1"/>
+        <result property="priceCase2" column="priceCase2"/>
+        <result property="priceCase2AdjPst" column="priceCase2AdjPst"/>
+        <result property="sumCase2" column="sumCase2"/>
+        <result property="voppbt" column="voppbt"/>
+        <result property="voppb" column="voppb"/>
+        <!-- 绑定小区相关信息 -->
+        <result property="bindCommunityId" column="bindProjID"/>
+        <result property="bindCommunityPst" column="bind_Proj_Pst"/>
+        <result property="bindBlockClass" column="bind_Block_Class"/>
+        <result property="bindBlockClassPst" column="bind_Block_Class_Pst"/>
+        <result property="bindBlockPropertyLevel" column="bind_Block_Plevel"/>
+        <result property="bindBlockPropertyLevelPst" column="bind_Block_Plevel_Pst"/>
+        <result property="bindBlockProjectType" column="bind_Block_PType"/>
+        <result property="bindBlockProjectTypePst" column="bind_Block_Ptype_Pst"/>
+        <result property="bindCountyProjectType" column="bind_County_PType"/>
+        <result property="bindCountyProjectTypePst" column="bind_County_Ptype_Pst"/>
+    </resultMap>
+
+    <sql id="selectAllField">
+        SELECT ProjectID
+              ,ProjectName
+              ,ProjectAddr
+              ,County
+              ,Block
+              ,"Loop"
+              ,IsIndxGen
+              ,IsPstCalc
+              ,StatusRun
+              ,ProjectSPLabel
+              ,PropertyType
+              ,ProjectType
+              ,ProjectTypeDtl
+              ,ProjectLevel
+              ,Year
+              ,MainArea
+              ,AreaCoff
+              ,YearCoff
+              ,PriceNote
+              ,BasePriceDft
+              ,MainPriceDft
+              ,BasePrice_1
+              ,PriceUnitAdj
+              ,Visited_Num
+              ,First_Visit_Time
+              ,Visited_Num_15
+              ,Visited_Num_30
+              ,PriceDealMean_1
+              ,PriceDealMax_1
+              ,SumDeal_1
+              ,PriceDealMean
+              ,PriceDealMax
+              ,SumDeal
+              ,PriceListedMin
+              ,PriceCase1_ToAI_Pst
+              ,PriceCase2_ToAI_Pst
+              ,PriceCase1_ToLst_Pst
+              ,PriceCase2_ToLst_Pst
+              ,PriceCase1
+              ,PriceCase1AdjPst
+              ,SumCase1
+              ,PriceCase2
+              ,PriceCase2AdjPst
+              ,SumCase2
+              ,VOPPBT
+              ,VOPPB
+              ,BindProjID
+              ,Bind_Proj_Pst
+              ,Bind_Block_Class
+              ,Bind_Block_Class_Pst
+              ,Bind_Block_Plevel
+              ,Bind_Block_Plevel_Pst
+              ,Bind_Block_PType
+              ,Bind_Block_Ptype_Pst
+              ,Bind_County_PType
+              ,Bind_County_Ptype_Pst
+              ,VOPPAT
+              ,VOPPA
+        FROM dbo.DWA_PROJECTBASEPRICE_MANU_${yearMonth}
+    </sql>
+    <!--  分页总数   -->
+    <select id="selectPageCount"
+            parameterType="com.ruoyi.project.data.price.domain.ArtificialResidenceSaleBasePrice" resultType="int">
+        select count(1) from dbo.DWA_PROJECTBASEPRICE_MANU_${yearMonth}
+        <where>
+            <if test="communityId != null">
+                AND ProjectID = #{communityId}
+            </if>
+            <if test="nameOrAddress != null">
+                AND (ProjectName like concat('%', #{nameOrAddress}, '%') or ProjectAddr like concat('%',
+                #{nameOrAddress}, '%'))
+            </if>
+        </where>
+    </select>
+    <!-- 分页列表   -->
+    <select id="selectPageList"
+            parameterType="com.ruoyi.project.data.price.domain.ArtificialResidenceSaleBasePrice"
+            resultMap="MainMappingResult">
+        <include refid="selectAllField"/>
+        <where>
+            <if test="communityId != null">
+                AND ProjectID = #{communityId}
+            </if>
+            <if test="nameOrAddress != null">
+                AND (ProjectName like concat('%', #{nameOrAddress}, '%') or ProjectAddr like concat('%',
+                #{nameOrAddress}, '%'))
+            </if>
+        </where>
+        order by ProjectID ASC OFFSET #{pageIndex} rows fetch next #{pageSize} rows only
+    </select>
+
+    <!--    -->
+    <select id="selectById" parameterType="String" resultMap="MainMappingResult">
+        <include refid="selectAllField"/>
+        where id = #{id}
+    </select>
+    <!-- 获取表名   -->
+    <select id="yearMonthList" resultType="com.ruoyi.project.common.VueSelectModel">
+        SELECT right(name,6) as value, right(name,6) as label
+        FROM sys.tables
+        where name like 'DWA_PROJECTBASEPRICE_MANU_%'
+        order by cast(right(name,6) as int) desc
+    </select>
+
+    <!-- 修改价格信息（基价、主力基价、上月基价、幅度）、注意修改上期基价问题、还要把基价更新一下。 -->
+    <update id="updateEntity" parameterType="com.ruoyi.project.data.price.domain.ArtificialResidenceSaleBasePrice">
+        update dbo.DWA_PROJECTBASEPRICE_MANU_${yearMonth} set
+        BasePrice=#{basePrice},mainPrice=#{mainPrice},BasePrice_1=#{basePrice_1},VOPPAT=#{voppat},VOPPA=#{voppa},
+        PriceNote=#{comment}
+        where ProjectID=#{communityId};
+    </update>
+    <update id="prepareBachImport" parameterType="int">
+        create procedure dbo.BatchImportOfArtificialResidenceSale @table DWA_PROJECTBASEPRICE_MANU_Table readonly
+        as
+        begin
+            insert into dbo.DWA_PROJECTBASEPRICE_MANU_${yearMonth} ( ProjectID , ProjectName , ProjectAddr , County ,
+            Block ,
+            Loop , IsIndxGen , IsPstCalc , StatusRun , ProjectSPLabel , PropertyType , ProjectType , ProjectTypeDtl , ProjectLevel , Year , MainArea , AreaCoff , YearCoff , PriceNote , BasePriceDft , MainPriceDft , BasePrice_1 , PriceUnitAdj , Visited_Num , First_Visit_Time , Visited_Num_15 , Visited_Num_30 , PriceDealMean_1 , PriceDealMax_1 , SumDeal_1 , PriceDealMean , PriceDealMax , SumDeal , PriceListedMin , PriceCase1_ToAI_Pst , PriceCase2_ToAI_Pst , PriceCase1_ToLst_Pst , PriceCase2_ToLst_Pst , PriceCase1 , PriceCase1AdjPst , SumCase1 , PriceCase2 , PriceCase2AdjPst , SumCase2 , VOPPBT , VOPPB , BindProjID , Bind_Proj_Pst , Bind_Block_Class , Bind_Block_Class_Pst , Bind_Block_Plevel , Bind_Block_Plevel_Pst , Bind_Block_PType , Bind_Block_Ptype_Pst , Bind_County_PType , Bind_County_Ptype_Pst , VOPPAT , VOPPA )
+            select communityId , communityName , communityAddress , countyName , blockName , loopName , hasIndex , IsPstCalc , status , label , PropertyType , ProjectType , ProjectTypeDtl , propertyLevel , Year , area , areaCoefficient , yearCoefficient , comment , basePriceDraft , mainPriceDraft , BasePrice_1 , PriceUnitAdj , visitedNum , firstVisitTime , visitedNum15 , visitedNum30 , PriceDealMean_1 , PriceDealMax_1 , SumDeal_1 , PriceDealMean , PriceDealMax , SumDeal , PriceListedMin , PriceCase1_ToAI_Pst , PriceCase2_ToAI_Pst , PriceCase1_ToLst_Pst , PriceCase2_ToLst_Pst , PriceCase1 , PriceCase1AdjPst , SumCase1 , PriceCase2 , PriceCase2AdjPst , SumCase2 , VOPPBT , VOPPB , bindCommunityId , bindCommunityPst , bindBlockClass , bindBlockClassPst , bindBlockPropertyLevel , bindBlockPropertyLevelPst , bindBlockProjectType , bindBlockProjectTypePst , bindCountyProjectType , bindCountyProjectTypePst , VOPPAT , VOPPA
+            from @table;
+        end;
+    </update>
+    <insert id="insert" parameterType="com.ruoyi.project.data.price.domain.ArtificialResidenceSaleBasePrice">
+        insert into dbo.DWA_PROJECTBASEPRICE_MANU_${yearMonth}
+        (
+            ProjectID
+          , ProjectName
+          , ProjectAddr
+          , County
+          , Block
+          , "Loop"
+          , IsIndxGen
+          , IsPstCalc
+          , StatusRun
+          , ProjectSPLabel
+          , PropertyType
+          , ProjectType
+          , ProjectTypeDtl
+          , ProjectLevel
+          , Year
+          , MainArea
+          , AreaCoff
+          , YearCoff
+          , PriceNote
+          , BasePriceDft
+          , MainPriceDft
+          , BasePrice_1
+          , PriceUnitAdj
+          , Visited_Num
+          , First_Visit_Time
+          , Visited_Num_15
+          , Visited_Num_30
+          , PriceDealMean_1
+          , PriceDealMax_1
+          , SumDeal_1
+          , PriceDealMean
+          , PriceDealMax
+          , SumDeal
+          , PriceListedMin
+          , PriceCase1_ToAI_Pst
+          , PriceCase2_ToAI_Pst
+          , PriceCase1_ToLst_Pst
+          , PriceCase2_ToLst_Pst
+          , PriceCase1
+          , PriceCase1AdjPst
+          , SumCase1
+          , PriceCase2
+          , PriceCase2AdjPst
+          , SumCase2
+          , VOPPBT
+          , VOPPB
+          , BindProjID
+          , Bind_Proj_Pst
+          , Bind_Block_Class
+          , Bind_Block_Class_Pst
+          , Bind_Block_Plevel
+          , Bind_Block_Plevel_Pst
+          , Bind_Block_PType
+          , Bind_Block_Ptype_Pst
+          , Bind_County_PType
+          , Bind_County_Ptype_Pst
+          , VOPPAT
+          , VOPPA
+        )
+        values(
+        #{communityId}
+        , #{communityName}
+        , #{communityAddress}
+        , #{countyName}
+        , #{blockName}
+        , #{loopName}
+        , #{hasIndex}
+        , #{isPstCalc}
+        , #{status}
+        , #{label}
+        , #{propertyType}
+        , #{projectType}
+        , #{projectTypeDtl}
+        , #{propertyLevel}
+        , #{year}
+        , #{area}
+        , #{areaCoefficient}
+        , #{yearCoefficient}
+        , #{comment}
+        , #{basePriceDraft}
+        , #{mainPriceDraft}
+        , #{basePrice_1}
+        , #{priceUnitAdj}
+        , #{visitedNum}
+        , #{firstVisitTime,jdbcType=DATE}
+        , #{visitedNum15}
+        , #{visitedNum30}
+        , #{priceDealMean_1}
+        , #{priceDealMax_1}
+        , #{sumDeal_1}
+        , #{priceDealMean}
+        , #{priceDealMax}
+        , #{sumDeal}
+        , #{priceListedMin}
+        , #{priceCase1_ToAI_Pst}
+        , #{priceCase2_ToAI_Pst}
+        , #{priceCase1_ToLst_Pst}
+        , #{priceCase2_ToLst_Pst}
+        , #{priceCase1}
+        , #{priceCase1AdjPst}
+        , #{sumCase1}
+        , #{priceCase2}
+        , #{priceCase2AdjPst}
+        , #{sumCase2}
+        , #{voppbt}
+        , #{voppb}
+        , #{bindCommunityId}
+        , #{bindCommunityPst}
+        , #{bindBlockClass}
+        , #{bindBlockClassPst}
+        , #{bindBlockPropertyLevel}
+        , #{bindBlockPropertyLevelPst}
+        , #{bindBlockProjectType}
+        , #{bindBlockProjectTypePst}
+        , #{bindCountyProjectType}
+        , #{bindCountyProjectTypePst}
+        , #{voppat}
+        , #{voppa}
+        )
+    </insert>
+    <!-- 同步到基价库   -->
+    <insert id="insertUVBasePrice" parameterType="com.ruoyi.project.data.price.domain.ArtificialResidenceSaleBasePrice">
+        insert into obpm_LianCheng_Data.dbo.TLK_基价信息
+        (
+          LASTMODIFIED
+          , FORMNAME
+          , AUTHOR
+          , AUTHOR_DEPT_INDEX
+          , CREATED
+          , FORMID
+          , ISTMP
+          , VERSIONS
+          , APPLICATIONID
+          , STATEINT
+          , LASTMODIFIER
+          , DOMAINID
+          , AUDITORLIST
+          , COAUDITORLIST
+          , ID
+          , ITEM_PriceID
+          , ITEM_AIRAID
+          , ITEM_PROJECTTYPE
+          , ITEM_PRICETYPE
+          , ITEM_STANDARDPRICE
+          , ITEM_MAINAREAPRICE
+          , ITEM_VALUEPOINT
+          , ITEM_PRICEEXPLAIN
+          , ITEM_UPDATEPERSON
+          , ITEM_UPDATEDATE
+          , ITEM_PRICECHG
+        )
+        values(
+         getdate()
+        , N'数据维护管理/小区基价'
+        , N'amQRUkvYQAsAec1JGLp'
+        , 'Os6qe4Pmq5viTO8lTnW'
+        , getdate()
+        , N'ybte0OakLV17UzAyoVU'
+        , 0
+        , 1
+        , N'Ts7TykYmuEzzZgWhXHj'
+        , 0
+        , N'amQRUkvYQAsAec1JGLp'
+        , N'BclzHtmfLQoAA5ICTb5'
+        , N'{}'
+        , N'{}'
+        , newid()
+        , newid()
+        , #{communityId}
+        , 1
+        , 1
+        , #{basePriceDraft}
+        , #{mainPriceDraft}
+        , #{valuePoint}
+        , #{comment}
+        , '自动生成'
+        , getadte()
+        , #{voppa}
+        )
+    </insert>
+    <insert id="insertUVDocument" parameterType="com.ruoyi.project.data.price.domain.ArtificialResidenceSaleBasePrice">
+        insert into obpm_LianCheng_Data.dbo.T_DOCUMENT
+        (
+            ID
+          , LASTMODIFIED
+          , FORMNAME
+          , AUTHOR
+          , AUTHOR_DEPT_INDEX
+          , CREATED
+          , FORMID
+          , ISTMP
+          , VERSIONS
+          , APPLICATIONID
+          , LASTMODIFIER
+          , DOMAINID
+          , AUDITORLIST
+          , COAUDITORLIST
+          , MAPPINGID
+        )
+        SELECT     ID
+          , LASTMODIFIED
+          , FORMNAME
+          , AUTHOR
+          , AUTHOR_DEPT_INDEX
+          , CREATED
+          , FORMID
+          , ISTMP
+          , VERSIONS
+          , APPLICATIONID
+          , LASTMODIFIER
+          , DOMAINID
+          , AUDITORLIST
+          , COAUDITORLIST
+          , ID
+        FROM obpm_LianCheng_Data.dbo.TLK_基价信息
+        where id=#{priceId}
+    </insert>
+    <update id="updateLastMonthPrice">
+        update b
+        set b.ITEM_STANDARDPRICE = a.BasePrice_1
+        , b.ITEM_MAINAREAPRICE = a.BasePrice_1 * isnull(c.AreaCoff, 1) * isnull(c.AreaCoff, 1) * isnull(c.YearCoff,1)
+        from DWA_PROJECTBASEPRICE_MANU_${yearMonth}         a
+        join obpm_LianCheng_Data.dbo.TLK_基价信息     b
+        on a.ProjectID = b.ITEM_AIRAID
+        join dbo.DWA_PROJECTBASEPRICE_IMDT_${yearMonth} c
+        on a.ProjectID = c.ProjectID
+        where isnull(a.BasePrice_1, 1) <![CDATA[ <> ]]>  isnull(b.ITEM_STANDARDPRICE, 1)
+        and b.ITEM_VALUEPOINT = #{lastValuePoint} and a.ProjectId=#{communityId};
+    </update>
+</mapper>

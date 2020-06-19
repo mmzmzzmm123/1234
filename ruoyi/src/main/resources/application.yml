@@ -32,10 +32,15 @@ server:
     min-spare-threads: 30
 
 # 日志配置
+#logging:
+#  level:
+#    com.ruoyi: debug
+#    org.springframework: warn
 logging:
   level:
-    com.ruoyi: debug
-    org.springframework: warn
+    root: debug
+  path: C:\workshop\logs\ruoyi\
+  config: classpath:logback-spring.xml
 
 # Spring配置
 spring:
