@@ -42,6 +42,10 @@
         where id = #{id}
     </select>
 
+    <select id="selectChildrenByDayFlowDetailById" parameterType="Long" resultMap="ByDayFlowDetailResult">
+		select * from sys_dept where find_in_set(#{deptId})
+	</select>
+
     <insert id="insertByDayFlowDetail" parameterType="ByDayFlowDetail" useGeneratedKeys="true" keyProperty="id">
         insert into by_day_flow_detail
         <trim prefix="(" suffix=")" suffixOverrides=",">

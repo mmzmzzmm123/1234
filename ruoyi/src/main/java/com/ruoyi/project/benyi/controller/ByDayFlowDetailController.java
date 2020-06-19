@@ -72,6 +72,15 @@ public class ByDayFlowDetailController extends BaseController
     }
 
     /**
+     * 获取部门下拉树列表
+     */
+    @GetMapping("/treeselect")
+    public AjaxResult treeselect(ByDayFlowDetail byDayFlowDetail) {
+        List<ByDayFlowDetail> byDayFlowDetails = byDayFlowDetailService.selectByDayFlowDetailList(byDayFlowDetail);
+        return AjaxResult.success(byDayFlowDetailService.buildDayFlowDetailTreeSelect(byDayFlowDetails));
+    }
+
+    /**
      * 新增一日流程
      */
     @PreAuthorize("@ss.hasPermi('benyi:dayflowmanger:add')")

@@ -5,6 +5,9 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.framework.aspectj.lang.annotation.Excel;
 import com.ruoyi.framework.web.domain.BaseEntity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 一日流程对象 by_day_flow_detail
  * 
@@ -17,6 +20,12 @@ public class ByDayFlowDetail extends BaseEntity
 
     /** 流程ID */
     private Long id;
+
+    /** 树状父类ID */
+    private Long parentid;
+
+    /** 树状子类 */
+    private List<ByDayFlowDetail> children = new ArrayList<ByDayFlowDetail>();
 
     /** 流程序号 */
     @Excel(name = "流程序号")
@@ -146,6 +155,23 @@ public class ByDayFlowDetail extends BaseEntity
             .append("updateUser", getUpdateUser())
             .append("createTime", getCreateTime())
             .append("updateTime", getUpdateTime())
+            .append("parentid", getParentid())
             .toString();
+    }
+
+    public Long getParentid() {
+        return parentid;
+    }
+
+    public void setParentid(Long parentid) {
+        this.parentid = parentid;
+    }
+
+    public List<ByDayFlowDetail> getChildren() {
+        return children;
+    }
+
+    public void setChildren(List<ByDayFlowDetail> children) {
+        this.children = children;
     }
 }

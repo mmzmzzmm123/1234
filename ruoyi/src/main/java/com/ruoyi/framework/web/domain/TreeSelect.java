@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.stream.Collectors;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.ruoyi.project.benyi.domain.ByDayFlowDetail;
 import com.ruoyi.project.system.domain.SysDept;
 import com.ruoyi.project.system.domain.SysMenu;
 
@@ -26,10 +27,6 @@ public class TreeSelect implements Serializable
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<TreeSelect> children;
 
-    public TreeSelect()
-    {
-
-    }
 
     public TreeSelect(SysDept dept)
     {
@@ -43,6 +40,14 @@ public class TreeSelect implements Serializable
         this.id = menu.getMenuId();
         this.label = menu.getMenuName();
         this.children = menu.getChildren().stream().map(TreeSelect::new).collect(Collectors.toList());
+    }
+
+    //下拉树构造器
+    public TreeSelect(ByDayFlowDetail byDayFlowDetail) {
+
+        this.id = byDayFlowDetail.getId();
+        this.label = byDayFlowDetail.getName();
+        this.children = byDayFlowDetail.getChildren().stream().map(TreeSelect::new).collect(Collectors.toList());
     }
 
     public Long getId()

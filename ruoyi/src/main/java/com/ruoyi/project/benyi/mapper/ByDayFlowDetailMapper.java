@@ -28,6 +28,14 @@ public interface ByDayFlowDetailMapper
     public List<ByDayFlowDetail> selectByDayFlowDetailList(ByDayFlowDetail byDayFlowDetail);
 
     /**
+     * 根据ID查询所有子部门
+     *
+     * @param id 部门ID
+     * @return 部门列表
+     */
+    public List<ByDayFlowDetail> selectChildrenByDayFlowDetailById(Long id);
+
+    /**
      * 新增一日流程
      * 
      * @param byDayFlowDetail 一日流程

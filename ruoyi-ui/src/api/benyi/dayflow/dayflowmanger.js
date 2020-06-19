@@ -18,6 +18,14 @@ export function getDetail(id) {
     })
 }
 
+// 查询流程下拉树结构
+export function treeselect() {
+    return request({
+        url: '/benyi/dayflow/dayflowmanger/treeselect',
+        method: 'get'
+    })
+}
+
 // 新增一日流程
 export function addDetail(data) {
     return request({
