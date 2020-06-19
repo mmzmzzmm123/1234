@@ -44,7 +44,7 @@ public class ByDayFlowDetailController extends BaseController
     {
         startPage();
         List<ByDayFlowDetail> list = byDayFlowDetailService.selectByDayFlowDetailList(byDayFlowDetail);
-        System.out.println("-------------------------------"+list);
+        //System.out.println("-------------------------------"+list);
         return getDataTable(list);
     }
 
@@ -76,7 +76,7 @@ public class ByDayFlowDetailController extends BaseController
      */
     @GetMapping("/treeselect")
     public AjaxResult treeselect(ByDayFlowDetail byDayFlowDetail) {
-        List<ByDayFlowDetail> byDayFlowDetails = byDayFlowDetailService.selectByDayFlowDetailList(byDayFlowDetail);
+        List<ByDayFlowDetail> byDayFlowDetails = byDayFlowDetailService.selectByDayFlowDetailListTree(byDayFlowDetail);
         return AjaxResult.success(byDayFlowDetailService.buildDayFlowDetailTreeSelect(byDayFlowDetails));
     }
 

@@ -65,7 +65,7 @@ public class ByTeacherJbxxController extends BaseController
     /**
      * 查询教师基本信息列表
      */
-    @PreAuthorize("@ss.hasPermi('system:teacher:list')")
+    @PreAuthorize("@ss.hasPermi('system:teacher:list')"+ "||@ss.hasPermi('system:user:list')")
     @GetMapping("/listgroupxw")
     public TableDataInfo listGroupXw(ByTeacherJbxx byTeacherJbxx)
     {

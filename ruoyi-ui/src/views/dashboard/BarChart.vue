@@ -1,95 +1,147 @@
 <template>
-  <div :class="className" :style="{height:height,width:width}" />
+  <div :class="className" :style="{height:height,width:width}">
+    <el-row :gutter="24">
+      <el-col :span="24" :xs="24">
+        <div>
+          <FullCalendar
+            ref="fullCalendar"
+            defaultView="dayGridMonth"
+            locale="zh-cn" 
+            :buttonText="buttonText"
+            :plugins="calendarPlugins"
+            :events="calendarEvents"
+            :eventLimit="true"
+            :displayEventEnd="true"
+            eventLimitText="更多"
+            @eventClick="handleEventClick"
+          />
+        </div>
+      </el-col>
+    </el-row>
+  </div>
 </template>
 
 <script>
-import echarts from 'echarts'
-require('echarts/theme/macarons') // echarts theme
-import resize from './mixins/resize'
-
-const animationDuration = 6000
-
+import FullCalendar from "@fullcalendar/vue";
+import dayGridPlugin from "@fullcalendar/daygrid";
+import timeGridPlugin from "@fullcalendar/timegrid";
+import interactionPlugin from "@fullcalendar/interaction";
+import listPlugin from "@fullcalendar/list";
+import { getAllSchoolCalendars } from "@/api/benyi/calendar";
 export default {
-  mixins: [resize],
+  name: "fullcalendar_page",
+  components: {
+    FullCalendar
+  },
   props: {
     className: {
       type: String,
-      default: 'chart'
+      default: "chart"
     },
     width: {
       type: String,
-      default: '100%'
+      default: "100%"
     },
     height: {
       type: String,
-      default: '300px'
+      default: "480px"
     }
   },
   data() {
     return {
-      chart: null
+       header: {
+        left: "prev,next today",
+        center: "title",
+        right: "dayGridMonth, listWeek"
+      },
+      buttonText: {
+        today: "今天",
+        month: "月",
+        list: "周列表"
+      },
+      calendarPlugins: [
+        // plugins must be defined in the JS
+        dayGridPlugin,
+        //timeGridPlugin,
+        //interactionPlugin, // needed for dateClick
+        listPlugin
+      ],
+      calendarWeekends: true,
+      calendarEvents: [
+        // initial event data
+        // {
+        //   title: 'Event Now',
+        //   start: new Date(),
+        //   color: '#A61000'
+        // }
+      ],
+      calendarApi: null,
+      calendarData: [],
+      queryParams: {}
+    };
+  },
+  created() {
+    getAllSchoolCalendars(this.queryParams).then(response => {
+      this.calendarEvents = response.calendarData;
+    });
+  },
+  methods: {
+    handleEventClick(info) {
+      this.msgSuccess("活动: " + info.event.title);
     }
   },
   mounted() {
-    this.$nextTick(() => {
-      this.initChart()
-    })
-  },
-  beforeDestroy() {
-    if (!this.chart) {
-      return
-    }
-    this.chart.dispose()
-    this.chart = null
-  },
-  methods: {
-    initChart() {
-      this.chart = echarts.init(this.$el, 'macarons')
+    this.calendarApi = this.$refs.fullCalendar.getApi();
+  }
+};
+</script>
 
-      this.chart.setOption({
-        tooltip: {
-          trigger: 'axis',
-          axisPointer: { // 坐标轴指示器，坐标轴触发有效
-            type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
-          }
-        },
-        grid: {
-          top: 10,
-          left: '2%',
-          right: '2%',
-          bottom: '3%',
-          containLabel: true
-        },
-        xAxis: [{
-          type: 'category',
-          data: ['班级A', '班级B', '班级C', '班级D', '班级E', '班级F', '班级G'],
-          axisTick: {
-            alignWithLabel: true
-          }
-        }],
-        yAxis: [{
-          type: 'value',
-          axisTick: {
-            show: false
-          }
-        }],
-        series: [{
-          name: '幼儿出勤率',
-          type: 'bar',
-          stack: 'vistors',
-          barWidth: '60%',
-          data: [30, 29, 28, 31, 33, 18, 20],
-          animationDuration
-        }, {
-          name: '教师出勤率',
-          type: 'bar',
-          stack: 'vistors',
-          barWidth: '60%',
-          data: [3, 3, 3, 3, 2, 3, 3],
-          animationDuration
-        }]
-      })
+<style  lang="scss" scope>
+// you must include each plugins' css
+// paths prefixed with ~ signify node_modules
+@import "~@fullcalendar/core/main.css";
+@import "~@fullcalendar/daygrid/main.css";
+@import "~@fullcalendar/timegrid/main.css";
+@import "~@fullcalendar/list/main.css";
+.calendar {
+  width: 820px;
+  height: 100%;
+}
+.fc-widget-content {
+  .fc-sun,
+  .fc-sat {
+    background: rgba(245, 246, 248, 0.6);
+    //background: rgba(109, 113, 121, 0.6);
+  }
+}
+.xs-btns-style {
+  @media screen and (max-width: 768px) {
+    display: flex;
+    flex-wrap: wrap;
+    .el-col {
+      width: auto;
+    }
+  }
+  @media screen and (min-width: 769px) {
+  }
+  .el-col {
+    margin-bottom: 10px;
+    text-align: center;
+  }
+}
+.btn {
+  width: 96px;
+}
+.no-border-btn {
+  border: none;
+}
+.fc-header-toolbar {
+  @media screen and (max-width: 768px) {
+    .fc-left > .fc-today-button,
+    .fc-right > .fc-listWeek-button {
+      display: none;
     }
   }
 }
-</script>
+</style>
+

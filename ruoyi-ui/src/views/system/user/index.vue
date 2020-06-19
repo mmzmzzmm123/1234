@@ -477,7 +477,7 @@ export default {
     getTreeselect() {
       treeselect().then(response => {
         this.deptOptions = response.data;
-        console.log(this.deptOptions);
+        //console.log(this.deptOptions);
       });
     },
     // 筛选节点

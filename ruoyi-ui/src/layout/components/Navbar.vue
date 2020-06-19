@@ -13,6 +13,10 @@
       <template v-if="device!=='mobile'">
         <search id="header-search" class="right-menu-item" />
 
+        <el-tooltip content="系统使用文档" effect="dark" placement="bottom">
+          <ruo-yi-doc id="ruoyi-doc" class="right-menu-item hover-effect" />
+        </el-tooltip>
+
         <screenfull id="screenfull" class="right-menu-item hover-effect" />
 
         <el-tooltip content="布局大小" effect="dark" placement="bottom">
@@ -51,6 +55,7 @@ import Hamburger from "@/components/Hamburger";
 import Screenfull from "@/components/Screenfull";
 import SizeSelect from "@/components/SizeSelect";
 import Search from "@/components/HeaderSearch";
+import RuoYiDoc from '@/components/BenYi/Doc'
 import { getDeptsInfo } from "@/api/system/dept";
 
 export default {
@@ -59,7 +64,8 @@ export default {
     Hamburger,
     Screenfull,
     SizeSelect,
-    Search
+    Search,
+    RuoYiDoc
   },
   computed: {
     ...mapGetters(["sidebar", "avatar", "device"]),

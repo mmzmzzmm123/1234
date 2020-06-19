@@ -7,6 +7,7 @@
     <resultMap type="ByDayFlowDetail" id="ByDayFlowDetailResult">
         <result property="id" column="id"/>
         <result property="sortNumber" column="sort_number"/>
+        <result property="parentId" column="parent_id"/>
         <result property="targetCount" column="target_count"/>
         <result property="name" column="name"/>
         <result property="content" column="content"/>
@@ -23,8 +24,29 @@
         from by_day_flow_detail
     </sql>
 
+    <sql id="selectByDayFlowDetailsVo">
+        select * from(
+select dict_value+9999 id,dict_label name,0 parent_id,dict_sort sort_number from sys_dict_data where dict_type='sys_dayflow_type'
+union all
+select id,name,flow_type+9999,sort_number from by_day_flow_detail ) t
+    </sql>
+
     <select id="selectByDayFlowDetailList" parameterType="ByDayFlowDetail" resultMap="ByDayFlowDetailResult">
         <include refid="selectByDayFlowDetailVo"/>
+        <where>
+            <if test="sortNumber != null ">and sort_number = #{sortNumber}</if>
+            <if test="targetCount != null ">and target_count = #{targetCount}</if>
+            <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
+            <if test="content != null  and content != ''">and content = #{content}</if>
+            <if test="note != null  and note != ''">and note = #{note}</if>
+            <if test="flowType != null ">and flow_type = #{flowType}</if>
+            <if test="createUser != null ">and create_user = #{createUser}</if>
+            <if test="updateUser != null ">and update_user = #{updateUser}</if>
+        </where>
+    </select>
+
+    <select id="selectByDayFlowDetailListTree" parameterType="ByDayFlowDetail" resultMap="ByDayFlowDetailResult">
+        <include refid="selectByDayFlowDetailsVo"/>
         <where>
             <if test="sortNumber != null ">and sort_number = #{sortNumber}</if>
             <if test="targetCount != null ">and target_count = #{targetCount}</if>

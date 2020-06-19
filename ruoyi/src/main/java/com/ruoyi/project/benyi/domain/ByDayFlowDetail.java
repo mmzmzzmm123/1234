@@ -22,7 +22,7 @@ public class ByDayFlowDetail extends BaseEntity
     private Long id;
 
     /** 树状父类ID */
-    private Long parentid;
+    private Long parentId;
 
     /** 树状子类 */
     private List<ByDayFlowDetail> children = new ArrayList<ByDayFlowDetail>();
@@ -155,16 +155,16 @@ public class ByDayFlowDetail extends BaseEntity
             .append("updateUser", getUpdateUser())
             .append("createTime", getCreateTime())
             .append("updateTime", getUpdateTime())
-            .append("parentid", getParentid())
+            .append("parentid", getParentId())
             .toString();
     }
 
-    public Long getParentid() {
-        return parentid;
+    public Long getParentId() {
+        return parentId;
     }
 
-    public void setParentid(Long parentid) {
-        this.parentid = parentid;
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
     }
 
     public List<ByDayFlowDetail> getChildren() {

@@ -1,116 +1,75 @@
 <template>
-  <div :class="className" :style="{height:height,width:width}" />
+  <el-card :class="className" :style="{height:height,width:width}">
+    <div slot="header" class="clearfix">
+      <span>欢迎来到 {{deptName}} 管理系统</span>
+    </div>
+    <div class="text item">班级总数：{{classTotal}}</div>
+    <div class="text item">教职工总数：{{userTotal}}</div>
+    <div class="text item">幼儿总数：0</div>
+    <div class="text item">今日园历活动数：0</div>
+    <div class="text item">学习视频数：0</div>
+  </el-card>
 </template>
 
 <script>
-import echarts from 'echarts'
-require('echarts/theme/macarons') // echarts theme
-import resize from './mixins/resize'
-
-const animationDuration = 3000
+import { listUser, getUserProfile } from "@/api/system/user";
+import { listClass } from "@/api/system/class";
 
 export default {
-  mixins: [resize],
   props: {
     className: {
       type: String,
-      default: 'chart'
+      default: "chart"
     },
     width: {
       type: String,
-      default: '100%'
+      default: "100%"
     },
     height: {
       type: String,
-      default: '300px'
+      default: "480px"
     }
   },
   data() {
     return {
-      chart: null
-    }
+      deptName: {},
+      classTotal: 0,
+      userTotal: 0
+    };
   },
-  mounted() {
-    this.$nextTick(() => {
-      this.initChart()
-    })
-  },
-  beforeDestroy() {
-    if (!this.chart) {
-      return
-    }
-    this.chart.dispose()
-    this.chart = null
+  created() {
+    this.getDeptName();
+    this.getClassCount();
+    this.getUserCount();
   },
   methods: {
-    initChart() {
-      this.chart = echarts.init(this.$el, 'macarons')
-
-      this.chart.setOption({
-        tooltip: {
-          trigger: 'axis',
-          axisPointer: { // 坐标轴指示器，坐标轴触发有效
-            type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
-          }
-        },
-        radar: {
-          radius: '66%',
-          center: ['50%', '42%'],
-          splitNumber: 8,
-          splitArea: {
-            areaStyle: {
-              color: 'rgba(127,95,132,.3)',
-              opacity: 1,
-              shadowBlur: 45,
-              shadowColor: 'rgba(0,0,0,.5)',
-              shadowOffsetX: 0,
-              shadowOffsetY: 15
-            }
-          },
-          indicator: [
-            { name: 'Sales', max: 10000 },
-            { name: 'Administration', max: 20000 },
-            { name: 'Information Techology', max: 20000 },
-            { name: 'Customer Support', max: 20000 },
-            { name: 'Development', max: 20000 },
-            { name: 'Marketing', max: 20000 }
-          ]
-        },
-        legend: {
-          left: 'center',
-          bottom: '10',
-          data: ['Allocated Budget', 'Expected Spending', 'Actual Spending']
-        },
-        series: [{
-          type: 'radar',
-          symbolSize: 0,
-          areaStyle: {
-            normal: {
-              shadowBlur: 13,
-              shadowColor: 'rgba(0,0,0,.2)',
-              shadowOffsetX: 0,
-              shadowOffsetY: 10,
-              opacity: 1
-            }
-          },
-          data: [
-            {
-              value: [5000, 7000, 12000, 11000, 15000, 14000],
-              name: 'Allocated Budget'
-            },
-            {
-              value: [4000, 9000, 15000, 15000, 13000, 11000],
-              name: 'Expected Spending'
-            },
-            {
-              value: [5500, 11000, 12000, 15000, 12000, 12000],
-              name: 'Actual Spending'
-            }
-          ],
-          animationDuration: animationDuration
-        }]
-      })
+    getDeptName() {
+      getUserProfile().then(response => {
+        this.deptName = response.data.dept.deptName;
+      });
+    },
+    /** 查询班级信息列表 */
+    getClassCount() {
+      listClass(null).then(response => {
+        this.classTotal = response.total;
+      });
+    },
+    /** 查询用户列表 */
+    getUserCount() {
+      listUser(null).then(response => {
+        this.userTotal = response.total;
+      });
     }
   }
-}
+};
 </script>
+
+<style>
+.text {
+  font-size: 14px;
+}
+
+.item {
+  margin-bottom: 18px;
+}
+</style>

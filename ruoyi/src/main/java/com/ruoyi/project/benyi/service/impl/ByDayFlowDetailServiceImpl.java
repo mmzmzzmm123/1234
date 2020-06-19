@@ -51,6 +51,18 @@ public class ByDayFlowDetailServiceImpl implements IByDayFlowDetailService
     }
 
     /**
+     * 查询一日流程列表树
+     *
+     * @param byDayFlowDetail 一日流程
+     * @return 一日流程树集合
+     */
+    @Override
+    public List<ByDayFlowDetail> selectByDayFlowDetailListTree(ByDayFlowDetail byDayFlowDetail)
+    {
+        return byDayFlowDetailMapper.selectByDayFlowDetailListTree(byDayFlowDetail);
+    }
+
+    /**
      * 构建前端所需要树结构
      *
      * @param byDayFlowDetails 部门列表
@@ -58,17 +70,19 @@ public class ByDayFlowDetailServiceImpl implements IByDayFlowDetailService
      */
     @Override
     public List<ByDayFlowDetail> buildDayFlowDetailTree(List<ByDayFlowDetail> byDayFlowDetails) {
+        System.out.println("start---");
         List<ByDayFlowDetail> returnList = new ArrayList<ByDayFlowDetail>();
         List<Long> tempList = new ArrayList<Long>();
         for (ByDayFlowDetail byDayFlowDetail : byDayFlowDetails)
         {
-            tempList.add(byDayFlowDetail.getParentid());
+            tempList.add(byDayFlowDetail.getId());
         }
         for (Iterator<ByDayFlowDetail> iterator = byDayFlowDetails.iterator(); iterator.hasNext();)
         {
             ByDayFlowDetail byDayFlowDetail = (ByDayFlowDetail) iterator.next();
+            System.out.println("test==="+!tempList.contains(byDayFlowDetail.getParentId()));
             // 如果是顶级节点, 遍历该父节点的所有子节点
-            if (!tempList.contains(byDayFlowDetail.getParentid()))
+            if (!tempList.contains(byDayFlowDetail.getParentId()))
             {
                 recursionFn(byDayFlowDetails, byDayFlowDetail);
                 returnList.add(byDayFlowDetail);
@@ -127,8 +141,9 @@ public class ByDayFlowDetailServiceImpl implements IByDayFlowDetailService
         while (it.hasNext())
         {
             ByDayFlowDetail n = (ByDayFlowDetail) it.next();
-            if (StringUtils.isNotNull(n.getParentid()) && n.getParentid().longValue() == t.getId().longValue())
+            if (StringUtils.isNotNull(n.getParentId()) && n.getParentId().longValue() == t.getId().longValue())
             {
+                //System.out.println("parentid="+n.getParentId().longValue()+"---"+t.getId().longValue());
                 tlist.add(n);
             }
         }

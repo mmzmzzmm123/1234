@@ -42,7 +42,7 @@ public class ByClassController extends BaseController {
     /**
      * 查询班级信息列表
      */
-    @PreAuthorize("@ss.hasPermi('system:class:list')")
+    @PreAuthorize("@ss.hasPermi('system:class:list')"+ "||@ss.hasPermi('system:school:list')")
     @GetMapping("/list")
     public TableDataInfo list(ByClass byClass) {
         startPage();
