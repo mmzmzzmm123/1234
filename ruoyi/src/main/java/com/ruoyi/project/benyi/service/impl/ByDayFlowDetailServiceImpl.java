@@ -70,7 +70,7 @@ public class ByDayFlowDetailServiceImpl implements IByDayFlowDetailService
      */
     @Override
     public List<ByDayFlowDetail> buildDayFlowDetailTree(List<ByDayFlowDetail> byDayFlowDetails) {
-        System.out.println("start---");
+        //System.out.println("start---");
         List<ByDayFlowDetail> returnList = new ArrayList<ByDayFlowDetail>();
         List<Long> tempList = new ArrayList<Long>();
         for (ByDayFlowDetail byDayFlowDetail : byDayFlowDetails)
@@ -80,7 +80,7 @@ public class ByDayFlowDetailServiceImpl implements IByDayFlowDetailService
         for (Iterator<ByDayFlowDetail> iterator = byDayFlowDetails.iterator(); iterator.hasNext();)
         {
             ByDayFlowDetail byDayFlowDetail = (ByDayFlowDetail) iterator.next();
-            System.out.println("test==="+!tempList.contains(byDayFlowDetail.getParentId()));
+            //System.out.println("test==="+!tempList.contains(byDayFlowDetail.getParentId()));
             // 如果是顶级节点, 遍历该父节点的所有子节点
             if (!tempList.contains(byDayFlowDetail.getParentId()))
             {
