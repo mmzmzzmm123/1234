@@ -1,9 +1,10 @@
 package com.ruoyi.project.data.price.service.impl;
 
+import com.ruoyi.project.common.VueSelectModel;
+import com.ruoyi.project.data.price.domain.ComputeResidenceRentBasePrice;
 import com.ruoyi.project.data.price.domain.UltimateResidenceRentBasePrice;
 import com.ruoyi.project.data.price.mapper.UltimateResidenceRentPriceMapper;
 import com.ruoyi.project.data.price.service.IUltimateResidenceRentBasePriceService;
-import com.ruoyi.project.system.service.impl.SysUserServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,26 +28,18 @@ public class UltimateResidenceRentBasePriceServiceImpl implements IUltimateResid
 
     @Override
     public List<UltimateResidenceRentBasePrice> selectList(UltimateResidenceRentBasePrice ultimateResidenceRentBasePrice) {
-        return ultimateResidenceRentPriceMapper.selectListByRoute(ultimateResidenceRentBasePrice);
+        return ultimateResidenceRentPriceMapper.selectPageList(ultimateResidenceRentBasePrice);
     }
 
     @Override
     public int selectCount(UltimateResidenceRentBasePrice ultimateResidenceRentBasePrice) {
-        return ultimateResidenceRentPriceMapper.selectCountByRoute(ultimateResidenceRentBasePrice);
+        return ultimateResidenceRentPriceMapper.selectPageCount(ultimateResidenceRentBasePrice);
     }
 
     @Override
-    public UltimateResidenceRentBasePrice selectById(Integer id) {
-        return ultimateResidenceRentPriceMapper.selectByRoute(id);
+    public List<VueSelectModel> getYearMonth() {
+        return ultimateResidenceRentPriceMapper.yearMonthList();
     }
 
-    @Override
-    public int update(UltimateResidenceRentBasePrice ultimateResidenceRentBasePrice) {
-        return ultimateResidenceRentPriceMapper.updateByRoute(ultimateResidenceRentBasePrice);
-    }
 
-    @Override
-    public String batchImport(List<UltimateResidenceRentBasePrice> ultimateResidenceRentBasePrices, String operName) {
-        return null;
-    }
 }

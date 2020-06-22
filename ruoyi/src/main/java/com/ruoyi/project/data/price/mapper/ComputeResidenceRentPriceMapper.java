@@ -14,12 +14,12 @@ public interface ComputeResidenceRentPriceMapper {
      * @param id
      * @return
      */
-    ComputeResidenceRentBasePrice selectComputeResidenceRentBasePriceById(String id);
+    ComputeResidenceRentBasePrice selectById(String id);
 
     /**
      * 查询列表
      */
-    List<ComputeResidenceRentBasePrice> selectComputeResidenceRentBasePriceList(ComputeResidenceRentBasePrice ComputeResidenceRentBasePrice);
+    List<ComputeResidenceRentBasePrice> selectPageList(ComputeResidenceRentBasePrice ComputeResidenceRentBasePrice);
 
     /**
      * 求和
@@ -27,7 +27,7 @@ public interface ComputeResidenceRentPriceMapper {
      * @param ComputeResidenceRentBasePrice
      * @return
      */
-    Integer selectComputeResidenceRentBasePriceListCount(ComputeResidenceRentBasePrice ComputeResidenceRentBasePrice);
+    Integer selectPageCount(ComputeResidenceRentBasePrice ComputeResidenceRentBasePrice);
 
     /**
      * 更新

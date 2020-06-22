@@ -4,6 +4,7 @@ import com.ruoyi.framework.aspectj.lang.annotation.Excel;
 import com.ruoyi.framework.web.domain.BaseEntity;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * 人工修正住宅租赁对象
@@ -36,6 +37,20 @@ public class ArtificialResidenceRentBasePrice extends BaseEntity {
     private String voppat;
     @Excel(name = "价格涨跌幅-调整后")
     private BigDecimal voppa;
+
+    /**
+     * 价值时点
+     */
+    private Date valuePoint;
+    /**
+     * 上期价值时点
+     */
+    private Date lastValuePoint;
+    /**
+     * 价格id（随机生成）
+     */
+    private String priceId;
+
 
     public Integer getYearMonth() {
         return yearMonth;
@@ -123,5 +138,29 @@ public class ArtificialResidenceRentBasePrice extends BaseEntity {
 
     public void setVoppa(BigDecimal voppa) {
         this.voppa = voppa;
+    }
+
+    public Date getValuePoint() {
+        return valuePoint;
+    }
+
+    public void setValuePoint(Date valuePoint) {
+        this.valuePoint = valuePoint;
+    }
+
+    public Date getLastValuePoint() {
+        return lastValuePoint;
+    }
+
+    public void setLastValuePoint(Date lastValuePoint) {
+        this.lastValuePoint = lastValuePoint;
+    }
+
+    public String getPriceId() {
+        return priceId;
+    }
+
+    public void setPriceId(String priceId) {
+        this.priceId = priceId;
     }
 }

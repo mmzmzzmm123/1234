@@ -56,15 +56,6 @@ public interface ArtificialResidenceSaleBasePriceMapper {
      */
     int prepareBachImport(@Param("yearMonth") Integer yearMonth);
 
-//    /**
-//     * 修改数据
-//     *
-//     * @param artificialResidenceSaleBasePrice
-//     * @return
-//     */
-//    int updatePrice(ArtificialResidenceSaleBasePrice artificialResidenceSaleBasePrice);
-
-
     /**
      * 分页列表
      *

@@ -519,7 +519,6 @@ export default {
       this.reset();
       const id = row.id || this.ids;
       const yearMonth = row.yearMonth;
-      console.log(yearMonth);
       getById(yearMonth, id).then(response => {
         // 复合信息
         response.data.complexRegion =

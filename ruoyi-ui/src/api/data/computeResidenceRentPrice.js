@@ -1,35 +1,35 @@
 import request from '@/utils/request'
 
-// 查询【请填写功能名称】列表
+// 查询计算住宅租赁基价列表
 export function list(query) {
   return request({
-    url: '/data/rentprice/residence/compute/list',
+    url: '/data/rent-price/residence/compute/list',
     method: 'get',
     params: query
   })
 }
 
-// 查询【请填写功能名称】详细
+// 查询计算住宅租赁基价详细
 export function get(id) {
   return request({
-    url: '/data/rentprice/residence/compute/' + id,
+    url: '/data/rent-price/residence/compute/' + id,
     method: 'get'
   })
 }
 
-// 修改【请填写功能名称】
+// 修改计算住宅租赁基价
 export function update(data) {
   return request({
-    url: '/data/rentprice/residence/compute',
+    url: '/data/rent-price/residence/compute',
     method: 'put',
     data: data
   })
 }
 
-// 导出【请填写功能名称】
+// 导出计算住宅租赁基价
 export function export2File(query) {
   return request({
-    url: '/data/rentprice/residence/compute/export',
+    url: '/data/rent-price/residence/compute/export',
     method: 'get',
     params: query
   })
@@ -37,7 +37,7 @@ export function export2File(query) {
 
 export function getYearMonthList() {
   return request({
-    url: '/data/rentprice/residence/compute/yearmonth',
+    url: '/data/rent-price/residence/compute/yearmonth',
     method: 'get'
   })
 }

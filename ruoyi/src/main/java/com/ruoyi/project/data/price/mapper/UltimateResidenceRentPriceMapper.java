@@ -1,6 +1,7 @@
 package com.ruoyi.project.data.price.mapper;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.ruoyi.project.common.VueSelectModel;
 import com.ruoyi.project.data.price.domain.ArtificialResidenceRentBasePrice;
 import com.ruoyi.project.data.price.domain.UltimateOfficeBasePrice;
 import com.ruoyi.project.data.price.domain.UltimateResidenceRentBasePrice;
@@ -16,20 +17,13 @@ import java.util.List;
 @DS("compute")
 public interface UltimateResidenceRentPriceMapper {
 
+    List<UltimateResidenceRentBasePrice> selectPageList(UltimateResidenceRentBasePrice ultimateResidenceRentBasePrice);
 
-    List<UltimateResidenceRentBasePrice> selectListByRoute(UltimateResidenceRentBasePrice ultimateResidenceRentBasePrice);
-
-    Integer selectCountByRoute(UltimateResidenceRentBasePrice ultimateResidenceRentBasePrice);
-
-    /**
-     * @param id
-     * @return
-     */
-    UltimateResidenceRentBasePrice selectByRoute(Integer id);
+    Integer selectPageCount(UltimateResidenceRentBasePrice ultimateResidenceRentBasePrice);
 
     /**
-     * @param ultimateResidenceRentBasePrice
      * @return
      */
-    int updateByRoute(UltimateResidenceRentBasePrice ultimateResidenceRentBasePrice);
+    List<VueSelectModel> yearMonthList();
+
 }

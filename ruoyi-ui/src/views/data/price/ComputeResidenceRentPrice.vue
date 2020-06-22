@@ -38,16 +38,6 @@
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
-          type="success"
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['system:user:edit']"
-        >修改</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
           type="warning"
           icon="el-icon-download"
           size="mini"
@@ -55,19 +45,9 @@
           v-hasPermi="['system:user:export']"
         >导出</el-button>
       </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="info"
-          icon="el-icon-upload2"
-          size="mini"
-          @click="handleImport"
-          v-hasPermi="['system:user:import']"
-        >导入</el-button>
-      </el-col>
     </el-row>
 
     <el-table v-loading="loading" :data="dataList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="年月" align="center" prop="yearMonth" />
       <el-table-column label="小区ID" align="center" prop="communityId" />
       <el-table-column label="小区名称" align="center" prop="communityName" />
@@ -139,24 +119,6 @@
       <el-table-column label="绑定混合小区涨跌幅" align="center" prop="bind_MixProject_Pst" />
       <el-table-column label="价格涨跌幅类型-调整后" align="center" prop="voppat" />
       <el-table-column label="价格涨跌幅-调整后" align="center" prop="voppa" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
-        <template slot-scope="scope">
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
-            v-hasPermi="['system:user:edit']"
-          >修改</el-button>
-          <!-- <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['system:user:remove']"
-          >删除</el-button>-->
-        </template>
-      </el-table-column>
     </el-table>
 
     <pagination
@@ -167,89 +129,6 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改办公基价对话框 -->
-    <!-- <el-dialog :title="title" :visible.sync="open" width="800px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="160px">
-        <el-row :gutter="20">
-          <el-col :span="12">
-            <el-form-item label="小区ID">
-              <el-input v-model="form.communityId" disabled="true" readonly />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="楼栋ID">
-              <el-input v-model="form.buildingId" disabled="true" readonly />
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row :gutter="20">
-          <el-col :span="12">
-            <el-form-item label="主力基价（元/㎡）">
-              <el-input v-model="form.mainPrice" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="主力租金（元/月·㎡）">
-              <el-input v-model="form.mainPriceRent" />
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row :gutter="20">
-          <el-col :span="12">
-            <el-form-item label="主力基价涨跌幅">
-              <el-input v-model="form.mainPricePst" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="主力租金涨跌幅">
-              <el-input v-model="form.mainPriceRentPst" />
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row :gutter="20">
-          <el-col :span="12">
-            <el-form-item label="主力基价类型">
-              <el-input v-model="form.mainPriceType" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="主力租金类型">
-              <el-input v-model="form.mainPriceRentType" />
-            </el-form-item>
-          </el-col>
-        </el-row>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
-        <el-button @click="cancel">取 消</el-button>
-      </div>
-    </el-dialog>
-
-    <el-dialog :title="upload.title" :visible.sync="upload.open" width="400px" append-to-body>
-      <el-upload
-        ref="upload"
-        :limit="1"
-        accept=".xlsx, .xls"
-        :headers="upload.headers"
-        :action="upload.url + '?updateSupport=' + upload.updateSupport"
-        :disabled="upload.isUploading"
-        :on-progress="handleFileUploadProgress"
-        :on-success="handleFileSuccess"
-        :auto-upload="false"
-        drag
-      >
-        <i class="el-icon-upload"></i>
-        <div class="el-upload__text">
-          将文件拖到此处，或
-          <em>点击上传</em>
-        </div>
-        <div class="el-upload__tip" style="color:red" slot="tip">提示：仅允许导入“xls”或“xlsx”格式文件！</div>
-      </el-upload>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitFileForm">确 定</el-button>
-        <el-button @click="upload.open = false">取 消</el-button>
-      </div>
-    </el-dialog>-->
   </div>
 </template>
 
@@ -355,7 +234,7 @@ export default {
     },
     /** 查询办公基价列表 */
     getList() {
-      this.$refs['queryForm'].validate(valid => {
+      this.$refs["queryForm"].validate(valid => {
         if (valid) {
           this.loading = true;
           list(this.queryParams).then(response => {
@@ -441,18 +320,22 @@ export default {
     /** 导出按钮操作 */
     handleExport() {
       const queryParams = this.queryParams;
-      this.$confirm("是否确认导出所有住宅租赁基价数据项?", "警告", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      })
-        .then(function() {
-          return export2File(queryParams);
-        })
-        .then(response => {
-          this.download(response.msg);
-        })
-        .catch(function() {});
+      this.$refs["queryForm"].validate(valid => {
+        if (valid) {
+          this.$confirm("是否确认导出所有住宅租赁基价数据项?", "警告", {
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            type: "warning"
+          })
+            .then(function() {
+              return export2File(queryParams);
+            })
+            .then(response => {
+              this.download(response.msg);
+            })
+            .catch(function() {});
+        }
+      });
     },
     handleImport() {
       this.upload.title = "办公基价导入";

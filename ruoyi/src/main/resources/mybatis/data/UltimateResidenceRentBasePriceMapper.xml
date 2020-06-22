@@ -37,7 +37,7 @@
         from ODS_PROJECT_RENT_PRICE_INFO_${yearMonth}
     </sql>
 
-    <select id="selectCountByRoute" parameterType="com.ruoyi.project.data.price.domain.UltimateResidenceRentBasePrice" resultType="int">
+    <select id="selectPageCount" parameterType="com.ruoyi.project.data.price.domain.UltimateResidenceRentBasePrice" resultType="int">
         select count(1) from ODS_PROJECT_RENT_PRICE_INFO_${yearMonth}
         <where>
             <if test="communityId != null">
@@ -49,7 +49,7 @@
         </where>
     </select>
 
-    <select id="selectListByRoute" parameterType="com.ruoyi.project.data.price.domain.UltimateResidenceRentBasePrice"
+    <select id="selectPageList" parameterType="com.ruoyi.project.data.price.domain.UltimateResidenceRentBasePrice"
             resultMap="MappingResult">
         <include refid="selectAllColumn"/>
         <where>
@@ -61,5 +61,12 @@
             </if>
         </where>
         order by ProjectID ASC, status DESC OFFSET #{pageIndex} rows fetch next #{pageSize} rows only;
+    </select>
+
+    <select id="yearMonthList" resultType="com.ruoyi.project.common.VueSelectModel">
+        SELECT right(name,6) as value, right(name,6) as label
+        FROM sys.tables
+        where name like 'ODS_PROJECT_RENT_PRICE_INFO_%' and name not like '%_bak'
+        order by cast(right(name,6) as int) desc
     </select>
 </mapper>

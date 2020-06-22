@@ -11,12 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-/**
- * 【请填写功能名称】Service业务层处理
- *
- * @author ruoyi
- * @date 2020-05-20
- */
+
 @Service
 public class ComputeResidenceRentPriceServiceImpl implements IComputeResidenceRentPriceService {
 
@@ -26,32 +21,24 @@ public class ComputeResidenceRentPriceServiceImpl implements IComputeResidenceRe
     private ComputeResidenceRentPriceMapper computeResidenceRentPriceMapper;
 
     @Override
-    public List<ComputeResidenceRentBasePrice> selectList(ComputeResidenceRentBasePrice computeResidenceRentBasePrice) {
-        return computeResidenceRentPriceMapper.selectComputeResidenceRentBasePriceList(computeResidenceRentBasePrice);
+    public List<ComputeResidenceRentBasePrice> selectPageList(ComputeResidenceRentBasePrice computeResidenceRentBasePrice) {
+        return computeResidenceRentPriceMapper.selectPageList(computeResidenceRentBasePrice);
     }
 
     @Override
-    public int selectCount(ComputeResidenceRentBasePrice computeResidenceRentBasePrice) {
-        return computeResidenceRentPriceMapper.selectComputeResidenceRentBasePriceListCount(computeResidenceRentBasePrice);
+    public int selectPageCount(ComputeResidenceRentBasePrice computeResidenceRentBasePrice) {
+        return computeResidenceRentPriceMapper.selectPageCount(computeResidenceRentBasePrice);
     }
 
     @Override
     public ComputeResidenceRentBasePrice selectById(String id) {
-        return computeResidenceRentPriceMapper.selectComputeResidenceRentBasePriceById(id);
-    }
-
-    @Override
-    public int update(ComputeResidenceRentBasePrice officeBasePriceUltimate) {
-        return 0;
-    }
-
-    @Override
-    public String batchImport(List<ComputeResidenceRentBasePrice> officeBasePriceUltimates, String operName) {
-        return null;
+        return computeResidenceRentPriceMapper.selectById(id);
     }
 
     @Override
     public List<VueSelectModel> getYearMonth() {
         return computeResidenceRentPriceMapper.yearMonthList();
     }
+
+
 }

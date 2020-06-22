@@ -14,24 +14,70 @@
         <result property="rentPrice_1" column="rentPrice_1"/>
         <result property="voppat" column="voppat"/>
         <result property="voppa" column="voppa"/>
+        <result property="yearMonth" column="yearMonth"/>
     </resultMap>
 
-    <select id="selectArtificialResidenceRentBasePriceListCount"
+    <select id="selectById" resultMap="MainMappingResult">
+        select * from DWA_PROJECTBASEPRICE_RENT_MANU_${yearMonth} where id=#{id};
+    </select>
+
+    <select id="selectPageCount"
             parameterType="com.ruoyi.project.data.price.domain.ArtificialResidenceRentBasePrice" resultType="int">
-        select count(1) from DWA_PROJECTBASEPRICE_RENT_IMDT_${yearMonth}
+        select count(1) from DWA_PROJECTBASEPRICE_RENT_MANU_${yearMonth}
         <where>
             <if test="communityId != null">
-                AND ProjectID = #{communityId}
+                ProjectID like concat('%',#{communityId},'%')
             </if>
         </where>
     </select>
     <!-- 分页   -->
-    <select id="selectArtificialResidenceRentBasePriceList"
+    <select id="selectPageList"
             parameterType="com.ruoyi.project.data.price.domain.ArtificialResidenceRentBasePrice"
             resultMap="MainMappingResult">
-        <![CDATA[ SELECT ID,ProjectID,MainCoff_Rent,RentPrice,MainRentPrice,RentPrice_1,VOPPAT,VOPPA ]]>
-            FROM dbo.DWA_PROJECTBASEPRICE_RENT_MANU_${yearMonth}
-            order by ProjectID ASC OFFSET #{pageIndex} rows fetch next #{pageSize} rows only
+        SELECT ID,ProjectID,MainCoff_Rent,RentPrice,MainRentPrice,RentPrice_1,VOPPAT,VOPPA
+        FROM dbo.DWA_PROJECTBASEPRICE_RENT_MANU_${yearMonth}
+        <where>
+            <if test="communityId != null">
+                ProjectID like concat('%',#{communityId},'%')
+            </if>
+        </where>
+        order by ProjectID ASC OFFSET #{pageIndex} rows fetch next #{pageSize} rows only
+</select>
+
+    <!-- 获取表名   -->
+    <select id="yearMonthList" resultType="com.ruoyi.project.common.VueSelectModel">
+        SELECT right(name,6) as value, right(name,6) as label
+        FROM sys.tables
+        where name like 'DWA_PROJECTBASEPRICE_RENT_MANU_%' and name not like '%_bak'
+        order by cast(right(name,6) as int) desc
     </select>
+    <!--    从计算作价中同步数据到人工修正表 -->
+    <update id="importBySync">
+        insert into dbo.DWA_PROJECTBASEPRICE_RENT_MANU_${yearMonth}
+        (ProjectID,MainCoff_Rent,RentPrice,MainRentPrice,RentPrice_1,VOPPAT,VOPPA,ModifyDate)
+        SELECT ProjectID,MainCoff_Rent,RentPriceDft,MainRentPriceDft,RentPrice_1,VOPPAT,VOPPA,getdate()
+        from dbo.DWA_PROJECTBASEPRICE_RENT_IMDT_${yearMonth};
+    </update>
+    <!--    清空人工修正表-->
+    <update id="clearData">
+        truncate table DWA_PROJECTBASEPRICE_RENT_MANU_${yearMonth};
+    </update>
+    <!--    更新人工修正租赁基价-->
+    <update id="update" parameterType="com.ruoyi.project.data.price.domain.ArtificialResidenceRentBasePrice">
+        update dbo.DWA_PROJECTBASEPRICE_RENT_MANU_${yearMonth}
+            set RentPrice=#{rentPrice},MainRentPrice=#{mainRentPrice},VOPPAT=#{voppat},VOPPA=#{voppa},RentPrice_1=#{rentPrice_1}
+        ,ModifyDate=getdate()
+        where ID=#{id}
+    </update>
+    <!--    创建存储过程-->
+    <update id="prepareBachImport" parameterType="int">
+        create procedure dbo.BatchImportOfArtificialResidenceRent @table DWA_PROJECTBASEPRICE_RENT_MANU_Table readonly
+        as
+        begin
+            insert into dbo.DWA_PROJECTBASEPRICE_RENT_MANU_${yearMonth}(ProjectID,MainCoff_Rent,RentPrice,MainRentPrice,RentPrice_1,VOPPAT,VOPPA,ModifyDate )
+            select ProjectID,MainCoff_Rent,RentPrice,MainRentPrice,RentPrice_1,VOPPAT,VOPPA,ModifyDate
+            from @table;
+        end;
+    </update>
 
 </mapper>

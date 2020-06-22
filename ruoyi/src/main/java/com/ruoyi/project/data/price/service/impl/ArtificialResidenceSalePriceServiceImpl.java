@@ -86,7 +86,6 @@ public class ArtificialResidenceSalePriceServiceImpl implements IArtificialResid
     }
 
     @Override
-//    @Transactional
     public String batchImport(Integer yearMonth, List<ComputeResidenceSaleBasePrice> list) {
 
         int successNum = list.size();

@@ -1,6 +1,8 @@
 package com.ruoyi.project.data.price.controller;
 
+import com.ruoyi.common.exception.CustomException;
 import com.ruoyi.common.utils.ServletUtils;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.file.FileUploadUtils;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.framework.aspectj.lang.annotation.Log;
@@ -26,12 +28,10 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/data/rentprice/residence")
+@RequestMapping("/data/rent-price/residence/")
 public class ResidenceRentBasePriceController extends BaseController {
     @Autowired
     private IComputeResidenceRentPriceService computeResidenceRentPriceService;
@@ -49,15 +49,15 @@ public class ResidenceRentBasePriceController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('system:user:list')")
     @GetMapping("/compute/list")
-    public TableDataInfo list(ComputeResidenceRentBasePrice computeResidenceRentBasePrice) {
+    public TableDataInfo computeList(ComputeResidenceRentBasePrice computeResidenceRentBasePrice) {
         int pageIndex = ServletUtils.getParameterToInt("pageIndex");
         int pageSize = ServletUtils.getParameterToInt(TableSupport.PAGE_SIZE);
         computeResidenceRentBasePrice.setPageIndex(pageIndex <= 1 ? 0 : (pageIndex - 1) * pageSize);
         computeResidenceRentBasePrice.setPageSize(pageSize);
 
-        int total = computeResidenceRentPriceService.selectCount(computeResidenceRentBasePrice);
+        int total = computeResidenceRentPriceService.selectPageCount(computeResidenceRentBasePrice);
         List<ComputeResidenceRentBasePrice> list =
-                computeResidenceRentPriceService.selectList(computeResidenceRentBasePrice);
+                computeResidenceRentPriceService.selectPageList(computeResidenceRentBasePrice);
         list.forEach(x -> x.setYearMonth(computeResidenceRentBasePrice.getYearMonth()));
         return getDataTable(list, total);
     }
@@ -67,9 +67,8 @@ public class ResidenceRentBasePriceController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('system:user:list')")
     @GetMapping("/compute/yearmonth")
-    public AjaxResult yearMonthList() {
+    public AjaxResult computeYearMonthList() {
         List<VueSelectModel> list = computeResidenceRentPriceService.getYearMonth();
-
         return AjaxResult.success(list);
     }
 
@@ -79,70 +78,59 @@ public class ResidenceRentBasePriceController extends BaseController {
     @PreAuthorize("@ss.hasPermi('system:user:query')")
     @GetMapping(value = "/compute/{id}")
     public AjaxResult getInfo(@PathVariable("id") String id) {
-
         return AjaxResult.success(computeResidenceRentPriceService.selectById(id));
-    }
-
-    /**
-     * 修改 住宅租赁基价
-     */
-    @PreAuthorize("@ss.hasPermi('system:user:edit')")
-    @Log(title = "住宅租赁基价", businessType = BusinessType.UPDATE)
-    @PutMapping(value = "/compute")
-    public AjaxResult edit(@RequestBody ComputeResidenceRentBasePrice computeResidenceRentBasePrice) {
-        return toAjax(computeResidenceRentPriceService.update(computeResidenceRentBasePrice));
     }
 
     /**
      * 导出 住宅租赁基价列表
      */
     @PreAuthorize("@ss.hasPermi('system:user:export')")
-    @Log(title = "办公基价", businessType = BusinessType.EXPORT)
+    @Log(title = "住宅租赁基价", businessType = BusinessType.EXPORT)
     @GetMapping("/compute/export")
     public AjaxResult export(ComputeResidenceRentBasePrice computeResidenceRentBasePrice) {
-        int total = computeResidenceRentPriceService.selectCount(computeResidenceRentBasePrice);
+        int total = computeResidenceRentPriceService.selectPageCount(computeResidenceRentBasePrice);
         computeResidenceRentBasePrice.setPageIndex(0);
         computeResidenceRentBasePrice.setPageSize(total);
         List<ComputeResidenceRentBasePrice> list =
-                computeResidenceRentPriceService.selectList(computeResidenceRentBasePrice);
+                computeResidenceRentPriceService.selectPageList(computeResidenceRentBasePrice);
         ExcelUtil<ComputeResidenceRentBasePrice> util = new ExcelUtil<>(ComputeResidenceRentBasePrice.class);
         return util.exportExcel(list, "住宅租赁基价");
     }
 
-    /**
-     * 办公基价导入
-     *
-     * @param file
-     * @return
-     * @throws Exception
-     */
-    @Log(title = "办公基价", businessType = BusinessType.IMPORT)
-    @PreAuthorize("@ss.hasPermi('system:user:import')")
-    @PostMapping("/compute/importData")
-    public AjaxResult importData(@RequestParam("id") String id, @RequestParam("module") String module,
-                                 MultipartFile file) throws Exception {
-        ExcelUtil<ComputeResidenceRentBasePrice> util = new ExcelUtil<>(ComputeResidenceRentBasePrice.class);
-        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
-        String operName = loginUser.getUsername();
-        // 上传文件路径
-        String filePath = RuoYiConfig.getUploadPath();
-        // 上传并返回新文件名称
-        String fileName = FileUploadUtils.upload(filePath, file);
-        UploadFile uploadFile = new UploadFile();
-        uploadFile.setFk(id);
-        uploadFile.setSaveFileName(fileName);
-        uploadFile.setFileName(file.getOriginalFilename());
-        uploadFile.setModuleName(module);
-        uploadFile.setCreateBy(operName);
-        fileService.insert(uploadFile);
 
-//        List<ComputeResidenceRentBasePrice> computeResidenceRentBasePrices = util.importExcel(file.getInputStream());
-//        String message = computeResidenceRentPriceService.batchImport(computeResidenceRentBasePrices, operName);
-        return AjaxResult.success("not implement");
+    /**
+     * 查询 人工修正住宅租赁 表名
+     */
+    @PreAuthorize("@ss.hasPermi('system:user:list')")
+    @GetMapping("/artificial/yearmonth")
+    public AjaxResult artificialYearMonthList() {
+        List<VueSelectModel> list = artificialResidenceRentPriceService.getYearMonth();
+        return AjaxResult.success(list);
     }
 
     /**
-     * 人工修正住宅租赁
+     * 查询 人工修正住宅租赁
+     */
+    @PreAuthorize("@ss.hasPermi('system:user:list')")
+    @GetMapping("/artificial/{yearMonth}/{id}")
+    public AjaxResult artificialById(@PathVariable("yearMonth") Integer yearMonth, @PathVariable("id") String id) {
+        ArtificialResidenceRentBasePrice artificialResidenceRentBasePrice =
+                artificialResidenceRentPriceService.selectById(yearMonth, id);
+        return AjaxResult.success(artificialResidenceRentBasePrice);
+    }
+
+    /**
+     * 修改 住宅租赁基价
+     */
+    @PreAuthorize("@ss.hasPermi('system:user:edit')")
+    @Log(title = "人工修正住宅租赁基价", businessType = BusinessType.UPDATE)
+    @PutMapping(value = "/artificial")
+    public AjaxResult artificialEdit(@RequestBody ArtificialResidenceRentBasePrice artificialResidenceRentBasePrice) {
+        return toAjax(artificialResidenceRentPriceService.update(artificialResidenceRentBasePrice));
+    }
+
+    /**
+     * 查询 人工修正住宅租赁
      *
      * @param artificialResidenceRentBasePrice
      * @return
@@ -162,9 +150,81 @@ public class ResidenceRentBasePriceController extends BaseController {
         return getDataTable(list, total);
     }
 
+    /**
+     * 导出 住宅租赁基价列表
+     */
+    @PreAuthorize("@ss.hasPermi('system:user:export')")
+    @Log(title = "人工修正住宅租赁基价", businessType = BusinessType.EXPORT)
+    @GetMapping("/artificial/export")
+    public AjaxResult artificialExport(ArtificialResidenceRentBasePrice artificialResidenceRentBasePrice) {
+        int total = artificialResidenceRentPriceService.selectCount(artificialResidenceRentBasePrice);
+        artificialResidenceRentBasePrice.setPageIndex(0);
+        artificialResidenceRentBasePrice.setPageSize(total);
+        List<ArtificialResidenceRentBasePrice> list =
+                artificialResidenceRentPriceService.selectList(artificialResidenceRentBasePrice);
+        ExcelUtil<ArtificialResidenceRentBasePrice> util = new ExcelUtil<>(ArtificialResidenceRentBasePrice.class);
+        return util.exportExcel(list, "人工修正住宅租赁基价" + artificialResidenceRentBasePrice.getYearMonth());
+    }
 
-    // 文件保存
+    /**
+     * 导入 人工修正住宅租赁基价
+     *
+     * @param file
+     * @return
+     * @throws Exception
+     */
+    @Log(title = "住宅租赁基价", businessType = BusinessType.IMPORT)
+    @PreAuthorize("@ss.hasPermi('system:user:import')")
+    @PostMapping("/artificial/import/{yearMonth}")
+    public AjaxResult importData(@PathVariable("yearMonth") Integer yearMonth,
+                                 MultipartFile file) throws Exception {
+        ExcelUtil<ComputeResidenceRentBasePrice> util = new ExcelUtil<>(ComputeResidenceRentBasePrice.class);
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+        String operName = loginUser.getUsername();
+        // 上传文件路径
+        String filePath = RuoYiConfig.getUploadPath();
+        // 上传并返回新文件名称
+        String fileName = FileUploadUtils.upload(filePath, file);
+        UploadFile uploadFile = new UploadFile();
+        uploadFile.setFk(yearMonth.toString());
+        uploadFile.setSaveFileName(fileName);
+        uploadFile.setFileName(file.getOriginalFilename());
+        uploadFile.setModuleName("人工修正住宅销售基价");
+        uploadFile.setCreateBy(operName);
+        fileService.insert(uploadFile);
 
+        List<ComputeResidenceRentBasePrice> artificialResidenceSaleBasePrices = util.importExcel(file.getInputStream
+                ());
+        if (StringUtils.isNull(artificialResidenceSaleBasePrices) || artificialResidenceSaleBasePrices.size() == 0) {
+            throw new CustomException("人工修正住宅销售基价不能为空！");
+        }
+        String message = artificialResidenceRentPriceService.batchImport(yearMonth, artificialResidenceSaleBasePrices);
+        return AjaxResult.success(message);
+    }
+
+    /**
+     * 同步作价数据
+     *
+     * @param yearMonth
+     * @return
+     */
+    @PreAuthorize("@ss.hasPermi('system:user:list')")
+    @GetMapping("/artificial/importSync/{yearMonth}")
+    public AjaxResult artificialImportBySync(@PathVariable Integer yearMonth) {
+        artificialResidenceRentPriceService.importBySync(yearMonth);
+        return AjaxResult.success();
+    }
+
+
+    /**
+     * 查询 最终住宅租赁 表名
+     */
+    @PreAuthorize("@ss.hasPermi('system:user:list')")
+    @GetMapping("/ultimate/yearmonth")
+    public AjaxResult ultimateYearMonthList() {
+        List<VueSelectModel> list = ultimateResidenceRentBasePriceService.getYearMonth();
+        return AjaxResult.success(list);
+    }
 
     /**
      * 查询 住宅租赁基价列表
@@ -185,30 +245,6 @@ public class ResidenceRentBasePriceController extends BaseController {
     }
 
     /**
-     * 人工审核住宅租赁基价导入（模板）
-     * 记录变化的值和变化次数
-     */
-
-    /**
-     * 获取 住宅租赁基价详细信息
-     */
-    @PreAuthorize("@ss.hasPermi('system:user:query')")
-    @GetMapping(value = "/ultimate/{id}")
-    public AjaxResult ultimateResidenceRentBasePriceGet(@PathVariable("id") Integer id) {
-        return AjaxResult.success(ultimateResidenceRentBasePriceService.selectById(id));
-    }
-
-    /**
-     * 修改 住宅租赁基价
-     */
-    @PreAuthorize("@ss.hasPermi('system:user:edit')")
-    @Log(title = "住宅租赁基价", businessType = BusinessType.UPDATE)
-    @PutMapping(value = "/ultimate")
-    public AjaxResult ultimateResidenceRentBasePriceEdit(@RequestBody UltimateResidenceRentBasePrice ultimateResidenceRentBasePrice) {
-        return toAjax(ultimateResidenceRentBasePriceService.update(ultimateResidenceRentBasePrice));
-    }
-
-    /**
      * 导出 住宅租赁基价列表
      */
     @PreAuthorize("@ss.hasPermi('system:user:export')")
@@ -223,5 +259,4 @@ public class ResidenceRentBasePriceController extends BaseController {
         ExcelUtil<UltimateResidenceRentBasePrice> util = new ExcelUtil<>(UltimateResidenceRentBasePrice.class);
         return util.exportExcel(list, "核准住宅租赁基价");
     }
-
 }

@@ -163,7 +163,7 @@ public class ResidenceSaleBasePriceController extends BaseController {
      * @return
      * @throws Exception
      */
-    @Log(title = "办公基价", businessType = BusinessType.IMPORT)
+    @Log(title = "住宅售价基价", businessType = BusinessType.IMPORT)
     @PreAuthorize("@ss.hasPermi('system:user:import')")
     @PostMapping("/artificial/importData/{yearMonth}")
     public AjaxResult importData(@PathVariable("yearMonth") Integer yearMonth,

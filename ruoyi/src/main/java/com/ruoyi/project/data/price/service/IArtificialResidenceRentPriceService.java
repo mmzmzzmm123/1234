@@ -1,6 +1,9 @@
 package com.ruoyi.project.data.price.service;
 
+import com.ruoyi.project.common.VueSelectModel;
 import com.ruoyi.project.data.price.domain.ArtificialResidenceRentBasePrice;
+import com.ruoyi.project.data.price.domain.ComputeResidenceRentBasePrice;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -11,6 +14,15 @@ import java.util.List;
  * @date 2020-05-20
  */
 public interface IArtificialResidenceRentPriceService {
+
+    /**
+     * 单条记录
+     *
+     * @param yearMonth
+     * @param id
+     * @return
+     */
+    ArtificialResidenceRentBasePrice selectById(Integer yearMonth, String id);
 
     /**
      * 查询人工修正住宅租赁列表
@@ -26,7 +38,33 @@ public interface IArtificialResidenceRentPriceService {
      */
     int selectCount(ArtificialResidenceRentBasePrice officeBasePriceUltimate);
 
+    /**
+     * 获取表名
+     *
+     * @return
+     */
+    List<VueSelectModel> getYearMonth();
 
+    /**
+     * @param yearMonth
+     */
+    void importBySync(Integer yearMonth);
+
+    /**
+     * 更新
+     * @param officeBasePriceUltimate
+     * @return
+     */
+    int update(ArtificialResidenceRentBasePrice officeBasePriceUltimate);
+
+    /**
+     * 导入
+     *
+     * @param yearMonth
+     * @param list
+     * @return
+     */
+    String batchImport(Integer yearMonth, List<ComputeResidenceRentBasePrice> list);
 }
 
 

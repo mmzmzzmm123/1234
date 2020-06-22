@@ -1,15 +1,15 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="100px">
-      <el-form-item label="年月" prop="yearMonth" clearable>
-        <el-date-picker
-          v-model="queryParams.yearMonth"
-          format="yyyyMM"
-          value-format="yyyyMM"
-          type="month"
-          placeholder="选择年月"
-          @keyup.enter.native="handleQuery"
-        ></el-date-picker>
+    <el-form :model="queryParams" ref="queryForm" :rules="rules" :inline="true" label-width="100px">
+      <el-form-item label="年月" prop="yearMonth">
+        <el-select v-model="queryParams.yearMonth" placeholder="请选择年月">
+          <el-option
+            v-for="item in yearMonthList"
+            :value="item.value"
+            :label="item.label"
+            :key="item.value"
+          ></el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="联城小区ID" prop="communityId" clearable>
         <el-input
@@ -26,16 +26,61 @@
       </el-form-item>
     </el-form>
 
+    <el-row :gutter="10" class="mb8">
+      <el-col :span="1.5">
+        <el-button
+          type="primary"
+          icon="el-icon-bell"
+          size="mini"
+          @click="handleSync"
+          v-hasPermi="['system:user:import']"
+        >从作价导入</el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="info"
+          icon="el-icon-upload2"
+          size="mini"
+          @click="handleImport"
+          v-hasPermi="['system:user:import']"
+        >文件导入</el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="warning"
+          icon="el-icon-download"
+          size="mini"
+          @click="handleExport"
+          v-hasPermi="['system:user:export']"
+        >导出</el-button>
+      </el-col>
+    </el-row>
+
     <el-table v-loading="loading" :data="dataList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="年月" align="center" prop="yearMonth" />
-      <el-table-column label="小区ID" align="center" prop="communityId" />
+      <el-table-column label="年月" align="center" prop="yearMonth" fixed />
+      <el-table-column label="小区ID" align="center" prop="communityId" fixed />
       <el-table-column label="租金主力面积系数" align="center" prop="mainRentCoefficient" />
       <el-table-column label="平均租金" align="center" prop="rentPrice" />
       <el-table-column label="主力面积租金" align="center" prop="mainRentPrice" />
       <el-table-column label="平均租金（上周期）" align="center" prop="rentPrice_1" />
       <el-table-column label="价格涨跌幅类型-调整后" align="center" prop="voppat" />
       <el-table-column label="价格涨跌幅-调整后" align="center" prop="voppa" />
+      <el-table-column
+        label="操作"
+        align="center"
+        class-name="small-padding fixed-width"
+        fixed="right"
+      >
+        <template slot-scope="scope">
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-edit"
+            @click="handleUpdate(scope.row)"
+            v-hasPermi="['system:user:edit']"
+          >修改</el-button>
+        </template>
+      </el-table-column>
     </el-table>
 
     <pagination
@@ -45,23 +90,135 @@
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
     />
+    <!-- 文件上传对话框 -->
+    <el-dialog :title="upload.title" :visible.sync="upload.open" width="400px" append-to-body>
+      <el-upload
+        ref="upload"
+        :limit="1"
+        accept=".xlsx, .xls"
+        :headers="upload.headers"
+        :action="upload.url + '/' + queryParams.yearMonth"
+        :disabled="upload.isUploading"
+        :on-progress="handleFileUploadProgress"
+        :on-success="handleFileSuccess"
+        :auto-upload="false"
+        drag
+      >
+        <i class="el-icon-upload"></i>
+        <div class="el-upload__text">
+          将文件拖到此处，或
+          <em>点击上传</em>
+        </div>
+        <div class="el-upload__tip" style="color:red" slot="tip">提示：仅允许导入“xls”或“xlsx”格式文件！</div>
+        <div class="el-upload__tip" slot="tip">
+          <el-alert :title="uploadTips" type="warning" effect="dark" :closable="false"></el-alert>
+        </div>
+      </el-upload>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitFileForm">确 定</el-button>
+        <el-button @click="upload.open = false">取 消</el-button>
+      </div>
+    </el-dialog>
+
+    <!-- 修改对话框 -->
+    <el-dialog :title="title" :visible.sync="open" width="800px" append-to-body>
+      <el-form ref="form" :model="form" :rules="updateRules" label-width="160px">
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item label="小区ID">
+              <el-input v-model="form.communityId" disabled readonly />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="租金主力面积系数">
+              <el-input v-model="form.mainRentCoefficient" disabled readonly />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item label="平均租金" prop="rentPrice">
+              <el-input v-model="form.rentPrice" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="主力面积租金" prop="mainRentPrice">
+              <el-input v-model="form.mainRentPrice" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="24">
+            <el-form-item label="平均租金（上周期）" prop="rentPrice_1">
+              <el-input v-model="form.rentPrice_1" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item label="价格涨跌幅类型-调整后" prop="voppat">
+              <el-input v-model="form.voppat" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="价格涨跌幅-调整后" prop="voppa">
+              <el-input v-model="form.voppa" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="formSubmitForm">确 定</el-button>
+        <el-button @click="cancel">取 消</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import { getToken } from "@/utils/auth";
 import {
-  list
+  getById,
+  list,
+  update,
+  importSync,
+  export2File,
+  getYearMonthList
 } from "@/api/data/artificialResidenceRentPrice";
 
 export default {
   name: "artificialResidenceRentBasePrice",
   data() {
     // 年月
-    var checkYearMonth = (rule, value, callback) => {
-      console.log(value);
-      if (value === "" || !isNaN(parseInt(value))) {
+    var yearMonthValidator = (rule, value, callback) => {
+      if (!value) {
         callback(new Error("请输入年月"));
+      } else if (value === "" || isNaN(parseInt(value))) {
+        callback(new Error("请输入年月"));
+      } else {
+        callback();
+      }
+    };
+    // 价格判断
+    var priceValidator = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error("请输入价格"));
+      } else if (value === "" || isNaN(parseFloat(value))) {
+        callback(new Error("请输入价格"));
+      } else {
+        if (value <= 0) {
+          callback(new Error("请输入合理价格"));
+        } else {
+          callback();
+        }
+      }
+    };
+
+    var numberValidator = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error("请输入数字"));
+      } else if (value === "" || isNaN(parseFloat(value))) {
+        callback(new Error("请输入数字"));
       } else {
         callback();
       }
@@ -92,10 +249,12 @@ export default {
         pageIndex: 1,
         pageSize: 10
       },
+      yearMonthList: [],
       statusOptions: [
         { value: 1, text: "正常" },
         { value: 1, text: "失效" }
       ],
+      uploadTips: "",
       upload: {
         // 是否显示弹出层（用户导入）
         open: false,
@@ -111,16 +270,45 @@ export default {
           "/data/rentprice/residence/artificial/importData"
       },
       // 表单参数
-      form: {},
+      form: {
+        url: ""
+      },
       // 表单校验
       rules: {
-        yearMonth: [{ validator: checkYearMonth, trigger: "blur" }]
+        yearMonth: [
+          { validator: yearMonthValidator, trigger: "blur" },
+          { validator: yearMonthValidator, trigger: "change" }
+        ]
+      },
+      updateRules: {
+        yearMonth: [
+          { validator: yearMonthValidator, trigger: "blur" },
+          { validator: yearMonthValidator, trigger: "change" }
+        ],
+        rentPrice: [
+          { validator: priceValidator, trigger: "blur" },
+          { validator: priceValidator, trigger: "change" }
+        ],
+        mainPriceRent: [
+          { validator: priceValidator, trigger: "blur" },
+          { validator: priceValidator, trigger: "change" }
+        ],
+        rentPrice_1: [
+          { validator: priceValidator, trigger: "blur" },
+          { validator: priceValidator, trigger: "change" }
+        ],
+        voppa: [
+          { validator: numberValidator, trigger: "blur" },
+          { validator: numberValidator, trigger: "change" }
+        ]
       }
     };
   },
   created() {
     this.loading = false;
-    // this.getList();
+    getYearMonthList().then(response => {
+      this.yearMonthList = response.data;
+    });
   },
   methods: {
     yesOrNotFormatter: function(row, column, cellValue, index) {
@@ -139,9 +327,9 @@ export default {
     },
     /** 查询办公基价列表 */
     getList() {
-      this.loading = true;
       this.$refs["queryForm"].validate(valid => {
         if (valid) {
+          this.loading = true;
           list(this.queryParams).then(response => {
             this.dataList = response.rows;
             this.total = response.total;
@@ -167,6 +355,70 @@ export default {
       this.queryParams.pageIndex = 1;
       this.getList();
     },
+    handleSync() {
+      this.$refs["queryForm"].validate(valid => {
+        if (valid) {
+          // 清除原有数据，然后导入
+          this.$refs["queryForm"].validate(valid => {
+            if (valid) {
+              this.$confirm("此操作会删除原数据，是否继续?", "警告", {
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                type: "warning"
+              })
+                .then(() => {
+                  return importSync(this.queryParams.yearMonth);
+                })
+                .then(response => {
+                  this.$message({
+                    type: "success",
+                    message: "操作成功!"
+                  });
+                })
+                .catch(() => {});
+            }
+          });
+        }
+      });
+    },
+    handleExport() {
+      const queryParams = this.queryParams;
+      this.$refs["queryForm"].validate(valid => {
+        if (valid) {
+          this.$confirm("是否确认导出住宅租赁基价数据项?", "警告", {
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            type: "warning"
+          })
+            .then(function() {
+              return export2File(queryParams);
+            })
+            .then(response => {
+              this.download(response.msg);
+            })
+            .catch(function() {});
+        }
+      });
+    },
+    handleImport() {
+      this.$refs["queryForm"].validate(valid => {
+        if (valid) {
+          this.upload.title = "人工修正住宅租赁基价导入";
+          this.uploadTips = "当前选中的基价月份：" + this.queryParams.yearMonth;
+          this.upload.open = true;
+        }
+      });
+    },
+    handleUpdate(row) {
+      this.reset();
+      const id = row.id || this.ids;
+      const yearMonth = row.yearMonth;
+      getById(yearMonth, id).then(response => {
+        this.form = response.data;
+        this.open = true;
+        this.title = "修改住宅租赁基价";
+      });
+    },
     /** 重置按钮操作 */
     resetQuery() {
       this.resetForm("queryForm");
@@ -177,6 +429,38 @@ export default {
       this.ids = selection.map(item => item.id);
       this.single = selection.length != 1;
       this.multiple = !selection.length;
+    },
+    // 文件上传中处理
+    handleFileUploadProgress(event, file, fileList) {
+      this.upload.isUploading = true;
+    },
+    // 文件上传成功处理
+    handleFileSuccess(response, file, fileList) {
+      this.upload.open = false;
+      this.upload.isUploading = false;
+      this.$refs.upload.clearFiles();
+      this.$alert(response.msg, "导入结果", { dangerouslyUseHTMLString: true });
+      this.getList();
+    },
+    // 提交上传文件
+    submitFileForm() {
+      this.$refs.upload.submit();
+    },
+    formSubmitForm() {
+      this.$refs["form"].validate(valid => {
+        if (valid) {
+          this.loading = true;
+          update(this.form).then(response => {
+            this.$message({
+              type: "success",
+              message: "操作成功!"
+            });
+            this.loading = false;
+            this.open = false;
+            this.getList();
+          });
+        }
+      });
     }
   }
 };
