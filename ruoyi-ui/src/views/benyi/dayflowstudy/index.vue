@@ -41,19 +41,20 @@
           </div>
           <div v-for="(item, index) in dayflowtaskList" :key="index" class="text item">
             {{item.taskLable}}
+            <br />
+            {{item.taskContent}}
             <div
               v-for="(item_standard, index_standard) in (dayflowstandardList.filter(p=>p.taskCode==item.code))"
               :key="index_standard"
               class="text item"
-            >{{item_standard.standardTitle}}
-            <br/>解读
-            <div
-              v-for="(item_unscramble, index_unscramble) in (dayflowunscrambleList.filter(p=>p.standardId==item_standard.id))"
-              :key="index_unscramble"
-              class="text item"
-            >{{item_unscramble.sort}}-{{item_unscramble.content}}
-            
-            </div>
+            >
+              {{item_standard.standardTitle}}
+              <br />解读
+              <div
+                v-for="(item_unscramble, index_unscramble) in (dayflowunscrambleList.filter(p=>p.standardId==item_standard.id))"
+                :key="index_unscramble"
+                class="text item"
+              >{{item_unscramble.sort}}){{item_unscramble.content}}</div>
             </div>
           </div>
         </el-card>
@@ -98,9 +99,6 @@ export default {
       // 查询参数
       queryParams: {
         detailId: undefined
-      },
-      queryStandardParams: {
-        taskCode: undefined
       }
     };
   },
@@ -112,12 +110,21 @@ export default {
   },
   created() {
     this.getTreeselect();
+    this.getChildNodeList();
   },
   methods: {
     /** 查询部门下拉树结构 */
     getTreeselect() {
       treeselect().then(response => {
         this.treeOptions = response.data;
+      });
+    },
+    getChildNodeList() {
+      listStandard(null).then(response => {
+        this.dayflowstandardList = response.rows;
+      });
+      listUnscramble(null).then(response => {
+        this.dayflowunscrambleList = response.rows;
       });
     },
     // 筛选节点
@@ -141,12 +148,6 @@ export default {
       getDetail(this.queryParams.detailId).then(response => {
         this.content = response.data.content;
         this.note = response.data.note;
-      });
-      listStandard(null).then(response => {
-        this.dayflowstandardList = response.rows;
-      });
-      listUnscramble(null).then(response => {
-        this.dayflowunscrambleList = response.rows;
       });
     }
   }
