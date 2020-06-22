@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.data.cases.mapper.sync.DownloadOriginalResidenceRentPlatformCaseMapper">
+    <resultMap id="resultMapping" type="com.ruoyi.project.data.cases.domain.OriginalResidenceRentOpeningCase">
+        <result property="caseArea" column="面积" javaType="java.math.BigDecimal"/>
+        <result property="caseBlock" column="block" />
+        <result property="caseAddress" column="地址"/>
+        <result property="caseCommunityName" column="小区名"/>
+        <result property="caseUrl" column="来源页"/>
+        <result property="caseDecoration" column="装修"/>
+        <result property="caseStorey" column="楼层"/>
+        <result property="caseHallNum" column="厅数"/>
+        <result property="caseNo" column="编号"/>
+<!--        <result property="caseRentType" column="type"/>-->
+        <result property="casePrice" column="price" javaType="java.math.BigDecimal"/>
+        <result property="caseCounty" column="区域" />
+        <result property="caseRentType" column="出租方式"/>
+        <result property="caseRoomNum" column="室数"/>
+        <result property="caseProvider" column="来源"/>
+        <result property="caseGetDate" column="savetime" javaType="java.sql.Date"/>
+
+    </resultMap>
+    <select id="download" resultMap="resultMapping">
+        select 面积
+            ,block
+            ,地址
+            ,小区名
+            ,来源页
+            ,装修
+            ,楼层
+            ,厅数
+            ,编号
+            ,type
+            ,price
+            ,区域
+            ,出租方式
+            ,室数
+            ,来源
+            ,savetime
+        FROM dbo.挂牌房源
+        where savetime <![CDATA[ > ]]> #{startDate} and savetime <![CDATA[ <= ]]> #{endDate}
+    </select>
+</mapper>

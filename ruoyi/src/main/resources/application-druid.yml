@@ -73,6 +73,11 @@ spring:
           url: jdbc:sqlserver://139.196.201.83:1433;DatabaseName=CALC
           username: purple
           password: liancheng
+        spider:
+          driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+          url: jdbc:sqlserver://139.196.201.83:1433;DatabaseName=TEST
+          username: purple
+          password: liancheng
 
 #        druid:
 #            statViewServlet:
