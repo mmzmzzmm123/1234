@@ -24,45 +24,22 @@
           />
         </div>
       </el-col>
-      <el-col :span="20" :xs="24">
-        <el-card>
-          <div slot="header" class="clearfix">
-            <span>内容介绍</span>
+      <div>
+        <span>流程中所含任务</span>
+      </div>
+      <el-col :span="20" :xs="24" v-for="(item, index) in dayflowtaskList" :key="index" >
+        <el-card :body-style="{ padding: '2px' }">
+          <div class="to-detail">
+            <el-tooltip effect="dark" :content="item.taskLable" placement="right">
+              <div>
+                <p class="info-title">{{item.taskLable}}</p>
+              </div>
+            </el-tooltip>
+            <p class="info-title info-title-name">该任务所含标准个数:{{ item.standardCount }}</p>
+            <div class="bottom">
+              <time class="time">{{ parseTime(item.createtime) }}</time>
+            </div>
           </div>
-            <div 
-              v-for="(item, index) in dayflowtaskList" 
-              :key="index"
-              class="text item">
-              {{' 任务名称 ' + item.taskLable + "     "
-              + '所含标准个数' + item.standardCount  }}
-            </div>
-            <!-- <div class="text item">
-              <el-form-item label="意见建议" prop="content">
-                <el-input
-                  type="textarea"
-                  v-model="form.content"
-                  :disabled="dis"
-                  maxlength="500"
-                  placeholder="请您对视频内容和讲师作出评价，并告诉我们你喜欢或不喜欢的理由，以便使我们改进对您的服务品质。谢谢您的支持！"
-                />
-              </el-form-item>
-            </div> -->
-            <!-- <div class="text item">
-              <el-form-item label="标题">{{title}}</el-form-item>
-            </div>
-            <div class="text item">
-              <el-form-item label="讲师">{{lecturername}}</el-form-item>
-            </div>
-            <div class="text item">
-              <el-form-item label="简介">{{information}}</el-form-item>
-            </div>
-            <div class="text item">
-              <el-form-item label="评分" prop="score">
-                <el-rate v-model="form.score" :disabled="dis" :show-score="dis"></el-rate>
-                <el-input v-model="form.videoid" v-if="false" />
-                <el-input v-model="form.lecturerid" v-if="false" />
-              </el-form-item>
-            </div> -->
         </el-card>
       </el-col>
     </el-row>
@@ -72,6 +49,7 @@
 <script>
 import { listDetail, getDetail } from "@/api/benyi/dayflow/dayflowmanger";
 import { listDayflowtask } from "@/api/benyi/dayflow/dayflowtask";
+import { listStandard } from "@/api/benyi/dayflow/biaozhun/standard"
 import { treeselect } from "@/api/benyi/dayflow/dayflowmanger";
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
@@ -87,8 +65,11 @@ export default {
       name: undefined,
       // 一日流程id
       id: undefined,
+      
       // 根据一日流程id查到的名下任务列表
       dayflowtaskList: [],
+      // 根据任务查询到名下标准
+      dayflowstandardList: [],
       // 树状显示类型
       treeOptions: [],
       // 树结构
@@ -98,7 +79,8 @@ export default {
       },
       // 查询参数
       queryParams: {
-        detailId: undefined
+        detailId: undefined,
+        taskCode: undefined,
       }
     };
   },
@@ -127,16 +109,59 @@ export default {
     handleNodeClick(data) {
       this.queryParams.detailId = data.id;
       this.getTaskList();
+      // console.log(this.dayflowtaskList[date.id])
+      // this.getStandardList();
     },
     /** 查询一日流程任务列表 */
     getTaskList() {
       this.loading = true;
       listDayflowtask(this.queryParams).then(response => {
         this.dayflowtaskList = response.rows;
-        console.log(this.dayflowtaskList);
+        // console.log(this.dayflowtaskList);
         this.loading = false;
       });
     },
+    /** 查询任务标准列表 */
+    // getStandardList() {
+    //   this.loading = true;
+    //   const taskCode = this.dayflowtaskList[this.id-1].code;
+    //   listStandard(taskCode).then(response => {
+    //     this.dayflowstandardList = response.rows;
+    //     console.log(this.dayflowstandardList);
+    //     this.loading = false;
+    //   });
+    // },
   }
 };
 </script>
+
+<style>
+.time {
+  line-height: 12px;
+  font-size: 12px;
+  color: #999;
+}
+
+.bottom {
+  margin-top: 13px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.to-detail {
+  /*cursor: pointer;*/
+  padding: 14px;
+}
+
+.info-title {
+  width: 100%; /*根据自己项目进行定义宽度*/
+  overflow: hidden; /*设置超出的部分进行影藏*/
+  text-overflow: ellipsis; /*设置超出部分使用省略号*/
+  white-space: nowrap; /*设置为单行*/
+}
+
+.info-title-name {
+  font-size: 12px;
+}
+</style>
