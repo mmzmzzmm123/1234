@@ -16,10 +16,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="classtype"    column="classtype"    />
         <result property="createuserid"    column="createuserid"    />
         <result property="createtime"    column="createtime"    />
+        <result property="avgscore"    column="avgscore"    />
     </resultMap>
 
     <sql id="selectByTrainVideoVo">
-        select id, title, information, lecturer,(select name from by_lecturer where lecturer=by_lecturer.id) as lecturername, videourl,filetype, type, classtype, createuserid, createtime from by_train_video
+        select id, title, information, lecturer,(select name from by_lecturer where lecturer=by_lecturer.id) as lecturername, videourl,filetype, type, classtype, createuserid, createtime,
+        (select avg(score) from by_train_video_score where by_train_video_score.videoid=by_train_video.id) avgscore
+        from by_train_video
     </sql>
 
     <select id="selectByTrainVideoList" parameterType="ByTrainVideo" resultMap="ByTrainVideoResult">

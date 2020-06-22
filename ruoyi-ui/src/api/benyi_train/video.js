@@ -9,6 +9,15 @@ export function listVideo(query) {
   })
 }
 
+
+// 查询培训列表
+export function listScoreAndFree(id) {
+  return request({
+    url: '/benyi/video/listscoreandfree/'+id,
+    method: 'get'
+  })
+}
+
 // 查询培训详细
 export function getVideo(id) {
   return request({

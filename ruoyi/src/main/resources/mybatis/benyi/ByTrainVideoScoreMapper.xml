@@ -9,12 +9,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="videoid"    column="videoid"    />
         <result property="lecturerid"    column="lecturerid"    />
         <result property="score"    column="score"    />
+        <result property="content"    column="content"    />
         <result property="createuserid"    column="createuserid"    />
         <result property="createtime"    column="createtime"    />
     </resultMap>
 
     <sql id="selectByTrainVideoScoreVo">
-        select id, videoid, lecturerid, score, createuserid, createtime from by_train_video_score
+        select id, videoid, lecturerid, score,(select content from by_train_video_feedback where by_train_video_feedback.id=by_train_video_score.id) content, createuserid, createtime from by_train_video_score
     </sql>
 
     <select id="selectByTrainVideoScoreList" parameterType="ByTrainVideoScore" resultMap="ByTrainVideoScoreResult">

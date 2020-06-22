@@ -85,6 +85,16 @@
         :formatter="typeFormat"
         :show-overflow-tooltip="true"
       />
+      <el-table-column label="所得平均分" align="center">
+        <template slot-scope="scope">
+          <el-button
+            title="点击我查看分数和评价"
+            size="mini"
+            type="text"
+            @click="lookDetails(scope.row)"
+          >{{ scope.row.avgscore }}</el-button>
+        </template>
+      </el-table-column>
       <el-table-column label="创建时间" align="center" prop="createtime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createtime) }}</span>
@@ -182,12 +192,29 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+
+    <!-- 添加或修改培训对话框 -->
+    <el-dialog title="查看分数和评价详情页" :visible.sync="opendetail" width="800px">
+      <el-table v-loading="loading" :data="scoreandfreeList">
+        <el-table-column label="分数" align="center" prop="score" />
+        <el-table-column label="评价" align="center" prop="content" :show-overflow-tooltip="true" />
+      </el-table>
+
+      <pagination
+        v-show="detailtotal>0"
+        :total="detailtotal"
+        :page.sync="queryParams.pageNum"
+        :limit.sync="queryParams.pageSize"
+        @pagination="getScoreAndFreeList"
+      />
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import {
   listVideo,
+  listScoreAndFree,
   getVideo,
   delVideo,
   addVideo,
@@ -223,14 +250,20 @@ export default {
       multiple: true,
       // 总条数
       total: 0,
+      //详情总条数
+      detailtotal: 0,
       // 培训表格数据
       videoList: [],
+      // 培训表格数据
+      scoreandfreeList: [],
       // 弹出层标题
       title: "",
       //讲师列表
       lecturerOptions: [],
       // 是否显示弹出层
       open: false,
+      //详情页弹出层
+      opendetail: false,
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -378,8 +411,18 @@ export default {
       this.loading = true;
       listVideo(this.queryParams).then(response => {
         this.videoList = response.rows;
+        //console.log(response.rows);
         this.total = response.total;
         this.loading = false;
+      });
+    },
+    /** 查询分数和评价列表 */
+    getScoreAndFreeList(id) {
+      //this.loading = true;
+      listScoreAndFree(id).then(response => {
+        this.scoreandfreeList = response.rows;
+        this.detailtotal = response.total;
+        //this.loading = false;
       });
     },
     // 取消按钮
@@ -422,6 +465,12 @@ export default {
       this.ids = selection.map(item => item.id);
       this.single = selection.length != 1;
       this.multiple = !selection.length;
+    },
+    /**查看平均分详情和评价 */
+    lookDetails(row) {
+      const id = row.id;
+      this.opendetail = true;
+      this.getScoreAndFreeList(id);
     },
     /** 新增按钮操作 */
     handleAdd() {

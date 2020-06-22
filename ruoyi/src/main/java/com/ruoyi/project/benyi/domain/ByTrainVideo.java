@@ -82,6 +82,12 @@ public class ByTrainVideo extends BaseEntity {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createtime;
 
+    /**
+     * 培训视频平均分
+     */
+    @Excel(name = "培训视频平均分")
+    private Float avgscore;
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -170,6 +176,14 @@ public class ByTrainVideo extends BaseEntity {
         return createtime;
     }
 
+    public void setAvgscore(Float avgscore) {
+        this.avgscore = avgscore;
+    }
+
+    public Float getAvgscore() {
+        return avgscore;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
@@ -184,6 +198,7 @@ public class ByTrainVideo extends BaseEntity {
                 .append("classtype", getClasstype())
                 .append("createuserid", getCreateuserid())
                 .append("createtime", getCreatetime())
+                .append("avgscore",getAvgscore())
                 .toString();
     }
 }

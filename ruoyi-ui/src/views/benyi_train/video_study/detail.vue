@@ -148,6 +148,7 @@ export default {
       if (this.form.score == 0) {
         this.form.score = null;
       }
+      this.form.content=this.form.content.trim();
       this.form.lecturerid = this.lecturerid;
       this.form.videoid = id;
       this.$refs["form"].validate(valid => {

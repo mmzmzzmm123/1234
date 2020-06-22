@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.List;
 
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.project.benyi.domain.ByTrainVideoScore;
+import com.ruoyi.project.benyi.service.IByTrainVideoScoreService;
 import com.ruoyi.project.common.CommonController;
 import com.ruoyi.project.common.SchoolCommon;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -40,6 +42,8 @@ public class ByTrainVideoController extends BaseController {
     private CommonController commonController;
     @Autowired
     private SchoolCommon schoolCommon;
+    @Autowired
+    private IByTrainVideoScoreService byTrainVideoScoreService;
 
 
     /**
@@ -61,6 +65,19 @@ public class ByTrainVideoController extends BaseController {
             }
         }
 
+        return getDataTable(list);
+    }
+
+    /**
+     * 查询培训评分和评价列表
+     */
+    @PreAuthorize("@ss.hasPermi('benyi:video:list')")
+    @GetMapping("/listscoreandfree/{id}")
+    public TableDataInfo listscoreandfree(@PathVariable("id") Long id) {
+        startPage();
+        ByTrainVideoScore byTrainVideoScore=new ByTrainVideoScore();
+        byTrainVideoScore.setVideoid(id);
+        List<ByTrainVideoScore> list = byTrainVideoScoreService.selectByTrainVideoScoreList(byTrainVideoScore);
         return getDataTable(list);
     }
 
