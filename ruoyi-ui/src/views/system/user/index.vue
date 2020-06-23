@@ -28,7 +28,7 @@
       <!--用户数据-->
       <el-col :span="20" :xs="24">
         <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
-          <el-form-item label="用户名称" prop="userName">
+          <el-form-item label="登录账号" prop="userName">
             <el-input
               v-model="queryParams.userName"
               placeholder="请输入用户名称"
