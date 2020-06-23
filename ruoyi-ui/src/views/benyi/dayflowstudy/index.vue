@@ -24,20 +24,37 @@
           />
         </div>
       </el-col>
-      <div>
-        <span>流程中所含任务</span>
-      </div>
-      <el-col :span="20" :xs="24" v-for="(item, index) in dayflowtaskList" :key="index" >
-        <el-card :body-style="{ padding: '2px' }">
-          <div class="to-detail">
-            <el-tooltip effect="dark" :content="item.taskLable" placement="right">
-              <div>
-                <p class="info-title">{{item.taskLable}}</p>
-              </div>
-            </el-tooltip>
-            <p class="info-title info-title-name">该任务所含标准个数:{{ item.standardCount }}</p>
-            <div class="bottom">
-              <time class="time">{{ parseTime(item.createtime) }}</time>
+      <el-col :span="20" :xs="24">
+        <el-card class="box-card">
+          <div slot="header" class="clearfix">
+            <span>{{title}}</span>
+          </div>
+          <div class="text item">
+            导言
+            <br />
+            <label v-html="content"></label>
+          </div>
+          <div class="text item">
+            目的
+            <br />
+            <label v-html="note"></label>
+          </div>
+          <div v-for="(item, index) in dayflowtaskList" :key="index" class="text item">
+            {{item.taskLable}}
+            <br />
+            {{item.taskContent}}
+            <div
+              v-for="(item_standard, index_standard) in (dayflowstandardList.filter(p=>p.taskCode==item.code))"
+              :key="index_standard"
+              class="text item"
+            >
+              {{item_standard.standardTitle}}
+              <br />解读
+              <div
+                v-for="(item_unscramble, index_unscramble) in (dayflowunscrambleList.filter(p=>p.standardId==item_standard.id))"
+                :key="index_unscramble"
+                class="text item"
+              >{{item_unscramble.sort}}){{item_unscramble.content}}</div>
             </div>
           </div>
         </el-card>
@@ -47,29 +64,31 @@
 </template>
 
 <script>
-import { listDetail, getDetail } from "@/api/benyi/dayflow/dayflowmanger";
 import { listDayflowtask } from "@/api/benyi/dayflow/dayflowtask";
-import { listStandard } from "@/api/benyi/dayflow/biaozhun/standard"
-import { treeselect } from "@/api/benyi/dayflow/dayflowmanger";
-import Treeselect from "@riophae/vue-treeselect";
-import "@riophae/vue-treeselect/dist/vue-treeselect.css";
-
+import { listStandard } from "@/api/benyi/dayflow/biaozhun/standard";
+import { listUnscramble } from "@/api/benyi/dayflow/unscramble";
+import { treeselect, getDetail } from "@/api/benyi/dayflow/dayflowmanger";
 
 export default {
   name: "Detail",
   data() {
     return {
-      // 遮罩层
-      loading: true,
       // 一日流程名称
       name: undefined,
       // 一日流程id
       id: undefined,
-      
+      //标题
+      title: "一日流程",
+      //导言
+      content: undefined,
+      //目的
+      note: undefined,
       // 根据一日流程id查到的名下任务列表
       dayflowtaskList: [],
       // 根据任务查询到名下标准
       dayflowstandardList: [],
+      //一日流程解读
+      dayflowunscrambleList: [],
       // 树状显示类型
       treeOptions: [],
       // 树结构
@@ -79,8 +98,7 @@ export default {
       },
       // 查询参数
       queryParams: {
-        detailId: undefined,
-        taskCode: undefined,
+        detailId: undefined
       }
     };
   },
@@ -92,12 +110,21 @@ export default {
   },
   created() {
     this.getTreeselect();
+    this.getChildNodeList();
   },
   methods: {
     /** 查询部门下拉树结构 */
     getTreeselect() {
       treeselect().then(response => {
         this.treeOptions = response.data;
+      });
+    },
+    getChildNodeList() {
+      listStandard(null).then(response => {
+        this.dayflowstandardList = response.rows;
+      });
+      listUnscramble(null).then(response => {
+        this.dayflowunscrambleList = response.rows;
       });
     },
     // 筛选节点
@@ -108,60 +135,39 @@ export default {
     // 节点单击事件
     handleNodeClick(data) {
       this.queryParams.detailId = data.id;
+      this.title = data.label;
       this.getTaskList();
-      console.log(this.dayflowtaskList);
-      console.log(this.dayflowtaskList[0].value.code);
-      //this.getStandardList();
+      // console.log(this.dayflowtaskList[date.id])
+      // this.getStandardList();
     },
     /** 查询一日流程任务列表 */
     getTaskList() {
-      this.loading = true;
       listDayflowtask(this.queryParams).then(response => {
         this.dayflowtaskList = response.rows;
-        // console.log(this.dayflowtaskList);
-        this.loading = false;
       });
-    },
-    /** 查询任务标准列表 */
-    // getStandardList() {
-    //   this.loading = true;
-    //   listStandard(this.queryParams).then(response => {
-    //     this.dayflowstandardList = response.rows;
-    //     console.log(this.dayflowstandardList);
-    //     this.loading = false;
-    //   });
-    // },
+      getDetail(this.queryParams.detailId).then(response => {
+        this.content = response.data.content;
+        this.note = response.data.note;
+      });
+    }
   }
 };
 </script>
-
 <style>
-.time {
-  line-height: 12px;
-  font-size: 12px;
-  color: #999;
+.text {
+  font-size: 14px;
 }
 
-.bottom {
-  margin-top: 13px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.item {
+  margin-bottom: 18px;
 }
 
-.to-detail {
-  /*cursor: pointer;*/
-  padding: 14px;
+.clearfix:before,
+.clearfix:after {
+  display: table;
+  content: "";
 }
-
-.info-title {
-  width: 100%; /*根据自己项目进行定义宽度*/
-  overflow: hidden; /*设置超出的部分进行影藏*/
-  text-overflow: ellipsis; /*设置超出部分使用省略号*/
-  white-space: nowrap; /*设置为单行*/
-}
-
-.info-title-name {
-  font-size: 12px;
+.clearfix:after {
+  clear: both;
 }
 </style>
