@@ -1,0 +1,20 @@
+version: '2'
+services:
+  ruoyi-mysql:
+    build:
+      context: ./db
+      dockerfile: Dockerfile
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+    restart: always
+    container_name: ruoyi-mysql
+    image: ruoyi-mysql
+    ports:
+      - 3306:3306
+
+  ruoyi-redis:
+    image: redis:5.0
+    ports:
+      - 6379:6379
+    restart: always
+    container_name: ruoyi-redis
