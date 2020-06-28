@@ -88,11 +88,11 @@
         where code = #{code}
     </update>
 
-    <delete id="deleteByDayFlowTaskById" parameterType="Long">
+    <delete id="deleteByDayFlowTaskByCode" parameterType="Long">
         delete from by_day_flow_task where code = #{code}
     </delete>
 
-    <delete id="deleteByDayFlowTaskByIds" parameterType="String">
+    <delete id="deleteByDayFlowTaskByCodes" parameterType="String">
         delete from by_day_flow_task where code in
         <foreach item="code" collection="array" open="(" separator="," close=")">
             #{code}
