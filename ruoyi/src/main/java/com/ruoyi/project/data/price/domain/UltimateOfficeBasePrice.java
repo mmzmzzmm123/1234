@@ -82,7 +82,7 @@ public class UltimateOfficeBasePrice extends BaseEntity {
     private Boolean status;
     @Excel(name = "是否标准楼栋")
     private Boolean isStandardBuilding;
-    @Excel(name = "更改价格说明")
+//    @Excel(name = "更改价格说明")
     private String adjustPriceComment;
 
     public Integer getLastYearMonth() {

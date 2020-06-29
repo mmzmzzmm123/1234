@@ -78,37 +78,44 @@
 
     <select id="getCount" parameterType="com.ruoyi.project.data.price.domain.UltimateOfficeBasePrice" resultType="int">
         select count(1) FROM ODS_OFFICE_BUILDING_PRICE_INFO_${yearMonth} a
-        <if test="communityId != null">
-            AND a.PROJECTID_P = #{communityId}
-        </if>
-        <if test="buildingId != null">
-            AND a.BUILDINGID_P = #{buildingId}
-        </if>
-        <if test="status != null">
-            AND a.STATUS = #{status}
-        </if>
+        <where>
+            <if test="communityId != null">
+                AND a.PROJECTID_P = #{communityId}
+            </if>
+            <if test="buildingId != null">
+                AND a.BUILDINGID_P = #{buildingId}
+            </if>
+            <if test="status != null">
+                AND a.STATUS = #{status}
+            </if>
+        </where>
     </select>
 
     <select id="getList" parameterType="com.ruoyi.project.data.price.domain.UltimateOfficeBasePrice"
             resultMap="OfficeBasePriceUltimateResult">
         <include refid="getById"/>
-        <if test="communityId != null">
-            AND a.PROJECTID_P = #{communityId}
-        </if>
-        <if test="buildingId != null">
-            AND a.BUILDINGID_P = #{buildingId}
-        </if>
-        <if test="status != null">
-            AND a.STATUS = #{status}
-        </if>
+        <where>
+            <if test="communityId != null">
+                AND a.PROJECTID_P = #{communityId}
+            </if>
+            <if test="buildingId != null">
+                AND a.BUILDINGID_P = #{buildingId}
+            </if>
+            <if test="status != null">
+                AND a.STATUS = #{status}
+            </if>
+        </where>
+
         order by a.id desc OFFSET #{pageIndex} rows fetch next #{pageSize} rows only;
     </select>
 
     <select id="getById" resultMap="OfficeBasePriceUltimateResult">
         <include refid="getById"/>
-        <if test="id != null">
-            AND a.id=#{id}
-        </if>
+        <where>
+            <if test="id != null">
+                AND a.id=#{id}
+            </if>
+        </where>
     </select>
 
     <!-- 更新基价 -->

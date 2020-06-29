@@ -1,9 +1,12 @@
 package com.ruoyi.project.data.price.service.impl;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.ruoyi.common.exception.CustomException;
+import com.ruoyi.common.utils.LoadUtil;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.framework.config.UVConfig;
 import com.ruoyi.project.common.UVResponse;
@@ -16,6 +19,7 @@ import com.ruoyi.project.system.service.impl.SysUserServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -26,6 +30,7 @@ import org.springframework.web.client.RestTemplate;
  * @date 2020-05-20
  */
 @Service
+@DS("compute")
 public class UltimateOfficeBasePriceServiceImpl implements IUltimateOfficeBasePriceService {
 
     private static final Logger log = LoggerFactory.getLogger(SysUserServiceImpl.class);
@@ -34,7 +39,8 @@ public class UltimateOfficeBasePriceServiceImpl implements IUltimateOfficeBasePr
     private UltimateOfficeBasePriceMapper officeBasePriceUltimateMapper;
     @Autowired
     private UVConfig uvConfig;
-
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     private static Integer getLastYearMonth(Integer yearMonth) {
         Calendar calendar = Calendar.getInstance();
@@ -84,10 +90,31 @@ public class UltimateOfficeBasePriceServiceImpl implements IUltimateOfficeBasePr
             officeBasePriceUltimateMapper.insertArtificialOfficeBasePrice(inputModel);
         });
 
-        RestTemplate restTemplate = new RestTemplate();
-        String url = String.format(uvConfig.getAitificialOfficeBasePriceUrl(), yearMonth, lastYearMonth);
-        UVResponse<Integer> affectCount = restTemplate.getForObject(url, UVResponse.class);
-        successMsg.insert(0, "恭喜您，数据已全部导入成功！共 " + successNum + " 条，修改数据：" + affectCount.getData() + "条");
+//        RestTemplate restTemplate = new RestTemplate();
+//        String url = String.format(uvConfig.getAitificialOfficeBasePriceUrl(), yearMonth, lastYearMonth);
+//        UVResponse<Integer> affectCount = restTemplate.getForObject(url, UVResponse.class);
+
+        String rawSql =  LoadUtil.loadContent("sql-template/update_office_price.sql");
+        Calendar calendar = Calendar.getInstance();
+        int year = yearMonth / 100;
+        int month = yearMonth % 100;
+        calendar.set(year, month, 1);
+        Date firstOfMonth = calendar.getTime();
+        calendar.add(Calendar.MONTH, -1);
+        Date lastMonth = calendar.getTime();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+        String sql = rawSql.replace("#yearMonth#", yearMonth.toString())
+                .replace("#lastYearMonth#", lastYearMonth.toString())
+                .replace("#today#", simpleDateFormat.format(firstOfMonth))
+                .replace("#lastMonth#", simpleDateFormat.format(lastMonth));
+        jdbcTemplate.update(sql);
+
+//        String rawSql =
+//        String sql = rawSql.replace("#yearMonth#", yearMonth.toString());
+//        jdbcTemplate.execute(sql);
+
+        successMsg.insert(0, "恭喜您，数据已全部导入成功！共 " + successNum + " 条");
         return successMsg.toString();
     }
 
