@@ -8,7 +8,6 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 /**
- * 【请填写功能名称】对象 office_base_price_ultimate
  *
  * @author ruoyi
  * @date 2020-05-20

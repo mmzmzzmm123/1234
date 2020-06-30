@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.data.cases.mapper.sync.DownloadOriginalOfficeCaseMapper">
+    <resultMap id="DownloadMapping" type="com.ruoyi.project.data.cases.domain.OriginalOfficeCase">
+        <result property="url" column="url"/>
+        <result property="title" column="title"/>
+        <result property="floorAreaRatio" column="容积率"/>
+        <result property="caseTotalPrice" column="总价售"/>
+        <result property="caseUnitPrice" column="均价售"/>
+        <result property="name" column="楼盘名称"/>
+        <result property="caseFloor" column="楼层"/>
+        <result property="area" column="面积" javaType="java.math.BigDecimal"/>
+        <result property="managementFee" column="物业费"/>
+        <result property="seatCount" column="工位数"/>
+        <result property="address" column="地址"/>
+        <result property="metro" column="地铁"/>
+        <result property="publishDate" column="发布时间" javaType="java.sql.Date"/>
+        <result property="sourceNo" column="房源编号"/>
+        <result property="lng" column="百度lng"/>
+        <result property="lat" column="百度lat"/>
+        <result property="county" column="区域"/>
+        <result property="catalog" column="分类"/>
+        <result property="source" column="来源"/>
+        <result property="level" column="等级"/>
+        <result property="homePageUrl" column="楼盘网址"/>
+        <result property="decoration" column="装修"/>
+        <result property="type" column="类型"/>
+        <result property="block" column="板块"/>
+        <result property="agency" column="挂牌中介"/>
+        <result property="rentOfMonthly" column="月租金租"/>
+        <result property="rentOfStandard" column="标准租金租"/>
+        <result property="score" column="得房率"/>
+        <result property="totalPrice" column="总价"/>
+        <result property="unitPrice" column="单价"/>
+    </resultMap>
+    <select id="download" resultMap="DownloadMapping">
+        select url, title, 容积率, 总价售, 均价售, 楼盘名称, 楼层, 面积, 物业费, 工位数, 地址, 地铁,
+         发布时间,房源编号, 百度lng, 百度lat, 区域, 分类, 来源, 等级, 楼盘网址, 装修,
+         类型, 板块, 挂牌中介, 月租金租, 标准租金租, 更新时间, 得房率,
+        case when 分类 = '售' then 总价售
+            when 分类 = '租' then 月租金租 end as 总价,
+        case when 分类 = '售' then 均价售
+            when 分类 = '租' then 标准租金租 end as 单价
+        from dbo.办公
+        where 更新时间 >= #{startDate} and 更新时间 <![CDATA[ < ]]> #{endDate}
+    </select>
+</mapper>

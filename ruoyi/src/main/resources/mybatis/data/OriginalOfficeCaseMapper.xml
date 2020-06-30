@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.data.cases.mapper.OriginalOfficeCaseMapper">
+    <update id="createTable">
+        <bind name="targetTableName" value="'dbo.ODS_OFFICECASELISTED_' + yearMonth + '_RAW'"/>
+        IF OBJECT_ID(#{targetTableName}, 'U') IS NOT NULL
+        drop table ${targetTableName};
+
+        create TABLE ${targetTableName}
+        (
+        ID uniqueidentifier not null primary key,
+        url varchar (1000) NULL,
+        title varchar (1000) NULL,
+        容积率 varchar (1000) NULL,
+        总价售 varchar (1000) NULL,
+        均价售 varchar (1000) NULL,
+        楼盘名称 varchar (1000) NULL,
+        楼盘名称_M nvarchar (512) NULL,
+        楼层 varchar (1000) NULL,
+        面积 varchar (1000) NULL,
+        物业费 varchar (1000) NULL,
+        工位数 varchar (1000) NULL,
+        地址 varchar (1000) NULL,
+        地铁 varchar (1000) NULL,
+        发布时间 date NULL,
+        房源编号 varchar (1000) NULL,
+        百度lng varchar (1000) NULL,
+        百度lat varchar (1000) NULL,
+        区域 varchar (1000) NULL,
+        分类 varchar (1000) NULL,
+        来源 varchar (1000) NULL,
+        等级 varchar (1000) NULL,
+        楼盘网址 varchar (1000) NULL,
+        装修 varchar (1000) NULL,
+        类型 varchar (1000) NULL,
+        板块 varchar (1000) NULL,
+        挂牌中介 varchar (1000) NULL,
+        月租金租 varchar (1000) NULL,
+        标准租金租 varchar (1000) NULL,
+        更新时间 varchar (1000) NULL,
+        得房率 varchar (1000) NULL,
+        总价 decimal (18, 2) NULL,
+        单价 decimal (18, 2) NULL
+        );
+    </update>
+    <!--  创建人工修正表  -->
+    <update id="createArtificialTable">
+        <bind name="targetTableName" value="'dbo.DWA_PROJECTBASEPRICE_OFFICE_MANU_' + yearMonth"/>
+        IF OBJECT_ID(#{targetTableName}, 'U') IS NOT NULL
+        drop table ${targetTableName};
+
+        CREATE TABLE ${targetTableName}
+        (
+        id uniqueidentifier not null,
+        BuildingID bigint NOT NULL,
+        UnifiedID bigint NULL,
+        ProjectID bigint NOT NULL,
+        BuildingID_P nvarchar (20) NOT NULL,
+        ProjectID_P bigint NULL,
+        MainPrice decimal (38, 6) NULL,
+        MainPriceRent decimal (38, 6) NULL,
+        MainPricePst decimal (38, 6) NULL,
+        MainPriceRentPst decimal (38, 6) NULL,
+        MainPriceType varchar (2) NULL,
+        MainPriceRentType varchar (2) NULL,
+        ModifyDate date NULL,
+        Status nvarchar (30) NULL,
+        BuildingStd tinyint NULL,
+        AdjEvd nvarchar (1000) NULL,
+        MainPrice_1 decimal (38, 6) NULL,
+        MainPriceRent_1 decimal (38, 6) NULL,
+        AreaCoff decimal (7, 4) NULL,
+        YearCoff decimal (7, 4) NULL,
+        BuildingCoff decimal (7, 4) NULL,
+        ProjectName nvarchar (1024) NULL,
+        ProjectAddr nvarchar (1024) NULL,
+        BuildingAddr nvarchar (1024) NULL,
+        County nvarchar (512) NULL,
+        Loop nvarchar (512) NULL,
+        Block nvarchar (512) NULL,
+        Street nvarchar (512) NULL,
+        Year int NULL,
+        AvgArea decimal (18, 2) NULL,
+        TotalFloorSum nvarchar (32) NULL,
+        UpperFloorSum nvarchar (32) NULL,
+        OfficeClass nvarchar (256) NULL,
+        Grade nvarchar (64) NULL
+        );
+    </update>
+</mapper>

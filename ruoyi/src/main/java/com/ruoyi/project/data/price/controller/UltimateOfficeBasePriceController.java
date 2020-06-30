@@ -76,15 +76,15 @@ public class UltimateOfficeBasePriceController extends BaseController {
         return AjaxResult.success(officeBasePriceUltimateService.getById(yearMonth, id));
     }
 
-    /**
-     * 修改办公基价
-     */
-    @PreAuthorize("@ss.hasPermi('system:user:edit')")
-    @Log(title = "办公基价", businessType = BusinessType.UPDATE)
-    @PutMapping
-    public AjaxResult edit(@RequestBody UltimateOfficeBasePrice officeBasePriceUltimate) {
-        return toAjax(officeBasePriceUltimateService.update(officeBasePriceUltimate));
-    }
+//    /**
+//     * 修改办公基价
+//     */
+//    @PreAuthorize("@ss.hasPermi('system:user:edit')")
+//    @Log(title = "办公基价", businessType = BusinessType.UPDATE)
+//    @PutMapping
+//    public AjaxResult update(@RequestBody UltimateOfficeBasePrice officeBasePriceUltimate) {
+//        return toAjax(officeBasePriceUltimateService.update(officeBasePriceUltimate));
+//    }
 
     /**
      * 导出办公基价列表
@@ -99,7 +99,7 @@ public class UltimateOfficeBasePriceController extends BaseController {
         List<UltimateOfficeBasePrice> list =
                 officeBasePriceUltimateService.selectOfficeBasePriceUltimateList(officeBasePriceUltimate);
         ExcelUtil<UltimateOfficeBasePrice> util = new ExcelUtil<>(UltimateOfficeBasePrice.class);
-        return util.exportExcel(list, "办公基价");
+        return util.exportExcel(list, "办公基价初始化" + officeBasePriceUltimate.getYearMonth().toString());
     }
 
     /**

@@ -167,7 +167,7 @@
       @pagination="getList"
     />
 
-    <el-dialog :title="upload.title" :visible.sync="upload.open" width="400px" append-to-body>
+    <el-dialog :title="upload.title" :visible.sync="upload.open"  width="400px" append-to-body>
       <el-upload
         ref="upload"
         :limit="1"
@@ -196,64 +196,6 @@
       </div>
     </el-dialog>
   </div>
-
-  <!-- 添加或修改办公基价对话框 -->
-  <!-- <el-dialog :title="title" :visible.sync="open" width="800px" append-to-body>
-    <el-form ref="form" :model="form" :rules="rules" label-width="160px">
-      <el-row :gutter="20">
-        <el-col :span="12">
-          <el-form-item label="小区ID">
-            <el-input v-model="form.communityId" disabled="true" readonly />
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="楼栋ID">
-            <el-input v-model="form.buildingId" disabled="true" readonly />
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row :gutter="20">
-        <el-col :span="12">
-          <el-form-item label="主力基价（元/㎡）">
-            <el-input v-model="form.mainPrice" />
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="主力租金（元/月·㎡）">
-            <el-input v-model="form.mainPriceRent" />
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row :gutter="20">
-        <el-col :span="12">
-          <el-form-item label="主力基价涨跌幅">
-            <el-input v-model="form.mainPricePst" />
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="主力租金涨跌幅">
-            <el-input v-model="form.mainPriceRentPst" />
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row :gutter="20">
-        <el-col :span="12">
-          <el-form-item label="主力基价类型">
-            <el-input v-model="form.mainPriceType" />
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="主力租金类型">
-            <el-input v-model="form.mainPriceRentType" />
-          </el-form-item>
-        </el-col>
-      </el-row>
-    </el-form>
-    <div slot="footer" class="dialog-footer">
-      <el-button type="primary" @click="submitForm">确 定</el-button>
-      <el-button @click="cancel">取 消</el-button>
-    </div>
-  </el-dialog>-->
 </template>
 
 <script>
@@ -343,9 +285,6 @@ export default {
     });
   },
   methods: {
-    // yearMonthChange: function(yearMonth) {
-    //   this.upload.url += "/" + yearMonth;
-    // },
     yesOrNotFormatter: function(row, column, cellValue, index) {
       if (cellValue) return "是";
       return "否";

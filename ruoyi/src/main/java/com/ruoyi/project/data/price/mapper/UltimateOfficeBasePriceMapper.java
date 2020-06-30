@@ -64,6 +64,22 @@ public interface UltimateOfficeBasePriceMapper {
     int updateBasePriceStatus(OfficeBasePriceModifyModel officeBasePriceModifyModel);
 
     /**
+     * 修改状态
+     *
+     * @param officeBasePriceModifyModel
+     * @return
+     */
+    int updateStatus(OfficeBasePriceModifyModel officeBasePriceModifyModel);
+
+    /**
+     * 新增状态
+     *
+     * @param officeBasePriceModifyModel
+     * @return
+     */
+    int insertNewRecord(OfficeBasePriceModifyModel officeBasePriceModifyModel);
+
+    /**
      * 更新当前基价
      *
      * @param officeBasePriceModifyModel

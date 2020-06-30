@@ -64,7 +64,7 @@
           v-hasPermi="['system:user:import']"
         >导入</el-button>
       </el-col>
-      <el-col :span="1.5">
+      <!-- <el-col :span="1.5">
         <el-button
           type="success"
           icon="el-icon-druid"
@@ -72,11 +72,10 @@
           @click="handleImport"
           v-hasPermi="['system:user:import']"
         >基价变化一览</el-button>
-      </el-col>
+      </el-col>-->
     </el-row>
 
     <el-table v-loading="loading" :data="dataList">
-      <!-- <el-table-column type="selection" width="55" align="center" /> -->
       <el-table-column label="年月" align="center" prop="yearMonth" />
       <el-table-column label="小区ID" align="center" prop="communityId" width="110" />
       <el-table-column label="楼栋ID" align="center" prop="buildingId" width="110" />
@@ -107,7 +106,7 @@
       />
       <el-table-column label="价格更改说明" align="center" prop="adjustPriceComment" />
       <el-table-column label="更新日期" align="center" prop="updateDate" :formatter="dateFormatter" />
-      <el-table-column
+      <!-- <el-table-column
         label="操作"
         align="center"
         class-name="small-padding fixed-width"
@@ -122,7 +121,7 @@
             v-hasPermi="['system:user:edit']"
           >修改</el-button>
         </template>
-      </el-table-column>
+      </el-table-column> -->
     </el-table>
 
     <pagination
@@ -134,7 +133,7 @@
     />
 
     <!-- 添加或修改办公基价对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="800px" append-to-body>
+    <!-- <el-dialog :title="title" :visible.sync="open" width="800px" append-to-body>
       <el-form ref="form" :model="form" :rules="updateRules" label-width="160px">
         <el-row :gutter="20">
           <el-col :span="12">
@@ -165,7 +164,7 @@
             <el-form-item label="楼栋地址">
               <el-input v-model="form.buildingAddress" disabled readonly />
             </el-form-item>
-          </el-col>-->
+          </el-col>
           <el-col :span="24">
             <el-form-item label="楼栋地址">
               <el-input v-model="form.complexRegion" disabled readonly />
@@ -212,12 +211,12 @@
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item label="主力基价涨跌幅">
-              <el-input v-model="form.mainPricePst" disabled readonly />
+              <el-input v-model="form.mainPricePst" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="主力租金涨跌幅">
-              <el-input v-model="form.mainPriceRentPst" disabled readonly />
+              <el-input v-model="form.mainPriceRentPst" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -286,21 +285,15 @@
         <el-button type="primary" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
-    </el-dialog>
+    </el-dialog> -->
 
-    <el-dialog
-      :title="upload.title"
-      :visible.sync="upload.open"
-      width="80%"
-      top="10vh"
-      append-to-body
-    >
+    <el-dialog :title="upload.title" :visible.sync="upload.open" width="400px" append-to-body>
       <el-upload
         ref="upload"
         :limit="1"
         accept=".xlsx, .xls"
         :headers="upload.headers"
-        :action="upload.url + '?updateSupport=' + upload.updateSupport"
+        :action="upload.url"
         :disabled="upload.isUploading"
         :on-progress="handleFileUploadProgress"
         :on-success="handleFileSuccess"
@@ -313,7 +306,9 @@
           <em>点击上传</em>
         </div>
         <div class="el-upload__tip" style="color:red" slot="tip">提示：仅允许导入“xls”或“xlsx”格式文件！</div>
-        <div class="el-upload__tip" style="color:red" slot="tip">基价年月：{{ queryParams.yearMonth }}</div>
+        <div class="el-upload__tip" slot="tip">
+          <el-alert :title="uploadTips" type="warning" effect="dark" :closable="false"></el-alert>
+        </div>
       </el-upload>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitFileForm">确 定</el-button>
@@ -377,6 +372,9 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
+      // 上传提示
+      uploadTips: "",
+      // 年月列表
       yearMonthList: [],
       // 查询参数
       queryParams: {
@@ -515,33 +513,33 @@ export default {
       this.multiple = !selection.length;
     },
     /** 修改按钮操作 */
-    handleUpdate(row) {
-      this.reset();
-      const id = row.id || this.ids;
-      const yearMonth = row.yearMonth;
-      getById(yearMonth, id).then(response => {
-        // 复合信息
-        response.data.complexRegion =
-          response.data.countyName +
-          "-" +
-          response.data.blockName +
-          "-" +
-          response.data.loopName +
-          "-" +
-          response.data.streetName +
-          "-" +
-          response.data.buildingAddress;
-        // 办公信息
-        response.data.complexOfficeInfo =
-          response.data.officeClass + "-" + response.data.officeLevel;
-        // 层数信息
-        response.data.complexFloorInfo =
-          response.data.upperFloorSum + "-" + response.data.totalFloorSum;
-        this.form = response.data;
-        this.open = true;
-        this.title = "修改办公基价";
-      });
-    },
+    // handleUpdate(row) {
+    //   this.reset();
+    //   const id = row.id || this.ids;
+    //   const yearMonth = row.yearMonth;
+    //   getById(yearMonth, id).then(response => {
+    //     // 复合信息
+    //     response.data.complexRegion =
+    //       response.data.countyName +
+    //       "-" +
+    //       response.data.blockName +
+    //       "-" +
+    //       response.data.loopName +
+    //       "-" +
+    //       response.data.streetName +
+    //       "-" +
+    //       response.data.buildingAddress;
+    //     // 办公信息
+    //     response.data.complexOfficeInfo =
+    //       response.data.officeClass + "-" + response.data.officeLevel;
+    //     // 层数信息
+    //     response.data.complexFloorInfo =
+    //       response.data.upperFloorSum + "-" + response.data.totalFloorSum;
+    //     this.form = response.data;
+    //     this.open = true;
+    //     this.title = "修改办公基价";
+    //   });
+    // },
     /** 提交按钮 */
     submitForm: function() {
       this.$refs["form"].validate(valid => {
@@ -575,8 +573,13 @@ export default {
         .catch(function() {});
     },
     handleImport() {
-      this.upload.title = "办公基价导入";
-      this.upload.open = true;
+      this.$refs["queryForm"].validate(valid => {
+        if (valid) {
+          this.upload.title = "办公基价导入";
+          this.uploadTips = "当前选中的基价月份：" + this.queryParams.yearMonth;
+          this.upload.open = true;
+        }
+      });
     },
     // 文件上传中处理
     handleFileUploadProgress(event, file, fileList) {
