@@ -3,6 +3,34 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.project.data.cases.mapper.OriginalResidenceSaleClosingCaseMapper">
+
+    <update id="createRawClosingCaseTable">
+        <bind name="targetTableName" value="'dbo.二手房成交数据' + yearMonth" />
+        IF OBJECT_ID(#{targetTableName}, 'U') IS NOT NULL
+        drop table ${targetTableName};
+
+        create table ${targetTableName}
+        (
+            case_id uniqueidentifier not null primary key,
+            区域 varchar (255) NULL,
+            板块 varchar (255) NULL,
+            环线 varchar (255) NULL,
+            小区名称 varchar (255) NULL,
+            房屋地址 varchar (255) NULL,
+            面积 float NULL,
+            房屋类型 varchar (255) NULL,
+            总价 float NULL,
+            单价 float NULL,
+            登记日期 varchar (255) NULL,
+            签约日期 varchar (255) NULL,
+            中介公司 varchar (255) NULL,
+            中介类型 varchar (255) NULL,
+            卖家类型 float NULL,
+            买家类型 varchar (5) NULL,
+            出生年月日 varchar (5) NULL
+        )
+    </update>
+
     <!-- 外部数据重复问题   -->
     <update id="createTable">
         <bind name="targetTableName" value="'dbo.original_residence_sale_closing_case_' + yearMonth"/>
@@ -11,7 +39,7 @@
 
         CREATE TABLE ${targetTableName}
         (
-            id bigint identity (1,1) not null primary key,
+            id int identity(1,1) not null,
             case_id varchar(32) not null,
             case_county_name nvarchar(20) null,
             case_block_name nvarchar(20) null,
@@ -55,7 +83,7 @@
 
         CREATE TABLE ${targetTableName}
         (
-            SID int NOT NULL IDENTITY(1, 1) ,
+            id int identity(1,1) not null primary key,
             case_id varchar(32) not null,
             ProjectID bigint NULL,
             BuildingID bigint NULL,

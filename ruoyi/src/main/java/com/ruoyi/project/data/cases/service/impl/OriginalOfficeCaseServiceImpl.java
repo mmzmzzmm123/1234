@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.Calendar;
@@ -31,7 +32,7 @@ public class OriginalOfficeCaseServiceImpl implements IOriginalOfficeCaseService
      * 计算
      */
     @Override
-//    @Scheduled(cron = "")
+    @Scheduled(cron = "0 0 17 28 * ?")
     public void compute() {
         Date date = new Date();
         Calendar calendar = Calendar.getInstance();

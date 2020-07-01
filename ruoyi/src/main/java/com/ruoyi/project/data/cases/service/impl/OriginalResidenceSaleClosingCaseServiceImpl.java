@@ -40,7 +40,7 @@ public class OriginalResidenceSaleClosingCaseServiceImpl implements IOriginalRes
      */
     @Scheduled(cron = "0 0 5 9 * ?")
     @Override
-    public void pullData() {
+    public void clear() {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
         Integer targetTableRoute = new Integer(String.format("%d%02d", calendar.get(Calendar.YEAR),
@@ -96,13 +96,14 @@ public class OriginalResidenceSaleClosingCaseServiceImpl implements IOriginalRes
     }
 
     /**
-     * 匹配数据
+     * 清洗成交数据
      *
      * @param yearMonth
      */
     public void after(Integer yearMonth) {
-        // 清洗挂牌案例
-        String rawSql = LoadUtil.loadContent("sql-template/clear_residence_sale_closing_case.sql");
+        // sql-template/.sql
+//        String rawSql = LoadUtil.loadContent("sql-template/clear_residence_sale_closing_case.sql");
+        String rawSql = LoadUtil.loadContent("sql-template/clear_sale_closing_case.sql");
         String sql = rawSql.replace("#yearMonth#", yearMonth.toString());
         jdbcTemplate.update(sql);
     }

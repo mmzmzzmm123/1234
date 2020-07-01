@@ -19,32 +19,32 @@ import java.util.List;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = RuoYiApplication.class)
 public class ResidenceRentBasePriceTests {
-
-    @Autowired
-    private IOriginalResidenceRentOpeningCaseService originalResidenceRentOpeningCaseService;
-    @Autowired
-    private IArtificialResidenceSalePriceService artificialResidenceSalePriceService;
-    @Autowired
-    private IOriginalResidenceSaleClosingCaseService originalResidenceClosingCaseService;
-
-    @Test
-    public void testClearOpeningCase() {
-        originalResidenceRentOpeningCaseService.pullData();
-    }
-
-    @Test
-    public void testClearClosingCase() {
-        originalResidenceClosingCaseService.pullData();
-    }
-
-    @Test
-    public void testBatchImport() {
-        List<ComputeResidenceSaleBasePrice> list = new LinkedList<>();
-        ComputeResidenceSaleBasePrice computeResidenceSaleBasePrice = new ComputeResidenceSaleBasePrice();
-        computeResidenceSaleBasePrice.setCommunityId("10101");
-        computeResidenceSaleBasePrice.setBasePriceDraft(new BigDecimal(12222));
-        list.add(computeResidenceSaleBasePrice);
-        artificialResidenceSalePriceService.batchImport(202007, list);
-    }
+//
+//    @Autowired
+//    private IOriginalResidenceRentOpeningCaseService originalResidenceRentOpeningCaseService;
+//    @Autowired
+//    private IArtificialResidenceSalePriceService artificialResidenceSalePriceService;
+//    @Autowired
+//    private IOriginalResidenceSaleClosingCaseService originalResidenceClosingCaseService;
+//
+//    @Test
+//    public void testClearOpeningCase() {
+//        originalResidenceRentOpeningCaseService.pullData();
+//    }
+//
+//    @Test
+//    public void testClearClosingCase() {
+//        originalResidenceClosingCaseService.clear();
+//    }
+//
+//    @Test
+//    public void testBatchImport() {
+//        List<ComputeResidenceSaleBasePrice> list = new LinkedList<>();
+//        ComputeResidenceSaleBasePrice computeResidenceSaleBasePrice = new ComputeResidenceSaleBasePrice();
+//        computeResidenceSaleBasePrice.setCommunityId("10101");
+//        computeResidenceSaleBasePrice.setBasePriceDraft(new BigDecimal(12222));
+//        list.add(computeResidenceSaleBasePrice);
+//        artificialResidenceSalePriceService.batchImport(202007, list);
+//    }
 
 }

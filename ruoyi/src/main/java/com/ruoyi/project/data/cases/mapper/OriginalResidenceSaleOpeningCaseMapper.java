@@ -19,6 +19,15 @@ public interface OriginalResidenceSaleOpeningCaseMapper {
     int createTable(@Param("yearMonth") Integer yearMonth);
 
     /**
+     *
+     * @param yearMonth
+     * @return
+     */
+    int createOpeningCaseRawTable(@Param("yearMonth") Integer yearMonth);
+
+
+
+    /**
      * 创建清洗完成之后的表ODS_HOUSINGCASELISTED_LJ_YYYYMM
      *
      * @param yearMonth

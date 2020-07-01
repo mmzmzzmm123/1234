@@ -19,6 +19,13 @@ public interface OriginalResidenceSaleClosingCaseMapper {
     int createTable(@Param("yearMonth") Integer yearMonth);
 
     /**
+     * 原始成交案例
+     * @param yearMonth
+     * @return
+     */
+    int createClosingCaseRawTable(@Param("yearMonth") Integer yearMonth);
+
+    /**
      * 创建清洗完成之后的表ODS_HOUSINGCASELISTED_LJ_YYYYMM
      * @param yearMonth
      * @return

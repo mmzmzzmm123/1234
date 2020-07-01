@@ -94,10 +94,6 @@ public class UltimateOfficeBasePriceServiceImpl implements IUltimateOfficeBasePr
             officeBasePriceUltimateMapper.insertArtificialOfficeBasePrice(inputModel);
         });
 
-//        RestTemplate restTemplate = new RestTemplate();
-//        String url = String.format(uvConfig.getAitificialOfficeBasePriceUrl(), yearMonth, lastYearMonth);
-//        UVResponse<Integer> affectCount = restTemplate.getForObject(url, UVResponse.class);
-
         String rawSql = LoadUtil.loadContent("sql-template/update_office_price.sql");
         Calendar calendar = Calendar.getInstance();
         int year = yearMonth / 100;
@@ -113,10 +109,6 @@ public class UltimateOfficeBasePriceServiceImpl implements IUltimateOfficeBasePr
                 .replace("#today#", simpleDateFormat.format(firstOfMonth))
                 .replace("#lastMonth#", simpleDateFormat.format(lastMonth));
         jdbcTemplate.update(sql);
-
-//        String rawSql =
-//        String sql = rawSql.replace("#yearMonth#", yearMonth.toString());
-//        jdbcTemplate.execute(sql);
 
         successMsg.insert(0, "恭喜您，数据已全部导入成功！共 " + successNum + " 条");
         return successMsg.toString();

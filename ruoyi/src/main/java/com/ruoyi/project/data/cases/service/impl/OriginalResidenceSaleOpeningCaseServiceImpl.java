@@ -44,7 +44,7 @@ public class OriginalResidenceSaleOpeningCaseServiceImpl implements IOriginalRes
      */
     @Scheduled(cron = "0 0 5 25 * ?")
     @Override
-    public void pullData() {
+    public void clear() {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
         Integer syncTableRoute = new Integer(String.format("%d%02d", calendar.get(Calendar.YEAR),
@@ -56,16 +56,18 @@ public class OriginalResidenceSaleOpeningCaseServiceImpl implements IOriginalRes
         calendar.add(Calendar.MONTH, 1);
         Integer computeTableRoute = new Integer(String.format("%d%02d", calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH) + 1));
+        computeTableRoute = 202007;
+        lastYearMonth = 202006;
 
         prepare(computeTableRoute, syncTableRoute);
         List<OriginalResidenceSaleOpeningCase> list = downloadOriginalResidenceSaleOpeningCaseMapper.download();
         list.parallelStream().forEach(originalResidenceOpeningCase -> {
-            originalResidenceOpeningCase.clear();
-            originalResidenceOpeningCase.setYearMonth(syncTableRoute);
-            syncOriginalResidenceSaleOpeningCaseMapper.insert(originalResidenceOpeningCase);
+//            originalResidenceOpeningCase.clear();
+//            originalResidenceOpeningCase.setYearMonth(syncTableRoute);
+//            syncOriginalResidenceSaleOpeningCaseMapper.insert(originalResidenceOpeningCase);
         });
         running(computeTableRoute, list);
-        after(computeTableRoute, lastYearMonth, valuePoint);
+        after(computeTableRoute, lastYearMonth);
     }
 
     /**
@@ -75,13 +77,13 @@ public class OriginalResidenceSaleOpeningCaseServiceImpl implements IOriginalRes
      * @param syncTableRoute
      */
     public void prepare(Integer computeTableRoute, Integer syncTableRoute) {
-        originalResidenceSaleOpeningCaseMapper.createTable(computeTableRoute);
+        originalResidenceSaleOpeningCaseMapper.createOpeningCaseRawTable(computeTableRoute);
         originalResidenceSaleOpeningCaseMapper.createCleanTable(computeTableRoute);
         originalResidenceSaleOpeningCaseMapper.createAssembleTable(computeTableRoute);
         originalResidenceSaleOpeningCaseMapper.createComputePriceTable(computeTableRoute);
         originalResidenceSaleOpeningCaseMapper.createArtificialPriceTable(computeTableRoute);
 
-        syncOriginalResidenceSaleOpeningCaseMapper.createTable(syncTableRoute);
+//        syncOriginalResidenceSaleOpeningCaseMapper.createTable(syncTableRoute);
     }
 
     /**
@@ -93,22 +95,14 @@ public class OriginalResidenceSaleOpeningCaseServiceImpl implements IOriginalRes
     public void running(Integer computeTableRoute, List<OriginalResidenceSaleOpeningCase> list) {
         SqlParameterSource[] batchParams = SqlParameterSourceUtils.createBatch(list.toArray());
         int[] updateCounts = namedParameterJdbcTemplate.batchUpdate("insert into dbo" +
-                        ".original_residence_sale_opening_case_" + computeTableRoute + "(case_id, case_lianjia_id, " +
-                        "case_lianjia_community_id, case_title, clean_property_type, case_apartment_layout, " +
-                        "case_house_structure, case_area, case_underground_area, case_toward, clean_toward, " +
-                        "case_storey, clean_total_floor, clean_current_floor_desc, case_elevator, clean_elevator, " +
-                        "case_tihu, case_decoration, clean_decoration, case_year, clean_year, case_address, " +
-                        "case_price, clean_unit_price, clean_total_price, case_community_name, case_visited_num, " +
-                        "case_visited_num_15, case_visited_num_30, case_latest_deal_date, case_latest_visited_date, " +
-                        "case_first_visited_date, case_url, case_community_url, case_get_date, case_provider, " +
-                        "create_time) values (:newCaseId,:caseLianJiaId,:caseLianJiaCommunityId,:caseTitle," +
-                        ":cleanPropertyType," +
-                        ":caseApartmentLayout,:caseHouseStructure,:caseArea,:caseUndergroundArea,:caseToward," +
-                        ":cleanToward,:caseStorey,:cleanTotalFloor,:cleanCurrentFloorDesc,:caseElevator," +
-                        ":cleanElevator,:caseTiHu,:caseDecoration,:cleanDecoration,:caseYear,:cleanYear,:caseAddress," +
-                        ":casePrice,:cleanUnitPrice,:cleanTotalPrice,:caseCommunityName,:caseVisitedNum," +
-                        ":caseVisitedNum15,:caseVisitedNum30,NULL,:caseLatestVisitTime,:caseFirstVisitTime,:caseUrl," +
-                        ":caseCommunityUrl,:caseGetDate,:caseProvider,GETDATE());",
+                        ".ODS_HOUSINGCASELISTED_LJ_" + computeTableRoute + "_RAW(case_id, llid, lcid, Name, " +
+                        "Roomtype, Area, Towards, Storey, Lastdeal, Condoelev, Decoration, Year, Address, Price, " +
+                        "Cname, Visited_Num, First_Visit_Time, Visited_Num_15, Visited_Num_30, Url, Curl, CurlDate) " +
+                        "values (:newCaseId,:caseLianJiaId,:caseLianJiaCommunityId,:caseTitle," +
+                        ":caseApartmentLayout,:caseArea,:caseToward,:caseStorey,:caseLastDeal,:caseElevator" +
+                        ",:caseDecoration,:caseYear,:caseAddress,:casePrice,:caseCommunityName,:caseVisitedNum," +
+                        ":caseFirstVisitTime,:caseVisitedNum15,:caseVisitedNum30,:caseUrl,:caseCommunityUrl," +
+                        ":caseGetDate);",
                 batchParams);
     }
 
@@ -118,21 +112,20 @@ public class OriginalResidenceSaleOpeningCaseServiceImpl implements IOriginalRes
      *
      * @param yearMonth
      * @param lastYearMonth
-     * @param valuePoint
      */
-    public void after(Integer yearMonth, Integer lastYearMonth, Date valuePoint) {
+    public void after(Integer yearMonth, Integer lastYearMonth) {
         // 清洗挂牌案例
-        String rawSql = LoadUtil.loadContent("sql-template/clear_residence_sale_opening_case.sql");
+
+        String rawSql = LoadUtil.loadContent("sql-template/clear_sale_opening_case.sql");
+//        String rawSql = LoadUtil.loadContent("sql-template/clear_residence_sale_opening_case.sql");
         String sql = rawSql.replace("#yearMonth#", yearMonth.toString())
                 .replace("#lastYearMonth#", lastYearMonth.toString());
         jdbcTemplate.update(sql);
 
         // 作价
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        rawSql = LoadUtil.loadContent("sql-template/compute_residence_sale_base_price.sql");
+        rawSql = LoadUtil.loadContent("sql-template/compute_sale_price.sql");
         sql = rawSql.replace("#yearMonth#", yearMonth.toString())
-                .replace("#lastYearMonth#", lastYearMonth.toString())
-                .replace("#valuePoint#", simpleDateFormat.format(valuePoint));
+                .replace("#lastYearMonth#", lastYearMonth.toString());
         jdbcTemplate.update(sql);
 
         logger.debug("#作价完成#");

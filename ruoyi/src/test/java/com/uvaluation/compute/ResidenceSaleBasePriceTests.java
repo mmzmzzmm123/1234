@@ -1,6 +1,7 @@
 package com.uvaluation.compute;
 
 import com.ruoyi.RuoYiApplication;
+import com.ruoyi.project.data.cases.service.IOriginalResidenceRentClosingCaseService;
 import com.ruoyi.project.data.cases.service.IOriginalResidenceSaleClosingCaseService;
 import com.ruoyi.project.data.cases.service.IOriginalResidenceSaleOpeningCaseService;
 import com.ruoyi.project.data.price.domain.ComputeResidenceSaleBasePrice;
@@ -9,6 +10,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +20,7 @@ import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = RuoYiApplication.class)
+@ActiveProfiles("uat")
 public class ResidenceSaleBasePriceTests {
 
     @Autowired
@@ -27,15 +30,22 @@ public class ResidenceSaleBasePriceTests {
     @Autowired
     private IOriginalResidenceSaleClosingCaseService originalResidenceClosingCaseService;
 
-    @Test
-    public void testClearOpeningCase() {
-        originalResidenceOpeningCaseService.pullData();
-    }
-
+    /**
+     * 成交案例清洗
+     */
     @Test
     public void testClearClosingCase() {
-        originalResidenceClosingCaseService.pullData();
+        originalResidenceClosingCaseService.clear();
     }
+
+    /**
+     * 挂牌案例清洗
+     */
+    @Test
+    public void testClearOpeningCase() {
+        originalResidenceOpeningCaseService.clear();
+    }
+
 
     @Test
     public void testBatchImport() {
@@ -46,5 +56,6 @@ public class ResidenceSaleBasePriceTests {
         list.add(computeResidenceSaleBasePrice);
         artificialResidenceSalePriceService.batchImport(202007, list);
     }
+
 
 }

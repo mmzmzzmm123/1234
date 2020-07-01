@@ -28,7 +28,7 @@
         <result property="caseProvider" column="caseProvider"/>
     </resultMap>
     <select id="download" resultMap="resultMapping">
-        select llid
+        select top 100 llid
              , lcid
              , name
              , type

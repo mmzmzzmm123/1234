@@ -6,7 +6,7 @@ import com.ruoyi.project.data.cases.domain.OriginalOfficeCase;
 import java.util.Date;
 import java.util.List;
 
-@DS("test")
+@DS("spider")
 public interface DownloadOriginalOfficeCaseMapper {
     /**
      * 下载案例

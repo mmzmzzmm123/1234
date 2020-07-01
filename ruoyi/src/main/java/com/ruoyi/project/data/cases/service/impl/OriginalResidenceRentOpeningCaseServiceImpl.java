@@ -71,7 +71,6 @@ public class OriginalResidenceRentOpeningCaseServiceImpl implements IOriginalRes
         });
 
         // 两种数据，分别插入不同的表当中
-
         running(computeTableRoute, list);
         after(computeTableRoute, lastYearMonth, valuePoint);
     }
