@@ -57,5 +57,4 @@ public class ResidenceSaleBasePriceTests {
         artificialResidenceSalePriceService.batchImport(202007, list);
     }
 
-
 }
