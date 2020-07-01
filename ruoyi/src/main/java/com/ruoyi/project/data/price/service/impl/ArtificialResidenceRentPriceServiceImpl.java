@@ -4,6 +4,7 @@ import com.baomidou.dynamic.datasource.annotation.DS;
 import com.microsoft.sqlserver.jdbc.SQLServerCallableStatement;
 import com.microsoft.sqlserver.jdbc.SQLServerDataTable;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
+import com.ruoyi.common.utils.LoadUtil;
 import com.ruoyi.project.common.VueSelectModel;
 import com.ruoyi.project.data.price.domain.ArtificialResidenceRentBasePrice;
 import com.ruoyi.project.data.price.domain.ArtificialResidenceSaleBasePrice;
@@ -14,10 +15,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.*;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -38,6 +41,9 @@ public class ArtificialResidenceRentPriceServiceImpl implements IArtificialResid
 
     @Autowired
     private ArtificialResidenceRentPriceMapper artificialResidenceRentPriceMapper;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     @Override
     public ArtificialResidenceRentBasePrice selectById(Integer yearMonth, String id) {
@@ -94,6 +100,10 @@ public class ArtificialResidenceRentPriceServiceImpl implements IArtificialResid
         Date valuePoint = calendar.getTime();
         calendar.add(Calendar.MONTH, -1);
         Date lastValuePoint = calendar.getTime();
+        String lastYearMonth = String.format("%d%02d", calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String priceDate = simpleDateFormat.format(valuePoint);
+        String lastPriceDate = simpleDateFormat.format(lastValuePoint);
 
         artificialResidenceRentPriceMapper.prepareBachImport(yearMonth);
         CopyOnWriteArrayList<ArtificialResidenceRentBasePrice> copyOnWriteArrayList = new CopyOnWriteArrayList<>();
@@ -162,6 +172,14 @@ public class ArtificialResidenceRentPriceServiceImpl implements IArtificialResid
             // 删除存储过程，还原环境
             statement.execute("drop procedure BatchImportOfArtificialResidenceRent");
             conn.close();
+            // 人工修正导入
+            // yearMonth, lastYearMonth, lastPriceDate, priceDate
+            String rawSql = LoadUtil.loadContent("sql-template/update_rent_price.sql");
+            String sql = rawSql.replace("#yearMonth#", yearMonth.toString())
+                    .replace("#lastYearMonth#", lastYearMonth)
+                    .replace("#priceDate#", priceDate)
+                    .replace("#lastPriceDate#", lastPriceDate);
+            jdbcTemplate.update(sql);
         } catch (Exception e) {
             e.printStackTrace();
         }

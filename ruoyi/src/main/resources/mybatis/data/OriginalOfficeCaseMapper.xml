@@ -49,44 +49,28 @@
     <update id="createArtificialTable">
         <bind name="targetTableName" value="'dbo.DWA_PROJECTBASEPRICE_OFFICE_MANU_' + yearMonth"/>
         IF OBJECT_ID(#{targetTableName}, 'U') IS NOT NULL
-        drop table ${targetTableName};
+            drop table ${targetTableName};
 
         CREATE TABLE ${targetTableName}
         (
-        id uniqueidentifier not null,
-        BuildingID bigint NOT NULL,
-        UnifiedID bigint NULL,
-        ProjectID bigint NOT NULL,
-        BuildingID_P nvarchar (20) NOT NULL,
-        ProjectID_P bigint NULL,
-        MainPrice decimal (38, 6) NULL,
-        MainPriceRent decimal (38, 6) NULL,
-        MainPricePst decimal (38, 6) NULL,
-        MainPriceRentPst decimal (38, 6) NULL,
-        MainPriceType varchar (2) NULL,
-        MainPriceRentType varchar (2) NULL,
-        ModifyDate date NULL,
-        Status nvarchar (30) NULL,
-        BuildingStd tinyint NULL,
-        AdjEvd nvarchar (1000) NULL,
-        MainPrice_1 decimal (38, 6) NULL,
-        MainPriceRent_1 decimal (38, 6) NULL,
-        AreaCoff decimal (7, 4) NULL,
-        YearCoff decimal (7, 4) NULL,
-        BuildingCoff decimal (7, 4) NULL,
-        ProjectName nvarchar (1024) NULL,
-        ProjectAddr nvarchar (1024) NULL,
-        BuildingAddr nvarchar (1024) NULL,
-        County nvarchar (512) NULL,
-        Loop nvarchar (512) NULL,
-        Block nvarchar (512) NULL,
-        Street nvarchar (512) NULL,
-        Year int NULL,
-        AvgArea decimal (18, 2) NULL,
-        TotalFloorSum nvarchar (32) NULL,
-        UpperFloorSum nvarchar (32) NULL,
-        OfficeClass nvarchar (256) NULL,
-        Grade nvarchar (64) NULL
+            BuildingID bigint NOT NULL,
+            ProjectID bigint NULL,
+            County nvarchar (512) NULL,
+            Loop nvarchar (512) NULL,
+            Block nvarchar (512) NULL,
+            ProjectAddr nvarchar (1024) NULL,
+            ProjectName nvarchar (1024) NULL,
+            Year int NULL,
+            AvgArea decimal (18, 2) NULL,
+            TotalFloorSum nvarchar (32) NULL,
+            UpperFloorSum nvarchar (32) NULL,
+            OfficeClass nvarchar (256) NULL,
+            Grade nvarchar (64) NULL,
+            MainPrice_1 decimal (18, 2) NULL,
+            MainPriceRent_1 decimal (18, 2) NULL,
+            MainPrice decimal (18, 2) NULL,
+            MainPriceRent decimal (18, 2) NULL,
+            ModifyDate date NULL
         );
     </update>
 </mapper>

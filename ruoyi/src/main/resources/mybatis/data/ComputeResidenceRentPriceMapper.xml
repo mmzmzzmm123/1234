@@ -22,7 +22,7 @@
         <result property="projectLevel" column="projectLevel"/>
         <result property="propertyDevPeriod" column="propertyDevPeriod"/>
         <result property="bindClassID" column="bindClassID"/>
-        <result property="mainCoefficientRent" column="mainCoffRent"/>
+        <result property="mainCoefficientRent" column="mainCoff_Rent"/>
         <result property="rentPriceDft" column="rentPriceDft"/>
         <result property="mainRentPriceDft" column="mainRentPriceDft"/>
         <result property="rentPrice_1" column="rentPrice_1"/>

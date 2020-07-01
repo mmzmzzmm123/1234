@@ -212,7 +212,8 @@
     <insert id="insertArtificialOfficeBasePrice"
             parameterType="com.ruoyi.project.data.price.domain.UltimateOfficeBasePrice">
         insert into
-        dbo.DWA_PROJECTBASEPRICE_OFFICE_MANU_${yearMonth}(ID,BuildingID,ProjectID,County,"Loop",Block,ProjectAddr,ProjectName,Year,AvgArea,TotalFloorSum,UpperFloorSum,OfficeClass,Grade,MainPrice_1,MainPriceRent_1,MainPrice,MainPriceRent,ModifyDate) values(#{id},#{buildingId},#{communityId},#{countyName},#{loopName},#{blockName},#{communityAddress},#{communityName},#{year},#{avgArea},#{totalFloorSum},#{upperFloorSum},#{officeClass},#{officeLevel},#{mainPrice_1},#{mainPriceRent_1},#{mainPrice},#{mainPriceRent},getdate())
+        dbo.DWA_PROJECTBASEPRICE_OFFICE_MANU_${yearMonth}(ID,BuildingID,ProjectID,County,"Loop",Block,ProjectAddr,ProjectName,Year,AvgArea,TotalFloorSum,UpperFloorSum,OfficeClass,Grade,MainPrice_1,MainPriceRent_1,MainPrice,MainPriceRent,ModifyDate)
+        values(#{id},#{buildingId},#{communityId},#{countyName},#{loopName},#{blockName},#{communityAddress},#{communityName},#{year},#{avgArea},#{totalFloorSum},#{upperFloorSum},#{officeClass},#{officeLevel},#{mainPrice_1},#{mainPriceRent_1},#{mainPrice},#{mainPriceRent},getdate())
     </insert>
     <!-- 更新状态 -->
     <update id="updateStatus">

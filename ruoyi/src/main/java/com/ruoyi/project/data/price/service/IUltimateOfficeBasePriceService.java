@@ -54,12 +54,6 @@ public interface IUltimateOfficeBasePriceService {
      */
     List<VueSelectModel> getYearMonthList();
 
-
-    /**
-     * 计算
-     */
-    void compute();
-
 }
 
 
