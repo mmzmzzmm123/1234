@@ -39,7 +39,7 @@ public class ByDayFlowTaskController extends BaseController
     /**
      * 查询一日流程任务列表
      */
-    @PreAuthorize("@ss.hasPermi('benyi:dayflowtask:list')")
+    @PreAuthorize("@ss.hasPermi('benyi:dayflowtask:list')"+ "||@ss.hasPermi('benyi:dayflowmanger:list')")
     @GetMapping("/list")
     public TableDataInfo list(ByDayFlowTask byDayFlowTask)
     {

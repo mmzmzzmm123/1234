@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.benyi.mapper.ByThemeActivityMapper">
+
+    <resultMap type="ByThemeActivity" id="ByThemeActivityResult">
+        <result property="id" column="id"/>
+        <result property="themeid" column="themeid"/>
+        <result property="name" column="name"/>
+        <result property="type" column="type"/>
+        <result property="field" column="field"/>
+        <result property="target" column="target"/>
+        <result property="data" column="data"/>
+        <result property="process" column="process"/>
+        <result property="proposal" column="proposal"/>
+        <result property="reflect" column="reflect"/>
+        <result property="appendix" column="appendix"/>
+        <result property="sort" column="sort"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <sql id="selectByThemeActivityVo">
+        select id, themeid, name, type, field, target, data, process, proposal, reflect, appendix, sort, create_time from by_theme_activity
+    </sql>
+
+    <select id="selectByThemeActivityList" parameterType="ByThemeActivity" resultMap="ByThemeActivityResult">
+        <include refid="selectByThemeActivityVo"/>
+        <where>
+            <if test="themeid != null ">and themeid = #{themeid}</if>
+            <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
+            <if test="type != null  and type != ''">and type = #{type}</if>
+            <if test="field != null  and field != ''">and field = #{field}</if>
+            <if test="target != null  and target != ''">and target = #{target}</if>
+            <if test="data != null  and data != ''">and data = #{data}</if>
+            <if test="process != null  and process != ''">and process = #{process}</if>
+            <if test="proposal != null  and proposal != ''">and proposal = #{proposal}</if>
+            <if test="reflect != null  and reflect != ''">and reflect = #{reflect}</if>
+            <if test="appendix != null  and appendix != ''">and appendix = #{appendix}</if>
+            <if test="sort != null ">and sort = #{sort}</if>
+        </where>
+    </select>
+
+    <select id="selectByThemeActivityById" parameterType="Long" resultMap="ByThemeActivityResult">
+        <include refid="selectByThemeActivityVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertByThemeActivity" parameterType="ByThemeActivity" useGeneratedKeys="true" keyProperty="id">
+        insert into by_theme_activity
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="themeid != null ">themeid,</if>
+            <if test="name != null  and name != ''">name,</if>
+            <if test="type != null  and type != ''">type,</if>
+            <if test="field != null  and field != ''">field,</if>
+            <if test="target != null  and target != ''">target,</if>
+            <if test="data != null  and data != ''">data,</if>
+            <if test="process != null  and process != ''">process,</if>
+            <if test="proposal != null  and proposal != ''">proposal,</if>
+            <if test="reflect != null  and reflect != ''">reflect,</if>
+            <if test="appendix != null  and appendix != ''">appendix,</if>
+            <if test="sort != null ">sort,</if>
+            <if test="createTime != null ">create_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="themeid != null ">#{themeid},</if>
+            <if test="name != null  and name != ''">#{name},</if>
+            <if test="type != null  and type != ''">#{type},</if>
+            <if test="field != null  and field != ''">#{field},</if>
+            <if test="target != null  and target != ''">#{target},</if>
+            <if test="data != null  and data != ''">#{data},</if>
+            <if test="process != null  and process != ''">#{process},</if>
+            <if test="proposal != null  and proposal != ''">#{proposal},</if>
+            <if test="reflect != null  and reflect != ''">#{reflect},</if>
+            <if test="appendix != null  and appendix != ''">#{appendix},</if>
+            <if test="sort != null ">#{sort},</if>
+            <if test="createTime != null ">#{createTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateByThemeActivity" parameterType="ByThemeActivity">
+        update by_theme_activity
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="themeid != null ">themeid = #{themeid},</if>
+            <if test="name != null  and name != ''">name = #{name},</if>
+            <if test="type != null  and type != ''">type = #{type},</if>
+            <if test="field != null  and field != ''">field = #{field},</if>
+            <if test="target != null  and target != ''">target = #{target},</if>
+            <if test="data != null  and data != ''">data = #{data},</if>
+            <if test="process != null  and process != ''">process = #{process},</if>
+            <if test="proposal != null  and proposal != ''">proposal = #{proposal},</if>
+            <if test="reflect != null  and reflect != ''">reflect = #{reflect},</if>
+            <if test="appendix != null  and appendix != ''">appendix = #{appendix},</if>
+            <if test="sort != null ">sort = #{sort},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteByThemeActivityById" parameterType="Long">
+        delete from by_theme_activity where id = #{id}
+    </delete>
+
+    <delete id="deleteByThemeActivityByIds" parameterType="String">
+        delete from by_theme_activity where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

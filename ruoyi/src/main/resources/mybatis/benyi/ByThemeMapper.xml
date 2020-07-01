@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.benyi.mapper.ByThemeMapper">
+
+    <resultMap type="ByTheme" id="ByThemeResult">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="content" column="content"/>
+        <result property="communicate" column="communicate"/>
+        <result property="classid" column="classid"/>
+        <result property="sort" column="sort"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <sql id="selectByThemeVo">
+        select id, name, content, communicate, classid, sort, create_time from by_theme
+    </sql>
+
+    <select id="selectByThemeList" parameterType="ByTheme" resultMap="ByThemeResult">
+        <include refid="selectByThemeVo"/>
+        <where>
+            <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
+            <if test="content != null  and content != ''">and content = #{content}</if>
+            <if test="communicate != null  and communicate != ''">and communicate = #{communicate}</if>
+            <if test="classid != null  and classid != ''">and classid = #{classid}</if>
+            <if test="sort != null ">and sort = #{sort}</if>
+        </where>
+    </select>
+
+    <select id="selectByThemeById" parameterType="Long" resultMap="ByThemeResult">
+        <include refid="selectByThemeVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertByTheme" parameterType="ByTheme">
+        insert into by_theme
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null ">id,</if>
+            <if test="name != null  and name != ''">name,</if>
+            <if test="content != null  and content != ''">content,</if>
+            <if test="communicate != null  and communicate != ''">communicate,</if>
+            <if test="classid != null  and classid != ''">classid,</if>
+            <if test="sort != null ">sort,</if>
+            <if test="createTime != null ">create_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null ">#{id},</if>
+            <if test="name != null  and name != ''">#{name},</if>
+            <if test="content != null  and content != ''">#{content},</if>
+            <if test="communicate != null  and communicate != ''">#{communicate},</if>
+            <if test="classid != null  and classid != ''">#{classid},</if>
+            <if test="sort != null ">#{sort},</if>
+            <if test="createTime != null ">#{createTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateByTheme" parameterType="ByTheme">
+        update by_theme
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null  and name != ''">name = #{name},</if>
+            <if test="content != null  and content != ''">content = #{content},</if>
+            <if test="communicate != null  and communicate != ''">communicate = #{communicate},</if>
+            <if test="classid != null  and classid != ''">classid = #{classid},</if>
+            <if test="sort != null ">sort = #{sort},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteByThemeById" parameterType="Long">
+        delete from by_theme where id = #{id}
+    </delete>
+
+    <delete id="deleteByThemeByIds" parameterType="String">
+        delete from by_theme where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

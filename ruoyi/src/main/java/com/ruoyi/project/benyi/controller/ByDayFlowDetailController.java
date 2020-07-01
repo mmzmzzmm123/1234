@@ -64,7 +64,7 @@ public class ByDayFlowDetailController extends BaseController
     /**
      * 获取一日流程详细信息
      */
-    @PreAuthorize("@ss.hasPermi('benyi:dayflowmanger:query')")
+    @PreAuthorize("@ss.hasPermi('benyi:dayflowmanger:query')"+ "||@ss.hasPermi('benyi:dayflowmanger:list')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {

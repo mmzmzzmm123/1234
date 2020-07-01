@@ -39,7 +39,7 @@ public class ByDayFlowStandardController extends BaseController
     /**
      * 查询一日流程标准列表
      */
-    @PreAuthorize("@ss.hasPermi('benyi:standard:list')")
+    @PreAuthorize("@ss.hasPermi('benyi:standard:list')"+ "||@ss.hasPermi('benyi:dayflowmanger:list')")
     @GetMapping("/list")
     public TableDataInfo list(ByDayFlowStandard byDayFlowStandard)
     {

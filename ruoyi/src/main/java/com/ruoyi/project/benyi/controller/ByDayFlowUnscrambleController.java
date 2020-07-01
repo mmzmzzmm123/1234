@@ -36,7 +36,7 @@ public class ByDayFlowUnscrambleController extends BaseController
 /**
  * 查询一日流程解读列表
  */
-@PreAuthorize("@ss.hasPermi('benyi:unscramble:list')")
+@PreAuthorize("@ss.hasPermi('benyi:unscramble:list')"+ "||@ss.hasPermi('benyi:dayflowmanger:list')")
 @GetMapping("/list")
         public TableDataInfo list(ByDayFlowUnscramble byDayFlowUnscramble)
     {
