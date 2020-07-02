@@ -61,7 +61,16 @@
     <el-table v-loading="loading" :data="themeList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="编号" align="center" prop="id" />
-      <el-table-column label="主题名称" align="center" prop="name" />
+      <el-table-column label="主题名称" align="center" prop="name" >
+        <template slot-scope="scope">
+          <router-link
+            :to="'/benyi_course/theme/activity/' + scope.row.id"
+            class="link-dayflow"
+          >
+            <span>{{ scope.row.name }}</span>
+          </router-link>
+        </template>
+      </el-table-column>
       <el-table-column label="适用班级" align="center" prop="classid" :formatter="bjtypeFormat" />
       <el-table-column label="序号" align="center" prop="sort" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">

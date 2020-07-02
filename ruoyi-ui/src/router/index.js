@@ -152,6 +152,18 @@ export const constantRoutes = [{
         }]
     },
     {
+        path: '/benyi_course/theme',
+        component: Layout,
+        hidden: true,
+        children: [{
+            path: 'activity/:id(\\d+)',
+            component: () =>
+                import ('@/views/benyi/theme/activity'),
+            name: 'Theme1',
+            meta: { title: '主题整合内容', icon: '' }
+        }]
+    },
+    {
         path: '/job',
         component: Layout,
         hidden: true,

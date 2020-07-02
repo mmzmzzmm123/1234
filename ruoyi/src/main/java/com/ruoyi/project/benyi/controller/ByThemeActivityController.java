@@ -2,6 +2,7 @@ package com.ruoyi.project.benyi.controller;
 
 import java.util.List;
 
+import com.ruoyi.project.system.service.ISysDictDataService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,6 +33,8 @@ import com.ruoyi.framework.web.page.TableDataInfo;
 public class ByThemeActivityController extends BaseController {
     @Autowired
     private IByThemeActivityService byThemeActivityService;
+    @Autowired
+    private ISysDictDataService dictDataService;
 
     /**
      * 查询主题整合活动列表
@@ -62,7 +65,21 @@ public class ByThemeActivityController extends BaseController {
     @PreAuthorize("@ss.hasPermi('benyi:theme:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id) {
-        return AjaxResult.success(byThemeActivityService.selectByThemeActivityById(id));
+        AjaxResult ajax = AjaxResult.success();
+        ByThemeActivity byThemeActivity=byThemeActivityService.selectByThemeActivityById(id);
+        String dictType = "sys_theme_type";
+        ajax.put("types", dictDataService.selectDictDataByType(dictType));
+        String strType = byThemeActivity.getType();
+        ajax.put("typeIds", strType.split(";"));
+
+        String dictField = "sys_theme_field";
+        ajax.put("fields", dictDataService.selectDictDataByType(dictField));
+        String strField = byThemeActivity.getField();
+        ajax.put("fieldIds", strField.split(";"));
+
+
+        ajax.put(AjaxResult.DATA_TAG, byThemeActivity);
+        return ajax;
     }
 
     /**
