@@ -60,7 +60,7 @@ spring:
           password: lc1234
         compute:
           driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
-          url: jdbc:sqlserver://172.16.30.233:1433;DatabaseName=uv_compute_test
+          url: jdbc:sqlserver://172.16.30.233:1433;DatabaseName=uv_compute
           username: sa
           password: Lcdatacenter_888
         clean:

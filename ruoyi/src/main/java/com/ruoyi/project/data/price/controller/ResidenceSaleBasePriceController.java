@@ -17,10 +17,11 @@ import com.ruoyi.framework.web.page.TableSupport;
 import com.ruoyi.project.common.VueSelectModel;
 import com.ruoyi.project.data.price.domain.ArtificialResidenceSaleBasePrice;
 import com.ruoyi.project.data.price.domain.ComputeResidenceSaleBasePrice;
-import com.ruoyi.project.data.price.service.IArtificialResidenceRentPriceService;
+import com.ruoyi.project.data.price.domain.UltimateResidenceSaleBasePrice;
 import com.ruoyi.project.data.price.service.IArtificialResidenceSalePriceService;
-import com.ruoyi.project.data.price.service.IOriginalResidenceSalePriceService;
+import com.ruoyi.project.data.price.service.IComputeResidenceSalePriceService;
 import com.ruoyi.project.data.price.service.IUltimateResidenceRentBasePriceService;
+import com.ruoyi.project.data.price.service.IUltimateResidenceSalePriceService;
 import com.ruoyi.project.system.domain.UploadFile;
 import com.ruoyi.project.system.service.IUploadFileService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,18 +29,19 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.LinkedList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/data/price/residence/sale")
+@RequestMapping("/data/sale-price/residence")
 public class ResidenceSaleBasePriceController extends BaseController {
 
     @Autowired
-    private IOriginalResidenceSalePriceService computeResidenceSalePriceService;
+    private IComputeResidenceSalePriceService computeResidenceSalePriceService;
     @Autowired
     private IArtificialResidenceSalePriceService artificialResidenceSalePriceService;
     @Autowired
-    private IUltimateResidenceRentBasePriceService ultimateResidenceRentBasePriceService;
+    private IUltimateResidenceSalePriceService ultimateResidenceSalePriceService;
     @Autowired
     private IUploadFileService fileService;
     @Autowired
@@ -85,8 +87,11 @@ public class ResidenceSaleBasePriceController extends BaseController {
         int total = computeResidenceSalePriceService.selectCount(computeResidenceSaleBasePrice);
         computeResidenceSaleBasePrice.setPageIndex(0);
         computeResidenceSaleBasePrice.setPageSize(total);
-        List<ComputeResidenceSaleBasePrice> list =
-                computeResidenceSalePriceService.selectList(computeResidenceSaleBasePrice);
+        List<ComputeResidenceSaleBasePrice> list = null;
+        if (0 == total)
+            list = new LinkedList<>();
+        else
+            list = computeResidenceSalePriceService.selectList(computeResidenceSaleBasePrice);
         ExcelUtil<ComputeResidenceSaleBasePrice> util = new ExcelUtil<>(ComputeResidenceSaleBasePrice.class);
         return util.exportExcel(list, "住宅销售基价" + computeResidenceSaleBasePrice.getYearMonth());
     }
@@ -192,76 +197,53 @@ public class ResidenceSaleBasePriceController extends BaseController {
         return AjaxResult.success(message);
     }
 
-//
-//    /**
-//     * 人工修正住宅租赁
-//     *
-//     * @param artificialResidenceRentBasePrice
-//     * @return
-//     */
-//    @PreAuthorize("@ss.hasPermi('system:user:list')")
-//    @GetMapping("/artificial/list")
-//    public TableDataInfo artificialByList(ArtificialResidenceRentBasePrice artificialResidenceRentBasePrice) {
-//        int pageIndex = ServletUtils.getParameterToInt("pageIndex");
-//        int pageSize = ServletUtils.getParameterToInt(TableSupport.PAGE_SIZE);
-//        artificialResidenceRentBasePrice.setPageIndex(pageIndex <= 1 ? 0 : (pageIndex - 1) * pageSize);
-//        artificialResidenceRentBasePrice.setPageSize(pageSize);
-//
-//        int total = artificialResidenceRentPriceService.selectCount(artificialResidenceRentBasePrice);
-//        List<ArtificialResidenceRentBasePrice> list =
-//                artificialResidenceRentPriceService.selectList(artificialResidenceRentBasePrice);
-//        list.forEach(x -> x.setYearMonth(artificialResidenceRentBasePrice.getYearMonth()));
-//        return getDataTable(list, total);
-//    }
-//
-//
-//    // 文件保存
-//
-//
-//    /**
-//     * 查询 住宅租赁基价列表
-//     */
-//    @PreAuthorize("@ss.hasPermi('system:user:list')")
-//    @GetMapping("/ultimate/list")
-//    public TableDataInfo ultimateResidenceRentBasePriceList(UltimateResidenceRentBasePrice
-//    ultimateResidenceRentBasePrice) {
-//        int pageIndex = ServletUtils.getParameterToInt("pageIndex");
-//        int pageSize = ServletUtils.getParameterToInt(TableSupport.PAGE_SIZE);
-//        ultimateResidenceRentBasePrice.setPageIndex(pageIndex <= 1 ? 0 : (pageIndex - 1) * pageSize);
-//        ultimateResidenceRentBasePrice.setPageSize(pageSize);
-//
-//        int total = ultimateResidenceRentBasePriceService.selectCount(ultimateResidenceRentBasePrice);
-//        List<UltimateResidenceRentBasePrice> list =
-//                ultimateResidenceRentBasePriceService.selectList(ultimateResidenceRentBasePrice);
-//        list.forEach(x -> x.setYearMonth(ultimateResidenceRentBasePrice.getYearMonth()));
-//        return getDataTable(list, total);
-//    }
-//
-//    /**
-//     * 人工审核住宅租赁基价导入（模板）
-//     * 记录变化的值和变化次数
-//     */
-//
-//    /**
-//     * 获取 住宅租赁基价详细信息
-//     */
-//    @PreAuthorize("@ss.hasPermi('system:user:query')")
-//    @GetMapping(value = "/ultimate/{id}")
-//    public AjaxResult ultimateResidenceRentBasePriceGet(@PathVariable("id") Integer id) {
-//        return AjaxResult.success(ultimateResidenceRentBasePriceService.selectById(id));
-//    }
-//
-//    /**
-//     * 修改 住宅租赁基价
-//     */
-//    @PreAuthorize("@ss.hasPermi('system:user:edit')")
-//    @Log(title = "住宅租赁基价", businessType = BusinessType.UPDATE)
-//    @PutMapping(value = "/ultimate")
-//    public AjaxResult ultimateResidenceRentBasePriceEdit(@RequestBody UltimateResidenceRentBasePrice
-//    ultimateResidenceRentBasePrice) {
-//        return toAjax(ultimateResidenceRentBasePriceService.update(ultimateResidenceRentBasePrice));
-//    }
-//
+    /**
+     * 查询 住宅租赁基价列表
+     */
+    @PreAuthorize("@ss.hasPermi('system:user:list')")
+    @GetMapping("/ultimate/list")
+    public TableDataInfo ultimateList(UltimateResidenceSaleBasePrice ultimateResidenceSaleBasePrice) {
+        int pageIndex = ServletUtils.getParameterToInt("pageIndex");
+        int pageSize = ServletUtils.getParameterToInt(TableSupport.PAGE_SIZE);
+        ultimateResidenceSaleBasePrice.setPageIndex(pageIndex <= 1 ? 0 : (pageIndex - 1) * pageSize);
+        ultimateResidenceSaleBasePrice.setPageSize(pageSize);
 
+        int total = ultimateResidenceSalePriceService.selectCount(ultimateResidenceSaleBasePrice);
+        List<UltimateResidenceSaleBasePrice> list =
+                ultimateResidenceSalePriceService.selectList(ultimateResidenceSaleBasePrice);
+        list.forEach(x -> x.setYearMonth(ultimateResidenceSaleBasePrice.getYearMonth()));
+        return getDataTable(list, total);
+    }
+
+    /**
+     * 查询 年月
+     */
+    @PreAuthorize("@ss.hasPermi('system:user:list')")
+    @GetMapping("/ultimate/yearmonth")
+    public AjaxResult ultimateYearMonthList() {
+        List<VueSelectModel> list = ultimateResidenceSalePriceService.getYearMonth();
+
+        return AjaxResult.success(list);
+    }
+
+    /**
+     * 导出 住宅销售基价列表
+     */
+    @PreAuthorize("@ss.hasPermi('system:user:export')")
+    @Log(title = "住宅销售基价", businessType = BusinessType.EXPORT)
+    @GetMapping("/ultimate/export")
+    public AjaxResult ultimateExport(UltimateResidenceSaleBasePrice
+                                             ultimateResidenceSaleBasePrice) {
+        int total = ultimateResidenceSalePriceService.selectCount(ultimateResidenceSaleBasePrice);
+        ultimateResidenceSaleBasePrice.setPageIndex(0);
+        ultimateResidenceSaleBasePrice.setPageSize(total);
+        List<UltimateResidenceSaleBasePrice> list = null;
+        if (0 == total)
+            list = new LinkedList<>();
+        else
+            list = ultimateResidenceSalePriceService.selectList(ultimateResidenceSaleBasePrice);
+        ExcelUtil<UltimateResidenceSaleBasePrice> util = new ExcelUtil<>(UltimateResidenceSaleBasePrice.class);
+        return util.exportExcel(list, "住宅销售基价" + ultimateResidenceSaleBasePrice.getYearMonth());
+    }
 
 }

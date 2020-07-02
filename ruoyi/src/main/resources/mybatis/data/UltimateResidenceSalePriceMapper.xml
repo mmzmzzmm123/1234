@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.data.price.mapper.UltimateResidenceSalePriceMapper">
+
+    <resultMap type="com.ruoyi.project.data.price.domain.UltimateResidenceSaleBasePrice"
+               id="MainMappingResult">
+        <result property="id" column="id"/>
+        <result property="yearMonth" column="yearMonth"/>
+        <result property="communityId" column="ProjectID"/>
+<!--        <result property="priceType" column="PriceType"/>-->
+        <result property="basePrice" column="BasePrice"/>
+        <result property="mainPrice" column="MainPrice"/>
+        <result property="areaCoefficient" column="AreaCoff"/>
+        <result property="yearCoefficient" column="YearCoff"/>
+        <result property="voppat" column="VOPPAT"/>
+        <result property="voppa" column="VOPPA"/>
+        <result property="priceDate" column="PriceDate"/>
+        <result property="comment" column="PriceNote"/>
+        <result property="updateDate" column="ModifyDate" jdbcType="DATE"/>
+        <result property="status" column="Status"/>
+        <result property="adjustPriceComment" column="AdjEvd"/>
+    </resultMap>
+
+    <sql id="selectAllField">
+        SELECT ID
+              ,ProjectID
+              ,PriceType
+              ,BasePrice
+              ,MainPrice
+              ,AreaCoff
+              ,YearCoff
+              ,VOPPAT
+              ,VOPPA
+              ,PriceDate
+              ,PriceNote
+              ,ModifyDate
+              ,Status
+              ,AdjEvd
+              ,${yearMonth} as yearMonth
+        FROM dbo.ODS_PROJECT_PRICE_INFO_${yearMonth}
+    </sql>
+    <!--  分页总数   -->
+    <select id="selectPageCount"
+            parameterType="com.ruoyi.project.data.price.domain.UltimateResidenceSaleBasePrice" resultType="int">
+        select count(1) from dbo.ODS_PROJECT_PRICE_INFO_${yearMonth}
+        <where>
+            <if test="communityId != null">
+                AND ProjectID = #{communityId}
+            </if>
+            <if test="status != null">
+                AND Status = #{status}
+            </if>
+        </where>
+    </select>
+    <!-- 分页列表   -->
+    <select id="selectPageList"
+            parameterType="com.ruoyi.project.data.price.domain.UltimateResidenceSaleBasePrice"
+            resultMap="MainMappingResult">
+        <include refid="selectAllField"/>
+        <where>
+            <if test="communityId != null">
+                AND ProjectID = #{communityId}
+            </if>
+            <if test="status != null">
+                AND Status = #{status}
+            </if>
+        </where>
+        order by ProjectID ASC OFFSET #{pageIndex} rows fetch next #{pageSize} rows only
+    </select>
+
+    <!-- 获取表名   -->
+    <select id="yearMonthList" resultType="com.ruoyi.project.common.VueSelectModel">
+        SELECT right(name,6) as value, right(name,6) as label
+        FROM sys.tables
+        where name like 'ODS_PROJECT_PRICE_INFO_%'
+        order by cast(right(name,6) as int) desc
+    </select>
+</mapper>

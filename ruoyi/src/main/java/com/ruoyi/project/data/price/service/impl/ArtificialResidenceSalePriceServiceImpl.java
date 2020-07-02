@@ -1,43 +1,29 @@
 package com.ruoyi.project.data.price.service.impl;
 
-import com.baomidou.dynamic.datasource.DynamicRoutingDataSource;
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.microsoft.sqlserver.jdbc.*;
-import com.ruoyi.common.exception.CustomException;
-import com.ruoyi.common.utils.StringUtils;
-import com.ruoyi.framework.datasource.DynamicDataSource;
-import com.ruoyi.project.common.UVResponse;
+import com.ruoyi.common.utils.LoadUtil;
 import com.ruoyi.project.common.VueSelectModel;
 import com.ruoyi.project.data.price.domain.ArtificialResidenceSaleBasePrice;
 import com.ruoyi.project.data.price.domain.ComputeResidenceSaleBasePrice;
 import com.ruoyi.project.data.price.mapper.ArtificialResidenceSaleBasePriceMapper;
-import com.ruoyi.project.data.price.mapper.ComputeResidenceSalePriceMapper;
 import com.ruoyi.project.data.price.service.IArtificialResidenceSalePriceService;
-import com.ruoyi.project.data.price.service.IOriginalResidenceSalePriceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
-import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionTemplate;
-import org.springframework.web.client.RestTemplate;
 
-import javax.sql.DataSource;
 import java.sql.*;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * 计算住宅基价Service业务层处理
@@ -94,9 +80,13 @@ public class ArtificialResidenceSalePriceServiceImpl implements IArtificialResid
         Calendar calendar = Calendar.getInstance();
         calendar.set(yearMonth / 100, (yearMonth % 100) - 1, 1);
         Date valuePoint = calendar.getTime();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         calendar.add(Calendar.MONTH, -1);
+        Integer lastYearMonth = new Integer(String.format("%d%02d", calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH) + 1));
         Date lastValuePoint = calendar.getTime();
 
+        artificialResidenceSaleBasePriceMapper.initImport();
         artificialResidenceSaleBasePriceMapper.prepareBachImport(yearMonth);
         CopyOnWriteArrayList<ArtificialResidenceSaleBasePrice> copyOnWriteArrayList = new CopyOnWriteArrayList<>();
         list.parallelStream().forEach(inputModel -> {
@@ -116,10 +106,11 @@ public class ArtificialResidenceSalePriceServiceImpl implements IArtificialResid
             // 声明变量
             // 构造一个
             String driverName = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
-            String dbURL = "jdbc:sqlserver://172.16.30.233:1433;DatabaseName=uv_compute";
+            String dbURL = "jdbc:sqlserver://172.16.30.233:1433;DatabaseName=uv_compute_test";
             String name = "sa";
             String pwd = "Lcdatacenter_888";
             Class.forName(driverName);
+//            jdbcTemplate.getDataSource().getConnection()
             Connection conn = DriverManager.getConnection(dbURL, name, pwd);
             SQLServerDataTable sourceDataTable = new SQLServerDataTable();
             sourceDataTable.addColumnMetadata("communityId", java.sql.Types.NVARCHAR);
@@ -251,8 +242,8 @@ public class ArtificialResidenceSalePriceServiceImpl implements IArtificialResid
             Statement statement = conn.createStatement();
 
 
-            try (CallableStatement cs = conn.prepareCall("{CALL dbo.BatchImportOfArtificialResidenceSale (?)}")) {
-                ((SQLServerCallableStatement) cs).setStructured(1, "dbo.DWA_PROJECTBASEPRICE_MANU_Table",
+            try (CallableStatement cs = conn.prepareCall("{CALL BatchImportOfArtificialResidenceSale (?) }")) {
+                ((SQLServerCallableStatement) cs).setStructured(1, "DWA_PROJECTBASEPRICE_MANU_Table",
                         sourceDataTable);
                 boolean resultSetReturned = cs.execute();
                 if (resultSetReturned) {
@@ -263,13 +254,33 @@ public class ArtificialResidenceSalePriceServiceImpl implements IArtificialResid
                 }
             }
             // 删除存储过程，还原环境
-            statement.execute("drop procedure BatchImportOfArtificialResidenceSale");
+            statement.execute("IF OBJECT_ID('BatchImportOfArtificialResidenceSale', 'U') IS NOT NULL " +
+                    " drop procedure BatchImportOfArtificialResidenceSale;");
             conn.close();
+
+            after(yearMonth, lastYearMonth, valuePoint, lastValuePoint);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         StringBuilder successMsg = new StringBuilder("恭喜您，数据已全部导入成功！共 " + (successNum - failureNum) + " 条");
         return successMsg.toString();
+    }
+
+    /**
+     * @param yearMonth
+     * @param lastYearMonth
+     */
+    private void after(Integer yearMonth, Integer lastYearMonth, Date priceDate, Date lastPriceDate) {
+        String rawSql = LoadUtil.loadContent("sql-template/update_sale_price.sql");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String sql =
+                rawSql.replace("#yearMonth#", yearMonth.toString())
+                        .replace("#lastYearMonth#", lastYearMonth.toString())
+                        .replace("#lastPriceDate#", simpleDateFormat.format(lastPriceDate))
+                        .replace("#priceDate#", simpleDateFormat.format(priceDate));
+        jdbcTemplate.update(sql);
+
     }
 }

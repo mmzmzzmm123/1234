@@ -56,8 +56,8 @@ public class OriginalResidenceSaleOpeningCaseServiceImpl implements IOriginalRes
         calendar.add(Calendar.MONTH, 1);
         Integer computeTableRoute = new Integer(String.format("%d%02d", calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH) + 1));
-        computeTableRoute = 202007;
-        lastYearMonth = 202006;
+//        computeTableRoute = 202007;
+//        lastYearMonth = 202006;
 
         prepare(computeTableRoute, syncTableRoute);
         List<OriginalResidenceSaleOpeningCase> list = downloadOriginalResidenceSaleOpeningCaseMapper.download();
@@ -82,7 +82,7 @@ public class OriginalResidenceSaleOpeningCaseServiceImpl implements IOriginalRes
         originalResidenceSaleOpeningCaseMapper.createAssembleTable(computeTableRoute);
         originalResidenceSaleOpeningCaseMapper.createComputePriceTable(computeTableRoute);
         originalResidenceSaleOpeningCaseMapper.createArtificialPriceTable(computeTableRoute);
-
+        originalResidenceSaleOpeningCaseMapper.createUltimatePriceTable(computeTableRoute);
 //        syncOriginalResidenceSaleOpeningCaseMapper.createTable(syncTableRoute);
     }
 

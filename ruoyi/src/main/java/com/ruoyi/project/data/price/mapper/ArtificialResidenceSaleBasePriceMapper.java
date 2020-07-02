@@ -49,12 +49,20 @@ public interface ArtificialResidenceSaleBasePriceMapper {
     int updateLastMonthPrice(ArtificialResidenceSaleBasePrice artificialResidenceSaleBasePrice);
 
     /**
+     * 初始化执行环境
+     *
+     * @return
+     */
+    int initImport();
+
+    /**
      * 创建用于批量导入的存储过程
      *
      * @param yearMonth
      * @return
      */
     int prepareBachImport(@Param("yearMonth") Integer yearMonth);
+
 
     /**
      * 分页列表

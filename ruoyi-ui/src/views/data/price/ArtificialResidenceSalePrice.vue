@@ -2,7 +2,11 @@
   <div class="app-container">
     <el-form :model="queryParams" :rules="rules" ref="queryForm" :inline="true" label-width="100px">
       <el-form-item label="年月" prop="yearMonth">
-        <el-select v-model="queryParams.yearMonth" placeholder="请选择年月">
+        <el-select
+          v-model="queryParams.yearMonth"
+          placeholder="请选择年月"
+          @change="yearMonthChange(queryParams.yearMonth)"
+        >
           <el-option
             v-for="item in yearMonthList"
             :value="item.value"
@@ -36,7 +40,7 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
+      <!-- <el-col :span="1.5">
         <el-button
           type="success"
           icon="el-icon-edit"
@@ -45,7 +49,7 @@
           @click="handleUpdate"
           v-hasPermi="['system:user:edit']"
         >修改</el-button>
-      </el-col>
+      </el-col>-->
       <el-col :span="1.5">
         <el-button
           type="warning"
@@ -62,15 +66,15 @@
           size="mini"
           @click="handleImport"
           v-hasPermi="['system:user:import']"
-        >导入</el-button>
+        >文件导入</el-button>
       </el-col>
     </el-row>
 
     <el-table v-loading="loading" :data="dataList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="年月" align="center" prop="yearMonth" />
-      <el-table-column label="小区ID" align="center" prop="communityId" />
-      <el-table-column label="小区名称" align="center" prop="communityName" />
+      <!-- <el-table-column type="selection" width="55" align="center" /> -->
+      <!-- <el-table-column label="年月" align="center" prop="yearMonth" /> -->
+      <el-table-column label="小区ID" align="center" prop="communityId" fixed />
+      <el-table-column label="小区名称" align="center" width="200" prop="communityName" fixed />
       <el-table-column label="小区地址" align="center" prop="communityAddress" />
 
       <el-table-column label="区域" align="center" prop="countyName" />
@@ -89,7 +93,12 @@
         prop="isPstCalc"
         :formatter="yesOrNotFormatter"
       />
-      <el-table-column label="运行状态" align="center" prop="status" />
+      <el-table-column
+        label="运行状态"
+        align="center"
+        prop="status"
+        :formatter="runningStateFormatter"
+      />
       <el-table-column label="特殊小区标签" align="center" prop="label" />
       <el-table-column label="物业类型" align="center" prop="propertyType" />
       <el-table-column label="小区类型" align="center" prop="projectType" />
@@ -139,7 +148,7 @@
       <el-table-column label="绑定板块+小区类型的涨跌幅" align="center" prop="bindBlockProjectTypePst" />
       <el-table-column label="绑定区县+小区类型" align="center" prop="bindCountyProjectType" />
       <el-table-column label="绑定区县+小区类型的涨跌幅" align="center" prop="bindCountyProjectTypePst" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <!-- <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -156,7 +165,7 @@
             v-hasPermi="['system:user:remove']"
           >删除</el-button>
         </template>
-      </el-table-column>
+      </el-table-column>-->
     </el-table>
 
     <pagination
@@ -167,7 +176,7 @@
       @pagination="getList"
     />
 
-    <el-dialog :title="upload.title" :visible.sync="upload.open"  width="400px" append-to-body>
+    <el-dialog :title="upload.title" :visible.sync="upload.open" width="400px" append-to-body>
       <el-upload
         ref="upload"
         :limit="1"
@@ -265,7 +274,7 @@ export default {
         // 上传的地址
         url:
           process.env.VUE_APP_BASE_API +
-          "/data/price/residence/sale/artificial/importData/"
+          "/data/sale-price/residence/artificial/importData/"
       },
       // 表单参数
       form: {},
@@ -285,6 +294,10 @@ export default {
     });
   },
   methods: {
+    yearMonthChange: function(yearMonth) {
+      // this.upload.url += "/" + yearMonth;
+      // console.log(this.upload.url);
+    },
     yesOrNotFormatter: function(row, column, cellValue, index) {
       if (cellValue) return "是";
       return "否";
@@ -292,6 +305,15 @@ export default {
     statusFormatter: function(row, column, cellValue, index) {
       if (cellValue) return "正常";
       return "失效";
+    },
+    runningStateFormatter: function(row, column, cellValue, index) {
+      if (1 === cellValue) return "正常状态";
+      else if (2 === cellValue) return "建设中";
+      else if (3 === cellValue) return "建设中";
+      else if (4 === cellValue) return "已撤销";
+      else if (5 === cellValue) return "合并";
+      else if (8 === cellValue) return "分拆";
+      return "未知状态";
     },
     dateFormatter: function(row, column, cellValue, index) {
       if (cellValue) {

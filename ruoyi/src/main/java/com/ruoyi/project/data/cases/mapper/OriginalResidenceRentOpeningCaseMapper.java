@@ -33,8 +33,10 @@ public interface OriginalResidenceRentOpeningCaseMapper {
      * @return
      */
     int createAssembleTable(@Param("yearMonth") Integer yearMonth);
+
     /**
      * 作价表
+     *
      * @param yearMonth
      * @return
      */
@@ -42,10 +44,19 @@ public interface OriginalResidenceRentOpeningCaseMapper {
 
     /**
      * 人工修正价格表
+     *
      * @param yearMonth
      * @return
      */
     int createArtificialPriceTable(@Param("yearMonth") Integer yearMonth);
+
+    /**
+     * 结果表
+     *
+     * @param yearMonth
+     * @return
+     */
+    int createUltimatePriceTable(@Param("yearMonth") Integer yearMonth);
 
     /**
      * 分页总数

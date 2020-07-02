@@ -87,6 +87,7 @@ public class OriginalResidenceRentOpeningCaseServiceImpl implements IOriginalRes
         originalResidenceRentOpeningCaseMapper.createAssembleTable(computeTableRoute);
         originalResidenceRentOpeningCaseMapper.createComputePriceTable(computeTableRoute);
         originalResidenceRentOpeningCaseMapper.createArtificialPriceTable(computeTableRoute);
+        originalResidenceRentOpeningCaseMapper.createUltimatePriceTable(computeTableRoute);
 
         syncOriginalResidenceRentOpeningCaseMapper.createTable(syncTableRoute);
     }

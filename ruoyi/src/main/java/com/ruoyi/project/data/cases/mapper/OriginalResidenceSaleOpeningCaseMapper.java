@@ -57,6 +57,14 @@ public interface OriginalResidenceSaleOpeningCaseMapper {
     int createArtificialPriceTable(@Param("yearMonth") Integer yearMonth);
 
     /**
+     * 结果表
+     *
+     * @param yearMonth
+     * @return
+     */
+    int createUltimatePriceTable(@Param("yearMonth") Integer yearMonth);
+
+    /**
      * 分页总数
      *
      * @param originalResidenceSaleOpeningCase

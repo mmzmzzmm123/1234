@@ -1,5 +1,5 @@
-truncate table dbo.DW_HOUSINGCASE_COMM_#yearMonth#;
-truncate table dbo.DWA_PROJECTBASEPRICE_IMDT_#yearMonth#;
+truncate table DW_HOUSINGCASE_COMM_#yearMonth#;
+truncate table DWA_PROJECTBASEPRICE_IMDT_#yearMonth#;
 
 insert into DW_HOUSINGCASE_COMM_#yearMonth#
 select
@@ -223,87 +223,163 @@ left join ODS_PROJECT_PRICE_INFO_#lastYearMonth# d on a.ITEM_AIRAID = d.ProjectI
 where a.ITEM_ISBUILDINDEX='1' and a.ITEM_PROJECTTYPE='1' and d.Status=1;
 
 ----第二步；根据案例自动计算的小区涨跌幅
+update #DWA_PROJECTBASEPRICE_IMDT_STEP_1
+set PriceCase1_ToAI_Pst=NULL
+where PriceCase1_ToAI_Pst < -0.05 or PriceCase1_ToAI_Pst>=0.12;
+
+update #DWA_PROJECTBASEPRICE_IMDT_STEP_1
+set PriceCase2_ToAI_Pst=NULL
+where PriceCase2_ToAI_Pst < -0.05 or PriceCase2_ToAI_Pst>=0.12;
+
+update #DWA_PROJECTBASEPRICE_IMDT_STEP_1
+set PriceCase1_ToLst_Pst=NULL
+where PriceCase1_ToLst_Pst < -0.05 or PriceCase1_ToLst_Pst>=0.12;
+
+update #DWA_PROJECTBASEPRICE_IMDT_STEP_1
+set PriceCase2_ToLst_Pst=NULL
+where PriceCase2_ToLst_Pst < -0.05 or PriceCase2_ToLst_Pst>=0.12;
+
+-- 2. 对 #DWA_PROJECTBASEPRICE_IMDT_STEP_2 计算方式整体修改为如下。其它逻辑保存不变。
 create table #DWA_PROJECTBASEPRICE_IMDT_STEP_2
 (
     ProjectID bigint primary key
-  , VOPPBT int --价格涨跌幅类型-调整前
+  , VOPPBT varchar(64) --价格涨跌幅类型-调整前
   , VOPPB decimal(18, 6)  --价格涨跌幅-调整前
 );
 
+
+SELECT a.ProjectID, PriceCase1_ToAI_Pst, PriceCase2_ToAI_Pst, PriceCase1_ToLst_Pst, PriceCase2_ToLst_Pst,
+       case when abs(ToAI_1)+abs(ToAI_2)+abs(ToLst_1)+abs(ToLst_2)=4 and ToAI_1+ToAI_2+ToLst_1+ToLst_2=4 then '4-4-0'  --4个非空，4涨，0跌（涨跌幅=0情况，当作涨）
+            when abs(ToAI_1)+abs(ToAI_2)+abs(ToLst_1)+abs(ToLst_2)=4 and ToAI_1+ToAI_2+ToLst_1+ToLst_2=2 then '4-3-1'
+            when abs(ToAI_1)+abs(ToAI_2)+abs(ToLst_1)+abs(ToLst_2)=4 and ToAI_1+ToAI_2+ToLst_1+ToLst_2=0 then '4-2-2'
+            when abs(ToAI_1)+abs(ToAI_2)+abs(ToLst_1)+abs(ToLst_2)=4 and ToAI_1+ToAI_2+ToLst_1+ToLst_2=-2 then '4-1-3'
+            when abs(ToAI_1)+abs(ToAI_2)+abs(ToLst_1)+abs(ToLst_2)=4 and ToAI_1+ToAI_2+ToLst_1+ToLst_2=-4 then '4-0-4'
+            when abs(ToAI_1)+abs(ToAI_2)+abs(ToLst_1)+abs(ToLst_2)=3 and ToAI_1+ToAI_2+ToLst_1+ToLst_2=3 then '3-3-0'
+            when abs(ToAI_1)+abs(ToAI_2)+abs(ToLst_1)+abs(ToLst_2)=3 and ToAI_1+ToAI_2+ToLst_1+ToLst_2=1 then '3-2-1'
+            when abs(ToAI_1)+abs(ToAI_2)+abs(ToLst_1)+abs(ToLst_2)=3 and ToAI_1+ToAI_2+ToLst_1+ToLst_2=-1 then '3-1-2'
+            when abs(ToAI_1)+abs(ToAI_2)+abs(ToLst_1)+abs(ToLst_2)=3 and ToAI_1+ToAI_2+ToLst_1+ToLst_2=-3 then '3-0-3'
+            when abs(ToAI_1)+abs(ToAI_2)+abs(ToLst_1)+abs(ToLst_2)=2 and ToAI_1+ToAI_2+ToLst_1+ToLst_2=2 then '2-2-0'
+            when abs(ToAI_1)+abs(ToAI_2)+abs(ToLst_1)+abs(ToLst_2)=2 and ToAI_1+ToAI_2+ToLst_1+ToLst_2=0 then '2-1-1'
+            when abs(ToAI_1)+abs(ToAI_2)+abs(ToLst_1)+abs(ToLst_2)=2 and ToAI_1+ToAI_2+ToLst_1+ToLst_2=-2 then '2-0-2'
+            when abs(ToAI_1)+abs(ToAI_2)+abs(ToLst_1)+abs(ToLst_2)=1 and ToAI_1+ToAI_2+ToLst_1+ToLst_2=1 then '1-1-0'
+            when abs(ToAI_1)+abs(ToAI_2)+abs(ToLst_1)+abs(ToLst_2)=1 and ToAI_1+ToAI_2+ToLst_1+ToLst_2=-1 then '1-0-1'
+            end as VOPPBT
+INTO #TMP_STEP_2
+FROM (SELECT projectid,
+             isnull(PriceCase1_ToAI_Pst,0) PriceCase1_ToAI_Pst, case when PriceCase1_ToAI_Pst>=0 then 1 when PriceCase1_ToAI_Pst<0 then -1 else 0 end as ToAI_1,
+             isnull(PriceCase2_ToAI_Pst,0) PriceCase2_ToAI_Pst, case when PriceCase2_ToAI_Pst>=0 then 1 when PriceCase2_ToAI_Pst<0 then -1 else 0 end as ToAI_2,
+             isnull(PriceCase1_ToLst_Pst,0) PriceCase1_ToLst_Pst, case when PriceCase1_ToLst_Pst>=0 then 1 when PriceCase1_ToLst_Pst<0 then -1 else 0 end as ToLst_1,
+             isnull(PriceCase2_ToLst_Pst,0) PriceCase2_ToLst_Pst, case when PriceCase2_ToLst_Pst>=0 then 1 when PriceCase2_ToLst_Pst<0 then -1 else 0 end as ToLst_2
+      FROM #DWA_PROJECTBASEPRICE_IMDT_STEP_1 where PriceUnitAdj is not null
+) a
+
+select *
+into #TMP_STEP_2_UP
+from #TMP_STEP_2 t
+unpivot (Vlu for Tp in (PriceCase1_ToAI_Pst, PriceCase2_ToAI_Pst, PriceCase1_ToLst_Pst, PriceCase2_ToLst_Pst)) UP
+
 INSERT INTO #DWA_PROJECTBASEPRICE_IMDT_STEP_2
-SELECT a.ProjectID,
-       CASE WHEN (PriceCase2_ToAI_Pst>0 AND PriceCase2_ToLst_Pst>0 AND PriceCase2AdjPst>0) THEN 11
-            WHEN (PriceCase2_ToAI_Pst>0 AND PriceCase2_ToLst_Pst>0 AND PriceCase2AdjPst=0) THEN 12
-            WHEN (PriceCase2_ToAI_Pst>0 AND PriceCase2_ToLst_Pst>0 AND PriceCase2AdjPst<0) THEN 13
-            WHEN (PriceCase2_ToAI_Pst>0 AND PriceCase2_ToLst_Pst=0 AND PriceCase2AdjPst>0) THEN 14
-            WHEN (PriceCase2_ToAI_Pst>0 AND PriceCase2_ToLst_Pst=0 AND PriceCase2AdjPst=0) THEN 15
-            WHEN (PriceCase2_ToAI_Pst>0 AND PriceCase2_ToLst_Pst=0 AND PriceCase2AdjPst<0) THEN 16
-            WHEN (PriceCase2_ToAI_Pst>0 AND PriceCase2_ToLst_Pst<0 AND PriceCase2AdjPst>0) THEN 17
-            WHEN (PriceCase2_ToAI_Pst>0 AND PriceCase2_ToLst_Pst<0 AND PriceCase2AdjPst=0) THEN 18
-            WHEN (PriceCase2_ToAI_Pst>0 AND PriceCase2_ToLst_Pst<0 AND PriceCase2AdjPst<0) THEN 19
-            WHEN (PriceCase2_ToAI_Pst=0 AND PriceCase2_ToLst_Pst>0 AND PriceCase2AdjPst>0) THEN 21
-            WHEN (PriceCase2_ToAI_Pst=0 AND PriceCase2_ToLst_Pst>0 AND PriceCase2AdjPst=0) THEN 22
-            WHEN (PriceCase2_ToAI_Pst=0 AND PriceCase2_ToLst_Pst>0 AND PriceCase2AdjPst<0) THEN 23
-            WHEN (PriceCase2_ToAI_Pst=0 AND PriceCase2_ToLst_Pst=0 AND PriceCase2AdjPst>0) THEN 24
-            WHEN (PriceCase2_ToAI_Pst=0 AND PriceCase2_ToLst_Pst=0 AND PriceCase2AdjPst=0
-                  AND (PriceCase2_ToAI_0<>0 OR PriceCase2_ToLst_0<>0 OR PriceCase2Adj_0<>0)) THEN 25
-            WHEN (PriceCase2_ToAI_Pst=0 AND PriceCase2_ToLst_Pst=0 AND PriceCase2AdjPst<0) THEN 26
-            WHEN (PriceCase2_ToAI_Pst=0 AND PriceCase2_ToLst_Pst<0 AND PriceCase2AdjPst>0) THEN 27
-            WHEN (PriceCase2_ToAI_Pst=0 AND PriceCase2_ToLst_Pst<0 AND PriceCase2AdjPst=0) THEN 28
-            WHEN (PriceCase2_ToAI_Pst=0 AND PriceCase2_ToLst_Pst<0 AND PriceCase2AdjPst<0) THEN 29
-            WHEN (PriceCase2_ToAI_Pst<0 AND PriceCase2_ToLst_Pst>0 AND PriceCase2AdjPst>0) THEN 0
-            WHEN (PriceCase2_ToAI_Pst<0 AND PriceCase2_ToLst_Pst>0 AND PriceCase2AdjPst=0) THEN 32
-            WHEN (PriceCase2_ToAI_Pst<0 AND PriceCase2_ToLst_Pst>0 AND PriceCase2AdjPst<0) THEN 33
-            WHEN (PriceCase2_ToAI_Pst<0 AND PriceCase2_ToLst_Pst=0 AND PriceCase2AdjPst>0) THEN 34
-            WHEN (PriceCase2_ToAI_Pst<0 AND PriceCase2_ToLst_Pst=0 AND PriceCase2AdjPst=0) THEN 35
-            WHEN (PriceCase2_ToAI_Pst<0 AND PriceCase2_ToLst_Pst=0 AND PriceCase2AdjPst<0) THEN 36
-            WHEN (PriceCase2_ToAI_Pst<0 AND PriceCase2_ToLst_Pst<0 AND PriceCase2AdjPst>0) THEN 37
-            WHEN (PriceCase2_ToAI_Pst<0 AND PriceCase2_ToLst_Pst<0 AND PriceCase2AdjPst=0) THEN 38
-            WHEN (PriceCase2_ToAI_Pst<0 AND PriceCase2_ToLst_Pst<0 AND PriceCase2AdjPst<0) THEN 39
-            END AS VOPPBT,
-       CASE WHEN (PriceCase2_ToAI_Pst>0 AND PriceCase2_ToLst_Pst>0 AND PriceCase2AdjPst>0) THEN MIN    --11
-            WHEN (PriceCase2_ToAI_Pst>0 AND PriceCase2_ToLst_Pst>0 AND PriceCase2AdjPst=0) THEN MDN*1.0/4    --12
-            WHEN (PriceCase2_ToAI_Pst>0 AND PriceCase2_ToLst_Pst>0 AND PriceCase2AdjPst<0) THEN MDN*1.0/4     --13
-            WHEN (PriceCase2_ToAI_Pst>0 AND PriceCase2_ToLst_Pst=0 AND PriceCase2AdjPst>0) THEN MDN*1.0/4     --14
-            WHEN (PriceCase2_ToAI_Pst>0 AND PriceCase2_ToLst_Pst=0 AND PriceCase2AdjPst=0) THEN 0      --15
-            WHEN (PriceCase2_ToAI_Pst>0 AND PriceCase2_ToLst_Pst=0 AND PriceCase2AdjPst<0) THEN 0      --16
-            WHEN (PriceCase2_ToAI_Pst>0 AND PriceCase2_ToLst_Pst<0 AND PriceCase2AdjPst>0) THEN MDN*1.0/4     --17
-            WHEN (PriceCase2_ToAI_Pst>0 AND PriceCase2_ToLst_Pst<0 AND PriceCase2AdjPst=0) THEN 0      --18
-            WHEN (PriceCase2_ToAI_Pst>0 AND PriceCase2_ToLst_Pst<0 AND PriceCase2AdjPst<0) THEN MDN    --19
-            WHEN (PriceCase2_ToAI_Pst=0 AND PriceCase2_ToLst_Pst>0 AND PriceCase2AdjPst>0) THEN MDN*1.0/4     --21
-            WHEN (PriceCase2_ToAI_Pst=0 AND PriceCase2_ToLst_Pst>0 AND PriceCase2AdjPst=0) THEN MDN*1.0/4     --22
-            WHEN (PriceCase2_ToAI_Pst=0 AND PriceCase2_ToLst_Pst>0 AND PriceCase2AdjPst<0) THEN 0      --23
-            WHEN (PriceCase2_ToAI_Pst=0 AND PriceCase2_ToLst_Pst=0 AND PriceCase2AdjPst>0) THEN 0      --24
-            WHEN (PriceCase2_ToAI_Pst=0 AND PriceCase2_ToLst_Pst=0 AND PriceCase2AdjPst=0
-                  AND (PriceCase2_ToAI_0<>0 OR PriceCase2_ToLst_0<>0 OR PriceCase2Adj_0<>0)) THEN 0      --25
-            WHEN (PriceCase2_ToAI_Pst=0 AND PriceCase2_ToLst_Pst=0 AND PriceCase2AdjPst<0) THEN MIN*1.0/3     --26
-            WHEN (PriceCase2_ToAI_Pst=0 AND PriceCase2_ToLst_Pst<0 AND PriceCase2AdjPst>0) THEN 0      --27
-            WHEN (PriceCase2_ToAI_Pst=0 AND PriceCase2_ToLst_Pst<0 AND PriceCase2AdjPst=0) THEN 0      --28
-            WHEN (PriceCase2_ToAI_Pst=0 AND PriceCase2_ToLst_Pst<0 AND PriceCase2AdjPst<0) THEN MDN    --29
-            WHEN (PriceCase2_ToAI_Pst<0 AND PriceCase2_ToLst_Pst>0 AND PriceCase2AdjPst>0) THEN 0      --31
-            WHEN (PriceCase2_ToAI_Pst<0 AND PriceCase2_ToLst_Pst>0 AND PriceCase2AdjPst=0) THEN 0      --32
-            WHEN (PriceCase2_ToAI_Pst<0 AND PriceCase2_ToLst_Pst>0 AND PriceCase2AdjPst<0) THEN MDN    --33
-            WHEN (PriceCase2_ToAI_Pst<0 AND PriceCase2_ToLst_Pst=0 AND PriceCase2AdjPst>0) THEN 0      --34
-            WHEN (PriceCase2_ToAI_Pst<0 AND PriceCase2_ToLst_Pst=0 AND PriceCase2AdjPst=0) THEN 0      --35
-            WHEN (PriceCase2_ToAI_Pst<0 AND PriceCase2_ToLst_Pst=0 AND PriceCase2AdjPst<0) THEN MDN    --36
-            WHEN (PriceCase2_ToAI_Pst<0 AND PriceCase2_ToLst_Pst<0 AND PriceCase2AdjPst>0) THEN MDN    --37
-            WHEN (PriceCase2_ToAI_Pst<0 AND PriceCase2_ToLst_Pst<0 AND PriceCase2AdjPst=0) THEN MDN    --38
-            WHEN (PriceCase2_ToAI_Pst<0 AND PriceCase2_ToLst_Pst<0 AND PriceCase2AdjPst<0) THEN MDN    --39
+SELECT ProjectID, VOPPBT,
+       CASE WHEN VOPPBT in ('4-4-0', '4-0-4') THEN Vlu_4
+            WHEN VOPPBT in ('4-3-1', '3-3-0') THEN Vlu_3
+            WHEN VOPPBT in ('4-1-3', '3-0-3') THEN Vlu_3_
+            WHEN VOPPBT in ('2-2-0') THEN Vlu_2
+            WHEN VOPPBT in ('2-1-1') THEN Vlu_1
+            WHEN VOPPBT in ('4-2-2', '3-2-1') AND SM=2 THEN Mn
+            WHEN VOPPBT in ('4-2-2', '3-2-1') AND SM<2 THEN 0
+            WHEN VOPPBT in ('1-1-0') AND SM=1 THEN Mn
+            WHEN VOPPBT in ('1-1-0') AND SM<1 THEN 0
+            WHEN VOPPBT in ('3-1-2', '2-0-2', '1-0-1') THEN MX_
             END AS VOPPB
-FROM (SELECT projectid, ISNULL(PriceCase2_ToAI_Pst,0) PriceCase2_ToAI_Pst,
-        ISNULL(PriceCase2_ToLst_Pst,0) PriceCase2_ToLst_Pst, ISNULL(PriceCase2AdjPst,0) PriceCase2AdjPst,
-        PriceCase2_ToAI_0, PriceCase2_ToLst_0, PriceCase2Adj_0
-      FROM #DWA_PROJECTBASEPRICE_IMDT_STEP_1 where PriceUnitAdj is not null) a
-LEFT JOIN (
-  select projectid, min(vl) as MIN, avg(MDN) as MDN
-  from (
-    select projectid, tp, vl, PERCENTILE_CONT(0.5) within group(order by vl)over(partition by projectid) as MDN --取中位数
-    from (
-      select projectid, PriceCase2_ToAI_Pst, PriceCase2_ToLst_Pst, PriceCase2AdjPst
-      from #DWA_PROJECTBASEPRICE_IMDT_STEP_1 where PriceUnitAdj is not null
-    ) as t unpivot(vl for tp in (PriceCase2_ToAI_Pst, PriceCase2_ToLst_Pst, PriceCase2AdjPst)) as up
-  )tt group by projectid
-)b ON a.projectid = b.projectid;
+FROM (
+  SELECT ProjectID, VOPPBT,
+         AVG(Vlu) as Vlu_4,
+         SUM(CASE WHEN Vlu>=0 THEN Vlu ELSE 0 END)/3 as Vlu_3, SUM(CASE WHEN Vlu<0 THEN Vlu ELSE 0 END)/3 as Vlu_3_,
+         SUM(CASE WHEN Vlu>=0 THEN Vlu ELSE 0 END)/2 as Vlu_2, SUM(CASE WHEN Vlu<0 THEN Vlu ELSE 0 END)/2 as Vlu_2_,
+         SUM(CASE WHEN Vlu>=0 THEN Vlu ELSE 0 END)/1 as Vlu_1, SUM(CASE WHEN Vlu<0 THEN Vlu ELSE 0 END)/1 as Vlu_1_,
+         MIN(CASE WHEN Vlu>0 THEN Vlu END) as Mn, MAX(CASE WHEN Vlu<0 THEN Vlu END) as MX_,
+         COUNT(CASE WHEN Vlu>0 THEN Vlu END) AS SM, COUNT(CASE WHEN Vlu<0 THEN Vlu END) AS SM_
+  FROM #TMP_STEP_2_UP
+  GROUP BY ProjectID, VOPPBT
+) T
+
+DROP TABLE #TMP_STEP_2_UP;
+DROP TABLE #TMP_STEP_2;
+
+--INSERT INTO #DWA_PROJECTBASEPRICE_IMDT_STEP_2
+--SELECT a.ProjectID,
+--       CASE WHEN (PriceCase2_ToAI_Pst>0 AND PriceCase2_ToLst_Pst>0 AND PriceCase2AdjPst>0) THEN 11
+--            WHEN (PriceCase2_ToAI_Pst>0 AND PriceCase2_ToLst_Pst>0 AND PriceCase2AdjPst=0) THEN 12
+--            WHEN (PriceCase2_ToAI_Pst>0 AND PriceCase2_ToLst_Pst>0 AND PriceCase2AdjPst<0) THEN 13
+--            WHEN (PriceCase2_ToAI_Pst>0 AND PriceCase2_ToLst_Pst=0 AND PriceCase2AdjPst>0) THEN 14
+--            WHEN (PriceCase2_ToAI_Pst>0 AND PriceCase2_ToLst_Pst=0 AND PriceCase2AdjPst=0) THEN 15
+--            WHEN (PriceCase2_ToAI_Pst>0 AND PriceCase2_ToLst_Pst=0 AND PriceCase2AdjPst<0) THEN 16
+--            WHEN (PriceCase2_ToAI_Pst>0 AND PriceCase2_ToLst_Pst<0 AND PriceCase2AdjPst>0) THEN 17
+--            WHEN (PriceCase2_ToAI_Pst>0 AND PriceCase2_ToLst_Pst<0 AND PriceCase2AdjPst=0) THEN 18
+--            WHEN (PriceCase2_ToAI_Pst>0 AND PriceCase2_ToLst_Pst<0 AND PriceCase2AdjPst<0) THEN 19
+--            WHEN (PriceCase2_ToAI_Pst=0 AND PriceCase2_ToLst_Pst>0 AND PriceCase2AdjPst>0) THEN 21
+--            WHEN (PriceCase2_ToAI_Pst=0 AND PriceCase2_ToLst_Pst>0 AND PriceCase2AdjPst=0) THEN 22
+--            WHEN (PriceCase2_ToAI_Pst=0 AND PriceCase2_ToLst_Pst>0 AND PriceCase2AdjPst<0) THEN 23
+--            WHEN (PriceCase2_ToAI_Pst=0 AND PriceCase2_ToLst_Pst=0 AND PriceCase2AdjPst>0) THEN 24
+--            WHEN (PriceCase2_ToAI_Pst=0 AND PriceCase2_ToLst_Pst=0 AND PriceCase2AdjPst=0
+--                  AND (PriceCase2_ToAI_0<>0 OR PriceCase2_ToLst_0<>0 OR PriceCase2Adj_0<>0)) THEN 25
+--            WHEN (PriceCase2_ToAI_Pst=0 AND PriceCase2_ToLst_Pst=0 AND PriceCase2AdjPst<0) THEN 26
+--            WHEN (PriceCase2_ToAI_Pst=0 AND PriceCase2_ToLst_Pst<0 AND PriceCase2AdjPst>0) THEN 27
+--            WHEN (PriceCase2_ToAI_Pst=0 AND PriceCase2_ToLst_Pst<0 AND PriceCase2AdjPst=0) THEN 28
+--            WHEN (PriceCase2_ToAI_Pst=0 AND PriceCase2_ToLst_Pst<0 AND PriceCase2AdjPst<0) THEN 29
+--            WHEN (PriceCase2_ToAI_Pst<0 AND PriceCase2_ToLst_Pst>0 AND PriceCase2AdjPst>0) THEN 0
+--            WHEN (PriceCase2_ToAI_Pst<0 AND PriceCase2_ToLst_Pst>0 AND PriceCase2AdjPst=0) THEN 32
+--            WHEN (PriceCase2_ToAI_Pst<0 AND PriceCase2_ToLst_Pst>0 AND PriceCase2AdjPst<0) THEN 33
+--            WHEN (PriceCase2_ToAI_Pst<0 AND PriceCase2_ToLst_Pst=0 AND PriceCase2AdjPst>0) THEN 34
+--            WHEN (PriceCase2_ToAI_Pst<0 AND PriceCase2_ToLst_Pst=0 AND PriceCase2AdjPst=0) THEN 35
+--            WHEN (PriceCase2_ToAI_Pst<0 AND PriceCase2_ToLst_Pst=0 AND PriceCase2AdjPst<0) THEN 36
+--            WHEN (PriceCase2_ToAI_Pst<0 AND PriceCase2_ToLst_Pst<0 AND PriceCase2AdjPst>0) THEN 37
+--            WHEN (PriceCase2_ToAI_Pst<0 AND PriceCase2_ToLst_Pst<0 AND PriceCase2AdjPst=0) THEN 38
+--            WHEN (PriceCase2_ToAI_Pst<0 AND PriceCase2_ToLst_Pst<0 AND PriceCase2AdjPst<0) THEN 39
+--            END AS VOPPBT,
+--       CASE WHEN (PriceCase2_ToAI_Pst>0 AND PriceCase2_ToLst_Pst>0 AND PriceCase2AdjPst>0) THEN MIN    --11
+--            WHEN (PriceCase2_ToAI_Pst>0 AND PriceCase2_ToLst_Pst>0 AND PriceCase2AdjPst=0) THEN MDN*1.0/4    --12
+--            WHEN (PriceCase2_ToAI_Pst>0 AND PriceCase2_ToLst_Pst>0 AND PriceCase2AdjPst<0) THEN MDN*1.0/4     --13
+--            WHEN (PriceCase2_ToAI_Pst>0 AND PriceCase2_ToLst_Pst=0 AND PriceCase2AdjPst>0) THEN MDN*1.0/4     --14
+--            WHEN (PriceCase2_ToAI_Pst>0 AND PriceCase2_ToLst_Pst=0 AND PriceCase2AdjPst=0) THEN 0      --15
+--            WHEN (PriceCase2_ToAI_Pst>0 AND PriceCase2_ToLst_Pst=0 AND PriceCase2AdjPst<0) THEN 0      --16
+--            WHEN (PriceCase2_ToAI_Pst>0 AND PriceCase2_ToLst_Pst<0 AND PriceCase2AdjPst>0) THEN MDN*1.0/4     --17
+--            WHEN (PriceCase2_ToAI_Pst>0 AND PriceCase2_ToLst_Pst<0 AND PriceCase2AdjPst=0) THEN 0      --18
+--            WHEN (PriceCase2_ToAI_Pst>0 AND PriceCase2_ToLst_Pst<0 AND PriceCase2AdjPst<0) THEN MDN    --19
+--            WHEN (PriceCase2_ToAI_Pst=0 AND PriceCase2_ToLst_Pst>0 AND PriceCase2AdjPst>0) THEN MDN*1.0/4     --21
+--            WHEN (PriceCase2_ToAI_Pst=0 AND PriceCase2_ToLst_Pst>0 AND PriceCase2AdjPst=0) THEN MDN*1.0/4     --22
+--            WHEN (PriceCase2_ToAI_Pst=0 AND PriceCase2_ToLst_Pst>0 AND PriceCase2AdjPst<0) THEN 0      --23
+--            WHEN (PriceCase2_ToAI_Pst=0 AND PriceCase2_ToLst_Pst=0 AND PriceCase2AdjPst>0) THEN 0      --24
+--            WHEN (PriceCase2_ToAI_Pst=0 AND PriceCase2_ToLst_Pst=0 AND PriceCase2AdjPst=0
+--                  AND (PriceCase2_ToAI_0<>0 OR PriceCase2_ToLst_0<>0 OR PriceCase2Adj_0<>0)) THEN 0      --25
+--            WHEN (PriceCase2_ToAI_Pst=0 AND PriceCase2_ToLst_Pst=0 AND PriceCase2AdjPst<0) THEN MIN*1.0/3     --26
+--            WHEN (PriceCase2_ToAI_Pst=0 AND PriceCase2_ToLst_Pst<0 AND PriceCase2AdjPst>0) THEN 0      --27
+--            WHEN (PriceCase2_ToAI_Pst=0 AND PriceCase2_ToLst_Pst<0 AND PriceCase2AdjPst=0) THEN 0      --28
+--            WHEN (PriceCase2_ToAI_Pst=0 AND PriceCase2_ToLst_Pst<0 AND PriceCase2AdjPst<0) THEN MDN    --29
+--            WHEN (PriceCase2_ToAI_Pst<0 AND PriceCase2_ToLst_Pst>0 AND PriceCase2AdjPst>0) THEN 0      --31
+--            WHEN (PriceCase2_ToAI_Pst<0 AND PriceCase2_ToLst_Pst>0 AND PriceCase2AdjPst=0) THEN 0      --32
+--            WHEN (PriceCase2_ToAI_Pst<0 AND PriceCase2_ToLst_Pst>0 AND PriceCase2AdjPst<0) THEN MDN    --33
+--            WHEN (PriceCase2_ToAI_Pst<0 AND PriceCase2_ToLst_Pst=0 AND PriceCase2AdjPst>0) THEN 0      --34
+--            WHEN (PriceCase2_ToAI_Pst<0 AND PriceCase2_ToLst_Pst=0 AND PriceCase2AdjPst=0) THEN 0      --35
+--            WHEN (PriceCase2_ToAI_Pst<0 AND PriceCase2_ToLst_Pst=0 AND PriceCase2AdjPst<0) THEN MDN    --36
+--            WHEN (PriceCase2_ToAI_Pst<0 AND PriceCase2_ToLst_Pst<0 AND PriceCase2AdjPst>0) THEN MDN    --37
+--            WHEN (PriceCase2_ToAI_Pst<0 AND PriceCase2_ToLst_Pst<0 AND PriceCase2AdjPst=0) THEN MDN    --38
+--            WHEN (PriceCase2_ToAI_Pst<0 AND PriceCase2_ToLst_Pst<0 AND PriceCase2AdjPst<0) THEN MDN    --39
+--            END AS VOPPB
+--FROM (SELECT projectid, ISNULL(PriceCase2_ToAI_Pst,0) PriceCase2_ToAI_Pst,
+--        ISNULL(PriceCase2_ToLst_Pst,0) PriceCase2_ToLst_Pst, ISNULL(PriceCase2AdjPst,0) PriceCase2AdjPst,
+--        PriceCase2_ToAI_0, PriceCase2_ToLst_0, PriceCase2Adj_0
+--      FROM #DWA_PROJECTBASEPRICE_IMDT_STEP_1 where PriceUnitAdj is not null) a
+--LEFT JOIN (
+--  select projectid, min(vl) as MIN, avg(MDN) as MDN
+--  from (
+--    select projectid, tp, vl, PERCENTILE_CONT(0.5) within group(order by vl)over(partition by projectid) as MDN --取中位数
+--    from (
+--      select projectid, PriceCase2_ToAI_Pst, PriceCase2_ToLst_Pst, PriceCase2AdjPst
+--      from #DWA_PROJECTBASEPRICE_IMDT_STEP_1 where PriceUnitAdj is not null
+--    ) as t unpivot(vl for tp in (PriceCase2_ToAI_Pst, PriceCase2_ToLst_Pst, PriceCase2AdjPst)) as up
+--  )tt group by projectid
+--)b ON a.projectid = b.projectid;
 
 ----第三步；计算绑定涨跌幅
 -----2019.11.12规则新增：对于绑定没有推导出、且上周期有价格的小区，沿用上周期价格
@@ -458,9 +534,9 @@ FROM obpm_LianCheng_Data.dbo.TLK_小区信息管理  A
 left join obpm_LianCheng_Data.dbo.TLK_字典数据信息       h
     on a.ITEM_PROPERTYLEVEL=h.ITEM_DICVALUE and h.ITEM_DICTYPE='物业档次'
 left join obpm_LianCheng_Data.dbo.TLK_字典数据信息       g
-    on a.ITEM_RAPropertyType=g.ITEM_DICVALUE and g.ITEM_DICTYPE='居住物业类型'
+    on a.ITEM_RAPropertyType=g.ITEM_DICVALUE and g.ITEM_DICTYPE='物业类型'
 left join obpm_LianCheng_Data.dbo.TLK_字典数据信息       i
-    on a.ITEM_RAType=g.ITEM_DICVALUE and i.ITEM_DICTYPE='小区类型'
+    on a.ITEM_RAType=i.ITEM_DICVALUE and i.ITEM_DICTYPE='小区类型'
 LEFT JOIN ODS_PROJECT_PRICE_INFO_#lastYearMonth# D
 ON A.ITEM_AIRAID = D.ProjectID
 where A.ITEM_PROJECTTYPE='1' and a.ITEM_ISBUILDINDEX='1' and D.Status=1;

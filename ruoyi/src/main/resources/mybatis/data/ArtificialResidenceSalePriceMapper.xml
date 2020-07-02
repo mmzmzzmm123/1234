@@ -183,6 +183,10 @@
         PriceNote=#{comment}
         where ProjectID=#{communityId};
     </update>
+    <update id="initImport">
+        IF OBJECT_ID('BatchImportOfArtificialResidenceSale', 'P') IS NOT NULL
+	        drop procedure BatchImportOfArtificialResidenceSale;
+    </update>
     <update id="prepareBachImport" parameterType="int">
         create procedure dbo.BatchImportOfArtificialResidenceSale @table DWA_PROJECTBASEPRICE_MANU_Table readonly
         as

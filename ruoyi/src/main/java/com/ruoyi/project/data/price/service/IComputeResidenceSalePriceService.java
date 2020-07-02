@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * 计算住宅基价
  */
-public interface IOriginalResidenceSalePriceService {
+public interface IComputeResidenceSalePriceService {
 
     /**
      * 查询列表
