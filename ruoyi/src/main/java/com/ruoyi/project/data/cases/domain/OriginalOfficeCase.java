@@ -40,7 +40,7 @@ public class OriginalOfficeCase {
     /**
      * 面积
      */
-    private String area;
+    private BigDecimal area;
     /**
      * 物业费
      */
@@ -128,6 +128,10 @@ public class OriginalOfficeCase {
      * 单价
      */
     private BigDecimal unitPrice;
+    /**
+     * 更新时间
+     */
+    private Date updateDate;
 
     public String getUrl() {
         return url;
@@ -193,11 +197,11 @@ public class OriginalOfficeCase {
         this.caseFloor = caseFloor;
     }
 
-    public String getArea() {
+    public BigDecimal getArea() {
         return area;
     }
 
-    public void setArea(String area) {
+    public void setArea(BigDecimal area) {
         this.area = area;
     }
 
@@ -383,5 +387,13 @@ public class OriginalOfficeCase {
 
     public void setUnitPrice(BigDecimal unitPrice) {
         this.unitPrice = unitPrice;
+    }
+
+    public Date getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(Date updateDate) {
+        this.updateDate = updateDate;
     }
 }

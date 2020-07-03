@@ -41,3 +41,17 @@ export function getYearMonthList() {
     method: 'get'
   })
 }
+
+export function getBlockChange(yearmonth) {
+  return request({
+    url: '/data/sale-price/residence/compute/block-change/' + yearmonth,
+    method: 'get'
+  })
+}
+
+export function getCountyChange(yearmonth) {
+  return request({
+    url: '/data/sale-price/residence/compute/county-change/' + yearmonth,
+    method: 'get'
+  })
+}

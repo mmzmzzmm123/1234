@@ -1,15 +1,10 @@
- --区县处理
-update ODS_OFFICECASELISTED_#yearMonth#_RAW     
+update ODS_OFFICECASELISTED_#yearMonth#_RAW
 set [区域] = left([区域],2);
- 
---楼盘名称中括号处理
+
 update ODS_OFFICECASELISTED_#yearMonth#_RAW 
-set [楼盘名称_M] = STUFF([楼盘名称], patindex('%(%',[楼盘名称]),patindex('%)%',[楼盘名称])-patindex('%(%',[楼盘名称])+1,'')
- 
-----索引匹配
---搜房
----(2019.07.09)删除DIM_OFFICE_PROJECTID_SF2AI 中同一BuildingID对应不同UnifiedID的记录
-select distinct a.SID,
+set [楼盘名称_M] = STUFF([楼盘名称], patindex('%(%',[楼盘名称]),patindex('%)%',[楼盘名称])-patindex('%(%',[楼盘名称])+1,'');
+
+select distinct a.case_id,
   case when b.BuildingID_P is not null then b.BuildingID_P
        when c.BuildingID_P is not null then c.BuildingID_P
        else d.BuildingID_P end as BuildingID_P,
@@ -24,22 +19,15 @@ left join DIM_OFFICE_PROJECTID_SF2AI_201909 c
 on a.[来源]='房天下' and 'http:'+a.[楼盘网址] = c.Curl
 left join DIM_OFFICE_PROJECTID_SF2AI_201909 d
 on a.[来源]='房天下' and (a.[地址] =d.Address_SF or a.[地址] =d.AddressF_SF) and a.[区域] = d.Area_SF and  a.[板块] = d.Block_SF
-where b.ID_SF is not null or c.ID_SF is not null or d.ID_SF is not null
+where b.ID_SF is not null or c.ID_SF is not null or d.ID_SF is not null;
 
 --安居客
-select distinct a.SID, b.BuildingID_P, b.ProjectID_P
+select distinct a.case_id, b.BuildingID_P, b.ProjectID_P
 into #AddressMatchAJK
 from ODS_OFFICECASELISTED_#yearMonth#_RAW a
 left join DIM_OFFICE_PROJECTID_AJK2AI_201909 b
 on a.[来源]='安居客' and (a.[楼盘名称] = b.ProjectName_AJK or a.[楼盘名称_M] = b.ProjectName_AJK or a.[地址] = b.Address_AJK or a.[地址] = b.AddressF_AJK) and (a.[区域] = b.Area_AJK or a.[板块] = b.Block_AJK)
 where b.ID_AJK is not null;
-
-----修正系数匹配及修正
-----价格（主力基价或租金）偏离幅度q：
-----1）有基价的案例：q=修正后案例单价/上期基价-1； 
----	2）无基价的案例：q=修正后案例单价/(AVERAGE(上期修正案例均价,当期修正案例均价))-1
---- //////20190620优化：1） 可用案例偏离幅度修改为6%。 2） 剔除不在DIM_OFFICE_PROJECT_BUILDING_201909 中的楼栋
---- //////20200325优化：案例整合表中新增没有地址匹配到的案例
 
 with ListedPriceAvg_1 as(
   select BuildingID_P, ProjectID_P, avg(ListedPrice) as ListedPrice_1, avg(ListedPriceRent) as ListedPriceRent_1 
@@ -55,7 +43,7 @@ coff as(
                    else 1 end as DECIMAL(7,4)) as DecorationCoff      
   from ODS_OFFICECASELISTED_#yearMonth#_RAW a
   left join (select * from #AddressMatchSF union select * from #AddressMatchAJK) b
-  on a.SID = b.SID
+  on a.case_id = b.case_id
   left join DIM_OFFICE_PROJECT_BUILDING_201909 c
   on b.BuildingID_P = c.BuildingID_P and c.EffDate <= getdate() AND c.ExpirDate > getdate()
 ),
@@ -73,7 +61,7 @@ ListedPriceAvg_0_1 as(
     select BuildingID_P, ProjectID_P, ListedPrice as Price, ListedPriceRent as PriceRent from ListedPriceAvg
   ) a group by BuildingID_P, ProjectID_P
 )
-select a.*, isnull(a.[单价],0)*1.0/FloorCoff/DecorationCoff as PriceAmend,
+select a.*, cast(isnull(a.[单价],0)*1.0/FloorCoff/DecorationCoff as decimal(18,6)) as PriceAmend,
        b.MainPrice MainPrice_1, b.MainPriceRent MainPriceRent_1,
        e.ListedPrice_1, e.ListedPriceRent_1, d.ListedPrice, d.ListedPriceRent,
        case when a.[分类]='售' and isnull(b.MainPrice,0)<>0 then isnull(a.[单价],0)*1.0/FloorCoff/DecorationCoff/b.MainPrice-1
@@ -87,7 +75,7 @@ left join (select BuildingID_P, ProjectID_P, MainPrice, MainPriceRent from ODS_O
 on a.BuildingID_P = b.BuildingID_P
 left join ListedPriceAvg_0_1 c on a.BuildingID_P = c.BuildingID_P
 left join ListedPriceAvg d on a.BuildingID_P = d.BuildingID_P
-left join ListedPriceAvg_1 e on a.BuildingID_P = e.BuildingID_P
+left join ListedPriceAvg_1 e on a.BuildingID_P = e.BuildingID_P;
 
 alter table DW_OFFICECASE_COMM_#yearMonth# add VOPPT nvarchar(32);
 
@@ -115,7 +103,7 @@ select BuildingID_P, ProjectID_P,
 Into #BuildingPriceWithCase
 from DW_OFFICECASE_COMM_#yearMonth# a
 where VOPPT in ('s:lte:6%','r:lte:6%')
-group by BuildingID_P, ProjectID_P, MainPrice_1, MainPriceRent_1
+group by BuildingID_P, ProjectID_P, MainPrice_1, MainPriceRent_1;
 
 ---绑定涨跌幅
 --绑定同一办公项目
@@ -137,8 +125,8 @@ left join (
 )b on a.ProjectID_P = b.ProjectID_P
 left join #BuildingPriceWithCase c
 on a.BuildingID_P= c.BuildingID_P
-where (b.ProjectID_P is not null or c.BuildingID_P is not null) and a.EffDate <= getdate() AND a.ExpirDate > getdate()
-go
+where (b.ProjectID_P is not null or c.BuildingID_P is not null) and a.EffDate <= getdate() AND a.ExpirDate > getdate();
+
 
 --竣工日期<=5年+同一办公分类+ 同一街道
 with BindStreet as(
@@ -147,26 +135,25 @@ with BindStreet as(
   inner join #TempBindUnifiedID b
   on abs(a.[Year]-b.[Year])<=5 and a.OfficeClass = b.OfficeClass and (a.OfficeClass is not null and a.OfficeClass<>'未确定') and a.Street = b.Street
 )
-select a.BuildingID_P, a.ProjectID_P, a.ProjectName, a.ProjectAddr, a.BuildingAddr, a.County, a.Loop, a.Block, a.Street, 
-       a.[Year], a.AvgArea, a.TotalFloorSum, a.UpperFloorSum, a.OfficeClass, a.Grade, 
-       case when c.MainPricePst is not null then c.MainPricePst 
+select a.BuildingID_P, a.ProjectID_P, a.ProjectName, a.ProjectAddr, a.BuildingAddr, a.County, a.Loop, a.Block, a.Street,
+       a.[Year], a.AvgArea, a.TotalFloorSum, a.UpperFloorSum, a.OfficeClass, a.Grade,
+       case when c.MainPricePst is not null then c.MainPricePst
             when b.MainPricePst is not null then b.MainPricePst end as MainPricePst,
-       case when c.MainPriceRentPst is not null then c.MainPriceRentPst 
+       case when c.MainPriceRentPst is not null then c.MainPriceRentPst
             when b.MainPriceRentPst is not null then b.MainPriceRentPst end as MainPriceRentPst,
        case when c.MainPricePst is not null then c.MainPriceType
             when b.MainPricePst is not null then 't1' end as MainPriceType,
        case when c.MainPriceRentPst is not null then c.MainPriceRentType
-            when b.MainPriceRentPst is not null then 't1' end as MainPriceRentType  
+            when b.MainPriceRentPst is not null then 't1' end as MainPriceRentType
 into #TempBindStreet
 from DIM_OFFICE_PROJECT_BUILDING_201909 a
 left join (
-  select BuildingID_P, ProjectID_P, avg(MainPricePst) MainPricePst, avg(MainPriceRentPst) MainPriceRentPst 
+  select BuildingID_P, ProjectID_P, avg(MainPricePst) MainPricePst, avg(MainPriceRentPst) MainPriceRentPst
   from BindStreet group by BuildingID_P, ProjectID_P
 ) b on a.BuildingID_P = b.BuildingID_P
 left join #TempBindUnifiedID c
 on a.BuildingID_P= c.BuildingID_P
-where (b.ProjectID_P is not null or c.BuildingID_P is not null) and a.EffDate <= getdate() AND a.ExpirDate > getdate()
-go
+where (b.ProjectID_P is not null or c.BuildingID_P is not null) and a.EffDate <= getdate() AND a.ExpirDate > getdate();
 
 --竣工日期<=5年+同一办公分类+ 同一板块
 with BindBlock as(
@@ -175,26 +162,25 @@ with BindBlock as(
   inner join #TempBindStreet b
   on abs(a.[Year]-b.[Year])<=5 and a.OfficeClass = b.OfficeClass and (a.OfficeClass is not null and a.OfficeClass<>'未确定') and a.Block = b.Block
 )
-select a.BuildingID_P, a.ProjectID_P, a.ProjectName, a.ProjectAddr, a.BuildingAddr, a.County, a.Loop, a.Block, a.Street, 
-       a.[Year], a.AvgArea, a.TotalFloorSum, a.UpperFloorSum, a.OfficeClass, a.Grade, 
-       case when c.MainPricePst is not null then c.MainPricePst 
+select a.BuildingID_P, a.ProjectID_P, a.ProjectName, a.ProjectAddr, a.BuildingAddr, a.County, a.Loop, a.Block, a.Street,
+       a.[Year], a.AvgArea, a.TotalFloorSum, a.UpperFloorSum, a.OfficeClass, a.Grade,
+       case when c.MainPricePst is not null then c.MainPricePst
             when b.MainPricePst is not null then b.MainPricePst end as MainPricePst,
-       case when c.MainPriceRentPst is not null then c.MainPriceRentPst 
+       case when c.MainPriceRentPst is not null then c.MainPriceRentPst
             when b.MainPriceRentPst is not null then b.MainPriceRentPst end as MainPriceRentPst,
        case when c.MainPricePst is not null then c.MainPriceType
             when b.MainPricePst is not null then 't2' end as MainPriceType,
        case when c.MainPriceRentPst is not null then c.MainPriceRentType
-            when b.MainPriceRentPst is not null then 't2' end as MainPriceRentType  
+            when b.MainPriceRentPst is not null then 't2' end as MainPriceRentType
 into #TempBindBlock
 from DIM_OFFICE_PROJECT_BUILDING_201909 a
 left join (
-  select BuildingID_P, ProjectID_P, avg(MainPricePst) MainPricePst, avg(MainPriceRentPst) MainPriceRentPst 
+  select BuildingID_P, ProjectID_P, avg(MainPricePst) MainPricePst, avg(MainPriceRentPst) MainPriceRentPst
   from BindBlock group by BuildingID_P, ProjectID_P
 ) b on a.BuildingID_P = b.BuildingID_P
 left join #TempBindStreet c
 on a.BuildingID_P= c.BuildingID_P
-where(b.ProjectID_P is not null or c.BuildingID_P is not null) and a.EffDate <= getdate() AND a.ExpirDate > getdate()
-go
+where(b.ProjectID_P is not null or c.BuildingID_P is not null) and a.EffDate <= getdate() AND a.ExpirDate > getdate();
 
 --竣工日期<=5年+同一办公分类+ 同一区域
 with BindCounty as(
@@ -203,26 +189,26 @@ with BindCounty as(
   inner join #TempBindBlock b
   on abs(a.[Year]-b.[Year])<=5 and a.OfficeClass = b.OfficeClass and (a.OfficeClass is not null and a.OfficeClass<>'未确定') and a.County = b.County
 )
-select a.BuildingID_P, a.ProjectID_P, a.ProjectName, a.ProjectAddr, a.BuildingAddr, a.County, a.Loop, a.Block, a.Street, 
-       a.[Year], a.AvgArea, a.TotalFloorSum, a.UpperFloorSum, a.OfficeClass, a.Grade, 
-       case when c.MainPricePst is not null then c.MainPricePst 
+select a.BuildingID_P, a.ProjectID_P, a.ProjectName, a.ProjectAddr, a.BuildingAddr, a.County, a.Loop, a.Block, a.Street,
+       a.[Year], a.AvgArea, a.TotalFloorSum, a.UpperFloorSum, a.OfficeClass, a.Grade,
+       case when c.MainPricePst is not null then c.MainPricePst
             when b.MainPricePst is not null then b.MainPricePst end as MainPricePst,
-       case when c.MainPriceRentPst is not null then c.MainPriceRentPst 
+       case when c.MainPriceRentPst is not null then c.MainPriceRentPst
             when b.MainPriceRentPst is not null then b.MainPriceRentPst end as MainPriceRentPst,
        case when c.MainPricePst is not null then c.MainPriceType
             when b.MainPricePst is not null then 't3' end as MainPriceType,
        case when c.MainPriceRentPst is not null then c.MainPriceRentType
-            when b.MainPriceRentPst is not null then 't3' end as MainPriceRentType  
+            when b.MainPriceRentPst is not null then 't3' end as MainPriceRentType
 into #TempBindCounty
 from DIM_OFFICE_PROJECT_BUILDING_201909 a
 left join (
-  select BuildingID_P, ProjectID_P, avg(MainPricePst) MainPricePst, avg(MainPriceRentPst) MainPriceRentPst 
+  select BuildingID_P, ProjectID_P, avg(MainPricePst) MainPricePst, avg(MainPriceRentPst) MainPriceRentPst
   from BindCounty group by BuildingID_P, ProjectID_P
 ) b on a.BuildingID_P = b.BuildingID_P
 left join #TempBindBlock c
 on a.BuildingID_P= c.BuildingID_P
-where (b.ProjectID_P is not null or c.BuildingID_P is not null) and a.EffDate <= getdate() AND a.ExpirDate > getdate()
-go
+where (b.ProjectID_P is not null or c.BuildingID_P is not null) and a.EffDate <= getdate() AND a.ExpirDate > getdate();
+
 
 --竣工日期<=5年+同一办公分类+ 同一环线
 with BindLoop as(
@@ -231,30 +217,29 @@ with BindLoop as(
   inner join #TempBindCounty b
   on abs(a.[Year]-b.[Year])<=5 and a.OfficeClass = b.OfficeClass and (a.OfficeClass is not null and a.OfficeClass<>'未确定') and a.Loop = b.Loop
 )
-select a.BuildingID_P, a.ProjectID_P, a.ProjectName, a.ProjectAddr, a.BuildingAddr, a.County, a.Loop, a.Block, a.Street, 
-       a.[Year], a.AvgArea, a.TotalFloorSum, a.UpperFloorSum, a.OfficeClass, a.Grade, 
-       case when c.MainPricePst is not null then c.MainPricePst 
+select a.BuildingID_P, a.ProjectID_P, a.ProjectName, a.ProjectAddr, a.BuildingAddr, a.County, a.Loop, a.Block, a.Street,
+       a.[Year], a.AvgArea, a.TotalFloorSum, a.UpperFloorSum, a.OfficeClass, a.Grade,
+       case when c.MainPricePst is not null then c.MainPricePst
             when b.MainPricePst is not null then b.MainPricePst end as MainPricePst,
-       case when c.MainPriceRentPst is not null then c.MainPriceRentPst 
+       case when c.MainPriceRentPst is not null then c.MainPriceRentPst
             when b.MainPriceRentPst is not null then b.MainPriceRentPst end as MainPriceRentPst,
        case when c.MainPricePst is not null then c.MainPriceType
             when b.MainPricePst is not null then 't4' end as MainPriceType,
        case when c.MainPriceRentPst is not null then c.MainPriceRentType
-            when b.MainPriceRentPst is not null then 't4' end as MainPriceRentType  
+            when b.MainPriceRentPst is not null then 't4' end as MainPriceRentType
 into #TempBindLoop
 from DIM_OFFICE_PROJECT_BUILDING_201909 a
 left join (
-  select BuildingID_P, ProjectID_P, avg(MainPricePst) MainPricePst, avg(MainPriceRentPst) MainPriceRentPst 
+  select BuildingID_P, ProjectID_P, avg(MainPricePst) MainPricePst, avg(MainPriceRentPst) MainPriceRentPst
   from BindLoop group by BuildingID_P, ProjectID_P
 ) b on a.BuildingID_P = b.BuildingID_P
 left join #TempBindCounty c
 on a.BuildingID_P= c.BuildingID_P
-where (b.ProjectID_P is not null or c.BuildingID_P is not null) and a.EffDate <= getdate() AND a.ExpirDate > getdate()
-go
+where (b.ProjectID_P is not null or c.BuildingID_P is not null) and a.EffDate <= getdate() AND a.ExpirDate > getdate();
 
 ---添加上期基价
 ---///非t~t4，且上期价格非空，且上期价格类型非t5，则另当期基价类型为t5
-select newid() as id
+select row_number() over( order by newid() ) id
      , a.BuildingID
      , a.UnifiedID
      , a.ProjectID

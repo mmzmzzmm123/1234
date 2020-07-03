@@ -88,6 +88,16 @@
             <if test="status != null">
                 AND a.STATUS = #{status}
             </if>
+            <if test="isStandardBuilding != null">
+                AND a.BuildingStd = #{isStandardBuilding}
+            </if>
+            <if test="nameOrAddress != null">
+                AND (
+                a.ProjectName like concat('%', #{nameOrAddress} ,'%') or
+                a.ProjectAddr like concat('%', #{nameOrAddress} ,'%') or
+                a.BuildingAddr like concat('%', #{nameOrAddress} ,'%')
+                )
+            </if>
         </where>
     </select>
 
@@ -104,8 +114,17 @@
             <if test="status != null">
                 AND a.STATUS = #{status}
             </if>
+            <if test="isStandardBuilding != null">
+                AND a.BuildingStd = #{isStandardBuilding}
+            </if>
+            <if test="nameOrAddress != null">
+                AND (
+                a.ProjectName like concat('%', #{nameOrAddress} ,'%') or
+                a.ProjectAddr like concat('%', #{nameOrAddress} ,'%') or
+                a.BuildingAddr like concat('%', #{nameOrAddress} ,'%')
+                )
+            </if>
         </where>
-
         order by a.id desc OFFSET #{pageIndex} rows fetch next #{pageSize} rows only;
     </select>
 
@@ -292,5 +311,19 @@
           , Grade
         from ODS_OFFICE_BUILDING_PRICE_INFO_${yearMonth}
         where id=#{id};
+    </update>
+    <update id="initImport">
+        IF OBJECT_ID('BatchImportOfArtificialOfficePrice', 'P') IS NOT NULL
+	        drop procedure BatchImportOfArtificialOfficePrice;
+    </update>
+    <!--准备批量导入-->
+    <update id="prepareBachImport">
+        create procedure dbo.BatchImportOfArtificialOfficePrice @table DWA_PROJECTBASEPRICE_OFFICE_MANU_Table readonly
+        as
+        begin
+            insert into dbo.DWA_PROJECTBASEPRICE_OFFICE_MANU_${yearMonth} (id,BuildingID_P,ProjectID_P,ProjectName,ProjectAddr,BuildingAddr,County,Loop,Block,Street,Year,AvgArea,TotalFloorSum,UpperFloorSum,OfficeClass,Grade,MainPrice_1,MainPriceRent_1,MainPrice,MainPriceRent,MainPricePst,MainPriceRentPst,MainPriceType,MainPriceRentType,AreaCoff,YearCoff,BuildingCoff,BuildingStd,AdjEvd,ModifyDate)
+            select id,BuildingID_P,ProjectID_P,ProjectName,ProjectAddr,BuildingAddr,County,Loop,Block,Street,Year,AvgArea,TotalFloorSum,UpperFloorSum,OfficeClass,Grade,MainPrice_1,MainPriceRent_1,MainPrice,MainPriceRent,MainPricePst,MainPriceRentPst,MainPriceType,MainPriceRentType,AreaCoff,YearCoff,BuildingCoff,BuildingStd,AdjEvd,getdate()
+            from @table;
+        end;
     </update>
 </mapper>

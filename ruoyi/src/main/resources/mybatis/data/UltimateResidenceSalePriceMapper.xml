@@ -74,7 +74,7 @@
     <select id="yearMonthList" resultType="com.ruoyi.project.common.VueSelectModel">
         SELECT right(name,6) as value, right(name,6) as label
         FROM sys.tables
-        where name like 'ODS_PROJECT_PRICE_INFO_%'
+        where name like 'ODS_PROJECT_PRICE_INFO_%' and name not like '%_bak'
         order by cast(right(name,6) as int) desc
     </select>
 </mapper>

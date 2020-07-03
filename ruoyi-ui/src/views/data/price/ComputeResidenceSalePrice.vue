@@ -45,6 +45,24 @@
           v-hasPermi="['system:user:export']"
         >导出</el-button>
       </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="primary"
+          icon="el-icon-s-data"
+          size="mini"
+          @click="queryBlockChart"
+          v-hasPermi="['system:user:list']"
+        >板块涨跌幅</el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="primary"
+          icon="el-icon-s-data"
+          size="mini"
+          @click="queryCountyChart"
+          v-hasPermi="['system:user:list']"
+        >区域涨跌幅</el-button>
+      </el-col>
     </el-row>
 
     <el-table v-loading="loading" :data="dataList" @selection-change="handleSelectionChange">
@@ -120,24 +138,6 @@
       <el-table-column label="绑定板块+小区类型的涨跌幅" align="center" prop="bindBlockProjectTypePst" />
       <el-table-column label="绑定区县+小区类型" align="center" prop="bindCountyProjectType" />
       <el-table-column label="绑定区县+小区类型的涨跌幅" align="center" prop="bindCountyProjectTypePst" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
-        <template slot-scope="scope">
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
-            v-hasPermi="['system:user:edit']"
-          >修改</el-button>
-          <!-- <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['system:user:remove']"
-          >删除</el-button>-->
-        </template>
-      </el-table-column>
     </el-table>
 
     <pagination
@@ -147,17 +147,25 @@
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
     />
+
+    <el-dialog :title="changeChart.title" :visible.sync="changeChart.open" append-to-body>
+      <line-chart :chart-data="changeChart" />
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import { getToken } from "@/utils/auth";
+import LineChart from "./DistrictBlockChangeChart";
+
 import {
   list,
   get,
   update,
   export2File,
-  getYearMonthList
+  getYearMonthList,
+  getBlockChange,
+  getCountyChange
 } from "@/api/data/computeResidenceSalePrice";
 
 export default {
@@ -191,6 +199,15 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
+      // 板块变化
+      blockChart: null,
+      changeChart: {
+        title: "",
+        graph: null,
+        open: false,
+        name: [],
+        value: []
+      },
       // 查询参数
       queryParams: {
         yearMonth: undefined,
@@ -235,7 +252,16 @@ export default {
       this.yearMonthList = response.data;
     });
   },
+  components: {
+    LineChart
+  },
   methods: {
+    initChart() {
+      console.log(document.getElementById("main"));
+      echarts.init(document.getElementById("main"));
+      console.log("====>");
+      console.log(this.blockChart);
+    },
     yesOrNotFormatter: function(row, column, cellValue, index) {
       if (cellValue) return "是";
       return "否";
@@ -321,16 +347,6 @@ export default {
                 this.msgError(response.msg);
               }
             });
-          } else {
-            // addUltimate(this.form).then(response => {
-            //   if (response.code === 200) {
-            //     this.msgSuccess("新增成功");
-            //     this.open = false;
-            //     this.getList();
-            //   } else {
-            //     this.msgError(response.msg);
-            //   }
-            // });
           }
         }
       });
@@ -374,6 +390,43 @@ export default {
     // 提交上传文件
     submitFileForm() {
       this.$refs.upload.submit();
+    },
+    // 板块涨跌幅
+    queryBlockChart() {
+      this.$refs["queryForm"].validate(valid => {
+        if (valid) {
+          getBlockChange(this.queryParams.yearMonth).then(response => {
+            var name = new Array();
+            var value = new Array();
+            for (var i = 0; i < response.data.length; i++) {
+              name.push(response.data[i]["name"]);
+              value.push(response.data[i]["value"]);
+            }
+            this.changeChart.name = name;
+            this.changeChart.value = value;
+          });
+          this.changeChart.open = true;
+          this.changeChart.title = "板块涨跌幅";
+        }
+      });
+    },
+    queryCountyChart() {
+      this.$refs["queryForm"].validate(valid => {
+        if (valid) {
+          getCountyChange(this.queryParams.yearMonth).then(response => {
+            var name = new Array();
+            var value = new Array();
+            for (var i = 0; i < response.data.length; i++) {
+              name.push(response.data[i]["name"]);
+              value.push(response.data[i]["value"]);
+            }
+            this.changeChart.name = name;
+            this.changeChart.value = value;
+            this.changeChart.title = "区域涨跌幅";
+          });
+          this.changeChart.open = true;
+        }
+      });
     }
   }
 };

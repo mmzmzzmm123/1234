@@ -27,6 +27,14 @@ public interface OriginalResidenceRentOpeningCaseMapper {
     int createCleanTable(@Param("yearMonth") Integer yearMonth);
 
     /**
+     * 租赁平台案例
+     *
+     * @param yearMonth
+     * @return
+     */
+    int createPlatformCaseTable(@Param("yearMonth") Integer yearMonth);
+
+    /**
      * 案例汇总表（挂牌、成交）
      *
      * @param yearMonth

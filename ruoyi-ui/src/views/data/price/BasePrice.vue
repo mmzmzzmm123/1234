@@ -1,17 +1,17 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" :rules="rules" ref="queryForm" :inline="true" label-width="100px">
-      <el-form-item label="联城小区ID" prop="communityId" clearable>
+      <el-form-item label="小区ID" prop="communityId" clearable>
         <el-input
           v-model="queryParams.communityId"
-          placeholder="请输入案例小区名称"
+          placeholder="请输入案例小区ID"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="小区类型" prop="communityType" clearable>
-        <el-select v-model="queryParams.communityType" placeholder="请输入小区类型">
+      <el-form-item label="项目类型" prop="communityType" clearable>
+        <el-select v-model="queryParams.communityType" placeholder="请选择项目类型">
           <el-option
             v-for="item in communityTypeOptions"
             :value="item.value"
@@ -21,7 +21,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="价格类型" prop="priceType" clearable>
-        <el-select v-model="queryParams.priceType" placeholder="请输入价格类型">
+        <el-select v-model="queryParams.priceType" placeholder="请选择价格类型">
           <el-option
             v-for="item in priceTypeOptions"
             :value="item.value"
@@ -47,17 +47,7 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-      <!-- <el-col :span="1.5">
-        <el-button
-          type="success"
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['system:user:edit']"
-        >修改</el-button>
-      </el-col>-->
-      <!-- <el-col :span="1.5">
+      <el-col :span="1.5">
         <el-button
           type="warning"
           icon="el-icon-download"
@@ -66,15 +56,6 @@
           v-hasPermi="['system:user:export']"
         >导出</el-button>
       </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="info"
-          icon="el-icon-upload2"
-          size="mini"
-          @click="handleImport"
-          v-hasPermi="['system:user:import']"
-        >导入</el-button>
-      </el-col>-->
     </el-row>
 
     <el-table v-loading="loading" :data="dataList" @selection-change="handleSelectionChange">
@@ -86,12 +67,6 @@
           <el-tag size="big" type="success" v-if="2 == scope.row.communityType">办公</el-tag>
         </template>
       </el-table-column>
-      <!-- <el-table-column
-        label=""
-        align="center"
-        prop=""
-        :formatter="priceTypeFormatter"
-      /> -->
       <el-table-column label="价格类型" align="center" prop="priceType">
         <template slot-scope="scope">
           <el-tag size="big" v-if="1 == scope.row.priceType">售价</el-tag>
@@ -101,117 +76,15 @@
       <el-table-column label="价值时点" align="center" prop="valuePoint" />
       <el-table-column label="标准基价" align="center" prop="standardPrice" />
       <el-table-column label="主力面积基价" align="center" prop="mainAreaPrice" />
-      <!-- <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
-        <template slot-scope="scope">
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
-            v-hasPermi="['system:user:edit']"
-          >修改</el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['system:user:remove']"
-          >删除</el-button>
-        </template>
-      </el-table-column>-->
     </el-table>
 
     <pagination
       v-show="total>0"
       :total="total"
-      :page.sync="queryParams.pageNum"
+      :page.sync="queryParams.pageIndex"
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
     />
-
-    <!-- 添加或修改办公基价对话框 -->
-    <!-- <el-dialog :title="title" :visible.sync="open" width="800px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="160px">
-        <el-row :gutter="20">
-          <el-col :span="12">
-            <el-form-item label="小区ID">
-              <el-input v-model="form.communityId" disabled="true" readonly />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="楼栋ID">
-              <el-input v-model="form.buildingId" disabled="true" readonly />
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row :gutter="20">
-          <el-col :span="12">
-            <el-form-item label="主力基价（元/㎡）">
-              <el-input v-model="form.mainPrice" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="主力租金（元/月·㎡）">
-              <el-input v-model="form.mainPriceRent" />
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row :gutter="20">
-          <el-col :span="12">
-            <el-form-item label="主力基价涨跌幅">
-              <el-input v-model="form.mainPricePst" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="主力租金涨跌幅">
-              <el-input v-model="form.mainPriceRentPst" />
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row :gutter="20">
-          <el-col :span="12">
-            <el-form-item label="主力基价类型">
-              <el-input v-model="form.mainPriceType" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="主力租金类型">
-              <el-input v-model="form.mainPriceRentType" />
-            </el-form-item>
-          </el-col>
-        </el-row>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
-        <el-button @click="cancel">取 消</el-button>
-      </div>
-    </el-dialog>
-
-    <el-dialog :title="upload.title" :visible.sync="upload.open" width="400px" append-to-body>
-      <el-upload
-        ref="upload"
-        :limit="1"
-        accept=".xlsx, .xls"
-        :headers="upload.headers"
-        :action="upload.url + '?updateSupport=' + upload.updateSupport"
-        :disabled="upload.isUploading"
-        :on-progress="handleFileUploadProgress"
-        :on-success="handleFileSuccess"
-        :auto-upload="false"
-        drag
-      >
-        <i class="el-icon-upload"></i>
-        <div class="el-upload__text">
-          将文件拖到此处，或
-          <em>点击上传</em>
-        </div>
-        <div class="el-upload__tip" style="color:red" slot="tip">提示：仅允许导入“xls”或“xlsx”格式文件！</div>
-      </el-upload>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitFileForm">确 定</el-button>
-        <el-button @click="upload.open = false">取 消</el-button>
-      </div>
-    </el-dialog>-->
   </div>
 </template>
 
@@ -262,7 +135,7 @@ export default {
         communityType: undefined,
         priceType: undefined,
         valuePoint: undefined,
-        pageNum: 1,
+        pageIndex: 1,
         pageSize: 10
       },
       yearMonthList: [],
@@ -301,9 +174,6 @@ export default {
   },
   created() {
     this.loading = false;
-    // getYearMonthList().then(response => {
-    //   this.yearMonthList = response.data;
-    // });
   },
   methods: {
     priceTypeFormatter: function(row, column, cellValue, index) {
@@ -365,7 +235,7 @@ export default {
     },
     /** 搜索按钮操作 */
     handleQuery() {
-      this.queryParams.pageNum = 1;
+      this.queryParams.pageIndex = 1;
       this.getList();
     },
     /** 重置按钮操作 */
@@ -379,12 +249,6 @@ export default {
       this.single = selection.length != 1;
       this.multiple = !selection.length;
     },
-    /** 新增按钮操作 */
-    // handleAdd() {
-    //   this.reset();
-    //   this.open = true;
-    //   this.title = "添加办公基价";
-    // },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
@@ -409,16 +273,6 @@ export default {
                 this.msgError(response.msg);
               }
             });
-          } else {
-            // addUltimate(this.form).then(response => {
-            //   if (response.code === 200) {
-            //     this.msgSuccess("新增成功");
-            //     this.open = false;
-            //     this.getList();
-            //   } else {
-            //     this.msgError(response.msg);
-            //   }
-            // });
           }
         }
       });
@@ -426,7 +280,7 @@ export default {
     /** 导出按钮操作 */
     handleExport() {
       const queryParams = this.queryParams;
-      this.$confirm("是否确认导出所有住宅租赁基价数据项?", "警告", {
+      this.$confirm("确认导出物业基价?", "警告", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"

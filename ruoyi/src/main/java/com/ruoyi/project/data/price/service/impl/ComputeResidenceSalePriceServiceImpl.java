@@ -1,6 +1,7 @@
 package com.ruoyi.project.data.price.service.impl;
 
 import com.ruoyi.project.common.VueSelectModel;
+import com.ruoyi.project.data.price.domain.DistrictBlockChange;
 import com.ruoyi.project.data.price.domain.ComputeResidenceSaleBasePrice;
 import com.ruoyi.project.data.price.mapper.ComputeResidenceSalePriceMapper;
 import com.ruoyi.project.data.price.service.IComputeResidenceSalePriceService;
@@ -38,5 +39,15 @@ public class ComputeResidenceSalePriceServiceImpl implements IComputeResidenceSa
     @Override
     public List<VueSelectModel> getYearMonth() {
         return computeResidenceSalePriceMapper.yearMonthList();
+    }
+
+    @Override
+    public List<DistrictBlockChange> getBlockChange(Integer yearMonth) {
+        return computeResidenceSalePriceMapper.getBlockChange(yearMonth);
+    }
+
+    @Override
+    public List<DistrictBlockChange> getCountyChange(Integer yearMonth) {
+        return computeResidenceSalePriceMapper.getCountyChange(yearMonth);
     }
 }

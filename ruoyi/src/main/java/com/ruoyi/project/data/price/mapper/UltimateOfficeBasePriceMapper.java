@@ -95,12 +95,24 @@ public interface UltimateOfficeBasePriceMapper {
     List<VueSelectModel> getYearMonthList();
 
     /**
+     * 准备批量执行环境
+     */
+    void initImport();
+
+    /**
+     * @param yearMonth
+     * @return
+     */
+    int prepareBachImport(@Param("yearMonth") Integer yearMonth);
+
+    /**
      * 插入人工修正的办公基价
      *
      * @param ultimateOfficeBasePrice
      * @return
      */
     int insertArtificialOfficeBasePrice(UltimateOfficeBasePrice ultimateOfficeBasePrice);
+
 
     /**
      * 批量插入人工修正办公基价

@@ -11,7 +11,7 @@
         <result property="caseUnitPrice" column="均价售"/>
         <result property="name" column="楼盘名称"/>
         <result property="caseFloor" column="楼层"/>
-        <result property="area" column="面积" javaType="java.math.BigDecimal"/>
+        <result property="area" column="面积" javaType="java.math.BigDecimal" />
         <result property="managementFee" column="物业费"/>
         <result property="seatCount" column="工位数"/>
         <result property="address" column="地址"/>
@@ -32,17 +32,19 @@
         <result property="rentOfMonthly" column="月租金租"/>
         <result property="rentOfStandard" column="标准租金租"/>
         <result property="score" column="得房率"/>
-        <result property="totalPrice" column="总价"/>
-        <result property="unitPrice" column="单价"/>
+        <result property="totalPrice" column="总价" javaType="java.math.BigDecimal"/>
+        <result property="unitPrice" column="单价" javaType="java.math.BigDecimal"/>
+        <result property="updateDate" column="更新时间" javaType="java.sql.Date"/>
     </resultMap>
     <select id="download" resultMap="DownloadMapping">
-        select url, title, 容积率, 总价售, 均价售, 楼盘名称, 楼层, 面积, 物业费, 工位数, 地址, 地铁,
+        select url, title, 容积率, 总价售, 均价售, 楼盘名称, 楼层, case 面积 when 'nan' then NULL ELSE 面积 END 面积,
+         物业费, 工位数, 地址, 地铁,
          发布时间,房源编号, 百度lng, 百度lat, 区域, 分类, 来源, 等级, 楼盘网址, 装修,
          类型, 板块, 挂牌中介, 月租金租, 标准租金租, 更新时间, 得房率,
-        case when 分类 = '售' then 总价售
-            when 分类 = '租' then 月租金租 end as 总价,
-        case when 分类 = '售' then 均价售
-            when 分类 = '租' then 标准租金租 end as 单价
+        case when 分类 = '售' then (case 总价售 when 'nan' then NULL ELSE 总价售 END)
+            when 分类 = '租' then (case 月租金租 when 'nan' then NULL ELSE 月租金租 END) end as 总价,
+        case when 分类 = '售' then (case 均价售 when 'nan' then NULL ELSE 均价售 END)
+            when 分类 = '租' then (case 标准租金租 when 'nan' then NULL ELSE 标准租金租 END) end as 单价
         from dbo.办公
         where 更新时间 >= #{startDate} and 更新时间 <![CDATA[ < ]]> #{endDate}
     </select>

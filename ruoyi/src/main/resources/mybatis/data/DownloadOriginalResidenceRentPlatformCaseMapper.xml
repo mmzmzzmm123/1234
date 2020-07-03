@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.project.data.cases.mapper.sync.DownloadOriginalResidenceRentPlatformCaseMapper">
-    <resultMap id="resultMapping" type="com.ruoyi.project.data.cases.domain.OriginalResidenceRentOpeningCase">
+    <resultMap id="resultMapping" type="com.ruoyi.project.data.cases.domain.OriginalResidencePlatformRentOpeningCase">
         <result property="caseArea" column="面积" javaType="java.math.BigDecimal"/>
         <result property="caseBlock" column="block" />
         <result property="caseAddress" column="地址"/>
@@ -23,7 +23,7 @@
 
     </resultMap>
     <select id="download" resultMap="resultMapping">
-        select 面积
+        select top 100 面积
             ,block
             ,地址
             ,小区名
@@ -32,7 +32,6 @@
             ,楼层
             ,厅数
             ,编号
-            ,type
             ,price
             ,区域
             ,出租方式
@@ -40,6 +39,6 @@
             ,来源
             ,savetime
         FROM dbo.挂牌房源
-        where savetime <![CDATA[ > ]]> #{startDate} and savetime <![CDATA[ <= ]]> #{endDate}
+        where savetime <![CDATA[ > ]]> #{startDate,jdbcType=DATE} and savetime <![CDATA[ <= ]]> #{endDate,jdbcType=DATE}
     </select>
 </mapper>

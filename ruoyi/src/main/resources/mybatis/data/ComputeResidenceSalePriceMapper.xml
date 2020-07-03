@@ -143,7 +143,8 @@
                 AND ProjectID = #{communityId}
             </if>
             <if test="nameOrAddress != null">
-                AND (ProjectName like concat('%', #{nameOrAddress}, '%') or  ProjectAddr like concat('%', #{nameOrAddress}, '%'))
+                AND (ProjectName like concat('%', #{nameOrAddress}, '%') or ProjectAddr like concat('%',
+                #{nameOrAddress}, '%'))
             </if>
         </where>
     </select>
@@ -157,7 +158,8 @@
                 AND ProjectID = #{communityId}
             </if>
             <if test="nameOrAddress != null">
-                AND (ProjectName like concat('%', #{nameOrAddress}, '%') or  ProjectAddr like concat('%', #{nameOrAddress}, '%'))
+                AND (ProjectName like concat('%', #{nameOrAddress}, '%') or ProjectAddr like concat('%',
+                #{nameOrAddress}, '%'))
             </if>
         </where>
         order by ProjectID ASC OFFSET #{pageIndex} rows fetch next #{pageSize} rows only
@@ -170,17 +172,28 @@
     </select>
     <!-- 获取表名   -->
     <select id="yearMonthList" resultType="com.ruoyi.project.common.VueSelectModel">
-        SELECT right(name,6) as value, right(name,6) as label
+        SELECT top 12 right(name,6) as value, right(name,6) as label
         FROM sys.tables
         where name like 'DWA_PROJECTBASEPRICE_IMDT_%'
         order by cast(right(name,6) as int) desc
     </select>
-
-    <!--    <update id="updateComputeResidenceRentBasePrice" parameterType="com.ruoyi.project.data.price.domain.UltimateOfficeBasePrice">-->
-    <!--        update TLK_计价办公核准基价 set ITEM_YEARMONTH=ITEM_YEARMONTH-->
-    <!--        <trim prefix="SET" suffixOverrides=",">-->
-    <!--        </trim>-->
-    <!--        where id = #{id}-->
-    <!--    </update>-->
+    <!--  区域涨跌幅  -->
+    <select id="getBlockChange" resultType="com.ruoyi.project.data.price.domain.DistrictBlockChange">
+        select Block as name
+             , avg(VOPPA) as value
+        from dbo.DWA_PROJECTBASEPRICE_IMDT_${yearMonth}
+        where Block is not null
+        group by Block
+        order by avg(VOPPA)
+    </select>
+    <!--区域涨跌幅-->
+    <select id="getCountyChange" resultType="com.ruoyi.project.data.price.domain.DistrictBlockChange">
+        select left(County,2) as name
+             , avg(VOPPA) as value
+        from dbo.DWA_PROJECTBASEPRICE_IMDT_${yearMonth}
+        where County is not null
+        group by left(County,2)
+        order by avg(VOPPA)
+    </select>
 
 </mapper>

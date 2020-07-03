@@ -18,16 +18,16 @@
       <el-form-item label="联城小区ID" prop="communityId" clearable>
         <el-input
           v-model="queryParams.communityId"
-          placeholder="请输入案例小区名称"
+          placeholder="请输入案例小区ID"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="联城楼栋ID" prop="buildingId" clearable>
+      <el-form-item label="名称或地址" prop="nameOrAddress" clearable>
         <el-input
-          v-model="queryParams.buildingId"
-          placeholder="请输入联城楼栋ID"
+          v-model="queryParams.nameOrAddress"
+          placeholder="请输入名称或地址"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
@@ -37,6 +37,12 @@
         <el-select v-model="queryParams.status" clearable>
           <el-option label="正常" value="1"></el-option>
           <el-option label="失效" value="0"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="标准楼栋">
+        <el-select v-model="queryParams.standardBuilding" clearable>
+          <el-option label="是" value="1"></el-option>
+          <el-option label="否" value="0"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item>
@@ -62,7 +68,7 @@
           size="mini"
           @click="handleImport"
           v-hasPermi="['system:user:import']"
-        >导入</el-button>
+        >文件导入</el-button>
       </el-col>
       <!-- <el-col :span="1.5">
         <el-button
@@ -76,9 +82,9 @@
     </el-row>
 
     <el-table v-loading="loading" :data="dataList">
-      <el-table-column label="年月" align="center" prop="yearMonth" />
-      <el-table-column label="小区ID" align="center" prop="communityId" width="110" />
-      <el-table-column label="楼栋ID" align="center" prop="buildingId" width="110" />
+      <el-table-column label="年月" align="center" prop="yearMonth" fixed />
+      <el-table-column label="小区ID" align="center" prop="communityId" width="110" fixed />
+      <el-table-column label="楼栋ID" align="center" prop="buildingId" width="110" fixed />
       <el-table-column label="项目名称" align="center" prop="communityName" />
       <el-table-column label="办公项目地址" align="center" prop="communityAddress" />
       <el-table-column label="楼栋地址" align="center" prop="buildingAddress" />
@@ -293,7 +299,7 @@
         :limit="1"
         accept=".xlsx, .xls"
         :headers="upload.headers"
-        :action="upload.url"
+        :action="upload.url+ '/' + queryParams.yearMonth "
         :disabled="upload.isUploading"
         :on-progress="handleFileUploadProgress"
         :on-success="handleFileSuccess"
@@ -380,14 +386,12 @@ export default {
       queryParams: {
         yearMonth: undefined,
         communityId: undefined,
-        buildingId: undefined,
+        nameOrAddress: undefined,
+        status: undefined,
+        standardBuilding: undefined,
         pageNum: 1,
         pageSize: 10
       },
-      statusOptions: [
-        { value: 1, text: "正常" },
-        { value: 1, text: "失效" }
-      ],
       upload: {
         // 是否显示弹出层（用户导入）
         open: false,
@@ -442,8 +446,8 @@ export default {
   },
   methods: {
     yearMonthChange: function(yearMonth) {
-      this.upload.url += "/" + yearMonth;
-      console.log(this.upload.url);
+      // this.upload.url += "/" + yearMonth;
+      // console.log(this.upload.url);
     },
     regionFormatter: function(row, column, cellValue, index) {
       // 区域-板块-环线-街道

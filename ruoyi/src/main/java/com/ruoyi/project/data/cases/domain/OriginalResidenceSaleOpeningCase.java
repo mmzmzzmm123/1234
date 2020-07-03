@@ -627,10 +627,6 @@ public class OriginalResidenceSaleOpeningCase {
         this.caseLastDeal = caseLastDeal;
     }
 
-    public void setNewCaseId(String newCaseId) {
-        this.newCaseId = newCaseId;
-    }
-
     /**
      * 生成caseid，根据caseid来确定唯一案例，还有案例来源
      *
@@ -639,7 +635,6 @@ public class OriginalResidenceSaleOpeningCase {
     public String getNewCaseId() {
         return DigestUtils.md5DigestAsHex(getCaseLianJiaId().getBytes());
     }
-
     public Integer getYearMonth() {
         return yearMonth;
     }
@@ -742,6 +737,8 @@ public class OriginalResidenceSaleOpeningCase {
             this.setCleanToward(towardArray[index]);
         }
     }
+
+
 
     @Override
     public String toString() {

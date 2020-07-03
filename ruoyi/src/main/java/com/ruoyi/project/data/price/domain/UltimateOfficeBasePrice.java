@@ -83,6 +83,10 @@ public class UltimateOfficeBasePrice extends BaseEntity {
     private Boolean isStandardBuilding;
 //    @Excel(name = "更改价格说明")
     private String adjustPriceComment;
+    /**
+     * 名称或者地址
+     */
+    private String nameOrAddress;
 
     public Integer getLastYearMonth() {
         return lastYearMonth;
@@ -364,4 +368,11 @@ public class UltimateOfficeBasePrice extends BaseEntity {
         this.adjustPriceComment = adjustPriceComment;
     }
 
+    public String getNameOrAddress() {
+        return nameOrAddress;
+    }
+
+    public void setNameOrAddress(String nameOrAddress) {
+        this.nameOrAddress = nameOrAddress;
+    }
 }

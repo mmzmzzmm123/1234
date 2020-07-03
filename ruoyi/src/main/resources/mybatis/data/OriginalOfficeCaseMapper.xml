@@ -6,43 +6,43 @@
     <update id="createTable">
         <bind name="targetTableName" value="'dbo.ODS_OFFICECASELISTED_' + yearMonth + '_RAW'"/>
         IF OBJECT_ID(#{targetTableName}, 'U') IS NOT NULL
-        drop table ${targetTableName};
+            drop table ${targetTableName};
 
         create TABLE ${targetTableName}
         (
-        ID uniqueidentifier not null primary key,
-        url varchar (1000) NULL,
-        title varchar (1000) NULL,
-        容积率 varchar (1000) NULL,
-        总价售 varchar (1000) NULL,
-        均价售 varchar (1000) NULL,
-        楼盘名称 varchar (1000) NULL,
-        楼盘名称_M nvarchar (512) NULL,
-        楼层 varchar (1000) NULL,
-        面积 varchar (1000) NULL,
-        物业费 varchar (1000) NULL,
-        工位数 varchar (1000) NULL,
-        地址 varchar (1000) NULL,
-        地铁 varchar (1000) NULL,
-        发布时间 date NULL,
-        房源编号 varchar (1000) NULL,
-        百度lng varchar (1000) NULL,
-        百度lat varchar (1000) NULL,
-        区域 varchar (1000) NULL,
-        分类 varchar (1000) NULL,
-        来源 varchar (1000) NULL,
-        等级 varchar (1000) NULL,
-        楼盘网址 varchar (1000) NULL,
-        装修 varchar (1000) NULL,
-        类型 varchar (1000) NULL,
-        板块 varchar (1000) NULL,
-        挂牌中介 varchar (1000) NULL,
-        月租金租 varchar (1000) NULL,
-        标准租金租 varchar (1000) NULL,
-        更新时间 varchar (1000) NULL,
-        得房率 varchar (1000) NULL,
-        总价 decimal (18, 2) NULL,
-        单价 decimal (18, 2) NULL
+            case_id varchar(32) not null primary key,
+            url varchar (1000) NULL,
+            title varchar (1000) NULL,
+            容积率 varchar (1000) NULL,
+            总价售 varchar (1000) NULL,
+            均价售 varchar (1000) NULL,
+            楼盘名称 varchar (1000) NULL,
+            楼盘名称_M nvarchar (512) NULL,
+            楼层 varchar (1000) NULL,
+            面积 varchar (1000) NULL,
+            物业费 varchar (1000) NULL,
+            工位数 varchar (1000) NULL,
+            地址 varchar (1000) NULL,
+            地铁 varchar (1000) NULL,
+            发布时间 date NULL,
+            房源编号 varchar (1000) NULL,
+            百度lng varchar (1000) NULL,
+            百度lat varchar (1000) NULL,
+            区域 varchar (1000) NULL,
+            分类 varchar (1000) NULL,
+            来源 varchar (1000) NULL,
+            等级 varchar (1000) NULL,
+            楼盘网址 varchar (1000) NULL,
+            装修 varchar (1000) NULL,
+            类型 varchar (1000) NULL,
+            板块 varchar (1000) NULL,
+            挂牌中介 varchar (1000) NULL,
+            月租金租 varchar (1000) NULL,
+            标准租金租 varchar (1000) NULL,
+            更新时间 date NULL,
+            得房率 varchar (1000) NULL,
+            总价 decimal (18, 2) NULL,
+            单价 decimal (18, 2) NULL
         );
     </update>
     <!--  创建人工修正表  -->
@@ -51,26 +51,107 @@
         IF OBJECT_ID(#{targetTableName}, 'U') IS NOT NULL
             drop table ${targetTableName};
 
+        create table ${targetTableName}
+        (
+            id int not null,
+            BuildingID_P nvarchar(20) not null,
+            ProjectID_P nvarchar(20) null,
+            ProjectName nvarchar(200) null,
+            ProjectAddr nvarchar(200) null,
+            BuildingAddr nvarchar(200) null,
+            County nvarchar(200) null,
+            Loop nvarchar(200) null,
+            Block nvarchar(200) null,
+            Street nvarchar(200) null,
+            Year int null,
+            AvgArea decimal(10, 2) null,
+            TotalFloorSum nvarchar(50) null,
+            UpperFloorSum nvarchar(50) null,
+            OfficeClass nvarchar(50) null,
+            Grade nvarchar(50) null,
+            MainPrice_1 decimal(18, 6) null,
+            MainPriceRent_1 decimal(18, 6) null,
+            MainPrice decimal(38, 6) null,
+            MainPriceRent decimal(38, 6) null,
+            MainPricePst decimal(38, 6) null,
+            MainPriceRentPst decimal(38, 6) null,
+            MainPriceType varchar(2) null,
+            MainPriceRentType varchar(2) null,
+            AreaCoff decimal(18, 6) null,
+            YearCoff decimal(18, 6) null,
+            BuildingCoff decimal(18, 6) null,
+            BuildingStd bit null,
+            AdjEvd nvarchar(1000) null,
+            ModifyDate date not null
+        );
+    </update>
+    <!--案例汇总表-->
+    <update id="createAssembleTable">
+        <bind name="targetTableName" value="'dbo.DW_OFFICECASE_COMM_' + yearMonth"/>
+        IF OBJECT_ID(#{targetTableName}, 'U') IS NOT NULL
+            drop table ${targetTableName};
+
         CREATE TABLE ${targetTableName}
         (
-            BuildingID bigint NOT NULL,
-            ProjectID bigint NULL,
-            County nvarchar (512) NULL,
-            Loop nvarchar (512) NULL,
-            Block nvarchar (512) NULL,
-            ProjectAddr nvarchar (1024) NULL,
-            ProjectName nvarchar (1024) NULL,
-            Year int NULL,
-            AvgArea decimal (18, 2) NULL,
+            ID uniqueidentifier NOT NULL,
+            url varchar (1000) NULL,
+            title varchar (1000) NULL,
+            容积率 varchar (1000) NULL,
+            总价售 varchar (1000) NULL,
+            均价售 varchar (1000) NULL,
+            楼盘名称 varchar (1000) NULL,
+            楼盘名称_M nvarchar (512) NULL,
+            楼层 varchar (1000) NULL,
+            面积 varchar (1000) NULL,
+            物业费 varchar (1000) NULL,
+            工位数 varchar (1000) NULL,
+            地址 varchar (1000) NULL,
+            地铁 varchar (1000) NULL,
+            发布时间 date NULL,
+            房源编号 varchar (1000) NULL,
+            百度lng varchar (1000) NULL,
+            百度lat varchar (1000) NULL,
+            区域 varchar (1000) NULL,
+            分类 varchar (1000) NULL,
+            来源 varchar (1000) NULL,
+            等级 varchar (1000) NULL,
+            楼盘网址 varchar (1000) NULL,
+            装修 varchar (1000) NULL,
+            类型 varchar (1000) NULL,
+            板块 varchar (1000) NULL,
+            挂牌中介 varchar (1000) NULL,
+            月租金租 varchar (1000) NULL,
+            标准租金租 varchar (1000) NULL,
+            更新时间 varchar (1000) NULL,
+            得房率 varchar (1000) NULL,
+            总价 decimal (18, 2) NULL,
+            单价 decimal (18, 2) NULL,
+            BuildingID_P bigint NULL,
+            ProjectID_P bigint NULL,
             TotalFloorSum nvarchar (32) NULL,
-            UpperFloorSum nvarchar (32) NULL,
-            OfficeClass nvarchar (256) NULL,
-            Grade nvarchar (64) NULL,
-            MainPrice_1 decimal (18, 2) NULL,
-            MainPriceRent_1 decimal (18, 2) NULL,
-            MainPrice decimal (18, 2) NULL,
-            MainPriceRent decimal (18, 2) NULL,
-            ModifyDate date NULL
-        );
+            FloorCoff decimal (7, 4) NULL,
+            DecorationCoff decimal (7, 4) NULL,
+            PriceAmend numeric (38, 12) NULL,
+            MainPrice_1 decimal (38, 6) NULL,
+            MainPriceRent_1 decimal (38, 6) NULL,
+            ListedPrice_1 decimal (38, 6) NULL,
+            ListedPriceRent_1 decimal (38, 6) NULL,
+            ListedPrice decimal (38, 6) NULL,
+            ListedPriceRent decimal (38, 6) NULL,
+            VOPP numeric (38, 6) NULL,
+            VOPPT nvarchar (32) NULL
+        )
+    </update>
+    <!--  初始化汇总表-->
+    <update id="initAssembleTable">
+        <bind name="targetTableName" value="'dbo.DW_OFFICECASE_COMM_' + yearMonth"/>
+        IF OBJECT_ID(#{targetTableName}, 'U') IS NOT NULL
+            drop table ${targetTableName};
+    </update>
+    <!--  初始化汇总表-->
+    <update id="initPriceTable">
+        <bind name="targetTableName" value="'dbo.ODS_OFFICE_BUILDING_PRICE_INFO_' + yearMonth"/>
+        IF OBJECT_ID(#{targetTableName}, 'U') IS NOT NULL
+            drop table ${targetTableName};
     </update>
 </mapper>

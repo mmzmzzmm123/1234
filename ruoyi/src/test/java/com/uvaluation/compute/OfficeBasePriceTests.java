@@ -1,8 +1,7 @@
 package com.uvaluation.compute;
 
 import com.ruoyi.RuoYiApplication;
-import com.ruoyi.project.data.cases.service.IOriginalResidenceRentClosingCaseService;
-import com.ruoyi.project.data.cases.service.IOriginalResidenceRentOpeningCaseService;
+import com.ruoyi.project.data.cases.service.IOriginalOfficeCaseService;
 import com.ruoyi.project.data.cases.service.IOriginalResidenceSaleClosingCaseService;
 import com.ruoyi.project.data.cases.service.IOriginalResidenceSaleOpeningCaseService;
 import com.ruoyi.project.data.price.domain.ComputeResidenceSaleBasePrice;
@@ -21,21 +20,16 @@ import java.util.List;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = RuoYiApplication.class)
 @ActiveProfiles("uat")
-public class ResidenceRentBasePriceTests {
+public class OfficeBasePriceTests {
 
     @Autowired
-    private IOriginalResidenceRentOpeningCaseService originalResidenceRentOpeningCaseService;
-    @Autowired
-    private IOriginalResidenceRentClosingCaseService originalResidenceRentClosingCaseService;
+    private IOriginalOfficeCaseService originalOfficeCaseService;
 
+    /**
+     * 下载案例并且作价
+     */
     @Test
-    public void testClearOpeningCase() {
-        originalResidenceRentOpeningCaseService.pullData();
+    public void testCompute() {
+        originalOfficeCaseService.compute();
     }
-
-    @Test
-    public void testClearClosingCase() {
-        originalResidenceRentClosingCaseService.pullData();
-    }
-
 }

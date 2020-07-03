@@ -9,7 +9,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * 租赁数据
+ * 租赁挂牌案例
  */
 public class OriginalResidenceRentOpeningCase extends OriginalResidenceSaleOpeningCase {
 
@@ -17,6 +17,10 @@ public class OriginalResidenceRentOpeningCase extends OriginalResidenceSaleOpeni
      * 外部案例编号
      */
     private String caseNo;
+    /**
+     * 案例匹配小区id
+     */
+    private String cleanCommunityId;
     /**
      * 总面积
      */
@@ -120,5 +124,13 @@ public class OriginalResidenceRentOpeningCase extends OriginalResidenceSaleOpeni
 
     public void setCaseRoomNum(Integer caseRoomNum) {
         this.caseRoomNum = caseRoomNum;
+    }
+
+    public String getCleanCommunityId() {
+        return cleanCommunityId;
+    }
+
+    public void setCleanCommunityId(String cleanCommunityId) {
+        this.cleanCommunityId = cleanCommunityId;
     }
 }

@@ -16,11 +16,11 @@ import com.ruoyi.framework.web.page.TableDataInfo;
 import com.ruoyi.framework.web.page.TableSupport;
 import com.ruoyi.project.common.VueSelectModel;
 import com.ruoyi.project.data.price.domain.ArtificialResidenceSaleBasePrice;
+import com.ruoyi.project.data.price.domain.DistrictBlockChange;
 import com.ruoyi.project.data.price.domain.ComputeResidenceSaleBasePrice;
 import com.ruoyi.project.data.price.domain.UltimateResidenceSaleBasePrice;
 import com.ruoyi.project.data.price.service.IArtificialResidenceSalePriceService;
 import com.ruoyi.project.data.price.service.IComputeResidenceSalePriceService;
-import com.ruoyi.project.data.price.service.IUltimateResidenceRentBasePriceService;
 import com.ruoyi.project.data.price.service.IUltimateResidenceSalePriceService;
 import com.ruoyi.project.system.domain.UploadFile;
 import com.ruoyi.project.system.service.IUploadFileService;
@@ -94,6 +94,32 @@ public class ResidenceSaleBasePriceController extends BaseController {
             list = computeResidenceSalePriceService.selectList(computeResidenceSaleBasePrice);
         ExcelUtil<ComputeResidenceSaleBasePrice> util = new ExcelUtil<>(ComputeResidenceSaleBasePrice.class);
         return util.exportExcel(list, "住宅销售基价" + computeResidenceSaleBasePrice.getYearMonth());
+    }
+
+    /**
+     * 板块涨跌幅
+     *
+     * @param yearMonth
+     * @return
+     */
+    @PreAuthorize("@ss.hasPermi('system:user:list')")
+    @GetMapping("/compute/block-change/{yearMonth}")
+    public AjaxResult blockChange(@PathVariable("yearMonth") Integer yearMonth) {
+        List<DistrictBlockChange> districtBlockChanges = computeResidenceSalePriceService.getBlockChange(yearMonth);
+        return AjaxResult.success(districtBlockChanges);
+    }
+
+    /**
+     * 区域跌幅
+     *
+     * @param yearMonth
+     * @return
+     */
+    @PreAuthorize("@ss.hasPermi('system:user:list')")
+    @GetMapping("/compute/county-change/{yearMonth}")
+    public AjaxResult countyChange(@PathVariable("yearMonth") Integer yearMonth) {
+        List<DistrictBlockChange> districtBlockChanges = computeResidenceSalePriceService.getCountyChange(yearMonth);
+        return AjaxResult.success(districtBlockChanges);
     }
 
     /**
@@ -245,5 +271,6 @@ public class ResidenceSaleBasePriceController extends BaseController {
         ExcelUtil<UltimateResidenceSaleBasePrice> util = new ExcelUtil<>(UltimateResidenceSaleBasePrice.class);
         return util.exportExcel(list, "住宅销售基价" + ultimateResidenceSaleBasePrice.getYearMonth());
     }
+
 
 }

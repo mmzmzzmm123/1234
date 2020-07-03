@@ -7,20 +7,38 @@ select a.BuildingID_p, a.ProjectID_p, a.MainPrice, a.MainPriceRent, a.MainPrice_
 into #InfoChg
 from DWA_PROJECTBASEPRICE_OFFICE_MANU_#yearMonth# a
 left join ODS_OFFICE_BUILDING_PRICE_INFO_#yearMonth# b
-on a.BuildingID = b.BuildingID and b.status=1 and (
+on a.BuildingID_p = b.BuildingID_p and b.status=1 and (
     cast(a.MainPrice as decimal(18,1)) <> cast(isnull(b.MainPrice, 0) as decimal(18,1)) or
     cast(a.MainPriceRent as decimal(18,1)) <> cast(isnull(b.MainPriceRent, 0) as decimal(18,1)))
 left join ODS_OFFICE_BUILDING_PRICE_INFO_#lastYearMonth# c
-on a.BuildingID = c.BuildingID and c.status=1 and (
+on a.BuildingID_p = c.BuildingID_p and c.status=1 and (
     cast(a.MainPrice_1 as decimal(18,1)) <> cast(isnull(c.MainPrice, 0) as decimal(18,1)) or
     cast(a.MainPriceRent_1 as decimal(18,1)) <> cast(isnull(c.MainPriceRent, 0) as decimal(18,1)))
-where b.BuildingID is not null or c.BuildingID is not null;
+where b.BuildingID_p is not null or c.BuildingID is not null;
 
 --价格调整
-select a.BuildingID, a.UnifiedID, a.ProjectID, a.BuildingID_P, a.ProjectID_P, b.MainPrice_1, b.MainPriceRent_1,
+select a.BuildingID, a.UnifiedID, a.ProjectID, a.BuildingID_P, a.ProjectID_P, b.MainPrice_1 as MainPrice, b.MainPriceRent_1 as MainPriceRent,
         a.MainPricePst, a.MainPriceRentPst,
         a.MainPriceType, a.MainPriceRentType, b.ModifyDate, 1 as Status, a.BuildingStd,
         case when MainPrice_1Chg=0 then '' else 'MainPrice_1Chg|' end + case when MainPriceRent_1Chg=0 then '' else 'MainPriceRent_1Chg|' end as AdjEvd
+		, a.MainPrice_1
+		, a.MainPriceRent_1
+		, a.AreaCoff
+		, a.YearCoff
+		, a.BuildingCoff
+		, a.ProjectName
+		, a.ProjectAddr
+		, a.BuildingAddr
+		, a.County
+		, a.Loop
+		, a.Block
+		, a.Street
+		, a.Year
+		, a.AvgArea
+		, a.TotalFloorSum
+		, a.UpperFloorSum
+		, a.OfficeClass
+		, a.Grade
 into #InfoChgLst
 from ODS_OFFICE_BUILDING_PRICE_INFO_#lastYearMonth# a
 inner join #InfoChg b
@@ -36,8 +54,7 @@ where b.BuildingID_p is not null and a.status=1;
 
 insert into ODS_OFFICE_BUILDING_PRICE_INFO_#lastYearMonth#
 (
-    id
-  , BuildingID
+   BuildingID
   , UnifiedID
   , ProjectID
   , BuildingID_P
@@ -72,8 +89,7 @@ insert into ODS_OFFICE_BUILDING_PRICE_INFO_#lastYearMonth#
   , Grade
 )
 select
-	newid()
-  , BuildingID
+	BuildingID
   , UnifiedID
   , ProjectID
   , BuildingID_P
@@ -113,6 +129,24 @@ select a.BuildingID, a.UnifiedID, a.ProjectID, a.BuildingID_P, a.ProjectID_P, b.
         b.MainPrice*1.0/c.MainPrice as MainPricePst, b.MainPriceRent*1.0/c.MainPriceRent as MainPriceRentPst,
         a.MainPriceType, a.MainPriceRentType, b.ModifyDate, 1 as Status, a.BuildingStd,
         case when MainPriceChg=0 then '' else 'MainPriceChg|' end + case when MainPriceRentChg=0 then '' else 'MainPriceRentChg|' end as AdjEvd
+		, c.MainPrice_1
+		, c.MainPriceRent_1
+		, a.AreaCoff
+		, a.YearCoff
+		, a.BuildingCoff
+		, a.ProjectName
+		, a.ProjectAddr
+		, a.BuildingAddr
+		, a.County
+		, a.Loop
+		, a.Block
+		, a.Street
+		, a.Year
+		, a.AvgArea
+		, a.TotalFloorSum
+		, a.UpperFloorSum
+		, a.OfficeClass
+		, a.Grade
 into #InfoChgCurr
 from ODS_OFFICE_BUILDING_PRICE_INFO_#yearMonth# a
 inner join #InfoChg b
@@ -130,8 +164,7 @@ where b.BuildingID_p is not null and a.status=1;
 
 insert into dbo.ODS_OFFICE_BUILDING_PRICE_INFO_#yearMonth#
 (
-    id
-  , BuildingID
+    BuildingID
   , UnifiedID
   , ProjectID
   , BuildingID_P
@@ -166,8 +199,7 @@ insert into dbo.ODS_OFFICE_BUILDING_PRICE_INFO_#yearMonth#
   , Grade
 )
 select
-	newid()
-  , BuildingID
+	BuildingID
   , UnifiedID
   , ProjectID
   , BuildingID_P

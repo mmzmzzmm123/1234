@@ -1,10 +1,17 @@
 package com.ruoyi.project.data.price.service.impl;
 
 import java.math.BigDecimal;
+import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.Date;
+import java.util.concurrent.CopyOnWriteArrayList;
 
+import com.baomidou.dynamic.datasource.DynamicRoutingDataSource;
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.microsoft.sqlserver.jdbc.SQLServerCallableStatement;
+import com.microsoft.sqlserver.jdbc.SQLServerDataTable;
+import com.microsoft.sqlserver.jdbc.SQLServerException;
 import com.ruoyi.common.exception.CustomException;
 import com.ruoyi.common.utils.LoadUtil;
 import com.ruoyi.common.utils.StringUtils;
@@ -13,6 +20,7 @@ import com.ruoyi.project.common.UVResponse;
 import com.ruoyi.project.common.VueSelectModel;
 import com.ruoyi.project.data.cases.mapper.OriginalOfficeCaseMapper;
 import com.ruoyi.project.data.cases.mapper.sync.DownloadOriginalOfficeCaseMapper;
+import com.ruoyi.project.data.price.domain.ArtificialResidenceSaleBasePrice;
 import com.ruoyi.project.data.price.domain.OfficeBasePriceModifyModel;
 import com.ruoyi.project.data.price.domain.UltimateOfficeBasePrice;
 import com.ruoyi.project.data.price.mapper.UltimateOfficeBasePriceMapper;
@@ -20,7 +28,9 @@ import com.ruoyi.project.data.price.service.IUltimateOfficeBasePriceService;
 import com.ruoyi.project.system.service.impl.SysUserServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -40,6 +50,9 @@ import org.springframework.web.client.RestTemplate;
 public class UltimateOfficeBasePriceServiceImpl implements IUltimateOfficeBasePriceService {
 
     private static final Logger log = LoggerFactory.getLogger(UltimateOfficeBasePriceServiceImpl.class);
+
+    @Value("spring.datasource.dynamic.datasource.")
+    private String computeConnUrl;
 
     @Autowired
     private UltimateOfficeBasePriceMapper officeBasePriceUltimateMapper;
@@ -88,30 +101,134 @@ public class UltimateOfficeBasePriceServiceImpl implements IUltimateOfficeBasePr
         StringBuilder failureMsg = new StringBuilder();
         Integer lastYearMonth = getLastYearMonth(yearMonth);
 
-        // 批量插入
-        officeBasePriceUltimates.stream().parallel().forEach(inputModel -> {
-            inputModel.setYearMonth(yearMonth);
-            officeBasePriceUltimateMapper.insertArtificialOfficeBasePrice(inputModel);
-        });
+        officeBasePriceUltimateMapper.initImport();
+        officeBasePriceUltimateMapper.prepareBachImport(yearMonth);
 
-        String rawSql = LoadUtil.loadContent("sql-template/update_office_price.sql");
-        Calendar calendar = Calendar.getInstance();
-        int year = yearMonth / 100;
-        int month = yearMonth % 100;
-        calendar.set(year, month, 1);
-        Date firstOfMonth = calendar.getTime();
-        calendar.add(Calendar.MONTH, -1);
-        Date lastMonth = calendar.getTime();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            // 声明变量
+            // 构造一个
+            String driverName = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
+            String dbURL = "jdbc:sqlserver://172.16.30.233:1433;DatabaseName=uv_compute_test";
+            String name = "sa";
+            String pwd = "Lcdatacenter_888";
+            Class.forName(driverName);
+            Connection conn = DriverManager.getConnection(dbURL, name, pwd);
+            SQLServerDataTable sourceDataTable = new SQLServerDataTable();
 
-        String sql = rawSql.replace("#yearMonth#", yearMonth.toString())
-                .replace("#lastYearMonth#", lastYearMonth.toString())
-                .replace("#today#", simpleDateFormat.format(firstOfMonth))
-                .replace("#lastMonth#", simpleDateFormat.format(lastMonth));
-        jdbcTemplate.update(sql);
+
+
+            sourceDataTable.addColumnMetadata("id", java.sql.Types.NVARCHAR);
+            sourceDataTable.addColumnMetadata("BuildingID_P", java.sql.Types.NVARCHAR);
+            sourceDataTable.addColumnMetadata("ProjectID_P", java.sql.Types.NVARCHAR);
+            sourceDataTable.addColumnMetadata("ProjectName", java.sql.Types.NVARCHAR);
+            sourceDataTable.addColumnMetadata("ProjectAddr", java.sql.Types.NVARCHAR);
+            sourceDataTable.addColumnMetadata("BuildingAddr", java.sql.Types.NVARCHAR);
+            sourceDataTable.addColumnMetadata("County", java.sql.Types.NVARCHAR);
+            sourceDataTable.addColumnMetadata("Loop", java.sql.Types.NVARCHAR);
+            sourceDataTable.addColumnMetadata("Block", java.sql.Types.NVARCHAR);
+            sourceDataTable.addColumnMetadata("Street", java.sql.Types.NVARCHAR);
+            sourceDataTable.addColumnMetadata("Year", java.sql.Types.INTEGER);
+            sourceDataTable.addColumnMetadata("AvgArea", java.sql.Types.DECIMAL);
+            sourceDataTable.addColumnMetadata("TotalFloorSum", java.sql.Types.NVARCHAR);
+            sourceDataTable.addColumnMetadata("UpperFloorSum", java.sql.Types.NVARCHAR);
+            sourceDataTable.addColumnMetadata("OfficeClass", java.sql.Types.NVARCHAR);
+            sourceDataTable.addColumnMetadata("Grade", java.sql.Types.NVARCHAR);
+            sourceDataTable.addColumnMetadata("MainPrice_1", java.sql.Types.DECIMAL);
+            sourceDataTable.addColumnMetadata("MainPriceRent_1", java.sql.Types.DECIMAL);
+            sourceDataTable.addColumnMetadata("MainPrice", java.sql.Types.DECIMAL);
+            sourceDataTable.addColumnMetadata("MainPriceRent", java.sql.Types.DECIMAL);
+            sourceDataTable.addColumnMetadata("MainPricePst", java.sql.Types.DECIMAL);
+            sourceDataTable.addColumnMetadata("MainPriceRentPst", java.sql.Types.DECIMAL);
+            sourceDataTable.addColumnMetadata("MainPriceType", java.sql.Types.NVARCHAR);
+            sourceDataTable.addColumnMetadata("MainPriceRentType", java.sql.Types.NVARCHAR);
+            sourceDataTable.addColumnMetadata("AreaCoff", java.sql.Types.DECIMAL);
+            sourceDataTable.addColumnMetadata("YearCoff", java.sql.Types.DECIMAL);
+            sourceDataTable.addColumnMetadata("BuildingCoff", java.sql.Types.DECIMAL);
+            sourceDataTable.addColumnMetadata("BuildingStd", java.sql.Types.NVARCHAR);
+            sourceDataTable.addColumnMetadata("AdjEvd", java.sql.Types.NVARCHAR);
+
+
+            officeBasePriceUltimates.forEach(x -> {
+                try {
+                    sourceDataTable.addRow(
+                            x.getId(),
+                            x.getBuildingId(),
+                            x.getCommunityId(),
+                            x.getCommunityName(),
+                            x.getCommunityAddress(),
+                            x.getBuildingAddress(),
+                            x.getCountyName(),
+                            x.getLoopName(),
+                            x.getBlockName(),
+                            x.getStreetName(),
+                            x.getYear(),
+                            x.getAvgArea(),
+                            x.getTotalFloorSum(),
+                            x.getUpperFloorSum(),
+                            x.getOfficeClass(),
+                            x.getOfficeLevel(),
+                            x.getMainPrice_1(),
+                            x.getMainPriceRent_1(),
+                            x.getMainPrice(),
+                            x.getMainPriceRent(),
+                            x.getMainPricePst(),
+                            x.getMainPriceRentPst(),
+                            x.getMainPriceType(),
+                            x.getMainPriceRentType(),
+                            x.getAreaCoefficient(),
+                            x.getYearCoefficient(),
+                            x.getBuildingCoefficient(),
+                            x.getStandardBuilding(),
+                            x.getAdjustPriceComment()
+                    );
+
+                } catch (SQLServerException e) {
+                    e.printStackTrace();
+                }
+            });
+            Statement statement = conn.createStatement();
+
+            try (CallableStatement cs = conn.prepareCall("{CALL BatchImportOfArtificialOfficePrice (?) }")) {
+                ((SQLServerCallableStatement) cs).setStructured(1, "DWA_PROJECTBASEPRICE_OFFICE_MANU_Table",
+                        sourceDataTable);
+                boolean resultSetReturned = cs.execute();
+                if (resultSetReturned) {
+                    try (ResultSet rs = cs.getResultSet()) {
+                        rs.next();
+                        System.out.println(rs.getInt(1));
+                    }
+                }
+            }
+            // 删除存储过程，还原环境
+            officeBasePriceUltimateMapper.initImport();
+            conn.close();
+
+            Calendar calendar = Calendar.getInstance();
+            int year = yearMonth / 100;
+            int month = yearMonth % 100;
+            calendar.set(year, month, 1);
+            Date lastValuePoint = calendar.getTime();
+            calendar.add(Calendar.MONTH, -1);
+            Date valuePoint = calendar.getTime();
+
+            after(yearMonth, lastYearMonth, valuePoint, lastValuePoint);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         successMsg.insert(0, "恭喜您，数据已全部导入成功！共 " + successNum + " 条");
         return successMsg.toString();
+
+//        String rawSql = LoadUtil.loadContent("sql-template/update_office_price.sql");
+//        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+//
+//        String sql = rawSql.replace("#yearMonth#", yearMonth.toString())
+//                .replace("#lastYearMonth#", lastYearMonth.toString())
+//                .replace("#today#", simpleDateFormat.format(firstOfMonth))
+//                .replace("#lastMonth#", simpleDateFormat.format(lastMonth));
+//        jdbcTemplate.update(sql);
+//
     }
 
     @Override
@@ -231,5 +348,24 @@ public class UltimateOfficeBasePriceServiceImpl implements IUltimateOfficeBasePr
         officeBasePriceModifyModel.setMainPriceRentPst(lastUltimateOfficeBasePrice.getMainPriceRentPst());
 
         return officeBasePriceModifyModel;
+    }
+
+    /**
+     * @param yearMonth
+     * @param lastYearMonth
+     * @param valuePoint
+     * @param lastValuePoint
+     */
+    private void after(Integer yearMonth, Integer lastYearMonth, Date valuePoint, Date lastValuePoint) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String priceDate = simpleDateFormat.format(valuePoint);
+        String lastPriceDate = simpleDateFormat.format(lastValuePoint);
+        String rawSql = LoadUtil.loadContent("sql-template/update_office_price.sql");
+
+        String sql = rawSql.replace("#yearMonth#", yearMonth.toString())
+                .replace("#lastYearMonth#", lastYearMonth.toString())
+                .replace("#today#", priceDate)
+                .replace("#lastMonth#", lastPriceDate);
+        jdbcTemplate.update(sql);
     }
 }

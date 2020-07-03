@@ -5,122 +5,191 @@
 <mapper namespace="com.ruoyi.project.data.cases.mapper.OriginalResidenceRentOpeningCaseMapper">
 
     <update id="createTable">
-        <bind name="targetTableName" value="'dbo.original_residence_rent_opening_case_' + yearMonth"/>
+        <bind name="targetTableName" value="'dbo.ODS_HOUSINGCASELISTED_RENT_LJ_' + yearMonth +'_RAW' "/>
         IF OBJECT_ID(#{targetTableName}, 'U') IS NOT NULL
-        drop table ${targetTableName};
+            drop table ${targetTableName};
 
-        CREATE TABLE ${targetTableName}
+        create table ${targetTableName}
         (
-        case_id varchar (32) NOT NULL,
-        case_no nvarchar (32) NULL,
-        case_lianjia_id nvarchar (50) NOT null primary key,
-        case_lianjia_community_id nvarchar (50) NOT NULL,
-        case_title nvarchar (500) NOT NULL,
-        clean_property_type nvarchar (20) NULL,
-        case_apartment_layout nvarchar (500) NOT NULL,
-        case_house_structure nvarchar (50) NULL,
-        case_area decimal (10, 2) NOT NULL,
-        case_total_area decimal (10, 2) NOT NULL,
-        case_rent_type nvarchar (20) NULL,
-        case_status nvarchar (20) NULL,
-        case_block nvarchar (20) NULL,
-        case_county nvarchar (20) NULL,
-        case_loop nvarchar (20) NULL,
-        case_hall_num int NULL,
-        case_room_num int NULL,
-        case_underground_area decimal (10, 2) NULL,
-        case_toward nvarchar (50) NOT NULL,
-        clean_toward nvarchar (50) NULL,
-        case_storey nvarchar (20) NOT NULL,
-        clean_total_floor int NOT NULL,
-        clean_current_floor_desc nvarchar (20) NULL,
-        case_elevator nvarchar (20) NULL,
-        clean_elevator nvarchar (20) NULL,
-        case_tihu nvarchar (20) NULL,
-        case_decoration nvarchar (20) NULL,
-        clean_decoration nvarchar (50) NULL,
-        case_year int NOT NULL,
-        clean_year int NOT NULL,
-        case_address nvarchar (500) NULL,
-        case_vid nvarchar (500) NULL,
-        case_chan_quan_xing_zhi nvarchar (200) NULL,
-        case_price decimal (18, 2) NOT NULL,
-        clean_unit_price decimal (18, 2) NOT NULL,
-        clean_total_price decimal (18, 2) NOT NULL,
-        case_community_name nvarchar (500) NULL,
-        case_visited_num int NOT NULL,
-        case_visited_num_15 int NOT NULL,
-        case_visited_num_30 int NOT NULL,
-        case_latest_deal_date date NULL,
-        case_latest_visited_date date NULL,
-        case_first_visited_date date NULL,
-        case_url nvarchar (500) NOT NULL,
-        case_community_url nvarchar (500) NOT NULL,
-        case_get_date date NOT NULL,
-        case_provider nvarchar (50) NOT NULL,
-        uv_community_name nvarchar (500) NULL,
-        uv_community_address nvarchar (1024) NULL,
-        uv_community_id nvarchar (20) NULL,
-        uv_building_id nvarchar (20) NULL,
-        uv_county nvarchar (50) NULL,
-        uv_block nvarchar (50) NULL,
-        uv_loop nvarchar (50) NULL,
-        area_coefficient decimal (18, 6) NULL,
-        toward_coefficient decimal (18, 6) NULL,
-        floor_coefficient decimal (18, 6) NULL,
-        decoration_coefficient int NULL,
-        year_coefficient decimal (18, 6) NULL,
-        building_coefficient decimal (18, 6) NULL,
-        adjust_unit_price decimal (18, 2) NULL,
-        clean_project_level nvarchar (50) NULL,
-        create_time datetime NOT NULL
+            case_id varchar(32) not null
+            , Llid nvarchar(64)
+            , Lcid nvarchar(64)
+            , Airaid nvarchar(64)
+            , Name sql_variant
+            , Type nvarchar(128)
+            , Roomtype nvarchar(50)
+            , Area decimal(18, 2)
+            , TotalArea decimal(18, 2)
+            , Towards nvarchar(50)
+            , Storey nvarchar(50)
+            , Visited_Num int
+            , First_Visit_Time date
+            , Visited_Num_15 int
+            , Visited_Num_30 int
+            , PostDate date
+            , Decoration nvarchar(50)
+            , Address nvarchar(1024)
+            , DataType nvarchar(128)
+            , Created datetime
+            , Modified datetime
+            , StatusTxt nvarchar(1024)
+            , Price decimal(18, 2)
+            , Url nvarchar(512)
+            , Curl nvarchar(512)
+            , Cname nvarchar(1024)
+            , SynDate date
         );
-    </update>
 
-    <update id="createCleanTable">
-        <bind name="targetTableName" value="'dbo.ODS_HOUSINGCASELISTED_LJ_' + yearMonth"/>
+--         CREATE TABLE ${targetTableName}
+--         (
+--         case_id varchar (32) NOT NULL,
+--         case_no nvarchar (32) NULL,
+--         case_lianjia_id nvarchar (50) NOT null primary key,
+--         case_lianjia_community_id nvarchar (50) NOT NULL,
+--         case_title nvarchar (500) NOT NULL,
+--         clean_property_type nvarchar (20) NULL,
+--         case_apartment_layout nvarchar (500) NOT NULL,
+--         case_house_structure nvarchar (50) NULL,
+--         case_area decimal (10, 2) NOT NULL,
+--         case_total_area decimal (10, 2) NOT NULL,
+--         case_rent_type nvarchar (20) NULL,
+--         case_status nvarchar (20) NULL,
+--         case_block nvarchar (20) NULL,
+--         case_county nvarchar (20) NULL,
+--         case_loop nvarchar (20) NULL,
+--         case_hall_num int NULL,
+--         case_room_num int NULL,
+--         case_underground_area decimal (10, 2) NULL,
+--         case_toward nvarchar (50) NOT NULL,
+--         clean_toward nvarchar (50) NULL,
+--         case_storey nvarchar (20) NOT NULL,
+--         clean_total_floor int NOT NULL,
+--         clean_current_floor_desc nvarchar (20) NULL,
+--         case_elevator nvarchar (20) NULL,
+--         clean_elevator nvarchar (20) NULL,
+--         case_tihu nvarchar (20) NULL,
+--         case_decoration nvarchar (20) NULL,
+--         clean_decoration nvarchar (50) NULL,
+--         case_year int NOT NULL,
+--         clean_year int NOT NULL,
+--         case_address nvarchar (500) NULL,
+--         case_vid nvarchar (500) NULL,
+--         case_chan_quan_xing_zhi nvarchar (200) NULL,
+--         case_price decimal (18, 2) NOT NULL,
+--         clean_unit_price decimal (18, 2) NOT NULL,
+--         clean_total_price decimal (18, 2) NOT NULL,
+--         case_community_name nvarchar (500) NULL,
+--         case_visited_num int NOT NULL,
+--         case_visited_num_15 int NOT NULL,
+--         case_visited_num_30 int NOT NULL,
+--         case_latest_deal_date date NULL,
+--         case_latest_visited_date date NULL,
+--         case_first_visited_date date NULL,
+--         case_url nvarchar (500) NOT NULL,
+--         case_community_url nvarchar (500) NOT NULL,
+--         case_get_date date NOT NULL,
+--         case_provider nvarchar (50) NOT NULL,
+--         uv_community_name nvarchar (500) NULL,
+--         uv_community_address nvarchar (1024) NULL,
+--         uv_community_id nvarchar (20) NULL,
+--         uv_building_id nvarchar (20) NULL,
+--         uv_county nvarchar (50) NULL,
+--         uv_block nvarchar (50) NULL,
+--         uv_loop nvarchar (50) NULL,
+--         area_coefficient decimal (18, 6) NULL,
+--         toward_coefficient decimal (18, 6) NULL,
+--         floor_coefficient decimal (18, 6) NULL,
+--         decoration_coefficient int NULL,
+--         year_coefficient decimal (18, 6) NULL,
+--         building_coefficient decimal (18, 6) NULL,
+--         adjust_unit_price decimal (18, 2) NULL,
+--         clean_project_level nvarchar (50) NULL,
+--         create_time datetime NOT NULL
+--         );
+    </update>
+    <!-- 租赁平台案例 -->
+    <update id="createPlatformCaseTable">
+        <bind name="targetTableName" value="'dbo.residence_rent_platform_case_' + yearMonth"/>
         IF OBJECT_ID(#{targetTableName}, 'U') IS NOT NULL
-        drop table ${targetTableName};
+            drop table ${targetTableName};
 
         CREATE TABLE ${targetTableName}
         (
-        case_id varchar(32) not null,
-        HouseholdsID_LJ bigint not null primary key,
-        ProjectID_LJ bigint null,
-        ProjectID bigint null,
-        Roomtype nvarchar(64) null,
-        Area decimal(18, 2) null,
-        Towards nvarchar(64) null,
-        UpperFloorSum nvarchar(32) null,
-        UpperFloorNum nvarchar(32) null,
-        Elevator tinyint null,
-        Decoration nvarchar(64) null,
-        Year int null,
-        AreaCoff decimal(7, 4) null,
-        TowardsCoff decimal(7, 4) null,
-        FloorCoff decimal(7, 4) null,
-        DecorationRng int null,
-        YearCoff decimal(7, 4) null,
-        BuildingCoff decimal(7, 4) null,
-        PriceTotal decimal(18, 2) null,
-        PriceUnit decimal(18, 2) not null,
-        PriceUnitAdj decimal(18, 2) not null,
-        Visited_Num int null,
-        First_Visit_Time date null,
-        Visited_Num_15 int null,
-        Visited_Num_30 int null,
-        Status tinyint null,
-        AdjustedValue decimal(18, 2) null,
-        AdjustedPst decimal(18, 6) null,
-        AdjustedCumValue decimal(18, 2) null,
-        AdjustedCumPst decimal(18, 6) null,
-        AdjustedCumValueAbs decimal(18, 2) null,
-        AdjustedCumPstAbs decimal(18, 6) null,
-        AdjustedCumNum int null,
-        PriceTotalIn decimal(18, 2) null,
-        PriceTotalOut decimal(18, 2) null,
-        PriceDateIn date null,
-        PriceDateOut date null
+            case_id varchar(32) not null,
+            case_area varchar (255) NULL,
+            case_block varchar (255) NULL,
+            case_address varchar (255) NULL,
+            case_community_name varchar (255) NULL,
+            case_url varchar (255) NULL,
+            case_decoration varchar (255) NULL,
+            case_floor varchar (255) NULL,
+            case_hall_num varchar (255) NULL,
+            case_no varchar (255) NULL,
+            case_type varchar (255) NULL,
+            case_price varchar (255) NULL,
+            case_county varchar (255) NULL,
+            case_rent_type varchar (255) NULL,
+            case_room_num varchar (255) NULL,
+            case_source varchar (255) NULL,
+            savetime date NULL
+        )
+    </update>
+    <update id="createCleanTable">
+        <bind name="targetTableName" value="'dbo.ODS_HOUSINGCASELISTED_RENT_' + yearMonth"/>
+        IF OBJECT_ID(#{targetTableName}, 'U') IS NOT NULL
+            drop table ${targetTableName};
+
+        create table ${targetTableName}
+        (
+            SID int identity
+            , HouseholdsID_SRC nvarchar(64) primary key
+            , ProjectID_SRC nvarchar(64) not null
+            , ProjectID bigint
+            , BuildingID bigint
+            , RentType tinyint
+            , Room tinyint
+            , Hall tinyint
+            , Bashroom tinyint
+            , Area decimal(18, 2)
+            , Towards nvarchar(64)
+            , UpperFloorSum nvarchar(32)
+            , UpperFloorNum nvarchar(32)
+            , Elevator tinyint
+            , Decoration nvarchar(64)
+            , Year int
+            , AreaCoff decimal(7, 4)
+            , TowardsCoff decimal(7, 4)
+            , FloorCoff decimal(7, 4)
+            , DecorationRng int
+            , YearCoff decimal(7, 4)
+            , BuildingCoff decimal(7, 4)
+            , RoomTypeCoff decimal(7, 4)
+            , PriceTotal decimal(18, 2) not null
+            , PriceUnit decimal(18, 2) not null
+            , PriceScatterRent decimal(18, 2)
+            , PriceEntireRent decimal(18, 2)
+            , PriceShareRent0 decimal(18, 2)
+            , PriceShareRent decimal(18, 2)
+            , Visited_Num int
+            , First_Visit_Time date
+            , Visited_Num_15 int
+            , Visited_Num_30 int
+            , Status tinyint
+            , AdjustedValue decimal(18, 2)
+            , AdjustedPst decimal(18, 6)
+            , AdjustedCumValue decimal(18, 2)
+            , AdjustedCumPst decimal(18, 6)
+            , AdjustedCumValueAbs decimal(18, 2)
+            , AdjustedCumPstAbs decimal(18, 6)
+            , AdjustedCumNum int
+            , PriceTotalIn decimal(18, 2)
+            , PriceTotalOut decimal(18, 2)
+            , PriceDateIn date
+            , PriceDateOut date
+            , Origin nvarchar(64)
+            , UrlHouseholds nvarchar(max)
+            , UrlProjects nvarchar(max)
+            , CaseName nvarchar(1024)
         );
     </update>
     <update id="createAssembleTable">
@@ -266,14 +335,14 @@
     </update>
 
     <!--  核准住宅租赁基价  -->
-    <update id="createUltimateTable">
+    <update id="createUltimatePriceTable">
         <bind name="targetTableName" value="'dbo.ODS_PROJECT_RENT_PRICE_INFO_' + yearMonth"/>
         IF OBJECT_ID(#{targetTableName}, 'U') IS NOT NULL
             drop table ${targetTableName};
 
-        create table ODS_PROJECT_RENT_PRICE_INFO_202007
+        create table ${targetTableName}
         (
-            id uniqueidentifier primary key
+            id varchar(32) primary key
             , ProjectID bigint not null
             , PriceType int
             , BasePrice_1 decimal(18, 2)
