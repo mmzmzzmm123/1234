@@ -26,7 +26,7 @@ export default {
   },
   data() {
     return {
-      title: '若依管理系统',
+      title: '英科大数据车间系统',
       logo: logoImg
     }
   }

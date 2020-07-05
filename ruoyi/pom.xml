@@ -10,7 +10,7 @@
 
 	<name>ruoyi</name>
 	<url>http://www.ruoyi.</url>
-	<description>若依管理系统</description>
+	<description>英科大数据车间系统</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
