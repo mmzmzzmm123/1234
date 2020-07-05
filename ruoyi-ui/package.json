@@ -2,7 +2,7 @@
   "name": "ruoyi",
   "version": "2.3.0",
   "description": "英科大数据车间系统",
-  "author": "英科",
+  "author": "chenyu",
   "license": "MIT",
   "scripts": {
     "dev": "vue-cli-service serve --open",
