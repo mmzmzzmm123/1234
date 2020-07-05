@@ -138,7 +138,7 @@
 </template>
 
 <script>
-import { listDept, getDept, delDept, addDept, updateDept, listDeptExcludeChild } from "@/api/system/dept";
+import { listDept, getDept, delDept, addDept, updateDept } from "@/api/system/dept";
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 
@@ -220,6 +220,12 @@ export default {
         children: node.children
       };
     },
+    /** 查询部门下拉树结构 */
+    getTreeselect() {
+      listDept().then(response => {
+        this.deptOptions = this.handleTree(response.data, "deptId");
+      });
+    },
     // 字典状态字典翻译
     statusFormat(row, column) {
       return this.selectDictLabel(this.statusOptions, row.status);
@@ -250,25 +256,21 @@ export default {
     /** 新增按钮操作 */
     handleAdd(row) {
       this.reset();
+      this.getTreeselect();
       if (row != undefined) {
         this.form.parentId = row.deptId;
       }
       this.open = true;
       this.title = "添加部门";
-      listDept().then(response => {
-	        this.deptOptions = this.handleTree(response.data, "deptId");
-      });
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
+      this.getTreeselect();
       getDept(row.deptId).then(response => {
         this.form = response.data;
         this.open = true;
         this.title = "修改部门";
-      });
-      listDeptExcludeChild(row.deptId).then(response => {
-	        this.deptOptions = this.handleTree(response.data, "deptId");
       });
     },
     /** 提交按钮 */
@@ -281,6 +283,8 @@ export default {
                 this.msgSuccess("修改成功");
                 this.open = false;
                 this.getList();
+              } else {
+                this.msgError(response.msg);
               }
             });
           } else {
@@ -289,6 +293,8 @@ export default {
                 this.msgSuccess("新增成功");
                 this.open = false;
                 this.getList();
+              } else {
+                this.msgError(response.msg);
               }
             });
           }

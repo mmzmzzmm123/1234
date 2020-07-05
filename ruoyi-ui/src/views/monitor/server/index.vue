@@ -193,6 +193,9 @@ export default {
     getList() {
       getServer().then(response => {
         this.server = response.data;
+        console.log(response);
+        console.log(response.data);
+
         this.loading.close();
       });
     },

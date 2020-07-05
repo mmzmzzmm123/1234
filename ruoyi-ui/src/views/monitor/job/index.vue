@@ -133,7 +133,7 @@
 
     <!-- 添加或修改定时任务对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="700px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="120px">
+      <el-form ref="form" :model="form" :rules="rules" label-width="100px">
         <el-row>
           <el-col :span="12">
             <el-form-item label="任务名称" prop="jobName">
@@ -397,7 +397,7 @@ export default {
           type: "warning"
         }).then(function() {
           return runJob(row.jobId, row.jobGroup);
-        }).then(() => {
+        }).then(function() {
           this.msgSuccess("执行成功");
         }).catch(function() {});
     },
@@ -438,6 +438,8 @@ export default {
                 this.msgSuccess("修改成功");
                 this.open = false;
                 this.getList();
+              } else {
+                this.msgError(response.msg);
               }
             });
           } else {
@@ -446,6 +448,8 @@ export default {
                 this.msgSuccess("新增成功");
                 this.open = false;
                 this.getList();
+              } else {
+                this.msgError(response.msg);
               }
             });
           }

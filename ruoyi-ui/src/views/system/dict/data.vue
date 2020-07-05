@@ -305,6 +305,8 @@ export default {
                 this.msgSuccess("修改成功");
                 this.open = false;
                 this.getList();
+              } else {
+                this.msgError(response.msg);
               }
             });
           } else {
@@ -313,6 +315,8 @@ export default {
                 this.msgSuccess("新增成功");
                 this.open = false;
                 this.getList();
+              } else {
+                this.msgError(response.msg);
               }
             });
           }
