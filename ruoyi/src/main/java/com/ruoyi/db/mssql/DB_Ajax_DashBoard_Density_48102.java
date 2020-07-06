@@ -242,4 +242,43 @@ public class DB_Ajax_DashBoard_Density_48102 {
 		}
 		return hashMapList;
 	}
+
+	public static List<HashMap<String,String>> getDensityDataRange(String fDateStart, String fDateEnd) {
+		List<HashMap<String,String>> hashMapList = new ArrayList<>();
+		try {
+			Connection conn = getSQLConnection();
+			String sql = "SELECT\n" +
+					"\tProductDate AS TIME,\n" +
+					"\tAVG ( Density ) AS density \n" +
+					"FROM\n" +
+					"\t[dbo].[MouldingRealTimeDensity] \n" +
+					"WHERE\n" +
+					"\tCreatedOn >= '"+fDateStart+"' and CreatedOn <= '"+fDateEnd+"'" +
+					"GROUP BY\n" +
+					"\tProductDate \n" +
+					"ORDER BY\n" +
+					"\tMAX ( CreatedOn );";
+			Statement stmt = conn.createStatement();//
+			System.out.println(sql);
+
+			ResultSet rs = stmt.executeQuery(sql);
+			while (rs.next()) {
+				// 截面积(mm2)
+				HashMap<String,String> map = new HashMap<>();
+				map.put("density",rs.getString("density"));
+				map.put("time",rs.getString("time"));
+				hashMapList.add(map);
+
+			}
+			rs.close();
+			stmt.close();
+			conn.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+
+		}
+		return hashMapList;
+	}
+
+
 }

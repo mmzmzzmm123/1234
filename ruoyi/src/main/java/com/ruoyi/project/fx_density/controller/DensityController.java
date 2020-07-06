@@ -1,15 +1,17 @@
 package com.ruoyi.project.fx_density.controller;
 
 import com.ruoyi.db.mssql.DB_Ajax_DashBoard_Density_48102;
+import com.ruoyi.db.mssql.DB_Ajax_DashBoard_Technologist_48102;
 import com.ruoyi.framework.web.controller.BaseController;
 import com.ruoyi.framework.web.domain.AjaxResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 服务器监控
- * 
+ *
  * @author ruoyi
  */
 @RestController
@@ -36,4 +38,12 @@ public class DensityController extends BaseController
     {
         return AjaxResult.success(DB_Ajax_DashBoard_Density_48102.DoGetGroupDensityListMap());
     }
+
+
+    @GetMapping("/getDensityDataRange/{fDateStart}/{fDateEnd}")
+    public AjaxResult getDateRange(@PathVariable String fDateStart, @PathVariable String fDateEnd) throws Exception
+    {
+        return AjaxResult.success(DB_Ajax_DashBoard_Density_48102.getDensityDataRange(fDateStart,fDateEnd));
+    }
+
 }

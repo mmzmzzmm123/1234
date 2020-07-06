@@ -133,10 +133,11 @@
       },
       itemStyle: {
         normal: {
-          color: '#fff',
+          color: '#a32323',
           borderWidth: 10,
           /*shadowColor: 'rgba(72,216,191, 0.3)',
           shadowBlur: 100,*/
+          label : {show: true},
           borderColor: '#A9F387'
         }
       },

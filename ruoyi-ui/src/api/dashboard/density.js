@@ -19,3 +19,11 @@ export function getDensityGroup() {
     method: 'get'
   })
 }
+
+
+export function getDensityDataRange(fDateStart,fDateEnd) {
+  return request({
+    url: '/fx_density/getDensityDataRange/'+fDateStart+'/'+fDateEnd,
+    method: 'get'
+  })
+}
