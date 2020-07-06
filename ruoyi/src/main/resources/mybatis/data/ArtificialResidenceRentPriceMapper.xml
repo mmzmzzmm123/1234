@@ -2,13 +2,13 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ruoyi.project.data.price.mapper.ArtificialResidenceRentPriceMapper">
+<mapper namespace="com.uvaluation.project.data.price.mapper.ArtificialResidenceRentPriceMapper">
 
-    <resultMap type="com.ruoyi.project.data.price.domain.ArtificialResidenceRentBasePrice"
+    <resultMap type="com.uvaluation.project.data.price.domain.ArtificialResidenceRentBasePrice"
                id="MainMappingResult">
         <result property="id" column="id"/>
         <result property="communityId" column="ProjectID"/>
-        <result property="mainRentCoefficient" column="MainCoff_Rent"/>
+        <result property="mainCoefficientRent" column="MainCoff_Rent"/>
         <result property="mainRentPrice" column="MainRentPrice"/>
         <result property="rentPrice" column="RentPrice"/>
         <result property="rentPrice_1" column="rentPrice_1"/>
@@ -22,7 +22,7 @@
     </select>
 
     <select id="selectPageCount"
-            parameterType="com.ruoyi.project.data.price.domain.ArtificialResidenceRentBasePrice" resultType="int">
+            parameterType="com.uvaluation.project.data.price.domain.ArtificialResidenceRentBasePrice" resultType="int">
         select count(1) from DWA_PROJECTBASEPRICE_RENT_MANU_${yearMonth}
         <where>
             <if test="communityId != null">
@@ -32,7 +32,7 @@
     </select>
     <!-- 分页   -->
     <select id="selectPageList"
-            parameterType="com.ruoyi.project.data.price.domain.ArtificialResidenceRentBasePrice"
+            parameterType="com.uvaluation.project.data.price.domain.ArtificialResidenceRentBasePrice"
             resultMap="MainMappingResult">
         SELECT ID,ProjectID,MainCoff_Rent,RentPrice,MainRentPrice,RentPrice_1,VOPPAT,VOPPA
         FROM dbo.DWA_PROJECTBASEPRICE_RENT_MANU_${yearMonth}
@@ -45,7 +45,7 @@
 </select>
 
     <!-- 获取表名   -->
-    <select id="yearMonthList" resultType="com.ruoyi.project.common.VueSelectModel">
+    <select id="yearMonthList" resultType="com.uvaluation.project.common.VueSelectModel">
         SELECT right(name,6) as value, right(name,6) as label
         FROM sys.tables
         where name like 'DWA_PROJECTBASEPRICE_RENT_MANU_%' and name not like '%_bak'
@@ -63,19 +63,24 @@
         truncate table DWA_PROJECTBASEPRICE_RENT_MANU_${yearMonth};
     </update>
     <!--    更新人工修正租赁基价-->
-    <update id="update" parameterType="com.ruoyi.project.data.price.domain.ArtificialResidenceRentBasePrice">
+    <update id="update" parameterType="com.uvaluation.project.data.price.domain.ArtificialResidenceRentBasePrice">
         update dbo.DWA_PROJECTBASEPRICE_RENT_MANU_${yearMonth}
             set RentPrice=#{rentPrice},MainRentPrice=#{mainRentPrice},VOPPAT=#{voppat},VOPPA=#{voppa},RentPrice_1=#{rentPrice_1}
         ,ModifyDate=getdate()
         where ID=#{id}
+    </update>
+    <update id="initProcedure">
+        IF OBJECT_ID('BatchImportOfArtificialResidenceRent', 'P') IS NOT NULL
+	        drop procedure BatchImportOfArtificialResidenceRent;
     </update>
     <!--    创建存储过程-->
     <update id="prepareBachImport" parameterType="int">
         create procedure dbo.BatchImportOfArtificialResidenceRent @table DWA_PROJECTBASEPRICE_RENT_MANU_Table readonly
         as
         begin
-            insert into dbo.DWA_PROJECTBASEPRICE_RENT_MANU_${yearMonth}(ProjectID,MainCoff_Rent,RentPrice,MainRentPrice,RentPrice_1,VOPPAT,VOPPA,ModifyDate )
-            select ProjectID,MainCoff_Rent,RentPrice,MainRentPrice,RentPrice_1,VOPPAT,VOPPA,ModifyDate
+            insert into
+            dbo.DWA_PROJECTBASEPRICE_RENT_MANU_${yearMonth}(ID,ProjectID,MainCoff_Rent,RentPrice,MainRentPrice,RentPrice_1,VOPPAT,VOPPA,ModifyDate)
+            select id,ProjectID,MainCoff_Rent,RentPrice,MainRentPrice,RentPrice_1,VOPPAT,VOPPA,getdate()
             from @table;
         end;
     </update>

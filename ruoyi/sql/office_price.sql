@@ -1,24 +1,3 @@
--- create type dbo.DWA_PROJECTBASEPRICE_OFFICE_MANU_Table as table(
--- 	BuildingID bigint NOT NULL,
--- 	ProjectID bigint NULL,
--- 	County nvarchar (512) NULL,
--- 	Loop nvarchar (512) NULL,
--- 	Block nvarchar (512) NULL,
--- 	ProjectAddr nvarchar (1024) NULL,
--- 	ProjectName nvarchar (1024) NULL,
--- 	Year int NULL,
--- 	AvgArea decimal (18, 2) NULL,
--- 	TotalFloorSum nvarchar (32) NULL,
--- 	UpperFloorSum nvarchar (32) NULL,
--- 	OfficeClass nvarchar (256) NULL,
--- 	Grade nvarchar (64) NULL,
--- 	MainPrice_1 decimal (18, 2) NULL,
--- 	MainPriceRent_1 decimal (18, 2) NULL,
--- 	MainPrice decimal (18, 2) NULL,
--- 	MainPriceRent decimal (18, 2) NULL,
--- 	ModifyDate date NULL
--- )
--- go
 create type dbo.DWA_PROJECTBASEPRICE_OFFICE_MANU_Table as table
 (
     BuildingID nvarchar(20) null

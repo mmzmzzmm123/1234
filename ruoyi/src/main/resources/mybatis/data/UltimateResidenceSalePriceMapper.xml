@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ruoyi.project.data.price.mapper.UltimateResidenceSalePriceMapper">
+<mapper namespace="com.uvaluation.project.data.price.mapper.UltimateResidenceSalePriceMapper">
 
-    <resultMap type="com.ruoyi.project.data.price.domain.UltimateResidenceSaleBasePrice"
+    <resultMap type="com.uvaluation.project.data.price.domain.UltimateResidenceSaleBasePrice"
                id="MainMappingResult">
         <result property="id" column="id"/>
         <result property="yearMonth" column="yearMonth"/>
@@ -43,7 +43,7 @@
     </sql>
     <!--  分页总数   -->
     <select id="selectPageCount"
-            parameterType="com.ruoyi.project.data.price.domain.UltimateResidenceSaleBasePrice" resultType="int">
+            parameterType="com.uvaluation.project.data.price.domain.UltimateResidenceSaleBasePrice" resultType="int">
         select count(1) from dbo.ODS_PROJECT_PRICE_INFO_${yearMonth}
         <where>
             <if test="communityId != null">
@@ -56,7 +56,7 @@
     </select>
     <!-- 分页列表   -->
     <select id="selectPageList"
-            parameterType="com.ruoyi.project.data.price.domain.UltimateResidenceSaleBasePrice"
+            parameterType="com.uvaluation.project.data.price.domain.UltimateResidenceSaleBasePrice"
             resultMap="MainMappingResult">
         <include refid="selectAllField"/>
         <where>
@@ -71,7 +71,7 @@
     </select>
 
     <!-- 获取表名   -->
-    <select id="yearMonthList" resultType="com.ruoyi.project.common.VueSelectModel">
+    <select id="yearMonthList" resultType="com.uvaluation.project.common.VueSelectModel">
         SELECT right(name,6) as value, right(name,6) as label
         FROM sys.tables
         where name like 'ODS_PROJECT_PRICE_INFO_%' and name not like '%_bak'

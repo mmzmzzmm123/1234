@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ruoyi.project.data.cases.mapper.OriginalOfficeCaseMapper">
+<mapper namespace="com.uvaluation.project.data.cases.mapper.OriginalOfficeCaseMapper">
     <update id="createTable">
         <bind name="targetTableName" value="'dbo.ODS_OFFICECASELISTED_' + yearMonth + '_RAW'"/>
         IF OBJECT_ID(#{targetTableName}, 'U') IS NOT NULL

@@ -1,8 +1,7 @@
 package com.uvaluation.compute;
 
-import com.ruoyi.project.data.cases.domain.OriginalOfficeCase;
-import com.ruoyi.project.data.price.domain.ComputeResidenceRentBasePrice;
-import com.ruoyi.project.data.price.domain.UltimateResidenceRentBasePrice;
+import com.uvaluation.project.data.cases.domain.OriginalOfficeCase;
+import com.uvaluation.project.data.price.domain.UltimateResidenceRentBasePrice;
 import org.junit.Assert;
 import org.junit.Test;
 

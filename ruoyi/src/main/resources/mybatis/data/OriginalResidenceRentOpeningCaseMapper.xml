@@ -2,8 +2,8 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ruoyi.project.data.cases.mapper.OriginalResidenceRentOpeningCaseMapper">
-
+<mapper namespace="com.uvaluation.project.data.cases.mapper.OriginalResidenceRentOpeningCaseMapper">
+    <!--挂牌案例-->
     <update id="createTable">
         <bind name="targetTableName" value="'dbo.ODS_HOUSINGCASELISTED_RENT_LJ_' + yearMonth +'_RAW' "/>
         IF OBJECT_ID(#{targetTableName}, 'U') IS NOT NULL
@@ -134,6 +134,7 @@
             savetime date NULL
         )
     </update>
+    <!-- 挂牌清洗案例-->
     <update id="createCleanTable">
         <bind name="targetTableName" value="'dbo.ODS_HOUSINGCASELISTED_RENT_' + yearMonth"/>
         IF OBJECT_ID(#{targetTableName}, 'U') IS NOT NULL
@@ -190,181 +191,6 @@
             , UrlHouseholds nvarchar(max)
             , UrlProjects nvarchar(max)
             , CaseName nvarchar(1024)
-        );
-    </update>
-    <update id="createAssembleTable">
-        <bind name="targetTableName" value="'dbo.DW_HOUSINGCASE_COMM_' + yearMonth"/>
-        IF OBJECT_ID(#{targetTableName}, 'U') IS NOT NULL
-        drop table ${targetTableName};
-
-        create table ${targetTableName}
-        (
-        SID int primary key identity
-        , case_id varchar(32) not null
-        , HouseholdsID_LJ bigint
-        , ProjectID_LJ bigint
-        , ProjectID bigint --modified
-        , ProjectName nvarchar(1024)
-        , ProjectAddr nvarchar(1024)
-        , County nvarchar(512)
-        , Block nvarchar(512)
-        , Loop nvarchar(512)
-        , Roomtype nvarchar(64)
-        , Area decimal(18, 2)
-        , Towards nvarchar(64)
-        , UpperFloorSum nvarchar(32)
-        , UpperFloorNum nvarchar(32)
-        , Elevator tinyint
-        , Decoration nvarchar(64)
-        , Year int
-        , AreaCoff decimal(7, 4)
-        , TowardsCoff decimal(7, 4)
-        , FloorCoff decimal(7, 4)
-        , DecorationRng int
-        , YearCoff decimal(7, 4)
-        , BuildingCoff decimal(7, 4)
-        , BasePrice_1 decimal(18, 2)
-        , PriceTotal decimal(18, 2) not null
-        , PriceUnit decimal(18, 2) not null
-        , PriceUnitAdj decimal(18, 2) not null
-        , Visited_Num int
-        , First_Visit_Time date
-        , Visited_Num_15 int
-        , Visited_Num_30 int
-        , Status tinyint
-        , AdjustedValue decimal(18, 2)
-        , AdjustedPst decimal(18, 6)
-        , AdjustedCumValue decimal(18, 2)
-        , AdjustedCumPst decimal(18, 6)
-        , AdjustedCumValueAbs decimal(18, 2)
-        , AdjustedCumPstAbs decimal(18, 6)
-        , AdjustedCumNum int
-        , PriceTotalIn decimal(18, 2)
-        , PriceDateIn date
-        , CaseType int
-        , RangeFlag int
-        );
-    </update>
-    <update id="createComputePriceTable">
-        <bind name="targetTableName" value="'dbo.DWA_PROJECTBASEPRICE_IMDT_' + yearMonth"/>
-        IF OBJECT_ID(#{targetTableName}, 'U') IS NOT NULL
-        drop table ${targetTableName};
-
-        create table ${targetTableName}
-        (
-        SID int not null identity(1,1)
-        , ProjectID nvarchar(20) primary key
-        , ProjectName nvarchar(1024)
-        , ProjectAddr nvarchar(1024)
-        , County nvarchar(512)
-        , Block nvarchar(512)
-        , Loop nvarchar(512)
-        , IsIndxGen tinyint
-        , IsPstCalc tinyint
-        , StatusRun tinyint
-        , ProjectSPLabel nvarchar(64)
-        , PropertyType nvarchar(256)
-        , ProjectType nvarchar(256)
-        , ProjectTypeDtl nvarchar(256)
-        , ProjectLevel nvarchar(64)
-        , Year int
-        , MainArea decimal(18, 2)
-        , AreaCoff decimal(7, 4)
-        , YearCoff decimal(7, 4)
-        , PriceNote nvarchar(1024)
-        , BasePriceDft decimal(18, 2)
-        , MainPriceDft decimal(18, 2)
-        , BasePrice_1 decimal(18, 2)
-        , PriceUnitAdj decimal(18, 2)
-        , Visited_Num int
-        , First_Visit_Time date
-        , Visited_Num_15 int
-        , Visited_Num_30 int
-        , PriceDealMean_1 decimal(18, 2)
-        , PriceDealMax_1 decimal(18, 2)
-        , SumDeal_1 int
-        , PriceDealMean decimal(18, 2)
-        , PriceDealMax decimal(18, 2)
-        , SumDeal int
-        , PriceListedMin decimal(18, 2)
-        , PriceCase1_ToAI_Pst decimal(18, 6)
-        , PriceCase2_ToAI_Pst decimal(18, 6)
-        , PriceCase1_ToLst_Pst decimal(18, 6)
-        , PriceCase2_ToLst_Pst decimal(18, 6)
-        , PriceCase1 decimal(18, 2)
-        , PriceCase1AdjPst decimal(18, 6)
-        , SumCase1 int
-        , PriceCase2 decimal(18, 2)
-        , PriceCase2AdjPst decimal(18, 6)
-        , SumCase2 int
-        , VOPPBT varchar(64)
-        , VOPPB decimal(18, 6)
-        , BindProjID int
-        , Bind_Proj_Pst decimal(18, 6)
-        , Bind_Block_Class nvarchar(128)
-        , Bind_Block_Class_Pst decimal(18, 6)
-        , Bind_Block_Plevel nvarchar(128)
-        , Bind_Block_Plevel_Pst decimal(18, 6)
-        , Bind_Block_PType nvarchar(128)
-        , Bind_Block_Ptype_Pst decimal(18, 6)
-        , Bind_County_PType nvarchar(128)
-        , Bind_County_Ptype_Pst decimal(18, 6)
-        , VOPPAT varchar(64)
-        , VOPPA decimal(18, 6)
-        );
-    </update>
-
-    <!-- 人工修正表 -->
-    <update id="createArtificialPriceTable">
-        <bind name="targetTableName" value="'dbo.DWA_PROJECTBASEPRICE_RENT_MANU_' + yearMonth"/>
-        IF OBJECT_ID(#{targetTableName}, 'U') IS NOT NULL
-            drop table ${targetTableName};
-
-        create table ${targetTableName}
-        (
-            id uniqueidentifier not null
-            , ProjectID bigint primary key
-            , MainCoff_Rent decimal(7, 4)
-            , RentPrice decimal(18, 2)
-            , MainRentPrice decimal(18, 2)
-            , RentPrice_1 decimal(18, 2)
-            , VOPPAT varchar(64)
-            , VOPPA decimal(18, 6)
-            , ModifyDate date
-        );
-    </update>
-
-    <!--  核准住宅租赁基价  -->
-    <update id="createUltimatePriceTable">
-        <bind name="targetTableName" value="'dbo.ODS_PROJECT_RENT_PRICE_INFO_' + yearMonth"/>
-        IF OBJECT_ID(#{targetTableName}, 'U') IS NOT NULL
-            drop table ${targetTableName};
-
-        create table ${targetTableName}
-        (
-            id varchar(32) primary key
-            , ProjectID bigint not null
-            , PriceType int
-            , BasePrice_1 decimal(18, 2)
-            , RentPrice decimal(18, 2)
-            , SumCase1 int
-            , VOPPAT varchar(64)
-            , VOPPA decimal(18, 6)
-            , GF_1Room decimal(18, 2)
-            , GF_2Room decimal(18, 2)
-            , GY_2Room decimal(18, 2)
-            , GY_3Room decimal(18, 2)
-            , One_Room decimal(18, 2)
-            , Two_Room decimal(18, 2)
-            , Three_Room decimal(18, 2)
-            , EntireRentRatio decimal(18, 4)
-            , EntireRentNum int
-            , ShareRentRatio decimal(18, 4)
-            , ShareRentNum int
-            , SaleRentRatio decimal(18, 4)
-            , ModifyDate date
-            , Status bit
-            , AdjEvd nvarchar(1024)
         );
     </update>
 </mapper>

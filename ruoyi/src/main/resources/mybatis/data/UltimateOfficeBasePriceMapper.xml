@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ruoyi.project.data.price.mapper.UltimateOfficeBasePriceMapper">
+<mapper namespace="com.uvaluation.project.data.price.mapper.UltimateOfficeBasePriceMapper">
 
-    <resultMap type="com.ruoyi.project.data.price.domain.UltimateOfficeBasePrice"
+    <resultMap type="com.uvaluation.project.data.price.domain.UltimateOfficeBasePrice"
                id="OfficeBasePriceUltimateResult">
         <result property="id" column="id"/>
         <result property="yearMonth" column="yearMonth"/>
@@ -76,7 +76,7 @@
         FROM ODS_OFFICE_BUILDING_PRICE_INFO_${yearMonth} a
     </sql>
 
-    <select id="getCount" parameterType="com.ruoyi.project.data.price.domain.UltimateOfficeBasePrice" resultType="int">
+    <select id="getCount" parameterType="com.uvaluation.project.data.price.domain.UltimateOfficeBasePrice" resultType="int">
         select count(1) FROM ODS_OFFICE_BUILDING_PRICE_INFO_${yearMonth} a
         <where>
             <if test="communityId != null">
@@ -101,7 +101,7 @@
         </where>
     </select>
 
-    <select id="getList" parameterType="com.ruoyi.project.data.price.domain.UltimateOfficeBasePrice"
+    <select id="getList" parameterType="com.uvaluation.project.data.price.domain.UltimateOfficeBasePrice"
             resultMap="OfficeBasePriceUltimateResult">
         <include refid="getById"/>
         <where>
@@ -138,7 +138,7 @@
     </select>
 
     <!-- 更新基价 -->
-    <update id="updateBasePrice" parameterType="com.ruoyi.project.data.price.domain.OfficeBasePriceModifyModel">
+    <update id="updateBasePrice" parameterType="com.uvaluation.project.data.price.domain.OfficeBasePriceModifyModel">
           update ODS_OFFICE_BUILDING_PRICE_INFO_${yearMonth} set Status=0 where id=#{id};
     </update>
     <insert id="batchInsertArtificialOfficeBase">
@@ -150,7 +150,7 @@
         </foreach>
     </insert>
     <!-- 更新基价 -->
-    <insert id="updateBasePriceCopyNew" parameterType="com.ruoyi.project.data.price.domain.OfficeBasePriceModifyModel">
+    <insert id="updateBasePriceCopyNew" parameterType="com.uvaluation.project.data.price.domain.OfficeBasePriceModifyModel">
         insert into ODS_OFFICE_BUILDING_PRICE_INFO_${yearMonth}(BuildingID
               ,UnifiedID
               ,ProjectID
@@ -185,14 +185,14 @@
     </insert>
 
     <!-- 获取表名   -->
-    <select id="getYearMonthList" resultType="com.ruoyi.project.common.VueSelectModel">
+    <select id="getYearMonthList" resultType="com.uvaluation.project.common.VueSelectModel">
         SELECT right(name,6) as value, right(name,6) as label
         FROM sys.tables
         where name like 'ODS_OFFICE_BUILDING_PRICE_INFO_%' and name not like '%_bak'
         order by cast(right(name,6) as int) desc
     </select>
     <!--    -->
-    <select id="getByBuildingId" resultType="com.ruoyi.project.data.price.domain.UltimateOfficeBasePrice">
+    <select id="getByBuildingId" resultType="com.uvaluation.project.data.price.domain.UltimateOfficeBasePrice">
         select ID
               ,BuildingID_P as buildingId
               ,ProjectID_P as communityId
@@ -210,7 +210,7 @@
         where BuildingID_P=#{buildingId} AND status= 1
     </select>
     <!-- 查询价格 -->
-    <select id="getByRouteId" resultType="com.ruoyi.project.data.price.domain.UltimateOfficeBasePrice">
+    <select id="getByRouteId" resultType="com.uvaluation.project.data.price.domain.UltimateOfficeBasePrice">
         SELECT ID
               ,BuildingID_P as buildingId
               ,ProjectID_P as communityId
@@ -229,7 +229,7 @@
     </select>
     <!-- 插入人工修正办公基价  -->
     <insert id="insertArtificialOfficeBasePrice"
-            parameterType="com.ruoyi.project.data.price.domain.UltimateOfficeBasePrice">
+            parameterType="com.uvaluation.project.data.price.domain.UltimateOfficeBasePrice">
         insert into
         dbo.DWA_PROJECTBASEPRICE_OFFICE_MANU_${yearMonth}(ID,BuildingID,ProjectID,County,"Loop",Block,ProjectAddr,ProjectName,Year,AvgArea,TotalFloorSum,UpperFloorSum,OfficeClass,Grade,MainPrice_1,MainPriceRent_1,MainPrice,MainPriceRent,ModifyDate)
         values(#{id},#{buildingId},#{communityId},#{countyName},#{loopName},#{blockName},#{communityAddress},#{communityName},#{year},#{avgArea},#{totalFloorSum},#{upperFloorSum},#{officeClass},#{officeLevel},#{mainPrice_1},#{mainPriceRent_1},#{mainPrice},#{mainPriceRent},getdate())
@@ -312,7 +312,7 @@
         from ODS_OFFICE_BUILDING_PRICE_INFO_${yearMonth}
         where id=#{id};
     </update>
-    <update id="initImport">
+    <update id="initProcedure">
         IF OBJECT_ID('BatchImportOfArtificialOfficePrice', 'P') IS NOT NULL
 	        drop procedure BatchImportOfArtificialOfficePrice;
     </update>

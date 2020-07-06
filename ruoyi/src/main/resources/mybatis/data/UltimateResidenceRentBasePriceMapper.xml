@@ -2,12 +2,20 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ruoyi.project.data.price.mapper.UltimateResidenceRentPriceMapper">
+<mapper namespace="com.uvaluation.project.data.price.mapper.UltimateResidenceRentPriceMapper">
 
-    <resultMap type="com.ruoyi.project.data.price.domain.UltimateResidenceRentBasePrice"
+    <resultMap type="com.uvaluation.project.data.price.domain.UltimateResidenceRentBasePrice"
                id="MappingResult">
         <result property="id" column="id"/>
         <result property="communityId" column="projectID"/>
+        <result property="communityName" column="ProjectName"/>
+        <result property="communityAddress" column="ProjectAddr"/>
+        <result property="county" column="county"/>
+        <result property="block" column="block"/>
+        <result property="loop" column="loop"/>
+        <result property="interCommunity" column="InterCommunity"/>
+        <result property="magnetSchool" column="MagnetSchool"/>
+        <result property="loop" column="loop"/>
         <result property="priceType" column="priceType"/>
         <result property="basePrice_1" column="basePrice_1"/>
         <result property="rentPrice" column="rentPrice"/>
@@ -32,38 +40,72 @@
     </resultMap>
 
     <sql id="selectAllColumn">
-        select
-        ID,ProjectID,PriceType,BasePrice_1,RentPrice,SumCase1,VOPPAT,VOPPA,GF_1Room,GF_2Room,GY_2Room,GY_3Room,One_Room,Two_Room,Three_Room,EntireRentRatio,EntireRentNum,ShareRentRatio,ShareRentNum,SaleRentRatio,ModifyDate,Status,AdjEvd
-        from ODS_PROJECT_RENT_PRICE_INFO_${yearMonth}
+        SELECT a.id,
+               A.ProjectID,
+               B.ProjectName,
+               B.ProjectAddr,
+               B.County,
+               B.Block,
+               B.Loop,
+               B.InterCommunity,
+               B.MagnetSchool,
+               B.ProjectLevel,
+               B.RoomNum,
+               A.BasePrice_1,
+               A.RentPrice,
+               A.SumCase1,
+               A.VOPPA,
+               A.GF_1Room,
+               A.GF_2Room,
+               A.GY_2Room,
+               A.GY_3Room,
+               A.One_Room,
+               A.Two_Room,
+               A.Three_Room,
+               A.EntireRentRatio,
+               A.EntireRentNum,
+               A.ShareRentRatio,
+               A.ShareRentNum,
+               A.SaleRentRatio,
+               a.status,
+               a.adjEvd,
+               a.modifyDate
+        FROM ODS_PROJECT_RENT_PRICE_INFO_${yearMonth} A
+        LEFT JOIN obpm_LianCheng_Data.dbo.V_RESIDENCE_COMMUNITY B
+            ON A.ProjectID = B.projectid
     </sql>
 
-    <select id="selectPageCount" parameterType="com.ruoyi.project.data.price.domain.UltimateResidenceRentBasePrice" resultType="int">
-        select count(1) from ODS_PROJECT_RENT_PRICE_INFO_${yearMonth}
+    <select id="selectPageCount" parameterType="com.uvaluation.project.data.price.domain.UltimateResidenceRentBasePrice" resultType="int">
+        select count(1) from ODS_PROJECT_RENT_PRICE_INFO_${yearMonth} a LEFT JOIN
+        obpm_LianCheng_Data.dbo.V_RESIDENCE_COMMUNITY B
+        ON A.ProjectID = B.projectid
         <where>
+            B.projectid is not null
             <if test="communityId != null">
-                AND ProjectID = #{communityId}
+                AND a.ProjectID = #{communityId}
             </if>
             <if test="status != null">
-                AND Status = #{status}
+                AND a.Status = #{status}
             </if>
         </where>
     </select>
 
-    <select id="selectPageList" parameterType="com.ruoyi.project.data.price.domain.UltimateResidenceRentBasePrice"
+    <select id="selectPageList" parameterType="com.uvaluation.project.data.price.domain.UltimateResidenceRentBasePrice"
             resultMap="MappingResult">
         <include refid="selectAllColumn"/>
         <where>
+            B.projectid is not null
             <if test="communityId != null">
-                AND ProjectID = #{communityId}
+                AND a.ProjectID = #{communityId}
             </if>
             <if test="status != null">
-                AND Status = #{status}
+                AND a.Status = #{status}
             </if>
         </where>
-        order by ProjectID ASC, status DESC OFFSET #{pageIndex} rows fetch next #{pageSize} rows only;
+        order by a.ProjectID ASC, a.status DESC OFFSET #{pageIndex} rows fetch next #{pageSize} rows only;
     </select>
 
-    <select id="yearMonthList" resultType="com.ruoyi.project.common.VueSelectModel">
+    <select id="yearMonthList" resultType="com.uvaluation.project.common.VueSelectModel">
         SELECT right(name,6) as value, right(name,6) as label
         FROM sys.tables
         where name like 'ODS_PROJECT_RENT_PRICE_INFO_%' and name not like '%_bak'

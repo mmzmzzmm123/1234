@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ruoyi.project.data.price.mapper.ComputeResidenceRentPriceMapper">
+<mapper namespace="com.uvaluation.project.data.price.mapper.ComputeResidenceRentPriceMapper">
 
-    <resultMap type="com.ruoyi.project.data.price.domain.ComputeResidenceRentBasePrice"
+    <resultMap type="com.uvaluation.project.data.price.domain.ComputeResidenceRentBasePrice"
                id="MainMappingResult">
         <result property="id" column="id"/>
         <result property="communityId" column="ProjectID"/>
@@ -131,7 +131,7 @@
     </sql>
 
     <select id="selectPageCount"
-            parameterType="com.ruoyi.project.data.price.domain.ComputeResidenceRentBasePrice" resultType="int">
+            parameterType="com.uvaluation.project.data.price.domain.ComputeResidenceRentBasePrice" resultType="int">
         select count(1) from DWA_PROJECTBASEPRICE_RENT_IMDT_${yearMonth}
         <where>
             <if test="communityId != null">
@@ -141,7 +141,7 @@
     </select>
     <!-- 分页   -->
     <select id="selectPageList"
-            parameterType="com.ruoyi.project.data.price.domain.ComputeResidenceRentBasePrice"
+            parameterType="com.uvaluation.project.data.price.domain.ComputeResidenceRentBasePrice"
             resultMap="MainMappingResult">
         <![CDATA[ SELECT ID,ProjectID,ProjectName,ProjectAddr,County,Block,[Loop] as loopLine,IsIndxGen,IsPstCalc,StatusRun,PropertyType,ProjectType,ProjectTypeDtl,ProjectLevel,PropertyDevPeriod,BindClassID,MainCoff_Rent,RentPriceDft,MainRentPriceDft,RentPrice_1,PriceDealMean_1,PriceDealMax_1,SumDeal_1,PriceDeal_1_ToAI_Pst,PriceDealMean,PriceDealMax,SumDeal,PriceDeal_ToAI_Pst,PriceDeal_ToLst_Pst,PriceCaseOff,PriceCaseOff_ToLst_Pst,PriceListedMin,PriceLstMn_ToAI_Pst,PriceCase1_ToAI_Pst,PriceCase2_ToAI_Pst,PriceCase1_ToLst_Pst,PriceCase2_ToLst_Pst,PriceCase1,PriceCase1AdjPst,SumCase1,PriceCase2,PriceCase2AdjPst,SumCase2,VOPPBT,VOPPB,BindProjID,Bind_Proj_Pst,Bind_Block_Class,Bind_Block_Class_Pst,Bind_Block_Plevel,Bind_Block_Plevel_Pst,Bind_Block_PType,Bind_Block_Ptype_Pst,Bind_County_PType,Bind_County_Ptype_Pst,Bind_MixProject_PType,Bind_MixProject_Pst,VOPPAT,VOPPA ]]>
                 FROM dbo.DWA_PROJECTBASEPRICE_RENT_IMDT_${yearMonth}
@@ -154,7 +154,7 @@
         where id = #{id}
     </select>
     <!-- 获取表名   -->
-    <select id="yearMonthList" resultType="com.ruoyi.project.common.VueSelectModel">
+    <select id="yearMonthList" resultType="com.uvaluation.project.common.VueSelectModel">
         SELECT right(name,6) as value, right(name,6) as label
         FROM sys.tables
         where name like 'DWA_PROJECTBASEPRICE_RENT_IMDT_%'

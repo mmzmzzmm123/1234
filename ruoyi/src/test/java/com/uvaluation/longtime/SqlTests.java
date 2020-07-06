@@ -1,8 +1,8 @@
 package com.uvaluation.longtime;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
-import com.ruoyi.RuoYiApplication;
-import com.ruoyi.project.data.price.domain.UltimateOfficeBasePrice;
+import com.uvaluation.RuoYiApplication;
+import com.uvaluation.project.data.price.domain.UltimateOfficeBasePrice;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -2,12 +2,12 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ruoyi.project.data.basis.mapper.UVBasePriceMapper">
+<mapper namespace="com.uvaluation.project.data.basis.mapper.UVBasePriceMapper">
     <!--    <resultMap id="resultMapping" type="com.ruoyi.project.data.basis.domain.UVBasePrice">-->
     <!--        -->
     <!--    </resultMap>-->
     <select id="pageCount"
-            parameterType="com.ruoyi.project.data.basis.domain.UVBasePriceQueryModel"
+            parameterType="com.uvaluation.project.data.basis.domain.UVBasePriceQueryModel"
             resultType="int">
         select count(1) from dbo.TLK_基价信息
         <where>
@@ -26,8 +26,8 @@
         </where>
     </select>
     <select id="pageList"
-            parameterType="com.ruoyi.project.data.basis.domain.UVBasePriceQueryModel"
-            resultType="com.ruoyi.project.data.basis.domain.UVBasePrice">
+            parameterType="com.uvaluation.project.data.basis.domain.UVBasePriceQueryModel"
+            resultType="com.uvaluation.project.data.basis.domain.UVBasePrice">
 <!--        <bind name="skip" value=" (pageIndex - 1) * pageSize "></bind>-->
         SELECT ITEM_AIRAID as communityId
         ,ITEM_PROJECTTYPE as communityType

@@ -1,12 +1,14 @@
 package com.uvaluation;
 
 
-import com.ruoyi.project.data.price.domain.ComputeResidenceSaleBasePrice;
+import com.uvaluation.project.data.cases.domain.OriginalResidenceRentClosingCase;
+import com.uvaluation.project.data.price.domain.ComputeResidenceSaleBasePrice;
 import org.junit.Test;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.stream.Collectors;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Stream;
 
 public class GenerateTableTests {
@@ -16,9 +18,9 @@ public class GenerateTableTests {
         Class<?> targetClass = ComputeResidenceSaleBasePrice.class;
 
         Stream.of(targetClass.getDeclaredFields()).forEach(x -> {
-            if (x.isAnnotationPresent(com.ruoyi.framework.aspectj.lang.annotation.Excel.class)) {
-                com.ruoyi.framework.aspectj.lang.annotation.Excel excel =
-                        x.getAnnotation(com.ruoyi.framework.aspectj.lang.annotation.Excel.class);
+            if (x.isAnnotationPresent(com.uvaluation.framework.aspectj.lang.annotation.Excel.class)) {
+                com.uvaluation.framework.aspectj.lang.annotation.Excel excel =
+                        x.getAnnotation(com.uvaluation.framework.aspectj.lang.annotation.Excel.class);
                 System.out.println(String.format("<el-table-column label=\"%s\" align=\"center\" " +
                         "prop=\"%s\" />", excel.name(), x.getName()));
             }
@@ -29,7 +31,7 @@ public class GenerateTableTests {
     public void generateUserTableType() {
         Class<?> targetClass = ComputeResidenceSaleBasePrice.class;
         Stream.of(targetClass.getDeclaredFields()).forEach(x -> {
-            if (x.isAnnotationPresent(com.ruoyi.framework.aspectj.lang.annotation.Excel.class)) {
+            if (x.isAnnotationPresent(com.uvaluation.framework.aspectj.lang.annotation.Excel.class)) {
                 if ("java.lang.String".equals(x.getType().getName()))
                     System.out.println(String.format("sourceDataTable.addColumnMetadata(\"%s\", java.sql.Types" +
                             ".NVARCHAR);", x.getName()));
@@ -50,7 +52,7 @@ public class GenerateTableTests {
     public void generateUserTableScript() {
         Class<?> targetClass = ComputeResidenceSaleBasePrice.class;
         Stream.of(targetClass.getDeclaredFields()).forEach(x -> {
-            if (x.isAnnotationPresent(com.ruoyi.framework.aspectj.lang.annotation.Excel.class)) {
+            if (x.isAnnotationPresent(com.uvaluation.framework.aspectj.lang.annotation.Excel.class)) {
                 System.out.println(x.getName() + ",");
 //                System.out.println(x.getName() + " nvarchar(200) null ,");
 //                if ("java.lang.String".equals(x.getType().getName()))
@@ -67,5 +69,25 @@ public class GenerateTableTests {
 //                            ".DATE);", x.getName()));
             }
         });
+    }
+
+    @Test
+    public void generateBatchInsertSqL() {
+        Class targetClass = OriginalResidenceRentClosingCase .class;
+
+        List<Field> fieldList = new ArrayList<>();
+        while (targetClass != null) {
+            fieldList.addAll(new ArrayList<>(Arrays.asList(targetClass.getDeclaredFields())));
+            targetClass = targetClass.getSuperclass();
+        }
+        Field[] fields = new Field[fieldList.size()];
+        fieldList.toArray(fields);
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < fields.length; i++) {
+            sb.append(":");
+            sb.append(fields[i].getName());
+            sb.append(",");
+        }
+        System.out.println(sb.toString());
     }
 }

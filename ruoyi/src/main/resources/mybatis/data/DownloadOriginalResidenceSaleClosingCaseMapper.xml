@@ -2,8 +2,8 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ruoyi.project.data.cases.mapper.sync.DownloadOriginalResidenceSaleClosingCaseMapper">
-    <resultMap id="resultMapping" type="com.ruoyi.project.data.cases.domain.OriginalResidenceSaleClosingCase">
+<mapper namespace="com.uvaluation.project.data.cases.mapper.sync.DownloadOriginalResidenceSaleClosingCaseMapper">
+    <resultMap id="resultMapping" type="com.uvaluation.project.data.cases.domain.OriginalResidenceSaleClosingCase">
         <result property="caseCountyName" column="区域"/>
         <result property="caseBlockName" column="板块"/>
         <result property="caseLoopName" column="环线"/>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.uvaluation.project.data.cases.mapper.sync.DownloadOriginalResidenceRentClosingCaseMapper">
+    <select id="download" resultType="com.uvaluation.project.data.cases.domain.OriginalResidenceRentClosingCase">
+        SELECT 合同编号 as caseContractNo
+              ,小区名称 as caseCommunityName
+              ,挂牌时间 as caseOpeningDate
+              ,交易时间 as caseClosingDate
+              ,租金 as caseRentPrice
+              ,建筑面积 as caseArea
+              ,住宅楼总楼层数 as caseTotalFloor
+              ,朝向 as caseToward
+              ,户型 as caseApartmentLayout
+              ,装修状况 as caseDecoration
+              ,小区ID as caseCommunityId
+              ,楼栋ID as caseBuildingId
+          FROM dbo.ODS_HOUSINGCASEDEAL_RENT_${yearMonth}_RAW
+    </select>
+</mapper>

@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ruoyi.project.data.price.mapper.ComputeResidenceSalePriceMapper">
+<mapper namespace="com.uvaluation.project.data.price.mapper.ComputeResidenceSalePriceMapper">
 
-    <resultMap type="com.ruoyi.project.data.price.domain.ComputeResidenceSaleBasePrice"
+    <resultMap type="com.uvaluation.project.data.price.domain.ComputeResidenceSaleBasePrice"
                id="MainMappingResult">
         <result property="id" column="sid"/>
         <result property="communityId" column="ProjectID"/>
@@ -136,7 +136,7 @@
     </sql>
     <!--  分页总数   -->
     <select id="selectPageCount"
-            parameterType="com.ruoyi.project.data.price.domain.ComputeResidenceRentBasePrice" resultType="int">
+            parameterType="com.uvaluation.project.data.price.domain.ComputeResidenceRentBasePrice" resultType="int">
         select count(1) from dbo.DWA_PROJECTBASEPRICE_IMDT_${yearMonth}
         <where>
             <if test="communityId != null">
@@ -150,7 +150,7 @@
     </select>
     <!-- 分页列表   -->
     <select id="selectPageList"
-            parameterType="com.ruoyi.project.data.price.domain.ComputeResidenceSaleBasePrice"
+            parameterType="com.uvaluation.project.data.price.domain.ComputeResidenceSaleBasePrice"
             resultMap="MainMappingResult">
         <include refid="selectAllField"/>
         <where>
@@ -171,14 +171,14 @@
         where id = #{id}
     </select>
     <!-- 获取表名   -->
-    <select id="yearMonthList" resultType="com.ruoyi.project.common.VueSelectModel">
+    <select id="yearMonthList" resultType="com.uvaluation.project.common.VueSelectModel">
         SELECT top 12 right(name,6) as value, right(name,6) as label
         FROM sys.tables
         where name like 'DWA_PROJECTBASEPRICE_IMDT_%'
         order by cast(right(name,6) as int) desc
     </select>
     <!--  区域涨跌幅  -->
-    <select id="getBlockChange" resultType="com.ruoyi.project.data.price.domain.DistrictBlockChange">
+    <select id="getBlockChange" resultType="com.uvaluation.project.data.price.domain.DistrictBlockChange">
         select Block as name
              , avg(VOPPA) as value
         from dbo.DWA_PROJECTBASEPRICE_IMDT_${yearMonth}
@@ -187,7 +187,7 @@
         order by avg(VOPPA)
     </select>
     <!--区域涨跌幅-->
-    <select id="getCountyChange" resultType="com.ruoyi.project.data.price.domain.DistrictBlockChange">
+    <select id="getCountyChange" resultType="com.uvaluation.project.data.price.domain.DistrictBlockChange">
         select left(County,2) as name
              , avg(VOPPA) as value
         from dbo.DWA_PROJECTBASEPRICE_IMDT_${yearMonth}
