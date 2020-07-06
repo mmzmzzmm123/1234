@@ -45,6 +45,15 @@ public class ByThemeController extends BaseController {
     }
 
     /**
+     * 获取部门下拉树列表
+     */
+    @GetMapping("/treeselect")
+    public AjaxResult treeselect(ByTheme byTheme) {
+        List<ByTheme> byThemeDetails = byThemeService.selectByThemeListTree(byTheme);
+        return AjaxResult.success(byThemeService.buildThemeTreeSelect(byThemeDetails));
+    }
+
+    /**
      * 导出主题整合列表
      */
     @PreAuthorize("@ss.hasPermi('benyi:theme:export')")

@@ -5,6 +5,9 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.framework.aspectj.lang.annotation.Excel;
 import com.ruoyi.framework.web.domain.BaseEntity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 主题整合对象 by_theme
  *
@@ -42,6 +45,12 @@ public class ByTheme extends BaseEntity {
      */
     @Excel(name = "适用班级")
     private String classid;
+
+    /** 树状父类ID */
+    private Long parentId;
+
+    /** 树状子类 */
+    private List<ByTheme> children = new ArrayList<ByTheme>();
 
     /**
      * 序号
@@ -97,6 +106,22 @@ public class ByTheme extends BaseEntity {
         return sort;
     }
 
+    public Long getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
+    }
+
+    public List<ByTheme> getChildren() {
+        return children;
+    }
+
+    public void setChildren(List<ByTheme> children) {
+        this.children = children;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
@@ -107,6 +132,7 @@ public class ByTheme extends BaseEntity {
                 .append("classid", getClassid())
                 .append("sort", getSort())
                 .append("createTime", getCreateTime())
+                .append("parentid", getParentId())
                 .toString();
     }
 }

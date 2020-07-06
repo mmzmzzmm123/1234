@@ -10,6 +10,7 @@
         <result property="content" column="content"/>
         <result property="communicate" column="communicate"/>
         <result property="classid" column="classid"/>
+        <result property="parentId" column="parent_id"/>
         <result property="sort" column="sort"/>
         <result property="createTime" column="create_time"/>
     </resultMap>
@@ -18,13 +19,31 @@
         select id, name, content, communicate, classid, sort, create_time from by_theme
     </sql>
 
+    <sql id="selectByThemeVoTree">
+        select dict_value+9999 id, 0 parent_id,dict_label name,dict_sort sort   from sys_dict_data where dict_type='sys_yebjlx' and dict_label !='托班（2-3岁）'
+        union all
+        select id, classid+9999, name, sort from by_theme
+        order by sort
+    </sql>
+
+    <select id="selectByThemeListTree" parameterType="ByTheme" resultMap="ByThemeResult">
+        <include refid="selectByThemeVoTree"/>
+        <where>
+            <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
+            <if test="content != null  and content != ''">and content = #{content}</if>
+            <if test="communicate != null  and communicate != ''">and communicate = #{communicate}</if>
+            <if test="classid != null  and classid != ''">and classid = #{classid}</if>
+            <if test="sort != null ">and sort = #{sort}</if>
+        </where>
+    </select>
+
     <select id="selectByThemeList" parameterType="ByTheme" resultMap="ByThemeResult">
         <include refid="selectByThemeVo"/>
         <where>
             <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
             <if test="content != null  and content != ''">and content = #{content}</if>
             <if test="communicate != null  and communicate != ''">and communicate = #{communicate}</if>
-            <if test="classid != null  and classid != ''">and classid = #{classid}</if>
+            <if test="parentId != null  and parentId != ''">and parent_id = #{parentId}</if>
             <if test="sort != null ">and sort = #{sort}</if>
         </where>
     </select>

@@ -28,6 +28,14 @@ public interface ByThemeMapper {
     public List<ByTheme> selectByThemeList(ByTheme byTheme);
 
     /**
+     * 查询一日流程树
+     *
+     * @param byTheme 一日流程
+     * @return 一日流程树集合
+     */
+    public List<ByTheme> selectByThemeListTree(ByTheme byTheme);
+
+    /**
      * 新增主题整合
      *
      * @param byTheme 主题整合

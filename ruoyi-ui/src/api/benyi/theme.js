@@ -9,6 +9,14 @@ export function listTheme(query) {
   })
 }
 
+// 查询流程下拉树结构
+export function treeselect() {
+  return request({
+      url: '/benyi/theme/treeselect',
+      method: 'get'
+  })
+}
+
 // 查询主题整合详细
 export function getTheme(id) {
   return request({

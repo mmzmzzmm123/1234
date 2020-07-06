@@ -2,6 +2,7 @@ package com.ruoyi.project.benyi.service;
 
 import java.util.List;
 
+import com.ruoyi.framework.web.domain.TreeSelect;
 import com.ruoyi.project.benyi.domain.ByTheme;
 
 /**
@@ -26,6 +27,30 @@ public interface IByThemeService {
      * @return 主题整合集合
      */
     public List<ByTheme> selectByThemeList(ByTheme byTheme);
+
+    /**
+     * 查询一日流程列表树
+     *
+     * @param byTheme 一日流程
+     * @return 一日流程树集合
+     */
+    public List<ByTheme> selectByThemeListTree(ByTheme byTheme);
+
+    /**
+     * 构建前端所需要树结构
+     *
+     * @param byThemes 部门列表
+     * @return 树结构列表
+     */
+    public List<ByTheme> buildThemeDetailTree(List<ByTheme> byThemes);
+
+    /**
+     * 构建前端所需要下拉树结构
+     *
+     * @param byThemes 部门列表
+     * @return 下拉树结构列表
+     */
+    public List<TreeSelect> buildThemeTreeSelect(List<ByTheme> byThemes);
 
     /**
      * 新增主题整合
