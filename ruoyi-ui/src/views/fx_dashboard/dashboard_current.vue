@@ -94,7 +94,11 @@
             </el-table-column>
             <el-table-column
               prop="ChangeMould"
-              label="是否换模">
+              label="是否换模中">
+              <template scope="scope">
+                <span v-if="scope.row.ChangeMould" style="color:red">换模中</span>
+                <span v-else style="color: #37B328">否</span>
+              </template>
             </el-table-column>
             <el-table-column
               prop="SoCode"

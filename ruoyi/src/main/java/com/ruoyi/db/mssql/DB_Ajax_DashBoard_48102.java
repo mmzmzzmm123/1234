@@ -80,11 +80,7 @@ public class DB_Ajax_DashBoard_48102 {
 			Connection conn = getSQLConnection();
 			String sql = "SELECT\n" +
 					"\t( SELECT MAX ( MouldingDisplayBoardOperation.OperateTime ) FROM MouldingDisplayBoardOperation WHERE MouldingDisplayBoardOperation.DisplayBoardId = V_MouldingDisplayBoard.Id ) AS LastUpdateDate,\n" +
-					"CASE\n" +
-					"\t\t\n" +
-					"\t\tWHEN ChangeMould = 0 THEN\n" +
-					"\t\tN'否' ELSE N'是' \n" +
-					"\tEND AS ChangeMould,\n" +
+					"ChangeMould,\n" +
 					"\tdbo.V_MouldingDisplayBoard.Id,\n" +
 					"\tdbo.V_MouldingDisplayBoard.Line,\n" +
 					"\tdbo.V_MouldingDisplayBoard.CustomerName,\n" +
