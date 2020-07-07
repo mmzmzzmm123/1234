@@ -48,7 +48,7 @@ public class DB_Ajax_DashBoard_Density_48102 {
 					"	ProductDate,\r\n" +
 					"TIME  ORDER BY MAX(CreatedOn)";
 			Statement stmt = conn.createStatement();//
-			System.out.println(sql);
+//			System.out.println(sql);
 
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
@@ -81,7 +81,7 @@ public class DB_Ajax_DashBoard_Density_48102 {
 					"ORDER BY\r\n" +
 					"	convert(int,REPLACE( line, '#', '' ) )";
 			Statement stmt = conn.createStatement();//
-			System.out.println(sql);
+//			System.out.println(sql);
 
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
@@ -112,7 +112,7 @@ public class DB_Ajax_DashBoard_Density_48102 {
 					"GROUP BY\r\n" +
 					"	ProductDate  ORDER BY MAX(CreatedOn)";
 			Statement stmt = conn.createStatement();//
-			System.out.println(sql);
+//			System.out.println(sql);
 
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
@@ -145,7 +145,7 @@ public class DB_Ajax_DashBoard_Density_48102 {
 					"GROUP BY\r\n" +
 					"	ProductDate  ORDER BY MAX(CreatedOn)";
 			Statement stmt = conn.createStatement();//
-			System.out.println(sql);
+//			System.out.println(sql);
 
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
@@ -183,7 +183,7 @@ public class DB_Ajax_DashBoard_Density_48102 {
 					"	ProductDate,\r\n" +
 					"TIME  ORDER BY MAX(CreatedOn)";
 			Statement stmt = conn.createStatement();//
-			System.out.println(sql);
+//			System.out.println(sql);
 
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
@@ -222,7 +222,7 @@ public class DB_Ajax_DashBoard_Density_48102 {
 					"ORDER BY\r\n" +
 					"	convert(int,REPLACE( line, '#', '' ) )";
 			Statement stmt = conn.createStatement();//
-			System.out.println(sql);
+//			System.out.println(sql);
 
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
@@ -259,7 +259,7 @@ public class DB_Ajax_DashBoard_Density_48102 {
 					"ORDER BY\n" +
 					"\tMAX ( CreatedOn );";
 			Statement stmt = conn.createStatement();//
-			System.out.println(sql);
+//			System.out.println(sql);
 
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {

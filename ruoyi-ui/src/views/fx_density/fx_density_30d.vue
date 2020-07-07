@@ -40,7 +40,7 @@
         getDensity30Day().then(response => {
           for (var i = 0; i < response.data.length; i++) {
             lineChartData.xAxisData.push((response.data[i].time + '').replace(' 00:00:00.0', ''))
-            lineChartData.actualData.push(parseFloat(response.data[i].density).toFixed(4))
+            lineChartData.actualData.push(parseFloat(response.data[i].density).toFixed(3))
           }
 
           const chart_energy_avg = echarts.init(document.getElementById('chart_density_avg'))
