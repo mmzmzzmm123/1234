@@ -27,7 +27,7 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
+      <!-- <el-col :span="1.5">
         <el-button
           type="primary"
           icon="el-icon-bell"
@@ -35,7 +35,7 @@
           @click="handleSync"
           v-hasPermi="['system:user:import']"
         >从作价导入</el-button>
-      </el-col>
+      </el-col> -->
       <el-col :span="1.5">
         <el-button
           type="info"
@@ -45,7 +45,7 @@
           v-hasPermi="['system:user:import']"
         >文件导入</el-button>
       </el-col>
-      <el-col :span="1.5">
+      <!-- <el-col :span="1.5">
         <el-button
           type="warning"
           icon="el-icon-download"
@@ -53,19 +53,19 @@
           @click="handleExport"
           v-hasPermi="['system:user:export']"
         >导出</el-button>
-      </el-col>
+      </el-col> -->
     </el-row>
 
     <el-table v-loading="loading" :data="dataList" @selection-change="handleSelectionChange">
       <el-table-column label="年月" align="center" prop="yearMonth" fixed />
       <el-table-column label="小区ID" align="center" prop="communityId" fixed />
-      <el-table-column label="租金主力面积系数" align="center" prop="mainRentCoefficient" />
+      <el-table-column label="租金主力面积系数" align="center" prop="mainCoefficientRent" />
       <el-table-column label="平均租金" align="center" prop="rentPrice" />
       <el-table-column label="主力面积租金" align="center" prop="mainRentPrice" />
       <el-table-column label="平均租金（上周期）" align="center" prop="rentPrice_1" />
       <el-table-column label="价格涨跌幅类型-调整后" align="center" prop="voppat" />
       <el-table-column label="价格涨跌幅-调整后" align="center" prop="voppa" />
-      <el-table-column
+      <!-- <el-table-column
         label="操作"
         align="center"
         class-name="small-padding fixed-width"
@@ -80,7 +80,7 @@
             v-hasPermi="['system:user:edit']"
           >修改</el-button>
         </template>
-      </el-table-column>
+      </el-table-column> -->
     </el-table>
 
     <pagination
@@ -131,7 +131,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="租金主力面积系数">
-              <el-input v-model="form.mainRentCoefficient" disabled readonly />
+              <el-input v-model="form.mainCoefficientRent" disabled readonly />
             </el-form-item>
           </el-col>
         </el-row>
@@ -267,7 +267,7 @@ export default {
         // 上传的地址
         url:
           process.env.VUE_APP_BASE_API +
-          "/data/rentprice/residence/artificial/importData"
+          "/data/rent-price/residence/artificial/importData"
       },
       // 表单参数
       form: {

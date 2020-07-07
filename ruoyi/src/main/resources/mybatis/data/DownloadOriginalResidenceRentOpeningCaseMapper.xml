@@ -2,8 +2,8 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.uvaluation.project.data.cases.mapper.sync.DownloadOriginalResidenceRentOpeningCaseMapper">
-    <resultMap id="resultMapping" type="com.uvaluation.project.data.cases.domain.OriginalResidenceRentOpeningCase">
+<mapper namespace="com.ruoyi.project.data.cases.mapper.sync.DownloadOriginalResidenceRentOpeningCaseMapper">
+    <resultMap id="resultMapping" type="com.ruoyi.project.data.cases.domain.OriginalResidenceRentOpeningCase">
         <result property="caseLianJiaId" column="llid"/>
         <result property="caseLianJiaCommunityId" column="lcid"/>
         <result property="cleanCommunityId" column="airaid" />

@@ -62,13 +62,13 @@
       <el-table-column label="区域" align="center" prop="county" />
       <el-table-column label="板块" align="center" prop="block" />
       <el-table-column label="环线" align="center" prop="loop" />
-      <el-table-column label="国际社区分" align="center" prop="loop" />
-      <el-table-column label="重点小学名称" align="center" prop="loop" />
-      <el-table-column label="物业档次" align="center" prop="loop" />
-      <el-table-column label="室数量-AI" align="center" prop="loop" />
+      <el-table-column label="国际社区分" align="center" prop="interCommunity" />
+      <el-table-column label="重点小学名称" align="center" prop="magnetSchool" />
+      <el-table-column label="物业档次" align="center" prop="projectLevel" />
+      <el-table-column label="室数量-AI" align="center" prop="roomNum" />
 
       <el-table-column label="标准基价（元/㎡·月）" align="center" prop="rentPrice" />
-      <el-table-column label="平均租金（元/㎡·月）" align="center" prop="rentPrice" />
+      <el-table-column label="平均租金（元/㎡·月）" align="center" prop="mainRentPrice" />
       <el-table-column label="散租挂牌案例" align="center" prop="散租挂牌案例" />
       <el-table-column label="租金涨跌幅" align="center" prop="voppa" />
       <el-table-column label="租金-工房1室" align="center" prop="gf_1Room" />

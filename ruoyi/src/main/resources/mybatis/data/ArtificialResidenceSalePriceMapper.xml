@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.uvaluation.project.data.price.mapper.ArtificialResidenceSalePriceMapper">
+<mapper namespace="com.ruoyi.project.data.price.mapper.ArtificialResidenceSalePriceMapper">
 
-    <resultMap type="com.uvaluation.project.data.price.domain.ArtificialResidenceSaleBasePrice"
+    <resultMap type="com.ruoyi.project.data.price.domain.ArtificialResidenceSaleBasePrice"
                id="MainMappingResult">
         <result property="communityId" column="ProjectID"/>
         <result property="communityName" column="ProjectName"/>
@@ -134,7 +134,7 @@
     </sql>
     <!--  分页总数   -->
     <select id="selectPageCount"
-            parameterType="com.uvaluation.project.data.price.domain.ArtificialResidenceSaleBasePrice" resultType="int">
+            parameterType="com.ruoyi.project.data.price.domain.ArtificialResidenceSaleBasePrice" resultType="int">
         select count(1) from dbo.DWA_PROJECTBASEPRICE_MANU_${yearMonth}
         <where>
             <if test="communityId != null">
@@ -148,7 +148,7 @@
     </select>
     <!-- 分页列表   -->
     <select id="selectPageList"
-            parameterType="com.uvaluation.project.data.price.domain.ArtificialResidenceSaleBasePrice"
+            parameterType="com.ruoyi.project.data.price.domain.ArtificialResidenceSaleBasePrice"
             resultMap="MainMappingResult">
         <include refid="selectAllField"/>
         <where>
@@ -169,7 +169,7 @@
         where id = #{id}
     </select>
     <!-- 获取表名   -->
-    <select id="yearMonthList" resultType="com.uvaluation.project.common.VueSelectModel">
+    <select id="yearMonthList" resultType="com.ruoyi.project.common.VueSelectModel">
         SELECT right(name,6) as value, right(name,6) as label
         FROM sys.tables
         where name like 'DWA_PROJECTBASEPRICE_MANU_%'
@@ -177,7 +177,7 @@
     </select>
 
     <!-- 修改价格信息（基价、主力基价、上月基价、幅度）、注意修改上期基价问题、还要把基价更新一下。 -->
-    <update id="updateEntity" parameterType="com.uvaluation.project.data.price.domain.ArtificialResidenceSaleBasePrice">
+    <update id="updateEntity" parameterType="com.ruoyi.project.data.price.domain.ArtificialResidenceSaleBasePrice">
         update dbo.DWA_PROJECTBASEPRICE_MANU_${yearMonth} set
         BasePrice=#{basePrice},mainPrice=#{mainPrice},BasePrice_1=#{basePrice_1},VOPPAT=#{voppat},VOPPA=#{voppa},
         PriceNote=#{comment}
@@ -198,7 +198,7 @@
             from @table;
         end;
     </update>
-    <insert id="insert" parameterType="com.uvaluation.project.data.price.domain.ArtificialResidenceSaleBasePrice">
+    <insert id="insert" parameterType="com.ruoyi.project.data.price.domain.ArtificialResidenceSaleBasePrice">
         insert into dbo.DWA_PROJECTBASEPRICE_MANU_${yearMonth}
         (
             ProjectID
@@ -322,7 +322,7 @@
         )
     </insert>
     <!-- 同步到基价库   -->
-    <insert id="insertUVBasePrice" parameterType="com.uvaluation.project.data.price.domain.ArtificialResidenceSaleBasePrice">
+    <insert id="insertUVBasePrice" parameterType="com.ruoyi.project.data.price.domain.ArtificialResidenceSaleBasePrice">
         insert into obpm_LianCheng_Data.dbo.TLK_基价信息
         (
           LASTMODIFIED
@@ -381,7 +381,7 @@
         , #{voppa}
         )
     </insert>
-    <insert id="insertUVDocument" parameterType="com.uvaluation.project.data.price.domain.ArtificialResidenceSaleBasePrice">
+    <insert id="insertUVDocument" parameterType="com.ruoyi.project.data.price.domain.ArtificialResidenceSaleBasePrice">
         insert into obpm_LianCheng_Data.dbo.T_DOCUMENT
         (
             ID

@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.uvaluation.project.data.cases.mapper.OriginalResidenceSaleOpeningCaseMapper">
+<mapper namespace="com.ruoyi.project.data.cases.mapper.OriginalResidenceSaleOpeningCaseMapper">
     <!--案例原始表-->
     <update id="createOpeningCaseRawTable">
         <bind name="targetTableName" value="'dbo.ODS_HOUSINGCASELISTED_LJ_' + yearMonth +'_RAW'"/>
