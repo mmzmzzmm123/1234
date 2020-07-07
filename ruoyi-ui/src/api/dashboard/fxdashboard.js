@@ -20,6 +20,13 @@ export function get30Day() {
   })
 }
 
+export function getcurrent() {
+  return request({
+    url: '/fx_dashboard/current',
+    method: 'get'
+  })
+}
+
 export function getDateRange(fDateStart,fDateEnd) {
 
 

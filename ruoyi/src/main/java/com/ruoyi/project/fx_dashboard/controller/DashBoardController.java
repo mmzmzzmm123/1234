@@ -38,6 +38,12 @@ public class DashBoardController extends BaseController
         return AjaxResult.success(DB_Ajax_DashBoard_48102.DoGetCurrentTimeGroup());
     }
 
+    @GetMapping("/current")
+    public AjaxResult DoGetCurrent() throws Exception
+    {
+        return AjaxResult.success(DB_Ajax_DashBoard_48102.DoGetCurrent());
+    }
+
 
     @GetMapping("/daterange/{fDateStart}/{fDateEnd}")
     public AjaxResult getDateRange(@PathVariable String fDateStart, @PathVariable String fDateEnd) throws Exception

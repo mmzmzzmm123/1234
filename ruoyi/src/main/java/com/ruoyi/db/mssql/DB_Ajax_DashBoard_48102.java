@@ -73,6 +73,78 @@ public class DB_Ajax_DashBoard_48102 {
 		return hashMapList;
 	}
 
+
+	public static String DoGetCurrent() {
+		StringBuilder jsonpath = new StringBuilder();
+		try {
+			Connection conn = getSQLConnection();
+			String sql = "SELECT\n" +
+					"\t( SELECT MAX ( MouldingDisplayBoardOperation.OperateTime ) FROM MouldingDisplayBoardOperation WHERE MouldingDisplayBoardOperation.DisplayBoardId = V_MouldingDisplayBoard.Id ) AS LastUpdateDate,\n" +
+					"CASE\n" +
+					"\t\t\n" +
+					"\t\tWHEN ChangeMould = 0 THEN\n" +
+					"\t\tN'否' ELSE N'是' \n" +
+					"\tEND AS ChangeMould,\n" +
+					"\tdbo.V_MouldingDisplayBoard.Id,\n" +
+					"\tdbo.V_MouldingDisplayBoard.Line,\n" +
+					"\tdbo.V_MouldingDisplayBoard.CustomerName,\n" +
+					"\tdbo.V_MouldingDisplayBoard.NormalDensity,\n" +
+					"\tdbo.V_MouldingDisplayBoard.Length,\n" +
+					"\tdbo.V_MouldingDisplayBoard.NormalCapacity,\n" +
+					"\tdbo.V_MouldingDisplayBoard.SoCode,\n" +
+					"\tdbo.V_MouldingDisplayBoard.NormalWeight,\n" +
+					"\tdbo.V_MouldingDisplayBoard.Quantity,\n" +
+					"\tdbo.V_MouldingDisplayBoard.FactCapacity,\n" +
+					"\tdbo.V_MouldingDisplayBoard.MouldingStyleCode,\n" +
+					"\tdbo.V_MouldingDisplayBoard.CurrentFinishedQuantity\n" +
+					"\t\n" +
+					"\t,\n" +
+					"CASE\n" +
+					"\t\t\n" +
+					"\t\tWHEN ( CurrentYield IS NULL ) THEN\n" +
+					"\t\t0 ELSE CurrentYield \n" +
+					"\tEND AS CurrentYield,\n" +
+					"CASE\n" +
+					"\t\t\n" +
+					"\t\tWHEN ( CapacityStandardObtainedRate IS NULL ) THEN\n" +
+					"\t\t0 ELSE CapacityStandardObtainedRate \n" +
+					"\tEND AS CapacityStandardObtainedRate,\n" +
+					"\tdbo.V_MouldingDisplayBoard.SectionalErea,\n" +
+					"\tdbo.V_MouldingDisplayBoard.MouldYield,\n" +
+					"\tdbo.V_MouldingDisplayBoard.FinishedQuantity,\n" +
+					"\tdbo.V_MouldingDisplayBoard.TotalCapacity,\n" +
+					"\tdbo.V_MouldingDisplayBoard.ChangeMouldTime,\n" +
+					"\tdbo.V_MouldingDisplayBoard.OperatePersonCode,\n" +
+					"\tdbo.V_MouldingDisplayBoard.OperatePersonName,\n" +
+					"\tdbo.V_MouldingDisplayBoard.Speed,\n" +
+					"\tdbo.V_MouldingDisplayBoard.CurrentFinishLength \n" +
+					"FROM\n" +
+					"\tdbo.V_MouldingDisplayBoard \n" +
+					"ORDER BY\n" +
+					"\tCAST (\n" +
+					"\tREPLACE( dbo.V_MouldingDisplayBoard.Line, '#', '' ) AS INT) FOR JSON PATH";
+			Statement stmt = conn.createStatement();//
+
+			ResultSet rs = stmt.executeQuery(sql);
+			while (rs.next()) {
+				// 截面积(mm2)
+				jsonpath.append(rs.getString(1));
+
+
+			}
+			rs.close();
+			stmt.close();
+			conn.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+
+		}
+		return jsonpath.toString();
+	}
+
+
+
+
 	public static List<HashMap<String,String>> DoGetLastDay() {
 		List<HashMap<String,String>> hashMapList = new ArrayList<>();
 		try {
