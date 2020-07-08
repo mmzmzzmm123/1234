@@ -89,6 +89,12 @@ public class UltimateOfficeBasePriceServiceImpl implements IUltimateOfficeBasePr
         Integer lastYearMonth = getLastYearMonth(yearMonth);
 
         officeBasePriceUltimateMapper.initProcedure();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String operateDate = simpleDateFormat.format(calendar.getTime());
+        officeBasePriceUltimateMapper.dumpTable(yearMonth, operateDate);
+        officeBasePriceUltimateMapper.clearArtificialTable(yearMonth);
         officeBasePriceUltimateMapper.prepareBachImport(yearMonth);
 
         try {
@@ -126,7 +132,7 @@ public class UltimateOfficeBasePriceServiceImpl implements IUltimateOfficeBasePr
             sourceDataTable.addColumnMetadata("AreaCoff", java.sql.Types.DECIMAL);
             sourceDataTable.addColumnMetadata("YearCoff", java.sql.Types.DECIMAL);
             sourceDataTable.addColumnMetadata("BuildingCoff", java.sql.Types.DECIMAL);
-            sourceDataTable.addColumnMetadata("BuildingStd", java.sql.Types.NVARCHAR);
+            sourceDataTable.addColumnMetadata("BuildingStd", java.sql.Types.BIT);
             sourceDataTable.addColumnMetadata("AdjEvd", java.sql.Types.NVARCHAR);
 
 
@@ -184,7 +190,6 @@ public class UltimateOfficeBasePriceServiceImpl implements IUltimateOfficeBasePr
             officeBasePriceUltimateMapper.initProcedure();
             conn.close();
 
-            Calendar calendar = Calendar.getInstance();
             int year = yearMonth / 100;
             int month = yearMonth % 100;
             calendar.set(year, month, 1);
@@ -195,6 +200,7 @@ public class UltimateOfficeBasePriceServiceImpl implements IUltimateOfficeBasePr
             after(yearMonth, lastYearMonth, valuePoint, lastValuePoint);
 
         } catch (Exception e) {
+            log.error("办公导入异常", e);
             e.printStackTrace();
         }
 

@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.data.cases.mapper.sync.SyncOriginalResidenceRentAggregationCaseMapper">
+    <update id="createTable">
+        <bind name="targetTableName" value="'dbo.DW_HOUSINGCASE_RENT_COMM_' + yearMonth"/>
+        IF OBJECT_ID(#{targetTableName}, 'U') IS NOT NULL
+            drop table ${targetTableName};
+        create TABLE ${targetTableName}
+        (
+            ID int NOT NULL IDENTITY(1, 1),
+            HouseholdsID_SRC nvarchar (64) NOT null primary key,
+            ProjectID_SRC nvarchar (64) NOT NULL,
+            ProjectID bigint NULL,
+            BuildingID bigint NULL,
+            RentType tinyint NULL,
+            Room tinyint NULL,
+            Hall tinyint NULL,
+            Bashroom tinyint NULL,
+            Area decimal (18, 2) NULL,
+            Towards nvarchar (64) NULL,
+            UpperFloorSum nvarchar (32) NULL,
+            UpperFloorNum nvarchar (32) NULL,
+            Elevator tinyint NULL,
+            Decoration nvarchar (64) NULL,
+            Year int NULL,
+            AreaCoff decimal (7, 4) NULL,
+            TowardsCoff decimal (7, 4) NULL,
+            FloorCoff decimal (7, 4) NULL,
+            DecorationRng int NULL,
+            YearCoff decimal (7, 4) NULL,
+            BuildingCoff decimal (7, 4) NULL,
+            RoomTypeCoff decimal (7, 4) NULL,
+            PriceTotal decimal (18, 2) NOT NULL,
+            PriceUnit decimal (18, 2) NOT NULL,
+            PriceScatterRent decimal (18, 2) NULL,
+            PriceEntireRent decimal (18, 2) NULL,
+            PriceShareRent0 decimal (18, 2) NULL,
+            PriceShareRent decimal (18, 2) NULL,
+            Visited_Num int NULL,
+            First_Visit_Time date NULL,
+            Visited_Num_15 int NULL,
+            Visited_Num_30 int NULL,
+            Status tinyint NULL,
+            AdjustedValue decimal (18, 2) NULL,
+            AdjustedPst decimal (18, 6) NULL,
+            AdjustedCumValue decimal (18, 2) NULL,
+            AdjustedCumPst decimal (18, 6) NULL,
+            AdjustedCumValueAbs decimal (18, 2) NULL,
+            AdjustedCumPstAbs decimal (18, 6) NULL,
+            AdjustedCumNum int NULL,
+            PriceTotalIn decimal (18, 2) NULL,
+            PriceTotalOut decimal (18, 2) NULL,
+            PriceDateIn date NULL,
+            PriceDateOut date NULL,
+            Origin nvarchar (64) NULL,
+            UrlHouseholds nvarchar (max) NULL,
+            UrlProjects nvarchar (max) NULL,
+            CaseName nvarchar (1024) NULL,
+            CaseType tinyint NULL,
+            RentPrice_1 decimal (18, 2) NULL,
+            Range decimal (18, 4) NULL,
+            RangeFlag int NULL,
+            RentPrice decimal (18, 2) NULL,
+            EntireRentRatio decimal (18, 6) NULL,
+            ShareRentRatio decimal (18, 6) NULL
+        )
+    </update>
+
+    <insert id="insert" parameterType="com.ruoyi.project.data.cases.domain.OriginalResidenceSaleOpeningCase">
+        insert into dbo.DW_HOUSINGCASE_RENT_COMM_${yearMonth}
+        (
+            HouseholdsID_SRC
+          , ProjectID_SRC
+          , ProjectID
+          , BuildingID
+          , RentType
+          , Room
+          , Hall
+          , Bashroom
+          , Area
+          , Towards
+          , UpperFloorSum
+          , UpperFloorNum
+          , Elevator
+          , Decoration
+          , Year
+          , AreaCoff
+          , TowardsCoff
+          , FloorCoff
+          , DecorationRng
+          , YearCoff
+          , BuildingCoff
+          , RoomTypeCoff
+          , PriceTotal
+          , PriceUnit
+          , PriceScatterRent
+          , PriceEntireRent
+          , PriceShareRent0
+          , PriceShareRent
+          , Visited_Num
+          , First_Visit_Time
+          , Visited_Num_15
+          , Visited_Num_30
+          , Status
+          , AdjustedValue
+          , AdjustedPst
+          , AdjustedCumValue
+          , AdjustedCumPst
+          , AdjustedCumValueAbs
+          , AdjustedCumPstAbs
+          , AdjustedCumNum
+          , PriceTotalIn
+          , PriceTotalOut
+          , PriceDateIn
+          , PriceDateOut
+          , Origin
+          , UrlHouseholds
+          , UrlProjects
+          , CaseName
+          , CaseType
+          , RentPrice_1
+          , Range
+          , RangeFlag
+          , RentPrice
+          , EntireRentRatio
+          , ShareRentRatio
+        ) values
+        (
+            #{caseLianJiaId},
+            #{caseLianJiaCommunityId},
+            #{caseTitle},
+            #{caseApartmentLayout},
+            #{caseArea},
+            #{caseToward},
+            #{caseStorey},
+            #{caseLastDeal,jdbcType=DATE},
+            #{caseElevator},
+            #{caseDecoration},
+            #{caseYear},
+            #{caseAddress},
+            #{casePrice},
+            #{caseCommunityName},
+            #{caseVisitedNum},
+            #{caseFirstVisitTime,jdbcType=DATE},
+            #{caseVisitedNum15},
+            #{caseVisitedNum30},
+            #{caseUrl},
+            #{caseCommunityUrl},
+            #{caseGetDate,jdbcType=DATE}
+            )
+    </insert>
+</mapper>

@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
@@ -189,14 +190,15 @@ public class ExcelUtil<T> {
                 Row row = sheet.getRow(i);
                 T entity = null;
                 for (Map.Entry<Integer, Field> entry : fieldsMap.entrySet()) {
-                    Object val = this.getCellValue(row, entry.getKey());
-
                     // 如果不存在实例则新建.
                     entity = (entity == null ? clazz.newInstance() : entity);
                     // 从map中得到对应列的field.
                     Field field = fieldsMap.get(entry.getKey());
                     // 取得类型,并根据对象类型设置值.
                     Class<?> fieldType = field.getType();
+
+                    Object val = this.getCellValue(row, entry.getKey(), fieldType);
+
                     if (String.class == fieldType) {
                         String s = Convert.toStr(val);
                         if (StringUtils.endsWith(s, ".0")) {
@@ -219,6 +221,10 @@ public class ExcelUtil<T> {
                             val = DateUtils.parseDate(val);
                         } else if (val instanceof Double) {
                             val = DateUtil.getJavaDate((Double) val);
+                        }
+                    } else if (Boolean.class == fieldType) {
+                        if (val instanceof String) {
+                            val = new Boolean(val.toString());
                         }
                     }
                     if (StringUtils.isNotNull(fieldType)) {
@@ -705,10 +711,54 @@ public class ExcelUtil<T> {
                     if (HSSFDateUtil.isCellDateFormatted(cell)) {
                         val = DateUtil.getJavaDate((Double) val); // POI Excel 日期格式转换
                     } else {
+//                        new BigDecimal(val.toString())
                         if ((Double) val % 1 > 0) {
-                            val = new DecimalFormat("0.00").format(val);
+                            val = new DecimalFormat("0.000000").format(val);
                         } else {
                             val = new DecimalFormat("0").format(val);
+                        }
+                    }
+                } else if (cell.getCellTypeEnum() == CellType.STRING) {
+                    val = cell.getStringCellValue();
+                } else if (cell.getCellTypeEnum() == CellType.BOOLEAN) {
+                    val = cell.getBooleanCellValue();
+                } else if (cell.getCellTypeEnum() == CellType.ERROR) {
+                    val = cell.getErrorCellValue();
+                }
+
+            }
+        } catch (Exception e) {
+            return val;
+        }
+        return val;
+    }
+
+    public Object getCellValue(Row row, int column, Class<?> fieldType) {
+        if (row == null) {
+            return row;
+        }
+        Object val = "";
+        try {
+            Cell cell = row.getCell(column);
+            if (StringUtils.isNotNull(cell)) {
+                if (cell.getCellTypeEnum() == CellType.NUMERIC || cell.getCellTypeEnum() == CellType.FORMULA) {
+                    val = cell.getNumericCellValue();
+                    if (HSSFDateUtil.isCellDateFormatted(cell)) {
+                        val = DateUtil.getJavaDate((Double) val); // POI Excel 日期格式转换
+                    } else {
+                        if (BigDecimal.class == fieldType) {
+
+                            if (StringUtils.isNotEmpty(val.toString())) {
+                                val = new BigDecimal(val.toString());
+                            } else {
+                                val = null;
+                            }
+                        } else {
+                            if ((Double) val % 1 > 0) {
+                                val = new DecimalFormat("0.00").format(val);
+                            } else {
+                                val = new DecimalFormat("0").format(val);
+                            }
                         }
                     }
                 } else if (cell.getCellTypeEnum() == CellType.STRING) {

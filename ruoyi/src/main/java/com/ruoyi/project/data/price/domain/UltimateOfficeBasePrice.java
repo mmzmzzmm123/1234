@@ -80,7 +80,7 @@ public class UltimateOfficeBasePrice extends BaseEntity {
 //    @Excel(name = "状态")
     private Boolean status;
     @Excel(name = "是否标准楼栋")
-    private Boolean isStandardBuilding;
+    private Boolean standardBuilding;
 //    @Excel(name = "更改价格说明")
     private String adjustPriceComment;
     /**
@@ -353,11 +353,11 @@ public class UltimateOfficeBasePrice extends BaseEntity {
     }
 
     public Boolean getStandardBuilding() {
-        return isStandardBuilding;
+        return standardBuilding;
     }
 
     public void setStandardBuilding(Boolean standardBuilding) {
-        isStandardBuilding = standardBuilding;
+        this.standardBuilding = standardBuilding;
     }
 
     public String getAdjustPriceComment() {

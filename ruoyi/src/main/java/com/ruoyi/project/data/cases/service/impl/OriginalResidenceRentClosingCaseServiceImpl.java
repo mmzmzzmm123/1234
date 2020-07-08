@@ -51,8 +51,8 @@ public class OriginalResidenceRentClosingCaseServiceImpl implements IOriginalRes
         Integer computeTableRoute = new Integer(String.format("%d%02d", calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH) + 1));
 
-        targetTableRoute = 202005;
-        computeTableRoute = 202007;
+//        targetTableRoute = 202005;
+//        computeTableRoute = 202007;
 
         prepare(computeTableRoute);
         List<OriginalResidenceRentClosingCase> list =

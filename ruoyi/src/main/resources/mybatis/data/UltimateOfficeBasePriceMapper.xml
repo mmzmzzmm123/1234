@@ -18,7 +18,7 @@
         <result property="mainPriceRentType" column="MainPriceRentType"/>
         <result property="updateDate" column="ModifyDate"/>
         <result property="status" column="Status"/>
-        <result property="isStandardBuilding" column="BuildingStd"/>
+        <result property="standardBuilding" column="BuildingStd"/>
         <result property="adjustPriceComment" column="AdjEvd"/>
         <result property="areaCoefficient" column="AreaCoff"/>
         <result property="yearCoefficient" column="YearCoff"/>
@@ -88,8 +88,8 @@
             <if test="status != null">
                 AND a.STATUS = #{status}
             </if>
-            <if test="isStandardBuilding != null">
-                AND a.BuildingStd = #{isStandardBuilding}
+            <if test="standardBuilding != null">
+                AND a.BuildingStd = #{standardBuilding}
             </if>
             <if test="nameOrAddress != null">
                 AND (
@@ -114,8 +114,8 @@
             <if test="status != null">
                 AND a.STATUS = #{status}
             </if>
-            <if test="isStandardBuilding != null">
-                AND a.BuildingStd = #{isStandardBuilding}
+            <if test="standardBuilding != null">
+                AND a.BuildingStd = #{standardBuilding}
             </if>
             <if test="nameOrAddress != null">
                 AND (
@@ -203,7 +203,7 @@
               ,MainPriceType as mainPriceType
               ,MainPriceRentType as mainPriceRentType
               ,Status as status
-              ,BuildingStd as isStandardBuilding
+              ,BuildingStd as standardBuilding
               ,AdjEvd as adjustPriceComment
               ,${yearMonth} as yearMonth
         from ODS_OFFICE_BUILDING_PRICE_INFO_${yearMonth}
@@ -221,7 +221,7 @@
               ,MainPriceType as mainPriceType
               ,MainPriceRentType as mainPriceRentType
               ,Status as status
-              ,BuildingStd as isStandardBuilding
+              ,BuildingStd as standardBuilding
               ,AdjEvd as adjustPriceComment
               ,${yearMonth} as yearMonth
         FROM dbo.ODS_OFFICE_BUILDING_PRICE_INFO_${yearMonth}
@@ -325,5 +325,12 @@
             select id,BuildingID_P,ProjectID_P,ProjectName,ProjectAddr,BuildingAddr,County,Loop,Block,Street,Year,AvgArea,TotalFloorSum,UpperFloorSum,OfficeClass,Grade,MainPrice_1,MainPriceRent_1,MainPrice,MainPriceRent,MainPricePst,MainPriceRentPst,MainPriceType,MainPriceRentType,AreaCoff,YearCoff,BuildingCoff,BuildingStd,AdjEvd,getdate()
             from @table;
         end;
+    </update>
+    <update id="dumpTable">
+        select * into ODS_OFFICE_BUILDING_PRICE_INFO_${yearMonth}_${operateDate}_bak from
+        ODS_OFFICE_BUILDING_PRICE_INFO_${yearMonth};
+    </update>
+    <update id="clearArtificialTable">
+        truncate table DWA_PROJECTBASEPRICE_OFFICE_MANU_${yearMonth}
     </update>
 </mapper>

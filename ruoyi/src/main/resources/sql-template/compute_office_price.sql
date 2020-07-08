@@ -272,8 +272,8 @@ select row_number() over( order by newid() ) id
                't5'
        end                                                   as MainPriceRentType
      , cast(getdate() as date)                               ModifyDate
-     , cast(1 as nvarchar)                                   Status
-     , a.BuildingStd
+     , cast(1 as bit)                   as                Status
+     , cast(a.BuildingStd as bit)   as BuildingStd
      , cast(null as nvarchar(1000))                          as AdjEvd
 	 , c.MainPrice as MainPrice_1
 	 , c.MainPriceRent  as MainPriceRent_1

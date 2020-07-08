@@ -117,7 +117,7 @@ public class UltimateOfficeBasePriceController extends BaseController {
         LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
         String operName = loginUser.getUsername();
         String message = officeBasePriceUltimateService.batchImport(yearMonth, officeBasePriceUltimates, operName);
-        return AjaxResult.success(message);
+        return AjaxResult.success("");
     }
 }
 

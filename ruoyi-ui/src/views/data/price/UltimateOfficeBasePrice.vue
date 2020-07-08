@@ -127,7 +127,7 @@
             v-hasPermi="['system:user:edit']"
           >修改</el-button>
         </template>
-      </el-table-column> -->
+      </el-table-column>-->
     </el-table>
 
     <pagination
@@ -291,9 +291,15 @@
         <el-button type="primary" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
-    </el-dialog> -->
+    </el-dialog>-->
 
-    <el-dialog :title="upload.title" :visible.sync="upload.open" width="400px" append-to-body>
+    <el-dialog
+      :title="upload.title"
+      :visible.sync="upload.open"
+      width="400px"
+      append-to-body
+      :before-close="handleClose"
+    >
       <el-upload
         ref="upload"
         :limit="1"
@@ -600,6 +606,14 @@ export default {
     // 提交上传文件
     submitFileForm() {
       this.$refs.upload.submit();
+    },
+    handleClose: function(done) {
+      this
+        .$confirm("确认关闭？")
+        .then(_ => {
+          done();
+        })
+        .catch(_ => {});
     }
   }
 };

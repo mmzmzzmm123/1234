@@ -99,10 +99,25 @@ public interface UltimateOfficeBasePriceMapper {
     void initProcedure();
 
     /**
+     * 备份价格表
+     *
+     * @param yearMonth
+     * @param operateDate
+     */
+    void dumpTable(@Param("yearMonth") Integer yearMonth, @Param("operateDate") String operateDate);
+
+    /**
      * @param yearMonth
      * @return
      */
     int prepareBachImport(@Param("yearMonth") Integer yearMonth);
+
+    /**
+     * 清空人工修正表
+     *
+     * @param yearMonth 表名
+     */
+    void clearArtificialTable(@Param("yearMonth") Integer yearMonth);
 
     /**
      * 插入人工修正的办公基价
