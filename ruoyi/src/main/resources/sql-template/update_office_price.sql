@@ -16,7 +16,7 @@ on a.BuildingID_p = c.BuildingID_p and c.status=1 and (
     cast(a.MainPriceRent_1 as decimal(18,1)) <> cast(isnull(c.MainPriceRent, 0) as decimal(18,1)))
 where b.BuildingID_p is not null or c.BuildingID is not null;
 
---价格调整
+-- 上期价格变化
 select a.BuildingID, a.UnifiedID, a.ProjectID, a.BuildingID_P, a.ProjectID_P, b.MainPrice_1 as MainPrice, b.MainPriceRent_1 as MainPriceRent,
         a.MainPricePst, a.MainPriceRentPst,
         a.MainPriceType, a.MainPriceRentType, b.ModifyDate, 1 as Status, a.BuildingStd,
@@ -126,7 +126,8 @@ from #InfoChgLst;
 
 --当周期价格调整
 select a.BuildingID, a.UnifiedID, a.ProjectID, a.BuildingID_P, a.ProjectID_P, b.MainPrice, b.MainPriceRent,
-        b.MainPrice*1.0/c.MainPrice as MainPricePst, b.MainPriceRent*1.0/c.MainPriceRent as MainPriceRentPst,
+        ((b.MainPrice*1.0/c.MainPrice) - 1) as MainPricePst,
+        ((b.MainPriceRent*1.0/c.MainPriceRent) - 1) as MainPriceRentPst,
         a.MainPriceType, a.MainPriceRentType, b.ModifyDate, 1 as Status, a.BuildingStd,
         case when MainPriceChg=0 then '' else 'MainPriceChg|' end + case when MainPriceRentChg=0 then '' else 'MainPriceRentChg|' end as AdjEvd
 		, c.MainPrice_1

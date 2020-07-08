@@ -9,7 +9,7 @@ import java.util.Date;
 
 /**
  *
- * @author ruoyi
+ * @author purple
  * @date 2020-05-20
  */
 public class UltimateOfficeBasePrice extends BaseEntity {
@@ -19,7 +19,6 @@ public class UltimateOfficeBasePrice extends BaseEntity {
 
     @Excel(name = "id")
     private String id;
-//    @JSONField(serialize = false)
     private Integer yearMonth;
     @JSONField(serialize = false)
     private Integer lastYearMonth;

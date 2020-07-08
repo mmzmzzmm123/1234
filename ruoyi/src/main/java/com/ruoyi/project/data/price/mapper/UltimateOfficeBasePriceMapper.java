@@ -6,6 +6,7 @@ import com.baomidou.dynamic.datasource.annotation.DS;
 import com.ruoyi.project.common.VueSelectModel;
 import com.ruoyi.project.data.price.domain.OfficeBasePriceModifyModel;
 import com.ruoyi.project.data.price.domain.UltimateOfficeBasePrice;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 
 /**
@@ -45,6 +46,14 @@ public interface UltimateOfficeBasePriceMapper {
      * @return 办公基价集合
      */
     List<UltimateOfficeBasePrice> getList(UltimateOfficeBasePrice officeBasePriceUltimate);
+
+    /**
+     * 查询某表数据
+     *
+     * @param yearMonth
+     * @return
+     */
+    List<UltimateOfficeBasePrice> getUltimateOfficeBasePrices(@Param("yearMonth") Integer yearMonth);
 
     /**
      * 求和

@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.data.cases.mapper.sync.SyncOfficeAggregationCaseMapper">
+    <!-- 创建表   -->
+    <update id="createAggregationCaseTable">
+        <bind name="targetTableName" value="'dbo.DW_OFFICECASE_COMM_' + yearMonth"/>
+        IF OBJECT_ID(#{targetTableName}, 'U') IS NOT NULL
+            drop table ${targetTableName};
+
+        CREATE TABLE ${targetTableName}
+        (
+            ID int identity(1,1) NOT NULL,
+            url varchar (1000) NULL,
+            title varchar (1000) NULL,
+            容积率 varchar (1000) NULL,
+            总价售 varchar (1000) NULL,
+            均价售 varchar (1000) NULL,
+            楼盘名称 varchar (1000) NULL,
+            楼盘名称_M nvarchar (512) NULL,
+            楼层 varchar (1000) NULL,
+            面积 varchar (1000) NULL,
+            物业费 varchar (1000) NULL,
+            工位数 varchar (1000) NULL,
+            地址 varchar (1000) NULL,
+            地铁 varchar (1000) NULL,
+            发布时间 date NULL,
+            房源编号 varchar (1000) NULL,
+            百度lng varchar (1000) NULL,
+            百度lat varchar (1000) NULL,
+            区域 varchar (1000) NULL,
+            分类 varchar (1000) NULL,
+            来源 varchar (1000) NULL,
+            等级 varchar (1000) NULL,
+            楼盘网址 varchar (1000) NULL,
+            装修 varchar (1000) NULL,
+            类型 varchar (1000) NULL,
+            板块 varchar (1000) NULL,
+            挂牌中介 varchar (1000) NULL,
+            月租金租 varchar (1000) NULL,
+            标准租金租 varchar (1000) NULL,
+            更新时间 varchar (1000) NULL,
+            得房率 varchar (1000) NULL,
+            总价 decimal (18, 2) NULL,
+            单价 decimal (18, 2) NULL,
+            BuildingID_P bigint NULL,
+            ProjectID_P bigint NULL,
+            TotalFloorSum nvarchar (32) NULL,
+            FloorCoff decimal (7, 4) NULL,
+            DecorationCoff decimal (7, 4) NULL,
+            PriceAmend numeric (38, 12) NULL,
+            MainPrice_1 decimal (38, 6) NULL,
+            MainPriceRent_1 decimal (38, 6) NULL,
+            ListedPrice_1 decimal (38, 6) NULL,
+            ListedPriceRent_1 decimal (38, 6) NULL,
+            ListedPrice decimal (38, 6) NULL,
+            ListedPriceRent decimal (38, 6) NULL,
+            VOPP numeric (38, 6) NULL,
+            VOPPT nvarchar (32) NULL
+        )
+    </update>
+    <!--同步-->
+    <insert id="insertAggregationCase" parameterType="com.ruoyi.project.data.cases.domain.OfficeAggregationCase">
+        insert into dbo.DW_OFFICECASE_COMM_${yearMonth}
+          (
+              url
+            , title
+            , 容积率
+            , 总价售
+            , 均价售
+            , 楼盘名称
+            , 楼盘名称_M
+            , 楼层
+            , 面积
+            , 物业费
+            , 工位数
+            , 地址
+            , 地铁
+            , 发布时间
+            , 房源编号
+            , 百度lng
+            , 百度lat
+            , 区域
+            , 分类
+            , 来源
+            , 等级
+            , 楼盘网址
+            , 装修
+            , 类型
+            , 板块
+            , 挂牌中介
+            , 月租金租
+            , 标准租金租
+            , 更新时间
+            , 得房率
+            , 总价
+            , 单价
+            , BuildingID_P
+            , ProjectID_P
+            , TotalFloorSum
+            , FloorCoff
+            , DecorationCoff
+            , PriceAmend
+            , MainPrice_1
+            , MainPriceRent_1
+            , ListedPrice_1
+            , ListedPriceRent_1
+            , ListedPrice
+            , ListedPriceRent
+            , VOPP
+            , VOPPT
+          ) values
+        (
+            #{url},
+            #{title},
+            #{floorAreaRatio},
+            #{caseTotalPrice},
+            #{caseUnitPrice},
+            #{name},
+            #{name_m},
+            #{caseFloor},
+            #{area},
+            #{managementFee},
+            #{seatCount},
+            #{address},
+            #{metro},
+            #{publishDate,jdbcType=DATE},
+            #{sourceNo},
+            #{lng},
+            #{lat},
+            #{county},
+            #{catalog},
+            #{source},
+            #{level},
+            #{homePageUrl},
+            #{decoration},
+            #{type},
+            #{block},
+            #{agency},
+            #{rentOfMonthly},
+            #{rentOfStandard},
+            #{updateDate,jdbcType=DATE},
+            #{score},
+            #{totalPrice},
+            #{unitPrice},
+            #{buildingId},
+            #{communityId},
+            #{totalFloor},
+            #{floorCoefficient},
+            #{decorationCoefficient},
+            #{priceAmend},
+            #{mainPrice_1},
+            #{mainPriceRent_1},
+            #{listedPrice_1},
+            #{listedPriceRent_1},
+            #{listedPrice},
+            #{listedPriceRent},
+            #{vopp},
+            #{voppt}
+            )
+    </insert>
+    <!--备份表-->
+    <update id="dumpPriceTable">
+        <bind name="targetTableName" value="'dbo.ODS_OFFICE_BUILDING_PRICE_INFO_' + yearMonth"/>
+        IF OBJECT_ID(#{targetTableName}, 'U') IS NOT NULL
+            select * into ODS_OFFICE_BUILDING_PRICE_INFO_${yearMonth}_${operateDate}_bak from ${targetTableName}
+    </update>
+    <!--创建价格表-->
+    <update id="createPriceTable">
+        <bind name="targetTableName" value="'dbo.ODS_OFFICE_BUILDING_PRICE_INFO_' + yearMonth"/>
+        IF OBJECT_ID(#{targetTableName}, 'U') IS NOT NULL
+            drop table ${targetTableName};
+
+        create table ${targetTableName}(
+            id bigint identity not null ,
+            BuildingID bigint not null,
+            UnifiedID bigint null,
+            ProjectID bigint not null,
+            BuildingID_P nvarchar(20) not null,
+            ProjectID_P bigint null,
+            MainPrice decimal(38, 6) null,
+            MainPriceRent decimal(38, 6) null,
+            MainPricePst decimal(38, 6) null,
+            MainPriceRentPst decimal(38, 6) null,
+            MainPriceType varchar(2) null,
+            MainPriceRentType varchar(2) null,
+            ModifyDate date null,
+            Status nvarchar(30) null,
+            BuildingStd tinyint null,
+            AdjEvd nvarchar(1000) null,
+            MainPrice_1 decimal(38, 6) null,
+            MainPriceRent_1 decimal(38, 6) null,
+            AreaCoff decimal(7, 4) null,
+            YearCoff decimal(7, 4) null,
+            BuildingCoff decimal(7, 4) null,
+            ProjectName nvarchar(1024) null,
+            ProjectAddr nvarchar(1024) null,
+            BuildingAddr nvarchar(1024) null,
+            County nvarchar(512) null,
+            Loop nvarchar(512) null,
+            Block nvarchar(512) null,
+            Street nvarchar(512) null,
+            Year int null,
+            AvgArea decimal(18, 2) null,
+            TotalFloorSum nvarchar(32) null,
+            UpperFloorSum nvarchar(32) null,
+            OfficeClass nvarchar(256) null,
+            Grade nvarchar(64) null
+        );
+    </update>
+    <!--插入价格表-->
+    <update id="insertUltimatePriceTable" parameterType="com.ruoyi.project.data.price.domain.UltimateOfficeBasePrice">
+        insert into dbo.ODS_OFFICE_BUILDING_PRICE_INFO_${yearMonth}
+        (
+            BuildingID_P
+          , ProjectID_P
+          , MainPrice
+          , MainPriceRent
+          , MainPricePst
+          , MainPriceRentPst
+          , MainPriceType
+          , MainPriceRentType
+          , ModifyDate
+          , Status
+          , BuildingStd
+          , AdjEvd
+          , MainPrice_1
+          , MainPriceRent_1
+          , AreaCoff
+          , YearCoff
+          , BuildingCoff
+          , ProjectName
+          , ProjectAddr
+          , BuildingAddr
+          , County
+          , Loop
+          , Block
+          , Street
+          , Year
+          , AvgArea
+          , TotalFloorSum
+          , UpperFloorSum
+          , OfficeClass
+          , Grade
+        ) values(
+            #{buildingId},
+            #{communityId},
+            #{mainPrice},
+            #{mainPriceRent},
+            #{mainPricePst},
+            #{mainPriceRentPst},
+            #{mainPriceType},
+            #{mainPriceRentType},
+            #{updateDate,jdbcType=DATE},
+            #{status},
+            #{standardBuilding},
+            #{adjustPriceComment},
+            #{mainPrice_1},
+            #{mainPriceRent_1},
+            #{areaCoefficient},
+            #{yearCoefficient},
+            #{buildingCoefficient},
+            #{communityName},
+            #{communityAddress},
+            #{buildingAddress},
+            #{countyName},
+            #{loopName},
+            #{blockName},
+            #{streetName},
+            #{year},
+            #{avgArea},
+            #{totalFloorSum},
+            #{upperFloorSum},
+            #{officeClass},
+            #{officeLevel}
+        )
+    </update>
+</mapper>

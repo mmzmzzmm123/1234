@@ -154,4 +154,54 @@
         IF OBJECT_ID(#{targetTableName}, 'U') IS NOT NULL
             drop table ${targetTableName};
     </update>
+    <!-- 汇总案例 -->
+    <select id="getOfficeAggregationCases" resultType="com.ruoyi.project.data.cases.domain.OfficeAggregationCase">
+        SELECT url as url
+              ,title as title
+              ,容积率 as floorAreaRatio
+              ,总价售 as caseTotalPrice
+              ,均价售 as caseUnitPrice
+              ,楼盘名称 as name
+              ,楼盘名称_M as name_m
+              ,楼层 as caseFloor
+              ,面积 as area
+              ,物业费 as managementFee
+              ,工位数 as seatCount
+              ,地址 as address
+              ,地铁 as metro
+              ,发布时间 as publishDate
+              ,房源编号 as sourceNo
+              ,百度lng as lng
+              ,百度lat as lat
+              ,区域 as county
+              ,分类 as catalog
+              ,来源 as source
+              ,等级 as level
+              ,楼盘网址 as homePageUrl
+              ,装修 as decoration
+              ,类型 as type
+              ,板块 as block
+              ,挂牌中介 as agency
+              ,月租金租 as rentOfMonthly
+              ,标准租金租 as rentOfStandard
+              ,更新时间 as updateDate
+              ,得房率 as score
+              ,总价 as totalPrice
+              ,单价 as unitPrice
+              ,BuildingID_P as buildingId
+              ,ProjectID_P as communityId
+              ,TotalFloorSum as totalFloor
+              ,FloorCoff as floorCoefficient
+              ,DecorationCoff as decorationCoefficient
+              ,PriceAmend as priceAmend
+              ,MainPrice_1 as mainPrice_1
+              ,MainPriceRent_1 as mainPriceRent_1
+              ,ListedPrice_1 as listedPrice_1
+              ,ListedPriceRent_1 as listedPriceRent_1
+              ,ListedPrice as listedPrice
+              ,ListedPriceRent as listedPriceRent
+              ,VOPP as vopp
+              ,VOPPT as voppt
+          FROM dbo.DW_OFFICECASE_COMM_${yearMonth}
+    </select>
 </mapper>

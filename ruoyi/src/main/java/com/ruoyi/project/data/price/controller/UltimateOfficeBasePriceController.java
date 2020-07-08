@@ -25,10 +25,9 @@ import com.ruoyi.framework.web.page.TableDataInfo;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
- * 办公基价Controller
+ * 办公基价
  *
- * @author ruoyi
- * @date 2020-05-20
+ * @author purple
  */
 @RestController
 @RequestMapping("/data/compute/price/office")
@@ -117,7 +116,7 @@ public class UltimateOfficeBasePriceController extends BaseController {
         LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
         String operName = loginUser.getUsername();
         String message = officeBasePriceUltimateService.batchImport(yearMonth, officeBasePriceUltimates, operName);
-        return AjaxResult.success("");
+        return AjaxResult.success(message);
     }
 }
 

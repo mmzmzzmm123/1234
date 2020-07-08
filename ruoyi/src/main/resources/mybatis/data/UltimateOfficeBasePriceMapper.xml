@@ -333,4 +333,41 @@
     <update id="clearArtificialTable">
         truncate table DWA_PROJECTBASEPRICE_OFFICE_MANU_${yearMonth}
     </update>
+    <update id="clearPriceTable">
+        truncate table ODS_OFFICE_BUILDING_PRICE_INFO_${yearMonth}
+    </update>
+    <select id="getUltimateOfficeBasePrices" resultType="com.ruoyi.project.data.price.domain.UltimateOfficeBasePrice">
+        SELECT BuildingID_P as buildingId
+              ,ProjectID_P as communityId
+              ,MainPrice as mainPrice
+              ,MainPriceRent as mainPriceRent
+              ,MainPricePst as mainPricePst
+              ,MainPriceRentPst as mainPriceRentPst
+              ,MainPriceType as mainPriceType
+              ,MainPriceRentType as mainPriceRentType
+              ,ModifyDate as updateDate
+              ,Status as status
+              ,BuildingStd as standardBuilding
+              ,AdjEvd as adjustPriceComment
+              ,MainPrice_1 as mainPrice_1
+              ,MainPriceRent_1 as mainPriceRent_1
+              ,AreaCoff as areaCoefficient
+              ,YearCoff as yearCoefficient
+              ,BuildingCoff as buildingCoefficient
+              ,ProjectName as communityName
+              ,ProjectAddr as communityAddress
+              ,BuildingAddr as buildingAddress
+              ,County as countyName
+              ,Loop as loopName
+              ,Block as blockName
+              ,Street as streetName
+              ,Year as year
+              ,AvgArea as avgArea
+              ,TotalFloorSum as totalFloorSum
+              ,UpperFloorSum as upperFloorSum
+              ,OfficeClass as officeClass
+              ,Grade as officeLevel,
+              ${yearMonth} as yearMonth
+          FROM dbo.ODS_OFFICE_BUILDING_PRICE_INFO_${yearMonth}
+    </select>
 </mapper>

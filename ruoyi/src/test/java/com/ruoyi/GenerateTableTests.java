@@ -1,8 +1,10 @@
 package com.ruoyi;
 
 
+import com.ruoyi.project.data.cases.domain.OfficeAggregationCase;
 import com.ruoyi.project.data.cases.domain.OriginalResidenceRentClosingCase;
 import com.ruoyi.project.data.price.domain.ComputeResidenceSaleBasePrice;
+import com.ruoyi.project.data.price.domain.UltimateOfficeBasePrice;
 import org.junit.Test;
 
 import java.lang.reflect.Field;
@@ -73,7 +75,7 @@ public class GenerateTableTests {
 
     @Test
     public void generateBatchInsertSqL() {
-        Class targetClass = OriginalResidenceRentClosingCase .class;
+        Class targetClass = OriginalResidenceRentClosingCase.class;
 
         List<Field> fieldList = new ArrayList<>();
         while (targetClass != null) {
@@ -90,4 +92,24 @@ public class GenerateTableTests {
         }
         System.out.println(sb.toString());
     }
+
+    @Test
+    public void generateBatchGuoHaoInsertSqL() {
+        Class targetClass = UltimateOfficeBasePrice.class;
+
+        List<Field> fieldList = new ArrayList<>();
+        while (targetClass != null) {
+            fieldList.addAll(new ArrayList<>(Arrays.asList(targetClass.getDeclaredFields())));
+            targetClass = targetClass.getSuperclass();
+        }
+        Field[] fields = new Field[fieldList.size()];
+        fieldList.toArray(fields);
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < fields.length; i++) {
+            sb.append("#{"+fields[i].getName()+"},");
+            sb.append("\n");
+        }
+        System.out.println(sb.toString());
+    }
+
 }
