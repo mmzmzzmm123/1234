@@ -235,6 +235,13 @@ public class UltimateOfficeBasePriceServiceImpl implements IUltimateOfficeBasePr
                 .replace("#today#", priceDate)
                 .replace("#lastMonth#", lastPriceDate);
         jdbcTemplate.update(sql);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(lastValuePoint);
+        calendar.add(Calendar.MONTH, -1);
+        Integer lastPriceTableRoute = new Integer(String.format("%d%02d", calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH) + 1));
+        pushData(yearMonth, lastYearMonth, lastPriceTableRoute);
     }
 
     /**
@@ -250,6 +257,7 @@ public class UltimateOfficeBasePriceServiceImpl implements IUltimateOfficeBasePr
         syncOfficeAggregationCaseMapper.createAggregationCaseTable(currentPriceTableRoute);
         List<OfficeAggregationCase> list = originalOfficeCaseMapper.getOfficeAggregationCases(yearMonth);
         list.parallelStream().forEach(officeAggregationCase -> {
+            officeAggregationCase.setYearMonth(currentPriceTableRoute);
             syncOfficeAggregationCaseMapper.insertAggregationCase(officeAggregationCase);
         });
 
@@ -258,6 +266,7 @@ public class UltimateOfficeBasePriceServiceImpl implements IUltimateOfficeBasePr
         List<UltimateOfficeBasePrice> ultimateOfficeBasePrices =
                 ultimateOfficeBasePriceMapper.getUltimateOfficeBasePrices(yearMonth);
         ultimateOfficeBasePrices.parallelStream().forEach(ultimateOfficeBasePrice -> {
+            ultimateOfficeBasePrice.setYearMonth(currentPriceTableRoute);
             syncOfficeAggregationCaseMapper.insertUltimatePriceTable(ultimateOfficeBasePrice);
         });
 
@@ -272,6 +281,7 @@ public class UltimateOfficeBasePriceServiceImpl implements IUltimateOfficeBasePr
         List<UltimateOfficeBasePrice> lastUltimateOfficeBasePrices =
                 ultimateOfficeBasePriceMapper.getUltimateOfficeBasePrices(lastPriceTableRoute);
         lastUltimateOfficeBasePrices.parallelStream().forEach(ultimateOfficeBasePrice -> {
+            ultimateOfficeBasePrice.setYearMonth(lastPriceTableRoute);
             syncOfficeAggregationCaseMapper.insertUltimatePriceTable(ultimateOfficeBasePrice);
         });
     }

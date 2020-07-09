@@ -8,7 +8,6 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 /**
- *
  * @author purple
  * @date 2020-05-20
  */
@@ -22,6 +21,7 @@ public class UltimateOfficeBasePrice extends BaseEntity {
     private Integer yearMonth;
     @JSONField(serialize = false)
     private Integer lastYearMonth;
+
     @Excel(name = "楼栋ID-平台")
     private String buildingId;
     @Excel(name = "小区ID-平台")
@@ -74,18 +74,22 @@ public class UltimateOfficeBasePrice extends BaseEntity {
     private BigDecimal yearCoefficient;
     @Excel(name = "基价楼栋系数")
     private BigDecimal buildingCoefficient;
-//    @Excel(name = "更新日期")
+    //    @Excel(name = "更新日期")
     private Date updateDate;
-//    @Excel(name = "状态")
+    //    @Excel(name = "状态")
     private Boolean status;
     @Excel(name = "是否标准楼栋")
     private Boolean standardBuilding;
-//    @Excel(name = "更改价格说明")
+    //    @Excel(name = "更改价格说明")
     private String adjustPriceComment;
     /**
      * 名称或者地址
      */
     private String nameOrAddress;
+
+    private String deprecatedBuildingId;
+    private String deprecatedCommunityId;
+    private String unifiedId;
 
     public Integer getLastYearMonth() {
         return lastYearMonth;
@@ -373,5 +377,30 @@ public class UltimateOfficeBasePrice extends BaseEntity {
 
     public void setNameOrAddress(String nameOrAddress) {
         this.nameOrAddress = nameOrAddress;
+    }
+
+
+    public String getDeprecatedBuildingId() {
+        return deprecatedBuildingId;
+    }
+
+    public void setDeprecatedBuildingId(String deprecatedBuildingId) {
+        this.deprecatedBuildingId = deprecatedBuildingId;
+    }
+
+    public String getDeprecatedCommunityId() {
+        return deprecatedCommunityId;
+    }
+
+    public void setDeprecatedCommunityId(String deprecatedCommunityId) {
+        this.deprecatedCommunityId = deprecatedCommunityId;
+    }
+
+    public String getUnifiedId() {
+        return unifiedId;
+    }
+
+    public void setUnifiedId(String unifiedId) {
+        this.unifiedId = unifiedId;
     }
 }

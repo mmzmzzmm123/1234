@@ -162,21 +162,28 @@
     </insert>
     <!--备份表-->
     <update id="dumpPriceTable">
+        <bind name="backUpTableName" value="'dbo.ODS_OFFICE_BUILDING_PRICE_INFO_' + yearMonth+'_'+operateDate+'_bak'"/>
+        <bind name="targetTableName" value="'dbo.ODS_OFFICE_BUILDING_PRICE_INFO_' + yearMonth"/>
+        IF OBJECT_ID(#{backUpTableName}, 'U') IS NOT NULL
+            drop table ${backUpTableName}
+        select * into ${backUpTableName} from ${targetTableName}
+    </update>
+    <update id="clearPriceTable">
         <bind name="targetTableName" value="'dbo.ODS_OFFICE_BUILDING_PRICE_INFO_' + yearMonth"/>
         IF OBJECT_ID(#{targetTableName}, 'U') IS NOT NULL
-            select * into ODS_OFFICE_BUILDING_PRICE_INFO_${yearMonth}_${operateDate}_bak from ${targetTableName}
+            truncate table ${targetTableName}
     </update>
     <!--创建价格表-->
-    <update id="createPriceTable">
+    <update id="createUltimatePriceTable">
         <bind name="targetTableName" value="'dbo.ODS_OFFICE_BUILDING_PRICE_INFO_' + yearMonth"/>
         IF OBJECT_ID(#{targetTableName}, 'U') IS NOT NULL
             drop table ${targetTableName};
 
         create table ${targetTableName}(
             id bigint identity not null ,
-            BuildingID bigint not null,
+            BuildingID bigint null,
             UnifiedID bigint null,
-            ProjectID bigint not null,
+            ProjectID bigint null,
             BuildingID_P nvarchar(20) not null,
             ProjectID_P bigint null,
             MainPrice decimal(38, 6) null,
@@ -243,6 +250,9 @@
           , UpperFloorSum
           , OfficeClass
           , Grade
+          , BuildingID
+          , ProjectID
+          , UnifiedID
         ) values(
             #{buildingId},
             #{communityId},
@@ -273,7 +283,10 @@
             #{totalFloorSum},
             #{upperFloorSum},
             #{officeClass},
-            #{officeLevel}
+            #{officeLevel},
+            #{deprecatedBuildingId},
+            #{deprecatedCommunityId},
+            #{unifiedId}
         )
     </update>
 </mapper>

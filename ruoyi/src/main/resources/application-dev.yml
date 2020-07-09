@@ -70,9 +70,9 @@ spring:
           password: Lcdatacenter_888
         calc:
           driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
-          url: jdbc:sqlserver://172.16.30.233:1433;DatabaseName=uv_calc
-          username: sa
-          password: Lcdatacenter_888
+          url: jdbc:sqlserver://139.196.201.83:1433;DatabaseName=CALC
+          username: purple
+          password: liancheng
         spider:
           driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
           url: jdbc:sqlserver://139.196.201.83:1433;DatabaseName=TEST
