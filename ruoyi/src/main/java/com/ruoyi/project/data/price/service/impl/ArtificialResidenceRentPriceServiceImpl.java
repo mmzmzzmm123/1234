@@ -198,7 +198,7 @@ public class ArtificialResidenceRentPriceServiceImpl implements IArtificialResid
             Integer lastPriceTableRoute = new Integer(String.format("%d%02d", calendar.get(Calendar.YEAR),
                     calendar.get(Calendar.MONTH) + 1));
 
-            pushData(yearMonth, lastYearMonth, lastPriceTableRoute);
+//            pushData(yearMonth, lastYearMonth, lastPriceTableRoute);
         } catch (Exception e) {
             log.error("住宅租赁基价人工修正异常", e);
         }
