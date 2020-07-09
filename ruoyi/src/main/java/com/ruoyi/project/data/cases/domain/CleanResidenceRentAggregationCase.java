@@ -9,42 +9,153 @@ import java.util.Date;
 public class CleanResidenceRentAggregationCase {
 
     private Integer yearMonth;
+    /**
+     * 案例单套ID
+     */
     private String householdsIdSRC;
+    /**
+     * 案例小区ID
+     */
     private String projectIdSRC;
+    /**
+     * 小区ID
+     */
     private String communityId;
+
     private String buildingId;
+    /**
+     * WHEN A.RentType=1 THEN ''整租''
+     * WHEN A.RentType=2 THEN ''散租''
+     * WHEN A.RentType=3 THEN ''分租''
+     */
     private Integer rentType;
+    /**
+     * 室
+     */
     private Integer roomNum;
+    /**
+     * 厅
+     */
     private Integer hallNum;
+    /**
+     * 卫
+     */
     private Integer bashRoomNum;
+    /**
+     * 面积
+     */
     private BigDecimal area;
+    /**
+     * 朝向
+     */
     private String toward;
+    /**
+     * UpperFloorSum 总层数
+     */
     private String totalFloor;
+    /**
+     * UpperFloorNum 所在层
+     */
     private String currentFloor;
+    /**
+     * 有无电梯
+     */
     private Boolean elevator;
+    /**
+     * 装修类型
+     */
     private String decoration;
+    /**
+     * 建成年代
+     */
     private Integer year;
+    /**
+     * 房屋面积系数
+     */
     private BigDecimal areaCoefficient;
+    /**
+     * 朝向系数
+     */
     private BigDecimal towardCoefficient;
+    /**
+     * 楼层系数
+     */
     private BigDecimal floorCoefficient;
+    /**
+     * 装修系数
+     */
     private Integer decorationCoefficient;
+    /**
+     * 建成年代系数
+     */
     private BigDecimal yearCoefficient;
+    /**
+     * 楼栋系数
+     */
     private BigDecimal buildingCoefficient;
+    /**
+     * 室厅修正系数
+     */
     private BigDecimal roomTypeCoefficient;
+    /**
+     * 总价（元）
+     */
     private BigDecimal totalPrice;
+    /**
+     * 单价（元每平方米）
+     */
     private BigDecimal unitPrice;
+    /**
+     * 散租单价
+     */
     private BigDecimal priceScatterRent;
+    /**
+     * 整租单价
+     */
     private BigDecimal priceEntireRent;
+    /**
+     * 合租单间价
+     */
     private BigDecimal priceShareRent0;
+    /**
+     * 合租折算价
+     */
     private BigDecimal priceShareRent;
+    /**
+     * 带看总次数
+     */
     private Integer visitedNum;
+    /**
+     * 首次带看时间
+     */
     private Date firstVisitedDate;
+    /**
+     * 15天内带看总次数
+     */
     private Integer visitedNum15;
+    /**
+     * 30天内带看总次数
+     */
     private Integer visitedNum30;
+    /**
+     * 案例状态
+     */
     private Integer status;
+    /**
+     * 最近一次挂牌总价调整幅度
+     */
     private BigDecimal adjustedValue;
+    /**
+     * 最近一次挂牌总价调整比例
+     */
     private BigDecimal adjustedPst;
+    /**
+     * 累计挂牌总价调整幅度
+     */
     private BigDecimal adjustedCumValue;
+    /**
+     * 累计挂牌总价调整比例
+     */
     private BigDecimal adjustedCumPst;
     /**
      * 累计挂牌总价绝对调整幅度

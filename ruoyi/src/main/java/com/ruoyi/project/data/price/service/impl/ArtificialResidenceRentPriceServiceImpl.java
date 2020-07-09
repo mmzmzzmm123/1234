@@ -6,9 +6,16 @@ import com.microsoft.sqlserver.jdbc.SQLServerDataTable;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 import com.ruoyi.common.utils.LoadUtil;
 import com.ruoyi.project.common.VueSelectModel;
+import com.ruoyi.project.data.cases.domain.CleanResidenceRentAggregationCase;
+import com.ruoyi.project.data.cases.domain.OfficeAggregationCase;
+import com.ruoyi.project.data.cases.mapper.ResidenceRentAggregationCaseMapper;
+import com.ruoyi.project.data.cases.mapper.sync.SyncResidenceRentCaseMapper;
 import com.ruoyi.project.data.price.domain.ArtificialResidenceRentBasePrice;
 import com.ruoyi.project.data.price.domain.ComputeResidenceRentBasePrice;
+import com.ruoyi.project.data.price.domain.UltimateOfficeBasePrice;
+import com.ruoyi.project.data.price.domain.UltimateResidenceRentBasePrice;
 import com.ruoyi.project.data.price.mapper.ArtificialResidenceRentPriceMapper;
+import com.ruoyi.project.data.price.mapper.UltimateResidenceRentPriceMapper;
 import com.ruoyi.project.data.price.service.IArtificialResidenceRentPriceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +23,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,6 +53,12 @@ public class ArtificialResidenceRentPriceServiceImpl implements IArtificialResid
     private ArtificialResidenceRentPriceMapper artificialResidenceRentPriceMapper;
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private SyncResidenceRentCaseMapper syncResidenceRentCaseMapper;
+    @Autowired
+    private ResidenceRentAggregationCaseMapper residenceRentAggregationCaseMapper;
+    @Autowired
+    private UltimateResidenceRentPriceMapper ultimateResidenceRentPriceMapper;
 
     @Override
     public ArtificialResidenceRentBasePrice selectById(Integer yearMonth, String id) {
@@ -101,7 +115,8 @@ public class ArtificialResidenceRentPriceServiceImpl implements IArtificialResid
         Date valuePoint = calendar.getTime();
         calendar.add(Calendar.MONTH, -1);
         Date lastValuePoint = calendar.getTime();
-        String lastYearMonth = String.format("%d%02d", calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1);
+        Integer lastYearMonth = new Integer(String.format("%d%02d", calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH) + 1));
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         String priceDate = simpleDateFormat.format(valuePoint);
         String lastPriceDate = simpleDateFormat.format(lastValuePoint);
@@ -173,16 +188,69 @@ public class ArtificialResidenceRentPriceServiceImpl implements IArtificialResid
             // 人工修正导入
             String rawSql = LoadUtil.loadContent("sql-template/update_rent_price.sql");
             String sql = rawSql.replace("#yearMonth#", yearMonth.toString())
-                    .replace("#lastYearMonth#", lastYearMonth)
+                    .replace("#lastYearMonth#", lastYearMonth.toString())
                     .replace("#priceDate#", priceDate)
                     .replace("#lastPriceDate#", lastPriceDate);
             jdbcTemplate.update(sql);
             artificialResidenceRentPriceMapper.initProcedure();
+            calendar.setTime(lastValuePoint);
+            calendar.add(Calendar.MONTH, -1);
+            Integer lastPriceTableRoute = new Integer(String.format("%d%02d", calendar.get(Calendar.YEAR),
+                    calendar.get(Calendar.MONTH) + 1));
+
+            pushData(yearMonth, lastYearMonth, lastPriceTableRoute);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("住宅租赁基价人工修正异常", e);
         }
 
         StringBuilder successMsg = new StringBuilder("恭喜您，数据已全部导入成功！共 " + (successNum - failureNum) + " 条");
         return successMsg.toString();
     }
+
+    /**
+     * 数据推送
+     *
+     * @param yearMonth              作价表
+     * @param currentPriceTableRoute 当期表
+     * @param lastPriceTableRoute    上期表
+     */
+    @Async
+    public void pushData(Integer yearMonth, Integer currentPriceTableRoute, Integer lastPriceTableRoute) {
+        try {
+            // 案例同步
+            syncResidenceRentCaseMapper.createAggregationCaseTable(currentPriceTableRoute);
+            List<CleanResidenceRentAggregationCase> list = residenceRentAggregationCaseMapper.getMonthly(yearMonth);
+            list.parallelStream().forEach(cleanResidenceRentAggregationCase -> {
+                cleanResidenceRentAggregationCase.setYearMonth(currentPriceTableRoute);
+                syncResidenceRentCaseMapper.insertAggregationCaseTable(cleanResidenceRentAggregationCase);
+            });
+
+            // 当期价格同步
+            syncResidenceRentCaseMapper.createUltimatePriceTable(currentPriceTableRoute);
+            List<UltimateResidenceRentBasePrice> ultimateResidenceRentBasePrices =
+                    ultimateResidenceRentPriceMapper.getMonthly(yearMonth);
+            ultimateResidenceRentBasePrices.parallelStream().forEach(ultimateResidenceRentBasePrice -> {
+                ultimateResidenceRentBasePrice.setYearMonth(currentPriceTableRoute);
+                syncResidenceRentCaseMapper.insertUltimatePriceTable(ultimateResidenceRentBasePrice);
+            });
+
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(new Date());
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
+            String operateDate = simpleDateFormat.format(calendar.getTime());
+
+            // 上期价格同步
+            syncResidenceRentCaseMapper.dumpPriceTable(lastPriceTableRoute, operateDate);
+            syncResidenceRentCaseMapper.clearPriceTable(lastPriceTableRoute);
+            List<UltimateResidenceRentBasePrice> lastUltimateResidenceRentBasePrices =
+                    ultimateResidenceRentPriceMapper.getMonthly(lastPriceTableRoute);
+            lastUltimateResidenceRentBasePrices.parallelStream().forEach(ultimateResidenceRentBasePrice -> {
+                ultimateResidenceRentBasePrice.setYearMonth(lastPriceTableRoute);
+                syncResidenceRentCaseMapper.insertUltimatePriceTable(ultimateResidenceRentBasePrice);
+            });
+        } catch (Exception e) {
+            log.error("推送住宅租赁数据失败", e);
+        }
+    }
+
 }

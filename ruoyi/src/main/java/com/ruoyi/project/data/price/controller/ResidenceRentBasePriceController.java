@@ -20,7 +20,7 @@ import com.ruoyi.project.data.price.domain.ComputeResidenceRentBasePrice;
 import com.ruoyi.project.data.price.domain.UltimateResidenceRentBasePrice;
 import com.ruoyi.project.data.price.service.IArtificialResidenceRentPriceService;
 import com.ruoyi.project.data.price.service.IComputeResidenceRentPriceService;
-import com.ruoyi.project.data.price.service.IUltimateResidenceRentBasePriceService;
+import com.ruoyi.project.data.price.service.IUltimateResidenceRentPriceService;
 import com.ruoyi.project.system.domain.UploadFile;
 import com.ruoyi.project.system.service.IUploadFileService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +38,7 @@ public class ResidenceRentBasePriceController extends BaseController {
     @Autowired
     private IArtificialResidenceRentPriceService artificialResidenceRentPriceService;
     @Autowired
-    private IUltimateResidenceRentBasePriceService ultimateResidenceRentBasePriceService;
+    private IUltimateResidenceRentPriceService ultimateResidenceRentBasePriceService;
     @Autowired
     private IUploadFileService fileService;
     @Autowired

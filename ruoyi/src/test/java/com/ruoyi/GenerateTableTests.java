@@ -1,6 +1,7 @@
 package com.ruoyi;
 
 
+import com.ruoyi.project.data.cases.domain.CleanResidenceRentAggregationCase;
 import com.ruoyi.project.data.cases.domain.OfficeAggregationCase;
 import com.ruoyi.project.data.cases.domain.OriginalResidenceRentClosingCase;
 import com.ruoyi.project.data.price.domain.ComputeResidenceSaleBasePrice;
@@ -95,7 +96,7 @@ public class GenerateTableTests {
 
     @Test
     public void generateBatchGuoHaoInsertSqL() {
-        Class targetClass = UltimateOfficeBasePrice.class;
+        Class targetClass = CleanResidenceRentAggregationCase.class;
 
         List<Field> fieldList = new ArrayList<>();
         while (targetClass != null) {

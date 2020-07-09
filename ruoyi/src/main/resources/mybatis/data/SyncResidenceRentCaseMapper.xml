@@ -2,8 +2,8 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ruoyi.project.data.cases.mapper.sync.SyncOriginalResidenceRentAggregationCaseMapper">
-    <update id="createTable">
+<mapper namespace="com.ruoyi.project.data.cases.mapper.sync.SyncResidenceRentCaseMapper">
+    <update id="createAggregationCaseTable">
         <bind name="targetTableName" value="'dbo.DW_HOUSINGCASE_RENT_COMM_' + yearMonth"/>
         IF OBJECT_ID(#{targetTableName}, 'U') IS NOT NULL
             drop table ${targetTableName};
@@ -68,7 +68,7 @@
         )
     </update>
 
-    <insert id="insert" parameterType="com.ruoyi.project.data.cases.domain.OriginalResidenceSaleOpeningCase">
+    <insert id="insertAggregationCaseTable" parameterType="com.ruoyi.project.data.cases.domain.CleanResidenceRentAggregationCase">
         insert into dbo.DW_HOUSINGCASE_RENT_COMM_${yearMonth}
         (
             HouseholdsID_SRC
@@ -128,27 +128,74 @@
           , ShareRentRatio
         ) values
         (
-            #{caseLianJiaId},
-            #{caseLianJiaCommunityId},
-            #{caseTitle},
-            #{caseApartmentLayout},
-            #{caseArea},
-            #{caseToward},
-            #{caseStorey},
-            #{caseLastDeal,jdbcType=DATE},
-            #{caseElevator},
-            #{caseDecoration},
-            #{caseYear},
-            #{caseAddress},
-            #{casePrice},
-            #{caseCommunityName},
-            #{caseVisitedNum},
-            #{caseFirstVisitTime,jdbcType=DATE},
-            #{caseVisitedNum15},
-            #{caseVisitedNum30},
-            #{caseUrl},
-            #{caseCommunityUrl},
-            #{caseGetDate,jdbcType=DATE}
+            #{householdsIdSRC},
+            #{projectIdSRC},
+            #{communityId},
+            #{buildingId},
+            #{rentType},
+            #{roomNum},
+            #{hallNum},
+            #{bashRoomNum},
+            #{area},
+            #{toward},
+            #{totalFloor},
+            #{currentFloor},
+            #{elevator},
+            #{decoration},
+            #{year},
+            #{areaCoefficient},
+            #{towardCoefficient},
+            #{floorCoefficient},
+            #{decorationCoefficient},
+            #{yearCoefficient},
+            #{buildingCoefficient},
+            #{roomTypeCoefficient},
+            #{totalPrice},
+            #{unitPrice},
+            #{priceScatterRent},
+            #{priceEntireRent},
+            #{priceShareRent0},
+            #{priceShareRent},
+            #{visitedNum},
+            #{firstVisitedDate,jdbcType=DATE},
+            #{visitedNum15},
+            #{visitedNum30},
+            #{status},
+            #{adjustedValue},
+            #{adjustedPst},
+            #{adjustedCumValue},
+            #{adjustedCumPst},
+            #{adjustedCumValueAbs},
+            #{adjustedCumPstAbs},
+            #{adjustedCumNum},
+            #{priceTotalIn},
+            #{priceTotalOut},
+            #{priceDateIn,jdbcType=DATE},
+            #{priceDateOut,jdbcType=DATE},
+            #{origin},
+            #{urlHouseholds},
+            #{urlProjects},
+            #{caseName},
+            #{caseType},
+            #{rentPrice_1},
+            #{range},
+            #{rangeFlag},
+            #{rentPrice},
+            #{entireRentRatio},
+            #{shareRentRatio}
             )
     </insert>
+    <!--备份表-->
+    <update id="dumpPriceTable">
+        <bind name="backUpTableName" value="'dbo.ODS_PROJECT_RENT_PRICE_INFO_' + yearMonth+'_'+operateDate+'_bak'"/>
+        <bind name="targetTableName" value="'dbo.ODS_PROJECT_RENT_PRICE_INFO_' + yearMonth"/>
+        IF OBJECT_ID(#{backUpTableName}, 'U') IS NOT NULL
+            drop table ${backUpTableName}
+        select * into ${backUpTableName} from ${targetTableName}
+    </update>
+    <update id="clearPriceTable">
+        <bind name="targetTableName" value="'dbo.ODS_PROJECT_RENT_PRICE_INFO_' + yearMonth"/>
+        IF OBJECT_ID(#{targetTableName}, 'U') IS NOT NULL
+            truncate table ${targetTableName}
+    </update>
 </mapper>

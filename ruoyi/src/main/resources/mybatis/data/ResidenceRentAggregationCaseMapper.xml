@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.data.cases.mapper.ResidenceRentAggregationCaseMapper">
+    <resultMap id="AggregationCaseResultMapping" type="com.ruoyi.project.data.cases.domain.CleanResidenceRentAggregationCase">
+        <result property="householdsIdSRC" column="HouseholdsID_SRC"/>
+        <result property="projectIdSRC" column="ProjectID_SRC"/>
+        <result property="communityId" column="ProjectID"/>
+        <result property="buildingId" column="BuildingID"/>
+        <result property="rentType" column="RentType"/>
+        <result property="roomNum" column="Room"/>
+        <result property="hallNum" column="Hall"/>
+        <result property="bashRoomNum" column="Bashroom"/>
+        <result property="area" column="Area"/>
+        <result property="toward" column="Towards"/>
+        <result property="totalFloor" column="UpperFloorSum"/>
+        <result property="currentFloor" column="UpperFloorNum"/>
+        <result property="elevator" column="Elevator"/>
+        <result property="decoration" column="Decoration"/>
+        <result property="year" column="Year"/>
+        <result property="areaCoefficient" column="AreaCoff"/>
+        <result property="towardCoefficient" column="TowardsCoff"/>
+        <result property="floorCoefficient" column="FloorCoff"/>
+        <result property="decorationCoefficient" column="DecorationRng"/>
+        <result property="yearCoefficient" column="YearCoff"/>
+        <result property="buildingCoefficient" column="BuildingCoff"/>
+        <result property="roomTypeCoefficient" column="RoomTypeCoff"/>
+        <result property="totalPrice" column="PriceTotal"/>
+        <result property="unitPrice" column="PriceUnit"/>
+        <result property="priceScatterRent" column="PriceScatterRent"/>
+        <result property="priceEntireRent" column="PriceEntireRent"/>
+        <result property="priceShareRent0" column="PriceShareRent0"/>
+        <result property="priceShareRent" column="PriceShareRent"/>
+        <result property="visitedNum" column="Visited_Num"/>
+        <result property="firstVisitedDate" column="First_Visit_Time" jdbcType="DATE"/>
+        <result property="visitedNum15" column="Visited_Num_15"/>
+        <result property="visitedNum30" column="Visited_Num_30"/>
+        <result property="status" column="Status"/>
+        <result property="adjustedValue" column="AdjustedValue"/>
+        <result property="adjustedPst" column="AdjustedPst"/>
+        <result property="adjustedCumValue" column="AdjustedCumValue"/>
+        <result property="adjustedCumPst" column="AdjustedCumPst"/>
+        <result property="adjustedCumValueAbs" column="AdjustedCumValueAbs"/>
+        <result property="adjustedCumPstAbs" column="AdjustedCumPstAbs"/>
+        <result property="adjustedCumNum" column="AdjustedCumNum"/>
+        <result property="priceTotalIn" column="PriceTotalIn"/>
+        <result property="priceTotalOut" column="PriceTotalOut"/>
+        <result property="priceDateIn" column="PriceDateIn" jdbcType="DATE"/>
+        <result property="priceDateOut" column="PriceDateOut" jdbcType="DATE"/>
+        <result property="origin" column="Origin"/>
+        <result property="urlHouseholds" column="UrlHouseholds"/>
+        <result property="urlProjects" column="UrlProjects"/>
+        <result property="caseName" column="CaseName"/>
+        <result property="caseType" column="CaseType"/>
+        <result property="rentPrice_1" column="RentPrice_1"/>
+        <result property="range" column="Range"/>
+        <result property="rangeFlag" column="RangeFlag"/>
+        <result property="rentPrice" column="RentPrice"/>
+        <result property="entireRentRatio" column="EntireRentRatio"/>
+        <result property="shareRentRatio" column="ShareRentRatio"/>
+        <result property="yearMonth" column="yearMonth"/>
+    </resultMap>
+    <!-- 汇总案例 -->
+    <select id="getOfficeAggregationCases" resultMap="AggregationCaseResultMapping">
+            SELECT HouseholdsID_SRC
+                ,ProjectID_SRC
+                ,ProjectID
+                ,BuildingID
+                ,RentType
+                ,Room
+                ,Hall
+                ,Bashroom
+                ,Area
+                ,Towards
+                ,UpperFloorSum
+                ,UpperFloorNum
+                ,Elevator
+                ,Decoration
+                ,Year
+                ,AreaCoff
+                ,TowardsCoff
+                ,FloorCoff
+                ,DecorationRng
+                ,YearCoff
+                ,BuildingCoff
+                ,RoomTypeCoff
+                ,PriceTotal
+                ,PriceUnit
+                ,PriceScatterRent
+                ,PriceEntireRent
+                ,PriceShareRent0
+                ,PriceShareRent
+                ,Visited_Num
+                ,First_Visit_Time
+                ,Visited_Num_15
+                ,Visited_Num_30
+                ,Status
+                ,AdjustedValue
+                ,AdjustedPst
+                ,AdjustedCumValue
+                ,AdjustedCumPst
+                ,AdjustedCumValueAbs
+                ,AdjustedCumPstAbs
+                ,AdjustedCumNum
+                ,PriceTotalIn
+                ,PriceTotalOut
+                ,PriceDateIn
+                ,PriceDateOut
+                ,Origin
+                ,UrlHouseholds
+                ,UrlProjects
+                ,CaseName
+                ,CaseType
+                ,RentPrice_1
+                ,Range
+                ,RangeFlag
+                ,RentPrice
+                ,EntireRentRatio
+                ,ShareRentRatio
+                ,${yearMonth} as yearMonth
+            FROM dbo.DW_HOUSINGCASE_RENT_COMM_${yearMonth}
+    </select>
+</mapper>

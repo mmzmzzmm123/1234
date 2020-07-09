@@ -111,4 +111,57 @@
         where name like 'ODS_PROJECT_RENT_PRICE_INFO_%' and name not like '%_bak'
         order by cast(right(name,6) as int) desc
     </select>
+    <resultMap id="ultimatePriceMapping" type="com.ruoyi.project.data.price.domain.UltimateResidenceRentBasePrice">
+        <result property="id" column="id"/>
+        <result property="communityId" column="projectID"/>
+        <result property="priceType" column="priceType"/>
+        <result property="basePrice_1" column="basePrice_1"/>
+        <result property="rentPrice" column="rentPrice"/>
+        <result property="sumCase1" column="sumCase1"/>
+        <result property="voppa" column="voppa"/>
+        <result property="voppat" column="voppat"/>
+        <result property="gf_1Room" column="gf_1Room"/>
+        <result property="gf_2Room" column="gf_2Room"/>
+        <result property="gy_2Room" column="gy_2Room"/>
+        <result property="gy_3Room" column="gy_3Room"/>
+        <result property="one_Room" column="one_Room"/>
+        <result property="two_Room" column="two_Room"/>
+        <result property="three_Room" column="three_Room"/>
+        <result property="entireRentRatio" column="entireRentRatio"/>
+        <result property="entireRentNum" column="entireRentNum"/>
+        <result property="shareRentRatio" column="shareRentRatio"/>
+        <result property="shareRentNum" column="shareRentNum"/>
+        <result property="saleRentRatio" column="saleRentRatio"/>
+        <result property="modifyDate" column="modifyDate" jdbcType="DATE"/>
+        <result property="status" column="status"/>
+        <result property="adjEvd" column="adjEvd"/>
+        <result property="yearMonth" column="yearMonth"/>
+    </resultMap>
+    <select id="getMonthly" resultMap="ultimatePriceMapping">
+        SELECT ID
+          ,ProjectID
+          ,PriceType
+          ,BasePrice_1
+          ,RentPrice
+          ,SumCase1
+          ,VOPPAT
+          ,VOPPA
+          ,GF_1Room
+          ,GF_2Room
+          ,GY_2Room
+          ,GY_3Room
+          ,One_Room
+          ,Two_Room
+          ,Three_Room
+          ,EntireRentRatio
+          ,EntireRentNum
+          ,ShareRentRatio
+          ,ShareRentNum
+          ,SaleRentRatio
+          ,ModifyDate
+          ,Status
+          ,AdjEvd
+          ,${yearMonth} as yearMonth
+      FROM dbo.ODS_PROJECT_RENT_PRICE_INFO_${yearMonth}
+    </select>
 </mapper>

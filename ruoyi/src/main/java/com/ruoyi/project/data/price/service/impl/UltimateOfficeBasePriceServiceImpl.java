@@ -253,36 +253,41 @@ public class UltimateOfficeBasePriceServiceImpl implements IUltimateOfficeBasePr
      */
     @Async
     public void pushData(Integer yearMonth, Integer currentPriceTableRoute, Integer lastPriceTableRoute) {
-        // 案例同步
-        syncOfficeAggregationCaseMapper.createAggregationCaseTable(currentPriceTableRoute);
-        List<OfficeAggregationCase> list = originalOfficeCaseMapper.getOfficeAggregationCases(yearMonth);
-        list.parallelStream().forEach(officeAggregationCase -> {
-            officeAggregationCase.setYearMonth(currentPriceTableRoute);
-            syncOfficeAggregationCaseMapper.insertAggregationCase(officeAggregationCase);
-        });
+        try {
+            // 案例同步
+            syncOfficeAggregationCaseMapper.createAggregationCaseTable(currentPriceTableRoute);
+            List<OfficeAggregationCase> list = originalOfficeCaseMapper.getOfficeAggregationCases(yearMonth);
+            list.parallelStream().forEach(officeAggregationCase -> {
+                officeAggregationCase.setYearMonth(currentPriceTableRoute);
+                syncOfficeAggregationCaseMapper.insertAggregationCase(officeAggregationCase);
+            });
 
-        // 当期价格同步
-        syncOfficeAggregationCaseMapper.createUltimatePriceTable(currentPriceTableRoute);
-        List<UltimateOfficeBasePrice> ultimateOfficeBasePrices =
-                ultimateOfficeBasePriceMapper.getUltimateOfficeBasePrices(yearMonth);
-        ultimateOfficeBasePrices.parallelStream().forEach(ultimateOfficeBasePrice -> {
-            ultimateOfficeBasePrice.setYearMonth(currentPriceTableRoute);
-            syncOfficeAggregationCaseMapper.insertUltimatePriceTable(ultimateOfficeBasePrice);
-        });
+            // 当期价格同步
+            syncOfficeAggregationCaseMapper.createUltimatePriceTable(currentPriceTableRoute);
+            List<UltimateOfficeBasePrice> ultimateOfficeBasePrices =
+                    ultimateOfficeBasePriceMapper.getUltimateOfficeBasePrices(yearMonth);
+            ultimateOfficeBasePrices.parallelStream().forEach(ultimateOfficeBasePrice -> {
+                ultimateOfficeBasePrice.setYearMonth(currentPriceTableRoute);
+                syncOfficeAggregationCaseMapper.insertUltimatePriceTable(ultimateOfficeBasePrice);
+            });
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(new Date());
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
-        String operateDate = simpleDateFormat.format(calendar.getTime());
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(new Date());
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
+            String operateDate = simpleDateFormat.format(calendar.getTime());
 
-        // 上期价格同步
-        syncOfficeAggregationCaseMapper.dumpPriceTable(lastPriceTableRoute, operateDate);
-        syncOfficeAggregationCaseMapper.clearPriceTable(lastPriceTableRoute);
-        List<UltimateOfficeBasePrice> lastUltimateOfficeBasePrices =
-                ultimateOfficeBasePriceMapper.getUltimateOfficeBasePrices(lastPriceTableRoute);
-        lastUltimateOfficeBasePrices.parallelStream().forEach(ultimateOfficeBasePrice -> {
-            ultimateOfficeBasePrice.setYearMonth(lastPriceTableRoute);
-            syncOfficeAggregationCaseMapper.insertUltimatePriceTable(ultimateOfficeBasePrice);
-        });
+            // 上期价格同步
+            syncOfficeAggregationCaseMapper.dumpPriceTable(lastPriceTableRoute, operateDate);
+            syncOfficeAggregationCaseMapper.clearPriceTable(lastPriceTableRoute);
+            List<UltimateOfficeBasePrice> lastUltimateOfficeBasePrices =
+                    ultimateOfficeBasePriceMapper.getUltimateOfficeBasePrices(lastPriceTableRoute);
+            lastUltimateOfficeBasePrices.parallelStream().forEach(ultimateOfficeBasePrice -> {
+                ultimateOfficeBasePrice.setYearMonth(lastPriceTableRoute);
+                syncOfficeAggregationCaseMapper.insertUltimatePriceTable(ultimateOfficeBasePrice);
+            });
+        } catch (Exception e) {
+            log.error("推送办公数据失败", e);
+        }
     }
+
 }
