@@ -1,9 +1,11 @@
 package com.ruoyi.project.data.cases.domain;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * 租赁挂牌案例
+ * @author lihe
  */
 public class OriginalResidenceRentOpeningCase extends OriginalResidenceSaleOpeningCase {
 
@@ -47,6 +49,7 @@ public class OriginalResidenceRentOpeningCase extends OriginalResidenceSaleOpeni
      * 室数量
      */
     private Integer caseRoomNum;
+    private Date updateDate;
 
     public String getCaseNo() {
         return caseNo;
@@ -126,5 +129,13 @@ public class OriginalResidenceRentOpeningCase extends OriginalResidenceSaleOpeni
 
     public void setCleanCommunityId(String cleanCommunityId) {
         this.cleanCommunityId = cleanCommunityId;
+    }
+
+    public Date getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(Date updateDate) {
+        this.updateDate = updateDate;
     }
 }

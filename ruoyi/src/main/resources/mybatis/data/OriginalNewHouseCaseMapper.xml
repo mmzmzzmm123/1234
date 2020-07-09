@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.data.cases.mapper.OriginalNewHouseCaseMapper">
+    <!--第一批一手房案例表-->
+    <update id="createFirstTable">
+        <bind name="targetTableName" value="'dbo.original_new_house_case_' + yearMonth"/>
+        IF OBJECT_ID(#{targetTableName}, 'U') IS NOT NULL
+            drop table ${targetTableName};
+
+        create TABLE ${targetTableName}
+        (
+            case_id varchar(32) not null,
+            case_county varchar (20) NULL,
+            case_block varchar (200) NULL,
+            case_loop varchar (200) NULL,
+            case_community_name nvarchar (255) NULL,
+            case_address nvarchar (1024) NULL,
+            case_area decimal(18,2) NULL,
+            case_unit_price decimal(18,2) NULL,
+            case_total_price decimal(18,2) NULL,
+            case_house_type nvarchar(255) null,
+            case_signing_date date null,
+            case_floor int null,
+            case_house_property nvarchar(255) null,
+            case_apartment_layout nvarchar(255) null,
+            compute_unit_price decimal(18,2) NULL,
+            compute_total_price decimal(18,2) NULL,
+            reference_unit_price decimal(18,2) NULL,
+            reference_total_price decimal(18,2) NULL,
+            case_label nvarchar(512) null,
+            create_time datetime not null
+        );
+    </update>
+
+    <insert id="insertFirstTable" parameterType="com.ruoyi.project.data.cases.domain.OriginalNewHouseCase">
+        <bind name="targetTableName" value="'dbo.original_new_house_case_' + yearMonth"/>
+        insert into ${targetTableName}
+        (
+            case_id
+          , case_county
+          , case_block
+          , case_loop
+          , case_community_name
+          , case_address
+          , case_area
+          , case_unit_price
+          , case_total_price
+          , case_house_type
+          , case_signing_date
+          , case_floor
+          , case_house_property
+          , case_apartment_layout
+          , compute_unit_price
+          , compute_total_price
+          , reference_unit_price
+          , reference_total_price
+          , case_label
+          , create_time
+        )
+        values(
+            #{caseId},
+            #{caseCounty},
+            #{caseBlock},
+            #{caseLoop},
+            #{caseCommunityName},
+            #{caseAddress},
+            #{caseArea},
+            #{caseUnitPrice},
+            #{caseTotalPrice},
+            #{caseHouseType},
+            #{caseSigningDate,jdbcType=DATE},
+            #{caseFloor},
+            #{caseHouseProperty},
+            #{caseApartmentLayout},
+            #{computeUnitPrice},
+            #{computeTotalPrice},
+            #{referenceUnitPrice},
+            #{referenceTotalPrice},
+            #{caseLabel},
+            getdate()
+        )
+    </insert>
+
+    <!--第二批一手房案例表-->
+    <update id="createSecondTable">
+        <bind name="targetTableName" value="'dbo.original_new_house_case_' + yearMonth+'_update'"/>
+        IF OBJECT_ID(#{targetTableName}, 'U') IS NOT NULL
+        drop table ${targetTableName};
+
+        create TABLE ${targetTableName}
+        (
+            case_id varchar(32) not null,
+            case_county varchar (20) NULL,
+            case_block varchar (200) NULL,
+            case_loop varchar (200) NULL,
+            case_community_name nvarchar (255) NULL,
+            case_address nvarchar (1024) NULL,
+            case_area decimal(18,2) NULL,
+            case_unit_price decimal(18,2) NULL,
+            case_total_price decimal(18,2) NULL,
+            case_house_type nvarchar(255) null,
+            case_signing_date date null,
+            case_floor int null,
+            case_house_property nvarchar(255) null,
+            case_apartment_layout nvarchar(255) null,
+            compute_unit_price decimal(18,2) NULL,
+            compute_total_price decimal(18,2) NULL,
+            reference_unit_price decimal(18,2) NULL,
+            reference_total_price decimal(18,2) NULL,
+            case_label nvarchar(512) null,
+            create_time datetime not null
+        );
+    </update>
+
+    <insert id="insertSecondTable" parameterType="com.ruoyi.project.data.cases.domain.OriginalNewHouseCase">
+        <bind name="targetTableName" value="'dbo.original_new_house_case_' + yearMonth+'_update'"/>
+        insert into ${targetTableName}
+        (
+            case_id
+            , case_county
+            , case_block
+            , case_loop
+            , case_community_name
+            , case_address
+            , case_area
+            , case_unit_price
+            , case_total_price
+            , case_house_type
+            , case_signing_date
+            , case_floor
+            , case_house_property
+            , case_apartment_layout
+            , compute_unit_price
+            , compute_total_price
+            , reference_unit_price
+            , reference_total_price
+            , case_label
+            , create_time
+        )
+        values(
+            #{caseId},
+            #{caseCounty},
+            #{caseBlock},
+            #{caseLoop},
+            #{caseCommunityName},
+            #{caseAddress},
+            #{caseArea},
+            #{caseUnitPrice},
+            #{caseTotalPrice},
+            #{caseHouseType},
+            #{caseSigningDate,jdbcType=DATE},
+            #{caseFloor},
+            #{caseHouseProperty},
+            #{caseApartmentLayout},
+            #{computeUnitPrice},
+            #{computeTotalPrice},
+            #{referenceUnitPrice},
+            #{referenceTotalPrice},
+            #{caseLabel},
+            getdate()
+        )
+    </insert>
+
+</mapper>

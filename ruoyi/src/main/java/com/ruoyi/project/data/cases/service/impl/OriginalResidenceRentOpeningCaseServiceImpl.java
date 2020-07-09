@@ -59,16 +59,8 @@ public class OriginalResidenceRentOpeningCaseServiceImpl implements IOriginalRes
                 calendar.get(Calendar.MONTH) + 1));
         Date endDate = calendar.getTime();
 
-        computeTableRoute = 202007;
-        lastYearMonth = 202006;
-        syncTableRoute = 202005;
-
-        calendar.set(2020, 5, 15);
-        startDate = calendar.getTime();
-        calendar.set(2020, 6, 15);
-        endDate = calendar.getTime();
-
         prepare(computeTableRoute, syncTableRoute);
+        // 拉取案例
         List<OriginalResidenceRentOpeningCase> list = downloadOriginalResidenceRentOpeningCaseMapper.download();
         List<OriginalResidencePlatformRentOpeningCase> platformCaseList =
                 downloadOriginalResidenceRentPlatformCaseMapper.download(startDate, endDate);
@@ -108,12 +100,13 @@ public class OriginalResidenceRentOpeningCaseServiceImpl implements IOriginalRes
                         ".ODS_HOUSINGCASELISTED_RENT_LJ_" + computeTableRoute + "_RAW (case_id, Llid,Lcid,Airaid," +
                         "Name,Type,Roomtype,Area,TotalArea,Towards,Storey,Visited_Num,First_Visit_Time," +
                         "Visited_Num_15,Visited_Num_30,Decoration,Address," +
-                        "StatusTxt,Price,Url,Curl,Cname,SynDate) values " +
+                        "StatusTxt,Price,Url,Curl,Cname,SynDate,Created,Modified) values " +
                         "(:newCaseId,:caseLianJiaId,:caseLianJiaCommunityId,:cleanCommunityId,:caseTitle," +
                         ":caseRentType," +
                         ":caseApartmentLayout,:caseArea,:caseTotalArea,:caseToward,:caseStorey,:caseVisitedNum," +
                         ":caseFirstVisitTime,:caseVisitedNum15,:caseVisitedNum30,:caseDecoration,:caseAddress," +
-                        ":caseStatus,:casePrice,:caseUrl,:caseCommunityUrl,:caseCommunityName,GETDATE());",
+                        ":caseStatus,:casePrice,:caseUrl,:caseCommunityUrl,:caseCommunityName,GETDATE(),:caseGetDate," +
+                        ":updateDate);",
                 batchParams);
 
         // 租赁平台案例入库
