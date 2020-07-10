@@ -7,6 +7,11 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
+/**
+ * 住宅销售挂牌案例DAO
+ *
+ * @author lihe
+ */
 @DS("compute")
 public interface OriginalResidenceSaleOpeningCaseMapper {
 
@@ -16,16 +21,15 @@ public interface OriginalResidenceSaleOpeningCaseMapper {
      * @param yearMonth
      * @return
      */
-    int createTable(@Param("yearMonth") Integer yearMonth);
+    int createRawTable(@Param("yearMonth") Integer yearMonth);
 
     /**
+     * 插入住宅销售挂牌案例
      *
-     * @param yearMonth
+     * @param originalResidenceSaleOpeningCase
      * @return
      */
-    int createOpeningCaseRawTable(@Param("yearMonth") Integer yearMonth);
-
-
+    int insertRawTable(OriginalResidenceSaleOpeningCase originalResidenceSaleOpeningCase);
 
     /**
      * 创建清洗完成之后的表ODS_HOUSINGCASELISTED_LJ_YYYYMM
@@ -42,8 +46,10 @@ public interface OriginalResidenceSaleOpeningCaseMapper {
      * @return
      */
     int createAssembleTable(@Param("yearMonth") Integer yearMonth);
+
     /**
      * 作价表
+     *
      * @param yearMonth
      * @return
      */
@@ -51,6 +57,7 @@ public interface OriginalResidenceSaleOpeningCaseMapper {
 
     /**
      * 人工修正价格表
+     *
      * @param yearMonth
      * @return
      */
@@ -73,6 +80,8 @@ public interface OriginalResidenceSaleOpeningCaseMapper {
     Integer pageCount(OriginalResidenceSaleOpeningCase originalResidenceSaleOpeningCase);
 
     /**
+     * 分页列表
+     *
      * @param queryModel
      * @return
      */

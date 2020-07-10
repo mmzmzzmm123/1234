@@ -62,6 +62,11 @@ public class DownloadOriginalNewHouseCaseServiceImplTests {
     }
 
     @Test
+    public void testDownload202003First() {
+        downloadOriginalNewHouseCaseService.downloadFirst(202003);
+    }
+
+    @Test
     public void testDownloadLastYearSecondLoop() {
         Arrays.asList(201901, 201902, 201903, 201904, 201905, 201906, 201907, 201908, 201909, 201910, 201911, 201912).parallelStream().forEach(i -> {
             downloadOriginalNewHouseCaseService.downloadSecond(i);

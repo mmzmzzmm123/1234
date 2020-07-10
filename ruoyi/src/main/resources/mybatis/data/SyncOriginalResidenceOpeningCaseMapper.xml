@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.project.data.cases.mapper.sync.SyncOriginalResidenceSaleOpeningCaseMapper">
-    <update id="createTable">
+    <update id="createRawTable">
         <bind name="targetTableName" value="'dbo.ODS_HOUSINGCASELISTED_LJ_' + yearMonth + '_RAW'"/>
         IF OBJECT_ID(#{targetTableName}, 'U') IS NULL
             CREATE TABLE ${targetTableName}
@@ -35,7 +35,7 @@
         truncate table ${targetTableName}
     </update>
 
-    <insert id="insert" parameterType="com.ruoyi.project.data.cases.domain.OriginalResidenceSaleOpeningCase">
+    <insert id="insertRawTable" parameterType="com.ruoyi.project.data.cases.domain.OriginalResidenceSaleOpeningCase">
         insert into dbo.ODS_HOUSINGCASELISTED_LJ_${yearMonth}_RAW
         (
             llid

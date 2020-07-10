@@ -4,42 +4,41 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.project.data.cases.mapper.OriginalResidenceSaleClosingCaseMapper">
 
-    <update id="createRawClosingCaseTable">
-        <bind name="targetTableName" value="'dbo.二手房成交数据' + yearMonth" />
-        IF OBJECT_ID(#{targetTableName}, 'U') IS NOT NULL
-        drop table ${targetTableName};
+<!--    <update id="createRawClosingCaseTable">-->
+<!--        <bind name="targetTableName" value="'dbo.二手房成交数据' + yearMonth" />-->
+<!--        IF OBJECT_ID(#{targetTableName}, 'U') IS NOT NULL-->
+<!--        drop table ${targetTableName};-->
 
-        create table ${targetTableName}
-        (
-            case_id uniqueidentifier not null primary key,
-            区域 varchar (255) NULL,
-            板块 varchar (255) NULL,
-            环线 varchar (255) NULL,
-            小区名称 varchar (255) NULL,
-            房屋地址 varchar (255) NULL,
-            面积 float NULL,
-            房屋类型 varchar (255) NULL,
-            总价 float NULL,
-            单价 float NULL,
-            登记日期 varchar (255) NULL,
-            签约日期 varchar (255) NULL,
-            中介公司 varchar (255) NULL,
-            中介类型 varchar (255) NULL,
-            卖家类型 float NULL,
-            买家类型 varchar (5) NULL,
-            出生年月日 varchar (5) NULL
-        )
-    </update>
+<!--        create table ${targetTableName}-->
+<!--        (-->
+<!--            case_id uniqueidentifier not null primary key,-->
+<!--            区域 varchar (255) NULL,-->
+<!--            板块 varchar (255) NULL,-->
+<!--            环线 varchar (255) NULL,-->
+<!--            小区名称 varchar (255) NULL,-->
+<!--            房屋地址 varchar (255) NULL,-->
+<!--            面积 float NULL,-->
+<!--            房屋类型 varchar (255) NULL,-->
+<!--            总价 float NULL,-->
+<!--            单价 float NULL,-->
+<!--            登记日期 varchar (255) NULL,-->
+<!--            签约日期 varchar (255) NULL,-->
+<!--            中介公司 varchar (255) NULL,-->
+<!--            中介类型 varchar (255) NULL,-->
+<!--            卖家类型 float NULL,-->
+<!--            买家类型 varchar (5) NULL,-->
+<!--            出生年月日 varchar (5) NULL-->
+<!--        )-->
+<!--    </update>-->
 
     <!-- 外部数据重复问题   -->
-    <update id="createTable">
+    <update id="createRawTable">
         <bind name="targetTableName" value="'dbo.original_residence_sale_closing_case_' + yearMonth"/>
         IF OBJECT_ID(#{targetTableName}, 'U') IS NOT NULL
             drop table ${targetTableName};
 
         CREATE TABLE ${targetTableName}
         (
-            id int identity(1,1) not null,
             case_id varchar(32) not null,
             case_county_name nvarchar(20) null,
             case_block_name nvarchar(20) null,
@@ -99,4 +98,52 @@
             DateContract date NULL
         );
     </update>
+    <insert id="insertRawTable" parameterType="com.ruoyi.project.data.cases.domain.OriginalResidenceSaleClosingCase">
+        <bind name="targetTableName" value="'dbo.original_residence_sale_closing_case_' + yearMonth"/>
+        insert into ${targetTableName}
+        (
+            case_id
+          , case_county_name
+          , case_block_name
+          , case_loopline_name
+          , case_community_name
+          , case_address
+          , case_area
+          , case_unit_price
+          , case_total_price
+          , case_house_type
+          , case_signing_date
+          , case_register_date
+          , case_agency_name
+          , case_agency_type
+          , case_seller_type
+          , case_buyer_type
+          , case_birthday
+          , case_deal_type
+          , clean_property_type
+          , create_time
+        )
+        values(
+            #{caseId},
+            #{caseCountyName},
+            #{caseBlockName},
+            #{caseLoopName},
+            #{caseCommunityName},
+            #{caseAddress},
+            #{caseArea},
+            #{caseUnitPrice},
+            #{caseTotalPrice},
+            #{caseHouseType},
+            #{caseSigningDate,jdbcType=DATE},
+            #{caseRegisterDate,jdbcType=DATE},
+            #{agencyName},
+            #{agencyType},
+            #{sellerType},
+            #{buyerType},
+            #{birthday,jdbcType=DATE},
+            2,
+            #{cleanPropertyType},
+            getdate()
+        )
+    </insert>
 </mapper>

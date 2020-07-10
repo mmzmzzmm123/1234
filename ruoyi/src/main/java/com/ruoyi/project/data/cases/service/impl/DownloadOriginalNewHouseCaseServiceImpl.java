@@ -13,8 +13,6 @@ import org.springframework.stereotype.Service;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * 定时下载一手房案例数据并且推送到联城数库中
@@ -130,15 +128,5 @@ public class DownloadOriginalNewHouseCaseServiceImpl {
                 }
             }
         });
-
-//        Map<String, List<OriginalNewHouseCase>> originalNewHouseCasePerCaseId =
-//                originalNewHouseCaseList.stream().collect(Collectors.groupingBy(OriginalNewHouseCase::getCaseId));
-//
-//        originalNewHouseCasePerCaseId.entrySet().stream().filter(x -> x.getValue().size() > 1).forEach(caseIdGroup
-//        -> {
-//            caseIdGroup.getValue().stream().forEach(originalNewHouseCase -> {
-//
-//            });
-//        });
     }
 }

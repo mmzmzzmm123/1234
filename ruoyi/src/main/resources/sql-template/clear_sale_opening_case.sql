@@ -1,5 +1,7 @@
-----建临时表#HousingCaseListAdj， 插入挂牌清洗数据
------- 20200312BUG修复：朝向处理规则优化
+truncate table Ods_HousingCaseListed_LJ_#yearMonth#
+
+--建临时表#HousingCaseListAdj， 插入挂牌清洗数据
+-- 20200312BUG修复：朝向处理规则优化
 create table #HousingCaseListAdj
 (
 	case_id varchar(32) not null
@@ -97,7 +99,7 @@ DEALLOCATE Record2Insert
 SET NOCOUNT OFF
 
 
-----案例标准化
+--案例标准化
 create table #HousingCaseListSTD
 (
     HouseholdsID_LJ bigint
@@ -122,58 +124,58 @@ SELECT A.HouseholdsID_LJ, A.ProjectID_LJ, B.ProjectID, B.BuildingID,
 FROM #HousingCaseListAdj A
 LEFT JOIN  obpm_LianCheng_Data.dbo.DIM_PROJECTID_LJ2AI B
 ON A.ProjectID_LJ = B.ProjectID_LJ
-left join (select * from uv_compute.dbo.ODS_PROJECT_INFO_202004 WHERE EffDate <= GETDATE() and ExpirDate > GETDATE() ) C
-on B.ProjectID = C.ProjectID
-LEFT JOIN (SELECT * FROM obpm_LianCheng_Data.dbo.DIM_PARAMETERS WHERE CoffType='面积修正（链家挂牌）') D	--面积修正
-on D.ProjectType = '公寓' and C.ProjectLevel = D.ProjectLevel and ( A.Area > D.LowerKey and A.Area <= D.UpperKey)
-LEFT JOIN (SELECT * FROM obpm_LianCheng_Data.dbo.DIM_PARAMETERS WHERE CoffType='朝向（链家挂牌）') E	--朝向修正
-on E.ProjectType = '公寓' and A.Towards = E.SingleKey
-LEFT JOIN (SELECT * FROM obpm_LianCheng_Data.dbo.DIM_PARAMETERS WHERE CoffType='楼层（链家挂牌）') F	--楼层修正
-on F.ProjectType = '公寓' and isnull(A.Elevator,99)=isnull(F.Elevator,99)  and A.UpperFloorSum = F.UpperKey and A.UpperFloorNum = F.LowerKey
-LEFT JOIN (SELECT * FROM obpm_LianCheng_Data.dbo.DIM_PARAMETERS WHERE CoffType='室内装修（链家挂牌）') G --装修修正
-on G.ProjectType = '公寓' and A.Decoration = G.SingleKey
-LEFT JOIN (SELECT * FROM obpm_LianCheng_Data.dbo.DIM_PARAMETERS WHERE CoffType='竣工日期') H   --竣工日期修正
-on H.ProjectType = '公寓' and A.[Year]=H.SingleKey
+left join (select CommunityId,ProjectLevel from uv_compute.dbo.ResidenceCommunity) C
+on B.ProjectID = C.CommunityId
+LEFT JOIN (SELECT ProjectLevel,LowerKey,UpperKey,CoefficientA,CoefficientB FROM obpm_LianCheng_Data.dbo.DIM_PARAMETERS WHERE CoffType='面积修正（链家挂牌）' and ProjectType = '公寓') D	--面积修正
+on C.ProjectLevel = D.ProjectLevel and ( A.Area > D.LowerKey and A.Area <= D.UpperKey)
+LEFT JOIN (SELECT SingleKey,Coefficient FROM obpm_LianCheng_Data.dbo.DIM_PARAMETERS WHERE CoffType='朝向（链家挂牌）' and ProjectType = '公寓') E	--朝向修正
+on A.Towards = E.SingleKey
+LEFT JOIN (SELECT Elevator,UpperKey,LowerKey,Coefficient FROM obpm_LianCheng_Data.dbo.DIM_PARAMETERS WHERE CoffType='楼层（链家挂牌）' and ProjectType = '公寓') F	--楼层修正
+on isnull(A.Elevator,99)=isnull(F.Elevator,99)  and A.UpperFloorSum = F.UpperKey and A.UpperFloorNum = F.LowerKey
+LEFT JOIN (SELECT SingleKey,Coefficient FROM obpm_LianCheng_Data.dbo.DIM_PARAMETERS WHERE CoffType='室内装修（链家挂牌）' and ProjectType = '公寓') G --装修修正
+on A.Decoration = G.SingleKey
+LEFT JOIN (SELECT SingleKey,Coefficient FROM obpm_LianCheng_Data.dbo.DIM_PARAMETERS WHERE CoffType='竣工日期' and ProjectType = '公寓') H   --竣工日期修正
+on A.[Year]=H.SingleKey
 LEFT JOIN obpm_LianCheng_Data.dbo.DIM_BUILDING_COFF I
 on B.BuildingID = I.BuildingID;
 
 
 --当月拍照表调价信息
---- 20200205BUG修复：AdjustedValue、AdjustedPst 中当Status=1时，值不为0的问题
-  select
-  	a.HouseholdsID_LJ,
-		case when b.Status is null then 3
-         when a.PriceTotal=b.PriceTotal then 1
-         else 2 end as Status,
-    case when a.PriceTotal=b.PriceTotal then 0   -- 20200205修改
-         when b.Status is null then 0
-         else a.PriceTotal-b.PriceTotal end AdjustedValue,
-    case when a.PriceTotal=b.PriceTotal then 0   -- 20200205修改
-         when b.Status is null then 0
-         else (a.PriceTotal-b.PriceTotal)*1.0/b.PriceTotal end AdjustedPst,
-    case when a.PriceTotal=b.PriceTotal then b.AdjustedCumValue
-         when b.Status is null then 0
-         else b.AdjustedCumValue + a.PriceTotal-b.PriceTotal end AdjustedCumValue,
-    case when a.PriceTotal=b.PriceTotal then b.AdjustedCumPst
-         when b.Status is null then 0
-         else (b.AdjustedCumValue + a.PriceTotal-b.PriceTotal)*1.0/b.PriceTotalIn end AdjustedCumPst,
-    case when a.PriceTotal=b.PriceTotal then b.AdjustedCumValueAbs
-         when b.Status is null then 0
-         else b.AdjustedCumValueAbs + abs(a.PriceTotal-b.PriceTotal) end AdjustedCumValueAbs,
-    case when a.PriceTotal=b.PriceTotal then b.AdjustedCumPstAbs
-         when b.Status is null then 0
-         else (b.AdjustedCumValueAbs+ abs(a.PriceTotal-b.PriceTotal))*1.0/b.PriceTotalIn end AdjustedCumPstAbs,
-    case when a.PriceTotal=b.PriceTotal then b.AdjustedCumPstAbs
-         when b.Status is null then 0
-         else b.AdjustedCumNum+1 end AdjustedCumNum,
-    case when b.Status is null then a.PriceTotal else b.PriceTotalIn end PriceTotalIn,
-    NULL as PriceTotalOut,
-    case when b.Status is null then getdate() else b.PriceDateIn end PriceDateIn,
-    cast(NULL as date) as PriceDateOut
-    into #HousingCaseListStatic
-    from #HousingCaseListAdj a
-    left join Ods_HousingCaseListed_LJ_#lastYearMonth# b
-    on a.HouseholdsID_LJ = b.HouseholdsID_LJ;
+-- 20200205BUG修复：AdjustedValue、AdjustedPst 中当Status=1时，值不为0的问题
+select
+a.HouseholdsID_LJ,
+    case when b.Status is null then 3
+     when a.PriceTotal=b.PriceTotal then 1
+     else 2 end as Status,
+case when a.PriceTotal=b.PriceTotal then 0   -- 20200205修改
+     when b.Status is null then 0
+     else a.PriceTotal-b.PriceTotal end AdjustedValue,
+case when a.PriceTotal=b.PriceTotal then 0   -- 20200205修改
+     when b.Status is null then 0
+     else (a.PriceTotal-b.PriceTotal)*1.0/b.PriceTotal end AdjustedPst,
+case when a.PriceTotal=b.PriceTotal then b.AdjustedCumValue
+     when b.Status is null then 0
+     else b.AdjustedCumValue + a.PriceTotal-b.PriceTotal end AdjustedCumValue,
+case when a.PriceTotal=b.PriceTotal then b.AdjustedCumPst
+     when b.Status is null then 0
+     else (b.AdjustedCumValue + a.PriceTotal-b.PriceTotal)*1.0/b.PriceTotalIn end AdjustedCumPst,
+case when a.PriceTotal=b.PriceTotal then b.AdjustedCumValueAbs
+     when b.Status is null then 0
+     else b.AdjustedCumValueAbs + abs(a.PriceTotal-b.PriceTotal) end AdjustedCumValueAbs,
+case when a.PriceTotal=b.PriceTotal then b.AdjustedCumPstAbs
+     when b.Status is null then 0
+     else (b.AdjustedCumValueAbs+ abs(a.PriceTotal-b.PriceTotal))*1.0/b.PriceTotalIn end AdjustedCumPstAbs,
+case when a.PriceTotal=b.PriceTotal then b.AdjustedCumPstAbs
+     when b.Status is null then 0
+     else b.AdjustedCumNum+1 end AdjustedCumNum,
+case when b.Status is null then a.PriceTotal else b.PriceTotalIn end PriceTotalIn,
+NULL as PriceTotalOut,
+case when b.Status is null then getdate() else b.PriceDateIn end PriceDateIn,
+cast(NULL as date) as PriceDateOut
+into #HousingCaseListStatic
+from #HousingCaseListAdj a
+left join Ods_HousingCaseListed_LJ_#lastYearMonth# b
+on a.HouseholdsID_LJ = b.HouseholdsID_LJ;
 
 --插入当月未下架(活跃)案例数据
 insert into Ods_HousingCaseListed_LJ_#yearMonth#
@@ -207,7 +209,6 @@ insert into dbo.Ods_HousingCaseListed_LJ_#yearMonth# select * from #TmpRecordAdd
 
 
 /*插入历史下架记录*/
-
 select a.case_id,a.HouseholdsID_LJ,	a.ProjectID_LJ,	a.ProjectID, a.Roomtype,	a.Area,	a.Towards,	a.UpperFloorSum,	a.UpperFloorNum,	a.Elevator,	a.Decoration,	a.[Year],
     a.AreaCoff, a.TowardsCoff, a.FloorCoff, a.DecorationRng, a.YearCoff, a.BuildingCoff, a.PriceTotal, a.PriceUnit, a.PriceUnitAdj,
     a.Visited_Num, a.First_Visit_Time,	a.Visited_Num_15,	a.Visited_Num_30,	5 as Status,

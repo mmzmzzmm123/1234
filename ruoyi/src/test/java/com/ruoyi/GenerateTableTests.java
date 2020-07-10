@@ -1,10 +1,7 @@
 package com.ruoyi;
 
 
-import com.ruoyi.project.data.cases.domain.CleanResidenceRentAggregationCase;
-import com.ruoyi.project.data.cases.domain.OfficeAggregationCase;
-import com.ruoyi.project.data.cases.domain.OriginalNewHouseCase;
-import com.ruoyi.project.data.cases.domain.OriginalResidenceRentClosingCase;
+import com.ruoyi.project.data.cases.domain.*;
 import com.ruoyi.project.data.price.domain.ComputeResidenceSaleBasePrice;
 import com.ruoyi.project.data.price.domain.UltimateOfficeBasePrice;
 import org.junit.Assert;
@@ -96,7 +93,7 @@ public class GenerateTableTests {
 
     @Test
     public void generateBatchGuoHaoInsertSqL() {
-        Class targetClass = OriginalNewHouseCase.class;
+        Class targetClass = OriginalResidenceSaleClosingCase .class;
 
         List<Field> fieldList = new ArrayList<>();
         while (targetClass != null) {
@@ -135,6 +132,21 @@ public class GenerateTableTests {
         Assert.assertEquals("4868c51874ba68c7fa2c96eeac02cde7",originalNewHouseCase.getCaseId());
     }
 
+    @Test
+    public void print2019Query(){
+        for (int i = 201901; i <= 201912; i++) {
+            System.out.println("SELECT * FROM dbo.一手房成交数据"+i+" where 房屋地址='联茂路80号1层';");
+            System.out.println("SELECT * FROM dbo.一手房成交数据"+i+"_update where 房屋地址='联茂路80号1层';");
+        }
+    }
+
+    @Test
+    public void print2020Query(){
+        for (int i = 202001; i <= 202006; i++) {
+            System.out.println("SELECT * FROM dbo.一手房成交数据"+i+" where 房屋地址='联茂路80号1层';");
+            System.out.println("SELECT * FROM dbo.一手房成交数据"+i+"_update where 房屋地址='联茂路80号1层';");
+        }
+    }
 
 
 }

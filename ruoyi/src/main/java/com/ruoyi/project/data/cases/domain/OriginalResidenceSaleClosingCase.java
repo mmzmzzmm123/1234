@@ -37,6 +37,8 @@ public class OriginalResidenceSaleClosingCase {
         shangye.add("商店");
     }
 
+    private Integer yearMonth;
+
     /**
      * 唯一标识
      */
@@ -264,12 +266,12 @@ public class OriginalResidenceSaleClosingCase {
      */
     private BigDecimal refUnitPrice;
 
-    public String getCaseId() {
-        return caseId;
-    }
-
     public void setCaseId(String caseId) {
         this.caseId = caseId;
+    }
+
+    public String getCaseId() {
+        return caseId;
     }
 
     public String getCaseCommunityName() {
@@ -736,6 +738,14 @@ public class OriginalResidenceSaleClosingCase {
         this.cleanCurrentFloorDesc = cleanCurrentFloorDesc;
     }
 
+    public Integer getYearMonth() {
+        return yearMonth;
+    }
+
+    public void setYearMonth(Integer yearMonth) {
+        this.yearMonth = yearMonth;
+    }
+
     /**
      * 构造caseId
      *
@@ -743,9 +753,10 @@ public class OriginalResidenceSaleClosingCase {
      * @throws NoSuchAlgorithmException
      */
     public String generateCaseId() {
-        String text = getCaseCountyName() + getCaseAddress() + getCaseArea();
-        if (null != getCaseSigningDate())
+        String text = getCaseCountyName() + getCaseAddress();
+        if (null != getCaseSigningDate()) {
             text += simplaDateFormat.format(getCaseSigningDate());
+        }
 
         return DigestUtils.md5DigestAsHex(text.getBytes());
     }
@@ -777,17 +788,23 @@ public class OriginalResidenceSaleClosingCase {
      * @return
      */
     public Integer refineCurrentFloor() {
-        if (StringUtils.isEmpty(getCaseAddress())) return null;
+        if (StringUtils.isEmpty(getCaseAddress())) {
+            return null;
+        }
 
         Pattern pattern = Pattern.compile("(\\d+)(室)$");
 
         Matcher matcher = pattern.matcher(getCaseAddress());
-        if (!matcher.find()) return null;
+        if (!matcher.find()) {
+            return null;
+        }
 
         String value = matcher.group(1);
         Integer num = new Integer(value);
-        if (num > 1000 || num > 100)
+        if (num > 1000 || num > 100) {
             return num / 100;
+        }
+
 
         return null;
     }
@@ -800,7 +817,9 @@ public class OriginalResidenceSaleClosingCase {
      * @return
      */
     public String refineBuildingAddress() {
-        if (StringUtils.isEmpty(getCaseAddress())) return null;
+        if (StringUtils.isEmpty(getCaseAddress())) {
+            return null;
+        }
 
         Pattern pattern = Pattern.compile("(\\d+)室$");
         Matcher matcher = pattern.matcher(getCaseAddress());
