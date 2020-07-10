@@ -32,6 +32,8 @@ public interface IArtificialResidenceRentPriceService {
     List<ArtificialResidenceRentBasePrice> selectList(ArtificialResidenceRentBasePrice officeBasePriceUltimate);
 
     /**
+     * 分页总数
+     *
      * @param officeBasePriceUltimate
      * @return
      */
@@ -51,6 +53,7 @@ public interface IArtificialResidenceRentPriceService {
 
     /**
      * 更新
+     *
      * @param officeBasePriceUltimate
      * @return
      */

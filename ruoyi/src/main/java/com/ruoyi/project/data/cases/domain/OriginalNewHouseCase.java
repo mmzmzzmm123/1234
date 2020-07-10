@@ -14,6 +14,9 @@ import java.util.Date;
  */
 public class OriginalNewHouseCase {
     private static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    private Integer pageIndex;
+    private Integer pageSize;
+
     private Integer yearMonth;
     /**
      * 案例id
@@ -247,5 +250,21 @@ public class OriginalNewHouseCase {
 
     public void setCaseLabel(String caseLabel) {
         this.caseLabel = caseLabel;
+    }
+
+    public Integer getPageIndex() {
+        return pageIndex;
+    }
+
+    public void setPageIndex(Integer pageIndex) {
+        this.pageIndex = pageIndex;
+    }
+
+    public Integer getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(Integer pageSize) {
+        this.pageSize = pageSize;
     }
 }

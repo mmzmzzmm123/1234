@@ -26,7 +26,7 @@ export default {
   },
   data() {
     return {
-      title: '若依管理系统',
+      title: '联城作价系统',
       logo: logoImg
     }
   }

@@ -163,4 +163,51 @@
         )
     </insert>
 
+    <select id="pageCount" parameterType="com.ruoyi.project.data.cases.domain.OriginalNewHouseCase">
+        SELECT case_county as caseCounty
+              ,case_block as caseBlock
+              ,case_loop as caseLoop
+              ,case_community_name as caseCommunityName
+              ,case_address as caseAddress
+              ,case_area as caseArea
+              ,case_unit_price as caseUnitPrice
+              ,case_total_price as caseTotalPrice
+              ,case_house_type as caseHouseType
+              ,case_signing_date as caseSigningDate
+              ,case_floor as caseFloor
+              ,case_house_property as caseHouseProperty
+              ,case_apartment_layout as caseApartmentLayout
+              ,compute_unit_price as computeUnitPrice
+              ,compute_total_price as computeTotalPrice
+              ,reference_unit_price as referenceUnitPrice
+              ,reference_total_price as referenceTotalPrice
+              ,case_label as caseLabel
+              ,create_time
+              , ${yearMonth} as yearMonth
+          FROM dbo.original_new_house_case_${yearMonth}
+    </select>
+    <select id="pageList" resultType="com.ruoyi.project.data.cases.domain.OriginalNewHouseCase">
+        SELECT case_county as caseCounty
+              ,case_block as caseBlock
+              ,case_loop as caseLoop
+              ,case_community_name as caseCommunityName
+              ,case_address as caseAddress
+              ,case_area as caseArea
+              ,case_unit_price as caseUnitPrice
+              ,case_total_price as caseTotalPrice
+              ,case_house_type as caseHouseType
+              ,case_signing_date as caseSigningDate
+              ,case_floor as caseFloor
+              ,case_house_property as caseHouseProperty
+              ,case_apartment_layout as caseApartmentLayout
+              ,compute_unit_price as computeUnitPrice
+              ,compute_total_price as computeTotalPrice
+              ,reference_unit_price as referenceUnitPrice
+              ,reference_total_price as referenceTotalPrice
+              ,case_label as caseLabel
+              ,create_time
+              , ${yearMonth} as yearMonth
+          FROM dbo.original_new_house_case_${yearMonth}
+          order by case_id ASC OFFSET #{pageIndex} rows fetch next #{pageSize} rows only
+    </select>
 </mapper>

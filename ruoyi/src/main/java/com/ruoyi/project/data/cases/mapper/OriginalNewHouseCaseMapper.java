@@ -47,5 +47,21 @@ public interface OriginalNewHouseCaseMapper {
      */
     int insertSecondTable(OriginalNewHouseCase originalNewHouseCase);
 
+    /**
+     * 分页总数
+     *
+     * @param originalNewHouseCase
+     * @return
+     */
+    int pageCount(OriginalNewHouseCase originalNewHouseCase);
+
+    /**
+     * 分页列表
+     *
+     * @param originalNewHouseCase
+     * @return
+     */
+    List<OriginalNewHouseCase> pageList(OriginalNewHouseCase originalNewHouseCase);
+
 
 }
