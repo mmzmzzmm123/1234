@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.Calendar;
@@ -65,6 +66,8 @@ public class DownloadOriginalResidenceSaleClosingCaseServiceImpl {
 
         running(tableRoute, originalResidenceSaleClosingCases);
         after(tableRoute);
+
+        copy2UVData(tableRoute, remoteTableRoute);
     }
 
 
@@ -107,6 +110,25 @@ public class DownloadOriginalResidenceSaleClosingCaseServiceImpl {
             jdbcTemplate.update(sql);
         } catch (Exception e) {
             logger.error("住宅销售成交案例清洗异常", e);
+        }
+    }
+
+    /**
+     * 拷贝数据到联城数库
+     *
+     * @param tableRoute
+     * @param remoteTableRoute
+     */
+    @Async
+    public void copy2UVData(Integer tableRoute, Integer remoteTableRoute) {
+        try {
+            String yearMonth = String.format("%d-%02d", remoteTableRoute / 100, remoteTableRoute % 100);
+            String rawSql = LoadUtil.loadContent("sql-template/copy_ershou_data.sql");
+            String sql = rawSql.replace("#tableRoute#", tableRoute.toString())
+                    .replace("#yearMonth#", yearMonth);
+            jdbcTemplate.update(sql);
+        } catch (Exception e) {
+            logger.error("住宅销售二手成交案例推送到联城数库异常", e);
         }
     }
 

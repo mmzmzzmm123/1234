@@ -54,11 +54,11 @@ public class OriginalOfficeCaseServiceImpl implements IOriginalOfficeCaseService
                 calendar.get(Calendar.MONTH) + 1));
 
 //        yearMonth = 202007;
-//        lastYearMonth = 202006;
-//        calendar.set(2020, 5, 16);
-//        startDate = calendar.getTime();
-//        calendar.set(2020, 6, 16);
-//        endDate = calendar.getTime();
+////        lastYearMonth = 202006;
+////        calendar.set(2020, 5, 16);
+////        startDate = calendar.getTime();
+////        calendar.set(2020, 6, 16);
+////        endDate = calendar.getTime();
 
         before(yearMonth, startDate, endDate);
         running(yearMonth, lastYearMonth);

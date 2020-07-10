@@ -148,5 +148,11 @@ public class GenerateTableTests {
         }
     }
 
+    @Test
+    public void printLoop2(){
+        for (int i = 201901; i <= 201912; i++) {
+            System.out.println(i);
+        }
+    }
 
 }
