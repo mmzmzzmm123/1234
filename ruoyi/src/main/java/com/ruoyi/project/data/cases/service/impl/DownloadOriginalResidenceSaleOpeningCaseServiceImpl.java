@@ -13,8 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.Calendar;
-import java.util.Date;
+
 import java.util.List;
 
 /**
@@ -96,7 +95,10 @@ public class DownloadOriginalResidenceSaleOpeningCaseServiceImpl {
                          List<OriginalResidenceSaleOpeningCase> originalResidenceSaleOpeningCaseList) {
 
         originalResidenceSaleOpeningCaseList.parallelStream().forEach(originalResidenceSaleOpeningCase -> {
+            originalResidenceSaleOpeningCase.setYearMonth(tableRoute);
+            originalResidenceSaleOpeningCase.setCaseId(originalResidenceSaleOpeningCase.getNewCaseId());
             originalResidenceSaleOpeningCaseMapper.insertRawTable(originalResidenceSaleOpeningCase);
+            originalResidenceSaleOpeningCase.setYearMonth(remoteTableRoute);
             syncOriginalResidenceSaleOpeningCaseMapper.insertRawTable(originalResidenceSaleOpeningCase);
         });
     }

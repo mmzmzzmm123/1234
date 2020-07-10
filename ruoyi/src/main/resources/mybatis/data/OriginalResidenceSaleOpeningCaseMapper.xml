@@ -11,7 +11,7 @@
 
         create table ${targetTableName}
         (
-            case_id varchar (32) not null primary key
+            case_id varchar (32) not null
             , llid bigint
             , lcid bigint
             , Name sql_variant
@@ -35,68 +35,122 @@
             , CurlDate date
         );
     </update>
+
+    <insert id="insertRawTable" parameterType="com.ruoyi.project.data.cases.domain.OriginalResidenceSaleOpeningCase">
+        <bind name="targetTableName" value="'dbo.ODS_HOUSINGCASELISTED_LJ_' + yearMonth +'_RAW'"/>
+        insert into ${targetTableName}
+        (
+            case_id
+            , llid
+            , lcid
+            , Name
+            , Roomtype
+            , Area
+            , Towards
+            , Storey
+            , Lastdeal
+            , Condoelev
+            , Decoration
+            , Year
+            , Address
+            , Price
+            , Cname
+            , Visited_Num
+            , First_Visit_Time
+            , Visited_Num_15
+            , Visited_Num_30
+            , Url
+            , Curl
+            , CurlDate
+        ) values (
+            #{caseId},
+            #{caseLianJiaId},
+            #{caseLianJiaCommunityId},
+            #{caseTitle},
+            #{caseApartmentLayout},
+            #{caseArea},
+            #{caseToward},
+            #{caseStorey},
+            #{caseLastDeal,jdbcType=DATE},
+            #{caseElevator},
+            #{caseDecoration},
+            #{caseYear},
+            #{caseAddress},
+            #{casePrice},
+            #{caseCommunityName},
+            #{caseVisitedNum},
+            #{caseFirstVisitTime},
+            #{caseVisitedNum15},
+            #{caseVisitedNum30},
+            #{caseUrl},
+            #{caseCommunityUrl},
+            getdate()
+        )
+
+    </insert>
+
     <!--原始数据-->
 <!--    <update id="createRawTable">-->
 <!--        <bind name="targetTableName" value="'dbo.original_residence_sale_opening_case_' + yearMonth"/>-->
 <!--        IF OBJECT_ID(#{targetTableName}, 'U') IS NOT NULL-->
-<!--        drop table ${targetTableName};-->
+<!--            drop table ${targetTableName};-->
 
 <!--        CREATE TABLE ${targetTableName}-->
 <!--        (-->
-<!--        case_id varchar (32) NOT NULL,-->
-<!--        case_lianjia_id nvarchar (50) NOT null primary key,-->
-<!--        case_lianjia_community_id nvarchar (50) NOT NULL,-->
-<!--        case_title nvarchar (500) NOT NULL,-->
-<!--        clean_property_type nvarchar (20) NULL,-->
-<!--        case_apartment_layout nvarchar (500) NOT NULL,-->
-<!--        case_house_structure nvarchar (50) NULL,-->
-<!--        case_area decimal (10, 2) NOT NULL,-->
-<!--        case_underground_area decimal (10, 2) NULL,-->
-<!--        case_toward nvarchar (50) NOT NULL,-->
-<!--        clean_toward nvarchar (50) NULL,-->
-<!--        case_storey nvarchar (20) NOT NULL,-->
-<!--        clean_total_floor int NOT NULL,-->
-<!--        clean_current_floor_desc nvarchar (20) NULL,-->
-<!--        case_elevator nvarchar (20) NULL,-->
-<!--        clean_elevator nvarchar (20) NULL,-->
-<!--        case_tihu nvarchar (20) NULL,-->
-<!--        case_decoration nvarchar (20) NULL,-->
-<!--        clean_decoration nvarchar (50) NULL,-->
-<!--        case_year int NOT NULL,-->
-<!--        clean_year int NOT NULL,-->
-<!--        case_address nvarchar (500) NULL,-->
-<!--        case_vid nvarchar (500) NULL,-->
-<!--        case_chan_quan_xing_zhi nvarchar (200) NULL,-->
-<!--        case_price decimal (18, 2) NOT NULL,-->
-<!--        clean_unit_price decimal (18, 2) NOT NULL,-->
-<!--        clean_total_price decimal (18, 2) NOT NULL,-->
-<!--        case_community_name nvarchar (500) NULL,-->
-<!--        case_visited_num int NOT NULL,-->
-<!--        case_visited_num_15 int NOT NULL,-->
-<!--        case_visited_num_30 int NOT NULL,-->
-<!--        case_latest_deal_date date NULL,-->
-<!--        case_latest_visited_date date NULL,-->
-<!--        case_first_visited_date date NULL,-->
-<!--        case_url nvarchar (500) NOT NULL,-->
-<!--        case_community_url nvarchar (500) NOT NULL,-->
-<!--        case_get_date date NOT NULL,-->
-<!--        case_provider nvarchar (50) NOT NULL,-->
-<!--        uv_community_name nvarchar (500) NULL,-->
-<!--        uv_community_address nvarchar (1024) NULL,-->
-<!--        uv_community_id nvarchar (20) NULL,-->
-<!--        uv_building_id nvarchar (20) NULL,-->
-<!--        uv_county nvarchar (50) NULL,-->
-<!--        uv_block nvarchar (50) NULL,-->
-<!--        uv_loop nvarchar (50) NULL,-->
-<!--        area_coefficient decimal (18, 6) NULL,-->
-<!--        toward_coefficient decimal (18, 6) NULL,-->
-<!--        floor_coefficient decimal (18, 6) NULL,-->
-<!--        decoration_coefficient int NULL,-->
-<!--        year_coefficient decimal (18, 6) NULL,-->
-<!--        building_coefficient decimal (18, 6) NULL,-->
-<!--        adjust_unit_price decimal (18, 2) NULL,-->
-<!--        clean_project_level nvarchar (50) NULL,-->
-<!--        create_time datetime NOT NULL-->
+<!--            case_id varchar (32) NOT NULL,-->
+<!--            case_lianjia_id nvarchar (50) NOT null primary key,-->
+<!--            case_lianjia_community_id nvarchar (50) NOT NULL,-->
+<!--            case_title nvarchar (500) NOT NULL,-->
+<!--            clean_property_type nvarchar (20) NULL,-->
+<!--            case_apartment_layout nvarchar (500) NOT NULL,-->
+<!--            case_house_structure nvarchar (50) NULL,-->
+<!--            case_area decimal (10, 2) NOT NULL,-->
+<!--            case_underground_area decimal (10, 2) NULL,-->
+<!--            case_toward nvarchar (50) NOT NULL,-->
+<!--            clean_toward nvarchar (50) NULL,-->
+<!--            case_storey nvarchar (20) NOT NULL,-->
+<!--            clean_total_floor int NOT NULL,-->
+<!--            clean_current_floor_desc nvarchar (20) NULL,-->
+<!--            case_elevator nvarchar (20) NULL,-->
+<!--            clean_elevator nvarchar (20) NULL,-->
+<!--            case_tihu nvarchar (20) NULL,-->
+<!--            case_decoration nvarchar (20) NULL,-->
+<!--            clean_decoration nvarchar (50) NULL,-->
+<!--            case_year int NOT NULL,-->
+<!--            clean_year int NOT NULL,-->
+<!--            case_address nvarchar (500) NULL,-->
+<!--            case_vid nvarchar (500) NULL,-->
+<!--            case_chan_quan_xing_zhi nvarchar (200) NULL,-->
+<!--            case_price decimal (18, 2) NOT NULL,-->
+<!--            clean_unit_price decimal (18, 2) NOT NULL,-->
+<!--            clean_total_price decimal (18, 2) NOT NULL,-->
+<!--            case_community_name nvarchar (500) NULL,-->
+<!--            case_visited_num int NOT NULL,-->
+<!--            case_visited_num_15 int NOT NULL,-->
+<!--            case_visited_num_30 int NOT NULL,-->
+<!--            case_latest_deal_date date NULL,-->
+<!--            case_latest_visited_date date NULL,-->
+<!--            case_first_visited_date date NULL,-->
+<!--            case_url nvarchar (500) NOT NULL,-->
+<!--            case_community_url nvarchar (500) NOT NULL,-->
+<!--            case_get_date date NOT NULL,-->
+<!--            case_provider nvarchar (50) NOT NULL,-->
+<!--            uv_community_name nvarchar (500) NULL,-->
+<!--            uv_community_address nvarchar (1024) NULL,-->
+<!--            uv_community_id nvarchar (20) NULL,-->
+<!--            uv_building_id nvarchar (20) NULL,-->
+<!--            uv_county nvarchar (50) NULL,-->
+<!--            uv_block nvarchar (50) NULL,-->
+<!--            uv_loop nvarchar (50) NULL,-->
+<!--            area_coefficient decimal (18, 6) NULL,-->
+<!--            toward_coefficient decimal (18, 6) NULL,-->
+<!--            floor_coefficient decimal (18, 6) NULL,-->
+<!--            decoration_coefficient int NULL,-->
+<!--            year_coefficient decimal (18, 6) NULL,-->
+<!--            building_coefficient decimal (18, 6) NULL,-->
+<!--            adjust_unit_price decimal (18, 2) NULL,-->
+<!--            clean_project_level nvarchar (50) NULL,-->
+<!--            create_time datetime NOT NULL-->
 <!--        );-->
 <!--    </update>-->
     <!--清洗表-->

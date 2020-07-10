@@ -93,7 +93,7 @@ public class GenerateTableTests {
 
     @Test
     public void generateBatchGuoHaoInsertSqL() {
-        Class targetClass = OriginalResidenceSaleClosingCase .class;
+        Class targetClass = OriginalResidenceSaleOpeningCase  .class;
 
         List<Field> fieldList = new ArrayList<>();
         while (targetClass != null) {
