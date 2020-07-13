@@ -85,3 +85,24 @@ export function AllDataDataRange(fDateStart,fDateEnd) {
   })
 }
 
+export function getBestHunsha() {
+  return request({
+    url: '/fx_technologist/getBestHunsha',
+    method: 'get'
+  })
+}
+
+
+export function getBestTijiaoxian() {
+  return request({
+    url: '/fx_technologist/getBestTijiaoxian',
+    method: 'get'
+  })
+}
+
+export function getBestHuakuang() {
+  return request({
+    url: '/fx_technologist/getBestHuakuang',
+    method: 'get'
+  })
+}

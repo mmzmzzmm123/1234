@@ -90,4 +90,28 @@ public class TechnologistController extends BaseController
         return AjaxResult.success(DB_Ajax_DashBoard_Technologist_48102.AllDataDataRange(fDateStart,fDateEnd));
     }
 
+
+
+    @GetMapping("/getBestOEM")
+    public AjaxResult getBestHuakuang() throws Exception
+    {
+        return AjaxResult.success(DB_Ajax_DashBoard_Technologist_48102.getBestHuakuang());
+    }
+
+    @GetMapping("/getBestODM")
+    public AjaxResult getBestTijiaoxian() throws Exception
+    {
+        return AjaxResult.success(DB_Ajax_DashBoard_Technologist_48102.getBestTijiaoxian());
+    }
+
+    @GetMapping("/getBestODM")
+    public AjaxResult getBestHunsha() throws Exception
+    {
+        return AjaxResult.success(DB_Ajax_DashBoard_Technologist_48102.getBestHunsha());
+    }
+
+
+
+
+
 }

@@ -231,7 +231,7 @@
               j = j + 1;
             }
 
-            if (data_ajax[i].CurrentYield <= 1.2 | data_ajax[i].CurrentYield !== 0) {
+            if (data_ajax[i].CurrentYield <= 1.2 && data_ajax[i].CurrentYield !== 0 && data_ajax[i].CurrentYield >= 0.3) {
               avg_zhengpin_avg = avg_zhengpin_avg + (data_ajax[i].CurrentYield) * 1;
               k = k + 1;
             }

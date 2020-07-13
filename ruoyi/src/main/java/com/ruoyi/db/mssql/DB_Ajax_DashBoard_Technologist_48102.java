@@ -448,5 +448,116 @@ public class DB_Ajax_DashBoard_Technologist_48102 {
 		return jsonpath.toString();
 	}
 
+
+
+	public static List<HashMap<String,String>> getBestHuakuang() {
+		List<HashMap<String,String>> hashMapList = new ArrayList<>();
+		try {
+			Connection conn = getSQLConnection();
+			String sql = "SELECT TOP\n" +
+					"\t20 MouldingStyleCode,\n" +
+					"\t[折算人民币价税合计] AS CNY \n" +
+					"FROM\n" +
+					"\t[chen_12个月_A版本BOM销售额] \n" +
+					"WHERE\n" +
+					"\ttagname = 'OEM' \n" +
+					"ORDER BY\n" +
+					"\t折算人民币价税合计 DESC";
+			Statement stmt = conn.createStatement();//
+
+			ResultSet rs = stmt.executeQuery(sql);
+			while (rs.next()) {
+				// 截面积(mm2)
+				HashMap<String,String> map = new HashMap<>();
+				map.put("MouldingStyleCode",rs.getString("MouldingStyleCode"));
+				map.put("CNY",rs.getString("CNY"));
+				hashMapList.add(map);
+
+			}
+			rs.close();
+			stmt.close();
+			conn.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+
+		}
+		return hashMapList;
+	}
+
+
+	public static List<HashMap<String,String>> getBestTijiaoxian() {
+		List<HashMap<String,String>> hashMapList = new ArrayList<>();
+		try {
+			Connection conn = getSQLConnection();
+			String sql = "SELECT TOP\n" +
+					"\t20 MouldingStyleCode,\n" +
+					"\t[折算人民币价税合计] AS CNY \n" +
+					"FROM\n" +
+					"\t[chen_12个月_A版本BOM销售额] \n" +
+					"WHERE\n" +
+					"\ttagname = 'OEM' \n" +
+					"ORDER BY\n" +
+					"\t折算人民币价税合计 DESC";
+			Statement stmt = conn.createStatement();//
+
+			ResultSet rs = stmt.executeQuery(sql);
+			while (rs.next()) {
+				// 截面积(mm2)
+				HashMap<String,String> map = new HashMap<>();
+				map.put("MouldingStyleCode",rs.getString("MouldingStyleCode"));
+				map.put("CNY",rs.getString("CNY"));
+				hashMapList.add(map);
+
+			}
+			rs.close();
+			stmt.close();
+			conn.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+
+		}
+		return hashMapList;
+	}
+
+
+	public static List<HashMap<String,String>> getBestHunsha() {
+		List<HashMap<String,String>> hashMapList = new ArrayList<>();
+		try {
+			Connection conn = getSQLConnection();
+			String sql = "SELECT TOP\n" +
+					"\t20 MouldingStyleCode,\n" +
+					"\t[折算人民币价税合计] AS CNY \n" +
+					"FROM\n" +
+					"\t[chen_12个月_A版本BOM销售额] \n" +
+					"WHERE\n" +
+					"\ttagname = 'OEM' \n" +
+					"ORDER BY\n" +
+					"\t折算人民币价税合计 DESC";
+			Statement stmt = conn.createStatement();//
+
+			ResultSet rs = stmt.executeQuery(sql);
+			while (rs.next()) {
+				// 截面积(mm2)
+				HashMap<String,String> map = new HashMap<>();
+				map.put("MouldingStyleCode",rs.getString("MouldingStyleCode"));
+				map.put("CNY",rs.getString("CNY"));
+				hashMapList.add(map);
+
+			}
+			rs.close();
+			stmt.close();
+			conn.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+
+		}
+		return hashMapList;
+	}
+
+
+
+
+
+
 }
 

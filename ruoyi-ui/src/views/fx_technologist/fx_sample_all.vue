@@ -55,7 +55,7 @@
         <div class="ibox-title">
           <h3>汇总表 </h3>
         </div>
-        <div id="tableL01" class="table table-striped table-bordered table-hover float-left">
+        <div id="tableL01"  style="font-size:10px"  class="table table-striped table-bordered table-hover float-left">
         </div>
       </div>
     </el-row>
@@ -157,10 +157,10 @@
             {field: 'SalesMan', title: '销售员', sortable: true, filterControl: 'input', filterStrictSearch: false},
             {field: 'TagName', title: '类型', sortable: true, filterControl: 'select', filterStrictSearch: false},
             {field: 'ProductionLine', title: '产品线', sortable: true, filterControl: 'select', filterStrictSearch: false},
-            {field: 'NewMould', title: '是否新模', sortable: true, filterControl: 'select', filterStrictSearch: false},
+            {field: 'NewMould', title: '是否<br>新模</br>', sortable: true, filterControl: 'select', filterStrictSearch: false},
             {field: '地区', title: '区域', sortable: true, filterControl: 'select', filterStrictSearch: false},
             {field: '经理审核时间', title: '下单日期', sortable: true, filterControl: 'input', filterStrictSearch: false},
-            {field: '分解天数', title: '分解(天)', sortable: true, filterControl: 'input', filterStrictSearch: false},
+            {field: '分解天数', title: '分解<br>(天)</br>', sortable: true, filterControl: 'input', filterStrictSearch: false},
             {
               field: 'FactMakingDate',
               title: '完成时间',
@@ -168,13 +168,13 @@
               filterControl: 'input',
               filterStrictSearch: false
             },
-            {field: '交期天数', title: '交期(天)', sortable: true, filterControl: 'input', filterStrictSearch: false},
+            {field: '交期天数', title: '交期<br>(天)</br>', sortable: true, filterControl: 'input', filterStrictSearch: false},
             {field: '客户是否下单', title: '是否确认', sortable: true, filterControl: 'select', filterStrictSearch: false},
             {field: '折算人民币价税合计', title: '销售金额', sortable: true, filterControl: 'input', filterStrictSearch: false},
-            {field: '客户数量', title: '客户数量', sortable: true, filterControl: 'input', filterStrictSearch: false},
+            {field: '客户数量', title: '客户<br>数量</br>', sortable: true, filterControl: 'input', filterStrictSearch: false},
             {
               field: 'FinishedDensity',
-              title: '打样密度',
+              title: '打样<br>密度</br>',
               sortable: true,
               filterControl: 'input',
               filterStrictSearch: false
@@ -195,6 +195,8 @@
             pageNumber: 1,
             pageList: [],
             cache: false,
+            fixedColumns: true,
+            fixedNumber: 1 ,
             searchText: '',
             filterControl: true,
             disableUnusedSelectOptions: true, striped: true,
