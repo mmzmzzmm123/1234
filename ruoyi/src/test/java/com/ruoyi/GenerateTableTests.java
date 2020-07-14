@@ -1,6 +1,7 @@
 package com.ruoyi;
 
 
+import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.project.data.cases.domain.*;
 import com.ruoyi.project.data.price.domain.ComputeResidenceSaleBasePrice;
 import com.ruoyi.project.data.price.domain.UltimateOfficeBasePrice;
@@ -93,7 +94,7 @@ public class GenerateTableTests {
 
     @Test
     public void generateBatchGuoHaoInsertSqL() {
-        Class targetClass = OriginalResidenceSaleOpeningCase  .class;
+        Class targetClass = OriginalResidenceSaleOpeningCase.class;
 
         List<Field> fieldList = new ArrayList<>();
         while (targetClass != null) {
@@ -118,41 +119,56 @@ public class GenerateTableTests {
             originalNewHouseCase.setCaseLabel("车位");
         }
 
-        Assert.assertTrue(Objects.equals("车位",originalNewHouseCase.getCaseLabel()));
+        Assert.assertTrue(Objects.equals("车位", originalNewHouseCase.getCaseLabel()));
     }
 
     @Test
     public void printLoop() {
-        OriginalNewHouseCase  originalNewHouseCase = new OriginalNewHouseCase();
+        OriginalNewHouseCase originalNewHouseCase = new OriginalNewHouseCase();
         originalNewHouseCase.setCaseCounty("浦东");
         originalNewHouseCase.setCaseAddress("昌邑路55弄164室");
         Calendar calendar = Calendar.getInstance();
-        calendar.set(2005,10,16);
+        calendar.set(2005, 10, 16);
         originalNewHouseCase.setCaseSigningDate(calendar.getTime());
-        Assert.assertEquals("4868c51874ba68c7fa2c96eeac02cde7",originalNewHouseCase.getCaseId());
+        Assert.assertEquals("4868c51874ba68c7fa2c96eeac02cde7", originalNewHouseCase.getCaseId());
     }
 
     @Test
-    public void print2019Query(){
+    public void print2019Query() {
         for (int i = 201901; i <= 201912; i++) {
-            System.out.println("SELECT * FROM dbo.一手房成交数据"+i+" where 房屋地址='联茂路80号1层';");
-            System.out.println("SELECT * FROM dbo.一手房成交数据"+i+"_update where 房屋地址='联茂路80号1层';");
+            System.out.println("SELECT * FROM dbo.一手房成交数据" + i + " where 房屋地址='联茂路80号1层';");
+            System.out.println("SELECT * FROM dbo.一手房成交数据" + i + "_update where 房屋地址='联茂路80号1层';");
         }
     }
 
     @Test
-    public void print2020Query(){
+    public void print2020Query() {
         for (int i = 202001; i <= 202006; i++) {
-            System.out.println("SELECT * FROM dbo.一手房成交数据"+i+" where 房屋地址='联茂路80号1层';");
-            System.out.println("SELECT * FROM dbo.一手房成交数据"+i+"_update where 房屋地址='联茂路80号1层';");
+            System.out.println("SELECT * FROM dbo.一手房成交数据" + i + " where 房屋地址='联茂路80号1层';");
+            System.out.println("SELECT * FROM dbo.一手房成交数据" + i + "_update where 房屋地址='联茂路80号1层';");
         }
     }
 
     @Test
-    public void printLoop2(){
-        for (int i = 201901; i <= 201912; i++) {
-            System.out.println(i);
+    public void printLoop2() {
+        for (int i = 201701; i <= 201712; i++) {
+            System.out.println("SELECT * FROM dbo.original_new_house_case_" + i + " where " +
+                    "case_id='52de6447d8d55974cae721c13711768b'");
         }
+        for (int i = 201801; i <= 201812; i++) {
+            System.out.println("SELECT * FROM dbo.original_new_house_case_" + i + " where " +
+                    "case_id='52de6447d8d55974cae721c13711768b'");
+        }
+        for (int i = 201901; i <= 201912; i++) {
+            System.out.println("SELECT * FROM dbo.original_new_house_case_" + i + " where " +
+                    "case_id='52de6447d8d55974cae721c13711768b'");
+        }
+    }
+
+    @Test
+    public void testLastDate() {
+        Integer lastYearMonth = DateUtils.getLastYearMonth();
+        Assert.assertTrue(Objects.equals(202006, lastYearMonth));
     }
 
 }

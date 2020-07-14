@@ -1,6 +1,7 @@
 package com.ruoyi.framework.task;
 
 import com.ruoyi.project.data.cases.service.IOriginalResidenceRentOpeningCaseService;
+import com.ruoyi.project.data.cases.service.impl.DownloadOriginalNewHouseCaseServiceImpl;
 import com.ruoyi.project.data.cases.service.impl.DownloadOriginalResidenceSaleClosingCaseServiceImpl;
 import com.ruoyi.project.data.cases.service.impl.DownloadOriginalResidenceSaleOpeningCaseServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,8 @@ public class RyTask {
     private DownloadOriginalResidenceSaleOpeningCaseServiceImpl downloadOriginalResidenceSaleOpeningCaseService;
     @Autowired
     private DownloadOriginalResidenceSaleClosingCaseServiceImpl downloadOriginalResidenceSaleClosingCaseService;
+    @Autowired
+    private DownloadOriginalNewHouseCaseServiceImpl downloadOriginalNewHouseCaseService;
 
     public void ryMultipleParams(String s, Boolean b, Long l, Double d, Integer i) {
         System.out.println(StringUtils.format("执行多参方法： 字符串类型{}，布尔类型{}，长整型{}，浮点型{}，整形{}", s, b, l, d, i));
@@ -43,7 +46,7 @@ public class RyTask {
      * 下载第一批一手房成交案例
      */
     public void downloadFirstNewHouseCase() {
-
+        downloadOriginalNewHouseCaseService.downloadFirst();
     }
 
     /**
@@ -57,7 +60,7 @@ public class RyTask {
      * 下载第二批一手房成交案例
      */
     public void downloadSecondNewHouseCase() {
-
+        downloadOriginalNewHouseCaseService.downloadSecond();
     }
 
 }
