@@ -458,22 +458,18 @@ public class DB_Ajax_DashBoard_Technologist_48102 {
 			Connection conn = getSQLConnection();
 			String sql = "SELECT DISTINCT TOP\n" +
 					"\t20 chen_12个月_A版本BOM销售额.MouldingStyleCode,\n" +
-					"\t[折算人民币价税合计] AS CNY,\n" +
+					"\tchen_12个月_A版本BOM销售额.[折算人民币价税合计] AS CNY,\n" +
+					"\tchen_打样分析汇总.[客户数量],\n" +
 					"\tMouldingSampleMakingMasterSchedule.ProductionLine ,\n" +
-					"\t(SELECT TOP\n" +
-					"\t1 SHCountry \n" +
-					"FROM\n" +
-					"\tMouldingDataStatistics \n" +
-					"WHERE MouldingCode = reverse(substring(reverse(chen_12个月_A版本BOM销售额.MouldingStyleCode),charindex('-',reverse(chen_12个月_A版本BOM销售额.MouldingStyleCode)) +1,500)) \n" +
-					"GROUP BY SHCountry\n" +
-					"ORDER BY sum(SHMouldingSaleLength) ) as Area\n" +
+					"\t( SELECT TOP 1 SHCountry FROM MouldingDataStatistics WHERE MouldingCode = reverse( SUBSTRING ( reverse( chen_12个月_A版本BOM销售额.MouldingStyleCode ), charindex( '-', reverse( chen_12个月_A版本BOM销售额.MouldingStyleCode ) ) + 1, 500 ) ) GROUP BY SHCountry ORDER BY SUM ( SHMouldingSaleLength ) DESC ) AS Area \n" +
 					"FROM\n" +
 					"\t[chen_12个月_A版本BOM销售额]\n" +
-					"\tLEFT JOIN MouldingSampleMakingMasterSchedule ON MouldingSampleMakingMasterSchedule.MouldingStyleCode = chen_12个月_A版本BOM销售额.MouldingStyleCode \n" +
+					"\tLEFT JOIN MouldingSampleMakingMasterSchedule ON MouldingSampleMakingMasterSchedule.MouldingStyleCode = chen_12个月_A版本BOM销售额.MouldingStyleCode\n" +
+					"\tINNER JOIN [chen_打样分析汇总] ON chen_打样分析汇总.MouldingStyleCode = chen_12个月_A版本BOM销售额.MouldingStyleCode \n" +
 					"WHERE\n" +
 					"\tMouldingSampleMakingMasterSchedule.ProductionLine = '"+ProductionLine+"' \n" +
 					"ORDER BY\n" +
-					"\t折算人民币价税合计 DESC";
+					"\tchen_12个月_A版本BOM销售额.折算人民币价税合计 DESC";
 			Statement stmt = conn.createStatement();//
 
 			ResultSet rs = stmt.executeQuery(sql);
@@ -506,31 +502,26 @@ public class DB_Ajax_DashBoard_Technologist_48102 {
 			Connection conn = getSQLConnection();
 			String sql = "SELECT DISTINCT TOP\n" +
 					"\t20 chen_12个月_A版本BOM销售额.MouldingStyleCode,\n" +
-					"\t[折算人民币价税合计] AS CNY,\n" +
+					"\tchen_12个月_A版本BOM销售额.[折算人民币价税合计] AS CNY,\tchen_打样分析汇总.[客户数量],\n" +
 					"\tMouldingSampleMakingMasterSchedule.ProductionLine ,\n" +
+					"\n" +
 					"\t(SELECT TOP\n" +
 					"\t1 SHCountry \n" +
 					"FROM\n" +
 					"\tMouldingDataStatistics \n" +
-					"WHERE MouldingCode = reverse(substring(reverse(chen_12个月_A版本BOM销售额.MouldingStyleCode),charindex('-',reverse(chen_12个月_A版本BOM销售额.MouldingStyleCode)) +1,500)) \n" +
+					"WHERE MouldingCode = reverse(substring(reverse(chen_12个月_A版本BOM销售额.MouldingStyleCode),charindex('-',reverse(chen_12个月_A版本BOM销售额.MouldingStyleCode)) +1,500))  and SHCountry is not null\n" +
 					"GROUP BY SHCountry\n" +
-					"ORDER BY sum(SHMouldingSaleLength) ) as Area,\n" +
-					"\t(SELECT TOP\n" +
-					"\t1 SDCountry \n" +
-					"FROM\n" +
-					"\tMouldingDataStatistics \n" +
-					"WHERE MouldingCode = reverse(substring(reverse(chen_12个月_A版本BOM销售额.MouldingStyleCode),charindex('-',reverse(chen_12个月_A版本BOM销售额.MouldingStyleCode)) +1,500)) \n" +
-					"GROUP BY SDCountry\n" +
-					"ORDER BY sum(SDMouldingSaleLength) ) as Area2\n" +
+					"ORDER BY sum(SHMouldingSaleLength) desc ) as Area\n" +
 					"FROM\n" +
 					"\t[chen_12个月_A版本BOM销售额]\n" +
 					"\tLEFT JOIN MouldingSampleMakingMasterSchedule ON MouldingSampleMakingMasterSchedule.MouldingStyleCode = chen_12个月_A版本BOM销售额.MouldingStyleCode \n" +
+					"\tINNER JOIN [chen_打样分析汇总] on  chen_打样分析汇总.MouldingStyleCode = chen_12个月_A版本BOM销售额.MouldingStyleCode\n" +
+					"\n" +
 					"WHERE\n" +
 					"\tSUBSTRING(chen_12个月_A版本BOM销售额.MouldingStyleCode,1,1) = 'J'\n" +
 					"\n" +
-					"\n" +
 					"ORDER BY\n" +
-					"\t折算人民币价税合计 DESC";
+					"\tchen_12个月_A版本BOM销售额.折算人民币价税合计 DESC";
 			Statement stmt = conn.createStatement();//
 
 			ResultSet rs = stmt.executeQuery(sql);
