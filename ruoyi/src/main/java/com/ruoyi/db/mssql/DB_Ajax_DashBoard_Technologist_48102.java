@@ -450,17 +450,28 @@ public class DB_Ajax_DashBoard_Technologist_48102 {
 
 
 
-	public static List<HashMap<String,String>> getBestHuakuang() {
+//除了 画框 婚纱框 相框 镜框
+
+	public static List<HashMap<String,String>> getBestByProductionLine(String ProductionLine) {
 		List<HashMap<String,String>> hashMapList = new ArrayList<>();
 		try {
 			Connection conn = getSQLConnection();
-			String sql = "SELECT TOP\n" +
-					"\t20 MouldingStyleCode,\n" +
-					"\t[折算人民币价税合计] AS CNY \n" +
+			String sql = "SELECT DISTINCT TOP\n" +
+					"\t20 chen_12个月_A版本BOM销售额.MouldingStyleCode,\n" +
+					"\t[折算人民币价税合计] AS CNY,\n" +
+					"\tMouldingSampleMakingMasterSchedule.ProductionLine ,\n" +
+					"\t(SELECT TOP\n" +
+					"\t1 SHCountry \n" +
 					"FROM\n" +
-					"\t[chen_12个月_A版本BOM销售额] \n" +
+					"\tMouldingDataStatistics \n" +
+					"WHERE MouldingCode = reverse(substring(reverse(chen_12个月_A版本BOM销售额.MouldingStyleCode),charindex('-',reverse(chen_12个月_A版本BOM销售额.MouldingStyleCode)) +1,500)) \n" +
+					"GROUP BY SHCountry\n" +
+					"ORDER BY sum(SHMouldingSaleLength) ) as Area\n" +
+					"FROM\n" +
+					"\t[chen_12个月_A版本BOM销售额]\n" +
+					"\tLEFT JOIN MouldingSampleMakingMasterSchedule ON MouldingSampleMakingMasterSchedule.MouldingStyleCode = chen_12个月_A版本BOM销售额.MouldingStyleCode \n" +
 					"WHERE\n" +
-					"\ttagname = 'OEM' \n" +
+					"\tMouldingSampleMakingMasterSchedule.ProductionLine = '"+ProductionLine+"' \n" +
 					"ORDER BY\n" +
 					"\t折算人民币价税合计 DESC";
 			Statement stmt = conn.createStatement();//
@@ -471,6 +482,7 @@ public class DB_Ajax_DashBoard_Technologist_48102 {
 				HashMap<String,String> map = new HashMap<>();
 				map.put("MouldingStyleCode",rs.getString("MouldingStyleCode"));
 				map.put("CNY",rs.getString("CNY"));
+				map.put("Area",rs.getString("Area"));
 				hashMapList.add(map);
 
 			}
@@ -485,17 +497,38 @@ public class DB_Ajax_DashBoard_Technologist_48102 {
 	}
 
 
-	public static List<HashMap<String,String>> getBestTijiaoxian() {
+
+//除了 画框 婚纱框 相框 镜框
+
+	public static List<HashMap<String,String>> getBestByProductionLine_Jiancai( ) {
 		List<HashMap<String,String>> hashMapList = new ArrayList<>();
 		try {
 			Connection conn = getSQLConnection();
-			String sql = "SELECT TOP\n" +
-					"\t20 MouldingStyleCode,\n" +
-					"\t[折算人民币价税合计] AS CNY \n" +
+			String sql = "SELECT DISTINCT TOP\n" +
+					"\t20 chen_12个月_A版本BOM销售额.MouldingStyleCode,\n" +
+					"\t[折算人民币价税合计] AS CNY,\n" +
+					"\tMouldingSampleMakingMasterSchedule.ProductionLine ,\n" +
+					"\t(SELECT TOP\n" +
+					"\t1 SHCountry \n" +
 					"FROM\n" +
-					"\t[chen_12个月_A版本BOM销售额] \n" +
+					"\tMouldingDataStatistics \n" +
+					"WHERE MouldingCode = reverse(substring(reverse(chen_12个月_A版本BOM销售额.MouldingStyleCode),charindex('-',reverse(chen_12个月_A版本BOM销售额.MouldingStyleCode)) +1,500)) \n" +
+					"GROUP BY SHCountry\n" +
+					"ORDER BY sum(SHMouldingSaleLength) ) as Area,\n" +
+					"\t(SELECT TOP\n" +
+					"\t1 SDCountry \n" +
+					"FROM\n" +
+					"\tMouldingDataStatistics \n" +
+					"WHERE MouldingCode = reverse(substring(reverse(chen_12个月_A版本BOM销售额.MouldingStyleCode),charindex('-',reverse(chen_12个月_A版本BOM销售额.MouldingStyleCode)) +1,500)) \n" +
+					"GROUP BY SDCountry\n" +
+					"ORDER BY sum(SDMouldingSaleLength) ) as Area2\n" +
+					"FROM\n" +
+					"\t[chen_12个月_A版本BOM销售额]\n" +
+					"\tLEFT JOIN MouldingSampleMakingMasterSchedule ON MouldingSampleMakingMasterSchedule.MouldingStyleCode = chen_12个月_A版本BOM销售额.MouldingStyleCode \n" +
 					"WHERE\n" +
-					"\ttagname = 'OEM' \n" +
+					"\tSUBSTRING(chen_12个月_A版本BOM销售额.MouldingStyleCode,1,1) = 'J'\n" +
+					"\n" +
+					"\n" +
 					"ORDER BY\n" +
 					"\t折算人民币价税合计 DESC";
 			Statement stmt = conn.createStatement();//
@@ -506,6 +539,7 @@ public class DB_Ajax_DashBoard_Technologist_48102 {
 				HashMap<String,String> map = new HashMap<>();
 				map.put("MouldingStyleCode",rs.getString("MouldingStyleCode"));
 				map.put("CNY",rs.getString("CNY"));
+				map.put("Area",rs.getString("Area"));
 				hashMapList.add(map);
 
 			}
@@ -518,42 +552,6 @@ public class DB_Ajax_DashBoard_Technologist_48102 {
 		}
 		return hashMapList;
 	}
-
-
-	public static List<HashMap<String,String>> getBestHunsha() {
-		List<HashMap<String,String>> hashMapList = new ArrayList<>();
-		try {
-			Connection conn = getSQLConnection();
-			String sql = "SELECT TOP\n" +
-					"\t20 MouldingStyleCode,\n" +
-					"\t[折算人民币价税合计] AS CNY \n" +
-					"FROM\n" +
-					"\t[chen_12个月_A版本BOM销售额] \n" +
-					"WHERE\n" +
-					"\ttagname = 'OEM' \n" +
-					"ORDER BY\n" +
-					"\t折算人民币价税合计 DESC";
-			Statement stmt = conn.createStatement();//
-
-			ResultSet rs = stmt.executeQuery(sql);
-			while (rs.next()) {
-				// 截面积(mm2)
-				HashMap<String,String> map = new HashMap<>();
-				map.put("MouldingStyleCode",rs.getString("MouldingStyleCode"));
-				map.put("CNY",rs.getString("CNY"));
-				hashMapList.add(map);
-
-			}
-			rs.close();
-			stmt.close();
-			conn.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-
-		}
-		return hashMapList;
-	}
-
 
 
 

@@ -7,11 +7,11 @@
 
         <div class="ibox ">
           <div class="ibox-title">
-            <h3>婚纱框爆款 </h3>
+            <h3>婚纱框畅销款 </h3>
           </div>
           <div class="ibox-content">
             <el-table
-              :data="tableDataODM"
+              :data="tableData婚纱框"
               stripe
               border
               style="width: 100%">
@@ -41,11 +41,11 @@
 
         <div class="ibox ">
           <div class="ibox-title">
-            <h3>踢脚线爆款 </h3>
+            <h3>建材畅销款 </h3>
           </div>
           <div class="ibox-content">
             <el-table
-              :data="tableDataOEM"
+              :data="tableData建材"
               stripe
               border
               style="width: 100%">
@@ -75,11 +75,11 @@
 
         <div class="ibox ">
           <div class="ibox-title">
-            <h3>画框爆款 </h3>
+            <h3>画框畅销款 </h3>
           </div>
           <div class="ibox-content">
             <el-table
-              :data="tableDataOEM"
+              :data="tableData画框"
               stripe
               border
               style="width: 100%">
@@ -112,8 +112,10 @@
 
   require('echarts/theme/macarons') // echarts theme
   import resize from '../dashboard/mixins/resize'
-  import {getBestOEM} from '@/api/dashboard/fx_technologist'
-  import {getBestODM} from '@/api/dashboard/fx_technologist'
+  import {getBestJiancai} from '@/api/dashboard/fx_technologist'
+  import {getBestHunsha} from '@/api/dashboard/fx_technologist'
+  import {getBestHuakuang} from '@/api/dashboard/fx_technologist'
+
 
 
   const lineChartData = {
@@ -128,7 +130,7 @@
       return {
         tableData婚纱框: [],
         tableData画框: [],
-        tableData踢脚线: []
+        tableData建材: []
 
       }
     },
@@ -159,13 +161,13 @@
           }
         })
 
-        getBestTijiaoxian().then(response => {
+        getBestJiancai().then(response => {
 
 
           for (var i = 0; i < response.data.length; i++) {
 
 
-            this.tableData踢脚线.push({
+            this.tableData建材.push({
               MouldingStyleCode: response.data[i].MouldingStyleCode,
               CNY: ((response.data[i].CNY)*1).toFixed(2),
               Area: response.data[i].Area,

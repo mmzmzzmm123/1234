@@ -93,9 +93,9 @@ export function getBestHunsha() {
 }
 
 
-export function getBestTijiaoxian() {
+export function getBestJiancai() {
   return request({
-    url: '/fx_technologist/getBestTijiaoxian',
+    url: '/fx_technologist/getBestJiancai',
     method: 'get'
   })
 }

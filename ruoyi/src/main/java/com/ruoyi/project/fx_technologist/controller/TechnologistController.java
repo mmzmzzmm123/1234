@@ -92,22 +92,22 @@ public class TechnologistController extends BaseController
 
 
 
-    @GetMapping("/getBestOEM")
+    @GetMapping("/getBestHuakuang")
     public AjaxResult getBestHuakuang() throws Exception
     {
-        return AjaxResult.success(DB_Ajax_DashBoard_Technologist_48102.getBestHuakuang());
+        return AjaxResult.success(DB_Ajax_DashBoard_Technologist_48102.getBestByProductionLine("画框"));
     }
 
-    @GetMapping("/getBestODM")
+    @GetMapping("/getBestJiancai")
     public AjaxResult getBestTijiaoxian() throws Exception
     {
-        return AjaxResult.success(DB_Ajax_DashBoard_Technologist_48102.getBestTijiaoxian());
+        return AjaxResult.success(DB_Ajax_DashBoard_Technologist_48102.getBestByProductionLine_Jiancai());
     }
 
-    @GetMapping("/getBestODM")
+    @GetMapping("/getBestHunsha")
     public AjaxResult getBestHunsha() throws Exception
     {
-        return AjaxResult.success(DB_Ajax_DashBoard_Technologist_48102.getBestHunsha());
+        return AjaxResult.success(DB_Ajax_DashBoard_Technologist_48102.getBestByProductionLine("婚纱框"));
     }
 
 
