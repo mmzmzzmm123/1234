@@ -459,9 +459,9 @@ public class DB_Ajax_DashBoard_Technologist_48102 {
 			String sql = "SELECT DISTINCT TOP\n" +
 					"\t20 chen_12个月_A版本BOM销售额.MouldingStyleCode,\n" +
 					"\tchen_12个月_A版本BOM销售额.[折算人民币价税合计] AS CNY,\n" +
-					"\tchen_打样分析汇总.[客户数量],\n" +
+					"\tchen_打样分析汇总.[客户数量] as CustomerNum,\n" +
 					"\tMouldingSampleMakingMasterSchedule.ProductionLine ,\n" +
-					"\t( SELECT TOP 1 SHCountry FROM MouldingDataStatistics WHERE MouldingCode = reverse( SUBSTRING ( reverse( chen_12个月_A版本BOM销售额.MouldingStyleCode ), charindex( '-', reverse( chen_12个月_A版本BOM销售额.MouldingStyleCode ) ) + 1, 500 ) ) GROUP BY SHCountry ORDER BY SUM ( SHMouldingSaleLength ) DESC ) AS Area \n" +
+					"\t( SELECT TOP 1 SHCountry FROM MouldingDataStatistics WHERE MouldingCode = reverse( SUBSTRING ( reverse( chen_12个月_A版本BOM销售额.MouldingStyleCode ), charindex( '-', reverse( chen_12个月_A版本BOM销售额.MouldingStyleCode ) ) + 1, 500 ) )  and SHCountry is not null GROUP BY SHCountry ORDER BY SUM ( SHMouldingSaleLength ) DESC ) AS Area \n" +
 					"FROM\n" +
 					"\t[chen_12个月_A版本BOM销售额]\n" +
 					"\tLEFT JOIN MouldingSampleMakingMasterSchedule ON MouldingSampleMakingMasterSchedule.MouldingStyleCode = chen_12个月_A版本BOM销售额.MouldingStyleCode\n" +
@@ -479,6 +479,8 @@ public class DB_Ajax_DashBoard_Technologist_48102 {
 				map.put("MouldingStyleCode",rs.getString("MouldingStyleCode"));
 				map.put("CNY",rs.getString("CNY"));
 				map.put("Area",rs.getString("Area"));
+				map.put("CustomerNum",rs.getString("CustomerNum"));
+
 				hashMapList.add(map);
 
 			}
@@ -502,7 +504,7 @@ public class DB_Ajax_DashBoard_Technologist_48102 {
 			Connection conn = getSQLConnection();
 			String sql = "SELECT DISTINCT TOP\n" +
 					"\t20 chen_12个月_A版本BOM销售额.MouldingStyleCode,\n" +
-					"\tchen_12个月_A版本BOM销售额.[折算人民币价税合计] AS CNY,\tchen_打样分析汇总.[客户数量],\n" +
+					"\tchen_12个月_A版本BOM销售额.[折算人民币价税合计] AS CNY,\tchen_打样分析汇总.[客户数量]  as CustomerNum,\n" +
 					"\tMouldingSampleMakingMasterSchedule.ProductionLine ,\n" +
 					"\n" +
 					"\t(SELECT TOP\n" +
@@ -531,6 +533,8 @@ public class DB_Ajax_DashBoard_Technologist_48102 {
 				map.put("MouldingStyleCode",rs.getString("MouldingStyleCode"));
 				map.put("CNY",rs.getString("CNY"));
 				map.put("Area",rs.getString("Area"));
+				map.put("CustomerNum",rs.getString("CustomerNum"));
+
 				hashMapList.add(map);
 
 			}

@@ -30,6 +30,11 @@
                 sortable
                 label="热销区域">
               </el-table-column>
+              <el-table-column
+                prop="CustomerNum"
+                sortable
+                label="客户数量">
+              </el-table-column>
             </el-table>
           </div>
         </div>
@@ -64,6 +69,11 @@
                 sortable
                 label="热销区域">
               </el-table-column>
+              <el-table-column
+                prop="CustomerNum"
+                sortable
+                label="客户数量">
+              </el-table-column>
             </el-table>
           </div>
         </div>
@@ -97,6 +107,11 @@
                 prop="Area"
                 sortable
                 label="热销区域">
+              </el-table-column>
+              <el-table-column
+                prop="CustomerNum"
+                sortable
+                label="客户数量">
               </el-table-column>
             </el-table>
           </div>
@@ -156,6 +171,8 @@
               MouldingStyleCode: response.data[i].MouldingStyleCode,
               CNY: ((response.data[i].CNY)*1).toFixed(2),
               Area: response.data[i].Area,
+              CustomerNum: response.data[i].CustomerNum,
+
 
             })
           }
@@ -171,6 +188,8 @@
               MouldingStyleCode: response.data[i].MouldingStyleCode,
               CNY: ((response.data[i].CNY)*1).toFixed(2),
               Area: response.data[i].Area,
+              CustomerNum: response.data[i].CustomerNum,
+
             })
           }
         })
@@ -185,6 +204,8 @@
               MouldingStyleCode: response.data[i].MouldingStyleCode,
               CNY: ((response.data[i].CNY)*1).toFixed(2),
               Area: response.data[i].Area,
+              CustomerNum: response.data[i].CustomerNum,
+
             })
           }
         })
