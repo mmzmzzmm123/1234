@@ -1,52 +1,52 @@
 <template>
   <div class="dashboard-editor-container">
-    <el-row :gutter="32">
+    <!--    <el-row :gutter="32">-->
 
-      <el-col :xs="24" :sm="12" :lg="12" style="height: 170px">
-
-
-        <table class="ibox" style="font-size:24px;width: 100%;margin-top: 50px" >
-          <tbody>
-          <tr>
-            <!-- <td>
-                    <strong>日期</strong> <i id="groupdate"></i>
-                </td>                                         -->
-            <td id="groupdate">
-            </td>
-            <td>
-              <strong>班次</strong> 白班
-            </td>
-          <tr>
-          </tr>
-          <td>
-            <strong>班组</strong> 陈亮
-          </td>
-          <td>
-            <strong>开线数量</strong> <i id="line_open_numbers">31/32</i>
-          </td>
-          </tbody>
-        </table>
-        <!--右上角 生产进度 -->
-
-      </el-col>
+    <!--      <el-col :xs="24" :sm="12" :lg="12" style="height: 170px">-->
 
 
+    <!--        <table class="ibox" style="font-size:24px;width: 100%;margin-top: 50px" >-->
+    <!--          <tbody>-->
+    <!--          <tr>-->
+    <!--            &lt;!&ndash; <td>-->
+    <!--                    <strong>日期</strong> <i id="groupdate"></i>-->
+    <!--                </td>                                         &ndash;&gt;-->
+    <!--            <td id="groupdate">-->
+    <!--            </td>-->
+    <!--            <td>-->
+    <!--              <strong>班次</strong> 白班-->
+    <!--            </td>-->
+    <!--          <tr>-->
+    <!--          </tr>-->
+    <!--          <td>-->
+    <!--            <strong>班组</strong> -->
+    <!--          </td>-->
+    <!--          <td>-->
+    <!--            <strong>开线数量</strong> <i id="line_open_numbers">31/32</i>-->
+    <!--          </td>-->
+    <!--          </tbody>-->
+    <!--        </table>-->
+    <!--        &lt;!&ndash;右上角 生产进度 &ndash;&gt;-->
+
+    <!--      </el-col>-->
 
 
 
-      <el-col :xs="24" :sm="12" :lg="12">
-        <div class="ibox">
-          <div class="m-b-xs">
-            <h5 style="font-size:20px;">生产进度</h5>
-            <h2 id=shengchanjindu>65%</h2>
-            <div id=finishedbox class="m-t-sm small">当班已完成: 1200/2500 (箱)</div>
-            <el-progress id="shengchanjinduavg" :percentage="56" :format="format"></el-progress>
 
-          </div>
-        </div>
-      </el-col>
 
-    </el-row>
+    <!--      <el-col :xs="24" :sm="12" :lg="12">-->
+    <!--        <div class="ibox">-->
+    <!--          <div class="m-b-xs">-->
+    <!--            <h5 style="font-size:20px;">生产进度</h5>-->
+    <!--            <h2 id=shengchanjindu>65%</h2>-->
+    <!--            <div id=finishedbox class="m-t-sm small">当班已完成: 1200/2500 (箱)</div>-->
+    <!--            <el-progress id="shengchanjinduavg" :percentage="56" :format="format"></el-progress>-->
+
+    <!--          </div>-->
+    <!--        </div>-->
+    <!--      </el-col>-->
+
+    <!--    </el-row>-->
 
 
     <el-row :gutter="32">
@@ -88,21 +88,33 @@
             border
             style="width: 100%">
             <el-table-column
-              prop="line"
+              prop="Line"
               label="线号"
-              width="100">
+              width="50">
             </el-table-column>
             <el-table-column
-              prop="Moulds"
-              label="量产模具">
+              prop="ChangeMould"
+              label="是否换模中">
+              <template scope="scope">
+                <span v-if="scope.row.ChangeMould" style="color:red">换模中</span>
+                <span v-else style="color: #37B328">否</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              prop="SoCode"
+              label="订单号">
+            </el-table-column>
+            <el-table-column
+              prop="MouldingStyleCode"
+              label="框型">
             </el-table-column>
             <el-table-column
               prop="FinishedQuantity"
               label="完成箱数">
             </el-table-column>
             <el-table-column
-              prop="GroupProcessTime"
-              label="量产用时">
+              prop="Quantity"
+              label="订单箱数">
             </el-table-column>
             <el-table-column
               prop="NormalCapacity"
@@ -118,19 +130,19 @@
             </el-table-column>
             <el-table-column
               prop="CurrentYield"
-              label="正品率">
+              label="当班正品率">
             </el-table-column>
             <el-table-column
-              prop="AvgDensity"
-              label="平均密度">
-            </el-table-column>
-            <el-table-column
-              prop="MouldAndChangeMouldTime"
-              label="换模型号-用时">
+              prop="ChangeMouldTime"
+              label="换模用时">
             </el-table-column>
             <el-table-column
               prop="Person"
               label="人员">
+            </el-table-column>
+            <el-table-column
+              prop="LastUpdateDate"
+              label="最后操作时间">
             </el-table-column>
 
           </el-table>
@@ -144,18 +156,16 @@
 <script>
   import echarts from 'echarts'
 
-
   require('echarts/theme/macarons') // echarts theme
-  import resize from "./dashboard/mixins/resize";
-  import {getDashboardGroup} from '@/api/dashboard/fxdashboard'
+  import {getcurrent} from '@/api/dashboard/fxdashboard'
 
-  const lineChartData = {
+  let lineChartData = {
     xAxisData: [],
     actualData: []
   }
 
   export default {
-    mixins: [resize],
+    mixins: [],
     name: 'density30day',
     data() {
       return {
@@ -174,9 +184,10 @@
     methods: {
       getData() {
 
-        getDashboardGroup().then(response => {
 
-          var j;
+        getcurrent().then(response => {
+          console.log(response);
+          var j,k;
           var avg_zhengpin_avg = 0;
           var avg_density = 0;
           var avg_energy_avg = 0;
@@ -184,8 +195,11 @@
           var sum_quantity = 0;
           var sum_currentfinishedquantity = 0;
           j = 0;
+          k = 0;
 
-          var data_ajax = response.data;
+
+          var data_ajax = JSON.parse(response.msg);
+          response.data = data_ajax;
 
           for (var i = 0; i < response.data.length; i++) {
             lineChartData.xAxisData.push((response.data[i].time + '').replace(' 00:00:00.0', ''))
@@ -193,35 +207,42 @@
 
 
             this.tableData.push({
-              line: response.data[i].line,
-              Moulds: response.data[i].Moulds,
+              ChangeMould: response.data[i].ChangeMould,
+              Line: response.data[i].Line,
+              MouldingStyleCode: response.data[i].MouldingStyleCode,
               FinishedQuantity: response.data[i].FinishedQuantity,
               GroupProcessTime: (response.data[i].GroupTime * 1) - (response.data[i].GroupChangeMouldTime * 1),
-              NormalCapacity: response.data[i].NormalCapacity,
-              currentspeed: (response.data[i].currentspeed * 1).toFixed(0),
+              NormalCapacity: response.data[i].NormalCapacity * 2,
+              currentspeed: (response.data[i].Speed * 60 * 60 * 24).toFixed(0),
               CapacityStandardObtainedRate: (response.data[i].CapacityStandardObtainedRate * 100).toFixed(2) + '%',
               CurrentYield: (response.data[i].CurrentYield * 100).toFixed(2) + '%',
-              AvgDensity: (response.data[i].AvgDensity * 1).toFixed(4),
-              MouldAndChangeMouldTime: response.data[i].MouldAndChangeMouldTime,
-              Person: response.data[i].Person,
-            })
-            console.log(data_ajax)
+              SoCode: response.data[i].SoCode,
+              ChangeMouldTime: response.data[i].ChangeMouldTime,
+              Person: response.data[i].OperatePersonName,
+              Quantity: response.data[i].Quantity,
+              LastUpdateDate: response.data[i].LastUpdateDate
 
-            if (data_ajax[i].GroupChangeMouldTime !== 0) {
-              avg_chang_moulding_time = avg_chang_moulding_time + (data_ajax[i].GroupChangeMouldTime) * 1;
+
+            })
+
+            if (data_ajax[i].ChangeMouldTime !== 0) {
+              avg_chang_moulding_time = avg_chang_moulding_time + (data_ajax[i].ChangeMouldTime) * 1;
               j = j + 1;
+            }
+
+            if (data_ajax[i].CurrentYield <= 1.2 && data_ajax[i].CurrentYield !== 0 && data_ajax[i].CurrentYield >= 0.3) {
+              avg_zhengpin_avg = avg_zhengpin_avg + (data_ajax[i].CurrentYield) * 1;
+              k = k + 1;
             }
 
             avg_density = parseFloat(avg_density) + parseFloat(data_ajax[i].AvgDensity);
 
-            avg_energy_avg = avg_energy_avg + (data_ajax[i].CapacityStandardObtainedRate) * 1;
+            avg_energy_avg = avg_energy_avg + (data_ajax[i].CapacityStandardObtainedRate );
 
-            avg_zhengpin_avg = avg_zhengpin_avg + (data_ajax[i].CurrentYield) * 1;
 
             sum_quantity = 2000;
 
             sum_currentfinishedquantity = sum_currentfinishedquantity + (data_ajax[i].FinishedQuantity) * 1;
-
 
           }
 
@@ -231,7 +252,7 @@
           const chart_change_moulding_time = echarts.init(document.getElementById("chart_change_moulding_time"));
 
 
-          option_zhengpin_avg.series[0].data[0].value = (avg_zhengpin_avg / data_ajax.length * 100).toFixed(0);
+          option_zhengpin_avg.series[0].data[0].value = (avg_zhengpin_avg / k * 100).toFixed(0);
           chart_zhengpin_avg.setOption(option_zhengpin_avg, true);
 
           option_density.series[0].data[0].value = (avg_density / data_ajax.length).toFixed(3);

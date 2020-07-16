@@ -41,6 +41,8 @@
           </el-option>
         </el-select>
         <el-button @click="getData" type="primary">查询</el-button>
+        <el-button @click="exportExcel" type="primary">导出</el-button>
+
 
       </el-col>
       </el-row>
@@ -77,6 +79,7 @@
       <b>产线明细</b>
       <div class="ibox-content">
         <el-table
+          id="exportTableData"
           :data="tableData"
           stripe
           border
@@ -125,7 +128,8 @@
 
 <script>
   import echarts from 'echarts'
-
+  import FileSaver from 'file-saver'
+  import XLSX from 'xlsx'
   require('echarts/theme/macarons') // echarts theme
   import resize from '../dashboard/mixins/resize'
   import {getDateRange} from '@/api/dashboard/fxdashboard'
@@ -144,10 +148,10 @@
         tableData: [],
         options: [{
           value: '08:00:01',
-          label: '白班'
+          label: '08:00'
         }, {
           value: '20:00:00',
-          label: '夜班'
+          label: '20:00'
         }],
         daterange_group_value1: [],
         daterange_group_value2: [],
@@ -185,8 +189,8 @@
 
       this.daterange_group_value1 = "08:00:01"
       this.daterange_group_value2 = "08:00:01"
-      this.daterange_time1= '2020-05-01'
-      this.daterange_time2= '2020-05-01'
+      this.daterange_time1= '2020-07-01'
+      this.daterange_time2= '2020-07-01'
 
 
     },
@@ -284,7 +288,21 @@
 
 
 
-      }
+      },
+      exportExcel () {
+        /* generate workbook object from table */
+        let wb = XLSX.utils.table_to_book(document.querySelector('#exportTableData'));
+        /* get binary string as output */
+        let wbout = XLSX.write(wb, { bookType: 'xlsx', bookSST: true, type: 'array' });
+        try {
+          FileSaver.saveAs(new Blob([wbout], { type: 'application/octet-stream' }), '车间报表.xlsx');
+        } catch (e)
+        {
+          if (typeof console !== 'undefined')
+            console.log(e, wbout)
+        }
+        return wbout
+      },
 
     }
 

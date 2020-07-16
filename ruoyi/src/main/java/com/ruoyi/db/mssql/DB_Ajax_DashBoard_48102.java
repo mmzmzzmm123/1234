@@ -39,7 +39,9 @@ public class DB_Ajax_DashBoard_48102 {
 		List<HashMap<String,String>> hashMapList = new ArrayList<>();
 		try {
 			Connection conn = getSQLConnection();
-			String sql = "SELECT * FROM [dbo].[V_chen_Dashboard_当前]  order by line";
+			String sql = "SELECT * FROM [dbo].[V_chen_Dashboard_当前]  order by " +
+					"CAST (" +
+					"REPLACE( line, '#', '' ) AS INT)";
 
 			Statement stmt = conn.createStatement();//
 
@@ -145,7 +147,9 @@ public class DB_Ajax_DashBoard_48102 {
 		List<HashMap<String,String>> hashMapList = new ArrayList<>();
 		try {
 			Connection conn = getSQLConnection();
-			String sql = "SELECT * FROM V_chen_Dashboard_当天";
+			String sql = "SELECT * FROM V_chen_Dashboard_当天 ORDER BY " +
+					"CAST (" +
+					"REPLACE( line, '#', '' ) AS INT)";
 
 			Statement stmt = conn.createStatement();//
 
@@ -182,7 +186,9 @@ public class DB_Ajax_DashBoard_48102 {
 		List<HashMap<String,String>> hashMapList = new ArrayList<>();
 		try {
 			Connection conn = getSQLConnection();
-			String sql = "SELECT * FROM V_chen_Dashboard_当月";
+			String sql = "SELECT * FROM V_chen_Dashboard_当月 ORDER BY "+
+					" CAST (" +
+					"REPLACE( line, '#', '' ) AS INT)";
 
 			Statement stmt = conn.createStatement();//
 
@@ -329,8 +335,11 @@ public class DB_Ajax_DashBoard_48102 {
 					"	) AS db3) AS db3 GROUP BY line ) AS db2 ON db2.line = db1.line\r\n" +
 					"	LEFT JOIN (SELECT Line,id,DATEDIFF(MINUTE,StartTime,EndTime) as ChangeMouldTime FROM MouldingDisplayBoard WHERE id IN (SELECT MAX (id) AS id FROM MouldingDisplayBoard WHERE ChangeMould=1 GROUP BY Line)) as db4 on db4.line = db1.line\r\n" +
 					"\r\n" +
-					"GROUP BY\r\n" +
-					"	db1.line";
+					"GROUP BY" +
+					"	db1.line " +
+					"ORDER BY " +
+					"CAST (" +
+					" REPLACE( db1.line, '#', '' ) AS INT)";
 			Statement stmt = conn.createStatement();//
 
 			ResultSet rs = stmt.executeQuery(sql);
