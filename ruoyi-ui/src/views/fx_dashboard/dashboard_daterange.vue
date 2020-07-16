@@ -210,7 +210,7 @@
 
         getDateRange(fDateStart,fDateEnd).then(response => {
 
-          var j;
+          var j,k,l;
           var avg_zhengpin_avg = 0;
           var avg_density = 0;
           var avg_energy_avg = 0;
@@ -218,6 +218,9 @@
           var sum_quantity = 0;
           var sum_currentfinishedquantity = 0;
           j = 0;
+          k = 0;
+          l = 0;
+
 
           var data_ajax = response.data;
 
@@ -239,15 +242,25 @@
 
             })
 
-            if (data_ajax[i].lastchangemouldtime !== 0) {
+            if (data_ajax[i].lastchangemouldtime >= 10) {
               avg_chang_moulding_time = avg_chang_moulding_time + (data_ajax[i].lastchangemouldtime) * 1;
               j = j + 1;
             }
+
+            if (data_ajax[i].sum_device_meter !== null) {
+              avg_zhengpin_avg = avg_zhengpin_avg + (data_ajax[i].sum_box_meter / data_ajax[i].sum_device_meter) * 1;
+              k = k + 1;
+            }
+
+            if (data_ajax[i].avg_currentcapacity !== null) {
+              avg_energy_avg = avg_energy_avg + (data_ajax[i].avg_currentcapacity / data_ajax[i].avg_normalcapacity);
+              l = l + 1;
+            }
             avg_density = parseFloat(avg_density) + parseFloat(data_ajax[i].avg_density);
-            avg_energy_avg = avg_energy_avg + (data_ajax[i].avg_currentcapacity / data_ajax[i].avg_normalcapacity);
-            avg_zhengpin_avg = avg_zhengpin_avg + (data_ajax[i].sum_box_meter / data_ajax[i].sum_device_meter);
+        //    avg_energy_avg = avg_energy_avg + (data_ajax[i].avg_currentcapacity / data_ajax[i].avg_normalcapacity);
+          //  avg_zhengpin_avg = avg_zhengpin_avg + (data_ajax[i].sum_box_meter / data_ajax[i].sum_device_meter);
             sum_quantity = 2000;
-            sum_currentfinishedquantity = sum_currentfinishedquantity + (data_ajax[i].sumbox) * 1;
+           sum_currentfinishedquantity = sum_currentfinishedquantity + (data_ajax[i].sumbox) * 1;
 
 
           }
@@ -258,7 +271,10 @@
           const chart_change_moulding_time = echarts.init(document.getElementById("chart_change_moulding_time"));
 
           // 设置仪表盘数据
-          option_zhengpin_avg.series[0].data[0].value = (avg_zhengpin_avg / data_ajax.length * 100).toFixed(0);
+
+
+
+          option_zhengpin_avg.series[0].data[0].value = (avg_zhengpin_avg / k * 100).toFixed(0);
           chart_zhengpin_avg.setOption(option_zhengpin_avg, true);
 
           option_density.series[0].data[0].value = (avg_density / data_ajax.length).toFixed(3);
@@ -268,7 +284,7 @@
           // option_change_moulding_time.series[0].data[0].value = 0;
           // chart_change_moulding_time.setOption(option_change_moulding_time, true);
 
-          option_energy_avg.series[0].data[0].value = (avg_energy_avg / data_ajax.length * avg_zhengpin_avg / data_ajax.length * 100).toFixed(0);
+          option_energy_avg.series[0].data[0].value = (avg_energy_avg / l * avg_zhengpin_avg / k * 100).toFixed(0);
           chart_energy_avg.setOption(option_energy_avg, true);
 
         })
