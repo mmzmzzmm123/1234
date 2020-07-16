@@ -19,10 +19,18 @@ public class ChangeMouldTimeController extends BaseController
 {
 //    @PreAuthorize("@ss.hasPermi('monitor:server:list')")
     @GetMapping("/list")
-    public AjaxResult get30Day() throws Exception
+    public AjaxResult DoGetChangeMouldTimeList() throws Exception
     {
         return AjaxResult.success(DB_Ajax_DashBoard_ChangeMouldTime_48102.DoGetChangeMouldTimeList());
     }
+
+
+    @GetMapping("/DoGetChangeMouldTimeListDateRange/{fDateStart}/{fDateEnd}")
+    public AjaxResult DoGetChangeMouldTimeListDateRange(@PathVariable String fDateStart, @PathVariable String fDateEnd) throws Exception
+    {
+        return AjaxResult.success(DB_Ajax_DashBoard_ChangeMouldTime_48102.DoGetChangeMouldTimeListDateRange(fDateStart,fDateEnd));
+    }
+
 
     @GetMapping("/rangetimeavg/{fDateStart}/{fDateEnd}")
     public AjaxResult getRangeTimeAvg(@PathVariable String fDateStart, @PathVariable String fDateEnd) throws Exception

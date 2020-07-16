@@ -41,7 +41,7 @@
           </el-option>
         </el-select>
         <el-button @click="getData" type="primary">查询</el-button>
-        <el-button @click="exportExcel" type="primary">导出</el-button>
+        <el-button @click="exportExcel" type="primary">导出明细</el-button>
 
 
       </el-col>
@@ -76,10 +76,71 @@
     </el-row>
 
     <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
+      <b>汇总统计</b>
+      <div class="ibox-content">
+        <el-col :xs="24" :sm="18" :lg="18">
+        <el-table
+          id="exportTableData"
+          :data="tableDataSum"
+          stripe
+          border
+          style="width: 100%">
+          <el-table-column
+            prop="开线数量"
+            label="开线数量"
+            width="100">
+          </el-table-column>
+          <el-table-column
+            prop="完成箱数"
+            label="完成箱数">
+          </el-table-column>
+          <el-table-column
+            prop="线均箱数"
+            label="线均箱数">
+          </el-table-column>
+          <el-table-column
+            prop="产能达标率"
+            label="产能达标率">
+          </el-table-column>
+          <el-table-column
+            prop="正品达标率"
+            label="正品率">
+          </el-table-column>
+          <el-table-column
+            prop="平均密度"
+            label="平均密度">
+          </el-table-column>
+
+        </el-table>
+        </el-col>
+        <el-col :xs="24" :sm="6" :lg="6">
+
+        <el-table
+          id="exportTableData3"
+          :data="tableDataSum2"
+          stripe
+          border
+          style="width: 100%">
+          <el-table-column
+            prop="换模次数"
+            label="换模次数">
+          </el-table-column>
+          <el-table-column
+            prop="平均换模时间"
+            label="平均换模时间">
+          </el-table-column>
+        </el-table>
+        </el-col>
+
+      </div>
+    </el-row>
+
+
+    <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
       <b>产线明细</b>
       <div class="ibox-content">
         <el-table
-          id="exportTableData"
+          id="exportTableData2"
           :data="tableData"
           stripe
           border
@@ -111,7 +172,7 @@
           </el-table-column>
           <el-table-column
             prop="yieldrate"
-            label="正品达标率">
+            label="正品率">
           </el-table-column>
           <el-table-column
             prop="avg_density"
@@ -146,6 +207,9 @@
     data() {
       return {
         tableData: [],
+        tableDataSum: [],
+        tableDataSum2: [],
+
         options: [{
           value: '08:00:01',
           label: '08:00'
@@ -189,8 +253,8 @@
 
       this.daterange_group_value1 = "08:00:01"
       this.daterange_group_value2 = "08:00:01"
-      this.daterange_time1= '2020-07-01'
-      this.daterange_time2= '2020-07-01'
+      this.daterange_time1= '2020-07-16'
+      this.daterange_time2= '2020-07-16'
 
 
     },
@@ -207,8 +271,12 @@
           actualData: []
         }
         this.tableData=[];
+        this.tableDataSum=[];
+        this.tableDataSum2=[];
 
-        getDateRange(fDateStart,fDateEnd).then(response => {
+
+
+          getDateRange(fDateStart,fDateEnd).then(response => {
 
           var j,k,l;
           var avg_zhengpin_avg = 0;
@@ -217,6 +285,7 @@
           var avg_chang_moulding_time = 0;
           var sum_quantity = 0;
           var sum_currentfinishedquantity = 0;
+          var line_sum = 0;
           j = 0;
           k = 0;
           l = 0;
@@ -231,7 +300,7 @@
 
             this.tableData.push({
               line: response.data[i].line,
-              Moulds: response.data[i].Moulds,
+              Moulds: response.data[i].Moulds+'-',
               sumbox: response.data[i].sumbox,
               avg_currentcapacity: (response.data[i].avg_currentcapacity * 1 * response.data[i].sum_box_meter / response.data[i].sum_device_meter).toFixed(2),
               avg_normalcapacity: (response.data[i].avg_normalcapacity * 1).toFixed(2),
@@ -241,6 +310,10 @@
               lastchangemouldtime: (response.data[i].lastchangemouldtime),
 
             })
+
+
+
+
 
             if (data_ajax[i].lastchangemouldtime >= 10) {
               avg_chang_moulding_time = avg_chang_moulding_time + (data_ajax[i].lastchangemouldtime) * 1;
@@ -287,6 +360,18 @@
           option_energy_avg.series[0].data[0].value = (avg_energy_avg / l * avg_zhengpin_avg / k * 100).toFixed(0);
           chart_energy_avg.setOption(option_energy_avg, true);
 
+            //汇总数据填充
+            this.tableDataSum.push({
+              平均密度:(avg_density / data_ajax.length).toFixed(3),
+              正品达标率: (avg_zhengpin_avg / k * 100).toFixed(0)+'%',
+              产能达标率: (avg_energy_avg / l * avg_zhengpin_avg / k * 100).toFixed(0)+'%',
+              线均箱数: (sum_currentfinishedquantity/(response.data.length)).toFixed(1),
+              完成箱数: sum_currentfinishedquantity.toFixed(1),
+              开线数量: (response.data.length),
+
+
+            })
+
         })
 
 
@@ -299,6 +384,16 @@
 
 
 
+
+          //总表数据填充
+          this.tableDataSum2.push({
+            平均换模时间: (response.data[0].avgchangemouldtime * 1),
+            换模次数:  (response.data[0].num * 1),
+          })
+
+
+
+
         })
 
 
@@ -307,7 +402,7 @@
       },
       exportExcel () {
         /* generate workbook object from table */
-        let wb = XLSX.utils.table_to_book(document.querySelector('#exportTableData'));
+        let wb = XLSX.utils.table_to_book(document.querySelector('#exportTableData2'));
         /* get binary string as output */
         let wbout = XLSX.write(wb, { bookType: 'xlsx', bookSST: true, type: 'array' });
         try {

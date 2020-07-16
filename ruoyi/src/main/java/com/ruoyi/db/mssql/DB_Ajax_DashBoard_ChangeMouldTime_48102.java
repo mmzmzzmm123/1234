@@ -76,28 +76,78 @@ public class DB_Ajax_DashBoard_ChangeMouldTime_48102 {
 	}
 
 
-
-	public static List<HashMap<String,String>> DoGet_avg_changemouldtime_date_range(String fstarttime, String fendtime) {
+	public static List<HashMap<String,String>> DoGetChangeMouldTimeListDateRange(String fstarttime, String fendtime) {
 		List<HashMap<String,String>> hashMapList = new ArrayList<>();
 		try {
 			Connection conn = getSQLConnection();
-			String sql = "SELECT AVG\r\n" +
-					"	(\r\n" +
-					"	DATEDIFF( MINUTE, StartTime, EndTime )) AS avgchangemouldtime \r\n" +
-					"FROM\r\n" +
-					"	dbo.MouldingDisplayBoard \r\n" +
-					"WHERE\r\n" +
-					"\tChangeMould =  1 and \tDATEDIFF( minute,starttime, endtime) > 20\n" +
-					"	AND Deleted = 0 \r\n" +
-					"	AND StartTime > '" + fstarttime + "' \r\n" +
-					"	AND endtime < '" + fendtime + "'";
+			String sql = "SELECT\n" +
+					"\tLine,\n" +
+					"\tLEFT ( MouldingStyleCode, charindex( '-', MouldingStyleCode ) - 1 ) AS Mould,\n" +
+					"\tMouldingStyleCode,\n" +
+					"\tStartTime,\n" +
+					"\tEndTime,\n" +
+					"\tDATEDIFF( MINUTE, starttime, endtime ) AS ChangeMouldTime \n" +
+					"FROM\n" +
+					"\t[dbo].[MouldingDisplayBoard] \n" +
+					"WHERE\n" +
+					"\tChangeMould = 1 \n" +
+					"\tAND DATEDIFF( MINUTE, starttime, endtime ) > 20 \n" +
+					"\tAND endtime >= '"+fstarttime+"' \n" +
+					"\tAND endtime <= '"+fendtime+"' \n" +
+					"ORDER BY\n" +
+					"\tstarttime DESC";
 			Statement stmt = conn.createStatement();//
 
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
 				// 截面积(mm2)
 				HashMap<String,String> map = new HashMap<>();
+				map.put("Line",rs.getString("Line"));
+				map.put("Mould",rs.getString("Mould"));
+				map.put("MouldingStyleCode",rs.getString("MouldingStyleCode"));
+				map.put("StartTime",rs.getString("StartTime"));
+				map.put("EndTime",rs.getString("EndTime"));
+				map.put("ChangeMouldTime",rs.getString("ChangeMouldTime"));
+				hashMapList.add(map);
+
+			}
+			rs.close();
+			stmt.close();
+			conn.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+
+		}
+		return hashMapList;
+	}
+
+
+
+	public static List<HashMap<String,String>> DoGet_avg_changemouldtime_date_range(String fstarttime, String fendtime) {
+		List<HashMap<String,String>> hashMapList = new ArrayList<>();
+		try {
+			Connection conn = getSQLConnection();
+			String sql = "SELECT AVG\n" +
+					"\t(\n" +
+					"\tDATEDIFF( MINUTE, StartTime, EndTime )) AS avgchangemouldtime , count\n" +
+					"\t(\n" +
+					"\tDATEDIFF( MINUTE, StartTime, EndTime )) AS num \n" +
+					"FROM\n" +
+					"\tdbo.MouldingDisplayBoard \n" +
+					"WHERE\n" +
+					"\tChangeMould = 1 \n" +
+					"\tAND DATEDIFF( MINUTE, starttime, endtime ) > 20 \n" +
+					"\tAND Deleted = 0 " +
+					"	AND StartTime > '" + fstarttime + "' \r\n" +
+					"	AND endtime < '" + fendtime + "'";
+			Statement stmt = conn.createStatement();//
+			ResultSet rs = stmt.executeQuery(sql);
+			while (rs.next()) {
+				// 截面积(mm2)
+				HashMap<String,String> map = new HashMap<>();
 				map.put("avgchangemouldtime",rs.getString("avgchangemouldtime"));
+				map.put("num",rs.getString("num"));
+
 				hashMapList.add(map);
 
 			}
