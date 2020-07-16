@@ -341,7 +341,7 @@ public class DB_Ajax_DashBoard_48102 {
 					"CAST (" +
 					" REPLACE( db1.line, '#', '' ) AS INT)";
 			Statement stmt = conn.createStatement();//
-
+			System.out.println(sql);
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
 				// 截面积(mm2)
