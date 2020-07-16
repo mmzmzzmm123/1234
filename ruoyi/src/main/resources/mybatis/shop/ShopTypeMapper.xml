@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.erp.shop.mapper.ShopTypeMapper">
+
+    <resultMap type="ShopType" id="ShopTypeResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="shortName"    column="short_name"    />
+        <result property="authUrl"    column="auth_url"    />
+        <result property="clientId"    column="client_id"    />
+        <result property="clientSecret"    column="client_secret"    />
+        <result property="createDate"    column="create_date"    />
+        <result property="modifyDate"    column="modify_date"    />
+    </resultMap>
+
+    <sql id="selectShopTypeVo">
+        select id, name, short_name,auth_url,client_id,client_secret,create_date, modify_date from erp_shop_type
+    </sql>
+
+    <select id="selectShopTypeAll" resultMap="ShopTypeResult">
+        <include refid="selectShopTypeVo"/>
+    </select>
+
+    <select id="selectShopTypeList" parameterType="ShopType" resultMap="ShopTypeResult">
+        <include refid="selectShopTypeVo"/>
+        <where>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="shortName != null  and shortName != ''"> and short_name like concat('%', #{shortName}, '%')</if>
+            <if test="authUrl != null "> and auth_url = #{authUrl}</if>
+            <if test="clientId != null "> and client_id = #{clientId}</if>
+            <if test="clientSecret != null "> and client_secret = #{clientSecret}</if>
+            <if test="params.beginCreateDate != null and params.beginCreateDate != '' and params.endCreateDate != null and params.endCreateDate != ''"> and create_date between #{params.beginCreateDate} and #{params.endCreateDate}</if>
+            <if test="params.beginModifyDate != null and params.beginModifyDate != '' and params.endModifyDate != null and params.endModifyDate != ''"> and modify_date between #{params.beginModifyDate} and #{params.endModifyDate}</if>
+        </where>
+    </select>
+
+    <select id="selectShopTypeById" parameterType="Long" resultMap="ShopTypeResult">
+        <include refid="selectShopTypeVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertShopType" parameterType="ShopType" useGeneratedKeys="true" keyProperty="id">
+        insert into erp_shop_type
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,</if>
+            <if test="shortName != null">short_name,</if>
+            <if test="authUrl != null">auth_url,</if>
+            <if test="clientId != null">client_id,</if>
+            <if test="clientSecret != null">client_secret,</if>
+            create_date,
+            modify_date,
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="shortName != null">#{shortName},</if>
+            <if test="authUrl != null">#{authUrl},</if>
+            <if test="clientId != null">#{clientId},</if>
+            <if test="clientSecret != null">#{clientSecret},</if>
+            sysdate(),
+            sysdate(),
+        </trim>
+    </insert>
+
+    <update id="updateShopType" parameterType="ShopType">
+        update erp_shop_type
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="shortName != null">short_name = #{shortName},</if>
+            <if test="authUrl != null">auth_url = #{authUrl},</if>
+            <if test="clientId != null">client_id = #{clientId},</if>
+            <if test="clientSecret != null">client_secret = #{clientSecret},</if>
+            modify_date = sysdate()
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteShopTypeById" parameterType="Long">
+        delete from erp_shop_type where id = #{id}
+    </delete>
+
+    <delete id="deleteShopTypeByIds" parameterType="String">
+        delete from erp_shop_type where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
