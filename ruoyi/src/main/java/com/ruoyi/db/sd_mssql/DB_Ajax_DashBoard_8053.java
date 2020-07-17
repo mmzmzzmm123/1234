@@ -1,16 +1,16 @@
-package com.ruoyi.db.mssql;
+package com.ruoyi.db.sd_mssql;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class DB_Ajax_DashBoard_48102 {
+public class DB_Ajax_DashBoard_8053 {
 
-	private static final String IP = "192.168.48.102";
-	private static final String DBName = "ERPDATA";
-	private static final String USER = "sa";
-	private static final String PWD = "park$1299";
+	private static String IP = "192.168.80.53";
+	private static String DBName = "ERPDATA";
+	private static String USER = "sa";
+	private static String PWD = "#080507h";
 
 	/** 创建数据库对象 */
 	private static Connection getSQLConnection() {
@@ -122,7 +122,7 @@ public class DB_Ajax_DashBoard_48102 {
 					"\tCAST (\n" +
 					"\tREPLACE( dbo.V_MouldingDisplayBoard.Line, '#', '' ) AS INT) FOR JSON PATH";
 			Statement stmt = conn.createStatement();//
-
+			System.out.println(sql);
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
 				// 截面积(mm2)
@@ -142,67 +142,6 @@ public class DB_Ajax_DashBoard_48102 {
 
 
 
-	public static String SD_DoGetCurrent() {
-		StringBuilder jsonpath = new StringBuilder();
-		try {
-			Connection conn = getSQLConnection();
-			String sql = "SELECT\n" +
-					"\tChangeMould,\n" +
-					"\tV_SD_MouldingDisplayBoard.Id,\n" +
-					"\tV_SD_MouldingDisplayBoard.Line,\n" +
-					"\tV_SD_MouldingDisplayBoard.CustomerName,\n" +
-					"\tV_SD_MouldingDisplayBoard.NormalDensity,\n" +
-					"\tV_SD_MouldingDisplayBoard.Length,\n" +
-					"\tV_SD_MouldingDisplayBoard.NormalCapacity,\n" +
-					"\tV_SD_MouldingDisplayBoard.SoCode,\n" +
-					"\tV_SD_MouldingDisplayBoard.NormalWeight,\n" +
-					"\tV_SD_MouldingDisplayBoard.Quantity,\n" +
-					"\tV_SD_MouldingDisplayBoard.FactCapacity,\n" +
-					"\tV_SD_MouldingDisplayBoard.MouldingStyleCode,\n" +
-					"\tV_SD_MouldingDisplayBoard.CurrentFinishedQuantity\n" +
-					"\t\n" +
-					"\t,\n" +
-					"CASE\n" +
-					"\t\t\n" +
-					"\t\tWHEN ( CurrentYield IS NULL ) THEN\n" +
-					"\t\t0 ELSE CurrentYield \n" +
-					"\tEND AS CurrentYield,\n" +
-					"CASE\n" +
-					"\t\t\n" +
-					"\t\tWHEN ( CapacityStandardObtainedRate IS NULL ) THEN\n" +
-					"\t\t0 ELSE CapacityStandardObtainedRate \n" +
-					"\tEND AS CapacityStandardObtainedRate,\n" +
-					"\tV_SD_MouldingDisplayBoard.SectionalErea,\n" +
-					"\tV_SD_MouldingDisplayBoard.MouldYield,\n" +
-					"\tV_SD_MouldingDisplayBoard.FinishedQuantity,\n" +
-					"\tV_SD_MouldingDisplayBoard.TotalCapacity,\n" +
-					"\tV_SD_MouldingDisplayBoard.ChangeMouldTime,\n" +
-					"\tV_SD_MouldingDisplayBoard.OperatePersonCode,\n" +
-					"\tV_SD_MouldingDisplayBoard.OperatePersonName,\n" +
-					"\tV_SD_MouldingDisplayBoard.Speed,\n" +
-					"\tV_SD_MouldingDisplayBoard.CurrentFinishLength \n" +
-					"FROM\n" +
-					"\tV_SD_MouldingDisplayBoard \n" +
-					"ORDER BY\n" +
-					"\tCAST ( REPLACE( V_SD_MouldingDisplayBoard.Line, '#', '' ) AS INT ) FOR JSON PATH";
-			Statement stmt = conn.createStatement();//
-
-			ResultSet rs = stmt.executeQuery(sql);
-			while (rs.next()) {
-				// 截面积(mm2)
-				jsonpath.append(rs.getString(1));
-
-
-			}
-			rs.close();
-			stmt.close();
-			conn.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-
-		}
-		return jsonpath.toString();
-	}
 
 	public static List<HashMap<String,String>> DoGetLastDay() {
 		List<HashMap<String,String>> hashMapList = new ArrayList<>();
