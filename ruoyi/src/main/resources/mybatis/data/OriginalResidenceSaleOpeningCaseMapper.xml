@@ -14,7 +14,7 @@
             case_id varchar (32) not null
             , llid bigint
             , lcid bigint
-            , Name sql_variant
+            , Name nvarchar(1024)
             , Roomtype nvarchar(50)
             , Area decimal(18, 2)
             , Towards nvarchar(50)

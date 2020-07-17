@@ -19,8 +19,8 @@
         <result property="caseApartmentLayout" column="户型"/>
         <result property="computeUnitPrice" column="计算单价"/>
         <result property="computeTotalPrice" column="计算总价"/>
-        <result property="referenceTotalPrice" column="参考单价"/>
-        <result property="referenceUnitPrice" column="参考总价"/>
+        <result property="referenceUnitPrice" column="参考单价"/>
+        <result property="referenceTotalPrice" column="参考总价"/>
         <result property="yearMonth" column="yearMonth"/>
     </resultMap>
     <select id="getFirst" resultMap="ResultMapping">

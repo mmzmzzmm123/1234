@@ -98,6 +98,7 @@ public class DownloadOriginalResidenceSaleOpeningCaseServiceImpl {
             originalResidenceSaleOpeningCase.setYearMonth(tableRoute);
             originalResidenceSaleOpeningCase.setCaseId(originalResidenceSaleOpeningCase.getNewCaseId());
             originalResidenceSaleOpeningCaseMapper.insertRawTable(originalResidenceSaleOpeningCase);
+
             originalResidenceSaleOpeningCase.setYearMonth(remoteTableRoute);
             syncOriginalResidenceSaleOpeningCaseMapper.insertRawTable(originalResidenceSaleOpeningCase);
         });
