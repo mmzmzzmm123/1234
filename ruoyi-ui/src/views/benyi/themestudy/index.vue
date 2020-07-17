@@ -35,7 +35,9 @@
           </div>
           <div class="text item" v-show="title2">
             <h3 class="box-card-title">{{title2}}</h3>
-            <div class="pad-left" v-html="communicate"></div>
+            <div class="pad-left">
+               <Editor v-model="communicate" />
+            </div>
           </div>
           <div class="text item" v-show="title3">
             <h3 class="box-card-title">{{title3}}</h3>
@@ -69,9 +71,13 @@
 <script>
 import { treeselect, getTheme } from "@/api/benyi/theme";
 import { listActivity } from "@/api/benyi/activity";
+import Editor from "@/components/Editor";
 
 export default {
   name: "Detail",
+  components: {
+    Editor
+  },
   data() {
     return {
       // 主题整合名称
