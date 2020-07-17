@@ -253,7 +253,9 @@ public class DB_Ajax_DashBoard_48102 {
 			Connection conn = getSQLConnection();
 			String sql = "SELECT\n" +
 					"\t( SELECT SUM ( Quantity ) FROM MouldingDisplayBoardOperation WHERE deleted = 0 and OperateTime >= dbo.GetWorkShiftStartDate ( GETDATE( ) ) ) AS SUMBOX,\n" +
-					"\t( SELECT MAX ( OperatePersonName ) FROM MouldingDisplayBoardOperationPerson WHERE line = '班长#' AND OperateTime >= dbo.GetWorkShiftStartDate ( GETDATE( ) ) ) AS NAME";
+					"\t( SELECT MAX ( OperatePersonName ) FROM MouldingDisplayBoardOperationPerson WHERE line = '班长#' AND OperateTime >= dbo.GetWorkShiftStartDate ( GETDATE( ) ) ) AS NAME,"+
+					"\t( SELECT MAX ( OperatePersonCode ) FROM MouldingDisplayBoardOperationPerson WHERE line = '班长#' AND OperateTime >= dbo.GetWorkShiftStartDate ( GETDATE( ) ) ) AS PersonCode";
+
 
 			Statement stmt = conn.createStatement();//
 
@@ -287,7 +289,8 @@ public class DB_Ajax_DashBoard_48102 {
 					"\t( SELECT AVG ( sum_box_meter / sum_device_meter * avg_currentcapacity / avg_normalcapacity ) FROM [V_chen_Dashboard_上个班组] ) AS capacity,\n" +
 					"\t( SELECT AVG ( sum_box_meter / sum_device_meter ) FROM [V_chen_Dashboard_上个班组] ) AS yield,\n" +
 					"\t( SELECT SUM ( Quantity ) FROM MouldingDisplayBoardOperation WHERE deleted = 0 AND OperateTime > dbo.GetWorkShiftStartDate ( GETDATE( ) - 0.5 ) AND OperateTime < dbo.GetWorkShiftendDate ( GETDATE( ) - 0.5 ) ) AS SUMBOX,\n" +
-					"\t( SELECT MAX ( OperatePersonName ) FROM MouldingDisplayBoardOperationPerson WHERE line = '班长#' AND OperateTime > dbo.GetWorkShiftStartDate ( GETDATE( ) - 0.5 ) AND OperateTime < dbo.GetWorkShiftendDate ( GETDATE( ) - 0.5 ) ) AS NAME";
+					"\t( SELECT MAX ( OperatePersonName ) FROM MouldingDisplayBoardOperationPerson WHERE line = '班长#' AND OperateTime > dbo.GetWorkShiftStartDate ( GETDATE( ) - 0.5 ) AND OperateTime < dbo.GetWorkShiftendDate ( GETDATE( ) - 0.5 ) ) AS NAME,\n" +
+					"\t\t( SELECT MAX ( OperatePersonCode ) FROM MouldingDisplayBoardOperationPerson WHERE line = '班长#' AND OperateTime > dbo.GetWorkShiftStartDate ( GETDATE( ) - 0.5 ) AND OperateTime < dbo.GetWorkShiftendDate ( GETDATE( ) - 0.5 ) ) AS PersonCode";
 
 			Statement stmt = conn.createStatement();//
 

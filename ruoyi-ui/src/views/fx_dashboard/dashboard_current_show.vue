@@ -30,13 +30,18 @@
     </el-row>
 
     <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
-      <el-col :xs="24" :sm="11" :lg="11">
+
+    <el-col :xs="24" :sm="12" :lg="12">
+
+    <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
+      <el-col :xs="24" :sm="24" :lg="24">
 
         <div class="ibox ">
           <div class="ibox-title">
             <b>当班信息</b>
           </div>
           <div class="ibox-content">
+
             <el-table
               :data="tableDataCurrentGroup"
               stripe
@@ -50,17 +55,26 @@
                 prop="已完成箱数"
                 label="已完成箱数">
               </el-table-column>
-
-
+              <el-table-column
+                prop="正品率"
+                label="正品率">
+              </el-table-column>
+              <el-table-column
+                prop="产能达标率"
+                label="产能达标率">
+              </el-table-column>
+              <el-table-column
+                prop="平均密度"
+                label="平均密度">
+              </el-table-column>
 
             </el-table>
+
           </div>
         </div>
       </el-col>
-      <el-col :xs="24" :sm="1" :lg="1">
-        <h1></h1>
-      </el-col>
-      <el-col :xs="24" :sm="11" :lg="11">
+
+      <el-col :xs="24" :sm="24" :lg="24">
 
         <div class="ibox ">
           <div class="ibox-title">
@@ -97,6 +111,37 @@
             </el-table>
           </div>
         </div>
+      </el-col>
+    </el-row>
+    </el-col>
+
+    <el-col :xs="24" :sm="6" :lg="6">
+
+
+      <div class="ibox">
+        <el-image
+          :align="center"
+          style="width: 180px; height: 180px"
+          :src="url"
+          :fit=fill>
+        </el-image>        <h2  style="margin-top: 0px;">B班班长-陈亮</h2>
+      </div>
+
+    </el-col>
+
+
+      <el-col :xs="24" :sm="6" :lg="6">
+
+
+        <div class="ibox">
+          <el-image
+            :align="center"
+            style="width: 180px; height: 180px"
+            :src="url2"
+            :fit=fill>
+          </el-image>        <h2  style="margin-top: 0px;">A班班长-陈忠维</h2>
+        </div>
+
       </el-col>
     </el-row>
 
@@ -199,7 +244,12 @@
       return {
         tableData: [],
         tableDataCurrentGroup: [],
-        tableDataLastGroup: []
+        tableDataLastGroup: [],
+        tableDataLastGroup2: [],
+        url: 'https://tfs.intco.cn:11288/filesever/MRP/PersonPhoto/M0647.jpg',
+        url2: 'https://tfs.intco.cn:11288/filesever/MRP/PersonPhoto/M1246.jpg'
+
+
       }
     },
 
@@ -218,6 +268,10 @@ this.Refresh()
           },60000*10);   //这就是 一分钟
       },
       getData() {
+        var d_zhenpin=0;
+        var d_midu=0;
+        var d_channeng=0;
+
 
 
         getcurrent().then(response => {
@@ -294,6 +348,22 @@ this.Refresh()
           option_energy_avg.series[0].data[0].value = (avg_energy_avg / data_ajax.length * 100).toFixed(0);
           chart_energy_avg.setOption(option_energy_avg, true);
 
+           d_zhenpin=(avg_zhengpin_avg / k * 100).toFixed(0);
+           d_channeng=(avg_energy_avg / data_ajax.length * 100).toFixed(0);
+
+          currentBoxAndGroupMonitor().then(response => {
+
+            for (var i = 0; i < response.data.length; i++) {
+              this.tableDataCurrentGroup.push({
+                已完成箱数: response.data[i].SUMBOX,
+                班长: response.data[i].NAME,
+                产能达标率: d_channeng+'%',
+                正品率: d_zhenpin+'%',
+                平均密度: d_midu,
+              })
+            }
+          })
+
         })
 
         getDensityGroup().then(response => {
@@ -304,6 +374,8 @@ this.Refresh()
           }
           option_change_moulding_time.series[0].data[0].value = (avg_density / response.data.length).toFixed(3);
           chart_density.setOption(option_change_moulding_time, true);
+          d_midu=(avg_density / response.data.length).toFixed(3);
+
         })
 
 
@@ -325,14 +397,7 @@ this.Refresh()
         })
 
 
-        currentBoxAndGroupMonitor().then(response => {
-          for (var i = 0; i < response.data.length; i++) {
-            this.tableDataCurrentGroup.push({
-              已完成箱数: response.data[i].SUMBOX,
-              班长: response.data[i].NAME,
-            })
-          }
-        })
+
       }
     }
 
