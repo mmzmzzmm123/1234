@@ -2,7 +2,6 @@
   <div class="dashboard-editor-container">
 
 
-
     <el-row :gutter="32">
       <el-col :xs="24" :sm="12" :lg="6">
         <div class="ibox">
@@ -31,6 +30,78 @@
     </el-row>
 
     <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
+      <el-col :xs="24" :sm="11" :lg="11">
+
+        <div class="ibox ">
+          <div class="ibox-title">
+            <b>当班信息</b>
+          </div>
+          <div class="ibox-content">
+            <el-table
+              :data="tableDataCurrentGroup"
+              stripe
+              border
+              style="width: 100%">
+              <el-table-column
+                prop="班长"
+                label="班长">
+              </el-table-column>
+              <el-table-column
+                prop="已完成箱数"
+                label="已完成箱数">
+              </el-table-column>
+
+
+
+            </el-table>
+          </div>
+        </div>
+      </el-col>
+      <el-col :xs="24" :sm="1" :lg="1">
+        <h1></h1>
+      </el-col>
+      <el-col :xs="24" :sm="11" :lg="11">
+
+        <div class="ibox ">
+          <div class="ibox-title">
+            <b>上个班组汇总 </b>
+          </div>
+          <div class="ibox-content">
+            <el-table
+              :data="tableDataLastGroup"
+              stripe
+              border
+              style="width: 100%">
+              <el-table-column
+                prop="班长"
+                label="班长">
+              </el-table-column>
+              <el-table-column
+                prop="已完成箱数"
+                label="完成箱数">
+              </el-table-column>
+              <el-table-column
+                prop="正品率"
+                label="正品率">
+              </el-table-column>
+              <el-table-column
+                prop="产能达标率"
+                label="产能达标率">
+              </el-table-column>
+              <el-table-column
+                prop="平均密度"
+                label="平均密度">
+              </el-table-column>
+
+
+            </el-table>
+          </div>
+        </div>
+      </el-col>
+    </el-row>
+
+
+    <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
       <div class="ibox ">
         <div class="ibox-title">
           <h5>产线明细 </h5>
@@ -48,10 +119,10 @@
             </el-table-column>
             <el-table-column
               prop="ChangeMould"
-              label="是否换模中">
+              label="状态">
               <template scope="scope">
                 <span v-if="scope.row.ChangeMould" style="color:red">换模中</span>
-                <span v-else style="color: #37B328">否</span>
+                <span v-else style="color: #37B328">量产</span>
               </template>
             </el-table-column>
             <el-table-column
@@ -112,7 +183,9 @@
 
   require('echarts/theme/macarons') // echarts theme
   import resize from '../dashboard/mixins/resize'
-  import {getcurrent} from '@/api/dashboard/fxdashboard'
+  import {getcurrent,DoGetLastGroupReporterData,currentBoxAndGroupMonitor} from '@/api/dashboard/fxdashboard'
+  import {getDensityGroup} from '@/api/dashboard/density'
+
 
   let lineChartData = {
     xAxisData: [],
@@ -124,7 +197,9 @@
     name: 'density30day',
     data() {
       return {
-        tableData: []
+        tableData: [],
+        tableDataCurrentGroup: [],
+        tableDataLastGroup: []
       }
     },
 
@@ -134,15 +209,19 @@
     },
     mounted() {
 
-
+this.Refresh()
     },
     methods: {
+      Refresh(){
+        setTimeout(function(){
+          window.location.reload(true);
+          },60000*10);   //这就是 一分钟
+      },
       getData() {
 
 
         getcurrent().then(response => {
-          console.log(response);
-          var j,k;
+          var j, k;
           var avg_zhengpin_avg = 0;
           var avg_density = 0;
           var avg_energy_avg = 0;
@@ -159,7 +238,6 @@
           for (var i = 0; i < response.data.length; i++) {
             lineChartData.xAxisData.push((response.data[i].time + '').replace(' 00:00:00.0', ''))
             lineChartData.actualData.push(parseFloat(response.data[i].density).toFixed(4))
-
 
             this.tableData.push({
               ChangeMould: response.data[i].ChangeMould,
@@ -190,9 +268,9 @@
               k = k + 1;
             }
 
-            avg_density = parseFloat(avg_density) + parseFloat(data_ajax[i].AvgDensity);
+            // avg_density = parseFloat(avg_density) + parseFloat(data_ajax[i].AvgDensity);
 
-            avg_energy_avg = avg_energy_avg + (data_ajax[i].CapacityStandardObtainedRate );
+            avg_energy_avg = avg_energy_avg + (data_ajax[i].CapacityStandardObtainedRate);
 
 
             sum_quantity = 2000;
@@ -203,15 +281,12 @@
 
           const chart_energy_avg = echarts.init(document.getElementById("chart_energy_avg"));
           const chart_zhengpin_avg = echarts.init(document.getElementById("chart_zhengpin_avg"));
-          const chart_density = echarts.init(document.getElementById("chart_density"));
+          // const chart_density = echarts.init(document.getElementById("chart_density"));
           const chart_change_moulding_time = echarts.init(document.getElementById("chart_change_moulding_time"));
 
 
           option_zhengpin_avg.series[0].data[0].value = (avg_zhengpin_avg / k * 100).toFixed(0);
           chart_zhengpin_avg.setOption(option_zhengpin_avg, true);
-
-          option_density.series[0].data[0].value = (avg_density / data_ajax.length).toFixed(3);
-          chart_density.setOption(option_density, true);
 
           option_change_moulding_time.series[0].data[0].value = (avg_chang_moulding_time / j).toFixed(0);
           chart_change_moulding_time.setOption(option_change_moulding_time, true);
@@ -219,6 +294,44 @@
           option_energy_avg.series[0].data[0].value = (avg_energy_avg / data_ajax.length * 100).toFixed(0);
           chart_energy_avg.setOption(option_energy_avg, true);
 
+        })
+
+        getDensityGroup().then(response => {
+          let avg_density = 0;
+          const chart_density = echarts.init(document.getElementById("chart_density"));
+          for (let i = 0; i < response.data.length; i++) {
+            avg_density = avg_density + (response.data[i].density) * 1;
+          }
+          option_change_moulding_time.series[0].data[0].value = (avg_density / response.data.length).toFixed(3);
+          chart_density.setOption(option_change_moulding_time, true);
+        })
+
+
+        DoGetLastGroupReporterData().then(response => {
+          console.log(response)
+          for (var i = 0; i < response.data.length; i++) {
+            console.log(response)
+
+
+            this.tableDataLastGroup.push({
+              产能达标率: ((response.data[i].capacity)*1).toFixed(2)*100 + '%',
+              正品率: ((response.data[i].yield)*1).toFixed(2)*100 + '%',
+              平均密度: ((response.data[i].avg_density)*1).toFixed(2),
+              已完成箱数: response.data[i].SUMBOX,
+              班长: response.data[i].NAME,
+
+            })
+          }
+        })
+
+
+        currentBoxAndGroupMonitor().then(response => {
+          for (var i = 0; i < response.data.length; i++) {
+            this.tableDataCurrentGroup.push({
+              已完成箱数: response.data[i].SUMBOX,
+              班长: response.data[i].NAME,
+            })
+          }
         })
       }
     }

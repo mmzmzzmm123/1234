@@ -204,6 +204,8 @@ public class DB_Ajax_DashBoard_48102 {
 		return jsonpath.toString();
 	}
 
+
+
 	public static List<HashMap<String,String>> DoGetLastDay() {
 		List<HashMap<String,String>> hashMapList = new ArrayList<>();
 		try {
@@ -243,6 +245,75 @@ public class DB_Ajax_DashBoard_48102 {
 		return hashMapList;
 	}
 
+
+
+	public static List<HashMap<String,String>> DoGetCurrentBoxAndGroupMonitor() {
+		List<HashMap<String,String>> hashMapList = new ArrayList<>();
+		try {
+			Connection conn = getSQLConnection();
+			String sql = "SELECT\n" +
+					"\t( SELECT SUM ( Quantity ) FROM MouldingDisplayBoardOperation WHERE deleted = 0 and OperateTime >= dbo.GetWorkShiftStartDate ( GETDATE( ) ) ) AS SUMBOX,\n" +
+					"\t( SELECT MAX ( OperatePersonName ) FROM MouldingDisplayBoardOperationPerson WHERE line = '班长#' AND OperateTime >= dbo.GetWorkShiftStartDate ( GETDATE( ) ) ) AS NAME";
+
+			Statement stmt = conn.createStatement();//
+
+			ResultSet rs = stmt.executeQuery(sql);
+			while (rs.next()) {
+
+				HashMap<String,String> map = new HashMap<>();
+				map.put("SUMBOX",rs.getString("SUMBOX"));
+				map.put("NAME",rs.getString("NAME"));
+				hashMapList.add(map);
+
+			}
+			rs.close();
+			stmt.close();
+			conn.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+
+		}
+		return hashMapList;
+	}
+
+
+
+	public static List<HashMap<String,String>> DoGetLastGroupReporterData() {
+		List<HashMap<String,String>> hashMapList = new ArrayList<>();
+		try {
+			Connection conn = getSQLConnection();
+			String sql = "SELECT\n" +
+					"\t( SELECT SUM ( avg_density ) / SUM ( CASE WHEN avg_density IS NOT NULL THEN 校验字段 ELSE 0 END ) FROM [V_chen_Dashboard_上个班组] ) AS avg_density,\n" +
+					"\t( SELECT AVG ( sum_box_meter / sum_device_meter * avg_currentcapacity / avg_normalcapacity ) FROM [V_chen_Dashboard_上个班组] ) AS capacity,\n" +
+					"\t( SELECT AVG ( sum_box_meter / sum_device_meter ) FROM [V_chen_Dashboard_上个班组] ) AS yield,\n" +
+					"\t( SELECT SUM ( Quantity ) FROM MouldingDisplayBoardOperation WHERE deleted = 0 AND OperateTime > dbo.GetWorkShiftStartDate ( GETDATE( ) - 0.5 ) AND OperateTime < dbo.GetWorkShiftendDate ( GETDATE( ) - 0.5 ) ) AS SUMBOX,\n" +
+					"\t( SELECT MAX ( OperatePersonName ) FROM MouldingDisplayBoardOperationPerson WHERE line = '班长#' AND OperateTime > dbo.GetWorkShiftStartDate ( GETDATE( ) - 0.5 ) AND OperateTime < dbo.GetWorkShiftendDate ( GETDATE( ) - 0.5 ) ) AS NAME";
+
+			Statement stmt = conn.createStatement();//
+
+			ResultSet rs = stmt.executeQuery(sql);
+			while (rs.next()) {
+
+				HashMap<String,String> map = new HashMap<>();
+				map.put("SUMBOX",rs.getString("SUMBOX"));
+				map.put("NAME",rs.getString("NAME"));
+				map.put("avg_density",rs.getString("avg_density"));
+				map.put("yield",rs.getString("yield"));
+				map.put("capacity",rs.getString("capacity"));
+				hashMapList.add(map);
+
+			}
+			rs.close();
+			stmt.close();
+			conn.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+
+		}
+		return hashMapList;
+	}
+
+
 	public static List<HashMap<String,String>> DoGet30Day() {
 		List<HashMap<String,String>> hashMapList = new ArrayList<>();
 		try {
@@ -255,8 +326,6 @@ public class DB_Ajax_DashBoard_48102 {
 
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
-				// 截面积(mm2)
-
 
 
 				HashMap<String,String> map = new HashMap<>();

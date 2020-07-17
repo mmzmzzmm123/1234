@@ -27,6 +27,20 @@ export function getcurrent() {
   })
 }
 
+export function DoGetLastGroupReporterData() {
+  return request({
+    url: '/fx_dashboard/DoGetLastGroupReporterData',
+    method: 'get'
+  })
+}
+
+export function currentBoxAndGroupMonitor() {
+  return request({
+    url: '/fx_dashboard/currentBoxAndGroupMonitor',
+    method: 'get'
+  })
+}
+
 export function getDateRange(fDateStart,fDateEnd) {
 
 

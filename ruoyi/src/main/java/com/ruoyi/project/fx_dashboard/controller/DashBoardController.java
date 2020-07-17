@@ -44,6 +44,17 @@ public class DashBoardController extends BaseController
         return AjaxResult.success(DB_Ajax_DashBoard_48102.DoGetCurrent());
     }
 
+    @GetMapping("/currentBoxAndGroupMonitor")
+    public AjaxResult DoGetBoxAndGroupMonitor() throws Exception
+    {
+        return AjaxResult.success(DB_Ajax_DashBoard_48102.DoGetCurrentBoxAndGroupMonitor());
+    }
+
+    @GetMapping("/DoGetLastGroupReporterData")
+    public AjaxResult DoGetLastGroupReporterData() throws Exception
+    {
+        return AjaxResult.success(DB_Ajax_DashBoard_48102.DoGetLastGroupReporterData());
+    }
 
     @GetMapping("/daterange/{fDateStart}/{fDateEnd}")
     public AjaxResult getDateRange(@PathVariable String fDateStart, @PathVariable String fDateEnd) throws Exception
