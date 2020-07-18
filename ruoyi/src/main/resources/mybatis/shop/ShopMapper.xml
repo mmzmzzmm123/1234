@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.erp.shop.mapper.ShopMapper">
+    
+    <resultMap type="Shop" id="ShopResult">
+        <result property="id"    column="id"    />
+        <result property="adminId"    column="admin_id"    />
+        <result property="shopTypeId"    column="shop_type_id"    />
+        <result property="shopName"    column="shop_name"    />
+        <result property="shopData"    column="shop_data"    />
+        <result property="createDate"    column="create_date"    />
+        <result property="modifyDate"    column="modify_date"    />
+        <result property="authDate"    column="auth_date"    />
+        <association property="shopType"    column="shop_type_id" javaType="ShopType" resultMap="shopTypeResult" />
+    </resultMap>
+
+    <resultMap id="shopTypeResult" type="shopType">
+        <id     property="id"   column="id"     />
+        <result property="name" column="name"   />
+        <result property="shortName" column="short_name"   />
+    </resultMap>
+
+    <sql id="selectShopVo">
+        select s.id, s.admin_id, s.shop_type_id, s.shop_name, s.shop_data, s.create_date, s.modify_date, s.auth_date,
+        t.name,t.short_name
+        from erp_shop s
+            left join erp_shop_type t on s.shop_type_id = t.id
+    </sql>
+
+    <select id="selectShopList" parameterType="Shop" resultMap="ShopResult">
+        <include refid="selectShopVo"/>
+        <where>  
+            <if test="shopTypeId != null "> and shop_type_id = #{shopTypeId}</if>
+            <if test="shopName != null  and shopName != ''"> and shop_name like concat('%', #{shopName}, '%')</if>
+            <if test="params.beginCreateDate != null and params.beginCreateDate != '' and params.endCreateDate != null and params.endCreateDate != ''"> and create_date between #{params.beginCreateDate} and #{params.endCreateDate}</if>
+            <if test="params.beginModifyDate != null and params.beginModifyDate != '' and params.endModifyDate != null and params.endModifyDate != ''"> and modify_date between #{params.beginModifyDate} and #{params.endModifyDate}</if>
+            <if test="params.beginAuthDate != null and params.beginAuthDate != '' and params.endAuthDate != null and params.endAuthDate != ''"> and auth_date between #{params.beginAuthDate} and #{params.endAuthDate}</if>
+        </where>
+    </select>
+    
+    <select id="selectShopById" parameterType="Long" resultMap="ShopResult">
+        <include refid="selectShopVo"/>
+        where s.id = #{id}
+    </select>
+        
+    <insert id="insertShop" parameterType="Shop" useGeneratedKeys="true" keyProperty="id">
+        insert into erp_shop
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="adminId != null">admin_id,</if>
+            <if test="shopTypeId != null">shop_type_id,</if>
+            <if test="shopName != null and shopName != ''">shop_name,</if>
+            <if test="shopData != null">shop_data,</if>
+            create_date,
+            modify_date,
+            auth_date,
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="adminId != null">#{adminId},</if>
+            <if test="shopTypeId != null">#{shopTypeId},</if>
+            <if test="shopName != null and shopName != ''">#{shopName},</if>
+            <if test="shopData != null">#{shopData},</if>
+            sysdate(),
+            sysdate(),
+            sysdate(),
+         </trim>
+    </insert>
+
+    <update id="updateShop" parameterType="Shop">
+        update erp_shop
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="shopTypeId != null">shop_type_id = #{shopTypeId},</if>
+            <if test="shopName != null and shopName != ''">shop_name = #{shopName},</if>
+            <if test="shopData != null">shop_data = #{shopData},</if>
+            <if test="authDate != null">auth_date = #{authDate},</if>
+            modify_date = sysdate()
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteShopById" parameterType="Long">
+        delete from erp_shop where id = #{id}
+    </delete>
+
+    <delete id="deleteShopByIds" parameterType="String">
+        delete from erp_shop where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>
