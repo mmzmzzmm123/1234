@@ -96,6 +96,7 @@ mybatis:
 # PageHelper分页插件
 pagehelper: 
   helperDialect: mysql
+  # true为启用合理化，如果pageNum<1那么pageNum=1，如果pageNum>pages那么pageNum=pages;false为禁用合理化，如果pageNum<1或pageNum>pages则会返回空数据
   reasonable: true
   supportMethodsArguments: true
   params: count=countSql 
