@@ -1,20 +1,21 @@
 <template>
   <div>
     <svg-icon icon-class="question" @click="goto"/>
+   
   </div>
 </template>
 
 <script>
 export default {
-  name: 'BenYiDoc',
+  name: 'RuoYiDoc',
   data() {
     return {
-      url: 'https://www.baidu.com'
+      url: ""
     }
   },
   methods: {
     goto() {
-      window.open(this.url)
+      window.open(this.url);
     }
   }
 }

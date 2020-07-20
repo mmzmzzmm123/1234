@@ -65,7 +65,7 @@ export default {
     Screenfull,
     SizeSelect,
     Search,
-    RuoYiDoc
+    RuoYiDoc 
   },
   computed: {
     ...mapGetters(["sidebar", "avatar", "device"]),

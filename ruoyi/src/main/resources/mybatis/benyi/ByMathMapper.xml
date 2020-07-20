@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.benyi.mapper.ByMathMapper">
+
+    <resultMap type="ByMath" id="ByMathResult">
+                    <result property="id"    column="id"    />
+                    <result property="name"    column="name"    />
+                    <result property="target"    column="target"    />
+                    <result property="feature"    column="feature"    />
+                    <result property="suggest"    column="suggest"    />
+                    <result property="classtypeId"    column="classtype_id"    />
+                    <result property="sort"    column="sort"    />
+                    <result property="createTime"    column="create_time"    />
+            </resultMap>
+
+    <sql id="selectByMathVo">
+        select id, name, target, feature, suggest, classtype_id, sort, create_time from by_math
+    </sql>
+
+    <select id="selectByMathList" parameterType="ByMath" resultMap="ByMathResult">
+        <include refid="selectByMathVo"/>
+        <where>
+                                                                                                    <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+                                                                                                            <if test="target != null  and target != ''"> and target = #{target}</if>
+                                                                                                            <if test="feature != null  and feature != ''"> and feature = #{feature}</if>
+                                                                                                            <if test="suggest != null  and suggest != ''"> and suggest = #{suggest}</if>
+                                                                                                            <if test="classtypeId != null "> and classtype_id = #{classtypeId}</if>
+                                                                                                            <if test="sort != null "> and sort = #{sort}</if>
+                                                                                    </where>
+    </select>
+
+    <select id="selectByMathById" parameterType="Long" resultMap="ByMathResult">
+        <include refid="selectByMathVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertByMath" parameterType="ByMath">
+        insert into by_math
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                                                <if test="id != null ">id,</if>
+                                                                <if test="name != null  and name != ''">name,</if>
+                                                                <if test="target != null  and target != ''">target,</if>
+                                                                <if test="feature != null  and feature != ''">feature,</if>
+                                                                <if test="suggest != null  and suggest != ''">suggest,</if>
+                                                                <if test="classtypeId != null ">classtype_id,</if>
+                                                                <if test="sort != null ">sort,</if>
+                                                                <if test="createTime != null ">create_time,</if>
+                                    </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                                                <if test="id != null ">#{id},</if>
+                                                                <if test="name != null  and name != ''">#{name},</if>
+                                                                <if test="target != null  and target != ''">#{target},</if>
+                                                                <if test="feature != null  and feature != ''">#{feature},</if>
+                                                                <if test="suggest != null  and suggest != ''">#{suggest},</if>
+                                                                <if test="classtypeId != null ">#{classtypeId},</if>
+                                                                <if test="sort != null ">#{sort},</if>
+                                                                <if test="createTime != null ">#{createTime},</if>
+                                    </trim>
+    </insert>
+
+    <update id="updateByMath" parameterType="ByMath">
+        update by_math
+        <trim prefix="SET" suffixOverrides=",">
+                                                                            <if test="name != null  and name != ''">name = #{name},</if>
+                                                                <if test="target != null  and target != ''">target = #{target},</if>
+                                                                <if test="feature != null  and feature != ''">feature = #{feature},</if>
+                                                                <if test="suggest != null  and suggest != ''">suggest = #{suggest},</if>
+                                                                <if test="classtypeId != null ">classtype_id = #{classtypeId},</if>
+                                                                <if test="sort != null ">sort = #{sort},</if>
+                                                                <if test="createTime != null ">create_time = #{createTime},</if>
+                                    </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteByMathById" parameterType="Long">
+        delete from by_math where id = #{id}
+    </delete>
+
+    <delete id="deleteByMathByIds" parameterType="String">
+        delete from by_math where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
