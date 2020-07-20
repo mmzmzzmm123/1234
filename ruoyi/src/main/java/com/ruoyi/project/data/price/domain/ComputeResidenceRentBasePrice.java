@@ -58,9 +58,15 @@ public class ComputeResidenceRentBasePrice extends BaseEntity {
     private BigDecimal rentPriceDft;
     @Excel(name = "主力面积租金(草稿)")
     private BigDecimal mainRentPriceDft;
+    @Excel(name = "主力面积(㎡)")
+    private BigDecimal area;
 
     @Excel(name = "上月AI租金")
     private BigDecimal rentPrice_1;
+    @Excel(name = "价格涨跌幅类型-调整后")
+    private String voppat;
+    @Excel(name = "价格涨跌幅-调整后")
+    private BigDecimal voppa;
     @Excel(name = "成交均价(上周期)")
     private BigDecimal priceDealMean_1;
     @Excel(name = "成交最大价(上周期)")
@@ -141,10 +147,7 @@ public class ComputeResidenceRentBasePrice extends BaseEntity {
     private String bind_MixProject_PType;
     @Excel(name = "绑定混合小区涨跌幅")
     private BigDecimal bind_MixProject_Pst;
-    @Excel(name = "价格涨跌幅类型-调整后")
-    private String voppat;
-    @Excel(name = "价格涨跌幅-调整后")
-    private BigDecimal voppa;
+
 
     public Integer getYearMonth() {
         return yearMonth;
@@ -640,5 +643,13 @@ public class ComputeResidenceRentBasePrice extends BaseEntity {
 
     public void setVoppa(BigDecimal voppa) {
         this.voppa = voppa;
+    }
+
+    public BigDecimal getArea() {
+        return area;
+    }
+
+    public void setArea(BigDecimal area) {
+        this.area = area;
     }
 }

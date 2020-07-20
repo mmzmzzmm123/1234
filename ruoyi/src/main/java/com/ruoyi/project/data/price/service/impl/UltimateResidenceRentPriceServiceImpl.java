@@ -24,12 +24,12 @@ public class UltimateResidenceRentPriceServiceImpl implements IUltimateResidence
     private UltimateResidenceRentPriceMapper ultimateResidenceRentPriceMapper;
 
     @Override
-    public List<UltimateResidenceRentBasePrice> selectList(UltimateResidenceRentBasePrice ultimateResidenceRentBasePrice) {
+    public List<UltimateResidenceRentBasePrice> selectPageList(UltimateResidenceRentBasePrice ultimateResidenceRentBasePrice) {
         return ultimateResidenceRentPriceMapper.selectPageList(ultimateResidenceRentBasePrice);
     }
 
     @Override
-    public int selectCount(UltimateResidenceRentBasePrice ultimateResidenceRentBasePrice) {
+    public int selectPageCount(UltimateResidenceRentBasePrice ultimateResidenceRentBasePrice) {
         return ultimateResidenceRentPriceMapper.selectPageCount(ultimateResidenceRentBasePrice);
     }
 

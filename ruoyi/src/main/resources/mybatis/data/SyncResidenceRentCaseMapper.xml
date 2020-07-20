@@ -198,4 +198,38 @@
         IF OBJECT_ID(#{targetTableName}, 'U') IS NOT NULL
             truncate table ${targetTableName}
     </update>
+    <update id="createView">
+        CREATE VIEW ODS_PROJECT_RENT_PRICE_INFO_#lastYearMonth#_VIEW AS
+            SELECT A.ProjectID         AS "小区ID",
+            B.ProjectName       AS "小区名称",
+            B.ProjectAddr       AS "小区地址",
+            B.County            AS "区域",
+            B.Block             AS "板块",
+            B.Loop              AS "环线",
+            B.InterCommunity    AS "国际社区分",
+            B.MagnetSchool      AS "重点小学名称",
+            B.ProjectLevel      AS "物业档次",
+            B.RoomNum           AS "室数量-AI",
+            A.BasePrice_1       AS "标准基价-#yearMonth#",
+            A.RentPrice         AS "平均租金-#yearMonth#",
+            A.SumCase1          AS "散租挂牌案例",
+            A.VOPPA             AS "租金涨跌幅-#yearMonth#",
+            A.GF_1Room          AS "租金-工房1室",
+            A.GF_2Room          AS "租金-工房2室",
+            A.GY_2Room          AS "租金-公寓2室",
+            A.GY_3Room          AS "租金-公寓3室",
+            A.One_Room          AS "1房",
+            A.Two_Room          AS "2房",
+            A.Three_Room        AS "3房",
+            A.EntireRentRatio   AS "整租比-#yearMonth#",
+            A.EntireRentNum     AS "整租案例",
+            A.ShareRentRatio    AS "分租比-#yearMonth#",
+            A.ShareRentNum      AS "分租案例",
+            A.SaleRentRatio     AS "租售比-#yearMonth#"
+            FROM ODS_PROJECT_RENT_PRICE_INFO_#lastYearMonth# A
+            LEFT JOIN ODS_PROJECT_INFO_202007 B
+            ON A.ProjectID = B.ProjectID AND B.EffDate
+            <![CDATA[ <= ]]> GETDATE() and B.ExpirDate <![CDATA[ > ]]> GETDATE() and A.Status=1
+            WHERE B.ProjectID IS NOT NULL
+    </update>
 </mapper>

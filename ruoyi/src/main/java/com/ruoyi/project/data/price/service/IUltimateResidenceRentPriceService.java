@@ -19,7 +19,7 @@ public interface IUltimateResidenceRentPriceService {
      * @param ultimateResidenceRentBasePrice
      * @return
      */
-    List<UltimateResidenceRentBasePrice> selectList(UltimateResidenceRentBasePrice ultimateResidenceRentBasePrice);
+    List<UltimateResidenceRentBasePrice> selectPageList(UltimateResidenceRentBasePrice ultimateResidenceRentBasePrice);
 
 
 
@@ -29,7 +29,7 @@ public interface IUltimateResidenceRentPriceService {
      * @param ultimateResidenceRentBasePrice
      * @return
      */
-    int selectCount(UltimateResidenceRentBasePrice ultimateResidenceRentBasePrice);
+    int selectPageCount(UltimateResidenceRentBasePrice ultimateResidenceRentBasePrice);
 
     /**
      * 获取表名

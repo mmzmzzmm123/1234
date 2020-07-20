@@ -73,7 +73,7 @@ select a.ProjectID, a.PriceType, a.BasePrice_1, b.RentPrice, a.SumCase1, b.VOPPA
         a.ShareRentRatio*b.RentPrice/a.RentPrice as ShareRentRatio,
         a.ShareRentNum,
         a.SaleRentRatio*b.RentPrice/a.RentPrice as SaleRentRatio,
-        b.ModifyDate, 1 as Status,
+        getdate(), 1 as Status,
         case when RentPriceChg=0 then '' else 'RentPriceChg|' end +
         case when VOPPATChg=0 then '' else 'VOPPATChg|' end +
         case when VOPPAChg=0 then '' else 'VOPPAChg|' end as AdjEvd
@@ -107,7 +107,8 @@ select a.ProjectID, a.PriceType, a.BasePrice_1, b.RentPrice_1, a.SumCase1, a.VOP
         a.ShareRentRatio*b.RentPrice_1/a.RentPrice as ShareRentRatio,
         a.ShareRentNum,
         a.SaleRentRatio*b.RentPrice_1/a.RentPrice as SaleRentRatio,
-        b.ModifyDate, 1 as Status,
+        getdate(),
+        1 as Status,
         'RentPrice_1Chg|'  as AdjEvd
 into #InfoChgLst
 from ODS_PROJECT_RENT_PRICE_INFO_#lastYearMonth# a
@@ -127,7 +128,7 @@ select * from #InfoChgLst;
 
 drop table #InfoChg, #InfoChgCurr, #InfoChgLst
 
-更新上月价格
+-- 更新上月价格
 update a
 set a.ITEM_MAINAREAPRICE = b.RentPrice
 from obpm_LianCheng_Data.dbo.TLK_基价信息       a
@@ -179,7 +180,7 @@ select newid()
      , 'BclzHtmfLQoAA5ICTb5'
      , newid()
      , ProjectID
-     , 2
+     , 1
      , 2
      , RentPrice
      , '#priceDate#'

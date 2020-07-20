@@ -175,6 +175,7 @@
             MainCoff_Rent decimal (7, 4) NULL,
             RentPriceDft decimal (18, 2) NULL,
             MainRentPriceDft decimal (18, 2) NULL,
+            area decimal(18,2) null,
             RentPrice_1 decimal (18, 2) NULL,
             PriceDealMean_1 decimal (18, 2) NULL,
             PriceDealMax_1 decimal (18, 2) NULL,

@@ -8,7 +8,9 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 /**
+ * 住宅销售基价
  *
+ * @author lihe
  */
 public class UltimateResidenceSaleBasePrice extends BaseEntity {
 

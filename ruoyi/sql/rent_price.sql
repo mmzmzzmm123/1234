@@ -7,6 +7,5 @@ create type [dbo].[DWA_PROJECTBASEPRICE_RENT_MANU_Table] as table(
     , RentPrice_1 decimal(18, 2)
     , VOPPAT varchar(64)
     , VOPPA decimal(18, 6)
-    , ModifyDate date
 )
 go

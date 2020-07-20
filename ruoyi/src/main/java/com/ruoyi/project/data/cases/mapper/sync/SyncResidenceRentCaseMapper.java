@@ -62,4 +62,10 @@ public interface SyncResidenceRentCaseMapper {
      */
     int insertUltimatePriceTable(UltimateResidenceRentBasePrice ultimateOfficeBasePrice);
 
+    /**
+     * @param yearMonth
+     * @param lastYearMonth
+     * @return
+     */
+    int createView(@Param("yearMonth") Integer yearMonth, @Param("lastYearMonth") Integer lastYearMonth);
 }

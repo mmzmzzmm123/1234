@@ -635,6 +635,7 @@ insert into dbo.DWA_PROJECTBASEPRICE_RENT_IMDT_#yearMonth#
            ,MainCoff_Rent
            ,RentPriceDft
            ,MainRentPriceDft
+           ,area
            ,RentPrice_1
            ,PriceDealMean_1
            ,PriceDealMax_1
@@ -694,6 +695,7 @@ select A.ProjectID
      , isnull(D.MainCoff_Rent, 1)
      , A.RentPrice_1 * (1 + isnull(C.VOPPA, 0))                              as RentPriceDft
      , A.RentPrice_1 * (1 + isnull(C.VOPPA, 0)) * isnull(D.MainCoff_Rent, 1) as MainRentPriceDft
+     , D.MainArea
      , A.RentPrice_1
      , A.PriceDealMean_1
      , A.PriceDealMax_1

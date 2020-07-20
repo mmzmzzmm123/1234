@@ -237,9 +237,9 @@ public class ResidenceRentBasePriceController extends BaseController {
         ultimateResidenceRentBasePrice.setPageIndex(pageIndex <= 1 ? 0 : (pageIndex - 1) * pageSize);
         ultimateResidenceRentBasePrice.setPageSize(pageSize);
 
-        int total = ultimateResidenceRentBasePriceService.selectCount(ultimateResidenceRentBasePrice);
+        int total = ultimateResidenceRentBasePriceService.selectPageCount(ultimateResidenceRentBasePrice);
         List<UltimateResidenceRentBasePrice> list =
-                ultimateResidenceRentBasePriceService.selectList(ultimateResidenceRentBasePrice);
+                ultimateResidenceRentBasePriceService.selectPageList(ultimateResidenceRentBasePrice);
         list.forEach(x -> x.setYearMonth(ultimateResidenceRentBasePrice.getYearMonth()));
         return getDataTable(list, total);
     }
@@ -251,11 +251,11 @@ public class ResidenceRentBasePriceController extends BaseController {
     @Log(title = "审核住宅租赁基价", businessType = BusinessType.EXPORT)
     @GetMapping("/ultimate/export")
     public AjaxResult ultimateResidenceRentBasePriceExport(UltimateResidenceRentBasePrice ultimateResidenceRentBasePrice) {
-        int total = ultimateResidenceRentBasePriceService.selectCount(ultimateResidenceRentBasePrice);
+        int total = ultimateResidenceRentBasePriceService.selectPageCount(ultimateResidenceRentBasePrice);
         ultimateResidenceRentBasePrice.setPageIndex(0);
         ultimateResidenceRentBasePrice.setPageSize(total);
         List<UltimateResidenceRentBasePrice> list =
-                ultimateResidenceRentBasePriceService.selectList(ultimateResidenceRentBasePrice);
+                ultimateResidenceRentBasePriceService.selectPageList(ultimateResidenceRentBasePrice);
         ExcelUtil<UltimateResidenceRentBasePrice> util = new ExcelUtil<>(UltimateResidenceRentBasePrice.class);
         return util.exportExcel(list, "核准住宅租赁基价");
     }
