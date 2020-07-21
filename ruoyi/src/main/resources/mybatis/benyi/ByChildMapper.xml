@@ -5,78 +5,119 @@
 <mapper namespace="com.ruoyi.project.benyi.mapper.ByChildMapper">
 
     <resultMap type="ByChild" id="ByChildResult">
-                    <result property="id"    column="id"    />
-                    <result property="schoolid"    column="schoolid"    />
-                    <result property="classid"    column="classid"    />
-                    <result property="name"    column="name"    />
-                    <result property="enName"    column="en_name"    />
-                    <result property="infantName"    column="infant_name"    />
-                    <result property="phone"    column="phone"    />
-                    <result property="xb"    column="xb"    />
-                    <result property="mz"    column="mz"    />
-                    <result property="zjhm"    column="zjhm"    />
-                    <result property="csrq"    column="csrq"    />
-                    <result property="birthProvince"    column="birth_province"    />
-                    <result property="birthCity"    column="birth_city"    />
-                    <result property="birthArea"    column="birth_area"    />
-                    <result property="registeredProvince"    column="registered_province"    />
-                    <result property="registeredCity"    column="registered_city"    />
-                    <result property="registeredArea"    column="registered_area"    />
-                    <result property="addrProvince"    column="addr_province"    />
-                    <result property="addrCity"    column="addr_city"    />
-                    <result property="addrArea"    column="addr_area"    />
-                    <result property="addrDetail"    column="addr_detail"    />
-                    <result property="everSchool"    column="ever_school"    />
-                    <result property="learnEnglish"    column="learn_english"    />
-                    <result property="source"    column="source"    />
-                    <result property="status"    column="status"    />
-                    <result property="enterDate"    column="enter_date"    />
-                    <result property="outDate"    column="out_date"    />
-                    <result property="firstLanguage"    column="first_language"    />
-                    <result property="seconderLanguage"    column="seconder_language"    />
-                    <result property="otherLanguage"    column="other_language"    />
-                    <result property="createuserid"    column="createuserid"    />
-                    <result property="createTime"    column="create_time"    />
-            </resultMap>
+        <result property="id" column="id"/>
+        <result property="schoolid" column="schoolid"/>
+        <result property="classid" column="classid"/>
+        <result property="name" column="name"/>
+        <result property="enName" column="en_name"/>
+        <result property="infantName" column="infant_name"/>
+        <result property="phone" column="phone"/>
+        <result property="xb" column="xb"/>
+        <result property="mz" column="mz"/>
+        <result property="zjhm" column="zjhm"/>
+        <result property="csrq" column="csrq"/>
+        <result property="birthProvince" column="birth_province"/>
+        <result property="birthProvincename" column="birth_provincename"/>
+        <result property="birthCity" column="birth_city"/>
+        <result property="birthCityname" column="birth_cityname"/>
+        <result property="birthArea" column="birth_area"/>
+        <result property="birthAreaname" column="birth_areaname"/>
+        <result property="registeredProvince" column="registered_province"/>
+        <result property="registeredProvincename" column="registered_provincename"/>
+        <result property="registeredCity" column="registered_city"/>
+        <result property="registeredCityname" column="registered_cityname"/>
+        <result property="registeredArea" column="registered_area"/>
+        <result property="registeredAreaname" column="registered_areaname"/>
+        <result property="addrProvince" column="addr_province"/>
+        <result property="addrProvincename" column="addr_provincename"/>
+        <result property="addrCity" column="addr_city"/>
+        <result property="addrCityname" column="addr_cityname"/>
+        <result property="addrArea" column="addr_area"/>
+        <result property="addrAreaname" column="addr_areaname"/>
+        <result property="addrDetail" column="addr_detail"/>
+        <result property="everSchool" column="ever_school"/>
+        <result property="learnEnglish" column="learn_english"/>
+        <result property="source" column="source"/>
+        <result property="status" column="status"/>
+        <result property="enterDate" column="enter_date"/>
+        <result property="outDate" column="out_date"/>
+        <result property="firstLanguage" column="first_language"/>
+        <result property="seconderLanguage" column="seconder_language"/>
+        <result property="otherLanguage" column="other_language"/>
+        <result property="createuserid" column="createuserid"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
 
     <sql id="selectByChildVo">
-        select id, schoolid, classid, name, en_name, infant_name, phone, xb, mz, zjhm, csrq, birth_province, birth_city, birth_area, registered_province, registered_city, registered_area, addr_province, addr_city, addr_area, addr_detail, ever_school, learn_english, source, status, enter_date, out_date, first_language, seconder_language, other_language, createuserid, create_time from by_child
+        select id, schoolid, classid, name, en_name, infant_name, phone, xb, mz, zjhm, csrq, birth_province, birth_provincename, birth_city, birth_cityname, birth_area, birth_areaname, registered_province, registered_provincename, registered_city, registered_cityname, registered_area, registered_areaname, addr_province, addr_provincename, addr_city, addr_cityname, addr_area, addr_areaname, addr_detail, ever_school, learn_english, source, status, enter_date, out_date, first_language, seconder_language, other_language, createuserid, create_time from by_child
     </sql>
 
     <select id="selectByChildList" parameterType="ByChild" resultMap="ByChildResult">
         <include refid="selectByChildVo"/>
         <where>
-                                                                                                    <if test="schoolid != null "> and schoolid = #{schoolid}</if>
-                                                                                                            <if test="classid != null "> and classid = #{classid}</if>
-                                                                                                            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
-                                                                                                            <if test="enName != null  and enName != ''"> and en_name like concat('%', #{enName}, '%')</if>
-                                                                                                            <if test="infantName != null  and infantName != ''"> and infant_name like concat('%', #{infantName}, '%')</if>
-                                                                                                            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
-                                                                                                            <if test="xb != null  and xb != ''"> and xb = #{xb}</if>
-                                                                                                            <if test="mz != null  and mz != ''"> and mz = #{mz}</if>
-                                                                                                            <if test="zjhm != null  and zjhm != ''"> and zjhm = #{zjhm}</if>
-                                                                                                            <if test="csrq != null "> and csrq = #{csrq}</if>
-                                                                                                            <if test="birthProvince != null  and birthProvince != ''"> and birth_province = #{birthProvince}</if>
-                                                                                                            <if test="birthCity != null  and birthCity != ''"> and birth_city = #{birthCity}</if>
-                                                                                                            <if test="birthArea != null  and birthArea != ''"> and birth_area = #{birthArea}</if>
-                                                                                                            <if test="registeredProvince != null  and registeredProvince != ''"> and registered_province = #{registeredProvince}</if>
-                                                                                                            <if test="registeredCity != null  and registeredCity != ''"> and registered_city = #{registeredCity}</if>
-                                                                                                            <if test="registeredArea != null  and registeredArea != ''"> and registered_area = #{registeredArea}</if>
-                                                                                                            <if test="addrProvince != null  and addrProvince != ''"> and addr_province = #{addrProvince}</if>
-                                                                                                            <if test="addrCity != null  and addrCity != ''"> and addr_city = #{addrCity}</if>
-                                                                                                            <if test="addrArea != null  and addrArea != ''"> and addr_area = #{addrArea}</if>
-                                                                                                            <if test="addrDetail != null  and addrDetail != ''"> and addr_detail = #{addrDetail}</if>
-                                                                                                            <if test="everSchool != null  and everSchool != ''"> and ever_school = #{everSchool}</if>
-                                                                                                            <if test="learnEnglish != null  and learnEnglish != ''"> and learn_english = #{learnEnglish}</if>
-                                                                                                            <if test="source != null  and source != ''"> and source = #{source}</if>
-                                                                                                            <if test="status != null  and status != ''"> and status = #{status}</if>
-                                                                                                            <if test="enterDate != null "> and enter_date = #{enterDate}</if>
-                                                                                                            <if test="outDate != null "> and out_date = #{outDate}</if>
-                                                                                                            <if test="firstLanguage != null  and firstLanguage != ''"> and first_language = #{firstLanguage}</if>
-                                                                                                            <if test="seconderLanguage != null  and seconderLanguage != ''"> and seconder_language = #{seconderLanguage}</if>
-                                                                                                            <if test="otherLanguage != null  and otherLanguage != ''"> and other_language = #{otherLanguage}</if>
-                                                                                                            <if test="createuserid != null "> and createuserid = #{createuserid}</if>
-                                                                                    </where>
+            <if test="schoolid != null ">and schoolid = #{schoolid}</if>
+            <if test="classid != null  and classid != ''">and classid = #{classid}</if>
+            <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
+            <if test="enName != null  and enName != ''">and en_name like concat('%', #{enName}, '%')</if>
+            <if test="infantName != null  and infantName != ''">and infant_name like concat('%', #{infantName}, '%')
+            </if>
+            <if test="phone != null  and phone != ''">and phone = #{phone}</if>
+            <if test="xb != null  and xb != ''">and xb = #{xb}</if>
+            <if test="mz != null  and mz != ''">and mz = #{mz}</if>
+            <if test="zjhm != null  and zjhm != ''">and zjhm = #{zjhm}</if>
+            <if test="csrq != null ">and csrq = #{csrq}</if>
+            <if test="birthProvince != null  and birthProvince != ''">and birth_province = #{birthProvince}</if>
+            <if test="birthProvincename != null  and birthProvincename != ''">and birth_provincename like concat('%',
+                #{birthProvincename}, '%')
+            </if>
+            <if test="birthCity != null  and birthCity != ''">and birth_city = #{birthCity}</if>
+            <if test="birthCityname != null  and birthCityname != ''">and birth_cityname like concat('%',
+                #{birthCityname}, '%')
+            </if>
+            <if test="birthArea != null  and birthArea != ''">and birth_area = #{birthArea}</if>
+            <if test="birthAreaname != null  and birthAreaname != ''">and birth_areaname like concat('%',
+                #{birthAreaname}, '%')
+            </if>
+            <if test="registeredProvince != null  and registeredProvince != ''">and registered_province =
+                #{registeredProvince}
+            </if>
+            <if test="registeredProvincename != null  and registeredProvincename != ''">and registered_provincename like
+                concat('%', #{registeredProvincename}, '%')
+            </if>
+            <if test="registeredCity != null  and registeredCity != ''">and registered_city = #{registeredCity}</if>
+            <if test="registeredCityname != null  and registeredCityname != ''">and registered_cityname like concat('%',
+                #{registeredCityname}, '%')
+            </if>
+            <if test="registeredArea != null  and registeredArea != ''">and registered_area = #{registeredArea}</if>
+            <if test="registeredAreaname != null  and registeredAreaname != ''">and registered_areaname like concat('%',
+                #{registeredAreaname}, '%')
+            </if>
+            <if test="addrProvince != null  and addrProvince != ''">and addr_province = #{addrProvince}</if>
+            <if test="addrProvincename != null  and addrProvincename != ''">and addr_provincename like concat('%',
+                #{addrProvincename}, '%')
+            </if>
+            <if test="addrCity != null  and addrCity != ''">and addr_city = #{addrCity}</if>
+            <if test="addrCityname != null  and addrCityname != ''">and addr_cityname like concat('%', #{addrCityname},
+                '%')
+            </if>
+            <if test="addrArea != null  and addrArea != ''">and addr_area = #{addrArea}</if>
+            <if test="addrAreaname != null  and addrAreaname != ''">and addr_areaname like concat('%', #{addrAreaname},
+                '%')
+            </if>
+            <if test="addrDetail != null  and addrDetail != ''">and addr_detail = #{addrDetail}</if>
+            <if test="everSchool != null  and everSchool != ''">and ever_school = #{everSchool}</if>
+            <if test="learnEnglish != null  and learnEnglish != ''">and learn_english = #{learnEnglish}</if>
+            <if test="source != null  and source != ''">and source = #{source}</if>
+            <if test="status != null  and status != ''">and status = #{status}</if>
+            <if test="enterDate != null ">and enter_date = #{enterDate}</if>
+            <if test="outDate != null ">and out_date = #{outDate}</if>
+            <if test="firstLanguage != null  and firstLanguage != ''">and first_language = #{firstLanguage}</if>
+            <if test="seconderLanguage != null  and seconderLanguage != ''">and seconder_language =
+                #{seconderLanguage}
+            </if>
+            <if test="otherLanguage != null  and otherLanguage != ''">and other_language = #{otherLanguage}</if>
+            <if test="createuserid != null ">and createuserid = #{createuserid}</if>
+        </where>
     </select>
 
     <select id="selectByChildById" parameterType="Long" resultMap="ByChildResult">
@@ -87,108 +128,147 @@
     <insert id="insertByChild" parameterType="ByChild" useGeneratedKeys="true" keyProperty="id">
         insert into by_child
         <trim prefix="(" suffix=")" suffixOverrides=",">
-                                                                            <if test="schoolid != null ">schoolid,</if>
-                                                                <if test="classid != null ">classid,</if>
-                                                                <if test="name != null  and name != ''">name,</if>
-                                                                <if test="enName != null  and enName != ''">en_name,</if>
-                                                                <if test="infantName != null  and infantName != ''">infant_name,</if>
-                                                                <if test="phone != null  and phone != ''">phone,</if>
-                                                                <if test="xb != null  and xb != ''">xb,</if>
-                                                                <if test="mz != null  and mz != ''">mz,</if>
-                                                                <if test="zjhm != null  and zjhm != ''">zjhm,</if>
-                                                                <if test="csrq != null ">csrq,</if>
-                                                                <if test="birthProvince != null  and birthProvince != ''">birth_province,</if>
-                                                                <if test="birthCity != null  and birthCity != ''">birth_city,</if>
-                                                                <if test="birthArea != null  and birthArea != ''">birth_area,</if>
-                                                                <if test="registeredProvince != null  and registeredProvince != ''">registered_province,</if>
-                                                                <if test="registeredCity != null  and registeredCity != ''">registered_city,</if>
-                                                                <if test="registeredArea != null  and registeredArea != ''">registered_area,</if>
-                                                                <if test="addrProvince != null  and addrProvince != ''">addr_province,</if>
-                                                                <if test="addrCity != null  and addrCity != ''">addr_city,</if>
-                                                                <if test="addrArea != null  and addrArea != ''">addr_area,</if>
-                                                                <if test="addrDetail != null  and addrDetail != ''">addr_detail,</if>
-                                                                <if test="everSchool != null  and everSchool != ''">ever_school,</if>
-                                                                <if test="learnEnglish != null  and learnEnglish != ''">learn_english,</if>
-                                                                <if test="source != null  and source != ''">source,</if>
-                                                                <if test="status != null  and status != ''">status,</if>
-                                                                <if test="enterDate != null ">enter_date,</if>
-                                                                <if test="outDate != null ">out_date,</if>
-                                                                <if test="firstLanguage != null  and firstLanguage != ''">first_language,</if>
-                                                                <if test="seconderLanguage != null  and seconderLanguage != ''">seconder_language,</if>
-                                                                <if test="otherLanguage != null  and otherLanguage != ''">other_language,</if>
-                                                                <if test="createuserid != null ">createuserid,</if>
-                                                                <if test="createTime != null ">create_time,</if>
-                                    </trim>
+            <if test="schoolid != null ">schoolid,</if>
+            <if test="classid != null  and classid != ''">classid,</if>
+            <if test="name != null  and name != ''">name,</if>
+            <if test="enName != null  and enName != ''">en_name,</if>
+            <if test="infantName != null  and infantName != ''">infant_name,</if>
+            <if test="phone != null  and phone != ''">phone,</if>
+            <if test="xb != null  and xb != ''">xb,</if>
+            <if test="mz != null  and mz != ''">mz,</if>
+            <if test="zjhm != null  and zjhm != ''">zjhm,</if>
+            <if test="csrq != null ">csrq,</if>
+            <if test="birthProvince != null  and birthProvince != ''">birth_province,</if>
+            <if test="birthProvincename != null  and birthProvincename != ''">birth_provincename,</if>
+            <if test="birthCity != null  and birthCity != ''">birth_city,</if>
+            <if test="birthCityname != null  and birthCityname != ''">birth_cityname,</if>
+            <if test="birthArea != null  and birthArea != ''">birth_area,</if>
+            <if test="birthAreaname != null  and birthAreaname != ''">birth_areaname,</if>
+            <if test="registeredProvince != null  and registeredProvince != ''">registered_province,</if>
+            <if test="registeredProvincename != null  and registeredProvincename != ''">registered_provincename,</if>
+            <if test="registeredCity != null  and registeredCity != ''">registered_city,</if>
+            <if test="registeredCityname != null  and registeredCityname != ''">registered_cityname,</if>
+            <if test="registeredArea != null  and registeredArea != ''">registered_area,</if>
+            <if test="registeredAreaname != null  and registeredAreaname != ''">registered_areaname,</if>
+            <if test="addrProvince != null  and addrProvince != ''">addr_province,</if>
+            <if test="addrProvincename != null  and addrProvincename != ''">addr_provincename,</if>
+            <if test="addrCity != null  and addrCity != ''">addr_city,</if>
+            <if test="addrCityname != null  and addrCityname != ''">addr_cityname,</if>
+            <if test="addrArea != null  and addrArea != ''">addr_area,</if>
+            <if test="addrAreaname != null  and addrAreaname != ''">addr_areaname,</if>
+            <if test="addrDetail != null  and addrDetail != ''">addr_detail,</if>
+            <if test="everSchool != null  and everSchool != ''">ever_school,</if>
+            <if test="learnEnglish != null  and learnEnglish != ''">learn_english,</if>
+            <if test="source != null  and source != ''">source,</if>
+            <if test="status != null  and status != ''">status,</if>
+            <if test="enterDate != null ">enter_date,</if>
+            <if test="outDate != null ">out_date,</if>
+            <if test="firstLanguage != null  and firstLanguage != ''">first_language,</if>
+            <if test="seconderLanguage != null  and seconderLanguage != ''">seconder_language,</if>
+            <if test="otherLanguage != null  and otherLanguage != ''">other_language,</if>
+            <if test="createuserid != null ">createuserid,</if>
+            <if test="createTime != null ">create_time,</if>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-                                                                            <if test="schoolid != null ">#{schoolid},</if>
-                                                                <if test="classid != null ">#{classid},</if>
-                                                                <if test="name != null  and name != ''">#{name},</if>
-                                                                <if test="enName != null  and enName != ''">#{enName},</if>
-                                                                <if test="infantName != null  and infantName != ''">#{infantName},</if>
-                                                                <if test="phone != null  and phone != ''">#{phone},</if>
-                                                                <if test="xb != null  and xb != ''">#{xb},</if>
-                                                                <if test="mz != null  and mz != ''">#{mz},</if>
-                                                                <if test="zjhm != null  and zjhm != ''">#{zjhm},</if>
-                                                                <if test="csrq != null ">#{csrq},</if>
-                                                                <if test="birthProvince != null  and birthProvince != ''">#{birthProvince},</if>
-                                                                <if test="birthCity != null  and birthCity != ''">#{birthCity},</if>
-                                                                <if test="birthArea != null  and birthArea != ''">#{birthArea},</if>
-                                                                <if test="registeredProvince != null  and registeredProvince != ''">#{registeredProvince},</if>
-                                                                <if test="registeredCity != null  and registeredCity != ''">#{registeredCity},</if>
-                                                                <if test="registeredArea != null  and registeredArea != ''">#{registeredArea},</if>
-                                                                <if test="addrProvince != null  and addrProvince != ''">#{addrProvince},</if>
-                                                                <if test="addrCity != null  and addrCity != ''">#{addrCity},</if>
-                                                                <if test="addrArea != null  and addrArea != ''">#{addrArea},</if>
-                                                                <if test="addrDetail != null  and addrDetail != ''">#{addrDetail},</if>
-                                                                <if test="everSchool != null  and everSchool != ''">#{everSchool},</if>
-                                                                <if test="learnEnglish != null  and learnEnglish != ''">#{learnEnglish},</if>
-                                                                <if test="source != null  and source != ''">#{source},</if>
-                                                                <if test="status != null  and status != ''">#{status},</if>
-                                                                <if test="enterDate != null ">#{enterDate},</if>
-                                                                <if test="outDate != null ">#{outDate},</if>
-                                                                <if test="firstLanguage != null  and firstLanguage != ''">#{firstLanguage},</if>
-                                                                <if test="seconderLanguage != null  and seconderLanguage != ''">#{seconderLanguage},</if>
-                                                                <if test="otherLanguage != null  and otherLanguage != ''">#{otherLanguage},</if>
-                                                                <if test="createuserid != null ">#{createuserid},</if>
-                                                                <if test="createTime != null ">#{createTime},</if>
-                                    </trim>
+            <if test="schoolid != null ">#{schoolid},</if>
+            <if test="classid != null  and classid != ''">#{classid},</if>
+            <if test="name != null  and name != ''">#{name},</if>
+            <if test="enName != null  and enName != ''">#{enName},</if>
+            <if test="infantName != null  and infantName != ''">#{infantName},</if>
+            <if test="phone != null  and phone != ''">#{phone},</if>
+            <if test="xb != null  and xb != ''">#{xb},</if>
+            <if test="mz != null  and mz != ''">#{mz},</if>
+            <if test="zjhm != null  and zjhm != ''">#{zjhm},</if>
+            <if test="csrq != null ">#{csrq},</if>
+            <if test="birthProvince != null  and birthProvince != ''">#{birthProvince},</if>
+            <if test="birthProvincename != null  and birthProvincename != ''">#{birthProvincename},</if>
+            <if test="birthCity != null  and birthCity != ''">#{birthCity},</if>
+            <if test="birthCityname != null  and birthCityname != ''">#{birthCityname},</if>
+            <if test="birthArea != null  and birthArea != ''">#{birthArea},</if>
+            <if test="birthAreaname != null  and birthAreaname != ''">#{birthAreaname},</if>
+            <if test="registeredProvince != null  and registeredProvince != ''">#{registeredProvince},</if>
+            <if test="registeredProvincename != null  and registeredProvincename != ''">#{registeredProvincename},</if>
+            <if test="registeredCity != null  and registeredCity != ''">#{registeredCity},</if>
+            <if test="registeredCityname != null  and registeredCityname != ''">#{registeredCityname},</if>
+            <if test="registeredArea != null  and registeredArea != ''">#{registeredArea},</if>
+            <if test="registeredAreaname != null  and registeredAreaname != ''">#{registeredAreaname},</if>
+            <if test="addrProvince != null  and addrProvince != ''">#{addrProvince},</if>
+            <if test="addrProvincename != null  and addrProvincename != ''">#{addrProvincename},</if>
+            <if test="addrCity != null  and addrCity != ''">#{addrCity},</if>
+            <if test="addrCityname != null  and addrCityname != ''">#{addrCityname},</if>
+            <if test="addrArea != null  and addrArea != ''">#{addrArea},</if>
+            <if test="addrAreaname != null  and addrAreaname != ''">#{addrAreaname},</if>
+            <if test="addrDetail != null  and addrDetail != ''">#{addrDetail},</if>
+            <if test="everSchool != null  and everSchool != ''">#{everSchool},</if>
+            <if test="learnEnglish != null  and learnEnglish != ''">#{learnEnglish},</if>
+            <if test="source != null  and source != ''">#{source},</if>
+            <if test="status != null  and status != ''">#{status},</if>
+            <if test="enterDate != null ">#{enterDate},</if>
+            <if test="outDate != null ">#{outDate},</if>
+            <if test="firstLanguage != null  and firstLanguage != ''">#{firstLanguage},</if>
+            <if test="seconderLanguage != null  and seconderLanguage != ''">#{seconderLanguage},</if>
+            <if test="otherLanguage != null  and otherLanguage != ''">#{otherLanguage},</if>
+            <if test="createuserid != null ">#{createuserid},</if>
+            <if test="createTime != null ">#{createTime},</if>
+        </trim>
     </insert>
 
     <update id="updateByChild" parameterType="ByChild">
         update by_child
         <trim prefix="SET" suffixOverrides=",">
-                                                                            <if test="schoolid != null ">schoolid = #{schoolid},</if>
-                                                                <if test="classid != null ">classid = #{classid},</if>
-                                                                <if test="name != null  and name != ''">name = #{name},</if>
-                                                                <if test="enName != null  and enName != ''">en_name = #{enName},</if>
-                                                                <if test="infantName != null  and infantName != ''">infant_name = #{infantName},</if>
-                                                                <if test="phone != null  and phone != ''">phone = #{phone},</if>
-                                                                <if test="xb != null  and xb != ''">xb = #{xb},</if>
-                                                                <if test="mz != null  and mz != ''">mz = #{mz},</if>
-                                                                <if test="zjhm != null  and zjhm != ''">zjhm = #{zjhm},</if>
-                                                                <if test="csrq != null ">csrq = #{csrq},</if>
-                                                                <if test="birthProvince != null  and birthProvince != ''">birth_province = #{birthProvince},</if>
-                                                                <if test="birthCity != null  and birthCity != ''">birth_city = #{birthCity},</if>
-                                                                <if test="birthArea != null  and birthArea != ''">birth_area = #{birthArea},</if>
-                                                                <if test="registeredProvince != null  and registeredProvince != ''">registered_province = #{registeredProvince},</if>
-                                                                <if test="registeredCity != null  and registeredCity != ''">registered_city = #{registeredCity},</if>
-                                                                <if test="registeredArea != null  and registeredArea != ''">registered_area = #{registeredArea},</if>
-                                                                <if test="addrProvince != null  and addrProvince != ''">addr_province = #{addrProvince},</if>
-                                                                <if test="addrCity != null  and addrCity != ''">addr_city = #{addrCity},</if>
-                                                                <if test="addrArea != null  and addrArea != ''">addr_area = #{addrArea},</if>
-                                                                <if test="addrDetail != null  and addrDetail != ''">addr_detail = #{addrDetail},</if>
-                                                                <if test="everSchool != null  and everSchool != ''">ever_school = #{everSchool},</if>
-                                                                <if test="learnEnglish != null  and learnEnglish != ''">learn_english = #{learnEnglish},</if>
-                                                                <if test="source != null  and source != ''">source = #{source},</if>
-                                                                <if test="status != null  and status != ''">status = #{status},</if>
-                                                                <if test="enterDate != null ">enter_date = #{enterDate},</if>
-                                                                <if test="outDate != null ">out_date = #{outDate},</if>
-                                                                <if test="firstLanguage != null  and firstLanguage != ''">first_language = #{firstLanguage},</if>
-                                                                <if test="seconderLanguage != null  and seconderLanguage != ''">seconder_language = #{seconderLanguage},</if>
-                                                                <if test="otherLanguage != null  and otherLanguage != ''">other_language = #{otherLanguage},</if>
-                                                                <if test="createuserid != null ">createuserid = #{createuserid},</if>
-                                                                <if test="createTime != null ">create_time = #{createTime},</if>
-                                    </trim>
+            <if test="schoolid != null ">schoolid = #{schoolid},</if>
+            <if test="classid != null  and classid != ''">classid = #{classid},</if>
+            <if test="name != null  and name != ''">name = #{name},</if>
+            <if test="enName != null  and enName != ''">en_name = #{enName},</if>
+            <if test="infantName != null  and infantName != ''">infant_name = #{infantName},</if>
+            <if test="phone != null  and phone != ''">phone = #{phone},</if>
+            <if test="xb != null  and xb != ''">xb = #{xb},</if>
+            <if test="mz != null  and mz != ''">mz = #{mz},</if>
+            <if test="zjhm != null  and zjhm != ''">zjhm = #{zjhm},</if>
+            <if test="csrq != null ">csrq = #{csrq},</if>
+            <if test="birthProvince != null  and birthProvince != ''">birth_province = #{birthProvince},</if>
+            <if test="birthProvincename != null  and birthProvincename != ''">birth_provincename =
+                #{birthProvincename},
+            </if>
+            <if test="birthCity != null  and birthCity != ''">birth_city = #{birthCity},</if>
+            <if test="birthCityname != null  and birthCityname != ''">birth_cityname = #{birthCityname},</if>
+            <if test="birthArea != null  and birthArea != ''">birth_area = #{birthArea},</if>
+            <if test="birthAreaname != null  and birthAreaname != ''">birth_areaname = #{birthAreaname},</if>
+            <if test="registeredProvince != null  and registeredProvince != ''">registered_province =
+                #{registeredProvince},
+            </if>
+            <if test="registeredProvincename != null  and registeredProvincename != ''">registered_provincename =
+                #{registeredProvincename},
+            </if>
+            <if test="registeredCity != null  and registeredCity != ''">registered_city = #{registeredCity},</if>
+            <if test="registeredCityname != null  and registeredCityname != ''">registered_cityname =
+                #{registeredCityname},
+            </if>
+            <if test="registeredArea != null  and registeredArea != ''">registered_area = #{registeredArea},</if>
+            <if test="registeredAreaname != null  and registeredAreaname != ''">registered_areaname =
+                #{registeredAreaname},
+            </if>
+            <if test="addrProvince != null  and addrProvince != ''">addr_province = #{addrProvince},</if>
+            <if test="addrProvincename != null  and addrProvincename != ''">addr_provincename = #{addrProvincename},
+            </if>
+            <if test="addrCity != null  and addrCity != ''">addr_city = #{addrCity},</if>
+            <if test="addrCityname != null  and addrCityname != ''">addr_cityname = #{addrCityname},</if>
+            <if test="addrArea != null  and addrArea != ''">addr_area = #{addrArea},</if>
+            <if test="addrAreaname != null  and addrAreaname != ''">addr_areaname = #{addrAreaname},</if>
+            <if test="addrDetail != null  and addrDetail != ''">addr_detail = #{addrDetail},</if>
+            <if test="everSchool != null  and everSchool != ''">ever_school = #{everSchool},</if>
+            <if test="learnEnglish != null  and learnEnglish != ''">learn_english = #{learnEnglish},</if>
+            <if test="source != null  and source != ''">source = #{source},</if>
+            <if test="status != null  and status != ''">status = #{status},</if>
+            <if test="enterDate != null ">enter_date = #{enterDate},</if>
+            <if test="outDate != null ">out_date = #{outDate},</if>
+            <if test="firstLanguage != null  and firstLanguage != ''">first_language = #{firstLanguage},</if>
+            <if test="seconderLanguage != null  and seconderLanguage != ''">seconder_language = #{seconderLanguage},
+            </if>
+            <if test="otherLanguage != null  and otherLanguage != ''">other_language = #{otherLanguage},</if>
+            <if test="createuserid != null ">createuserid = #{createuserid},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+        </trim>
         where id = #{id}
     </update>
 

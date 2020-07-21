@@ -12,7 +12,7 @@ import com.ruoyi.framework.web.domain.BaseEntity;
  * 幼儿信息对象 by_child
  *
  * @author tsbz
- * @date 2020-07-20
+ * @date 2020-07-21
  */
 public class ByChild extends BaseEntity {
     private static final long serialVersionUID = 1L;
@@ -32,7 +32,7 @@ public class ByChild extends BaseEntity {
      * 班级id
      */
     @Excel(name = "班级id")
-    private Long classid;
+    private String classid;
 
     /**
      * 姓名
@@ -90,10 +90,22 @@ public class ByChild extends BaseEntity {
     private String birthProvince;
 
     /**
+     * 出生所在省名称
+     */
+    @Excel(name = "出生所在省名称")
+    private String birthProvincename;
+
+    /**
      * 出生所在地市
      */
     @Excel(name = "出生所在地市")
     private String birthCity;
+
+    /**
+     * 出生所在市名称
+     */
+    @Excel(name = "出生所在市名称")
+    private String birthCityname;
 
     /**
      * 出生地区
@@ -102,10 +114,22 @@ public class ByChild extends BaseEntity {
     private String birthArea;
 
     /**
+     * 出生所在区名称
+     */
+    @Excel(name = "出生所在区名称")
+    private String birthAreaname;
+
+    /**
      * 户口所在地
      */
     @Excel(name = "户口所在地")
     private String registeredProvince;
+
+    /**
+     * 户口所在地名称
+     */
+    @Excel(name = "户口所在地名称")
+    private String registeredProvincename;
 
     /**
      * 户口所在地市
@@ -114,10 +138,22 @@ public class ByChild extends BaseEntity {
     private String registeredCity;
 
     /**
+     * 户口所在市名称
+     */
+    @Excel(name = "户口所在市名称")
+    private String registeredCityname;
+
+    /**
      * 户口所在区
      */
     @Excel(name = "户口所在区")
     private String registeredArea;
+
+    /**
+     * 户口所在区名称
+     */
+    @Excel(name = "户口所在区名称")
+    private String registeredAreaname;
 
     /**
      * 住址省
@@ -126,16 +162,34 @@ public class ByChild extends BaseEntity {
     private String addrProvince;
 
     /**
+     * 住址省名称
+     */
+    @Excel(name = "住址省名称")
+    private String addrProvincename;
+
+    /**
      * 住址市
      */
     @Excel(name = "住址市")
     private String addrCity;
 
     /**
+     * 住址市名称
+     */
+    @Excel(name = "住址市名称")
+    private String addrCityname;
+
+    /**
      * 住址区
      */
     @Excel(name = "住址区")
     private String addrArea;
+
+    /**
+     * 住址区名称
+     */
+    @Excel(name = "住址区名称")
+    private String addrAreaname;
 
     /**
      * 详细地址
@@ -221,11 +275,11 @@ public class ByChild extends BaseEntity {
         return schoolid;
     }
 
-    public void setClassid(Long classid) {
+    public void setClassid(String classid) {
         this.classid = classid;
     }
 
-    public Long getClassid() {
+    public String getClassid() {
         return classid;
     }
 
@@ -301,12 +355,28 @@ public class ByChild extends BaseEntity {
         return birthProvince;
     }
 
+    public void setBirthProvincename(String birthProvincename) {
+        this.birthProvincename = birthProvincename;
+    }
+
+    public String getBirthProvincename() {
+        return birthProvincename;
+    }
+
     public void setBirthCity(String birthCity) {
         this.birthCity = birthCity;
     }
 
     public String getBirthCity() {
         return birthCity;
+    }
+
+    public void setBirthCityname(String birthCityname) {
+        this.birthCityname = birthCityname;
+    }
+
+    public String getBirthCityname() {
+        return birthCityname;
     }
 
     public void setBirthArea(String birthArea) {
@@ -317,12 +387,28 @@ public class ByChild extends BaseEntity {
         return birthArea;
     }
 
+    public void setBirthAreaname(String birthAreaname) {
+        this.birthAreaname = birthAreaname;
+    }
+
+    public String getBirthAreaname() {
+        return birthAreaname;
+    }
+
     public void setRegisteredProvince(String registeredProvince) {
         this.registeredProvince = registeredProvince;
     }
 
     public String getRegisteredProvince() {
         return registeredProvince;
+    }
+
+    public void setRegisteredProvincename(String registeredProvincename) {
+        this.registeredProvincename = registeredProvincename;
+    }
+
+    public String getRegisteredProvincename() {
+        return registeredProvincename;
     }
 
     public void setRegisteredCity(String registeredCity) {
@@ -333,12 +419,28 @@ public class ByChild extends BaseEntity {
         return registeredCity;
     }
 
+    public void setRegisteredCityname(String registeredCityname) {
+        this.registeredCityname = registeredCityname;
+    }
+
+    public String getRegisteredCityname() {
+        return registeredCityname;
+    }
+
     public void setRegisteredArea(String registeredArea) {
         this.registeredArea = registeredArea;
     }
 
     public String getRegisteredArea() {
         return registeredArea;
+    }
+
+    public void setRegisteredAreaname(String registeredAreaname) {
+        this.registeredAreaname = registeredAreaname;
+    }
+
+    public String getRegisteredAreaname() {
+        return registeredAreaname;
     }
 
     public void setAddrProvince(String addrProvince) {
@@ -349,6 +451,14 @@ public class ByChild extends BaseEntity {
         return addrProvince;
     }
 
+    public void setAddrProvincename(String addrProvincename) {
+        this.addrProvincename = addrProvincename;
+    }
+
+    public String getAddrProvincename() {
+        return addrProvincename;
+    }
+
     public void setAddrCity(String addrCity) {
         this.addrCity = addrCity;
     }
@@ -357,12 +467,28 @@ public class ByChild extends BaseEntity {
         return addrCity;
     }
 
+    public void setAddrCityname(String addrCityname) {
+        this.addrCityname = addrCityname;
+    }
+
+    public String getAddrCityname() {
+        return addrCityname;
+    }
+
     public void setAddrArea(String addrArea) {
         this.addrArea = addrArea;
     }
 
     public String getAddrArea() {
         return addrArea;
+    }
+
+    public void setAddrAreaname(String addrAreaname) {
+        this.addrAreaname = addrAreaname;
+    }
+
+    public String getAddrAreaname() {
+        return addrAreaname;
     }
 
     public void setAddrDetail(String addrDetail) {
@@ -468,14 +594,23 @@ public class ByChild extends BaseEntity {
                 .append("zjhm", getZjhm())
                 .append("csrq", getCsrq())
                 .append("birthProvince", getBirthProvince())
+                .append("birthProvincename", getBirthProvincename())
                 .append("birthCity", getBirthCity())
+                .append("birthCityname", getBirthCityname())
                 .append("birthArea", getBirthArea())
+                .append("birthAreaname", getBirthAreaname())
                 .append("registeredProvince", getRegisteredProvince())
+                .append("registeredProvincename", getRegisteredProvincename())
                 .append("registeredCity", getRegisteredCity())
+                .append("registeredCityname", getRegisteredCityname())
                 .append("registeredArea", getRegisteredArea())
+                .append("registeredAreaname", getRegisteredAreaname())
                 .append("addrProvince", getAddrProvince())
+                .append("addrProvincename", getAddrProvincename())
                 .append("addrCity", getAddrCity())
+                .append("addrCityname", getAddrCityname())
                 .append("addrArea", getAddrArea())
+                .append("addrAreaname", getAddrAreaname())
                 .append("addrDetail", getAddrDetail())
                 .append("everSchool", getEverSchool())
                 .append("learnEnglish", getLearnEnglish())

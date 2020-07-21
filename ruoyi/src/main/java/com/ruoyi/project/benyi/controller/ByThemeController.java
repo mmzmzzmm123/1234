@@ -68,7 +68,7 @@ public class ByThemeController extends BaseController {
     /**
      * 获取主题整合详细信息
      */
-    @PreAuthorize("@ss.hasPermi('benyi:theme:query')")
+    @PreAuthorize("@ss.hasPermi('benyi:theme:query')" + "||@ss.hasPermi('benyi:theme:list')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id) {
         return AjaxResult.success(byThemeService.selectByThemeById(id));

@@ -2,6 +2,8 @@ package com.ruoyi.project.benyi.controller;
 
 import java.util.List;
 
+import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.project.common.SchoolCommon;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,6 +34,8 @@ import com.ruoyi.framework.web.page.TableDataInfo;
 public class ByChildController extends BaseController {
     @Autowired
     private IByChildService byChildService;
+    @Autowired
+    private SchoolCommon schoolCommon;
 
     /**
      * 查询幼儿信息列表
@@ -72,7 +76,20 @@ public class ByChildController extends BaseController {
     @Log(title = "幼儿信息", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody ByChild byChild) {
-        return toAjax(byChildService.insertByChild(byChild));
+        //首先判断当前账户是否为幼儿园账号
+        if (schoolCommon.isSchool()) {
+            //学校id
+            byChild.setSchoolid(SecurityUtils.getLoginUser().getUser().getDept().getDeptId());
+            //创建人id
+            byChild.setCreateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
+            //班级id
+            if (schoolCommon.isStringEmpty(byChild.getClassid())) {
+                byChild.setClassid(schoolCommon.getClassId());
+            }
+            return toAjax(byChildService.insertByChild(byChild));
+        } else {
+            return AjaxResult.error("当前用户非幼儿园，无法添加幼儿");
+        }
     }
 
     /**
@@ -83,6 +100,23 @@ public class ByChildController extends BaseController {
     @PutMapping
     public AjaxResult edit(@RequestBody ByChild byChild) {
         return toAjax(byChildService.updateByChild(byChild));
+    }
+
+    /**
+     * 修改幼儿信息
+     */
+    @PreAuthorize("@ss.hasPermi('benyi:child:edit')")
+    @Log(title = "幼儿信息", businessType = BusinessType.UPDATE)
+    @PutMapping("/{ids}")
+    public AjaxResult edit(@RequestBody ByChild byChild, @PathVariable Long[] ids) {
+        int iCount = 0;
+        for (int i = 0; i < ids.length; i++) {
+            Long id = ids[i];
+            System.out.println("classid=" + byChild.getClassid() + "   " + "id=" + id);
+            byChild.setId(id);
+            iCount = iCount + byChildService.updateByChild(byChild);
+        }
+        return toAjax(iCount);
     }
 
     /**

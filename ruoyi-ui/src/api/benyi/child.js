@@ -35,6 +35,15 @@ export function updateChild(data) {
   })
 }
 
+// 修改幼儿信息
+export function updateChild_tb(data,id) {
+  return request({
+    url: '/benyi/child/'+id,
+    method: 'put',
+    data: data
+  })
+}
+
 // 删除幼儿信息
 export function delChild(id) {
   return request({
