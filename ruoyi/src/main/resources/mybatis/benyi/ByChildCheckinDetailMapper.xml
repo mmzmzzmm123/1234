@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.benyi.mapper.ByChildCheckinDetailMapper">
+
+    <resultMap type="ByChildCheckinDetail" id="ByChildCheckinDetailResult">
+        <result property="id" column="id"/>
+        <result property="schoolid" column="schoolid"/>
+        <result property="classid" column="classid"/>
+        <result property="childid" column="childid"/>
+        <result property="childname" column="childname"/>
+        <result property="type" column="type"/>
+        <result property="createuserid" column="createuserid"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <sql id="selectByChildCheckinDetailVo">
+        select id, schoolid, classid, childid, childname, type, createuserid, create_time from by_child_checkin_detail
+    </sql>
+
+    <select id="selectByChildCheckinDetailList" parameterType="ByChildCheckinDetail"
+            resultMap="ByChildCheckinDetailResult">
+        <include refid="selectByChildCheckinDetailVo"/>
+        <where>
+            <if test="schoolid != null ">and schoolid = #{schoolid}</if>
+            <if test="classid != null  and classid != ''">and classid = #{classid}</if>
+            <if test="childid != null ">and childid = #{childid}</if>
+            <if test="childname != null  and childname != ''">and childname like concat('%', #{childname}, '%')</if>
+            <if test="type != null  and type != ''">and type = #{type}</if>
+            <if test="createuserid != null ">and createuserid = #{createuserid}</if>
+        </where>
+    </select>
+
+    <select id="selectByChildCheckinDetailById" parameterType="Long" resultMap="ByChildCheckinDetailResult">
+        <include refid="selectByChildCheckinDetailVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertByChildCheckinDetail" parameterType="ByChildCheckinDetail" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into by_child_checkin_detail
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="schoolid != null ">schoolid,</if>
+            <if test="classid != null  and classid != ''">classid,</if>
+            <if test="childid != null ">childid,</if>
+            <if test="childname != null  and childname != ''">childname,</if>
+            <if test="type != null  and type != ''">type,</if>
+            <if test="createuserid != null ">createuserid,</if>
+            <if test="createTime != null ">create_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="schoolid != null ">#{schoolid},</if>
+            <if test="classid != null  and classid != ''">#{classid},</if>
+            <if test="childid != null ">#{childid},</if>
+            <if test="childname != null  and childname != ''">#{childname},</if>
+            <if test="type != null  and type != ''">#{type},</if>
+            <if test="createuserid != null ">#{createuserid},</if>
+            <if test="createTime != null ">#{createTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateByChildCheckinDetail" parameterType="ByChildCheckinDetail">
+        update by_child_checkin_detail
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="schoolid != null ">schoolid = #{schoolid},</if>
+            <if test="classid != null  and classid != ''">classid = #{classid},</if>
+            <if test="childid != null ">childid = #{childid},</if>
+            <if test="childname != null  and childname != ''">childname = #{childname},</if>
+            <if test="type != null  and type != ''">type = #{type},</if>
+            <if test="createuserid != null ">createuserid = #{createuserid},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteByChildCheckinDetailById" parameterType="Long">
+        delete from by_child_checkin_detail where id = #{id}
+    </delete>
+
+    <delete id="deleteByChildCheckinDetailByIds" parameterType="String">
+        delete from by_child_checkin_detail where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
