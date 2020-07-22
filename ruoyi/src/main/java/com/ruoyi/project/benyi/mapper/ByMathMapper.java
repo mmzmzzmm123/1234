@@ -28,6 +28,14 @@ public interface ByMathMapper
     public List<ByMath> selectByMathList(ByMath byMath);
 
     /**
+     * 查询游戏数学树
+     *
+     * @param byMath 游戏数学
+     * @return 游戏数学树集合
+     */
+    public List<ByMath> selectByMathListTree(ByMath byMath);
+
+    /**
      * 新增游戏数学
      *
      * @param byMath 游戏数学

@@ -383,6 +383,7 @@ export default {
       const id = row.id || this.ids;
       getActivity(id).then(response => {
         this.form = response.data;
+        console.log(this.form);
 
         this.typeOptions = response.types;
         this.form.type = response.typeIds;

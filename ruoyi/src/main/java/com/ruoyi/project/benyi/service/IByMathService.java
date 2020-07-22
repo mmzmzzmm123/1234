@@ -1,6 +1,8 @@
 package com.ruoyi.project.benyi.service;
 
 import java.util.List;
+
+import com.ruoyi.framework.web.domain.TreeSelect;
 import com.ruoyi.project.benyi.domain.ByMath;
 
 /**
@@ -26,6 +28,33 @@ public interface IByMathService
      * @return 游戏数学集合
      */
     public List<ByMath> selectByMathList(ByMath byMath);
+
+    /**
+     * 查询游戏数学列表树
+     *
+     * @param byMath 游戏数学
+     * @return 游戏数学树集合
+     */
+    public List<ByMath> selectByMathListTree(ByMath byMath);
+
+
+
+    /**
+     * 构建前端所需要树结构
+     *
+     * @param byMaths 部门列表
+     * @return 树结构列表
+     */
+    public List<ByMath> buildMathDetailTree(List<ByMath> byMaths);
+
+
+    /**
+     * 构建前端所需要下拉树结构
+     *
+     * @param byMaths 部门列表
+     * @return 树结构列表
+     */
+    public List<TreeSelect> buildMathTreeSelect(List<ByMath> byMaths);
 
     /**
      * 新增游戏数学

@@ -5,30 +5,49 @@
 <mapper namespace="com.ruoyi.project.benyi.mapper.ByMathMapper">
 
     <resultMap type="ByMath" id="ByMathResult">
-                    <result property="id"    column="id"    />
-                    <result property="name"    column="name"    />
-                    <result property="target"    column="target"    />
-                    <result property="feature"    column="feature"    />
-                    <result property="suggest"    column="suggest"    />
-                    <result property="classtypeId"    column="classtype_id"    />
-                    <result property="sort"    column="sort"    />
-                    <result property="createTime"    column="create_time"    />
-            </resultMap>
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="target" column="target"/>
+        <result property="feature" column="feature"/>
+        <result property="suggest" column="suggest"/>
+        <result property="classtypeId" column="classtype_id"/>
+        <result property="sort" column="sort"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
 
     <sql id="selectByMathVo">
         select id, name, target, feature, suggest, classtype_id, sort, create_time from by_math
     </sql>
 
+    <sql id="selectByMathVoTree">
+        select dict_value+9999 id, 0 parent_id,dict_label name,dict_sort sort   from sys_dict_data where dict_type='sys_yebjlx' and dict_label !='托班（2-3岁）'
+        union all
+        select id, classtype_id+9999, name, sort from by_math
+        order by sort
+    </sql>
+
+    <select id="selectByMathListTree" parameterType="ByMath" resultMap="ByMathResult">
+        <include refid="selectByMathVoTree"/>
+        <where>
+            <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
+            <if test="target != null  and target != ''">and target = #{target}</if>
+            <if test="feature != null  and feature != ''">and feature = #{feature}</if>
+            <if test="suggest != null  and suggest != ''">and suggest = #{suggest}</if>
+            <if test="classtypeId != null ">and classtype_id = #{classtypeId}</if>
+            <if test="sort != null ">and sort = #{sort}</if>
+        </where>
+    </select>
+
     <select id="selectByMathList" parameterType="ByMath" resultMap="ByMathResult">
         <include refid="selectByMathVo"/>
         <where>
-                                                                                                    <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
-                                                                                                            <if test="target != null  and target != ''"> and target = #{target}</if>
-                                                                                                            <if test="feature != null  and feature != ''"> and feature = #{feature}</if>
-                                                                                                            <if test="suggest != null  and suggest != ''"> and suggest = #{suggest}</if>
-                                                                                                            <if test="classtypeId != null "> and classtype_id = #{classtypeId}</if>
-                                                                                                            <if test="sort != null "> and sort = #{sort}</if>
-                                                                                    </where>
+            <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
+            <if test="target != null  and target != ''">and target = #{target}</if>
+            <if test="feature != null  and feature != ''">and feature = #{feature}</if>
+            <if test="suggest != null  and suggest != ''">and suggest = #{suggest}</if>
+            <if test="classtypeId != null ">and classtype_id = #{classtypeId}</if>
+            <if test="sort != null ">and sort = #{sort}</if>
+        </where>
     </select>
 
     <select id="selectByMathById" parameterType="Long" resultMap="ByMathResult">
@@ -39,38 +58,38 @@
     <insert id="insertByMath" parameterType="ByMath">
         insert into by_math
         <trim prefix="(" suffix=")" suffixOverrides=",">
-                                                <if test="id != null ">id,</if>
-                                                                <if test="name != null  and name != ''">name,</if>
-                                                                <if test="target != null  and target != ''">target,</if>
-                                                                <if test="feature != null  and feature != ''">feature,</if>
-                                                                <if test="suggest != null  and suggest != ''">suggest,</if>
-                                                                <if test="classtypeId != null ">classtype_id,</if>
-                                                                <if test="sort != null ">sort,</if>
-                                                                <if test="createTime != null ">create_time,</if>
-                                    </trim>
+            <if test="id != null ">id,</if>
+            <if test="name != null  and name != ''">name,</if>
+            <if test="target != null  and target != ''">target,</if>
+            <if test="feature != null  and feature != ''">feature,</if>
+            <if test="suggest != null  and suggest != ''">suggest,</if>
+            <if test="classtypeId != null ">classtype_id,</if>
+            <if test="sort != null ">sort,</if>
+            <if test="createTime != null ">create_time,</if>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-                                                <if test="id != null ">#{id},</if>
-                                                                <if test="name != null  and name != ''">#{name},</if>
-                                                                <if test="target != null  and target != ''">#{target},</if>
-                                                                <if test="feature != null  and feature != ''">#{feature},</if>
-                                                                <if test="suggest != null  and suggest != ''">#{suggest},</if>
-                                                                <if test="classtypeId != null ">#{classtypeId},</if>
-                                                                <if test="sort != null ">#{sort},</if>
-                                                                <if test="createTime != null ">#{createTime},</if>
-                                    </trim>
+            <if test="id != null ">#{id},</if>
+            <if test="name != null  and name != ''">#{name},</if>
+            <if test="target != null  and target != ''">#{target},</if>
+            <if test="feature != null  and feature != ''">#{feature},</if>
+            <if test="suggest != null  and suggest != ''">#{suggest},</if>
+            <if test="classtypeId != null ">#{classtypeId},</if>
+            <if test="sort != null ">#{sort},</if>
+            <if test="createTime != null ">#{createTime},</if>
+        </trim>
     </insert>
 
     <update id="updateByMath" parameterType="ByMath">
         update by_math
         <trim prefix="SET" suffixOverrides=",">
-                                                                            <if test="name != null  and name != ''">name = #{name},</if>
-                                                                <if test="target != null  and target != ''">target = #{target},</if>
-                                                                <if test="feature != null  and feature != ''">feature = #{feature},</if>
-                                                                <if test="suggest != null  and suggest != ''">suggest = #{suggest},</if>
-                                                                <if test="classtypeId != null ">classtype_id = #{classtypeId},</if>
-                                                                <if test="sort != null ">sort = #{sort},</if>
-                                                                <if test="createTime != null ">create_time = #{createTime},</if>
-                                    </trim>
+            <if test="name != null  and name != ''">name = #{name},</if>
+            <if test="target != null  and target != ''">target = #{target},</if>
+            <if test="feature != null  and feature != ''">feature = #{feature},</if>
+            <if test="suggest != null  and suggest != ''">suggest = #{suggest},</if>
+            <if test="classtypeId != null ">classtype_id = #{classtypeId},</if>
+            <if test="sort != null ">sort = #{sort},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+        </trim>
         where id = #{id}
     </update>
 

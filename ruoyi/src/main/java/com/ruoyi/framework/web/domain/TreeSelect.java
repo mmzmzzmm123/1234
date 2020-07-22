@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.ruoyi.project.benyi.domain.ByDayFlowDetail;
+import com.ruoyi.project.benyi.domain.ByMath;
 import com.ruoyi.project.benyi.domain.ByTheme;
 import com.ruoyi.project.system.domain.SysDept;
 import com.ruoyi.project.system.domain.SysMenu;
@@ -57,6 +58,14 @@ public class TreeSelect implements Serializable
         this.id = bytheme.getId();
         this.label = bytheme.getName();
         this.children = bytheme.getChildren().stream().map(TreeSelect::new).collect(Collectors.toList());
+    }
+
+    //下拉树构造器
+    public TreeSelect(ByMath bymath) {
+
+        this.id = bymath.getId();
+        this.label = bymath.getName();
+        this.children = bymath.getChildren().stream().map(TreeSelect::new).collect(Collectors.toList());
     }
 
     public Long getId()

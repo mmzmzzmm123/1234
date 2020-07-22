@@ -70,16 +70,13 @@
     <el-table v-loading="loading" :data="mathList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="编号" align="center" prop="id" />
-      <el-table-column label="名称" align="center" prop="name" >
+      <el-table-column label="名称" align="center" prop="name">
         <template slot-scope="scope">
-          <router-link
-            :to="'/benyi_course/math/plan/' + scope.row.id"
-            class="link-dayflow"
-          >
+          <router-link :to="'/benyi_course/math/plan/' + scope.row.id" class="link-dayflow">
             <span>{{ scope.row.name }}</span>
           </router-link>
         </template>
-      </el-table-column>  
+      </el-table-column>
       <el-table-column
         label="适用班级"
         align="center"
@@ -131,14 +128,14 @@
           <Editor v-model="form.suggest" placeholder="请输入教学建议" />
         </el-form-item>
         <el-form-item label="适用班级" prop="classtypeId">
-            <el-select v-model="form.classtypeId" placeholder="请选择适用班级">
-                <el-option
-                v-for="dict in classtypeIdOptions"
-                :key="dict.dictValue"
-                :label="dict.dictLabel"
-                :value="dict.dictValue"
-                />
-            </el-select>
+          <el-select v-model="form.classtypeId" placeholder="请选择适用班级">
+            <el-option
+              v-for="dict in classtypeIdOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            />
+          </el-select>
         </el-form-item>
         <el-form-item label="序号" prop="sort">
           <el-input-number v-model="form.sort" controls-position="right" :min="0" />
@@ -180,8 +177,6 @@ export default {
       multiple: true,
       // 总条数
       total: 0,
-      //班级类型 字典
-      bjtypeOptions: [],
       // 游戏数学表格数据
       mathList: [],
       // 弹出层标题
@@ -204,7 +199,14 @@ export default {
       // 表单参数
       form: {},
       // 表单校验
-      rules: {}
+      rules: {
+        name: [{ required: true, message: "名称不能为空", trigger: "blur" }],
+        target: [{ required: true, message: "学习目标不能为空", trigger: "blur" }],
+        feature: [{ required: true, message: "年龄段表现特征不能为空", trigger: "blur" }],
+        suggest: [{ required: true, message: "教学建议不能为空", trigger: "blur" }],
+        classtypeId: [{ required: true, message: "适用班级不能为空", trigger: "blur" }],
+        sort: [{ required: true, message: "序号不能为空", trigger: "blur" }]
+      }
     };
   },
   created() {
@@ -274,6 +276,7 @@ export default {
       const id = row.id || this.ids;
       getMath(id).then(response => {
         this.form = response.data;
+        console.log(this.form);
         this.open = true;
         this.title = "修改游戏数学";
       });

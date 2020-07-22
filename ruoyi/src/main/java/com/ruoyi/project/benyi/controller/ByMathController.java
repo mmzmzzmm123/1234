@@ -61,11 +61,20 @@ public class ByMathController extends BaseController
     /**
      * 获取游戏数学详细信息
      */
-    @PreAuthorize("@ss.hasPermi('benyi:math:query')")
+    @PreAuthorize("@ss.hasPermi('benyi:math:query')" + "||@ss.hasPermi('benyi:theme:list')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
         return AjaxResult.success(byMathService.selectByMathById(id));
+    }
+
+    /**
+     * 获取部门下拉树列表
+     */
+    @GetMapping("/treeselect")
+    public AjaxResult treeselect(ByMath byMath) {
+        List<ByMath> byMathDetails = byMathService.selectByMathListTree(byMath);
+        return AjaxResult.success(byMathService.buildMathTreeSelect(byMathDetails));
     }
 
     /**

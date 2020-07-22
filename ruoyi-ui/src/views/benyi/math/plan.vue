@@ -148,9 +148,9 @@
       <el-table-column label="游戏名称" align="center" prop="name" />
       <el-table-column label="排序" align="center" prop="sort" />
       <el-table-column label="游戏形式" align="center" :formatter="typeFormat" prop="type" />
-      <el-table-column label="游戏目标" align="center" prop="target" />
-      <el-table-column label="游戏准备" align="center" prop="prepare" />
-      <el-table-column label="游戏过程" align="center" prop="process" />
+      <el-table-column label="游戏目标" align="center" prop="target"  :show-overflow-tooltip="true"/>
+      <el-table-column label="游戏准备" align="center" prop="prepare" :show-overflow-tooltip="true" />
+      <el-table-column label="游戏过程" align="center" prop="process"  :show-overflow-tooltip="true"/>
       <!-- <el-table-column label="本周其它目标" align="center" prop="otherTarget" />
       <el-table-column label="建议" align="center" prop="suggest" />
       <el-table-column label="创建时间" align="center" prop="createtime" width="180">
@@ -298,7 +298,16 @@ export default {
       // 表单参数
       form: {},
       // 表单校验
-      rules: {}
+      rules: {
+        name: [{ required: true, message: "游戏名称不能为空", trigger: "blur" }],
+        sort: [{ required: true, message: "序号不能为空", trigger: "blur" }],
+        type: [{ required: true, message: "游戏形式不能为空", trigger: "blur" }],
+        target: [{ required: true, message: "游戏目标不能为空", trigger: "blur" }],
+        prepare: [{ required: true, message: "游戏准备不能为空", trigger: "blur" }],
+        process: [{ required: true, message: "游戏过程不能为空", trigger: "blur" }],
+        otherTarget: [{ required: true, message: "本周其它目标不能为空", trigger: "blur" }],
+        suggest: [{ required: true, message: "建议不能为空", trigger: "blur" }]
+      }
     };
   },
   created() {
