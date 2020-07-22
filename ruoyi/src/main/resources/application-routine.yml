@@ -1,0 +1,80 @@
+ruoyi:
+  # 名称
+  name: RuoYi
+  # 版本
+  version: 2.2.0
+  # 版权年份
+  copyrightYear: 2019
+  # 实例演示开关
+  demoEnabled: true
+  # 文件路径 示例（ Windows配置D:/ruoyi/uploadPath，Linux配置 /home/ruoyi/uploadPath）
+  profile: D:/ruoyi/uploadPath
+  # 获取ip地址开关
+  addressEnabled: false
+
+# web服务器配置
+server:
+  port: 9700
+  servlet:
+    # 应用的访问路径
+    context-path: /
+  tomcat:
+    # tomcat的URI编码
+    uri-encoding: UTF-8
+    # tomcat最大线程数，默认为200
+    max-threads: 800
+    # Tomcat启动初始化的线程数，默认值25
+    min-spare-threads: 30
+
+spring:
+  datasource:
+    dynamic:
+      primary: master
+      hikari:
+        connection-timeout: 30000
+        validation-timeout: 30000
+        idle-timeout: 30000
+        max-lifetime: 30000
+        max-pool-size: 30
+        min-idle: 10
+        initialization-fail-timeout: 30000
+        connection-init-sql: select 1
+        connection-test-query: select 1
+        is-auto-commit: true
+        is-read-only: false
+      datasource:
+        master:
+          driver-class-name: com.mysql.jdbc.Driver
+          url: jdbc:mysql://172.16.30.243:6060/ruoyi?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+          username: root
+          password: LOLm2dI2UQF#RxOf
+        teemlink:
+          driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+          url: jdbc:sqlserver://172.16.30.233:1433;DatabaseName=obpm_LianCheng_Data
+          username: sa
+          password: Lcdatacenter_888
+        oldProd:
+          driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+          url: jdbc:sqlserver://139.196.201.83:8433;DatabaseName=LC_DataCenter
+          username: sa
+          password: lc1234
+        compute:
+          driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+          url: jdbc:sqlserver://172.16.30.233:1433;DatabaseName=uv_calc
+          username: sa
+          password: Lcdatacenter_888
+        clean:
+          driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+          url: jdbc:sqlserver://172.16.30.233:1433;DatabaseName=uv_clean
+          username: sa
+          password: Lcdatacenter_888
+        calc:
+          driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+          url: jdbc:sqlserver://139.196.201.83:1433;DatabaseName=CALC
+          username: purple
+          password: liancheng
+        spider:
+          driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+          url: jdbc:sqlserver://139.196.201.83:1433;DatabaseName=TEST
+          username: purple
+          password: liancheng

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.data.basis.mapper.UvCommunityGeoMapper">
+    <select id="all" resultType="com.ruoyi.project.data.basis.domain.UvCommunityGeo">
+        select community_id as communityId, baidu_lng as baiduLng, baidu_lat as baiduLat from gis_community where
+        gaode_lng is null
+    </select>
+    <update id="updateGaoDeCoordinate" parameterType="com.ruoyi.project.data.basis.domain.UvCommunityGeo">
+        update gis_community set gaode_lng=#{gaodeLng},gaode_lat=#{gaodeLat},update_time=getdate() where
+        community_id=#{communityId}
+    </update>
+</mapper>
