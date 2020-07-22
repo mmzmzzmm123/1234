@@ -1,6 +1,11 @@
 package com.ruoyi.project.benyi.controller;
 
 import java.util.List;
+
+import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.project.benyi.domain.ByChild;
+import com.ruoyi.project.benyi.service.IByChildService;
+import com.ruoyi.project.common.SchoolCommon;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,31 +33,32 @@ import com.ruoyi.framework.web.page.TableDataInfo;
  */
 @RestController
 @RequestMapping("/benyi/checkindetail")
-public class ByChildCheckinDetailController extends BaseController
-{
+public class ByChildCheckinDetailController extends BaseController {
     @Autowired
     private IByChildCheckinDetailService byChildCheckinDetailService;
+    @Autowired
+    private SchoolCommon schoolCommon;
+    @Autowired
+    private IByChildService byChildService;
 
-/**
- * 查询幼儿考勤列表
- */
-@PreAuthorize("@ss.hasPermi('benyi:checkindetail:list')")
-@GetMapping("/list")
-        public TableDataInfo list(ByChildCheckinDetail byChildCheckinDetail)
-    {
+    /**
+     * 查询幼儿考勤列表
+     */
+    @PreAuthorize("@ss.hasPermi('benyi:checkindetail:list')")
+    @GetMapping("/list")
+    public TableDataInfo list(ByChildCheckinDetail byChildCheckinDetail) {
         startPage();
         List<ByChildCheckinDetail> list = byChildCheckinDetailService.selectByChildCheckinDetailList(byChildCheckinDetail);
         return getDataTable(list);
     }
-    
+
     /**
      * 导出幼儿考勤列表
      */
     @PreAuthorize("@ss.hasPermi('benyi:checkindetail:export')")
     @Log(title = "幼儿考勤", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
-    public AjaxResult export(ByChildCheckinDetail byChildCheckinDetail)
-    {
+    public AjaxResult export(ByChildCheckinDetail byChildCheckinDetail) {
         List<ByChildCheckinDetail> list = byChildCheckinDetailService.selectByChildCheckinDetailList(byChildCheckinDetail);
         ExcelUtil<ByChildCheckinDetail> util = new ExcelUtil<ByChildCheckinDetail>(ByChildCheckinDetail.class);
         return util.exportExcel(list, "detail");
@@ -63,8 +69,7 @@ public class ByChildCheckinDetailController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('benyi:checkindetail:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
-    {
+    public AjaxResult getInfo(@PathVariable("id") Long id) {
         return AjaxResult.success(byChildCheckinDetailService.selectByChildCheckinDetailById(id));
     }
 
@@ -74,9 +79,31 @@ public class ByChildCheckinDetailController extends BaseController
     @PreAuthorize("@ss.hasPermi('benyi:checkindetail:add')")
     @Log(title = "幼儿考勤", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody ByChildCheckinDetail byChildCheckinDetail)
-    {
-        return toAjax(byChildCheckinDetailService.insertByChildCheckinDetail(byChildCheckinDetail));
+    public AjaxResult add(@RequestBody ByChildCheckinDetail byChildCheckinDetail) {
+        //首先判断当前账户是否为幼儿园账号
+        if (schoolCommon.isSchool()) {
+            int iCount = 0;
+            //getChildname 暂用作幼儿id集合
+            if (!schoolCommon.isStringEmpty(byChildCheckinDetail.getChildname())) {
+                String[] strArr = byChildCheckinDetail.getChildname().split(",");
+                for (int i = 0; i < strArr.length; i++) {
+                    Long cid = Long.parseLong(strArr[i]);
+                    byChildCheckinDetail.setChildid(cid);
+                    ByChild byChild=byChildService.selectByChildById(cid);
+                    byChildCheckinDetail.setChildname(byChild.getName());
+                    byChildCheckinDetail.setClassid(byChild.getClassid());
+                    byChildCheckinDetail.setSchoolid(SecurityUtils.getLoginUser().getUser().getDept().getDeptId());
+
+                    iCount = iCount + byChildCheckinDetailService.insertByChildCheckinDetail(byChildCheckinDetail);
+                }
+                return toAjax(iCount);
+            }
+
+            return toAjax(iCount);
+        } else {
+            return AjaxResult.error("当前用户非幼儿园，无法添加幼儿");
+        }
+
     }
 
     /**
@@ -85,8 +112,7 @@ public class ByChildCheckinDetailController extends BaseController
     @PreAuthorize("@ss.hasPermi('benyi:checkindetail:edit')")
     @Log(title = "幼儿考勤", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody ByChildCheckinDetail byChildCheckinDetail)
-    {
+    public AjaxResult edit(@RequestBody ByChildCheckinDetail byChildCheckinDetail) {
         return toAjax(byChildCheckinDetailService.updateByChildCheckinDetail(byChildCheckinDetail));
     }
 
@@ -96,8 +122,7 @@ public class ByChildCheckinDetailController extends BaseController
     @PreAuthorize("@ss.hasPermi('benyi:checkindetail:remove')")
     @Log(title = "幼儿考勤", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
-    {
+    public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(byChildCheckinDetailService.deleteByChildCheckinDetailByIds(ids));
     }
 }
