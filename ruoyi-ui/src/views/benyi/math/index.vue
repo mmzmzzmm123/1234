@@ -70,10 +70,16 @@
     <el-table v-loading="loading" :data="mathList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="编号" align="center" prop="id" />
-      <el-table-column label="名称" align="center" prop="name" />
-      <!-- <el-table-column label="学习目标" align="center" prop="target" />
-      <el-table-column label="年龄段表现特征" align="center" prop="feature" />
-      <el-table-column label="教学建议" align="center" prop="suggest" /> -->
+      <el-table-column label="名称" align="center" prop="name" >
+        <template slot-scope="scope">
+          <router-link
+            :to="'/benyi_course/math/plan/' + scope.row.id"
+            class="link-dayflow"
+          >
+            <span>{{ scope.row.name }}</span>
+          </router-link>
+        </template>
+      </el-table-column>  
       <el-table-column
         label="适用班级"
         align="center"
@@ -135,7 +141,7 @@
             </el-select>
         </el-form-item>
         <el-form-item label="序号" prop="sort">
-          <el-input v-model="form.sort" placeholder="请输入序号" />
+          <el-input-number v-model="form.sort" controls-position="right" :min="0" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">

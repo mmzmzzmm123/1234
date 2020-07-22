@@ -1,5 +1,6 @@
 package com.ruoyi.project.benyi.controller;
 
+import java.util.Date;
 import java.util.List;
 
 import com.ruoyi.project.system.service.ISysDictDataService;
@@ -89,6 +90,7 @@ public class ByThemeActivityController extends BaseController {
     @Log(title = "主题整合活动", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody ByThemeActivity byThemeActivity) {
+        byThemeActivity.setCreateTime(new Date());
         return toAjax(byThemeActivityService.insertByThemeActivity(byThemeActivity));
     }
 

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.benyi.mapper.ByMathPlanMapper">
+
+    <resultMap type="ByMathPlan" id="ByMathPlanResult">
+        <result property="id" column="id"/>
+        <result property="mathid" column="mathid"/>
+        <result property="name" column="name"/>
+        <result property="sort" column="sort"/>
+        <result property="type" column="type"/>
+        <result property="target" column="target"/>
+        <result property="prepare" column="prepare"/>
+        <result property="process" column="process"/>
+        <result property="otherTarget" column="other_target"/>
+        <result property="suggest" column="suggest"/>
+        <result property="createtime" column="createtime"/>
+    </resultMap>
+
+    <sql id="selectByMathPlanVo">
+        select id, mathid, name, sort, type, target, prepare, process, other_target, suggest, createtime from by_math_plan
+    </sql>
+
+    <select id="selectByMathPlanList" parameterType="ByMathPlan" resultMap="ByMathPlanResult">
+        <include refid="selectByMathPlanVo"/>
+        <where>
+            <if test="mathid != null ">and mathid = #{mathid}</if>
+            <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
+            <if test="sort != null ">and sort = #{sort}</if>
+            <if test="type != null  and type != ''">and type like concat('%', #{type}, '%')</if>
+            <if test="target != null  and target != ''">and target = #{target}</if>
+            <if test="prepare != null  and prepare != ''">and prepare = #{prepare}</if>
+            <if test="process != null  and process != ''">and process = #{process}</if>
+            <if test="otherTarget != null  and otherTarget != ''">and other_target = #{otherTarget}</if>
+            <if test="suggest != null  and suggest != ''">and suggest = #{suggest}</if>
+            <if test="createtime != null ">and createtime = #{createtime}</if>
+        </where>
+    </select>
+
+    <select id="selectByMathPlanById" parameterType="Long" resultMap="ByMathPlanResult">
+        <include refid="selectByMathPlanVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertByMathPlan" parameterType="ByMathPlan" useGeneratedKeys="true" keyProperty="id">
+        insert into by_math_plan
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="mathid != null ">mathid,</if>
+            <if test="name != null  and name != ''">name,</if>
+            <if test="sort != null ">sort,</if>
+            <if test="type != null  and type != ''">type,</if>
+            <if test="target != null  and target != ''">target,</if>
+            <if test="prepare != null  and prepare != ''">prepare,</if>
+            <if test="process != null  and process != ''">process,</if>
+            <if test="otherTarget != null  and otherTarget != ''">other_target,</if>
+            <if test="suggest != null  and suggest != ''">suggest,</if>
+            <if test="createtime != null ">createtime,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="mathid != null ">#{mathid},</if>
+            <if test="name != null  and name != ''">#{name},</if>
+            <if test="sort != null ">#{sort},</if>
+            <if test="type != null  and type != ''">#{type},</if>
+            <if test="target != null  and target != ''">#{target},</if>
+            <if test="prepare != null  and prepare != ''">#{prepare},</if>
+            <if test="process != null  and process != ''">#{process},</if>
+            <if test="otherTarget != null  and otherTarget != ''">#{otherTarget},</if>
+            <if test="suggest != null  and suggest != ''">#{suggest},</if>
+            <if test="createtime != null ">#{createtime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateByMathPlan" parameterType="ByMathPlan">
+        update by_math_plan
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="mathid != null ">mathid = #{mathid},</if>
+            <if test="name != null  and name != ''">name = #{name},</if>
+            <if test="sort != null ">sort = #{sort},</if>
+            <if test="type != null  and type != ''">type = #{type},</if>
+            <if test="target != null  and target != ''">target = #{target},</if>
+            <if test="prepare != null  and prepare != ''">prepare = #{prepare},</if>
+            <if test="process != null  and process != ''">process = #{process},</if>
+            <if test="otherTarget != null  and otherTarget != ''">other_target = #{otherTarget},</if>
+            <if test="suggest != null  and suggest != ''">suggest = #{suggest},</if>
+            <if test="createtime != null ">createtime = #{createtime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteByMathPlanById" parameterType="Long">
+        delete from by_math_plan where id = #{id}
+    </delete>
+
+    <delete id="deleteByMathPlanByIds" parameterType="String">
+        delete from by_math_plan where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

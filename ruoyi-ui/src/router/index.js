@@ -164,6 +164,18 @@ export const constantRoutes = [{
         }]
     },
     {
+        path: '/benyi_course/math',
+        component: Layout,
+        hidden: true,
+        children: [{
+            path: 'plan/:id(\\d+)',
+            component: () =>
+                import ('@/views/benyi/math/plan'),
+            name: 'Math1',
+            meta: { title: '游戏数学方案', icon: '' }
+        }]
+    },
+    {
         path: '/job',
         component: Layout,
         hidden: true,
