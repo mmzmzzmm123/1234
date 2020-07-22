@@ -90,11 +90,15 @@
             </dependency>
 			
             <!-- swagger2-UI-->
+
             <dependency>
                 <groupId>io.springfox</groupId>
                 <artifactId>springfox-swagger-ui</artifactId>
                 <version>${swagger.version}</version>
             </dependency>
+
+
+
             
             <!--io常用工具类 -->
             <dependency>
@@ -183,6 +187,7 @@
         <module>ruoyi-quartz</module>
         <module>ruoyi-generator</module>
         <module>ruoyi-common</module>
+        <module>ruoyi-index</module>
     </modules>
     <packaging>pom</packaging>
 
