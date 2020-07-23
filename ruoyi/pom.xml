@@ -183,7 +183,13 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-actuator</artifactId>
 		</dependency>
-		
+
+		<dependency>
+			<groupId>com.squareup.okhttp3</groupId>
+			<artifactId>okhttp</artifactId>
+			<version>3.8.1</version>
+		</dependency>
+
 		<!-- swagger2-->
 		<dependency>
 			<groupId>io.springfox</groupId>
