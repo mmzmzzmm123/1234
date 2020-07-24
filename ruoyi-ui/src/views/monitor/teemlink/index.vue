@@ -167,7 +167,9 @@ export default {
     /** 统计 */
     handleStat(row) {
       this.reset();
+      this.loading = true;
       get(row.tableDbName, row.columnDbName).then(response => {
+        this.loading = false;
         if(response.data.count === response.data.validCount) {
           row.stat = '无';
           return;
