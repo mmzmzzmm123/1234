@@ -1,5 +1,6 @@
 package com.ruoyi.project.benyi.controller;
 
+import java.util.Date;
 import java.util.List;
 
 import com.ruoyi.common.utils.SecurityUtils;
@@ -48,6 +49,10 @@ public class ByChildCheckinDetailController extends BaseController {
     @GetMapping("/list")
     public TableDataInfo list(ByChildCheckinDetail byChildCheckinDetail) {
         startPage();
+        System.out.println("checkintime=" + byChildCheckinDetail.getCreateTime());
+        if (byChildCheckinDetail.getCreateTime() == null) {
+            byChildCheckinDetail.setCreateTime(new Date());
+        }
         List<ByChildCheckinDetail> list = byChildCheckinDetailService.selectByChildCheckinDetailList(byChildCheckinDetail);
         return getDataTable(list);
     }
@@ -89,7 +94,7 @@ public class ByChildCheckinDetailController extends BaseController {
                 for (int i = 0; i < strArr.length; i++) {
                     Long cid = Long.parseLong(strArr[i]);
                     byChildCheckinDetail.setChildid(cid);
-                    ByChild byChild=byChildService.selectByChildById(cid);
+                    ByChild byChild = byChildService.selectByChildById(cid);
                     byChildCheckinDetail.setChildname(byChild.getName());
                     byChildCheckinDetail.setClassid(byChild.getClassid());
                     byChildCheckinDetail.setSchoolid(SecurityUtils.getLoginUser().getUser().getDept().getDeptId());

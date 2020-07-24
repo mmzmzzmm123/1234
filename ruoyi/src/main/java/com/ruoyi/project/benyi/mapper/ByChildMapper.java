@@ -28,6 +28,14 @@ public interface ByChildMapper {
     public List<ByChild> selectByChildList(ByChild byChild);
 
     /**
+     * 查询幼儿信息列表-用于考勤
+     *
+     * @param byChild 幼儿信息
+     * @return 幼儿信息集合
+     */
+    public List<ByChild> selectByCheckList(ByChild byChild);
+
+    /**
      * 新增幼儿信息
      *
      * @param byChild 幼儿信息

@@ -29,6 +29,7 @@
             <if test="childname != null  and childname != ''">and childname like concat('%', #{childname}, '%')</if>
             <if test="type != null  and type != ''">and type = #{type}</if>
             <if test="createuserid != null ">and createuserid = #{createuserid}</if>
+            <if test="createTime != null ">and to_days(create_time) =to_days(#{createTime})</if>
         </where>
     </select>
 

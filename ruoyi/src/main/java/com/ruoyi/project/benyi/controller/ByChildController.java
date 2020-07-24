@@ -49,6 +49,16 @@ public class ByChildController extends BaseController {
     }
 
     /**
+     * 查询幼儿考勤列表
+     */
+    @PreAuthorize("@ss.hasPermi('benyi:checkindetail:list')")
+    @GetMapping("/listByCheck")
+    public TableDataInfo listByCheck(ByChild byChild) {
+        List<ByChild> list = byChildService.selectByCheckList(byChild);
+        return getDataTable(list);
+    }
+
+    /**
      * 导出幼儿信息列表
      */
     @PreAuthorize("@ss.hasPermi('benyi:child:export')")

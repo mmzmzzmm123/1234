@@ -9,6 +9,15 @@ export function listChild(query) {
   })
 }
 
+// 查询幼儿信息列表
+export function listByCheck(query) {
+  return request({
+    url: '/benyi/child/listByCheck',
+    method: 'get',
+    params: query
+  })
+}
+
 // 查询幼儿信息详细
 export function getChild(id) {
   return request({

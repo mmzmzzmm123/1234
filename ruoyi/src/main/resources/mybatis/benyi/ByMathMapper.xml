@@ -13,6 +13,7 @@
         <result property="classtypeId" column="classtype_id"/>
         <result property="sort" column="sort"/>
         <result property="createTime" column="create_time"/>
+        <result property="parentId" column="parent_id"/>
     </resultMap>
 
     <sql id="selectByMathVo">

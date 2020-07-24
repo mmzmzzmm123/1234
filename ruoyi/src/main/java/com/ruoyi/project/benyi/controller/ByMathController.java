@@ -74,6 +74,9 @@ public class ByMathController extends BaseController
     @GetMapping("/treeselect")
     public AjaxResult treeselect(ByMath byMath) {
         List<ByMath> byMathDetails = byMathService.selectByMathListTree(byMath);
+//        for(int i=0;i<byMathDetails.size();i++){
+//            System.out.println("parentid="+byMathDetails.get(i).getParentId());
+//        }
         return AjaxResult.success(byMathService.buildMathTreeSelect(byMathDetails));
     }
 

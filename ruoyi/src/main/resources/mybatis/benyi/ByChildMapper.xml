@@ -120,6 +120,73 @@
         </where>
     </select>
 
+    <select id="selectByCheckList" parameterType="ByChild" resultMap="ByChildResult">
+        select a.* from by_child a
+        where id not in (select childid from by_child_checkin_detail where to_days(create_time) = to_days(now()))
+        <if test="schoolid != null ">and schoolid = #{schoolid}</if>
+        <if test="classid != null  and classid != ''">and classid = #{classid}</if>
+        <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
+        <if test="enName != null  and enName != ''">and en_name like concat('%', #{enName}, '%')</if>
+        <if test="infantName != null  and infantName != ''">and infant_name like concat('%', #{infantName}, '%')
+        </if>
+        <if test="phone != null  and phone != ''">and phone = #{phone}</if>
+        <if test="xb != null  and xb != ''">and xb = #{xb}</if>
+        <if test="mz != null  and mz != ''">and mz = #{mz}</if>
+        <if test="zjhm != null  and zjhm != ''">and zjhm = #{zjhm}</if>
+        <if test="csrq != null ">and csrq = #{csrq}</if>
+        <if test="birthProvince != null  and birthProvince != ''">and birth_province = #{birthProvince}</if>
+        <if test="birthProvincename != null  and birthProvincename != ''">and birth_provincename like concat('%',
+            #{birthProvincename}, '%')
+        </if>
+        <if test="birthCity != null  and birthCity != ''">and birth_city = #{birthCity}</if>
+        <if test="birthCityname != null  and birthCityname != ''">and birth_cityname like concat('%',
+            #{birthCityname}, '%')
+        </if>
+        <if test="birthArea != null  and birthArea != ''">and birth_area = #{birthArea}</if>
+        <if test="birthAreaname != null  and birthAreaname != ''">and birth_areaname like concat('%',
+            #{birthAreaname}, '%')
+        </if>
+        <if test="registeredProvince != null  and registeredProvince != ''">and registered_province =
+            #{registeredProvince}
+        </if>
+        <if test="registeredProvincename != null  and registeredProvincename != ''">and registered_provincename like
+            concat('%', #{registeredProvincename}, '%')
+        </if>
+        <if test="registeredCity != null  and registeredCity != ''">and registered_city = #{registeredCity}</if>
+        <if test="registeredCityname != null  and registeredCityname != ''">and registered_cityname like concat('%',
+            #{registeredCityname}, '%')
+        </if>
+        <if test="registeredArea != null  and registeredArea != ''">and registered_area = #{registeredArea}</if>
+        <if test="registeredAreaname != null  and registeredAreaname != ''">and registered_areaname like concat('%',
+            #{registeredAreaname}, '%')
+        </if>
+        <if test="addrProvince != null  and addrProvince != ''">and addr_province = #{addrProvince}</if>
+        <if test="addrProvincename != null  and addrProvincename != ''">and addr_provincename like concat('%',
+            #{addrProvincename}, '%')
+        </if>
+        <if test="addrCity != null  and addrCity != ''">and addr_city = #{addrCity}</if>
+        <if test="addrCityname != null  and addrCityname != ''">and addr_cityname like concat('%', #{addrCityname},
+            '%')
+        </if>
+        <if test="addrArea != null  and addrArea != ''">and addr_area = #{addrArea}</if>
+        <if test="addrAreaname != null  and addrAreaname != ''">and addr_areaname like concat('%', #{addrAreaname},
+            '%')
+        </if>
+        <if test="addrDetail != null  and addrDetail != ''">and addr_detail = #{addrDetail}</if>
+        <if test="everSchool != null  and everSchool != ''">and ever_school = #{everSchool}</if>
+        <if test="learnEnglish != null  and learnEnglish != ''">and learn_english = #{learnEnglish}</if>
+        <if test="source != null  and source != ''">and source = #{source}</if>
+        <if test="status != null  and status != ''">and status = #{status}</if>
+        <if test="enterDate != null ">and enter_date = #{enterDate}</if>
+        <if test="outDate != null ">and out_date = #{outDate}</if>
+        <if test="firstLanguage != null  and firstLanguage != ''">and first_language = #{firstLanguage}</if>
+        <if test="seconderLanguage != null  and seconderLanguage != ''">and seconder_language =
+            #{seconderLanguage}
+        </if>
+        <if test="otherLanguage != null  and otherLanguage != ''">and other_language = #{otherLanguage}</if>
+        <if test="createuserid != null ">and createuserid = #{createuserid}</if>
+    </select>
+
     <select id="selectByChildById" parameterType="Long" resultMap="ByChildResult">
         <include refid="selectByChildVo"/>
         where id = #{id}

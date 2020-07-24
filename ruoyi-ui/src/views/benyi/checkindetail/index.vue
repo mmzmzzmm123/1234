@@ -30,6 +30,17 @@
           />
         </el-select>
       </el-form-item>
+      <el-form-item label="考勤时间" prop="createTime">     
+       <el-date-picker
+          clearable
+          size="small"
+          style="width: 200px"
+          v-model="queryParams.createTime"
+          type="date"
+          value-format="yyyy-MM-dd"
+          placeholder="选择考勤时间"
+        ></el-date-picker>
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -78,7 +89,7 @@
     </el-row>
 
     <el-table v-loading="loading" :data="detailList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
+      <el-table-column type="selection" width="55" align="center" :selectable="checkSelectable" />
       <el-table-column label="编号" align="center" prop="id" />
       <!-- <el-table-column label="学校编码" align="center" prop="schoolid" /> -->
       <el-table-column label="班级编码" align="center" prop="classid" :formatter="classFormat" />
@@ -99,6 +110,7 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['benyi:checkindetail:edit']"
+            :disabled="!checkSelectable(scope.row)"
           >修改</el-button>
           <el-button
             size="mini"
@@ -106,6 +118,7 @@
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['benyi:checkindetail:remove']"
+            :disabled="!checkSelectable(scope.row)"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -127,10 +140,16 @@
             :indeterminate="isIndeterminate"
             v-model="checkAll"
             @change="handleCheckAllChange"
+            :disabled="isable"
           >全选</el-checkbox>
           <div style="margin: 15px 0;"></div>
           <el-checkbox-group v-model="checkedChilds" @change="handlecheckedChildsChange">
-            <el-checkbox v-for="child in childs" :label="child.id" :key="child.id">{{child.name}}</el-checkbox>
+            <el-checkbox
+              v-for="child in childs"
+              :label="child.id"
+              :key="child.id"
+              :disabled="isable"
+            >{{child.name}}</el-checkbox>
           </el-checkbox-group>
           <el-input v-model="form.childname" v-if="false" />
         </el-form-item>
@@ -163,7 +182,7 @@ import {
   exportDetail
 } from "@/api/benyi/checkindetail";
 
-import { listChild } from "@/api/benyi/child";
+import { listByCheck, listChild } from "@/api/benyi/child";
 
 import { listClass } from "@/api/system/class";
 
@@ -171,6 +190,7 @@ export default {
   name: "Detail",
   data() {
     return {
+      isable: false,
       checkAll: false,
       checkedChilds: [],
       childs: [],
@@ -204,7 +224,8 @@ export default {
         childid: undefined,
         childname: undefined,
         type: undefined,
-        createuserid: undefined
+        createuserid: undefined,
+        createTime: undefined
       },
       // 表单参数
       form: {},
@@ -229,6 +250,16 @@ export default {
     });
   },
   methods: {
+    //控制按钮可用
+    checkSelectable(row) {
+      var date = new Date();
+      //console.log(date.toLocaleDateString());
+      return this.CompareDate(row.createTime, date.toLocaleDateString());
+    },
+    //比较日期大小
+    CompareDate(d1, d2) {
+      return new Date(d1.replace(/-/g, "/")) > new Date(d2.replace(/-/g, "/"));
+    },
     //班级列表
     getClassList() {
       listClass(null).then(response => {
@@ -280,6 +311,8 @@ export default {
         createTime: undefined
       };
       this.resetForm("form");
+
+      this.checkedChilds = [];
     },
     /** 搜索按钮操作 */
     handleQuery() {
@@ -299,18 +332,25 @@ export default {
     },
     /** 新增按钮操作 */
     handleAdd() {
+      this.reset();
+      this.isable = false;
       this.open = true;
       this.title = "幼儿考勤";
-      listChild(null).then(response => {
+      listByCheck(null).then(response => {
         this.childs = response.rows;
       });
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
+      this.isable = true;
       const id = row.id || this.ids;
       getDetail(id).then(response => {
         this.form = response.data;
+        listChild(null).then(response => {
+          this.childs = response.rows;
+        });
+        this.checkedChilds.push(response.data.childid);
         this.open = true;
         this.title = "修改幼儿考勤";
       });
@@ -323,14 +363,26 @@ export default {
             this.msgError("请至少选择一个幼儿");
             return;
           }
-          //提交
-          addDetail(this.form).then(response => {
-            if (response.code === 200) {
-              this.msgSuccess("添加考勤成功");
-              this.open = false;
-              this.getList();
+          if (valid) {
+            if (this.form.id != undefined) {
+              updateDetail(this.form).then(response => {
+                if (response.code === 200) {
+                  this.msgSuccess("修改考勤成功");
+                  this.open = false;
+                  this.getList();
+                }
+              });
+            } else {
+              //提交
+              addDetail(this.form).then(response => {
+                if (response.code === 200) {
+                  this.msgSuccess("添加考勤成功");
+                  this.open = false;
+                  this.getList();
+                }
+              });
             }
-          });
+          }
         }
       });
     },

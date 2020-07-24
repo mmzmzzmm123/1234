@@ -74,7 +74,7 @@ public class ByThemeServiceImpl implements IByThemeService {
         }
         for (Iterator<ByTheme> iterator = byThemes.iterator(); iterator.hasNext(); ) {
             ByTheme item = (ByTheme) iterator.next();
-            //System.out.println("test==="+!tempList.contains(byDayFlowDetail.getParentId()));
+            //System.out.println("test==="+!tempList.contains(item.getParentId()));
             // 如果是顶级节点, 遍历该父节点的所有子节点
             if (!tempList.contains(item.getParentId())) {
                 recursionFn(byThemes, item);
