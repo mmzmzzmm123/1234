@@ -35,16 +35,16 @@
           </div>
           <div class="text item" v-show="title2">
             <h3 class="box-card-title">{{title2}}</h3>
-            <div class="pad-left">
-               <Editor v-model="communicate" />
-            </div>
+            <div class="pad-left" v-html="communicate"></div>
           </div>
           <div class="text item" v-show="title3">
             <h3 class="box-card-title">{{title3}}</h3>
-            <div class="pad-left">
-               <Editor v-model="sug" />
-            </div>
-
+            <div class="pad-left" v-html="sug"></div>
+          </div>
+          <div class="text item" v-show="gameplan">
+            <h3 class="box-card-title">{{gameplan}}</h3>
+          </div>
+          <div>
             <div class="pad-left">
               <div v-for="(item, index) in planList" :key="index" class="text item">
                 <h3 class="box-card-case mr">第{{item.sort}}周 - {{item.name}}</h3>
@@ -99,6 +99,8 @@ export default {
       communicate: "",
       //建议
       sug: "",
+      // 数学游戏方案
+      gameplan: "数学游戏方案",
       //活动形式
       typeOptions: [],
       //目的
@@ -148,7 +150,6 @@ export default {
     getTreeselect() {
       treeselect().then(response => {
         this.treeOptions = response.data;
-        console.log(this.treeOptions);
       });
     },
     // 筛选节点
@@ -159,19 +160,14 @@ export default {
     // 节点单击事件
     handleNodeClick(data) {
       this.id = data.id;
-      console.log(data.id);
       if (data.id >= 9999) {
       } else {
         this.title = data.label;
-        console.log(this.title);
         this.getMathDetails();
       }
-      // console.log(this.dayflowtaskList[date.id])
-      // this.getStandardList();
     },
     getMathDetails() {
       getMath(this.id).then(response => {
-        //console.log(response);
         if (response.code == "200") {
           this.title1 = "学习目标";
           this.title2 = "表现特征";
@@ -179,10 +175,10 @@ export default {
           this.note = response.data.target;
           this.communicate = response.data.feature;
           this.sug = response.data.suggest;
-          //this.queryParams.mathid = response.data.id;
+          this.queryParams.mathid = response.data.id;
 
           listPlan(this.queryParams).then(req => {
-            //console.log(req);
+            // console.log(req);
             if (req.code == "200") {
               this.planList = req.rows;
             }
