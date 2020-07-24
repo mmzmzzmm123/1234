@@ -61,7 +61,7 @@ public class ByMathController extends BaseController
     /**
      * 获取游戏数学详细信息
      */
-    @PreAuthorize("@ss.hasPermi('benyi:math:query')" + "||@ss.hasPermi('benyi:theme:list')")
+    @PreAuthorize("@ss.hasPermi('benyi:math:query')" + "||@ss.hasPermi('benyi:math:list')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {

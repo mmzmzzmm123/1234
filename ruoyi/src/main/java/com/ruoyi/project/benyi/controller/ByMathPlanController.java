@@ -31,34 +31,31 @@ import com.ruoyi.framework.web.page.TableDataInfo;
  */
 @RestController
 @RequestMapping("/benyi/plan")
-public class ByMathPlanController extends BaseController
-{
+public class ByMathPlanController extends BaseController {
     @Autowired
     private IByMathPlanService byMathPlanService;
 
     @Autowired
     private ISysDictDataService dictDataService;
 
-/**
- * 查询游戏数学方案列表
- */
-@PreAuthorize("@ss.hasPermi('benyi:plan:list')")
-@GetMapping("/list")
-        public TableDataInfo list(ByMathPlan byMathPlan)
-    {
+    /**
+     * 查询游戏数学方案列表
+     */
+    @PreAuthorize("@ss.hasPermi('benyi:math:list')")
+    @GetMapping("/list")
+    public TableDataInfo list(ByMathPlan byMathPlan) {
         startPage();
         List<ByMathPlan> list = byMathPlanService.selectByMathPlanList(byMathPlan);
         return getDataTable(list);
     }
-    
+
     /**
      * 导出游戏数学方案列表
      */
-    @PreAuthorize("@ss.hasPermi('benyi:plan:export')")
+    @PreAuthorize("@ss.hasPermi('benyi:math:export')")
     @Log(title = "游戏数学方案", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
-    public AjaxResult export(ByMathPlan byMathPlan)
-    {
+    public AjaxResult export(ByMathPlan byMathPlan) {
         List<ByMathPlan> list = byMathPlanService.selectByMathPlanList(byMathPlan);
         ExcelUtil<ByMathPlan> util = new ExcelUtil<ByMathPlan>(ByMathPlan.class);
         return util.exportExcel(list, "plan");
@@ -67,10 +64,9 @@ public class ByMathPlanController extends BaseController
     /**
      * 获取游戏数学方案详细信息
      */
-    @PreAuthorize("@ss.hasPermi('benyi:plan:query')")
+    @PreAuthorize("@ss.hasPermi('benyi:math:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
-    {
+    public AjaxResult getInfo(@PathVariable("id") Long id) {
         AjaxResult ajax = AjaxResult.success();
         ByMathPlan byMathPlan = byMathPlanService.selectByMathPlanById(id);
         // 将数据库中的type类型分割  然后返回给前端
@@ -86,11 +82,10 @@ public class ByMathPlanController extends BaseController
     /**
      * 新增游戏数学方案
      */
-    @PreAuthorize("@ss.hasPermi('benyi:plan:add')")
+    @PreAuthorize("@ss.hasPermi('benyi:math:add')")
     @Log(title = "游戏数学方案", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody ByMathPlan byMathPlan)
-    {
+    public AjaxResult add(@RequestBody ByMathPlan byMathPlan) {
         byMathPlan.setCreatetime(new Date());
         return toAjax(byMathPlanService.insertByMathPlan(byMathPlan));
     }
@@ -98,22 +93,20 @@ public class ByMathPlanController extends BaseController
     /**
      * 修改游戏数学方案
      */
-    @PreAuthorize("@ss.hasPermi('benyi:plan:edit')")
+    @PreAuthorize("@ss.hasPermi('benyi:math:edit')")
     @Log(title = "游戏数学方案", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody ByMathPlan byMathPlan)
-    {
+    public AjaxResult edit(@RequestBody ByMathPlan byMathPlan) {
         return toAjax(byMathPlanService.updateByMathPlan(byMathPlan));
     }
 
     /**
      * 删除游戏数学方案
      */
-    @PreAuthorize("@ss.hasPermi('benyi:plan:remove')")
+    @PreAuthorize("@ss.hasPermi('benyi:math:remove')")
     @Log(title = "游戏数学方案", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
-    {
+    public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(byMathPlanService.deleteByMathPlanByIds(ids));
     }
 }
