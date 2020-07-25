@@ -1,0 +1,12 @@
+muster:
+  # 文件路径 示例（ Windows配置D:/muster/uploadPath，Linux配置 /home/muster/uploadPath）
+  profile: /www/muster/upload
+
+
+# 开发环境配置
+server:
+  # 服务器的HTTP端口，默认为8080
+  port: 8081
+  servlet:
+    # 应用的访问路径
+    context-path: /prod-api

@@ -1,8 +1,8 @@
 {
   "name": "muster",
   "version": "3.0.0",
-  "description": "若依管理系统",
-  "author": "若依",
+  "description": "Muster管理系统",
+  "author": "MUster",
   "license": "MIT",
   "scripts": {
     "dev": "vue-cli-service serve --open",

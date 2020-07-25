@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @ConfigurationProperties(prefix = "muster")
-public class RuoYiConfig
+public class MusterConfig
 {
     /** 项目名称 */
     private String name;
@@ -29,6 +29,10 @@ public class RuoYiConfig
 
     /** 获取地址开关 */
     private static boolean addressEnabled;
+
+    private static String appId;
+
+    private static String bizId;
 
     public String getName()
     {
@@ -77,7 +81,7 @@ public class RuoYiConfig
 
     public void setProfile(String profile)
     {
-        RuoYiConfig.profile = profile;
+        MusterConfig.profile = profile;
     }
 
     public static boolean isAddressEnabled()
@@ -87,7 +91,7 @@ public class RuoYiConfig
 
     public void setAddressEnabled(boolean addressEnabled)
     {
-        RuoYiConfig.addressEnabled = addressEnabled;
+        MusterConfig.addressEnabled = addressEnabled;
     }
 
     /**
@@ -112,5 +116,41 @@ public class RuoYiConfig
     public static String getUploadPath()
     {
         return getProfile() + "/upload";
+    }
+
+    /**
+     * Gets appId.
+     *
+     * @return the appId
+     */
+    public static String getAppId() {
+        return appId;
+    }
+
+    /**
+     * Sets appId.
+     *
+     * @param appId the appId
+     */
+    public void setAppId(final String appId) {
+        MusterConfig.appId = appId;
+    }
+
+    /**
+     * Gets bizId.
+     *
+     * @return the bizId
+     */
+    public static String getBizId() {
+        return bizId;
+    }
+
+    /**
+     * Sets bizId.
+     *
+     * @param bizId the bizId
+     */
+    public void setBizId(final String bizId) {
+        MusterConfig.bizId = bizId;
     }
 }

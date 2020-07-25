@@ -3,7 +3,7 @@ package com.muster.common.utils.ip;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.alibaba.fastjson.JSONObject;
-import com.muster.common.config.RuoYiConfig;
+import com.muster.common.config.MusterConfig;
 import com.muster.common.constant.Constants;
 import com.muster.common.utils.StringUtils;
 import com.muster.common.utils.http.HttpUtils;
@@ -31,7 +31,7 @@ public class AddressUtils
         {
             return "内网IP";
         }
-        if (RuoYiConfig.isAddressEnabled())
+        if (MusterConfig.isAddressEnabled())
         {
             try
             {

@@ -46,7 +46,7 @@ import com.muster.common.annotation.Excel;
 import com.muster.common.annotation.Excel.ColumnType;
 import com.muster.common.annotation.Excel.Type;
 import com.muster.common.annotation.Excels;
-import com.muster.common.config.RuoYiConfig;
+import com.muster.common.config.MusterConfig;
 import com.muster.common.core.domain.AjaxResult;
 import com.muster.common.core.text.Convert;
 import com.muster.common.exception.CustomException;
@@ -739,7 +739,7 @@ public class ExcelUtil<T>
      */
     public String getAbsoluteFile(String filename)
     {
-        String downloadPath = RuoYiConfig.getDownloadPath() + filename;
+        String downloadPath = MusterConfig.getDownloadPath() + filename;
         File desc = new File(downloadPath);
         if (!desc.getParentFile().exists())
         {

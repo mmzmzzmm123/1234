@@ -1,0 +1,25 @@
+
+我发一下服务器的信息：
+grow.xxzzu.com
+47.92.6.215
+mysql 和 linux 的密码都是
+gywj@1qaz@WSX
+
+数据库使用
+sys_manager
+测试存储过程可以使用 ：
+proc_DS01E_enterprise_info
+
+当前，ms_muster 数据库 未更新，等开发模式确定后，一起逐一更新数据结构
+
+小象智租 微信 开发者ID(AppID)
+AppID：wx08196c4219236ab5
+AppSecret：9a131c53016eb64e1f55161326307bbf
+
+appId：wx08196c4219236ab5
+授权回调域：grow.xxzzu.com
+
+
+微信开放平台：（open.weixin.qq.com）
+注册邮箱：jcjytbkt@126.com
+密码：xx-621588+-
