@@ -73,13 +73,9 @@
 <script>
 import { treeselect, getMath } from "@/api/benyi/math";
 import { listPlan } from "@/api/benyi/plan";
-import Editor from "@/components/Editor";
 
 export default {
   name: "Detail",
-  components: {
-    Editor
-  },
   data() {
     return {
       // 游戏数学名称

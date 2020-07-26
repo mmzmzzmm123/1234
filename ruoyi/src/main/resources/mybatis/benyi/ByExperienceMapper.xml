@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.benyi.mapper.ByExperienceMapper">
+
+    <resultMap type="ByExperience" id="ByExperienceResult">
+                    <result property="id"    column="id"    />
+                    <result property="jzxm"    column="jzxm"    />
+                    <result property="yexm"    column="yexm"    />
+                    <result property="csrq"    column="csrq"    />
+                    <result property="lxfs"    column="lxfs"    />
+                    <result property="nrysj"    column="nrysj"    />
+                    <result property="sqtysj"    column="sqtysj"    />
+                    <result property="swxw"    column="swxw"    />
+                    <result property="schoolid"    column="schoolid"    />
+                    <result property="sfhf"    column="sfhf"    />
+                    <result property="hfrn"    column="hfrn"    />
+                    <result property="hfuserid"    column="hfuserid"    />
+                    <result property="fhsj"    column="fhsj"    />
+                    <result property="yzzs"    column="yzzs"    />
+                    <result property="tyjg"    column="tyjg"    />
+                    <result property="rysj"    column="rysj"    />
+                    <result property="createTime"    column="create_time"    />
+            </resultMap>
+
+    <sql id="selectByExperienceVo">
+        select id, jzxm, yexm, csrq, lxfs, nrysj, sqtysj, swxw, schoolid, sfhf, hfrn, hfuserid, fhsj, yzzs, tyjg, rysj, create_time from by_experience
+    </sql>
+
+    <select id="selectByExperienceList" parameterType="ByExperience" resultMap="ByExperienceResult">
+        <include refid="selectByExperienceVo"/>
+        <where>
+                                                                                                    <if test="jzxm != null  and jzxm != ''"> and jzxm = #{jzxm}</if>
+                                                                                                            <if test="yexm != null  and yexm != ''"> and yexm = #{yexm}</if>
+                                                                                                            <if test="csrq != null "> and csrq = #{csrq}</if>
+                                                                                                            <if test="lxfs != null  and lxfs != ''"> and lxfs = #{lxfs}</if>
+                                                                                                            <if test="nrysj != null "> and nrysj = #{nrysj}</if>
+                                                                                                            <if test="sqtysj != null "> and sqtysj = #{sqtysj}</if>
+                                                                                                            <if test="swxw != null  and swxw != ''"> and swxw = #{swxw}</if>
+                                                                                                            <if test="schoolid != null "> and schoolid = #{schoolid}</if>
+                                                                                                            <if test="sfhf != null  and sfhf != ''"> and sfhf = #{sfhf}</if>
+                                                                                                            <if test="hfrn != null  and hfrn != ''"> and hfrn = #{hfrn}</if>
+                                                                                                            <if test="hfuserid != null "> and hfuserid = #{hfuserid}</if>
+                                                                                                            <if test="fhsj != null "> and fhsj = #{fhsj}</if>
+                                                                                                            <if test="yzzs != null  and yzzs != ''"> and yzzs = #{yzzs}</if>
+                                                                                                            <if test="tyjg != null  and tyjg != ''"> and tyjg = #{tyjg}</if>
+                                                                                                            <if test="rysj != null "> and rysj = #{rysj}</if>
+                                                                                    </where>
+    </select>
+
+    <select id="selectByExperienceById" parameterType="Long" resultMap="ByExperienceResult">
+        <include refid="selectByExperienceVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertByExperience" parameterType="ByExperience" useGeneratedKeys="true" keyProperty="id">
+        insert into by_experience
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                                                                            <if test="jzxm != null  and jzxm != ''">jzxm,</if>
+                                                                <if test="yexm != null  and yexm != ''">yexm,</if>
+                                                                <if test="csrq != null ">csrq,</if>
+                                                                <if test="lxfs != null  and lxfs != ''">lxfs,</if>
+                                                                <if test="nrysj != null ">nrysj,</if>
+                                                                <if test="sqtysj != null ">sqtysj,</if>
+                                                                <if test="swxw != null  and swxw != ''">swxw,</if>
+                                                                <if test="schoolid != null ">schoolid,</if>
+                                                                <if test="sfhf != null  and sfhf != ''">sfhf,</if>
+                                                                <if test="hfrn != null  and hfrn != ''">hfrn,</if>
+                                                                <if test="hfuserid != null ">hfuserid,</if>
+                                                                <if test="fhsj != null ">fhsj,</if>
+                                                                <if test="yzzs != null  and yzzs != ''">yzzs,</if>
+                                                                <if test="tyjg != null  and tyjg != ''">tyjg,</if>
+                                                                <if test="rysj != null ">rysj,</if>
+                                                                <if test="createTime != null ">create_time,</if>
+                                    </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                                                                            <if test="jzxm != null  and jzxm != ''">#{jzxm},</if>
+                                                                <if test="yexm != null  and yexm != ''">#{yexm},</if>
+                                                                <if test="csrq != null ">#{csrq},</if>
+                                                                <if test="lxfs != null  and lxfs != ''">#{lxfs},</if>
+                                                                <if test="nrysj != null ">#{nrysj},</if>
+                                                                <if test="sqtysj != null ">#{sqtysj},</if>
+                                                                <if test="swxw != null  and swxw != ''">#{swxw},</if>
+                                                                <if test="schoolid != null ">#{schoolid},</if>
+                                                                <if test="sfhf != null  and sfhf != ''">#{sfhf},</if>
+                                                                <if test="hfrn != null  and hfrn != ''">#{hfrn},</if>
+                                                                <if test="hfuserid != null ">#{hfuserid},</if>
+                                                                <if test="fhsj != null ">#{fhsj},</if>
+                                                                <if test="yzzs != null  and yzzs != ''">#{yzzs},</if>
+                                                                <if test="tyjg != null  and tyjg != ''">#{tyjg},</if>
+                                                                <if test="rysj != null ">#{rysj},</if>
+                                                                <if test="createTime != null ">#{createTime},</if>
+                                    </trim>
+    </insert>
+
+    <update id="updateByExperience" parameterType="ByExperience">
+        update by_experience
+        <trim prefix="SET" suffixOverrides=",">
+                                                                            <if test="jzxm != null  and jzxm != ''">jzxm = #{jzxm},</if>
+                                                                <if test="yexm != null  and yexm != ''">yexm = #{yexm},</if>
+                                                                <if test="csrq != null ">csrq = #{csrq},</if>
+                                                                <if test="lxfs != null  and lxfs != ''">lxfs = #{lxfs},</if>
+                                                                <if test="nrysj != null ">nrysj = #{nrysj},</if>
+                                                                <if test="sqtysj != null ">sqtysj = #{sqtysj},</if>
+                                                                <if test="swxw != null  and swxw != ''">swxw = #{swxw},</if>
+                                                                <if test="schoolid != null ">schoolid = #{schoolid},</if>
+                                                                <if test="sfhf != null  and sfhf != ''">sfhf = #{sfhf},</if>
+                                                                <if test="hfrn != null  and hfrn != ''">hfrn = #{hfrn},</if>
+                                                                <if test="hfuserid != null ">hfuserid = #{hfuserid},</if>
+                                                                <if test="fhsj != null ">fhsj = #{fhsj},</if>
+                                                                <if test="yzzs != null  and yzzs != ''">yzzs = #{yzzs},</if>
+                                                                <if test="tyjg != null  and tyjg != ''">tyjg = #{tyjg},</if>
+                                                                <if test="rysj != null ">rysj = #{rysj},</if>
+                                                                <if test="createTime != null ">create_time = #{createTime},</if>
+                                    </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteByExperienceById" parameterType="Long">
+        delete from by_experience where id = #{id}
+    </delete>
+
+    <delete id="deleteByExperienceByIds" parameterType="String">
+        delete from by_experience where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
