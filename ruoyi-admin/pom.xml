@@ -72,7 +72,10 @@
             <groupId>com.ruoyi</groupId>
             <artifactId>ruoyi-generator</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>com.ruoyi</groupId>
+            <artifactId>ruoyi-bookmark</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

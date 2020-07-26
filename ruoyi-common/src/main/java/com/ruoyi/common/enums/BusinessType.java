@@ -8,6 +8,10 @@ package com.ruoyi.common.enums;
 public enum BusinessType
 {
     /**
+     * 查询
+     */
+    SELECT,
+    /**
      * 其它
      */
     OTHER,
