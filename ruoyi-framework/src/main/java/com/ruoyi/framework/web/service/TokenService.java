@@ -195,7 +195,6 @@ public class TokenService
         Claims claims = parseToken(token);
         return claims.getSubject();
     }
-
     /**
      * 获取请求token
      *
