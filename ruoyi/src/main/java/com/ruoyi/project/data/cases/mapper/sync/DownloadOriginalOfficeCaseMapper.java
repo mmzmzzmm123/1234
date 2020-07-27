@@ -6,10 +6,15 @@ import com.ruoyi.project.data.cases.domain.OriginalOfficeCase;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * 爬取库中的办公案例
+ *
+ * @author lihe
+ */
 @DS("spider")
 public interface DownloadOriginalOfficeCaseMapper {
     /**
-     * 下载案例
+     * 下载办公案例
      *
      * @param startDate
      * @param endDate

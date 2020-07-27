@@ -26,13 +26,13 @@ public interface OriginalOfficeCaseMapper {
      * @param yearMonth
      */
     void createArtificialTable(@Param("yearMonth") Integer yearMonth);
-
-    /**
-     * 创建案例汇总表
-     *
-     * @param yearMonth
-     */
-    void createAssembleTable(@Param("yearMonth") Integer yearMonth);
+//
+//    /**
+//     * 创建案例汇总表
+//     *
+//     * @param yearMonth
+//     */
+//    void createAssembleTable(@Param("yearMonth") Integer yearMonth);
 
     /**
      * 初始化案例汇总表

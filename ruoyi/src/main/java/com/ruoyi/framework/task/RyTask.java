@@ -1,5 +1,6 @@
 package com.ruoyi.framework.task;
 
+import com.ruoyi.project.data.cases.service.IOriginalOfficeCaseService;
 import com.ruoyi.project.data.cases.service.IOriginalResidenceRentOpeningCaseService;
 import com.ruoyi.project.data.cases.service.impl.DownloadOriginalNewHouseCaseServiceImpl;
 import com.ruoyi.project.data.cases.service.impl.DownloadOriginalResidenceSaleClosingCaseServiceImpl;
@@ -22,6 +23,8 @@ public class RyTask {
     private DownloadOriginalResidenceSaleClosingCaseServiceImpl downloadOriginalResidenceSaleClosingCaseService;
     @Autowired
     private DownloadOriginalNewHouseCaseServiceImpl downloadOriginalNewHouseCaseService;
+    @Autowired
+    private IOriginalOfficeCaseService originalOfficeCaseService;
 
     public void ryMultipleParams(String s, Boolean b, Long l, Double d, Integer i) {
         System.out.println(StringUtils.format("执行多参方法： 字符串类型{}，布尔类型{}，长整型{}，浮点型{}，整形{}", s, b, l, d, i));
@@ -61,6 +64,13 @@ public class RyTask {
      */
     public void downloadSecondNewHouseCase() {
         downloadOriginalNewHouseCaseService.downloadSecond();
+    }
+
+    /**
+     * 下载办公案例和作价
+     */
+    public void downloadOfficeCase() {
+        originalOfficeCaseService.compute();
     }
 
 }

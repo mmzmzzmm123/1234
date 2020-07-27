@@ -15,6 +15,14 @@ import java.util.stream.Stream;
 public class GenerateTableTests {
 
     @Test
+    public void testLastYearMonth() {
+
+        Integer lastYearMonth =  DateUtils.getLastYearMonth();
+        Assert.assertTrue(202007 == lastYearMonth);
+
+    }
+
+    @Test
     public void getELTableColumn() {
         Class<?> targetClass = ComputeResidenceSaleBasePrice.class;
 
