@@ -49,7 +49,7 @@
     "@fullcalendar/vue": "^4.4.0",
     "@riophae/vue-treeselect": "0.4.0",
     "axios": "0.18.1",
-    "clipboard": "2.0.4",
+    "clipboard": "^2.0.4",
     "driver.js": "^0.9.8",
     "echarts": "4.2.1",
     "element-ui": "2.13.0",

@@ -40,9 +40,9 @@
           type="primary"
           icon="el-icon-plus"
           size="mini"
-          @click="handleAdd"
+          @click="copy($event,inviteCode)"
           v-hasPermi="['benyi:experience:add']"
-        >新增</el-button>
+        >一键复制</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -77,35 +77,13 @@
         </template>
       </el-table-column>
       <el-table-column label="联系方式" align="center" prop="lxfs" />
-      <el-table-column label="拟入园时间" align="center" prop="nrysj" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.nrysj, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>
       <el-table-column label="申请体验时间" align="center" prop="sqtysj" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.sqtysj, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="上午或下午" align="center" prop="swxw" />
-      <el-table-column label="体验学校" align="center" prop="schoolid" />
-      <el-table-column label="是否回复" align="center" prop="sfhf" />
-      <el-table-column label="回复内容" align="center" prop="hfrn" />
-      <el-table-column label="回复人" align="center" prop="hfuserid" />
-      <el-table-column label="回复时间" align="center" prop="fhsj" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.fhsj, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="园长指示" align="center" prop="yzzs" />
-      <el-table-column label="体验结果
-            0不入园
-            1入园" align="center" prop="tyjg" />
-      <el-table-column label="入园时间" align="center" prop="rysj" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.rysj, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>
+      <el-table-column label="上午或下午" align="center" prop="swxw" :formatter="swxwFormat" />
+      <el-table-column label="是否回复" align="center" prop="sfhf" :formatter="ynFormat" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -135,98 +113,127 @@
     />
 
     <!-- 添加或修改入班体验申请对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="家长姓名" prop="jzxm">
-          <el-input v-model="form.jzxm" placeholder="请输入家长姓名" />
-        </el-form-item>
-        <el-form-item label="幼儿姓名" prop="yexm">
-          <el-input v-model="form.yexm" placeholder="请输入幼儿姓名" />
-        </el-form-item>
-        <el-form-item label="幼儿出生日期" prop="csrq">
-          <el-date-picker
-            clearable
-            size="small"
-            style="width: 200px"
-            v-model="form.csrq"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="选择幼儿出生日期"
-          ></el-date-picker>
-        </el-form-item>
-        <el-form-item label="联系方式" prop="lxfs">
-          <el-input v-model="form.lxfs" placeholder="请输入联系方式" />
-        </el-form-item>
-        <el-form-item label="拟入园时间" prop="nrysj">
-          <el-date-picker
-            clearable
-            size="small"
-            style="width: 200px"
-            v-model="form.nrysj"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="选择拟入园时间"
-          ></el-date-picker>
-        </el-form-item>
-        <el-form-item label="申请体验时间" prop="sqtysj">
-          <el-date-picker
-            clearable
-            size="small"
-            style="width: 200px"
-            v-model="form.sqtysj"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="选择申请体验时间"
-          ></el-date-picker>
-        </el-form-item>
-        <el-form-item label="上午或下午" prop="swxw">
-          <el-input v-model="form.swxw" placeholder="请输入上午或下午" />
-        </el-form-item>
-        <el-form-item label="体验学校" prop="schoolid">
-          <el-input v-model="form.schoolid" placeholder="请输入体验学校" />
-        </el-form-item>
-        <el-form-item label="是否回复" prop="sfhf">
-          <el-input v-model="form.sfhf" placeholder="请输入是否回复" />
-        </el-form-item>
-        <el-form-item label="回复内容" prop="hfrn">
-          <el-input v-model="form.hfrn" type="textarea" placeholder="请输入内容" />
-        </el-form-item>
-        <el-form-item label="回复人" prop="hfuserid">
-          <el-input v-model="form.hfuserid" placeholder="请输入回复人" />
-        </el-form-item>
-        <el-form-item label="回复时间" prop="fhsj">
-          <el-date-picker
-            clearable
-            size="small"
-            style="width: 200px"
-            v-model="form.fhsj"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="选择回复时间"
-          ></el-date-picker>
-        </el-form-item>
-        <el-form-item label="园长指示" prop="yzzs">
-          <el-input v-model="form.yzzs" type="textarea" placeholder="请输入内容" />
-        </el-form-item>
-        <el-form-item label="体验结果
-            0不入园
-            1入园" prop="tyjg">
-          <el-input v-model="form.tyjg" placeholder="请输入体验结果
-            0不入园
-            1入园" />
-        </el-form-item>
-        <el-form-item label="入园时间" prop="rysj">
-          <el-date-picker
-            clearable
-            size="small"
-            style="width: 200px"
-            v-model="form.rysj"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="选择入园时间"
-          ></el-date-picker>
-        </el-form-item>
-      </el-form>
+    <el-dialog :title="title" :visible.sync="open" width="800px" append-to-body>
+      <el-row :gutter="15">
+        <el-form ref="form" :model="form" :rules="rules" label-width="120px">
+          <el-col :span="12">
+            <el-form-item label="家长姓名" prop="jzxm">
+              <el-input v-model="form.jzxm" placeholder="请输入家长姓名" disabled="true" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="联系方式" prop="lxfs">
+              <el-input v-model="form.lxfs" placeholder="请输入联系方式" disabled="true" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="幼儿姓名" prop="yexm">
+              <el-input v-model="form.yexm" placeholder="请输入幼儿姓名" disabled="true" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="出生日期" prop="csrq">
+              <el-date-picker
+                clearable
+                size="small"
+                style="width: 200px"
+                v-model="form.csrq"
+                type="date"
+                value-format="yyyy-MM-dd"
+                placeholder="选择幼儿出生日期"
+                disabled="true"
+              ></el-date-picker>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="拟入园时间" prop="nrysj">
+              <el-date-picker
+                clearable
+                size="small"
+                style="width: 200px"
+                v-model="form.nrysj"
+                type="date"
+                value-format="yyyy-MM-dd"
+                placeholder="选择拟入园时间"
+                disabled="true"
+              ></el-date-picker>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="申请体验时间" prop="sqtysj">
+              <el-date-picker
+                clearable
+                size="small"
+                style="width: 200px"
+                v-model="form.sqtysj"
+                type="date"
+                value-format="yyyy-MM-dd"
+                placeholder="选择申请体验时间"
+                disabled="true"
+              ></el-date-picker>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="上午或下午" prop="swxw">
+              <el-select v-model="form.swxw" placeholder="请选择" disabled="true">
+                <el-option
+                  v-for="dict in swxwOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                ></el-option>
+              </el-select>
+              <el-input v-model="form.schoolid" v-if="false" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="是否回复" prop="sfhf">
+              <el-radio-group v-model="form.sfhf">
+                <el-radio
+                  v-for="dict in ynOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictValue"
+                >{{dict.dictLabel}}</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="回复内容" prop="hfrn">
+              <el-input v-model="form.hfrn" type="textarea" placeholder="请输入内容" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="园长指示" prop="yzzs">
+              <el-input v-model="form.yzzs" type="textarea" placeholder="请输入内容" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="体验结果" prop="tyjg">
+              <el-select v-model="form.tyjg" placeholder="请选择">
+                <el-option
+                  v-for="dict in tyjgOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="入园时间" prop="rysj">
+              <el-date-picker
+                clearable
+                size="small"
+                style="width: 200px"
+                v-model="form.rysj"
+                type="date"
+                value-format="yyyy-MM-dd"
+                placeholder="选择入园时间"
+              ></el-date-picker>
+            </el-form-item>
+          </el-col>
+        </el-form>
+      </el-row>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
@@ -245,10 +252,15 @@ import {
   exportExperience,
 } from "@/api/benyi/experience";
 
+import { getUserProfile } from "@/api/system/user";
+
+import Clipboard from "clipboard";
+
 export default {
   name: "Experience",
   data() {
     return {
+      inviteCode: "",
       // 遮罩层
       loading: true,
       // 选中数组
@@ -261,6 +273,10 @@ export default {
       total: 0,
       // 入班体验申请表格数据
       experienceList: [],
+      //字典翻译
+      swxwOptions: [],
+      ynOptions: [],
+      tyjgOptions: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -288,13 +304,78 @@ export default {
       // 表单参数
       form: {},
       // 表单校验
-      rules: {},
+      rules: {
+        jzxm: [
+          { required: true, message: "家长姓名不能为空", trigger: "blur" },
+        ],
+        yexm: [
+          { required: true, message: "幼儿姓名不能为空", trigger: "blur" },
+        ],
+        csrq: [
+          { required: true, message: "幼儿出生日期不能为空", trigger: "blur" },
+        ],
+        lxfs: [
+          {
+            required: true,
+            pattern: /^1[3|4|5|6|7|8|9][0-9]\d{8}$/,
+            message: "请输入正确的手机号码",
+            trigger: "blur",
+          },
+        ],
+        nrysj: [
+          { required: true, message: "拟入园时间不能为空", trigger: "blur" },
+        ],
+        sqtysj: [
+          { required: true, message: "申请体验时间不能为空", trigger: "blur" },
+        ],
+        swxw: [
+          { required: true, message: "下午或下午不能为空", trigger: "blur" },
+        ],
+        hfrn: [
+          { required: true, message: "回复内容不能为空", trigger: "blur" },
+        ],
+        yzzs: [
+          { required: true, message: "园长指示不能为空", trigger: "blur" },
+        ],
+      },
     };
   },
   created() {
     this.getList();
+    this.getUser();
+    this.getDicts("sys_dm_swxw").then((response) => {
+      this.swxwOptions = response.data;
+    });
+    this.getDicts("sys_yes_no").then((response) => {
+      this.ynOptions = response.data;
+    });
+    this.getDicts("sys_dm_tyjg").then((response) => {
+      this.tyjgOptions = response.data;
+    });
   },
   methods: {
+    getUser() {
+      getUserProfile().then((response) => {
+        var domain = window.location.host;
+        console.log(domain);
+        //this.user = response.data;
+        this.inviteCode =
+          response.data.dept.deptName +
+          "入班半日体验申请表 " +
+          "http://" +
+          domain +
+          "/experience/choose/" +
+          response.data.dept.deptId;
+      });
+    },
+    // 字典翻译
+    ynFormat(row, column) {
+      return this.selectDictLabel(this.ynOptions, row.sfhf);
+    },
+    // 字典翻译
+    swxwFormat(row, column) {
+      return this.selectDictLabel(this.swxwOptions, row.swxw);
+    },
     /** 查询入班体验申请列表 */
     getList() {
       this.loading = true;
@@ -354,6 +435,25 @@ export default {
       this.open = true;
       this.title = "添加入班体验申请";
     },
+    copy(e, text) {
+      const clipboard = new Clipboard(e.target, { text: () => text });
+      clipboard.on("success", (e) => {
+        this.msgSuccess("复制成功");
+        // 释放内存
+        clipboard.off("error");
+        clipboard.off("success");
+        clipboard.destroy();
+      });
+      clipboard.on("error", (e) => {
+        // 不支持复制
+        this.msgError("手机权限不支持复制功能");
+        // 释放内存
+        clipboard.off("error");
+        clipboard.off("success");
+        clipboard.destroy();
+      });
+      clipboard.onClick(e);
+    },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
@@ -362,6 +462,15 @@ export default {
         this.form = response.data;
         this.open = true;
         this.title = "修改入班体验申请";
+        this.form.sfhf = "Y";
+        (this.form.hfrn =
+          "家长你好，非常欢迎你带孩子来园入班进行半日体验。我已经按照你所申请入班体验的时间，在本园XX班做了安排。请你在" +
+          response.data.sqtysj +
+          "(" +
+          this.swxwFormat(response.data) +
+          ")" +
+          "开始进班体验。小一班班长章一梦老师将联系你安排具体事宜，并给你一份半日体验计划表。祝你体验愉快！"),
+          (this.form.yzzs = "请XX班按此预约时间做准备。");
       });
     },
     /** 提交按钮 */
@@ -408,7 +517,7 @@ export default {
           this.msgSuccess("删除成功");
         })
         .catch(function () {});
-    }
+    },
   },
 };
 </script>

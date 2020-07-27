@@ -17,10 +17,19 @@ export function getExperience(id) {
   })
 }
 
+// 查询入班体验申请详细
+export function getExperience_query(query) {
+  return request({
+    url: '/benyi/experience/getInfo',
+    method: 'get',
+    params: query
+  })
+}
+
 // 新增入班体验申请
 export function addExperience(data) {
   return request({
-    url: '/benyi/experience',
+    url: '/benyi/experience/add',
     method: 'post',
     data: data
   })

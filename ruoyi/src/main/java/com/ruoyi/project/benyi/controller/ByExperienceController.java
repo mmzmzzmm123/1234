@@ -2,6 +2,8 @@ package com.ruoyi.project.benyi.controller;
 
 import java.util.List;
 
+import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.project.common.SchoolCommon;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,6 +34,8 @@ import com.ruoyi.framework.web.page.TableDataInfo;
 public class ByExperienceController extends BaseController {
     @Autowired
     private IByExperienceService byExperienceService;
+    @Autowired
+    private SchoolCommon schoolCommon;
 
     /**
      * 查询入班体验申请列表
@@ -40,6 +44,7 @@ public class ByExperienceController extends BaseController {
     @GetMapping("/list")
     public TableDataInfo list(ByExperience byExperience) {
         startPage();
+        byExperience.setSchoolid(SecurityUtils.getLoginUser().getUser().getDept().getDeptId());
         List<ByExperience> list = byExperienceService.selectByExperienceList(byExperience);
         return getDataTable(list);
     }
@@ -66,11 +71,30 @@ public class ByExperienceController extends BaseController {
     }
 
     /**
+     * 获取入班体验申请详细信息
+     */
+    @GetMapping("/getInfo")
+    public AjaxResult getInfo_query(ByExperience byExperience) {
+        if(schoolCommon.isStringEmpty(byExperience.getYexm())){
+            return AjaxResult.error("请输入幼儿姓名");
+        }
+        if(schoolCommon.isStringEmpty(byExperience.getLxfs())){
+            return AjaxResult.error("请输入家长联系方式");
+        }
+
+        List<ByExperience> list = byExperienceService.selectByExperienceList(byExperience);
+        if (list == null || list.size() == 0) {
+            return AjaxResult.error("未找到该幼儿的半日入园体验信息");
+        }
+        return AjaxResult.success(list.get(0));
+    }
+
+    /**
      * 新增入班体验申请
      */
-    @PreAuthorize("@ss.hasPermi('benyi:experience:add')")
+//    @PreAuthorize("@ss.hasPermi('benyi:experience:add')")
     @Log(title = "入班体验申请", businessType = BusinessType.INSERT)
-    @PostMapping
+    @PostMapping("/add")
     public AjaxResult add(@RequestBody ByExperience byExperience) {
         return toAjax(byExperienceService.insertByExperience(byExperience));
     }
