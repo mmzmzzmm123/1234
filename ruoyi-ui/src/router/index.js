@@ -54,22 +54,24 @@ export const constantRoutes = [{
     hidden: true
   },
   {
-    path: '/experience/choose/:id(\\d+)',
-    component: () =>
-      import('@/views/benyi/experience/choose'),
-    hidden: true
-  },
-  {
     path: '/experience/apply/:id(\\d+)',
     component: () =>
-      import('@/views/benyi/experience/apply'),
-    hidden: true
-  },
-  {
-    path: '/experience/result/:id(\\d+)',
-    component: () =>
-      import('@/views/benyi/experience/result'),
-    hidden: true
+      import('@/views/benyi/experience/choose'),
+    hidden: true,
+    children: [
+      {
+        path: '/experience/apply/:id(\\d+)',
+        component: () =>
+          import('@/views/benyi/experience/apply'),
+        hidden: true
+      },
+      {
+        path: '/experience/result/:id(\\d+)',
+        component: () =>
+          import('@/views/benyi/experience/result'),
+        hidden: true
+      }
+    ]
   },
   {
     path: '',

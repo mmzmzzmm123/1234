@@ -18,7 +18,6 @@
           <el-date-picker
             clearable
             size="small"
-            style="width: 200px"
             v-model="form.csrq"
             type="date"
             value-format="yyyy-MM-dd"
@@ -29,7 +28,6 @@
           <el-date-picker
             clearable
             size="small"
-            style="width: 200px"
             v-model="form.nrysj"
             type="date"
             value-format="yyyy-MM-dd"
@@ -43,7 +41,6 @@
                 clearable
                 size="small"
                 v-model="form.sqtysj"
-                style="width: 200px"
                 type="date"
                 value-format="yyyy-MM-dd"
                 placeholder="申请体验时间"
@@ -63,7 +60,7 @@
       </el-form>
       <div class="btns">
         <el-button class="btn" type="primary" @click="submitForm">确 定</el-button>
-        <el-button class="btn" @click="cancel">返 回</el-button>
+        <el-button class="btn" @click="reset">重 置</el-button>
       </div>
     </div>
   </div>
@@ -156,7 +153,7 @@ export default {
 
 <style lang="scss">
 .apply-input {
-  padding-top: 30px;
+  padding-top: 60px;
   p {
     margin: 0;
   }
@@ -166,6 +163,7 @@ export default {
   }
   .info {
     text-align: center;
+    font-size: 14px;
   }
   .apply-form {
     width: 500px;
@@ -182,18 +180,21 @@ export default {
   .come-txt {
     line-height: 22px;
     text-indent: 2em;
+    font-size: 14px;
   }
   .thanks-top {
     padding: 8px 0 8px 0;
     text-align: right;
+    font-size: 14px;
   }
   .thanks {
     text-align: right;
+    font-size: 14px;
   }
 }
 @media screen and (max-width: 768.89px) {
   .apply-input {
-    padding: 30px 10px 0;
+    padding: 60px 10px 30px;
     .apply-form {
       width: 100%;
     }

@@ -1,5 +1,5 @@
- <template>
-  <div class="app-container">
+<template>
+  <div class="result-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
       <el-form-item label="幼儿姓名" prop="yexm">
         <el-input v-model="queryParams.yexm" placeholder="请输入幼儿姓名" clearable size="small" />
@@ -9,97 +9,86 @@
       </el-form-item>
       <el-form-item>
         <el-button type="primary" size="mini" @click="handleQuery">查询</el-button>
-        <el-button type="primary" size="mini" @click="cancel">返回</el-button>
+        <el-button size="mini" @click="cancel">重置</el-button>
       </el-form-item>
     </el-form>
-    <div v-show="hide">
-      <h2>入班半日体验申请表</h2>
-      <el-row :gutter="15">
-        <el-form ref="form" :model="form" label-width="80px">
-          <el-col :span="12">
-            <el-form-item label="家长姓名" prop="jzxm">
-              <el-input v-model="form.jzxm" placeholder="请输入家长姓名" :disabled="hide" />
-              <el-input v-model="form.schoolid" v-if="false" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="联系方式" prop="lxfs">
-              <el-input v-model="form.lxfs" placeholder="请输入联系方式" :disabled="hide" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="幼儿姓名" prop="yexm">
-              <el-input v-model="form.yexm" placeholder="请输入幼儿姓名" :disabled="hide" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="幼儿出生日期" prop="csrq">
+    <div class="main" v-show="hide">
+      <h2 class="title">体验申请查询结果</h2>
+      <div class="result-info">
+        <h3 class="title">园长答复</h3>
+        <div class="info">
+          <el-alert title="通过申请" type="success" description="hfrn" :closable="false" show-icon></el-alert>
+          <el-alert
+            title="未通过申请"
+            type="error"
+            description="文字说明文字说明文字说明文字说明文字说明文字说明"
+            :closable="false"
+            show-icon
+          ></el-alert>
+        </div>
+      </div>
+      <div class="result-info">
+        <h3 class="title">园长指示</h3>
+        <div class="info">
+          <el-alert title="yzzs" :closable="false" type="info"></el-alert>
+        </div>
+      </div>
+      <div class="result-form">
+        <p class="form-title">提交信息核对</p>
+        <el-form class="form" ref="form" :model="form" label-width="110px">
+          <el-form-item label="家长姓名" prop="jzxm">
+            <el-input v-model="form.jzxm" placeholder="请输入家长姓名" :disabled="hide" />
+            <el-input v-model="form.schoolid" v-if="false" />
+          </el-form-item>
+          <el-form-item label="联系方式" prop="lxfs">
+            <el-input v-model="form.lxfs" placeholder="请输入联系方式" :disabled="hide" />
+          </el-form-item>
+          <el-form-item label="幼儿姓名" prop="yexm">
+            <el-input v-model="form.yexm" placeholder="请输入幼儿姓名" :disabled="hide" />
+          </el-form-item>
+          <el-form-item label="幼儿出生日期" prop="csrq">
+            <el-date-picker
+              clearable
+              size="small"
+              v-model="form.csrq"
+              type="date"
+              value-format="yyyy-MM-dd"
+              placeholder="选择幼儿出生日期"
+              :disabled="hide"
+            ></el-date-picker>
+          </el-form-item>
+          <el-form-item label="拟入园时间" prop="nrysj">
+            <el-date-picker
+              clearable
+              size="small"
+              v-model="form.nrysj"
+              type="date"
+              value-format="yyyy-MM-dd"
+              placeholder="选择拟入园时间"
+              :disabled="hide"
+            ></el-date-picker>
+          </el-form-item>
+          <div>
+            <el-form-item label="预约体验时间" prop="sqtysj">
               <el-date-picker
                 clearable
                 size="small"
-                style="width: 200px"
-                v-model="form.csrq"
+                v-model="form.sqtysj"
                 type="date"
                 value-format="yyyy-MM-dd"
-                placeholder="选择幼儿出生日期"
+                placeholder="选择申请体验时间"
                 :disabled="hide"
               ></el-date-picker>
             </el-form-item>
-          </el-col>
-
-          <el-col :span="12">
-            <el-form-item label="拟入园时间" prop="nrysj">
-              <el-date-picker
-                clearable
-                size="small"
-                style="width: 200px"
-                v-model="form.nrysj"
-                type="date"
-                value-format="yyyy-MM-dd"
-                placeholder="选择拟入园时间"
-                :disabled="hide"
-              ></el-date-picker>
+            <el-form-item prop="swxw">
+              <el-radio-group v-model="form.swxw" :disabled="hide">
+                <el-radio label="1">上午</el-radio>
+                <el-radio label="2">下午</el-radio>
+              </el-radio-group>
             </el-form-item>
-          </el-col>
-          <el-col :span="24">
-            <el-collapse v-model="activeNames">
-              <el-collapse-item title="园长你好" name="1">
-                <div>
-                  为了更好地了解贵园，我申请来贵园进行入班半日体验。我预约
-                  <el-form-item prop="sqtysj">
-                    <el-date-picker
-                      clearable
-                      size="small"
-                      v-model="form.sqtysj"
-                      type="date"
-                      value-format="yyyy-MM-dd"
-                      placeholder="选择申请体验时间"
-                      :disabled="hide"
-                    ></el-date-picker>
-                  </el-form-item>
-                  <el-form-item prop="swxw">
-                    <el-radio-group v-model="form.swxw" :disabled="hide">
-                      <el-radio label="1">上午</el-radio>
-                      <el-radio label="2">下午</el-radio>
-                    </el-radio-group>
-                  </el-form-item>来园入班体验。请园长为我安排与我孩子年龄段相适应的班级。届时，我将与我的孩子准时入班进行半日体验。
-                </div>
-                <div>请园长批准我的申请为盼。谢谢！</div>
-              </el-collapse-item>
-            </el-collapse>
-          </el-col>
-          <el-col :span="24" v-show="ishf">
-            <el-collapse v-model="activeNames">
-              <el-collapse-item title="园长答复" name="2">{{hfrn}}</el-collapse-item>
-            </el-collapse>
-          </el-col>
-          <el-col :span="24" v-show="ishf">
-            <el-collapse v-model="activeNames">
-              <el-collapse-item title="园长指示" name="3">{{yzzs}}</el-collapse-item>
-            </el-collapse>
-          </el-col>
+          </div>
         </el-form>
-      </el-row>
+      </div>
     </div>
   </div>
 </template>
@@ -111,11 +100,10 @@ export default {
   name: "result",
   data() {
     return {
-      hide: false,
-      ishf: false,
-      hfrn: "",
-      yzzs: "",
-      activeNames: ["1", "2", "3"],
+      hide: true,
+      ishf: true,
+      hfrn: "sddfsdfsdffds",
+      yzzs: "sfdsfdsfdsf",
       // 查询参数
       queryParams: {
         yexm: undefined,
@@ -180,8 +168,78 @@ export default {
     },
     // 返回按钮
     cancel() {
-      this.$router.go(-1);
+      this.queryParams = {
+        yexm: undefined,
+        lxfs: undefined,
+        schoolId: undefined,
+      };
     },
   },
 };
 </script>
+<style lang="scss" scoped>
+.result-container {
+  padding: 60px 15px 0;
+  .main {
+    padding-top: 10px;
+    border-top: 1px solid #eee;
+    .title {
+      text-align: center;
+      font-size: 18px;
+    }
+    .result-form {
+      .form-title {
+        display: flex;
+        align-items: center;
+        text-align: left;
+        text-align: left;
+        font-size: 14px;
+        font-weight: 700;
+        &::before {
+          content: "";
+          width: 3px;
+          height: 14px;
+          background: #0a56ca;
+          display: inline-block;
+          margin: 1px 5px 0 0;
+        }
+      }
+      .form {
+        width: 500px;
+        margin: 30px auto 0;
+      }
+    }
+    .result-info {
+      .title {
+        display: flex;
+        align-items: center;
+        text-align: left;
+        font-size: 14px;
+        font-weight: 700;
+        &::before {
+          content: "";
+          width: 3px;
+          height: 14px;
+          background: #0a56ca;
+          display: inline-block;
+          margin: 1px 5px 0 0;
+        }
+      }
+      .info {
+        padding: 0 20px;
+      }
+    }
+  }
+}
+@media screen and (max-width: 768.89px) {
+  .result-container {
+    .main {
+      .result-form {
+        .form {
+          width: 100%;
+        }
+      }
+    }
+  }
+}
+</style>
