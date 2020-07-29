@@ -364,7 +364,7 @@ export default {
           "入班半日体验申请表 " +
           "http://" +
           domain +
-          "/experience/choose/" +
+          "/experience/apply/" +
           response.data.dept.deptId;
       });
     },

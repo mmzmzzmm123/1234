@@ -17,20 +17,13 @@
       <div class="result-info">
         <h3 class="title">园长答复</h3>
         <div class="info">
-          <el-alert title="通过申请" type="success" description="hfrn" :closable="false" show-icon></el-alert>
-          <el-alert
-            title="未通过申请"
-            type="error"
-            description="文字说明文字说明文字说明文字说明文字说明文字说明"
-            :closable="false"
-            show-icon
-          ></el-alert>
+          <el-alert :title="hfrn" type="success" :closable="false" show-icon></el-alert>
         </div>
       </div>
       <div class="result-info">
         <h3 class="title">园长指示</h3>
         <div class="info">
-          <el-alert title="yzzs" :closable="false" type="info"></el-alert>
+          <el-alert :title="yzzs" :closable="false" type="info"></el-alert>
         </div>
       </div>
       <div class="result-form">
@@ -100,10 +93,10 @@ export default {
   name: "result",
   data() {
     return {
-      hide: true,
+      hide: false,
       ishf: true,
-      hfrn: "sddfsdfsdffds",
-      yzzs: "sfdsfdsfdsf",
+      hfrn: "",
+      yzzs: "",
       // 查询参数
       queryParams: {
         yexm: undefined,
@@ -135,14 +128,12 @@ export default {
           this.hide = true;
           this.form = response.data;
           if (response.data.sfhf == "Y") {
-            this.ishf = true;
+            this.ishf = false;
             this.hfrn = response.data.hfrn;
             this.yzzs = response.data.yzzs;
           } else {
-            this.ishf = false;
+            this.ishf = true;
           }
-        } else {
-          this.hide = false;
         }
       });
     },

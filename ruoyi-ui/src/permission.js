@@ -66,7 +66,7 @@ router.beforeEach((to, from, next) => {
   } else {
     //console.log(whiteList.indexOf(to.path));
     // 没有token
-    if (whiteList.indexOf(to.path) !== -1 ||to.path.indexOf("/experience") != -1) {
+    if (whiteList.indexOf(to.path) !== -1 ||to.path.indexOf("/experience/apply/") != -1||to.path.indexOf("/experience/result/") != -1) {
       // 在免登录白名单，直接进入
       next()
     } else {

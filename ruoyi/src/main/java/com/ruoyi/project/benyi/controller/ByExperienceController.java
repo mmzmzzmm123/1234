@@ -75,10 +75,10 @@ public class ByExperienceController extends BaseController {
      */
     @GetMapping("/getInfo")
     public AjaxResult getInfo_query(ByExperience byExperience) {
-        if(schoolCommon.isStringEmpty(byExperience.getYexm())){
+        if (schoolCommon.isStringEmpty(byExperience.getYexm())) {
             return AjaxResult.error("请输入幼儿姓名");
         }
-        if(schoolCommon.isStringEmpty(byExperience.getLxfs())){
+        if (schoolCommon.isStringEmpty(byExperience.getLxfs())) {
             return AjaxResult.error("请输入家长联系方式");
         }
 
@@ -96,6 +96,17 @@ public class ByExperienceController extends BaseController {
     @Log(title = "入班体验申请", businessType = BusinessType.INSERT)
     @PostMapping("/add")
     public AjaxResult add(@RequestBody ByExperience byExperience) {
+        //首先判断该幼儿是否已提交申请
+        ByExperience byExperienceNew = new ByExperience();
+        byExperienceNew.setYexm(byExperience.getYexm());
+        byExperienceNew.setLxfs(byExperience.getLxfs());
+        byExperienceNew.setSchoolid(byExperience.getSchoolid());
+
+        List<ByExperience> list = byExperienceService.selectByExperienceList(byExperienceNew);
+        if (list != null && list.size() > 0) {
+            return AjaxResult.error("该幼儿已在当前幼儿园申请，不可重复提交");
+        }
+
         return toAjax(byExperienceService.insertByExperience(byExperience));
     }
 
