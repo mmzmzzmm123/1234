@@ -65,7 +65,7 @@ public class DownloadOriginalResidenceSaleClosingCaseServiceImpl {
         running(tableRoute, originalResidenceSaleClosingCases);
         after(tableRoute);
 
-        copy2UVData(tableRoute, remoteTableRoute);
+//        copy2UVData(tableRoute, remoteTableRoute);
     }
 
 

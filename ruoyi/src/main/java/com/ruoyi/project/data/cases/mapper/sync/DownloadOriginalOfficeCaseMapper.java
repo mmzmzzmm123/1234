@@ -2,6 +2,7 @@ package com.ruoyi.project.data.cases.mapper.sync;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.ruoyi.project.data.cases.domain.OriginalOfficeCase;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.Date;
 import java.util.List;
@@ -20,5 +21,5 @@ public interface DownloadOriginalOfficeCaseMapper {
      * @param endDate
      * @return
      */
-    List<OriginalOfficeCase> download(Date startDate, Date endDate);
+    List<OriginalOfficeCase> download(@Param("startDate") Date startDate,@Param("endDate") Date endDate);
 }
