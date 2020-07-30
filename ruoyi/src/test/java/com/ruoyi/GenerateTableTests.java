@@ -82,7 +82,7 @@ public class GenerateTableTests {
 
     @Test
     public void generateBatchInsertSqL() {
-        Class targetClass = OriginalResidenceRentClosingCase.class;
+        Class targetClass = OtherResidenceRentClosingCase .class;
 
         List<Field> fieldList = new ArrayList<>();
         while (targetClass != null) {
@@ -223,6 +223,10 @@ public class GenerateTableTests {
             System.out.println(") as t;\n");
         }
 
+    }
+    @Test
+    public void printUUID(){
+        System.out.println(UUID.randomUUID().toString().replace("-",""));
     }
 
 }

@@ -1,10 +1,13 @@
 package com.ruoyi.project.data.cases.service.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.LoadUtil;
 import com.ruoyi.project.data.cases.domain.OriginalResidenceRentClosingCase;
+import com.ruoyi.project.data.cases.domain.OtherResidenceRentClosingCase;
 import com.ruoyi.project.data.cases.mapper.OriginalResidenceRentClosingCaseMapper;
 import com.ruoyi.project.data.cases.mapper.sync.DownloadOriginalResidenceRentClosingCaseMapper;
+import com.ruoyi.project.data.cases.mapper.sync.DownloadOtherResidenceRentClosingCaseMapper;
 import com.ruoyi.project.data.cases.service.IOriginalResidenceRentClosingCaseService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +34,8 @@ public class OriginalResidenceRentClosingCaseServiceImpl implements IOriginalRes
     @Autowired
     private DownloadOriginalResidenceRentClosingCaseMapper downloadOriginalResidenceRentClosingCaseMapper;
     @Autowired
+    private DownloadOtherResidenceRentClosingCaseMapper downloadOtherResidenceRentClosingCaseMapper;
+    @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -38,26 +43,19 @@ public class OriginalResidenceRentClosingCaseServiceImpl implements IOriginalRes
     /**
      *
      */
-    @Scheduled(cron = "0 0 15 29 * ?")
     @Override
     public void pullData() {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(new Date());
-        Integer targetTableRoute = new Integer(String.format("%d%02d", calendar.get(Calendar.YEAR),
-                calendar.get(Calendar.MONTH)));
-        Integer lastYearMonth = new Integer(String.format("%d%02d", calendar.get(Calendar.YEAR),
-                calendar.get(Calendar.MONTH) + 1));
-        calendar.add(Calendar.MONTH, 1);
-        Integer computeTableRoute = new Integer(String.format("%d%02d", calendar.get(Calendar.YEAR),
-                calendar.get(Calendar.MONTH) + 1));
-
-//        targetTableRoute = 202005;
-//        computeTableRoute = 202007;
+        Integer targetTableRoute = DateUtils.getLastYearMonth();
+        Integer lastYearMonth = DateUtils.getYearMonth();
+        Integer computeTableRoute = DateUtils.getNextYearMonth();
 
         prepare(computeTableRoute);
         List<OriginalResidenceRentClosingCase> list =
                 downloadOriginalResidenceRentClosingCaseMapper.download(targetTableRoute);
-        running(computeTableRoute, list);
+
+        List<OtherResidenceRentClosingCase> otherResidenceRentClosingCaseList =
+                downloadOtherResidenceRentClosingCaseMapper.download(targetTableRoute);
+        running(computeTableRoute, list, otherResidenceRentClosingCaseList);
         after(computeTableRoute, lastYearMonth);
     }
 
@@ -68,6 +66,8 @@ public class OriginalResidenceRentClosingCaseServiceImpl implements IOriginalRes
      */
     public void prepare(Integer computeTableRoute) {
         originalResidenceRentClosingCaseMapper.createRawTable(computeTableRoute);
+        // 新增住宅租赁成交案例
+        originalResidenceRentClosingCaseMapper.createOtherRawTable(computeTableRoute);
         originalResidenceRentClosingCaseMapper.createCleanTable(computeTableRoute);
         originalResidenceRentClosingCaseMapper.createAssembleTable(computeTableRoute);
         originalResidenceRentClosingCaseMapper.createComputeTable(computeTableRoute);
@@ -81,7 +81,8 @@ public class OriginalResidenceRentClosingCaseServiceImpl implements IOriginalRes
      * @param computeTableRoute
      * @param list
      */
-    public void running(Integer computeTableRoute, List<OriginalResidenceRentClosingCase> list) {
+    public void running(Integer computeTableRoute, List<OriginalResidenceRentClosingCase> list,
+                        List<OtherResidenceRentClosingCase> otherResidenceRentClosingCaseList) {
         SqlParameterSource[] batchParams = SqlParameterSourceUtils.createBatch(list.toArray());
         int[] updateCounts = namedParameterJdbcTemplate.batchUpdate("insert into dbo" +
                         ".ODS_HOUSINGCASEDEAL_RENT_" + computeTableRoute + "_RAW(case_id, case_contract_no, " +
@@ -92,6 +93,18 @@ public class OriginalResidenceRentClosingCaseServiceImpl implements IOriginalRes
                         ":caseRentPrice,:caseTotalFloor,:caseArea,:caseToward,:caseApartmentLayout,:caseDecoration," +
                         ":cleanCommunityId,:cleanBuildingId);",
                 batchParams);
+
+        batchParams = SqlParameterSourceUtils.createBatch(otherResidenceRentClosingCaseList.toArray());
+        updateCounts = namedParameterJdbcTemplate.batchUpdate("insert into dbo" +
+                        ".TEMP_ODS_HOUSINGCASEDEAL_RENT_" + computeTableRoute + "_RAW(case_id,case_district," +
+                        "case_community_name,case_address,case_area,case_closing_date,case_total_price," +
+                        "case_decoration,case_total_floor,case_current_floor,case_toward,case_floor,uv_community_id," +
+                        "uv_building_id) " +
+                        "values (:caseId,:caseDistrict,:caseCommunityName,:caseAddress,:caseArea,:closingDate," +
+                        ":caseTotalPrice,:caseDecoration,:caseTotalFloor,:caseCurrentFloor,:caseToward,:caseFloor," +
+                        ":uvCommunityId,:uvBuildingId);",
+                batchParams);
+
     }
 
     /**
@@ -104,6 +117,12 @@ public class OriginalResidenceRentClosingCaseServiceImpl implements IOriginalRes
         String rawSql = LoadUtil.loadContent("sql-template/clear_rent_closing_case.sql");
         String sql = rawSql.replace("#yearMonth#", yearMonth.toString());
         jdbcTemplate.update(sql);
+
+        // 其他住宅租赁成交案例
+        rawSql = LoadUtil.loadContent("sql-template/clear_other_rent_closing_case.sql");
+        sql = rawSql.replace("#yearMonth#", yearMonth.toString());
+        jdbcTemplate.update(sql);
+
         // 计算
         rawSql = LoadUtil.loadContent("sql-template/compute_rent_price.sql");
         sql = rawSql.replace("#yearMonth#", yearMonth.toString())

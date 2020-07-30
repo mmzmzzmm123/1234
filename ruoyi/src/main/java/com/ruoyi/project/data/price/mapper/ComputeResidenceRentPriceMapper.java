@@ -18,6 +18,8 @@ public interface ComputeResidenceRentPriceMapper {
 
     /**
      * 查询列表
+     * @param ComputeResidenceRentBasePrice
+     * @return
      */
     List<ComputeResidenceRentBasePrice> selectPageList(ComputeResidenceRentBasePrice ComputeResidenceRentBasePrice);
 

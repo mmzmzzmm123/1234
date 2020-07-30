@@ -1,6 +1,7 @@
 package com.ruoyi.project.data.cases.service.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.ruoyi.common.exception.ComputeDataNotFoundException;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.LoadUtil;
 import com.ruoyi.project.data.cases.domain.OriginalOfficeCase;
@@ -76,6 +77,9 @@ public class OriginalOfficeCaseServiceImpl implements IOriginalOfficeCaseService
 
         // 下载列表
         List<OriginalOfficeCase> downloadList = downloadOriginalOfficeCaseMapper.download(startDate, endDate);
+        if (0 == downloadList.size()) {
+            throw new ComputeDataNotFoundException("办公作价");
+        }
         SqlParameterSource[] batchParams = SqlParameterSourceUtils.createBatch(downloadList.toArray());
         namedParameterJdbcTemplate.batchUpdate("insert into dbo.ODS_OFFICECASELISTED_" + yearMonth.toString() + "_RAW" +
                         "(case_id,url, title,容积率,总价售,均价售, 楼盘名称, 楼盘名称_M, 楼层, 面积, 物业费, 工位数, 地址, 地铁, 发布时间, 房源编号, 百度lng, " +

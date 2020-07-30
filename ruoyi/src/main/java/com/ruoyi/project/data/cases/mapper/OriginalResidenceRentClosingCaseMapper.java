@@ -19,6 +19,14 @@ public interface OriginalResidenceRentClosingCaseMapper {
     int createRawTable(@Param("yearMonth") Integer yearMonth);
 
     /**
+     * 创建其他住宅租赁成交案例
+     *
+     * @param tableRoute
+     * @return
+     */
+    int createOtherRawTable(@Param("yearMonth") Integer tableRoute);
+
+    /**
      * 创建清洗完成之后的表ODS_HOUSINGCASELISTED_LJ_YYYYMM
      *
      * @param yearMonth
@@ -33,8 +41,10 @@ public interface OriginalResidenceRentClosingCaseMapper {
      * @return
      */
     int createAssembleTable(@Param("yearMonth") Integer yearMonth);
+
     /**
      * 作价表
+     *
      * @param yearMonth
      * @return
      */
@@ -42,6 +52,7 @@ public interface OriginalResidenceRentClosingCaseMapper {
 
     /**
      * 人工修正价格表
+     *
      * @param yearMonth
      * @return
      */

@@ -23,7 +23,7 @@
 
     </resultMap>
     <select id="download" resultMap="resultMapping">
-        select top 100 面积
+        select 面积
             ,block
             ,地址
             ,小区名
