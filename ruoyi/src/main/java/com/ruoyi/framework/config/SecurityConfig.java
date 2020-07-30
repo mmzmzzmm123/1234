@@ -104,6 +104,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/druid/**").anonymous()
                 .antMatchers("/benyi/experience/add").anonymous()//半日入园体验申请
                 .antMatchers("/benyi/experience/getInfo**").anonymous()//半日入园体验明细
+                .antMatchers("/benyi/halfdayplan/getInfo/**").anonymous()//半日入园内容
                 // 除上面外的所有请求全部需要鉴权认证
                 .anyRequest().authenticated()
                 .and()

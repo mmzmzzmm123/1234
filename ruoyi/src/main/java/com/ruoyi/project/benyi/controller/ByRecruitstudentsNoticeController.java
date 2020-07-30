@@ -98,7 +98,7 @@ public class ByRecruitstudentsNoticeController extends BaseController {
     }
 
     /**
-     * 删除入园通知书
+     * 复制入园通知书
      */
     @PreAuthorize("@ss.hasPermi('benyi:recruitstudentsnotice:edit')")
     @Log(title = "入园通知书", businessType = BusinessType.INSERT)

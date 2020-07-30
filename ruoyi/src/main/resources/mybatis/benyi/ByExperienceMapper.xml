@@ -21,11 +21,13 @@
         <result property="yzzs" column="yzzs"/>
         <result property="tyjg" column="tyjg"/>
         <result property="rysj" column="rysj"/>
+        <result property="tynrcontent" column="tynrcontent"/>
+        <result property="tynrid" column="tynrid"/>
         <result property="createTime" column="create_time"/>
     </resultMap>
 
     <sql id="selectByExperienceVo">
-        select id, jzxm, yexm, csrq, lxfs, nrysj, sqtysj, swxw, schoolid, sfhf, hfrn, hfuserid, fhsj, yzzs, tyjg, rysj, create_time from by_experience
+        select id, jzxm, yexm, csrq, lxfs, nrysj, sqtysj, swxw, schoolid, sfhf, hfrn, hfuserid, fhsj, yzzs, tyjg, rysj, tynrid,(select title from by_halfdayplan where by_halfdayplan.id=tynrid) tynrcontent, create_time from by_experience
     </sql>
 
     <select id="selectByExperienceList" parameterType="ByExperience" resultMap="ByExperienceResult">
@@ -46,6 +48,7 @@
             <if test="yzzs != null  and yzzs != ''">and yzzs = #{yzzs}</if>
             <if test="tyjg != null  and tyjg != ''">and tyjg = #{tyjg}</if>
             <if test="rysj != null ">and rysj = #{rysj}</if>
+            <if test="tynrid != null ">and tynrid = #{tynrid}</if>
         </where>
         order by create_time desc
     </select>
@@ -74,6 +77,7 @@
             <if test="tyjg != null  and tyjg != ''">tyjg,</if>
             <if test="rysj != null ">rysj,</if>
             <if test="createTime != null ">create_time,</if>
+            <if test="tynrid != null ">tynrid,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="jzxm != null  and jzxm != ''">#{jzxm},</if>
@@ -92,6 +96,7 @@
             <if test="tyjg != null  and tyjg != ''">#{tyjg},</if>
             <if test="rysj != null ">#{rysj},</if>
             <if test="createTime != null ">#{createTime},</if>
+            <if test="tynrid != null ">#{tynrid},</if>
         </trim>
     </insert>
 
@@ -114,6 +119,7 @@
             <if test="tyjg != null  and tyjg != ''">tyjg = #{tyjg},</if>
             <if test="rysj != null ">rysj = #{rysj},</if>
             <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="tynrid != null ">tynrid = #{tynrid},</if>
         </trim>
         where id = #{id}
     </update>

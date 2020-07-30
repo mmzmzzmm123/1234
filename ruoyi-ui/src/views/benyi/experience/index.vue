@@ -36,13 +36,15 @@
 
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
-        <el-button
-          type="primary"
-          icon="el-icon-plus"
-          size="mini"
-          @click="copy($event,inviteCode)"
-          v-hasPermi="['benyi:experience:add']"
-        >一键复制</el-button>
+        <el-tooltip effect="dark" content="点我，可以复制内容发送给家长填报《入园体验申请》呦" placement="top-start">
+          <el-button
+            type="primary"
+            icon="el-icon-plus"
+            size="mini"
+            @click="copy($event,inviteCode)"
+            v-hasPermi="['benyi:experience:add']"
+          >一键复制</el-button>
+        </el-tooltip>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -52,7 +54,7 @@
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['benyi:experience:edit']"
-        >修改</el-button>
+        >回复</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -84,6 +86,7 @@
       </el-table-column>
       <el-table-column label="上午或下午" align="center" prop="swxw" :formatter="swxwFormat" />
       <el-table-column label="是否回复" align="center" prop="sfhf" :formatter="ynFormat" />
+      <el-table-column label="体验内容" align="center" prop="tynrid" :formatter="tynrFormat" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -92,7 +95,7 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['benyi:experience:edit']"
-          >修改</el-button>
+          >回复</el-button>
           <el-button
             size="mini"
             type="text"
@@ -118,17 +121,17 @@
         <el-form ref="form" :model="form" :rules="rules" label-width="120px">
           <el-col :span="12">
             <el-form-item label="家长姓名" prop="jzxm">
-              <el-input v-model="form.jzxm" placeholder="请输入家长姓名" disabled="true" />
+              <el-input v-model="form.jzxm" placeholder="请输入家长姓名" :disabled="true" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="联系方式" prop="lxfs">
-              <el-input v-model="form.lxfs" placeholder="请输入联系方式" disabled="true" />
+              <el-input v-model="form.lxfs" placeholder="请输入联系方式" :disabled="true" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="幼儿姓名" prop="yexm">
-              <el-input v-model="form.yexm" placeholder="请输入幼儿姓名" disabled="true" />
+              <el-input v-model="form.yexm" placeholder="请输入幼儿姓名" :disabled="true" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -141,7 +144,7 @@
                 type="date"
                 value-format="yyyy-MM-dd"
                 placeholder="选择幼儿出生日期"
-                disabled="true"
+                :disabled="true"
               ></el-date-picker>
             </el-form-item>
           </el-col>
@@ -155,7 +158,7 @@
                 type="date"
                 value-format="yyyy-MM-dd"
                 placeholder="选择拟入园时间"
-                disabled="true"
+                :disabled="true"
               ></el-date-picker>
             </el-form-item>
           </el-col>
@@ -169,13 +172,13 @@
                 type="date"
                 value-format="yyyy-MM-dd"
                 placeholder="选择申请体验时间"
-                disabled="true"
+                :disabled="true"
               ></el-date-picker>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="上午或下午" prop="swxw">
-              <el-select v-model="form.swxw" placeholder="请选择" disabled="true">
+              <el-select v-model="form.swxw" placeholder="请选择" :disabled="true">
                 <el-option
                   v-for="dict in swxwOptions"
                   :key="dict.dictValue"
@@ -205,6 +208,18 @@
           <el-col :span="24">
             <el-form-item label="园长指示" prop="yzzs">
               <el-input v-model="form.yzzs" type="textarea" placeholder="请输入内容" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="体验内容" prop="tynrid">
+              <el-select v-model="form.tynrid" placeholder="请选择">
+                <el-option
+                  v-for="dict in tynrOptions"
+                  :key="dict.id"
+                  :label="dict.title"
+                  :value="dict.id"
+                ></el-option>
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -252,6 +267,8 @@ import {
   exportExperience,
 } from "@/api/benyi/experience";
 
+import { listHalfdayplan } from "@/api/benyi/halfdayplan";
+
 import { getUserProfile } from "@/api/system/user";
 
 import Clipboard from "clipboard";
@@ -277,6 +294,7 @@ export default {
       swxwOptions: [],
       ynOptions: [],
       tyjgOptions: [],
+      tynrOptions: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -300,6 +318,7 @@ export default {
         yzzs: undefined,
         tyjg: undefined,
         rysj: undefined,
+        tynrid: undefined,
       },
       // 表单参数
       form: {},
@@ -337,12 +356,16 @@ export default {
         yzzs: [
           { required: true, message: "园长指示不能为空", trigger: "blur" },
         ],
+        tynrid: [
+          { required: true, message: "体验内容不能为空", trigger: "blur" },
+        ],
       },
     };
   },
   created() {
     this.getList();
     this.getUser();
+    this.getTynr();
     this.getDicts("sys_dm_swxw").then((response) => {
       this.swxwOptions = response.data;
     });
@@ -354,10 +377,16 @@ export default {
     });
   },
   methods: {
+    getTynr() {
+      listHalfdayplan(null).then((response) => {
+        //console.log(response.rows);
+        this.tynrOptions = response.rows;
+      });
+    },
     getUser() {
       getUserProfile().then((response) => {
         var domain = window.location.host;
-        console.log(domain);
+        //console.log(domain);
         //this.user = response.data;
         this.inviteCode =
           response.data.dept.deptName +
@@ -367,6 +396,18 @@ export default {
           "/experience/apply/" +
           response.data.dept.deptId;
       });
+    },
+    // 字典翻译
+    tynrFormat(row, column) {
+      var actions = [];
+      var datas = this.tynrOptions;
+      Object.keys(datas).map((key) => {
+        if (datas[key].id == row.tynrid) {
+          actions.push(datas[key].title);
+          return false;
+        }
+      });
+      return actions.join("");
     },
     // 字典翻译
     ynFormat(row, column) {
@@ -409,6 +450,7 @@ export default {
         yzzs: undefined,
         tyjg: undefined,
         rysj: undefined,
+        tynrid: undefined,
         createTime: undefined,
       };
       this.resetForm("form");

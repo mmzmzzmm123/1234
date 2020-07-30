@@ -26,6 +26,13 @@
           <el-alert :title="yzzs" :closable="false" type="info"></el-alert>
         </div>
       </div>
+      <div class="result-info">
+        <h3 class="title">体验内容</h3>
+        <div class="info">
+          <a target="_blank" :href="href_tynr">{{tynrcontent}}</a>
+          <!-- <el-alert :title="tyrnid" :closable="false" type="info"></el-alert> -->
+        </div>
+      </div>
       <div class="result-form">
         <p class="form-title">提交信息核对</p>
         <el-form class="form" ref="form" :model="form" label-width="110px">
@@ -97,6 +104,8 @@ export default {
       ishf: true,
       hfrn: "",
       yzzs: "",
+      tynrcontent: "",
+      href_tynr: "",
       // 查询参数
       queryParams: {
         yexm: undefined,
@@ -109,7 +118,7 @@ export default {
   },
   created() {
     const sid = this.$route.params && this.$route.params.id;
-    this.queryParams.schoolid = sid;
+    this.queryParams.schoolid = sid; 
   },
   methods: {
     // 字典翻译
@@ -131,6 +140,8 @@ export default {
             this.ishf = false;
             this.hfrn = response.data.hfrn;
             this.yzzs = response.data.yzzs;
+            this.href_tynr = "/experience/content/" + response.data.tynrid;
+            this.tynrcontent = response.data.tynrcontent;
           } else {
             this.ishf = true;
           }

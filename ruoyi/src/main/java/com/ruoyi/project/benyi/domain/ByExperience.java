@@ -119,6 +119,14 @@ public class ByExperience extends BaseEntity {
     @Excel(name = "入园时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date rysj;
 
+    /**
+     * 体验内容id
+     */
+    @Excel(name = "体验内容id")
+    private String tynrid;
+
+    private String tynrcontent;
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -247,6 +255,22 @@ public class ByExperience extends BaseEntity {
         return rysj;
     }
 
+    public void setTynrid(String tynrid) {
+        this.tynrid = tynrid;
+    }
+
+    public String getTynrid() {
+        return tynrid;
+    }
+
+    public void setTynrcontent(String tynrcontent) {
+        this.tynrcontent = tynrcontent;
+    }
+
+    public String getTynrcontent() {
+        return tynrcontent;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
@@ -267,6 +291,8 @@ public class ByExperience extends BaseEntity {
                 .append("tyjg", getTyjg())
                 .append("rysj", getRysj())
                 .append("createTime", getCreateTime())
+                .append("tynrid", getTynrid())
+                .append("tynrcontent", getTynrcontent())
                 .toString();
     }
 }

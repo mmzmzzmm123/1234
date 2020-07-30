@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.benyi.mapper.ByHalfdayplanMapper">
+
+    <resultMap type="ByHalfdayplan" id="ByHalfdayplanResult">
+        <result property="id" column="id"/>
+        <result property="schoolid" column="schoolid"/>
+        <result property="classid" column="classid"/>
+        <result property="title" column="title"/>
+        <result property="content" column="content"/>
+        <result property="createTime" column="create_time"/>
+        <result property="type" column="type"/>
+    </resultMap>
+
+    <sql id="selectByHalfdayplanVo">
+        select id, schoolid, classid, title, content, create_time, type from by_halfdayplan
+    </sql>
+
+    <select id="selectByHalfdayplanList" parameterType="ByHalfdayplan" resultMap="ByHalfdayplanResult">
+        <include refid="selectByHalfdayplanVo"/>
+        where type='1'
+        <if test="schoolid != null ">or schoolid = #{schoolid}</if>
+        <if test="classid != null  and classid != ''">and classid = #{classid}</if>
+        <if test="title != null  and title != ''">and title = #{title}</if>
+        <if test="content != null  and content != ''">and content = #{content}</if>
+        <if test="type != null  and type != ''">and type = #{type}</if>
+
+        order by type
+    </select>
+
+    <select id="selectByHalfdayplanById" parameterType="String" resultMap="ByHalfdayplanResult">
+        <include refid="selectByHalfdayplanVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertByHalfdayplan" parameterType="ByHalfdayplan" useGeneratedKeys="true" keyProperty="id">
+        insert into by_halfdayplan
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null  and id != ''">id,</if>
+            <if test="schoolid != null ">schoolid,</if>
+            <if test="classid != null  and classid != ''">classid,</if>
+            <if test="title != null  and title != ''">title,</if>
+            <if test="content != null  and content != ''">content,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="type != null  and type != ''">type,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null  and id != ''">#{id},</if>
+            <if test="schoolid != null ">#{schoolid},</if>
+            <if test="classid != null  and classid != ''">#{classid},</if>
+            <if test="title != null  and title != ''">#{title},</if>
+            <if test="content != null  and content != ''">#{content},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="type != null  and type != ''">#{type},</if>
+        </trim>
+    </insert>
+
+    <update id="updateByHalfdayplan" parameterType="ByHalfdayplan">
+        update by_halfdayplan
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="schoolid != null ">schoolid = #{schoolid},</if>
+            <if test="classid != null  and classid != ''">classid = #{classid},</if>
+            <if test="title != null  and title != ''">title = #{title},</if>
+            <if test="content != null  and content != ''">content = #{content},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="type != null  and type != ''">type = #{type},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteByHalfdayplanById" parameterType="String">
+        delete from by_halfdayplan where id = #{id}
+    </delete>
+
+    <delete id="deleteByHalfdayplanByIds" parameterType="String">
+        delete from by_halfdayplan where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

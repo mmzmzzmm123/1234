@@ -54,12 +54,17 @@ export const constantRoutes = [{
     hidden: true
   },
   {
+    path: '/experience/content/:id',
+    component: () =>
+      import('@/views/benyi/experience/content'),
+    hidden: true
+  },
+  {
     path: '/experience/apply/:id(\\d+)',
     component: () =>
       import('@/views/benyi/experience/choose'),
     hidden: true,
-    children: [
-      {
+    children: [{
         path: '/experience/apply/:id(\\d+)',
         component: () =>
           import('@/views/benyi/experience/apply'),

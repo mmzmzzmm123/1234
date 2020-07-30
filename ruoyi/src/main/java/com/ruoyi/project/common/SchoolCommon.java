@@ -19,6 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 public class SchoolCommon {
@@ -169,5 +170,10 @@ public class SchoolCommon {
             return true;
         }
         return false;
+    }
+
+    // 生成UUID
+    public String getUuid(){
+        return UUID.randomUUID().toString().replace("-","");
     }
 }
