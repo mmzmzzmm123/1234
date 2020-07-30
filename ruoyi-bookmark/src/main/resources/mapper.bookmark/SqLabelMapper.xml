@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.sq.mapper.SqLabelMapper">
+    
+    <resultMap type="SqLabel" id="SqLabelResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="labelName"    column="label_name"    />
+        <result property="order"    column="order"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="labelCount"    column="label_count"    />
+    </resultMap>
+
+    <sql id="selectSqLabelVo">
+        select id, user_id, label_name, order, create_time, label_count from sq_label
+    </sql>
+
+    <select id="selectSqLabelList" parameterType="SqLabel" resultMap="SqLabelResult">
+        <include refid="selectSqLabelVo"/>
+        <where>  
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="labelName != null  and labelName != ''"> and label_name like concat('%', #{labelName}, '%')</if>
+            <if test="order != null "> and order = #{order}</if>
+            <if test="labelCount != null "> and label_count = #{labelCount}</if>
+        </where>
+    </select>
+    
+    <select id="selectSqLabelById" parameterType="Long" resultMap="SqLabelResult">
+        <include refid="selectSqLabelVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSqLabel" parameterType="SqLabel" useGeneratedKeys="true" keyProperty="id">
+        insert into sq_label
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="labelName != null">label_name,</if>
+            <if test="order != null">order,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="labelCount != null">label_count,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="labelName != null">#{labelName},</if>
+            <if test="order != null">#{order},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="labelCount != null">#{labelCount},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSqLabel" parameterType="SqLabel">
+        update sq_label
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="labelName != null">label_name = #{labelName},</if>
+            <if test="order != null">order = #{order},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="labelCount != null">label_count = #{labelCount},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSqLabelById" parameterType="Long">
+        delete from sq_label where id = #{id}
+    </delete>
+
+    <delete id="deleteSqLabelByIds" parameterType="String">
+        delete from sq_label where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

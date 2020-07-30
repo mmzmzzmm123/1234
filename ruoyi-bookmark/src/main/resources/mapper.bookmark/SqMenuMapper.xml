@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.sq.mapper.SqMenuMapper">
+    
+    <resultMap type="SqMenu" id="SqMenuResult">
+        <result property="menuId"    column="menu_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="menuName"    column="menu_name"    />
+        <result property="menuUrl"    column="menu_url"    />
+        <result property="menuIcon"    column="menu_icon"    />
+        <result property="parentId"    column="parent_id"    />
+        <result property="menuOrder"    column="menu_order"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectSqMenuVo">
+        select menu_id, user_id, menu_name, menu_url, menu_icon, parent_id, menu_order, create_time from sq_menu
+    </sql>
+
+    <select id="selectSqMenuList" parameterType="SqMenu" resultMap="SqMenuResult">
+        <include refid="selectSqMenuVo"/>
+        <where>  
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="menuName != null  and menuName != ''"> and menu_name like concat('%', #{menuName}, '%')</if>
+            <if test="menuUrl != null  and menuUrl != ''"> and menu_url = #{menuUrl}</if>
+            <if test="menuIcon != null  and menuIcon != ''"> and menu_icon = #{menuIcon}</if>
+            <if test="parentId != null "> and parent_id = #{parentId}</if>
+            <if test="menuOrder != null "> and menu_order = #{menuOrder}</if>
+        </where>
+    </select>
+    
+    <select id="selectSqMenuById" parameterType="Long" resultMap="SqMenuResult">
+        <include refid="selectSqMenuVo"/>
+        where menu_id = #{menuId}
+    </select>
+        
+    <insert id="insertSqMenu" parameterType="SqMenu" useGeneratedKeys="true" keyProperty="menuId">
+        insert into sq_menu
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="menuName != null">menu_name,</if>
+            <if test="menuUrl != null">menu_url,</if>
+            <if test="menuIcon != null">menu_icon,</if>
+            <if test="parentId != null">parent_id,</if>
+            <if test="menuOrder != null">menu_order,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="menuName != null">#{menuName},</if>
+            <if test="menuUrl != null">#{menuUrl},</if>
+            <if test="menuIcon != null">#{menuIcon},</if>
+            <if test="parentId != null">#{parentId},</if>
+            <if test="menuOrder != null">#{menuOrder},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSqMenu" parameterType="SqMenu">
+        update sq_menu
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="menuName != null">menu_name = #{menuName},</if>
+            <if test="menuUrl != null">menu_url = #{menuUrl},</if>
+            <if test="menuIcon != null">menu_icon = #{menuIcon},</if>
+            <if test="parentId != null">parent_id = #{parentId},</if>
+            <if test="menuOrder != null">menu_order = #{menuOrder},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where menu_id = #{menuId}
+    </update>
+
+    <delete id="deleteSqMenuById" parameterType="Long">
+        delete from sq_menu where menu_id = #{menuId}
+    </delete>
+
+    <delete id="deleteSqMenuByIds" parameterType="String">
+        delete from sq_menu where menu_id in 
+        <foreach item="menuId" collection="array" open="(" separator="," close=")">
+            #{menuId}
+        </foreach>
+    </delete>
+    
+</mapper>

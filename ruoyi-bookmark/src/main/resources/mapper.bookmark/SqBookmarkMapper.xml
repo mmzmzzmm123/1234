@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.sq.mapper.SqBookmarkMapper">
+    
+    <resultMap type="SqBookmark" id="SqBookmarkResult">
+        <result property="bookmarkId"    column="bookmark_id"    />
+        <result property="userid"    column="userid"    />
+        <result property="title"    column="title"    />
+        <result property="url"    column="url"    />
+        <result property="urls"    column="urls"    />
+        <result property="description"    column="description"    />
+        <result property="image"    column="image"    />
+        <result property="label"    column="Label"    />
+        <result property="menuId"    column="menu_id"    />
+        <result property="zcount"    column="zcount"    />
+        <result property="idelete"    column="IDelete"    />
+        <result property="start"    column="Start"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectSqBookmarkVo">
+        select bookmark_id, userid, title, url, urls, description, image, Label, menu_id, zcount, IDelete, Start, create_time from sq_bookmark
+    </sql>
+
+    <select id="selectSqBookmarkList" parameterType="SqBookmark" resultMap="SqBookmarkResult">
+        <include refid="selectSqBookmarkVo"/>
+        <where>  
+            <if test="userid != null "> and userid = #{userid}</if>
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="url != null  and url != ''"> and url = #{url}</if>
+            <if test="urls != null  and urls != ''"> and urls = #{urls}</if>
+            <if test="description != null  and description != ''"> and description = #{description}</if>
+            <if test="image != null  and image != ''"> and image = #{image}</if>
+            <if test="label != null  and label != ''"> and Label = #{label}</if>
+            <if test="menuId != null "> and menu_id = #{menuId}</if>
+            <if test="zcount != null "> and zcount = #{zcount}</if>
+            <if test="idelete != null "> and IDelete = #{idelete}</if>
+            <if test="start != null "> and Start = #{start}</if>
+        </where>
+    </select>
+    
+    <select id="selectSqBookmarkById" parameterType="Long" resultMap="SqBookmarkResult">
+        <include refid="selectSqBookmarkVo"/>
+        where bookmark_id = #{bookmarkId}
+    </select>
+        
+    <insert id="insertSqBookmark" parameterType="SqBookmark" useGeneratedKeys="true" keyProperty="bookmarkId">
+        insert into sq_bookmark
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userid != null">userid,</if>
+            <if test="title != null">title,</if>
+            <if test="url != null">url,</if>
+            <if test="urls != null">urls,</if>
+            <if test="description != null">description,</if>
+            <if test="image != null">image,</if>
+            <if test="label != null">Label,</if>
+            <if test="menuId != null">menu_id,</if>
+            <if test="zcount != null">zcount,</if>
+            <if test="idelete != null">IDelete,</if>
+            <if test="start != null">Start,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userid != null">#{userid},</if>
+            <if test="title != null">#{title},</if>
+            <if test="url != null">#{url},</if>
+            <if test="urls != null">#{urls},</if>
+            <if test="description != null">#{description},</if>
+            <if test="image != null">#{image},</if>
+            <if test="label != null">#{label},</if>
+            <if test="menuId != null">#{menuId},</if>
+            <if test="zcount != null">#{zcount},</if>
+            <if test="idelete != null">#{idelete},</if>
+            <if test="start != null">#{start},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSqBookmark" parameterType="SqBookmark">
+        update sq_bookmark
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userid != null">userid = #{userid},</if>
+            <if test="title != null">title = #{title},</if>
+            <if test="url != null">url = #{url},</if>
+            <if test="urls != null">urls = #{urls},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="image != null">image = #{image},</if>
+            <if test="label != null">Label = #{label},</if>
+            <if test="menuId != null">menu_id = #{menuId},</if>
+            <if test="zcount != null">zcount = #{zcount},</if>
+            <if test="idelete != null">IDelete = #{idelete},</if>
+            <if test="start != null">Start = #{start},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where bookmark_id = #{bookmarkId}
+    </update>
+
+    <delete id="deleteSqBookmarkById" parameterType="Long">
+        delete from sq_bookmark where bookmark_id = #{bookmarkId}
+    </delete>
+
+    <delete id="deleteSqBookmarkByIds" parameterType="String">
+        delete from sq_bookmark where bookmark_id in 
+        <foreach item="bookmarkId" collection="array" open="(" separator="," close=")">
+            #{bookmarkId}
+        </foreach>
+    </delete>
+    
+</mapper>
