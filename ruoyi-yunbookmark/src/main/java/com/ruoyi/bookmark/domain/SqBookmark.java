@@ -1,4 +1,4 @@
-package com.ruoyi.sq.domain;
+package com.ruoyi.bookmark.domain;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -6,10 +6,10 @@ import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
- * 书签对象 sq_bookmark
+ * 书签管理对象 sq_bookmark
  * 
  * @author wanghao
- * @date 2020-07-26
+ * @date 2020-08-02
  */
 public class SqBookmark extends BaseEntity
 {

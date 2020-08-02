@@ -2,8 +2,8 @@
 <!DOCTYPE mapper
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ruoyi.sq.mapper.SqBookmarkMapper">
-    
+<mapper namespace="com.ruoyi.bookmark.mapper.SqBookmarkMapper">
+
     <resultMap type="SqBookmark" id="SqBookmarkResult">
         <result property="bookmarkId"    column="bookmark_id"    />
         <result property="userid"    column="userid"    />
@@ -26,7 +26,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectSqBookmarkList" parameterType="SqBookmark" resultMap="SqBookmarkResult">
         <include refid="selectSqBookmarkVo"/>
-        <where>  
+        <where>
             <if test="userid != null "> and userid = #{userid}</if>
             <if test="title != null  and title != ''"> and title = #{title}</if>
             <if test="url != null  and url != ''"> and url = #{url}</if>
@@ -40,12 +40,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="start != null "> and Start = #{start}</if>
         </where>
     </select>
-    
+
     <select id="selectSqBookmarkById" parameterType="Long" resultMap="SqBookmarkResult">
         <include refid="selectSqBookmarkVo"/>
         where bookmark_id = #{bookmarkId}
     </select>
-        
+
     <insert id="insertSqBookmark" parameterType="SqBookmark" useGeneratedKeys="true" keyProperty="bookmarkId">
         insert into sq_bookmark
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -102,10 +102,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteSqBookmarkByIds" parameterType="String">
-        delete from sq_bookmark where bookmark_id in 
+        delete from sq_bookmark where bookmark_id in
         <foreach item="bookmarkId" collection="array" open="(" separator="," close=")">
             #{bookmarkId}
         </foreach>
     </delete>
-    
+
+    <select id="selectBymenuIdUserID" parameterType="SqBookmark"  resultMap="SqBookmarkResult">
+        <include refid="selectSqBookmarkVo"/>
+        where menu_id = #{menuID} and userid=#{userID}
+    </select>
 </mapper>

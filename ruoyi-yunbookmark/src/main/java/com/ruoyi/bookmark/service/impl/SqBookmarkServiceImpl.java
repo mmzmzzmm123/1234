@@ -1,20 +1,18 @@
-package com.ruoyi.sq.service.impl;
-
-import com.ruoyi.sq.mapper.SqBookmarkMapper;
-import com.ruoyi.sq.service.ISqBookmarkService;
+package com.ruoyi.bookmark.service.impl;
 
 import java.util.List;
 import com.ruoyi.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.ruoyi.sq.domain.SqBookmark;
+import com.ruoyi.bookmark.mapper.SqBookmarkMapper;
+import com.ruoyi.bookmark.domain.SqBookmark;
+import com.ruoyi.bookmark.service.ISqBookmarkService;
 
 /**
- * 书签Service业务层处理
- * 
+ * 书签管理Service业务层处理
+ *
  * @author wanghao
- * @date 2020-07-26
+ * @date 2020-08-02
  */
 @Service
 public class SqBookmarkServiceImpl implements ISqBookmarkService
@@ -23,10 +21,22 @@ public class SqBookmarkServiceImpl implements ISqBookmarkService
     private SqBookmarkMapper sqBookmarkMapper;
 
     /**
-     * 查询书签
-     * 
-     * @param bookmarkId 书签ID
-     * @return 书签
+     * 查询书签管理
+     *
+     * @param menuID 栏目ID
+     * @param userID 用户ID
+     * @return 书签管理
+     */
+    @Override
+    public List<SqBookmark> selectBymenuIdUserID(Long menuID, Long userID) {
+        return sqBookmarkMapper.selectBymenuIdUserID(menuID,userID);
+    }
+
+    /**
+     * 查询书签管理
+     *
+     * @param bookmarkId 书签管理ID
+     * @return 书签管理
      */
     @Override
     public SqBookmark selectSqBookmarkById(Long bookmarkId)
@@ -35,10 +45,10 @@ public class SqBookmarkServiceImpl implements ISqBookmarkService
     }
 
     /**
-     * 查询书签列表
-     * 
-     * @param sqBookmark 书签
-     * @return 书签
+     * 查询书签管理列表
+     *
+     * @param sqBookmark 书签管理
+     * @return 书签管理
      */
     @Override
     public List<SqBookmark> selectSqBookmarkList(SqBookmark sqBookmark)
@@ -47,9 +57,9 @@ public class SqBookmarkServiceImpl implements ISqBookmarkService
     }
 
     /**
-     * 新增书签
-     * 
-     * @param sqBookmark 书签
+     * 新增书签管理
+     *
+     * @param sqBookmark 书签管理
      * @return 结果
      */
     @Override
@@ -60,9 +70,9 @@ public class SqBookmarkServiceImpl implements ISqBookmarkService
     }
 
     /**
-     * 修改书签
-     * 
-     * @param sqBookmark 书签
+     * 修改书签管理
+     *
+     * @param sqBookmark 书签管理
      * @return 结果
      */
     @Override
@@ -72,9 +82,9 @@ public class SqBookmarkServiceImpl implements ISqBookmarkService
     }
 
     /**
-     * 批量删除书签
-     * 
-     * @param bookmarkIds 需要删除的书签ID
+     * 批量删除书签管理
+     *
+     * @param bookmarkIds 需要删除的书签管理ID
      * @return 结果
      */
     @Override
@@ -84,9 +94,9 @@ public class SqBookmarkServiceImpl implements ISqBookmarkService
     }
 
     /**
-     * 删除书签信息
-     * 
-     * @param bookmarkId 书签ID
+     * 删除书签管理信息
+     *
+     * @param bookmarkId 书签管理ID
      * @return 结果
      */
     @Override

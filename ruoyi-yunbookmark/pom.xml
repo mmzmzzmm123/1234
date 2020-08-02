@@ -9,11 +9,15 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>ruoyi-bookmark</artifactId>
+
+    <artifactId>ruoyi-yunbookmark</artifactId>
+
+
 
     <description>
-        bookmark系统模块
+        yunbookmark系统模块
     </description>
+
     <dependencies>
 
         <!-- 通用工具-->
