@@ -2,6 +2,7 @@ package com.ruoyi;
 
 
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.LoadUtil;
 import com.ruoyi.project.data.cases.domain.*;
 import com.ruoyi.project.data.price.domain.ComputeResidenceSaleBasePrice;
 import com.ruoyi.project.data.price.domain.UltimateOfficeBasePrice;
@@ -82,7 +83,7 @@ public class GenerateTableTests {
 
     @Test
     public void generateBatchInsertSqL() {
-        Class targetClass = OtherResidenceRentClosingCase .class;
+        Class targetClass = OtherResidenceRentClosingCase.class;
 
         List<Field> fieldList = new ArrayList<>();
         while (targetClass != null) {
@@ -224,9 +225,23 @@ public class GenerateTableTests {
         }
 
     }
+
     @Test
-    public void printUUID(){
-        System.out.println(UUID.randomUUID().toString().replace("-",""));
+    public void printUUID() {
+        System.out.println(UUID.randomUUID().toString().replace("-", ""));
+    }
+
+    @Test
+    public void appendDouHao() {
+        List<String> list = LoadUtil.loadList("temp.dict");
+
+        list.forEach(x -> {
+            int index = x.indexOf("大道");
+            if(-1 != index) {
+                System.out.println(x.substring(0,index+2));
+            }
+        });
+
     }
 
 }
