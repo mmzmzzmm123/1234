@@ -9,8 +9,6 @@ import com.microsoft.sqlserver.jdbc.spatialdatatypes.Point;
 import com.ruoyi.RuoYiApplication;
 import com.ruoyi.project.data.basis.domain.*;
 import com.ruoyi.project.data.basis.mapper.UvCommunityGeoMapper;
-import com.sun.org.apache.regexp.internal.RE;
-import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -18,9 +16,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.security.web.PortResolverImpl;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 

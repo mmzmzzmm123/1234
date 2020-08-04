@@ -1,7 +1,5 @@
 package com.ruoyi.project.tool.address.model;
 
-import com.ruoyi.project.tool.address.service.impl.SignalAddressHandler;
-
 import java.util.LinkedList;
 import java.util.List;
 
@@ -44,14 +42,6 @@ public class CleanAddress {
      * （和地下有关系）
      */
     private String floor;
-    /**
-     * 小区地址
-     */
-    private PartialAddress communityAddress;
-    /**
-     * 楼栋地址
-     */
-    private PartialAddress buildingAddress;
     /**
      * 单套地址
      */
@@ -154,22 +144,6 @@ public class CleanAddress {
         this.floor = floor;
     }
 
-    public PartialAddress getCommunityAddress() {
-        return communityAddress;
-    }
-
-    public void setCommunityAddress(PartialAddress communityAddress) {
-        this.communityAddress = communityAddress;
-    }
-
-    public PartialAddress getBuildingAddress() {
-        return buildingAddress;
-    }
-
-    public void setBuildingAddress(PartialAddress buildingAddress) {
-        this.buildingAddress = buildingAddress;
-    }
-
     public PartialAddress getCondoAddress() {
         return condoAddress;
     }
@@ -231,8 +205,6 @@ public class CleanAddress {
                 ", road='" + road + '\'' +
                 ", communityName='" + communityName + '\'' +
                 ", floor=" + floor +
-                ", communityAddress=" + communityAddress +
-                ", buildingAddress=" + buildingAddress +
                 ", condoAddress=" + condoAddress +
                 ", propertyType='" + propertyType + '\'' +
                 ", independent=" + independent +

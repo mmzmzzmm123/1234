@@ -5,7 +5,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * 室地址
+ * 单套地址
  *
  * @author lihe
  */
@@ -19,7 +19,25 @@ public class CondoAddress extends PartialAddress {
     }
 
     @Override
-    public List<PartialAddress> getPartialAddress() {
-        return null;
+    public AddressType getAddressType() {
+        return AddressType.CONDO;
     }
+
+    @Override
+    public Boolean multiAddress() {
+        return childrenAddress.size() > 0;
+    }
+
+    public String getHao() {
+        return hao;
+    }
+
+    public String getShi() {
+        return shi;
+    }
+
+    public Integer getFloor() {
+        return floor;
+    }
+
 }

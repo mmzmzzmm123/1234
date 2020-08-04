@@ -206,12 +206,8 @@ public class CleanAddressBuilder {
             String buildingAddressText = condoAddressText.substring(0, haoIndex + 1);
             BuildingAddress buildingAddress = new BuildingAddress(buildingAddressText);
             // 楼栋
-            cleanAddress.setBuildingAddress(buildingAddress);
+            condoAddress.addPartialAddress(buildingAddress);
             cleanAddress.addAddress(condoAddress);
-            cleanAddress.addAddress(buildingAddress);
-
-            cleanAddress.addAddress(condoAddress);
-            cleanAddress.addAddress(buildingAddress);
             getCommunityAddress(buildingAddressText);
         } else if (!StringUtils.isEmpty(cleanAddress.getCommunityName())) {
 

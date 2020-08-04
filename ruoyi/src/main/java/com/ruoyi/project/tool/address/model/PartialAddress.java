@@ -4,6 +4,7 @@ import com.ruoyi.common.exception.CustomException;
 import com.ruoyi.common.utils.StringUtils;
 import io.swagger.models.auth.In;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -18,34 +19,32 @@ public abstract class PartialAddress {
     protected String hao;
     protected String shi;
     protected Integer floor;
+
+    protected final int HUNDRED = 100;
+    protected final int TEN_THOUSAND = 10 * 1000;
     protected final static String SHI_PATTERN = "([\\dA-Za-z]+)室$";
     protected final static String HAO_PATTERN = "([\\dA-Za-z]+)(甲乙丙丁戊己庚辛仍亏)?号";
     protected final static String NUMBER_PATTERN = "\\d+";
-    protected final int HUNDRED = 100;
-    protected final int TEN_THOUSAND = 10 * 1000;
+
 
     public PartialAddress(String address) {
         this.address = address;
     }
 
-    public String getHao() {
-        return hao;
-    }
+    /**
+     * @return
+     */
+    public abstract AddressType getAddressType();
 
-    public String getShi() {
-        return shi;
-    }
-
-    public Integer getFloor() {
-        return floor;
-    }
 
     /**
      * 获取地址（单套、楼栋、小区）
      *
      * @return
      */
-    public abstract List<PartialAddress> getPartialAddress();
+    protected List<PartialAddress> childrenAddress = new LinkedList<>();
+
+    public abstract Boolean multiAddress();
 
     /**
      * 室解析
@@ -100,6 +99,15 @@ public abstract class PartialAddress {
             return matcher.group(1);
         }
         return null;
+    }
+
+    /**
+     * 增加地址
+     *
+     * @param partialAddress
+     */
+    protected void addPartialAddress(PartialAddress partialAddress) {
+        this.childrenAddress.add(partialAddress);
     }
 
     @Override

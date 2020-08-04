@@ -14,8 +14,12 @@ public class BuildingAddress extends PartialAddress {
     }
 
     @Override
-    public List<PartialAddress> getPartialAddress() {
+    public AddressType getAddressType() {
+        return null;
+    }
 
+    @Override
+    public Boolean multiAddress() {
         return null;
     }
 }
