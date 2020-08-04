@@ -13,6 +13,12 @@ public class NoSignalAddressHandler implements AddressHandler {
 
     @Override
     public void clear(CleanAddress cleanAddress) {
-        CleanAddressBuilder.builder(cleanAddress).parseDistrict();
+        CleanAddressBuilder.builder(cleanAddress)
+                .parseDistrict()
+                .parseRegion()
+                .parseBlock()
+                .parseRoad()
+                .parseIndependent()
+                .parseAddress();
     }
 }

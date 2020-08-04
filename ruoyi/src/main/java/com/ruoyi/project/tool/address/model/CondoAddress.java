@@ -13,19 +13,13 @@ public class CondoAddress extends PartialAddress {
 
     public CondoAddress(String address) {
         super(address);
+        this.shi = parseShi();
+        this.floor = parseFloor();
+        this.hao = parseHAO();
     }
 
     @Override
     public List<PartialAddress> getPartialAddress() {
-        Pattern pattern = Pattern.compile(SHI_PATTERN);
-        Matcher matcher = pattern.matcher(this.address);
-        // 这个需要优化，地下层没有考虑
-        if (matcher.find()) {
-            this.shi = parseShi();
-            this.floor = parseFloor();
-            this.hao = parseHAO();
-        }
-
         return null;
     }
 }

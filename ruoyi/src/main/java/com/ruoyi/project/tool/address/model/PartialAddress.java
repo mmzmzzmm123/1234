@@ -102,4 +102,12 @@ public abstract class PartialAddress {
         return null;
     }
 
+    @Override
+    public String toString() {
+        return "PartialAddress{" +
+                "hao='" + hao + '\'' +
+                ", shi='" + shi + '\'' +
+                ", floor=" + floor +
+                '}';
+    }
 }

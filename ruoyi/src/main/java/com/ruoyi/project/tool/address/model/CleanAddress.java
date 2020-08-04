@@ -43,7 +43,7 @@ public class CleanAddress {
      * 楼层
      * （和地下有关系）
      */
-    private Integer floor;
+    private String floor;
     /**
      * 小区地址
      */
@@ -67,9 +67,11 @@ public class CleanAddress {
     /**
      * 多个地址
      */
-    private List<PartialAddress> addressList;
+    private List<PartialAddress> addressList = new LinkedList<>();
 
-
+    /**
+     * 是否包含特殊字符
+     */
     private Boolean containsSpecialChar;
 
     private static List<String> specialChar = new LinkedList<>();
@@ -144,11 +146,11 @@ public class CleanAddress {
         this.communityName = communityName;
     }
 
-    public Integer getFloor() {
+    public String getFloor() {
         return floor;
     }
 
-    public void setFloor(Integer floor) {
+    public void setFloor(String floor) {
         this.floor = floor;
     }
 
@@ -188,8 +190,8 @@ public class CleanAddress {
         return addressList;
     }
 
-    public void setAddressList(List<PartialAddress> addressList) {
-        this.addressList = addressList;
+    public void addAddress(PartialAddress partialAddress) {
+        this.addressList.add(partialAddress);
     }
 
     public Boolean getIndependent() {
@@ -217,5 +219,25 @@ public class CleanAddress {
         }
 
         return false;
+    }
+
+    @Override
+    public String toString() {
+        return "CleanAddress{" +
+                "rawAddress='" + rawAddress + '\'' +
+                ", district='" + district + '\'' +
+                ", region='" + region + '\'' +
+                ", block='" + block + '\'' +
+                ", road='" + road + '\'' +
+                ", communityName='" + communityName + '\'' +
+                ", floor=" + floor +
+                ", communityAddress=" + communityAddress +
+                ", buildingAddress=" + buildingAddress +
+                ", condoAddress=" + condoAddress +
+                ", propertyType='" + propertyType + '\'' +
+                ", independent=" + independent +
+                ", addressList=" + addressList +
+                ", containsSpecialChar=" + containsSpecialChar +
+                '}';
     }
 }
