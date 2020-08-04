@@ -11,4 +11,12 @@
         update gis_community set gaode_lng=#{gaodeLng},gaode_lat=#{gaodeLat},update_time=getdate() where
         community_id=#{communityId}
     </update>
+    <select id="getSomeGeo" resultType="com.ruoyi.project.data.basis.domain.UvGeo">
+        select OBJECTID as id, Shape.STAsText() as geoText
+        from ${tableName}
+        where BD_shape is null
+    </select>
+    <update id="updateSomeGeo">
+        update ${tableName} set BD_Shape=#{geo} where OBJECTID=#{id};
+    </update>
 </mapper>

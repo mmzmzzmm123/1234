@@ -1,5 +1,7 @@
 package com.ruoyi.framework.task;
 
+import com.ruoyi.project.data.cases.service.IOriginalOfficeCaseService;
+import com.ruoyi.project.data.cases.service.IOriginalResidenceRentClosingCaseService;
 import com.ruoyi.project.data.cases.service.IOriginalResidenceRentOpeningCaseService;
 import com.ruoyi.project.data.cases.service.impl.DownloadOriginalNewHouseCaseServiceImpl;
 import com.ruoyi.project.data.cases.service.impl.DownloadOriginalResidenceSaleClosingCaseServiceImpl;
@@ -22,6 +24,12 @@ public class RyTask {
     private DownloadOriginalResidenceSaleClosingCaseServiceImpl downloadOriginalResidenceSaleClosingCaseService;
     @Autowired
     private DownloadOriginalNewHouseCaseServiceImpl downloadOriginalNewHouseCaseService;
+    @Autowired
+    private IOriginalOfficeCaseService originalOfficeCaseService;
+    @Autowired
+    private IOriginalResidenceRentOpeningCaseService originalResidenceRentOpeningCaseService;
+    @Autowired
+    private IOriginalResidenceRentClosingCaseService originalResidenceRentClosingCaseService;
 
     public void ryMultipleParams(String s, Boolean b, Long l, Double d, Integer i) {
         System.out.println(StringUtils.format("执行多参方法： 字符串类型{}，布尔类型{}，长整型{}，浮点型{}，整形{}", s, b, l, d, i));
@@ -63,4 +71,24 @@ public class RyTask {
         downloadOriginalNewHouseCaseService.downloadSecond();
     }
 
+    /**
+     * 下载办公案例和作价
+     */
+    public void downloadOfficeCase() {
+        originalOfficeCaseService.compute();
+    }
+
+    /**
+     * 住宅租赁挂牌案例下载
+     */
+    public void downloadRentOpeningCase() {
+        originalResidenceRentOpeningCaseService.pullData();
+    }
+
+    /**
+     * 住宅租赁成交案例下载
+     */
+    public void downloadRentClosingCase() {
+        originalResidenceRentClosingCaseService.pullData();
+    }
 }

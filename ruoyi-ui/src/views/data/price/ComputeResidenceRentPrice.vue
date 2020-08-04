@@ -79,6 +79,7 @@
       <el-table-column label="租金主力面积系数" align="center" prop="mainCoefficientRent" />
       <el-table-column label="AI租金(草稿)" align="center" prop="rentPriceDft" />
       <el-table-column label="主力面积租金(草稿)" align="center" prop="mainRentPriceDft" />
+      <el-table-column label="主力面积(㎡)" align="center" prop="area" />
       <el-table-column label="上月AI租金" align="center" prop="rentPrice_1" />
       <el-table-column label="成交均价(上周期)" align="center" prop="priceDealMean_1" />
       <el-table-column label="成交最大价(上周期)" align="center" prop="priceDealMax_1" />

@@ -10,19 +10,40 @@
 
         CREATE TABLE ${targetTableName}
         (
-        case_id varchar(32) not null,
-        case_contract_no nvarchar (32) NOT null primary key,
-        case_community_name nvarchar (512) NULL,
-        case_opening_date date NULL,
-        case_closing_date date NULL,
-        case_rent_price decimal (18, 2) NULL,
-        case_area decimal (18, 2) NULL,
-        case_total_floor int NULL,
-        case_toward nvarchar (16) NULL,
-        case_apartment_layout nvarchar (16) NULL,
-        case_decoration nvarchar (16) NULL,
-        clean_community_id nvarchar (32) NULL,
-        clean_building_id nvarchar (32) NULL
+            case_id varchar(32) not null,
+            case_contract_no nvarchar (32) NOT null primary key,
+            case_community_name nvarchar (512) NULL,
+            case_opening_date date NULL,
+            case_closing_date date NULL,
+            case_rent_price decimal (18, 2) NULL,
+            case_area decimal (18, 2) NULL,
+            case_total_floor int NULL,
+            case_toward nvarchar (16) NULL,
+            case_apartment_layout nvarchar (16) NULL,
+            case_decoration nvarchar (16) NULL,
+            clean_community_id nvarchar (32) NULL,
+            clean_building_id nvarchar (32) NULL
+        )
+    </update>
+    <update id="createOtherRawTable">
+        <bind name="targetTableName" value="'dbo.TEMP_ODS_HOUSINGCASEDEAL_RENT_' + yearMonth+'_RAW'"/>
+        IF OBJECT_ID(#{targetTableName}, 'U') IS NOT NULL
+            drop table ${targetTableName};
+        CREATE TABLE ${targetTableName}(
+            case_id varchar(32) NOT NULL primary key,
+            case_district nvarchar(64) NULL,
+            case_community_name nvarchar(1024) NULL,
+            case_address nvarchar(1024) NULL,
+            case_area decimal(18, 2) NULL,
+            case_closing_date date NULL,
+            case_total_price decimal(18, 2) NOT NULL,
+            case_decoration nvarchar(64) NULL,
+            case_total_floor int null,
+            case_current_floor nvarchar(32) NULL,
+            case_toward nvarchar(64) NULL,
+            case_floor nvarchar(32) NULL,
+            uv_community_id nvarchar(20) null,
+            uv_building_id nvarchar(20) null
         )
     </update>
     <update id="createCleanTable">

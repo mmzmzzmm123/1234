@@ -7,6 +7,7 @@ import java.util.Date;
 
 /**
  * 租赁成交案例
+ * @author lihe
  */
 public class OriginalResidenceRentClosingCase {
     private String caseId;

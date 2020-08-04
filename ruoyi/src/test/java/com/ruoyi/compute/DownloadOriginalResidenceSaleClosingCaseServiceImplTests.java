@@ -27,9 +27,9 @@ public class DownloadOriginalResidenceSaleClosingCaseServiceImplTests {
     @Test
     public void testLoopDownload() {
         // , 201912
-        Arrays.asList(201901, 201902, 201903, 201904, 201905, 201906, 201907, 201908, 201909, 201910).parallelStream().forEach(i -> {
-            downloadOriginalResidenceSaleClosingCaseService.download(i + 2, i);
-        });
+//        Arrays.asList(201901, 201902, 201903, 201904, 201905, 201906, 201907, 201908, 201909, 201910).parallelStream().forEach(i -> {
+//            downloadOriginalResidenceSaleClosingCaseService.download(i + 2, i);
+//        });
 //        downloadOriginalResidenceSaleClosingCaseService.download(202001, 201911);
 //        downloadOriginalResidenceSaleClosingCaseService.download(202002, 201912);
 //        downloadOriginalResidenceSaleClosingCaseService.download(202003, 202001);

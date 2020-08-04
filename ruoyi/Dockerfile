@@ -1,5 +1,8 @@
 FROM 172.16.30.92:5000/uv:jdk-1.8.0
 
+# 设置时区
+RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+
 VOLUME /tmp
 # 将jar包添加到容器中并更名为app.jar
 

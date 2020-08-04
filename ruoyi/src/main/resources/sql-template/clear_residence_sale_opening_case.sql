@@ -1,3 +1,5 @@
+truncate table ODS_HOUSINGCASELISTED_LJ_#yearMonth#;
+
 update a
 set a.uv_community_id=b.ITEM_ProjectID,
     a.uv_building_id=b.ITEM_BuildingID,

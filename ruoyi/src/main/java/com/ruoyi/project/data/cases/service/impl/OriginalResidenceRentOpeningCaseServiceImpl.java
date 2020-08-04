@@ -1,6 +1,7 @@
 package com.ruoyi.project.data.cases.service.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.LoadUtil;
 import com.ruoyi.project.data.cases.domain.OriginalResidencePlatformRentOpeningCase;
 import com.ruoyi.project.data.cases.domain.OriginalResidenceRentOpeningCase;
@@ -43,21 +44,19 @@ public class OriginalResidenceRentOpeningCaseServiceImpl implements IOriginalRes
     /**
      * 29号拉取挂牌案例
      */
-    @Scheduled(cron = "0 0 5 29 * ?")
     @Override
     public void pullData() {
+
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
-        Integer syncTableRoute = new Integer(String.format("%d%02d", calendar.get(Calendar.YEAR),
-                calendar.get(Calendar.MONTH)));
-        Integer lastYearMonth = new Integer(String.format("%d%02d", calendar.get(Calendar.YEAR),
-                calendar.get(Calendar.MONTH) + 1));
         calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), 1);
         Date startDate = calendar.getTime();
         calendar.add(Calendar.MONTH, 1);
-        Integer computeTableRoute = new Integer(String.format("%d%02d", calendar.get(Calendar.YEAR),
-                calendar.get(Calendar.MONTH) + 1));
         Date endDate = calendar.getTime();
+
+        Integer computeTableRoute = DateUtils.getNextYearMonth();
+        Integer lastYearMonth = DateUtils.getYearMonth();
+        Integer syncTableRoute = DateUtils.getLastYearMonth();
 
         prepare(computeTableRoute, syncTableRoute);
         // 拉取案例

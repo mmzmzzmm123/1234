@@ -4,18 +4,18 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.project.data.cases.mapper.sync.DownloadOriginalResidenceRentClosingCaseMapper">
     <select id="download" resultType="com.ruoyi.project.data.cases.domain.OriginalResidenceRentClosingCase">
-        SELECT 合同编号 as caseContractNo
-              ,小区名称 as caseCommunityName
-              ,挂牌时间 as caseOpeningDate
-              ,交易时间 as caseClosingDate
-              ,租金 as caseRentPrice
-              ,建筑面积 as caseArea
-              ,住宅楼总楼层数 as caseTotalFloor
+        SELECT 案例ID as caseContractNo
+              ,NULL as caseCommunityName
+              ,NULL as caseOpeningDate
+              ,成交时间 as caseClosingDate
+              ,"租金（元/月）" as caseRentPrice
+              ,面积 as caseArea
+              ,总楼层 as caseTotalFloor
               ,朝向 as caseToward
-              ,户型 as caseApartmentLayout
-              ,装修状况 as caseDecoration
-              ,小区ID as caseCommunityId
+              ,室厅 as caseApartmentLayout
+              ,NULL as caseDecoration
+              ,AIID as caseCommunityId
               ,楼栋ID as caseBuildingId
-          FROM dbo.ODS_HOUSINGCASEDEAL_RENT_${yearMonth}_RAW
+          FROM dbo.住宅租赁成交案例_链家_${yearMonth}
     </select>
 </mapper>

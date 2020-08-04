@@ -36,16 +36,17 @@
         <result property="unitPrice" column="单价" javaType="java.math.BigDecimal"/>
         <result property="updateDate" column="更新时间" javaType="java.sql.Date"/>
     </resultMap>
+    <!-- 获取爬虫库中的办公案例 -->
     <select id="download" resultMap="DownloadMapping">
         select url, title, 容积率, 总价售, 均价售, 楼盘名称, 楼层, case 面积 when 'nan' then NULL ELSE 面积 END 面积,
          物业费, 工位数, 地址, 地铁,
          发布时间,房源编号, 百度lng, 百度lat, 区域, 分类, 来源, 等级, 楼盘网址, 装修,
          类型, 板块, 挂牌中介, 月租金租, 标准租金租, 更新时间, 得房率,
-        case when 分类 = '售' then (case 总价售 when 'nan' then NULL ELSE 总价售 END)
-            when 分类 = '租' then (case 月租金租 when 'nan' then NULL ELSE 月租金租 END) end as 总价,
-        case when 分类 = '售' then (case 均价售 when 'nan' then NULL ELSE 均价售 END)
-            when 分类 = '租' then (case 标准租金租 when 'nan' then NULL ELSE 标准租金租 END) end as 单价
+         case when 分类 = '售' then (case when ISNUMERIC(总价售)=1 then 总价售 ELSE NULL END)
+            when 分类 = '租' then (case when ISNUMERIC(月租金租)=1 then 月租金租 ELSE NULL END) end as 总价,
+         case when 分类 = '售' then (case when ISNUMERIC(均价售)=1 then 均价售 ELSE NULL END)
+            when 分类 = '租' then (case when ISNUMERIC(标准租金租)=1 then 标准租金租 ELSE NULL END) end as 单价
         from dbo.办公
-        where 更新时间 >= #{startDate} and 更新时间 <![CDATA[ < ]]> #{endDate}
+        where 更新时间 >= #{startDate,jdbcType=DATE} and 更新时间 <![CDATA[ < ]]> #{endDate,jdbcType=DATE}
     </select>
 </mapper>

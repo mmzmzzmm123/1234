@@ -25,6 +25,8 @@ public interface OriginalResidenceSaleClosingCaseMapper {
      */
     int createRawTable(@Param("yearMonth") Integer yearMonth);
 
+
+
     /**
      * 插入住宅销售成交案例
      *
@@ -54,4 +56,6 @@ public interface OriginalResidenceSaleClosingCaseMapper {
      * @return
      */
     List<OriginalResidenceSaleOpeningCase> pageList(OriginalResidenceSaleOpeningCaseQueryModel queryModel);
+
+
 }

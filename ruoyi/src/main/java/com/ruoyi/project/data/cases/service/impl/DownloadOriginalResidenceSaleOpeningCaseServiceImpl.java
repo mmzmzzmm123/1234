@@ -43,7 +43,7 @@ public class DownloadOriginalResidenceSaleOpeningCaseServiceImpl {
      */
     public void download() {
         Integer tableRoute = DateUtils.getNextYearMonth();
-        Integer remoteTableRoute = DateUtils.getLastYearMonth();
+        Integer remoteTableRoute = DateUtils.getYearMonth();
 
         download(tableRoute, remoteTableRoute);
     }
@@ -82,6 +82,9 @@ public class DownloadOriginalResidenceSaleOpeningCaseServiceImpl {
         originalResidenceSaleOpeningCaseMapper.createRawTable(tableRoute);
         originalResidenceSaleOpeningCaseMapper.createCleanTable(tableRoute);
         originalResidenceSaleOpeningCaseMapper.createAssembleTable(tableRoute);
+        originalResidenceSaleOpeningCaseMapper.createComputePriceTable(tableRoute);
+        originalResidenceSaleOpeningCaseMapper.createArtificialPriceTable(tableRoute);
+        originalResidenceSaleOpeningCaseMapper.createUltimatePriceTable(tableRoute);
         syncOriginalResidenceSaleOpeningCaseMapper.createRawTable(remoteTableRoute);
     }
 

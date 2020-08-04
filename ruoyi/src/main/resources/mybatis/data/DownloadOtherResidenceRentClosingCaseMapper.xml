@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.data.cases.mapper.sync.DownloadOtherResidenceRentClosingCaseMapper">
+  <resultMap id="DownloadMapping" type="com.ruoyi.project.data.cases.domain.OtherResidenceRentClosingCase">
+    <result property="caseDistrict" column="County"/>
+    <result property="caseCommunityName" column="ProjectName_SRC"/>
+    <result property="caseAddress" column="HouseholdsAddr_SRC" />
+    <result property="caseArea" column="Area" javaType="java.math.BigDecimal"/>
+    <result property="closingDate" column="PriceDateOut" javaType="java.sql.Date"/>
+    <result property="caseTotalPrice" column="PriceTotal" javaType="java.math.BigDecimal"/>
+    <result property="caseDecoration" column="Decoration" />
+    <result property="caseTotalFloor" column="UpperFloorSum" />
+    <result property="caseCurrentFloor" column="UpperFloorNum" />
+    <result property="caseToward" column="Towards" />
+    <result property="caseFloor" column="Storey" />
+    <result property="uvCommunityId" column="ProjectID" />
+    <result property="uvBuildingId" column="BuildingID" />
+  </resultMap>
+  <select id="download" resultMap="DownloadMapping">
+        SELECT County
+          ,ProjectName_SRC
+          ,HouseholdsAddr_SRC
+          ,Area
+          ,PriceDateOut
+          ,PriceTotal
+          ,Decoration
+          ,UpperFloorSum
+          ,UpperFloorNum
+          ,Towards
+          ,Storey
+          ,ProjectID
+          ,BuildingID
+      FROM dbo.TEMP_ODS_HOUSINGCASEDEAL_RENT_${yearMonth}_RAW
+    </select>
+</mapper>

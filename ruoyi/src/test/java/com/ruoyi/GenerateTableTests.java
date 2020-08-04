@@ -15,6 +15,14 @@ import java.util.stream.Stream;
 public class GenerateTableTests {
 
     @Test
+    public void testLastYearMonth() {
+
+        Integer lastYearMonth = DateUtils.getLastYearMonth();
+        Assert.assertTrue(202007 == lastYearMonth);
+
+    }
+
+    @Test
     public void getELTableColumn() {
         Class<?> targetClass = ComputeResidenceSaleBasePrice.class;
 
@@ -225,5 +233,69 @@ public class GenerateTableTests {
         return str;
     }
 
+
+
+    /**
+     *
+     */
+    @Test
+    public void testPrintLoop() {
+
+        /**
+         * 成交案例总数
+         * 成交套数
+         * 成交价格
+         */
+        List<String> list = new LinkedList<>();
+        list.add("425280");
+        list.add("428770");
+        list.add("427490");
+        list.add("428790");
+        list.add("427780");
+        list.add("430050");
+        list.add("425028");
+        list.add("429710");
+        list.add("425700");
+        for (int j = 0; j < list.size(); j++) {
+
+            System.out.println("select " + list.get(j) + " as community_id , sum(count) as count,sum(total_price) as " +
+                    "total_price," +
+                    "avg" +
+                    "(avg_price) as avg_price ,sum(total_area) as total_area,avg(avg_area) as avg_area from (");
+
+            for (int i = 201901; i <= 201906; i++) {
+                System.out.println("select COUNT(1) " +
+                        "as count" +
+                        " ,sum" +
+                        "(PriceTotal) as total_price ,avg" +
+                        "(PriceTotal) as avg_price," +
+                        "sum(Area) as total_area ,avg" +
+                        "(Area) as avg_area from " +
+                        "ODS_HOUSINGCASE_DEAL_" + i + " where ProjectID=" + list.get(j));
+                if (i != 201906)
+                    System.out.println("union");
+            }
+            System.out.println(") as t;\n");
+        }
+
+    }
+
+    @Test
+    public void printUUID() {
+        System.out.println(UUID.randomUUID().toString().replace("-", ""));
+    }
+
+    @Test
+    public void appendDouHao() {
+        List<String> list = LoadUtil.loadList("temp.dict");
+
+        list.forEach(x -> {
+            int index = x.indexOf("大道");
+            if(-1 != index) {
+                System.out.println(x.substring(0,index+2));
+            }
+        });
+
+    }
 
 }
