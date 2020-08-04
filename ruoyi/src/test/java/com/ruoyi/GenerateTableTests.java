@@ -171,4 +171,59 @@ public class GenerateTableTests {
         Assert.assertTrue(Objects.equals(202006, lastYearMonth));
     }
 
+    @Test
+    public void testAppend() {
+        StringBuffer sb = new StringBuffer();
+        sb.append(String.valueOf('a'), 0, 1);
+        sb.insert(0, "b");
+        sb.insert(0, "c");
+        System.out.println(sb.toString());
+        Assert.assertEquals("cba", sb.toString());
+    }
+
+    @Test
+    public void testDemo() {
+        String s = "Let's take LeetCode contest";
+        int length = s.length();
+        StringBuffer sb = new StringBuffer(s.length());
+        int startIndex = 0;
+        for (int i = 0; i < length; i++) {
+            char ch = s.charAt(i);
+            if (ch == ' ') {
+                startIndex = i + 1;
+                sb.append(" ");
+            } else {
+                sb.insert(startIndex, ch);
+            }
+        }
+
+        Assert.assertEquals("s'teL ekat edoCteeL tsetnoc", sb.toString());
+
+    }
+
+    @Test
+    public void testSplit() {
+        String s = "";
+
+        String[] ss = s.split(" ");
+        StringBuffer sb = new StringBuffer();
+
+        for (String item :
+                ss) {
+            sb.append(reverseString(item.toCharArray()));
+            sb.append(" ");
+        }
+        sb.substring(0, sb.length() - 1);
+    }
+
+    private String reverseString(char[] chs) {
+        String str = "";
+
+        for (int i = 0; i < chs.length; i++) {
+            str = chs[i] + str;
+        }
+        return str;
+    }
+
+
 }
