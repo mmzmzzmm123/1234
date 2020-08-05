@@ -141,7 +141,6 @@ public class CleanAddressBuilder {
             cleanAddress.setIndependent(Boolean.TRUE);
         }
 
-
         return this;
     }
 
