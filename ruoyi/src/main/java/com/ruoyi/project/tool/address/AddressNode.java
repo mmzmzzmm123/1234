@@ -1,5 +1,7 @@
 package com.ruoyi.project.tool.address;
 
+import com.ruoyi.common.utils.StringUtils;
+
 import java.util.AbstractList;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -55,11 +57,24 @@ public class AddressNode {
         return content;
     }
 
+    /**
+     * 数据节点
+     *
+     * @return
+     */
+    public Boolean dataNode() {
+        return StringUtils.isNotEmpty(this.content);
+    }
+
     public void setContent(String content) {
         this.content = content;
     }
 
     public void addChildNode(AddressNode addressNode) {
         contentList.add(addressNode);
+    }
+
+    public List<AddressNode> getContentList() {
+        return contentList;
     }
 }

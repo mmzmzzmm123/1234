@@ -75,7 +75,7 @@ public class AddressNodeParse {
         }
 
         for (Map.Entry<String, String> district : districtMap.entrySet()) {
-            int index = shanghaiAndDistrict.indexOf(district.getKey());
+            int index = shanghaiAndDistrict.indexOf(district.getKey(), this.context.getStartIndex());
             if (-1 != index) {
                 AddressNode addressNode = new AddressNode(AddressNodeType.DISTRICT, district.getValue());
                 addressNode.setStartIndex(index);
@@ -92,7 +92,7 @@ public class AddressNodeParse {
      */
     public void parseRegion() {
         for (int i = 0; i < regionList.size(); i++) {
-            int index = this.context.getContent().indexOf(regionList.get(i));
+            int index = this.context.getContent().indexOf(regionList.get(i), this.context.getStartIndex());
             if (-1 != index) {
                 AddressNode addressNode = new AddressNode(AddressNodeType.REGION, regionList.get(i));
                 addressNode.setStartIndex(index);
@@ -124,9 +124,8 @@ public class AddressNodeParse {
      */
     public void parseRoad() {
         AddressNode addressNode = new AddressNode(AddressNodeType.ROAD);
-
         for (int i = 0; i < roadList.size(); i++) {
-            int index = this.context.getContent().indexOf(roadList.get(i));
+            int index = this.context.getContent().indexOf(roadList.get(i), this.context.getStartIndex());
             if (-1 != index) {
                 if (null == addressNode.getStartIndex()) {
                     addressNode.setStartIndex(index);
@@ -171,12 +170,13 @@ public class AddressNodeParse {
         Pattern nongPattern = Pattern.compile(DEFAULT_NONG_PATTERN);
         Matcher matcher = nongPattern.matcher(this.context.getContent());
         if (matcher.find()) {
-            int index = this.context.getContent().indexOf(matcher.group(0));
+            int index = this.context.getContent().indexOf(matcher.group(0), this.context.getStartIndex());
             if (-1 != index) {
                 AddressNode addressNode = new AddressNode(AddressNodeType.NONG, matcher.group(0));
                 addressNode.setStartIndex(index);
                 addressNode.setEndIndex(index + matcher.group(0).length() + 1);
                 addressNode.addChildNode(addressNode);
+                this.context.addAddressNode(addressNode);
             }
         }
     }
@@ -188,12 +188,13 @@ public class AddressNodeParse {
         Pattern haoPattern = Pattern.compile(DEFAULT_HAO_PATTERN);
         Matcher matcher = haoPattern.matcher(this.context.getContent());
         if (matcher.find()) {
-            int index = this.context.getContent().indexOf(matcher.group(0));
+            int index = this.context.getContent().indexOf(matcher.group(0), this.context.getStartIndex());
             if (-1 != index) {
                 AddressNode addressNode = new AddressNode(AddressNodeType.HAO, matcher.group(0));
                 addressNode.setStartIndex(index);
                 addressNode.setEndIndex(index + matcher.group(0).length() + 1);
                 addressNode.addChildNode(addressNode);
+                this.context.addAddressNode(addressNode);
             }
         }
     }
@@ -205,12 +206,13 @@ public class AddressNodeParse {
         Pattern haoPattern = Pattern.compile(DEFAULT_ZHUANG_PATTERN);
         Matcher matcher = haoPattern.matcher(this.context.getContent());
         if (matcher.find()) {
-            int index = this.context.getContent().indexOf(matcher.group(0));
+            int index = this.context.getContent().indexOf(matcher.group(0), this.context.getStartIndex());
             if (-1 != index) {
                 AddressNode addressNode = new AddressNode(AddressNodeType.ZHUANG, matcher.group(0));
                 addressNode.setStartIndex(index);
                 addressNode.setEndIndex(index + matcher.group(0).length() + 1);
                 addressNode.addChildNode(addressNode);
+                this.context.addAddressNode(addressNode);
             }
         }
     }
@@ -222,12 +224,13 @@ public class AddressNodeParse {
         Pattern haoPattern = Pattern.compile(DEFAULT_FLOOR_PATTERN);
         Matcher matcher = haoPattern.matcher(this.context.getContent());
         if (matcher.find()) {
-            int index = this.context.getContent().indexOf(matcher.group(0));
+            int index = this.context.getContent().indexOf(matcher.group(0), this.context.getStartIndex());
             if (-1 != index) {
                 AddressNode addressNode = new AddressNode(AddressNodeType.CENG, matcher.group(0));
                 addressNode.setStartIndex(index);
                 addressNode.setEndIndex(index + matcher.group(0).length() + 1);
                 addressNode.addChildNode(addressNode);
+                this.context.addAddressNode(addressNode);
             }
         }
     }
@@ -239,12 +242,13 @@ public class AddressNodeParse {
         Pattern haoPattern = Pattern.compile(DEFAULT_SHI_PATTERN);
         Matcher matcher = haoPattern.matcher(this.context.getContent());
         if (matcher.find()) {
-            int index = this.context.getContent().indexOf(matcher.group(0));
+            int index = this.context.getContent().indexOf(matcher.group(0),this.context.getStartIndex());
             if (-1 != index) {
                 AddressNode addressNode = new AddressNode(AddressNodeType.SHI, matcher.group(0));
                 addressNode.setStartIndex(index);
                 addressNode.setEndIndex(index + matcher.group(0).length() + 1);
                 addressNode.addChildNode(addressNode);
+                this.context.addAddressNode(addressNode);
             }
         }
     }

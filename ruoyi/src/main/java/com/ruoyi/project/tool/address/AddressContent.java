@@ -27,4 +27,12 @@ public class AddressContent {
     public String getResult() {
         return sb.toString();
     }
+
+    @Override
+    public String toString() {
+        return "AddressContent{" +
+                "addressType=" + addressType +
+                ", sb=" + sb +
+                '}';
+    }
 }

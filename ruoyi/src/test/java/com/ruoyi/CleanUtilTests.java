@@ -1,8 +1,11 @@
 package com.ruoyi;
 
 import com.ruoyi.common.utils.LoadUtil;
+import com.ruoyi.project.tool.address.AddressContent;
 import com.ruoyi.project.tool.address.CleanUtil;
+import com.ruoyi.project.tool.address.StandardAddress;
 import com.ruoyi.project.tool.address.model.CleanAddress;
+import com.ruoyi.project.tool.address.utils.DefaultAddressBuilder;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -21,6 +24,24 @@ public class CleanUtilTests {
         textList.sort((x, y) -> y.length() - x.length());
         textList.forEach(item -> {
             System.out.println(item);
+        });
+    }
+
+    @Test
+    public void testClear2() {
+        //
+        List<String> textList = LoadUtil.loadList("icbc.dict");
+
+        textList.forEach(item -> {
+            DefaultAddressBuilder defaultAddressBuilder = new DefaultAddressBuilder();
+            StandardAddress standardAddress = defaultAddressBuilder.clear(item);
+            List<AddressContent> list = standardAddress.getResult();
+            list.forEach(x -> {
+                System.out.println(x);
+            });
+//
+//            CleanAddress cleanAddress = CleanUtil.clear(item);
+//            System.out.println(cleanAddress);
         });
     }
 
