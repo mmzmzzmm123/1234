@@ -1,4 +1,4 @@
-package com.ruoyi.project.tool.address;
+package com.ruoyi.project.tool.address.utils;
 
 import com.ruoyi.project.tool.address.model.AdrNode;
 

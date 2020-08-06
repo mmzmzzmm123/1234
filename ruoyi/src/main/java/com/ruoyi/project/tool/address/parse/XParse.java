@@ -1,7 +1,7 @@
 package com.ruoyi.project.tool.address.parse;
 
 import com.ruoyi.common.utils.LoadUtil;
-import com.ruoyi.project.tool.address.ParseContext;
+import com.ruoyi.project.tool.address.utils.ParseContext;
 import com.ruoyi.project.tool.address.model.RoadNode;
 
 import java.util.List;

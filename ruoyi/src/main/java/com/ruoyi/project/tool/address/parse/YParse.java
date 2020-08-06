@@ -1,6 +1,6 @@
 package com.ruoyi.project.tool.address.parse;
 
-import com.ruoyi.project.tool.address.ParseContext;
+import com.ruoyi.project.tool.address.utils.ParseContext;
 import com.ruoyi.project.tool.address.model.*;
 
 import java.util.regex.Matcher;
