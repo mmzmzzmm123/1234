@@ -24,9 +24,10 @@ public abstract class BaseAddressBuilder implements AddressBuilder {
     private static final int DISTRICT_LENGTH = 8;
     private static final String SHANGHAI_SHI = "上海市";
     private static final String SHANGHAI = "上海";
+    private static final String SHANG_SHANG = "上上";
     private static final String SHANG = "上";
     private static final String HAO = "号";
-    private static final String SHANG_SHANG = "上上";
+
     private static final String CHINESE_FLOOR_PATTERN = "([一二三四五六七八九十]+)层";
     private static final String NUMBER_FLOOR_PATTERN = "(\\d+)层";
     private static final String DEFAULT_HAO_PATTERN = "([\\dA-Za-z]+)号";

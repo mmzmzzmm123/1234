@@ -1,10 +1,10 @@
 package com.ruoyi;
 
 import com.ruoyi.common.utils.LoadUtil;
-import com.ruoyi.project.tool.address.AddressContent;
-import com.ruoyi.project.tool.address.CleanUtil;
-import com.ruoyi.project.tool.address.StandardAddress;
+import com.ruoyi.project.tool.address.*;
 import com.ruoyi.project.tool.address.model.CleanAddress;
+import com.ruoyi.project.tool.address.model.LianHaoNode;
+import com.ruoyi.project.tool.address.parse.ZParse;
 import com.ruoyi.project.tool.address.utils.DefaultAddressBuilder;
 import org.junit.Assert;
 import org.junit.Test;
@@ -15,17 +15,125 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Base64;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class CleanUtilTests {
 
     @Test
-    public void testSortDistrict() {
+    public void printStreet() {
+        List<String> textList = LoadUtil.loadList("jie.dict");
+        textList.forEach(item -> {
+            if (!item.contains("路") && item.contains("街") && !item.contains("街坊")) {
+                System.out.println(item);
+            }
+        });
+    }
+
+    @Test
+    public void printNoRoad() {
+        List<String> textList = LoadUtil.loadList("icbc.dict");
+        textList.forEach(item -> {
+            if (!item.contains("路")) {
+                System.out.println(item);
+            }
+        });
+    }
+
+
+    @Test
+    public void testSort() {
         List<String> textList = LoadUtil.loadList("temp.dict");
         textList.sort((x, y) -> y.length() - x.length());
         textList.forEach(item -> {
             System.out.println(item);
         });
     }
+
+    @Test
+    public void testClear3() {
+        List<String> textList = LoadUtil.loadList("test.dict");
+        textList.forEach(item -> {
+            AddressResult addressResult = AddressUtil.clear(item);
+            if (null == addressResult.getCleanAddress()) {
+                return;
+            }
+            addressResult.getCleanAddress().forEach(adr -> {
+                System.out.println(String.format("%s\t%s\t", addressResult.getDistrict(), adr));
+            });
+        });
+    }
+
+    /**
+     * 中间连号
+     */
+    @Test
+    public void testLianHaoInMiddle() {
+        AddressResult addressResult = AddressUtil.clear("上海市浦东新区拱北路278号22号702室");
+        if (null == addressResult.getCleanAddress()) {
+            return;
+        }
+
+        Assert.assertEquals(addressResult.getCleanAddress().get(0), "拱北路278号22号702室");
+        Assert.assertEquals(addressResult.getDistrict(), "浦东");
+    }
+
+    /**
+     * 尾部连号
+     */
+    @Test
+    public void testLianHaoInEnd() {
+        AddressResult addressResult = AddressUtil.clear("上海市浦东新区拱北路278弄22号702号");
+        if (null == addressResult.getCleanAddress()) {
+            return;
+        }
+
+        Assert.assertEquals(addressResult.getCleanAddress().get(0), "拱北路278弄22号702室");
+        Assert.assertEquals(addressResult.getDistrict(), "浦东");
+    }
+
+    /**
+     * 多个号
+     */
+    @Test
+    public void testMultiHao() {
+        AddressResult addressResult = AddressUtil.clear("上海市松江区泗泾镇德悦路375弄24、25号704室");
+        if (null == addressResult.getCleanAddress()) {
+            return;
+        }
+
+        Assert.assertEquals("德悦路375弄24号704室", addressResult.getCleanAddress().get(0));
+        Assert.assertEquals("德悦路375弄25号704室", addressResult.getCleanAddress().get(1));
+        Assert.assertEquals(addressResult.getDistrict(), "松江");
+    }
+
+    @Test
+    public void testWhileMatch() {
+        Pattern numberPattern = Pattern.compile("\\d+");
+        Matcher matcher = numberPattern.matcher("24、25号");
+
+        while (matcher.find()) {
+
+            System.out.println(matcher.group());
+
+        }
+    }
+
+
+    /**
+     * 室、地下
+     */
+    @Test
+    public void testShiAndDiXiaShi() {
+        AddressResult addressResult = AddressUtil.clear("闵行区北华路168弄35号1002室及30号地下1层车位665室");
+        if (null == addressResult.getCleanAddress()) {
+            return;
+        }
+        addressResult.getCleanAddress().forEach(adr -> {
+            System.out.println(String.format("%s\t%s\t", addressResult.getDistrict(), adr));
+        });
+    }
+
 
     @Test
     public void testClear2() {
