@@ -94,6 +94,13 @@ mybatis:
     mapperLocations: classpath*:mapper/**/*Mapper.xml
     # 加载全局的配置文件
     configLocation: classpath:mybatis/mybatis-config.xml
+#通用mapper的所在接口名称 不只是包名
+#mappers 多个接口时逗号隔开
+
+mapper:
+  mappers: com.ruoyi.common.mybatisMapper.MyMapper
+  not-empty: false
+  identity: MYSQL
 
 # PageHelper分页插件
 pagehelper: 

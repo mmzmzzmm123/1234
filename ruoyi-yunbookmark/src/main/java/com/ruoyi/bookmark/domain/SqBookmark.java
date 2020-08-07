@@ -5,61 +5,79 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 /**
  * 书签管理对象 sq_bookmark
  * 
- * @author wanghao
+ * @author wanghao  不存在的字段注解 @Transient
  * @date 2020-08-02
  */
+@Table(name="sq_bookmark")
 public class SqBookmark extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
-
+    @Id
+    @GeneratedValue(generator = "JDBC")//返回自增长主键
     /** $column.columnComment */
     private Long bookmarkId;
 
     /** 所属用户ID */
+    @Column(name = "userid")
     @Excel(name = "所属用户ID")
     private Long userid;
 
     /** 书签标题 */
     @Excel(name = "书签标题")
+    @Column(name = "title")
     private String title;
 
     /** 书签地址 */
     @Excel(name = "书签地址")
+    @Column(name = "url")
     private String url;
 
     /** $column.columnComment */
     @Excel(name = "书签地址")
+    @Column(name = "urls")
     private String urls;
 
     /** 书签描述 */
     @Excel(name = "书签描述")
+    @Column(name = "description")
     private String description;
 
     /** $column.columnComment */
     @Excel(name = "书签描述")
+    @Column(name = "image")
     private String image;
 
     /** 标签 */
     @Excel(name = "标签")
+    @Column(name = "Label")
     private String label;
 
     /** 分类ID */
     @Excel(name = "分类ID")
+    @Column(name = "menu_id")
     private Long menuId;
 
     /** 点赞数 */
     @Excel(name = "点赞数")
+    @Column(name = "zcount")
     private Long zcount;
 
     /** 0 未删除 1表示删除 */
     @Excel(name = "0 未删除 1表示删除")
+    @Column(name = "IDelete")
     private Integer idelete;
 
     /** 0公开显示 1隐藏显示 2好友显示 3稍后再看 */
     @Excel(name = "0公开显示 1隐藏显示 2好友显示 3稍后再看")
+    @Column(name = "Start")
     private Integer start;
 
     public void setBookmarkId(Long bookmarkId) 

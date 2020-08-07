@@ -11,6 +11,10 @@ import com.ruoyi.bookmark.domain.SqBookmark;
  */
 public interface ISqBookmarkService
 {
+    /**
+     * 测试 通用mapper
+     */
+    public List<SqBookmark> selectByID(Long userID);
 
     /**
      * 查询用户栏目下书签管理

@@ -2,6 +2,7 @@ package com.ruoyi.bookmark.mapper;
 
 import java.util.List;
 import com.ruoyi.bookmark.domain.SqBookmark;
+import com.ruoyi.common.mybatisMapper.MyMapper;
 import org.apache.ibatis.annotations.Param;
 
 /**
@@ -10,7 +11,7 @@ import org.apache.ibatis.annotations.Param;
  * @author wanghao
  * @date 2020-08-02
  */
-public interface SqBookmarkMapper
+public interface SqBookmarkMapper extends MyMapper<SqBookmark>
 {
     /**
      * 查询栏目下书签管理

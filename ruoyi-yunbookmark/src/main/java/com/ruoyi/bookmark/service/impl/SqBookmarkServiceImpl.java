@@ -20,6 +20,12 @@ public class SqBookmarkServiceImpl implements ISqBookmarkService
     @Autowired
     private SqBookmarkMapper sqBookmarkMapper;
 
+    @Override
+    public List<SqBookmark> selectByID(Long userID) {
+
+        return sqBookmarkMapper.selectByExample(userID);
+    }
+
     /**
      * 查询书签管理
      *

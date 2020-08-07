@@ -36,6 +36,15 @@ public class SqBookmarkController extends BaseController
     private ISqBookmarkService sqBookmarkService;
 
 
+    /**
+     * 测试通用mapper
+     */
+    @GetMapping("/selectByID")
+    public TableDataInfo selectByID(Long userID) {
+        List<SqBookmark> list = sqBookmarkService.selectByID(userID);
+        return getDataTable(list);
+    }
+
 
     /**
      * 查询用户栏目下的书签
