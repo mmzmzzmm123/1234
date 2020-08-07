@@ -166,7 +166,13 @@ public class ExcelUtil<T> {
                 Cell cell = heard.getCell(i);
                 if (StringUtils.isNotNull(cell)) {
                     String value = this.getCellValue(heard, i).toString();
-                    cellMap.put(value, i);
+                    if (StringUtils.isNotEmpty(value)) {
+                        String noLineValue = value.replace("\r\n", "").replace("\n", "")
+                                .replace("\r", "");
+                        cellMap.put(noLineValue, i);
+                    } else {
+                        cellMap.put(value, i);
+                    }
                 } else {
                     cellMap.put(null, i);
                 }

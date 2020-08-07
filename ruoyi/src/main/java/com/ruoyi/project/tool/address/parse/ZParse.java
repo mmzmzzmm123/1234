@@ -2,7 +2,6 @@ package com.ruoyi.project.tool.address.parse;
 
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.project.tool.address.model.*;
-import com.ruoyi.project.tool.address.utils.ParseContext;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -18,6 +17,7 @@ import java.util.regex.Pattern;
  */
 public class ZParse {
     private static final String FU_SHI = "复式";
+    private static final String SHI_JI = "室及";
     private static final String NUMBER_PATTERN = "\\d+";
     private static final String LIAN_SHI_PATTERN = "(\\d+)[、\\.\\-\\_](\\d)(室)?$";
     private static final String DEFAULT_SHI_PATTERN = "[\\dA-Za-z]+室";
@@ -118,6 +118,12 @@ public class ZParse {
 
     private void parseShi() {
         String text = this.context.getContent().substring(this.startIndex);
+
+        if (this.isPark && !text.contains(SHI_JI)) {
+            // 表示该地址是车位，无需处理室号。
+            return;
+        }
+
         // 复式
         if (-1 != text.indexOf(FU_SHI)) {
             parseFUSHI();

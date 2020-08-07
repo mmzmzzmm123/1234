@@ -102,6 +102,48 @@ public class AddressUtilTests {
         }
         Assert.assertEquals("北华路168弄35号1002室", addressResult.getCleanAddress().get(0));
         Assert.assertEquals(addressResult.getDistrict(), "闵行");
+
+        addressResult = AddressUtil.clear("西藏北路1308弄8号地下1层车位(人防)27室");
+        if (null == addressResult.getCleanAddress()) {
+            return;
+        }
+        Assert.assertEquals("西藏北路1308弄8号", addressResult.getCleanAddress().get(0));
+        Assert.assertEquals(addressResult.getDistrict(), null);
+    }
+
+    /**
+     * 号号楼
+     */
+    @Test
+    public void testHaoLou() {
+        AddressResult addressResult = AddressUtil.clear("四平路283号6号楼2802室");
+        if (null == addressResult.getCleanAddress()) {
+            return;
+        }
+        Assert.assertEquals("四平路283号6号2802室", addressResult.getCleanAddress().get(0));
+
+    }
+
+    /**
+     * 复式
+     */
+    @Test
+    public void testFUSHI() {
+        AddressResult addressResult = AddressUtil.clear("硕望路188弄21号101(复式)");
+        if (null == addressResult.getCleanAddress()) {
+            return;
+        }
+        Assert.assertEquals("硕望路188弄21号101室", addressResult.getCleanAddress().get(0));
+        Assert.assertEquals(addressResult.getDistrict(), null);
+    }
+
+    @Test
+    public void testZhenJieFang() {
+        AddressResult addressResult = AddressUtil.clear("南翔镇7街坊255/2丘19幢1单元1203室");
+        if (null == addressResult.getCleanAddress()) {
+            return;
+        }
+        Assert.assertFalse(false);
     }
 
     /**
@@ -144,10 +186,10 @@ public class AddressUtilTests {
 
 
     @Test
-    public void printStreet() {
+    public void printStreetOrRoad() {
         List<String> textList = LoadUtil.loadList("jie.dict");
         textList.forEach(item -> {
-            if (!item.contains("路") && item.contains("街") && !item.contains("街坊")) {
+            if ((item.contains("路") || item.contains("街")) && !item.contains("街坊")) {
                 System.out.println(item);
             }
         });

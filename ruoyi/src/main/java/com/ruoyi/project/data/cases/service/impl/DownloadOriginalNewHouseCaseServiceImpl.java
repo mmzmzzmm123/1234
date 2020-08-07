@@ -3,6 +3,7 @@ package com.ruoyi.project.data.cases.service.impl;
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.ruoyi.common.constant.LabelConstants;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.LoadUtil;
 import com.ruoyi.project.data.cases.domain.OriginalNewHouseCase;
 import com.ruoyi.project.data.cases.mapper.OriginalNewHouseCaseMapper;
 import com.ruoyi.project.data.cases.mapper.sync.DownloadOriginalNewHouseCaseMapper;
@@ -127,61 +128,17 @@ public class DownloadOriginalNewHouseCaseServiceImpl {
      * @param tableRoute
      */
     private void afterFirst(Integer tableRoute) {
-        //
         try {
-            jdbcTemplate.update("insert into obpm_LianCheng_Data.dbo.TLK_成交案例\n" +
-                    "(\n" +
-                    "    ID\n" +
-                    "  , ITEM_DEALID\n" +
-                    "  , ITEM_SECTOR\n" +
-                    "  , ITEM_CIRCLEPOSITION\n" +
-                    "  , ITEM_DISTRICT\n" +
-                    "  , ITEM_RANAME\n" +
-                    "  , ITEM_HOUSEADDRESS\n" +
-                    "  , ITEM_AREA\n" +
-                    "  , ITEM_SUMPRICE\n" +
-                    "  , ITEM_UNITPRICE\n" +
-                    "  , ITEM_SIGNINGDATA\n" +
-                    "  , ITEM_FLOOR\n" +
-                    "  , ITEM_ROOMNATURE\n" +
-                    "  , ITEM_APARTMENT\n" +
-                    "  , ITEM_DEALTYPE\n" +
-                    "  , ITEM_CALCULATIONUNITPRICE\n" +
-                    "  , ITEM_CONSULTUNITPRICE\n" +
-                    "  , ITEM_CONSULTTOTALPRICE\n" +
-                    "  , ITEM_YEARMONTH\n" +
-                    "  , ITEM_CALCULATIONTOTALPRICE\n" +
-                    "  , ITEM_HOUSETYPE\n" +
-                    "  , case_id\n" +
-                    ")\n" +
-                    "select newid()\n" +
-                    "     , replace(newid(), '-', '')\n" +
-                    "     , case_block\n" +
-                    "     , case_loop\n" +
-                    "     , case_county\n" +
-                    "     , case_community_name\n" +
-                    "     , case_address\n" +
-                    "     , case_area\n" +
-                    "     , case_total_price\n" +
-                    "     , case_unit_price\n" +
-                    "     , case_signing_date\n" +
-                    "     , case_floor\n" +
-                    "     , case_house_property\n" +
-                    "     , case_apartment_layout\n" +
-                    "     , '一手'\n" +
-                    "     , compute_unit_price\n" +
-                    "     , reference_unit_price\n" +
-                    "     , reference_total_price\n" +
-                    "     , '" + (tableRoute / 100) + "-" + String.format("%02d", (tableRoute % 100)) + "'\n" +
-                    "     , compute_total_price\n" +
-                    "     , case_house_type\n" +
-                    "     , case_id\n" +
-                    "from uv_compute.dbo.original_new_house_case_" + tableRoute + ";");
+            String rawSql = LoadUtil.loadContent("sql-template/copy_yishou_data.sql");
+            String yearMonth = String.format("%d-%02d", tableRoute / 100, tableRoute % 100);
+            String sql = rawSql
+                    .replace("#tableRoute#", tableRoute.toString())
+                    .replace("#yearMonth#", yearMonth);
+            jdbcTemplate.update(sql);
         } catch (Exception e) {
             logger.error("第一批次案例推送成交案例库异常", e);
             e.printStackTrace();
         }
-
     }
 
     /**
@@ -192,60 +149,15 @@ public class DownloadOriginalNewHouseCaseServiceImpl {
     private void afterSecond(Integer tableRoute) {
         //
         try {
-            jdbcTemplate.update("insert into obpm_LianCheng_Data.dbo.TLK_成交案例\n" +
-                    "(\n" +
-                    "    ID\n" +
-                    "  , ITEM_DEALID\n" +
-                    "  , ITEM_SECTOR\n" +
-                    "  , ITEM_CIRCLEPOSITION\n" +
-                    "  , ITEM_DISTRICT\n" +
-                    "  , ITEM_RANAME\n" +
-                    "  , ITEM_HOUSEADDRESS\n" +
-                    "  , ITEM_AREA\n" +
-                    "  , ITEM_SUMPRICE\n" +
-                    "  , ITEM_UNITPRICE\n" +
-                    "  , ITEM_SIGNINGDATA\n" +
-                    "  , ITEM_FLOOR\n" +
-                    "  , ITEM_ROOMNATURE\n" +
-                    "  , ITEM_APARTMENT\n" +
-                    "  , ITEM_DEALTYPE\n" +
-                    "  , ITEM_CALCULATIONUNITPRICE\n" +
-                    "  , ITEM_CONSULTUNITPRICE\n" +
-                    "  , ITEM_CONSULTTOTALPRICE\n" +
-                    "  , ITEM_YEARMONTH\n" +
-                    "  , ITEM_CALCULATIONTOTALPRICE\n" +
-                    "  , ITEM_HOUSETYPE\n" +
-                    "  , case_id\n" +
-                    ")\n" +
-                    "select newid()\n" +
-                    "     , replace(newid(), '-', '')\n" +
-                    "     , case_block\n" +
-                    "     , case_loop\n" +
-                    "     , case_county\n" +
-                    "     , case_community_name\n" +
-                    "     , case_address\n" +
-                    "     , case_area\n" +
-                    "     , case_total_price\n" +
-                    "     , case_unit_price\n" +
-                    "     , case_signing_date\n" +
-                    "     , case_floor\n" +
-                    "     , case_house_property\n" +
-                    "     , case_apartment_layout\n" +
-                    "     , '一手'\n" +
-                    "     , compute_unit_price\n" +
-                    "     , reference_unit_price\n" +
-                    "     , reference_total_price\n" +
-                    "     , '" + (tableRoute / 100) + "-" + String.format("%02d", (tableRoute % 100)) + "'\n" +
-                    "     , compute_total_price\n" +
-                    "     , case_house_type\n" +
-                    "     , case_id\n" +
-                    "from uv_compute.dbo.original_new_house_case_" + tableRoute + "_update;");
-
+            String rawSql = LoadUtil.loadContent("sql-template/copy_yishou_data.sql");
+            String yearMonth = String.format("%d-%02d", tableRoute / 100, tableRoute % 100);
+            String sql = rawSql
+                    .replace("#tableRoute#", tableRoute.toString() + "_update")
+                    .replace("#yearMonth#", yearMonth);
+            jdbcTemplate.update(sql);
         } catch (Exception e) {
             logger.error("第二批次案例推送成交案例库异常", e);
             e.printStackTrace();
         }
-
     }
-
 }

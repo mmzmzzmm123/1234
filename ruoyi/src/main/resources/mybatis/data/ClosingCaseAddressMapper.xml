@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.data.basis.mapper.ClosingCaseAddressMapper">
+    <select id="selectCount" resultType="int">
+        select count(1) from closing_case;
+    </select>
+    <select id="selectPageList" resultType="com.ruoyi.project.data.basis.domain.ClosingCaseAddress">
+        select
+            item_dealid as dealid,
+            ITEM_HOUSEADDRESS as address,
+            clean_address as cleanAddress,
+            tag as tag
+        from closing_case order by item_dealid offset #{offset} ROW FETCH NEXT #{limit}
+        ROWS ONLY;
+    </select>
+    <update id="clear" parameterType="com.ruoyi.project.data.basis.domain.ClosingCaseAddress">
+        update closing_case set clean_address=#{cleanAddress},tag=#{tag} where ITEM_DEALID=#{dealId};
+    </update>
+</mapper>

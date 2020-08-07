@@ -1,6 +1,5 @@
 package com.ruoyi.project.tool.address.parse;
 
-import com.ruoyi.project.tool.address.utils.ParseContext;
 import com.ruoyi.project.tool.address.model.*;
 
 import java.util.regex.Matcher;
@@ -104,7 +103,7 @@ public class YParse {
 
     private void parseHao() {
         // 连号
-        String text = this.context.getContent().substring(this.context.getStartIndex());
+        String text = this.context.getContent().substring(this.context.getStartIndex()).replace("(临时)", "");
         Pattern lianHaoPattern = Pattern.compile(LIAN_HAO_PATTERN);
         Matcher matcher = lianHaoPattern.matcher(text);
         if (matcher.find()) {
