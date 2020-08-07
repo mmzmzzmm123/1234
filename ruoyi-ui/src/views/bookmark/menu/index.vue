@@ -14,6 +14,8 @@
  import "../ztree/jquery.ztree.core.js"
   import "../ztree/demo.css"
   import "../ztree/zTreeStyle.css"
+  import "../ztree/jquery.ztree.exedit.js"
+
 
   export default {
     name: 'areaTree',
@@ -30,6 +32,8 @@
             showIcon: true,
             selectedMulti: false,
             dblClickExpand: false,
+            addHoverDom: this.addHoverDom,
+            removeHoverDom: this.removeHoverDom,
             addDiyDom: this.addDiyDom
           },
           check: {
@@ -102,7 +106,7 @@
 
 
 
-       addDiyDom:function(treeId, treeNode) {
+    addDiyDom:function(treeId, treeNode) {
     var spaceWidth = 5;
     var switchObj = $("#" + treeNode.tId + "_switch"),
       icoObj = $("#" + treeNode.tId + "_ico");
@@ -115,8 +119,26 @@
     }
   },
 
+  addHoverDom:function(treeId, treeNode) {
+  	var confCount = $("."+treeNode.tId+"_sz").length;
+  	//console.log("进入addHoverDom:统计"+treeNode.tId+"_sz 的数量:"+confCount);
+  	if (confCount>0) return;
+  	//if (treeNode.parentNode && treeNode.parentNode.id!=1) return;
+  	var switchObjspan = $("#" + treeNode.tId + "_span");
+  	var editStr = "<span class="+treeNode.tId+"_sz onclick='alert(1111111);return false;' style='float:right;display: inline-block' onfocus='this.blur();'>删</span>";
+  	switchObjspan.after(editStr);
+
+  },
+
+  removeHoverDom:function(treeId, treeNode) {
+  	console.log("进入removeHoverDom:"+"." + treeNode.tId + "_sz")
+  	//if (treeNode.parentTId && treeNode.getParentNode().id!=1) return;
+  	$("." + treeNode.tId + "_sz").unbind().remove();
+
+  },
+  //点击展开
    beforeClick:function(treeId, treeNode) {
-    if (treeNode.level == 0 ) {
+    if (treeNode.level != 19990 ) {
       var zTree = $.fn.zTree.getZTreeObj("treeDemo");
       zTree.expandNode(treeNode);
       return false;
@@ -165,7 +187,7 @@
   .ztree.showIcon li a span.button.switch {visibility:visible}
   .ztree li a.curSelectedNode {background-color:#D4D4D4;border:0;height:30px;}
   .ztree li span {line-height:30px;}
-  .ztree li span.button {margin-top: -7px;;margin-left:2px}
+  .ztree li span.button {margin-top: -4px;;margin-left:2px}
   .ztree li span.button.switch {width: 16px;height: 16px;}
 
   .ztree li a.level0 span {font-size: 100%;font-weight: bold}
