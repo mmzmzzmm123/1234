@@ -38,10 +38,7 @@ public abstract class AbstractQuartzJob implements Job
         try
         {
             before(context, sysJob);
-            if (sysJob != null)
-            {
-                doExecute(context, sysJob);
-            }
+            doExecute(context, sysJob);
             after(context, sysJob, null);
         }
         catch (Exception e)
