@@ -40,7 +40,7 @@ public class SqBookmarkController extends BaseController
      * 测试通用mapper
      */
     @GetMapping("/selectByID")
-    public TableDataInfo selectByID(Long userID) {
+    public TableDataInfo selectByID( Long userID) {
         List<SqBookmark> list = sqBookmarkService.selectByID(userID);
         return getDataTable(list);
     }
@@ -51,6 +51,7 @@ public class SqBookmarkController extends BaseController
      * @return
      */
     @GetMapping("/selectBymenuIdUserID")
+    @PreAuthorize("@ss.hasPermi('bookmark:bookmark:list')")
     public TableDataInfo selectBymenuIdUserID(Long menuID, Long userID) {
         startPage();
         List<SqBookmark> list = sqBookmarkService.selectBymenuIdUserID(menuID,userID);

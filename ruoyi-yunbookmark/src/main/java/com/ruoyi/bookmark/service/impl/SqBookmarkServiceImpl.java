@@ -2,6 +2,7 @@ package com.ruoyi.bookmark.service.impl;
 
 import java.util.List;
 import com.ruoyi.common.utils.DateUtils;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.bookmark.mapper.SqBookmarkMapper;
@@ -23,7 +24,7 @@ public class SqBookmarkServiceImpl implements ISqBookmarkService
     @Override
     public List<SqBookmark> selectByID(Long userID) {
 
-        return sqBookmarkMapper.selectByExample(userID);
+        return sqBookmarkMapper.selectAll();
     }
 
     /**

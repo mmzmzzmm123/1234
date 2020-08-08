@@ -8,12 +8,12 @@ import tk.mybatis.spring.annotation.MapperScan;
 
 /**
  * 启动程序
- * 
+ *
  * @author
  */
 
 @SpringBootApplication(exclude = { DataSourceAutoConfiguration.class })
-@MapperScan(basePackages = "com.ruoyi.bookmark.mapper")
+@MapperScan(basePackages = { "com.ruoyi.**.mapper" })
 public class RuoYiApplication
 {
     public static void main(String[] args)

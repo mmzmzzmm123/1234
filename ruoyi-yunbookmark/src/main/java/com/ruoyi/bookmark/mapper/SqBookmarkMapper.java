@@ -1,15 +1,17 @@
 package com.ruoyi.bookmark.mapper;
 
-import java.util.List;
 import com.ruoyi.bookmark.domain.SqBookmark;
 import com.ruoyi.common.mybatisMapper.MyMapper;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
+
 
 /**
  * 书签管理Mapper接口
  *
  * @author wanghao
- * @date 2020-08-02
+ * @date 2020-08-02F
  */
 public interface SqBookmarkMapper extends MyMapper<SqBookmark>
 {
@@ -20,7 +22,7 @@ public interface SqBookmarkMapper extends MyMapper<SqBookmark>
      * @param userID 用户ID
      * @return 书签管理
      */
-    public List<SqBookmark> selectBymenuIdUserID(@Param("menuID") Long menuID,@Param("userID") Long userID);
+    public List<SqBookmark> selectBymenuIdUserID(@Param("menuID") Long menuID, @Param("userID") Long userID);
     /**
      * 查询书签管理
      *

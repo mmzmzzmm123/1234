@@ -1,27 +1,28 @@
 package com.ruoyi.bookmark.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
-import com.ruoyi.common.core.domain.BaseEntity;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+
+import javax.persistence.*;
+import java.util.Date;
 
 /**
- * 书签管理对象 sq_bookmark
- * 
- * @author wanghao  不存在的字段注解 @Transient
+ * 书签管理对象 sq_bookmark   不存在的字段注解 @Transient
+ *
+ * @author wanghao
  * @date 2020-08-02
+ * @GeneratedValue让通用mapper在执行insert操作之后将自动生成的主键值回写到当前实体对象对应的属性当中
  */
 @Table(name="sq_bookmark")
-public class SqBookmark extends BaseEntity
+public class SqBookmark
 {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(generator = "JDBC")//返回自增长主键
+    @Column(name = "bookmark_id")
     /** $column.columnComment */
     private Long bookmarkId;
 
@@ -80,111 +81,125 @@ public class SqBookmark extends BaseEntity
     @Column(name = "Start")
     private Integer start;
 
-    public void setBookmarkId(Long bookmarkId) 
+    /** 创建时间 */
+    @Transient
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date createTime;
+
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public void setBookmarkId(Long bookmarkId)
     {
         this.bookmarkId = bookmarkId;
     }
 
-    public Long getBookmarkId() 
+    public Long getBookmarkId()
     {
         return bookmarkId;
     }
-    public void setUserid(Long userid) 
+    public void setUserid(Long userid)
     {
         this.userid = userid;
     }
 
-    public Long getUserid() 
+    public Long getUserid()
     {
         return userid;
     }
-    public void setTitle(String title) 
+    public void setTitle(String title)
     {
         this.title = title;
     }
 
-    public String getTitle() 
+    public String getTitle()
     {
         return title;
     }
-    public void setUrl(String url) 
+    public void setUrl(String url)
     {
         this.url = url;
     }
 
-    public String getUrl() 
+    public String getUrl()
     {
         return url;
     }
-    public void setUrls(String urls) 
+    public void setUrls(String urls)
     {
         this.urls = urls;
     }
 
-    public String getUrls() 
+    public String getUrls()
     {
         return urls;
     }
-    public void setDescription(String description) 
+    public void setDescription(String description)
     {
         this.description = description;
     }
 
-    public String getDescription() 
+    public String getDescription()
     {
         return description;
     }
-    public void setImage(String image) 
+    public void setImage(String image)
     {
         this.image = image;
     }
 
-    public String getImage() 
+    public String getImage()
     {
         return image;
     }
-    public void setLabel(String label) 
+    public void setLabel(String label)
     {
         this.label = label;
     }
 
-    public String getLabel() 
+    public String getLabel()
     {
         return label;
     }
-    public void setMenuId(Long menuId) 
+    public void setMenuId(Long menuId)
     {
         this.menuId = menuId;
     }
 
-    public Long getMenuId() 
+    public Long getMenuId()
     {
         return menuId;
     }
-    public void setZcount(Long zcount) 
+    public void setZcount(Long zcount)
     {
         this.zcount = zcount;
     }
 
-    public Long getZcount() 
+    public Long getZcount()
     {
         return zcount;
     }
-    public void setIdelete(Integer idelete) 
+    public void setIdelete(Integer idelete)
     {
         this.idelete = idelete;
     }
 
-    public Integer getIdelete() 
+    public Integer getIdelete()
     {
         return idelete;
     }
-    public void setStart(Integer start) 
+    public void setStart(Integer start)
     {
         this.start = start;
     }
 
-    public Integer getStart() 
+    public Integer getStart()
     {
         return start;
     }
