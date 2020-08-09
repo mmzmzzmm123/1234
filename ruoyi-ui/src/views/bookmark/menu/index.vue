@@ -1,5 +1,5 @@
 <template >
-  <div>
+  <div class="main">
 
     <!--github-->
     <a @click="zreaZtree" class="github-corner" target="_blank" title="Follow me on GitHub" aria-label="Follow me on GitHub">
@@ -11,30 +11,50 @@
 
 
     <div  class="areaTree" v-show="isShowZtree">
-        <sapn style="display: block;width: 100%;height: 30px;line-height: 30px;text-indent: 25px;font-size: 15px;font-weight:bold">我是菜单1号</sapn>
-        <sapn style="display: block;width: 100%;height: 30px;line-height: 30px;text-indent: 25px;font-size: 15px;font-weight:bold">我是菜单1号</sapn>
-        <sapn style="display: block;width: 100%;height: 30px;line-height: 30px;text-indent: 25px;font-size: 15px;font-weight:bold">我是菜单1号</sapn>
-        <sapn style="display: block;width: 100%;height: 30px;line-height: 30px;text-indent: 25px;font-size: 15px;font-weight:bold">我是菜单1号</sapn>
-        <sapn style="display: block;width: 100%;height: 30px;line-height: 30px;text-indent: 25px;font-size: 15px;font-weight:bold">我是菜单1号</sapn>
-        <sapn style="display: block;width: 100%;height: 30px;line-height: 30px;text-indent: 25px;font-size: 15px;font-weight:bold">我是菜单1号</sapn>
-        <sapn style="display: block;width: 100%;height: 30px;line-height: 30px;text-indent: 25px;font-size: 15px;font-weight:bold">我是菜单1号</sapn>
-        <sapn style="display: block;width: 100%;height: 30px;line-height: 30px;text-indent: 25px;font-size: 15px;font-weight:bold">我是菜单1号</sapn>
-        <sapn style="display: block;width: 100%;height: 30px;line-height: 30px;text-indent: 25px;font-size: 15px;font-weight:bold">我是菜单1号</sapn>
+        <span style="display: block;width: 100%;height: 30px;line-height: 30px;text-indent: 25px;font-size: 15px;font-weight:bold">我是菜单1号</span>
+        <span style="display: block;width: 100%;height: 30px;line-height: 30px;text-indent: 25px;font-size: 15px;font-weight:bold">我是菜单1号</span>
+        <span style="display: block;width: 100%;height: 30px;line-height: 30px;text-indent: 25px;font-size: 15px;font-weight:bold">我是菜单1号</span>
+        <span style="display: block;width: 100%;height: 30px;line-height: 30px;text-indent: 25px;font-size: 15px;font-weight:bold">我是菜单1号</span>
+        <span style="display: block;width: 100%;height: 30px;line-height: 30px;text-indent: 25px;font-size: 15px;font-weight:bold">我是菜单1号</span>
+        <span style="display: block;width: 100%;height: 30px;line-height: 30px;text-indent: 25px;font-size: 15px;font-weight:bold">我是菜单1号</span>
+        <span style="display: block;width: 100%;height: 30px;line-height: 30px;text-indent: 25px;font-size: 15px;font-weight:bold">我是菜单1号</span>
+        <span style="display: block;width: 100%;height: 30px;line-height: 30px;text-indent: 25px;font-size: 15px;font-weight:bold">我是菜单1号</span>
+        <span style="display: block;width: 100%;height: 30px;line-height: 30px;text-indent: 25px;font-size: 15px;font-weight:bold">我是菜单1号</span>
         <ul id="treeDemo" class="ztree" ></ul>
     </div>
 
-    <div style="width: 100%;height: 500px">
+    <div class="sousou">
 
 
 <!--      //搜索-->
-      <div style="width: 400px;height: 200px;margin: 0 auto;background-color: red;margin-top: 19%">
 
 
+      <div style="width: 800px;height: 200px;margin: 0 auto;margin-top: 19%">
+
+        <div >
 
 
+          <div class="choice-top" v-for="iconlist in iconlist">
+            <el-tooltip :hide-after="500" class="item" effect="dark" :content="iconlist.title" placement="top" >
+            <div @click="sendEventDataTop($event)" :data-icon="iconlist.icon"><img :ng-src="'https://favicon.lucq.fun/?url='+iconlist.icon" err-src="./images/default.ico"  ng-click="detailBookmark(bookmark);$event.stopPropagation()" :src="'https://favicon.lucq.fun/?url='+iconlist.icon"  ></div>
+            </el-tooltip>
+          </div>
 
+        </div>
 
+        <div style="margin-top: 15px;">
+          <el-input placeholder="百度一下" v-model="sousou" class="sousoucss" ref="sousouref">
+            <img @click="IsCord()"  slot="prefix"  :src="sousouicon" style="width: 20px;height: 20px;position: absolute;top: 50%;margin-top: -10px;">
+              <el-button   slot="append" icon="el-icon-search"  circle ></el-button>
+          </el-input>
+        </div>
 
+        <el-card class="box-card" v-show="isSousouCard" style="width: 500px;opacity: 0.7">
+          <div class="choice" v-for="iconlist in iconlist">
+            <div  @click="sendEventData($event)" :data-icon="iconlist.icon"><img err-src="https://favicon.lucq.fun/?url=https://www.5118.com/"  class="sousouicon"  :ng-src="'https://favicon.lucq.fun/?url='+iconlist.icon"  :src="'https://favicon.lucq.fun/?url='+iconlist.icon"  ><span>{{iconlist.title}}</span></div>
+<!--            ng-click="detailBookmark(bookmark);$event.stopPropagation()"     -->
+          </div>
+        </el-card>
 
       </div>
 
@@ -73,6 +93,11 @@
         expandAll:false,//是否展开ztree树
         curMenu:null,
         zTree_Menu:null,
+        isSousouCard:false,//切换搜索源
+        iconurl:'https://favicon.lucq.fun/?url=',
+        sousouicon:'https://favicon.lucq.fun/?url=https://www.baidu.com/',//默认搜索图片
+        sousou:'',
+        sousouVlaue:'百度一下',
         setting:{
           view: {
             showLine: false,
@@ -136,9 +161,38 @@
           { id:631, pId:3, name:"文档",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
           { id:731, pId:3, name:"文档",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
           { id:831, pId:3, name:"文档",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
-
-
           ]
+        ,
+        iconlist:[
+         {iconID:"1",icon:"https://www.baidu.com",title:"百度"},
+         {iconID:"2",icon:"https://www.google.com/",title:"谷歌搜索引擎"},
+         {iconID:"3",icon:"https://www.so.com/",title:"搜索"},
+         {iconID:"4",icon:"https://www.sogou.com/",title:"搜狗"},
+         {iconID:"5",icon:"https://cn.bing.com/",title:"必应"},
+         {iconID:"6",icon:"https://yz.m.sm.cn/",title:"神马搜索"},
+          {iconID:"7",icon:"https://www.jd.com/",title:"京东"},
+          {iconID:"8",icon:"https://taobao.com/",title:"淘宝"},
+          {iconID:"7",icon:"https://y.qq.com",title:"QQ音乐"},
+          {iconID:"7",icon:"https://weibo.com/",title:"微博"},
+          {iconID:"7",icon:"http://www.dianping.com/",title:"大众点评"},
+          {iconID:"7",icon:"https://mail.sina.com.cn/",title:"新浪邮箱"},
+          {iconID:"7",icon:"http://caiyunapp.com",title:"彩云天气"},
+          {iconID:"7",icon:"https://www.yhd.com/",title:"一号店"},
+          {iconID:"7",icon:"https://www.mi.com/",title:"小米"},
+          {iconID:"7",icon:"https://www.tianyancha.com/",title:"天眼查"},
+          {iconID:"7",icon:"https://translate.google.com/",title:"谷歌翻译"},
+          {iconID:"7",icon:"https://open.163.com/",title:"网易公开课"},
+          {iconID:"7",icon:"http://mooc.org/",title:"MOCC"},
+          {iconID:"7",icon:"https://www.w3school.com.cn/",title:"w3school"},
+          {iconID:"7",icon:"https://segmentfault.com/",title:"segmentfault"},
+          {iconID:"7",icon:"https://www.y-english.org/",title:"云英语"},
+          {iconID:"7",icon:"https://www.tutorialspoint.com/",title:"Tutorials Point"},
+          {iconID:"7",icon:"https://github.com/",title:"GitHub"},
+          {iconID:"7",icon:"https://mail.sina.com.cn/",title:"新浪邮箱"},
+          {iconID:"7",icon:"https://movie.douban.com/",title:"豆瓣电影"},
+          {iconID:"7",icon:"http://www.zzrbl.com/",title:"猪猪电影网"},
+
+        ]
       }
     },
     methods:{
@@ -193,7 +247,6 @@
     //if (treeNode.level != 19990 ) {
        var zTree = $.fn.zTree.getZTreeObj("treeDemo");
        zTree.expandNode(treeNode);
-
     //  return false;
     // }
     //return true;
@@ -202,6 +255,26 @@
       zreaZtree:function () {
       var that=this;
         that.isShowZtree = !that.isShowZtree;
+
+      },
+      //显示隐藏 数据源
+      IsCord:function(){
+        var that=this;
+        that.isSousouCard=!that.isSousouCard;
+      },
+      //切换搜索源
+      sendEventData:function(ev){
+      var that=this;
+        var node = ev.currentTarget;
+        that.sousouicon=that.iconurl+node.dataset.icon;
+        that.isSousouCard=!that.isSousouCard;
+        that.$refs.sousouref.focus()
+      },
+      sendEventDataTop:function(ev){
+        var that=this;
+        var node = ev.currentTarget;
+        that.sousouicon=that.iconurl+node.dataset.icon;
+        that.$refs.sousouref.focus()
 
       },
 
@@ -222,7 +295,10 @@
     },
     mounted(){
       var that=this;
+
       $.fn.zTree.init($("#treeDemo"), this.setting, this.zNodes).expandAll(that.expandAll);
+
+      that.$refs.sousouref.focus()
 
       // var _this = this
       //
@@ -294,6 +370,7 @@
     /* 兼容调试如果animation-name执行，那么-wekit-animation-name则不执行 */
     -webkit-animation-name:mymove;
     -webkit-animation-duration:1s;/* 5s表示执行动画的时间，0或不写则无动画效果 */
+
   }
 
   @keyframes mymove /* 对应animation-name，里面为执行的动画*/
@@ -317,8 +394,91 @@
     to {left:300px;}/*动画结束位置*/
   }
 
+.app-main{
+width: 100%;
+  height: 500px;
+  background-image: url('https://byr-navi.com/images/backgrounds/14.jpg') ;
+  background-size: 100%;
+  background-repeat: no-repeat;
+  height: 500px;
+}
 
 
+  .sousoucss{
+    opacity: 0.6;
+
+  }
+
+
+  .choice {
+    margin: 5px 5px 5px 5px;
+    background-color: #FFFFFF;
+
+  }
+  .choice div{
+    float:left;
+    height: 30px;
+    line-height: 30px;
+    border-radius: 5px;
+    text-align: center;
+    margin: 5px 5px 5px 5px;
+    /*box-shadow:0 0 1px #000 ;*/
+    background: none #fff;
+    border: 1px solid rgba(34,36,38,.15);
+    color: rgba(0,0,0,.87);
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    font-size: 14px;
+    font-weight: 700;
+    /*font-family: Lato,'Helvetica Neue',Arial,Helvetica,sans-serif;*/
+    align-items: center;
+    vertical-align:middle;
+    width:fit-content;
+    /*width:-webkit-fit-content;*/
+    width:-moz-fit-content;
+    padding-left:12px;
+    padding-right:12px;
+  }
+  .choice div i{
+    margin-right: 1px;
+  }
+  .choice div:hover{
+    color: #1c84c6;
+
+  }
+
+
+
+  /*搜索 */
+  .sousouicon{
+    width:16px;
+    height:16px;
+    vertical-align:middle;
+    margin-right: 3px;
+    margin-bottom: 3px;
+
+  }
+/*搜索top 上面的*/
+  .choice-top img{
+    width:16px;
+    height:16px;
+    vertical-align:middle;
+    margin-bottom: 3px;
+  }
+  .choice-top div{
+    float:left;
+    height: 30px;
+    line-height: 30px;
+    border-radius: 5px;
+    text-align: center;
+    margin: 5px 5px 5px 5px;
+    background-color: #3c5d5b;
+    border: 1px solid rgba(34,36,38,.15);
+    padding-left:12px;
+    padding-right:12px;
+    opacity: 0.8;
+
+  }
 
 
 </style>
