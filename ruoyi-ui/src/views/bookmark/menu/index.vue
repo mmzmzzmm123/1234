@@ -1,8 +1,53 @@
-<template>
-  <div id="areaTree" style="width: 300px">
-    <div class="ztr"  style="width: 100%">
-      <ul id="treeDemo" class="ztree" ></ul>
+<template >
+  <div>
+
+    <!--github-->
+    <a @click="zreaZtree" class="github-corner" target="_blank" title="Follow me on GitHub" aria-label="Follow me on GitHub">
+      <svg width="80" height="80" viewBox="0 0 250 250" style="fill:#008000; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true">
+        <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+        <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path>
+      </svg>
+    </a>
+
+
+    <div  class="areaTree" v-show="isShowZtree">
+        <sapn style="display: block;width: 100%;height: 30px;line-height: 30px;text-indent: 25px;font-size: 15px;font-weight:bold">我是菜单1号</sapn>
+        <sapn style="display: block;width: 100%;height: 30px;line-height: 30px;text-indent: 25px;font-size: 15px;font-weight:bold">我是菜单1号</sapn>
+        <sapn style="display: block;width: 100%;height: 30px;line-height: 30px;text-indent: 25px;font-size: 15px;font-weight:bold">我是菜单1号</sapn>
+        <sapn style="display: block;width: 100%;height: 30px;line-height: 30px;text-indent: 25px;font-size: 15px;font-weight:bold">我是菜单1号</sapn>
+        <sapn style="display: block;width: 100%;height: 30px;line-height: 30px;text-indent: 25px;font-size: 15px;font-weight:bold">我是菜单1号</sapn>
+        <sapn style="display: block;width: 100%;height: 30px;line-height: 30px;text-indent: 25px;font-size: 15px;font-weight:bold">我是菜单1号</sapn>
+        <sapn style="display: block;width: 100%;height: 30px;line-height: 30px;text-indent: 25px;font-size: 15px;font-weight:bold">我是菜单1号</sapn>
+        <sapn style="display: block;width: 100%;height: 30px;line-height: 30px;text-indent: 25px;font-size: 15px;font-weight:bold">我是菜单1号</sapn>
+        <sapn style="display: block;width: 100%;height: 30px;line-height: 30px;text-indent: 25px;font-size: 15px;font-weight:bold">我是菜单1号</sapn>
+        <ul id="treeDemo" class="ztree" ></ul>
     </div>
+
+    <div style="width: 100%;height: 500px">
+
+
+<!--      //搜索-->
+      <div style="width: 400px;height: 200px;margin: 0 auto;background-color: red;margin-top: 19%">
+
+
+
+
+
+
+
+
+      </div>
+
+
+
+
+
+
+
+    </div>
+
+
+
 
   </div>
 </template>
@@ -16,14 +61,16 @@
   import "../ztree/zTreeStyle.css"
   import "../ztree/jquery.ztree.exedit.js"
 
-
   export default {
     name: 'areaTree',
     components:{
 
     },
+
     data:function(){
       return{
+        isShowZtree:false,//ztree树显示
+        expandAll:false,//是否展开ztree树
         curMenu:null,
         zTree_Menu:null,
         setting:{
@@ -54,68 +101,63 @@
         },
         zNodes:[
           { id:1, pId:0, name:"文件夹",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
-          { id:11, pId:1, name:"收件箱",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
+          { id:2, pId:0, name:"文件夹",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
+          { id:3, pId:2, name:"文件夹",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
+          { id:4, pId:0, name:"文件夹",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
+          { id:5, pId:4, name:"文件夹",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
+          { id:6, pId:0, name:"文件夹",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
+          { id:7, pId:6, name:"文件夹",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
+          { id:8, pId:0, name:"文件夹",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
+          { id:9, pId:8, name:"文件夹",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
+          { id:1123, pId:0, name:"文件夹",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
+          { id:1142, pId:1, name:"收件箱",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
           { id:111, pId:11, name:"收件箱1",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
           { id:112, pId:111, name:"收件箱2",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
           { id:113, pId:112, name:"收件箱3",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
           { id:114, pId:113, name:"收件箱4",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
-          { id:32, pId:114, name:"照片",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
-          { id:32, pId:114, name:"照片",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
-          { id:32, pId:114, name:"照片",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
-          { id:32, pId:114, name:"照片",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
-          { id:32, pId:114, name:"照片",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
-          { id:399, pId:114, name:"照片",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
+          { id:1321, pId:114, name:"照片",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
+          { id:2322, pId:114, name:"照片",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
+          { id:3323, pId:114, name:"照片",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
+          { id:4324, pId:114, name:"照片",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
+          { id:5325, pId:114, name:"照片",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
+          { id:6399, pId:114, name:"照片",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
           { id:32, pId:399, name:"照片",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
           { id:12, pId:1, name:"垃圾邮件",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
           { id:13, pId:1, name:"草稿",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
           { id:14, pId:1, name:"已发送邮件",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
           { id:15, pId:1, name:"已删除邮件",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
-          { id:3, pId:1, name:"快速视图",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
+          { id:322, pId:11, name:"快速视图",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
           { id:31, pId:3, name:"文档",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
-          { id:32, pId:3, name:"照片",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"}
+          { id:131, pId:3, name:"文档",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
+          { id:231, pId:3, name:"文档",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
+          { id:331, pId:3, name:"文档",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
+          { id:431, pId:3, name:"文档",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
+          { id:531, pId:3, name:"文档",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
+          { id:631, pId:3, name:"文档",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
+          { id:731, pId:3, name:"文档",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
+          { id:831, pId:3, name:"文档",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
+
+
           ]
       }
     },
     methods:{
-      // freshArea: function(){
-      //   $.fn.zTree.init($("#treeDemo"), this.setting, this.zNodes);
-      // },
-      // zTreeOnClick: function(event, treeId, treeNode) {
-      //   console.log(treeNode.tId + ", " + treeNode.name);
-      // },
-      // zTreeOnCheck: function(event, treeId, treeNode) {
-      //   console.log(treeNode.tId + ", " + treeNode.name + "," + treeNode.checked);
-      //   var zTree = $.fn.zTree.getZTreeObj("treeDemo"),
-      //     checkCount = zTree.getCheckedNodes(true).length,//选中
-      //     nocheckCount = zTree.getCheckedNodes(false).length,//未选中
-      //     changeCount = zTree.getChangeCheckedNodes().length;//获取输入框勾选状态被改变的节点集合（与原始数据 checkedOld 对比）
-      //   var checkedNames = [],checkedIds = [];
-      //   for (var i = 0; i <= zTree.getCheckedNodes(true).length - 1; i++) {
-      //     checkedIds.push(zTree.getCheckedNodes(true)[i].id);
-      //     checkedNames.push(zTree.getCheckedNodes(true)[i].name);
-      //   };
-      //   console.log(checkedIds);
-      //   console.log(checkedNames);
-      // },
-      // beforeClick: function(treeId, treeNode) {
-      //   var zTree = $.fn.zTree.getZTreeObj("treeDemo");
-      //   // zTree.checkNode(treeNode, !treeNode.checked, null, true);
-      //   zTree.checkNode(treeNode, !treeNode.checked, true, true); //第二个参数!treeNode.checked和"",省略此参数效果等同，则根据对此节点的勾选状态进行 toggle 切换，第三个参数设置为true时候进行父子节点的勾选联动操作 ，第四个参数true 表示执行此方法时触发 beforeCheck & onCheck 事件回调函数；false 表示执行此方法时不触发事件回调函数
-      //   return false;
-      // }
-
-
 
     addDiyDom:function(treeId, treeNode) {
-    var spaceWidth = 5;
+    var spaceWidth = 20;
     var switchObj = $("#" + treeNode.tId + "_switch"),
       icoObj = $("#" + treeNode.tId + "_ico");
     switchObj.remove();
+
     icoObj.before(switchObj);
 
-    if (treeNode.level > 1) {
+    if (treeNode.level > -1) {
       var spaceStr = "<span style='display: inline-block;width:" + (spaceWidth * treeNode.level)+ "px'></span>";
       switchObj.before(spaceStr);
+
+      var switchObjspan = $("#" + treeNode.tId + "_span");
+      var editStr = "<span class="+treeNode.tId+"_count style='float:right;display: inline-block' onfocus='this.blur();'>99</span>";
+      switchObjspan.after(editStr);
     }
   },
 
@@ -125,55 +167,83 @@
   	if (confCount>0) return;
   	//if (treeNode.parentNode && treeNode.parentNode.id!=1) return;
   	var switchObjspan = $("#" + treeNode.tId + "_span");
-  	var editStr = "<span class="+treeNode.tId+"_sz onclick='alert(1111111);return false;' style='float:right;display: inline-block' onfocus='this.blur();'>删</span>";
+  	var editStr = "<span class="+treeNode.tId+"_sz onclick='alert(2222);return false;' style='float:right;display: inline-block' onfocus='this.blur();'>删</span>";
   	switchObjspan.after(editStr);
 
+    $("." + treeNode.tId + "_count").unbind().remove();
+
+
+    //绑定编辑
+   // document.getElementsByClassName(treeNode.tId + "_sz").onclick=function(){alert(this.value)};
+    //document.getElementsByClassName(treeNode.tId + "_sz").addEventListener('click', editBookmark);
+   // $("." + treeNode.tId + "_sz").addEventListener('click', editBookmark);
   },
 
   removeHoverDom:function(treeId, treeNode) {
-  	console.log("进入removeHoverDom:"+"." + treeNode.tId + "_sz")
+  	//console.log("进入removeHoverDom:"+"." + treeNode.tId + "_sz")
   	//if (treeNode.parentTId && treeNode.getParentNode().id!=1) return;
   	$("." + treeNode.tId + "_sz").unbind().remove();
+    var switchObjspan = $("#" + treeNode.tId + "_span");
+    var editStr = "<span class="+treeNode.tId+"_count onclick='alert(1111111);return false;' style='float:right;display: inline-block' onfocus='this.blur();'>99</span>";
+    switchObjspan.after(editStr);
 
   },
   //点击展开
    beforeClick:function(treeId, treeNode) {
-    if (treeNode.level != 19990 ) {
-      var zTree = $.fn.zTree.getZTreeObj("treeDemo");
-      zTree.expandNode(treeNode);
-      return false;
-    }
-    return true;
-  }
-  //
+    //if (treeNode.level != 19990 ) {
+       var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+       zTree.expandNode(treeNode);
+
+    //  return false;
+    // }
+    //return true;
+  },
+      //显示隐藏 ztree菜单
+      zreaZtree:function () {
+      var that=this;
+        that.isShowZtree = !that.isShowZtree;
+
+      },
 
 
 
+      editBookmark:function(){
+        var that=this;
+        alert("this button");
+// //如果提供了事件对象，则这是一个非IE浏览器
+//         if ( e && e.stopPropagation )
+//         //因此它支持W3C的stopPropagation()方法
+//           e.stopPropagation();
+//         else
+//         //否则，我们需要使用IE的方式来取消事件冒泡
+//           window.event.cancelBubble = true;
 
-
-
-
+      }
     },
     mounted(){
-      //$.fn.zTree.init($("#treeDemo"), this.setting, this.zNodes).expandAll(true);
+      var that=this;
+      $.fn.zTree.init($("#treeDemo"), this.setting, this.zNodes).expandAll(that.expandAll);
 
-      var _this = this
-
-      var treeObj = $("#treeDemo");
-      $.fn.zTree.init(treeObj, this.setting, this.zNodes);
-      _this.zTree_Menu = $.fn.zTree.getZTreeObj("treeDemo");
-      curMenu = zTree_Menu.getNodes()[0].children[0].children[0];
-      _this.zTree_Menu.selectNode(curMenu);
-
-      treeObj.hover(function () {
-        if (!treeObj.hasClass("showIcon")) {
-          treeObj.addClass("showIcon");
-        }
-      }, function() {
-        treeObj.removeClass("showIcon");
-      });
+      // var _this = this
+      //
+      // var treeObj = $("#treeDemo");
+      // $.fn.zTree.init(treeObj, this.setting, this.zNodes);
+      // _this.zTree_Menu = $.fn.zTree.getZTreeObj("treeDemo");
+      // curMenu = zTree_Menu.getNodes()[0].children[0].children[0];
+      // _this.zTree_Menu.selectNode(curMenu);
+      //
+      // treeObj.hover(function () {
+      //   if (!treeObj.hasClass("showIcon")) {
+      //     treeObj.addClass("showIcon");
+      //   }
+      // }, function() {
+      //   treeObj.removeClass("showIcon");
+      // });
 
     },
+
+
+
 
   }
 </script>
@@ -182,12 +252,12 @@
   .ztree li ul{  margin:0;  padding:0}
   .ztree li {line-height:30px}
   .ztree li a {width:200px;height:30px;padding-top: 0px;;width:100%}
-  .ztree li a:hover {text-decoration:none; background-color: #E7E7E7;}
+  .ztree li a:hover {text-decoration:none; background-color: #E7E7E7;opacity:0.4;}
   .ztree li a span.button.switch {vertical-align:middle}
   .ztree.showIcon li a span.button.switch {visibility:visible}
   .ztree li a.curSelectedNode {background-color:#D4D4D4;border:0;height:30px;}
   .ztree li span {line-height:30px;}
-  .ztree li span.button {margin-top: -4px;;margin-left:2px}
+  .ztree li span.button {margin-top: -4px;margin-left:3px}
   .ztree li span.button.switch {width: 16px;height: 16px;}
 
   .ztree li a.level0 span {font-size: 100%;font-weight: bold}
@@ -212,7 +282,44 @@
   /*background:red;*/
   }
 
+  .areaTree{
+    width: 300px;
+    height: 700px;
+    overflow:auto;
+    background:url('https://ftp.bmp.ovh/imgs/2020/08/4ac1d6b4f41049ef.jpg') no-repeat;
+    background-size: 100% 100%;
+    position:relative;
+    animation-name:mymove;
+    animation-duration:1s;/* 5s表示执行动画的时间，0或不写则无动画效果 */
+    /* 兼容调试如果animation-name执行，那么-wekit-animation-name则不执行 */
+    -webkit-animation-name:mymove;
+    -webkit-animation-duration:1s;/* 5s表示执行动画的时间，0或不写则无动画效果 */
+  }
+
+  @keyframes mymove /* 对应animation-name，里面为执行的动画*/
+  {
+    from {left:-200px;}/*执行动画的初始位置*/
+    to {left:0px;}/*动画结束位置*/
+    0% {
+      opacity: 0.6; /*初始状态 透明度为10%*/
+    }
+    50% {
+      opacity: 0.9; /*中间状态 透明度为50%*/
+    }
+    100% {
+      opacity: 1; /*结尾状态 不透明*/
+    }
+  }
+
+  @-webkit-keyframes mymove/* 对应-webkit-animation-name，里面为执行的动画*/
+  {
+    from {left:-200px;}/*执行动画的初始位置*/
+    to {left:300px;}/*动画结束位置*/
+  }
+
+
 
 
 
 </style>
+
