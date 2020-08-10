@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
+    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
       <el-form-item label="系统模块" prop="title">
         <el-input
           v-model="queryParams.title"
@@ -66,7 +66,7 @@
         ></el-date-picker>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+        <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
@@ -100,6 +100,7 @@
           v-hasPermi="['system:config:export']"
         >导出</el-button>
       </el-col>
+      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="list" @selection-change="handleSelectionChange">
@@ -195,6 +196,8 @@ export default {
       ids: [],
       // 非多个禁用
       multiple: true,
+      // 显示搜索条件
+      showSearch: true,
       // 总条数
       total: 0,
       // 表格数据

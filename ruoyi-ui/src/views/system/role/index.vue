@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true">
+    <el-form :model="queryParams" ref="queryForm" v-show="showSearch" :inline="true">
       <el-form-item label="角色名称" prop="roleName">
         <el-input
           v-model="queryParams.roleName"
@@ -50,7 +50,7 @@
         ></el-date-picker>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+        <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
@@ -91,9 +91,10 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['system:post:export']"
+          v-hasPermi="['system:role:export']"
         >导出</el-button>
       </el-col>
+      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="roleList" @selection-change="handleSelectionChange">
@@ -249,6 +250,8 @@ export default {
       single: true,
       // 非多个禁用
       multiple: true,
+      // 显示搜索条件
+      showSearch: true,
       // 总条数
       total: 0,
       // 角色表格数据
@@ -368,16 +371,16 @@ export default {
     },
     /** 根据角色ID查询菜单树结构 */
     getRoleMenuTreeselect(roleId) {
-      roleMenuTreeselect(roleId).then(response => {
+      return roleMenuTreeselect(roleId).then(response => {
         this.menuOptions = response.menus;
-        this.$refs.menu.setCheckedKeys(response.checkedKeys);
+        return response;
       });
     },
     /** 根据角色ID查询部门树结构 */
     getRoleDeptTreeselect(roleId) {
-      roleDeptTreeselect(roleId).then(response => {
+      return roleDeptTreeselect(roleId).then(response => {
         this.deptOptions = response.depts;
-        this.$refs.dept.setCheckedKeys(response.checkedKeys);
+        return response;
       });
     },
     // 角色状态修改
@@ -450,24 +453,30 @@ export default {
     handleUpdate(row) {
       this.reset();
       const roleId = row.roleId || this.ids
-      this.$nextTick(() => {
-        this.getRoleMenuTreeselect(roleId);
-      });
+      const roleMenu = this.getRoleMenuTreeselect(roleId);
       getRole(roleId).then(response => {
         this.form = response.data;
         this.open = true;
+        this.$nextTick(() => {
+          roleMenu.then(res => {
+            this.$refs.menu.setCheckedKeys(res.checkedKeys);
+          });
+        });
         this.title = "修改角色";
       });
     },
     /** 分配数据权限操作 */
     handleDataScope(row) {
       this.reset();
-      this.$nextTick(() => {
-        this.getRoleDeptTreeselect(row.roleId);
-      });
+      const roleDeptTreeselect = this.getRoleDeptTreeselect(row.roleId);
       getRole(row.roleId).then(response => {
         this.form = response.data;
         this.openDataScope = true;
+        this.$nextTick(() => {
+          roleDeptTreeselect.then(res => {
+            this.$refs.dept.setCheckedKeys(res.checkedKeys);
+          });
+        });
         this.title = "分配数据权限";
       });
     },

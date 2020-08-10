@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
+    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
       <el-form-item label="字典名称" prop="dictName">
         <el-input
           v-model="queryParams.dictName"
@@ -50,7 +50,7 @@
         ></el-date-picker>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+        <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
@@ -103,6 +103,7 @@
           v-hasPermi="['system:dict:remove']"
         >清理缓存</el-button>
       </el-col>
+      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="typeList" @selection-change="handleSelectionChange">
@@ -196,6 +197,8 @@ export default {
       single: true,
       // 非多个禁用
       multiple: true,
+      // 显示搜索条件
+      showSearch: true,
       // 总条数
       total: 0,
       // 字典表格数据
