@@ -36,4 +36,8 @@ public class ResidenceRentBasePriceTests {
         originalResidenceRentClosingCaseService.pullData();
     }
 
+    @Test
+    public void testPushAggregateCase() {
+        originalResidenceRentClosingCaseService.pushAggregateCase(202008, 202007);
+    }
 }

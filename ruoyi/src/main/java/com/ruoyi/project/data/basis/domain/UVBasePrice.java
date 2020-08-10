@@ -28,12 +28,12 @@ public class UVBasePrice extends BaseEntity {
     /**
      * 基价（售价、租金）
      */
-    @Excel(name = "主力基价", cellType = Excel.ColumnType.NUMERIC)
+    @Excel(name = "主力基价")
     private BigDecimal standardPrice;
     /**
      * 主力面积基价（售价、租金）
      */
-    @Excel(name = "主力面积基价", cellType = Excel.ColumnType.NUMERIC)
+    @Excel(name = "主力面积基价")
     private BigDecimal mainAreaPrice;
     /**
      * 价值时点

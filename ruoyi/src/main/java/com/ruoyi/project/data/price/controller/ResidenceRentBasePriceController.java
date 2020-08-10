@@ -94,7 +94,7 @@ public class ResidenceRentBasePriceController extends BaseController {
         List<ComputeResidenceRentBasePrice> list =
                 computeResidenceRentPriceService.selectPageList(computeResidenceRentBasePrice);
         ExcelUtil<ComputeResidenceRentBasePrice> util = new ExcelUtil<>(ComputeResidenceRentBasePrice.class);
-        return util.exportExcel(list, "住宅租赁基价初始化-" + computeResidenceRentBasePrice.getYearMonth());
+        return util.exportExcel(list, "住宅租赁基价初始化" + computeResidenceRentBasePrice.getYearMonth());
     }
 
 

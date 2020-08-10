@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.data.basis.mapper.UvClosingCaseMapper">
+    <resultMap id="ResultMapping" type="com.ruoyi.project.data.basis.domain.UvClosingCase">
+        <result property="dealId" column="ITEM_DEALID"/>
+        <result property="dealType" column="ITEM_DEALTYPE"/>
+        <result property="caseDistrict" column="ITEM_DISTRICT"/>
+        <result property="caseBlock" column="ITEM_SECTOR"/>
+        <result property="caseLoop" column="ITEM_CIRCLEPOSITION"/>
+        <result property="caseTotalPrice" column="ITEM_SUMPRICE"/>
+        <result property="caseUnitPrice" column="ITEM_UNITPRICE"/>
+        <result property="caseCommunityName" column="ITEM_RANAME"/>
+        <result property="caseAddress" column="ITEM_HOUSEADDRESS"/>
+        <result property="caseArea" column="ITEM_AREA" javaType="java.math.BigDecimal"/>
+        <result property="caseHouseType" column="ITEM_HOUSETYPE"/>
+        <result property="caseHouseProperty" column="ITEM_ROOMNATURE"/>
+        <result property="caseContractDate" column="ITEM_SIGNINGDATA" javaType="java.sql.Date" />
+        <result property="caseFloor" column="ITEM_FLOOR"/>
+        <result property="caseApartmentLayout" column="ITEM_APARTMENT"/>
+        <result property="propertyType" column="ITEM_PROPERTYTYPE"/>
+        <result property="communityId" column="ITEM_AIRAID"/>
+        <result property="communityName" column="ITEM_STANDARDRA"/>
+        <result property="buildingId" column="ITEM_AIUNITID"/>
+        <result property="buildingName" column="ITEM_STANDARDUNITADDRESS"/>
+        <result property="condoId" column="ITEM_SINGLEID"/>
+        <result property="condoName" column="ITEM_STANDARDSINGLEADDRESS"/>
+    </resultMap>
+    <!-- 获取爬虫库中的办公案例 -->
+    <select id="selectPageList" resultMap="ResultMapping" parameterType="com.ruoyi.project.data.basis.domain.UvClosingCase">
+        select ITEM_AIRAID,ITEM_AIUNITID,ITEM_APARTMENT,ITEM_AREA,ITEM_CIRCLEPOSITION,ITEM_DEALID,ITEM_DEALTYPE,ITEM_DISTRICT,ITEM_FLOOR,ITEM_HOUSEADDRESS,ITEM_HOUSETYPE,ITEM_PROPERTYTYPE,ITEM_RANAME,ITEM_ROOMNATURE,ITEM_SECTOR,ITEM_SIGNINGDATA,ITEM_SINGLEID,ITEM_STANDARDRA,ITEM_STANDARDSINGLEADDRESS,ITEM_STANDARDUNITADDRESS,ITEM_SUMPRICE,ITEM_UNITPRICE
+        from dbo.TLK_成交案例
+        <where>
+            <if test="dealId != null">
+                ITEM_DEALID=#{dealId}
+            </if>
+        </where>
+        order by ITEM_DEALID ASC offset #{offset} rows fetch next #{limit} rows only
+    </select>
+
+    <select id="selectPageCount" resultType="int" parameterType="com.ruoyi.project.data.basis.domain.UvClosingCase">
+        select count(1)
+        from dbo.TLK_成交案例
+        <where>
+            <if test="dealId != null">
+                ITEM_DEALID=#{dealId}
+            </if>
+        </where>
+    </select>
+</mapper>

@@ -62,7 +62,7 @@
         <result property="yearMonth" column="yearMonth"/>
     </resultMap>
     <!-- 汇总案例 -->
-    <select id="getOfficeAggregationCases" resultMap="AggregationCaseResultMapping">
+    <select id="getMonthly" resultMap="AggregationCaseResultMapping">
             SELECT HouseholdsID_SRC
                 ,ProjectID_SRC
                 ,ProjectID

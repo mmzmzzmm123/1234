@@ -16,6 +16,15 @@ import java.util.stream.Stream;
 public class GenerateTableTests {
 
     @Test
+    public void testFileName() {
+        String fileName = "中文_12312312-zxcjdf9021.xlsx";
+        String realFileName =
+                fileName.substring(0, fileName.indexOf("_")) + fileName.substring(fileName.lastIndexOf(
+                        "."));
+        Assert.assertEquals("中文.xlsx", realFileName);
+    }
+
+    @Test
     public void testLastYearMonth() {
 
         Integer lastYearMonth = DateUtils.getLastYearMonth();
@@ -235,7 +244,6 @@ public class GenerateTableTests {
     }
 
 
-
     /**
      *
      */
@@ -292,8 +300,8 @@ public class GenerateTableTests {
 
         list.forEach(x -> {
             int index = x.indexOf("大道");
-            if(-1 != index) {
-                System.out.println(x.substring(0,index+2));
+            if (-1 != index) {
+                System.out.println(x.substring(0, index + 2));
             }
         });
 

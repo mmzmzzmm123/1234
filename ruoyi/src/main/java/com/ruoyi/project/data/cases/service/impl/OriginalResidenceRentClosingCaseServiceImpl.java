@@ -3,11 +3,14 @@ package com.ruoyi.project.data.cases.service.impl;
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.LoadUtil;
+import com.ruoyi.project.data.cases.domain.CleanResidenceRentAggregationCase;
 import com.ruoyi.project.data.cases.domain.OriginalResidenceRentClosingCase;
 import com.ruoyi.project.data.cases.domain.OtherResidenceRentClosingCase;
 import com.ruoyi.project.data.cases.mapper.OriginalResidenceRentClosingCaseMapper;
+import com.ruoyi.project.data.cases.mapper.ResidenceRentAggregationCaseMapper;
 import com.ruoyi.project.data.cases.mapper.sync.DownloadOriginalResidenceRentClosingCaseMapper;
 import com.ruoyi.project.data.cases.mapper.sync.DownloadOtherResidenceRentClosingCaseMapper;
+import com.ruoyi.project.data.cases.mapper.sync.SyncResidenceRentCaseMapper;
 import com.ruoyi.project.data.cases.service.IOriginalResidenceRentClosingCaseService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +19,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -39,6 +43,10 @@ public class OriginalResidenceRentClosingCaseServiceImpl implements IOriginalRes
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private SyncResidenceRentCaseMapper syncResidenceRentCaseMapper;
+    @Autowired
+    private ResidenceRentAggregationCaseMapper residenceRentAggregationCaseMapper;
 
     /**
      *
@@ -128,5 +136,20 @@ public class OriginalResidenceRentClosingCaseServiceImpl implements IOriginalRes
         sql = rawSql.replace("#yearMonth#", yearMonth.toString())
                 .replace("#lastYearMonth#", lastYearMonth.toString());
         jdbcTemplate.update(sql);
+
+        pushAggregateCase(yearMonth, lastYearMonth);
+    }
+
+    @Async
+    @Override
+    public void pushAggregateCase(Integer yearMonth, Integer currentPriceTableRoute) {
+        // 案例同步
+        syncResidenceRentCaseMapper.createAggregationCaseTable(currentPriceTableRoute);
+        List<CleanResidenceRentAggregationCase> list = residenceRentAggregationCaseMapper.getMonthly(yearMonth);
+        list.parallelStream().forEach(cleanResidenceRentAggregationCase -> {
+            cleanResidenceRentAggregationCase.setYearMonth(currentPriceTableRoute);
+            syncResidenceRentCaseMapper.insertAggregationCaseTable(cleanResidenceRentAggregationCase);
+        });
+        logger.info("推送案例汇总数据完成");
     }
 }

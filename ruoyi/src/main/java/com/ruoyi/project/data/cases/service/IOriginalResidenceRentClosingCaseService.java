@@ -10,4 +10,11 @@ public interface IOriginalResidenceRentClosingCaseService {
      * 数据下载
      */
     void pullData();
+
+    /**
+     * 推送数据
+     * @param yearMonth
+     * @param currentPriceTableRoute
+     */
+    void pushAggregateCase(Integer yearMonth, Integer currentPriceTableRoute);
 }

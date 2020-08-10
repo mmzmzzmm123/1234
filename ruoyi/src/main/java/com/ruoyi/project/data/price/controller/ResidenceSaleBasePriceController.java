@@ -88,12 +88,14 @@ public class ResidenceSaleBasePriceController extends BaseController {
         computeResidenceSaleBasePrice.setPageIndex(0);
         computeResidenceSaleBasePrice.setPageSize(total);
         List<ComputeResidenceSaleBasePrice> list = null;
-        if (0 == total)
+        if (0 == total) {
             list = new LinkedList<>();
-        else
+        } else {
             list = computeResidenceSalePriceService.selectList(computeResidenceSaleBasePrice);
+        }
+
         ExcelUtil<ComputeResidenceSaleBasePrice> util = new ExcelUtil<>(ComputeResidenceSaleBasePrice.class);
-        return util.exportExcel(list, "住宅销售基价" + computeResidenceSaleBasePrice.getYearMonth());
+        return util.exportExcel(list, "住宅销售基价初始化" + computeResidenceSaleBasePrice.getYearMonth());
     }
 
     /**
@@ -264,10 +266,12 @@ public class ResidenceSaleBasePriceController extends BaseController {
         ultimateResidenceSaleBasePrice.setPageIndex(0);
         ultimateResidenceSaleBasePrice.setPageSize(total);
         List<UltimateResidenceSaleBasePrice> list = null;
-        if (0 == total)
+        if (0 == total) {
             list = new LinkedList<>();
-        else
+        } else {
             list = ultimateResidenceSalePriceService.selectList(ultimateResidenceSaleBasePrice);
+        }
+
         ExcelUtil<UltimateResidenceSaleBasePrice> util = new ExcelUtil<>(UltimateResidenceSaleBasePrice.class);
         return util.exportExcel(list, "住宅销售基价" + ultimateResidenceSaleBasePrice.getYearMonth());
     }

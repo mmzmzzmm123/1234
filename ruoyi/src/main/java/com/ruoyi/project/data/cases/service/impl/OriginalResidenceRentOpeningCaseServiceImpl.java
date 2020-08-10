@@ -33,13 +33,15 @@ public class OriginalResidenceRentOpeningCaseServiceImpl implements IOriginalRes
     @Autowired
     private DownloadOriginalResidenceRentOpeningCaseMapper downloadOriginalResidenceRentOpeningCaseMapper;
     @Autowired
+    private DownloadOriginalResidenceRentPlatformCaseMapper downloadOriginalResidenceRentPlatformCaseMapper;
+
+    @Autowired
     private SyncOriginalResidenceRentOpeningCaseMapper syncOriginalResidenceRentOpeningCaseMapper;
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     @Autowired
     private JdbcTemplate jdbcTemplate;
-    @Autowired
-    private DownloadOriginalResidenceRentPlatformCaseMapper downloadOriginalResidenceRentPlatformCaseMapper;
+
 
     /**
      * 29号拉取挂牌案例
@@ -136,6 +138,5 @@ public class OriginalResidenceRentOpeningCaseServiceImpl implements IOriginalRes
                 .replace("#lastYearMonth#", lastYearMonth.toString());
         jdbcTemplate.update(sql);
 
-        logger.debug("#作价完成#");
     }
 }

@@ -56,8 +56,6 @@ public class ArtificialResidenceRentPriceServiceImpl implements IArtificialResid
     @Autowired
     private SyncResidenceRentCaseMapper syncResidenceRentCaseMapper;
     @Autowired
-    private ResidenceRentAggregationCaseMapper residenceRentAggregationCaseMapper;
-    @Autowired
     private UltimateResidenceRentPriceMapper ultimateResidenceRentPriceMapper;
 
     @Override
@@ -217,14 +215,6 @@ public class ArtificialResidenceRentPriceServiceImpl implements IArtificialResid
     @Async
     public void pushData(Integer yearMonth, Integer currentPriceTableRoute, Integer lastPriceTableRoute) {
         try {
-            // 案例同步
-            syncResidenceRentCaseMapper.createAggregationCaseTable(currentPriceTableRoute);
-            List<CleanResidenceRentAggregationCase> list = residenceRentAggregationCaseMapper.getMonthly(yearMonth);
-            list.parallelStream().forEach(cleanResidenceRentAggregationCase -> {
-                cleanResidenceRentAggregationCase.setYearMonth(currentPriceTableRoute);
-                syncResidenceRentCaseMapper.insertAggregationCaseTable(cleanResidenceRentAggregationCase);
-            });
-
             // 当期价格同步
             syncResidenceRentCaseMapper.createUltimatePriceTable(currentPriceTableRoute);
             List<UltimateResidenceRentBasePrice> ultimateResidenceRentBasePrices =

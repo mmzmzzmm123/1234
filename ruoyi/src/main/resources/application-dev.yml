@@ -11,6 +11,13 @@ ruoyi:
   profile: D:/ruoyi/uploadPath
   # 获取ip地址开关
   addressEnabled: false
+  data:
+    elasticsearch:
+      cluster-name: elasticsearch
+      cluster-nodes: 172.16.30.243:9200
+      index:
+        number-of-replicas: 0
+        number-of-shards: 3
 
 # web服务器配置
 server:
