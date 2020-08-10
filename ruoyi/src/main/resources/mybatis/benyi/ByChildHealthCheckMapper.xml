@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.benyi.mapper.ByChildHealthCheckMapper">
+
+    <resultMap type="ByChildHealthCheck" id="ByChildHealthCheckResult">
+        <result property="id" column="id"/>
+        <result property="childId" column="child_id"/>
+        <result property="classInfo" column="class_info"/>
+        <result property="schoolName" column="school_name"/>
+        <result property="checkTime" column="check_time"/>
+        <result property="doctorName" column="doctor_name"/>
+        <result property="eyesVisionLeft" column="eyes_vision_left"/>
+        <result property="eyesVisionRight" column="eyes_vision_right"/>
+        <result property="visionAssessment" column="vision_assessment"/>
+        <result property="decayedTooth" column="decayed_tooth"/>
+        <result property="weight" column="weight"/>
+        <result property="weightAssessment" column="weight_assessment"/>
+        <result property="height" column="height"/>
+        <result property="heightAssessment" column="height_assessment"/>
+        <result property="totalAssessment" column="total_assessment"/>
+        <result property="createtime" column="createtime"/>
+        <result property="createuser" column="createuser"/>
+        <association property="byChild"    column="id" javaType="ByChild" resultMap="ByChildResult" />
+    </resultMap>
+
+    <resultMap type="ByChild" id="ByChildResult">
+        <result property="id" column="id"/>
+        <result property="schoolid" column="schoolid"/>
+        <result property="classid" column="classid"/>
+        <result property="name" column="name"/>
+        <result property="enName" column="en_name"/>
+        <result property="infantName" column="infant_name"/>
+        <result property="phone" column="phone"/>
+        <result property="xb" column="xb"/>
+        <result property="mz" column="mz"/>
+        <result property="zjhm" column="zjhm"/>
+        <result property="csrq" column="csrq"/>
+        <result property="birthProvince" column="birth_province"/>
+        <result property="birthProvincename" column="birth_provincename"/>
+        <result property="birthCity" column="birth_city"/>
+        <result property="birthCityname" column="birth_cityname"/>
+        <result property="birthArea" column="birth_area"/>
+        <result property="birthAreaname" column="birth_areaname"/>
+        <result property="registeredProvince" column="registered_province"/>
+        <result property="registeredProvincename" column="registered_provincename"/>
+        <result property="registeredCity" column="registered_city"/>
+        <result property="registeredCityname" column="registered_cityname"/>
+        <result property="registeredArea" column="registered_area"/>
+        <result property="registeredAreaname" column="registered_areaname"/>
+        <result property="addrProvince" column="addr_province"/>
+        <result property="addrProvincename" column="addr_provincename"/>
+        <result property="addrCity" column="addr_city"/>
+        <result property="addrCityname" column="addr_cityname"/>
+        <result property="addrArea" column="addr_area"/>
+        <result property="addrAreaname" column="addr_areaname"/>
+        <result property="addrDetail" column="addr_detail"/>
+        <result property="everSchool" column="ever_school"/>
+        <result property="learnEnglish" column="learn_english"/>
+        <result property="source" column="source"/>
+        <result property="status" column="status"/>
+        <result property="enterDate" column="enter_date"/>
+        <result property="outDate" column="out_date"/>
+        <result property="firstLanguage" column="first_language"/>
+        <result property="seconderLanguage" column="seconder_language"/>
+        <result property="otherLanguage" column="other_language"/>
+        <result property="createuserid" column="createuserid"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <sql id="selectByChildHealthCheckVo">
+        select h.id, h.child_id, h.class_info, h.school_name, h.check_time, h.doctor_name, h.eyes_vision_left, h.eyes_vision_right, h.vision_assessment, h.decayed_tooth, h.weight, h.weight_assessment, h.height, h.height_assessment, h.total_assessment, h.createtime, h.createuser,
+        c.id, c.schoolid, c.classid, c.name
+        from by_child_health_check h
+            left join by_child c on h.child_id = c.id
+    </sql>
+
+    <select id="selectByChildHealthCheckList" parameterType="ByChildHealthCheck" resultMap="ByChildHealthCheckResult">
+        <include refid="selectByChildHealthCheckVo"/>
+        <where>
+            <if test="childId != null ">and child_id = #{childId}</if>
+            <if test="classInfo != null  and classInfo != ''">and class_info = #{classInfo}</if>
+            <if test="schoolName != null  and schoolName != ''">and school_name like concat('%', #{schoolName}, '%')
+            </if>
+            <if test="checkTime != null ">and check_time = #{checkTime}</if>
+            <if test="doctorName != null  and doctorName != ''">and doctor_name like concat('%', #{doctorName}, '%')
+            </if>
+            <if test="eyesVisionLeft != null  and eyesVisionLeft != ''">and eyes_vision_left = #{eyesVisionLeft}</if>
+            <if test="eyesVisionRight != null  and eyesVisionRight != ''">and eyes_vision_right = #{eyesVisionRight}
+            </if>
+            <if test="visionAssessment != null  and visionAssessment != ''">and vision_assessment =
+                #{visionAssessment}
+            </if>
+            <if test="decayedTooth != null  and decayedTooth != ''">and decayed_tooth = #{decayedTooth}</if>
+            <if test="weight != null ">and weight = #{weight}</if>
+            <if test="weightAssessment != null  and weightAssessment != ''">and weight_assessment =
+                #{weightAssessment}
+            </if>
+            <if test="height != null ">and height = #{height}</if>
+            <if test="heightAssessment != null  and heightAssessment != ''">and height_assessment =
+                #{heightAssessment}
+            </if>
+            <if test="totalAssessment != null  and totalAssessment != ''">and total_assessment = #{totalAssessment}</if>
+            <if test="createtime != null ">and createtime = #{createtime}</if>
+            <if test="createuser != null ">and createuser = #{createuser}</if>
+        </where>
+    </select>
+
+    <select id="selectByChildHealthCheckById" parameterType="Long" resultMap="ByChildHealthCheckResult">
+        <include refid="selectByChildHealthCheckVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertByChildHealthCheck" parameterType="ByChildHealthCheck" useGeneratedKeys="true" keyProperty="id">
+        insert into by_child_health_check
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="childId != null ">child_id,</if>
+            <if test="classInfo != null  and classInfo != ''">class_info,</if>
+            <if test="schoolName != null  and schoolName != ''">school_name,</if>
+            <if test="checkTime != null ">check_time,</if>
+            <if test="doctorName != null  and doctorName != ''">doctor_name,</if>
+            <if test="eyesVisionLeft != null  and eyesVisionLeft != ''">eyes_vision_left,</if>
+            <if test="eyesVisionRight != null  and eyesVisionRight != ''">eyes_vision_right,</if>
+            <if test="visionAssessment != null  and visionAssessment != ''">vision_assessment,</if>
+            <if test="decayedTooth != null  and decayedTooth != ''">decayed_tooth,</if>
+            <if test="weight != null ">weight,</if>
+            <if test="weightAssessment != null  and weightAssessment != ''">weight_assessment,</if>
+            <if test="height != null ">height,</if>
+            <if test="heightAssessment != null  and heightAssessment != ''">height_assessment,</if>
+            <if test="totalAssessment != null  and totalAssessment != ''">total_assessment,</if>
+            <if test="createtime != null ">createtime,</if>
+            <if test="createuser != null ">createuser,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="childId != null ">#{childId},</if>
+            <if test="classInfo != null  and classInfo != ''">#{classInfo},</if>
+            <if test="schoolName != null  and schoolName != ''">#{schoolName},</if>
+            <if test="checkTime != null ">#{checkTime},</if>
+            <if test="doctorName != null  and doctorName != ''">#{doctorName},</if>
+            <if test="eyesVisionLeft != null  and eyesVisionLeft != ''">#{eyesVisionLeft},</if>
+            <if test="eyesVisionRight != null  and eyesVisionRight != ''">#{eyesVisionRight},</if>
+            <if test="visionAssessment != null  and visionAssessment != ''">#{visionAssessment},</if>
+            <if test="decayedTooth != null  and decayedTooth != ''">#{decayedTooth},</if>
+            <if test="weight != null ">#{weight},</if>
+            <if test="weightAssessment != null  and weightAssessment != ''">#{weightAssessment},</if>
+            <if test="height != null ">#{height},</if>
+            <if test="heightAssessment != null  and heightAssessment != ''">#{heightAssessment},</if>
+            <if test="totalAssessment != null  and totalAssessment != ''">#{totalAssessment},</if>
+            <if test="createtime != null ">#{createtime},</if>
+            <if test="createuser != null ">#{createuser},</if>
+        </trim>
+    </insert>
+
+    <update id="updateByChildHealthCheck" parameterType="ByChildHealthCheck">
+        update by_child_health_check
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="childId != null ">child_id = #{childId},</if>
+            <if test="classInfo != null  and classInfo != ''">class_info = #{classInfo},</if>
+            <if test="schoolName != null  and schoolName != ''">school_name = #{schoolName},</if>
+            <if test="checkTime != null ">check_time = #{checkTime},</if>
+            <if test="doctorName != null  and doctorName != ''">doctor_name = #{doctorName},</if>
+            <if test="eyesVisionLeft != null  and eyesVisionLeft != ''">eyes_vision_left = #{eyesVisionLeft},</if>
+            <if test="eyesVisionRight != null  and eyesVisionRight != ''">eyes_vision_right = #{eyesVisionRight},</if>
+            <if test="visionAssessment != null  and visionAssessment != ''">vision_assessment = #{visionAssessment},
+            </if>
+            <if test="decayedTooth != null  and decayedTooth != ''">decayed_tooth = #{decayedTooth},</if>
+            <if test="weight != null ">weight = #{weight},</if>
+            <if test="weightAssessment != null  and weightAssessment != ''">weight_assessment = #{weightAssessment},
+            </if>
+            <if test="height != null ">height = #{height},</if>
+            <if test="heightAssessment != null  and heightAssessment != ''">height_assessment = #{heightAssessment},
+            </if>
+            <if test="totalAssessment != null  and totalAssessment != ''">total_assessment = #{totalAssessment},</if>
+            <if test="createtime != null ">createtime = #{createtime},</if>
+            <if test="createuser != null ">createuser = #{createuser},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteByChildHealthCheckById" parameterType="Long">
+        delete from by_child_health_check where id = #{id}
+    </delete>
+
+    <delete id="deleteByChildHealthCheckByIds" parameterType="String">
+        delete from by_child_health_check where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
