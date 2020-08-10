@@ -124,7 +124,8 @@ public class DownloadOriginalResidenceSaleOpeningCaseServiceImpl {
             // 作价
             rawSql = LoadUtil.loadContent("sql-template/compute_sale_price.sql");
             sql = rawSql.replace("#yearMonth#", tableRoute.toString())
-                    .replace("#lastYearMonth#", remoteTableRoute.toString());
+                    .replace("#lastYearMonth#", remoteTableRoute.toString())
+                    .replace("#lastPriceDate#", String.format("%d-%d-01", tableRoute / 100, tableRoute % 100));
             jdbcTemplate.update(sql);
         } catch (Exception e) {
             logger.error("住宅作价异常", e);

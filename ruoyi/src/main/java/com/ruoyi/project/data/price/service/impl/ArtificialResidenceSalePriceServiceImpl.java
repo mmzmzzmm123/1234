@@ -270,7 +270,7 @@ public class ArtificialResidenceSalePriceServiceImpl implements IArtificialResid
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         String sql =
                 rawSql.replace("#yearMonth#", yearMonth.toString())
-                        .replace("#lastYearMonth#", lastYearMonth.toString())
+//                        .replace("#lastYearMonth#", lastYearMonth.toString())
                         .replace("#lastPriceDate#", simpleDateFormat.format(lastPriceDate))
                         .replace("#priceDate#", simpleDateFormat.format(priceDate));
         jdbcTemplate.update(sql);

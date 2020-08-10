@@ -1,6 +1,7 @@
 truncate table DW_HOUSINGCASE_COMM_#yearMonth#;
 truncate table DWA_PROJECTBASEPRICE_IMDT_#yearMonth#;
 
+
 insert into DW_HOUSINGCASE_COMM_#yearMonth#
 select
 	  a.case_id
@@ -26,7 +27,7 @@ select
      , isnull(a.DecorationRng, 0)
      , isnull(a.YearCoff, 1)
      , isnull(a.BuildingCoff, 1)
-     , d.BasePrice as BasePrice_1
+     , d.ITEM_STANDARDPRICE as BasePrice_1
      , a.PriceTotal
      , a.PriceUnit
      , a.PriceUnitAdj
@@ -57,10 +58,10 @@ from ODS_HOUSINGCASELISTED_LJ_#yearMonth#        a
         on c.ITEM_SECTOR121=g.ITEM_DICVALUE and g.ITEM_DICTYPE='板块'
 	left join obpm_LianCheng_Data.dbo.TLK_字典数据信息       h
         on c.ITEM_CIRCLEPOSITION=h.ITEM_DICVALUE and h.ITEM_DICTYPE='环线'
-	left join ODS_PROJECT_PRICE_INFO_#lastYearMonth# d
-        on b.ProjectID = d.ProjectID
-           and d.Status = 1
-where a.status not in ( 4, 5 );
+    left join obpm_LianCheng_Data.dbo.TLK_基价信息 d
+        on cast(b.ProjectID as nvarchar(20)) = d.ITEM_AIRAID
+           and d.ITEM_PROJECTTYPE = '1' and d.ITEM_PRICETYPE='1'
+where a.status not in ( 4, 5 ) and d.ITEM_VALUEPOINT='#lastPriceDate#';
 
 
 insert into DW_HOUSINGCASE_COMM_#yearMonth#
@@ -88,7 +89,7 @@ select
      , 0
      , 1
      , isnull(a.BuildingCoff, 1)
-     , d.BasePrice as BasePrice_1
+     , d.ITEM_STANDARDPRICE as BasePrice_1
      , a.PriceTotal
      , a.PriceUnit
      , a.PriceUnitAdj
@@ -116,9 +117,11 @@ from ODS_HOUSINGCASE_DEAL_#lastYearMonth#            a
         on c.ITEM_SECTOR121=g.ITEM_DICVALUE and g.ITEM_DICTYPE='板块'
 	left join obpm_LianCheng_Data.dbo.TLK_字典数据信息       h
         on c.ITEM_CIRCLEPOSITION=h.ITEM_DICVALUE and h.ITEM_DICTYPE='环线'
-    left join ODS_PROJECT_PRICE_INFO_#lastYearMonth# d
-        on a.ProjectID = d.ProjectID
-           and d.Status = 1;
+left join obpm_LianCheng_Data.dbo.TLK_基价信息 d
+        on cast(a.ProjectID as nvarchar(20)) = d.ITEM_AIRAID
+           and d.ITEM_PROJECTTYPE = '1' and d.ITEM_PRICETYPE='1'
+where d.ITEM_VALUEPOINT='#lastPriceDate#';
+
 
 
 ---成交案例的HouseholdsID_LJ，在上期由0优化为NULL，因此RangeFlag类型需要修改
@@ -175,7 +178,7 @@ create table #DWA_PROJECTBASEPRICE_IMDT_STEP_1
 ---规则修改：链家1和链家2调价幅度，status in (1,2) 都纳入计算范围
 insert into #DWA_PROJECTBASEPRICE_IMDT_STEP_1
 select a.ITEM_AIRAID, a.ITEM_RANAME, a.ITEM_RAADRESS,f.CountyName , g.ITEM_DICTEXT, h.ITEM_DICTEXT, a.ITEM_ISBUILDINDEX, a.ITEM_GAINCALCULATION, a.ITEM_RUNNINGSTATE,
-       d.BasePrice, b.PriceUnitAdj, b.Visited_Num,
+       d.ITEM_STANDARDPRICE, b.PriceUnitAdj, b.Visited_Num,
 			 b.First_Visit_Time, b.Visited_Num_15, b.Visited_Num_30, c.PriceDealMean_1, c.PriceDealMax_1, c.SumDeal_1,
 			 b.PriceDealMean, b.PriceDealMax, b.SumDeal, b.PriceListedMin, b.PriceCase1_ToAI_Pst, b.PriceCase2_ToAI_Pst,
 			 (PriceCase1 - PriceCase1_1)*1.0/PriceCase1_1 as PriceCase1_ToLst_Pst,
@@ -219,8 +222,10 @@ left join (
 				 avg(case when RangeFlag = 10 then PriceUnitAdj end) as PriceCase2_1
 	from DW_HOUSINGCASE_COMM_#lastYearMonth# group by ProjectID
 ) c on a.ITEM_AIRAID = c.ProjectID
-left join ODS_PROJECT_PRICE_INFO_#lastYearMonth# d on a.ITEM_AIRAID = d.ProjectID
-where a.ITEM_ISBUILDINDEX='1' and a.ITEM_PROJECTTYPE='1' and d.Status=1;
+    left join obpm_LianCheng_Data.dbo.TLK_基价信息 d
+        on cast(b.ProjectID as nvarchar(20)) = d.ITEM_AIRAID
+           and d.ITEM_PROJECTTYPE = '1' and d.ITEM_PRICETYPE='1'
+where a.ITEM_ISBUILDINDEX='1' and a.ITEM_PROJECTTYPE='1' and d.ITEM_VALUEPOINT='#lastPriceDate#';
 
 ----第二步；根据案例自动计算的小区涨跌幅
 update #DWA_PROJECTBASEPRICE_IMDT_STEP_1
@@ -405,10 +410,10 @@ create table #DWA_PROJECTBASEPRICE_IMDT_STEP_3
 
 SELECT A.ITEM_AIRAID as ProjectID, g.ITEM_DICTEXT as Block, f.CountyName as County, h.ITEM_DICTEXT as ProjectLevel, A.item_ProjectTypeDtl as ProjectTypeDtl, A.item_BindClassID as BindClassID, B.ProjectID AS BindProjID, B.VOPPB AS Bind_Proj_Pst,
 			 CASE WHEN C.ProjectID IS NOT NULL THEN C.VOPPBT
-            WHEN B.ProjectID IS NOT NULL AND D.BasePrice IS NOT NULL THEN '8505' END AS VOPPAT,
+            WHEN B.ProjectID IS NOT NULL AND D.ITEM_STANDARDPRICE IS NOT NULL THEN '8505' END AS VOPPAT,
 			 CASE WHEN C.ProjectID IS NOT NULL THEN C.VOPPB
-            WHEN B.ProjectID IS NOT NULL AND D.BasePrice IS NOT NULL THEN B.VOPPB END AS VOPPA,
-       D.BasePrice
+            WHEN B.ProjectID IS NOT NULL AND D.ITEM_STANDARDPRICE IS NOT NULL THEN B.VOPPB END AS VOPPA,
+       D.ITEM_STANDARDPRICE as BasePrice
 INTO #TempBindProjID
 FROM obpm_LianCheng_Data.dbo.TLK_小区信息管理 a
 left join obpm_LianCheng_Data.dbo.V_CountyDict f on f.CountyId=a.ITEM_DISTRICT1
@@ -420,9 +425,10 @@ LEFT JOIN (SELECT ProjectID, VOPPBT, VOPPB FROM #DWA_PROJECTBASEPRICE_IMDT_STEP_
 ON A.item_BindProjID = B.ProjectID
 LEFT JOIN (SELECT ProjectID, VOPPBT, VOPPB FROM #DWA_PROJECTBASEPRICE_IMDT_STEP_2 WHERE ABS(VOPPB) < 0.1) C
 ON A.ITEM_AIRAID = C.ProjectID
-LEFT JOIN ODS_PROJECT_PRICE_INFO_#lastYearMonth# D
-ON A.ITEM_AIRAID = D.ProjectID AND D.Status=1
-where a.ITEM_ISBUILDINDEX='1' and a.ITEM_PROJECTTYPE='1';
+left join obpm_LianCheng_Data.dbo.TLK_基价信息 d
+    on cast(b.ProjectID as nvarchar(20)) = d.ITEM_AIRAID
+       and d.ITEM_PROJECTTYPE = '1' and d.ITEM_PRICETYPE='1'
+where a.ITEM_ISBUILDINDEX='1' and a.ITEM_PROJECTTYPE='1' and d.ITEM_VALUEPOINT='#lastPriceDate#';
 
 -- 2.板块+绑定
 SELECT A.ProjectID, A.Block, A.County, A.ProjectLevel, A.ProjectTypeDtl, A.BindClassID, A.BindProjID, A.Bind_Proj_Pst,
@@ -529,7 +535,7 @@ create table #DWA_PROJECTBASEPRICE_IMDT_STEP_4
 
 INSERT INTO #DWA_PROJECTBASEPRICE_IMDT_STEP_4
 SELECT A.ITEM_AIRAID, A.ITEM_RALABLE, g.ITEM_DICTEXT, i.ITEM_DICTEXT, A.item_ProjectTypeDtl, h.ITEM_DICTEXT, A.ITEM_MAINCOMPLETIONYEAR, A.item_MainArea,
-       A.item_AreaCoff, A.item_YearCoff, D.PriceNote
+       A.item_AreaCoff, A.item_YearCoff, D.ITEM_PRICEEXPLAIN
 FROM obpm_LianCheng_Data.dbo.TLK_小区信息管理  A
 left join obpm_LianCheng_Data.dbo.TLK_字典数据信息       h
     on a.ITEM_PROPERTYLEVEL=h.ITEM_DICVALUE and h.ITEM_DICTYPE='物业档次'
@@ -537,12 +543,12 @@ left join obpm_LianCheng_Data.dbo.TLK_字典数据信息       g
     on a.ITEM_RAPropertyType=g.ITEM_DICVALUE and g.ITEM_DICTYPE='物业类型'
 left join obpm_LianCheng_Data.dbo.TLK_字典数据信息       i
     on a.ITEM_RAType=i.ITEM_DICVALUE and i.ITEM_DICTYPE='小区类型'
-LEFT JOIN ODS_PROJECT_PRICE_INFO_#lastYearMonth# D
-ON A.ITEM_AIRAID = D.ProjectID
-where A.ITEM_PROJECTTYPE='1' and a.ITEM_ISBUILDINDEX='1' and D.Status=1;
+left join obpm_LianCheng_Data.dbo.TLK_基价信息 d
+    on A.ITEM_AIRAID = d.ITEM_AIRAID
+       and d.ITEM_PROJECTTYPE = '1' and d.ITEM_PRICETYPE='1'
+where A.ITEM_PROJECTTYPE='1' and a.ITEM_ISBUILDINDEX='1' and D.ITEM_VALUEPOINT='#lastPriceDate#';
 
 ----第五步；整合到结果表
-
 INSERT INTO DWA_PROJECTBASEPRICE_IMDT_#yearMonth#
 SELECT A.ProjectID, A.ProjectName, A.ProjectAddr, A.County, A.Block, A.Loop, a.IsIndxGen, a.IsPstCalc, a.StatusRun, D.ProjectSPLabel, D.PropertyType, D.ProjectType,
        D.ProjectTypeDtl, D.ProjectLevel, D.[Year], D.MainArea, ISNULL(D.AreaCoff,1), ISNULL(D.YearCoff,1), D.PriceNote,
