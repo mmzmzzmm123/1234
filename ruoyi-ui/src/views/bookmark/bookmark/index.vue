@@ -277,6 +277,7 @@ export default {
     this.getList();
   },
   methods: {
+
     /** 查询书签管理列表 */
     getList() {
       this.loading = true;

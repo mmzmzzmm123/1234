@@ -1,6 +1,8 @@
 <template >
   <div class="main">
 
+    <div class="index-top"></div>
+
     <!--github-->
     <a @click="zreaZtree" class="github-corner" target="_blank" title="Follow me on GitHub" aria-label="Follow me on GitHub">
       <svg width="80" height="80" viewBox="0 0 250 250" style="fill:#008000; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true">
@@ -10,32 +12,48 @@
     </a>
 
 
-    <div  class="areaTree" v-show="isShowZtree">
-        <span style="display: block;width: 100%;height: 30px;line-height: 30px;text-indent: 25px;font-size: 15px;font-weight:bold">我是菜单1号</span>
-        <span style="display: block;width: 100%;height: 30px;line-height: 30px;text-indent: 25px;font-size: 15px;font-weight:bold">我是菜单1号</span>
-        <span style="display: block;width: 100%;height: 30px;line-height: 30px;text-indent: 25px;font-size: 15px;font-weight:bold">我是菜单1号</span>
-        <span style="display: block;width: 100%;height: 30px;line-height: 30px;text-indent: 25px;font-size: 15px;font-weight:bold">我是菜单1号</span>
-        <span style="display: block;width: 100%;height: 30px;line-height: 30px;text-indent: 25px;font-size: 15px;font-weight:bold">我是菜单1号</span>
-        <span style="display: block;width: 100%;height: 30px;line-height: 30px;text-indent: 25px;font-size: 15px;font-weight:bold">我是菜单1号</span>
-        <span style="display: block;width: 100%;height: 30px;line-height: 30px;text-indent: 25px;font-size: 15px;font-weight:bold">我是菜单1号</span>
-        <span style="display: block;width: 100%;height: 30px;line-height: 30px;text-indent: 25px;font-size: 15px;font-weight:bold">我是菜单1号</span>
-        <span style="display: block;width: 100%;height: 30px;line-height: 30px;text-indent: 25px;font-size: 15px;font-weight:bold">我是菜单1号</span>
+
+
+
+
+
+
+
+
+
+    <div style="height: 700px;width: 270px;margin-top: 50px"></div>
+
+    <div style="height: 700px;width: 500px;margin-top: 50px">
+    </div>
+    <div  class="areaTree" >
         <ul id="treeDemo" class="ztree" ></ul>
     </div>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     <div class="sousou">
-
-
 <!--      //搜索-->
 
 
-      <div style="width: 800px;height: 200px;margin: 0 auto;margin-top: 19%">
+      <div style="width: 50%;height: 200px;margin: 0 auto;margin-top: 19%">
 
         <div >
 
 
           <div class="choice-top" v-for="iconlist in iconlist">
-            <el-tooltip :hide-after="500" class="item" effect="dark" :content="iconlist.title" placement="top" >
+            <el-tooltip  :visible-arrow="visiblearro" :enterable="enterable" class="item"  effect="dark" :content="iconlist.title" placement="top" >
             <div @click="sendEventDataTop($event)" :data-icon="iconlist.icon"><img :ng-src="'https://favicon.lucq.fun/?url='+iconlist.icon" err-src="./images/default.ico"  ng-click="detailBookmark(bookmark);$event.stopPropagation()" :src="'https://favicon.lucq.fun/?url='+iconlist.icon"  ></div>
             </el-tooltip>
           </div>
@@ -45,16 +63,29 @@
         <div style="margin-top: 15px;">
           <el-input placeholder="百度一下" v-model="sousou" class="sousoucss" ref="sousouref">
             <img @click="IsCord()"  slot="prefix"  :src="sousouicon" style="width: 20px;height: 20px;position: absolute;top: 50%;margin-top: -10px;">
-              <el-button   slot="append" icon="el-icon-search"  circle ></el-button>
+              <el-button   slot="append" icon="el-icon-search"  circle @click="getUrl"></el-button>
           </el-input>
         </div>
 
-        <el-card class="box-card" v-show="isSousouCard" style="width: 500px;opacity: 0.7">
-          <div class="choice" v-for="iconlist in iconlist">
+        <transition name="el-zoom-in-top">
+            <el-card class="box-card" v-show="isSousouCard" style="width: 100%;opacity: 0.7;margin-top: 10px;height:200px;overflow:auto">
+
+              <div class="choice" v-for="iconlist in iconlist" >
             <div  @click="sendEventData($event)" :data-icon="iconlist.icon"><img err-src="https://favicon.lucq.fun/?url=https://www.5118.com/"  class="sousouicon"  :ng-src="'https://favicon.lucq.fun/?url='+iconlist.icon"  :src="'https://favicon.lucq.fun/?url='+iconlist.icon"  ><span>{{iconlist.title}}</span></div>
-<!--            ng-click="detailBookmark(bookmark);$event.stopPropagation()"     -->
-          </div>
-        </el-card>
+              </div>
+            </el-card>
+
+        </transition>
+
+
+
+
+<!--        <el-card class="box-card" v-show="isSousouCard" style="width: 500px;opacity: 0.7">-->
+<!--          <div class="choice" v-for="iconlist in iconlist">-->
+<!--            <div  @click="sendEventData($event)" :data-icon="iconlist.icon"><img err-src="https://favicon.lucq.fun/?url=https://www.5118.com/"  class="sousouicon"  :ng-src="'https://favicon.lucq.fun/?url='+iconlist.icon"  :src="'https://favicon.lucq.fun/?url='+iconlist.icon"  ><span>{{iconlist.title}}</span></div>-->
+<!--&lt;!&ndash;            ng-click="detailBookmark(bookmark);$event.stopPropagation()"     &ndash;&gt;-->
+<!--          </div>-->
+<!--        </el-card>-->
 
       </div>
 
@@ -89,9 +120,12 @@
 
     data:function(){
       return{
+        enterable:false,
+        visiblearro:true,//提示箭头
         isShowZtree:false,//ztree树显示
         expandAll:false,//是否展开ztree树
         curMenu:null,
+        sousou:'百度一下',//搜索文字
         zTree_Menu:null,
         isSousouCard:false,//切换搜索源
         iconurl:'https://favicon.lucq.fun/?url=',
@@ -125,42 +159,42 @@
           }
         },
         zNodes:[
-          { id:1, pId:0, name:"文件夹",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
-          { id:2, pId:0, name:"文件夹",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
-          { id:3, pId:2, name:"文件夹",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
-          { id:4, pId:0, name:"文件夹",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
-          { id:5, pId:4, name:"文件夹",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
-          { id:6, pId:0, name:"文件夹",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
-          { id:7, pId:6, name:"文件夹",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
-          { id:8, pId:0, name:"文件夹",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
-          { id:9, pId:8, name:"文件夹",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
-          { id:1123, pId:0, name:"文件夹",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
-          { id:1142, pId:1, name:"收件箱",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
-          { id:111, pId:11, name:"收件箱1",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
-          { id:112, pId:111, name:"收件箱2",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
-          { id:113, pId:112, name:"收件箱3",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
-          { id:114, pId:113, name:"收件箱4",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
-          { id:1321, pId:114, name:"照片",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
-          { id:2322, pId:114, name:"照片",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
-          { id:3323, pId:114, name:"照片",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
-          { id:4324, pId:114, name:"照片",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
-          { id:5325, pId:114, name:"照片",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
-          { id:6399, pId:114, name:"照片",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
-          { id:32, pId:399, name:"照片",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
-          { id:12, pId:1, name:"垃圾邮件",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
-          { id:13, pId:1, name:"草稿",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
-          { id:14, pId:1, name:"已发送邮件",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
-          { id:15, pId:1, name:"已删除邮件",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
-          { id:322, pId:11, name:"快速视图",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
-          { id:31, pId:3, name:"文档",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
-          { id:131, pId:3, name:"文档",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
-          { id:231, pId:3, name:"文档",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
-          { id:331, pId:3, name:"文档",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
-          { id:431, pId:3, name:"文档",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
-          { id:531, pId:3, name:"文档",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
-          { id:631, pId:3, name:"文档",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
-          { id:731, pId:3, name:"文档",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
-          { id:831, pId:3, name:"文档",icon:"https://s1.ax1x.com/2020/07/27/akpZ4O.png"},
+          { id:1, pId:0, name:"文件夹",icon:"https://favicon.lucq.fun/?url=https://www.baidu.com"},
+          { id:2, pId:0, name:"文件夹",icon:"https://favicon.lucq.fun/?url=https://movie.douban.com/"},
+          { id:3, pId:2, name:"文件夹",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
+          { id:4, pId:0, name:"文件夹",icon:"https://favicon.lucq.fun/?url=https://www.w3school.com.cn/"},
+          { id:5, pId:4, name:"文件夹",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
+          { id:6, pId:0, name:"文件夹",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
+          { id:7, pId:6, name:"文件夹",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
+          { id:8, pId:0, name:"文件夹",icon:"https://favicon.lucq.fun/?url=https://open.163.com/"},
+          { id:9, pId:8, name:"文件夹",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
+          { id:1123, pId:0, name:"文件夹",icon:"https://favicon.lucq.fun/?url=https://y.qq.com"},
+          { id:1142, pId:1, name:"收件箱",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
+          { id:111, pId:19, name:"收件箱1",icon:"https://favicon.lucq.fun/?url=https://mail.sina.com.cn/"},
+          { id:112, pId:111, name:"收件箱2",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
+          { id:113, pId:112, name:"收件箱3",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
+          { id:114, pId:113, name:"收件箱4",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
+          { id:1321, pId:114, name:"照片",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
+          { id:2322, pId:114, name:"照片",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
+          { id:3323, pId:114, name:"照片",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
+          { id:4324, pId:114, name:"照片",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
+          { id:5325, pId:114, name:"照片",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
+          { id:6399, pId:114, name:"照片",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
+          { id:32, pId:399, name:"照片",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
+          { id:12, pId:1, name:"垃圾邮件",icon:"https://favicon.lucq.fun/?url=https://www.google.com/"},
+          { id:13, pId:1, name:"草稿",icon:"https://favicon.lucq.fun/?url=https://yz.m.sm.cn/"},
+          { id:14, pId:1, name:"已发送邮件",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
+          { id:15, pId:1, name:"已删除邮件",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
+          { id:322, pId:11, name:"快速视图",icon:"https://favicon.lucq.fun/?url=https://taobao.com/"},
+          { id:31, pId:3, name:"文档",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
+          { id:131, pId:3, name:"文档",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
+          { id:231, pId:3, name:"文档",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
+          { id:331, pId:3, name:"文档",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
+          { id:431, pId:3, name:"文档",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
+          { id:531, pId:3, name:"文档",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
+          { id:631, pId:3, name:"文档",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
+          { id:731, pId:3, name:"文档",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
+          { id:831, pId:3, name:"文档",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
           ]
         ,
         iconlist:[
@@ -198,19 +232,22 @@
     methods:{
 
     addDiyDom:function(treeId, treeNode) {
+      console.log("自定义ztree:"+treeId.tId+"___treeNode："+treeNode.tId)
     var spaceWidth = 20;
     var switchObj = $("#" + treeNode.tId + "_switch"),
       icoObj = $("#" + treeNode.tId + "_ico");
     switchObj.remove();
-
     icoObj.before(switchObj);
 
     if (treeNode.level > -1) {
       var spaceStr = "<span style='display: inline-block;width:" + (spaceWidth * treeNode.level)+ "px'></span>";
       switchObj.before(spaceStr);
-
       var switchObjspan = $("#" + treeNode.tId + "_span");
-      var editStr = "<span class="+treeNode.tId+"_count style='float:right;display: inline-block' onfocus='this.blur();'>99</span>";
+
+
+
+
+      var editStr = "<span class="+treeNode.tId+"_count style='color: #9e9e9e;float:right;display: inline-block;margin-right: 15px;font-size:8px' onfocus='this.blur();'>99</span>";
       switchObjspan.after(editStr);
     }
   },
@@ -221,7 +258,7 @@
   	if (confCount>0) return;
   	//if (treeNode.parentNode && treeNode.parentNode.id!=1) return;
   	var switchObjspan = $("#" + treeNode.tId + "_span");
-  	var editStr = "<span class="+treeNode.tId+"_sz onclick='alert(2222);return false;' style='float:right;display: inline-block' onfocus='this.blur();'>删</span>";
+  	var editStr = "<span class="+treeNode.tId+"_sz onclick='alert(2222);return false;' style='color: #9e9e9e;float:right;display: inline-block;margin-right: 15px;font-size:8px' onfocus='this.blur();'>删</span>";
   	switchObjspan.after(editStr);
 
     $("." + treeNode.tId + "_count").unbind().remove();
@@ -236,9 +273,10 @@
   removeHoverDom:function(treeId, treeNode) {
   	//console.log("进入removeHoverDom:"+"." + treeNode.tId + "_sz")
   	//if (treeNode.parentTId && treeNode.getParentNode().id!=1) return;
+
   	$("." + treeNode.tId + "_sz").unbind().remove();
     var switchObjspan = $("#" + treeNode.tId + "_span");
-    var editStr = "<span class="+treeNode.tId+"_count onclick='alert(1111111);return false;' style='float:right;display: inline-block' onfocus='this.blur();'>99</span>";
+    var editStr = "<span class="+treeNode.tId+"_count onclick='alert(1111111);return false;' style='color: #9e9e9e;float:right;display: inline-block;margin-right: 15px;font-size:8px' onfocus='this.blur();'>12</span>";
     switchObjspan.after(editStr);
 
   },
@@ -291,13 +329,31 @@
 //         //否则，我们需要使用IE的方式来取消事件冒泡
 //           window.event.cancelBubble = true;
 
+      },
+      //新打开新窗口
+      getUrl:function () {
+      var that=this;
+      if (that.sousou!=null&&that.sousou!=undefined&&that.sousou!='') {
+        var url=that.sousouicon+that.sousou;
+        window.open(url);
+        //window.location.href=url;
+        }else {
+        // that.$notify({
+        //   title:'提示',
+        //   type: 'success',
+        //   message: '搜了个寂寞,内容不能为空!',
+        // });
+        that.$refs.sousouref.focus()
+        }
+
+
       }
     },
     mounted(){
       var that=this;
-
       $.fn.zTree.init($("#treeDemo"), this.setting, this.zNodes).expandAll(that.expandAll);
 
+      //光标自动选中
       that.$refs.sousouref.focus()
 
       // var _this = this
@@ -323,12 +379,16 @@
 
   }
 </script>
-<style>
+<style >
+  body{
+    font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
+  }
+
 
   .ztree li ul{  margin:0;  padding:0}
   .ztree li {line-height:30px}
-  .ztree li a {width:200px;height:30px;padding-top: 0px;;width:100%}
-  .ztree li a:hover {text-decoration:none; background-color: #E7E7E7;opacity:0.4;}
+  .ztree li a {width:200px;height:30px;padding-top: 0px;font-size: 14px;width:100%}
+  .ztree li a:hover {text-decoration:none; background-color: #E3E3E3;}
   .ztree li a span.button.switch {vertical-align:middle}
   .ztree.showIcon li a span.button.switch {visibility:visible}
   .ztree li a.curSelectedNode {background-color:#D4D4D4;border:0;height:30px;}
@@ -336,7 +396,7 @@
   .ztree li span.button {margin-top: -4px;margin-left:3px}
   .ztree li span.button.switch {width: 16px;height: 16px;}
 
-  .ztree li a.level0 span {font-size: 100%;font-weight: bold}
+  /*.ztree li a.level0 span {font-size: 100%;font-weight: bold}*/
   .ztree li span.button {background-image:url("../ztree/left_menuForOutLook.png"); *background-image:url("../ztree/left_menuForOutLook.gif")}
   .ztree li span.button.switch.level0 {width: 20px; height:20px}
   .ztree li span.button.switch.level1 {width: 20px; height:20px}
@@ -360,16 +420,18 @@
 
   .areaTree{
     width: 300px;
-    height: 700px;
-    overflow:auto;
-    background:url('https://ftp.bmp.ovh/imgs/2020/08/4ac1d6b4f41049ef.jpg') no-repeat;
+    /*height: 700px;*/
+    font-weight: 400;
+   /*overflow:auto;*/
+    background-color: #F6F6F6;
+   /* background:url('https://ftp.bmp.ovh/imgs/2020/08/4ac1d6b4f41049ef.jpg') no-repeat;*/
     background-size: 100% 100%;
-    position:relative;
-    animation-name:mymove;
-    animation-duration:1s;/* 5s表示执行动画的时间，0或不写则无动画效果 */
-    /* 兼容调试如果animation-name执行，那么-wekit-animation-name则不执行 */
-    -webkit-animation-name:mymove;
-    -webkit-animation-duration:1s;/* 5s表示执行动画的时间，0或不写则无动画效果 */
+    /*position:relative;*/
+    /*animation-name:mymove;*/
+    /*animation-duration:1s;!* 5s表示执行动画的时间，0或不写则无动画效果 *!*/
+    /*!* 兼容调试如果animation-name执行，那么-wekit-animation-name则不执行 *!*/
+    /*-webkit-animation-name:mymove;*/
+    /*-webkit-animation-duration:1s;!* 5s表示执行动画的时间，0或不写则无动画效果 *!*/
 
   }
 
@@ -407,6 +469,13 @@ width: 100%;
   .sousoucss{
     opacity: 0.6;
 
+  }
+  .sousoucss button:hover{
+    color: #1c84c6;
+  }
+  .el-input-group__append{
+    background-color: #1f2d3d!important;
+    opacity: 0.7;
   }
 
 
@@ -446,8 +515,16 @@ width: 100%;
     color: #1c84c6;
 
   }
+/**顶部*/
+  .index-top{
+    width: 100%;
+    height: 50px;
+    background-color: #3c5d5b;
+    position: absolute;
+    top: 0;
+    opacity: 0.2;
 
-
+  }
 
   /*搜索 */
   .sousouicon{
@@ -481,5 +558,42 @@ width: 100%;
   }
 
 
+  /**滚动条美化*/
+
+  /*滚动条的宽度*/
+
+  ::-webkit-scrollbar {
+    width:5px;
+    height:3px;
+    /*background-color: red;*/
+  }
+
+  /*外层轨道。可以用display:none让其不显示，也可以添加背景图片，颜色改变显示效果*/
+
+  ::-webkit-scrollbar-track {
+    width: 6px;
+    background-color:#fff;
+    -webkit-border-radius: 2em;
+    -moz-border-radius: 2em;
+    border-radius:2em;
+  }
+
+  /*滚动条的设置*/
+
+  ::-webkit-scrollbar-thumb {
+    background-color:#606d71;
+    background-clip:padding-box;
+    min-height:28px;
+    -webkit-border-radius: 2em;
+    -moz-border-radius: 2em;
+    border-radius:2em;
+
+  }
+  /*滚动条移上去的背景*/
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: #7c6fff;
+  }
+/*滚动条美化结束*/
 </style>
 

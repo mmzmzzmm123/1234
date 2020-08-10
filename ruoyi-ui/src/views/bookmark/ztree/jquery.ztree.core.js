@@ -1302,9 +1302,9 @@
       makeDOMNodeIcon: function (html, setting, node) {
         var nameStr = data.nodeName(setting, node),
           name = setting.view.nameIsHTML ? nameStr : nameStr.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-        html.push("<span id='", node.tId, consts.id.ICON,
+        html.push("<span  id='", node.tId, consts.id.ICON,
           "' title='' treeNode", consts.id.ICON, " class='", view.makeNodeIcoClass(setting, node),
-          "' style='", view.makeNodeIcoStyle(setting, node), "'></span><span id='", node.tId, consts.id.SPAN,
+          "' style='", view.makeNodeIcoStyle(setting, node), "'></span><span style='margin-left:3px;' id='", node.tId, consts.id.SPAN,
           "' class='", consts.className.NAME,
           "'>", name, "</span>");
       },
@@ -1330,7 +1330,7 @@
           fontStyle.push(f, ":", fontcss[f], ";");
         }
         html.push("<a id='", node.tId, consts.id.A, "' class='", consts.className.LEVEL, node.level,
-          nodeClasses.add ? ' ' + nodeClasses.add.join(' ') : '', 
+          nodeClasses.add ? ' ' + nodeClasses.add.join(' ') : '',
           "' treeNode", consts.id.A, " onclick=\"", (node.click || ''),
           "\" ", ((url != null && url.length > 0) ? "href='" + url + "'" : ""), " target='", view.makeNodeTarget(node), "' style='", fontStyle.join(''),
           "'");
