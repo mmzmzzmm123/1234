@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.benyi.mapper.ByChildLearndevelopmentFamilyMapper">
+
+    <resultMap type="ByChildLearndevelopmentFamily" id="ByChildLearndevelopmentFamilyResult">
+        <result property="id" column="id"/>
+        <result property="childid" column="childid"/>
+        <result property="xnxq" column="xnxq"/>
+        <result property="zpimgs" column="zpimgs"/>
+        <result property="zpimgremarks" column="zpimgremarks"/>
+        <result property="shimgs" column="shimgs"/>
+        <result property="shimgsremarks" column="shimgsremarks"/>
+        <result property="yqsj" column="yqsj"/>
+        <result property="yqsjremarks" column="yqsjremarks"/>
+        <result property="jspy" column="jspy"/>
+        <result property="jspyremarks" column="jspyremarks"/>
+        <result property="createuserid" column="createuserid"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <sql id="selectByChildLearndevelopmentFamilyVo">
+        select id, childid, xnxq, zpimgs, zpimgremarks, shimgs, shimgsremarks, yqsj, yqsjremarks, jspy, jspyremarks, createuserid, create_time from by_child_learndevelopment_family
+    </sql>
+
+    <select id="selectByChildLearndevelopmentFamilyList" parameterType="ByChildLearndevelopmentFamily"
+            resultMap="ByChildLearndevelopmentFamilyResult">
+        <include refid="selectByChildLearndevelopmentFamilyVo"/>
+        <where>
+            <if test="childid != null ">and childid = #{childid}</if>
+            <if test="xnxq != null  and xnxq != ''">and xnxq = #{xnxq}</if>
+            <if test="zpimgs != null  and zpimgs != ''">and zpimgs = #{zpimgs}</if>
+            <if test="zpimgremarks != null  and zpimgremarks != ''">and zpimgremarks = #{zpimgremarks}</if>
+            <if test="shimgs != null  and shimgs != ''">and shimgs = #{shimgs}</if>
+            <if test="shimgsremarks != null  and shimgsremarks != ''">and shimgsremarks = #{shimgsremarks}</if>
+            <if test="yqsj != null  and yqsj != ''">and yqsj = #{yqsj}</if>
+            <if test="yqsjremarks != null  and yqsjremarks != ''">and yqsjremarks = #{yqsjremarks}</if>
+            <if test="jspy != null  and jspy != ''">and jspy = #{jspy}</if>
+            <if test="jspyremarks != null  and jspyremarks != ''">and jspyremarks = #{jspyremarks}</if>
+            <if test="createuserid != null ">and createuserid = #{createuserid}</if>
+        </where>
+    </select>
+
+    <select id="selectByChildLearndevelopmentFamilyById" parameterType="Long"
+            resultMap="ByChildLearndevelopmentFamilyResult">
+        <include refid="selectByChildLearndevelopmentFamilyVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertByChildLearndevelopmentFamily" parameterType="ByChildLearndevelopmentFamily">
+        insert into by_child_learndevelopment_family
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null ">id,</if>
+            <if test="childid != null ">childid,</if>
+            <if test="xnxq != null  and xnxq != ''">xnxq,</if>
+            <if test="zpimgs != null  and zpimgs != ''">zpimgs,</if>
+            <if test="zpimgremarks != null  and zpimgremarks != ''">zpimgremarks,</if>
+            <if test="shimgs != null  and shimgs != ''">shimgs,</if>
+            <if test="shimgsremarks != null  and shimgsremarks != ''">shimgsremarks,</if>
+            <if test="yqsj != null  and yqsj != ''">yqsj,</if>
+            <if test="yqsjremarks != null  and yqsjremarks != ''">yqsjremarks,</if>
+            <if test="jspy != null  and jspy != ''">jspy,</if>
+            <if test="jspyremarks != null  and jspyremarks != ''">jspyremarks,</if>
+            <if test="createuserid != null ">createuserid,</if>
+            <if test="createTime != null ">create_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null ">#{id},</if>
+            <if test="childid != null ">#{childid},</if>
+            <if test="xnxq != null  and xnxq != ''">#{xnxq},</if>
+            <if test="zpimgs != null  and zpimgs != ''">#{zpimgs},</if>
+            <if test="zpimgremarks != null  and zpimgremarks != ''">#{zpimgremarks},</if>
+            <if test="shimgs != null  and shimgs != ''">#{shimgs},</if>
+            <if test="shimgsremarks != null  and shimgsremarks != ''">#{shimgsremarks},</if>
+            <if test="yqsj != null  and yqsj != ''">#{yqsj},</if>
+            <if test="yqsjremarks != null  and yqsjremarks != ''">#{yqsjremarks},</if>
+            <if test="jspy != null  and jspy != ''">#{jspy},</if>
+            <if test="jspyremarks != null  and jspyremarks != ''">#{jspyremarks},</if>
+            <if test="createuserid != null ">#{createuserid},</if>
+            <if test="createTime != null ">#{createTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateByChildLearndevelopmentFamily" parameterType="ByChildLearndevelopmentFamily">
+        update by_child_learndevelopment_family
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="childid != null ">childid = #{childid},</if>
+            <if test="xnxq != null  and xnxq != ''">xnxq = #{xnxq},</if>
+            <if test="zpimgs != null  and zpimgs != ''">zpimgs = #{zpimgs},</if>
+            <if test="zpimgremarks != null  and zpimgremarks != ''">zpimgremarks = #{zpimgremarks},</if>
+            <if test="shimgs != null  and shimgs != ''">shimgs = #{shimgs},</if>
+            <if test="shimgsremarks != null  and shimgsremarks != ''">shimgsremarks = #{shimgsremarks},</if>
+            <if test="yqsj != null  and yqsj != ''">yqsj = #{yqsj},</if>
+            <if test="yqsjremarks != null  and yqsjremarks != ''">yqsjremarks = #{yqsjremarks},</if>
+            <if test="jspy != null  and jspy != ''">jspy = #{jspy},</if>
+            <if test="jspyremarks != null  and jspyremarks != ''">jspyremarks = #{jspyremarks},</if>
+            <if test="createuserid != null ">createuserid = #{createuserid},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteByChildLearndevelopmentFamilyById" parameterType="Long">
+        delete from by_child_learndevelopment_family where id = #{id}
+    </delete>
+
+    <delete id="deleteByChildLearndevelopmentFamilyByIds" parameterType="String">
+        delete from by_child_learndevelopment_family where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

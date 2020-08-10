@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.benyi.mapper.ByChildLearndevelopmentTeacherMapper">
+
+    <resultMap type="ByChildLearndevelopmentTeacher" id="ByChildLearndevelopmentTeacherResult">
+        <result property="id" column="id"/>
+        <result property="childid" column="childid"/>
+        <result property="xnxq" column="xnxq"/>
+        <result property="gcjl" column="gcjl"/>
+        <result property="gcjlremarks" column="gcjlremarks"/>
+        <result property="wtyfa" column="wtyfa"/>
+        <result property="wtyfaremarks" column="wtyfaremarks"/>
+        <result property="pgjg" column="pgjg"/>
+        <result property="pgjgremarks" column="pgjgremarks"/>
+        <result property="jyjh" column="jyjh"/>
+        <result property="jyjhremarks" column="jyjhremarks"/>
+        <result property="createuserid" column="createuserid"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <sql id="selectByChildLearndevelopmentTeacherVo">
+        select id, childid, xnxq, gcjl, gcjlremarks, wtyfa, wtyfaremarks, pgjg, pgjgremarks, jyjh, jyjhremarks, createuserid, create_time from by_child_learndevelopment_teacher
+    </sql>
+
+    <select id="selectByChildLearndevelopmentTeacherList" parameterType="ByChildLearndevelopmentTeacher"
+            resultMap="ByChildLearndevelopmentTeacherResult">
+        <include refid="selectByChildLearndevelopmentTeacherVo"/>
+        <where>
+            <if test="childid != null ">and childid = #{childid}</if>
+            <if test="xnxq != null  and xnxq != ''">and xnxq = #{xnxq}</if>
+            <if test="gcjl != null  and gcjl != ''">and gcjl = #{gcjl}</if>
+            <if test="gcjlremarks != null  and gcjlremarks != ''">and gcjlremarks = #{gcjlremarks}</if>
+            <if test="wtyfa != null  and wtyfa != ''">and wtyfa = #{wtyfa}</if>
+            <if test="wtyfaremarks != null  and wtyfaremarks != ''">and wtyfaremarks = #{wtyfaremarks}</if>
+            <if test="pgjg != null  and pgjg != ''">and pgjg = #{pgjg}</if>
+            <if test="pgjgremarks != null  and pgjgremarks != ''">and pgjgremarks = #{pgjgremarks}</if>
+            <if test="jyjh != null  and jyjh != ''">and jyjh = #{jyjh}</if>
+            <if test="jyjhremarks != null  and jyjhremarks != ''">and jyjhremarks = #{jyjhremarks}</if>
+            <if test="createuserid != null ">and createuserid = #{createuserid}</if>
+        </where>
+    </select>
+
+    <select id="selectByChildLearndevelopmentTeacherById" parameterType="Long"
+            resultMap="ByChildLearndevelopmentTeacherResult">
+        <include refid="selectByChildLearndevelopmentTeacherVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertByChildLearndevelopmentTeacher" parameterType="ByChildLearndevelopmentTeacher">
+        insert into by_child_learndevelopment_teacher
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null ">id,</if>
+            <if test="childid != null ">childid,</if>
+            <if test="xnxq != null  and xnxq != ''">xnxq,</if>
+            <if test="gcjl != null  and gcjl != ''">gcjl,</if>
+            <if test="gcjlremarks != null  and gcjlremarks != ''">gcjlremarks,</if>
+            <if test="wtyfa != null  and wtyfa != ''">wtyfa,</if>
+            <if test="wtyfaremarks != null  and wtyfaremarks != ''">wtyfaremarks,</if>
+            <if test="pgjg != null  and pgjg != ''">pgjg,</if>
+            <if test="pgjgremarks != null  and pgjgremarks != ''">pgjgremarks,</if>
+            <if test="jyjh != null  and jyjh != ''">jyjh,</if>
+            <if test="jyjhremarks != null  and jyjhremarks != ''">jyjhremarks,</if>
+            <if test="createuserid != null ">createuserid,</if>
+            <if test="createTime != null ">create_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null ">#{id},</if>
+            <if test="childid != null ">#{childid},</if>
+            <if test="xnxq != null  and xnxq != ''">#{xnxq},</if>
+            <if test="gcjl != null  and gcjl != ''">#{gcjl},</if>
+            <if test="gcjlremarks != null  and gcjlremarks != ''">#{gcjlremarks},</if>
+            <if test="wtyfa != null  and wtyfa != ''">#{wtyfa},</if>
+            <if test="wtyfaremarks != null  and wtyfaremarks != ''">#{wtyfaremarks},</if>
+            <if test="pgjg != null  and pgjg != ''">#{pgjg},</if>
+            <if test="pgjgremarks != null  and pgjgremarks != ''">#{pgjgremarks},</if>
+            <if test="jyjh != null  and jyjh != ''">#{jyjh},</if>
+            <if test="jyjhremarks != null  and jyjhremarks != ''">#{jyjhremarks},</if>
+            <if test="createuserid != null ">#{createuserid},</if>
+            <if test="createTime != null ">#{createTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateByChildLearndevelopmentTeacher" parameterType="ByChildLearndevelopmentTeacher">
+        update by_child_learndevelopment_teacher
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="childid != null ">childid = #{childid},</if>
+            <if test="xnxq != null  and xnxq != ''">xnxq = #{xnxq},</if>
+            <if test="gcjl != null  and gcjl != ''">gcjl = #{gcjl},</if>
+            <if test="gcjlremarks != null  and gcjlremarks != ''">gcjlremarks = #{gcjlremarks},</if>
+            <if test="wtyfa != null  and wtyfa != ''">wtyfa = #{wtyfa},</if>
+            <if test="wtyfaremarks != null  and wtyfaremarks != ''">wtyfaremarks = #{wtyfaremarks},</if>
+            <if test="pgjg != null  and pgjg != ''">pgjg = #{pgjg},</if>
+            <if test="pgjgremarks != null  and pgjgremarks != ''">pgjgremarks = #{pgjgremarks},</if>
+            <if test="jyjh != null  and jyjh != ''">jyjh = #{jyjh},</if>
+            <if test="jyjhremarks != null  and jyjhremarks != ''">jyjhremarks = #{jyjhremarks},</if>
+            <if test="createuserid != null ">createuserid = #{createuserid},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteByChildLearndevelopmentTeacherById" parameterType="Long">
+        delete from by_child_learndevelopment_teacher where id = #{id}
+    </delete>
+
+    <delete id="deleteByChildLearndevelopmentTeacherByIds" parameterType="String">
+        delete from by_child_learndevelopment_teacher where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
