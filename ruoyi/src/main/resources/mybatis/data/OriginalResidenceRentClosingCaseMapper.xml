@@ -111,7 +111,7 @@
 
         CREATE TABLE ${targetTableName}
         (
-        ID int NOT NULL IDENTITY(1, 1),
+        ID int NOT NULL IDENTITY(1, 1) primary key,
         HouseholdsID_SRC nvarchar (64) NOT NULL,
         ProjectID_SRC nvarchar (64) NOT NULL,
         ProjectID nvarchar (32) NULL,

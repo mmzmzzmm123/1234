@@ -2,8 +2,8 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ruoyi.project.data.cases.mapper.ResidenceRentAggregationCaseMapper">
-    <resultMap id="AggregationCaseResultMapping" type="com.ruoyi.project.data.cases.domain.CleanResidenceRentAggregationCase">
+<mapper namespace="com.ruoyi.project.data.cases.mapper.AggregateResidenceRentCaseMapper">
+    <resultMap id="AggregationCaseResultMapping" type="com.ruoyi.project.data.cases.domain.AggregateResidenceRentCase">
         <result property="householdsIdSRC" column="HouseholdsID_SRC"/>
         <result property="projectIdSRC" column="ProjectID_SRC"/>
         <result property="communityId" column="ProjectID"/>
@@ -61,9 +61,8 @@
         <result property="shareRentRatio" column="ShareRentRatio"/>
         <result property="yearMonth" column="yearMonth"/>
     </resultMap>
-    <!-- 汇总案例 -->
-    <select id="getMonthly" resultMap="AggregationCaseResultMapping">
-            SELECT HouseholdsID_SRC
+    <sql id="selectAll">
+        SELECT HouseholdsID_SRC
                 ,ProjectID_SRC
                 ,ProjectID
                 ,BuildingID
@@ -120,5 +119,46 @@
                 ,ShareRentRatio
                 ,${yearMonth} as yearMonth
             FROM dbo.DW_HOUSINGCASE_RENT_COMM_${yearMonth}
+    </sql>
+    <!-- 汇总案例 -->
+    <select id="getMonthly" resultMap="AggregationCaseResultMapping">
+        <include refid="selectAll"></include>
     </select>
+
+    <select id="selectPageCount"
+            parameterType="com.ruoyi.project.data.cases.domain.AggregateResidenceRentCase" resultType="int">
+        <bind name="tableName" value="'DW_HOUSINGCASE_RENT_COMM_' + yearMonth"/>
+        select count(1)
+        from ${tableName}
+        <where>
+            <if test="caseName != null">
+                caseName=#{caseName}
+            </if>
+            <if test="caseType != null">
+                AND CaseType=#{caseType}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectPageList"
+            parameterType="com.ruoyi.project.data.cases.domain.AggregateResidenceRentCase" resultMap="AggregationCaseResultMapping">
+        <include refid="selectAll"></include>
+        <where>
+            <if test="caseName != null">
+                caseName=#{caseName}
+            </if>
+            <if test="caseType != null">
+                AND CaseType=#{caseType}
+            </if>
+        </where>
+        order by ID ASC OFFSET #{offset} rows fetch next #{limit} rows only
+    </select>
+
+    <select id="yearMonthList" resultType="com.ruoyi.project.common.VueSelectModel">
+        SELECT right(name,6) as value, right(name,6) as label
+        FROM sys.tables
+        where name like 'DW_HOUSINGCASE_RENT_COMM_%' and name not like '%_bak'
+        order by cast(right(name,6) as int) desc
+    </select>
+
 </mapper>

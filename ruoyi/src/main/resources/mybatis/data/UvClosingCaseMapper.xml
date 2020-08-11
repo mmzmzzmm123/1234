@@ -35,6 +35,9 @@
             <if test="dealId != null">
                 ITEM_DEALID=#{dealId}
             </if>
+            <if test="caseCommunityName != null">
+                AND ITEM_RANAME like concat('%',#{caseCommunityName},'%')
+            </if>
         </where>
         order by ITEM_DEALID ASC offset #{offset} rows fetch next #{limit} rows only
     </select>
@@ -45,6 +48,9 @@
         <where>
             <if test="dealId != null">
                 ITEM_DEALID=#{dealId}
+            </if>
+            <if test="caseCommunityName != null">
+                AND ITEM_RANAME like concat('%',#{caseCommunityName},'%')
             </if>
         </where>
     </select>

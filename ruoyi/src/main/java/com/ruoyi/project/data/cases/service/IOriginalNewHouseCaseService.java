@@ -1,5 +1,6 @@
 package com.ruoyi.project.data.cases.service;
 
+import com.ruoyi.project.common.VueSelectModel;
 import com.ruoyi.project.data.cases.domain.OriginalNewHouseCase;
 import com.ruoyi.project.data.price.domain.ArtificialResidenceRentBasePrice;
 
@@ -25,5 +26,12 @@ public interface IOriginalNewHouseCaseService {
      * @return
      */
     int selectCount(OriginalNewHouseCase originalNewHouseCase);
+
+    /**
+     * 表名
+     *
+     * @return
+     */
+    List<VueSelectModel> selectYearMonth();
 
 }

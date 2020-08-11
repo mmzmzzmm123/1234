@@ -1,234 +1,293 @@
 package com.ruoyi.project.data.cases.domain;
 
+import com.ruoyi.framework.aspectj.lang.annotation.Excel;
+import com.ruoyi.framework.web.domain.BaseEntity;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
 /**
- * 租赁汇总案例
+ * 住宅租赁汇总案例
+ *
+ * @author lihe
  */
-public class CleanResidenceRentAggregationCase {
+public class AggregateResidenceRentCase extends BaseEntity {
 
     private Integer yearMonth;
     /**
      * 案例单套ID
      */
+    @Excel(name = "案例单套ID")
     private String householdsIdSRC;
     /**
      * 案例小区ID
      */
+    @Excel(name = "案例小区ID")
     private String projectIdSRC;
     /**
      * 小区ID
      */
+    @Excel(name = "小区ID")
     private String communityId;
-
+    @Excel(name = "楼栋ID")
     private String buildingId;
     /**
      * WHEN A.RentType=1 THEN ''整租''
      * WHEN A.RentType=2 THEN ''散租''
      * WHEN A.RentType=3 THEN ''分租''
      */
+    @Excel(name = "1=整租,2=散租,3=分租")
     private Integer rentType;
     /**
      * 室
      */
+    @Excel(name = "室")
     private Integer roomNum;
     /**
      * 厅
      */
+    @Excel(name = "厅")
     private Integer hallNum;
     /**
      * 卫
      */
+    @Excel(name = "卫")
     private Integer bashRoomNum;
     /**
      * 面积
      */
+    @Excel(name = "面积")
     private BigDecimal area;
     /**
      * 朝向
      */
+    @Excel(name = "朝向")
     private String toward;
     /**
      * UpperFloorSum 总层数
      */
+    @Excel(name = "总层数")
     private String totalFloor;
     /**
      * UpperFloorNum 所在层
      */
+    @Excel(name = "所在层")
     private String currentFloor;
     /**
      * 有无电梯
      */
+    @Excel(name = "有无电梯")
     private Boolean elevator;
     /**
      * 装修类型
      */
+    @Excel(name = "装修类型")
     private String decoration;
     /**
      * 建成年代
      */
+    @Excel(name = "建成年代")
     private Integer year;
     /**
      * 房屋面积系数
      */
+    @Excel(name = "房屋面积系数")
     private BigDecimal areaCoefficient;
     /**
      * 朝向系数
      */
+    @Excel(name = "朝向系数")
     private BigDecimal towardCoefficient;
     /**
      * 楼层系数
      */
+    @Excel(name = "楼层系数")
     private BigDecimal floorCoefficient;
     /**
      * 装修系数
      */
+    @Excel(name = "装修系数")
     private Integer decorationCoefficient;
     /**
      * 建成年代系数
      */
+    @Excel(name = "建成年代系数")
     private BigDecimal yearCoefficient;
     /**
      * 楼栋系数
      */
+    @Excel(name = "楼栋系数")
     private BigDecimal buildingCoefficient;
     /**
      * 室厅修正系数
      */
+    @Excel(name = "室厅修正系数")
     private BigDecimal roomTypeCoefficient;
     /**
      * 总价（元）
      */
+    @Excel(name = "总价(元)")
     private BigDecimal totalPrice;
     /**
      * 单价（元每平方米）
      */
+    @Excel(name = "单价(元/㎡)")
     private BigDecimal unitPrice;
     /**
      * 散租单价
      */
+    @Excel(name = "散租单价")
     private BigDecimal priceScatterRent;
     /**
      * 整租单价
      */
+    @Excel(name = "整租单价")
     private BigDecimal priceEntireRent;
     /**
      * 合租单间价
      */
+    @Excel(name = "合租单间价")
     private BigDecimal priceShareRent0;
     /**
      * 合租折算价
      */
+    @Excel(name = "合租折算价")
     private BigDecimal priceShareRent;
     /**
      * 带看总次数
      */
+    @Excel(name = "带看总次数")
     private Integer visitedNum;
     /**
      * 首次带看时间
      */
+    @Excel(name = "首次带看时间")
     private Date firstVisitedDate;
     /**
      * 15天内带看总次数
      */
+    @Excel(name = "15天内带看总次数")
     private Integer visitedNum15;
     /**
      * 30天内带看总次数
      */
+    @Excel(name = "30天内带看总次数")
     private Integer visitedNum30;
     /**
      * 案例状态
      */
+    @Excel(name = "案例状态")
     private Integer status;
     /**
      * 最近一次挂牌总价调整幅度
      */
+    @Excel(name = "最近一次挂牌总价调整幅度")
     private BigDecimal adjustedValue;
     /**
      * 最近一次挂牌总价调整比例
      */
+    @Excel(name = "最近一次挂牌总价调整比例")
     private BigDecimal adjustedPst;
     /**
      * 累计挂牌总价调整幅度
      */
+    @Excel(name = "累计挂牌总价调整幅度")
     private BigDecimal adjustedCumValue;
     /**
      * 累计挂牌总价调整比例
      */
+    @Excel(name = "累计挂牌总价调整比例")
     private BigDecimal adjustedCumPst;
     /**
      * 累计挂牌总价绝对调整幅度
      */
+    @Excel(name = "累计挂牌总价绝对调整幅度")
     private BigDecimal adjustedCumValueAbs;
     /**
      * 累计挂牌总价绝对调整比例
      */
+    @Excel(name = "累计挂牌总价绝对调整比例")
     private BigDecimal adjustedCumPstAbs;
     /**
      * 累计挂牌总价调价次数
      */
+    @Excel(name = "累计挂牌总价调价次数")
     private BigDecimal adjustedCumNum;
     /**
      * 首次挂牌总价
      */
+    @Excel(name = "首次挂牌总价(元)")
     private BigDecimal priceTotalIn;
     /**
      * 下架时挂牌总价
      */
+    @Excel(name = "下架时挂牌总价(元)")
     private BigDecimal priceTotalOut;
     /**
      * 首次挂牌日期
      */
+    @Excel(name = "首次挂牌日期")
     private Date priceDateIn;
     /**
      * 下架日期
      */
+    @Excel(name = "下架日期")
     private Date priceDateOut;
     /**
      * 案例来源
      */
+    @Excel(name = "案例来源")
     private String origin;
     /**
      * 案例URL
      */
+    @Excel(name = "案例URL")
     private String urlHouseholds;
     /**
      * 案例小区URL
      */
+    @Excel(name = "案例小区URL")
     private String urlProjects;
     /**
      * 案例名称
      */
+    @Excel(name = "案例名称")
     private String caseName;
     /**
      * 0=成交
      * 1=挂牌
      */
+    @Excel(name = "0=成交,1=挂牌")
     private Integer caseType;
     /**
      * 平均租金（上周期）
      */
+    @Excel(name = "平均租金(上周期)")
     private BigDecimal rentPrice_1;
     /**
      * 案例涨跌幅
      */
+    @Excel(name = "案例涨跌幅")
     private BigDecimal range;
     /**
      * 涨跌类型
      */
+    @Excel(name = "涨跌类型")
     private Integer rangeFlag;
     /**
      * 平均租金
      */
+    @Excel(name = "平均租金")
     private BigDecimal rentPrice;
     /**
      * 整租比
      */
+    @Excel(name = "整租比")
     private BigDecimal entireRentRatio;
     /**
      * 分租比
      */
+    @Excel(name = "分租比")
     private BigDecimal shareRentRatio;
 
     public Integer getYearMonth() {

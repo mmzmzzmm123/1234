@@ -18,6 +18,7 @@ public interface ComputeResidenceRentPriceMapper {
 
     /**
      * 查询列表
+     *
      * @param ComputeResidenceRentBasePrice
      * @return
      */
@@ -40,6 +41,8 @@ public interface ComputeResidenceRentPriceMapper {
     int updateComputeResidenceRentBasePrice(ComputeResidenceRentBasePrice ComputeResidenceRentBasePrice);
 
     /**
+     * 表名
+     *
      * @return
      */
     List<VueSelectModel> yearMonthList();

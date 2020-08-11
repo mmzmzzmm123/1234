@@ -3,11 +3,11 @@ package com.ruoyi.project.data.cases.service.impl;
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.LoadUtil;
-import com.ruoyi.project.data.cases.domain.CleanResidenceRentAggregationCase;
+import com.ruoyi.project.data.cases.domain.AggregateResidenceRentCase;
 import com.ruoyi.project.data.cases.domain.OriginalResidenceRentClosingCase;
 import com.ruoyi.project.data.cases.domain.OtherResidenceRentClosingCase;
 import com.ruoyi.project.data.cases.mapper.OriginalResidenceRentClosingCaseMapper;
-import com.ruoyi.project.data.cases.mapper.ResidenceRentAggregationCaseMapper;
+import com.ruoyi.project.data.cases.mapper.AggregateResidenceRentCaseMapper;
 import com.ruoyi.project.data.cases.mapper.sync.DownloadOriginalResidenceRentClosingCaseMapper;
 import com.ruoyi.project.data.cases.mapper.sync.DownloadOtherResidenceRentClosingCaseMapper;
 import com.ruoyi.project.data.cases.mapper.sync.SyncResidenceRentCaseMapper;
@@ -20,11 +20,8 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -46,7 +43,7 @@ public class OriginalResidenceRentClosingCaseServiceImpl implements IOriginalRes
     @Autowired
     private SyncResidenceRentCaseMapper syncResidenceRentCaseMapper;
     @Autowired
-    private ResidenceRentAggregationCaseMapper residenceRentAggregationCaseMapper;
+    private AggregateResidenceRentCaseMapper aggregateResidenceRentCaseMapper;
 
     /**
      *
@@ -145,10 +142,10 @@ public class OriginalResidenceRentClosingCaseServiceImpl implements IOriginalRes
     public void pushAggregateCase(Integer yearMonth, Integer currentPriceTableRoute) {
         // 案例同步
         syncResidenceRentCaseMapper.createAggregationCaseTable(currentPriceTableRoute);
-        List<CleanResidenceRentAggregationCase> list = residenceRentAggregationCaseMapper.getMonthly(yearMonth);
-        list.parallelStream().forEach(cleanResidenceRentAggregationCase -> {
-            cleanResidenceRentAggregationCase.setYearMonth(currentPriceTableRoute);
-            syncResidenceRentCaseMapper.insertAggregationCaseTable(cleanResidenceRentAggregationCase);
+        List<AggregateResidenceRentCase> list = aggregateResidenceRentCaseMapper.getMonthly(yearMonth);
+        list.parallelStream().forEach(aggregateResidenceRentCase -> {
+            aggregateResidenceRentCase.setYearMonth(currentPriceTableRoute);
+            syncResidenceRentCaseMapper.insertAggregationCaseTable(aggregateResidenceRentCase);
         });
         logger.info("推送案例汇总数据完成");
     }

@@ -68,7 +68,7 @@
         )
     </update>
 
-    <insert id="insertAggregationCaseTable" parameterType="com.ruoyi.project.data.cases.domain.CleanResidenceRentAggregationCase">
+    <insert id="insertAggregationCaseTable" parameterType="com.ruoyi.project.data.cases.domain.AggregateResidenceRentCase">
         insert into dbo.DW_HOUSINGCASE_RENT_COMM_${yearMonth}
         (
             HouseholdsID_SRC

@@ -1,11 +1,11 @@
 package com.ruoyi.project.data.cases.mapper.sync;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
-import com.ruoyi.project.data.cases.domain.CleanResidenceRentAggregationCase;
-import com.ruoyi.project.data.cases.domain.OriginalResidenceRentOpeningCase;
-import com.ruoyi.project.data.price.domain.UltimateOfficeBasePrice;
+import com.ruoyi.project.data.cases.domain.AggregateResidenceRentCase;
 import com.ruoyi.project.data.price.domain.UltimateResidenceRentBasePrice;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * @author lihe
@@ -24,10 +24,12 @@ public interface SyncResidenceRentCaseMapper {
     /**
      * 插入案例汇总表
      *
-     * @param cleanResidenceRentAggregationCase
+     * @param aggregateResidenceRentCase
      * @return
      */
-    int insertAggregationCaseTable(CleanResidenceRentAggregationCase cleanResidenceRentAggregationCase);
+    int insertAggregationCaseTable(AggregateResidenceRentCase aggregateResidenceRentCase);
+
+
 
     /**
      * 创建最终价格表

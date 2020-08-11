@@ -1,6 +1,7 @@
 package com.ruoyi.project.data.cases.service.impl;
 
 import com.ruoyi.common.constant.LabelConstants;
+import com.ruoyi.project.common.VueSelectModel;
 import com.ruoyi.project.data.cases.domain.OriginalNewHouseCase;
 import com.ruoyi.project.data.cases.mapper.OriginalNewHouseCaseMapper;
 import com.ruoyi.project.data.cases.mapper.sync.DownloadOriginalNewHouseCaseMapper;
@@ -34,5 +35,10 @@ public class OriginalNewHouseCaseServiceImpl implements IOriginalNewHouseCaseSer
     @Override
     public int selectCount(OriginalNewHouseCase originalNewHouseCase) {
         return originalNewHouseCaseMapper.pageCount(originalNewHouseCase);
+    }
+
+    @Override
+    public List<VueSelectModel> selectYearMonth() {
+        return null;
     }
 }
