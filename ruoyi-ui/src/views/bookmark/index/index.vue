@@ -1,0 +1,337 @@
+<template >
+
+  <el-container>
+    <transition name="el-zoom-in-left">
+    <el-aside width="300px" style="height:900px" v-show="isShowZtree" class="transition-box">
+
+      <div class="aside-logo">
+      <img src="https://s1.ax1x.com/2020/08/11/aXV1YV.png"/>
+      </div>
+      <div class="aside-title"><i class="el-icon-s-tools"></i><span>所有书签</span></div>
+      <div class="aside-title"><i class="el-icon-help"></i><span>发现书签</span></div>
+      <div class="aside-title"><i class="el-icon-s-platform"></i><span>任意门</span></div>
+      <div class="aside-title"><i class="el-icon-message-solid"></i><span>收件箱</span></div>
+      <div class="reminder">我的收藏</div>
+      <div class="areaTree" >
+        <ul id="treeDemo" class="ztree" ></ul>
+      </div>
+      <div class="reminder">工具箱</div>
+      <div class="aside-title"><i class="el-icon-s-tools"></i><span>所有书签</span></div>
+      <div class="aside-title"><i class="el-icon-help"></i><span>发现书签</span></div>
+      <div class="aside-title"><i class="el-icon-s-platform"></i><span>任意门</span></div>
+      <div class="aside-title"><i class="el-icon-message-solid"></i><span>收件箱</span></div>
+
+      <el-footer class="aside-navigation">
+      </el-footer>
+    </el-aside>
+
+    </transition>
+
+    <el-container>
+      <el-header > <el-button @click="isShowZtree = !isShowZtree">Click Me</el-button></el-header>
+      <el-main style="background-color: #1c84c6">Main</el-main>
+      <el-footer>Footer</el-footer>
+
+    </el-container>
+
+  </el-container>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</template>
+
+
+<script>
+  // 下面的是单个Vue组件引用的外部静态文件，也可以在main.js文件中引用
+  import "../ztree/jquery-1.4.4.min.js"
+ import "../ztree/jquery.ztree.core.js"
+  import "../ztree/demo.css"
+  import "../ztree/zTreeStyle.css"
+  import "../ztree/jquery.ztree.exedit.js"
+
+  export default {
+    name: 'areaTree',
+    components:{
+
+    },
+
+    data:function(){
+      return{
+        enterable:false,
+        isShowZtree:true,//ztree树显示
+        expandAll:false,//是否展开ztree树
+        curMenu:null,
+        zTree_Menu:null,
+        setting:{
+          view: {
+            showLine: false,
+            showIcon: true,
+            selectedMulti: false,
+            dblClickExpand: false,
+            addHoverDom: this.addHoverDom,
+            removeHoverDom: this.removeHoverDom,
+            addDiyDom: this.addDiyDom,
+          },
+          check: {
+            enable: true,
+            nocheckInherit: false ,
+            chkboxType: { "Y": "p", "N": "s" }
+          },
+          data: {
+            simpleData: {
+              enable: true
+            }
+          },
+          callback: {
+            beforeClick: this.beforeClick,
+            onClick: this.zTreeOnClick,
+            onCheck: this.zTreeOnCheck,
+          }
+        },
+        zNodes:[
+          { id:1, pId:0, name:"文件夹",icon:"https://favicon.lucq.fun/?url=https://www.baidu.com"},
+          { id:2, pId:0, name:"文件夹",icon:"https://favicon.lucq.fun/?url=https://movie.douban.com/"},
+          { id:3, pId:2, name:"文件夹",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
+          { id:4, pId:0, name:"文件夹",icon:"https://favicon.lucq.fun/?url=https://www.w3school.com.cn/"},
+          { id:5, pId:4, name:"文件夹",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
+          { id:6, pId:0, name:"文件夹",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
+          { id:7, pId:6, name:"文件夹",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
+          { id:8, pId:0, name:"文件夹",icon:"https://favicon.lucq.fun/?url=https://open.163.com/"},
+          { id:9, pId:8, name:"文件夹",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
+          { id:1123, pId:0, name:"文件夹",icon:"https://favicon.lucq.fun/?url=https://y.qq.com"},
+          { id:1142, pId:1, name:"收件箱",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
+          { id:111, pId:19, name:"收件箱1",icon:"https://favicon.lucq.fun/?url=https://mail.sina.com.cn/"},
+          { id:112, pId:111, name:"收件箱2",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
+          { id:113, pId:112, name:"收件箱3",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
+          { id:114, pId:113, name:"收件箱4",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
+          { id:1321, pId:114, name:"照片",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
+          { id:2322, pId:114, name:"照片",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
+          { id:3323, pId:114, name:"照片",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
+          { id:4324, pId:114, name:"照片",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
+          { id:5325, pId:114, name:"照片",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
+          { id:6399, pId:114, name:"照片",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
+          { id:32, pId:399, name:"照片",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
+          { id:12, pId:1, name:"垃圾邮件",icon:"https://favicon.lucq.fun/?url=https://www.google.com/"},
+          { id:13, pId:1, name:"草稿",icon:"https://favicon.lucq.fun/?url=https://yz.m.sm.cn/"},
+          { id:14, pId:1, name:"已发送邮件",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
+          { id:15, pId:1, name:"已删除邮件",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
+          { id:322, pId:11, name:"快速视图",icon:"https://favicon.lucq.fun/?url=https://taobao.com/"},
+          { id:31, pId:3, name:"文档",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
+          { id:131, pId:3, name:"文档",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
+          { id:231, pId:3, name:"文档",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
+          { id:331, pId:3, name:"文档",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
+          { id:431, pId:3, name:"文档",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
+          { id:531, pId:3, name:"文档",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
+          { id:631, pId:3, name:"文档",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
+          { id:731, pId:3, name:"文档",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
+          { id:831, pId:3, name:"文档",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
+          ],
+      }
+    },
+    methods:{
+
+    addDiyDom:function(treeId, treeNode) {
+      // console.log("自定义ztree:"+treeId.tId+"___treeNode："+treeNode.tId)
+    var spaceWidth = 20;
+    var switchObj = $("#" + treeNode.tId + "_switch"),
+      icoObj = $("#" + treeNode.tId + "_ico");
+    switchObj.remove();
+    icoObj.before(switchObj);
+
+    if (treeNode.level > -1) {
+      var spaceStr = "<span style='display: inline-block;width:" + (spaceWidth * treeNode.level)+ "px'></span>";
+      switchObj.before(spaceStr);
+      var switchObjspan = $("#" + treeNode.tId + "_span");
+
+
+
+
+      var editStr = "<span class="+treeNode.tId+"_count style='color: #9e9e9e;float:right;display: inline-block;margin-right: 15px;font-size:8px' onfocus='this.blur();'>99</span>";
+      switchObjspan.after(editStr);
+    }
+  },
+
+  addHoverDom:function(treeId, treeNode) {
+  	var confCount = $("."+treeNode.tId+"_sz").length;
+  	//console.log("进入addHoverDom:统计"+treeNode.tId+"_sz 的数量:"+confCount);
+  	if (confCount>0) return;
+  	//if (treeNode.parentNode && treeNode.parentNode.id!=1) return;
+  	var switchObjspan = $("#" + treeNode.tId + "_span");
+  	var editStr = "<span class="+treeNode.tId+"_sz onclick='alert(2222);return false;' style='color: #9e9e9e;float:right;display: inline-block;margin-right: 15px;font-size:8px' onfocus='this.blur();'>删</span>";
+  	switchObjspan.after(editStr);
+
+    $("." + treeNode.tId + "_count").unbind().remove();
+
+
+    //绑定编辑
+   // document.getElementsByClassName(treeNode.tId + "_sz").onclick=function(){alert(this.value)};
+    //document.getElementsByClassName(treeNode.tId + "_sz").addEventListener('click', editBookmark);
+   // $("." + treeNode.tId + "_sz").addEventListener('click', editBookmark);
+  },
+
+  removeHoverDom:function(treeId, treeNode) {
+  	//console.log("进入removeHoverDom:"+"." + treeNode.tId + "_sz")
+  	//if (treeNode.parentTId && treeNode.getParentNode().id!=1) return;
+
+  	$("." + treeNode.tId + "_sz").unbind().remove();
+    var switchObjspan = $("#" + treeNode.tId + "_span");
+    var editStr = "<span class="+treeNode.tId+"_count onclick='alert(1111111);return false;' style='color: #9e9e9e;float:right;display: inline-block;margin-right: 15px;font-size:8px' onfocus='this.blur();'>12</span>";
+    switchObjspan.after(editStr);
+
+  },
+  //点击展开
+   beforeClick:function(treeId, treeNode) {
+    //if (treeNode.level != 19990 ) {
+       var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+       zTree.expandNode(treeNode);
+    //  return false;
+    // }
+    //return true;
+  },
+      //显示隐藏 ztree菜单
+      zreaZtree:function () {
+      var that=this;
+        that.isShowZtree = !that.isShowZtree;
+
+      },
+
+
+
+
+      editBookmark:function(){
+        var that=this;
+        alert("this button");
+// //如果提供了事件对象，则这是一个非IE浏览器
+//         if ( e && e.stopPropagation )
+//         //因此它支持W3C的stopPropagation()方法
+//           e.stopPropagation();
+//         else
+//         //否则，我们需要使用IE的方式来取消事件冒泡
+//           window.event.cancelBubble = true;
+
+      },
+
+    },
+    mounted(){
+      var that=this;
+      $.fn.zTree.init($("#treeDemo"), this.setting, this.zNodes).expandAll(that.expandAll);
+
+    },
+
+
+
+
+  }
+</script>
+<style >
+  /*body{*/
+  /*  font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;*/
+  /*}*/
+
+
+  .ztree li ul{  margin:0;  padding:0}
+  .ztree li {line-height:32px}
+  .ztree li a {width:200px;height:32px;padding-top: 0px;font-size: 14px;width:100%}
+  .ztree li a:hover {text-decoration:none; background-color: #c5c5c5;}
+  .ztree li a span.button.switch {vertical-align:middle}
+  .ztree.showIcon li a span.button.switch {visibility:visible}
+  .ztree li a.curSelectedNode {background-color:#D4D4D4;border:0;height:32px;}
+  .ztree li span {line-height:32px;}
+  .ztree li span.button {margin-top: -4px;margin-left:3px}
+  .ztree li span.button.switch {width: 16px;height: 16px;}
+
+  /*.ztree li a.level0 span {font-size: 100%;font-weight: bold}*/
+  .ztree li span.button {background-image:url("../ztree/left_menuForOutLook.png"); *background-image:url("../ztree/left_menuForOutLook.gif")}
+  .ztree li span.button.switch.level0 {width: 20px; height:20px}
+  .ztree li span.button.switch.level1 {width: 20px; height:20px}
+  .ztree li span.button.noline_open {background-position: 0 0;}
+  .ztree li span.button.noline_close {background-position: -18px 0;}
+  .ztree li span.button.noline_open.level0 {background-position: 0 0;}
+  .ztree li span.button.noline_close.level0 {background-position:-18px 0;}
+
+
+  .ztree li span.button.ico_close{vertical-align: middle}
+
+  .ztree li span.button.ico_open{vertical-align: middle}
+
+  .ztree li span.button.ico_docu {vertical-align: middle}
+
+
+  .ztr{
+  /*//background{ width:100%;height:100%;position:absolute;top:0px;opacity: 0.6;background-image: url(https://s1.ax1x.com/2020/07/27/akFjER.jpg);background-size: 500px 100px;}*/
+  /*background:red;*/
+  }
+
+  /*.areaTree{*/
+  /*  width: 300px;*/
+  /*  !*height: 700px;*!*/
+  /*  font-weight: 400;*/
+  /* !*overflow:auto;*!*/
+  /*  background-color: #F6F6F6;*/
+  /* !* background:url('https://ftp.bmp.ovh/imgs/2020/08/4ac1d6b4f41049ef.jpg') no-repeat;*!*/
+  /*  background-size: 100% 100%;*/
+
+  /*}*/
+
+
+  aside{
+    padding:0;
+    margin-bottom: 0;
+    /*background:url('https://ftp.bmp.ovh/imgs/2020/08/4ac1d6b4f41049ef.jpg') no-repeat;*/
+    background-color: #f6f6f6;
+    border: 3px solid transparent;
+  }
+
+  .aside-title{
+    height: 32px;
+    margin-left: 26px;
+  }
+  .aside-title i{
+    font-size: 20px;
+    margin-right: 11px;
+  }
+  .aside-title span{
+    font-size: 14px;
+    margin-right: 11px;
+  }
+  .aside-logo{
+
+  }
+  .aside-logo img{
+    background-repeat: no-repeat;
+    width: 100%;
+    height: 50px;
+    opacity: 0.6;
+  }
+
+  .reminder{
+    margin-left: 27px;
+    color: #878787;
+    opacity: 0.6;
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .aside-navigation{
+    width: 100%;
+    height: 30px;
+    background-color: #a0c4ff;
+
+  }
+
+
+</style>
+

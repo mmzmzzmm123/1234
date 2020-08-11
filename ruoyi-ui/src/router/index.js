@@ -6,6 +6,13 @@ Vue.use(Router)
 /* Layout */
 import Layout from '@/layout'
 
+
+// 导航首页
+import bookmarkmenu from '@/views/bookmark/menu';
+
+import index3 from '@/views/bookmark/index';
+
+
 /**
  * Note: 路由配置项
  *
@@ -23,6 +30,15 @@ import Layout from '@/layout'
     breadcrumb: false            // 如果设置为false，则不会在breadcrumb面包屑中显示
   }
  */
+//书签路由bookmark
+export const bookmark = [
+  {
+    path: '/index2',
+    component: bookmarkmenu,
+    hidden: true
+  },
+]
+
 
 // 公共路由
 export const constantRoutes = [
@@ -117,11 +133,23 @@ export const constantRoutes = [
         meta: { title: '修改生成配置' }
       }
     ]
-  }
+  },
+  {
+    path: '/index2',
+    component: bookmarkmenu,
+    hidden: true
+  },
+  {
+    path: '/index3',
+    component: index3,
+    hidden: true
+  },
 ]
 
 export default new Router({
   mode: 'history', // 去掉url中的#
   scrollBehavior: () => ({ y: 0 }),
-  routes: constantRoutes
+  routes:constantRoutes
+
 })
+
