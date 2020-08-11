@@ -1,23 +1,25 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
-      <el-form-item label="幼儿id" prop="childid">
-        <el-input
-          v-model="queryParams.childid"
-          placeholder="请输入幼儿id"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+      <el-form-item label="幼儿" prop="childid">
+        <el-select v-model="queryParams.childid" placeholder="请选择">
+          <el-option
+            v-for="dict in childOptions"
+            :key="dict.id"
+            :label="dict.name"
+            :value="dict.id"
+          ></el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="学年学期" prop="xnxq">
-        <el-input
-          v-model="queryParams.xnxq"
-          placeholder="请输入学年学期"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+        <el-select v-model="queryParams.xnxq" placeholder="请选择">
+          <el-option
+            v-for="dict in xnxqOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          ></el-option>
+        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -60,9 +62,9 @@
     <el-table v-loading="loading" :data="familyList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="编号" align="center" prop="id" />
-      <el-table-column label="幼儿id" align="center" prop="childid" />
-      <el-table-column label="学年学期" align="center" prop="xnxq" />
-      <el-table-column label="作品照片" align="center" prop="zpimgs" />
+      <el-table-column label="幼儿" align="center" prop="childid" :formatter="childFormat" />
+      <el-table-column label="学年学期" align="center" prop="xnxq" :formatter="xnxqFormat" />
+      <!-- <el-table-column label="作品照片" align="center" prop="zpimgs" />
       <el-table-column label="作品照片备注" align="center" prop="zpimgremarks" />
       <el-table-column label="生活照片" align="center" prop="shimgs" />
       <el-table-column label="生活照片备注" align="center" prop="shimgsremarks" />
@@ -70,7 +72,7 @@
       <el-table-column label="有趣事件备注" align="center" prop="yqsjremarks" />
       <el-table-column label="教师评语" align="center" prop="jspy" />
       <el-table-column label="教师评语备注" align="center" prop="jspyremarks" />
-      <el-table-column label="创建人" align="center" prop="createuserid" />
+      <el-table-column label="创建人" align="center" prop="createuserid" />-->
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -100,42 +102,75 @@
     />
 
     <!-- 添加或修改儿童学习与发展档案（家长）对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="幼儿id" prop="childid">
-          <el-input v-model="form.childid" placeholder="请输入幼儿id" />
-        </el-form-item>
-        <el-form-item label="学年学期" prop="xnxq">
-          <el-input v-model="form.xnxq" placeholder="请输入学年学期" />
-        </el-form-item>
-        <el-form-item label="作品照片" prop="zpimgs">
-          <el-input v-model="form.zpimgs" placeholder="请输入作品照片" />
-        </el-form-item>
-        <el-form-item label="作品照片备注" prop="zpimgremarks">
-          <el-input v-model="form.zpimgremarks" type="textarea" placeholder="请输入内容" />
-        </el-form-item>
-        <el-form-item label="生活照片" prop="shimgs">
-          <el-input v-model="form.shimgs" placeholder="请输入生活照片" />
-        </el-form-item>
-        <el-form-item label="生活照片备注" prop="shimgsremarks">
-          <el-input v-model="form.shimgsremarks" type="textarea" placeholder="请输入内容" />
-        </el-form-item>
-        <el-form-item label="有趣事件" prop="yqsj">
-          <el-input v-model="form.yqsj" placeholder="请输入有趣事件" />
-        </el-form-item>
-        <el-form-item label="有趣事件备注" prop="yqsjremarks">
-          <el-input v-model="form.yqsjremarks" type="textarea" placeholder="请输入内容" />
-        </el-form-item>
-        <el-form-item label="教师评语" prop="jspy">
-          <el-input v-model="form.jspy" placeholder="请输入教师评语" />
-        </el-form-item>
-        <el-form-item label="教师评语备注" prop="jspyremarks">
-          <el-input v-model="form.jspyremarks" type="textarea" placeholder="请输入内容" />
-        </el-form-item>
-        <el-form-item label="创建人" prop="createuserid">
-          <el-input v-model="form.createuserid" placeholder="请输入创建人" />
-        </el-form-item>
-      </el-form>
+    <el-dialog :title="title" :visible.sync="open" width="800px" append-to-body>
+      <el-row :gutter="15">
+        <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+          <el-col :span="12">
+            <el-form-item label="幼儿id" prop="childid">
+              <el-select v-model="form.childid" placeholder="请选择">
+                <el-option
+                  v-for="dict in childOptions"
+                  :key="dict.id"
+                  :label="dict.name"
+                  :value="dict.id"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="学年学期" prop="xnxq">
+              <el-select v-model="form.xnxq" placeholder="请选择">
+                <el-option
+                  v-for="dict in xnxqOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="作品照片" prop="zpimgs">
+              <Editor v-model="form.zpimgs" placeholder="请输入" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="备注" prop="zpimgremarks">
+              <el-input v-model="form.zpimgremarks" type="textarea" placeholder="请输入作品照片备注" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="生活照片" prop="shimgs">
+              <Editor v-model="form.shimgs" placeholder="请输入" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="备注" prop="shimgsremarks">
+              <el-input v-model="form.shimgsremarks" type="textarea" placeholder="请输入生活照片备注" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="有趣事件" prop="yqsj">
+              <Editor v-model="form.yqsj" placeholder="请输入" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="备注" prop="yqsjremarks">
+              <el-input v-model="form.yqsjremarks" type="textarea" placeholder="请输入有趣事件备注" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="教师评语" prop="jspy">
+              <Editor v-model="form.jspy" placeholder="请输入" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="备注" prop="jspyremarks">
+              <el-input v-model="form.jspyremarks" type="textarea" placeholder="请输入教师评语备注" />
+            </el-form-item>
+          </el-col>
+        </el-form>
+      </el-row>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
@@ -153,8 +188,15 @@ import {
   updateFamily,
 } from "@/api/benyi/learndevelopmentfamily";
 
+import { listChild } from "@/api/benyi/child";
+
+import Editor from "@/components/Editor";
+
 export default {
   name: "Family",
+  components: {
+    Editor,
+  },
   data() {
     return {
       // 遮罩层
@@ -169,6 +211,10 @@ export default {
       total: 0,
       // 儿童学习与发展档案（家长）表格数据
       familyList: [],
+      //幼儿
+      childOptions: [],
+      //学年学期
+      xnxqOptions: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -192,13 +238,45 @@ export default {
       // 表单参数
       form: {},
       // 表单校验
-      rules: {},
+      rules: {
+        childid: [{ required: true, message: "幼儿不能为空", trigger: "blur" }],
+        xnxq: [
+          { required: true, message: "学年学期不能为空", trigger: "blur" },
+        ],
+      },
     };
   },
   created() {
     this.getList();
+    this.getChildList();
+    this.getDicts("sys_xnxq").then((response) => {
+      this.xnxqOptions = response.data;
+    });
   },
   methods: {
+    // 字典翻译
+    childFormat(row, column) {
+      // return this.selectDictLabel(this.classOptions, row.classid);
+      var actions = [];
+      var datas = this.childOptions;
+      Object.keys(datas).map((key) => {
+        if (datas[key].id == "" + row.childid) {
+          actions.push(datas[key].name);
+          return false;
+        }
+      });
+      return actions.join("");
+    },
+    // 字典翻译
+    xnxqFormat(row, column) {
+      return this.selectDictLabel(this.xnxqOptions, row.xnxq);
+    },
+    //获取幼儿列表
+    getChildList() {
+      listChild(null).then((response) => {
+        this.childOptions = response.rows;
+      });
+    },
     /** 查询儿童学习与发展档案（家长）列表 */
     getList() {
       this.loading = true;

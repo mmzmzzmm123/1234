@@ -2,6 +2,8 @@ package com.ruoyi.project.benyi.controller;
 
 import java.util.List;
 
+import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.project.common.SchoolCommon;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,6 +34,8 @@ import com.ruoyi.framework.web.page.TableDataInfo;
 public class ByChildLearndevelopmentTeacherController extends BaseController {
     @Autowired
     private IByChildLearndevelopmentTeacherService byChildLearndevelopmentTeacherService;
+    @Autowired
+    private SchoolCommon schoolCommon;
 
     /**
      * 查询儿童学习与发展档案（教师）列表
@@ -72,7 +76,21 @@ public class ByChildLearndevelopmentTeacherController extends BaseController {
     @Log(title = "儿童学习与发展档案（教师）", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody ByChildLearndevelopmentTeacher byChildLearndevelopmentTeacher) {
-        return toAjax(byChildLearndevelopmentTeacherService.insertByChildLearndevelopmentTeacher(byChildLearndevelopmentTeacher));
+        //首先判断当前账户是否为幼儿园账号
+        if (schoolCommon.isSchool()) {
+            //首先判断，当前学年学期是否添加了幼儿档案
+            ByChildLearndevelopmentTeacher byChildLearndevelopmentTeacherNew = new ByChildLearndevelopmentTeacher();
+            byChildLearndevelopmentTeacherNew.setXnxq(byChildLearndevelopmentTeacher.getXnxq());
+            byChildLearndevelopmentTeacherNew.setChildid(byChildLearndevelopmentTeacher.getChildid());
+            List<ByChildLearndevelopmentTeacher> list = byChildLearndevelopmentTeacherService.selectByChildLearndevelopmentTeacherList(byChildLearndevelopmentTeacherNew);
+            if (list != null && list.size() > 0) {
+                return AjaxResult.error("当前学期的幼儿档案已创建，无法重复创建");
+            }
+            byChildLearndevelopmentTeacher.setCreateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
+            return toAjax(byChildLearndevelopmentTeacherService.insertByChildLearndevelopmentTeacher(byChildLearndevelopmentTeacher));
+        } else {
+            return AjaxResult.error("当前用户非幼儿园，无法添加幼儿档案");
+        }
     }
 
     /**
