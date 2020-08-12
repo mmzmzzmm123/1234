@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.benyi.mapper.ByFilesMapper">
+
+    <resultMap type="ByFiles" id="ByFilesResult">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="filetype" column="filetype"/>
+        <result property="type" column="type"/>
+        <result property="fileurl" column="fileurl"/>
+        <result property="createuserid" column="createuserid"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <sql id="selectByFilesVo">
+        select id, name, filetype, type, fileurl, createuserid, create_time from by_files
+    </sql>
+
+    <select id="selectByFilesList" parameterType="ByFiles" resultMap="ByFilesResult">
+        <include refid="selectByFilesVo"/>
+        <where>
+            <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
+            <if test="filetype != null  and filetype != ''">and filetype = #{filetype}</if>
+            <if test="type != null  and type != ''">and type = #{type}</if>
+            <if test="fileurl != null  and fileurl != ''">and fileurl = #{fileurl}</if>
+            <if test="createuserid != null ">and createuserid = #{createuserid}</if>
+        </where>
+    </select>
+
+    <select id="selectByFilesById" parameterType="Long" resultMap="ByFilesResult">
+        <include refid="selectByFilesVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertByFiles" parameterType="ByFiles" useGeneratedKeys="true" keyProperty="id">
+        insert into by_files
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null  and name != ''">name,</if>
+            <if test="filetype != null  and filetype != ''">filetype,</if>
+            <if test="type != null  and type != ''">type,</if>
+            <if test="fileurl != null  and fileurl != ''">fileurl,</if>
+            <if test="createuserid != null ">createuserid,</if>
+            <if test="createTime != null ">create_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null  and name != ''">#{name},</if>
+            <if test="filetype != null  and filetype != ''">#{filetype},</if>
+            <if test="type != null  and type != ''">#{type},</if>
+            <if test="fileurl != null  and fileurl != ''">#{fileurl},</if>
+            <if test="createuserid != null ">#{createuserid},</if>
+            <if test="createTime != null ">#{createTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateByFiles" parameterType="ByFiles">
+        update by_files
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null  and name != ''">name = #{name},</if>
+            <if test="filetype != null  and filetype != ''">filetype = #{filetype},</if>
+            <if test="type != null  and type != ''">type = #{type},</if>
+            <if test="fileurl != null  and fileurl != ''">fileurl = #{fileurl},</if>
+            <if test="createuserid != null ">createuserid = #{createuserid},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteByFilesById" parameterType="Long">
+        delete from by_files where id = #{id}
+    </delete>
+
+    <delete id="deleteByFilesByIds" parameterType="String">
+        delete from by_files where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
