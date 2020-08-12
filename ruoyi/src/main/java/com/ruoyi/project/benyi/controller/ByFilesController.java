@@ -2,6 +2,7 @@ package com.ruoyi.project.benyi.controller;
 
 import java.util.List;
 
+import com.ruoyi.common.utils.SecurityUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -72,6 +73,9 @@ public class ByFilesController extends BaseController {
     @Log(title = "文件管理", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody ByFiles byFiles) {
+
+        byFiles.setCreateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
+
         return toAjax(byFilesService.insertByFiles(byFiles));
     }
 
