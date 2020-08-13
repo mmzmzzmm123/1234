@@ -21,15 +21,62 @@
       <div class="aside-title"><i class="el-icon-s-platform"></i><span>任意门</span></div>
       <div class="aside-title"><i class="el-icon-message-solid"></i><span>收件箱</span></div>
 
-      <el-footer class="aside-navigation">
-      </el-footer>
+<!--      <el-footer class="aside-navigation">-->
+<!--      </el-footer>-->
     </el-aside>
 
     </transition>
-
+<!--    <el-button @click="isShowZtree = !isShowZtree">Click Me</el-button>-->
     <el-container>
-      <el-header > <el-button @click="isShowZtree = !isShowZtree">Click Me</el-button></el-header>
-      <el-main style="background-color: #1c84c6">Main</el-main>
+      <el-header  class="header-sousou" style="height: 50px">
+
+
+        <el-input placeholder="请输入书签名字" v-model="sousou" size="small" style="width: 95%;float: left">
+        <i slot="prefix" class="el-input__icon el-icon-search"></i>
+      </el-input>
+
+        <div class="header-list ">
+          <i class="el-icon-s-operation margintop"></i>
+          <span >List</span>
+        </div>
+
+
+      </el-header>
+      <el-main class="bookmarkmain" >
+        <div class="filter">
+          <div class="filter-sort">
+            <span>选择排序方式</span> <i class="el-icon-bottom"></i> <i class="el-icon-caret-bottom"></i>
+          </div>
+          <span class="separator">|</span>
+
+          <div class="main-label">
+            <span><i class="el-icon-star-on"></i></span>
+            <span>稍后再读</span>
+          </div>
+          <div class="main-label">
+            <span><i class="el-icon-star-on"></i></span>
+            <span>稍后再读</span>
+          </div>
+          <div class="main-label">
+            <span><i class="el-icon-star-on"></i></span>
+            <span>稍后再读</span>
+          </div>
+          <div class="main-label">
+            <span><i class="el-icon-star-on"></i></span>
+            <span>稍后再读</span>
+          </div>
+          <div class="main-label">
+            <span><i class="el-icon-star-on"></i></span>
+            <span>稍后再读</span>
+          </div>
+
+
+        </div>
+        <div style="width: 75%;height: 800px;background-color: #695fff;float: left"></div>
+
+        <div style="width: 25%;height: 800px;background-color: #ff5f85;float: left"></div>
+
+      </el-main>
       <el-footer>Footer</el-footer>
 
     </el-container>
@@ -70,6 +117,7 @@
 
     data:function(){
       return{
+        sousou:'',//搜索书签
         enterable:false,
         isShowZtree:true,//ztree树显示
         expandAll:false,//是否展开ztree树
@@ -239,13 +287,14 @@
 <style >
   /*body{*/
   /*  font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;*/
+  /*  background-color: #fff!important;*/
   /*}*/
 
 
   .ztree li ul{  margin:0;  padding:0}
   .ztree li {line-height:32px}
   .ztree li a {width:200px;height:32px;padding-top: 0px;font-size: 14px;width:100%}
-  .ztree li a:hover {text-decoration:none; background-color: #c5c5c5;}
+  .ztree li a:hover {text-decoration:none; background-color: #D4D4D4;}
   .ztree li a span.button.switch {vertical-align:middle}
   .ztree.showIcon li a span.button.switch {visibility:visible}
   .ztree li a.curSelectedNode {background-color:#D4D4D4;border:0;height:32px;}
@@ -286,22 +335,25 @@
 
   /*}*/
 
-
   aside{
     padding:0;
     margin-bottom: 0;
     /*background:url('https://ftp.bmp.ovh/imgs/2020/08/4ac1d6b4f41049ef.jpg') no-repeat;*/
     background-color: #f6f6f6;
-    border: 3px solid transparent;
+
   }
 
   .aside-title{
     height: 32px;
-    margin-left: 26px;
+  }
+  .aside-title:hover{
+    background-color: #c5c5c5;
   }
   .aside-title i{
+    margin-left: 26px;
     font-size: 20px;
     margin-right: 11px;
+    vertical-align:middle;
   }
   .aside-title span{
     font-size: 14px;
@@ -330,6 +382,97 @@
     height: 30px;
     background-color: #a0c4ff;
 
+  }
+  .filter{
+    width: 100%;
+    height: 30px;
+    position: relative;
+    margin-top: 0;
+    background-color: #ffffff;
+    margin-bottom: 5px;
+  }
+  .filter-sort{
+    color: #7e868d;
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,.08), inset 0 -1px 0 rgba(0,0,0,.04);
+    margin-right: 4px;
+    border-radius: 2px;
+    height: 22px;
+    font-size: 12px;
+    line-height: 22px;
+    text-align: center;
+    float: left;
+    padding: 0 8px;
+  }
+  .filter-sort:hover{
+    color: #6f8eee;
+    background-color: #e6e6e6;
+
+  }
+  .bookmarkmain{
+    padding-top: 0px!important;
+  }
+  .separator{
+    float: left;
+  }
+  .filter-sort i{
+    margin-left: -4px;
+    margin-right: -1px;
+  }
+
+  .header-sousou input{
+    margin-top: 8px;
+    border: 0px;
+    background-color: #f2f2f2;
+
+  }
+  .header-sousou i{
+    font-size: 1px;
+    margin-top: 6px;
+  }
+
+  .margintop{
+    margin-left: 10px;
+  }
+
+  .header-list{
+    line-height: 50px;
+  }
+  .header-list:hover{
+    color: #7a6df0;
+
+  }
+  .header-list i{
+    font-size: 19px;
+  }
+  .header-list span{
+    font-size: 18px;
+  }
+
+
+  .main-label{
+    color: #7e868d;
+    border-radius: 2px;
+    height: 22px;
+    float: left;
+    font-size: 12px;
+    margin-left: 5px;
+  }
+  .main-label:hover{
+    background-color: #E8F3FC;
+    color: #1988E0;
+  }
+  .main-label span i{
+    margin-left: 5px;
+  }
+
+  .main-label span{
+    line-height: 22px;
+  }
+  .main-label :nth-child(1){
+    margin-right: -1px;
+  }
+  .main-label :nth-child(2){
+    margin-right: 5px;
   }
 
 

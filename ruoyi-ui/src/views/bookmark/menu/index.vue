@@ -162,7 +162,7 @@
 <style >
   body{
     font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
-    background-image: url("https://s1.ax1x.com/2020/08/11/aOHstP.jpg");
+    /*background-image: url("https://s1.ax1x.com/2020/08/11/aOHstP.jpg");*/
     background-repeat: no-repeat;
     background-size: 100% 100%;
   }
