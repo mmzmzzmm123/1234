@@ -72,7 +72,44 @@
 
 
         </div>
-        <div style="width: 75%;height: 800px;background-color: #695fff;float: left"></div>
+        <div style="width: 75%;height: 800px;background-color: #fff;float: left">
+
+          <el-row>
+
+<hr>
+            <el-col :span="24" v-for="bm in bookmark">
+
+              <div class="bookmark">
+              <span class="bookmark-title">{{bm.title}}</span>
+              <div class="">
+                <p class="description">{{bm.description}}</p>
+              </div>
+              <div class="info-wrap">
+                <div class="info">
+                  <div class="bookmark-icon">
+                    <img :err-src='bm.icon'   :ng-src="bm.icon"  :src="bm.icon"  />
+                  </div>
+                  <div class="bookmark-official">{{bm.official}}&nbsp;·&nbsp;</div><div class="bookmark-time">{{bm.time}}</div>
+                </div>
+              </div>
+              </div>
+              <el-divider class="bookmark-hr"></el-divider>
+            </el-col>
+
+
+
+
+
+          </el-row>
+
+
+
+        </div>
+
+
+
+
+
 
         <div style="width: 25%;height: 800px;background-color: #ff5f85;float: left"></div>
 
@@ -187,6 +224,17 @@
           { id:731, pId:3, name:"文档",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
           { id:831, pId:3, name:"文档",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
           ],
+        bookmark:[
+          {id:1,title:"最大的骄傲于最大的自卑都表示心灵的最软弱无力。——斯宾诺莎",description:"阅读使人充实，会谈使人敏捷，写作使人精确。——培根",official:"www.baidu.com",time:"2020-10-08",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
+          {id:1,title:"意志坚强的人能把世界放在手中像泥块一样任意揉捏。——歌德",description:"最具挑战性的挑战莫过于提升自我。——迈克尔·F·斯特利",official:"www.baidu.com",time:"2020-10-08",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
+          {id:1,title:"要知道对好事的称颂过于夸大，也会招来人们的反感轻蔑和嫉妒。——培根",description:"意志命运往往背道而驰，决心到最后会全部推倒。——莎士比亚",official:"www.baidu.com",time:"2020-10-08",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
+          {id:1,title:"要使整个人生都过得舒适、愉快，这是不可能的，因为人类必须具备一种能应付逆境的态度。——卢梭",description:"只有把抱怨环境的心情，化为上进的力量，才是成功的保证。——罗曼·罗兰",official:"www.baidu.com",time:"2020-10-08",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
+          {id:1,title:"希望的灯一旦熄灭，生活刹那间变成了一片黑暗。——普列姆昌德",description:"到很多东西的诀窍，就是一下子不要学很多。——洛克",official:"www.baidu.com",time:"2020-10-08",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
+          {id:1,title:"我这个人走得很慢，但是我从不后退。——亚伯拉罕·林肯",description:"重复别人所说的话，只需要教育；而要挑战别人所说的话，则需要头脑。——玛丽·佩蒂博恩·普尔",official:"www.baidu.com",time:"2020-10-08",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
+          {id:1,title:"我们若已接受最坏的，就再没有什么损失。——卡耐基",description:"书籍把我们引入最美好的社会，使我们认识各个时代的伟大智者。——史美尔斯",official:"www.baidu.com",time:"2020-10-08",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
+          {id:1,title:"我的努力求学没有得到别的好处，只不过是愈来愈发觉自己的无知。——笛卡儿",description:"少而好学，如日出之阳；壮而好学，如日中之光；志而好学，如炳烛之光。——刘向",official:"www.baidu.com",time:"2020-10-08",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
+
+        ]
       }
     },
     methods:{
@@ -475,6 +523,67 @@
     margin-right: 5px;
   }
 
+  .bookmark-title{
+    /*设置文本框大小*/
+    white-space: nowrap;
+    /*设置内容不换行*/
+    text-overflow: ellipsis;
+    /*设置文字超出文本框的内容显示成...*/
+    overflow: hidden;
+    /*超出部分隐藏*/
+    font-size: 17px;
+    font-weight: 600;
+  }
+
+  .description{
+    /*设置文本框大小*/
+    white-space: nowrap;
+    /*设置内容不换行*/
+    text-overflow: ellipsis;
+    /*设置文字超出文本框的内容显示成...*/
+    overflow: hidden;
+    /*超出部分隐藏*/
+    color: #545454;
+    font-size: 13px;
+  }
+.bookmark{
+  height: 65px;
+}
+
+  .bookmark-icon{
+    float: left;
+    margin-right: 5px;
+
+  }
+  .bookmark-icon img{
+    width: 14px;
+    height: 14px;
+    vertical-align:middle;
+  }
+
+
+
+  .bookmark-official{
+    float: left;
+  }
+  .info{
+    font-size: 12px;
+
+  }
+  .info-wrap{
+    color: #8c8c8c;
+  }
+  .bookmark-time{
+    float: left;
+
+
+  }
+
+  .bookmark-hr{
+    background-color: #fff!important;
+   margin-top: 2px!important;
+    margin-bottom: 7px!important;
+  }
 
 </style>
 
