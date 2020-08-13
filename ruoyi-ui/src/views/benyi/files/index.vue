@@ -204,7 +204,7 @@ export default {
   },
   methods: {
     handleAvatarSuccess(res, file) {
-      console.log(res);
+      //console.log(res);
       if (res.code == "200") {
         this.form.fileurl = res.fileName;
         this.form.filetype = res.fileName.split(".")[1];
@@ -213,13 +213,13 @@ export default {
       }
     },
     handleRemove(file, fileList) {
-      console.log(file, fileList);
+      //console.log(file, fileList);
       if (file.response.code == "200") {
         this.form.fileurl = "";
       }
     },
     handlePreview(file) {
-      console.log(file);
+      //console.log(file);
     },
     handleExceed(files, fileList) {
       this.$message.warning(
