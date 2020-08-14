@@ -1,14 +1,21 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
-      <el-form-item label="幼儿id" prop="childid">
-        <el-input
+      <el-form-item label="选择幼儿" prop="childid">
+        <el-select
           v-model="queryParams.childid"
-          placeholder="请输入幼儿id"
+          placeholder="请输入选择幼儿"
           clearable
           size="small"
-          @keyup.enter.native="handleQuery"
-        />
+          style="width: 240px"
+        >
+          <el-option
+            v-for="dict in childOptions"
+            :key="dict.id"
+            :label="dict.name"
+            :value="dict.id"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item label="父亲姓名" prop="fathername">
         <el-input
@@ -73,7 +80,7 @@
     >
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="编号" align="center" prop="id" />
-      <el-table-column label="幼儿id" align="center" prop="childid" />
+      <el-table-column label="幼儿" align="center" prop="childid" :formatter="childFormat" />
       <el-table-column label="父亲姓名" align="center" prop="fathername" />
       <el-table-column label="父亲联系电话" align="center" prop="fphone" />
       <el-table-column label="父亲办公电话" align="center" prop="foffphone" />
@@ -110,58 +117,121 @@
 
     <!-- 添加或修改幼儿紧急情况联系人对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="800px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="幼儿id" prop="childid">
-          <el-input v-model="form.childid" placeholder="请输入幼儿id" />
-        </el-form-item>
-        <el-form-item label="父亲姓名" prop="fathername">
-          <el-input v-model="form.fathername" placeholder="请输入父亲姓名" />
-        </el-form-item>
-        <el-form-item label="父亲联系电话" prop="fphone">
-          <el-input v-model="form.fphone" placeholder="请输入父亲联系电话" />
-        </el-form-item>
-        <el-form-item label="父亲办公电话" prop="foffphone">
-          <el-input v-model="form.foffphone" placeholder="请输入父亲办公电话" />
-        </el-form-item>
-        <el-form-item label="母亲姓名" prop="mothername">
-          <el-input v-model="form.mothername" placeholder="请输入母亲姓名" />
-        </el-form-item>
-        <el-form-item label="母亲联系电话" prop="mphone">
-          <el-input v-model="form.mphone" placeholder="请输入母亲联系电话" />
-        </el-form-item>
-        <el-form-item label="母亲办公电话" prop="moffphone">
-          <el-input v-model="form.moffphone" placeholder="请输入母亲办公电话" />
-        </el-form-item>
-        <el-form-item label="其他紧急联系姓名" prop="grandfathername">
-          <el-input v-model="form.grandfathername" placeholder="请输入其他紧急联系姓名" />
-        </el-form-item>
-        <el-form-item label="与幼儿关系" prop="gfgx">
-          <el-input v-model="form.gfgx" placeholder="请输入与幼儿关系" />
-        </el-form-item>
-        <el-form-item label="联系电话" prop="gfphone">
-          <el-input v-model="form.gfphone" placeholder="请输入联系电话" />
-        </el-form-item>
-        <el-form-item label="办公电话" prop="gfoffphone">
-          <el-input v-model="form.gfoffphone" placeholder="请输入办公电话" />
-        </el-form-item>
-        <el-form-item label="住址" prop="gfaddress">
-          <el-input v-model="form.gfaddress" placeholder="请输入住址" />
-        </el-form-item>
-        <el-form-item label="其他联系人姓名2" prop="grandmothername">
-          <el-input v-model="form.grandmothername" placeholder="请输入其他联系人姓名2" />
-        </el-form-item>
-        <el-form-item label="与幼儿关系2" prop="gmgx">
-          <el-input v-model="form.gmgx" placeholder="请输入与幼儿关系2" />
-        </el-form-item>
-        <el-form-item label="联系电话2" prop="gmphone">
-          <el-input v-model="form.gmphone" placeholder="请输入联系电话2" />
-        </el-form-item>
-        <el-form-item label="住址2" prop="gmaddress">
-          <el-input v-model="form.gmaddress" placeholder="请输入住址2" />
-        </el-form-item>
-        <el-form-item label="办公电话2" prop="gmoffphone">
-          <el-input v-model="form.gmoffphone" placeholder="请输入办公电话2" />
-        </el-form-item>
+      <el-form ref="form" :model="form" :rules="rules" label-width="120px">
+        <el-row :gutter="15">
+          <el-col :span="24">
+            <el-form-item label="选择幼儿" prop="childid">
+              <el-select v-model="form.childid" placeholder="请输入选择幼儿">
+                <el-option
+                  v-for="dict in childOptions"
+                  :key="dict.id"
+                  :label="dict.name"
+                  :value="dict.id"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="父亲姓名" prop="fathername">
+              <el-input v-model="form.fathername" placeholder="请输入父亲姓名" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="联系电话" prop="fphone">
+              <el-input v-model="form.fphone" placeholder="请输入父亲联系电话" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="办公电话" prop="foffphone">
+              <el-input v-model="form.foffphone" placeholder="请输入父亲办公电话" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="15">
+          <el-col :span="12">
+            <el-form-item label="母亲姓名" prop="mothername">
+              <el-input v-model="form.mothername" placeholder="请输入母亲姓名" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="联系电话" prop="mphone">
+              <el-input v-model="form.mphone" placeholder="请输入母亲联系电话" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="办公电话" prop="moffphone">
+              <el-input v-model="form.moffphone" placeholder="请输入母亲办公电话" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="15">
+          <el-col :span="12">
+            <el-form-item label="其他联系人姓名" prop="grandfathername">
+              <el-input v-model="form.grandfathername" placeholder="请输入其他联系人姓名" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="与幼儿关系" prop="gfgx">
+              <el-select v-model="form.gfgx" placeholder="请选择与幼儿关系">
+                <el-option
+                  v-for="dict in jtgxOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="联系电话" prop="gfphone">
+              <el-input v-model="form.gfphone" placeholder="请输入联系电话" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="办公电话" prop="gfoffphone">
+              <el-input v-model="form.gfoffphone" placeholder="请输入办公电话" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="住址" prop="gfaddress">
+              <el-input v-model="form.gfaddress" placeholder="请输入住址" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="15">
+          <el-col :span="12">
+            <el-form-item label="其他联系人姓名" prop="grandmothername">
+              <el-input v-model="form.grandmothername" placeholder="请输入其他联系人姓名" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="与幼儿关系" prop="gmgx">
+              <el-select v-model="form.gmgx" placeholder="请选择与幼儿关系">
+                <el-option
+                  v-for="dict in jtgxOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="联系电话" prop="gmphone">
+              <el-input v-model="form.gmphone" placeholder="请输入联系电话" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="办公电话" prop="gmoffphone">
+              <el-input v-model="form.gmoffphone" placeholder="请输入办公电话" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="住址" prop="gmaddress">
+              <el-input v-model="form.gmaddress" placeholder="请输入住址" />
+            </el-form-item>
+          </el-col>
+        </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -180,6 +250,8 @@ import {
   updateContactpeople,
 } from "@/api/benyi/contactpeople";
 
+import { listChild } from "@/api/benyi/child";
+
 export default {
   name: "Contactpeople",
   data() {
@@ -196,6 +268,10 @@ export default {
       total: 0,
       // 幼儿紧急情况联系人表格数据
       contactpeopleList: [],
+      //幼儿列表
+      childOptions: [],
+      //家庭关系
+      jtgxOptions: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -225,13 +301,38 @@ export default {
       // 表单参数
       form: {},
       // 表单校验
-      rules: {},
+      rules: {
+        childid: [{ required: true, message: "请选择幼儿", trigger: "blur" }],
+      },
     };
   },
   created() {
     this.getList();
+    this.getChildList();
+    this.getDicts("sys_dm_jtgx").then((response) => {
+      this.jtgxOptions = response.data;
+    });
   },
   methods: {
+    // 字典翻译
+    childFormat(row, column) {
+      // return this.selectDictLabel(this.classOptions, row.classid);
+      var actions = [];
+      var datas = this.childOptions;
+      Object.keys(datas).map((key) => {
+        if (datas[key].id == "" + row.childid) {
+          actions.push(datas[key].name);
+          return false;
+        }
+      });
+      return actions.join("");
+    },
+    /** 查询幼儿信息列表 */
+    getChildList() {
+      listChild(null).then((response) => {
+        this.childOptions = response.rows;
+      });
+    },
     /** 查询幼儿紧急情况联系人列表 */
     getList() {
       this.loading = true;
