@@ -4,9 +4,14 @@
     <transition name="el-zoom-in-left">
     <el-aside width="300px" style="height:900px" v-show="isShowZtree" class="transition-box">
 
-      <div class="aside-logo">
-      <img src="https://s1.ax1x.com/2020/08/11/aXV1YV.png"/>
-      </div>
+
+      <el-header  class="aside-logo">
+        <img src="https://s1.ax1x.com/2020/08/15/dACqUO.png"/>
+
+      </el-header>
+
+
+
       <div class="aside-title"><i class="el-icon-s-tools"></i><span>所有书签</span></div>
       <div class="aside-title"><i class="el-icon-help"></i><span>发现书签</span></div>
       <div class="aside-title"><i class="el-icon-s-platform"></i><span>任意门</span></div>
@@ -26,18 +31,64 @@
     </el-aside>
 
     </transition>
+
+    <el-drawer
+      title="我是标题"
+      :visible.sync="drawer"
+      :direction="direction"
+      :modal-append-to-body="drawerS"
+      :append-to-body="isShowZtree"
+    >
+      <span>我来啦!</span>
+    </el-drawer>
+
+
+
+
+
+
 <!--    <el-button @click="isShowZtree = !isShowZtree">Click Me</el-button>-->
     <el-container>
+
       <el-header  class="header-sousou" style="height: 50px">
+      <div class="sousou-left">
+        <div class="sousouleft-switch" @click="drawer = true"><i class="el-icon-s-unfold"/></div>
+        <div class="sousou-leftico" @click="drawer = true"><img src="https://favicon.lucq.fun/?url=https://www.baidu.com"/></div>
 
+      </div>
 
-        <el-input placeholder="请输入书签名字" v-model="sousou" size="small" style="width: 95%;float: left">
+        <div class="sousou-input">
+
+        <el-input placeholder="请输入书签名字" v-model="sousou" size="small">
         <i slot="prefix" class="el-input__icon el-icon-search"></i>
       </el-input>
 
-        <div class="header-list ">
+        </div>
+        <div class="header-list">
+          <el-dropdown trigger="click" size="small" :hide-on-click="false">
+              <span class="el-dropdown-link">
           <i class="el-icon-s-operation margintop"></i>
-          <span >List</span>
+              </span>
+            <el-dropdown-menu  slot="dropdown">
+              <el-dropdown-item class="filter-item" icon="el-icon-plus" command="a">按时间排序(正序)</el-dropdown-item>
+              <el-dropdown-item class="filter-item" icon="el-icon-plus" command="b">按时间排序(到序)</el-dropdown-item>
+              <el-dropdown-item class="filter-item" icon="el-icon-plus" command="c">按字母A-Z排序</el-dropdown-item>
+              <el-dropdown-item class="filter-item" icon="el-icon-plus" command="d" divided>按网站A-Z排序</el-dropdown-item>
+              <el-dropdown-item class="filter-item" icon="el-icon-plus" command="e">按网站A-Z排序</el-dropdown-item>
+              <el-dropdown-item class="filter-item" icon="el-icon-plus" command="f">按网站A-Z排序</el-dropdown-item>
+              <el-dropdown-item class="filter-item"  divided>
+                <el-switch
+                v-model="swictxuanran"
+                active-color="#13ce66"
+                inactive-color="#ff4949">
+              </el-switch>
+              开启渲染
+              </el-dropdown-item>
+
+              <el-dropdown-item class="filter-item" divided>关闭</el-dropdown-item>
+
+            </el-dropdown-menu>
+          </el-dropdown>
         </div>
 
 
@@ -45,9 +96,27 @@
       <el-main class="bookmarkmain" >
         <div class="filter">
           <div class="filter-sort">
+
+
+            <el-dropdown trigger="click" size="small">
+              <span class="el-dropdown-link">
             <span>选择排序方式</span> <i class="el-icon-bottom"></i> <i class="el-icon-caret-bottom"></i>
+              </span>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>按时间排序(正序)</el-dropdown-item>
+                <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>按时间排序(到序)</el-dropdown-item>
+                <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>按字母A-Z排序</el-dropdown-item>
+                <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>按字母A-Z排序</el-dropdown-item>
+                <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>按网站A-Z排序</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+
+
+
+
+
           </div>
-          <span class="separator">|</span>
+          <el-divider direction="vertical" style="margin-top: 3px;"></el-divider>
 
           <div class="main-label">
             <span><i class="el-icon-star-on"></i></span>
@@ -72,7 +141,7 @@
 
 
         </div>
-        <div style="width: 75%;height: 800px;background-color: #fff;float: left">
+        <div  class="bookmarklist">
 
           <el-row>
 
@@ -80,7 +149,7 @@
             <el-col :span="24" v-for="bm in bookmark">
 
               <div class="bookmark">
-              <span class="bookmark-title">{{bm.title}}</span>
+              <p class="bookmark-title">{{bm.title}}</p>
               <div class="">
                 <p class="description">{{bm.description}}</p>
               </div>
@@ -111,7 +180,7 @@
 
 
 
-        <div style="width: 25%;height: 800px;background-color: #ff5f85;float: left"></div>
+<!--        <div class="announcement"></div>-->
 
       </el-main>
       <el-footer>Footer</el-footer>
@@ -154,6 +223,11 @@
 
     data:function(){
       return{
+        drawerS:false,
+        drawer: false,
+        direction: 'ltr',
+
+        swictxuanran:true,
         sousou:'',//搜索书签
         enterable:false,
         isShowZtree:true,//ztree树显示
@@ -326,6 +400,11 @@
       $.fn.zTree.init($("#treeDemo"), this.setting, this.zNodes).expandAll(that.expandAll);
 
     },
+    handleCommand(command) {
+      this.$message('click on item ' + command);
+    }
+
+
 
 
 
@@ -333,10 +412,15 @@
   }
 </script>
 <style >
-  /*body{*/
-  /*  font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;*/
-  /*  background-color: #fff!important;*/
-  /*}*/
+
+
+
+
+
+
+  body{
+    font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
+  }
 
 
   .ztree li ul{  margin:0;  padding:0}
@@ -408,13 +492,14 @@
     margin-right: 11px;
   }
   .aside-logo{
-
+    background-color: #fff;
+    opacity: 0.9;
   }
   .aside-logo img{
+    margin-top: 5px;
     background-repeat: no-repeat;
-    width: 100%;
     height: 50px;
-    opacity: 0.6;
+
   }
 
   .reminder{
@@ -432,12 +517,15 @@
 
   }
   .filter{
-    width: 100%;
-    height: 30px;
-    position: relative;
-    margin-top: 0;
-    background-color: #ffffff;
-    margin-bottom: 5px;
+    /*width: 100%;*/
+    /*height: 30px;*/
+    /*position: relative;*/
+    /*margin-top: 0;*/
+    /*background-color: #ffffff;*/
+    /*margin-bottom: 5px;*/
+
+    display: flex;
+    flex-wrap: wrap;
   }
   .filter-sort{
     color: #7e868d;
@@ -466,6 +554,12 @@
     margin-left: -4px;
     margin-right: -1px;
   }
+  .filter div{
+    margin-bottom: 3px;
+  }
+  .header-sousou{
+    display: flex;
+  }
 
   .header-sousou input{
     margin-top: 8px;
@@ -482,19 +576,27 @@
     margin-left: 10px;
   }
 
+
+
+  .sousou-input{
+    float: left;
+  width: 100%;
+
+
+  }
   .header-list{
     line-height: 50px;
+    margin-top: 3px;
   }
   .header-list:hover{
     color: #7a6df0;
 
   }
   .header-list i{
-    font-size: 19px;
+    font-size: 25px;
+    margin-right: 2px;
   }
-  .header-list span{
-    font-size: 18px;
-  }
+
 
 
   .main-label{
@@ -584,6 +686,61 @@
    margin-top: 2px!important;
     margin-bottom: 7px!important;
   }
+.sousouleft-switch{
+  float: left;
+  width: 30px;
+  height: 30px;
+  line-height: 50px;
+  margin-top: 3px;
+  margin-right: 5px;
+
+}
+
+  .sousouleft-switch i{
+   font-size: 30px;
+    opacity: 0.8;
+
+  }
+  .sousou-leftico{
+    float: left;
+    width: 30px;
+    height: 30px;
+    border: #a4a4a4 solid 1px;
+    border-radius: 5px;
+    opacity:0.7;
+    text-align: center;
+    line-height: 30px;
+    margin-top: 9px;
+    margin-right: 12px;
+
+  }
+
+  .sousou-leftico img{
+    margin-top: 5px;
+  }
+
+  .filter-item:hover{
+    background-color: #E5E5E5!important;
+    color: #000!important;
+  }
+
+  .announcement{
+    margin-top: 20px;
+    width: 24%;
+    height: 400px;
+    /*background-color: #ff5f85;*/
+    float: left;
+    border-left:#8c8c8c 1px solid ;
+    margin-left: 10px;
+  }
+  .bookmarklist{
+    width: 100%;
+    height: 800px;
+    /*background-color: #fff;*/
+    float: left
+  }
+
+
 
 </style>
 

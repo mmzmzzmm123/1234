@@ -1,0 +1,64 @@
+
+@media only screen and (min-width: 1600px) and (max-width: 1920px) {
+
+  .sousouleft-switch{
+    display: none;
+  }
+}
+
+
+@media only screen and (min-width: 1130px) and (max-width: 1920px) {
+
+  .sousouleft-switch{
+    display: none;
+  }
+
+
+}
+
+@media only screen and (min-width: 100px) and (max-width: 1000px) {
+  .sousou-leftico{
+    display: none;
+  }
+  .header-listtxet{
+    display: none;
+  }
+  .transition-box{
+    width: 250px!important;
+  }
+
+
+}
+
+@media only screen and (min-width: 1130px) and (max-width: 1920px) {
+
+  .sousouleft-switch{
+    display: none;
+  }
+
+
+}
+
+/*@media only screen and (min-width: 0px) and (max-width: 1264px) {*/
+
+/*  !*右侧导航条*!*/
+/*  .announcement{*/
+/*    display: none!important;*/
+/*    width: 0px!important;*/
+/*  }*/
+/*  !*书签列表*!*/
+/*  .bookmarklist{*/
+/*    width: 100%!important;*/
+/*  }*/
+
+/*}*/
+
+@media only screen and (min-width: 1px) and (max-width: 660px) {
+
+  .transition-box{
+    display: none;
+  }
+
+
+}
+

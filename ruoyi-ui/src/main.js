@@ -24,8 +24,8 @@ import Pagination from "@/components/Pagination";
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 
-
-
+//媒体查詢
+import '@/assets/styles/base.css'
 
 
 
