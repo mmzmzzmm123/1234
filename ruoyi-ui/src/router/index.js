@@ -13,6 +13,8 @@ import bookmarkmenu from '@/views/bookmark/menu';
 import index3 from '@/views/bookmark/index';
 
 
+
+
 /**
  * Note: 路由配置项
  *
@@ -137,12 +139,20 @@ export const constantRoutes = [
   {
     path: '/index2',
     component: bookmarkmenu,
-    hidden: true
+
   },
   {
     path: '/index3',
     component: index3,
-    hidden: true
+    meta:{
+      requireAuth: false,
+    },
+    children: [
+      {
+        path: '/content',
+        component: resolve => require(['../views/bookmark/content/index.vue'], resolve),
+      }
+    ],redirect:'/content'
   },
 ]
 

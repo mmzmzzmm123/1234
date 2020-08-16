@@ -94,93 +94,96 @@
 
       </el-header>
       <el-main class="bookmarkmain" >
-        <div class="filter">
-          <div class="filter-sort">
-
-
-            <el-dropdown trigger="click" size="small">
-              <span class="el-dropdown-link">
-            <span>选择排序方式</span> <i class="el-icon-bottom"></i> <i class="el-icon-caret-bottom"></i>
-              </span>
-              <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>按时间排序(正序)</el-dropdown-item>
-                <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>按时间排序(到序)</el-dropdown-item>
-                <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>按字母A-Z排序</el-dropdown-item>
-                <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>按字母A-Z排序</el-dropdown-item>
-                <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>按网站A-Z排序</el-dropdown-item>
-              </el-dropdown-menu>
-            </el-dropdown>
 
 
 
 
-
-          </div>
-          <el-divider direction="vertical" style="margin-top: 3px;"></el-divider>
-
-          <div class="main-label">
-            <span><i class="el-icon-star-on"></i></span>
-            <span>稍后再读</span>
-          </div>
-          <div class="main-label">
-            <span><i class="el-icon-star-on"></i></span>
-            <span>稍后再读</span>
-          </div>
-          <div class="main-label">
-            <span><i class="el-icon-star-on"></i></span>
-            <span>稍后再读</span>
-          </div>
-          <div class="main-label">
-            <span><i class="el-icon-star-on"></i></span>
-            <span>稍后再读</span>
-          </div>
-          <div class="main-label">
-            <span><i class="el-icon-star-on"></i></span>
-            <span>稍后再读</span>
-          </div>
-
-
-        </div>
-        <div  class="bookmarklist">
-
-          <el-row>
-
-<hr>
-            <el-col :span="24" v-for="bm in bookmark">
-
-              <div class="bookmark">
-              <p class="bookmark-title">{{bm.title}}</p>
-              <div class="">
-                <p class="description">{{bm.description}}</p>
-              </div>
-              <div class="info-wrap">
-                <div class="info">
-                  <div class="bookmark-icon">
-                    <img :err-src='bm.icon'   :ng-src="bm.icon"  :src="bm.icon"  />
-                  </div>
-                  <div class="bookmark-official">{{bm.official}}&nbsp;·&nbsp;</div><div class="bookmark-time">{{bm.time}}</div>
-                </div>
-              </div>
-              </div>
-              <el-divider class="bookmark-hr"></el-divider>
-            </el-col>
+<!--        <div class="filter">-->
+<!--          <div class="filter-sort">-->
+<!--            <el-dropdown trigger="click" size="small">-->
+<!--              <span class="el-dropdown-link">-->
+<!--            <span>选择排序方式</span> <i class="el-icon-bottom"></i> <i class="el-icon-caret-bottom"></i>-->
+<!--              </span>-->
+<!--              <el-dropdown-menu slot="dropdown">-->
+<!--                <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>按时间排序(正序)</el-dropdown-item>-->
+<!--                <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>按时间排序(到序)</el-dropdown-item>-->
+<!--                <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>按字母A-Z排序</el-dropdown-item>-->
+<!--                <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>按字母A-Z排序</el-dropdown-item>-->
+<!--                <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>按网站A-Z排序</el-dropdown-item>-->
+<!--              </el-dropdown-menu>-->
+<!--            </el-dropdown>-->
 
 
 
 
 
-          </el-row>
+<!--          </div>-->
+<!--          <div >-->
+<!--          <el-divider direction="vertical"  ></el-divider>-->
+<!--          </div>-->
+<!--          <div class="main-label">-->
+<!--            <span><i class="el-icon-star-on"></i></span>-->
+<!--            <span>稍后再读</span>-->
+<!--          </div>-->
+<!--          <div class="main-label">-->
+<!--            <span><i class="el-icon-star-on"></i></span>-->
+<!--            <span>稍后再读</span>-->
+<!--          </div>-->
+<!--          <div class="main-label">-->
+<!--            <span><i class="el-icon-star-on"></i></span>-->
+<!--            <span>稍后再读</span>-->
+<!--          </div>-->
+<!--          <div class="main-label">-->
+<!--            <span><i class="el-icon-star-on"></i></span>-->
+<!--            <span>稍后再读</span>-->
+<!--          </div>-->
+<!--          <div class="main-label">-->
+<!--            <span><i class="el-icon-star-on"></i></span>-->
+<!--            <span>稍后再读</span>-->
+<!--          </div>-->
+
+
+<!--        </div>-->
+<!--        <div  class="bookmarklist">-->
+
+<!--          <el-row>-->
+
+<!--<hr>-->
+<!--            <el-col :span="24" v-for="bm in bookmark">-->
+
+<!--              <div class="bookmark">-->
+<!--              <p class="bookmark-title">{{bm.title}}</p>-->
+<!--              <div class="">-->
+<!--                <p class="description">{{bm.description}}</p>-->
+<!--              </div>-->
+<!--              <div class="info-wrap">-->
+<!--                <div class="info">-->
+<!--                  <div class="bookmark-icon">-->
+<!--                    <img :err-src='bm.icon'   :ng-src="bm.icon"  :src="bm.icon"  />-->
+<!--                  </div>-->
+<!--                  <div class="bookmark-official">{{bm.official}}&nbsp;·&nbsp;</div><div class="bookmark-time">{{bm.time}}</div>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--              </div>-->
+<!--              <el-divider class="bookmark-hr"></el-divider>-->
+<!--            </el-col>-->
 
 
 
-        </div>
+
+
+<!--          </el-row>-->
+
+
+
+<!--        </div>-->
 
 
 
 
+        <router-view></router-view>
 
-
-<!--        <div class="announcement"></div>-->
+<!--&lt;!&ndash;        <div class="announcement"></div>&ndash;&gt;-->
 
       </el-main>
       <el-footer>Footer</el-footer>
@@ -256,8 +259,9 @@
           },
           callback: {
             beforeClick: this.beforeClick,
-            onClick: this.zTreeOnClick,
-            onCheck: this.zTreeOnCheck,
+            onClick: this.OnClickzTree,
+            // onCheck: this.zTreeOnCheck,
+
           }
         },
         zNodes:[
@@ -340,7 +344,7 @@
   	if (confCount>0) return;
   	//if (treeNode.parentNode && treeNode.parentNode.id!=1) return;
   	var switchObjspan = $("#" + treeNode.tId + "_span");
-  	var editStr = "<span class="+treeNode.tId+"_sz onclick='alert(2222);return false;' style='color: #9e9e9e;float:right;display: inline-block;margin-right: 15px;font-size:8px' onfocus='this.blur();'>删</span>";
+  	var editStr = "<span class="+treeNode.tId+"_sz onclick='alert(2222);return false;' style='color: #9e9e9e;float:right;display: inline-block;margin-right: 15px;font-size:8px' onfocus='this.blur();'><i class='el-icon-edit'></i></span>";
   	switchObjspan.after(editStr);
 
     $("." + treeNode.tId + "_count").unbind().remove();
@@ -367,10 +371,24 @@
     //if (treeNode.level != 19990 ) {
        var zTree = $.fn.zTree.getZTreeObj("treeDemo");
        zTree.expandNode(treeNode);
+
     //  return false;
     // }
     //return true;
   },
+      //节点点击
+      OnClickzTree:function(event,treeId, treeNode){
+      // alert("11"+treeNode.tId );
+
+        // $("." + treeNode.tId + "_sz").unbind().remove();
+        // var switchObjspan = $("#" + treeNode.tId + "_span");
+        //
+        // var confCount = $("#" + treeNode.tId + "_count").length;
+        // if (confCount>0) return;
+        // var editStr = "<span class="+treeNode.tId+"_count onclick='alert(1111111);return false;' style='color: #9e9e9e;float:right;display: inline-block;margin-right: 15px;font-size:8px' onfocus='this.blur();'>12</span>";
+        // switchObjspan.after(editStr);
+      return false;
+      },
       //显示隐藏 ztree菜单
       zreaZtree:function () {
       var that=this;
@@ -472,6 +490,12 @@
     margin-bottom: 0;
     /*background:url('https://ftp.bmp.ovh/imgs/2020/08/4ac1d6b4f41049ef.jpg') no-repeat;*/
     background-color: #f6f6f6;
+    /*background: url(http://csssecrets.io/images/tiger.jpg) no-repeat;*/
+    /*background-size: cover;*/
+    /*z-index: -1;!*-1 可以当背景*!*/
+    /*-webkit-filter: blur(3px);*/
+    /*filter: blur(3px);*/
+
 
   }
 
@@ -565,8 +589,16 @@
     margin-top: 8px;
     border: 0px;
     background-color: #f2f2f2;
+    border-radius: 0!important;
+
 
   }
+  .header-sousou input:focus{
+    background-color: #FFFFFF!important;
+    border:  1px solid #f2f2f2;
+  }
+
+
   .header-sousou i{
     font-size: 1px;
     margin-top: 6px;
@@ -580,7 +612,7 @@
 
   .sousou-input{
     float: left;
-  width: 100%;
+     width: 100%;
 
 
   }
@@ -599,18 +631,7 @@
 
 
 
-  .main-label{
-    color: #7e868d;
-    border-radius: 2px;
-    height: 22px;
-    float: left;
-    font-size: 12px;
-    margin-left: 5px;
-  }
-  .main-label:hover{
-    background-color: #E8F3FC;
-    color: #1988E0;
-  }
+
   .main-label span i{
     margin-left: 5px;
   }
@@ -687,7 +708,7 @@
     margin-bottom: 7px!important;
   }
 .sousouleft-switch{
-  float: left;
+
   width: 30px;
   height: 30px;
   line-height: 50px;
@@ -701,11 +722,15 @@
     opacity: 0.8;
 
   }
+  .sousou-left{
+    display: flex;
+  }
+
   .sousou-leftico{
-    float: left;
+
     width: 30px;
     height: 30px;
-    border: #a4a4a4 solid 1px;
+    border: #d1e9ff solid 1px;
     border-radius: 5px;
     opacity:0.7;
     text-align: center;

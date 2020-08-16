@@ -1,25 +1,13 @@
-
-@media only screen and (min-width: 1600px) and (max-width: 1920px) {
-
-  .sousouleft-switch{
-    display: none;
-  }
+/* pc width > 1920>>>xl */
+@media screen and (max-width: 1920px) {
+    .sousouleft-switch{
+      display: none;
+    }
 }
 
 
-@media only screen and (min-width: 1130px) and (max-width: 1920px) {
-
-  .sousouleft-switch{
-    display: none;
-  }
-
-
-}
-
-@media only screen and (min-width: 100px) and (max-width: 1000px) {
-  .sousou-leftico{
-    display: none;
-  }
+/* ipad pro  >>lg*/
+@media screen and (max-width: 1200px) {
   .header-listtxet{
     display: none;
   }
@@ -30,35 +18,78 @@
 
 }
 
-@media only screen and (min-width: 1130px) and (max-width: 1920px) {
+/* >>> md*/
+@media screen and (max-width: 992px) {
 
+
+}
+/* ipad >>> xs*/
+@media screen and (max-width: 768px) {
+  .sousou-leftico{
+    display: none;
+  }
+    .transition-box{
+      display: none;
+    }
   .sousouleft-switch{
-    display: none;
+    display: block;
   }
+}
+/* iphone6 7 8 plus */
+@media screen and (max-width: 414px) {
 
+}
+/* iphoneX */
+@media screen and (max-width: 375px) and (-webkit-device-pixel-ratio: 3) {
+
+}
+/* iphone6 7 8 */
+@media screen and (max-width: 375px) and (-webkit-device-pixel-ratio: 2) {
+
+}
+/* iphone5 */
+@media screen and (max-width: 320px) {
 
 }
 
-/*@media only screen and (min-width: 0px) and (max-width: 1264px) {*/
-
-/*  !*右侧导航条*!*/
-/*  .announcement{*/
-/*    display: none!important;*/
-/*    width: 0px!important;*/
-/*  }*/
-/*  !*书签列表*!*/
-/*  .bookmarklist{*/
-/*    width: 100%!important;*/
-/*  }*/
-
-/*}*/
-
-@media only screen and (min-width: 1px) and (max-width: 660px) {
-
-  .transition-box{
-    display: none;
-  }
 
 
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
