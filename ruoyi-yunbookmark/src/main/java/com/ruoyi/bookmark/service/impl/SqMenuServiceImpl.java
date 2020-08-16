@@ -10,19 +10,32 @@ import com.ruoyi.bookmark.service.ISqMenuService;
 
 /**
  * 书签菜单Service业务层处理
- * 
+ *
  * @author wanghao
  * @date 2020-08-06
  */
 @Service
-public class SqMenuServiceImpl implements ISqMenuService 
+public class SqMenuServiceImpl implements ISqMenuService
 {
     @Autowired
     private SqMenuMapper sqMenuMapper;
 
     /**
+     * @auther: Wang
+     * @date: 2020/08/16 20:04
+     * 功能描述:查询用户的 所有书签菜单
+     */
+    @Override
+    public List<SqMenu> selecByUserID(Long id) {
+        SqMenu sqMenu=new SqMenu();
+        sqMenu.setUserId(id);
+
+        return sqMenuMapper.selectSqMenuList(sqMenu);
+    }
+
+    /**
      * 查询书签菜单
-     * 
+     *
      * @param menuId 书签菜单ID
      * @return 书签菜单
      */
@@ -34,7 +47,7 @@ public class SqMenuServiceImpl implements ISqMenuService
 
     /**
      * 查询书签菜单列表
-     * 
+     *
      * @param sqMenu 书签菜单
      * @return 书签菜单
      */
@@ -46,7 +59,7 @@ public class SqMenuServiceImpl implements ISqMenuService
 
     /**
      * 新增书签菜单
-     * 
+     *
      * @param sqMenu 书签菜单
      * @return 结果
      */
@@ -59,7 +72,7 @@ public class SqMenuServiceImpl implements ISqMenuService
 
     /**
      * 修改书签菜单
-     * 
+     *
      * @param sqMenu 书签菜单
      * @return 结果
      */
@@ -71,7 +84,7 @@ public class SqMenuServiceImpl implements ISqMenuService
 
     /**
      * 批量删除书签菜单
-     * 
+     *
      * @param menuIds 需要删除的书签菜单ID
      * @return 结果
      */
@@ -83,7 +96,7 @@ public class SqMenuServiceImpl implements ISqMenuService
 
     /**
      * 删除书签菜单信息
-     * 
+     *
      * @param menuId 书签菜单ID
      * @return 结果
      */

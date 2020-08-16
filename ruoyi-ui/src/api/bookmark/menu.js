@@ -1,5 +1,16 @@
 import request from '@/utils/request'
 
+
+
+
+// 查询用户 书签菜单
+export function listMenuByUserId() {
+  return request({
+    url: '/bookmark/menu/selectMenuByUserID',
+    method: 'get'
+  })
+}
+
 // 查询书签菜单列表
 export function listMenu(query) {
   return request({

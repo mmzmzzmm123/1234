@@ -1,16 +1,16 @@
 package com.ruoyi.web.controller.yunbookmark;
 
 import java.util.List;
+
+import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.common.core.domain.model.LoginUser;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.*;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -31,6 +31,35 @@ public class SqMenuController extends BaseController
 {
     @Autowired
     private ISqMenuService sqMenuService;
+
+    /**
+     * 功能描述:查询用户的 所有书签菜单
+     */
+    @GetMapping("/selectMenuByUserID")
+    public AjaxResult selecByUserID()
+    {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        LoginUser user = (LoginUser) auth.getPrincipal();
+        List<SqMenu> list = sqMenuService.selecByUserID(user.getUser().getUserId());
+        return AjaxResult.success(list);
+    }
+
+    /**
+     * 查询MenuID单个书签信息
+     */
+    @GetMapping("/selectByMenuId")
+    public AjaxResult list(@RequestParam("menuId") Long menuId)
+    {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        LoginUser user = (LoginUser) auth.getPrincipal();
+        Long userId=user.getUser().getUserId();
+
+        SqMenu sqMenu=new SqMenu();
+        sqMenu.setMenuId(menuId);
+        sqMenu.setUserId(userId);
+        List<SqMenu> list = sqMenuService.selectSqMenuList(sqMenu);
+        return AjaxResult.success(list);
+    }
 
     /**
      * 查询书签菜单列表

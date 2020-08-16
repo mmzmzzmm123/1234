@@ -3,7 +3,7 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.bookmark.mapper.SqMenuMapper">
-    
+
     <resultMap type="SqMenu" id="SqMenuResult">
         <result property="menuId"    column="menu_id"    />
         <result property="userId"    column="user_id"    />
@@ -21,7 +21,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectSqMenuList" parameterType="SqMenu" resultMap="SqMenuResult">
         <include refid="selectSqMenuVo"/>
-        <where>  
+        <where>
+            <if test="menuId != null "> and menu_id = #{menuId}</if>
             <if test="userId != null "> and user_id = #{userId}</if>
             <if test="menuName != null  and menuName != ''"> and menu_name like concat('%', #{menuName}, '%')</if>
             <if test="menuUrl != null  and menuUrl != ''"> and menu_url = #{menuUrl}</if>
@@ -30,12 +31,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="menuOrder != null "> and menu_order = #{menuOrder}</if>
         </where>
     </select>
-    
+
     <select id="selectSqMenuById" parameterType="Long" resultMap="SqMenuResult">
         <include refid="selectSqMenuVo"/>
         where menu_id = #{menuId}
     </select>
-        
+
     <insert id="insertSqMenu" parameterType="SqMenu" useGeneratedKeys="true" keyProperty="menuId">
         insert into sq_menu
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -77,10 +78,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteSqMenuByIds" parameterType="String">
-        delete from sq_menu where menu_id in 
+        delete from sq_menu where menu_id in
         <foreach item="menuId" collection="array" open="(" separator="," close=")">
             #{menuId}
         </foreach>
     </delete>
-    
+
+
 </mapper>

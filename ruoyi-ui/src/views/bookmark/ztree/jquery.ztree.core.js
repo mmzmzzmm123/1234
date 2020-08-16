@@ -79,15 +79,15 @@
         key: {
           isParent: "isParent",
           children: "children",
-          name: "name",
+          name: "menuName",
           title: "",
           url: "url",
-          icon: "icon"
+          icon: "menuIcon"
         },
         simpleData: {
           enable: false,
-          idKey: "id",
-          pIdKey: "pId",
+          idKey: "menuId",
+          pIdKey: "parentId",
           rootPId: null
         },
         keep: {
@@ -1366,7 +1366,7 @@
         if (!node.isAjaxing) {
           var isParent = data.nodeIsParent(setting, node);
           var icon = (isParent && node.iconOpen && node.iconClose) ? (node.open ? node.iconOpen : node.iconClose) : node[setting.data.key.icon];
-          if (icon) icoStyle.push("background:url(", icon, ") 0 0 no-repeat;");
+          if (icon) icoStyle.push("background:url(", icon, ") 0 0 no-repeat;background-position:center;background-size:21px 21px;border-radius: 50%;");
           if (setting.view.showIcon == false || !tools.apply(setting.view.showIcon, [setting.treeId, node], true)) {
             icoStyle.push("display:none;");
           }
