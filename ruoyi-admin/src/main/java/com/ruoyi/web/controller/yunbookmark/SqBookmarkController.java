@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.ruoyi.bookmark.domain.SqBookmark;
 import com.ruoyi.bookmark.service.ISqBookmarkService;
+import com.ruoyi.common.core.domain.entity.SysUser;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -52,9 +53,10 @@ public class SqBookmarkController extends BaseController
      */
     @GetMapping("/selectBymenuIdUserID")
     @PreAuthorize("@ss.hasPermi('bookmark:bookmark:list')")
-    public TableDataInfo selectBymenuIdUserID(Long menuID, Long userID) {
+    public TableDataInfo selectBymenuIdUserID(Long menuId) {
+        SysUser sysUser=getAuthUser();
         startPage();
-        List<SqBookmark> list = sqBookmarkService.selectBymenuIdUserID(menuID,userID);
+        List<SqBookmark> list = sqBookmarkService.selectBymenuIdUserID(menuId,sysUser.getUserId());
         return getDataTable(list);
     }
 

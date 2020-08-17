@@ -1,5 +1,16 @@
 import request from '@/utils/request'
 
+
+export function selectBymenuIdUserID(query) {
+  return request({
+    url: '/bookmark/bookmark/selectBymenuIdUserID',
+    method: 'get',
+    params: query
+  })
+}
+
+
+
 // 查询书签管理列表
 export function listBookmark(query) {
   return request({

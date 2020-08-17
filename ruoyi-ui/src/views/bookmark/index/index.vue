@@ -12,8 +12,8 @@
 
 
 
-      <div class="aside-title"><i class="el-icon-s-tools"></i><span>所有书签</span></div>
-      <div class="aside-title"><i class="el-icon-help"></i><span>发现书签</span></div>
+      <div class="aside-title"><i class="el-icon-s-tools"></i><span>全部书签</span></div>
+      <div class="aside-title"><i class="el-icon-help"></i><span>发现</span></div>
       <div class="aside-title"><i class="el-icon-s-platform"></i><span>任意门</span></div>
       <div class="aside-title"><i class="el-icon-message-solid"></i><span>收件箱</span></div>
       <div class="reminder">我的收藏</div>
@@ -44,9 +44,6 @@
 
 
 
-
-
-
 <!--    <el-button @click="isShowZtree = !isShowZtree">Click Me</el-button>-->
     <el-container>
 
@@ -54,7 +51,6 @@
       <div class="sousou-left">
         <div class="sousouleft-switch" @click="drawer = true"><i class="el-icon-s-unfold"/></div>
         <div class="sousou-leftico" @click="drawer = true"><img src="https://favicon.lucq.fun/?url=https://www.baidu.com"/></div>
-
       </div>
 
         <div class="sousou-input">
@@ -62,30 +58,40 @@
         <el-input placeholder="请输入书签名字" v-model="sousou" size="small">
         <i slot="prefix" class="el-input__icon el-icon-search"></i>
       </el-input>
-
         </div>
-        <div class="header-list">
-          <el-dropdown trigger="click" size="small" :hide-on-click="false">
-              <span class="el-dropdown-link">
-          <i class="el-icon-s-operation margintop"></i>
-              </span>
-            <el-dropdown-menu  slot="dropdown">
-              <el-dropdown-item class="filter-item" icon="el-icon-plus" command="a">按时间排序(正序)</el-dropdown-item>
-              <el-dropdown-item class="filter-item" icon="el-icon-plus" command="b">按时间排序(到序)</el-dropdown-item>
-              <el-dropdown-item class="filter-item" icon="el-icon-plus" command="c">按字母A-Z排序</el-dropdown-item>
-              <el-dropdown-item class="filter-item" icon="el-icon-plus" command="d" divided>按网站A-Z排序</el-dropdown-item>
-              <el-dropdown-item class="filter-item" icon="el-icon-plus" command="e">按网站A-Z排序</el-dropdown-item>
-              <el-dropdown-item class="filter-item" icon="el-icon-plus" command="f">按网站A-Z排序</el-dropdown-item>
-              <el-dropdown-item class="filter-item"  divided>
-                <el-switch
-                v-model="swictxuanran"
-                active-color="#13ce66"
-                inactive-color="#ff4949">
-              </el-switch>
-              开启渲染
-              </el-dropdown-item>
 
-              <el-dropdown-item class="filter-item" divided>关闭</el-dropdown-item>
+        <div class="sousouright-icon"><el-badge :value="5" :max="99" class="item" ><i class="el-icon-message-solid" style="font-size: 17px;"></i></el-badge></div>
+
+        <div class="sousouright-icon">
+          <el-dropdown trigger="click" size="small" :hide-on-click="false"  >
+              <span class="el-dropdown-link">
+          <i class="el-icon-plus" style="font-size: 18px;"/>
+             </span>
+            <el-dropdown-menu  slot="dropdown" >
+              <el-dropdown-item class="filter-item" icon="el-icon-plus" command="a">添加连接</el-dropdown-item>
+              <el-dropdown-item class="filter-item" icon="el-icon-plus" command="b">添加文本</el-dropdown-item>
+              <el-dropdown-item class="filter-item" icon="el-icon-plus" command="d" >导入书签</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+
+
+          </div>
+
+
+
+
+
+        <div class="header-list">
+          <el-dropdown trigger="click" size="small" :hide-on-click="false"  >
+              <span class="el-dropdown-link">
+           <el-avatar  :size="28" src="https://up.raindrop.io/collection/templates/social-media-logos-6/97social.png"></el-avatar>
+              </span>
+            <el-dropdown-menu  slot="dropdown" >
+              <el-dropdown-item class="filter-item" icon="el-icon-plus" command="a">外观显示</el-dropdown-item>
+              <el-dropdown-item class="filter-item" icon="el-icon-plus" command="b">用户中心</el-dropdown-item>
+              <el-dropdown-item class="filter-item" icon="el-icon-plus" command="d" >建议反馈</el-dropdown-item>
+              <el-dropdown-item class="filter-item" icon="el-icon-plus" command="e" divided>退出登录</el-dropdown-item>
+
 
             </el-dropdown-menu>
           </el-dropdown>
@@ -95,95 +101,8 @@
       </el-header>
       <el-main class="bookmarkmain" >
 
-
-
-
-<!--        <div class="filter">-->
-<!--          <div class="filter-sort">-->
-<!--            <el-dropdown trigger="click" size="small">-->
-<!--              <span class="el-dropdown-link">-->
-<!--            <span>选择排序方式</span> <i class="el-icon-bottom"></i> <i class="el-icon-caret-bottom"></i>-->
-<!--              </span>-->
-<!--              <el-dropdown-menu slot="dropdown">-->
-<!--                <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>按时间排序(正序)</el-dropdown-item>-->
-<!--                <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>按时间排序(到序)</el-dropdown-item>-->
-<!--                <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>按字母A-Z排序</el-dropdown-item>-->
-<!--                <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>按字母A-Z排序</el-dropdown-item>-->
-<!--                <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>按网站A-Z排序</el-dropdown-item>-->
-<!--              </el-dropdown-menu>-->
-<!--            </el-dropdown>-->
-
-
-
-
-
-<!--          </div>-->
-<!--          <div >-->
-<!--          <el-divider direction="vertical"  ></el-divider>-->
-<!--          </div>-->
-<!--          <div class="main-label">-->
-<!--            <span><i class="el-icon-star-on"></i></span>-->
-<!--            <span>稍后再读</span>-->
-<!--          </div>-->
-<!--          <div class="main-label">-->
-<!--            <span><i class="el-icon-star-on"></i></span>-->
-<!--            <span>稍后再读</span>-->
-<!--          </div>-->
-<!--          <div class="main-label">-->
-<!--            <span><i class="el-icon-star-on"></i></span>-->
-<!--            <span>稍后再读</span>-->
-<!--          </div>-->
-<!--          <div class="main-label">-->
-<!--            <span><i class="el-icon-star-on"></i></span>-->
-<!--            <span>稍后再读</span>-->
-<!--          </div>-->
-<!--          <div class="main-label">-->
-<!--            <span><i class="el-icon-star-on"></i></span>-->
-<!--            <span>稍后再读</span>-->
-<!--          </div>-->
-
-
-<!--        </div>-->
-<!--        <div  class="bookmarklist">-->
-
-<!--          <el-row>-->
-
-<!--<hr>-->
-<!--            <el-col :span="24" v-for="bm in bookmark">-->
-
-<!--              <div class="bookmark">-->
-<!--              <p class="bookmark-title">{{bm.title}}</p>-->
-<!--              <div class="">-->
-<!--                <p class="description">{{bm.description}}</p>-->
-<!--              </div>-->
-<!--              <div class="info-wrap">-->
-<!--                <div class="info">-->
-<!--                  <div class="bookmark-icon">-->
-<!--                    <img :err-src='bm.icon'   :ng-src="bm.icon"  :src="bm.icon"  />-->
-<!--                  </div>-->
-<!--                  <div class="bookmark-official">{{bm.official}}&nbsp;·&nbsp;</div><div class="bookmark-time">{{bm.time}}</div>-->
-<!--                </div>-->
-<!--              </div>-->
-<!--              </div>-->
-<!--              <el-divider class="bookmark-hr"></el-divider>-->
-<!--            </el-col>-->
-
-
-
-
-
-<!--          </el-row>-->
-
-
-
-<!--        </div>-->
-
-
-
-
         <router-view></router-view>
 
-<!--&lt;!&ndash;        <div class="announcement"></div>&ndash;&gt;-->
 
       </el-main>
       <el-footer>Footer</el-footer>
@@ -229,7 +148,6 @@
         drawerS:false,
         drawer: false,
         direction: 'ltr',
-
         swictxuanran:true,
         sousou:'',//搜索书签
         enterable:false,
@@ -629,14 +547,17 @@
 
 
   .sousou-input{
-    float: left;
-     width: 100%;
+
+     width: 82.5%;
+    margin-right: 15px;
 
 
   }
   .header-list{
-    line-height: 50px;
-    margin-top: 3px;
+    /*line-height: 50px;*/
+    margin-top: 10px;
+    /*align-content: center;*/
+    /*justify-content: center;*/
   }
   .header-list:hover{
     color: #7a6df0;
@@ -782,6 +703,11 @@
     /*background-color: #fff;*/
     float: left
   }
+  .sousouright-icon{
+    margin-right: 24px;
+    margin-top: 10px;
+  }
+
 
 
 

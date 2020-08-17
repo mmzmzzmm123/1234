@@ -3,13 +3,13 @@
 <template>
     <div>
 
-      <div class="filter">
+      <div class="filter" >
         <div class="filter-sort">
           <el-dropdown trigger="click" size="small">
               <span class="el-dropdown-link">
             <span>按时间排序(正)</span> <i class="el-icon-caret-bottom"></i>
               </span>
-            <el-dropdown-menu slot="dropdown">
+            <el-dropdown-menu slot="dropdown" >
               <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>按时间排序(正)</el-dropdown-item>
               <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>按时间排序(反)</el-dropdown-item>
               <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>按字母A-Z排序</el-dropdown-item>
@@ -53,10 +53,10 @@
       </div>
       <div  class="bookmarklist">
 
-        <el-row>
+        <el-row >
 
           <hr class="bookamrk-hr"/>
-          <el-col :span="24" v-for="bm in bookmark">
+          <el-col :span="24" v-for="bm in bookmarkList">
 
             <div class="bookmark">
               <p class="bookmark-title">{{bm.title}}</p>
@@ -68,7 +68,7 @@
                   <div class="bookmark-icon">
                     <img :err-src='bm.icon'   :ng-src="bm.icon"  :src="bm.icon"  />
                   </div>
-                  <div class="bookmark-official">{{bm.official}}&nbsp;·&nbsp;</div><div class="bookmark-time">{{bm.time}}</div>
+                  <div class="bookmark-official">{{bm.urls}}&nbsp;·&nbsp;</div><div class="bookmark-time">{{bm.createTime|changeTime}}</div>
                 </div>
               </div>
             </div>
@@ -92,14 +92,20 @@
     </div>
 </template>
 
-
-
 <script>
-    export default {
-        components: {},
+
+
+  import { selectBymenuIdUserID, getBookmark, delBookmark, addBookmark, updateBookmark, exportBookmark } from "@/api/bookmark/bookmark";
+  import { format } from 'timeago.js';
+
+  export default {
+        components: {
+          format
+        },
 
         data: function () {
             return {
+              loading:true,
               bookmark:[
                 {id:1,title:"最大的骄傲于最大的自卑都表示心灵的最软弱无力。——斯宾诺莎",description:"阅读使人充实，会谈使人敏捷，写作使人精确。——培根",official:"www.baidu.com",time:"2020-10-08",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
                 {id:1,title:"意志坚强的人能把世界放在手中像泥块一样任意揉捏。——歌德",description:"最具挑战性的挑战莫过于提升自我。——迈克尔·F·斯特利",official:"www.baidu.com",time:"2020-10-08",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
@@ -111,9 +117,51 @@
                 {id:1,title:"我的努力求学没有得到别的好处，只不过是愈来愈发觉自己的无知。——笛卡儿",description:"少而好学，如日出之阳；壮而好学，如日中之光；志而好学，如炳烛之光。——刘向",official:"www.baidu.com",time:"2020-10-08",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
 
               ],
+              queryParams: {
+                pageNum: 1,
+                pageSize: 15,
+                userid: undefined,
+                title: undefined,
+                url: undefined,
+                urls: undefined,
+                description: undefined,
+                image: undefined,
+                label: undefined,
+                menuId: undefined,
+                zcount: undefined,
+                idelete: undefined,
+                start: undefined,
+              },
+              bookmarkList:[],
             }
         },
-        methods: {}
+     filters: {
+      //timeago.js插件
+      //计算时间，类似于几分钟前，几小时前，几天前等
+      changeTime(val){
+        let time = new Date(val); //先将接收到的json格式的日期数据转换成可用的js对象日期
+        return format(time, 'zh_CN'); //转换成类似于几天前的格式
+      }
+    },
+      created() {
+         this.queryParams.menuId=1;
+         this.getList();
+      },
+        methods: {
+          /** 查询书签管理列表 */
+          getList() {
+            this.loading = true;
+            selectBymenuIdUserID(this.queryParams).then(response => {
+              this.bookmarkList = response.rows;
+              this.total = response.total;
+              this.loading = false;
+            });
+          },
+
+
+
+        },
+
     }
 </script>
 
