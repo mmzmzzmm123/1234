@@ -1,4 +1,5 @@
 <template >
+  <div>
 
   <el-container>
     <transition name="el-zoom-in-left">
@@ -111,6 +112,31 @@
 
 
 
+<!--  编辑弹窗-->
+  <el-dialog  :title="title"  :visible.sync="open" width="500px" center append-to-body>
+    <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+      <el-form-item prop="menuName">
+        <div class="labelname">菜单名称</div>
+        <el-input v-model="form.menuName" placeholder="请输入菜单名称" />
+      </el-form-item>
+      <el-form-item  prop="menuIcon">
+        <div class="labelname">菜单图标</div>
+        <el-input v-model="form.menuIcon" placeholder="请输入菜单图标" />
+      </el-form-item>
+      <el-form-item  prop="parentId">
+        <div class="labelname">上级菜单</div>
+        <treeselect v-model="form.parentId" :options="menuOptions" :normalizer="normalizer" placeholder="请选择父菜单id" />
+      </el-form-item>
+      <el-form-item  prop="menuOrder">
+        <div class="labelname">排序</div>
+        <el-input v-model="form.menuOrder" placeholder="请输入菜单排序" />
+      </el-form-item>
+    </el-form>
+    <div slot="footer" class="dialog-footer">
+      <el-button type="primary" @click="submitForm">确 定</el-button>
+      <el-button @click="cancel">取 消</el-button>
+    </div>
+  </el-dialog>
 
 
 
@@ -120,8 +146,7 @@
 
 
 
-
-
+  </div>
 
 
 </template>
@@ -129,6 +154,10 @@
 
 <script>
   // 下面的是单个Vue组件引用的外部静态文件，也可以在main.js文件中引用
+
+  import { listMenu, getMenu, delMenu, addMenu, updateMenu, exportMenu } from "@/api/bookmark/menu";
+  import Treeselect from "@riophae/vue-treeselect";
+  import "@riophae/vue-treeselect/dist/vue-treeselect.css";
   import "../ztree/jquery-1.4.4.min.js"
  import "../ztree/jquery.ztree.core.js"
   import "../ztree/demo.css"
@@ -138,11 +167,30 @@
   export default {
     name: 'areaTree',
     components:{
-
+      Treeselect
     },
 
     data:function(){
       return{
+        queryParams: {
+          userId: undefined,
+          menuName: undefined,
+          menuUrl: undefined,
+          menuIcon: undefined,
+          parentId: undefined,
+          menuOrder: undefined,
+        },
+        // 书签菜单树选项
+        menuOptions: [],
+        // 弹出层标题
+        title: "",
+        // 是否显示弹出层
+        open: false,
+        // 表单参数
+        form: {},
+        // 表单校验
+        rules: {
+        },
         drawerS:false,
         drawer: false,
         direction: 'ltr',
@@ -180,55 +228,8 @@
 
           }
         },
-        zNodes:[
-          // { id:1, pId:0, name:"文件夹",icon:"https://favicon.lucq.fun/?url=https://www.baidu.com"},
-          // { id:2, pId:0, name:"文件夹",icon:"https://favicon.lucq.fun/?url=https://movie.douban.com/"},
-          // { id:3, pId:2, name:"文件夹",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
-          // { id:4, pId:0, name:"文件夹",icon:"https://favicon.lucq.fun/?url=https://www.w3school.com.cn/"},
-          // { id:5, pId:4, name:"文件夹",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
-          // { id:6, pId:0, name:"文件夹",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
-          // { id:7, pId:6, name:"文件夹",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
-          // { id:8, pId:0, name:"文件夹",icon:"https://favicon.lucq.fun/?url=https://open.163.com/"},
-          // { id:9, pId:8, name:"文件夹",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
-          // { id:1123, pId:0, name:"文件夹",icon:"https://favicon.lucq.fun/?url=https://y.qq.com"},
-          // { id:1142, pId:1, name:"收件箱",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
-          // { id:111, pId:19, name:"收件箱1",icon:"https://favicon.lucq.fun/?url=https://mail.sina.com.cn/"},
-          // { id:112, pId:111, name:"收件箱2",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
-          // { id:113, pId:112, name:"收件箱3",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
-          // { id:114, pId:113, name:"收件箱4",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
-          // { id:1321, pId:114, name:"照片",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
-          // { id:2322, pId:114, name:"照片",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
-          // { id:3323, pId:114, name:"照片",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
-          // { id:4324, pId:114, name:"照片",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
-          // { id:5325, pId:114, name:"照片",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
-          // { id:6399, pId:114, name:"照片",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
-          // { id:32, pId:399, name:"照片",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
-          // { id:12, pId:1, name:"垃圾邮件",icon:"https://favicon.lucq.fun/?url=https://www.google.com/"},
-          // { id:13, pId:1, name:"草稿",icon:"https://favicon.lucq.fun/?url=https://yz.m.sm.cn/"},
-          // { id:14, pId:1, name:"已发送邮件",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
-          // { id:15, pId:1, name:"已删除邮件",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
-          // { id:322, pId:11, name:"快速视图",icon:"https://favicon.lucq.fun/?url=https://taobao.com/"},
-          // { id:31, pId:3, name:"文档",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
-          // { id:131, pId:3, name:"文档",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
-          // { id:231, pId:3, name:"文档",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
-          // { id:331, pId:3, name:"文档",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
-          // { id:431, pId:3, name:"文档",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
-          // { id:531, pId:3, name:"文档",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
-          // { id:631, pId:3, name:"文档",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
-          // { id:731, pId:3, name:"文档",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
-          // { id:831, pId:3, name:"文档",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
-          ],
-        bookmark:[
-          {id:1,title:"最大的骄傲于最大的自卑都表示心灵的最软弱无力。——斯宾诺莎",description:"阅读使人充实，会谈使人敏捷，写作使人精确。——培根",official:"www.baidu.com",time:"2020-10-08",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
-          {id:1,title:"意志坚强的人能把世界放在手中像泥块一样任意揉捏。——歌德",description:"最具挑战性的挑战莫过于提升自我。——迈克尔·F·斯特利",official:"www.baidu.com",time:"2020-10-08",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
-          {id:1,title:"要知道对好事的称颂过于夸大，也会招来人们的反感轻蔑和嫉妒。——培根",description:"意志命运往往背道而驰，决心到最后会全部推倒。——莎士比亚",official:"www.baidu.com",time:"2020-10-08",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
-          {id:1,title:"要使整个人生都过得舒适、愉快，这是不可能的，因为人类必须具备一种能应付逆境的态度。——卢梭",description:"只有把抱怨环境的心情，化为上进的力量，才是成功的保证。——罗曼·罗兰",official:"www.baidu.com",time:"2020-10-08",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
-          {id:1,title:"希望的灯一旦熄灭，生活刹那间变成了一片黑暗。——普列姆昌德",description:"到很多东西的诀窍，就是一下子不要学很多。——洛克",official:"www.baidu.com",time:"2020-10-08",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
-          {id:1,title:"我这个人走得很慢，但是我从不后退。——亚伯拉罕·林肯",description:"重复别人所说的话，只需要教育；而要挑战别人所说的话，则需要头脑。——玛丽·佩蒂博恩·普尔",official:"www.baidu.com",time:"2020-10-08",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
-          {id:1,title:"我们若已接受最坏的，就再没有什么损失。——卡耐基",description:"书籍把我们引入最美好的社会，使我们认识各个时代的伟大智者。——史美尔斯",official:"www.baidu.com",time:"2020-10-08",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
-          {id:1,title:"我的努力求学没有得到别的好处，只不过是愈来愈发觉自己的无知。——笛卡儿",description:"少而好学，如日出之阳；壮而好学，如日中之光；志而好学，如炳烛之光。——刘向",official:"www.baidu.com",time:"2020-10-08",icon:"https://favicon.lucq.fun/?url=https://www.sogou.com/"},
-
-        ]
+        zNodes:[],
+        bookmark:[]
       }
     },
     created() {
@@ -237,6 +238,32 @@
       that.getList();
     },
     methods:{
+
+      /** 转换书签菜单数据结构 */
+      normalizer(node) {
+        if (node.children && !node.children.length) {
+          delete node.children;
+        }
+        return {
+          id: node.menuId,
+          label: node.menuName,
+          children: node.children
+        };
+      },
+      /** 查询部门下拉树结构 */
+      getTreeselect() {
+        listMenuByUserId().then(response => {
+          this.menuOptions = [];
+          const data = { menuId: 0, menuName: '顶级节点', children: [] };
+          data.children = this.handleTree(response.data, "menuId", "parentId");
+          this.menuOptions.push(data);
+        });
+      },
+      // 取消按钮
+      cancel() {
+        this.open = false;
+        this.reset();
+      },
       /** 查询用户的书签菜单Menu */
       getList() {
         listMenuByUserId().then(response => {
@@ -247,7 +274,51 @@
         });
 
       },
-
+      /** 提交按钮 */
+      submitForm: function() {
+        this.$refs["form"].validate(valid => {
+          if (valid) {
+            if (this.form.menuId != undefined) {
+              updateMenu(this.form).then(response => {
+                if (response.code === 200) {
+                  this.msgSuccess("修改成功");
+                  this.open = false;
+                  this.getList();
+                }
+              });
+            } else {
+              addMenu(this.form).then(response => {
+                if (response.code === 200) {
+                  this.msgSuccess("新增成功");
+                  this.open = false;
+                  this.getList();
+                }
+              });
+            }
+          }
+        });
+      },
+      /** 新增按钮操作 */
+      handleAdd() {
+        this.reset();
+        this.getTreeselect();
+        this.open = true;
+        this.title = "添加书签菜单";
+      },
+      // 表单重置
+      reset() {
+        this.form = {
+          menuId: undefined,
+          userId: undefined,
+          menuName: undefined,
+          menuUrl: undefined,
+          menuIcon: undefined,
+          parentId: undefined,
+          menuOrder: undefined,
+          createTime: undefined
+        };
+        this.resetForm("form");
+      },
 
     addDiyDom:function(treeId, treeNode) {
       // console.log("自定义ztree:"+treeId.tId+"___treeNode："+treeNode.tId)
@@ -332,9 +403,8 @@
 
 
       editBookmark:function(e){
-
-        alert("this button");
-
+        var that=this;
+        that.handleAdd();//新增
         if ( e && e.stopPropagation )
         //因此它支持W3C的stopPropagation()方法
           e.stopPropagation();
@@ -715,6 +785,10 @@
   }
   .sq-dropdown div{
     display: none!important;
+  }
+  .labelname{
+    font-weight: 800;
+    color: rgb(0, 0, 0);
   }
 
 
