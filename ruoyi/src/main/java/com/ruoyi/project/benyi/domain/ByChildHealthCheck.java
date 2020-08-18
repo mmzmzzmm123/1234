@@ -3,6 +3,7 @@ package com.ruoyi.project.benyi.domain;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.ruoyi.project.system.domain.ByClass;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.framework.aspectj.lang.annotation.Excel;
@@ -120,6 +121,8 @@ public class ByChildHealthCheck extends BaseEntity {
     @Excel(name = "创建人")
 
     private ByChild byChild;
+
+    private ByClass byClass;
 
     private Long createuser;
 
@@ -272,6 +275,7 @@ public class ByChildHealthCheck extends BaseEntity {
                 .append("createtime", getCreatetime())
                 .append("createuser", getCreateuser())
                 .append("byChild", getByChild())
+                .append("byClass", getByChild())
                 .toString();
     }
 
@@ -289,5 +293,13 @@ public class ByChildHealthCheck extends BaseEntity {
 
     public void setByChild(ByChild byChild) {
         this.byChild = byChild;
+    }
+
+    public ByClass getByClass() {
+        return byClass;
+    }
+
+    public void setByClass(ByClass byClass) {
+        this.byClass = byClass;
     }
 }

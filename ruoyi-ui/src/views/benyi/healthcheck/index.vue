@@ -1,10 +1,21 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
-      
+    <el-form
+      :model="queryParams"
+      ref="queryForm"
+      :inline="true"
+      label-width="68px"
+      clearable
+      size="small"
+    >
       <el-form-item label="班级信息" prop="classInfo">
-        <el-select v-model="queryParams.classInfo" placeholder="请选择班级信息" clearable size="small">
-          <el-option label="请选择字典生成" value />
+        <el-select v-model="queryParams.classInfo" placeholder="请选择班级信息">
+          <el-option
+            v-for="dict in classInfoOptions"
+            :key="dict.bjbh"
+            :label="dict.bjmc"
+            :value="dict.bjbh"
+          ></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="检查日期" prop="checkTime">
@@ -171,13 +182,25 @@
     <!-- 添加或修改儿童常规体检记录对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="班级信息">
-          <el-select v-model="form.classInfo" placeholder="请选择班级信息">
-            <el-option label="请选择字典生成" value />
+        <el-form-item label="班级信息" prop="classInfo">
+          <el-select v-model="form.classInfo" placeholder="请选择班级信息" @change="classInfoChange">
+            <el-option
+              v-for="dict in classInfoOptions"
+              :key="dict.bjbh"
+              :label="dict.bjmc"
+              :value="dict.bjbh"
+            ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="学校名称" prop="schoolName">
-          <el-input v-model="form.schoolName" placeholder="请输入学校名称" />
+        <el-form-item label="幼儿id" prop="childId">
+          <el-select v-model="form.childId" placeholder="请选择班级信息"  >
+            <el-option
+              v-for="dict in (childInfoOptions.filter(c=>c.classid == this.form.classInfo))"
+              :key="dict.id"
+              :label="dict.name"
+              :value="dict.id"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="检查日期" prop="checkTime">
           <el-date-picker
@@ -255,9 +278,6 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="创建人" prop="createuser">
-          <el-input v-model="form.createuser" placeholder="请输入创建人" />
-        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -276,6 +296,8 @@ import {
   updateHealthcheck,
   exportHealthcheck
 } from "@/api/benyi/healthcheck";
+import { listClass } from "@/api/system/class";
+import { listChild } from "@/api/benyi/child";
 
 export default {
   name: "Healthcheck",
@@ -297,6 +319,10 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
+      //班级类型 字典
+      classInfoOptions: [],
+      // 班级下幼儿列表
+      childInfoOptions: [],
       // 视力评价字典
       visionAssessmentOptions: [],
       // 是否龋齿字典
@@ -307,6 +333,7 @@ export default {
       heightAssessmentOptions: [],
       // 总评价字典
       totalAssessmentOptions: [],
+
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -330,12 +357,15 @@ export default {
       },
       // 表单参数
       form: {},
+      
       // 表单校验
       rules: {}
     };
   },
   created() {
     this.getList();
+    this.getclassinfo();
+
     this.getDicts("sys_vision_assessment").then(response => {
       this.visionAssessmentOptions = response.data;
     });
@@ -353,6 +383,14 @@ export default {
     });
   },
   methods: {
+    // 班级选择框变化后触发
+    classInfoChange() {
+      this.queryParams.childId = null;
+      listChild(null).then(response => {
+        this.childInfoOptions = response.rows;
+      });
+
+    },
     /** 查询儿童常规体检记录列表 */
     getList() {
       this.loading = true;
@@ -360,6 +398,12 @@ export default {
         this.healthcheckList = response.rows;
         this.total = response.total;
         this.loading = false;
+      });
+    },
+    // 查询所有班级信息
+    getclassinfo() {
+      listClass(null).then(response => {
+        this.classInfoOptions = response.rows;
       });
     },
     // 视力评价字典翻译
