@@ -65,7 +65,7 @@ public class SysDeptController extends BaseController {
     /**
      * 根据用户获取部门列表信息-用于切换岗位
      */
-    @PreAuthorize("@ss.hasPermi('system:user:query')")
+    //@PreAuthorize("@ss.hasPermi('system:user:query')")
     @GetMapping(value = {"/getDeptsInfo"})
     public TableDataInfo getDeptsInfo() {
         Long userId = SecurityUtils.getLoginUser().getUser().getUserId();
@@ -76,7 +76,7 @@ public class SysDeptController extends BaseController {
     /**
      * 切换岗位
      */
-    @PreAuthorize("@ss.hasPermi('system:user:query')")
+    //@PreAuthorize("@ss.hasPermi('system:user:query')")
     @PostMapping(value = {"/changeDept/{deptId}"})
     public AjaxResult changeDept(@PathVariable Long deptId) {
         System.out.println("开始切换...");

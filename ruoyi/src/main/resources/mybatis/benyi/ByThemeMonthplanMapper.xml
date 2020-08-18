@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.benyi.mapper.ByThemeMonthplanMapper">
+
+    <resultMap type="ByThemeMonthplan" id="ByThemeMonthplanResult">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="classid" column="classid"/>
+        <result property="xnxq" column="xnxq"/>
+        <result property="month" column="month"/>
+        <result property="themes" column="themes"/>
+        <result property="selfthemes" column="selfthemes"/>
+        <result property="support" column="support"/>
+        <result property="remarks" column="remarks"/>
+        <result property="createuserid" column="createuserid"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <sql id="selectByThemeMonthplanVo">
+        select id, name, classid, xnxq, month, themes, selfthemes, support, remarks, createuserid, create_time from by_theme_monthplan
+    </sql>
+
+    <select id="selectByThemeMonthplanList" parameterType="ByThemeMonthplan" resultMap="ByThemeMonthplanResult">
+        <include refid="selectByThemeMonthplanVo"/>
+        <where>
+            <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
+            <if test="classid != null  and classid != ''">and classid = #{classid}</if>
+            <if test="xnxq != null  and xnxq != ''">and xnxq = #{xnxq}</if>
+            <if test="month != null  and month != ''">and month = #{month}</if>
+            <if test="themes != null  and themes != ''">and themes = #{themes}</if>
+            <if test="selfthemes != null  and selfthemes != ''">and selfthemes = #{selfthemes}</if>
+            <if test="support != null  and support != ''">and support = #{support}</if>
+            <if test="remarks != null  and remarks != ''">and remarks = #{remarks}</if>
+            <if test="createuserid != null ">and createuserid = #{createuserid}</if>
+        </where>
+    </select>
+
+    <select id="selectByThemeMonthplanById" parameterType="Long" resultMap="ByThemeMonthplanResult">
+        <include refid="selectByThemeMonthplanVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertByThemeMonthplan" parameterType="ByThemeMonthplan" useGeneratedKeys="true" keyProperty="id">
+        insert into by_theme_monthplan
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null  and name != ''">name,</if>
+            <if test="classid != null  and classid != ''">classid,</if>
+            <if test="xnxq != null  and xnxq != ''">xnxq,</if>
+            <if test="month != null  and month != ''">month,</if>
+            <if test="themes != null  and themes != ''">themes,</if>
+            <if test="selfthemes != null  and selfthemes != ''">selfthemes,</if>
+            <if test="support != null  and support != ''">support,</if>
+            <if test="remarks != null  and remarks != ''">remarks,</if>
+            <if test="createuserid != null ">createuserid,</if>
+            <if test="createTime != null ">create_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null  and name != ''">#{name},</if>
+            <if test="classid != null  and classid != ''">#{classid},</if>
+            <if test="xnxq != null  and xnxq != ''">#{xnxq},</if>
+            <if test="month != null  and month != ''">#{month},</if>
+            <if test="themes != null  and themes != ''">#{themes},</if>
+            <if test="selfthemes != null  and selfthemes != ''">#{selfthemes},</if>
+            <if test="support != null  and support != ''">#{support},</if>
+            <if test="remarks != null  and remarks != ''">#{remarks},</if>
+            <if test="createuserid != null ">#{createuserid},</if>
+            <if test="createTime != null ">#{createTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateByThemeMonthplan" parameterType="ByThemeMonthplan">
+        update by_theme_monthplan
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null  and name != ''">name = #{name},</if>
+            <if test="classid != null  and classid != ''">classid = #{classid},</if>
+            <if test="xnxq != null  and xnxq != ''">xnxq = #{xnxq},</if>
+            <if test="month != null  and month != ''">month = #{month},</if>
+            <if test="themes != null  and themes != ''">themes = #{themes},</if>
+            <if test="selfthemes != null  and selfthemes != ''">selfthemes = #{selfthemes},</if>
+            <if test="support != null  and support != ''">support = #{support},</if>
+            <if test="remarks != null  and remarks != ''">remarks = #{remarks},</if>
+            <if test="createuserid != null ">createuserid = #{createuserid},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteByThemeMonthplanById" parameterType="Long">
+        delete from by_theme_monthplan where id = #{id}
+    </delete>
+
+    <delete id="deleteByThemeMonthplanByIds" parameterType="String">
+        delete from by_theme_monthplan where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

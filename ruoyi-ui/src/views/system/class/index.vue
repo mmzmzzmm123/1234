@@ -128,7 +128,14 @@
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['system:class:remove']"
-          >删除</el-button>
+          >删除班级</el-button>
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-delete"
+            @click="handleEditJs(scope.row)"
+            v-hasPermi="['system:class:edit']"
+          >清空教师</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -206,7 +213,8 @@ import {
   delClass,
   addClass,
   updateClass,
-  exportClass
+  exportClass,
+  delJsClass
 } from "@/api/system/class";
 import { getUsersByRoleId } from "@/api/system/user";
 
@@ -396,6 +404,22 @@ export default {
         .then(() => {
           this.getList();
           this.msgSuccess("删除成功");
+        })
+        .catch(function() {});
+    },
+    handleEditJs(row) {
+      const bjbhs = row.bjbh || this.ids;
+      this.$confirm("是否确认清空选中的班级教师信息?", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(function() {
+          return delJsClass(bjbhs);
+        })
+        .then(() => {
+          this.getList();
+          this.msgSuccess("清空成功");
         })
         .catch(function() {});
     },

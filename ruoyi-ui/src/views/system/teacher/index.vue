@@ -123,7 +123,7 @@
 
     <!-- 添加或修改教师基本信息对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px">
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px" :disabled="flag">
+      <el-form ref="form" :model="form" :rules="rules" label-width="100px" :disabled="flag">
         <el-form-item label="id" prop="id" v-show="false">
           <el-input v-model="form.id" />
         </el-form-item>

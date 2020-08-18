@@ -43,6 +43,14 @@ export function delClass(bjbh) {
   })
 }
 
+// 清空班级教师信息
+export function delJsClass(bjbh) {
+  return request({
+    url: '/system/class/deljs/' + bjbh,
+    method: 'delete'
+  })
+}
+
 // 导出班级信息
 export function exportClass(query) {
   return request({
