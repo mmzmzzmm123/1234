@@ -67,7 +67,7 @@
               <span class="el-dropdown-link">
           <i class="el-icon-plus" style="font-size: 18px;"/>
              </span>
-            <el-dropdown-menu  slot="dropdown" >
+            <el-dropdown-menu  slot="dropdown" class="sq-dropdown">
               <el-dropdown-item class="filter-item" icon="el-icon-plus" command="a">添加连接</el-dropdown-item>
               <el-dropdown-item class="filter-item" icon="el-icon-plus" command="b">添加文本</el-dropdown-item>
               <el-dropdown-item class="filter-item" icon="el-icon-plus" command="d" >导入书签</el-dropdown-item>
@@ -86,13 +86,11 @@
               <span class="el-dropdown-link">
            <el-avatar  :size="28" src="https://up.raindrop.io/collection/templates/social-media-logos-6/97social.png"></el-avatar>
               </span>
-            <el-dropdown-menu  slot="dropdown" >
+            <el-dropdown-menu  slot="dropdown" class="sq-dropdown">
               <el-dropdown-item class="filter-item" icon="el-icon-plus" command="a">外观显示</el-dropdown-item>
               <el-dropdown-item class="filter-item" icon="el-icon-plus" command="b">用户中心</el-dropdown-item>
               <el-dropdown-item class="filter-item" icon="el-icon-plus" command="d" >建议反馈</el-dropdown-item>
-              <el-dropdown-item class="filter-item" icon="el-icon-plus" command="e" divided>退出登录</el-dropdown-item>
-
-
+              <el-dropdown-item class="filter-item" icon="el-icon-plus" command="e" >退出登录</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </div>
@@ -127,7 +125,7 @@
 
 
 </template>
-
+<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
 
 <script>
   // 下面的是单个Vue组件引用的外部静态文件，也可以在main.js文件中引用
@@ -278,7 +276,7 @@
   	if (confCount>0) return;
   	//if (treeNode.parentNode && treeNode.parentNode.id!=1) return;
   	var switchObjspan = $("#" + treeNode.tId + "_span");
-  	var editStr = "<span class="+treeNode.tId+"_sz onclick='alert(2222);return false;' style='color: #9e9e9e;float:right;display: inline-block;margin-right: 15px;font-size:8px' onfocus='this.blur();'><i class='el-icon-edit'></i></span>";
+  	var editStr = "<span class="+treeNode.tId+"_sz onclick='editBookmark()' style='color: #9e9e9e;float:right;display: inline-block;margin-right: 15px;font-size:8px' onfocus='this.blur();'><i class='el-icon-edit'></i></span>";
   	switchObjspan.after(editStr);
 
     $("." + treeNode.tId + "_count").unbind().remove();
@@ -302,6 +300,7 @@
   },
   //点击展开
    beforeClick:function(treeId, treeNode) {
+
     //if (treeNode.level != 19990 ) {
        var zTree = $.fn.zTree.getZTreeObj("treeDemo");
        zTree.expandNode(treeNode);
@@ -332,31 +331,33 @@
 
 
 
+      editBookmark:function(e){
 
-      editBookmark:function(){
-        var that=this;
         alert("this button");
-// //如果提供了事件对象，则这是一个非IE浏览器
-//         if ( e && e.stopPropagation )
-//         //因此它支持W3C的stopPropagation()方法
-//           e.stopPropagation();
-//         else
-//         //否则，我们需要使用IE的方式来取消事件冒泡
-//           window.event.cancelBubble = true;
+
+        if ( e && e.stopPropagation )
+        //因此它支持W3C的stopPropagation()方法
+          e.stopPropagation();
+        else
+        //否则，我们需要使用IE的方式来取消事件冒泡
+          window.event.cancelBubble = true;
+
+        return false;
+
 
       },
 
     },
     mounted(){
 
-
+      window['editBookmark'] = () => {
+        this.editBookmark()
+      }
 
     },
     handleCommand(command) {
       this.$message('click on item ' + command);
     },
-
-
 
 
 
@@ -707,6 +708,15 @@
     margin-right: 24px;
     margin-top: 10px;
   }
+  .sq-dropdown{
+    top:33px!important;
+    box-shadow: 0 2px 15px 0 rgba(0,0,0,.2)!important;
+    font-weight: 800!important;
+  }
+  .sq-dropdown div{
+    display: none!important;
+  }
+
 
 
 

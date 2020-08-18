@@ -37,6 +37,10 @@
   .sousouleft-switch{
     display: block;
   }
+
+  .sousouright-icon{
+    margin-right: 13px;
+  }
 }
 /* iphone6 7 8 plus */
 @media screen and (max-width: 414px) {
