@@ -242,8 +242,8 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="体重(kg)" prop="weight">
-          <el-input v-model="form.weight" placeholder="请输入体重" />
+        <el-form-item label="体重(kg)" prop="weight" >
+          <el-input v-model="form.weight" placeholder="请输入体重" maxlength="6" />
         </el-form-item>
         <el-form-item label="体重评价">
           <el-select v-model="form.weightAssessment" placeholder="请选择体重评价">
@@ -256,7 +256,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="身高(cm)" prop="height">
-          <el-input v-model="form.height" placeholder="请输入身高" />
+          <el-input v-model="form.height" placeholder="请输入身高" maxlength="3" />
         </el-form-item>
         <el-form-item label="身高评价">
           <el-select v-model="form.heightAssessment" placeholder="请选择身高评价">
@@ -376,10 +376,10 @@ export default {
           { required: true, message: "总评价不能为空", trigger: "blur" }
         ],
         weight: [
-          { required: true, message: "输入内容必须是数字,且不能超过五位数", max: 6, trigger: "blur" }
+          { required: true, message: "输入内容必须是数字,且不能超过六位数",  trigger: "blur" }
         ],
         height: [
-          { required: true, message: "输入内容必须是数字,且不能超过三位数", max: 3, trigger: "blur" }
+          { required: true, message: "输入内容必须是数字,且不能超过三位数",  trigger: "blur" }
         ],
       }
     };
