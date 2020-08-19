@@ -113,28 +113,29 @@
 
 
 <!--  编辑弹窗-->
-  <el-dialog  :title="title"  :visible.sync="open" width="500px" center append-to-body>
+  <el-dialog  :title="title"  :visible.sync="open" width="500px"  append-to-body>
     <el-form ref="form" :model="form" :rules="rules" label-width="80px">
       <el-form-item prop="menuName">
         <div class="labelname">菜单名称</div>
-        <el-input v-model="form.menuName" placeholder="请输入菜单名称" />
+        <el-input class="custom-input" v-model="form.menuName" placeholder="请输入菜单名称" />
       </el-form-item>
       <el-form-item  prop="menuIcon">
         <div class="labelname">菜单图标</div>
-        <el-input v-model="form.menuIcon" placeholder="请输入菜单图标" />
+        <el-input class="custom-input" v-model="form.menuIcon" placeholder="请输入菜单图标" />
       </el-form-item>
       <el-form-item  prop="parentId">
         <div class="labelname">上级菜单</div>
-        <treeselect v-model="form.parentId" :options="menuOptions" :normalizer="normalizer" placeholder="请选择父菜单id" />
+        <treeselect class="custom-input"  v-model="form.parentId" :options="menuOptions" :normalizer="normalizer" placeholder="请选择父菜单id" />
       </el-form-item>
       <el-form-item  prop="menuOrder">
         <div class="labelname">排序</div>
-        <el-input v-model="form.menuOrder" placeholder="请输入菜单排序" />
+        <el-input class="custom-input" v-model="form.menuOrder" placeholder="请输入菜单排序" />
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
-      <el-button type="primary" @click="submitForm">确 定</el-button>
-      <el-button @click="cancel">取 消</el-button>
+      <el-button type="primary"  round  @click="submitForm">确定</el-button>
+      <el-button round  @click="cancel">取消</el-button>
+
     </div>
   </el-dialog>
 
@@ -789,8 +790,25 @@
   .labelname{
     font-weight: 800;
     color: rgb(0, 0, 0);
+    float: left;
+    margin-bottom: -10px;
   }
-
+  .el-form-item__content{
+    margin-left: 0px!important;
+  }
+  .el-dialog__body{
+    padding-top: 0px!important;
+  }
+  .custom-input input{
+    border: 0px;
+    border-radius: 0px;
+    border-bottom: 1px solid #C0C4CC;
+  }
+  .custom-input input:focus{
+    border: 0px;
+    border-radius: 0px;
+    border-bottom: 1px solid #695fff;
+  }
 
 
 
