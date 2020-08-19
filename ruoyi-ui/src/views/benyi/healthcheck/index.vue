@@ -114,8 +114,8 @@
     <el-table v-loading="loading" :data="healthcheckList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="体检表编号" align="center" prop="id" />
-      <el-table-column label="幼儿ID" align="center" prop="childId" />
-      <el-table-column label="班级信息" align="center" prop="classInfo" />
+      <el-table-column label="幼儿姓名" align="center" prop="byChild.name" />
+      <el-table-column label="班级信息" align="center" prop="byClass.bjmc" />
       <el-table-column label="检查日期" align="center" prop="checkTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.checkTime, '{y}-{m}-{d}') }}</span>
@@ -148,7 +148,7 @@
       />
       <el-table-column label="创建时间" align="center" prop="createtime" width="180">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.createtime, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.createtime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -242,7 +242,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="体重" prop="weight">
+        <el-form-item label="体重(kg)" prop="weight">
           <el-input v-model="form.weight" placeholder="请输入体重" />
         </el-form-item>
         <el-form-item label="体重评价">
@@ -255,7 +255,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="身高" prop="height">
+        <el-form-item label="身高(cm)" prop="height">
           <el-input v-model="form.height" placeholder="请输入身高" />
         </el-form-item>
         <el-form-item label="身高评价">
@@ -359,7 +359,29 @@ export default {
       form: {},
       
       // 表单校验
-      rules: {}
+      rules: {
+        classInfo: [
+          { required: true, message: "班级信息不能为空", trigger: "blur" }
+        ],
+        childId: [
+          { required: true, message: "幼儿姓名不能为空", trigger: "blur" }
+        ],
+        checkTime: [
+          { required: true, message: "检查时间不能为空", trigger: "blur" }
+        ],
+        doctorName: [
+          { required: true, message: "保健医不能为空", trigger: "blur" }
+        ],
+        totalAssessment: [
+          { required: true, message: "总评价不能为空", trigger: "blur" }
+        ],
+        weight: [
+          { required: true, message: "输入内容必须是数字,且不能超过五位数", max: 6, trigger: "blur" }
+        ],
+        height: [
+          { required: true, message: "输入内容必须是数字,且不能超过三位数", max: 3, trigger: "blur" }
+        ],
+      }
     };
   },
   created() {

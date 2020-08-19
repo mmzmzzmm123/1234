@@ -82,7 +82,7 @@ public class ByChildHealthCheck extends BaseEntity {
      * 体重
      */
     @Excel(name = "体重")
-    private Integer weight;
+    private Double weight;
 
     /**
      * 体重评价
@@ -94,7 +94,7 @@ public class ByChildHealthCheck extends BaseEntity {
      * 身高
      */
     @Excel(name = "身高")
-    private Double height;
+    private Long height;
 
     /**
      * 身高评价
@@ -112,6 +112,7 @@ public class ByChildHealthCheck extends BaseEntity {
      * 创建时间
      */
     @Excel(name = "创建时间")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createtime;
 
 
@@ -206,11 +207,11 @@ public class ByChildHealthCheck extends BaseEntity {
         return decayedTooth;
     }
 
-    public void setWeight(Integer weight) {
+    public void setWeight(Double weight) {
         this.weight = weight;
     }
 
-    public Integer getWeight() {
+    public Double getWeight() {
         return weight;
     }
 
@@ -222,11 +223,11 @@ public class ByChildHealthCheck extends BaseEntity {
         return weightAssessment;
     }
 
-    public void setHeight(Double height) {
+    public void setHeight(Long height) {
         this.height = height;
     }
 
-    public Double getHeight() {
+    public Long getHeight() {
         return height;
     }
 

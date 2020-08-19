@@ -1,5 +1,6 @@
 package com.ruoyi.project.benyi.controller;
 
+import java.util.Date;
 import java.util.List;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,6 +77,7 @@ public class ByChildHealthCheckController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody ByChildHealthCheck byChildHealthCheck)
     {
+        byChildHealthCheck.setCreatetime(new Date());
         return toAjax(byChildHealthCheckService.insertByChildHealthCheck(byChildHealthCheck));
     }
 
@@ -87,6 +89,7 @@ public class ByChildHealthCheckController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody ByChildHealthCheck byChildHealthCheck)
     {
+
         return toAjax(byChildHealthCheckService.updateByChildHealthCheck(byChildHealthCheck));
     }
 
