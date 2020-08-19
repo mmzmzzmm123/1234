@@ -1,6 +1,6 @@
 ## 平台简介
 上海群体教师发展评估系统，主要上海闵行用于骨干系列评选、见习之星评选等教师评选活动。
-##技术架构
+## 技术架构
 * 前端采用Vue、Element UI。
 * 后端采用Spring Boot、Spring Security、Redis & Jwt。
 * 权限认证使用Jwt，支持多终端认证系统。
