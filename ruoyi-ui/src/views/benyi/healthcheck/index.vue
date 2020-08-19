@@ -53,7 +53,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="创建时间" prop="createtime">
+      <!-- <el-form-item label="创建时间" prop="createtime">
         <el-date-picker
           clearable
           size="small"
@@ -63,7 +63,7 @@
           value-format="yyyy-MM-dd"
           placeholder="选择创建时间"
         ></el-date-picker>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -192,7 +192,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="幼儿id" prop="childId">
+        <el-form-item label="幼儿姓名" prop="childId">
           <el-select v-model="form.childId" placeholder="请选择班级信息"  >
             <el-option
               v-for="dict in (childInfoOptions.filter(c=>c.classid == this.form.classInfo))"
