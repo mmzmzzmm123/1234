@@ -11,13 +11,14 @@
         />
       </el-form-item>
       <el-form-item label="所属班级" prop="classid">
-        <el-input
-          v-model="queryParams.classid"
-          placeholder="请输入所属班级"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+        <el-select v-model="queryParams.classid" placeholder="请选择班级">
+          <el-option
+            v-for="dict in classOptions"
+            :key="dict.bjbh"
+            :label="dict.bjmc"
+            :value="dict.bjbh"
+          ></el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="学年学期" prop="xnxq">
         <el-input
@@ -111,24 +112,35 @@
     />
 
     <!-- 添加或修改主题整合月计划对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="计划名称" prop="name">
-          <el-input v-model="form.name" placeholder="请输入计划名称" />
-        </el-form-item>
+    <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="90px">
         <el-form-item label="所属班级" prop="classid">
-          <el-input v-model="form.classid" placeholder="请输入所属班级" />
-        </el-form-item>
-        <el-form-item label="学年学期" prop="xnxq">
-          <el-input v-model="form.xnxq" placeholder="请输入学年学期" />
+          <el-select
+            v-model="form.classid"
+            placeholder="请选择班级"
+            @change="getClassName"
+            :disabled="disable"
+          >
+            <el-option
+              v-for="dict in classOptions"
+              :key="dict.bjbh"
+              :label="dict.bjmc"
+              :value="dict.bjbh"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="计划月份" prop="month">
-          <el-input v-model="form.month" placeholder="请输入计划月份" />
+          <el-date-picker
+            v-model="form.month"
+            type="month"
+            placeholder="选择计划月份"
+            :disabled="disable"
+          ></el-date-picker>
         </el-form-item>
-        <el-form-item label="本月主题" prop="themes">
+        <el-form-item label="主题" prop="themes">
           <el-input v-model="form.themes" type="textarea" placeholder="请输入内容" />
         </el-form-item>
-        <el-form-item label="本月自定义主题" prop="selfthemes">
+        <el-form-item label="自定义主题" prop="selfthemes">
           <el-input v-model="form.selfthemes" type="textarea" placeholder="请输入内容" />
         </el-form-item>
         <el-form-item label="家长支持" prop="support">
@@ -155,6 +167,8 @@ import {
   updateMonthplan,
 } from "@/api/benyi/thememonthplan";
 
+import { listClass } from "@/api/system/class";
+
 export default {
   name: "Monthplan",
   data() {
@@ -169,8 +183,12 @@ export default {
       multiple: true,
       // 总条数
       total: 0,
+      //是否
+      disable: false,
       // 主题整合月计划表格数据
       monthplanList: [],
+      //班级
+      classOptions: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -192,13 +210,48 @@ export default {
       // 表单参数
       form: {},
       // 表单校验
-      rules: {},
+      rules: {
+        classid: [{ required: true, message: "班级不能为空", trigger: "blur" }],
+        month: [
+          { required: true, message: "计划月份不能为空", trigger: "blur" },
+        ],
+        themes: [{ required: true, message: "主题不能为空", trigger: "blur" }],
+      },
     };
   },
   created() {
     this.getList();
+    this.getClassList();
   },
   methods: {
+    getClassName(val) {
+      //locations是v-for里面的也是datas里面的值
+      let obj = {};
+      obj = this.classOptions.find((item) => {
+        return item.bjbh === val;
+      });
+      let getName = "";
+      getName = obj.bjmc;
+      this.form.name = getName;
+    },
+    // 字典翻译
+    classFormat(row, column) {
+      // return this.selectDictLabel(this.classOptions, row.classid);
+      var actions = [];
+      var datas = this.classOptions;
+      Object.keys(datas).map((key) => {
+        if (datas[key].bjbh == "" + row.classid) {
+          actions.push(datas[key].bjmc);
+          return false;
+        }
+      });
+      return actions.join("");
+    },
+    getClassList() {
+      listClass(null).then((response) => {
+        this.classOptions = response.rows;
+      });
+    },
     /** 查询主题整合月计划列表 */
     getList() {
       this.loading = true;
@@ -250,7 +303,8 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加主题整合月计划";
+      this.title = "添加<主题整合>月计划";
+      this.disable = false;
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -259,7 +313,8 @@ export default {
       getMonthplan(id).then((response) => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改主题整合月计划";
+        this.title = "修改<主题整合>月计划";
+        this.disable = true;
       });
     },
     /** 提交按钮 */
