@@ -41,6 +41,15 @@
   .sousouright-icon{
     margin-right: 13px;
   }
+.addbookmarkurl .el-dialog{
+  width: 380px!important;
+}
+
+  .addbookmarkurl-input {
+    width: 73%!important;
+  }
+
+
 }
 /* iphone6 7 8 plus */
 @media screen and (max-width: 414px) {

@@ -113,7 +113,7 @@
 
 
 <!--  编辑弹窗-->
-  <el-dialog  :title="title"  :visible.sync="open" width="500px"  append-to-body>
+  <el-dialog  :title="title"  :visible.sync="open" width="500px" class="menuedit"  append-to-body>
     <el-form ref="form" :model="form" :rules="rules" label-width="80px">
       <el-form-item prop="menuName">
         <div class="labelname">菜单名称</div>
@@ -141,6 +141,16 @@
 
 
 
+
+  <!-- 添加链接-->
+    <el-dialog  title="添加链接"  :visible.sync="addurlopen" width="500px"  append-to-body class="addbookmarkurl">
+
+
+      <el-input  v-model="bookamkrurl" placeholder="输入链接地址 例：https://withpinbox.com" class="addbookmarkurl-input"  />
+
+      <el-button  plain  class="addbookmarkurl-button"  round  @click="submitForm">确定</el-button>
+
+    </el-dialog>
 
 
 
@@ -185,8 +195,12 @@
         menuOptions: [],
         // 弹出层标题
         title: "",
-        // 是否显示弹出层
+        // 是否显示弹出层 编辑添加
         open: false,
+        //书签URL
+        bookamkrurl:'',
+        //添加url
+        addurlopen:true,
         // 表单参数
         form: {},
         // 表单校验
@@ -809,6 +823,51 @@
     border-radius: 0px;
     border-bottom: 1px solid #695fff;
   }
+
+  /*添加bookmarkurl*/
+  .addbookmarkurl input{
+    border: 0px;
+    border-radius: 0px;
+    border-bottom: 1px solid #409EFF;
+  }
+  .addbookmarkurl input:focus{
+    border-bottom: 1px solid #409EFF;
+  }
+  .addbookmarkurl input:hover{
+
+    border-bottom: 1px solid #409EFF;
+  }
+
+
+  .addbookmarkurl .el-dialog{
+    top: 40%;
+  }
+
+
+  .addbookmarkurl .el-dialog__body{
+    padding-right: 10px;
+    height: 60px!important;
+  }
+
+  .addbookmarkurl-input {
+    width: 82%!important;
+    float: left;
+    font-size: 13px;
+  }
+ .addbookmarkurl-button {
+   float: left;
+   margin-left: 5px;
+   border: 1px solid #409EFF!important;
+  }
+  .addbookmarkurl-button:hover {
+  background-color: #409EFF!important;
+    color: #FFFFFF!important;
+  }
+
+  .el-dialog{
+    border-radius: 10px!important;
+  }
+
 
 
 
