@@ -97,7 +97,14 @@
     <el-table v-loading="loading" :data="jdxList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="标识" align="center" prop="id" /> -->
-      <el-table-column label="基地校名称" align="center" prop="jdxmc" />
+      <!-- <el-table-column label="基地校名称" align="center" prop="jdxmc" /> -->
+      <el-table-column label="基地校名称" align="center" :show-overflow-tooltip="true">
+        <template slot-scope="scope">
+          <router-link :to="'/jxjs/jdx/jxjsjbxx/data/' + scope.row.id" class="link-type">
+            <span>{{ scope.row.jdxmc }}</span>
+          </router-link>
+        </template>
+      </el-table-column>
       <!-- <el-table-column label="学校类别" align="center" prop="xxlb" /> -->
       <el-table-column label="学校办别" align="center" prop="xxbb" :formatter="xxbbFormat" />
       <el-table-column label="办学类型" align="center" prop="bxlx" :formatter="bxlxFormat" />
@@ -182,11 +189,35 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+
+    <!-- 添加或修改基地校对话框 -->
+    <el-dialog title="基地校分配见习教师" :visible.sync="open_fpjs" width="600px" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="100px">
+        <el-table :data="jxjsjbxxList" @selection-change="handleSelectionChange">
+          <el-table-column type="selection" width="55" align="center" />
+          <!-- <el-table-column label="编号" align="center" prop="id" /> -->
+          <el-table-column label="姓名" align="center" prop="name" />
+          <!-- <el-table-column label="性别" align="center" prop="xb" :formatter="xbFormat" />
+          <el-table-column label="政治面貌" align="center" prop="zzmm" :formatter="zzmmFormat" />
+          <el-table-column label="民族" align="center" prop="mz" :formatter="mzFormat" />
+          <el-table-column label="学历" align="center" prop="xl" :formatter="xlFormat" />
+          <el-table-column label="学位" align="center" prop="xw" :formatter="xwFormat" />
+          <el-table-column label="是否师范生" align="center" prop="sfsfs" :formatter="sfsfsFormat" />-->
+          <el-table-column label="录取年份" align="center" prop="lqnf" />
+        </el-table>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button @click="cancel_fpjs">取 消</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import { listJdx, getJdx, delJdx, addJdx, updateJdx } from "@/api/jxjs/jdx";
+
+import { listJxjsjbxxnotjdx, getJxjsjbxx } from "@/api/jxjs/jxjsjbxx";
 
 export default {
   name: "Jdx",
@@ -206,10 +237,13 @@ export default {
       total: 0,
       // 基地校表格数据
       jdxList: [],
+      jxjsjbxxList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
       open: false,
+      // 是否显示弹出层
+      open_fpjs: false,
       //字典
       nfOptions: [],
       xxbbOptions: [],
@@ -281,10 +315,20 @@ export default {
         this.loading = false;
       });
     },
+    /** 查询基地校列表 */
+    getJxjsList() {
+      listJxjsjbxxnotjdx(null).then((response) => {
+        this.jxjsjbxxList = response.rows;
+      });
+    },
     // 取消按钮
     cancel() {
       this.open = false;
       this.reset();
+    },
+    // 取消按钮
+    cancel_fpjs() {
+      this.open_fpjs = false;
     },
     // 表单重置
     reset() {
@@ -377,6 +421,8 @@ export default {
     handleFpjs(row) {
       const ids = row.id || this.ids;
       console.log(ids);
+      this.open_fpjs = true;
+      this.getJxjsList();
     },
   },
 };

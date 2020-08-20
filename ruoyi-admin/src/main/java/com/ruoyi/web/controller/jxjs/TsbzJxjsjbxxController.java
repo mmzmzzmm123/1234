@@ -34,6 +34,18 @@ public class TsbzJxjsjbxxController extends BaseController
     private ITsbzJxjsjbxxService tsbzJxjsjbxxService;
 
     /**
+     * 查询见习教师基本信息列表，没有基地校的教师列表
+     */
+    @PreAuthorize("@ss.hasPermi('jxjs:jdx:list')")
+    @GetMapping("/listnotjdx")
+    public TableDataInfo listnotjdx(TsbzJxjsjbxx tsbzJxjsjbxx)
+    {
+        startPage();
+        List<TsbzJxjsjbxx> list = tsbzJxjsjbxxService.selectTsbzJxjsjbxxListnotjdx(tsbzJxjsjbxx);
+        return getDataTable(list);
+    }
+
+    /**
      * 查询见习教师基本信息列表
      */
     @PreAuthorize("@ss.hasPermi('jxjs:jxjsjbxx:list')")

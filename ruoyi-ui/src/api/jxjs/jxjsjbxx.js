@@ -9,6 +9,15 @@ export function listJxjsjbxx(query) {
   })
 }
 
+// 查询见习教师基本信息列表
+export function listJxjsjbxxnotjdx(query) {
+  return request({
+    url: '/jxjs/jxjsjbxx/listnotjdx',
+    method: 'get',
+    params: query
+  })
+}
+
 // 查询见习教师基本信息详细
 export function getJxjsjbxx(id) {
   return request({

@@ -1,33 +1,33 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.jxjs.mapper.TsbzJxjsjbxxMapper">
-    
+
     <resultMap type="TsbzJxjsjbxx" id="TsbzJxjsjbxxResult">
-        <result property="id"    column="id"    />
-        <result property="otherid"    column="otherid"    />
-        <result property="name"    column="name"    />
-        <result property="jxbh"    column="jxbh"    />
-        <result property="xb"    column="xb"    />
-        <result property="csrq"    column="csrq"    />
-        <result property="email"    column="email"    />
-        <result property="phone"    column="phone"    />
-        <result property="yzbm"    column="yzbm"    />
-        <result property="zzmm"    column="zzmm"    />
-        <result property="mz"    column="mz"    />
-        <result property="prdwid"    column="prdwid"    />
-        <result property="prdwmc"    column="prdwmc"    />
-        <result property="jdxid"    column="jdxid"    />
-        <result property="rjxd"    column="rjxd"    />
-        <result property="rjxk"    column="rjxk"    />
-        <result property="rjnj"    column="rjnj"    />
-        <result property="byyx"    column="byyx"    />
-        <result property="xl"    column="xl"    />
-        <result property="xw"    column="xw"    />
-        <result property="sfsfs"    column="sfsfs"    />
-        <result property="lqnf"    column="lqnf"    />
-        <result property="createTime"    column="create_time"    />
+        <result property="id" column="id"/>
+        <result property="otherid" column="otherid"/>
+        <result property="name" column="name"/>
+        <result property="jxbh" column="jxbh"/>
+        <result property="xb" column="xb"/>
+        <result property="csrq" column="csrq"/>
+        <result property="email" column="email"/>
+        <result property="phone" column="phone"/>
+        <result property="yzbm" column="yzbm"/>
+        <result property="zzmm" column="zzmm"/>
+        <result property="mz" column="mz"/>
+        <result property="prdwid" column="prdwid"/>
+        <result property="prdwmc" column="prdwmc"/>
+        <result property="jdxid" column="jdxid"/>
+        <result property="rjxd" column="rjxd"/>
+        <result property="rjxk" column="rjxk"/>
+        <result property="rjnj" column="rjnj"/>
+        <result property="byyx" column="byyx"/>
+        <result property="xl" column="xl"/>
+        <result property="xw" column="xw"/>
+        <result property="sfsfs" column="sfsfs"/>
+        <result property="lqnf" column="lqnf"/>
+        <result property="createTime" column="create_time"/>
     </resultMap>
 
     <sql id="selectTsbzJxjsjbxxVo">
@@ -36,36 +36,62 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectTsbzJxjsjbxxList" parameterType="TsbzJxjsjbxx" resultMap="TsbzJxjsjbxxResult">
         <include refid="selectTsbzJxjsjbxxVo"/>
-        <where>  
-            <if test="otherid != null  and otherid != ''"> and otherid = #{otherid}</if>
-            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
-            <if test="jxbh != null  and jxbh != ''"> and jxbh = #{jxbh}</if>
-            <if test="xb != null  and xb != ''"> and xb = #{xb}</if>
-            <if test="csrq != null "> and csrq = #{csrq}</if>
-            <if test="email != null  and email != ''"> and email = #{email}</if>
-            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
-            <if test="yzbm != null  and yzbm != ''"> and yzbm = #{yzbm}</if>
-            <if test="zzmm != null  and zzmm != ''"> and zzmm = #{zzmm}</if>
-            <if test="mz != null  and mz != ''"> and mz = #{mz}</if>
-            <if test="prdwid != null  and prdwid != ''"> and prdwid = #{prdwid}</if>
-            <if test="prdwmc != null  and prdwmc != ''"> and prdwmc = #{prdwmc}</if>
-            <if test="jdxid != null  and jdxid != ''"> and jdxid = #{jdxid}</if>
-            <if test="rjxd != null  and rjxd != ''"> and rjxd = #{rjxd}</if>
-            <if test="rjxk != null  and rjxk != ''"> and rjxk = #{rjxk}</if>
-            <if test="rjnj != null  and rjnj != ''"> and rjnj = #{rjnj}</if>
-            <if test="byyx != null  and byyx != ''"> and byyx = #{byyx}</if>
-            <if test="xl != null  and xl != ''"> and xl = #{xl}</if>
-            <if test="xw != null  and xw != ''"> and xw = #{xw}</if>
-            <if test="sfsfs != null  and sfsfs != ''"> and sfsfs = #{sfsfs}</if>
-            <if test="lqnf != null  and lqnf != ''"> and lqnf = #{lqnf}</if>
+        <where>
+            <if test="otherid != null  and otherid != ''">and otherid = #{otherid}</if>
+            <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
+            <if test="jxbh != null  and jxbh != ''">and jxbh = #{jxbh}</if>
+            <if test="xb != null  and xb != ''">and xb = #{xb}</if>
+            <if test="csrq != null ">and csrq = #{csrq}</if>
+            <if test="email != null  and email != ''">and email = #{email}</if>
+            <if test="phone != null  and phone != ''">and phone = #{phone}</if>
+            <if test="yzbm != null  and yzbm != ''">and yzbm = #{yzbm}</if>
+            <if test="zzmm != null  and zzmm != ''">and zzmm = #{zzmm}</if>
+            <if test="mz != null  and mz != ''">and mz = #{mz}</if>
+            <if test="prdwid != null  and prdwid != ''">and prdwid = #{prdwid}</if>
+            <if test="prdwmc != null  and prdwmc != ''">and prdwmc = #{prdwmc}</if>
+            <if test="jdxid != null  and jdxid != ''">and jdxid = #{jdxid}</if>
+            <if test="rjxd != null  and rjxd != ''">and rjxd = #{rjxd}</if>
+            <if test="rjxk != null  and rjxk != ''">and rjxk = #{rjxk}</if>
+            <if test="rjnj != null  and rjnj != ''">and rjnj = #{rjnj}</if>
+            <if test="byyx != null  and byyx != ''">and byyx = #{byyx}</if>
+            <if test="xl != null  and xl != ''">and xl = #{xl}</if>
+            <if test="xw != null  and xw != ''">and xw = #{xw}</if>
+            <if test="sfsfs != null  and sfsfs != ''">and sfsfs = #{sfsfs}</if>
+            <if test="lqnf != null  and lqnf != ''">and lqnf = #{lqnf}</if>
         </where>
     </select>
-    
+
+    <select id="selectTsbzJxjsjbxxListnotjdx" parameterType="TsbzJxjsjbxx" resultMap="TsbzJxjsjbxxResult">
+        <include refid="selectTsbzJxjsjbxxVo"/>
+        where jdxid is null
+        <if test="otherid != null  and otherid != ''">and otherid = #{otherid}</if>
+        <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
+        <if test="jxbh != null  and jxbh != ''">and jxbh = #{jxbh}</if>
+        <if test="xb != null  and xb != ''">and xb = #{xb}</if>
+        <if test="csrq != null ">and csrq = #{csrq}</if>
+        <if test="email != null  and email != ''">and email = #{email}</if>
+        <if test="phone != null  and phone != ''">and phone = #{phone}</if>
+        <if test="yzbm != null  and yzbm != ''">and yzbm = #{yzbm}</if>
+        <if test="zzmm != null  and zzmm != ''">and zzmm = #{zzmm}</if>
+        <if test="mz != null  and mz != ''">and mz = #{mz}</if>
+        <if test="prdwid != null  and prdwid != ''">and prdwid = #{prdwid}</if>
+        <if test="prdwmc != null  and prdwmc != ''">and prdwmc = #{prdwmc}</if>
+        <!--<if test="jdxid != null  and jdxid != ''"> and jdxid = #{jdxid}</if>-->
+        <if test="rjxd != null  and rjxd != ''">and rjxd = #{rjxd}</if>
+        <if test="rjxk != null  and rjxk != ''">and rjxk = #{rjxk}</if>
+        <if test="rjnj != null  and rjnj != ''">and rjnj = #{rjnj}</if>
+        <if test="byyx != null  and byyx != ''">and byyx = #{byyx}</if>
+        <if test="xl != null  and xl != ''">and xl = #{xl}</if>
+        <if test="xw != null  and xw != ''">and xw = #{xw}</if>
+        <if test="sfsfs != null  and sfsfs != ''">and sfsfs = #{sfsfs}</if>
+        <if test="lqnf != null  and lqnf != ''">and lqnf = #{lqnf}</if>
+    </select>
+
     <select id="selectTsbzJxjsjbxxById" parameterType="Long" resultMap="TsbzJxjsjbxxResult">
         <include refid="selectTsbzJxjsjbxxVo"/>
         where id = #{id}
     </select>
-        
+
     <insert id="insertTsbzJxjsjbxx" parameterType="TsbzJxjsjbxx">
         insert into tsbz_jxjsjbxx
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -92,7 +118,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="sfsfs != null">sfsfs,</if>
             <if test="lqnf != null">lqnf,</if>
             <if test="createTime != null">create_time,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
             <if test="otherid != null">#{otherid},</if>
@@ -117,7 +143,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="sfsfs != null">#{sfsfs},</if>
             <if test="lqnf != null">#{lqnf},</if>
             <if test="createTime != null">#{createTime},</if>
-         </trim>
+        </trim>
     </insert>
 
     <update id="updateTsbzJxjsjbxx" parameterType="TsbzJxjsjbxx">
@@ -154,10 +180,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteTsbzJxjsjbxxByIds" parameterType="String">
-        delete from tsbz_jxjsjbxx where id in 
+        delete from tsbz_jxjsjbxx where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>
-    
+
 </mapper>

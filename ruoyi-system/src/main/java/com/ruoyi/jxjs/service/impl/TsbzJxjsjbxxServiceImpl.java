@@ -45,6 +45,18 @@ public class TsbzJxjsjbxxServiceImpl implements ITsbzJxjsjbxxService
     }
 
     /**
+     * 查询见习教师基本信息列表
+     *
+     * @param tsbzJxjsjbxx 见习教师基本信息
+     * @return 见习教师基本信息
+     */
+    @Override
+    public List<TsbzJxjsjbxx> selectTsbzJxjsjbxxListnotjdx(TsbzJxjsjbxx tsbzJxjsjbxx)
+    {
+        return tsbzJxjsjbxxMapper.selectTsbzJxjsjbxxListnotjdx(tsbzJxjsjbxx);
+    }
+
+    /**
      * 新增见习教师基本信息
      * 
      * @param tsbzJxjsjbxx 见习教师基本信息

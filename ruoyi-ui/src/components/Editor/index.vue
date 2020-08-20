@@ -147,7 +147,7 @@ export default {
 .editor {
   white-space: pre-wrap!important;
   line-height: normal !important;
-  height: 192px;
+  /* height: 192px; */
 }
 .quill-img {
   display: none;
