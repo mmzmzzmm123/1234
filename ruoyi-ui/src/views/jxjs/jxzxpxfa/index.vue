@@ -120,8 +120,8 @@
         </template>
       </el-table-column>
       <el-table-column label="所属年份" align="center" prop="nf" />
-      <el-table-column label="评选学段" align="center" prop="pxxd" />
-      <el-table-column label="评选学科" align="center" prop="pxxk" />
+      <el-table-column label="评选学段" align="center" prop="pxxd" :formatter="pxxdFormat" />
+      <el-table-column label="评选学科" align="center" prop="pxxk" :formatter="pxxkFormat" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -151,12 +151,15 @@
     />
 
     <!-- 添加或修改见习之星评选方案对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="1024px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="110px">
         <el-form-item label="方案名称" prop="name">
           <el-input v-model="form.name" placeholder="请输入方案名称" />
         </el-form-item>
-        <el-form-item label="方案文件" prop="fawj">
+        <el-form-item label="方案内容" prop="fanr">
+          <Editor v-model="form.fanr" placeholder="请输入方案内容" />
+        </el-form-item>
+        <el-form-item label="方案文件" prop="fawj" >
           <el-input v-model="form.fawj" v-if="false" />
           <el-upload
             class="upload-demo"
@@ -241,9 +244,13 @@ import {
 } from "@/api/jxjs/jxzxpxfa";
 
 import { getToken } from "@/utils/auth";
+import Editor from "@/components/Editor";
 
 export default {
   name: "Jxzxpxfa",
+  components: {
+    Editor
+  },
   data() {
     return {
       // 遮罩层
@@ -357,6 +364,14 @@ export default {
     },
     beforeRemove(file, fileList) {
       return this.$confirm(`确定移除 ${file.name}？`);
+    },
+    // 评选学段字典翻译
+    pxxdFormat(row, column) {
+      return this.selectDictLabel(this.pxxdOptions, row.pxxd);
+    },
+    // 评选学科字典翻译
+    pxxkFormat(row, column) {
+      return this.selectDictLabel(this.pxxkOptions, row.pxxk);
     },
     /** 查询见习之星评选方案列表 */
     getList() {

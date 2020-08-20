@@ -29,6 +29,12 @@ public class TsbzJxzxpxfa extends BaseEntity {
     private String name;
 
     /**
+     * 方案内容
+     */
+    @Excel(name = "方案名称")
+    private String fanr;
+
+    /**
      * 方案文件
      */
     @Excel(name = "方案文件")
@@ -177,6 +183,7 @@ public class TsbzJxzxpxfa extends BaseEntity {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
                 .append("id", getId())
                 .append("name", getName())
+                .append("fanr", getFanr())
                 .append("fawj", getFawj())
                 .append("fazt", getFazt())
                 .append("fayxkssj", getFayxkssj())
@@ -188,5 +195,13 @@ public class TsbzJxzxpxfa extends BaseEntity {
                 .append("createTime", getCreateTime())
                 .append("wjmc", getWjmc())
                 .toString();
+    }
+
+    public String getFanr() {
+        return fanr;
+    }
+
+    public void setFanr(String fanr) {
+        this.fanr = fanr;
     }
 }

@@ -7,6 +7,7 @@
     <resultMap type="TsbzJxzxpxfa" id="TsbzJxzxpxfaResult">
         <result property="id" column="id"/>
         <result property="name" column="name"/>
+        <result property="fanr"    column="fanr" />
         <result property="fawj" column="fawj"/>
         <result property="fazt" column="fazt"/>
         <result property="fayxkssj" column="fayxkssj"/>
@@ -20,13 +21,14 @@
     </resultMap>
 
     <sql id="selectTsbzJxzxpxfaVo">
-        select id, name, fawj, fazt, fayxkssj, fayxjssj, nf, pxxd, pxxk, createuserid, create_time, wjmc from tsbz_jxzxpxfa
+        select id, name, fanr, fawj, fazt, fayxkssj, fayxjssj, nf, pxxd, pxxk, createuserid, create_time, wjmc from tsbz_jxzxpxfa
     </sql>
 
     <select id="selectTsbzJxzxpxfaList" parameterType="TsbzJxzxpxfa" resultMap="TsbzJxzxpxfaResult">
         <include refid="selectTsbzJxzxpxfaVo"/>
         <where>
             <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
+            <if test="fanr != null  and fanr != ''"> and fanr = #{fanr}</if>
             <if test="fawj != null  and fawj != ''">and fawj = #{fawj}</if>
             <if test="fazt != null  and fazt != ''">and fazt = #{fazt}</if>
             <if test="fayxkssj != null ">and fayxkssj = #{fayxkssj}</if>
@@ -48,6 +50,7 @@
         insert into tsbz_jxzxpxfa
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="name != null">name,</if>
+            <if test="fanr != null">fanr,</if>
             <if test="fawj != null">fawj,</if>
             <if test="fazt != null">fazt,</if>
             <if test="fayxkssj != null">fayxkssj,</if>
@@ -61,6 +64,7 @@
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="name != null">#{name},</if>
+            <if test="fanr != null">#{fanr},</if>
             <if test="fawj != null">#{fawj},</if>
             <if test="fazt != null">#{fazt},</if>
             <if test="fayxkssj != null">#{fayxkssj},</if>
@@ -78,6 +82,7 @@
         update tsbz_jxzxpxfa
         <trim prefix="SET" suffixOverrides=",">
             <if test="name != null">name = #{name},</if>
+            <if test="fanr != null">fanr = #{fanr},</if>
             <if test="fawj != null">fawj = #{fawj},</if>
             <if test="fazt != null">fazt = #{fazt},</if>
             <if test="fayxkssj != null">fayxkssj = #{fayxkssj},</if>
