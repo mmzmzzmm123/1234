@@ -26,7 +26,7 @@ export default {
   },
   data() {
     return {
-      title: '若依管理系统',
+      title: '闵行群体教师管理系统',
       logo: logoImg
     }
   }
