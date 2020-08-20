@@ -1,6 +1,8 @@
 package com.ruoyi.web.controller.jxjs;
 
 import java.util.List;
+
+import com.ruoyi.web.controller.common.SchoolCommonController;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,11 +34,13 @@ public class TsbzJdxController extends BaseController
 {
     @Autowired
     private ITsbzJdxService tsbzJdxService;
+    @Autowired
+    private SchoolCommonController schoolCommonController;
 
     /**
      * 查询基地校列表
      */
-    @PreAuthorize("@ss.hasPermi('system:jdx:list')")
+    @PreAuthorize("@ss.hasPermi('jxjs:jdx:list')")
     @GetMapping("/list")
     public TableDataInfo list(TsbzJdx tsbzJdx)
     {
@@ -48,7 +52,7 @@ public class TsbzJdxController extends BaseController
     /**
      * 导出基地校列表
      */
-    @PreAuthorize("@ss.hasPermi('system:jdx:export')")
+    @PreAuthorize("@ss.hasPermi('jxjs:jdx:export')")
     @Log(title = "基地校", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
     public AjaxResult export(TsbzJdx tsbzJdx)
@@ -61,7 +65,7 @@ public class TsbzJdxController extends BaseController
     /**
      * 获取基地校详细信息
      */
-    @PreAuthorize("@ss.hasPermi('system:jdx:query')")
+    @PreAuthorize("@ss.hasPermi('jxjs:jdx:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") String id)
     {
@@ -71,18 +75,19 @@ public class TsbzJdxController extends BaseController
     /**
      * 新增基地校
      */
-    @PreAuthorize("@ss.hasPermi('system:jdx:add')")
+    @PreAuthorize("@ss.hasPermi('jxjs:jdx:add')")
     @Log(title = "基地校", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody TsbzJdx tsbzJdx)
     {
+        tsbzJdx.setId(schoolCommonController.getUuid());
         return toAjax(tsbzJdxService.insertTsbzJdx(tsbzJdx));
     }
 
     /**
      * 修改基地校
      */
-    @PreAuthorize("@ss.hasPermi('system:jdx:edit')")
+    @PreAuthorize("@ss.hasPermi('jxjs:jdx:edit')")
     @Log(title = "基地校", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody TsbzJdx tsbzJdx)
@@ -93,7 +98,7 @@ public class TsbzJdxController extends BaseController
     /**
      * 删除基地校
      */
-    @PreAuthorize("@ss.hasPermi('system:jdx:remove')")
+    @PreAuthorize("@ss.hasPermi('jxjs:jdx:remove')")
     @Log(title = "基地校", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable String[] ids)
