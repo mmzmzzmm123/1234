@@ -10,10 +10,60 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+      <el-form-item label="性别" prop="xb">
+        <el-select v-model="queryParams.xb" placeholder="请选择性别" clearable size="small">
+          <el-option
+            v-for="dict in xbOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item label="政治面貌" prop="zzmm">
         <el-select v-model="queryParams.zzmm" placeholder="请选择政治面貌" clearable size="small">
           <el-option
             v-for="dict in zzmmOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="民族" prop="mz">
+        <el-select v-model="queryParams.mz" placeholder="请选择民族" clearable size="small">
+          <el-option
+            v-for="dict in mzOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="任教学段" prop="rjxd">
+        <el-select v-model="queryParams.rjxd" placeholder="请选择任教学段" clearable size="small">
+          <el-option
+            v-for="dict in rjxdOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="任教学科" prop="rjxk">
+        <el-select v-model="queryParams.rjxk" placeholder="请选择任教学科" clearable size="small">
+          <el-option
+            v-for="dict in rjxkOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="任教年级" prop="rjnj">
+        <el-select v-model="queryParams.rjnj" placeholder="请选择任教年级" clearable size="small">
+          <el-option
+            v-for="dict in rjnjOptions"
             :key="dict.dictValue"
             :label="dict.dictLabel"
             :value="dict.dictValue"
@@ -40,6 +90,53 @@
           />
         </el-select>
       </el-form-item>
+      <el-form-item label="是否师范生" prop="sfsfs">
+        <el-select v-model="queryParams.sfsfs" placeholder="请选择是否师范生" clearable size="small">
+          <el-option
+            v-for="dict in sfsfsOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="录取年份" prop="lqnf">
+        <el-select v-model="queryParams.lqnf" placeholder="请选择录取年份" clearable size="small">
+          <el-option
+            v-for="dict in lqnfOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
+        </el-select>
+      </el-form-item>
+      <!-- <el-form-item label="聘任单位" prop="prdwid">
+        <el-input
+          v-model="queryParams.prdwid"
+          placeholder="请输入聘任单位"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="基地校" prop="jdxid">
+        <el-input
+          v-model="queryParams.jdxid"
+          placeholder="请输入基地校"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="毕业院校" prop="byyx">
+        <el-input
+          v-model="queryParams.byyx"
+          placeholder="请输入毕业院校"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item> -->
       <el-form-item>
         <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
