@@ -298,6 +298,9 @@ export default {
         name: [
           { required: true, message: "方案名称不能为空", trigger: "blur" },
         ],
+        fanr: [
+          { required: true, message: "方案内容不能为空", trigger: "blur" },
+        ],
         fawj: [
           { required: true, message: "方案文件不能为空", trigger: "blur" },
         ],
