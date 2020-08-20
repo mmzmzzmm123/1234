@@ -1,73 +1,10 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="其他系统id" prop="otherid">
-        <el-input
-          v-model="queryParams.otherid"
-          placeholder="请输入其他系统id"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
       <el-form-item label="姓名" prop="name">
         <el-input
           v-model="queryParams.name"
           placeholder="请输入姓名"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="进修编号" prop="jxbh">
-        <el-input
-          v-model="queryParams.jxbh"
-          placeholder="请输入进修编号"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="性别" prop="xb">
-        <el-select v-model="queryParams.xb" placeholder="请选择性别" clearable size="small">
-          <el-option
-            v-for="dict in xbOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="出生日期" prop="csrq">
-        <el-date-picker clearable size="small" style="width: 200px"
-          v-model="queryParams.csrq"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="选择出生日期">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item label="电子邮件" prop="email">
-        <el-input
-          v-model="queryParams.email"
-          placeholder="请输入电子邮件"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="联系电话" prop="phone">
-        <el-input
-          v-model="queryParams.phone"
-          placeholder="请输入联系电话"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="邮编" prop="yzbm">
-        <el-input
-          v-model="queryParams.yzbm"
-          placeholder="请输入邮编"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
@@ -83,73 +20,6 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="民族" prop="mz">
-        <el-select v-model="queryParams.mz" placeholder="请选择民族" clearable size="small">
-          <el-option
-            v-for="dict in mzOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="聘任单位" prop="prdwid">
-        <el-input
-          v-model="queryParams.prdwid"
-          placeholder="请输入聘任单位"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="基地校" prop="jdxid">
-        <el-input
-          v-model="queryParams.jdxid"
-          placeholder="请输入基地校"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="任教学段" prop="rjxd">
-        <el-select v-model="queryParams.rjxd" placeholder="请选择任教学段" clearable size="small">
-          <el-option
-            v-for="dict in rjxdOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="任教学科" prop="rjxk">
-        <el-select v-model="queryParams.rjxk" placeholder="请选择任教学科" clearable size="small">
-          <el-option
-            v-for="dict in rjxkOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="任教年级" prop="rjnj">
-        <el-select v-model="queryParams.rjnj" placeholder="请选择任教年级" clearable size="small">
-          <el-option
-            v-for="dict in rjnjOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="毕业院校" prop="byyx">
-        <el-input
-          v-model="queryParams.byyx"
-          placeholder="请输入毕业院校"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
       <el-form-item label="学历" prop="xl">
         <el-select v-model="queryParams.xl" placeholder="请选择学历" clearable size="small">
           <el-option
@@ -164,26 +34,6 @@
         <el-select v-model="queryParams.xw" placeholder="请选择学位" clearable size="small">
           <el-option
             v-for="dict in xwOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="是否师范生" prop="sfsfs">
-        <el-select v-model="queryParams.sfsfs" placeholder="请选择是否师范生" clearable size="small">
-          <el-option
-            v-for="dict in sfsfsOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="录取年份" prop="lqnf">
-        <el-select v-model="queryParams.lqnf" placeholder="请选择录取年份" clearable size="small">
-          <el-option
-            v-for="dict in lqnfOptions"
             :key="dict.dictValue"
             :label="dict.dictLabel"
             :value="dict.dictValue"
@@ -240,32 +90,27 @@
 
     <el-table v-loading="loading" :data="jxjsjbxxList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="标识" align="center" prop="id" />
-      <el-table-column label="其他系统id" align="center" prop="otherid" />
+      <el-table-column label="编号" align="center" prop="id" />
       <el-table-column label="姓名" align="center" prop="name" />
-      <el-table-column label="进修编号" align="center" prop="jxbh" />
       <el-table-column label="性别" align="center" prop="xb" :formatter="xbFormat" />
-      <el-table-column label="出生日期" align="center" prop="csrq" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.csrq, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="电子邮件" align="center" prop="email" />
-      <el-table-column label="联系电话" align="center" prop="phone" />
-      <el-table-column label="邮编" align="center" prop="yzbm" />
       <el-table-column label="政治面貌" align="center" prop="zzmm" :formatter="zzmmFormat" />
       <el-table-column label="民族" align="center" prop="mz" :formatter="mzFormat" />
+      <el-table-column label="学历" align="center" prop="xl" :formatter="xlFormat" />
+      <el-table-column label="学位" align="center" prop="xw" :formatter="xwFormat" />
+      <el-table-column label="是否师范生" align="center" prop="sfsfs" :formatter="sfsfsFormat" />
+      <el-table-column label="录取年份" align="center" prop="lqnf" :formatter="lqnfFormat" />
+      <!-- <el-table-column label="出生日期" align="center" prop="csrq" width="180">
       <el-table-column label="聘任单位" align="center" prop="prdwid" />
       <el-table-column label="聘任单位名称" align="center" prop="prdwmc" />
       <el-table-column label="基地校" align="center" prop="jdxid" />
       <el-table-column label="任教学段" align="center" prop="rjxd" :formatter="rjxdFormat" />
       <el-table-column label="任教学科" align="center" prop="rjxk" :formatter="rjxkFormat" />
       <el-table-column label="任教年级" align="center" prop="rjnj" :formatter="rjnjFormat" />
-      <el-table-column label="毕业院校" align="center" prop="byyx" />
-      <el-table-column label="学历" align="center" prop="xl" :formatter="xlFormat" />
-      <el-table-column label="学位" align="center" prop="xw" :formatter="xwFormat" />
-      <el-table-column label="是否师范生" align="center" prop="sfsfs" :formatter="sfsfsFormat" />
-      <el-table-column label="录取年份" align="center" prop="lqnf" :formatter="lqnfFormat" />
+      <el-table-column label="毕业院校" align="center" prop="byyx" /> 
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.csrq, '{y}-{m}-{d}') }}</span>
+        </template>
+      </el-table-column>-->
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -297,9 +142,6 @@
     <!-- 添加或修改见习教师基本信息对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="其他系统id" prop="otherid">
-          <el-input v-model="form.otherid" placeholder="请输入其他系统id" />
-        </el-form-item>
         <el-form-item label="姓名" prop="name">
           <el-input v-model="form.name" placeholder="请输入姓名" />
         </el-form-item>
@@ -328,7 +170,7 @@
           <el-input v-model="form.email" placeholder="请输入电子邮件" />
         </el-form-item>
         <el-form-item label="联系电话" prop="phone">
-          <el-input v-model="form.phone" placeholder="请输入联系电话" />
+          <el-input v-model="form.phone" placeholder="请输入联系电话" maxlength="11"/>
         </el-form-item>
         <el-form-item label="邮编" prop="yzbm">
           <el-input v-model="form.yzbm" placeholder="请输入邮编" />
@@ -519,6 +361,22 @@ export default {
       form: {},
       // 表单校验
       rules: {
+        name: [
+          { required: true, message: "教师名称不能为空", trigger: "blur" },
+        ],
+        jxbh: [
+          { required: true, message: "进修编号不能为空", trigger: "blur" },
+        ],
+        xb: [
+          { required: true, message: "教师性别不能为空", trigger: "blur" },
+        ],
+        csrq: [
+          { required: true, message: "出生日期不能为空", trigger: "blur" },
+        ],
+        phone: [
+          { required: true, message: "电话不能为空", trigger: "blur" },
+        ],
+        
       }
     };
   },
