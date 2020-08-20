@@ -90,7 +90,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="是否师范生" prop="sfsfs">
+      <el-form-item label="师范生" prop="sfsfs">
         <el-select v-model="queryParams.sfsfs" placeholder="请选择是否师范生" clearable size="small">
           <el-option
             v-for="dict in sfsfsOptions"

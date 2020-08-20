@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.jxjs.mapper.TsbzJxzxpxfaMapper">
+
+    <resultMap type="TsbzJxzxpxfa" id="TsbzJxzxpxfaResult">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="fawj" column="fawj"/>
+        <result property="fazt" column="fazt"/>
+        <result property="fayxkssj" column="fayxkssj"/>
+        <result property="fayxjssj" column="fayxjssj"/>
+        <result property="nf" column="nf"/>
+        <result property="pxxd" column="pxxd"/>
+        <result property="pxxk" column="pxxk"/>
+        <result property="createuserid" column="createuserid"/>
+        <result property="createTime" column="create_time"/>
+        <result property="wjmc" column="wjmc"/>
+    </resultMap>
+
+    <sql id="selectTsbzJxzxpxfaVo">
+        select id, name, fawj, fazt, fayxkssj, fayxjssj, nf, pxxd, pxxk, createuserid, create_time, wjmc from tsbz_jxzxpxfa
+    </sql>
+
+    <select id="selectTsbzJxzxpxfaList" parameterType="TsbzJxzxpxfa" resultMap="TsbzJxzxpxfaResult">
+        <include refid="selectTsbzJxzxpxfaVo"/>
+        <where>
+            <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
+            <if test="fawj != null  and fawj != ''">and fawj = #{fawj}</if>
+            <if test="fazt != null  and fazt != ''">and fazt = #{fazt}</if>
+            <if test="fayxkssj != null ">and fayxkssj = #{fayxkssj}</if>
+            <if test="fayxjssj != null ">and fayxjssj = #{fayxjssj}</if>
+            <if test="nf != null  and nf != ''">and nf = #{nf}</if>
+            <if test="pxxd != null  and pxxd != ''">and pxxd = #{pxxd}</if>
+            <if test="pxxk != null  and pxxk != ''">and pxxk = #{pxxk}</if>
+            <if test="createuserid != null ">and createuserid = #{createuserid}</if>
+            <if test="wjmc != null  and wjmc != ''">and wjmc = #{wjmc}</if>
+        </where>
+    </select>
+
+    <select id="selectTsbzJxzxpxfaById" parameterType="Long" resultMap="TsbzJxzxpxfaResult">
+        <include refid="selectTsbzJxzxpxfaVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertTsbzJxzxpxfa" parameterType="TsbzJxzxpxfa" useGeneratedKeys="true" keyProperty="id">
+        insert into tsbz_jxzxpxfa
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,</if>
+            <if test="fawj != null">fawj,</if>
+            <if test="fazt != null">fazt,</if>
+            <if test="fayxkssj != null">fayxkssj,</if>
+            <if test="fayxjssj != null">fayxjssj,</if>
+            <if test="nf != null">nf,</if>
+            <if test="pxxd != null">pxxd,</if>
+            <if test="pxxk != null">pxxk,</if>
+            <if test="createuserid != null">createuserid,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="wjmc != null">wjmc,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="fawj != null">#{fawj},</if>
+            <if test="fazt != null">#{fazt},</if>
+            <if test="fayxkssj != null">#{fayxkssj},</if>
+            <if test="fayxjssj != null">#{fayxjssj},</if>
+            <if test="nf != null">#{nf},</if>
+            <if test="pxxd != null">#{pxxd},</if>
+            <if test="pxxk != null">#{pxxk},</if>
+            <if test="createuserid != null">#{createuserid},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="wjmc != null">#{wjmc},</if>
+        </trim>
+    </insert>
+
+    <update id="updateTsbzJxzxpxfa" parameterType="TsbzJxzxpxfa">
+        update tsbz_jxzxpxfa
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="fawj != null">fawj = #{fawj},</if>
+            <if test="fazt != null">fazt = #{fazt},</if>
+            <if test="fayxkssj != null">fayxkssj = #{fayxkssj},</if>
+            <if test="fayxjssj != null">fayxjssj = #{fayxjssj},</if>
+            <if test="nf != null">nf = #{nf},</if>
+            <if test="pxxd != null">pxxd = #{pxxd},</if>
+            <if test="pxxk != null">pxxk = #{pxxk},</if>
+            <if test="createuserid != null">createuserid = #{createuserid},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="wjmc != null">wjmc = #{wjmc},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTsbzJxzxpxfaById" parameterType="Long">
+        delete from tsbz_jxzxpxfa where id = #{id}
+    </delete>
+
+    <delete id="deleteTsbzJxzxpxfaByIds" parameterType="String">
+        delete from tsbz_jxzxpxfa where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
