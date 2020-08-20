@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.jxjs.mapper.TsbzJdxMapper">
+    
+    <resultMap type="TsbzJdx" id="TsbzJdxResult">
+        <result property="id"    column="id"    />
+        <result property="otherid"    column="otherid"    />
+        <result property="jdxmc"    column="jdxmc"    />
+        <result property="xxlb"    column="xxlb"    />
+        <result property="bxlx"    column="bxlx"    />
+        <result property="xxbb"    column="xxbb"    />
+        <result property="jdxnf"    column="jdxnf"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectTsbzJdxVo">
+        select id, otherid, jdxmc, xxlb, bxlx, xxbb, jdxnf, create_time from tsbz_jdx
+    </sql>
+
+    <select id="selectTsbzJdxList" parameterType="TsbzJdx" resultMap="TsbzJdxResult">
+        <include refid="selectTsbzJdxVo"/>
+        <where>  
+            <if test="otherid != null  and otherid != ''"> and otherid = #{otherid}</if>
+            <if test="jdxmc != null  and jdxmc != ''"> and jdxmc = #{jdxmc}</if>
+            <if test="xxlb != null  and xxlb != ''"> and xxlb = #{xxlb}</if>
+            <if test="bxlx != null  and bxlx != ''"> and bxlx = #{bxlx}</if>
+            <if test="xxbb != null  and xxbb != ''"> and xxbb = #{xxbb}</if>
+            <if test="jdxnf != null  and jdxnf != ''"> and jdxnf = #{jdxnf}</if>
+        </where>
+    </select>
+    
+    <select id="selectTsbzJdxById" parameterType="String" resultMap="TsbzJdxResult">
+        <include refid="selectTsbzJdxVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTsbzJdx" parameterType="TsbzJdx">
+        insert into tsbz_jdx
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="otherid != null">otherid,</if>
+            <if test="jdxmc != null">jdxmc,</if>
+            <if test="xxlb != null">xxlb,</if>
+            <if test="bxlx != null">bxlx,</if>
+            <if test="xxbb != null">xxbb,</if>
+            <if test="jdxnf != null">jdxnf,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="otherid != null">#{otherid},</if>
+            <if test="jdxmc != null">#{jdxmc},</if>
+            <if test="xxlb != null">#{xxlb},</if>
+            <if test="bxlx != null">#{bxlx},</if>
+            <if test="xxbb != null">#{xxbb},</if>
+            <if test="jdxnf != null">#{jdxnf},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTsbzJdx" parameterType="TsbzJdx">
+        update tsbz_jdx
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="otherid != null">otherid = #{otherid},</if>
+            <if test="jdxmc != null">jdxmc = #{jdxmc},</if>
+            <if test="xxlb != null">xxlb = #{xxlb},</if>
+            <if test="bxlx != null">bxlx = #{bxlx},</if>
+            <if test="xxbb != null">xxbb = #{xxbb},</if>
+            <if test="jdxnf != null">jdxnf = #{jdxnf},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTsbzJdxById" parameterType="String">
+        delete from tsbz_jdx where id = #{id}
+    </delete>
+
+    <delete id="deleteTsbzJdxByIds" parameterType="String">
+        delete from tsbz_jdx where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>
