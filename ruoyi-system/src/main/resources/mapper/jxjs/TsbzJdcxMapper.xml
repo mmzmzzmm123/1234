@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.jxjs.mapper.TsbzJdcxMapper">
+    
+    <resultMap type="TsbzJdcx" id="TsbzJdcxResult">
+        <result property="id"    column="id"    />
+        <result property="faid"    column="faid"    />
+        <result property="jsid"    column="jsid"    />
+        <result property="dqzt"    column="dqzt"    />
+        <result property="createuserid"    column="createuserid"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="jdxshr"    column="jdxshr"    />
+        <result property="jdxshzt"    column="jdxshzt"    />
+        <result property="sbly"    column="sbly"    />
+        <result property="qjshr"    column="qjshr"    />
+        <result property="qjshzt"    column="qjshzt"    />
+        <result property="qjshyj"    column="qjshyj"    />
+        <result property="jdpx"    column="jdpx"    />
+        <result property="alfxdf"    column="alfxdf"    />
+        <result property="jasjdf"    column="jasjdf"    />
+        <result property="gbzdf"    column="gbzdf"    />
+        <result property="zhdf"    column="zhdf"    />
+        <result property="cjdrcreateTime"    column="cjdrcreate_time"    />
+        <result property="msqr"    column="msqr"    />
+        <result property="msqrcreateTime"    column="msqrcreate_time"    />
+        <result property="msjgmnktjxdf"    column="msjgmnktjxdf"    />
+        <result property="yjdf"    column="yjdf"    />
+        <result property="zhdf2"    column="zhdf2"    />
+    </resultMap>
+
+    <sql id="selectTsbzJdcxVo">
+        select id, faid, jsid, dqzt, createuserid, create_time, jdxshr, jdxshzt, sbly, qjshr, qjshzt, qjshyj, jdpx, alfxdf, jasjdf, gbzdf, zhdf, cjdrcreate_time, msqr, msqrcreate_time, msjgmnktjxdf, yjdf, zhdf2 from tsbz_jdcx
+    </sql>
+
+    <select id="selectTsbzJdcxList" parameterType="TsbzJdcx" resultMap="TsbzJdcxResult">
+        <include refid="selectTsbzJdcxVo"/>
+        <where>  
+            <if test="faid != null "> and faid = #{faid}</if>
+            <if test="jsid != null "> and jsid = #{jsid}</if>
+            <if test="dqzt != null  and dqzt != ''"> and dqzt = #{dqzt}</if>
+            <if test="createuserid != null "> and createuserid = #{createuserid}</if>
+            <if test="jdxshr != null "> and jdxshr = #{jdxshr}</if>
+            <if test="jdxshzt != null  and jdxshzt != ''"> and jdxshzt = #{jdxshzt}</if>
+            <if test="sbly != null  and sbly != ''"> and sbly = #{sbly}</if>
+            <if test="qjshr != null "> and qjshr = #{qjshr}</if>
+            <if test="qjshzt != null  and qjshzt != ''"> and qjshzt = #{qjshzt}</if>
+            <if test="qjshyj != null  and qjshyj != ''"> and qjshyj = #{qjshyj}</if>
+            <if test="jdpx != null "> and jdpx = #{jdpx}</if>
+            <if test="alfxdf != null "> and alfxdf = #{alfxdf}</if>
+            <if test="jasjdf != null "> and jasjdf = #{jasjdf}</if>
+            <if test="gbzdf != null "> and gbzdf = #{gbzdf}</if>
+            <if test="zhdf != null "> and zhdf = #{zhdf}</if>
+            <if test="cjdrcreateTime != null "> and cjdrcreate_time = #{cjdrcreateTime}</if>
+            <if test="msqr != null  and msqr != ''"> and msqr = #{msqr}</if>
+            <if test="msqrcreateTime != null "> and msqrcreate_time = #{msqrcreateTime}</if>
+            <if test="msjgmnktjxdf != null "> and msjgmnktjxdf = #{msjgmnktjxdf}</if>
+            <if test="yjdf != null "> and yjdf = #{yjdf}</if>
+            <if test="zhdf2 != null "> and zhdf2 = #{zhdf2}</if>
+        </where>
+    </select>
+    
+    <select id="selectTsbzJdcxById" parameterType="Long" resultMap="TsbzJdcxResult">
+        <include refid="selectTsbzJdcxVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTsbzJdcx" parameterType="TsbzJdcx" useGeneratedKeys="true" keyProperty="id">
+        insert into tsbz_jdcx
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="faid != null">faid,</if>
+            <if test="jsid != null">jsid,</if>
+            <if test="dqzt != null">dqzt,</if>
+            <if test="createuserid != null">createuserid,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="jdxshr != null">jdxshr,</if>
+            <if test="jdxshzt != null">jdxshzt,</if>
+            <if test="sbly != null">sbly,</if>
+            <if test="qjshr != null">qjshr,</if>
+            <if test="qjshzt != null">qjshzt,</if>
+            <if test="qjshyj != null">qjshyj,</if>
+            <if test="jdpx != null">jdpx,</if>
+            <if test="alfxdf != null">alfxdf,</if>
+            <if test="jasjdf != null">jasjdf,</if>
+            <if test="gbzdf != null">gbzdf,</if>
+            <if test="zhdf != null">zhdf,</if>
+            <if test="cjdrcreateTime != null">cjdrcreate_time,</if>
+            <if test="msqr != null">msqr,</if>
+            <if test="msqrcreateTime != null">msqrcreate_time,</if>
+            <if test="msjgmnktjxdf != null">msjgmnktjxdf,</if>
+            <if test="yjdf != null">yjdf,</if>
+            <if test="zhdf2 != null">zhdf2,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="faid != null">#{faid},</if>
+            <if test="jsid != null">#{jsid},</if>
+            <if test="dqzt != null">#{dqzt},</if>
+            <if test="createuserid != null">#{createuserid},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="jdxshr != null">#{jdxshr},</if>
+            <if test="jdxshzt != null">#{jdxshzt},</if>
+            <if test="sbly != null">#{sbly},</if>
+            <if test="qjshr != null">#{qjshr},</if>
+            <if test="qjshzt != null">#{qjshzt},</if>
+            <if test="qjshyj != null">#{qjshyj},</if>
+            <if test="jdpx != null">#{jdpx},</if>
+            <if test="alfxdf != null">#{alfxdf},</if>
+            <if test="jasjdf != null">#{jasjdf},</if>
+            <if test="gbzdf != null">#{gbzdf},</if>
+            <if test="zhdf != null">#{zhdf},</if>
+            <if test="cjdrcreateTime != null">#{cjdrcreateTime},</if>
+            <if test="msqr != null">#{msqr},</if>
+            <if test="msqrcreateTime != null">#{msqrcreateTime},</if>
+            <if test="msjgmnktjxdf != null">#{msjgmnktjxdf},</if>
+            <if test="yjdf != null">#{yjdf},</if>
+            <if test="zhdf2 != null">#{zhdf2},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTsbzJdcx" parameterType="TsbzJdcx">
+        update tsbz_jdcx
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="faid != null">faid = #{faid},</if>
+            <if test="jsid != null">jsid = #{jsid},</if>
+            <if test="dqzt != null">dqzt = #{dqzt},</if>
+            <if test="createuserid != null">createuserid = #{createuserid},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="jdxshr != null">jdxshr = #{jdxshr},</if>
+            <if test="jdxshzt != null">jdxshzt = #{jdxshzt},</if>
+            <if test="sbly != null">sbly = #{sbly},</if>
+            <if test="qjshr != null">qjshr = #{qjshr},</if>
+            <if test="qjshzt != null">qjshzt = #{qjshzt},</if>
+            <if test="qjshyj != null">qjshyj = #{qjshyj},</if>
+            <if test="jdpx != null">jdpx = #{jdpx},</if>
+            <if test="alfxdf != null">alfxdf = #{alfxdf},</if>
+            <if test="jasjdf != null">jasjdf = #{jasjdf},</if>
+            <if test="gbzdf != null">gbzdf = #{gbzdf},</if>
+            <if test="zhdf != null">zhdf = #{zhdf},</if>
+            <if test="cjdrcreateTime != null">cjdrcreate_time = #{cjdrcreateTime},</if>
+            <if test="msqr != null">msqr = #{msqr},</if>
+            <if test="msqrcreateTime != null">msqrcreate_time = #{msqrcreateTime},</if>
+            <if test="msjgmnktjxdf != null">msjgmnktjxdf = #{msjgmnktjxdf},</if>
+            <if test="yjdf != null">yjdf = #{yjdf},</if>
+            <if test="zhdf2 != null">zhdf2 = #{zhdf2},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTsbzJdcxById" parameterType="Long">
+        delete from tsbz_jdcx where id = #{id}
+    </delete>
+
+    <delete id="deleteTsbzJdcxByIds" parameterType="String">
+        delete from tsbz_jdcx where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>
