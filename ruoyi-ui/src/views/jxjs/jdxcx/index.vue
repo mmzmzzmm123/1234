@@ -13,13 +13,9 @@
         </el-select>
       </el-form-item>
       <el-form-item label="选择教师" prop="jsid">
-        <el-input
-          v-model="queryParams.jsid"
-          placeholder="请输入教师"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+        <el-select v-model="queryParams.jsid" filterable placeholder="请选择教师">
+          <el-option v-for="item in jsOptions" :key="item.id" :label="item.name" :value="item.id"></el-option>
+        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -64,7 +60,7 @@
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="编号" align="center" prop="id" />
       <el-table-column label="方案名称" align="center" prop="faid" :formatter="faFormat" />
-      <el-table-column label="教师姓名" align="center" prop="jsid" />
+      <el-table-column label="教师姓名" align="center" prop="jsid" :formatter="jsFormat" />
       <el-table-column label="当前状态" align="center" prop="dqzt" :formatter="dqztFormat" />
       <el-table-column label="基地校审核状态" align="center" prop="jdxshzt" :formatter="jdxshztFormat" />
       <el-table-column label="区级审核状态" align="center" prop="qjshzt" :formatter="qjshztFormat" />
@@ -253,6 +249,8 @@ import {
 
 import { listJxzxpxfa } from "@/api/jxjs/jxzxpxfa";
 
+import { listJxjsjbxx, getJxjsjbxx } from "@/api/jxjs/jxjsjbxx";
+
 export default {
   name: "Jdcx",
   data() {
@@ -285,6 +283,8 @@ export default {
       qjshyjOptions: [],
       //方案
       faOptions: [],
+      //教师
+      jsOptions: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -353,6 +353,7 @@ export default {
   created() {
     this.getFaList();
     this.getList();
+    this.getJsList();
     this.getDicts("sys_dm_shzt").then((response) => {
       this.dqztOptions = response.data;
     });
@@ -373,8 +374,20 @@ export default {
       var actions = [];
       var datas = this.faOptions;
       Object.keys(datas).map((key) => {
-        console.log(row.faid);
         if (datas[key].id == "" + row.faid) {
+          actions.push(datas[key].name);
+          return false;
+        }
+      });
+      return actions.join("");
+    },
+    // 字典翻译
+    jsFormat(row, column) {
+      // return this.selectDictLabel(this.classOptions, row.classid);
+      var actions = [];
+      var datas = this.jsOptions;
+      Object.keys(datas).map((key) => {
+        if (datas[key].id == "" + row.jsid) {
           actions.push(datas[key].name);
           return false;
         }
@@ -385,6 +398,11 @@ export default {
       this.queryParams_fa.fazt = "1";
       listJxzxpxfa(this.queryParams_fa).then((response) => {
         this.faOptions = response.rows;
+      });
+    },
+    getJsList() {
+      listJxjsjbxx(null).then((response) => {
+        this.jsOptions = response.rows;
       });
     },
     /** 查询基地区级审核列表 */
