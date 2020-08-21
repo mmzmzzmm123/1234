@@ -35,23 +35,21 @@
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
-          type="success"
-          icon="el-icon-edit"
+          type="info"
+          icon="el-icon-upload2"
           size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['jxjs:jdcx:edit']"
-        >审核</el-button>
+          @click="handleImport"
+          v-hasPermi="['system:user:import']"
+        >成绩导入</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
-          type="danger"
-          icon="el-icon-delete"
+          type="warning"
+          icon="el-icon-download"
           size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['jxjs:jdcx:remove']"
-        >退回</el-button>
+          @click="handleExport"
+          v-hasPermi="['jxjs:jxjsjbxx:export']"
+        >导出</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
@@ -95,17 +93,10 @@
           <el-button
             size="mini"
             type="text"
-            icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
-            v-hasPermi="['jxjs:jdcx:edit']"
-          >审核</el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
+            icon="el-icon-view"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['jxjs:jdcx:remove']"
-          >退回</el-button>
+            v-hasPermi="['jxjs:jdcx:view']"
+          >详情</el-button>
         </template>
       </el-table-column>
     </el-table>

@@ -12,11 +12,6 @@
           <el-option v-for="dict in faOptions" :key="dict.id" :label="dict.name" :value="dict.id"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="基地校" prop="faid">
-        <el-select v-model="queryParams.faid" placeholder="请选择基地校">
-          <el-option v-for="dict in faOptions" :key="dict.id" :label="dict.name" :value="dict.id"></el-option>
-        </el-select>
-      </el-form-item>
       <el-form-item label="选择教师" prop="jsid">
         <el-input
           v-model="queryParams.jsid"
@@ -41,7 +36,7 @@
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['jxjs:jdcx:edit']"
-        >审核</el-button>
+        >确认</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -51,7 +46,25 @@
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['jxjs:jdcx:remove']"
-        >退回</el-button>
+        >删除</el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="info"
+          icon="el-icon-upload2"
+          size="mini"
+          @click="handleImport"
+          v-hasPermi="['system:user:import']"
+        >成绩导入</el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="warning"
+          icon="el-icon-download"
+          size="mini"
+          @click="handleExport"
+          v-hasPermi="['jxjs:jxjsjbxx:export']"
+        >导出面试名单</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
@@ -98,14 +111,14 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['jxjs:jdcx:edit']"
-          >审核</el-button>
+          >确认</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['jxjs:jdcx:remove']"
-          >退回</el-button>
+          >删除</el-button>
         </template>
       </el-table-column>
     </el-table>
