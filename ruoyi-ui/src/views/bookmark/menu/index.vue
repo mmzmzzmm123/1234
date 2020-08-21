@@ -152,6 +152,8 @@
       var that=this;
       //光标自动选中
       that.$refs.sousouref.focus()
+
+
     },
 
 

@@ -11,6 +11,7 @@ import Layout from '@/layout'
 import bookmarkmenu from '@/views/bookmark/menu';
 
 import index3 from '@/views/bookmark/index';
+ // import content from '../views/bookmark/content/index';
 
 
 
@@ -150,9 +151,17 @@ export const constantRoutes = [
     children: [
       {
         path: '/content',
+        name: 'content',
         component: resolve => require(['../views/bookmark/content/index.vue'], resolve),
+        query:{
+          t:Date.now(),
+        },
+        meta:{
+          requireAuth: false,//加该字段,表示进入这个路由是需要登录的true
+        },
       }
-    ],redirect:'/content'
+    ],
+
   },
 ]
 

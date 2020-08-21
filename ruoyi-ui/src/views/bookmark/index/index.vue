@@ -22,7 +22,7 @@
         <ul id="treeDemo" class="ztree" ></ul>
       </div>
       <div class="reminder">工具箱</div>
-      <div class="aside-title"><i class="el-icon-s-tools"></i><span>所有书签</span></div>
+      <div class="aside-title"><i class="el-icon-s-tools"></i><span>收藏同步</span></div>
       <div class="aside-title"><i class="el-icon-help"></i><span>发现书签</span></div>
       <div class="aside-title"><i class="el-icon-s-platform"></i><span>任意门</span></div>
       <div class="aside-title"><i class="el-icon-message-solid"></i><span>收件箱</span></div>
@@ -100,7 +100,7 @@
       </el-header>
       <el-main class="bookmarkmain" >
 
-        <router-view></router-view>
+        <router-view :key="$route.query.menuId"></router-view>
 
 
       </el-main>
@@ -142,15 +142,15 @@
 
 
 
-  <!-- 添加链接-->
-    <el-dialog  title="添加链接"  :visible.sync="addurlopen" width="500px"  append-to-body class="addbookmarkurl">
+<!--  &lt;!&ndash; 添加链接&ndash;&gt;-->
+<!--    <el-dialog  title="添加链接"  :visible.sync="addurlopen" width="500px"  append-to-body class="addbookmarkurl">-->
 
 
-      <el-input  v-model="bookamkrurl" placeholder="输入链接地址 例：https://withpinbox.com" class="addbookmarkurl-input"  />
+<!--      <el-input  v-model="bookamkrurl" placeholder="输入链接地址 例：https://withpinbox.com" class="addbookmarkurl-input"  />-->
 
-      <el-button  plain  class="addbookmarkurl-button"  round  @click="submitForm">确定</el-button>
+<!--      <el-button  plain  class="addbookmarkurl-button"  round  @click="submitForm">确定</el-button>-->
 
-    </el-dialog>
+<!--    </el-dialog>-->
 
 
 
@@ -362,6 +362,7 @@
   	if (confCount>0) return;
   	//if (treeNode.parentNode && treeNode.parentNode.id!=1) return;
   	var switchObjspan = $("#" + treeNode.tId + "_span");
+
   	var editStr = "<span class="+treeNode.tId+"_sz onclick='editBookmark()' style='color: #9e9e9e;float:right;display: inline-block;margin-right: 15px;font-size:8px' onfocus='this.blur();'><i class='el-icon-edit'></i></span>";
   	switchObjspan.after(editStr);
 
@@ -388,8 +389,8 @@
    beforeClick:function(treeId, treeNode) {
 
     //if (treeNode.level != 19990 ) {
-       var zTree = $.fn.zTree.getZTreeObj("treeDemo");
-       zTree.expandNode(treeNode);
+    //    var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+    //    zTree.expandNode(treeNode);
 
     //  return false;
     // }
@@ -397,7 +398,14 @@
   },
       //节点点击
       OnClickzTree:function(event,treeId, treeNode){
-      // alert("11"+treeNode.tId );
+        var that=this;
+        that.$router.push({
+          path: "/content",
+          query: {
+            menuId: treeNode.menuId
+          }
+        })
+
 
         // $("." + treeNode.tId + "_sz").unbind().remove();
         // var switchObjspan = $("#" + treeNode.tId + "_span");
@@ -406,7 +414,7 @@
         // if (confCount>0) return;
         // var editStr = "<span class="+treeNode.tId+"_count onclick='alert(1111111);return false;' style='color: #9e9e9e;float:right;display: inline-block;margin-right: 15px;font-size:8px' onfocus='this.blur();'>12</span>";
         // switchObjspan.after(editStr);
-      return false;
+      // return false;
       },
       //显示隐藏 ztree菜单
       zreaZtree:function () {
@@ -419,6 +427,10 @@
 
       editBookmark:function(e){
         var that=this;
+
+        //console.log("menuid:"+e.srcElement.dataset.menuId)
+
+
         that.handleAdd();//新增
         if ( e && e.stopPropagation )
         //因此它支持W3C的stopPropagation()方法

@@ -1,10 +1,10 @@
 
 
-<template>
-    <div>
+<template >
+    <div >
 
       <div class="filter" >
-        <div class="filter-sort">
+        <div class="filter-sort" >
           <el-dropdown trigger="click" size="small">
               <span class="el-dropdown-link">
             <span>按时间排序(正)</span> <i class="el-icon-caret-bottom"></i>
@@ -51,7 +51,7 @@
 
 
       </div>
-      <div  class="bookmarklist">
+      <div  class="bookmarklist" v-loading="loading">
 
         <el-row >
 
@@ -108,7 +108,7 @@
 
         data: function () {
             return {
-              loading:true,
+              loading:false,
               queryParams: {
                 pageNum: 1,
                 pageSize: 15,
@@ -136,10 +136,18 @@
       }
     },
       created() {
-         this.queryParams.menuId=1;
-         this.getList();
+        var that=this;
+        if (that.$route.query.menuId==undefined){
+          that.queryParams.menuId=1;
+        }else {
+          that.queryParams.menuId=that.$route.query.menuId;
+        }
+        this.getList();
       },
-        methods: {
+    mounted(){
+
+    },
+    methods: {
           /** 查询书签管理列表 */
           getList() {
             this.loading = true;
