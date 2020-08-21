@@ -1,4 +1,4 @@
-## 平台简介
+## 平台简介更改测试
 
 * 前端采用Vue、Element UI。
 * 后端采用Spring Boot、Spring Security、Redis & Jwt。
