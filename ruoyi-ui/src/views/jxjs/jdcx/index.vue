@@ -1,19 +1,20 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="方案编号" prop="faid">
+      
+      <el-form-item label="教师编号" prop="jsid">
         <el-input
-          v-model="queryParams.faid"
-          placeholder="请输入方案编号"
+          v-model="queryParams.jsid"
+          placeholder="请输入教师编号"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="教师编号" prop="jsid">
+      <el-form-item label="方案编号" prop="faid">
         <el-input
-          v-model="queryParams.jsid"
-          placeholder="请输入教师编号"
+          v-model="queryParams.faid"
+          placeholder="请输入方案编号"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
@@ -29,24 +30,6 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="创建人" prop="createuserid">
-        <el-input
-          v-model="queryParams.createuserid"
-          placeholder="请输入创建人"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="基地校审核人" prop="jdxshr">
-        <el-input
-          v-model="queryParams.jdxshr"
-          placeholder="请输入基地校审核人"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
       <el-form-item label="基地校审核状态" prop="jdxshzt">
         <el-select v-model="queryParams.jdxshzt" placeholder="请选择基地校审核状态" clearable size="small">
           <el-option
@@ -56,24 +39,6 @@
             :value="dict.dictValue"
           />
         </el-select>
-      </el-form-item>
-      <el-form-item label="上报理由" prop="sbly">
-        <el-input
-          v-model="queryParams.sbly"
-          placeholder="请输入上报理由"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="区级审核人" prop="qjshr">
-        <el-input
-          v-model="queryParams.qjshr"
-          placeholder="请输入区级审核人"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
       </el-form-item>
       <el-form-item label="区级审核状态" prop="qjshzt">
         <el-select v-model="queryParams.qjshzt" placeholder="请选择区级审核状态" clearable size="small">
@@ -95,7 +60,44 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="基地排序" prop="jdpx">
+      
+      <!-- <el-form-item label="创建人" prop="createuserid">
+        <el-input
+          v-model="queryParams.createuserid"
+          placeholder="请输入创建人"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="基地校审核人" prop="jdxshr">
+        <el-input
+          v-model="queryParams.jdxshr"
+          placeholder="请输入基地校审核人"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item> -->
+      <!-- <el-form-item label="上报理由" prop="sbly">
+        <el-input
+          v-model="queryParams.sbly"
+          placeholder="请输入上报理由"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="区级审核人" prop="qjshr">
+        <el-input
+          v-model="queryParams.qjshr"
+          placeholder="请输入区级审核人"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item> -->
+      <!-- <el-form-item label="基地排序" prop="jdpx">
         <el-input
           v-model="queryParams.jdpx"
           placeholder="请输入基地排序"
@@ -191,7 +193,7 @@
           size="small"
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item>
         <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -246,18 +248,20 @@
       <el-table-column label="方案编号" align="center" prop="faid" />
       <el-table-column label="教师编号" align="center" prop="jsid" />
       <el-table-column label="当前状态" align="center" prop="dqzt" :formatter="dqztFormat" />
-      <el-table-column label="创建人" align="center" prop="createuserid" />
-      <el-table-column label="基地校审核人" align="center" prop="jdxshr" />
       <el-table-column label="基地校审核状态" align="center" prop="jdxshzt" :formatter="jdxshztFormat" />
-      <el-table-column label="上报理由" align="center" prop="sbly" />
-      <el-table-column label="区级审核人" align="center" prop="qjshr" />
       <el-table-column label="区级审核状态" align="center" prop="qjshzt" :formatter="qjshztFormat" />
       <el-table-column label="区级审核意见" align="center" prop="qjshyj" :formatter="qjshyjFormat" />
+      <el-table-column label="综合得分" align="center" prop="zhdf" />
+      <el-table-column label="综合得分2" align="center" prop="zhdf2" />
+
+      <!-- <el-table-column label="创建人" align="center" prop="createuserid" />
+      <el-table-column label="基地校审核人" align="center" prop="jdxshr" />
+      <el-table-column label="上报理由" align="center" prop="sbly" />
+      <el-table-column label="区级审核人" align="center" prop="qjshr" />
       <el-table-column label="基地排序" align="center" prop="jdpx" />
       <el-table-column label="案例分析得分" align="center" prop="alfxdf" />
       <el-table-column label="教案设计得分" align="center" prop="jasjdf" />
       <el-table-column label="钢笔字得分" align="center" prop="gbzdf" />
-      <el-table-column label="综合得分" align="center" prop="zhdf" />
       <el-table-column label="成绩导入创建时间" align="center" prop="cjdrcreateTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.cjdrcreateTime, '{y}-{m}-{d}') }}</span>
@@ -270,8 +274,8 @@
         </template>
       </el-table-column>
       <el-table-column label="面试结果模拟课堂教学" align="center" prop="msjgmnktjxdf" />
-      <el-table-column label="演讲得分" align="center" prop="yjdf" />
-      <el-table-column label="综合得分2" align="center" prop="zhdf2" />
+      <el-table-column label="演讲得分" align="center" prop="yjdf" /> -->
+      
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -476,6 +480,30 @@ export default {
       form: {},
       // 表单校验
       rules: {
+        faid: [
+          { required: true, message: "方案编号不能为空", trigger: "blur" },
+        ],
+        jsid: [
+          { required: true, message: "教师编号不能为空", trigger: "blur" },
+        ],
+        dqzt: [
+          { required: true, message: "当前状态不能为空", trigger: "blur" },
+        ],
+        jdxshzt: [
+          { required: true, message: "基地校审核状态不能为空", trigger: "blur" },
+        ],
+        qjshzt: [
+          { required: true, message: "区级审核状态不能为空", trigger: "blur" },
+        ],
+        qjshyj: [
+          { required: true, message: "区级审核意见不能为空", trigger: "blur" },
+        ],
+        zhdf: [
+          { required: true, message: "综合得分不能为空", trigger: "blur" },
+        ],
+        zhdf2: [
+          { required: true, message: "综合得分2不能为空", trigger: "blur" },
+        ],
       }
     };
   },
