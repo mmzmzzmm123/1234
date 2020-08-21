@@ -1,6 +1,7 @@
 package com.ruoyi.web.controller.jxjs;
 
 import java.util.List;
+
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,14 +23,13 @@ import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
  * 见习教师基本信息Controller
- * 
+ *
  * @author ruoyi
  * @date 2020-08-20
  */
 @RestController
 @RequestMapping("/jxjs/jxjsjbxx")
-public class TsbzJxjsjbxxController extends BaseController
-{
+public class TsbzJxjsjbxxController extends BaseController {
     @Autowired
     private ITsbzJxjsjbxxService tsbzJxjsjbxxService;
 
@@ -38,8 +38,7 @@ public class TsbzJxjsjbxxController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('jxjs:jdx:list')")
     @GetMapping("/listnotjdx")
-    public TableDataInfo listnotjdx(TsbzJxjsjbxx tsbzJxjsjbxx)
-    {
+    public TableDataInfo listnotjdx(TsbzJxjsjbxx tsbzJxjsjbxx) {
         startPage();
         List<TsbzJxjsjbxx> list = tsbzJxjsjbxxService.selectTsbzJxjsjbxxListnotjdx(tsbzJxjsjbxx);
         return getDataTable(list);
@@ -50,8 +49,7 @@ public class TsbzJxjsjbxxController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('jxjs:jxjsjbxx:list')")
     @GetMapping("/list")
-    public TableDataInfo list(TsbzJxjsjbxx tsbzJxjsjbxx)
-    {
+    public TableDataInfo list(TsbzJxjsjbxx tsbzJxjsjbxx) {
         startPage();
         List<TsbzJxjsjbxx> list = tsbzJxjsjbxxService.selectTsbzJxjsjbxxList(tsbzJxjsjbxx);
         return getDataTable(list);
@@ -63,8 +61,7 @@ public class TsbzJxjsjbxxController extends BaseController
     @PreAuthorize("@ss.hasPermi('jxjs:jxjsjbxx:export')")
     @Log(title = "见习教师基本信息", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
-    public AjaxResult export(TsbzJxjsjbxx tsbzJxjsjbxx)
-    {
+    public AjaxResult export(TsbzJxjsjbxx tsbzJxjsjbxx) {
         List<TsbzJxjsjbxx> list = tsbzJxjsjbxxService.selectTsbzJxjsjbxxList(tsbzJxjsjbxx);
         ExcelUtil<TsbzJxjsjbxx> util = new ExcelUtil<TsbzJxjsjbxx>(TsbzJxjsjbxx.class);
         return util.exportExcel(list, "jxjsjbxx");
@@ -75,8 +72,7 @@ public class TsbzJxjsjbxxController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('jxjs:jxjsjbxx:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
-    {
+    public AjaxResult getInfo(@PathVariable("id") Long id) {
         return AjaxResult.success(tsbzJxjsjbxxService.selectTsbzJxjsjbxxById(id));
     }
 
@@ -86,8 +82,7 @@ public class TsbzJxjsjbxxController extends BaseController
     @PreAuthorize("@ss.hasPermi('jxjs:jxjsjbxx:add')")
     @Log(title = "见习教师基本信息", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody TsbzJxjsjbxx tsbzJxjsjbxx)
-    {
+    public AjaxResult add(@RequestBody TsbzJxjsjbxx tsbzJxjsjbxx) {
         return toAjax(tsbzJxjsjbxxService.insertTsbzJxjsjbxx(tsbzJxjsjbxx));
     }
 
@@ -97,9 +92,32 @@ public class TsbzJxjsjbxxController extends BaseController
     @PreAuthorize("@ss.hasPermi('jxjs:jxjsjbxx:edit')")
     @Log(title = "见习教师基本信息", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody TsbzJxjsjbxx tsbzJxjsjbxx)
-    {
+    public AjaxResult edit(@RequestBody TsbzJxjsjbxx tsbzJxjsjbxx) {
         return toAjax(tsbzJxjsjbxxService.updateTsbzJxjsjbxx(tsbzJxjsjbxx));
+    }
+
+    /**
+     * 修改见习教师基本信息
+     */
+    @PreAuthorize("@ss.hasPermi('jxjs:jdx:edit')")
+    @Log(title = "见习教师基本信息", businessType = BusinessType.UPDATE)
+    @PostMapping("/updatejsjdx/{ids}/{jdxid}")
+    public AjaxResult updateJsJdx(@PathVariable Long[] ids, @PathVariable String jdxid) {
+        int iCount = 0;
+        System.out.println("jsid=" + ids[0]);
+        System.out.println("jdxid=" + jdxid);
+        if (ids == null || ids.length == 0) {
+            return AjaxResult.error("请选择要分配的见习教师");
+        }
+        TsbzJxjsjbxx tsbzJxjsjbxx = null;
+        for (int i = 0; i < ids.length; i++) {
+
+            tsbzJxjsjbxx = new TsbzJxjsjbxx();
+            tsbzJxjsjbxx.setId(ids[i]);
+            tsbzJxjsjbxx.setJdxid(jdxid);
+            iCount = iCount + (tsbzJxjsjbxxService.updateTsbzJxjsjbxx(tsbzJxjsjbxx));
+        }
+        return toAjax(iCount);
     }
 
     /**
@@ -107,9 +125,8 @@ public class TsbzJxjsjbxxController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('jxjs:jxjsjbxx:remove')")
     @Log(title = "见习教师基本信息", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
-    {
+    @DeleteMapping("/{ids}")
+    public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(tsbzJxjsjbxxService.deleteTsbzJxjsjbxxByIds(ids));
     }
 }

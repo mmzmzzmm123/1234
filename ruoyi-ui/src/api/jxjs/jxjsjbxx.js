@@ -35,6 +35,14 @@ export function addJxjsjbxx(data) {
   })
 }
 
+// 新增基地校
+export function updateJxjsJdx(id, jdxid) {
+  return request({
+    url: '/jxjs/jxjsjbxx/updatejsjdx/' + id + "/" + jdxid,
+    method: 'post'
+  })
+}
+
 // 修改见习教师基本信息
 export function updateJxjsjbxx(data) {
   return request({

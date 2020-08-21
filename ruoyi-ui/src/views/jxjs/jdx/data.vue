@@ -285,6 +285,9 @@ export default {
     };
   },
   created() {
+    const jdxId = this.$route.params && this.$route.params.id;
+    //console.log(jdxId);
+    this.queryParams.jdxid = jdxId;
     this.getList();
     this.getDicts("sys_user_sex").then((response) => {
       this.xbOptions = response.data;

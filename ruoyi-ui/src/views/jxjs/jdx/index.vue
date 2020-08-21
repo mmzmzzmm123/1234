@@ -192,22 +192,20 @@
 
     <!-- 添加或修改基地校对话框 -->
     <el-dialog title="基地校分配见习教师" :visible.sync="open_fpjs" width="600px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="100px">
-        <el-table :data="jxjsjbxxList" @selection-change="handleSelectionChange">
-          <el-table-column type="selection" width="55" align="center" />
-          <!-- <el-table-column label="编号" align="center" prop="id" /> -->
-          <el-table-column label="姓名" align="center" prop="name" />
-          <!-- <el-table-column label="性别" align="center" prop="xb" :formatter="xbFormat" />
+      <el-table :data="jxjsjbxxList" @selection-change="handleSelectionChangeFpjs">
+        <el-table-column type="selection" width="55" align="center" />
+        <!-- <el-table-column label="编号" align="center" prop="id" /> -->
+        <el-table-column label="姓名" align="center" prop="name" />
+        <!-- <el-table-column label="性别" align="center" prop="xb" :formatter="xbFormat" />
           <el-table-column label="政治面貌" align="center" prop="zzmm" :formatter="zzmmFormat" />
           <el-table-column label="民族" align="center" prop="mz" :formatter="mzFormat" />
           <el-table-column label="学历" align="center" prop="xl" :formatter="xlFormat" />
           <el-table-column label="学位" align="center" prop="xw" :formatter="xwFormat" />
-          <el-table-column label="是否师范生" align="center" prop="sfsfs" :formatter="sfsfsFormat" />-->
-          <el-table-column label="录取年份" align="center" prop="lqnf" />
-        </el-table>
-      </el-form>
+        <el-table-column label="是否师范生" align="center" prop="sfsfs" :formatter="sfsfsFormat" />-->
+        <el-table-column label="录取年份" align="center" prop="lqnf" />
+      </el-table>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button type="primary" @click="submitForm_fpjs">确 定</el-button>
         <el-button @click="cancel_fpjs">取 消</el-button>
       </div>
     </el-dialog>
@@ -217,7 +215,11 @@
 <script>
 import { listJdx, getJdx, delJdx, addJdx, updateJdx } from "@/api/jxjs/jdx";
 
-import { listJxjsjbxxnotjdx, getJxjsjbxx } from "@/api/jxjs/jxjsjbxx";
+import {
+  listJxjsjbxxnotjdx,
+  getJxjsjbxx,
+  updateJxjsJdx,
+} from "@/api/jxjs/jxjsjbxx";
 
 export default {
   name: "Jdx",
@@ -227,6 +229,8 @@ export default {
       loading: true,
       // 选中数组
       ids: [],
+      jdxid: "",
+      jsIds: [],
       // 非单个禁用
       single: true,
       // 非多个禁用
@@ -360,6 +364,10 @@ export default {
       this.single = selection.length !== 1;
       this.multiple = !selection.length;
     },
+    // 多选框选中数据
+    handleSelectionChangeFpjs(selection) {
+      this.jsIds = selection.map((item) => item.id);
+    },
     /** 新增按钮操作 */
     handleAdd() {
       this.reset();
@@ -400,6 +408,20 @@ export default {
         }
       });
     },
+    /** 分配教师提交按钮 */
+    submitForm_fpjs() {
+      if (this.jsIds == null || this.jsIds.length == 0) {
+        this.msgError("请选择要分配的教师");
+      } else {
+        console.log(this.jsIds[0]);
+        updateJxjsJdx(this.jsIds, this.jdxid).then((response) => {
+          if (response.code === 200) {
+            this.msgSuccess("分配成功");
+            this.open_fpjs = false;
+          }
+        });
+      }
+    },
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
@@ -421,6 +443,7 @@ export default {
     handleFpjs(row) {
       const ids = row.id || this.ids;
       console.log(ids);
+      this.jdxid = ids;
       this.open_fpjs = true;
       this.getJxjsList();
     },
