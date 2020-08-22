@@ -320,6 +320,19 @@
         this.open = true;
         this.title = "添加书签菜单";
       },
+      // /** 修改按钮操作 */
+      // handleUpdate(row) {
+      //   this.reset();
+      //   this.getTreeselect(); //树
+      //   if (row != undefined) {
+      //     this.form.parentId = row.menuId;
+      //   }
+      //   getMenu(row.menuId).then(response => {
+      //     this.form = response.data;
+      //     this.open = true;
+      //     this.title = "修改书签菜单";
+      //   });
+      // },
       // 表单重置
       reset() {
         this.form = {
@@ -363,7 +376,7 @@
   	//if (treeNode.parentNode && treeNode.parentNode.id!=1) return;
   	var switchObjspan = $("#" + treeNode.tId + "_span");
 
-  	var editStr = "<span class="+treeNode.tId+"_sz onclick='editBookmark()' style='color: #9e9e9e;float:right;display: inline-block;margin-right: 15px;font-size:8px' onfocus='this.blur();'><i class='el-icon-edit'></i></span>";
+  	var editStr = "<span class="+treeNode.tId+"_sz data-parentId="+treeNode.parentId+" data-menuId="+treeNode.menuId+" onclick='editBookmark(this)' style='color: #9e9e9e;float:right;display: inline-block;margin-right: 15px;font-size:8px' onfocus='this.blur();'><i class='el-icon-edit'></i></span>";
   	switchObjspan.after(editStr);
 
     $("." + treeNode.tId + "_count").unbind().remove();
@@ -426,31 +439,33 @@
 
 
       editBookmark:function(e){
-        var that=this;
+        this.reset();
+        this.getTreeselect();
+        if (e.getAttribute("data-menuId")!=null&&e.getAttribute("data-parentId")!=null) {
+          this.form.parentId = e.getAttribute("data-parentId");
+        }
+        getMenu(e.getAttribute("data-menuId")).then(response => {
+          this.form = response.data;
+          this.open = true;
+          this.title = "修改书签菜单";
+        });
 
-        //console.log("menuid:"+e.srcElement.dataset.menuId)
 
-
-        that.handleAdd();//新增
+        //阻止冒泡事件
         if ( e && e.stopPropagation )
         //因此它支持W3C的stopPropagation()方法
           e.stopPropagation();
         else
         //否则，我们需要使用IE的方式来取消事件冒泡
           window.event.cancelBubble = true;
-
         return false;
-
-
       },
 
     },
     mounted(){
-
-      window['editBookmark'] = () => {
-        this.editBookmark()
+      window['editBookmark'] = (e) => {
+        this.editBookmark(e)
       }
-
     },
     handleCommand(command) {
       this.$message('click on item ' + command);
