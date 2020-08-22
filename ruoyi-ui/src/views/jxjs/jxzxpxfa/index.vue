@@ -128,6 +128,13 @@
             size="mini"
             type="text"
             icon="el-icon-edit"
+            @click="handleCopy(scope.row)"
+            v-hasPermi="['jxjs:jxzxpxfa:add']"
+          >复制</el-button>
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['jxjs:jxzxpxfa:edit']"
           >修改</el-button>
@@ -241,6 +248,7 @@ import {
   addJxzxpxfa,
   updateJxzxpxfa,
   changeStatus,
+  copyJxzxpxfa,
 } from "@/api/jxjs/jxzxpxfa";
 
 import { getToken } from "@/utils/auth";
@@ -253,6 +261,7 @@ export default {
   },
   data() {
     return {
+      inviteCode: "",
       // 遮罩层
       loading: true,
       // 选中数组
@@ -385,6 +394,62 @@ export default {
         this.loading = false;
       });
     },
+    /** 复制按钮操作 */
+    handleCopy(row) {
+      const id = row.id;
+      this.$confirm(
+        '是否复制见习之星评选方案编号为"' + id + '"的数据项?',
+        "警告",
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+        }
+      )
+        .then(function () {
+          return copyJxzxpxfa(id);
+        })
+        .then(() => {
+          this.getList();
+          this.msgSuccess("复制成功");
+        })
+        .catch(function () {});
+    },
+    
+    // // 一键
+    // getUser() {
+    //   getUserProfile().then((response) => {
+    //     this.user = response.data;
+    //     console.log(this.user);
+    //     // this.inviteCode =
+    //     //   response.data.dept.deptName +
+    //     //   "评选方案 " +
+    //     //   "http://" +
+    //     //   domain +
+    //     //   "/experience/apply/" +
+    //     //   response.data.dept.deptId;
+    //   });
+    // },
+    // // 一键复制
+    // copy(e, text) {
+    //   const clipboard = new Clipboard(e.target, { text: () => text });
+    //   clipboard.on("success", (e) => {
+    //     this.msgSuccess("复制成功");
+    //     // 释放内存
+    //     clipboard.off("error");
+    //     clipboard.off("success");
+    //     clipboard.destroy();
+    //   });
+    //   clipboard.on("error", (e) => {
+    //     // 不支持复制
+    //     this.msgError("手机权限不支持复制功能");
+    //     // 释放内存
+    //     clipboard.off("error");
+    //     clipboard.off("success");
+    //     clipboard.destroy();
+    //   });
+    //   clipboard.onClick(e);
+    // },
     // 取消按钮
     cancel() {
       this.open = false;

@@ -108,4 +108,14 @@ public class TsbzJxzxpxfaController extends BaseController {
     public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(tsbzJxzxpxfaService.deleteTsbzJxzxpxfaByIds(ids));
     }
+    /**
+     * 复制见习之星评选方案
+     */
+    @PreAuthorize("@ss.hasPermi('jxjs:jxzxpxfa:add')")
+    @Log(title = "见习之星评选方案", businessType = BusinessType.INSERT)
+    @PostMapping("/copy/{id}")
+    public AjaxResult copy(@PathVariable Long id) {
+        TsbzJxzxpxfa tsbzJx = tsbzJxzxpxfaService.selectTsbzJxzxpxfaById(id);
+        return toAjax(tsbzJxzxpxfaService.insertTsbzJxzxpxfa(tsbzJx));
+    }
 }
