@@ -51,7 +51,18 @@
 
 
       </div>
-      <div  class="bookmarklist" v-loading="loading">
+
+      <div class="nullbookmark" v-if="showimg">
+          <div class="nullbookmark-img">
+
+          </div>
+        <div style="color: #000000" class="nullbookmark-text">
+          此目录还未添加书签
+        </div>
+
+      </div>
+
+      <div  class="bookmarklist" v-loading="loading" v-if="showbookmark">
 
         <el-row >
 
@@ -108,6 +119,8 @@
 
         data: function () {
             return {
+              showbookmark:true,
+              showimg:false,
               loading:false,
               queryParams: {
                 pageNum: 1,
@@ -152,9 +165,14 @@
           getList() {
             this.loading = true;
             selectBymenuIdUserID(this.queryParams).then(response => {
+              if (response.total!=0&&response.code==200){
               this.bookmarkList = response.rows;
               this.total = response.total;
               this.loading = false;
+              }else {
+                this.showbookmark = false;
+                this.showimg = true;
+              }
             });
           },
 
@@ -191,6 +209,29 @@
   }
   .filter-sort-dropdown div{
     display: none!important;
+  }
+  .nullbookmark{
+    display: flex;
+    flex-flow: column;
+    margin-top: 10%;
+  }
+  .nullbookmark-img{
+    margin: 0 auto;
+    width:250px;
+    height: 250px;
+    justify-content: center;
+    align-content: center;
+    background-image: url("https://s1.ax1x.com/2020/08/22/dawFp9.png") ;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+  }
+
+  .nullbookmark-text{
+    margin: 0 auto;
+    width:250px;
+    text-align: center;
+    color: #D4D4D4!important;
+
   }
 
 </style>
