@@ -41,7 +41,7 @@
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['jxjs:jdcx:edit']"
-        >提交</el-button>
+        >修改</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -53,58 +53,52 @@
           v-hasPermi="['jxjs:jdcx:remove']"
         >删除</el-button>
       </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="warning"
+          icon="el-icon-check"
+          size="mini"
+          :disabled="multiple"
+          @click="handleCheck"
+          v-hasPermi="['jxjs:jdcx:edit']"
+        >提交</el-button>
+      </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="jdcxList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="编号" align="center" prop="id" />
+      <el-table-column type="selection" width="55" align="center" :selectable="isShow" />
+      <!-- <el-table-column label="编号" align="center" prop="id" /> -->
       <el-table-column label="方案名称" align="center" prop="faid" :formatter="faFormat" />
       <el-table-column label="教师姓名" align="center" prop="jsid" :formatter="jsFormat" />
       <el-table-column label="当前状态" align="center" prop="dqzt" :formatter="dqztFormat" />
-      <el-table-column label="基地校审核状态" align="center" prop="jdxshzt" :formatter="jdxshztFormat" />
-      <el-table-column label="区级审核状态" align="center" prop="qjshzt" :formatter="qjshztFormat" />
-      <el-table-column label="区级审核意见" align="center" prop="qjshyj" :formatter="qjshyjFormat" />
-      <el-table-column label="综合得分" align="center" prop="zhdf" />
-      <!-- <el-table-column label="综合得分2" align="center" prop="zhdf2" /> -->
-
-      <!-- <el-table-column label="创建人" align="center" prop="createuserid" />
-      <el-table-column label="基地校审核人" align="center" prop="jdxshr" />
+      <el-table-column label="基地校意见" align="center" prop="jdxshzt" :formatter="jdxshztFormat" />
       <el-table-column label="上报理由" align="center" prop="sbly" />
-      <el-table-column label="区级审核人" align="center" prop="qjshr" />
-      <el-table-column label="基地排序" align="center" prop="jdpx" />
-      <el-table-column label="案例分析得分" align="center" prop="alfxdf" />
-      <el-table-column label="教案设计得分" align="center" prop="jasjdf" />
-      <el-table-column label="钢笔字得分" align="center" prop="gbzdf" />
-      <el-table-column label="成绩导入创建时间" align="center" prop="cjdrcreateTime" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.cjdrcreateTime, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="面试确认" align="center" prop="msqr" />
-      <el-table-column label="面试确认时间" align="center" prop="msqrcreateTime" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.msqrcreateTime, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="面试结果模拟课堂教学" align="center" prop="msjgmnktjxdf" />
-      <el-table-column label="演讲得分" align="center" prop="yjdf" />-->
-
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-check"
+            @click="handleCheck(scope.row)"
+            v-hasPermi="['jxjs:jdcx:edit']"
+            v-show="isShow(scope.row)"
+          >提交</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['jxjs:jdcx:edit']"
-          >提交</el-button>
+            v-show="isShow(scope.row)"
+          >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['jxjs:jdcx:remove']"
+            v-show="isShow(scope.row)"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -119,114 +113,33 @@
     />
 
     <!-- 添加或修改基地区级审核对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="800px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="方案编号" prop="faid">
-          <el-input v-model="form.faid" placeholder="请输入方案编号" />
-        </el-form-item>
-        <el-form-item label="教师编号" prop="jsid">
-          <el-input v-model="form.jsid" placeholder="请输入教师编号" />
-        </el-form-item>
-        <el-form-item label="当前状态" prop="dqzt">
-          <el-select v-model="form.dqzt" placeholder="请选择当前状态">
-            <el-option
-              v-for="dict in dqztOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            ></el-option>
+          <el-select v-model="form.faid" placeholder="请选择方案">
+            <el-option v-for="dict in faOptions" :key="dict.id" :label="dict.name" :value="dict.id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="创建人" prop="createuserid">
-          <el-input v-model="form.createuserid" placeholder="请输入创建人" />
-        </el-form-item>
-        <el-form-item label="基地校审核人" prop="jdxshr">
-          <el-input v-model="form.jdxshr" placeholder="请输入基地校审核人" />
-        </el-form-item>
-        <el-form-item label="基地校审核状态" prop="jdxshzt">
-          <el-select v-model="form.jdxshzt" placeholder="请选择基地校审核状态">
-            <el-option
-              v-for="dict in jdxshztOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            ></el-option>
-          </el-select>
+        <el-form-item label="选择教师" prop="dqzt">
+          <el-checkbox
+            :indeterminate="isIndeterminate"
+            v-model="checkAll"
+            @change="handleCheckAllChange"
+            :disabled="isable"
+          >全选</el-checkbox>
+          <div style="margin: 15px 0;"></div>
+          <el-checkbox-group v-model="checkedJss" @change="handlecheckedJssChange">
+            <el-checkbox
+              v-for="js in jss"
+              :label="js.id"
+              :key="js.id"
+              :disabled="isable"
+            >{{js.name}}</el-checkbox>
+          </el-checkbox-group>
+          <el-input v-model="form.dqzt" v-if="false" />
         </el-form-item>
         <el-form-item label="上报理由" prop="sbly">
           <el-input v-model="form.sbly" placeholder="请输入上报理由" />
-        </el-form-item>
-        <el-form-item label="区级审核人" prop="qjshr">
-          <el-input v-model="form.qjshr" placeholder="请输入区级审核人" />
-        </el-form-item>
-        <el-form-item label="区级审核状态" prop="qjshzt">
-          <el-select v-model="form.qjshzt" placeholder="请选择区级审核状态">
-            <el-option
-              v-for="dict in qjshztOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="区级审核意见" prop="qjshyj">
-          <el-select v-model="form.qjshyj" placeholder="请选择区级审核意见">
-            <el-option
-              v-for="dict in qjshyjOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="基地排序" prop="jdpx">
-          <el-input v-model="form.jdpx" placeholder="请输入基地排序" />
-        </el-form-item>
-        <el-form-item label="案例分析得分" prop="alfxdf">
-          <el-input v-model="form.alfxdf" placeholder="请输入案例分析得分" />
-        </el-form-item>
-        <el-form-item label="教案设计得分" prop="jasjdf">
-          <el-input v-model="form.jasjdf" placeholder="请输入教案设计得分" />
-        </el-form-item>
-        <el-form-item label="钢笔字得分" prop="gbzdf">
-          <el-input v-model="form.gbzdf" placeholder="请输入钢笔字得分" />
-        </el-form-item>
-        <el-form-item label="综合得分" prop="zhdf">
-          <el-input v-model="form.zhdf" placeholder="请输入综合得分" />
-        </el-form-item>
-        <el-form-item label="成绩导入创建时间" prop="cjdrcreateTime">
-          <el-date-picker
-            clearable
-            size="small"
-            style="width: 200px"
-            v-model="form.cjdrcreateTime"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="选择成绩导入创建时间"
-          ></el-date-picker>
-        </el-form-item>
-        <el-form-item label="面试确认" prop="msqr">
-          <el-input v-model="form.msqr" placeholder="请输入面试确认" />
-        </el-form-item>
-        <el-form-item label="面试确认时间" prop="msqrcreateTime">
-          <el-date-picker
-            clearable
-            size="small"
-            style="width: 200px"
-            v-model="form.msqrcreateTime"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="选择面试确认时间"
-          ></el-date-picker>
-        </el-form-item>
-        <el-form-item label="面试结果模拟课堂教学" prop="msjgmnktjxdf">
-          <el-input v-model="form.msjgmnktjxdf" placeholder="请输入面试结果模拟课堂教学" />
-        </el-form-item>
-        <el-form-item label="演讲得分" prop="yjdf">
-          <el-input v-model="form.yjdf" placeholder="请输入演讲得分" />
-        </el-form-item>
-        <el-form-item label="综合得分2" prop="zhdf2">
-          <el-input v-model="form.zhdf2" placeholder="请输入综合得分2" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -245,6 +158,7 @@ import {
   addJdcx,
   updateJdcx,
   exportJdcx,
+  checkJdcx,
 } from "@/api/jxjs/jdcx";
 
 import { listJxzxpxfa } from "@/api/jxjs/jxzxpxfa";
@@ -255,6 +169,12 @@ export default {
   name: "Jdcx",
   data() {
     return {
+      isable: false,
+      isCheck: true,
+      checkAll: false,
+      checkedJss: [],
+      jss: [],
+      isIndeterminate: false,
       // 遮罩层
       loading: true,
       // 选中数组
@@ -277,8 +197,6 @@ export default {
       dqztOptions: [],
       // 基地校审核状态字典
       jdxshztOptions: [],
-      // 区级审核状态字典
-      qjshztOptions: [],
       // 区级审核意见字典
       qjshyjOptions: [],
       //方案
@@ -319,33 +237,12 @@ export default {
       form: {},
       // 表单校验
       rules: {
-        faid: [
-          { required: true, message: "方案编号不能为空", trigger: "blur" },
-        ],
-        jsid: [
-          { required: true, message: "教师编号不能为空", trigger: "blur" },
-        ],
+        faid: [{ required: true, message: "方案不能为空", trigger: "blur" }],
         dqzt: [
-          { required: true, message: "当前状态不能为空", trigger: "blur" },
+          { required: true, message: "请至少选择一个教师", trigger: "blur" },
         ],
-        jdxshzt: [
-          {
-            required: true,
-            message: "基地校审核状态不能为空",
-            trigger: "blur",
-          },
-        ],
-        qjshzt: [
-          { required: true, message: "区级审核状态不能为空", trigger: "blur" },
-        ],
-        qjshyj: [
-          { required: true, message: "区级审核意见不能为空", trigger: "blur" },
-        ],
-        zhdf: [
-          { required: true, message: "综合得分不能为空", trigger: "blur" },
-        ],
-        zhdf2: [
-          { required: true, message: "综合得分2不能为空", trigger: "blur" },
+        sbly: [
+          { required: true, message: "上报理由不能为空", trigger: "blur" },
         ],
       },
     };
@@ -357,17 +254,19 @@ export default {
     this.getDicts("sys_dm_shzt").then((response) => {
       this.dqztOptions = response.data;
     });
-    this.getDicts("sys_dm_shzt").then((response) => {
-      this.jdxshztOptions = response.data;
-    });
-    this.getDicts("sys_dm_shzt").then((response) => {
-      this.qjshztOptions = response.data;
-    });
     this.getDicts("sys_dm_shyj").then((response) => {
-      this.qjshyjOptions = response.data;
+      this.jdxshztOptions = response.data;
     });
   },
   methods: {
+    isShow(row) {
+      console.log(row.dqzt);
+      if (row.dqzt == "2" || row.dqzt == "9") {
+        return false;
+      } else {
+        return true;
+      }
+    },
     // 字典翻译
     faFormat(row, column) {
       // return this.selectDictLabel(this.classOptions, row.classid);
@@ -422,14 +321,6 @@ export default {
     jdxshztFormat(row, column) {
       return this.selectDictLabel(this.jdxshztOptions, row.jdxshzt);
     },
-    // 区级审核状态字典翻译
-    qjshztFormat(row, column) {
-      return this.selectDictLabel(this.qjshztOptions, row.qjshzt);
-    },
-    // 区级审核意见字典翻译
-    qjshyjFormat(row, column) {
-      return this.selectDictLabel(this.qjshyjOptions, row.qjshyj);
-    },
     // 取消按钮
     cancel() {
       this.open = false;
@@ -463,6 +354,8 @@ export default {
         zhdf2: null,
       };
       this.resetForm("form");
+
+      this.checkedJss = [];
     },
     /** 搜索按钮操作 */
     handleQuery() {
@@ -483,17 +376,26 @@ export default {
     /** 新增按钮操作 */
     handleAdd() {
       this.reset();
+      this.isable = false;
       this.open = true;
-      this.title = "添加基地区级审核";
+      this.title = "基地校初选";
+      listJxjsjbxx(null).then((response) => {
+        this.jss = response.rows;
+      });
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
+      this.isable = true;
       const id = row.id || this.ids;
       getJdcx(id).then((response) => {
         this.form = response.data;
+        listJxjsjbxx(null).then((response) => {
+          this.jss = response.rows;
+        });
+        this.checkedJss.push(response.data.jsid);
         this.open = true;
-        this.title = "修改基地区级审核";
+        this.title = "修改基地校初选信息";
       });
     },
     /** 提交按钮 */
@@ -524,7 +426,7 @@ export default {
     handleDelete(row) {
       const ids = row.id || this.ids;
       this.$confirm(
-        '是否确认删除基地区级审核编号为"' + ids + '"的数据项?',
+        '是否确认删除基地校初级审核编号为"' + ids + '"的数据项?',
         "警告",
         {
           confirmButtonText: "确定",
@@ -541,21 +443,60 @@ export default {
         })
         .catch(function () {});
     },
-    /** 导出按钮操作 */
-    handleExport() {
-      const queryParams = this.queryParams;
-      this.$confirm("是否确认导出所有基地区级审核数据项?", "警告", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-      })
+    /** 提交按钮操作 */
+    handleCheck(row) {
+      const ids = row.id || this.ids;
+      this.$confirm(
+        '确认提交基地校初级审核编号为"' + ids + '"的数据项?',
+        "警告",
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+        }
+      )
         .then(function () {
-          return exportJdcx(queryParams);
+          return checkJdcx(ids);
         })
-        .then((response) => {
-          this.download(response.msg);
+        .then(() => {
+          this.getList();
+          this.msgSuccess("提交成功");
         })
         .catch(function () {});
+    },
+    handleCheckAllChange(val) {
+      // this.checkedJss = val ? this.jss : [];
+      // this.isIndeterminate = false;
+      this.checkedJss = [];
+      this.jss.forEach((item) => {
+        //当全选被选中的时候，循环遍历源数据，把数据的每一项加入到默认选中的数组去
+        this.checkedJss.push(item.id);
+      });
+      this.checkedJss = val ? this.checkedJss : []; //三元表达式，如果val的值为true，那么就把当前默认选中的值赋值给自身，这样页面页面上所有的元素就都选中了。如果为false，就是取消全选
+      this.isIndeterminate = false; //官网说这是个样式控制，是来控制，什么时候半选的，要不要都无所谓，看你需求
+
+      //console.log(this.checkedJss);
+      var cids = "";
+      this.checkedJss.forEach((item) => {
+        //当全选被选中的时候，循环遍历源数据，把数据的每一项加入到默认选中的数组去
+        cids = cids + item + ",";
+      });
+      //console.log(cids);
+      this.form.dqzt = cids;
+    },
+    handlecheckedJssChange(value) {
+      let checkedCount = value.length;
+      this.checkAll = checkedCount === this.jss.length;
+      this.isIndeterminate = checkedCount > 0 && checkedCount < this.jss.length;
+
+      console.log(this.isIndeterminate);
+      var cids = "";
+      this.checkedJss.forEach((item) => {
+        //当全选被选中的时候，循环遍历源数据，把数据的每一项加入到默认选中的数组去
+        cids = cids + item + ",";
+      });
+      //console.log(cids);
+      this.form.dqzt = cids;
     },
   },
 };

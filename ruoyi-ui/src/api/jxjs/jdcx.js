@@ -51,3 +51,11 @@ export function exportJdcx(query) {
     params: query
   })
 }
+
+// 删除基地区级审核
+export function checkJdcx(id) {
+  return request({
+    url: '/jxjs/jdcx/check/' + id,
+    method: 'post'
+  })
+}
