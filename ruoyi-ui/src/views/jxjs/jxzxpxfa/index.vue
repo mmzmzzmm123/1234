@@ -127,7 +127,7 @@
           <el-button
             size="mini"
             type="text"
-            icon="el-icon-edit"
+            icon="el-icon-document-copy"
             @click="handleCopy(scope.row)"
             v-hasPermi="['jxjs:jxzxpxfa:add']"
           >复制</el-button>

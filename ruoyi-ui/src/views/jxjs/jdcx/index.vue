@@ -7,11 +7,11 @@
       v-show="showSearch"
       label-width="68px"
     >
-      <el-form-item label="评选方案" prop="faid">
+      <!-- <el-form-item label="评选方案" prop="faid">
         <el-select v-model="queryParams.faid" placeholder="请选择方案">
           <el-option v-for="dict in faOptions" :key="dict.id" :label="dict.name" :value="dict.id"></el-option>
         </el-select>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="基地校" prop="faid">
         <el-select v-model="queryParams.faid" placeholder="请选择基地校">
           <el-option v-for="dict in faOptions" :key="dict.id" :label="dict.name" :value="dict.id"></el-option>
@@ -58,16 +58,16 @@
 
     <el-table v-loading="loading" :data="jdcxList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="编号" align="center" prop="id" />
-      <el-table-column label="方案名称" align="center" prop="faid" :formatter="faFormat" />
-      <el-table-column label="教师姓名" align="center" prop="jsid" />
+      <el-table-column label="教师姓名" align="center" prop="jsid" :formatter="jsFormat" />
+      <el-table-column label="基地校名称" align="center" prop="jdxid" :formatter="jdxmcFormat" />
       <el-table-column label="当前状态" align="center" prop="dqzt" :formatter="dqztFormat" />
-      <el-table-column label="基地校审核状态" align="center" prop="jdxshzt" :formatter="jdxshztFormat" />
+      <el-table-column label="基地校审核意见" align="center" prop="jdxshzt" :formatter="jdxshztFormat" />
       <el-table-column label="区级审核状态" align="center" prop="qjshzt" :formatter="qjshztFormat" />
-      <el-table-column label="区级审核意见" align="center" prop="qjshyj" :formatter="qjshyjFormat" />
+      <el-table-column label="区级审核建议" align="center" prop="qjshyj" />
+      <!-- <el-table-column label="综合得分2" align="center" prop="zhdf2" /> 
+      <el-table-column label="编号" align="center" prop="id" />
       <el-table-column label="综合得分" align="center" prop="zhdf" />
-      <!-- <el-table-column label="综合得分2" align="center" prop="zhdf2" /> -->
-
+      <el-table-column label="方案名称" align="center" prop="faid" :formatter="faFormat" />-->
       <!-- <el-table-column label="创建人" align="center" prop="createuserid" />
       <el-table-column label="基地校审核人" align="center" prop="jdxshr" />
       <el-table-column label="上报理由" align="center" prop="sbly" />
@@ -122,42 +122,12 @@
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="方案编号" prop="faid">
-          <el-input v-model="form.faid" placeholder="请输入方案编号" />
-        </el-form-item>
-        <el-form-item label="教师编号" prop="jsid">
-          <el-input v-model="form.jsid" placeholder="请输入教师编号" />
-        </el-form-item>
-        <el-form-item label="当前状态" prop="dqzt">
-          <el-select v-model="form.dqzt" placeholder="请选择当前状态">
-            <el-option
-              v-for="dict in dqztOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            ></el-option>
+          <el-select v-model="form.faid" placeholder="请选择方案">
+            <el-option v-for="dict in faOptions" :key="dict.id" :label="dict.name" :value="dict.id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="创建人" prop="createuserid">
-          <el-input v-model="form.createuserid" placeholder="请输入创建人" />
-        </el-form-item>
-        <el-form-item label="基地校审核人" prop="jdxshr">
-          <el-input v-model="form.jdxshr" placeholder="请输入基地校审核人" />
-        </el-form-item>
-        <el-form-item label="基地校审核状态" prop="jdxshzt">
-          <el-select v-model="form.jdxshzt" placeholder="请选择基地校审核状态">
-            <el-option
-              v-for="dict in jdxshztOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="上报理由" prop="sbly">
-          <el-input v-model="form.sbly" placeholder="请输入上报理由" />
-        </el-form-item>
-        <el-form-item label="区级审核人" prop="qjshr">
-          <el-input v-model="form.qjshr" placeholder="请输入区级审核人" />
+        <el-form-item label="教师名称" prop="jsid" :formatter="jsFormat">
+          <el-input v-model="form.jsid" placeholder="请输入教师编号"  />
         </el-form-item>
         <el-form-item label="区级审核状态" prop="qjshzt">
           <el-select v-model="form.qjshzt" placeholder="请选择区级审核状态">
@@ -169,17 +139,10 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="区级审核意见" prop="qjshyj">
-          <el-select v-model="form.qjshyj" placeholder="请选择区级审核意见">
-            <el-option
-              v-for="dict in qjshyjOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            ></el-option>
-          </el-select>
+        <el-form-item label="区级审核建议" prop="qjshyj">
+           <el-input v-model="form.qjshyj" placeholder="请输入审核建议" />
         </el-form-item>
-        <el-form-item label="基地排序" prop="jdpx">
+        <!-- <el-form-item label="基地排序" prop="jdpx">
           <el-input v-model="form.jdpx" placeholder="请输入基地排序" />
         </el-form-item>
         <el-form-item label="案例分析得分" prop="alfxdf">
@@ -193,6 +156,12 @@
         </el-form-item>
         <el-form-item label="综合得分" prop="zhdf">
           <el-input v-model="form.zhdf" placeholder="请输入综合得分" />
+        </el-form-item>
+        <el-form-item label="上报理由" prop="sbly">
+          <el-input v-model="form.sbly" placeholder="请输入上报理由" />
+        </el-form-item>
+        <el-form-item label="区级审核人" prop="qjshr">
+          <el-input v-model="form.qjshr" placeholder="请输入区级审核人" />
         </el-form-item>
         <el-form-item label="成绩导入创建时间" prop="cjdrcreateTime">
           <el-date-picker
@@ -228,6 +197,35 @@
         <el-form-item label="综合得分2" prop="zhdf2">
           <el-input v-model="form.zhdf2" placeholder="请输入综合得分2" />
         </el-form-item>
+        <el-form-item label="教师编号" prop="jsid">
+          <el-input v-model="form.jsid" placeholder="请输入教师编号" />
+        </el-form-item>
+        <el-form-item label="基地校审核人" prop="jdxshr">
+          <el-input v-model="form.jdxshr" placeholder="请输入基地校审核人" />
+        </el-form-item>
+        <el-form-item label="基地校审核状态" prop="jdxshzt">
+          <el-select v-model="form.jdxshzt" placeholder="请选择基地校审核状态">
+            <el-option
+              v-for="dict in jdxshztOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="当前状态" prop="dqzt">
+          <el-select v-model="form.dqzt" placeholder="请选择当前状态">
+            <el-option
+              v-for="dict in dqztOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="创建人" prop="createuserid">
+          <el-input v-model="form.createuserid" placeholder="请输入创建人" />
+        </el-form-item> -->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -248,6 +246,7 @@ import {
 } from "@/api/jxjs/jdcx";
 
 import { listJxzxpxfa } from "@/api/jxjs/jxzxpxfa";
+import { listJxjsjbxx, getJxjsjbxx } from "@/api/jxjs/jxjsjbxx";
 
 export default {
   name: "Jdcx",
@@ -273,12 +272,14 @@ export default {
       open: false,
       // 当前状态字典
       dqztOptions: [],
-      // 基地校审核状态字典
+      // 基地校审核意见字典
       jdxshztOptions: [],
       // 区级审核状态字典
       qjshztOptions: [],
       // 区级审核意见字典
       qjshyjOptions: [],
+      // 教师列表
+      jsOptions: [],
       //方案
       faOptions: [],
       // 查询参数
@@ -349,18 +350,19 @@ export default {
   created() {
     this.getFaList();
     this.getList();
+    this.getJsList();
     this.getDicts("sys_dm_shzt").then((response) => {
       this.dqztOptions = response.data;
     });
-    this.getDicts("sys_dm_shzt").then((response) => {
+    this.getDicts("sys_dm_shyj").then((response) => {
       this.jdxshztOptions = response.data;
     });
-    this.getDicts("sys_dm_shzt").then((response) => {
+    this.getDicts("sys_dm_shyj").then((response) => {
       this.qjshztOptions = response.data;
     });
-    this.getDicts("sys_dm_shyj").then((response) => {
-      this.qjshyjOptions = response.data;
-    });
+    // this.getDicts("sys_dm_shyj").then((response) => {
+    //   this.qjshyjOptions = response.data;
+    // });
   },
   methods: {
     // 字典翻译
@@ -388,9 +390,46 @@ export default {
       this.loading = true;
       listJdcx(this.queryParams).then((response) => {
         this.jdcxList = response.rows;
+        // 过滤未审核和未同意的人员
+        this.jdcxList = this.jdcxList.filter(function(item) {
+          return item.dqzt == 2 && item.jdxshzt == 1;
+        });
         this.total = response.total;
         this.loading = false;
       });
+    },
+    // 获取教师信息
+    getJsList() {
+      listJxjsjbxx(null).then((response) => {
+        this.jsOptions = response.rows;
+        //console.log(this.jsOptions);
+      });
+    },
+    // 基地校名称字典翻译
+    jdxmcFormat(row, column) {
+      // return this.selectDictLabel(this.classOptions, row.classid);
+      var actions = [];
+      var datas = this.jsOptions;
+      Object.keys(datas).map((key) => {
+        if (datas[key].id == "" + row.jsid) {
+          actions.push(datas[key].jdxid);
+          return false;
+        }
+      });
+      return actions.join("");
+    },
+    // 字典翻译
+    jsFormat(row, column) {
+      // return this.selectDictLabel(this.classOptions, row.classid);
+      var actions = [];
+      var datas = this.jsOptions;
+      Object.keys(datas).map((key) => {
+        if (datas[key].id == "" + row.jsid) {
+          actions.push(datas[key].name);
+          return false;
+        }
+      });
+      return actions.join("");
     },
     // 当前状态字典翻译
     dqztFormat(row, column) {
@@ -470,6 +509,7 @@ export default {
       const id = row.id || this.ids;
       getJdcx(id).then((response) => {
         this.form = response.data;
+        console.log(this.form);
         this.open = true;
         this.title = "修改基地区级审核";
       });

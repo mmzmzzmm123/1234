@@ -381,6 +381,7 @@ export default {
       this.title = "基地校初选";
       listJxjsjbxx(null).then((response) => {
         this.jss = response.rows;
+        console.log(this.jss + '-------------');
       });
     },
     /** 修改按钮操作 */
@@ -392,6 +393,7 @@ export default {
         this.form = response.data;
         listJxjsjbxx(null).then((response) => {
           this.jss = response.rows;
+          
         });
         this.checkedJss.push(response.data.jsid);
         this.open = true;

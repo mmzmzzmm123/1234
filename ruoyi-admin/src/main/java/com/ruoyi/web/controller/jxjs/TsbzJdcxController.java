@@ -100,6 +100,7 @@ public class TsbzJdcxController extends BaseController {
     @Log(title = "基地区级审核", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody TsbzJdcx tsbzJdcx) {
+        tsbzJdcx.setQjshr(SecurityUtils.getLoginUser().getUser().getUserId());
         return toAjax(tsbzJdcxService.updateTsbzJdcx(tsbzJdcx));
     }
 
