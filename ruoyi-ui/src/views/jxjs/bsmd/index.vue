@@ -56,14 +56,26 @@
 
     <el-table v-loading="loading" :data="jdcxList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="编号" align="center" prop="id" />
+      <el-table-column label="方案名称" align="center" prop="faname" />
+      <el-table-column label="基地校" align="center" prop="jdxmc" />
+      <el-table-column label="教师姓名" align="center" prop="jsname" />
+      <el-table-column label="性别" align="center" prop="xb" :formatter="xbFormat" />
+      <el-table-column label="学段" align="center" prop="rjxd" :formatter="xdFormat" />
+      <el-table-column label="学科" align="center" prop="rjxk" :formatter="xkFormat" />
+      <el-table-column label="联系方式" align="center" prop="phone" />
+      <el-table-column label="聘任校" align="center" prop="prdwmc" />
+      <el-table-column label="评审状态" align="center" prop="qjshzt" :formatter="qjshztFormat" />
+
+
+
+      <!-- <el-table-column label="编号" align="center" prop="id" />
       <el-table-column label="方案名称" align="center" prop="faid" :formatter="faFormat" />
       <el-table-column label="教师姓名" align="center" prop="jsid" />
       <el-table-column label="当前状态" align="center" prop="dqzt" :formatter="dqztFormat" />
       <el-table-column label="基地校审核状态" align="center" prop="jdxshzt" :formatter="jdxshztFormat" />
       <el-table-column label="区级审核状态" align="center" prop="qjshzt" :formatter="qjshztFormat" />
       <el-table-column label="区级审核意见" align="center" prop="qjshyj" :formatter="qjshyjFormat" />
-      <el-table-column label="综合得分" align="center" prop="zhdf" />
+      <el-table-column label="综合得分" align="center" prop="zhdf" /> -->
       <!-- <el-table-column label="综合得分2" align="center" prop="zhdf2" /> -->
 
       <!-- <el-table-column label="创建人" align="center" prop="createuserid" />
@@ -88,7 +100,7 @@
       <el-table-column label="面试结果模拟课堂教学" align="center" prop="msjgmnktjxdf" />
       <el-table-column label="演讲得分" align="center" prop="yjdf" />-->
 
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <!-- <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -98,7 +110,7 @@
             v-hasPermi="['jxjs:jdcx:view']"
           >详情</el-button>
         </template>
-      </el-table-column>
+      </el-table-column> -->
     </el-table>
 
     <pagination
@@ -227,15 +239,22 @@
     </el-dialog>
     <!-- excel导入对话框lu -->
     <el-dialog :title="upload.title" :visible.sync="upload.open" width="400px" append-to-body>
-      <el-upload ref="upload" :limit="1" accept=".xlsx, .xls" :headers="upload.headers" :action="upload.url + '?updateSupport=' + upload.updateSupport" :disabled="upload.isUploading" :on-progress="handleFileUploadProgress" :on-success="handleFileSuccess" :auto-upload="false" drag>
+      <el-link type="info" style="font-size:14px" @click="importTemplate">下载模板</el-link>
+      <el-upload ref="upload" :limit="1" accept=".xlsx, .xls" :headers="upload.headers" :action="upload.url + '?faide=' + upload.faide" :disabled="upload.isUploading" :on-progress="handleFileUploadProgress" :on-success="handleFileSuccess" :auto-upload="false" drag>
         <i class="el-icon-upload"></i>
         <div class="el-upload__text">
           将文件拖到此处，或
           <em>点击上传</em>
         </div>
         <div class="el-upload__tip" slot="tip">
-          <el-checkbox v-model="upload.updateSupport" />是否更新已经存在的用户数据
-          <el-link type="info" style="font-size:12px" @click="importTemplate">下载模板</el-link>
+          <!-- <el-form-item label="评选方案" prop="faid"> -->
+            <el-select v-model="upload.faide" placeholder="请选择方案">
+              <el-option v-for="dict in faOptions" :key="dict.id" :label="dict.name" :value="dict.id"></el-option>
+            </el-select>
+            <br/>
+          <!-- </el-form-item> -->
+          <!-- <el-checkbox v-model="upload.updateSupport" />是否更新已经存在的用户数据 -->
+          
         </div>
         <div class="el-upload__tip" style="color:red" slot="tip">提示：仅允许导入“xls”或“xlsx”格式文件！</div>
       </el-upload>
@@ -255,6 +274,7 @@ import {
   addJdcx,
   updateJdcx,
   exportJdcx,
+  importTemplate,
 } from "@/api/jxjs/jdcx";
 
 import { getToken } from "@/utils/auth";
@@ -290,6 +310,12 @@ export default {
       qjshztOptions: [],
       // 区级审核意见字典
       qjshyjOptions: [],
+      // 性别
+      xbOptions: [],
+      // 学段
+      xdOptions: [],
+      // 学科
+      xkOptions: [],
       //方案
       faOptions: [],
       // 用户导入参数lu
@@ -302,10 +328,12 @@ export default {
         isUploading: false,
         // 是否更新已经存在的用户数据
         updateSupport: 0,
+        //方案id
+        faide: "",
         // 设置上传的请求头部
         headers: { Authorization: "Bearer " + getToken() },
         // 上传的地址
-        url: process.env.VUE_APP_BASE_API + "/system/user/importData",
+        url: process.env.VUE_APP_BASE_API + "/jxjs/jdcx/importData",
       },
       // 查询参数
       queryParams: {
@@ -387,6 +415,15 @@ export default {
     this.getDicts("sys_dm_shyj").then((response) => {
       this.qjshyjOptions = response.data;
     });
+    this.getDicts("sys_user_sex").then((response) => {
+      this.xbOptions = response.data;
+    });
+    this.getDicts("sys_dm_rjxd").then((response) => {
+      this.xdOptions = response.data;
+    });
+    this.getDicts("sys_dm_rjxk").then((response) => {
+      this.xkOptions = response.data;
+    });
   },
   methods: {
     // 字典翻译
@@ -433,6 +470,18 @@ export default {
     // 区级审核意见字典翻译
     qjshyjFormat(row, column) {
       return this.selectDictLabel(this.qjshyjOptions, row.qjshyj);
+    },
+    // 性别字典翻译
+    xbFormat(row, column) {
+      return this.selectDictLabel(this.xbOptions, row.xb);
+    },
+    // 学段字典翻译
+    xdFormat(row, column) {
+      return this.selectDictLabel(this.xdOptions, row.rjxd);
+    },
+    // 学科字典翻译
+    xkFormat(row, column) {
+      return this.selectDictLabel(this.xkOptions, row.rjxk);
     },
     // 取消按钮
     cancel() {
@@ -563,31 +612,36 @@ export default {
     },
     /** 导入按钮操作 */
     handleImport() {
-      this.upload.title = "用户导入";
+      this.upload.title = "成绩导入";
       this.upload.open = true;
     },
     /** 下载模板操作 */
-    // importTemplate() {
-    //   importTemplate().then((response) => {
-    //     this.download(response.msg);
-    //   });
-    // },
-    // // 文件上传中处理
-    // handleFileUploadProgress(event, file, fileList) {
-    //   this.upload.isUploading = true;
-    // },
-    // // 文件上传成功处理
-    // handleFileSuccess(response, file, fileList) {
-    //   this.upload.open = false;
-    //   this.upload.isUploading = false;
-    //   this.$refs.upload.clearFiles();
-    //   this.$alert(response.msg, "导入结果", { dangerouslyUseHTMLString: true });
-    //   this.getList();
-    // },
-    // // 提交上传文件
-    // submitFileForm() {
-    //   this.$refs.upload.submit();
-    // },
+    importTemplate() {
+      importTemplate().then((response) => {
+        this.download(response.msg);
+      });
+    },
+    // 文件上传中处理
+    handleFileUploadProgress(event, file, fileList) {
+      this.upload.isUploading = true;
+    },
+    // 文件上传成功处理
+    handleFileSuccess(response, file, fileList) {
+      this.upload.open = false;
+      this.upload.isUploading = false;
+      this.$refs.upload.clearFiles();
+      this.$alert("成功导入："+response.msg+"条数据。", "导入结果", { dangerouslyUseHTMLString: true });
+      this.getList();
+    },
+    // 提交上传文件
+    submitFileForm() {
+      if(this.upload.faide==""){
+        this.$alert("请选择方案", "导入结果", { dangerouslyUseHTMLString: true });
+      }else{
+        this.$refs.upload.submit();
+      }
+      
+    },
   },
 };
 </script>

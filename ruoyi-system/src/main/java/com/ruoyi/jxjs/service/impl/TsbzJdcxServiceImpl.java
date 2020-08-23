@@ -104,5 +104,16 @@ public class TsbzJdcxServiceImpl implements ITsbzJdcxService
     {
         return tsbzJdcxMapper.selectTsbzJdcxExport(tsbzJdcx);
     }
+    /**
+     * 成绩导入
+     *
+     * @param tsbzJdcx 基地区级审核
+     * @return 结果
+     */
+    @Override
+    public int updateTsbzJdcxforjsfa(TsbzJdcx tsbzJdcx)
+    {
+        return tsbzJdcxMapper.updateTsbzJdcxforjsfa(tsbzJdcx);
+    }
 
 }

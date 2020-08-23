@@ -65,4 +65,11 @@ public interface TsbzJdcxMapper
      * @return 基地区级审核集合
      */
     public List<TsbzJdcx> selectTsbzJdcxExport(TsbzJdcx tsbzJdcx);
+    /**
+     * 成绩导入
+     *
+     * @param tsbzJdcx 基地区级审核
+     * @return 结果
+     */
+    public int updateTsbzJdcxforjsfa(TsbzJdcx tsbzJdcx);
 }

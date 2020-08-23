@@ -59,3 +59,10 @@ export function checkJdcx(id) {
         method: 'post'
     })
 }
+// 下载成绩导入模板
+export function importTemplate() {
+    return request({
+      url: '/jxjs/jdcx/importTemplate',
+      method: 'get'
+    })
+  }

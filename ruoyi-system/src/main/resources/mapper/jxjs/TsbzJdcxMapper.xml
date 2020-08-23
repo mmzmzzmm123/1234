@@ -189,5 +189,33 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="zhdf2 != null "> and a.zhdf2 = #{zhdf2}</if>
         </where>
     </select>
-
+    <update id="updateTsbzJdcxforjsfa" parameterType="TsbzJdcx">
+        update tsbz_jdcx
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="faid != null">faid = #{faid},</if>
+            <if test="jsid != null">jsid = #{jsid},</if>
+            <if test="dqzt != null">dqzt = #{dqzt},</if>
+            <if test="createuserid != null">createuserid = #{createuserid},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="jdxshr != null">jdxshr = #{jdxshr},</if>
+            <if test="jdxshzt != null">jdxshzt = #{jdxshzt},</if>
+            <if test="sbly != null">sbly = #{sbly},</if>
+            <if test="qjshr != null">qjshr = #{qjshr},</if>
+            <if test="qjshzt != null">qjshzt = #{qjshzt},</if>
+            <if test="qjshyj != null">qjshyj = #{qjshyj},</if>
+            <if test="jdpx != null">jdpx = #{jdpx},</if>
+            <if test="alfxdf != null">alfxdf = #{alfxdf},</if>
+            <if test="jasjdf != null">jasjdf = #{jasjdf},</if>
+            <if test="gbzdf != null">gbzdf = #{gbzdf},</if>
+            <if test="zhdf != null">zhdf = #{zhdf},</if>
+            <if test="cjdrcreateTime != null">cjdrcreate_time = #{cjdrcreateTime},</if>
+            <if test="msqr != null">msqr = #{msqr},</if>
+            <if test="msqrcreateTime != null">msqrcreate_time = #{msqrcreateTime},</if>
+            <if test="msjgmnktjxdf != null">msjgmnktjxdf = #{msjgmnktjxdf},</if>
+            <if test="yjdf != null">yjdf = #{yjdf},</if>
+            <if test="zhdf2 != null">zhdf2 = #{zhdf2},</if>
+            <if test="lqzt != null">lqzt = #{lqzt},</if>
+        </trim>
+        where faid = #{faid} and jsid = #{jsid}
+    </update>
 </mapper>

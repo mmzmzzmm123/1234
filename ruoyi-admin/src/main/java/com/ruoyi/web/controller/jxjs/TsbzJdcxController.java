@@ -4,7 +4,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.jxjs.domain.TsbzJxzxmd;
 import com.ruoyi.jxjs.service.ITsbzJxzxmdService;
 import com.ruoyi.web.controller.common.SchoolCommonController;
@@ -26,6 +29,7 @@ import com.ruoyi.jxjs.domain.TsbzJdcx;
 import com.ruoyi.jxjs.service.ITsbzJdcxService;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 基地区级审核Controller
@@ -50,7 +54,8 @@ public class TsbzJdcxController extends BaseController {
     @GetMapping("/list")
     public TableDataInfo list(TsbzJdcx tsbzJdcx) {
         startPage();
-        List<TsbzJdcx> list = tsbzJdcxService.selectTsbzJdcxList(tsbzJdcx);
+//        List<TsbzJdcx> list = tsbzJdcxService.selectTsbzJdcxList(tsbzJdcx);
+        List<TsbzJdcx> list = tsbzJdcxService.selectTsbzJdcxExport(tsbzJdcx);
         return getDataTable(list);
     }
 
@@ -161,4 +166,32 @@ public class TsbzJdcxController extends BaseController {
     public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(tsbzJdcxService.deleteTsbzJdcxByIds(ids));
     }
+
+    @Log(title = "分数导入", businessType = BusinessType.IMPORT)
+//    @PreAuthorize("@ss.hasPermi('system:user:import')")
+    @PostMapping("/importData")
+    public AjaxResult importData(MultipartFile file,Long faide) throws Exception
+    {
+        ExcelUtil<TsbzJdcx> util = new ExcelUtil<TsbzJdcx>(TsbzJdcx.class);
+        List<TsbzJdcx> tsbzJdcxList = util.importExcel(file.getInputStream());
+        int iCount = 0;
+        for (TsbzJdcx tsbzJdcx:tsbzJdcxList) {
+            tsbzJdcx.setFaid(faide);
+            iCount = iCount + tsbzJdcxService.updateTsbzJdcxforjsfa(tsbzJdcx);
+        }
+//        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+//        String operName = loginUser.getUsername();
+//        String message = userService.importUser(userList, updateSupport, operName);
+        //String message = faide;
+        return AjaxResult.success(String.valueOf(iCount),null);
+    }
+
+    @GetMapping("/importTemplate")
+    public AjaxResult importTemplate()
+    {
+//        ExcelUtil<SysUser> util = new ExcelUtil<SysUser>(SysUser.class);
+        ExcelUtil<TsbzJdcx> util = new ExcelUtil<TsbzJdcx>(TsbzJdcx.class);
+        return util.importTemplateExcel("成绩导入");
+    }
+
 }
