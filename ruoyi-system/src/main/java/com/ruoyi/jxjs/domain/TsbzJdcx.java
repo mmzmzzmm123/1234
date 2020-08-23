@@ -104,6 +104,10 @@ public class TsbzJdcx extends BaseEntity
     /** 综合得分2 */
 //    @Excel(name = "综合得分2")
     private BigDecimal zhdf2;
+    /**
+     * 录取状态
+     */
+    private String lqzt;
 
     @Excel(name = "评选名称")
     private String faname;
@@ -347,7 +351,13 @@ public class TsbzJdcx extends BaseEntity
     {
         return zhdf2;
     }
+    public void setLqzt(String lqzt) {
+        this.lqzt = lqzt;
+    }
 
+    public String getLqzt() {
+        return lqzt;
+    }
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
@@ -374,6 +384,8 @@ public class TsbzJdcx extends BaseEntity
             .append("msjgmnktjxdf", getMsjgmnktjxdf())
             .append("yjdf", getYjdf())
             .append("zhdf2", getZhdf2())
+            .append("lqzt", getLqzt()
+            )
             .toString();
     }
 }
