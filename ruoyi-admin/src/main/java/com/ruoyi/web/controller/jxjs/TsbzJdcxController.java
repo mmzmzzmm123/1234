@@ -113,7 +113,7 @@ public class TsbzJdcxController extends BaseController {
         }
 
         //如果lqzt为1，则代表录取成功，则在见习名单表插入一条记录
-        if (tsbzJdcx.getLqzt().equals("1")) {
+        if (!schoolCommonController.isStringEmpty(tsbzJdcx.getLqzt()) && tsbzJdcx.getLqzt().equals("1")) {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
             Date date = new Date();
             System.out.println("year=" + sdf.format(date));
