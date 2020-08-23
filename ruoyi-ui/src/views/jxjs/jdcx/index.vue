@@ -122,12 +122,14 @@
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="方案编号" prop="faid">
-          <el-select v-model="form.faid" placeholder="请选择方案">
+          <el-select v-model="form.faid" placeholder="请选择方案" :disabled="true">
             <el-option v-for="dict in faOptions" :key="dict.id" :label="dict.name" :value="dict.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="教师名称" prop="jsid" :formatter="jsFormat">
-          <el-input v-model="form.jsid" placeholder="请输入教师编号"  />
+          <el-select v-model="form.jsid" placeholder="请选择教师" :disabled="true"> 
+            <el-option v-for="dict in jsOptions" :key="dict.id" :label="dict.name" :value="dict.id" ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="区级审核状态" prop="qjshzt">
           <el-select v-model="form.qjshzt" placeholder="请选择区级审核状态">
