@@ -28,10 +28,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="msjgmnktjxdf"    column="msjgmnktjxdf"    />
         <result property="yjdf"    column="yjdf"    />
         <result property="zhdf2"    column="zhdf2"    />
+        <result property="lqzt"    column="lqzt"    />
     </resultMap>
 
     <sql id="selectTsbzJdcxVo">
-        select id, faid, jsid, dqzt, createuserid, create_time, jdxshr, jdxshzt, sbly, qjshr, qjshzt, qjshyj, jdpx, alfxdf, jasjdf, gbzdf, zhdf, cjdrcreate_time, msqr, msqrcreate_time, msjgmnktjxdf, yjdf, zhdf2 from tsbz_jdcx
+        select id, faid, jsid, dqzt, createuserid, create_time, jdxshr, jdxshzt, sbly, qjshr, qjshzt, qjshyj, jdpx, alfxdf, jasjdf, gbzdf, zhdf, cjdrcreate_time, msqr, msqrcreate_time, msjgmnktjxdf, yjdf, zhdf2, lqzt from tsbz_jdcx
     </sql>
 
     <select id="selectTsbzJdcxList" parameterType="TsbzJdcx" resultMap="TsbzJdcxResult">
@@ -58,6 +59,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="msjgmnktjxdf != null "> and msjgmnktjxdf = #{msjgmnktjxdf}</if>
             <if test="yjdf != null "> and yjdf = #{yjdf}</if>
             <if test="zhdf2 != null "> and zhdf2 = #{zhdf2}</if>
+            <if test="lqzt != null  and lqzt != ''"> and lqzt = #{lqzt}</if>
         </where>
     </select>
     
@@ -91,6 +93,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="msjgmnktjxdf != null">msjgmnktjxdf,</if>
             <if test="yjdf != null">yjdf,</if>
             <if test="zhdf2 != null">zhdf2,</if>
+            <if test="lqzt != null">lqzt,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="faid != null">#{faid},</if>
@@ -115,6 +118,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="msjgmnktjxdf != null">#{msjgmnktjxdf},</if>
             <if test="yjdf != null">#{yjdf},</if>
             <if test="zhdf2 != null">#{zhdf2},</if>
+            <if test="lqzt != null">#{lqzt},</if>
          </trim>
     </insert>
 
@@ -143,6 +147,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="msjgmnktjxdf != null">msjgmnktjxdf = #{msjgmnktjxdf},</if>
             <if test="yjdf != null">yjdf = #{yjdf},</if>
             <if test="zhdf2 != null">zhdf2 = #{zhdf2},</if>
+            <if test="lqzt != null">lqzt = #{lqzt},</if>
         </trim>
         where id = #{id}
     </update>

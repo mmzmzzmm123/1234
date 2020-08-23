@@ -1,8 +1,12 @@
 package com.ruoyi.web.controller.jxjs;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.jxjs.domain.TsbzJxzxmd;
+import com.ruoyi.jxjs.service.ITsbzJxzxmdService;
 import com.ruoyi.web.controller.common.SchoolCommonController;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +40,8 @@ public class TsbzJdcxController extends BaseController {
     private ITsbzJdcxService tsbzJdcxService;
     @Autowired
     private SchoolCommonController schoolCommonController;
+    @Autowired
+    private ITsbzJxzxmdService tsbzJxzxmdService;
 
     /**
      * 查询基地区级审核列表
@@ -101,6 +107,27 @@ public class TsbzJdcxController extends BaseController {
     @Log(title = "基地区级审核", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody TsbzJdcx tsbzJdcx) {
+
+        //区级审核人
+        if (tsbzJdcx.getQjshr() != null && tsbzJdcx.getQjshr().equals(2)) {
+            tsbzJdcx.setQjshr(SecurityUtils.getLoginUser().getUser().getUserId());
+        }
+
+        //如果lqzt为1，则代表录取成功，则在见习名单表插入一条记录
+        if (!schoolCommonController.isStringEmpty(tsbzJdcx.getLqzt()) && tsbzJdcx.getLqzt().equals("1")) {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
+            Date date = new Date();
+            System.out.println("year=" + sdf.format(date));
+
+            TsbzJxzxmd tsbzJxzxmd = new TsbzJxzxmd();
+
+            tsbzJxzxmd.setJsid(tsbzJdcx.getJsid());
+            tsbzJxzxmd.setNf(sdf.format(date));
+            tsbzJxzxmd.setCreateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
+
+            tsbzJxzxmdService.insertTsbzJxzxmd(tsbzJxzxmd);
+        }
+
         return toAjax(tsbzJdcxService.updateTsbzJdcx(tsbzJdcx));
     }
 
