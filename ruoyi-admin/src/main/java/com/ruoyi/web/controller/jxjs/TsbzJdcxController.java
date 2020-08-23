@@ -55,9 +55,10 @@ public class TsbzJdcxController extends BaseController {
     @Log(title = "基地区级审核", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
     public AjaxResult export(TsbzJdcx tsbzJdcx) {
-        List<TsbzJdcx> list = tsbzJdcxService.selectTsbzJdcxList(tsbzJdcx);
+//        List<TsbzJdcx> list = tsbzJdcxService.selectTsbzJdcxList(tsbzJdcx);
+        List<TsbzJdcx> list = tsbzJdcxService.selectTsbzJdcxExport(tsbzJdcx);
         ExcelUtil<TsbzJdcx> util = new ExcelUtil<TsbzJdcx>(TsbzJdcx.class);
-        return util.exportExcel(list, "jdcx");
+        return util.exportExcel(list, "笔试名单");
     }
 
     /**

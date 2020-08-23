@@ -58,4 +58,12 @@ public interface ITsbzJdcxService
      * @return 结果
      */
     public int deleteTsbzJdcxById(Long id);
+
+    /**
+     * 查询基地区级审核导出
+     *
+     * @param tsbzJdcx 基地区级审核
+     * @return 基地区级审核集合
+     */
+    public List<TsbzJdcx> selectTsbzJdcxExport(TsbzJdcx tsbzJdcx);
 }

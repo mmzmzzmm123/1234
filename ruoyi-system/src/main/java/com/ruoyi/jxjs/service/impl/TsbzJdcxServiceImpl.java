@@ -92,4 +92,17 @@ public class TsbzJdcxServiceImpl implements ITsbzJdcxService
     {
         return tsbzJdcxMapper.deleteTsbzJdcxById(id);
     }
+
+    /**
+     * 查询基地区级审核导出
+     *
+     * @param tsbzJdcx 基地区级审核
+     * @return 基地区级审核
+     */
+    @Override
+    public List<TsbzJdcx> selectTsbzJdcxExport(TsbzJdcx tsbzJdcx)
+    {
+        return tsbzJdcxMapper.selectTsbzJdcxExport(tsbzJdcx);
+    }
+
 }
