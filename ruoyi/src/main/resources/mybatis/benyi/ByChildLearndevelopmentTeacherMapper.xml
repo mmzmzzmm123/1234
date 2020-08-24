@@ -7,6 +7,8 @@
     <resultMap type="ByChildLearndevelopmentTeacher" id="ByChildLearndevelopmentTeacherResult">
         <result property="id" column="id"/>
         <result property="childid" column="childid"/>
+        <result property="schoolid" column="schoolid"/>
+        <result property="classid" column="classid"/>
         <result property="xnxq" column="xnxq"/>
         <result property="gcjl" column="gcjl"/>
         <result property="gcjlremarks" column="gcjlremarks"/>
@@ -21,24 +23,26 @@
     </resultMap>
 
     <sql id="selectByChildLearndevelopmentTeacherVo">
-        select id, childid, xnxq, gcjl, gcjlremarks, wtyfa, wtyfaremarks, pgjg, pgjgremarks, jyjh, jyjhremarks, createuserid, create_time from by_child_learndevelopment_teacher
+        select a.id, a.childid, a.xnxq, a.gcjl, a.gcjlremarks, a.wtyfa, a.wtyfaremarks, a.pgjg, a.pgjgremarks, a.jyjh, a.jyjhremarks, a.createuserid, a.create_time,b.schoolid, b.classid from by_child_learndevelopment_teacher  a left join by_child b on a.childid=b.id
     </sql>
 
     <select id="selectByChildLearndevelopmentTeacherList" parameterType="ByChildLearndevelopmentTeacher"
             resultMap="ByChildLearndevelopmentTeacherResult">
         <include refid="selectByChildLearndevelopmentTeacherVo"/>
         <where>
-            <if test="childid != null ">and childid = #{childid}</if>
-            <if test="xnxq != null  and xnxq != ''">and xnxq = #{xnxq}</if>
-            <if test="gcjl != null  and gcjl != ''">and gcjl = #{gcjl}</if>
-            <if test="gcjlremarks != null  and gcjlremarks != ''">and gcjlremarks = #{gcjlremarks}</if>
-            <if test="wtyfa != null  and wtyfa != ''">and wtyfa = #{wtyfa}</if>
-            <if test="wtyfaremarks != null  and wtyfaremarks != ''">and wtyfaremarks = #{wtyfaremarks}</if>
-            <if test="pgjg != null  and pgjg != ''">and pgjg = #{pgjg}</if>
-            <if test="pgjgremarks != null  and pgjgremarks != ''">and pgjgremarks = #{pgjgremarks}</if>
-            <if test="jyjh != null  and jyjh != ''">and jyjh = #{jyjh}</if>
-            <if test="jyjhremarks != null  and jyjhremarks != ''">and jyjhremarks = #{jyjhremarks}</if>
-            <if test="createuserid != null ">and createuserid = #{createuserid}</if>
+            <if test="childid != null ">and a.childid = #{childid}</if>
+            <if test="schoolid != null ">and b.schoolid = #{schoolid}</if>
+            <if test="classid != null  and classid != ''">and b.classid = #{classid}</if>
+            <if test="xnxq != null  and xnxq != ''">and a.xnxq = #{xnxq}</if>
+            <if test="gcjl != null  and gcjl != ''">and a.gcjl = #{gcjl}</if>
+            <if test="gcjlremarks != null  and gcjlremarks != ''">and a.gcjlremarks = #{gcjlremarks}</if>
+            <if test="wtyfa != null  and wtyfa != ''">and a.wtyfa = #{wtyfa}</if>
+            <if test="wtyfaremarks != null  and wtyfaremarks != ''">and a.wtyfaremarks = #{wtyfaremarks}</if>
+            <if test="pgjg != null  and pgjg != ''">and a.pgjg = #{pgjg}</if>
+            <if test="pgjgremarks != null  and pgjgremarks != ''">and a.pgjgremarks = #{pgjgremarks}</if>
+            <if test="jyjh != null  and jyjh != ''">and a.jyjh = #{jyjh}</if>
+            <if test="jyjhremarks != null  and jyjhremarks != ''">and a.jyjhremarks = #{jyjhremarks}</if>
+            <if test="createuserid != null ">and a.createuserid = #{createuserid}</if>
         </where>
     </select>
 

@@ -44,6 +44,11 @@ public class ByChildLearndevelopmentTeacherController extends BaseController {
     @GetMapping("/list")
     public TableDataInfo list(ByChildLearndevelopmentTeacher byChildLearndevelopmentTeacher) {
         startPage();
+        byChildLearndevelopmentTeacher.setSchoolid(SecurityUtils.getLoginUser().getUser().getDept().getDeptId());
+        //判断是否为班主任
+        if (!schoolCommon.isStringEmpty(schoolCommon.getClassId())) {
+            byChildLearndevelopmentTeacher.setClassid(schoolCommon.getClassId());
+        }
         List<ByChildLearndevelopmentTeacher> list = byChildLearndevelopmentTeacherService.selectByChildLearndevelopmentTeacherList(byChildLearndevelopmentTeacher);
         return getDataTable(list);
     }

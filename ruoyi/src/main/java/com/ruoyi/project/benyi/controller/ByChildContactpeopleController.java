@@ -46,7 +46,6 @@ public class ByChildContactpeopleController extends BaseController {
         startPage();
         byChildContactpeople.setSchoolid(SecurityUtils.getLoginUser().getUser().getDept().getDeptId());
         //判断是否为班主任
-        System.out.println(schoolCommon.getClassId());
         if (!schoolCommon.isStringEmpty(schoolCommon.getClassId())) {
             byChildContactpeople.setClassid(schoolCommon.getClassId());
         }

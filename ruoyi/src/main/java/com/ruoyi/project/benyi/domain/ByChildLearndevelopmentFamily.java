@@ -26,6 +26,18 @@ public class ByChildLearndevelopmentFamily extends BaseEntity {
     private Long childid;
 
     /**
+     * 学校编码
+     */
+    @Excel(name = "学校编码")
+    private Long schoolid;
+
+    /**
+     * 班级编码
+     */
+    @Excel(name = "班级编码")
+    private String classid;
+
+    /**
      * 学年学期
      */
     @Excel(name = "学年学期")
@@ -99,6 +111,22 @@ public class ByChildLearndevelopmentFamily extends BaseEntity {
 
     public Long getChildid() {
         return childid;
+    }
+
+    public void setSchoolid(Long schoolid) {
+        this.schoolid = schoolid;
+    }
+
+    public Long getSchoolid() {
+        return schoolid;
+    }
+
+    public void setClassid(String classid) {
+        this.classid = classid;
+    }
+
+    public String getClassid() {
+        return classid;
     }
 
     public void setXnxq(String xnxq) {
@@ -186,6 +214,8 @@ public class ByChildLearndevelopmentFamily extends BaseEntity {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
                 .append("id", getId())
                 .append("childid", getChildid())
+                .append("schoolid", getSchoolid())
+                .append("classid", getClassid())
                 .append("xnxq", getXnxq())
                 .append("zpimgs", getZpimgs())
                 .append("zpimgremarks", getZpimgremarks())

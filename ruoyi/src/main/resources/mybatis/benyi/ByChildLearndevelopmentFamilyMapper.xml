@@ -7,6 +7,8 @@
     <resultMap type="ByChildLearndevelopmentFamily" id="ByChildLearndevelopmentFamilyResult">
         <result property="id" column="id"/>
         <result property="childid" column="childid"/>
+        <result property="schoolid" column="schoolid"/>
+        <result property="classid" column="classid"/>
         <result property="xnxq" column="xnxq"/>
         <result property="zpimgs" column="zpimgs"/>
         <result property="zpimgremarks" column="zpimgremarks"/>
@@ -21,24 +23,26 @@
     </resultMap>
 
     <sql id="selectByChildLearndevelopmentFamilyVo">
-        select id, childid, xnxq, zpimgs, zpimgremarks, shimgs, shimgsremarks, yqsj, yqsjremarks, jspy, jspyremarks, createuserid, create_time from by_child_learndevelopment_family
+        select a.id, a.childid, a.xnxq, a.zpimgs, a.zpimgremarks, a.shimgs, a.shimgsremarks, a.yqsj, a.yqsjremarks, a.jspy, a.jspyremarks, a.createuserid, a.create_time,b.schoolid, b.classid from by_child_learndevelopment_family  a left join by_child b on a.childid=b.id
     </sql>
 
     <select id="selectByChildLearndevelopmentFamilyList" parameterType="ByChildLearndevelopmentFamily"
             resultMap="ByChildLearndevelopmentFamilyResult">
         <include refid="selectByChildLearndevelopmentFamilyVo"/>
         <where>
-            <if test="childid != null ">and childid = #{childid}</if>
-            <if test="xnxq != null  and xnxq != ''">and xnxq = #{xnxq}</if>
-            <if test="zpimgs != null  and zpimgs != ''">and zpimgs = #{zpimgs}</if>
-            <if test="zpimgremarks != null  and zpimgremarks != ''">and zpimgremarks = #{zpimgremarks}</if>
-            <if test="shimgs != null  and shimgs != ''">and shimgs = #{shimgs}</if>
-            <if test="shimgsremarks != null  and shimgsremarks != ''">and shimgsremarks = #{shimgsremarks}</if>
-            <if test="yqsj != null  and yqsj != ''">and yqsj = #{yqsj}</if>
-            <if test="yqsjremarks != null  and yqsjremarks != ''">and yqsjremarks = #{yqsjremarks}</if>
-            <if test="jspy != null  and jspy != ''">and jspy = #{jspy}</if>
-            <if test="jspyremarks != null  and jspyremarks != ''">and jspyremarks = #{jspyremarks}</if>
-            <if test="createuserid != null ">and createuserid = #{createuserid}</if>
+            <if test="childid != null ">and a.childid = #{childid}</if>
+            <if test="schoolid != null ">and b.schoolid = #{schoolid}</if>
+            <if test="classid != null  and classid != ''">and b.classid = #{classid}</if>
+            <if test="xnxq != null  and xnxq != ''">and a.xnxq = #{xnxq}</if>
+            <if test="zpimgs != null  and zpimgs != ''">and a.zpimgs = #{zpimgs}</if>
+            <if test="zpimgremarks != null  and zpimgremarks != ''">and a.zpimgremarks = #{zpimgremarks}</if>
+            <if test="shimgs != null  and shimgs != ''">and a.shimgs = #{shimgs}</if>
+            <if test="shimgsremarks != null  and shimgsremarks != ''">and a.shimgsremarks = #{shimgsremarks}</if>
+            <if test="yqsj != null  and yqsj != ''">and a.yqsj = #{yqsj}</if>
+            <if test="yqsjremarks != null  and yqsjremarks != ''">and a.yqsjremarks = #{yqsjremarks}</if>
+            <if test="jspy != null  and jspy != ''">and a.jspy = #{jspy}</if>
+            <if test="jspyremarks != null  and jspyremarks != ''">and a.jspyremarks = #{jspyremarks}</if>
+            <if test="createuserid != null ">and a.createuserid = #{createuserid}</if>
         </where>
     </select>
 
