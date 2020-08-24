@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.benyi.mapper.ByPlanweekMapper">
+
+    <resultMap type="ByPlanweek" id="ByPlanweekResult">
+        <result property="id" column="id"/>
+        <result property="schoolid" column="schoolid"/>
+        <result property="classid" column="classid"/>
+        <result property="name" column="name"/>
+        <result property="starttime" column="starttime"/>
+        <result property="endtime" column="endtime"/>
+        <result property="themeofweek" column="themeofweek"/>
+        <result property="jxmbSh" column="jxmb_sh"/>
+        <result property="jxmbYy" column="jxmb_yy"/>
+        <result property="jxmbJk" column="jxmb_jk"/>
+        <result property="jxmbKx" column="jxmb_kx"/>
+        <result property="jxmbYs" column="jxmb_ys"/>
+        <result property="createuserid" column="createuserid"/>
+        <result property="createTime" column="create_time"/>
+        <result property="status" column="status"/>
+        <result property="shrid" column="shrid"/>
+        <result property="shtime" column="shtime"/>
+    </resultMap>
+
+    <sql id="selectByPlanweekVo">
+        select id, schoolid, classid, name, starttime, endtime, themeofweek, jxmb_sh, jxmb_yy, jxmb_jk, jxmb_kx, jxmb_ys, createuserid, create_time, status, shrid, shtime from by_planweek
+    </sql>
+
+    <select id="selectByPlanweekList" parameterType="ByPlanweek" resultMap="ByPlanweekResult">
+        <include refid="selectByPlanweekVo"/>
+        <where>
+            <if test="schoolid != null ">and schoolid = #{schoolid}</if>
+            <if test="classid != null  and classid != ''">and classid = #{classid}</if>
+            <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
+            <if test="starttime != null ">and starttime = #{starttime}</if>
+            <if test="endtime != null ">and endtime = #{endtime}</if>
+            <if test="themeofweek != null  and themeofweek != ''">and themeofweek = #{themeofweek}</if>
+            <if test="jxmbSh != null  and jxmbSh != ''">and jxmb_sh = #{jxmbSh}</if>
+            <if test="jxmbYy != null  and jxmbYy != ''">and jxmb_yy = #{jxmbYy}</if>
+            <if test="jxmbJk != null  and jxmbJk != ''">and jxmb_jk = #{jxmbJk}</if>
+            <if test="jxmbKx != null  and jxmbKx != ''">and jxmb_kx = #{jxmbKx}</if>
+            <if test="jxmbYs != null  and jxmbYs != ''">and jxmb_ys = #{jxmbYs}</if>
+            <if test="createuserid != null ">and createuserid = #{createuserid}</if>
+            <if test="status != null  and status != ''">and status = #{status}</if>
+            <if test="shrid != null ">and shrid = #{shrid}</if>
+            <if test="shtime != null ">and shtime = #{shtime}</if>
+        </where>
+    </select>
+
+    <select id="selectByPlanweekById" parameterType="Long" resultMap="ByPlanweekResult">
+        <include refid="selectByPlanweekVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertByPlanweek" parameterType="ByPlanweek" useGeneratedKeys="true" keyProperty="id">
+        insert into by_planweek
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="schoolid != null ">schoolid,</if>
+            <if test="classid != null  and classid != ''">classid,</if>
+            <if test="name != null  and name != ''">name,</if>
+            <if test="starttime != null ">starttime,</if>
+            <if test="endtime != null ">endtime,</if>
+            <if test="themeofweek != null  and themeofweek != ''">themeofweek,</if>
+            <if test="jxmbSh != null  and jxmbSh != ''">jxmb_sh,</if>
+            <if test="jxmbYy != null  and jxmbYy != ''">jxmb_yy,</if>
+            <if test="jxmbJk != null  and jxmbJk != ''">jxmb_jk,</if>
+            <if test="jxmbKx != null  and jxmbKx != ''">jxmb_kx,</if>
+            <if test="jxmbYs != null  and jxmbYs != ''">jxmb_ys,</if>
+            <if test="createuserid != null ">createuserid,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="status != null  and status != ''">status,</if>
+            <if test="shrid != null ">shrid,</if>
+            <if test="shtime != null ">shtime,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="schoolid != null ">#{schoolid},</if>
+            <if test="classid != null  and classid != ''">#{classid},</if>
+            <if test="name != null  and name != ''">#{name},</if>
+            <if test="starttime != null ">#{starttime},</if>
+            <if test="endtime != null ">#{endtime},</if>
+            <if test="themeofweek != null  and themeofweek != ''">#{themeofweek},</if>
+            <if test="jxmbSh != null  and jxmbSh != ''">#{jxmbSh},</if>
+            <if test="jxmbYy != null  and jxmbYy != ''">#{jxmbYy},</if>
+            <if test="jxmbJk != null  and jxmbJk != ''">#{jxmbJk},</if>
+            <if test="jxmbKx != null  and jxmbKx != ''">#{jxmbKx},</if>
+            <if test="jxmbYs != null  and jxmbYs != ''">#{jxmbYs},</if>
+            <if test="createuserid != null ">#{createuserid},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="status != null  and status != ''">#{status},</if>
+            <if test="shrid != null ">#{shrid},</if>
+            <if test="shtime != null ">#{shtime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateByPlanweek" parameterType="ByPlanweek">
+        update by_planweek
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="schoolid != null ">schoolid = #{schoolid},</if>
+            <if test="classid != null  and classid != ''">classid = #{classid},</if>
+            <if test="name != null  and name != ''">name = #{name},</if>
+            <if test="starttime != null ">starttime = #{starttime},</if>
+            <if test="endtime != null ">endtime = #{endtime},</if>
+            <if test="themeofweek != null  and themeofweek != ''">themeofweek = #{themeofweek},</if>
+            <if test="jxmbSh != null  and jxmbSh != ''">jxmb_sh = #{jxmbSh},</if>
+            <if test="jxmbYy != null  and jxmbYy != ''">jxmb_yy = #{jxmbYy},</if>
+            <if test="jxmbJk != null  and jxmbJk != ''">jxmb_jk = #{jxmbJk},</if>
+            <if test="jxmbKx != null  and jxmbKx != ''">jxmb_kx = #{jxmbKx},</if>
+            <if test="jxmbYs != null  and jxmbYs != ''">jxmb_ys = #{jxmbYs},</if>
+            <if test="createuserid != null ">createuserid = #{createuserid},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="status != null  and status != ''">status = #{status},</if>
+            <if test="shrid != null ">shrid = #{shrid},</if>
+            <if test="shtime != null ">shtime = #{shtime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteByPlanweekById" parameterType="Long">
+        delete from by_planweek where id = #{id}
+    </delete>
+
+    <delete id="deleteByPlanweekByIds" parameterType="String">
+        delete from by_planweek where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

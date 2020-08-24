@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.benyi.mapper.ByPlanweekitemMapper">
+
+    <resultMap type="ByPlanweekitem" id="ByPlanweekitemResult">
+        <result property="id" column="id"/>
+        <result property="wid" column="wid"/>
+        <result property="activitytype" column="activitytype"/>
+        <result property="content" column="content"/>
+        <result property="activitytime" column="activitytime"/>
+        <result property="createuserid" column="createuserid"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateuserid" column="updateuserid"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <sql id="selectByPlanweekitemVo">
+        select id, wid, activitytype, content, activitytime, createuserid, create_time, updateuserid, update_time from by_planweekitem
+    </sql>
+
+    <select id="selectByPlanweekitemList" parameterType="ByPlanweekitem" resultMap="ByPlanweekitemResult">
+        <include refid="selectByPlanweekitemVo"/>
+        <where>
+            <if test="wid != null ">and wid = #{wid}</if>
+            <if test="activitytype != null  and activitytype != ''">and activitytype = #{activitytype}</if>
+            <if test="content != null  and content != ''">and content = #{content}</if>
+            <if test="activitytime != null ">and activitytime = #{activitytime}</if>
+            <if test="createuserid != null ">and createuserid = #{createuserid}</if>
+            <if test="updateuserid != null ">and updateuserid = #{updateuserid}</if>
+        </where>
+    </select>
+
+    <select id="selectByPlanweekitemById" parameterType="Long" resultMap="ByPlanweekitemResult">
+        <include refid="selectByPlanweekitemVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertByPlanweekitem" parameterType="ByPlanweekitem" useGeneratedKeys="true" keyProperty="id">
+        insert into by_planweekitem
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="wid != null ">wid,</if>
+            <if test="activitytype != null  and activitytype != ''">activitytype,</if>
+            <if test="content != null  and content != ''">content,</if>
+            <if test="activitytime != null ">activitytime,</if>
+            <if test="createuserid != null ">createuserid,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateuserid != null ">updateuserid,</if>
+            <if test="updateTime != null ">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="wid != null ">#{wid},</if>
+            <if test="activitytype != null  and activitytype != ''">#{activitytype},</if>
+            <if test="content != null  and content != ''">#{content},</if>
+            <if test="activitytime != null ">#{activitytime},</if>
+            <if test="createuserid != null ">#{createuserid},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateuserid != null ">#{updateuserid},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateByPlanweekitem" parameterType="ByPlanweekitem">
+        update by_planweekitem
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="wid != null ">wid = #{wid},</if>
+            <if test="activitytype != null  and activitytype != ''">activitytype = #{activitytype},</if>
+            <if test="content != null  and content != ''">content = #{content},</if>
+            <if test="activitytime != null ">activitytime = #{activitytime},</if>
+            <if test="createuserid != null ">createuserid = #{createuserid},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateuserid != null ">updateuserid = #{updateuserid},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteByPlanweekitemById" parameterType="Long">
+        delete from by_planweekitem where id = #{id}
+    </delete>
+
+    <delete id="deleteByPlanweekitemByIds" parameterType="String">
+        delete from by_planweekitem where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
