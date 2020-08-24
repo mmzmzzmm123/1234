@@ -66,10 +66,17 @@ public class TsbzJdcxController extends BaseController {
     @Log(title = "基地区级审核", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
     public AjaxResult export(TsbzJdcx tsbzJdcx) {
-//        List<TsbzJdcx> list = tsbzJdcxService.selectTsbzJdcxList(tsbzJdcx);
-        List<TsbzJdcx> list = tsbzJdcxService.selectTsbzJdcxExport(tsbzJdcx);
-        ExcelUtil<TsbzJdcx> util = new ExcelUtil<TsbzJdcx>(TsbzJdcx.class);
-        return util.exportExcel(list, "笔试名单");
+        if (!schoolCommonController.isStringEmpty(tsbzJdcx.getQjshzt()) && tsbzJdcx.getQjshzt().equals("1")) {
+            //        List<TsbzJdcx> list = tsbzJdcxService.selectTsbzJdcxList(tsbzJdcx);
+            List<TsbzJdcx> list = tsbzJdcxService.selectTsbzJdcxExport(tsbzJdcx);
+            ExcelUtil<TsbzJdcx> util = new ExcelUtil<TsbzJdcx>(TsbzJdcx.class);
+            return util.exportExcel(list, "笔试名单");
+        } else if (!schoolCommonController.isStringEmpty(tsbzJdcx.getMsqr()) && tsbzJdcx.getMsqr().equals("1")) {
+            List<TsbzJdcx> list = tsbzJdcxService.selectTsbzJdcxExport(tsbzJdcx);
+            ExcelUtil<TsbzJdcx> util = new ExcelUtil<TsbzJdcx>(TsbzJdcx.class);
+            return util.exportExcel(list, "面试名单");
+        }
+        return AjaxResult.error("未知错误，请联系系统开发人员");
     }
 
     /**
@@ -170,12 +177,11 @@ public class TsbzJdcxController extends BaseController {
     @Log(title = "分数导入", businessType = BusinessType.IMPORT)
 //    @PreAuthorize("@ss.hasPermi('system:user:import')")
     @PostMapping("/importData")
-    public AjaxResult importData(MultipartFile file,Long faide) throws Exception
-    {
+    public AjaxResult importData(MultipartFile file, Long faide) throws Exception {
         ExcelUtil<TsbzJdcx> util = new ExcelUtil<TsbzJdcx>(TsbzJdcx.class);
         List<TsbzJdcx> tsbzJdcxList = util.importExcel(file.getInputStream());
         int iCount = 0;
-        for (TsbzJdcx tsbzJdcx:tsbzJdcxList) {
+        for (TsbzJdcx tsbzJdcx : tsbzJdcxList) {
             tsbzJdcx.setFaid(faide);
             iCount = iCount + tsbzJdcxService.updateTsbzJdcxforjsfa(tsbzJdcx);
         }
@@ -183,15 +189,21 @@ public class TsbzJdcxController extends BaseController {
 //        String operName = loginUser.getUsername();
 //        String message = userService.importUser(userList, updateSupport, operName);
         //String message = faide;
-        return AjaxResult.success(String.valueOf(iCount),null);
+        return AjaxResult.success(String.valueOf(iCount), null);
     }
 
     @GetMapping("/importTemplate")
-    public AjaxResult importTemplate()
-    {
+    public AjaxResult importTemplate() {
 //        ExcelUtil<SysUser> util = new ExcelUtil<SysUser>(SysUser.class);
         ExcelUtil<TsbzJdcx> util = new ExcelUtil<TsbzJdcx>(TsbzJdcx.class);
-        return util.importTemplateExcel("成绩导入");
+        return util.importTemplateExcel("笔试成绩导入");
+    }
+
+    @GetMapping("/msimportTemplate")
+    public AjaxResult msimportTemplate() {
+//        ExcelUtil<SysUser> util = new ExcelUtil<SysUser>(SysUser.class);
+        ExcelUtil<TsbzJdcx> util = new ExcelUtil<TsbzJdcx>(TsbzJdcx.class);
+        return util.importTemplateExcel("面试成绩导入");
     }
 
 }

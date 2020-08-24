@@ -164,29 +164,30 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <select id="selectTsbzJdcxExport" parameterType="TsbzJdcx" resultMap="TsbzJdcxResult">
-        select a.id, a.faid, a.jsid, a.dqzt, a.createuserid, a.create_time, a.jdxshr, a.jdxshzt, a.sbly, a.qjshr, a.qjshzt, a.qjshyj, a.jdpx, a.alfxdf, a.jasjdf, a.gbzdf, a.zhdf, a.cjdrcreate_time, a.msqr, a.msqrcreate_time, a.msjgmnktjxdf, a.yjdf, a.zhdf2, c.name as faname, d.jdxmc,b.name as jsname,b.xb,b.rjxd,b.rjxk,b.phone,b.prdwmc from tsbz_jdcx a LEFT JOIN tsbz_jxjsjbxx b ON a.jsid=b.id LEFT JOIN tsbz_jxzxpxfa c ON a.faid=c.id LEFT JOIN tsbz_jdx d ON b.jdxid=d.id
+        select a.id, a.faid, a.jsid, a.dqzt, a.createuserid, a.create_time, a.jdxshr, a.jdxshzt, a.sbly, a.qjshr, a.qjshzt, a.qjshyj, a.jdpx, a.alfxdf, a.jasjdf, a.gbzdf, a.zhdf, a.cjdrcreate_time, a.msqr, a.msqrcreate_time, a.msjgmnktjxdf, a.yjdf, a.zhdf2,a.lqzt, c.name as faname, d.jdxmc,b.name as jsname,b.xb,b.rjxd,b.rjxk,b.phone,b.prdwmc from tsbz_jdcx a LEFT JOIN tsbz_jxjsjbxx b ON a.jsid=b.id LEFT JOIN tsbz_jxzxpxfa c ON a.faid=c.id LEFT JOIN tsbz_jdx d ON b.jdxid=d.id
         <where>
             <if test="faid != null "> and a.faid = #{faid}</if>
             <if test="jsid != null "> and a.jsid = #{jsid}</if>
-            <if test="dqzt != null  and a.dqzt != ''"> and a.dqzt = #{dqzt}</if>
+            <if test="dqzt != null  and dqzt != ''"> and a.dqzt = #{dqzt}</if>
             <if test="createuserid != null "> and a.createuserid = #{createuserid}</if>
             <if test="jdxshr != null "> and a.jdxshr = #{jdxshr}</if>
-            <if test="jdxshzt != null  and a.jdxshzt != ''"> and a.jdxshzt = #{jdxshzt}</if>
-            <if test="sbly != null  and a.sbly != ''"> and a.sbly = #{sbly}</if>
+            <if test="jdxshzt != null  and jdxshzt != ''"> and a.jdxshzt = #{jdxshzt}</if>
+            <if test="sbly != null  and sbly != ''"> and a.sbly = #{sbly}</if>
             <if test="qjshr != null "> and a.qjshr = #{qjshr}</if>
-            <if test="qjshzt != null  and a.qjshzt != ''"> and a.qjshzt = #{qjshzt}</if>
-            <if test="qjshyj != null  and a.qjshyj != ''"> and a.qjshyj = #{qjshyj}</if>
+            <if test="qjshzt != null  and qjshzt != ''"> and a.qjshzt = #{qjshzt}</if>
+            <if test="qjshyj != null  and qjshyj != ''"> and a.qjshyj = #{qjshyj}</if>
             <if test="jdpx != null "> and a.jdpx = #{jdpx}</if>
             <if test="alfxdf != null "> and a.alfxdf = #{alfxdf}</if>
             <if test="jasjdf != null "> and a.jasjdf = #{jasjdf}</if>
             <if test="gbzdf != null "> and a.gbzdf = #{gbzdf}</if>
             <if test="zhdf != null "> and a.zhdf = #{zhdf}</if>
             <if test="cjdrcreateTime != null "> and a.cjdrcreate_time = #{cjdrcreateTime}</if>
-            <if test="msqr != null  and a.msqr != ''"> and a.msqr = #{msqr}</if>
+            <if test="msqr != null  and msqr != ''"> and a.msqr = #{msqr}</if>
             <if test="msqrcreateTime != null "> and a.msqrcreate_time = #{msqrcreateTime}</if>
             <if test="msjgmnktjxdf != null "> and a.msjgmnktjxdf = #{msjgmnktjxdf}</if>
             <if test="yjdf != null "> and a.yjdf = #{yjdf}</if>
             <if test="zhdf2 != null "> and a.zhdf2 = #{zhdf2}</if>
+            <if test="lqzt != null  and lqzt != ''"> and lqzt = #{lqzt}</if>
         </where>
     </select>
     <update id="updateTsbzJdcxforjsfa" parameterType="TsbzJdcx">

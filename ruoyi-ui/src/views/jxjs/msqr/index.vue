@@ -22,7 +22,7 @@
           <el-option
             v-for="item in lqztOptions"
             :key="item.dictValue"
-            :label="item.dictLable"
+            :label="item.dictLabel"
             :value="item.dictValue"
           ></el-option>
         </el-select>
@@ -42,7 +42,7 @@
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['jxjs:jdcx:edit']"
-        >确认</el-button>
+        >确认录取</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -92,7 +92,7 @@
             @click="handleUpdate(scope.row)"
             v-hasPermi="['jxjs:jdcx:edit']"
             v-show="isShow(scope.row)"
-          >确认</el-button>
+          >确认录取</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -124,15 +124,57 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+
+    <!-- excel导入对话框lu -->
+    <el-dialog :title="upload.title" :visible.sync="upload.open" width="400px" append-to-body>
+      <el-link type="info" style="font-size:14px" @click="importTemplate">下载模板</el-link>
+      <el-upload
+        ref="upload"
+        :limit="1"
+        accept=".xlsx, .xls"
+        :headers="upload.headers"
+        :action="upload.url + '?faide=' + upload.faide"
+        :disabled="upload.isUploading"
+        :on-progress="handleFileUploadProgress"
+        :on-success="handleFileSuccess"
+        :auto-upload="false"
+        drag
+      >
+        <i class="el-icon-upload"></i>
+        <div class="el-upload__text">
+          将文件拖到此处，或
+          <em>点击上传</em>
+        </div>
+        <div class="el-upload__tip" slot="tip">
+          <!-- <el-form-item label="评选方案" prop="faid"> -->
+          <el-select v-model="upload.faide" placeholder="请选择方案">
+            <el-option v-for="dict in faOptions" :key="dict.id" :label="dict.name" :value="dict.id"></el-option>
+          </el-select>
+          <br />
+          <!-- </el-form-item> -->
+          <!-- <el-checkbox v-model="upload.updateSupport" />是否更新已经存在的用户数据 -->
+        </div>
+        <div class="el-upload__tip" style="color:red" slot="tip">提示：仅允许导入“xls”或“xlsx”格式文件！</div>
+      </el-upload>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitFileForm">确 定</el-button>
+        <el-button @click="upload.open = false">取 消</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { listJdcx, getJdcx, updateJdcx, exportJdcx } from "@/api/jxjs/jdcx";
-
+import {
+  listJdcx,
+  getJdcx,
+  updateJdcx,
+  exportJdcx,
+  importTemplate,
+} from "@/api/jxjs/jdcx";
 import { listJxzxpxfa } from "@/api/jxjs/jxzxpxfa";
-
 import { listJxjsjbxx, getJxjsjbxx } from "@/api/jxjs/jxjsjbxx";
+import { getToken } from "@/utils/auth";
 
 export default {
   name: "Jdcx",
@@ -166,6 +208,23 @@ export default {
       faOptions: [],
       //教师
       jsOptions: [],
+      // 用户导入参数lu
+      upload: {
+        // 是否显示弹出层（用户导入）
+        open: false,
+        // 弹出层标题（用户导入）
+        title: "",
+        // 是否禁用上传
+        isUploading: false,
+        // 是否更新已经存在的用户数据
+        updateSupport: 0,
+        //方案id
+        faide: "",
+        // 设置上传的请求头部
+        headers: { Authorization: "Bearer " + getToken() },
+        // 上传的地址
+        url: process.env.VUE_APP_BASE_API + "/jxjs/jdcx/importData",
+      },
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -370,7 +429,7 @@ export default {
     /** 导出按钮操作 */
     handleExport() {
       const queryParams = this.queryParams;
-      this.$confirm("是否确认导出所有基地区级审核数据项?", "警告", {
+      this.$confirm("是否确认导出所有面试名单数据项?", "警告", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
@@ -382,6 +441,41 @@ export default {
           this.download(response.msg);
         })
         .catch(function () {});
+    },
+    /** 导入按钮操作 */
+    handleImport() {
+      this.upload.title = "成绩导入";
+      this.upload.open = true;
+    },
+    /** 下载模板操作 */
+    importTemplate() {
+      importTemplate().then((response) => {
+        this.download(response.msg);
+      });
+    },
+    // 文件上传中处理
+    handleFileUploadProgress(event, file, fileList) {
+      this.upload.isUploading = true;
+    },
+    // 文件上传成功处理
+    handleFileSuccess(response, file, fileList) {
+      this.upload.open = false;
+      this.upload.isUploading = false;
+      this.$refs.upload.clearFiles();
+      this.$alert("成功导入：" + response.msg + "条数据。", "导入结果", {
+        dangerouslyUseHTMLString: true,
+      });
+      this.getList();
+    },
+    // 提交上传文件
+    submitFileForm() {
+      if (this.upload.faide == "") {
+        this.$alert("请选择方案", "导入结果", {
+          dangerouslyUseHTMLString: true,
+        });
+      } else {
+        this.$refs.upload.submit();
+      }
     },
   },
 };
