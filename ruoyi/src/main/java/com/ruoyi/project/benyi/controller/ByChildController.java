@@ -44,6 +44,12 @@ public class ByChildController extends BaseController {
     @GetMapping("/list")
     public TableDataInfo list(ByChild byChild) {
         startPage();
+        byChild.setSchoolid(SecurityUtils.getLoginUser().getUser().getDept().getDeptId());
+        //判断是否为班主任
+        System.out.println(schoolCommon.getClassId());
+        if (!schoolCommon.isStringEmpty(schoolCommon.getClassId())) {
+            byChild.setClassid(schoolCommon.getClassId());
+        }
         List<ByChild> list = byChildService.selectByChildList(byChild);
         return getDataTable(list);
     }
@@ -54,6 +60,12 @@ public class ByChildController extends BaseController {
     @PreAuthorize("@ss.hasPermi('benyi:checkindetail:list')")
     @GetMapping("/listByCheck")
     public TableDataInfo listByCheck(ByChild byChild) {
+        byChild.setSchoolid(SecurityUtils.getLoginUser().getUser().getDept().getDeptId());
+        //判断是否为班主任
+        System.out.println(schoolCommon.getClassId());
+        if (!schoolCommon.isStringEmpty(schoolCommon.getClassId())) {
+            byChild.setClassid(schoolCommon.getClassId());
+        }
         List<ByChild> list = byChildService.selectByCheckList(byChild);
         return getDataTable(list);
     }

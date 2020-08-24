@@ -7,6 +7,8 @@
     <resultMap type="ByChildContactpeople" id="ByChildContactpeopleResult">
         <result property="id" column="id"/>
         <result property="childid" column="childid"/>
+        <result property="schoolid" column="schoolid"/>
+        <result property="classid" column="classid"/>
         <result property="fathername" column="fathername"/>
         <result property="fphone" column="fphone"/>
         <result property="foffphone" column="foffphone"/>
@@ -27,40 +29,42 @@
     </resultMap>
 
     <sql id="selectByChildContactpeopleVo">
-        select id, childid, fathername, fphone, foffphone, mothername, mphone, moffphone, grandfathername, gfgx, gfphone, gfoffphone, gfaddress, grandmothername, gmgx, gmphone, gmaddress, gmoffphone, create_time from by_child_contactpeople
+        select a.id, a.childid, a.fathername, a.fphone, a.foffphone, a.mothername, a.mphone, a.moffphone, a.grandfathername, a.gfgx, a.gfphone, a.gfoffphone, a.gfaddress, a.grandmothername, a.gmgx, a.gmphone, a.gmaddress, a.gmoffphone, a.create_time,b.schoolid, b.classid from by_child_contactpeople a left join by_child b on a.childid=b.id
     </sql>
 
     <select id="selectByChildContactpeopleList" parameterType="ByChildContactpeople"
             resultMap="ByChildContactpeopleResult">
         <include refid="selectByChildContactpeopleVo"/>
         <where>
-            <if test="childid != null ">and childid = #{childid}</if>
-            <if test="fathername != null  and fathername != ''">and fathername like concat('%', #{fathername}, '%')</if>
-            <if test="fphone != null  and fphone != ''">and fphone = #{fphone}</if>
-            <if test="foffphone != null  and foffphone != ''">and foffphone = #{foffphone}</if>
-            <if test="mothername != null  and mothername != ''">and mothername like concat('%', #{mothername}, '%')</if>
-            <if test="mphone != null  and mphone != ''">and mphone = #{mphone}</if>
-            <if test="moffphone != null  and moffphone != ''">and moffphone = #{moffphone}</if>
-            <if test="grandfathername != null  and grandfathername != ''">and grandfathername like concat('%',
+            <if test="childid != null ">and a.childid = #{childid}</if>
+            <if test="schoolid != null ">and b.schoolid = #{schoolid}</if>
+            <if test="classid != null  and classid != ''">and b.classid = #{classid}</if>
+            <if test="fathername != null  and fathername != ''">and a.fathername like concat('%', #{fathername}, '%')</if>
+            <if test="fphone != null  and fphone != ''">and a.fphone = #{fphone}</if>
+            <if test="foffphone != null  and foffphone != ''">and a.foffphone = #{foffphone}</if>
+            <if test="mothername != null  and mothername != ''">and a.mothername like concat('%', #{mothername}, '%')</if>
+            <if test="mphone != null  and mphone != ''">and a.mphone = #{mphone}</if>
+            <if test="moffphone != null  and moffphone != ''">and a.moffphone = #{moffphone}</if>
+            <if test="grandfathername != null  and grandfathername != ''">and a.grandfathername like concat('%',
                 #{grandfathername}, '%')
             </if>
-            <if test="gfgx != null  and gfgx != ''">and gfgx = #{gfgx}</if>
-            <if test="gfphone != null  and gfphone != ''">and gfphone = #{gfphone}</if>
-            <if test="gfoffphone != null  and gfoffphone != ''">and gfoffphone = #{gfoffphone}</if>
-            <if test="gfaddress != null  and gfaddress != ''">and gfaddress = #{gfaddress}</if>
-            <if test="grandmothername != null  and grandmothername != ''">and grandmothername like concat('%',
+            <if test="gfgx != null  and gfgx != ''">and a.gfgx = #{gfgx}</if>
+            <if test="gfphone != null  and gfphone != ''">and a.gfphone = #{gfphone}</if>
+            <if test="gfoffphone != null  and gfoffphone != ''">and a.gfoffphone = #{gfoffphone}</if>
+            <if test="gfaddress != null  and gfaddress != ''">and a.gfaddress = #{gfaddress}</if>
+            <if test="grandmothername != null  and grandmothername != ''">and a.grandmothername like concat('%',
                 #{grandmothername}, '%')
             </if>
-            <if test="gmgx != null  and gmgx != ''">and gmgx = #{gmgx}</if>
-            <if test="gmphone != null  and gmphone != ''">and gmphone = #{gmphone}</if>
-            <if test="gmaddress != null  and gmaddress != ''">and gmaddress = #{gmaddress}</if>
-            <if test="gmoffphone != null  and gmoffphone != ''">and gmoffphone = #{gmoffphone}</if>
+            <if test="gmgx != null  and gmgx != ''">and a.gmgx = #{gmgx}</if>
+            <if test="gmphone != null  and gmphone != ''">and a.gmphone = #{gmphone}</if>
+            <if test="gmaddress != null  and gmaddress != ''">and a.gmaddress = #{gmaddress}</if>
+            <if test="gmoffphone != null  and gmoffphone != ''">and a.gmoffphone = #{gmoffphone}</if>
         </where>
     </select>
 
     <select id="selectByChildContactpeopleById" parameterType="Long" resultMap="ByChildContactpeopleResult">
         <include refid="selectByChildContactpeopleVo"/>
-        where id = #{id}
+        where a.id = #{id}
     </select>
 
     <insert id="insertByChildContactpeople" parameterType="ByChildContactpeople">

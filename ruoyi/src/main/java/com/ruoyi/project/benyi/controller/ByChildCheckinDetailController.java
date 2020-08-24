@@ -53,6 +53,14 @@ public class ByChildCheckinDetailController extends BaseController {
         if (byChildCheckinDetail.getCreateTime() == null) {
             byChildCheckinDetail.setCreateTime(new Date());
         }
+
+        byChildCheckinDetail.setSchoolid(SecurityUtils.getLoginUser().getUser().getDept().getDeptId());
+        //判断是否为班主任
+        System.out.println(schoolCommon.getClassId());
+        if (!schoolCommon.isStringEmpty(schoolCommon.getClassId())) {
+            byChildCheckinDetail.setClassid(schoolCommon.getClassId());
+        }
+
         List<ByChildCheckinDetail> list = byChildCheckinDetailService.selectByChildCheckinDetailList(byChildCheckinDetail);
         return getDataTable(list);
     }

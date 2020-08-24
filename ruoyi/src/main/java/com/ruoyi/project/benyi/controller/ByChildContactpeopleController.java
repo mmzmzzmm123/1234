@@ -2,6 +2,8 @@ package com.ruoyi.project.benyi.controller;
 
 import java.util.List;
 
+import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.project.common.SchoolCommon;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,6 +34,8 @@ import com.ruoyi.framework.web.page.TableDataInfo;
 public class ByChildContactpeopleController extends BaseController {
     @Autowired
     private IByChildContactpeopleService byChildContactpeopleService;
+    @Autowired
+    private SchoolCommon schoolCommon;
 
     /**
      * 查询幼儿紧急情况联系人列表
@@ -40,6 +44,12 @@ public class ByChildContactpeopleController extends BaseController {
     @GetMapping("/list")
     public TableDataInfo list(ByChildContactpeople byChildContactpeople) {
         startPage();
+        byChildContactpeople.setSchoolid(SecurityUtils.getLoginUser().getUser().getDept().getDeptId());
+        //判断是否为班主任
+        System.out.println(schoolCommon.getClassId());
+        if (!schoolCommon.isStringEmpty(schoolCommon.getClassId())) {
+            byChildContactpeople.setClassid(schoolCommon.getClassId());
+        }
         List<ByChildContactpeople> list = byChildContactpeopleService.selectByChildContactpeopleList(byChildContactpeople);
         return getDataTable(list);
     }

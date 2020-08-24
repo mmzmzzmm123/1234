@@ -26,6 +26,18 @@ public class ByChildContactpeople extends BaseEntity {
     private Long childid;
 
     /**
+     * 学校id
+     */
+    @Excel(name = "学校id")
+    private Long schoolid;
+
+    /**
+     * 班级id
+     */
+    @Excel(name = "班级id")
+    private String classid;
+
+    /**
      * 父亲姓名
      */
     @Excel(name = "父亲姓名")
@@ -135,6 +147,22 @@ public class ByChildContactpeople extends BaseEntity {
 
     public Long getChildid() {
         return childid;
+    }
+
+    public void setSchoolid(Long schoolid) {
+        this.schoolid = schoolid;
+    }
+
+    public Long getSchoolid() {
+        return schoolid;
+    }
+
+    public void setClassid(String classid) {
+        this.classid = classid;
+    }
+
+    public String getClassid() {
+        return classid;
     }
 
     public void setFathername(String fathername) {
@@ -270,6 +298,8 @@ public class ByChildContactpeople extends BaseEntity {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
                 .append("id", getId())
                 .append("childid", getChildid())
+                .append("schoolid", getSchoolid())
+                .append("classid", getClassid())
                 .append("fathername", getFathername())
                 .append("fphone", getFphone())
                 .append("foffphone", getFoffphone())
