@@ -43,15 +43,15 @@ public class ByThemeTermplan extends BaseEntity {
     /**
      * 月份
      */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "月份", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM")
+    @Excel(name = "月份", width = 30, dateFormat = "yyyy-MM")
     private Date startmonth;
 
     /**
      * 结束月份
      */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "结束月份", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM")
+    @Excel(name = "结束月份", width = 30, dateFormat = "yyyy-MM")
     private Date endmonth;
 
     /**
@@ -84,6 +84,12 @@ public class ByThemeTermplan extends BaseEntity {
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "审批时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date sptime;
+
+    /**
+     * 审核意见
+     */
+    @Excel(name = "审核意见")
+    private String shyj;
 
     public void setId(String id) {
         this.id = id;
@@ -173,6 +179,14 @@ public class ByThemeTermplan extends BaseEntity {
         return sptime;
     }
 
+    public void setShyj(String shyj) {
+        this.shyj = shyj;
+    }
+
+    public String getShyj() {
+        return shyj;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
@@ -189,6 +203,7 @@ public class ByThemeTermplan extends BaseEntity {
                 .append("status", getStatus())
                 .append("spr", getSpr())
                 .append("sptime", getSptime())
+                .append("shyj", getShyj())
                 .toString();
     }
 }

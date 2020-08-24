@@ -1,86 +1,30 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
-      <el-form-item label="学校id" prop="schoolid">
-        <el-input
-          v-model="queryParams.schoolid"
-          placeholder="请输入学校id"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="班级id" prop="classid">
-        <el-input
-          v-model="queryParams.classid"
-          placeholder="请输入班级id"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="名称" prop="name">
-        <el-input
-          v-model="queryParams.name"
-          placeholder="请输入名称"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="月份" prop="month">
-        <el-date-picker
-          clearable
-          size="small"
-          style="width: 200px"
-          v-model="queryParams.month"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="选择月份"
-        ></el-date-picker>
+      <el-form-item label="班级编码" prop="classid">
+        <el-select v-model="queryParams.classid" placeholder="请选择班级">
+          <el-option
+            v-for="dict in classOptions"
+            :key="dict.bjbh"
+            :label="dict.bjmc"
+            :value="dict.bjbh"
+          ></el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="学年学期" prop="xnxq">
-        <el-input
-          v-model="queryParams.xnxq"
-          placeholder="请输入学年学期"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+        <el-select v-model="queryParams.xnxq" placeholder="请选择学年学期" clearable size="small">
+          <el-option
+            v-for="dict in xnxqOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
+        </el-select>
       </el-form-item>
-      <el-form-item label="创建人" prop="createuserid">
-        <el-input
-          v-model="queryParams.createuserid"
-          placeholder="请输入创建人"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="状态" prop="status">
+      <el-form-item label="当前状态" prop="status">
         <el-select v-model="queryParams.status" placeholder="请选择状态" clearable size="small">
           <el-option label="请选择字典生成" value />
         </el-select>
-      </el-form-item>
-      <el-form-item label="审批人" prop="spr">
-        <el-input
-          v-model="queryParams.spr"
-          placeholder="请输入审批人"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="审批时间" prop="sptime">
-        <el-date-picker
-          clearable
-          size="small"
-          style="width: 200px"
-          v-model="queryParams.sptime"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="选择审批时间"
-        ></el-date-picker>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -122,30 +66,21 @@
 
     <el-table v-loading="loading" :data="termplanList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="编号" align="center" prop="id" />
-      <el-table-column label="学校id" align="center" prop="schoolid" />
-      <el-table-column label="班级id" align="center" prop="classid" />
+      <el-table-column label="班级" align="center" prop="classid" :formatter="classFormat" />
       <el-table-column label="名称" align="center" prop="name" />
-      <el-table-column label="月份" align="center" prop="startmonth" width="180">
+      <el-table-column label="开始月份" align="center" prop="startmonth" width="180">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.startmonth, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.startmonth, '{y}-{m}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="结束月份" align="center" prop="endmonth" width="180">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.endmonth, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.endmonth, '{y}-{m}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="学年学期" align="center" prop="xnxq" />
+      <el-table-column label="学年学期" align="center" prop="xnxq" :formatter="xnxqFormat" />
       <el-table-column label="备注" align="center" prop="remark" />
-      <el-table-column label="创建人" align="center" prop="createuserid" />
       <el-table-column label="状态" align="center" prop="status" />
-      <el-table-column label="审批人" align="center" prop="spr" />
-      <el-table-column label="审批时间" align="center" prop="sptime" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.sptime, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -177,61 +112,28 @@
     <!-- 添加或修改主题整合学期计划对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="学校id" prop="schoolid">
-          <el-input v-model="form.schoolid" placeholder="请输入学校id" />
-        </el-form-item>
-        <el-form-item label="班级id" prop="classid">
-          <el-input v-model="form.classid" placeholder="请输入班级id" />
-        </el-form-item>
-        <el-form-item label="名称" prop="name">
-          <el-input v-model="form.name" placeholder="请输入名称" />
-        </el-form-item>
         <el-form-item label="月份" prop="startmonth">
           <el-date-picker
-            clearable
-            size="small"
-            style="width: 200px"
             v-model="form.startmonth"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="选择月份"
-          ></el-date-picker>
-        </el-form-item>
-        <el-form-item label="结束月份" prop="endmonth">
-          <el-date-picker
-            clearable
-            size="small"
-            style="width: 200px"
-            v-model="form.endmonth"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="选择结束月份"
+            type="monthrange"
+            range-separator="至"
+            start-placeholder="开始月份"
+            end-placeholder="结束月份"
+            value-format="yyyy-MM"
           ></el-date-picker>
         </el-form-item>
         <el-form-item label="学年学期" prop="xnxq">
-          <el-input v-model="form.xnxq" placeholder="请输入学年学期" />
+          <el-select v-model="form.xnxq" placeholder="请选择学年学期">
+            <el-option
+              v-for="dict in xnxqOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            />
+          </el-select>
         </el-form-item>
-        <el-form-item label="创建人" prop="createuserid">
-          <el-input v-model="form.createuserid" placeholder="请输入创建人" />
-        </el-form-item>
-        <el-form-item label="状态">
-          <el-radio-group v-model="form.status">
-            <el-radio label="1">请选择字典生成</el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="审批人" prop="spr">
-          <el-input v-model="form.spr" placeholder="请输入审批人" />
-        </el-form-item>
-        <el-form-item label="审批时间" prop="sptime">
-          <el-date-picker
-            clearable
-            size="small"
-            style="width: 200px"
-            v-model="form.sptime"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="选择审批时间"
-          ></el-date-picker>
+        <el-form-item label="备注" prop="remark">
+             <el-input v-model="form.remark" type="textarea" placeholder="请输入备注" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -250,6 +152,7 @@ import {
   addTermplan,
   updateTermplan,
 } from "@/api/benyi/themetermplan";
+import { listClass } from "@/api/system/class";
 
 export default {
   name: "Termplan",
@@ -267,6 +170,10 @@ export default {
       total: 0,
       // 主题整合学期计划表格数据
       termplanList: [],
+      //班级
+      classOptions: [],
+      //学年学期
+      xnxqOptions: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -289,13 +196,47 @@ export default {
       // 表单参数
       form: {},
       // 表单校验
-      rules: {},
+      rules: {
+        xnxq: [
+          { required: true, message: "学年学期不能为空", trigger: "blur" },
+        ],
+        startmonth: [
+          { required: true, message: "日期不能为空", trigger: "blur" },
+        ],
+      },
     };
   },
   created() {
+    this.getClassList();
     this.getList();
+    this.getDicts("sys_xnxq").then((response) => {
+      this.xnxqOptions = response.data;
+    });
   },
   methods: {
+    // 字典翻译
+    classFormat(row, column) {
+      // return this.selectDictLabel(this.classOptions, row.classid);
+      var actions = [];
+      var datas = this.classOptions;
+      Object.keys(datas).map((key) => {
+        if (datas[key].bjbh == "" + row.classid) {
+          actions.push(datas[key].bjmc);
+          return false;
+        }
+      });
+      return actions.join("");
+    },
+    // 学年学期类型--字典状态字典翻译
+    xnxqFormat(row, column) {
+      return this.selectDictLabel(this.xnxqOptions, row.xnxq);
+    },
+    //班级列表
+    getClassList() {
+      listClass(null).then((response) => {
+        this.classOptions = response.rows;
+      });
+    },
     /** 查询主题整合学期计划列表 */
     getList() {
       this.loading = true;
@@ -359,12 +300,19 @@ export default {
         this.form = response.data;
         this.open = true;
         this.title = "修改主题整合学期计划";
+        const time = [];
+        time.push(response.data.startmonth);
+        time.push(response.data.endmonth);
+        this.form.startmonth = time;
       });
     },
     /** 提交按钮 */
     submitForm: function () {
       this.$refs["form"].validate((valid) => {
         if (valid) {
+          const time = this.form.startmonth;
+          this.form.startmonth = time[0];
+          this.form.endmonth = time[1];
           if (this.form.id != undefined) {
             updateTermplan(this.form).then((response) => {
               if (response.code === 200) {

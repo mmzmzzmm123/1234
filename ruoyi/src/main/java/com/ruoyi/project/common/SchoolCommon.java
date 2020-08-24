@@ -109,8 +109,8 @@ public class SchoolCommon {
         byClass.setZljs(sysUser.getUserId());
         //新的返回byclassNew返回整条数据
         ByClass byClassNew = byClassService.selectByClassByUserId(byClass);
-        System.out.println("--------------------"+ byClassNew);
-        if(byClassNew != null) {
+        System.out.println("--------------------" + byClassNew);
+        if (byClassNew != null) {
             //如果实体byclassnew不为空,那么取出它的班级编号
             return byClassNew.getBjbh();
         } else {
@@ -137,10 +137,10 @@ public class SchoolCommon {
 
     //根据时间 生成学年学期
     public String getCurrentXnXq(Date date) {
-        String year=String.format("%tY", date);
+        String year = String.format("%tY", date);
         Integer iYear = Integer.parseInt(year);
         System.out.println("当前年======:" + iYear);
-        String mon=String.format("%tm", date);
+        String mon = String.format("%tm", date);
         Integer iMonth = Integer.parseInt(mon);
         System.out.println("当前月======:" + iMonth);
         String strNxNq = "";
@@ -155,7 +155,7 @@ public class SchoolCommon {
     }
 
     public String getCurrentXn() {
-       return  getCurrentXnXq().substring(0,9);
+        return getCurrentXnXq().substring(0, 9);
     }
 
     public String getCurrentYear() {
@@ -173,7 +173,18 @@ public class SchoolCommon {
     }
 
     // 生成UUID
-    public String getUuid(){
-        return UUID.randomUUID().toString().replace("-","");
+    public String getUuid() {
+        return UUID.randomUUID().toString().replace("-", "");
+    }
+
+    //日期相减 获取月份
+    public Integer getDifMonth(Date startDate, Date endDate) {
+        Calendar start = Calendar.getInstance();
+        Calendar end = Calendar.getInstance();
+        start.setTime(startDate);
+        end.setTime(endDate);
+        int result = end.get(Calendar.MONTH) - start.get(Calendar.MONTH);
+        int month = (end.get(Calendar.YEAR) - start.get(Calendar.YEAR)) * 12;
+        return Math.abs(month + result);
     }
 }

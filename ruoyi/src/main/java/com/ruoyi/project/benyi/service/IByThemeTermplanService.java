@@ -17,7 +17,7 @@ public interface IByThemeTermplanService {
      * @param id 主题整合学期计划ID
      * @return 主题整合学期计划
      */
-    public ByThemeTermplan selectByThemeTermplanById(Long id);
+    public ByThemeTermplan selectByThemeTermplanById(String id);
 
     /**
      * 查询主题整合学期计划列表
@@ -49,7 +49,7 @@ public interface IByThemeTermplanService {
      * @param ids 需要删除的主题整合学期计划ID
      * @return 结果
      */
-    public int deleteByThemeTermplanByIds(Long[] ids);
+    public int deleteByThemeTermplanByIds(String[] ids);
 
     /**
      * 删除主题整合学期计划信息
@@ -57,5 +57,5 @@ public interface IByThemeTermplanService {
      * @param id 主题整合学期计划ID
      * @return 结果
      */
-    public int deleteByThemeTermplanById(Long id);
+    public int deleteByThemeTermplanById(String id);
 }

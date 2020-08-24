@@ -1,6 +1,16 @@
 package com.ruoyi.project.benyi.controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+
+import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.project.benyi.domain.ByThemeTermplanitem;
+import com.ruoyi.project.benyi.service.IByThemeTermplanitemService;
+import com.ruoyi.project.common.SchoolCommon;
+import com.ruoyi.project.system.service.IByClassService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,31 +38,34 @@ import com.ruoyi.framework.web.page.TableDataInfo;
  */
 @RestController
 @RequestMapping("/benyi/themetermplan")
-public class ByThemeTermplanController extends BaseController
-{
+public class ByThemeTermplanController extends BaseController {
     @Autowired
     private IByThemeTermplanService byThemeTermplanService;
+    @Autowired
+    private SchoolCommon schoolCommon;
+    @Autowired
+    private IByClassService byClassService;
+    @Autowired
+    private IByThemeTermplanitemService byThemeTermplanitemService;
 
-/**
- * 查询主题整合学期计划列表
- */
-@PreAuthorize("@ss.hasPermi('benyi:themetermplan:list')")
-@GetMapping("/list")
-        public TableDataInfo list(ByThemeTermplan byThemeTermplan)
-    {
+    /**
+     * 查询主题整合学期计划列表
+     */
+    @PreAuthorize("@ss.hasPermi('benyi:themetermplan:list')")
+    @GetMapping("/list")
+    public TableDataInfo list(ByThemeTermplan byThemeTermplan) {
         startPage();
         List<ByThemeTermplan> list = byThemeTermplanService.selectByThemeTermplanList(byThemeTermplan);
         return getDataTable(list);
     }
-    
+
     /**
      * 导出主题整合学期计划列表
      */
     @PreAuthorize("@ss.hasPermi('benyi:themetermplan:export')")
     @Log(title = "主题整合学期计划", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
-    public AjaxResult export(ByThemeTermplan byThemeTermplan)
-    {
+    public AjaxResult export(ByThemeTermplan byThemeTermplan) {
         List<ByThemeTermplan> list = byThemeTermplanService.selectByThemeTermplanList(byThemeTermplan);
         ExcelUtil<ByThemeTermplan> util = new ExcelUtil<ByThemeTermplan>(ByThemeTermplan.class);
         return util.exportExcel(list, "themetermplan");
@@ -63,8 +76,7 @@ public class ByThemeTermplanController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('benyi:themetermplan:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
-    {
+    public AjaxResult getInfo(@PathVariable("id") String id) {
         return AjaxResult.success(byThemeTermplanService.selectByThemeTermplanById(id));
     }
 
@@ -74,9 +86,41 @@ public class ByThemeTermplanController extends BaseController
     @PreAuthorize("@ss.hasPermi('benyi:themetermplan:add')")
     @Log(title = "主题整合学期计划", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody ByThemeTermplan byThemeTermplan)
-    {
-        return toAjax(byThemeTermplanService.insertByThemeTermplan(byThemeTermplan));
+    public AjaxResult add(@RequestBody ByThemeTermplan byThemeTermplan) {
+        String classId = schoolCommon.getClassId();
+        //首先判断当前账户是否为幼儿园账号
+        if (schoolCommon.isSchool() && !schoolCommon.isStringEmpty(classId)) {
+            int iCount = schoolCommon.getDifMonth(byThemeTermplan.getStartmonth(), byThemeTermplan.getEndmonth());
+            System.out.println("月份差=" + iCount);
+            String uuid = schoolCommon.getUuid();
+            byThemeTermplan.setId(uuid);
+            byThemeTermplan.setSchoolid(SecurityUtils.getLoginUser().getUser().getDept().getDeptId());
+            byThemeTermplan.setCreateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
+            byThemeTermplan.setClassid(classId);
+            byThemeTermplan.setName(byClassService.selectByClassById(classId).getBjmc() + "-主题整合学期计划");
+
+            ByThemeTermplanitem byThemeTermplanitem = null;
+            for (int i = 0; i <= iCount; i++) {
+                byThemeTermplanitem = new ByThemeTermplanitem();
+                byThemeTermplanitem.setTpid(uuid);
+                byThemeTermplanitem.setCreateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
+                //月份加1
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(byThemeTermplan.getStartmonth());
+                calendar.add(Calendar.MONTH, i);
+                byThemeTermplanitem.setMonth(calendar.getTime());
+                //创建时间
+                byThemeTermplanitem.setCreateTime(new Date());
+
+                //新增每月计划
+                byThemeTermplanitemService.insertByThemeTermplanitem(byThemeTermplanitem);
+            }
+
+            return toAjax(byThemeTermplanService.insertByThemeTermplan(byThemeTermplan));
+        } else {
+            return AjaxResult.error("当前用户非幼儿园，无法添加幼儿");
+        }
+
     }
 
     /**
@@ -85,8 +129,7 @@ public class ByThemeTermplanController extends BaseController
     @PreAuthorize("@ss.hasPermi('benyi:themetermplan:edit')")
     @Log(title = "主题整合学期计划", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody ByThemeTermplan byThemeTermplan)
-    {
+    public AjaxResult edit(@RequestBody ByThemeTermplan byThemeTermplan) {
         return toAjax(byThemeTermplanService.updateByThemeTermplan(byThemeTermplan));
     }
 
@@ -96,8 +139,7 @@ public class ByThemeTermplanController extends BaseController
     @PreAuthorize("@ss.hasPermi('benyi:themetermplan:remove')")
     @Log(title = "主题整合学期计划", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
-    {
+    public AjaxResult remove(@PathVariable String[] ids) {
         return toAjax(byThemeTermplanService.deleteByThemeTermplanByIds(ids));
     }
 }

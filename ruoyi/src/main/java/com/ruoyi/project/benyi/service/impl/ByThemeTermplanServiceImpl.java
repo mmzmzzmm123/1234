@@ -27,7 +27,7 @@ public class ByThemeTermplanServiceImpl implements IByThemeTermplanService {
      * @return 主题整合学期计划
      */
     @Override
-    public ByThemeTermplan selectByThemeTermplanById(Long id) {
+    public ByThemeTermplan selectByThemeTermplanById(String id) {
         return byThemeTermplanMapper.selectByThemeTermplanById(id);
     }
 
@@ -72,7 +72,7 @@ public class ByThemeTermplanServiceImpl implements IByThemeTermplanService {
      * @return 结果
      */
     @Override
-    public int deleteByThemeTermplanByIds(Long[] ids) {
+    public int deleteByThemeTermplanByIds(String[] ids) {
         return byThemeTermplanMapper.deleteByThemeTermplanByIds(ids);
     }
 
@@ -83,7 +83,7 @@ public class ByThemeTermplanServiceImpl implements IByThemeTermplanService {
      * @return 结果
      */
     @Override
-    public int deleteByThemeTermplanById(Long id) {
+    public int deleteByThemeTermplanById(String id) {
         return byThemeTermplanMapper.deleteByThemeTermplanById(id);
     }
 }

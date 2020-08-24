@@ -29,6 +29,13 @@ public class ByThemeTermplanitem extends BaseEntity {
     private String tpid;
 
     /**
+     * 月份
+     */
+    @JsonFormat(pattern = "yyyy-MM")
+    @Excel(name = "月份", width = 30, dateFormat = "yyyy-MM")
+    private Date month;
+
+    /**
      * 主题内容
      */
     @Excel(name = "主题内容")
@@ -39,13 +46,6 @@ public class ByThemeTermplanitem extends BaseEntity {
      */
     @Excel(name = "创建人")
     private Long createuserid;
-
-    /**
-     * $column.columnComment
-     */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "创建人", width = 30, dateFormat = "yyyy-MM-dd")
-    private Date 创建时间;
 
     /**
      * 修改人
@@ -69,6 +69,14 @@ public class ByThemeTermplanitem extends BaseEntity {
         return tpid;
     }
 
+    public void setMonth(Date month) {
+        this.month = month;
+    }
+
+    public Date getMonth() {
+        return month;
+    }
+
     public void setThemeconent(String themeconent) {
         this.themeconent = themeconent;
     }
@@ -85,14 +93,6 @@ public class ByThemeTermplanitem extends BaseEntity {
         return createuserid;
     }
 
-    public void set创建时间(Date 创建时间) {
-        this.创建时间 = 创建时间;
-    }
-
-    public Date get创建时间() {
-        return 创建时间;
-    }
-
     public void setUpdateuserid(Long updateuserid) {
         this.updateuserid = updateuserid;
     }
@@ -106,10 +106,11 @@ public class ByThemeTermplanitem extends BaseEntity {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
                 .append("id", getId())
                 .append("tpid", getTpid())
+                .append("month", getMonth())
                 .append("themeconent", getThemeconent())
                 .append("remark", getRemark())
                 .append("createuserid", getCreateuserid())
-                .append("创建时间", get创建时间())
+                .append("createTime", getCreateTime())
                 .append("updateuserid", getUpdateuserid())
                 .append("updateTime", getUpdateTime())
                 .toString();
