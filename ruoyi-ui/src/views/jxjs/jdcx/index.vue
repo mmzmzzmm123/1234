@@ -254,6 +254,7 @@ export default {
   name: "Jdcx",
   data() {
     return {
+      
       // 遮罩层
       loading: true,
       // 选中数组
@@ -466,7 +467,7 @@ export default {
         jdxshr: null,
         jdxshzt: null,
         sbly: null,
-        qjshr: null,
+        qjshr: 2,
         qjshzt: null,
         qjshyj: null,
         jdpx: null,
@@ -511,7 +512,6 @@ export default {
       const id = row.id || this.ids;
       getJdcx(id).then((response) => {
         this.form = response.data;
-        console.log(this.form);
         this.open = true;
         this.title = "修改基地区级审核";
       });
@@ -520,7 +520,12 @@ export default {
     submitForm() {
       this.$refs["form"].validate((valid) => {
         if (valid) {
-          if (this.form.id != null) {
+          if (this.form.id != null ) {
+            if (this.form.qjshzt == "0") {
+              this.form.dqzt = "8";
+            } else if (this.form.qjshzt == "1") {
+              this.form.dqzt = "9";
+            }
             updateJdcx(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("修改成功");
@@ -529,6 +534,11 @@ export default {
               }
             });
           } else {
+            if (this.form.qjshzt == "0") {
+              this.form.dqzt = "8";
+            } else if (this.form.qjshzt == "1") {
+              this.form.dqzt = "9";
+            }
             addJdcx(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("新增成功");

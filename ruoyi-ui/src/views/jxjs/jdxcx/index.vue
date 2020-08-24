@@ -261,7 +261,7 @@ export default {
   methods: {
     isShow(row) {
       console.log(row.dqzt);
-      if (row.dqzt == "2" || row.dqzt == "9") {
+      if (row.dqzt == "2" || row.dqzt == "9" || row.dqzt == "8") {
         return false;
       } else {
         return true;
@@ -381,7 +381,6 @@ export default {
       this.title = "基地校初选";
       listJxjsjbxx(null).then((response) => {
         this.jss = response.rows;
-        console.log(this.jss + '-------------');
       });
     },
     /** 修改按钮操作 */
