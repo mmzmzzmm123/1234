@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.benyi.mapper.ByThemeTermplanitemMapper">
+
+    <resultMap type="ByThemeTermplanitem" id="ByThemeTermplanitemResult">
+        <result property="id" column="id"/>
+        <result property="tpid" column="tpid"/>
+        <result property="themeconent" column="themeconent"/>
+        <result property="remark" column="remark"/>
+        <result property="createuserid" column="createuserid"/>
+        <result property="创建时间" column="创建时间"/>
+        <result property="updateuserid" column="updateuserid"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <sql id="selectByThemeTermplanitemVo">
+        select id, tpid, themeconent, remark, createuserid, 创建时间, updateuserid, update_time from by_theme_termplanitem
+    </sql>
+
+    <select id="selectByThemeTermplanitemList" parameterType="ByThemeTermplanitem"
+            resultMap="ByThemeTermplanitemResult">
+        <include refid="selectByThemeTermplanitemVo"/>
+        <where>
+            <if test="tpid != null  and tpid != ''">and tpid = #{tpid}</if>
+            <if test="themeconent != null  and themeconent != ''">and themeconent = #{themeconent}</if>
+            <if test="createuserid != null ">and createuserid = #{createuserid}</if>
+            <if test="创建时间 != null ">and 创建时间 = #{创建时间}</if>
+            <if test="updateuserid != null ">and updateuserid = #{updateuserid}</if>
+        </where>
+    </select>
+
+    <select id="selectByThemeTermplanitemById" parameterType="Long" resultMap="ByThemeTermplanitemResult">
+        <include refid="selectByThemeTermplanitemVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertByThemeTermplanitem" parameterType="ByThemeTermplanitem" useGeneratedKeys="true" keyProperty="id">
+        insert into by_theme_termplanitem
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="tpid != null  and tpid != ''">tpid,</if>
+            <if test="themeconent != null  and themeconent != ''">themeconent,</if>
+            <if test="remark != null  and remark != ''">remark,</if>
+            <if test="createuserid != null ">createuserid,</if>
+            <if test="创建时间 != null ">创建时间,</if>
+            <if test="updateuserid != null ">updateuserid,</if>
+            <if test="updateTime != null ">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="tpid != null  and tpid != ''">#{tpid},</if>
+            <if test="themeconent != null  and themeconent != ''">#{themeconent},</if>
+            <if test="remark != null  and remark != ''">#{remark},</if>
+            <if test="createuserid != null ">#{createuserid},</if>
+            <if test="创建时间 != null ">#{创建时间},</if>
+            <if test="updateuserid != null ">#{updateuserid},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateByThemeTermplanitem" parameterType="ByThemeTermplanitem">
+        update by_theme_termplanitem
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="tpid != null  and tpid != ''">tpid = #{tpid},</if>
+            <if test="themeconent != null  and themeconent != ''">themeconent = #{themeconent},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+            <if test="createuserid != null ">createuserid = #{createuserid},</if>
+            <if test="创建时间 != null ">创建时间 = #{创建时间},</if>
+            <if test="updateuserid != null ">updateuserid = #{updateuserid},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteByThemeTermplanitemById" parameterType="Long">
+        delete from by_theme_termplanitem where id = #{id}
+    </delete>
+
+    <delete id="deleteByThemeTermplanitemByIds" parameterType="String">
+        delete from by_theme_termplanitem where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

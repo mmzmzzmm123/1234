@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.benyi.mapper.ByThemeTermplanMapper">
+
+    <resultMap type="ByThemeTermplan" id="ByThemeTermplanResult">
+        <result property="id" column="id"/>
+        <result property="schoolid" column="schoolid"/>
+        <result property="classid" column="classid"/>
+        <result property="name" column="name"/>
+        <result property="startmonth" column="startmonth"/>
+        <result property="endmonth" column="endmonth"/>
+        <result property="xnxq" column="xnxq"/>
+        <result property="remark" column="remark"/>
+        <result property="createuserid" column="createuserid"/>
+        <result property="createTime" column="create_time"/>
+        <result property="status" column="status"/>
+        <result property="spr" column="spr"/>
+        <result property="sptime" column="sptime"/>
+    </resultMap>
+
+    <sql id="selectByThemeTermplanVo">
+        select id, schoolid, classid, name, startmonth, endmonth, xnxq, remark, createuserid, create_time, status, spr, sptime from by_theme_termplan
+    </sql>
+
+    <select id="selectByThemeTermplanList" parameterType="ByThemeTermplan" resultMap="ByThemeTermplanResult">
+        <include refid="selectByThemeTermplanVo"/>
+        <where>
+            <if test="schoolid != null ">and schoolid = #{schoolid}</if>
+            <if test="classid != null  and classid != ''">and classid = #{classid}</if>
+            <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
+            <if test="startmonth != null ">and startmonth = #{startmonth}</if>
+            <if test="endmonth != null ">and endmonth = #{endmonth}</if>
+            <if test="xnxq != null  and xnxq != ''">and xnxq = #{xnxq}</if>
+            <if test="createuserid != null ">and createuserid = #{createuserid}</if>
+            <if test="status != null  and status != ''">and status = #{status}</if>
+            <if test="spr != null ">and spr = #{spr}</if>
+            <if test="sptime != null ">and sptime = #{sptime}</if>
+        </where>
+    </select>
+
+    <select id="selectByThemeTermplanById" parameterType="String" resultMap="ByThemeTermplanResult">
+        <include refid="selectByThemeTermplanVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertByThemeTermplan" parameterType="ByThemeTermplan">
+        insert into by_theme_termplan
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null  and id != ''">id,</if>
+            <if test="schoolid != null ">schoolid,</if>
+            <if test="classid != null  and classid != ''">classid,</if>
+            <if test="name != null  and name != ''">name,</if>
+            <if test="startmonth != null ">startmonth,</if>
+            <if test="endmonth != null ">endmonth,</if>
+            <if test="xnxq != null  and xnxq != ''">xnxq,</if>
+            <if test="remark != null  and remark != ''">remark,</if>
+            <if test="createuserid != null ">createuserid,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="status != null  and status != ''">status,</if>
+            <if test="spr != null ">spr,</if>
+            <if test="sptime != null ">sptime,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null  and id != ''">#{id},</if>
+            <if test="schoolid != null ">#{schoolid},</if>
+            <if test="classid != null  and classid != ''">#{classid},</if>
+            <if test="name != null  and name != ''">#{name},</if>
+            <if test="startmonth != null ">#{startmonth},</if>
+            <if test="endmonth != null ">#{endmonth},</if>
+            <if test="xnxq != null  and xnxq != ''">#{xnxq},</if>
+            <if test="remark != null  and remark != ''">#{remark},</if>
+            <if test="createuserid != null ">#{createuserid},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="status != null  and status != ''">#{status},</if>
+            <if test="spr != null ">#{spr},</if>
+            <if test="sptime != null ">#{sptime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateByThemeTermplan" parameterType="ByThemeTermplan">
+        update by_theme_termplan
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="schoolid != null ">schoolid = #{schoolid},</if>
+            <if test="classid != null  and classid != ''">classid = #{classid},</if>
+            <if test="name != null  and name != ''">name = #{name},</if>
+            <if test="startmonth != null ">startmonth = #{startmonth},</if>
+            <if test="endmonth != null ">endmonth = #{endmonth},</if>
+            <if test="xnxq != null  and xnxq != ''">xnxq = #{xnxq},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+            <if test="createuserid != null ">createuserid = #{createuserid},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="status != null  and status != ''">status = #{status},</if>
+            <if test="spr != null ">spr = #{spr},</if>
+            <if test="sptime != null ">sptime = #{sptime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteByThemeTermplanById" parameterType="String">
+        delete from by_theme_termplan where id = #{id}
+    </delete>
+
+    <delete id="deleteByThemeTermplanByIds" parameterType="String">
+        delete from by_theme_termplan where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
