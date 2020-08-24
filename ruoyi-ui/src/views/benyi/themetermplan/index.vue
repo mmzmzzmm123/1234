@@ -67,7 +67,13 @@
     <el-table v-loading="loading" :data="termplanList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="班级" align="center" prop="classid" :formatter="classFormat" />
-      <el-table-column label="名称" align="center" prop="name" />
+      <el-table-column label="名称" align="center" prop="name" :show-overflow-tooltip="true">
+        <template slot-scope="scope">
+          <router-link :to="'/benyi_course/themetermplan/data/' + scope.row.id" class="link-type">
+            <span>{{ scope.row.name }}</span>
+          </router-link>
+        </template>
+      </el-table-column>
       <el-table-column label="开始月份" align="center" prop="startmonth" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.startmonth, '{y}-{m}') }}</span>

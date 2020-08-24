@@ -28,7 +28,7 @@ import com.ruoyi.framework.web.page.TableDataInfo;
  * @date 2020-08-24
  */
 @RestController
-@RequestMapping("/benyi/termplanitem")
+@RequestMapping("/benyi/themetermplanitem")
 public class ByThemeTermplanitemController extends BaseController {
     @Autowired
     private IByThemeTermplanitemService byThemeTermplanitemService;

@@ -218,6 +218,21 @@ export const constantRoutes = [{
     }]
   },
   {
+    path: '/benyi_course/themetermplan',
+    component: Layout,
+    hidden: true,
+    children: [{
+      path: 'data/:id',
+      component: () =>
+        import('@/views/benyi/themetermplan/data'),
+      name: 'Themetermplan1',
+      meta: {
+        title: '主题整合学期计划',
+        icon: ''
+      }
+    }]
+  },
+  {
     path: '/benyi_course/math',
     component: Layout,
     hidden: true,
