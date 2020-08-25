@@ -61,6 +61,12 @@ public class Constants
      * 登录用户 redis key
      */
     public static final String LOGIN_TOKEN_KEY = "login_tokens:";
+
+
+    /**
+     * 登录当前在线 用户 redis key
+     */
+    public static final String LOGIN_TOKEN_KEY_ONLINE = "login_tokens_onlie:";
     
     /**
      * 防重提交 redis key

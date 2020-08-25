@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.data.redis.serializer.RedisSerializer;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.stereotype.Component;
 
 /**
@@ -22,6 +24,7 @@ public class RedisCache
 {
     @Autowired
     public RedisTemplate redisTemplate;
+
 
     /**
      * 缓存基本的对象，Integer、String、实体类等
@@ -46,6 +49,8 @@ public class RedisCache
     {
         redisTemplate.opsForValue().set(key, value, timeout, timeUnit);
     }
+
+
 
     /**
      * 设置有效时间
@@ -189,6 +194,20 @@ public class RedisCache
         redisTemplate.opsForHash().put(key, hKey, value);
     }
 
+
+    /**
+     * 缓存基本的对象，Integer、String、实体类等
+     *
+     * @param key 缓存的键值
+     * @param value 缓存的值
+     * @param timeout 时间
+     * @param timeUnit 时间颗粒度
+     */
+    public boolean  delCacheMapKey(final String key,final String... token)
+    {
+        return redisTemplate.opsForHash().delete(key,token)>=1;
+    }
+
     /**
      * 获取Hash中的数据
      *
@@ -224,4 +243,9 @@ public class RedisCache
     {
         return redisTemplate.keys(pattern);
     }
+
+
+
+
+
 }

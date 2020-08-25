@@ -1,9 +1,7 @@
 package com.ruoyi.web.controller.monitor;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -42,39 +40,56 @@ public class SysUserOnlineController extends BaseController
     @GetMapping("/list")
     public TableDataInfo list(String ipaddr, String userName)
     {
-        Collection<String> keys = redisCache.keys(Constants.LOGIN_TOKEN_KEY + "*");
+        // 一次性取出 在线用户
+        Map<String, Object> maps = redisCache.getCacheMap(Constants.LOGIN_TOKEN_KEY_ONLINE);
+        List<String> delList=new ArrayList<>();
         List<SysUserOnline> userOnlineList = new ArrayList<SysUserOnline>();
-        for (String key : keys)
-        {
-            LoginUser user = redisCache.getCacheObject(key);
-            if (StringUtils.isNotEmpty(ipaddr) && StringUtils.isNotEmpty(userName))
-            {
-                if (StringUtils.equals(ipaddr, user.getIpaddr()) && StringUtils.equals(userName, user.getUsername()))
+        Iterator<Map.Entry<String, Object>> it = maps.entrySet().iterator();
+        while(it.hasNext()){
+            Map.Entry<String, Object> entry = it.next();
+            LoginUser user=(LoginUser) entry.getValue();
+            boolean removed = true;
+            if (user.getExpireTime()<=System.currentTimeMillis()){
+                it.remove();
+                removed=false;
+                delList.add(entry.getKey());
+            }
+            if (removed){
+                if (StringUtils.isNotEmpty(ipaddr) && StringUtils.isNotEmpty(userName))
                 {
-                    userOnlineList.add(userOnlineService.selectOnlineByInfo(ipaddr, userName, user));
+                    if (StringUtils.equals(ipaddr, user.getIpaddr()) && StringUtils.equals(userName, user.getUsername()))
+                    {
+                        userOnlineList.add(userOnlineService.selectOnlineByInfo(ipaddr, userName, user));
+                    }
+                }
+                else if (StringUtils.isNotEmpty(ipaddr))
+                {
+                    if (StringUtils.equals(ipaddr, user.getIpaddr()))
+                    {
+                        userOnlineList.add(userOnlineService.selectOnlineByIpaddr(ipaddr, user));
+                    }
+                }
+                else if (StringUtils.isNotEmpty(userName) && StringUtils.isNotNull(user.getUser()))
+                {
+                    if (StringUtils.equals(userName, user.getUsername()))
+                    {
+                        userOnlineList.add(userOnlineService.selectOnlineByUserName(userName, user));
+                    }
+                }
+                else
+                {
+                    userOnlineList.add(userOnlineService.loginUserToUserOnline(user));
                 }
             }
-            else if (StringUtils.isNotEmpty(ipaddr))
-            {
-                if (StringUtils.equals(ipaddr, user.getIpaddr()))
-                {
-                    userOnlineList.add(userOnlineService.selectOnlineByIpaddr(ipaddr, user));
-                }
-            }
-            else if (StringUtils.isNotEmpty(userName) && StringUtils.isNotNull(user.getUser()))
-            {
-                if (StringUtils.equals(userName, user.getUsername()))
-                {
-                    userOnlineList.add(userOnlineService.selectOnlineByUserName(userName, user));
-                }
-            }
-            else
-            {
-                userOnlineList.add(userOnlineService.loginUserToUserOnline(user));
-            }
-        }
+
+        };
+
         Collections.reverse(userOnlineList);
         userOnlineList.removeAll(Collections.singleton(null));
+        if (!delList.isEmpty()){
+            String[] delTokens=new String[delList.size()];
+            redisCache.delCacheMapKey(Constants.LOGIN_TOKEN_KEY_ONLINE,delList.toArray(delTokens));
+        }
         return getDataTable(userOnlineList);
     }
 
@@ -86,7 +101,10 @@ public class SysUserOnlineController extends BaseController
     @DeleteMapping("/{tokenId}")
     public AjaxResult forceLogout(@PathVariable String tokenId)
     {
-        redisCache.deleteObject(Constants.LOGIN_TOKEN_KEY + tokenId);
+        redisCache.deleteObject(tokenId);
+        redisCache.delCacheMapKey(Constants.LOGIN_TOKEN_KEY_ONLINE , tokenId);
         return AjaxResult.success();
     }
+
+
 }
