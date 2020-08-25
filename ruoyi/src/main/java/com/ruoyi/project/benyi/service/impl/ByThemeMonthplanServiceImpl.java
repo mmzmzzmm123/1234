@@ -13,7 +13,7 @@ import com.ruoyi.project.benyi.service.IByThemeMonthplanService;
  * 主题整合月计划Service业务层处理
  *
  * @author tsbz
- * @date 2020-08-17
+ * @date 2020-08-25
  */
 @Service
 public class ByThemeMonthplanServiceImpl implements IByThemeMonthplanService {
@@ -27,7 +27,7 @@ public class ByThemeMonthplanServiceImpl implements IByThemeMonthplanService {
      * @return 主题整合月计划
      */
     @Override
-    public ByThemeMonthplan selectByThemeMonthplanById(Long id) {
+    public ByThemeMonthplan selectByThemeMonthplanById(String id) {
         return byThemeMonthplanMapper.selectByThemeMonthplanById(id);
     }
 
@@ -72,7 +72,7 @@ public class ByThemeMonthplanServiceImpl implements IByThemeMonthplanService {
      * @return 结果
      */
     @Override
-    public int deleteByThemeMonthplanByIds(Long[] ids) {
+    public int deleteByThemeMonthplanByIds(String[] ids) {
         return byThemeMonthplanMapper.deleteByThemeMonthplanByIds(ids);
     }
 
@@ -83,7 +83,7 @@ public class ByThemeMonthplanServiceImpl implements IByThemeMonthplanService {
      * @return 结果
      */
     @Override
-    public int deleteByThemeMonthplanById(Long id) {
+    public int deleteByThemeMonthplanById(String id) {
         return byThemeMonthplanMapper.deleteByThemeMonthplanById(id);
     }
 }

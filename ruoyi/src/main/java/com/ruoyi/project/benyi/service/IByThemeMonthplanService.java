@@ -8,7 +8,7 @@ import com.ruoyi.project.benyi.domain.ByThemeMonthplan;
  * 主题整合月计划Service接口
  *
  * @author tsbz
- * @date 2020-08-17
+ * @date 2020-08-25
  */
 public interface IByThemeMonthplanService {
     /**
@@ -17,7 +17,7 @@ public interface IByThemeMonthplanService {
      * @param id 主题整合月计划ID
      * @return 主题整合月计划
      */
-    public ByThemeMonthplan selectByThemeMonthplanById(Long id);
+    public ByThemeMonthplan selectByThemeMonthplanById(String id);
 
     /**
      * 查询主题整合月计划列表
@@ -49,7 +49,7 @@ public interface IByThemeMonthplanService {
      * @param ids 需要删除的主题整合月计划ID
      * @return 结果
      */
-    public int deleteByThemeMonthplanByIds(Long[] ids);
+    public int deleteByThemeMonthplanByIds(String[] ids);
 
     /**
      * 删除主题整合月计划信息
@@ -57,5 +57,5 @@ public interface IByThemeMonthplanService {
      * @param id 主题整合月计划ID
      * @return 结果
      */
-    public int deleteByThemeMonthplanById(Long id);
+    public int deleteByThemeMonthplanById(String id);
 }

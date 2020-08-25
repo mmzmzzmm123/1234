@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
-      <el-form-item label="所属计划" prop="tpid">
+      <el-form-item label="学期计划" prop="tpid">
         <el-select v-model="queryParams.tpid" size="small">
           <el-option
             v-for="item in themePlanOptions"
@@ -69,7 +69,7 @@
     >
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="编号" align="center" prop="id" /> -->
-      <el-table-column label="所属计划" align="center" prop="tpid" :formatter="themePlanFormat" />
+      <el-table-column label="学期计划" align="center" prop="tpid" :formatter="themePlanFormat" />
       <el-table-column label="月份" align="center" prop="month" />
       <el-table-column label="主题内容" align="center" prop="themeconent" :formatter="themeFormat" />
       <el-table-column label="备注" align="center" prop="remark" />
