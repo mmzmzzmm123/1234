@@ -227,7 +227,22 @@ export const constantRoutes = [{
         import('@/views/benyi/themetermplan/data'),
       name: 'Themetermplan1',
       meta: {
-        title: '主题整合学期计划',
+        title: '主题整合学期计划(明细)',
+        icon: ''
+      }
+    }]
+  },
+  {
+    path: '/benyi_course/thememonthplan',
+    component: Layout,
+    hidden: true,
+    children: [{
+      path: 'data/:id',
+      component: () =>
+        import('@/views/benyi/thememonthplan/data'),
+      name: 'Thememonthplan1',
+      meta: {
+        title: '主题整合月计划(明细)',
         icon: ''
       }
     }]

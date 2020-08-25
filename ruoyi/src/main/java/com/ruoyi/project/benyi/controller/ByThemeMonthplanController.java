@@ -132,7 +132,8 @@ public class ByThemeMonthplanController extends BaseController {
             byThemeMonthplan.setClassid(classId);
             byThemeMonthplan.setThemes(strThemeIds);//主题id
             byThemeMonthplan.setCreateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
-            byThemeMonthplan.setName(byClassService.selectByClassById(classId).getBjmc() + "-主题整合月计划");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
+            byThemeMonthplan.setName(byClassService.selectByClassById(classId).getBjmc() + "-主题整合月计划" + "(" + sdf.format(byThemeMonthplan.getMonth()) + ")");
             return toAjax(byThemeMonthplanService.insertByThemeMonthplan(byThemeMonthplan));
         } else {
             return AjaxResult.error("当前用户非幼儿园，无法创建月计划");

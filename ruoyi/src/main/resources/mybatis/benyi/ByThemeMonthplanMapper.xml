@@ -47,6 +47,7 @@
             <if test="spyj != null  and spyj != ''"> and spyj = #{spyj}</if>
             <if test="status != null  and status != ''"> and status = #{status}</if>
         </where>
+        order by month desc
     </select>
 
     <select id="selectByThemeMonthplanById" parameterType="String" resultMap="ByThemeMonthplanResult">

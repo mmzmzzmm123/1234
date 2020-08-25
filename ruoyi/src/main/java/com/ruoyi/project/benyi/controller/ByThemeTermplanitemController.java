@@ -2,6 +2,7 @@ package com.ruoyi.project.benyi.controller;
 
 import java.util.List;
 
+import com.ruoyi.common.utils.SecurityUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -72,6 +73,7 @@ public class ByThemeTermplanitemController extends BaseController {
     @Log(title = "主题整合学期计划明细", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody ByThemeTermplanitem byThemeTermplanitem) {
+        byThemeTermplanitem.setCreateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
         return toAjax(byThemeTermplanitemService.insertByThemeTermplanitem(byThemeTermplanitem));
     }
 

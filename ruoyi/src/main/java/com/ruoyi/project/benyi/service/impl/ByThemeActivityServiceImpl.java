@@ -86,4 +86,15 @@ public class ByThemeActivityServiceImpl implements IByThemeActivityService {
     public int deleteByThemeActivityById(Long id) {
         return byThemeActivityMapper.deleteByThemeActivityById(id);
     }
+
+    /**
+     * 查询主题整合活动列表
+     *
+     * @param ids 主题整合活动
+     * @return 主题整合活动集合
+     */
+    @Override
+    public List<ByThemeActivity> selectByThemeActivityByThemeIds(Long[] ids){
+        return byThemeActivityMapper.selectByThemeActivityByThemeIds(ids);
+    }
 }

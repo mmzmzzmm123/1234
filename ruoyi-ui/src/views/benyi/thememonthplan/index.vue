@@ -91,7 +91,13 @@
 
     <el-table v-loading="loading" :data="monthplanList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="计划名称" align="center" prop="name" />
+       <el-table-column label="计划名称" align="center" prop="name" :show-overflow-tooltip="true">
+        <template slot-scope="scope">
+          <router-link :to="'/benyi_course/thememonthplan/data/' + scope.row.id" class="link-type">
+            <span>{{ scope.row.name }}</span>
+          </router-link>
+        </template>
+      </el-table-column>
       <el-table-column label="所属班级" align="center" prop="classid" :formatter="classFormat" />
       <el-table-column label="学年学期" align="center" prop="xnxq" :formatter="xnxqFormat" />
       <el-table-column label="计划月份" align="center" prop="month" width="180">
@@ -105,8 +111,8 @@
           <div v-html="scope.row.wxkc"></div>
         </template>
       </el-table-column>
-      <el-table-column label="家长支持" align="center" prop="support" />
-      <el-table-column label="备注" align="center" prop="remarks" />
+      <!-- <el-table-column label="家长支持" align="center" prop="support" />
+      <el-table-column label="备注" align="center" prop="remarks" /> -->
       <el-table-column label="状态" align="center" prop="status" :formatter="statusFormat" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
