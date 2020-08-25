@@ -2,51 +2,24 @@
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
       <el-form-item label="所属计划" prop="tpid">
-        <el-input
-          v-model="queryParams.tpid"
-          placeholder="请输入所属计划"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+        <el-select v-model="queryParams.tpid" size="small">
+          <el-option
+            v-for="item in themePlanOptions"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item label="主题内容" prop="themeconent">
-        <el-input
-          v-model="queryParams.themeconent"
-          placeholder="请输入主题内容"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="创建人" prop="createuserid">
-        <el-input
-          v-model="queryParams.createuserid"
-          placeholder="请输入创建人"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="创建人" prop="创建时间">
-        <el-date-picker
-          clearable
-          size="small"
-          style="width: 200px"
-          v-model="queryParams.创建时间"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="选择创建人"
-        ></el-date-picker>
-      </el-form-item>
-      <el-form-item label="修改人" prop="updateuserid">
-        <el-input
-          v-model="queryParams.updateuserid"
-          placeholder="请输入修改人"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+        <el-select v-model="queryParams.themeconent" size="small">
+          <el-option
+            v-for="item in themeOptions"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -62,6 +35,7 @@
           size="mini"
           @click="handleAdd"
           v-hasPermi="['benyi:themetermplan:add']"
+          v-show="isShow"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -72,6 +46,7 @@
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['benyi:themetermplan:edit']"
+          v-show="isShow"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -82,16 +57,8 @@
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['benyi:themetermplan:remove']"
+          v-show="isShow"
         >删除</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['benyi:themetermplan:export']"
-        >导出</el-button>
       </el-col>
     </el-row>
 
@@ -101,17 +68,11 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="编号" align="center" prop="id" />
-      <el-table-column label="所属计划" align="center" prop="tpid" />
-      <el-table-column label="主题内容" align="center" prop="themeconent" />
+      <!-- <el-table-column label="编号" align="center" prop="id" /> -->
+      <el-table-column label="所属计划" align="center" prop="tpid" :formatter="themePlanFormat" />
+      <el-table-column label="月份" align="center" prop="month" />
+      <el-table-column label="主题内容" align="center" prop="themeconent" :formatter="themeFormat" />
       <el-table-column label="备注" align="center" prop="remark" />
-      <el-table-column label="创建人" align="center" prop="createuserid" />
-      <el-table-column label="创建人" align="center" prop="创建时间" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.创建时间, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="修改人" align="center" prop="updateuserid" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -120,6 +81,7 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['benyi:themetermplan:edit']"
+            v-show="isShow"
           >修改</el-button>
           <el-button
             size="mini"
@@ -127,6 +89,7 @@
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['benyi:themetermplan:remove']"
+            v-show="isShow"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -144,27 +107,31 @@
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="所属计划" prop="tpid">
-          <el-input v-model="form.tpid" placeholder="请输入所属计划" />
+          <el-select v-model="form.tpid" size="small" :disabled="true">
+            <el-option
+              v-for="item in themePlanOptions"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
+            />
+          </el-select>
         </el-form-item>
-        <el-form-item label="主题内容" prop="themeconent">
-          <el-input v-model="form.themeconent" placeholder="请输入主题内容" />
-        </el-form-item>
-        <el-form-item label="创建人" prop="createuserid">
-          <el-input v-model="form.createuserid" placeholder="请输入创建人" />
-        </el-form-item>
-        <el-form-item label="创建人" prop="创建时间">
+        <el-form-item label="月份" prop="month">
           <el-date-picker
-            clearable
-            size="small"
-            style="width: 200px"
-            v-model="form.创建时间"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="选择创建人"
+            v-model="form.month"
+            type="month"
+            placeholder="请选择月"
+            value-format="yyyy-MM"
           ></el-date-picker>
         </el-form-item>
-        <el-form-item label="修改人" prop="updateuserid">
-          <el-input v-model="form.updateuserid" placeholder="请输入修改人" />
+        <el-form-item label="选择主题" prop="themeconent">
+          <el-checkbox-group v-model="themeList" :max="max" @change="getThemeconentValue">
+            <el-checkbox v-for="(item,i) in themeOptions" :label="item.id" :key="i">{{item.name}}</el-checkbox>
+          </el-checkbox-group>
+          <el-input v-model="form.themeconent" v-if="false" />
+        </el-form-item>
+        <el-form-item label="备注" prop="remark">
+          <el-input v-model="form.remark" type="textarea" placeholder="请输入备注" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -185,10 +152,19 @@ import {
   exportTermplanitem,
 } from "@/api/benyi/themetermplanitem";
 
+import { listTermplan, getTermplan } from "@/api/benyi/themetermplan";
+import { listTheme } from "@/api/benyi/theme";
+
 export default {
   name: "Termplanitem",
   data() {
     return {
+      isShow: true,
+      //最大选中个数
+      max: 2,
+      //主题
+      themeOptions: [],
+      themeList: [],
       // 遮罩层
       loading: true,
       // 选中数组
@@ -201,10 +177,13 @@ export default {
       total: 0,
       // 主题整合学期计划明细表格数据
       termplanitemList: [],
+      //计划列表
+      themePlanOptions: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
       open: false,
+      defaultThemeType: "",
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -212,19 +191,97 @@ export default {
         tpid: undefined,
         themeconent: undefined,
         createuserid: undefined,
-        创建时间: undefined,
         updateuserid: undefined,
       },
       // 表单参数
       form: {},
       // 表单校验
-      rules: {},
+      rules: {
+        month: [{ required: true, message: "月份不能为空", trigger: "blur" }],
+        themeconent: [
+          { required: true, message: "主题不能为空", trigger: "blur" },
+        ],
+      },
     };
   },
   created() {
-    this.getList();
+    const themeplanid = this.$route.params && this.$route.params.id;
+    //console.log(themeplanid);
+    this.getThemePlan(themeplanid);
+    this.getThemePlanList();
+    this.getThemeList();
   },
   methods: {
+    // 主题--字典状态字典翻译
+    themeFormat(row, column) {
+      if (row.themeconent != null) {
+        var ilength = row.themeconent.split(";").length - 1;
+        var names = "";
+        for (var i = 1; i < ilength; i++) {
+          names =
+            names +
+            this.selectMoeDictLabel(
+              this.themeOptions,
+              row.themeconent.split(";")[i]
+            ) +
+            " ";
+        }
+        //this.selectDictLabel(this.scopeOptions, row.xnxq);
+        return names;
+      }
+      return "";
+    },
+    //获取选中的checkbox
+    getThemeconentValue() {
+      //console.log(this.themeList);
+      var text = ";";
+      this.themeList.forEach(function (value, key, arr) {
+        //console.log(value); // 结果依次为1，2，3
+        text = text + value + ";";
+        //console.log(text);
+      });
+      this.form.themeconent = text;
+    },
+    //主题
+    getThemeList() {
+      listTheme(null).then((response) => {
+        //console.log(response.rows);
+        this.themeOptions = response.rows;
+      });
+    },
+    // 字典翻译
+    themePlanFormat(row, column) {
+      // return this.selectDictLabel(this.classOptions, row.classid);
+      var actions = [];
+      var datas = this.themePlanOptions;
+      Object.keys(datas).map((key) => {
+        if (datas[key].id == "" + row.tpid) {
+          actions.push(datas[key].name);
+          return false;
+        }
+      });
+      return actions.join("");
+    },
+    //计划详情
+    getThemePlan(themeplanid) {
+      getTermplan(themeplanid).then((response) => {
+        this.queryParams.tpid = response.data.id;
+        this.defaultThemeType = response.data.id;
+
+        if (response.data.status == "0") {
+          this.isShow = true;
+        } else {
+          this.isShow = false;
+        }
+
+        this.getList();
+      });
+    },
+    getThemePlanList() {
+      listTermplan().then((response) => {
+        this.themePlanOptions = response.rows;
+      });
+    },
     /** 查询主题整合学期计划明细列表 */
     getList() {
       this.loading = true;
@@ -247,11 +304,12 @@ export default {
         themeconent: undefined,
         remark: undefined,
         createuserid: undefined,
-        创建时间: undefined,
+        month: undefined,
         updateuserid: undefined,
         updateTime: undefined,
       };
       this.resetForm("form");
+      this.themeList = [];
     },
     /** 搜索按钮操作 */
     handleQuery() {
@@ -261,6 +319,7 @@ export default {
     /** 重置按钮操作 */
     resetQuery() {
       this.resetForm("queryForm");
+      this.queryParams.tpid = this.defaultThemeType;
       this.handleQuery();
     },
     // 多选框选中数据
@@ -274,6 +333,7 @@ export default {
       this.reset();
       this.open = true;
       this.title = "添加主题整合学期计划明细";
+      this.form.tpid = this.queryParams.tpid;
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -283,6 +343,16 @@ export default {
         this.form = response.data;
         this.open = true;
         this.title = "修改主题整合学期计划明细";
+        var themeconent = response.data.themeconent.split(";");
+        var array = [];
+        //console.log(arr);
+        themeconent.forEach(function (value, key, arr) {
+          //console.log(value); // 结果依次为1，2，3
+          if (value != "") {
+            array.push(parseInt(value));
+          }
+        });
+        this.themeList = array;
       });
     },
     /** 提交按钮 */
@@ -327,22 +397,6 @@ export default {
         .then(() => {
           this.getList();
           this.msgSuccess("删除成功");
-        })
-        .catch(function () {});
-    },
-    /** 导出按钮操作 */
-    handleExport() {
-      const queryParams = this.queryParams;
-      this.$confirm("是否确认导出所有主题整合学期计划明细数据项?", "警告", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-      })
-        .then(function () {
-          return exportTermplanitem(queryParams);
-        })
-        .then((response) => {
-          this.download(response.msg);
         })
         .catch(function () {});
     },

@@ -5,29 +5,30 @@
 <mapper namespace="com.ruoyi.project.benyi.mapper.ByThemeTermplanitemMapper">
 
     <resultMap type="ByThemeTermplanitem" id="ByThemeTermplanitemResult">
-        <result property="id"    column="id"    />
-        <result property="tpid"    column="tpid"    />
-        <result property="month"    column="month"    />
-        <result property="themeconent"    column="themeconent"    />
-        <result property="remark"    column="remark"    />
-        <result property="createuserid"    column="createuserid"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="updateuserid"    column="updateuserid"    />
-        <result property="updateTime"    column="update_time"    />
+        <result property="id" column="id"/>
+        <result property="tpid" column="tpid"/>
+        <result property="month" column="month"/>
+        <result property="themeconent" column="themeconent"/>
+        <result property="remark" column="remark"/>
+        <result property="createuserid" column="createuserid"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateuserid" column="updateuserid"/>
+        <result property="updateTime" column="update_time"/>
     </resultMap>
 
     <sql id="selectByThemeTermplanitemVo">
         select id, tpid, month, themeconent, remark, createuserid, create_time, updateuserid, update_time from by_theme_termplanitem
     </sql>
 
-    <select id="selectByThemeTermplanitemList" parameterType="ByThemeTermplanitem" resultMap="ByThemeTermplanitemResult">
+    <select id="selectByThemeTermplanitemList" parameterType="ByThemeTermplanitem"
+            resultMap="ByThemeTermplanitemResult">
         <include refid="selectByThemeTermplanitemVo"/>
         <where>
-            <if test="tpid != null  and tpid != ''"> and tpid = #{tpid}</if>
-            <if test="month != null "> and month = #{month}</if>
-            <if test="themeconent != null  and themeconent != ''"> and themeconent = #{themeconent}</if>
-            <if test="createuserid != null "> and createuserid = #{createuserid}</if>
-            <if test="updateuserid != null "> and updateuserid = #{updateuserid}</if>
+            <if test="tpid != null  and tpid != ''">and tpid = #{tpid}</if>
+            <if test="month != null ">and month = #{month}</if>
+            <if test="themeconent != null  and themeconent != ''">and themeconent like concat('%;', #{themeconent}, ';%')</if>
+            <if test="createuserid != null ">and createuserid = #{createuserid}</if>
+            <if test="updateuserid != null ">and updateuserid = #{updateuserid}</if>
         </where>
         order by month
     </select>

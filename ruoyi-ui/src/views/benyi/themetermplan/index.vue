@@ -23,7 +23,12 @@
       </el-form-item>
       <el-form-item label="当前状态" prop="status">
         <el-select v-model="queryParams.status" placeholder="请选择状态" clearable size="small">
-          <el-option label="请选择字典生成" value />
+          <el-option
+            v-for="dict in statusOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
         </el-select>
       </el-form-item>
       <el-form-item>
@@ -65,7 +70,7 @@
     </el-row>
 
     <el-table v-loading="loading" :data="termplanList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
+      <el-table-column type="selection" width="55" align="center" :selectable="isShow"/>
       <el-table-column label="班级" align="center" prop="classid" :formatter="classFormat" />
       <el-table-column label="名称" align="center" prop="name" :show-overflow-tooltip="true">
         <template slot-scope="scope">
@@ -86,7 +91,7 @@
       </el-table-column>
       <el-table-column label="学年学期" align="center" prop="xnxq" :formatter="xnxqFormat" />
       <el-table-column label="备注" align="center" prop="remark" />
-      <el-table-column label="状态" align="center" prop="status" />
+      <el-table-column label="状态" align="center" prop="status" :formatter="statusFormat" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -95,6 +100,7 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['benyi:themetermplan:edit']"
+            v-show="isShow(scope.row)"
           >修改</el-button>
           <el-button
             size="mini"
@@ -102,7 +108,16 @@
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['benyi:themetermplan:remove']"
+            v-show="isShow(scope.row)"
           >删除</el-button>
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-check"
+            @click="handleCheck(scope.row)"
+            v-hasPermi="['benyi:themetermplan:edit']"
+            v-show="isShow(scope.row)"
+          >提交</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -139,7 +154,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="备注" prop="remark">
-             <el-input v-model="form.remark" type="textarea" placeholder="请输入备注" />
+          <el-input v-model="form.remark" type="textarea" placeholder="请输入备注" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -157,6 +172,7 @@ import {
   delTermplan,
   addTermplan,
   updateTermplan,
+  checkTermplan,
 } from "@/api/benyi/themetermplan";
 import { listClass } from "@/api/system/class";
 
@@ -180,6 +196,8 @@ export default {
       classOptions: [],
       //学年学期
       xnxqOptions: [],
+      //当前状态
+      statusOptions: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -218,8 +236,19 @@ export default {
     this.getDicts("sys_xnxq").then((response) => {
       this.xnxqOptions = response.data;
     });
+    this.getDicts("sys_dm_planweekstatus").then((response) => {
+      this.statusOptions = response.data;
+    });
   },
   methods: {
+    isShow(row) {
+      console.log(row.status);
+      if (row.status == "0") {
+        return true;
+      } else {
+        return false;
+      }
+    },
     // 字典翻译
     classFormat(row, column) {
       // return this.selectDictLabel(this.classOptions, row.classid);
@@ -236,6 +265,10 @@ export default {
     // 学年学期类型--字典状态字典翻译
     xnxqFormat(row, column) {
       return this.selectDictLabel(this.xnxqOptions, row.xnxq);
+    },
+    // 当前状态类型--字典状态字典翻译
+    statusFormat(row, column) {
+      return this.selectDictLabel(this.statusOptions, row.status);
     },
     //班级列表
     getClassList() {
@@ -357,6 +390,27 @@ export default {
         .then(() => {
           this.getList();
           this.msgSuccess("删除成功");
+        })
+        .catch(function () {});
+    },
+    /** 提交按钮操作 */
+    handleCheck(row) {
+      const id = row.id;
+      this.$confirm(
+        "是否确认提交主题整合学期计划?提交后数据将不能维护",
+        "警告",
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+        }
+      )
+        .then(function () {
+          return checkTermplan(id);
+        })
+        .then(() => {
+          this.getList();
+          this.msgSuccess("提交成功");
         })
         .catch(function () {});
     },

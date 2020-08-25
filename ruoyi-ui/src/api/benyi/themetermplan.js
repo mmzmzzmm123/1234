@@ -43,6 +43,14 @@ export function delTermplan(id) {
   })
 }
 
+// 提交主题整合学期计划
+export function checkTermplan(id) {
+  return request({
+    url: '/benyi/themetermplan/check/' + id,
+    method: 'post'
+  })
+}
+
 // 导出主题整合学期计划
 export function exportTermplan(query) {
   return request({

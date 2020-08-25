@@ -142,4 +142,17 @@ public class ByThemeTermplanController extends BaseController {
     public AjaxResult remove(@PathVariable String[] ids) {
         return toAjax(byThemeTermplanService.deleteByThemeTermplanByIds(ids));
     }
+
+    /**
+     * 提交主题整合学期计划
+     */
+    @PreAuthorize("@ss.hasPermi('benyi:themetermplan:edit')")
+    @Log(title = "主题整合学期计划", businessType = BusinessType.UPDATE)
+    @PostMapping("/check/{id}")
+    public AjaxResult check(@PathVariable String id) {
+        ByThemeTermplan byThemeTermplan = new ByThemeTermplan();
+        byThemeTermplan.setId(id);
+        byThemeTermplan.setStatus("1");
+        return toAjax(byThemeTermplanService.updateByThemeTermplan(byThemeTermplan));
+    }
 }
