@@ -40,6 +40,7 @@
             <if test="createuserid != null ">and createuserid = #{createuserid}</if>
             <if test="xnxq != null  and xnxq != ''">and xnxq = #{xnxq}</if>
         </where>
+        order by month desc
     </select>
 
     <select id="selectByThemeWeekplanById" parameterType="String" resultMap="ByThemeWeekplanResult">

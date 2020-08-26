@@ -86,21 +86,18 @@
           v-hasPermi="['benyi:themeweekplan:remove']"
         >删除</el-button>
       </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['benyi:themeweekplan:export']"
-        >导出</el-button>
-      </el-col>
     </el-row>
 
     <el-table v-loading="loading" :data="weekplanList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
+      <el-table-column type="selection" width="55" align="center" :selectable="isShow" />
       <!-- <el-table-column label="编号" align="center" prop="id" /> -->
-      <el-table-column label="计划名称" align="center" prop="name" :show-overflow-tooltip="true" />
+      <el-table-column label="计划名称" align="center" prop="name" :show-overflow-tooltip="true">
+        <template slot-scope="scope">
+          <router-link :to="'/benyi_course/themeweekplan/data/' + scope.row.id" class="link-type">
+            <span>{{ scope.row.name }}</span>
+          </router-link>
+        </template>
+      </el-table-column>
       <el-table-column label="班级名称" align="center" prop="classid" :formatter="classFormat" />
       <el-table-column label="所属月份" align="center" prop="month" width="180">
         <template slot-scope="scope">
@@ -119,6 +116,7 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['benyi:themeweekplan:edit']"
+            v-show="isShow(scope.row)"
           >修改</el-button>
           <el-button
             size="mini"
@@ -126,7 +124,16 @@
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['benyi:themeweekplan:remove']"
+            v-show="isShow(scope.row)"
           >删除</el-button>
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-check"
+            @click="handleCheck(scope.row)"
+            v-hasPermi="['benyi:themeweekplan:edit']"
+            v-show="isShow(scope.row)"
+          >提交</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -187,6 +194,7 @@ import {
   addWeekplan,
   updateWeekplan,
   exportWeekplan,
+  checkWeekplan,
 } from "@/api/benyi/themeweekplan";
 import { listClass } from "@/api/system/class";
 
@@ -256,6 +264,13 @@ export default {
     });
   },
   methods: {
+    isShow(row) {
+      if (row.status == "0") {
+        return true;
+      } else {
+        return false;
+      }
+    },
     //班级列表
     getClassList() {
       listClass(null).then((response) => {
@@ -389,6 +404,23 @@ export default {
         .then(() => {
           this.getList();
           this.msgSuccess("删除成功");
+        })
+        .catch(function () {});
+    },
+    /** 提交按钮操作 */
+    handleCheck(row) {
+      const id = row.id;
+      this.$confirm("是否确认提交主题整合周计划?提交后数据将不能维护", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(function () {
+          return checkWeekplan(id);
+        })
+        .then(() => {
+          this.getList();
+          this.msgSuccess("提交成功");
         })
         .catch(function () {});
     },

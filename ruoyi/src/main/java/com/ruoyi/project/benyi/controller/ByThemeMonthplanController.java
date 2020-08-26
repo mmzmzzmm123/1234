@@ -60,7 +60,14 @@ public class ByThemeMonthplanController extends BaseController {
     @GetMapping("/list")
     public TableDataInfo list(ByThemeMonthplan byThemeMonthplan) {
         startPage();
-        List<ByThemeMonthplan> list = byThemeMonthplanService.selectByThemeMonthplanList(byThemeMonthplan);
+        byThemeMonthplan.setSchoolid(SecurityUtils.getLoginUser().getUser().getDept().getDeptId());
+        String classId = schoolCommon.getClassId();
+        List<ByThemeMonthplan> list = null;
+        //首先判断当前账户是否为幼儿园账号
+        if (schoolCommon.isSchool() && !schoolCommon.isStringEmpty(classId)) {
+            byThemeMonthplan.setClassid(classId);
+        }
+        list = byThemeMonthplanService.selectByThemeMonthplanList(byThemeMonthplan);
         return getDataTable(list);
     }
 

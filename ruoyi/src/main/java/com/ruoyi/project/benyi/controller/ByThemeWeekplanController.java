@@ -62,7 +62,16 @@ public class ByThemeWeekplanController extends BaseController {
     @GetMapping("/list")
     public TableDataInfo list(ByThemeWeekplan byThemeWeekplan) {
         startPage();
-        List<ByThemeWeekplan> list = byThemeWeekplanService.selectByThemeWeekplanList(byThemeWeekplan);
+
+        byThemeWeekplan.setSchoolid(SecurityUtils.getLoginUser().getUser().getDept().getDeptId());
+        String classId = schoolCommon.getClassId();
+        List<ByThemeWeekplan> list = null;
+        //首先判断当前账户是否为幼儿园账号
+        if (schoolCommon.isSchool() && !schoolCommon.isStringEmpty(classId)) {
+            byThemeWeekplan.setClassid(classId);
+        }
+        list = byThemeWeekplanService.selectByThemeWeekplanList(byThemeWeekplan);
+
         return getDataTable(list);
     }
 
@@ -188,5 +197,18 @@ public class ByThemeWeekplanController extends BaseController {
     @DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable String[] ids) {
         return toAjax(byThemeWeekplanService.deleteByThemeWeekplanByIds(ids));
+    }
+
+    /**
+     * 提交主题整合学期计划
+     */
+    @PreAuthorize("@ss.hasPermi('benyi:themeweekplan:edit')")
+    @Log(title = "主题整合周计划", businessType = BusinessType.UPDATE)
+    @PostMapping("/check/{id}")
+    public AjaxResult check(@PathVariable String id) {
+        ByThemeWeekplan byThemeWeekplan = new ByThemeWeekplan();
+        byThemeWeekplan.setId(id);
+        byThemeWeekplan.setStatus("1");
+        return toAjax(byThemeWeekplanService.updateByThemeWeekplan(byThemeWeekplan));
     }
 }

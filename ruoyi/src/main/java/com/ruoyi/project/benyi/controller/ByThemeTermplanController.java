@@ -55,7 +55,14 @@ public class ByThemeTermplanController extends BaseController {
     @GetMapping("/list")
     public TableDataInfo list(ByThemeTermplan byThemeTermplan) {
         startPage();
-        List<ByThemeTermplan> list = byThemeTermplanService.selectByThemeTermplanList(byThemeTermplan);
+        byThemeTermplan.setSchoolid(SecurityUtils.getLoginUser().getUser().getDept().getDeptId());
+        String classId = schoolCommon.getClassId();
+        List<ByThemeTermplan> list = null;
+        //首先判断当前账户是否为幼儿园账号
+        if (schoolCommon.isSchool() && !schoolCommon.isStringEmpty(classId)) {
+            byThemeTermplan.setClassid(classId);
+        }
+        list = byThemeTermplanService.selectByThemeTermplanList(byThemeTermplan);
         return getDataTable(list);
     }
 

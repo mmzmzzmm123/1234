@@ -43,6 +43,14 @@ export function delWeekplan(id) {
   })
 }
 
+// 提交主题整合学期计划
+export function checkWeekplan(id) {
+  return request({
+    url: '/benyi/themeweekplan/check/' + id,
+    method: 'post'
+  })
+}
+
 // 导出主题整合周计划（根据月计划明细）
 export function exportWeekplan(query) {
   return request({

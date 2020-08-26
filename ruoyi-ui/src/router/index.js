@@ -248,6 +248,21 @@ export const constantRoutes = [{
     }]
   },
   {
+    path: '/benyi_course/themeweekplan',
+    component: Layout,
+    hidden: true,
+    children: [{
+      path: 'data/:id',
+      component: () =>
+        import('@/views/benyi/themeweekplan/data'),
+      name: 'Themeweekplan1',
+      meta: {
+        title: '主题整合周计划(明细)',
+        icon: ''
+      }
+    }]
+  },
+  {
     path: '/benyi_course/math',
     component: Layout,
     hidden: true,
