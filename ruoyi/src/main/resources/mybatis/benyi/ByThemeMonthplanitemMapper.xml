@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ruoyi.project.benyi.mapper.ByThemeWeekplanMapper">
+<mapper namespace="com.ruoyi.project.benyi.mapper.ByThemeMonthplanitemMapper">
 
-    <resultMap type="ByThemeWeekplan" id="ByThemeWeekplanResult">
+    <resultMap type="ByThemeMonthplanitem" id="ByThemeMonthplanitemResult">
         <result property="id" column="id"/>
         <result property="mpid" column="mpid"/>
         <result property="zc" column="zc"/>
@@ -16,12 +16,12 @@
         <result property="createTime" column="create_time"/>
     </resultMap>
 
-    <sql id="selectByThemeWeekplanVo">
-        select id, mpid, zc, starttime, endtime, activityid, jzzc, createuserid, create_time from by_theme_weekplan
+    <sql id="selectByThemeMonthplanitemVo">
+        select id, mpid, zc, starttime, endtime, activityid, jzzc, createuserid, create_time from by_theme_monthplanitem
     </sql>
 
-    <select id="selectByThemeWeekplanList" parameterType="ByThemeWeekplan" resultMap="ByThemeWeekplanResult">
-        <include refid="selectByThemeWeekplanVo"/>
+    <select id="selectByThemeMonthplanitemList" parameterType="ByThemeMonthplanitem" resultMap="ByThemeMonthplanitemResult">
+        <include refid="selectByThemeMonthplanitemVo"/>
         <where>
             <if test="mpid != null  and mpid != ''">and mpid = #{mpid}</if>
             <if test="zc != null ">and zc = #{zc}</if>
@@ -34,13 +34,13 @@
         order by zc
     </select>
 
-    <select id="selectByThemeWeekplanById" parameterType="String" resultMap="ByThemeWeekplanResult">
-        <include refid="selectByThemeWeekplanVo"/>
+    <select id="selectByThemeMonthplanitemById" parameterType="String" resultMap="ByThemeMonthplanitemResult">
+        <include refid="selectByThemeMonthplanitemVo"/>
         where id = #{id}
     </select>
 
-    <insert id="insertByThemeWeekplan" parameterType="ByThemeWeekplan">
-        insert into by_theme_weekplan
+    <insert id="insertByThemeMonthplanitem" parameterType="ByThemeMonthplanitem">
+        insert into by_theme_monthplanitem
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null  and id != ''">id,</if>
             <if test="mpid != null  and mpid != ''">mpid,</if>
@@ -65,8 +65,8 @@
         </trim>
     </insert>
 
-    <update id="updateByThemeWeekplan" parameterType="ByThemeWeekplan">
-        update by_theme_weekplan
+    <update id="updateByThemeMonthplanitem" parameterType="ByThemeMonthplanitem">
+        update by_theme_monthplanitem
         <trim prefix="SET" suffixOverrides=",">
             <if test="mpid != null  and mpid != ''">mpid = #{mpid},</if>
             <if test="zc != null ">zc = #{zc},</if>
@@ -80,12 +80,12 @@
         where id = #{id}
     </update>
 
-    <delete id="deleteByThemeWeekplanById" parameterType="String">
-        delete from by_theme_weekplan where id = #{id}
+    <delete id="deleteByThemeMonthplanitemById" parameterType="String">
+        delete from by_theme_monthplanitem where id = #{id}
     </delete>
 
-    <delete id="deleteByThemeWeekplanByIds" parameterType="String">
-        delete from by_theme_weekplan where id in
+    <delete id="deleteByThemeMonthplanitemByIds" parameterType="String">
+        delete from by_theme_monthplanitem where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

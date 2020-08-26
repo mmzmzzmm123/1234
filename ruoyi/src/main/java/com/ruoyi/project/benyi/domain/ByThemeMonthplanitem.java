@@ -14,7 +14,7 @@ import com.ruoyi.framework.web.domain.BaseEntity;
  * @author tsbz
  * @date 2020-08-25
  */
-public class ByThemeWeekplan extends BaseEntity {
+public class ByThemeMonthplanitem extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
     /**

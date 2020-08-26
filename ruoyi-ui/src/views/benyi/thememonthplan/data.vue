@@ -12,9 +12,9 @@
         </el-select>
       </el-form-item>
       <el-form-item label="周次" prop="zc">
-        <el-input
+        <el-input-number
           v-model="queryParams.zc"
-          placeholder="请输入周次"
+          placeholder="周次"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
@@ -34,6 +34,7 @@
           size="mini"
           @click="handleAdd"
           v-hasPermi="['benyi:thememonthplan:add']"
+          v-show="isShow"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -44,6 +45,7 @@
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['benyi:thememonthplan:edit']"
+          v-show="isShow"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -54,6 +56,7 @@
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['benyi:thememonthplan:remove']"
+          v-show="isShow"
         >删除</el-button>
       </el-col>
     </el-row>
@@ -61,7 +64,7 @@
     <el-table v-loading="loading" :data="weekplanList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="编号" align="center" prop="id" /> -->
-      <el-table-column label="所属月计划" align="center" prop="mpid" :formatter="themeMonthPlanFormat"/>
+      <el-table-column label="所属月计划" align="center" prop="mpid" :formatter="themeMonthPlanFormat" />
       <el-table-column label="周次" align="center" prop="zc" />
       <el-table-column label="开始时间" align="center" prop="starttime" width="180">
         <template slot-scope="scope">
@@ -73,7 +76,12 @@
           <span>{{ parseTime(scope.row.endtime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="活动" align="center" prop="activityid" />
+      <el-table-column
+        label="活动"
+        align="center"
+        prop="activityid"
+        :formatter="themeactivityFormat"
+      />
       <el-table-column label="家长支持" align="center" prop="jzzc" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
@@ -83,6 +91,7 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['benyi:thememonthplan:edit']"
+            v-show="isShow"
           >修改</el-button>
           <el-button
             size="mini"
@@ -90,6 +99,7 @@
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['benyi:thememonthplan:remove']"
+            v-show="isShow"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -174,7 +184,7 @@ import {
   delWeekplan,
   addWeekplan,
   updateWeekplan,
-} from "@/api/benyi/themeweekplan";
+} from "@/api/benyi/thememonthplanitem";
 import { listMonthplan, getMonthplan } from "@/api/benyi/thememonthplan";
 import { listActivityByThemeId } from "@/api/benyi/activity";
 
@@ -182,6 +192,7 @@ export default {
   name: "Weekplan",
   data() {
     return {
+      isShow: true,
       // 遮罩层
       loading: true,
       // 选中数组
@@ -196,8 +207,11 @@ export default {
       weekplanList: [],
       //主题整合月计划列表
       themeMonthPlanOptions: [],
+      //id默认值
       defaultThemeMonthType: "",
+      //选中的chebox值
       themeactivityList: [],
+      //获取的活动列表
       themeactivityOptions: [],
       max: 5,
       // 弹出层标题
@@ -239,6 +253,25 @@ export default {
     this.getThemeMonthPlanList();
   },
   methods: {
+    // 主题--字典状态字典翻译
+    themeactivityFormat(row, column) {
+      if (row.activityid != null) {
+        var ilength = row.activityid.split(";").length - 1;
+        var names = "";
+        for (var i = 1; i < ilength; i++) {
+          names =
+            names +
+            this.selectMoeDictLabel(
+              this.themeactivityOptions,
+              row.activityid.split(";")[i]
+            ) +
+            "；";
+        }
+        //this.selectDictLabel(this.scopeOptions, row.xnxq);
+        return names;
+      }
+      return "";
+    },
     //获取选中的checkbox
     getThemeActivityIdValue() {
       //console.log(this.themeList);
@@ -257,7 +290,7 @@ export default {
         this.themeactivityOptions = response.rows;
       });
     },
-     // 字典翻译
+    // 字典翻译
     themeMonthPlanFormat(row, column) {
       // return this.selectDictLabel(this.classOptions, row.classid);
       var actions = [];
@@ -286,6 +319,12 @@ export default {
           }
         });
         this.getThemeActivityList(array);
+
+        if (response.data.status == "0") {
+          this.isShow = true;
+        } else {
+          this.isShow = false;
+        }
 
         this.getList();
       });
@@ -323,6 +362,7 @@ export default {
         createTime: undefined,
       };
       this.resetForm("form");
+      this.themeactivityList = [];
     },
     /** 搜索按钮操作 */
     handleQuery() {
@@ -355,7 +395,17 @@ export default {
       getWeekplan(id).then((response) => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改主题整合周计划";
+        this.title = "修改主题整合周计划明细";
+        var activityid = response.data.activityid.split(";");
+        var array = [];
+        //console.log(arr);
+        activityid.forEach(function (value, key, arr) {
+          //console.log(value); // 结果依次为1，2，3
+          if (value != "") {
+            array.push(parseInt(value));
+          }
+        });
+        this.themeactivityList = array;
       });
     },
     /** 提交按钮 */

@@ -90,8 +90,8 @@
     </el-row>
 
     <el-table v-loading="loading" :data="monthplanList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
-       <el-table-column label="计划名称" align="center" prop="name" :show-overflow-tooltip="true">
+      <el-table-column type="selection" width="55" align="center" :selectable="isShow" />
+      <el-table-column label="计划名称" align="center" prop="name" :show-overflow-tooltip="true">
         <template slot-scope="scope">
           <router-link :to="'/benyi_course/thememonthplan/data/' + scope.row.id" class="link-type">
             <span>{{ scope.row.name }}</span>
@@ -112,7 +112,7 @@
         </template>
       </el-table-column>
       <!-- <el-table-column label="家长支持" align="center" prop="support" />
-      <el-table-column label="备注" align="center" prop="remarks" /> -->
+      <el-table-column label="备注" align="center" prop="remarks" />-->
       <el-table-column label="状态" align="center" prop="status" :formatter="statusFormat" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
@@ -122,6 +122,7 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['benyi:thememonthplan:edit']"
+            v-show="isShow(scope.row)"
           >修改</el-button>
           <el-button
             size="mini"
@@ -129,7 +130,16 @@
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['benyi:thememonthplan:remove']"
+            v-show="isShow(scope.row)"
           >删除</el-button>
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-check"
+            @click="handleCheck(scope.row)"
+            v-hasPermi="['benyi:themetermplan:edit']"
+            v-show="isShow(scope.row)"
+          >提交</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -188,6 +198,7 @@ import {
   delMonthplan,
   addMonthplan,
   updateMonthplan,
+  checkMonthplan
 } from "@/api/benyi/thememonthplan";
 import Editor from "@/components/Editor";
 import { listClass } from "@/api/system/class";
@@ -269,6 +280,13 @@ export default {
     });
   },
   methods: {
+    isShow(row) {
+      if (row.status == "0") {
+        return true;
+      } else {
+        return false;
+      }
+    },
     // 当前状态类型--字典状态字典翻译
     statusFormat(row, column) {
       return this.selectDictLabel(this.statusOptions, row.status);
@@ -419,7 +437,7 @@ export default {
     handleDelete(row) {
       const ids = row.id || this.ids;
       this.$confirm(
-        '是否确认删除主题整合月计划编号为"' + ids + '"的数据项?',
+        '是否确认删除主题整合月计划数据项?',
         "警告",
         {
           confirmButtonText: "确定",
@@ -433,6 +451,27 @@ export default {
         .then(() => {
           this.getList();
           this.msgSuccess("删除成功");
+        })
+        .catch(function () {});
+    },
+    /** 提交按钮操作 */
+    handleCheck(row) {
+      const id = row.id;
+      this.$confirm(
+        "是否确认提交主题整合月计划?提交后数据将不能维护",
+        "警告",
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+        }
+      )
+        .then(function () {
+          return checkMonthplan(id);
+        })
+        .then(() => {
+          this.getList();
+          this.msgSuccess("提交成功");
         })
         .catch(function () {});
     },

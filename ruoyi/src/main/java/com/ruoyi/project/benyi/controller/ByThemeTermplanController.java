@@ -118,7 +118,7 @@ public class ByThemeTermplanController extends BaseController {
 
             return toAjax(byThemeTermplanService.insertByThemeTermplan(byThemeTermplan));
         } else {
-            return AjaxResult.error("当前用户非幼儿园，无法添加幼儿");
+            return AjaxResult.error("当前用户非幼儿园教师，无法创建计划");
         }
 
     }
@@ -140,6 +140,15 @@ public class ByThemeTermplanController extends BaseController {
     @Log(title = "主题整合学期计划", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable String[] ids) {
+        //首先判断当前id下是否存在子目录
+        for (int i = 0; i < ids.length; i++) {
+            ByThemeTermplanitem byThemeTermplanitem = new ByThemeTermplanitem();
+            byThemeTermplanitem.setTpid(ids[i]);
+            List<ByThemeTermplanitem> list = byThemeTermplanitemService.selectByThemeTermplanitemList(byThemeTermplanitem);
+            if (list != null && list.size() > 0) {
+                return AjaxResult.error("选中的计划下存在子计划，无法删除");
+            }
+        }
         return toAjax(byThemeTermplanService.deleteByThemeTermplanByIds(ids));
     }
 

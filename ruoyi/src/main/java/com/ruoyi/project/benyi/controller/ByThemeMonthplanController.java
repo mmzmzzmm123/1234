@@ -1,15 +1,15 @@
 package com.ruoyi.project.benyi.controller;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.project.benyi.domain.ByThemeTermplan;
 import com.ruoyi.project.benyi.domain.ByThemeTermplanitem;
+import com.ruoyi.project.benyi.domain.ByThemeMonthplanitem;
 import com.ruoyi.project.benyi.service.IByThemeTermplanService;
 import com.ruoyi.project.benyi.service.IByThemeTermplanitemService;
+import com.ruoyi.project.benyi.service.IByThemeMonthplanitemService;
 import com.ruoyi.project.common.SchoolCommon;
 import com.ruoyi.project.system.service.IByClassService;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -50,6 +50,8 @@ public class ByThemeMonthplanController extends BaseController {
     private IByThemeTermplanService byThemeTermplanService;
     @Autowired
     private IByThemeTermplanitemService byThemeTermplanitemService;
+    @Autowired
+    private IByThemeMonthplanitemService byThemeWeekplanService;
 
     /**
      * 查询主题整合月计划列表
@@ -136,7 +138,7 @@ public class ByThemeMonthplanController extends BaseController {
             byThemeMonthplan.setName(byClassService.selectByClassById(classId).getBjmc() + "-主题整合月计划" + "(" + sdf.format(byThemeMonthplan.getMonth()) + ")");
             return toAjax(byThemeMonthplanService.insertByThemeMonthplan(byThemeMonthplan));
         } else {
-            return AjaxResult.error("当前用户非幼儿园，无法创建月计划");
+            return AjaxResult.error("当前用户非幼儿园教师，无法创建月计划");
         }
     }
 
@@ -157,6 +159,28 @@ public class ByThemeMonthplanController extends BaseController {
     @Log(title = "主题整合月计划", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable String[] ids) {
+        //首先判断当前id下是否存在子目录
+        for (int i = 0; i < ids.length; i++) {
+            ByThemeMonthplanitem byThemeMonthplanitem = new ByThemeMonthplanitem();
+            byThemeMonthplanitem.setMpid(ids[i]);
+            List<ByThemeMonthplanitem> list = byThemeWeekplanService.selectByThemeMonthplanitemList(byThemeMonthplanitem);
+            if (list != null && list.size() > 0) {
+                return AjaxResult.error("选中的计划下存在子计划，无法删除");
+            }
+        }
         return toAjax(byThemeMonthplanService.deleteByThemeMonthplanByIds(ids));
+    }
+
+    /**
+     * 提交主题整合学期计划
+     */
+    @PreAuthorize("@ss.hasPermi('benyi:thememonthplan:edit')")
+    @Log(title = "主题整合学期计划", businessType = BusinessType.UPDATE)
+    @PostMapping("/check/{id}")
+    public AjaxResult check(@PathVariable String id) {
+        ByThemeMonthplan byThemeMonthplan = new ByThemeMonthplan();
+        byThemeMonthplan.setId(id);
+        byThemeMonthplan.setStatus("1");
+        return toAjax(byThemeMonthplanService.updateByThemeMonthplan(byThemeMonthplan));
     }
 }

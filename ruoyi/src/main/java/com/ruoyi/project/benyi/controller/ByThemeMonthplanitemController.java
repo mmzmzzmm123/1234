@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.ruoyi.framework.aspectj.lang.annotation.Log;
 import com.ruoyi.framework.aspectj.lang.enums.BusinessType;
-import com.ruoyi.project.benyi.domain.ByThemeWeekplan;
-import com.ruoyi.project.benyi.service.IByThemeWeekplanService;
+import com.ruoyi.project.benyi.domain.ByThemeMonthplanitem;
+import com.ruoyi.project.benyi.service.IByThemeMonthplanitemService;
 import com.ruoyi.framework.web.controller.BaseController;
 import com.ruoyi.framework.web.domain.AjaxResult;
 import com.ruoyi.common.utils.poi.ExcelUtil;
@@ -30,11 +30,11 @@ import com.ruoyi.framework.web.page.TableDataInfo;
  * @date 2020-08-25
  */
 @RestController
-@RequestMapping("/benyi/themeweekplan")
-public class ByThemeWeekplanController extends BaseController
+@RequestMapping("/benyi/thememonthplanitem")
+public class ByThemeMonthplanitemController extends BaseController
 {
     @Autowired
-    private IByThemeWeekplanService byThemeWeekplanService;
+    private IByThemeMonthplanitemService byThemeWeekplanService;
     @Autowired
     private SchoolCommon schoolCommon;
 
@@ -43,10 +43,10 @@ public class ByThemeWeekplanController extends BaseController
  */
 @PreAuthorize("@ss.hasPermi('benyi:thememonthplan:list')")
 @GetMapping("/list")
-        public TableDataInfo list(ByThemeWeekplan byThemeWeekplan)
+        public TableDataInfo list(ByThemeMonthplanitem byThemeMonthplanitem)
     {
         startPage();
-        List<ByThemeWeekplan> list = byThemeWeekplanService.selectByThemeWeekplanList(byThemeWeekplan);
+        List<ByThemeMonthplanitem> list = byThemeWeekplanService.selectByThemeMonthplanitemList(byThemeMonthplanitem);
         return getDataTable(list);
     }
     
@@ -56,10 +56,10 @@ public class ByThemeWeekplanController extends BaseController
     @PreAuthorize("@ss.hasPermi('benyi:thememonthplan:export')")
     @Log(title = "主题整合周计划", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
-    public AjaxResult export(ByThemeWeekplan byThemeWeekplan)
+    public AjaxResult export(ByThemeMonthplanitem byThemeMonthplanitem)
     {
-        List<ByThemeWeekplan> list = byThemeWeekplanService.selectByThemeWeekplanList(byThemeWeekplan);
-        ExcelUtil<ByThemeWeekplan> util = new ExcelUtil<ByThemeWeekplan>(ByThemeWeekplan.class);
+        List<ByThemeMonthplanitem> list = byThemeWeekplanService.selectByThemeMonthplanitemList(byThemeMonthplanitem);
+        ExcelUtil<ByThemeMonthplanitem> util = new ExcelUtil<ByThemeMonthplanitem>(ByThemeMonthplanitem.class);
         return util.exportExcel(list, "weekplan");
     }
 
@@ -70,7 +70,7 @@ public class ByThemeWeekplanController extends BaseController
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") String id)
     {
-        return AjaxResult.success(byThemeWeekplanService.selectByThemeWeekplanById(id));
+        return AjaxResult.success(byThemeWeekplanService.selectByThemeMonthplanitemById(id));
     }
 
     /**
@@ -79,12 +79,12 @@ public class ByThemeWeekplanController extends BaseController
     @PreAuthorize("@ss.hasPermi('benyi:thememonthplan:add')")
     @Log(title = "主题整合周计划", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody ByThemeWeekplan byThemeWeekplan)
+    public AjaxResult add(@RequestBody ByThemeMonthplanitem byThemeMonthplanitem)
     {
         String uuid=schoolCommon.getUuid();
-        byThemeWeekplan.setId(uuid);
-        byThemeWeekplan.setCreateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
-        return toAjax(byThemeWeekplanService.insertByThemeWeekplan(byThemeWeekplan));
+        byThemeMonthplanitem.setId(uuid);
+        byThemeMonthplanitem.setCreateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
+        return toAjax(byThemeWeekplanService.insertByThemeMonthplanitem(byThemeMonthplanitem));
     }
 
     /**
@@ -93,9 +93,9 @@ public class ByThemeWeekplanController extends BaseController
     @PreAuthorize("@ss.hasPermi('benyi:thememonthplan:edit')")
     @Log(title = "主题整合周计划", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody ByThemeWeekplan byThemeWeekplan)
+    public AjaxResult edit(@RequestBody ByThemeMonthplanitem byThemeMonthplanitem)
     {
-        return toAjax(byThemeWeekplanService.updateByThemeWeekplan(byThemeWeekplan));
+        return toAjax(byThemeWeekplanService.updateByThemeMonthplanitem(byThemeMonthplanitem));
     }
 
     /**
@@ -106,6 +106,6 @@ public class ByThemeWeekplanController extends BaseController
     @DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable String[] ids)
     {
-        return toAjax(byThemeWeekplanService.deleteByThemeWeekplanByIds(ids));
+        return toAjax(byThemeWeekplanService.deleteByThemeMonthplanitemByIds(ids));
     }
 }
