@@ -98,7 +98,7 @@
           </router-link>
         </template>
       </el-table-column>
-      <el-table-column label="所属班级" align="center" prop="classid" :formatter="classFormat" />
+      <el-table-column label="班级名称" align="center" prop="classid" :formatter="classFormat" />
       <el-table-column label="学年学期" align="center" prop="xnxq" :formatter="xnxqFormat" />
       <el-table-column label="计划月份" align="center" prop="month" width="180">
         <template slot-scope="scope">
@@ -164,10 +164,11 @@
             type="month"
             value-format="yyyy-MM"
             placeholder="选择计划月份"
+            :disabled="disable"
           ></el-date-picker>
         </el-form-item>
         <el-form-item label="学年学期" prop="xnxq">
-          <el-select v-model="form.xnxq" placeholder="请选择学年学期">
+          <el-select v-model="form.xnxq" placeholder="请选择学年学期" :disabled="disable">
             <el-option
               v-for="dict in xnxqOptions"
               :key="dict.dictValue"
@@ -198,7 +199,7 @@ import {
   delMonthplan,
   addMonthplan,
   updateMonthplan,
-  checkMonthplan
+  checkMonthplan,
 } from "@/api/benyi/thememonthplan";
 import Editor from "@/components/Editor";
 import { listClass } from "@/api/system/class";
@@ -211,6 +212,7 @@ export default {
   },
   data() {
     return {
+      disable: false,
       // 遮罩层
       loading: true,
       // 选中数组
@@ -398,6 +400,7 @@ export default {
       this.reset();
       this.open = true;
       this.title = "添加主题整合月计划";
+      this.disable = false;
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -407,6 +410,7 @@ export default {
         this.form = response.data;
         this.open = true;
         this.title = "修改主题整合月计划";
+        this.disable = true;
       });
     },
     /** 提交按钮 */
@@ -436,15 +440,11 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$confirm(
-        '是否确认删除主题整合月计划数据项?',
-        "警告",
-        {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning",
-        }
-      )
+      this.$confirm("是否确认删除主题整合月计划数据项?", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
         .then(function () {
           return delMonthplan(ids);
         })
@@ -457,15 +457,11 @@ export default {
     /** 提交按钮操作 */
     handleCheck(row) {
       const id = row.id;
-      this.$confirm(
-        "是否确认提交主题整合月计划?提交后数据将不能维护",
-        "警告",
-        {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning",
-        }
-      )
+      this.$confirm("是否确认提交主题整合月计划?提交后数据将不能维护", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
         .then(function () {
           return checkMonthplan(id);
         })

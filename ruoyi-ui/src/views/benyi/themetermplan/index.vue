@@ -71,8 +71,8 @@
 
     <el-table v-loading="loading" :data="termplanList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" :selectable="isShow"/>
-      <el-table-column label="班级" align="center" prop="classid" :formatter="classFormat" />
-      <el-table-column label="名称" align="center" prop="name" :show-overflow-tooltip="true">
+      <el-table-column label="班级名称" align="center" prop="classid" :formatter="classFormat" />
+      <el-table-column label="计划名称" align="center" prop="name" :show-overflow-tooltip="true">
         <template slot-scope="scope">
           <router-link :to="'/benyi_course/themetermplan/data/' + scope.row.id" class="link-type">
             <span>{{ scope.row.name }}</span>

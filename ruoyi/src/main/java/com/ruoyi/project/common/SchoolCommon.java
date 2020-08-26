@@ -187,4 +187,41 @@ public class SchoolCommon {
         int month = (end.get(Calendar.YEAR) - start.get(Calendar.YEAR)) * 12;
         return Math.abs(month + result);
     }
+
+    //日期加天数
+    public Date DateAddDays(int iday, Date dt) {
+        //天数加1
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(dt);
+        calendar.add(Calendar.DAY_OF_MONTH, iday);
+
+        return calendar.getTime();
+    }
+
+    //月份加数
+    public Date DateAddMonths(int iday, Date dt) {
+        //天数加1
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(dt);
+        calendar.add(Calendar.MONTH, iday);
+
+        return calendar.getTime();
+    }
+
+    /**
+     * 日期转星期
+     *
+     * @param datetime
+     * @return
+     */
+    public int dateToWeek(Date datetime) {
+        int[] weekDays = {7, 1, 2, 3, 4, 5, 6};
+        Calendar cal = Calendar.getInstance(); // 获得一个日历
+        cal.setTime(datetime);
+        int w = cal.get(Calendar.DAY_OF_WEEK) - 1; // 指示一个星期中的某天。
+        if (w < 0)
+            w = 0;
+        return weekDays[w];
+    }
+
 }

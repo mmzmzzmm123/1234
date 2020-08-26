@@ -104,11 +104,13 @@ public class ByThemeTermplanController extends BaseController {
                 byThemeTermplanitem = new ByThemeTermplanitem();
                 byThemeTermplanitem.setTpid(uuid);
                 byThemeTermplanitem.setCreateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
-                //月份加1
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(byThemeTermplan.getStartmonth());
-                calendar.add(Calendar.MONTH, i);
-                byThemeTermplanitem.setMonth(calendar.getTime());
+//                //月份加1
+//                Calendar calendar = Calendar.getInstance();
+//                calendar.setTime(byThemeTermplan.getStartmonth());
+//                calendar.add(Calendar.MONTH, i);
+
+                byThemeTermplanitem.setMonth(schoolCommon.DateAddMonths(i, byThemeTermplan.getStartmonth()));
+
                 //创建时间
                 byThemeTermplanitem.setCreateTime(new Date());
 

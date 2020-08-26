@@ -1,7 +1,7 @@
 import request from '@/utils/request'
 
 // 查询主题整合周计划列表
-export function listWeekplan(query) {
+export function listMonthplanitem(query) {
   return request({
     url: '/benyi/thememonthplanitem/list',
     method: 'get',
@@ -10,7 +10,7 @@ export function listWeekplan(query) {
 }
 
 // 查询主题整合周计划详细
-export function getWeekplan(id) {
+export function getMonthplanitem(id) {
   return request({
     url: '/benyi/thememonthplanitem/' + id,
     method: 'get'
@@ -18,7 +18,7 @@ export function getWeekplan(id) {
 }
 
 // 新增主题整合周计划
-export function addWeekplan(data) {
+export function addMonthplanitem(data) {
   return request({
     url: '/benyi/thememonthplanitem',
     method: 'post',
@@ -27,7 +27,7 @@ export function addWeekplan(data) {
 }
 
 // 修改主题整合周计划
-export function updateWeekplan(data) {
+export function updateMonthplanitem(data) {
   return request({
     url: '/benyi/thememonthplanitem',
     method: 'put',
@@ -36,7 +36,7 @@ export function updateWeekplan(data) {
 }
 
 // 删除主题整合周计划
-export function delWeekplan(id) {
+export function delMonthplanitem(id) {
   return request({
     url: '/benyi/thememonthplanitem/' + id,
     method: 'delete'
@@ -44,7 +44,7 @@ export function delWeekplan(id) {
 }
 
 // 导出主题整合周计划
-export function exportWeekplan(query) {
+export function exportMonthplanitem(query) {
   return request({
     url: '/benyi/thememonthplanitem/export',
     method: 'get',

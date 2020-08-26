@@ -179,11 +179,11 @@
 
 <script>
 import {
-  listWeekplan,
-  getWeekplan,
-  delWeekplan,
-  addWeekplan,
-  updateWeekplan,
+  listMonthplanitem,
+  getMonthplanitem,
+  delMonthplanitem,
+  addMonthplanitem,
+  updateMonthplanitem,
 } from "@/api/benyi/thememonthplanitem";
 import { listMonthplan, getMonthplan } from "@/api/benyi/thememonthplan";
 import { listActivityByThemeId } from "@/api/benyi/activity";
@@ -337,7 +337,7 @@ export default {
     /** 查询主题整合周计划列表 */
     getList() {
       this.loading = true;
-      listWeekplan(this.queryParams).then((response) => {
+      listMonthplanitem(this.queryParams).then((response) => {
         this.weekplanList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -392,7 +392,7 @@ export default {
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids;
-      getWeekplan(id).then((response) => {
+      getMonthplanitem(id).then((response) => {
         this.form = response.data;
         this.open = true;
         this.title = "修改主题整合周计划明细";
@@ -413,7 +413,7 @@ export default {
       this.$refs["form"].validate((valid) => {
         if (valid) {
           if (this.form.id != undefined) {
-            updateWeekplan(this.form).then((response) => {
+            updateMonthplanitem(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("修改成功");
                 this.open = false;
@@ -421,7 +421,7 @@ export default {
               }
             });
           } else {
-            addWeekplan(this.form).then((response) => {
+            addMonthplanitem(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("新增成功");
                 this.open = false;
@@ -445,7 +445,7 @@ export default {
         }
       )
         .then(function () {
-          return delWeekplan(ids);
+          return delMonthplanitem(ids);
         })
         .then(() => {
           this.getList();

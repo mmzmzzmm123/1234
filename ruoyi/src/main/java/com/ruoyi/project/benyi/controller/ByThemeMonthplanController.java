@@ -51,7 +51,7 @@ public class ByThemeMonthplanController extends BaseController {
     @Autowired
     private IByThemeTermplanitemService byThemeTermplanitemService;
     @Autowired
-    private IByThemeMonthplanitemService byThemeWeekplanService;
+    private IByThemeMonthplanitemService byThemeonthplanitemService;
 
     /**
      * 查询主题整合月计划列表
@@ -100,7 +100,7 @@ public class ByThemeMonthplanController extends BaseController {
             ByThemeTermplan byThemeTermplan = new ByThemeTermplan();
             byThemeTermplan.setSchoolid(SecurityUtils.getLoginUser().getUser().getDept().getDeptId());
             byThemeTermplan.setClassid(classId);
-            byThemeTermplan.setStatus("1");
+            byThemeTermplan.setStatus("2");
             byThemeTermplan.setXnxq(byThemeMonthplan.getXnxq());
             List<ByThemeTermplan> list = byThemeTermplanService.selectByThemeTermplanList(byThemeTermplan);
             String strThemeIds = "";
@@ -112,7 +112,7 @@ public class ByThemeMonthplanController extends BaseController {
                     byThemeTermplanitem.setMonth(byThemeMonthplan.getMonth());
                     List<ByThemeTermplanitem> listItem = byThemeTermplanitemService.selectByThemeTermplanitemList(byThemeTermplanitem);
                     if (listItem != null && listItem.size() > 0) {
-                        for (int j = 0; j < list.size(); j++) {
+                        for (int j = 0; j < listItem.size(); j++) {
                             String themeIds = listItem.get(j).getThemeconent();
                             if (!schoolCommon.isStringEmpty(themeIds)) {
                                 strThemeIds = strThemeIds + themeIds;
@@ -163,7 +163,7 @@ public class ByThemeMonthplanController extends BaseController {
         for (int i = 0; i < ids.length; i++) {
             ByThemeMonthplanitem byThemeMonthplanitem = new ByThemeMonthplanitem();
             byThemeMonthplanitem.setMpid(ids[i]);
-            List<ByThemeMonthplanitem> list = byThemeWeekplanService.selectByThemeMonthplanitemList(byThemeMonthplanitem);
+            List<ByThemeMonthplanitem> list = byThemeonthplanitemService.selectByThemeMonthplanitemList(byThemeMonthplanitem);
             if (list != null && list.size() > 0) {
                 return AjaxResult.error("选中的计划下存在子计划，无法删除");
             }

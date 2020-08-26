@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.benyi.mapper.ByThemeWeekplanitemMapper">
+
+    <resultMap type="ByThemeWeekplanitem" id="ByThemeWeekplanitemResult">
+        <result property="id" column="id"/>
+        <result property="daytime" column="daytime"/>
+        <result property="zhou" column="zhou"/>
+        <result property="activityid" column="activityid"/>
+        <result property="fzxz" column="fzxz"/>
+        <result property="jzzc" column="jzzc"/>
+        <result property="createuserid" column="createuserid"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateuserid" column="updateuserid"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="wpid" column="wpid"/>
+    </resultMap>
+
+    <sql id="selectByThemeWeekplanitemVo">
+        select id, daytime, zhou, activityid, fzxz, jzzc, createuserid, create_time, updateuserid, update_time, wpid from by_theme_weekplanitem
+    </sql>
+
+    <select id="selectByThemeWeekplanitemList" parameterType="ByThemeWeekplanitem"
+            resultMap="ByThemeWeekplanitemResult">
+        <include refid="selectByThemeWeekplanitemVo"/>
+        <where>
+            <if test="daytime != null ">and daytime = #{daytime}</if>
+            <if test="zhou != null ">and zhou = #{zhou}</if>
+            <if test="activityid != null  and activityid != ''">and activityid = #{activityid}</if>
+            <if test="fzxz != null  and fzxz != ''">and fzxz = #{fzxz}</if>
+            <if test="jzzc != null  and jzzc != ''">and jzzc = #{jzzc}</if>
+            <if test="createuserid != null ">and createuserid = #{createuserid}</if>
+            <if test="updateuserid != null ">and updateuserid = #{updateuserid}</if>
+            <if test="wpid != null  and wpid != ''">and wpid = #{wpid}</if>
+        </where>
+    </select>
+
+    <select id="selectByThemeWeekplanitemById" parameterType="Long" resultMap="ByThemeWeekplanitemResult">
+        <include refid="selectByThemeWeekplanitemVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertByThemeWeekplanitem" parameterType="ByThemeWeekplanitem" useGeneratedKeys="true" keyProperty="id">
+        insert into by_theme_weekplanitem
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="daytime != null ">daytime,</if>
+            <if test="zhou != null ">zhou,</if>
+            <if test="activityid != null  and activityid != ''">activityid,</if>
+            <if test="fzxz != null  and fzxz != ''">fzxz,</if>
+            <if test="jzzc != null  and jzzc != ''">jzzc,</if>
+            <if test="createuserid != null ">createuserid,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateuserid != null ">updateuserid,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="wpid != null  and wpid != ''">wpid,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="daytime != null ">#{daytime},</if>
+            <if test="zhou != null ">#{zhou},</if>
+            <if test="activityid != null  and activityid != ''">#{activityid},</if>
+            <if test="fzxz != null  and fzxz != ''">#{fzxz},</if>
+            <if test="jzzc != null  and jzzc != ''">#{jzzc},</if>
+            <if test="createuserid != null ">#{createuserid},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateuserid != null ">#{updateuserid},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="wpid != null  and wpid != ''">#{wpid},</if>
+        </trim>
+    </insert>
+
+    <update id="updateByThemeWeekplanitem" parameterType="ByThemeWeekplanitem">
+        update by_theme_weekplanitem
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="daytime != null ">daytime = #{daytime},</if>
+            <if test="zhou != null ">zhou = #{zhou},</if>
+            <if test="activityid != null  and activityid != ''">activityid = #{activityid},</if>
+            <if test="fzxz != null  and fzxz != ''">fzxz = #{fzxz},</if>
+            <if test="jzzc != null  and jzzc != ''">jzzc = #{jzzc},</if>
+            <if test="createuserid != null ">createuserid = #{createuserid},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateuserid != null ">updateuserid = #{updateuserid},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="wpid != null  and wpid != ''">wpid = #{wpid},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteByThemeWeekplanitemById" parameterType="Long">
+        delete from by_theme_weekplanitem where id = #{id}
+    </delete>
+
+    <delete id="deleteByThemeWeekplanitemByIds" parameterType="String">
+        delete from by_theme_weekplanitem where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
