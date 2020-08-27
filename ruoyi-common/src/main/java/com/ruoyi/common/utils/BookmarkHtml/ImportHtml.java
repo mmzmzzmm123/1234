@@ -283,7 +283,7 @@ public class ImportHtml {
 //	}
 //
     public static String matchCharset(String content) {
-        Pattern p = Pattern.compile("(?<=charset=)(.+)(?=\")");
+        Pattern p = Pattern.compile(Const.URL_CODE);
         Matcher m = p.matcher(content);
         if (m.find()){
             return m.group();

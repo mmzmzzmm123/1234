@@ -15,6 +15,7 @@ public class Const {
     public static String LOGIN_SESSION_KEY = "Favorites_user";
 
     public static String PASSWORD_KEY = "@#$%^&*()OPG#$%^&*(HG";
+    public static String URL_CODE = "(?<=charset=)(.+)(?=\")";//取网址的编码
 
     public static String DES3_KEY = "9964DYByKL967c3308imytCB";
 
@@ -27,6 +28,8 @@ public class Const {
     public static String LAST_REFERER = "LAST_REFERER";
 
     public static int COOKIE_TIMEOUT= 30*24*60*60;
+
+
 
 
 //	  @Autowired(required = true)
