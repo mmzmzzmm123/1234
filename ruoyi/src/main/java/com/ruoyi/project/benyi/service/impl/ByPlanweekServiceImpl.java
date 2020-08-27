@@ -27,7 +27,7 @@ public class ByPlanweekServiceImpl implements IByPlanweekService {
      * @return 周计划(家长和教育部门)
      */
     @Override
-    public ByPlanweek selectByPlanweekById(Long id) {
+    public ByPlanweek selectByPlanweekById(String id) {
         return byPlanweekMapper.selectByPlanweekById(id);
     }
 
@@ -72,7 +72,7 @@ public class ByPlanweekServiceImpl implements IByPlanweekService {
      * @return 结果
      */
     @Override
-    public int deleteByPlanweekByIds(Long[] ids) {
+    public int deleteByPlanweekByIds(String[] ids) {
         return byPlanweekMapper.deleteByPlanweekByIds(ids);
     }
 
@@ -83,7 +83,7 @@ public class ByPlanweekServiceImpl implements IByPlanweekService {
      * @return 结果
      */
     @Override
-    public int deleteByPlanweekById(Long id) {
+    public int deleteByPlanweekById(String id) {
         return byPlanweekMapper.deleteByPlanweekById(id);
     }
 }

@@ -17,7 +17,7 @@ public interface ByPlanweekMapper
      * @param id 周计划(家长和教育部门)ID
      * @return 周计划(家长和教育部门)
      */
-    public ByPlanweek selectByPlanweekById(Long id);
+    public ByPlanweek selectByPlanweekById(String id);
 
     /**
      * 查询周计划(家长和教育部门)列表
@@ -49,7 +49,7 @@ public interface ByPlanweekMapper
      * @param id 周计划(家长和教育部门)ID
      * @return 结果
      */
-    public int deleteByPlanweekById(Long id);
+    public int deleteByPlanweekById(String id);
 
     /**
      * 批量删除周计划(家长和教育部门)
@@ -57,5 +57,5 @@ public interface ByPlanweekMapper
      * @param ids 需要删除的数据ID
      * @return 结果
      */
-    public int deleteByPlanweekByIds(Long[] ids);
+    public int deleteByPlanweekByIds(String[] ids);
 }

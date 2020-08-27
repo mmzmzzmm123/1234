@@ -26,291 +26,306 @@ import Layout from '@/layout'
 
 // 公共路由
 export const constantRoutes = [{
-    path: '/redirect',
-    component: Layout,
-    hidden: true,
-    children: [{
-      path: '/redirect/:path(.*)',
-      component: () =>
-        import('@/views/redirect')
-    }]
-  },
-  {
-    path: '/login',
-    component: () =>
-      import('@/views/login'),
-    hidden: true
-  },
-  {
-    path: '/404',
-    component: () =>
-      import('@/views/error/404'),
-    hidden: true
-  },
-  {
-    path: '/401',
-    component: () =>
-      import('@/views/error/401'),
-    hidden: true
-  },
-  {
-    path: '/experience/content/:id',
-    component: () =>
-      import('@/views/benyi/experience/content'),
-    hidden: true
-  },
-  {
-    path: '/experience/apply/:id(\\d+)',
-    component: () =>
-      import('@/views/benyi/experience/choose'),
-    hidden: true,
-    children: [{
+        path: '/redirect',
+        component: Layout,
+        hidden: true,
+        children: [{
+            path: '/redirect/:path(.*)',
+            component: () =>
+                import ('@/views/redirect')
+        }]
+    },
+    {
+        path: '/login',
+        component: () =>
+            import ('@/views/login'),
+        hidden: true
+    },
+    {
+        path: '/404',
+        component: () =>
+            import ('@/views/error/404'),
+        hidden: true
+    },
+    {
+        path: '/401',
+        component: () =>
+            import ('@/views/error/401'),
+        hidden: true
+    },
+    {
+        path: '/experience/content/:id',
+        component: () =>
+            import ('@/views/benyi/experience/content'),
+        hidden: true
+    },
+    {
         path: '/experience/apply/:id(\\d+)',
         component: () =>
-          import('@/views/benyi/experience/apply'),
-        hidden: true
-      },
-      {
-        path: '/experience/result/:id(\\d+)',
-        component: () =>
-          import('@/views/benyi/experience/result'),
-        hidden: true
-      }
-    ]
-  },
-  {
-    path: '',
-    component: Layout,
-    redirect: 'index',
-    children: [{
-      path: 'index',
-      component: () =>
-        import('@/views/index'),
-      name: '首页',
-      meta: {
-        title: '首页',
-        icon: 'dashboard',
-        noCache: true,
-        affix: true
-      }
-    }]
-  },
-  {
-    path: '/user',
-    component: Layout,
-    hidden: true,
-    redirect: 'noredirect',
-    children: [{
-      path: 'profile',
-      component: () =>
-        import('@/views/system/user/profile/index'),
-      name: 'Profile',
-      meta: {
-        title: '个人中心',
-        icon: 'user'
-      }
-    }]
-  },
-  {
-    path: '/user/change',
-    component: Layout,
-    hidden: true,
-    redirect: 'noredirect',
-    children: [{
-      path: 'dept',
-      component: () =>
-        import('@/views/system/user/change/dept/index'),
-      name: 'Changedept',
-      meta: {
-        title: '切换岗位',
-        icon: 'user'
-      }
-    }]
-  },
-  {
-    path: '/dict',
-    component: Layout,
-    hidden: true,
-    children: [{
-      path: 'type/data/:dictId(\\d+)',
-      component: () =>
-        import('@/views/system/dict/data'),
-      name: 'Data',
-      meta: {
-        title: '字典数据',
-        icon: ''
-      }
-    }]
-  },
-  {
-    path: '/dayflow',
-    component: Layout,
-    hidden: true,
-    children: [{
-      path: 'dayflowmanger/dayflowtask/:id(\\d+)',
-      component: () =>
-        import('@/views/benyi/dayflow/task'),
-      name: 'Task',
-      meta: {
-        title: '一日流程任务',
-        icon: ''
-      }
-    }]
-  },
-  {
-    path: '/dayflow/dayflowmanger',
-    component: Layout,
-    hidden: true,
-    children: [{
-      path: 'dayflowtask/standard/:code(\\d+)',
-      component: () =>
-        import('@/views/benyi/dayflow/standard'),
-      name: 'Standard',
-      meta: {
-        title: '一日流程标准',
-        icon: ''
-      }
-    }]
-  },
-  {
-    path: '/dayflow/dayflowmanger/dayflowtask',
-    component: Layout,
-    hidden: true,
-    children: [{
-      path: 'standard/unscramble/:id(\\d+)',
-      component: () =>
-        import('@/views/benyi/dayflow/unscramble'),
-      name: 'unscramble',
-      meta: {
-        title: '一日流程标准解读',
-        icon: ''
-      }
-    }]
-  },
-  {
-    path: '/video_study',
-    component: Layout,
-    hidden: true,
-    children: [{
-      path: 'study/detail/:id(\\d+)',
-      component: () =>
-        import('@/views/benyi_train/video_study/detail'),
-      name: 'Detail',
-      meta: {
-        title: '培训视频详情',
-        icon: ''
-      }
-    }]
-  },
-  {
-    path: '/benyi_course/theme',
-    component: Layout,
-    hidden: true,
-    children: [{
-      path: 'activity/:id(\\d+)',
-      component: () =>
-        import('@/views/benyi/theme/activity'),
-      name: 'Theme1',
-      meta: {
-        title: '主题整合内容',
-        icon: ''
-      }
-    }]
-  },
-  {
-    path: '/benyi_course/themetermplan',
-    component: Layout,
-    hidden: true,
-    children: [{
-      path: 'data/:id',
-      component: () =>
-        import('@/views/benyi/themetermplan/data'),
-      name: 'Themetermplan1',
-      meta: {
-        title: '主题整合学期计划(明细)',
-        icon: ''
-      }
-    }]
-  },
-  {
-    path: '/benyi_course/thememonthplan',
-    component: Layout,
-    hidden: true,
-    children: [{
-      path: 'data/:id',
-      component: () =>
-        import('@/views/benyi/thememonthplan/data'),
-      name: 'Thememonthplan1',
-      meta: {
-        title: '主题整合月计划(明细)',
-        icon: ''
-      }
-    }]
-  },
-  {
-    path: '/benyi_course/themeweekplan',
-    component: Layout,
-    hidden: true,
-    children: [{
-      path: 'data/:id',
-      component: () =>
-        import('@/views/benyi/themeweekplan/data'),
-      name: 'Themeweekplan1',
-      meta: {
-        title: '主题整合周计划(明细)',
-        icon: ''
-      }
-    }]
-  },
-  {
-    path: '/benyi_course/math',
-    component: Layout,
-    hidden: true,
-    children: [{
-      path: 'plan/:id(\\d+)',
-      component: () =>
-        import('@/views/benyi/math/plan'),
-      name: 'Math1',
-      meta: {
-        title: '游戏数学方案',
-        icon: ''
-      }
-    }]
-  },
-  {
-    path: '/job',
-    component: Layout,
-    hidden: true,
-    children: [{
-      path: 'log',
-      component: () =>
-        import('@/views/monitor/job/log'),
-      name: 'JobLog',
-      meta: {
-        title: '调度日志'
-      }
-    }]
-  },
-  {
-    path: '/gen',
-    component: Layout,
-    hidden: true,
-    children: [{
-      path: 'edit',
-      component: () =>
-        import('@/views/tool/gen/editTable'),
-      name: 'GenEdit',
-      meta: {
-        title: '修改生成配置'
-      }
-    }]
-  }
+            import ('@/views/benyi/experience/choose'),
+        hidden: true,
+        children: [{
+                path: '/experience/apply/:id(\\d+)',
+                component: () =>
+                    import ('@/views/benyi/experience/apply'),
+                hidden: true
+            },
+            {
+                path: '/experience/result/:id(\\d+)',
+                component: () =>
+                    import ('@/views/benyi/experience/result'),
+                hidden: true
+            }
+        ]
+    },
+    {
+        path: '',
+        component: Layout,
+        redirect: 'index',
+        children: [{
+            path: 'index',
+            component: () =>
+                import ('@/views/index'),
+            name: '首页',
+            meta: {
+                title: '首页',
+                icon: 'dashboard',
+                noCache: true,
+                affix: true
+            }
+        }]
+    },
+    {
+        path: '/user',
+        component: Layout,
+        hidden: true,
+        redirect: 'noredirect',
+        children: [{
+            path: 'profile',
+            component: () =>
+                import ('@/views/system/user/profile/index'),
+            name: 'Profile',
+            meta: {
+                title: '个人中心',
+                icon: 'user'
+            }
+        }]
+    },
+    {
+        path: '/user/change',
+        component: Layout,
+        hidden: true,
+        redirect: 'noredirect',
+        children: [{
+            path: 'dept',
+            component: () =>
+                import ('@/views/system/user/change/dept/index'),
+            name: 'Changedept',
+            meta: {
+                title: '切换岗位',
+                icon: 'user'
+            }
+        }]
+    },
+    {
+        path: '/dict',
+        component: Layout,
+        hidden: true,
+        children: [{
+            path: 'type/data/:dictId(\\d+)',
+            component: () =>
+                import ('@/views/system/dict/data'),
+            name: 'Data',
+            meta: {
+                title: '字典数据',
+                icon: ''
+            }
+        }]
+    },
+    {
+        path: '/dayflow',
+        component: Layout,
+        hidden: true,
+        children: [{
+            path: 'dayflowmanger/dayflowtask/:id(\\d+)',
+            component: () =>
+                import ('@/views/benyi/dayflow/task'),
+            name: 'Task',
+            meta: {
+                title: '一日流程任务',
+                icon: ''
+            }
+        }]
+    },
+    {
+        path: '/dayflow/dayflowmanger',
+        component: Layout,
+        hidden: true,
+        children: [{
+            path: 'dayflowtask/standard/:code(\\d+)',
+            component: () =>
+                import ('@/views/benyi/dayflow/standard'),
+            name: 'Standard',
+            meta: {
+                title: '一日流程标准',
+                icon: ''
+            }
+        }]
+    },
+    {
+        path: '/dayflow/dayflowmanger/dayflowtask',
+        component: Layout,
+        hidden: true,
+        children: [{
+            path: 'standard/unscramble/:id(\\d+)',
+            component: () =>
+                import ('@/views/benyi/dayflow/unscramble'),
+            name: 'unscramble',
+            meta: {
+                title: '一日流程标准解读',
+                icon: ''
+            }
+        }]
+    },
+    {
+        path: '/video_study',
+        component: Layout,
+        hidden: true,
+        children: [{
+            path: 'study/detail/:id(\\d+)',
+            component: () =>
+                import ('@/views/benyi_train/video_study/detail'),
+            name: 'Detail',
+            meta: {
+                title: '培训视频详情',
+                icon: ''
+            }
+        }]
+    },
+    {
+        path: '/benyi_course/planweek',
+        component: Layout,
+        hidden: true,
+        children: [{
+            path: 'data/:id',
+            component: () =>
+                import ('@/views/benyi/planweek/data'),
+            name: 'planweek1',
+            meta: {
+                title: '周计划(明细)',
+                icon: ''
+            }
+        }]
+    },
+    {
+        path: '/benyi_course/theme',
+        component: Layout,
+        hidden: true,
+        children: [{
+            path: 'activity/:id(\\d+)',
+            component: () =>
+                import ('@/views/benyi/theme/activity'),
+            name: 'Theme1',
+            meta: {
+                title: '主题整合内容',
+                icon: ''
+            }
+        }]
+    },
+    {
+        path: '/benyi_course/themetermplan',
+        component: Layout,
+        hidden: true,
+        children: [{
+            path: 'data/:id',
+            component: () =>
+                import ('@/views/benyi/themetermplan/data'),
+            name: 'Themetermplan1',
+            meta: {
+                title: '主题整合学期计划(明细)',
+                icon: ''
+            }
+        }]
+    },
+    {
+        path: '/benyi_course/thememonthplan',
+        component: Layout,
+        hidden: true,
+        children: [{
+            path: 'data/:id',
+            component: () =>
+                import ('@/views/benyi/thememonthplan/data'),
+            name: 'Thememonthplan1',
+            meta: {
+                title: '主题整合月计划(明细)',
+                icon: ''
+            }
+        }]
+    },
+    {
+        path: '/benyi_course/themeweekplan',
+        component: Layout,
+        hidden: true,
+        children: [{
+            path: 'data/:id',
+            component: () =>
+                import ('@/views/benyi/themeweekplan/data'),
+            name: 'Themeweekplan1',
+            meta: {
+                title: '主题整合周计划(明细)',
+                icon: ''
+            }
+        }]
+    },
+    {
+        path: '/benyi_course/math',
+        component: Layout,
+        hidden: true,
+        children: [{
+            path: 'plan/:id(\\d+)',
+            component: () =>
+                import ('@/views/benyi/math/plan'),
+            name: 'Math1',
+            meta: {
+                title: '游戏数学方案',
+                icon: ''
+            }
+        }]
+    },
+    {
+        path: '/job',
+        component: Layout,
+        hidden: true,
+        children: [{
+            path: 'log',
+            component: () =>
+                import ('@/views/monitor/job/log'),
+            name: 'JobLog',
+            meta: {
+                title: '调度日志'
+            }
+        }]
+    },
+    {
+        path: '/gen',
+        component: Layout,
+        hidden: true,
+        children: [{
+            path: 'edit',
+            component: () =>
+                import ('@/views/tool/gen/editTable'),
+            name: 'GenEdit',
+            meta: {
+                title: '修改生成配置'
+            }
+        }]
+    }
 ]
 
 export default new Router({
-  mode: 'history', // 去掉url中的#
-  scrollBehavior: () => ({
-    y: 0
-  }),
-  routes: constantRoutes
+    mode: 'history', // 去掉url中的#
+    scrollBehavior: () => ({
+        y: 0
+    }),
+    routes: constantRoutes
 })

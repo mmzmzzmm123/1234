@@ -1,9 +1,8 @@
 package com.ruoyi.project.benyi.service.impl;
 
 import java.util.List;
-
-import com.ruoyi.common.utils.DateUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+                                                                                            import com.ruoyi.common.utils.DateUtils;
+            import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.project.benyi.mapper.ByPlanweekitemMapper;
 import com.ruoyi.project.benyi.domain.ByPlanweekitem;
@@ -13,10 +12,11 @@ import com.ruoyi.project.benyi.service.IByPlanweekitemService;
  * 周计划(家长和教育部门细化)Service业务层处理
  *
  * @author tsbz
- * @date 2020-08-24
+ * @date 2020-08-27
  */
 @Service
-public class ByPlanweekitemServiceImpl implements IByPlanweekitemService {
+public class ByPlanweekitemServiceImpl implements IByPlanweekitemService
+{
     @Autowired
     private ByPlanweekitemMapper byPlanweekitemMapper;
 
@@ -27,7 +27,8 @@ public class ByPlanweekitemServiceImpl implements IByPlanweekitemService {
      * @return 周计划(家长和教育部门细化)
      */
     @Override
-    public ByPlanweekitem selectByPlanweekitemById(Long id) {
+    public ByPlanweekitem selectByPlanweekitemById(Long id)
+    {
         return byPlanweekitemMapper.selectByPlanweekitemById(id);
     }
 
@@ -38,7 +39,8 @@ public class ByPlanweekitemServiceImpl implements IByPlanweekitemService {
      * @return 周计划(家长和教育部门细化)
      */
     @Override
-    public List<ByPlanweekitem> selectByPlanweekitemList(ByPlanweekitem byPlanweekitem) {
+    public List<ByPlanweekitem> selectByPlanweekitemList(ByPlanweekitem byPlanweekitem)
+    {
         return byPlanweekitemMapper.selectByPlanweekitemList(byPlanweekitem);
     }
 
@@ -49,9 +51,10 @@ public class ByPlanweekitemServiceImpl implements IByPlanweekitemService {
      * @return 结果
      */
     @Override
-    public int insertByPlanweekitem(ByPlanweekitem byPlanweekitem) {
-        byPlanweekitem.setCreateTime(DateUtils.getNowDate());
-        return byPlanweekitemMapper.insertByPlanweekitem(byPlanweekitem);
+    public int insertByPlanweekitem(ByPlanweekitem byPlanweekitem)
+    {
+                                                                                                                                                            byPlanweekitem.setCreateTime(DateUtils.getNowDate());
+                                                                    return byPlanweekitemMapper.insertByPlanweekitem(byPlanweekitem);
     }
 
     /**
@@ -61,9 +64,10 @@ public class ByPlanweekitemServiceImpl implements IByPlanweekitemService {
      * @return 结果
      */
     @Override
-    public int updateByPlanweekitem(ByPlanweekitem byPlanweekitem) {
-        byPlanweekitem.setUpdateTime(DateUtils.getNowDate());
-        return byPlanweekitemMapper.updateByPlanweekitem(byPlanweekitem);
+    public int updateByPlanweekitem(ByPlanweekitem byPlanweekitem)
+    {
+                                                                                                                                                                                                    byPlanweekitem.setUpdateTime(DateUtils.getNowDate());
+                            return byPlanweekitemMapper.updateByPlanweekitem(byPlanweekitem);
     }
 
     /**
@@ -73,7 +77,8 @@ public class ByPlanweekitemServiceImpl implements IByPlanweekitemService {
      * @return 结果
      */
     @Override
-    public int deleteByPlanweekitemByIds(Long[] ids) {
+    public int deleteByPlanweekitemByIds(Long[] ids)
+    {
         return byPlanweekitemMapper.deleteByPlanweekitemByIds(ids);
     }
 
@@ -84,7 +89,8 @@ public class ByPlanweekitemServiceImpl implements IByPlanweekitemService {
      * @return 结果
      */
     @Override
-    public int deleteByPlanweekitemById(Long id) {
+    public int deleteByPlanweekitemById(Long id)
+    {
         return byPlanweekitemMapper.deleteByPlanweekitemById(id);
     }
 }
