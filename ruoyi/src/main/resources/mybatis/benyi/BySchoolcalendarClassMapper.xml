@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.project.benyi.mapper.BySchoolcalendarClassMapper">
 
     <resultMap type="BySchoolcalendarClass" id="BySchoolcalendarClassResult">
-        <result property="id"    column="id"    />
-        <result property="name"    column="name"    />
-        <result property="type"    column="type"    />
-        <result property="classid"    column="classid"    />
-        <result property="xnxq"    column="xnxq"    />
-        <result property="deptid"    column="deptId"    />
-        <result property="activitytime"    column="activitytime"    />
-        <result property="activityendtime"    column="activityendtime"    />
-        <result property="stylecolor"    column="stylecolor"    />
-        <result property="createuserid"    column="createuserid"    />
-        <result property="createtime"    column="createtime"    />
-        <association property="byClass"    column="bjbh" javaType="ByClass" resultMap="ByClassResult" />
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="type" column="type"/>
+        <result property="classid" column="classid"/>
+        <result property="xnxq" column="xnxq"/>
+        <result property="deptid" column="deptId"/>
+        <result property="activitytime" column="activitytime"/>
+        <result property="activityendtime" column="activityendtime"/>
+        <result property="stylecolor" column="stylecolor"/>
+        <result property="createuserid" column="createuserid"/>
+        <result property="createtime" column="createtime"/>
+        <association property="byClass" column="bjbh" javaType="ByClass" resultMap="ByClassResult"/>
     </resultMap>
 
     <resultMap type="ByClass" id="ByClassResult">
@@ -44,20 +44,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         from by_schoolcalendar_class s, by_class c
     </sql>
 
-    <select id="selectBySchoolcalendarClassList" parameterType="BySchoolcalendarClass" resultMap="BySchoolcalendarClassResult">
+    <select id="selectBySchoolcalendarClassList" parameterType="BySchoolcalendarClass"
+            resultMap="BySchoolcalendarClassResult">
         <include refid="selectBySchoolcalendarClassVo"/>
-        <where>
-            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
-            <if test="type != null  and type != ''"> and type = #{type}</if>
-            <if test="classid != null  and classid != ''"> and classid = #{classid}</if>
-            <if test="xnxq != null  and xnxq != ''"> and xnxq = #{xnxq}</if>
-            <if test="deptid != null "> and deptId = #{deptid}</if>
-            <if test="activitytime != null "> and activitytime = #{activitytime}</if>
-            <if test="activityendtime != null "> and activityendtime = #{activityendtime}</if>
-            <if test="stylecolor != null  and stylecolor != ''"> and stylecolor = #{stylecolor}</if>
-            <if test="createuserid != null "> and createuserid = #{createuserid}</if>
-            <if test="createtime != null "> and createtime = #{createtime}</if>
-        </where>
+        where s.classid=c.bjbh
+
+        <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
+        <if test="type != null  and type != ''">and type = #{type}</if>
+        <if test="classid != null  and classid != ''">and classid = #{classid}</if>
+        <if test="xnxq != null  and xnxq != ''">and xnxq = #{xnxq}</if>
+        <if test="deptid != null ">and deptId = #{deptid}</if>
+        <if test="activitytime != null ">and activitytime = #{activitytime}</if>
+        <if test="activityendtime != null ">and activityendtime = #{activityendtime}</if>
+        <if test="stylecolor != null  and stylecolor != ''">and stylecolor = #{stylecolor}</if>
+        <if test="createuserid != null ">and createuserid = #{createuserid}</if>
+        <if test="createtime != null ">and createtime = #{createtime}</if>
+
     </select>
 
     <select id="selectBySchoolcalendarClassById" parameterType="Long" resultMap="BySchoolcalendarClassResult">
@@ -79,7 +81,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="stylecolor != null  and stylecolor != ''">stylecolor,</if>
             <if test="createuserid != null ">createuserid,</if>
             <if test="createtime != null ">createtime,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null ">#{id},</if>
             <if test="name != null  and name != ''">#{name},</if>
@@ -92,7 +94,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="stylecolor != null  and stylecolor != ''">#{stylecolor},</if>
             <if test="createuserid != null ">#{createuserid},</if>
             <if test="createtime != null ">#{createtime},</if>
-         </trim>
+        </trim>
     </insert>
 
     <update id="updateBySchoolcalendarClass" parameterType="BySchoolcalendarClass">

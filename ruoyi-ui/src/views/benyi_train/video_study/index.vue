@@ -100,6 +100,7 @@ export default {
         title: undefined,
         lecturer: undefined,
         type: undefined,
+        status:"0",
         pageNum: 1,
         pageSize: 8
       }

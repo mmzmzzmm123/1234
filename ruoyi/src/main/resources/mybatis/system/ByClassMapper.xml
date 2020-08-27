@@ -34,6 +34,7 @@
     <select id="selectByClassList" parameterType="ByClass" resultMap="ByClassResult">
         <include refid="selectByClassVo"/>
         where isdel='0'
+        <if test="bjbh != null  and bjbh != ''">and bjbh = #{bjbh}</if>
         <if test="deptId != null  and deptId != ''">and dept_id = #{deptId}</if>
         <if test="bjtype != null  and bjtype != ''">and bjtype = #{bjtype}</if>
         <if test="bhxh != null ">and bhxh = #{bhxh}</if>

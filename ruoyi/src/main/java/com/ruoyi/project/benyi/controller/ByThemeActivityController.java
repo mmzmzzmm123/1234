@@ -113,4 +113,14 @@ public class ByThemeActivityController extends BaseController {
     public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(byThemeActivityService.deleteByThemeActivityByIds(ids));
     }
+
+    /**
+     * 查询主题整合活动列表
+     */
+    @PreAuthorize("@ss.hasPermi('benyi:theme:list')"+ "||@ss.hasPermi('benyi:thememonthplan:list')")
+    @PostMapping("/listbythemeid/{ids}")
+    public TableDataInfo listbythemeid(@PathVariable Long[] ids) {
+        List<ByThemeActivity> list = byThemeActivityService.selectByThemeActivityByThemeIds(ids);
+        return getDataTable(list);
+    }
 }

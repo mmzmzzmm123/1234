@@ -56,8 +56,9 @@ public class ByChildCheckinDetailController extends BaseController {
 
         byChildCheckinDetail.setSchoolid(SecurityUtils.getLoginUser().getUser().getDept().getDeptId());
         //判断是否为班主任
-        if (!schoolCommon.isStringEmpty(schoolCommon.getClassId())) {
-            byChildCheckinDetail.setClassid(schoolCommon.getClassId());
+        String classId = schoolCommon.getClassId();
+        if (!schoolCommon.isStringEmpty(classId)) {
+            byChildCheckinDetail.setClassid(classId);
         }
 
         List<ByChildCheckinDetail> list = byChildCheckinDetailService.selectByChildCheckinDetailList(byChildCheckinDetail);

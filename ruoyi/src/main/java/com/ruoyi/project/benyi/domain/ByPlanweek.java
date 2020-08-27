@@ -20,7 +20,7 @@ public class ByPlanweek extends BaseEntity {
     /**
      * 编号
      */
-    private Long id;
+    private String id;
 
     /**
      * 学校id
@@ -115,11 +115,19 @@ public class ByPlanweek extends BaseEntity {
     @Excel(name = "审核时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date shtime;
 
-    public void setId(Long id) {
+    /**
+     * 审核意见
+     */
+    @Excel(name = "审核意见")
+    private String shyj;
+
+
+
+    public void setId(String id) {
         this.id = id;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
@@ -263,6 +271,15 @@ public class ByPlanweek extends BaseEntity {
                 .append("status", getStatus())
                 .append("shrid", getShrid())
                 .append("shtime", getShtime())
+                .append("shyj", getShyj())
                 .toString();
+    }
+
+    public String getShyj() {
+        return shyj;
+    }
+
+    public void setShyj(String shyj) {
+        this.shyj = shyj;
     }
 }

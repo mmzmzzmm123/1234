@@ -55,7 +55,14 @@ public class ByThemeTermplanController extends BaseController {
     @GetMapping("/list")
     public TableDataInfo list(ByThemeTermplan byThemeTermplan) {
         startPage();
-        List<ByThemeTermplan> list = byThemeTermplanService.selectByThemeTermplanList(byThemeTermplan);
+        byThemeTermplan.setSchoolid(SecurityUtils.getLoginUser().getUser().getDept().getDeptId());
+        String classId = schoolCommon.getClassId();
+        List<ByThemeTermplan> list = null;
+        //首先判断当前账户是否为幼儿园账号
+        if (schoolCommon.isSchool() && !schoolCommon.isStringEmpty(classId)) {
+            byThemeTermplan.setClassid(classId);
+        }
+        list = byThemeTermplanService.selectByThemeTermplanList(byThemeTermplan);
         return getDataTable(list);
     }
 
@@ -104,11 +111,13 @@ public class ByThemeTermplanController extends BaseController {
                 byThemeTermplanitem = new ByThemeTermplanitem();
                 byThemeTermplanitem.setTpid(uuid);
                 byThemeTermplanitem.setCreateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
-                //月份加1
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(byThemeTermplan.getStartmonth());
-                calendar.add(Calendar.MONTH, i);
-                byThemeTermplanitem.setMonth(calendar.getTime());
+//                //月份加1
+//                Calendar calendar = Calendar.getInstance();
+//                calendar.setTime(byThemeTermplan.getStartmonth());
+//                calendar.add(Calendar.MONTH, i);
+
+                byThemeTermplanitem.setMonth(schoolCommon.DateAddMonths(i, byThemeTermplan.getStartmonth()));
+
                 //创建时间
                 byThemeTermplanitem.setCreateTime(new Date());
 
@@ -118,7 +127,7 @@ public class ByThemeTermplanController extends BaseController {
 
             return toAjax(byThemeTermplanService.insertByThemeTermplan(byThemeTermplan));
         } else {
-            return AjaxResult.error("当前用户非幼儿园，无法添加幼儿");
+            return AjaxResult.error("当前用户非幼儿园教师，无法创建计划");
         }
 
     }
@@ -140,6 +149,28 @@ public class ByThemeTermplanController extends BaseController {
     @Log(title = "主题整合学期计划", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable String[] ids) {
+        //首先判断当前id下是否存在子目录
+        for (int i = 0; i < ids.length; i++) {
+            ByThemeTermplanitem byThemeTermplanitem = new ByThemeTermplanitem();
+            byThemeTermplanitem.setTpid(ids[i]);
+            List<ByThemeTermplanitem> list = byThemeTermplanitemService.selectByThemeTermplanitemList(byThemeTermplanitem);
+            if (list != null && list.size() > 0) {
+                return AjaxResult.error("选中的计划下存在子计划，无法删除");
+            }
+        }
         return toAjax(byThemeTermplanService.deleteByThemeTermplanByIds(ids));
+    }
+
+    /**
+     * 提交主题整合学期计划
+     */
+    @PreAuthorize("@ss.hasPermi('benyi:themetermplan:edit')")
+    @Log(title = "主题整合学期计划", businessType = BusinessType.UPDATE)
+    @PostMapping("/check/{id}")
+    public AjaxResult check(@PathVariable String id) {
+        ByThemeTermplan byThemeTermplan = new ByThemeTermplan();
+        byThemeTermplan.setId(id);
+        byThemeTermplan.setStatus("1");
+        return toAjax(byThemeTermplanService.updateByThemeTermplan(byThemeTermplan));
     }
 }

@@ -43,6 +43,14 @@ export function delMonthplan(id) {
   })
 }
 
+// 提交主题整合学期计划
+export function checkMonthplan(id) {
+  return request({
+    url: '/benyi/thememonthplan/check/' + id,
+    method: 'post'
+  })
+}
+
 // 导出主题整合月计划
 export function exportMonthplan(query) {
   return request({

@@ -350,7 +350,7 @@ import {
   delChild,
   addChild,
   updateChild,
-  updateChild_tb
+  updateChild_tb,
 } from "@/api/benyi/child";
 
 import { listClass } from "@/api/system/class";
@@ -365,22 +365,22 @@ export default {
       placeholders: {
         province: "请选择省",
         city: "请选择市",
-        area: "请选择区"
+        area: "请选择区",
       },
       diglogForm: {
         province: null,
         city: null,
-        area: null
+        area: null,
       },
       diglogForm1: {
         province: null,
         city: null,
-        area: null
+        area: null,
       },
       diglogForm2: {
         province: null,
         city: null,
-        area: null
+        area: null,
       },
       // 遮罩层
       loading: true,
@@ -455,46 +455,47 @@ export default {
         firstLanguage: undefined,
         seconderLanguage: undefined,
         otherLanguage: undefined,
-        createuserid: undefined
+        createuserid: undefined,
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
         name: [
-          { required: true, message: "幼儿姓名不能为空", trigger: "blur" }
+          { required: true, message: "幼儿姓名不能为空", trigger: "blur" },
         ],
         phone: [
-          { required: true, message: "家长手机号码不能为空", trigger: "blur" }
-        ]
+          { required: true, message: "家长手机号码不能为空", trigger: "blur" },
+        ],
+        classid: [{ required: true, message: "班级不能为空", trigger: "blur" }],
       },
       rules_tb: {
-        classid: [{ required: true, message: "班级不能为空", trigger: "blur" }]
-      }
+        classid: [{ required: true, message: "班级不能为空", trigger: "blur" }],
+      },
     };
   },
   created() {
     this.getList();
     this.getClassList();
-    this.getDicts("sys_user_sex").then(response => {
+    this.getDicts("sys_user_sex").then((response) => {
       this.sexOptions = response.data;
     });
-    this.getDicts("sys_normal_disable").then(response => {
+    this.getDicts("sys_normal_disable").then((response) => {
       this.statusOptions = response.data;
     });
-    this.getDicts("sys_dm_mz").then(response => {
+    this.getDicts("sys_dm_mz").then((response) => {
       this.mzOptions = response.data;
     });
-    this.getDicts("sys_yes_no").then(response => {
+    this.getDicts("sys_yes_no").then((response) => {
       this.ynOptions = response.data;
     });
-    this.getDicts("sys_dm_ryqd").then(response => {
+    this.getDicts("sys_dm_ryqd").then((response) => {
       this.sourceOptions = response.data;
     });
   },
   components: {
     //省市区三级联动全局组件
-    VDistpicker
+    VDistpicker,
   },
   methods: {
     // 性别字典翻译
@@ -522,7 +523,7 @@ export default {
       // return this.selectDictLabel(this.classOptions, row.classid);
       var actions = [];
       var datas = this.classOptions;
-      Object.keys(datas).map(key => {
+      Object.keys(datas).map((key) => {
         if (datas[key].bjbh == "" + row.classid) {
           actions.push(datas[key].bjmc);
           return false;
@@ -531,14 +532,14 @@ export default {
       return actions.join("");
     },
     getClassList() {
-      listClass(null).then(response => {
+      listClass(null).then((response) => {
         this.classOptions = response.rows;
       });
     },
     /** 查询幼儿信息列表 */
     getList() {
       this.loading = true;
-      listChild(this.queryParams).then(response => {
+      listChild(this.queryParams).then((response) => {
         this.childList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -597,7 +598,7 @@ export default {
         seconderLanguage: undefined,
         otherLanguage: undefined,
         createuserid: undefined,
-        createTime: undefined
+        createTime: undefined,
       };
 
       this.diglogForm.province = "";
@@ -626,7 +627,7 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.id);
+      this.ids = selection.map((item) => item.id);
       this.single = selection.length != 1;
       this.multiple = !selection.length;
     },
@@ -640,7 +641,7 @@ export default {
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids;
-      getChild(id).then(response => {
+      getChild(id).then((response) => {
         this.form = response.data;
 
         this.diglogForm.province = response.data.birthProvincename;
@@ -660,11 +661,11 @@ export default {
       });
     },
     /** 提交按钮 */
-    submitForm: function() {
-      this.$refs["form"].validate(valid => {
+    submitForm: function () {
+      this.$refs["form"].validate((valid) => {
         if (valid) {
           if (this.form.id != undefined) {
-            updateChild(this.form).then(response => {
+            updateChild(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("修改成功");
                 this.open = false;
@@ -672,7 +673,7 @@ export default {
               }
             });
           } else {
-            addChild(this.form).then(response => {
+            addChild(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("新增成功");
                 this.open = false;
@@ -684,11 +685,11 @@ export default {
       });
     },
     /** 提交按钮 */
-    submitForm_tb: function() {
-      this.$refs["form"].validate(valid => {
+    submitForm_tb: function () {
+      this.$refs["form"].validate((valid) => {
         if (valid) {
           console.log(this.ids + "---" + this.form.classid);
-          updateChild_tb(this.form, this.ids).then(response => {
+          updateChild_tb(this.form, this.ids).then((response) => {
             if (response.code === 200) {
               this.msgSuccess("调班成功");
               this.open_tb = false;
@@ -714,17 +715,17 @@ export default {
         {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
-          type: "warning"
+          type: "warning",
         }
       )
-        .then(function() {
+        .then(function () {
           return delChild(ids);
         })
         .then(() => {
           this.getList();
           this.msgSuccess("删除成功");
         })
-        .catch(function() {});
+        .catch(function () {});
     },
     //所在省市区触发联动方法
     onSelected_brith(data) {
@@ -779,7 +780,7 @@ export default {
         this.form.addrAreaname = data.area.value;
         this.form.addrArea = data.area.code;
       }
-    }
-  }
+    },
+  },
 };
 </script>

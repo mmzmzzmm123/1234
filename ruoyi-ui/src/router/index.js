@@ -209,6 +209,21 @@ export const constantRoutes = [{
     }]
   },
   {
+    path: '/benyi_course/planweek',
+    component: Layout,
+    hidden: true,
+    children: [{
+      path: 'data/:id',
+      component: () =>
+        import('@/views/benyi/planweek/data'),
+      name: 'planweek1',
+      meta: {
+        title: '周计划(明细)',
+        icon: ''
+      }
+    }]
+  },
+  {
     path: '/benyi_course/theme',
     component: Layout,
     hidden: true,
@@ -233,7 +248,37 @@ export const constantRoutes = [{
         import('@/views/benyi/themetermplan/data'),
       name: 'Themetermplan1',
       meta: {
-        title: '主题整合学期计划',
+        title: '主题整合学期计划(明细)',
+        icon: ''
+      }
+    }]
+  },
+  {
+    path: '/benyi_course/thememonthplan',
+    component: Layout,
+    hidden: true,
+    children: [{
+      path: 'data/:id',
+      component: () =>
+        import('@/views/benyi/thememonthplan/data'),
+      name: 'Thememonthplan1',
+      meta: {
+        title: '主题整合月计划(明细)',
+        icon: ''
+      }
+    }]
+  },
+  {
+    path: '/benyi_course/themeweekplan',
+    component: Layout,
+    hidden: true,
+    children: [{
+      path: 'data/:id',
+      component: () =>
+        import('@/views/benyi/themeweekplan/data'),
+      name: 'Themeweekplan1',
+      meta: {
+        title: '主题整合周计划(明细)',
         icon: ''
       }
     }]

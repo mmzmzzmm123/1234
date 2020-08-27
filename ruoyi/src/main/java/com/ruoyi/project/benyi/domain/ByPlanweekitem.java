@@ -12,7 +12,7 @@ import com.ruoyi.framework.web.domain.BaseEntity;
  * 周计划(家长和教育部门细化)对象 by_planweekitem
  *
  * @author tsbz
- * @date 2020-08-24
+ * @date 2020-08-27
  */
 public class ByPlanweekitem extends BaseEntity {
     private static final long serialVersionUID = 1L;
@@ -26,7 +26,7 @@ public class ByPlanweekitem extends BaseEntity {
      * 所属计划
      */
     @Excel(name = "所属计划")
-    private Long wid;
+    private String wid;
 
     /**
      * 活动类型
@@ -67,11 +67,11 @@ public class ByPlanweekitem extends BaseEntity {
         return id;
     }
 
-    public void setWid(Long wid) {
+    public void setWid(String wid) {
         this.wid = wid;
     }
 
-    public Long getWid() {
+    public String getWid() {
         return wid;
     }
 

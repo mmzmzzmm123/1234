@@ -10,33 +10,46 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="所属班级" prop="classid">
-        <el-select v-model="queryParams.classid" placeholder="请选择班级">
+      <el-form-item label="学年学期" prop="xnxq">
+        <el-select v-model="queryParams.xnxq" placeholder="请选择学年学期" clearable size="small">
           <el-option
-            v-for="dict in classOptions"
-            :key="dict.bjbh"
-            :label="dict.bjmc"
-            :value="dict.bjbh"
-          ></el-option>
+            v-for="dict in xnxqOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
         </el-select>
       </el-form-item>
-      <el-form-item label="学年学期" prop="xnxq">
-        <el-input
-          v-model="queryParams.xnxq"
-          placeholder="请输入学年学期"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
       <el-form-item label="计划月份" prop="month">
-        <el-input
-          v-model="queryParams.month"
-          placeholder="请输入计划月份"
+        <el-date-picker
           clearable
           size="small"
-          @keyup.enter.native="handleQuery"
-        />
+          style="width: 200px"
+          v-model="queryParams.month"
+          type="month"
+          value-format="yyyy-MM"
+          placeholder="选择计划月份"
+        ></el-date-picker>
+      </el-form-item>
+      <el-form-item label="主题内容" prop="themes">
+        <el-select v-model="queryParams.themes" size="small">
+          <el-option
+            v-for="item in themeOptions"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="当前状态" prop="status">
+        <el-select v-model="queryParams.status" placeholder="请选择状态" clearable size="small">
+          <el-option
+            v-for="dict in statusOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -77,12 +90,30 @@
     </el-row>
 
     <el-table v-loading="loading" :data="monthplanList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="编号" align="center" prop="id" />
-      <el-table-column label="计划名称" align="center" prop="name" />
-      <el-table-column label="所属班级" align="center" prop="classid" />
-      <el-table-column label="学年学期" align="center" prop="xnxq" />
-      <el-table-column label="计划月份" align="center" prop="month" />
+      <el-table-column type="selection" width="55" align="center" :selectable="isShow" />
+      <el-table-column label="计划名称" align="center" prop="name" :show-overflow-tooltip="true">
+        <template slot-scope="scope">
+          <router-link :to="'/benyi_course/thememonthplan/data/' + scope.row.id" class="link-type">
+            <span>{{ scope.row.name }}</span>
+          </router-link>
+        </template>
+      </el-table-column>
+      <el-table-column label="班级名称" align="center" prop="classid" :formatter="classFormat" />
+      <el-table-column label="学年学期" align="center" prop="xnxq" :formatter="xnxqFormat" />
+      <el-table-column label="计划月份" align="center" prop="month" width="180">
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.month, '{y}-{m}') }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="本月主题" align="center" prop="themes" :formatter="themeFormat" />
+      <el-table-column prop="wxkc" label="微型课程">
+        <template slot-scope="scope">
+          <div v-html="scope.row.wxkc"></div>
+        </template>
+      </el-table-column>
+      <!-- <el-table-column label="家长支持" align="center" prop="support" />
+      <el-table-column label="备注" align="center" prop="remarks" />-->
+      <el-table-column label="状态" align="center" prop="status" :formatter="statusFormat" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -91,6 +122,7 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['benyi:thememonthplan:edit']"
+            v-show="isShow(scope.row)"
           >修改</el-button>
           <el-button
             size="mini"
@@ -98,7 +130,16 @@
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['benyi:thememonthplan:remove']"
+            v-show="isShow(scope.row)"
           >删除</el-button>
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-check"
+            @click="handleCheck(scope.row)"
+            v-hasPermi="['benyi:themetermplan:edit']"
+            v-show="isShow(scope.row)"
+          >提交</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -112,39 +153,32 @@
     />
 
     <!-- 添加或修改主题整合月计划对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="90px">
-        <el-form-item label="所属班级" prop="classid">
-          <el-select
-            v-model="form.classid"
-            placeholder="请选择班级"
-            @change="getClassName"
-            :disabled="disable"
-          >
-            <el-option
-              v-for="dict in classOptions"
-              :key="dict.bjbh"
-              :label="dict.bjmc"
-              :value="dict.bjbh"
-            ></el-option>
-          </el-select>
-        </el-form-item>
+    <el-dialog :title="title" :visible.sync="open" width="800px" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="计划月份" prop="month">
           <el-date-picker
+            clearable
+            size="small"
+            style="width: 200px"
             v-model="form.month"
             type="month"
+            value-format="yyyy-MM"
             placeholder="选择计划月份"
             :disabled="disable"
           ></el-date-picker>
         </el-form-item>
-        <el-form-item label="主题" prop="themes">
-          <el-input v-model="form.themes" type="textarea" placeholder="请输入内容" />
+        <el-form-item label="学年学期" prop="xnxq">
+          <el-select v-model="form.xnxq" placeholder="请选择学年学期" :disabled="disable">
+            <el-option
+              v-for="dict in xnxqOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            />
+          </el-select>
         </el-form-item>
-        <el-form-item label="自定义主题" prop="selfthemes">
-          <el-input v-model="form.selfthemes" type="textarea" placeholder="请输入内容" />
-        </el-form-item>
-        <el-form-item label="家长支持" prop="support">
-          <el-input v-model="form.support" type="textarea" placeholder="请输入内容" />
+        <el-form-item label="微型课程" prop="wxkc">
+          <Editor v-model="form.wxkc" placeholder="请输入微型课程" />
         </el-form-item>
         <el-form-item label="备注" prop="remarks">
           <el-input v-model="form.remarks" type="textarea" placeholder="请输入内容" />
@@ -165,14 +199,20 @@ import {
   delMonthplan,
   addMonthplan,
   updateMonthplan,
+  checkMonthplan,
 } from "@/api/benyi/thememonthplan";
-
+import Editor from "@/components/Editor";
 import { listClass } from "@/api/system/class";
+import { listTheme } from "@/api/benyi/theme";
 
 export default {
   name: "Monthplan",
+  components: {
+    Editor,
+  },
   data() {
     return {
+      disable: false,
       // 遮罩层
       loading: true,
       // 选中数组
@@ -183,56 +223,101 @@ export default {
       multiple: true,
       // 总条数
       total: 0,
-      //是否
-      disable: false,
       // 主题整合月计划表格数据
       monthplanList: [],
-      //班级
-      classOptions: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
       open: false,
+      //学年学期
+      xnxqOptions: [],
+      //班级
+      classOptions: [],
+      //主题
+      themeOptions: [],
+      //当前状态
+      statusOptions: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
         pageSize: 10,
         name: undefined,
+        schoolid: undefined,
         classid: undefined,
         xnxq: undefined,
         month: undefined,
         themes: undefined,
         selfthemes: undefined,
+        wxkc: undefined,
         support: undefined,
         remarks: undefined,
         createuserid: undefined,
+        spr: undefined,
+        sptime: undefined,
+        spyj: undefined,
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
-        classid: [{ required: true, message: "班级不能为空", trigger: "blur" }],
-        month: [
-          { required: true, message: "计划月份不能为空", trigger: "blur" },
+        xnxq: [
+          { required: true, message: "学年学期不能为空", trigger: "blur" },
         ],
-        themes: [{ required: true, message: "主题不能为空", trigger: "blur" }],
+        month: [{ required: true, message: "月份不能为空", trigger: "blur" }],
+        wxkc: [
+          { required: true, message: "微型课程不能为空", trigger: "blur" },
+        ],
       },
     };
   },
   created() {
-    this.getList();
     this.getClassList();
+    this.getThemeList();
+    this.getList();
+    this.getDicts("sys_xnxq").then((response) => {
+      this.xnxqOptions = response.data;
+    });
+    this.getDicts("sys_dm_planweekstatus").then((response) => {
+      this.statusOptions = response.data;
+    });
   },
   methods: {
-    getClassName(val) {
-      //locations是v-for里面的也是datas里面的值
-      let obj = {};
-      obj = this.classOptions.find((item) => {
-        return item.bjbh === val;
+    isShow(row) {
+      if (row.status == "0") {
+        return true;
+      } else {
+        return false;
+      }
+    },
+    // 当前状态类型--字典状态字典翻译
+    statusFormat(row, column) {
+      return this.selectDictLabel(this.statusOptions, row.status);
+    },
+    // 主题--字典状态字典翻译
+    themeFormat(row, column) {
+      if (row.themes != null) {
+        var ilength = row.themes.split(";").length - 1;
+        var names = "";
+        for (var i = 1; i < ilength; i++) {
+          names =
+            names +
+            this.selectMoeDictLabel(
+              this.themeOptions,
+              row.themes.split(";")[i]
+            ) +
+            " ";
+        }
+        //this.selectDictLabel(this.scopeOptions, row.xnxq);
+        return names;
+      }
+      return "";
+    },
+    //主题
+    getThemeList() {
+      listTheme(null).then((response) => {
+        //console.log(response.rows);
+        this.themeOptions = response.rows;
       });
-      let getName = "";
-      getName = obj.bjmc;
-      this.form.name = getName;
     },
     // 字典翻译
     classFormat(row, column) {
@@ -247,6 +332,11 @@ export default {
       });
       return actions.join("");
     },
+    // 学年学期类型--字典状态字典翻译
+    xnxqFormat(row, column) {
+      return this.selectDictLabel(this.xnxqOptions, row.xnxq);
+    },
+    //班级列表
     getClassList() {
       listClass(null).then((response) => {
         this.classOptions = response.rows;
@@ -271,15 +361,21 @@ export default {
       this.form = {
         id: undefined,
         name: undefined,
+        schoolid: undefined,
         classid: undefined,
         xnxq: undefined,
         month: undefined,
         themes: undefined,
         selfthemes: undefined,
+        wxkc: undefined,
         support: undefined,
         remarks: undefined,
         createuserid: undefined,
         createTime: undefined,
+        spr: undefined,
+        sptime: undefined,
+        spyj: undefined,
+        status: "0",
       };
       this.resetForm("form");
     },
@@ -303,7 +399,7 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加<主题整合>月计划";
+      this.title = "添加主题整合月计划";
       this.disable = false;
     },
     /** 修改按钮操作 */
@@ -313,7 +409,7 @@ export default {
       getMonthplan(id).then((response) => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改<主题整合>月计划";
+        this.title = "修改主题整合月计划";
         this.disable = true;
       });
     },
@@ -344,21 +440,34 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$confirm(
-        '是否确认删除主题整合月计划编号为"' + ids + '"的数据项?',
-        "警告",
-        {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning",
-        }
-      )
+      this.$confirm("是否确认删除主题整合月计划数据项?", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
         .then(function () {
           return delMonthplan(ids);
         })
         .then(() => {
           this.getList();
           this.msgSuccess("删除成功");
+        })
+        .catch(function () {});
+    },
+    /** 提交按钮操作 */
+    handleCheck(row) {
+      const id = row.id;
+      this.$confirm("是否确认提交主题整合月计划?提交后数据将不能维护", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(function () {
+          return checkMonthplan(id);
+        })
+        .then(() => {
+          this.getList();
+          this.msgSuccess("提交成功");
         })
         .catch(function () {});
     },

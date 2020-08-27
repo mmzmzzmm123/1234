@@ -1,12 +1,17 @@
 package com.ruoyi.project.benyi.controller;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.project.benyi.domain.ByThemeTermplan;
+import com.ruoyi.project.benyi.domain.ByThemeTermplanitem;
+import com.ruoyi.project.benyi.domain.ByThemeMonthplanitem;
+import com.ruoyi.project.benyi.service.IByThemeTermplanService;
+import com.ruoyi.project.benyi.service.IByThemeTermplanitemService;
+import com.ruoyi.project.benyi.service.IByThemeMonthplanitemService;
 import com.ruoyi.project.common.SchoolCommon;
+import com.ruoyi.project.system.service.IByClassService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,6 +44,14 @@ public class ByThemeMonthplanController extends BaseController {
     private IByThemeMonthplanService byThemeMonthplanService;
     @Autowired
     private SchoolCommon schoolCommon;
+    @Autowired
+    private IByClassService byClassService;
+    @Autowired
+    private IByThemeTermplanService byThemeTermplanService;
+    @Autowired
+    private IByThemeTermplanitemService byThemeTermplanitemService;
+    @Autowired
+    private IByThemeMonthplanitemService byThemeonthplanitemService;
 
     /**
      * 查询主题整合月计划列表
@@ -47,7 +60,14 @@ public class ByThemeMonthplanController extends BaseController {
     @GetMapping("/list")
     public TableDataInfo list(ByThemeMonthplan byThemeMonthplan) {
         startPage();
-        List<ByThemeMonthplan> list = byThemeMonthplanService.selectByThemeMonthplanList(byThemeMonthplan);
+        byThemeMonthplan.setSchoolid(SecurityUtils.getLoginUser().getUser().getDept().getDeptId());
+        String classId = schoolCommon.getClassId();
+        List<ByThemeMonthplan> list = null;
+        //首先判断当前账户是否为幼儿园账号
+        if (schoolCommon.isSchool() && !schoolCommon.isStringEmpty(classId)) {
+            byThemeMonthplan.setClassid(classId);
+        }
+        list = byThemeMonthplanService.selectByThemeMonthplanList(byThemeMonthplan);
         return getDataTable(list);
     }
 
@@ -68,7 +88,7 @@ public class ByThemeMonthplanController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('benyi:thememonthplan:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id) {
+    public AjaxResult getInfo(@PathVariable("id") String id) {
         return AjaxResult.success(byThemeMonthplanService.selectByThemeMonthplanById(id));
     }
 
@@ -79,28 +99,53 @@ public class ByThemeMonthplanController extends BaseController {
     @Log(title = "主题整合月计划", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody ByThemeMonthplan byThemeMonthplan) {
+        String classId = schoolCommon.getClassId();
         //首先判断当前账户是否为幼儿园账号
-        if (schoolCommon.isSchool()) {
+        if (schoolCommon.isSchool() && !schoolCommon.isStringEmpty(classId)) {
 
-            byThemeMonthplan.setCreateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
-
-            String dateTime = byThemeMonthplan.getMonth();
-            dateTime = dateTime .replace("Z", " UTC"); //2019-06-27T16:00:00.000 UTC
-            SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS Z");//转换时区格式
-            SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM");
-            Date date = null;//将Z时间格式转换成Date类型格式或换成毫秒
-            try {
-                date = format1.parse(dateTime);
-            } catch (ParseException e) {
-                e.printStackTrace();
+            //根据当前月份 查找学期计划的主题
+            ByThemeTermplan byThemeTermplan = new ByThemeTermplan();
+            byThemeTermplan.setSchoolid(SecurityUtils.getLoginUser().getUser().getDept().getDeptId());
+            byThemeTermplan.setClassid(classId);
+            byThemeTermplan.setStatus("2");
+            byThemeTermplan.setXnxq(byThemeMonthplan.getXnxq());
+            List<ByThemeTermplan> list = byThemeTermplanService.selectByThemeTermplanList(byThemeTermplan);
+            String strThemeIds = "";
+            if (list != null && list.size() > 0) {
+                for (int i = 0; i < list.size(); i++) {
+                    String themeId = list.get(i).getId();
+                    ByThemeTermplanitem byThemeTermplanitem = new ByThemeTermplanitem();
+                    byThemeTermplanitem.setTpid(themeId);
+                    byThemeTermplanitem.setMonth(byThemeMonthplan.getMonth());
+                    List<ByThemeTermplanitem> listItem = byThemeTermplanitemService.selectByThemeTermplanitemList(byThemeTermplanitem);
+                    if (listItem != null && listItem.size() > 0) {
+                        for (int j = 0; j < listItem.size(); j++) {
+                            String themeIds = listItem.get(j).getThemeconent();
+                            if (!schoolCommon.isStringEmpty(themeIds)) {
+                                strThemeIds = strThemeIds + themeIds;
+                            }
+                        }
+                    }
+                }
+            } else {
+                return AjaxResult.error("当前班级未制定学期计划或学期计划未审批，无法创建月计划");
             }
-            String time= format2.format(date);//2019-06
-            System.out.println(time);
-            byThemeMonthplan.setMonth(time);
-            byThemeMonthplan.setName(byThemeMonthplan.getName() + "-主题整合月计划（" + byThemeMonthplan.getMonth() + "）");
+
+            if (schoolCommon.isStringEmpty(strThemeIds)) {
+                return AjaxResult.error("当前班级制定的学期计划未设置月份主题，无法创建月计划");
+            }
+
+            String uuid = schoolCommon.getUuid();
+            byThemeMonthplan.setId(uuid);
+            byThemeMonthplan.setSchoolid(SecurityUtils.getLoginUser().getUser().getDept().getDeptId());
+            byThemeMonthplan.setClassid(classId);
+            byThemeMonthplan.setThemes(strThemeIds);//主题id
+            byThemeMonthplan.setCreateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
+            byThemeMonthplan.setName(byClassService.selectByClassById(classId).getBjmc() + "-主题整合月计划" + "(" + sdf.format(byThemeMonthplan.getMonth()) + ")");
             return toAjax(byThemeMonthplanService.insertByThemeMonthplan(byThemeMonthplan));
         } else {
-            return AjaxResult.error("当前用户非幼儿园，无法添加幼儿");
+            return AjaxResult.error("当前用户非幼儿园教师，无法创建月计划");
         }
     }
 
@@ -120,7 +165,29 @@ public class ByThemeMonthplanController extends BaseController {
     @PreAuthorize("@ss.hasPermi('benyi:thememonthplan:remove')")
     @Log(title = "主题整合月计划", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids) {
+    public AjaxResult remove(@PathVariable String[] ids) {
+        //首先判断当前id下是否存在子目录
+        for (int i = 0; i < ids.length; i++) {
+            ByThemeMonthplanitem byThemeMonthplanitem = new ByThemeMonthplanitem();
+            byThemeMonthplanitem.setMpid(ids[i]);
+            List<ByThemeMonthplanitem> list = byThemeonthplanitemService.selectByThemeMonthplanitemList(byThemeMonthplanitem);
+            if (list != null && list.size() > 0) {
+                return AjaxResult.error("选中的计划下存在子计划，无法删除");
+            }
+        }
         return toAjax(byThemeMonthplanService.deleteByThemeMonthplanByIds(ids));
+    }
+
+    /**
+     * 提交主题整合学期计划
+     */
+    @PreAuthorize("@ss.hasPermi('benyi:thememonthplan:edit')")
+    @Log(title = "主题整合学期计划", businessType = BusinessType.UPDATE)
+    @PostMapping("/check/{id}")
+    public AjaxResult check(@PathVariable String id) {
+        ByThemeMonthplan byThemeMonthplan = new ByThemeMonthplan();
+        byThemeMonthplan.setId(id);
+        byThemeMonthplan.setStatus("1");
+        return toAjax(byThemeMonthplanService.updateByThemeMonthplan(byThemeMonthplan));
     }
 }

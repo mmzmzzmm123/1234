@@ -1,7 +1,6 @@
 package com.ruoyi.project.benyi.controller;
 
 import java.util.List;
-
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,32 +24,35 @@ import com.ruoyi.framework.web.page.TableDataInfo;
  * 周计划(家长和教育部门细化)Controller
  *
  * @author tsbz
- * @date 2020-08-24
+ * @date 2020-08-27
  */
 @RestController
 @RequestMapping("/benyi/planweekitem")
-public class ByPlanweekitemController extends BaseController {
+public class ByPlanweekitemController extends BaseController
+{
     @Autowired
     private IByPlanweekitemService byPlanweekitemService;
 
-    /**
-     * 查询周计划(家长和教育部门细化)列表
-     */
-    @PreAuthorize("@ss.hasPermi('benyi:planweek:list')")
-    @GetMapping("/list")
-    public TableDataInfo list(ByPlanweekitem byPlanweekitem) {
+/**
+ * 查询周计划(家长和教育部门细化)列表
+ */
+@PreAuthorize("@ss.hasPermi('benyi:planweekitem:list')")
+@GetMapping("/list")
+        public TableDataInfo list(ByPlanweekitem byPlanweekitem)
+    {
         startPage();
         List<ByPlanweekitem> list = byPlanweekitemService.selectByPlanweekitemList(byPlanweekitem);
         return getDataTable(list);
     }
-
+    
     /**
      * 导出周计划(家长和教育部门细化)列表
      */
-    @PreAuthorize("@ss.hasPermi('benyi:planweek:export')")
+    @PreAuthorize("@ss.hasPermi('benyi:planweekitem:export')")
     @Log(title = "周计划(家长和教育部门细化)", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
-    public AjaxResult export(ByPlanweekitem byPlanweekitem) {
+    public AjaxResult export(ByPlanweekitem byPlanweekitem)
+    {
         List<ByPlanweekitem> list = byPlanweekitemService.selectByPlanweekitemList(byPlanweekitem);
         ExcelUtil<ByPlanweekitem> util = new ExcelUtil<ByPlanweekitem>(ByPlanweekitem.class);
         return util.exportExcel(list, "planweekitem");
@@ -59,39 +61,43 @@ public class ByPlanweekitemController extends BaseController {
     /**
      * 获取周计划(家长和教育部门细化)详细信息
      */
-    @PreAuthorize("@ss.hasPermi('benyi:planweek:query')")
+    @PreAuthorize("@ss.hasPermi('benyi:planweekitem:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id) {
+    public AjaxResult getInfo(@PathVariable("id") Long id)
+    {
         return AjaxResult.success(byPlanweekitemService.selectByPlanweekitemById(id));
     }
 
     /**
      * 新增周计划(家长和教育部门细化)
      */
-    @PreAuthorize("@ss.hasPermi('benyi:planweek:add')")
+    @PreAuthorize("@ss.hasPermi('benyi:planweekitem:add')")
     @Log(title = "周计划(家长和教育部门细化)", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody ByPlanweekitem byPlanweekitem) {
+    public AjaxResult add(@RequestBody ByPlanweekitem byPlanweekitem)
+    {
         return toAjax(byPlanweekitemService.insertByPlanweekitem(byPlanweekitem));
     }
 
     /**
      * 修改周计划(家长和教育部门细化)
      */
-    @PreAuthorize("@ss.hasPermi('benyi:planweek:edit')")
+    @PreAuthorize("@ss.hasPermi('benyi:planweekitem:edit')")
     @Log(title = "周计划(家长和教育部门细化)", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody ByPlanweekitem byPlanweekitem) {
+    public AjaxResult edit(@RequestBody ByPlanweekitem byPlanweekitem)
+    {
         return toAjax(byPlanweekitemService.updateByPlanweekitem(byPlanweekitem));
     }
 
     /**
      * 删除周计划(家长和教育部门细化)
      */
-    @PreAuthorize("@ss.hasPermi('benyi:planweek:remove')")
+    @PreAuthorize("@ss.hasPermi('benyi:planweekitem:remove')")
     @Log(title = "周计划(家长和教育部门细化)", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids) {
+    public AjaxResult remove(@PathVariable Long[] ids)
+    {
         return toAjax(byPlanweekitemService.deleteByPlanweekitemByIds(ids));
     }
 }

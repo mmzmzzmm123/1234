@@ -5,68 +5,95 @@
 <mapper namespace="com.ruoyi.project.benyi.mapper.ByThemeMonthplanMapper">
 
     <resultMap type="ByThemeMonthplan" id="ByThemeMonthplanResult">
-        <result property="id" column="id"/>
-        <result property="name" column="name"/>
-        <result property="classid" column="classid"/>
-        <result property="xnxq" column="xnxq"/>
-        <result property="month" column="month"/>
-        <result property="themes" column="themes"/>
-        <result property="selfthemes" column="selfthemes"/>
-        <result property="support" column="support"/>
-        <result property="remarks" column="remarks"/>
-        <result property="createuserid" column="createuserid"/>
-        <result property="createTime" column="create_time"/>
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="schoolid"    column="schoolid"    />
+        <result property="classid"    column="classid"    />
+        <result property="xnxq"    column="xnxq"    />
+        <result property="month"    column="month"    />
+        <result property="themes"    column="themes"    />
+        <result property="selfthemes"    column="selfthemes"    />
+        <result property="wxkc"    column="wxkc"    />
+        <result property="support"    column="support"    />
+        <result property="remarks"    column="remarks"    />
+        <result property="createuserid"    column="createuserid"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="spr"    column="spr"    />
+        <result property="sptime"    column="sptime"    />
+        <result property="spyj"    column="spyj"    />
+        <result property="status"    column="status"    />
     </resultMap>
 
     <sql id="selectByThemeMonthplanVo">
-        select id, name, classid, xnxq, month, themes, selfthemes, support, remarks, createuserid, create_time from by_theme_monthplan
+        select id, name, schoolid, classid, xnxq, month, themes, selfthemes, wxkc, support, remarks, createuserid, create_time, spr, sptime, spyj, status from by_theme_monthplan
     </sql>
 
     <select id="selectByThemeMonthplanList" parameterType="ByThemeMonthplan" resultMap="ByThemeMonthplanResult">
         <include refid="selectByThemeMonthplanVo"/>
         <where>
-            <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
-            <if test="classid != null  and classid != ''">and classid = #{classid}</if>
-            <if test="xnxq != null  and xnxq != ''">and xnxq = #{xnxq}</if>
-            <if test="month != null  and month != ''">and month = #{month}</if>
-            <if test="themes != null  and themes != ''">and themes = #{themes}</if>
-            <if test="selfthemes != null  and selfthemes != ''">and selfthemes = #{selfthemes}</if>
-            <if test="support != null  and support != ''">and support = #{support}</if>
-            <if test="remarks != null  and remarks != ''">and remarks = #{remarks}</if>
-            <if test="createuserid != null ">and createuserid = #{createuserid}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="schoolid != null "> and schoolid = #{schoolid}</if>
+            <if test="classid != null  and classid != ''"> and classid = #{classid}</if>
+            <if test="xnxq != null  and xnxq != ''"> and xnxq = #{xnxq}</if>
+            <if test="month != null "> and month = #{month}</if>
+            <if test="themes != null  and themes != ''"> and themes = #{themes}</if>
+            <if test="selfthemes != null  and selfthemes != ''"> and selfthemes = #{selfthemes}</if>
+            <if test="wxkc != null  and wxkc != ''"> and wxkc = #{wxkc}</if>
+            <if test="support != null  and support != ''"> and support = #{support}</if>
+            <if test="remarks != null  and remarks != ''"> and remarks = #{remarks}</if>
+            <if test="createuserid != null "> and createuserid = #{createuserid}</if>
+            <if test="spr != null "> and spr = #{spr}</if>
+            <if test="sptime != null "> and sptime = #{sptime}</if>
+            <if test="spyj != null  and spyj != ''"> and spyj = #{spyj}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
         </where>
+        order by month desc
     </select>
 
-    <select id="selectByThemeMonthplanById" parameterType="Long" resultMap="ByThemeMonthplanResult">
+    <select id="selectByThemeMonthplanById" parameterType="String" resultMap="ByThemeMonthplanResult">
         <include refid="selectByThemeMonthplanVo"/>
         where id = #{id}
     </select>
 
-    <insert id="insertByThemeMonthplan" parameterType="ByThemeMonthplan" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insertByThemeMonthplan" parameterType="ByThemeMonthplan">
         insert into by_theme_monthplan
         <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null  and id != ''">id,</if>
             <if test="name != null  and name != ''">name,</if>
+            <if test="schoolid != null ">schoolid,</if>
             <if test="classid != null  and classid != ''">classid,</if>
             <if test="xnxq != null  and xnxq != ''">xnxq,</if>
-            <if test="month != null  and month != ''">month,</if>
+            <if test="month != null ">month,</if>
             <if test="themes != null  and themes != ''">themes,</if>
             <if test="selfthemes != null  and selfthemes != ''">selfthemes,</if>
+            <if test="wxkc != null  and wxkc != ''">wxkc,</if>
             <if test="support != null  and support != ''">support,</if>
             <if test="remarks != null  and remarks != ''">remarks,</if>
             <if test="createuserid != null ">createuserid,</if>
             <if test="createTime != null ">create_time,</if>
+            <if test="spr != null ">spr,</if>
+            <if test="sptime != null ">sptime,</if>
+            <if test="spyj != null  and spyj != ''">spyj,</if>
+            <if test="status != null  and status != ''">status,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null  and id != ''">#{id},</if>
             <if test="name != null  and name != ''">#{name},</if>
+            <if test="schoolid != null ">#{schoolid},</if>
             <if test="classid != null  and classid != ''">#{classid},</if>
             <if test="xnxq != null  and xnxq != ''">#{xnxq},</if>
-            <if test="month != null  and month != ''">#{month},</if>
+            <if test="month != null ">#{month},</if>
             <if test="themes != null  and themes != ''">#{themes},</if>
             <if test="selfthemes != null  and selfthemes != ''">#{selfthemes},</if>
+            <if test="wxkc != null  and wxkc != ''">#{wxkc},</if>
             <if test="support != null  and support != ''">#{support},</if>
             <if test="remarks != null  and remarks != ''">#{remarks},</if>
             <if test="createuserid != null ">#{createuserid},</if>
             <if test="createTime != null ">#{createTime},</if>
+            <if test="spr != null ">#{spr},</if>
+            <if test="sptime != null ">#{sptime},</if>
+            <if test="spyj != null  and spyj != ''">#{spyj},</if>
+            <if test="status != null  and status != ''">#{status},</if>
         </trim>
     </insert>
 
@@ -74,20 +101,26 @@
         update by_theme_monthplan
         <trim prefix="SET" suffixOverrides=",">
             <if test="name != null  and name != ''">name = #{name},</if>
+            <if test="schoolid != null ">schoolid = #{schoolid},</if>
             <if test="classid != null  and classid != ''">classid = #{classid},</if>
             <if test="xnxq != null  and xnxq != ''">xnxq = #{xnxq},</if>
-            <if test="month != null  and month != ''">month = #{month},</if>
+            <if test="month != null ">month = #{month},</if>
             <if test="themes != null  and themes != ''">themes = #{themes},</if>
             <if test="selfthemes != null  and selfthemes != ''">selfthemes = #{selfthemes},</if>
+            <if test="wxkc != null  and wxkc != ''">wxkc = #{wxkc},</if>
             <if test="support != null  and support != ''">support = #{support},</if>
             <if test="remarks != null  and remarks != ''">remarks = #{remarks},</if>
             <if test="createuserid != null ">createuserid = #{createuserid},</if>
             <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="spr != null ">spr = #{spr},</if>
+            <if test="sptime != null ">sptime = #{sptime},</if>
+            <if test="spyj != null  and spyj != ''">spyj = #{spyj},</if>
+            <if test="status != null  and status != ''">status = #{status},</if>
         </trim>
         where id = #{id}
     </update>
 
-    <delete id="deleteByThemeMonthplanById" parameterType="Long">
+    <delete id="deleteByThemeMonthplanById" parameterType="String">
         delete from by_theme_monthplan where id = #{id}
     </delete>
 

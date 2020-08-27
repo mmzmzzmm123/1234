@@ -108,4 +108,13 @@
         </foreach>
     </delete>
 
+    <select id="selectByThemeActivityByThemeIds" parameterType="String" resultMap="ByThemeActivityResult">
+        <include refid="selectByThemeActivityVo"/>
+         where themeid in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        order by themeid,sort
+    </select>
+
 </mapper>
