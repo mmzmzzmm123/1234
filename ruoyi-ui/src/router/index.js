@@ -60,6 +60,12 @@ export const constantRoutes = [{
     hidden: true
   },
   {
+    path: '/activity',
+    component: () =>
+      import('@/views/benyi/activity'),
+    hidden: true
+  },
+  {
     path: '/experience/apply/:id(\\d+)',
     component: () =>
       import('@/views/benyi/experience/choose'),
