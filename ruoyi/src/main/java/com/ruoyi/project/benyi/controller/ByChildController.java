@@ -46,8 +46,9 @@ public class ByChildController extends BaseController {
         startPage();
         byChild.setSchoolid(SecurityUtils.getLoginUser().getUser().getDept().getDeptId());
         //判断是否为班主任
-        if (!schoolCommon.isStringEmpty(schoolCommon.getClassId())) {
-            byChild.setClassid(schoolCommon.getClassId());
+        String classId = schoolCommon.getClassId();
+        if (!schoolCommon.isStringEmpty(classId) && classId != "-1") {
+            byChild.setClassid(classId);
         }
         List<ByChild> list = byChildService.selectByChildList(byChild);
         return getDataTable(list);
@@ -61,9 +62,10 @@ public class ByChildController extends BaseController {
     public TableDataInfo listByCheck(ByChild byChild) {
         byChild.setSchoolid(SecurityUtils.getLoginUser().getUser().getDept().getDeptId());
         //判断是否为班主任
-        System.out.println(schoolCommon.getClassId());
-        if (!schoolCommon.isStringEmpty(schoolCommon.getClassId())) {
-            byChild.setClassid(schoolCommon.getClassId());
+        //System.out.println(schoolCommon.getClassId());
+        String classId = schoolCommon.getClassId();
+        if (!schoolCommon.isStringEmpty(classId) && classId != "-1") {
+            byChild.setClassid(classId);
         }
         List<ByChild> list = byChildService.selectByCheckList(byChild);
         return getDataTable(list);

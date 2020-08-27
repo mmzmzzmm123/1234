@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.UUID;
 
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.project.benyi.domain.ByChild;
+import com.ruoyi.project.benyi.service.IByChildService;
 import com.ruoyi.project.common.SchoolCommon;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +40,9 @@ public class ByClassController extends BaseController {
     private IByClassService byClassService;
     @Autowired
     private SchoolCommon schoolCommon;
+    @Autowired
+    private IByChildService byChildService;
+
 
     /**
      * 查询班级信息列表
@@ -52,7 +57,7 @@ public class ByClassController extends BaseController {
         if (schoolCommon.isSchool() && !schoolCommon.isStringEmpty(classId)) {
             byClass.setBjbh(classId);
             list = byClassService.selectByClassList(byClass);
-        }else{
+        } else {
             list = byClassService.selectByClassList(byClass);
         }
 
@@ -199,7 +204,7 @@ public class ByClassController extends BaseController {
     public AjaxResult deljs(@PathVariable String bjbhs) {
         //首先判断 当前用户是否为学校
         if (schoolCommon.isSchool()) {
-            ByClass byClass=byClassService.selectByClassById(bjbhs);
+            ByClass byClass = byClassService.selectByClassById(bjbhs);
             byClass.setZbjs(null);
             byClass.setPbjs(null);
             byClass.setZljs(null);
@@ -218,6 +223,19 @@ public class ByClassController extends BaseController {
     public AjaxResult remove(@PathVariable String[] bjbhs) {
         //首先判断 当前用户是否为学校
         if (schoolCommon.isSchool()) {
+
+            //判断班级下 是否存在幼儿信息
+            if (bjbhs.length > 0) {
+                for (int i = 0; i < bjbhs.length; i++) {
+                    ByChild byChild = new ByChild();
+                    byChild.setClassid(bjbhs[i]);
+                    List<ByChild> list = byChildService.selectByChildList(byChild);
+                    if (list != null && list.size() > 0) {
+                        return AjaxResult.error("当前班级存在幼儿信息，无法删除班级");
+                    }
+                }
+            }
+
             return toAjax(byClassService.deleteByClassByIds(bjbhs));
         }
         return AjaxResult.error("当前用户非幼儿园，无法删除班级");

@@ -46,8 +46,9 @@ public class ByChildContactpeopleController extends BaseController {
         startPage();
         byChildContactpeople.setSchoolid(SecurityUtils.getLoginUser().getUser().getDept().getDeptId());
         //判断是否为班主任
-        if (!schoolCommon.isStringEmpty(schoolCommon.getClassId())) {
-            byChildContactpeople.setClassid(schoolCommon.getClassId());
+        String classId = schoolCommon.getClassId();
+        if (!schoolCommon.isStringEmpty(classId)) {
+            byChildContactpeople.setClassid(classId);
         }
         List<ByChildContactpeople> list = byChildContactpeopleService.selectByChildContactpeopleList(byChildContactpeople);
         return getDataTable(list);

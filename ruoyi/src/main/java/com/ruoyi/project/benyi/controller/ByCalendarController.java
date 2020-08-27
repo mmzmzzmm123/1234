@@ -59,6 +59,8 @@ public class ByCalendarController extends BaseController {
     private IByThemeWeekplanitemService byThemeWeekplanitemService;
     @Autowired
     private IByThemeActivityService byThemeActivityService;
+    @Autowired
+    private IByChildService byChildService;
 
     /**
      * 查询园历管理(本一)列表
@@ -169,12 +171,14 @@ public class ByCalendarController extends BaseController {
 //        listvi.addAll(getbyteacherBiths((long)207,formatter,hashMap));
 
         //根据不同的班级记载班级园历
-        if (!schoolCommon.isStringEmpty(schoolCommon.getClassId())) {
+        String classId = schoolCommon.getClassId();
+        if (!schoolCommon.isStringEmpty(classId)) {
             //根据不同的班级加载班级园历
-            listvi.addAll(getbyclasses(schoolCommon.getClassId(), formatter, hashMap));
+            listvi.addAll(getbyclasses(classId, formatter, hashMap));
             //加载主题整合活动
-            listvi.addAll(getbyclassthemes(schoolCommon.getClassId(), formatter, hashMap));
+            listvi.addAll(getbyclassthemes(classId, formatter, hashMap));
             //根据班级加载幼儿生日
+            listvi.addAll(getbychilds(classId, formatter));
         }
 
         AjaxResult ajax = AjaxResult.success();
@@ -248,7 +252,7 @@ public class ByCalendarController extends BaseController {
                 }
                 //生日
                 if (byTeacherJbxx.getCsrq() != null) {
-                    String timefor = formatter.format(byTeacherJbxx.getCjgzrq());
+                    String timefor = formatter.format(byTeacherJbxx.getCsrq());
                     timefor = timefor.replaceAll(timefor.split("-")[0], strCurrentYear);
 
                     ByCalendarShow by = new ByCalendarShow();
@@ -341,6 +345,39 @@ public class ByCalendarController extends BaseController {
             }
         }
 
+        return listvi;
+    }
+
+    //获取班级幼儿生日列表
+    private List<ByCalendarShow> getbychilds(String classId, SimpleDateFormat formatter) {
+        List<ByCalendarShow> listvi = new ArrayList<>();
+
+        Long deptId = SecurityUtils.getLoginUser().getUser().getDept().getDeptId();
+        ByChild byChild = new ByChild();
+        byChild.setSchoolid(deptId);
+        byChild.setClassid(classId);
+        byChild.setStatus("0");
+        List<ByChild> list = byChildService.selectByChildList(byChild);
+        if (list != null && list.size() > 0) {
+            String strCurrentYear = schoolCommon.getCurrentYear();
+            ByCalendarShow by = null;
+            for (int i = 0; i < list.size(); i++) {
+                by = new ByCalendarShow();
+                ByChild byNewChild = list.get(i);
+                if (byNewChild.getCsrq() != null) {
+                    by.setId(byNewChild.getId());
+                    by.setTitle(byNewChild.getName() + "-生日");
+
+                    String timefor = formatter.format(byNewChild.getCsrq());
+                    timefor = timefor.replaceAll(timefor.split("-")[0], strCurrentYear);
+
+                    by.setStart(timefor);
+                    by.setEnd(timefor);
+                    by.setColor("#b37feb");
+                    listvi.add(by);
+                }
+            }
+        }
         return listvi;
     }
 

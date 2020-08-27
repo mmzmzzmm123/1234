@@ -27,14 +27,13 @@ import com.ruoyi.framework.web.page.TableDataInfo;
 
 /**
  * 园历管理(班级)Controller
- * 
+ *
  * @author tsbz
  * @date 2020-05-06
  */
 @RestController
 @RequestMapping("/benyi/schoolcalendarclass")
-public class BySchoolcalendarClassController extends BaseController
-{
+public class BySchoolcalendarClassController extends BaseController {
     @Autowired
     private IBySchoolcalendarClassService bySchoolcalendarClassService;
 
@@ -47,17 +46,16 @@ public class BySchoolcalendarClassController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('benyi:schoolcalendarclass:list')")
     @GetMapping("/list")
-    public TableDataInfo list(BySchoolcalendarClass bySchoolcalendarClass)
-    {
+    public TableDataInfo list(BySchoolcalendarClass bySchoolcalendarClass) {
         String strClassId = schoolCommon.getClassId();
-        if(!schoolCommon.isStringEmpty(strClassId)){
+        if (!schoolCommon.isStringEmpty(strClassId)) {
             startPage();
             bySchoolcalendarClass.setClassid(strClassId);
             List<BySchoolcalendarClass> list = bySchoolcalendarClassService.selectBySchoolcalendarClassList(bySchoolcalendarClass);
             //System.out.println("---------------------分页"+list);
             return getDataTable(list);
-        }else{
-            List<BySchoolcalendarClass> list =new ArrayList<>();
+        } else {
+            List<BySchoolcalendarClass> list = new ArrayList<>();
             return getDataTable(list);
         }
 
@@ -68,8 +66,7 @@ public class BySchoolcalendarClassController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('benyi:schoolcalendarclass:list')")
     @GetMapping("/listAll")
-    public TableDataInfo listAll(BySchoolcalendarClass bySchoolcalendarClass)
-    {
+    public TableDataInfo listAll(BySchoolcalendarClass bySchoolcalendarClass) {
         List<BySchoolcalendarClass> listAll = bySchoolcalendarClassService.selectBySchoolcalendarClassList(bySchoolcalendarClass);
         //System.out.println("---------------------没有分页"+listAll);
         return getDataTable(listAll);
@@ -81,8 +78,7 @@ public class BySchoolcalendarClassController extends BaseController
     @PreAuthorize("@ss.hasPermi('benyi:schoolcalendarclass:export')")
     @Log(title = "园历管理(班级)", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
-    public AjaxResult export(BySchoolcalendarClass bySchoolcalendarClass)
-    {
+    public AjaxResult export(BySchoolcalendarClass bySchoolcalendarClass) {
         List<BySchoolcalendarClass> list = bySchoolcalendarClassService.selectBySchoolcalendarClassList(bySchoolcalendarClass);
         ExcelUtil<BySchoolcalendarClass> util = new ExcelUtil<BySchoolcalendarClass>(BySchoolcalendarClass.class);
         return util.exportExcel(list, "schoolcalendarclass");
@@ -93,8 +89,7 @@ public class BySchoolcalendarClassController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('benyi:schoolcalendarclass:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
-    {
+    public AjaxResult getInfo(@PathVariable("id") Long id) {
         return AjaxResult.success(bySchoolcalendarClassService.selectBySchoolcalendarClassById(id));
     }
 
@@ -104,11 +99,10 @@ public class BySchoolcalendarClassController extends BaseController
     @PreAuthorize("@ss.hasPermi('benyi:schoolcalendarclass:add')")
     @Log(title = "园历管理(班级)", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody BySchoolcalendarClass bySchoolcalendarClass)
-    {
+    public AjaxResult add(@RequestBody BySchoolcalendarClass bySchoolcalendarClass) {
         String strClassId = schoolCommon.getClassId();
         //判断当前用户是否有班级
-        if(!schoolCommon.isStringEmpty(strClassId)) {
+        if (!schoolCommon.isStringEmpty(strClassId)) {
             //设置创建时间为当前时间
             bySchoolcalendarClass.setCreatetime(new Date());
             //设置学年信息  从学校公共类调取方法 传入活动时间进行判断
@@ -119,7 +113,7 @@ public class BySchoolcalendarClassController extends BaseController
             bySchoolcalendarClass.setDeptid(SecurityUtils.getLoginUser().getUser().getDept().getDeptId());
             bySchoolcalendarClass.setClassid(strClassId);
             return toAjax(bySchoolcalendarClassService.insertBySchoolcalendarClass(bySchoolcalendarClass));
-        }else {
+        } else {
             return AjaxResult.error("当前用户下没有班级，无法创建园历");
         }
 
@@ -131,11 +125,10 @@ public class BySchoolcalendarClassController extends BaseController
     @PreAuthorize("@ss.hasPermi('benyi:schoolcalendarclass:edit')")
     @Log(title = "园历管理(班级)", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody BySchoolcalendarClass bySchoolcalendarClass)
-    {
-        if(!schoolCommon.isStringEmpty(schoolCommon.getClassId())){
+    public AjaxResult edit(@RequestBody BySchoolcalendarClass bySchoolcalendarClass) {
+        if (!schoolCommon.isStringEmpty(schoolCommon.getClassId())) {
             return toAjax(bySchoolcalendarClassService.updateBySchoolcalendarClass(bySchoolcalendarClass));
-        }else{
+        } else {
             return AjaxResult.error("当前用户下没有班级，无法修改园历");
         }
     }
@@ -145,13 +138,12 @@ public class BySchoolcalendarClassController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('benyi:schoolcalendarclass:remove')")
     @Log(title = "园历管理(班级)", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
-    {
+    @DeleteMapping("/{ids}")
+    public AjaxResult remove(@PathVariable Long[] ids) {
         //判断当前用户下是否有班级
-        if(!schoolCommon.isStringEmpty(schoolCommon.getClassId())) {
+        if (!schoolCommon.isStringEmpty(schoolCommon.getClassId())) {
             return toAjax(bySchoolcalendarClassService.deleteBySchoolcalendarClassByIds(ids));
-        }else {
+        } else {
             return AjaxResult.error("当前用户下没有班级,无法删除园历");
         }
 

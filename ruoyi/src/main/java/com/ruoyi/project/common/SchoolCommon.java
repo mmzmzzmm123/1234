@@ -3,10 +3,7 @@ package com.ruoyi.project.common;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.framework.security.LoginUser;
 import com.ruoyi.framework.web.domain.server.Sys;
-import com.ruoyi.project.system.domain.ByClass;
-import com.ruoyi.project.system.domain.BySchool;
-import com.ruoyi.project.system.domain.SysDept;
-import com.ruoyi.project.system.domain.SysUser;
+import com.ruoyi.project.system.domain.*;
 import com.ruoyi.project.system.service.IByClassService;
 import com.ruoyi.project.system.service.IBySchoolService;
 import com.ruoyi.project.system.service.ISysDeptService;
@@ -101,6 +98,7 @@ public class SchoolCommon {
      * 判断当前用户是否拥有班级
      **/
     public String getClassId() {
+        String strClassId = "-1";
         SysUser sysUser = getUser();
         ByClass byClass = new ByClass();
         //根据用户id来设置主班教师,配班教师,助理教师的教师id
@@ -114,8 +112,26 @@ public class SchoolCommon {
             //如果实体byclassnew不为空,那么取出它的班级编号
             return byClassNew.getBjbh();
         } else {
-            return "";
+//            //如果为空 确认当前用户的角色是否为班长、配班、助理、实习教师
+//            List<SysRole> listRole = SecurityUtils.getLoginUser().getUser().getRoles();
+//            if (listRole != null && listRole.size() > 0) {
+//                for (int i = 0; i < listRole.size(); i++) {
+//                    System.out.println(listRole.get(i).getRoleId() == (102));
+//                    //为班长、配班、助理、实习教师
+//                    if (listRole.get(i).getRoleId() == 102 || listRole.get(i).getRoleId() == 104 || listRole.get(i).getRoleId() == 105 || listRole.get(i).getRoleId() == 105) {
+//                        System.out.println("未设置当前账户所在班级");
+//                        strClassId = "-1";
+//                    } else {
+//                        strClassId = "";
+//                        break;
+//                    }
+//                }
+//            } else {
+//                //没设置角色
+//                strClassId = "-1";
+//            }
         }
+        return "";
     }
 
     public String getCurrentXnXq() {
