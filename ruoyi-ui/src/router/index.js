@@ -159,6 +159,13 @@ export const constantRoutes = [
         meta:{
           requireAuth: false,//加该字段,表示进入这个路由是需要登录的true
         },
+      },{
+        path: '/importHtml',
+        name: 'importHtml',
+        component: resolve => require(['../views/bookmark/common/ImportHtml.vue'], resolve),
+        meta:{
+          requireAuth: true,//加该字段,表示进入这个路由是需要登录的true
+        },
       }
     ],
 

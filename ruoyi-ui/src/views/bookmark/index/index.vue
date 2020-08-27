@@ -24,7 +24,11 @@
       <div class="reminder">工具箱</div>
       <div class="aside-title"><i class="el-icon-s-tools"></i><span>收藏同步</span></div>
       <div class="aside-title"><i class="el-icon-help"></i><span>发现书签</span></div>
-      <div class="aside-title"><i class="el-icon-s-platform"></i><span>任意门</span></div>
+      <router-link :to="{ name: 'importHtml' }">
+      <div class="aside-title">
+        <i class="el-icon-s-platform"></i><span>导入书签</span>
+      </div>
+      </router-link>
       <div class="aside-title"><i class="el-icon-message-solid"></i><span>收件箱</span></div>
 
 <!--      <el-footer class="aside-navigation">-->
