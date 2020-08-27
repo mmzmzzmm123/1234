@@ -8,8 +8,7 @@ import java.util.List;
 
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.project.benyi.domain.*;
-import com.ruoyi.project.benyi.service.IBySchoolcalendarClassService;
-import com.ruoyi.project.benyi.service.IBySchoolcalendarService;
+import com.ruoyi.project.benyi.service.*;
 import com.ruoyi.project.common.SchoolCommon;
 import com.ruoyi.project.system.domain.ByTeacherJbxx;
 import com.ruoyi.project.system.domain.SysDictData;
@@ -28,7 +27,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.ruoyi.framework.aspectj.lang.annotation.Log;
 import com.ruoyi.framework.aspectj.lang.enums.BusinessType;
-import com.ruoyi.project.benyi.service.IByCalendarService;
 import com.ruoyi.framework.web.controller.BaseController;
 import com.ruoyi.framework.web.domain.AjaxResult;
 import com.ruoyi.common.utils.poi.ExcelUtil;
@@ -42,8 +40,7 @@ import com.ruoyi.framework.web.page.TableDataInfo;
  */
 @RestController
 @RequestMapping("/benyi/calendar")
-public class ByCalendarController extends BaseController
-{
+public class ByCalendarController extends BaseController {
     @Autowired
     private IByCalendarService byCalendarService;
     @Autowired
@@ -56,14 +53,19 @@ public class ByCalendarController extends BaseController
     private SchoolCommon schoolCommon;
     @Autowired
     private IByTeacherJbxxService byTeacherJbxxService;
+    @Autowired
+    private IByThemeWeekplanService byThemeWeekplanService;
+    @Autowired
+    private IByThemeWeekplanitemService byThemeWeekplanitemService;
+    @Autowired
+    private IByThemeActivityService byThemeActivityService;
 
     /**
      * 查询园历管理(本一)列表
      */
     @PreAuthorize("@ss.hasPermi('benyi:calendar:list')")
     @GetMapping("/list")
-    public TableDataInfo list(ByCalendar byCalendar)
-    {
+    public TableDataInfo list(ByCalendar byCalendar) {
         startPage();
         List<ByCalendar> list = byCalendarService.selectByCalendarList(byCalendar);
         return getDataTable(list);
@@ -75,8 +77,7 @@ public class ByCalendarController extends BaseController
     @PreAuthorize("@ss.hasPermi('benyi:calendar:export')")
     @Log(title = "园历管理(本一)", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
-    public AjaxResult export(ByCalendar byCalendar)
-    {
+    public AjaxResult export(ByCalendar byCalendar) {
         List<ByCalendar> list = byCalendarService.selectByCalendarList(byCalendar);
         ExcelUtil<ByCalendar> util = new ExcelUtil<ByCalendar>(ByCalendar.class);
         return util.exportExcel(list, "calendar");
@@ -87,8 +88,7 @@ public class ByCalendarController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('benyi:calendar:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
-    {
+    public AjaxResult getInfo(@PathVariable("id") Long id) {
         return AjaxResult.success(byCalendarService.selectByCalendarById(id));
     }
 
@@ -98,8 +98,7 @@ public class ByCalendarController extends BaseController
     @PreAuthorize("@ss.hasPermi('benyi:calendar:add')")
     @Log(title = "园历管理(本一)", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody ByCalendar byCalendar)
-    {
+    public AjaxResult add(@RequestBody ByCalendar byCalendar) {
         byCalendar.setCreateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
         byCalendar.setStylecolor("#eb2f96");
         byCalendar.setCreatetime(new Date());
@@ -112,8 +111,7 @@ public class ByCalendarController extends BaseController
     @PreAuthorize("@ss.hasPermi('benyi:calendar:edit')")
     @Log(title = "园历管理(本一)", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody ByCalendar byCalendar)
-    {
+    public AjaxResult edit(@RequestBody ByCalendar byCalendar) {
         return toAjax(byCalendarService.updateByCalendar(byCalendar));
     }
 
@@ -122,9 +120,8 @@ public class ByCalendarController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('benyi:calendar:remove')")
     @Log(title = "园历管理(本一)", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
-    {
+    @DeleteMapping("/{ids}")
+    public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(byCalendarService.deleteByCalendarByIds(ids));
     }
 
@@ -137,21 +134,21 @@ public class ByCalendarController extends BaseController
         //将类型颜色样式加载到字典
         HashMap<String, String> hashMap = new HashMap<>();
         for (SysDictData calendartype : dictDataService.selectDictDataByType("sys_schoolcalendartype")) {
-            System.out.println("====sys_yebjlx.getDictValue()"+calendartype.getDictValue());
-            System.out.println("=====calendartype.getCssClass()"+calendartype.getCssClass());
-            hashMap.put(calendartype.getDictValue(),calendartype.getCssClass());
+            System.out.println("====sys_yebjlx.getDictValue()" + calendartype.getDictValue());
+            System.out.println("=====calendartype.getCssClass()" + calendartype.getCssClass());
+            hashMap.put(calendartype.getDictValue(), calendartype.getCssClass());
         }
         //定义返回列表
-        List<ByCalendarShow> listvi= new ArrayList<>();
-        SimpleDateFormat formatter=new SimpleDateFormat("yyyy-MM-dd");
+        List<ByCalendarShow> listvi = new ArrayList<>();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         //加载本一园历
         List<ByCalendar> list = byCalendarService.selectByCalendarList(byCalendar);
-        if(list.size()>0){
-            for (ByCalendar calendar:list) {
+        if (list.size() > 0) {
+            for (ByCalendar calendar : list) {
                 ByCalendarShow by = new ByCalendarShow();
                 by.setId(calendar.getId());
                 by.setTitle(calendar.getName());
-                System.out.println("title:"+calendar.getName());
+                System.out.println("title:" + calendar.getName());
                 by.setStart(formatter.format(calendar.getActivitytime()));
                 by.setEnd(formatter.format(calendar.getActivityendtime()));
                 by.setColor(hashMap.get(calendar.getType()));
@@ -160,21 +157,23 @@ public class ByCalendarController extends BaseController
         }
 
         //幼儿园登陆展示
-        if (schoolCommon.isSchool() == true){
+        if (schoolCommon.isSchool() == true) {
             Long schoolId = SecurityUtils.getLoginUser().getUser().getDeptId();
             //根据不同的幼儿园加载幼儿园园历
             //(long)207
-            listvi.addAll(getbySchoolcalendars(schoolId,formatter,hashMap));
+            listvi.addAll(getbySchoolcalendars(schoolId, formatter, hashMap));
             //根据不同的幼儿园加载幼儿园园历
-            listvi.addAll(getbyteacherBiths(schoolId,formatter,hashMap));
+            listvi.addAll(getbyteacherBiths(schoolId, formatter, hashMap));
         }
 //        listvi.addAll(getbySchoolcalendars((long)207,formatter,hashMap));
 //        listvi.addAll(getbyteacherBiths((long)207,formatter,hashMap));
 
         //根据不同的班级记载班级园历
-        if (schoolCommon.getClassId()!=""){
+        if (!schoolCommon.isStringEmpty(schoolCommon.getClassId())) {
             //根据不同的班级加载班级园历
-            listvi.addAll(getbyclasses(schoolCommon.getClassId(),formatter,hashMap));
+            listvi.addAll(getbyclasses(schoolCommon.getClassId(), formatter, hashMap));
+            //加载主题整合活动
+            listvi.addAll(getbyclassthemes(schoolCommon.getClassId(), formatter, hashMap));
             //根据班级加载幼儿生日
         }
 
@@ -187,16 +186,16 @@ public class ByCalendarController extends BaseController
     /**
      * 根据不同的幼儿园加载幼儿园园历
      */
-    private List<ByCalendarShow> getbySchoolcalendars(Long schoolId,SimpleDateFormat formatter,HashMap<String, String> hashMap){
-        List<ByCalendarShow> listvi= new ArrayList<>();
+    private List<ByCalendarShow> getbySchoolcalendars(Long schoolId, SimpleDateFormat formatter, HashMap<String, String> hashMap) {
+        List<ByCalendarShow> listvi = new ArrayList<>();
 
         BySchoolcalendar bySchoolcalendar = new BySchoolcalendar();
         //设置幼儿园
         bySchoolcalendar.setDeptid(schoolId);
 
         List<BySchoolcalendar> bySchoolcalendarList = bySchoolcalendarService.selectBySchoolcalendarList(bySchoolcalendar);
-        if(bySchoolcalendarList.size()>0){
-            for (BySchoolcalendar bsc:bySchoolcalendarList) {
+        if (bySchoolcalendarList.size() > 0) {
+            for (BySchoolcalendar bsc : bySchoolcalendarList) {
                 ByCalendarShow by = new ByCalendarShow();
                 by.setId(bsc.getId());
                 by.setTitle(bsc.getName());
@@ -212,14 +211,14 @@ public class ByCalendarController extends BaseController
     /**
      * 根据不同的幼儿园加载教师生日
      */
-    private List<ByCalendarShow> getbyteacherBiths(Long schoolId,SimpleDateFormat formatter,HashMap<String, String> hashMap){
-        SysUser sysUser=new SysUser();
+    private List<ByCalendarShow> getbyteacherBiths(Long schoolId, SimpleDateFormat formatter, HashMap<String, String> hashMap) {
+        SysUser sysUser = new SysUser();
         sysUser.setDeptId(schoolId);
         ByTeacherJbxx byTeacherJbxx = new ByTeacherJbxx();
         byTeacherJbxx.setUser(sysUser);
         List<ByTeacherJbxx> listTeacherBirth = byTeacherJbxxService.selectByTeacherJbxxList(byTeacherJbxx);
 
-        List<ByCalendarShow> listvi= new ArrayList<>();
+        List<ByCalendarShow> listvi = new ArrayList<>();
         //系统内员工的生日、入职日期信息
         System.out.println("listTeacherBirth.size()===" + listTeacherBirth.size());
         if (listTeacherBirth != null && listTeacherBirth.size() > 0) {
@@ -228,56 +227,57 @@ public class ByCalendarController extends BaseController
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
                 //创建一个教师实体类，并赋值
-                byTeacherJbxx=listTeacherBirth.get(i);
-                String strCurrentYear=schoolCommon.getCurrentYear();
+                byTeacherJbxx = listTeacherBirth.get(i);
+                String strCurrentYear = schoolCommon.getCurrentYear();
                 System.out.println("当前年===" + strCurrentYear);
 
                 //参加工作日期
-                if(byTeacherJbxx.getCjgzrq()!=null){
-                    String timefor =  formatter.format(byTeacherJbxx.getCjgzrq());
-                    timefor = timefor.replaceAll(timefor.split("-")[0],strCurrentYear);
+                if (byTeacherJbxx.getCjgzrq() != null) {
+                    String timefor = formatter.format(byTeacherJbxx.getCjgzrq());
+                    timefor = timefor.replaceAll(timefor.split("-")[0], strCurrentYear);
 
                     ByCalendarShow by = new ByCalendarShow();
                     //by.setId((long)000);
-                    by.setTitle(listTeacherBirth.get(i).getUser().getNickName()+"-合同满年期限");
+                    by.setTitle(listTeacherBirth.get(i).getUser().getNickName() + "-合同满年期限");
                     by.setStart(timefor);
                     by.setEnd(timefor);
                     //教师生日颜色
                     by.setColor("#13c2c2");
                     listvi.add(by);
-                    System.out.println("当前年工作日期timefor===" + timefor+"====="+listTeacherBirth.get(i).getUser().getNickName()+"-合同满年期限");
+                    System.out.println("当前年工作日期timefor===" + timefor + "=====" + listTeacherBirth.get(i).getUser().getNickName() + "-合同满年期限");
                 }
                 //生日
-                if(byTeacherJbxx.getCsrq()!=null){
-                    String timefor =  formatter.format(byTeacherJbxx.getCjgzrq());
-                    timefor = timefor.replaceAll(timefor.split("-")[0],strCurrentYear);
+                if (byTeacherJbxx.getCsrq() != null) {
+                    String timefor = formatter.format(byTeacherJbxx.getCjgzrq());
+                    timefor = timefor.replaceAll(timefor.split("-")[0], strCurrentYear);
 
                     ByCalendarShow by = new ByCalendarShow();
                     //by.setId((long)000);
-                    by.setTitle(listTeacherBirth.get(i).getUser().getNickName()+"-生日");
+                    by.setTitle(listTeacherBirth.get(i).getUser().getNickName() + "-生日");
                     by.setStart(timefor);
                     by.setEnd(timefor);
                     //教师生日颜色
                     by.setColor("#722ed1");
                     listvi.add(by);
-                    System.out.println("当前年生日timefor===" + timefor+"====="+listTeacherBirth.get(i).getUser().getNickName()+"-生日");
+                    System.out.println("当前年生日timefor===" + timefor + "=====" + listTeacherBirth.get(i).getUser().getNickName() + "-生日");
                 }
             }
         }
         return listvi;
     }
+
     /**
      * 根据不同的班级加载班级园历
      */
-    private List<ByCalendarShow> getbyclasses(String classlId,SimpleDateFormat formatter,HashMap<String, String> hashMap){
-        List<ByCalendarShow> listvi= new ArrayList<>();
+    private List<ByCalendarShow> getbyclasses(String classId, SimpleDateFormat formatter, HashMap<String, String> hashMap) {
+        List<ByCalendarShow> listvi = new ArrayList<>();
 
         BySchoolcalendarClass bySchoolcalendarClass = new BySchoolcalendarClass();
         //设置班级
-        bySchoolcalendarClass.setClassid(classlId);
+        bySchoolcalendarClass.setClassid(classId);
         List<BySchoolcalendarClass> bySchoolcalendarClassList = bySchoolcalendarClassService.selectBySchoolcalendarClassList(bySchoolcalendarClass);
-        if(bySchoolcalendarClassList.size()>0){
-            for (BySchoolcalendarClass bscc:bySchoolcalendarClassList) {
+        if (bySchoolcalendarClassList.size() > 0) {
+            for (BySchoolcalendarClass bscc : bySchoolcalendarClassList) {
                 ByCalendarShow by = new ByCalendarShow();
                 by.setId(bscc.getId());
                 by.setTitle(bscc.getName());
@@ -287,6 +287,60 @@ public class ByCalendarController extends BaseController
                 listvi.add(by);
             }
         }
+
+        //班级课程
+
+        return listvi;
+    }
+
+    //获取班级主题整合活动
+    private List<ByCalendarShow> getbyclassthemes(String classId, SimpleDateFormat formatter, HashMap<String, String> hashMap) {
+
+        List<ByCalendarShow> listvi = new ArrayList<>();
+        Long deptId = SecurityUtils.getLoginUser().getUser().getDept().getDeptId();
+        ByThemeWeekplan byThemeWeekplan = new ByThemeWeekplan();
+        byThemeWeekplan.setSchoolid(deptId);
+        byThemeWeekplan.setClassid(classId);
+        byThemeWeekplan.setStatus("2");
+        //学年学期？
+
+        List<ByThemeWeekplan> listByThemeWeekplan = byThemeWeekplanService.selectByThemeWeekplanList(byThemeWeekplan);
+        if (listByThemeWeekplan != null && listByThemeWeekplan.size() > 0) {
+            ByThemeWeekplanitem byThemeWeekplanitem = null;
+            for (int i = 0; i < listByThemeWeekplan.size(); i++) {
+                byThemeWeekplanitem = new ByThemeWeekplanitem();
+                String wpId = listByThemeWeekplan.get(i).getId();
+
+                byThemeWeekplanitem.setWpid(wpId);
+                List<ByThemeWeekplanitem> listByThemeWeekplanitem = byThemeWeekplanitemService.selectByThemeWeekplanitemList(byThemeWeekplanitem);
+                if (listByThemeWeekplanitem != null && listByThemeWeekplanitem.size() > 0) {
+                    for (int j = 0; j < listByThemeWeekplanitem.size(); j++) {
+                        if (!schoolCommon.isStringEmpty(listByThemeWeekplanitem.get(j).getActivityid())) {
+                            ByCalendarShow by = new ByCalendarShow();
+                            by.setId(listByThemeWeekplanitem.get(j).getId());
+
+                            String[] strArr = listByThemeWeekplanitem.get(j).getActivityid().split(";");
+                            String activityName = "";
+                            if (strArr.length > 0) {
+                                for (int g = 0; g < strArr.length; g++) {
+                                    if (!schoolCommon.isStringEmpty(strArr[g])) {
+                                        activityName = activityName + byThemeActivityService.selectByThemeActivityById(Long.valueOf(strArr[g])).getName() + ";";
+                                    }
+                                }
+                            }
+
+                            by.setTitle("主题整合(" + activityName + ")");
+                            by.setStart(formatter.format(listByThemeWeekplanitem.get(j).getDaytime()));
+                            by.setEnd(formatter.format(listByThemeWeekplanitem.get(j).getDaytime()));
+                            by.setColor(hashMap.get("03"));
+                            listvi.add(by);
+                        }
+                    }
+                }
+
+            }
+        }
+
         return listvi;
     }
 
