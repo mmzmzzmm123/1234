@@ -5,16 +5,17 @@
 <mapper namespace="com.ruoyi.project.benyi.mapper.ByPlanweekitemMapper">
 
     <resultMap type="ByPlanweekitem" id="ByPlanweekitemResult">
-                    <result property="id"    column="id"    />
-                    <result property="wid"    column="wid"    />
-                    <result property="activitytype"    column="activitytype"    />
-                    <result property="content"    column="content"    />
-                    <result property="activitytime"    column="activitytime"    />
-                    <result property="createuserid"    column="createuserid"    />
-                    <result property="createTime"    column="create_time"    />
-                    <result property="updateuserid"    column="updateuserid"    />
-                    <result property="updateTime"    column="update_time"    />
-            </resultMap>
+        <result property="id" column="id"/>
+        <result property="wid" column="wid"/>
+        <result property="activitytype" column="activitytype"/>
+        <result property="content" column="content"/>
+        <result property="activitytime" column="activitytime"/>
+        <result property="createuserid" column="createuserid"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateuserid" column="updateuserid"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="day" column="day"/>
+    </resultMap>
 
     <sql id="selectByPlanweekitemVo">
         select id, wid, activitytype, content, activitytime, createuserid, create_time, updateuserid, update_time from by_planweekitem
@@ -23,13 +24,14 @@
     <select id="selectByPlanweekitemList" parameterType="ByPlanweekitem" resultMap="ByPlanweekitemResult">
         <include refid="selectByPlanweekitemVo"/>
         <where>
-                                                                                                    <if test="wid != null  and wid != ''"> and wid = #{wid}</if>
-                                                                                                            <if test="activitytype != null  and activitytype != ''"> and activitytype = #{activitytype}</if>
-                                                                                                            <if test="content != null  and content != ''"> and content = #{content}</if>
-                                                                                                            <if test="activitytime != null "> and activitytime = #{activitytime}</if>
-                                                                                                            <if test="createuserid != null "> and createuserid = #{createuserid}</if>
-                                                                                                                                        <if test="updateuserid != null "> and updateuserid = #{updateuserid}</if>
-                                                                                    </where>
+            <if test="wid != null  and wid != ''">and wid = #{wid}</if>
+            <if test="activitytype != null  and activitytype != ''">and activitytype = #{activitytype}</if>
+            <if test="content != null  and content != ''">and content = #{content}</if>
+            <if test="activitytime != null ">and activitytime = #{activitytime}</if>
+            <if test="createuserid != null ">and createuserid = #{createuserid}</if>
+            <if test="updateuserid != null ">and updateuserid = #{updateuserid}</if>
+            <if test="day != null  and day != ''">and day = #{day}</if>
+        </where>
     </select>
 
     <select id="selectByPlanweekitemById" parameterType="Long" resultMap="ByPlanweekitemResult">
@@ -40,39 +42,42 @@
     <insert id="insertByPlanweekitem" parameterType="ByPlanweekitem" useGeneratedKeys="true" keyProperty="id">
         insert into by_planweekitem
         <trim prefix="(" suffix=")" suffixOverrides=",">
-                                                                            <if test="wid != null  and wid != ''">wid,</if>
-                                                                <if test="activitytype != null  and activitytype != ''">activitytype,</if>
-                                                                <if test="content != null  and content != ''">content,</if>
-                                                                <if test="activitytime != null ">activitytime,</if>
-                                                                <if test="createuserid != null ">createuserid,</if>
-                                                                <if test="createTime != null ">create_time,</if>
-                                                                <if test="updateuserid != null ">updateuserid,</if>
-                                                                <if test="updateTime != null ">update_time,</if>
-                                    </trim>
+            <if test="wid != null  and wid != ''">wid,</if>
+            <if test="activitytype != null  and activitytype != ''">activitytype,</if>
+            <if test="content != null  and content != ''">content,</if>
+            <if test="activitytime != null ">activitytime,</if>
+            <if test="createuserid != null ">createuserid,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateuserid != null ">updateuserid,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="day != null  and day != ''">day,</if>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-                                                                            <if test="wid != null  and wid != ''">#{wid},</if>
-                                                                <if test="activitytype != null  and activitytype != ''">#{activitytype},</if>
-                                                                <if test="content != null  and content != ''">#{content},</if>
-                                                                <if test="activitytime != null ">#{activitytime},</if>
-                                                                <if test="createuserid != null ">#{createuserid},</if>
-                                                                <if test="createTime != null ">#{createTime},</if>
-                                                                <if test="updateuserid != null ">#{updateuserid},</if>
-                                                                <if test="updateTime != null ">#{updateTime},</if>
-                                    </trim>
+            <if test="wid != null  and wid != ''">#{wid},</if>
+            <if test="activitytype != null  and activitytype != ''">#{activitytype},</if>
+            <if test="content != null  and content != ''">#{content},</if>
+            <if test="activitytime != null ">#{activitytime},</if>
+            <if test="createuserid != null ">#{createuserid},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateuserid != null ">#{updateuserid},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="day != null  and day != ''">#{day},</if>
+        </trim>
     </insert>
 
     <update id="updateByPlanweekitem" parameterType="ByPlanweekitem">
         update by_planweekitem
         <trim prefix="SET" suffixOverrides=",">
-                                                                            <if test="wid != null  and wid != ''">wid = #{wid},</if>
-                                                                <if test="activitytype != null  and activitytype != ''">activitytype = #{activitytype},</if>
-                                                                <if test="content != null  and content != ''">content = #{content},</if>
-                                                                <if test="activitytime != null ">activitytime = #{activitytime},</if>
-                                                                <if test="createuserid != null ">createuserid = #{createuserid},</if>
-                                                                <if test="createTime != null ">create_time = #{createTime},</if>
-                                                                <if test="updateuserid != null ">updateuserid = #{updateuserid},</if>
-                                                                <if test="updateTime != null ">update_time = #{updateTime},</if>
-                                    </trim>
+            <if test="wid != null  and wid != ''">wid = #{wid},</if>
+            <if test="activitytype != null  and activitytype != ''">activitytype = #{activitytype},</if>
+            <if test="content != null  and content != ''">content = #{content},</if>
+            <if test="activitytime != null ">activitytime = #{activitytime},</if>
+            <if test="createuserid != null ">createuserid = #{createuserid},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateuserid != null ">updateuserid = #{updateuserid},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="day != null  and day != ''">day = #{day},</if>
+        </trim>
         where id = #{id}
     </update>
 

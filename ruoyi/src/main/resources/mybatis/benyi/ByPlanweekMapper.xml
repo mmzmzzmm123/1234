@@ -22,11 +22,13 @@
         <result property="status" column="status"/>
         <result property="shrid" column="shrid"/>
         <result property="shtime" column="shtime"/>
-        <result property="shyj"    column="shyj"    />
+        <result property="shyj" column="shyj"/>
+        <result property="weekly" column="weekly"/>
+        <result property="month" column="month"/>
     </resultMap>
 
     <sql id="selectByPlanweekVo">
-        select id, schoolid, classid, name, starttime, endtime, themeofweek, jxmb_sh, jxmb_yy, jxmb_jk, jxmb_kx, jxmb_ys, createuserid, create_time, status, shrid, shtime, shyj from by_planweek
+        select id, schoolid, classid, name, month, starttime, endtime, themeofweek, jxmb_sh, jxmb_yy, jxmb_jk, jxmb_kx, jxmb_ys, createuserid, create_time, status, shrid, shtime, shyj, weekly from by_planweek
     </sql>
 
     <select id="selectByPlanweekList" parameterType="ByPlanweek" resultMap="ByPlanweekResult">
@@ -48,6 +50,8 @@
             <if test="shrid != null ">and shrid = #{shrid}</if>
             <if test="shtime != null ">and shtime = #{shtime}</if>
             <if test="shyj != null  and shyj != ''"> and shyj = #{shyj}</if>
+            <if test="weekly != null  and weekly != ''"> and weekly = #{weekly}</if>
+            <if test="month != null ">and month = #{month}</if>
         </where>
     </select>
 
@@ -77,6 +81,8 @@
             <if test="shrid != null ">shrid,</if>
             <if test="shtime != null ">shtime,</if>
             <if test="shyj != null  and shyj != ''">shyj,</if>
+            <if test="weekly != null  and weekly != ''">weekly,</if>
+            <if test="month != null ">month,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null  and id != ''">#{id},</if>
@@ -97,6 +103,8 @@
             <if test="shrid != null ">#{shrid},</if>
             <if test="shtime != null ">#{shtime},</if>
             <if test="shyj != null  and shyj != ''">#{shyj},</if>
+            <if test="weekly != null  and weekly != ''">#{weekly},</if>
+            <if test="month != null ">#{month},</if>
         </trim>
     </insert>
 
@@ -120,6 +128,8 @@
             <if test="shrid != null ">shrid = #{shrid},</if>
             <if test="shtime != null ">shtime = #{shtime},</if>
             <if test="shyj != null  and shyj != ''">shyj = #{shyj},</if>
+            <if test="weekly != null  and weekly != ''">weekly = #{weekly},</if>
+            <if test="month != null ">month = #{month},</if>
         </trim>
         where id = #{id}
     </update>

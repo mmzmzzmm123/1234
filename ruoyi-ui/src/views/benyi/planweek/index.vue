@@ -19,7 +19,7 @@
             :value="dict.dictValue"
           />
         </el-select>
-      </el-form-item> -->
+      </el-form-item>-->
       <el-form-item label="开始时间" prop="starttime">
         <el-date-picker
           clearable
@@ -99,6 +99,11 @@
           </router-link>
         </template>
       </el-table-column>
+      <el-table-column label="月份" align="center" prop="month" width="180">
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.starttime, '{y}-{m}') }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="开始时间" align="center" prop="starttime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.starttime, '{y}-{m}-{d}') }}</span>
@@ -109,6 +114,7 @@
           <span>{{ parseTime(scope.row.endtime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="周次" align="center" prop="weekly" :formatter="weeklyFormat" />
       <el-table-column label="本周主题" align="center" prop="themeofweek" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
@@ -126,7 +132,7 @@
             @click="handleCheck(scope.row)"
             v-hasPermi="['system:planweek:edit']"
             v-show="isShow(scope.row)"
-          >提交</el-button> -->
+          >提交</el-button>-->
           <el-button
             size="mini"
             type="text"
@@ -152,6 +158,17 @@
         <el-form-item label="计划名称" prop="name">
           <el-input v-model="form.name" placeholder="请输入计划名称" />
         </el-form-item>
+        <el-form-item label="月份" prop="month">
+          <el-date-picker
+            clearable
+            size="small"
+            style="width: 200px"
+            v-model="form.month"
+            type="month"
+            value-format="yyyy-MM"
+            placeholder="选择月份"
+          ></el-date-picker>
+        </el-form-item>
         <el-form-item label="开始时间" prop="starttime">
           <el-date-picker
             clearable
@@ -173,6 +190,16 @@
             value-format="yyyy-MM-dd"
             placeholder="选择结束时间"
           ></el-date-picker>
+        </el-form-item>
+        <el-form-item label="周次" prop="weekly">
+          <el-select v-model="form.weekly" placeholder="请选择周次">
+            <el-option
+              v-for="dict in weeklyOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="本周主题" prop="themeofweek">
           <el-input v-model="form.themeofweek" placeholder="请输入本周主题" />
@@ -234,6 +261,8 @@ export default {
       statusOptions: [],
       //班级
       classOptions: [],
+      // 周次
+      weeklyOptions: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -256,37 +285,43 @@ export default {
         createuserid: undefined,
         status: undefined,
         shrid: undefined,
-        shtime: undefined
+        shtime: undefined,
+        weekly: undefined,
+        month: undefined
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
-        name: [{ required: true, message: "计划名称不能为空", trigger: "blur" }],
+        name: [
+          { required: true, message: "计划名称不能为空", trigger: "blur" }
+        ],
         starttime: [
-          { required: true, message: "开始时间不能为空", trigger: "blur" },
+          { required: true, message: "开始时间不能为空", trigger: "blur" }
         ],
         endtime: [
-          { required: true, message: "结束时间不能为空", trigger: "blur" },
+          { required: true, message: "结束时间不能为空", trigger: "blur" }
         ],
         themeofweek: [
-          { required: true, message: "本周主题不能为空", trigger: "blur" },
+          { required: true, message: "本周主题不能为空", trigger: "blur" }
         ],
         jxmbSh: [
-          { required: true, message: "教学目标(社会)不能为空", trigger: "blur" },
+          { required: true, message: "教学目标(社会)不能为空", trigger: "blur" }
         ],
         jxmbYy: [
-          { required: true, message: "教学目标(语言)不能为空", trigger: "blur" },
+          { required: true, message: "教学目标(语言)不能为空", trigger: "blur" }
         ],
         jxmbJk: [
-          { required: true, message: "教学目标(健康)不能为空", trigger: "blur" },
+          { required: true, message: "教学目标(健康)不能为空", trigger: "blur" }
         ],
         jxmbKx: [
-          { required: true, message: "教学目标(科学)不能为空", trigger: "blur" },
+          { required: true, message: "教学目标(科学)不能为空", trigger: "blur" }
         ],
         jxmbYs: [
-          { required: true, message: "教学目标(艺术)不能为空", trigger: "blur" },
-        ]
+          { required: true, message: "教学目标(艺术)不能为空", trigger: "blur" }
+        ],
+        weekly: [{ required: true, message: "周次不能为空", trigger: "blur" }],
+        month: [{ required: true, message: "月份不能为空", trigger: "blur" }]
       }
     };
   },
@@ -296,6 +331,9 @@ export default {
     // 审核状态获取数据
     this.getDicts("sys_dm_planweekstatus").then(response => {
       this.statusOptions = response.data;
+    });
+    this.getDicts("sys_dm_weekly").then(response => {
+      this.weeklyOptions = response.data;
     });
   },
   methods: {
@@ -310,7 +348,7 @@ export default {
     },
     // 获取班级列表
     getClassList() {
-      listClass(null).then((response) => {
+      listClass(null).then(response => {
         this.classOptions = response.rows;
       });
     },
@@ -329,12 +367,16 @@ export default {
     statusFormat(row, column) {
       return this.selectDictLabel(this.statusOptions, row.status);
     },
+    // 性别字典翻译
+    weeklyFormat(row, column) {
+      return this.selectDictLabel(this.weeklyOptions, row.weekly);
+    },
     // 班级字典翻译
     classFormat(row, column) {
       // return this.selectDictLabel(this.classOptions, row.classid);
       var actions = [];
       var datas = this.classOptions;
-      Object.keys(datas).map((key) => {
+      Object.keys(datas).map(key => {
         if (datas[key].bjbh == "" + row.classid) {
           actions.push(datas[key].bjmc);
           return false;
@@ -366,7 +408,9 @@ export default {
         createTime: undefined,
         status: "0",
         shrid: undefined,
-        shtime: undefined
+        shtime: undefined,
+        weekly: undefined,
+        month: undefined
       };
       this.resetForm("form");
     },
@@ -405,23 +449,19 @@ export default {
     /** 审核提交按钮操作 */
     handleCheck(row) {
       const ids = row.id || this.ids;
-      this.$confirm(
-        '确认提交周计划编号为"' + ids + '"的数据项?',
-        "警告",
-        {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning",
-        }
-      )
-        .then(function () {
+      this.$confirm('确认提交周计划编号为"' + ids + '"的数据项?', "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(function() {
           return checkPlanweek(ids);
         })
         .then(() => {
           this.getList();
           this.msgSuccess("提交成功");
         })
-        .catch(function () {});
+        .catch(function() {});
     },
     isShow(row) {
       if (row.status == "1" || row.status == "2") {

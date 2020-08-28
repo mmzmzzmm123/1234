@@ -59,6 +59,12 @@ public class ByPlanweekitem extends BaseEntity {
     @Excel(name = "修改人")
     private Long updateuserid;
 
+    /**
+     * 星期几
+     */
+    @Excel(name = "星期几")
+    private String day;
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -127,6 +133,15 @@ public class ByPlanweekitem extends BaseEntity {
                 .append("createTime", getCreateTime())
                 .append("updateuserid", getUpdateuserid())
                 .append("updateTime", getUpdateTime())
+                .append("day", getDay())
                 .toString();
+    }
+
+    public String getDay() {
+        return day;
+    }
+
+    public void setDay(String day) {
+        this.day = day;
     }
 }

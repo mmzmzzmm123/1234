@@ -49,7 +49,7 @@
           size="small"
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item> -->
+      </el-form-item>-->
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -97,7 +97,11 @@
       </el-col>
     </el-row>
 
-    <el-table v-loading="loading" :data="planweekitemList" @selection-change="handleSelectionChange">
+    <el-table
+      v-loading="loading"
+      :data="planweekitemList"
+      @selection-change="handleSelectionChange"
+    >
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="编号" align="center" prop="id" />
       <el-table-column label="活动内容" align="center" prop="content" />
@@ -113,6 +117,7 @@
           <span>{{ parseTime(scope.row.activitytime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="星期" align="center" prop="day" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -176,8 +181,11 @@
             type="date"
             value-format="yyyy-MM-dd"
             placeholder="选择活动时间"
-            :picker-options="pickerOptions7">
-          ></el-date-picker>
+            :picker-options="pickerOptions7"
+          >></el-date-picker>
+        </el-form-item>
+        <el-form-item label="星期" prop="day">
+          <el-input v-model="form.day" placeholder="请输入星期几" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -200,6 +208,15 @@ import {
 
 import { getPlanweek, listPlanweek } from "@/api/benyi/planweek";
 
+const weekArr = [
+  "星期日",
+  "星期一",
+  "星期二",
+  "星期三",
+  "星期四",
+  "星期五",
+  "星期六"
+];
 export default {
   name: "Planweekitem",
   data() {
@@ -235,12 +252,13 @@ export default {
         content: undefined,
         activitytime: undefined,
         createuserid: undefined,
-        updateuserid: undefined
+        updateuserid: undefined,
+        day: undefined
       },
       // 日期控件 只显示今天和今天以后一周时间区间
       pickerOptions7: {
         disabledDate(time) {
-          let curDate = (new Date()).getTime();
+          let curDate = new Date().getTime();
           let three = 7 * 24 * 3600 * 1000;
           let threeMonths = curDate + three;
           let datestart = Date.now() - 86400000;
@@ -252,14 +270,23 @@ export default {
       form: {},
       // 表单校验
       rules: {
-        activitytype: [{ required: true, message: "活动类型不能为空", trigger: "blur" }],
-        content: [{ required: true, message: "活动内容不能为空", trigger: "blur" }],
-        activitytime: [{ required: true, message: "活动时间不能为空", trigger: "blur" }],
+        activitytype: [
+          { required: true, message: "活动类型不能为空", trigger: "blur" }
+        ],
+        content: [
+          { required: true, message: "活动内容不能为空", trigger: "blur" }
+        ],
+        activitytime: [
+          { required: true, message: "活动时间不能为空", trigger: "blur" }
+        ],
+        day: [
+          { required: true, message: "星期不能为空", trigger: "blur" }
+        ]
       }
     };
   },
   created() {
-    const planweekid  = this.$route.params && this.$route.params.id;
+    const planweekid = this.$route.params && this.$route.params.id;
     this.getPlanweek2(planweekid);
     this.getPlanWeekList();
     this.getDicts("sys_math_type").then(response => {
@@ -269,7 +296,7 @@ export default {
   methods: {
     // 周计划
     getPlanweek2(planweekid) {
-      getPlanweek(planweekid).then((response) => {
+      getPlanweek(planweekid).then(response => {
         this.queryParams.wid = response.data.id;
         this.defaultWeekType = response.data.id;
         this.getList();
@@ -286,7 +313,7 @@ export default {
     },
     // 查询周计划选项
     getPlanWeekList() {
-      listPlanweek().then((response) => {
+      listPlanweek().then(response => {
         this.planweekOptions = response.rows;
       });
     },
@@ -295,7 +322,7 @@ export default {
       // return this.selectDictLabel(this.classOptions, row.classid);
       var actions = [];
       var datas = this.planweekOptions;
-      Object.keys(datas).map((key) => {
+      Object.keys(datas).map(key => {
         if (datas[key].id == "" + row.wid) {
           actions.push(datas[key].name);
           return false;
@@ -323,7 +350,8 @@ export default {
         createuserid: undefined,
         createTime: undefined,
         updateuserid: undefined,
-        updateTime: undefined
+        updateTime: undefined,
+        day: undefined
       };
       this.resetForm("form");
     },

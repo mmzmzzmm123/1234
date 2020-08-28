@@ -121,6 +121,18 @@ public class ByPlanweek extends BaseEntity {
     @Excel(name = "审核意见")
     private String shyj;
 
+    /**
+     * 周次
+     */
+    @Excel(name = "周次")
+    private String weekly;
+
+    /**
+     * 月份
+     */
+    @JsonFormat(pattern = "yyyy-MM")
+    @Excel(name = "月份", width = 30, dateFormat = "yyyy-MM")
+    private Date month;
 
 
     public void setId(String id) {
@@ -272,6 +284,8 @@ public class ByPlanweek extends BaseEntity {
                 .append("shrid", getShrid())
                 .append("shtime", getShtime())
                 .append("shyj", getShyj())
+                .append("weekly", getWeekly())
+                .append("month", getMonth())
                 .toString();
     }
 
@@ -281,5 +295,21 @@ public class ByPlanweek extends BaseEntity {
 
     public void setShyj(String shyj) {
         this.shyj = shyj;
+    }
+
+    public String getWeekly() {
+        return weekly;
+    }
+
+    public void setWeekly(String weekly) {
+        this.weekly = weekly;
+    }
+
+    public Date getMonth() {
+        return month;
+    }
+
+    public void setMonth(Date month) {
+        this.month = month;
     }
 }
