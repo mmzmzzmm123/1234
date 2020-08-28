@@ -1,6 +1,8 @@
 package com.ruoyi.project.benyi.controller;
 
 import java.util.List;
+
+import com.ruoyi.common.utils.SecurityUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -76,6 +78,7 @@ public class ByPlanweekitemController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody ByPlanweekitem byPlanweekitem)
     {
+        byPlanweekitem.setCreateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
         return toAjax(byPlanweekitemService.insertByPlanweekitem(byPlanweekitem));
     }
 
@@ -87,6 +90,7 @@ public class ByPlanweekitemController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody ByPlanweekitem byPlanweekitem)
     {
+        byPlanweekitem.setUpdateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
         return toAjax(byPlanweekitemService.updateByPlanweekitem(byPlanweekitem));
     }
 

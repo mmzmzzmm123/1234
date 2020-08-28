@@ -21,15 +21,6 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="活动内容" prop="content">
-        <el-input
-          v-model="queryParams.content"
-          placeholder="请输入活动内容"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
       <el-form-item label="活动时间" prop="activitytime">
         <el-date-picker
           clearable
@@ -106,28 +97,22 @@
       </el-col>
     </el-row>
 
-    <el-table
-      v-loading="loading"
-      :data="planweekitemList"
-      @selection-change="handleSelectionChange"
-    >
+    <el-table v-loading="loading" :data="planweekitemList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="编号" align="center" prop="id" />
-      <el-table-column label="所属计划" align="center" prop="wid" />
+      <el-table-column label="活动内容" align="center" prop="content" />
+      <el-table-column label="所属计划" align="center" prop="wid" :formatter="themePlanFormat" />
       <el-table-column
         label="活动类型"
         align="center"
         prop="activitytype"
         :formatter="activitytypeFormat"
       />
-      <el-table-column label="活动内容" align="center" prop="content" />
       <el-table-column label="活动时间" align="center" prop="activitytime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.activitytime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="创建人" align="center" prop="createuserid" />
-      <el-table-column label="修改人" align="center" prop="updateuserid" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -169,7 +154,7 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="活动类型">
+        <el-form-item label="活动类型" prop="activitytype">
           <el-select v-model="form.activitytype" placeholder="请选择活动类型">
             <el-option
               v-for="dict in activitytypeOptions"
@@ -191,6 +176,7 @@
             type="date"
             value-format="yyyy-MM-dd"
             placeholder="选择活动时间"
+            :picker-options="pickerOptions7">
           ></el-date-picker>
         </el-form-item>
       </el-form>
@@ -251,10 +237,25 @@ export default {
         createuserid: undefined,
         updateuserid: undefined
       },
+      // 日期控件 只显示今天和今天以后一周时间区间
+      pickerOptions7: {
+        disabledDate(time) {
+          let curDate = (new Date()).getTime();
+          let three = 7 * 24 * 3600 * 1000;
+          let threeMonths = curDate + three;
+          let datestart = Date.now() - 86400000;
+          return time.getTime() < datestart || time.getTime() > threeMonths;
+        }
+      },
+
       // 表单参数
       form: {},
       // 表单校验
-      rules: {}
+      rules: {
+        activitytype: [{ required: true, message: "活动类型不能为空", trigger: "blur" }],
+        content: [{ required: true, message: "活动内容不能为空", trigger: "blur" }],
+        activitytime: [{ required: true, message: "活动时间不能为空", trigger: "blur" }],
+      }
     };
   },
   created() {

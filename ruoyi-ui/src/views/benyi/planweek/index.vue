@@ -10,16 +10,16 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="当前状态" prop="status">
-        <el-select v-model="queryParams.status" placeholder="请选择当前状态" clearable size="small">
+      <!-- <el-form-item label="班级名称" prop="classid">
+        <el-select v-model="queryParams.classid" placeholder="请选择班级" clearable size="small">
           <el-option
-            v-for="dict in statusOptions"
+            v-for="dict in classOptions"
             :key="dict.dictValue"
             :label="dict.dictLabel"
             :value="dict.dictValue"
           />
         </el-select>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="开始时间" prop="starttime">
         <el-date-picker
           clearable
@@ -42,64 +42,6 @@
           placeholder="选择结束时间"
         ></el-date-picker>
       </el-form-item>
-      <el-form-item label="本周主题" prop="themeofweek">
-        <el-input
-          v-model="queryParams.themeofweek"
-          placeholder="请输入本周主题"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="审核人" prop="shrid">
-        <el-input
-          v-model="queryParams.shrid"
-          placeholder="请输入审核人"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-     <!--
-       <el-form-item label="学校id" prop="schoolid">
-        <el-input
-          v-model="queryParams.schoolid"
-          placeholder="请输入学校id"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="班级id" prop="classid">
-        <el-input
-          v-model="queryParams.classid"
-          placeholder="请输入班级id"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="创建人" prop="createuserid">
-        <el-input
-          v-model="queryParams.createuserid"
-          placeholder="请输入创建人"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>-->
-      
-      <!-- <el-form-item label="审核时间" prop="shtime">
-        <el-date-picker
-          clearable
-          size="small"
-          style="width: 200px"
-          v-model="queryParams.shtime"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="选择审核时间"
-        ></el-date-picker>
-      </el-form-item> -->
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -149,8 +91,7 @@
 
     <el-table v-loading="loading" :data="planweekList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="编号" align="center" prop="id" />
-      <el-table-column label="班级id" align="center" prop="classid" :formatter="classFormat" />
+      <el-table-column label="班级名称" align="center" prop="classid" :formatter="classFormat" />
       <el-table-column label="计划名称" align="center" prop="name" :show-overflow-tooltip="true">
         <template slot-scope="scope">
           <router-link :to="'/benyi_course/planweek/data/' + scope.row.id" class="link-type">
@@ -169,15 +110,6 @@
         </template>
       </el-table-column>
       <el-table-column label="本周主题" align="center" prop="themeofweek" />
-      <el-table-column label="当前状态" align="center" prop="status" :formatter="statusFormat" />
-      <el-table-column label="审核人" align="center" prop="shrid" />
-      <!-- <el-table-column label="审核时间" align="center" prop="shtime" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.shtime, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column> -->
-      <!-- <el-table-column label="学校id" align="center" prop="schoolid" />
-      -->
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -187,14 +119,14 @@
             @click="handleUpdate(scope.row)"
             v-hasPermi="['system:planweek:edit']"
           >修改</el-button>
-          <el-button
+          <!-- <el-button
             size="mini"
             type="text"
             icon="el-icon-check"
             @click="handleCheck(scope.row)"
             v-hasPermi="['system:planweek:edit']"
             v-show="isShow(scope.row)"
-          >提交</el-button>
+          >提交</el-button> -->
           <el-button
             size="mini"
             type="text"
@@ -260,36 +192,6 @@
         <el-form-item label="教学目标(艺术)" prop="jxmbYs">
           <el-input v-model="form.jxmbYs" placeholder="请输入教学目标(艺术)" />
         </el-form-item>
-        <!-- <el-form-item label="当前状态">
-          <el-select v-model="form.status" placeholder="请选择当前状态">
-            <el-option
-              v-for="dict in statusOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            ></el-option>
-          </el-select>
-        </el-form-item> -->
-        <!-- <el-form-item label="审核人" prop="shrid">
-          <el-input v-model="form.shrid" placeholder="请输入审核人" />
-        </el-form-item> -->
-        <!-- <el-form-item label="学校id" prop="schoolid">
-          <el-input v-model="form.schoolid" placeholder="请输入学校id" />
-        </el-form-item>
-        <el-form-item label="班级id" prop="classid">
-          <el-input v-model="form.classid" placeholder="请输入班级id" />
-        </el-form-item>-->
-        <!-- <el-form-item label="审核时间" prop="shtime">
-          <el-date-picker
-            clearable
-            size="small"
-            style="width: 200px"
-            v-model="form.shtime"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="选择审核时间"
-          ></el-date-picker>
-        </el-form-item> -->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -359,7 +261,33 @@ export default {
       // 表单参数
       form: {},
       // 表单校验
-      rules: {}
+      rules: {
+        name: [{ required: true, message: "计划名称不能为空", trigger: "blur" }],
+        starttime: [
+          { required: true, message: "开始时间不能为空", trigger: "blur" },
+        ],
+        endtime: [
+          { required: true, message: "结束时间不能为空", trigger: "blur" },
+        ],
+        themeofweek: [
+          { required: true, message: "本周主题不能为空", trigger: "blur" },
+        ],
+        jxmbSh: [
+          { required: true, message: "教学目标(社会)不能为空", trigger: "blur" },
+        ],
+        jxmbYy: [
+          { required: true, message: "教学目标(语言)不能为空", trigger: "blur" },
+        ],
+        jxmbJk: [
+          { required: true, message: "教学目标(健康)不能为空", trigger: "blur" },
+        ],
+        jxmbKx: [
+          { required: true, message: "教学目标(科学)不能为空", trigger: "blur" },
+        ],
+        jxmbYs: [
+          { required: true, message: "教学目标(艺术)不能为空", trigger: "blur" },
+        ]
+      }
     };
   },
   created() {
