@@ -113,7 +113,7 @@ export const constantRoutes = [{
         component: Layout,
         hidden: true,
         children: [{
-            path: 'jxzxkhgl/jxzxkhfa/data/:id',
+            path: 'jxzxkhfa/data/:id',
             component: (resolve) => require(['@/views/jxzxkhgl/jxzxkhfa/data'], resolve),
             name: 'jxzxkhfa1',
             meta: {

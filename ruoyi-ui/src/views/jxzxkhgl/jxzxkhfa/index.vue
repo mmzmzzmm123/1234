@@ -95,7 +95,13 @@
     <el-table v-loading="loading" :data="jxzxkhfaList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="编号" align="center" prop="id" />
-      <el-table-column label="考核方案名称" align="center" prop="name" />
+      <el-table-column label="考核方案名称" align="center" prop="name" :show-overflow-tooltip="true">
+        <template slot-scope="scope">
+          <router-link :to="'/jxzxkhgl/jxzxkhfa/data/' + scope.row.id" class="link-type">
+            <span>{{ scope.row.name }}</span>
+          </router-link>
+        </template>
+      </el-table-column>  
       <el-table-column label="考核方案状态" align="center" prop="status" :formatter="statusFormat" />
       <el-table-column label="考核开始时间" align="center" prop="starttime" width="180">
         <template slot-scope="scope">

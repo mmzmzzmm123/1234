@@ -1,19 +1,18 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
+    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="102px">
       <el-form-item label="所属考核方案" prop="faid">
-        <el-input
-          v-model="queryParams.faid"
-          placeholder="请输入所属考核方案"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+        <el-select v-model="queryParams.faid" placeholder="请选择考核模块" clearable size="small">
+          <el-option
+            v-for="dict in khfaOptions"
+            :key="dict.id"
+            :label="dict.name"
+            :value="dict.id"
+          />
+        </el-select>
       </el-form-item>
-      <el-form-item label="考核模块
-            字典项" prop="khmk">
-        <el-select v-model="queryParams.khmk" placeholder="请选择考核模块
-            字典项" clearable size="small">
+      <el-form-item label="考核模块" prop="khmk">
+        <el-select v-model="queryParams.khmk" placeholder="请选择考核模块" clearable size="small">
           <el-option
             v-for="dict in khmkOptions"
             :key="dict.dictValue"
@@ -22,28 +21,8 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="考核内容" prop="khnr">
-        <el-input
-          v-model="queryParams.khnr"
-          placeholder="请输入考核内容"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="提交数量" prop="tjsl">
-        <el-input
-          v-model="queryParams.tjsl"
-          placeholder="请输入提交数量"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="同步来源
-            字典项所属系统" prop="tbly">
-        <el-select v-model="queryParams.tbly" placeholder="请选择同步来源
-            字典项所属系统" clearable size="small">
+      <el-form-item label="同步来源" prop="tbly">
+        <el-select v-model="queryParams.tbly" placeholder="请选择同步来源" clearable size="small">
           <el-option
             v-for="dict in tblyOptions"
             :key="dict.dictValue"
@@ -68,15 +47,6 @@
           placeholder="选择执行截止时间">
         </el-date-picker>
       </el-form-item>
-      <el-form-item label="创建人" prop="createuserid">
-        <el-input
-          v-model="queryParams.createuserid"
-          placeholder="请输入创建人"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
       <el-form-item>
         <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -90,7 +60,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['khgl:jxzxkhzbx:add']"
+          v-hasPermi="['jxzxkhgl:jxzxkhzbx:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -100,7 +70,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['khgl:jxzxkhzbx:edit']"
+          v-hasPermi="['jxzxkhgl:jxzxkhzbx:edit']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -110,7 +80,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['khgl:jxzxkhzbx:remove']"
+          v-hasPermi="['jxzxkhgl:jxzxkhzbx:remove']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -119,7 +89,7 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['khgl:jxzxkhzbx:export']"
+          v-hasPermi="['jxzxkhgl:jxzxkhzbx:export']"
         >导出</el-button>
       </el-col>
 	  <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
@@ -128,15 +98,9 @@
     <el-table v-loading="loading" :data="jxzxkhzbxList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="编号" align="center" prop="id" />
-      <el-table-column label="所属考核方案" align="center" prop="faid" />
-      <el-table-column label="考核模块
-            字典项" align="center" prop="khmk" :formatter="khmkFormat" />
-      <el-table-column label="考核内容" align="center" prop="khnr" />
-      <el-table-column label="提交数量" align="center" prop="tjsl" />
-      <el-table-column label="关键字段" align="center" prop="gjzd" />
-      <el-table-column label="同步来源
-            字典项所属系统" align="center" prop="tbly" :formatter="tblyFormat" />
-      <el-table-column label="接口标记预留" align="center" prop="jkbj" />
+      <el-table-column label="所属考核方案" align="center" prop="faid" :formatter="khfaFormat" />
+      <el-table-column label="考核模块" align="center" prop="khmk" :formatter="khmkFormat" />
+      <el-table-column label="同步来源" align="center" prop="tbly" :formatter="tblyFormat" />
       <el-table-column label="执行开始时间" align="center" prop="starttime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.starttime, '{y}-{m}-{d}') }}</span>
@@ -147,10 +111,6 @@
           <span>{{ parseTime(scope.row.endtime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="执行任务预留" align="center" prop="zxrw" />
-      <el-table-column label="创建人" align="center" prop="createuserid" />
-      <el-table-column label="预留1" align="center" prop="yly" />
-      <el-table-column label="预留2" align="center" prop="yle" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -158,14 +118,14 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['khgl:jxzxkhzbx:edit']"
+            v-hasPermi="['jxzxkhgl:jxzxkhzbx:edit']"
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['khgl:jxzxkhzbx:remove']"
+            v-hasPermi="['jxzxkhgl:jxzxkhzbx:remove']"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -182,13 +142,18 @@
     <!-- 添加或修改考核指标项对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="所属考核方案" prop="faid">
-          <el-input v-model="form.faid" placeholder="请输入所属考核方案" />
+        <el-form-item label="所属考核方案" prop="faid" >
+          <el-select v-model="queryParams.faid" placeholder="请选择考核模块" clearable size="small" :disabled="true">
+            <el-option
+              v-for="dict in khfaOptions"
+              :key="dict.id"
+              :label="dict.name"
+              :value="dict.id"
+            />
+          </el-select>
         </el-form-item>
-        <el-form-item label="考核模块
-            字典项" prop="khmk">
-          <el-select v-model="form.khmk" placeholder="请选择考核模块
-            字典项">
+        <el-form-item label="考核模块" prop="khmk">
+          <el-select v-model="form.khmk" placeholder="请选择考核模块">
             <el-option
               v-for="dict in khmkOptions"
               :key="dict.dictValue"
@@ -206,10 +171,8 @@
         <el-form-item label="关键字段" prop="gjzd">
           <el-input v-model="form.gjzd" type="textarea" placeholder="请输入内容" />
         </el-form-item>
-        <el-form-item label="同步来源
-            字典项所属系统" prop="tbly">
-          <el-select v-model="form.tbly" placeholder="请选择同步来源
-            字典项所属系统">
+        <el-form-item label="同步来源" prop="tbly">
+          <el-select v-model="form.tbly" placeholder="请选择同步来源">
             <el-option
               v-for="dict in tblyOptions"
               :key="dict.dictValue"
@@ -218,9 +181,9 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="接口标记预留" prop="jkbj">
+        <!-- <el-form-item label="接口标记预留" prop="jkbj">
           <el-input v-model="form.jkbj" type="textarea" placeholder="请输入内容" />
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="执行开始时间" prop="starttime">
           <el-date-picker clearable size="small" style="width: 200px"
             v-model="form.starttime"
@@ -236,18 +199,6 @@
             value-format="yyyy-MM-dd"
             placeholder="选择执行截止时间">
           </el-date-picker>
-        </el-form-item>
-        <el-form-item label="执行任务预留" prop="zxrw">
-          <el-input v-model="form.zxrw" type="textarea" placeholder="请输入内容" />
-        </el-form-item>
-        <el-form-item label="创建人" prop="createuserid">
-          <el-input v-model="form.createuserid" placeholder="请输入创建人" />
-        </el-form-item>
-        <el-form-item label="预留1" prop="yly">
-          <el-input v-model="form.yly" type="textarea" placeholder="请输入内容" />
-        </el-form-item>
-        <el-form-item label="预留2" prop="yle">
-          <el-input v-model="form.yle" type="textarea" placeholder="请输入内容" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -288,6 +239,10 @@ export default {
       khmkOptions: [],
       // 同步来源字典项所属系统字典
       tblyOptions: [],
+      // 默认方案
+      defaultFa: "",
+      // 考核方案选项
+      khfaOptions: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -308,14 +263,22 @@ export default {
       },
       // 表单参数
       form: {},
-      // 表单校验
+      // 表单校验v
       rules: {
+        khmk: [{ required: true, message: "不能为空", trigger: "blur" }],
+        khnr: [{ required: true, message: "不能为空", trigger: "blur" }],
+        tjsl: [{ required: true, message: "不能为空", trigger: "blur" }],
+        gjzd: [{ required: true, message: "不能为空", trigger: "blur" }],
+        tbly: [{ required: true, message: "不能为空", trigger: "blur" }],
+        starttime: [{ required: true, message: "不能为空", trigger: "blur" }],
+        endtime: [{ required: true, message: "不能为空", trigger: "blur" }],
       }
     };
   },
   created() {
-    //const 
-    this.getList();
+    const khfaid = this.$route.params && this.$route.params.id; 
+    this.getkhfa2(khfaid);
+    this.getJxzxkhfaList();
     this.getDicts("sys_dm_khmk").then(response => {
       this.khmkOptions = response.data;
     });
@@ -324,6 +287,14 @@ export default {
     });
   },
   methods: {
+    // 考核方案列表
+    getkhfa2(khfaid) {
+      getJxzxkhfa(khfaid).then(response => {
+        this.queryParams.faid = response.data.id;
+        this.defaultFa = response.data.id;
+        this.getList();
+      });
+    },
     /** 查询考核指标项列表 */
     getList() {
       this.loading = true;
@@ -332,6 +303,24 @@ export default {
         this.total = response.total;
         this.loading = false;
       });
+    },
+    // 查询考核方案选项
+    getJxzxkhfaList() {
+      listJxzxkhfa().then(response => {
+        this.khfaOptions = response.rows;
+      });
+    },
+    // 考核方案字典翻译
+    khfaFormat(row, column) {
+      var actions = [];
+      var datas = this.khfaOptions;
+      Object.keys(datas).map(key => {
+        if (datas[key].id == "" + row.faid) {
+          actions.push(datas[key].name);
+          return false;
+        }
+      });
+      return actions.join("");
     },
     // 考核模块字典项字典翻译
     khmkFormat(row, column) {
@@ -375,6 +364,7 @@ export default {
     /** 重置按钮操作 */
     resetQuery() {
       this.resetForm("queryForm");
+      this.queryParams.faid = this.defaultFa;
       this.handleQuery();
     },
     // 多选框选中数据
@@ -388,6 +378,7 @@ export default {
       this.reset();
       this.open = true;
       this.title = "添加考核指标项";
+      this.form.faid = this.queryParams.faid;
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
