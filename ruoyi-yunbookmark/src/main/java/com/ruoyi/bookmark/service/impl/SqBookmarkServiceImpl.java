@@ -131,16 +131,20 @@ public class SqBookmarkServiceImpl implements ISqBookmarkService
      */
     @Override
     public List<SqBookmark> selectBydelete(Long userId) {
-        return sqBookmarkMapper.selectBydelete(userId);
+        SqBookmark sqBookmark= new SqBookmark();
+        sqBookmark.setUserid(userId);
+        sqBookmark.setIdelete(1); //已经删除的书签
+        return sqBookmarkMapper.select(sqBookmark);
     }
     /**
-     * 用户全部书签
+     * 用户全部书签 不包括已经删除的
      * @return
      */
     @Override
     public List<SqBookmark> selectByUseridList(Long userId) {
         SqBookmark sqBookmark= new SqBookmark();
         sqBookmark.setUserid(userId);
+        sqBookmark.setIdelete(0); //未删除的书签
         return sqBookmarkMapper.select(sqBookmark);
     }
 }

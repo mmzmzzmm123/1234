@@ -82,7 +82,7 @@ public class SqBookmark
     private Integer start;
 
     /** 创建时间 */
-    @Transient
+    @Excel(name = "创建时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 

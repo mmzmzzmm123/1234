@@ -22,13 +22,12 @@
         <ul id="treeDemo" class="ztree" ></ul>
       </div>
       <div class="reminder">工具箱</div>
-      <div class="aside-title"><i class="el-icon-s-tools"></i><span>收藏同步</span></div>
-      <div class="aside-title" @click="gorecycle"><i class="el-icon-help"></i><span>回收站</span></div>
-      <div class="aside-title" @click="importHtml">
-        <i class="el-icon-s-platform"></i><span>导入书签</span>
-      </div>
-      <div class="aside-title"><i class="el-icon-message-solid"></i><span>意见反馈</span></div>
-      <div class="aside-title"><i class="el-icon-message-solid"></i><span>其他设置</span></div>
+      <div class="aside-title"><i class="el-icon-s-flag" style="color: red"></i><span>书签同步</span></div>
+      <div class="aside-title"><i class="el-icon-s-management" ></i><span>标签管理</span></div>
+      <div class="aside-title" @click="gorecycle"><i class="el-icon-delete-solid"></i><span>回收站</span></div>
+      <div class="aside-title" @click="importHtml"><i class="el-icon-s-platform"></i><span>导入书签</span></div>
+      <div class="aside-title"><i class="el-icon-s-comment"></i><span>意见反馈</span></div>
+      <div class="aside-title"><i class="el-icon-s-grid"></i><span>其他设置</span></div>
 
 <!--      <el-footer class="aside-navigation">-->
 <!--      </el-footer>-->

@@ -23,13 +23,7 @@ public interface SqBookmarkMapper extends MyMapper<SqBookmark>
      * @return 书签管理
      */
     public List<SqBookmark> selectBymenuIdUserID(@Param("menuID") Long menuID, @Param("userID") Long userID);
-    /**
-     * @auther: Wang
-     * @date: 2020/08/29 23:03
-     * 功能描述: 回收站
-     */
 
-    public List<SqBookmark> selectBydelete(@Param("userID") Long userID);
     /**
      * 查询书签管理
      *
