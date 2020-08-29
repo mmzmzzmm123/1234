@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.jxjs.mapper.TsbzJxzxkhgcsjMapper">
+
+    <resultMap type="TsbzJxzxkhgcsj" id="TsbzJxzxkhgcsjResult">
+        <result property="id" column="id"/>
+        <result property="faid" column="faid"/>
+        <result property="zbid" column="zbid"/>
+        <result property="content" column="content"/>
+        <result property="createuserid" column="createuserid"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <sql id="selectTsbzJxzxkhgcsjVo">
+        select id, faid, zbid, content, createuserid, create_time from tsbz_jxzxkhgcsj
+    </sql>
+
+    <select id="selectTsbzJxzxkhgcsjList" parameterType="TsbzJxzxkhgcsj" resultMap="TsbzJxzxkhgcsjResult">
+        <include refid="selectTsbzJxzxkhgcsjVo"/>
+        <where>
+            <if test="faid != null ">and faid = #{faid}</if>
+            <if test="zbid != null ">and zbid = #{zbid}</if>
+            <if test="content != null  and content != ''">and content = #{content}</if>
+            <if test="createuserid != null ">and createuserid = #{createuserid}</if>
+        </where>
+    </select>
+
+    <select id="selectTsbzJxzxkhgcsjById" parameterType="String" resultMap="TsbzJxzxkhgcsjResult">
+        <include refid="selectTsbzJxzxkhgcsjVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertTsbzJxzxkhgcsj" parameterType="TsbzJxzxkhgcsj">
+        insert into tsbz_jxzxkhgcsj
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="faid != null">faid,</if>
+            <if test="zbid != null">zbid,</if>
+            <if test="content != null">content,</if>
+            <if test="createuserid != null">createuserid,</if>
+            <if test="createTime != null">create_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="faid != null">#{faid},</if>
+            <if test="zbid != null">#{zbid},</if>
+            <if test="content != null">#{content},</if>
+            <if test="createuserid != null">#{createuserid},</if>
+            <if test="createTime != null">#{createTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateTsbzJxzxkhgcsj" parameterType="TsbzJxzxkhgcsj">
+        update tsbz_jxzxkhgcsj
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="faid != null">faid = #{faid},</if>
+            <if test="zbid != null">zbid = #{zbid},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="createuserid != null">createuserid = #{createuserid},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTsbzJxzxkhgcsjById" parameterType="String">
+        delete from tsbz_jxzxkhgcsj where id = #{id}
+    </delete>
+
+    <delete id="deleteTsbzJxzxkhgcsjByIds" parameterType="String">
+        delete from tsbz_jxzxkhgcsj where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
