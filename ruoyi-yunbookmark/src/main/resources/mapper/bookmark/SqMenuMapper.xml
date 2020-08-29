@@ -29,6 +29,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="menuIcon != null  and menuIcon != ''"> and menu_icon = #{menuIcon}</if>
             <if test="parentId != null "> and parent_id = #{parentId}</if>
             <if test="menuOrder != null "> and menu_order = #{menuOrder}</if>
+             order BY menu_order ASC
         </where>
     </select>
 
