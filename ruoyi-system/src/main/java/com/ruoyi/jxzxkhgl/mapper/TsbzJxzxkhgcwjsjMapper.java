@@ -1,16 +1,16 @@
-package com.ruoyi.jxjs.service;
+package com.ruoyi.jxzxkhgl.mapper;
 
 import java.util.List;
 
-import com.ruoyi.jxjs.domain.TsbzJxzxkhgcwjsj;
+import com.ruoyi.jxzxkhgl.domain.TsbzJxzxkhgcwjsj;
 
 /**
- * 考核过程文件数据Service接口
+ * 考核过程文件数据Mapper接口
  *
  * @author ruoyi
  * @date 2020-08-29
  */
-public interface ITsbzJxzxkhgcwjsjService {
+public interface TsbzJxzxkhgcwjsjMapper {
     /**
      * 查询考核过程文件数据
      *
@@ -44,18 +44,18 @@ public interface ITsbzJxzxkhgcwjsjService {
     public int updateTsbzJxzxkhgcwjsj(TsbzJxzxkhgcwjsj tsbzJxzxkhgcwjsj);
 
     /**
-     * 批量删除考核过程文件数据
-     *
-     * @param ids 需要删除的考核过程文件数据ID
-     * @return 结果
-     */
-    public int deleteTsbzJxzxkhgcwjsjByIds(Long[] ids);
-
-    /**
-     * 删除考核过程文件数据信息
+     * 删除考核过程文件数据
      *
      * @param id 考核过程文件数据ID
      * @return 结果
      */
     public int deleteTsbzJxzxkhgcwjsjById(Long id);
+
+    /**
+     * 批量删除考核过程文件数据
+     *
+     * @param ids 需要删除的数据ID
+     * @return 结果
+     */
+    public int deleteTsbzJxzxkhgcwjsjByIds(Long[] ids);
 }

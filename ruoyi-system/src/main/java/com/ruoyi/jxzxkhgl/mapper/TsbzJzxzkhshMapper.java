@@ -1,8 +1,8 @@
-package com.ruoyi.jxjs.mapper;
+package com.ruoyi.jxzxkhgl.mapper;
 
 import java.util.List;
 
-import com.ruoyi.jxjs.domain.TsbzJzxzkhsh;
+import com.ruoyi.jxzxkhgl.domain.TsbzJzxzkhsh;
 
 /**
  * 考核审核过程Mapper接口

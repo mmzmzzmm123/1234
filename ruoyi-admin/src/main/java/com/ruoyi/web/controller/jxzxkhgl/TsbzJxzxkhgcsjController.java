@@ -1,4 +1,4 @@
-package com.ruoyi.web.controller.jxjs;
+package com.ruoyi.web.controller.jxzxkhgl;
 
 import java.util.List;
 
@@ -16,8 +16,8 @@ import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.enums.BusinessType;
-import com.ruoyi.jxjs.domain.TsbzJxzxkhgcsj;
-import com.ruoyi.jxjs.service.ITsbzJxzxkhgcsjService;
+import com.ruoyi.jxzxkhgl.domain.TsbzJxzxkhgcsj;
+import com.ruoyi.jxzxkhgl.service.ITsbzJxzxkhgcsjService;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
 
@@ -28,7 +28,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * @date 2020-08-29
  */
 @RestController
-@RequestMapping("/jxjs/jxzxkhgcsj")
+@RequestMapping("/jxzxkhgl/jxzxkhgcsj")
 public class TsbzJxzxkhgcsjController extends BaseController {
     @Autowired
     private ITsbzJxzxkhgcsjService tsbzJxzxkhgcsjService;
@@ -36,7 +36,7 @@ public class TsbzJxzxkhgcsjController extends BaseController {
     /**
      * 查询考核过程数据列表
      */
-    @PreAuthorize("@ss.hasPermi('jxjs:jxzxkhgcsj:list')")
+    @PreAuthorize("@ss.hasPermi('jxzxkhgl:jxzxkhgcsj:list')")
     @GetMapping("/list")
     public TableDataInfo list(TsbzJxzxkhgcsj tsbzJxzxkhgcsj) {
         startPage();
@@ -47,7 +47,7 @@ public class TsbzJxzxkhgcsjController extends BaseController {
     /**
      * 导出考核过程数据列表
      */
-    @PreAuthorize("@ss.hasPermi('jxjs:jxzxkhgcsj:export')")
+    @PreAuthorize("@ss.hasPermi('jxzxkhgl:jxzxkhgcsj:export')")
     @Log(title = "考核过程数据", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
     public AjaxResult export(TsbzJxzxkhgcsj tsbzJxzxkhgcsj) {
@@ -59,7 +59,7 @@ public class TsbzJxzxkhgcsjController extends BaseController {
     /**
      * 获取考核过程数据详细信息
      */
-    @PreAuthorize("@ss.hasPermi('jxjs:jxzxkhgcsj:query')")
+    @PreAuthorize("@ss.hasPermi('jxzxkhgl:jxzxkhgcsj:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") String id) {
         return AjaxResult.success(tsbzJxzxkhgcsjService.selectTsbzJxzxkhgcsjById(id));
@@ -68,7 +68,7 @@ public class TsbzJxzxkhgcsjController extends BaseController {
     /**
      * 新增考核过程数据
      */
-    @PreAuthorize("@ss.hasPermi('jxjs:jxzxkhgcsj:add')")
+    @PreAuthorize("@ss.hasPermi('jxzxkhgl:jxzxkhgcsj:add')")
     @Log(title = "考核过程数据", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody TsbzJxzxkhgcsj tsbzJxzxkhgcsj) {
@@ -78,7 +78,7 @@ public class TsbzJxzxkhgcsjController extends BaseController {
     /**
      * 修改考核过程数据
      */
-    @PreAuthorize("@ss.hasPermi('jxjs:jxzxkhgcsj:edit')")
+    @PreAuthorize("@ss.hasPermi('jxzxkhgl:jxzxkhgcsj:edit')")
     @Log(title = "考核过程数据", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody TsbzJxzxkhgcsj tsbzJxzxkhgcsj) {
@@ -88,7 +88,7 @@ public class TsbzJxzxkhgcsjController extends BaseController {
     /**
      * 删除考核过程数据
      */
-    @PreAuthorize("@ss.hasPermi('jxjs:jxzxkhgcsj:remove')")
+    @PreAuthorize("@ss.hasPermi('jxzxkhgl:jxzxkhgcsj:remove')")
     @Log(title = "考核过程数据", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable String[] ids) {

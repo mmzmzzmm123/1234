@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ruoyi.jxjs.mapper.TsbzJzxzkhshMapper">
+<mapper namespace="com.ruoyi.jxzxkhgl.mapper.TsbzJzxzkhshMapper">
 
     <resultMap type="TsbzJzxzkhsh" id="TsbzJzxzkhshResult">
         <result property="id" column="id"/>

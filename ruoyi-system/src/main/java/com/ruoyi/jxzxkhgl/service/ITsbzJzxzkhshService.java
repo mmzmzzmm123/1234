@@ -1,8 +1,8 @@
-package com.ruoyi.jxjs.service;
+package com.ruoyi.jxzxkhgl.service;
 
 import java.util.List;
 
-import com.ruoyi.jxjs.domain.TsbzJzxzkhsh;
+import com.ruoyi.jxzxkhgl.domain.TsbzJzxzkhsh;
 
 /**
  * 考核审核过程Service接口

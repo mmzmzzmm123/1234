@@ -1,4 +1,4 @@
-package com.ruoyi.jxjs.domain;
+package com.ruoyi.jxzxkhgl.domain;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -6,36 +6,36 @@ import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
- * 考核过程数据对象 tsbz_jxzxkhgcsj
+ * 考核过程文件数据对象 tsbz_jxzxkhgcwjsj
  *
  * @author ruoyi
  * @date 2020-08-29
  */
-public class TsbzJxzxkhgcsj extends BaseEntity {
+public class TsbzJxzxkhgcwjsj extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
     /**
      * 编号
      */
-    private String id;
+    private Long id;
 
     /**
-     * 所属方案
+     * 所属过程
      */
-    @Excel(name = "所属方案")
-    private Long faid;
+    @Excel(name = "所属过程")
+    private String gcid;
 
     /**
-     * 指标项
+     * 文件名称
      */
-    @Excel(name = "指标项")
-    private Long zbid;
+    @Excel(name = "文件名称")
+    private String filename;
 
     /**
-     * 内容
+     * 文件路径
      */
-    @Excel(name = "内容")
-    private String content;
+    @Excel(name = "文件路径")
+    private String filepath;
 
     /**
      * 创建人
@@ -43,36 +43,36 @@ public class TsbzJxzxkhgcsj extends BaseEntity {
     @Excel(name = "创建人")
     private Long createuserid;
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setFaid(Long faid) {
-        this.faid = faid;
+    public void setGcid(String gcid) {
+        this.gcid = gcid;
     }
 
-    public Long getFaid() {
-        return faid;
+    public String getGcid() {
+        return gcid;
     }
 
-    public void setZbid(Long zbid) {
-        this.zbid = zbid;
+    public void setFilename(String filename) {
+        this.filename = filename;
     }
 
-    public Long getZbid() {
-        return zbid;
+    public String getFilename() {
+        return filename;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setFilepath(String filepath) {
+        this.filepath = filepath;
     }
 
-    public String getContent() {
-        return content;
+    public String getFilepath() {
+        return filepath;
     }
 
     public void setCreateuserid(Long createuserid) {
@@ -87,9 +87,9 @@ public class TsbzJxzxkhgcsj extends BaseEntity {
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
                 .append("id", getId())
-                .append("faid", getFaid())
-                .append("zbid", getZbid())
-                .append("content", getContent())
+                .append("gcid", getGcid())
+                .append("filename", getFilename())
+                .append("filepath", getFilepath())
                 .append("createuserid", getCreateuserid())
                 .append("createTime", getCreateTime())
                 .toString();

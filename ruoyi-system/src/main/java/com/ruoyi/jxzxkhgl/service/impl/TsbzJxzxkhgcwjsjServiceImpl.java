@@ -1,13 +1,13 @@
-package com.ruoyi.jxjs.service.impl;
+package com.ruoyi.jxzxkhgl.service.impl;
 
 import java.util.List;
 
 import com.ruoyi.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.ruoyi.jxjs.mapper.TsbzJxzxkhgcwjsjMapper;
-import com.ruoyi.jxjs.domain.TsbzJxzxkhgcwjsj;
-import com.ruoyi.jxjs.service.ITsbzJxzxkhgcwjsjService;
+import com.ruoyi.jxzxkhgl.mapper.TsbzJxzxkhgcwjsjMapper;
+import com.ruoyi.jxzxkhgl.domain.TsbzJxzxkhgcwjsj;
+import com.ruoyi.jxzxkhgl.service.ITsbzJxzxkhgcwjsjService;
 
 /**
  * 考核过程文件数据Service业务层处理
