@@ -18,7 +18,7 @@
     </resultMap>
 
     <sql id="selectByPlanweekitemVo">
-        select id, wid, activitytype, content, activitytime, createuserid, create_time, updateuserid, update_time from by_planweekitem
+        select id, wid, activitytype, content, activitytime, createuserid, create_time, updateuserid, update_time, day from  by_planweekitem
     </sql>
 
     <select id="selectByPlanweekitemList" parameterType="ByPlanweekitem" resultMap="ByPlanweekitemResult">

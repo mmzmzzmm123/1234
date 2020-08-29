@@ -3,6 +3,7 @@ package com.ruoyi.project.benyi.controller;
 import java.util.List;
 
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.project.common.SchoolCommon;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,6 +35,8 @@ public class ByPlanweekitemController extends BaseController
 {
     @Autowired
     private IByPlanweekitemService byPlanweekitemService;
+    @Autowired
+    private SchoolCommon schoolCommon;
 
 /**
  * 查询周计划(家长和教育部门细化)列表
@@ -79,6 +82,7 @@ public class ByPlanweekitemController extends BaseController
     public AjaxResult add(@RequestBody ByPlanweekitem byPlanweekitem)
     {
         byPlanweekitem.setCreateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
+        byPlanweekitem.setDay("星期" + String.valueOf(schoolCommon.dateToWeek(byPlanweekitem.getActivitytime())));
         return toAjax(byPlanweekitemService.insertByPlanweekitem(byPlanweekitem));
     }
 
@@ -91,6 +95,7 @@ public class ByPlanweekitemController extends BaseController
     public AjaxResult edit(@RequestBody ByPlanweekitem byPlanweekitem)
     {
         byPlanweekitem.setUpdateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
+        byPlanweekitem.setDay("星期" + String.valueOf(schoolCommon.dateToWeek(byPlanweekitem.getActivitytime())));
         return toAjax(byPlanweekitemService.updateByPlanweekitem(byPlanweekitem));
     }
 

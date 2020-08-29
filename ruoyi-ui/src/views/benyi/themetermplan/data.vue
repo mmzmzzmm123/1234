@@ -191,7 +191,7 @@ export default {
         tpid: undefined,
         themeconent: undefined,
         createuserid: undefined,
-        updateuserid: undefined,
+        updateuserid: undefined
       },
       // 表单参数
       form: {},
@@ -306,7 +306,7 @@ export default {
         createuserid: undefined,
         month: undefined,
         updateuserid: undefined,
-        updateTime: undefined,
+        updateTime: undefined
       };
       this.resetForm("form");
       this.themeList = [];

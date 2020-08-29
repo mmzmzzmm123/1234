@@ -184,9 +184,9 @@
             :picker-options="pickerOptions7"
           >></el-date-picker>
         </el-form-item>
-        <el-form-item label="星期" prop="day">
+        <!-- <el-form-item label="星期" prop="day">
           <el-input v-model="form.day" placeholder="请输入星期几" />
-        </el-form-item>
+        </el-form-item> -->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -279,9 +279,9 @@ export default {
         activitytime: [
           { required: true, message: "活动时间不能为空", trigger: "blur" }
         ],
-        day: [
-          { required: true, message: "星期不能为空", trigger: "blur" }
-        ]
+        // day: [
+        //   { required: true, message: "星期不能为空", trigger: "blur" }
+        // ]
       }
     };
   },
