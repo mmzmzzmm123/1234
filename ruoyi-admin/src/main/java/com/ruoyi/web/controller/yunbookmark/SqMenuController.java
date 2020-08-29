@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.core.domain.model.LoginUser;
+import com.sun.org.apache.bcel.internal.generic.NEW;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -123,8 +124,31 @@ public class SqMenuController extends BaseController
     @PreAuthorize("@ss.hasPermi('bookmark:menu:remove')")
     @Log(title = "书签菜单", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{menuIds}")
-    public AjaxResult remove(@PathVariable Long[] menuIds)
+    public AjaxResult removes(@PathVariable Long[] menuIds)
     {
         return toAjax(sqMenuService.deleteSqMenuByIds(menuIds));
     }
+
+    /**
+     * 删除书签菜单
+     */
+
+    @Log(title = "书签菜单", businessType = BusinessType.DELETE)
+	@DeleteMapping("/delete/{menuId}")
+    public AjaxResult remove(@PathVariable Long menuId)
+    {
+        SysUser sysUser=getAuthUser();
+        //查询目录下是否还有目录
+        SqMenu sqMenu=new SqMenu();
+        sqMenu.setParentId(menuId);
+        List<SqMenu> sqMenuList=sqMenuService.selectSqMenuList(sqMenu);
+        if (sqMenuList==null||sqMenuList.isEmpty()){
+            return toAjax(sqMenuService.deleteSqMenuById(menuId,sysUser.getUserId()));
+        }else{
+            return AjaxResult.error("删除失败,该目录下级还有目录菜单");
+        }
+    }
+
+
+
 }

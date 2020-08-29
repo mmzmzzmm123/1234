@@ -69,7 +69,7 @@
           <hr class="bookamrk-hr"/>
           <el-col :span="24" v-for="bm in bookmarkList">
 
-            <div class="bookmark">
+            <div class="bookmark" :data-id="bm.id" @click="windowurl(bm.url,bm.bookmarkId)">
               <p class="bookmark-title">{{bm.title}}</p>
               <div class="">
                 <p class="description">{{bm.description}}</p>
@@ -138,6 +138,7 @@
                 start: undefined,
               },
               bookmarkList:[],
+              urltext:'?from=yunshuqian.com',//网址域名起推广作用
             }
         },
      filters: {
@@ -175,10 +176,31 @@
               }
             });
           },
+      windowurl(url,bookmarkId){
+        // window.open(url+this.urltext);
+        window.open(url);
 
+
+        //如果是回收站打开的 就修改状态
+        // if (this.$route.params.menuId=6666){
+        //   this.$axios.get(`/api/bookmark/updateBookmarkStart?bookmarkId=${bookmarkId}`).then(response => {
+        //
+        //     if (response.status == 200 && response.data.status == 'success') {
+        //       this.momentlList()
+        //       this.$message({type: 'success', message: '此书签被打开,移除稍后再看,并且公开显示!'})
+        //
+        //     }else {
+        //       this.$message({type: 'error', message: '移除失败!'})
+        //     }
+        //
+        //   });
+        // }
+
+      },
 
 
         },
+
 
     }
 </script>

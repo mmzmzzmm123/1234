@@ -73,8 +73,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where menu_id = #{menuId}
     </update>
 
-    <delete id="deleteSqMenuById" parameterType="Long">
-        delete from sq_menu where menu_id = #{menuId}
+    <delete id="deleteSqMenuById" parameterType="SqMenu">
+        delete from sq_menu where menu_id = #{menuId} and user_id = #{userId}
     </delete>
 
     <delete id="deleteSqMenuByIds" parameterType="String">

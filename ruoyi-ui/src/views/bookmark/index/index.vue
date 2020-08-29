@@ -3,7 +3,7 @@
 
   <el-container>
     <transition name="el-zoom-in-left">
-    <el-aside width="300px" style="height:900px" v-show="isShowZtree" class="transition-box">
+    <el-aside width="300px" style="height:900px;box-shadow: inset -1px 0 0 rgba(0,0,0,.1);" v-show="isShowZtree" class="transition-box">
 
 
       <el-header  class="aside-logo">
@@ -137,6 +137,10 @@
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
+
+      <el-button type="danger"  round  @click="deleteMmenu(form.menuId)">删除</el-button>
+
+
       <el-button type="primary"  round  @click="submitForm">确定</el-button>
       <el-button round  @click="cancel">取消</el-button>
 
@@ -273,7 +277,7 @@
       getTreeselect() {
         listMenuByUserId().then(response => {
           this.menuOptions = [];
-          const data = { menuId: 0, menuName: '顶级节点', children: [] };
+          const data = { menuId: 0, menuName: '顶级菜单', children: [] };
           data.children = this.handleTree(response.data, "menuId", "parentId");
           this.menuOptions.push(data);
         });
@@ -298,6 +302,12 @@
         this.$refs["form"].validate(valid => {
           if (valid) {
             if (this.form.menuId != undefined) {
+              if (this.form.menuId==this.form.parentId){
+                this.msgError("不能讲上级菜单设置为本身");
+                return;
+              }
+
+
               updateMenu(this.form).then(response => {
                 if (response.code === 200) {
                   this.msgSuccess("修改成功");
@@ -465,6 +475,33 @@
         return false;
       },
 
+      //删除书签目录
+      deleteMmenu(menuId){
+
+        this.$confirm('是否删除此目录菜单?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+            delMenu(menuId).then(response => {
+              // if(){}
+              this.$message({
+                type: 'success',
+                message: '删除成功!'
+              });
+
+              this.open = false;
+              this.getList();
+            });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });
+        });
+
+
+      }
     },
     mounted(){
       window['editBookmark'] = (e) => {
@@ -474,6 +511,8 @@
     handleCommand(command) {
       this.$message('click on item ' + command);
     },
+
+
 
 
 
@@ -569,7 +608,7 @@
     margin-right: 11px;
   }
   .aside-logo{
-    background-color: #fff;
+    /*background-color: #fff;*/
     opacity: 0.9;
   }
   .aside-logo img{

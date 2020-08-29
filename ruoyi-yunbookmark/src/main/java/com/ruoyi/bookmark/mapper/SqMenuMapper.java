@@ -61,7 +61,7 @@ public interface SqMenuMapper extends MyMapper<SqMenu>
      * @param menuId 书签菜单ID
      * @return 结果
      */
-    public int deleteSqMenuById(Long menuId);
+    public int deleteSqMenuById(@Param("menuId")Long menuId,@Param("userId")Long userId);
 
     /**
      * 批量删除书签菜单

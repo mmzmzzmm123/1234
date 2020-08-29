@@ -49,7 +49,7 @@ export function updateMenu(data) {
 // 删除书签菜单
 export function delMenu(menuId) {
   return request({
-    url: '/bookmark/menu/' + menuId,
+    url: '/bookmark/menu/delete/' + menuId,
     method: 'delete'
   })
 }

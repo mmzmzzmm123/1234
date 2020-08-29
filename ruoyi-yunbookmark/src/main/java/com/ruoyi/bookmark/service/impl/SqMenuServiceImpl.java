@@ -101,8 +101,8 @@ public class SqMenuServiceImpl implements ISqMenuService
      * @return 结果
      */
     @Override
-    public int deleteSqMenuById(Long menuId)
+    public int deleteSqMenuById(Long menuId,Long userId)
     {
-        return sqMenuMapper.deleteSqMenuById(menuId);
+        return sqMenuMapper.deleteSqMenuById(menuId,userId);
     }
 }

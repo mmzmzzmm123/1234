@@ -65,5 +65,5 @@ public interface ISqMenuService
      * @param menuId 书签菜单ID
      * @return 结果
      */
-    public int deleteSqMenuById(Long menuId);
+    public int deleteSqMenuById(Long menuId,Long userId);
 }
