@@ -1,14 +1,21 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
+    <el-form
+      :model="queryParams"
+      ref="queryForm"
+      :inline="true"
+      v-show="showSearch"
+      label-width="68px"
+    >
       <el-form-item label="所属方案" prop="faid">
-        <el-input
-          v-model="queryParams.faid"
-          placeholder="请输入所属方案"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+        <el-select v-model="queryParams.faid" size="small">
+          <el-option
+            v-for="item in jxzxkhfaOptions"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -37,16 +44,16 @@
           v-hasPermi="['jxzxkhgl:jxzxkhgcsj:remove']"
         >删除</el-button>
       </el-col>
-	  <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="jxzxkhgcsjList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="编号" align="center" prop="id" />
+      <!-- <el-table-column label="编号" align="center" prop="id" /> -->
       <el-table-column label="所属方案" align="center" prop="faid" />
-      <el-table-column label="指标项" align="center" prop="zbid" />
+      <el-table-column label="指标项" align="center" prop="tsbzJxzxkhzbx.khnr" />
       <el-table-column label="内容" align="center" prop="content" />
-      <el-table-column label="创建人" align="center" prop="createuserid" />
+      <!-- <el-table-column label="创建人" align="center" prop="createuserid" /> -->
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -66,7 +73,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -100,7 +107,15 @@
 </template>
 
 <script>
-import { listJxzxkhgcsj, getJxzxkhgcsj, delJxzxkhgcsj, addJxzxkhgcsj, updateJxzxkhgcsj } from "@/api/jxzxkhgl/jxzxkhgcsj";
+import {
+  listJxzxkhgcsj,
+  getJxzxkhgcsj,
+  delJxzxkhgcsj,
+  addJxzxkhgcsj,
+  updateJxzxkhgcsj,
+} from "@/api/jxzxkhgl/jxzxkhgcsj";
+
+import { listJxzxkhfa, getJxzxkhfa } from "@/api/jxzxkhgl/jxzxkhfa";
 
 export default {
   name: "Jxzxkhgcsj",
@@ -120,6 +135,8 @@ export default {
       total: 0,
       // 考核过程数据表格数据
       jxzxkhgcsjList: [],
+      //考核方案
+      jxzxkhfaOptions: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -133,21 +150,32 @@ export default {
         content: null,
         createuserid: null,
       },
+      // 查询参数
+      queryParams_fa: {
+        status: "1",
+      },
       // 表单参数
       form: {},
       // 表单校验
-      rules: {
-      }
+      rules: {},
     };
   },
   created() {
+    this.getKhfa();
     this.getList();
   },
   methods: {
+    //考核方案
+    getKhfa() {
+      listJxzxkhfa(this.queryParams_fa).then((response) => {
+        this.jxzxkhfaOptions = response.rows;
+      });
+    },
     /** 查询考核过程数据列表 */
     getList() {
       this.loading = true;
-      listJxzxkhgcsj(this.queryParams).then(response => {
+      listJxzxkhgcsj(this.queryParams).then((response) => {
+        console.log(response.rows);
         this.jxzxkhgcsjList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -166,7 +194,7 @@ export default {
         zbid: null,
         content: null,
         createuserid: null,
-        createTime: null
+        createTime: null,
       };
       this.resetForm("form");
     },
@@ -182,32 +210,33 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.id)
-      this.single = selection.length!==1
-      this.multiple = !selection.length
-    },
-    /** 新增按钮操作 */
-    handleAdd() {
-      this.reset();
-      this.open = true;
-      this.title = "添加考核过程数据";
+      this.ids = selection.map((item) => item.id);
+      this.single = selection.length !== 1;
+      this.multiple = !selection.length;
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const id = row.id || this.ids
-      getJxzxkhgcsj(id).then(response => {
-        this.form = response.data;
+      const id = row.id || this.ids;
+      console.log("id:" + id);
+      if (id != "") {
+        getJxzxkhgcsj(id).then((response) => {
+          this.form = response.data;
+          this.open = true;
+          this.title = "修改考核过程数据";
+        });
+      } else {
+        this.reset();
         this.open = true;
-        this.title = "修改考核过程数据";
-      });
+        this.title = "添加考核过程数据";
+      }
     },
     /** 提交按钮 */
     submitForm() {
-      this.$refs["form"].validate(valid => {
+      this.$refs["form"].validate((valid) => {
         if (valid) {
           if (this.form.id != null) {
-            updateJxzxkhgcsj(this.form).then(response => {
+            updateJxzxkhgcsj(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("修改成功");
                 this.open = false;
@@ -215,7 +244,7 @@ export default {
               }
             });
           } else {
-            addJxzxkhgcsj(this.form).then(response => {
+            addJxzxkhgcsj(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("新增成功");
                 this.open = false;
@@ -229,17 +258,24 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$confirm('是否确认删除考核过程数据编号为"' + ids + '"的数据项?', "警告", {
+      this.$confirm(
+        '是否确认删除考核过程数据编号为"' + ids + '"的数据项?',
+        "警告",
+        {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
+          type: "warning",
+        }
+      )
+        .then(function () {
           return delJxzxkhgcsj(ids);
-        }).then(() => {
+        })
+        .then(() => {
           this.getList();
           this.msgSuccess("删除成功");
-        }).catch(function() {});
+        })
+        .catch(function () {});
     },
-  }
+  },
 };
 </script>

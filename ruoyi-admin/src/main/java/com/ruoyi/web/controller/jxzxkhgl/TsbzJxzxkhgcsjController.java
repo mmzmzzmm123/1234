@@ -2,6 +2,7 @@ package com.ruoyi.web.controller.jxzxkhgl;
 
 import java.util.List;
 
+import com.ruoyi.web.controller.common.SchoolCommonController;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,6 +33,8 @@ import com.ruoyi.common.core.page.TableDataInfo;
 public class TsbzJxzxkhgcsjController extends BaseController {
     @Autowired
     private ITsbzJxzxkhgcsjService tsbzJxzxkhgcsjService;
+    @Autowired
+    private SchoolCommonController schoolCommonController;
 
     /**
      * 查询考核过程数据列表
@@ -72,6 +75,7 @@ public class TsbzJxzxkhgcsjController extends BaseController {
     @Log(title = "考核过程数据", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody TsbzJxzxkhgcsj tsbzJxzxkhgcsj) {
+        tsbzJxzxkhgcsj.setId(schoolCommonController.getUuid());
         return toAjax(tsbzJxzxkhgcsjService.insertTsbzJxzxkhgcsj(tsbzJxzxkhgcsj));
     }
 
