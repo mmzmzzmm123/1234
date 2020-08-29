@@ -22,7 +22,7 @@
         <ul id="treeDemo" class="ztree" ></ul>
       </div>
       <div class="reminder">工具箱</div>
-      <div class="aside-title"><i class="el-icon-s-flag" style="color: red"></i><span>书签同步</span></div>
+      <div class="aside-title"><i class="el-icon-s-flag" style="color: red"></i><span>RSS订阅</span></div>
       <div class="aside-title"><i class="el-icon-s-management" ></i><span>标签管理</span></div>
       <div class="aside-title" @click="gorecycle"><i class="el-icon-delete-solid"></i><span>回收站</span></div>
       <div class="aside-title" @click="importHtml"><i class="el-icon-s-platform"></i><span>导入书签</span></div>
@@ -127,7 +127,7 @@
       </el-form-item>
       <el-form-item  prop="parentId">
         <div class="labelname">上级菜单</div>
-        <treeselect class="custom-input"  v-model="form.parentId" :options="menuOptions" :normalizer="normalizer" placeholder="请选择父菜单id" />
+        <treeselect class="menutreeselect"  v-model="form.parentId" :options="menuOptions" :normalizer="normalizer"  />
       </el-form-item>
       <el-form-item  prop="menuOrder">
         <div class="labelname">排序</div>
@@ -301,7 +301,7 @@
           if (valid) {
             if (this.form.menuId != undefined) {
               if (this.form.menuId==this.form.parentId){
-                this.msgError("不能讲上级菜单设置为本身");
+                this.msgError("不能将上级菜单设置为本身");
                 return;
               }
 
@@ -965,6 +965,11 @@
 
   .el-dialog{
     border-radius: 10px!important;
+  }
+
+  /*编辑目录 选择目录菜单样式调整*/
+  .vue-treeselect__control{
+    padding-top: 6px!important;
   }
 
 
