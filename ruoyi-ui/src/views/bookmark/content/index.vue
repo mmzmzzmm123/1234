@@ -109,7 +109,7 @@
 <script>
 
 
-  import { selectBymenuIdUserID, getBookmark, delBookmark, addBookmark, updateBookmark, exportBookmark } from "@/api/bookmark/bookmark";
+  import { selectBymenuIdUserID,selectBydelete,selectByUseridList, getBookmark, delBookmark, addBookmark, updateBookmark, exportBookmark } from "@/api/bookmark/bookmark";
   import { format } from 'timeago.js';
 
   export default {
@@ -151,17 +151,61 @@
     },
       created() {
         var that=this;
-        if (that.$route.query.menuId==undefined){
+        var routedata=that.$route.query.menuId;
+        if (routedata==undefined){
           that.queryParams.menuId=1;
         }else {
-          that.queryParams.menuId=that.$route.query.menuId;
+          that.queryParams.menuId=routedata;
         }
-        this.getList();
+
+        if (routedata=='BOOKMARK'){
+          //全部书签
+          this.getBookmarkList();
+
+        }else if(routedata=='RECYCLE'){
+          //回收站
+          this.getrecycleList();
+
+        }else{
+          //根据menuId查询
+          this.getList();
+        }
+
       },
     mounted(){
 
     },
     methods: {
+          /** 回收站**/
+          getrecycleList() {
+            this.loading = true;
+            selectBydelete(this.queryParams).then(response => {
+              if (response.total!=0&&response.code==200){
+                this.bookmarkList = response.rows;
+                this.total = response.total;
+                this.loading = false;
+              }else {
+                this.showbookmark = false;
+                this.showimg = true;
+              }
+            });
+          },
+      /** 全部书签**/
+      getBookmarkList() {
+        this.loading = true;
+        selectByUseridList(this.queryParams).then(response => {
+          if (response.total!=0&&response.code==200){
+            this.bookmarkList = response.rows;
+            this.total = response.total;
+            this.loading = false;
+          }else {
+            this.showbookmark = false;
+            this.showimg = true;
+          }
+        });
+      },
+
+
           /** 查询书签管理列表 */
           getList() {
             this.loading = true;

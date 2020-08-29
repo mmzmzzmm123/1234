@@ -81,4 +81,15 @@ public interface ISqBookmarkService
      * @return 结果
      */
     public void updateSqBookmarkBymenuId(Long menuId);
+    /**
+     * 回收站
+     * @return
+     */
+    public List<SqBookmark> selectBydelete(Long userId);
+
+    /**
+     * 用户全部书签
+     * @return
+     */
+    List<SqBookmark> selectByUseridList(Long userId);
 }

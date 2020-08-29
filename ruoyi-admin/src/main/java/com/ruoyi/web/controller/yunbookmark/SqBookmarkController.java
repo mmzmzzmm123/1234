@@ -59,6 +59,31 @@ public class SqBookmarkController extends BaseController
         List<SqBookmark> list = sqBookmarkService.selectBymenuIdUserID(menuId,sysUser.getUserId());
         return getDataTable(list);
     }
+    /**
+     * 回收站
+     * @return
+     */
+    @GetMapping("/selectBydelete")
+    @PreAuthorize("@ss.hasPermi('bookmark:bookmark:list')")
+    public TableDataInfo selectBydelete() {
+        SysUser sysUser=getAuthUser();
+        startPage();
+        List<SqBookmark> list = sqBookmarkService.selectBydelete(sysUser.getUserId());
+        return getDataTable(list);
+    }
+
+    /**
+     * 用户全部书签
+     * @return
+     */
+    @GetMapping("/selectByUseridList")
+    @PreAuthorize("@ss.hasPermi('bookmark:bookmark:list')")
+    public TableDataInfo selectByUseridList() {
+        SysUser sysUser=getAuthUser();
+        startPage();
+        List<SqBookmark> list = sqBookmarkService.selectByUseridList(sysUser.getUserId());
+        return getDataTable(list);
+    }
 
 
     /**

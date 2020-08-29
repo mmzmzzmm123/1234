@@ -2,6 +2,7 @@ package com.ruoyi.bookmark.service.impl;
 
 import java.util.List;
 import com.ruoyi.common.utils.DateUtils;
+import com.sun.org.apache.bcel.internal.generic.NEW;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -122,5 +123,24 @@ public class SqBookmarkServiceImpl implements ISqBookmarkService
     @Override
     public void updateSqBookmarkBymenuId(Long menuId) {
          sqBookmarkMapper.updateSqBookmarkBymenuId(menuId);
+
+    }
+    /**
+     * 回收站
+     * @return
+     */
+    @Override
+    public List<SqBookmark> selectBydelete(Long userId) {
+        return sqBookmarkMapper.selectBydelete(userId);
+    }
+    /**
+     * 用户全部书签
+     * @return
+     */
+    @Override
+    public List<SqBookmark> selectByUseridList(Long userId) {
+        SqBookmark sqBookmark= new SqBookmark();
+        sqBookmark.setUserid(userId);
+        return sqBookmarkMapper.select(sqBookmark);
     }
 }

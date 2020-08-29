@@ -13,7 +13,7 @@
 
 
 
-      <div class="aside-title"><i class="el-icon-s-tools"></i><span>全部书签</span></div>
+      <div class="aside-title" @click="goBookmarkList"><i class="el-icon-s-tools"></i><span>全部书签</span></div>
       <div class="aside-title"><i class="el-icon-help"></i><span>发现</span></div>
       <div class="aside-title"><i class="el-icon-s-platform"></i><span>任意门</span></div>
       <div class="aside-title"><i class="el-icon-message-solid"></i><span>收件箱</span></div>
@@ -23,13 +23,12 @@
       </div>
       <div class="reminder">工具箱</div>
       <div class="aside-title"><i class="el-icon-s-tools"></i><span>收藏同步</span></div>
-      <div class="aside-title"><i class="el-icon-help"></i><span>发现书签</span></div>
-      <router-link :to="{ name: 'importHtml' }">
-      <div class="aside-title">
+      <div class="aside-title" @click="gorecycle"><i class="el-icon-help"></i><span>回收站</span></div>
+      <div class="aside-title" @click="importHtml">
         <i class="el-icon-s-platform"></i><span>导入书签</span>
       </div>
-      </router-link>
-      <div class="aside-title"><i class="el-icon-message-solid"></i><span>收件箱</span></div>
+      <div class="aside-title"><i class="el-icon-message-solid"></i><span>意见反馈</span></div>
+      <div class="aside-title"><i class="el-icon-message-solid"></i><span>其他设置</span></div>
 
 <!--      <el-footer class="aside-navigation">-->
 <!--      </el-footer>-->
@@ -423,6 +422,7 @@
     // }
     //return true;
   },
+      /** 点击跳转**/
       //节点点击
       OnClickzTree:function(event,treeId, treeNode){
         var that=this;
@@ -447,6 +447,13 @@
       zreaZtree:function () {
       var that=this;
         that.isShowZtree = !that.isShowZtree;
+
+      },
+      /**跳转导入页面**/
+      importHtml:function(){
+        this.$router.push({
+          path: "/importHtml",
+        })
 
       },
 
@@ -501,7 +508,30 @@
         });
 
 
-      }
+      },
+      // 全部书签
+      goBookmarkList(){
+        var that=this;
+        that.$router.push({
+          path: "/content",
+          query: {
+            menuId: 'BOOKMARK'
+          }
+        })
+
+      },
+      // 回收站
+      gorecycle(){
+        var that=this;
+        that.$router.push({
+          path: "/content",
+          query: {
+            menuId: 'RECYCLE'
+          }
+        })
+
+      },
+
     },
     mounted(){
       window['editBookmark'] = (e) => {

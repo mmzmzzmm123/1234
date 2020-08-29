@@ -8,6 +8,23 @@ export function selectBymenuIdUserID(query) {
     params: query
   })
 }
+//回收站
+export function selectBydelete(query) {
+  return request({
+    url: '/bookmark/bookmark/selectBydelete',
+    method: 'get',
+    params: query
+  })
+}
+
+//用户全部书签
+export function selectByUseridList(query) {
+  return request({
+    url: '/bookmark/bookmark/selectByUseridList',
+    method: 'get',
+    params: query
+  })
+}
 
 
 
