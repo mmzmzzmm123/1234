@@ -2,6 +2,7 @@ package com.ruoyi.web.controller.yunbookmark;
 
 import java.util.List;
 
+import com.ruoyi.bookmark.service.ISqBookmarkService;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.sun.org.apache.bcel.internal.generic.NEW;
@@ -32,7 +33,8 @@ public class SqMenuController extends BaseController
 {
     @Autowired
     private ISqMenuService sqMenuService;
-
+    @Autowired
+    private ISqBookmarkService sqBookmarkService;
     /**
      * 功能描述:查询用户的 所有书签菜单
      */
@@ -143,7 +145,11 @@ public class SqMenuController extends BaseController
         sqMenu.setParentId(menuId);
         List<SqMenu> sqMenuList=sqMenuService.selectSqMenuList(sqMenu);
         if (sqMenuList==null||sqMenuList.isEmpty()){
-            return toAjax(sqMenuService.deleteSqMenuById(menuId,sysUser.getUserId()));
+        sqMenuService.deleteSqMenuById(menuId,sysUser.getUserId());
+            //修改目录下的所有书签状态为 删除状态
+            sqBookmarkService.updateSqBookmarkBymenuId(menuId);
+
+            return toAjax(1);
         }else{
             return AjaxResult.error("删除失败,该目录下级还有目录菜单");
         }

@@ -73,4 +73,12 @@ public interface ISqBookmarkService
      * @return 结果
      */
     public int deleteSqBookmarkById(Long bookmarkId);
+
+    /**
+     * 修改目录下书签状态为 删除状态
+     *
+     * @param
+     * @return 结果
+     */
+    public void updateSqBookmarkBymenuId(Long menuId);
 }

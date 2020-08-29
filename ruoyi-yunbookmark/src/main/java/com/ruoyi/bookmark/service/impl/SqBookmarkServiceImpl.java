@@ -111,4 +111,16 @@ public class SqBookmarkServiceImpl implements ISqBookmarkService
     {
         return sqBookmarkMapper.deleteSqBookmarkById(bookmarkId);
     }
+
+
+    /**
+     * 修改目录下书签状态为 删除状态
+     *
+     * @param
+     * @return 结果
+     */
+    @Override
+    public void updateSqBookmarkBymenuId(Long menuId) {
+         sqBookmarkMapper.updateSqBookmarkBymenuId(menuId);
+    }
 }

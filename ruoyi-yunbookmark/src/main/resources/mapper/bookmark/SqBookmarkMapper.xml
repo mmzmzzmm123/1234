@@ -97,6 +97,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where bookmark_id = #{bookmarkId}
     </update>
 
+    <update id="updateSqBookmarkBymenuId" parameterType="Long">
+        update sq_bookmark set IDelete = 1 where menu_id = #{menuId}
+    </update>
+
     <delete id="deleteSqBookmarkById" parameterType="Long">
         delete from sq_bookmark where bookmark_id = #{bookmarkId}
     </delete>
