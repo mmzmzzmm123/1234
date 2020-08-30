@@ -39,6 +39,7 @@ public class SqMenuController extends BaseController
     /**
      * 功能描述:查询用户的 所有书签菜单
      */
+
     @GetMapping("/selectMenuByUserID")
     public AjaxResult selecByUserID()
     {
@@ -118,6 +119,11 @@ public class SqMenuController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody SqMenu sqMenu)
     {
+        //查询书签的所有上级
+
+        //查询当前移动目录的 所有下级书签数量(包括下级目录书签)
+
+
         return toAjax(sqMenuService.updateSqMenu(sqMenu));
     }
 
@@ -160,16 +166,22 @@ public class SqMenuController extends BaseController
 //     * 批量更新书签的数量
 //     */
 //
-    @RequestMapping("/bookmarkcount")
-    public void bookmarkcount()
+    @RequestMapping("/bookmarkcount/{menuId}")
+    public AjaxResult bookmarkcount(@PathVariable Long menuId)
     {
 
 //        Long[] menuIds={1L,2L,3L};
         //所有的父级目录
-        Long[] menuIds=  sqMenuService.selectBymenuidParentid(4L);
-        sqMenuService.updateCountAdd(menuIds,5);
+//        Long[] menuIds=  sqMenuService.selectBymenuidParentid(4L);
+//        sqMenuService.updateCountAdd(menuIds,5);
 
+        Long[] menuIds=  sqMenuService.selectBymenuidsubordinateid(menuId);
+        for (int i=0;i<menuIds.length;i++){
+            System.out.println("id:"+menuIds[i].toString());
+        }
         logger.info("执行完毕");
+      return   AjaxResult.success(menuIds);
+
     }
 
 

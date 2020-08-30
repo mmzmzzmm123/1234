@@ -21,7 +21,32 @@ public class SqMenuServiceImpl implements ISqMenuService
     @Autowired
     private SqMenuMapper sqMenuMapper;
 
+    /**
+     * 查询 目录菜单的 所有父级ID
+     *
+     * @param menuId
+     * @return 所有的下级MenuID 串
+     */
+    @Override
+    public Long[] selectBymenuidsubordinateid(Long menuId){
 
+        List<Long> menuIds=new ArrayList<>();
+        Boolean flag=true;
+        while (flag) {
+            SqMenu sqMenu=new SqMenu();
+            sqMenu.setParentId(menuId);
+            SqMenu Menu = sqMenuMapper.selectOne(sqMenu);
+            if (Menu!=null) {
+                menuIds.add(Menu.getMenuId());
+                menuId = Menu.getMenuId();
+            }else {
+                flag=false;
+            }
+
+        }
+        Long[] menuIdArry = menuIds.toArray(new Long[menuIds.size()]);
+        return  menuIdArry;
+    }
 
 
     /**

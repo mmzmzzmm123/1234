@@ -14,6 +14,14 @@ public interface ISqMenuService
 
 
     /**
+     * 查询 目录菜单的 所有下级ID
+     *
+     * @param menuId 目录ID
+     * @return 结果
+     */
+    public Long[] selectBymenuidsubordinateid(Long menuId);
+
+ /**
      * 查询 目录菜单的 所有父级ID
      *
      * @param menuId 目录ID
