@@ -114,8 +114,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectBymenuIdUserID" parameterType="SqBookmark"  resultMap="SqBookmarkResult">
         <include refid="selectSqBookmarkVo"/>
-        where menu_id = #{menuID} and userid=#{userID} and IDelete=0
+        where menu_id = #{menuID} and userid=#{userID}
     </select>
-
-
 </mapper>

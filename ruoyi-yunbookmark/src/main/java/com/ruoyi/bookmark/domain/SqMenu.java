@@ -52,10 +52,37 @@ public class SqMenu
     @Column(name = "parent_id")
     private Long parentId;
 
+    /** 下级书签数量 */
+
+    @Column(name = "bookmark_count")
+    private Date bookmarkCount;
+
     /** 创建时间 */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "create_time")
     private Date createTime;
+
+    /** 修改时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Column(name = "update_time")
+    private Date updateTime;
+
+
+    public Date getBookmarkCount() {
+        return bookmarkCount;
+    }
+
+    public void setBookmarkCount(Date bookmarkCount) {
+        this.bookmarkCount = bookmarkCount;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
 
     public Date getCreateTime() {
         return createTime;
@@ -138,7 +165,9 @@ public class SqMenu
             .append("menuIcon", getMenuIcon())
             .append("parentId", getParentId())
             .append("menuOrder", getMenuOrder())
+            .append("bookmarkCount", getBookmarkCount())
             .append("createTime", getCreateTime())
+            .append("updateTime", getUpdateTime())
             .toString();
     }
 }
