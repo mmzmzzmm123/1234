@@ -16,12 +16,12 @@ public interface SqMenuMapper extends MyMapper<SqMenu>
 {
 
     /**
-     * @auther: Wang
-     * @date: 2020/08/16 20:04
-     * 功能描述:查询用户的 所有书签菜单
+     * 查询用户的所有目录菜单
+     *
+     * @param userid 用户userid
+     * @return 结果
      */
-
-    public  List<SqMenu> selecByUserID(Long id);
+    public  List<SqMenu> selecByUserID(Long userid);
 
     /**
      * 查询书签菜单
@@ -56,9 +56,10 @@ public interface SqMenuMapper extends MyMapper<SqMenu>
     public int updateSqMenu(SqMenu sqMenu);
 
     /**
-     * 删除书签菜单
+     * 删除书签菜单信息
      *
-     * @param menuId 书签菜单ID
+     * @param menuId 书签目录菜单emnuID
+     * @param userId 用户userID
      * @return 结果
      */
     public int deleteSqMenuById(@Param("menuId")Long menuId,@Param("userId")Long userId);
@@ -72,17 +73,19 @@ public interface SqMenuMapper extends MyMapper<SqMenu>
     public int deleteSqMenuByIds(Long[] menuIds);
 
     /**
-     * 批量减少目录下书签数量  -1
+     * 批量减少目录下书签数量
      *
-     * @param menuIds
+     * @param menuIds 目录menuId串
+     * @param icount 减少数量
      * @return 结果
      */
     public int updateCountReduce(@Param("menuIds")Long[] menuIds,@Param("icount")int icount);
 
     /**
-     * 批量添加目录下书签数量  +1
+     * 批量添加目录下书签数量
      *
-     * @param menuIds   +1
+     * @param menuIds 目录menuId串
+     * @param icount 添加数量
      * @return 结果
      */
     public int updateCountAdd(@Param("menuIds")Long[] menuIds,@Param("icount")int icount);

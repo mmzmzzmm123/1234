@@ -16,7 +16,7 @@ public interface ISqMenuService
     /**
      * 查询 目录菜单的 所有父级ID
      *
-     * @param menuId
+     * @param menuId 目录ID
      * @return 结果
      */
     public Long[] selectBymenuidParentid(Long menuId);
@@ -24,7 +24,8 @@ public interface ISqMenuService
     /**
      * 批量减少目录下书签数量
      *
-     * @param menuIds
+     * @param menuIds 目录menuId串
+     * @param icount 减少数量
      * @return 结果
      */
     public int updateCountReduce(Long[] menuIds,int icount);
@@ -32,16 +33,19 @@ public interface ISqMenuService
     /**
      * 批量添加目录下书签数量
      *
-     * @param menuIds
+     * @param menuIds 目录menuId串
+     * @param icount 添加数量
      * @return 结果
      */
     public int updateCountAdd(Long[] menuIds,int icount);
+
     /**
-     * @auther: Wang
-     * @date: 2020/08/16 20:04
-     * 功能描述:查询用户的 所有书签菜单
+     * 查询用户的所有目录菜单
+     *
+     * @param userid 用户userid
+     * @return 结果
      */
-    public List<SqMenu> selecByUserID(Long id);
+    public List<SqMenu> selecByUserID(Long userid);
 
 
     /**
@@ -87,7 +91,8 @@ public interface ISqMenuService
     /**
      * 删除书签菜单信息
      *
-     * @param menuId 书签菜单ID
+     * @param menuId 书签目录菜单emnuID
+     * @param userId 用户userID
      * @return 结果
      */
     public int deleteSqMenuById(Long menuId,Long userId);

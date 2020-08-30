@@ -165,7 +165,8 @@ public class SqMenuController extends BaseController
     {
 
 //        Long[] menuIds={1L,2L,3L};
-        Long[] menuIds=  sqMenuService.selectBymenuidParentid(4L);//所有的父级目录
+        //所有的父级目录
+        Long[] menuIds=  sqMenuService.selectBymenuidParentid(4L);
         sqMenuService.updateCountAdd(menuIds,5);
 
         logger.info("执行完毕");
