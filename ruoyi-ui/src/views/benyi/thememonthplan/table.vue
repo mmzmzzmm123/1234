@@ -1,5 +1,7 @@
 <template>
-  <div class="table-container"></div>
+  <div class="table-container">
+    343
+  </div>
 </template>
 
 <script>
