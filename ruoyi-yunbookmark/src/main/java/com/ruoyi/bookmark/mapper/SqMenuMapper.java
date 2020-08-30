@@ -71,5 +71,21 @@ public interface SqMenuMapper extends MyMapper<SqMenu>
      */
     public int deleteSqMenuByIds(Long[] menuIds);
 
+    /**
+     * 批量减少目录下书签数量  -1
+     *
+     * @param menuIds
+     * @return 结果
+     */
+    public int updateCountReduce(Long[] menuIds);
+
+    /**
+     * 批量添加目录下书签数量  +1
+     *
+     * @param menuIds   +1
+     * @return 结果
+     */
+    public int updateCountAdd(Long[] menuIds);
+
 
 }

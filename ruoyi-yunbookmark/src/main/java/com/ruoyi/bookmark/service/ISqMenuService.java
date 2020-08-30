@@ -11,6 +11,22 @@ import com.ruoyi.bookmark.domain.SqMenu;
  */
 public interface ISqMenuService
 {
+
+    /**
+     * 批量减少目录下书签数量  -1
+     *
+     * @param menuIds
+     * @return 结果
+     */
+    public int updateCountReduce(Long[] menuIds);
+
+    /**
+     * 批量添加目录下书签数量  +1
+     *
+     * @param menuIds   +1
+     * @return 结果
+     */
+    public int updateCountAdd(Long[] menuIds);
     /**
      * @auther: Wang
      * @date: 2020/08/16 20:04
