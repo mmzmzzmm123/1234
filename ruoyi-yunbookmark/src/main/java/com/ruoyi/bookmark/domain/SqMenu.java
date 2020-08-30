@@ -55,7 +55,7 @@ public class SqMenu
     /** 下级书签数量 */
 
     @Column(name = "bookmark_count")
-    private Date bookmarkCount;
+    private Integer bookmarkCount;
 
     /** 创建时间 */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -68,11 +68,11 @@ public class SqMenu
     private Date updateTime;
 
 
-    public Date getBookmarkCount() {
+    public Integer getBookmarkCount() {
         return bookmarkCount;
     }
 
-    public void setBookmarkCount(Date bookmarkCount) {
+    public void setBookmarkCount(Integer bookmarkCount) {
         this.bookmarkCount = bookmarkCount;
     }
 

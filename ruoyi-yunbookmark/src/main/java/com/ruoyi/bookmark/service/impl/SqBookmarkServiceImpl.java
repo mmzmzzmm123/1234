@@ -115,9 +115,9 @@ public class SqBookmarkServiceImpl implements ISqBookmarkService
 
 
     /**
-     * 修改目录下书签状态为 删除状态
+     * 根据menuID 修改目录下所有书签状态为 删除状态
      *
-     * @param
+     * @param menuId
      * @return 结果
      */
     @Override
@@ -147,4 +147,25 @@ public class SqBookmarkServiceImpl implements ISqBookmarkService
         sqBookmark.setIdelete(0); //未删除的书签
         return sqBookmarkMapper.select(sqBookmark);
     }
+
+    /**
+     * 根据MenuId查询当前目录下 有多少书签数量
+     *
+     * @param  menuId
+     * @return 结果
+     */
+    @Override
+    public int selectByMenuIdCount(Long menuId)
+    {
+        SqBookmark sqBookmark=new SqBookmark();
+        sqBookmark.setMenuId(menuId);
+       List<SqBookmark> sqBookmarks=sqBookmarkMapper.select(sqBookmark);
+       if (sqBookmarks!=null&&!sqBookmarks.isEmpty()){
+           return sqBookmarks.size();
+       }else {
+           return 0;
+       }
+    }
+
+
 }

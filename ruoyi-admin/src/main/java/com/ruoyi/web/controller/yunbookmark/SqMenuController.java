@@ -5,7 +5,9 @@ import java.util.List;
 import com.ruoyi.bookmark.service.ISqBookmarkService;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.core.domain.model.LoginUser;
+import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
 import com.sun.org.apache.bcel.internal.generic.NEW;
+import org.apache.velocity.runtime.directive.Foreach;
 import org.junit.Test;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -119,12 +121,34 @@ public class SqMenuController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody SqMenu sqMenu)
     {
+        //查询当前目录的 所有下级目录ID
+        Long[] downMenuid = sqMenuService.selectBymenuidsubordinateid(sqMenu.getMenuId());
+
+        //自身menuId >> 所有下级目录的书签数量
+        int bookmarkCount =sqBookmarkService.selectByMenuIdCount(sqMenu.getMenuId());
+        for (Long menuId:downMenuid){
+          SqMenu menu=new SqMenu();
+          menu.setMenuId(menuId);
+          List<SqMenu> menulist= sqMenuService.selectSqMenuList(menu);
+          bookmarkCount +=menulist.get(0).getBookmarkCount();
+        }
+
+        // ================修改前,减少上级所有目录的书签统计数量===================
+        //查询书签修改前的所有上级
+        Long[] parentMenuidlist = sqMenuService.selectBymenuidParentid(sqMenu.getMenuId());
+        if (parentMenuidlist!=null&&parentMenuidlist.length>0){
+            sqMenuService.updateCountReduce(parentMenuidlist,bookmarkCount);
+        }
+
+        //修改
+        sqMenuService.updateSqMenu(sqMenu);
+        // ================修改后,增加上级所有目录的书签统计数量===================
         //查询书签的所有上级
-
-        //查询当前移动目录的 所有下级书签数量(包括下级目录书签)
-
-
-        return toAjax(sqMenuService.updateSqMenu(sqMenu));
+        Long[] parentMenuid = sqMenuService.selectBymenuidParentid(sqMenu.getMenuId());
+        if (parentMenuid!=null&&parentMenuid.length>0){
+        sqMenuService.updateCountAdd(parentMenuid,bookmarkCount);
+        }
+        return AjaxResult.success();
     }
 
     /**

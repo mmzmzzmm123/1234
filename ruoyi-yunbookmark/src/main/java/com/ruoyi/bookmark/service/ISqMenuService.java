@@ -14,7 +14,7 @@ public interface ISqMenuService
 
 
     /**
-     * 查询 目录菜单的 所有下级ID
+     * 查询 目录菜单的 所有下级MenuId
      *
      * @param menuId 目录ID
      * @return 结果

@@ -92,4 +92,11 @@ public interface ISqBookmarkService
      * @return
      */
     List<SqBookmark> selectByUseridList(Long userId);
+
+
+    /**
+     * 根据MenuId查询当前目录下 有多少书签数量
+     * @return
+     */
+    public int selectByMenuIdCount(Long menuId);
 }
