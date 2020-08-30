@@ -1,6 +1,9 @@
 package com.ruoyi.system.service.impl;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,12 +39,17 @@ public class SysDictTypeServiceImpl implements ISysDictTypeService
     public void init()
     {
         List<SysDictType> dictTypeList = dictTypeMapper.selectDictTypeAll();
+		List<SysDictData> dictDatas = dictDataMapper.selectDictDataByType("");
+		Map<String, List<SysDictData>> dictDatasMap = dictDatas.stream()
+				.collect(Collectors.groupingBy(SysDictData::getDictType));
         for (SysDictType dictType : dictTypeList)
-        {
-            List<SysDictData> dictDatas = dictDataMapper.selectDictDataByType(dictType.getDictType());
-            DictUtils.setDictCache(dictType.getDictType(), dictDatas);
-        }
-    }
+		{
+			if (dictDatasMap.get(dictType.getDictType()) != null) 
+			{
+				DictUtils.setDictCache(dictType.getDictType(), dictDatasMap.get(dictType.getDictType()));
+			}
+		}
+	}
 
     /**
      * 根据条件分页查询字典类型
