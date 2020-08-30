@@ -32,7 +32,7 @@
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['jxzxkhgl:jxzxkhgcsj:edit']"
-        >修改</el-button>
+        >填报</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -42,7 +42,16 @@
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['jxzxkhgl:jxzxkhgcsj:remove']"
-        >删除</el-button>
+        >清空</el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="warning"
+          icon="el-icon-check"
+          size="mini"
+          @click="handleDelete"
+          v-hasPermi="['jxzxkhgl:jxzxkhgcsj:edit']"
+        >提交</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
@@ -50,7 +59,8 @@
     <el-table v-loading="loading" :data="jxzxkhgcsjList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="编号" align="center" prop="id" /> -->
-      <el-table-column label="所属方案" align="center" prop="faid" />
+      <el-table-column label="所属方案" align="center" prop="tsbzJxzxkhzbx.faid" :formatter="faFormat" />
+      <el-table-column label="指标模块" align="center" prop="tsbzJxzxkhzbx.khmk" />
       <el-table-column label="指标项" align="center" prop="tsbzJxzxkhzbx.khnr" />
       <el-table-column label="内容" align="center" prop="content" />
       <!-- <el-table-column label="创建人" align="center" prop="createuserid" /> -->
@@ -62,14 +72,14 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['jxzxkhgl:jxzxkhgcsj:edit']"
-          >修改</el-button>
+          >填报</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['jxzxkhgl:jxzxkhgcsj:remove']"
-          >删除</el-button>
+          >清空</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -86,16 +96,38 @@
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="所属方案" prop="faid">
-          <el-input v-model="form.faid" placeholder="请输入所属方案" />
+          <el-select v-model="form.faid" size="small" :disabled="true">
+            <el-option
+              v-for="item in jxzxkhfaOptions"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
+            />
+          </el-select>
         </el-form-item>
         <el-form-item label="指标项" prop="zbid">
-          <el-input v-model="form.zbid" placeholder="请输入指标项" />
+          <el-input v-model="form.khnr" :disabled="true" />
+          <el-input v-model="form.zbid" v-if="false" />
         </el-form-item>
         <el-form-item label="内容" prop="content">
           <el-input v-model="form.content" type="textarea" placeholder="请输入内容" />
         </el-form-item>
-        <el-form-item label="创建人" prop="createuserid">
-          <el-input v-model="form.createuserid" placeholder="请输入创建人" />
+        <el-form-item label="选择文件" prop="fileurl">
+          <el-input v-model="form.fileurl" v-if="false" />
+          <el-upload
+            class="upload-demo"
+            :action="uploadFileUrl"
+            :headers="headers"
+            :on-preview="handlePreview"
+            :on-remove="handleRemove"
+            :before-remove="beforeRemove"
+            :limit="1"
+            :on-exceed="handleExceed"
+            :file-list="fileList"
+            :on-success="handleAvatarSuccess"
+          >
+            <el-button size="small" type="primary">选择文件</el-button>
+          </el-upload>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -116,11 +148,13 @@ import {
 } from "@/api/jxzxkhgl/jxzxkhgcsj";
 
 import { listJxzxkhfa, getJxzxkhfa } from "@/api/jxzxkhgl/jxzxkhfa";
+import { getToken } from "@/utils/auth";
 
 export default {
   name: "Jxzxkhgcsj",
   data() {
     return {
+      khnr: "",
       // 遮罩层
       loading: true,
       // 选中数组
@@ -141,6 +175,12 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
+      uploadFileUrl: process.env.VUE_APP_BASE_API + "/common/upload", // 上传的图片服务器地址
+      headers: {
+        Authorization: "Bearer " + getToken(),
+      },
+      //文件
+      fileList: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -157,7 +197,11 @@ export default {
       // 表单参数
       form: {},
       // 表单校验
-      rules: {},
+      rules: {
+        content: [
+          { required: true, message: "考核内容不能为空", trigger: "blur" },
+        ],
+      },
     };
   },
   created() {
@@ -165,6 +209,46 @@ export default {
     this.getList();
   },
   methods: {
+    handleAvatarSuccess(res, file) {
+      //console.log(res);
+      if (res.code == "200") {
+        this.form.fileurl = res.fileName;
+      } else {
+        this.msgError(res.msg);
+      }
+    },
+    handleRemove(file, fileList) {
+      //console.log(file, fileList);
+      if (file.response.code == "200") {
+        this.form.fileurl = "";
+      }
+    },
+    handlePreview(file) {
+      //console.log(file);
+    },
+    handleExceed(files, fileList) {
+      this.$message.warning(
+        `当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${
+          files.length + fileList.length
+        } 个文件`
+      );
+    },
+    beforeRemove(file, fileList) {
+      return this.$confirm(`确定移除 ${file.name}？`);
+    },
+    // 字典翻译
+    faFormat(row, column) {
+      // return this.selectDictLabel(this.classOptions, row.classid);
+      var actions = [];
+      var datas = this.jxzxkhfaOptions;
+      Object.keys(datas).map((key) => {
+        if (datas[key].id == "" + row.faid) {
+          actions.push(datas[key].name);
+          return false;
+        }
+      });
+      return actions.join("");
+    },
     //考核方案
     getKhfa() {
       listJxzxkhfa(this.queryParams_fa).then((response) => {
@@ -195,8 +279,10 @@ export default {
         content: null,
         createuserid: null,
         createTime: null,
+        khnr: null,
       };
       this.resetForm("form");
+      this.fileList = [];
     },
     /** 搜索按钮操作 */
     handleQuery() {
@@ -218,17 +304,23 @@ export default {
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids;
-      console.log("id:" + id);
+      //console.log("id:" + row.tsbzJxzxkhzbx.khnr);
+
       if (id != "") {
         getJxzxkhgcsj(id).then((response) => {
           this.form = response.data;
+          console.log(response.data);
           this.open = true;
           this.title = "修改考核过程数据";
+          this.form.khnr = row.tsbzJxzxkhzbx.khnr;
         });
       } else {
         this.reset();
         this.open = true;
         this.title = "添加考核过程数据";
+        this.form.faid = row.tsbzJxzxkhzbx.faid;
+        this.form.zbid = row.tsbzJxzxkhzbx.id;
+        this.form.khnr = row.tsbzJxzxkhzbx.khnr;
       }
     },
     /** 提交按钮 */
@@ -258,21 +350,17 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$confirm(
-        '是否确认删除考核过程数据编号为"' + ids + '"的数据项?',
-        "警告",
-        {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning",
-        }
-      )
+      this.$confirm("是否确认清空考核过程数据的数据项?", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
         .then(function () {
           return delJxzxkhgcsj(ids);
         })
         .then(() => {
           this.getList();
-          this.msgSuccess("删除成功");
+          this.msgSuccess("清空成功");
         })
         .catch(function () {});
     },

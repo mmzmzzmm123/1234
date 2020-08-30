@@ -14,10 +14,10 @@ public interface ITsbzJxzxkhgcsjService {
     /**
      * 查询考核过程数据
      *
-     * @param id 考核过程数据ID
+     * @param tsbzJxzxkhgcsj 考核过程数据ID
      * @return 考核过程数据
      */
-    public TsbzJxzxkhgcsj selectTsbzJxzxkhgcsjById(String id);
+    public TsbzJxzxkhgcsj selectTsbzJxzxkhgcsjById(TsbzJxzxkhgcsj tsbzJxzxkhgcsj);
 
     /**
      * 查询考核过程数据列表

@@ -23,12 +23,12 @@ public class TsbzJxzxkhgcsjServiceImpl implements ITsbzJxzxkhgcsjService {
     /**
      * 查询考核过程数据
      *
-     * @param id 考核过程数据ID
+     * @param tsbzJxzxkhgcsj 考核过程数据ID
      * @return 考核过程数据
      */
     @Override
-    public TsbzJxzxkhgcsj selectTsbzJxzxkhgcsjById(String id) {
-        return tsbzJxzxkhgcsjMapper.selectTsbzJxzxkhgcsjById(id);
+    public TsbzJxzxkhgcsj selectTsbzJxzxkhgcsjById(TsbzJxzxkhgcsj tsbzJxzxkhgcsj) {
+        return tsbzJxzxkhgcsjMapper.selectTsbzJxzxkhgcsjById(tsbzJxzxkhgcsj);
     }
 
     /**

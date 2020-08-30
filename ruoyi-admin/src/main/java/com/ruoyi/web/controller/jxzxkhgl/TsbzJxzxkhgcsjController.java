@@ -2,6 +2,7 @@ package com.ruoyi.web.controller.jxzxkhgl;
 
 import java.util.List;
 
+import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.web.controller.common.SchoolCommonController;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +44,7 @@ public class TsbzJxzxkhgcsjController extends BaseController {
     @GetMapping("/list")
     public TableDataInfo list(TsbzJxzxkhgcsj tsbzJxzxkhgcsj) {
         startPage();
+        tsbzJxzxkhgcsj.setCreateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
         List<TsbzJxzxkhgcsj> list = tsbzJxzxkhgcsjService.selectTsbzJxzxkhgcsjList(tsbzJxzxkhgcsj);
         return getDataTable(list);
     }
@@ -65,7 +67,10 @@ public class TsbzJxzxkhgcsjController extends BaseController {
     @PreAuthorize("@ss.hasPermi('jxzxkhgl:jxzxkhgcsj:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") String id) {
-        return AjaxResult.success(tsbzJxzxkhgcsjService.selectTsbzJxzxkhgcsjById(id));
+        TsbzJxzxkhgcsj tsbzJxzxkhgcsj = new TsbzJxzxkhgcsj();
+        tsbzJxzxkhgcsj.setId(id);
+        tsbzJxzxkhgcsj.setCreateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
+        return AjaxResult.success(tsbzJxzxkhgcsjService.selectTsbzJxzxkhgcsjById(tsbzJxzxkhgcsj));
     }
 
     /**
@@ -76,6 +81,7 @@ public class TsbzJxzxkhgcsjController extends BaseController {
     @PostMapping
     public AjaxResult add(@RequestBody TsbzJxzxkhgcsj tsbzJxzxkhgcsj) {
         tsbzJxzxkhgcsj.setId(schoolCommonController.getUuid());
+        tsbzJxzxkhgcsj.setCreateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
         return toAjax(tsbzJxzxkhgcsjService.insertTsbzJxzxkhgcsj(tsbzJxzxkhgcsj));
     }
 
