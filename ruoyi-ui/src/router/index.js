@@ -66,6 +66,30 @@ export const constantRoutes = [{
     hidden: true
   },
   {
+    path: '/week',
+    component: () =>
+      import('@/views/benyi/themeweekplan/table'),
+    hidden: true
+  },
+  {
+    path: '/month',
+    component: () =>
+      import('@/views/benyi/thememonthplan/table'),
+    hidden: true
+  },
+  {
+    path: '/term',
+    component: () =>
+      import('@/views/benyi/themetermplan/table'),
+    hidden: true
+  },
+  {
+    path: '/play',
+    component: () =>
+      import('@/views/benyi/planweek/table'),
+    hidden: true
+  },
+  {
     path: '/experience/apply/:id(\\d+)',
     component: () =>
       import('@/views/benyi/experience/choose'),

@@ -14,7 +14,7 @@ NProgress.configure({
 })
 
 //const whiteList = ['/login', '/auth-redirect', '/bind', '/register']
-const whiteList = ['/login']
+const whiteList = ['/login', '/experience/apply/', '/experience/result/', '/experience/content/', '/activity', 'week', 'month', ', term', 'play']
 
 router.beforeEach((to, from, next) => {
   NProgress.start()
@@ -64,9 +64,17 @@ router.beforeEach((to, from, next) => {
       }
     }
   } else {
-    //console.log(whiteList.indexOf(to.path));
     // 没有token
-    if (whiteList.indexOf(to.path) !== -1 ||to.path.indexOf("/experience/apply/") != -1||to.path.indexOf("/experience/result/") != -1||to.path.indexOf("/experience/content/") != -1||to.path.indexOf("/activity") != -1) {
+    // if (whiteList.indexOf(to.path) !== -1 ||to.path.indexOf("/experience/apply/") != -1||to.path.indexOf("/experience/result/") != -1||to.path.indexOf("/experience/content/") != -1||to.path.indexOf("/activity") != -1||to.path.indexOf("/week") != -1) {
+    let whiteBool = false;
+    for (let path of whiteList) {
+      // console.log(to.path.indexOf(path) > -1);
+      if (to.path.indexOf(path) > -1) {
+        whiteBool = true;
+        break;
+      }
+    }
+    if (whiteBool) {
       // 在免登录白名单，直接进入
       next()
     } else {
