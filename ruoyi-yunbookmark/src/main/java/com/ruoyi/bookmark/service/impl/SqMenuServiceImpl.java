@@ -1,5 +1,6 @@
 package com.ruoyi.bookmark.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import com.ruoyi.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,31 @@ public class SqMenuServiceImpl implements ISqMenuService
 {
     @Autowired
     private SqMenuMapper sqMenuMapper;
+
+
+
+
+    /**
+     * 查询 目录菜单的 所有父级ID
+     *
+     * @param menuId
+     * @return 结果
+     */
+    @Override
+    public Long[] selectBymenuidParentid(Long menuId){
+
+        List<Long> menuIds=new ArrayList<>();
+
+        while (!menuId.toString().equals("0")) {
+            SqMenu sqMenu = sqMenuMapper.selectSqMenuById(menuId);
+            if (!sqMenu.getParentId().toString().equals("0")) {
+                menuIds.add(sqMenu.getParentId());
+            }
+            menuId = sqMenu.getParentId();
+        }
+        Long[] menuIdArry = menuIds.toArray(new Long[menuIds.size()]);
+        return  menuIdArry;
+    }
 
     /**
      * @auther: Wang

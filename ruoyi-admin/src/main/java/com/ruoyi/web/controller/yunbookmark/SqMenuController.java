@@ -160,15 +160,18 @@ public class SqMenuController extends BaseController
 //     * 批量更新书签的数量
 //     */
 //
-//    @RequestMapping("/bookmarkcount")
-//    public void bookmarkcount()
-//    {
-//
+    @RequestMapping("/bookmarkcount")
+    public void bookmarkcount()
+    {
+
 //        Long[] menuIds={1L,2L,3L};
-//
+
 //        sqMenuService.updateCountAdd(menuIds,5);
-//        logger.info("执行完毕");
-//    }
+          Long[] menuIds=  sqMenuService.selectBymenuidParentid(4L);//所有的父级目录
+        sqMenuService.updateCountAdd(menuIds,5);
+
+        logger.info("执行完毕");
+    }
 
 
 }

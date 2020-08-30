@@ -12,6 +12,15 @@ import com.ruoyi.bookmark.domain.SqMenu;
 public interface ISqMenuService
 {
 
+
+    /**
+     * 查询 目录菜单的 所有父级ID
+     *
+     * @param menuId
+     * @return 结果
+     */
+    public Long[] selectBymenuidParentid(Long menuId);
+
     /**
      * 批量减少目录下书签数量
      *
