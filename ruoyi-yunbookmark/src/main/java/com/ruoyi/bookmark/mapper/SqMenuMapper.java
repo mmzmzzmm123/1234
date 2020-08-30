@@ -77,7 +77,7 @@ public interface SqMenuMapper extends MyMapper<SqMenu>
      * @param menuIds
      * @return 结果
      */
-    public int updateCountReduce(Long[] menuIds);
+    public int updateCountReduce(@Param("menuIds")Long[] menuIds,@Param("icount")int icount);
 
     /**
      * 批量添加目录下书签数量  +1
@@ -85,7 +85,7 @@ public interface SqMenuMapper extends MyMapper<SqMenu>
      * @param menuIds   +1
      * @return 结果
      */
-    public int updateCountAdd(Long[] menuIds);
+    public int updateCountAdd(@Param("menuIds")Long[] menuIds,@Param("icount")int icount);
 
 
 }

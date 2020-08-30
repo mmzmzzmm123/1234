@@ -92,18 +92,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
 
-    <delete id="updateCountReduce" parameterType="String">
-        <foreach item="menuId" collection="array" separator=";" >
-            update sq_menu set bookmark_count=bookmark_count-1 where menu_id = #{menuId}
+    <update id="updateCountReduce" >
+        <foreach item="menuId" collection="menuIds" separator=";" >
+            update sq_menu set bookmark_count=bookmark_count - #{icount} where menu_id = #{menuId}
         </foreach>
-    </delete>
+    </update>
 
 
-    <delete id="updateCountAdd" parameterType="String">
-        <foreach item="menuId" collection="array" separator=";" >
-            update sq_menu set bookmark_count=bookmark_count+1 where menu_id = #{menuId}
+    <update id="updateCountAdd" >
+        <foreach item="menuId" collection="menuIds" separator=";" >
+            update sq_menu set bookmark_count = bookmark_count + #{icount} where menu_id = #{menuId}
         </foreach>
-    </delete>
+    </update>
 
 
 </mapper>

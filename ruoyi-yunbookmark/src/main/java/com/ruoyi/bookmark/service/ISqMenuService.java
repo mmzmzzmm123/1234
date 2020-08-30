@@ -13,20 +13,20 @@ public interface ISqMenuService
 {
 
     /**
-     * 批量减少目录下书签数量  -1
+     * 批量减少目录下书签数量
      *
      * @param menuIds
      * @return 结果
      */
-    public int updateCountReduce(Long[] menuIds);
+    public int updateCountReduce(Long[] menuIds,int icount);
 
     /**
-     * 批量添加目录下书签数量  +1
+     * 批量添加目录下书签数量
      *
-     * @param menuIds   +1
+     * @param menuIds
      * @return 结果
      */
-    public int updateCountAdd(Long[] menuIds);
+    public int updateCountAdd(Long[] menuIds,int icount);
     /**
      * @auther: Wang
      * @date: 2020/08/16 20:04

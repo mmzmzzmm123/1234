@@ -108,24 +108,24 @@ public class SqMenuServiceImpl implements ISqMenuService
 
 
     /**
-     * 批量减少目录下书签数量  -1
+     * 批量减少目录下书签数量
      *
      * @param menuIds
      * @return 结果
      */
     @Override
-    public int updateCountReduce(Long[] menuIds){
-        return sqMenuMapper.updateCountReduce(menuIds);
+    public int updateCountReduce(Long[] menuIds,int icount){
+        return sqMenuMapper.updateCountReduce(menuIds,icount);
     }
 
     /**
-     * 批量添加目录下书签数量  +1
+     * 批量添加目录下书签数量
      *
-     * @param menuIds   +1
+     * @param menuIds
      * @return 结果
      */
     @Override
-    public int updateCountAdd(Long[] menuIds){
-        return sqMenuMapper.updateCountAdd(menuIds);
+    public int updateCountAdd(Long[] menuIds,int icount){
+        return sqMenuMapper.updateCountAdd(menuIds,icount);
     }
 }

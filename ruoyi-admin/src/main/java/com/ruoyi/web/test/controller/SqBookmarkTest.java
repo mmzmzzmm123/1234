@@ -1,6 +1,8 @@
 package com.ruoyi.web.test.controller;
 
 
+import com.ruoyi.bookmark.mapper.SqMenuMapper;
+import com.ruoyi.bookmark.service.impl.SqMenuServiceImpl;
 import com.ruoyi.web.controller.yunbookmark.SqBookmarkController;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
@@ -24,6 +26,8 @@ public class SqBookmarkTest extends BaseSpringBootTest{
 
     @Autowired
     private SqBookmarkController sqBookmarkController;
+    @Autowired
+    private SqMenuMapper sqMenuMapper;
 
     private MockMvc mockMvc;
 
@@ -32,14 +36,23 @@ public class SqBookmarkTest extends BaseSpringBootTest{
         mockMvc = MockMvcBuilders.standaloneSetup(sqBookmarkController).build();
         logger.info("setup().........");
     }
+//    @Test
+//    public void demo() throws Exception {
+//        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/bookmark/bookmark/2"))
+//                .andExpect(MockMvcResultMatchers.status().isOk())
+//                .andDo(MockMvcResultHandlers.print())
+//                .andReturn();
+//
+//        logger.info(mvcResult.getResponse().getContentAsString());
+//
+//    }
     @Test
     public void demo() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/bookmark/bookmark/2"))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andDo(MockMvcResultHandlers.print())
-                .andReturn();
+        Long[] menuIds={1L,4L,6L};
+        sqMenuMapper.updateCountAdd(menuIds,5);
 
-        logger.info(mvcResult.getResponse().getContentAsString());
+        logger.info("执行完毕");
+
     }
 
 }

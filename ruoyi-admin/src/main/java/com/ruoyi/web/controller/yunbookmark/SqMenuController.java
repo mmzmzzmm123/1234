@@ -6,6 +6,7 @@ import com.ruoyi.bookmark.service.ISqBookmarkService;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.sun.org.apache.bcel.internal.generic.NEW;
+import org.junit.Test;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -155,6 +156,19 @@ public class SqMenuController extends BaseController
         }
     }
 
+//    /**
+//     * 批量更新书签的数量
+//     */
+//
+//    @RequestMapping("/bookmarkcount")
+//    public void bookmarkcount()
+//    {
+//
+//        Long[] menuIds={1L,2L,3L};
+//
+//        sqMenuService.updateCountAdd(menuIds,5);
+//        logger.info("执行完毕");
+//    }
 
 
 }
