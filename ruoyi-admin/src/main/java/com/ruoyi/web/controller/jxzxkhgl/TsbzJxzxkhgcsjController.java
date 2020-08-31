@@ -71,10 +71,19 @@ public class TsbzJxzxkhgcsjController extends BaseController {
     @PreAuthorize("@ss.hasPermi('jxzxkhgl:jxzxkhgcsj:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") String id) {
+        AjaxResult ajax = AjaxResult.success();
         TsbzJxzxkhgcsj tsbzJxzxkhgcsj = new TsbzJxzxkhgcsj();
         tsbzJxzxkhgcsj.setId(id);
         tsbzJxzxkhgcsj.setCreateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
-        return AjaxResult.success(tsbzJxzxkhgcsjService.selectTsbzJxzxkhgcsjById(tsbzJxzxkhgcsj));
+
+        //获取文件信息
+        TsbzJxzxkhgcwjsj tsbzJxzxkhgcwjsj = new TsbzJxzxkhgcwjsj();
+        tsbzJxzxkhgcwjsj.setGcid(id);
+        List<TsbzJxzxkhgcwjsj> list = tsbzJxzxkhgcwjsjService.selectTsbzJxzxkhgcwjsjList(tsbzJxzxkhgcwjsj);
+        ajax.put("file", list);
+        ajax.put(AjaxResult.DATA_TAG, tsbzJxzxkhgcsjService.selectTsbzJxzxkhgcsjById(tsbzJxzxkhgcsj));
+
+        return ajax;
     }
 
     /**

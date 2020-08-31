@@ -325,6 +325,20 @@ export default {
           this.open = true;
           this.title = "修改考核过程数据";
           this.form.khnr = row.tsbzJxzxkhzbx.khnr;
+          console.log(response.file);
+          var array = [];
+          var path = "";
+          var name = "";
+          response.file.forEach(function (value, key, arr) {
+            //console.log(value); // 结果依次为1，2，3
+            array.push({ name: value.filename, url: value.filepath });
+            path = path + value.filepath + ";";
+            name = name + value.filename + ";";
+          });
+          this.filecount = response.file.length;
+          this.form.filepath = path;
+          this.form.filename = name;
+          this.fileList = array;
         });
       } else {
         this.reset();
