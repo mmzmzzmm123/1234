@@ -116,8 +116,10 @@
             <el-input v-model="form.url" placeholder="请输入书签地址" />
           </el-form-item>
           <el-form-item label="书签描述" prop="description">
-            <el-input v-model="form.description" placeholder="请输入书签描述" />
+            <el-input v-model="form.description" type="textarea" placeholder="请输入书签描述"
+                      :autosize="{minRows: 3, maxRows:4}" :style="{width: '100%'}"></el-input>
           </el-form-item>
+
           <el-form-item label="书签标签" prop="label">
             <el-input v-model="form.label" placeholder="请输入标签" />
           </el-form-item>

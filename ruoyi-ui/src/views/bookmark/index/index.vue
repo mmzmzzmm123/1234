@@ -129,16 +129,22 @@
         <div class="labelname">上级菜单</div>
         <treeselect class="menutreeselect"  v-model="form.parentId" :options="menuOptions" :normalizer="normalizer"  />
       </el-form-item>
+
+
+<!--      <el-form-item  prop="menuOrder">-->
+<!--        <div class="labelname">排序</div>-->
+<!--        <el-input class="custom-input" v-model="form.menuOrder" placeholder="请输入菜单排序" />-->
+<!--      </el-form-item>-->
+
       <el-form-item  prop="menuOrder">
-        <div class="labelname">排序</div>
-        <el-input class="custom-input" v-model="form.menuOrder" placeholder="请输入菜单排序" />
+        <div class="labelname">排序(小到大)</div><br/>
+        <el-input-number v-model="form.menuOrder" placeholder="计数器"></el-input-number>
       </el-form-item>
+
+
     </el-form>
     <div slot="footer" class="dialog-footer">
-
       <el-button type="danger"  round  @click="deleteMmenu(form.menuId)">删除</el-button>
-
-
       <el-button type="primary"  round  @click="submitForm">确定</el-button>
       <el-button round  @click="cancel">取消</el-button>
 
@@ -259,6 +265,14 @@
       that.getList();
     },
     methods:{
+
+
+
+
+
+
+
+
 
       /** 转换书签菜单数据结构 */
       normalizer(node) {
@@ -905,6 +919,7 @@
     color: rgb(0, 0, 0);
     float: left;
     margin-bottom: -10px;
+    margin-right: 5px;
   }
   .el-form-item__content{
     margin-left: 0px!important;
