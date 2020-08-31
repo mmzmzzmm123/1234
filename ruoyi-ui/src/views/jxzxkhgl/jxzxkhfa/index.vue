@@ -192,8 +192,22 @@
         <el-form-item label="考核文件名称" prop="filename">
           <el-input v-model="form.filename" placeholder="请输入考核文件名称" />
         </el-form-item>
-        <el-form-item label="文件路径" prop="filepath">
-          <el-input v-model="form.filepath" type="textarea" placeholder="请输入内容" />
+        <el-form-item label="考核文件" prop="filepath" >
+          <el-input v-model="form.filepath" v-if="false" />
+          <el-upload
+            class="upload-demo"
+            :action="uploadFileUrl"
+            :headers="headers"
+            :on-preview="handlePreview"
+            :on-remove="handleRemove"
+            :before-remove="beforeRemove"
+            :limit="1"
+            :on-exceed="handleExceed"
+            :file-list="fileList"
+            :on-success="handleAvatarSuccess"
+          >
+            <el-button size="small" type="primary">选择文件</el-button>
+          </el-upload>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -206,6 +220,7 @@
 
 <script>
 import { listJxzxkhfa, getJxzxkhfa, delJxzxkhfa, addJxzxkhfa, updateJxzxkhfa, exportJxzxkhfa } from "@/api/jxzxkhgl/jxzxkhfa";
+import { getToken } from "@/utils/auth";
 
 export default {
   name: "Jxzxkhfa",
@@ -231,6 +246,8 @@ export default {
       open: false,
       // 考核方案状态
       statusOptions: [],
+      // 上传文件list
+      fileList: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -255,7 +272,11 @@ export default {
         filename: [{ required: true, message: "考核文件名称不能为空", trigger: "blur" }],
         filepath: [{ required: true, message: "文件路径不能为空", trigger: "blur" }],
         khnf: [{ required: true, message: "考核年份不能为空", trigger: "blur" }],
-      }
+      },
+      uploadFileUrl: process.env.VUE_APP_BASE_API + "/common/upload", // 上传的图片服务器地址
+      headers: {
+        Authorization: "Bearer " + getToken(),
+      },
     };
   },
   created() {
@@ -278,6 +299,40 @@ export default {
     statusFormat(row, column) {
       return this.selectDictLabel(this.statusOptions, row.status);
     },
+    // 文件上传
+    handlePreview(file) {
+      //console.log(file);
+    },
+    // 文件上传移除
+    handleRemove(file, fileList) {
+      //console.log(file, fileList);
+      if (file.response.code == "200") {
+        this.form.filepath = "";
+      }
+    },
+    // 文件上传 弹窗
+    beforeRemove(file, fileList) {
+      return this.$confirm(`确定移除 ${file.name}？`);
+    },
+    // 文件上传  限制
+    handleExceed(files, fileList) {
+      this.$message.warning(
+        `当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${
+          files.length + fileList.length
+        } 个文件`
+      );
+    },
+    // 文件上传 成功钩子
+    handleAvatarSuccess(res, file) {
+      console.log(res, file);
+      if (res.code == "200") {
+        this.form.filepath = res.fileName;
+        this.form.filename = file.name;
+      } else {
+        this.msgError(res.msg);
+      }
+    },
+
     // 取消按钮
     cancel() {
       this.open = false;
@@ -298,6 +353,7 @@ export default {
         createTime: null
       };
       this.resetForm("form");
+      this.fileList = [];
     },
     /** 搜索按钮操作 */
     handleQuery() {
@@ -329,6 +385,10 @@ export default {
         this.form = response.data;
         this.open = true;
         this.title = "修改见习之星考核方案";
+        this.fileList.push({
+          name: response.data.filename,
+          url: response.data.filepath,
+        });
       });
     },
     /** 提交按钮 */
