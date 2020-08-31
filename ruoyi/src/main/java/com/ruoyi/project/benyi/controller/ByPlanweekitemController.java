@@ -82,7 +82,23 @@ public class ByPlanweekitemController extends BaseController
     public AjaxResult add(@RequestBody ByPlanweekitem byPlanweekitem)
     {
         byPlanweekitem.setCreateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
-        byPlanweekitem.setDay("星期" + String.valueOf(schoolCommon.dateToWeek(byPlanweekitem.getActivitytime())));
+        String dayTurn = String.valueOf(schoolCommon.dateToWeek(byPlanweekitem.getActivitytime()));
+        if (dayTurn.equals("1")) {
+            dayTurn = "一";
+        }else  if (dayTurn.equals("2")) {
+            dayTurn = "二";
+        }else  if (dayTurn.equals("3")) {
+            dayTurn = "三";
+        }else  if (dayTurn.equals("4")) {
+            dayTurn = "四";
+        }else  if (dayTurn.equals("5")) {
+            dayTurn = "五";
+        }else  if (dayTurn.equals("6")) {
+            dayTurn = "六";
+        }else  if (dayTurn.equals("7")) {
+            dayTurn = "七";
+        }
+        byPlanweekitem.setDay("星期" + dayTurn);
         return toAjax(byPlanweekitemService.insertByPlanweekitem(byPlanweekitem));
     }
 
@@ -95,7 +111,23 @@ public class ByPlanweekitemController extends BaseController
     public AjaxResult edit(@RequestBody ByPlanweekitem byPlanweekitem)
     {
         byPlanweekitem.setUpdateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
-        byPlanweekitem.setDay("星期" + String.valueOf(schoolCommon.dateToWeek(byPlanweekitem.getActivitytime())));
+        String dayTurn = String.valueOf(schoolCommon.dateToWeek(byPlanweekitem.getActivitytime()));
+        if (dayTurn.equals("1")) {
+            dayTurn = "一";
+        }else  if (dayTurn.equals("2")) {
+            dayTurn = "二";
+        }else  if (dayTurn.equals("3")) {
+            dayTurn = "三";
+        }else  if (dayTurn.equals("4")) {
+            dayTurn = "四";
+        }else  if (dayTurn.equals("5")) {
+            dayTurn = "五";
+        }else  if (dayTurn.equals("6")) {
+            dayTurn = "六";
+        }else  if (dayTurn.equals("7")) {
+            dayTurn = "日";
+        }
+        byPlanweekitem.setDay("星期" + dayTurn);
         return toAjax(byPlanweekitemService.updateByPlanweekitem(byPlanweekitem));
     }
 
