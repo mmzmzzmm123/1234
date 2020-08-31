@@ -77,8 +77,8 @@ public class ByPlanweekController extends BaseController {
     @PostMapping
     public AjaxResult add(@RequestBody ByPlanweek byPlanweek) {
         String classId = schoolCommon.getClassId();
-        //首先判断当前账户是否为幼儿园账号
-        //if (schoolCommon.isSchool() && !schoolCommon.isStringEmpty(classId)) {
+        // 首先判断当前账户是否为幼儿园账号
+        if (schoolCommon.isSchool() && !schoolCommon.isStringEmpty(classId)) {
             String uuid = schoolCommon.getUuid();
             byPlanweek.setId(uuid);
             //学校id
@@ -89,9 +89,9 @@ public class ByPlanweekController extends BaseController {
             byPlanweek.setClassid(classId);
             byPlanweek.setStatus("0");
             return toAjax(byPlanweekService.insertByPlanweek(byPlanweek));
-//        } else {
-//            return AjaxResult.error("当前用户非幼儿园，无法添加计划");
-//        }
+        } else {
+            return AjaxResult.error("当前用户非幼儿园，无法添加计划");
+        }
     }
 
     /**
