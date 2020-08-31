@@ -147,7 +147,7 @@
     />
 
     <!-- 添加或修改周计划(家长和教育部门细化)对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="1024px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="所属计划" prop="wid">
           <el-select v-model="form.wid" size="small" :disabled="true">
@@ -169,9 +169,6 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="活动内容" prop="content">
-          <el-input v-model="form.content" placeholder="请输入活动内容" />
-        </el-form-item>
         <el-form-item label="活动时间" prop="activitytime">
           <el-date-picker
             clearable
@@ -183,6 +180,9 @@
             placeholder="选择活动时间"
             :picker-options="pickerOptions7"
           >></el-date-picker>
+        </el-form-item>
+        <el-form-item label="活动内容" prop="content">
+          <Editor v-model="form.content" placeholder="请输入活动内容" />
         </el-form-item>
         <!-- <el-form-item label="星期" prop="day">
           <el-input v-model="form.day" placeholder="请输入星期几" />
@@ -206,6 +206,8 @@ import {
   exportPlanweekitem
 } from "@/api/benyi/planweekitem";
 
+import Editor from "@/components/Editor";
+
 import { getPlanweek, listPlanweek } from "@/api/benyi/planweek";
 
 const weekArr = [
@@ -219,6 +221,9 @@ const weekArr = [
 ];
 export default {
   name: "Planweekitem",
+  components: {
+    Editor
+  },
   data() {
     return {
       // 遮罩层
