@@ -52,7 +52,7 @@ export function exportActivity(query) {
   })
 }
 
-// 删除主题整合活动
+// 查询主题整合活动
 export function listActivityByThemeId(id) {
   return request({
     url: '/benyi/activity/listbythemeid/' + id,

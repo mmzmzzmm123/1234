@@ -103,4 +103,23 @@ public class ByThemeController extends BaseController {
     public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(byThemeService.deleteByThemeByIds(ids));
     }
+
+    /**
+     * 查询主题整合活动列表
+     */
+    @PostMapping("/listthemebyid/{ids}")
+    public TableDataInfo listbythemeid(@PathVariable Long[] ids) {
+        List<ByTheme> list = byThemeService.selectByThemeByIds(ids);
+        return getDataTable(list);
+    }
+
+    /**
+     * 查询主题整合活动列表
+     */
+    @PostMapping("/listthemebyactivityid/{ids}")
+    public TableDataInfo listthemebyactivityid(@PathVariable Long[] ids) {
+        List<ByTheme> list = byThemeService.selectByThemeByActivityIds(ids);
+        return getDataTable(list);
+    }
+
 }

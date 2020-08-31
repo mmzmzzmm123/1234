@@ -108,7 +108,7 @@
       <el-table-column label="学年学期" align="center" prop="xnxq" :formatter="xnxqFormat" />
       <el-table-column label="备注" align="center" prop="remark" />
       <el-table-column label="状态" align="center" prop="status" :formatter="statusFormat" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="300">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -134,6 +134,14 @@
             v-hasPermi="['benyi:themeweekplan:edit']"
             v-show="isShow(scope.row)"
           >提交</el-button>
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-view"
+            @click="handleView(scope.row)"
+            v-hasPermi="['benyi:themeweekplan:query']"
+            v-show="isShow(scope.row)"
+          >预览</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -423,6 +431,13 @@ export default {
           this.msgSuccess("提交成功");
         })
         .catch(function () {});
+    },
+    /** 预览按钮操作 */
+    handleView(row) {
+      const id = row.id;
+      this.$router.push({
+        path: "/benyi_course/themeweekplanprint/table/"+id,
+      });
     },
   },
 };
