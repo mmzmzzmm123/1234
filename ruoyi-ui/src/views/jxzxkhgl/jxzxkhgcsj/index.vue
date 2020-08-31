@@ -112,8 +112,8 @@
         <el-form-item label="内容" prop="content">
           <el-input v-model="form.content" type="textarea" placeholder="请输入内容" />
         </el-form-item>
-        <el-form-item label="选择文件" prop="fileurl">
-          <el-input v-model="form.fileurl" v-if="false" />
+        <el-form-item label="选择文件" prop="filepath">
+          <el-input v-model="form.filepath" v-if="false" />
           <el-upload
             class="upload-demo"
             :action="uploadFileUrl"
@@ -121,7 +121,7 @@
             :on-preview="handlePreview"
             :on-remove="handleRemove"
             :before-remove="beforeRemove"
-            :limit="1"
+            :limit="filecount"
             :on-exceed="handleExceed"
             :file-list="fileList"
             :on-success="handleAvatarSuccess"
@@ -154,6 +154,7 @@ export default {
   name: "Jxzxkhgcsj",
   data() {
     return {
+      filecount: 1,
       khnr: "",
       // 遮罩层
       loading: true,
@@ -210,17 +211,23 @@ export default {
   },
   methods: {
     handleAvatarSuccess(res, file) {
-      //console.log(res);
+      //console.log(res, file);
       if (res.code == "200") {
-        this.form.fileurl = res.fileName;
+        this.form.filepath = this.form.filepath + res.fileName + ";";
+        this.form.filename = this.form.filename + file.name + ";";
       } else {
         this.msgError(res.msg);
       }
+      //console.log(this.form.filepath, this.form.filename);
     },
     handleRemove(file, fileList) {
       //console.log(file, fileList);
       if (file.response.code == "200") {
-        this.form.fileurl = "";
+        this.form.filepath = this.form.filepath.replace(
+          file.response.fileName + ";",
+          ""
+        );
+        this.form.filename = this.form.filename.replace(file.name + ";", "");
       }
     },
     handlePreview(file) {
@@ -228,9 +235,11 @@ export default {
     },
     handleExceed(files, fileList) {
       this.$message.warning(
-        `当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${
-          files.length + fileList.length
-        } 个文件`
+        `当前限制选择 ` +
+          this.filecount +
+          ` 个文件，本次选择了 ${files.length} 个文件，共选择了 ${
+            files.length + fileList.length
+          } 个文件`
       );
     },
     beforeRemove(file, fileList) {
@@ -280,6 +289,8 @@ export default {
         createuserid: null,
         createTime: null,
         khnr: null,
+        filepath: "",
+        filename: "",
       };
       this.resetForm("form");
       this.fileList = [];
@@ -304,7 +315,8 @@ export default {
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids;
-      //console.log("id:" + row.tsbzJxzxkhzbx.khnr);
+      //console.log("tjsl:" + row.tsbzJxzxkhzbx.tjsl);
+      this.filecount = row.tsbzJxzxkhzbx.tjsl;
 
       if (id != "") {
         getJxzxkhgcsj(id).then((response) => {
@@ -350,6 +362,11 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
+      console.log(ids);
+      if (ids.length <= 0) {
+        this.msgError("数据已清空");
+        return;
+      }
       this.$confirm("是否确认清空考核过程数据的数据项?", "警告", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",

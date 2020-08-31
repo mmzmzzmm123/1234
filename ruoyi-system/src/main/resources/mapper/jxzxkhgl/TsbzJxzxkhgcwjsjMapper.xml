@@ -73,4 +73,11 @@
         </foreach>
     </delete>
 
+    <delete id="deleteTsbzJxzxkhgcwjsjByGcIds" parameterType="String">
+        delete from tsbz_jxzxkhgcwjsj where gcid in
+        <foreach item="gcid" collection="array" open="(" separator="," close=")">
+            #{gcid}
+        </foreach>
+    </delete>
+
 </mapper>

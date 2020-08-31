@@ -3,6 +3,8 @@ package com.ruoyi.web.controller.jxzxkhgl;
 import java.util.List;
 
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.jxzxkhgl.domain.TsbzJxzxkhgcwjsj;
+import com.ruoyi.jxzxkhgl.service.ITsbzJxzxkhgcwjsjService;
 import com.ruoyi.web.controller.common.SchoolCommonController;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +38,8 @@ public class TsbzJxzxkhgcsjController extends BaseController {
     private ITsbzJxzxkhgcsjService tsbzJxzxkhgcsjService;
     @Autowired
     private SchoolCommonController schoolCommonController;
+    @Autowired
+    private ITsbzJxzxkhgcwjsjService tsbzJxzxkhgcwjsjService;
 
     /**
      * 查询考核过程数据列表
@@ -80,8 +84,27 @@ public class TsbzJxzxkhgcsjController extends BaseController {
     @Log(title = "考核过程数据", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody TsbzJxzxkhgcsj tsbzJxzxkhgcsj) {
-        tsbzJxzxkhgcsj.setId(schoolCommonController.getUuid());
+        String uuid = schoolCommonController.getUuid();
+        tsbzJxzxkhgcsj.setId(uuid);
         tsbzJxzxkhgcsj.setCreateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
+
+        String filePaths = tsbzJxzxkhgcsj.getFilepath();
+        String fileNames = tsbzJxzxkhgcsj.getFilename();
+        if (!schoolCommonController.isStringEmpty(filePaths) && !schoolCommonController.isStringEmpty(fileNames)) {
+            String[] strArrFilePath = filePaths.split(";");
+            String[] strArrFileName = fileNames.split(";");
+            TsbzJxzxkhgcwjsj tsbzJxzxkhgcwjsj = null;
+            for (int i = 0; i < strArrFilePath.length; i++) {
+                tsbzJxzxkhgcwjsj = new TsbzJxzxkhgcwjsj();
+                tsbzJxzxkhgcwjsj.setFilepath(strArrFilePath[i]);
+                tsbzJxzxkhgcwjsj.setFilename(strArrFileName[i]);
+                tsbzJxzxkhgcwjsj.setGcid(uuid);
+                tsbzJxzxkhgcwjsj.setCreateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
+
+                tsbzJxzxkhgcwjsjService.insertTsbzJxzxkhgcwjsj(tsbzJxzxkhgcwjsj);
+            }
+        }
+
         return toAjax(tsbzJxzxkhgcsjService.insertTsbzJxzxkhgcsj(tsbzJxzxkhgcsj));
     }
 
@@ -92,6 +115,27 @@ public class TsbzJxzxkhgcsjController extends BaseController {
     @Log(title = "考核过程数据", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody TsbzJxzxkhgcsj tsbzJxzxkhgcsj) {
+        //1先清空文件数据;
+        String[] tmp = new String[1];
+        tmp[0] = tsbzJxzxkhgcsj.getId();
+        tsbzJxzxkhgcwjsjService.deleteTsbzJxzxkhgcwjsjByGcIds(tmp);
+
+        //2再重新创建;
+        String filePaths = tsbzJxzxkhgcsj.getFilepath();
+        String fileNames = tsbzJxzxkhgcsj.getFilename();
+        if (!schoolCommonController.isStringEmpty(filePaths) && !schoolCommonController.isStringEmpty(fileNames)) {
+            String[] strArrFilePath = filePaths.split(";");
+            String[] strArrFileName = fileNames.split(";");
+            TsbzJxzxkhgcwjsj tsbzJxzxkhgcwjsj = null;
+            for (int i = 0; i < strArrFilePath.length; i++) {
+                tsbzJxzxkhgcwjsj = new TsbzJxzxkhgcwjsj();
+                tsbzJxzxkhgcwjsj.setFilepath(strArrFilePath[i]);
+                tsbzJxzxkhgcwjsj.setFilename(strArrFileName[i]);
+                tsbzJxzxkhgcwjsj.setGcid(tsbzJxzxkhgcsj.getId());
+                tsbzJxzxkhgcwjsj.setCreateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
+                tsbzJxzxkhgcwjsjService.insertTsbzJxzxkhgcwjsj(tsbzJxzxkhgcwjsj);
+            }
+        }
         return toAjax(tsbzJxzxkhgcsjService.updateTsbzJxzxkhgcsj(tsbzJxzxkhgcsj));
     }
 
@@ -102,6 +146,9 @@ public class TsbzJxzxkhgcsjController extends BaseController {
     @Log(title = "考核过程数据", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable String[] ids) {
+        //清空考核数据先清空文件数据
+        tsbzJxzxkhgcwjsjService.deleteTsbzJxzxkhgcwjsjByGcIds(ids);
+
         return toAjax(tsbzJxzxkhgcsjService.deleteTsbzJxzxkhgcsjByIds(ids));
     }
 }

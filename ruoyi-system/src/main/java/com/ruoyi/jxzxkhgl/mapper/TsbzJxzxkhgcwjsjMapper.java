@@ -58,4 +58,12 @@ public interface TsbzJxzxkhgcwjsjMapper {
      * @return 结果
      */
     public int deleteTsbzJxzxkhgcwjsjByIds(Long[] ids);
+
+    /**
+     * 批量删除考核过程文件数据
+     *
+     * @param gcids 需要删除的考核过程文件数据ID
+     * @return 结果
+     */
+    public int deleteTsbzJxzxkhgcwjsjByGcIds(String[] gcids);
 }

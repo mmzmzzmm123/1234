@@ -77,6 +77,16 @@ public class TsbzJxzxkhgcwjsjServiceImpl implements ITsbzJxzxkhgcwjsjService {
     }
 
     /**
+     * 批量删除考核过程文件数据
+     *
+     * @param gcids 需要删除的考核过程文件数据ID
+     * @return 结果
+     */
+    public int deleteTsbzJxzxkhgcwjsjByGcIds(String[] gcids) {
+        return tsbzJxzxkhgcwjsjMapper.deleteTsbzJxzxkhgcwjsjByGcIds(gcids);
+    }
+
+    /**
      * 删除考核过程文件数据信息
      *
      * @param id 考核过程文件数据ID
