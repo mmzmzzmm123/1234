@@ -75,7 +75,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="menuOrder != null">menu_order = #{menuOrder},</if>
             <if test="bookmarkCount != null">bookmark_count = #{bookmarkCount},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
-            update_time = now()
         </trim>
         where menu_id = #{menuId}
     </update>

@@ -69,6 +69,17 @@
           <hr class="bookamrk-hr"/>
           <el-col :span="24" v-for="bm in bookmarkList">
 
+            <div class="editBookamrk">
+              <div class="editlist">
+                <div> <el-button plain size="small" @click="handleUpdate(bm.bookmarkId)">修改</el-button></div>
+                <div> <el-button plain size="small" @click="handleDelete(bm.bookmarkId)">删除</el-button></div>
+                <div> <el-button plain size="small">分享</el-button></div>
+
+              </div>
+
+
+            </div>
+
             <div class="bookmark" :data-id="bm.id" @click="windowurl(bm.url,bm.bookmarkId)">
               <p class="bookmark-title">{{bm.title}}</p>
               <div class="">
@@ -85,21 +96,48 @@
                   <div class="bookmark-official">{{bm.urls}}&nbsp;·&nbsp;</div><div class="bookmark-time">{{bm.createTime|changeTime}}</div>
                 </div>
               </div>
+
             </div>
+
             <el-divider class="bookmark-hr"></el-divider>
           </el-col>
-
-
-
-
-
         </el-row>
-
-
-
       </div>
 
 
+      <!-- 添加或修改书签管理对话框 -->
+      <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+        <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+
+          <el-form-item label="书签标题" prop="title">
+            <el-input v-model="form.title" placeholder="请输入书签标题" />
+          </el-form-item>
+          <el-form-item label="书签地址" prop="url">
+            <el-input v-model="form.url" placeholder="请输入书签地址" />
+          </el-form-item>
+          <el-form-item label="书签描述" prop="description">
+            <el-input v-model="form.description" placeholder="请输入书签描述" />
+          </el-form-item>
+          <el-form-item label="书签标签" prop="label">
+            <el-input v-model="form.label" placeholder="请输入标签" />
+          </el-form-item>
+          <el-form-item label="所属目录" prop="menuId">
+            <el-input v-model="form.menuId" placeholder="请选择上级目录" />
+          </el-form-item>
+<!--          0公开显示1隐藏显示2好友显示3稍后再看-->
+          <el-form-item label="选择状态" prop="start">
+            <el-input v-model="form.start" placeholder="" />
+          </el-form-item>
+
+
+
+
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="submitForm">确 定</el-button>
+          <el-button @click="cancel">取 消</el-button>
+        </div>
+      </el-dialog>
 
 
 
@@ -119,6 +157,12 @@
 
         data: function () {
             return {
+              // 遮罩层
+              loading: true,
+              // 弹出层标题
+              title: "",
+              // 是否显示弹出层
+              open: false,
               showbookmark:true,
               showimg:false,
               loading:false,
@@ -139,6 +183,11 @@
               },
               bookmarkList:[],
               urltext:'?from=yunshuqian.com',//网址域名起推广作用
+              // 表单参数
+              form: {},
+              // 表单校验
+              rules: {
+              }
             }
         },
      filters: {
@@ -176,6 +225,78 @@
 
     },
     methods: {
+      /** 修改按钮操作 */
+      handleUpdate(bookmarkId) {
+        this.reset();
+         const ibookmarkId = bookmarkId || this.ids
+        getBookmark(ibookmarkId).then(response => {
+          this.form = response.data;
+          this.open = true;
+          this.title = "书签编辑管理";
+        });
+      },
+      /** 提交按钮 修改和新增 */
+      submitForm: function() {
+        this.$refs["form"].validate(valid => {
+          if (valid) {
+            if (this.form.bookmarkId != undefined) {
+              updateBookmark(this.form).then(response => {
+                if (response.code === 200) {
+                  this.msgSuccess("修改成功");
+                  this.open = false;
+                  this.getList();
+                }
+              });
+            } else {
+              addBookmark(this.form).then(response => {
+                if (response.code === 200) {
+                  this.msgSuccess("新增成功");
+                  this.open = false;
+                  this.getList();
+                }
+              });
+            }
+          }
+        });
+      },
+      /** 删除按钮操作 */
+      handleDelete(bookmarkId) {
+        const bookmarkIds = bookmarkId || this.ids;
+        this.$confirm('是否确认删除此条书签数据项?', "警告", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }).then(function() {
+          return delBookmark(bookmarkIds);
+        }).then(() => {
+          this.getList();
+          this.msgSuccess("删除成功");
+        }).catch(function() {});
+      },
+      // 取消按钮
+      cancel() {
+        this.open = false;
+        this.reset();
+      },
+      // 表单重置
+      reset() {
+        this.form = {
+          bookmarkId: undefined,
+          userid: undefined,
+          title: undefined,
+          url: undefined,
+          urls: undefined,
+          description: undefined,
+          image: undefined,
+          label: undefined,
+          menuId: undefined,
+          zcount: undefined,
+          idelete: undefined,
+          start: undefined,
+          createTime: undefined
+        };
+        this.resetForm("form");
+      },
           /** 回收站**/
           getrecycleList() {
             this.loading = true;
@@ -225,25 +346,9 @@
         window.open(url);
 
 
-        //如果是回收站打开的 就修改状态
-        // if (this.$route.params.menuId=6666){
-        //   this.$axios.get(`/api/bookmark/updateBookmarkStart?bookmarkId=${bookmarkId}`).then(response => {
-        //
-        //     if (response.status == 200 && response.data.status == 'success') {
-        //       this.momentlList()
-        //       this.$message({type: 'success', message: '此书签被打开,移除稍后再看,并且公开显示!'})
-        //
-        //     }else {
-        //       this.$message({type: 'error', message: '移除失败!'})
-        //     }
-        //
-        //   });
-        // }
 
       },
-
-
-        },
+  },
 
 
     }
@@ -299,5 +404,27 @@
     color: #D4D4D4!important;
 
   }
+  .editBookamrk{
+    width: 200px;
+    height: 70px;
+    position: absolute;
+    background-color: #acd7ff;
+    right: 0;
+  }
+  .editlist{
+    display: flex;
+    width: 200px;
+    height: 70px;
+    flex-flow: wrap;
+    align-items: center;
+  }
+  .editlist div{
+    margin-left:10px;
+    width: 50px;
+    height: 35px;
+    align-content: center;
+
+  }
+
 
 </style>

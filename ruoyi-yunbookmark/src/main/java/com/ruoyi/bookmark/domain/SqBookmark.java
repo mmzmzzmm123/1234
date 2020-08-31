@@ -42,7 +42,7 @@ public class SqBookmark
     private String url;
 
     /** $column.columnComment */
-    @Excel(name = "书签地址")
+    @Excel(name = "官网地址")
     @Column(name = "urls")
     private String urls;
 
@@ -52,7 +52,7 @@ public class SqBookmark
     private String description;
 
     /** $column.columnComment */
-    @Excel(name = "书签描述")
+    @Excel(name = "图片")
     @Column(name = "image")
     private String image;
 
