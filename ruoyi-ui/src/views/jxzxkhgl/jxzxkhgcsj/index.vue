@@ -32,6 +32,7 @@
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['jxzxkhgl:jxzxkhgcsj:edit']"
+          v-show="disable"
         >填报</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -42,6 +43,7 @@
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['jxzxkhgl:jxzxkhgcsj:remove']"
+          v-show="disable"
         >清空</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -49,8 +51,9 @@
           type="warning"
           icon="el-icon-check"
           size="mini"
-          @click="handleDelete"
+          @click="handleCheck"
           v-hasPermi="['jxzxkhgl:jxzxkhgcsj:edit']"
+          v-show="disable"
         >提交</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
@@ -72,6 +75,7 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['jxzxkhgl:jxzxkhgcsj:edit']"
+            v-show="disable"
           >填报</el-button>
           <el-button
             size="mini"
@@ -79,6 +83,7 @@
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['jxzxkhgl:jxzxkhgcsj:remove']"
+            v-show="disable"
           >清空</el-button>
         </template>
       </el-table-column>
@@ -148,12 +153,21 @@ import {
 } from "@/api/jxzxkhgl/jxzxkhgcsj";
 
 import { listJxzxkhfa, getJxzxkhfa } from "@/api/jxzxkhgl/jxzxkhfa";
+import {
+  listJzxzkhshByfaid,
+  getJzxzkhsh,
+  checkJzxzkhsh,
+} from "@/api/jxzxkhgl/jxzxkhsh";
 import { getToken } from "@/utils/auth";
 
 export default {
   name: "Jxzxkhgcsj",
   data() {
     return {
+      //是否已提交
+      disable: true,
+      //默认方案id
+      defaultFaid: "",
       filecount: 1,
       khnr: "",
       // 遮罩层
@@ -194,6 +208,10 @@ export default {
       // 查询参数
       queryParams_fa: {
         status: "1",
+      },
+      // 查询参数
+      queryParams_khsh: {
+        faid: "1",
       },
       // 表单参数
       form: {},
@@ -258,10 +276,21 @@ export default {
       });
       return actions.join("");
     },
+    //判断该方案是否已提交
+    getIsCheck() {
+      this.queryParams_khsh.faid = this.defaultFaid;
+      listJzxzkhshByfaid(this.queryParams_khsh).then((response) => {
+        if (response.rows.length > 0) {
+          this.disable = false;
+        }
+      });
+    },
     //考核方案
     getKhfa() {
       listJxzxkhfa(this.queryParams_fa).then((response) => {
         this.jxzxkhfaOptions = response.rows;
+        this.defaultFaid = response.rows[0].id;
+        this.queryParams.faid = this.defaultFaid;
       });
     },
     /** 查询考核过程数据列表 */
@@ -272,6 +301,8 @@ export default {
         this.jxzxkhgcsjList = response.rows;
         this.total = response.total;
         this.loading = false;
+
+        this.getIsCheck();
       });
     },
     // 取消按钮
@@ -303,6 +334,7 @@ export default {
     /** 重置按钮操作 */
     resetQuery() {
       this.resetForm("queryForm");
+      this.queryParams.faid = this.defaultFaid;
       this.handleQuery();
     },
     // 多选框选中数据
@@ -392,6 +424,31 @@ export default {
         .then(() => {
           this.getList();
           this.msgSuccess("清空成功");
+        })
+        .catch(function () {});
+    },
+    /** 删除按钮操作 */
+    handleCheck() {
+      const faid = this.queryParams.faid;
+      if (faid == null || faid == "") {
+        this.msgError("请选择要提交的方案");
+        return;
+      }
+      this.$confirm(
+        "是否确认提交当前方案的考核过程数据项?提交后数据不能维护！",
+        "警告",
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+        }
+      )
+        .then(function () {
+          return checkJzxzkhsh(faid);
+        })
+        .then(() => {
+          this.getList();
+          this.msgSuccess("提交成功");
         })
         .catch(function () {});
     },

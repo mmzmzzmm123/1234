@@ -2,6 +2,7 @@ package com.ruoyi.web.controller.jxzxkhgl;
 
 import java.util.List;
 
+import com.ruoyi.common.utils.SecurityUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,10 +37,21 @@ public class TsbzJxzxkhshController extends BaseController {
     /**
      * 查询考核审核过程列表
      */
-    @PreAuthorize("@ss.hasPermi('jxzxkhgl:jxzxkhsh:list')")
+    @PreAuthorize("@ss.hasPermi('jxzxkhgl:jxzxkhsh:list')" + "||@ss.hasPermi('jxzxkhgl:jxzxkhgcsj:list')")
     @GetMapping("/list")
     public TableDataInfo list(TsbzJxzxkhsh tsbzJxzxkhsh) {
         startPage();
+        List<TsbzJxzxkhsh> list = tsbzJxzxkhshService.selectTsbzJxzxkhshList(tsbzJxzxkhsh);
+        return getDataTable(list);
+    }
+
+    /**
+     * 查询考核审核过程列表
+     */
+    @PreAuthorize("@ss.hasPermi('jxzxkhgl:jxzxkhsh:list')" + "||@ss.hasPermi('jxzxkhgl:jxzxkhgcsj:list')")
+    @GetMapping("/listbyfaid")
+    public TableDataInfo listByFaid(TsbzJxzxkhsh tsbzJxzxkhsh) {
+        tsbzJxzxkhsh.setCreateuseird(SecurityUtils.getLoginUser().getUser().getUserId());
         List<TsbzJxzxkhsh> list = tsbzJxzxkhshService.selectTsbzJxzxkhshList(tsbzJxzxkhsh);
         return getDataTable(list);
     }
@@ -68,10 +80,12 @@ public class TsbzJxzxkhshController extends BaseController {
     /**
      * 新增考核审核过程
      */
-    @PreAuthorize("@ss.hasPermi('jxzxkhgl:jxzxkhsh:add')")
+    @PreAuthorize("@ss.hasPermi('jxzxkhgl:jxzxkhsh:add')" + "||@ss.hasPermi('jxzxkhgl:jxzxkhgcsj:edit')")
     @Log(title = "考核审核过程", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody TsbzJxzxkhsh tsbzJxzxkhsh) {
+        tsbzJxzxkhsh.setJsid(SecurityUtils.getLoginUser().getUser().getUserId());
+        tsbzJxzxkhsh.setCreateuseird(SecurityUtils.getLoginUser().getUser().getUserId());
         return toAjax(tsbzJxzxkhshService.insertTsbzJxzxkhsh(tsbzJxzxkhsh));
     }
 
@@ -93,5 +107,19 @@ public class TsbzJxzxkhshController extends BaseController {
     @DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(tsbzJxzxkhshService.deleteTsbzJxzxkhshByIds(ids));
+    }
+
+    /**
+     * 新增考核审核过程
+     */
+    @PreAuthorize("@ss.hasPermi('jxzxkhgl:jxzxkhsh:add')" + "||@ss.hasPermi('jxzxkhgl:jxzxkhgcsj:edit')")
+    @Log(title = "考核审核过程", businessType = BusinessType.INSERT)
+    @PostMapping("/check/{id}")
+    public AjaxResult add(@PathVariable Long id) {
+        TsbzJxzxkhsh tsbzJxzxkhsh = new TsbzJxzxkhsh();
+        tsbzJxzxkhsh.setFaid(id);
+        tsbzJxzxkhsh.setJsid(SecurityUtils.getLoginUser().getUser().getUserId());
+        tsbzJxzxkhsh.setCreateuseird(SecurityUtils.getLoginUser().getUser().getUserId());
+        return toAjax(tsbzJxzxkhshService.insertTsbzJxzxkhsh(tsbzJxzxkhsh));
     }
 }
