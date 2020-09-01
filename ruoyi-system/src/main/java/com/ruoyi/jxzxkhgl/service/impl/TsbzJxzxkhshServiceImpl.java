@@ -5,9 +5,9 @@ import java.util.List;
 import com.ruoyi.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.ruoyi.jxzxkhgl.mapper.TsbzJzxzkhshMapper;
-import com.ruoyi.jxzxkhgl.domain.TsbzJzxzkhsh;
-import com.ruoyi.jxzxkhgl.service.ITsbzJzxzkhshService;
+import com.ruoyi.jxzxkhgl.mapper.TsbzJxzxkhshMapper;
+import com.ruoyi.jxzxkhgl.domain.TsbzJxzxkhsh;
+import com.ruoyi.jxzxkhgl.service.ITsbzJxzxkhshService;
 
 /**
  * 考核审核过程Service业务层处理
@@ -16,9 +16,9 @@ import com.ruoyi.jxzxkhgl.service.ITsbzJzxzkhshService;
  * @date 2020-08-29
  */
 @Service
-public class TsbzJzxzkhshServiceImpl implements ITsbzJzxzkhshService {
+public class TsbzJxzxkhshServiceImpl implements ITsbzJxzxkhshService {
     @Autowired
-    private TsbzJzxzkhshMapper tsbzJzxzkhshMapper;
+    private TsbzJxzxkhshMapper tsbzJxzxkhshMapper;
 
     /**
      * 查询考核审核过程
@@ -27,42 +27,42 @@ public class TsbzJzxzkhshServiceImpl implements ITsbzJzxzkhshService {
      * @return 考核审核过程
      */
     @Override
-    public TsbzJzxzkhsh selectTsbzJzxzkhshById(Long id) {
-        return tsbzJzxzkhshMapper.selectTsbzJzxzkhshById(id);
+    public TsbzJxzxkhsh selectTsbzJzxzkhshById(Long id) {
+        return tsbzJxzxkhshMapper.selectTsbzJzxzkhshById(id);
     }
 
     /**
      * 查询考核审核过程列表
      *
-     * @param tsbzJzxzkhsh 考核审核过程
+     * @param tsbzJxzxkhsh 考核审核过程
      * @return 考核审核过程
      */
     @Override
-    public List<TsbzJzxzkhsh> selectTsbzJzxzkhshList(TsbzJzxzkhsh tsbzJzxzkhsh) {
-        return tsbzJzxzkhshMapper.selectTsbzJzxzkhshList(tsbzJzxzkhsh);
+    public List<TsbzJxzxkhsh> selectTsbzJzxzkhshList(TsbzJxzxkhsh tsbzJxzxkhsh) {
+        return tsbzJxzxkhshMapper.selectTsbzJzxzkhshList(tsbzJxzxkhsh);
     }
 
     /**
      * 新增考核审核过程
      *
-     * @param tsbzJzxzkhsh 考核审核过程
+     * @param tsbzJxzxkhsh 考核审核过程
      * @return 结果
      */
     @Override
-    public int insertTsbzJzxzkhsh(TsbzJzxzkhsh tsbzJzxzkhsh) {
-        tsbzJzxzkhsh.setCreateTime(DateUtils.getNowDate());
-        return tsbzJzxzkhshMapper.insertTsbzJzxzkhsh(tsbzJzxzkhsh);
+    public int insertTsbzJzxzkhsh(TsbzJxzxkhsh tsbzJxzxkhsh) {
+        tsbzJxzxkhsh.setCreateTime(DateUtils.getNowDate());
+        return tsbzJxzxkhshMapper.insertTsbzJzxzkhsh(tsbzJxzxkhsh);
     }
 
     /**
      * 修改考核审核过程
      *
-     * @param tsbzJzxzkhsh 考核审核过程
+     * @param tsbzJxzxkhsh 考核审核过程
      * @return 结果
      */
     @Override
-    public int updateTsbzJzxzkhsh(TsbzJzxzkhsh tsbzJzxzkhsh) {
-        return tsbzJzxzkhshMapper.updateTsbzJzxzkhsh(tsbzJzxzkhsh);
+    public int updateTsbzJzxzkhsh(TsbzJxzxkhsh tsbzJxzxkhsh) {
+        return tsbzJxzxkhshMapper.updateTsbzJzxzkhsh(tsbzJxzxkhsh);
     }
 
     /**
@@ -73,7 +73,7 @@ public class TsbzJzxzkhshServiceImpl implements ITsbzJzxzkhshService {
      */
     @Override
     public int deleteTsbzJzxzkhshByIds(Long[] ids) {
-        return tsbzJzxzkhshMapper.deleteTsbzJzxzkhshByIds(ids);
+        return tsbzJxzxkhshMapper.deleteTsbzJzxzkhshByIds(ids);
     }
 
     /**
@@ -84,6 +84,6 @@ public class TsbzJzxzkhshServiceImpl implements ITsbzJzxzkhshService {
      */
     @Override
     public int deleteTsbzJzxzkhshById(Long id) {
-        return tsbzJzxzkhshMapper.deleteTsbzJzxzkhshById(id);
+        return tsbzJxzxkhshMapper.deleteTsbzJzxzkhshById(id);
     }
 }

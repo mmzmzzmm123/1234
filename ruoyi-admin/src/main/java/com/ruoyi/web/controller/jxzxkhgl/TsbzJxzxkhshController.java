@@ -16,8 +16,8 @@ import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.enums.BusinessType;
-import com.ruoyi.jxzxkhgl.domain.TsbzJzxzkhsh;
-import com.ruoyi.jxzxkhgl.service.ITsbzJzxzkhshService;
+import com.ruoyi.jxzxkhgl.domain.TsbzJxzxkhsh;
+import com.ruoyi.jxzxkhgl.service.ITsbzJxzxkhshService;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
 
@@ -28,70 +28,70 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * @date 2020-08-29
  */
 @RestController
-@RequestMapping("/jxzxkhgl/jzxzkhsh")
-public class TsbzJzxzkhshController extends BaseController {
+@RequestMapping("/jxzxkhgl/jxzxkhsh")
+public class TsbzJxzxkhshController extends BaseController {
     @Autowired
-    private ITsbzJzxzkhshService tsbzJzxzkhshService;
+    private ITsbzJxzxkhshService tsbzJxzxkhshService;
 
     /**
      * 查询考核审核过程列表
      */
-    @PreAuthorize("@ss.hasPermi('jxzxkhgl:jzxzkhsh:list')")
+    @PreAuthorize("@ss.hasPermi('jxzxkhgl:jxzxkhsh:list')")
     @GetMapping("/list")
-    public TableDataInfo list(TsbzJzxzkhsh tsbzJzxzkhsh) {
+    public TableDataInfo list(TsbzJxzxkhsh tsbzJxzxkhsh) {
         startPage();
-        List<TsbzJzxzkhsh> list = tsbzJzxzkhshService.selectTsbzJzxzkhshList(tsbzJzxzkhsh);
+        List<TsbzJxzxkhsh> list = tsbzJxzxkhshService.selectTsbzJzxzkhshList(tsbzJxzxkhsh);
         return getDataTable(list);
     }
 
     /**
      * 导出考核审核过程列表
      */
-    @PreAuthorize("@ss.hasPermi('jxzxkhgl:jzxzkhsh:export')")
+    @PreAuthorize("@ss.hasPermi('jxzxkhgl:jxzxkhsh:export')")
     @Log(title = "考核审核过程", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
-    public AjaxResult export(TsbzJzxzkhsh tsbzJzxzkhsh) {
-        List<TsbzJzxzkhsh> list = tsbzJzxzkhshService.selectTsbzJzxzkhshList(tsbzJzxzkhsh);
-        ExcelUtil<TsbzJzxzkhsh> util = new ExcelUtil<TsbzJzxzkhsh>(TsbzJzxzkhsh.class);
-        return util.exportExcel(list, "jzxzkhsh");
+    public AjaxResult export(TsbzJxzxkhsh tsbzJxzxkhsh) {
+        List<TsbzJxzxkhsh> list = tsbzJxzxkhshService.selectTsbzJzxzkhshList(tsbzJxzxkhsh);
+        ExcelUtil<TsbzJxzxkhsh> util = new ExcelUtil<TsbzJxzxkhsh>(TsbzJxzxkhsh.class);
+        return util.exportExcel(list, "jxzxkhsh");
     }
 
     /**
      * 获取考核审核过程详细信息
      */
-    @PreAuthorize("@ss.hasPermi('jxzxkhgl:jzxzkhsh:query')")
+    @PreAuthorize("@ss.hasPermi('jxzxkhgl:jxzxkhsh:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id) {
-        return AjaxResult.success(tsbzJzxzkhshService.selectTsbzJzxzkhshById(id));
+        return AjaxResult.success(tsbzJxzxkhshService.selectTsbzJzxzkhshById(id));
     }
 
     /**
      * 新增考核审核过程
      */
-    @PreAuthorize("@ss.hasPermi('jxzxkhgl:jzxzkhsh:add')")
+    @PreAuthorize("@ss.hasPermi('jxzxkhgl:jxzxkhsh:add')")
     @Log(title = "考核审核过程", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody TsbzJzxzkhsh tsbzJzxzkhsh) {
-        return toAjax(tsbzJzxzkhshService.insertTsbzJzxzkhsh(tsbzJzxzkhsh));
+    public AjaxResult add(@RequestBody TsbzJxzxkhsh tsbzJxzxkhsh) {
+        return toAjax(tsbzJxzxkhshService.insertTsbzJzxzkhsh(tsbzJxzxkhsh));
     }
 
     /**
      * 修改考核审核过程
      */
-    @PreAuthorize("@ss.hasPermi('jxzxkhgl:jzxzkhsh:edit')")
+    @PreAuthorize("@ss.hasPermi('jxzxkhgl:jxzxkhsh:edit')")
     @Log(title = "考核审核过程", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody TsbzJzxzkhsh tsbzJzxzkhsh) {
-        return toAjax(tsbzJzxzkhshService.updateTsbzJzxzkhsh(tsbzJzxzkhsh));
+    public AjaxResult edit(@RequestBody TsbzJxzxkhsh tsbzJxzxkhsh) {
+        return toAjax(tsbzJxzxkhshService.updateTsbzJzxzkhsh(tsbzJxzxkhsh));
     }
 
     /**
      * 删除考核审核过程
      */
-    @PreAuthorize("@ss.hasPermi('jxzxkhgl:jzxzkhsh:remove')")
+    @PreAuthorize("@ss.hasPermi('jxzxkhgl:jxzxkhsh:remove')")
     @Log(title = "考核审核过程", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids) {
-        return toAjax(tsbzJzxzkhshService.deleteTsbzJzxzkhshByIds(ids));
+        return toAjax(tsbzJxzxkhshService.deleteTsbzJzxzkhshByIds(ids));
     }
 }

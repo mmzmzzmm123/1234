@@ -2,7 +2,7 @@ package com.ruoyi.jxzxkhgl.mapper;
 
 import java.util.List;
 
-import com.ruoyi.jxzxkhgl.domain.TsbzJzxzkhsh;
+import com.ruoyi.jxzxkhgl.domain.TsbzJxzxkhsh;
 
 /**
  * 考核审核过程Mapper接口
@@ -10,38 +10,38 @@ import com.ruoyi.jxzxkhgl.domain.TsbzJzxzkhsh;
  * @author ruoyi
  * @date 2020-08-29
  */
-public interface TsbzJzxzkhshMapper {
+public interface TsbzJxzxkhshMapper {
     /**
      * 查询考核审核过程
      *
      * @param id 考核审核过程ID
      * @return 考核审核过程
      */
-    public TsbzJzxzkhsh selectTsbzJzxzkhshById(Long id);
+    public TsbzJxzxkhsh selectTsbzJzxzkhshById(Long id);
 
     /**
      * 查询考核审核过程列表
      *
-     * @param tsbzJzxzkhsh 考核审核过程
+     * @param tsbzJxzxkhsh 考核审核过程
      * @return 考核审核过程集合
      */
-    public List<TsbzJzxzkhsh> selectTsbzJzxzkhshList(TsbzJzxzkhsh tsbzJzxzkhsh);
+    public List<TsbzJxzxkhsh> selectTsbzJzxzkhshList(TsbzJxzxkhsh tsbzJxzxkhsh);
 
     /**
      * 新增考核审核过程
      *
-     * @param tsbzJzxzkhsh 考核审核过程
+     * @param tsbzJxzxkhsh 考核审核过程
      * @return 结果
      */
-    public int insertTsbzJzxzkhsh(TsbzJzxzkhsh tsbzJzxzkhsh);
+    public int insertTsbzJzxzkhsh(TsbzJxzxkhsh tsbzJxzxkhsh);
 
     /**
      * 修改考核审核过程
      *
-     * @param tsbzJzxzkhsh 考核审核过程
+     * @param tsbzJxzxkhsh 考核审核过程
      * @return 结果
      */
-    public int updateTsbzJzxzkhsh(TsbzJzxzkhsh tsbzJzxzkhsh);
+    public int updateTsbzJzxzkhsh(TsbzJxzxkhsh tsbzJxzxkhsh);
 
     /**
      * 删除考核审核过程

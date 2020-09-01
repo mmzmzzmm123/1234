@@ -89,7 +89,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['jxzxkhgl:jzxzkhsh:add']"
+          v-hasPermi="['jxzxkhgl:jxzxkhsh:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -99,7 +99,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['jxzxkhgl:jzxzkhsh:edit']"
+          v-hasPermi="['jxzxkhgl:jxzxkhsh:edit']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -109,7 +109,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['jxzxkhgl:jzxzkhsh:remove']"
+          v-hasPermi="['jxzxkhgl:jxzxkhsh:remove']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -118,7 +118,7 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['jxzxkhgl:jzxzkhsh:export']"
+          v-hasPermi="['jxzxkhgl:jxzxkhsh:export']"
         >导出</el-button>
       </el-col>
 	  <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
@@ -144,14 +144,14 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['jxzxkhgl:jzxzkhsh:edit']"
+            v-hasPermi="['jxzxkhgl:jxzxkhsh:edit']"
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['jxzxkhgl:jzxzkhsh:remove']"
+            v-hasPermi="['jxzxkhgl:jxzxkhsh:remove']"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -229,7 +229,7 @@
 </template>
 
 <script>
-import { listJzxzkhsh, getJzxzkhsh, delJzxzkhsh, addJzxzkhsh, updateJzxzkhsh, exportJzxzkhsh } from "@/api/jxzxkhgl/jzxzkhsh";
+import { listJzxzkhsh, getJzxzkhsh, delJzxzkhsh, addJzxzkhsh, updateJzxzkhsh, exportJzxzkhsh } from "@/api/jxzxkhgl/jxzxkhsh";
 
 export default {
   name: "Jzxzkhsh",
