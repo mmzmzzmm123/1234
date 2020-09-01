@@ -185,4 +185,26 @@ public class ByThemeServiceImpl implements IByThemeService {
     public int deleteByThemeById(Long id) {
         return byThemeMapper.deleteByThemeById(id);
     }
+
+    /**
+     * 查询主题整合列表
+     *
+     * @param ids 主题整合
+     * @return 主题整合集合selectByThemeByIds
+     */
+    @Override
+    public List<ByTheme> selectByThemeByIds(Long[] ids) {
+        return byThemeMapper.selectByThemeByIds(ids);
+    }
+
+    /**
+     * 查询主题整合列表
+     *
+     * @param ids 主题整合
+     * @return 主题整合集合
+     */
+    @Override
+    public List<ByTheme> selectByThemeByActivityIds(Long[] ids) {
+        return byThemeMapper.selectByThemeByActivityIds(ids);
+    }
 }

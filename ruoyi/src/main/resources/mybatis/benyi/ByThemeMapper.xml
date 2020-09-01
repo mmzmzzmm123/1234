@@ -92,11 +92,28 @@
         delete from by_theme where id = #{id}
     </delete>
 
-    <delete id="deleteByThemeByIds" parameterType="String">
+    <delete id="deleteByThemeByIds" parameterType="Long">
         delete from by_theme where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>
+
+    <select id="selectByThemeByIds" parameterType="Long" resultMap="ByThemeResult">
+        <include refid="selectByThemeVo"/>
+        where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+    <select id="selectByThemeByActivityIds" parameterType="Long" resultMap="ByThemeResult">
+        select * from by_theme where id in (
+        select themeid from by_theme_activity where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        )
+    </select>
 
 </mapper>

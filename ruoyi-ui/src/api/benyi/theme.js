@@ -59,3 +59,19 @@ export function exportTheme(query) {
     params: query
   })
 }
+
+// 查询主题整合
+export function listThemeByIds(id) {
+  return request({
+    url: '/benyi/theme/listthemebyid/' + id,
+    method: 'post'
+  })
+}
+
+// 查询主题整合
+export function listThemeByActivityIds(id) {
+  return request({
+    url: '/benyi/theme/listthemebyactivityid/' + id,
+    method: 'post'
+  })
+}

@@ -66,4 +66,20 @@ public interface ByThemeMapper {
      * @return 结果
      */
     public int deleteByThemeByIds(Long[] ids);
+
+    /**
+     * 查询主题整合列表
+     *
+     * @param ids 主题整合
+     * @return 主题整合集合
+     */
+    public List<ByTheme> selectByThemeByIds(Long[] ids);
+
+    /**
+     * 查询主题整合列表
+     *
+     * @param ids 主题整合
+     * @return 主题整合集合
+     */
+    public List<ByTheme> selectByThemeByActivityIds(Long[] ids);
 }

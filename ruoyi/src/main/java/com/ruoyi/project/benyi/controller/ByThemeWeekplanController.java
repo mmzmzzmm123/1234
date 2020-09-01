@@ -14,6 +14,7 @@ import com.ruoyi.project.benyi.service.IByThemeMonthplanitemService;
 import com.ruoyi.project.benyi.service.IByThemeWeekplanitemService;
 import com.ruoyi.project.common.SchoolCommon;
 import com.ruoyi.project.system.service.IByClassService;
+import com.ruoyi.project.system.service.ISysUserService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -54,6 +55,9 @@ public class ByThemeWeekplanController extends BaseController {
     private IByThemeMonthplanitemService byThemeonthplanitemService;
     @Autowired
     private IByThemeWeekplanitemService byThemeWeekplanitemService;
+    @Autowired
+    private ISysUserService userService;
+
 
     /**
      * 查询主题整合周计划（根据月计划明细）列表
@@ -93,7 +97,12 @@ public class ByThemeWeekplanController extends BaseController {
     @PreAuthorize("@ss.hasPermi('benyi:themeweekplan:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") String id) {
-        return AjaxResult.success(byThemeWeekplanService.selectByThemeWeekplanById(id));
+        AjaxResult ajax=AjaxResult.success();
+        ByThemeWeekplan byThemeWeekplan=byThemeWeekplanService.selectByThemeWeekplanById(id);
+        ajax.put(AjaxResult.DATA_TAG, byThemeWeekplan);
+        ajax.put("classname",byClassService.selectByClassById(byThemeWeekplan.getClassid()).getBjmc());
+        ajax.put("createusername",userService.selectUserById(byThemeWeekplan.getCreateuserid()).getNickName());
+        return ajax;
     }
 
     /**

@@ -153,12 +153,13 @@
     />
 
     <!-- 添加或修改周计划(家长和教育部门)对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="1024px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="计划名称" prop="name">
           <el-input v-model="form.name" placeholder="请输入计划名称" />
         </el-form-item>
-        <el-form-item label="月份" prop="month">
+        <el-form-item label="月  份" prop="month">
+          <label slot="label">月&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;份</label>
           <el-date-picker
             clearable
             size="small"
@@ -192,7 +193,8 @@
           ></el-date-picker>
         </el-form-item>
         <el-form-item label="周次" prop="weekly">
-          <el-select v-model="form.weekly" placeholder="请选择周次">
+          <label slot="label">周&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;次</label>
+          <el-select v-model="form.weekly" placeholder="请选择周次"> 
             <el-option
               v-for="dict in weeklyOptions"
               :key="dict.dictValue"
@@ -205,19 +207,19 @@
           <el-input v-model="form.themeofweek" placeholder="请输入本周主题" />
         </el-form-item>
         <el-form-item label="教学目标(社会)" prop="jxmbSh">
-          <el-input v-model="form.jxmbSh" placeholder="请输入教学目标(社会)" />
+          <Editor v-model="form.jxmbSh" placeholder="请输入教学目标(社会)" />
         </el-form-item>
         <el-form-item label="教学目标(语言)" prop="jxmbYy">
-          <el-input v-model="form.jxmbYy" placeholder="请输入教学目标(语言)" />
+          <Editor v-model="form.jxmbYy" placeholder="请输入教学目标(语言)" />
         </el-form-item>
         <el-form-item label="教学目标(健康)" prop="jxmbJk">
-          <el-input v-model="form.jxmbJk" placeholder="请输入教学目标(健康)" />
+          <Editor v-model="form.jxmbJk" placeholder="请输入教学目标(健康)" />
         </el-form-item>
         <el-form-item label="教学目标(科学)" prop="jxmbKx">
-          <el-input v-model="form.jxmbKx" placeholder="请输入教学目标(科学)" />
+          <Editor v-model="form.jxmbKx" placeholder="请输入教学目标(科学)" />
         </el-form-item>
         <el-form-item label="教学目标(艺术)" prop="jxmbYs">
-          <el-input v-model="form.jxmbYs" placeholder="请输入教学目标(艺术)" />
+          <Editor v-model="form.jxmbYs" placeholder="请输入教学目标(艺术)" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -239,10 +241,15 @@ import {
   checkPlanweek
 } from "@/api/benyi/planweek";
 
+import Editor from "@/components/Editor";
+
 import { listClass } from "@/api/system/class";
 
 export default {
   name: "Planweek",
+  components: {
+    Editor
+  },
   data() {
     return {
       // 遮罩层
