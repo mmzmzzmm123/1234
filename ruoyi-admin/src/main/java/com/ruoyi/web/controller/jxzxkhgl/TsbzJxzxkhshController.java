@@ -40,7 +40,7 @@ public class TsbzJxzxkhshController extends BaseController {
     @GetMapping("/list")
     public TableDataInfo list(TsbzJxzxkhsh tsbzJxzxkhsh) {
         startPage();
-        List<TsbzJxzxkhsh> list = tsbzJxzxkhshService.selectTsbzJzxzkhshList(tsbzJxzxkhsh);
+        List<TsbzJxzxkhsh> list = tsbzJxzxkhshService.selectTsbzJxzxkhshList(tsbzJxzxkhsh);
         return getDataTable(list);
     }
 
@@ -51,7 +51,7 @@ public class TsbzJxzxkhshController extends BaseController {
     @Log(title = "考核审核过程", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
     public AjaxResult export(TsbzJxzxkhsh tsbzJxzxkhsh) {
-        List<TsbzJxzxkhsh> list = tsbzJxzxkhshService.selectTsbzJzxzkhshList(tsbzJxzxkhsh);
+        List<TsbzJxzxkhsh> list = tsbzJxzxkhshService.selectTsbzJxzxkhshList(tsbzJxzxkhsh);
         ExcelUtil<TsbzJxzxkhsh> util = new ExcelUtil<TsbzJxzxkhsh>(TsbzJxzxkhsh.class);
         return util.exportExcel(list, "jxzxkhsh");
     }
@@ -62,7 +62,7 @@ public class TsbzJxzxkhshController extends BaseController {
     @PreAuthorize("@ss.hasPermi('jxzxkhgl:jxzxkhsh:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id) {
-        return AjaxResult.success(tsbzJxzxkhshService.selectTsbzJzxzkhshById(id));
+        return AjaxResult.success(tsbzJxzxkhshService.selectTsbzJxzxkhshById(id));
     }
 
     /**
@@ -72,7 +72,7 @@ public class TsbzJxzxkhshController extends BaseController {
     @Log(title = "考核审核过程", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody TsbzJxzxkhsh tsbzJxzxkhsh) {
-        return toAjax(tsbzJxzxkhshService.insertTsbzJzxzkhsh(tsbzJxzxkhsh));
+        return toAjax(tsbzJxzxkhshService.insertTsbzJxzxkhsh(tsbzJxzxkhsh));
     }
 
     /**
@@ -82,7 +82,7 @@ public class TsbzJxzxkhshController extends BaseController {
     @Log(title = "考核审核过程", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody TsbzJxzxkhsh tsbzJxzxkhsh) {
-        return toAjax(tsbzJxzxkhshService.updateTsbzJzxzkhsh(tsbzJxzxkhsh));
+        return toAjax(tsbzJxzxkhshService.updateTsbzJxzxkhsh(tsbzJxzxkhsh));
     }
 
     /**
@@ -92,6 +92,6 @@ public class TsbzJxzxkhshController extends BaseController {
     @Log(title = "考核审核过程", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids) {
-        return toAjax(tsbzJxzxkhshService.deleteTsbzJzxzkhshByIds(ids));
+        return toAjax(tsbzJxzxkhshService.deleteTsbzJxzxkhshByIds(ids));
     }
 }
