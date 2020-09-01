@@ -4,6 +4,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
+import com.ruoyi.jxjs.domain.TsbzJxjsjbxx;
 
 /**
  * 考核审核过程对象 tsbz_jzxzkhsh
@@ -78,6 +79,8 @@ public class TsbzJxzxkhsh extends BaseEntity {
      */
     @Excel(name = "创建人")
     private Long createuseird;
+
+    private TsbzJxjsjbxx tsbzJxjsjbxx;
 
     public void setId(Long id) {
         this.id = id;
@@ -167,6 +170,14 @@ public class TsbzJxzxkhsh extends BaseEntity {
         return createuseird;
     }
 
+    public TsbzJxjsjbxx getTsbzJxjsjbxx() {
+        return tsbzJxjsjbxx;
+    }
+
+    public void setTsbzJxjsjbxx(TsbzJxjsjbxx tsbzJxjsjbxx) {
+        this.tsbzJxjsjbxx = tsbzJxjsjbxx;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
@@ -182,6 +193,7 @@ public class TsbzJxzxkhsh extends BaseEntity {
                 .append("qjshjy", getQjshjy())
                 .append("createuseird", getCreateuseird())
                 .append("createTime", getCreateTime())
+                .append("tsbzJxjsjbxx", getTsbzJxjsjbxx())
                 .toString();
     }
 }

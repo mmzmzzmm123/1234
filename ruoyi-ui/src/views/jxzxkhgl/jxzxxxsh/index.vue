@@ -126,9 +126,9 @@
 
     <el-table v-loading="loading" :data="jzxzkhshList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="编号" align="center" prop="id" />
+      <!-- <el-table-column label="编号" align="center" prop="id" /> -->
       <el-table-column label="考核方案" align="center" prop="faid" />
-      <el-table-column label="教师" align="center" prop="jsid" />
+      <el-table-column label="教师" align="center" prop="tsbzJxjsjbxx.name" />
       <el-table-column label="状态" align="center" prop="status" :formatter="statusFormat" />
       <el-table-column label="校级审核人" align="center" prop="xjshr" />
       <el-table-column label="校级审核意见" align="center" prop="xjshyj" :formatter="xjshyjFormat" />
@@ -298,6 +298,7 @@ export default {
     getList() {
       this.loading = true;
       listJzxzkhsh(this.queryParams).then(response => {
+        console.log(response.rows);
         this.jzxzkhshList = response.rows;
         this.total = response.total;
         this.loading = false;
