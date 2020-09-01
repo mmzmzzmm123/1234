@@ -1,3 +1,11 @@
+/*
+ * @Author: your name
+ * @Date: 2020-09-01 19:20:03
+ * @LastEditTime: 2020-09-01 19:22:51
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \ruoyi-ui\src\permission.js
+ */
 import router from './router'
 import store from './store'
 import {
@@ -14,7 +22,7 @@ NProgress.configure({
 })
 
 //const whiteList = ['/login', '/auth-redirect', '/bind', '/register']
-const whiteList = ['/login', '/experience/apply/', '/experience/result/', '/experience/content/', '/activity', 'week', 'month', 'term', 'play']
+const whiteList = ['/login', '/experience/apply/', '/experience/result/', '/experience/content/', '/activity', '/week', '/month', '/term', '/play']
 
 router.beforeEach((to, from, next) => {
   NProgress.start()
