@@ -71,7 +71,7 @@
           <i class="el-icon-plus" style="font-size: 18px;"/>
              </span>
             <el-dropdown-menu  slot="dropdown" class="sq-dropdown">
-              <el-dropdown-item class="filter-item" icon="el-icon-plus" command="a">添加连接</el-dropdown-item>
+              <el-dropdown-item class="filter-item" icon="el-icon-plus"  @click.native="addbookmarkurl">添加连接</el-dropdown-item>
               <el-dropdown-item class="filter-item" icon="el-icon-plus" command="b">添加文本</el-dropdown-item>
               <el-dropdown-item class="filter-item" icon="el-icon-plus" command="d" >导入书签</el-dropdown-item>
             </el-dropdown-menu>
@@ -154,15 +154,46 @@
 
 
 
-<!--  &lt;!&ndash; 添加链接&ndash;&gt;-->
-<!--    <el-dialog  title="添加链接"  :visible.sync="addurlopen" width="500px"  append-to-body class="addbookmarkurl">-->
+  <!-- 添加链接-->
+    <!-- 添加或修改书签管理对话框 -->
+    <el-dialog title="添加连接" :visible.sync="addopen" width="500px" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+        <el-form-item label="书签地址" prop="url">
+          <el-input v-model="form.url" placeholder="请输入书签地址" />
+        </el-form-item>
+        <el-form-item label="书签标题" prop="title">
+          <el-input v-model="form.title" placeholder="请输入书签标题" />
+        </el-form-item>
+        <el-form-item label="书签描述" prop="description">
+          <el-input v-model="form.description" type="textarea" placeholder="请输入书签描述" run dev
+                    :autosize="{minRows: 3, maxRows:4}" :style="{width: '100%'}"></el-input>
+        </el-form-item>
+
+        <el-form-item label="书签标签" prop="label">
+          <el-input v-model="form.label" placeholder="请输入标签" />
+        </el-form-item>
+<!--        <el-form-item label="所属目录" prop="menuId">-->
+<!--          <el-input v-model="form.menuId" placeholder="请选择上级目录" />-->
+<!--        </el-form-item>-->
+
+        <el-form-item  prop="menuId">
+          <div class="labelname">所属目录</div>
+          <treeselect class="menutreeselect"  v-model="form.menuId" :options="menuOptions" :normalizer="normalizer"  />
+        </el-form-item>
 
 
-<!--      <el-input  v-model="bookamkrurl" placeholder="输入链接地址 例：https://withpinbox.com" class="addbookmarkurl-input"  />-->
 
-<!--      <el-button  plain  class="addbookmarkurl-button"  round  @click="submitForm">确定</el-button>-->
 
-<!--    </el-dialog>-->
+        <!--          0公开显示1隐藏显示2好友显示3稍后再看-->
+        <el-form-item label="选择状态" prop="start">
+          <el-input v-model="form.start" placeholder="" />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="addbookmark">确 定</el-button>
+        <el-button @click="bookmarkcancel">取 消</el-button>
+      </div>
+    </el-dialog>
 
 
 
@@ -177,6 +208,7 @@
 
 <script>
   // 下面的是单个Vue组件引用的外部静态文件，也可以在main.js文件中引用
+  import {  addBookmark} from "@/api/bookmark/bookmark";
 
   import { listMenu, getMenu, delMenu, addMenu, updateMenu, exportMenu } from "@/api/bookmark/menu";
   import Treeselect from "@riophae/vue-treeselect";
@@ -203,12 +235,29 @@
           parentId: undefined,
           menuOrder: undefined,
         },
+        bookmarkParams: {
+          pageNum: 1,
+          pageSize: 15,
+          userid: undefined,
+          title: undefined,
+          url: undefined,
+          urls: undefined,
+          description: undefined,
+          image: undefined,
+          label: undefined,
+          menuId: undefined,
+          zcount: undefined,
+          idelete: undefined,
+          start: undefined,
+        },
         // 书签菜单树选项
         menuOptions: [],
         // 弹出层标题
         title: "",
         // 是否显示弹出层 编辑添加
         open: false,
+        //添加连接
+        addopen:false,
         //书签URL
         bookamkrurl:'',
         //添加url
@@ -265,8 +314,61 @@
       that.getList();
     },
     methods:{
+      /** 新增书签Url操作 */
+      addbookmarkurl:function(){
+          this.reset();
+          this.addopen = true;
+
+        // getMenu(e.getAttribute("data-menuId")).then(response => {
+        //   this.form = response.data;
+        //   this.open = true;
+        //   this.title = "修改书签菜单";
+        // });
 
 
+
+      },
+
+      /** 提交按钮 修改和新增 */
+      addbookmark: function() {
+        this.$refs["form"].validate(valid => {
+          if (valid) {
+
+              addBookmark(this.form).then(response => {
+                if (response.code === 200) {
+                  this.msgSuccess("新增成功");
+                  this.addopen = false;
+                  this.getList();
+                }
+              });
+            }
+
+        });
+      },
+      // 表单重置
+      bookmarkreset() {
+        this.form = {
+          bookmarkId: undefined,
+          userid: undefined,
+          title: undefined,
+          url: undefined,
+          urls: undefined,
+          description: undefined,
+          image: undefined,
+          label: undefined,
+          menuId: undefined,
+          zcount: undefined,
+          idelete: undefined,
+          start: undefined,
+          createTime: undefined
+        };
+        this.resetForm("form");
+      },
+      // 取消按钮
+      bookmarkcancel() {
+        this.addopen = false;
+        this.bookmarkreset();
+      },
 
 
 
@@ -303,7 +405,6 @@
       getList() {
         listMenuByUserId().then(response => {
           this.zNodes = response.data;
-          console.log(response.data)
           //加载Ztree树
           $.fn.zTree.init($("#treeDemo"), this.setting, this.zNodes).expandAll(this.expandAll);
         });

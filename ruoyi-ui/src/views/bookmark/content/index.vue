@@ -73,6 +73,7 @@
               <div class="editlist">
                 <div> <el-button plain size="small" @click="handleUpdate(bm.bookmarkId)">修改</el-button></div>
                 <div> <el-button plain size="small" @click="handleDelete(bm.bookmarkId)">删除</el-button></div>
+                <div> <el-button plain size="small">笔记</el-button></div>
                 <div> <el-button plain size="small">分享</el-button></div>
 
               </div>
@@ -116,7 +117,7 @@
             <el-input v-model="form.url" placeholder="请输入书签地址" />
           </el-form-item>
           <el-form-item label="书签描述" prop="description">
-            <el-input v-model="form.description" type="textarea" placeholder="请输入书签描述"
+            <el-input v-model="form.description" type="textarea" placeholder="请输入书签描述" run dev
                       :autosize="{minRows: 3, maxRows:4}" :style="{width: '100%'}"></el-input>
           </el-form-item>
 
@@ -130,16 +131,16 @@
           <el-form-item label="选择状态" prop="start">
             <el-input v-model="form.start" placeholder="" />
           </el-form-item>
-
-
-
-
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="submitForm">确 定</el-button>
           <el-button @click="cancel">取 消</el-button>
         </div>
       </el-dialog>
+
+
+
+
 
 
 
@@ -407,7 +408,7 @@
 
   }
   .editBookamrk{
-    width: 200px;
+    width: 270px;
     height: 70px;
     position: absolute;
     background-color: #acd7ff;
@@ -415,7 +416,7 @@
   }
   .editlist{
     display: flex;
-    width: 200px;
+    width: 100%;
     height: 70px;
     flex-flow: wrap;
     align-items: center;

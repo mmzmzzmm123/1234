@@ -1,10 +1,16 @@
 package com.ruoyi.web.controller.yunbookmark;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Date;
 import java.util.List;
 
 import com.ruoyi.bookmark.domain.SqBookmark;
 import com.ruoyi.bookmark.service.ISqBookmarkService;
 import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.common.utils.BookmarkHtml.ImportHtml;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,6 +39,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
 @RequestMapping("/bookmark/bookmark")
 public class SqBookmarkController extends BaseController
 {
+    public static Logger logger =  LoggerFactory.getLogger(SqBookmarkController.class);
     @Autowired
     private ISqBookmarkService sqBookmarkService;
 
@@ -129,6 +136,14 @@ public class SqBookmarkController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody SqBookmark sqBookmark)
     {
+        SysUser sysUser=getAuthUser();
+        sqBookmark.setUserid(sysUser.getUserId());
+        try {
+            sqBookmark.setUrls(ImportHtml.Urlutils(new URL(sqBookmark.getUrl())));
+        } catch (MalformedURLException e) {
+            logger.info(sysUser.getUserId()+"新增书签 获取网址的 主机信息 报错"+new Date());
+            e.printStackTrace();
+        }
         return toAjax(sqBookmarkService.insertSqBookmark(sqBookmark));
     }
 
