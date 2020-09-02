@@ -103,12 +103,18 @@ public class TsbzJxzxkhshController extends BaseController {
        if(!schoolCommonController.isStringEmpty(tsbzJxzxkhsh.getXjshyj())&&tsbzJxzxkhsh.getXjshyj().equals("1")) {
            tsbzJxzxkhsh.setXjshr(SecurityUtils.getLoginUser().getUser().getUserId());
            tsbzJxzxkhsh.setStatus("2");
+       }else if (!schoolCommonController.isStringEmpty(tsbzJxzxkhsh.getXjshyj())&&tsbzJxzxkhsh.getXjshyj().equals("0")) {
+           tsbzJxzxkhsh.setXjshr(SecurityUtils.getLoginUser().getUser().getUserId());
+           tsbzJxzxkhsh.setStatus("8");
        }
 
         //区级
         if(!schoolCommonController.isStringEmpty(tsbzJxzxkhsh.getQjshyj())&&tsbzJxzxkhsh.getQjshyj().equals("1")) {
             tsbzJxzxkhsh.setQjshr(SecurityUtils.getLoginUser().getUser().getUserId());
             tsbzJxzxkhsh.setStatus("9");
+        }else if (!schoolCommonController.isStringEmpty(tsbzJxzxkhsh.getQjshyj())&&tsbzJxzxkhsh.getQjshyj().equals("0")) {
+            tsbzJxzxkhsh.setQjshr(SecurityUtils.getLoginUser().getUser().getUserId());
+            tsbzJxzxkhsh.setStatus("8");
         }
 
         return toAjax(tsbzJxzxkhshService.updateTsbzJxzxkhsh(tsbzJxzxkhsh));

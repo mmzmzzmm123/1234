@@ -66,7 +66,7 @@
 
     <el-table v-loading="loading" :data="jzxzkhshList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="编号" align="center" prop="id" />
+      <el-table-column label="聘任校" align="center" prop="tsbzJxjsjbxx.prdwmc" />
       <el-table-column label="考核方案" align="center" prop="faid" :formatter="faFormat" />
       <el-table-column label="教师" align="center" prop="tsbzJxjsjbxx.name" />
       <el-table-column label="状态" align="center" prop="status" :formatter="statusFormat" />
@@ -88,7 +88,7 @@
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['jxzxkhgl:jxzxkhsh:remove']"
-          >删除</el-button>
+          >退回</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -403,23 +403,19 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$confirm(
-        '是否确认删除考核审核过程编号为"' + ids + '"的数据项?',
-        "警告",
-        {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }
-      )
-        .then(function() {
+      this.$confirm("是否确认该教师考核数据回退到聘任校?", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(function () {
           return delJzxzkhsh(ids);
         })
         .then(() => {
           this.getList();
           this.msgSuccess("删除成功");
         })
-        .catch(function() {});
+        .catch(function () {});
     }
     /** 导出按钮操作 */
     // handleExport() {
