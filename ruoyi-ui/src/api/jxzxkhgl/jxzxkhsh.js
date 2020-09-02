@@ -69,3 +69,11 @@ export function checkJzxzkhsh(id) {
     method: 'post'
   })
 }
+
+// 删除考核审核过程
+export function backJzxzkhsh(id, status) {
+  return request({
+    url: '/jxzxkhgl/jxzxkhsh/back/' + id + '/' + status,
+    method: 'post'
+  })
+}

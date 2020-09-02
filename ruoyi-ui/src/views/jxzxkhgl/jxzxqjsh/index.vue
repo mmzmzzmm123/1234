@@ -35,7 +35,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="状态" prop="status">
+      <el-form-item label="当前状态" prop="status">
         <el-select v-model="queryParams.status" placeholder="请选择状态" clearable size="small">
           <el-option
             v-for="dict in statusOptions"
@@ -86,7 +86,7 @@
     </el-row>
 
     <el-table v-loading="loading" :data="jzxzkhshList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
+      <el-table-column type="selection" width="55" align="center" :selectable="isShow" />
       <!-- <el-table-column label="编号" align="center" prop="id" /> -->
       <el-table-column label="考核方案" align="center" prop="faid" :formatter="faFormat" />
       <el-table-column label="聘任校" align="center" prop="tsbzJxjsjbxx.prdwmc" />
@@ -104,6 +104,7 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['jxzxkhgl:jxzxkhsh:edit']"
+            v-show="isShow(scope.row)"
           >审核</el-button>
           <el-button
             size="mini"
@@ -111,6 +112,7 @@
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['jxzxkhgl:jxzxkhsh:remove']"
+            v-show="isShow(scope.row)"
           >退回</el-button>
         </template>
       </el-table-column>
@@ -167,7 +169,7 @@
 import {
   listJzxzkhsh,
   getJzxzkhsh,
-  delJzxzkhsh,
+  backJzxzkhsh,
   addJzxzkhsh,
   updateJzxzkhsh,
 } from "@/api/jxzxkhgl/jxzxkhsh";
@@ -250,6 +252,13 @@ export default {
     });
   },
   methods: {
+    //设置是否可用
+    isShow(row) {
+      if (row.status == "9") {
+        return false;
+      }
+      return true;
+    },
     /** 查询考核审核过程列表 */
     getList() {
       this.loading = true;
@@ -368,11 +377,11 @@ export default {
         type: "warning",
       })
         .then(function () {
-          return delJzxzkhsh(ids);
+          return backJzxzkhsh(ids, "1");
         })
         .then(() => {
           this.getList();
-          this.msgSuccess("删除成功");
+          this.msgSuccess("回退成功");
         })
         .catch(function () {});
     },

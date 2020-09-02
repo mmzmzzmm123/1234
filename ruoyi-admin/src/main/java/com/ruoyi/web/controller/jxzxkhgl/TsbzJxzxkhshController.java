@@ -103,18 +103,12 @@ public class TsbzJxzxkhshController extends BaseController {
        if(!schoolCommonController.isStringEmpty(tsbzJxzxkhsh.getXjshyj())&&tsbzJxzxkhsh.getXjshyj().equals("1")) {
            tsbzJxzxkhsh.setXjshr(SecurityUtils.getLoginUser().getUser().getUserId());
            tsbzJxzxkhsh.setStatus("2");
-       }else if (!schoolCommonController.isStringEmpty(tsbzJxzxkhsh.getXjshyj())&&tsbzJxzxkhsh.getXjshyj().equals("0")) {
-           tsbzJxzxkhsh.setXjshr(SecurityUtils.getLoginUser().getUser().getUserId());
-           tsbzJxzxkhsh.setStatus("8");
        }
 
         //区级
         if(!schoolCommonController.isStringEmpty(tsbzJxzxkhsh.getQjshyj())&&tsbzJxzxkhsh.getQjshyj().equals("1")) {
             tsbzJxzxkhsh.setQjshr(SecurityUtils.getLoginUser().getUser().getUserId());
             tsbzJxzxkhsh.setStatus("9");
-        }else if (!schoolCommonController.isStringEmpty(tsbzJxzxkhsh.getQjshyj())&&tsbzJxzxkhsh.getQjshyj().equals("0")) {
-            tsbzJxzxkhsh.setQjshr(SecurityUtils.getLoginUser().getUser().getUserId());
-            tsbzJxzxkhsh.setStatus("8");
         }
 
         return toAjax(tsbzJxzxkhshService.updateTsbzJxzxkhsh(tsbzJxzxkhsh));
@@ -132,6 +126,19 @@ public class TsbzJxzxkhshController extends BaseController {
 
     /**
      * 新增考核审核过程
+     */
+    @PreAuthorize("@ss.hasPermi('jxzxkhgl:jxzxkhsh:edit')")
+    @Log(title = "考核审核过程", businessType = BusinessType.UPDATE)
+    @PostMapping("/back/{id}/{status}")
+    public AjaxResult back(@PathVariable Long id,@PathVariable String status) {
+        TsbzJxzxkhsh tsbzJxzxkhsh = new TsbzJxzxkhsh();
+        tsbzJxzxkhsh.setId(id);
+        tsbzJxzxkhsh.setStatus(status);
+        return toAjax(tsbzJxzxkhshService.updateTsbzJxzxkhsh(tsbzJxzxkhsh));
+    }
+
+    /**
+     * 回退考核审核过程
      */
     @PreAuthorize("@ss.hasPermi('jxzxkhgl:jxzxkhsh:add')" + "||@ss.hasPermi('jxzxkhgl:jxzxkhgcsj:edit')")
     @Log(title = "考核审核过程", businessType = BusinessType.INSERT)

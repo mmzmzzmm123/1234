@@ -5,14 +5,11 @@
       ref="queryForm"
       :inline="true"
       v-show="showSearch"
-      label-width="102px"
+      label-width="68px"
     >
       <el-form-item label="考核方案" prop="faid">
-        <el-select v-model="form.faid" placeholder="请选择方案">
-          <el-option 
-          v-for="dict in faOptions" 
-          :key="dict.id" 
-          :label="dict.name" :value="dict.id"></el-option>
+        <el-select v-model="queryParams.faid" size="small">
+          <el-option v-for="dict in faOptions" :key="dict.id" :label="dict.name" :value="dict.id"></el-option>
         </el-select>
       </el-form-item>
       <!-- <el-form-item label="教师" prop="jsid">
@@ -23,8 +20,8 @@
           :label="dict.name" 
           :value="dict.id"></el-option>
         </el-select>
-      </el-form-item> -->
-      <el-form-item label="状态" prop="status">
+      </el-form-item>-->
+      <el-form-item label="当前状态" prop="status">
         <el-select v-model="queryParams.status" placeholder="请选择状态" clearable size="small">
           <el-option
             v-for="dict in statusOptions"
@@ -34,7 +31,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="校级审核意见" prop="xjshyj">
+      <el-form-item label="校级意见" prop="xjshyj">
         <el-select v-model="queryParams.xjshyj" placeholder="请选择校级审核意见" clearable size="small">
           <el-option
             v-for="dict in xjshyjOptions"
@@ -53,20 +50,30 @@
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
+          type="success"
+          icon="el-icon-edit"
+          size="mini"
+          :disabled="single"
+          @click="handleUpdate"
+          v-hasPermi="['jxzxkhgl:jxzxkhsh:edit']"
+        >审核</el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
           type="danger"
           icon="el-icon-delete"
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['jxzxkhgl:jxzxkhsh:remove']"
-        >删除</el-button>
+        >退回</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="jzxzkhshList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="聘任校" align="center" prop="tsbzJxjsjbxx.prdwmc" />
+      <el-table-column type="selection" width="55" align="center" :selectable="isShow" />
+      <!-- <el-table-column label="聘任校" align="center" prop="tsbzJxjsjbxx.prdwmc" /> -->
       <el-table-column label="考核方案" align="center" prop="faid" :formatter="faFormat" />
       <el-table-column label="教师" align="center" prop="tsbzJxjsjbxx.name" />
       <el-table-column label="状态" align="center" prop="status" :formatter="statusFormat" />
@@ -88,6 +95,7 @@
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['jxzxkhgl:jxzxkhsh:remove']"
+            v-show="isShow(scope.row)"
           >退回</el-button>
         </template>
       </el-table-column>
@@ -105,19 +113,13 @@
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
         <el-form-item label="考核方案" prop="faid">
-          <el-select v-model="form.faid" placeholder="请选择方案">
+          <el-select v-model="form.faid" placeholder="请选择方案" :disabled="true">
             <el-option v-for="dict in faOptions" :key="dict.id" :label="dict.name" :value="dict.id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="教师" prop="jsid" :formatter="jsFormat">
-          <el-select v-model="form.jsid" placeholder="请选择教师" :disabled="true">
-            <el-option
-              v-for="dict in JssOptions"
-              :key="dict.id"
-              :label="dict.name"
-              :value="dict.id"
-            ></el-option>
-          </el-select>
+        <el-form-item label="教师" prop="jsid">
+          <el-input v-model="jsxm" :disabled="true" />
+          <el-input v-model="form.jsid" v-if="false" />
         </el-form-item>
         <!-- <el-form-item label="状态" prop="status">
           <el-select v-model="form.status" placeholder="请选择状态">
@@ -158,15 +160,17 @@ import {
   delJzxzkhsh,
   addJzxzkhsh,
   updateJzxzkhsh,
-  exportJzxzkhsh
 } from "@/api/jxzxkhgl/jxzxkhsh";
 import { listJxzxkhfa } from "@/api/jxzxkhgl/jxzxkhfa";
-import { listJxjsjbxx } from "@/api/jxjs/jxjsjbxx";
 
 export default {
   name: "Jzxzkhsh",
   data() {
     return {
+      //教师姓名
+      jsxm: "",
+      //默认方案id
+      defaultFaid: "",
       // 遮罩层
       loading: true,
       // 选中数组
@@ -193,8 +197,6 @@ export default {
       qjshyjOptions: [],
       //方案
       faOptions: [],
-      // 教师列表
-      JssOptions: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -208,15 +210,15 @@ export default {
         qjshr: null,
         qjshyj: null,
         qjshjy: null,
-        createuseird: null
+        createuseird: null,
       },
       // 查询参数
       queryParams_fa: {
-        status: null
+        status: "1",
       },
       // 查询参数
       queryParams_Jss: {
-        jsid: null
+        jsid: null,
       },
       // 表单参数
       form: {},
@@ -231,20 +233,19 @@ export default {
         xjshjy: [
           { required: true, message: "方案编号不能为空", trigger: "blur" },
         ],
-      }
+      },
     };
   },
   created() {
-    this.getJssList();
     this.getFaList();
     this.getList();
-    this.getDicts("sys_dm_khshgczt").then(response => {
+    this.getDicts("sys_dm_khshgczt").then((response) => {
       this.statusOptions = response.data;
     });
-    this.getDicts("sys_dm_shyj").then(response => {
+    this.getDicts("sys_dm_shyj").then((response) => {
       this.xjshyjOptions = response.data;
     });
-    this.getDicts("sys_dm_shyj").then(response => {
+    this.getDicts("sys_dm_shyj").then((response) => {
       this.qjshyjOptions = response.data;
     });
   },
@@ -252,7 +253,7 @@ export default {
     /** 查询考核审核过程列表 */
     getList() {
       this.loading = true;
-      listJzxzkhsh(this.queryParams).then(response => {
+      listJzxzkhsh(this.queryParams).then((response) => {
         this.jzxzkhshList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -261,7 +262,7 @@ export default {
     // 是否显示按钮
     isShow(row) {
       //console.log(row.status);
-      if (row.xjshyj == "0" || row.xjshyj == "1") {
+      if (row.status == "0" || row.status == "9" || row.status == "2") {
         return false;
       } else {
         return true;
@@ -272,7 +273,7 @@ export default {
       // return this.selectDictLabel(this.classOptions, row.classid);
       var actions = [];
       var datas = this.faOptions;
-      Object.keys(datas).map(key => {
+      Object.keys(datas).map((key) => {
         if (datas[key].id == "" + row.faid) {
           actions.push(datas[key].name);
           return false;
@@ -282,31 +283,11 @@ export default {
     },
     // 获取方案信息
     getFaList() {
-      this.queryParams_fa.status = "1";
-      listJxzxkhfa(this.queryParams_fa).then(response => {
+      listJxzxkhfa(this.queryParams_fa).then((response) => {
         this.faOptions = response.rows;
+        this.defaultFaid = response.rows[0].id;
+        this.queryParams.faid = this.defaultFaid;
       });
-    },
-    // 获取教师信息
-    getJssList() {
-      this.queryParams_Jss.jsid = this.queryParams.jsid;
-      listJxjsjbxx(this.queryParams_Jss).then(response => {
-        this.JssOptions = response.rows;
-        //console.log(this.JssOptions);
-      });
-    },
-
-    jsFormat(row, column) {
-      // return this.selectDictLabel(this.classOptions, row.classid);
-      var actions = [];
-      var datas = this.JssOptions;
-      Object.keys(datas).map(key => {
-        if (datas[key].id == "" + row.jsid) {
-          actions.push(datas[key].name);
-          return false;
-        }
-      });
-      return actions.join("");
     },
     // 状态字典翻译
     statusFormat(row, column) {
@@ -339,7 +320,7 @@ export default {
         qjshyj: null,
         qjshjy: null,
         createuseird: null,
-        createTime: null
+        createTime: null,
       };
       this.resetForm("form");
     },
@@ -351,26 +332,24 @@ export default {
     /** 重置按钮操作 */
     resetQuery() {
       this.resetForm("queryForm");
+      this.queryParams.faid = this.defaultFaid;
       this.handleQuery();
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.id);
+      this.ids = selection.map((item) => item.id);
       this.single = selection.length !== 1;
       this.multiple = !selection.length;
-    },
-    /** 新增按钮操作 */
-    handleAdd() {
-      this.reset();
-      this.isable = false;
-      this.open = true;
-      this.title = "添加考核审核过程";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids;
-      getJzxzkhsh(id).then(response => {
+      if (id == null || id == "") {
+        return this.msgError("当前教师未提交数据，不允许审核！");
+      }
+      getJzxzkhsh(id).then((response) => {
+        this.jsxm = response.data.tsbzJxjsjbxx.name;
         this.form = response.data;
         this.open = true;
         this.title = "修改考核审核过程";
@@ -378,10 +357,10 @@ export default {
     },
     /** 提交按钮 */
     submitForm() {
-      this.$refs["form"].validate(valid => {
+      this.$refs["form"].validate((valid) => {
         if (valid) {
           if (this.form.id != null) {
-            updateJzxzkhsh(this.form).then(response => {
+            updateJzxzkhsh(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("修改成功");
                 this.open = false;
@@ -389,7 +368,7 @@ export default {
               }
             });
           } else {
-            addJzxzkhsh(this.form).then(response => {
+            addJzxzkhsh(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("新增成功");
                 this.open = false;
@@ -403,7 +382,7 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$confirm("是否确认该教师考核数据回退到聘任校?", "警告", {
+      this.$confirm("是否确认该教师考核数据回退到教师?", "警告", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
@@ -413,23 +392,10 @@ export default {
         })
         .then(() => {
           this.getList();
-          this.msgSuccess("删除成功");
+          this.msgSuccess("回退成功");
         })
         .catch(function () {});
-    }
-    /** 导出按钮操作 */
-    // handleExport() {
-    //   const queryParams = this.queryParams;
-    //   this.$confirm('是否确认导出所有考核审核过程数据项?', "警告", {
-    //       confirmButtonText: "确定",
-    //       cancelButtonText: "取消",
-    //       type: "warning"
-    //     }).then(function() {
-    //       return exportJzxzkhsh(queryParams);
-    //     }).then(response => {
-    //       this.download(response.msg);
-    //     }).catch(function() {});
-    // }
-  }
+    },
+  },
 };
 </script>
