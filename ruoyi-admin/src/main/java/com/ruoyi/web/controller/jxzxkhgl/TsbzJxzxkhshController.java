@@ -96,6 +96,8 @@ public class TsbzJxzxkhshController extends BaseController {
     @Log(title = "考核审核过程", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody TsbzJxzxkhsh tsbzJxzxkhsh) {
+        tsbzJxzxkhsh.setXjshr(SecurityUtils.getLoginUser().getUser().getUserId());
+        tsbzJxzxkhsh.setStatus("2");
         return toAjax(tsbzJxzxkhshService.updateTsbzJxzxkhsh(tsbzJxzxkhsh));
     }
 
