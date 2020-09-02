@@ -47,8 +47,10 @@
     </resultMap>
 
     <sql id="selectTsbzJxzxkhshVo">
-select d.id,d.faid,d.jsid,d.status,d.xjshr,d.xjshyj,d.xjshjy,d.qjshr,d.qjshjy,d.qjshyj,d.createuseird,d.create_time,b.name,b.prdwmc from tsbz_jxzxkhsh d
-left join tsbz_jxjsjbxx b on b.id=d.jsid
+selectd.id,d.faid,d.jsid,d.status,d.xjshr,d.xjshyj,d.xjshjy,d.qjshr,d.qjshjy,d.qjshyj,d.createuseird,d.create_time,b.name,b.prdwmc from tsbz_jxzxmd a
+left join tsbz_jxjsjbxx b on b.id=a.jsid
+left join sys_dept c on b.prdwid=c.schoolid
+left join tsbz_jxzxkhsh d on a.jsid=d.jsid
     </sql>
 
     <select id="selectTsbzJxzxkhshList" parameterType="TsbzJxzxkhsh" resultMap="TsbzJxzxkhshResult">

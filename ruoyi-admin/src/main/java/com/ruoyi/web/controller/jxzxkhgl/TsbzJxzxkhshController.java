@@ -3,6 +3,7 @@ package com.ruoyi.web.controller.jxzxkhgl;
 import java.util.List;
 
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.web.controller.common.SchoolCommonController;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,6 +34,8 @@ import com.ruoyi.common.core.page.TableDataInfo;
 public class TsbzJxzxkhshController extends BaseController {
     @Autowired
     private ITsbzJxzxkhshService tsbzJxzxkhshService;
+    @Autowired
+    private SchoolCommonController schoolCommonController;
 
     /**
      * 查询考核审核过程列表
@@ -96,8 +99,18 @@ public class TsbzJxzxkhshController extends BaseController {
     @Log(title = "考核审核过程", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody TsbzJxzxkhsh tsbzJxzxkhsh) {
-        tsbzJxzxkhsh.setXjshr(SecurityUtils.getLoginUser().getUser().getUserId());
-        tsbzJxzxkhsh.setStatus("2");
+        //校级
+       if(!schoolCommonController.isStringEmpty(tsbzJxzxkhsh.getXjshjy())&&tsbzJxzxkhsh.getXjshjy()=="1") {
+           tsbzJxzxkhsh.setXjshr(SecurityUtils.getLoginUser().getUser().getUserId());
+           tsbzJxzxkhsh.setStatus("2");
+       }
+
+        //区级
+        if(!schoolCommonController.isStringEmpty(tsbzJxzxkhsh.getQjshjy())&&tsbzJxzxkhsh.getQjshjy()=="1") {
+            tsbzJxzxkhsh.setQjshr(SecurityUtils.getLoginUser().getUser().getUserId());
+            tsbzJxzxkhsh.setStatus("9");
+        }
+
         return toAjax(tsbzJxzxkhshService.updateTsbzJxzxkhsh(tsbzJxzxkhsh));
     }
 
