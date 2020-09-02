@@ -13,7 +13,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="基地校" prop="jdxid">
-         <el-select v-model="queryParams.jdxid" filterable placeholder="请选择基地校">
+        <el-select v-model="queryParams.jdxid" filterable placeholder="请选择基地校">
           <el-option v-for="item in jdxOptions" :key="item.id" :label="item.jdxmc" :value="item.id"></el-option>
         </el-select>
       </el-form-item>
@@ -59,7 +59,7 @@
           size="mini"
           @click="handleExport"
           v-hasPermi="['jxjs:jxjsjbxx:export']"
-        >导出</el-button>
+        >导出笔试名单</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>

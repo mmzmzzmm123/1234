@@ -100,13 +100,13 @@ public class TsbzJxzxkhshController extends BaseController {
     @PutMapping
     public AjaxResult edit(@RequestBody TsbzJxzxkhsh tsbzJxzxkhsh) {
         //校级
-       if(!schoolCommonController.isStringEmpty(tsbzJxzxkhsh.getXjshjy())&&tsbzJxzxkhsh.getXjshjy().equals("1")) {
+       if(!schoolCommonController.isStringEmpty(tsbzJxzxkhsh.getXjshyj())&&tsbzJxzxkhsh.getXjshyj().equals("1")) {
            tsbzJxzxkhsh.setXjshr(SecurityUtils.getLoginUser().getUser().getUserId());
            tsbzJxzxkhsh.setStatus("2");
        }
 
         //区级
-        if(!schoolCommonController.isStringEmpty(tsbzJxzxkhsh.getQjshjy())&&tsbzJxzxkhsh.getQjshjy().equals("1")) {
+        if(!schoolCommonController.isStringEmpty(tsbzJxzxkhsh.getQjshyj())&&tsbzJxzxkhsh.getQjshyj().equals("1")) {
             tsbzJxzxkhsh.setQjshr(SecurityUtils.getLoginUser().getUser().getUserId());
             tsbzJxzxkhsh.setStatus("9");
         }

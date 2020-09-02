@@ -35,6 +35,16 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+      <el-form-item label="状态" prop="status">
+        <el-select v-model="queryParams.status" placeholder="请选择状态" clearable size="small">
+          <el-option
+            v-for="dict in statusOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item label="区级意见" prop="qjshyj">
         <el-select v-model="queryParams.qjshyj" placeholder="请选择区级审核意见" clearable size="small">
           <el-option
@@ -70,22 +80,22 @@
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['jxzxkhgl:jxzxkhsh:remove']"
-        >清除</el-button>
+        >退回</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="jzxzkhshList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="编号" align="center" prop="id" />
-      <el-table-column label="考核方案" align="center" prop="faid" :formatter="faFormat"/>
+      <!-- <el-table-column label="编号" align="center" prop="id" /> -->
+      <el-table-column label="考核方案" align="center" prop="faid" :formatter="faFormat" />
       <el-table-column label="聘任校" align="center" prop="tsbzJxjsjbxx.prdwmc" />
       <el-table-column label="教师" align="center" prop="tsbzJxjsjbxx.name" />
       <el-table-column label="状态" align="center" prop="status" :formatter="statusFormat" />
       <el-table-column label="校级审核意见" align="center" prop="xjshyj" :formatter="xjshyjFormat" />
-      <el-table-column label="校级审核建议" align="center" prop="xjshjy" :show-overflow-tooltip="true"/>
+      <el-table-column label="校级审核建议" align="center" prop="xjshjy" :show-overflow-tooltip="true" />
       <el-table-column label="区级审核意见" align="center" prop="qjshyj" :formatter="qjshyjFormat" />
-      <el-table-column label="区级审核建议" align="center" prop="qjshjy" :show-overflow-tooltip="true"/>
+      <el-table-column label="区级审核建议" align="center" prop="qjshjy" :show-overflow-tooltip="true" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -101,7 +111,7 @@
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['jxzxkhgl:jxzxkhsh:remove']"
-          >清除</el-button>
+          >退回</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -340,15 +350,7 @@ export default {
           if (this.form.id != null) {
             updateJzxzkhsh(this.form).then((response) => {
               if (response.code === 200) {
-                this.msgSuccess("修改成功");
-                this.open = false;
-                this.getList();
-              }
-            });
-          } else {
-            addJzxzkhsh(this.form).then((response) => {
-              if (response.code === 200) {
-                this.msgSuccess("新增成功");
+                this.msgSuccess("审核成功");
                 this.open = false;
                 this.getList();
               }
@@ -360,15 +362,11 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$confirm(
-        '是否确认删除考核审核过程编号为"' + ids + '"的数据项?',
-        "警告",
-        {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning",
-        }
-      )
+      this.$confirm("是否确认该教师考核数据回退到聘任校?", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
         .then(function () {
           return delJzxzkhsh(ids);
         })
