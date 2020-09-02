@@ -1,6 +1,12 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="102px">
+    <el-form
+      :model="queryParams"
+      ref="queryForm"
+      :inline="true"
+      v-show="showSearch"
+      label-width="102px"
+    >
       <el-form-item label="考核方案名称" prop="name">
         <el-input
           v-model="queryParams.name"
@@ -21,21 +27,27 @@
         </el-select>
       </el-form-item>
       <el-form-item label="考核开始时间" prop="starttime">
-        <el-date-picker clearable size="small" style="width: 200px"
+        <el-date-picker
+          clearable
+          size="small"
+          style="width: 200px"
           v-model="queryParams.starttime"
           type="date"
           value-format="yyyy-MM-dd"
-          placeholder="选择考核开始时间">
-        </el-date-picker>
+          placeholder="选择考核开始时间"
+        ></el-date-picker>
       </el-form-item>
       <el-form-item label="考核结束时间" prop="endtime">
-        <el-date-picker clearable size="small" style="width: 200px"
+        <el-date-picker
+          clearable
+          size="small"
+          style="width: 200px"
           v-model="queryParams.endtime"
           type="date"
           value-format="yyyy-MM-dd"
-          placeholder="选择考核结束时间">
-        </el-date-picker>
-      </el-form-item> 
+          placeholder="选择考核结束时间"
+        ></el-date-picker>
+      </el-form-item>
       <!-- <el-form-item label="考核年份" prop="khnf">
         <el-date-picker clearable size="small" style="width: 200px"
           v-model="queryParams.khnf"
@@ -43,7 +55,7 @@
           value-format="yyyy-MM-dd"
           placeholder="选择考核年份">
         </el-date-picker>
-      </el-form-item> -->
+      </el-form-item>-->
       <el-form-item>
         <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -80,16 +92,7 @@
           v-hasPermi="['jxzxkhgl:jxzxkhfa:remove']"
         >删除</el-button>
       </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['jxzxkhgl:jxzxkhfa:export']"
-        >导出</el-button>
-      </el-col>
-	  <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="jxzxkhfaList" @selection-change="handleSelectionChange">
@@ -101,7 +104,7 @@
             <span>{{ scope.row.name }}</span>
           </router-link>
         </template>
-      </el-table-column>  
+      </el-table-column>
       <el-table-column label="考核方案状态" align="center" prop="status" :formatter="statusFormat" />
       <el-table-column label="考核开始时间" align="center" prop="starttime" width="180">
         <template slot-scope="scope">
@@ -120,7 +123,7 @@
           <span>{{ parseTime(scope.row.khnf, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="创建人" align="center" prop="createuserid" /> -->
+      <el-table-column label="创建人" align="center" prop="createuserid" />-->
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -140,7 +143,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -166,33 +169,42 @@
           </el-select>
         </el-form-item>
         <el-form-item label="考核年份" prop="khnf">
-          <el-date-picker clearable size="small" style="width: 200px"
+          <el-date-picker
+            clearable
+            size="small"
+            style="width: 200px"
             v-model="form.khnf"
             type="year"
             value-format="yyyy"
-            placeholder="选择考核年份">
-          </el-date-picker>
+            placeholder="选择考核年份"
+          ></el-date-picker>
         </el-form-item>
         <el-form-item label="考核开始时间" prop="starttime">
-          <el-date-picker clearable size="small" style="width: 200px"
+          <el-date-picker
+            clearable
+            size="small"
+            style="width: 200px"
             v-model="form.starttime"
             type="date"
             value-format="yyyy-MM-dd"
-            placeholder="选择考核开始时间">
-          </el-date-picker>
+            placeholder="选择考核开始时间"
+          ></el-date-picker>
         </el-form-item>
         <el-form-item label="考核结束时间" prop="endtime">
-          <el-date-picker clearable size="small" style="width: 200px"
+          <el-date-picker
+            clearable
+            size="small"
+            style="width: 200px"
             v-model="form.endtime"
             type="date"
             value-format="yyyy-MM-dd"
-            placeholder="选择考核结束时间">
-          </el-date-picker>
+            placeholder="选择考核结束时间"
+          ></el-date-picker>
         </el-form-item>
         <el-form-item label="考核文件名称" prop="filename">
           <el-input v-model="form.filename" placeholder="请输入考核文件名称" />
         </el-form-item>
-        <el-form-item label="考核文件" prop="filepath" >
+        <el-form-item label="考核文件" prop="filepath">
           <el-input v-model="form.filepath" v-if="false" />
           <el-upload
             class="upload-demo"
@@ -219,7 +231,13 @@
 </template>
 
 <script>
-import { listJxzxkhfa, getJxzxkhfa, delJxzxkhfa, addJxzxkhfa, updateJxzxkhfa, exportJxzxkhfa } from "@/api/jxzxkhgl/jxzxkhfa";
+import {
+  listJxzxkhfa,
+  getJxzxkhfa,
+  delJxzxkhfa,
+  addJxzxkhfa,
+  updateJxzxkhfa,
+} from "@/api/jxzxkhgl/jxzxkhfa";
 import { getToken } from "@/utils/auth";
 
 export default {
@@ -265,13 +283,27 @@ export default {
       form: {},
       // 表单校验
       rules: {
-        name: [{ required: true, message: "考核方案名称不能为空", trigger: "blur" }],
-        status: [{ required: true, message: "考核方案状态不能为空", trigger: "blur" }],
-        starttime: [{ required: true, message: "考核开始时间不能为空", trigger: "blur" }],
-        endtime: [{ required: true, message: "考核结束时间不能为空", trigger: "blur" }],
-        filename: [{ required: true, message: "考核文件名称不能为空", trigger: "blur" }],
-        filepath: [{ required: true, message: "文件路径不能为空", trigger: "blur" }],
-        khnf: [{ required: true, message: "考核年份不能为空", trigger: "blur" }],
+        name: [
+          { required: true, message: "考核方案名称不能为空", trigger: "blur" },
+        ],
+        status: [
+          { required: true, message: "考核方案状态不能为空", trigger: "blur" },
+        ],
+        starttime: [
+          { required: true, message: "考核开始时间不能为空", trigger: "blur" },
+        ],
+        endtime: [
+          { required: true, message: "考核结束时间不能为空", trigger: "blur" },
+        ],
+        filename: [
+          { required: true, message: "考核文件名称不能为空", trigger: "blur" },
+        ],
+        filepath: [
+          { required: true, message: "文件路径不能为空", trigger: "blur" },
+        ],
+        khnf: [
+          { required: true, message: "考核年份不能为空", trigger: "blur" },
+        ],
       },
       uploadFileUrl: process.env.VUE_APP_BASE_API + "/common/upload", // 上传的图片服务器地址
       headers: {
@@ -281,7 +313,7 @@ export default {
   },
   created() {
     this.getList();
-    this.getDicts("sys_dm_khfazt").then(response => {
+    this.getDicts("sys_dm_khfazt").then((response) => {
       this.statusOptions = response.data;
     });
   },
@@ -289,7 +321,7 @@ export default {
     /** 查询见习之星考核方案列表 */
     getList() {
       this.loading = true;
-      listJxzxkhfa(this.queryParams).then(response => {
+      listJxzxkhfa(this.queryParams).then((response) => {
         this.jxzxkhfaList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -350,7 +382,7 @@ export default {
         filepath: null,
         khnf: null,
         createuserid: null,
-        createTime: null
+        createTime: null,
       };
       this.resetForm("form");
       this.fileList = [];
@@ -367,9 +399,9 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.id)
-      this.single = selection.length!==1
-      this.multiple = !selection.length
+      this.ids = selection.map((item) => item.id);
+      this.single = selection.length !== 1;
+      this.multiple = !selection.length;
     },
     /** 新增按钮操作 */
     handleAdd() {
@@ -380,8 +412,8 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const id = row.id || this.ids
-      getJxzxkhfa(id).then(response => {
+      const id = row.id || this.ids;
+      getJxzxkhfa(id).then((response) => {
         this.form = response.data;
         this.open = true;
         this.title = "修改见习之星考核方案";
@@ -393,10 +425,10 @@ export default {
     },
     /** 提交按钮 */
     submitForm() {
-      this.$refs["form"].validate(valid => {
+      this.$refs["form"].validate((valid) => {
         if (valid) {
           if (this.form.id != null) {
-            updateJxzxkhfa(this.form).then(response => {
+            updateJxzxkhfa(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("修改成功");
                 this.open = false;
@@ -404,7 +436,7 @@ export default {
               }
             });
           } else {
-            addJxzxkhfa(this.form).then(response => {
+            addJxzxkhfa(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("新增成功");
                 this.open = false;
@@ -418,30 +450,24 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$confirm('是否确认删除见习之星考核方案编号为"' + ids + '"的数据项?', "警告", {
+      this.$confirm(
+        '是否确认删除见习之星考核方案编号为"' + ids + '"的数据项?',
+        "警告",
+        {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
+          type: "warning",
+        }
+      )
+        .then(function () {
           return delJxzxkhfa(ids);
-        }).then(() => {
+        })
+        .then(() => {
           this.getList();
           this.msgSuccess("删除成功");
-        }).catch(function() {});
+        })
+        .catch(function () {});
     },
-    /** 导出按钮操作 */
-    handleExport() {
-      const queryParams = this.queryParams;
-      this.$confirm('是否确认导出所有见习之星考核方案数据项?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
-          return exportJxzxkhfa(queryParams);
-        }).then(response => {
-          this.download(response.msg);
-        }).catch(function() {});
-    }
-  }
+  },
 };
 </script>
