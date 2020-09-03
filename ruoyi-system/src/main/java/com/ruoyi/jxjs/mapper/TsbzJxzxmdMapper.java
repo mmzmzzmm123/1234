@@ -58,4 +58,12 @@ public interface TsbzJxzxmdMapper {
      * @return 结果
      */
     public int deleteTsbzJxzxmdByIds(Long[] ids);
+
+    /**
+     * 查询见习之星名单列表
+     *
+     * @param tsbzJxzxmd 见习之星名单
+     * @return 见习之星名单集合
+     */
+    public List<TsbzJxzxmd> selectTsbzJxzxmdKhjdList(TsbzJxzxmd tsbzJxzxmd);
 }

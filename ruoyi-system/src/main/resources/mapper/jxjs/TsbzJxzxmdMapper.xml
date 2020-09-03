@@ -10,6 +10,35 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="nf"    column="nf"    />
         <result property="createuserid"    column="createuserid"    />
         <result property="createTime"    column="create_time"    />
+        <result property="bfb"    column="bfb"    />
+        <result property="faid"    column="faid"    />
+        <association property="tsbzJxjsjbxx" column="jsid" javaType="TsbzJxjsjbxx" resultMap="TsbzJxjsjbxxResult"/>
+    </resultMap>
+
+    <resultMap type="TsbzJxjsjbxx" id="TsbzJxjsjbxxResult">
+        <result property="id" column="id"/>
+        <result property="otherid" column="otherid"/>
+        <result property="name" column="name"/>
+        <result property="jxbh" column="jxbh"/>
+        <result property="xb" column="xb"/>
+        <result property="csrq" column="csrq"/>
+        <result property="email" column="email"/>
+        <result property="phone" column="phone"/>
+        <result property="yzbm" column="yzbm"/>
+        <result property="zzmm" column="zzmm"/>
+        <result property="mz" column="mz"/>
+        <result property="prdwid" column="prdwid"/>
+        <result property="prdwmc" column="prdwmc"/>
+        <result property="jdxid" column="jdxid"/>
+        <result property="rjxd" column="rjxd"/>
+        <result property="rjxk" column="rjxk"/>
+        <result property="rjnj" column="rjnj"/>
+        <result property="byyx" column="byyx"/>
+        <result property="xl" column="xl"/>
+        <result property="xw" column="xw"/>
+        <result property="sfsfs" column="sfsfs"/>
+        <result property="lqnf" column="lqnf"/>
+        <result property="createTime" column="create_time"/>
     </resultMap>
 
     <sql id="selectTsbzJxzxmdVo">
@@ -67,5 +96,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{id}
         </foreach>
     </delete>
+
+    <select id="selectTsbzJxzxmdKhjdList" parameterType="TsbzJxzxmd" resultMap="TsbzJxzxmdResult">
+        select b.id, b.otherid, b.name, b.jxbh, b.xb, b.csrq, b.email, b.phone, b.yzbm, b.zzmm, b.mz, b.prdwid, b.prdwmc, b.jdxid, b.rjxd, b.rjxk, b.rjnj, b.byyx, b.xl, b.xw, b.sfsfs, b.lqnf, b.create_time,
+        (select count(*)from tsbz_jxzxkhgcsj where faid=#{faid} and createuserid=a.jsid)/(select count(*) from tsbz_jxzxkhzbx where faid=#{faid}) bfb from tsbz_jxzxmd a
+        left join tsbz_jxjsjbxx b on a.jsid=b.id
+        where a.nf=#{nf}
+    </select>
     
 </mapper>

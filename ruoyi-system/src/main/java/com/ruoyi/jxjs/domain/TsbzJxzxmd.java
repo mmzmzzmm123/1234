@@ -5,6 +5,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 
+import java.math.BigDecimal;
+
 /**
  * 见习之星名单对象 tsbz_jxzxmd
  *
@@ -36,6 +38,11 @@ public class TsbzJxzxmd extends BaseEntity {
      */
     @Excel(name = "创建人")
     private Long createuserid;
+
+
+    private BigDecimal bfb;
+    private String faid;
+    private TsbzJxjsjbxx tsbzJxjsjbxx;
 
     public void setId(Long id) {
         this.id = id;
@@ -69,6 +76,30 @@ public class TsbzJxzxmd extends BaseEntity {
         return createuserid;
     }
 
+    public BigDecimal getBfb() {
+        return bfb;
+    }
+
+    public void setBfb(BigDecimal bfb) {
+        this.bfb = bfb;
+    }
+
+    public String getFaid() {
+        return faid;
+    }
+
+    public void setFaid(String faid) {
+        this.faid = faid;
+    }
+
+    public TsbzJxjsjbxx getTsbzJxjsjbxx() {
+        return tsbzJxjsjbxx;
+    }
+
+    public void setTsbzJxjsjbxx(TsbzJxjsjbxx tsbzJxjsjbxx) {
+        this.tsbzJxjsjbxx = tsbzJxjsjbxx;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
@@ -77,6 +108,9 @@ public class TsbzJxzxmd extends BaseEntity {
                 .append("nf", getNf())
                 .append("createuserid", getCreateuserid())
                 .append("createTime", getCreateTime())
+                .append("bfb", getBfb())
+                .append("faid", getFaid())
+                .append("tsbzJxjsjbxx", getTsbzJxjsjbxx())
                 .toString();
     }
 }
