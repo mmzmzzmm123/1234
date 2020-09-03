@@ -28,7 +28,7 @@
           size="small"
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item> -->
+      </el-form-item>-->
       <el-form-item label="游戏形式" prop="type">
         <el-select v-model="queryParams.type" placeholder="请选择游戏形式" clearable size="small">
           <el-option
@@ -94,7 +94,7 @@
           value-format="yyyy-MM-dd"
           placeholder="选择创建时间"
         ></el-date-picker>
-      </el-form-item> -->
+      </el-form-item>-->
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -108,7 +108,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['benyi:plan:add']"
+          v-hasPermi="['benyi:math:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -118,7 +118,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['benyi:plan:edit']"
+          v-hasPermi="['benyi:math:edit']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -128,17 +128,8 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['benyi:plan:remove']"
+          v-hasPermi="['benyi:math:remove']"
         >删除</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['benyi:plan:export']"
-        >导出</el-button>
       </el-col>
     </el-row>
 
@@ -148,16 +139,16 @@
       <el-table-column label="游戏名称" align="center" prop="name" />
       <el-table-column label="排序" align="center" prop="sort" />
       <el-table-column label="游戏形式" align="center" :formatter="typeFormat" prop="type" />
-      <el-table-column label="游戏目标" align="center" prop="target"  :show-overflow-tooltip="true"/>
+      <el-table-column label="游戏目标" align="center" prop="target" :show-overflow-tooltip="true" />
       <el-table-column label="游戏准备" align="center" prop="prepare" :show-overflow-tooltip="true" />
-      <el-table-column label="游戏过程" align="center" prop="process"  :show-overflow-tooltip="true"/>
+      <el-table-column label="游戏过程" align="center" prop="process" :show-overflow-tooltip="true" />
       <!-- <el-table-column label="本周其它目标" align="center" prop="otherTarget" />
       <el-table-column label="建议" align="center" prop="suggest" />
       <el-table-column label="创建时间" align="center" prop="createtime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createtime, '{y}-{m}-{d}') }}</span>
         </template>
-      </el-table-column> -->
+      </el-table-column>-->
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -165,14 +156,14 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['benyi:plan:edit']"
+            v-hasPermi="['benyi:math:edit']"
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['benyi:plan:remove']"
+            v-hasPermi="['benyi:math:remove']"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -246,7 +237,6 @@ import {
   delPlan,
   addPlan,
   updatePlan,
-  exportPlan
 } from "@/api/benyi/plan";
 import { listMath, getMath } from "@/api/benyi/math";
 import Editor from "@/components/Editor";
@@ -254,7 +244,7 @@ import Editor from "@/components/Editor";
 export default {
   name: "Plan",
   components: {
-    Editor
+    Editor,
   },
   data() {
     return {
@@ -293,28 +283,40 @@ export default {
         process: undefined,
         otherTarget: undefined,
         suggest: undefined,
-        createtime: undefined
+        createtime: undefined,
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
-        name: [{ required: true, message: "游戏名称不能为空", trigger: "blur" }],
+        name: [
+          { required: true, message: "游戏名称不能为空", trigger: "blur" },
+        ],
         sort: [{ required: true, message: "序号不能为空", trigger: "blur" }],
-        type: [{ required: true, message: "游戏形式不能为空", trigger: "blur" }],
-        target: [{ required: true, message: "游戏目标不能为空", trigger: "blur" }],
-        prepare: [{ required: true, message: "游戏准备不能为空", trigger: "blur" }],
-        process: [{ required: true, message: "游戏过程不能为空", trigger: "blur" }],
-        otherTarget: [{ required: true, message: "本周其它目标不能为空", trigger: "blur" }],
-        suggest: [{ required: true, message: "建议不能为空", trigger: "blur" }]
-      }
+        type: [
+          { required: true, message: "游戏形式不能为空", trigger: "blur" },
+        ],
+        target: [
+          { required: true, message: "游戏目标不能为空", trigger: "blur" },
+        ],
+        prepare: [
+          { required: true, message: "游戏准备不能为空", trigger: "blur" },
+        ],
+        process: [
+          { required: true, message: "游戏过程不能为空", trigger: "blur" },
+        ],
+        otherTarget: [
+          { required: true, message: "本周其它目标不能为空", trigger: "blur" },
+        ],
+        suggest: [{ required: true, message: "建议不能为空", trigger: "blur" }],
+      },
     };
   },
   created() {
     const mathId = this.$route.params && this.$route.params.id;
     this.getMath(mathId);
     this.getMaths();
-    this.getDicts("sys_math_type").then(response => {
+    this.getDicts("sys_math_type").then((response) => {
       this.typeOptions = response.data;
     });
   },
@@ -322,7 +324,7 @@ export default {
     /** 查询游戏数学方案列表 */
     getList() {
       this.loading = true;
-      listPlan(this.queryParams).then(response => {
+      listPlan(this.queryParams).then((response) => {
         this.planList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -344,7 +346,7 @@ export default {
     },
     /** 查询游戏数学名称详细 */
     getMath(mathId) {
-      getMath(mathId).then(response => {
+      getMath(mathId).then((response) => {
         this.queryParams.mathid = response.data.id;
         this.defaultMath = response.data.id;
         this.getList();
@@ -352,7 +354,7 @@ export default {
     },
     //获取游戏数学名称列表
     getMaths() {
-      listMath().then(response => {
+      listMath().then((response) => {
         this.mathOptions = response.rows;
       });
     },
@@ -374,7 +376,7 @@ export default {
         process: undefined,
         otherTarget: undefined,
         suggest: undefined,
-        createtime: undefined
+        createtime: undefined,
       };
       this.resetForm("form");
     },
@@ -391,7 +393,7 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.id);
+      this.ids = selection.map((item) => item.id);
       this.single = selection.length != 1;
       this.multiple = !selection.length;
     },
@@ -406,26 +408,26 @@ export default {
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids;
-      getPlan(id).then(response => {
+      getPlan(id).then((response) => {
         this.form = response.data;
         // console.log(this.form);
         this.typeOptions = response.types;
         // console.log(this.typeOptions);
         this.form.type = response.typeIds;
-        
+
         this.open = true;
         this.title = "修改游戏数学方案";
       });
     },
     /** 提交按钮 */
-    submitForm: function() {
-      this.$refs["form"].validate(valid => {
+    submitForm: function () {
+      this.$refs["form"].validate((valid) => {
         if (valid) {
           var arrtype = this.form.type;
           this.form.type = arrtype.join(";");
-          
+
           if (this.form.id != undefined) {
-            updatePlan(this.form).then(response => {
+            updatePlan(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("修改成功");
                 this.open = false;
@@ -433,7 +435,7 @@ export default {
               }
             });
           } else {
-            addPlan(this.form).then(response => {
+            addPlan(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("新增成功");
                 this.open = false;
@@ -453,34 +455,18 @@ export default {
         {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
-          type: "warning"
+          type: "warning",
         }
       )
-        .then(function() {
+        .then(function () {
           return delPlan(ids);
         })
         .then(() => {
           this.getList();
           this.msgSuccess("删除成功");
         })
-        .catch(function() {});
+        .catch(function () {});
     },
-    /** 导出按钮操作 */
-    handleExport() {
-      const queryParams = this.queryParams;
-      this.$confirm("是否确认导出所有游戏数学方案数据项?", "警告", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      })
-        .then(function() {
-          return exportPlan(queryParams);
-        })
-        .then(response => {
-          this.download(response.msg);
-        })
-        .catch(function() {});
-    }
-  }
+  },
 };
 </script>
