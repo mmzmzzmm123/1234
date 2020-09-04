@@ -26,26 +26,15 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="考核开始时间" prop="starttime">
+      <el-form-item label="考核方案年份" prop="khnf">
         <el-date-picker
           clearable
           size="small"
           style="width: 200px"
-          v-model="queryParams.starttime"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="选择考核开始时间"
-        ></el-date-picker>
-      </el-form-item>
-      <el-form-item label="考核结束时间" prop="endtime">
-        <el-date-picker
-          clearable
-          size="small"
-          style="width: 200px"
-          v-model="queryParams.endtime"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="选择考核结束时间"
+          v-model="queryParams.khnf"
+          type="year"
+          value-format="yyyy"
+          placeholder="选择考核方案年份"
         ></el-date-picker>
       </el-form-item>
       <!-- <el-form-item label="考核年份" prop="khnf">
@@ -97,7 +86,7 @@
 
     <el-table v-loading="loading" :data="jxzxkhfaList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="编号" align="center" prop="id" />
+      <!-- <el-table-column label="编号" align="center" prop="id" /> -->
       <el-table-column label="考核方案名称" align="center" prop="name" :show-overflow-tooltip="true">
         <template slot-scope="scope">
           <router-link :to="'/jxzxkhgl/jxzxkhfa/data/' + scope.row.id" class="link-type">
@@ -106,6 +95,7 @@
         </template>
       </el-table-column>
       <el-table-column label="考核方案状态" align="center" prop="status" :formatter="statusFormat" />
+      <el-table-column label="考核方案年份" align="center" prop="khnf" />
       <el-table-column label="考核开始时间" align="center" prop="starttime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.starttime, '{y}-{m}-{d}') }}</span>
@@ -116,6 +106,7 @@
           <span>{{ parseTime(scope.row.endtime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="考核文件" align="center" prop="filename" />
       <!-- <el-table-column label="考核文件名称" align="center" prop="filename" />
       <el-table-column label="文件路径" align="center" prop="filepath" />
       <el-table-column label="考核年份" align="center" prop="khnf" width="180">
@@ -177,6 +168,7 @@
             type="year"
             value-format="yyyy"
             placeholder="选择考核年份"
+            :disabled="isEdit"
           ></el-date-picker>
         </el-form-item>
         <el-form-item label="考核开始时间" prop="starttime">
@@ -201,10 +193,11 @@
             placeholder="选择考核结束时间"
           ></el-date-picker>
         </el-form-item>
-        <el-form-item label="考核文件名称" prop="filename">
+        <!-- <el-form-item label="考核文件名称" prop="filename">
           <el-input v-model="form.filename" placeholder="请输入考核文件名称" />
-        </el-form-item>
+        </el-form-item>-->
         <el-form-item label="考核文件" prop="filepath">
+          <el-input v-model="form.filename" v-if="false" />
           <el-input v-model="form.filepath" v-if="false" />
           <el-upload
             class="upload-demo"
@@ -220,6 +213,9 @@
           >
             <el-button size="small" type="primary">选择文件</el-button>
           </el-upload>
+        </el-form-item>
+        <el-form-item label="备注" prop="remark">
+          <el-input v-model="form.remark" type="textarea" placeholder="请输入备注" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -244,6 +240,8 @@ export default {
   name: "Jxzxkhfa",
   data() {
     return {
+      //是否可以修改
+      isEdit: false,
       // 遮罩层
       loading: true,
       // 选中数组
@@ -383,6 +381,7 @@ export default {
         khnf: null,
         createuserid: null,
         createTime: null,
+        remark: null,
       };
       this.resetForm("form");
       this.fileList = [];
@@ -408,12 +407,14 @@ export default {
       this.reset();
       this.open = true;
       this.title = "添加见习之星考核方案";
+      this.isEdit = false;
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids;
       getJxzxkhfa(id).then((response) => {
+        this.isEdit = true;
         this.form = response.data;
         this.open = true;
         this.title = "修改见习之星考核方案";
@@ -450,15 +451,11 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$confirm(
-        '是否确认删除见习之星考核方案编号为"' + ids + '"的数据项?',
-        "警告",
-        {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning",
-        }
-      )
+      this.$confirm("是否确认删除见习之星考核方案数据项?", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
         .then(function () {
           return delJxzxkhfa(ids);
         })

@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.jxzxkhgl.mapper.TsbzJxzxkhzbxMapper">
-    
+
     <resultMap type="TsbzJxzxkhzbx" id="TsbzJxzxkhzbxResult">
-        <result property="id"    column="id"    />
-        <result property="faid"    column="faid"    />
-        <result property="khmk"    column="khmk"    />
-        <result property="khnr"    column="khnr"    />
-        <result property="tjsl"    column="tjsl"    />
-        <result property="gjzd"    column="gjzd"    />
-        <result property="tbly"    column="tbly"    />
-        <result property="jkbj"    column="jkbj"    />
-        <result property="starttime"    column="starttime"    />
-        <result property="endtime"    column="endtime"    />
-        <result property="zxrw"    column="zxrw"    />
-        <result property="createuserid"    column="createuserid"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="yly"    column="yly"    />
-        <result property="yle"    column="yle"    />
+        <result property="id" column="id"/>
+        <result property="faid" column="faid"/>
+        <result property="khmk" column="khmk"/>
+        <result property="khnr" column="khnr"/>
+        <result property="tjsl" column="tjsl"/>
+        <result property="gjzd" column="gjzd"/>
+        <result property="tbly" column="tbly"/>
+        <result property="jkbj" column="jkbj"/>
+        <result property="starttime" column="starttime"/>
+        <result property="endtime" column="endtime"/>
+        <result property="zxrw" column="zxrw"/>
+        <result property="createuserid" column="createuserid"/>
+        <result property="createTime" column="create_time"/>
+        <result property="yly" column="yly"/>
+        <result property="yle" column="yle"/>
     </resultMap>
 
     <sql id="selectTsbzJxzxkhzbxVo">
@@ -28,28 +28,29 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectTsbzJxzxkhzbxList" parameterType="TsbzJxzxkhzbx" resultMap="TsbzJxzxkhzbxResult">
         <include refid="selectTsbzJxzxkhzbxVo"/>
-        <where>  
-            <if test="faid != null "> and faid = #{faid}</if>
-            <if test="khmk != null  and khmk != ''"> and khmk = #{khmk}</if>
-            <if test="khnr != null  and khnr != ''"> and khnr = #{khnr}</if>
-            <if test="tjsl != null "> and tjsl = #{tjsl}</if>
-            <if test="gjzd != null  and gjzd != ''"> and gjzd = #{gjzd}</if>
-            <if test="tbly != null  and tbly != ''"> and tbly = #{tbly}</if>
-            <if test="jkbj != null  and jkbj != ''"> and jkbj = #{jkbj}</if>
-            <if test="starttime != null "> and starttime = #{starttime}</if>
-            <if test="endtime != null "> and endtime = #{endtime}</if>
-            <if test="zxrw != null  and zxrw != ''"> and zxrw = #{zxrw}</if>
-            <if test="createuserid != null "> and createuserid = #{createuserid}</if>
-            <if test="yly != null  and yly != ''"> and yly = #{yly}</if>
-            <if test="yle != null  and yle != ''"> and yle = #{yle}</if>
+        <where>
+            <if test="faid != null ">and faid = #{faid}</if>
+            <if test="khmk != null  and khmk != ''">and khmk = #{khmk}</if>
+            <if test="khnr != null  and khnr != ''">and khnr like concat('%', #{khnr}, '%')</if>
+            <if test="tjsl != null ">and tjsl = #{tjsl}</if>
+            <if test="gjzd != null  and gjzd != ''">and gjzd = #{gjzd}</if>
+            <if test="tbly != null  and tbly != ''">and tbly = #{tbly}</if>
+            <if test="jkbj != null  and jkbj != ''">and jkbj = #{jkbj}</if>
+            <if test="starttime != null ">and starttime = #{starttime}</if>
+            <if test="endtime != null ">and endtime = #{endtime}</if>
+            <if test="zxrw != null  and zxrw != ''">and zxrw = #{zxrw}</if>
+            <if test="createuserid != null ">and createuserid = #{createuserid}</if>
+            <if test="yly != null  and yly != ''">and yly = #{yly}</if>
+            <if test="yle != null  and yle != ''">and yle = #{yle}</if>
         </where>
+        order by id
     </select>
-    
+
     <select id="selectTsbzJxzxkhzbxById" parameterType="Long" resultMap="TsbzJxzxkhzbxResult">
         <include refid="selectTsbzJxzxkhzbxVo"/>
         where id = #{id}
     </select>
-        
+
     <insert id="insertTsbzJxzxkhzbx" parameterType="TsbzJxzxkhzbx" useGeneratedKeys="true" keyProperty="id">
         insert into tsbz_jxzxkhzbx
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -67,7 +68,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">create_time,</if>
             <if test="yly != null">yly,</if>
             <if test="yle != null">yle,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="faid != null">#{faid},</if>
             <if test="khmk != null">#{khmk},</if>
@@ -83,7 +84,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">#{createTime},</if>
             <if test="yly != null">#{yly},</if>
             <if test="yle != null">#{yle},</if>
-         </trim>
+        </trim>
     </insert>
 
     <update id="updateTsbzJxzxkhzbx" parameterType="TsbzJxzxkhzbx">
@@ -112,10 +113,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteTsbzJxzxkhzbxByIds" parameterType="String">
-        delete from tsbz_jxzxkhzbx where id in 
+        delete from tsbz_jxzxkhzbx where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>
-    
+
 </mapper>

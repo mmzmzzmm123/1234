@@ -102,6 +102,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         (select count(*)from tsbz_jxzxkhgcsj where faid=#{faid} and createuserid=a.jsid)/(select count(*) from tsbz_jxzxkhzbx where faid=#{faid}) bfb from tsbz_jxzxmd a
         left join tsbz_jxjsjbxx b on a.jsid=b.id
         where a.nf=#{nf}
+        <if test="name != null  and name != ''">and b.name like concat('%', #{name}, '%')</if>
+        <if test="prdwid != null  and prdwid != ''">and b.prdwid = #{prdwid}</if>
+        <if test="prdwmc != null  and prdwmc != ''">and b.prdwmc = #{prdwmc}</if>
+        <if test="jdxid != null  and jdxid != ''">and b.jdxid = #{jdxid}</if>
     </select>
     
 </mapper>

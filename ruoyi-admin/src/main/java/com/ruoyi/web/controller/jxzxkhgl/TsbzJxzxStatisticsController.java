@@ -32,6 +32,7 @@ public class TsbzJxzxStatisticsController extends BaseController {
     public TableDataInfo list(TsbzJxzxmd tsbzJxzxmd) {
         System.out.println("nf:" + tsbzJxzxmd.getNf());
         System.out.println("faid:" + tsbzJxzxmd.getFaid());
+        System.out.println("name:" + tsbzJxzxmd.getName());
         startPage();
         List<TsbzJxzxmd> list = tsbzJxzxmdService.selectTsbzJxzxmdKhjdList(tsbzJxzxmd);
         return getDataTable(list);

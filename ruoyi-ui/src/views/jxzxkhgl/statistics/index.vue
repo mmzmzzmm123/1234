@@ -17,18 +17,19 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="选择学校" prop="prdwid">
-        <el-input
-          v-model="queryParams.prdwid"
-          placeholder="请选择学校"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+      <el-form-item label="基地学校" prop="jdxid">
+        <el-select v-model="queryParams.jdxid" size="small">
+          <el-option
+            v-for="item in jdxOptions"
+            :key="item.id"
+            :label="item.jdxmc"
+            :value="item.id"
+          />
+        </el-select>
       </el-form-item>
-      <el-form-item label="选择教师" prop="jsid">
+      <el-form-item label="见习教师" prop="name">
         <el-input
-          v-model="queryParams.jsid"
+          v-model="queryParams.name"
           placeholder="请输入教师"
           clearable
           size="small"
@@ -44,10 +45,19 @@
     <el-table v-loading="loading" :data="jzxzkhjdList">
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="编号" align="center" prop="id" /> -->
+      <el-table-column label="基地校" align="center" prop="tsbzJxjsjbxx.jdxid" :formatter="jdxFormat"/>
+      <el-table-column label="聘任校" align="center" prop="tsbzJxjsjbxx.prdwmc" />
       <el-table-column label="姓名" align="center" prop="tsbzJxjsjbxx.name" />
+      <el-table-column label="任教学科" align="center" prop="tsbzJxjsjbxx.rjxk" />
+      <el-table-column label="任教学段" align="center" prop="tsbzJxjsjbxx.rjxd" />
       <el-table-column prop="bfb" label="完成进度">
         <template slot-scope="scope">
-          <el-progress :text-inside="true" :stroke-width="24" :percentage="scope.row.bfb*100" status="success"></el-progress>
+          <el-progress
+            :text-inside="true"
+            :stroke-width="24"
+            :percentage="scope.row.bfb*100"
+            status="success"
+          ></el-progress>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -56,8 +66,8 @@
             size="mini"
             type="text"
             icon="el-icon-view"
-            @click="handleUpdate(scope.row)"
-            v-hasPermi="['jxzxkhgl:statistics:edit']"
+            @click="handleView(scope.row)"
+            v-hasPermi="['jxzxkhgl:statistics:query']"
           >详情</el-button>
         </template>
       </el-table-column>
@@ -83,6 +93,7 @@
 <script>
 import { listJxzxKhjd, getJxzxKhjd } from "@/api/jxzxkhgl/statistics";
 import { listJxzxkhfa, getJxzxkhfa } from "@/api/jxzxkhgl/jxzxkhfa";
+import { listJdx } from "@/api/jxjs/jdx";
 
 export default {
   name: "Jzxzkhjd",
@@ -108,6 +119,8 @@ export default {
       jzxzkhjdList: [],
       //考核方案
       jxzxkhfaOptions: [],
+      //基地校列表
+      jdxOptions: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -116,8 +129,10 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
+        jdxid: null,
         faid: null,
         nf: null,
+        name: null,
       },
       // 查询参数
       queryParams_fa: {
@@ -130,9 +145,29 @@ export default {
     };
   },
   created() {
+    this.getJdxList();
     this.getKhfa();
   },
   methods: {
+    //翻译基地校
+    jdxFormat(row, column) {
+      // return this.selectDictLabel(this.classOptions, row.classid);
+      var actions = [];
+      var datas = this.jdxOptions;
+      Object.keys(datas).map((key) => {
+        if (datas[key].id == "" + row.tsbzJxjsjbxx.jdxid) {
+          actions.push(datas[key].jdxmc);
+          return false;
+        }
+      });
+      return actions.join("");
+    },
+    //获取基地校列表
+    getJdxList() {
+      listJdx(null).then((response) => {
+        this.jdxOptions = response.rows;
+      });
+    },
     /** 查询考核审核过程列表 */
     getList() {
       this.loading = true;

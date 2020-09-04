@@ -38,7 +38,7 @@ public class TsbzJxzxkhzbxController extends BaseController
     /**
      * 查询考核指标项列表
      */
-    @PreAuthorize("@ss.hasPermi('jxzxkhgl:jxzxkhzbx:list')")
+    @PreAuthorize("@ss.hasPermi('jxzxkhgl:jxzxkhfa:list')")
     @GetMapping("/list")
     public TableDataInfo list(TsbzJxzxkhzbx tsbzJxzxkhzbx)
     {
@@ -50,7 +50,7 @@ public class TsbzJxzxkhzbxController extends BaseController
     /**
      * 导出考核指标项列表
      */
-    @PreAuthorize("@ss.hasPermi('jxzxkhgl:jxzxkhzbx:export')")
+    @PreAuthorize("@ss.hasPermi('jxzxkhgl:jxzxkhfa:export')")
     @Log(title = "考核指标项", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
     public AjaxResult export(TsbzJxzxkhzbx tsbzJxzxkhzbx)
@@ -63,7 +63,7 @@ public class TsbzJxzxkhzbxController extends BaseController
     /**
      * 获取考核指标项详细信息
      */
-    @PreAuthorize("@ss.hasPermi('jxzxkhgl:jxzxkhzbx:query')")
+    @PreAuthorize("@ss.hasPermi('jxzxkhgl:jxzxkhfa:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
@@ -73,7 +73,7 @@ public class TsbzJxzxkhzbxController extends BaseController
     /**
      * 新增考核指标项
      */
-    @PreAuthorize("@ss.hasPermi('jxzxkhgl:jxzxkhzbx:add')")
+    @PreAuthorize("@ss.hasPermi('jxzxkhgl:jxzxkhfa:add')")
     @Log(title = "考核指标项", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody TsbzJxzxkhzbx tsbzJxzxkhzbx)
@@ -85,7 +85,7 @@ public class TsbzJxzxkhzbxController extends BaseController
     /**
      * 修改考核指标项
      */
-    @PreAuthorize("@ss.hasPermi('jxzxkhgl:jxzxkhzbx:edit')")
+    @PreAuthorize("@ss.hasPermi('jxzxkhgl:jxzxkhfa:edit')")
     @Log(title = "考核指标项", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody TsbzJxzxkhzbx tsbzJxzxkhzbx)
@@ -96,7 +96,7 @@ public class TsbzJxzxkhzbxController extends BaseController
     /**
      * 删除考核指标项
      */
-    @PreAuthorize("@ss.hasPermi('jxzxkhgl:jxzxkhzbx:remove')")
+    @PreAuthorize("@ss.hasPermi('jxzxkhgl:jxzxkhfa:remove')")
     @Log(title = "考核指标项", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)

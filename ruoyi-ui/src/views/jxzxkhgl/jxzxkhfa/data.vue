@@ -1,6 +1,12 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="102px">
+    <el-form
+      :model="queryParams"
+      ref="queryForm"
+      :inline="true"
+      v-show="showSearch"
+      label-width="102px"
+    >
       <el-form-item label="所属考核方案" prop="faid">
         <el-select v-model="queryParams.faid" placeholder="请选择考核模块" clearable size="small">
           <el-option
@@ -21,7 +27,25 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="同步来源" prop="tbly">
+      <el-form-item label="考核内容" prop="khnr">
+        <el-input
+          v-model="queryParams.khnr"
+          placeholder="请输入考核内容"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="提交数量" prop="tjsl">
+        <el-input-number
+          v-model="queryParams.tjsl"
+          placeholder="数量"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <!-- <el-form-item label="同步来源" prop="tbly">
         <el-select v-model="queryParams.tbly" placeholder="请选择同步来源" clearable size="small">
           <el-option
             v-for="dict in tblyOptions"
@@ -32,21 +56,27 @@
         </el-select>
       </el-form-item>
       <el-form-item label="执行开始时间" prop="starttime">
-        <el-date-picker clearable size="small" style="width: 200px"
+        <el-date-picker
+          clearable
+          size="small"
+          style="width: 200px"
           v-model="queryParams.starttime"
           type="date"
           value-format="yyyy-MM-dd"
-          placeholder="选择执行开始时间">
-        </el-date-picker>
+          placeholder="选择执行开始时间"
+        ></el-date-picker>
       </el-form-item>
       <el-form-item label="执行截止时间" prop="endtime">
-        <el-date-picker clearable size="small" style="width: 200px"
+        <el-date-picker
+          clearable
+          size="small"
+          style="width: 200px"
           v-model="queryParams.endtime"
           type="date"
           value-format="yyyy-MM-dd"
-          placeholder="选择执行截止时间">
-        </el-date-picker>
-      </el-form-item>
+          placeholder="选择执行截止时间"
+        ></el-date-picker>
+      </el-form-item>-->
       <el-form-item>
         <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -60,7 +90,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['jxzxkhgl:jxzxkhzbx:add']"
+          v-hasPermi="['jxzxkhgl:jxzxkhfa:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -70,7 +100,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['jxzxkhgl:jxzxkhzbx:edit']"
+          v-hasPermi="['jxzxkhgl:jxzxkhfa:edit']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -80,27 +110,21 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['jxzxkhgl:jxzxkhzbx:remove']"
+          v-hasPermi="['jxzxkhgl:jxzxkhfa:remove']"
         >删除</el-button>
       </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['jxzxkhgl:jxzxkhzbx:export']"
-        >导出</el-button>
-      </el-col>
-	  <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="jxzxkhzbxList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="编号" align="center" prop="id" />
+      <!-- <el-table-column label="编号" align="center" prop="id" /> -->
       <el-table-column label="所属考核方案" align="center" prop="faid" :formatter="khfaFormat" />
       <el-table-column label="考核模块" align="center" prop="khmk" :formatter="khmkFormat" />
-      <el-table-column label="同步来源" align="center" prop="tbly" :formatter="tblyFormat" />
+      <el-table-column label="考核内容" align="center" prop="khnr" />
+      <el-table-column label="关键字段" align="center" prop="gjzd" :show-overflow-tooltip="true" />
+      <el-table-column label="提交文件数量" align="center" prop="tjsl" />
+      <!-- <el-table-column label="同步来源" align="center" prop="tbly" :formatter="tblyFormat" />
       <el-table-column label="执行开始时间" align="center" prop="starttime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.starttime, '{y}-{m}-{d}') }}</span>
@@ -110,7 +134,7 @@
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.endtime, '{y}-{m}-{d}') }}</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -118,19 +142,19 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['jxzxkhgl:jxzxkhzbx:edit']"
+            v-hasPermi="['jxzxkhgl:jxzxkhfa:edit']"
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['jxzxkhgl:jxzxkhzbx:remove']"
+            v-hasPermi="['jxzxkhgl:jxzxkhfa:remove']"
           >删除</el-button>
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -142,8 +166,14 @@
     <!-- 添加或修改考核指标项对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="所属考核方案" prop="faid" >
-          <el-select v-model="queryParams.faid" placeholder="请选择考核模块" clearable size="small" :disabled="true">
+        <el-form-item label="考核方案" prop="faid">
+          <el-select
+            v-model="queryParams.faid"
+            placeholder="请选择考核模块"
+            clearable
+            size="small"
+            :disabled="true"
+          >
             <el-option
               v-for="dict in khfaOptions"
               :key="dict.id"
@@ -166,12 +196,12 @@
           <el-input v-model="form.khnr" placeholder="请输入考核内容" />
         </el-form-item>
         <el-form-item label="提交数量" prop="tjsl">
-          <el-input v-model="form.tjsl" placeholder="请输入提交数量" />
+          <el-input-number v-model="form.tjsl" placeholder="请输入提交数量" />
         </el-form-item>
         <el-form-item label="关键字段" prop="gjzd">
           <el-input v-model="form.gjzd" type="textarea" placeholder="请输入内容" />
         </el-form-item>
-        <el-form-item label="同步来源" prop="tbly">
+        <!-- <el-form-item label="同步来源" prop="tbly">
           <el-select v-model="form.tbly" placeholder="请选择同步来源">
             <el-option
               v-for="dict in tblyOptions"
@@ -180,26 +210,32 @@
               :value="dict.dictValue"
             ></el-option>
           </el-select>
-        </el-form-item>
+        </el-form-item>-->
         <!-- <el-form-item label="接口标记预留" prop="jkbj">
           <el-input v-model="form.jkbj" type="textarea" placeholder="请输入内容" />
-        </el-form-item> -->
-        <el-form-item label="执行开始时间" prop="starttime">
-          <el-date-picker clearable size="small" style="width: 200px"
+        </el-form-item>-->
+        <!-- <el-form-item label="执行开始时间" prop="starttime">
+          <el-date-picker
+            clearable
+            size="small"
+            style="width: 200px"
             v-model="form.starttime"
             type="date"
             value-format="yyyy-MM-dd"
-            placeholder="选择执行开始时间">
-          </el-date-picker>
+            placeholder="选择执行开始时间"
+          ></el-date-picker>
         </el-form-item>
         <el-form-item label="执行截止时间" prop="endtime">
-          <el-date-picker clearable size="small" style="width: 200px"
+          <el-date-picker
+            clearable
+            size="small"
+            style="width: 200px"
             v-model="form.endtime"
             type="date"
             value-format="yyyy-MM-dd"
-            placeholder="选择执行截止时间">
-          </el-date-picker>
-        </el-form-item>
+            placeholder="选择执行截止时间"
+          ></el-date-picker>
+        </el-form-item>-->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -210,7 +246,13 @@
 </template>
 
 <script>
-import { listJxzxkhzbx, getJxzxkhzbx, delJxzxkhzbx, addJxzxkhzbx, updateJxzxkhzbx, exportJxzxkhzbx } from "@/api/jxzxkhgl/jxzxkhzbx";
+import {
+  listJxzxkhzbx,
+  getJxzxkhzbx,
+  delJxzxkhzbx,
+  addJxzxkhzbx,
+  updateJxzxkhzbx,
+} from "@/api/jxzxkhgl/jxzxkhzbx";
 import { listJxzxkhfa, getJxzxkhfa } from "@/api/jxzxkhgl/jxzxkhfa";
 
 export default {
@@ -250,7 +292,7 @@ export default {
         faid: null,
         khmk: null,
         khnr: null,
-        tjsl: null,
+        tjsl: undefined,
         gjzd: null,
         tbly: null,
         jkbj: null,
@@ -259,7 +301,7 @@ export default {
         zxrw: null,
         createuserid: null,
         yly: null,
-        yle: null
+        yle: null,
       },
       // 表单参数
       form: {},
@@ -272,24 +314,24 @@ export default {
         tbly: [{ required: true, message: "不能为空", trigger: "blur" }],
         starttime: [{ required: true, message: "不能为空", trigger: "blur" }],
         endtime: [{ required: true, message: "不能为空", trigger: "blur" }],
-      }
+      },
     };
   },
   created() {
-    const khfaid = this.$route.params && this.$route.params.id; 
+    const khfaid = this.$route.params && this.$route.params.id;
     this.getkhfa2(khfaid);
     this.getJxzxkhfaList();
-    this.getDicts("sys_dm_khmk").then(response => {
+    this.getDicts("sys_dm_khmk").then((response) => {
       this.khmkOptions = response.data;
     });
-    this.getDicts("sys_dm_tbly").then(response => {
+    this.getDicts("sys_dm_tbly").then((response) => {
       this.tblyOptions = response.data;
     });
   },
   methods: {
     // 考核方案列表
     getkhfa2(khfaid) {
-      getJxzxkhfa(khfaid).then(response => {
+      getJxzxkhfa(khfaid).then((response) => {
         this.queryParams.faid = response.data.id;
         this.defaultFa = response.data.id;
         this.getList();
@@ -298,7 +340,7 @@ export default {
     /** 查询考核指标项列表 */
     getList() {
       this.loading = true;
-      listJxzxkhzbx(this.queryParams).then(response => {
+      listJxzxkhzbx(this.queryParams).then((response) => {
         this.jxzxkhzbxList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -306,7 +348,7 @@ export default {
     },
     // 查询考核方案选项
     getJxzxkhfaList() {
-      listJxzxkhfa().then(response => {
+      listJxzxkhfa().then((response) => {
         this.khfaOptions = response.rows;
       });
     },
@@ -314,7 +356,7 @@ export default {
     khfaFormat(row, column) {
       var actions = [];
       var datas = this.khfaOptions;
-      Object.keys(datas).map(key => {
+      Object.keys(datas).map((key) => {
         if (datas[key].id == "" + row.faid) {
           actions.push(datas[key].name);
           return false;
@@ -342,7 +384,7 @@ export default {
         faid: null,
         khmk: null,
         khnr: null,
-        tjsl: null,
+        tjsl: 0,
         gjzd: null,
         tbly: null,
         jkbj: null,
@@ -352,7 +394,7 @@ export default {
         createuserid: null,
         createTime: null,
         yly: null,
-        yle: null
+        yle: null,
       };
       this.resetForm("form");
     },
@@ -369,9 +411,9 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.id)
-      this.single = selection.length!==1
-      this.multiple = !selection.length
+      this.ids = selection.map((item) => item.id);
+      this.single = selection.length !== 1;
+      this.multiple = !selection.length;
     },
     /** 新增按钮操作 */
     handleAdd() {
@@ -383,8 +425,8 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const id = row.id || this.ids
-      getJxzxkhzbx(id).then(response => {
+      const id = row.id || this.ids;
+      getJxzxkhzbx(id).then((response) => {
         this.form = response.data;
         this.open = true;
         this.title = "修改考核指标项";
@@ -392,10 +434,10 @@ export default {
     },
     /** 提交按钮 */
     submitForm() {
-      this.$refs["form"].validate(valid => {
+      this.$refs["form"].validate((valid) => {
         if (valid) {
           if (this.form.id != null) {
-            updateJxzxkhzbx(this.form).then(response => {
+            updateJxzxkhzbx(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("修改成功");
                 this.open = false;
@@ -403,7 +445,7 @@ export default {
               }
             });
           } else {
-            addJxzxkhzbx(this.form).then(response => {
+            addJxzxkhzbx(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("新增成功");
                 this.open = false;
@@ -417,30 +459,24 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$confirm('是否确认删除考核指标项编号为"' + ids + '"的数据项?', "警告", {
+      this.$confirm(
+        '是否确认删除考核指标项数据项?',
+        "警告",
+        {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
+          type: "warning",
+        }
+      )
+        .then(function () {
           return delJxzxkhzbx(ids);
-        }).then(() => {
+        })
+        .then(() => {
           this.getList();
           this.msgSuccess("删除成功");
-        }).catch(function() {});
+        })
+        .catch(function () {});
     },
-    /** 导出按钮操作 */
-    handleExport() {
-      const queryParams = this.queryParams;
-      this.$confirm('是否确认导出所有考核指标项数据项?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
-          return exportJxzxkhzbx(queryParams);
-        }).then(response => {
-          this.download(response.msg);
-        }).catch(function() {});
-    }
-  }
+  },
 };
 </script>

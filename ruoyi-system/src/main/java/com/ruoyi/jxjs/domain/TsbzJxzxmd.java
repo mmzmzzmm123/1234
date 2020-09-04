@@ -44,6 +44,43 @@ public class TsbzJxzxmd extends BaseEntity {
     private String faid;
     private TsbzJxjsjbxx tsbzJxjsjbxx;
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPrdwid() {
+        return prdwid;
+    }
+
+    public void setPrdwid(String prdwid) {
+        this.prdwid = prdwid;
+    }
+
+    public String getPrdwmc() {
+        return prdwmc;
+    }
+
+    public void setPrdwmc(String prdwmc) {
+        this.prdwmc = prdwmc;
+    }
+
+    public String getJdxid() {
+        return jdxid;
+    }
+
+    public void setJdxid(String jdxid) {
+        this.jdxid = jdxid;
+    }
+
+    private String name;
+    private String prdwid;
+    private String prdwmc;
+    private String jdxid;
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -111,6 +148,10 @@ public class TsbzJxzxmd extends BaseEntity {
                 .append("bfb", getBfb())
                 .append("faid", getFaid())
                 .append("tsbzJxjsjbxx", getTsbzJxjsjbxx())
+                .append("name", getName())
+                .append("prdwid", getPrdwid())
+                .append("prdwmc", getPrdwmc())
+                .append("jdxid", getJdxid())
                 .toString();
     }
 }
