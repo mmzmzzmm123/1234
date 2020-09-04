@@ -2,13 +2,15 @@
 spring:
     datasource:
         type: com.alibaba.druid.pool.DruidDataSource
-        driverClassName: com.mysql.cj.jdbc.Driver
+        #driverClassName: com.mysql.cj.jdbc.Driver
+        driverClassName: oracle.jdbc.driver.OracleDriver
         druid:
             # 主库数据源
             master:
-                url: jdbc:mysql://localhost:3306/ry-vue?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
-                username: root
-                password: password
+                #url: jdbc:mysql://localhost:3306/ry-vue?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+                url: jdbc:oracle:thin:@127.0.0.1:1521/orcl
+                username: ry_fast
+                password: ry_fast
             # 从库数据源
             slave:
                 # 从数据源开关/默认关闭

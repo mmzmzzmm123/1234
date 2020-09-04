@@ -13,7 +13,7 @@ import com.ruoyi.generator.domain.GenTableColumn;
 
 /**
  * 模板处理工具类
- * 
+ *
  * @author ruoyi
  */
 public class VelocityUtils
@@ -23,6 +23,8 @@ public class VelocityUtils
 
     /** mybatis空间路径 */
     private static final String MYBATIS_PATH = "main/resources/mapper";
+    /** mybatis空间路径oracle */
+    private static final String MYBATIS_PATH_ORACLE = "main/resources/omapper";
 
     /** 默认上级菜单，系统工具 */
     private static final String DEFAULT_PARENT_MENU_ID = "3";
@@ -110,7 +112,9 @@ public class VelocityUtils
         templates.add("vm/java/serviceImpl.java.vm");
         templates.add("vm/java/controller.java.vm");
         templates.add("vm/xml/mapper.xml.vm");
+        templates.add("vm/xml/mapper_oracle.xml.vm");
         templates.add("vm/sql/sql.vm");
+        templates.add("vm/sql/sql_oracle.vm");
         templates.add("vm/js/api.js.vm");
         if (GenConstants.TPL_CRUD.equals(tplCategory))
         {
@@ -141,6 +145,7 @@ public class VelocityUtils
 
         String javaPath = PROJECT_PATH + "/" + StringUtils.replace(packageName, ".", "/");
         String mybatisPath = MYBATIS_PATH + "/" + moduleName;
+        String mybatisPathOracle = MYBATIS_PATH_ORACLE + "/" + moduleName;
         String vuePath = "vue";
 
         if (template.contains("domain.java.vm"))
@@ -167,9 +172,17 @@ public class VelocityUtils
         {
             fileName = StringUtils.format("{}/{}Mapper.xml", mybatisPath, className);
         }
+        else if (template.contains("mapper_oracle.xml.vm"))
+        {
+            fileName = StringUtils.format("{}/{}Mapper.xml", mybatisPathOracle, className);
+        }
         else if (template.contains("sql.vm"))
         {
             fileName = businessName + "Menu.sql";
+        }
+        else if (template.contains("sql_oracle.vm"))
+        {
+            fileName = businessName + "Menu_oracle.sql";
         }
         else if (template.contains("api.js.vm"))
         {
