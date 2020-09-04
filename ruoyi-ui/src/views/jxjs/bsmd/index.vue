@@ -18,13 +18,9 @@
         </el-select>
       </el-form-item>
       <el-form-item label="选择教师" prop="jsid">
-        <el-input
-          v-model="queryParams.jsid"
-          placeholder="请输入教师"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+        <el-select v-model="queryParams.jsid" filterable placeholder="请选择教师">
+          <el-option v-for="item in jsOptions" :key="item.id" :label="item.name" :value="item.id"></el-option>
+        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -169,11 +165,14 @@ import {
 import { getToken } from "@/utils/auth";
 import { listJxzxpxfa } from "@/api/jxjs/jxzxpxfa";
 import { listJdx } from "@/api/jxjs/jdx";
+import { listJxjsjbxx, getJxjsjbxx } from "@/api/jxjs/jxjsjbxx";
 
 export default {
   name: "Jdcx",
   data() {
     return {
+      //默认选中方案id
+      defaultFaId: "",
       // 遮罩层
       loading: true,
       // 选中数组
@@ -208,6 +207,8 @@ export default {
       msqrOptions: [],
       //基地校
       jdxOptions: [],
+      // 教师列表
+      jsOptions: [],
       // 用户导入参数lu
       upload: {
         // 是否显示弹出层（用户导入）
@@ -268,7 +269,8 @@ export default {
   created() {
     this.getFaList();
     this.getJdxList();
-    this.getList();
+    this.getJsList();
+    //this.getList();
     this.getDicts("sys_dm_msqr").then((response) => {
       this.msqrOptions = response.data;
     });
@@ -289,6 +291,13 @@ export default {
     });
   },
   methods: {
+    // 获取教师信息
+    getJsList() {
+      listJxjsjbxx(null).then((response) => {
+        this.jsOptions = response.rows;
+        //console.log(this.jsOptions);
+      });
+    },
     getJdxList() {
       listJdx(null).then((response) => {
         this.jdxOptions = response.rows;
@@ -315,10 +324,14 @@ export default {
       });
       return actions.join("");
     },
-    getFaList() {
+    async getFaList() {
       this.queryParams_fa.fazt = "1";
-      listJxzxpxfa(this.queryParams_fa).then((response) => {
+      await listJxzxpxfa(this.queryParams_fa).then((response) => {
         this.faOptions = response.rows;
+        this.defaultFaId = response.rows[0].id;
+        this.queryParams.faid = this.defaultFaId;
+
+        this.getList();
       });
     },
     /** 查询基地区级审核列表 */
@@ -392,6 +405,7 @@ export default {
     /** 重置按钮操作 */
     resetQuery() {
       this.resetForm("queryForm");
+       this.queryParams.faid = this.defaultFaId;
       this.handleQuery();
     },
     // 多选框选中数据

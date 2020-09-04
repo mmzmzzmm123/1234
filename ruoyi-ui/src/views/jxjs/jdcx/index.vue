@@ -54,8 +54,9 @@
 
     <el-table v-loading="loading" :data="jdcxList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="教师姓名" align="center" prop="jsid" :formatter="jsFormat" />
+      <el-table-column label="方案名称" align="center" prop="faname" />
       <el-table-column label="基地校名称" align="center" prop="jdxmc" />
+      <el-table-column label="教师姓名" align="center" prop="jsname"  />
       <el-table-column label="当前状态" align="center" prop="dqzt" :formatter="dqztFormat" />
       <el-table-column label="基地校审核意见" align="center" prop="jdxshzt" :formatter="jdxshztFormat" />
       <el-table-column label="区级审核状态" align="center" prop="qjshzt" :formatter="qjshztFormat" />
@@ -315,19 +316,6 @@ export default {
       Object.keys(datas).map((key) => {
         if (datas[key].id == "" + row.jsid) {
           actions.push(datas[key].jdxid);
-          return false;
-        }
-      });
-      return actions.join("");
-    },
-    // 字典翻译
-    jsFormat(row, column) {
-      // return this.selectDictLabel(this.classOptions, row.classid);
-      var actions = [];
-      var datas = this.jsOptions;
-      Object.keys(datas).map((key) => {
-        if (datas[key].id == "" + row.jsid) {
-          actions.push(datas[key].name);
           return false;
         }
       });
