@@ -140,7 +140,6 @@
             icon="el-icon-view"
             @click="handleView(scope.row)"
             v-hasPermi="['benyi:themeweekplan:query']"
-            v-show="isShow(scope.row)"
           >预览</el-button>
         </template>
       </el-table-column>

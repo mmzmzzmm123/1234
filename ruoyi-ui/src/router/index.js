@@ -323,6 +323,21 @@ export const constantRoutes = [{
     }]
   },
   {
+    path: '/benyi_course/thememonthplanprint',
+    component: Layout,
+    hidden: true,
+    children: [{
+      path: 'table/:id',
+      component: () =>
+        import('@/views/benyi/thememonthplan/table'),
+      name: 'Thememonthplan2',
+      meta: {
+        title: '主题整合月计划(表格)',
+        icon: ''
+      }
+    }]
+  },
+  {
     path: '/benyi_course/math',
     component: Layout,
     hidden: true,
