@@ -96,7 +96,7 @@
             <el-option v-for="dict in faOptions" :key="dict.id" :label="dict.name" :value="dict.id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="教师名称" prop="tsbzJxjsjbxx.name" :formatter="jsFormat">
+        <el-form-item label="教师名称" prop="jsid">
           <el-select v-model="form.jsid" placeholder="请选择教师" :disabled="true">
             <el-option v-for="dict in jsOptions" :key="dict.id" :label="dict.name" :value="dict.id"></el-option>
           </el-select>
@@ -141,6 +141,8 @@ export default {
   name: "Jdcx",
   data() {
     return {
+      //默认选中方案id
+      defaultFaId: "",
       // 遮罩层
       loading: true,
       // 选中数组
@@ -241,7 +243,6 @@ export default {
   created() {
     this.getFaList();
     this.getJdxList();
-    this.getList();
     this.getJsList();
     this.getDicts("sys_dm_shzt").then((response) => {
       this.dqztOptions = response.data;
@@ -276,10 +277,14 @@ export default {
       });
       return actions.join("");
     },
-    getFaList() {
+    async getFaList() {
       this.queryParams_fa.fazt = "1";
-      listJxzxpxfa(this.queryParams_fa).then((response) => {
+      await listJxzxpxfa(this.queryParams_fa).then((response) => {
         this.faOptions = response.rows;
+        this.defaultFaId = response.rows[0].id;
+        this.queryParams.faid = this.defaultFaId;
+
+        this.getList();
       });
     },
     /** 查询基地区级审核列表 */
@@ -386,6 +391,7 @@ export default {
     /** 重置按钮操作 */
     resetQuery() {
       this.resetForm("queryForm");
+      this.queryParams.faid = this.defaultFaId;
       this.handleQuery();
     },
     // 多选框选中数据
