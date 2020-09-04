@@ -2,19 +2,16 @@ package com.ruoyi.web.test.controller;
 
 
 import com.ruoyi.bookmark.mapper.SqMenuMapper;
-import com.ruoyi.bookmark.service.impl.SqMenuServiceImpl;
+import com.ruoyi.bookmark.service.ISqUserTagService;
 import com.ruoyi.web.controller.yunbookmark.SqBookmarkController;
-import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @Auther: Wang
@@ -28,6 +25,12 @@ public class SqBookmarkTest extends BaseSpringBootTest{
     private SqBookmarkController sqBookmarkController;
     @Autowired
     private SqMenuMapper sqMenuMapper;
+    @Autowired
+    private ISqUserTagService iSqUserTagService;
+
+
+
+
 
     private MockMvc mockMvc;
 
@@ -46,13 +49,34 @@ public class SqBookmarkTest extends BaseSpringBootTest{
 //        logger.info(mvcResult.getResponse().getContentAsString());
 //
 //    }
-    @Test
-    public void demo() throws Exception {
-        Long[] menuIds={1L,4L,6L};
-        sqMenuMapper.updateCountAdd(menuIds,5);
+//    @Test
+//    public void demo() throws Exception {
+//        Long[] menuIds={1L,4L,6L};
+//        sqMenuMapper.updateCountAdd(menuIds,5);
+//
+//        logger.info("执行完毕");
+//
+//    }
+    /**
+     * @auther: Wang
+     * @date: 2020/09/04 23:58
+     * 功能描述: 测试查询用户的 标签
+     */
 
+    @Test
+    public void selectSqUserTagByUserId() throws Exception {
+      List<Map<String,Object>> map =  iSqUserTagService.selectSqUserTagByUserId(1L);
         logger.info("执行完毕");
+        for (Map<String, Object> list: map) {
+            for (Map.Entry<String,Object> entry: list.entrySet() ) {
+                System.out.println(entry.getKey()+"="+entry.getValue());
+            }
+            logger.info("========================================");
+        }
+
 
     }
+
+
 
 }

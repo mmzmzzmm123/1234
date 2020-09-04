@@ -1,6 +1,8 @@
 package com.ruoyi.web.controller.yunbookmark;
 
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,11 +29,26 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * @date 2020-09-04
  */
 @RestController
-@RequestMapping("/system/usertag")
+@RequestMapping("/usertag/tag")
 public class SqUserTagController extends BaseController
 {
     @Autowired
     private ISqUserTagService sqUserTagService;
+
+    /**
+     * 获取用戶标签
+     */
+
+    @GetMapping(value = "/selectTagByUserID/{userId}")
+    public AjaxResult selectSqUserTagByUserId(@PathVariable("userId") Long userId)
+    {
+        List<Map<String,Object>> map =  sqUserTagService.selectSqUserTagByUserId(userId);
+        return AjaxResult.success(map);
+    }
+
+
+
+
 
     /**
      * 查询标签管理列表
