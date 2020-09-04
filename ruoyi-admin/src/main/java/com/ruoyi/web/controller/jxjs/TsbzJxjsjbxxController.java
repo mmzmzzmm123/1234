@@ -48,14 +48,35 @@ public class TsbzJxjsjbxxController extends BaseController {
     }
 
     /**
+     * 查询见习教师基本信息列表，没有参加基地初选的名单
+     */
+    @PreAuthorize("@ss.hasPermi('jxjs:jxjsjbxx:list')")
+    @GetMapping("/listnotjdcx")
+    public TableDataInfo listnotjdcx(TsbzJxjsjbxx tsbzJxjsjbxx) {
+
+        //首先判断是否为学校用户
+        String jdxId = schoolCommonController.deptIdToJdxId();
+        if (!schoolCommonController.isStringEmpty(jdxId)) {
+            tsbzJxjsjbxx.setJdxid(jdxId);
+        }
+
+        //年份同时设置为见习教师录取年份
+        tsbzJxjsjbxx.setLqnf(tsbzJxjsjbxx.getNf());
+
+        startPage();
+        List<TsbzJxjsjbxx> list = tsbzJxjsjbxxService.selectTsbzJxjsjbxxListnotjdcx(tsbzJxjsjbxx);
+        return getDataTable(list);
+    }
+
+    /**
      * 查询见习教师基本信息列表
      */
     @PreAuthorize("@ss.hasPermi('jxjs:jxjsjbxx:list')")
     @GetMapping("/list")
     public TableDataInfo list(TsbzJxjsjbxx tsbzJxjsjbxx) {
         //首先判断是否为学校用户
-        String jdxId=schoolCommonController.deptIdToJdxId();
-        if(!schoolCommonController.isStringEmpty(jdxId)){
+        String jdxId = schoolCommonController.deptIdToJdxId();
+        if (!schoolCommonController.isStringEmpty(jdxId)) {
             tsbzJxjsjbxx.setJdxid(jdxId);
         }
 

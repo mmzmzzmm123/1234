@@ -7,14 +7,13 @@
       v-show="showSearch"
       label-width="68px"
     >
-      
       <el-form-item label="评选方案" prop="faid">
         <el-select v-model="queryParams.faid" placeholder="请选择方案">
           <el-option v-for="dict in faOptions" :key="dict.id" :label="dict.name" :value="dict.id"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="基地校" prop="jdxid">
-         <el-select v-model="queryParams.jdxid" filterable placeholder="请选择基地校">
+        <el-select v-model="queryParams.jdxid" filterable placeholder="请选择基地校">
           <el-option v-for="item in jdxOptions" :key="item.id" :label="item.jdxmc" :value="item.id"></el-option>
         </el-select>
       </el-form-item>
@@ -56,7 +55,7 @@
     <el-table v-loading="loading" :data="jdcxList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="教师姓名" align="center" prop="jsid" :formatter="jsFormat" />
-      <el-table-column label="基地校名称" align="center" prop="jdxmc"  />
+      <el-table-column label="基地校名称" align="center" prop="jdxmc" />
       <el-table-column label="当前状态" align="center" prop="dqzt" :formatter="dqztFormat" />
       <el-table-column label="基地校审核意见" align="center" prop="jdxshzt" :formatter="jdxshztFormat" />
       <el-table-column label="区级审核状态" align="center" prop="qjshzt" :formatter="qjshztFormat" />
@@ -91,24 +90,19 @@
 
     <!-- 添加或修改基地区级审核对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+      <el-form ref="form" :model="form" :rules="rules" label-width="110px">
         <el-form-item label="方案编号" prop="faid">
           <el-select v-model="form.faid" placeholder="请选择方案" :disabled="true">
             <el-option v-for="dict in faOptions" :key="dict.id" :label="dict.name" :value="dict.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="教师名称" prop="tsbzJxjsjbxx.name" :formatter="jsFormat">
-          <el-select v-model="form.jsid" placeholder="请选择教师" :disabled="true"> 
-            <el-option 
-            v-for="dict in jsOptions" 
-            :key="dict.id" 
-            :label="dict.name" 
-            :value="dict.id" >
-            </el-option>
+          <el-select v-model="form.jsid" placeholder="请选择教师" :disabled="true">
+            <el-option v-for="dict in jsOptions" :key="dict.id" :label="dict.name" :value="dict.id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="区级审核状态" prop="qjshzt">
-          <el-select v-model="form.qjshzt" placeholder="请选择区级审核状态">
+        <el-form-item label="区级审核意见" prop="qjshzt">
+          <el-select v-model="form.qjshzt" placeholder="请选择区级审核意见">
             <el-option
               v-for="dict in qjshztOptions"
               :key="dict.dictValue"
@@ -118,7 +112,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="区级审核建议" prop="qjshyj">
-           <el-input v-model="form.qjshyj" placeholder="请输入审核建议" />
+          <el-input v-model="form.qjshyj" type="textarea" placeholder="请输入审核建议" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -147,7 +141,6 @@ export default {
   name: "Jdcx",
   data() {
     return {
-      
       // 遮罩层
       loading: true,
       // 选中数组
@@ -295,7 +288,7 @@ export default {
       listJdcx(this.queryParams).then((response) => {
         this.jdcxList = response.rows;
         // 过滤未审核和未同意的人员
-        this.jdcxList = this.jdcxList.filter(function(item) {
+        this.jdcxList = this.jdcxList.filter(function (item) {
           return item.dqzt == 2 && item.jdxshzt == 1;
         });
         this.total = response.total;
@@ -401,12 +394,6 @@ export default {
       this.single = selection.length !== 1;
       this.multiple = !selection.length;
     },
-    /** 新增按钮操作 */
-    handleAdd() {
-      this.reset();
-      this.open = true;
-      this.title = "添加基地区级审核";
-    },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
@@ -414,14 +401,14 @@ export default {
       getJdcx(id).then((response) => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改基地区级审核";
+        this.title = "见习之星评选区级审核";
       });
     },
     /** 提交按钮 */
     submitForm() {
       this.$refs["form"].validate((valid) => {
         if (valid) {
-          if (this.form.id != null ) {
+          if (this.form.id != null) {
             if (this.form.qjshzt == "0") {
               this.form.dqzt = "8";
             } else if (this.form.qjshzt == "1") {
@@ -429,7 +416,7 @@ export default {
             }
             updateJdcx(this.form).then((response) => {
               if (response.code === 200) {
-                this.msgSuccess("修改成功");
+                this.msgSuccess("审核成功");
                 this.open = false;
                 this.getList();
               }
@@ -454,37 +441,17 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$confirm(
-        '是否确认删除基地区级审核编号为"' + ids + '"的数据项?',
-        "警告",
-        {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning",
-        }
-      )
-        .then(function () {
-          return delJdcx(ids);
-        })
-        .then(() => {
-          this.getList();
-          this.msgSuccess("删除成功");
-        })
-        .catch(function () {});
-    },
-    /** 导出按钮操作 */
-    handleExport() {
-      const queryParams = this.queryParams;
-      this.$confirm("是否确认导出所有基地区级审核数据项?", "警告", {
+      this.$confirm("是否确认回退基地区级审核数据项?", "警告", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
       })
         .then(function () {
-          return exportJdcx(queryParams);
+          return delJdcx(ids);
         })
-        .then((response) => {
-          this.download(response.msg);
+        .then(() => {
+          this.getList();
+          this.msgSuccess("回退成功");
         })
         .catch(function () {});
     },

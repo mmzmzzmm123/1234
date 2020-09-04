@@ -116,7 +116,7 @@
     <el-dialog :title="title" :visible.sync="open" width="800px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="方案编号" prop="faid">
-          <el-select v-model="form.faid" placeholder="请选择方案">
+          <el-select v-model="form.faid" placeholder="请选择方案" :disabled="true">
             <el-option v-for="dict in faOptions" :key="dict.id" :label="dict.name" :value="dict.id"></el-option>
           </el-select>
         </el-form-item>
@@ -139,7 +139,7 @@
           <el-input v-model="form.dqzt" v-if="false" />
         </el-form-item>
         <el-form-item label="上报理由" prop="sbly">
-          <el-input v-model="form.sbly" placeholder="请输入上报理由" />
+          <el-input v-model="form.sbly" type="textarea" placeholder="请输入上报理由" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -163,7 +163,7 @@ import {
 
 import { listJxzxpxfa } from "@/api/jxjs/jxzxpxfa";
 
-import { listJxjsjbxx, getJxjsjbxx } from "@/api/jxjs/jxjsjbxx";
+import { listJxjsjbxx,listJxjsjbxxnotjdcx, getJxjsjbxx } from "@/api/jxjs/jxjsjbxx";
 
 export default {
   name: "Jdxcx",
@@ -235,6 +235,11 @@ export default {
       queryParams_fa: {
         fazt: "1",
       },
+      // 查询参数
+      queryParams_js: {
+        faid: null,
+        nf: null,
+      },
       // 表单参数
       form: {},
       // 表单校验
@@ -261,7 +266,7 @@ export default {
   },
   methods: {
     isShow(row) {
-      console.log(row.dqzt);
+      //console.log(row.dqzt);
       if (row.dqzt == "2" || row.dqzt == "9" || row.dqzt == "8") {
         return false;
       } else {
@@ -300,6 +305,8 @@ export default {
         this.defaultFaId = response.rows[0].id;
         this.queryParams.faid = this.defaultFaId;
 
+        this.queryParams_js.faid = this.defaultFaId;
+        this.queryParams_js.nf = response.rows[0].nf;
         this.getList();
       });
     },
@@ -385,7 +392,7 @@ export default {
       this.isable = false;
       this.open = true;
       this.title = "基地校初选";
-      listJxjsjbxx(null).then((response) => {
+      listJxjsjbxxnotjdcx(this.queryParams_js).then((response) => {
         this.jss = response.rows;
       });
     },
@@ -431,15 +438,11 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$confirm(
-        '是否确认删除基地校初级审核数据项?',
-        "警告",
-        {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning",
-        }
-      )
+      this.$confirm("是否确认删除基地校初级审核数据项?", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
         .then(function () {
           return delJdcx(ids);
         })
@@ -452,15 +455,11 @@ export default {
     /** 提交按钮操作 */
     handleCheck(row) {
       const ids = row.id || this.ids;
-      this.$confirm(
-        '确认提交基地校初级审核数据项?提交后数据不能维护',
-        "警告",
-        {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning",
-        }
-      )
+      this.$confirm("确认提交基地校初级审核数据项?提交后数据不能维护", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
         .then(function () {
           return checkJdcx(ids);
         })

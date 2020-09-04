@@ -28,6 +28,8 @@
         <result property="sfsfs" column="sfsfs"/>
         <result property="lqnf" column="lqnf"/>
         <result property="createTime" column="create_time"/>
+        <result property="faid" column="faid"/>
+        <result property="nf" column="nf"/>
     </resultMap>
 
     <sql id="selectTsbzJxjsjbxxVo">
@@ -77,6 +79,32 @@
         <if test="prdwid != null  and prdwid != ''">and prdwid = #{prdwid}</if>
         <if test="prdwmc != null  and prdwmc != ''">and prdwmc = #{prdwmc}</if>
         <!--<if test="jdxid != null  and jdxid != ''"> and jdxid = #{jdxid}</if>-->
+        <if test="rjxd != null  and rjxd != ''">and rjxd = #{rjxd}</if>
+        <if test="rjxk != null  and rjxk != ''">and rjxk = #{rjxk}</if>
+        <if test="rjnj != null  and rjnj != ''">and rjnj = #{rjnj}</if>
+        <if test="byyx != null  and byyx != ''">and byyx = #{byyx}</if>
+        <if test="xl != null  and xl != ''">and xl = #{xl}</if>
+        <if test="xw != null  and xw != ''">and xw = #{xw}</if>
+        <if test="sfsfs != null  and sfsfs != ''">and sfsfs = #{sfsfs}</if>
+        <if test="lqnf != null  and lqnf != ''">and lqnf = #{lqnf}</if>
+    </select>
+
+    <select id="selectTsbzJxjsjbxxListnotjdcx" parameterType="TsbzJxjsjbxx" resultMap="TsbzJxjsjbxxResult">
+        select id, otherid, name, jxbh, xb, csrq, email, phone, yzbm, zzmm, mz, prdwid, prdwmc, jdxid, rjxd, rjxk, rjnj, byyx, xl, xw, sfsfs, lqnf, create_time
+        from tsbz_jxjsjbxx where id not in (select jsid from tsbz_jdcx t1 left join tsbz_jxzxpxfa t2 on t1.faid=t2.id where faid=#{faid} and t2.nf=#{nf})
+        <if test="otherid != null  and otherid != ''">and otherid = #{otherid}</if>
+        <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
+        <if test="jxbh != null  and jxbh != ''">and jxbh = #{jxbh}</if>
+        <if test="xb != null  and xb != ''">and xb = #{xb}</if>
+        <if test="csrq != null ">and csrq = #{csrq}</if>
+        <if test="email != null  and email != ''">and email = #{email}</if>
+        <if test="phone != null  and phone != ''">and phone = #{phone}</if>
+        <if test="yzbm != null  and yzbm != ''">and yzbm = #{yzbm}</if>
+        <if test="zzmm != null  and zzmm != ''">and zzmm = #{zzmm}</if>
+        <if test="mz != null  and mz != ''">and mz = #{mz}</if>
+        <if test="prdwid != null  and prdwid != ''">and prdwid = #{prdwid}</if>
+        <if test="prdwmc != null  and prdwmc != ''">and prdwmc = #{prdwmc}</if>
+        <if test="jdxid != null  and jdxid != ''"> and jdxid = #{jdxid}</if>
         <if test="rjxd != null  and rjxd != ''">and rjxd = #{rjxd}</if>
         <if test="rjxk != null  and rjxk != ''">and rjxk = #{rjxk}</if>
         <if test="rjnj != null  and rjnj != ''">and rjnj = #{rjnj}</if>
