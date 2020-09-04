@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.bookmark.mapper.SqBookmarkTagMapper">
+    
+    <resultMap type="SqBookmarkTag" id="SqBookmarkTagResult">
+        <result property="id"    column="id"    />
+        <result property="bookmarkId"    column="bookmark_id"    />
+        <result property="tagId"    column="tag_id"    />
+    </resultMap>
+
+    <sql id="selectSqBookmarkTagVo">
+        select id, bookmark_id, tag_id from sq_bookmark_tag
+    </sql>
+
+    <select id="selectSqBookmarkTagList" parameterType="SqBookmarkTag" resultMap="SqBookmarkTagResult">
+        <include refid="selectSqBookmarkTagVo"/>
+        <where>  
+            <if test="bookmarkId != null "> and bookmark_id = #{bookmarkId}</if>
+            <if test="tagId != null "> and tag_id = #{tagId}</if>
+        </where>
+    </select>
+    
+    <select id="selectSqBookmarkTagById" parameterType="Long" resultMap="SqBookmarkTagResult">
+        <include refid="selectSqBookmarkTagVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSqBookmarkTag" parameterType="SqBookmarkTag">
+        insert into sq_bookmark_tag
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="bookmarkId != null">bookmark_id,</if>
+            <if test="tagId != null">tag_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="bookmarkId != null">#{bookmarkId},</if>
+            <if test="tagId != null">#{tagId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSqBookmarkTag" parameterType="SqBookmarkTag">
+        update sq_bookmark_tag
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="bookmarkId != null">bookmark_id = #{bookmarkId},</if>
+            <if test="tagId != null">tag_id = #{tagId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSqBookmarkTagById" parameterType="Long">
+        delete from sq_bookmark_tag where id = #{id}
+    </delete>
+
+    <delete id="deleteSqBookmarkTagByIds" parameterType="String">
+        delete from sq_bookmark_tag where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

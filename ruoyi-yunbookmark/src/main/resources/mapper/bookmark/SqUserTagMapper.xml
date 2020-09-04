@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.bookmark.mapper.SqUserTagMapper">
+    
+    <resultMap type="SqUserTag" id="SqUserTagResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="tagId"    column="tag_id"    />
+        <result property="icount"    column="icount"    />
+        <result property="iorder"    column="iorder"    />
+    </resultMap>
+
+    <sql id="selectSqUserTagVo">
+        select id, user_id, tag_id, icount, iorder from sq_user_tag
+    </sql>
+
+    <select id="selectSqUserTagList" parameterType="SqUserTag" resultMap="SqUserTagResult">
+        <include refid="selectSqUserTagVo"/>
+        <where>  
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="tagId != null "> and tag_id = #{tagId}</if>
+            <if test="icount != null "> and icount = #{icount}</if>
+            <if test="iorder != null "> and iorder = #{iorder}</if>
+        </where>
+    </select>
+    
+    <select id="selectSqUserTagById" parameterType="Long" resultMap="SqUserTagResult">
+        <include refid="selectSqUserTagVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSqUserTag" parameterType="SqUserTag" useGeneratedKeys="true" keyProperty="id">
+        insert into sq_user_tag
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="tagId != null">tag_id,</if>
+            <if test="icount != null">icount,</if>
+            <if test="iorder != null">iorder,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="tagId != null">#{tagId},</if>
+            <if test="icount != null">#{icount},</if>
+            <if test="iorder != null">#{iorder},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSqUserTag" parameterType="SqUserTag">
+        update sq_user_tag
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="tagId != null">tag_id = #{tagId},</if>
+            <if test="icount != null">icount = #{icount},</if>
+            <if test="iorder != null">iorder = #{iorder},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSqUserTagById" parameterType="Long">
+        delete from sq_user_tag where id = #{id}
+    </delete>
+
+    <delete id="deleteSqUserTagByIds" parameterType="String">
+        delete from sq_user_tag where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>
