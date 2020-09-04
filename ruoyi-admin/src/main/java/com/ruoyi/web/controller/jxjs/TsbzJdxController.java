@@ -3,10 +3,12 @@ package com.ruoyi.web.controller.jxjs;
 import java.util.List;
 
 import com.ruoyi.common.core.domain.entity.SysDept;
+import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.jxjs.domain.TsbzJxjsjbxx;
 import com.ruoyi.jxjs.service.ITsbzJxjsjbxxService;
 import com.ruoyi.system.service.ISysDeptService;
+import com.ruoyi.system.service.ISysUserService;
 import com.ruoyi.web.controller.common.SchoolCommonController;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +46,8 @@ public class TsbzJdxController extends BaseController {
     private ITsbzJxjsjbxxService tsbzJxjsjbxxService;
     @Autowired
     private ISysDeptService deptService;
+    @Autowired
+    private ISysUserService userService;
 
     /**
      * 查询基地校列表
@@ -109,10 +113,10 @@ public class TsbzJdxController extends BaseController {
         SysDept dept = new SysDept();
         //设置schoolID为xxdm
         dept.setSchoolid(tsbzJdx.getId());
-        dept = deptService.selectDeptList(dept).get(0);
-        dept.setDeptName(tsbzJdx.getJdxmc());
-        dept.setUpdateBy(SecurityUtils.getLoginUser().getUser().getUserName());
-        deptService.updateDept(dept);
+        SysDept deptNew = deptService.selectDeptList(dept).get(0);
+        deptNew.setDeptName(tsbzJdx.getJdxmc());
+        deptNew.setUpdateBy(SecurityUtils.getLoginUser().getUser().getUserName());
+        deptService.updateDept(deptNew);
         return toAjax(tsbzJdxService.updateTsbzJdx(tsbzJdx));
     }
 
@@ -132,6 +136,29 @@ public class TsbzJdxController extends BaseController {
             if (list != null && list.size() > 0) {
                 return AjaxResult.error("当前基地校已分配见习教师，无法删除");
             }
+        }
+
+        //先判断是否允许删除dept部门
+        //检查是否允许删除
+        SysDept dept = null;
+        for (int i = 0; i < ids.length; i++) {
+            dept = new SysDept();
+            dept.setSchoolid(ids[i]);
+            dept = deptService.selectDeptList(dept).get(0);
+
+            SysUser user = new SysUser();
+            user.setDeptId(dept.getDeptId());
+            List<SysUser> list = userService.selectUserList(user);
+            if (list != null && list.size() > 0) {
+                return AjaxResult.error("当前选中的基地校存在用户数据，无法删除");
+            }
+        }
+        //删除过程
+        for (int i = 0; i < ids.length; i++) {
+            dept = new SysDept();
+            dept.setSchoolid(ids[i]);
+            dept = deptService.selectDeptList(dept).get(0);
+            deptService.deleteDeptById(dept.getDeptId());
         }
         return toAjax(tsbzJdxService.deleteTsbzJdxByIds(ids));
     }

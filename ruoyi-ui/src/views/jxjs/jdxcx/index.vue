@@ -166,9 +166,11 @@ import { listJxzxpxfa } from "@/api/jxjs/jxzxpxfa";
 import { listJxjsjbxx, getJxjsjbxx } from "@/api/jxjs/jxjsjbxx";
 
 export default {
-  name: "Jdcx",
+  name: "Jdxcx",
   data() {
     return {
+      //默认选中方案id
+      defaultFaId: "",
       isable: false,
       isCheck: true,
       checkAll: false,
@@ -231,7 +233,7 @@ export default {
       },
       // 查询参数
       queryParams_fa: {
-        fazt: null,
+        fazt: "1",
       },
       // 表单参数
       form: {},
@@ -249,7 +251,6 @@ export default {
   },
   created() {
     this.getFaList();
-    this.getList();
     this.getJsList();
     this.getDicts("sys_dm_shzt").then((response) => {
       this.dqztOptions = response.data;
@@ -293,10 +294,13 @@ export default {
       });
       return actions.join("");
     },
-    getFaList() {
-      this.queryParams_fa.fazt = "1";
-      listJxzxpxfa(this.queryParams_fa).then((response) => {
+    async getFaList() {
+      await listJxzxpxfa(this.queryParams_fa).then((response) => {
         this.faOptions = response.rows;
+        this.defaultFaId = response.rows[0].id;
+        this.queryParams.faid = this.defaultFaId;
+
+        this.getList();
       });
     },
     getJsList() {
@@ -355,6 +359,7 @@ export default {
       };
       this.resetForm("form");
 
+      this.form.faid = this.defaultFaId;
       this.checkedJss = [];
     },
     /** 搜索按钮操作 */
@@ -365,6 +370,7 @@ export default {
     /** 重置按钮操作 */
     resetQuery() {
       this.resetForm("queryForm");
+      this.queryParams.faid = this.defaultFaId;
       this.handleQuery();
     },
     // 多选框选中数据
@@ -392,7 +398,6 @@ export default {
         this.form = response.data;
         listJxjsjbxx(null).then((response) => {
           this.jss = response.rows;
-          
         });
         this.checkedJss.push(response.data.jsid);
         this.open = true;
@@ -427,7 +432,7 @@ export default {
     handleDelete(row) {
       const ids = row.id || this.ids;
       this.$confirm(
-        '是否确认删除基地校初级审核编号为"' + ids + '"的数据项?',
+        '是否确认删除基地校初级审核数据项?',
         "警告",
         {
           confirmButtonText: "确定",
@@ -448,7 +453,7 @@ export default {
     handleCheck(row) {
       const ids = row.id || this.ids;
       this.$confirm(
-        '确认提交基地校初级审核编号为"' + ids + '"的数据项?',
+        '确认提交基地校初级审核数据项?提交后数据不能维护',
         "警告",
         {
           confirmButtonText: "确定",

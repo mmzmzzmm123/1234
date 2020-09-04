@@ -29,6 +29,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="yjdf"    column="yjdf"    />
         <result property="zhdf2"    column="zhdf2"    />
         <result property="lqzt"    column="lqzt"    />
+        <result property="jdxid"    column="jdxid"    />
     </resultMap>
 
     <sql id="selectTsbzJdcxVo">
@@ -164,7 +165,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <select id="selectTsbzJdcxExport" parameterType="TsbzJdcx" resultMap="TsbzJdcxResult">
-        select a.id, a.faid, a.jsid, a.dqzt, a.createuserid, a.create_time, a.jdxshr, a.jdxshzt, a.sbly, a.qjshr, a.qjshzt, a.qjshyj, a.jdpx, a.alfxdf, a.jasjdf, a.gbzdf, a.zhdf, a.cjdrcreate_time, a.msqr, a.msqrcreate_time, a.msjgmnktjxdf, a.yjdf, a.zhdf2,a.lqzt, c.name as faname, d.jdxmc,b.name as jsname,b.xb,b.rjxd,b.rjxk,b.phone,b.prdwmc from tsbz_jdcx a LEFT JOIN tsbz_jxjsjbxx b ON a.jsid=b.id LEFT JOIN tsbz_jxzxpxfa c ON a.faid=c.id LEFT JOIN tsbz_jdx d ON b.jdxid=d.id
+        select d.id as jdxid,a.id, a.faid, a.jsid, a.dqzt, a.createuserid, a.create_time, a.jdxshr, a.jdxshzt, a.sbly, a.qjshr, a.qjshzt, a.qjshyj, a.jdpx, a.alfxdf, a.jasjdf, a.gbzdf, a.zhdf, a.cjdrcreate_time, a.msqr, a.msqrcreate_time, a.msjgmnktjxdf, a.yjdf, a.zhdf2,a.lqzt, c.name as faname, d.jdxmc,b.name as jsname,b.xb,b.rjxd,b.rjxk,b.phone,b.prdwmc from tsbz_jdcx a LEFT JOIN tsbz_jxjsjbxx b ON a.jsid=b.id LEFT JOIN tsbz_jxzxpxfa c ON a.faid=c.id LEFT JOIN tsbz_jdx d ON b.jdxid=d.id
         <where>
             <if test="faid != null "> and a.faid = #{faid}</if>
             <if test="jsid != null "> and a.jsid = #{jsid}</if>
@@ -188,6 +189,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="yjdf != null "> and a.yjdf = #{yjdf}</if>
             <if test="zhdf2 != null "> and a.zhdf2 = #{zhdf2}</if>
             <if test="lqzt != null  and lqzt != ''"> and lqzt = #{lqzt}</if>
+            <if test="jdxid != null  and jdxid != ''"> and d.id = #{jdxid}</if>
         </where>
     </select>
     <update id="updateTsbzJdcxforjsfa" parameterType="TsbzJdcx">

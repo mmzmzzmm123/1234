@@ -66,6 +66,7 @@
           >修改</el-button>
           <el-button
             v-if="!(scope.row.parentId==200)"
+            v-show="!(scope.row.deptId==200)"
             size="mini"
             type="text"
             icon="el-icon-plus"

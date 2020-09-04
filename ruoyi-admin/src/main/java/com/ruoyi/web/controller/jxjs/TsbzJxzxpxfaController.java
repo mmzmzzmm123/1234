@@ -37,7 +37,7 @@ public class TsbzJxzxpxfaController extends BaseController {
     /**
      * 查询见习之星评选方案列表
      */
-    @PreAuthorize("@ss.hasPermi('jxjs:jxzxpxfa:list')")
+    @PreAuthorize("@ss.hasPermi('jxjs:jxzxpxfa:list')"+ "||@ss.hasPermi('jxjs:jdcx:list')")
     @GetMapping("/list")
     public TableDataInfo list(TsbzJxzxpxfa tsbzJxzxpxfa) {
         startPage();

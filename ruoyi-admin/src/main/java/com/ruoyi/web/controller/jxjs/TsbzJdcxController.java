@@ -53,6 +53,12 @@ public class TsbzJdcxController extends BaseController {
     @PreAuthorize("@ss.hasPermi('jxjs:jdcx:list')")
     @GetMapping("/list")
     public TableDataInfo list(TsbzJdcx tsbzJdcx) {
+        System.out.println("faid:" + tsbzJdcx.getFaid());
+        //首先判断是否为学校用户
+        String jdxId=schoolCommonController.deptIdToJdxId();
+        if(!schoolCommonController.isStringEmpty(jdxId)){
+            tsbzJdcx.setJdxid(jdxId);
+        }
         startPage();
 //        List<TsbzJdcx> list = tsbzJdcxService.selectTsbzJdcxList(tsbzJdcx);
         List<TsbzJdcx> list = tsbzJdcxService.selectTsbzJdcxExport(tsbzJdcx);
