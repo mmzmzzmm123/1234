@@ -77,11 +77,16 @@
       <el-table-column label="考核方案" align="center" prop="faid" :formatter="faFormat" />
       <el-table-column label="教师" align="center" prop="tsbzJxjsjbxx.name">
         <template slot-scope="scope">
+          <router-link :to="'/jxzxkhgl/jxzxxxsh/data/' + scope.row.id" class="link-type">
+            <span>{{ scope.row.tsbzJxjsjbxx.name }}</span>
+          </router-link>
+        </template>
+        <!-- <template slot-scope="scope">
           <el-button
           type="text"
           @click="handleDetail(scope.row)">
           {{ scope.row.tsbzJxjsjbxx.name }}</el-button>  
-        </template>  
+        </template>   -->
       </el-table-column>
       <el-table-column label="状态" align="center" prop="status" :formatter="statusFormat" />
       <el-table-column label="校级审核意见" align="center" prop="xjshyj" :formatter="xjshyjFormat" />
@@ -386,21 +391,21 @@ export default {
         this.title = "修改考核审核过程";
       });
     },
-    /** 详情按钮操作 */
-    handleDetail(row) {
-      this.reset();
-      const id = row.id || this.ids;
-      if (id == null || id == "") {
-        return this.msgError("当前教师未提交数据，无法查看详情！");
-      }
-      getJzxzkhsh(id).then((response) => {
-        this.jsxm = response.data.tsbzJxjsjbxx.name;
-        this.jsprx = response.data.tsbzJxjsjbxx.prdwmc;
-        this.form = response.data;
-        this.open1 = true;
-        this.title = "教师详情";
-      });
-    },
+    // /** 详情按钮操作 */
+    // handleDetail(row) {
+    //   this.reset();
+    //   const id = row.id || this.ids;
+    //   if (id == null || id == "") {
+    //     return this.msgError("当前教师未提交数据，无法查看详情！");
+    //   }
+    //   getJzxzkhsh(id).then((response) => {
+    //     this.jsxm = response.data.tsbzJxjsjbxx.name;
+    //     this.jsprx = response.data.tsbzJxjsjbxx.prdwmc;
+    //     this.form = response.data;
+    //     this.open1 = true;
+    //     this.title = "教师详情";
+    //   });
+    // },
     /** 提交按钮 */
     submitForm() {
       this.$refs["form"].validate((valid) => {

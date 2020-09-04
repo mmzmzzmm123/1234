@@ -123,6 +123,20 @@ export const constantRoutes = [{
         }]
     },
     {
+        path: '/jxzxkhgl',
+        component: Layout,
+        hidden: true,
+        children: [{
+            path: 'jxzxxxsh/data/:id',
+            component: (resolve) => require(['@/views/jxzxkhgl/jxzxxxsh/data'], resolve),
+            name: 'jxzxxxsh1',
+            meta: {
+                title: '教师详情页',
+                icon: ''
+            }
+        }]
+    },
+    {
         path: '/job',
         component: Layout,
         hidden: true,

@@ -82,6 +82,8 @@ public class TsbzJxzxkhsh extends BaseEntity {
 
     private TsbzJxjsjbxx tsbzJxjsjbxx;
 
+    private TsbzJxzxkhgcwjsj tsbzJxzxkhgcwjsj;
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -194,6 +196,15 @@ public class TsbzJxzxkhsh extends BaseEntity {
                 .append("createuseird", getCreateuseird())
                 .append("createTime", getCreateTime())
                 .append("tsbzJxjsjbxx", getTsbzJxjsjbxx())
+                .append("tsbzJxzxkhgcwjsj", getTsbzJxzxkhgcwjsj())
                 .toString();
+    }
+
+    public TsbzJxzxkhgcwjsj getTsbzJxzxkhgcwjsj() {
+        return tsbzJxzxkhgcwjsj;
+    }
+
+    public void setTsbzJxzxkhgcwjsj(TsbzJxzxkhgcwjsj tsbzJxzxkhgcwjsj) {
+        this.tsbzJxzxkhgcwjsj = tsbzJxzxkhgcwjsj;
     }
 }

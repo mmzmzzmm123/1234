@@ -18,6 +18,16 @@
         <result property="createuseird" column="createuseird"/>
         <result property="createTime" column="create_time"/>
         <association property="tsbzJxjsjbxx" column="jsid" javaType="TsbzJxjsjbxx" resultMap="TsbzJxjsjbxxResult"/>
+        <association property="tsbzJxzxkhgcwjsj" column="createuserid" javaType="TsbzJxzxkhgcwjsj" resultMap="TsbzJxzxkhgcwjsjResult"/>
+    </resultMap>
+
+    <resultMap type="TsbzJxzxkhgcwjsj" id="TsbzJxzxkhgcwjsjResult">
+        <result property="id" column="id"/>
+        <result property="gcid" column="gcid"/>
+        <result property="filename" column="filename"/>
+        <result property="filepath" column="filepath"/>
+        <result property="createuserid" column="createuserid"/>
+        <result property="createTime" column="create_time"/>
     </resultMap>
 
     <resultMap type="TsbzJxjsjbxx" id="TsbzJxjsjbxxResult">
@@ -47,10 +57,11 @@
     </resultMap>
 
     <sql id="selectTsbzJxzxkhshVo">
-select d.id,d.faid,d.jsid,ifnull(d.status,0) status,d.xjshr,d.xjshyj,d.xjshjy,d.qjshr,d.qjshjy,d.qjshyj,d.createuseird,a.create_time,b.name,b.prdwmc from tsbz_jxzxmd a
+select d.id,d.faid,d.jsid,ifnull(d.status,0) status,d.xjshr,d.xjshyj,d.xjshjy,d.qjshr,d.qjshjy,d.qjshyj,d.createuseird,a.create_time,b.name,b.prdwmc, b.xb, e.filename, e.filepath from tsbz_jxzxmd a
 left join tsbz_jxjsjbxx b on b.id=a.jsid
 left join sys_dept c on b.prdwid=c.schoolid
 left join tsbz_jxzxkhsh d on a.jsid=d.jsid
+left join tsbz_jxzxkhgcwjsj e on a.jsid=e.createuserid
     </sql>
 
     <select id="selectTsbzJxzxkhshList" parameterType="TsbzJxzxkhsh" resultMap="TsbzJxzxkhshResult">
