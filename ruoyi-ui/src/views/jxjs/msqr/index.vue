@@ -12,6 +12,11 @@
           <el-option v-for="dict in faOptions" :key="dict.id" :label="dict.name" :value="dict.id"></el-option>
         </el-select>
       </el-form-item>
+      <el-form-item label="基地校" prop="jdxid">
+        <el-select v-model="queryParams.jdxid" filterable placeholder="请选择基地校">
+          <el-option v-for="item in jdxOptions" :key="item.id" :label="item.jdxmc" :value="item.id"></el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item label="选择教师" prop="jsid">
         <el-select v-model="queryParams.jsid" filterable placeholder="请选择教师">
           <el-option v-for="item in jsOptions" :key="item.id" :label="item.name" :value="item.id"></el-option>
@@ -69,7 +74,9 @@
       <el-table-column type="selection" width="55" align="center" :selectable="isShow" />
       <!-- <el-table-column label="编号" align="center" prop="id" /> -->
       <!-- <el-table-column label="方案名称" align="center" prop="faid" :formatter="faFormat" /> -->
-      <el-table-column label="教师姓名" align="center" prop="jsid" :formatter="jsFormat" />
+      <el-table-column label="方案名称" align="center" prop="faname" />
+      <el-table-column label="基地校" align="center" prop="jdxmc" />
+      <el-table-column label="教师姓名" align="center" prop="jsname" />
       <el-table-column label="当前状态" align="center" prop="dqzt" :formatter="dqztFormat" />
       <el-table-column label="录取状态" align="center" prop="lqzt" :formatter="lqztFormat" />
       <el-table-column label="区级审核意见" align="center" prop="qjshzt" :formatter="qjshztFormat" />
@@ -175,11 +182,14 @@ import {
 import { listJxzxpxfa } from "@/api/jxjs/jxzxpxfa";
 import { listJxjsjbxx, getJxjsjbxx } from "@/api/jxjs/jxjsjbxx";
 import { getToken } from "@/utils/auth";
+import { listJdx } from "@/api/jxjs/jdx";
 
 export default {
   name: "Jdcx",
   data() {
     return {
+      //默认选中方案id
+      defaultFaId: "",
       // 遮罩层
       loading: true,
       // 选中数组
@@ -208,6 +218,8 @@ export default {
       faOptions: [],
       //教师
       jsOptions: [],
+      //基地校
+      jdxOptions: [],
       // 用户导入参数lu
       upload: {
         // 是否显示弹出层（用户导入）
@@ -251,6 +263,7 @@ export default {
         yjdf: null,
         zhdf2: null,
         lqzt: null,
+        jdxid: null,
       },
       // 查询参数
       queryParams_fa: {
@@ -268,8 +281,9 @@ export default {
   },
   created() {
     this.getFaList();
+    this.getJdxList();
     this.getJsList();
-    this.getList();
+    // this.getList();
     this.getDicts("sys_dm_shzt").then((response) => {
       this.dqztOptions = response.data;
     });
@@ -281,6 +295,11 @@ export default {
     });
   },
   methods: {
+    getJdxList() {
+      listJdx(null).then((response) => {
+        this.jdxOptions = response.rows;
+      });
+    },
     isShow(row) {
       console.log(row.dqzt);
       if (row.dqzt == "9") {
@@ -303,23 +322,14 @@ export default {
       });
       return actions.join("");
     },
-    // 字典翻译
-    jsFormat(row, column) {
-      // return this.selectDictLabel(this.classOptions, row.classid);
-      var actions = [];
-      var datas = this.jsOptions;
-      Object.keys(datas).map((key) => {
-        if (datas[key].id == "" + row.jsid) {
-          actions.push(datas[key].name);
-          return false;
-        }
-      });
-      return actions.join("");
-    },
-    getFaList() {
+    async getFaList() {
       this.queryParams_fa.fazt = "1";
-      listJxzxpxfa(this.queryParams_fa).then((response) => {
+      await listJxzxpxfa(this.queryParams_fa).then((response) => {
         this.faOptions = response.rows;
+        this.defaultFaId = response.rows[0].id;
+        this.queryParams.faid = this.defaultFaId;
+
+        this.getList();
       });
     },
     getJsList() {
@@ -391,6 +401,7 @@ export default {
     /** 重置按钮操作 */
     resetQuery() {
       this.resetForm("queryForm");
+      this.queryParams.faid = this.defaultFaId;
       this.handleQuery();
     },
     // 多选框选中数据

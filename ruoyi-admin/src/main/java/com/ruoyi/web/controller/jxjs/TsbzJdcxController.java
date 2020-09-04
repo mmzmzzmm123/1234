@@ -140,6 +140,7 @@ public class TsbzJdcxController extends BaseController {
             TsbzJxzxmd tsbzJxzxmd = new TsbzJxzxmd();
 
             tsbzJxzxmd.setJsid(tsbzJdcx.getJsid());
+            tsbzJxzxmd.setPxfaid(tsbzJdcx.getFaid());
             tsbzJxzxmd.setNf(sdf.format(date));
             tsbzJxzxmd.setCreateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
 

@@ -10,6 +10,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="nf"    column="nf"    />
         <result property="createuserid"    column="createuserid"    />
         <result property="createTime"    column="create_time"    />
+        <result property="pxfaid"    column="pxfaid"    />
         <result property="bfb"    column="bfb"    />
         <result property="faid"    column="faid"    />
         <association property="tsbzJxjsjbxx" column="jsid" javaType="TsbzJxjsjbxx" resultMap="TsbzJxjsjbxxResult"/>
@@ -42,7 +43,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectTsbzJxzxmdVo">
-        select id, jsid, nf, createuserid, create_time from tsbz_jxzxmd
+        select id, jsid, nf, createuserid, create_time, pxfaid from tsbz_jxzxmd
     </sql>
 
     <select id="selectTsbzJxzxmdList" parameterType="TsbzJxzxmd" resultMap="TsbzJxzxmdResult">
@@ -51,6 +52,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="jsid != null "> and jsid = #{jsid}</if>
             <if test="nf != null  and nf != ''"> and nf = #{nf}</if>
             <if test="createuserid != null "> and createuserid = #{createuserid}</if>
+            <if test="pxfaid != null "> and pxfaid = #{pxfaid}</if>
         </where>
     </select>
     
@@ -66,12 +68,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="nf != null">nf,</if>
             <if test="createuserid != null">createuserid,</if>
             <if test="createTime != null">create_time,</if>
+            <if test="pxfaid != null">pxfaid,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="jsid != null">#{jsid},</if>
             <if test="nf != null">#{nf},</if>
             <if test="createuserid != null">#{createuserid},</if>
             <if test="createTime != null">#{createTime},</if>
+            <if test="pxfaid != null">#{pxfaid},</if>
          </trim>
     </insert>
 
@@ -82,6 +86,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="nf != null">nf = #{nf},</if>
             <if test="createuserid != null">createuserid = #{createuserid},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="pxfaid != null">pxfaid = #{pxfaid},</if>
         </trim>
         where id = #{id}
     </update>

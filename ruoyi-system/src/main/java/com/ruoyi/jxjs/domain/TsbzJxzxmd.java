@@ -39,6 +39,10 @@ public class TsbzJxzxmd extends BaseEntity {
     @Excel(name = "创建人")
     private Long createuserid;
 
+    /** 评选方案id */
+    @Excel(name = "评选方案id")
+    private Long pxfaid;
+
 
     private BigDecimal bfb;
     private String faid;
@@ -113,6 +117,16 @@ public class TsbzJxzxmd extends BaseEntity {
         return createuserid;
     }
 
+    public void setPxfaid(Long pxfaid)
+    {
+        this.pxfaid = pxfaid;
+    }
+
+    public Long getPxfaid()
+    {
+        return pxfaid;
+    }
+
     public BigDecimal getBfb() {
         return bfb;
     }
@@ -145,6 +159,7 @@ public class TsbzJxzxmd extends BaseEntity {
                 .append("nf", getNf())
                 .append("createuserid", getCreateuserid())
                 .append("createTime", getCreateTime())
+                .append("pxfaid", getPxfaid())
                 .append("bfb", getBfb())
                 .append("faid", getFaid())
                 .append("tsbzJxjsjbxx", getTsbzJxjsjbxx())

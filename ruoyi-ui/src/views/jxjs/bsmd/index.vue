@@ -251,6 +251,7 @@ export default {
         msjgmnktjxdf: null,
         yjdf: null,
         zhdf2: null,
+        jdxid: null,
       },
       // 查询参数
       queryParams_fa: {
@@ -405,7 +406,7 @@ export default {
     /** 重置按钮操作 */
     resetQuery() {
       this.resetForm("queryForm");
-       this.queryParams.faid = this.defaultFaId;
+      this.queryParams.faid = this.defaultFaId;
       this.handleQuery();
     },
     // 多选框选中数据
