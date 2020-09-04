@@ -2,6 +2,11 @@ package com.ruoyi.web.controller.jxjs;
 
 import java.util.List;
 
+import com.ruoyi.common.core.domain.entity.SysDept;
+import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.jxjs.domain.TsbzJxjsjbxx;
+import com.ruoyi.jxjs.service.ITsbzJxjsjbxxService;
+import com.ruoyi.system.service.ISysDeptService;
 import com.ruoyi.web.controller.common.SchoolCommonController;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,26 +29,28 @@ import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
  * 基地校Controller
- * 
+ *
  * @author ruoyi
  * @date 2020-08-20
  */
 @RestController
 @RequestMapping("/jxjs/jdx")
-public class TsbzJdxController extends BaseController
-{
+public class TsbzJdxController extends BaseController {
     @Autowired
     private ITsbzJdxService tsbzJdxService;
     @Autowired
     private SchoolCommonController schoolCommonController;
+    @Autowired
+    private ITsbzJxjsjbxxService tsbzJxjsjbxxService;
+    @Autowired
+    private ISysDeptService deptService;
 
     /**
      * 查询基地校列表
      */
     @PreAuthorize("@ss.hasPermi('jxjs:jdx:list')")
     @GetMapping("/list")
-    public TableDataInfo list(TsbzJdx tsbzJdx)
-    {
+    public TableDataInfo list(TsbzJdx tsbzJdx) {
         startPage();
         List<TsbzJdx> list = tsbzJdxService.selectTsbzJdxList(tsbzJdx);
         return getDataTable(list);
@@ -55,8 +62,7 @@ public class TsbzJdxController extends BaseController
     @PreAuthorize("@ss.hasPermi('jxjs:jdx:export')")
     @Log(title = "基地校", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
-    public AjaxResult export(TsbzJdx tsbzJdx)
-    {
+    public AjaxResult export(TsbzJdx tsbzJdx) {
         List<TsbzJdx> list = tsbzJdxService.selectTsbzJdxList(tsbzJdx);
         ExcelUtil<TsbzJdx> util = new ExcelUtil<TsbzJdx>(TsbzJdx.class);
         return util.exportExcel(list, "jdx");
@@ -67,8 +73,7 @@ public class TsbzJdxController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('jxjs:jdx:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") String id)
-    {
+    public AjaxResult getInfo(@PathVariable("id") String id) {
         return AjaxResult.success(tsbzJdxService.selectTsbzJdxById(id));
     }
 
@@ -78,9 +83,18 @@ public class TsbzJdxController extends BaseController
     @PreAuthorize("@ss.hasPermi('jxjs:jdx:add')")
     @Log(title = "基地校", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody TsbzJdx tsbzJdx)
-    {
-        tsbzJdx.setId(schoolCommonController.getUuid());
+    public AjaxResult add(@RequestBody TsbzJdx tsbzJdx) {
+        String uuid = schoolCommonController.getUuid();
+        tsbzJdx.setId(uuid);
+        //将当前记录插入的dept表
+        SysDept dept = new SysDept();
+        dept.setSchoolid(uuid);
+        dept.setDeptName(tsbzJdx.getJdxmc());
+        dept.setCreateBy(SecurityUtils.getLoginUser().getUser().getUserName());
+        dept.setParentId(200L);
+        dept.setAncestors("0,100,200");
+        dept.setOrderNum(String.valueOf(tsbzJdxService.selectTsbzJdxList(null).size()));
+        deptService.insertDept(dept);
         return toAjax(tsbzJdxService.insertTsbzJdx(tsbzJdx));
     }
 
@@ -90,8 +104,15 @@ public class TsbzJdxController extends BaseController
     @PreAuthorize("@ss.hasPermi('jxjs:jdx:edit')")
     @Log(title = "基地校", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody TsbzJdx tsbzJdx)
-    {
+    public AjaxResult edit(@RequestBody TsbzJdx tsbzJdx) {
+        //创建dept实例  并且向要添加的dept中设置各个参数
+        SysDept dept = new SysDept();
+        //设置schoolID为xxdm
+        dept.setSchoolid(tsbzJdx.getId());
+        dept = deptService.selectDeptList(dept).get(0);
+        dept.setDeptName(tsbzJdx.getJdxmc());
+        dept.setUpdateBy(SecurityUtils.getLoginUser().getUser().getUserName());
+        deptService.updateDept(dept);
         return toAjax(tsbzJdxService.updateTsbzJdx(tsbzJdx));
     }
 
@@ -100,9 +121,18 @@ public class TsbzJdxController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('jxjs:jdx:remove')")
     @Log(title = "基地校", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable String[] ids)
-    {
+    @DeleteMapping("/{ids}")
+    public AjaxResult remove(@PathVariable String[] ids) {
+        TsbzJxjsjbxx tsbzJxjsjbxx = null;
+        //判断当前基地校是否已分配学生
+        for (int i = 0; i < ids.length; i++) {
+            tsbzJxjsjbxx = new TsbzJxjsjbxx();
+            tsbzJxjsjbxx.setJdxid(ids[i]);
+            List<TsbzJxjsjbxx> list = tsbzJxjsjbxxService.selectTsbzJxjsjbxxList(tsbzJxjsjbxx);
+            if (list != null && list.size() > 0) {
+                return AjaxResult.error("当前基地校已分配见习教师，无法删除");
+            }
+        }
         return toAjax(tsbzJdxService.deleteTsbzJdxByIds(ids));
     }
 }

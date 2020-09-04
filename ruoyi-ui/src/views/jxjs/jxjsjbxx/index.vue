@@ -1,6 +1,12 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
+    <el-form
+      :model="queryParams"
+      ref="queryForm"
+      :inline="true"
+      v-show="showSearch"
+      label-width="68px"
+    >
       <el-form-item label="姓名" prop="name">
         <el-input
           v-model="queryParams.name"
@@ -136,7 +142,7 @@
           size="small"
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item> -->
+      </el-form-item>-->
       <el-form-item>
         <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -173,21 +179,12 @@
           v-hasPermi="['jxjs:jxjsjbxx:remove']"
         >删除</el-button>
       </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['jxjs:jxjsjbxx:export']"
-        >导出</el-button>
-      </el-col>
-	  <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="jxjsjbxxList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="编号" align="center" prop="id" />
+      <!-- <el-table-column label="编号" align="center" prop="id" /> -->
       <el-table-column label="姓名" align="center" prop="name" />
       <el-table-column label="性别" align="center" prop="xb" :formatter="xbFormat" />
       <el-table-column label="政治面貌" align="center" prop="zzmm" :formatter="zzmmFormat" />
@@ -227,7 +224,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -256,18 +253,21 @@
           </el-select>
         </el-form-item>
         <el-form-item label="出生日期" prop="csrq">
-          <el-date-picker clearable size="small" style="width: 200px"
+          <el-date-picker
+            clearable
+            size="small"
+            style="width: 200px"
             v-model="form.csrq"
             type="date"
             value-format="yyyy-MM-dd"
-            placeholder="选择出生日期">
-          </el-date-picker>
+            placeholder="选择出生日期"
+          ></el-date-picker>
         </el-form-item>
         <el-form-item label="电子邮件" prop="email">
           <el-input v-model="form.email" placeholder="请输入电子邮件" />
         </el-form-item>
         <el-form-item label="联系电话" prop="phone">
-          <el-input v-model="form.phone" placeholder="请输入联系电话" maxlength="11"/>
+          <el-input v-model="form.phone" placeholder="请输入联系电话" maxlength="11" />
         </el-form-item>
         <el-form-item label="邮编" prop="yzbm">
           <el-input v-model="form.yzbm" placeholder="请输入邮编" />
@@ -384,7 +384,13 @@
 </template>
 
 <script>
-import { listJxjsjbxx, getJxjsjbxx, delJxjsjbxx, addJxjsjbxx, updateJxjsjbxx, exportJxjsjbxx } from "@/api/jxjs/jxjsjbxx";
+import {
+  listJxjsjbxx,
+  getJxjsjbxx,
+  delJxjsjbxx,
+  addJxjsjbxx,
+  updateJxjsjbxx,
+} from "@/api/jxjs/jxjsjbxx";
 
 export default {
   name: "Jxjsjbxx",
@@ -464,49 +470,44 @@ export default {
         jxbh: [
           { required: true, message: "进修编号不能为空", trigger: "blur" },
         ],
-        xb: [
-          { required: true, message: "教师性别不能为空", trigger: "blur" },
-        ],
+        xb: [{ required: true, message: "教师性别不能为空", trigger: "blur" }],
         csrq: [
           { required: true, message: "出生日期不能为空", trigger: "blur" },
         ],
-        phone: [
-          { required: true, message: "电话不能为空", trigger: "blur" },
-        ],
-        
-      }
+        phone: [{ required: true, message: "电话不能为空", trigger: "blur" }],
+      },
     };
   },
   created() {
     this.getList();
-    this.getDicts("sys_user_sex").then(response => {
+    this.getDicts("sys_user_sex").then((response) => {
       this.xbOptions = response.data;
     });
-    this.getDicts("sys_dm_zzmm").then(response => {
+    this.getDicts("sys_dm_zzmm").then((response) => {
       this.zzmmOptions = response.data;
     });
-    this.getDicts("sys_dm_mz").then(response => {
+    this.getDicts("sys_dm_mz").then((response) => {
       this.mzOptions = response.data;
     });
-    this.getDicts("sys_dm_rjxd").then(response => {
+    this.getDicts("sys_dm_rjxd").then((response) => {
       this.rjxdOptions = response.data;
     });
-    this.getDicts("sys_dm_rjxk").then(response => {
+    this.getDicts("sys_dm_rjxk").then((response) => {
       this.rjxkOptions = response.data;
     });
-    this.getDicts("sys_dm_rjnj").then(response => {
+    this.getDicts("sys_dm_rjnj").then((response) => {
       this.rjnjOptions = response.data;
     });
-    this.getDicts("sys_dm_xl").then(response => {
+    this.getDicts("sys_dm_xl").then((response) => {
       this.xlOptions = response.data;
     });
-    this.getDicts("sys_dm_xw").then(response => {
+    this.getDicts("sys_dm_xw").then((response) => {
       this.xwOptions = response.data;
     });
-    this.getDicts("sys_dm_sfsfs").then(response => {
+    this.getDicts("sys_dm_sfsfs").then((response) => {
       this.sfsfsOptions = response.data;
     });
-    this.getDicts("sys_dm_rxnf").then(response => {
+    this.getDicts("sys_dm_rxnf").then((response) => {
       this.lqnfOptions = response.data;
     });
   },
@@ -514,7 +515,7 @@ export default {
     /** 查询见习教师基本信息列表 */
     getList() {
       this.loading = true;
-      listJxjsjbxx(this.queryParams).then(response => {
+      listJxjsjbxx(this.queryParams).then((response) => {
         this.jxjsjbxxList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -590,7 +591,7 @@ export default {
         xw: null,
         sfsfs: null,
         lqnf: null,
-        createTime: null
+        createTime: null,
       };
       this.resetForm("form");
     },
@@ -606,9 +607,9 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.id)
-      this.single = selection.length!==1
-      this.multiple = !selection.length
+      this.ids = selection.map((item) => item.id);
+      this.single = selection.length !== 1;
+      this.multiple = !selection.length;
     },
     /** 新增按钮操作 */
     handleAdd() {
@@ -619,8 +620,8 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const id = row.id || this.ids
-      getJxjsjbxx(id).then(response => {
+      const id = row.id || this.ids;
+      getJxjsjbxx(id).then((response) => {
         this.form = response.data;
         this.open = true;
         this.title = "修改见习教师基本信息";
@@ -628,10 +629,10 @@ export default {
     },
     /** 提交按钮 */
     submitForm() {
-      this.$refs["form"].validate(valid => {
+      this.$refs["form"].validate((valid) => {
         if (valid) {
           if (this.form.id != null) {
-            updateJxjsjbxx(this.form).then(response => {
+            updateJxjsjbxx(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("修改成功");
                 this.open = false;
@@ -639,7 +640,7 @@ export default {
               }
             });
           } else {
-            addJxjsjbxx(this.form).then(response => {
+            addJxjsjbxx(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("新增成功");
                 this.open = false;
@@ -653,30 +654,24 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$confirm('是否确认删除见习教师基本信息编号为"' + ids + '"的数据项?', "警告", {
+      this.$confirm(
+        '是否确认删除见习教师基本信息数据项?',
+        "警告",
+        {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
+          type: "warning",
+        }
+      )
+        .then(function () {
           return delJxjsjbxx(ids);
-        }).then(() => {
+        })
+        .then(() => {
           this.getList();
           this.msgSuccess("删除成功");
-        }).catch(function() {});
+        })
+        .catch(function () {});
     },
-    /** 导出按钮操作 */
-    handleExport() {
-      const queryParams = this.queryParams;
-      this.$confirm('是否确认导出所有见习教师基本信息数据项?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
-          return exportJxjsjbxx(queryParams);
-        }).then(response => {
-          this.download(response.msg);
-        }).catch(function() {});
-    }
-  }
+  },
 };
 </script>

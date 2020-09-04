@@ -293,11 +293,8 @@ export default {
         endtime: [
           { required: true, message: "考核结束时间不能为空", trigger: "blur" },
         ],
-        filename: [
-          { required: true, message: "考核文件名称不能为空", trigger: "blur" },
-        ],
         filepath: [
-          { required: true, message: "文件路径不能为空", trigger: "blur" },
+          { required: true, message: "文件不能为空", trigger: "blur" },
         ],
         khnf: [
           { required: true, message: "考核年份不能为空", trigger: "blur" },
