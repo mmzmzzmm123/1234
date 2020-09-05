@@ -81,12 +81,6 @@
             <span>{{ scope.row.tsbzJxjsjbxx.name }}</span>
           </router-link>
         </template>
-        <!-- <template slot-scope="scope">
-          <el-button
-          type="text"
-          @click="handleDetail(scope.row)">
-          {{ scope.row.tsbzJxjsjbxx.name }}</el-button>  
-        </template>   -->
       </el-table-column>
       <el-table-column label="状态" align="center" prop="status" :formatter="statusFormat" />
       <el-table-column label="校级审核意见" align="center" prop="xjshyj" :formatter="xjshyjFormat" />

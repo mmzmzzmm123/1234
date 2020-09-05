@@ -19,6 +19,15 @@
           <el-option v-for="dict in faOptions" :key="dict.id" :label="dict.name" :value="dict.id"></el-option>
         </el-select>
       </el-form-item>
+      <!-- <el-form-item label="基地校" prop="jdx"  :formatter="jdxFormat">
+        <el-select v-model="jdx" placeholder="请选择基地校" :disabled="true" >
+          <el-option 
+          v-for="dict in jdxOptions" 
+          :key="dict.dictValue" 
+          :label="dict.dictLabel" 
+          :value="dict.dictValue"></el-option>
+        </el-select>
+      </el-form-item> -->
       <el-form-item label="聘任校" prop="jsprx">
         <el-input v-model="jsprx" :disabled="true" />
       </el-form-item>
@@ -79,6 +88,11 @@ import {
   updateJzxzkhsh
 } from "@/api/jxzxkhgl/jxzxkhsh";
 import { listJxzxkhfa } from "@/api/jxzxkhgl/jxzxkhfa";
+import { listJdx, getJdx  } from "@/api/jxjs/jdx";
+import {
+  listJxzxkhgcsj,
+  getJxzxkhgcsj,
+} from "@/api/jxzxkhgl/jxzxkhgcsj";
 
 export default {
   name: "Jzxzkhsh",
@@ -90,12 +104,16 @@ export default {
       jsxb: "",
       // 教师聘任校
       jsprx: "",
+      // 教师基地校
+      jdx: "",
       // 教师文件
       jsfilename: "",
       // 教师文件路径
       jsfilepath: "",
       //默认方案id
       defaultFaid: "",
+      // 默认基地校
+      defaultJdxid: "",
       // 遮罩层
       loading: true,
       // 选中数组
@@ -124,8 +142,11 @@ export default {
       xjshyjOptions: [],
       // 区级审核意见字典
       qjshyjOptions: [],
+      // 教师基地校
+      jdxOptions: [],
       //方案
       faOptions: [],
+      jxzxkhgcsjList: [],
 
       // 查询参数
       queryParams: {
@@ -146,6 +167,10 @@ export default {
       queryParams_fa: {
         status: "1"
       },
+      // 查询基地校
+      queryParams_jdx: {
+        jdxid: null  
+      },
       // 查询参数
       queryParams_Jss: {
         jsid: null
@@ -165,11 +190,11 @@ export default {
   },
   created() {
     const dqshid = this.$route.params && this.$route.params.id;
-    console.log(dqshid);
     if (dqshid != null || dqshid != "") {
       this.getDetail(dqshid);
       this.getFaList();
-      // this.getList();
+      this.getJdxList();
+      this.getJxzxkhgcsjList();
       this.getDicts("sys_dm_khshgczt").then(response => {
         this.statusOptions = response.data;
       });
@@ -193,12 +218,21 @@ export default {
         this.jsxm = response.data.tsbzJxjsjbxx.name;
         this.jsxb = response.data.tsbzJxjsjbxx.xb;
         this.jsprx = response.data.tsbzJxjsjbxx.prdwmc;
+        this.jdx = response.data.tsbzJxjsjbxx.jdxid;
         this.jsfilename = response.data.tsbzJxzxkhgcwjsj.filename;
         this.jsfilepath = response.data.tsbzJxzxkhgcwjsj.filepath;
         this.form = response.data;
-        console.log(this.form);
       });
     },
+    // 获取考核过程数据
+    // getJxzxkhgcsjList() {
+    //   this.loading = true;
+    //   listJxzxkhgcsj(null).then((response) => {
+    //     console.log(response.rows);
+    //     this.jxzxkhgcsjList = response.rows;
+    //     this.getIsCheck();
+    //   });
+    // },
     // /** 查询考核审核过程列表 */
     // getList() {
     //   this.loading = true;
@@ -220,6 +254,19 @@ export default {
     xbFormat(row, column) {
       return this.selectDictLabel(this.xbOptions, row.xb);
     },
+    // 基地校字典翻译
+    jdxFormat(row, column) {
+      // return this.selectDictLabel(this.classOptions, row.classid);
+      var actions = [];
+      var datas = this.jdxOptions;
+      Object.keys(datas).map(key => {
+        if (datas[key].id == "" + row.jdx) {
+          actions.push(datas[key].jdxmc);
+          return false;
+        }
+      });
+      return actions.join("");
+    },
     // 方案字典翻译
     faFormat(row, column) {
       // return this.selectDictLabel(this.classOptions, row.classid);
@@ -239,6 +286,13 @@ export default {
         this.faOptions = response.rows;
         this.defaultFaid = response.rows[0].id;
         this.queryParams.faid = this.defaultFaid;
+      });
+    },
+    // 获取基地校信息
+    getJdxList() {
+      listJdx(this.queryParams_jdx).then(response => {
+        this.jdxOptions = response.rows;
+        this.defaultJdxid = response.rows[0].id;
       });
     },
     // 状态字典翻译
@@ -286,6 +340,7 @@ export default {
     resetQuery() {
       this.resetForm("queryForm");
       this.queryParams.faid = this.defaultFaid;
+      this.queryParams.jdx = this.defaultJdxid;
       this.handleQuery();
     },
     // 多选框选中数据
