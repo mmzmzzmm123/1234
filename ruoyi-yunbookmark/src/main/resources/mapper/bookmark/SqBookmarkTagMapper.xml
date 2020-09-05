@@ -3,7 +3,7 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.bookmark.mapper.SqBookmarkTagMapper">
-    
+
     <resultMap type="SqBookmarkTag" id="SqBookmarkTagResult">
         <result property="id"    column="id"    />
         <result property="bookmarkId"    column="bookmark_id"    />
@@ -16,17 +16,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectSqBookmarkTagList" parameterType="SqBookmarkTag" resultMap="SqBookmarkTagResult">
         <include refid="selectSqBookmarkTagVo"/>
-        <where>  
+        <where>
             <if test="bookmarkId != null "> and bookmark_id = #{bookmarkId}</if>
             <if test="tagId != null "> and tag_id = #{tagId}</if>
         </where>
     </select>
-    
-    <select id="selectSqBookmarkTagById" parameterType="Long" resultMap="SqBookmarkTagResult">
-        <include refid="selectSqBookmarkTagVo"/>
-        where id = #{id}
+
+
+    <select id="selectSqTaListById" parameterType="Long" resultType="java.util.Map">
+        select  a.bookmark_id as bookmarkId, a.tag_id as tagId,b.name from sq_bookmark_tag as a,sq_tag as b WHERE a.tag_id=b.id and  a.bookmark_id = #{bookmarkId}
     </select>
-        
+
     <insert id="insertSqBookmarkTag" parameterType="SqBookmarkTag">
         insert into sq_bookmark_tag
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -55,10 +55,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteSqBookmarkTagByIds" parameterType="String">
-        delete from sq_bookmark_tag where id in 
+        delete from sq_bookmark_tag where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>
-    
+
 </mapper>

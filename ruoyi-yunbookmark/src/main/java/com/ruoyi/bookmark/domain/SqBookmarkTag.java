@@ -7,11 +7,11 @@ import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
  * 书签标签管理对象 sq_bookmark_tag
- * 
+ *
  * @author ruoyi
  * @date 2020-09-04
  */
-public class SqBookmarkTag extends BaseEntity
+public class SqBookmarkTag
 {
     private static final long serialVersionUID = 1L;
 
@@ -26,30 +26,30 @@ public class SqBookmarkTag extends BaseEntity
     @Excel(name = "标签ID")
     private Long tagId;
 
-    public void setId(Long id) 
+    public void setId(Long id)
     {
         this.id = id;
     }
 
-    public Long getId() 
+    public Long getId()
     {
         return id;
     }
-    public void setBookmarkId(Long bookmarkId) 
+    public void setBookmarkId(Long bookmarkId)
     {
         this.bookmarkId = bookmarkId;
     }
 
-    public Long getBookmarkId() 
+    public Long getBookmarkId()
     {
         return bookmarkId;
     }
-    public void setTagId(Long tagId) 
+    public void setTagId(Long tagId)
     {
         this.tagId = tagId;
     }
 
-    public Long getTagId() 
+    public Long getTagId()
     {
         return tagId;
     }

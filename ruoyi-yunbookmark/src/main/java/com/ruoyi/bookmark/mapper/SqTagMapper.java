@@ -5,15 +5,17 @@ import com.ruoyi.bookmark.domain.SqTag;
 
 /**
  * 书签_标签Mapper接口
- * 
+ *
  * @author ruoyi
  * @date 2020-09-04
  */
-public interface SqTagMapper 
+public interface SqTagMapper
 {
+
+
     /**
      * 查询书签_标签
-     * 
+     *
      * @param id 书签_标签ID
      * @return 书签_标签
      */
@@ -21,7 +23,7 @@ public interface SqTagMapper
 
     /**
      * 查询书签_标签列表
-     * 
+     *
      * @param sqTag 书签_标签
      * @return 书签_标签集合
      */
@@ -29,7 +31,7 @@ public interface SqTagMapper
 
     /**
      * 新增书签_标签
-     * 
+     *
      * @param sqTag 书签_标签
      * @return 结果
      */
@@ -37,7 +39,7 @@ public interface SqTagMapper
 
     /**
      * 修改书签_标签
-     * 
+     *
      * @param sqTag 书签_标签
      * @return 结果
      */
@@ -45,7 +47,7 @@ public interface SqTagMapper
 
     /**
      * 删除书签_标签
-     * 
+     *
      * @param id 书签_标签ID
      * @return 结果
      */
@@ -53,7 +55,7 @@ public interface SqTagMapper
 
     /**
      * 批量删除书签_标签
-     * 
+     *
      * @param ids 需要删除的数据ID
      * @return 结果
      */

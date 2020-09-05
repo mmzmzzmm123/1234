@@ -18,6 +18,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="idelete"    column="IDelete"    />
         <result property="start"    column="Start"    />
         <result property="createTime"    column="create_time"    />
+        <collection property="sqTags"
+                    javaType="java.util.ArrayList"
+                    ofType="java.util.Map"
+                    select="com.ruoyi.bookmark.mapper.SqBookmarkTagMapper.selectSqTaListById"
+                    column="bookmark_id">
+
+
+        </collection>
+
     </resultMap>
 
     <sql id="selectSqBookmarkVo">

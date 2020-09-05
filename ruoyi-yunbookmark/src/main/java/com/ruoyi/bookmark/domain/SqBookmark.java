@@ -8,6 +8,8 @@ import com.ruoyi.common.annotation.Excel;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 书签管理对象 sq_bookmark   不存在的字段注解 @Transient
@@ -86,6 +88,16 @@ public class SqBookmark
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
+    private List<Map<String,Object>> sqTags;
+
+
+    public List<Map<String, Object>> getSqTags() {
+        return sqTags;
+    }
+
+    public void setSqTags(List<Map<String, Object>> sqTags) {
+        this.sqTags = sqTags;
+    }
 
     public Date getCreateTime() {
         return createTime;

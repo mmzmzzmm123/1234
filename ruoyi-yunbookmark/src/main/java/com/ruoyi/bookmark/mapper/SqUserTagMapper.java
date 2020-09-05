@@ -14,6 +14,7 @@ import com.ruoyi.bookmark.domain.SqUserTag;
 public interface SqUserTagMapper
 {
 
+
     /**
      *通过用户userID查用户的所有标签
      *

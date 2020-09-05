@@ -71,7 +71,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectSqUserTagByUserId" parameterType="Long" resultType="java.util.Map">
    SELECT u.id,u.user_id as userId,u.tag_id as tagId ,u.icount,u.iorder,t.name
-   from sq_user_tag as u,sq_tag as t
+   from sq_user_tag AS u,sq_tag as t
     WHERE
     u.tag_id=t.id
     AND
