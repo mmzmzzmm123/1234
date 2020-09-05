@@ -23,6 +23,35 @@ public class SqUserTagServiceImpl implements ISqUserTagService
 
 
     /**
+     * 批量减少用戶 标签引用的 数量 -1
+     *
+     * @param tags 标签串
+     * @param userId 用户ID
+     * @return 结果
+     */
+    @Override
+    public int updateCountReduce(Long[] tags,Long userId){
+        return sqUserTagMapper.updateCountReduce(tags,userId);
+    }
+
+    /**
+     * 批量添加 用戶 标签引用的 数量 +1
+     *
+     * @param tags 标签串
+     * @param userId 用户ID
+     * @return 结果
+     */
+    @Override
+    public int updateCountAdd(Long[] tags,Long userId){
+        return sqUserTagMapper.updateCountAdd(tags,userId);
+    }
+
+
+
+
+
+
+    /**
      *通过用户userID查用户的所有标签
      *
      *

@@ -81,7 +81,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     ORDER BY u.iorder
     </select>
 
+    <update id="updateCountReduce" >
+        <foreach item="tagId" collection="tags" separator=";" >
+            update sq_user_tag set icount=icount-1 WHERE user_id=#{userId} and tag_id = #{tagId}
+        </foreach>
+    </update>
 
+
+    <update id="updateCountAdd" >
+        <foreach item="tagId" collection="tags" separator=";" >
+            update sq_user_tag set icount=icount+1 WHERE user_id=#{userId} and tag_id = #{tagId}
+        </foreach>
+    </update>
 
 
 </mapper>

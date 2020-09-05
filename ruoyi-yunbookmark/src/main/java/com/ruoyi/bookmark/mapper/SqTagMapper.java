@@ -1,7 +1,10 @@
 package com.ruoyi.bookmark.mapper;
 
 import java.util.List;
+
+import com.ruoyi.bookmark.domain.SqBookmarkTag;
 import com.ruoyi.bookmark.domain.SqTag;
+import com.ruoyi.common.mybatisMapper.MyMapper;
 
 /**
  * 书签_标签Mapper接口
@@ -9,7 +12,7 @@ import com.ruoyi.bookmark.domain.SqTag;
  * @author ruoyi
  * @date 2020-09-04
  */
-public interface SqTagMapper
+public interface SqTagMapper extends MyMapper<SqTag>
 {
 
 

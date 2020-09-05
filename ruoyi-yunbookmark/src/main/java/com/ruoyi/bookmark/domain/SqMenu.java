@@ -6,8 +6,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.TreeEntity;
 
-import javax.persistence.Column;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import java.util.Date;
 
 /**
@@ -16,11 +15,13 @@ import java.util.Date;
  * @author wanghao
  * @date 2020-08-06
  */
+@Table(name="sq_menu")
 public class SqMenu
 {
     private static final long serialVersionUID = 1L;
-
-    /** 书签菜单ID */
+    /** ID */
+    @Id
+    @GeneratedValue(generator = "JDBC")//返回自增长主键
     @Column(name = "menu_id")
     private Long menuId;
 

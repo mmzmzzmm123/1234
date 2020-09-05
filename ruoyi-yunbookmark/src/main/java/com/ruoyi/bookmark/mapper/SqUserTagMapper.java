@@ -3,7 +3,10 @@ package com.ruoyi.bookmark.mapper;
 import java.util.List;
 import java.util.Map;
 
+import com.ruoyi.bookmark.domain.SqTag;
 import com.ruoyi.bookmark.domain.SqUserTag;
+import com.ruoyi.common.mybatisMapper.MyMapper;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 标签管理Mapper接口
@@ -11,8 +14,27 @@ import com.ruoyi.bookmark.domain.SqUserTag;
  * @author wang
  * @date 2020-09-04
  */
-public interface SqUserTagMapper
+public interface SqUserTagMapper  extends MyMapper<SqUserTag>
 {
+
+    /**
+     * 批量减少用戶 标签引用的 数量 -1
+     *
+     * @param tags 标签串
+     * @param userId 用户ID
+     * @return 结果
+     */
+    public int updateCountReduce(@Param("tags")Long[] tags, @Param("userId")Long userId);
+
+    /**
+     * 批量添加 用戶 标签引用的 数量 +1
+     *
+     * @param tags 标签串
+     * @param userId 用户ID
+     * @return 结果
+     */
+    public int updateCountAdd(@Param("tags")Long[] tags, @Param("userId")Long userId);
+
 
 
     /**

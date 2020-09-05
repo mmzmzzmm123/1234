@@ -121,9 +121,34 @@
                       :autosize="{minRows: 3, maxRows:4}" :style="{width: '100%'}"></el-input>
           </el-form-item>
 
-          <el-form-item label="书签标签" prop="label">
-            <el-input v-model="form.label" placeholder="请输入标签" />
-          </el-form-item>
+
+         <el-form-item label="书签标签:" prop="label">
+          <el-tag
+            class="bookmarktag"
+            v-for="tag in form.sqTags"
+            :key="tag.tagId"
+            closable
+            type="success"
+            :disable-transitions="false"
+             @close="taghandleClose(tag.tagId)"
+            v-if="tag.name!='TAGDELETE'"
+          >
+            {{tag.name}}
+          </el-tag>
+           <el-input
+             class="input-new-tag"
+             v-if="inputVisible"
+             v-model="inputValue"
+             ref="saveTagInput"
+             size="small"
+             @keyup.enter.native="handleInputConfirm"
+             @blur="handleInputConfirm"
+           >
+           </el-input>
+           <el-button v-else class="button-new-tag" size="small" @click="showInput">+ New Tag</el-button>
+
+ </el-form-item>
+
           <el-form-item label="所属目录" prop="menuId">
             <el-input v-model="form.menuId" placeholder="请选择上级目录" />
           </el-form-item>
@@ -183,14 +208,19 @@
                 zcount: undefined,
                 idelete: undefined,
                 start: undefined,
+                sqTags:[]
               },
+              dynamicTags: ['标签一', '标签二', '标签三'],
+              inputVisible: false, //标签
+              inputValue: '', //标签
               bookmarkList:[],
               urltext:'?from=yunshuqian.com',//网址域名起推广作用
               // 表单参数
               form: {},
               // 表单校验
               rules: {
-              }
+              },
+              tagcount:0,
             }
         },
      filters: {
@@ -228,6 +258,57 @@
 
     },
     methods: {
+
+
+
+    /**书签编辑设置的 标签开始**/
+      taghandleClose(tag) {
+//1. 首先我们要得到这个对象
+      var tina = this.form.sqTags.filter((p) => {
+        return p.tagId == tag;
+      });
+//2. 其次得到这个对象在数组中对应的索引
+      var index = this.form.sqTags.indexOf(tina[0]);
+//3. 如果存在则将其删除，index > -1 代表存在
+//       index > -1 && this.form.sqTags.splice(index, 1);
+      if (index > -1){
+        if (this.form.sqTags[index].tagId<0){
+        this.form.sqTags.splice(index, 1);
+        }
+        this.form.sqTags[index].name="TAGDELETE";
+      }
+      console.log(this.form.sqTags);
+      },
+      showInput() {
+        this.inputVisible = true;
+        this.$nextTick(_ => {
+          this.$refs.saveTagInput.$refs.input.focus();
+        });
+      },
+
+      handleInputConfirm() {
+        let inputValue = this.inputValue;
+        if (inputValue) {
+          this.tagcount=this.tagcount-1;
+          //添加
+         var updatetag ={name: inputValue, bookmarkId: this.form.bookmarkId,tagId:this.tagcount};
+
+          this.form.sqTags.push(updatetag);
+        }
+        this.inputVisible = false;
+        this.inputValue = '';
+        console.log(this.form.sqTags);
+      },
+
+
+    /**书签编辑设置的 标签结束**/
+
+
+
+
+
+
+
       /** 修改按钮操作 */
       handleUpdate(bookmarkId) {
         this.reset();
@@ -360,6 +441,33 @@
 
 
 <style>
+
+
+/**编辑标签 开始**/
+  .el-tag + .el-tag {
+    margin-left: 10px;
+  }
+  .button-new-tag {
+    margin-left: 10px;
+    height: 32px;
+    line-height: 30px;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+  .input-new-tag {
+    width: 90px;
+    margin-left: 10px;
+    vertical-align: bottom;
+  }
+
+/**编辑标签 结束**/
+
+
+
+
+
+
+
   .filler-tag span{
     font-size: 12px;
     margin-left: 5px;
@@ -427,6 +535,9 @@
     height: 35px;
     align-content: center;
 
+  }
+  .bookmarktag{
+    margin-right: 5px;
   }
 
 
