@@ -70,7 +70,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <select id="selectSqUserTagByUserId" parameterType="Long" resultType="java.util.Map">
-   SELECT u.id,u.user_id as userId,u.tag_id as tagId ,u.icount,u.iorder,t.name  from sq_user_tag AS u,sq_tag as t WHERE u.tag_id=t.id AND u.user_id = 1 ORDER BY u.iorder
+   SELECT u.id,u.user_id as userId,u.tag_id as tagId ,u.icount,u.iorder,t.name
+   from sq_user_tag as u,sq_tag as t
+    WHERE
+    u.tag_id=t.id
+    AND
+    t.tag_type='P'
+    AND
+    u.user_id = 1
+    ORDER BY u.iorder
     </select>
 
 
