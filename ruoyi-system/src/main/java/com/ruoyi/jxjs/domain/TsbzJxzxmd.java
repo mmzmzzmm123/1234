@@ -39,7 +39,9 @@ public class TsbzJxzxmd extends BaseEntity {
     @Excel(name = "创建人")
     private Long createuserid;
 
-    /** 评选方案id */
+    /**
+     * 评选方案id
+     */
     @Excel(name = "评选方案id")
     private Long pxfaid;
 
@@ -80,10 +82,29 @@ public class TsbzJxzxmd extends BaseEntity {
         this.jdxid = jdxid;
     }
 
+    public String getJdxmc() {
+        return jdxmc;
+    }
+
+    public void setJdxmc(String jdxmc) {
+        this.jdxmc = jdxmc;
+    }
+
     private String name;
     private String prdwid;
     private String prdwmc;
     private String jdxid;
+    private String jdxmc;
+
+    public String getPxfamc() {
+        return pxfamc;
+    }
+
+    public void setPxfamc(String pxfamc) {
+        this.pxfamc = pxfamc;
+    }
+
+    private  String pxfamc;
 
     public void setId(Long id) {
         this.id = id;
@@ -117,13 +138,11 @@ public class TsbzJxzxmd extends BaseEntity {
         return createuserid;
     }
 
-    public void setPxfaid(Long pxfaid)
-    {
+    public void setPxfaid(Long pxfaid) {
         this.pxfaid = pxfaid;
     }
 
-    public Long getPxfaid()
-    {
+    public Long getPxfaid() {
         return pxfaid;
     }
 
@@ -167,6 +186,8 @@ public class TsbzJxzxmd extends BaseEntity {
                 .append("prdwid", getPrdwid())
                 .append("prdwmc", getPrdwmc())
                 .append("jdxid", getJdxid())
+                .append("jdxmc", getJdxmc())
+                .append("pxfamc",getPxfamc())
                 .toString();
     }
 }

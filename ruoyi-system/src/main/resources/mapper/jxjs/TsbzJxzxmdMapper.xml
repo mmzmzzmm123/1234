@@ -1,18 +1,21 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.jxjs.mapper.TsbzJxzxmdMapper">
-    
+
     <resultMap type="TsbzJxzxmd" id="TsbzJxzxmdResult">
-        <result property="id"    column="id"    />
-        <result property="jsid"    column="jsid"    />
-        <result property="nf"    column="nf"    />
-        <result property="createuserid"    column="createuserid"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="pxfaid"    column="pxfaid"    />
-        <result property="bfb"    column="bfb"    />
-        <result property="faid"    column="faid"    />
+        <result property="id" column="id"/>
+        <result property="jsid" column="jsid"/>
+        <result property="nf" column="nf"/>
+        <result property="createuserid" column="createuserid"/>
+        <result property="createTime" column="create_time"/>
+        <result property="pxfaid" column="pxfaid"/>
+        <result property="bfb" column="bfb"/>
+        <result property="faid" column="faid"/>
+        <result property="jdxid" column="jdxid"/>
+        <result property="jdxmc" column="jdxmc"/>
+        <result property="pxfamc" column="pxfamc"/>
         <association property="tsbzJxjsjbxx" column="jsid" javaType="TsbzJxjsjbxx" resultMap="TsbzJxjsjbxxResult"/>
     </resultMap>
 
@@ -43,24 +46,28 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectTsbzJxzxmdVo">
-        select id, jsid, nf, createuserid, create_time, pxfaid from tsbz_jxzxmd
+         select a.id, a.jsid, a.nf, a.createuserid, a.create_time, a.pxfaid,b.name, b.jxbh, b.xb, b.csrq, b.email, b.phone, b.yzbm, b.zzmm, b.mz, b.prdwid, b.prdwmc, b.jdxid, b.rjxd, b.rjxk, b.rjnj, b.byyx, b.xl, b.xw, b.sfsfs, b.lqnf,c.jdxmc as jdxmc,d.name as pxfamc from tsbz_jxzxmd a
+left join tsbz_jxjsjbxx b on a.jsid=b.id
+left join tsbz_jdx c on b.jdxid=c.id
+left join tsbz_jxzxpxfa d on a.pxfaid=d.id
     </sql>
 
     <select id="selectTsbzJxzxmdList" parameterType="TsbzJxzxmd" resultMap="TsbzJxzxmdResult">
         <include refid="selectTsbzJxzxmdVo"/>
-        <where>  
-            <if test="jsid != null "> and jsid = #{jsid}</if>
-            <if test="nf != null  and nf != ''"> and nf = #{nf}</if>
-            <if test="createuserid != null "> and createuserid = #{createuserid}</if>
-            <if test="pxfaid != null "> and pxfaid = #{pxfaid}</if>
+        <where>
+            <if test="jsid != null ">and  a.jsid = #{jsid}</if>
+            <if test="nf != null  and nf != ''">and  a.nf = #{nf}</if>
+            <if test="createuserid != null ">and  a.createuserid = #{createuserid}</if>
+            <if test="pxfaid != null ">and a.pxfaid = #{pxfaid}</if>
+            <if test="jdxid != null  and jdxid != ''">and b.jdxid = #{jdxid}</if>
         </where>
     </select>
-    
+
     <select id="selectTsbzJxzxmdById" parameterType="Long" resultMap="TsbzJxzxmdResult">
         <include refid="selectTsbzJxzxmdVo"/>
-        where id = #{id}
+        where  a.id = #{id}
     </select>
-        
+
     <insert id="insertTsbzJxzxmd" parameterType="TsbzJxzxmd" useGeneratedKeys="true" keyProperty="id">
         insert into tsbz_jxzxmd
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -69,14 +76,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createuserid != null">createuserid,</if>
             <if test="createTime != null">create_time,</if>
             <if test="pxfaid != null">pxfaid,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="jsid != null">#{jsid},</if>
             <if test="nf != null">#{nf},</if>
             <if test="createuserid != null">#{createuserid},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="pxfaid != null">#{pxfaid},</if>
-         </trim>
+        </trim>
     </insert>
 
     <update id="updateTsbzJxzxmd" parameterType="TsbzJxzxmd">
@@ -96,21 +103,24 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteTsbzJxzxmdByIds" parameterType="String">
-        delete from tsbz_jxzxmd where id in 
+        delete from tsbz_jxzxmd where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>
 
     <select id="selectTsbzJxzxmdKhjdList" parameterType="TsbzJxzxmd" resultMap="TsbzJxzxmdResult">
-        select b.id, b.otherid, b.name, b.jxbh, b.xb, b.csrq, b.email, b.phone, b.yzbm, b.zzmm, b.mz, b.prdwid, b.prdwmc, b.jdxid, b.rjxd, b.rjxk, b.rjnj, b.byyx, b.xl, b.xw, b.sfsfs, b.lqnf, b.create_time,
-        (select count(*)from tsbz_jxzxkhgcsj where faid=#{faid} and createuserid=a.jsid)/(select count(*) from tsbz_jxzxkhzbx where faid=#{faid}) bfb from tsbz_jxzxmd a
+        select b.id, b.otherid, b.name, b.jxbh, b.xb, b.csrq, b.email, b.phone, b.yzbm, b.zzmm, b.mz, b.prdwid,
+        b.prdwmc, b.jdxid, b.rjxd, b.rjxk, b.rjnj, b.byyx, b.xl, b.xw, b.sfsfs, b.lqnf, b.create_time,c.jdxmc as jdxmc,
+        (select count(*)from tsbz_jxzxkhgcsj where faid=#{faid} and createuserid=a.jsid)/(select count(*) from
+        tsbz_jxzxkhzbx where faid=#{faid}) bfb from tsbz_jxzxmd a
         left join tsbz_jxjsjbxx b on a.jsid=b.id
+        left join tsbz_jdx c on b.jdxid=c.id
         where a.nf=#{nf}
         <if test="name != null  and name != ''">and b.name like concat('%', #{name}, '%')</if>
         <if test="prdwid != null  and prdwid != ''">and b.prdwid = #{prdwid}</if>
         <if test="prdwmc != null  and prdwmc != ''">and b.prdwmc = #{prdwmc}</if>
         <if test="jdxid != null  and jdxid != ''">and b.jdxid = #{jdxid}</if>
     </select>
-    
+
 </mapper>

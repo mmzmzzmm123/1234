@@ -21,7 +21,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectTsbzJdxList" parameterType="TsbzJdx" resultMap="TsbzJdxResult">
         <include refid="selectTsbzJdxVo"/>
-        <where>  
+        <where>
+            <if test="id != null  and id != ''"> and id = #{id}</if>
             <if test="otherid != null  and otherid != ''"> and otherid = #{otherid}</if>
             <if test="jdxmc != null  and jdxmc != ''"> and jdxmc = #{jdxmc}</if>
             <if test="xxlb != null  and xxlb != ''"> and xxlb = #{xxlb}</if>

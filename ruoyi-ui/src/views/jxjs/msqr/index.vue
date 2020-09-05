@@ -55,7 +55,7 @@
           icon="el-icon-upload2"
           size="mini"
           @click="handleImport"
-          v-hasPermi="['system:user:import']"
+          v-hasPermi="['jxjs:jdcx:import']"
         >成绩导入</el-button>
       </el-col>
       <el-col :span="1.5">

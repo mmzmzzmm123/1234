@@ -2,6 +2,7 @@ package com.ruoyi.web.controller.jxjs;
 
 import java.util.List;
 
+import com.ruoyi.web.controller.common.SchoolCommonController;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,6 +33,8 @@ import com.ruoyi.common.core.page.TableDataInfo;
 public class TsbzJxzxmdController extends BaseController {
     @Autowired
     private ITsbzJxzxmdService tsbzJxzxmdService;
+    @Autowired
+    private SchoolCommonController schoolCommonController;
 
     /**
      * 查询见习之星名单列表
@@ -39,6 +42,11 @@ public class TsbzJxzxmdController extends BaseController {
     @PreAuthorize("@ss.hasPermi('jxjs:jxzxmd:list')")
     @GetMapping("/list")
     public TableDataInfo list(TsbzJxzxmd tsbzJxzxmd) {
+        //首先判断是否为学校用户
+        String jdxId = schoolCommonController.deptIdToJdxId();
+        if (!schoolCommonController.isStringEmpty(jdxId)) {
+            tsbzJxzxmd.setJdxid(jdxId);
+        }
         startPage();
         List<TsbzJxzxmd> list = tsbzJxzxmdService.selectTsbzJxzxmdList(tsbzJxzxmd);
         return getDataTable(list);

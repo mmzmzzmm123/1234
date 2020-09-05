@@ -52,9 +52,14 @@ public class TsbzJdxController extends BaseController {
     /**
      * 查询基地校列表
      */
-    @PreAuthorize("@ss.hasPermi('jxjs:jdx:list')")
+    @PreAuthorize("@ss.hasPermi('jxjs:jdx:list')"+ "||@ss.hasPermi('jxjs:jxzxmd:list')")
     @GetMapping("/list")
     public TableDataInfo list(TsbzJdx tsbzJdx) {
+        //首先判断是否为学校用户
+        String jdxId = schoolCommonController.deptIdToJdxId();
+        if (!schoolCommonController.isStringEmpty(jdxId)) {
+            tsbzJdx.setId(jdxId);
+        }
         startPage();
         List<TsbzJdx> list = tsbzJdxService.selectTsbzJdxList(tsbzJdx);
         return getDataTable(list);

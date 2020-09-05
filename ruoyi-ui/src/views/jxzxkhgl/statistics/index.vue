@@ -45,7 +45,7 @@
     <el-table v-loading="loading" :data="jzxzkhjdList">
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="编号" align="center" prop="id" /> -->
-      <el-table-column label="基地校" align="center" prop="tsbzJxjsjbxx.jdxid" :formatter="jdxFormat"/>
+      <el-table-column label="基地校" align="center" prop="jdxmc"/>
       <el-table-column label="聘任校" align="center" prop="tsbzJxjsjbxx.prdwmc" />
       <el-table-column label="姓名" align="center" prop="tsbzJxjsjbxx.name" />
       <el-table-column label="任教学科" align="center" prop="tsbzJxjsjbxx.rjxk" />
@@ -149,19 +149,6 @@ export default {
     this.getKhfa();
   },
   methods: {
-    //翻译基地校
-    jdxFormat(row, column) {
-      // return this.selectDictLabel(this.classOptions, row.classid);
-      var actions = [];
-      var datas = this.jdxOptions;
-      Object.keys(datas).map((key) => {
-        if (datas[key].id == "" + row.tsbzJxjsjbxx.jdxid) {
-          actions.push(datas[key].jdxmc);
-          return false;
-        }
-      });
-      return actions.join("");
-    },
     //获取基地校列表
     getJdxList() {
       listJdx(null).then((response) => {
