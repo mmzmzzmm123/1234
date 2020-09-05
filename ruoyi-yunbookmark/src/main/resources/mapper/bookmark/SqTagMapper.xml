@@ -8,18 +8,26 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="id"    column="id"    />
         <result property="name"    column="name"    />
         <result property="icount"    column="icount"    />
+        <result property="userId"    column="user_Id"    />
+        <result property="tagType"    column="tag_type"    />
+        <result property="url"    column="url"    />
+        <result property="status"    column="status"    />
         <result property="createTime"    column="create_time"    />
     </resultMap>
 
     <sql id="selectSqTagVo">
-        select id, name, icount, create_time from sq_tag
+        select id, name, icount, user_Id, tag_type, url, status, create_time from sq_tag
     </sql>
 
     <select id="selectSqTagList" parameterType="SqTag" resultMap="SqTagResult">
         <include refid="selectSqTagVo"/>
         <where>  
-            <if test="name != null  and name != ''"> and name = #{name}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
             <if test="icount != null "> and icount = #{icount}</if>
+            <if test="userId != null "> and user_Id = #{userId}</if>
+            <if test="tagType != null  and tagType != ''"> and tag_type = #{tagType}</if>
+            <if test="url != null  and url != ''"> and url = #{url}</if>
+            <if test="status != null "> and status = #{status}</if>
         </where>
     </select>
     
@@ -33,11 +41,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="name != null">name,</if>
             <if test="icount != null">icount,</if>
+            <if test="userId != null">user_Id,</if>
+            <if test="tagType != null">tag_type,</if>
+            <if test="url != null">url,</if>
+            <if test="status != null">status,</if>
             <if test="createTime != null">create_time,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="name != null">#{name},</if>
             <if test="icount != null">#{icount},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="tagType != null">#{tagType},</if>
+            <if test="url != null">#{url},</if>
+            <if test="status != null">#{status},</if>
             <if test="createTime != null">#{createTime},</if>
          </trim>
     </insert>
@@ -47,6 +63,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="SET" suffixOverrides=",">
             <if test="name != null">name = #{name},</if>
             <if test="icount != null">icount = #{icount},</if>
+            <if test="userId != null">user_Id = #{userId},</if>
+            <if test="tagType != null">tag_type = #{tagType},</if>
+            <if test="url != null">url = #{url},</if>
+            <if test="status != null">status = #{status},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
         </trim>
         where id = #{id}
