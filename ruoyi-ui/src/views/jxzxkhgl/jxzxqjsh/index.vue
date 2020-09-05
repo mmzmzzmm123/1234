@@ -117,7 +117,7 @@
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['jxzxkhgl:jxzxkhsh:remove']"
+            v-hasPermi="['jxzxkhgl:jxzxkhsh:edit']"
             v-show="isShow(scope.row)"
           >退回</el-button>
         </template>

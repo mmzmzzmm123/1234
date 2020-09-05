@@ -24,7 +24,7 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
+      <!-- <el-col :span="1.5">
         <el-button
           type="success"
           icon="el-icon-edit"
@@ -34,7 +34,7 @@
           v-hasPermi="['jxzxkhgl:jxzxkhgcsj:edit']"
           v-show="disable"
         >填报</el-button>
-      </el-col>
+      </el-col> -->
       <el-col :span="1.5">
         <el-button
           type="danger"
@@ -65,6 +65,7 @@
       <el-table-column label="所属方案" align="center" prop="tsbzJxzxkhzbx.faid" :formatter="faFormat" />
       <el-table-column label="指标模块" align="center" prop="tsbzJxzxkhzbx.khmk" />
       <el-table-column label="指标项" align="center" prop="tsbzJxzxkhzbx.khnr" />
+        <el-table-column label="提交文件数" align="center" prop="tsbzJxzxkhzbx.tjsl" />
       <el-table-column label="内容" align="center" prop="content" />
       <!-- <el-table-column label="创建人" align="center" prop="createuserid" /> -->
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -347,7 +348,7 @@ export default {
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids;
-      //console.log("tjsl:" + row.tsbzJxzxkhzbx.tjsl);
+      // console.log("tjsl:" + row.tsbzJxzxkhzbx.tjsl);
       this.filecount = row.tsbzJxzxkhzbx.tjsl;
 
       if (id != "") {

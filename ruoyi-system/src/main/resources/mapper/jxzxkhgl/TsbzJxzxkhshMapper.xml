@@ -15,6 +15,7 @@
         <result property="qjshr" column="qjshr"/>
         <result property="qjshyj" column="qjshyj"/>
         <result property="qjshjy" column="qjshjy"/>
+        <result property="jdxid" column="jdxid"/>
         <result property="createuseird" column="createuseird"/>
         <result property="createTime" column="create_time"/>
         <association property="tsbzJxjsjbxx" column="jsid" javaType="TsbzJxjsjbxx" resultMap="TsbzJxjsjbxxResult"/>
@@ -57,7 +58,7 @@
     </resultMap>
 
     <sql id="selectTsbzJxzxkhshVo">
-select d.id,d.faid,d.jsid,ifnull(d.status,0) status,d.xjshr,d.xjshyj,d.xjshjy,d.qjshr,d.qjshjy,d.qjshyj,d.createuseird,a.create_time,b.name,b.prdwmc, b.xb, e.filename, e.filepath from tsbz_jxzxmd a
+select d.id,d.faid,d.jsid,ifnull(d.status,0) status,d.xjshr,d.xjshyj,d.xjshjy,d.qjshr,d.qjshjy,d.qjshyj,d.createuseird,a.create_time,b.name,b.prdwmc,b.jdxid as jdxid, b.xb, e.filename, e.filepath from tsbz_jxzxmd a
 left join tsbz_jxjsjbxx b on b.id=a.jsid
 left join sys_dept c on b.prdwid=c.schoolid
 left join tsbz_jxzxkhsh d on a.jsid=d.jsid
@@ -77,6 +78,7 @@ left join tsbz_jxzxkhgcwjsj e on a.jsid=e.createuserid
             <if test="qjshyj != null  and qjshyj != ''">and d.qjshyj = #{qjshyj}</if>
             <if test="qjshjy != null  and qjshjy != ''">and d.qjshjy = #{qjshjy}</if>
             <if test="createuseird != null ">and d.createuseird = #{createuseird}</if>
+            <if test="jdxid != null  and jdxid != ''">and b.jdxid = #{jdxid}</if>
         </where>
     </select>
 

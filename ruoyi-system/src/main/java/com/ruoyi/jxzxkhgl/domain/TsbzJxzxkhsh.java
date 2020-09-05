@@ -84,6 +84,16 @@ public class TsbzJxzxkhsh extends BaseEntity {
 
     private TsbzJxzxkhgcwjsj tsbzJxzxkhgcwjsj;
 
+    public String getJdxid() {
+        return jdxid;
+    }
+
+    public void setJdxid(String jdxid) {
+        this.jdxid = jdxid;
+    }
+
+    private String jdxid;
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -197,6 +207,7 @@ public class TsbzJxzxkhsh extends BaseEntity {
                 .append("createTime", getCreateTime())
                 .append("tsbzJxjsjbxx", getTsbzJxjsjbxx())
                 .append("tsbzJxzxkhgcwjsj", getTsbzJxzxkhgcwjsj())
+                .append("jdxid",getJdxid())
                 .toString();
     }
 

@@ -43,6 +43,13 @@ public class TsbzJxzxkhshController extends BaseController {
     @PreAuthorize("@ss.hasPermi('jxzxkhgl:jxzxkhsh:list')" + "||@ss.hasPermi('jxzxkhgl:jxzxkhgcsj:list')")
     @GetMapping("/list")
     public TableDataInfo list(TsbzJxzxkhsh tsbzJxzxkhsh) {
+
+        //首先判断是否为学校用户
+        String jdxId = schoolCommonController.deptIdToJdxId();
+        if (!schoolCommonController.isStringEmpty(jdxId)) {
+            tsbzJxzxkhsh.setJdxid(jdxId);
+        }
+
         startPage();
         List<TsbzJxzxkhsh> list = tsbzJxzxkhshService.selectTsbzJxzxkhshList(tsbzJxzxkhsh);
         return getDataTable(list);
@@ -100,13 +107,13 @@ public class TsbzJxzxkhshController extends BaseController {
     @PutMapping
     public AjaxResult edit(@RequestBody TsbzJxzxkhsh tsbzJxzxkhsh) {
         //校级
-       if(!schoolCommonController.isStringEmpty(tsbzJxzxkhsh.getXjshyj())&&tsbzJxzxkhsh.getXjshyj().equals("1")) {
-           tsbzJxzxkhsh.setXjshr(SecurityUtils.getLoginUser().getUser().getUserId());
-           tsbzJxzxkhsh.setStatus("2");
-       }
+        if (!schoolCommonController.isStringEmpty(tsbzJxzxkhsh.getXjshyj()) && tsbzJxzxkhsh.getXjshyj().equals("1")) {
+            tsbzJxzxkhsh.setXjshr(SecurityUtils.getLoginUser().getUser().getUserId());
+            tsbzJxzxkhsh.setStatus("2");
+        }
 
         //区级
-        if(!schoolCommonController.isStringEmpty(tsbzJxzxkhsh.getQjshyj())&&tsbzJxzxkhsh.getQjshyj().equals("1")) {
+        if (!schoolCommonController.isStringEmpty(tsbzJxzxkhsh.getQjshyj()) && tsbzJxzxkhsh.getQjshyj().equals("1")) {
             tsbzJxzxkhsh.setQjshr(SecurityUtils.getLoginUser().getUser().getUserId());
             tsbzJxzxkhsh.setStatus("9");
         }
@@ -130,7 +137,7 @@ public class TsbzJxzxkhshController extends BaseController {
     @PreAuthorize("@ss.hasPermi('jxzxkhgl:jxzxkhsh:edit')")
     @Log(title = "考核审核过程", businessType = BusinessType.UPDATE)
     @PostMapping("/back/{id}/{status}")
-    public AjaxResult back(@PathVariable Long id,@PathVariable String status) {
+    public AjaxResult back(@PathVariable Long id, @PathVariable String status) {
         TsbzJxzxkhsh tsbzJxzxkhsh = new TsbzJxzxkhsh();
         tsbzJxzxkhsh.setId(id);
         tsbzJxzxkhsh.setStatus(status);

@@ -89,7 +89,7 @@ public class TsbzJxzxkhgcsjController extends BaseController {
     /**
      * 新增考核过程数据
      */
-    @PreAuthorize("@ss.hasPermi('jxzxkhgl:jxzxkhgcsj:add')")
+    @PreAuthorize("@ss.hasPermi('jxzxkhgl:jxzxkhgcsj:edit')")
     @Log(title = "考核过程数据", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody TsbzJxzxkhgcsj tsbzJxzxkhgcsj) {
