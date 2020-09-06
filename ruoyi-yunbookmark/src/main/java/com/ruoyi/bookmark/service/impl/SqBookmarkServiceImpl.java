@@ -104,14 +104,51 @@ public class SqBookmarkServiceImpl implements ISqBookmarkService
     public int insertSqBookmark(SqBookmark sqBookmark)
     {
 
-
-
-
-
+      int i= sqBookmarkMapper.insertUseGeneratedKeys(sqBookmark);
 
 
         sqBookmark.setCreateTime(DateUtils.getNowDate());
-        return sqBookmarkMapper.insertSqBookmark(sqBookmark);
+        //传入的标签
+        List<Map<String, Object>> listmap = sqBookmark.getSqTags();
+        if (listmap==null||listmap.isEmpty()||listmap.size()==0){
+            return sqBookmarkMapper.insertSqBookmark(sqBookmark);
+        }
+        String addtag="";
+        //给文章添加标签
+        HashMap<Long,Long> bookmarkTag=new HashMap<Long,Long>();
+        //文章添加书签
+        SqBookmarkTag bookamrktag = new SqBookmarkTag();
+
+        for (Map<String, Object> map : listmap) {
+            for (Map.Entry<String, Object> entry : map.entrySet()) {
+                //新增书签
+                if (Integer.parseInt(String.valueOf(map.get("tagId"))) < 0) {
+                    Map<String, Object> tagmap = iSqTagService.addtag(String.valueOf(map.get("name")), sqBookmark.getUserid());
+                    for (Map.Entry<String, Object> tag : tagmap.entrySet()) {
+                        addtag += tagmap.get("tagId").toString();
+                        map.put("tagId", tagmap.get("tagId"));
+                    }
+                }
+                bookmarkTag.put(Long.valueOf(map.get("tagId").toString()),sqBookmark.getBookmarkId());
+            }
+        }
+
+        //给文章添加书签
+        for (Map.Entry<Long,Long> tag:bookmarkTag.entrySet()){
+            bookamrktag.setBookmarkId(tag.getValue());
+            bookamrktag.setTagId(tag.getKey());
+            sqBookmarkTagMapper.insertSqBookmarkTag(bookamrktag);
+        }
+
+        //个人标签引用数量 批量+1
+        if (!addtag.equals("") && addtag.length()>0) {
+            addtag=addtag.substring(0,addtag.length()-1);
+            String[] add = addtag.split(",");
+            Long[] num = (Long[]) ConvertUtils.convert(add,Long.class);
+            sqUserTagMapper.updateCountReduce(num, sqBookmark.getUserid());
+        }
+
+        return i;
     }
 
     /**
@@ -128,6 +165,9 @@ public class SqBookmarkServiceImpl implements ISqBookmarkService
         String addtag = "";
         //传入的标签
         List<Map<String, Object>> listmap = sqBookmark.getSqTags();
+        if (listmap==null||listmap.isEmpty()||listmap.size()==0){
+            return sqBookmarkMapper.updateSqBookmark(sqBookmark);
+        }
         //给文章添加标签
         HashMap<Long,Long> bookmarkTag=new HashMap<Long,Long>();
         //文章添加书签

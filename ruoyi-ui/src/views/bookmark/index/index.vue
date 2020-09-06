@@ -169,25 +169,61 @@
                     :autosize="{minRows: 3, maxRows:4}" :style="{width: '100%'}"></el-input>
         </el-form-item>
 
-        <el-form-item label="书签标签" prop="label">
-          <el-input v-model="form.label" placeholder="请输入标签" />
-        </el-form-item>
-<!--        <el-form-item label="所属目录" prop="menuId">-->
-<!--          <el-input v-model="form.menuId" placeholder="请选择上级目录" />-->
-<!--        </el-form-item>-->
-
         <el-form-item  prop="menuId">
           <div class="labelname">所属目录</div>
           <treeselect class="menutreeselect"  v-model="form.menuId" :options="menuOptions" :normalizer="normalizer"  />
         </el-form-item>
 
+        <el-form-item label="书签标签" prop="label">
+          <el-tag
+            class="bookmarktag"
+            v-for="tag in sqTags"
+            :key="tag.tagId"
+            closable
+            type="success"
+            :disable-transitions="false"
+            @close="taghandleClose(tag.tagId)"
+            v-if="tag.name!='TAGDELETE'"
+          >
+            {{tag.name}}
+          </el-tag>
+          <el-input
+            class="input-new-tag"
+            v-if="inputVisible"
+            v-model="inputValue"
+            ref="saveTagInput"
+            size="small"
+            @keyup.enter.native="handleInputConfirm"
+            @blur="handleInputConfirm"
+          >
+          </el-input>
+          <el-button v-else class="button-new-tag" size="small" @click="showInput">+ 新增标签</el-button>
 
-
-
-        <!--          0公开显示1隐藏显示2好友显示3稍后再看-->
-        <el-form-item label="选择状态" prop="start">
-          <el-input v-model="form.start" placeholder="" />
         </el-form-item>
+
+<!--        <el-form-item label="所属目录" prop="menuId">-->
+<!--          <el-input v-model="form.menuId" placeholder="请选择上级目录" />-->
+<!--        </el-form-item>-->
+
+
+<!--        0公开显示 1隐藏显示 2好友显示-->
+        <el-form-item label="选择状态" prop="start">
+          <el-radio-group v-model="form.start" size="medium">
+            <el-radio v-for="(item, index) in bookmarkstatus" :key="index" :label="item.value"
+                      :disabled="item.disabled">{{item.name}}</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <!--           1.未读稍后再看 2 已读 2.續看-->
+        <el-form-item label="选择类型" prop="type">
+          <el-radio-group v-model="form.type" size="medium">
+            <el-radio v-for="(item, index) in bookmarktype" :key="index" :label="item.value"
+                      :disabled="item.disabled">{{item.name}}</el-radio>
+          </el-radio-group>
+        </el-form-item>
+
+
+
+
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="addbookmark">确 定</el-button>
@@ -249,6 +285,7 @@
           zcount: undefined,
           idelete: undefined,
           start: undefined,
+          sqTags:[]
         },
         // 书签菜单树选项
         menuOptions: [],
@@ -305,7 +342,29 @@
           }
         },
         zNodes:[],
-        bookmark:[]
+        bookmark:[],
+        inputVisible: false, //标签
+        inputValue: '', //标签
+        tagcount:0, //标签虚拟ID
+        sqTags:[],
+        bookmarkstatus: [{
+          "name": "公开",
+          "value": 1
+        }, {
+          "name": "私密",
+          "value": 2
+        }],
+        bookmarktype: [{
+          "name": "已阅读",
+          "value": 1
+        }, {
+          "name": "稍后读",
+          "value": 2
+        }, {
+          "name": "待续读",
+          "value": 3
+        }],
+
       }
     },
     created() {
@@ -314,6 +373,53 @@
       that.getList();
     },
     methods:{
+
+
+
+
+
+
+
+      /**书签编辑设置的 标签开始**/
+      taghandleClose(tag) {
+//1. 首先我们要得到这个对象
+        var tina = this.sqTags.filter((p) => {
+          return p.tagId == tag;
+        });
+//2. 其次得到这个对象在数组中对应的索引
+        var index = this.sqTags.indexOf(tina[0]);
+//3. 如果存在则将其删除，index > -1 代表存在
+       index > -1 && this.sqTags.splice(index, 1);
+
+        console.log(this.sqTags);
+      },
+      showInput() {
+        this.inputVisible = true;
+        this.$nextTick(_ => {
+          this.$refs.saveTagInput.$refs.input.focus();
+        });
+      },
+
+      handleInputConfirm() {
+        let inputValue = this.inputValue;
+        if (inputValue) {
+          this.tagcount=this.tagcount-1;
+          var updatetag ={name: inputValue, bookmarkId:"bookmarkId",tagId:this.tagcount};
+          this.sqTags.push(updatetag);
+        }
+        this.inputVisible = false;
+        this.inputValue = '';
+        console.log(this.sqTags);
+      },
+
+
+      /**书签编辑设置的 标签结束**/
+
+
+
+
+
+
       /** 新增书签Url操作 */
       addbookmarkurl:function(){
           this.reset();
@@ -324,16 +430,13 @@
         //   this.open = true;
         //   this.title = "修改书签菜单";
         // });
-
-
-
       },
 
       /** 提交按钮 修改和新增 */
       addbookmark: function() {
         this.$refs["form"].validate(valid => {
           if (valid) {
-
+            this.form.sqTags=this.sqTags;
               addBookmark(this.form).then(response => {
                 if (response.code === 200) {
                   this.msgSuccess("新增成功");
@@ -462,6 +565,7 @@
       // },
       // 表单重置
       reset() {
+        this.sqTags=[],
         this.form = {
           menuId: undefined,
           userId: undefined,

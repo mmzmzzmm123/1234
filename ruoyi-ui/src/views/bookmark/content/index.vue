@@ -120,6 +120,9 @@
             <el-input v-model="form.description" type="textarea" placeholder="请输入书签描述" run dev
                       :autosize="{minRows: 3, maxRows:4}" :style="{width: '100%'}"></el-input>
           </el-form-item>
+          <el-form-item label="所属目录" prop="menuId">
+            <el-input v-model="form.menuId" placeholder="请选择上级目录" />
+          </el-form-item>
 
 
          <el-form-item label="书签标签:" prop="label">
@@ -132,8 +135,6 @@
             :disable-transitions="false"
              @close="taghandleClose(tag.tagId)"
             v-if="tag.name!='TAGDELETE'"
-
-
           >
             {{tag.name}}
           </el-tag>
@@ -147,17 +148,32 @@
              @blur="handleInputConfirm"
            >
            </el-input>
-           <el-button v-else class="button-new-tag" size="small" @click="showInput">+ New Tag</el-button>
+           <el-button v-else class="button-new-tag" size="small" @click="showInput">+ 新增标签</el-button>
 
- </el-form-item>
+        </el-form-item>
 
-          <el-form-item label="所属目录" prop="menuId">
-            <el-input v-model="form.menuId" placeholder="请选择上级目录" />
-          </el-form-item>
-<!--          0公开显示1隐藏显示2好友显示3稍后再看-->
+          <!--        0公开显示 1隐藏显示 2好友显示-->
           <el-form-item label="选择状态" prop="start">
-            <el-input v-model="form.start" placeholder="" />
+            <el-radio-group v-model="form.start" size="medium">
+              <el-radio v-for="(item, index) in bookmarkstatus" :key="index" :label="item.value"
+                        :disabled="item.disabled">{{item.name}}</el-radio>
+            </el-radio-group>
           </el-form-item>
+          <!--           1.未读稍后再看 2 已读 2.續看-->
+          <el-form-item label="选择类型" prop="type">
+            <el-radio-group v-model="form.type" size="medium">
+              <el-radio v-for="(item, index) in bookmarktype" :key="index" :label="item.value"
+                        :disabled="item.disabled">{{item.name}}</el-radio>
+            </el-radio-group>
+          </el-form-item>
+
+
+
+
+
+
+
+
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -212,9 +228,9 @@
                 start: undefined,
                 sqTags:[]
               },
-              dynamicTags: ['标签一', '标签二', '标签三'],
               inputVisible: false, //标签
               inputValue: '', //标签
+              tagcount:0, //标签虚拟ID
               bookmarkList:[],
               urltext:'?from=yunshuqian.com',//网址域名起推广作用
               // 表单参数
@@ -222,7 +238,24 @@
               // 表单校验
               rules: {
               },
-              tagcount:0,
+              bookmarkstatus: [{
+                "name": "公开",
+                "value": 1
+              }, {
+                "name": "私密",
+                "value": 2
+              }],
+              bookmarktype: [{
+                "name": "已阅读",
+                "value": 1
+              }, {
+                "name": "稍后读",
+                "value": 2
+              }, {
+                "name": "待续读",
+                "value": 3
+              }],
+
             }
         },
      filters: {
