@@ -143,6 +143,12 @@
             <artifactId>hutool-all</artifactId>
             <version>5.4.1</version>
         </dependency>
+        <!--beanutils JAVA工具类工具包-->
+        <dependency>
+            <groupId>commons-beanutils</groupId>
+            <artifactId>commons-beanutils</artifactId>
+            <version>1.9.4</version>
+        </dependency>
 
     </dependencies>
 

@@ -132,6 +132,8 @@
             :disable-transitions="false"
              @close="taghandleClose(tag.tagId)"
             v-if="tag.name!='TAGDELETE'"
+
+
           >
             {{tag.name}}
           </el-tag>

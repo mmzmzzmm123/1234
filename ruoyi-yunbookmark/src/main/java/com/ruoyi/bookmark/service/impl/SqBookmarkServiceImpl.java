@@ -2,9 +2,7 @@ package com.ruoyi.bookmark.service.impl;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import cn.hutool.core.date.DateUtil;
 import com.ruoyi.bookmark.domain.SqBookmarkTag;
@@ -13,9 +11,11 @@ import com.ruoyi.bookmark.domain.SqUserTag;
 import com.ruoyi.bookmark.mapper.SqBookmarkTagMapper;
 import com.ruoyi.bookmark.mapper.SqTagMapper;
 import com.ruoyi.bookmark.mapper.SqUserTagMapper;
+import com.ruoyi.bookmark.service.ISqTagService;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.utils.DateUtils;
 import com.sun.org.apache.bcel.internal.generic.NEW;
+import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.ibatis.annotations.Param;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,6 +49,8 @@ public class SqBookmarkServiceImpl implements ISqBookmarkService
 
     @Autowired
     private SqUserTagMapper sqUserTagMapper;
+    @Autowired
+    private ISqTagService iSqTagService;
 
     @Override
     public List<SqBookmark> selectByID(Long userID) {
@@ -101,6 +103,13 @@ public class SqBookmarkServiceImpl implements ISqBookmarkService
     @Override
     public int insertSqBookmark(SqBookmark sqBookmark)
     {
+
+
+
+
+
+
+
         sqBookmark.setCreateTime(DateUtils.getNowDate());
         return sqBookmarkMapper.insertSqBookmark(sqBookmark);
     }
@@ -112,116 +121,64 @@ public class SqBookmarkServiceImpl implements ISqBookmarkService
      * @return 结果
      */
     @Override
-    public int updateSqBookmark(SqBookmark sqBookmark)
-    {
-        //删除书签 现在的标签
-        SqBookmarkTag sqBookmarkTag=new SqBookmarkTag();
-        sqBookmarkTag.setBookmarkId(sqBookmark.getBookmarkId());
-        sqBookmarkTagMapper.delete(sqBookmarkTag);
+    public int updateSqBookmark(SqBookmark sqBookmark) {
         //删除的书签ID
-        String deletetag="";
+        String deletetag = "";
         //新增的书签ID
-        String addtag="";
+        String addtag = "";
         //传入的标签
-        List<Map<String,Object>> listmap=sqBookmark.getSqTags();
+        List<Map<String, Object>> listmap = sqBookmark.getSqTags();
         //给文章添加标签
-        Long[] tags= new Long[listmap.size()];
-
+        HashMap<Long,Long> bookmarkTag=new HashMap<Long,Long>();
         //文章添加书签
-        SqBookmarkTag bookamrktag=new SqBookmarkTag();
-        int i=0;
-        for (Map<String,Object> map:listmap) {
-            for (Map.Entry<String, Object> entry : map.entrySet()){
-
-                if(Integer.parseInt(String.valueOf(map.get("tagId")))<0){
-                   //创建新的标签 返回id给map    并且添加用户的个人书签记录
-                    //1.新增标签
-                        //1.1查询书签是否存在
-                        SqTag sqTag=new SqTag();
-                        SqUserTag sqUserTag =new SqUserTag();
-                        sqTag.setName(String.valueOf(map.get("name")));
-                        List<SqTag> taglist=sqTagMapper.selectSqTagList(sqTag);
-                        //存在返回ID
-                        if (taglist!=null&&!taglist.isEmpty()){
-                            map.put("tagId",taglist.get(0).getId());
-                            logger.debug("传入的新标签 tagid="+taglist.get(0).getId());
-                            //添加到用戶个人书签里面去
-                            //1.用户是否已经有这个书签记录了
-                            sqUserTag.setUserId(sqBookmark.getUserid());
-                            sqUserTag.setTagId(taglist.get(0).getId());
-
-                          List<SqUserTag> sqUserTags = sqUserTagMapper.selectSqUserTagList(sqUserTag);
-
-                          if (sqUserTags!=null&&!sqUserTags.isEmpty()){
-                              addtag +=sqUserTags.get(0).getTagId().toString()+",";
-                          }else {
-                              sqUserTag.setIcount(1);
-                              sqUserTag.setIorder(1);
-                              sqUserTagMapper.insertSqUserTag(sqUserTag);
-                          }
-
-                        }else {
-                            //不存在 >>创建 返回ID
-                            sqTag.setUserId(sqBookmark.getUserid());
-                            sqTag.setTagType("P");
-                            sqTag.setIcount(1);
-                            sqTag.setStatus(0);
-                            try {
-                                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
-                                Date dateStart = df.parse(df.format(new Date()));
-                                sqTag.setCreateTime(dateStart);
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                            }
-
-                            int tagid=sqTagMapper.insertUseGeneratedKeys(sqTag);
-                            logger.debug("传入的新标签 tagid="+sqTag.getId());
-                            map.put("tagId",sqTag.getId());
-                            //添加到用戶个人书签里面去
-                            sqUserTag.setUserId(sqBookmark.getUserid());
-                            sqUserTag.setTagId(Long.valueOf(sqTag.getId()));
-                            sqUserTag.setIcount(1);
-                            sqUserTag.setIorder(1);
-                            sqUserTagMapper.insertSqUserTag(sqUserTag);
-                        }
-
+        SqBookmarkTag bookamrktag = new SqBookmarkTag();
+        int i = 0;
+        for (Map<String, Object> map : listmap) {
+            for (Map.Entry<String, Object> entry : map.entrySet()) {
+                //新增书签
+                if (Integer.parseInt(String.valueOf(map.get("tagId"))) < 0) {
+                    Map<String, Object> tagmap = iSqTagService.addtag(String.valueOf(map.get("name")), sqBookmark.getUserid());
+                    for (Map.Entry<String, Object> tag : tagmap.entrySet()) {
+                        addtag += tagmap.get("tagId").toString();
+                        map.put("tagId", tagmap.get("tagId"));
+                    }
                 }
-                if (!String.valueOf(map.get("name")).equals("TAGDELETE")){
-                    //给文章添加书签
-                    bookamrktag.setBookmarkId(sqBookmark.getBookmarkId());
-                    bookamrktag.setTagId(Long.valueOf(map.get("tagId").toString()));
-                    sqBookmarkTagMapper.insertSqBookmarkTag(bookamrktag);
-                }else{
-                    deletetag += map.get("tagId").toString()+",";
+                //删除书签
+                if (!String.valueOf(map.get("name")).equals("TAGDELETE")) {
+                    bookmarkTag.put(Long.valueOf(map.get("tagId").toString()),sqBookmark.getBookmarkId());
+                } else {
+                    deletetag += map.get("tagId").toString() + ",";
                 }
                 break;
             }
         }
+        //删除书签 现在的所有标签
+        SqBookmarkTag sqBookmarkTag = new SqBookmarkTag();
+        sqBookmarkTag.setBookmarkId(sqBookmark.getBookmarkId());
+        sqBookmarkTagMapper.delete(sqBookmarkTag);
+
+        //给文章添加书签
+        for (Map.Entry<Long,Long> tag:bookmarkTag.entrySet()){
+            bookamrktag.setBookmarkId(tag.getValue());
+            bookamrktag.setTagId(tag.getKey());
+            sqBookmarkTagMapper.insertSqBookmarkTag(bookamrktag);
+        }
 
         //个人标签引用数量 批量-1
-       String[] tagreduce=deletetag.split(",");
-
-        if (tagreduce!=null&&tagreduce.length>0){
-        Long[] num = new Long[tagreduce.length];
-        for (int idx = 0; idx < tagreduce.length; idx++) {
-            if(!tagreduce[idx].equals("")&&tagreduce[idx]!=null){
-            num[idx] = Long.parseLong(tagreduce[idx]);
-            }
+        if (!deletetag.equals("") && deletetag.length()>0) {
+           deletetag=deletetag.substring(0,deletetag.length()-1);
+           String[] tagreduce = deletetag.split(",");
+           Long[] num = (Long[]) ConvertUtils.convert(tagreduce,Long.class);
+           sqUserTagMapper.updateCountReduce(num, sqBookmark.getUserid());
         }
-        sqUserTagMapper.updateCountReduce(num,sqBookmark.getUserid());
-        }
-
         //个人标签引用数量 批量+1
-        String[] tagadd=addtag.split(",");
-        if (tagadd!=null&&tagadd.length>0) {
-            Long[] add = new Long[tagadd.length];
-            for (int idx = 0; idx < tagadd.length; idx++) {
-                if(!tagadd[idx].equals("")&&tagadd[idx]!=null) {
-                    add[idx] = Long.parseLong(tagadd[idx]);
-                }
-            }
-            sqUserTagMapper.updateCountAdd(add, sqBookmark.getUserid());
+        if (!addtag.equals("") && addtag.length()>0) {
+            addtag=addtag.substring(0,addtag.length()-1);
+            String[] add = addtag.split(",");
+            Long[] num = (Long[]) ConvertUtils.convert(add,Long.class);
+            sqUserTagMapper.updateCountReduce(num, sqBookmark.getUserid());
         }
+
         return sqBookmarkMapper.updateSqBookmark(sqBookmark);
     }
 
