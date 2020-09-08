@@ -4,6 +4,8 @@ import java.util.List;
 
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.project.common.SchoolCommon;
+import com.ruoyi.project.system.service.IByClassService;
+import com.ruoyi.project.system.service.ISysUserService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,6 +38,10 @@ public class ByPlanweekController extends BaseController {
     private IByPlanweekService byPlanweekService;
     @Autowired
     private SchoolCommon schoolCommon;
+    @Autowired
+    private IByClassService byClassService;
+    @Autowired
+    private ISysUserService userService;
 
     /**
      * 查询周计划(家长和教育部门)列表
@@ -66,7 +72,12 @@ public class ByPlanweekController extends BaseController {
     @PreAuthorize("@ss.hasPermi('benyi:planweek:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") String id) {
-        return AjaxResult.success(byPlanweekService.selectByPlanweekById(id));
+        AjaxResult ajax=AjaxResult.success();
+        ByPlanweek byPlanweek = byPlanweekService.selectByPlanweekById(id);
+        ajax.put(AjaxResult.DATA_TAG, byPlanweek);
+        ajax.put("classname", byClassService.selectByClassById(byPlanweek.getClassid()).getBjmc());
+        ajax.put("createusername",userService.selectUserById(byPlanweek.getCreateuserid()).getNickName());
+        return ajax;
     }
 
     /**
