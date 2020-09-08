@@ -99,6 +99,13 @@
             v-hasPermi="['benyi:themeweekplan:edit']"
             v-show="isShow(scope.row)"
           >审批</el-button>
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-view"
+            @click="handleView(scope.row)"
+            v-hasPermi="['benyi:themeweekplan:query']"
+          >预览</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -142,7 +149,7 @@
         <el-form-item label="备注" prop="remar">
           <el-input v-model="form.remark" type="textarea" placeholder="请输入内容" :disabled="true" />
         </el-form-item>
-          <el-form-item label="审批意见" prop="status">
+        <el-form-item label="审批意见" prop="status">
           <el-radio-group v-model="form.status">
             <el-radio label="0">退回</el-radio>
             <el-radio label="2">通过</el-radio>
@@ -341,6 +348,13 @@ export default {
             });
           }
         }
+      });
+    },
+    /** 预览按钮操作 */
+    handleView(row) {
+      const id = row.id;
+      this.$router.push({
+        path: "/benyi_course/themeweekplanprint/table/" + id,
       });
     },
   },
