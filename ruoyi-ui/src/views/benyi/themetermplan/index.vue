@@ -70,7 +70,7 @@
     </el-row>
 
     <el-table v-loading="loading" :data="termplanList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" :selectable="isShow"/>
+      <el-table-column type="selection" width="55" align="center" :selectable="isShow" />
       <el-table-column label="班级名称" align="center" prop="classid" :formatter="classFormat" />
       <el-table-column label="计划名称" align="center" prop="name" :show-overflow-tooltip="true">
         <template slot-scope="scope">
@@ -118,6 +118,13 @@
             v-hasPermi="['benyi:themetermplan:edit']"
             v-show="isShow(scope.row)"
           >提交</el-button>
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-view"
+            @click="handleView(scope.row)"
+            v-hasPermi="['benyi:themetermplan:query']"
+          >预览</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -375,15 +382,11 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$confirm(
-        '是否确认删除主题整合学期计划数据项?',
-        "警告",
-        {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning",
-        }
-      )
+      this.$confirm("是否确认删除主题整合学期计划数据项?", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
         .then(function () {
           return delTermplan(ids);
         })
@@ -413,6 +416,13 @@ export default {
           this.msgSuccess("提交成功");
         })
         .catch(function () {});
+    },
+    /** 预览按钮操作 */
+    handleView(row) {
+      const id = row.id;
+      this.$router.push({
+        path: "/benyi_course/themetermplanprint/table/"+id,
+      });
     },
   },
 };
