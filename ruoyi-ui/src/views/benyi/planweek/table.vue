@@ -8,7 +8,7 @@
       <table>
         <tr class="align-center">
           <!-- <td v-for="h in headerData" :key="h.title">
-            <b class="table-title">{{h.title}}</b>sfd
+            <b class="table-title">{{h.title}}</b>
             {{h.name}}
           </td>-->
           <td class="w140">
