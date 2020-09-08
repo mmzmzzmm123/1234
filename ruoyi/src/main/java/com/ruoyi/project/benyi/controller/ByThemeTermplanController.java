@@ -11,6 +11,7 @@ import com.ruoyi.project.benyi.domain.ByThemeTermplanitem;
 import com.ruoyi.project.benyi.service.IByThemeTermplanitemService;
 import com.ruoyi.project.common.SchoolCommon;
 import com.ruoyi.project.system.service.IByClassService;
+import com.ruoyi.project.system.service.ISysUserService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -47,6 +48,8 @@ public class ByThemeTermplanController extends BaseController {
     private IByClassService byClassService;
     @Autowired
     private IByThemeTermplanitemService byThemeTermplanitemService;
+    @Autowired
+    private ISysUserService userService;
 
     /**
      * 查询主题整合学期计划列表
@@ -84,7 +87,12 @@ public class ByThemeTermplanController extends BaseController {
     @PreAuthorize("@ss.hasPermi('benyi:themetermplan:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") String id) {
-        return AjaxResult.success(byThemeTermplanService.selectByThemeTermplanById(id));
+        AjaxResult ajax = AjaxResult.success();
+        ByThemeTermplan byThemeTermplan = byThemeTermplanService.selectByThemeTermplanById(id);
+        ajax.put(AjaxResult.DATA_TAG, byThemeTermplan);
+        ajax.put("classname", byClassService.selectByClassById(byThemeTermplan.getClassid()).getBjmc());
+        ajax.put("createusername", userService.selectUserById(byThemeTermplan.getCreateuserid()).getNickName());
+        return ajax;
     }
 
     /**

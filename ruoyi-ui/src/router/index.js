@@ -338,6 +338,21 @@ export const constantRoutes = [{
     }]
   },
   {
+    path: '/benyi_course/themetermplanprint',
+    component: Layout,
+    hidden: true,
+    children: [{
+      path: 'table/:id',
+      component: () =>
+        import('@/views/benyi/themetermplan/table'),
+      name: 'Themetermplan2',
+      meta: {
+        title: '主题整合学期计划(表格)',
+        icon: ''
+      }
+    }]
+  },
+  {
     path: '/benyi_course/math',
     component: Layout,
     hidden: true,
