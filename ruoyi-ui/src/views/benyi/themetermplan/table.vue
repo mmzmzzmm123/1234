@@ -108,7 +108,7 @@ export default {
     },
     // 主题--字典状态字典翻译
     themeFormat(themeids) {
-      if (themeids != "") {
+      if (themeids != "" && themeids != null) {
         var ilength = themeids.split(";").length - 1;
         var names = "";
         for (var i = 1; i < ilength; i++) {
