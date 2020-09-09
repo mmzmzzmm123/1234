@@ -1,6 +1,7 @@
 package com.ruoyi.web.test.controller;
 
 
+import com.github.wujun234.uid.UidGenerator;
 import com.ruoyi.bookmark.mapper.SqMenuMapper;
 import com.ruoyi.bookmark.service.ISqUserTagService;
 import com.ruoyi.web.controller.yunbookmark.SqBookmarkController;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 
@@ -76,6 +78,9 @@ public class SqBookmarkTest extends BaseSpringBootTest{
 
 
     }
+
+
+
 
 
 

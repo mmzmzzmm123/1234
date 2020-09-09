@@ -3,11 +3,14 @@ package com.ruoyi.bookmark.service.impl;
 import java.util.List;
 import java.util.Map;
 
+import com.github.wujun234.uid.UidGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.bookmark.mapper.SqUserTagMapper;
 import com.ruoyi.bookmark.domain.SqUserTag;
 import com.ruoyi.bookmark.service.ISqUserTagService;
+
+import javax.annotation.Resource;
 
 /**
  * 标签管理Service业务层处理
@@ -20,6 +23,8 @@ public class SqUserTagServiceImpl implements ISqUserTagService
 {
     @Autowired
     private SqUserTagMapper sqUserTagMapper;
+
+
 
 
     /**
