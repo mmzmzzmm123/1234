@@ -105,6 +105,13 @@
             v-hasPermi="['benyi:thememonthplan:edit']"
             v-show="isShow(scope.row)"
           >审批</el-button>
+                    <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-view"
+            @click="handleView(scope.row)"
+            v-hasPermi="['benyi:themetermplan:query']"
+          >预览</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -388,6 +395,13 @@ export default {
             });
           }
         }
+      });
+    },
+      /** 预览按钮操作 */
+    handleView(row) {
+      const id = row.id;
+      this.$router.push({
+        path: "/benyi_course/thememonthplanprint/table/"+id,
       });
     },
   },
