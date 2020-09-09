@@ -41,7 +41,7 @@ public class ByPlanweekitemController extends BaseController
 /**
  * 查询周计划(家长和教育部门细化)列表
  */
-@PreAuthorize("@ss.hasPermi('benyi:planweekitem:list')")
+@PreAuthorize("@ss.hasPermi('benyi:planweek:list')")
 @GetMapping("/list")
         public TableDataInfo list(ByPlanweekitem byPlanweekitem)
     {
@@ -53,7 +53,7 @@ public class ByPlanweekitemController extends BaseController
     /**
      * 导出周计划(家长和教育部门细化)列表
      */
-    @PreAuthorize("@ss.hasPermi('benyi:planweekitem:export')")
+    @PreAuthorize("@ss.hasPermi('benyi:planweek:export')")
     @Log(title = "周计划(家长和教育部门细化)", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
     public AjaxResult export(ByPlanweekitem byPlanweekitem)
@@ -66,7 +66,7 @@ public class ByPlanweekitemController extends BaseController
     /**
      * 获取周计划(家长和教育部门细化)详细信息
      */
-    @PreAuthorize("@ss.hasPermi('benyi:planweekitem:query')")
+    @PreAuthorize("@ss.hasPermi('benyi:planweek:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
@@ -76,7 +76,7 @@ public class ByPlanweekitemController extends BaseController
     /**
      * 新增周计划(家长和教育部门细化)
      */
-    @PreAuthorize("@ss.hasPermi('benyi:planweekitem:add')")
+    @PreAuthorize("@ss.hasPermi('benyi:planweek:add')")
     @Log(title = "周计划(家长和教育部门细化)", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody ByPlanweekitem byPlanweekitem)
@@ -105,7 +105,7 @@ public class ByPlanweekitemController extends BaseController
     /**
      * 修改周计划(家长和教育部门细化)
      */
-    @PreAuthorize("@ss.hasPermi('benyi:planweekitem:edit')")
+    @PreAuthorize("@ss.hasPermi('benyi:planweek:edit')")
     @Log(title = "周计划(家长和教育部门细化)", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody ByPlanweekitem byPlanweekitem)
@@ -134,7 +134,7 @@ public class ByPlanweekitemController extends BaseController
     /**
      * 删除周计划(家长和教育部门细化)
      */
-    @PreAuthorize("@ss.hasPermi('benyi:planweekitem:remove')")
+    @PreAuthorize("@ss.hasPermi('benyi:planweek:remove')")
     @Log(title = "周计划(家长和教育部门细化)", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)

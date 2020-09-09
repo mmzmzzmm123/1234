@@ -45,7 +45,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['benyi:planweekitem:add']"
+          v-hasPermi="['benyi:planweek:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -55,7 +55,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['benyi:planweekitem:edit']"
+          v-hasPermi="['benyi:planweek:edit']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -65,7 +65,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['benyi:planweekitem:remove']"
+          v-hasPermi="['benyi:planweek:remove']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -74,7 +74,7 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['benyi:planweekitem:export']"
+          v-hasPermi="['benyi:planweek:export']"
         >导出</el-button>
       </el-col>
     </el-row>
@@ -107,14 +107,14 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['benyi:planweekitem:edit']"
+            v-hasPermi="['benyi:planweek:edit']"
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['benyi:planweekitem:remove']"
+            v-hasPermi="['benyi:planweek:remove']"
           >删除</el-button>
         </template>
       </el-table-column>
