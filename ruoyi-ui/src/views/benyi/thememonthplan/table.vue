@@ -188,27 +188,31 @@ export default {
     getList() {
       //console.log(this.queryParams.wpid);
       listMonthplanitem(this.queryParams).then((response) => {
-        this.bodyData.monthplanitemList = response.rows;
-
-        //获取所有的活动id
-        var activityIds = "";
-        response.rows.forEach(function (value, key, arr) {
-          if (value.activityid != null) {
-            activityIds = activityIds + value.activityid + ";";
-          }
-        });
-        var array = [];
-        activityIds.split(";").forEach(function (value, key, arr) {
-          if (value != "") {
-            array.push(parseInt(value));
-          }
-        });
-
         if (response.rows.length > 0) {
-          this.getThemeActivityList(array);
-        }
+          this.bodyData.monthplanitemList = response.rows;
 
-        this.bodyData.monthplanitemList[0].theme = activityIds;
+          //获取所有的活动id
+          var activityIds = "";
+          response.rows.forEach(function (value, key, arr) {
+            if (value.activityid != null) {
+              activityIds = activityIds + value.activityid + ";";
+            }
+          });
+          var array = [];
+          activityIds.split(";").forEach(function (value, key, arr) {
+            if (value != "") {
+              array.push(parseInt(value));
+            }
+          });
+
+          if (response.rows.length > 0) {
+            this.getThemeActivityList(array);
+          }
+
+          this.bodyData.monthplanitemList[0].theme = activityIds;
+        }else{
+          this.bodyData.monthplanitemList[0].theme = " ";
+        }
       });
     },
     // 主题--字典状态字典翻译
