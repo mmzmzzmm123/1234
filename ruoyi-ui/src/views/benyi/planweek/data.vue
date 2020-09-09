@@ -32,24 +32,6 @@
           placeholder="选择活动时间"
         ></el-date-picker>
       </el-form-item>
-      <!-- <el-form-item label="创建人" prop="createuserid">
-        <el-input
-          v-model="queryParams.createuserid"
-          placeholder="请输入创建人"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="修改人" prop="updateuserid">
-        <el-input
-          v-model="queryParams.updateuserid"
-          placeholder="请输入修改人"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>-->
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -294,7 +276,7 @@ export default {
     const planweekid = this.$route.params && this.$route.params.id;
     this.getPlanweek2(planweekid);
     this.getPlanWeekList();
-    this.getDicts("sys_math_type").then(response => {
+    this.getDicts("sys_dm_qyhdxs").then(response => {
       this.activitytypeOptions = response.data;
     });
   },

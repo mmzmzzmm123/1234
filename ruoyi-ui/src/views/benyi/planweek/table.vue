@@ -28,27 +28,56 @@
             {{monththeme}}
           </td>
         </tr>
-        <tr v-for="item in weekplanitemList" :key="item.daytime">
-          <td v-if="item.theme" :rowspan="bodyData.weekplanitemList.length" class="align-center">
-            <span>{{item.theme}}</span>
+        
+        <tr class="align-center">
+          <td rowspan="5">
+            <span>周教学目标</span>
           </td>
-          <td class="align-center">{{item.daytime}} / 星期{{item.zhou}}</td>
-          <td colspan="4">{{item.jzzc}}</td>
+          <td style="width: 140px;">社会</td>
+          <td>{{sh}}</td>
+          <td  colspan="4"></td>
+        </tr>
+        <tr class="align-center"> 
+          <td>语言</td>
+          <td>{{yy}}</td>
+          <td  colspan="4"></td>
+        </tr>
+        <tr class="align-center">
+          <td>健康</td>
+          <td>{{jk}}</td>
+          <td colspan="4"></td>
+        </tr>
+        <tr class="align-center">
+          <td>科学</td>
+          <td>{{kx}}</td>
+          <td colspan="4"></td>
+        </tr>
+        <tr class="align-center">
+          <td>艺术</td>
+          <td>{{ys}}</td>
+          <td colspan="4"></td>
+        </tr>
+
+        <tr v-for="item in planweekitemList" :key="item.id">
+          <td v-if="item.activitytime" :rowspan="bodyData.planweekitemList.length" class="align-center">
+            <span>{{item.activitytime}}</span>
+          </td>
+          <td class="align-center">{{item.activitytime}}</td>
+          <td colspan="4">{{item.activitytime}}</td>
         </tr>
         <tr class="align-center table-bg">
           <td v-for="h in bodyData.title" :key="h.prop">
             <b>{{h.label}}</b>
           </td>
         </tr>
-        <tr v-for="item in bodyData.weekplanitemList" :key="item.daytime">
-          <td v-if="item.theme" :rowspan="bodyData.weekplanitemList.length" class="align-center">
+        <tr v-for="item in bodyData.planweekitemList" :key="item.id">
+          <td v-if="item.theme" :rowspan="bodyData.planweekitemList.length" class="align-center">
             <span>{{item.theme}}</span>
           </td>
-          <td class="align-center">{{item.daytime}} / 星期{{item.zhou}}</td>
-          <td>{{themeactivityFormat(item.activityid)}}</td>
-          <td class="align-center">{{fzxzFormat(item.fzxz)}}</td>
-          <td>{{item.jzzc}}</td>
-          <td>{{item.jzzc}}</td>
+          <td class="align-center">{{item.activitytime}}</td>
+          <td class="align-center">{{item.day}}</td>
+          <td class="align-center">{{activitytypeFormat(item.activitytype)}}</td>
+          <td class="align-center">{{(item.content)}}</td>
         </tr>
       </table>
       <!-- <p
@@ -60,15 +89,15 @@
 
 <script>
 import {
-  listWeekplanitem,
-  getWeekplanitem,
-} from "@/api/benyi/themeweekplanitem";
+  listPlanweekitem,
+  getPlanweekitem,
+  delPlanweekitem,
+  addPlanweekitem,
+  updatePlanweekitem,
+  exportPlanweekitem
+} from "@/api/benyi/planweekitem";
 
-import { listWeekplan, getWeekplan } from "@/api/benyi/themeweekplan";
-import { listActivityByThemeId } from "@/api/benyi/activity";
-import { listMonthplan } from "@/api/benyi/thememonthplan";
-import { listMonthplanitem } from "@/api/benyi/thememonthplanitem";
-import { listThemeByIds, listThemeByActivityIds } from "@/api/benyi/theme";
+import { getPlanweek, listPlanweek } from "@/api/benyi/planweek";
 
 export default {
   name: "PlayTable",
@@ -83,90 +112,78 @@ export default {
       monththeme: "",
       bz: "",
       spyj: "",
+      sh: "",
+      yy: "",
+      jk: "",
+      kx: "",
+      ys: "",
       //根据活动id获取的theme名称
       themenamebyactivityids: "",
+      activitytypeOptions: [],
       //分组性质
       fzxzOptions: [],
-      //主题活动
-      themeactivityOptions: [],
-      weekplanitemList: [],
+      // item列表
+      planweekitemList: [],
       bodyData: {
         title: [
           {
-            label: "活动",
-            prop: "theme",
+            label: "日期",
+            prop: "activitytime",
           },
           {
-            label: "周一",
+            label: "星期",
             prop: "day",
           },
           {
-            label: "周二",
-            prop: "name",
+            label: "区域活动形式",
+            prop: "activitytype",
           },
           {
-            label: "周三",
-            prop: "term",
+            label: "活动详情",
+            prop: "content",
           },
-          {
-            label: "周四",
-            prop: "help",
-          },
-          {
-            label: "周五",
-            prop: "help",
-          },
+          
+          // {
+          //   label: "周四",
+          //   prop: "help",
+          // },
+          // {
+          //   label: "周五",
+          //   prop: "help",
+          // },
         ],
-        weekplanitemList: [
+        planweekitemList: [
           {
             theme: "春天的颜色",
           },
-          // {
-          //   day: "周二",
-          //   name: "活动",
-          //   term: "同质",
-          // },
-          // {
-          //   day: "周三",
-          //   name: "活动",
-          //   term: "同质",
-          // },
-          // {
-          //   day: "周四",
-          //   name: "活动",
-          //   term: "同质",
-          // },
-          // {
-          //   day: "周五",
-          //   name: "活动",
-          //   term: "同质",
-          // },
         ],
       },
       // 查询参数
       queryParams: {
-        wpid: undefined,
+        wid: undefined,
       },
-      // 查询参数
-      queryParams_MonPlan: {
-        xnxq: undefined,
-        month: undefined,
-        status: "2",
-      },
-      queryParams_MonPlanItem: {
-        mpid: undefined,
-        zc: undefined,
-      },
+      
     };
   },
   created() {
-    const themeweekplanid = this.$route.params && this.$route.params.id;
-    this.getThemeWeekPlan(themeweekplanid);
+    const planweekid = this.$route.params && this.$route.params.id;
+    this.getWPlanweek(planweekid);
     this.getDicts("sys_dm_fzxz").then((response) => {
       this.fzxzOptions = response.data;
     });
+    this.getDicts("sys_dm_qyhdxs").then(response => {
+      this.activitytypeOptions = response.data;
+    });
   },
   methods: {
+    // 活动类型字典翻译
+    activitytypeFormat(activitytype) {
+      return this.selectDictLabel(this.activitytypeOptions, activitytype);
+    },
+    // 分组性质类型--字典状态字典翻译
+    fzxzFormat(fzxz) {
+      return this.selectDictLabel(this.fzxzOptions, fzxz);
+    },
     //主题翻译
     async themeFormat(themeids) {
       var themename = "";
@@ -209,58 +226,31 @@ export default {
       }
       return "";
     },
-    // 分组性质类型--字典状态字典翻译
-    fzxzFormat(fzxz) {
-      return this.selectDictLabel(this.fzxzOptions, fzxz);
-    },
-    //主题活动
-    getThemeActivityList(themeid) {
-      listActivityByThemeId(themeid).then((response) => {
-        //console.log(response.rows);
-        this.themeactivityOptions = response.rows;
-      });
-    },
+    
     //获取周教学计划详情
-    getThemeWeekPlan(themeweekplanid) {
-      getWeekplan(themeweekplanid).then((response) => {
+    getWPlanweek(planweekid) {
+      getPlanweek(planweekid).then((response) => {
         //(response);
+        this.queryParams.wid = response.data.id;
+        this.defaultWeekType = response.data.id;
+        this.month = response.data.month;
+        this.zc = response.data.weekly;
+        this.monththeme = response.data.themeofweek;
+        this.sh = response.data.jxmbSh;
+        this.yy = response.data.jxmbYy;
+        this.jk = response.data.jxmbJk;
+        this.kx = response.data.jxmbKx;
+        this.ys = response.data.jxmbYs;
+        // console.log(this.month);
+
         this.queryParams.wpid = response.data.id;
         this.title = response.data.name;
-        this.zc = response.data.zc;
-        this.month = response.data.month;
+        
+        //this.month = response.data.month;
         this.classname = response.classname;
         this.tbr = response.createusername;
         this.bz = response.data.remark;
         this.spyj = response.data.shyj;
-
-        //查找活动id
-        this.queryParams_MonPlan.month = response.data.month;
-        this.queryParams_MonPlan.xnxq = response.data.xnxq;
-        listMonthplan(this.queryParams_MonPlan).then((resMonPlan) => {
-          //console.log(resMonPlan.rows);
-          //获取的月主题
-          var monththemeids = resMonPlan.rows[0].themes;
-
-          this.themeFormat(monththemeids);
-
-          this.queryParams_MonPlanItem.mpid = resMonPlan.rows[0].id;
-          this.queryParams_MonPlanItem.zc = response.data.zc;
-          listMonthplanitem(this.queryParams_MonPlanItem).then(
-            (resMonPlanItem) => {
-              //console.log(resMonPlanItem.rows);
-              var activityids = resMonPlanItem.rows[0].activityid.split(";");
-              var array = [];
-              //console.log(arr);
-              activityids.forEach(function (value, key, arr) {
-                //console.log(value); // 结果依次为1，2，3
-                if (value != "") {
-                  array.push(parseInt(value));
-                }
-              });
-              this.getThemeActivityList(array);
-            }
-          );
-        });
 
         this.getList();
       });
@@ -268,8 +258,9 @@ export default {
     /** 查询主题整合周计划明细列表 */
     async getList() {
       //console.log(this.queryParams.wpid);
-      await listWeekplanitem(this.queryParams).then((response) => {
-        this.bodyData.weekplanitemList = response.rows;
+      await listPlanweekitem(this.queryParams).then((response) => {
+        this.bodyData.planweekitemList = response.rows;
+        // console.log(this.bodyData.planweekitemList);
 
         //获取所有的活动id
         var activityIds = "";
@@ -284,28 +275,9 @@ export default {
             array.push(parseInt(value));
           }
         });
-        //获取所有的活动id截止
-        this.getThemeByActivityIds(array);
       });
     },
-    //根据活动id获取theme列表
-    async getThemeByActivityIds(array) {
-      if (array.length > 0) {
-        var themename = "";
-        await listThemeByActivityIds(array).then((response) => {
-          response.rows.forEach(function (value, key, arr) {
-            themename = themename + value.name + ";";
-          });
-        });
-        //console.log(themename);
-        this.themenamebyactivityids = themename;
-      }
-
-      this.bodyData.weekplanitemList[0].theme =
-        this.themenamebyactivityids == ""
-          ? "未设置"
-          : this.themenamebyactivityids;
-    },
+    
     prints() {
       //console.log(this.$refs.printMe);
       this.$print(this.$refs.printMe);

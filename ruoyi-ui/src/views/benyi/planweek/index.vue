@@ -55,7 +55,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['system:planweek:add']"
+          v-hasPermi="['benyi:planweek:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -65,7 +65,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['system:planweek:edit']"
+          v-hasPermi="['benyi:planweek:edit']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -75,18 +75,10 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['system:planweek:remove']"
+          v-hasPermi="['benyi:planweek:remove']"
         >删除</el-button>
       </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['system:planweek:export']"
-        >导出</el-button>
-      </el-col>
+      
     </el-row>
 
     <el-table v-loading="loading" :data="planweekList" @selection-change="handleSelectionChange">
@@ -123,23 +115,22 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['system:planweek:edit']"
+            v-hasPermi="['benyi:planweek:edit']"
           >修改</el-button>
-          <!-- <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-check"
-            @click="handleCheck(scope.row)"
-            v-hasPermi="['system:planweek:edit']"
-            v-show="isShow(scope.row)"
-          >提交</el-button>-->
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['system:planweek:remove']"
+            v-hasPermi="['benyi:planweek:remove']"
           >删除</el-button>
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-view"
+            @click="handleView(scope.row)"
+            v-hasPermi="['benyi:planweek:query']"
+          >预览</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -359,17 +350,7 @@ export default {
         this.classOptions = response.rows;
       });
     },
-    // // 主题名称家班级
-    // getClassName(val) {
-    //   //locations是v-for里面的也是datas里面的值
-    //   let obj = {};
-    //   obj = this.classOptions.find((item) => {
-    //     return item.bjbh === val;
-    //   });
-    //   let getName = "";
-    //   getName = obj.bjmc;
-    //   this.form.name = getName;
-    // },
+    
     // 当前状态翻译
     statusFormat(row, column) {
       return this.selectDictLabel(this.statusOptions, row.status);
@@ -521,6 +502,13 @@ export default {
           this.msgSuccess("删除成功");
         })
         .catch(function() {});
+    },
+    /** 预览按钮操作 */
+    handleView(row) {
+      const id = row.id;
+      this.$router.push({
+        path: "/benyi_course/planweekprint/table/"+id,
+      });
     },
     /** 导出按钮操作 */
     handleExport() {
