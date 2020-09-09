@@ -3,6 +3,11 @@ package com.ruoyi.project.benyi.controller;
 import java.util.List;
 
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.project.benyi.domain.ByPlanweekitem;
+import com.ruoyi.project.benyi.domain.ByPlanweekitem;
+import com.ruoyi.project.benyi.service.impl.ByPlanweekServiceImpl;
+import com.ruoyi.project.benyi.service.IByPlanweekitemService;
+
 import com.ruoyi.project.common.SchoolCommon;
 import com.ruoyi.project.system.service.IByClassService;
 import com.ruoyi.project.system.service.ISysUserService;
@@ -42,6 +47,8 @@ public class ByPlanweekController extends BaseController {
     private IByClassService byClassService;
     @Autowired
     private ISysUserService userService;
+    @Autowired
+    private IByPlanweekitemService byPlanweekItemService;
 
     /**
      * 查询周计划(家长和教育部门)列表
@@ -142,6 +149,15 @@ public class ByPlanweekController extends BaseController {
     @Log(title = "周计划(家长和教育部门)", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable String[] ids) {
+        //首先判断当前id下是否存在子目录
+        for (int i = 0; i < ids.length; i++) {
+            ByPlanweekitem byPlanweekitem = new ByPlanweekitem();
+            byPlanweekitem.setWid(ids[i]);
+            List<ByPlanweekitem> list = byPlanweekItemService.selectByPlanweekitemList(byPlanweekitem);
+            if (list != null && list.size() > 0) {
+                return AjaxResult.error("选中的计划下存在子计划，无法删除");
+            }
+        }
         return toAjax(byPlanweekService.deleteByPlanweekByIds(ids));
     }
 }
