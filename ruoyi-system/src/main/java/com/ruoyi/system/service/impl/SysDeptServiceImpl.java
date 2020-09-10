@@ -48,27 +48,29 @@ public class SysDeptServiceImpl implements ISysDeptService
     @Override
     public List<SysDept> buildDeptTree(List<SysDept> depts)
     {
-        List<SysDept> returnList = new ArrayList<SysDept>();
-        List<Long> tempList = new ArrayList<Long>();
-        for (SysDept dept : depts)
-        {
-            tempList.add(dept.getDeptId());
-        }
-        for (Iterator<SysDept> iterator = depts.iterator(); iterator.hasNext();)
-        {
-            SysDept dept = (SysDept) iterator.next();
-            // 如果是顶级节点, 遍历该父节点的所有子节点
-            if (!tempList.contains(dept.getParentId()))
-            {
-                recursionFn(depts, dept);
-                returnList.add(dept);
-            }
-        }
-        if (returnList.isEmpty())
-        {
-            returnList = depts;
-        }
+        // 找到所有一级分类
+        List<SysDept> returnList = depts.stream()
+            .filter(deptEntity -> deptEntity.getParentId() == 0L)
+            .map(deptEntity -> {
+                deptEntity.setChildren(getChildrens(deptEntity, depts));
+                return deptEntity;
+            })
+            .sorted(Comparator.comparingInt(dept -> Integer.parseInt(dept.getOrderNum())))
+            .collect(Collectors.toList());
         return returnList;
+    }
+
+    // 递归查找所有菜单的子菜单
+    private List<SysDept> getChildrens(SysDept root, List<SysDept> all) {
+        List<SysDept> children = all.stream()
+            .filter(deptEntity -> deptEntity.getParentId().equals(root.getDeptId()))
+            .map(deptEntity -> {
+                deptEntity.setChildren(getChildrens(deptEntity, all));
+                return deptEntity;
+            })
+            .sorted(Comparator.comparingInt(dept -> Integer.parseInt(dept.getOrderNum())))
+            .collect(Collectors.toList());
+        return children;
     }
 
     /**
