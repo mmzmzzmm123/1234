@@ -93,6 +93,25 @@ public class ByChildController extends BaseController {
     }
 
     /**
+     * 获取维护幼儿信息
+     */
+    @GetMapping("/getInfo")
+    public AjaxResult getInfo_query(ByChild byChild) {
+        if (schoolCommon.isStringEmpty(byChild.getName())) {
+            return AjaxResult.error("请输入幼儿姓名");
+        }
+        if (schoolCommon.isStringEmpty(byChild.getPhone())) {
+            return AjaxResult.error("请输入家长联系方式");
+        }
+
+        List<ByChild> list = byChildService.selectByChildList(byChild);
+        if (list == null || list.size() == 0) {
+            return AjaxResult.error("未找到该幼儿的信息");
+        }
+        return AjaxResult.success(list.get(0));
+    }
+
+    /**
      * 新增幼儿信息
      */
     @PreAuthorize("@ss.hasPermi('benyi:child:add')")
