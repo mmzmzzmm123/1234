@@ -17,8 +17,11 @@
       <div class="result-form">
         <p class="form-title">提交核对幼儿信息</p>
         <el-form class="form" ref="form" :model="form"  label-width="110px">
-          <el-form-item label="家长姓名" prop="jzxm">
-            <el-input v-model="form.jzxm" placeholder="请输入家长姓名" />
+          <el-form-item label="父亲姓名" prop="father">
+            <el-input v-model="form.father" placeholder="请输入父亲姓名"  @input="onInput()"/>
+          </el-form-item>
+          <el-form-item label="母亲姓名" prop="mother">
+            <el-input v-model="form.mother" placeholder="请输入母亲姓名"  @input="onInput()"/>
           </el-form-item>
           <el-form-item label="家长联系方式" prop="phone">
             <el-input v-model="form.phone" placeholder="请输入联系方式" :disabled="hide" />
@@ -163,6 +166,9 @@ import { getChild_query, updateChild } from "@/api/benyi/child";
 //导入省市区三级联动库
 import VDistpicker from "v-distpicker";
 
+// 更新紧急联系人
+import {  updateContactpeople } from "@/api/benyi/contactpeople";
+
 export default {
   name: "result",
   data() {
@@ -193,6 +199,8 @@ export default {
       yzzs: "",
       tynrcontent: "",
       href_tynr: "",
+      father: "",
+      mother: "",
       // 是否显示弹出层
       open: false,
       // 幼儿信息表格数据
@@ -215,7 +223,8 @@ export default {
         phone: undefined
       },
       // 表单参数
-      form: {}
+      form: {
+      }
     };
   },
   created() {
@@ -242,6 +251,10 @@ export default {
     VDistpicker
   },
   methods: {
+    // 强制输入刷新
+    onInput() {
+      this.$forceUpdate();
+    },
     // 性别字典翻译
     xbFormat(row, column) {
       return this.selectDictLabel(this.sexOptions, row.xb);
@@ -282,7 +295,10 @@ export default {
           this.hide = true;
           this.childList = response.rows;
           this.form = response.data;
+          console.log(this.form);
           this.form.id = response.data.id;
+          this.form.father = response.data.byChildContactpeople.fathername;
+          this.form.mother = response.data.byChildContactpeople.mothername;
           this.diglogForm.province = response.data.birthProvincename;
           this.diglogForm.city = response.data.birthCityname;
           this.diglogForm.area = response.data.birthAreaname;
@@ -304,6 +320,16 @@ export default {
         if (valid) {
           if (this.form.id != undefined) {
             updateChild(this.form).then((response) => {
+              if (response.code === 200) {
+                this.msgSuccess("修改成功");
+                //this.open = false;
+                this.hide = false;
+              }
+            });
+            this.form.childid = this.form.id;
+            this.form.fathername = this.form.father;
+            this.form.mothername = this.form.mother;
+            updateContactpeople(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("修改成功");
                 //this.open = false;

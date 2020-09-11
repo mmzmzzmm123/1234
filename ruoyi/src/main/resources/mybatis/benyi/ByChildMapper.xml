@@ -46,10 +46,37 @@
         <result property="otherLanguage" column="other_language"/>
         <result property="createuserid" column="createuserid"/>
         <result property="createTime" column="create_time"/>
+        <association property="byChildContactpeople"    column="childid" javaType="ByChildContactpeople" resultMap="ByChildContactpeopleResult" />
+    </resultMap>
+
+    <resultMap type="ByChildContactpeople" id="ByChildContactpeopleResult">
+        <result property="id" column="id"/>
+        <result property="childid" column="childid"/>
+        <result property="schoolid" column="schoolid"/>
+        <result property="classid" column="classid"/>
+        <result property="fathername" column="fathername"/>
+        <result property="fphone" column="fphone"/>
+        <result property="foffphone" column="foffphone"/>
+        <result property="mothername" column="mothername"/>
+        <result property="mphone" column="mphone"/>
+        <result property="moffphone" column="moffphone"/>
+        <result property="grandfathername" column="grandfathername"/>
+        <result property="gfgx" column="gfgx"/>
+        <result property="gfphone" column="gfphone"/>
+        <result property="gfoffphone" column="gfoffphone"/>
+        <result property="gfaddress" column="gfaddress"/>
+        <result property="grandmothername" column="grandmothername"/>
+        <result property="gmgx" column="gmgx"/>
+        <result property="gmphone" column="gmphone"/>
+        <result property="gmaddress" column="gmaddress"/>
+        <result property="gmoffphone" column="gmoffphone"/>
+        <result property="createTime" column="create_time"/>
     </resultMap>
 
     <sql id="selectByChildVo">
-        select id, schoolid, classid, name, en_name, infant_name, phone, xb, mz, zjhm, csrq, birth_province, birth_provincename, birth_city, birth_cityname, birth_area, birth_areaname, registered_province, registered_provincename, registered_city, registered_cityname, registered_area, registered_areaname, addr_province, addr_provincename, addr_city, addr_cityname, addr_area, addr_areaname, addr_detail, ever_school, learn_english, source, status, enter_date, out_date, first_language, seconder_language, other_language, createuserid, create_time from by_child
+        select c.id, c.schoolid, c.classid, c.name, c.en_name, c.infant_name, c.phone, c.xb, c.mz, c.zjhm, c.csrq, c.birth_province, c.birth_provincename, c.birth_city, c.birth_cityname, c.birth_area, c.birth_areaname, c.registered_province, c.registered_provincename, c.registered_city, c.registered_cityname, c.registered_area, c.registered_areaname, c.addr_province, c.addr_provincename, c.addr_city, c.addr_cityname, c.addr_area, c.addr_areaname, c.addr_detail, c.ever_school, c.learn_english, c.source, c.status, c.enter_date, c.out_date, c.first_language, c.seconder_language, c.other_language, c.createuserid, c.create_time, p.fathername, p.mothername
+        from by_child c
+        left join by_child_contactpeople p on c.id=p.childid
     </sql>
 
     <select id="selectByChildList" parameterType="ByChild" resultMap="ByChildResult">

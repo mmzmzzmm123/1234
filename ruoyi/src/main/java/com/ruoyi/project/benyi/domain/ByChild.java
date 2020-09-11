@@ -259,6 +259,8 @@ public class ByChild extends BaseEntity {
     @Excel(name = "创建人")
     private Long createuserid;
 
+    private ByChildContactpeople byChildContactpeople;
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -623,6 +625,15 @@ public class ByChild extends BaseEntity {
                 .append("otherLanguage", getOtherLanguage())
                 .append("createuserid", getCreateuserid())
                 .append("createTime", getCreateTime())
+                .append("byChildContactpeople", getByChildContactpeople())
                 .toString();
+    }
+
+    public ByChildContactpeople getByChildContactpeople() {
+        return byChildContactpeople;
+    }
+
+    public void setByChildContactpeople(ByChildContactpeople byChildContactpeople) {
+        this.byChildContactpeople = byChildContactpeople;
     }
 }

@@ -88,6 +88,17 @@
           v-hasPermi="['benyi:child:edit']"
         >调班</el-button>
       </el-col>
+      <el-col :span="1.5">
+        <el-tooltip effect="dark" content="点我，可以复制链接发送给所有家长补填幼儿信息呦" placement="top-start">
+          <el-button
+            type="primary"
+            icon="el-icon-document-copy"
+            size="mini"
+            @click="copy($event,inviteCode)"
+            v-hasPermi="['benyi:child:add']"
+          >家长填报链接</el-button>
+        </el-tooltip>
+      </el-col>
     </el-row>
 
     <el-table v-loading="loading" :data="childList" @selection-change="handleSelectionChange">
@@ -289,12 +300,12 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="第一语言" prop="firstLanguage">
-              <el-input v-model="form.firstLanguage" placeholder="请输入第一语言" />
+              <el-input v-model="form.firstLanguage" placeholder="请输入第一语言" maxlength="2"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="第二语言" prop="seconderLanguage">
-              <el-input v-model="form.seconderLanguage" placeholder="请输入第二语言" />
+              <el-input v-model="form.seconderLanguage" placeholder="请输入第二语言" maxlength="2" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -357,6 +368,10 @@ import { listClass } from "@/api/system/class";
 
 //导入省市区三级联动库
 import VDistpicker from "v-distpicker";
+// 获取当前ip
+import { getUserProfile } from "@/api/system/user";
+// 点击复制
+import Clipboard from "clipboard";
 
 export default {
   name: "Child",
@@ -382,6 +397,8 @@ export default {
         city: null,
         area: null,
       },
+      // 连接内容
+      inviteCode: "",
       // 遮罩层
       loading: true,
       // 选中数组
@@ -492,12 +509,48 @@ export default {
     this.getDicts("sys_dm_ryqd").then((response) => {
       this.sourceOptions = response.data;
     });
+    this.getLink();
   },
   components: {
     //省市区三级联动全局组件
     VDistpicker,
   },
   methods: {
+    // 链接内容
+    getLink() {
+      getUserProfile().then((response) => {
+        var domain = window.location.host;
+        //console.log(domain);
+        //this.user = response.data;
+        this.inviteCode =
+        response.data.dept.deptName +
+          "幼儿信息维护链接" +
+          "http://" +
+          domain +
+          "/child_preserve/index/" +
+          response.data.dept.deptId;
+      });
+    },
+    // 给家长发送链接
+    copy(e, text) {
+      const clipboard = new Clipboard(e.target, { text: () => text });
+      clipboard.on("success", (e) => {
+        this.msgSuccess("复制成功");
+        // 释放内存
+        clipboard.off("error");
+        clipboard.off("success");
+        clipboard.destroy();
+      });
+      clipboard.on("error", (e) => {
+        // 不支持复制
+        this.msgError("手机权限不支持复制功能");
+        // 释放内存
+        clipboard.off("error");
+        clipboard.off("success");
+        clipboard.destroy();
+      });
+      clipboard.onClick(e);
+    },
     // 性别字典翻译
     xbFormat(row, column) {
       return this.selectDictLabel(this.sexOptions, row.xb);
