@@ -74,6 +74,12 @@
             <artifactId>ruoyi-yunbookmark</artifactId>
         </dependency>
 
+        <!-- 便签模块-->
+        <dependency>
+            <groupId>com.ruoyi</groupId>
+            <artifactId>ruoyi-note</artifactId>
+        </dependency>
+
     </dependencies>
 
 </project>

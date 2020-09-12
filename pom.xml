@@ -181,6 +181,13 @@
                 <version>${ruoyi.version}</version>
             </dependency>
 
+            <!-- note系统模块-->
+            <dependency>
+                <groupId>com.ruoyi</groupId>
+                <artifactId>ruoyi-note</artifactId>
+                <version>${ruoyi.version}</version>
+            </dependency>
+
             <!-- 通用工具-->
             <dependency>
                 <groupId>com.ruoyi</groupId>
@@ -199,6 +206,7 @@
         <module>ruoyi-generator</module>
         <module>ruoyi-common</module>
         <module>ruoyi-yunbookmark</module>
+        <module>ruoyi-note</module>
 
     </modules>
     <packaging>pom</packaging>

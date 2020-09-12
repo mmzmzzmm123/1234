@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.note.mapper.NmNoteTagMapper">
+
+    <resultMap type="NmNoteTag" id="NmNoteTagResult">
+        <result property="id"    column="id"    />
+        <result property="noteId"    column="note_id"    />
+        <result property="tagId"    column="tag_id"    />
+    </resultMap>
+
+    <sql id="selectNmNoteTagVo">
+        select id, note_id, tag_id from nm_note_tag
+    </sql>
+
+
+    <select id="selectNmNoteTagList" parameterType="NmNoteTag" resultMap="NmNoteTagResult">
+        <include refid="selectNmNoteTagVo"/>
+        <where>
+            <if test="noteId != null "> and note_id = #{noteId}</if>
+            <if test="tagId != null "> and tag_id = #{tagId}</if>
+        </where>
+    </select>
+
+    <select id="selectNmNoteTagById" parameterType="Long" resultMap="NmNoteTagResult">
+        <include refid="selectNmNoteTagVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertNmNoteTag" parameterType="NmNoteTag" useGeneratedKeys="true" keyProperty="id">
+        insert into nm_note_tag
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="noteId != null">note_id,</if>
+            <if test="tagId != null">tag_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="noteId != null">#{noteId},</if>
+            <if test="tagId != null">#{tagId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateNmNoteTag" parameterType="NmNoteTag">
+        update nm_note_tag
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="noteId != null">note_id = #{noteId},</if>
+            <if test="tagId != null">tag_id = #{tagId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteNmNoteTagById" parameterType="Long">
+        delete from nm_note_tag where id = #{id}
+    </delete>
+
+    <delete id="deleteNmNoteTagByIds" parameterType="String">
+        delete from nm_note_tag where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

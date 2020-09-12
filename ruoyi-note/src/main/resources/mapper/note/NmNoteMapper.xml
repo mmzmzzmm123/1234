@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.note.mapper.NmNoteMapper">
+
+    <resultMap type="NmNote" id="NmNoteResult">
+        <result property="noteId"    column="note_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="title"    column="title"    />
+        <result property="description"    column="description"    />
+        <result property="menuId"    column="menu_id"    />
+        <result property="background"    column="background"    />
+        <result property="noteCount"    column="note_count"    />
+        <result property="noteSort"    column="note_sort"    />
+        <result property="isState"    column="is_state"    />
+        <result property="readProgress"    column="read_progress"    />
+        <result property="isStar"    column="is_star"    />
+        <result property="isDelete"    column="is_delete"    />
+        <result property="topFlag"    column="top_flag"    />
+        <result property="isShare"    column="is_share"    />
+        <result property="isEncryption"    column="is_encryption"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+
+    <sql id="selectNmNoteVo">
+        select note_id, user_id, title, description, menu_id, background, note_count, note_sort, is_state, read_progress, is_star, is_delete, top_flag, is_share, is_encryption, create_time, update_time from nm_note
+    </sql>
+
+    <select id="selectNmNoteList" parameterType="NmNote" resultMap="NmNoteResult">
+        <include refid="selectNmNoteVo"/>
+        <where>
+            <if test="noteId != null "> and note_id = #{noteId}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="title != null  and title != ''"> and title like concat('%', #{title}, '%')</if>
+            <if test="description != null  and description != ''"> and description = #{description}</if>
+            <if test="menuId != null "> and menu_id = #{menuId}</if>
+            <if test="background != null  and background != ''"> and background = #{background}</if>
+            <if test="noteCount != null "> and note_count = #{noteCount}</if>
+            <if test="noteSort != null "> and note_sort = #{noteSort}</if>
+            <if test="isState != null "> and is_state = #{isState}</if>
+            <if test="readProgress != null "> and read_progress = #{readProgress}</if>
+            <if test="isStar != null "> and is_star = #{isStar}</if>
+            <if test="isDelete != null "> and is_delete = #{isDelete}</if>
+            <if test="topFlag != null "> and top_flag = #{topFlag}</if>
+            <if test="isShare != null "> and is_share = #{isShare}</if>
+            <if test="isEncryption != null "> and is_encryption = #{isEncryption}</if>
+        </where>
+    </select>
+
+    <select id="selectNmNoteById" parameterType="Long" resultMap="NmNoteResult">
+        <include refid="selectNmNoteVo"/>
+        where note_id = #{noteId}
+    </select>
+
+    <insert id="insertNmNote" parameterType="NmNote">
+        insert into nm_note
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="noteId != null">note_id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="title != null">title,</if>
+            <if test="description != null">description,</if>
+            <if test="menuId != null">menu_id,</if>
+            <if test="background != null">background,</if>
+            <if test="noteCount != null">note_count,</if>
+            <if test="noteSort != null">note_sort,</if>
+            <if test="isState != null">is_state,</if>
+            <if test="readProgress != null">read_progress,</if>
+            <if test="isStar != null">is_star,</if>
+            <if test="isDelete != null">is_delete,</if>
+            <if test="topFlag != null">top_flag,</if>
+            <if test="isShare != null">is_share,</if>
+            <if test="isEncryption != null">is_encryption,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="noteId != null">#{noteId},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="title != null">#{title},</if>
+            <if test="description != null">#{description},</if>
+            <if test="menuId != null">#{menuId},</if>
+            <if test="background != null">#{background},</if>
+            <if test="noteCount != null">#{noteCount},</if>
+            <if test="noteSort != null">#{noteSort},</if>
+            <if test="isState != null">#{isState},</if>
+            <if test="readProgress != null">#{readProgress},</if>
+            <if test="isStar != null">#{isStar},</if>
+            <if test="isDelete != null">#{isDelete},</if>
+            <if test="topFlag != null">#{topFlag},</if>
+            <if test="isShare != null">#{isShare},</if>
+            <if test="isEncryption != null">#{isEncryption},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateNmNote" parameterType="NmNote">
+        update nm_note
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="title != null">title = #{title},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="menuId != null">menu_id = #{menuId},</if>
+            <if test="background != null">background = #{background},</if>
+            <if test="noteCount != null">note_count = #{noteCount},</if>
+            <if test="noteSort != null">note_sort = #{noteSort},</if>
+            <if test="isState != null">is_state = #{isState},</if>
+            <if test="readProgress != null">read_progress = #{readProgress},</if>
+            <if test="isStar != null">is_star = #{isStar},</if>
+            <if test="isDelete != null">is_delete = #{isDelete},</if>
+            <if test="topFlag != null">top_flag = #{topFlag},</if>
+            <if test="isShare != null">is_share = #{isShare},</if>
+            <if test="isEncryption != null">is_encryption = #{isEncryption},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where note_id = #{noteId}
+    </update>
+
+    <delete id="deleteNmNoteById" parameterType="Long">
+        delete from nm_note where note_id = #{noteId}
+    </delete>
+
+    <delete id="deleteNmNoteByIds" parameterType="String">
+        delete from nm_note where note_id in
+        <foreach item="noteId" collection="array" open="(" separator="," close=")">
+            #{noteId}
+        </foreach>
+    </delete>
+
+</mapper>

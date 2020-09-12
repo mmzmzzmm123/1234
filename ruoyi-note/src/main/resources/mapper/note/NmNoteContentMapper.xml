@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.note.mapper.NmNoteContentMapper">
+
+    <resultMap type="NmNoteContent" id="NmNoteContentResult">
+        <result property="noteId"    column="note_id"    />
+        <result property="markdownContent"    column="markdown_content"    />
+        <result property="ueditorContent"    column="ueditor_content"    />
+    </resultMap>
+
+    <sql id="selectNmNoteContentVo">
+        select note_id, markdown_content, ueditor_content from nm_note_content
+    </sql>
+
+    <select id="selectNmNoteContentList" parameterType="NmNoteContent" resultMap="NmNoteContentResult">
+        <include refid="selectNmNoteContentVo"/>
+        <where>
+            <if test="noteId != null "> and note_id = #{noteId}</if>
+            <if test="markdownContent != null  and markdownContent != ''"> and markdown_content = #{markdownContent}</if>
+            <if test="ueditorContent != null  and ueditorContent != ''"> and ueditor_content = #{ueditorContent}</if>
+        </where>
+    </select>
+
+
+    <select id="selectNmNoteContentById" parameterType="Long" resultMap="NmNoteContentResult">
+        <include refid="selectNmNoteContentVo"/>
+        where note_id = #{noteId}
+    </select>
+
+    <insert id="insertNmNoteContent" parameterType="NmNoteContent">
+        insert into nm_note_content
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="noteId != null">note_id,</if>
+            <if test="markdownContent != null">markdown_content,</if>
+            <if test="ueditorContent != null">ueditor_content,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="noteId != null">#{noteId},</if>
+            <if test="markdownContent != null">#{markdownContent},</if>
+            <if test="ueditorContent != null">#{ueditorContent},</if>
+         </trim>
+    </insert>
+
+    <update id="updateNmNoteContent" parameterType="NmNoteContent">
+        update nm_note_content
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="markdownContent != null">markdown_content = #{markdownContent},</if>
+            <if test="ueditorContent != null">ueditor_content = #{ueditorContent},</if>
+        </trim>
+        where note_id = #{noteId}
+    </update>
+
+    <delete id="deleteNmNoteContentById" parameterType="Long">
+        delete from nm_note_content where note_id = #{noteId}
+    </delete>
+
+    <delete id="deleteNmNoteContentByIds" parameterType="String">
+        delete from nm_note_content where note_id in
+        <foreach item="noteId" collection="array" open="(" separator="," close=")">
+            #{noteId}
+        </foreach>
+    </delete>
+
+</mapper>

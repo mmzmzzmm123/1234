@@ -44,17 +44,7 @@ public class BaseController
         return user.getUser();
     }
 
-//    /**
-//     * @auther: Wang
-//     * @date: 2020/08/17 20:19
-//     * 功能描述:获取当前用户UserID
-//     */
-//    protected Long getAuthUserId()
-//    {
-//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//        LoginUser user = (LoginUser) auth.getPrincipal();
-//        return user.getUser().getUserId();
-//    }
+
 
     /**
      * 将前台传递过来的日期格式的字符串，自动转化为Date类型
