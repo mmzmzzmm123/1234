@@ -65,7 +65,6 @@
       <div  class="bookmarklist" v-loading="loading" v-if="showbookmark">
 
         <el-row >
-
           <hr class="bookamrk-hr"/>
           <el-col :span="24" v-for="bm in bookmarkList">
 
@@ -75,11 +74,9 @@
                 <div> <el-button plain size="small" @click="handleDelete(bm.bookmarkId)">删除</el-button></div>
                 <div> <el-button plain size="small">笔记</el-button></div>
                 <div> <el-button plain size="small">分享</el-button></div>
-
               </div>
-
-
             </div>
+
 
             <div class="bookmark" :data-id="bm.id" @click="windowurl(bm.url,bm.bookmarkId)">
               <p class="bookmark-title">{{bm.title}}</p>
@@ -91,18 +88,18 @@
                   <div class="bookmark-icon">
 <!--                    <img :err-src='bm.icon'   :ng-src="bm.icon"  :src="bm.icon"  />-->
                     <img :ng-src="'https://favicon.lucq.fun/?url=http://'+bm.urls" :src="'https://favicon.lucq.fun/?url=http://'+bm.urls" onerror="this.src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQEAYAAABPYyMiAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAZiS0dEAAAAAAAA+UO7fwAAAAlwSFlzAAAASAAAAEgARslrPgAAAmVJREFUSMftlG1IU2EUx8+5jRHzg+5OiD64WTBBjSY5ZybUJMaMiIUICUKFIGmoIIogYWKFBmtDxN1tBKIWvlS6SR+iLFDBXqSMgmzbvQ7fkAjcINmQ5u7pQwyCiOvWx/p/fPj9/5znnPM8AP+VolRTjjHhTlmZipzEk9GYao4sVaMYxXp62NgIdpLBCuLP05mZZHOYZA3p5KgMjBcUwCmw4PfVVYiBGmbW1zMzOU4QCgtTvdAeRESEyNZyJbx+dDTjVv/9YFSjSScnfabsbPYMF+AbxsYS3F5TfwPZAacpMNfUBEAljK24mMJwlLIUClTAdfwok9FXWBTtc3Phzqv7c/RWa8KnrHZM8VltbRjC92AxGkEPRpSJInjJQPpIBJoZC6nn50M19dM5J/v6/lhRxgXXDX9Qp1POcmHh2sTEQbfbvVmrUCTbr4RPaeMe8Q0eTyI36VkrW50mftjrPWCyDn9oSUuTdj4Y/1Qpl7NdzkNC98iIqsIxHdQVFaU8eWW1U1guLy1lr3Acr3O7pXi227EhDLpcCZ8UL/kK8LIYjxtDIRhEP8xGIlI8bcAKvY3FGB/zYvf81pYUL/0PvGTKoTUvjzbgCx5ZWlJq3a5lQa1Ge3yTWnp64ASYqVcUoXn3Jtja2/EpRtHj89FF8Tb25ufDOwCo8/lSL0BF/eDPzcVXeA7WDAa6J9rES1VVdJqx41JHBwCE8BgA3JU9B+3AACziMwjv7MAaPQb/wgIAnP2rDpCWtpkncjm+Ro34bWgo3FkX0O6bnARARCT6hSR6YzazXa7DfLyigo7TNtObxNb/s/oB7V8JFvW/8IQAAAAldEVYdGRhdGU6Y3JlYXRlADIwMjAtMDItMDJUMTg6MTE6NTgrMDg6MDCoc6tpAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDIwLTAyLTAyVDE4OjExOjU4KzA4OjAw2S4T1QAAAGd0RVh0c3ZnOmJhc2UtdXJpAGZpbGU6Ly8vaG9tZS9hZG1pbi9pY29uLWZvbnQvdG1wL2ljb25fNWhyOG55Nmo1bWMvamluZ2RpYW5hbmxpX2tvbmd3dWppYW94aW5nX3Nob3VjYW5nLnN2Z4/vilwAAAAASUVORK5CYII='" alt=""  ng-show="bm.urls">
-
-
                   </div>
                   <div class="bookmark-official">{{bm.urls}}&nbsp;·&nbsp;</div><div class="bookmark-time">{{bm.createTime|changeTime}}</div>
                 </div>
               </div>
-
             </div>
-
             <el-divider class="bookmark-hr"></el-divider>
           </el-col>
         </el-row>
+
+
+
+
       </div>
 
 

@@ -3,7 +3,8 @@
 
   <el-container>
     <transition name="el-zoom-in-left">
-    <el-aside width="300px" style="height:900px;box-shadow: inset -1px 0 0 rgba(0,0,0,.1);" v-show="isShowZtree" class="transition-box">
+
+    <el-aside  :style="asideHeight" v-show="isShowZtree" class="transition-box">
 
 
       <el-header  class="aside-logo">
@@ -27,11 +28,12 @@
       <div class="aside-title" @click="gorecycle"><i class="el-icon-delete-solid"></i><span>回收站</span></div>
       <div class="aside-title" @click="importHtml"><i class="el-icon-s-platform"></i><span>导入书签</span></div>
       <div class="aside-title"><i class="el-icon-s-comment"></i><span>意见反馈</span></div>
-      <div class="aside-title"><i class="el-icon-s-grid"></i><span>其他设置</span></div>
+      <div class="aside-title asideMenu" ><i class="el-icon-s-grid"></i><span>其他设置</span></div>
+    </el-aside>
 
 <!--      <el-footer class="aside-navigation">-->
 <!--      </el-footer>-->
-    </el-aside>
+
 
     </transition>
 
@@ -106,7 +108,7 @@
 
 
       </el-main>
-      <el-footer>Footer</el-footer>
+
 
     </el-container>
 
@@ -364,6 +366,11 @@
           "name": "待续读",
           "value": 3
         }],
+        asideHeight:{
+          height:"",
+          width:"300px",
+        }
+
 
       }
     },
@@ -371,13 +378,23 @@
       var that=this;
       //书签菜单
       that.getList();
+
+
+      window.addEventListener('resize', this.getHeight);
+      this.getHeight()
     },
     methods:{
 
+      /**自动获取高度**/
+      getHeight(){
+        if (window.innerHeight<=900) {
+          this.asideHeight.height=='700px';
 
+          return;
+        }
+        this.asideHeight.height=window.innerHeight+'px';
 
-
-
+      },
 
 
       /**书签编辑设置的 标签开始**/
@@ -414,10 +431,6 @@
 
 
       /**书签编辑设置的 标签结束**/
-
-
-
-
 
 
       /** 新增书签Url操作 */
@@ -756,6 +769,9 @@
         this.editBookmark(e)
       }
     },
+    destroyed(){
+      window.removeEventListener('resize', this.getHeight)
+    },
     handleCommand(command) {
       this.$message('click on item ' + command);
     },
@@ -788,18 +804,18 @@
   .ztree.showIcon li a span.button.switch {visibility:visible}
   .ztree li a.curSelectedNode {background-color:#D4D4D4;border:0;height:32px;}
   .ztree li span {line-height:32px;}
-  .ztree li span.button {margin-top: -4px;margin-left:3px;width: 21px;height: 21px;}
+  .ztree li span.button {margin-top: 0px;margin-left:2px;width: 20px;height: 20px;}
 
-  .ztree li span.button.switch {width: 16px;height: 16px;}
+  .ztree li span.button.switch {width: 20px;height: 20px;}
 
   /*.ztree li a.level0 span {font-size: 100%;font-weight: bold}*/
-  .ztree li span.button {background-image:url("../ztree/left_menuForOutLook.png"); *background-image:url("../ztree/left_menuForOutLook.gif")}
+  .ztree li span.button {background-image:url("../ztree/bottom.png");}
   .ztree li span.button.switch.level0 {width: 20px; height:20px}
   .ztree li span.button.switch.level1 {width: 20px; height:20px}
   .ztree li span.button.noline_open {background-position: 0 0;}
-  .ztree li span.button.noline_close {background-position: -18px 0;}
-  .ztree li span.button.noline_open.level0 {background-position: 0 0;}
-  .ztree li span.button.noline_close.level0 {background-position:-18px 0;}
+  .ztree li span.button.noline_close {background-position: 0 0;background-image:url("../ztree/right.png");}
+  /*.ztree li span.button.noline_open.level0 {background-position: 0 0;}*/
+  /*.ztree li span.button.noline_close.level0 {background-position:-18px 0;}*/
 
 
   .ztree li span.button.ico_close{vertical-align: middle}
@@ -1192,8 +1208,13 @@
     padding-top: 6px!important;
   }
 
+  el-aside{
+    box-shadow: inset -1px 0 0 rgba(0,0,0,.1);
+  }
 
-
+  .asideMenu{
+    margin-bottom: 100px;
+  }
 
 
 </style>
