@@ -62,7 +62,7 @@
 
       </div>
 
-      <div  class="bookmarklist" v-loading="loading" v-if="showbookmark">
+      <div  class="bookmarklist" v-loading="loading" v-if="showbookmark" >
 
         <el-row >
           <hr class="bookamrk-hr"/>
@@ -96,9 +96,6 @@
             <el-divider class="bookmark-hr"></el-divider>
           </el-col>
         </el-row>
-
-
-
 
       </div>
 
@@ -571,6 +568,9 @@
   .bookmarktag{
     margin-right: 5px;
   }
+.bookmarklist{
+  /*height: 400px !important;*/
+}
 
 
 </style>

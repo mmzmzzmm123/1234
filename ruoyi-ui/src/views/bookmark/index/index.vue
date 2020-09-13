@@ -1,7 +1,7 @@
 <template >
-  <div>
+  <div >
 
-  <el-container>
+  <el-container >
     <transition name="el-zoom-in-left">
 
     <el-aside  :style="asideHeight" v-show="isShowZtree" class="transition-box">
@@ -37,20 +37,20 @@
 
     </transition>
 
-    <el-drawer
-      title="我是标题"
-      :visible.sync="drawer"
-      :direction="direction"
-      :modal-append-to-body="drawerS"
-      :append-to-body="isShowZtree"
-    >
-      <span>我来啦!</span>
-    </el-drawer>
+<!--    <el-drawer-->
+<!--      title="我是标题"-->
+<!--      :visible.sync="drawer"-->
+<!--      :direction="direction"-->
+<!--      :modal-append-to-body="drawerS"-->
+<!--      :append-to-body="isShowZtree"-->
+<!--    >-->
+<!--      <span>我来啦!</span>-->
+<!--    </el-drawer>-->
 
 
 
 <!--    <el-button @click="isShowZtree = !isShowZtree">Click Me</el-button>-->
-    <el-container>
+    <el-container >
 
       <el-header  class="header-sousou" style="height: 50px">
       <div class="sousou-left">
@@ -102,7 +102,7 @@
 
 
       </el-header>
-      <el-main class="bookmarkmain" >
+      <el-main class="bookmarkmain" style="overflow: hidden;">
 
         <router-view :key="$route.query.menuId"></router-view>
 
@@ -387,12 +387,12 @@
 
       /**自动获取高度**/
       getHeight(){
-        if (window.innerHeight<=900) {
-          this.asideHeight.height=='700px';
-
-          return;
-        }
-        this.asideHeight.height=window.innerHeight+'px';
+        // if (window.innerHeight<=500) {
+        //    this.asideHeight.height=='500';
+        //
+        //   return;
+        // }
+        // this.asideHeight.height=window.innerHeight+'px';
 
       },
 
@@ -830,16 +830,17 @@
   /*background:red;*/
   }
 
-  /*.areaTree{*/
-  /*  width: 300px;*/
-  /*  !*height: 700px;*!*/
-  /*  font-weight: 400;*/
-  /* !*overflow:auto;*!*/
-  /*  background-color: #F6F6F6;*/
-  /* !* background:url('https://ftp.bmp.ovh/imgs/2020/08/4ac1d6b4f41049ef.jpg') no-repeat;*!*/
-  /*  background-size: 100% 100%;*/
+  .areaTree{
 
-  /*}*/
+    height: 400px;
+    /*overflow:scroll;*/
+    /*font-weight: 400;*/
+   overflow:auto;
+   /* background-color: #F6F6F6;*/
+   /* background:url('https://ftp.bmp.ovh/imgs/2020/08/4ac1d6b4f41049ef.jpg') no-repeat;*/
+   /* background-size: 100% 100%;*/
+
+  }
 
   aside{
     padding:0;
@@ -918,14 +919,22 @@
     text-align: center;
     float: left;
     padding: 0 8px;
+
   }
   .filter-sort:hover{
     color: #6f8eee;
     background-color: #e6e6e6;
 
   }
+
+
+
+
+
+
   .bookmarkmain{
     padding-top: 0px!important;
+
   }
   .separator{
     float: left;
@@ -1212,9 +1221,8 @@
     box-shadow: inset -1px 0 0 rgba(0,0,0,.1);
   }
 
-  .asideMenu{
-    margin-bottom: 100px;
-  }
+
+
 
 
 </style>
