@@ -2,9 +2,9 @@
   <div >
 
   <el-container >
-    <transition name="el-zoom-in-left">
+    <transition name="el-zoom-in-left" >
 
-    <el-aside  :style="asideHeight" v-show="isShowZtree" class="transition-box">
+    <el-aside  :style="asideHeight" v-show="isShowZtree" class="transition-box" style="overflow-x:hidden;overflow-y: hidden;">
 
 
       <el-header  class="aside-logo">
@@ -12,7 +12,7 @@
 
       </el-header>
 
-
+<div class="main-right">
 
       <div class="aside-title" @click="goBookmarkList"><i class="el-icon-s-tools"></i><span>全部书签</span></div>
       <div class="aside-title"><i class="el-icon-help"></i><span>发现</span></div>
@@ -28,7 +28,27 @@
       <div class="aside-title" @click="gorecycle"><i class="el-icon-delete-solid"></i><span>回收站</span></div>
       <div class="aside-title" @click="importHtml"><i class="el-icon-s-platform"></i><span>导入书签</span></div>
       <div class="aside-title"><i class="el-icon-s-comment"></i><span>意见反馈</span></div>
-      <div class="aside-title asideMenu" ><i class="el-icon-s-grid"></i><span>其他设置</span></div>
+      <div class="aside-title " style="margin-bottom: 100px"><i class="el-icon-s-grid"></i><span>其他设置</span></div>
+
+      </div>
+
+
+
+
+
+      <div class="tabBar">
+        <div class="" style="width: 100%;height: 30px;background-color: #cacaca;float: left;text-align: center;line-height: 30px" >
+          <i class="el-icon-folder-checked"></i>
+          <span>新的收藏集</span>
+        </div>
+
+        <div style="float: left;width: 100%;height: 50px;background-color: black" >
+        <img src="https://s1.ax1x.com/2020/09/13/w0jfy9.png" style="width: 100%;height: 100%">
+        </div>
+
+        </div>
+
+
     </el-aside>
 
 <!--      <el-footer class="aside-navigation">-->
@@ -102,7 +122,7 @@
 
 
       </el-header>
-      <el-main class="bookmarkmain" style="overflow: hidden;">
+      <el-main class="bookmarkmain" >
 
         <router-view :key="$route.query.menuId"></router-view>
 
@@ -151,6 +171,7 @@
       <el-button round  @click="cancel">取消</el-button>
 
     </div>
+
   </el-dialog>
 
 
@@ -368,7 +389,7 @@
         }],
         asideHeight:{
           height:"",
-          width:"300px",
+
         }
 
 
@@ -387,12 +408,11 @@
 
       /**自动获取高度**/
       getHeight(){
-        // if (window.innerHeight<=500) {
-        //    this.asideHeight.height=='500';
-        //
+        // if (window.innerHeight<=750) {
+        //    this.asideHeight.height=='750px';
         //   return;
         // }
-        // this.asideHeight.height=window.innerHeight+'px';
+       this.asideHeight.height=window.innerHeight+'px';
 
       },
 
@@ -830,29 +850,34 @@
   /*background:red;*/
   }
 
-  .areaTree{
+  /*.areaTree{*/
 
-    height: 400px;
-    /*overflow:scroll;*/
-    /*font-weight: 400;*/
-   overflow:auto;
-   /* background-color: #F6F6F6;*/
-   /* background:url('https://ftp.bmp.ovh/imgs/2020/08/4ac1d6b4f41049ef.jpg') no-repeat;*/
-   /* background-size: 100% 100%;*/
+  /*  height: 400px;*/
+  /*  overflow:scroll;*/
+  /*  font-weight: 400;*/
+  /*overflow:auto;*/
+  /*  background-color: #F6F6F6;*/
+  /*  background:url('https://ftp.bmp.ovh/imgs/2020/08/4ac1d6b4f41049ef.jpg') no-repeat;*/
+  /*  background-size: 100% 100%;*/
+
+  /*}*/
+
+  #app{
+    overflow-y: hidden;
 
   }
-
   aside{
     padding:0;
     margin-bottom: 0;
     /*background:url('https://ftp.bmp.ovh/imgs/2020/08/4ac1d6b4f41049ef.jpg') no-repeat;*/
-    background-color: #f6f6f6;
-    /*background: url(http://csssecrets.io/images/tiger.jpg) no-repeat;*/
+    /*background-color: #f6f6f6;*/
+    background: url("https://s1.ax1x.com/2020/08/16/dEcqVU.jpg") no-repeat;
+
     /*background-size: cover;*/
     /*z-index: -1;!*-1 可以当背景*!*/
     /*-webkit-filter: blur(3px);*/
     /*filter: blur(3px);*/
-
+    box-shadow: inset -1px 0 0 rgba(0,0,0,.1);
 
   }
 
@@ -1128,7 +1153,7 @@
   }
   .bookmarklist{
     width: 100%;
-    height: 800px;
+    height: 600px;
     /*background-color: #fff;*/
     float: left
   }
@@ -1222,7 +1247,46 @@
   }
 
 
+.main-right{
+  /*overflow:scroll;*/
+  /*width: 300px;*/
+  height: 85%;
+  min-height: 40%;
+  overflow:auto;
+  /*overflow: hidden;*/
 
+
+  z-index: 1;
+
+}
+  .main-right::-webkit-scrollbar{
+    /*滚动条整体样式*/
+    width:0px;
+    /*高宽分别对应横竖滚动条的尺寸*/
+    height: 12px !important;
+
+  }
+
+  /*定义滑块 样式*/
+  .main-right::-webkit-scrollbar-thumb {
+    border-radius: 3px;
+    /*height: 10px!important;    !* 滚动条滑块长度 *!*/
+    background-color: #6ba5ff;
+
+
+  }
+  /*定义滚动条轨道 内阴影+圆角 透明效果*/
+  ::-webkit-scrollbar-track {
+    background-color:transparent;
+
+  }
+
+  .tabBar{
+    width: 300px;
+    overflow: hidden;
+    position: fixed;
+    bottom: 0;
+  }
 
 
 </style>

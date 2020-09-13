@@ -17,11 +17,6 @@
               <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>按网站A-Z排序</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
-
-
-
-
-
         </div>
         <div >
           <el-divider direction="vertical"></el-divider>
@@ -47,27 +42,26 @@
         <div class="filler-tag">
           <el-tag size="small" >...</el-tag>
         </div>
-
-
-
       </div>
+
+
+
 
       <div class="nullbookmark" v-if="showimg">
           <div class="nullbookmark-img">
-
           </div>
         <div style="color: #000000" class="nullbookmark-text">
           此目录还未添加书签
         </div>
-
       </div>
 
-      <div  class="bookmarklist" v-loading="loading" v-if="showbookmark" >
 
+
+
+      <div  class="bookmarklist" v-loading="loading" v-if="showbookmark" >
         <el-row >
           <hr class="bookamrk-hr"/>
           <el-col :span="24" v-for="bm in bookmarkList">
-
             <div class="editBookamrk">
               <div class="editlist">
                 <div> <el-button plain size="small" @click="handleUpdate(bm.bookmarkId)">修改</el-button></div>
@@ -469,7 +463,7 @@
 
 
 
-<style>
+<style scoped>
 
 
 /**编辑标签 开始**/
@@ -512,6 +506,7 @@
   .bookamrk-hr{
    margin-top: 0;
   }
+
 
   .filter-sort-dropdown{
     top:65px!important;
