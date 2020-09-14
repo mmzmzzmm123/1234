@@ -975,17 +975,19 @@
     display: flex;
   }
 
+
   .header-sousou input{
     margin-top: 8px;
     border: 0px;
     background-color: #f2f2f2;
     border-radius: 0!important;
+    /*border:  1px solid #f2f2f2;*/
 
 
   }
   .header-sousou input:focus{
     background-color: #FFFFFF!important;
-    border:  1px solid #f2f2f2;
+    border:  1px solid #C0C4CC;
   }
 
 

@@ -103,11 +103,8 @@ public class SqBookmarkServiceImpl implements ISqBookmarkService
     @Override
     public int insertSqBookmark(SqBookmark sqBookmark)
     {
-
+        sqBookmark.setCreateTime(DateUtil.date(System.currentTimeMillis()));
       int i= sqBookmarkMapper.insertUseGeneratedKeys(sqBookmark);
-
-
-        sqBookmark.setCreateTime(DateUtils.getNowDate());
         //传入的标签
         List<Map<String, Object>> listmap = sqBookmark.getSqTags();
         if (listmap==null||listmap.isEmpty()||listmap.size()==0){
@@ -216,7 +213,7 @@ public class SqBookmarkServiceImpl implements ISqBookmarkService
             addtag=addtag.substring(0,addtag.length()-1);
             String[] add = addtag.split(",");
             Long[] num = (Long[]) ConvertUtils.convert(add,Long.class);
-            sqUserTagMapper.updateCountReduce(num, sqBookmark.getUserid());
+            sqUserTagMapper.updateCountAdd(num, sqBookmark.getUserid());
         }
 
         return sqBookmarkMapper.updateSqBookmark(sqBookmark);

@@ -10,10 +10,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="tagId"    column="tag_id"    />
         <result property="icount"    column="icount"    />
         <result property="iorder"    column="iorder"    />
+        <result property="tagName"    column="tag_name"    />
     </resultMap>
 
     <sql id="selectSqUserTagVo">
-        select id, user_id, tag_id, icount, iorder from sq_user_tag
+        select id, user_id, tag_id,tag_name,icount, iorder from sq_user_tag
     </sql>
 
     <select id="selectSqUserTagList" parameterType="SqUserTag" resultMap="SqUserTagResult">
@@ -23,6 +24,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="tagId != null "> and tag_id = #{tagId}</if>
             <if test="icount != null "> and icount = #{icount}</if>
             <if test="iorder != null "> and iorder = #{iorder}</if>
+            <if test="tagName != null "> and tagName = #{tagName}</if>
         </where>
     </select>
 
@@ -38,12 +40,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="tagId != null">tag_id,</if>
             <if test="icount != null">icount,</if>
             <if test="iorder != null">iorder,</if>
+            <if test="tagName != null ">tag_name,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="userId != null">#{userId},</if>
             <if test="tagId != null">#{tagId},</if>
             <if test="icount != null">#{icount},</if>
             <if test="iorder != null">#{iorder},</if>
+            <if test="tagName != null ">#{tagName},</if>
          </trim>
     </insert>
 
@@ -54,6 +58,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="tagId != null">tag_id = #{tagId},</if>
             <if test="icount != null">icount = #{icount},</if>
             <if test="iorder != null">iorder = #{iorder},</if>
+            <if test="tagName != null">tagName = #{tagName},</if>
         </trim>
         where id = #{id}
     </update>

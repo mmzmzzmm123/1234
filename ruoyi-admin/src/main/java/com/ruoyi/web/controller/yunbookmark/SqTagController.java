@@ -1,6 +1,8 @@
 package com.ruoyi.web.controller.yunbookmark;
 
 import java.util.List;
+
+import com.ruoyi.common.core.domain.entity.SysUser;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,6 +34,9 @@ public class SqTagController extends BaseController
 {
     @Autowired
     private ISqTagService sqTagService;
+
+
+
 
     /**
      * 查询书签_标签列表

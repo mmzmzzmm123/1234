@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.github.wujun234.uid.UidGenerator;
 import com.ruoyi.bookmark.domain.SqUserTag;
 import com.ruoyi.bookmark.mapper.SqUserTagMapper;
 import com.ruoyi.common.utils.DateUtils;
@@ -17,6 +18,8 @@ import org.springframework.stereotype.Service;
 import com.ruoyi.bookmark.mapper.SqTagMapper;
 import com.ruoyi.bookmark.domain.SqTag;
 import com.ruoyi.bookmark.service.ISqTagService;
+
+import javax.annotation.Resource;
 
 /**
  * 书签_标签Service业务层处理
@@ -140,22 +143,25 @@ public class SqTagServiceImpl implements ISqTagService
             }else {
                 sqUserTag.setIcount(1);
                 sqUserTag.setIorder(1);
+                sqUserTag.setTagName(tagName);
                 sqUserTagMapper.insertSqUserTag(sqUserTag);
             }
 
         }else {
             //不存在 >>创建 返回ID
+
             sqTag.setUserId(userId);
             sqTag.setTagType("P");
             sqTag.setIcount(1);
             sqTag.setStatus(0);
             sqTag.setCreateTime(DateUtils.getNowDate());
-            sqTagMapper.insertUseGeneratedKeys(sqTag);
+            sqTagMapper.insertSqTag(sqTag);
             logger.debug("传入的新标签 tagid="+sqTag.getId());
             map.put("tagId",sqTag.getId());
             //添加到用戶个人书签里面去
             sqUserTag.setUserId(userId);
             sqUserTag.setTagId(Long.valueOf(sqTag.getId()));
+            sqUserTag.setTagName(sqTag.getName());
             sqUserTag.setIcount(1);
             sqUserTag.setIorder(1);
             sqUserTagMapper.insertSqUserTag(sqUserTag);

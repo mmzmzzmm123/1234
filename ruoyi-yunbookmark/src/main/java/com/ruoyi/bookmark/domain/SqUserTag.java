@@ -36,6 +36,11 @@ public class SqUserTag extends BaseEntity
     @Column(name = "tag_id")
     private Long tagId;
 
+    /** 书签排序 */
+    @Excel(name = "书签名字")
+    @Column(name = "tag_name")
+    private String tagName;
+
     /** 书签引用的数量 */
     @Excel(name = "书签引用的数量")
     @Column(name = "icount")
@@ -45,6 +50,15 @@ public class SqUserTag extends BaseEntity
     @Excel(name = "书签排序")
     @Column(name = "iorder")
     private Integer iorder;
+
+
+    public String getTagName() {
+        return tagName;
+    }
+
+    public void setTagName(String tagName) {
+        this.tagName = tagName;
+    }
 
     public void setId(Long id)
     {
@@ -100,6 +114,7 @@ public class SqUserTag extends BaseEntity
             .append("tagId", getTagId())
             .append("icount", getIcount())
             .append("iorder", getIorder())
+            .append("tagName", getTagName())
             .toString();
     }
     public SqUserTag(){

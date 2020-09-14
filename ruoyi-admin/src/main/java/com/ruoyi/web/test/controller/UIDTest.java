@@ -22,7 +22,7 @@ public class UIDTest extends BaseSpringBootTest{
     public void testSerialGenerate() {
         // Generate UID
         long cachedUidGeneratoruid = cachedUidGenerator.getUID();
-        long defaultUidGeneratoruid = defaultUidGenerator.getUID();
+        long defaultUidGeneratoruid = defaultUidGenerator.getUID(); //用这个
 
         System.out.println("cachedUidGeneratoruid:"+cachedUidGeneratoruid);
         System.out.println("cachedUidGeneratoruid解密:"+cachedUidGenerator.parseUID(cachedUidGeneratoruid));
