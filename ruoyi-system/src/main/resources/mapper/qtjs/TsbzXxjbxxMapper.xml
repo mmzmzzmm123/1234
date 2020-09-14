@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.qtjs.mapper.TsbzXxjbxxMapper">
+
+    <resultMap type="TsbzXxjbxx" id="TsbzXxjbxxResult">
+        <result property="id" column="id"/>
+        <result property="xxdm" column="xxdm"/>
+        <result property="countyid" column="countyid"/>
+        <result property="townid" column="townid"/>
+        <result property="villageid" column="villageid"/>
+        <result property="jyjxxdm" column="jyjxxdm"/>
+        <result property="xxmc" column="xxmc"/>
+        <result property="xxywmc" column="xxywmc"/>
+        <result property="xxdz" column="xxdz"/>
+        <result property="xxxz" column="xxxz"/>
+        <result property="dzzfzr" column="dzzfzr"/>
+        <result property="jxny" column="jxny"/>
+        <result property="xxbbm" column="xxbbm"/>
+        <result property="xxlbm" column="xxlbm"/>
+        <result property="szdqlbm" column="szdqlbm"/>
+        <result property="szdjjsxm" column="szdjjsxm"/>
+        <result property="szdmzsxm" column="szdmzsxm"/>
+        <result property="rxnl" column="rxnl"/>
+        <result property="zjxyym" column="zjxyym"/>
+        <result property="fjxyym" column="fjxyym"/>
+        <result property="zsqy" column="zsqy"/>
+        <result property="yzbm" column="yzbm"/>
+        <result property="lxdh" column="lxdh"/>
+        <result property="czdh" column="czdh"/>
+        <result property="dzxx" column="dzxx"/>
+        <result property="zydz" column="zydz"/>
+        <result property="zzjgdm" column="zzjgdm"/>
+        <result property="lsyg" column="lsyg"/>
+        <result property="dqxn" column="dqxn"/>
+        <result property="dqxq" column="dqxq"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <sql id="selectTsbzXxjbxxVo">
+        select id, xxdm, countyid, townid, villageid, jyjxxdm, xxmc, xxywmc, xxdz, xxxz, dzzfzr, jxny, xxbbm, xxlbm, szdqlbm, szdjjsxm, szdmzsxm, rxnl, zjxyym, fjxyym, zsqy, yzbm, lxdh, czdh, dzxx, zydz, zzjgdm, lsyg, dqxn, dqxq, create_time from tsbz_xxjbxx
+    </sql>
+
+    <select id="selectTsbzXxjbxxList" parameterType="TsbzXxjbxx" resultMap="TsbzXxjbxxResult">
+        <include refid="selectTsbzXxjbxxVo"/>
+        <where>
+            <if test="xxdm != null  and xxdm != ''">and xxdm = #{xxdm}</if>
+            <if test="countyid != null  and countyid != ''">and countyid = #{countyid}</if>
+            <if test="townid != null  and townid != ''">and townid = #{townid}</if>
+            <if test="villageid != null  and villageid != ''">and villageid = #{villageid}</if>
+            <if test="jyjxxdm != null  and jyjxxdm != ''">and jyjxxdm = #{jyjxxdm}</if>
+            <if test="xxmc != null  and xxmc != ''">and xxmc = #{xxmc}</if>
+            <if test="xxywmc != null  and xxywmc != ''">and xxywmc = #{xxywmc}</if>
+            <if test="xxdz != null  and xxdz != ''">and xxdz = #{xxdz}</if>
+            <if test="xxxz != null  and xxxz != ''">and xxxz = #{xxxz}</if>
+            <if test="dzzfzr != null  and dzzfzr != ''">and dzzfzr = #{dzzfzr}</if>
+            <if test="jxny != null ">and jxny = #{jxny}</if>
+            <if test="xxbbm != null  and xxbbm != ''">and xxbbm = #{xxbbm}</if>
+            <if test="xxlbm != null  and xxlbm != ''">and xxlbm = #{xxlbm}</if>
+            <if test="szdqlbm != null  and szdqlbm != ''">and szdqlbm = #{szdqlbm}</if>
+            <if test="szdjjsxm != null  and szdjjsxm != ''">and szdjjsxm = #{szdjjsxm}</if>
+            <if test="szdmzsxm != null  and szdmzsxm != ''">and szdmzsxm = #{szdmzsxm}</if>
+            <if test="rxnl != null ">and rxnl = #{rxnl}</if>
+            <if test="zjxyym != null  and zjxyym != ''">and zjxyym = #{zjxyym}</if>
+            <if test="fjxyym != null  and fjxyym != ''">and fjxyym = #{fjxyym}</if>
+            <if test="zsqy != null  and zsqy != ''">and zsqy = #{zsqy}</if>
+            <if test="yzbm != null  and yzbm != ''">and yzbm = #{yzbm}</if>
+            <if test="lxdh != null  and lxdh != ''">and lxdh = #{lxdh}</if>
+            <if test="czdh != null  and czdh != ''">and czdh = #{czdh}</if>
+            <if test="dzxx != null  and dzxx != ''">and dzxx = #{dzxx}</if>
+            <if test="zydz != null  and zydz != ''">and zydz = #{zydz}</if>
+            <if test="zzjgdm != null  and zzjgdm != ''">and zzjgdm = #{zzjgdm}</if>
+            <if test="lsyg != null  and lsyg != ''">and lsyg = #{lsyg}</if>
+            <if test="dqxn != null  and dqxn != ''">and dqxn = #{dqxn}</if>
+            <if test="dqxq != null  and dqxq != ''">and dqxq = #{dqxq}</if>
+        </where>
+    </select>
+
+    <select id="selectTsbzXxjbxxById" parameterType="String" resultMap="TsbzXxjbxxResult">
+        <include refid="selectTsbzXxjbxxVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertTsbzXxjbxx" parameterType="TsbzXxjbxx">
+        insert into tsbz_xxjbxx
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="xxdm != null">xxdm,</if>
+            <if test="countyid != null">countyid,</if>
+            <if test="townid != null">townid,</if>
+            <if test="villageid != null">villageid,</if>
+            <if test="jyjxxdm != null">jyjxxdm,</if>
+            <if test="xxmc != null">xxmc,</if>
+            <if test="xxywmc != null">xxywmc,</if>
+            <if test="xxdz != null">xxdz,</if>
+            <if test="xxxz != null">xxxz,</if>
+            <if test="dzzfzr != null">dzzfzr,</if>
+            <if test="jxny != null">jxny,</if>
+            <if test="xxbbm != null">xxbbm,</if>
+            <if test="xxlbm != null">xxlbm,</if>
+            <if test="szdqlbm != null">szdqlbm,</if>
+            <if test="szdjjsxm != null">szdjjsxm,</if>
+            <if test="szdmzsxm != null">szdmzsxm,</if>
+            <if test="rxnl != null">rxnl,</if>
+            <if test="zjxyym != null">zjxyym,</if>
+            <if test="fjxyym != null">fjxyym,</if>
+            <if test="zsqy != null">zsqy,</if>
+            <if test="yzbm != null">yzbm,</if>
+            <if test="lxdh != null">lxdh,</if>
+            <if test="czdh != null">czdh,</if>
+            <if test="dzxx != null">dzxx,</if>
+            <if test="zydz != null">zydz,</if>
+            <if test="zzjgdm != null">zzjgdm,</if>
+            <if test="lsyg != null">lsyg,</if>
+            <if test="dqxn != null">dqxn,</if>
+            <if test="dqxq != null">dqxq,</if>
+            <if test="createTime != null">create_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="xxdm != null">#{xxdm},</if>
+            <if test="countyid != null">#{countyid},</if>
+            <if test="townid != null">#{townid},</if>
+            <if test="villageid != null">#{villageid},</if>
+            <if test="jyjxxdm != null">#{jyjxxdm},</if>
+            <if test="xxmc != null">#{xxmc},</if>
+            <if test="xxywmc != null">#{xxywmc},</if>
+            <if test="xxdz != null">#{xxdz},</if>
+            <if test="xxxz != null">#{xxxz},</if>
+            <if test="dzzfzr != null">#{dzzfzr},</if>
+            <if test="jxny != null">#{jxny},</if>
+            <if test="xxbbm != null">#{xxbbm},</if>
+            <if test="xxlbm != null">#{xxlbm},</if>
+            <if test="szdqlbm != null">#{szdqlbm},</if>
+            <if test="szdjjsxm != null">#{szdjjsxm},</if>
+            <if test="szdmzsxm != null">#{szdmzsxm},</if>
+            <if test="rxnl != null">#{rxnl},</if>
+            <if test="zjxyym != null">#{zjxyym},</if>
+            <if test="fjxyym != null">#{fjxyym},</if>
+            <if test="zsqy != null">#{zsqy},</if>
+            <if test="yzbm != null">#{yzbm},</if>
+            <if test="lxdh != null">#{lxdh},</if>
+            <if test="czdh != null">#{czdh},</if>
+            <if test="dzxx != null">#{dzxx},</if>
+            <if test="zydz != null">#{zydz},</if>
+            <if test="zzjgdm != null">#{zzjgdm},</if>
+            <if test="lsyg != null">#{lsyg},</if>
+            <if test="dqxn != null">#{dqxn},</if>
+            <if test="dqxq != null">#{dqxq},</if>
+            <if test="createTime != null">#{createTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateTsbzXxjbxx" parameterType="TsbzXxjbxx">
+        update tsbz_xxjbxx
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="xxdm != null">xxdm = #{xxdm},</if>
+            <if test="countyid != null">countyid = #{countyid},</if>
+            <if test="townid != null">townid = #{townid},</if>
+            <if test="villageid != null">villageid = #{villageid},</if>
+            <if test="jyjxxdm != null">jyjxxdm = #{jyjxxdm},</if>
+            <if test="xxmc != null">xxmc = #{xxmc},</if>
+            <if test="xxywmc != null">xxywmc = #{xxywmc},</if>
+            <if test="xxdz != null">xxdz = #{xxdz},</if>
+            <if test="xxxz != null">xxxz = #{xxxz},</if>
+            <if test="dzzfzr != null">dzzfzr = #{dzzfzr},</if>
+            <if test="jxny != null">jxny = #{jxny},</if>
+            <if test="xxbbm != null">xxbbm = #{xxbbm},</if>
+            <if test="xxlbm != null">xxlbm = #{xxlbm},</if>
+            <if test="szdqlbm != null">szdqlbm = #{szdqlbm},</if>
+            <if test="szdjjsxm != null">szdjjsxm = #{szdjjsxm},</if>
+            <if test="szdmzsxm != null">szdmzsxm = #{szdmzsxm},</if>
+            <if test="rxnl != null">rxnl = #{rxnl},</if>
+            <if test="zjxyym != null">zjxyym = #{zjxyym},</if>
+            <if test="fjxyym != null">fjxyym = #{fjxyym},</if>
+            <if test="zsqy != null">zsqy = #{zsqy},</if>
+            <if test="yzbm != null">yzbm = #{yzbm},</if>
+            <if test="lxdh != null">lxdh = #{lxdh},</if>
+            <if test="czdh != null">czdh = #{czdh},</if>
+            <if test="dzxx != null">dzxx = #{dzxx},</if>
+            <if test="zydz != null">zydz = #{zydz},</if>
+            <if test="zzjgdm != null">zzjgdm = #{zzjgdm},</if>
+            <if test="lsyg != null">lsyg = #{lsyg},</if>
+            <if test="dqxn != null">dqxn = #{dqxn},</if>
+            <if test="dqxq != null">dqxq = #{dqxq},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTsbzXxjbxxById" parameterType="String">
+        delete from tsbz_xxjbxx where id = #{id}
+    </delete>
+
+    <delete id="deleteTsbzXxjbxxByIds" parameterType="String">
+        delete from tsbz_xxjbxx where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
