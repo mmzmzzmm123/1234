@@ -1,10 +1,16 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="其他系统教师编号" prop="jsid">
+    <el-form
+      :model="queryParams"
+      ref="queryForm"
+      :inline="true"
+      v-show="showSearch"
+      label-width="88px"
+    >
+      <el-form-item label="所属部门" prop="deptid">
         <el-input
-          v-model="queryParams.jsid"
-          placeholder="请输入其他系统教师编号"
+          v-model="queryParams.deptid"
+          placeholder="请输入部门id"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
@@ -28,28 +34,10 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="部门id" prop="deptid">
-        <el-input
-          v-model="queryParams.deptid"
-          placeholder="请输入部门id"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
       <el-form-item label="教师档案号" prop="dabh">
         <el-input
           v-model="queryParams.dabh"
           placeholder="请输入教师档案号"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="证件类型" prop="zjlx">
-        <el-input
-          v-model="queryParams.zjlx"
-          placeholder="请输入证件类型"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
@@ -92,12 +80,15 @@
         />
       </el-form-item>
       <el-form-item label="出生日期" prop="csrq">
-        <el-date-picker clearable size="small" style="width: 200px"
+        <el-date-picker
+          clearable
+          size="small"
+          style="width: 200px"
           v-model="queryParams.csrq"
           type="date"
           value-format="yyyy-MM-dd"
-          placeholder="选择出生日期">
-        </el-date-picker>
+          placeholder="选择出生日期"
+        ></el-date-picker>
       </el-form-item>
       <el-form-item label="任教年限" prop="rjnx">
         <el-input
@@ -180,16 +171,7 @@
           v-hasPermi="['qtjs:jsjbxx:remove']"
         >删除</el-button>
       </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['qtjs:jsjbxx:export']"
-        >导出</el-button>
-      </el-col>
-	  <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="jsjbxxList" @selection-change="handleSelectionChange">
@@ -234,7 +216,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -277,12 +259,15 @@
           <el-input v-model="form.gwlx" placeholder="请输入岗位类型" />
         </el-form-item>
         <el-form-item label="出生日期" prop="csrq">
-          <el-date-picker clearable size="small" style="width: 200px"
+          <el-date-picker
+            clearable
+            size="small"
+            style="width: 200px"
             v-model="form.csrq"
             type="date"
             value-format="yyyy-MM-dd"
-            placeholder="选择出生日期">
-          </el-date-picker>
+            placeholder="选择出生日期"
+          ></el-date-picker>
         </el-form-item>
         <el-form-item label="任教年限" prop="rjnx">
           <el-input v-model="form.rjnx" placeholder="请输入任教年限" />
@@ -309,7 +294,13 @@
 </template>
 
 <script>
-import { listJsjbxx, getJsjbxx, delJsjbxx, addJsjbxx, updateJsjbxx, exportJsjbxx } from "@/api/qtjs/jsjbxx";
+import {
+  listJsjbxx,
+  getJsjbxx,
+  delJsjbxx,
+  addJsjbxx,
+  updateJsjbxx,
+} from "@/api/qtjs/jsjbxx";
 
 export default {
   name: "Jsjbxx",
@@ -357,8 +348,7 @@ export default {
       // 表单参数
       form: {},
       // 表单校验
-      rules: {
-      }
+      rules: {},
     };
   },
   created() {
@@ -368,7 +358,7 @@ export default {
     /** 查询教师基本信息列表 */
     getList() {
       this.loading = true;
-      listJsjbxx(this.queryParams).then(response => {
+      listJsjbxx(this.queryParams).then((response) => {
         this.jsjbxxList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -399,7 +389,7 @@ export default {
         zyry: null,
         tzb: null,
         zks: null,
-        createTime: null
+        createTime: null,
       };
       this.resetForm("form");
     },
@@ -415,9 +405,9 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.id)
-      this.single = selection.length!==1
-      this.multiple = !selection.length
+      this.ids = selection.map((item) => item.id);
+      this.single = selection.length !== 1;
+      this.multiple = !selection.length;
     },
     /** 新增按钮操作 */
     handleAdd() {
@@ -428,8 +418,8 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const id = row.id || this.ids
-      getJsjbxx(id).then(response => {
+      const id = row.id || this.ids;
+      getJsjbxx(id).then((response) => {
         this.form = response.data;
         this.open = true;
         this.title = "修改教师基本信息";
@@ -437,10 +427,10 @@ export default {
     },
     /** 提交按钮 */
     submitForm() {
-      this.$refs["form"].validate(valid => {
+      this.$refs["form"].validate((valid) => {
         if (valid) {
           if (this.form.id != null) {
-            updateJsjbxx(this.form).then(response => {
+            updateJsjbxx(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("修改成功");
                 this.open = false;
@@ -448,7 +438,7 @@ export default {
               }
             });
           } else {
-            addJsjbxx(this.form).then(response => {
+            addJsjbxx(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("新增成功");
                 this.open = false;
@@ -462,30 +452,24 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$confirm('是否确认删除教师基本信息编号为"' + ids + '"的数据项?', "警告", {
+      this.$confirm(
+        '是否确认删除教师基本信息编号为"' + ids + '"的数据项?',
+        "警告",
+        {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
+          type: "warning",
+        }
+      )
+        .then(function () {
           return delJsjbxx(ids);
-        }).then(() => {
+        })
+        .then(() => {
           this.getList();
           this.msgSuccess("删除成功");
-        }).catch(function() {});
+        })
+        .catch(function () {});
     },
-    /** 导出按钮操作 */
-    handleExport() {
-      const queryParams = this.queryParams;
-      this.$confirm('是否确认导出所有教师基本信息数据项?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
-          return exportJsjbxx(queryParams);
-        }).then(response => {
-          this.download(response.msg);
-        }).catch(function() {});
-    }
-  }
+  },
 };
 </script>
