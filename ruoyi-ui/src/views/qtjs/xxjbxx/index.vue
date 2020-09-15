@@ -1,37 +1,10 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="其他系统编号" prop="xxdm">
+    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="119px">
+      <el-form-item label="学校名称" prop="xxmc">
         <el-input
-          v-model="queryParams.xxdm"
-          placeholder="请输入其他系统编号"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="区县ID" prop="countyid">
-        <el-input
-          v-model="queryParams.countyid"
-          placeholder="请输入区县ID"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="乡镇(街道)ID" prop="townid">
-        <el-input
-          v-model="queryParams.townid"
-          placeholder="请输入乡镇(街道)ID"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="村委(居委)ID" prop="villageid">
-        <el-input
-          v-model="queryParams.villageid"
-          placeholder="请输入村委(居委)ID"
+          v-model="queryParams.xxmc"
+          placeholder="请输入学校名称"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
@@ -46,216 +19,40 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="学校名称" prop="xxmc">
-        <el-input
-          v-model="queryParams.xxmc"
-          placeholder="请输入学校名称"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="学校英文名称" prop="xxywmc">
-        <el-input
-          v-model="queryParams.xxywmc"
-          placeholder="请输入学校英文名称"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="学校地址" prop="xxdz">
-        <el-input
-          v-model="queryParams.xxdz"
-          placeholder="请输入学校地址"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="学校校长" prop="xxxz">
-        <el-input
-          v-model="queryParams.xxxz"
-          placeholder="请输入学校校长"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="党组织负责人" prop="dzzfzr">
-        <el-input
-          v-model="queryParams.dzzfzr"
-          placeholder="请输入党组织负责人"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="建校年月" prop="jxny">
-        <el-date-picker clearable size="small" style="width: 200px"
-          v-model="queryParams.jxny"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="选择建校年月">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item label="学校办别码" prop="xxbbm">
-        <el-input
-          v-model="queryParams.xxbbm"
-          placeholder="请输入学校办别码"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
       <el-form-item label="学校类别码" prop="xxlbm">
-        <el-input
-          v-model="queryParams.xxlbm"
-          placeholder="请输入学校类别码"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+        <el-select v-model="queryParams.xxlbm" placeholder="请选择学校类别码">
+          <el-option
+            v-for="dict in xxlbmOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          ></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="学校办别" prop="xxbbm">
+        <el-select v-model="queryParams.xxbbm" placeholder="请选择学校办别">
+          <el-option
+            v-for="dict in xxbbOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          ></el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="所在地区类别码" prop="szdqlbm">
-        <el-input
-          v-model="queryParams.szdqlbm"
-          placeholder="请输入所在地区类别码"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="所在地经济属性码" prop="szdjjsxm">
-        <el-input
-          v-model="queryParams.szdjjsxm"
-          placeholder="请输入所在地经济属性码"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="所在地民族属性码" prop="szdmzsxm">
-        <el-input
-          v-model="queryParams.szdmzsxm"
-          placeholder="请输入所在地民族属性码"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="入学年龄" prop="rxnl">
-        <el-input
-          v-model="queryParams.rxnl"
-          placeholder="请输入入学年龄"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="主教学语言码" prop="zjxyym">
-        <el-input
-          v-model="queryParams.zjxyym"
-          placeholder="请输入主教学语言码"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="辅教学语言码" prop="fjxyym">
-        <el-input
-          v-model="queryParams.fjxyym"
-          placeholder="请输入辅教学语言码"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="招生区域" prop="zsqy">
-        <el-input
-          v-model="queryParams.zsqy"
-          placeholder="请输入招生区域"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="邮政编码" prop="yzbm">
-        <el-input
-          v-model="queryParams.yzbm"
-          placeholder="请输入邮政编码"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="联系电话" prop="lxdh">
-        <el-input
-          v-model="queryParams.lxdh"
-          placeholder="请输入联系电话"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="传真电话" prop="czdh">
-        <el-input
-          v-model="queryParams.czdh"
-          placeholder="请输入传真电话"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="电子信箱" prop="dzxx">
-        <el-input
-          v-model="queryParams.dzxx"
-          placeholder="请输入电子信箱"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="主页地址" prop="zydz">
-        <el-input
-          v-model="queryParams.zydz"
-          placeholder="请输入主页地址"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+        <el-select v-model="queryParams.szdqlbm" placeholder="请选择所在地区类别码">
+          <el-option
+            v-for="dict in szdqlbmOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          ></el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="组织机构代码" prop="zzjgdm">
         <el-input
           v-model="queryParams.zzjgdm"
           placeholder="请输入组织机构代码"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="历史沿革" prop="lsyg">
-        <el-input
-          v-model="queryParams.lsyg"
-          placeholder="请输入历史沿革"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="当前学年" prop="dqxn">
-        <el-input
-          v-model="queryParams.dqxn"
-          placeholder="请输入当前学年"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="当前学期" prop="dqxq">
-        <el-input
-          v-model="queryParams.dqxq"
-          placeholder="请输入当前学期"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
@@ -311,38 +108,12 @@
 
     <el-table v-loading="loading" :data="xxjbxxList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="编号" align="center" prop="id" />
-      <el-table-column label="其他系统编号" align="center" prop="xxdm" />
-      <el-table-column label="区县ID" align="center" prop="countyid" />
-      <el-table-column label="乡镇(街道)ID" align="center" prop="townid" />
-      <el-table-column label="村委(居委)ID" align="center" prop="villageid" />
-      <el-table-column label="教育局学校代码" align="center" prop="jyjxxdm" />
       <el-table-column label="学校名称" align="center" prop="xxmc" />
-      <el-table-column label="学校英文名称" align="center" prop="xxywmc" />
-      <el-table-column label="学校地址" align="center" prop="xxdz" />
-      <el-table-column label="学校校长" align="center" prop="xxxz" />
-      <el-table-column label="党组织负责人" align="center" prop="dzzfzr" />
-      <el-table-column label="建校年月" align="center" prop="jxny" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.jxny, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="学校办别码" align="center" prop="xxbbm" />
-      <el-table-column label="学校类别码" align="center" prop="xxlbm" />
-      <el-table-column label="所在地区类别码" align="center" prop="szdqlbm" />
-      <el-table-column label="所在地经济属性码" align="center" prop="szdjjsxm" />
-      <el-table-column label="所在地民族属性码" align="center" prop="szdmzsxm" />
-      <el-table-column label="入学年龄" align="center" prop="rxnl" />
-      <el-table-column label="主教学语言码" align="center" prop="zjxyym" />
-      <el-table-column label="辅教学语言码" align="center" prop="fjxyym" />
-      <el-table-column label="招生区域" align="center" prop="zsqy" />
-      <el-table-column label="邮政编码" align="center" prop="yzbm" />
-      <el-table-column label="联系电话" align="center" prop="lxdh" />
-      <el-table-column label="传真电话" align="center" prop="czdh" />
-      <el-table-column label="电子信箱" align="center" prop="dzxx" />
-      <el-table-column label="主页地址" align="center" prop="zydz" />
+      <el-table-column label="区县" align="center" prop="countyid" />
+      <el-table-column label="教育局学校代码" align="center" prop="jyjxxdm" />
+      <el-table-column label="学校办别码" align="center" prop="xxbbm"  :formatter="xxbbFormat"/>
+      <el-table-column label="学校类别码" align="center" prop="xxlbm" :formatter="xxlbmFormat" />
       <el-table-column label="组织机构代码" align="center" prop="zzjgdm" />
-      <el-table-column label="历史沿革" align="center" prop="lsyg" />
       <el-table-column label="当前学年" align="center" prop="dqxn" />
       <el-table-column label="当前学期" align="center" prop="dqxq" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -376,29 +147,26 @@
     <!-- 添加或修改学校信息对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="其他系统编号" prop="xxdm">
-          <el-input v-model="form.xxdm" placeholder="请输入其他系统编号" />
-        </el-form-item>
-        <el-form-item label="区县ID" prop="countyid">
-          <el-input v-model="form.countyid" placeholder="请输入区县ID" />
-        </el-form-item>
-        <el-form-item label="乡镇(街道)ID" prop="townid">
-          <el-input v-model="form.townid" placeholder="请输入乡镇(街道)ID" />
-        </el-form-item>
-        <el-form-item label="村委(居委)ID" prop="villageid">
-          <el-input v-model="form.villageid" placeholder="请输入村委(居委)ID" />
-        </el-form-item>
         <el-form-item label="教育局学校代码" prop="jyjxxdm">
-          <el-input v-model="form.jyjxxdm" placeholder="请输入教育局学校代码" />
+          <el-input v-model="form.jyjxxdm" placeholder="请输入教育局学校代码" maxlength="20" />
         </el-form-item>
         <el-form-item label="学校名称" prop="xxmc">
           <el-input v-model="form.xxmc" placeholder="请输入学校名称" />
         </el-form-item>
-        <el-form-item label="学校英文名称" prop="xxywmc">
-          <el-input v-model="form.xxywmc" placeholder="请输入学校英文名称" />
+        <el-form-item label="区县" prop="countyid">
+          <el-input v-model="form.countyid" placeholder="请输入区县" maxlength="6" />
+        </el-form-item>
+        <el-form-item label="乡镇(街道)" prop="townid">
+          <el-input v-model="form.townid" placeholder="请输入乡镇(街道)"  maxlength="9"/>
+        </el-form-item>
+        <el-form-item label="村委(居委)" prop="villageid">
+          <el-input v-model="form.villageid" placeholder="请输入村委(居委)" maxlength="11" />
         </el-form-item>
         <el-form-item label="学校地址" prop="xxdz">
           <el-input v-model="form.xxdz" placeholder="请输入学校地址" />
+        </el-form-item>
+        <el-form-item label="学校英文名称" prop="xxywmc">
+          <el-input v-model="form.xxywmc" placeholder="请输入学校英文名称" />
         </el-form-item>
         <el-form-item label="学校校长" prop="xxxz">
           <el-input v-model="form.xxxz" placeholder="请输入学校校长" />
@@ -415,16 +183,44 @@
           </el-date-picker>
         </el-form-item>
         <el-form-item label="学校办别码" prop="xxbbm">
-          <el-input v-model="form.xxbbm" placeholder="请输入学校办别码" />
+          <el-select v-model="form.xxbbm" placeholder="请选择学校办别">
+            <el-option
+              v-for="dict in xxbbOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="学校类别码" prop="xxlbm">
-          <el-input v-model="form.xxlbm" placeholder="请输入学校类别码" />
+          <el-select v-model="form.xxlbm" placeholder="请选择学校类别">
+            <el-option
+              v-for="dict in xxlbmOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="所在地区类别码" prop="szdqlbm">
-          <el-input v-model="form.szdqlbm" placeholder="请输入所在地区类别码" />
+          <el-select v-model="form.szdqlbm" placeholder="请选择所在地区类别码">
+            <el-option
+              v-for="dict in szdqlbmOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="所在地经济属性码" prop="szdjjsxm">
-          <el-input v-model="form.szdjjsxm" placeholder="请输入所在地经济属性码" />
+          <el-select v-model="form.szdjjsxm" placeholder="请选择所在地经济属性码">
+            <el-option
+              v-for="dict in szdjjsxmOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="所在地民族属性码" prop="szdmzsxm">
           <el-input v-model="form.szdmzsxm" placeholder="请输入所在地民族属性码" />
@@ -502,6 +298,14 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
+      // 学校类别选项
+      xxlbmOptions: [],
+      // 学校办别选项
+      xxbbOptions: [],
+      // 所在地区类别码
+      szdqlbmOptions: [],
+      // 所在地经济属性
+      szdjjsxmOptions: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -540,13 +344,50 @@ export default {
       form: {},
       // 表单校验
       rules: {
+        jyjxxdm: [
+          { required: true, message: "教育局学校代码不能为空", trigger: "blur" },
+        ],
+        xxmc: [
+          { required: true, message: "学校名称不能为空", trigger: "blur" },
+        ],
+        xxlbm: [
+          { required: true, message: "学校类别不能为空", trigger: "blur" },
+        ],
+        xxbbm: [
+          { required: true, message: "学校办别不能为空", trigger: "blur" },
+        ],
+        szdqlbm: [
+          { required: true, message: "所在地区类别不能为空", trigger: "blur" },
+        ],
+        countyid: [
+          { required: true, message: "学校区县不能为空", trigger: "blur" },
+        ],
+        townid: [
+          { required: true, message: "学校乡镇不能为空", trigger: "blur" },
+        ],
+        xxdz: [
+          { required: true, message: "学校地址不能为空", trigger: "blur" },
+        ],
       }
     };
   },
   created() {
     this.getList();
+    this.getDicts("sys_dm_bxlx").then((response) => {
+      this.xxlbmOptions = response.data;
+    });
+    this.getDicts("sys_dm_xxbb").then((response) => {
+      this.xxbbOptions = response.data;
+    });
+    this.getDicts("sys_dm_szdqlb").then((response) => {
+      this.szdqlbmOptions = response.data;
+    });
+    this.getDicts("sys_dm_szdjjsxm").then((response) => {
+      this.szdjjsxmOptions = response.data;
+    });
   },
   methods: {
+    
     /** 查询学校信息列表 */
     getList() {
       this.loading = true;
@@ -555,6 +396,18 @@ export default {
         this.total = response.total;
         this.loading = false;
       });
+    },
+    // 字典翻译
+    xxlbmFormat(row, column) {
+      return this.selectDictLabel(this.xxlbmOptions, row.xxlbm);
+    },
+    // 字典翻译
+    xxbbFormat(row, column) {
+      return this.selectDictLabel(this.xxbbOptions, row.xxbbm);
+    },
+    // 字典翻译
+    szdqlbmFormat(row, column) {
+      return this.selectDictLabel(this.szdqlbmOptions, row.szdqlbm);
     },
     // 取消按钮
     cancel() {

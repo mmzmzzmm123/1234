@@ -104,6 +104,7 @@ public class TsbzJdxController extends BaseController {
         dept.setAncestors("0,100,200");
         dept.setOrderNum(String.valueOf(tsbzJdxService.selectTsbzJdxList(null).size()));
         deptService.insertDept(dept);
+        System.out.println(dept + "======================");
         return toAjax(tsbzJdxService.insertTsbzJdx(tsbzJdx));
     }
 
