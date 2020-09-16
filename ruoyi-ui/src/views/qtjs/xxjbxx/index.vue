@@ -145,8 +145,8 @@
     />
 
     <!-- 添加或修改学校信息对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+    <el-dialog :title="title" :visible.sync="open" width="800px" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="120px">
         <el-form-item label="教育局学校代码" prop="jyjxxdm">
           <el-input v-model="form.jyjxxdm" placeholder="请输入教育局学校代码" maxlength="20" />
         </el-form-item>

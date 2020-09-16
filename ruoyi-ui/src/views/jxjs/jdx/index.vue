@@ -145,8 +145,8 @@
     />
 
     <!-- 添加或修改基地校对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="100px">
+    <el-dialog :title="title" :visible.sync="open" width="800px" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="120px">
         <el-form-item label="基地校名称" prop="jdxmc">
           <el-input v-model="form.jdxmc" type="textarea" placeholder="请输入基地校名称" />
         </el-form-item>

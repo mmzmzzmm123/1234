@@ -2,6 +2,7 @@ package com.ruoyi.web.controller.qtjs;
 
 import java.util.List;
 
+import com.ruoyi.common.utils.SecurityUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -72,6 +73,7 @@ public class TsbzQtjspxfaController extends BaseController {
     @Log(title = "群体教师评选方案", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody TsbzQtjspxfa tsbzQtjspxfa) {
+        tsbzQtjspxfa.setCreateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
         return toAjax(tsbzQtjspxfaService.insertTsbzQtjspxfa(tsbzQtjspxfa));
     }
 
@@ -93,5 +95,26 @@ public class TsbzQtjspxfaController extends BaseController {
     @DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(tsbzQtjspxfaService.deleteTsbzQtjspxfaByIds(ids));
+    }
+
+    /**
+     * 状态修改
+     */
+    @PreAuthorize("@ss.hasPermi('jxjs:jxzxpxfa:edit')")
+    @Log(title = "见习之星评选方案", businessType = BusinessType.UPDATE)
+    @PutMapping("/changeStatus")
+    public AjaxResult changeStatus(@RequestBody TsbzQtjspxfa tsbzQtjspxfa) {
+        return toAjax(tsbzQtjspxfaService.updateTsbzQtjspxfa(tsbzQtjspxfa));
+    }
+
+    /**
+     * 复制见习之星评选方案
+     */
+    @PreAuthorize("@ss.hasPermi('jxjs:jxzxpxfa:add')")
+    @Log(title = "见习之星评选方案", businessType = BusinessType.INSERT)
+    @PostMapping("/copy/{id}")
+    public AjaxResult copy(@PathVariable Long id) {
+        TsbzQtjspxfa tsbzFa = tsbzQtjspxfaService.selectTsbzQtjspxfaById(id);
+        return toAjax(tsbzQtjspxfaService.insertTsbzQtjspxfa(tsbzFa));
     }
 }
