@@ -83,4 +83,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </foreach>
     </delete>
 
+    <select id="selectCountByName" parameterType="String" resultMap="SqTagResult">
+        select id,name from sq_tag where name=#{name}
+    </select>
+
+    <update id="updateBookmarkTagIdByTagId" parameterType="Long" >
+       UPDATE  sq_bookmark as a,sq_bookmark_tag as b SET b.tag_id = #{toTagId} WHERE a.bookmark_id=b.bookmark_id and a.userid=#{userId} and b.tag_id=#{tagId}
+    </update>
+
 </mapper>

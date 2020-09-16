@@ -39,7 +39,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
 @RequestMapping("/bookmark/bookmark")
 public class SqBookmarkController extends BaseController
 {
-    public static Logger logger =  LoggerFactory.getLogger(SqBookmarkController.class);
+    public final static Logger logger =  LoggerFactory.getLogger(SqBookmarkController.class);
     @Autowired
     private ISqBookmarkService sqBookmarkService;
 

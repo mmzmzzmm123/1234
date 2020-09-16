@@ -91,4 +91,38 @@ public interface ISqUserTagService
      * @return 结果
      */
     public int deleteSqUserTagById(Long id);
+
+    /**
+     * 删除标签管理信息
+     *
+     * @param ids 书签标签ID串
+     * @param userId 用户ID
+     * @return 结果
+     */
+    public int userRemoveByid(Long[] ids, Long userId);
+
+
+    /**
+     * 用户添加标签
+     *
+     * @param  sqUserTag
+     * @return int
+     */
+    int insertSqUserTagAdd(SqUserTag sqUserTag);
+
+    /**
+     * 用户修改标签
+     *
+     * @param  sqUserTag
+     * @return int
+     */
+    int updateSqUserTagEdit(SqUserTag sqUserTag);
+    /**
+     * 查询用户 是否已经有此标签
+     *
+     * @param  name
+     * @param  userId
+     * @return int
+     */
+    int selectCountByName(String name,Long userId);
 }

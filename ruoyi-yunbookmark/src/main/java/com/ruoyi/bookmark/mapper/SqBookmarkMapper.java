@@ -79,4 +79,5 @@ public interface SqBookmarkMapper extends MyMapper<SqBookmark>
      * @return 结果
      */
     public void updateSqBookmarkBymenuId(Long menuId);
+
 }

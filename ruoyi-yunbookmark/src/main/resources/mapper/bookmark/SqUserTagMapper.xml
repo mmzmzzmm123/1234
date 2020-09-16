@@ -58,7 +58,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="tagId != null">tag_id = #{tagId},</if>
             <if test="icount != null">icount = #{icount},</if>
             <if test="iorder != null">iorder = #{iorder},</if>
-            <if test="tagName != null">tagName = #{tagName},</if>
+            <if test="tagName != null">tag_name = #{tagName},</if>
         </trim>
         where id = #{id}
     </update>
@@ -72,6 +72,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
+    </delete>
+
+    <delete id="userRemoveByid" parameterType="String">
+        delete from sq_user_tag where id in
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        and user_id=#{userId}
     </delete>
 
     <select id="selectSqUserTagByUserId" parameterType="Long" resultType="java.util.Map">
@@ -92,12 +100,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </foreach>
     </update>
 
-
     <update id="updateCountAdd" >
         <foreach item="tagId" collection="tags" separator=";" >
             update sq_user_tag set icount=icount+1 WHERE user_id=#{userId} and tag_id = #{tagId}
         </foreach>
     </update>
+
+
+    <select id="selectCountByName" parameterType="SqUserTag" resultType="int">
+        select count(*) from sq_tag where name=#{name} and user_id=#{userId}
+    </select>
 
 
 </mapper>

@@ -89,4 +89,22 @@ public interface SqUserTagMapper  extends MyMapper<SqUserTag>
      * @return 结果
      */
     public int deleteSqUserTagByIds(Long[] ids);
+
+    /**
+     * 删除标签管理信息
+     *
+     * @param ids 书签标签ID串
+     * @param userId 用户ID
+     * @return 结果
+     */
+    public int userRemoveByid(@Param("ids")Long[] ids, @Param("userId")Long userId);
+
+    /**
+     * 通过标签名字查看是否存在
+     *
+     * @param name String
+     * @param userId Long
+     * @return 数量
+     */
+    public int selectCountByName(@Param("name")String name,@Param("userId")Long userId);
 }

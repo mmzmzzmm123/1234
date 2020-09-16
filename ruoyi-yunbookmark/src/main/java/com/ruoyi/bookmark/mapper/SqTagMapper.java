@@ -5,6 +5,7 @@ import java.util.List;
 import com.ruoyi.bookmark.domain.SqBookmarkTag;
 import com.ruoyi.bookmark.domain.SqTag;
 import com.ruoyi.common.mybatisMapper.MyMapper;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 书签_标签Mapper接口
@@ -16,6 +17,15 @@ public interface SqTagMapper extends MyMapper<SqTag>
 {
 
 
+
+
+   /**
+    * 通过标签名字查看是否存在
+    *
+    * @param name
+    * @return 书签_标签集合
+    */
+    public List<SqTag> selectCountByName(String name);
     /**
      * 查询书签_标签
      *
@@ -63,4 +73,15 @@ public interface SqTagMapper extends MyMapper<SqTag>
      * @return 结果
      */
     public int deleteSqTagByIds(Long[] ids);
+
+
+    /**
+     * 批量修改对应书签的 标签
+     *
+     * @param tagId 修改前引用的ID
+     * @param toTagId 修改标签后引用的ID
+     * @param userId 修改前引用的ID
+     * @return 结果
+     */
+    int updateBookmarkTagIdByTagId(@Param("tagId")Long tagId, @Param("toTagId")Long toTagId, @Param("userId")Long userId);
 }

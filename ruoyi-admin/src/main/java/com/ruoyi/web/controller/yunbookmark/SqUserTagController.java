@@ -3,6 +3,7 @@ package com.ruoyi.web.controller.yunbookmark;
 import java.util.List;
 import java.util.Map;
 
+import com.ruoyi.common.core.domain.entity.SysUser;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,17 +37,71 @@ public class SqUserTagController extends BaseController
     private ISqUserTagService sqUserTagService;
 
     /**
-     * 获取用戶标签
+     * 用戶获取标签
      */
 
-    @GetMapping(value = "/selectTagByUserID/{userId}")
-    public AjaxResult selectSqUserTagByUserId(@PathVariable("userId") Long userId)
+    @GetMapping(value = "/selectTagByUserID")
+    public AjaxResult selectSqUserTagByUserId()
     {
-        List<Map<String,Object>> map =  sqUserTagService.selectSqUserTagByUserId(userId);
+        SysUser sysUser=getAuthUser();
+        startPage();
+        List<Map<String,Object>> map =  sqUserTagService.selectSqUserTagByUserId(sysUser.getUserId());
         return AjaxResult.success(map);
     }
 
+    /**
+     * 用户删除标签
+     */
+    @PreAuthorize("@ss.hasPermi('system:tag:remove')")
+    @Log(title = "标签管理", businessType = BusinessType.DELETE)
+    @DeleteMapping("/userRemoveByid/{ids}")
+    public AjaxResult userRemoveByid(@PathVariable Long[] ids)
+    {
+        SysUser sysUser=getAuthUser();
+        return toAjax(sqUserTagService.userRemoveByid(ids,sysUser.getUserId()));
+    }
 
+    /**
+     * 用户新增标签
+     */
+    @PreAuthorize("@ss.hasPermi('system:tag:add')")
+    @Log(title = "标签管理", businessType = BusinessType.INSERT)
+    @PostMapping(value = "/SqUserTagAdd")
+    public AjaxResult SqUserTagAdd(@RequestBody SqUserTag sqUserTag) {
+        SysUser sysUser = getAuthUser();
+        sqUserTag.setUserId(sysUser.getUserId());
+        //检测标签是否已经存在
+        int i = sqUserTagService.selectCountByName(sqUserTag.getTagName(), sysUser.getUserId());
+        if (i > 0) {
+            return AjaxResult.error("新增标签'" + sqUserTag.getTagName() + "'失败，该标签已存在");
+        }
+        return toAjax(sqUserTagService.insertSqUserTagAdd(sqUserTag));
+    }
+
+    /**
+     * 用户修改标签
+     */
+    @PreAuthorize("@ss.hasPermi('system:tag:edit')")
+    @Log(title = "标签管理", businessType = BusinessType.UPDATE)
+    @PutMapping(value = "/SqUserTagEdit")
+    public AjaxResult SqUserTagEdit(@RequestBody SqUserTag sqUserTag) {
+        SysUser sysUser = getAuthUser();
+        //检测操作的是否自己的标签
+        SqUserTag tag = sqUserTagService.selectSqUserTagById(sqUserTag.getId());
+        if (!tag.getUserId().equals(sysUser.getUserId())) {
+            return AjaxResult.error("修改失败,检测到异常操作已被系统记录!");
+        }
+        //检测标签是否已经存在
+        int i = sqUserTagService.selectCountByName(sqUserTag.getTagName(), sysUser.getUserId());
+        if (i > 0) {
+            return AjaxResult.error("修改标签【" +tag.getTagName()+"】为【"+ sqUserTag.getTagName() + "】失败，标签【"+sqUserTag.getTagName()+"】已存在");
+        }
+
+        //做一次数据初始化 防止用户传入的 注入的数据
+        tag.setTagName(sqUserTag.getTagName());
+        tag.setIorder(sqUserTag.getIorder());
+        return toAjax(sqUserTagService.updateSqUserTagEdit(tag));
+    }
 
 
 
