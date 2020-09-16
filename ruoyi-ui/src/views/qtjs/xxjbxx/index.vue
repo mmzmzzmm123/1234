@@ -1,19 +1,16 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="119px">
+    <el-form
+      :model="queryParams"
+      ref="queryForm"
+      :inline="true"
+      v-show="showSearch"
+      label-width="119px"
+    >
       <el-form-item label="学校名称" prop="xxmc">
         <el-input
           v-model="queryParams.xxmc"
           placeholder="请输入学校名称"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="教育局学校代码" prop="jyjxxdm">
-        <el-input
-          v-model="queryParams.jyjxxdm"
-          placeholder="请输入教育局学校代码"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
@@ -49,7 +46,7 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="组织机构代码" prop="zzjgdm">
+      <!-- <el-form-item label="组织机构代码" prop="zzjgdm">
         <el-input
           v-model="queryParams.zzjgdm"
           placeholder="请输入组织机构代码"
@@ -57,7 +54,7 @@
           size="small"
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
+      </el-form-item>-->
       <el-form-item>
         <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -103,19 +100,17 @@
           v-hasPermi="['qtjs:xxjbxx:export']"
         >导出</el-button>
       </el-col>
-	  <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="xxjbxxList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="学校名称" align="center" prop="xxmc" />
       <el-table-column label="区县" align="center" prop="countyid" />
-      <el-table-column label="教育局学校代码" align="center" prop="jyjxxdm" />
-      <el-table-column label="学校办别码" align="center" prop="xxbbm"  :formatter="xxbbFormat"/>
+      <el-table-column label="学校办别码" align="center" prop="xxbbm" :formatter="xxbbFormat" />
       <el-table-column label="学校类别码" align="center" prop="xxlbm" :formatter="xxlbmFormat" />
-      <el-table-column label="组织机构代码" align="center" prop="zzjgdm" />
-      <el-table-column label="当前学年" align="center" prop="dqxn" />
-      <el-table-column label="当前学期" align="center" prop="dqxq" />
+      <el-table-column label="当前学年" align="center" prop="dqxn" :formatter="dqxnFormat" />
+      <el-table-column label="当前学期" align="center" prop="dqxq" :formatter="dqxqFormat"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -135,7 +130,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -146,24 +141,113 @@
 
     <!-- 添加或修改学校信息对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="800px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="120px">
-        <el-form-item label="教育局学校代码" prop="jyjxxdm">
-          <el-input v-model="form.jyjxxdm" placeholder="请输入教育局学校代码" maxlength="20" />
-        </el-form-item>
-        <el-form-item label="学校名称" prop="xxmc">
-          <el-input v-model="form.xxmc" placeholder="请输入学校名称" />
-        </el-form-item>
-        <el-form-item label="区县" prop="countyid">
-          <el-input v-model="form.countyid" placeholder="请输入区县" maxlength="6" />
-        </el-form-item>
-        <el-form-item label="乡镇(街道)" prop="townid">
-          <el-input v-model="form.townid" placeholder="请输入乡镇(街道)"  maxlength="9"/>
-        </el-form-item>
-        <el-form-item label="村委(居委)" prop="villageid">
-          <el-input v-model="form.villageid" placeholder="请输入村委(居委)" maxlength="11" />
-        </el-form-item>
-        <el-form-item label="学校地址" prop="xxdz">
-          <el-input v-model="form.xxdz" placeholder="请输入学校地址" />
+      <el-row :gutter="15">
+        <el-form ref="form" :model="form" :rules="rules" label-width="120px">
+          <el-col :span="12">
+            <el-form-item label="学校名称" prop="xxmc">
+              <el-input v-model="form.xxmc" placeholder="请输入学校名称" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="区县" prop="countyid">
+              <el-input v-model="form.countyid" placeholder="请输入区县" maxlength="6" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="乡镇(街道)" prop="townid">
+              <el-input v-model="form.townid" placeholder="请输入乡镇(街道)" maxlength="9" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="村委(居委)" prop="villageid">
+              <el-input v-model="form.villageid" placeholder="请输入村委(居委)" maxlength="11" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="学校地址" prop="xxdz">
+              <el-input v-model="form.xxdz" placeholder="请输入学校地址" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="学校办别" prop="xxbbm">
+              <el-select v-model="form.xxbbm" placeholder="请选择学校办别">
+                <el-option
+                  v-for="dict in xxbbOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="学校类别" prop="xxlbm">
+              <el-select v-model="form.xxlbm" placeholder="请选择学校类别">
+                <el-option
+                  v-for="dict in xxlbmOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="当前学年" prop="dqxn">
+              <el-select v-model="form.dqxn" placeholder="请选择当前学年">
+                <el-option
+                  v-for="dict in dqxnOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="当前学期" prop="dqxq">
+              <el-select v-model="form.dqxq" placeholder="请选择当前学期">
+                <el-option
+                  v-for="dict in dqxqOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="建校年月" prop="jxny">
+              <el-date-picker
+                clearable
+                size="small"
+                style="width: 200px"
+                v-model="form.jxny"
+                type="date"
+                value-format="yyyy-MM-dd"
+                placeholder="选择建校年月"
+              ></el-date-picker>
+            </el-form-item>
+          </el-col>
+          <!-- <el-col :span="12">
+            <el-form-item label="所在地区类别" prop="szdqlbm">
+              <el-select v-model="form.szdqlbm" placeholder="请选择所在地区类别">
+                <el-option
+                  v-for="dict in szdqlbmOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col> -->
+          <!-- <el-col :span="12">
+            <el-form-item label="教育局学校代码" prop="jyjxxdm">
+              <el-input v-model="form.jyjxxdm" placeholder="请输入教育局学校代码" maxlength="20" />
+            </el-form-item>
+          </el-col> -->
+          <!-- <el-form-item label="所在地民族属性码" prop="szdmzsxm">
+          <el-input v-model="form.szdmzsxm" placeholder="请输入所在地民族属性码" />
         </el-form-item>
         <el-form-item label="学校英文名称" prop="xxywmc">
           <el-input v-model="form.xxywmc" placeholder="请输入学校英文名称" />
@@ -173,57 +257,6 @@
         </el-form-item>
         <el-form-item label="党组织负责人" prop="dzzfzr">
           <el-input v-model="form.dzzfzr" placeholder="请输入党组织负责人" />
-        </el-form-item>
-        <el-form-item label="建校年月" prop="jxny">
-          <el-date-picker clearable size="small" style="width: 200px"
-            v-model="form.jxny"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="选择建校年月">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="学校办别码" prop="xxbbm">
-          <el-select v-model="form.xxbbm" placeholder="请选择学校办别">
-            <el-option
-              v-for="dict in xxbbOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="学校类别码" prop="xxlbm">
-          <el-select v-model="form.xxlbm" placeholder="请选择学校类别">
-            <el-option
-              v-for="dict in xxlbmOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="所在地区类别码" prop="szdqlbm">
-          <el-select v-model="form.szdqlbm" placeholder="请选择所在地区类别码">
-            <el-option
-              v-for="dict in szdqlbmOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="所在地经济属性码" prop="szdjjsxm">
-          <el-select v-model="form.szdjjsxm" placeholder="请选择所在地经济属性码">
-            <el-option
-              v-for="dict in szdjjsxmOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="所在地民族属性码" prop="szdmzsxm">
-          <el-input v-model="form.szdmzsxm" placeholder="请输入所在地民族属性码" />
         </el-form-item>
         <el-form-item label="入学年龄" prop="rxnl">
           <el-input v-model="form.rxnl" placeholder="请输入入学年龄" />
@@ -257,14 +290,10 @@
         </el-form-item>
         <el-form-item label="历史沿革" prop="lsyg">
           <el-input v-model="form.lsyg" placeholder="请输入历史沿革" />
-        </el-form-item>
-        <el-form-item label="当前学年" prop="dqxn">
-          <el-input v-model="form.dqxn" placeholder="请输入当前学年" />
-        </el-form-item>
-        <el-form-item label="当前学期" prop="dqxq">
-          <el-input v-model="form.dqxq" placeholder="请输入当前学期" />
-        </el-form-item>
-      </el-form>
+          </el-form-item>-->
+        </el-form>
+      </el-row>
+
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
@@ -274,7 +303,14 @@
 </template>
 
 <script>
-import { listXxjbxx, getXxjbxx, delXxjbxx, addXxjbxx, updateXxjbxx, exportXxjbxx } from "@/api/qtjs/xxjbxx";
+import {
+  listXxjbxx,
+  getXxjbxx,
+  delXxjbxx,
+  addXxjbxx,
+  updateXxjbxx,
+  exportXxjbxx
+} from "@/api/qtjs/xxjbxx";
 
 export default {
   name: "Xxjbxx",
@@ -306,6 +342,10 @@ export default {
       szdqlbmOptions: [],
       // 所在地经济属性
       szdjjsxmOptions: [],
+      // 当前学年选项
+      dqxnOptions: [],
+      // 当前学期选项
+      dqxqOptions: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -338,56 +378,56 @@ export default {
         zzjgdm: null,
         lsyg: null,
         dqxn: null,
-        dqxq: null,
+        dqxq: null
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
-        jyjxxdm: [
-          { required: true, message: "教育局学校代码不能为空", trigger: "blur" },
-        ],
         xxmc: [
-          { required: true, message: "学校名称不能为空", trigger: "blur" },
+          { required: true, message: "学校名称不能为空", trigger: "blur" }
         ],
         xxlbm: [
-          { required: true, message: "学校类别不能为空", trigger: "blur" },
+          { required: true, message: "学校类别不能为空", trigger: "blur" }
         ],
         xxbbm: [
-          { required: true, message: "学校办别不能为空", trigger: "blur" },
-        ],
-        szdqlbm: [
-          { required: true, message: "所在地区类别不能为空", trigger: "blur" },
+          { required: true, message: "学校办别不能为空", trigger: "blur" }
         ],
         countyid: [
-          { required: true, message: "学校区县不能为空", trigger: "blur" },
+          { required: true, message: "学校区县不能为空", trigger: "blur" }
         ],
         townid: [
-          { required: true, message: "学校乡镇不能为空", trigger: "blur" },
+          { required: true, message: "学校乡镇不能为空", trigger: "blur" }
         ],
-        xxdz: [
-          { required: true, message: "学校地址不能为空", trigger: "blur" },
-        ],
+        xxdz: [{ required: true, message: "学校地址不能为空", trigger: "blur" }],
+        villageid: [{ required: true, message: "村不能为空", trigger: "blur" }],
+        dqxn: [{ required: true, message: "当前学年不能为空", trigger: "blur" }],
+        dqxq: [{ required: true, message: "当前学期不能为空", trigger: "blur" }],
       }
     };
   },
   created() {
     this.getList();
-    this.getDicts("sys_dm_bxlx").then((response) => {
+    this.getDicts("sys_dm_bxlx").then(response => {
       this.xxlbmOptions = response.data;
     });
-    this.getDicts("sys_dm_xxbb").then((response) => {
+    this.getDicts("sys_dm_xxbb").then(response => {
       this.xxbbOptions = response.data;
     });
-    this.getDicts("sys_dm_szdqlb").then((response) => {
+    this.getDicts("sys_dm_szdqlb").then(response => {
       this.szdqlbmOptions = response.data;
     });
-    this.getDicts("sys_dm_szdjjsxm").then((response) => {
+    this.getDicts("sys_dm_szdjjsxm").then(response => {
       this.szdjjsxmOptions = response.data;
+    });
+    this.getDicts("sys_dm_rxnf").then(response => {
+      this.dqxnOptions = response.data;
+    });
+    this.getDicts("sys_dm_dqxq").then(response => {
+      this.dqxqOptions = response.data;
     });
   },
   methods: {
-    
     /** 查询学校信息列表 */
     getList() {
       this.loading = true;
@@ -408,6 +448,14 @@ export default {
     // 字典翻译
     szdqlbmFormat(row, column) {
       return this.selectDictLabel(this.szdqlbmOptions, row.szdqlbm);
+    },
+    // 字典翻译
+    dqxnFormat(row, column) {
+      return this.selectDictLabel(this.dqxnOptions, row.dqxn);
+    },
+    // 字典翻译
+    dqxqFormat(row, column) {
+      return this.selectDictLabel(this.dqxqOptions, row.dqxq);
     },
     // 取消按钮
     cancel() {
@@ -463,9 +511,9 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.id)
-      this.single = selection.length!==1
-      this.multiple = !selection.length
+      this.ids = selection.map(item => item.id);
+      this.single = selection.length !== 1;
+      this.multiple = !selection.length;
     },
     /** 新增按钮操作 */
     handleAdd() {
@@ -476,7 +524,7 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const id = row.id || this.ids
+      const id = row.id || this.ids;
       getXxjbxx(id).then(response => {
         this.form = response.data;
         this.open = true;
@@ -510,29 +558,39 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$confirm('是否确认删除学校信息编号为"' + ids + '"的数据项?', "警告", {
+      this.$confirm(
+        '是否确认删除学校信息编号为"' + ids + '"的数据项?',
+        "警告",
+        {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
-        }).then(function() {
+        }
+      )
+        .then(function() {
           return delXxjbxx(ids);
-        }).then(() => {
+        })
+        .then(() => {
           this.getList();
           this.msgSuccess("删除成功");
-        }).catch(function() {});
+        })
+        .catch(function() {});
     },
     /** 导出按钮操作 */
     handleExport() {
       const queryParams = this.queryParams;
-      this.$confirm('是否确认导出所有学校信息数据项?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
+      this.$confirm("是否确认导出所有学校信息数据项?", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(function() {
           return exportXxjbxx(queryParams);
-        }).then(response => {
+        })
+        .then(response => {
           this.download(response.msg);
-        }).catch(function() {});
+        })
+        .catch(function() {});
     }
   }
 };

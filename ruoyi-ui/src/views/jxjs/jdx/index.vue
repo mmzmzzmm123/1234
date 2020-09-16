@@ -194,14 +194,7 @@
     <el-dialog title="基地校分配见习教师" :visible.sync="open_fpjs" width="600px" append-to-body>
       <el-table :data="jxjsjbxxList" @selection-change="handleSelectionChangeFpjs">
         <el-table-column type="selection" width="55" align="center" />
-        <!-- <el-table-column label="编号" align="center" prop="id" /> -->
         <el-table-column label="姓名" align="center" prop="name" />
-        <!-- <el-table-column label="性别" align="center" prop="xb" :formatter="xbFormat" />
-          <el-table-column label="政治面貌" align="center" prop="zzmm" :formatter="zzmmFormat" />
-          <el-table-column label="民族" align="center" prop="mz" :formatter="mzFormat" />
-          <el-table-column label="学历" align="center" prop="xl" :formatter="xlFormat" />
-          <el-table-column label="学位" align="center" prop="xw" :formatter="xwFormat" />
-        <el-table-column label="是否师范生" align="center" prop="sfsfs" :formatter="sfsfsFormat" />-->
         <el-table-column label="录取年份" align="center" prop="lqnf" />
       </el-table>
       <div slot="footer" class="dialog-footer">
