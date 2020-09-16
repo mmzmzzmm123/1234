@@ -15,12 +15,13 @@
         <result property="fayxjssj" column="fayxjssj"/>
         <result property="nf" column="nf"/>
         <result property="pxlb" column="pxlb"/>
+        <result property="cxxxlb" column="cxxxlb"/>
         <result property="createuserid" column="createuserid"/>
         <result property="createTime" column="create_time"/>
     </resultMap>
 
     <sql id="selectTsbzQtjspxfaVo">
-        select id, name, fanr, fawj, wjmc, fazt, fayxkssj, fayxjssj, nf, pxlb, createuserid, create_time from tsbz_qtjspxfa
+        select id, name, fanr, fawj, wjmc, fazt, fayxkssj, fayxjssj, nf, pxlb, cxxxlb, createuserid, create_time from tsbz_qtjspxfa
     </sql>
 
     <select id="selectTsbzQtjspxfaList" parameterType="TsbzQtjspxfa" resultMap="TsbzQtjspxfaResult">
@@ -35,6 +36,7 @@
             <if test="fayxjssj != null ">and fayxjssj = #{fayxjssj}</if>
             <if test="nf != null  and nf != ''">and nf = #{nf}</if>
             <if test="pxlb != null  and pxlb != ''">and pxlb = #{pxlb}</if>
+            <if test="cxxxlb != null  and cxxxlb != ''">and cxxxlb = #{cxxxlb}</if>
             <if test="createuserid != null ">and createuserid = #{createuserid}</if>
         </where>
     </select>
@@ -56,6 +58,7 @@
             <if test="fayxjssj != null">fayxjssj,</if>
             <if test="nf != null">nf,</if>
             <if test="pxlb != null">pxlb,</if>
+            <if test="cxxxlb != null">cxxxlb,</if>
             <if test="createuserid != null">createuserid,</if>
             <if test="createTime != null">create_time,</if>
         </trim>
@@ -69,6 +72,7 @@
             <if test="fayxjssj != null">#{fayxjssj},</if>
             <if test="nf != null">#{nf},</if>
             <if test="pxlb != null">#{pxlb},</if>
+            <if test="cxxxlb != null">#{cxxxlb},</if>
             <if test="createuserid != null">#{createuserid},</if>
             <if test="createTime != null">#{createTime},</if>
         </trim>
@@ -86,6 +90,7 @@
             <if test="fayxjssj != null">fayxjssj = #{fayxjssj},</if>
             <if test="nf != null">nf = #{nf},</if>
             <if test="pxlb != null">pxlb = #{pxlb},</if>
+            <if test="cxxxlb != null">cxxxlb = #{cxxxlb},</if>
             <if test="createuserid != null">createuserid = #{createuserid},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
         </trim>

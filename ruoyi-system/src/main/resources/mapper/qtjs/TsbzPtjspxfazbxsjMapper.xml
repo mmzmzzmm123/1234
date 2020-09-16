@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.qtjs.mapper.TsbzPtjspxfazbxsjMapper">
+
+    <resultMap type="TsbzPtjspxfazbxsj" id="TsbzPtjspxfazbxsjResult">
+        <result property="id" column="id"/>
+        <result property="faid" column="faid"/>
+        <result property="zbid" column="zbid"/>
+        <result property="jsid" column="jsid"/>
+        <result property="content" column="content"/>
+        <result property="filepath" column="filepath"/>
+        <result property="filename" column="filename"/>
+        <result property="createuserid" column="createuserid"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <sql id="selectTsbzPtjspxfazbxsjVo">
+        select id, faid, zbid, jsid, content, filepath, filename, createuserid, create_time from tsbz_ptjspxfazbxsj
+    </sql>
+
+    <select id="selectTsbzPtjspxfazbxsjList" parameterType="TsbzPtjspxfazbxsj" resultMap="TsbzPtjspxfazbxsjResult">
+        <include refid="selectTsbzPtjspxfazbxsjVo"/>
+        <where>
+            <if test="faid != null ">and faid = #{faid}</if>
+            <if test="zbid != null ">and zbid = #{zbid}</if>
+            <if test="jsid != null ">and jsid = #{jsid}</if>
+            <if test="content != null  and content != ''">and content = #{content}</if>
+            <if test="filepath != null  and filepath != ''">and filepath = #{filepath}</if>
+            <if test="filename != null  and filename != ''">and filename like concat('%', #{filename}, '%')</if>
+            <if test="createuserid != null ">and createuserid = #{createuserid}</if>
+        </where>
+    </select>
+
+    <select id="selectTsbzPtjspxfazbxsjById" parameterType="Long" resultMap="TsbzPtjspxfazbxsjResult">
+        <include refid="selectTsbzPtjspxfazbxsjVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertTsbzPtjspxfazbxsj" parameterType="TsbzPtjspxfazbxsj" useGeneratedKeys="true" keyProperty="id">
+        insert into tsbz_ptjspxfazbxsj
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="faid != null">faid,</if>
+            <if test="zbid != null">zbid,</if>
+            <if test="jsid != null">jsid,</if>
+            <if test="content != null">content,</if>
+            <if test="filepath != null">filepath,</if>
+            <if test="filename != null">filename,</if>
+            <if test="createuserid != null">createuserid,</if>
+            <if test="createTime != null">create_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="faid != null">#{faid},</if>
+            <if test="zbid != null">#{zbid},</if>
+            <if test="jsid != null">#{jsid},</if>
+            <if test="content != null">#{content},</if>
+            <if test="filepath != null">#{filepath},</if>
+            <if test="filename != null">#{filename},</if>
+            <if test="createuserid != null">#{createuserid},</if>
+            <if test="createTime != null">#{createTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateTsbzPtjspxfazbxsj" parameterType="TsbzPtjspxfazbxsj">
+        update tsbz_ptjspxfazbxsj
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="faid != null">faid = #{faid},</if>
+            <if test="zbid != null">zbid = #{zbid},</if>
+            <if test="jsid != null">jsid = #{jsid},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="filepath != null">filepath = #{filepath},</if>
+            <if test="filename != null">filename = #{filename},</if>
+            <if test="createuserid != null">createuserid = #{createuserid},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTsbzPtjspxfazbxsjById" parameterType="Long">
+        delete from tsbz_ptjspxfazbxsj where id = #{id}
+    </delete>
+
+    <delete id="deleteTsbzPtjspxfazbxsjByIds" parameterType="String">
+        delete from tsbz_ptjspxfazbxsj where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

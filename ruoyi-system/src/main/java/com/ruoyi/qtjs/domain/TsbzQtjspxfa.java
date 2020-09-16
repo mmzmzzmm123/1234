@@ -12,169 +12,173 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * 群体教师评选方案对象 tsbz_qtjspxfa
  *
  * @author ruoyi
- * @date 2020-09-15
+ * @date 2020-09-16
  */
-public class TsbzQtjspxfa extends BaseEntity {
+public class TsbzQtjspxfa extends BaseEntity
+{
     private static final long serialVersionUID = 1L;
 
-    /**
-     * 编号
-     */
+    /** 编号 */
     private Long id;
 
-    /**
-     * 方案名称
-     */
+    /** 方案名称 */
     @Excel(name = "方案名称")
     private String name;
 
-    /**
-     * 方案内容
-     */
+    /** 方案内容 */
     @Excel(name = "方案内容")
     private String fanr;
 
-    /**
-     * 方案文件
-     */
+    /** 方案文件 */
     @Excel(name = "方案文件")
     private String fawj;
 
-    /**
-     * 文件名称
-     */
+    /** 文件名称 */
     @Excel(name = "文件名称")
     private String wjmc;
 
-    /**
-     * 方案状态
-     */
+    /** 方案状态 */
     @Excel(name = "方案状态")
     private String fazt;
 
-    /**
-     * 方案有效开始时间
-     */
+    /** 方案有效开始时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "方案有效开始时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date fayxkssj;
 
-    /**
-     * 方案有效结束时间
-     */
+    /** 方案有效结束时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "方案有效结束时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date fayxjssj;
 
-    /**
-     * 所属年份
-     */
+    /** 所属年份 */
     @Excel(name = "所属年份")
     private String nf;
 
-    /**
-     * 评选类别
-     */
+    /** 评选类别 */
     @Excel(name = "评选类别")
     private String pxlb;
 
-    /**
-     * 创建人
-     */
+    /** 参选学校类别 */
+    @Excel(name = "参选学校类别")
+    private String cxxxlb;
+
+    /** 创建人 */
     @Excel(name = "创建人")
     private Long createuserid;
 
-    public void setId(Long id) {
+    public void setId(Long id)
+    {
         this.id = id;
     }
 
-    public Long getId() {
+    public Long getId()
+    {
         return id;
     }
-
-    public void setName(String name) {
+    public void setName(String name)
+    {
         this.name = name;
     }
 
-    public String getName() {
+    public String getName()
+    {
         return name;
     }
-
-    public void setFanr(String fanr) {
+    public void setFanr(String fanr)
+    {
         this.fanr = fanr;
     }
 
-    public String getFanr() {
+    public String getFanr()
+    {
         return fanr;
     }
-
-    public void setFawj(String fawj) {
+    public void setFawj(String fawj)
+    {
         this.fawj = fawj;
     }
 
-    public String getFawj() {
+    public String getFawj()
+    {
         return fawj;
     }
-
-    public void setWjmc(String wjmc) {
+    public void setWjmc(String wjmc)
+    {
         this.wjmc = wjmc;
     }
 
-    public String getWjmc() {
+    public String getWjmc()
+    {
         return wjmc;
     }
-
-    public void setFazt(String fazt) {
+    public void setFazt(String fazt)
+    {
         this.fazt = fazt;
     }
 
-    public String getFazt() {
+    public String getFazt()
+    {
         return fazt;
     }
-
-    public void setFayxkssj(Date fayxkssj) {
+    public void setFayxkssj(Date fayxkssj)
+    {
         this.fayxkssj = fayxkssj;
     }
 
-    public Date getFayxkssj() {
+    public Date getFayxkssj()
+    {
         return fayxkssj;
     }
-
-    public void setFayxjssj(Date fayxjssj) {
+    public void setFayxjssj(Date fayxjssj)
+    {
         this.fayxjssj = fayxjssj;
     }
 
-    public Date getFayxjssj() {
+    public Date getFayxjssj()
+    {
         return fayxjssj;
     }
-
-    public void setNf(String nf) {
+    public void setNf(String nf)
+    {
         this.nf = nf;
     }
 
-    public String getNf() {
+    public String getNf()
+    {
         return nf;
     }
-
-    public void setPxlb(String pxlb) {
+    public void setPxlb(String pxlb)
+    {
         this.pxlb = pxlb;
     }
 
-    public String getPxlb() {
+    public String getPxlb()
+    {
         return pxlb;
     }
+    public void setCxxxlb(String cxxxlb)
+    {
+        this.cxxxlb = cxxxlb;
+    }
 
-    public void setCreateuserid(Long createuserid) {
+    public String getCxxxlb()
+    {
+        return cxxxlb;
+    }
+    public void setCreateuserid(Long createuserid)
+    {
         this.createuserid = createuserid;
     }
 
-    public Long getCreateuserid() {
+    public Long getCreateuserid()
+    {
         return createuserid;
     }
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
+        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
                 .append("id", getId())
                 .append("name", getName())
                 .append("fanr", getFanr())
@@ -185,6 +189,7 @@ public class TsbzQtjspxfa extends BaseEntity {
                 .append("fayxjssj", getFayxjssj())
                 .append("nf", getNf())
                 .append("pxlb", getPxlb())
+                .append("cxxxlb", getCxxxlb())
                 .append("createuserid", getCreateuserid())
                 .append("createTime", getCreateTime())
                 .toString();

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.qtjs.mapper.TsbzQtjspxjgMapper">
+
+    <resultMap type="TsbzQtjspxjg" id="TsbzQtjspxjgResult">
+        <result property="id" column="id"/>
+        <result property="faid" column="faid"/>
+        <result property="jsid" column="jsid"/>
+        <result property="pxlx" column="pxlx"/>
+        <result property="nf" column="nf"/>
+        <result property="createuserid" column="createuserid"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <sql id="selectTsbzQtjspxjgVo">
+        select id, faid, jsid, pxlx, nf, createuserid, create_time from tsbz_qtjspxjg
+    </sql>
+
+    <select id="selectTsbzQtjspxjgList" parameterType="TsbzQtjspxjg" resultMap="TsbzQtjspxjgResult">
+        <include refid="selectTsbzQtjspxjgVo"/>
+        <where>
+            <if test="faid != null ">and faid = #{faid}</if>
+            <if test="jsid != null ">and jsid = #{jsid}</if>
+            <if test="pxlx != null  and pxlx != ''">and pxlx = #{pxlx}</if>
+            <if test="nf != null  and nf != ''">and nf = #{nf}</if>
+            <if test="createuserid != null ">and createuserid = #{createuserid}</if>
+        </where>
+    </select>
+
+    <select id="selectTsbzQtjspxjgById" parameterType="Long" resultMap="TsbzQtjspxjgResult">
+        <include refid="selectTsbzQtjspxjgVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertTsbzQtjspxjg" parameterType="TsbzQtjspxjg" useGeneratedKeys="true" keyProperty="id">
+        insert into tsbz_qtjspxjg
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="faid != null">faid,</if>
+            <if test="jsid != null">jsid,</if>
+            <if test="pxlx != null">pxlx,</if>
+            <if test="nf != null">nf,</if>
+            <if test="createuserid != null">createuserid,</if>
+            <if test="createTime != null">create_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="faid != null">#{faid},</if>
+            <if test="jsid != null">#{jsid},</if>
+            <if test="pxlx != null">#{pxlx},</if>
+            <if test="nf != null">#{nf},</if>
+            <if test="createuserid != null">#{createuserid},</if>
+            <if test="createTime != null">#{createTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateTsbzQtjspxjg" parameterType="TsbzQtjspxjg">
+        update tsbz_qtjspxjg
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="faid != null">faid = #{faid},</if>
+            <if test="jsid != null">jsid = #{jsid},</if>
+            <if test="pxlx != null">pxlx = #{pxlx},</if>
+            <if test="nf != null">nf = #{nf},</if>
+            <if test="createuserid != null">createuserid = #{createuserid},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTsbzQtjspxjgById" parameterType="Long">
+        delete from tsbz_qtjspxjg where id = #{id}
+    </delete>
+
+    <delete id="deleteTsbzQtjspxjgByIds" parameterType="String">
+        delete from tsbz_qtjspxjg where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
