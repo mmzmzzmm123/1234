@@ -118,23 +118,11 @@
 
     <el-table v-loading="loading" :data="jxzxkhzbxList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <!-- <el-table-column label="编号" align="center" prop="id" /> -->
       <el-table-column label="所属考核方案" align="center" prop="faid" :formatter="khfaFormat" />
       <el-table-column label="考核模块" align="center" prop="khmk" :formatter="khmkFormat" />
       <el-table-column label="考核内容" align="center" prop="khnr" />
       <el-table-column label="关键字段" align="center" prop="gjzd" :show-overflow-tooltip="true" />
       <el-table-column label="提交文件数量" align="center" prop="tjsl" />
-      <!-- <el-table-column label="同步来源" align="center" prop="tbly" :formatter="tblyFormat" />
-      <el-table-column label="执行开始时间" align="center" prop="starttime" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.starttime, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="执行截止时间" align="center" prop="endtime" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.endtime, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column> -->
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -201,41 +189,6 @@
         <el-form-item label="关键字段" prop="gjzd">
           <el-input v-model="form.gjzd" type="textarea" placeholder="请输入内容" />
         </el-form-item>
-        <!-- <el-form-item label="同步来源" prop="tbly">
-          <el-select v-model="form.tbly" placeholder="请选择同步来源">
-            <el-option
-              v-for="dict in tblyOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            ></el-option>
-          </el-select>
-        </el-form-item>-->
-        <!-- <el-form-item label="接口标记预留" prop="jkbj">
-          <el-input v-model="form.jkbj" type="textarea" placeholder="请输入内容" />
-        </el-form-item>-->
-        <!-- <el-form-item label="执行开始时间" prop="starttime">
-          <el-date-picker
-            clearable
-            size="small"
-            style="width: 200px"
-            v-model="form.starttime"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="选择执行开始时间"
-          ></el-date-picker>
-        </el-form-item>
-        <el-form-item label="执行截止时间" prop="endtime">
-          <el-date-picker
-            clearable
-            size="small"
-            style="width: 200px"
-            v-model="form.endtime"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="选择执行截止时间"
-          ></el-date-picker>
-        </el-form-item>-->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>

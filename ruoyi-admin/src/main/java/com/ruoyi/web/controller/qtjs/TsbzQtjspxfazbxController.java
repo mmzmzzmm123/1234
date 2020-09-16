@@ -15,8 +15,8 @@ import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.enums.BusinessType;
-import com.ruoyi.qtjs.domain.TsbzPtjspxfazbx;
-import com.ruoyi.qtjs.service.ITsbzPtjspxfazbxService;
+import com.ruoyi.qtjs.domain.TsbzQtjspxfazbx;
+import com.ruoyi.qtjs.service.ITsbzQtjspxfazbxService;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
 
@@ -27,77 +27,77 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * @date 2020-09-16
  */
 @RestController
-@RequestMapping("/qtjs/ptjspxfazbx")
-public class TsbzPtjspxfazbxController extends BaseController
+@RequestMapping("/qtjs/qtjspxfazbx")
+public class TsbzQtjspxfazbxController extends BaseController
 {
     @Autowired
-    private ITsbzPtjspxfazbxService tsbzPtjspxfazbxService;
+    private ITsbzQtjspxfazbxService tsbzQtjspxfazbxService;
 
     /**
      * 查询群体教师评选方案指标列表
      */
-    @PreAuthorize("@ss.hasPermi('qtjs:qtjspxfa:list')")
+    @PreAuthorize("@ss.hasPermi('qtjs:qtjspxfazbx:list')")
     @GetMapping("/list")
-    public TableDataInfo list(TsbzPtjspxfazbx tsbzPtjspxfazbx)
+    public TableDataInfo list(TsbzQtjspxfazbx tsbzQtjspxfazbx)
     {
         startPage();
-        List<TsbzPtjspxfazbx> list = tsbzPtjspxfazbxService.selectTsbzPtjspxfazbxList(tsbzPtjspxfazbx);
+        List<TsbzQtjspxfazbx> list = tsbzQtjspxfazbxService.selectTsbzQtjspxfazbxList(tsbzQtjspxfazbx);
         return getDataTable(list);
     }
 
     /**
      * 导出群体教师评选方案指标列表
      */
-    @PreAuthorize("@ss.hasPermi('qtjs:qtjspxfa:export')")
+    @PreAuthorize("@ss.hasPermi('qtjs:qtjspxfazbx:export')")
     @Log(title = "群体教师评选方案指标", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
-    public AjaxResult export(TsbzPtjspxfazbx tsbzPtjspxfazbx)
+    public AjaxResult export(TsbzQtjspxfazbx tsbzQtjspxfazbx)
     {
-        List<TsbzPtjspxfazbx> list = tsbzPtjspxfazbxService.selectTsbzPtjspxfazbxList(tsbzPtjspxfazbx);
-        ExcelUtil<TsbzPtjspxfazbx> util = new ExcelUtil<TsbzPtjspxfazbx>(TsbzPtjspxfazbx.class);
-        return util.exportExcel(list, "ptjspxfazbx");
+        List<TsbzQtjspxfazbx> list = tsbzQtjspxfazbxService.selectTsbzQtjspxfazbxList(tsbzQtjspxfazbx);
+        ExcelUtil<TsbzQtjspxfazbx> util = new ExcelUtil<TsbzQtjspxfazbx>(TsbzQtjspxfazbx.class);
+        return util.exportExcel(list, "qtjspxfazbx");
     }
 
     /**
      * 获取群体教师评选方案指标详细信息
      */
-    @PreAuthorize("@ss.hasPermi('qtjs:qtjspxfa:query')")
+    @PreAuthorize("@ss.hasPermi('qtjs:qtjspxfazbx:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
-        return AjaxResult.success(tsbzPtjspxfazbxService.selectTsbzPtjspxfazbxById(id));
+        return AjaxResult.success(tsbzQtjspxfazbxService.selectTsbzQtjspxfazbxById(id));
     }
 
     /**
      * 新增群体教师评选方案指标
      */
-    @PreAuthorize("@ss.hasPermi('qtjs:qtjspxfa:add')")
+    @PreAuthorize("@ss.hasPermi('qtjs:qtjspxfazbx:add')")
     @Log(title = "群体教师评选方案指标", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody TsbzPtjspxfazbx tsbzPtjspxfazbx)
+    public AjaxResult add(@RequestBody TsbzQtjspxfazbx tsbzQtjspxfazbx)
     {
-        return toAjax(tsbzPtjspxfazbxService.insertTsbzPtjspxfazbx(tsbzPtjspxfazbx));
+        return toAjax(tsbzQtjspxfazbxService.insertTsbzQtjspxfazbx(tsbzQtjspxfazbx));
     }
 
     /**
      * 修改群体教师评选方案指标
      */
-    @PreAuthorize("@ss.hasPermi('qtjs:qtjspxfa:edit')")
+    @PreAuthorize("@ss.hasPermi('qtjs:qtjspxfazbx:edit')")
     @Log(title = "群体教师评选方案指标", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody TsbzPtjspxfazbx tsbzPtjspxfazbx)
+    public AjaxResult edit(@RequestBody TsbzQtjspxfazbx tsbzQtjspxfazbx)
     {
-        return toAjax(tsbzPtjspxfazbxService.updateTsbzPtjspxfazbx(tsbzPtjspxfazbx));
+        return toAjax(tsbzQtjspxfazbxService.updateTsbzQtjspxfazbx(tsbzQtjspxfazbx));
     }
 
     /**
      * 删除群体教师评选方案指标
      */
-    @PreAuthorize("@ss.hasPermi('qtjs:qtjspxfa:remove')")
+    @PreAuthorize("@ss.hasPermi('qtjs:qtjspxfazbx:remove')")
     @Log(title = "群体教师评选方案指标", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)
     {
-        return toAjax(tsbzPtjspxfazbxService.deleteTsbzPtjspxfazbxByIds(ids));
+        return toAjax(tsbzQtjspxfazbxService.deleteTsbzQtjspxfazbxByIds(ids));
     }
 }

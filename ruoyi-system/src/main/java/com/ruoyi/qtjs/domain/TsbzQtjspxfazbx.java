@@ -6,12 +6,12 @@ import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
- * 群体教师评选指标数据对象 tsbz_ptjspxfazbxsj
+ * 群体教师评选方案指标对象 tsbz_qtjspxfazbx
  * 
  * @author ruoyi
  * @date 2020-09-16
  */
-public class TsbzPtjspxfazbxsj extends BaseEntity
+public class TsbzQtjspxfazbx extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
@@ -22,25 +22,21 @@ public class TsbzPtjspxfazbxsj extends BaseEntity
     @Excel(name = "方案编号")
     private Long faid;
 
-    /** 指标编号 */
-    @Excel(name = "指标编号")
-    private Long zbid;
+    /** 评选条件 */
+    @Excel(name = "评选条件")
+    private String pxtj;
 
-    /** 教师编号 */
-    @Excel(name = "教师编号")
-    private Long jsid;
+    /** 所属类型 */
+    @Excel(name = "所属类型")
+    private String sslx;
 
-    /** 佐证内容 */
-    @Excel(name = "佐证内容")
-    private String content;
+    /** 指标值 */
+    @Excel(name = "指标值")
+    private String zbb;
 
-    /** 附件 */
-    @Excel(name = "附件")
-    private String filepath;
-
-    /** 附件名称 */
-    @Excel(name = "附件名称")
-    private String filename;
+    /** 备注 */
+    @Excel(name = "备注")
+    private String remarks;
 
     /** 创建人 */
     @Excel(name = "创建人")
@@ -64,50 +60,41 @@ public class TsbzPtjspxfazbxsj extends BaseEntity
     {
         return faid;
     }
-    public void setZbid(Long zbid) 
+    public void setPxtj(String pxtj) 
     {
-        this.zbid = zbid;
+        this.pxtj = pxtj;
     }
 
-    public Long getZbid() 
+    public String getPxtj() 
     {
-        return zbid;
+        return pxtj;
     }
-    public void setJsid(Long jsid) 
+    public void setSslx(String sslx) 
     {
-        this.jsid = jsid;
-    }
-
-    public Long getJsid() 
-    {
-        return jsid;
-    }
-    public void setContent(String content) 
-    {
-        this.content = content;
+        this.sslx = sslx;
     }
 
-    public String getContent() 
+    public String getSslx() 
     {
-        return content;
+        return sslx;
     }
-    public void setFilepath(String filepath) 
+    public void setZbb(String zbb) 
     {
-        this.filepath = filepath;
-    }
-
-    public String getFilepath() 
-    {
-        return filepath;
-    }
-    public void setFilename(String filename) 
-    {
-        this.filename = filename;
+        this.zbb = zbb;
     }
 
-    public String getFilename() 
+    public String getZbb() 
     {
-        return filename;
+        return zbb;
+    }
+    public void setRemarks(String remarks) 
+    {
+        this.remarks = remarks;
+    }
+
+    public String getRemarks() 
+    {
+        return remarks;
     }
     public void setCreateuserid(Long createuserid) 
     {
@@ -124,11 +111,10 @@ public class TsbzPtjspxfazbxsj extends BaseEntity
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
             .append("id", getId())
             .append("faid", getFaid())
-            .append("zbid", getZbid())
-            .append("jsid", getJsid())
-            .append("content", getContent())
-            .append("filepath", getFilepath())
-            .append("filename", getFilename())
+            .append("pxtj", getPxtj())
+            .append("sslx", getSslx())
+            .append("zbb", getZbb())
+            .append("remarks", getRemarks())
             .append("createuserid", getCreateuserid())
             .append("createTime", getCreateTime())
             .toString();

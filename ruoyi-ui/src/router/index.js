@@ -137,6 +137,20 @@ export const constantRoutes = [{
         }]
     },
     {
+        path: '/qtjs',
+        component: Layout,
+        hidden: true,
+        children: [{
+            path: 'qtjspxfa/data/:id',
+            component: (resolve) => require(['@/views/qtjs/qtjspxfa/data'], resolve),
+            name: 'qtjspxfa1',
+            meta: {
+                title: '评选方案指标',
+                icon: ''
+            }
+        }]
+    },
+    {
         path: '/job',
         component: Layout,
         hidden: true,

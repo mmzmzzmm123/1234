@@ -96,7 +96,13 @@
 
     <el-table v-loading="loading" :data="qtjspxfaList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="方案名称" align="center" prop="name" />
+      <el-table-column label="方案名称" align="center" prop="name" :show-overflow-tooltip="true">
+        <template slot-scope="scope">
+          <router-link :to="'/qtjs/qtjspxfa/data/' + scope.row.id" class="link-type">
+            <span>{{ scope.row.name }}</span>
+          </router-link>
+        </template>
+      </el-table-column>
       <el-table-column label="方案状态" align="center" prop="fazt" >
         <template slot-scope="scope">
           <el-switch
