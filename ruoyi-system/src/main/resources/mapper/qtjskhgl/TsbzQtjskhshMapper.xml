@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.TsbzQtjskhshMapper">
+    
+    <resultMap type="TsbzQtjskhsh" id="TsbzQtjskhshResult">
+        <result property="id"    column="id"    />
+        <result property="faid"    column="faid"    />
+        <result property="jsid"    column="jsid"    />
+        <result property="status"    column="status"    />
+        <result property="xjshr"    column="xjshr"    />
+        <result property="xjshyj"    column="xjshyj"    />
+        <result property="xjshjy"    column="xjshjy"    />
+        <result property="qjshr"    column="qjshr"    />
+        <result property="qjshyj"    column="qjshyj"    />
+        <result property="qjshjy"    column="qjshjy"    />
+        <result property="createuseird"    column="createuseird"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectTsbzQtjskhshVo">
+        select id, faid, jsid, status, xjshr, xjshyj, xjshjy, qjshr, qjshyj, qjshjy, createuseird, create_time from tsbz_qtjskhsh
+    </sql>
+
+    <select id="selectTsbzQtjskhshList" parameterType="TsbzQtjskhsh" resultMap="TsbzQtjskhshResult">
+        <include refid="selectTsbzQtjskhshVo"/>
+        <where>  
+            <if test="faid != null "> and faid = #{faid}</if>
+            <if test="jsid != null "> and jsid = #{jsid}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="xjshr != null "> and xjshr = #{xjshr}</if>
+            <if test="xjshyj != null  and xjshyj != ''"> and xjshyj = #{xjshyj}</if>
+            <if test="xjshjy != null  and xjshjy != ''"> and xjshjy = #{xjshjy}</if>
+            <if test="qjshr != null "> and qjshr = #{qjshr}</if>
+            <if test="qjshyj != null  and qjshyj != ''"> and qjshyj = #{qjshyj}</if>
+            <if test="qjshjy != null  and qjshjy != ''"> and qjshjy = #{qjshjy}</if>
+            <if test="createuseird != null "> and createuseird = #{createuseird}</if>
+        </where>
+    </select>
+    
+    <select id="selectTsbzQtjskhshById" parameterType="Long" resultMap="TsbzQtjskhshResult">
+        <include refid="selectTsbzQtjskhshVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTsbzQtjskhsh" parameterType="TsbzQtjskhsh" useGeneratedKeys="true" keyProperty="id">
+        insert into tsbz_qtjskhsh
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="faid != null">faid,</if>
+            <if test="jsid != null">jsid,</if>
+            <if test="status != null">status,</if>
+            <if test="xjshr != null">xjshr,</if>
+            <if test="xjshyj != null">xjshyj,</if>
+            <if test="xjshjy != null">xjshjy,</if>
+            <if test="qjshr != null">qjshr,</if>
+            <if test="qjshyj != null">qjshyj,</if>
+            <if test="qjshjy != null">qjshjy,</if>
+            <if test="createuseird != null">createuseird,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="faid != null">#{faid},</if>
+            <if test="jsid != null">#{jsid},</if>
+            <if test="status != null">#{status},</if>
+            <if test="xjshr != null">#{xjshr},</if>
+            <if test="xjshyj != null">#{xjshyj},</if>
+            <if test="xjshjy != null">#{xjshjy},</if>
+            <if test="qjshr != null">#{qjshr},</if>
+            <if test="qjshyj != null">#{qjshyj},</if>
+            <if test="qjshjy != null">#{qjshjy},</if>
+            <if test="createuseird != null">#{createuseird},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTsbzQtjskhsh" parameterType="TsbzQtjskhsh">
+        update tsbz_qtjskhsh
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="faid != null">faid = #{faid},</if>
+            <if test="jsid != null">jsid = #{jsid},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="xjshr != null">xjshr = #{xjshr},</if>
+            <if test="xjshyj != null">xjshyj = #{xjshyj},</if>
+            <if test="xjshjy != null">xjshjy = #{xjshjy},</if>
+            <if test="qjshr != null">qjshr = #{qjshr},</if>
+            <if test="qjshyj != null">qjshyj = #{qjshyj},</if>
+            <if test="qjshjy != null">qjshjy = #{qjshjy},</if>
+            <if test="createuseird != null">createuseird = #{createuseird},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTsbzQtjskhshById" parameterType="Long">
+        delete from tsbz_qtjskhsh where id = #{id}
+    </delete>
+
+    <delete id="deleteTsbzQtjskhshByIds" parameterType="String">
+        delete from tsbz_qtjskhsh where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

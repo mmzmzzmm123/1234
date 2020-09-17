@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.TsbzQtjskhgcwjsjMapper">
+    
+    <resultMap type="TsbzQtjskhgcwjsj" id="TsbzQtjskhgcwjsjResult">
+        <result property="id"    column="id"    />
+        <result property="gcid"    column="gcid"    />
+        <result property="filename"    column="filename"    />
+        <result property="filepath"    column="filepath"    />
+        <result property="createuserid"    column="createuserid"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectTsbzQtjskhgcwjsjVo">
+        select id, gcid, filename, filepath, createuserid, create_time from tsbz_qtjskhgcwjsj
+    </sql>
+
+    <select id="selectTsbzQtjskhgcwjsjList" parameterType="TsbzQtjskhgcwjsj" resultMap="TsbzQtjskhgcwjsjResult">
+        <include refid="selectTsbzQtjskhgcwjsjVo"/>
+        <where>  
+            <if test="gcid != null  and gcid != ''"> and gcid = #{gcid}</if>
+            <if test="filename != null  and filename != ''"> and filename like concat('%', #{filename}, '%')</if>
+            <if test="filepath != null  and filepath != ''"> and filepath = #{filepath}</if>
+            <if test="createuserid != null "> and createuserid = #{createuserid}</if>
+        </where>
+    </select>
+    
+    <select id="selectTsbzQtjskhgcwjsjById" parameterType="Long" resultMap="TsbzQtjskhgcwjsjResult">
+        <include refid="selectTsbzQtjskhgcwjsjVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTsbzQtjskhgcwjsj" parameterType="TsbzQtjskhgcwjsj" useGeneratedKeys="true" keyProperty="id">
+        insert into tsbz_qtjskhgcwjsj
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="gcid != null">gcid,</if>
+            <if test="filename != null">filename,</if>
+            <if test="filepath != null">filepath,</if>
+            <if test="createuserid != null">createuserid,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="gcid != null">#{gcid},</if>
+            <if test="filename != null">#{filename},</if>
+            <if test="filepath != null">#{filepath},</if>
+            <if test="createuserid != null">#{createuserid},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTsbzQtjskhgcwjsj" parameterType="TsbzQtjskhgcwjsj">
+        update tsbz_qtjskhgcwjsj
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="gcid != null">gcid = #{gcid},</if>
+            <if test="filename != null">filename = #{filename},</if>
+            <if test="filepath != null">filepath = #{filepath},</if>
+            <if test="createuserid != null">createuserid = #{createuserid},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTsbzQtjskhgcwjsjById" parameterType="Long">
+        delete from tsbz_qtjskhgcwjsj where id = #{id}
+    </delete>
+
+    <delete id="deleteTsbzQtjskhgcwjsjByIds" parameterType="String">
+        delete from tsbz_qtjskhgcwjsj where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>
