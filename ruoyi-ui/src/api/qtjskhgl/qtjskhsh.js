@@ -51,3 +51,19 @@ export function exportQtjskhsh(query) {
     params: query
   })
 }
+
+// 提交考核审核过程
+export function checkQtjskhsh(id) {
+  return request({
+    url: '/qtjskhgl/qtjskhsh/check/' + id,
+    method: 'post'
+  })
+}
+
+// 删除考核审核过程
+export function backQtjskhsh(id, status) {
+  return request({
+    url: '/qtjskhgl/qtjskhsh/back/' + id + '/' + status,
+    method: 'post'
+  })
+}

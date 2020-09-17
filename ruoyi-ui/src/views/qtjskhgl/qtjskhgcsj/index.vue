@@ -1,28 +1,16 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
+    <el-form
+      :model="queryParams"
+      ref="queryForm"
+      :inline="true"
+      v-show="showSearch"
+      label-width="68px"
+    >
       <el-form-item label="所属方案" prop="faid">
         <el-input
           v-model="queryParams.faid"
           placeholder="请输入所属方案"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="指标项" prop="zbid">
-        <el-input
-          v-model="queryParams.zbid"
-          placeholder="请输入指标项"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="创建人" prop="createuserid">
-        <el-input
-          v-model="queryParams.createuserid"
-          placeholder="请输入创建人"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
@@ -37,43 +25,24 @@
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
-          type="primary"
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['qtjskhgl:qtjskhgcsj:add']"
-        >新增</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['qtjskhgl:qtjskhgcsj:edit']"
-        >修改</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
           type="danger"
           icon="el-icon-delete"
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['qtjskhgl:qtjskhgcsj:remove']"
-        >删除</el-button>
+        >清空</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
           type="warning"
-          icon="el-icon-download"
+          icon="el-icon-check"
           size="mini"
-          @click="handleExport"
-          v-hasPermi="['qtjskhgl:qtjskhgcsj:export']"
-        >导出</el-button>
+          @click="handleCheck"
+          v-hasPermi="['qtjskhgl:qtjskhgcsj:edit']"
+        >提交</el-button>
       </el-col>
-	  <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="qtjskhgcsjList" @selection-change="handleSelectionChange">
@@ -91,7 +60,7 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['qtjskhgl:qtjskhgcsj:edit']"
-          >修改</el-button>
+          >填报</el-button>
           <el-button
             size="mini"
             type="text"
@@ -102,7 +71,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -136,7 +105,19 @@
 </template>
 
 <script>
-import { listQtjskhgcsj, getQtjskhgcsj, delQtjskhgcsj, addQtjskhgcsj, updateQtjskhgcsj, exportQtjskhgcsj } from "@/api/qtjskhgl/qtjskhgcsj";
+import {
+  listQtjskhgcsj,
+  getQtjskhgcsj,
+  delQtjskhgcsj,
+  addQtjskhgcsj,
+  updateQtjskhgcsj,
+} from "@/api/qtjskhgl/qtjskhgcsj";
+
+import {
+  listQtjskhsh,
+  getQtjskhsh,
+  checkQtjskhsh,
+} from "@/api/qtjskhgl/qtjskhsh";
 
 export default {
   name: "Qtjskhgcsj",
@@ -172,8 +153,7 @@ export default {
       // 表单参数
       form: {},
       // 表单校验
-      rules: {
-      }
+      rules: {},
     };
   },
   created() {
@@ -183,7 +163,7 @@ export default {
     /** 查询群体教师考核过程数据列表 */
     getList() {
       this.loading = true;
-      listQtjskhgcsj(this.queryParams).then(response => {
+      listQtjskhgcsj(this.queryParams).then((response) => {
         this.qtjskhgcsjList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -202,7 +182,7 @@ export default {
         zbid: null,
         content: null,
         createuserid: null,
-        createTime: null
+        createTime: null,
       };
       this.resetForm("form");
     },
@@ -218,9 +198,9 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.id)
-      this.single = selection.length!==1
-      this.multiple = !selection.length
+      this.ids = selection.map((item) => item.id);
+      this.single = selection.length !== 1;
+      this.multiple = !selection.length;
     },
     /** 新增按钮操作 */
     handleAdd() {
@@ -231,8 +211,8 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const id = row.id || this.ids
-      getQtjskhgcsj(id).then(response => {
+      const id = row.id || this.ids;
+      getQtjskhgcsj(id).then((response) => {
         this.form = response.data;
         this.open = true;
         this.title = "修改群体教师考核过程数据";
@@ -240,10 +220,10 @@ export default {
     },
     /** 提交按钮 */
     submitForm() {
-      this.$refs["form"].validate(valid => {
+      this.$refs["form"].validate((valid) => {
         if (valid) {
           if (this.form.id != null) {
-            updateQtjskhgcsj(this.form).then(response => {
+            updateQtjskhgcsj(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("修改成功");
                 this.open = false;
@@ -251,7 +231,7 @@ export default {
               }
             });
           } else {
-            addQtjskhgcsj(this.form).then(response => {
+            addQtjskhgcsj(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("新增成功");
                 this.open = false;
@@ -265,30 +245,49 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$confirm('是否确认删除群体教师考核过程数据编号为"' + ids + '"的数据项?', "警告", {
+      this.$confirm(
+        '是否确认删除群体教师考核过程数据编号为"' + ids + '"的数据项?',
+        "警告",
+        {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
+          type: "warning",
+        }
+      )
+        .then(function () {
           return delQtjskhgcsj(ids);
-        }).then(() => {
+        })
+        .then(() => {
           this.getList();
           this.msgSuccess("删除成功");
-        }).catch(function() {});
+        })
+        .catch(function () {});
     },
-    /** 导出按钮操作 */
-    handleExport() {
-      const queryParams = this.queryParams;
-      this.$confirm('是否确认导出所有群体教师考核过程数据数据项?', "警告", {
+    /** 提交按钮操作 */
+    handleCheck() {
+      const faid = this.queryParams.faid;
+      if (faid == null || faid == "") {
+        this.msgError("请选择要提交的方案");
+        return;
+      }
+      this.$confirm(
+        "是否确认提交当前方案的考核过程数据项?提交后数据不能维护！",
+        "警告",
+        {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
-          return exportQtjskhgcsj(queryParams);
-        }).then(response => {
-          this.download(response.msg);
-        }).catch(function() {});
-    }
-  }
+          type: "warning",
+        }
+      )
+        .then(function () {
+          return checkQtjskhsh(faid);
+        })
+        .then(() => {
+          this.getList();
+          this.msgSuccess("提交成功");
+        })
+        .catch(function () {});
+    },
+  },
 };
 </script>

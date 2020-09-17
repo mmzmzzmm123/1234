@@ -132,7 +132,7 @@ public class TsbzJxzxkhshController extends BaseController {
     }
 
     /**
-     * 新增考核审核过程
+     * 回退考核审核过程
      */
     @PreAuthorize("@ss.hasPermi('jxzxkhgl:jxzxkhsh:edit')")
     @Log(title = "考核审核过程", businessType = BusinessType.UPDATE)
@@ -145,7 +145,7 @@ public class TsbzJxzxkhshController extends BaseController {
     }
 
     /**
-     * 回退考核审核过程
+     * 提交考核审核过程
      */
     @PreAuthorize("@ss.hasPermi('jxzxkhgl:jxzxkhsh:add')" + "||@ss.hasPermi('jxzxkhgl:jxzxkhgcsj:edit')")
     @Log(title = "考核审核过程", businessType = BusinessType.INSERT)

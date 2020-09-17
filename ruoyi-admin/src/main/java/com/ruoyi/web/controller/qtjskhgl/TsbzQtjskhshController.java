@@ -2,6 +2,7 @@ package com.ruoyi.web.controller.qtjskhgl;
 
 import java.util.List;
 
+import com.ruoyi.common.utils.SecurityUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -93,5 +94,32 @@ public class TsbzQtjskhshController extends BaseController {
     @DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(tsbzQtjskhshService.deleteTsbzQtjskhshByIds(ids));
+    }
+
+    /**
+     * 回退考核审核过程
+     */
+    @PreAuthorize("@ss.hasPermi('qtjskhgl:qtjskhsh:edit')")
+    @Log(title = "考核审核过程", businessType = BusinessType.UPDATE)
+    @PostMapping("/back/{id}/{status}")
+    public AjaxResult back(@PathVariable Long id, @PathVariable String status) {
+        TsbzQtjskhsh tsbzQtjskhsh = new TsbzQtjskhsh();
+        tsbzQtjskhsh.setId(id);
+        tsbzQtjskhsh.setStatus(status);
+        return toAjax(tsbzQtjskhshService.updateTsbzQtjskhsh(tsbzQtjskhsh));
+    }
+
+    /**
+     * 提交考核审核过程
+     */
+    @PreAuthorize("@ss.hasPermi('qtjskhgl:qtjskhsh:add')" + "||@ss.hasPermi('qtjskhgl:qtjskhgcsj:edit')")
+    @Log(title = "考核审核过程", businessType = BusinessType.INSERT)
+    @PostMapping("/check/{id}")
+    public AjaxResult add(@PathVariable Long id) {
+        TsbzQtjskhsh tsbzQtjskhsh = new TsbzQtjskhsh();
+        tsbzQtjskhsh.setFaid(id);
+        tsbzQtjskhsh.setJsid(SecurityUtils.getLoginUser().getUser().getUserId());
+        tsbzQtjskhsh.setCreateuseird(SecurityUtils.getLoginUser().getUser().getUserId());
+        return toAjax(tsbzQtjskhshService.insertTsbzQtjskhsh(tsbzQtjskhsh));
     }
 }
