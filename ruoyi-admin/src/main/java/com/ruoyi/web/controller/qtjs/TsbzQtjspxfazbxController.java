@@ -36,7 +36,7 @@ public class TsbzQtjspxfazbxController extends BaseController
     /**
      * 查询群体教师评选方案指标列表
      */
-    @PreAuthorize("@ss.hasPermi('qtjs:qtjspxfazbx:list')")
+    @PreAuthorize("@ss.hasPermi('qtjs:qtjspxfa:list')")
     @GetMapping("/list")
     public TableDataInfo list(TsbzQtjspxfazbx tsbzQtjspxfazbx)
     {
@@ -48,7 +48,7 @@ public class TsbzQtjspxfazbxController extends BaseController
     /**
      * 导出群体教师评选方案指标列表
      */
-    @PreAuthorize("@ss.hasPermi('qtjs:qtjspxfazbx:export')")
+    @PreAuthorize("@ss.hasPermi('qtjs:qtjspxfa:export')")
     @Log(title = "群体教师评选方案指标", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
     public AjaxResult export(TsbzQtjspxfazbx tsbzQtjspxfazbx)
@@ -61,7 +61,7 @@ public class TsbzQtjspxfazbxController extends BaseController
     /**
      * 获取群体教师评选方案指标详细信息
      */
-    @PreAuthorize("@ss.hasPermi('qtjs:qtjspxfazbx:query')")
+    @PreAuthorize("@ss.hasPermi('qtjs:qtjspxfa:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
@@ -71,7 +71,7 @@ public class TsbzQtjspxfazbxController extends BaseController
     /**
      * 新增群体教师评选方案指标
      */
-    @PreAuthorize("@ss.hasPermi('qtjs:qtjspxfazbx:add')")
+    @PreAuthorize("@ss.hasPermi('qtjs:qtjspxfa:add')")
     @Log(title = "群体教师评选方案指标", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody TsbzQtjspxfazbx tsbzQtjspxfazbx)
@@ -82,7 +82,7 @@ public class TsbzQtjspxfazbxController extends BaseController
     /**
      * 修改群体教师评选方案指标
      */
-    @PreAuthorize("@ss.hasPermi('qtjs:qtjspxfazbx:edit')")
+    @PreAuthorize("@ss.hasPermi('qtjs:qtjspxfa:edit')")
     @Log(title = "群体教师评选方案指标", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody TsbzQtjspxfazbx tsbzQtjspxfazbx)
@@ -93,7 +93,7 @@ public class TsbzQtjspxfazbxController extends BaseController
     /**
      * 删除群体教师评选方案指标
      */
-    @PreAuthorize("@ss.hasPermi('qtjs:qtjspxfazbx:remove')")
+    @PreAuthorize("@ss.hasPermi('qtjs:qtjspxfa:remove')")
     @Log(title = "群体教师评选方案指标", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)
