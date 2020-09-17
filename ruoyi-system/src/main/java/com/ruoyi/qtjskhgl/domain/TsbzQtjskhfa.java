@@ -50,8 +50,8 @@ public class TsbzQtjskhfa extends BaseEntity
     private String filepath;
 
     /** 考核年份 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "考核年份", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy")
+    @Excel(name = "考核年份", width = 30, dateFormat = "yyyy")
     private Date khnf;
 
     /** 考核类型 */

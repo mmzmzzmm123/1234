@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
+    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="102px">
       <el-form-item label="考核方案名称" prop="name">
         <el-input
           v-model="queryParams.name"
@@ -10,67 +10,25 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="考核方案状态
-            0:未启动
-            1:启动
-            9:已结束" prop="status">
-        <el-select v-model="queryParams.status" placeholder="请选择考核方案状态
-            0:未启动
-            1:启动
-            9:已结束" clearable size="small">
-          <el-option label="请选择字典生成" value="" />
+      <el-form-item label="考核方案状态" prop="status">
+        <el-select v-model="queryParams.status" placeholder="请选择考核方案状态">
+          <el-option
+            v-for="dict in statusOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="考核开始时间" prop="starttime">
-        <el-date-picker clearable size="small" style="width: 200px"
-          v-model="queryParams.starttime"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="选择考核开始时间">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item label="考核结束时间" prop="endtime">
-        <el-date-picker clearable size="small" style="width: 200px"
-          v-model="queryParams.endtime"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="选择考核结束时间">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item label="考核文件名称" prop="filename">
-        <el-input
-          v-model="queryParams.filename"
-          placeholder="请输入考核文件名称"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="考核年份" prop="khnf">
-        <el-date-picker clearable size="small" style="width: 200px"
-          v-model="queryParams.khnf"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="选择考核年份">
-        </el-date-picker>
-      </el-form-item>
       <el-form-item label="考核类型" prop="khlx">
-        <el-input
-          v-model="queryParams.khlx"
-          placeholder="请输入考核类型"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="创建人" prop="createuserid">
-        <el-input
-          v-model="queryParams.createuserid"
-          placeholder="请输入创建人"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+        <el-select v-model="queryParams.khlx" placeholder="请选择考核类型">
+          <el-option
+            v-for="dict in khlxOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          ></el-option>
+        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -122,12 +80,9 @@
 
     <el-table v-loading="loading" :data="qtjskhfaList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="编号" align="center" prop="id" />
       <el-table-column label="考核方案名称" align="center" prop="name" />
-      <el-table-column label="考核方案状态
-            0:未启动
-            1:启动
-            9:已结束" align="center" prop="status" />
+      <el-table-column label="考核方案状态" align="center" prop="status"  :formatter="statusFormat"/>
+      <el-table-column label="考核类型" align="center" prop="khlx" :formatter="khlxFormat" />
       <el-table-column label="考核开始时间" align="center" prop="starttime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.starttime, '{y}-{m}-{d}') }}</span>
@@ -138,15 +93,6 @@
           <span>{{ parseTime(scope.row.endtime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="考核文件名称" align="center" prop="filename" />
-      <el-table-column label="文件路径" align="center" prop="filepath" />
-      <el-table-column label="考核年份" align="center" prop="khnf" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.khnf, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="考核类型" align="center" prop="khlx" />
-      <el-table-column label="创建人" align="center" prop="createuserid" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -177,17 +123,41 @@
 
     <!-- 添加或修改群体教师考核方案对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+      <el-form ref="form" :model="form" :rules="rules" label-width="120px">
         <el-form-item label="考核方案名称" prop="name">
           <el-input v-model="form.name" placeholder="请输入考核方案名称" />
         </el-form-item>
-        <el-form-item label="考核方案状态
-            0:未启动
-            1:启动
-            9:已结束">
-          <el-radio-group v-model="form.status">
-            <el-radio label="1">请选择字典生成</el-radio>
-          </el-radio-group>
+        <el-form-item label="考核方案状态" prop="status">
+          <el-select v-model="form.status" placeholder="请选择考核方案状态">
+            <el-option
+              v-for="dict in statusOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="考核类型" prop="khlx">
+          <el-select v-model="form.khlx" placeholder="请选择考核类型">
+            <el-option
+              v-for="dict in khlxOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="考核年份" prop="khnf">
+          <el-date-picker
+            clearable
+            size="small"
+            style="width: 200px"
+            v-model="form.khnf"
+            type="year"
+            value-format="yyyy"
+            placeholder="选择考核年份"
+            :disabled="isEdit"
+          ></el-date-picker>
         </el-form-item>
         <el-form-item label="考核开始时间" prop="starttime">
           <el-date-picker clearable size="small" style="width: 200px"
@@ -205,25 +175,25 @@
             placeholder="选择考核结束时间">
           </el-date-picker>
         </el-form-item>
+        <el-form-item label="考核方案文件" prop="filepath">
+          <el-input v-model="form.filepath" v-if="false" />
+          <el-upload
+            class="upload-demo"
+            :action="uploadFileUrl"
+            :headers="headers"
+            :on-preview="handlePreview"
+            :on-remove="handleRemove"
+            :before-remove="beforeRemove"
+            :limit="1"
+            :on-exceed="handleExceed"
+            :file-list="fileList"
+            :on-success="handleAvatarSuccess"
+          >
+            <el-button size="small" type="primary">选择文件</el-button>
+          </el-upload>
+        </el-form-item>
         <el-form-item label="考核文件名称" prop="filename">
           <el-input v-model="form.filename" placeholder="请输入考核文件名称" />
-        </el-form-item>
-        <el-form-item label="文件路径" prop="filepath">
-          <el-input v-model="form.filepath" type="textarea" placeholder="请输入内容" />
-        </el-form-item>
-        <el-form-item label="考核年份" prop="khnf">
-          <el-date-picker clearable size="small" style="width: 200px"
-            v-model="form.khnf"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="选择考核年份">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="考核类型" prop="khlx">
-          <el-input v-model="form.khlx" placeholder="请输入考核类型" />
-        </el-form-item>
-        <el-form-item label="创建人" prop="createuserid">
-          <el-input v-model="form.createuserid" placeholder="请输入创建人" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -236,6 +206,7 @@
 
 <script>
 import { listQtjskhfa, getQtjskhfa, delQtjskhfa, addQtjskhfa, updateQtjskhfa, exportQtjskhfa } from "@/api/qtjskhgl/qtjskhfa";
+import { getToken } from "@/utils/auth";
 
 export default {
   name: "Qtjskhfa",
@@ -259,6 +230,12 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
+      // 状态选项
+      statusOptions: [],
+      // 考核方案类型选项
+      khlxOptions: [],
+      // 文件选项
+      fileList: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -277,11 +254,30 @@ export default {
       form: {},
       // 表单校验
       rules: {
-      }
+        name: [{ required: true, message: "考核方案名称不能为空", trigger: "blur" },],
+        status: [{ required: true, message: "考核状态不能为空", trigger: "blur" },],
+        starttime: [{ required: true, message: "开始时间不能为空", trigger: "blur" },],
+        endtime: [{ required: true, message: "结束时间不能为空", trigger: "blur" },],
+        filename: [{ required: true, message: "文件名称不能为空", trigger: "blur" },],
+        filepath: [{ required: true, message: "文件不能为空", trigger: "blur" },],
+        khnf: [{ required: true, message: "考核年份不能为空", trigger: "blur" },],
+        khlx: [{ required: true, message: "考核类型不能为空", trigger: "blur" },],
+
+      },
+      uploadFileUrl: process.env.VUE_APP_BASE_API + "/common/upload", // 上传的图片服务器地址
+      headers: {
+        Authorization: "Bearer " + getToken(),
+      },
     };
   },
   created() {
     this.getList();
+    this.getDicts("sys_dm_khfazt").then(response => {
+      this.statusOptions = response.data;
+    });
+    this.getDicts("sys_dm_ggjskhfalx").then(response => {
+      this.khlxOptions = response.data;
+    });
   },
   methods: {
     /** 查询群体教师考核方案列表 */
@@ -293,6 +289,45 @@ export default {
         this.loading = false;
       });
     },
+    // 字典翻译
+    statusFormat(row, column) {
+      return this.selectDictLabel(this.statusOptions, row.status);
+    },
+    // 字典翻译
+    khlxFormat(row, column) {
+      return this.selectDictLabel(this.khlxOptions, row.khlx);
+    },
+    // 上传文件
+    handleAvatarSuccess(res, file) {
+      console.log(res, file);
+      if (res.code == "200") {
+        this.form.filepath = res.fileName;
+        this.form.filename = file.name;
+      } else {
+        this.msgError(res.msg);
+      }
+    },
+    handleRemove(file, fileList) {
+      //console.log(file, fileList);
+      if (file.response.code == "200") {
+        this.form.filepath = "";
+        this.form.filename = "";
+      }
+    },
+    handlePreview(file) {
+      //console.log(file);
+    },
+    handleExceed(files, fileList) {
+      this.$message.warning(
+        `当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${
+          files.length + fileList.length
+        } 个文件`
+      );
+    },
+    beforeRemove(file, fileList) {
+      return this.$confirm(`确定移除 ${file.name}？`);
+    },
+
     // 取消按钮
     cancel() {
       this.open = false;
@@ -314,6 +349,7 @@ export default {
         createTime: null
       };
       this.resetForm("form");
+      this.fileList = [];
     },
     /** 搜索按钮操作 */
     handleQuery() {
@@ -345,6 +381,10 @@ export default {
         this.form = response.data;
         this.open = true;
         this.title = "修改群体教师考核方案";
+        this.fileList.push({
+          name: response.data.filename,
+          url: response.data.filepath,
+        });
       });
     },
     /** 提交按钮 */
