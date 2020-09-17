@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
+    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="102px">
       <el-form-item label="所属考核方案" prop="faid">
         <el-select v-model="queryParams.faid" placeholder="请选择考核模块" clearable size="small">
           <el-option
@@ -20,23 +20,15 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="所属类型" prop="sslx">
-        <el-input
-          v-model="queryParams.sslx"
-          placeholder="请输入所属类型"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="创建人" prop="createuserid">
-        <el-input
-          v-model="queryParams.createuserid"
-          placeholder="请输入创建人"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+      <el-form-item label="指标所属类型" prop="sslx">
+        <el-select v-model="queryParams.sslx" placeholder="请选择所属类型" clearable size="small">
+          <el-option
+            v-for="dict in sslxOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -88,12 +80,10 @@
 
     <el-table v-loading="loading" :data="qtjspxfazbxList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="方案编号" align="center" prop="faid" :formatter="khfaFormat"/>
+      <el-table-column label="方案名称" align="center" prop="faid" :formatter="khfaFormat"/>
       <el-table-column label="评选条件" align="center" prop="pxtj" />
-      <el-table-column label="所属类型" align="center" prop="sslx" />
+      <el-table-column label="所属类型" align="center" prop="sslx" :formatter="sslxFormat" />
       <el-table-column label="指标值" align="center" prop="zbb" />
-      <el-table-column label="备注" align="center" prop="remarks" />
-      <el-table-column label="创建人" align="center" prop="createuserid" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -145,16 +135,20 @@
           <el-input v-model="form.pxtj" placeholder="请输入评选条件" />
         </el-form-item>
         <el-form-item label="所属类型" prop="sslx">
-          <el-input v-model="form.sslx" placeholder="请输入所属类型" />
+          <el-select v-model="form.sslx" placeholder="请选择所属类型">
+            <el-option
+              v-for="dict in sslxOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="指标值" prop="zbb">
           <el-input v-model="form.zbb" type="textarea" placeholder="请输入内容" />
         </el-form-item>
         <el-form-item label="备注" prop="remarks">
           <el-input v-model="form.remarks" type="textarea" placeholder="请输入内容" />
-        </el-form-item>
-        <el-form-item label="创建人" prop="createuserid">
-          <el-input v-model="form.createuserid" placeholder="请输入创建人" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -198,6 +192,8 @@ export default {
       faOptions: [],
       // 默认方案
       defaultFa: "",
+      // 指标所属类型选项
+      sslxOptions: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -213,6 +209,9 @@ export default {
       form: {},
       // 表单校验
       rules: {
+        pxtj: [{ required: true, message: "不能为空", trigger: "blur" }],
+        sslx: [{ required: true, message: "不能为空", trigger: "blur" }],
+        zbb: [{ required: true, message: "不能为空", trigger: "blur" }],
       }
     };
   },
@@ -221,6 +220,9 @@ export default {
     this.getfa2(faid);
     this.getList();
     this.getfaList();
+    this.getDicts("sys_dm_zbsslx").then((response) => {
+      this.sslxOptions = response.data;
+    });
   },
   methods: {
 
@@ -258,6 +260,10 @@ export default {
         }
       });
       return actions.join("");
+    },
+    // 所属类型字典项字典翻译
+    sslxFormat(row, column) {
+      return this.selectDictLabel(this.sslxOptions, row.sslx);
     },
     // 取消按钮
     cancel() {

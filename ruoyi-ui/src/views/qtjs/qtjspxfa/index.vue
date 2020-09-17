@@ -314,7 +314,18 @@ export default {
       // 表单参数
       form: {},
       // 表单校验
-      rules: {},
+      rules: {
+        name: [{ required: true, message: "方案名称不能为空", trigger: "blur" }],
+        fanr: [{ required: true, message: "方案内容不能为空", trigger: "blur" }],
+        fawj: [{ required: true, message: "方案文件不能为空", trigger: "blur" }],
+        wjmc: [{ required: true, message: "文件名称不能为空", trigger: "blur" }],
+        fazt: [{ required: true, message: "方案状态不能为空", trigger: "blur" }],
+        fayxkssj: [{ required: true, message: "开始时间不能为空", trigger: "blur" }],
+        fayxjssj: [{ required: true, message: "结束时间不能为空", trigger: "blur" }],
+        nf: [{ required: true, message: "年份不能为空", trigger: "blur" }],
+        pxlb: [{ required: true, message: "评选类别不能为空", trigger: "blur" }],
+
+      },
       uploadFileUrl: process.env.VUE_APP_BASE_API + "/common/upload", // 上传的图片服务器地址
       headers: {
         Authorization: "Bearer " + getToken(),

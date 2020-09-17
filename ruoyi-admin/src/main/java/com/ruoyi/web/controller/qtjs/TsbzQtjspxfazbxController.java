@@ -1,6 +1,8 @@
 package com.ruoyi.web.controller.qtjs;
 
 import java.util.List;
+
+import com.ruoyi.common.utils.SecurityUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -76,6 +78,7 @@ public class TsbzQtjspxfazbxController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody TsbzQtjspxfazbx tsbzQtjspxfazbx)
     {
+        tsbzQtjspxfazbx.setCreateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
         return toAjax(tsbzQtjspxfazbxService.insertTsbzQtjspxfazbx(tsbzQtjspxfazbx));
     }
 
