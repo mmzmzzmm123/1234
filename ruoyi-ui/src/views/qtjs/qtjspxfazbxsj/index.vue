@@ -1,34 +1,50 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="102px">
-      <el-form-item label="所属考核方案" prop="faid">
-        <el-select v-model="queryParams.faid" placeholder="请选择考核模块" clearable size="small">
-          <el-option
-            v-for="dict in faOptions"
-            :key="dict.id"
-            :label="dict.name"
-            :value="dict.id"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="评选条件" prop="pxtj">
+    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
+      <el-form-item label="所属方案" prop="faid">
         <el-input
-          v-model="queryParams.pxtj"
-          placeholder="请输入评选条件"
+          v-model="queryParams.faid"
+          placeholder="请输入方案编号"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="指标所属类型" prop="sslx">
-        <el-select v-model="queryParams.sslx" placeholder="请选择所属类型" clearable size="small">
-          <el-option
-            v-for="dict in sslxOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
-          />
-        </el-select>
+      <el-form-item label="指标编号" prop="zbid">
+        <el-input
+          v-model="queryParams.zbid"
+          placeholder="请输入指标编号"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="教师编号" prop="jsid">
+        <el-input
+          v-model="queryParams.jsid"
+          placeholder="请输入教师编号"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="附件名称" prop="filename">
+        <el-input
+          v-model="queryParams.filename"
+          placeholder="请输入附件名称"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="创建人" prop="createuserid">
+        <el-input
+          v-model="queryParams.createuserid"
+          placeholder="请输入创建人"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
       </el-form-item>
       <el-form-item>
         <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -43,7 +59,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['qtjs:qtjspxfazbx:add']"
+          v-hasPermi="['qtjs:qtjspxfazbxsj:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -53,7 +69,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['qtjs:qtjspxfazbx:edit']"
+          v-hasPermi="['qtjs:qtjspxfazbxsj:edit']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -63,7 +79,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['qtjs:qtjspxfazbx:remove']"
+          v-hasPermi="['qtjs:qtjspxfazbxsj:remove']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -72,18 +88,22 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['qtjs:qtjspxfazbx:export']"
+          v-hasPermi="['qtjs:qtjspxfazbxsj:export']"
         >导出</el-button>
       </el-col>
 	  <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="qtjspxfazbxList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="qtjspxfazbxsjList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="方案名称" align="center" prop="faid" :formatter="khfaFormat"/>
-      <el-table-column label="评选条件" align="center" prop="pxtj" />
-      <el-table-column label="所属类型" align="center" prop="sslx" :formatter="sslxFormat" />
-      <el-table-column label="指标值" align="center" prop="zbb" />
+      <el-table-column label="编号" align="center" prop="id" />
+      <el-table-column label="方案编号" align="center" prop="faid" />
+      <el-table-column label="指标编号" align="center" prop="zbid" />
+      <el-table-column label="教师编号" align="center" prop="jsid" />
+      <el-table-column label="佐证内容" align="center" prop="content" />
+      <el-table-column label="附件" align="center" prop="filepath" />
+      <el-table-column label="附件名称" align="center" prop="filename" />
+      <el-table-column label="创建人" align="center" prop="createuserid" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -91,14 +111,14 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['qtjs:qtjspxfazbx:edit']"
+            v-hasPermi="['qtjs:qtjspxfazbxsj:edit']"
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['qtjs:qtjspxfazbx:remove']"
+            v-hasPermi="['qtjs:qtjspxfazbxsj:remove']"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -112,43 +132,29 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改群体教师评选方案指标对话框 -->
+    <!-- 添加或修改群体教师评选指标数据对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="考核方案" prop="faid">
-          <el-select
-            v-model="queryParams.faid"
-            placeholder="请选择考核模块"
-            clearable
-            size="small"
-            :disabled="true"
-          >
-            <el-option
-              v-for="dict in faOptions"
-              :key="dict.id"
-              :label="dict.name"
-              :value="dict.id"
-            />
-          </el-select>
+        <el-form-item label="方案编号" prop="faid">
+          <el-input v-model="form.faid" placeholder="请输入方案编号" />
         </el-form-item>
-        <el-form-item label="评选条件" prop="pxtj">
-          <el-input v-model="form.pxtj" placeholder="请输入评选条件" />
+        <el-form-item label="指标编号" prop="zbid">
+          <el-input v-model="form.zbid" placeholder="请输入指标编号" />
         </el-form-item>
-        <el-form-item label="所属类型" prop="sslx">
-          <el-select v-model="form.sslx" placeholder="请选择所属类型">
-            <el-option
-              v-for="dict in sslxOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            ></el-option>
-          </el-select>
+        <el-form-item label="教师编号" prop="jsid">
+          <el-input v-model="form.jsid" placeholder="请输入教师编号" />
         </el-form-item>
-        <el-form-item label="指标值" prop="zbb">
-          <el-input v-model="form.zbb" type="textarea" placeholder="请输入内容" />
+        <el-form-item label="佐证内容" prop="content">
+          <el-input v-model="form.content" type="textarea" placeholder="请输入内容" />
         </el-form-item>
-        <el-form-item label="备注" prop="remarks">
-          <el-input v-model="form.remarks" type="textarea" placeholder="请输入内容" />
+        <el-form-item label="附件" prop="filepath">
+          <el-input v-model="form.filepath" type="textarea" placeholder="请输入内容" />
+        </el-form-item>
+        <el-form-item label="附件名称" prop="filename">
+          <el-input v-model="form.filename" placeholder="请输入附件名称" />
+        </el-form-item>
+        <el-form-item label="创建人" prop="createuserid">
+          <el-input v-model="form.createuserid" placeholder="请输入创建人" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -160,14 +166,10 @@
 </template>
 
 <script>
-import { listQtjspxfazbx, getQtjspxfazbx, delQtjspxfazbx, addQtjspxfazbx, updateQtjspxfazbx, exportQtjspxfazbx } from "@/api/qtjs/qtjspxfazbx";
-import {
-  listQtjspxfa,
-  getQtjspxfa,
-} from "@/api/qtjs/qtjspxfa";
+import { listQtjspxfazbxsj, getQtjspxfazbxsj, delQtjspxfazbxsj, addQtjspxfazbxsj, updateQtjspxfazbxsj, exportQtjspxfazbxsj } from "@/api/qtjs/qtjspxfazbxsj";
 
 export default {
-  name: "Qtjspxfazbx",
+  name: "Qtjspxfazbxsj",
   data() {
     return {
       // 遮罩层
@@ -182,88 +184,43 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      // 群体教师评选方案指标表格数据
-      qtjspxfazbxList: [],
+      // 群体教师评选指标数据表格数据
+      qtjspxfazbxsjList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
       open: false,
-      // 方案选项
-      faOptions: [],
-      // 默认方案
-      defaultFa: "",
-      // 指标所属类型选项
-      sslxOptions: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
         pageSize: 10,
         faid: null,
-        pxtj: null,
-        sslx: null,
-        zbb: null,
-        remarks: null,
+        zbid: null,
+        jsid: null,
+        content: null,
+        filepath: null,
+        filename: null,
         createuserid: null,
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
-        pxtj: [{ required: true, message: "不能为空", trigger: "blur" }],
-        sslx: [{ required: true, message: "不能为空", trigger: "blur" }],
-        zbb: [{ required: true, message: "不能为空", trigger: "blur" }],
       }
     };
   },
   created() {
-    const faid = this.$route.params && this.$route.params.id;
-    this.getfa2(faid);
     this.getList();
-    this.getfaList();
-    this.getDicts("sys_dm_zbsslx").then((response) => {
-      this.sslxOptions = response.data;
-    });
   },
   methods: {
-
-    /** 查询群体教师评选方案指标列表 */
+    /** 查询群体教师评选指标数据列表 */
     getList() {
       this.loading = true;
-      listQtjspxfazbx(this.queryParams).then(response => {
-        this.qtjspxfazbxList = response.rows;
+      listQtjspxfazbxsj(this.queryParams).then(response => {
+        this.qtjspxfazbxsjList = response.rows;
         this.total = response.total;
         this.loading = false;
       });
-    },
-    // 考核方案列表
-    getfa2(faid) {
-      getQtjspxfa(faid).then((response) => {
-        this.queryParams.faid = response.data.id;
-        this.defaultFa = response.data.id;
-        this.getList();
-      });
-    },
-    // 查询考核方案选项
-    getfaList() {
-      listQtjspxfa().then((response) => {
-        this.faOptions = response.rows;
-      });
-    },
-    // 考核方案字典翻译
-    khfaFormat(row, column) {
-      var actions = [];
-      var datas = this.faOptions;
-      Object.keys(datas).map((key) => {
-        if (datas[key].id == "" + row.faid) {
-          actions.push(datas[key].name);
-          return false;
-        }
-      });
-      return actions.join("");
-    },
-    // 所属类型字典项字典翻译
-    sslxFormat(row, column) {
-      return this.selectDictLabel(this.sslxOptions, row.sslx);
     },
     // 取消按钮
     cancel() {
@@ -275,10 +232,11 @@ export default {
       this.form = {
         id: null,
         faid: null,
-        pxtj: null,
-        sslx: null,
-        zbb: null,
-        remarks: null,
+        zbid: null,
+        jsid: null,
+        content: null,
+        filepath: null,
+        filename: null,
         createuserid: null,
         createTime: null
       };
@@ -292,7 +250,6 @@ export default {
     /** 重置按钮操作 */
     resetQuery() {
       this.resetForm("queryForm");
-      this.queryParams.faid = this.defaultFa;
       this.handleQuery();
     },
     // 多选框选中数据
@@ -305,17 +262,16 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加群体教师评选方案指标";
-      this.form.faid = this.queryParams.faid;
+      this.title = "添加群体教师评选指标数据";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids
-      getQtjspxfazbx(id).then(response => {
+      getQtjspxfazbxsj(id).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改群体教师评选方案指标";
+        this.title = "修改群体教师评选指标数据";
       });
     },
     /** 提交按钮 */
@@ -323,7 +279,7 @@ export default {
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.id != null) {
-            updateQtjspxfazbx(this.form).then(response => {
+            updateQtjspxfazbxsj(this.form).then(response => {
               if (response.code === 200) {
                 this.msgSuccess("修改成功");
                 this.open = false;
@@ -331,7 +287,7 @@ export default {
               }
             });
           } else {
-            addQtjspxfazbx(this.form).then(response => {
+            addQtjspxfazbxsj(this.form).then(response => {
               if (response.code === 200) {
                 this.msgSuccess("新增成功");
                 this.open = false;
@@ -345,12 +301,12 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$confirm('是否确认删除群体教师评选方案指标编号为"' + ids + '"的数据项?', "警告", {
+      this.$confirm('是否确认删除群体教师评选指标数据编号为"' + ids + '"的数据项?', "警告", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
         }).then(function() {
-          return delQtjspxfazbx(ids);
+          return delQtjspxfazbxsj(ids);
         }).then(() => {
           this.getList();
           this.msgSuccess("删除成功");
@@ -359,12 +315,12 @@ export default {
     /** 导出按钮操作 */
     handleExport() {
       const queryParams = this.queryParams;
-      this.$confirm('是否确认导出所有群体教师评选方案指标数据项?', "警告", {
+      this.$confirm('是否确认导出所有群体教师评选指标数据数据项?', "警告", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
         }).then(function() {
-          return exportQtjspxfazbx(queryParams);
+          return exportQtjspxfazbxsj(queryParams);
         }).then(response => {
           this.download(response.msg);
         }).catch(function() {});
