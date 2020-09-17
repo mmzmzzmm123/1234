@@ -1,6 +1,7 @@
 package com.ruoyi.web.controller.common;
 
 import com.ruoyi.common.core.domain.entity.SysDept;
+import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.jxjs.domain.TsbzJdx;
@@ -42,6 +43,35 @@ public class SchoolCommonController {
         } catch (Exception e) {
             //throw new CustomException("部门id转换学校id异常", HttpStatus.UNAUTHORIZED);
             return jdxId;
+        }
+    }
+
+    /**
+     * 基地校id转部门id
+     **/
+    public Long jdxIdToDeptId(String jxdId) {
+        try {
+            long dept = 0;
+            SysDept sysDept = new SysDept();
+            sysDept.setSchoolid(jxdId);
+            List<SysDept> list = deptService.selectDeptList(sysDept);
+            return list.get(0).getDeptId();
+        } catch (Exception e) {
+            //throw new CustomException("部门id转换学校id异常", HttpStatus.UNAUTHORIZED);
+            return null;
+        }
+    }
+
+    /**
+     * 用户id转基地校教师id
+     **/
+    public Long userIdToJxjsId(Long userId) {
+        try {
+            SysUser sysUser = userService.selectUserById(userId);
+            return sysUser.getJsid();
+        } catch (Exception e) {
+            //throw new CustomException("部门id转换学校id异常", HttpStatus.UNAUTHORIZED);
+            return null;
         }
     }
 

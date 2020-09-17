@@ -48,7 +48,7 @@ public class TsbzJxzxkhgcsjController extends BaseController {
     @GetMapping("/list")
     public TableDataInfo list(TsbzJxzxkhgcsj tsbzJxzxkhgcsj) {
         startPage();
-        tsbzJxzxkhgcsj.setCreateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
+        tsbzJxzxkhgcsj.setCreateuserid(schoolCommonController.userIdToJxjsId(SecurityUtils.getLoginUser().getUser().getUserId()));
         List<TsbzJxzxkhgcsj> list = tsbzJxzxkhgcsjService.selectTsbzJxzxkhgcsjList(tsbzJxzxkhgcsj);
         return getDataTable(list);
     }
@@ -74,7 +74,7 @@ public class TsbzJxzxkhgcsjController extends BaseController {
         AjaxResult ajax = AjaxResult.success();
         TsbzJxzxkhgcsj tsbzJxzxkhgcsj = new TsbzJxzxkhgcsj();
         tsbzJxzxkhgcsj.setId(id);
-        tsbzJxzxkhgcsj.setCreateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
+        tsbzJxzxkhgcsj.setCreateuserid(schoolCommonController.userIdToJxjsId(SecurityUtils.getLoginUser().getUser().getUserId()));
 
         //获取文件信息
         TsbzJxzxkhgcwjsj tsbzJxzxkhgcwjsj = new TsbzJxzxkhgcwjsj();
@@ -95,7 +95,7 @@ public class TsbzJxzxkhgcsjController extends BaseController {
     public AjaxResult add(@RequestBody TsbzJxzxkhgcsj tsbzJxzxkhgcsj) {
         String uuid = schoolCommonController.getUuid();
         tsbzJxzxkhgcsj.setId(uuid);
-        tsbzJxzxkhgcsj.setCreateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
+        tsbzJxzxkhgcsj.setCreateuserid(schoolCommonController.userIdToJxjsId(SecurityUtils.getLoginUser().getUser().getUserId()));
 
         String filePaths = tsbzJxzxkhgcsj.getFilepath();
         String fileNames = tsbzJxzxkhgcsj.getFilename();
@@ -108,7 +108,7 @@ public class TsbzJxzxkhgcsjController extends BaseController {
                 tsbzJxzxkhgcwjsj.setFilepath(strArrFilePath[i]);
                 tsbzJxzxkhgcwjsj.setFilename(strArrFileName[i]);
                 tsbzJxzxkhgcwjsj.setGcid(uuid);
-                tsbzJxzxkhgcwjsj.setCreateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
+                tsbzJxzxkhgcwjsj.setCreateuserid(schoolCommonController.userIdToJxjsId(SecurityUtils.getLoginUser().getUser().getUserId()));
 
                 tsbzJxzxkhgcwjsjService.insertTsbzJxzxkhgcwjsj(tsbzJxzxkhgcwjsj);
             }
@@ -141,7 +141,7 @@ public class TsbzJxzxkhgcsjController extends BaseController {
                 tsbzJxzxkhgcwjsj.setFilepath(strArrFilePath[i]);
                 tsbzJxzxkhgcwjsj.setFilename(strArrFileName[i]);
                 tsbzJxzxkhgcwjsj.setGcid(tsbzJxzxkhgcsj.getId());
-                tsbzJxzxkhgcwjsj.setCreateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
+                tsbzJxzxkhgcwjsj.setCreateuserid(schoolCommonController.userIdToJxjsId(SecurityUtils.getLoginUser().getUser().getUserId()));
                 tsbzJxzxkhgcwjsjService.insertTsbzJxzxkhgcwjsj(tsbzJxzxkhgcwjsj);
             }
         }

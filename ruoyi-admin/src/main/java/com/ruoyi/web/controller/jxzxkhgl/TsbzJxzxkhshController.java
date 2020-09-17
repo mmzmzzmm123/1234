@@ -94,7 +94,8 @@ public class TsbzJxzxkhshController extends BaseController {
     @Log(title = "考核审核过程", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody TsbzJxzxkhsh tsbzJxzxkhsh) {
-        tsbzJxzxkhsh.setJsid(SecurityUtils.getLoginUser().getUser().getUserId());
+        tsbzJxzxkhsh.setJsid(schoolCommonController.userIdToJxjsId(SecurityUtils.getLoginUser().getUser().getUserId()));
+        tsbzJxzxkhsh.setStatus("1");
         tsbzJxzxkhsh.setCreateuseird(SecurityUtils.getLoginUser().getUser().getUserId());
         return toAjax(tsbzJxzxkhshService.insertTsbzJxzxkhsh(tsbzJxzxkhsh));
     }
@@ -153,7 +154,8 @@ public class TsbzJxzxkhshController extends BaseController {
     public AjaxResult add(@PathVariable Long id) {
         TsbzJxzxkhsh tsbzJxzxkhsh = new TsbzJxzxkhsh();
         tsbzJxzxkhsh.setFaid(id);
-        tsbzJxzxkhsh.setJsid(SecurityUtils.getLoginUser().getUser().getUserId());
+        tsbzJxzxkhsh.setStatus("1");
+        tsbzJxzxkhsh.setJsid(schoolCommonController.userIdToJxjsId(SecurityUtils.getLoginUser().getUser().getUserId()));
         tsbzJxzxkhsh.setCreateuseird(SecurityUtils.getLoginUser().getUser().getUserId());
         return toAjax(tsbzJxzxkhshService.insertTsbzJxzxkhsh(tsbzJxzxkhsh));
     }

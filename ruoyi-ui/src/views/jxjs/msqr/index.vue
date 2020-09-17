@@ -302,10 +302,10 @@ export default {
     },
     isShow(row) {
       console.log(row.dqzt);
-      if (row.dqzt == "9") {
-        return false;
-      } else {
+      if (row.dqzt == "9" && (row.lqzt == null || row.lqzt == "")) {
         return true;
+      } else {
+        return false;
       }
     },
     // 字典翻译

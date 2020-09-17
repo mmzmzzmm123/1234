@@ -8,8 +8,11 @@ import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.ServletUtils;
+import com.ruoyi.jxjs.domain.TsbzJxjsjbxx;
 import com.ruoyi.jxjs.domain.TsbzJxzxmd;
+import com.ruoyi.jxjs.service.ITsbzJxjsjbxxService;
 import com.ruoyi.jxjs.service.ITsbzJxzxmdService;
+import com.ruoyi.system.service.ISysUserService;
 import com.ruoyi.web.controller.common.SchoolCommonController;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +49,10 @@ public class TsbzJdcxController extends BaseController {
     private SchoolCommonController schoolCommonController;
     @Autowired
     private ITsbzJxzxmdService tsbzJxzxmdService;
+    @Autowired
+    private ITsbzJxjsjbxxService tsbzJxjsjbxxService;
+    @Autowired
+    private ISysUserService userService;
 
     /**
      * 查询基地区级审核列表
@@ -55,8 +62,8 @@ public class TsbzJdcxController extends BaseController {
     public TableDataInfo list(TsbzJdcx tsbzJdcx) {
         System.out.println("faid:" + tsbzJdcx.getFaid());
         //首先判断是否为学校用户
-        String jdxId=schoolCommonController.deptIdToJdxId();
-        if(!schoolCommonController.isStringEmpty(jdxId)){
+        String jdxId = schoolCommonController.deptIdToJdxId();
+        if (!schoolCommonController.isStringEmpty(jdxId)) {
             tsbzJdcx.setJdxid(jdxId);
         }
         startPage();
@@ -131,20 +138,41 @@ public class TsbzJdcxController extends BaseController {
             tsbzJdcx.setQjshr(SecurityUtils.getLoginUser().getUser().getUserId());
         }
 
-        //如果lqzt为1，则代表录取成功，则在见习名单表插入一条记录
+        //如果lqzt为1，则代表录取成功，则在见习名单表插入一条记录 并创建一条登录信息
         if (!schoolCommonController.isStringEmpty(tsbzJdcx.getLqzt()) && tsbzJdcx.getLqzt().equals("1")) {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
             Date date = new Date();
             System.out.println("year=" + sdf.format(date));
 
             TsbzJxzxmd tsbzJxzxmd = new TsbzJxzxmd();
-
             tsbzJxzxmd.setJsid(tsbzJdcx.getJsid());
             tsbzJxzxmd.setPxfaid(tsbzJdcx.getFaid());
             tsbzJxzxmd.setNf(sdf.format(date));
             tsbzJxzxmd.setCreateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
-
             tsbzJxzxmdService.insertTsbzJxzxmd(tsbzJxzxmd);
+
+            //新建用户
+            SysUser user = new SysUser();
+            TsbzJxjsjbxx tsbzJxjsjbxx = tsbzJxjsjbxxService.selectTsbzJxjsjbxxById(tsbzJdcx.getJsid());
+            user.setDeptId(schoolCommonController.jdxIdToDeptId(tsbzJxjsjbxx.getJdxid()));
+            user.setUserName(tsbzJxjsjbxx.getJxbh());
+            user.setNickName(tsbzJxjsjbxx.getName());
+            user.setDelFlag("0");
+            user.setEmail(tsbzJxjsjbxx.getJxbh() + "@mhjy.edu");
+            user.setPhonenumber(tsbzJxjsjbxx.getPhone());
+            user.setStatus("0");
+            user.setSex(tsbzJxjsjbxx.getXb());
+            user.setPassword(SecurityUtils.encryptPassword("123456"));//默认密码123456
+            Long[] postIds = new Long[1];
+            postIds[0] = (long) 4;//普通用户
+            user.setPostIds(postIds);
+            Long[] roleIds = new Long[1];
+            roleIds[0] = (long) 101;//见习教师
+            user.setRoleIds(roleIds);
+            user.setJstype("01");
+            user.setJsid(tsbzJdcx.getJsid());
+
+            userService.insertUser(user);
         }
 
         return toAjax(tsbzJdcxService.updateTsbzJdcx(tsbzJdcx));

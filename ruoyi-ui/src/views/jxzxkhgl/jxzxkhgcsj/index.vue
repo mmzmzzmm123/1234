@@ -34,7 +34,7 @@
           v-hasPermi="['jxzxkhgl:jxzxkhgcsj:edit']"
           v-show="disable"
         >填报</el-button>
-      </el-col> -->
+      </el-col>-->
       <el-col :span="1.5">
         <el-button
           type="danger"
@@ -63,9 +63,14 @@
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="编号" align="center" prop="id" /> -->
       <el-table-column label="所属方案" align="center" prop="tsbzJxzxkhzbx.faid" :formatter="faFormat" />
-      <el-table-column label="指标模块" align="center" prop="tsbzJxzxkhzbx.khmk" />
+      <el-table-column
+        label="指标模块"
+        align="center"
+        prop="tsbzJxzxkhzbx.khmk"
+        :formatter="khmkFormat"
+      />
       <el-table-column label="指标项" align="center" prop="tsbzJxzxkhzbx.khnr" />
-        <el-table-column label="提交文件数" align="center" prop="tsbzJxzxkhzbx.tjsl" />
+      <el-table-column label="提交文件数" align="center" prop="tsbzJxzxkhzbx.tjsl" />
       <el-table-column label="内容" align="center" prop="content" />
       <!-- <el-table-column label="创建人" align="center" prop="createuserid" /> -->
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -187,6 +192,8 @@ export default {
       jxzxkhgcsjList: [],
       //考核方案
       jxzxkhfaOptions: [],
+      //指标模块
+      khmkOptions: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -227,8 +234,15 @@ export default {
   created() {
     this.getKhfa();
     this.getList();
+    this.getDicts("sys_dm_khmk").then((response) => {
+      this.khmkOptions = response.data;
+    });
   },
   methods: {
+    // 考核模块字典项字典翻译
+    khmkFormat(row, column) {
+      return this.selectDictLabel(this.khmkOptions, row.tsbzJxzxkhzbx.khmk);
+    },
     handleAvatarSuccess(res, file) {
       //console.log(res, file);
       if (res.code == "200") {
