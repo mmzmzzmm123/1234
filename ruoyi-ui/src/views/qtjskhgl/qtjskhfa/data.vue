@@ -1,33 +1,42 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="102px">
-      <el-form-item label="考核方案名称" prop="name">
+      <el-form-item label="所属考核方案" prop="faid">
         <el-input
-          v-model="queryParams.name"
-          placeholder="请输入考核方案名称"
+          v-model="queryParams.faid"
+          placeholder="请输入所属考核方案"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="考核方案状态" prop="status">
-        <el-select v-model="queryParams.status" placeholder="请选择考核方案状态">
+      <el-form-item label="考核模块" prop="khmk">
+        <el-select v-model="queryParams.khmk" placeholder="请选择考核模块" clearable size="small">
           <el-option
-            v-for="dict in statusOptions"
+            v-for="dict in khmkOptions"
             :key="dict.dictValue"
             :label="dict.dictLabel"
             :value="dict.dictValue"
-          ></el-option>
+          />
         </el-select>
       </el-form-item>
+      <el-form-item label="考核内容" prop="khnr">
+        <el-input
+          v-model="queryParams.khnr"
+          placeholder="请输入考核内容"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
       <el-form-item label="考核类型" prop="khlx">
-        <el-select v-model="queryParams.khlx" placeholder="请选择考核类型">
+        <el-select v-model="queryParams.khlx" placeholder="请选择考核类型" clearable size="small">
           <el-option
             v-for="dict in khlxOptions"
             :key="dict.dictValue"
             :label="dict.dictLabel"
             :value="dict.dictValue"
-          ></el-option>
+          />
         </el-select>
       </el-form-item>
       <el-form-item>
@@ -43,7 +52,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['qtjskhgl:qtjskhfa:add']"
+          v-hasPermi="['qtjskhgl:qtjskhzbx:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -53,7 +62,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['qtjskhgl:qtjskhfa:edit']"
+          v-hasPermi="['qtjskhgl:qtjskhzbx:edit']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -63,7 +72,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['qtjskhgl:qtjskhfa:remove']"
+          v-hasPermi="['qtjskhgl:qtjskhzbx:remove']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -72,33 +81,23 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['qtjskhgl:qtjskhfa:export']"
+          v-hasPermi="['qtjskhgl:qtjskhzbx:export']"
         >导出</el-button>
       </el-col>
 	  <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="qtjskhfaList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="qtjskhzbxList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="考核方案名称" align="center" prop="name" :show-overflow-tooltip="true">
-        <template slot-scope="scope">
-          <router-link :to="'/qtjskhgl/qtjskhfa/data/' + scope.row.id" class="link-type">
-            <span>{{ scope.row.name }}</span>
-          </router-link>
-        </template>
-      </el-table-column>
-      <el-table-column label="考核方案状态" align="center" prop="status"  :formatter="statusFormat"/>
+      <el-table-column label="编号" align="center" prop="id" />
+      <el-table-column label="所属考核方案" align="center" prop="faid" />
+      <el-table-column label="考核模块" align="center" prop="khmk" :formatter="khmkFormat" />
+      <el-table-column label="考核内容" align="center" prop="khnr" />
+      <el-table-column label="提交数量" align="center" prop="tjsl" />
+      <el-table-column label="关键字段" align="center" prop="gjzd" />
+      <el-table-column label="同步来源" align="center" prop="tbly" :formatter="tblyFormat" />
+      <el-table-column label="接口标记预留" align="center" prop="jkbj" />
       <el-table-column label="考核类型" align="center" prop="khlx" :formatter="khlxFormat" />
-      <el-table-column label="考核开始时间" align="center" prop="starttime" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.starttime, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="考核结束时间" align="center" prop="endtime" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.endtime, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -106,14 +105,14 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['qtjskhgl:qtjskhfa:edit']"
+            v-hasPermi="['qtjskhgl:qtjskhzbx:edit']"
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['qtjskhgl:qtjskhfa:remove']"
+            v-hasPermi="['qtjskhgl:qtjskhzbx:remove']"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -127,24 +126,67 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改群体教师考核方案对话框 -->
+    <!-- 添加或修改群体教师考核指标项对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
-        <el-form-item label="考核方案名称" prop="name">
-          <el-input v-model="form.name" placeholder="请输入考核方案名称" />
+        <el-form-item label="所属考核方案" prop="faid">
+          <el-input v-model="form.faid" placeholder="请输入所属考核方案" />
         </el-form-item>
-        <el-form-item label="考核方案状态" prop="status">
-          <el-select v-model="form.status" placeholder="请选择考核方案状态">
+        <el-form-item label="考核模块
+            字典项" prop="khmk">
+          <el-select v-model="form.khmk" placeholder="请选择考核模块
+            字典项">
             <el-option
-              v-for="dict in statusOptions"
+              v-for="dict in khmkOptions"
               :key="dict.dictValue"
               :label="dict.dictLabel"
               :value="dict.dictValue"
             ></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="考核内容" prop="khnr">
+          <el-input v-model="form.khnr" placeholder="请输入考核内容" />
+        </el-form-item>
+        <el-form-item label="提交数量" prop="tjsl">
+          <el-input v-model="form.tjsl" placeholder="请输入提交数量" />
+        </el-form-item>
+        <el-form-item label="关键字段" prop="gjzd">
+          <el-input v-model="form.gjzd" type="textarea" placeholder="请输入内容" />
+        </el-form-item>
+        <el-form-item label="同步来源" prop="tbly">
+          <el-select v-model="form.tbly" placeholder="请选择同步来源">
+            <el-option
+              v-for="dict in tblyOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="接口标记预留" prop="jkbj">
+          <el-input v-model="form.jkbj" type="textarea" placeholder="请输入内容" />
+        </el-form-item>
+        <el-form-item label="执行开始时间" prop="starttime">
+          <el-date-picker clearable size="small" style="width: 200px"
+            v-model="form.starttime"
+            type="date"
+            value-format="yyyy-MM-dd"
+            placeholder="选择执行开始时间">
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item label="执行截止时间" prop="endtime">
+          <el-date-picker clearable size="small" style="width: 200px"
+            v-model="form.endtime"
+            type="date"
+            value-format="yyyy-MM-dd"
+            placeholder="选择执行截止时间">
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item label="执行任务预留" prop="zxrw">
+          <el-input v-model="form.zxrw" type="textarea" placeholder="请输入内容" />
+        </el-form-item>
         <el-form-item label="考核类型" prop="khlx">
-          <el-select v-model="form.khlx" placeholder="请选择考核类型">
+          <el-select v-model="form.khlx" placeholder="请选择考核类型：必做;二选一;选择性项目">
             <el-option
               v-for="dict in khlxOptions"
               :key="dict.dictValue"
@@ -152,54 +194,6 @@
               :value="dict.dictValue"
             ></el-option>
           </el-select>
-        </el-form-item>
-        <el-form-item label="考核年份" prop="khnf">
-          <el-date-picker
-            clearable
-            size="small"
-            style="width: 200px"
-            v-model="form.khnf"
-            type="year"
-            value-format="yyyy"
-            placeholder="选择考核年份"
-            :disabled="isEdit"
-          ></el-date-picker>
-        </el-form-item>
-        <el-form-item label="考核开始时间" prop="starttime">
-          <el-date-picker clearable size="small" style="width: 200px"
-            v-model="form.starttime"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="选择考核开始时间">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="考核结束时间" prop="endtime">
-          <el-date-picker clearable size="small" style="width: 200px"
-            v-model="form.endtime"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="选择考核结束时间">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="考核方案文件" prop="filepath">
-          <el-input v-model="form.filepath" v-if="false" />
-          <el-upload
-            class="upload-demo"
-            :action="uploadFileUrl"
-            :headers="headers"
-            :on-preview="handlePreview"
-            :on-remove="handleRemove"
-            :before-remove="beforeRemove"
-            :limit="1"
-            :on-exceed="handleExceed"
-            :file-list="fileList"
-            :on-success="handleAvatarSuccess"
-          >
-            <el-button size="small" type="primary">选择文件</el-button>
-          </el-upload>
-        </el-form-item>
-        <el-form-item label="考核文件名称" prop="filename">
-          <el-input v-model="form.filename" placeholder="请输入考核文件名称" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -211,11 +205,10 @@
 </template>
 
 <script>
-import { listQtjskhfa, getQtjskhfa, delQtjskhfa, addQtjskhfa, updateQtjskhfa, exportQtjskhfa } from "@/api/qtjskhgl/qtjskhfa";
-import { getToken } from "@/utils/auth";
+import { listQtjskhzbx, getQtjskhzbx, delQtjskhzbx, addQtjskhzbx, updateQtjskhzbx, exportQtjskhzbx } from "@/api/qtjskhgl/qtjskhzbx";
 
 export default {
-  name: "Qtjskhfa",
+  name: "Qtjskhzbx",
   data() {
     return {
       // 遮罩层
@@ -230,110 +223,78 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      // 群体教师考核方案表格数据
-      qtjskhfaList: [],
+      // 群体教师考核指标项表格数据
+      qtjskhzbxList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
       open: false,
-      // 状态选项
-      statusOptions: [],
-      // 考核方案类型选项
+      // 考核模块
+      khmkOptions: [],
+      // 同步来源
+      tblyOptions: [],
+      // 考核类型：必做;二选一;选择性项目字典
       khlxOptions: [],
-      // 文件选项
-      fileList: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        name: null,
-        status: null,
+        faid: null,
+        khmk: null,
+        khnr: null,
+        tjsl: null,
+        gjzd: null,
+        tbly: null,
+        jkbj: null,
         starttime: null,
         endtime: null,
-        filename: null,
-        filepath: null,
-        khnf: null,
-        khlx: null,
+        zxrw: null,
         createuserid: null,
+        yly: null,
+        yle: null,
+        khlx: null
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
-        name: [{ required: true, message: "考核方案名称不能为空", trigger: "blur" },],
-        status: [{ required: true, message: "考核状态不能为空", trigger: "blur" },],
-        starttime: [{ required: true, message: "开始时间不能为空", trigger: "blur" },],
-        endtime: [{ required: true, message: "结束时间不能为空", trigger: "blur" },],
-        filename: [{ required: true, message: "文件名称不能为空", trigger: "blur" },],
-        filepath: [{ required: true, message: "文件不能为空", trigger: "blur" },],
-        khnf: [{ required: true, message: "考核年份不能为空", trigger: "blur" },],
-        khlx: [{ required: true, message: "考核类型不能为空", trigger: "blur" },],
-
-      },
-      uploadFileUrl: process.env.VUE_APP_BASE_API + "/common/upload", // 上传的图片服务器地址
-      headers: {
-        Authorization: "Bearer " + getToken(),
-      },
+      }
     };
   },
   created() {
     this.getList();
-    this.getDicts("sys_dm_khfazt").then(response => {
-      this.statusOptions = response.data;
+    this.getDicts("sys_dm_khmk").then(response => {
+      this.khmkOptions = response.data;
     });
-    this.getDicts("sys_dm_ggjskhfalx").then(response => {
+    this.getDicts("sys_dm_tbly").then(response => {
+      this.tblyOptions = response.data;
+    });
+    this.getDicts("sys_dm_ggjskhzblx").then(response => {
       this.khlxOptions = response.data;
     });
   },
   methods: {
-    /** 查询群体教师考核方案列表 */
+    /** 查询群体教师考核指标项列表 */
     getList() {
       this.loading = true;
-      listQtjskhfa(this.queryParams).then(response => {
-        this.qtjskhfaList = response.rows;
+      listQtjskhzbx(this.queryParams).then(response => {
+        this.qtjskhzbxList = response.rows;
         this.total = response.total;
         this.loading = false;
       });
     },
-    // 字典翻译
-    statusFormat(row, column) {
-      return this.selectDictLabel(this.statusOptions, row.status);
+    // 考核模块
+    khmkFormat(row, column) {
+      return this.selectDictLabel(this.khmkOptions, row.khmk);
     },
-    // 字典翻译
+    // 同步来源
+    tblyFormat(row, column) {
+      return this.selectDictLabel(this.tblyOptions, row.tbly);
+    },
+    // 考核类型：必做;二选一;选择性项目字典翻译
     khlxFormat(row, column) {
       return this.selectDictLabel(this.khlxOptions, row.khlx);
     },
-    // 上传文件
-    handleAvatarSuccess(res, file) {
-      console.log(res, file);
-      if (res.code == "200") {
-        this.form.filepath = res.fileName;
-        this.form.filename = file.name;
-      } else {
-        this.msgError(res.msg);
-      }
-    },
-    handleRemove(file, fileList) {
-      //console.log(file, fileList);
-      if (file.response.code == "200") {
-        this.form.filepath = "";
-        this.form.filename = "";
-      }
-    },
-    handlePreview(file) {
-      //console.log(file);
-    },
-    handleExceed(files, fileList) {
-      this.$message.warning(
-        `当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${
-          files.length + fileList.length
-        } 个文件`
-      );
-    },
-    beforeRemove(file, fileList) {
-      return this.$confirm(`确定移除 ${file.name}？`);
-    },
-
     // 取消按钮
     cancel() {
       this.open = false;
@@ -343,19 +304,23 @@ export default {
     reset() {
       this.form = {
         id: null,
-        name: null,
-        status: "0",
+        faid: null,
+        khmk: null,
+        khnr: null,
+        tjsl: null,
+        gjzd: null,
+        tbly: null,
+        jkbj: null,
         starttime: null,
         endtime: null,
-        filename: null,
-        filepath: null,
-        khnf: null,
-        khlx: null,
+        zxrw: null,
         createuserid: null,
-        createTime: null
+        createTime: null,
+        yly: null,
+        yle: null,
+        khlx: null
       };
       this.resetForm("form");
-      this.fileList = [];
     },
     /** 搜索按钮操作 */
     handleQuery() {
@@ -377,20 +342,16 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加群体教师考核方案";
+      this.title = "添加群体教师考核指标项";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids
-      getQtjskhfa(id).then(response => {
+      getQtjskhzbx(id).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改群体教师考核方案";
-        this.fileList.push({
-          name: response.data.filename,
-          url: response.data.filepath,
-        });
+        this.title = "修改群体教师考核指标项";
       });
     },
     /** 提交按钮 */
@@ -398,7 +359,7 @@ export default {
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.id != null) {
-            updateQtjskhfa(this.form).then(response => {
+            updateQtjskhzbx(this.form).then(response => {
               if (response.code === 200) {
                 this.msgSuccess("修改成功");
                 this.open = false;
@@ -406,7 +367,7 @@ export default {
               }
             });
           } else {
-            addQtjskhfa(this.form).then(response => {
+            addQtjskhzbx(this.form).then(response => {
               if (response.code === 200) {
                 this.msgSuccess("新增成功");
                 this.open = false;
@@ -420,12 +381,12 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$confirm('是否确认删除群体教师考核方案编号为"' + ids + '"的数据项?', "警告", {
+      this.$confirm('是否确认删除群体教师考核指标项编号为"' + ids + '"的数据项?', "警告", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
         }).then(function() {
-          return delQtjskhfa(ids);
+          return delQtjskhzbx(ids);
         }).then(() => {
           this.getList();
           this.msgSuccess("删除成功");
@@ -434,12 +395,12 @@ export default {
     /** 导出按钮操作 */
     handleExport() {
       const queryParams = this.queryParams;
-      this.$confirm('是否确认导出所有群体教师考核方案数据项?', "警告", {
+      this.$confirm('是否确认导出所有群体教师考核指标项数据项?', "警告", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
         }).then(function() {
-          return exportQtjskhfa(queryParams);
+          return exportQtjskhzbx(queryParams);
         }).then(response => {
           this.download(response.msg);
         }).catch(function() {});

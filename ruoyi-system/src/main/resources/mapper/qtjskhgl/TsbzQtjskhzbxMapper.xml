@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.qtjskhgl.mapper.TsbzQtjskhzbxMapper">
+    
+    <resultMap type="TsbzQtjskhzbx" id="TsbzQtjskhzbxResult">
+        <result property="id"    column="id"    />
+        <result property="faid"    column="faid"    />
+        <result property="khmk"    column="khmk"    />
+        <result property="khnr"    column="khnr"    />
+        <result property="tjsl"    column="tjsl"    />
+        <result property="gjzd"    column="gjzd"    />
+        <result property="tbly"    column="tbly"    />
+        <result property="jkbj"    column="jkbj"    />
+        <result property="starttime"    column="starttime"    />
+        <result property="endtime"    column="endtime"    />
+        <result property="zxrw"    column="zxrw"    />
+        <result property="createuserid"    column="createuserid"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="yly"    column="yly"    />
+        <result property="yle"    column="yle"    />
+        <result property="khlx"    column="khlx"    />
+    </resultMap>
+
+    <sql id="selectTsbzQtjskhzbxVo">
+        select id, faid, khmk, khnr, tjsl, gjzd, tbly, jkbj, starttime, endtime, zxrw, createuserid, create_time, yly, yle, khlx from tsbz_qtjskhzbx
+    </sql>
+
+    <select id="selectTsbzQtjskhzbxList" parameterType="TsbzQtjskhzbx" resultMap="TsbzQtjskhzbxResult">
+        <include refid="selectTsbzQtjskhzbxVo"/>
+        <where>  
+            <if test="faid != null "> and faid = #{faid}</if>
+            <if test="khmk != null  and khmk != ''"> and khmk = #{khmk}</if>
+            <if test="khnr != null  and khnr != ''"> and khnr = #{khnr}</if>
+            <if test="tjsl != null "> and tjsl = #{tjsl}</if>
+            <if test="gjzd != null  and gjzd != ''"> and gjzd = #{gjzd}</if>
+            <if test="tbly != null  and tbly != ''"> and tbly = #{tbly}</if>
+            <if test="jkbj != null  and jkbj != ''"> and jkbj = #{jkbj}</if>
+            <if test="starttime != null "> and starttime = #{starttime}</if>
+            <if test="endtime != null "> and endtime = #{endtime}</if>
+            <if test="zxrw != null  and zxrw != ''"> and zxrw = #{zxrw}</if>
+            <if test="createuserid != null "> and createuserid = #{createuserid}</if>
+            <if test="yly != null  and yly != ''"> and yly = #{yly}</if>
+            <if test="yle != null  and yle != ''"> and yle = #{yle}</if>
+            <if test="khlx != null  and khlx != ''"> and khlx = #{khlx}</if>
+        </where>
+    </select>
+    
+    <select id="selectTsbzQtjskhzbxById" parameterType="Long" resultMap="TsbzQtjskhzbxResult">
+        <include refid="selectTsbzQtjskhzbxVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTsbzQtjskhzbx" parameterType="TsbzQtjskhzbx" useGeneratedKeys="true" keyProperty="id">
+        insert into tsbz_qtjskhzbx
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="faid != null">faid,</if>
+            <if test="khmk != null">khmk,</if>
+            <if test="khnr != null">khnr,</if>
+            <if test="tjsl != null">tjsl,</if>
+            <if test="gjzd != null">gjzd,</if>
+            <if test="tbly != null">tbly,</if>
+            <if test="jkbj != null">jkbj,</if>
+            <if test="starttime != null">starttime,</if>
+            <if test="endtime != null">endtime,</if>
+            <if test="zxrw != null">zxrw,</if>
+            <if test="createuserid != null">createuserid,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="yly != null">yly,</if>
+            <if test="yle != null">yle,</if>
+            <if test="khlx != null">khlx,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="faid != null">#{faid},</if>
+            <if test="khmk != null">#{khmk},</if>
+            <if test="khnr != null">#{khnr},</if>
+            <if test="tjsl != null">#{tjsl},</if>
+            <if test="gjzd != null">#{gjzd},</if>
+            <if test="tbly != null">#{tbly},</if>
+            <if test="jkbj != null">#{jkbj},</if>
+            <if test="starttime != null">#{starttime},</if>
+            <if test="endtime != null">#{endtime},</if>
+            <if test="zxrw != null">#{zxrw},</if>
+            <if test="createuserid != null">#{createuserid},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="yly != null">#{yly},</if>
+            <if test="yle != null">#{yle},</if>
+            <if test="khlx != null">#{khlx},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTsbzQtjskhzbx" parameterType="TsbzQtjskhzbx">
+        update tsbz_qtjskhzbx
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="faid != null">faid = #{faid},</if>
+            <if test="khmk != null">khmk = #{khmk},</if>
+            <if test="khnr != null">khnr = #{khnr},</if>
+            <if test="tjsl != null">tjsl = #{tjsl},</if>
+            <if test="gjzd != null">gjzd = #{gjzd},</if>
+            <if test="tbly != null">tbly = #{tbly},</if>
+            <if test="jkbj != null">jkbj = #{jkbj},</if>
+            <if test="starttime != null">starttime = #{starttime},</if>
+            <if test="endtime != null">endtime = #{endtime},</if>
+            <if test="zxrw != null">zxrw = #{zxrw},</if>
+            <if test="createuserid != null">createuserid = #{createuserid},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="yly != null">yly = #{yly},</if>
+            <if test="yle != null">yle = #{yle},</if>
+            <if test="khlx != null">khlx = #{khlx},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTsbzQtjskhzbxById" parameterType="Long">
+        delete from tsbz_qtjskhzbx where id = #{id}
+    </delete>
+
+    <delete id="deleteTsbzQtjskhzbxByIds" parameterType="String">
+        delete from tsbz_qtjskhzbx where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>
