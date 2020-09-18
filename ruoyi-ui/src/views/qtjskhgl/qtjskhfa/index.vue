@@ -162,7 +162,6 @@
             type="year"
             value-format="yyyy"
             placeholder="选择考核年份"
-            :disabled="isEdit"
           ></el-date-picker>
         </el-form-item>
         <el-form-item label="考核开始时间" prop="starttime">

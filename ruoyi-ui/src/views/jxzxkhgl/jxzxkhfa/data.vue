@@ -45,16 +45,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <!-- <el-form-item label="同步来源" prop="tbly">
-        <el-select v-model="queryParams.tbly" placeholder="请选择同步来源" clearable size="small">
-          <el-option
-            v-for="dict in tblyOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
-          />
-        </el-select>
-      </el-form-item>
+      <!-- 
       <el-form-item label="执行开始时间" prop="starttime">
         <el-date-picker
           clearable
@@ -189,6 +180,16 @@
         <el-form-item label="关键字段" prop="gjzd">
           <el-input v-model="form.gjzd" type="textarea" placeholder="请输入内容" />
         </el-form-item>
+        <el-form-item label="同步来源" prop="tbly">
+          <el-select v-model="form.tbly" placeholder="请选择同步来源">
+            <el-option
+              v-for="dict in tblyOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            ></el-option>
+          </el-select>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -260,13 +261,11 @@ export default {
       form: {},
       // 表单校验v
       rules: {
-        khmk: [{ required: true, message: "不能为空", trigger: "blur" }],
-        khnr: [{ required: true, message: "不能为空", trigger: "blur" }],
-        tjsl: [{ required: true, message: "不能为空", trigger: "blur" }],
-        gjzd: [{ required: true, message: "不能为空", trigger: "blur" }],
+        khmk: [{ required: true, message: "考核模块不能为空", trigger: "blur" }],
+        khnr: [{ required: true, message: "考核内容不能为空", trigger: "blur" }],
+        tjsl: [{ required: true, message: "提交数量不能为空", trigger: "blur" }],
+        gjzd: [{ required: true, message: "关键字段不能为空", trigger: "blur" }],
         tbly: [{ required: true, message: "不能为空", trigger: "blur" }],
-        starttime: [{ required: true, message: "不能为空", trigger: "blur" }],
-        endtime: [{ required: true, message: "不能为空", trigger: "blur" }],
       },
     };
   },

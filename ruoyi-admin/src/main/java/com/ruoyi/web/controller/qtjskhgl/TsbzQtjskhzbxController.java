@@ -1,6 +1,8 @@
 package com.ruoyi.web.controller.qtjskhgl;
 
 import java.util.List;
+
+import com.ruoyi.common.utils.SecurityUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,7 +38,7 @@ public class TsbzQtjskhzbxController extends BaseController
     /**
      * 查询群体教师考核指标项列表
      */
-    @PreAuthorize("@ss.hasPermi('qtjskhgl:qtjskhzbx:list')")
+    @PreAuthorize("@ss.hasPermi('qtjskhgl:qtjskhfa:list')")
     @GetMapping("/list")
     public TableDataInfo list(TsbzQtjskhzbx tsbzQtjskhzbx)
     {
@@ -48,7 +50,7 @@ public class TsbzQtjskhzbxController extends BaseController
     /**
      * 导出群体教师考核指标项列表
      */
-    @PreAuthorize("@ss.hasPermi('qtjskhgl:qtjskhzbx:export')")
+    @PreAuthorize("@ss.hasPermi('qtjskhgl:qtjskhfa:export')")
     @Log(title = "群体教师考核指标项", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
     public AjaxResult export(TsbzQtjskhzbx tsbzQtjskhzbx)
@@ -61,7 +63,7 @@ public class TsbzQtjskhzbxController extends BaseController
     /**
      * 获取群体教师考核指标项详细信息
      */
-    @PreAuthorize("@ss.hasPermi('qtjskhgl:qtjskhzbx:query')")
+    @PreAuthorize("@ss.hasPermi('qtjskhgl:qtjskhfa:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
@@ -71,18 +73,19 @@ public class TsbzQtjskhzbxController extends BaseController
     /**
      * 新增群体教师考核指标项
      */
-    @PreAuthorize("@ss.hasPermi('qtjskhgl:qtjskhzbx:add')")
+    @PreAuthorize("@ss.hasPermi('qtjskhgl:qtjskhfa:add')")
     @Log(title = "群体教师考核指标项", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody TsbzQtjskhzbx tsbzQtjskhzbx)
     {
+        tsbzQtjskhzbx.setCreateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
         return toAjax(tsbzQtjskhzbxService.insertTsbzQtjskhzbx(tsbzQtjskhzbx));
     }
 
     /**
      * 修改群体教师考核指标项
      */
-    @PreAuthorize("@ss.hasPermi('qtjskhgl:qtjskhzbx:edit')")
+    @PreAuthorize("@ss.hasPermi('qtjskhgl:qtjskhfa:edit')")
     @Log(title = "群体教师考核指标项", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody TsbzQtjskhzbx tsbzQtjskhzbx)
@@ -93,7 +96,7 @@ public class TsbzQtjskhzbxController extends BaseController
     /**
      * 删除群体教师考核指标项
      */
-    @PreAuthorize("@ss.hasPermi('qtjskhgl:qtjskhzbx:remove')")
+    @PreAuthorize("@ss.hasPermi('qtjskhgl:qtjskhfa:remove')")
     @Log(title = "群体教师考核指标项", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)
