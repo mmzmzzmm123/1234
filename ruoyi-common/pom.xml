@@ -155,6 +155,13 @@
             <artifactId>uid-generator-spring-boot-starter</artifactId>
             <version>1.0.2.RELEASE</version>
         </dependency>
+        <!-- lombok 实体类工具-->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.12</version>
+        </dependency>
+
 
     </dependencies>
 
