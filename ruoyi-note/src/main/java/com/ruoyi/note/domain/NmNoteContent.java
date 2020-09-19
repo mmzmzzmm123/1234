@@ -19,7 +19,6 @@ import com.ruoyi.common.core.domain.BaseEntity;
 @NoArgsConstructor
 public class NmNoteContent
 {
-    private static final long serialVersionUID = 1L;
 
     /** 便签主键ID */
     private Long noteId;
