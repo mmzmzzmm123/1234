@@ -47,6 +47,28 @@ public class SchoolCommonController {
     }
 
     /**
+     * 当前登录用户部门id转学校id
+     **/
+    public String deptIdToXxId() {
+        String xxId = "";//转换值
+        try {
+            SysDept sysDept = getDept();
+            TsbzJdx tsbzJdx = new TsbzJdx();
+
+            String strSchoolId = sysDept.getSchoolid();
+            System.out.println("schoolId is Empty======:" + isStringEmpty(strSchoolId));
+            if (sysDept != null && !isStringEmpty(strSchoolId)) {
+                xxId = strSchoolId;
+                return xxId;
+            }
+            return xxId;
+        } catch (Exception e) {
+            //throw new CustomException("部门id转换学校id异常", HttpStatus.UNAUTHORIZED);
+            return xxId;
+        }
+    }
+
+    /**
      * 基地校id转部门id
      **/
     public Long jdxIdToDeptId(String jxdId) {

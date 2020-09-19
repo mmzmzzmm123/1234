@@ -1,16 +1,23 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
+    <el-form
+      :model="queryParams"
+      ref="queryForm"
+      :inline="true"
+      v-show="showSearch"
+      label-width="68px"
+    >
       <el-form-item label="考核方案" prop="faid">
-        <el-input
-          v-model="queryParams.faid"
-          placeholder="请输入考核方案"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+        <el-select v-model="queryParams.faid" size="small">
+          <el-option
+            v-for="item in qtjskhfaOptions"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
+          />
+        </el-select>
       </el-form-item>
-      <el-form-item label="教师" prop="jsid">
+      <el-form-item label="选择教师" prop="jsid">
         <el-input
           v-model="queryParams.jsid"
           placeholder="请输入教师"
@@ -19,55 +26,25 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="状态" prop="status">
+      <el-form-item label="当前状态" prop="status">
         <el-select v-model="queryParams.status" placeholder="请选择状态" clearable size="small">
-          <el-option label="请选择字典生成" value="" />
+          <el-option
+            v-for="dict in statusOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
         </el-select>
       </el-form-item>
-      <el-form-item label="校级审核人" prop="xjshr">
-        <el-input
-          v-model="queryParams.xjshr"
-          placeholder="请输入校级审核人"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="校级审核意见" prop="xjshyj">
-        <el-input
-          v-model="queryParams.xjshyj"
-          placeholder="请输入校级审核意见"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="区级审核人" prop="qjshr">
-        <el-input
-          v-model="queryParams.qjshr"
-          placeholder="请输入区级审核人"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="区级审核意见" prop="qjshyj">
-        <el-input
-          v-model="queryParams.qjshyj"
-          placeholder="请输入区级审核意见"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="创建人" prop="createuseird">
-        <el-input
-          v-model="queryParams.createuseird"
-          placeholder="请输入创建人"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+      <el-form-item label="区级意见" prop="qjshyj">
+        <el-select v-model="queryParams.qjshyj" placeholder="请选择区级审核意见" clearable size="small">
+          <el-option
+            v-for="dict in qjshyjOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -78,22 +55,13 @@
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
-          type="primary"
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['system:qtjskhsh:add']"
-        >新增</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
           type="success"
           icon="el-icon-edit"
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['system:qtjskhsh:edit']"
-        >修改</el-button>
+          v-hasPermi="['qtjskhgl:qtjskhsh:edit']"
+        >审核</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -102,34 +70,25 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['system:qtjskhsh:remove']"
-        >删除</el-button>
+          v-hasPermi="['qtjskhgl:qtjskhsh:remove']"
+        >退回</el-button>
       </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['system:qtjskhsh:export']"
-        >导出</el-button>
-      </el-col>
-	  <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="qtjskhshList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="编号" align="center" prop="id" />
+      <!-- <el-table-column label="编号" align="center" prop="id" /> -->
       <el-table-column label="考核方案" align="center" prop="faid" />
       <el-table-column label="教师" align="center" prop="jsid" />
       <el-table-column label="状态" align="center" prop="status" />
-      <el-table-column label="校级审核人" align="center" prop="xjshr" />
+      <!-- <el-table-column label="校级审核人" align="center" prop="xjshr" /> -->
       <el-table-column label="校级审核意见" align="center" prop="xjshyj" />
       <el-table-column label="校级审核建议" align="center" prop="xjshjy" />
-      <el-table-column label="区级审核人" align="center" prop="qjshr" />
+      <!-- <el-table-column label="区级审核人" align="center" prop="qjshr" /> -->
       <el-table-column label="区级审核意见" align="center" prop="qjshyj" />
       <el-table-column label="区级审核建议" align="center" prop="qjshjy" />
-      <el-table-column label="创建人" align="center" prop="createuseird" />
+      <!-- <el-table-column label="创建人" align="center" prop="createuseird" /> -->
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -137,19 +96,19 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['system:qtjskhsh:edit']"
-          >修改</el-button>
+            v-hasPermi="['qtjskhgl:qtjskhsh:edit']"
+          >审核</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['system:qtjskhsh:remove']"
-          >删除</el-button>
+            v-hasPermi="['qtjskhgl:qtjskhsh:remove']"
+          >退回</el-button>
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -203,12 +162,21 @@
 </template>
 
 <script>
-import { listQtjskhsh, getQtjskhsh, delQtjskhsh, addQtjskhsh, updateQtjskhsh, exportQtjskhsh } from "@/api/system/qtjskhsh";
+import {
+  listQtjskhsh,
+  getQtjskhsh,
+  delQtjskhsh,
+  addQtjskhsh,
+  updateQtjskhsh,
+} from "@/api/qtjskhgl/qtjskhsh";
+import { listQtjskhfa, getQtjskhfa } from "@/api/qtjskhgl/qtjskhfa";
 
 export default {
   name: "Qtjskhsh",
   data() {
     return {
+      //默认方案id
+      defaultFaid: "",
       // 遮罩层
       loading: true,
       // 选中数组
@@ -223,17 +191,24 @@ export default {
       total: 0,
       // 群体教师考核审核过程表格数据
       qtjskhshList: [],
+      qtjskhfaOptions: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
       open: false,
+      // 状态字典
+      statusOptions: [],
+      // 校级审核意见字典
+      xjshyjOptions: [],
+      // 区级审核意见字典
+      qjshyjOptions: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
         pageSize: 10,
         faid: null,
         jsid: null,
-        status: null,
+        status: "2",
         xjshr: null,
         xjshyj: null,
         xjshjy: null,
@@ -242,21 +217,41 @@ export default {
         qjshjy: null,
         createuseird: null,
       },
+      // 查询参数
+      queryParams_fa: {
+        status: "1",
+      },
       // 表单参数
       form: {},
       // 表单校验
-      rules: {
-      }
+      rules: {},
     };
   },
   created() {
-    this.getList();
+    this.getKhfa();
+    this.getDicts("sys_dm_khshgczt").then((response) => {
+      this.statusOptions = response.data;
+    });
+    this.getDicts("sys_dm_shyj").then((response) => {
+      this.xjshyjOptions = response.data;
+      this.qjshyjOptions = response.data;
+    });
   },
   methods: {
+    //考核方案
+    async getKhfa() {
+      await listQtjskhfa(this.queryParams_fa).then((response) => {
+        this.qtjskhfaOptions = response.rows;
+        this.defaultFaid = response.rows[0].id;
+        this.queryParams.faid = this.defaultFaid;
+
+        this.getList();
+      });
+    },
     /** 查询群体教师考核审核过程列表 */
     getList() {
       this.loading = true;
-      listQtjskhsh(this.queryParams).then(response => {
+      listQtjskhsh(this.queryParams).then((response) => {
         this.qtjskhshList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -281,7 +276,7 @@ export default {
         qjshyj: null,
         qjshjy: null,
         createuseird: null,
-        createTime: null
+        createTime: null,
       };
       this.resetForm("form");
     },
@@ -293,13 +288,14 @@ export default {
     /** 重置按钮操作 */
     resetQuery() {
       this.resetForm("queryForm");
+      this.queryParams.faid = this.defaultFaid;
       this.handleQuery();
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.id)
-      this.single = selection.length!==1
-      this.multiple = !selection.length
+      this.ids = selection.map((item) => item.id);
+      this.single = selection.length !== 1;
+      this.multiple = !selection.length;
     },
     /** 新增按钮操作 */
     handleAdd() {
@@ -310,8 +306,8 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const id = row.id || this.ids
-      getQtjskhsh(id).then(response => {
+      const id = row.id || this.ids;
+      getQtjskhsh(id).then((response) => {
         this.form = response.data;
         this.open = true;
         this.title = "修改群体教师考核审核过程";
@@ -319,10 +315,10 @@ export default {
     },
     /** 提交按钮 */
     submitForm() {
-      this.$refs["form"].validate(valid => {
+      this.$refs["form"].validate((valid) => {
         if (valid) {
           if (this.form.id != null) {
-            updateQtjskhsh(this.form).then(response => {
+            updateQtjskhsh(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("修改成功");
                 this.open = false;
@@ -330,7 +326,7 @@ export default {
               }
             });
           } else {
-            addQtjskhsh(this.form).then(response => {
+            addQtjskhsh(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("新增成功");
                 this.open = false;
@@ -344,30 +340,24 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$confirm('是否确认删除群体教师考核审核过程编号为"' + ids + '"的数据项?', "警告", {
+      this.$confirm(
+        '是否确认删除群体教师考核审核过程编号为"' + ids + '"的数据项?',
+        "警告",
+        {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
+          type: "warning",
+        }
+      )
+        .then(function () {
           return delQtjskhsh(ids);
-        }).then(() => {
+        })
+        .then(() => {
           this.getList();
           this.msgSuccess("删除成功");
-        }).catch(function() {});
+        })
+        .catch(function () {});
     },
-    /** 导出按钮操作 */
-    handleExport() {
-      const queryParams = this.queryParams;
-      this.$confirm('是否确认导出所有群体教师考核审核过程数据项?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
-          return exportQtjskhsh(queryParams);
-        }).then(response => {
-          this.download(response.msg);
-        }).catch(function() {});
-    }
-  }
+  },
 };
 </script>

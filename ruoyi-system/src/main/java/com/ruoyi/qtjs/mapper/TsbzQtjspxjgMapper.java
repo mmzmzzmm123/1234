@@ -58,4 +58,12 @@ public interface TsbzQtjspxjgMapper {
      * @return 结果
      */
     public int deleteTsbzQtjspxjgByIds(Long[] ids);
+
+    /**
+     * 查询群体教师考核名单列表
+     *
+     * @param tsbzQtjspxjg 见习之星名单
+     * @return 见习之星名单集合
+     */
+    public List<TsbzQtjspxjg> selectTsbzQtjspxjgKhjdList(TsbzQtjspxjg tsbzQtjspxjg);
 }

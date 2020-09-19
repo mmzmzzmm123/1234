@@ -12,26 +12,56 @@
         <result property="nf" column="nf"/>
         <result property="createuserid" column="createuserid"/>
         <result property="createTime" column="create_time"/>
+        <result property="bfb" column="bfb"/>
+        <result property="deptid" column="deptid"/>
+        <association property="tsbzJsjbxx" column="jsid" javaType="TsbzJsjbxx" resultMap="TsbzJsjbxxResult"/>
+    </resultMap>
+
+    <resultMap type="TsbzJsjbxx" id="TsbzJsjbxxResult">
+        <result property="id" column="id"/>
+        <result property="jsid" column="jsid"/>
+        <result property="jsxm" column="jsxm"/>
+        <result property="xb" column="xb"/>
+        <result property="deptid" column="deptid"/>
+        <result property="dabh" column="dabh"/>
+        <result property="zjlx" column="zjlx"/>
+        <result property="zjhm" column="zjhm"/>
+        <result property="bzzt" column="bzzt"/>
+        <result property="gwzt" column="gwzt"/>
+        <result property="gwlx" column="gwlx"/>
+        <result property="csrq" column="csrq"/>
+        <result property="rjnx" column="rjnx"/>
+        <result property="zc" column="zc"/>
+        <result property="zyry" column="zyry"/>
+        <result property="tzb" column="tzb"/>
+        <result property="zks" column="zks"/>
+        <result property="createTime" column="create_time"/>
     </resultMap>
 
     <sql id="selectTsbzQtjspxjgVo">
-        select id, faid, jsid, pxlx, nf, createuserid, create_time from tsbz_qtjspxjg
+--         select id, faid, jsid, pxlx, nf, createuserid, create_time from tsbz_qtjspxjg
+select  a.id, a.faid, a.jsid, a.pxlx, a.nf, a.createuserid, a.create_time,
+b.jsid, b.jsxm, b.xb, b.deptid, b.dabh, b.zjlx, b.zjhm, b.bzzt, b.gwzt, b.gwlx, b.csrq, b.rjnx, b.zc, b.zyry, b.tzb, b.zks,
+c.xxmc,
+d.name as pxfamc from tsbz_qtjspxjg a
+left join tsbz_jsjbxx b on a.jsid=b.id
+left join tsbz_xxjbxx c on b.deptid=c.id
+left join tsbz_qtjspxfa d on a.faid=d.id
     </sql>
 
     <select id="selectTsbzQtjspxjgList" parameterType="TsbzQtjspxjg" resultMap="TsbzQtjspxjgResult">
         <include refid="selectTsbzQtjspxjgVo"/>
         <where>
-            <if test="faid != null ">and faid = #{faid}</if>
-            <if test="jsid != null ">and jsid = #{jsid}</if>
-            <if test="pxlx != null  and pxlx != ''">and pxlx = #{pxlx}</if>
-            <if test="nf != null  and nf != ''">and nf = #{nf}</if>
-            <if test="createuserid != null ">and createuserid = #{createuserid}</if>
+            <if test="faid != null ">and a.faid = #{faid}</if>
+            <if test="jsid != null ">and a.jsid = #{jsid}</if>
+            <if test="pxlx != null  and pxlx != ''">and a.pxlx = #{pxlx}</if>
+            <if test="nf != null  and nf != ''">and a.nf = #{nf}</if>
         </where>
     </select>
 
     <select id="selectTsbzQtjspxjgById" parameterType="Long" resultMap="TsbzQtjspxjgResult">
         <include refid="selectTsbzQtjspxjgVo"/>
-        where id = #{id}
+        where a.id = #{id}
     </select>
 
     <insert id="insertTsbzQtjspxjg" parameterType="TsbzQtjspxjg" useGeneratedKeys="true" keyProperty="id">
@@ -77,5 +107,17 @@
             #{id}
         </foreach>
     </delete>
+
+    <select id="selectTsbzQtjspxjgKhjdList" parameterType="TsbzQtjspxjg" resultMap="TsbzQtjspxjgResult">
+        select b.id, b.jsid, b.jsxm, b.xb, b.deptid, b.dabh, b.zjlx, b.zjhm, b.bzzt, b.gwzt, b.gwlx, b.csrq, b.rjnx, b.zc, b.zyry, b.tzb, b.zks, b.create_time,
+        c.xxmc,
+        (select count(*)from tsbz_qtjskhgcsj where faid=#{faid} and createuserid=a.jsid)/(select count(*) from
+        tsbz_qtjskhzbx where faid=#{faid}) bfb from tsbz_qtjspxjg a
+        left join tsbz_jsjbxx b on a.jsid=b.id
+        left join tsbz_xxjbxx c on b.deptid=c.id
+        where a.nf=#{nf}
+        <if test="jsxm != null  and jsxm != ''">and b.jsxm like concat('%', #{jsxm}, '%')</if>
+        <if test="deptid != null  and deptid != ''">and b.deptid = #{deptid}</if>
+    </select>
 
 </mapper>
