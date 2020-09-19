@@ -1,5 +1,6 @@
 package com.ruoyi.qtjskhgl.domain;
 
+import com.ruoyi.qtjs.domain.TsbzJsjbxx;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
@@ -78,6 +79,26 @@ public class TsbzQtjskhsh extends BaseEntity {
      */
     @Excel(name = "创建人")
     private Long createuseird;
+
+    private TsbzJsjbxx tsbzJsjbxx;
+
+    public TsbzJsjbxx getTsbzJsjbxx() {
+        return tsbzJsjbxx;
+    }
+
+    public void setTsbzJsjbxx(TsbzJsjbxx tsbzJsjbxx) {
+        this.tsbzJsjbxx = tsbzJsjbxx;
+    }
+
+    public TsbzQtjskhgcwjsj getTsbzQtjskhgcwjsj() {
+        return tsbzQtjskhgcwjsj;
+    }
+
+    public void setTsbzQtjskhgcwjsj(TsbzQtjskhgcwjsj tsbzQtjskhgcwjsj) {
+        this.tsbzQtjskhgcwjsj = tsbzQtjskhgcwjsj;
+    }
+
+    private TsbzQtjskhgcwjsj tsbzQtjskhgcwjsj;
 
     public void setId(Long id) {
         this.id = id;
@@ -182,6 +203,8 @@ public class TsbzQtjskhsh extends BaseEntity {
                 .append("qjshjy", getQjshjy())
                 .append("createuseird", getCreateuseird())
                 .append("createTime", getCreateTime())
+                .append("tsbzJsjbxx", getTsbzJsjbxx())
+                .append("tsbzQtjskhgcwjsj", getTsbzQtjskhgcwjsj())
                 .toString();
     }
 }

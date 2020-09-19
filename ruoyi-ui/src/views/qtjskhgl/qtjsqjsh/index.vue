@@ -121,36 +121,31 @@
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="考核方案" prop="faid">
-          <el-input v-model="form.faid" placeholder="请输入考核方案" />
+          <el-select v-model="form.faid" size="small" :disabled="true">
+            <el-option
+              v-for="item in qtjskhfaOptions"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
+            />
+          </el-select>
         </el-form-item>
         <el-form-item label="教师" prop="jsid">
-          <el-input v-model="form.jsid" placeholder="请输入教师" />
-        </el-form-item>
-        <el-form-item label="状态">
-          <el-radio-group v-model="form.status">
-            <el-radio label="1">请选择字典生成</el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="校级审核人" prop="xjshr">
-          <el-input v-model="form.xjshr" placeholder="请输入校级审核人" />
-        </el-form-item>
-        <el-form-item label="校级审核意见" prop="xjshyj">
-          <el-input v-model="form.xjshyj" placeholder="请输入校级审核意见" />
-        </el-form-item>
-        <el-form-item label="校级审核建议" prop="xjshjy">
-          <el-input v-model="form.xjshjy" type="textarea" placeholder="请输入内容" />
-        </el-form-item>
-        <el-form-item label="区级审核人" prop="qjshr">
-          <el-input v-model="form.qjshr" placeholder="请输入区级审核人" />
+          <el-input v-model="jsxm" :disabled="true" />
+          <el-input v-model="form.jsid" v-if="false" />
         </el-form-item>
         <el-form-item label="区级审核意见" prop="qjshyj">
-          <el-input v-model="form.qjshyj" placeholder="请输入区级审核意见" />
+          <el-select v-model="form.qjshyj" placeholder="请选择区级审核意见">
+            <el-option
+              v-for="dict in qjshyjOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="区级审核建议" prop="qjshjy">
           <el-input v-model="form.qjshjy" type="textarea" placeholder="请输入内容" />
-        </el-form-item>
-        <el-form-item label="创建人" prop="createuseird">
-          <el-input v-model="form.createuseird" placeholder="请输入创建人" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -175,6 +170,8 @@ export default {
   name: "Qtjskhsh",
   data() {
     return {
+      //教师姓名
+      jsxm: "",
       //默认方案id
       defaultFaid: "",
       // 遮罩层
@@ -224,7 +221,11 @@ export default {
       // 表单参数
       form: {},
       // 表单校验
-      rules: {},
+      rules: {
+        qjshyj: [
+          { required: true, message: "区级审核意见不能为空", trigger: "blur" },
+        ],
+      },
     };
   },
   created() {
@@ -297,20 +298,15 @@ export default {
       this.single = selection.length !== 1;
       this.multiple = !selection.length;
     },
-    /** 新增按钮操作 */
-    handleAdd() {
-      this.reset();
-      this.open = true;
-      this.title = "添加群体教师考核审核过程";
-    },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids;
       getQtjskhsh(id).then((response) => {
+        this.jsxm = response.data.tsbzJsjbxx.jsxm;
         this.form = response.data;
         this.open = true;
-        this.title = "修改群体教师考核审核过程";
+        this.title = "群体教师考核审核";
       });
     },
     /** 提交按钮 */
@@ -320,15 +316,7 @@ export default {
           if (this.form.id != null) {
             updateQtjskhsh(this.form).then((response) => {
               if (response.code === 200) {
-                this.msgSuccess("修改成功");
-                this.open = false;
-                this.getList();
-              }
-            });
-          } else {
-            addQtjskhsh(this.form).then((response) => {
-              if (response.code === 200) {
-                this.msgSuccess("新增成功");
+                this.msgSuccess("审核成功");
                 this.open = false;
                 this.getList();
               }

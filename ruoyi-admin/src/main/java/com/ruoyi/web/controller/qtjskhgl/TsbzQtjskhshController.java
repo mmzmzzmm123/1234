@@ -72,10 +72,15 @@ public class TsbzQtjskhshController extends BaseController {
     /**
      * 新增群体教师考核审核过程
      */
-    @PreAuthorize("@ss.hasPermi('qtjskhgl:qtjskhsh:add')")
+    @PreAuthorize("@ss.hasPermi('qtjskhgl:qtjskhsh:add')" + "||@ss.hasPermi('qtjskhgl:qtjskhgcsj:edit')")
     @Log(title = "群体教师考核审核过程", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody TsbzQtjskhsh tsbzQtjskhsh) {
+
+        tsbzQtjskhsh.setJsid(schoolCommonController.userIdToJxjsId(SecurityUtils.getLoginUser().getUser().getUserId()));
+        tsbzQtjskhsh.setStatus("1");
+        tsbzQtjskhsh.setCreateuseird(SecurityUtils.getLoginUser().getUser().getUserId());
+
         return toAjax(tsbzQtjskhshService.insertTsbzQtjskhsh(tsbzQtjskhsh));
     }
 
@@ -86,6 +91,12 @@ public class TsbzQtjskhshController extends BaseController {
     @Log(title = "群体教师考核审核过程", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody TsbzQtjskhsh tsbzQtjskhsh) {
+
+        //区级
+        if (!schoolCommonController.isStringEmpty(tsbzQtjskhsh.getQjshyj()) && tsbzQtjskhsh.getQjshyj().equals("1")) {
+            tsbzQtjskhsh.setQjshr(SecurityUtils.getLoginUser().getUser().getUserId());
+            tsbzQtjskhsh.setStatus("9");
+        }
         return toAjax(tsbzQtjskhshService.updateTsbzQtjskhsh(tsbzQtjskhsh));
     }
 
