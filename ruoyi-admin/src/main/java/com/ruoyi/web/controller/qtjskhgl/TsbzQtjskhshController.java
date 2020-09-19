@@ -3,6 +3,7 @@ package com.ruoyi.web.controller.qtjskhgl;
 import java.util.List;
 
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.web.controller.common.SchoolCommonController;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,6 +34,8 @@ import com.ruoyi.common.core.page.TableDataInfo;
 public class TsbzQtjskhshController extends BaseController {
     @Autowired
     private ITsbzQtjskhshService tsbzQtjskhshService;
+    @Autowired
+    private SchoolCommonController schoolCommonController;
 
     /**
      * 查询群体教师考核审核过程列表
@@ -118,7 +121,7 @@ public class TsbzQtjskhshController extends BaseController {
     public AjaxResult add(@PathVariable Long id) {
         TsbzQtjskhsh tsbzQtjskhsh = new TsbzQtjskhsh();
         tsbzQtjskhsh.setFaid(id);
-        tsbzQtjskhsh.setJsid(SecurityUtils.getLoginUser().getUser().getUserId());
+        tsbzQtjskhsh.setJsid(schoolCommonController.userIdToJxjsId(SecurityUtils.getLoginUser().getUser().getUserId()));
         tsbzQtjskhsh.setCreateuseird(SecurityUtils.getLoginUser().getUser().getUserId());
         return toAjax(tsbzQtjskhshService.insertTsbzQtjskhsh(tsbzQtjskhsh));
     }
