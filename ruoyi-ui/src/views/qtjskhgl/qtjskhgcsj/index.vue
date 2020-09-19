@@ -343,12 +343,6 @@ export default {
       this.single = selection.length !== 1;
       this.multiple = !selection.length;
     },
-    /** 新增按钮操作 */
-    handleAdd() {
-      this.reset();
-      this.open = true;
-      this.title = "添加群体教师考核过程数据";
-    },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
@@ -359,7 +353,7 @@ export default {
           this.form = response.data;
           console.log(response.data);
           this.open = true;
-          this.title = "修改群体教师考核过程数据";
+          this.title = "填报群体教师考核过程数据";
           this.form.khnr = row.tsbzQtjskhzbx.khnr;
           console.log(response.file);
           var array = [];
@@ -413,7 +407,7 @@ export default {
     handleDelete(row) {
       const ids = row.id || this.ids;
       this.$confirm(
-        '是否确认删除群体教师考核过程数据编号为"' + ids + '"的数据项?',
+        '是否确认清空群体教师考核过程数据项?',
         "警告",
         {
           confirmButtonText: "确定",
@@ -426,7 +420,7 @@ export default {
         })
         .then(() => {
           this.getList();
-          this.msgSuccess("删除成功");
+          this.msgSuccess("清空成功");
         })
         .catch(function () {});
     },
