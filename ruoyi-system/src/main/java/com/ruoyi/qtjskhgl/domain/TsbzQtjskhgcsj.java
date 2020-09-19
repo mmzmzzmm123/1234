@@ -43,6 +43,20 @@ public class TsbzQtjskhgcsj extends BaseEntity {
     @Excel(name = "创建人")
     private Long createuserid;
 
+    private TsbzQtjskhzbx tsbzQtjskhzbx;
+
+    /**
+     * 文件名称
+     */
+    @Excel(name = "文件名称")
+    private String filename;
+
+    /**
+     * 文件路径
+     */
+    @Excel(name = "文件路径")
+    private String filepath;
+
     public void setId(String id) {
         this.id = id;
     }
@@ -83,6 +97,30 @@ public class TsbzQtjskhgcsj extends BaseEntity {
         return createuserid;
     }
 
+    public TsbzQtjskhzbx getTsbzQtjskhzbx() {
+        return tsbzQtjskhzbx;
+    }
+
+    public void setTsbzQtjskhzbx(TsbzQtjskhzbx tsbzQtjskhzbx) {
+        this.tsbzQtjskhzbx = tsbzQtjskhzbx;
+    }
+
+    public void setFilename(String filename) {
+        this.filename = filename;
+    }
+
+    public String getFilename() {
+        return filename;
+    }
+
+    public void setFilepath(String filepath) {
+        this.filepath = filepath;
+    }
+
+    public String getFilepath() {
+        return filepath;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
@@ -92,6 +130,9 @@ public class TsbzQtjskhgcsj extends BaseEntity {
                 .append("content", getContent())
                 .append("createuserid", getCreateuserid())
                 .append("createTime", getCreateTime())
+                .append("tsbzQtjskhzbx", getTsbzQtjskhzbx())
+                .append("filename", getFilename())
+                .append("filepath", getFilepath())
                 .toString();
     }
 }

@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ruoyi.system.mapper.TsbzQtjskhgcwjsjMapper">
+<mapper namespace="com.ruoyi.qtjskhgl.mapper.TsbzQtjskhgcwjsjMapper">
     
     <resultMap type="TsbzQtjskhgcwjsj" id="TsbzQtjskhgcwjsjResult">
         <result property="id"    column="id"    />
@@ -70,6 +70,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         delete from tsbz_qtjskhgcwjsj where id in 
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
+        </foreach>
+    </delete>
+
+    <delete id="deleteTsbzJxzxkhgcwjsjByGcIds" parameterType="String">
+        delete from tsbz_jxzxkhgcwjsj where gcid in
+        <foreach item="gcid" collection="array" open="(" separator="," close=")">
+            #{gcid}
         </foreach>
     </delete>
     

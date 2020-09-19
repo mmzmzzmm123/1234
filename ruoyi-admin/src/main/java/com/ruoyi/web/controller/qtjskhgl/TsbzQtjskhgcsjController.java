@@ -2,6 +2,10 @@ package com.ruoyi.web.controller.qtjskhgl;
 
 import java.util.List;
 
+import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.qtjskhgl.domain.TsbzQtjskhgcwjsj;
+import com.ruoyi.qtjskhgl.service.ITsbzQtjskhgcwjsjService;
+import com.ruoyi.web.controller.common.SchoolCommonController;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,6 +36,10 @@ import com.ruoyi.common.core.page.TableDataInfo;
 public class TsbzQtjskhgcsjController extends BaseController {
     @Autowired
     private ITsbzQtjskhgcsjService tsbzQtjskhgcsjService;
+    @Autowired
+    private SchoolCommonController schoolCommonController;
+    @Autowired
+    private ITsbzQtjskhgcwjsjService tsbzQtjskhgcwjsjService;
 
     /**
      * 查询群体教师考核过程数据列表
@@ -40,6 +48,7 @@ public class TsbzQtjskhgcsjController extends BaseController {
     @GetMapping("/list")
     public TableDataInfo list(TsbzQtjskhgcsj tsbzQtjskhgcsj) {
         startPage();
+        tsbzQtjskhgcsj.setCreateuserid(schoolCommonController.userIdToJxjsId(SecurityUtils.getLoginUser().getUser().getUserId()));
         List<TsbzQtjskhgcsj> list = tsbzQtjskhgcsjService.selectTsbzQtjskhgcsjList(tsbzQtjskhgcsj);
         return getDataTable(list);
     }
@@ -62,7 +71,20 @@ public class TsbzQtjskhgcsjController extends BaseController {
     @PreAuthorize("@ss.hasPermi('qtjskhgl:qtjskhgcsj:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") String id) {
-        return AjaxResult.success(tsbzQtjskhgcsjService.selectTsbzQtjskhgcsjById(id));
+        AjaxResult ajax = AjaxResult.success();
+        TsbzQtjskhgcsj tsbzQtjskhgcsj = new TsbzQtjskhgcsj();
+        tsbzQtjskhgcsj.setId(id);
+        tsbzQtjskhgcsj.setCreateuserid(schoolCommonController.userIdToJxjsId(SecurityUtils.getLoginUser().getUser().getUserId()));
+
+        //获取文件信息
+        TsbzQtjskhgcwjsj tsbzQtjskhgcwjsj = new TsbzQtjskhgcwjsj();
+        tsbzQtjskhgcwjsj.setGcid(id);
+        List<TsbzQtjskhgcwjsj> list = tsbzQtjskhgcwjsjService.selectTsbzQtjskhgcwjsjList(tsbzQtjskhgcwjsj);
+        ajax.put("file", list);
+        ajax.put(AjaxResult.DATA_TAG, tsbzQtjskhgcsjService.selectTsbzQtjskhgcsjById(tsbzQtjskhgcsj));
+
+        return ajax;
+//        return AjaxResult.success(tsbzQtjskhgcsjService.selectTsbzQtjskhgcsjById(id));
     }
 
     /**
@@ -72,7 +94,29 @@ public class TsbzQtjskhgcsjController extends BaseController {
     @Log(title = "群体教师考核过程数据", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody TsbzQtjskhgcsj tsbzQtjskhgcsj) {
+        String uuid = schoolCommonController.getUuid();
+        tsbzQtjskhgcsj.setId(uuid);
+        tsbzQtjskhgcsj.setCreateuserid(schoolCommonController.userIdToJxjsId(SecurityUtils.getLoginUser().getUser().getUserId()));
+
+        String filePaths = tsbzQtjskhgcsj.getFilepath();
+        String fileNames = tsbzQtjskhgcsj.getFilename();
+        if (!schoolCommonController.isStringEmpty(filePaths) && !schoolCommonController.isStringEmpty(fileNames)) {
+            String[] strArrFilePath = filePaths.split(";");
+            String[] strArrFileName = fileNames.split(";");
+            TsbzQtjskhgcwjsj tsbzQtjskhgcwjsj = null;
+            for (int i = 0; i < strArrFilePath.length; i++) {
+                tsbzQtjskhgcwjsj = new TsbzQtjskhgcwjsj();
+                tsbzQtjskhgcwjsj.setFilepath(strArrFilePath[i]);
+                tsbzQtjskhgcwjsj.setFilename(strArrFileName[i]);
+                tsbzQtjskhgcwjsj.setGcid(uuid);
+                tsbzQtjskhgcwjsj.setCreateuserid(schoolCommonController.userIdToJxjsId(SecurityUtils.getLoginUser().getUser().getUserId()));
+
+                tsbzQtjskhgcwjsjService.insertTsbzQtjskhgcwjsj(tsbzQtjskhgcwjsj);
+            }
+        }
+
         return toAjax(tsbzQtjskhgcsjService.insertTsbzQtjskhgcsj(tsbzQtjskhgcsj));
+//        return toAjax(tsbzQtjskhgcsjService.insertTsbzQtjskhgcsj(tsbzQtjskhgcsj));
     }
 
     /**
@@ -82,7 +126,29 @@ public class TsbzQtjskhgcsjController extends BaseController {
     @Log(title = "群体教师考核过程数据", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody TsbzQtjskhgcsj tsbzQtjskhgcsj) {
+        //1先清空文件数据;
+        String[] tmp = new String[1];
+        tmp[0] = tsbzQtjskhgcsj.getId();
+        tsbzQtjskhgcwjsjService.deleteTsbzQtjskhgcwjsjByGcIds(tmp);
+
+        //2再重新创建;
+        String filePaths = tsbzQtjskhgcsj.getFilepath();
+        String fileNames = tsbzQtjskhgcsj.getFilename();
+        if (!schoolCommonController.isStringEmpty(filePaths) && !schoolCommonController.isStringEmpty(fileNames)) {
+            String[] strArrFilePath = filePaths.split(";");
+            String[] strArrFileName = fileNames.split(";");
+            TsbzQtjskhgcwjsj tsbzQtjskhgcwjsj = null;
+            for (int i = 0; i < strArrFilePath.length; i++) {
+                tsbzQtjskhgcwjsj = new TsbzQtjskhgcwjsj();
+                tsbzQtjskhgcwjsj.setFilepath(strArrFilePath[i]);
+                tsbzQtjskhgcwjsj.setFilename(strArrFileName[i]);
+                tsbzQtjskhgcwjsj.setGcid(tsbzQtjskhgcsj.getId());
+                tsbzQtjskhgcwjsj.setCreateuserid(schoolCommonController.userIdToJxjsId(SecurityUtils.getLoginUser().getUser().getUserId()));
+                tsbzQtjskhgcwjsjService.insertTsbzQtjskhgcwjsj(tsbzQtjskhgcwjsj);
+            }
+        }
         return toAjax(tsbzQtjskhgcsjService.updateTsbzQtjskhgcsj(tsbzQtjskhgcsj));
+//        return toAjax(tsbzQtjskhgcsjService.updateTsbzQtjskhgcsj(tsbzQtjskhgcsj));
     }
 
     /**
@@ -92,6 +158,8 @@ public class TsbzQtjskhgcsjController extends BaseController {
     @Log(title = "群体教师考核过程数据", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable String[] ids) {
+        //清空考核数据先清空文件数据
+        tsbzQtjskhgcwjsjService.deleteTsbzQtjskhgcwjsjByGcIds(ids);
         return toAjax(tsbzQtjskhgcsjService.deleteTsbzQtjskhgcsjByIds(ids));
     }
 }

@@ -14,10 +14,10 @@ public interface ITsbzQtjskhgcsjService {
     /**
      * 查询群体教师考核过程数据
      *
-     * @param id 群体教师考核过程数据ID
+     * @param tsbzQtjskhgcsj 群体教师考核过程数据ID
      * @return 群体教师考核过程数据
      */
-    public TsbzQtjskhgcsj selectTsbzQtjskhgcsjById(String id);
+    public TsbzQtjskhgcsj selectTsbzQtjskhgcsjById(TsbzQtjskhgcsj tsbzQtjskhgcsj);
 
     /**
      * 查询群体教师考核过程数据列表

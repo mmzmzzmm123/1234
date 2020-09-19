@@ -8,13 +8,14 @@
       label-width="68px"
     >
       <el-form-item label="所属方案" prop="faid">
-        <el-input
-          v-model="queryParams.faid"
-          placeholder="请输入所属方案"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+        <el-select v-model="queryParams.faid" size="small">
+          <el-option
+            v-for="item in qtjskhfaOptions"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -31,6 +32,7 @@
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['qtjskhgl:qtjskhgcsj:remove']"
+          v-show="disable"
         >清空</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -40,6 +42,7 @@
           size="mini"
           @click="handleCheck"
           v-hasPermi="['qtjskhgl:qtjskhgcsj:edit']"
+          v-show="disable"
         >提交</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
@@ -47,11 +50,17 @@
 
     <el-table v-loading="loading" :data="qtjskhgcsjList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="编号" align="center" prop="id" />
-      <el-table-column label="所属方案" align="center" prop="faid" />
-      <el-table-column label="指标项" align="center" prop="zbid" />
+      <!-- <el-table-column label="编号" align="center" prop="id" /> -->
+      <el-table-column label="所属方案" align="center" prop="tsbzQtjskhzbx.faid" :formatter="faFormat" />
+      <el-table-column
+        label="指标模块"
+        align="center"
+        prop="tsbzQtjskhzbx.khmk"
+        :formatter="khmkFormat"
+      />
+      <el-table-column label="指标项" align="center" prop="tsbzQtjskhzbx.khnr" />
+      <el-table-column label="提交文件数" align="center" prop="tsbzQtjskhzbx.tjsl" />
       <el-table-column label="内容" align="center" prop="content" />
-      <el-table-column label="创建人" align="center" prop="createuserid" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -60,6 +69,7 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['qtjskhgl:qtjskhgcsj:edit']"
+            v-show="disable"
           >填报</el-button>
           <el-button
             size="mini"
@@ -67,7 +77,8 @@
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['qtjskhgl:qtjskhgcsj:remove']"
-          >删除</el-button>
+            v-show="disable"
+          >清空</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -84,16 +95,38 @@
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="所属方案" prop="faid">
-          <el-input v-model="form.faid" placeholder="请输入所属方案" />
+          <el-select v-model="form.faid" size="small" :disabled="true">
+            <el-option
+              v-for="item in qtjskhfaOptions"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
+            />
+          </el-select>
         </el-form-item>
         <el-form-item label="指标项" prop="zbid">
-          <el-input v-model="form.zbid" placeholder="请输入指标项" />
+          <el-input v-model="form.khnr" :disabled="true" />
+          <el-input v-model="form.zbid" v-if="false" />
         </el-form-item>
         <el-form-item label="内容" prop="content">
           <el-input v-model="form.content" type="textarea" placeholder="请输入内容" />
         </el-form-item>
-        <el-form-item label="创建人" prop="createuserid">
-          <el-input v-model="form.createuserid" placeholder="请输入创建人" />
+        <el-form-item label="选择文件" prop="filepath">
+          <el-input v-model="form.filepath" v-if="false" />
+          <el-upload
+            class="upload-demo"
+            :action="uploadFileUrl"
+            :headers="headers"
+            :on-preview="handlePreview"
+            :on-remove="handleRemove"
+            :before-remove="beforeRemove"
+            :limit="filecount"
+            :on-exceed="handleExceed"
+            :file-list="fileList"
+            :on-success="handleAvatarSuccess"
+          >
+            <el-button size="small" type="primary">选择文件</el-button>
+          </el-upload>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -118,11 +151,19 @@ import {
   getQtjskhsh,
   checkQtjskhsh,
 } from "@/api/qtjskhgl/qtjskhsh";
+import { listQtjskhfa, getQtjskhfa } from "@/api/qtjskhgl/qtjskhfa";
+import { getToken } from "@/utils/auth";
 
 export default {
   name: "Qtjskhgcsj",
   data() {
     return {
+      //是否已提交
+      disable: true,
+      //默认方案id
+      defaultFaid: "",
+      filecount: 1,
+      khnr: "",
       // 遮罩层
       loading: true,
       // 选中数组
@@ -137,10 +178,19 @@ export default {
       total: 0,
       // 群体教师考核过程数据表格数据
       qtjskhgcsjList: [],
+      qtjskhfaOptions: [],
+      //指标模块
+      khmkOptions: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
       open: false,
+      uploadFileUrl: process.env.VUE_APP_BASE_API + "/common/upload", // 上传的图片服务器地址
+      headers: {
+        Authorization: "Bearer " + getToken(),
+      },
+      //文件
+      fileList: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -150,20 +200,107 @@ export default {
         content: null,
         createuserid: null,
       },
+      // 查询参数
+      queryParams_fa: {
+        status: "1",
+      },
+      // 查询参数
+      queryParams_khsh: {
+        faid: "1",
+      },
       // 表单参数
       form: {},
       // 表单校验
-      rules: {},
+      rules: {
+        content: [
+          { required: true, message: "考核内容不能为空", trigger: "blur" },
+        ],
+      },
     };
   },
   created() {
-    this.getList();
+    this.getKhfa();
+    this.getDicts("sys_dm_khmk").then((response) => {
+      this.khmkOptions = response.data;
+    });
   },
   methods: {
+    //判断该方案是否已提交
+    getIsCheck() {
+      this.queryParams_khsh.faid = this.defaultFaid;
+      listQtjskhshByfaid(this.queryParams_khsh).then((response) => {
+        if (response.rows.length > 0) {
+          this.disable = false;
+        }
+      });
+    },
+    handleAvatarSuccess(res, file) {
+      //console.log(res, file);
+      if (res.code == "200") {
+        this.form.filepath = this.form.filepath + res.fileName + ";";
+        this.form.filename = this.form.filename + file.name + ";";
+      } else {
+        this.msgError(res.msg);
+      }
+      //console.log(this.form.filepath, this.form.filename);
+    },
+    handleRemove(file, fileList) {
+      //console.log(file, fileList);
+      if (file.response.code == "200") {
+        this.form.filepath = this.form.filepath.replace(
+          file.response.fileName + ";",
+          ""
+        );
+        this.form.filename = this.form.filename.replace(file.name + ";", "");
+      }
+    },
+    handlePreview(file) {
+      //console.log(file);
+    },
+    handleExceed(files, fileList) {
+      this.$message.warning(
+        `当前限制选择 ` +
+          this.filecount +
+          ` 个文件，本次选择了 ${files.length} 个文件，共选择了 ${
+            files.length + fileList.length
+          } 个文件`
+      );
+    },
+    beforeRemove(file, fileList) {
+      return this.$confirm(`确定移除 ${file.name}？`);
+    },
+    // 考核模块字典项字典翻译
+    khmkFormat(row, column) {
+      return this.selectDictLabel(this.khmkOptions, row.tsbzQtjskhzbx.khmk);
+    },
+    // 字典翻译
+    faFormat(row, column) {
+      // return this.selectDictLabel(this.classOptions, row.classid);
+      var actions = [];
+      var datas = this.qtjskhfaOptions;
+      Object.keys(datas).map((key) => {
+        if (datas[key].id == "" + row.faid) {
+          actions.push(datas[key].name);
+          return false;
+        }
+      });
+      return actions.join("");
+    },
+    //考核方案
+    async getKhfa() {
+      await listQtjskhfa(this.queryParams_fa).then((response) => {
+        this.qtjskhfaOptions = response.rows;
+        this.defaultFaid = response.rows[0].id;
+        this.queryParams.faid = this.defaultFaid;
+
+        this.getList();
+      });
+    },
     /** 查询群体教师考核过程数据列表 */
     getList() {
       this.loading = true;
       listQtjskhgcsj(this.queryParams).then((response) => {
+        console.log(response.rows);
         this.qtjskhgcsjList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -181,8 +318,11 @@ export default {
         faid: null,
         zbid: null,
         content: null,
+        khnr: null,
         createuserid: null,
         createTime: null,
+        filepath: "",
+        filename: "",
       };
       this.resetForm("form");
     },
@@ -194,6 +334,7 @@ export default {
     /** 重置按钮操作 */
     resetQuery() {
       this.resetForm("queryForm");
+      this.queryParams.faid = this.defaultFaid;
       this.handleQuery();
     },
     // 多选框选中数据
@@ -212,11 +353,37 @@ export default {
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids;
-      getQtjskhgcsj(id).then((response) => {
-        this.form = response.data;
+
+      if (id != "") {
+        getQtjskhgcsj(id).then((response) => {
+          this.form = response.data;
+          console.log(response.data);
+          this.open = true;
+          this.title = "修改群体教师考核过程数据";
+          this.form.khnr = row.tsbzQtjskhzbx.khnr;
+          console.log(response.file);
+          var array = [];
+          var path = "";
+          var name = "";
+          response.file.forEach(function (value, key, arr) {
+            //console.log(value); // 结果依次为1，2，3
+            array.push({ name: value.filename, url: value.filepath });
+            path = path + value.filepath + ";";
+            name = name + value.filename + ";";
+          });
+          this.filecount = response.file.length;
+          this.form.filepath = path;
+          this.form.filename = name;
+          this.fileList = array;
+        });
+      } else {
+        this.reset();
         this.open = true;
-        this.title = "修改群体教师考核过程数据";
-      });
+        this.title = "添加群体教师考核过程数据";
+        this.form.faid = row.tsbzQtjskhzbx.faid;
+        this.form.zbid = row.tsbzQtjskhzbx.id;
+        this.form.khnr = row.tsbzQtjskhzbx.khnr;
+      }
     },
     /** 提交按钮 */
     submitForm() {

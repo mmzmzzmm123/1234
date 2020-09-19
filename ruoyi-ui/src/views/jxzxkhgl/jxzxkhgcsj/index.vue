@@ -233,7 +233,6 @@ export default {
   },
   created() {
     this.getKhfa();
-    this.getList();
     this.getDicts("sys_dm_khmk").then((response) => {
       this.khmkOptions = response.data;
     });
@@ -301,11 +300,13 @@ export default {
       });
     },
     //考核方案
-    getKhfa() {
-      listJxzxkhfa(this.queryParams_fa).then((response) => {
+    async getKhfa() {
+      await listJxzxkhfa(this.queryParams_fa).then((response) => {
         this.jxzxkhfaOptions = response.rows;
         this.defaultFaid = response.rows[0].id;
         this.queryParams.faid = this.defaultFaid;
+
+        this.getList();
       });
     },
     /** 查询考核过程数据列表 */

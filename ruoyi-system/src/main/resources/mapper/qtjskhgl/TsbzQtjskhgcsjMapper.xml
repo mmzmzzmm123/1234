@@ -11,23 +11,45 @@
         <result property="content" column="content"/>
         <result property="createuserid" column="createuserid"/>
         <result property="createTime" column="create_time"/>
+        <association property="tsbzQtjskhzbx" column="zbid" javaType="TsbzQtjskhzbx" resultMap="TsbzQtjskhzbxResult"/>
+    </resultMap>
+
+    <resultMap type="TsbzQtjskhzbx" id="TsbzQtjskhzbxResult">
+        <result property="id"    column="id"    />
+        <result property="faid"    column="faid"    />
+        <result property="khmk"    column="khmk"    />
+        <result property="khnr"    column="khnr"    />
+        <result property="tjsl"    column="tjsl"    />
+        <result property="gjzd"    column="gjzd"    />
+        <result property="tbly"    column="tbly"    />
+        <result property="jkbj"    column="jkbj"    />
+        <result property="starttime"    column="starttime"    />
+        <result property="endtime"    column="endtime"    />
+        <result property="zxrw"    column="zxrw"    />
+        <result property="createuserid"    column="createuserid"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="yly"    column="yly"    />
+        <result property="yle"    column="yle"    />
+        <result property="khlx"    column="khlx"    />
     </resultMap>
 
     <sql id="selectTsbzQtjskhgcsjVo">
-        select id, faid, zbid, content, createuserid, create_time from tsbz_qtjskhgcsj
+--         select id, faid, zbid, content, createuserid, create_time from tsbz_qtjskhgcsj
+select b.id,b.content,b.zbid,b.createuserid,a.create_time,a.id as zbxid,a.faid,a.khmk,a.khnr,a.tjsl,a.gjzd,a.tbly,a.jkbj,a.starttime,a.endtime,a.zxrw,a.yly,a.yle from tsbz_qtjskhzbx a
+left join (select * from tsbz_qtjskhgcsj where createuserid= #{createuserid}) b
+on a.faid=b.faid and a.id=b.zbid
     </sql>
 
     <select id="selectTsbzQtjskhgcsjList" parameterType="TsbzQtjskhgcsj" resultMap="TsbzQtjskhgcsjResult">
         <include refid="selectTsbzQtjskhgcsjVo"/>
         <where>
-            <if test="faid != null ">and faid = #{faid}</if>
-            <if test="zbid != null ">and zbid = #{zbid}</if>
-            <if test="content != null  and content != ''">and content = #{content}</if>
-            <if test="createuserid != null ">and createuserid = #{createuserid}</if>
+            <if test="faid != null ">and a.faid = #{faid}</if>
+            <if test="zbid != null ">and a.zbid = #{zbid}</if>
+            <if test="content != null  and content != ''">and b.content = #{content}</if>
         </where>
     </select>
 
-    <select id="selectTsbzQtjskhgcsjById" parameterType="String" resultMap="TsbzQtjskhgcsjResult">
+    <select id="selectTsbzQtjskhgcsjById" parameterType="TsbzQtjskhgcsj" resultMap="TsbzQtjskhgcsjResult">
         <include refid="selectTsbzQtjskhgcsjVo"/>
         where id = #{id}
     </select>
