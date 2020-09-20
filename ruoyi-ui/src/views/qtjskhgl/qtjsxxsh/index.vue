@@ -74,10 +74,10 @@
     <el-table v-loading="loading" :data="qtjskhshList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" :selectable="isShow" />
       <el-table-column label="考核方案" align="center" prop="faid" :formatter="faFormat" />
-      <el-table-column label="教师" align="center" prop="tsbzJsjbxx.name">
+      <el-table-column label="教师" align="center" prop="tsbzJsjbxx.jsxm">
         <template slot-scope="scope">
           <router-link :to="'/qtjskhgl/qtjsxxsh/data/' + scope.row.id" class="link-type">
-            <span>{{ scope.row.tsbzJsjbxx.name }}</span>
+            <span>{{ scope.row.tsbzJsjbxx.jsxm }}</span>
           </router-link>
         </template>
       </el-table-column>
@@ -378,7 +378,7 @@ export default {
         return this.msgError("当前教师未提交数据，不允许审核！");
       }
       getQtjskhsh(id).then((response) => {
-        this.jsxm = response.data.tsbzJsjbxx.name;
+        this.jsxm = response.data.tsbzJsjbxx.jsxm;
         this.form = response.data;
         this.open = true;
         this.title = "修改考核审核过程";
