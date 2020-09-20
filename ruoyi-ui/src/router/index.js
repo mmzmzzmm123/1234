@@ -152,7 +152,7 @@ export const constantRoutes = [
       {
         path: '/content',
         name: 'content',
-        component: resolve => require(['../views/bookmark/content/index.vue'], resolve),
+        component: resolve => require(['../views/bookmark/bookmark/index.vue'], resolve),
         query:{
           t:Date.now(),
         },

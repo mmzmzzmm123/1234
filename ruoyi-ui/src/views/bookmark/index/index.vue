@@ -273,7 +273,7 @@
   import Treeselect from "@riophae/vue-treeselect";
   import "@riophae/vue-treeselect/dist/vue-treeselect.css";
   import "../ztree/jquery-1.4.4.min.js"
- import "../ztree/jquery.ztree.core.js"
+  import "../ztree/jquery.ztree.core.js"
   import "../ztree/demo.css"
   import "../ztree/zTreeStyle.css"
   import "../ztree/jquery.ztree.exedit.js"

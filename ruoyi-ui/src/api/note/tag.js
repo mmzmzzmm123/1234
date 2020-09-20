@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-// 查询便签标签列表
+// 查询便签的标签列表
 export function listTag(query) {
   return request({
     url: '/note/tag/list',
@@ -9,15 +9,15 @@ export function listTag(query) {
   })
 }
 
-// 查询便签标签详细
-export function getTag(id) {
+// 查询便签的标签详细
+export function getTag(noteTagId) {
   return request({
-    url: '/note/tag/' + id,
+    url: '/note/tag/' + noteTagId,
     method: 'get'
   })
 }
 
-// 新增便签标签
+// 新增便签的标签
 export function addTag(data) {
   return request({
     url: '/note/tag',
@@ -26,7 +26,7 @@ export function addTag(data) {
   })
 }
 
-// 修改便签标签
+// 修改便签的标签
 export function updateTag(data) {
   return request({
     url: '/note/tag',
@@ -35,15 +35,15 @@ export function updateTag(data) {
   })
 }
 
-// 删除便签标签
-export function delTag(id) {
+// 删除便签的标签
+export function delTag(noteTagId) {
   return request({
-    url: '/note/tag/' + id,
+    url: '/note/tag/' + noteTagId,
     method: 'delete'
   })
 }
 
-// 导出便签标签
+// 导出便签的标签
 export function exportTag(query) {
   return request({
     url: '/note/tag/export',

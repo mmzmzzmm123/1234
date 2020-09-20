@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.note.mapper.NmNoteShareMapper">
+    
+    <resultMap type="NmNoteShare" id="NmNoteShareResult">
+        <result property="noteId"    column="note_id"    />
+        <result property="isEncryption"    column="is_encryption"    />
+        <result property="noteQrcode"    column="note_qrcode"    />
+        <result property="shareUrl"    column="share_url"    />
+        <result property="sharePassword"    column="share_password"    />
+        <result property="shareImage"    column="share_image"    />
+        <result property="abortTime"    column="abort_time"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectNmNoteShareVo">
+        select note_id, is_encryption, note_qrcode, share_url, share_password, share_image, abort_time, create_time, update_time from nm_note_share
+    </sql>
+
+    <select id="selectNmNoteShareList" parameterType="NmNoteShare" resultMap="NmNoteShareResult">
+        <include refid="selectNmNoteShareVo"/>
+        <where>  
+            <if test="isEncryption != null "> and is_encryption = #{isEncryption}</if>
+            <if test="noteQrcode != null  and noteQrcode != ''"> and note_qrcode = #{noteQrcode}</if>
+            <if test="shareUrl != null  and shareUrl != ''"> and share_url = #{shareUrl}</if>
+            <if test="sharePassword != null  and sharePassword != ''"> and share_password = #{sharePassword}</if>
+            <if test="shareImage != null  and shareImage != ''"> and share_image = #{shareImage}</if>
+            <if test="abortTime != null "> and abort_time = #{abortTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectNmNoteShareById" parameterType="Long" resultMap="NmNoteShareResult">
+        <include refid="selectNmNoteShareVo"/>
+        where note_id = #{noteId}
+    </select>
+        
+    <insert id="insertNmNoteShare" parameterType="NmNoteShare">
+        insert into nm_note_share
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="noteId != null">note_id,</if>
+            <if test="isEncryption != null">is_encryption,</if>
+            <if test="noteQrcode != null">note_qrcode,</if>
+            <if test="shareUrl != null">share_url,</if>
+            <if test="sharePassword != null">share_password,</if>
+            <if test="shareImage != null">share_image,</if>
+            <if test="abortTime != null">abort_time,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="noteId != null">#{noteId},</if>
+            <if test="isEncryption != null">#{isEncryption},</if>
+            <if test="noteQrcode != null">#{noteQrcode},</if>
+            <if test="shareUrl != null">#{shareUrl},</if>
+            <if test="sharePassword != null">#{sharePassword},</if>
+            <if test="shareImage != null">#{shareImage},</if>
+            <if test="abortTime != null">#{abortTime},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateNmNoteShare" parameterType="NmNoteShare">
+        update nm_note_share
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="isEncryption != null">is_encryption = #{isEncryption},</if>
+            <if test="noteQrcode != null">note_qrcode = #{noteQrcode},</if>
+            <if test="shareUrl != null">share_url = #{shareUrl},</if>
+            <if test="sharePassword != null">share_password = #{sharePassword},</if>
+            <if test="shareImage != null">share_image = #{shareImage},</if>
+            <if test="abortTime != null">abort_time = #{abortTime},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where note_id = #{noteId}
+    </update>
+
+    <delete id="deleteNmNoteShareById" parameterType="Long">
+        delete from nm_note_share where note_id = #{noteId}
+    </delete>
+
+    <delete id="deleteNmNoteShareByIds" parameterType="String">
+        delete from nm_note_share where note_id in 
+        <foreach item="noteId" collection="array" open="(" separator="," close=")">
+            #{noteId}
+        </foreach>
+    </delete>
+    
+</mapper>
