@@ -34,24 +34,6 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="教师档案号" prop="dabh">
-        <el-input
-          v-model="queryParams.dabh"
-          placeholder="请输入教师档案号"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="证件号码" prop="zjhm">
-        <el-input
-          v-model="queryParams.zjhm"
-          placeholder="请输入证件号码"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
       <el-form-item label="编制状态" prop="bzzt">
         <el-input
           v-model="queryParams.bzzt"
@@ -74,62 +56,6 @@
         <el-input
           v-model="queryParams.gwlx"
           placeholder="请输入岗位类型"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="出生日期" prop="csrq">
-        <el-date-picker
-          clearable
-          size="small"
-          style="width: 200px"
-          v-model="queryParams.csrq"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="选择出生日期"
-        ></el-date-picker>
-      </el-form-item>
-      <el-form-item label="任教年限" prop="rjnx">
-        <el-input
-          v-model="queryParams.rjnx"
-          placeholder="请输入任教年限"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="职称" prop="zc">
-        <el-input
-          v-model="queryParams.zc"
-          placeholder="请输入职称"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="专业荣誉" prop="zyry">
-        <el-input
-          v-model="queryParams.zyry"
-          placeholder="请输入专业荣誉"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="同职比" prop="tzb">
-        <el-input
-          v-model="queryParams.tzb"
-          placeholder="请输入同职比"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="周课时" prop="zks">
-        <el-input
-          v-model="queryParams.zks"
-          placeholder="请输入周课时"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
@@ -181,22 +107,9 @@
       <el-table-column label="教师姓名" align="center" prop="jsxm" />
       <el-table-column label="性别" align="center" prop="xb" />
       <el-table-column label="部门id" align="center" prop="deptid" />
-      <el-table-column label="教师档案号" align="center" prop="dabh" />
-      <el-table-column label="证件类型" align="center" prop="zjlx" />
-      <el-table-column label="证件号码" align="center" prop="zjhm" />
       <el-table-column label="编制状态" align="center" prop="bzzt" />
       <el-table-column label="岗位状态" align="center" prop="gwzt" />
       <el-table-column label="岗位类型" align="center" prop="gwlx" />
-      <el-table-column label="出生日期" align="center" prop="csrq" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.csrq, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="任教年限" align="center" prop="rjnx" />
-      <el-table-column label="职称" align="center" prop="zc" />
-      <el-table-column label="专业荣誉" align="center" prop="zyry" />
-      <el-table-column label="同职比" align="center" prop="tzb" />
-      <el-table-column label="周课时" align="center" prop="zks" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button

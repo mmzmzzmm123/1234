@@ -165,6 +165,20 @@ export const constantRoutes = [{
         }]
     },
     {
+        path: '/qtjskhgl',
+        component: Layout,
+        hidden: true,
+        children: [{
+            path: 'qtjsxxsh/data/:id',
+            component: (resolve) => require(['@/views/qtjskhgl/qtjsxxsh/data'], resolve),
+            name: 'qtjsxxsh1',
+            meta: {
+                title: '教师详情页',
+                icon: ''
+            }
+        }]
+    },
+    {
         path: '/job',
         component: Layout,
         hidden: true,
