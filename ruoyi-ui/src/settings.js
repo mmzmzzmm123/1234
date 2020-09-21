@@ -1,5 +1,11 @@
+/*
+ * @Description:
+ * @Author: huangdeliang
+ * @Date: 2020-09-21 11:32:59
+ * @LastEditors: huangdeliang
+ */
 module.exports = {
-  title: '若依管理系统',
+  title: '管理系统',
 
   /**
    * 是否系统布局配置
