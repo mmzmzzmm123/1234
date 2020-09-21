@@ -228,7 +228,7 @@ export default {
       qjshyjOptions: [],
       //方案
       faOptions: [],
-      
+
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -267,7 +267,6 @@ export default {
   },
   created() {
     this.getFaList();
-    this.getList();
     this.getDicts("sys_dm_khshgczt").then((response) => {
       this.statusOptions = response.data;
     });
@@ -311,12 +310,13 @@ export default {
       return actions.join("");
     },
     // 获取方案信息
-    getFaList() {
-      listJxzxkhfa(this.queryParams_fa).then((response) => {
+    async getFaList() {
+      await listJxzxkhfa(this.queryParams_fa).then((response) => {
         this.faOptions = response.rows;
         this.defaultFaid = response.rows[0].id;
         this.queryParams.faid = this.defaultFaid;
       });
+      this.getList();
     },
     // 状态字典翻译
     statusFormat(row, column) {
