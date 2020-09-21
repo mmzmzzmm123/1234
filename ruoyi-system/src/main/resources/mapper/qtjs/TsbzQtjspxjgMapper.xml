@@ -14,6 +14,7 @@
         <result property="createTime" column="create_time"/>
         <result property="bfb" column="bfb"/>
         <result property="deptid" column="deptid"/>
+        <result property="deptname"    column="deptname"    />
         <association property="tsbzJsjbxx" column="jsid" javaType="TsbzJsjbxx" resultMap="TsbzJsjbxxResult"/>
     </resultMap>
 
@@ -110,7 +111,7 @@ left join tsbz_qtjspxfa d on a.faid=d.id
 
     <select id="selectTsbzQtjspxjgKhjdList" parameterType="TsbzQtjspxjg" resultMap="TsbzQtjspxjgResult">
         select b.id, b.jsid, b.jsxm, b.xb, b.deptid, b.dabh, b.zjlx, b.zjhm, b.bzzt, b.gwzt, b.gwlx, b.csrq, b.rjnx, b.zc, b.zyry, b.tzb, b.zks, b.create_time,
-        c.xxmc,
+        c.xxmc as deptname,
         (select count(*)from tsbz_qtjskhgcsj where faid=#{faid} and createuserid=a.jsid)/(select count(*) from
         tsbz_qtjskhzbx where faid=#{faid}) bfb from tsbz_qtjspxjg a
         left join tsbz_jsjbxx b on a.jsid=b.id

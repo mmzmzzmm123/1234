@@ -15,6 +15,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="qjshr"    column="qjshr"    />
         <result property="qjshyj"    column="qjshyj"    />
         <result property="qjshjy"    column="qjshjy"    />
+        <result property="deptname"    column="deptname"    />
         <result property="createuseird"    column="createuseird"    />
         <result property="createTime"    column="create_time"    />
         <association property="tsbzJsjbxx" column="jsid" javaType="TsbzJsjbxx" resultMap="TsbzJsjbxxResult"/>
@@ -53,7 +54,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <sql id="selectTsbzQtjskhshVo">
 --         select id, faid, jsid, status, xjshr, xjshyj, xjshjy, qjshr, qjshyj, qjshjy, createuseird, create_time from tsbz_qtjskhsh
-select d.id,d.faid,d.jsid,ifnull(d.status,0) status,d.xjshr,d.xjshyj,d.xjshjy,d.qjshr,d.qjshjy,d.qjshyj,d.createuseird,a.create_time,b.jsxm,b.deptid, b.xb, e.filename, e.filepath from tsbz_qtjspxjg a
+select c.dept_name as deptname,d.id,d.faid,d.jsid,ifnull(d.status,0) status,d.xjshr,d.xjshyj,d.xjshjy,d.qjshr,d.qjshjy,d.qjshyj,d.createuseird,a.create_time,b.jsxm,b.deptid, b.xb, e.filename, e.filepath from tsbz_qtjspxjg a
 left join tsbz_jsjbxx b on b.id=a.jsid
 left join sys_dept c on b.deptid=c.schoolid
 left join tsbz_qtjskhsh d on a.jsid=d.jsid

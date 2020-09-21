@@ -82,6 +82,16 @@ public class TsbzQtjskhsh extends BaseEntity {
 
     private TsbzJsjbxx tsbzJsjbxx;
 
+    public String getDeptname() {
+        return deptname;
+    }
+
+    public void setDeptname(String deptname) {
+        this.deptname = deptname;
+    }
+
+    private String deptname;
+
     public TsbzJsjbxx getTsbzJsjbxx() {
         return tsbzJsjbxx;
     }
@@ -205,6 +215,7 @@ public class TsbzQtjskhsh extends BaseEntity {
                 .append("createTime", getCreateTime())
                 .append("tsbzJsjbxx", getTsbzJsjbxx())
                 .append("tsbzQtjskhgcwjsj", getTsbzQtjskhgcwjsj())
+                .append("deptname", getDeptname())
                 .toString();
     }
 }

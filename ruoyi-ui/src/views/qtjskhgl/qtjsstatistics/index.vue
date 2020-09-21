@@ -27,9 +27,9 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="教师姓名" prop="jsmx">
+      <el-form-item label="教师姓名" prop="jsxm">
         <el-input
-          v-model="queryParams.jsmx"
+          v-model="queryParams.jsxm"
           placeholder="请输入教师姓名"
           clearable
           size="small"
@@ -45,8 +45,8 @@
     <el-table v-loading="loading" :data="qtjskhjdList">
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="编号" align="center" prop="id" /> -->
-      <el-table-column label="学校" align="center" prop="deptid"/>
-      <el-table-column label="姓名" align="center" prop="tsbzJsjbxx.jsmx" />
+      <el-table-column label="学校" align="center" prop="deptname"/>
+      <el-table-column label="姓名" align="center" prop="tsbzJsjbxx.jsxm" />
       <el-table-column prop="bfb" label="完成进度">
         <template slot-scope="scope">
           <el-progress
@@ -129,7 +129,7 @@ export default {
         deptid: null,
         faid: null,
         nf: null,
-        name: null,
+        jsxm: null,
       },
       // 查询参数
       queryParams_fa: {

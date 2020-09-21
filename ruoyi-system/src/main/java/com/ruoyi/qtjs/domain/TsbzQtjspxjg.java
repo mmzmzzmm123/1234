@@ -51,6 +51,16 @@ public class TsbzQtjspxjg extends BaseEntity {
     @Excel(name = "创建人")
     private Long createuserid;
 
+    public String getDeptname() {
+        return deptname;
+    }
+
+    public void setDeptname(String deptname) {
+        this.deptname = deptname;
+    }
+
+    private  String deptname;
+
     private BigDecimal bfb;
 
     public BigDecimal getBfb() {
@@ -152,6 +162,7 @@ public class TsbzQtjspxjg extends BaseEntity {
                 .append("bfb", getBfb())
                 .append("tsbzJsjbxx", getTsbzJsjbxx())
                 .append("jsxm", getJsxm())
+                .append("deptname", getDeptname())
                 .toString();
     }
 }
