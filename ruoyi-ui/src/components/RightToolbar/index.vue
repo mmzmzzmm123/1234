@@ -8,6 +8,12 @@
       <el-tooltip class="item" effect="dark" content="刷新" placement="top">
         <el-button size="mini" circle icon="el-icon-refresh" @click="refresh()" />
       </el-tooltip>
+     <el-tooltip class="item" effect="dark" content="切换" placement="top">
+        <el-button size="mini" circle icon="el-icon-refresh" />
+      </el-tooltip>
+      <el-tooltip class="item" effect="dark" content="列" placement="top">
+        <el-button size="mini" circle icon="el-icon-refresh" />
+      </el-tooltip>
     </el-row>
   </div>
 </template>
