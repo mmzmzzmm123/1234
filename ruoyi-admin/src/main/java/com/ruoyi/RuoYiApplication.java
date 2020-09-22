@@ -1,9 +1,3 @@
-/*
- * @Description: 
- * @Author: huangdeliang
- * @Date: 2020-09-21 11:32:59
- * @LastEditors: huangdeliang
- */
 package com.ruoyi;
 
 import org.springframework.boot.SpringApplication;

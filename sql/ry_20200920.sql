@@ -459,6 +459,7 @@ insert into sys_dict_type values(7,  '通知类型', 'sys_notice_type',     '0',
 insert into sys_dict_type values(8,  '通知状态', 'sys_notice_status',   '0', 'admin', '2018-03-16 11-33-00', 'ry', '2018-03-16 11-33-00', '通知状态列表');
 insert into sys_dict_type values(9,  '操作类型', 'sys_oper_type',       '0', 'admin', '2018-03-16 11-33-00', 'ry', '2018-03-16 11-33-00', '操作类型列表');
 insert into sys_dict_type values(10, '系统状态', 'sys_common_status',   '0', 'admin', '2018-03-16 11-33-00', 'ry', '2018-03-16 11-33-00', '登录状态列表');
+insert into sys_dict_type values(11, '销售渠道', 'sys_sale_channel',    '0', 'admin', '2020-09-22 17-33-00', 'ry', '2020-09-22 17-33-00', '登录状态列表');
 
 
 -- ----------------------------
@@ -512,6 +513,7 @@ insert into sys_dict_data values(25, 8,  '生成代码', '8',       'sys_oper_ty
 insert into sys_dict_data values(26, 9,  '清空数据', '9',       'sys_oper_type',       '',   'danger',  'N', '0', 'admin', '2018-03-16 11-33-00', 'ry', '2018-03-16 11-33-00', '清空操作');
 insert into sys_dict_data values(27, 1,  '成功',     '0',       'sys_common_status',   '',   'primary', 'N', '0', 'admin', '2018-03-16 11-33-00', 'ry', '2018-03-16 11-33-00', '正常状态');
 insert into sys_dict_data values(28, 2,  '失败',     '1',       'sys_common_status',   '',   'danger',  'N', '0', 'admin', '2018-03-16 11-33-00', 'ry', '2018-03-16 11-33-00', '停用状态');
+insert into sys_dict_data values(29, 1,  '微信',     '0',       'sys_sale_channel',   '',    '',        'Y', '0', 'admin', '2020-09-22 17-33-00', 'ry', '2020-09-22 17-33-00', '销售渠道');
 
 
 -- ----------------------------
@@ -679,3 +681,45 @@ create table gen_table_column (
   update_time       datetime                                   comment '更新时间',
   primary key (column_id)
 ) engine=innodb auto_increment=1 comment = '代码生成业务表字段';
+
+
+-- ----------------------------
+-- 20、分成比例业务表字段
+-- ----------------------------
+drop table if exists sys_commision;
+create table sys_commision (
+  rule_id          bigint(20)      not null auto_increment    comment '编号',
+  user_id          bigint(20)                                 comment '用户ID',
+  nick_name        varchar(30)     not null                   comment '用户昵称',
+  amount           int                                        comment '金额',
+  rate             int                                        comment '分成比例',
+  create_by        varchar(64)     default ''                 comment '创建者',
+  create_time      datetime                                   comment '创建时间',
+  update_by        varchar(64)     default ''                 comment '更新者',
+  update_time      datetime                                   comment '更新时间',
+  remark           varchar(500)    default null               comment '备注',
+  primary key (rule_id)
+) engine=innodb auto_increment=1 comment = '业务提成比例表';
+
+
+-- ----------------------------
+-- 21、订单业务表字段
+-- ----------------------------
+drop table if exists sys_order;
+create table sys_order (
+  order_id         bigint(20)      not null auto_increment    comment '编号',
+  user_id          bigint(20)                                 comment '用户ID',
+  nick_name        varchar(30)     not null                   comment '用户昵称',
+  amount           int                                        comment '金额',
+  sale_time        datetime                                   comment '成交日期',
+  channel_id       bigint(20)                                 comment '销售渠道ID',
+  create_by        varchar(64)     default ''                 comment '创建者',
+  create_time      datetime                                   comment '创建时间',
+  update_by        varchar(64)     default ''                 comment '更新者',
+  update_time      datetime                                   comment '更新时间',
+  remark           varchar(500)    default null               comment '备注',
+  primary key (order_id)
+) engine=innodb auto_increment=1 comment = '销售订单表';
+
+
+
