@@ -11,5 +11,17 @@
 
     <artifactId>ruoyi-custom</artifactId>
 
+    <description>
+        自定义模块
+    </description>
 
+    <dependencies>
+
+        <!-- 通用工具-->
+        <dependency>
+            <groupId>com.ruoyi</groupId>
+            <artifactId>ruoyi-common</artifactId>
+        </dependency>
+
+    </dependencies>
 </project>
