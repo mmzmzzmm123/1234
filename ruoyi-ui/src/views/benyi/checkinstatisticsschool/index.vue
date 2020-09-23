@@ -23,6 +23,7 @@
       <template v-for="(item,index) in tableHead">
         <el-table-column
           :prop=" item.column_name==''?'day'+(item.sort+1) : item.column_name"
+          :fixed="item.column_name!=''"
           :label=" item.column_name==''?(item.sort+1)+'' : item.sort"
           :key="index"
         ></el-table-column>
