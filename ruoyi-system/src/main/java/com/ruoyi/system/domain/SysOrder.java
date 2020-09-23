@@ -11,7 +11,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * 销售订单对象 sys_order
  * 
  * @author wonder
- * @date 2020-09-22
+ * @date 2020-09-23
  */
 public class SysOrder extends BaseEntity
 {
@@ -20,8 +20,7 @@ public class SysOrder extends BaseEntity
     /** 编号 */
     private Long orderId;
 
-    /** 用户ID */
-    @Excel(name = "用户ID")
+    /** 业务员 */
     private Long userId;
 
     /** 用户昵称 */
@@ -37,8 +36,8 @@ public class SysOrder extends BaseEntity
     @Excel(name = "成交日期", width = 30, dateFormat = "yyyy-MM-dd")
     private Date saleTime;
 
-    /** 销售渠道ID */
-    @Excel(name = "销售渠道ID")
+    /** 销售渠道 */
+    @Excel(name = "销售渠道")
     private Long channelId;
 
     public void setOrderId(Long orderId) 

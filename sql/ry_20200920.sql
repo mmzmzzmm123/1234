@@ -513,7 +513,9 @@ insert into sys_dict_data values(25, 8,  '生成代码', '8',       'sys_oper_ty
 insert into sys_dict_data values(26, 9,  '清空数据', '9',       'sys_oper_type',       '',   'danger',  'N', '0', 'admin', '2018-03-16 11-33-00', 'ry', '2018-03-16 11-33-00', '清空操作');
 insert into sys_dict_data values(27, 1,  '成功',     '0',       'sys_common_status',   '',   'primary', 'N', '0', 'admin', '2018-03-16 11-33-00', 'ry', '2018-03-16 11-33-00', '正常状态');
 insert into sys_dict_data values(28, 2,  '失败',     '1',       'sys_common_status',   '',   'danger',  'N', '0', 'admin', '2018-03-16 11-33-00', 'ry', '2018-03-16 11-33-00', '停用状态');
-insert into sys_dict_data values(29, 1,  '微信',     '0',       'sys_sale_channel',   '',    '',        'Y', '0', 'admin', '2020-09-22 17-33-00', 'ry', '2020-09-22 17-33-00', '销售渠道');
+# insert into sys_dict_data values(29, 1,  '微信',     '0',       'sys_sale_channel',   '',    '',        'Y', '0', 'admin', '2020-09-22 17-33-00', 'ry', '2020-09-22 17-33-00', '销售渠道');
+# insert into sys_dict_data values(30, 1,  'ry',     '2',       'sys_saller',   '',    '',        'Y', '0', 'wonder', '2020-09-22 17-33-00', 'wonder', '2020-09-22 17-33-00', '销售人员');
+# insert into sys_dict_data values(31, 2,  '张三',     '3',       'sys_saller',   '',    '',        'Y', '0', 'wonder', '2020-09-22 17-33-00', 'wonder', '2020-09-22 17-33-00', '销售人员');
 
 
 -- ----------------------------
@@ -709,8 +711,8 @@ drop table if exists sys_order;
 create table sys_order (
   order_id         bigint(20)      not null auto_increment    comment '编号',
   user_id          bigint(20)                                 comment '用户ID',
-  nick_name        varchar(30)     not null                   comment '用户昵称',
-  amount           int                                        comment '金额',
+  nick_name        varchar(30)                                comment '用户昵称',
+  amount           decimal                                    comment '金额',
   sale_time        datetime                                   comment '成交日期',
   channel_id       bigint(20)                                 comment '销售渠道ID',
   create_by        varchar(64)     default ''                 comment '创建者',

@@ -7,7 +7,7 @@ import com.ruoyi.system.domain.SysOrder;
  * 销售订单Mapper接口
  * 
  * @author wonder
- * @date 2020-09-22
+ * @date 2020-09-23
  */
 public interface SysOrderMapper 
 {

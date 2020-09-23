@@ -1,32 +1,15 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="用户ID" prop="userId">
-        <el-input
-          v-model="queryParams.userId"
-          placeholder="请输入用户ID"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="用户昵称" prop="nickName">
-        <el-input
-          v-model="queryParams.nickName"
-          placeholder="请输入用户昵称"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="金额" prop="amount">
-        <el-input
-          v-model="queryParams.amount"
-          placeholder="请输入金额"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+      <el-form-item label="业务员" prop="userId">
+        <el-select v-model="queryParams.userId" placeholder="请选择业务员" clearable size="small">
+          <el-option
+            v-for="dict in userIdOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item label="成交日期" prop="saleTime">
         <el-date-picker clearable size="small" style="width: 200px"
@@ -36,8 +19,8 @@
           placeholder="选择成交日期">
         </el-date-picker>
       </el-form-item>
-      <el-form-item label="销售渠道ID" prop="channelId">
-        <el-select v-model="queryParams.channelId" placeholder="请选择销售渠道ID" clearable size="small">
+      <el-form-item label="销售渠道" prop="channelId">
+        <el-select v-model="queryParams.channelId" placeholder="请选择销售渠道" clearable size="small">
           <el-option
             v-for="dict in channelIdOptions"
             :key="dict.dictValue"
@@ -97,7 +80,6 @@
     <el-table v-loading="loading" :data="orderList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="编号" align="center" prop="orderId" />
-      <el-table-column label="用户ID" align="center" prop="userId" />
       <el-table-column label="用户昵称" align="center" prop="nickName" />
       <el-table-column label="金额" align="center" prop="amount" />
       <el-table-column label="成交日期" align="center" prop="saleTime" width="180">
@@ -105,7 +87,7 @@
           <span>{{ parseTime(scope.row.saleTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="销售渠道ID" align="center" prop="channelId" :formatter="channelIdFormat" />
+      <el-table-column label="销售渠道" align="center" prop="channelId" :formatter="channelIdFormat" />
       <el-table-column label="创建者" align="center" prop="createBy" />
       <el-table-column label="备注" align="center" prop="remark" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -139,8 +121,15 @@
     <!-- 添加或修改销售订单对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="用户ID" prop="userId">
-          <el-input v-model="form.userId" placeholder="请输入用户ID" />
+        <el-form-item label="业务员" prop="userId">
+          <el-select v-model="form.userId" placeholder="请选择业务员">
+            <el-option
+              v-for="dict in userIdOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="parseInt(dict.dictValue)"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="用户昵称" prop="nickName">
           <el-input v-model="form.nickName" placeholder="请输入用户昵称" />
@@ -156,8 +145,8 @@
             placeholder="选择成交日期">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="销售渠道ID" prop="channelId">
-          <el-select v-model="form.channelId" placeholder="请选择销售渠道ID">
+        <el-form-item label="销售渠道" prop="channelId">
+          <el-select v-model="form.channelId" placeholder="请选择销售渠道">
             <el-option
               v-for="dict in channelIdOptions"
               :key="dict.dictValue"
@@ -203,15 +192,15 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
-      // 销售渠道ID字典
+      // 业务员字典
+      userIdOptions: [],
+      // 销售渠道字典
       channelIdOptions: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
         pageSize: 10,
         userId: null,
-        nickName: null,
-        amount: null,
         saleTime: null,
         channelId: null,
       },
@@ -219,17 +208,26 @@ export default {
       form: {},
       // 表单校验
       rules: {
-        nickName: [
-          { required: true, message: "用户昵称不能为空", trigger: "blur" }
+        userId: [
+          { required: true, message: "业务员不能为空", trigger: "change" }
+        ],
+        amount: [
+          { required: true, message: "金额不能为空", trigger: "blur" }
+        ],
+        saleTime: [
+          { required: true, message: "成交日期不能为空", trigger: "blur" }
         ],
         channelId: [
-          { required: true, message: "销售渠道ID不能为空", trigger: "change" }
+          { required: true, message: "销售渠道不能为空", trigger: "change" }
         ],
       }
     };
   },
   created() {
     this.getList();
+    this.getDicts("sys_saller").then(response => {
+      this.userIdOptions = response.data;
+    });
     this.getDicts("sys_sale_channel").then(response => {
       this.channelIdOptions = response.data;
     });
@@ -244,7 +242,11 @@ export default {
         this.loading = false;
       });
     },
-    // 销售渠道ID字典翻译
+    // 业务员字典翻译
+    userIdFormat(row, column) {
+      return this.selectDictLabel(this.userIdOptions, row.userId);
+    },
+    // 销售渠道字典翻译
     channelIdFormat(row, column) {
       return this.selectDictLabel(this.channelIdOptions, row.channelId);
     },
