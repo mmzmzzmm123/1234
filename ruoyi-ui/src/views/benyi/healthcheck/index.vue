@@ -63,7 +63,7 @@
           value-format="yyyy-MM-dd"
           placeholder="选择创建时间"
         ></el-date-picker>
-      </el-form-item> -->
+      </el-form-item>-->
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -180,105 +180,139 @@
     />
 
     <!-- 添加或修改儿童常规体检记录对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="班级信息" prop="classInfo">
-          <el-select v-model="form.classInfo" placeholder="请选择班级信息" @change="classInfoChange">
-            <el-option
-              v-for="dict in classInfoOptions"
-              :key="dict.bjbh"
-              :label="dict.bjmc"
-              :value="dict.bjbh"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="幼儿姓名" prop="childId">
-          <el-select v-model="form.childId" placeholder="请选择班级信息"  >
-            <el-option
-              v-for="dict in (childInfoOptions.filter(c=>c.classid == this.form.classInfo))"
-              :key="dict.id"
-              :label="dict.name"
-              :value="dict.id"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="检查日期" prop="checkTime">
-          <el-date-picker
-            clearable
-            size="small"
-            style="width: 200px"
-            v-model="form.checkTime"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="选择检查日期"
-          ></el-date-picker>
-        </el-form-item>
-        <el-form-item label="保健师" prop="doctorName">
-          <el-input v-model="form.doctorName" placeholder="请输入保健师" />
-        </el-form-item>
-        <el-form-item label="左眼视力" prop="eyesVisionLeft">
-          <el-input v-model="form.eyesVisionLeft" placeholder="请输入左眼视力" />
-        </el-form-item>
-        <el-form-item label="右眼视力" prop="eyesVisionRight">
-          <el-input v-model="form.eyesVisionRight" placeholder="请输入右眼视力" />
-        </el-form-item>
-        <el-form-item label="视力评价">
-          <el-select v-model="form.visionAssessment" placeholder="请选择视力评价">
-            <el-option
-              v-for="dict in visionAssessmentOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="是否龋齿">
-          <el-select v-model="form.decayedTooth" placeholder="请选择是否龋齿">
-            <el-option
-              v-for="dict in decayedToothOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="体重(kg)" prop="weight" >
-          <el-input v-model="form.weight" placeholder="请输入体重" maxlength="6"  />
-        </el-form-item>
-        <el-form-item label="体重评价">
-          <el-select v-model="form.weightAssessment" placeholder="请选择体重评价">
-            <el-option
-              v-for="dict in weightAssessmentOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="身高(cm)" prop="height">
-          <el-input v-model="form.height" placeholder="请输入身高" maxlength="3"  oninput = "value=value.replace(/[^\d]/g,'')"/>
-        </el-form-item>
-        <el-form-item label="身高评价">
-          <el-select v-model="form.heightAssessment" placeholder="请选择身高评价">
-            <el-option
-              v-for="dict in heightAssessmentOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="总评价">
-          <el-select v-model="form.totalAssessment" placeholder="请选择总评价">
-            <el-option
-              v-for="dict in totalAssessmentOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-      </el-form>
+    <el-dialog :title="title" :visible.sync="open" width="800px" append-to-body>
+      <el-row :gutter="15">
+        <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+          <el-col :span="12">
+            <el-form-item label="班级信息" prop="classInfo">
+              <el-select v-model="form.classInfo" placeholder="请选择班级信息" @change="classInfoChange">
+                <el-option
+                  v-for="dict in classInfoOptions"
+                  :key="dict.bjbh"
+                  :label="dict.bjmc"
+                  :value="dict.bjbh"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="幼儿姓名" prop="childId">
+              <el-select v-model="form.childId" placeholder="请选择班级信息">
+                <el-option
+                  v-for="dict in (childInfoOptions.filter(c=>c.classid == this.form.classInfo))"
+                  :key="dict.id"
+                  :label="dict.name"
+                  :value="dict.id"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="检查日期" prop="checkTime">
+              <el-date-picker
+                clearable
+                size="small"
+                style="width: 200px"
+                v-model="form.checkTime"
+                type="date"
+                value-format="yyyy-MM-dd"
+                placeholder="选择检查日期"
+              ></el-date-picker>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="视力评价">
+              <el-select v-model="form.visionAssessment" placeholder="请选择视力评价">
+                <el-option
+                  v-for="dict in visionAssessmentOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="是否龋齿">
+              <el-select v-model="form.decayedTooth" placeholder="请选择是否龋齿">
+                <el-option
+                  v-for="dict in decayedToothOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="体重(kg)" prop="weight">
+              <el-input v-model="form.weight" placeholder="请输入体重" maxlength="6" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="体重评价">
+              <el-select v-model="form.weightAssessment" placeholder="请选择体重评价">
+                <el-option
+                  v-for="dict in weightAssessmentOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="保健师" prop="doctorName">
+              <el-input v-model="form.doctorName" placeholder="请输入保健师" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="左眼视力" prop="eyesVisionLeft">
+              <el-input v-model="form.eyesVisionLeft" placeholder="请输入左眼视力" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="右眼视力" prop="eyesVisionRight">
+              <el-input v-model="form.eyesVisionRight" placeholder="请输入右眼视力" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="身高(cm)" prop="height">
+              <el-input
+                v-model="form.height"
+                placeholder="请输入身高"
+                maxlength="3"
+                oninput="value=value.replace(/[^\d]/g,'')"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="身高评价">
+              <el-select v-model="form.heightAssessment" placeholder="请选择身高评价">
+                <el-option
+                  v-for="dict in heightAssessmentOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="总评价">
+              <el-select v-model="form.totalAssessment" placeholder="请选择总评价">
+                <el-option
+                  v-for="dict in totalAssessmentOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-form>
+      </el-row>
+
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
@@ -357,7 +391,7 @@ export default {
       },
       // 表单参数
       form: {},
-      
+
       // 表单校验
       rules: {
         classInfo: [
@@ -376,8 +410,12 @@ export default {
           { required: true, message: "总评价不能为空", trigger: "blur" }
         ],
         weight: [
-          { required: true, message: "输入内容必须是数字,且不能超过六位数",  trigger: "blur" }
-        ],
+          {
+            required: true,
+            message: "输入内容必须是数字,且不能超过六位数",
+            trigger: "blur"
+          }
+        ]
       }
     };
   },
@@ -408,7 +446,6 @@ export default {
       listChild(null).then(response => {
         this.childInfoOptions = response.rows;
       });
-
     },
     /** 查询儿童常规体检记录列表 */
     getList() {

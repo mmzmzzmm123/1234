@@ -295,7 +295,7 @@ export default {
           this.hide = true;
           this.childList = response.rows;
           this.form = response.data;
-          console.log(this.form);
+          // console.log(this.form);
           this.form.id = response.data.id;
           this.form.father = response.data.byChildContactpeople.fathername;
           this.form.mother = response.data.byChildContactpeople.mothername;
