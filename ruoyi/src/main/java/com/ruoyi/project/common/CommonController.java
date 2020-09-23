@@ -10,6 +10,7 @@ import com.ruoyi.framework.config.FileConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -77,6 +78,7 @@ public class CommonController {
     /**
      * 通用上传请求
      */
+    @CrossOrigin
     @PostMapping("/common/upload")
     public AjaxResult uploadFile(MultipartFile file) throws Exception {
         try {
@@ -86,6 +88,7 @@ public class CommonController {
             // 上传并返回新文件名称
             String fileName = FileUploadUtils.upload(filePath, file);
             String url = serverConfig.getUrl() + fileName;
+            System.out.println("url:" + url);
             AjaxResult ajax = AjaxResult.success();
             ajax.put("fileName", fileName);
             ajax.put("url", url);
