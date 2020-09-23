@@ -216,7 +216,7 @@
 
     <select id="selectByChildById" parameterType="Long" resultMap="ByChildResult">
         <include refid="selectByChildVo"/>
-        where id = #{id}
+        where c.id = #{id}
     </select>
 
     <insert id="insertByChild" parameterType="ByChild" useGeneratedKeys="true" keyProperty="id">
