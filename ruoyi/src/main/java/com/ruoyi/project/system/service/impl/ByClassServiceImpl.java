@@ -16,8 +16,7 @@ import com.ruoyi.project.system.service.IByClassService;
  * @date 2020-04-14
  */
 @Service
-public class ByClassServiceImpl implements IByClassService
-{
+public class ByClassServiceImpl implements IByClassService {
     @Autowired
     private ByClassMapper byClassMapper;
 
@@ -28,8 +27,7 @@ public class ByClassServiceImpl implements IByClassService
      * @return 班级信息
      */
     @Override
-    public ByClass selectByClassById(String bjbh)
-    {
+    public ByClass selectByClassById(String bjbh) {
         return byClassMapper.selectByClassById(bjbh);
     }
 
@@ -46,8 +44,7 @@ public class ByClassServiceImpl implements IByClassService
      */
     @Override
     @DataScope(deptAlias = "d")
-    public List<ByClass> selectByClassList(ByClass byClass)
-    {
+    public List<ByClass> selectByClassList(ByClass byClass) {
         return byClassMapper.selectByClassList(byClass);
     }
 
@@ -58,8 +55,7 @@ public class ByClassServiceImpl implements IByClassService
      * @return 结果
      */
     @Override
-    public int insertByClass(ByClass byClass)
-    {
+    public int insertByClass(ByClass byClass) {
         return byClassMapper.insertByClass(byClass);
     }
 
@@ -70,8 +66,7 @@ public class ByClassServiceImpl implements IByClassService
      * @return 结果
      */
     @Override
-    public int updateByClass(ByClass byClass)
-    {
+    public int updateByClass(ByClass byClass) {
         return byClassMapper.updateByClass(byClass);
     }
 
@@ -82,8 +77,7 @@ public class ByClassServiceImpl implements IByClassService
      * @return 结果
      */
     @Override
-    public int deleteByClassByIds(String[] bjbhs)
-    {
+    public int deleteByClassByIds(String[] bjbhs) {
         return byClassMapper.deleteByClassByIds(bjbhs);
     }
 
@@ -94,8 +88,19 @@ public class ByClassServiceImpl implements IByClassService
      * @return 结果
      */
     @Override
-    public int deleteByClassById(String bjbh)
-    {
+    public int deleteByClassById(String bjbh) {
         return byClassMapper.deleteByClassById(bjbh);
+    }
+
+    /**
+     * 查询班级信息列表
+     *
+     * @param byClass 班级信息
+     * @return 班级信息集合
+     */
+    @Override
+    @DataScope(deptAlias = "d")
+    public List<ByClass> selectststicstSchoolList(ByClass byClass) {
+        return byClassMapper.selectststicstSchoolList(byClass);
     }
 }

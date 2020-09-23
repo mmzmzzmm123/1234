@@ -51,3 +51,12 @@ export function exportDetail(query) {
     params: query
   })
 }
+
+// 查询幼儿考勤列表
+export function listDatetime(query) {
+  return request({
+    url: '/benyi/datetime/list',
+    method: 'get',
+    params: query
+  })
+}

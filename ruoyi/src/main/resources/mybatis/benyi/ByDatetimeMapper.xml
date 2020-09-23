@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.benyi.mapper.ByDatetimeMapper">
+
+    <resultMap type="ByDatetime" id="ByDatetimeResult">
+        <result property="day" column="day"/>
+        <result property="sort" column="sort"/>
+        <result property="dayscount" column="dayscount"/>
+        <result property="month" column="month"/>
+    </resultMap>
+
+
+    <select id="selectByDatetimeList" parameterType="ByDatetime" resultMap="ByDatetimeResult">
+        select CONCAT(#{month},'-',help_topic_id +1) day,help_topic_id as sort,day(last_day( CONCAT(#{month},'-1')))
+        as dayscount
+        from mysql.help_topic
+        where help_topic_id &lt; day(last_day(CONCAT(#{month},'-1')))
+        order by help_topic_id
+    </select>
+
+</mapper>

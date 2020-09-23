@@ -61,4 +61,12 @@ public interface IByClassService
      * @return 结果
      */
     public int deleteByClassById(String bjbh);
+
+    /**
+     * 查询班级信息列表
+     *
+     * @param byClass 班级信息
+     * @return 班级信息集合
+     */
+    public List<ByClass> selectststicstSchoolList(ByClass byClass);
 }

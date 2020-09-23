@@ -21,6 +21,39 @@
         <result property="zljsxm" column="zljsxm"/>
         <result property="isdel" column="isdel"/>
         <result property="createtime" column="createtime"/>
+        <result property="month" column="month"/>
+        <result property="day1" column="day1"/>
+        <result property="day2" column="day2"/>
+        <result property="day3" column="day3"/>
+        <result property="day4" column="day4"/>
+        <result property="day5" column="day5"/>
+        <result property="day6" column="day6"/>
+        <result property="day7" column="day7"/>
+        <result property="day8" column="day8"/>
+        <result property="day9" column="day9"/>
+        <result property="day10" column="day10"/>
+        <result property="day11" column="day11"/>
+        <result property="day12" column="day12"/>
+        <result property="day13" column="day13"/>
+        <result property="day14" column="day14"/>
+        <result property="day15" column="day15"/>
+        <result property="day16" column="day16"/>
+        <result property="day17" column="day17"/>
+        <result property="day18" column="day18"/>
+        <result property="day19" column="day19"/>
+        <result property="day20" column="day20"/>
+        <result property="day21" column="day21"/>
+        <result property="day22" column="day22"/>
+        <result property="day23" column="day23"/>
+        <result property="day24" column="day24"/>
+        <result property="day25" column="day25"/>
+        <result property="day26" column="day26"/>
+        <result property="day27" column="day27"/>
+        <result property="day28" column="day28"/>
+        <result property="day29" column="day29"/>
+        <result property="day30" column="day30"/>
+        <result property="day31" column="day31"/>
+
     </resultMap>
 
     <sql id="selectByClassVo">
@@ -148,5 +181,108 @@
             #{bjbh}
         </foreach>
     </delete>
+
+    <select id="selectststicstSchoolList" parameterType="ByClass"
+            resultMap="ByClassResult">
+        select d.bjbh,d.dept_id,d.bjmc,
+        (select count(*) from by_child where classid=d.bjbh) as childcount,
+        ((select count(*) from by_child_checkin_detail where classid=d.bjbh and
+        date_format(create_time,'%Y-%m-%d')=concat(#{month},'-01') and type='01')/(select count(*) from by_child where
+        classid=d.bjbh)) as day1,
+        ((select count(*) from by_child_checkin_detail where classid=d.bjbh and
+        date_format(create_time,'%Y-%m-%d')=concat(#{month},'-02') and type='01')/(select count(*) from by_child where
+        classid=d.bjbh)) as day2,
+        ((select count(*) from by_child_checkin_detail where classid=d.bjbh and
+        date_format(create_time,'%Y-%m-%d')=concat(#{month},'-03') and type='01')/(select count(*) from by_child where
+        classid=d.bjbh)) as day3,
+        ((select count(*) from by_child_checkin_detail where classid=d.bjbh and
+        date_format(create_time,'%Y-%m-%d')=concat(#{month},'-04') and type='01')/(select count(*) from by_child where
+        classid=d.bjbh)) as day4,
+        ((select count(*) from by_child_checkin_detail where classid=d.bjbh and
+        date_format(create_time,'%Y-%m-%d')=concat(#{month},'-05') and type='01')/(select count(*) from by_child where
+        classid=d.bjbh)) as day5,
+        ((select count(*) from by_child_checkin_detail where classid=d.bjbh and
+        date_format(create_time,'%Y-%m-%d')=concat(#{month},'-06') and type='01')/(select count(*) from by_child where
+        classid=d.bjbh)) as day6,
+        ((select count(*) from by_child_checkin_detail where classid=d.bjbh and
+        date_format(create_time,'%Y-%m-%d')=concat(#{month},'-07') and type='01')/(select count(*) from by_child where
+        classid=d.bjbh)) as day7,
+        ((select count(*) from by_child_checkin_detail where classid=d.bjbh and
+        date_format(create_time,'%Y-%m-%d')=concat(#{month},'-08') and type='01')/(select count(*) from by_child where
+        classid=d.bjbh)) as day8,
+        ((select count(*) from by_child_checkin_detail where classid=d.bjbh and
+        date_format(create_time,'%Y-%m-%d')=concat(#{month},'-09') and type='01')/(select count(*) from by_child where
+        classid=d.bjbh)) as day9,
+        ((select count(*) from by_child_checkin_detail where classid=d.bjbh and
+        date_format(create_time,'%Y-%m-%d')=concat(#{month},'-10') and type='01')/(select count(*) from by_child where
+        classid=d.bjbh)) as day10,
+        ((select count(*) from by_child_checkin_detail where classid=d.bjbh and
+        date_format(create_time,'%Y-%m-%d')=concat(#{month},'-11') and type='01')/(select count(*) from by_child where
+        classid=d.bjbh)) as day11,
+        ((select count(*) from by_child_checkin_detail where classid=d.bjbh and
+        date_format(create_time,'%Y-%m-%d')=concat(#{month},'-12') and type='01')/(select count(*) from by_child where
+        classid=d.bjbh)) as day12,
+        ((select count(*) from by_child_checkin_detail where classid=d.bjbh and
+        date_format(create_time,'%Y-%m-%d')=concat(#{month},'-13') and type='01')/(select count(*) from by_child where
+        classid=d.bjbh)) as day13,
+        ((select count(*) from by_child_checkin_detail where classid=d.bjbh and
+        date_format(create_time,'%Y-%m-%d')=concat(#{month},'-14') and type='01')/(select count(*) from by_child where
+        classid=d.bjbh)) as day14,
+        ((select count(*) from by_child_checkin_detail where classid=d.bjbh and
+        date_format(create_time,'%Y-%m-%d')=concat(#{month},'-15') and type='01')/(select count(*) from by_child where
+        classid=d.bjbh)) as day15,
+        ((select count(*) from by_child_checkin_detail where classid=d.bjbh and
+        date_format(create_time,'%Y-%m-%d')=concat(#{month},'-16') and type='01')/(select count(*) from by_child where
+        classid=d.bjbh)) as day16,
+        ((select count(*) from by_child_checkin_detail where classid=d.bjbh and
+        date_format(create_time,'%Y-%m-%d')=concat(#{month},'-17') and type='01')/(select count(*) from by_child where
+        classid=d.bjbh)) as day17,
+        ((select count(*) from by_child_checkin_detail where classid=d.bjbh and
+        date_format(create_time,'%Y-%m-%d')=concat(#{month},'-18') and type='01')/(select count(*) from by_child where
+        classid=d.bjbh)) as day18,
+        ((select count(*) from by_child_checkin_detail where classid=d.bjbh and
+        date_format(create_time,'%Y-%m-%d')=concat(#{month},'-19') and type='01')/(select count(*) from by_child where
+        classid=d.bjbh)) as day19,
+        ((select count(*) from by_child_checkin_detail where classid=d.bjbh and
+        date_format(create_time,'%Y-%m-%d')=concat(#{month},'-20') and type='01')/(select count(*) from by_child where
+        classid=d.bjbh)) as day20,
+        ((select count(*) from by_child_checkin_detail where classid=d.bjbh and
+        date_format(create_time,'%Y-%m-%d')=concat(#{month},'-21') and type='01')/(select count(*) from by_child where
+        classid=d.bjbh)) as day21,
+        ((select count(*) from by_child_checkin_detail where classid=d.bjbh and
+        date_format(create_time,'%Y-%m-%d')=concat(#{month},'-22') and type='01')/(select count(*) from by_child where
+        classid=d.bjbh)) as day22,
+        ((select count(*) from by_child_checkin_detail where classid=d.bjbh and
+        date_format(create_time,'%Y-%m-%d')=concat(#{month},'-23') and type='01')/(select count(*) from by_child where
+        classid=d.bjbh)) as day23,
+        ((select count(*) from by_child_checkin_detail where classid=d.bjbh and
+        date_format(create_time,'%Y-%m-%d')=concat(#{month},'-24') and type='01')/(select count(*) from by_child where
+        classid=d.bjbh)) as day24,
+        ((select count(*) from by_child_checkin_detail where classid=d.bjbh and
+        date_format(create_time,'%Y-%m-%d')=concat(#{month},'-25') and type='01')/(select count(*) from by_child where
+        classid=d.bjbh)) as day25,
+        ((select count(*) from by_child_checkin_detail where classid=d.bjbh and
+        date_format(create_time,'%Y-%m-%d')=concat(#{month},'-26') and type='01')/(select count(*) from by_child where
+        classid=d.bjbh)) as day26,
+        ((select count(*) from by_child_checkin_detail where classid=d.bjbh and
+        date_format(create_time,'%Y-%m-%d')=concat(#{month},'-27') and type='01')/(select count(*) from by_child where
+        classid=d.bjbh)) as day27,
+        ((select count(*) from by_child_checkin_detail where classid=d.bjbh and
+        date_format(create_time,'%Y-%m-%d')=concat(#{month},'-28') and type='01')/(select count(*) from by_child where
+        classid=d.bjbh)) as day28,
+        ((select count(*) from by_child_checkin_detail where classid=d.bjbh and
+        date_format(create_time,'%Y-%m-%d')=concat(#{month},'-29') and type='01')/(select count(*) from by_child where
+        classid=d.bjbh)) as day29,
+        ((select count(*) from by_child_checkin_detail where classid=d.bjbh and
+        date_format(create_time,'%Y-%m-%d')=concat(#{month},'-30') and type='01')/(select count(*) from by_child where
+        classid=d.bjbh)) as day30,
+        ((select count(*) from by_child_checkin_detail where classid=d.bjbh and
+        date_format(create_time,'%Y-%m-%d')=concat(#{month},'-31') and type='01')/(select count(*) from by_child where
+        classid=d.bjbh)) as day31
+        from by_class d
+        where d.isdel='0'
+        <!-- 数据范围过滤 -->
+        ${dataScope}
+    </select>
 
 </mapper>

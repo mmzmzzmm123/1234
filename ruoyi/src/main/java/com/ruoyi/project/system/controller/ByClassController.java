@@ -241,4 +241,17 @@ public class ByClassController extends BaseController {
         return AjaxResult.error("当前用户非幼儿园，无法删除班级");
 
     }
+
+    /**
+     * 查询班级信息列表
+     */
+    @PreAuthorize("@ss.hasPermi('system:class:list')" + "||@ss.hasPermi('benyi:checkindetail:list')")
+    @GetMapping("/checklist")
+    public TableDataInfo checklist(ByClass byClass) {
+        startPage();
+        List<ByClass> list = byClassService.selectststicstSchoolList(byClass);
+        return getDataTable(list);
+    }
+
+
 }

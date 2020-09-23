@@ -59,3 +59,12 @@ export function exportClass(query) {
     params: query
   })
 }
+
+// 查询班级信息列表
+export function listClassCheck(query) {
+  return request({
+    url: '/system/class/checklist',
+    method: 'get',
+    params: query
+  })
+}
