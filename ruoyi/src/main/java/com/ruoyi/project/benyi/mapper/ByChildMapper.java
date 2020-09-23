@@ -66,4 +66,12 @@ public interface ByChildMapper {
      * @return 结果
      */
     public int deleteByChildByIds(Long[] ids);
+
+    /**
+     * 查询班级信息列表
+     *
+     * @param byChild 班级信息
+     * @return 班级信息集合
+     */
+    public List<ByChild> selectststicstClassList(ByChild byChild);
 }

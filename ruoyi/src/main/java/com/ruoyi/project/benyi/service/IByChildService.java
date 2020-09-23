@@ -66,4 +66,12 @@ public interface IByChildService {
      * @return 结果
      */
     public int deleteByChildById(Long id);
+
+    /**
+     * 查询幼儿信息列表
+     *
+     * @param byChild 幼儿信息
+     * @return 班级信息集合
+     */
+    public List<ByChild> selectststicstClassList(ByChild byChild);
 }

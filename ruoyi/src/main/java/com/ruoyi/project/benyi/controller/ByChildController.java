@@ -170,4 +170,15 @@ public class ByChildController extends BaseController {
     public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(byChildService.deleteByChildByIds(ids));
     }
+
+    /**
+     * 查询班级信息列表
+     */
+    @PreAuthorize("@ss.hasPermi('system:child:list')" + "||@ss.hasPermi('benyi:checkindetail:list')")
+    @GetMapping("/checklist")
+    public TableDataInfo checklist(ByChild byClass) {
+        startPage();
+        List<ByChild> list = byChildService.selectststicstClassList(byClass);
+        return getDataTable(list);
+    }
 }

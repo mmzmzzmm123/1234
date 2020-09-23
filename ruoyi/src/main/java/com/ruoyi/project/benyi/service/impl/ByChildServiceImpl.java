@@ -3,6 +3,7 @@ package com.ruoyi.project.benyi.service.impl;
 import java.util.List;
 
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.framework.aspectj.lang.annotation.DataScope;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.project.benyi.mapper.ByChildMapper;
@@ -96,5 +97,18 @@ public class ByChildServiceImpl implements IByChildService {
     @Override
     public int deleteByChildById(Long id) {
         return byChildMapper.deleteByChildById(id);
+    }
+
+
+    /**
+     * 查询幼儿考勤信息列表
+     *
+     * @param byChild 班级信息
+     * @return 班级信息集合
+     */
+    @Override
+    @DataScope(deptAlias = "d")
+    public List<ByChild> selectststicstClassList(ByChild byChild) {
+        return byChildMapper.selectststicstClassList(byChild);
     }
 }
