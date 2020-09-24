@@ -1,4 +1,4 @@
-package com.ruoyi.web.controller.system;
+package com.ruoyi.web.controller.custom;
 
 import java.util.List;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -15,19 +15,19 @@ import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.enums.BusinessType;
-import com.ruoyi.system.domain.SysOrder;
-import com.ruoyi.system.service.ISysOrderService;
+import com.ruoyi.custom.domain.SysOrder;
+import com.ruoyi.custom.service.ISysOrderService;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
  * 销售订单Controller
- * 
+ *
  * @author wonder
- * @date 2020-09-23
+ * @date 2020-09-24
  */
 @RestController
-@RequestMapping("/system/order")
+@RequestMapping("/custom/order")
 public class SysOrderController extends BaseController
 {
     @Autowired
@@ -36,7 +36,7 @@ public class SysOrderController extends BaseController
     /**
      * 查询销售订单列表
      */
-    @PreAuthorize("@ss.hasPermi('system:order:list')")
+    @PreAuthorize("@ss.hasPermi('custom:order:list')")
     @GetMapping("/list")
     public TableDataInfo list(SysOrder sysOrder)
     {
@@ -48,7 +48,7 @@ public class SysOrderController extends BaseController
     /**
      * 导出销售订单列表
      */
-    @PreAuthorize("@ss.hasPermi('system:order:export')")
+    @PreAuthorize("@ss.hasPermi('custom:order:export')")
     @Log(title = "销售订单", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
     public AjaxResult export(SysOrder sysOrder)
@@ -61,7 +61,7 @@ public class SysOrderController extends BaseController
     /**
      * 获取销售订单详细信息
      */
-    @PreAuthorize("@ss.hasPermi('system:order:query')")
+    @PreAuthorize("@ss.hasPermi('custom:order:query')")
     @GetMapping(value = "/{orderId}")
     public AjaxResult getInfo(@PathVariable("orderId") Long orderId)
     {
@@ -71,7 +71,7 @@ public class SysOrderController extends BaseController
     /**
      * 新增销售订单
      */
-    @PreAuthorize("@ss.hasPermi('system:order:add')")
+    @PreAuthorize("@ss.hasPermi('custom:order:add')")
     @Log(title = "销售订单", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody SysOrder sysOrder)
@@ -82,7 +82,7 @@ public class SysOrderController extends BaseController
     /**
      * 修改销售订单
      */
-    @PreAuthorize("@ss.hasPermi('system:order:edit')")
+    @PreAuthorize("@ss.hasPermi('custom:order:edit')")
     @Log(title = "销售订单", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody SysOrder sysOrder)
@@ -93,9 +93,9 @@ public class SysOrderController extends BaseController
     /**
      * 删除销售订单
      */
-    @PreAuthorize("@ss.hasPermi('system:order:remove')")
+    @PreAuthorize("@ss.hasPermi('custom:order:remove')")
     @Log(title = "销售订单", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{orderIds}")
+    @DeleteMapping("/{orderIds}")
     public AjaxResult remove(@PathVariable Long[] orderIds)
     {
         return toAjax(sysOrderService.deleteSysOrderByIds(orderIds));

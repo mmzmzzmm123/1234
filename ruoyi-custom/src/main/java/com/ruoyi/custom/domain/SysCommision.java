@@ -5,6 +5,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 
+import java.math.BigDecimal;
+
 /**
  * 业务提成比例对象 sys_commision
  * 
@@ -27,7 +29,7 @@ public class SysCommision extends BaseEntity
 
     /** 金额 */
     @Excel(name = "金额")
-    private Long amount;
+    private BigDecimal amount;
 
     /** 分成比例 */
     @Excel(name = "分成比例")
@@ -60,12 +62,9 @@ public class SysCommision extends BaseEntity
     {
         return nickName;
     }
-    public void setAmount(Long amount) 
-    {
-        this.amount = amount;
-    }
+    public void setAmount(BigDecimal amount) { this.amount = amount; }
 
-    public Long getAmount() 
+    public BigDecimal getAmount()
     {
         return amount;
     }
