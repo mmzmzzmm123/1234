@@ -1,45 +1,45 @@
 <template>
-  <div class="app-container" ref="printMe">
-    <div class="print no-print">
-      <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
-        <el-form-item label="选择月份" prop="month">
-          <el-date-picker
-            clearable
-            size="small"
-            style="width: 200px"
-            v-model="queryParams.month"
-            type="month"
-            value-format="yyyy-MM"
-            :default-value="new Date()"
-            placeholder="选择计划月份"
-          ></el-date-picker>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-          <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-          <el-button type="primary" plain size="mini" icon="el-icon-printer" @click="prints">打印</el-button>
-        </el-form-item>
-      </el-form>
+  <div class="app-container">
+    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
+      <el-form-item label="选择月份" prop="month">
+        <el-date-picker
+          clearable
+          size="small"
+          style="width: 200px"
+          v-model="queryParams.month"
+          type="month"
+          value-format="yyyy-MM"
+          :default-value="new Date()"
+          placeholder="选择计划月份"
+        ></el-date-picker>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+        <el-button type="primary" plain size="mini" icon="el-icon-printer" @click="prints">打印</el-button>
+      </el-form-item>
+    </el-form>
+
+    <div ref="printMe">
+      <h2 style="text-align:center;">幼儿园班级儿童考勤表({{this.month}})</h2>
+      <el-table v-loading="loading" style="width: 100%" border :data="tableData">
+        <template v-for="(item,index) in tableHead">
+          <el-table-column
+            :prop=" item.column_name==''?'day'+(item.sort+1) : item.column_name"
+            :fixed="item.column_name!=''"
+            :label=" item.column_name==''?(item.sort+1)+'' : item.sort"
+            :key="index"
+          ></el-table-column>
+        </template>
+      </el-table>
     </div>
-
-    <el-table v-loading="loading" style="width: 100%" border :data="tableData">
-      <template v-for="(item,index) in tableHead">
-        <el-table-column
-          :prop=" item.column_name==''?'day'+(item.sort+1) : item.column_name"
-          :fixed="item.column_name!=''"
-          :label=" item.column_name==''?(item.sort+1)+'' : item.sort"
-          :key="index"
-        ></el-table-column>
-      </template>
-    </el-table>
-
-    <pagination
-      v-show="total>0"
-      :total="total"
-      :page.sync="queryParams.pageNum"
-      :limit.sync="queryParams.pageSize"
-      @pagination="getList"
-    />
+    <!-- <pagination
+        v-show="total>0"
+        :total="total"
+        :page.sync="queryParams.pageNum"
+        :limit.sync="queryParams.pageSize"
+        @pagination="getList"
+    />-->
   </div>
 </template>
 
@@ -117,7 +117,7 @@ export default {
         console.log(response.rows);
         this.tableHead.push({
           column_name: "bjmc",
-          sort: "班级名称",
+          sort: "班级",
         });
         response.rows.forEach((res) => {
           this.tableHead.push({
@@ -181,6 +181,7 @@ export default {
     /** 搜索按钮操作 */
     handleQuery() {
       this.queryParams.pageNum = 1;
+      this.month = this.queryParams.month;
       this.getHeadList();
     },
     /** 重置按钮操作 */
