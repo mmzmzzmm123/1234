@@ -410,7 +410,7 @@
     </delete>
 
     <select id="selectststicstClassList" parameterType="ByChild"
-            resultMap="ByClassResult">
+            resultMap="ByChildResult">
         select c.id,c.classid,c.name,
         (select count(*) from by_child where id=c.id) as childcount,
         ((select count(*) from by_child_checkin_detail where classid=d.bjbh and
