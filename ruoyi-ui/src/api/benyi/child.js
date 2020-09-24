@@ -78,3 +78,12 @@ export function exportChild(query) {
         params: query
     })
 }
+
+// 查询班级信息列表
+export function listChildCheck(query) {
+    return request({
+        url: '/benyi/child/checklist',
+        method: 'get',
+        params: query
+    })
+}

@@ -1,303 +1,153 @@
 <template>
-  <div class="table-container" ref="printMe">
-    <h2 class="title">{{title}}</h2>
-    <div class="table">
-      <div class="print no-print">
-        <el-button type="primary" plain size="mini" icon="el-icon-printer" @click="prints"></el-button>
-      </div>
-      <table>
-        <tr class="align-center">
-          <!-- <td v-for="h in headerData" :key="h.title">
-            <b class="table-title">{{h.title}}</b>
-            {{h.name}}
-          </td>-->
-          <td class="w140">
-            <b class="table-title">班级：</b>
-            {{classid}}
-          </td>
-          <td>
-            <b class="table-title">班级人数：</b>
-            {{30}}
-          </td>
-          <td>
-            <b class="table-title">月份：</b>
-            第{{9}}月
-          </td>
-          <td>
-            <b class="table-title">学期：</b>
-            第{{1}}学期
-          </td>
-          <td>
-            <b class="table-title">学年：</b>
-            {{2020}}年
-          </td>
-          <td>
-            <b class="table-title">班主任：</b>
-            {{month}}
-          </td>
-          <td>
-            <b class="table-title">本月出勤率：</b>
-            {{month}}%
-          </td>
-          <td colspan="3">
-            <b class="table-title">本月出勤率：</b>
-            {{month}}%
-          </td>
-        </tr>
-        
-        <tr class="align-center">
-          <td rowspan="5">
-            <span>周教学目标</span>
-          </td>
-          <td style="width: 140px;">社会</td>
-          <td>{{sh}}</td>
-          <td  colspan="4"></td>
-        </tr>
-        <tr class="align-center"> 
-          <td>语言</td>
-          <td>{{yy}}</td>
-          <td  colspan="4"></td>
-        </tr>
-        <tr class="align-center">
-          <td>健康</td>
-          <td>{{jk}}</td>
-          <td colspan="4"></td>
-        </tr>
-        <tr class="align-center">
-          <td>科学</td>
-          <td>{{kx}}</td>
-          <td colspan="4"></td>
-        </tr>
-        <tr class="align-center">
-          <td>艺术</td>
-          <td>{{ys}}</td>
-          <td colspan="4"></td>
-        </tr>
+  <div class="app-container">
+    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
+      <el-form-item label="选择月份" prop="month">
+        <el-date-picker
+          clearable
+          size="small"
+          style="width: 200px"
+          v-model="queryParams.month"
+          type="month"
+          value-format="yyyy-MM"
+          :default-value="new Date()"
+          placeholder="选择计划月份"
+        ></el-date-picker>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+      </el-form-item>
+    </el-form>
 
-        <tr v-for="item in planweekitemList" :key="item.id">
-          <td v-if="item.activitytime" :rowspan="bodyData.planweekitemList.length" class="align-center">
-            <span>{{item.activitytime}}</span>
-          </td>
-          <td class="align-center">{{item.activitytime}}</td>
-          <td colspan="4">{{item.activitytime}}</td>
-        </tr>
-        <tr class="align-center table-bg">
-          <td v-for="h in bodyData.title" :key="h.prop">
-            <b>{{h.label}}</b>
-          </td>
-        </tr>
-        <tr v-for="item in bodyData.planweekitemList" :key="item.id">
-          <td v-if="item.theme" :rowspan="bodyData.planweekitemList.length" class="align-center">
-            <span>{{item.theme}}</span>
-          </td>
-          <td class="align-center">{{item.activitytime}}</td>
-          <td class="align-center">{{item.day}}</td>
-          <td class="align-center">{{activitytypeFormat(item.activitytype)}}</td>
-          <td class="align-center">{{(item.content)}}</td>
-        </tr>
-      </table>
-      <!-- <p
-        class="warning"
-      >注：此周计划表不需要发给家长，只需上报教学主管。制定班级一周教学与活动计划表，请使用班级管理模块中“教学与游戏活动周计划表”，以上报教学主管和作为周计划通知发给家长。</p>-->
-    </div>
+    <el-table v-loading="loading" style="width: 100%" border :data="tableData">
+      <template v-for="(item,index) in tableHead">
+        <el-table-column
+          :prop=" item.column_name==''?'day'+(item.sort+1) : item.column_name"
+          :label=" item.column_name==''?(item.sort+1)+'' : item.sort"
+          :key="index"
+        ></el-table-column>
+      </template>
+    </el-table>
+
+    <pagination
+      v-show="total>0"
+      :total="total"
+      :page.sync="queryParams.pageNum"
+      :limit.sync="queryParams.pageSize"
+      @pagination="getList"
+    />
   </div>
 </template>
 
 <script>
-import {
-  listDetail,
-  getDetail,
-  delDetail,
-  addDetail,
-  updateDetail,
-  exportDetail
-} from "@/api/benyi/checkindetail";
-
-import { listByCheck, listChild } from "@/api/benyi/child";
-
-import { listClass } from "@/api/system/class";
+import { listDatetime } from "@/api/benyi/checkindetail";
+import { listChildCheck } from "@/api/benyi/child";
 
 export default {
-  name: "Detail",
+  name: "checkinstatisticsschool",
   data() {
     return {
-      tableData: [],
-      title: "教学与游戏活动周计划表",
-      schoolid: "",
-      classid: "",
-      childid: "",
-      childname: "",
-      type: "",
-      createuserid: "",
       month: "",
-      bodyData: {
-        title: [
-          {
-            label: "日期",
-            prop: "activitytime",
-          },
-          {
-            label: "星期",
-            prop: "day",
-          },
-          {
-            label: "区域活动形式",
-            prop: "activitytype",
-          },
-          {
-            label: "活动详情",
-            prop: "content",
-          },
-          
-          // {
-          //   label: "周四",
-          //   prop: "help",
-          // },
-          // {
-          //   label: "周五",
-          //   prop: "help",
-          // },
-        ],
-        planweekitemList: [
-          {
-            theme: "春天的颜色",
-          },
-        ],
-      },
+      // 遮罩层
+      loading: true,
+      // 总条数
+      total: 0,
+      //javascript
+      // 表头数据
+      tableHead: [
+        // {
+        //   column_name: "column_name",
+        //   column_comment: "姓名",
+        // },
+        // {
+        //   column_name: "column_age",
+        //   column_comment: "年龄",
+        // },
+        // {
+        //   column_name: "column_sex",
+        //   column_comment: "性别",
+        // },
+      ],
+      // 表格数据
+      tableData: [
+        // {
+        //   column_age: "3",
+        //   column_name: "鞠婧祎",
+        //   column_sex: "女",
+        // },
+        // {
+        //   column_age: "25",
+        //   column_name: "魏大勋",
+        //   column_sex: "男",
+        // },
+        // {
+        //   column_age: "18",
+        //   column_name: "关晓彤",
+        //   column_sex: "女",
+        // },
+      ],
       // 查询参数
       queryParams: {
-        pageNum: 1,
-        pageSize: 10,
-        schoolid: undefined,
-        classid: undefined,
-        childid: undefined,
-        childname: undefined,
-        type: undefined,
-        createuserid: undefined,
-        createTime: undefined
+        month: "",
       },
     };
   },
   created() {
-    this.getList();
-    this.getClassList();
-    this.getDicts("sys_dm_cqzt").then(response => {
-      this.checkinOptions = response.data;
-    });
+    this.getNowTime(); //得到月份
+    this.getHeadList();
   },
   methods: {
-    //控制按钮可用
-    checkSelectable(row) {
-      var date = new Date();
-      //console.log(date.toLocaleDateString());
-      return this.CompareDate(row.createTime, date.toLocaleDateString());
+    getNowTime() {
+      var now = new Date();
+      var year = now.getFullYear(); // 得到年份
+      var month = now.getMonth(); // 得到月份
+      month = month + 1;
+      month = month.toString().padStart(2, "0");
+      this.month = `${year}-${month}`;
     },
-    //比较日期大小
-    CompareDate(d1, d2) {
-      return new Date(d1.replace(/-/g, "/")) > new Date(d2.replace(/-/g, "/"));
-    },
-    //班级列表
-    getClassList() {
-      listClass(null).then(response => {
-        this.classOptions = response.rows;
+    async getHeadList() {
+      this.tableHead = [];
+      if (this.queryParams.month == "") {
+        this.queryParams.month = this.month;
+      }
+      await listDatetime(this.queryParams).then((response) => {
+        console.log(response.rows);
+        this.tableHead.push({
+          column_name: "name",
+          sort: "姓名",
+        });
+        response.rows.forEach((res) => {
+          this.tableHead.push({
+            column_name: "",
+            sort: res.sort,
+          });
+        });
       });
+
+      this.getList();
     },
-    // 字典翻译
-    typeFormat(row, column) {
-      return this.selectDictLabel(this.checkinOptions, row.type);
-    },
-    // 字典翻译
-    classFormat(row, column) {
-      // return this.selectDictLabel(this.classOptions, row.classid);
-      var actions = [];
-      var datas = this.classOptions;
-      Object.keys(datas).map(key => {
-        if (datas[key].bjbh == "" + row.classid) {
-          actions.push(datas[key].bjmc);
-          return false;
-        }
-      });
-      return actions.join("");
-    },
-    /** 查询幼儿考勤列表 */
     getList() {
       this.loading = true;
-      listDetail(this.queryParams).then(response => {
-        this.detailList = response.rows;
-        // console.log(response.rows);
+      if (this.queryParams.month == "") {
+        this.queryParams.month = this.month;
+      }
+      listChildCheck(this.queryParams).then((response) => {
+        console.log(response.rows);
+        this.tableData = response.rows;
         this.total = response.total;
         this.loading = false;
       });
     },
-    prints() {
-      //console.log(this.$refs.printMe);
-      this.$print(this.$refs.printMe);
+    /** 搜索按钮操作 */
+    handleQuery() {
+      this.queryParams.pageNum = 1;
+      this.getHeadList();
     },
-  }
+    /** 重置按钮操作 */
+    resetQuery() {
+      this.resetForm("queryForm");
+      this.handleQuery();
+    },
+  },
 };
 </script>
-
-<style lang="scss">
-.table-container {
-  padding: 30px 10%;
-  .w140 {
-    width: 140px;
-  }
-  .w200 {
-    width: 200px;
-  }
-  .title {
-    margin: 0;
-    font-size: 18px;
-    text-align: center;
-    padding: 15px 0;
-  }
-  .align-center {
-    text-align: center;
-  }
-  .table {
-    font-size: 14px;
-    .print {
-      display: flex;
-      justify-content: flex-end;
-      padding-bottom: 10px;
-    }
-    p {
-      margin: 0;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-    table td {
-      border: #ccc solid 1px;
-      line-height: 24px;
-      padding: 8px 5px;
-    }
-    .table-title {
-      font-size: 16px;
-    }
-    .table-bg {
-      background: #f8f8f8;
-    }
-  }
-  .warning {
-    padding-top: 20px;
-    font-size: 12px;
-    color: #666;
-  }
-}
-@media print {
-  .table-container {
-    padding: 30px 0;
-  }
-  .print {
-    opacity: 0;
-  }
-}
-/*去除页眉页脚*/
-@page {
-  size: auto; /* auto is the initial value */
-  margin: 3mm; /* this affects the margin in the printer settings */
-}
-</style>

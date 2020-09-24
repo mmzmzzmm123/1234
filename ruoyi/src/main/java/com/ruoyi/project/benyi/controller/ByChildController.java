@@ -2,6 +2,7 @@ package com.ruoyi.project.benyi.controller;
 
 import java.util.List;
 
+import java.util.ArrayList;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.project.common.SchoolCommon;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -172,13 +173,21 @@ public class ByChildController extends BaseController {
     }
 
     /**
-     * 查询班级信息列表
+     * 查询幼儿考勤信息列表
      */
     @PreAuthorize("@ss.hasPermi('system:child:list')" + "||@ss.hasPermi('benyi:checkindetail:list')")
     @GetMapping("/checklist")
     public TableDataInfo checklist(ByChild byClass) {
-        startPage();
-        List<ByChild> list = byChildService.selectststicstClassList(byClass);
-        return getDataTable(list);
+        String strClassId = schoolCommon.getClassId();
+        if (!schoolCommon.isStringEmpty(strClassId)) {
+            startPage();
+            byClass.setClassid(strClassId);
+            List<ByChild> list = byChildService.selectststicstClassList(byClass);
+            return getDataTable(list);
+        } else {
+            List<ByChild> list = new ArrayList<>();
+            return getDataTable(list);
+        }
+
     }
 }
