@@ -1,6 +1,11 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
+    <el-form
+      :model="queryParams"
+      ref="queryForm"
+      :inline="true"
+      label-width="68px"
+    >
       <el-form-item label="选择月份" prop="month">
         <el-date-picker
           clearable
@@ -14,20 +19,44 @@
         ></el-date-picker>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-        <el-button type="primary" plain size="mini" icon="el-icon-printer" @click="prints">打印</el-button>
+        <el-button
+          type="primary"
+          icon="el-icon-search"
+          size="mini"
+          @click="handleQuery"
+          >搜索</el-button
+        >
+        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+          >重置</el-button
+        >
+        <el-button
+          type="primary"
+          plain
+          size="mini"
+          icon="el-icon-printer"
+          @click="prints"
+          >打印</el-button
+        >
       </el-form-item>
     </el-form>
 
     <div ref="printMe">
-      <h2 style="text-align:center;">幼儿园班级儿童考勤表({{this.month}})</h2>
-      <el-table v-loading="loading" style="width: 100%" border :data="tableData">
-        <template v-for="(item,index) in tableHead">
+      <h2 style="text-align: center">幼儿园班级儿童考勤表({{ this.month }})</h2>
+      <el-table
+        v-loading="loading"
+        style="width: 100%"
+        border
+        :data="tableData"
+      >
+        <template v-for="(item, index) in tableHead">
           <el-table-column
-            :prop=" item.column_name==''?'day'+(item.sort+1) : item.column_name"
-            :fixed="item.column_name!=''"
-            :label=" item.column_name==''?(item.sort+1)+'' : item.sort"
+            :prop="
+              item.column_name == ''
+                ? 'day' + (item.sort + 1)
+                : item.column_name
+            "
+            :fixed="item.column_name != ''"
+            :label="item.column_name == '' ? item.sort + 1 + '' : item.sort"
             :key="index"
           ></el-table-column>
         </template>
@@ -141,37 +170,130 @@ export default {
         response.rows.forEach((res) => {
           this.tableData.push({
             bjmc: res.bjmc,
-            day1: res.day1 == "0" ? "" : res.day1 * 100 + "%",
-            day2: res.day2 == "0" ? "" : res.day2 * 100 + "%",
-            day3: res.day3 == "0" ? "" : res.day3 * 100 + "%",
-            day4: res.day4 == "0" ? "" : res.day4 * 100 + "%",
-            day5: res.day5 == "0" ? "" : res.day5 * 100 + "%",
-            day6: res.day6 == "0" ? "" : res.day6 * 100 + "%",
-            day7: res.day7 == "0" ? "" : res.day7 * 100 + "%",
-            day8: res.day8 == "0" ? "" : res.day8 * 100 + "%",
-            day9: res.day9 == "0" ? "" : res.day9 * 100 + "%",
-            day10: res.day10 == "0" ? "" : res.day10 * 100 + "%",
-            day11: res.day11 == "0" ? "" : res.day11 * 100 + "%",
-            day12: res.day12 == "0" ? "" : res.day12 * 100 + "%",
-            day13: res.day13 == "0" ? "" : res.day13 * 100 + "%",
-            day14: res.day14 == "0" ? "" : res.day14 * 100 + "%",
-            day15: res.day15 == "0" ? "" : res.day15 * 100 + "%",
-            day16: res.day16 == "0" ? "" : res.day16 * 100 + "%",
-            day17: res.day17 == "0" ? "" : res.day17 * 100 + "%",
-            day18: res.day18 == "0" ? "" : res.day18 * 100 + "%",
-            day19: res.day19 == "0" ? "" : res.day19 * 100 + "%",
-            day20: res.day20 == "0" ? "" : res.day20 * 100 + "%",
-            day21: res.day21 == "0" ? "" : res.day21 * 100 + "%",
-            day22: res.day22 == "0" ? "" : res.day22 * 100 + "%",
-            day23: res.day23 == "0" ? "" : res.day23 * 100 + "%",
-            day24: res.day24 == "0" ? "" : res.day24 * 100 + "%",
-            day25: res.day25 == "0" ? "" : res.day25 * 100 + "%",
-            day26: res.day26 == "0" ? "" : res.day26 * 100 + "%",
-            day27: res.day27 == "0" ? "" : res.day27 * 100 + "%",
-            day28: res.day28 == "0" ? "" : res.day28 * 100 + "%",
-            day29: res.day29 == "0" ? "" : res.day29 * 100 + "%",
-            day30: res.day30 == "0" ? "" : res.day30 * 100 + "%",
-            day31: res.day31 == "0" ? "" : res.day31 * 100 + "%",
+            day1:
+              res.day1 == "0"
+                ? ""
+                : parseFloat((res.day1 * 100).toFixed(2)) + "%",
+            day2:
+              res.day2 == "0"
+                ? ""
+                : parseFloat((res.day2 * 100).toFixed(2)) + "%",
+            day3:
+              res.day3 == "0"
+                ? ""
+                : parseFloat((res.day3 * 100).toFixed(2)) + "%",
+            day4:
+              res.day4 == "0"
+                ? ""
+                : parseFloat((res.day4 * 100).toFixed(2)) + "%",
+            day5:
+              res.day5 == "0"
+                ? ""
+                : parseFloat((res.day5 * 100).toFixed(2)) + "%",
+            day6:
+              res.day6 == "0"
+                ? ""
+                : parseFloat((res.day6 * 100).toFixed(2)) + "%",
+            day7:
+              res.day7 == "0"
+                ? ""
+                : parseFloat((res.day7 * 100).toFixed(2)) + "%",
+            day8:
+              res.day8 == "0"
+                ? ""
+                : parseFloat((res.day8 * 100).toFixed(2)) + "%",
+            day9:
+              res.day9 == "0"
+                ? ""
+                : parseFloat((res.day9 * 100).toFixed(2)) + "%",
+            day10:
+              res.day10 == "0"
+                ? ""
+                : parseFloat((res.day10 * 100).toFixed(2)) + "%",
+            day11:
+              res.day11 == "0"
+                ? ""
+                : parseFloat((res.day11 * 100).toFixed(2)) + "%",
+            day12:
+              res.day12 == "0"
+                ? ""
+                : parseFloat((res.day12 * 100).toFixed(2)) + "%",
+            day13:
+              res.day13 == "0"
+                ? ""
+                : parseFloat((res.day13 * 100).toFixed(2)) + "%",
+            day14:
+              res.day14 == "0"
+                ? ""
+                : parseFloat((res.day14 * 100).toFixed(2)) + "%",
+            day15:
+              res.day15 == "0"
+                ? ""
+                : parseFloat((res.day15 * 100).toFixed(2)) + "%",
+            day16:
+              res.day16 == "0"
+                ? ""
+                : parseFloat((res.day16 * 100).toFixed(2)) + "%",
+            day17:
+              res.day17 == "0"
+                ? ""
+                : parseFloat((res.day17 * 100).toFixed(2)) + "%",
+            day18:
+              res.day18 == "0"
+                ? ""
+                : parseFloat((res.day18 * 100).toFixed(2)) + "%",
+            day19:
+              res.day19 == "0"
+                ? ""
+                : parseFloat((res.day19 * 100).toFixed(2)) + "%",
+            day20:
+              res.day20 == "0"
+                ? ""
+                : parseFloat((res.day20 * 100).toFixed(2)) + "%",
+            day21:
+              res.day21 == "0"
+                ? ""
+                : parseFloat((res.day21 * 100).toFixed(2)) + "%",
+            day22:
+              res.day22 == "0"
+                ? ""
+                : parseFloat((res.day22 * 100).toFixed(2)) + "%",
+            day23:
+              res.day23 == "0"
+                ? ""
+                : parseFloat((res.day23 * 100).toFixed(2)) + "%",
+            day24:
+              res.day24 == "0"
+                ? ""
+                : parseFloat((res.day24 * 100).toFixed(2)) + "%",
+            day25:
+              res.day25 == "0"
+                ? ""
+                : parseFloat((res.day25 * 100).toFixed(2)) + "%",
+            day26:
+              res.day26 == "0"
+                ? ""
+                : parseFloat((res.day26 * 100).toFixed(2)) + "%",
+            day27:
+              res.day27 == "0"
+                ? ""
+                : parseFloat((res.day27 * 100).toFixed(2)) + "%",
+            day28:
+              res.day28 == "0"
+                ? ""
+                : parseFloat((res.day28 * 100).toFixed(2)) + "%",
+            day29:
+              res.day29 == "0"
+                ? ""
+                : parseFloat((res.day29 * 100).toFixed(2)) + "%",
+            day30:
+              res.day30 == "0"
+                ? ""
+                : parseFloat((res.day30 * 100).toFixed(2)) + "%",
+            day31:
+              res.day31 == "0"
+                ? ""
+                : parseFloat((res.day31 * 100).toFixed(2)) + "%",
           });
         });
         this.total = response.total;
