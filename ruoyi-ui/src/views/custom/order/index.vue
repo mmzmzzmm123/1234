@@ -14,17 +14,17 @@
           </el-form-item>
         </el-col>
 
-        <el-col :span="4">
-          <el-form-item label="电话" prop="phone">
-            <el-input
-              v-model="queryParams.phone"
-              placeholder="请输入电话"
-              clearable
-              size="small"
-              @keyup.enter.native="handleQuery"
-            />
-          </el-form-item>
-        </el-col>
+<!--        <el-col :span="4">-->
+<!--          <el-form-item label="电话" prop="phone">-->
+<!--            <el-input-->
+<!--              v-model="queryParams.phone"-->
+<!--              placeholder="请输入电话"-->
+<!--              clearable-->
+<!--              size="small"-->
+<!--              @keyup.enter.native="handleQuery"-->
+<!--            />-->
+<!--          </el-form-item>-->
+<!--        </el-col>-->
 
         <el-col :span="4">
           <el-form-item label="收款方式" prop="payTypeId">
@@ -60,8 +60,8 @@
         </el-col>
 
         <el-col :span="4">
-          <el-form-item label="营养师" prop="nutritionistId">
-            <el-select v-model="queryParams.nutritionistId" placeholder="请选择营养师" clearable size="small">
+          <el-form-item label="主营养师" prop="nutritionistId">
+            <el-select v-model="queryParams.nutritionistId" placeholder="请选择主营养师" clearable size="small">
               <el-option v-for="dict in nutritionistIdOptions"
                          :key="dict.dictValue"
                          :label="dict.dictLabel"
@@ -176,28 +176,28 @@
         >新增
         </el-button>
       </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['custom:order:edit']"
-        >修改
-        </el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="danger"
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['custom:order:remove']"
-        >删除
-        </el-button>
-      </el-col>
+      <!--      <el-col :span="1.5">-->
+      <!--        <el-button-->
+      <!--          type="success"-->
+      <!--          icon="el-icon-edit"-->
+      <!--          size="mini"-->
+      <!--          :disabled="single"-->
+      <!--          @click="handleUpdate"-->
+      <!--          v-hasPermi="['custom:order:edit']"-->
+      <!--        >修改-->
+      <!--        </el-button>-->
+      <!--      </el-col>-->
+      <!--      <el-col :span="1.5">-->
+      <!--        <el-button-->
+      <!--          type="danger"-->
+      <!--          icon="el-icon-delete"-->
+      <!--          size="mini"-->
+      <!--          :disabled="multiple"-->
+      <!--          @click="handleDelete"-->
+      <!--          v-hasPermi="['custom:order:remove']"-->
+      <!--        >删除-->
+      <!--        </el-button>-->
+      <!--      </el-col>-->
       <el-col :span="1.5">
         <el-button
           type="warning"
@@ -212,28 +212,28 @@
     </el-row>
 
     <el-table v-loading="loading" :data="orderList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center"/>
-      <el-table-column label="编号" align="center" prop="orderId"/>
-      <el-table-column label="客户姓名" align="center" prop="customer"/>
-      <el-table-column label="电话" align="center" prop="phone"/>
-      <el-table-column label="金额" align="center" prop="amount"/>
-      <el-table-column label="收款方式" align="center" prop="payType"/>
-      <el-table-column label="售前" align="center" prop="preSale"/>
-      <el-table-column label="售后" align="center" prop="afterSale"/>
-      <el-table-column label="营养师" align="center" prop="nutritionist"/>
-      <el-table-column label="助理营养师" align="center" prop="nutriAssis"/>
-      <el-table-column label="账号" align="center" prop="account"/>
-      <el-table-column label="策划" align="center" prop="planner"/>
-      <el-table-column label="策划助理" align="center" prop="plannerAssis"/>
-      <el-table-column label="运营" align="center" prop="operator"/>
-      <el-table-column label="推荐人" align="center" prop="recommender"/>
-      <el-table-column label="成交日期" align="center" prop="orderTime" width="180">
+      <!--      <el-table-column type="selection" width="55" align="center"/>-->
+      <!--      <el-table-column label="编号" align="center" prop="orderId"/>-->
+      <el-table-column label="成交日期" align="center" prop="orderTime" width="150" fixed="left">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.orderTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="备注" align="center" prop="remark"/>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="客户姓名" align="center" prop="customer" width="120" fixed="left"/>
+      <el-table-column label="金额" align="center" prop="amount" width="120" fixed="left"/>
+      <el-table-column label="电话" align="center" prop="phone" width="120"/>
+      <el-table-column label="收款方式" align="center" prop="payType" width="120"/>
+      <el-table-column label="售前" align="center" prop="preSale" width="120"/>
+      <el-table-column label="售后" align="center" prop="afterSale" width="120"/>
+      <el-table-column label="主营养师" align="center" prop="nutritionist" width="120"/>
+      <el-table-column label="助理营养师" align="center" prop="nutriAssis" width="120"/>
+      <el-table-column label="账号" align="center" prop="account" width="120"/>
+      <el-table-column label="策划" align="center" prop="planner" width="120"/>
+      <el-table-column label="策划助理" align="center" prop="plannerAssis" width="120"/>
+      <el-table-column label="运营" align="center" prop="operator" width="120"/>
+      <el-table-column label="推荐人" align="center" prop="recommender" width="120"/>
+      <el-table-column label="备注" align="center" prop="remark" width="120"/>
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="150" fixed="right">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -289,7 +289,7 @@
                   v-for="dict in payTypeIdOptions"
                   :key="dict.dictValue"
                   :label="dict.dictLabel"
-                  :value="dict.dictValue"
+                  :value="parseInt(dict.dictValue)"
                 />
               </el-select>
             </el-form-item>
@@ -303,7 +303,7 @@
                   v-for="dict in preSaleIdOptions"
                   :key="dict.dictValue"
                   :label="dict.dictLabel"
-                  :value="dict.dictValue"
+                  :value="parseInt(dict.dictValue)"
                 />
               </el-select>
             </el-form-item>
@@ -316,20 +316,20 @@
                   v-for="dict in afterSaleIdOptions"
                   :key="dict.dictValue"
                   :label="dict.dictLabel"
-                  :value="dict.dictValue"
+                  :value="parseInt(dict.dictValue)"
                 />
               </el-select>
             </el-form-item>
           </el-col>
 
           <el-col :span="12">
-            <el-form-item label="营养师" prop="nutritionistId">
-              <el-select v-model="form.nutritionistId" placeholder="请选择营养师">
+            <el-form-item label="主营养师" prop="nutritionistId">
+              <el-select v-model="form.nutritionistId" placeholder="请选择主营养师">
                 <el-option
                   v-for="dict in nutritionistIdOptions"
                   :key="dict.dictValue"
                   :label="dict.dictLabel"
-                  :value="dict.dictValue"
+                  :value="parseInt(dict.dictValue)"
                 />
               </el-select>
             </el-form-item>
@@ -342,7 +342,7 @@
                   v-for="dict in nutriAssisIdOptions"
                   :key="dict.dictValue"
                   :label="dict.dictLabel"
-                  :value="dict.dictValue"
+                  :value="parseInt(dict.dictValue)"
                 />
               </el-select>
             </el-form-item>
@@ -356,7 +356,7 @@
                   v-for="dict in plannerIdOptions"
                   :key="dict.dictValue"
                   :label="dict.dictLabel"
-                  :value="dict.dictValue"
+                  :value="parseInt(dict.dictValue)"
                 />
               </el-select>
             </el-form-item>
@@ -369,7 +369,7 @@
                   v-for="dict in plannerAssisIdOptions"
                   :key="dict.dictValue"
                   :label="dict.dictLabel"
-                  :value="dict.dictValue"
+                  :value="parseInt(dict.dictValue)"
                 />
               </el-select>
             </el-form-item>
@@ -382,7 +382,7 @@
                   v-for="dict in operatorIdOptions"
                   :key="dict.dictValue"
                   :label="dict.dictLabel"
-                  :value="dict.dictValue"
+                  :value="parseInt(dict.dictValue)"
                 />
               </el-select>
             </el-form-item>
@@ -395,7 +395,7 @@
                   v-for="dict in accountIdOptions"
                   :key="dict.dictValue"
                   :label="dict.dictLabel"
-                  :value="dict.dictValue"
+                  :value="parseInt(dict.dictValue)"
                 />
               </el-select>
             </el-form-item>
@@ -462,7 +462,7 @@
         preSaleIdOptions: [],
         // 售后字典
         afterSaleIdOptions: [],
-        // 营养师字典
+        // 主营养师字典
         nutritionistIdOptions: [],
         // 助理营养师字典
         nutriAssisIdOptions: [],
@@ -502,6 +502,9 @@
           amount: [
             {required: true, message: "金额不能为空", trigger: "blur"}
           ],
+          orderTime: [
+            {required: true, message: "成交日期不能为空", trigger: "blur"}
+          ]
         }
       };
     },
@@ -556,7 +559,7 @@
       afterSaleIdFormat(row, column) {
         return this.selectDictLabel(this.afterSaleIdOptions, row.afterSaleId);
       },
-      // 营养师字典翻译
+      // 主营养师字典翻译
       nutritionistIdFormat(row, column) {
         return this.selectDictLabel(this.nutritionistIdOptions, row.nutritionistId);
       },
@@ -683,6 +686,19 @@
       submitForm() {
         this.$refs["form"].validate(valid => {
           if (valid) {
+
+            console.log(this.form)
+
+            this.form.payType = this.selectDictLabel(this.payTypeIdOptions, this.form.payTypeId);
+            this.form.preSale = this.selectDictLabel(this.preSaleIdOptions, this.form.preSaleId);
+            this.form.afterSale = this.selectDictLabel(this.afterSaleIdOptions, this.form.afterSaleId);
+            this.form.nutritionist = this.selectDictLabel(this.nutritionistIdOptions, this.form.nutritionistId);
+            this.form.nutriAssis = this.selectDictLabel(this.nutriAssisIdOptions, this.form.nutriAssisId);
+            this.form.account = this.selectDictLabel(this.accountIdOptions, this.form.accountId);
+            this.form.planner = this.selectDictLabel(this.plannerIdOptions, this.form.plannerId);
+            this.form.plannerAssis = this.selectDictLabel(this.plannerAssisIdOptions, this.form.plannerAssisId);
+            this.form.operator = this.selectDictLabel(this.operatorIdOptions, this.form.operatorId);
+
             if (this.form.orderId != null) {
               updateOrder(this.form).then(response => {
                 if (response.code === 200) {
