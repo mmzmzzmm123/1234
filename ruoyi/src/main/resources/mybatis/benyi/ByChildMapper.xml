@@ -78,6 +78,8 @@
         <result property="day29" column="day29"/>
         <result property="day30" column="day30"/>
         <result property="day31" column="day31"/>
+        <result property="bjmc" column="bjmc"/>
+        <result property="zbjsmc" column="zbjsmc"/>
         <association property="byChildContactpeople"    column="childid" javaType="ByChildContactpeople" resultMap="ByChildContactpeopleResult" />
     </resultMap>
 
@@ -412,6 +414,10 @@
     <select id="selectststicstClassList" parameterType="ByChild"
             resultMap="ByChildResult">
         select c.id, c.classid, c.name,
+
+        (select bjmc from by_class where bjbh=c.classid) as bjmc,
+
+        (select nick_name from sys_user where user_id in (select zbjs from by_class where bjbh=c.classid)) as zbjsmc,
 
         (select  (select dict_label from sys_dict_data
         where dict_type='sys_dm_cqzt' and dict_value= type)

@@ -297,6 +297,8 @@ public class ByChild extends BaseEntity {
     private String day29;
     private String day30;
     private String day31;
+    private String bjmc;
+    private String zbjsmc;
 
     public String getDay1() {
         return day1;
@@ -958,6 +960,8 @@ public class ByChild extends BaseEntity {
                 .append("day29", getDay29())
                 .append("day30", getDay30())
                 .append("day31", getDay31())
+                .append("bjmc", getBjmc())
+                .append("zbjsmc", getZbjsmc())
                 .toString();
     }
 
@@ -967,5 +971,22 @@ public class ByChild extends BaseEntity {
 
     public void setByChildContactpeople(ByChildContactpeople byChildContactpeople) {
         this.byChildContactpeople = byChildContactpeople;
+    }
+
+    public String getBjmc() {
+        return bjmc;
+    }
+
+    public void setBjmc(String bjmc) {
+        this.bjmc = bjmc;
+    }
+
+
+    public String getZbjsmc() {
+        return zbjsmc;
+    }
+
+    public void setZbjsmc(String zbjsmc) {
+        this.zbjsmc = zbjsmc;
     }
 }
