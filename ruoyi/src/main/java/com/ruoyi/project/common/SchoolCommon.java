@@ -94,6 +94,8 @@ public class SchoolCommon {
         return false;
     }
 
+
+
     /**
      * 判断当前用户是否拥有班级
      **/
