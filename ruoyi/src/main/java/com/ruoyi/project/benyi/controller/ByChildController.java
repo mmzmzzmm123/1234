@@ -41,7 +41,7 @@ public class ByChildController extends BaseController {
     /**
      * 查询幼儿信息列表
      */
-    @PreAuthorize("@ss.hasPermi('benyi:child:list')")
+    @PreAuthorize("@ss.hasPermi('benyi:child:list')" + "||@ss.hasPermi('benyi:checkinstatisticsschool:list')")
     @GetMapping("/list")
     public TableDataInfo list(ByChild byChild) {
         startPage();

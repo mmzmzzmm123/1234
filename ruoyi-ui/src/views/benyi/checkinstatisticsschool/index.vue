@@ -41,7 +41,11 @@
     </el-form>
 
     <div ref="printMe">
-      <h2 style="text-align: center">幼儿园班级儿童考勤表({{ this.month }})</h2>
+      <h2 style="text-align: center">{{this.user.dept.deptName}}班级儿童考勤表</h2>
+      <h4 style="text-align: left">
+        考勤月份：{{ this.month }} ------ 班级总数：{{ this.classcount }} ------
+        幼儿总数：{{ this.chilidcount }}
+      </h4>
       <el-table
         v-loading="loading"
         style="width: 100%"
@@ -75,10 +79,19 @@
 <script>
 import { listDatetime } from "@/api/benyi/checkindetail";
 import { listClassCheck } from "@/api/system/class";
+import { listChild } from "@/api/benyi/child";
+import { getUserProfile } from "@/api/system/user";
 export default {
   name: "checkinstatisticsschool",
   data() {
     return {
+      //用户信息
+      user: {},
+      //幼儿总数
+      chilidcount: "",
+      //班级数量
+      classcount: "",
+      //月份
       month: "",
       // 遮罩层
       loading: true,
@@ -127,8 +140,14 @@ export default {
   created() {
     this.getNowTime(); //得到月份
     this.getHeadList();
+    this.getUser();
   },
   methods: {
+    getUser() {
+      getUserProfile().then(response => {
+        this.user = response.data;
+      });
+    },
     getNowTime() {
       var now = new Date();
       var year = now.getFullYear(); // 得到年份
@@ -157,6 +176,12 @@ export default {
       });
 
       this.getList();
+      this.getChildCount();
+    },
+    getChildCount() {
+      listChild(null).then((response) => {
+        this.chilidcount = response.rows.length;
+      });
     },
     getList() {
       this.loading = true;
@@ -166,6 +191,7 @@ export default {
       }
       listClassCheck(this.queryParams).then((response) => {
         console.log(response.rows);
+        this.classcount = response.rows.length - 1;
         // this.tableData = response.rows;
         response.rows.forEach((res) => {
           this.tableData.push({
