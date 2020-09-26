@@ -14,17 +14,17 @@
           </el-form-item>
         </el-col>
 
-<!--        <el-col :span="4">-->
-<!--          <el-form-item label="电话" prop="phone">-->
-<!--            <el-input-->
-<!--              v-model="queryParams.phone"-->
-<!--              placeholder="请输入电话"-->
-<!--              clearable-->
-<!--              size="small"-->
-<!--              @keyup.enter.native="handleQuery"-->
-<!--            />-->
-<!--          </el-form-item>-->
-<!--        </el-col>-->
+        <!--        <el-col :span="4">-->
+        <!--          <el-form-item label="电话" prop="phone">-->
+        <!--            <el-input-->
+        <!--              v-model="queryParams.phone"-->
+        <!--              placeholder="请输入电话"-->
+        <!--              clearable-->
+        <!--              size="small"-->
+        <!--              @keyup.enter.native="handleQuery"-->
+        <!--            />-->
+        <!--          </el-form-item>-->
+        <!--        </el-col>-->
 
         <el-col :span="4">
           <el-form-item label="收款方式" prop="payTypeId">
@@ -141,14 +141,31 @@
         <!--          @keyup.enter.native="handleQuery"-->
         <!--        />-->
         <!--      </el-form-item>-->
-        <el-col :span="4">
+        <el-col :span="8">
           <el-form-item label="成交日期" prop="orderTime">
-            <el-date-picker clearable size="small" style="width: 200px"
-                            v-model="queryParams.orderTime"
-                            type="date"
-                            value-format="yyyy-MM-dd"
-                            placeholder="选择成交日期">
+
+            <el-date-picker
+              v-model="queryParams.orderTime"
+              type="daterange"
+              size="small"
+              align="right"
+              unlink-panels
+              range-separator="至"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+              value-format="yyyy-MM-dd"
+              :picker-options="pickerOptions">
             </el-date-picker>
+
+            <!--            <el-date-picker-->
+            <!--              clearable-->
+            <!--              size="small"-->
+            <!--              style="width: 200px"-->
+            <!--              v-model="queryParams.orderTime"-->
+            <!--              type="date"-->
+            <!--              value-format="yyyy-MM-dd"-->
+            <!--              placeholder="选择成交日期">>-->
+            <!--            </el-date-picker>-->
           </el-form-item>
         </el-col>
 
@@ -432,7 +449,7 @@
 </template>
 
 <script>
-  import {listOrder, getOrder, delOrder, addOrder, updateOrder, exportOrder} from "@/api/custom/order";
+  import {listOrder, getOrder, delOrder, addOrder, updateOrder, exportOrder, getOptions} from "@/api/custom/order";
 
   export default {
     name: "Order",
@@ -447,7 +464,7 @@
         // 非多个禁用
         multiple: true,
         // 显示搜索条件
-        showSearch: true,
+        showSearch: false,
         // 总条数
         total: 0,
         // 销售订单表格数据
@@ -504,38 +521,67 @@
           ],
           orderTime: [
             {required: true, message: "成交日期不能为空", trigger: "blur"}
+          ],
+          payTypeId: [
+            {required: true, message: "首款方式不能为空", trigger: "blur"}
+          ],
+          accountId: [
+            {required: true, message: "账号不能为空", trigger: "blur"}
           ]
-        }
+        },
+        pickerOptions: {
+          shortcuts: [{
+            text: '最近一周',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+              picker.$emit('pick', [start, end]);
+            }
+          }, {
+            text: '最近一个月',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+              picker.$emit('pick', [start, end]);
+            }
+          }, {
+            text: '最近三个月',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+              picker.$emit('pick', [start, end]);
+            }
+          }]
+        },
       };
     },
     created() {
       this.getList();
+      getOptions().then(response => {
+        console.log(response)
+        const options = response.data.reduce((opts, cur) => {
+          if (!opts[cur.postCode]) {
+            opts[cur.postCode] = [];
+          }
+          opts[cur.postCode].push({dictValue: cur.userId, dictLabel: cur.userName})
+          return opts;
+        }, {})
+        this.preSaleIdOptions = options['pre_sale'] || [];
+        this.afterSaleIdOptions = options['after_sale'] || [];
+        this.nutritionistIdOptions = options['nutri'] || [];
+        this.nutriAssisIdOptions = options['nutri_assis'] || [];
+        this.plannerIdOptions = options['planner'] || [];
+        this.plannerAssisIdOptions = options['planner_assis'] || [];
+        this.operatorIdOptions = options['operator'] || [];
+      })
       this.getDicts("cus_pay_type").then(response => {
         this.payTypeIdOptions = response.data;
       });
-      this.getDicts("cus_pre_sale").then(response => {
-        this.preSaleIdOptions = response.data;
-      });
-      this.getDicts("cus_after_sale").then(response => {
-        this.afterSaleIdOptions = response.data;
-      });
-      this.getDicts("cus_nutri").then(response => {
-        this.nutritionistIdOptions = response.data;
-      });
-      this.getDicts("cus_nutri_assis").then(response => {
-        this.nutriAssisIdOptions = response.data;
-      });
-      this.getDicts("cus_planner").then(response => {
-        this.plannerIdOptions = response.data;
-      });
       this.getDicts("cus_account").then(response => {
         this.accountIdOptions = response.data;
-      });
-      this.getDicts("cus_planner_assis").then(response => {
-        this.plannerAssisIdOptions = response.data;
-      });
-      this.getDicts("cus_operator").then(response => {
-        this.operatorIdOptions = response.data;
       });
     },
     methods: {
@@ -627,33 +673,33 @@
       handleQuery() {
         this.queryParams.pageNum = 1;
         this.getList();
-        this.getDicts("cus_pay_type").then(response => {
-          this.payTypeIdOptions = response.data;
-        });
-        this.getDicts("cus_pre_sale").then(response => {
-          this.preSaleIdOptions = response.data;
-        });
-        this.getDicts("cus_after_sale").then(response => {
-          this.afterSaleIdOptions = response.data;
-        });
-        this.getDicts("cus_nutri").then(response => {
-          this.nutritionistIdOptions = response.data;
-        });
-        this.getDicts("cus_nutri_assis").then(response => {
-          this.nutriAssisIdOptions = response.data;
-        });
-        this.getDicts("cus_planner").then(response => {
-          this.plannerIdOptions = response.data;
-        });
-        this.getDicts("cus_custom").then(response => {
-          this.accountIdOptions = response.data;
-        });
-        this.getDicts("cus_planner_assis").then(response => {
-          this.plannerAssisIdOptions = response.data;
-        });
-        this.getDicts("cus_operator").then(response => {
-          this.operatorIdOptions = response.data;
-        });
+        // this.getDicts("cus_pay_type").then(response => {
+        //   this.payTypeIdOptions = response.data;
+        // });
+        // this.getDicts("cus_pre_sale").then(response => {
+        //   this.preSaleIdOptions = response.data;
+        // });
+        // this.getDicts("cus_after_sale").then(response => {
+        //   this.afterSaleIdOptions = response.data;
+        // });
+        // this.getDicts("cus_nutri").then(response => {
+        //   this.nutritionistIdOptions = response.data;
+        // });
+        // this.getDicts("cus_nutri_assis").then(response => {
+        //   this.nutriAssisIdOptions = response.data;
+        // });
+        // this.getDicts("cus_planner").then(response => {
+        //   this.plannerIdOptions = response.data;
+        // });
+        // this.getDicts("cus_account").then(response => {
+        //   this.accountIdOptions = response.data;
+        // });
+        // this.getDicts("cus_planner_assis").then(response => {
+        //   this.plannerAssisIdOptions = response.data;
+        // });
+        // this.getDicts("cus_operator").then(response => {
+        //   this.operatorIdOptions = response.data;
+        // });
       },
       /** 重置按钮操作 */
       resetQuery() {
@@ -687,7 +733,7 @@
         this.$refs["form"].validate(valid => {
           if (valid) {
 
-            console.log(this.form)
+            // console.log(this.form)
 
             this.form.payType = this.selectDictLabel(this.payTypeIdOptions, this.form.payTypeId);
             this.form.preSale = this.selectDictLabel(this.preSaleIdOptions, this.form.preSaleId);
