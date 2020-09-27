@@ -1,6 +1,11 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
+    <el-form
+      :model="queryParams"
+      ref="queryForm"
+      :inline="true"
+      label-width="68px"
+    >
       <el-form-item label="选择月份" prop="month">
         <el-date-picker
           clearable
@@ -14,27 +19,48 @@
         ></el-date-picker>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-        <el-button type="primary" plain size="mini" icon="el-icon-printer" @click="prints">打印</el-button>
+        <el-button
+          type="primary"
+          icon="el-icon-search"
+          size="mini"
+          @click="handleQuery"
+          >搜索</el-button
+        >
+        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+          >重置</el-button
+        >
+        <el-button
+          type="primary"
+          plain
+          size="mini"
+          icon="el-icon-printer"
+          @click="prints"
+          >打印</el-button
+        >
       </el-form-item>
     </el-form>
 
     <div ref="printMe">
-      <h2 style="text-align:center;">儿童考勤表</h2>
+      <h2 style="text-align: center">儿童考勤表</h2>
       <h4 style="text-align: left">
-        班级名称：{{ this.bjmc }}------
-        考勤月份：{{ this.month }}------
-        在册人数：{{ this.childcount }}人 ------ 
-        班长姓名：{{ this.jsmc }} ------
-        
+        班级名称：{{ this.bjmc }} ------ 考勤月份：{{ this.month }} ------
+        在册人数：{{ this.childcount }}人 ------ 班长姓名：{{ this.jsmc }}
       </h4>
-      <el-table v-loading="loading" style="width: 100%" border :data="tableData">
-        <template v-for="(item,index) in tableHead">
+      <el-table
+        v-loading="loading"
+        style="width: 100%"
+        border
+        :data="tableData"
+      >
+        <template v-for="(item, index) in tableHead">
           <el-table-column
-            :prop=" item.column_name==''?'day'+(item.sort+1) : item.column_name"
-            :fixed="item.column_name!=''"
-            :label=" item.column_name==''?(item.sort+1)+'' : item.sort"
+            :prop="
+              item.column_name == ''
+                ? 'day' + (item.sort + 1)
+                : item.column_name
+            "
+            :fixed="item.column_name != ''"
+            :label="item.column_name == '' ? item.sort + 1 + '' : item.sort"
             :key="index"
           ></el-table-column>
         </template>
@@ -42,7 +68,7 @@
     </div>
 
     <pagination
-      v-show="total>0"
+      v-show="total > 0"
       :total="total"
       :page.sync="queryParams.pageNum"
       :limit.sync="queryParams.pageSize"
@@ -106,8 +132,8 @@ export default {
       ],
       // 查询参数
       queryParams: {
-        month: ""
-      }
+        month: "",
+      },
     };
   },
   created() {
@@ -128,17 +154,16 @@ export default {
       if (this.queryParams.month == "") {
         this.queryParams.month = this.month;
       }
-      await listDatetime(this.queryParams).then(response => {
+      await listDatetime(this.queryParams).then((response) => {
         console.log(response.rows);
         this.tableHead.push({
-          
           column_name: "name",
-          sort: "姓名"
+          sort: "姓名",
         });
-        response.rows.forEach(res => {
+        response.rows.forEach((res) => {
           this.tableHead.push({
             column_name: "",
-            sort: res.sort
+            sort: res.sort,
           });
         });
       });
@@ -150,9 +175,9 @@ export default {
       if (this.queryParams.month == "") {
         this.queryParams.month = this.month;
       }
-      listChildCheck(this.queryParams).then(response => {
+      listChildCheck(this.queryParams).then((response) => {
         console.log(response.rows);
-        this.bjmc =response.rows[0].bjmc;
+        this.bjmc = response.rows[0].bjmc;
         this.childcount = response.rows.length;
         this.jsmc = response.rows[0].zbjsmc;
         this.tableData = response.rows;
@@ -175,6 +200,6 @@ export default {
       //console.log(this.$refs.printMe);
       this.$print(this.$refs.printMe);
     },
-  }
+  },
 };
 </script>
