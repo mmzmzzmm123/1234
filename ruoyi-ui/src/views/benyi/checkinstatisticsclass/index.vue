@@ -67,13 +67,13 @@
       </el-table>
     </div>
 
-    <pagination
+    <!-- <pagination
       v-show="total > 0"
       :total="total"
       :page.sync="queryParams.pageNum"
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
-    />
+    /> -->
   </div>
 </template>
 
@@ -180,8 +180,43 @@ export default {
         this.bjmc = response.rows[0].bjmc;
         this.childcount = response.rows.length;
         this.jsmc = response.rows[0].zbjsmc;
-        this.tableData = response.rows;
-        this.total = response.total;
+        //  this.tableData = response.rows;
+        response.rows.forEach((res) => {
+          this.tableData.push({
+            name: res.name,
+            day1: res.day1 == "0%" ? "" : res.day1,
+            day2: res.day2 == "0%" ? "" : res.day2,
+            day3: res.day3 == "0%" ? "" : res.day3,
+            day4: res.day4 == "0%" ? "" : res.day4,
+            day5: res.day5 == "0%" ? "" : res.day5,
+            day6: res.day6 == "0%" ? "" : res.day6,
+            day7: res.day7 == "0%" ? "" : res.day7,
+            day8: res.day8 == "0%" ? "" : res.day8,
+            day9: res.day9 == "0%" ? "" : res.day9,
+            day10: res.day10 == "0%" ? "" : res.day10,
+            day11: res.day11 == "0%" ? "" : res.day11,
+            day12: res.day12 == "0%" ? "" : res.day12,
+            day13: res.day13 == "0%" ? "" : res.day13,
+            day14: res.day14 == "0%" ? "" : res.day14,
+            day15: res.day15 == "0%" ? "" : res.day15,
+            day16: res.day16 == "0%" ? "" : res.day16,
+            day17: res.day17 == "0%" ? "" : res.day17,
+            day18: res.day18 == "0%" ? "" : res.day18,
+            day19: res.day19 == "0%" ? "" : res.day19,
+            day20: res.day20 == "0%" ? "" : res.day20,
+            day21: res.day21 == "0%" ? "" : res.day21,
+            day22: res.day22 == "0%" ? "" : res.day22,
+            day23: res.day23 == "0%" ? "" : res.day23,
+            day24: res.day24 == "0%" ? "" : res.day24,
+            day25: res.day25 == "0%" ? "" : res.day25,
+            day26: res.day26 == "0%" ? "" : res.day26,
+            day27: res.day27 == "0%" ? "" : res.day27,
+            day28: res.day28 == "0%" ? "" : res.day28,
+            day29: res.day29 == "0%" ? "" : res.day29,
+            day30: res.day30 == "0%" ? "" : res.day30,
+            day31: res.day31 == "0%" ? "" : res.day31,
+          });
+        });
         this.loading = false;
       });
     },

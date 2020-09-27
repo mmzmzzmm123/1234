@@ -542,76 +542,76 @@
         and date_format(create_time,'%Y-%m-%d')=concat(#{month},'-31')) as day31
         from by_child c
         where c.status = '0'
-        <if test="classid != null  and classid != ''">and c.classid = #{classid}</if>
+       and c.classid = #{classid}
         <!-- 数据范围过滤 -->
         -- ${dataScope}
         union all
-        select '','classid', '小计','','',
+        select '',classid, '小计','','',
         CONCAT(convert(((select count(*) from by_child_checkin_detail where
-        type='01' and date_format(create_time,'%Y-%m-%d')=concat(#{month},'-01') and classid=c.classid) / count(*)*100),decimal), '%') as day1,
+        type='01' and date_format(create_time,'%Y-%m-%d')=concat(#{month},'-01') and classid=#{classid}) / count(*)*100),decimal), '%') as day1,
         CONCAT(convert(((select count(*) from by_child_checkin_detail where
-        type='01' and date_format(create_time,'%Y-%m-%d')=concat(#{month},'-02') and classid=c.classid) / count(*)*100),decimal), '%') as day2,
+        type='01' and date_format(create_time,'%Y-%m-%d')=concat(#{month},'-02') and classid=#{classid}) / count(*)*100),decimal), '%') as day2,
         CONCAT(convert(((select count(*) from by_child_checkin_detail where
-        type='01' and date_format(create_time,'%Y-%m-%d')=concat(#{month},'-03') and classid=c.classid) / count(*)*100),decimal), '%') as day3,
+        type='01' and date_format(create_time,'%Y-%m-%d')=concat(#{month},'-03') and classid=#{classid}) / count(*)*100),decimal), '%') as day3,
         CONCAT(convert(((select count(*) from by_child_checkin_detail where
-        type='01' and date_format(create_time,'%Y-%m-%d')=concat(#{month},'-04') and classid=c.classid) / count(*)*100),decimal), '%') as day4,
+        type='01' and date_format(create_time,'%Y-%m-%d')=concat(#{month},'-04') and classid=#{classid}) / count(*)*100),decimal), '%') as day4,
         CONCAT(convert(((select count(*) from by_child_checkin_detail where
-        type='01' and date_format(create_time,'%Y-%m-%d')=concat(#{month},'-05') and classid=c.classid) / count(*)*100),decimal), '%') as day5,
+        type='01' and date_format(create_time,'%Y-%m-%d')=concat(#{month},'-05') and classid=#{classid}) / count(*)*100),decimal), '%') as day5,
         CONCAT(convert(((select count(*) from by_child_checkin_detail where
-        type='01' and date_format(create_time,'%Y-%m-%d')=concat(#{month},'-06') and classid=c.classid) / count(*)*100),decimal), '%') as day6,
+        type='01' and date_format(create_time,'%Y-%m-%d')=concat(#{month},'-06') and classid=#{classid}) / count(*)*100),decimal), '%') as day6,
         CONCAT(convert(((select count(*) from by_child_checkin_detail where
-        type='01' and date_format(create_time,'%Y-%m-%d')=concat(#{month},'-07') and classid=c.classid) / count(*)*100),decimal), '%') as day7,
+        type='01' and date_format(create_time,'%Y-%m-%d')=concat(#{month},'-07') and classid=#{classid}) / count(*)*100),decimal), '%') as day7,
         CONCAT(convert(((select count(*) from by_child_checkin_detail where
-        type='01' and date_format(create_time,'%Y-%m-%d')=concat(#{month},'-08') and classid=c.classid) / count(*)*100),decimal), '%') as day8,
+        type='01' and date_format(create_time,'%Y-%m-%d')=concat(#{month},'-08') and classid=#{classid}) / count(*)*100),decimal), '%') as day8,
         CONCAT(convert(((select count(*) from by_child_checkin_detail where
-        type='01' and date_format(create_time,'%Y-%m-%d')=concat(#{month},'-09') and classid=c.classid) / count(*)*100),decimal), '%') as day9,
+        type='01' and date_format(create_time,'%Y-%m-%d')=concat(#{month},'-09') and classid=#{classid}) / count(*)*100),decimal), '%') as day9,
         CONCAT(convert(((select count(*) from by_child_checkin_detail where
-        type='01' and date_format(create_time,'%Y-%m-%d')=concat(#{month},'-10') and classid=c.classid) / count(*)*100),decimal), '%') as day10,
+        type='01' and date_format(create_time,'%Y-%m-%d')=concat(#{month},'-10') and classid=#{classid}) / count(*)*100),decimal), '%') as day10,
         CONCAT(convert(((select count(*) from by_child_checkin_detail where
-        type='01' and date_format(create_time,'%Y-%m-%d')=concat(#{month},'-11') and classid=c.classid) / count(*)*100),decimal), '%') as day11,
+        type='01' and date_format(create_time,'%Y-%m-%d')=concat(#{month},'-11') and classid=#{classid}) / count(*)*100),decimal), '%') as day11,
         CONCAT(convert(((select count(*) from by_child_checkin_detail where
-        type='01' and date_format(create_time,'%Y-%m-%d')=concat(#{month},'-12') and classid=c.classid) / count(*)*100),decimal), '%') as day12,
+        type='01' and date_format(create_time,'%Y-%m-%d')=concat(#{month},'-12') and classid=#{classid}) / count(*)*100),decimal), '%') as day12,
         CONCAT(convert(((select count(*) from by_child_checkin_detail where
-        type='01' and date_format(create_time,'%Y-%m-%d')=concat(#{month},'-13') and classid=c.classid) / count(*)*100),decimal), '%') as day13,
+        type='01' and date_format(create_time,'%Y-%m-%d')=concat(#{month},'-13') and classid=#{classid}) / count(*)*100),decimal), '%') as day13,
         CONCAT(convert(((select count(*) from by_child_checkin_detail where
-        type='01' and date_format(create_time,'%Y-%m-%d')=concat(#{month},'-14') and classid=c.classid) / count(*)*100),decimal), '%') as day14,
+        type='01' and date_format(create_time,'%Y-%m-%d')=concat(#{month},'-14') and classid=#{classid}) / count(*)*100),decimal), '%') as day14,
         CONCAT(convert(((select count(*) from by_child_checkin_detail where
-        type='01' and date_format(create_time,'%Y-%m-%d')=concat(#{month},'-15') and classid=c.classid) / count(*)*100),decimal), '%') as day15,
+        type='01' and date_format(create_time,'%Y-%m-%d')=concat(#{month},'-15') and classid=#{classid}) / count(*)*100),decimal), '%') as day15,
         CONCAT(convert(((select count(*) from by_child_checkin_detail where
-        type='01' and date_format(create_time,'%Y-%m-%d')=concat(#{month},'-16') and classid=c.classid) / count(*)*100),decimal), '%') as day16,
+        type='01' and date_format(create_time,'%Y-%m-%d')=concat(#{month},'-16') and classid=#{classid}) / count(*)*100),decimal), '%') as day16,
         CONCAT(convert(((select count(*) from by_child_checkin_detail where
-        type='01' and date_format(create_time,'%Y-%m-%d')=concat(#{month},'-17') and classid=c.classid) / count(*)*100),decimal), '%') as day17,
+        type='01' and date_format(create_time,'%Y-%m-%d')=concat(#{month},'-17') and classid=#{classid}) / count(*)*100),decimal), '%') as day17,
         CONCAT(convert(((select count(*) from by_child_checkin_detail where
-        type='01' and date_format(create_time,'%Y-%m-%d')=concat(#{month},'-18') and classid=c.classid) / count(*)*100),decimal), '%') as day18,
+        type='01' and date_format(create_time,'%Y-%m-%d')=concat(#{month},'-18') and classid=#{classid}) / count(*)*100),decimal), '%') as day18,
         CONCAT(convert(((select count(*) from by_child_checkin_detail where
-        type='01' and date_format(create_time,'%Y-%m-%d')=concat(#{month},'-19') and classid=c.classid) / count(*)*100),decimal), '%') as day19,
+        type='01' and date_format(create_time,'%Y-%m-%d')=concat(#{month},'-19') and classid=#{classid}) / count(*)*100),decimal), '%') as day19,
         CONCAT(convert(((select count(*) from by_child_checkin_detail where
-        type='01' and date_format(create_time,'%Y-%m-%d')=concat(#{month},'-20') and classid=c.classid) / count(*)*100),decimal), '%') as day20,
+        type='01' and date_format(create_time,'%Y-%m-%d')=concat(#{month},'-20') and classid=#{classid}) / count(*)*100),decimal), '%') as day20,
         CONCAT(convert(((select count(*) from by_child_checkin_detail where
-        type='01' and date_format(create_time,'%Y-%m-%d')=concat(#{month},'-21') and classid=c.classid) / count(*)*100),decimal), '%') as day21,
+        type='01' and date_format(create_time,'%Y-%m-%d')=concat(#{month},'-21') and classid=#{classid}) / count(*)*100),decimal), '%') as day21,
         CONCAT(convert(((select count(*) from by_child_checkin_detail where
-        type='01' and date_format(create_time,'%Y-%m-%d')=concat(#{month},'-22') and classid=c.classid) / count(*)*100),decimal), '%') as day22,
+        type='01' and date_format(create_time,'%Y-%m-%d')=concat(#{month},'-22') and classid=#{classid}) / count(*)*100),decimal), '%') as day22,
         CONCAT(convert(((select count(*) from by_child_checkin_detail where
-        type='01' and date_format(create_time,'%Y-%m-%d')=concat(#{month},'-23') and classid=c.classid) / count(*)*100),decimal), '%') as day23,
+        type='01' and date_format(create_time,'%Y-%m-%d')=concat(#{month},'-23') and classid=#{classid}) / count(*)*100),decimal), '%') as day23,
         CONCAT(convert(((select count(*) from by_child_checkin_detail where
-        type='01' and date_format(create_time,'%Y-%m-%d')=concat(#{month},'-24') and classid=c.classid) / count(*)*100),decimal), '%') as day24,
+        type='01' and date_format(create_time,'%Y-%m-%d')=concat(#{month},'-24') and classid=#{classid}) / count(*)*100),decimal), '%') as day24,
         CONCAT(convert(((select count(*) from by_child_checkin_detail where
-        type='01' and date_format(create_time,'%Y-%m-%d')=concat(#{month},'-25') and classid=c.classid) / count(*)*100),decimal), '%') as day25,
+        type='01' and date_format(create_time,'%Y-%m-%d')=concat(#{month},'-25') and classid=#{classid}) / count(*)*100),decimal), '%') as day25,
         CONCAT(convert(((select count(*) from by_child_checkin_detail where
-        type='01' and date_format(create_time,'%Y-%m-%d')=concat(#{month},'-26') and classid=c.classid) / count(*)*100),decimal), '%') as day26,
+        type='01' and date_format(create_time,'%Y-%m-%d')=concat(#{month},'-26') and classid=#{classid}) / count(*)*100),decimal), '%') as day26,
         CONCAT(convert(((select count(*) from by_child_checkin_detail where
-        type='01' and date_format(create_time,'%Y-%m-%d')=concat(#{month},'-27') and classid=c.classid) / count(*)*100),decimal), '%') as day27,
+        type='01' and date_format(create_time,'%Y-%m-%d')=concat(#{month},'-27') and classid=#{classid}) / count(*)*100),decimal), '%') as day27,
         CONCAT(convert(((select count(*) from by_child_checkin_detail where
-        type='01' and date_format(create_time,'%Y-%m-%d')=concat(#{month},'-28') and classid=c.classid) / count(*)*100),decimal), '%') as day28,
+        type='01' and date_format(create_time,'%Y-%m-%d')=concat(#{month},'-28') and classid=#{classid}) / count(*)*100),decimal), '%') as day28,
         CONCAT(convert(((select count(*) from by_child_checkin_detail where
-        type='01' and date_format(create_time,'%Y-%m-%d')=concat(#{month},'-29') and classid=c.classid) / count(*)*100),decimal), '%') as day29,
+        type='01' and date_format(create_time,'%Y-%m-%d')=concat(#{month},'-29') and classid=#{classid}) / count(*)*100),decimal), '%') as day29,
         CONCAT(convert(((select count(*) from by_child_checkin_detail where
-        type='01' and date_format(create_time,'%Y-%m-%d')=concat(#{month},'-30') and classid=c.classid) / count(*)*100),decimal), '%') as day30,
+        type='01' and date_format(create_time,'%Y-%m-%d')=concat(#{month},'-30') and classid=#{classid}) / count(*)*100),decimal), '%') as day30,
         CONCAT(convert(((select count(*) from by_child_checkin_detail where
-        type='01' and date_format(create_time,'%Y-%m-%d')=concat(#{month},'-31') and classid=c.classid) / count(*)*100),decimal), '%') as day31
+        type='01' and date_format(create_time,'%Y-%m-%d')=concat(#{month},'-31') and classid=#{classid}) / count(*)*100),decimal), '%') as day31
         from by_child c
         where c.status = '0'
-        <if test="classid != null  and classid != ''">and c.classid = #{classid}</if>
+        and c.classid = #{classid}
         <!-- 数据范围过滤 -->
          -- ${dataScope}
     </select>
