@@ -544,9 +544,9 @@
         where c.status = '0'
         <if test="classid != null  and classid != ''">and c.classid = #{classid}</if>
         <!-- 数据范围过滤 -->
---         ${dataScope}
+        -- ${dataScope}
         union all
-        select '','classid','小计','','',
+        select '','classid', '小计','','',
         CONCAT(convert(((select count(*) from by_child_checkin_detail where
         type='01' and date_format(create_time,'%Y-%m-%d')=concat(#{month},'-01') and classid=c.classid) / count(*)*100),decimal), '%') as day1,
         CONCAT(convert(((select count(*) from by_child_checkin_detail where
@@ -613,7 +613,7 @@
         where c.status = '0'
         <if test="classid != null  and classid != ''">and c.classid = #{classid}</if>
         <!-- 数据范围过滤 -->
---         ${dataScope}
+         -- ${dataScope}
     </select>
 
 </mapper>
