@@ -3,7 +3,11 @@ package com.ruoyi.project.benyi.controller;
 import java.util.List;
 
 import java.util.ArrayList;
+
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.common.utils.ServletUtils;
+import com.ruoyi.framework.security.LoginUser;
+import com.ruoyi.framework.security.service.TokenService;
 import com.ruoyi.project.common.SchoolCommon;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +27,7 @@ import com.ruoyi.framework.web.controller.BaseController;
 import com.ruoyi.framework.web.domain.AjaxResult;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.framework.web.page.TableDataInfo;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 幼儿信息Controller
@@ -37,6 +42,8 @@ public class ByChildController extends BaseController {
     private IByChildService byChildService;
     @Autowired
     private SchoolCommon schoolCommon;
+    @Autowired
+    private TokenService tokenService;
 
     /**
      * 查询幼儿信息列表
@@ -82,6 +89,26 @@ public class ByChildController extends BaseController {
         List<ByChild> list = byChildService.selectByChildList(byChild);
         ExcelUtil<ByChild> util = new ExcelUtil<ByChild>(ByChild.class);
         return util.exportExcel(list, "child");
+    }
+
+    @Log(title = "用户管理", businessType = BusinessType.IMPORT)
+    @PreAuthorize("@ss.hasPermi('benyi:child:import')")
+    @PostMapping("/importData")
+    public AjaxResult importData(MultipartFile file) throws Exception {
+        ExcelUtil<ByChild> util = new ExcelUtil<ByChild>(ByChild.class);
+        List<ByChild> childList = util.importExcel(file.getInputStream());
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+        String operName = loginUser.getUsername();
+        Long deptId = loginUser.getUser().getDeptId();
+        String bjbh=schoolCommon.getClassId();
+        String message = byChildService.importChild(childList, operName,deptId,bjbh);
+        return AjaxResult.success(message);
+    }
+
+    @GetMapping("/importTemplate")
+    public AjaxResult importTemplate() {
+        ExcelUtil<ByChild> util = new ExcelUtil<ByChild>(ByChild.class);
+        return util.importTemplateExcel("幼儿数据");
     }
 
     /**

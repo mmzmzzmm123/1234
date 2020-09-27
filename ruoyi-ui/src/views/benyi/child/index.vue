@@ -1,6 +1,11 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
+    <el-form
+      :model="queryParams"
+      ref="queryForm"
+      :inline="true"
+      label-width="68px"
+    >
       <el-form-item label="姓名" prop="name">
         <el-input
           v-model="queryParams.name"
@@ -43,8 +48,16 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+        <el-button
+          type="primary"
+          icon="el-icon-search"
+          size="mini"
+          @click="handleQuery"
+          >搜索</el-button
+        >
+        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+          >重置</el-button
+        >
       </el-form-item>
     </el-form>
 
@@ -56,7 +69,8 @@
           size="mini"
           @click="handleAdd"
           v-hasPermi="['benyi:child:add']"
-        >新增</el-button>
+          >新增</el-button
+        >
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -66,7 +80,8 @@
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['benyi:child:edit']"
-        >修改</el-button>
+          >修改</el-button
+        >
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -76,7 +91,8 @@
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['benyi:child:remove']"
-        >删除</el-button>
+          >删除</el-button
+        >
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -86,36 +102,99 @@
           :disabled="multiple"
           @click="handleTiaoban"
           v-hasPermi="['benyi:child:edit']"
-        >调班</el-button>
+          >调班</el-button
+        >
       </el-col>
       <el-col :span="1.5">
-        <el-tooltip effect="dark" content="点我，可以复制链接发送给所有家长补填幼儿信息呦" placement="top-start">
+        <el-button
+          type="info"
+          icon="el-icon-upload2"
+          size="mini"
+          @click="handleImport"
+          v-hasPermi="['benyi:child:import']"
+          >导入</el-button
+        >
+      </el-col>
+      <el-col :span="1.5">
+        <el-tooltip
+          effect="dark"
+          content="点我，可以复制链接发送给所有家长补填幼儿信息呦"
+          placement="top-start"
+        >
           <el-button
             type="primary"
             icon="el-icon-document-copy"
             size="mini"
-            @click="copy($event,inviteCode)"
+            @click="copy($event, inviteCode)"
             v-hasPermi="['benyi:child:add']"
-          >家长填报链接</el-button>
+            >家长填报链接</el-button
+          >
         </el-tooltip>
       </el-col>
     </el-row>
 
-    <el-table v-loading="loading" :data="childList" @selection-change="handleSelectionChange">
+    <el-table
+      v-loading="loading"
+      :data="childList"
+      @selection-change="handleSelectionChange"
+    >
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="编号" align="center" prop="id" />
       <!-- <el-table-column label="幼儿园名称" align="center" prop="schoolid" /> -->
-      <el-table-column label="班级名称" align="center" prop="classid" :formatter="classFormat" />
+      <el-table-column
+        label="班级名称"
+        align="center"
+        prop="classid"
+        :formatter="classFormat"
+      />
       <el-table-column label="姓名" align="center" prop="name" />
       <el-table-column label="家长手机号码" align="center" prop="phone" />
-      <el-table-column label="性别" align="center" prop="xb" :formatter="xbFormat" />
-      <el-table-column label="民族" align="center" prop="mz" :formatter="mzFormat" />
-      <el-table-column label="详细地址" show-overflow-tooltip align="center" prop="addrDetail" />
-      <el-table-column label="曾经就读幼儿园" align="center" prop="everSchool" />
-      <el-table-column label="是否学习英语" align="center" prop="learnEnglish" :formatter="ynFormat" />
-      <el-table-column label="入园渠道" align="center" prop="source" :formatter="sourceFormat" />
-      <el-table-column label="状态" align="center" prop="status" :formatter="statusFormat" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column
+        label="性别"
+        align="center"
+        prop="xb"
+        :formatter="xbFormat"
+      />
+      <el-table-column
+        label="民族"
+        align="center"
+        prop="mz"
+        :formatter="mzFormat"
+      />
+      <el-table-column
+        label="详细地址"
+        show-overflow-tooltip
+        align="center"
+        prop="addrDetail"
+      />
+      <el-table-column
+        label="曾经就读幼儿园"
+        align="center"
+        prop="everSchool"
+      />
+      <el-table-column
+        label="是否学习英语"
+        align="center"
+        prop="learnEnglish"
+        :formatter="ynFormat"
+      />
+      <el-table-column
+        label="入园渠道"
+        align="center"
+        prop="source"
+        :formatter="sourceFormat"
+      />
+      <el-table-column
+        label="状态"
+        align="center"
+        prop="status"
+        :formatter="statusFormat"
+      />
+      <el-table-column
+        label="操作"
+        align="center"
+        class-name="small-padding fixed-width"
+      >
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -123,20 +202,22 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['benyi:child:edit']"
-          >修改</el-button>
+            >修改</el-button
+          >
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['benyi:child:remove']"
-          >删除</el-button>
+            >删除</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
 
     <pagination
-      v-show="total>0"
+      v-show="total > 0"
       :total="total"
       :page.sync="queryParams.pageNum"
       :limit.sync="queryParams.pageSize"
@@ -256,12 +337,18 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="详细地址" prop="addrDetail">
-              <el-input v-model="form.addrDetail" placeholder="请输入详细地址" />
+              <el-input
+                v-model="form.addrDetail"
+                placeholder="请输入详细地址"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="曾就读园" prop="everSchool">
-              <el-input v-model="form.everSchool" placeholder="请输入曾经就读幼儿园" />
+              <el-input
+                v-model="form.everSchool"
+                placeholder="请输入曾经就读幼儿园"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -271,7 +358,8 @@
                   v-for="dict in ynOptions"
                   :key="dict.dictValue"
                   :label="dict.dictValue"
-                >{{dict.dictLabel}}</el-radio>
+                  >{{ dict.dictLabel }}</el-radio
+                >
               </el-radio-group>
             </el-form-item>
           </el-col>
@@ -294,23 +382,35 @@
                   v-for="dict in statusOptions"
                   :key="dict.dictValue"
                   :label="dict.dictValue"
-                >{{dict.dictLabel}}</el-radio>
+                  >{{ dict.dictLabel }}</el-radio
+                >
               </el-radio-group>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="第一语言" prop="firstLanguage">
-              <el-input v-model="form.firstLanguage" placeholder="请输入第一语言" maxlength="2"/>
+              <el-input
+                v-model="form.firstLanguage"
+                placeholder="请输入第一语言"
+                maxlength="2"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="第二语言" prop="seconderLanguage">
-              <el-input v-model="form.seconderLanguage" placeholder="请输入第二语言" maxlength="2" />
+              <el-input
+                v-model="form.seconderLanguage"
+                placeholder="请输入第二语言"
+                maxlength="2"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="其他语言" prop="otherLanguage">
-              <el-input v-model="form.otherLanguage" placeholder="请输入其他语言" />
+              <el-input
+                v-model="form.otherLanguage"
+                placeholder="请输入其他语言"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -333,7 +433,12 @@
       </div>
     </el-dialog>
     <!-- 幼儿调班信息对话框 -->
-    <el-dialog title="幼儿调班" :visible.sync="open_tb" width="400px" append-to-body>
+    <el-dialog
+      title="幼儿调班"
+      :visible.sync="open_tb"
+      width="400px"
+      append-to-body
+    >
       <el-form ref="form" :model="form" :rules="rules_tb" label-width="80px">
         <el-form-item label="选择班级" prop="classid">
           <el-select v-model="form.classid" placeholder="请选择班级">
@@ -351,6 +456,40 @@
         <el-button @click="cancel_tb">取 消</el-button>
       </div>
     </el-dialog>
+
+    <!-- 用户导入对话框 -->
+    <el-dialog :title="upload.title" :visible.sync="upload.open" width="400px">
+      <el-upload
+        ref="upload"
+        :limit="1"
+        accept=".xlsx, .xls"
+        :headers="upload.headers"
+        :action="upload.url"
+        :disabled="upload.isUploading"
+        :on-progress="handleFileUploadProgress"
+        :on-success="handleFileSuccess"
+        :auto-upload="false"
+        drag
+      >
+        <i class="el-icon-upload"></i>
+        <div class="el-upload__text">
+          将文件拖到此处，或
+          <em>点击上传</em>
+        </div>
+        <div class="el-upload__tip" slot="tip">
+          <el-link type="info" style="font-size: 12px" @click="importTemplate"
+            >下载模板</el-link
+          >
+        </div>
+        <div class="el-upload__tip" style="color: red" slot="tip">
+          提示：仅允许导入“xls”或“xlsx”格式文件！
+        </div>
+      </el-upload>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitFileForm">确 定</el-button>
+        <el-button @click="upload.open = false">取 消</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -362,9 +501,11 @@ import {
   addChild,
   updateChild,
   updateChild_tb,
+  importTemplate,
 } from "@/api/benyi/child";
 
 import { listClass } from "@/api/system/class";
+import { getToken } from "@/utils/auth";
 
 //导入省市区三级联动库
 import VDistpicker from "v-distpicker";
@@ -430,6 +571,19 @@ export default {
       classOptions: [],
       //是否可编辑
       isable: false,
+      // 幼儿导入参数
+      upload: {
+        // 是否显示弹出层（用户导入）
+        open: false,
+        // 弹出层标题（用户导入）
+        title: "",
+        // 是否禁用上传
+        isUploading: false,
+        // 设置上传的请求头部
+        headers: { Authorization: "Bearer " + getToken() },
+        // 上传的地址
+        url: process.env.VUE_APP_BASE_API + "/benyi/child/importData",
+      },
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -516,6 +670,11 @@ export default {
     VDistpicker,
   },
   methods: {
+    /** 导入按钮操作 */
+    handleImport() {
+      this.upload.title = "幼儿数据导入";
+      this.upload.open = true;
+    },
     // 链接内容
     getLink() {
       getUserProfile().then((response) => {
@@ -523,7 +682,7 @@ export default {
         //console.log(domain);
         //this.user = response.data;
         this.inviteCode =
-        response.data.dept.deptName +
+          response.data.dept.deptName +
           "幼儿信息维护链接" +
           "http://" +
           domain +
@@ -833,6 +992,28 @@ export default {
         this.form.addrAreaname = data.area.value;
         this.form.addrArea = data.area.code;
       }
+    },
+    /** 下载模板操作 */
+    importTemplate() {
+      importTemplate().then((response) => {
+        this.download(response.msg);
+      });
+    },
+    // 文件上传中处理
+    handleFileUploadProgress(event, file, fileList) {
+      this.upload.isUploading = true;
+    },
+    // 文件上传成功处理
+    handleFileSuccess(response, file, fileList) {
+      this.upload.open = false;
+      this.upload.isUploading = false;
+      this.$refs.upload.clearFiles();
+      this.$alert(response.msg, "导入结果", { dangerouslyUseHTMLString: true });
+      this.getList();
+    },
+    // 提交上传文件
+    submitFileForm() {
+      this.$refs.upload.submit();
     },
   },
 };

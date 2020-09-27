@@ -87,3 +87,11 @@ export function listChildCheck(query) {
         params: query
     })
 }
+
+// 下载用户导入模板
+export function importTemplate() {
+    return request({
+      url: '/benyi/child/importTemplate',
+      method: 'get'
+    })
+  }

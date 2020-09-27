@@ -100,7 +100,7 @@ public class SchoolCommon {
      * 判断当前用户是否拥有班级
      **/
     public String getClassId() {
-        String strClassId = "-1";
+//        String strClassId = "-1";
         SysUser sysUser = getUser();
         ByClass byClass = new ByClass();
         //根据用户id来设置主班教师,配班教师,助理教师的教师id

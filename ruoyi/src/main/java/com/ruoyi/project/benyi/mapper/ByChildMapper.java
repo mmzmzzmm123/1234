@@ -74,4 +74,15 @@ public interface ByChildMapper {
      * @return 班级信息集合
      */
     public List<ByChild> selectststicstClassList(ByChild byChild);
+
+    /**
+     * 导入用户数据
+     *
+     * @param userChild 用户数据列表
+     * @param operName  操作用户
+     * @param deptId 部门id
+     * @param  bjbh 班级编号
+     * @return 结果
+     */
+    public String importChild(List<ByChild> userChild, String operName, Long deptId, String bjbh);
 }

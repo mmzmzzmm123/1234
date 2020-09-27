@@ -25,13 +25,13 @@ public class ByChild extends BaseEntity {
     /**
      * 学校id
      */
-    @Excel(name = "学校id")
+//    @Excel(name = "学校id")
     private Long schoolid;
 
     /**
      * 班级id
      */
-    @Excel(name = "班级id")
+//    @Excel(name = "班级id")
     private String classid;
 
     /**
@@ -43,13 +43,13 @@ public class ByChild extends BaseEntity {
     /**
      * 英文名
      */
-    @Excel(name = "英文名")
+//    @Excel(name = "英文名")
     private String enName;
 
     /**
      * 小名
      */
-    @Excel(name = "小名")
+//    @Excel(name = "小名")
     private String infantName;
 
     /**
@@ -61,205 +61,202 @@ public class ByChild extends BaseEntity {
     /**
      * 性别
      */
-    @Excel(name = "性别")
+//    @Excel(name = "性别")
     private String xb;
 
     /**
      * 民族
      */
-    @Excel(name = "民族")
+//    @Excel(name = "民族")
     private String mz;
 
     /**
      * 证件号码
      */
-    @Excel(name = "证件号码")
+//    @Excel(name = "证件号码")
     private String zjhm;
 
     /**
      * 出生日期
      */
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "出生日期", width = 30, dateFormat = "yyyy-MM-dd")
+//    @Excel(name = "出生日期", width = 30, dateFormat = "yyyy-MM-dd")
     private Date csrq;
 
     /**
      * 出生所在省
      */
-    @Excel(name = "出生所在省")
+//    @Excel(name = "出生所在省")
     private String birthProvince;
 
     /**
      * 出生所在省名称
      */
-    @Excel(name = "出生所在省名称")
+//    @Excel(name = "出生所在省名称")
     private String birthProvincename;
 
     /**
      * 出生所在地市
      */
-    @Excel(name = "出生所在地市")
+//    @Excel(name = "出生所在地市")
     private String birthCity;
 
     /**
      * 出生所在市名称
      */
-    @Excel(name = "出生所在市名称")
+//    @Excel(name = "出生所在市名称")
     private String birthCityname;
 
     /**
      * 出生地区
      */
-    @Excel(name = "出生地区")
+//    @Excel(name = "出生地区")
     private String birthArea;
 
     /**
      * 出生所在区名称
      */
-    @Excel(name = "出生所在区名称")
+//    @Excel(name = "出生所在区名称")
     private String birthAreaname;
 
     /**
      * 户口所在地
      */
-    @Excel(name = "户口所在地")
+//    @Excel(name = "户口所在地")
     private String registeredProvince;
 
     /**
      * 户口所在地名称
      */
-    @Excel(name = "户口所在地名称")
+//    @Excel(name = "户口所在地名称")
     private String registeredProvincename;
 
     /**
      * 户口所在地市
      */
-    @Excel(name = "户口所在地市")
+//    @Excel(name = "户口所在地市")
     private String registeredCity;
 
     /**
      * 户口所在市名称
      */
-    @Excel(name = "户口所在市名称")
+//    @Excel(name = "户口所在市名称")
     private String registeredCityname;
 
     /**
      * 户口所在区
      */
-    @Excel(name = "户口所在区")
+//    @Excel(name = "户口所在区")
     private String registeredArea;
 
     /**
      * 户口所在区名称
      */
-    @Excel(name = "户口所在区名称")
+//    @Excel(name = "户口所在区名称")
     private String registeredAreaname;
 
     /**
      * 住址省
      */
-    @Excel(name = "住址省")
+//    @Excel(name = "住址省")
     private String addrProvince;
 
     /**
      * 住址省名称
      */
-    @Excel(name = "住址省名称")
+//    @Excel(name = "住址省名称")
     private String addrProvincename;
 
     /**
      * 住址市
      */
-    @Excel(name = "住址市")
+//    @Excel(name = "住址市")
     private String addrCity;
 
     /**
      * 住址市名称
      */
-    @Excel(name = "住址市名称")
+//    @Excel(name = "住址市名称")
     private String addrCityname;
 
     /**
      * 住址区
      */
-    @Excel(name = "住址区")
+//    @Excel(name = "住址区")
     private String addrArea;
 
     /**
      * 住址区名称
      */
-    @Excel(name = "住址区名称")
+//    @Excel(name = "住址区名称")
     private String addrAreaname;
 
     /**
      * 详细地址
      */
-    @Excel(name = "详细地址")
+//    @Excel(name = "详细地址")
     private String addrDetail;
 
     /**
      * 曾经就读幼儿园
      */
-    @Excel(name = "曾经就读幼儿园")
+//    @Excel(name = "曾经就读幼儿园")
     private String everSchool;
 
     /**
      * 是否学习英语
      */
-    @Excel(name = "是否学习英语")
+//    @Excel(name = "是否学习英语")
     private String learnEnglish;
 
     /**
      * 入园渠道
      */
-    @Excel(name = "入园渠道")
+//    @Excel(name = "入园渠道")
     private String source;
 
     /**
      * 状态
      */
-    @Excel(name = "状态")
+//    @Excel(name = "状态")
     private String status;
 
     /**
      * 入园时间
      */
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "入园时间", width = 30, dateFormat = "yyyy-MM-dd")
+//    @Excel(name = "入园时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date enterDate;
 
     /**
      * 离园时间
      */
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "离园时间", width = 30, dateFormat = "yyyy-MM-dd")
+//    @Excel(name = "离园时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date outDate;
 
     /**
      * 第一语言
      */
-    @Excel(name = "第一语言")
+//    @Excel(name = "第一语言")
     private String firstLanguage;
 
     /**
      * 第二语言
      */
-    @Excel(name = "第二语言")
+//    @Excel(name = "第二语言")
     private String seconderLanguage;
 
     /**
      * 其他语言
      */
-    @Excel(name = "其他语言")
+//    @Excel(name = "其他语言")
     private String otherLanguage;
 
     /**
      * 创建人
      */
-    @Excel(name = "创建人")
-
-
-
+//    @Excel(name = "创建人")
     private Long createuserid;
 
     private ByChildContactpeople byChildContactpeople;
@@ -547,10 +544,6 @@ public class ByChild extends BaseEntity {
     public void setDay31(String day31) {
         this.day31 = day31;
     }
-
-
-
-
 
 
     public void setId(Long id) {
