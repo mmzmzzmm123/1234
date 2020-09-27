@@ -14,6 +14,8 @@ import Layout from '@/layout'
  *                                // 只有一个时，会将那个子路由当做根路由显示在侧边栏--如引导页面
  *                                // 若你想不管路由下面的 children 声明的个数都显示你的根路由
  *                                // 你可以设置 alwaysShow: true，这样它就会忽略之前定义的规则，一直显示根路由
+ * noShowingChildren: true        // 当你的路由嵌套深度大于2,且根节点的子路由只有一个的时候，你可能会想只显示子路由--如一个复杂的首页
+ *                                // 此时你需要在根路由的一级嵌套子路由上设置 noShowingChildren: true，以保证该子路由的显示
  * redirect: noRedirect           // 当设置 noRedirect 的时候该路由在面包屑导航中不可被点击
  * name:'router-name'             // 设定路由的名字，一定要填写不然使用<keep-alive>时会出现各种问题
  * meta : {
