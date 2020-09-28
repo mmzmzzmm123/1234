@@ -155,7 +155,7 @@ export default {
         this.queryParams.month = this.month;
       }
       await listDatetime(this.queryParams).then((response) => {
-        console.log(response.rows);
+        // console.log(response.rows);
         this.tableHead.push({
           column_name: "name",
           sort: "姓名",
@@ -180,7 +180,7 @@ export default {
         this.queryParams.month = this.month;
       }
       listChildCheck(this.queryParams).then((response) => {
-        console.log(response.rows);
+        // console.log(response.rows);
         this.bjmc = response.rows[0].bjmc;
         this.childcount = response.rows.length - 1;
         this.jsmc = response.rows[0].zbjsmc;
@@ -258,7 +258,7 @@ export default {
       });
     },
     avg(a1) {
-      console.log("a" + a1);
+      // console.log("a" + a1);
       //bug 这个地方的分母a 应该取值所有班级的最大值
       var a = 0;
       var sum = 0;

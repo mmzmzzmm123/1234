@@ -163,7 +163,7 @@ export default {
         this.queryParams.month = this.month;
       }
       await listDatetime(this.queryParams).then((response) => {
-        console.log(response.rows);
+        // console.log(response.rows);
         this.tableHead.push({
           column_name: "bjmc",
           sort: "班级",
@@ -195,7 +195,7 @@ export default {
         this.queryParams.month = this.month;
       }
       listClassCheck(this.queryParams).then((response) => {
-        console.log(response.rows);
+        // console.log(response.rows);
         this.classcount = response.rows.length - 1;
         // this.tableData = response.rows;
         response.rows.forEach((res) => {
