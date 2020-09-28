@@ -160,6 +160,10 @@ export default {
           column_name: "name",
           sort: "姓名",
         });
+        this.tableHead.push({
+          column_name: "zj",
+          sort: "总计",
+        });
         response.rows.forEach((res) => {
           this.tableHead.push({
             column_name: "",
@@ -178,12 +182,45 @@ export default {
       listChildCheck(this.queryParams).then((response) => {
         console.log(response.rows);
         this.bjmc = response.rows[0].bjmc;
-        this.childcount = response.rows.length;
+        this.childcount = response.rows.length - 1;
         this.jsmc = response.rows[0].zbjsmc;
         //  this.tableData = response.rows;
         response.rows.forEach((res) => {
           this.tableData.push({
             name: res.name,
+            zj: this.avg([
+              res.day1,
+              res.day2,
+              res.day3,
+              res.day4,
+              res.day5,
+              res.day6,
+              res.day7,
+              res.day8,
+              res.day9,
+              res.day10,
+              res.day11,
+              res.day12,
+              res.day13,
+              res.day14,
+              res.day15,
+              res.day16,
+              res.day17,
+              res.day18,
+              res.day19,
+              res.day20,
+              res.day21,
+              res.day22,
+              res.day23,
+              res.day24,
+              res.day25,
+              res.day26,
+              res.day27,
+              res.day28,
+              res.day29,
+              res.day30,
+              res.day31,
+            ]),
             day1: res.day1 == "0%" ? "" : res.day1,
             day2: res.day2 == "0%" ? "" : res.day2,
             day3: res.day3 == "0%" ? "" : res.day3,
@@ -219,6 +256,29 @@ export default {
         });
         this.loading = false;
       });
+    },
+    avg(a1) {
+      console.log("a" + a1);
+      //bug 这个地方的分母a 应该取值所有班级的最大值
+      var a = 0;
+      var sum = 0;
+      a1.forEach((res) => {
+        if (res != "" && res != "0%" && res != null) {
+          // console.log("res:" + res);
+          a = a + 1;
+          if (res == "在园") {
+            sum = sum + 1;
+          }
+          if (res.indexOf("%") != -1) {
+            // console.log(res.split("%")[0]);
+            sum = sum + parseInt(res.split("%")[0])/100;
+          }
+        }
+      });
+      if (a == 0) {
+        return "";
+      }
+      return parseFloat(((sum / a) * 100).toFixed(2)) + "%";
     },
     /** 搜索按钮操作 */
     handleQuery() {

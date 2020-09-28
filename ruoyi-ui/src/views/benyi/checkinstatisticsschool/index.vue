@@ -365,7 +365,7 @@ export default {
       });
     },
     avg(a1) {
-      console.log("a" + a1.length);
+      // console.log("a" + a1.length);
       //bug 这个地方的分母a 应该取值所有班级的最大值
       var a = 0;
       var sum = 0;
