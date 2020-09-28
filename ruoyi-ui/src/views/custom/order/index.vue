@@ -735,15 +735,15 @@
 
             // console.log(this.form)
 
-            this.form.payType = this.selectDictLabel(this.payTypeIdOptions, this.form.payTypeId);
-            this.form.preSale = this.selectDictLabel(this.preSaleIdOptions, this.form.preSaleId);
-            this.form.afterSale = this.selectDictLabel(this.afterSaleIdOptions, this.form.afterSaleId);
-            this.form.nutritionist = this.selectDictLabel(this.nutritionistIdOptions, this.form.nutritionistId);
-            this.form.nutriAssis = this.selectDictLabel(this.nutriAssisIdOptions, this.form.nutriAssisId);
-            this.form.account = this.selectDictLabel(this.accountIdOptions, this.form.accountId);
-            this.form.planner = this.selectDictLabel(this.plannerIdOptions, this.form.plannerId);
-            this.form.plannerAssis = this.selectDictLabel(this.plannerAssisIdOptions, this.form.plannerAssisId);
-            this.form.operator = this.selectDictLabel(this.operatorIdOptions, this.form.operatorId);
+            // this.form.payType = this.selectDictLabel(this.payTypeIdOptions, this.form.payTypeId);
+            // this.form.preSale = this.selectDictLabel(this.preSaleIdOptions, this.form.preSaleId);
+            // this.form.afterSale = this.selectDictLabel(this.afterSaleIdOptions, this.form.afterSaleId);
+            // this.form.nutritionist = this.selectDictLabel(this.nutritionistIdOptions, this.form.nutritionistId);
+            // this.form.nutriAssis = this.selectDictLabel(this.nutriAssisIdOptions, this.form.nutriAssisId);
+            // this.form.account = this.selectDictLabel(this.accountIdOptions, this.form.accountId);
+            // this.form.planner = this.selectDictLabel(this.plannerIdOptions, this.form.plannerId);
+            // this.form.plannerAssis = this.selectDictLabel(this.plannerAssisIdOptions, this.form.plannerAssisId);
+            // this.form.operator = this.selectDictLabel(this.operatorIdOptions, this.form.operatorId);
 
             if (this.form.orderId != null) {
               updateOrder(this.form).then(response => {

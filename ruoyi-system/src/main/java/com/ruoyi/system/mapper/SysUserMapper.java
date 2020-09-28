@@ -19,6 +19,8 @@ public interface SysUserMapper
      */
     public List<SysUser> selectUserList(SysUser sysUser);
 
+    public List<SysUser> selectAllUser();
+
     /**
      * 通过用户名查询用户
      * 

@@ -18,6 +18,8 @@ public interface ISysUserService
      */
     public List<SysUser> selectUserList(SysUser user);
 
+    public List<SysUser> selectAllUser();
+
     /**
      * 通过用户名查询用户
      * 
