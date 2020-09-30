@@ -5,15 +5,15 @@ import com.ruoyi.note.domain.NmNote;
 
 /**
  * 便签管理Service接口
- * 
+ *
  * @author wang
  * @date 2020-09-12
  */
-public interface INmNoteService 
+public interface INmNoteService
 {
     /**
      * 查询便签管理
-     * 
+     *
      * @param noteId 便签管理ID
      * @return 便签管理
      */
@@ -21,7 +21,7 @@ public interface INmNoteService
 
     /**
      * 查询便签管理列表
-     * 
+     *
      * @param nmNote 便签管理
      * @return 便签管理集合
      */
@@ -29,7 +29,7 @@ public interface INmNoteService
 
     /**
      * 新增便签管理
-     * 
+     *
      * @param nmNote 便签管理
      * @return 结果
      */
@@ -37,7 +37,7 @@ public interface INmNoteService
 
     /**
      * 修改便签管理
-     * 
+     *
      * @param nmNote 便签管理
      * @return 结果
      */
@@ -45,7 +45,7 @@ public interface INmNoteService
 
     /**
      * 批量删除便签管理
-     * 
+     *
      * @param noteIds 需要删除的便签管理ID
      * @return 结果
      */
@@ -53,9 +53,17 @@ public interface INmNoteService
 
     /**
      * 删除便签管理信息
-     * 
+     *
      * @param noteId 便签管理ID
      * @return 结果
      */
     public int deleteNmNoteById(Long noteId);
+
+    /**
+     * 用户根据ID查询便签
+     *
+     * @param noteId 便签管理ID
+     * @return 便签管理
+     */
+    public NmNote selectNmNoteuserById(Long noteId,Long userID);
 }

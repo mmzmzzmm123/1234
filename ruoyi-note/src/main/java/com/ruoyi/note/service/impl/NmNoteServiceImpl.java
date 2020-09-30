@@ -10,19 +10,19 @@ import com.ruoyi.note.service.INmNoteService;
 
 /**
  * 便签管理Service业务层处理
- * 
+ *
  * @author wang
  * @date 2020-09-12
  */
 @Service
-public class NmNoteServiceImpl implements INmNoteService 
+public class NmNoteServiceImpl implements INmNoteService
 {
     @Autowired
     private NmNoteMapper nmNoteMapper;
 
     /**
      * 查询便签管理
-     * 
+     *
      * @param noteId 便签管理ID
      * @return 便签管理
      */
@@ -34,7 +34,7 @@ public class NmNoteServiceImpl implements INmNoteService
 
     /**
      * 查询便签管理列表
-     * 
+     *
      * @param nmNote 便签管理
      * @return 便签管理
      */
@@ -46,7 +46,7 @@ public class NmNoteServiceImpl implements INmNoteService
 
     /**
      * 新增便签管理
-     * 
+     *
      * @param nmNote 便签管理
      * @return 结果
      */
@@ -59,7 +59,7 @@ public class NmNoteServiceImpl implements INmNoteService
 
     /**
      * 修改便签管理
-     * 
+     *
      * @param nmNote 便签管理
      * @return 结果
      */
@@ -72,7 +72,7 @@ public class NmNoteServiceImpl implements INmNoteService
 
     /**
      * 批量删除便签管理
-     * 
+     *
      * @param noteIds 需要删除的便签管理ID
      * @return 结果
      */
@@ -84,7 +84,7 @@ public class NmNoteServiceImpl implements INmNoteService
 
     /**
      * 删除便签管理信息
-     * 
+     *
      * @param noteId 便签管理ID
      * @return 结果
      */
@@ -93,4 +93,20 @@ public class NmNoteServiceImpl implements INmNoteService
     {
         return nmNoteMapper.deleteNmNoteById(noteId);
     }
+
+    /**
+     * 用户根据ID查询便签
+     *
+     * @param noteId 便签管理ID
+     * @return 便签管理
+     */
+    @Override
+    public NmNote selectNmNoteuserById(Long noteId,Long userID) {
+        NmNote nmNote = new NmNote();
+        nmNote.setNoteId(noteId);
+        nmNote.setUserId(userID);
+        return nmNoteMapper.selectOne(nmNote);
+    }
+
+
 }

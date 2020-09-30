@@ -563,9 +563,7 @@
   .bookmarktag{
     margin-right: 5px;
   }
-.bookmarklist{
-  /*height: 400px !important;*/
-}
+
 
 
 </style>
