@@ -166,6 +166,13 @@ export const constantRoutes = [
         meta:{
           requireAuth: true,//加该字段,表示进入这个路由是需要登录的true
         },
+      },{
+        path: '/ceshi',
+        name: 'ceshi',
+        component: resolve => require(['../views/bookmark/ceshi/index.vue'], resolve),
+        meta:{
+          requireAuth: true,//加该字段,表示进入这个路由是需要登录的true
+        },
       }
     ],
 

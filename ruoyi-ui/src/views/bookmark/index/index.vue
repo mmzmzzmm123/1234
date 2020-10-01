@@ -28,6 +28,7 @@
       <div class="aside-title" @click="gorecycle"><i class="el-icon-delete-solid"></i><span>回收站</span></div>
       <div class="aside-title" @click="importHtml"><i class="el-icon-s-platform"></i><span>导入书签</span></div>
       <div class="aside-title"><i class="el-icon-s-comment"></i><span>意见反馈</span></div>
+      <div class="aside-title" @click="ceshi"><i class="el-icon-s-comment"></i><span>测试页面</span></div>
       <div class="aside-title " style="margin-bottom: 100px"><i class="el-icon-s-grid"></i><span>其他设置</span></div>
 
       </div>
@@ -704,6 +705,12 @@
       importHtml:function(){
         this.$router.push({
           path: "/importHtml",
+        })
+
+      },/**跳转测试页面**/
+      ceshi:function(){
+        this.$router.push({
+          path: "/ceshi",
         })
 
       },

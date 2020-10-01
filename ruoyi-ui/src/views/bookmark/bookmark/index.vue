@@ -3,49 +3,61 @@
 <template >
     <div >
 
-      <div class="filter" >
-        <div class="filter-sort" >
-          <el-dropdown trigger="click" size="small">
-              <span class="el-dropdown-link">
-            <span>按时间排序(正)</span> <i class="el-icon-caret-bottom"></i>
-              </span>
-            <el-dropdown-menu slot="dropdown" class="filter-sort-dropdown">
-              <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>按时间排序(正)</el-dropdown-item>
-              <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>按时间排序(反)</el-dropdown-item>
-              <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>按字母A-Z排序</el-dropdown-item>
-              <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>按字母A-Z排序</el-dropdown-item>
-              <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>按网站A-Z排序</el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
+      <div class="filter-tbar" >
+        <div class="filter-classification" >
+          <div class="classification " @click="showopen(0)"><span>全部</span></div>
+          <div class="classification"  @click="showopen(1)"><span>网页</span></div>
+          <div class="classification"  @click="showopen(2)"><span>文本</span></div>
+          <div class="classification"  @click="showopen(3)"><span>其他</span></div>
         </div>
-        <div >
-          <el-divider direction="vertical"></el-divider>
-        </div>
-        <div class="filler-tag">
-          <el-tag size="small">我的最爱</el-tag>
-        </div>
-        <div class="filler-tag">
-          <el-tag size="small" >小型标签</el-tag>
-        </div>
-        <div class="filler-tag">
-          <el-tag size="small" >小型标签</el-tag>
-        </div>
-        <div class="filler-tag">
-          <el-tag size="small" >小型标签</el-tag>
-        </div>
-        <div class="filler-tag">
-          <el-tag size="small" >小型标签</el-tag>
-        </div>
-        <div class="filler-tag">
-          <el-tag size="small" >小型标签</el-tag>
-        </div>
-        <div class="filler-tag">
-          <el-tag size="small" >...</el-tag>
+        <div class="setUpThe">
+          <div class="filter-content">
+            <el-dropdown trigger="hover" size="small">
+              <div class="el-dropdown-link dropdownList">
+                <i class="el-icon-document-checked " ></i>  <span>排序模式</span>
+              </div>
+              <el-dropdown-menu slot="dropdown" class="filter-sort-dropdown">
+                <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>按时间排序(正)</el-dropdown-item>
+                <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>按时间排序(反)</el-dropdown-item>
+                <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>按字母A-Z排序</el-dropdown-item>
+                <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>按字母A-Z排序</el-dropdown-item>
+                <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>按网站A-Z排序</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+
+          </div>
+          <div class="filter-content">
+            <el-dropdown trigger="hover" size="small">
+              <div class="el-dropdown-link dropdownList">
+                <i class="el-icon-tickets " ></i>  <span>卡片模式</span>
+              </div>
+              <el-dropdown-menu slot="dropdown" class="filter-sort-dropdown">
+                <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>按时间排序(正)</el-dropdown-item>
+                <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>按时间排序(反)</el-dropdown-item>
+                <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>按字母A-Z排序</el-dropdown-item>
+                <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>按字母A-Z排序</el-dropdown-item>
+                <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>按网站A-Z排序</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+
+          </div>
+          <div class="filter-content">
+            <el-dropdown trigger="hover" size="small">
+              <div class="el-dropdown-link dropdownList">
+                <i class="el-icon-setting " ></i>  <span>批量设置</span>
+              </div>
+              <el-dropdown-menu slot="dropdown" class="filter-sort-dropdown">
+                <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>编辑</el-dropdown-item>
+                <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>批量处理</el-dropdown-item>
+                <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>排序</el-dropdown-item>
+                <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>按网站A-Z排序</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+
+
+          </div>
         </div>
       </div>
-
-
-
 
       <div class="nullbookmark" v-if="showimg">
           <div class="nullbookmark-img">
@@ -84,6 +96,12 @@
                     <img :ng-src="'https://favicon.lucq.fun/?url=http://'+bm.urls" :src="'https://favicon.lucq.fun/?url=http://'+bm.urls" onerror="this.src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQEAYAAABPYyMiAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAZiS0dEAAAAAAAA+UO7fwAAAAlwSFlzAAAASAAAAEgARslrPgAAAmVJREFUSMftlG1IU2EUx8+5jRHzg+5OiD64WTBBjSY5ZybUJMaMiIUICUKFIGmoIIogYWKFBmtDxN1tBKIWvlS6SR+iLFDBXqSMgmzbvQ7fkAjcINmQ5u7pQwyCiOvWx/p/fPj9/5znnPM8AP+VolRTjjHhTlmZipzEk9GYao4sVaMYxXp62NgIdpLBCuLP05mZZHOYZA3p5KgMjBcUwCmw4PfVVYiBGmbW1zMzOU4QCgtTvdAeRESEyNZyJbx+dDTjVv/9YFSjSScnfabsbPYMF+AbxsYS3F5TfwPZAacpMNfUBEAljK24mMJwlLIUClTAdfwok9FXWBTtc3Phzqv7c/RWa8KnrHZM8VltbRjC92AxGkEPRpSJInjJQPpIBJoZC6nn50M19dM5J/v6/lhRxgXXDX9Qp1POcmHh2sTEQbfbvVmrUCTbr4RPaeMe8Q0eTyI36VkrW50mftjrPWCyDn9oSUuTdj4Y/1Qpl7NdzkNC98iIqsIxHdQVFaU8eWW1U1guLy1lr3Acr3O7pXi227EhDLpcCZ8UL/kK8LIYjxtDIRhEP8xGIlI8bcAKvY3FGB/zYvf81pYUL/0PvGTKoTUvjzbgCx5ZWlJq3a5lQa1Ge3yTWnp64ASYqVcUoXn3Jtja2/EpRtHj89FF8Tb25ufDOwCo8/lSL0BF/eDPzcVXeA7WDAa6J9rES1VVdJqx41JHBwCE8BgA3JU9B+3AACziMwjv7MAaPQb/wgIAnP2rDpCWtpkncjm+Ro34bWgo3FkX0O6bnARARCT6hSR6YzazXa7DfLyigo7TNtObxNb/s/oB7V8JFvW/8IQAAAAldEVYdGRhdGU6Y3JlYXRlADIwMjAtMDItMDJUMTg6MTE6NTgrMDg6MDCoc6tpAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDIwLTAyLTAyVDE4OjExOjU4KzA4OjAw2S4T1QAAAGd0RVh0c3ZnOmJhc2UtdXJpAGZpbGU6Ly8vaG9tZS9hZG1pbi9pY29uLWZvbnQvdG1wL2ljb25fNWhyOG55Nmo1bWMvamluZ2RpYW5hbmxpX2tvbmd3dWppYW94aW5nX3Nob3VjYW5nLnN2Z4/vilwAAAAASUVORK5CYII='" alt=""  ng-show="bm.urls">
                   </div>
                   <div class="bookmark-official">{{bm.urls}}&nbsp;·&nbsp;</div><div class="bookmark-time">{{bm.createTime|changeTime}}</div>
+                  <div class="bookmark-time" v-for="t in bm.sqTags">
+                    <el-tag class="bookmark-list-tag" style="background-color: #7a6df0;color: #ffffff" data-bookmarkId="t.bookmarkId" data-tagId="t.tagId}" size="mini">{{t.name}}</el-tag>
+
+                  </div>
+
+
                 </div>
               </div>
             </div>
@@ -278,10 +296,26 @@
 
       },
     mounted(){
-
+//初始化
+      this.newBookmark();
     },
     methods: {
+      /**初始化**/
+      newBookmark() {
+        //默认选中 全部
+        document.getElementsByClassName("classification")[0].classList.add("classification-click");
+      },
 
+
+      /**切换显示 全部 网页 文本 其他**/
+      showopen(e) {
+        document.getElementsByClassName("classification")[e].classList.add("classification-click");
+        for (var i = 0; i < 4; i++) {
+          if (i != e) {
+            document.getElementsByClassName("classification")[i].classList.remove('classification-click');
+          }
+        }
+      },
 
 
     /**书签编辑设置的 标签开始**/
@@ -509,7 +543,6 @@
 
 
   .filter-sort-dropdown{
-    top:65px!important;
     box-shadow: 0 2px 15px 0 rgba(0,0,0,.2)!important;
     font-weight: 600!important;
   }
@@ -545,6 +578,7 @@
     position: absolute;
     background-color: #acd7ff;
     right: 0;
+    display: none;
   }
   .editlist{
     display: flex;
@@ -564,6 +598,69 @@
     margin-right: 5px;
   }
 
+  .filter-tbar{
+    display: flex;
+    position: relative;
+    width: 100%;
+    height: 40px;
+    -webkit-box-pack: justify;
+    justify-content: space-between;
+    -webkit-box-align: center;
+    align-items: center;
 
+    box-sizing: border-box;
+  }
+
+  .filter-classification {
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+
+  }
+  .setUpThe{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .filter-content{
+    margin-left: 18px;
+
+  }
+
+.dropdownList{
+  display: flex;
+  justify-content: center;
+  font-size: 18px;
+}
+.dropdownList i{
+margin-right: 4px;
+  font-weight: 600;
+}
+.dropdownList span{
+  line-height: initial;
+  font-size: 17px;
+}
+
+
+
+  .classification{
+    width: 60px;
+    height: 27px;
+    margin-left: 10px;
+    text-align: center;
+    line-height: 26px;
+    color: #a4a4a4;
+  }
+  .classification-click{
+    border-radius: 19px;
+    background: #606c88;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #3f4c6b, #606c88);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #3f4c6b, #606c88); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    color: #FFFFFF;
+    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.4)
+  }
+  .bookmark-list-tag{
+    margin-left: 4px;
+  }
 
 </style>

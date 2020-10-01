@@ -3,6 +3,9 @@
     .sousouleft-switch{
       display: none;
     }
+  .dropdownList{
+    font-size: 22px!important;
+  }
 }
 
 
@@ -26,9 +29,20 @@
 
 /* >>> md*/
 @media screen and (max-width: 992px) {
+  .el-dropdown-link span{
+    display: none;
+  }
 
 
 }
+
+/* >>> md*/
+@media screen and (max-width: 850px) {
+
+
+
+}
+
 /* ipad >>> xs*/
 @media screen and (max-width: 768px) {
   .sousou-leftico{

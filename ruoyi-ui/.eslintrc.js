@@ -6,7 +6,7 @@ module.exports = {
     sourceType: 'module'
   },
   env: {
-    browser: true,
+    browser: true,autoprefixer
     node: true,
     es6: true,
   },
