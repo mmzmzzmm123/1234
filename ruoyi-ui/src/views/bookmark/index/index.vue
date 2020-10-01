@@ -80,10 +80,25 @@
       </div>
 
         <div class="sousou-input">
+          <el-popover
+            placement="bottom"
+            width="400"
+            trigger="click"
+            :visible-arrow="false"
+            popper-class="popover-suosou"
+          >
 
-        <el-input placeholder="请输入书签名字" v-model="sousou" size="small">
+              <div v-for="o in 4" :key="o">
+                {{'列表内容 ' + o }}
+              </div>
+
+        <el-input slot="reference" placeholder="请输入书签名字" v-model="sousou" size="small">
         <i slot="prefix" class="el-input__icon el-icon-search"></i>
       </el-input>
+
+
+          </el-popover>
+
         </div>
 
         <div class="sousouright-icon"><el-badge :value="5" :max="99" class="item" ><i class="el-icon-message-solid" style="font-size: 17px;"></i></el-badge></div>
@@ -789,6 +804,7 @@
         })
 
       },
+      
 
     },
     mounted(){
@@ -1296,6 +1312,14 @@
     position: fixed;
     bottom: 0;
   }
+  .popover-suosou{
+    width: 70%!important;
+    top: 40px;
+    left: 72px;
+  }
+
+
+
 
 
 </style>

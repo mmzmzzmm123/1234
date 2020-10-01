@@ -97,7 +97,7 @@
                   </div>
                   <div class="bookmark-official">{{bm.urls}}&nbsp;·&nbsp;</div><div class="bookmark-time">{{bm.createTime|changeTime}}</div>
                   <div class="bookmark-time" v-for="t in bm.sqTags">
-                    <el-tag class="bookmark-list-tag" style="background-color: #7a6df0;color: #ffffff" data-bookmarkId="t.bookmarkId" data-tagId="t.tagId}" size="mini">{{t.name}}</el-tag>
+                    <el-tag class="bookmark-list-tag" data-bookmarkId="t.bookmarkId" data-tagId="t.tagId}" size="mini">{{t.name}}</el-tag>
 
                   </div>
 
@@ -661,6 +661,8 @@ margin-right: 4px;
   }
   .bookmark-list-tag{
     margin-left: 4px;
+    color: #5094d5;
+    background-color: #fff;
   }
 
 </style>

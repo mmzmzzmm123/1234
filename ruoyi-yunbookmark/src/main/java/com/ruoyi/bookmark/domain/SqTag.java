@@ -57,6 +57,7 @@ public class SqTag
     @Column(name = "status")
     private Integer status;
 
+
     /** 创建时间 */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "create_time")
