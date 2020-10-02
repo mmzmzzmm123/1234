@@ -98,7 +98,7 @@
                 {{'列表内容 ' + o }}
               </div>
 
-        <el-input slot="reference" :suffix-icon="true" placeholder="请输入书签名字" v-model="sousou" size="small">
+        <el-input slot="reference"  placeholder="请输入书签名字" v-model="sousou" size="small">
         <i slot="prefix" class="el-input__icon el-icon-search"></i>
 <!--          <el-button slot="append" icon="el-icon-search"></el-button>-->
           </el-input>

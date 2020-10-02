@@ -106,7 +106,7 @@
                 <div class="bookmark-official">{{bm.urls}}&nbsp;·&nbsp;</div>
                 <div class="bookmark-time">{{bm.createTime|changeTime}}</div>
                 <div class="bookmark-time" v-for="t in bm.sqTags">
-                  <el-tag class="bookmark-list-tag" data-bookmarkId="t.bookmarkId" data-tagId="t.tagId}" size="mini">
+                  <el-tag class="bookmark-list-tag" data-bookmarkId="t.bookmarkId" data-tagId="t.tagId" size="mini">
                     {{t.name}}
                   </el-tag>
 
