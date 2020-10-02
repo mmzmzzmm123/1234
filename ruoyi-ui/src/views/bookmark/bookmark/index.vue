@@ -120,7 +120,7 @@
 
       </el-row>
       <p v-if="listloading" class="listhint"><i class="el-icon-loading"></i>加载中...</p>
-      <p v-if="noMore" class="listhint">没有更多了</p>
+      <p v-if="listnoMore" class="listhint">没有更多了</p>
     </div>
 
 
@@ -277,7 +277,9 @@
           height: "",
         },
         listloading: false,//滚动加载提示
-        datalistcount:500,
+        listnoMore: false,
+        total:0,//总条数
+        noMore:false,//是否可以滚动瀑布流
 
       }
     },
@@ -294,13 +296,7 @@
     },
     computed:{
       /**list加载完毕就禁止滚动**/
-      noMore() {
-        console.log(this.bookmarkList.length)
-        console.log(this.datalistcount)
-        // return this.bookmarkList.length >= this.datalistcount;
-        //TRUE 不滑动了
-        return false;
-      },
+
       /**是否禁用滚动**/
       disabled(){
         return this.listloading || this.noMore
@@ -355,9 +351,31 @@
 
       /**滚动监控**/
       load() {
+        //判断是否加载了所有数据
+        this.queryParams.pageNum=this.queryParams.pageNum+1;
+        if (this.queryParams.pageNum*this.queryParams.pageSize>=this.total){
+          //加载完毕了 禁止滚动
+          this.noMore=true;
+          this.listnoMore=true;
+          return;
+        }
+
         this.listloading = true
-        this.bookmarkList = this.bookmarkList.concat(this.bookmarkList, this.bookmarkList);
-        this.listloading = false
+        setTimeout(() =>{
+          selectBymenuIdUserID(this.queryParams).then(response => {
+            if (response.rows.length!=0 && response.code == 200) {
+              this.bookmarkList = this.bookmarkList.concat(this.bookmarkList, response.rows);
+              this.total = response.total;
+              this.listloading = false
+            } else {
+              //加载完毕了 禁止滚动
+              this.noMore=true;
+              this.listloading = false
+            }
+          });
+        },1000);
+
+
       },
 
       /**切换显示 全部 网页 文本 其他**/
@@ -553,7 +571,7 @@
 
 
   /**编辑标签 开始**/
-  .el-tag + .el-tag {
+  .el-tag {
     margin-left: 10px;
   }
 
