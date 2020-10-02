@@ -34,6 +34,7 @@
   }
 
 
+
 }
 
 /* >>> md*/
@@ -65,7 +66,9 @@
   .addbookmarkurl-input {
     width: 73%!important;
   }
-
+  .classification {
+    margin-left: 0px!important;
+  }
 
 }
 /* iphone6 7 8 plus */
