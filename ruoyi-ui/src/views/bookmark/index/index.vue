@@ -479,6 +479,7 @@
       /** 新增书签Url操作 */
       addbookmarkurl:function(){
           this.reset();
+          this.getTreeselect();
           this.addopen = true;
 
         // getMenu(e.getAttribute("data-menuId")).then(response => {
@@ -548,6 +549,14 @@
       },
       /** 查询部门下拉树结构 */
       getTreeselect() {
+        if (this.zNodes!=null&&this.zNodes.length!=0){
+          this.menuOptions = [];
+          const data = { menuId: 0, menuName: '顶级菜单', children: [] };
+          data.children = this.handleTree(this.zNodes, "menuId", "parentId");
+          this.menuOptions.push(data);
+          return;
+        }
+
         listMenuByUserId().then(response => {
           this.menuOptions = [];
           const data = { menuId: 0, menuName: '顶级菜单', children: [] };

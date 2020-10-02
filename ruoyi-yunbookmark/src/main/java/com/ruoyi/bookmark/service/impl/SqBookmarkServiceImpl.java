@@ -6,7 +6,9 @@ import java.util.*;
 import cn.hutool.core.date.DateUtil;
 import com.ruoyi.bookmark.domain.SqBookmarkTag;
 
+import com.ruoyi.bookmark.domain.SqMenu;
 import com.ruoyi.bookmark.mapper.SqBookmarkTagMapper;
+import com.ruoyi.bookmark.mapper.SqMenuMapper;
 import com.ruoyi.bookmark.mapper.SqTagMapper;
 
 import com.ruoyi.bookmark.service.ISqTagService;
@@ -38,6 +40,9 @@ public class SqBookmarkServiceImpl implements ISqBookmarkService
 
     @Autowired
     private SqTagMapper sqTagMapper;
+
+    @Autowired
+    private SqMenuMapper sqMenuMapper;
 
 
     @Autowired
@@ -132,8 +137,10 @@ public class SqBookmarkServiceImpl implements ISqBookmarkService
             sqBookmarkTagMapper.insertSqBookmarkTag(bookamrktag);
         }
 
-
-
+        //给对应目录 +1
+        Long[] menuIds= new Long[1];
+        menuIds[0]=sqBookmark.getMenuId();
+        sqMenuMapper.updateCountAdd(menuIds,1);
         return i;
     }
 
