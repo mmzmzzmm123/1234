@@ -8,7 +8,13 @@
 
 
       <el-header  class="aside-logo">
-        <img src="https://s1.ax1x.com/2020/08/15/dACqUO.png"/>
+<!--        <img src="https://s1.ax1x.com/2020/08/15/dACqUO.png"/>-->
+        <div class="logoname">
+          <span>集趣书签</span>
+        </div>
+        <div class="logoright" >
+          <i class="el-icon-plus"  />
+        </div>
 
       </el-header>
 
@@ -92,9 +98,10 @@
                 {{'列表内容 ' + o }}
               </div>
 
-        <el-input slot="reference" placeholder="请输入书签名字" v-model="sousou" size="small">
+        <el-input slot="reference" :suffix-icon="true" placeholder="请输入书签名字" v-model="sousou" size="small">
         <i slot="prefix" class="el-input__icon el-icon-search"></i>
-      </el-input>
+<!--          <el-button slot="append" icon="el-icon-search"></el-button>-->
+          </el-input>
 
 
           </el-popover>
@@ -204,7 +211,7 @@
           <el-input v-model="form.title" placeholder="请输入书签标题" />
         </el-form-item>
         <el-form-item label="书签描述" prop="description">
-          <el-input v-model="form.description" type="textarea" placeholder="请输入书签描述" run dev
+          <el-input v-model="form.description"  type="textarea" placeholder="请输入书签描述"
                     :autosize="{minRows: 3, maxRows:4}" :style="{width: '100%'}"></el-input>
         </el-form-item>
 
@@ -643,19 +650,25 @@
 
 
 
+      // console.log("进入addHoverDom:统计"+treeNode.bookmarkCount+"_sz 的数量:"+confCount);
+      // console.log("addDiyDom:统计2"+$.fn.zTree.getZTreeObj("treeDemo").getCheckedNodes()[0].bookmarkCount);
+      //console.log("addDiyDom:统计2"+$.fn.zTree.getZTreeObj("treeDemo").getCheckedNodes()[0]);
 
-      var editStr = "<span class="+treeNode.tId+"_count style='color: #9e9e9e;float:right;display: inline-block;margin-right: 15px;font-size:8px' onfocus='this.blur();'>99</span>";
+
+      var editStr = "<span class="+treeNode.tId+"_count style='color: #9e9e9e;float:right;display: inline-block;margin-right: 15px;font-size:8px' onfocus='this.blur();'>"+treeNode.bookmarkCount+"</span>";
       switchObjspan.after(editStr);
     }
   },
 
   addHoverDom:function(treeId, treeNode) {
   	var confCount = $("."+treeNode.tId+"_sz").length;
-  	//console.log("进入addHoverDom:统计"+treeNode.tId+"_sz 的数量:"+confCount);
+  	// console.log("进入addHoverDom:统计"+treeNode.tId+"_sz 的数量:"+confCount);
+  	// console.log("进入addHoverDom:treeId"+treeNode.tId+"_sz 的数量:"+confCount);
+  	// console.log("进入addHoverDom:统计"+treeNode.tId+"_sz 的数量:"+confCount);
+  	// console.log("进入addHoverDom:统计"+treeNode.bookmarkCount+"_sz 的数量:"+confCount);
   	if (confCount>0) return;
   	//if (treeNode.parentNode && treeNode.parentNode.id!=1) return;
   	var switchObjspan = $("#" + treeNode.tId + "_span");
-
   	var editStr = "<span class="+treeNode.tId+"_sz data-parentId="+treeNode.parentId+" data-menuId="+treeNode.menuId+" onclick='editBookmark(this)' style='color: #9e9e9e;float:right;display: inline-block;margin-right: 15px;font-size:8px' onfocus='this.blur();'><i class='el-icon-edit'></i></span>";
   	switchObjspan.after(editStr);
 
@@ -674,7 +687,7 @@
 
   	$("." + treeNode.tId + "_sz").unbind().remove();
     var switchObjspan = $("#" + treeNode.tId + "_span");
-    var editStr = "<span class="+treeNode.tId+"_count onclick='alert(1111111);return false;' style='color: #9e9e9e;float:right;display: inline-block;margin-right: 15px;font-size:8px' onfocus='this.blur();'>12</span>";
+    var editStr = "<span class="+treeNode.tId+"_count onclick='alert(1111111);return false;' style='color: #9e9e9e;float:right;display: inline-block;margin-right: 15px;font-size:8px' onfocus='this.blur();'>"+treeNode.bookmarkCount+"</span>";
     switchObjspan.after(editStr);
 
   },
@@ -804,7 +817,7 @@
         })
 
       },
-      
+
 
     },
     mounted(){
@@ -842,10 +855,10 @@
   .ztree li ul{  margin:0;  padding:0}
   .ztree li {line-height:32px}
   .ztree li a {width:200px;height:32px;padding-top: 0px;font-size: 14px;width:100%}
-  .ztree li a:hover {text-decoration:none; background-color: #D4D4D4;}
+  .ztree li a:hover {text-decoration:none; background-color: #E5E5E5;}
   .ztree li a span.button.switch {vertical-align:middle}
   .ztree.showIcon li a span.button.switch {visibility:visible}
-  .ztree li a.curSelectedNode {background-color:#D4D4D4;border:0;height:32px;}
+  .ztree li a.curSelectedNode {background-color:#E5E5E5;border:0;height:32px;}
   .ztree li span {line-height:32px;}
   .ztree li span.button {margin-top: 0px;margin-left:2px;width: 20px;height: 20px;}
 
@@ -893,8 +906,8 @@
     padding:0;
     margin-bottom: 0;
     /*background:url('https://ftp.bmp.ovh/imgs/2020/08/4ac1d6b4f41049ef.jpg') no-repeat;*/
-    /*background-color: #f6f6f6;*/
-    background: url("https://s1.ax1x.com/2020/08/16/dEcqVU.jpg") no-repeat;
+    background-color: #F6F6F6;
+    /*background: url("https://s1.ax1x.com/2020/08/16/dEcqVU.jpg") no-repeat;*/
 
     /*background-size: cover;*/
     /*z-index: -1;!*-1 可以当背景*!*/
@@ -921,15 +934,41 @@
     margin-right: 11px;
   }
   .aside-logo{
-    /*background-color: #fff;*/
-    opacity: 0.9;
+    display: flex;
+    align-items: center;
   }
-  .aside-logo img{
-    margin-top: 5px;
-    background-repeat: no-repeat;
-    height: 50px;
+  .aside-logo div{
+    width: 50%;
+  }
+  .logoname span{
+    margin-left: 8px;
+    font-family: "PingFang SC";
+    font-size: 20px;
+    font-weight: 400;
+  }
+  .logoright i{
+    float: right;
+    display: block;
+    width: 30px;
+    height: 28px;
+    background-color: #E6E4E1;
+    color: #5C5C5C;
+    text-align: center;
+    line-height: 28px;
+    border-radius: 2px;
+  }
 
+
+
+  .logoright i:active{
+    background-color: #7a6df0;
+    color: #FFFFFF;
   }
+
+
+
+
+
 
   .reminder{
     margin-left: 27px;

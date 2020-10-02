@@ -353,12 +353,16 @@
       load() {
         //判断是否加载了所有数据
         this.queryParams.pageNum=this.queryParams.pageNum+1;
-        if (this.queryParams.pageNum*this.queryParams.pageSize>=this.total){
+        // 2 15 26
+        var listcount=Math.ceil(this.total/15);
+        if (this.queryParams.pageNum>listcount){
+
           //加载完毕了 禁止滚动
           this.noMore=true;
           this.listnoMore=true;
+          this.listloading = false
           return;
-        }
+        }else {
 
         this.listloading = true
         setTimeout(() =>{
@@ -374,7 +378,7 @@
             }
           });
         },1000);
-
+        }
 
       },
 

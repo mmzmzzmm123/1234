@@ -82,7 +82,7 @@
           name: "menuName",
           title: "",
           url: "url",
-          icon: "menuIcon"
+          icon: "menuIcon",
         },
         simpleData: {
           enable: false,
