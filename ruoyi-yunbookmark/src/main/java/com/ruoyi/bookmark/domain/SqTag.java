@@ -1,6 +1,9 @@
 package com.ruoyi.bookmark.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
@@ -18,6 +21,9 @@ import java.util.Date;
  * @author ruoyi
  * @date 2020-09-05
  */
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name="sq_tag")
 public class SqTag
 {
@@ -58,94 +64,20 @@ public class SqTag
     private Integer status;
 
 
+    /** 标签的字体颜色 */
+    @Excel(name = "标签的字体颜色")
+    @Column(name = "is_fontColor")
+    private String isFontColor;
+
+    /** 标签的背景颜色 */
+    @Excel(name = "标签的背景颜色")
+    @Column(name = "is_bgColor")
+    private String isBgColor;
+
     /** 创建时间 */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "create_time")
     private Date createTime;
 
-    public void setId(Long id)
-    {
-        this.id = id;
-    }
 
-    public Long getId()
-    {
-        return id;
-    }
-    public void setName(String name)
-    {
-        this.name = name;
-    }
-
-    public String getName()
-    {
-        return name;
-    }
-    public void setIcount(Integer icount)
-    {
-        this.icount = icount;
-    }
-
-    public Integer getIcount()
-    {
-        return icount;
-    }
-    public void setUserId(Long userId)
-    {
-        this.userId = userId;
-    }
-
-    public Long getUserId()
-    {
-        return userId;
-    }
-    public void setTagType(String tagType)
-    {
-        this.tagType = tagType;
-    }
-
-    public String getTagType()
-    {
-        return tagType;
-    }
-    public void setUrl(String url)
-    {
-        this.url = url;
-    }
-
-    public String getUrl()
-    {
-        return url;
-    }
-    public void setStatus(Integer status)
-    {
-        this.status = status;
-    }
-
-    public Integer getStatus()
-    {
-        return status;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("id", getId())
-            .append("name", getName())
-            .append("icount", getIcount())
-            .append("userId", getUserId())
-            .append("tagType", getTagType())
-            .append("url", getUrl())
-            .append("status", getStatus())
-            .append("createTime", getCreateTime())
-            .toString();
-    }
 }

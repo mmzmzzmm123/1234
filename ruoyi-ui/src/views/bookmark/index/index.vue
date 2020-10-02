@@ -215,8 +215,8 @@
                     :autosize="{minRows: 3, maxRows:4}" :style="{width: '100%'}"></el-input>
         </el-form-item>
 
-        <el-form-item  prop="menuId">
-          <div class="labelname">所属目录</div>
+        <el-form-item  prop="parentId">
+          <div class="labelname">分类菜单</div>
           <treeselect class="menutreeselect"  v-model="form.menuId" :options="menuOptions" :normalizer="normalizer"  />
         </el-form-item>
 

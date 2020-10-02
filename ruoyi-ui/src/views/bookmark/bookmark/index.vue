@@ -351,6 +351,7 @@
 
       /**滚动监控**/
       load() {
+
         //判断是否加载了所有数据
         this.queryParams.pageNum=this.queryParams.pageNum+1;
         // 2 15 26
@@ -368,7 +369,8 @@
         setTimeout(() =>{
           selectBymenuIdUserID(this.queryParams).then(response => {
             if (response.rows.length!=0 && response.code == 200) {
-              this.bookmarkList = this.bookmarkList.concat(this.bookmarkList, response.rows);
+              console.log("response.rows"+response.rows)
+              this.bookmarkList = this.bookmarkList.concat( response.rows);
               this.total = response.total;
               this.listloading = false
             } else {
@@ -654,7 +656,7 @@
     position: absolute;
     background-color: #acd7ff;
     right: 0;
-    display: none;
+
   }
 
   .editlist {

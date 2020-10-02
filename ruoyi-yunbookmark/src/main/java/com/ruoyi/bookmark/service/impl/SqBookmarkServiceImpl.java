@@ -1,22 +1,16 @@
 package com.ruoyi.bookmark.service.impl;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+
 import java.util.*;
 
 import cn.hutool.core.date.DateUtil;
 import com.ruoyi.bookmark.domain.SqBookmarkTag;
-import com.ruoyi.bookmark.domain.SqTag;
-import com.ruoyi.bookmark.domain.SqUserTag;
+
 import com.ruoyi.bookmark.mapper.SqBookmarkTagMapper;
 import com.ruoyi.bookmark.mapper.SqTagMapper;
-import com.ruoyi.bookmark.mapper.SqUserTagMapper;
+
 import com.ruoyi.bookmark.service.ISqTagService;
-import com.ruoyi.common.core.domain.entity.SysUser;
-import com.ruoyi.common.utils.DateUtils;
-import com.sun.org.apache.bcel.internal.generic.NEW;
-import org.apache.commons.beanutils.ConvertUtils;
-import org.apache.ibatis.annotations.Param;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +18,7 @@ import org.springframework.stereotype.Service;
 import com.ruoyi.bookmark.mapper.SqBookmarkMapper;
 import com.ruoyi.bookmark.domain.SqBookmark;
 import com.ruoyi.bookmark.service.ISqBookmarkService;
-import sun.dc.pr.PRError;
 
-import javax.print.DocFlavor;
 
 /**
  * 书签管理Service业务层处理
@@ -47,8 +39,7 @@ public class SqBookmarkServiceImpl implements ISqBookmarkService
     @Autowired
     private SqTagMapper sqTagMapper;
 
-    @Autowired
-    private SqUserTagMapper sqUserTagMapper;
+
     @Autowired
     private ISqTagService iSqTagService;
 
@@ -103,14 +94,14 @@ public class SqBookmarkServiceImpl implements ISqBookmarkService
     @Override
     public int insertSqBookmark(SqBookmark sqBookmark)
     {
-        sqBookmark.setCreateTime(DateUtil.date(System.currentTimeMillis()));
-      int i= sqBookmarkMapper.insertUseGeneratedKeys(sqBookmark);
+
+      int i= sqBookmarkMapper.insertSqBookmark(sqBookmark);
         //传入的标签
         List<Map<String, Object>> listmap = sqBookmark.getSqTags();
         if (listmap==null||listmap.isEmpty()||listmap.size()==0){
-            return sqBookmarkMapper.insertSqBookmark(sqBookmark);
+           return i;
         }
-        String addtag="";
+
         //给文章添加标签
         HashMap<Long,Long> bookmarkTag=new HashMap<Long,Long>();
         //文章添加书签
@@ -122,14 +113,18 @@ public class SqBookmarkServiceImpl implements ISqBookmarkService
                 if (Integer.parseInt(String.valueOf(map.get("tagId"))) < 0) {
                     Map<String, Object> tagmap = iSqTagService.addtag(String.valueOf(map.get("name")), sqBookmark.getUserid());
                     for (Map.Entry<String, Object> tag : tagmap.entrySet()) {
-                        addtag += tagmap.get("tagId").toString();
-                        map.put("tagId", tagmap.get("tagId"));
+                        bookmarkTag.put(Long.valueOf(tagmap.get("tagId").toString()),sqBookmark.getBookmarkId());
                     }
+                }else {
+                    //原本就有的 标签
+                    bookmarkTag.put(Long.valueOf(map.get("tagId").toString()),sqBookmark.getBookmarkId());
                 }
-                bookmarkTag.put(Long.valueOf(map.get("tagId").toString()),sqBookmark.getBookmarkId());
             }
         }
-
+        //删除之前的标签
+        SqBookmarkTag sqBookmarkTag=new SqBookmarkTag();
+        sqBookmarkTag.setBookmarkId(sqBookmark.getBookmarkId());
+        sqBookmarkTagMapper.delete(sqBookmarkTag);
         //给文章添加书签
         for (Map.Entry<Long,Long> tag:bookmarkTag.entrySet()){
             bookamrktag.setBookmarkId(tag.getValue());
@@ -137,13 +132,7 @@ public class SqBookmarkServiceImpl implements ISqBookmarkService
             sqBookmarkTagMapper.insertSqBookmarkTag(bookamrktag);
         }
 
-        //个人标签引用数量 批量+1
-        if (!addtag.equals("") && addtag.length()>0) {
-            addtag=addtag.substring(0,addtag.length()-1);
-            String[] add = addtag.split(",");
-            Long[] num = (Long[]) ConvertUtils.convert(add,Long.class);
-            sqUserTagMapper.updateCountReduce(num, sqBookmark.getUserid());
-        }
+
 
         return i;
     }
@@ -156,41 +145,41 @@ public class SqBookmarkServiceImpl implements ISqBookmarkService
      */
     @Override
     public int updateSqBookmark(SqBookmark sqBookmark) {
-        //删除的书签ID
-        String deletetag = "";
-        //新增的书签ID
-        String addtag = "";
+//        //删除的书签ID
+//        String deletetag = "";
+//        //新增的书签ID
+//        String addtag = "";
         //传入的标签
+        int i =sqBookmarkMapper.updateSqBookmark(sqBookmark);
         List<Map<String, Object>> listmap = sqBookmark.getSqTags();
         if (listmap==null||listmap.isEmpty()||listmap.size()==0){
-            return sqBookmarkMapper.updateSqBookmark(sqBookmark);
+            return i;
         }
+
+
+
         //给文章添加标签
         HashMap<Long,Long> bookmarkTag=new HashMap<Long,Long>();
         //文章添加书签
         SqBookmarkTag bookamrktag = new SqBookmarkTag();
-        int i = 0;
+
         for (Map<String, Object> map : listmap) {
             for (Map.Entry<String, Object> entry : map.entrySet()) {
                 //新增书签
                 if (Integer.parseInt(String.valueOf(map.get("tagId"))) < 0) {
                     Map<String, Object> tagmap = iSqTagService.addtag(String.valueOf(map.get("name")), sqBookmark.getUserid());
                     for (Map.Entry<String, Object> tag : tagmap.entrySet()) {
-                        addtag += tagmap.get("tagId").toString();
-                        map.put("tagId", tagmap.get("tagId"));
+                        bookmarkTag.put(Long.valueOf(tagmap.get("tagId").toString()),sqBookmark.getBookmarkId());
                     }
-                }
-                //删除书签
-                if (!String.valueOf(map.get("name")).equals("TAGDELETE")) {
+                }else {
+                    //原本就有的 标签
                     bookmarkTag.put(Long.valueOf(map.get("tagId").toString()),sqBookmark.getBookmarkId());
-                } else {
-                    deletetag += map.get("tagId").toString() + ",";
                 }
-                break;
+
             }
         }
-        //删除书签 现在的所有标签
-        SqBookmarkTag sqBookmarkTag = new SqBookmarkTag();
+        //删除之前的标签
+        SqBookmarkTag sqBookmarkTag=new SqBookmarkTag();
         sqBookmarkTag.setBookmarkId(sqBookmark.getBookmarkId());
         sqBookmarkTagMapper.delete(sqBookmarkTag);
 
@@ -201,22 +190,8 @@ public class SqBookmarkServiceImpl implements ISqBookmarkService
             sqBookmarkTagMapper.insertSqBookmarkTag(bookamrktag);
         }
 
-        //个人标签引用数量 批量-1
-        if (!deletetag.equals("") && deletetag.length()>0) {
-           deletetag=deletetag.substring(0,deletetag.length()-1);
-           String[] tagreduce = deletetag.split(",");
-           Long[] num = (Long[]) ConvertUtils.convert(tagreduce,Long.class);
-           sqUserTagMapper.updateCountReduce(num, sqBookmark.getUserid());
-        }
-        //个人标签引用数量 批量+1
-        if (!addtag.equals("") && addtag.length()>0) {
-            addtag=addtag.substring(0,addtag.length()-1);
-            String[] add = addtag.split(",");
-            Long[] num = (Long[]) ConvertUtils.convert(add,Long.class);
-            sqUserTagMapper.updateCountAdd(num, sqBookmark.getUserid());
-        }
 
-        return sqBookmarkMapper.updateSqBookmark(sqBookmark);
+        return i;
     }
 
     /**
