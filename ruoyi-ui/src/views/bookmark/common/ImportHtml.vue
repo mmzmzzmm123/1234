@@ -92,7 +92,7 @@
 
 </template>
 
-<script>
+<script >
 
  import { getToken } from "@/utils/auth";
   export default {

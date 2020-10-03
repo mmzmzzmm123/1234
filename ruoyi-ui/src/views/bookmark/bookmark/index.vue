@@ -198,7 +198,7 @@
   </div>
 </template>
 
-<script>
+<script >
 
 
   import {
@@ -577,10 +577,6 @@
 <style scoped>
 
 
-  /**编辑标签 开始**/
-  .el-tag {
-    margin-left: 10px;
-  }
 
   .button-new-tag {
     margin-left: 10px;
@@ -656,7 +652,7 @@
     height: 70px;
     position: absolute;
     background-color: #acd7ff;
-    right: 0;
+    /*right: 0;编辑*/
     display: none;
   }
 
@@ -668,7 +664,14 @@
     align-items: center;
 
   }
-
+  .bookmark-time {
+    float: left;
+  }
+  .bookmark-hr {
+    background-color: #fff !important;
+    margin-top: 2px !important;
+    margin-bottom: 7px !important;
+  }
   .editlist div {
     margin-left: 10px;
     width: 50px;
@@ -681,6 +684,17 @@
     margin-right: 5px;
   }
 
+  .bookmark-icon {
+    float: left;
+    margin-right: 5px;
+
+  }
+
+  .bookmark-icon img {
+    width: 14px;
+    height: 14px;
+    vertical-align: middle;
+  }
   .filter-tbar {
     display: flex;
     position: relative;
@@ -748,10 +762,21 @@
   }
 
   .bookmark-list-tag {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     margin-left: 4px;
-    color: #5094d5;
-    background-color: #fff;
+    height: 18px;
+    line-height: 18px;
+    margin-top: 2px;
+    border-radius: 1px;
+    color: #7794D8;
+    background-color: #FFFFFF;
     border-radius: 0px;
+    border: 1px solid #EAEAEF;
+  }
+  .bookmark-list-tag:hover{
+    color: #569cd5;
   }
 
   .listhint {
@@ -769,8 +794,76 @@
   .info-wrap{
     color: #9EABB3;
   }
+
 /**evanyou背景特效**/
 
+  .bookmark-title {
+    /*设置文本框大小*/
+    white-space: nowrap;
+    /*设置内容不换行*/
+    text-overflow: ellipsis;
+    /*设置文字超出文本框的内容显示成...*/
+    overflow: hidden;
+    /*超出部分隐藏*/
+    font-size: 17px;
+    font-weight: 600;
+  }
 
+  .description {
+    /*设置文本框大小*/
+    white-space: nowrap;
+    /*设置内容不换行*/
+    text-overflow: ellipsis;
+    /*设置文字超出文本框的内容显示成...*/
+    overflow: hidden;
+    /*超出部分隐藏*/
+    color: #545454;
+    font-size: 13px;
+  }
+  .bookmarklist {
+    width: 100%;
+    height: 600px;
+    /*background-color: #fff;*/
+    float: left
+  }
+
+
+  /**滚动条美化*/
+
+  /*滚动条的宽度*/
+
+  ::-webkit-scrollbar {
+    width:5px;
+    height:3px;
+    /*background-color: red;*/
+  }
+
+  /*外层轨道。可以用display:none让其不显示，也可以添加背景图片，颜色改变显示效果*/
+
+  ::-webkit-scrollbar-track {
+    width: 6px;
+    background-color:#fff;
+    -webkit-border-radius: 2em;
+    -moz-border-radius: 2em;
+    border-radius:2em;
+  }
+
+  /*滚动条的设置*/
+
+  ::-webkit-scrollbar-thumb {
+    background-color:#606d71;
+    background-clip:padding-box;
+    min-height:28px;
+    -webkit-border-radius: 2em;
+    -moz-border-radius: 2em;
+    border-radius:2em;
+
+  }
+  /*滚动条移上去的背景*/
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: #7c6fff;
+  }
+  /*滚动条美化结束*/
 
 </style>

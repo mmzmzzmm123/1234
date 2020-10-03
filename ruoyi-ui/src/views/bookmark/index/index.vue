@@ -3,7 +3,7 @@
 
     <el-container class="box" ref="box">
       <transition name="el-zoom-in-left" >
-        <el-aside :style="asideHeight" v-show="isShowZtree" class="transition-box left"
+        <el-aside :style="asideHeight" v-show="isShowZtree" class="transition-box left isaside"
                   style="overflow-x:hidden;overflow-y: hidden;">
           <el-header class="aside-logo">
             <!--        <img src="https://s1.ax1x.com/2020/08/15/dACqUO.png"/>-->
@@ -28,7 +28,7 @@
             </div>
             <div class="reminder">工具箱</div>
             <div class="aside-title"><i class="el-icon-s-flag" style="color: red"></i><span>RSS订阅</span></div>
-            <div class="aside-title"><i class="el-icon-s-management"></i><span>标签管理</span></div>
+            <div class="aside-title" @click="goUserTagAll"><i class="el-icon-s-management"></i><span>标签管理</span></div>
             <div class="aside-title" @click="gorecycle"><i class="el-icon-delete-solid"></i><span>回收站</span></div>
             <div class="aside-title" @click="importHtml"><i class="el-icon-s-platform"></i><span>导入书签</span></div>
             <div class="aside-title"><i class="el-icon-s-comment"></i><span>意见反馈</span></div>
@@ -288,7 +288,7 @@
 </template>
 <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
 
-<script>
+<script >
   // 下面的是单个Vue组件引用的外部静态文件，也可以在main.js文件中引用
   import {addBookmark} from "@/api/bookmark/bookmark";
 
@@ -1327,7 +1327,8 @@
         })
 
       },
-      // 回收站
+
+      /** 回收站**/
       gorecycle() {
         var that = this;
         that.$router.push({
@@ -1336,8 +1337,15 @@
             menuId: 'RECYCLE'
           }
         })
-
       },
+      /** 用户书签**/
+      goUserTagAll() {
+        var that = this;
+        that.$router.push({
+          path: "/UserTagAll",
+        })
+      },
+
 
 
     },
@@ -1477,7 +1485,7 @@
 
   }
 
-  aside{
+  .isaside{
     padding: 0;
     margin-bottom: 0;
     /*background:url('https://ftp.bmp.ovh/imgs/2020/08/4ac1d6b4f41049ef.jpg') no-repeat;*/
@@ -1597,13 +1605,6 @@
   }
 
   .filter {
-    /*width: 100%;*/
-    /*height: 30px;*/
-    /*position: relative;*/
-    /*margin-top: 0;*/
-    /*background-color: #ffffff;*/
-    /*margin-bottom: 5px;*/
-
     display: flex;
     flex-wrap: wrap;
   }
@@ -1673,9 +1674,6 @@
     margin-top: 6px;
   }
 
-  .margintop {
-    margin-left: 10px;
-  }
 
 
   .sousou-input {
@@ -1720,71 +1718,29 @@
     margin-right: 5px;
   }
 
-  .bookmark-title {
-    /*设置文本框大小*/
-    white-space: nowrap;
-    /*设置内容不换行*/
-    text-overflow: ellipsis;
-    /*设置文字超出文本框的内容显示成...*/
-    overflow: hidden;
-    /*超出部分隐藏*/
-    font-size: 17px;
-    font-weight: 600;
-  }
 
-  .description {
-    /*设置文本框大小*/
-    white-space: nowrap;
-    /*设置内容不换行*/
-    text-overflow: ellipsis;
-    /*设置文字超出文本框的内容显示成...*/
-    overflow: hidden;
-    /*超出部分隐藏*/
-    color: #545454;
-    font-size: 13px;
-  }
 
   .bookmark {
     height: 65px;
   }
 
-  .bookmark-icon {
-    float: left;
-    margin-right: 5px;
 
-  }
-
-  .bookmark-icon img {
-    width: 14px;
-    height: 14px;
-    vertical-align: middle;
-  }
 
 
   .bookmark-official {
     float: left;
   }
 
-  .info {
-    font-size: 12px;
+  /*.info {*/
+  /*  font-size: 12px;*/
 
-  }
-
-  .info-wrap {
-    color: #8c8c8c;
-  }
-
-  .bookmark-time {
-    float: left;
+  /*}*/
 
 
-  }
 
-  .bookmark-hr {
-    background-color: #fff !important;
-    margin-top: 2px !important;
-    margin-bottom: 7px !important;
-  }
+
+
+
 
   .sousouleft-switch {
 
@@ -1829,22 +1785,8 @@
     color: #000 !important;
   }
 
-  .announcement {
-    margin-top: 20px;
-    width: 24%;
-    height: 400px;
-    /*background-color: #ff5f85;*/
-    float: left;
-    border-left: #8c8c8c 1px solid;
-    margin-left: 10px;
-  }
 
-  .bookmarklist {
-    width: 100%;
-    height: 600px;
-    /*background-color: #fff;*/
-    float: left
-  }
+
 
   .sousouright-icon {
     margin-right: 24px;
@@ -2032,6 +1974,7 @@
     user-select:none; /* CSS3属性 */
   }
 
+  /* 拖拽相关样式 结束 */
   #evanyou{
     position:fixed;
     width:100%;
