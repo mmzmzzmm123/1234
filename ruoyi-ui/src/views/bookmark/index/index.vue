@@ -62,7 +62,7 @@
       </transition>
 
       <div class="isresize">
-
+        <i class="el-icon-caret-top"></i>
       </div>
       <!--    <el-drawer-->
       <!--      title="我是标题"-->
@@ -466,7 +466,6 @@
               resize[i].style.left = moveLen; // 设置左侧区域的宽度
 
               for (let j = 0; j < left.length; j++) {
-                console.log("開始設置宽度")
                 left[j].style.width = moveLen + 'px';
                 // this.asideHeight.width = moveLen + 'px';
                 mid[j].style.width = (box[i].clientWidth - moveLen - 10) + 'px';
@@ -1018,8 +1017,13 @@
     padding: 0;
     margin-bottom: 0;
     /*background:url('https://ftp.bmp.ovh/imgs/2020/08/4ac1d6b4f41049ef.jpg') no-repeat;*/
-    background-color: #F6F6F6;
-    /*background: url("https://s1.ax1x.com/2020/08/16/dEcqVU.jpg") no-repeat;*/
+    /*background-color: #F6F6F6;*/
+    background: url("https://s1.ax1x.com/2020/08/16/dEcqVU.jpg") no-repeat;
+    filter:"progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod='scale')";
+    -moz-background-size:100% 100%;
+    background-size:100% 100%;
+
+
 
     /*background-size: cover;*/
     /*z-index: -1;!*-1 可以当背景*!*/
@@ -1503,24 +1507,25 @@
 
   /*拖拽区div样式*/
   .isresize {
-    background-color: transparent ;
-
-    /*border-radius: 6px;*/
-    width: 12px;
-    /*height: 50px;*/
+    background-color: transparent;
+    width: 10px;
     font-size: 25px;
-    color: white;
-    /*margin-top: 23%;*/
+    display:-webkit-flex;
+    justify-content:center;
+    align-items:center;
+    background-color: transparent;
+    color: transparent;
   }
   /*拖拽区鼠标悬停样式*/
-  .isresize:hover {
-    /*color: #f2f2f2;*/
-    /*color: #f2f2f2;*/
+  .isresize:hover{
+    color: #a4a4a4;
   }
   .isresize i{
-    line-height: 36px;
+    margin-left: 2px;
     transform: rotate(90deg);
-    width: 8px;
+    width: 10px;
+    /*color: transparent;*/
+    /*background-color: black;*/
   }
   .main-right{
     min-width: 250px;
