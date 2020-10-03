@@ -751,6 +751,7 @@
     margin-left: 4px;
     color: #5094d5;
     background-color: #fff;
+    border-radius: 0px;
   }
 
   .listhint {
