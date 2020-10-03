@@ -66,7 +66,7 @@
     </div>
 
 
-    <div class="bookmarklist" :style="datalist" v-loading="loading" v-if="showbookmark" v-infinite-scroll="load"
+    <div class="bookmarklist" :style="datalist" infinite-scroll-distance="10" v-loading="loading" v-if="showbookmark" v-infinite-scroll="load"
          infinite-scroll-disabled="disabled" style="overflow:auto;" infinite-scroll-immediate="false">
       <el-row>
         <hr class="bookamrk-hr"/>
@@ -351,6 +351,7 @@
 
       /**滚动监控**/
       load() {
+        console.log("滚动开始")
 
         //判断是否加载了所有数据
         this.queryParams.pageNum=this.queryParams.pageNum+1;
@@ -757,5 +758,15 @@
     background: #dcdfe682;
     font-weight: 600;
   }
+  .bookmark-title:hover{
+    color: #3C4DAC;
+  }
+  .description{
+    color: #9EABB3;
+  }
+  .info-wrap{
+    color: #9EABB3;
+  }
+
 
 </style>

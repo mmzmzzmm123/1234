@@ -8,7 +8,7 @@
           <el-header class="aside-logo">
             <!--        <img src="https://s1.ax1x.com/2020/08/15/dACqUO.png"/>-->
             <div class="logoname">
-              <span>集趣书签</span>
+              <span>藏趣云书签</span>
             </div>
             <div class="logoright">
               <i class="el-icon-plus"/>
@@ -894,8 +894,10 @@
 
 
   body {
-    font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+    /*font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;*/
+    font-family: "Merriweather","Open Sans","Microsoft Jhenghei","Microsoft Yahei",sans-serif;
   }
+
 
 
   .ztree li ul {
@@ -1013,15 +1015,44 @@
 
   }
 
-  aside {
+  aside{
     padding: 0;
     margin-bottom: 0;
     /*background:url('https://ftp.bmp.ovh/imgs/2020/08/4ac1d6b4f41049ef.jpg') no-repeat;*/
     /*background-color: #F6F6F6;*/
-    background: url("https://s1.ax1x.com/2020/08/16/dEcqVU.jpg") no-repeat;
+    /*background: url("https://s1.ax1x.com/2020/08/16/dEcqVU.jpg") no-repeat;*/
+
+
+    /*background: url("https://s1.ax1x.com/2020/10/03/03WM4K.md.jpg") no-repeat;*/
+    background: url("https://s1.ax1x.com/2020/10/03/03fri6.png") no-repeat;
+
+
+    /*background: url("https://s1.ax1x.com/2020/10/03/03RCSe.jpg") no-repeat;*/
+    /*background-color: #2E90AE;*/
+    /*background: -webkit-linear-gradient(to right, #000C40, #F0F2F0);  !* Chrome 10-25, Safari 5.1-6 *!*/
+    /*background: linear-gradient(to right, #000C40, #F0F2F0); !* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ *!*/
+
+    /*opacity:0.9;*/
+    /*filter:alpha(opacity=90);*/
+
+
+
+
     filter:"progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod='scale')";
     -moz-background-size:100% 100%;
     background-size:100% 100%;
+
+
+    /*background: url("https://s1.ax1x.com/2020/10/03/03sAeK.md.jpg") no-repeat, linear-gradient(90deg, rgb(107, 165, 255) 40%, rgb(197, 197, 197) 100%) ;*/
+    /*background-repeat: no-repeat;*/
+    /*filter:"progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod='scale')";*/
+    /*-moz-background-size:100% 100%;*/
+    /*background-size:400px 100%;*/
+
+    /*background-color: #2E90AE;*/
+    /*background: -webkit-linear-gradient(to right, #000C40, #F0F2F0);  !* Chrome 10-25, Safari 5.1-6 *!*/
+    /*!*background: linear-gradient(to right, #000C40, #F0F2F0); !* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ *!*!*/
+
 
 
 
