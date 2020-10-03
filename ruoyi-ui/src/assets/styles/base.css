@@ -14,7 +14,7 @@
   .header-listtxet{
     display: none;
   }
-  .transition-box{
+  .main-right{
     width: 250px!important;
   }
   .tabBar{
@@ -50,6 +50,9 @@
     display: none;
   }
     .transition-box{
+      display: none;
+    }
+    .isresize{
       display: none;
     }
   .sousouleft-switch{

@@ -1,223 +1,226 @@
-<template >
-  <div >
+<template>
+  <div  class="box" ref="box">
 
-  <el-container >
-    <transition name="el-zoom-in-left" >
+    <el-container class="box" ref="box">
+      <transition name="el-zoom-in-left" >
+        <el-aside :style="asideHeight" v-show="isShowZtree" class="transition-box left"
+                  style="overflow-x:hidden;overflow-y: hidden;">
+          <el-header class="aside-logo">
+            <!--        <img src="https://s1.ax1x.com/2020/08/15/dACqUO.png"/>-->
+            <div class="logoname">
+              <span>集趣书签</span>
+            </div>
+            <div class="logoright">
+              <i class="el-icon-plus"/>
+            </div>
 
-    <el-aside  :style="asideHeight" v-show="isShowZtree" class="transition-box" style="overflow-x:hidden;overflow-y: hidden;">
+          </el-header>
+
+          <div class="main-right">
+
+            <div class="aside-title" @click="goBookmarkList"><i class="el-icon-s-tools"></i><span>全部书签</span></div>
+            <div class="aside-title"><i class="el-icon-help"></i><span>发现</span></div>
+            <div class="aside-title"><i class="el-icon-s-platform"></i><span>任意门</span></div>
+            <div class="aside-title"><i class="el-icon-message-solid"></i><span>收件箱</span></div>
+            <div class="reminder">我的收藏</div>
+            <div class="areaTree">
+              <ul id="treeDemo" class="ztree"></ul>
+            </div>
+            <div class="reminder">工具箱</div>
+            <div class="aside-title"><i class="el-icon-s-flag" style="color: red"></i><span>RSS订阅</span></div>
+            <div class="aside-title"><i class="el-icon-s-management"></i><span>标签管理</span></div>
+            <div class="aside-title" @click="gorecycle"><i class="el-icon-delete-solid"></i><span>回收站</span></div>
+            <div class="aside-title" @click="importHtml"><i class="el-icon-s-platform"></i><span>导入书签</span></div>
+            <div class="aside-title"><i class="el-icon-s-comment"></i><span>意见反馈</span></div>
+            <div class="aside-title" @click="ceshi"><i class="el-icon-s-comment"></i><span>测试页面</span></div>
+            <div class="aside-title " style="margin-bottom: 100px"><i class="el-icon-s-grid"></i><span>其他设置</span></div>
+
+          </div>
 
 
-      <el-header  class="aside-logo">
-<!--        <img src="https://s1.ax1x.com/2020/08/15/dACqUO.png"/>-->
-        <div class="logoname">
-          <span>集趣书签</span>
-        </div>
-        <div class="logoright" >
-          <i class="el-icon-plus"  />
-        </div>
+          <div class="tabBar">
+            <div class=""
+                 style="width: 100%;height: 30px;background-color: #cacaca;float: left;text-align: center;line-height: 30px">
+              <i class="el-icon-folder-checked"></i>
+              <span>新的收藏集</span>
+            </div>
 
-      </el-header>
+            <div style="float: left;width: 100%;height: 50px;background-color: black">
+              <img src="https://s1.ax1x.com/2020/09/13/w0jfy9.png" style="width: 100%;height: 100%">
+            </div>
 
-<div class="main-right">
+          </div>
 
-      <div class="aside-title" @click="goBookmarkList"><i class="el-icon-s-tools"></i><span>全部书签</span></div>
-      <div class="aside-title"><i class="el-icon-help"></i><span>发现</span></div>
-      <div class="aside-title"><i class="el-icon-s-platform"></i><span>任意门</span></div>
-      <div class="aside-title"><i class="el-icon-message-solid"></i><span>收件箱</span></div>
-      <div class="reminder">我的收藏</div>
-      <div class="areaTree" >
-        <ul id="treeDemo" class="ztree" ></ul>
+
+        </el-aside>
+
+
+        <!--      <el-footer class="aside-navigation">-->
+        <!--      </el-footer>-->
+
+
+      </transition>
+
+      <div class="isresize">
+
       </div>
-      <div class="reminder">工具箱</div>
-      <div class="aside-title"><i class="el-icon-s-flag" style="color: red"></i><span>RSS订阅</span></div>
-      <div class="aside-title"><i class="el-icon-s-management" ></i><span>标签管理</span></div>
-      <div class="aside-title" @click="gorecycle"><i class="el-icon-delete-solid"></i><span>回收站</span></div>
-      <div class="aside-title" @click="importHtml"><i class="el-icon-s-platform"></i><span>导入书签</span></div>
-      <div class="aside-title"><i class="el-icon-s-comment"></i><span>意见反馈</span></div>
-      <div class="aside-title" @click="ceshi"><i class="el-icon-s-comment"></i><span>测试页面</span></div>
-      <div class="aside-title " style="margin-bottom: 100px"><i class="el-icon-s-grid"></i><span>其他设置</span></div>
-
-      </div>
-
+      <!--    <el-drawer-->
+      <!--      title="我是标题"-->
+      <!--      :visible.sync="drawer"-->
+      <!--      :direction="direction"-->
+      <!--      :modal-append-to-body="drawerS"-->
+      <!--      :append-to-body="isShowZtree"-->
+      <!--    >-->
+      <!--      <span>我来啦!</span>-->
+      <!--    </el-drawer>-->
 
 
+      <!--    <el-button @click="isShowZtree = !isShowZtree">Click Me</el-button>-->
 
 
-      <div class="tabBar">
-        <div class="" style="width: 100%;height: 30px;background-color: #cacaca;float: left;text-align: center;line-height: 30px" >
-          <i class="el-icon-folder-checked"></i>
-          <span>新的收藏集</span>
-        </div>
+        <el-container class="mid">
 
-        <div style="float: left;width: 100%;height: 50px;background-color: black" >
-        <img src="https://s1.ax1x.com/2020/09/13/w0jfy9.png" style="width: 100%;height: 100%">
-        </div>
+        <el-header class="header-sousou" style="height: 50px">
+          <div class="sousou-left">
+            <div class="sousouleft-switch" @click="drawer = true"><i class="el-icon-s-unfold"/></div>
+            <div class="sousou-leftico" @click="drawer = true"><img
+              src="https://favicon.lucq.fun/?url=https://www.baidu.com"/></div>
+          </div>
 
-        </div>
-
-
-    </el-aside>
-
-<!--      <el-footer class="aside-navigation">-->
-<!--      </el-footer>-->
-
-
-    </transition>
-
-<!--    <el-drawer-->
-<!--      title="我是标题"-->
-<!--      :visible.sync="drawer"-->
-<!--      :direction="direction"-->
-<!--      :modal-append-to-body="drawerS"-->
-<!--      :append-to-body="isShowZtree"-->
-<!--    >-->
-<!--      <span>我来啦!</span>-->
-<!--    </el-drawer>-->
-
-
-
-<!--    <el-button @click="isShowZtree = !isShowZtree">Click Me</el-button>-->
-    <el-container >
-
-      <el-header  class="header-sousou" style="height: 50px">
-      <div class="sousou-left">
-        <div class="sousouleft-switch" @click="drawer = true"><i class="el-icon-s-unfold"/></div>
-        <div class="sousou-leftico" @click="drawer = true"><img src="https://favicon.lucq.fun/?url=https://www.baidu.com"/></div>
-      </div>
-
-        <div class="sousou-input">
-          <el-popover
-            placement="bottom"
-            width="400"
-            trigger="click"
-            :visible-arrow="false"
-            popper-class="popover-suosou"
-          >
+          <div class="sousou-input">
+            <el-popover
+              placement="bottom"
+              width="400"
+              trigger="click"
+              :visible-arrow="false"
+              popper-class="popover-suosou"
+            >
 
               <div v-for="o in 4" :key="o">
                 {{'列表内容 ' + o }}
               </div>
 
-        <el-input slot="reference"  placeholder="请输入书签名字" v-model="sousou" size="small">
-        <i slot="prefix" class="el-input__icon el-icon-search"></i>
-<!--          <el-button slot="append" icon="el-icon-search"></el-button>-->
-          </el-input>
+              <el-input slot="reference" placeholder="请输入书签名字" v-model="sousou" size="small">
+                <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                <!--          <el-button slot="append" icon="el-icon-search"></el-button>-->
+              </el-input>
 
 
-          </el-popover>
+            </el-popover>
 
-        </div>
+          </div>
 
-        <div class="sousouright-icon"><el-badge :value="5" :max="99" class="item" ><i class="el-icon-message-solid" style="font-size: 17px;"></i></el-badge></div>
+          <div class="sousouright-icon">
+            <el-badge :value="5" :max="99" class="item"><i class="el-icon-message-solid" style="font-size: 17px;"></i>
+            </el-badge>
+          </div>
 
-        <div class="sousouright-icon">
-          <el-dropdown trigger="click" size="small" :hide-on-click="false"  >
+          <div class="sousouright-icon">
+            <el-dropdown trigger="click" size="small" :hide-on-click="false">
               <span class="el-dropdown-link">
           <i class="el-icon-plus" style="font-size: 18px;"/>
              </span>
-            <el-dropdown-menu  slot="dropdown" class="sq-dropdown">
-              <el-dropdown-item class="filter-item" icon="el-icon-plus"  @click.native="addbookmarkurl">添加连接</el-dropdown-item>
-              <el-dropdown-item class="filter-item" icon="el-icon-plus" command="b">添加文本</el-dropdown-item>
-              <el-dropdown-item class="filter-item" icon="el-icon-plus" command="d" >导入书签</el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
+              <el-dropdown-menu slot="dropdown" class="sq-dropdown">
+                <el-dropdown-item class="filter-item" icon="el-icon-plus" @click.native="addbookmarkurl">添加连接
+                </el-dropdown-item>
+                <el-dropdown-item class="filter-item" icon="el-icon-plus" command="b">添加文本</el-dropdown-item>
+                <el-dropdown-item class="filter-item" icon="el-icon-plus" command="d">导入书签</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
 
 
           </div>
 
 
-
-
-
-        <div class="header-list">
-          <el-dropdown trigger="click" size="small" :hide-on-click="false"  >
+          <div class="header-list">
+            <el-dropdown trigger="click" size="small" :hide-on-click="false">
               <span class="el-dropdown-link">
-           <el-avatar  :size="28" src="https://up.raindrop.io/collection/templates/social-media-logos-6/97social.png"></el-avatar>
+           <el-avatar :size="28"
+                      src="https://up.raindrop.io/collection/templates/social-media-logos-6/97social.png"></el-avatar>
               </span>
-            <el-dropdown-menu  slot="dropdown" class="sq-dropdown">
-              <el-dropdown-item class="filter-item" icon="el-icon-plus" command="a">外观显示</el-dropdown-item>
-              <el-dropdown-item class="filter-item" icon="el-icon-plus" command="b">用户中心</el-dropdown-item>
-              <el-dropdown-item class="filter-item" icon="el-icon-plus" command="d" >建议反馈</el-dropdown-item>
-              <el-dropdown-item class="filter-item" icon="el-icon-plus" command="e" >退出登录</el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
-        </div>
+              <el-dropdown-menu slot="dropdown" class="sq-dropdown">
+                <el-dropdown-item class="filter-item" icon="el-icon-plus" command="a">外观显示</el-dropdown-item>
+                <el-dropdown-item class="filter-item" icon="el-icon-plus" command="b">用户中心</el-dropdown-item>
+                <el-dropdown-item class="filter-item" icon="el-icon-plus" command="d">建议反馈</el-dropdown-item>
+                <el-dropdown-item class="filter-item" icon="el-icon-plus" command="e">退出登录</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+          </div>
 
 
-      </el-header>
-      <el-main class="bookmarkmain" >
+        </el-header>
+        <el-main class="bookmarkmain">
 
-        <router-view :key="$route.query.menuId"></router-view>
+          <router-view :key="$route.query.menuId"></router-view>
 
 
-      </el-main>
+        </el-main>
+
+
+      </el-container>
 
 
     </el-container>
 
-  </el-container>
+
+    <!--  编辑弹窗-->
+    <el-dialog :title="title" :visible.sync="open" width="500px" class="menuedit" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+        <el-form-item prop="menuName">
+          <div class="labelname">菜单名称</div>
+          <el-input class="custom-input" v-model="form.menuName" placeholder="请输入菜单名称"/>
+        </el-form-item>
+        <el-form-item prop="menuIcon">
+          <div class="labelname">菜单图标</div>
+          <el-input class="custom-input" v-model="form.menuIcon" placeholder="请输入菜单图标"/>
+        </el-form-item>
+        <el-form-item prop="parentId">
+          <div class="labelname">上级菜单</div>
+          <treeselect class="menutreeselect" v-model="form.parentId" :options="menuOptions" :normalizer="normalizer"/>
+        </el-form-item>
 
 
+        <!--      <el-form-item  prop="menuOrder">-->
+        <!--        <div class="labelname">排序</div>-->
+        <!--        <el-input class="custom-input" v-model="form.menuOrder" placeholder="请输入菜单排序" />-->
+        <!--      </el-form-item>-->
 
-<!--  编辑弹窗-->
-  <el-dialog  :title="title"  :visible.sync="open" width="500px" class="menuedit"  append-to-body>
-    <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-      <el-form-item prop="menuName">
-        <div class="labelname">菜单名称</div>
-        <el-input class="custom-input" v-model="form.menuName" placeholder="请输入菜单名称" />
-      </el-form-item>
-      <el-form-item  prop="menuIcon">
-        <div class="labelname">菜单图标</div>
-        <el-input class="custom-input" v-model="form.menuIcon" placeholder="请输入菜单图标" />
-      </el-form-item>
-      <el-form-item  prop="parentId">
-        <div class="labelname">上级菜单</div>
-        <treeselect class="menutreeselect"  v-model="form.parentId" :options="menuOptions" :normalizer="normalizer"  />
-      </el-form-item>
+        <el-form-item prop="menuOrder">
+          <div class="labelname">排序(小到大)</div>
+          <br/>
+          <el-input-number v-model="form.menuOrder" placeholder="计数器"></el-input-number>
+        </el-form-item>
 
 
-<!--      <el-form-item  prop="menuOrder">-->
-<!--        <div class="labelname">排序</div>-->
-<!--        <el-input class="custom-input" v-model="form.menuOrder" placeholder="请输入菜单排序" />-->
-<!--      </el-form-item>-->
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="danger" round @click="deleteMmenu(form.menuId)">删除</el-button>
+        <el-button type="primary" round @click="submitForm">确定</el-button>
+        <el-button round @click="cancel">取消</el-button>
 
-      <el-form-item  prop="menuOrder">
-        <div class="labelname">排序(小到大)</div><br/>
-        <el-input-number v-model="form.menuOrder" placeholder="计数器"></el-input-number>
-      </el-form-item>
+      </div>
 
-
-    </el-form>
-    <div slot="footer" class="dialog-footer">
-      <el-button type="danger"  round  @click="deleteMmenu(form.menuId)">删除</el-button>
-      <el-button type="primary"  round  @click="submitForm">确定</el-button>
-      <el-button round  @click="cancel">取消</el-button>
-
-    </div>
-
-  </el-dialog>
+    </el-dialog>
 
 
-
-
-  <!-- 添加链接-->
+    <!-- 添加链接-->
     <!-- 添加或修改书签管理对话框 -->
     <el-dialog title="添加连接" :visible.sync="addopen" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="书签地址" prop="url">
-          <el-input v-model="form.url" placeholder="请输入书签地址" />
+          <el-input v-model="form.url" placeholder="请输入书签地址"/>
         </el-form-item>
         <el-form-item label="书签标题" prop="title">
-          <el-input v-model="form.title" placeholder="请输入书签标题" />
+          <el-input v-model="form.title" placeholder="请输入书签标题"/>
         </el-form-item>
         <el-form-item label="书签描述" prop="description">
-          <el-input v-model="form.description"  type="textarea" placeholder="请输入书签描述"
+          <el-input v-model="form.description" type="textarea" placeholder="请输入书签描述"
                     :autosize="{minRows: 3, maxRows:4}" :style="{width: '100%'}"></el-input>
         </el-form-item>
 
-        <el-form-item  prop="parentId">
+        <el-form-item prop="parentId">
           <div class="labelname">分类菜单</div>
-          <treeselect class="menutreeselect"  v-model="form.menuId" :options="menuOptions" :normalizer="normalizer"  />
+          <treeselect class="menutreeselect" v-model="form.menuId" :options="menuOptions" :normalizer="normalizer"/>
         </el-form-item>
 
         <el-form-item label="书签标签" prop="label">
@@ -247,27 +250,27 @@
 
         </el-form-item>
 
-<!--        <el-form-item label="所属目录" prop="menuId">-->
-<!--          <el-input v-model="form.menuId" placeholder="请选择上级目录" />-->
-<!--        </el-form-item>-->
+        <!--        <el-form-item label="所属目录" prop="menuId">-->
+        <!--          <el-input v-model="form.menuId" placeholder="请选择上级目录" />-->
+        <!--        </el-form-item>-->
 
 
-<!--        0公开显示 1隐藏显示 2好友显示-->
+        <!--        0公开显示 1隐藏显示 2好友显示-->
         <el-form-item label="选择状态" prop="start">
           <el-radio-group v-model="form.start" size="medium">
             <el-radio v-for="(item, index) in bookmarkstatus" :key="index" :label="item.value"
-                      :disabled="item.disabled">{{item.name}}</el-radio>
+                      :disabled="item.disabled">{{item.name}}
+            </el-radio>
           </el-radio-group>
         </el-form-item>
         <!--           1.未读稍后再看 2 已读 2.續看-->
         <el-form-item label="选择类型" prop="type">
           <el-radio-group v-model="form.type" size="medium">
             <el-radio v-for="(item, index) in bookmarktype" :key="index" :label="item.value"
-                      :disabled="item.disabled">{{item.name}}</el-radio>
+                      :disabled="item.disabled">{{item.name}}
+            </el-radio>
           </el-radio-group>
         </el-form-item>
-
-
 
 
       </el-form>
@@ -278,10 +281,6 @@
     </el-dialog>
 
 
-
-
-
-
   </div>
 
 
@@ -290,9 +289,9 @@
 
 <script>
   // 下面的是单个Vue组件引用的外部静态文件，也可以在main.js文件中引用
-  import {  addBookmark} from "@/api/bookmark/bookmark";
+  import {addBookmark} from "@/api/bookmark/bookmark";
 
-  import { listMenu, getMenu, delMenu, addMenu, updateMenu, exportMenu } from "@/api/bookmark/menu";
+  import {listMenu, getMenu, delMenu, addMenu, updateMenu, exportMenu} from "@/api/bookmark/menu";
   import Treeselect from "@riophae/vue-treeselect";
   import "@riophae/vue-treeselect/dist/vue-treeselect.css";
   import "../ztree/jquery-1.4.4.min.js"
@@ -300,15 +299,16 @@
   import "../ztree/demo.css"
   import "../ztree/zTreeStyle.css"
   import "../ztree/jquery.ztree.exedit.js"
-  import { listMenuByUserId  } from "@/api/bookmark/menu";
+  import {listMenuByUserId} from "@/api/bookmark/menu";
+
   export default {
     name: 'areaTree',
-    components:{
+    components: {
       Treeselect
     },
 
-    data:function(){
-      return{
+    data: function () {
+      return {
         queryParams: {
           userId: undefined,
           menuName: undefined,
@@ -331,7 +331,7 @@
           zcount: undefined,
           idelete: undefined,
           start: undefined,
-          sqTags:[]
+          sqTags: []
         },
         // 书签菜单树选项
         menuOptions: [],
@@ -340,27 +340,26 @@
         // 是否显示弹出层 编辑添加
         open: false,
         //添加连接
-        addopen:false,
+        addopen: false,
         //书签URL
-        bookamkrurl:'',
+        bookamkrurl: '',
         //添加url
-        addurlopen:true,
+        addurlopen: true,
         // 表单参数
         form: {},
         // 表单校验
-        rules: {
-        },
-        drawerS:false,
+        rules: {},
+        drawerS: false,
         drawer: false,
         direction: 'ltr',
-        swictxuanran:true,
-        sousou:'',//搜索书签
-        enterable:false,
-        isShowZtree:true,//ztree树显示
-        expandAll:false,//是否展开ztree树
-        curMenu:null,
-        zTree_Menu:null,
-        setting:{
+        swictxuanran: true,
+        sousou: '',//搜索书签
+        enterable: false,
+        isShowZtree: true,//ztree树显示
+        expandAll: false,//是否展开ztree树
+        curMenu: null,
+        zTree_Menu: null,
+        setting: {
           view: {
             showLine: false,
             showIcon: true,
@@ -372,8 +371,8 @@
           },
           check: {
             enable: true,
-            nocheckInherit: false ,
-            chkboxType: { "Y": "p", "N": "s" }
+            nocheckInherit: false,
+            chkboxType: {"Y": "p", "N": "s"}
           },
           data: {
             simpleData: {
@@ -387,12 +386,12 @@
 
           }
         },
-        zNodes:[],
-        bookmark:[],
+        zNodes: [],
+        bookmark: [],
         inputVisible: false, //标签
         inputValue: '', //标签
-        tagcount:0, //标签虚拟ID
-        sqTags:[],
+        tagcount: 0, //标签虚拟ID
+        sqTags: [],
         bookmarkstatus: [{
           "name": "公开",
           "value": 1
@@ -410,16 +409,23 @@
           "name": "待续读",
           "value": 3
         }],
-        asideHeight:{
-          height:"",
-
+        asideHeight: {
+          height: "",
+          width:"",
         }
 
 
       }
     },
+    mounted () {
+      window['editBookmark'] = (e) => {
+        this.editBookmark(e)
+      },
+        //div拖动
+      this.dragControllerDivs();
+    },
     created() {
-      var that=this;
+      var that = this;
       //书签菜单
       that.getList();
 
@@ -427,15 +433,67 @@
       window.addEventListener('resize', this.getHeight);
       this.getHeight()
     },
-    methods:{
+
+    methods: {
+      /**div拖拽宽度**/
+      dragControllerDivs: function () {
+        console.log("开始拖拽")
+        var resize = document.getElementsByClassName('isresize');
+        var left = document.getElementsByClassName('main-right');
+        var mid = document.getElementsByClassName('el-container mid is-vertical');
+        var box = document.getElementsByClassName('box');
+        var transition = document.getElementsByClassName('transition-box');
+
+        for (let i = 0; i < resize.length; i++) {
+          // 鼠标按下事件
+          resize[i].onmousedown = function (e) {
+            //颜色改变提醒
+            resize[i].style.background = 'transparent';
+            var startX = e.clientX;
+            console.log("鼠标按下后：" + e.clientX)
+            resize[i].left = resize[i].offsetLeft;
+            console.log("鼠标按下后：" + resize[i].left)
+            console.log("鼠标按下后：" + resize[i].offsetLeft)
+            // 鼠标拖动事件
+            document.onmousemove = function (e) {
+              var endX = e.clientX;
+              var moveLen = resize[i].left + (endX - startX); // （endx-startx）=移动的距离。resize[i].left+移动的距离=左边区域最后的宽度
+              var maxT = box[i].clientWidth - resize[i].offsetWidth; // 容器宽度 - 左边区域的宽度 = 右边区域的宽度
+
+              if (moveLen < 32) moveLen = 32; // 左边区域的最小宽度为32px
+              if (moveLen > maxT - 150) moveLen = maxT - 150; //右边区域最小宽度为150px
+
+              resize[i].style.left = moveLen; // 设置左侧区域的宽度
+
+              for (let j = 0; j < left.length; j++) {
+                console.log("開始設置宽度")
+                left[j].style.width = moveLen + 'px';
+                // this.asideHeight.width = moveLen + 'px';
+                mid[j].style.width = (box[i].clientWidth - moveLen - 10) + 'px';
+              }
+            };
+            // 鼠标松开事件
+            document.onmouseup = function (evt) {
+              //颜色恢复
+              resize[i].style.background = 'transparent';
+              document.onmousemove = null;
+              document.onmouseup = null;
+              resize[i].releaseCapture && resize[i].releaseCapture(); //当你不在需要继续获得鼠标消息就要应该调用ReleaseCapture()释放掉
+            };
+            resize[i].setCapture && resize[i].setCapture(); //该函数在属于当前线程的指定窗口里设置鼠标捕获
+            return false;
+          };
+        }
+      },
+
 
       /**自动获取高度**/
-      getHeight(){
+      getHeight() {
         // if (window.innerHeight<=750) {
         //    this.asideHeight.height=='750px';
         //   return;
         // }
-       this.asideHeight.height=window.innerHeight+'px';
+        this.asideHeight.height = window.innerHeight + 'px';
 
       },
 
@@ -449,7 +507,7 @@
 //2. 其次得到这个对象在数组中对应的索引
         var index = this.sqTags.indexOf(tina[0]);
 //3. 如果存在则将其删除，index > -1 代表存在
-       index > -1 && this.sqTags.splice(index, 1);
+        index > -1 && this.sqTags.splice(index, 1);
 
         console.log(this.sqTags);
       },
@@ -463,8 +521,8 @@
       handleInputConfirm() {
         let inputValue = this.inputValue;
         if (inputValue) {
-          this.tagcount=this.tagcount-1;
-          var updatetag ={name: inputValue, bookmarkId:"bookmarkId",tagId:this.tagcount};
+          this.tagcount = this.tagcount - 1;
+          var updatetag = {name: inputValue, bookmarkId: "bookmarkId", tagId: this.tagcount};
           this.sqTags.push(updatetag);
         }
         this.inputVisible = false;
@@ -477,10 +535,10 @@
 
 
       /** 新增书签Url操作 */
-      addbookmarkurl:function(){
-          this.reset();
-          this.getTreeselect();
-          this.addopen = true;
+      addbookmarkurl: function () {
+        this.reset();
+        this.getTreeselect();
+        this.addopen = true;
 
         // getMenu(e.getAttribute("data-menuId")).then(response => {
         //   this.form = response.data;
@@ -490,18 +548,18 @@
       },
 
       /** 提交按钮 修改和新增 */
-      addbookmark: function() {
+      addbookmark: function () {
         this.$refs["form"].validate(valid => {
           if (valid) {
-            this.form.sqTags=this.sqTags;
-              addBookmark(this.form).then(response => {
-                if (response.code === 200) {
-                  this.msgSuccess("新增成功");
-                  this.addopen = false;
-                  this.getList();
-                }
-              });
-            }
+            this.form.sqTags = this.sqTags;
+            addBookmark(this.form).then(response => {
+              if (response.code === 200) {
+                this.msgSuccess("新增成功");
+                this.addopen = false;
+                this.getList();
+              }
+            });
+          }
 
         });
       },
@@ -531,11 +589,6 @@
       },
 
 
-
-
-
-
-
       /** 转换书签菜单数据结构 */
       normalizer(node) {
         if (node.children && !node.children.length) {
@@ -549,9 +602,9 @@
       },
       /** 查询部门下拉树结构 */
       getTreeselect() {
-        if (this.zNodes!=null&&this.zNodes.length!=0){
+        if (this.zNodes != null && this.zNodes.length != 0) {
           this.menuOptions = [];
-          const data = { menuId: 0, menuName: '顶级菜单', children: [] };
+          const data = {menuId: 0, menuName: '顶级菜单', children: []};
           data.children = this.handleTree(this.zNodes, "menuId", "parentId");
           this.menuOptions.push(data);
           return;
@@ -559,7 +612,7 @@
 
         listMenuByUserId().then(response => {
           this.menuOptions = [];
-          const data = { menuId: 0, menuName: '顶级菜单', children: [] };
+          const data = {menuId: 0, menuName: '顶级菜单', children: []};
           data.children = this.handleTree(response.data, "menuId", "parentId");
           this.menuOptions.push(data);
         });
@@ -579,11 +632,11 @@
 
       },
       /** 提交按钮 */
-      submitForm: function() {
+      submitForm: function () {
         this.$refs["form"].validate(valid => {
           if (valid) {
             if (this.form.menuId != undefined) {
-              if (this.form.menuId==this.form.parentId){
+              if (this.form.menuId == this.form.parentId) {
                 this.msgError("不能将上级菜单设置为本身");
                 return;
               }
@@ -630,91 +683,90 @@
       // },
       // 表单重置
       reset() {
-        this.sqTags=[],
-        this.form = {
-          menuId: undefined,
-          userId: undefined,
-          menuName: undefined,
-          menuUrl: undefined,
-          menuIcon: undefined,
-          parentId: undefined,
-          menuOrder: undefined,
-          createTime: undefined
-        };
+        this.sqTags = [],
+          this.form = {
+            menuId: undefined,
+            userId: undefined,
+            menuName: undefined,
+            menuUrl: undefined,
+            menuIcon: undefined,
+            parentId: undefined,
+            menuOrder: undefined,
+            createTime: undefined
+          };
         this.resetForm("form");
       },
 
-    addDiyDom:function(treeId, treeNode) {
-      // console.log("自定义ztree:"+treeId.tId+"___treeNode："+treeNode.tId)
-    var spaceWidth = 20;
-    var switchObj = $("#" + treeNode.tId + "_switch"),
-      icoObj = $("#" + treeNode.tId + "_ico");
-    switchObj.remove();
-    icoObj.before(switchObj);
+      addDiyDom: function (treeId, treeNode) {
+        // console.log("自定义ztree:"+treeId.tId+"___treeNode："+treeNode.tId)
+        var spaceWidth = 20;
+        var switchObj = $("#" + treeNode.tId + "_switch"),
+          icoObj = $("#" + treeNode.tId + "_ico");
+        switchObj.remove();
+        icoObj.before(switchObj);
 
-    if (treeNode.level > -1) {
-      var spaceStr = "<span style='display: inline-block;width:" + (spaceWidth * treeNode.level)+ "px'></span>";
-      switchObj.before(spaceStr);
-      var switchObjspan = $("#" + treeNode.tId + "_span");
-
-
-
-      // console.log("进入addHoverDom:统计"+treeNode.bookmarkCount+"_sz 的数量:"+confCount);
-      // console.log("addDiyDom:统计2"+$.fn.zTree.getZTreeObj("treeDemo").getCheckedNodes()[0].bookmarkCount);
-      //console.log("addDiyDom:统计2"+$.fn.zTree.getZTreeObj("treeDemo").getCheckedNodes()[0]);
+        if (treeNode.level > -1) {
+          var spaceStr = "<span style='display: inline-block;width:" + (spaceWidth * treeNode.level) + "px'></span>";
+          switchObj.before(spaceStr);
+          var switchObjspan = $("#" + treeNode.tId + "_span");
 
 
-      var editStr = "<span class="+treeNode.tId+"_count style='color: #9e9e9e;float:right;display: inline-block;margin-right: 15px;font-size:8px' onfocus='this.blur();'>"+treeNode.bookmarkCount+"</span>";
-      switchObjspan.after(editStr);
-    }
-  },
-
-  addHoverDom:function(treeId, treeNode) {
-  	var confCount = $("."+treeNode.tId+"_sz").length;
-  	// console.log("进入addHoverDom:统计"+treeNode.tId+"_sz 的数量:"+confCount);
-  	// console.log("进入addHoverDom:treeId"+treeNode.tId+"_sz 的数量:"+confCount);
-  	// console.log("进入addHoverDom:统计"+treeNode.tId+"_sz 的数量:"+confCount);
-  	// console.log("进入addHoverDom:统计"+treeNode.bookmarkCount+"_sz 的数量:"+confCount);
-  	if (confCount>0) return;
-  	//if (treeNode.parentNode && treeNode.parentNode.id!=1) return;
-  	var switchObjspan = $("#" + treeNode.tId + "_span");
-  	var editStr = "<span class="+treeNode.tId+"_sz data-parentId="+treeNode.parentId+" data-menuId="+treeNode.menuId+" onclick='editBookmark(this)' style='color: #9e9e9e;float:right;display: inline-block;margin-right: 15px;font-size:8px' onfocus='this.blur();'><i class='el-icon-edit'></i></span>";
-  	switchObjspan.after(editStr);
-
-    $("." + treeNode.tId + "_count").unbind().remove();
+          // console.log("进入addHoverDom:统计"+treeNode.bookmarkCount+"_sz 的数量:"+confCount);
+          // console.log("addDiyDom:统计2"+$.fn.zTree.getZTreeObj("treeDemo").getCheckedNodes()[0].bookmarkCount);
+          //console.log("addDiyDom:统计2"+$.fn.zTree.getZTreeObj("treeDemo").getCheckedNodes()[0]);
 
 
-    //绑定编辑
-   // document.getElementsByClassName(treeNode.tId + "_sz").onclick=function(){alert(this.value)};
-    //document.getElementsByClassName(treeNode.tId + "_sz").addEventListener('click', editBookmark);
-   // $("." + treeNode.tId + "_sz").addEventListener('click', editBookmark);
-  },
+          var editStr = "<span class=" + treeNode.tId + "_count style='color: #9e9e9e;float:right;display: inline-block;margin-right: 15px;font-size:8px' onfocus='this.blur();'>" + treeNode.bookmarkCount + "</span>";
+          switchObjspan.after(editStr);
+        }
+      },
 
-  removeHoverDom:function(treeId, treeNode) {
-  	//console.log("进入removeHoverDom:"+"." + treeNode.tId + "_sz")
-  	//if (treeNode.parentTId && treeNode.getParentNode().id!=1) return;
+      addHoverDom: function (treeId, treeNode) {
+        var confCount = $("." + treeNode.tId + "_sz").length;
+        // console.log("进入addHoverDom:统计"+treeNode.tId+"_sz 的数量:"+confCount);
+        // console.log("进入addHoverDom:treeId"+treeNode.tId+"_sz 的数量:"+confCount);
+        // console.log("进入addHoverDom:统计"+treeNode.tId+"_sz 的数量:"+confCount);
+        // console.log("进入addHoverDom:统计"+treeNode.bookmarkCount+"_sz 的数量:"+confCount);
+        if (confCount > 0) return;
+        //if (treeNode.parentNode && treeNode.parentNode.id!=1) return;
+        var switchObjspan = $("#" + treeNode.tId + "_span");
+        var editStr = "<span class=" + treeNode.tId + "_sz data-parentId=" + treeNode.parentId + " data-menuId=" + treeNode.menuId + " onclick='editBookmark(this)' style='color: #9e9e9e;float:right;display: inline-block;margin-right: 15px;font-size:8px' onfocus='this.blur();'><i class='el-icon-edit'></i></span>";
+        switchObjspan.after(editStr);
 
-  	$("." + treeNode.tId + "_sz").unbind().remove();
-    var switchObjspan = $("#" + treeNode.tId + "_span");
-    var editStr = "<span class="+treeNode.tId+"_count onclick='alert(1111111);return false;' style='color: #9e9e9e;float:right;display: inline-block;margin-right: 15px;font-size:8px' onfocus='this.blur();'>"+treeNode.bookmarkCount+"</span>";
-    switchObjspan.after(editStr);
+        $("." + treeNode.tId + "_count").unbind().remove();
 
-  },
-  //点击展开
-   beforeClick:function(treeId, treeNode) {
 
-    //if (treeNode.level != 19990 ) {
-    //    var zTree = $.fn.zTree.getZTreeObj("treeDemo");
-    //    zTree.expandNode(treeNode);
+        //绑定编辑
+        // document.getElementsByClassName(treeNode.tId + "_sz").onclick=function(){alert(this.value)};
+        //document.getElementsByClassName(treeNode.tId + "_sz").addEventListener('click', editBookmark);
+        // $("." + treeNode.tId + "_sz").addEventListener('click', editBookmark);
+      },
 
-    //  return false;
-    // }
-    //return true;
-  },
+      removeHoverDom: function (treeId, treeNode) {
+        //console.log("进入removeHoverDom:"+"." + treeNode.tId + "_sz")
+        //if (treeNode.parentTId && treeNode.getParentNode().id!=1) return;
+
+        $("." + treeNode.tId + "_sz").unbind().remove();
+        var switchObjspan = $("#" + treeNode.tId + "_span");
+        var editStr = "<span class=" + treeNode.tId + "_count onclick='alert(1111111);return false;' style='color: #9e9e9e;float:right;display: inline-block;margin-right: 15px;font-size:8px' onfocus='this.blur();'>" + treeNode.bookmarkCount + "</span>";
+        switchObjspan.after(editStr);
+
+      },
+      //点击展开
+      beforeClick: function (treeId, treeNode) {
+
+        //if (treeNode.level != 19990 ) {
+        //    var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+        //    zTree.expandNode(treeNode);
+
+        //  return false;
+        // }
+        //return true;
+      },
       /** 点击跳转**/
       //节点点击
-      OnClickzTree:function(event,treeId, treeNode){
-        var that=this;
+      OnClickzTree: function (event, treeId, treeNode) {
+        var that = this;
         that.$router.push({
           path: "/content",
           query: {
@@ -730,22 +782,22 @@
         // if (confCount>0) return;
         // var editStr = "<span class="+treeNode.tId+"_count onclick='alert(1111111);return false;' style='color: #9e9e9e;float:right;display: inline-block;margin-right: 15px;font-size:8px' onfocus='this.blur();'>12</span>";
         // switchObjspan.after(editStr);
-      // return false;
+        // return false;
       },
       //显示隐藏 ztree菜单
-      zreaZtree:function () {
-      var that=this;
+      zreaZtree: function () {
+        var that = this;
         that.isShowZtree = !that.isShowZtree;
 
       },
       /**跳转导入页面**/
-      importHtml:function(){
+      importHtml: function () {
         this.$router.push({
           path: "/importHtml",
         })
 
-      },/**跳转测试页面**/
-      ceshi:function(){
+      }, /**跳转测试页面**/
+      ceshi: function () {
         this.$router.push({
           path: "/ceshi",
         })
@@ -753,11 +805,10 @@
       },
 
 
-
-      editBookmark:function(e){
+      editBookmark: function (e) {
         this.reset();
         this.getTreeselect();
-        if (e.getAttribute("data-menuId")!=null&&e.getAttribute("data-parentId")!=null) {
+        if (e.getAttribute("data-menuId") != null && e.getAttribute("data-parentId") != null) {
           this.form.parentId = e.getAttribute("data-parentId");
         }
         getMenu(e.getAttribute("data-menuId")).then(response => {
@@ -768,7 +819,7 @@
 
 
         //阻止冒泡事件
-        if ( e && e.stopPropagation )
+        if (e && e.stopPropagation)
         //因此它支持W3C的stopPropagation()方法
           e.stopPropagation();
         else
@@ -778,23 +829,23 @@
       },
 
       //删除书签目录
-      deleteMmenu(menuId){
+      deleteMmenu(menuId) {
 
         this.$confirm('是否删除此目录菜单?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-            delMenu(menuId).then(response => {
-              // if(){}
-              this.$message({
-                type: 'success',
-                message: '删除成功!'
-              });
-
-              this.open = false;
-              this.getList();
+          delMenu(menuId).then(response => {
+            // if(){}
+            this.$message({
+              type: 'success',
+              message: '删除成功!'
             });
+
+            this.open = false;
+            this.getList();
+          });
         }).catch(() => {
           this.$message({
             type: 'info',
@@ -805,8 +856,8 @@
 
       },
       // 全部书签
-      goBookmarkList(){
-        var that=this;
+      goBookmarkList() {
+        var that = this;
         that.$router.push({
           path: "/content",
           query: {
@@ -816,8 +867,8 @@
 
       },
       // 回收站
-      gorecycle(){
-        var that=this;
+      gorecycle() {
+        var that = this;
         that.$router.push({
           path: "/content",
           query: {
@@ -829,12 +880,8 @@
 
 
     },
-    mounted(){
-      window['editBookmark'] = (e) => {
-        this.editBookmark(e)
-      }
-    },
-    destroyed(){
+
+    destroyed() {
       window.removeEventListener('resize', this.getHeight)
     },
     handleCommand(command) {
@@ -842,57 +889,112 @@
     },
 
 
-
-
-
-
-
   }
 </script>
 <style >
 
 
-
-
-
-
-  body{
-    font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
+  body {
+    font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
   }
 
 
-  .ztree li ul{  margin:0;  padding:0}
-  .ztree li {line-height:32px}
-  .ztree li a {width:200px;height:32px;padding-top: 0px;font-size: 14px;width:100%}
-  .ztree li a:hover {text-decoration:none; background-color: #E5E5E5;}
-  .ztree li a span.button.switch {vertical-align:middle}
-  .ztree.showIcon li a span.button.switch {visibility:visible}
-  .ztree li a.curSelectedNode {background-color:#E5E5E5;border:0;height:32px;}
-  .ztree li span {line-height:32px;}
-  .ztree li span.button {margin-top: 0px;margin-left:2px;width: 20px;height: 20px;}
+  .ztree li ul {
+    margin: 0;
+    padding: 0
+  }
 
-  .ztree li span.button.switch {width: 20px;height: 20px;}
+  .ztree li {
+    line-height: 32px
+  }
+
+  .ztree li a {
+    width: 200px;
+    height: 32px;
+    padding-top: 0px;
+    font-size: 14px;
+    width: 100%
+  }
+
+  .ztree li a:hover {
+    text-decoration: none;
+    background-color: #E5E5E5;
+  }
+
+  .ztree li a span.button.switch {
+    vertical-align: middle
+  }
+
+  .ztree.showIcon li a span.button.switch {
+    visibility: visible
+  }
+
+  .ztree li a.curSelectedNode {
+    background-color: #E5E5E5;
+    border: 0;
+    height: 32px;
+  }
+
+  .ztree li span {
+    line-height: 32px;
+  }
+
+  .ztree li span.button {
+    margin-top: 0px;
+    margin-left: 2px;
+    width: 20px;
+    height: 20px;
+  }
+
+  .ztree li span.button.switch {
+    width: 20px;
+    height: 20px;
+  }
 
   /*.ztree li a.level0 span {font-size: 100%;font-weight: bold}*/
-  .ztree li span.button {background-image:url("../ztree/bottom.png");}
-  .ztree li span.button.switch.level0 {width: 20px; height:20px}
-  .ztree li span.button.switch.level1 {width: 20px; height:20px}
-  .ztree li span.button.noline_open {background-position: 0 0;}
-  .ztree li span.button.noline_close {background-position: 0 0;background-image:url("../ztree/right.png");}
+  .ztree li span.button {
+    background-image: url("../ztree/bottom.png");
+  }
+
+  .ztree li span.button.switch.level0 {
+    width: 20px;
+    height: 20px
+  }
+
+  .ztree li span.button.switch.level1 {
+    width: 20px;
+    height: 20px
+  }
+
+  .ztree li span.button.noline_open {
+    background-position: 0 0;
+  }
+
+  .ztree li span.button.noline_close {
+    background-position: 0 0;
+    background-image: url("../ztree/right.png");
+  }
+
   /*.ztree li span.button.noline_open.level0 {background-position: 0 0;}*/
   /*.ztree li span.button.noline_close.level0 {background-position:-18px 0;}*/
 
 
-  .ztree li span.button.ico_close{vertical-align: middle}
+  .ztree li span.button.ico_close {
+    vertical-align: middle
+  }
 
-  .ztree li span.button.ico_open{vertical-align: middle}
+  .ztree li span.button.ico_open {
+    vertical-align: middle
+  }
 
-  .ztree li span.button.ico_docu {vertical-align: middle}
+  .ztree li span.button.ico_docu {
+    vertical-align: middle
+  }
 
 
-  .ztr{
-  /*//background{ width:100%;height:100%;position:absolute;top:0px;opacity: 0.6;background-image: url(https://s1.ax1x.com/2020/07/27/akFjER.jpg);background-size: 500px 100px;}*/
-  /*background:red;*/
+  .ztr {
+    /*//background{ width:100%;height:100%;position:absolute;top:0px;opacity: 0.6;background-image: url(https://s1.ax1x.com/2020/07/27/akFjER.jpg);background-size: 500px 100px;}*/
+    /*background:red;*/
   }
 
   /*.areaTree{*/
@@ -907,12 +1009,13 @@
 
   /*}*/
 
-  #app{
+  #app {
     overflow-y: hidden;
 
   }
-  aside{
-    padding:0;
+
+  aside {
+    padding: 0;
     margin-bottom: 0;
     /*background:url('https://ftp.bmp.ovh/imgs/2020/08/4ac1d6b4f41049ef.jpg') no-repeat;*/
     background-color: #F6F6F6;
@@ -922,40 +1025,47 @@
     /*z-index: -1;!*-1 可以当背景*!*/
     /*-webkit-filter: blur(3px);*/
     /*filter: blur(3px);*/
-    box-shadow: inset -1px 0 0 rgba(0,0,0,.1);
+    box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
 
   }
 
-  .aside-title{
+  .aside-title {
     height: 32px;
   }
-  .aside-title:hover{
+
+  .aside-title:hover {
     background-color: #c5c5c5;
   }
-  .aside-title i{
+
+  .aside-title i {
     margin-left: 26px;
     font-size: 20px;
     margin-right: 11px;
-    vertical-align:middle;
+    vertical-align: middle;
   }
-  .aside-title span{
+
+  .aside-title span {
     font-size: 14px;
     margin-right: 11px;
   }
-  .aside-logo{
+
+  .aside-logo {
     display: flex;
     align-items: center;
   }
-  .aside-logo div{
+
+  .aside-logo div {
     width: 50%;
   }
-  .logoname span{
+
+  .logoname span {
     margin-left: 8px;
     font-family: "PingFang SC";
     font-size: 20px;
     font-weight: 400;
   }
-  .logoright i{
+
+  .logoright i {
     float: right;
     display: block;
     width: 30px;
@@ -968,18 +1078,13 @@
   }
 
 
-
-  .logoright i:active{
+  .logoright i:active {
     background-color: #7a6df0;
     color: #FFFFFF;
   }
 
 
-
-
-
-
-  .reminder{
+  .reminder {
     margin-left: 27px;
     color: #878787;
     opacity: 0.6;
@@ -987,13 +1092,14 @@
     font-weight: 500;
   }
 
-  .aside-navigation{
+  .aside-navigation {
     width: 100%;
     height: 30px;
     background-color: #a0c4ff;
 
   }
-  .filter{
+
+  .filter {
     /*width: 100%;*/
     /*height: 30px;*/
     /*position: relative;*/
@@ -1004,9 +1110,10 @@
     display: flex;
     flex-wrap: wrap;
   }
-  .filter-sort{
+
+  .filter-sort {
     color: #7e868d;
-    box-shadow: inset 0 0 0 1px rgba(0,0,0,.08), inset 0 -1px 0 rgba(0,0,0,.04);
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .08), inset 0 -1px 0 rgba(0, 0, 0, .04);
     margin-right: 4px;
     border-radius: 2px;
     height: 22px;
@@ -1017,102 +1124,106 @@
     padding: 0 8px;
 
   }
-  .filter-sort:hover{
+
+  .filter-sort:hover {
     color: #6f8eee;
     background-color: #e6e6e6;
 
   }
 
 
-
-
-
-
-  .bookmarkmain{
-    padding-top: 0px!important;
+  .bookmarkmain {
+    padding-top: 0px !important;
 
   }
-  .separator{
+
+  .separator {
     float: left;
   }
-  .filter-sort i{
+
+  .filter-sort i {
     margin-left: -4px;
     margin-right: -1px;
   }
-  .filter div{
+
+  .filter div {
     margin-bottom: 3px;
   }
-  .header-sousou{
+
+  .header-sousou {
     display: flex;
   }
 
 
-  .header-sousou input{
+  .header-sousou input {
     margin-top: 8px;
     border: 0px;
     background-color: #f2f2f2;
-    border-radius: 0!important;
+    border-radius: 0 !important;
     /*border:  1px solid #f2f2f2;*/
 
 
   }
-  .header-sousou input:focus{
-    background-color: #FFFFFF!important;
-    border:  1px solid #C0C4CC;
+
+  .header-sousou input:focus {
+    background-color: #FFFFFF !important;
+    border: 1px solid #C0C4CC;
   }
 
 
-  .header-sousou i{
+  .header-sousou i {
     font-size: 1px;
     margin-top: 6px;
   }
 
-  .margintop{
+  .margintop {
     margin-left: 10px;
   }
 
 
+  .sousou-input {
 
-  .sousou-input{
-
-     width: 82.5%;
+    width: 82.5%;
     margin-right: 15px;
 
 
   }
-  .header-list{
+
+  .header-list {
     /*line-height: 50px;*/
     margin-top: 10px;
     /*align-content: center;*/
     /*justify-content: center;*/
   }
-  .header-list:hover{
+
+  .header-list:hover {
     color: #7a6df0;
 
   }
-  .header-list i{
+
+  .header-list i {
     font-size: 25px;
     margin-right: 2px;
   }
 
 
-
-
-  .main-label span i{
+  .main-label span i {
     margin-left: 5px;
   }
 
-  .main-label span{
+  .main-label span {
     line-height: 22px;
   }
-  .main-label :nth-child(1){
+
+  .main-label :nth-child(1) {
     margin-right: -1px;
   }
-  .main-label :nth-child(2){
+
+  .main-label :nth-child(2) {
     margin-right: 5px;
   }
 
-  .bookmark-title{
+  .bookmark-title {
     /*设置文本框大小*/
     white-space: nowrap;
     /*设置内容不换行*/
@@ -1124,7 +1235,7 @@
     font-weight: 600;
   }
 
-  .description{
+  .description {
     /*设置文本框大小*/
     white-space: nowrap;
     /*设置内容不换行*/
@@ -1135,70 +1246,76 @@
     color: #545454;
     font-size: 13px;
   }
-.bookmark{
-  height: 65px;
-}
 
-  .bookmark-icon{
+  .bookmark {
+    height: 65px;
+  }
+
+  .bookmark-icon {
     float: left;
     margin-right: 5px;
 
   }
-  .bookmark-icon img{
+
+  .bookmark-icon img {
     width: 14px;
     height: 14px;
-    vertical-align:middle;
+    vertical-align: middle;
   }
 
 
-
-  .bookmark-official{
+  .bookmark-official {
     float: left;
   }
-  .info{
+
+  .info {
     font-size: 12px;
 
   }
-  .info-wrap{
+
+  .info-wrap {
     color: #8c8c8c;
   }
-  .bookmark-time{
+
+  .bookmark-time {
     float: left;
 
 
   }
 
-  .bookmark-hr{
-    background-color: #fff!important;
-   margin-top: 2px!important;
-    margin-bottom: 7px!important;
+  .bookmark-hr {
+    background-color: #fff !important;
+    margin-top: 2px !important;
+    margin-bottom: 7px !important;
   }
-.sousouleft-switch{
 
-  width: 30px;
-  height: 30px;
-  line-height: 50px;
-  margin-top: 3px;
-  margin-right: 5px;
+  .sousouleft-switch {
 
-}
+    width: 30px;
+    height: 30px;
+    line-height: 50px;
+    margin-top: 3px;
+    margin-right: 5px;
 
-  .sousouleft-switch i{
-   font-size: 30px;
+  }
+
+  .sousouleft-switch i {
+    font-size: 30px;
     opacity: 0.8;
 
   }
-  .sousou-left{
+
+  .sousou-left {
     display: flex;
   }
 
-  .sousou-leftico{
+  .sousou-leftico {
 
     width: 30px;
     height: 30px;
     border: #d1e9ff solid 1px;
     border-radius: 5px;
-    opacity:0.7;
+    opacity: 0.7;
     text-align: center;
     line-height: 30px;
     margin-top: 9px;
@@ -1206,135 +1323,149 @@
 
   }
 
-  .sousou-leftico img{
+  .sousou-leftico img {
     margin-top: 5px;
   }
 
-  .filter-item:hover{
-    background-color: #E5E5E5!important;
-    color: #000!important;
+  .filter-item:hover {
+    background-color: #E5E5E5 !important;
+    color: #000 !important;
   }
 
-  .announcement{
+  .announcement {
     margin-top: 20px;
     width: 24%;
     height: 400px;
     /*background-color: #ff5f85;*/
     float: left;
-    border-left:#8c8c8c 1px solid ;
+    border-left: #8c8c8c 1px solid;
     margin-left: 10px;
   }
-  .bookmarklist{
+
+  .bookmarklist {
     width: 100%;
     height: 600px;
     /*background-color: #fff;*/
     float: left
   }
-  .sousouright-icon{
+
+  .sousouright-icon {
     margin-right: 24px;
     margin-top: 10px;
   }
-  .sq-dropdown{
-    top:33px!important;
-    box-shadow: 0 2px 15px 0 rgba(0,0,0,.2)!important;
-    font-weight: 800!important;
+
+  .sq-dropdown {
+    top: 33px !important;
+    box-shadow: 0 2px 15px 0 rgba(0, 0, 0, .2) !important;
+    font-weight: 800 !important;
   }
-  .sq-dropdown div{
-    display: none!important;
+
+  .sq-dropdown div {
+    display: none !important;
   }
-  .labelname{
+
+  .labelname {
     font-weight: 800;
     color: rgb(0, 0, 0);
     float: left;
     margin-bottom: -10px;
     margin-right: 5px;
   }
-  .el-form-item__content{
-    margin-left: 0px!important;
+
+  .el-form-item__content {
+    margin-left: 0px !important;
   }
-  .el-dialog__body{
-    padding-top: 0px!important;
+
+  .el-dialog__body {
+    padding-top: 0px !important;
   }
-  .custom-input input{
+
+  .custom-input input {
     border: 0px;
     border-radius: 0px;
     border-bottom: 1px solid #C0C4CC;
   }
-  .custom-input input:focus{
+
+  .custom-input input:focus {
     border: 0px;
     border-radius: 0px;
     border-bottom: 1px solid #695fff;
   }
 
   /*添加bookmarkurl*/
-  .addbookmarkurl input{
+  .addbookmarkurl input {
     border: 0px;
     border-radius: 0px;
     border-bottom: 1px solid #409EFF;
   }
-  .addbookmarkurl input:focus{
-    border-bottom: 1px solid #409EFF;
-  }
-  .addbookmarkurl input:hover{
 
+  .addbookmarkurl input:focus {
     border-bottom: 1px solid #409EFF;
   }
 
+  .addbookmarkurl input:hover {
 
-  .addbookmarkurl .el-dialog{
+    border-bottom: 1px solid #409EFF;
+  }
+
+
+  .addbookmarkurl .el-dialog {
     top: 40%;
   }
 
 
-  .addbookmarkurl .el-dialog__body{
+  .addbookmarkurl .el-dialog__body {
     padding-right: 10px;
-    height: 60px!important;
+    height: 60px !important;
   }
 
   .addbookmarkurl-input {
-    width: 82%!important;
+    width: 82% !important;
     float: left;
     font-size: 13px;
   }
- .addbookmarkurl-button {
-   float: left;
-   margin-left: 5px;
-   border: 1px solid #409EFF!important;
-  }
-  .addbookmarkurl-button:hover {
-  background-color: #409EFF!important;
-    color: #FFFFFF!important;
+
+  .addbookmarkurl-button {
+    float: left;
+    margin-left: 5px;
+    border: 1px solid #409EFF !important;
   }
 
-  .el-dialog{
-    border-radius: 10px!important;
+  .addbookmarkurl-button:hover {
+    background-color: #409EFF !important;
+    color: #FFFFFF !important;
+  }
+
+  .el-dialog {
+    border-radius: 10px !important;
   }
 
   /*编辑目录 选择目录菜单样式调整*/
-  .vue-treeselect__control{
-    padding-top: 6px!important;
+  .vue-treeselect__control {
+    padding-top: 6px !important;
   }
 
-  el-aside{
-    box-shadow: inset -1px 0 0 rgba(0,0,0,.1);
+  el-aside {
+    box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
   }
 
 
-.main-right{
-  /*overflow:scroll;*/
-  /*width: 300px;*/
-  height: 85%;
-  min-height: 40%;
-  overflow:auto;
-  /*overflow: hidden;*/
+  .main-right {
+    /*overflow:scroll;*/
+    width: 300px;
+    height: 85%;
+    min-height: 40%;
+    overflow: auto;
+    /*overflow: hidden;*/
 
 
-  z-index: 1;
+    z-index: 1;
 
-}
-  .main-right::-webkit-scrollbar{
+  }
+
+  .main-right::-webkit-scrollbar {
     /*滚动条整体样式*/
-    width:0px;
+    width: 0px;
     /*高宽分别对应横竖滚动条的尺寸*/
     height: 12px !important;
 
@@ -1348,26 +1479,60 @@
 
 
   }
+
   /*定义滚动条轨道 内阴影+圆角 透明效果*/
   ::-webkit-scrollbar-track {
-    background-color:transparent;
+    background-color: transparent;
 
   }
 
-  .tabBar{
+  .tabBar {
     width: 300px;
     overflow: hidden;
     position: fixed;
     bottom: 0;
   }
-  .popover-suosou{
-    width: 70%!important;
+
+  .popover-suosou {
+    width: 70% !important;
     top: 40px;
     left: 72px;
   }
+  /* 拖拽相关样式 */
+  /*包围div样式*/
 
+  /*拖拽区div样式*/
+  .isresize {
+    background-color: transparent ;
 
-
+    /*border-radius: 6px;*/
+    width: 12px;
+    /*height: 50px;*/
+    font-size: 25px;
+    color: white;
+    /*margin-top: 23%;*/
+  }
+  /*拖拽区鼠标悬停样式*/
+  .isresize:hover {
+    /*color: #f2f2f2;*/
+    /*color: #f2f2f2;*/
+  }
+  .isresize i{
+    line-height: 36px;
+    transform: rotate(90deg);
+    width: 8px;
+  }
+  .main-right{
+    min-width: 250px;
+  }
+  .box{
+    -moz-user-select:none; /* Firefox私有属性 */
+    -webkit-user-select:none; /* WebKit内核私有属性 */
+    -ms-user-select:none; /* IE私有属性(IE10及以后) */
+    -khtml-user-select:none; /* KHTML内核私有属性 */
+    -o-user-select:none; /* Opera私有属性 */
+    user-select:none; /* CSS3属性 */
+  }
 
 
 </style>
