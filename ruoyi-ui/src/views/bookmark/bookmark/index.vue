@@ -683,6 +683,12 @@
   .bookmarktag {
     margin-right: 5px;
   }
+  .bookmark-official {
+    float: left;
+  }
+  .info {
+    font-size: 12px;
+  }
 
   .bookmark-icon {
     float: left;
@@ -768,7 +774,7 @@
     margin-left: 4px;
     height: 18px;
     line-height: 18px;
-    margin-top: 2px;
+    margin-top: -2px;
     border-radius: 1px;
     color: #7794D8;
     background-color: #FFFFFF;
@@ -786,10 +792,13 @@
     font-weight: 600;
   }
   .bookmark-title:hover{
+
     color: #3C4DAC;
   }
   .description{
     color: #9EABB3;
+    margin-top: 5px;
+    margin-bottom: 5px;
   }
   .info-wrap{
     color: #9EABB3;
@@ -807,6 +816,8 @@
     /*超出部分隐藏*/
     font-size: 17px;
     font-weight: 600;
+    margin-top: 2px;
+    margin-bottom: 2px;
   }
 
   .description {

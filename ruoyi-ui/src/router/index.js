@@ -33,14 +33,14 @@ import index3 from '@/views/bookmark/index';
     breadcrumb: false            // 如果设置为false，则不会在breadcrumb面包屑中显示
   }
  */
-//书签路由bookmark
-export const bookmark = [
-  {
-    path: '/index2',
-    component: bookmarkmenu,
-    hidden: true
-  },
-]
+// //书签路由bookmark
+// export const bookmark = [
+//   {
+//     path: '/index2',
+//     component: bookmarkmenu,
+//     hidden: true
+//   },
+// ]
 
 
 // 公共路由
@@ -137,15 +137,16 @@ export const constantRoutes = [
       }
     ]
   },
-  {
-    path: '/index2',
-    component: bookmarkmenu,
-
-  },
+  // {
+  //   path: '/index2',
+  //   component: bookmarkmenu,
+  //
+  // },
   {
     path: '/index3',
     component: index3,
     meta:{
+      title: '书签管理',icon:'user',
       requireAuth: false,
     },
     children: [
@@ -157,6 +158,7 @@ export const constantRoutes = [
           t:Date.now(),
         },
         meta:{
+          title: '书签页面',icon:'user',
           requireAuth: false,//加该字段,表示进入这个路由是需要登录的true
         },
       },{
@@ -164,6 +166,7 @@ export const constantRoutes = [
         name: 'UserTagAll',
         component: resolve => require(['../views/bookmark/common/UserTagAll.vue'], resolve),
         meta:{
+          title: '用户标签',icon:'user',
           requireAuth: true,//加该字段,表示进入这个路由是需要登录的true
         },
       },{
@@ -171,6 +174,7 @@ export const constantRoutes = [
         name: 'importHtml',
         component: resolve => require(['../views/bookmark/common/ImportHtml.vue'], resolve),
         meta:{
+          title: '导入书签',icon:'user',
           requireAuth: true,//加该字段,表示进入这个路由是需要登录的true
         },
       },{
@@ -178,12 +182,14 @@ export const constantRoutes = [
         name: 'ceshi',
         component: resolve => require(['../views/bookmark/ceshi/index.vue'], resolve),
         meta:{
+          title: '测试页面',icon:'user',
           requireAuth: true,//加该字段,表示进入这个路由是需要登录的true
         },
       }
     ],
 
   },
+
 ]
 
 export default new Router({

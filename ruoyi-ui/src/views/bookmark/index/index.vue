@@ -88,26 +88,21 @@
           </div>
 
           <div class="sousou-input">
-            <el-popover
-              placement="bottom"
-              width="400"
-              trigger="click"
-              :visible-arrow="false"
-              popper-class="popover-suosou"
-            >
-
-              <div v-for="o in 4" :key="o">
-                {{'列表内容 ' + o }}
-              </div>
-
+<!--            <el-popover-->
+<!--              placement="bottom"-->
+<!--              width="400"-->
+<!--              trigger="click"-->
+<!--              :visible-arrow="false"-->
+<!--              popper-class="popover-suosou"-->
+<!--            >-->
+<!--              <div v-for="o in 4" :key="o">-->
+<!--                {{'列表内容 ' + o }}-->
+<!--              </div>-->
               <el-input slot="reference" placeholder="请输入书签名字" v-model="sousou" size="small">
                 <i slot="prefix" class="el-input__icon el-icon-search"></i>
                 <!--          <el-button slot="append" icon="el-icon-search"></el-button>-->
               </el-input>
-
-
-            </el-popover>
-
+<!--            </el-popover>-->
           </div>
 
           <div class="sousouright-icon">
@@ -115,7 +110,7 @@
             </el-badge>
           </div>
 
-          <div class="sousouright-icon">
+          <div class="sousouright-iconadd">
             <el-dropdown trigger="click" size="small" :hide-on-click="false">
               <span class="el-dropdown-link">
           <i class="el-icon-plus" style="font-size: 18px;"/>
@@ -127,8 +122,6 @@
                 <el-dropdown-item class="filter-item" icon="el-icon-plus" command="d">导入书签</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
-
-
           </div>
 
 
@@ -287,7 +280,7 @@
 
 </template>
 <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
-
+<style scoped src="../ztree/demo.css"/>
 <script >
   // 下面的是单个Vue组件引用的外部静态文件，也可以在main.js文件中引用
   import {addBookmark} from "@/api/bookmark/bookmark";
@@ -295,9 +288,9 @@
   import {listMenu, getMenu, delMenu, addMenu, updateMenu, exportMenu} from "@/api/bookmark/menu";
   import Treeselect from "@riophae/vue-treeselect";
   import "@riophae/vue-treeselect/dist/vue-treeselect.css";
-  import "../ztree/jquery-1.4.4.min.js"
+  // import "../ztree/jquery-1.4.4.min.js"
   import "../ztree/jquery.ztree.core.js"
-  import "../ztree/demo.css"
+  // import "../ztree/demo.css"
   import "../ztree/zTreeStyle.css"
   import "../ztree/jquery.ztree.exedit.js"
   import {listMenuByUserId} from "@/api/bookmark/menu";
@@ -1590,11 +1583,12 @@
 
 
   .reminder {
-    margin-left: 27px;
     color: #878787;
-    opacity: 0.6;
-    font-size: 14px;
-    font-weight: 500;
+    opacity: 0.7;
+    font-size: 14px!important;
+    font-weight: 500!important;
+    margin-left: 27px!important;
+
   }
 
   .aside-navigation {
@@ -1650,11 +1644,13 @@
 
   .header-sousou {
     display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
 
   .header-sousou input {
-    margin-top: 8px;
+    margin-top: 9px;
     border: 0px;
     background-color: #f2f2f2;
     border-radius: 0 !important;
@@ -1678,17 +1674,20 @@
 
   .sousou-input {
 
-    width: 82.5%;
-    margin-right: 15px;
+    width: 100%;
+
 
 
   }
 
   .header-list {
-    /*line-height: 50px;*/
-    margin-top: 10px;
-    /*align-content: center;*/
-    /*justify-content: center;*/
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 35px;
+    margin-top: 9px!important;
+
+
   }
 
   .header-list:hover {
@@ -1727,14 +1726,8 @@
 
 
 
-  .bookmark-official {
-    float: left;
-  }
 
-  /*.info {*/
-  /*  font-size: 12px;*/
 
-  /*}*/
 
 
 
@@ -1743,13 +1736,7 @@
 
 
   .sousouleft-switch {
-
-    width: 30px;
-    height: 30px;
-    line-height: 50px;
-    margin-top: 3px;
-    margin-right: 5px;
-
+    margin-top: 4px!important;
   }
 
   .sousouleft-switch i {
@@ -1759,26 +1746,27 @@
   }
 
   .sousou-left {
-    display: flex;
+    width: 50px!important;
+    height: 50px;
+    margin-top: 12px!important;
   }
 
-  .sousou-leftico {
-
+  .sousou-leftico  {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 30px;
     height: 30px;
-    border: #d1e9ff solid 1px;
-    border-radius: 5px;
-    opacity: 0.7;
-    text-align: center;
-    line-height: 30px;
-    margin-top: 9px;
-    margin-right: 12px;
+    border-radius: 3px;
+    border: 1px solid #e6e6e6 !important;
+    margin-top: 9px!important;
+
+
+  }
+  .sousou-leftico img{
 
   }
 
-  .sousou-leftico img {
-    margin-top: 5px;
-  }
 
   .filter-item:hover {
     background-color: #E5E5E5 !important;
@@ -1789,9 +1777,21 @@
 
 
   .sousouright-icon {
-    margin-right: 24px;
-    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50px;
+    margin-top: 7px!important;
   }
+
+ .sousouright-iconadd {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50px;
+   margin-top: 7px!important;
+  }
+
 
   .sq-dropdown {
     top: 33px !important;
@@ -1933,9 +1933,9 @@
   }
 
   .popover-suosou {
-    width: 70% !important;
+    /*width: 85% ;*/
     top: 40px;
-    left: 72px;
+    /*left: 72px;*/
   }
   /* 拖拽相关样式 */
   /*包围div样式*/
