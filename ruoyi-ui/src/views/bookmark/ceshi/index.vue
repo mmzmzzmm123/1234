@@ -10,16 +10,25 @@
     <div class="mid">
       <!--右侧div内容-->
     </div>
+
+
   </div>
 </template>
 
 <script>
+
   export default {
     name: 'Dashboard',
     mounted () {
       this.dragControllerDiv();
+
+
     },
     methods: {
+
+
+
+
       dragControllerDiv: function () {
         var resize = document.getElementsByClassName('resize');
         var left = document.getElementsByClassName('left');
@@ -115,5 +124,7 @@
     background: #fff;
     box-shadow: -1px 4px 5px 3px rgba(0, 0, 0, 0.11);
   }
+
+
 
 </style>

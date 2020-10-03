@@ -195,7 +195,6 @@
       </div>
     </el-dialog>
 
-
   </div>
 </template>
 
@@ -292,6 +291,7 @@
       }
     },
     mounted() {
+
       // document.querySelector("#datalist").addEventListener('scroll', this.handleScroll)
     },
     computed:{
@@ -564,9 +564,9 @@
       windowurl(url, bookmarkId) {
         // window.open(url+this.urltext);
         window.open(url);
-
-
       },
+
+
     },
 
 
@@ -657,7 +657,7 @@
     position: absolute;
     background-color: #acd7ff;
     right: 0;
-
+    display: none;
   }
 
   .editlist {
@@ -666,6 +666,7 @@
     height: 70px;
     flex-flow: wrap;
     align-items: center;
+
   }
 
   .editlist div {
@@ -767,6 +768,8 @@
   .info-wrap{
     color: #9EABB3;
   }
+/**evanyou背景特效**/
+
 
 
 </style>
