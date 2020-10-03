@@ -5,58 +5,59 @@
 <mapper namespace="com.ruoyi.custom.mapper.SysOrderMapper">
 
     <resultMap type="SysOrder" id="SysOrderResult">
-        <result property="orderId"    column="order_id"    />
-        <result property="customer"    column="customer"    />
-        <result property="phone"    column="phone"    />
-        <result property="amount"    column="amount"    />
-        <result property="payTypeId"    column="pay_type_id"    />
-        <result property="payType"    column="pay_type"    />
-        <result property="preSaleId"    column="pre_sale_id"    />
-        <result property="createBy"    column="create_by"    />
-        <result property="preSale"    column="pre_sale"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="afterSaleId"    column="after_sale_id"    />
-        <result property="updateBy"    column="update_by"    />
-        <result property="afterSale"    column="after_sale"    />
-        <result property="updateTime"    column="update_time"    />
-        <result property="nutritionistId"    column="nutritionist_id"    />
-        <result property="remark"    column="remark"    />
-        <result property="nutritionist"    column="nutritionist"    />
-        <result property="nutriAssisId"    column="nutri_assis_id"    />
-        <result property="nutriAssis"    column="nutri_assis"    />
-        <result property="accountId"    column="account_id"    />
-        <result property="account"    column="account"    />
-        <result property="plannerId"    column="planner_id"    />
-        <result property="planner"    column="planner"    />
-        <result property="plannerAssisId"    column="planner_assis_id"    />
-        <result property="plannerAssis"    column="planner_assis"    />
-        <result property="operatorId"    column="operator_id"    />
-        <result property="operator"    column="operator"    />
-        <result property="recommender"    column="recommender"    />
-        <result property="orderTime"    column="order_time"    />
+        <result property="orderId" column="order_id"/>
+        <result property="customer" column="customer"/>
+        <result property="phone" column="phone"/>
+        <result property="amount" column="amount"/>
+        <result property="payTypeId" column="pay_type_id"/>
+        <result property="payType" column="pay_type"/>
+        <result property="preSaleId" column="pre_sale_id"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="afterSaleId" column="after_sale_id"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="nutritionistId" column="nutritionist_id"/>
+        <result property="remark" column="remark"/>
+        <result property="nutriAssisId" column="nutri_assis_id"/>
+        <result property="accountId" column="account_id"/>
+        <result property="account" column="account"/>
+        <result property="plannerId" column="planner_id"/>
+        <result property="plannerAssisId" column="planner_assis_id"/>
+        <result property="operatorId" column="operator_id"/>
+        <result property="recommender" column="recommender"/>
+        <result property="orderTime" column="order_time"/>
+        <result property="serveMonth" column="serve_month"/>
+        <result property="reviewStatus" column="review_status"/>
     </resultMap>
 
     <sql id="selectSysOrderVo">
-        select order_id, customer, phone, amount, pay_type_id, pay_type, pre_sale_id, create_by, pre_sale, create_time, after_sale_id, update_by, after_sale, update_time, nutritionist_id, remark, nutritionist, nutri_assis_id, nutri_assis, account_id, account, planner_id, planner, planner_assis_id, planner_assis, operator_id, operator, recommender, order_time from sys_order
+        select o.order_id, o.review_status, o.customer, o.phone, o.amount, o.serve_month, o.pay_type_id, pay.dict_label as pay_type, o.pre_sale_id, o.create_by, o.create_time, o.after_sale_id, o.update_by, o.update_time, o.nutritionist_id, o.remark, o.nutri_assis_id, o.account_id, acc.dict_label as account, o.planner_id, o.planner_assis_id, o.operator_id, o.recommender, o.order_time from sys_order o
+        LEFT JOIN (SELECT dict_label, dict_value FROM sys_dict_data WHERE dict_type = 'cus_pay_type') AS pay ON pay.dict_value = o.pay_type_id
+        LEFT JOIN (SELECT dict_label, dict_value FROM sys_dict_data WHERE dict_type = 'cus_account') AS acc ON acc.dict_value = o.account_id
     </sql>
 
     <select id="selectSysOrderList" parameterType="SysOrder" resultMap="SysOrderResult">
         <include refid="selectSysOrderVo"/>
         <where>
-            <if test="customer != null  and customer != ''"> and customer = #{customer}</if>
-            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
-            <if test="payTypeId != null "> and pay_type_id = #{payTypeId}</if>
-            <if test="preSaleId != null "> and pre_sale_id = #{preSaleId}</if>
-            <if test="afterSaleId != null "> and after_sale_id = #{afterSaleId}</if>
-            <if test="nutritionistId != null "> and nutritionist_id = #{nutritionistId}</if>
-            <if test="nutriAssisId != null "> and nutri_assis_id = #{nutriAssisId}</if>
-            <if test="accountId != null "> and account_id = #{accountId}</if>
-            <if test="plannerId != null "> and planner_id = #{plannerId}</if>
-            <if test="plannerAssisId != null "> and planner_assis_id = #{plannerAssisId}</if>
-            <if test="operatorId != null "> and operator_id = #{operatorId}</if>
-            <if test="recommender != null  and recommender != ''"> and recommender = #{recommender}</if>
-            <if test="orderTime != null "> and order_time = #{orderTime}</if>
+            <if test="customer != null  and customer != ''">and customer = #{customer}</if>
+            <if test="phone != null  and phone != ''">and phone = #{phone}</if>
+            <if test="payTypeId != null ">and pay_type_id = #{payTypeId}</if>
+            <if test="preSaleId != null ">and pre_sale_id = #{preSaleId}</if>
+            <if test="afterSaleId != null ">and after_sale_id = #{afterSaleId}</if>
+            <if test="nutritionistId != null ">and nutritionist_id = #{nutritionistId}</if>
+            <if test="nutriAssisId != null ">and nutri_assis_id = #{nutriAssisId}</if>
+            <if test="accountId != null ">and account_id = #{accountId}</if>
+            <if test="plannerId != null ">and planner_id = #{plannerId}</if>
+            <if test="plannerAssisId != null ">and planner_assis_id = #{plannerAssisId}</if>
+            <if test="operatorId != null ">and operator_id = #{operatorId}</if>
+            <if test="recommender != null  and recommender != ''">and recommender = #{recommender}</if>
+            <if test="beginTime != null ">and order_time &gt;= #{beginTime}</if>
+            <if test="endTime != null ">and order_time &lt;= #{endTime}</if>
+            <if test="serveMonth != null ">and serve_month = #{serveMonth}</if>
+            <if test="reviewStatus != null ">and review_status = #{reviewStatus}</if>
         </where>
+        order by order_time desc
     </select>
 
     <select id="selectSysOrderById" parameterType="Long" resultMap="SysOrderResult">
@@ -71,60 +72,46 @@
             <if test="phone != null">phone,</if>
             <if test="amount != null">amount,</if>
             <if test="payTypeId != null">pay_type_id,</if>
-            <if test="payType != null">pay_type,</if>
             <if test="preSaleId != null">pre_sale_id,</if>
             <if test="createBy != null">create_by,</if>
-            <if test="preSale != null">pre_sale,</if>
             <if test="createTime != null">create_time,</if>
             <if test="afterSaleId != null">after_sale_id,</if>
             <if test="updateBy != null">update_by,</if>
-            <if test="afterSale != null">after_sale,</if>
             <if test="updateTime != null">update_time,</if>
             <if test="nutritionistId != null">nutritionist_id,</if>
             <if test="remark != null">remark,</if>
-            <if test="nutritionist != null">nutritionist,</if>
             <if test="nutriAssisId != null">nutri_assis_id,</if>
-            <if test="nutriAssis != null">nutri_assis,</if>
             <if test="accountId != null">account_id,</if>
-            <if test="account != null">account,</if>
             <if test="plannerId != null">planner_id,</if>
-            <if test="planner != null">planner,</if>
             <if test="plannerAssisId != null">planner_assis_id,</if>
-            <if test="plannerAssis != null">planner_assis,</if>
             <if test="operatorId != null">operator_id,</if>
-            <if test="operator != null">operator,</if>
             <if test="recommender != null">recommender,</if>
             <if test="orderTime != null">order_time,</if>
+            <if test="serveMonth != null">serve_month,</if>
+            <if test="reviewStatus != null">review_status,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="customer != null and customer != ''">#{customer},</if>
             <if test="phone != null">#{phone},</if>
             <if test="amount != null">#{amount},</if>
             <if test="payTypeId != null">#{payTypeId},</if>
-            <if test="payType != null">#{payType},</if>
             <if test="preSaleId != null">#{preSaleId},</if>
             <if test="createBy != null">#{createBy},</if>
-            <if test="preSale != null">#{preSale},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="afterSaleId != null">#{afterSaleId},</if>
             <if test="updateBy != null">#{updateBy},</if>
-            <if test="afterSale != null">#{afterSale},</if>
             <if test="updateTime != null">#{updateTime},</if>
             <if test="nutritionistId != null">#{nutritionistId},</if>
             <if test="remark != null">#{remark},</if>
-            <if test="nutritionist != null">#{nutritionist},</if>
             <if test="nutriAssisId != null">#{nutriAssisId},</if>
-            <if test="nutriAssis != null">#{nutriAssis},</if>
             <if test="accountId != null">#{accountId},</if>
-            <if test="account != null">#{account},</if>
             <if test="plannerId != null">#{plannerId},</if>
-            <if test="planner != null">#{planner},</if>
             <if test="plannerAssisId != null">#{plannerAssisId},</if>
-            <if test="plannerAssis != null">#{plannerAssis},</if>
             <if test="operatorId != null">#{operatorId},</if>
-            <if test="operator != null">#{operator},</if>
             <if test="recommender != null">#{recommender},</if>
             <if test="orderTime != null">#{orderTime},</if>
+            <if test="serveMonth != null">#{serveMonth},</if>
+            <if test="reviewStatus != null">#{reviewStatus},</if>
         </trim>
     </insert>
 
@@ -135,30 +122,23 @@
             <if test="phone != null">phone = #{phone},</if>
             <if test="amount != null">amount = #{amount},</if>
             <if test="payTypeId != null">pay_type_id = #{payTypeId},</if>
-            <if test="payType != null">pay_type = #{payType},</if>
             <if test="preSaleId != null">pre_sale_id = #{preSaleId},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
-            <if test="preSale != null">pre_sale = #{preSale},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="afterSaleId != null">after_sale_id = #{afterSaleId},</if>
             <if test="updateBy != null">update_by = #{updateBy},</if>
-            <if test="afterSale != null">after_sale = #{afterSale},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
             <if test="nutritionistId != null">nutritionist_id = #{nutritionistId},</if>
             <if test="remark != null">remark = #{remark},</if>
-            <if test="nutritionist != null">nutritionist = #{nutritionist},</if>
             <if test="nutriAssisId != null">nutri_assis_id = #{nutriAssisId},</if>
-            <if test="nutriAssis != null">nutri_assis = #{nutriAssis},</if>
             <if test="accountId != null">account_id = #{accountId},</if>
-            <if test="account != null">account = #{account},</if>
             <if test="plannerId != null">planner_id = #{plannerId},</if>
-            <if test="planner != null">planner = #{planner},</if>
             <if test="plannerAssisId != null">planner_assis_id = #{plannerAssisId},</if>
-            <if test="plannerAssis != null">planner_assis = #{plannerAssis},</if>
             <if test="operatorId != null">operator_id = #{operatorId},</if>
-            <if test="operator != null">operator = #{operator},</if>
             <if test="recommender != null">recommender = #{recommender},</if>
             <if test="orderTime != null">order_time = #{orderTime},</if>
+            <if test="serveMonth != null">serve_month = #{serveMonth},</if>
+            <if test="reviewStatus != null">review_status = #{reviewStatus},</if>
         </trim>
         where order_id = #{orderId}
     </update>

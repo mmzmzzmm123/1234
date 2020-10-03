@@ -1,13 +1,10 @@
 package com.ruoyi.web.controller.custom;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import com.ruoyi.common.core.domain.entity.SysDictData;
 import com.ruoyi.common.core.domain.entity.SysUser;
-import com.ruoyi.system.domain.SysPost;
-import com.ruoyi.system.domain.SysUserPost;
-import com.ruoyi.system.domain.custom.UserPostOption;
-import com.ruoyi.system.service.ISysPostService;
+import com.ruoyi.system.service.ISysDictDataService;
 import com.ruoyi.system.service.ISysUserService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,11 +38,10 @@ public class SysOrderController extends BaseController {
     private ISysOrderService sysOrderService;
 
     @Autowired
-    private ISysPostService postService;
-
-    @Autowired
     private ISysUserService userService;
 
+    @Autowired
+    private ISysDictDataService dictDataService;
 
     /**
      * 查询销售订单列表
@@ -54,8 +50,28 @@ public class SysOrderController extends BaseController {
     @GetMapping("/list")
     public TableDataInfo list(SysOrder sysOrder) {
         startPage();
-//        List<SysUser> users = userService.selectUserList();
         List<SysOrder> list = sysOrderService.selectSysOrderList(sysOrder);
+        List<SysUser> userList = userService.selectAllUser();
+
+        for (SysOrder order : list) {
+            for (SysUser user : userList) {
+                if (user.getUserId().equals(order.getPreSaleId())) {
+                    order.setPreSale(user.getNickName());
+                } else if (user.getUserId().equals(order.getAfterSaleId())) {
+                    order.setAfterSale(user.getNickName());
+                } else if (user.getUserId().equals(order.getNutritionistId())) {
+                    order.setNutritionist(user.getNickName());
+                } else if (user.getUserId().equals(order.getNutriAssisId())) {
+                    order.setNutriAssis(user.getNickName());
+                } else if (user.getUserId().equals(order.getOperatorId())) {
+                    order.setOperator(user.getNickName());
+                } else if (user.getUserId().equals(order.getPlannerId())) {
+                    order.setPlanner(user.getNickName());
+                } else if (user.getUserId().equals(order.getPlannerAssisId())) {
+                    order.setPlannerAssis(user.getNickName());
+                }
+            }
+        }
         return getDataTable(list);
     }
 
@@ -68,6 +84,27 @@ public class SysOrderController extends BaseController {
     @GetMapping("/export")
     public AjaxResult export(SysOrder sysOrder) {
         List<SysOrder> list = sysOrderService.selectSysOrderList(sysOrder);
+        List<SysUser> userList = userService.selectAllUser();
+
+        for (SysOrder order : list) {
+            for (SysUser user : userList) {
+                if (user.getUserId().equals(order.getPreSaleId())) {
+                    order.setPreSale(user.getNickName());
+                } else if (user.getUserId().equals(order.getAfterSaleId())) {
+                    order.setAfterSale(user.getNickName());
+                } else if (user.getUserId().equals(order.getNutritionistId())) {
+                    order.setNutritionist(user.getNickName());
+                } else if (user.getUserId().equals(order.getNutriAssisId())) {
+                    order.setNutriAssis(user.getNickName());
+                } else if (user.getUserId().equals(order.getOperatorId())) {
+                    order.setOperator(user.getNickName());
+                } else if (user.getUserId().equals(order.getPlannerId())) {
+                    order.setPlanner(user.getNickName());
+                } else if (user.getUserId().equals(order.getPlannerAssisId())) {
+                    order.setPlannerAssis(user.getNickName());
+                }
+            }
+        }
         ExcelUtil<SysOrder> util = new ExcelUtil<SysOrder>(SysOrder.class);
         return util.exportExcel(list, "order");
     }
@@ -111,25 +148,5 @@ public class SysOrderController extends BaseController {
         return toAjax(sysOrderService.deleteSysOrderByIds(orderIds));
     }
 
-    @GetMapping("/getOptions")
-    public AjaxResult getOptions() {
-        AjaxResult ajax = AjaxResult.success();
-        List<SysUserPost> userPosts = postService.selectUserPostAll();
-
-        List<UserPostOption> userPostOptions = new ArrayList<>();
-
-        for (SysUserPost userPost : userPosts) {
-            SysPost post = postService.selectPostById(userPost.getPostId());
-            SysUser user = userService.selectUserById(userPost.getUserId());
-            UserPostOption userPostOption = new UserPostOption();
-            userPostOption.setPostCode(post.getPostCode());
-            userPostOption.setUserId(userPost.getUserId());
-            userPostOption.setUserName(user.getNickName());
-            userPostOptions.add(userPostOption);
-        }
-
-        ajax.put(AjaxResult.DATA_TAG, userPostOptions);
-        return ajax;
-    }
 
 }

@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-row>
       <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="70px">
-        <el-col :span="4">
+        <el-col :span="6">
           <el-form-item label="客户姓名" prop="customer">
             <el-input
               v-model="queryParams.customer"
@@ -13,20 +13,7 @@
             />
           </el-form-item>
         </el-col>
-
-        <!--        <el-col :span="4">-->
-        <!--          <el-form-item label="电话" prop="phone">-->
-        <!--            <el-input-->
-        <!--              v-model="queryParams.phone"-->
-        <!--              placeholder="请输入电话"-->
-        <!--              clearable-->
-        <!--              size="small"-->
-        <!--              @keyup.enter.native="handleQuery"-->
-        <!--            />-->
-        <!--          </el-form-item>-->
-        <!--        </el-col>-->
-
-        <el-col :span="4">
+        <el-col :span="6">
           <el-form-item label="收款方式" prop="payTypeId">
             <el-select v-model="queryParams.payTypeId" placeholder="请选择收款方式" clearable size="small">
               <el-option v-for="dict in payTypeIdOptions"
@@ -36,8 +23,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-
-        <el-col :span="4">
+        <el-col :span="6">
           <el-form-item label="售前" prop="preSaleId">
             <el-select v-model="queryParams.preSaleId" placeholder="请选择售前" clearable size="small">
               <el-option v-for="dict in preSaleIdOptions"
@@ -47,8 +33,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-
-        <el-col :span="4">
+        <el-col :span="6">
           <el-form-item label="售后" prop="afterSaleId">
             <el-select v-model="queryParams.afterSaleId" placeholder="请选择售后" clearable size="small">
               <el-option v-for="dict in afterSaleIdOptions"
@@ -58,8 +43,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-
-        <el-col :span="4">
+        <el-col :span="6">
           <el-form-item label="主营养师" prop="nutritionistId">
             <el-select v-model="queryParams.nutritionistId" placeholder="请选择主营养师" clearable size="small">
               <el-option v-for="dict in nutritionistIdOptions"
@@ -69,8 +53,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-
-        <el-col :span="4">
+        <el-col :span="6">
           <el-form-item label="助理营养师" prop="nutriAssisId" label-width="90px">
             <el-select v-model="queryParams.nutriAssisId" placeholder="请选择助理营养师" clearable style="width: 170px"
                        size="small">
@@ -81,8 +64,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-
-        <el-col :span="4">
+        <el-col :span="6">
           <el-form-item label="账号" prop="accountId">
             <el-select v-model="queryParams.accountId" placeholder="请选择账号" clearable
                        size="small">
@@ -95,8 +77,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-
-        <el-col :span="4">
+        <el-col :span="6">
           <el-form-item label="策划" prop="plannerId">
             <el-select v-model="queryParams.plannerId" placeholder="请选择策划" clearable
                        size="small">
@@ -107,8 +88,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-
-        <el-col :span="4">
+        <el-col :span="6">
           <el-form-item label="策划助理" prop="plannerAssisId">
             <el-select v-model="queryParams.plannerAssisId" placeholder="请选择策划助理"
                        clearable size="small">
@@ -119,8 +99,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-
-        <el-col :span="4">
+        <el-col :span="6">
           <el-form-item label="运营" prop="operatorId">
             <el-select v-model="queryParams.operatorId" placeholder="请选择运营"
                        clearable size="small">
@@ -131,19 +110,19 @@
             </el-select>
           </el-form-item>
         </el-col>
-
-        <!--      <el-form-item label="推荐人" prop="recommender">-->
-        <!--        <el-input-->
-        <!--          v-model="queryParams.recommender"-->
-        <!--          placeholder="请输入推荐人"-->
-        <!--          clearable-->
-        <!--          size="small"-->
-        <!--          @keyup.enter.native="handleQuery"-->
-        <!--        />-->
-        <!--      </el-form-item>-->
-        <el-col :span="8">
+        <el-col :span="6">
+          <el-form-item label="审核状态" prop="reviewStatus">
+            <el-select v-model="queryParams.reviewStatus" placeholder="请选择审核状态"
+                       clearable size="small">
+              <el-option v-for="dict in reviewStatusOptions"
+                         :key="dict.dictValue"
+                         :label="dict.dictLabel"
+                         :value="dict.dictValue"/>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
           <el-form-item label="成交日期" prop="orderTime">
-
             <el-date-picker
               v-model="queryParams.orderTime"
               type="daterange"
@@ -156,19 +135,8 @@
               value-format="yyyy-MM-dd"
               :picker-options="pickerOptions">
             </el-date-picker>
-
-            <!--            <el-date-picker-->
-            <!--              clearable-->
-            <!--              size="small"-->
-            <!--              style="width: 200px"-->
-            <!--              v-model="queryParams.orderTime"-->
-            <!--              type="date"-->
-            <!--              value-format="yyyy-MM-dd"-->
-            <!--              placeholder="选择成交日期">>-->
-            <!--            </el-date-picker>-->
           </el-form-item>
         </el-col>
-
         <el-col>
           <el-form-item>
             <el-button type="cyan" icon="el-icon-search" size="mini"
@@ -193,28 +161,6 @@
         >新增
         </el-button>
       </el-col>
-      <!--      <el-col :span="1.5">-->
-      <!--        <el-button-->
-      <!--          type="success"-->
-      <!--          icon="el-icon-edit"-->
-      <!--          size="mini"-->
-      <!--          :disabled="single"-->
-      <!--          @click="handleUpdate"-->
-      <!--          v-hasPermi="['custom:order:edit']"-->
-      <!--        >修改-->
-      <!--        </el-button>-->
-      <!--      </el-col>-->
-      <!--      <el-col :span="1.5">-->
-      <!--        <el-button-->
-      <!--          type="danger"-->
-      <!--          icon="el-icon-delete"-->
-      <!--          size="mini"-->
-      <!--          :disabled="multiple"-->
-      <!--          @click="handleDelete"-->
-      <!--          v-hasPermi="['custom:order:remove']"-->
-      <!--        >删除-->
-      <!--        </el-button>-->
-      <!--      </el-col>-->
       <el-col :span="1.5">
         <el-button
           type="warning"
@@ -229,9 +175,16 @@
     </el-row>
 
     <el-table v-loading="loading" :data="orderList" @selection-change="handleSelectionChange">
-      <!--      <el-table-column type="selection" width="55" align="center"/>-->
-      <!--      <el-table-column label="编号" align="center" prop="orderId"/>-->
-      <el-table-column label="成交日期" align="center" prop="orderTime" width="150" fixed="left">
+      <el-table-column label="审核状态" align="center" prop="reviewStatus" width="80" fixed="left">
+        <template slot-scope="scope">
+          <el-tag
+            :type="scope.row.reviewStatus === 'yes' ? 'success' : 'danger'"
+            disable-transitions>
+            {{scope.row.reviewStatus === 'yes' ? '已审核':'未审核'}}
+          </el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column label="成交日期" align="center" prop="orderTime" width="120" fixed="left">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.orderTime, '{y}-{m}-{d}') }}</span>
         </template>
@@ -239,6 +192,7 @@
       <el-table-column label="客户姓名" align="center" prop="customer" width="120" fixed="left"/>
       <el-table-column label="金额" align="center" prop="amount" width="120" fixed="left"/>
       <el-table-column label="电话" align="center" prop="phone" width="120"/>
+      <el-table-column label="服务月数" align="center" prop="serveMonth" width="80"/>
       <el-table-column label="收款方式" align="center" prop="payType" width="120"/>
       <el-table-column label="售前" align="center" prop="preSale" width="120"/>
       <el-table-column label="售后" align="center" prop="afterSale" width="120"/>
@@ -311,100 +265,6 @@
               </el-select>
             </el-form-item>
           </el-col>
-
-
-          <el-col :span="12">
-            <el-form-item label="售前" prop="preSaleId">
-              <el-select v-model="form.preSaleId" placeholder="请选择售前">
-                <el-option
-                  v-for="dict in preSaleIdOptions"
-                  :key="dict.dictValue"
-                  :label="dict.dictLabel"
-                  :value="parseInt(dict.dictValue)"
-                />
-              </el-select>
-            </el-form-item>
-          </el-col>
-
-          <el-col :span="12">
-            <el-form-item label="售后" prop="afterSaleId">
-              <el-select v-model="form.afterSaleId" placeholder="请选择售后">
-                <el-option
-                  v-for="dict in afterSaleIdOptions"
-                  :key="dict.dictValue"
-                  :label="dict.dictLabel"
-                  :value="parseInt(dict.dictValue)"
-                />
-              </el-select>
-            </el-form-item>
-          </el-col>
-
-          <el-col :span="12">
-            <el-form-item label="主营养师" prop="nutritionistId">
-              <el-select v-model="form.nutritionistId" placeholder="请选择主营养师">
-                <el-option
-                  v-for="dict in nutritionistIdOptions"
-                  :key="dict.dictValue"
-                  :label="dict.dictLabel"
-                  :value="parseInt(dict.dictValue)"
-                />
-              </el-select>
-            </el-form-item>
-          </el-col>
-
-          <el-col :span="12">
-            <el-form-item label="助理营养师" prop="nutriAssisId">
-              <el-select v-model="form.nutriAssisId" placeholder="请选择助理营养师">
-                <el-option
-                  v-for="dict in nutriAssisIdOptions"
-                  :key="dict.dictValue"
-                  :label="dict.dictLabel"
-                  :value="parseInt(dict.dictValue)"
-                />
-              </el-select>
-            </el-form-item>
-          </el-col>
-
-
-          <el-col :span="12">
-            <el-form-item label="策划" prop="plannerId">
-              <el-select v-model="form.plannerId" placeholder="请选择策划">
-                <el-option
-                  v-for="dict in plannerIdOptions"
-                  :key="dict.dictValue"
-                  :label="dict.dictLabel"
-                  :value="parseInt(dict.dictValue)"
-                />
-              </el-select>
-            </el-form-item>
-          </el-col>
-
-          <el-col :span="12">
-            <el-form-item label="策划助理" prop="plannerAssisId">
-              <el-select v-model="form.plannerAssisId" placeholder="请选择策划助理">
-                <el-option
-                  v-for="dict in plannerAssisIdOptions"
-                  :key="dict.dictValue"
-                  :label="dict.dictLabel"
-                  :value="parseInt(dict.dictValue)"
-                />
-              </el-select>
-            </el-form-item>
-          </el-col>
-
-          <el-col :span="12">
-            <el-form-item label="运营" prop="operatorId">
-              <el-select v-model="form.operatorId" placeholder="请选择运营">
-                <el-option
-                  v-for="dict in operatorIdOptions"
-                  :key="dict.dictValue"
-                  :label="dict.dictLabel"
-                  :value="parseInt(dict.dictValue)"
-                />
-              </el-select>
-            </el-form-item>
-          </el-col>
-
           <el-col :span="12">
             <el-form-item label="账号" prop="accountId">
               <el-select v-model="form.accountId" placeholder="请选择账号">
@@ -417,15 +277,112 @@
               </el-select>
             </el-form-item>
           </el-col>
-
-          <el-col>
-            <el-form-item label="成交日期" prop="orderTime">
-              <el-date-picker clearable size="small" style="width: 200px"
-                              v-model="form.orderTime"
-                              type="date"
-                              value-format="yyyy-MM-dd"
-                              placeholder="选择成交日期">
-              </el-date-picker>
+          <el-col :span="12">
+            <el-form-item label="服务月数" prop="serveMonth">
+              <el-select v-model="form.serveMonth" placeholder="请选服务月数">
+                <el-option
+                  v-for="dict in serveMonthOption"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="parseInt(dict.dictValue)"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="售前" prop="preSaleId">
+              <el-select v-model="form.preSaleId" placeholder="请选择售前">
+                <el-option
+                  v-for="dict in preSaleIdOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="parseInt(dict.dictValue)"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="售后" prop="afterSaleId">
+              <el-select v-model="form.afterSaleId" placeholder="请选择售后">
+                <el-option
+                  v-for="dict in afterSaleIdOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="parseInt(dict.dictValue)"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="主营养师" prop="nutritionistId">
+              <el-select v-model="form.nutritionistId" placeholder="请选择主营养师">
+                <el-option
+                  v-for="dict in nutritionistIdOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="parseInt(dict.dictValue)"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="助理营养师" prop="nutriAssisId">
+              <el-select v-model="form.nutriAssisId" placeholder="请选择助理营养师">
+                <el-option
+                  v-for="dict in nutriAssisIdOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="parseInt(dict.dictValue)"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="策划" prop="plannerId">
+              <el-select v-model="form.plannerId" placeholder="请选择策划">
+                <el-option
+                  v-for="dict in plannerIdOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="parseInt(dict.dictValue)"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="策划助理" prop="plannerAssisId">
+              <el-select v-model="form.plannerAssisId" placeholder="请选择策划助理">
+                <el-option
+                  v-for="dict in plannerAssisIdOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="parseInt(dict.dictValue)"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="运营" prop="operatorId">
+              <el-select v-model="form.operatorId" placeholder="请选择运营">
+                <el-option
+                  v-for="dict in operatorIdOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="parseInt(dict.dictValue)"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12" v-hasPermi="['custom:order:review']">
+            <el-form-item label="审核状态" prop="reviewStatus">
+              <el-select v-model="form.reviewStatus" placeholder="请选择审核状态">
+                <el-option
+                  v-for="dict in reviewStatusOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col>
@@ -487,6 +444,10 @@
         plannerIdOptions: [],
         // 账号
         accountIdOptions: [],
+        // 服务月数
+        serveMonthOption: [],
+        // 审核状态
+        reviewStatusOptions: [],
         // 策划助理字典
         plannerAssisIdOptions: [],
         // 运营字典
@@ -507,7 +468,8 @@
           plannerAssisId: null,
           operatorId: null,
           recommender: null,
-          orderTime: null
+          orderTime: null,
+          reviewStatus: null,
         },
         // 表单参数
         form: {},
@@ -519,15 +481,18 @@
           amount: [
             {required: true, message: "金额不能为空", trigger: "blur"}
           ],
-          orderTime: [
-            {required: true, message: "成交日期不能为空", trigger: "blur"}
-          ],
           payTypeId: [
-            {required: true, message: "首款方式不能为空", trigger: "blur"}
+            {required: true, message: "收款方式不能为空", trigger: "blur"}
           ],
           accountId: [
             {required: true, message: "账号不能为空", trigger: "blur"}
-          ]
+          ],
+          serveMonth: [
+            {required: true, message: "服务月数不能为空", trigger: "blur"}
+          ],
+          // reviewStatus: [
+          //   {required: true, message: "请对数据进行审核", trigger: "blur"}
+          // ]
         },
         pickerOptions: {
           shortcuts: [{
@@ -561,7 +526,6 @@
     created() {
       this.getList();
       getOptions().then(response => {
-        console.log(response)
         const options = response.data.reduce((opts, cur) => {
           if (!opts[cur.postCode]) {
             opts[cur.postCode] = [];
@@ -583,6 +547,12 @@
       this.getDicts("cus_account").then(response => {
         this.accountIdOptions = response.data;
       });
+      this.getDicts("cus_serve_month").then(response => {
+        this.serveMonthOption = response.data;
+      });
+      this.getDicts("cus_review_status").then(response => {
+        this.reviewStatusOptions = response.data;
+      })
     },
     methods: {
       /** 查询销售订单列表 */
@@ -636,36 +606,29 @@
       },
       // 表单重置
       reset() {
+        const defaultPayType = this.payTypeIdOptions.find(opt => opt.remark === 'default');
         this.form = {
           orderId: null,
           customer: null,
           phone: null,
           amount: null,
-          payTypeId: null,
-          payType: null,
+          payTypeId: defaultPayType ? parseInt(defaultPayType.dictValue) : null,
           preSaleId: null,
           createBy: null,
-          preSale: null,
           createTime: null,
           afterSaleId: null,
           updateBy: null,
-          afterSale: null,
           updateTime: null,
           nutritionistId: null,
           remark: null,
-          nutritionist: null,
           nutriAssisId: null,
-          nutriAssis: null,
           accountId: null,
-          account: null,
           plannerId: null,
-          planner: null,
           plannerAssisId: null,
-          plannerAssis: null,
           operatorId: null,
-          operator: null,
           recommender: null,
-          orderTime: null
+          orderTime: null,
+          serveMonth: 1,
         };
         this.resetForm("form");
       },
@@ -673,33 +636,6 @@
       handleQuery() {
         this.queryParams.pageNum = 1;
         this.getList();
-        // this.getDicts("cus_pay_type").then(response => {
-        //   this.payTypeIdOptions = response.data;
-        // });
-        // this.getDicts("cus_pre_sale").then(response => {
-        //   this.preSaleIdOptions = response.data;
-        // });
-        // this.getDicts("cus_after_sale").then(response => {
-        //   this.afterSaleIdOptions = response.data;
-        // });
-        // this.getDicts("cus_nutri").then(response => {
-        //   this.nutritionistIdOptions = response.data;
-        // });
-        // this.getDicts("cus_nutri_assis").then(response => {
-        //   this.nutriAssisIdOptions = response.data;
-        // });
-        // this.getDicts("cus_planner").then(response => {
-        //   this.plannerIdOptions = response.data;
-        // });
-        // this.getDicts("cus_account").then(response => {
-        //   this.accountIdOptions = response.data;
-        // });
-        // this.getDicts("cus_planner_assis").then(response => {
-        //   this.plannerAssisIdOptions = response.data;
-        // });
-        // this.getDicts("cus_operator").then(response => {
-        //   this.operatorIdOptions = response.data;
-        // });
       },
       /** 重置按钮操作 */
       resetQuery() {
@@ -732,19 +668,6 @@
       submitForm() {
         this.$refs["form"].validate(valid => {
           if (valid) {
-
-            // console.log(this.form)
-
-            // this.form.payType = this.selectDictLabel(this.payTypeIdOptions, this.form.payTypeId);
-            // this.form.preSale = this.selectDictLabel(this.preSaleIdOptions, this.form.preSaleId);
-            // this.form.afterSale = this.selectDictLabel(this.afterSaleIdOptions, this.form.afterSaleId);
-            // this.form.nutritionist = this.selectDictLabel(this.nutritionistIdOptions, this.form.nutritionistId);
-            // this.form.nutriAssis = this.selectDictLabel(this.nutriAssisIdOptions, this.form.nutriAssisId);
-            // this.form.account = this.selectDictLabel(this.accountIdOptions, this.form.accountId);
-            // this.form.planner = this.selectDictLabel(this.plannerIdOptions, this.form.plannerId);
-            // this.form.plannerAssis = this.selectDictLabel(this.plannerAssisIdOptions, this.form.plannerAssisId);
-            // this.form.operator = this.selectDictLabel(this.operatorIdOptions, this.form.operatorId);
-
             if (this.form.orderId != null) {
               updateOrder(this.form).then(response => {
                 if (response.code === 200) {

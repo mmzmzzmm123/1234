@@ -100,10 +100,33 @@ public class SysOrder extends BaseEntity
     @Excel(name = "推荐人")
     private String recommender;
 
+    /** 服务月数 */
+    @Excel(name = "服务月数")
+    private String serveMonth;
+
+    @Excel(name = "审核状态", dictType = "cus_review_status")
+    private String reviewStatus;
+
     /** 成交日期 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Excel(name = "成交日期", width = 30, dateFormat = "yyyy-MM-dd")
     private Date orderTime;
+
+    public String getReviewStatus() {
+        return reviewStatus;
+    }
+
+    public void setReviewStatus(String reviewStatus) {
+        this.reviewStatus = reviewStatus;
+    }
+
+    public void setServeMonth(String serveMonth) {
+        this.serveMonth = serveMonth;
+    }
+
+    public String getServeMonth() {
+        return serveMonth;
+    }
 
     public void setOrderId(Long orderId)
     {
@@ -354,6 +377,8 @@ public class SysOrder extends BaseEntity
                 .append("operator", getOperator())
                 .append("recommender", getRecommender())
                 .append("orderTime", getOrderTime())
+                .append("serveMonth", getServeMonth())
+                .append("reviewStatus", getReviewStatus())
                 .toString();
     }
 }

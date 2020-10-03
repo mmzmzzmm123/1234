@@ -2,11 +2,11 @@ import request from '@/utils/request'
 
 // 查询销售订单列表
 export function listOrder(query) {
-  const [fromOrderTime, toOrderTime] = query.orderTime || [null, null];
+  const [beginTime, endTime] = query.orderTime || [null, null];
   const params = {
     ...query,
-    fromOrderTime,
-    toOrderTime,
+    beginTime,
+    endTime,
     orderTime: null
   }
 
@@ -62,7 +62,7 @@ export function exportOrder(query) {
 
 export function getOptions() {
   return request({
-    url: '/custom/order/getOptions',
+    url: '/custom/post/options',
     method: 'get'
   })
 }

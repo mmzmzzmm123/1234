@@ -1,12 +1,20 @@
-package com.ruoyi.system.domain.custom;
+package com.ruoyi.custom.domain;
 
-public class UserPostOption {
+import com.ruoyi.common.core.domain.BaseEntity;
+
+import java.io.Serializable;
+
+public class CusUserPost implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private Long userId;
 
     private String userName;
 
     private String postCode;
+
+    private String postId;
 
     public String getPostCode() {
         return postCode;
@@ -32,12 +40,21 @@ public class UserPostOption {
         this.userName = userName;
     }
 
+    public String getPostId() {
+        return postId;
+    }
+
+    public void setPostId(String postId) {
+        this.postId = postId;
+    }
+
     @Override
     public String toString() {
         return "UserPostOption{" +
                 "userId=" + userId +
                 ", userName='" + userName + '\'' +
                 ", postCode='" + postCode + '\'' +
+                ", postid='" + postId + '\'' +
                 '}';
     }
 }

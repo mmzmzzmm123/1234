@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.custom.mapper.CusUserPostMapper">
+
+    <resultMap type="CusUserPost" id="CusUserPostResult">
+        <result property="userId" column="user_id"/>
+        <result property="userName" column="nick_name"/>
+        <result property="postId" column="post_id"/>
+        <result property="postCode" column="post_code"/>
+    </resultMap>
+
+    <sql id="selectCusUserPostVo">
+        SELECT u.user_id, u.nick_name, p.post_id, p.post_code
+        FROM sys_user u, sys_post p, sys_user_post up
+        WHERE up.user_id = u.user_id AND p.post_id = up.post_id
+    </sql>
+
+    <select id="selectAllCusUserPost" parameterType="CusUserPost" resultMap="CusUserPostResult">
+        <include refid="selectCusUserPostVo"/>
+    </select>
+
+
+</mapper>
