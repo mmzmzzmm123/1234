@@ -1650,6 +1650,7 @@
 
 
   .header-sousou input {
+
     margin-top: 9px;
     border: 0px;
     background-color: #f2f2f2;
@@ -1673,9 +1674,10 @@
 
 
   .sousou-input {
-
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 100%;
-
 
 
   }
@@ -1737,6 +1739,7 @@
 
   .sousouleft-switch {
     margin-top: 4px!important;
+    margin-right: 10px!important;
   }
 
   .sousouleft-switch i {
@@ -1746,9 +1749,10 @@
   }
 
   .sousou-left {
-    width: 50px!important;
-    height: 50px;
-    margin-top: 12px!important;
+    /*width: 50px!important;*/
+    /*height: 50px;*/
+    /*margin-top: 12px!important;*/
+    /*background-color: red;*/
   }
 
   .sousou-leftico  {
@@ -1760,6 +1764,7 @@
     border-radius: 3px;
     border: 1px solid #e6e6e6 !important;
     margin-top: 9px!important;
+    margin-right: 10px!important;
 
 
   }
