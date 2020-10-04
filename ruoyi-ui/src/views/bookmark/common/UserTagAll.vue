@@ -1,77 +1,25 @@
 <template>
-  <div class="app-container" style="overflow-y: scroll;height:750px">
-<!--    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">-->
-<!--      <el-form-item label="标签名字" prop="name">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.name"-->
-<!--          placeholder="请输入标签名字"-->
-<!--          clearable-->
-<!--          size="small"-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="引用数量" prop="icount">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.icount"-->
-<!--          placeholder="请输入引用数量"-->
-<!--          clearable-->
-<!--          size="small"-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="谁增加的该标签" prop="userId">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.userId"-->
-<!--          placeholder="请输入谁增加的该标签"-->
-<!--          clearable-->
-<!--          size="small"-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="标签的字体颜色" prop="isFontColor">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.isFontColor"-->
-<!--          placeholder="请输入标签的字体颜色"-->
-<!--          clearable-->
-<!--          size="small"-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="标签的背景颜色" prop="isBgColor">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.isBgColor"-->
-<!--          placeholder="请输入标签的背景颜色"-->
-<!--          clearable-->
-<!--          size="small"-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="S系统标签,P用户标签" prop="tagType">-->
-<!--        <el-select v-model="queryParams.tagType" placeholder="请选择S系统标签,P用户标签" clearable size="small">-->
-<!--          <el-option label="请选择字典生成" value="" />-->
-<!--        </el-select>-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="状态 0显示默认" prop="istatus">-->
-<!--        <el-select v-model="queryParams.istatus" placeholder="请选择状态 0显示默认" clearable size="small">-->
-<!--          <el-option label="请选择字典生成" value="" />-->
-<!--        </el-select>-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="排序" prop="tagSort">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.tagSort"-->
-<!--          placeholder="请输入排序"-->
-<!--          clearable-->
-<!--          size="small"-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item>-->
-<!--        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>-->
-<!--        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>-->
-<!--      </el-form-item>-->
-<!--    </el-form>-->
+  <div class="app-container" >
+  <div class="mainlist">
 
-    <el-row :gutter="10" class="mb8">
+    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px"  style="float: left">
+      <el-form-item label="" prop="name">
+        <el-input
+          v-model="queryParams.name"
+          placeholder="请输入标签名字"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+
+      <el-form-item>
+        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+      </el-form-item>
+    </el-form>
+
+
+    <el-row :gutter="10" class="mb8" style="float: left;margin-top: 6px">
       <el-col :span="1.5">
         <el-button
           type="primary"
@@ -101,27 +49,19 @@
           v-hasPermi="['system:tag:remove']"
         >删除</el-button>
       </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['system:tag:export']"
-        >导出</el-button>
-      </el-col>
+
     </el-row>
 
     <el-table v-loading="loading" :data="tagList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
+      <el-table-column type="selection" width="50" align="center" />
       <el-table-column label="标签名字"  width="155" >
         <template slot-scope="scope">
               <el-tag type="success" size="medium">{{ scope.row.name }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="引用数量" align="center" prop="icount" />
-      <el-table-column label="标签的字体颜色" align="center" prop="isFontColor" />
-      <el-table-column label="标签的背景颜色" align="center" prop="isBgColor" />
+      <el-table-column label="字体颜色" align="center" prop="isFontColor" />
+      <el-table-column label="背景颜色" align="center" prop="isBgColor" />
       <el-table-column label="排序" align="center" prop="tagSort" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
@@ -150,6 +90,8 @@
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
     />
+
+  </div>
 
     <!-- 添加或修改书签_标签对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
@@ -338,25 +280,23 @@
           this.msgSuccess("删除成功");
         }).catch(function() {});
       },
-      /** 导出按钮操作 */
-      handleExport() {
-        const queryParams = this.queryParams;
-        this.$confirm('是否确认导出所有书签_标签数据项?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
-          return exportTag(queryParams);
-        }).then(response => {
-          this.download(response.msg);
-        }).catch(function() {});
-      }
+
     }
   };
 </script>
 <style scoped>
   .app-container{
     padding: 0px;
+
+
   }
+  .el-form-item{
+    margin-bottom: 5px;
+  }
+
+
+
+
+
 
 </style>

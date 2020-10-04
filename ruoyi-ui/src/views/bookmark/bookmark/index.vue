@@ -3,16 +3,34 @@
 
     <div class="filter-tbar">
       <div class="filter-classification">
-        <div class="classification " @click="showopen(0)"><span>全部</span></div>
-        <div class="classification" @click="showopen(1)"><span>网页</span></div>
-        <div class="classification" @click="showopen(2)"><span>文本</span></div>
-        <div class="classification" @click="showopen(3)"><span>其他</span></div>
+        <div class="classification " @click="showopen(0)"><span>网页</span></div>
+        <div class="classification" @click="showopen(1)"><span>文本</span></div>
+        <div class="classification" @click="showopen(2)"><span>其他</span></div>
+        <!--        <div class="classification" @click="showopen(3)"><span>其他</span></div>-->
       </div>
       <div class="setUpThe">
         <div class="filter-content">
+          <el-dropdown trigger="hover" size="small" @command="handleCommand">
+            <div class="el-dropdown-link dropdownList">
+              <i class="el-icon-document-checked "></i> <span>排序</span>
+            </div>
+            <el-dropdown-menu slot="dropdown" class="filter-sort-dropdown">
+              <el-dropdown-item class="filter-item" command="0"><i class="el-icon-bottom"></i>按时间排序(正)
+              </el-dropdown-item>
+              <el-dropdown-item class="filter-item" command="1"><i class="el-icon-bottom"></i>按时间排序(反)
+              </el-dropdown-item>
+              <el-dropdown-item class="filter-item" command="2"><i class="el-icon-bottom"></i>按标题A-Z排序(正)
+              </el-dropdown-item>
+              <el-dropdown-item class="filter-item" command="3"><i class="el-icon-bottom"></i>按标题A-Z排序(反)
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+
+        </div>
+        <div class="filter-content">
           <el-dropdown trigger="hover" size="small">
             <div class="el-dropdown-link dropdownList">
-              <i class="el-icon-document-checked "></i> <span>排序模式</span>
+              <i class="el-icon-tickets "></i> <span>列表</span>
             </div>
             <el-dropdown-menu slot="dropdown" class="filter-sort-dropdown">
               <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>按时间排序(正)</el-dropdown-item>
@@ -24,37 +42,26 @@
           </el-dropdown>
 
         </div>
-        <div class="filter-content">
-          <el-dropdown trigger="hover" size="small">
-            <div class="el-dropdown-link dropdownList">
-              <i class="el-icon-tickets "></i> <span>卡片模式</span>
-            </div>
-            <el-dropdown-menu slot="dropdown" class="filter-sort-dropdown">
-              <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>按时间排序(正)</el-dropdown-item>
-              <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>按时间排序(反)</el-dropdown-item>
-              <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>按字母A-Z排序</el-dropdown-item>
-              <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>按字母A-Z排序</el-dropdown-item>
-              <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>按网站A-Z排序</el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
-
-        </div>
-        <div class="filter-content">
-          <el-dropdown trigger="hover" size="small">
-            <div class="el-dropdown-link dropdownList">
-              <i class="el-icon-setting "></i> <span>批量设置</span>
-            </div>
-            <el-dropdown-menu slot="dropdown" class="filter-sort-dropdown">
-              <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>编辑</el-dropdown-item>
-              <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>批量处理</el-dropdown-item>
-              <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>排序</el-dropdown-item>
-              <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>按网站A-Z排序</el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
-
-
-        </div>
+<!--        <div class="filter-content">-->
+<!--          <el-dropdown trigger="hover" size="small">-->
+<!--            <div class="el-dropdown-link dropdownList">-->
+<!--              <i class="el-icon-setting "></i> <span>设置</span>-->
+<!--            </div>-->
+<!--            <el-dropdown-menu slot="dropdown" class="filter-sort-dropdown">-->
+<!--              <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>编辑</el-dropdown-item>-->
+<!--              <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>批量处理</el-dropdown-item>-->
+<!--              <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>排序</el-dropdown-item>-->
+<!--              <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>按网站A-Z排序</el-dropdown-item>-->
+<!--            </el-dropdown-menu>-->
+<!--          </el-dropdown>-->
+<!--        </div>-->
       </div>
+    </div>
+
+    <div v-if="queryParams.sousuo!=''" class="sousuoContent">
+      <i class="el-icon-success"></i>
+      <!--      <span> 当前搜索的内容是:{{queryParams.sousuo}}</span>-->
+      <span> 共为您找到约{{total}}个结果</span>
     </div>
 
     <div class="nullbookmark" v-if="showimg">
@@ -66,10 +73,11 @@
     </div>
 
 
-    <div class="bookmarklist" :style="datalist" infinite-scroll-distance="10" v-loading="loading" v-if="showbookmark" v-infinite-scroll="load"
+    <div class="bookmarklist" :style="datalist" infinite-scroll-distance="10" v-loading="loading" v-if="showbookmark"
+         v-infinite-scroll="load"
          infinite-scroll-disabled="disabled" style="overflow:auto;" infinite-scroll-immediate="false">
       <el-row>
-        <hr class="bookamrk-hr"/>
+        <!--        <hr class="bookamrk-hr" v-if="!queryParams.sousuo!=''"/>-->
         <el-col :span="24" v-for="bm in bookmarkList">
           <div class="editBookamrk">
             <div class="editlist">
@@ -90,9 +98,12 @@
 
 
           <div class="bookmark" :data-id="bm.id" @click="windowurl(bm.url,bm.bookmarkId)">
-            <p class="bookmark-title">{{bm.title}}</p>
+            <p class="bookmark-title" v-if="highlighted"><span v-html="highLight(bm.title,queryParams.sousuo)"/></p>
+            <p class="bookmark-title" v-if="!highlighted">{{bm.title}}</p>
             <div class="">
-              <p class="description">{{bm.description}}</p>
+              <p class="description" v-if="highlighted"><span v-html="highLight(bm.description,queryParams.sousuo)"/>
+              </p>
+              <p class="description" v-if="!highlighted">{{bm.description}}</p>
             </div>
             <div class="info-wrap">
               <div class="info">
@@ -198,7 +209,7 @@
   </div>
 </template>
 
-<script >
+<script>
 
 
   import {
@@ -244,7 +255,9 @@
           zcount: undefined,
           idelete: undefined,
           start: undefined,
-          sqTags: []
+          sqTags: [],
+          sort: 0,
+          sousuo: '',
         },
         inputVisible: false, //标签
         inputValue: '', //标签
@@ -277,40 +290,51 @@
         },
         listloading: false,//滚动加载提示
         listnoMore: false,
-        total:0,//总条数
-        noMore:false,//是否可以滚动瀑布流
+        total: 0,//总条数
+        noMore: false,//是否可以滚动瀑布流
+        highlighted: true,//搜索是否高亮
 
       }
     },
+
     filters: {
       //timeago.js插件
       //计算时间，类似于几分钟前，几小时前，几天前等
       changeTime(val) {
         let time = new Date(val); //先将接收到的json格式的日期数据转换成可用的js对象日期
         return format(time, 'zh_CN'); //转换成类似于几天前的格式
-      }
+      },
+
+
     },
     mounted() {
 
       // document.querySelector("#datalist").addEventListener('scroll', this.handleScroll)
     },
-    computed:{
+    computed: {
       /**list加载完毕就禁止滚动**/
 
       /**是否禁用滚动**/
-      disabled(){
+      disabled() {
         return this.listloading || this.noMore
       }
     },
     created() {
       var that = this;
+
+
       var routedata = that.$route.query.menuId;
+      var sousuo = that.$route.query.sousuo;
       if (routedata == undefined) {
-        that.queryParams.menuId = 1;
+        // that.queryParams.menuId = 1;
       } else {
         that.queryParams.menuId = routedata;
       }
 
+      //搜索值
+      if (sousuo != null && sousuo != undefined && sousuo != '') {
+        this.queryParams.sousuo = sousuo;
+      }
       if (routedata == 'BOOKMARK') {
         //全部书签
         this.getBookmarkList();
@@ -333,7 +357,7 @@
       this.newBookmark();
     },
     methods: {
-      /**初始化**/
+      /**初始化 分类全部的意思**/
       newBookmark() {
         //默认选中 全部
         document.getElementsByClassName("classification")[0].classList.add("classification-click");
@@ -352,36 +376,50 @@
       /**滚动监控**/
       load() {
         console.log("滚动开始")
-
+        var that=this;
         //判断是否加载了所有数据
-        this.queryParams.pageNum=this.queryParams.pageNum+1;
-        // 2 15 26
-        var listcount=Math.ceil(this.total/15);
-        if (this.queryParams.pageNum>listcount){
+        var i=that.queryParams.pageNum+1;
+        that.$set(that.queryParams,'pageNum',i)
+        console.log("this.queryParams.pageNum:"+that.queryParams.pageNum)
+        var listcount = Math.ceil(that.total / 15);
+        console.log("该目录共有页数:" +listcount)
 
+        if (i > listcount) {
           //加载完毕了 禁止滚动
-          this.noMore=true;
-          this.listnoMore=true;
-          this.listloading = false
+          that.noMore = true;
+          that.listnoMore = true;
+          that.listloading = false
+          console.log("禁止滚动了")
           return;
-        }else {
+        } else {
 
-        this.listloading = true
-        setTimeout(() =>{
-          selectBymenuIdUserID(this.queryParams).then(response => {
-            if (response.rows.length!=0 && response.code == 200) {
-              console.log("response.rows"+response.rows)
-              this.bookmarkList = this.bookmarkList.concat( response.rows);
-              this.total = response.total;
-              this.listloading = false
-            } else {
-              //加载完毕了 禁止滚动
-              this.noMore=true;
-              this.listloading = false
-            }
-          });
-        },1000);
+          this.listloading = true
+          setTimeout(() => {
+            selectBymenuIdUserID(this.queryParams).then(response => {
+              if (response.rows.length != 0 && response.code == 200) {
+                console.log("response.rows" + response.rows)
+                this.bookmarkList = this.bookmarkList.concat(response.rows);
+
+                this.total = response.total;
+                this.listloading = false
+                console.log("请求完毕"+that.queryParams.pageNum)
+              } else {
+                //出错了
+                //加载完毕了 禁止滚动
+                this.noMore = true;
+                this.listloading = false
+              }
+            });
+          }, 1000);
         }
+
+        // if (this.queryParams.pageNum = listcount) {
+        //   //加载完毕了 禁止滚动
+        //   that.noMore = true;
+        //   that.listnoMore = true;
+        //   that.listloading = false
+        //   console.log("刚刚好2页 禁止滚动了")
+        // }
 
       },
 
@@ -513,7 +551,9 @@
           zcount: undefined,
           idelete: undefined,
           start: undefined,
-          createTime: undefined
+          createTime: undefined,
+          sqTags: undefined,
+          sort: undefined,
         };
         this.resetForm("form");
       },
@@ -546,6 +586,11 @@
         });
       },
 
+      /**切换排序规则**/
+      handleCommand(command) {
+        this.queryParams.sort = command;
+        this.getList();
+      },
 
       /** 查询书签管理列表 */
       getList() {
@@ -566,6 +611,57 @@
         window.open(url);
       },
 
+      /**搜索高亮 开始**/
+      highLight(item, highLight) {
+        return this.highLightTableMsg(item, highLight)
+      },
+      highLightTableMsg(msg, highLightStr) {
+        if (msg == null) {
+          msg = ''
+        }
+        if (highLightStr == null) {
+          highLightStr = ''
+        }
+        if (msg instanceof Object) {
+          msg = JSON.stringify(msg)
+        }
+        if (highLightStr instanceof Object) {
+          highLightStr = JSON.stringify(highLightStr)
+        }
+        if (!(msg instanceof String)) {
+          msg = msg.toString()
+        }
+        if (!(highLightStr instanceof String)) {
+          highLightStr = highLightStr.toString()
+        }
+        var htmlStr = ''
+        if (highLightStr.length > 0) {
+          if (msg.indexOf(highLightStr) !== -1) {
+            assemblyStr(msg, highLightStr)
+
+          } else {
+            htmlStr = '<span>' + msg + '</span>'
+          }
+        } else {
+          htmlStr = '<span>' + msg + '</span>'
+        }
+
+        function assemblyStr(msgAssembly, highLightAssembly) {
+          if (msgAssembly.indexOf(highLightAssembly) !== -1) {
+            var length = highLightAssembly.length
+            // alert(length)
+            var start = msgAssembly.indexOf(highLightAssembly)
+            htmlStr = htmlStr + '<span>' + msgAssembly.substring(0, start) + '</span>' + '<span style="color:red;">' + highLightAssembly + '</span>'
+            msgAssembly = msgAssembly.substring(start + length, msgAssembly.length)
+            assemblyStr(msgAssembly, highLightAssembly)
+          } else {
+            htmlStr = htmlStr + '<span>' + msgAssembly + '</span>'
+          }
+        }
+
+        return htmlStr;
+      },
+      /**搜索高亮 结束**/
 
     },
 
@@ -575,7 +671,6 @@
 
 
 <style scoped>
-
 
 
   .button-new-tag {
@@ -664,14 +759,17 @@
     align-items: center;
 
   }
+
   .bookmark-time {
     float: left;
   }
+
   .bookmark-hr {
     background-color: #fff !important;
     margin-top: 2px !important;
     margin-bottom: 7px !important;
   }
+
   .editlist div {
     margin-left: 10px;
     width: 50px;
@@ -683,9 +781,11 @@
   .bookmarktag {
     margin-right: 5px;
   }
+
   .bookmark-official {
     float: left;
   }
+
   .info {
     font-size: 12px;
   }
@@ -701,6 +801,7 @@
     height: 14px;
     vertical-align: middle;
   }
+
   .filter-tbar {
     display: flex;
     position: relative;
@@ -781,7 +882,8 @@
     border-radius: 0px;
     border: 1px solid #EAEAEF;
   }
-  .bookmark-list-tag:hover{
+
+  .bookmark-list-tag:hover {
     color: #569cd5;
   }
 
@@ -791,20 +893,23 @@
     background: #dcdfe682;
     font-weight: 600;
   }
-  .bookmark-title:hover{
+
+  .bookmark-title:hover {
 
     color: #3C4DAC;
   }
-  .description{
+
+  .description {
     color: #9EABB3;
     margin-top: 5px;
     margin-bottom: 5px;
   }
-  .info-wrap{
+
+  .info-wrap {
     color: #9EABB3;
   }
 
-/**evanyou背景特效**/
+  /**evanyou背景特效**/
 
   .bookmark-title {
     /*设置文本框大小*/
@@ -831,6 +936,7 @@
     color: #545454;
     font-size: 13px;
   }
+
   .bookmarklist {
     width: 100%;
     height: 600px;
@@ -844,8 +950,8 @@
   /*滚动条的宽度*/
 
   ::-webkit-scrollbar {
-    width:5px;
-    height:3px;
+    width: 5px;
+    height: 3px;
     /*background-color: red;*/
   }
 
@@ -853,28 +959,49 @@
 
   ::-webkit-scrollbar-track {
     width: 6px;
-    background-color:#fff;
+    background-color: transparent;
     -webkit-border-radius: 2em;
     -moz-border-radius: 2em;
-    border-radius:2em;
+    border-radius: 2em;
   }
 
   /*滚动条的设置*/
 
   ::-webkit-scrollbar-thumb {
-    background-color:#606d71;
-    background-clip:padding-box;
-    min-height:28px;
+    /*设置为透明 隐藏掉*/
+    /*background-color: #606d71;*/
+    background-color: transparent;
+    background-clip: padding-box;
+    min-height: 28px;
     -webkit-border-radius: 2em;
     -moz-border-radius: 2em;
-    border-radius:2em;
+    border-radius: 2em;
 
   }
+
   /*滚动条移上去的背景*/
 
   ::-webkit-scrollbar-thumb:hover {
     background-color: #7c6fff;
   }
+
   /*滚动条美化结束*/
+
+
+
+
+  .sousuoContent {
+    width: 100%;
+    height: 24px;
+    background-color: #F2F2F2;
+    color: #6a6a6a;
+    font-weight: 600;
+    line-height: 24px;
+    border-radius: 3px;
+    text-indent: 4px;
+    /*text-align:center;*/
+    margin-bottom: 4px;
+
+  }
 
 </style>

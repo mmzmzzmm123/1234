@@ -59,11 +59,13 @@ public class SqBookmarkServiceImpl implements ISqBookmarkService
      *
      * @param menuID 栏目ID
      * @param userID 用户ID
+     * @param sort 排序方式
+     * @param sousou 搜索
      * @return 书签管理
      */
     @Override
-    public List<SqBookmark> selectBymenuIdUserID(Long menuID, Long userID) {
-        return sqBookmarkMapper.selectBymenuIdUserID(menuID,userID);
+    public List<SqBookmark> selectBymenuIdUserID(Long menuID, Long userID,Integer sort,String sousou) {
+        return sqBookmarkMapper.selectBymenuIdUserID(menuID,userID, sort,sousou);
     }
 
     /**

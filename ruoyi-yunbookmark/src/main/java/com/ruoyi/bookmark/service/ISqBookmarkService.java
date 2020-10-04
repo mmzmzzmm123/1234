@@ -21,9 +21,11 @@ public interface ISqBookmarkService
      *
      * @param menuID 栏目ID
      * @param userID 用户ID
+     * @param sort 排序方式
+     * @param sousou 搜索
      * @return 书签管理
      */
-    public List<SqBookmark> selectBymenuIdUserID(Long menuID,Long userID);
+    public List<SqBookmark> selectBymenuIdUserID(Long menuID,Long userID,Integer sort,String sousou);
 
 
     /**

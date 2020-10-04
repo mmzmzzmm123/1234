@@ -1,8 +1,8 @@
 <template>
-  <div  class="box" ref="box">
+  <div class="box" ref="box">
 
     <el-container class="box" ref="box">
-      <transition name="el-zoom-in-left" >
+      <transition name="el-zoom-in-left">
         <el-aside :style="asideHeight" v-show="isShowZtree" class="transition-box left isaside"
                   style="overflow-x:hidden;overflow-y: hidden;">
           <el-header class="aside-logo">
@@ -38,18 +38,20 @@
           </div>
 
 
-          <div class="tabBar">
-            <div class=""
-                 style="width: 100%;height: 30px;background-color: #cacaca;float: left;text-align: center;line-height: 30px">
-              <i class="el-icon-folder-checked"></i>
-              <span>新的收藏集</span>
-            </div>
+<!--          <div class="tabBar">-->
+<!--            <div class=""-->
+<!--                 style="width: 100%;height: 30px;background-color: #cacaca;float: left;text-align: center;line-height: 30px">-->
+<!--              <i class="el-icon-folder-checked"></i>-->
+<!--              <span>新的收藏集</span>-->
+<!--            </div>-->
 
-            <div style="float: left;width: 100%;height: 50px;background-color: black">
-              <img src="https://s1.ax1x.com/2020/09/13/w0jfy9.png" style="width: 100%;height: 100%">
-            </div>
+<!--            <div class="tabBarList" >-->
+<!--              <div><i class="el-icon-folder-checked"></i></div>-->
+<!--              <div><i class="el-icon-folder-checked"></i></div>-->
+<!--              <div><i class="el-icon-s-tools"></i></div>-->
+<!--            </div>-->
 
-          </div>
+<!--          </div>-->
 
 
         </el-aside>
@@ -78,7 +80,7 @@
       <!--    <el-button @click="isShowZtree = !isShowZtree">Click Me</el-button>-->
 
 
-        <el-container class="mid">
+      <el-container class="mid">
 
         <el-header class="header-sousou" style="height: 50px">
           <div class="sousou-left">
@@ -88,21 +90,23 @@
           </div>
 
           <div class="sousou-input">
-<!--            <el-popover-->
-<!--              placement="bottom"-->
-<!--              width="400"-->
-<!--              trigger="click"-->
-<!--              :visible-arrow="false"-->
-<!--              popper-class="popover-suosou"-->
-<!--            >-->
-<!--              <div v-for="o in 4" :key="o">-->
-<!--                {{'列表内容 ' + o }}-->
-<!--              </div>-->
-              <el-input slot="reference" placeholder="请输入书签名字" v-model="sousou" size="small">
-                <i slot="prefix" class="el-input__icon el-icon-search"></i>
-                <!--          <el-button slot="append" icon="el-icon-search"></el-button>-->
-              </el-input>
-<!--            </el-popover>-->
+            <!--            <el-popover-->
+            <!--              placement="bottom"-->
+            <!--              width="400"-->
+            <!--              trigger="click"-->
+            <!--              :visible-arrow="false"-->
+            <!--              popper-class="popover-suosou"-->
+            <!--            >-->
+            <!--              <div v-for="o in 4" :key="o">-->
+            <!--                {{'列表内容 ' + o }}-->
+            <!--              </div>-->
+            <el-input slot="reference" @keyup.enter.native="gosousuo" placeholder="请输入要查找的关键词" v-model="sousuo"
+                      size="small">
+              <i slot="prefix" class="el-input__icon el-icon-search" style="font-size: 15px;margin-top: 7px"></i>
+
+              <!--          <el-button slot="append" icon="el-icon-search"></el-button>-->
+            </el-input>
+            <!--            </el-popover>-->
           </div>
 
           <div class="sousouright-icon">
@@ -144,13 +148,29 @@
         </el-header>
         <el-main class="bookmarkmain">
 
-          <router-view :key="$route.query.menuId"></router-view>
+          <router-view :key="$route.query.t"></router-view>
 
 
         </el-main>
 
 
       </el-container>
+<!--      <el-aside class="mianUrl">-->
+<!--        <el-header class="mianUrl-top" style="height: 50px">-->
+<!--          <div class="mianUrl-top-left">-->
+<!--            <i class="el-icon-folder-delete"></i>-->
+<!--            <i class="el-icon-rank"></i>-->
+<!--          </div>-->
+<!--          <div class="mianUrl-top-right">-->
+<!--            <i class="el-icon-edit-outline"></i>-->
+<!--            <i class="el-icon-position"></i>-->
+<!--          </div>-->
+<!--        </el-header>-->
+<!--        <div class="mianUrl-botoom">-->
+<!--          <iframe class="openurl" :src="gourl"/>-->
+
+<!--        </div>-->
+<!--      </el-aside>-->
 
 
     </el-container>
@@ -281,7 +301,7 @@
 </template>
 <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
 <style scoped src="../ztree/demo.css"/>
-<script >
+<script>
   // 下面的是单个Vue组件引用的外部静态文件，也可以在main.js文件中引用
   import {addBookmark} from "@/api/bookmark/bookmark";
 
@@ -347,7 +367,7 @@
         drawer: false,
         direction: 'ltr',
         swictxuanran: true,
-        sousou: '',//搜索书签
+        sousuo: '',//搜索书签
         enterable: false,
         isShowZtree: true,//ztree树显示
         expandAll: false,//是否展开ztree树
@@ -405,18 +425,20 @@
         }],
         asideHeight: {
           height: "",
-          width:"",
-        }
+          width: "",
+        },
+        //点击的网址
+        gourl:'https://element.eleme.cn/#/zh-CN/theme',
 
 
       }
     },
-    mounted () {
+    mounted() {
       window['editBookmark'] = (e) => {
         this.editBookmark(e)
       },
         //div拖动
-      this.dragControllerDivs();
+        this.dragControllerDivs();
       /**背景彩带**/
       // this.backgroundcss();
 
@@ -438,7 +460,7 @@
 
     methods: {
       /**粒子球背景特效**/
-      backgroundparticle:function(){
+      backgroundparticle: function () {
         !function () {
           //封装方法，压缩之后减少文件大小
           function get_attribute(node, attr, default_value) {
@@ -558,7 +580,7 @@
       },
 
       /**evanyou 背景特效**/
-      evanyoucss:function(){
+      evanyoucss: function () {
         var c = document.getElementById('evanyou'),
           x = c.getContext('2d'),
           pr = window.devicePixelRatio || 1,
@@ -575,11 +597,13 @@
         c.height = h * pr;
         x.scale(pr, pr);
         x.globalAlpha = 0.6;
+
         function evanyou() {
           x.clearRect(0, 0, w, h)
-          q = [{ x: 0, y: h * .7 + f }, { x: 0, y: h * .7 - f }]
+          q = [{x: 0, y: h * .7 + f}, {x: 0, y: h * .7 - f}]
           while (q[1].x < w + f) d(q[0], q[1])
         }
+
         function d(i, j) {
           x.beginPath()
           x.moveTo(i.x, i.y)
@@ -592,12 +616,14 @@
           x.fillStyle = '#' + (v(r) * 127 + 128 << 16 | v(r + u / 3) * 127 + 128 << 8 | v(r + u / 3 * 2) * 127 + 128).toString(16)
           x.fill()
           q[0] = q[1]
-          q[1] = { x: k, y: n }
+          q[1] = {x: k, y: n}
         }
+
         function y(p) {
           var t = p + (z() * 2 - 1.1) * f
           return (t > h || t < 0) ? y(p) : t
         }
+
         document.onclick = evanyou
         document.ontouchstart = evanyou
         evanyou();
@@ -652,7 +678,7 @@
         }
       },
       /**背景特效彩带**/
-      backgroundcss:function(){
+      backgroundcss: function () {
         (function (name, factory) {
           if (typeof window === "object") {
             window[name] = factory();
@@ -1138,6 +1164,7 @@
       // 表单重置
       reset() {
         this.sqTags = [],
+          this.sousuo = '',
           this.form = {
             menuId: undefined,
             userId: undefined,
@@ -1224,7 +1251,8 @@
         that.$router.push({
           path: "/content",
           query: {
-            menuId: treeNode.menuId
+            menuId: treeNode.menuId,
+            t:Date.now(),
           }
         })
 
@@ -1338,7 +1366,17 @@
           path: "/UserTagAll",
         })
       },
-
+      /**搜索功能**/
+      gosousuo() {
+        var that = this;
+        that.$router.push({
+          path: "/content",
+          query: {
+            sousuo: this.sousuo,
+            t:Date.now(),
+          }
+        })
+      },
 
 
     },
@@ -1353,14 +1391,13 @@
 
   }
 </script>
-<style >
+<style>
 
 
   body {
     /*font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;*/
-    font-family: "Merriweather","Open Sans","Microsoft Jhenghei","Microsoft Yahei",sans-serif;
+    font-family: "Merriweather", "Open Sans", "Microsoft Jhenghei", "Microsoft Yahei", sans-serif;
   }
-
 
 
   .ztree li ul {
@@ -1478,7 +1515,7 @@
 
   }
 
-  .isaside{
+  .isaside {
     padding: 0;
     margin-bottom: 0;
     /*background:url('https://ftp.bmp.ovh/imgs/2020/08/4ac1d6b4f41049ef.jpg') no-repeat;*/
@@ -1499,11 +1536,9 @@
     /*filter:alpha(opacity=90);*/
 
 
-
-
-    filter:"progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod='scale')";
-    -moz-background-size:100% 100%;
-    background-size:100% 100%;
+    filter: "progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod='scale')";
+    -moz-background-size: 100% 100%;
+    background-size: 100% 100%;
 
 
     /*background: url("https://s1.ax1x.com/2020/10/03/03sAeK.md.jpg") no-repeat, linear-gradient(90deg, rgb(107, 165, 255) 40%, rgb(197, 197, 197) 100%) ;*/
@@ -1515,8 +1550,6 @@
     /*background-color: #2E90AE;*/
     /*background: -webkit-linear-gradient(to right, #000C40, #F0F2F0);  !* Chrome 10-25, Safari 5.1-6 *!*/
     /*!*background: linear-gradient(to right, #000C40, #F0F2F0); !* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ *!*!*/
-
-
 
 
     /*background-size: cover;*/
@@ -1585,9 +1618,9 @@
   .reminder {
     color: #878787;
     opacity: 0.7;
-    font-size: 14px!important;
-    font-weight: 500!important;
-    margin-left: 27px!important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    margin-left: 27px !important;
 
   }
 
@@ -1672,7 +1705,6 @@
   }
 
 
-
   .sousou-input {
     display: flex;
     align-items: center;
@@ -1687,7 +1719,7 @@
     justify-content: center;
     align-items: center;
     width: 35px;
-    margin-top: 9px!important;
+    margin-top: 9px !important;
 
 
   }
@@ -1720,26 +1752,14 @@
   }
 
 
-
   .bookmark {
     height: 65px;
   }
 
 
-
-
-
-
-
-
-
-
-
-
-
   .sousouleft-switch {
-    margin-top: 4px!important;
-    margin-right: 10px!important;
+    margin-top: 4px !important;
+    margin-right: 10px !important;
   }
 
   .sousouleft-switch i {
@@ -1755,7 +1775,7 @@
     /*background-color: red;*/
   }
 
-  .sousou-leftico  {
+  .sousou-leftico {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1763,12 +1783,13 @@
     height: 30px;
     border-radius: 3px;
     border: 1px solid #e6e6e6 !important;
-    margin-top: 9px!important;
-    margin-right: 10px!important;
+    margin-top: 9px !important;
+    margin-right: 10px !important;
 
 
   }
-  .sousou-leftico img{
+
+  .sousou-leftico img {
 
   }
 
@@ -1779,22 +1800,20 @@
   }
 
 
-
-
   .sousouright-icon {
     display: flex;
     justify-content: center;
     align-items: center;
     width: 50px;
-    margin-top: 7px!important;
+    margin-top: 7px !important;
   }
 
- .sousouright-iconadd {
+  .sousouright-iconadd {
     display: flex;
     justify-content: center;
     align-items: center;
     width: 50px;
-   margin-top: 7px!important;
+    margin-top: 7px !important;
   }
 
 
@@ -1895,16 +1914,11 @@
 
 
   .main-right {
-    /*overflow:scroll;*/
     width: 300px;
-    height: 85%;
+    height: 95%;
     min-height: 40%;
     overflow: auto;
-    /*overflow: hidden;*/
-
-
     z-index: 1;
-
   }
 
   .main-right::-webkit-scrollbar {
@@ -1931,10 +1945,34 @@
   }
 
   .tabBar {
-    width: 300px;
-    overflow: hidden;
-    position: fixed;
-    bottom: 0;
+    /*width: inherit;*/
+    /*overflow: hidden;*/
+    /*position: fixed;*/
+    /*bottom: 0;*/
+  }
+  .tabBarList{
+    display: flex;
+    float: left;
+    width: 100%;
+    height: 50px;
+    background-color: #e6e6e6;
+    text-align: center;
+    align-content: center;
+    align-items: center;
+  }
+  .tabBarList div{
+    display: flex;
+    width: 33.33%;
+    height: 50px;
+    align-content: center;
+    align-items: center;
+    text-align: center;
+  }
+
+  .tabBarList div i{
+    margin: 0 auto;
+    font-size: 25px;
+
   }
 
   .popover-suosou {
@@ -1942,6 +1980,7 @@
     top: 40px;
     /*left: 72px;*/
   }
+
   /* 拖拽相关样式 */
   /*包围div样式*/
 
@@ -1950,45 +1989,96 @@
     background-color: transparent;
     width: 10px;
     font-size: 25px;
-    display:-webkit-flex;
-    justify-content:center;
-    align-items:center;
+    display: -webkit-flex;
+    justify-content: center;
+    align-items: center;
     background-color: transparent;
     color: transparent;
   }
+
   /*拖拽区鼠标悬停样式*/
-  .isresize:hover{
+  .isresize:hover {
     color: #a4a4a4;
   }
-  .isresize i{
+
+  .isresize i {
     margin-left: 2px;
     transform: rotate(90deg);
     width: 10px;
     /*color: transparent;*/
     /*background-color: black;*/
   }
-  .main-right{
+
+  .main-right {
     min-width: 250px;
   }
-  .box{
-    -moz-user-select:none; /* Firefox私有属性 */
-    -webkit-user-select:none; /* WebKit内核私有属性 */
-    -ms-user-select:none; /* IE私有属性(IE10及以后) */
-    -khtml-user-select:none; /* KHTML内核私有属性 */
-    -o-user-select:none; /* Opera私有属性 */
-    user-select:none; /* CSS3属性 */
+
+  .box {
+    -moz-user-select: none; /* Firefox私有属性 */
+    -webkit-user-select: none; /* WebKit内核私有属性 */
+    -ms-user-select: none; /* IE私有属性(IE10及以后) */
+    -khtml-user-select: none; /* KHTML内核私有属性 */
+    -o-user-select: none; /* Opera私有属性 */
+    user-select: none; /* CSS3属性 */
   }
 
   /* 拖拽相关样式 结束 */
-  #evanyou{
-    position:fixed;
-    width:100%;
-    height:100%;
-    left:0;
-    top:0;
+  #evanyou {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
     z-index: -1;
-
   }
+
+
+
+  .mianUrl{
+    padding: 0px;
+    color: #8F8F8F;
+  }
+  .mianUrl-top{
+    display: flex;
+    padding: 0px!important;
+  }
+  .mianUrl-top div{
+    width: 50%;
+    height: 50px;
+    background-color: #FFFFFF;
+    font-size: 22px;
+    color: #414141;
+  }
+  .mianUrl i{
+    display: block;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    margin-top: 15px;
+    border-radius: 2px;
+  }
+
+  .mianUrl-top-left i{
+    float: left;
+    margin-left: 15px;
+  }
+  .mianUrl i:hover{
+    background-color: #F2F2F2;
+  }
+  .mianUrl-top-right i{
+    float: right;
+    margin-right: 15px;
+  }
+
+  .mianUrl-botoom{
+    height: 900px;
+  }
+  .openurl{
+    width: 100%;
+    height: 100%;
+  }
+
 
 
 

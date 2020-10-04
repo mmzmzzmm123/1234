@@ -123,6 +123,26 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectBymenuIdUserID" parameterType="SqBookmark"  resultMap="SqBookmarkResult">
         <include refid="selectSqBookmarkVo"/>
-        where menu_id = #{menuID} and userid=#{userID} order by create_time desc
+        where   userid=#{userID}
+        <if test="sousuo == null  or sousuo == ''"> and menu_id = #{menuID}</if>
+        <if test="sousuo != null  and sousuo != ''"> and title like concat('%', #{sousuo}, '%')</if>
+        order by
+        <choose>
+            <when test="sort == 0">
+                create_time desc
+            </when>
+            <when test="sort == 1">
+                create_time asc
+            </when>
+            <when test="sort == 2">
+                CONVERT(title USING GBK) asc
+            </when>
+            <when test="sort == 3">
+                CONVERT(title USING GBK) desc
+            </when>
+            <otherwise>
+                create_time desc
+            </otherwise>
+        </choose>
     </select>
 </mapper>

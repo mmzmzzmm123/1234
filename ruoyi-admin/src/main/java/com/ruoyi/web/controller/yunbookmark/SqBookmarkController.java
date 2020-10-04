@@ -60,10 +60,10 @@ public class SqBookmarkController extends BaseController
      */
     @GetMapping("/selectBymenuIdUserID")
     @PreAuthorize("@ss.hasPermi('bookmark:bookmark:list')")
-    public TableDataInfo selectBymenuIdUserID(Long menuId) {
+    public TableDataInfo selectBymenuIdUserID(Long menuId,Integer sort,String sousuo) {
         SysUser sysUser=getAuthUser();
         startPage();
-        List<SqBookmark> list = sqBookmarkService.selectBymenuIdUserID(menuId,sysUser.getUserId());
+        List<SqBookmark> list = sqBookmarkService.selectBymenuIdUserID(menuId,sysUser.getUserId(),sort,sousuo);
         return getDataTable(list);
     }
     /**
