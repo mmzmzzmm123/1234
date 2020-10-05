@@ -79,7 +79,7 @@
       <el-row>
         <!--        <hr class="bookamrk-hr" v-if="!queryParams.sousuo!=''"/>-->
         <el-col :span="24" v-for="bm in bookmarkList">
-          <div class="editBookamrk">
+          <div class="editBookamrk ">
             <div class="editlist">
               <div>
                 <el-button plain size="small" @click="handleUpdate(bm.bookmarkId)">修改</el-button>
@@ -97,7 +97,7 @@
           </div>
 
 
-          <div class="bookmark" :data-id="bm.id" @click="windowurl(bm.url,bm.bookmarkId)">
+          <div class="bookmark " :data-id="bm.id" @click="windowurl(bm.url,bm.bookmarkId)">
             <p class="bookmark-title" v-if="highlighted"><span v-html="highLight(bm.title,queryParams.sousuo)"/></p>
             <p class="bookmark-title" v-if="!highlighted">{{bm.title}}</p>
             <div class="">

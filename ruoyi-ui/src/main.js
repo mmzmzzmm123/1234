@@ -54,6 +54,11 @@ Vue.prototype.msgInfo = function (msg) {
   this.$message.info(msg);
 }
 
+//上线前需要删除的目前使用的
+// 1.目前使用的是 cdn引入
+// package.json  >>   "mdui": "^1.0.0",
+
+
 // 全局组件挂载
 Vue.component('Pagination', Pagination)
 Vue.use(ElementUI)

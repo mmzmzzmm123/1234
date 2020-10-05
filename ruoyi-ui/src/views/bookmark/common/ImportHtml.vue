@@ -29,8 +29,9 @@
         <div class="el-upload__tip" style="color:red" slot="tip">提示：仅允许导入".html"格式文件！</div>
       </el-upload>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitFileForm">确 定</el-button>
+        <el-button type="primary" class="  mdui-text-center  mdui-btn mdui-btn-raised mdui-text-color-blue-900  mdui-color-light-blue-100" @click="submitFileForm">确 定</el-button>
 <!--        <el-button @click="upload.open = false">取 消</el-button>-->
+        <button class="mdui-btn mdui-btn-raised mdui-btn-dense  mdui-color-light-blue-100  mdui-ripple">Button</button>
       </div>
 <!--    </el-dialog>-->
 

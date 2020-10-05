@@ -5,13 +5,13 @@
       <transition name="el-zoom-in-left">
         <el-aside :style="asideHeight" v-show="isShowZtree" class="transition-box left isaside"
                   style="overflow-x:hidden;overflow-y: hidden;">
-          <el-header class="aside-logo">
+          <el-header class="aside-logo ">
             <!--        <img src="https://s1.ax1x.com/2020/08/15/dACqUO.png"/>-->
             <div class="logoname">
               <span>藏趣云书签</span>
             </div>
-            <div class="logoright">
-              <i class="el-icon-plus"/>
+            <div class="logoright ">
+              <i class="el-icon-plus mdui-ripple"/>
             </div>
 
           </el-header>
@@ -33,7 +33,7 @@
             <div class="aside-title" @click="importHtml"><i class="el-icon-s-platform"></i><span>导入书签</span></div>
             <div class="aside-title"><i class="el-icon-s-comment"></i><span>意见反馈</span></div>
             <div class="aside-title" @click="ceshi"><i class="el-icon-s-comment"></i><span>测试页面</span></div>
-            <div class="aside-title" @click="NqQuillEdit"><i class="el-icon-s-comment"></i><span>NqQuillEdit编辑器</span></div>
+            <div class="aside-title" @click="NqEdit"><i class="el-icon-s-comment"></i><span>NqQuillEdit编辑器</span></div>
             <div class="aside-title " style="margin-bottom: 100px"><i class="el-icon-s-grid"></i><span>其他设置</span></div>
 
           </div>
@@ -1287,9 +1287,9 @@
 
       },
       /**跳转NqQuillEdit测试页面**/
-      NqQuillEdit: function () {
+      NqEdit: function () {
         this.$router.push({
-          path: "/NqQuillEdit",
+          path: "/NqEdit",
         })
 
       },
@@ -1617,10 +1617,10 @@
   }
 
 
-  .logoright i:active {
-    background-color: #7a6df0;
-    color: #FFFFFF;
-  }
+  /*.logoright i:active {*/
+  /*  background-color: #7a6df0;*/
+  /*  color: #FFFFFF;*/
+  /*}*/
 
 
   .reminder {
@@ -2019,7 +2019,8 @@
     min-width: 250px;
   }
 
-  .box {
+  /*不可复制*/
+  .isaside {
     -moz-user-select: none; /* Firefox私有属性 */
     -webkit-user-select: none; /* WebKit内核私有属性 */
     -ms-user-select: none; /* IE私有属性(IE10及以后) */

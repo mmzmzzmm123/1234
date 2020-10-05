@@ -186,9 +186,9 @@ export const constantRoutes = [
           requireAuth: true,//加该字段,表示进入这个路由是需要登录的true
         },
       },{
-        path: '/NqQuillEdit',
-        name: 'NqQuillEdit',
-        component: resolve => require(['../views/bookmark/common/NqQuillEdit.vue'], resolve),
+        path: '/NqEdit',
+        name: 'NqEdit',
+        component: resolve => require(['../views/bookmark/common/NqEdit.vue'], resolve),
         meta:{
           title: 'Quill编辑器',icon:'user',
           requireAuth: true,//加该字段,表示进入这个路由是需要登录的true
