@@ -788,6 +788,8 @@
 
   .info {
     font-size: 12px;
+    display: flex;
+    align-items: center;
   }
 
   .bookmark-icon {
@@ -797,9 +799,9 @@
   }
 
   .bookmark-icon img {
-    width: 14px;
-    height: 14px;
-    vertical-align: middle;
+    width: 15px;
+    height: 15px;
+
   }
 
   .filter-tbar {
@@ -890,7 +892,8 @@
   .listhint {
     width: 100%;
     text-align: center;
-    background: #dcdfe682;
+    color: #808080;
+    /*background: #dcdfe682;*/
     font-weight: 600;
   }
 
@@ -921,7 +924,7 @@
     /*超出部分隐藏*/
     font-size: 17px;
     font-weight: 600;
-    margin-top: 2px;
+    margin-top: 10px;
     margin-bottom: 2px;
   }
 
@@ -1003,5 +1006,14 @@
     margin-bottom: 4px;
 
   }
+
+
+  .bookmark {
+    height: 70px;
+    /*border-bottom: 1px solid #D9D9D9;*/
+  }
+
+
+
 
 </style>
