@@ -1,53 +1,68 @@
-
 <template>
-  <div class="edit_container">
-    <quill-editor
-      v-model="content"
-      ref="myQuillEditor"
-      :options="editorOption"
-      @blur="onEditorBlur($event)" @focus="onEditorFocus($event)"
-      @change="onEditorChange($event)">
-    </quill-editor>
+  <div class="home">
 
 
 
-    <svg-icon name="logo" class="menu-icon" color="#fff" width="16" height="16"></svg-icon>
-<!--    <IconSelect></IconSelect>-->
+    <el-form-item style="margin-bottom: 40px;" prop="title">
+      <MDinput v-model="postForm.title" :maxlength="100" name="name" required>
+        Title
+      </MDinput>
+    </el-form-item>
+
+
+
+
+
+    <tinymce
+      ref="editor"
+      v-model="msg"
+      :disabled="disabled"
+      @onClick="onClick"
+    />
+    <button @click="clear">清空内容</button>
+    <button @click="disabled = true">禁用</button>
   </div>
 </template>
-
-
-
 <script>
+  import tinymce from '../../../components/TinyMCE'
 
-
-  import quillEditor from "../../../components/Editor";
-  import SvgIcon from "../../../components/SvgIcon";
-  import IconSelect from "../../../components/IconSelect";
-
+  const defaultForm = {
+    status: 'draft',
+    title: '', // 文章题目
+    content: '', // 文章内容
+    content_short: '', // 文章摘要
+    source_uri: '', // 文章外链
+    image_uri: '', // 文章图片
+    display_time: undefined, // 前台展示时间
+    id: undefined,
+    platforms: ['a-platform'],
+    comment_disabled: false,
+    importance: 0
+  }
 
   export default {
+    name: 'home',
     components: {
-      quillEditor,SvgIcon,IconSelect
+      tinymce
     },
-    data() {
-      return {
-        content: `<p></p><p><br></p><ol><li><strong><em>Or drag/paste an image here.</em></strong></li><li><strong><em>rerew</em></strong></li><li><strong><em>rtrete</em></strong></li><li><strong><em>tytrytr</em></strong></li><li><strong><em>uytu</em></strong></li></ol>`,
-        editorOption: {}
+    data(){
+      return{
+        postForm: Object.assign({}, defaultForm),
+        msg: 'Welcome to Use Tinymce Editor',
+        disabled: false
       }
     },
     methods: {
-      onEditorReady(quillEditor) { // 准备编辑器
-
+      // 鼠标单击的事件
+      onClick (e, editor) {
+        console.log('Element clicked')
+        console.log(e)
+        console.log(editor)
       },
-      onEditorBlur(){}, // 失去焦点事件
-      onEditorFocus(){}, // 获得焦点事件
-      onEditorChange(){}, // 内容改变事件
-    },
-    computed: {
-      editor() {
-        return this.$refs.myQuillEditor.quill;
-      },
+      // 清空内容
+      clear () {
+        this.$refs.editor.clear()
+      }
     }
   }
 </script>
