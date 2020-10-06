@@ -1,15 +1,7 @@
 import request from '@/utils/request'
 
 // 查询销售订单列表
-export function listOrder(query) {
-  const [beginTime, endTime] = query.orderTime || [null, null];
-  const params = {
-    ...query,
-    beginTime,
-    endTime,
-    orderTime: null
-  }
-
+export function listOrder(params) {
   return request({
     url: '/custom/order/list',
     method: 'get',

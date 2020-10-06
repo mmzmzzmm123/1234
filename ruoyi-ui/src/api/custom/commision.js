@@ -9,6 +9,15 @@ export function listCommision(query) {
   })
 }
 
+// 查询提成明细
+export function detailCommision(query) {
+  return request({
+    url: '/custom/commision/detail',
+    method: 'get',
+    params: query
+  })
+}
+
 // 查询业务提成比例详细
 export function getCommision(ruleId) {
   return request({
@@ -49,5 +58,12 @@ export function exportCommision(query) {
     url: '/custom/commision/export',
     method: 'get',
     params: query
+  })
+}
+
+export function getSalesman() {
+  return request({
+    url: '/custom/commision/salesman',
+    method: 'get',
   })
 }

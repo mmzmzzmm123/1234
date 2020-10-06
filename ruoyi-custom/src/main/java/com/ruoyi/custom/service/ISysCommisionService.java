@@ -58,4 +58,6 @@ public interface ISysCommisionService
      * @return 结果
      */
     public int deleteSysCommisionById(Long ruleId);
+
+    public List<SysCommision> selectSysCommisionDetail(SysCommision sysCommision);
 }

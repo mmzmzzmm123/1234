@@ -58,4 +58,6 @@ public interface SysCommisionMapper
      * @return 结果
      */
     public int deleteSysCommisionByIds(Long[] ruleIds);
+
+    public List<SysCommision> selectSysCommisionDetail(SysCommision sysCommision);
 }

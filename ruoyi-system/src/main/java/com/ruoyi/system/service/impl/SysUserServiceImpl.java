@@ -3,6 +3,7 @@ package com.ruoyi.system.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ruoyi.system.domain.CusSalesman;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,6 +69,11 @@ public class SysUserServiceImpl implements ISysUserService {
     @Override
     public List<SysUser> selectAllUser() {
         return userMapper.selectAllUser();
+    }
+
+    @Override
+    public List<CusSalesman> selectSalesman() {
+        return userMapper.selectSalesman();
     }
 
     /**

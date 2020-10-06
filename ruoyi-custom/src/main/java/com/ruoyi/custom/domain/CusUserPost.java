@@ -16,6 +16,16 @@ public class CusUserPost implements Serializable {
 
     private String postId;
 
+    private String postName;
+
+    public void setPostName(String postName) {
+        this.postName = postName;
+    }
+
+    public String getPostName() {
+        return postName;
+    }
+
     public String getPostCode() {
         return postCode;
     }
@@ -55,6 +65,7 @@ public class CusUserPost implements Serializable {
                 ", userName='" + userName + '\'' +
                 ", postCode='" + postCode + '\'' +
                 ", postid='" + postId + '\'' +
+                ", postName='" + postName + '\'' +
                 '}';
     }
 }

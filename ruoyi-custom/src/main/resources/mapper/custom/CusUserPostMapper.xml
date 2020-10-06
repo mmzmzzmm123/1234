@@ -9,12 +9,13 @@
         <result property="userName" column="nick_name"/>
         <result property="postId" column="post_id"/>
         <result property="postCode" column="post_code"/>
+        <result property="postName" column="post_name"/>
     </resultMap>
 
     <sql id="selectCusUserPostVo">
-        SELECT u.user_id, u.nick_name, p.post_id, p.post_code
+        SELECT u.user_id, u.nick_name, p.post_id, p.post_code, p.post_name
         FROM sys_user u, sys_post p, sys_user_post up
-        WHERE up.user_id = u.user_id AND p.post_id = up.post_id
+        WHERE up.user_id = u.user_id AND p.post_id = up.post_id AND p.post_id > 4
     </sql>
 
     <select id="selectAllCusUserPost" parameterType="CusUserPost" resultMap="CusUserPostResult">

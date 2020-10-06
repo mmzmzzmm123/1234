@@ -1,45 +1,108 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.custom.mapper.SysCommisionMapper">
-    
+
     <resultMap type="SysCommision" id="SysCommisionResult">
-        <result property="ruleId"    column="rule_id"    />
-        <result property="userId"    column="user_id"    />
-        <result property="nickName"    column="nick_name"    />
-        <result property="amount"    column="amount"    />
-        <result property="rate"    column="rate"    />
-        <result property="createBy"    column="create_by"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="updateBy"    column="update_by"    />
-        <result property="updateTime"    column="update_time"    />
-        <result property="remark"    column="remark"    />
+        <result property="ruleId" column="rule_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="postId" column="post_id"/>
+        <result property="userName" column="user_name"/>
+        <result property="postName" column="post_name"/>
+        <result property="amount" column="amount"/>
+        <result property="rate" column="rate"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="remark" column="remark"/>
+        <result property="commision" column="commision"/>
     </resultMap>
 
-    <sql id="selectSysCommisionVo">
-        select rule_id, user_id, nick_name, amount, rate, create_by, create_time, update_by, update_time, remark from sys_commision
+    <resultMap id="SysCommisionDetailResult" type="SysCommision">
+        <result property="userId" column="user_id"/>
+        <result property="userName" column="user_name"/>
+        <result property="postId" column="post_id"/>
+        <result property="postName" column="post_name"/>
+        <result property="amount" column="amount"/>
+    </resultMap>
+
+    <sql id="groupAmountVo">
+        SELECT ${column} AS user_id, SUM(amount) AS amount
+        FROM sys_order
+        WHERE ${column} IS NOT NULL
+        <if test="beginTime != null and beginTime != ''"> AND date_format(order_time,'%y%m%d') &gt;= date_format(${beginTime},'%y%m%d')</if>
+        <if test="endTime != null and endTime != ''">AND date_format(order_time,'%y%m%d') &lt;= date_format(${endTime},'%y%m%d')</if>
+        GROUP BY ${column}
     </sql>
+
+    <select id="selectSysCommisionDetail" parameterType="SysCommision" resultMap="SysCommisionResult">
+        SELECT * FROM view_user_post pa
+        JOIN (
+            <include refid="groupAmountVo">
+                <property name="column" value="pre_sale_id"/>
+                <property name="beginTime" value="#{beginTime}"/>
+                <property name="endTime" value="#{endTime}"/>
+            </include>
+            UNION
+            <include refid="groupAmountVo">
+                <property name="column" value="after_sale_id"/>
+                <property name="beginTime" value="#{beginTime}"/>
+                <property name="endTime" value="#{endTime}"/>
+            </include>
+            UNION
+            <include refid="groupAmountVo">
+                <property name="column" value="nutritionist_id"/>
+                <property name="beginTime" value="#{beginTime}"/>
+                <property name="endTime" value="#{endTime}"/>
+            </include>
+            UNION
+            <include refid="groupAmountVo">
+                <property name="column" value="nutri_assis_id"/>
+                <property name="beginTime" value="#{beginTime}"/>
+                <property name="endTime" value="#{endTime}"/>
+            </include>
+            UNION
+            <include refid="groupAmountVo">
+                <property name="column" value="operator_id"/>
+                <property name="beginTime" value="#{beginTime}"/>
+                <property name="endTime" value="#{endTime}"/>
+            </include>
+        ) AS a USING(user_id)
+        <where>
+            <if test="postId != null and postId != ''">and post_id = #{postId}</if>
+            <if test="userId != null and userId != ''">and user_id = #{userId}</if>
+        </where>
+    </select>
+
+    <sql id="selectSysCommisionVo">
+        SELECT * FROM (
+            SELECT * FROM view_user_post AS pa
+            JOIN (SELECT * FROM sys_commision WHERE rate > 0) AS c USING(user_id)
+            ORDER BY user_id, amount
+        ) as t
+    </sql>
+
+
 
     <select id="selectSysCommisionList" parameterType="SysCommision" resultMap="SysCommisionResult">
         <include refid="selectSysCommisionVo"/>
-        <where>  
-            <if test="userId != null "> and user_id = #{userId}</if>
-            <if test="amount != null "> and amount = #{amount}</if>
-            <if test="rate != null "> and rate = #{rate}</if>
+        <where>
+            <if test="userId != null ">and user_id = #{userId}</if>
+            <if test="postId != null ">and post_id = #{postId}</if>
         </where>
     </select>
-    
+
     <select id="selectSysCommisionById" parameterType="Long" resultMap="SysCommisionResult">
         <include refid="selectSysCommisionVo"/>
         where rule_id = #{ruleId}
     </select>
-        
+
     <insert id="insertSysCommision" parameterType="SysCommision" useGeneratedKeys="true" keyProperty="ruleId">
         insert into sys_commision
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="userId != null">user_id,</if>
-            <if test="nickName != null">nick_name,</if>
             <if test="amount != null">amount,</if>
             <if test="rate != null">rate,</if>
             <if test="createBy != null">create_by,</if>
@@ -47,10 +110,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">update_by,</if>
             <if test="updateTime != null">update_time,</if>
             <if test="remark != null">remark,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="userId != null">#{userId},</if>
-            <if test="nickName != null">#{nickName},</if>
             <if test="amount != null">#{amount},</if>
             <if test="rate != null">#{rate},</if>
             <if test="createBy != null">#{createBy},</if>
@@ -58,14 +120,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">#{updateBy},</if>
             <if test="updateTime != null">#{updateTime},</if>
             <if test="remark != null">#{remark},</if>
-         </trim>
+        </trim>
     </insert>
 
     <update id="updateSysCommision" parameterType="SysCommision">
         update sys_commision
         <trim prefix="SET" suffixOverrides=",">
             <if test="userId != null">user_id = #{userId},</if>
-            <if test="nickName != null">nick_name = #{nickName},</if>
             <if test="amount != null">amount = #{amount},</if>
             <if test="rate != null">rate = #{rate},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
@@ -82,10 +143,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteSysCommisionByIds" parameterType="String">
-        delete from sys_commision where rule_id in 
+        delete from sys_commision where rule_id in
         <foreach item="ruleId" collection="array" open="(" separator="," close=")">
             #{ruleId}
         </foreach>
     </delete>
-    
+
 </mapper>

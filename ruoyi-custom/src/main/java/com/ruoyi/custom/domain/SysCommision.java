@@ -9,88 +9,135 @@ import java.math.BigDecimal;
 
 /**
  * 业务提成比例对象 sys_commision
- * 
+ *
  * @author wonder
  * @date 2020-09-24
  */
-public class SysCommision extends BaseEntity
-{
+public class SysCommision extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
-    /** 编号 */
+    /**
+     * 编号
+     */
     private Long ruleId;
 
-    /** 业务员 */
+    /**
+     * 业务员
+     */
     private Long userId;
 
-    /** 业务员 */
-    @Excel(name = "业务员")
-    private String nickName;
+    /**
+     * 职位id
+     */
+    private Long postId;
 
-    /** 金额 */
+    /**
+     * 业务员
+     */
+    @Excel(name = "业务员")
+    private String userName;
+
+    @Excel(name = "职位")
+    private String postName;
+
+    /**
+     * 金额
+     */
     @Excel(name = "金额")
     private BigDecimal amount;
 
-    /** 分成比例 */
-    @Excel(name = "分成比例")
+    /**
+     * 分成比例
+     */
+    @Excel(name = "比例", suffix = "%")
     private Long rate;
 
-    public void setRuleId(Long ruleId) 
-    {
+    /**
+     * 提成
+     */
+    @Excel(name = "提成")
+    private BigDecimal commision;
+
+    public BigDecimal getCommision() {
+        return commision;
+    }
+
+    public void setCommision(BigDecimal commision) {
+        this.commision = commision;
+    }
+
+    public Long getPostId() {
+        return postId;
+    }
+
+    public void setPostId(Long postId) {
+        this.postId = postId;
+    }
+
+    public void setPostName(String postName) {
+        this.postName = postName;
+    }
+
+    public String getPostName() {
+        return postName;
+    }
+
+    public void setRuleId(Long ruleId) {
         this.ruleId = ruleId;
     }
 
-    public Long getRuleId() 
-    {
+    public Long getRuleId() {
         return ruleId;
     }
-    public void setUserId(Long userId) 
-    {
+
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 
-    public Long getUserId() 
-    {
+    public Long getUserId() {
         return userId;
     }
-    public void setNickName(String nickName) 
-    {
-        this.nickName = nickName;
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
-    public String getNickName() 
-    {
-        return nickName;
+    public String getUserName() {
+        return userName;
     }
-    public void setAmount(BigDecimal amount) { this.amount = amount; }
 
-    public BigDecimal getAmount()
-    {
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
+    }
+
+    public BigDecimal getAmount() {
         return amount;
     }
-    public void setRate(Long rate) 
-    {
+
+    public void setRate(Long rate) {
         this.rate = rate;
     }
 
-    public Long getRate() 
-    {
+    public Long getRate() {
         return rate;
     }
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("ruleId", getRuleId())
-            .append("userId", getUserId())
-            .append("nickName", getNickName())
-            .append("amount", getAmount())
-            .append("rate", getRate())
-            .append("createBy", getCreateBy())
-            .append("createTime", getCreateTime())
-            .append("updateBy", getUpdateBy())
-            .append("updateTime", getUpdateTime())
-            .append("remark", getRemark())
-            .toString();
+        return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
+                .append("ruleId", getRuleId())
+                .append("userId", getUserId())
+                .append("userName", getUserName())
+                .append("postId", getPostId())
+                .append("postName", getPostName())
+                .append("amount", getAmount())
+                .append("commision", getCommision())
+                .append("rate", getRate())
+                .append("createBy", getCreateBy())
+                .append("createTime", getCreateTime())
+                .append("updateBy", getUpdateBy())
+                .append("updateTime", getUpdateTime())
+                .append("remark", getRemark())
+                .toString();
     }
 }

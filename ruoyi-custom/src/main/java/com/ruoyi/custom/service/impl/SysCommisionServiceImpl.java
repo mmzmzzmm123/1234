@@ -93,4 +93,9 @@ public class SysCommisionServiceImpl implements ISysCommisionService
     {
         return sysCommisionMapper.deleteSysCommisionById(ruleId);
     }
+
+    @Override
+    public List<SysCommision> selectSysCommisionDetail(SysCommision sysCommision) {
+        return sysCommisionMapper.selectSysCommisionDetail(sysCommision);
+    }
 }

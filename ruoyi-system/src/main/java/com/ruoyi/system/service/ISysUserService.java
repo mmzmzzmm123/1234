@@ -2,6 +2,7 @@ package com.ruoyi.system.service;
 
 import java.util.List;
 import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.system.domain.CusSalesman;
 
 /**
  * 用户 业务层
@@ -19,6 +20,8 @@ public interface ISysUserService
     public List<SysUser> selectUserList(SysUser user);
 
     public List<SysUser> selectAllUser();
+
+    public List<CusSalesman> selectSalesman();
 
     /**
      * 通过用户名查询用户

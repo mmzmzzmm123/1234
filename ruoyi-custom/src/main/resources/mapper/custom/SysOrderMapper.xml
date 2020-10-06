@@ -52,8 +52,8 @@
             <if test="plannerAssisId != null ">and planner_assis_id = #{plannerAssisId}</if>
             <if test="operatorId != null ">and operator_id = #{operatorId}</if>
             <if test="recommender != null  and recommender != ''">and recommender = #{recommender}</if>
-            <if test="beginTime != null ">and order_time &gt;= #{beginTime}</if>
-            <if test="endTime != null ">and order_time &lt;= #{endTime}</if>
+            <if test="beginTime != null and beginTime != ''">and date_format(order_time,'%y%m%d') &gt;= date_format(#{beginTime},'%y%m%d')</if>
+            <if test="endTime != null and endTime != ''">and date_format(order_time,'%y%m%d') &lt;= date_format(#{endTime},'%y%m%d')</if>
             <if test="serveMonth != null ">and serve_month = #{serveMonth}</if>
             <if test="reviewStatus != null ">and review_status = #{reviewStatus}</if>
         </where>

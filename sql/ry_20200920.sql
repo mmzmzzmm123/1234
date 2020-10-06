@@ -692,7 +692,7 @@ drop table if exists sys_commision;
 create table sys_commision (
   rule_id          bigint(20)      not null auto_increment    comment '编号',
   user_id          bigint(20)                                 comment '用户ID',
-  nick_name        varchar(30)     not null                   comment '用户昵称',
+  post_id          bigint(20)                                 comment '职位ID',
   amount           decimal(10,2)                              comment '金额',
   rate             float                                      comment '分成比例',
   create_by        varchar(64)     default ''                 comment '创建者',
@@ -734,5 +734,11 @@ create table sys_order (
   primary key (order_id)
 ) engine=innodb auto_increment=1 comment = '销售订单表';
 
+
+CREATE VIEW view_user_post AS (
+  SELECT up.user_id, u.nick_name AS user_name, p.post_id, p.post_name
+  FROM sys_post p, sys_user u, sys_user_post up
+  WHERE p.post_id = up.post_id AND u.user_id = up.user_id
+  )
 
 

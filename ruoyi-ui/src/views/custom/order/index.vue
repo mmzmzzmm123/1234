@@ -124,7 +124,7 @@
         <el-col :span="12">
           <el-form-item label="成交日期" prop="orderTime">
             <el-date-picker
-              v-model="queryParams.orderTime"
+              v-model="daterange"
               type="daterange"
               size="small"
               align="right"
@@ -407,6 +407,9 @@
 
 <script>
   import {listOrder, getOrder, delOrder, addOrder, updateOrder, exportOrder, getOptions} from "@/api/custom/order";
+  import dayjs from 'dayjs';
+  const beginTime = dayjs().startOf('month').format('YYYY-MM-DD');
+  const endTime = dayjs().format('YYYY-MM-DD');
 
   export default {
     name: "Order",
@@ -430,6 +433,8 @@
         title: "",
         // 是否显示弹出层
         open: false,
+        //
+        daterange: [beginTime, endTime],
         // 收款方式字典
         payTypeIdOptions: [],
         // 售前字典
@@ -468,7 +473,6 @@
           plannerAssisId: null,
           operatorId: null,
           recommender: null,
-          orderTime: null,
           reviewStatus: null,
         },
         // 表单参数
@@ -558,7 +562,7 @@
       /** 查询销售订单列表 */
       getList() {
         this.loading = true;
-        listOrder(this.queryParams).then(response => {
+        listOrder(this.addDateRange(this.queryParams, this.daterange)).then(response => {
           this.orderList = response.rows;
           this.total = response.total;
           this.loading = false;
@@ -639,6 +643,7 @@
       },
       /** 重置按钮操作 */
       resetQuery() {
+        this.daterange = [beginTime, endTime];
         this.resetForm("queryForm");
         this.handleQuery();
       },
