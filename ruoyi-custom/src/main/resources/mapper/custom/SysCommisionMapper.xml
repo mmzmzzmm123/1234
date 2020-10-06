@@ -32,6 +32,7 @@
         SELECT ${column} AS user_id, SUM(amount) AS amount
         FROM sys_order
         WHERE ${column} IS NOT NULL
+        AND review_status = 'yes'
         <if test="beginTime != null and beginTime != ''"> AND date_format(order_time,'%y%m%d') &gt;= date_format(${beginTime},'%y%m%d')</if>
         <if test="endTime != null and endTime != ''">AND date_format(order_time,'%y%m%d') &lt;= date_format(${endTime},'%y%m%d')</if>
         GROUP BY ${column}
