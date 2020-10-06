@@ -1,8 +1,8 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="职位" prop="postId">
-        <el-select v-model="queryParams.postId" placeholder="请选择职位" clearable size="small" @change="searchPostChange">
+      <el-form-item label="岗位" prop="postId">
+        <el-select v-model="queryParams.postId" placeholder="请选择岗位" clearable size="small" @change="searchPostChange">
           <el-option
             v-for="dict in postIdOptions"
             :key="dict.dictValue"
@@ -76,8 +76,12 @@
     <el-table v-loading="loading" :data="commisionList" :span-method="objectSpanMethod"
               @selection-change="handleSelectionChange">
       <el-table-column label="业务员" align="center" prop="userName"/>
-      <el-table-column label="职位" align="center" prop="postName"/>
-      <el-table-column label="金额" align="center" prop="amount"/>
+      <el-table-column label="岗位" align="center" prop="postName"/>
+      <el-table-column label="金额" align="center" prop="amount">
+        <template scope="scope">
+          {{toThousands(scope.row.amount)}}
+        </template>
+      </el-table-column>
       <el-table-column label="比例" align="center" prop="rate">
         <template scope="scope">
           {{scope.row.rate + '%'}}
@@ -119,8 +123,8 @@
       <el-row :gutter="15">
         <el-form ref="form" :model="form" :rules="rules" label-width="80px">
           <el-col :span="12">
-            <el-form-item label="职位" prop="postId">
-              <el-select v-model="form.postId" placeholder="请选择职位" @change="postChange">
+            <el-form-item label="岗位" prop="postId">
+              <el-select v-model="form.postId" placeholder="请选择岗位" @change="postChange">
                 <el-option
                   v-for="dict in postIdOptions"
                   :key="dict.dictValue"
@@ -228,7 +232,7 @@
             {required: true, message: "业务员不能为空", trigger: "change"}
           ],
           postId: [
-            {required: true, message: "职位不能为空", trigger: "change"}
+            {required: true, message: "岗位不能为空", trigger: "change"}
           ],
           amount: [
             {required: true, message: "金额不能为空", trigger: "blur"}
@@ -368,6 +372,7 @@
         const ruleId = row.ruleId || this.ids
         getCommision(ruleId).then(response => {
           this.form = response.data;
+          this.userIdOptions = this.options[this.form.postId];
           this.open = true;
           this.title = "修改业务提成比例";
         });
@@ -436,7 +441,7 @@
         this.userIdOptions = this.options[postId];
       },
       searchPostChange(postId) {
-        if(!postId) {
+        if (!postId) {
           this.searchUserIdOptions = this.totalUserIdOptions.slice();
           return;
         }

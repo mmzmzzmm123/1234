@@ -1,8 +1,8 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="职位" prop="postId">
-        <el-select v-model="queryParams.postId" placeholder="请选择职位" clearable size="small" @change="searchPostChange">
+      <el-form-item label="岗位" prop="postId">
+        <el-select v-model="queryParams.postId" placeholder="请选择岗位" clearable size="small" @change="searchPostChange">
           <el-option
             v-for="dict in postIdOptions"
             :key="dict.dictValue"
@@ -52,14 +52,23 @@
     <el-table v-loading="loading" :data="commisionList"
               @selection-change="handleSelectionChange">
       <el-table-column label="业务员" align="center" prop="userName"/>
-      <el-table-column label="职位" align="center" prop="postName"/>
-      <el-table-column label="总金额" align="center" prop="amount"/>
+      <el-table-column label="岗位" align="center" prop="postName"/>
+      <el-table-column label="总金额" align="center" prop="amount">
+        <template scope="scope">
+          {{toThousands(scope.row.amount)}}
+        </template>
+      </el-table-column>
       <el-table-column label="比例" align="center" prop="rate">
         <template scope="scope">
           {{scope.row.rate + '%'}}
         </template>
       </el-table-column>
-      <el-table-column label="提成" align="center" prop="commision"/>
+      <el-table-column label="提成" align="center" prop="commision">
+        <template scope="scope">
+          {{toThousands(scope.row.commision)}}
+        </template>
+      </el-table-column>
+
     </el-table>
 
     <pagination
@@ -206,7 +215,7 @@
         this.userIdOptions = this.options[postId];
       },
       searchPostChange(postId) {
-        if(!postId) {
+        if (!postId) {
           this.searchUserIdOptions = this.totalUserIdOptions.slice();
           return;
         }

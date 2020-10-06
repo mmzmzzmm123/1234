@@ -692,7 +692,7 @@ drop table if exists sys_commision;
 create table sys_commision (
   rule_id          bigint(20)      not null auto_increment    comment '编号',
   user_id          bigint(20)                                 comment '用户ID',
-  post_id          bigint(20)                                 comment '职位ID',
+  post_id          bigint(20)                                 comment '岗位ID',
   amount           decimal(10,2)                              comment '金额',
   rate             float                                      comment '分成比例',
   create_by        varchar(64)     default ''                 comment '创建者',

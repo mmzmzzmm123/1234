@@ -123,8 +123,8 @@ public class SysCommisionController extends BaseController {
             boolean comHit = false;
             for (int i = 0; i < tmpComList.size(); i++) {
                 SysCommision com = tmpComList.get(i);
-                long dAmount = detail.getAmount().longValue();
-                long cAmount = com.getAmount().longValue();
+                float dAmount = detail.getAmount().floatValue();
+                float cAmount = com.getAmount().floatValue();
                 if (dAmount < cAmount && i == 0) {
                     comHit = false;
                     break;
@@ -132,17 +132,17 @@ public class SysCommisionController extends BaseController {
                     comHit = true;
                     detail.setRate(com.getRate());
                     break;
-                } else if (dAmount >= cAmount && dAmount < tmpComList.get(i + 1).getAmount().longValue()) {
+                } else if (dAmount >= cAmount && dAmount < tmpComList.get(i + 1).getAmount().floatValue()) {
                     comHit = true;
                     detail.setRate(com.getRate());
                 }
             }
             if (!comHit) {
-                detail.setRate(0L);
+                detail.setRate(0F);
                 detail.setCommision(BigDecimal.ZERO);
             } else {
-                long amount = detail.getAmount().longValue();
-                amount = amount * detail.getRate() / 100;
+                float amount = detail.getAmount().floatValue();
+                amount = amount * detail.getRate() / 100F;
                 detail.setCommision(new BigDecimal(amount));
             }
         }

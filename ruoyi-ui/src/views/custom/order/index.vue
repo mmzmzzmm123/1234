@@ -190,7 +190,11 @@
         </template>
       </el-table-column>
       <el-table-column label="客户姓名" align="center" prop="customer" width="120" fixed="left"/>
-      <el-table-column label="金额" align="center" prop="amount" width="120" fixed="left"/>
+      <el-table-column label="金额" align="center" prop="amount" width="120" fixed="left">
+        <template scope="scope">
+          {{toThousands(scope.row.amount)}}
+        </template>
+      </el-table-column>
       <el-table-column label="电话" align="center" prop="phone" width="120"/>
       <el-table-column label="服务月数" align="center" prop="serveMonth" width="80"/>
       <el-table-column label="收款方式" align="center" prop="payType" width="120"/>
@@ -408,6 +412,7 @@
 <script>
   import {listOrder, getOrder, delOrder, addOrder, updateOrder, exportOrder, getOptions} from "@/api/custom/order";
   import dayjs from 'dayjs';
+
   const beginTime = dayjs().startOf('month').format('YYYY-MM-DD');
   const endTime = dayjs().format('YYYY-MM-DD');
 

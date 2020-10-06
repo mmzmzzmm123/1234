@@ -27,7 +27,7 @@ public class SysCommision extends BaseEntity {
     private Long userId;
 
     /**
-     * 职位id
+     * 岗位id
      */
     private Long postId;
 
@@ -37,7 +37,7 @@ public class SysCommision extends BaseEntity {
     @Excel(name = "业务员")
     private String userName;
 
-    @Excel(name = "职位")
+    @Excel(name = "岗位")
     private String postName;
 
     /**
@@ -50,7 +50,7 @@ public class SysCommision extends BaseEntity {
      * 分成比例
      */
     @Excel(name = "比例", suffix = "%")
-    private Long rate;
+    private Float rate;
 
     /**
      * 提成
@@ -114,11 +114,11 @@ public class SysCommision extends BaseEntity {
         return amount;
     }
 
-    public void setRate(Long rate) {
+    public void setRate(Float rate) {
         this.rate = rate;
     }
 
-    public Long getRate() {
+    public Float getRate() {
         return rate;
     }
 
