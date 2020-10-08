@@ -19,7 +19,7 @@
               <el-option v-for="dict in payTypeIdOptions"
                          :key="dict.dictValue"
                          :label="dict.dictLabel"
-                         :value="dict.dictValue"/>
+                         :value="parseInt(dict.dictValue)"/>
             </el-select>
           </el-form-item>
         </el-col>
@@ -29,7 +29,7 @@
               <el-option v-for="dict in preSaleIdOptions"
                          :key="dict.dictValue"
                          :label="dict.dictLabel"
-                         :value="dict.dictValue"/>
+                         :value="parseInt(dict.dictValue)"/>
             </el-select>
           </el-form-item>
         </el-col>
@@ -39,7 +39,7 @@
               <el-option v-for="dict in afterSaleIdOptions"
                          :key="dict.dictValue"
                          :label="dict.dictLabel"
-                         :value="dict.dictValue"/>
+                         :value="parseInt(dict.dictValue)"/>
             </el-select>
           </el-form-item>
         </el-col>
@@ -49,7 +49,7 @@
               <el-option v-for="dict in nutritionistIdOptions"
                          :key="dict.dictValue"
                          :label="dict.dictLabel"
-                         :value="dict.dictValue"/>
+                         :value="parseInt(dict.dictValue)"/>
             </el-select>
           </el-form-item>
         </el-col>
@@ -60,7 +60,7 @@
               <el-option v-for="dict in nutriAssisIdOptions"
                          :key="dict.dictValue"
                          :label="dict.dictLabel"
-                         :value="dict.dictValue"/>
+                         :value="parseInt(dict.dictValue)"/>
             </el-select>
           </el-form-item>
         </el-col>
@@ -72,7 +72,7 @@
                 v-for="dict in accountIdOptions"
                 :key="dict.dictValue"
                 :label="dict.dictLabel"
-                :value="dict.dictValue"
+                :value="parseInt(dict.dictValue)"
               />
             </el-select>
           </el-form-item>
@@ -84,7 +84,7 @@
               <el-option v-for="dict in plannerIdOptions"
                          :key="dict.dictValue"
                          :label="dict.dictLabel"
-                         :value="dict.dictValue"/>
+                         :value="parseInt(dict.dictValue)"/>
             </el-select>
           </el-form-item>
         </el-col>
@@ -95,7 +95,7 @@
               <el-option v-for="dict in plannerAssisIdOptions"
                          :key="dict.dictValue"
                          :label="dict.dictLabel"
-                         :value="dict.dictValue"/>
+                         :value="parseInt(dict.dictValue)"/>
             </el-select>
           </el-form-item>
         </el-col>
@@ -106,7 +106,7 @@
               <el-option v-for="dict in operatorIdOptions"
                          :key="dict.dictValue"
                          :label="dict.dictLabel"
-                         :value="dict.dictValue"/>
+                         :value="parseInt(dict.dictValue)"/>
             </el-select>
           </el-form-item>
         </el-col>
@@ -537,9 +537,9 @@
       getOptions().then(response => {
         const options = response.data.reduce((opts, cur) => {
           if (!opts[cur.postCode]) {
-            opts[cur.postCode] = [];
+            opts[cur.postCode] = [{dictValue: 0, dictLabel: ' ', remark: null}];
           }
-          opts[cur.postCode].push({dictValue: cur.userId, dictLabel: cur.userName})
+          opts[cur.postCode].push({dictValue: cur.userId, dictLabel: cur.userName, remark: cur.remark})
           return opts;
         }, {})
         this.preSaleIdOptions = options['pre_sale'] || [];
@@ -616,28 +616,38 @@
       // 表单重置
       reset() {
         const defaultPayType = this.payTypeIdOptions.find(opt => opt.remark === 'default');
+        const defaultServeMonth = this.serveMonthOption.find(opt => opt.remark === 'default');
+        const defaultAccount = this.accountIdOptions.find(opt => opt.remark === 'default');
+        const defaultOperator = this.operatorIdOptions.find(opt => opt.remark === 'default');
+        const defaultPresale = this.preSaleIdOptions.find(opt => opt.remark === 'default');
+        const defaultAftersale = this.afterSaleIdOptions.find(opt => opt.remark === 'default');
+        const defaultNutritionist = this.nutritionistIdOptions.find(opt => opt.remark === 'default');
+        const defaultNutriAssis = this.nutriAssisIdOptions.find(opt => opt.remark === 'default');
+        const defaultPlanner = this.plannerIdOptions.find(opt => opt.remark === 'default');
+        const defaultPlannerAssis = this.plannerAssisIdOptions.find(opt => opt.remark === 'default');
         this.form = {
           orderId: null,
           customer: null,
           phone: null,
           amount: null,
           payTypeId: defaultPayType ? parseInt(defaultPayType.dictValue) : null,
-          preSaleId: null,
+          preSaleId: defaultPresale ? parseInt(defaultPresale.dictValue) : null,
           createBy: null,
           createTime: null,
-          afterSaleId: null,
+          afterSaleId: defaultAftersale ? parseInt(defaultAftersale.dictValue) : null,
           updateBy: null,
           updateTime: null,
-          nutritionistId: null,
+          nutritionistId: defaultNutritionist ? parseInt(defaultNutritionist.dictValue) : null,
           remark: null,
-          nutriAssisId: null,
-          accountId: null,
-          plannerId: null,
-          plannerAssisId: null,
-          operatorId: null,
+          nutriAssisId: defaultNutriAssis ? parseInt(defaultNutriAssis.dictValue) : null,
+          accountId: defaultAccount ? parseInt(defaultAccount.dictValue) : null,
+          plannerId: defaultPlanner ? parseInt(defaultPlanner.dictValue) : null,
+          plannerAssisId: defaultPlannerAssis ? parseInt(defaultPlannerAssis.dictValue) : null,
+          operatorId: defaultOperator ? parseInt(defaultOperator.dictValue) : null,
           recommender: null,
           orderTime: null,
-          serveMonth: 1,
+          serveMonth: defaultServeMonth ? parseInt(defaultServeMonth.dictValue) : 1,
+          reviewStatus: 'no'
         };
         this.resetForm("form");
       },

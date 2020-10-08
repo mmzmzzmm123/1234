@@ -18,6 +18,16 @@ public class CusUserPost implements Serializable {
 
     private String postName;
 
+    private String remark;
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
     public void setPostName(String postName) {
         this.postName = postName;
     }
@@ -66,6 +76,7 @@ public class CusUserPost implements Serializable {
                 ", postCode='" + postCode + '\'' +
                 ", postid='" + postId + '\'' +
                 ", postName='" + postName + '\'' +
+                ", remark='" + remark + '\'' +
                 '}';
     }
 }

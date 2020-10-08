@@ -65,7 +65,7 @@
       </el-table-column>
       <el-table-column label="提成" align="center" prop="commision">
         <template scope="scope">
-          {{toThousands(scope.row.commision)}}
+          {{scope.row.commision.toFixed(2)}}
         </template>
       </el-table-column>
 
