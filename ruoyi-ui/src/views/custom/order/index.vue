@@ -122,6 +122,17 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
+          <el-form-item label="运营助理" prop="operatorAssisId">
+            <el-select v-model="queryParams.operatorAssisId" placeholder="请选择运营助理"
+                       clearable size="small">
+              <el-option v-for="dict in operatorAssisIdOptions"
+                         :key="dict.dictValue"
+                         :label="dict.dictLabel"
+                         :value="parseInt(dict.dictValue)"/>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
           <el-form-item label="审核状态" prop="reviewStatus">
             <el-select v-model="queryParams.reviewStatus" placeholder="请选择审核状态"
                        clearable size="small">
@@ -218,6 +229,7 @@
       <el-table-column label="策划" align="center" prop="planner" width="120"/>
       <el-table-column label="策划助理" align="center" prop="plannerAssis" width="120"/>
       <el-table-column label="运营" align="center" prop="operator" width="120"/>
+      <el-table-column label="运营助理" align="center" prop="operatorAssis" width="120"/>
       <el-table-column label="推荐人" align="center" prop="recommender" width="120"/>
       <el-table-column label="备注" align="center" prop="remark" width="120"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="150" fixed="right">
@@ -389,6 +401,23 @@
               </el-select>
             </el-form-item>
           </el-col>
+          <el-col :span="12">
+            <el-form-item label="运营助理" prop="operatorAssisId">
+              <el-select v-model="form.operatorAssisId" placeholder="请选择运营">
+                <el-option
+                  v-for="dict in operatorAssisIdOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="parseInt(dict.dictValue)"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="推荐人" prop="recommender">
+              <el-input v-model="form.recommender" placeholder="请输入推荐人"/>
+            </el-form-item>
+          </el-col>
           <el-col :span="12" v-hasPermi="['custom:order:review']">
             <el-form-item label="审核状态" prop="reviewStatus">
               <el-select v-model="form.reviewStatus" placeholder="请选择审核状态">
@@ -399,11 +428,6 @@
                   :value="dict.dictValue"
                 />
               </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col>
-            <el-form-item label="推荐人" prop="recommender">
-              <el-input v-model="form.recommender" placeholder="请输入推荐人"/>
             </el-form-item>
           </el-col>
           <el-col>
@@ -474,6 +498,8 @@
         plannerAssisIdOptions: [],
         // 运营字典
         operatorIdOptions: [],
+        //
+        operatorAssisIdOptions: [],
         // 查询参数
         queryParams: {
           pageNum: 1,
@@ -490,6 +516,7 @@
           plannerId: null,
           plannerAssisId: null,
           operatorId: null,
+          operatorAssisId: null,
           recommender: null,
           reviewStatus: null,
         },
@@ -562,6 +589,7 @@
         this.plannerIdOptions = options['planner'] || [];
         this.plannerAssisIdOptions = options['planner_assis'] || [];
         this.operatorIdOptions = options['operator'] || [];
+        this.operatorAssisIdOptions = options['operator_assis'] || [];
       })
       this.getDicts("cus_pay_type").then(response => {
         this.payTypeIdOptions = response.data;
@@ -621,6 +649,10 @@
       operatorIdFormat(row, column) {
         return this.selectDictLabel(this.operatorIdOptions, row.operatorId);
       },
+      // 运营助理字典翻译
+      operatorAssisIdFormat(row, column) {
+        return this.selectDictLabel(this.operatorAssisIdOptions, row.operatorAssisId);
+      },
       // 取消按钮
       cancel() {
         this.open = false;
@@ -632,6 +664,7 @@
         const defaultServeMonth = this.serveMonthOption.find(opt => opt.remark === 'default');
         const defaultAccount = this.accountIdOptions.find(opt => opt.remark === 'default');
         const defaultOperator = this.operatorIdOptions.find(opt => opt.remark === 'default');
+        const defaultOperatorAssis = this.operatorAssisIdOptions.find(opt => opt.remark === 'default');
         const defaultPresale = this.preSaleIdOptions.find(opt => opt.remark === 'default');
         const defaultAftersale = this.afterSaleIdOptions.find(opt => opt.remark === 'default');
         const defaultNutritionist = this.nutritionistIdOptions.find(opt => opt.remark === 'default');
@@ -657,6 +690,7 @@
           plannerId: defaultPlanner ? parseInt(defaultPlanner.dictValue) : null,
           plannerAssisId: defaultPlannerAssis ? parseInt(defaultPlannerAssis.dictValue) : null,
           operatorId: defaultOperator ? parseInt(defaultOperator.dictValue) : null,
+          operatorAssisId: defaultOperatorAssis ? parseInt(defaultOperatorAssis.dictValue) : null,
           recommender: null,
           orderTime: null,
           serveMonth: defaultServeMonth ? parseInt(defaultServeMonth.dictValue) : 1,

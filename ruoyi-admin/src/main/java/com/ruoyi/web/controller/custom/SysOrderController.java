@@ -69,6 +69,8 @@ public class SysOrderController extends BaseController {
                     order.setPlanner(user.getNickName());
                 } else if (user.getUserId().equals(order.getPlannerAssisId())) {
                     order.setPlannerAssis(user.getNickName());
+                } else if (user.getUserId().equals(order.getOperatorAssisId())) {
+                    order.setOperatorAssis(user.getNickName());
                 }
             }
         }
@@ -102,6 +104,8 @@ public class SysOrderController extends BaseController {
                     order.setPlanner(user.getNickName());
                 } else if (user.getUserId().equals(order.getPlannerAssisId())) {
                     order.setPlannerAssis(user.getNickName());
+                } else if (user.getUserId().equals(order.getOperatorAssisId())) {
+                    order.setOperatorAssis(user.getNickName());
                 }
             }
         }

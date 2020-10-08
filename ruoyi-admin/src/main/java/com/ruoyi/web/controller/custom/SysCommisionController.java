@@ -116,35 +116,31 @@ public class SysCommisionController extends BaseController {
         startPage();
         List<SysCommision> list = sysCommisionService.selectSysCommisionDetail(sysCommision);
         for (SysCommision detail : list) {
+            detail.setRate(0F);
             SysCommision tmpQueryCom = new SysCommision();
             tmpQueryCom.setUserId(detail.getUserId());
             List<SysCommision> tmpComList = sysCommisionService.selectSysCommisionList(tmpQueryCom);
 
-            boolean comHit = false;
             for (int i = 0; i < tmpComList.size(); i++) {
                 SysCommision com = tmpComList.get(i);
                 float dAmount = detail.getAmount().floatValue();
                 float cAmount = com.getAmount().floatValue();
+                detail.setRate(com.getRate());
                 if (dAmount < cAmount && i == 0) {
-                    comHit = false;
+                    // 第一条规则
                     break;
                 } else if (i == tmpComList.size() - 1 && dAmount > cAmount) {
-                    comHit = true;
-                    detail.setRate(com.getRate());
+                    // 最后一条规则
                     break;
                 } else if (dAmount >= cAmount && dAmount < tmpComList.get(i + 1).getAmount().floatValue()) {
-                    comHit = true;
-                    detail.setRate(com.getRate());
+                    // 中间规则
+                    break;
                 }
             }
-            if (!comHit) {
-                detail.setRate(0F);
-                detail.setCommision(BigDecimal.ZERO);
-            } else {
-                float amount = detail.getAmount().floatValue();
-                amount = amount * detail.getRate() / 100F;
-                detail.setCommision(new BigDecimal(amount));
-            }
+
+            float amount = detail.getAmount().floatValue();
+            amount = amount * detail.getRate() / 100F;
+            detail.setCommision(new BigDecimal(amount));
         }
         return getDataTable(list);
     }
