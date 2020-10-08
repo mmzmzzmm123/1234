@@ -15,12 +15,8 @@ import com.ruoyi.web.controller.system.SysLoginController;
 import com.ruoyi.web.controller.yunbookmark.SqBookmarkController;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.test.web.servlet.MockMvc;
@@ -31,10 +27,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
-import java.util.List;
-import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 

@@ -3,7 +3,8 @@ package com.ruoyi.web.controller.note;
 import java.util.List;
 
 import com.ruoyi.common.core.domain.entity.SysUser;
-import com.sun.org.apache.bcel.internal.generic.NEW;
+import com.ruoyi.note.domain.NoteContentMgDb;
+import com.ruoyi.note.service.INoteRepositoryService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,6 +36,20 @@ public class NmNoteController extends BaseController
 {
     @Autowired
     private INmNoteService nmNoteService;
+
+    @Autowired
+    private INoteRepositoryService noteRepositoryService;
+
+
+    //测试
+    @GetMapping("/selectBymenuNote2")
+    public void save() {
+        NoteContentMgDb noteContentMgDb = new NoteContentMgDb();
+        noteContentMgDb.setId(7L);
+        noteContentMgDb.setNoteContent("宋人头2");
+        noteRepositoryService.save(noteContentMgDb);
+    }
+
 
 
     /**
