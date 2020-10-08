@@ -3,6 +3,17 @@
     <el-row>
       <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="70px">
         <el-col :span="6">
+          <el-form-item label="订单编号" prop="orderId">
+            <el-input
+              v-model="queryParams.orderId"
+              placeholder="请输入订单编号"
+              clearable
+              size="small"
+              @keyup.enter.native="handleQuery"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
           <el-form-item label="客户姓名" prop="customer">
             <el-input
               v-model="queryParams.customer"
@@ -175,6 +186,7 @@
     </el-row>
 
     <el-table v-loading="loading" :data="orderList" @selection-change="handleSelectionChange">
+      <el-table-column label="编号" align="center" prop="orderId" width="150" fixed="left"/>
       <el-table-column label="审核状态" align="center" prop="reviewStatus" width="80" fixed="left">
         <template slot-scope="scope">
           <el-tag
@@ -466,6 +478,7 @@
         queryParams: {
           pageNum: 1,
           pageSize: 10,
+          orderId: null,
           customer: null,
           phone: null,
           payTypeId: null,

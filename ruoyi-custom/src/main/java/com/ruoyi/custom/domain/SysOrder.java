@@ -19,6 +19,7 @@ public class SysOrder extends BaseEntity
     private static final long serialVersionUID = 1L;
 
     /** 编号 */
+    @Excel(name = "编号")
     private Long orderId;
 
     /** 客户姓名 */

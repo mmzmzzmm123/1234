@@ -1,6 +1,7 @@
 package com.ruoyi.custom.service.impl;
 
 import java.util.List;
+
 import com.ruoyi.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,8 +16,7 @@ import com.ruoyi.custom.service.ISysOrderService;
  * @date 2020-09-24
  */
 @Service
-public class SysOrderServiceImpl implements ISysOrderService
-{
+public class SysOrderServiceImpl implements ISysOrderService {
     @Autowired
     private SysOrderMapper sysOrderMapper;
 
@@ -27,8 +27,7 @@ public class SysOrderServiceImpl implements ISysOrderService
      * @return 销售订单
      */
     @Override
-    public SysOrder selectSysOrderById(Long orderId)
-    {
+    public SysOrder selectSysOrderById(Long orderId) {
         return sysOrderMapper.selectSysOrderById(orderId);
     }
 
@@ -39,8 +38,7 @@ public class SysOrderServiceImpl implements ISysOrderService
      * @return 销售订单
      */
     @Override
-    public List<SysOrder> selectSysOrderList(SysOrder sysOrder)
-    {
+    public List<SysOrder> selectSysOrderList(SysOrder sysOrder) {
         return sysOrderMapper.selectSysOrderList(sysOrder);
     }
 
@@ -51,10 +49,10 @@ public class SysOrderServiceImpl implements ISysOrderService
      * @return 结果
      */
     @Override
-    public int insertSysOrder(SysOrder sysOrder)
-    {
+    public int insertSysOrder(SysOrder sysOrder) {
         sysOrder.setCreateTime(DateUtils.getNowDate());
         sysOrder.setOrderTime(DateUtils.getNowDate());
+        sysOrder.setOrderId(new Long(DateUtils.dateTimeNow()));
         return sysOrderMapper.insertSysOrder(sysOrder);
     }
 
@@ -65,8 +63,7 @@ public class SysOrderServiceImpl implements ISysOrderService
      * @return 结果
      */
     @Override
-    public int updateSysOrder(SysOrder sysOrder)
-    {
+    public int updateSysOrder(SysOrder sysOrder) {
         sysOrder.setUpdateTime(DateUtils.getNowDate());
         return sysOrderMapper.updateSysOrder(sysOrder);
     }
@@ -78,8 +75,7 @@ public class SysOrderServiceImpl implements ISysOrderService
      * @return 结果
      */
     @Override
-    public int deleteSysOrderByIds(Long[] orderIds)
-    {
+    public int deleteSysOrderByIds(Long[] orderIds) {
         return sysOrderMapper.deleteSysOrderByIds(orderIds);
     }
 
@@ -90,8 +86,7 @@ public class SysOrderServiceImpl implements ISysOrderService
      * @return 结果
      */
     @Override
-    public int deleteSysOrderById(Long orderId)
-    {
+    public int deleteSysOrderById(Long orderId) {
         return sysOrderMapper.deleteSysOrderById(orderId);
     }
 }
