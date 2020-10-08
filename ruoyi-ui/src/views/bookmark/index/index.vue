@@ -18,9 +18,9 @@
 
           <div class="main-right">
 
-            <div class="aside-title" @click="goBookmarkList"><i class="el-icon-s-tools"></i><span>全部书签</span></div>
-            <div class="aside-title"><i class="el-icon-help"></i><span>发现</span></div>
-            <div class="aside-title"><i class="el-icon-s-platform"></i><span>任意门</span></div>
+            <div class="aside-title" @click="goBookmarkList"><i class="el-icon-s-tools"></i><span>最新书签</span></div>
+<!--            <div class="aside-title"><i class="el-icon-help"></i><span>发现</span></div>-->
+<!--            <div class="aside-title"><i class="el-icon-s-platform"></i><span>任意门</span></div>-->
             <div class="aside-title"><i class="el-icon-message-solid"></i><span>收件箱</span></div>
             <div class="reminder">我的收藏</div>
             <div class="areaTree">
@@ -58,14 +58,14 @@
         </el-aside>
 
 
-        <!--      <el-footer class="aside-navigation">-->
-        <!--      </el-footer>-->
+<!--              <el-footer class="aside-navigation">-->
+<!--              </el-footer>-->
 
 
       </transition>
 
-      <div class="isresize">
-        <i class="el-icon-caret-top"></i>
+      <div class="isresize" style="cursor:w-resize">
+<!--        <i class="el-icon-caret-top"></i>-->
       </div>
       <!--    <el-drawer-->
       <!--      title="我是标题"-->
@@ -83,70 +83,6 @@
 
       <el-container class="mid">
 
-        <el-header class="header-sousou" style="height: 50px">
-          <div class="sousou-left">
-            <div class="sousouleft-switch" @click="drawer = true"><i class="el-icon-s-unfold"/></div>
-            <div class="sousou-leftico" @click="drawer = true"><img
-              src="https://favicon.lucq.fun/?url=https://www.baidu.com"/></div>
-          </div>
-
-          <div class="sousou-input">
-            <!--            <el-popover-->
-            <!--              placement="bottom"-->
-            <!--              width="400"-->
-            <!--              trigger="click"-->
-            <!--              :visible-arrow="false"-->
-            <!--              popper-class="popover-suosou"-->
-            <!--            >-->
-            <!--              <div v-for="o in 4" :key="o">-->
-            <!--                {{'列表内容 ' + o }}-->
-            <!--              </div>-->
-            <el-input slot="reference" @keyup.enter.native="gosousuo" placeholder="请输入要查找的关键词" v-model="sousuo"
-                      size="small">
-              <i slot="prefix" class="el-input__icon el-icon-search" style="font-size: 15px;margin-top: 7px"></i>
-
-              <!--          <el-button slot="append" icon="el-icon-search"></el-button>-->
-            </el-input>
-            <!--            </el-popover>-->
-          </div>
-
-          <div class="sousouright-icon">
-            <el-badge :value="5" :max="99" class="item"><i class="el-icon-message-solid" style="font-size: 17px;"></i>
-            </el-badge>
-          </div>
-
-          <div class="sousouright-iconadd">
-            <el-dropdown trigger="click" size="small" :hide-on-click="false">
-              <span class="el-dropdown-link">
-          <i class="el-icon-plus" style="font-size: 18px;"/>
-             </span>
-              <el-dropdown-menu slot="dropdown" class="sq-dropdown">
-                <el-dropdown-item class="filter-item" icon="el-icon-plus" @click.native="addbookmarkurl">添加连接
-                </el-dropdown-item>
-                <el-dropdown-item class="filter-item" icon="el-icon-plus" command="b">添加文本</el-dropdown-item>
-                <el-dropdown-item class="filter-item" icon="el-icon-plus" command="d">导入书签</el-dropdown-item>
-              </el-dropdown-menu>
-            </el-dropdown>
-          </div>
-
-
-          <div class="header-list">
-            <el-dropdown trigger="click" size="small" :hide-on-click="false">
-              <span class="el-dropdown-link">
-           <el-avatar :size="28"
-                      src="https://up.raindrop.io/collection/templates/social-media-logos-6/97social.png"></el-avatar>
-              </span>
-              <el-dropdown-menu slot="dropdown" class="sq-dropdown">
-                <el-dropdown-item class="filter-item" icon="el-icon-plus" command="a">外观显示</el-dropdown-item>
-                <el-dropdown-item class="filter-item" icon="el-icon-plus" command="b">用户中心</el-dropdown-item>
-                <el-dropdown-item class="filter-item" icon="el-icon-plus" command="d">建议反馈</el-dropdown-item>
-                <el-dropdown-item class="filter-item" icon="el-icon-plus" command="e">退出登录</el-dropdown-item>
-              </el-dropdown-menu>
-            </el-dropdown>
-          </div>
-
-
-        </el-header>
         <el-main class="bookmarkmain">
 
           <router-view :key="$route.query.t"></router-view>
@@ -217,82 +153,82 @@
     </el-dialog>
 
 
-    <!-- 添加链接-->
-    <!-- 添加或修改书签管理对话框 -->
-    <el-dialog title="添加连接" :visible.sync="addopen" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="书签地址" prop="url">
-          <el-input v-model="form.url" placeholder="请输入书签地址"/>
-        </el-form-item>
-        <el-form-item label="书签标题" prop="title">
-          <el-input v-model="form.title" placeholder="请输入书签标题"/>
-        </el-form-item>
-        <el-form-item label="书签描述" prop="description">
-          <el-input v-model="form.description" type="textarea" placeholder="请输入书签描述"
-                    :autosize="{minRows: 3, maxRows:4}" :style="{width: '100%'}"></el-input>
-        </el-form-item>
+<!--    &lt;!&ndash; 添加链接&ndash;&gt;-->
+<!--    &lt;!&ndash; 添加或修改书签管理对话框 &ndash;&gt;-->
+<!--    <el-dialog title="添加连接" :visible.sync="addopen" width="500px" append-to-body>-->
+<!--      <el-form ref="form" :model="form" :rules="rules" label-width="80px">-->
+<!--        <el-form-item label="书签地址" prop="url">-->
+<!--          <el-input v-model="form.url" placeholder="请输入书签地址"/>-->
+<!--        </el-form-item>-->
+<!--        <el-form-item label="书签标题" prop="title">-->
+<!--          <el-input v-model="form.title" placeholder="请输入书签标题"/>-->
+<!--        </el-form-item>-->
+<!--        <el-form-item label="书签描述" prop="description">-->
+<!--          <el-input v-model="form.description" type="textarea" placeholder="请输入书签描述"-->
+<!--                    :autosize="{minRows: 3, maxRows:4}" :style="{width: '100%'}"></el-input>-->
+<!--        </el-form-item>-->
 
-        <el-form-item prop="parentId">
-          <div class="labelname">分类菜单</div>
-          <treeselect class="menutreeselect" v-model="form.menuId" :options="menuOptions" :normalizer="normalizer"/>
-        </el-form-item>
+<!--        <el-form-item prop="parentId">-->
+<!--          <div class="labelname">分类菜单</div>-->
+<!--          <treeselect class="menutreeselect" v-model="form.menuId" :options="menuOptions" :normalizer="normalizer"/>-->
+<!--        </el-form-item>-->
 
-        <el-form-item label="书签标签" prop="label">
-          <el-tag
-            class="bookmarktag"
-            v-for="tag in sqTags"
-            :key="tag.tagId"
-            closable
-            type="success"
-            :disable-transitions="false"
-            @close="taghandleClose(tag.tagId)"
-            v-if="tag.name!='TAGDELETE'"
-          >
-            {{tag.name}}
-          </el-tag>
-          <el-input
-            class="input-new-tag"
-            v-if="inputVisible"
-            v-model="inputValue"
-            ref="saveTagInput"
-            size="small"
-            @keyup.enter.native="handleInputConfirm"
-            @blur="handleInputConfirm"
-          >
-          </el-input>
-          <el-button v-else class="button-new-tag" size="small" @click="showInput">+ 新增标签</el-button>
+<!--        <el-form-item label="书签标签" prop="label">-->
+<!--          <el-tag-->
+<!--            class="bookmarktag"-->
+<!--            v-for="tag in sqTags"-->
+<!--            :key="tag.tagId"-->
+<!--            closable-->
+<!--            type="success"-->
+<!--            :disable-transitions="false"-->
+<!--            @close="taghandleClose(tag.tagId)"-->
+<!--            v-if="tag.name!='TAGDELETE'"-->
+<!--          >-->
+<!--            {{tag.name}}-->
+<!--          </el-tag>-->
+<!--          <el-input-->
+<!--            class="input-new-tag"-->
+<!--            v-if="inputVisible"-->
+<!--            v-model="inputValue"-->
+<!--            ref="saveTagInput"-->
+<!--            size="small"-->
+<!--            @keyup.enter.native="handleInputConfirm"-->
+<!--            @blur="handleInputConfirm"-->
+<!--          >-->
+<!--          </el-input>-->
+<!--          <el-button v-else class="button-new-tag" size="small" @click="showInput">+ 新增标签</el-button>-->
 
-        </el-form-item>
+<!--        </el-form-item>-->
 
-        <!--        <el-form-item label="所属目录" prop="menuId">-->
-        <!--          <el-input v-model="form.menuId" placeholder="请选择上级目录" />-->
-        <!--        </el-form-item>-->
-
-
-        <!--        0公开显示 1隐藏显示 2好友显示-->
-        <el-form-item label="选择状态" prop="start">
-          <el-radio-group v-model="form.start" size="medium">
-            <el-radio v-for="(item, index) in bookmarkstatus" :key="index" :label="item.value"
-                      :disabled="item.disabled">{{item.name}}
-            </el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <!--           1.未读稍后再看 2 已读 2.續看-->
-        <el-form-item label="选择类型" prop="type">
-          <el-radio-group v-model="form.type" size="medium">
-            <el-radio v-for="(item, index) in bookmarktype" :key="index" :label="item.value"
-                      :disabled="item.disabled">{{item.name}}
-            </el-radio>
-          </el-radio-group>
-        </el-form-item>
+<!--        &lt;!&ndash;        <el-form-item label="所属目录" prop="menuId">&ndash;&gt;-->
+<!--        &lt;!&ndash;          <el-input v-model="form.menuId" placeholder="请选择上级目录" />&ndash;&gt;-->
+<!--        &lt;!&ndash;        </el-form-item>&ndash;&gt;-->
 
 
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="addbookmark">确 定</el-button>
-        <el-button @click="bookmarkcancel">取 消</el-button>
-      </div>
-    </el-dialog>
+<!--        &lt;!&ndash;        0公开显示 1隐藏显示 2好友显示&ndash;&gt;-->
+<!--        <el-form-item label="选择状态" prop="start">-->
+<!--          <el-radio-group v-model="form.start" size="medium">-->
+<!--            <el-radio v-for="(item, index) in bookmarkstatus" :key="index" :label="item.value"-->
+<!--                      :disabled="item.disabled">{{item.name}}-->
+<!--            </el-radio>-->
+<!--          </el-radio-group>-->
+<!--        </el-form-item>-->
+<!--        &lt;!&ndash;           1.未读稍后再看 2 已读 2.續看&ndash;&gt;-->
+<!--        <el-form-item label="选择类型" prop="type">-->
+<!--          <el-radio-group v-model="form.type" size="medium">-->
+<!--            <el-radio v-for="(item, index) in bookmarktype" :key="index" :label="item.value"-->
+<!--                      :disabled="item.disabled">{{item.name}}-->
+<!--            </el-radio>-->
+<!--          </el-radio-group>-->
+<!--        </el-form-item>-->
+
+
+<!--      </el-form>-->
+<!--      <div slot="footer" class="dialog-footer">-->
+<!--        <el-button type="primary" @click="addbookmark">确 定</el-button>-->
+<!--        <el-button @click="bookmarkcancel">取 消</el-button>-->
+<!--      </div>-->
+<!--    </el-dialog>-->
     <!--背景特效-->
     <canvas id="evanyou"></canvas>
 
@@ -428,9 +364,6 @@
           height: "",
           width: "",
         },
-        //点击的网址
-        gourl:'https://element.eleme.cn/#/zh-CN/theme',
-
 
       }
     },
@@ -453,8 +386,6 @@
       var that = this;
       //书签菜单
       that.getList();
-
-
       window.addEventListener('resize', this.getHeight);
       this.getHeight()
     },
@@ -1015,18 +946,6 @@
       /**书签编辑设置的 标签结束**/
 
 
-      /** 新增书签Url操作 */
-      addbookmarkurl: function () {
-        this.reset();
-        this.getTreeselect();
-        this.addopen = true;
-
-        // getMenu(e.getAttribute("data-menuId")).then(response => {
-        //   this.form = response.data;
-        //   this.open = true;
-        //   this.title = "修改书签菜单";
-        // });
-      },
 
       /** 提交按钮 修改和新增 */
       addbookmark: function () {
@@ -1374,17 +1293,7 @@
           path: "/UserTagAll",
         })
       },
-      /**搜索功能**/
-      gosousuo() {
-        var that = this;
-        that.$router.push({
-          path: "/content",
-          query: {
-            sousuo: this.sousuo,
-            t:Date.now(),
-          }
-        })
-      },
+
 
 
     },
@@ -1399,7 +1308,7 @@
 
   }
 </script>
-<style>
+<style >
 
 
   body {
@@ -1567,6 +1476,10 @@
     box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
 
   }
+  /*光标拖拽*/
+  /*.isaside{*/
+  /*  cursor:w-resize*/
+  /*}*/
 
   .aside-title {
     height: 32px;
@@ -1617,10 +1530,6 @@
   }
 
 
-  /*.logoright i:active {*/
-  /*  background-color: #7a6df0;*/
-  /*  color: #FFFFFF;*/
-  /*}*/
 
 
   .reminder {
@@ -1666,8 +1575,7 @@
 
 
   .bookmarkmain {
-    padding-top: 0px !important;
-
+    padding: 0px !important;
   }
 
   .separator {
@@ -1681,65 +1589,6 @@
 
   .filter div {
     margin-bottom: 3px;
-  }
-
-  .header-sousou {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-
-  .header-sousou input {
-
-    margin-top: 9px;
-    border: 0px;
-    background-color: #f2f2f2;
-    border-radius: 0 !important;
-    /*border:  1px solid #f2f2f2;*/
-
-
-  }
-
-  .header-sousou input:focus {
-    background-color: #FFFFFF !important;
-    border: 1px solid #C0C4CC;
-  }
-
-
-  .header-sousou i {
-    font-size: 1px;
-    margin-top: 6px;
-  }
-
-
-  .sousou-input {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-
-
-  }
-
-  .header-list {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 35px;
-    margin-top: 9px !important;
-
-
-  }
-
-  .header-list:hover {
-    color: #7a6df0;
-
-  }
-
-  .header-list i {
-    font-size: 25px;
-    margin-right: 2px;
   }
 
 
@@ -1757,80 +1606,6 @@
 
   .main-label :nth-child(2) {
     margin-right: 5px;
-  }
-
-
-
-
-
-  .sousouleft-switch {
-    margin-top: 4px !important;
-    margin-right: 10px !important;
-  }
-
-  .sousouleft-switch i {
-    font-size: 30px;
-    opacity: 0.8;
-
-  }
-
-  .sousou-left {
-    /*width: 50px!important;*/
-    /*height: 50px;*/
-    /*margin-top: 12px!important;*/
-    /*background-color: red;*/
-  }
-
-  .sousou-leftico {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 30px;
-    height: 30px;
-    border-radius: 3px;
-    border: 1px solid #e6e6e6 !important;
-    margin-top: 9px !important;
-    margin-right: 10px !important;
-
-
-  }
-
-  .sousou-leftico img {
-
-  }
-
-
-  .filter-item:hover {
-    background-color: #E5E5E5 !important;
-    color: #000 !important;
-  }
-
-
-  .sousouright-icon {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 50px;
-    margin-top: 7px !important;
-  }
-
-  .sousouright-iconadd {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 50px;
-    margin-top: 7px !important;
-  }
-
-
-  .sq-dropdown {
-    top: 33px !important;
-    box-shadow: 0 2px 15px 0 rgba(0, 0, 0, .2) !important;
-    font-weight: 800 !important;
-  }
-
-  .sq-dropdown div {
-    display: none !important;
   }
 
   .labelname {
@@ -1914,9 +1689,10 @@
     padding-top: 6px !important;
   }
 
-  el-aside {
+  .isaside {
     box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
   }
+
 
 
   .main-right {
@@ -1950,12 +1726,7 @@
 
   }
 
-  .tabBar {
-    /*width: inherit;*/
-    /*overflow: hidden;*/
-    /*position: fixed;*/
-    /*bottom: 0;*/
-  }
+
   .tabBarList{
     display: flex;
     float: left;
@@ -1992,28 +1763,29 @@
 
   /*拖拽区div样式*/
   .isresize {
-    background-color: transparent;
-    width: 10px;
+    width: 7px;
     font-size: 25px;
     display: -webkit-flex;
     justify-content: center;
     align-items: center;
     background-color: transparent;
     color: transparent;
+    z-index: 1;
+    margin-left: -4px!important;
   }
 
   /*拖拽区鼠标悬停样式*/
-  .isresize:hover {
-    color: #a4a4a4;
-  }
+  /*.isresize:hover {*/
+  /*  color: #a4a4a4;*/
+  /*}*/
 
-  .isresize i {
-    margin-left: 2px;
-    transform: rotate(90deg);
-    width: 10px;
-    /*color: transparent;*/
-    /*background-color: black;*/
-  }
+  /*.isresize i {*/
+  /*  margin-left: 2px;*/
+  /*  transform: rotate(90deg);*/
+  /*  width: 10px;*/
+  /*  !*color: transparent;*!*/
+  /*  !*background-color: black;*!*/
+  /*}*/
 
   .main-right {
     min-width: 250px;
@@ -2041,53 +1813,12 @@
 
 
 
-  .mianUrl{
-    padding: 0px;
-    color: #8F8F8F;
-  }
-  .mianUrl-top{
-    display: flex;
-    padding: 0px!important;
-  }
-  .mianUrl-top div{
-    width: 50%;
-    height: 50px;
-    background-color: #FFFFFF;
-    font-size: 22px;
-    color: #414141;
-  }
-  .mianUrl i{
-    display: block;
-    width: 30px;
-    height: 30px;
-    line-height: 30px;
-    text-align: center;
-    margin-top: 15px;
-    border-radius: 2px;
-  }
-
-  .mianUrl-top-left i{
-    float: left;
-    margin-left: 15px;
-  }
-  .mianUrl i:hover{
-    background-color: #F2F2F2;
-  }
-  .mianUrl-top-right i{
-    float: right;
-    margin-right: 15px;
-  }
-
-  .mianUrl-botoom{
-    height: 900px;
-  }
-  .openurl{
-    width: 100%;
-    height: 100%;
-  }
 
 
-
+  /*.mid{*/
+  /*  min-width: 400px!important;*/
+  /*  max-width: 400px;*/
+  /*}*/
 
 
 </style>

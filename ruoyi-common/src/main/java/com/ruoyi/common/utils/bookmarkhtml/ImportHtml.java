@@ -1,4 +1,4 @@
-package com.ruoyi.common.utils.BookmarkHtml;
+package com.ruoyi.common.utils.bookmarkhtml;
 
 
 import com.ruoyi.common.utils.StringUtils;
@@ -10,7 +10,6 @@ import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;

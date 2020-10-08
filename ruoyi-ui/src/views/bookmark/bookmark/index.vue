@@ -1,217 +1,313 @@
 <template>
   <div>
 
-    <div class="filter-tbar">
-      <div class="filter-classification">
-        <div class="classification " @click="showopen(0)"><span>网页</span></div>
-        <div class="classification" @click="showopen(1)"><span>文本</span></div>
-        <div class="classification" @click="showopen(2)"><span>其他</span></div>
-        <!--        <div class="classification" @click="showopen(3)"><span>其他</span></div>-->
-      </div>
-      <div class="setUpThe">
-        <div class="filter-content">
-          <el-dropdown trigger="hover" size="small" @command="handleCommand">
-            <div class="el-dropdown-link dropdownList">
-              <i class="el-icon-document-checked "></i> <span>排序</span>
-            </div>
-            <el-dropdown-menu slot="dropdown" class="filter-sort-dropdown">
-              <el-dropdown-item class="filter-item" command="0"><i class="el-icon-bottom"></i>按时间排序(正)
+    <el-container class="isbookmarkContainer">
+      <el-aside class="isBookmarkAside" >
+      <el-header class="header-sousou">
+        <div class="sousou-left">
+          <div class="sousouleft-switch" @click="drawer = true"><i class="el-icon-s-unfold"/></div>
+          <div class="sousou-leftico" @click="drawer = true"><img
+            src="https://favicon.lucq.fun/?url=https://www.baidu.com"/></div>
+        </div>
+        <div class="sousou-input">
+          <el-input slot="reference" @keyup.enter.native="gosousuo" placeholder="请输入要查找的关键词" v-model="sousuo"
+                    size="small">
+            <i slot="prefix" class="el-input__icon el-icon-search"></i>
+          </el-input>
+        </div>
+
+        <div class="sousouright-icon">
+          <el-badge :value="5" :max="99" class="item"><i class="el-icon-message-solid" style="font-size: 17px;"></i>
+          </el-badge>
+        </div>
+
+        <div class="sousouright-iconadd">
+          <el-dropdown trigger="click" size="small" :hide-on-click="false">
+              <span class="el-dropdown-link">
+          <i class="el-icon-plus" style="font-size: 18px;"/>
+             </span>
+            <el-dropdown-menu slot="dropdown" class="sq-dropdown">
+              <el-dropdown-item class="filter-item" icon="el-icon-plus" @click.native="addbookmarkurl">添加连接
               </el-dropdown-item>
-              <el-dropdown-item class="filter-item" command="1"><i class="el-icon-bottom"></i>按时间排序(反)
-              </el-dropdown-item>
-              <el-dropdown-item class="filter-item" command="2"><i class="el-icon-bottom"></i>按标题A-Z排序(正)
-              </el-dropdown-item>
-              <el-dropdown-item class="filter-item" command="3"><i class="el-icon-bottom"></i>按标题A-Z排序(反)
-              </el-dropdown-item>
+              <el-dropdown-item class="filter-item" icon="el-icon-plus" command="b">添加文本</el-dropdown-item>
+              <el-dropdown-item class="filter-item" icon="el-icon-plus" command="d">导入书签</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
-
         </div>
-        <div class="filter-content">
-          <el-dropdown trigger="hover" size="small">
-            <div class="el-dropdown-link dropdownList">
-              <i class="el-icon-tickets "></i> <span>列表</span>
-            </div>
-            <el-dropdown-menu slot="dropdown" class="filter-sort-dropdown">
-              <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>按时间排序(正)</el-dropdown-item>
-              <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>按时间排序(反)</el-dropdown-item>
-              <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>按字母A-Z排序</el-dropdown-item>
-              <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>按字母A-Z排序</el-dropdown-item>
-              <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>按网站A-Z排序</el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
 
-        </div>
-<!--        <div class="filter-content">-->
-<!--          <el-dropdown trigger="hover" size="small">-->
-<!--            <div class="el-dropdown-link dropdownList">-->
-<!--              <i class="el-icon-setting "></i> <span>设置</span>-->
-<!--            </div>-->
-<!--            <el-dropdown-menu slot="dropdown" class="filter-sort-dropdown">-->
-<!--              <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>编辑</el-dropdown-item>-->
-<!--              <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>批量处理</el-dropdown-item>-->
-<!--              <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>排序</el-dropdown-item>-->
-<!--              <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>按网站A-Z排序</el-dropdown-item>-->
+
+        <div class="header-list">
+<!--          <el-dropdown trigger="click" size="small" :hide-on-click="false">-->
+<!--              <span class="el-dropdown-link">-->
+           <el-avatar :size="28"
+                      src="https://up.raindrop.io/collection/templates/social-media-logos-6/97social.png"></el-avatar>
+<!--              </span>-->
+<!--            <el-dropdown-menu slot="dropdown" class="sq-dropdown">-->
+<!--              <el-dropdown-item class="filter-item" icon="el-icon-plus" command="a">外观显示</el-dropdown-item>-->
+<!--              <el-dropdown-item class="filter-item" icon="el-icon-plus" command="b">用户中心</el-dropdown-item>-->
+<!--              <el-dropdown-item class="filter-item" icon="el-icon-plus" command="d">建议反馈</el-dropdown-item>-->
+<!--              <el-dropdown-item class="filter-item" icon="el-icon-plus" command="e">退出登录</el-dropdown-item>-->
 <!--            </el-dropdown-menu>-->
 <!--          </el-dropdown>-->
-<!--        </div>-->
-      </div>
-    </div>
-
-    <div v-if="queryParams.sousuo!=''" class="sousuoContent">
-      <i class="el-icon-success"></i>
-      <!--      <span> 当前搜索的内容是:{{queryParams.sousuo}}</span>-->
-      <span> 共为您找到约{{total}}个结果</span>
-    </div>
-
-    <div class="nullbookmark" v-if="showimg">
-      <div class="nullbookmark-img">
-      </div>
-      <div style="color: #000000" class="nullbookmark-text">
-        此目录还未添加书签
-      </div>
-    </div>
+        </div>
+      </el-header>
 
 
-    <div class="bookmarklist" :style="datalist" infinite-scroll-distance="10" v-loading="loading" v-if="showbookmark"
-         v-infinite-scroll="load"
-         infinite-scroll-disabled="disabled" style="overflow:auto;" infinite-scroll-immediate="false">
-      <el-row>
-        <!--        <hr class="bookamrk-hr" v-if="!queryParams.sousuo!=''"/>-->
-        <el-col :span="24" v-for="bm in bookmarkList">
-          <div class="editBookamrk ">
-            <div class="editlist">
-              <div>
-                <el-button plain size="small" @click="handleUpdate(bm.bookmarkId)">修改</el-button>
+
+
+
+
+          <div class="filter-tbar">
+            <div class="filter-classification">
+              <div class="classification " @click="showopen(0)"><span>网页</span></div>
+              <div class="classification" @click="showopen(1)"><span>文本</span></div>
+              <div class="classification" @click="showopen(2)"><span>其他</span></div>
+              <!--        <div class="classification" @click="showopen(3)"><span>其他</span></div>-->
+            </div>
+            <div class="setUpThe">
+              <div class="filter-content">
+                <el-dropdown trigger="hover" size="small" @command="handleCommand">
+                  <div class="el-dropdown-link dropdownList">
+                    <i class="el-icon-document-checked "></i>
+<!--                    <span>排序</span>-->
+                  </div>
+                  <el-dropdown-menu slot="dropdown" class="filter-sort-dropdown">
+                    <el-dropdown-item class="filter-item" command="0"><i class="el-icon-bottom"></i>按时间排序(正)
+                    </el-dropdown-item>
+                    <el-dropdown-item class="filter-item" command="1"><i class="el-icon-bottom"></i>按时间排序(反)
+                    </el-dropdown-item>
+                    <el-dropdown-item class="filter-item" command="2"><i class="el-icon-bottom"></i>按标题A-Z排序(正)
+                    </el-dropdown-item>
+                    <el-dropdown-item class="filter-item" command="3"><i class="el-icon-bottom"></i>按标题A-Z排序(反)
+                    </el-dropdown-item>
+                  </el-dropdown-menu>
+                </el-dropdown>
+
               </div>
-              <div>
-                <el-button plain size="small" @click="handleDelete(bm.bookmarkId)">删除</el-button>
+              <div class="filter-content">
+                <el-dropdown trigger="hover" size="small">
+                  <div class="el-dropdown-link dropdownList">
+                    <i class="el-icon-tickets "></i>
+<!--                    <span>列表</span>-->
+                  </div>
+                  <el-dropdown-menu slot="dropdown" class="filter-sort-dropdown">
+                    <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>按时间排序(正)</el-dropdown-item>
+                    <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>按时间排序(反)</el-dropdown-item>
+                    <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>按字母A-Z排序</el-dropdown-item>
+                    <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>按字母A-Z排序</el-dropdown-item>
+                    <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>按网站A-Z排序</el-dropdown-item>
+                  </el-dropdown-menu>
+                </el-dropdown>
+
               </div>
-              <div>
-                <el-button plain size="small">笔记</el-button>
-              </div>
-              <div>
-                <el-button plain size="small">分享</el-button>
-              </div>
+              <!--        <div class="filter-content">-->
+              <!--          <el-dropdown trigger="hover" size="small">-->
+              <!--            <div class="el-dropdown-link dropdownList">-->
+              <!--              <i class="el-icon-setting "></i> <span>设置</span>-->
+              <!--            </div>-->
+              <!--            <el-dropdown-menu slot="dropdown" class="filter-sort-dropdown">-->
+              <!--              <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>编辑</el-dropdown-item>-->
+              <!--              <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>批量处理</el-dropdown-item>-->
+              <!--              <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>排序</el-dropdown-item>-->
+              <!--              <el-dropdown-item class="filter-item"><i class="el-icon-bottom"></i>按网站A-Z排序</el-dropdown-item>-->
+              <!--            </el-dropdown-menu>-->
+              <!--          </el-dropdown>-->
+              <!--        </div>-->
             </div>
           </div>
 
+          <div v-if="queryParams.sousuo!=''" class="sousuoContent">
+            <i class="el-icon-success"></i>
+            <!--      <span> 当前搜索的内容是:{{queryParams.sousuo}}</span>-->
+            <span> 共为您找到约{{total}}个结果</span>
+          </div>
 
-          <div class="bookmark " :data-id="bm.id" @click="windowurl(bm.url,bm.bookmarkId)">
-            <p class="bookmark-title" v-if="highlighted"><span v-html="highLight(bm.title,queryParams.sousuo)"/></p>
-            <p class="bookmark-title" v-if="!highlighted">{{bm.title}}</p>
-            <div class="">
-              <p class="description" v-if="highlighted"><span v-html="highLight(bm.description,queryParams.sousuo)"/>
-              </p>
-              <p class="description" v-if="!highlighted">{{bm.description}}</p>
+          <div class="nullbookmark" v-if="showimg">
+            <div class="nullbookmark-img">
             </div>
-            <div class="info-wrap">
-              <div class="info">
-                <div class="bookmark-icon">
-                  <!--                    <img :err-src='bm.icon'   :ng-src="bm.icon"  :src="bm.icon"  />-->
-                  <img :ng-src="'https://favicon.lucq.fun/?url=http://'+bm.urls"
-                       :src="'https://favicon.lucq.fun/?url=http://'+bm.urls"
-                       onerror="this.src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQEAYAAABPYyMiAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAZiS0dEAAAAAAAA+UO7fwAAAAlwSFlzAAAASAAAAEgARslrPgAAAmVJREFUSMftlG1IU2EUx8+5jRHzg+5OiD64WTBBjSY5ZybUJMaMiIUICUKFIGmoIIogYWKFBmtDxN1tBKIWvlS6SR+iLFDBXqSMgmzbvQ7fkAjcINmQ5u7pQwyCiOvWx/p/fPj9/5znnPM8AP+VolRTjjHhTlmZipzEk9GYao4sVaMYxXp62NgIdpLBCuLP05mZZHOYZA3p5KgMjBcUwCmw4PfVVYiBGmbW1zMzOU4QCgtTvdAeRESEyNZyJbx+dDTjVv/9YFSjSScnfabsbPYMF+AbxsYS3F5TfwPZAacpMNfUBEAljK24mMJwlLIUClTAdfwok9FXWBTtc3Phzqv7c/RWa8KnrHZM8VltbRjC92AxGkEPRpSJInjJQPpIBJoZC6nn50M19dM5J/v6/lhRxgXXDX9Qp1POcmHh2sTEQbfbvVmrUCTbr4RPaeMe8Q0eTyI36VkrW50mftjrPWCyDn9oSUuTdj4Y/1Qpl7NdzkNC98iIqsIxHdQVFaU8eWW1U1guLy1lr3Acr3O7pXi227EhDLpcCZ8UL/kK8LIYjxtDIRhEP8xGIlI8bcAKvY3FGB/zYvf81pYUL/0PvGTKoTUvjzbgCx5ZWlJq3a5lQa1Ge3yTWnp64ASYqVcUoXn3Jtja2/EpRtHj89FF8Tb25ufDOwCo8/lSL0BF/eDPzcVXeA7WDAa6J9rES1VVdJqx41JHBwCE8BgA3JU9B+3AACziMwjv7MAaPQb/wgIAnP2rDpCWtpkncjm+Ro34bWgo3FkX0O6bnARARCT6hSR6YzazXa7DfLyigo7TNtObxNb/s/oB7V8JFvW/8IQAAAAldEVYdGRhdGU6Y3JlYXRlADIwMjAtMDItMDJUMTg6MTE6NTgrMDg6MDCoc6tpAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDIwLTAyLTAyVDE4OjExOjU4KzA4OjAw2S4T1QAAAGd0RVh0c3ZnOmJhc2UtdXJpAGZpbGU6Ly8vaG9tZS9hZG1pbi9pY29uLWZvbnQvdG1wL2ljb25fNWhyOG55Nmo1bWMvamluZ2RpYW5hbmxpX2tvbmd3dWppYW94aW5nX3Nob3VjYW5nLnN2Z4/vilwAAAAASUVORK5CYII='"
-                       alt="" ng-show="bm.urls">
-                </div>
-                <div class="bookmark-official">{{bm.urls}}&nbsp;·&nbsp;</div>
-                <div class="bookmark-time">{{bm.createTime|changeTime}}</div>
-                <div class="bookmark-time" v-for="t in bm.sqTags">
-                  <el-tag class="bookmark-list-tag" data-bookmarkId="t.bookmarkId" data-tagId="t.tagId" size="mini">
-                    {{t.name}}
-                  </el-tag>
-
-                </div>
-
-
-              </div>
+            <div style="color: #000000" class="nullbookmark-text">
+              此目录还未添加书签
             </div>
           </div>
-        </el-col>
 
-      </el-row>
-      <p v-if="listloading" class="listhint"><i class="el-icon-loading"></i>加载中...</p>
-      <p v-if="listnoMore" class="listhint">没有更多了</p>
-    </div>
-
-
-    <!-- 添加或修改书签管理对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-
-        <el-form-item label="书签标题" prop="title">
-          <el-input v-model="form.title" placeholder="请输入书签标题"/>
-        </el-form-item>
-        <el-form-item label="书签地址" prop="url">
-          <el-input v-model="form.url" placeholder="请输入书签地址"/>
-        </el-form-item>
-        <el-form-item label="书签描述" prop="description">
-          <el-input v-model="form.description" type="textarea" placeholder="请输入书签描述" run dev
-                    :autosize="{minRows: 3, maxRows:4}" :style="{width: '100%'}"></el-input>
-        </el-form-item>
-        <el-form-item label="所属目录" prop="menuId">
-          <el-input v-model="form.menuId" placeholder="请选择上级目录"/>
-        </el-form-item>
-
-
-        <el-form-item label="书签标签:" prop="label">
-          <el-tag
-            class="bookmarktag"
-            v-for="tag in form.sqTags"
-            :key="tag.tagId"
-            closable
-            type="success"
-            :disable-transitions="false"
-            @close="taghandleClose(tag.tagId)"
-            v-if="tag.name!='TAGDELETE'"
-          >
-            {{tag.name}}
-          </el-tag>
-          <el-input
-            class="input-new-tag"
-            v-if="inputVisible"
-            v-model="inputValue"
-            ref="saveTagInput"
-            size="small"
-            @keyup.enter.native="handleInputConfirm"
-            @blur="handleInputConfirm"
-          >
-          </el-input>
-          <el-button v-else class="button-new-tag" size="small" @click="showInput">+ 新增标签</el-button>
-
-        </el-form-item>
-
-        <!--        0公开显示 1隐藏显示 2好友显示-->
-        <el-form-item label="选择状态" prop="start">
-          <el-radio-group v-model="form.start" size="medium">
-            <el-radio v-for="(item, index) in bookmarkstatus" :key="index" :label="item.value"
-                      :disabled="item.disabled">{{item.name}}
-            </el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <!--           1.未读稍后再看 2 已读 2.續看-->
-        <el-form-item label="选择类型" prop="type">
-          <el-radio-group v-model="form.type" size="medium">
-            <el-radio v-for="(item, index) in bookmarktype" :key="index" :label="item.value"
-                      :disabled="item.disabled">{{item.name}}
-            </el-radio>
-          </el-radio-group>
-        </el-form-item>
+          <!--    默认展示-->
+<!--          <div class="bookmarklist" :style="datalist" infinite-scroll-distance="10" v-loading="loading"-->
+<!--               v-if="showbookmark"-->
+<!--               v-infinite-scroll="load"-->
+<!--               infinite-scroll-disabled="disabled" style="overflow:auto;" infinite-scroll-immediate="false">-->
+<!--            <el-row>-->
+<!--              &lt;!&ndash;        <hr class="bookamrk-hr" v-if="!queryParams.sousuo!=''"/>&ndash;&gt;-->
+<!--              <el-col :span="24" v-for="bm in bookmarkList">-->
+<!--                <div class="editBookamrk ">-->
+<!--                  <div class="editlist">-->
+<!--                    <div>-->
+<!--                      <el-button plain size="small" @click="handleUpdate(bm.bookmarkId)">修改</el-button>-->
+<!--                    </div>-->
+<!--                    <div>-->
+<!--                      <el-button plain size="small" @click="handleDelete(bm.bookmarkId)">删除</el-button>-->
+<!--                    </div>-->
+<!--                    <div>-->
+<!--                      <el-button plain size="small">笔记</el-button>-->
+<!--                    </div>-->
+<!--                    <div>-->
+<!--                      <el-button plain size="small">分享</el-button>-->
+<!--                    </div>-->
+<!--                  </div>-->
+<!--                </div>-->
 
 
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
-        <el-button @click="cancel">取 消</el-button>
-      </div>
-    </el-dialog>
+<!--                <div class="bookmark " :data-id="bm.id" @click="windowurl(bm.url,bm.bookmarkId)">-->
+<!--                  <p class="bookmark-title" v-if="highlighted"><span v-html="highLight(bm.title,queryParams.sousuo)"/>-->
+<!--                  </p>-->
+<!--                  <p class="bookmark-title" v-if="!highlighted">{{bm.title}}</p>-->
+<!--                  <div class="">-->
+<!--                    <p class="description" v-if="highlighted"><span-->
+<!--                      v-html="highLight(bm.description,queryParams.sousuo)"/>-->
+<!--                    </p>-->
+<!--                    <p class="description" v-if="!highlighted">{{bm.description}}</p>-->
+<!--                  </div>-->
+<!--                  <div class="info-wrap">-->
+<!--                    <div class="info">-->
+<!--                      <div class="bookmark-icon">-->
+<!--                        &lt;!&ndash;                    <img :err-src='bm.icon'   :ng-src="bm.icon"  :src="bm.icon"  />&ndash;&gt;-->
+<!--                        <img :ng-src="'https://favicon.lucq.fun/?url=http://'+bm.urls"-->
+<!--                             :src="'https://favicon.lucq.fun/?url=http://'+bm.urls"-->
+<!--                             onerror="this.src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQEAYAAABPYyMiAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAZiS0dEAAAAAAAA+UO7fwAAAAlwSFlzAAAASAAAAEgARslrPgAAAmVJREFUSMftlG1IU2EUx8+5jRHzg+5OiD64WTBBjSY5ZybUJMaMiIUICUKFIGmoIIogYWKFBmtDxN1tBKIWvlS6SR+iLFDBXqSMgmzbvQ7fkAjcINmQ5u7pQwyCiOvWx/p/fPj9/5znnPM8AP+VolRTjjHhTlmZipzEk9GYao4sVaMYxXp62NgIdpLBCuLP05mZZHOYZA3p5KgMjBcUwCmw4PfVVYiBGmbW1zMzOU4QCgtTvdAeRESEyNZyJbx+dDTjVv/9YFSjSScnfabsbPYMF+AbxsYS3F5TfwPZAacpMNfUBEAljK24mMJwlLIUClTAdfwok9FXWBTtc3Phzqv7c/RWa8KnrHZM8VltbRjC92AxGkEPRpSJInjJQPpIBJoZC6nn50M19dM5J/v6/lhRxgXXDX9Qp1POcmHh2sTEQbfbvVmrUCTbr4RPaeMe8Q0eTyI36VkrW50mftjrPWCyDn9oSUuTdj4Y/1Qpl7NdzkNC98iIqsIxHdQVFaU8eWW1U1guLy1lr3Acr3O7pXi227EhDLpcCZ8UL/kK8LIYjxtDIRhEP8xGIlI8bcAKvY3FGB/zYvf81pYUL/0PvGTKoTUvjzbgCx5ZWlJq3a5lQa1Ge3yTWnp64ASYqVcUoXn3Jtja2/EpRtHj89FF8Tb25ufDOwCo8/lSL0BF/eDPzcVXeA7WDAa6J9rES1VVdJqx41JHBwCE8BgA3JU9B+3AACziMwjv7MAaPQb/wgIAnP2rDpCWtpkncjm+Ro34bWgo3FkX0O6bnARARCT6hSR6YzazXa7DfLyigo7TNtObxNb/s/oB7V8JFvW/8IQAAAAldEVYdGRhdGU6Y3JlYXRlADIwMjAtMDItMDJUMTg6MTE6NTgrMDg6MDCoc6tpAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDIwLTAyLTAyVDE4OjExOjU4KzA4OjAw2S4T1QAAAGd0RVh0c3ZnOmJhc2UtdXJpAGZpbGU6Ly8vaG9tZS9hZG1pbi9pY29uLWZvbnQvdG1wL2ljb25fNWhyOG55Nmo1bWMvamluZ2RpYW5hbmxpX2tvbmd3dWppYW94aW5nX3Nob3VjYW5nLnN2Z4/vilwAAAAASUVORK5CYII='"-->
+<!--                             alt="" ng-show="bm.urls">-->
+<!--                      </div>-->
+<!--                      <div class="bookmark-official">{{bm.urls}}&nbsp;·&nbsp;</div>-->
+<!--                      <div class="bookmark-time">{{bm.createTime|changeTime}}</div>-->
+<!--                      <div class="bookmark-time" v-for="t in bm.sqTags">-->
+<!--                        <el-tag class="bookmark-list-tag" data-bookmarkId="t.bookmarkId" data-tagId="t.tagId"-->
+<!--                                size="mini">-->
+<!--                          {{t.name}}-->
+<!--                        </el-tag>-->
+
+<!--                      </div>-->
+
+
+<!--                    </div>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--              </el-col>-->
+
+<!--            </el-row>-->
+<!--            <p v-if="listloading" class="listhint"><i class="el-icon-loading"></i>加载中...</p>-->
+<!--            <p v-if="listnoMore" class="listhint">没有更多了</p>-->
+<!--          </div>-->
+<!--              三窗口展示-->
+        <div class="bookmarklist" :style="datalist"  infinite-scroll-distance="10" v-loading="loading" v-if="showbookmark"
+             v-infinite-scroll="load"
+             infinite-scroll-disabled="disabled" style="overflow:auto;" infinite-scroll-immediate="false">
+    <BookmarkOne @on-windowurl="windowurl"  :listloading="listloading" :loading="loading" :bookmarkList="bookmarkList"></BookmarkOne>
+
+          <p v-if="listloading" class="listhint"><i class="el-icon-loading"></i>加载中...</p>
+          <p v-if="listnoMore" class="listhint">没有更多了</p>
+        </div>
+
+
+         <!-- 添加或修改书签管理对话框 -->
+          <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+            <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+
+              <el-form-item label="书签标题" prop="title">
+                <el-input v-model="form.title" placeholder="请输入书签标题"/>
+              </el-form-item>
+              <el-form-item label="书签地址" prop="url">
+                <el-input v-model="form.url" placeholder="请输入书签地址"/>
+              </el-form-item>
+              <el-form-item label="书签描述" prop="description">
+                <el-input v-model="form.description" type="textarea" placeholder="请输入书签描述" run dev
+                          :autosize="{minRows: 3, maxRows:4}" :style="{width: '100%'}"></el-input>
+              </el-form-item>
+              <el-form-item prop="menuId">
+                <div class="labelname">请选择上级目录</div>
+                <treeselect class="menutreeselect" v-model="form.parentId" :options="menuOptions"
+                            :normalizer="normalizer"/>
+              </el-form-item>
+
+              <el-form-item label="书签标签:" prop="label">
+                <el-tag
+                  class="bookmarktag"
+                  v-for="tag in form.sqTags"
+                  :key="tag.tagId"
+                  closable
+                  type="success"
+                  :disable-transitions="false"
+                  @close="taghandleClose(tag.tagId)"
+                  v-if="tag.name!='TAGDELETE'"
+                >
+                  {{tag.name}}
+                </el-tag>
+                <el-input
+                  class="input-new-tag"
+                  v-if="inputVisible"
+                  v-model="inputValue"
+                  ref="saveTagInput"
+                  size="small"
+                  @keyup.enter.native="handleInputConfirm"
+                  @blur="handleInputConfirm"
+                >
+                </el-input>
+                <el-button v-else class="button-new-tag" size="small" @click="showInput">+ 新增标签</el-button>
+
+              </el-form-item>
+
+              <!--        0公开显示 1隐藏显示 2好友显示-->
+              <el-form-item label="选择状态" prop="start">
+                <el-radio-group v-model="form.start" size="medium">
+                  <el-radio v-for="(item, index) in bookmarkstatus" :key="index" :label="item.value"
+                            :disabled="item.disabled">{{item.name}}
+                  </el-radio>
+                </el-radio-group>
+              </el-form-item>
+              <!--           1.未读稍后再看 2 已读 2.續看-->
+              <el-form-item label="选择类型" prop="type">
+                <el-radio-group v-model="form.type" size="medium">
+                  <el-radio v-for="(item, index) in bookmarktype" :key="index" :label="item.value"
+                            :disabled="item.disabled">{{item.name}}
+                  </el-radio>
+                </el-radio-group>
+              </el-form-item>
+
+
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+              <el-button type="primary" @click="submitForm">确 定</el-button>
+              <el-button @click="cancel">取 消</el-button>
+            </div>
+          </el-dialog>
+        </el-aside>
+
+        <el-main class="isBookmarkMain">
+                  <el-header class="mianUrl-top" style="height: 50px">
+                    <div class="mianUrl-top-left">
+                      <i class="el-icon-folder-delete"></i>
+                      <i class="el-icon-rank"></i>
+                    </div>
+                    <div class="mianUrl-top-right">
+                      <i class="el-icon-edit-outline" @click="windowurlOpen"></i>
+                      <i class="el-icon-position"></i>
+                    </div>
+                  </el-header>
+                  <div class="mianUrl-botoom"  v-loading="iframeLoading"  >
+<!--                    webkitallowfullscreen="true" mozallowfullscreen="true" allowfullscreen="true"-->
+                    <iframe sandbox="allow-forms allow-scripts allow-popups" class="openurl" :src="gourl"  target="_self"  tabindex="-1"  />
+                  </div>
+        </el-main>
+      </el-container>
+
+
+
 
   </div>
 </template>
 
 <script>
-
-
+  import {listMenuByUserId} from "@/api/bookmark/menu";
+  import Treeselect from "@riophae/vue-treeselect";
+  import BookmarkOne from "../../../components/BookmarkList";
+  import "@riophae/vue-treeselect/dist/vue-treeselect.css";
   import {
     selectBymenuIdUserID,
     selectBydelete,
@@ -226,11 +322,13 @@
 
   export default {
     components: {
-      format
+      format, Treeselect,BookmarkOne
     },
 
     data: function () {
       return {
+        sousuo: '',
+        drawer: false,
         // 遮罩层
         loading: true,
         // 弹出层标题
@@ -241,6 +339,7 @@
         showbookmark: true,
         showimg: false,
         loading: false,
+        iframeLoading:false,
         queryParams: {
           pageNum: 1,
           pageSize: 15,
@@ -264,6 +363,8 @@
         tagcount: 0, //标签虚拟ID
         bookmarkList: [],
         urltext: '?from=yunshuqian.com',//网址域名起推广作用
+        // 书签菜单树选项
+        menuOptions: [],
         // 表单参数
         form: {},
         // 表单校验
@@ -293,6 +394,10 @@
         total: 0,//总条数
         noMore: false,//是否可以滚动瀑布流
         highlighted: true,//搜索是否高亮
+        //点击的网址
+        gourl:'https://element.eleme.cn/#/zh-CN/theme',
+
+
 
       }
     },
@@ -376,13 +481,13 @@
       /**滚动监控**/
       load() {
         console.log("滚动开始")
-        var that=this;
+        var that = this;
         //判断是否加载了所有数据
-        var i=that.queryParams.pageNum+1;
-        that.$set(that.queryParams,'pageNum',i)
-        console.log("this.queryParams.pageNum:"+that.queryParams.pageNum)
+        var i = that.queryParams.pageNum + 1;
+        that.$set(that.queryParams, 'pageNum', i)
+        console.log("this.queryParams.pageNum:" + that.queryParams.pageNum)
         var listcount = Math.ceil(that.total / 15);
-        console.log("该目录共有页数:" +listcount)
+        console.log("该目录共有页数:" + listcount)
 
         if (i > listcount) {
           //加载完毕了 禁止滚动
@@ -402,7 +507,7 @@
 
                 this.total = response.total;
                 this.listloading = false
-                console.log("请求完毕"+that.queryParams.pageNum)
+                console.log("请求完毕" + that.queryParams.pageNum)
               } else {
                 //出错了
                 //加载完毕了 禁止滚动
@@ -432,7 +537,17 @@
           }
         }
       },
-
+      /** 转换书签菜单数据结构 */
+      normalizer(node) {
+        if (node.children && !node.children.length) {
+          delete node.children;
+        }
+        return {
+          id: node.menuId,
+          label: node.menuName,
+          children: node.children
+        };
+      },
 
       /**书签编辑设置的 标签开始**/
       taghandleClose(tag) {
@@ -552,7 +667,7 @@
           idelete: undefined,
           start: undefined,
           createTime: undefined,
-          sqTags: undefined,
+          sqTags: [],
           sort: undefined,
         };
         this.resetForm("form");
@@ -600,15 +715,27 @@
             this.bookmarkList = response.rows;
             this.total = response.total;
             this.loading = false;
+            if (this.total>0){
+              this.gourl=this.bookmarkList[0].url;
+            }
           } else {
             this.showbookmark = false;
             this.showimg = true;
           }
         });
       },
-      windowurl(url, bookmarkId) {
-        // window.open(url+this.urltext);
-        window.open(url);
+      /**网站内打开*/
+      windowurl(url,bookmarkId) {
+        var that=this;
+        that.iframeLoading=true;
+        this.gourl=url;
+        setTimeout(function(){
+          that.iframeLoading=false;
+        },1000);
+      },
+      /**新窗口打开*/
+      windowurlOpen() {
+       window.open(this.gourl);
       },
 
       /**搜索高亮 开始**/
@@ -662,7 +789,49 @@
         return htmlStr;
       },
       /**搜索高亮 结束**/
+      /**搜索功能**/
+      gosousuo() {
+        var that = this;
+        // that.$router.push({
+        //   path: "/content",
+        //   query: {
+        //     sousuo: this.sousuo,
+        //     t:Date.now(),
+        //   }
+        // })
+      },
 
+      /** 查询部门下拉树结构 */
+      getTreeselect() {
+        if (this.zNodes != null && this.zNodes.length != 0) {
+          this.menuOptions = [];
+          const data = {menuId: 0, menuName: '顶级菜单', children: []};
+          data.children = this.handleTree(this.zNodes, "menuId", "parentId");
+          this.menuOptions.push(data);
+          return;
+        }
+
+        listMenuByUserId().then(response => {
+          this.menuOptions = [];
+          const data = {menuId: 0, menuName: '顶级菜单', children: []};
+          data.children = this.handleTree(response.data, "menuId", "parentId");
+          this.menuOptions.push(data);
+        });
+      },
+
+
+      /** 新增书签Url操作 */
+      addbookmarkurl: function () {
+        this.reset();
+        this.getTreeselect();
+        this.open = true;
+
+        // getMenu(e.getAttribute("data-menuId")).then(response => {
+        //   this.form = response.data;
+        //   this.open = true;
+        //   this.title = "修改书签菜单";
+        // });
+      },
     },
 
 
@@ -747,7 +916,7 @@
     height: 70px;
     position: absolute;
     background-color: #acd7ff;
-    /*right: 0;编辑*/
+    right: 0;
     display: none;
   }
 
@@ -764,11 +933,6 @@
     float: left;
   }
 
-  .bookmark-hr {
-    background-color: #fff !important;
-    margin-top: 2px !important;
-    margin-bottom: 7px !important;
-  }
 
   .editlist div {
     margin-left: 10px;
@@ -795,13 +959,17 @@
   .bookmark-icon {
     float: left;
     margin-right: 5px;
-
   }
 
   .bookmark-icon img {
     width: 15px;
     height: 15px;
 
+  }
+
+  .filter-item:hover {
+    background-color: #E5E5E5 !important;
+    color: #000 !important;
   }
 
   .filter-tbar {
@@ -828,10 +996,11 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-right: 13px;
   }
 
   .filter-content {
-    margin-left: 18px;
+    margin-left: 13px;
 
   }
 
@@ -892,9 +1061,13 @@
   .listhint {
     width: 100%;
     text-align: center;
+    height: 20px;
+
     color: #808080;
     /*background: #dcdfe682;*/
     font-weight: 600;
+    padding: 0;
+    margin: 0;
   }
 
   .bookmark-title:hover {
@@ -928,6 +1101,8 @@
     margin-bottom: 2px;
   }
 
+
+
   .description {
     /*设置文本框大小*/
     white-space: nowrap;
@@ -942,9 +1117,7 @@
 
   .bookmarklist {
     width: 100%;
-    height: 600px;
-    /*background-color: #fff;*/
-    float: left
+
   }
 
 
@@ -972,8 +1145,8 @@
 
   ::-webkit-scrollbar-thumb {
     /*设置为透明 隐藏掉*/
-    /*background-color: #606d71;*/
-    background-color: transparent;
+    background-color: #606d71;
+    /*background-color: transparent;*/
     background-clip: padding-box;
     min-height: 28px;
     -webkit-border-radius: 2em;
@@ -989,8 +1162,6 @@
   }
 
   /*滚动条美化结束*/
-
-
 
 
   .sousuoContent {
@@ -1013,7 +1184,192 @@
     /*border-bottom: 1px solid #D9D9D9;*/
   }
 
+  .bookmark2 {
+    height: 52px;
+    /*border-bottom: 1px solid #D9D9D9;*/
+    white-space: nowrap;
+   border-top:1px solid #D4D4D4 ;
+  }
 
+  .sousouright-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50px;
+    margin: 0 auto;
+
+  }
+
+  .sousouright-iconadd {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50px;
+  }
+
+  .sq-dropdown {
+    top: 33px !important;
+    box-shadow: 0 2px 15px 0 rgba(0, 0, 0, .2) !important;
+    font-weight: 800 !important;
+  }
+
+  .sq-dropdown div {
+    display: none !important;
+  }
+
+  .sousouleft-switch {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+    width: 30px;
+    height: 30px;
+
+  }
+
+  .sousouleft-switch i {
+    font-size: 30px !important;
+    opacity: 0.8;
+
+
+  }
+
+  .sousou-leftico {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 3px;
+    border: 1px solid #e6e6e6;
+    margin-right: 10px;
+
+
+  }
+
+  .sousou-leftico img {
+
+  }
+
+  .header-sousou {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 50px;
+    padding-left: 0px;
+
+  }
+
+
+  .header-sousou input {
+
+    margin-top: 9px;
+    border: 0px;
+    background-color: #f2f2f2;
+    border-radius: 0 !important;
+    /*border:  1px solid #f2f2f2;*/
+
+
+  }
+
+  .header-sousou input:focus {
+    background-color: #FFFFFF !important;
+    border: 1px solid #C0C4CC;
+  }
+
+
+  .sousou-input {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .sousou-input i {
+    font-size: 15px;
+  }
+
+  .header-list {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 35px;
+  }
+
+  .header-list:hover {
+    color: #7a6df0;
+
+  }
+
+  .header-list i {
+    font-size: 25px;
+    margin-right: 2px;
+  }
+
+  .sousou-left {
+    /*width: 50px!important;*/
+    /*height: 50px;*/
+    /*margin-top: 12px!important;*/
+    /*background-color: red;*/
+  }
+  .isBookmarkAside{
+    padding: 0px;
+    background-color: #ffffff;
+    width: 400px!important;
+    box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+  }
+  .isBookmarkMain{
+    padding: 0px;
+  }
+
+  .mianUrl{
+    padding: 0px;
+    color: #8F8F8F;
+  }
+  .mianUrl-top{
+    display: flex;
+    padding: 0px!important;
+  }
+  .mianUrl-top div{
+    width: 50%;
+    height: 50px;
+    background-color: #FFFFFF;
+    font-size: 22px;
+    color: #414141;
+    padding-top: 19px;
+  }
+  .mianUrl i{
+    display: block;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    margin-top: 15px;
+    border-radius: 2px;
+  }
+
+  .mianUrl-top-left i{
+    float: left;
+    margin-left: 15px;
+  }
+  .mianUrl i:hover{
+    background-color: #F2F2F2;
+  }
+  .mianUrl-top-right i{
+    float: right;
+    margin-right: 15px;
+  }
+
+  .mianUrl-botoom{
+    height: 900px;
+
+  }
+  .openurl{
+    background-color: #ffffff;
+    border: 0px;
+    width: 100%;
+    height: 100%;
+  }
 
 
 </style>

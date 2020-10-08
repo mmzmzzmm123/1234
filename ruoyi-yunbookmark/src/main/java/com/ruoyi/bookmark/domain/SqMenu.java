@@ -19,9 +19,9 @@ import java.util.Date;
 public class SqMenu
 {
     private static final long serialVersionUID = 1L;
-    /** ID */
+    /** ID 返回自增长主键 */
     @Id
-    @GeneratedValue(generator = "JDBC")//返回自增长主键
+    @GeneratedValue(generator = "JDBC")
     @Column(name = "menu_id")
     private Long menuId;
 

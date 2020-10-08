@@ -8,7 +8,7 @@ import java.util.List;
 import com.ruoyi.bookmark.domain.SqBookmark;
 import com.ruoyi.bookmark.service.ISqBookmarkService;
 import com.ruoyi.common.core.domain.entity.SysUser;
-import com.ruoyi.common.utils.BookmarkHtml.ImportHtml;
+import com.ruoyi.common.utils.bookmarkhtml.ImportHtml;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.access.prepost.PreAuthorize;

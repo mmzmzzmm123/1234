@@ -186,10 +186,10 @@ public class SqMenuController extends BaseController
         }
     }
 
-//    /**
-//     * 批量更新书签的数量
-//     */
-//
+    /**
+     * 批量更新书签的数量
+     */
+
     @RequestMapping("/bookmarkcount/{menuId}")
     public AjaxResult bookmarkcount(@PathVariable Long menuId)
     {

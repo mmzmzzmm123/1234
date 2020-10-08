@@ -1,22 +1,17 @@
 <template>
   <div class="home">
 
-    <div CLASS="title">
+    <div CLASS="nqtitle">
       <div class="mdui-textfield mdui-textfield-floating-label">
         <label class="mdui-textfield-label">文章标题</label>
         <input class="mdui-textfield-input" type="text" required/>
         <div class="mdui-textfield-error">文章标题不能为空</div>
       </div>
-      <div class="mdui-textfield mdui-textfield-floating-label">
-        <label class="mdui-textfield-label">文章描述</label>
-        <input class="mdui-textfield-input" type="text" required/>
-        <div class="mdui-textfield-error">文章描述不能为空</div>
-      </div>
     </div>
-    <div class="mian" v-html="msg">
+<!--    <div class="mian" v-html="msg">-->
 
 
-    </div>
+<!--    </div>-->
 
     <div>
     <tinymce
@@ -26,8 +21,9 @@
       @onClick="onClick"
     />
     </div>
-    <div STYLE="margin-top: 10px;">
+    <div STYLE="margin-top: 10px;margin-bottom: 10px">
       <button class="mdui-btn mdui-btn-raised mdui-color-indigo-300" @click="clear">清空内容</button>
+      <button class="mdui-btn mdui-btn-raised mdui-color-indigo-300" @click="clear">发布</button>
       <button class="mdui-btn mdui-ripple mdui-btn-raised " @click="disabled = true">禁用</button>
       <button class="mdui-btn mdui-ripple mdui-btn-raised " @click="disabled = false">启用</button>
     </div>
@@ -78,7 +74,7 @@
     }
   }
 </script>
-<style>
+<style scoped>
   .title{
     display: flex;
   }
@@ -90,7 +86,8 @@
 
   }
   .mian{
-    min-height: 100px;
+    height: 300px;
+    overflow-y: auto;
     width: 100%;
     border: 1px solid #cacaca;
     background-color: #ebebeb;

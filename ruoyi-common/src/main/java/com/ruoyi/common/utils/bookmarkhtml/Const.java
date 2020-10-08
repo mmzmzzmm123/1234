@@ -1,4 +1,4 @@
-package com.ruoyi.common.utils.BookmarkHtml;
+package com.ruoyi.common.utils.bookmarkhtml;
 
 import org.springframework.stereotype.Component;
 

@@ -9,7 +9,7 @@ import com.ruoyi.bookmark.service.ISqMenuService;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.entity.SysUser;
-import com.ruoyi.common.utils.BookmarkHtml.ImportHtml;
+import com.ruoyi.common.utils.bookmarkhtml.ImportHtml;
 import com.ruoyi.common.utils.StringUtils;
 import org.jsoup.HttpStatusException;
 import org.slf4j.Logger;
@@ -22,17 +22,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import javax.net.ssl.SSLHandshakeException;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 
 /**
- * @Auther: Wang
+ * @auther: Wang
  * @Date:
  * 功能描述: 导入书签 导出书签
  */
