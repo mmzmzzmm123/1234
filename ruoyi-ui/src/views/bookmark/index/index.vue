@@ -1436,12 +1436,12 @@
     padding: 0;
     margin-bottom: 0;
     /*background:url('https://ftp.bmp.ovh/imgs/2020/08/4ac1d6b4f41049ef.jpg') no-repeat;*/
-    /*background-color: #F6F6F6;*/
+    background-color: #F6F5F4;
     /*background: url("https://s1.ax1x.com/2020/08/16/dEcqVU.jpg") no-repeat;*/
 
 
     /*background: url("https://s1.ax1x.com/2020/10/03/03WM4K.md.jpg") no-repeat;*/
-    background: url("https://s1.ax1x.com/2020/10/03/03fri6.png") no-repeat;
+    /*background: url("https://s1.ax1x.com/2020/10/03/03fri6.png") no-repeat;*/
 
 
     /*background: url("https://s1.ax1x.com/2020/10/03/03RCSe.jpg") no-repeat;*/

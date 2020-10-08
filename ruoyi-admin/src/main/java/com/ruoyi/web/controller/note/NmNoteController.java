@@ -69,8 +69,8 @@ public class NmNoteController extends BaseController
      *用户 获取便签详细信息 然后修改
      */
 
-    @GetMapping(value = "/user/{noteId}")
-    public AjaxResult userGetInfo(@PathVariable("noteId") Long noteId)
+    @GetMapping(value = "/userGetNoteInfo/{noteId}")
+    public AjaxResult userGetNoteInfo(@PathVariable("noteId") Long noteId)
     {
         SysUser sysUser=getAuthUser();
         return AjaxResult.success(nmNoteService.selectNmNoteuserById(noteId,sysUser.getUserId()));

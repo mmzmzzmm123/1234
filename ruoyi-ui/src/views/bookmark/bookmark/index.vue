@@ -290,6 +290,7 @@
                       <i class="el-icon-position"></i>
                     </div>
                   </el-header>
+                  <div class="main-url-title">部分网站不允许内嵌套打开,请在设置中选择自己喜欢的打开方式!</div>
                   <div class="mianUrl-botoom"  v-loading="iframeLoading"  >
 <!--                    webkitallowfullscreen="true" mozallowfullscreen="true" allowfullscreen="true"-->
                     <iframe sandbox="allow-forms allow-scripts allow-popups" class="openurl" :src="gourl"  target="_self"  tabindex="-1"  />
@@ -318,6 +319,10 @@
     updateBookmark,
     exportBookmark
   } from "@/api/bookmark/bookmark";
+  import {
+    selectBymenuNote,
+    userGetNoteInfo,
+  } from "@/api/note/note";
   import {format} from 'timeago.js';
 
   export default {
@@ -396,9 +401,26 @@
         highlighted: true,//搜索是否高亮
         //点击的网址
         gourl:'https://element.eleme.cn/#/zh-CN/theme',
-
-
-
+        //便签系统开始
+        noteParams: {
+          pageNum: 1,
+          pageSize: 15,
+          userId: undefined,
+          title: undefined,
+          description: undefined,
+          menuId: undefined,
+          background: undefined,
+          noteCount: undefined,
+          noteSort: undefined,
+          isState: undefined,
+          readProgress: undefined,
+          isStar: undefined,
+          isDelete: undefined,
+          topFlag: undefined,
+          isShare: undefined,
+          isEncryption: undefined,
+          createUserName: undefined
+        },
       }
     },
 
@@ -409,8 +431,6 @@
         let time = new Date(val); //先将接收到的json格式的日期数据转换成可用的js对象日期
         return format(time, 'zh_CN'); //转换成类似于几天前的格式
       },
-
-
     },
     mounted() {
 
@@ -426,8 +446,6 @@
     },
     created() {
       var that = this;
-
-
       var routedata = that.$route.query.menuId;
       var sousuo = that.$route.query.sousuo;
       if (routedata == undefined) {
@@ -530,12 +548,20 @@
 
       /**切换显示 全部 网页 文本 其他**/
       showopen(e) {
+        //1 是文本
+        if (e==1){
+          this.getNoteList();
+        }else if(e==0){
+          this.getList();
+        }
         document.getElementsByClassName("classification")[e].classList.add("classification-click");
         for (var i = 0; i < 4; i++) {
           if (i != e) {
             document.getElementsByClassName("classification")[i].classList.remove('classification-click');
           }
         }
+
+
       },
       /** 转换书签菜单数据结构 */
       normalizer(node) {
@@ -722,6 +748,16 @@
             this.showbookmark = false;
             this.showimg = true;
           }
+        });
+      },
+
+      /** 查询便签管理列表 */
+      getNoteList() {
+        this.loading = true;
+        selectBymenuNote(this.queryParams).then(response => {
+            this.bookmarkList = response.rows;
+            this.total = response.total;
+            this.loading = false;
         });
       },
       /**网站内打开*/
@@ -1369,6 +1405,11 @@
     border: 0px;
     width: 100%;
     height: 100%;
+  }
+  .main-url-title{
+    width: 100%;
+    color: #565656;
+    text-indent: 15px;
   }
 
 

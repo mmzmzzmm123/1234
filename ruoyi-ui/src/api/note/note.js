@@ -1,6 +1,31 @@
 import request from '@/utils/request'
 
 // 查询便签管理列表
+export function selectBymenuNote(query) {
+  return request({
+    url: '/note/note/selectBymenuNote',
+    method: 'get',
+    params: query
+  })
+}
+
+// 查询便签管理详细
+export function userGetNoteInfo(noteId) {
+  return request({
+    url: '/note/note/userGetNoteInfo' + noteId,
+    method: 'get'
+  })
+}
+
+
+
+
+
+
+
+
+
+// 查询便签管理列表
 export function listNote(query) {
   return request({
     url: '/note/note/list',
