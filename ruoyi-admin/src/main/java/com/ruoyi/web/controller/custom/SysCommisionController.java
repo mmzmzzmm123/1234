@@ -121,19 +121,21 @@ public class SysCommisionController extends BaseController {
             tmpQueryCom.setUserId(detail.getUserId());
             List<SysCommision> tmpComList = sysCommisionService.selectSysCommisionList(tmpQueryCom);
 
+            float dAmount = detail.getAmount().floatValue();
             for (int i = 0; i < tmpComList.size(); i++) {
                 SysCommision com = tmpComList.get(i);
-                float dAmount = detail.getAmount().floatValue();
                 float cAmount = com.getAmount().floatValue();
-                detail.setRate(com.getRate());
-                if (dAmount < cAmount && i == 0) {
+                if (dAmount <= cAmount && i == 0) {
                     // 第一条规则
+                    detail.setRate(com.getRate());
                     break;
-                } else if (i == tmpComList.size() - 1 && dAmount > cAmount) {
+                } else if (i == tmpComList.size() - 1 && dAmount >= cAmount) {
                     // 最后一条规则
+                    detail.setRate(com.getRate());
                     break;
-                } else if (dAmount >= cAmount && dAmount < tmpComList.get(i + 1).getAmount().floatValue()) {
+                } else if (cAmount < dAmount && dAmount <= tmpComList.get(i + 1).getAmount().floatValue()) {
                     // 中间规则
+                    detail.setRate(tmpComList.get(i + 1).getRate());
                     break;
                 }
             }

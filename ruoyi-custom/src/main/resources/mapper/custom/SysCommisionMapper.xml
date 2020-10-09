@@ -82,6 +82,12 @@
                 <property name="beginTime" value="#{beginTime}"/>
                 <property name="endTime" value="#{endTime}"/>
             </include>
+            UNION
+            <include refid="groupAmountVo">
+                <property name="column" value="planner_assis_id"/>
+                <property name="beginTime" value="#{beginTime}"/>
+                <property name="endTime" value="#{endTime}"/>
+            </include>
         ) AS a USING(user_id)
         <where>
             <if test="postId != null and postId != ''">and post_id = #{postId}</if>
