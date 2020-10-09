@@ -247,9 +247,9 @@
       this.getList();
       getOptions().then(response => {
         this.options = response.data.reduce((opts, cur) => {
-          if (cur.postCode.startsWith('planner')) {
-            return opts;
-          }
+          // if (cur.postCode.startsWith('planner')) {
+          //   return opts;
+          // }
           if (!opts[cur.postId]) {
             opts[cur.postId] = [];
           }
