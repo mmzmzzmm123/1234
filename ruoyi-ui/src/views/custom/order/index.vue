@@ -219,7 +219,7 @@
         </template>
       </el-table-column>
       <el-table-column label="电话" align="center" prop="phone" width="120"/>
-      <el-table-column label="服务月数" align="center" prop="serveMonth" width="80"/>
+      <el-table-column label="服务时长" align="center" prop="serveTime" width="80"/>
       <el-table-column label="收款方式" align="center" prop="payType" width="120"/>
       <el-table-column label="售前" align="center" prop="preSale" width="120"/>
       <el-table-column label="售后" align="center" prop="afterSale" width="120"/>
@@ -306,10 +306,10 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="服务月数" prop="serveMonth">
-              <el-select v-model="form.serveMonth" placeholder="请选服务月数">
+            <el-form-item label="服务时长" prop="serveTime">
+              <el-select v-model="form.serveTimeId" placeholder="请选服务时长">
                 <el-option
-                  v-for="dict in serveMonthOption"
+                  v-for="dict in serveTimeIdOption"
                   :key="dict.dictValue"
                   :label="dict.dictLabel"
                   :value="parseInt(dict.dictValue)"
@@ -490,8 +490,8 @@
         plannerIdOptions: [],
         // 账号
         accountIdOptions: [],
-        // 服务月数
-        serveMonthOption: [],
+        // 服务时长
+        serveTimeIdOption: [],
         // 审核状态
         reviewStatusOptions: [],
         // 策划助理字典
@@ -536,8 +536,8 @@
           accountId: [
             {required: true, message: "账号不能为空", trigger: "blur"}
           ],
-          serveMonth: [
-            {required: true, message: "服务月数不能为空", trigger: "blur"}
+          serveTimeId: [
+            {required: true, message: "服务时长不能为空", trigger: "blur"}
           ],
           // reviewStatus: [
           //   {required: true, message: "请对数据进行审核", trigger: "blur"}
@@ -597,8 +597,8 @@
       this.getDicts("cus_account").then(response => {
         this.accountIdOptions = response.data;
       });
-      this.getDicts("cus_serve_month").then(response => {
-        this.serveMonthOption = response.data;
+      this.getDicts("cus_serve_time").then(response => {
+        this.serveTimeIdOption = response.data;
       });
       this.getDicts("cus_review_status").then(response => {
         this.reviewStatusOptions = response.data;
@@ -661,7 +661,7 @@
       // 表单重置
       reset() {
         const defaultPayType = this.payTypeIdOptions.find(opt => opt.remark === 'default');
-        const defaultServeMonth = this.serveMonthOption.find(opt => opt.remark === 'default');
+        const defaultServeTime = this.serveTimeIdOption.find(opt => opt.remark === 'default');
         const defaultAccount = this.accountIdOptions.find(opt => opt.remark === 'default');
         const defaultOperator = this.operatorIdOptions.find(opt => opt.remark === 'default');
         const defaultOperatorAssis = this.operatorAssisIdOptions.find(opt => opt.remark === 'default');
@@ -693,7 +693,7 @@
           operatorAssisId: defaultOperatorAssis ? parseInt(defaultOperatorAssis.dictValue) : null,
           recommender: null,
           orderTime: null,
-          serveMonth: defaultServeMonth ? parseInt(defaultServeMonth.dictValue) : 1,
+          serveTimeId: defaultServeTime ? parseInt(defaultServeTime.dictValue) : null,
           reviewStatus: 'no'
         };
         this.resetForm("form");

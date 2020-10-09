@@ -158,8 +158,10 @@ public class SysOrder extends BaseEntity {
     /**
      * 服务月数
      */
-    @Excel(name = "服务月数")
-    private String serveMonth;
+    @Excel(name = "服务时长")
+    private String serveTime;
+
+    private Long serveTimeId;
 
     @Excel(name = "审核状态", dictType = "cus_review_status")
     private String reviewStatus;
@@ -170,6 +172,22 @@ public class SysOrder extends BaseEntity {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Excel(name = "成交日期", width = 30, dateFormat = "yyyy-MM-dd")
     private Date orderTime;
+
+    public String getServeTime() {
+        return serveTime;
+    }
+
+    public void setServeTimeId(Long serveTimeId) {
+        this.serveTimeId = serveTimeId;
+    }
+
+    public Long getServeTimeId() {
+        return serveTimeId;
+    }
+
+    public void setServeTime(String serveTime) {
+        this.serveTime = serveTime;
+    }
 
     public void setOperatorAssis(String operatorAssis) {
         this.operatorAssis = operatorAssis;
@@ -193,14 +211,6 @@ public class SysOrder extends BaseEntity {
 
     public void setReviewStatus(String reviewStatus) {
         this.reviewStatus = reviewStatus;
-    }
-
-    public void setServeMonth(String serveMonth) {
-        this.serveMonth = serveMonth;
-    }
-
-    public String getServeMonth() {
-        return serveMonth;
     }
 
     public void setOrderId(Long orderId) {
@@ -429,7 +439,8 @@ public class SysOrder extends BaseEntity {
                 .append("operatorAssis", getOperatorAssis())
                 .append("recommender", getRecommender())
                 .append("orderTime", getOrderTime())
-                .append("serveMonth", getServeMonth())
+                .append("serveTimeId", getServeTimeId())
+                .append("serveTime", getServeTime())
                 .append("reviewStatus", getReviewStatus())
                 .toString();
     }
