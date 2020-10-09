@@ -129,7 +129,7 @@ public class SysCommisionController extends BaseController {
                     // 第一条规则
                     detail.setRate(com.getRate());
                     break;
-                } else if (i == tmpComList.size() - 1 && dAmount >= cAmount) {
+                } else if (i == tmpComList.size() - 1 && dAmount > cAmount) {
                     // 最后一条规则
                     detail.setRate(com.getRate());
                     break;
