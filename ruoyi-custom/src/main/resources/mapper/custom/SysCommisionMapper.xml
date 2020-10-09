@@ -72,6 +72,12 @@
             </include>
             UNION
             <include refid="groupAmountVo">
+                <property name="column" value="operator_assis_id"/>
+                <property name="beginTime" value="#{beginTime}"/>
+                <property name="endTime" value="#{endTime}"/>
+            </include>
+            UNION
+            <include refid="groupAmountVo">
                 <property name="column" value="planner_id"/>
                 <property name="beginTime" value="#{beginTime}"/>
                 <property name="endTime" value="#{endTime}"/>
