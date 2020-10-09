@@ -16,7 +16,7 @@
     <sql id="selectCusUserPostVo">
         SELECT u.user_id, u.nick_name, p.post_id, p.post_code, p.post_name, u.remark
         FROM sys_user u, sys_post p, sys_user_post up
-        WHERE up.user_id = u.user_id AND p.post_id = up.post_id AND p.post_id > 4
+        WHERE up.user_id = u.user_id AND p.post_id = up.post_id AND p.post_id > 4 AND u.status = 0
     </sql>
 
     <select id="selectAllCusUserPost" parameterType="CusUserPost" resultMap="CusUserPostResult">
