@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.benyi.mapper.ByAssessmentcontentMapper">
+
+    <resultMap type="ByAssessmentcontent" id="ByAssessmentcontentResult">
+        <result property="id" column="id"/>
+        <result property="parentid" column="parentId"/>
+        <result property="name" column="name"/>
+        <result property="iselement" column="iselement"/>
+        <result property="scope" column="scope"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <sql id="selectByAssessmentcontentVo">
+        select id, parentId, name, iselement, scope, create_time from by_assessmentcontent
+    </sql>
+
+    <select id="selectByAssessmentcontentList" parameterType="ByAssessmentcontent"
+            resultMap="ByAssessmentcontentResult">
+        <include refid="selectByAssessmentcontentVo"/>
+        <where>
+            <if test="parentid != null ">and parentId = #{parentid}</if>
+            <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
+            <if test="iselement != null  and iselement != ''">and iselement = #{iselement}</if>
+            <if test="scope != null  and scope != ''">and scope = #{scope}</if>
+        </where>
+    </select>
+
+    <select id="selectByAssessmentcontentById" parameterType="Long" resultMap="ByAssessmentcontentResult">
+        <include refid="selectByAssessmentcontentVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertByAssessmentcontent" parameterType="ByAssessmentcontent" useGeneratedKeys="true" keyProperty="id">
+        insert into by_assessmentcontent
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="parentid != null ">parentId,</if>
+            <if test="name != null  and name != ''">name,</if>
+            <if test="iselement != null  and iselement != ''">iselement,</if>
+            <if test="scope != null  and scope != ''">scope,</if>
+            <if test="createTime != null ">create_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="parentid != null ">#{parentid},</if>
+            <if test="name != null  and name != ''">#{name},</if>
+            <if test="iselement != null  and iselement != ''">#{iselement},</if>
+            <if test="scope != null  and scope != ''">#{scope},</if>
+            <if test="createTime != null ">#{createTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateByAssessmentcontent" parameterType="ByAssessmentcontent">
+        update by_assessmentcontent
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="parentid != null ">parentId = #{parentid},</if>
+            <if test="name != null  and name != ''">name = #{name},</if>
+            <if test="iselement != null  and iselement != ''">iselement = #{iselement},</if>
+            <if test="scope != null  and scope != ''">scope = #{scope},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteByAssessmentcontentById" parameterType="Long">
+        delete from by_assessmentcontent where id = #{id}
+    </delete>
+
+    <delete id="deleteByAssessmentcontentByIds" parameterType="String">
+        delete from by_assessmentcontent where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

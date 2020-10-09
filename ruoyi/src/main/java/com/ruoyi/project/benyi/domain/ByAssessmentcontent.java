@@ -1,0 +1,97 @@
+package com.ruoyi.project.benyi.domain;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import com.ruoyi.framework.aspectj.lang.annotation.Excel;
+import com.ruoyi.framework.web.domain.BaseEntity;
+
+/**
+ * 评估内容对象 by_assessmentcontent
+ *
+ * @author tsbz
+ * @date 2020-10-09
+ */
+public class ByAssessmentcontent extends BaseEntity {
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * 编号
+     */
+    private Long id;
+
+    /**
+     * 父id
+     */
+    @Excel(name = "父id")
+    private Long parentid;
+
+    /**
+     * 名称
+     */
+    @Excel(name = "名称")
+    private String name;
+
+    /**
+     * 是否元素
+     */
+    @Excel(name = "是否元素")
+    private String iselement;
+
+    /**
+     * 元素才有适用范围;应该以幼儿的岁数为准
+     */
+    @Excel(name = "元素才有适用范围;应该以幼儿的岁数为准")
+    private String scope;
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setParentid(Long parentid) {
+        this.parentid = parentid;
+    }
+
+    public Long getParentid() {
+        return parentid;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setIselement(String iselement) {
+        this.iselement = iselement;
+    }
+
+    public String getIselement() {
+        return iselement;
+    }
+
+    public void setScope(String scope) {
+        this.scope = scope;
+    }
+
+    public String getScope() {
+        return scope;
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
+                .append("id", getId())
+                .append("parentid", getParentid())
+                .append("name", getName())
+                .append("iselement", getIselement())
+                .append("scope", getScope())
+                .append("createTime", getCreateTime())
+                .toString();
+    }
+}
