@@ -6,19 +6,10 @@
       :inline="true"
       label-width="68px"
     >
-      <el-form-item label="标题" prop="title">
+      <el-form-item label="评估标题" prop="title">
         <el-input
           v-model="queryParams.title"
           placeholder="请输入标题"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="内容" prop="content">
-        <el-input
-          v-model="queryParams.content"
-          placeholder="请输入内容"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
@@ -71,16 +62,6 @@
           >删除</el-button
         >
       </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['benyi:assessmentintroduce:export']"
-          >导出</el-button
-        >
-      </el-col>
     </el-row>
 
     <el-table
@@ -89,9 +70,9 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="编号" align="center" prop="id" />
+      <!-- <el-table-column label="编号" align="center" prop="id" /> -->
       <el-table-column label="标题" align="center" prop="title" />
-      <el-table-column label="内容" align="center" prop="content" />
+      <el-table-column label="内容" align="center" show-overflow-tooltip="true" prop="content" />
       <el-table-column
         label="操作"
         align="center"
@@ -127,13 +108,13 @@
     />
 
     <!-- 添加或修改评估体系介绍对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="800px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="标题" prop="title">
           <el-input v-model="form.title" placeholder="请输入标题" />
         </el-form-item>
         <el-form-item label="内容" prop="content">
-          <el-input v-model="form.content" placeholder="请输入内容" />
+          <el-input type="textarea" v-model="form.content" placeholder="请输入内容" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -151,7 +132,6 @@ import {
   delAssessmentintroduce,
   addAssessmentintroduce,
   updateAssessmentintroduce,
-  exportAssessmentintroduce,
 } from "@/api/benyi/assessmentintroduce";
 
 export default {
@@ -184,7 +164,10 @@ export default {
       // 表单参数
       form: {},
       // 表单校验
-      rules: {},
+      rules: {
+          title: [{ required: true, message: "名称不能为空", trigger: "blur" }],
+        content: [{ required: true, message: "内容不能为空", trigger: "blur" }],
+      },
     };
   },
   created() {
@@ -289,22 +272,6 @@ export default {
         .then(() => {
           this.getList();
           this.msgSuccess("删除成功");
-        })
-        .catch(function () {});
-    },
-    /** 导出按钮操作 */
-    handleExport() {
-      const queryParams = this.queryParams;
-      this.$confirm("是否确认导出所有评估体系介绍数据项?", "警告", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-      })
-        .then(function () {
-          return exportAssessmentintroduce(queryParams);
-        })
-        .then((response) => {
-          this.download(response.msg);
         })
         .catch(function () {});
     },

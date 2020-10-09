@@ -6,28 +6,10 @@
       :inline="true"
       label-width="68px"
     >
-      <el-form-item label="父id" prop="parentid">
+      <el-form-item label="名称" prop="name">
         <el-input
-          v-model="queryParams.parentid"
-          placeholder="请输入父id"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="是否元素" prop="iselement">
-        <el-input
-          v-model="queryParams.iselement"
-          placeholder="请输入是否元素"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="元素才有适用范围;应该以幼儿的岁数为准" prop="scope">
-        <el-input
-          v-model="queryParams.scope"
-          placeholder="请输入元素才有适用范围;应该以幼儿的岁数为准"
+          v-model="queryParams.name"
+          placeholder="请输入名称"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
@@ -80,16 +62,6 @@
           >删除</el-button
         >
       </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['benyi:assessmentcontent:export']"
-          >导出</el-button
-        >
-      </el-col>
     </el-row>
 
     <el-table
@@ -98,12 +70,12 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="编号" align="center" prop="id" />
-      <el-table-column label="父id" align="center" prop="parentid" />
+      <!-- <el-table-column label="编号" align="center" prop="id" /> -->
+      <!-- <el-table-column label="父id" align="center" prop="parentid" /> -->
       <el-table-column label="名称" align="center" prop="name" />
       <el-table-column label="是否元素" align="center" prop="iselement" />
       <el-table-column
-        label="元素才有适用范围;应该以幼儿的岁数为准"
+        label="适用范围"
         align="center"
         prop="scope"
       />
@@ -182,7 +154,6 @@ import {
   delAssessmentcontent,
   addAssessmentcontent,
   updateAssessmentcontent,
-  exportAssessmentcontent,
 } from "@/api/benyi/assessmentcontent";
 
 export default {
@@ -324,22 +295,6 @@ export default {
         .then(() => {
           this.getList();
           this.msgSuccess("删除成功");
-        })
-        .catch(function () {});
-    },
-    /** 导出按钮操作 */
-    handleExport() {
-      const queryParams = this.queryParams;
-      this.$confirm("是否确认导出所有评估内容数据项?", "警告", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-      })
-        .then(function () {
-          return exportAssessmentcontent(queryParams);
-        })
-        .then((response) => {
-          this.download(response.msg);
         })
         .catch(function () {});
     },
