@@ -79,7 +79,7 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="编号" align="center" prop="id" />
+      <!-- <el-table-column label="编号" align="center" prop="id" /> -->
       <el-table-column label="幼儿" align="center" prop="childid" :formatter="childFormat" />
       <el-table-column label="父亲姓名" align="center" prop="fathername" />
       <el-table-column label="父亲联系电话" align="center" prop="fphone" />

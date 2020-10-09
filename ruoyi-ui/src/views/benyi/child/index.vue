@@ -139,7 +139,7 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="编号" align="center" prop="id" />
+      <!-- <el-table-column label="编号" align="center" prop="id" /> -->
       <!-- <el-table-column label="幼儿园名称" align="center" prop="schoolid" /> -->
       <el-table-column
         label="班级名称"

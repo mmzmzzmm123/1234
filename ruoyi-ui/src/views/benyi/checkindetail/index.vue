@@ -90,9 +90,9 @@
 
     <el-table v-loading="loading" :data="detailList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" :selectable="checkSelectable" />
-      <el-table-column label="编号" align="center" prop="id" />
+      <!-- <el-table-column label="编号" align="center" prop="id" /> -->
       <!-- <el-table-column label="学校编码" align="center" prop="schoolid" /> -->
-      <el-table-column label="班级编码" align="center" prop="classid" :formatter="classFormat" />
+      <el-table-column label="班级名称" align="center" prop="classid" :formatter="classFormat" />
       <!-- <el-table-column label="幼儿编码" align="center" prop="childid" /> -->
       <el-table-column label="幼儿姓名" align="center" prop="childname" />
       <el-table-column label="出勤类型" align="center" prop="type" :formatter="typeFormat" />

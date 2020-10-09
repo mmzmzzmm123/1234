@@ -61,7 +61,7 @@
 
     <el-table v-loading="loading" :data="teacherList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="编号" align="center" prop="id" />
+      <!-- <el-table-column label="编号" align="center" prop="id" /> -->
       <el-table-column label="幼儿" align="center" prop="childid" :formatter="childFormat" />
       <el-table-column label="学年学期" align="center" prop="xnxq" :formatter="xnxqFormat" />
       <!-- <el-table-column label="观察记录" align="center" prop="gcjl" />

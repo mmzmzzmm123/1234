@@ -1,6 +1,11 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
+    <el-form
+      :model="queryParams"
+      ref="queryForm"
+      :inline="true"
+      label-width="68px"
+    >
       <el-form-item label="家长姓名" prop="jzxm">
         <el-input
           v-model="queryParams.jzxm"
@@ -29,21 +34,34 @@
         />
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+        <el-button
+          type="primary"
+          icon="el-icon-search"
+          size="mini"
+          @click="handleQuery"
+          >搜索</el-button
+        >
+        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+          >重置</el-button
+        >
       </el-form-item>
     </el-form>
 
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
-        <el-tooltip effect="dark" content="点我，可以复制内容发送给家长填报《入园体验申请》呦" placement="top-start">
+        <el-tooltip
+          effect="dark"
+          content="点我，可以复制内容发送给家长填报《入园体验申请》呦"
+          placement="top-start"
+        >
           <el-button
             type="primary"
             icon="el-icon-plus"
             size="mini"
-            @click="copy($event,inviteCode)"
+            @click="copy($event, inviteCode)"
             v-hasPermi="['benyi:experience:add']"
-          >一键复制</el-button>
+            >一键复制</el-button
+          >
         </el-tooltip>
       </el-col>
       <el-col :span="1.5">
@@ -54,7 +72,8 @@
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['benyi:experience:edit']"
-        >回复</el-button>
+          >回复</el-button
+        >
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -64,30 +83,64 @@
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['benyi:experience:remove']"
-        >删除</el-button>
+          >删除</el-button
+        >
       </el-col>
     </el-row>
 
-    <el-table v-loading="loading" :data="experienceList" @selection-change="handleSelectionChange">
+    <el-table
+      v-loading="loading"
+      :data="experienceList"
+      @selection-change="handleSelectionChange"
+    >
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="编号" align="center" prop="id" />
-      <el-table-column label="家长姓名" align="center" prop="jzxm" />
+      <!-- <el-table-column label="编号" align="center" prop="id" /> -->
       <el-table-column label="幼儿姓名" align="center" prop="yexm" />
-      <el-table-column label="幼儿出生日期" align="center" prop="csrq" width="180">
+      <el-table-column label="家长姓名" align="center" prop="jzxm" />
+      <el-table-column
+        label="幼儿出生日期"
+        align="center"
+        prop="csrq"
+        width="180"
+      >
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.csrq, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.csrq, "{y}-{m}-{d}") }}</span>
         </template>
       </el-table-column>
       <el-table-column label="联系方式" align="center" prop="lxfs" />
-      <el-table-column label="申请体验时间" align="center" prop="sqtysj" width="180">
+      <el-table-column
+        label="申请体验时间"
+        align="center"
+        prop="sqtysj"
+        width="180"
+      >
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.sqtysj, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.sqtysj, "{y}-{m}-{d}") }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="上午或下午" align="center" prop="swxw" :formatter="swxwFormat" />
-      <el-table-column label="是否回复" align="center" prop="sfhf" :formatter="ynFormat" />
-      <el-table-column label="体验内容" align="center" prop="tynrid" :formatter="tynrFormat" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column
+        label="上午或下午"
+        align="center"
+        prop="swxw"
+        :formatter="swxwFormat"
+      />
+      <el-table-column
+        label="是否回复"
+        align="center"
+        prop="sfhf"
+        :formatter="ynFormat"
+      />
+      <el-table-column
+        label="体验内容"
+        align="center"
+        prop="tynrid"
+        :formatter="tynrFormat"
+      />
+      <el-table-column
+        label="操作"
+        align="center"
+        class-name="small-padding fixed-width"
+      >
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -95,20 +148,22 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['benyi:experience:edit']"
-          >回复</el-button>
+            >回复</el-button
+          >
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['benyi:experience:remove']"
-          >删除</el-button>
+            >删除</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
 
     <pagination
-      v-show="total>0"
+      v-show="total > 0"
       :total="total"
       :page.sync="queryParams.pageNum"
       :limit.sync="queryParams.pageSize"
@@ -121,17 +176,29 @@
         <el-form ref="form" :model="form" :rules="rules" label-width="120px">
           <el-col :span="12">
             <el-form-item label="家长姓名" prop="jzxm">
-              <el-input v-model="form.jzxm" placeholder="请输入家长姓名" :disabled="true" />
+              <el-input
+                v-model="form.jzxm"
+                placeholder="请输入家长姓名"
+                :disabled="true"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="联系方式" prop="lxfs">
-              <el-input v-model="form.lxfs" placeholder="请输入联系方式" :disabled="true" />
+              <el-input
+                v-model="form.lxfs"
+                placeholder="请输入联系方式"
+                :disabled="true"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="幼儿姓名" prop="yexm">
-              <el-input v-model="form.yexm" placeholder="请输入幼儿姓名" :disabled="true" />
+              <el-input
+                v-model="form.yexm"
+                placeholder="请输入幼儿姓名"
+                :disabled="true"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -178,7 +245,11 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="上午或下午" prop="swxw">
-              <el-select v-model="form.swxw" placeholder="请选择" :disabled="true">
+              <el-select
+                v-model="form.swxw"
+                placeholder="请选择"
+                :disabled="true"
+              >
                 <el-option
                   v-for="dict in swxwOptions"
                   :key="dict.dictValue"
@@ -196,18 +267,27 @@
                   v-for="dict in ynOptions"
                   :key="dict.dictValue"
                   :label="dict.dictValue"
-                >{{dict.dictLabel}}</el-radio>
+                  >{{ dict.dictLabel }}</el-radio
+                >
               </el-radio-group>
             </el-form-item>
           </el-col>
           <el-col :span="24">
             <el-form-item label="回复内容" prop="hfrn">
-              <el-input v-model="form.hfrn" type="textarea" placeholder="请输入内容" />
+              <el-input
+                v-model="form.hfrn"
+                type="textarea"
+                placeholder="请输入内容"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="24">
             <el-form-item label="园长指示" prop="yzzs">
-              <el-input v-model="form.yzzs" type="textarea" placeholder="请输入内容" />
+              <el-input
+                v-model="form.yzzs"
+                type="textarea"
+                placeholder="请输入内容"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="12">
