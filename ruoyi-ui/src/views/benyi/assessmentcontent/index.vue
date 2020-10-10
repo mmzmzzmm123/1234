@@ -1,11 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form
-      :model="queryParams"
-      ref="queryForm"
-      :inline="true"
-      label-width="68px"
-    >
+    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
       <el-form-item label="名称" prop="name">
         <el-input
           v-model="queryParams.name"
@@ -16,16 +11,8 @@
         />
       </el-form-item>
       <el-form-item>
-        <el-button
-          type="primary"
-          icon="el-icon-search"
-          size="mini"
-          @click="handleQuery"
-          >搜索</el-button
-        >
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
-          >重置</el-button
-        >
+        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
 
@@ -37,8 +24,7 @@
           size="mini"
           @click="handleAdd"
           v-hasPermi="['benyi:assessmentcontent:add']"
-          >新增</el-button
-        >
+        >新增</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -48,8 +34,7 @@
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['benyi:assessmentcontent:edit']"
-          >修改</el-button
-        >
+        >修改</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -59,8 +44,7 @@
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['benyi:assessmentcontent:remove']"
-          >删除</el-button
-        >
+        >删除</el-button>
       </el-col>
     </el-row>
 
@@ -74,16 +58,8 @@
       <!-- <el-table-column label="父id" align="center" prop="parentid" /> -->
       <el-table-column label="名称" align="center" prop="name" />
       <el-table-column label="是否元素" align="center" prop="iselement" />
-      <el-table-column
-        label="适用范围"
-        align="center"
-        prop="scope"
-      />
-      <el-table-column
-        label="操作"
-        align="center"
-        class-name="small-padding fixed-width"
-      >
+      <el-table-column label="适用范围" align="center" prop="scope" :formatter="scopeFormat" />
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -91,16 +67,14 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['benyi:assessmentcontent:edit']"
-            >修改</el-button
-          >
+          >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['benyi:assessmentcontent:remove']"
-            >删除</el-button
-          >
+          >删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -120,23 +94,20 @@
           <el-input v-model="form.parentid" placeholder="请输入父id" />
         </el-form-item>
         <el-form-item label="名称" prop="name">
-          <el-input
-            v-model="form.name"
-            type="textarea"
-            placeholder="请输入内容"
-          />
+          <el-input v-model="form.name" type="textarea" placeholder="请输入内容" />
         </el-form-item>
         <el-form-item label="是否元素" prop="iselement">
           <el-input v-model="form.iselement" placeholder="请输入是否元素" />
         </el-form-item>
-        <el-form-item
-          label="元素才有适用范围;应该以幼儿的岁数为准"
-          prop="scope"
-        >
-          <el-input
-            v-model="form.scope"
-            placeholder="请输入元素才有适用范围;应该以幼儿的岁数为准"
-          />
+        <el-form-item label="适用范围" prop="scope">
+          <el-select v-model="form.scope" placeholder="请选择元素适用范围">
+            <el-option
+              v-for="dict in scopeOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            ></el-option>
+          </el-select>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -153,7 +124,7 @@ import {
   getAssessmentcontent,
   delAssessmentcontent,
   addAssessmentcontent,
-  updateAssessmentcontent,
+  updateAssessmentcontent
 } from "@/api/benyi/assessmentcontent";
 
 export default {
@@ -172,6 +143,8 @@ export default {
       total: 0,
       // 评估内容表格数据
       assessmentcontentList: [],
+      // 范围选项
+      scopeOptions: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -183,22 +156,29 @@ export default {
         parentid: undefined,
         name: undefined,
         iselement: undefined,
-        scope: undefined,
+        scope: undefined
       },
       // 表单参数
       form: {},
       // 表单校验
-      rules: {},
+      rules: {}
     };
   },
   created() {
     this.getList();
+    this.getDicts("sys_dm_pgyssyfw").then(response => {
+      this.scopeOptions = response.data;
+    });
   },
   methods: {
+    // 性别字典翻译
+    scopeFormat(row, column) {
+      return this.selectDictLabel(this.scopeOptions, row.scope);
+    },
     /** 查询评估内容列表 */
     getList() {
       this.loading = true;
-      listAssessmentcontent(this.queryParams).then((response) => {
+      listAssessmentcontent(this.queryParams).then(response => {
         this.assessmentcontentList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -217,7 +197,7 @@ export default {
         name: undefined,
         iselement: undefined,
         scope: undefined,
-        createTime: undefined,
+        createTime: undefined
       };
       this.resetForm("form");
     },
@@ -233,7 +213,7 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map((item) => item.id);
+      this.ids = selection.map(item => item.id);
       this.single = selection.length != 1;
       this.multiple = !selection.length;
     },
@@ -247,18 +227,18 @@ export default {
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids;
-      getAssessmentcontent(id).then((response) => {
+      getAssessmentcontent(id).then(response => {
         this.form = response.data;
         this.open = true;
         this.title = "修改评估内容";
       });
     },
     /** 提交按钮 */
-    submitForm: function () {
-      this.$refs["form"].validate((valid) => {
+    submitForm: function() {
+      this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.id != undefined) {
-            updateAssessmentcontent(this.form).then((response) => {
+            updateAssessmentcontent(this.form).then(response => {
               if (response.code === 200) {
                 this.msgSuccess("修改成功");
                 this.open = false;
@@ -266,7 +246,7 @@ export default {
               }
             });
           } else {
-            addAssessmentcontent(this.form).then((response) => {
+            addAssessmentcontent(this.form).then(response => {
               if (response.code === 200) {
                 this.msgSuccess("新增成功");
                 this.open = false;
@@ -286,18 +266,18 @@ export default {
         {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
-          type: "warning",
+          type: "warning"
         }
       )
-        .then(function () {
+        .then(function() {
           return delAssessmentcontent(ids);
         })
         .then(() => {
           this.getList();
           this.msgSuccess("删除成功");
         })
-        .catch(function () {});
-    },
-  },
+        .catch(function() {});
+    }
+  }
 };
 </script>
