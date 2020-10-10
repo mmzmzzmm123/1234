@@ -19,10 +19,11 @@ export function detailCommision(query) {
 }
 
 // 查询业务提成比例详细
-export function getCommision(ruleId) {
+export function getCommision(ruleId, postId) {
   return request({
     url: '/custom/commision/' + ruleId,
-    method: 'get'
+    method: 'get',
+    params: {postId}
   })
 }
 

@@ -27,9 +27,9 @@ public class SysCommisionServiceImpl implements ISysCommisionService
      * @return 业务提成比例
      */
     @Override
-    public SysCommision selectSysCommisionById(Long ruleId)
+    public SysCommision selectSysCommisionById(SysCommision sysCommision)
     {
-        return sysCommisionMapper.selectSysCommisionById(ruleId);
+        return sysCommisionMapper.selectSysCommisionById(sysCommision);
     }
 
     /**

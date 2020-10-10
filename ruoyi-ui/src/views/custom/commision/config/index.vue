@@ -274,7 +274,7 @@
         listCommision(this.queryParams).then(response => {
           this.commisionList = response.rows.reduce((arr, cur, idx, oriArr) => {
             for (let i = 0; i < arr.length; i++) {
-              if (arr[i].some(e => e.userId === cur.userId)) {
+              if (arr[i].some(e => e.userId === cur.userId && e.postId === cur.postId)) {
                 arr[i].push(cur);
                 break;
               } else if (i === arr.length - 1) {
@@ -370,7 +370,7 @@
       handleUpdate(row) {
         this.reset();
         const ruleId = row.ruleId || this.ids
-        getCommision(ruleId).then(response => {
+        getCommision(ruleId, row.postId).then(response => {
           this.form = response.data;
           this.userIdOptions = this.options[this.form.postId];
           this.open = true;

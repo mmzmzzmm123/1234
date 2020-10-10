@@ -19,10 +19,10 @@
             <el-input v-model="queryParams.userName" placeholder="请输入用户名称" clearable size="small" style="width: 240px"
                       @keyup.enter.native="handleQuery"/>
           </el-form-item>
-<!--          <el-form-item label="手机号码" prop="phonenumber">-->
-<!--            <el-input v-model="queryParams.phonenumber" placeholder="请输入手机号码" clearable size="small"-->
-<!--                      style="width: 240px" @keyup.enter.native="handleQuery"/>-->
-<!--          </el-form-item>-->
+          <!--          <el-form-item label="手机号码" prop="phonenumber">-->
+          <!--            <el-input v-model="queryParams.phonenumber" placeholder="请输入手机号码" clearable size="small"-->
+          <!--                      style="width: 240px" @keyup.enter.native="handleQuery"/>-->
+          <!--          </el-form-item>-->
           <el-form-item label="状态" prop="status">
             <el-select v-model="queryParams.status" placeholder="用户状态" clearable size="small" style="width: 240px">
               <el-option v-for="dict in statusOptions" :key="dict.dictValue" :label="dict.dictLabel"
@@ -71,7 +71,7 @@
           <el-table-column label="用户账号" align="center" prop="userName" :show-overflow-tooltip="true"/>
           <el-table-column label="用户名称" align="center" prop="nickName" :show-overflow-tooltip="true"/>
           <el-table-column label="岗位" align="center" prop="postName" :show-overflow-tooltip="true"/>
-<!--          <el-table-column label="手机号码" align="center" prop="phonenumber" width="120"/>-->
+          <!--          <el-table-column label="手机号码" align="center" prop="phonenumber" width="120"/>-->
           <el-table-column label="状态" align="center">
             <template slot-scope="scope">
               <el-switch v-model="scope.row.status" active-value="0" inactive-value="1"
@@ -118,18 +118,18 @@
             </el-form-item>
           </el-col>
         </el-row>
-<!--        <el-row>-->
-<!--          <el-col :span="12">-->
-<!--            <el-form-item label="手机号码" prop="phonenumber">-->
-<!--              <el-input v-model="form.phonenumber" placeholder="请输入手机号码" maxlength="11"/>-->
-<!--            </el-form-item>-->
-<!--          </el-col>-->
-<!--          <el-col :span="12">-->
-<!--            <el-form-item label="邮箱" prop="email">-->
-<!--              <el-input v-model="form.email" placeholder="请输入邮箱" maxlength="50"/>-->
-<!--            </el-form-item>-->
-<!--          </el-col>-->
-<!--        </el-row>-->
+        <!--        <el-row>-->
+        <!--          <el-col :span="12">-->
+        <!--            <el-form-item label="手机号码" prop="phonenumber">-->
+        <!--              <el-input v-model="form.phonenumber" placeholder="请输入手机号码" maxlength="11"/>-->
+        <!--            </el-form-item>-->
+        <!--          </el-col>-->
+        <!--          <el-col :span="12">-->
+        <!--            <el-form-item label="邮箱" prop="email">-->
+        <!--              <el-input v-model="form.email" placeholder="请输入邮箱" maxlength="50"/>-->
+        <!--            </el-form-item>-->
+        <!--          </el-col>-->
+        <!--        </el-row>-->
         <el-row>
           <el-col :span="12">
             <el-form-item v-if="form.userId == undefined" label="用户账号" prop="userName">
@@ -164,7 +164,7 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="岗位">
-              <el-select v-model="form.postId" placeholder="请选择">
+              <el-select v-model="form.postIds" multiple placeholder="请选择">
                 <el-option v-for="item in postOptions"
                            :key="item.postId"
                            :label="item.postName"
@@ -509,7 +509,7 @@
       submitForm: function () {
         this.$refs["form"].validate((valid) => {
           if (valid) {
-            this.form.postId && (this.form.postIds = [this.form.postId]);
+            // this.form.postId && (this.form.postIds = [this.form.postId]);
             this.form.roleId && (this.form.roleIds = [this.form.roleId]);
             // console.log(this.form)
             if (this.form.userId != undefined) {

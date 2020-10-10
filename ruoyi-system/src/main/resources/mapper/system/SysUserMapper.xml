@@ -28,7 +28,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="updateBy"     column="update_by"    />
 		<result property="updateTime"   column="update_time"  />
 		<result property="remark"       column="remark"       />
-		<result property="postId"		column="post_id"	  />
+		<!--		<result property="postId"		column="post_id"	  />-->
 		<result property="postName"		column="post_name"	  />
 		<association property="dept"    column="dept_id" javaType="SysDept" resultMap="deptResult" />
 		<collection  property="roles"   javaType="java.util.List"        resultMap="RoleResult" />
@@ -53,9 +53,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</resultMap>
 
 	<select id="selectAllUser" parameterType="SysUser" resultMap="SysUserResult">
-		select u.user_id, u.dept_id, u.nick_name, u.user_name, u.email, u.avatar, u.phonenumber, u.password, u.sex, u.status, u.del_flag, u.login_ip, u.login_date, u.create_by, u.create_time, u.remark, d.dept_name, d.leader from sys_user u
-		left join sys_dept d on u.dept_id = d.dept_id
-		where u.del_flag = '0'
+-- 		select u.user_id, u.dept_id, u.nick_name, u.user_name, u.email, u.avatar, u.phonenumber, u.password, u.sex, u.status, u.del_flag, u.login_ip, u.login_date, u.create_by, u.create_time, u.remark, d.dept_name, d.leader from sys_user u
+-- 		left join sys_dept d on u.dept_id = d.dept_id
+-- 		where u.del_flag = '0'
+		SELECT * FROM sys_user
+		JOIN (SELECT dept_id, dept_name, leader FROM sys_dept) AS d USING(dept_id)
+		WHERE del_flag = '0'
 	</select>
 
 	<select id="selectSalesman" parameterType="CusSalesman" resultMap="CusSalesmanResult">
@@ -63,40 +66,60 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
 	<sql id="selectUserVo">
-        select u.user_id, u.dept_id, u.user_name, u.nick_name, u.email, u.avatar, u.phonenumber, u.password, u.sex, u.status, u.del_flag, u.login_ip, u.login_date, u.create_by, u.create_time, u.remark, 
-        d.dept_id, d.parent_id, d.dept_name, d.order_num, d.leader, d.status as dept_status,
-        r.role_id, r.role_name, r.role_key, r.role_sort, r.data_scope, r.status as role_status, p.post_id, p.post_name
-        from sys_user u
-		    left join sys_dept d on u.dept_id = d.dept_id
-		    left join sys_user_role ur on u.user_id = ur.user_id
-		    left join sys_role r on r.role_id = ur.role_id
-		    left join sys_user_post up on up.user_id = u.user_id
-		    left join sys_post p on p.post_id = up.post_id
+--         select u.user_id, u.dept_id, u.user_name, u.nick_name, u.email, u.avatar, u.phonenumber, u.password, u.sex, u.status, u.del_flag, u.login_ip, u.login_date, u.create_by, u.create_time, u.remark,
+--         d.dept_id, d.parent_id, d.dept_name, d.order_num, d.leader, d.status as dept_status,
+--         r.role_id, r.role_name, r.role_key, r.role_sort, r.data_scope, r.status as role_status, p.post_id, p.post_name
+--         from sys_user u
+-- 		    left join sys_dept d on u.dept_id = d.dept_id
+-- 		    left join sys_user_role ur on u.user_id = ur.user_id
+-- 		    left join sys_role r on r.role_id = ur.role_id
+-- 		    left join sys_user_post up on up.user_id = u.user_id
+-- 		    left join sys_post p on p.post_id = up.post_id
+		SELECT * FROM sys_user
+		JOIN (SELECT dept_id, dept_name, parent_id, order_num, leader, status as dept_status FROM sys_dept) AS d USING(dept_id)
+		JOIN (SELECT * FROM sys_user_role) AS ur USING(user_id)
+		JOIN (SELECT role_id, role_name, role_key, role_sort, data_scope, status AS role_status FROM sys_role) AS r USING(role_id)
+		JOIN (
+				SELECT user_id, GROUP_CONCAT(post_name SEPARATOR ',') AS post_name, GROUP_CONCAT(post_id SEPARATOR ',') AS post_id
+				FROM (
+					SELECT * FROM sys_user_post
+					JOIN (SELECT post_id, post_name FROM sys_post) AS p USING(post_id)
+				) AS up GROUP BY user_id
+		) AS ups USING(user_id)
     </sql>
 
     <select id="selectUserList" parameterType="SysUser" resultMap="SysUserResult">
-		select u.user_id, u.dept_id, u.nick_name, u.user_name, u.email, u.avatar, u.phonenumber, u.password, u.sex, u.status, u.del_flag, u.login_ip, u.login_date, u.create_by, u.create_time, u.remark, d.dept_name, d.leader, p.post_id, p.post_name from sys_user u
-		left join sys_dept d on u.dept_id = d.dept_id
-		left join sys_user_post up on up.user_id = u.user_id
-		left join sys_post p on p.post_id = up.post_id
-		where u.del_flag = '0'
+-- 		select u.user_id, u.dept_id, u.nick_name, u.user_name, u.email, u.avatar, u.phonenumber, u.password, u.sex, u.status, u.del_flag, u.login_ip, u.login_date, u.create_by, u.create_time, u.remark, d.dept_name, d.leader, p.post_id, p.post_name from sys_user u
+-- 		left join sys_dept d on u.dept_id = d.dept_id
+-- 		left join sys_user_post up on up.user_id = u.user_id
+-- 		left join sys_post p on p.post_id = up.post_id
+-- 		where u.del_flag = '0'
+		SELECT * FROM sys_user
+		JOIN (SELECT dept_id, dept_name FROM sys_dept) AS d USING(dept_id)
+		JOIN (
+		SELECT user_id, GROUP_CONCAT(post_name SEPARATOR ',') AS post_name, GROUP_CONCAT(post_id SEPARATOR ',') AS post_id
+		FROM (
+			SELECT * FROM sys_user_post
+			JOIN (SELECT post_id, post_name FROM sys_post) AS p USING(post_id)
+			) AS up GROUP BY user_id ) AS ups USING(user_id)
+		WHERE del_flag = '0'
 		<if test="userName != null and userName != ''">
-			AND u.user_name like concat('%', #{userName}, '%')
+			AND user_name like concat('%', #{userName}, '%')
 		</if>
 		<if test="status != null and status != ''">
-			AND u.status = #{status}
+			AND status = #{status}
 		</if>
 		<if test="phonenumber != null and phonenumber != ''">
-			AND u.phonenumber like concat('%', #{phonenumber}, '%')
+			AND phonenumber like concat('%', #{phonenumber}, '%')
 		</if>
 		<if test="beginTime != null and beginTime != ''"><!-- 开始时间检索 -->
-			AND date_format(u.create_time,'%y%m%d') &gt;= date_format(#{beginTime},'%y%m%d')
+			AND date_format(create_time,'%y%m%d') &gt;= date_format(#{beginTime},'%y%m%d')
 		</if>
 		<if test="endTime != null and endTime != ''"><!-- 结束时间检索 -->
-			AND date_format(u.create_time,'%y%m%d') &lt;= date_format(#{endTime},'%y%m%d')
+			AND date_format(create_time,'%y%m%d') &lt;= date_format(#{endTime},'%y%m%d')
 		</if>
 		<if test="deptId != null and deptId != 0">
-			AND (u.dept_id = #{deptId} OR u.dept_id IN ( SELECT t.dept_id FROM sys_dept t WHERE find_in_set(#{deptId}, ancestors) ))
+			AND (dept_id = #{deptId} OR dept_id IN ( SELECT t.dept_id FROM sys_dept t WHERE find_in_set(#{deptId}, ancestors) ))
 		</if>
 		<!-- 数据范围过滤 -->
 		${params.dataScope}
@@ -104,12 +127,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 	<select id="selectUserByUserName" parameterType="String" resultMap="SysUserResult">
 	    <include refid="selectUserVo"/>
-		where u.user_name = #{userName}
+		where user_name = #{userName}
 	</select>
 
 	<select id="selectUserById" parameterType="Long" resultMap="SysUserResult">
 		<include refid="selectUserVo"/>
-		where u.user_id = #{userId}
+		where user_id = #{userId}
 	</select>
 
 	<select id="checkUserNameUnique" parameterType="String" resultType="int">

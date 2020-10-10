@@ -14,10 +14,10 @@ public interface SysCommisionMapper
     /**
      * 查询业务提成比例
      * 
-     * @param ruleId 业务提成比例ID
+     * @param sysCommision 业务提成比例ID
      * @return 业务提成比例
      */
-    public SysCommision selectSysCommisionById(Long ruleId);
+    public SysCommision selectSysCommisionById(SysCommision sysCommision);
 
     /**
      * 查询业务提成比例列表

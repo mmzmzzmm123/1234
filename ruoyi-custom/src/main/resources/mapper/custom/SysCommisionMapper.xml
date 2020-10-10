@@ -29,66 +29,78 @@
     </resultMap>
 
     <sql id="groupAmountVo">
-        SELECT ${column} AS user_id, SUM(amount) AS amount
+        SELECT ${column} AS user_id, ${postId} AS post_id, SUM(amount) AS amount
         FROM sys_order
-        WHERE ${column} IS NOT NULL
+        WHERE ${column} IS NOT NULL AND ${column} &lt;&gt; 0
         AND review_status = 'yes'
-        <if test="beginTime != null and beginTime != ''"> AND date_format(order_time,'%y%m%d') &gt;= date_format(${beginTime},'%y%m%d')</if>
-        <if test="endTime != null and endTime != ''">AND date_format(order_time,'%y%m%d') &lt;= date_format(${endTime},'%y%m%d')</if>
+        <if test="beginTime != null and beginTime != ''">AND date_format(order_time,'%y%m%d') &gt;=
+            date_format(${beginTime},'%y%m%d')
+        </if>
+        <if test="endTime != null and endTime != ''">AND date_format(order_time,'%y%m%d') &lt;=
+            date_format(${endTime},'%y%m%d')
+        </if>
         GROUP BY ${column}
     </sql>
 
     <select id="selectSysCommisionDetail" parameterType="SysCommision" resultMap="SysCommisionResult">
         SELECT * FROM view_user_post pa
         JOIN (
-            <include refid="groupAmountVo">
-                <property name="column" value="pre_sale_id"/>
-                <property name="beginTime" value="#{beginTime}"/>
-                <property name="endTime" value="#{endTime}"/>
-            </include>
-            UNION
-            <include refid="groupAmountVo">
-                <property name="column" value="after_sale_id"/>
-                <property name="beginTime" value="#{beginTime}"/>
-                <property name="endTime" value="#{endTime}"/>
-            </include>
-            UNION
-            <include refid="groupAmountVo">
-                <property name="column" value="nutritionist_id"/>
-                <property name="beginTime" value="#{beginTime}"/>
-                <property name="endTime" value="#{endTime}"/>
-            </include>
-            UNION
-            <include refid="groupAmountVo">
-                <property name="column" value="nutri_assis_id"/>
-                <property name="beginTime" value="#{beginTime}"/>
-                <property name="endTime" value="#{endTime}"/>
-            </include>
-            UNION
-            <include refid="groupAmountVo">
-                <property name="column" value="operator_id"/>
-                <property name="beginTime" value="#{beginTime}"/>
-                <property name="endTime" value="#{endTime}"/>
-            </include>
-            UNION
-            <include refid="groupAmountVo">
-                <property name="column" value="operator_assis_id"/>
-                <property name="beginTime" value="#{beginTime}"/>
-                <property name="endTime" value="#{endTime}"/>
-            </include>
-            UNION
-            <include refid="groupAmountVo">
-                <property name="column" value="planner_id"/>
-                <property name="beginTime" value="#{beginTime}"/>
-                <property name="endTime" value="#{endTime}"/>
-            </include>
-            UNION
-            <include refid="groupAmountVo">
-                <property name="column" value="planner_assis_id"/>
-                <property name="beginTime" value="#{beginTime}"/>
-                <property name="endTime" value="#{endTime}"/>
-            </include>
-        ) AS a USING(user_id)
+        <include refid="groupAmountVo">
+            <property name="column" value="pre_sale_id"/>
+            <property name="beginTime" value="#{beginTime}"/>
+            <property name="endTime" value="#{endTime}"/>
+            <property name="postId" value="5"/>
+        </include>
+        UNION
+        <include refid="groupAmountVo">
+            <property name="column" value="after_sale_id"/>
+            <property name="beginTime" value="#{beginTime}"/>
+            <property name="endTime" value="#{endTime}"/>
+            <property name="postId" value="6"/>
+        </include>
+        UNION
+        <include refid="groupAmountVo">
+            <property name="column" value="nutritionist_id"/>
+            <property name="beginTime" value="#{beginTime}"/>
+            <property name="endTime" value="#{endTime}"/>
+            <property name="postId" value="9"/>
+        </include>
+        UNION
+        <include refid="groupAmountVo">
+            <property name="column" value="nutri_assis_id"/>
+            <property name="beginTime" value="#{beginTime}"/>
+            <property name="endTime" value="#{endTime}"/>
+            <property name="postId" value="10"/>
+        </include>
+        UNION
+        <include refid="groupAmountVo">
+            <property name="column" value="operator_id"/>
+            <property name="beginTime" value="#{beginTime}"/>
+            <property name="endTime" value="#{endTime}"/>
+            <property name="postId" value="11"/>
+        </include>
+        UNION
+        <include refid="groupAmountVo">
+            <property name="column" value="operator_assis_id"/>
+            <property name="beginTime" value="#{beginTime}"/>
+            <property name="endTime" value="#{endTime}"/>
+            <property name="postId" value="13"/>
+        </include>
+        UNION
+        <include refid="groupAmountVo">
+            <property name="column" value="planner_id"/>
+            <property name="beginTime" value="#{beginTime}"/>
+            <property name="endTime" value="#{endTime}"/>
+            <property name="postId" value="7"/>
+        </include>
+        UNION
+        <include refid="groupAmountVo">
+            <property name="column" value="planner_assis_id"/>
+            <property name="beginTime" value="#{beginTime}"/>
+            <property name="endTime" value="#{endTime}"/>
+            <property name="postId" value="8"/>
+        </include>
+        ) AS a USING(user_id, post_id)
         <where>
             <if test="postId != null and postId != ''">and post_id = #{postId}</if>
             <if test="userId != null and userId != ''">and user_id = #{userId}</if>
@@ -97,24 +109,29 @@
 
     <sql id="selectSysCommisionVo">
         SELECT * FROM (
-            SELECT * FROM view_user_post AS pa
-            JOIN (SELECT * FROM sys_commision WHERE rate > 0) AS c USING(user_id)
-            ORDER BY user_id, amount
+        SELECT * FROM sys_commision c
+        JOIN (SELECT user_id, nick_name AS user_name FROM sys_user) AS u USING(user_id)
+        JOIN (SELECT post_id, post_name FROM sys_post) AS p USING(post_id)
+        <if test="postId != null">WHERE post_id = ${postId}</if>
+        ORDER BY user_id, amount
         ) as t
     </sql>
 
 
-
     <select id="selectSysCommisionList" parameterType="SysCommision" resultMap="SysCommisionResult">
-        <include refid="selectSysCommisionVo"/>
+        <include refid="selectSysCommisionVo">
+            <property name="postId" value="#{postId}"/>
+        </include>
         <where>
             <if test="userId != null ">and user_id = #{userId}</if>
             <if test="postId != null ">and post_id = #{postId}</if>
         </where>
     </select>
 
-    <select id="selectSysCommisionById" parameterType="Long" resultMap="SysCommisionResult">
-        <include refid="selectSysCommisionVo"/>
+    <select id="selectSysCommisionById" parameterType="SysCommision" resultMap="SysCommisionResult">
+        <include refid="selectSysCommisionVo">
+            <property name="postId" value="#{postId}"/>
+        </include>
         where rule_id = #{ruleId}
     </select>
 
@@ -122,6 +139,7 @@
         insert into sys_commision
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="userId != null">user_id,</if>
+            <if test="postId != null">post_id,</if>
             <if test="amount != null">amount,</if>
             <if test="rate != null">rate,</if>
             <if test="createBy != null">create_by,</if>
@@ -132,6 +150,7 @@
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="userId != null">#{userId},</if>
+            <if test="postId != null">#{postId},</if>
             <if test="amount != null">#{amount},</if>
             <if test="rate != null">#{rate},</if>
             <if test="createBy != null">#{createBy},</if>
@@ -146,6 +165,7 @@
         update sys_commision
         <trim prefix="SET" suffixOverrides=",">
             <if test="userId != null">user_id = #{userId},</if>
+            <if test="postId != null">post_id = #{postId},</if>
             <if test="amount != null">amount = #{amount},</if>
             <if test="rate != null">rate = #{rate},</if>
             <if test="createBy != null">create_by = #{createBy},</if>

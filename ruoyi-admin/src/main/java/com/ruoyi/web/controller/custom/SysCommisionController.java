@@ -68,8 +68,10 @@ public class SysCommisionController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('commision:config:query')")
     @GetMapping(value = "/{ruleId}")
-    public AjaxResult getInfo(@PathVariable("ruleId") Long ruleId) {
-        return AjaxResult.success(sysCommisionService.selectSysCommisionById(ruleId));
+    public AjaxResult getInfo(@PathVariable("ruleId") Long ruleId, SysCommision sysCommision) {
+        sysCommision.setRuleId(ruleId);
+        System.out.println(sysCommision);
+        return AjaxResult.success(sysCommisionService.selectSysCommisionById(sysCommision));
     }
 
     /**
@@ -119,6 +121,7 @@ public class SysCommisionController extends BaseController {
             detail.setRate(0F);
             SysCommision tmpQueryCom = new SysCommision();
             tmpQueryCom.setUserId(detail.getUserId());
+            tmpQueryCom.setPostId(detail.getPostId());
             List<SysCommision> tmpComList = sysCommisionService.selectSysCommisionList(tmpQueryCom);
 
             float dAmount = detail.getAmount().floatValue();
