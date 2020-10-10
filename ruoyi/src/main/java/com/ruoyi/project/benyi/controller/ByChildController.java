@@ -8,6 +8,8 @@ import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.framework.security.LoginUser;
 import com.ruoyi.framework.security.service.TokenService;
+import com.ruoyi.project.benyi.domain.ByChildContactpeople;
+import com.ruoyi.project.benyi.service.IByChildContactpeopleService;
 import com.ruoyi.project.common.SchoolCommon;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +46,8 @@ public class ByChildController extends BaseController {
     private SchoolCommon schoolCommon;
     @Autowired
     private TokenService tokenService;
+    @Autowired
+    private IByChildContactpeopleService byChildContactpeopleService;
 
     /**
      * 查询幼儿信息列表
@@ -100,8 +104,8 @@ public class ByChildController extends BaseController {
         LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
         String operName = loginUser.getUsername();
         Long deptId = loginUser.getUser().getDeptId();
-        String bjbh=schoolCommon.getClassId();
-        String message = byChildService.importChild(childList, operName,deptId,bjbh);
+        String bjbh = schoolCommon.getClassId();
+        String message = byChildService.importChild(childList, operName, deptId, bjbh);
         return AjaxResult.success(message);
     }
 
@@ -145,7 +149,7 @@ public class ByChildController extends BaseController {
     @PreAuthorize("@ss.hasPermi('benyi:child:add')")
     @Log(title = "幼儿信息", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody ByChild byChild) {
+    public AjaxResult add(@RequestBody ByChild byChild, @RequestBody ByChildContactpeople byChildContactpeople) {
         //首先判断当前账户是否为幼儿园账号
         if (schoolCommon.isSchool()) {
             //学校id
@@ -156,7 +160,18 @@ public class ByChildController extends BaseController {
             if (schoolCommon.isStringEmpty(byChild.getClassid())) {
                 byChild.setClassid(schoolCommon.getClassId());
             }
-            return toAjax(byChildService.insertByChild(byChild));
+            int i = byChildService.insertByChild(byChild);
+            Long chilId = byChild.getId();
+            if (i > 0) {
+                chilId = byChild.getId();
+//                System.out.println("newId:" + chilId);
+//                System.out.println("byChildContactpeople:" + byChildContactpeople);
+//                byChildContactpeople.setChildid(chilId);
+//                byChildContactpeopleService.insertByChildContactpeople(byChildContactpeople);
+                return AjaxResult.success(chilId.intValue());
+            } else {
+                return AjaxResult.error("创建失败，请联系管理员");
+            }
         } else {
             return AjaxResult.error("当前用户非幼儿园，无法添加幼儿");
         }
@@ -196,6 +211,8 @@ public class ByChildController extends BaseController {
     @Log(title = "幼儿信息", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids) {
+        //删除幼儿信息 同时删除幼儿联系人信息
+        byChildContactpeopleService.deleteByChildContactpeopleByChildIds(ids);
         return toAjax(byChildService.deleteByChildByIds(ids));
     }
 

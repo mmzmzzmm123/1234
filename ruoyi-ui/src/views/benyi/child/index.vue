@@ -6,19 +6,19 @@
       :inline="true"
       label-width="68px"
     >
-      <el-form-item label="姓名" prop="name">
+      <el-form-item label="幼儿姓名" prop="name">
         <el-input
           v-model="queryParams.name"
-          placeholder="请输入姓名"
+          placeholder="请输入幼儿姓名"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="性别" prop="xb">
+      <el-form-item label="幼儿性别" prop="xb">
         <el-select
           v-model="queryParams.xb"
-          placeholder="请选择性别"
+          placeholder="请选择幼儿性别"
           clearable
           size="small"
           style="width: 240px"
@@ -31,10 +31,10 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="状态" prop="status">
+      <el-form-item label="当前状态" prop="status">
         <el-select
           v-model="queryParams.status"
-          placeholder="请选择状态"
+          placeholder="请选择当前状态"
           clearable
           size="small"
           style="width: 240px"
@@ -226,207 +226,376 @@
 
     <!-- 添加或修改幼儿信息对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="800px" append-to-body>
-      <el-row :gutter="15">
-        <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-          <el-col :span="12">
-            <el-form-item label="姓名" prop="name">
-              <el-input v-model="form.name" placeholder="请输入姓名" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="英文名" prop="enName">
-              <el-input v-model="form.enName" placeholder="请输入英文名" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="小名" prop="infantName">
-              <el-input v-model="form.infantName" placeholder="请输入小名" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="手机号码" prop="phone">
-              <el-input v-model="form.phone" placeholder="请输入家长手机号码" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="性别" prop="xb">
-              <el-select v-model="form.xb" placeholder="请选择性别">
-                <el-option
-                  v-for="dict in sexOptions"
-                  :key="dict.dictValue"
-                  :label="dict.dictLabel"
-                  :value="dict.dictValue"
-                ></el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="民族" prop="mz">
-              <el-select v-model="form.mz" placeholder="请选择民族">
-                <el-option
-                  v-for="dict in mzOptions"
-                  :key="dict.dictValue"
-                  :label="dict.dictLabel"
-                  :value="dict.dictValue"
-                ></el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="证件号码" prop="zjhm">
-              <el-input v-model="form.zjhm" placeholder="请输入证件号码" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="出生日期" prop="csrq">
-              <el-date-picker
-                clearable
-                size="small"
-                style="width: 200px"
-                v-model="form.csrq"
-                type="date"
-                value-format="yyyy-MM-dd"
-                placeholder="选择出生日期"
-              ></el-date-picker>
-            </el-form-item>
-          </el-col>
-          <el-col :span="24">
-            <el-form-item label="出生地" prop="birthProvincename">
-              <v-distpicker
-                v-model="form.birthProvincename"
-                :placeholders="placeholders"
-                :province="diglogForm.province"
-                :city="diglogForm.city"
-                :area="diglogForm.area"
-                @selected="onSelected_brith"
-              ></v-distpicker>
-              <el-input v-model="form.birthProvince" v-if="false" />
-              <el-input v-model="form.birthCity" v-if="false" />
-              <el-input v-model="form.birthArea" v-if="false" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="24">
-            <el-form-item label="户口地" prop="registeredProvincename">
-              <v-distpicker
-                v-model="form.registeredProvincename"
-                :placeholders="placeholders"
-                :province="diglogForm1.province"
-                :city="diglogForm1.city"
-                :area="diglogForm1.area"
-                @selected="onSelected_registered"
-              ></v-distpicker>
-              <el-input v-model="form.registeredProvince" v-if="false" />
-              <el-input v-model="form.registeredCity" v-if="false" />
-              <el-input v-model="form.registeredArea" v-if="false" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="24">
-            <el-form-item label="现住址" prop="addrProvincename">
-              <v-distpicker
-                v-model="form.addrProvincename"
-                :placeholders="placeholders"
-                :province="diglogForm2.province"
-                :city="diglogForm2.city"
-                :area="diglogForm2.area"
-                @selected="onSelected_addr"
-              ></v-distpicker>
-              <el-input v-model="form.addrProvince" v-if="false" />
-              <el-input v-model="form.addrCity" v-if="false" />
-              <el-input v-model="form.addrArea" v-if="false" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="详细地址" prop="addrDetail">
-              <el-input
-                v-model="form.addrDetail"
-                placeholder="请输入详细地址"
-              />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="曾就读园" prop="everSchool">
-              <el-input
-                v-model="form.everSchool"
-                placeholder="请输入曾经就读幼儿园"
-              />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="学习英语" prop="learnEnglish">
-              <el-radio-group v-model="form.learnEnglish">
-                <el-radio
-                  v-for="dict in ynOptions"
-                  :key="dict.dictValue"
-                  :label="dict.dictValue"
-                  >{{ dict.dictLabel }}</el-radio
-                >
-              </el-radio-group>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="入园渠道" prop="source">
-              <el-select v-model="form.source" placeholder="请选择入园渠道">
-                <el-option
-                  v-for="dict in sourceOptions"
-                  :key="dict.dictValue"
-                  :label="dict.dictLabel"
-                  :value="dict.dictValue"
-                ></el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="状态">
-              <el-radio-group v-model="form.status">
-                <el-radio
-                  v-for="dict in statusOptions"
-                  :key="dict.dictValue"
-                  :label="dict.dictValue"
-                  >{{ dict.dictLabel }}</el-radio
-                >
-              </el-radio-group>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="第一语言" prop="firstLanguage">
-              <el-input
-                v-model="form.firstLanguage"
-                placeholder="请输入第一语言"
-                maxlength="2"
-              />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="第二语言" prop="seconderLanguage">
-              <el-input
-                v-model="form.seconderLanguage"
-                placeholder="请输入第二语言"
-                maxlength="2"
-              />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="其他语言" prop="otherLanguage">
-              <el-input
-                v-model="form.otherLanguage"
-                placeholder="请输入其他语言"
-              />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="选择班级" prop="classid">
-              <el-select v-model="form.classid" placeholder="请选择班级">
-                <el-option
-                  v-for="dict in classOptions"
-                  :key="dict.bjbh"
-                  :label="dict.bjmc"
-                  :value="dict.bjbh"
-                ></el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-        </el-form>
-      </el-row>
+      <el-tabs type="border-card">
+        <el-tab-pane label="幼儿基础信息">
+          <el-row :gutter="15">
+            <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+              <el-col :span="12">
+                <el-form-item label="姓名" prop="name">
+                  <el-input v-model="form.name" placeholder="请输入姓名" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="英文名" prop="enName">
+                  <el-input v-model="form.enName" placeholder="请输入英文名" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="小名" prop="infantName">
+                  <el-input
+                    v-model="form.infantName"
+                    placeholder="请输入小名"
+                  />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="手机号码" prop="phone">
+                  <el-input
+                    v-model="form.phone"
+                    placeholder="请输入家长手机号码"
+                  />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="性别" prop="xb">
+                  <el-select v-model="form.xb" placeholder="请选择性别">
+                    <el-option
+                      v-for="dict in sexOptions"
+                      :key="dict.dictValue"
+                      :label="dict.dictLabel"
+                      :value="dict.dictValue"
+                    ></el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="民族" prop="mz">
+                  <el-select v-model="form.mz" placeholder="请选择民族">
+                    <el-option
+                      v-for="dict in mzOptions"
+                      :key="dict.dictValue"
+                      :label="dict.dictLabel"
+                      :value="dict.dictValue"
+                    ></el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="证件号码" prop="zjhm">
+                  <el-input v-model="form.zjhm" placeholder="请输入证件号码" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="出生日期" prop="csrq">
+                  <el-date-picker
+                    clearable
+                    size="small"
+                    style="width: 200px"
+                    v-model="form.csrq"
+                    type="date"
+                    value-format="yyyy-MM-dd"
+                    placeholder="选择出生日期"
+                  ></el-date-picker>
+                </el-form-item>
+              </el-col>
+              <el-col :span="24">
+                <el-form-item label="出生地" prop="birthProvincename">
+                  <v-distpicker
+                    v-model="form.birthProvincename"
+                    :placeholders="placeholders"
+                    :province="diglogForm.province"
+                    :city="diglogForm.city"
+                    :area="diglogForm.area"
+                    @selected="onSelected_brith"
+                  ></v-distpicker>
+                  <el-input v-model="form.birthProvince" v-if="false" />
+                  <el-input v-model="form.birthCity" v-if="false" />
+                  <el-input v-model="form.birthArea" v-if="false" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="24">
+                <el-form-item label="户口地" prop="registeredProvincename">
+                  <v-distpicker
+                    v-model="form.registeredProvincename"
+                    :placeholders="placeholders"
+                    :province="diglogForm1.province"
+                    :city="diglogForm1.city"
+                    :area="diglogForm1.area"
+                    @selected="onSelected_registered"
+                  ></v-distpicker>
+                  <el-input v-model="form.registeredProvince" v-if="false" />
+                  <el-input v-model="form.registeredCity" v-if="false" />
+                  <el-input v-model="form.registeredArea" v-if="false" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="24">
+                <el-form-item label="现住址" prop="addrProvincename">
+                  <v-distpicker
+                    v-model="form.addrProvincename"
+                    :placeholders="placeholders"
+                    :province="diglogForm2.province"
+                    :city="diglogForm2.city"
+                    :area="diglogForm2.area"
+                    @selected="onSelected_addr"
+                  ></v-distpicker>
+                  <el-input v-model="form.addrProvince" v-if="false" />
+                  <el-input v-model="form.addrCity" v-if="false" />
+                  <el-input v-model="form.addrArea" v-if="false" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="详细地址" prop="addrDetail">
+                  <el-input
+                    v-model="form.addrDetail"
+                    placeholder="请输入详细地址"
+                  />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="曾就读园" prop="everSchool">
+                  <el-input
+                    v-model="form.everSchool"
+                    placeholder="请输入曾经就读幼儿园"
+                  />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="学习英语" prop="learnEnglish">
+                  <el-radio-group v-model="form.learnEnglish">
+                    <el-radio
+                      v-for="dict in ynOptions"
+                      :key="dict.dictValue"
+                      :label="dict.dictValue"
+                      >{{ dict.dictLabel }}</el-radio
+                    >
+                  </el-radio-group>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="入园渠道" prop="source">
+                  <el-select v-model="form.source" placeholder="请选择入园渠道">
+                    <el-option
+                      v-for="dict in sourceOptions"
+                      :key="dict.dictValue"
+                      :label="dict.dictLabel"
+                      :value="dict.dictValue"
+                    ></el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="状态">
+                  <el-radio-group v-model="form.status">
+                    <el-radio
+                      v-for="dict in statusOptions"
+                      :key="dict.dictValue"
+                      :label="dict.dictValue"
+                      >{{ dict.dictLabel }}</el-radio
+                    >
+                  </el-radio-group>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="第一语言" prop="firstLanguage">
+                  <el-input
+                    v-model="form.firstLanguage"
+                    placeholder="请输入第一语言"
+                    maxlength="2"
+                  />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="第二语言" prop="seconderLanguage">
+                  <el-input
+                    v-model="form.seconderLanguage"
+                    placeholder="请输入第二语言"
+                    maxlength="2"
+                  />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="其他语言" prop="otherLanguage">
+                  <el-input
+                    v-model="form.otherLanguage"
+                    placeholder="请输入其他语言"
+                  />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="选择班级" prop="classid">
+                  <el-select v-model="form.classid" placeholder="请选择班级">
+                    <el-option
+                      v-for="dict in classOptions"
+                      :key="dict.bjbh"
+                      :label="dict.bjmc"
+                      :value="dict.bjbh"
+                    ></el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+            </el-form>
+          </el-row>
+        </el-tab-pane>
+        <el-tab-pane label="监护人信息">
+          <el-form
+            ref="form_jhr"
+            :model="form_jhr"
+            :rules="rules_jhr"
+            label-width="120px"
+          >
+            <el-row :gutter="15">
+              <el-col :span="12">
+                <el-form-item label="父亲姓名" prop="fathername">
+                  <el-input
+                    v-model="form_jhr.fathername"
+                    placeholder="请输入父亲姓名"
+                  />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="联系电话" prop="fphone">
+                  <el-input
+                    v-model="form_jhr.fphone"
+                    placeholder="请输入父亲联系电话"
+                  />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="办公电话" prop="foffphone">
+                  <el-input
+                    v-model="form_jhr.foffphone"
+                    placeholder="请输入父亲办公电话"
+                  />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row :gutter="15">
+              <el-col :span="12">
+                <el-form-item label="母亲姓名" prop="mothername">
+                  <el-input
+                    v-model="form_jhr.mothername"
+                    placeholder="请输入母亲姓名"
+                  />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="联系电话" prop="mphone">
+                  <el-input
+                    v-model="form_jhr.mphone"
+                    placeholder="请输入母亲联系电话"
+                  />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="办公电话" prop="moffphone">
+                  <el-input
+                    v-model="form_jhr.moffphone"
+                    placeholder="请输入母亲办公电话"
+                  />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row :gutter="15">
+              <el-col :span="12">
+                <el-form-item label="其他联系人姓名" prop="grandfathername">
+                  <el-input
+                    v-model="form_jhr.grandfathername"
+                    placeholder="请输入其他联系人姓名"
+                  />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="与幼儿关系" prop="gfgx">
+                  <el-select
+                    v-model="form_jhr.gfgx"
+                    placeholder="请选择与幼儿关系"
+                  >
+                    <el-option
+                      v-for="dict in jtgxOptions"
+                      :key="dict.dictValue"
+                      :label="dict.dictLabel"
+                      :value="dict.dictValue"
+                    ></el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="联系电话" prop="gfphone">
+                  <el-input
+                    v-model="form_jhr.gfphone"
+                    placeholder="请输入联系电话"
+                  />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="办公电话" prop="gfoffphone">
+                  <el-input
+                    v-model="form_jhr.gfoffphone"
+                    placeholder="请输入办公电话"
+                  />
+                </el-form-item>
+              </el-col>
+              <el-col :span="24">
+                <el-form-item label="住址" prop="gfaddress">
+                  <el-input
+                    v-model="form_jhr.gfaddress"
+                    placeholder="请输入住址"
+                  />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row :gutter="15">
+              <el-col :span="12">
+                <el-form-item label="其他联系人姓名" prop="grandmothername">
+                  <el-input
+                    v-model="form_jhr.grandmothername"
+                    placeholder="请输入其他联系人姓名"
+                  />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="与幼儿关系" prop="gmgx">
+                  <el-select
+                    v-model="form_jhr.gmgx"
+                    placeholder="请选择与幼儿关系"
+                  >
+                    <el-option
+                      v-for="dict in jtgxOptions"
+                      :key="dict.dictValue"
+                      :label="dict.dictLabel"
+                      :value="dict.dictValue"
+                    ></el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="联系电话" prop="gmphone">
+                  <el-input
+                    v-model="form_jhr.gmphone"
+                    placeholder="请输入联系电话"
+                  />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="办公电话" prop="gmoffphone">
+                  <el-input
+                    v-model="form_jhr.gmoffphone"
+                    placeholder="请输入办公电话"
+                  />
+                </el-form-item>
+              </el-col>
+              <el-col :span="24">
+                <el-form-item label="住址" prop="gmaddress">
+                  <el-input
+                    v-model="form_jhr.gmaddress"
+                    placeholder="请输入住址"
+                  />
+                </el-form-item>
+              </el-col>
+            </el-row>
+          </el-form>
+        </el-tab-pane>
+      </el-tabs>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
@@ -503,6 +672,14 @@ import {
   updateChild_tb,
   importTemplate,
 } from "@/api/benyi/child";
+import {
+  listContactpeople,
+  getContactpeople,
+  getContactpeopleByChildId,
+  delContactpeople,
+  addContactpeople,
+  updateContactpeople,
+} from "@/api/benyi/contactpeople";
 
 import { listClass } from "@/api/system/class";
 import { getToken } from "@/utils/auth";
@@ -569,6 +746,8 @@ export default {
       sourceOptions: [],
       //班级
       classOptions: [],
+      //家庭关系
+      jtgxOptions: [],
       //是否可编辑
       isable: false,
       // 幼儿导入参数
@@ -630,6 +809,10 @@ export default {
       },
       // 表单参数
       form: {},
+      // 表单参数
+      form_jhr: {},
+      //监护人验证
+      rules_jhr: {},
       // 表单校验
       rules: {
         name: [
@@ -662,6 +845,9 @@ export default {
     });
     this.getDicts("sys_dm_ryqd").then((response) => {
       this.sourceOptions = response.data;
+    });
+    this.getDicts("sys_dm_jtgx").then((response) => {
+      this.jtgxOptions = response.data;
     });
     this.getLink();
   },
@@ -826,6 +1012,29 @@ export default {
       this.diglogForm2.area = "";
 
       this.resetForm("form");
+
+      this.form_jhr = {
+        id: undefined,
+        childid: undefined,
+        fathername: undefined,
+        fphone: undefined,
+        foffphone: undefined,
+        mothername: undefined,
+        mphone: undefined,
+        moffphone: undefined,
+        grandfathername: undefined,
+        gfgx: undefined,
+        gfphone: undefined,
+        gfoffphone: undefined,
+        gfaddress: undefined,
+        grandmothername: undefined,
+        gmgx: undefined,
+        gmphone: undefined,
+        gmaddress: undefined,
+        gmoffphone: undefined,
+        createTime: undefined,
+      };
+      this.resetForm("form_jhr");
     },
     /** 搜索按钮操作 */
     handleQuery() {
@@ -850,10 +1059,10 @@ export default {
       this.title = "添加幼儿信息";
     },
     /** 修改按钮操作 */
-    handleUpdate(row) {
+    async handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids;
-      getChild(id).then((response) => {
+      await getChild(id).then((response) => {
         this.form = response.data;
 
         this.diglogForm.province = response.data.birthProvincename;
@@ -870,6 +1079,12 @@ export default {
 
         this.open = true;
         this.title = "修改幼儿信息";
+
+        //根据幼儿id获取监护人信息
+        getContactpeopleByChildId(this.form.id).then((res) => {
+          // console.log("childid:" + this.form.id + ";jhr:" + res.data);
+          this.form_jhr = res.data;
+        });
       });
     },
     /** 提交按钮 */
@@ -879,17 +1094,25 @@ export default {
           if (this.form.id != undefined) {
             updateChild(this.form).then((response) => {
               if (response.code === 200) {
-                this.msgSuccess("修改成功");
-                this.open = false;
-                this.getList();
+                updateContactpeople(this.form_jhr).then((res) => {
+                  if (res.code === 200) {
+                    this.msgSuccess("修改成功");
+                    this.open = false;
+                    this.getList();
+                  }
+                });
               }
             });
           } else {
             addChild(this.form).then((response) => {
+              console.log(response);
               if (response.code === 200) {
-                this.msgSuccess("新增成功");
-                this.open = false;
-                this.getList();
+                this.form_jhr.childid = response.data;
+                addContactpeople(this.form_jhr).then((res) => {
+                  this.msgSuccess("新增成功");
+                  this.open = false;
+                  this.getList();
+                });
               }
             });
           }
@@ -941,7 +1164,7 @@ export default {
     },
     //所在省市区触发联动方法
     onSelected_brith(data) {
-      console.log("onSelected_brith=" + data);
+      // console.log("onSelected_brith=" + data);
       if (
         data.province.code == undefined ||
         data.city.code == undefined ||
@@ -959,7 +1182,7 @@ export default {
     },
     //户口所在地
     onSelected_registered(data) {
-      console.log("onSelected_registered=" + data);
+      // console.log("onSelected_registered=" + data);
       if (
         data.province.code == undefined ||
         data.city.code == undefined ||
@@ -977,7 +1200,7 @@ export default {
     },
     //住址所在地
     onSelected_addr(data) {
-      console.log("onSelected_addr=" + data);
+      // console.log("onSelected_addr=" + data);
       if (
         data.province.code == undefined ||
         data.city.code == undefined ||

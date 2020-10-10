@@ -17,6 +17,15 @@ export function getContactpeople(id) {
   })
 }
 
+
+// 查询幼儿紧急情况联系人详细
+export function getContactpeopleByChildId(id) {
+  return request({
+    url: '/benyi/contactpeople/bychild/' + id,
+    method: 'get'
+  })
+}
+
 // 新增幼儿紧急情况联系人
 export function addContactpeople(data) {
   return request({

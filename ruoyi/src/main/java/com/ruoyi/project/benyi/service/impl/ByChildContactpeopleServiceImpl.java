@@ -86,4 +86,15 @@ public class ByChildContactpeopleServiceImpl implements IByChildContactpeopleSer
     public int deleteByChildContactpeopleById(Long id) {
         return byChildContactpeopleMapper.deleteByChildContactpeopleById(id);
     }
+
+    /**
+     * 批量删除幼儿紧急情况联系人
+     *
+     * @param childIds 需要删除的幼儿紧急情况联系人ID
+     * @return 结果
+     */
+    @Override
+    public int deleteByChildContactpeopleByChildIds(Long[] childIds) {
+        return byChildContactpeopleMapper.deleteByChildContactpeopleByChildIds(childIds);
+    }
 }

@@ -121,7 +121,7 @@
         <el-row :gutter="15">
           <el-col :span="24">
             <el-form-item label="选择幼儿" prop="childid">
-              <el-select v-model="form.childid" placeholder="请输入选择幼儿">
+              <el-select v-model="form.childid" placeholder="请输入选择幼儿" disabled="true">
                 <el-option
                   v-for="dict in childOptions"
                   :key="dict.id"

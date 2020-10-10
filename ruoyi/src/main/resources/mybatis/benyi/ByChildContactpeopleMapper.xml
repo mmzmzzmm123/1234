@@ -149,4 +149,11 @@
         </foreach>
     </delete>
 
+    <delete id="deleteByChildContactpeopleByChildIds" parameterType="String">
+        delete from by_child_contactpeople where childid in
+        <foreach item="childid" collection="array" open="(" separator="," close=")">
+            #{childid}
+        </foreach>
+    </delete>
+
 </mapper>

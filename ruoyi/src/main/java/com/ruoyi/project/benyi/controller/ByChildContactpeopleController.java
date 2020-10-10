@@ -76,6 +76,21 @@ public class ByChildContactpeopleController extends BaseController {
     }
 
     /**
+     * 获取幼儿紧急情况联系人详细信息
+     */
+    @PreAuthorize("@ss.hasPermi('benyi:contactpeople:query')")
+    @GetMapping(value = "/bychild/{id}")
+    public AjaxResult getInfoByChildId(@PathVariable("id") Long id) {
+        ByChildContactpeople byChildContactpeople = new ByChildContactpeople();
+        byChildContactpeople.setChildid(id);
+        List<ByChildContactpeople> list = byChildContactpeopleService.selectByChildContactpeopleList(byChildContactpeople);
+        if (list != null && list.size() > 0) {
+            byChildContactpeople = list.get(0);
+        }
+        return AjaxResult.success(byChildContactpeople);
+    }
+
+    /**
      * 新增幼儿紧急情况联系人
      */
     @PreAuthorize("@ss.hasPermi('benyi:contactpeople:add')")

@@ -58,4 +58,12 @@ public interface ByChildContactpeopleMapper {
      * @return 结果
      */
     public int deleteByChildContactpeopleByIds(Long[] ids);
+
+    /**
+     * 批量删除幼儿紧急情况联系人
+     *
+     * @param childIds 需要删除的幼儿紧急情况联系人ID
+     * @return 结果
+     */
+    public int deleteByChildContactpeopleByChildIds(Long[] childIds);
 }
