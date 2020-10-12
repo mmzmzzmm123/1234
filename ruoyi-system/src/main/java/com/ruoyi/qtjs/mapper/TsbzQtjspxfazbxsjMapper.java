@@ -14,10 +14,10 @@ public interface TsbzQtjspxfazbxsjMapper
     /**
      * 查询群体教师评选指标数据
      * 
-     * @param id 群体教师评选指标数据ID
+     * @param tsbzQtjspxfazbxsj 群体教师评选指标数据ID
      * @return 群体教师评选指标数据
      */
-    public TsbzQtjspxfazbxsj selectTsbzQtjspxfazbxsjById(Long id);
+    public TsbzQtjspxfazbxsj selectTsbzQtjspxfazbxsjById(TsbzQtjspxfazbxsj tsbzQtjspxfazbxsj);
 
     /**
      * 查询群体教师评选指标数据列表

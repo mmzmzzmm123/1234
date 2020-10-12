@@ -373,7 +373,7 @@ export default {
           this.open = true;
           this.title = "修改考核过程数据";
           this.form.khnr = row.tsbzJxzxkhzbx.khnr;
-          console.log(response.file);
+          // console.log(response.file);
           var array = [];
           var path = "";
           var name = "";
@@ -443,7 +443,7 @@ export default {
         })
         .catch(function () {});
     },
-    /** 删除按钮操作 */
+    /** 提交按钮操作 */
     handleCheck() {
       const faid = this.queryParams.faid;
       if (faid == null || faid == "") {

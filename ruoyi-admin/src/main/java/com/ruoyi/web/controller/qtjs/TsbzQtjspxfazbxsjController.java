@@ -1,6 +1,8 @@
 package com.ruoyi.web.controller.qtjs;
 
 import java.util.List;
+
+import com.ruoyi.common.utils.SecurityUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,14 +24,13 @@ import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
  * 群体教师评选指标数据Controller
- * 
+ *
  * @author ruoyi
  * @date 2020-09-17
  */
 @RestController
 @RequestMapping("/qtjs/qtjspxfazbxsj")
-public class TsbzQtjspxfazbxsjController extends BaseController
-{
+public class TsbzQtjspxfazbxsjController extends BaseController {
     @Autowired
     private ITsbzQtjspxfazbxsjService tsbzQtjspxfazbxsjService;
 
@@ -38,9 +39,9 @@ public class TsbzQtjspxfazbxsjController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('qtjs:qtjspxfazbxsj:list')")
     @GetMapping("/list")
-    public TableDataInfo list(TsbzQtjspxfazbxsj tsbzQtjspxfazbxsj)
-    {
+    public TableDataInfo list(TsbzQtjspxfazbxsj tsbzQtjspxfazbxsj) {
         startPage();
+        tsbzQtjspxfazbxsj.setCreateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
         List<TsbzQtjspxfazbxsj> list = tsbzQtjspxfazbxsjService.selectTsbzQtjspxfazbxsjList(tsbzQtjspxfazbxsj);
         return getDataTable(list);
     }
@@ -51,8 +52,7 @@ public class TsbzQtjspxfazbxsjController extends BaseController
     @PreAuthorize("@ss.hasPermi('qtjs:qtjspxfazbxsj:export')")
     @Log(title = "群体教师评选指标数据", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
-    public AjaxResult export(TsbzQtjspxfazbxsj tsbzQtjspxfazbxsj)
-    {
+    public AjaxResult export(TsbzQtjspxfazbxsj tsbzQtjspxfazbxsj) {
         List<TsbzQtjspxfazbxsj> list = tsbzQtjspxfazbxsjService.selectTsbzQtjspxfazbxsjList(tsbzQtjspxfazbxsj);
         ExcelUtil<TsbzQtjspxfazbxsj> util = new ExcelUtil<TsbzQtjspxfazbxsj>(TsbzQtjspxfazbxsj.class);
         return util.exportExcel(list, "qtjspxfazbxsj");
@@ -63,9 +63,11 @@ public class TsbzQtjspxfazbxsjController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('qtjs:qtjspxfazbxsj:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
-    {
-        return AjaxResult.success(tsbzQtjspxfazbxsjService.selectTsbzQtjspxfazbxsjById(id));
+    public AjaxResult getInfo(@PathVariable("id") Long id) {
+        TsbzQtjspxfazbxsj tsbzQtjspxfazbxsj=new TsbzQtjspxfazbxsj();
+        tsbzQtjspxfazbxsj.setId(id);
+        tsbzQtjspxfazbxsj.setCreateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
+        return AjaxResult.success(tsbzQtjspxfazbxsjService.selectTsbzQtjspxfazbxsjById(tsbzQtjspxfazbxsj));
     }
 
     /**
@@ -74,8 +76,9 @@ public class TsbzQtjspxfazbxsjController extends BaseController
     @PreAuthorize("@ss.hasPermi('qtjs:qtjspxfazbxsj:add')")
     @Log(title = "群体教师评选指标数据", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody TsbzQtjspxfazbxsj tsbzQtjspxfazbxsj)
-    {
+    public AjaxResult add(@RequestBody TsbzQtjspxfazbxsj tsbzQtjspxfazbxsj) {
+        tsbzQtjspxfazbxsj.setJsid(SecurityUtils.getLoginUser().getUser().getUserId());
+        tsbzQtjspxfazbxsj.setCreateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
         return toAjax(tsbzQtjspxfazbxsjService.insertTsbzQtjspxfazbxsj(tsbzQtjspxfazbxsj));
     }
 
@@ -85,8 +88,7 @@ public class TsbzQtjspxfazbxsjController extends BaseController
     @PreAuthorize("@ss.hasPermi('qtjs:qtjspxfazbxsj:edit')")
     @Log(title = "群体教师评选指标数据", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody TsbzQtjspxfazbxsj tsbzQtjspxfazbxsj)
-    {
+    public AjaxResult edit(@RequestBody TsbzQtjspxfazbxsj tsbzQtjspxfazbxsj) {
         return toAjax(tsbzQtjspxfazbxsjService.updateTsbzQtjspxfazbxsj(tsbzQtjspxfazbxsj));
     }
 
@@ -95,9 +97,8 @@ public class TsbzQtjspxfazbxsjController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('qtjs:qtjspxfazbxsj:remove')")
     @Log(title = "群体教师评选指标数据", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
-    {
+    @DeleteMapping("/{ids}")
+    public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(tsbzQtjspxfazbxsjService.deleteTsbzQtjspxfazbxsjByIds(ids));
     }
 }

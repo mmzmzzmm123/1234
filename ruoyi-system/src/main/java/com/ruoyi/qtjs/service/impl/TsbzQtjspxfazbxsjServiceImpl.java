@@ -23,13 +23,13 @@ public class TsbzQtjspxfazbxsjServiceImpl implements ITsbzQtjspxfazbxsjService
     /**
      * 查询群体教师评选指标数据
      * 
-     * @param id 群体教师评选指标数据ID
+     * @param tsbzQtjspxfazbxsj 群体教师评选指标数据ID
      * @return 群体教师评选指标数据
      */
     @Override
-    public TsbzQtjspxfazbxsj selectTsbzQtjspxfazbxsjById(Long id)
+    public TsbzQtjspxfazbxsj selectTsbzQtjspxfazbxsjById(TsbzQtjspxfazbxsj tsbzQtjspxfazbxsj)
     {
-        return tsbzQtjspxfazbxsjMapper.selectTsbzQtjspxfazbxsjById(id);
+        return tsbzQtjspxfazbxsjMapper.selectTsbzQtjspxfazbxsjById(tsbzQtjspxfazbxsj);
     }
 
     /**

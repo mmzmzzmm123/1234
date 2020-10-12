@@ -1,43 +1,58 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.qtjs.mapper.TsbzQtjspxfazbxsjMapper">
-    
+
     <resultMap type="TsbzQtjspxfazbxsj" id="TsbzQtjspxfazbxsjResult">
-        <result property="id"    column="id"    />
-        <result property="faid"    column="faid"    />
-        <result property="zbid"    column="zbid"    />
-        <result property="jsid"    column="jsid"    />
-        <result property="content"    column="content"    />
-        <result property="filepath"    column="filepath"    />
-        <result property="filename"    column="filename"    />
-        <result property="createuserid"    column="createuserid"    />
-        <result property="createTime"    column="create_time"    />
+        <result property="id" column="id"/>
+        <result property="faid" column="faid"/>
+        <result property="zbid" column="zbid"/>
+        <result property="jsid" column="jsid"/>
+        <result property="content" column="content"/>
+        <result property="filepath" column="filepath"/>
+        <result property="filename" column="filename"/>
+        <result property="createuserid" column="createuserid"/>
+        <result property="createTime" column="create_time"/>
+        <association property="tsbzQtjspxfazbx" column="zbid" javaType="TsbzQtjspxfazbx"
+                     resultMap="TsbzQtjspxfazbxResult"/>
+    </resultMap>
+
+    <resultMap type="TsbzQtjspxfazbx" id="TsbzQtjspxfazbxResult">
+        <result property="id" column="zbxid"/>
+        <result property="faid" column="faid"/>
+        <result property="pxtj" column="pxtj"/>
+        <result property="sslx" column="sslx"/>
+        <result property="zbb" column="zbb"/>
+        <result property="remarks" column="remarks"/>
+        <result property="createuserid" column="createuserid"/>
+        <result property="createTime" column="create_time"/>
     </resultMap>
 
     <sql id="selectTsbzQtjspxfazbxsjVo">
-        select id, faid, zbid, jsid, content, filepath, filename, createuserid, create_time from tsbz_qtjspxfazbxsj
+select b.id,b.content,b.zbid,b.createuserid,a.create_time,a.id as zbxid,a.faid, a.pxtj, a.sslx, a.zbb, a.remarks from tsbz_qtjspxfazbx a
+left join (select * from tsbz_qtjspxfazbxsj where createuserid= #{createuserid}) b
+on a.faid=b.faid and a.id=b.zbid
     </sql>
 
     <select id="selectTsbzQtjspxfazbxsjList" parameterType="TsbzQtjspxfazbxsj" resultMap="TsbzQtjspxfazbxsjResult">
         <include refid="selectTsbzQtjspxfazbxsjVo"/>
-        <where>  
-            <if test="faid != null "> and faid = #{faid}</if>
-            <if test="zbid != null "> and zbid = #{zbid}</if>
-            <if test="jsid != null "> and jsid = #{jsid}</if>
-            <if test="content != null  and content != ''"> and content = #{content}</if>
-            <if test="filepath != null  and filepath != ''"> and filepath = #{filepath}</if>
-            <if test="filename != null  and filename != ''"> and filename like concat('%', #{filename}, '%')</if>
-            <if test="createuserid != null "> and createuserid = #{createuserid}</if>
+        <where>
+            <if test="faid != null ">and a.faid = #{faid}</if>
+            <if test="zbid != null ">and a.zbid = #{zbid}</if>
+            <!--<if test="jsid != null ">and jsid = #{jsid}</if>-->
+            <if test="content != null  and content != ''">and b.content = #{content}</if>
+            <!--<if test="filepath != null  and filepath != ''"> and filepath = #{filepath}</if>-->
+            <!--<if test="filename != null  and filename != ''"> and filename like concat('%', #{filename}, '%')</if>-->
+            <!--<if test="createuserid != null "> and createuserid = #{createuserid}</if>-->
         </where>
     </select>
-    
-    <select id="selectTsbzQtjspxfazbxsjById" parameterType="Long" resultMap="TsbzQtjspxfazbxsjResult">
+
+    <select id="selectTsbzQtjspxfazbxsjById" parameterType="TsbzQtjspxfazbxsj" resultMap="TsbzQtjspxfazbxsjResult">
         <include refid="selectTsbzQtjspxfazbxsjVo"/>
-        where id = #{id}
+        where b.id = #{id}
     </select>
-        
+
     <insert id="insertTsbzQtjspxfazbxsj" parameterType="TsbzQtjspxfazbxsj" useGeneratedKeys="true" keyProperty="id">
         insert into tsbz_qtjspxfazbxsj
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -49,7 +64,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="filename != null">filename,</if>
             <if test="createuserid != null">createuserid,</if>
             <if test="createTime != null">create_time,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="faid != null">#{faid},</if>
             <if test="zbid != null">#{zbid},</if>
@@ -59,7 +74,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="filename != null">#{filename},</if>
             <if test="createuserid != null">#{createuserid},</if>
             <if test="createTime != null">#{createTime},</if>
-         </trim>
+        </trim>
     </insert>
 
     <update id="updateTsbzQtjspxfazbxsj" parameterType="TsbzQtjspxfazbxsj">
@@ -82,10 +97,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteTsbzQtjspxfazbxsjByIds" parameterType="String">
-        delete from tsbz_qtjspxfazbxsj where id in 
+        delete from tsbz_qtjspxfazbxsj where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>
-    
+
 </mapper>
