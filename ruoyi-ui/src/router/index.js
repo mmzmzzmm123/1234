@@ -57,11 +57,17 @@ export const constantRoutes = [
     component: Layout,
     redirect: 'index',
     children: [
+      // {
+      //   path: 'index',
+      //   component: (resolve) => require(['@/views/index'], resolve),
+      //   name: '首页',
+      //   meta: { title: '首页', icon: 'dashboard', noCache: true, affix: true }
+      // }
       {
         path: 'index',
-        component: (resolve) => require(['@/views/index'], resolve),
-        name: '首页',
-        meta: { title: '首页', icon: 'dashboard', noCache: true, affix: true }
+        component: (resolve) => require(['@/views/custom/order'], resolve),
+        name: '订单',
+        meta: { title: '订单', icon: 'build', noCache: true, affix: true }
       }
     ]
   },
