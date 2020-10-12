@@ -30,7 +30,7 @@
     </resultMap>
 
     <sql id="selectTsbzQtjspxfazbxsjVo">
-select b.id,b.content,b.zbid,b.createuserid,a.create_time,a.id as zbxid,a.faid, a.pxtj, a.sslx, a.zbb, a.remarks from tsbz_qtjspxfazbx a
+select b.id,b.content,b.zbid,b.jsid, b.filepath, b.filename,b.createuserid,a.create_time,a.id as zbxid,a.faid, a.pxtj, a.sslx, a.zbb, a.remarks from tsbz_qtjspxfazbx a
 left join (select * from tsbz_qtjspxfazbxsj where createuserid= #{createuserid}) b
 on a.faid=b.faid and a.id=b.zbid
     </sql>

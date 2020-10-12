@@ -17,6 +17,16 @@ export function getQtjspxsh(id) {
   })
 }
 
+
+// 查询考核审核过程列表
+export function getQtjspxshByFaid(query) {
+    return request({
+      url: '/qtjs/qtjspxsh/listbyfaid',
+      method: 'get',
+      params: query
+    })
+  }
+
 // 新增群体教师评选审核过程
 export function addQtjspxsh(data) {
   return request({

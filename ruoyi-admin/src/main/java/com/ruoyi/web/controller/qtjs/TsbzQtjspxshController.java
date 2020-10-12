@@ -2,6 +2,7 @@ package com.ruoyi.web.controller.qtjs;
 
 import java.util.List;
 
+import com.ruoyi.common.utils.SecurityUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -57,6 +58,17 @@ public class TsbzQtjspxshController extends BaseController {
     }
 
     /**
+     * 查询考核审核过程列表
+     */
+    @PreAuthorize("@ss.hasPermi('qtjs:qtjspxsh:list')" + "||@ss.hasPermi('qtjs:qtjspxfazbxsj:list')")
+    @GetMapping("/listbyfaid")
+    public TableDataInfo listByFaid(TsbzQtjspxsh tsbzQtjspxsh) {
+        tsbzQtjspxsh.setCreateuseird(SecurityUtils.getLoginUser().getUser().getUserId());
+        List<TsbzQtjspxsh> list = tsbzQtjspxshService.selectTsbzQtjspxshList(tsbzQtjspxsh);
+        return getDataTable(list);
+    }
+
+    /**
      * 获取群体教师评选审核过程详细信息
      */
     @PreAuthorize("@ss.hasPermi('qtjs:qtjspxsh:query')")
@@ -93,5 +105,33 @@ public class TsbzQtjspxshController extends BaseController {
     @DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(tsbzQtjspxshService.deleteTsbzQtjspxshByIds(ids));
+    }
+
+    /**
+     * 回退考核审核过程
+     */
+    @PreAuthorize("@ss.hasPermi('qtjs:qtjspxsh:edit')")
+    @Log(title = "群体教师评选审核过程", businessType = BusinessType.UPDATE)
+    @PostMapping("/back/{id}/{status}")
+    public AjaxResult back(@PathVariable Long id, @PathVariable String status) {
+        TsbzQtjspxsh tsbzQtjspxsh = new TsbzQtjspxsh();
+        tsbzQtjspxsh.setId(id);
+        tsbzQtjspxsh.setStatus(status);
+        return toAjax(tsbzQtjspxshService.updateTsbzQtjspxsh(tsbzQtjspxsh));
+    }
+
+    /**
+     * 提交考核审核过程
+     */
+    @PreAuthorize("@ss.hasPermi('qtjs:qtjspxsh:add')" + "||@ss.hasPermi('qtjs:qtjspxfazbxsj:edit')")
+    @Log(title = "群体教师评选审核过程", businessType = BusinessType.INSERT)
+    @PostMapping("/check/{id}")
+    public AjaxResult add(@PathVariable Long id) {
+        TsbzQtjspxsh tsbzQtjspxsh = new TsbzQtjspxsh();
+        tsbzQtjspxsh.setFaid(id);
+        tsbzQtjspxsh.setStatus("1");
+        tsbzQtjspxsh.setJsid(SecurityUtils.getLoginUser().getUser().getUserId());
+        tsbzQtjspxsh.setCreateuseird(SecurityUtils.getLoginUser().getUser().getUserId());
+        return toAjax(tsbzQtjspxshService.insertTsbzQtjspxsh(tsbzQtjspxsh));
     }
 }

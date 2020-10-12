@@ -17,7 +17,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="指标编号" prop="zbid">
+      <!-- <el-form-item label="指标编号" prop="zbid">
         <el-input
           v-model="queryParams.zbid"
           placeholder="请输入指标编号"
@@ -25,7 +25,7 @@
           size="small"
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item>
         <el-button
           type="cyan"
@@ -70,6 +70,7 @@
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['qtjs:qtjspxfazbxsj:remove']"
+          v-show="disable"
           >清空</el-button
         >
       </el-col>
@@ -80,6 +81,7 @@
           size="mini"
           @click="handleCheck"
           v-hasPermi="['qtjs:qtjspxfazbxsj:edit']"
+          v-show="disable"
           >提交</el-button
         >
       </el-col>
@@ -120,6 +122,7 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['qtjs:qtjspxfazbxsj:edit']"
+            v-show="disable"
             >填报</el-button
           >
           <el-button
@@ -128,6 +131,7 @@
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['qtjs:qtjspxfazbxsj:remove']"
+            v-show="disable"
             >清空</el-button
           >
         </template>
@@ -167,11 +171,21 @@
           />
         </el-form-item>
         <el-form-item label="附件" prop="filepath">
-          <el-input
-            v-model="form.filepath"
-            type="textarea"
-            placeholder="请输入内容"
-          />
+          <el-input v-model="form.filepath" v-if="false" />
+          <el-upload
+            class="upload-demo"
+            :action="uploadFileUrl"
+            :headers="headers"
+            :on-preview="handlePreview"
+            :on-remove="handleRemove"
+            :before-remove="beforeRemove"
+            :limit="filecount"
+            :on-exceed="handleExceed"
+            :file-list="fileList"
+            :on-success="handleAvatarSuccess"
+          >
+            <el-button size="small" type="primary">选择文件</el-button>
+          </el-upload>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -191,12 +205,15 @@ import {
   updateQtjspxfazbxsj,
 } from "@/api/qtjs/qtjspxfazbxsj";
 import { listQtjspxfa, getQtjspxfa } from "@/api/qtjs/qtjspxfa";
-import { checkQtjspxsh } from "@/api/qtjs/qtjspxsh";
+import { checkQtjspxsh, getQtjspxshByFaid } from "@/api/qtjs/qtjspxsh";
+import { getToken } from "@/utils/auth";
 
 export default {
   name: "Qtjspxfazbxsj",
   data() {
     return {
+      //是否已提交
+      disable: true,
       //默认方案id
       defaultFaid: "",
       // 遮罩层
@@ -219,6 +236,13 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
+      uploadFileUrl: process.env.VUE_APP_BASE_API + "/common/upload", // 上传的图片服务器地址
+      headers: {
+        Authorization: "Bearer " + getToken(),
+      },
+      //文件
+      fileList: [],
+      filecount: 1,
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -227,19 +251,23 @@ export default {
         zbid: null,
         jsid: null,
         content: null,
-        filepath: null,
-        filename: null,
+        filepath: "",
+        filename: "",
         createuserid: null,
       },
       // 查询参数
       queryParams_fa: {
         fazt: "1",
       },
+      // 查询参数
+      queryParams_khsh: {
+        faid: "1",
+      },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
-         content: [
+        content: [
           { required: true, message: "佐证内容不能为空", trigger: "blur" },
         ],
       },
@@ -249,6 +277,41 @@ export default {
     this.getPxFaList();
   },
   methods: {
+    handleAvatarSuccess(res, file) {
+      //console.log(res, file);
+      if (res.code == "200") {
+        this.form.filepath = res.fileName + ";";
+        this.form.filename = file.name + ";";
+      } else {
+        this.msgError(res.msg);
+      }
+      //console.log(this.form.filepath, this.form.filename);
+    },
+    handleRemove(file, fileList) {
+      //console.log(file, fileList);
+      if (file.response.code == "200") {
+        this.form.filepath = this.form.filepath.replace(
+          file.response.fileName + ";",
+          ""
+        );
+        this.form.filename = this.form.filename.replace(file.name + ";", "");
+      }
+    },
+    handlePreview(file) {
+      //console.log(file);
+    },
+    handleExceed(files, fileList) {
+      this.$message.warning(
+        `当前限制选择 ` +
+          this.filecount +
+          ` 个文件，本次选择了 ${files.length} 个文件，共选择了 ${
+            files.length + fileList.length
+          } 个文件`
+      );
+    },
+    beforeRemove(file, fileList) {
+      return this.$confirm(`确定移除 ${file.name}？`);
+    },
     // 字典翻译
     faFormat(row, column) {
       // return this.selectDictLabel(this.classOptions, row.classid);
@@ -261,6 +324,15 @@ export default {
         }
       });
       return actions.join("");
+    },
+    //判断该方案是否已提交
+    getIsCheck() {
+      this.queryParams_khsh.faid = this.defaultFaid;
+      getQtjspxshByFaid(this.queryParams_khsh).then((response) => {
+        if (response.rows.length > 0) {
+          this.disable = false;
+        }
+      });
     },
     //获取评选方案
     async getPxFaList() {
@@ -278,6 +350,8 @@ export default {
         this.qtjspxfazbxsjList = response.rows;
         this.total = response.total;
         this.loading = false;
+
+        this.getIsCheck();
       });
     },
     // 取消按钮
@@ -300,6 +374,7 @@ export default {
         createTime: null,
       };
       this.resetForm("form");
+      this.fileList = [];
     },
     /** 搜索按钮操作 */
     handleQuery() {
@@ -330,6 +405,27 @@ export default {
           this.form.zbb = row.tsbzQtjspxfazbx.zbb;
           this.open = true;
           this.title = "填报群体教师评选指标数据";
+
+          // console.log(response.file);
+          var array = [];
+          var path = "";
+          var name = "";
+          // console.log("filename:" + response.data.filename);
+          if (response.data.filename != "" && response.data.filename != null) {
+            //console.log(value); // 结果依次为1，2，3
+            array.push({
+              name: response.data.filename,
+              url: response.data.filepath,
+            });
+            path = response.data.filepath + ";";
+            name = response.data.filename + ";";
+            this.filecount = 1;
+            this.form.filepath = path;
+            this.form.filename = name;
+            this.fileList = array;
+          } else {
+            this.filecount = 0;
+          }
         });
       } else {
         this.open = true;
