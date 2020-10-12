@@ -1,8 +1,13 @@
 package com.ruoyi.web.controller.qtjs;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.qtjs.domain.TsbzQtjspxjg;
+import com.ruoyi.qtjs.service.ITsbzQtjspxjgService;
+import com.ruoyi.web.controller.common.SchoolCommonController;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,6 +38,10 @@ import com.ruoyi.common.core.page.TableDataInfo;
 public class TsbzQtjspxshController extends BaseController {
     @Autowired
     private ITsbzQtjspxshService tsbzQtjspxshService;
+    @Autowired
+    private SchoolCommonController schoolCommonController;
+    @Autowired
+    private ITsbzQtjspxjgService tsbzQtjspxjgService;
 
     /**
      * 查询群体教师评选审核过程列表
@@ -94,6 +103,31 @@ public class TsbzQtjspxshController extends BaseController {
     @Log(title = "群体教师评选审核过程", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody TsbzQtjspxsh tsbzQtjspxsh) {
+        //校级
+        if (!schoolCommonController.isStringEmpty(tsbzQtjspxsh.getXjshyj()) && tsbzQtjspxsh.getXjshyj().equals("1")) {
+            tsbzQtjspxsh.setXjshr(SecurityUtils.getLoginUser().getUser().getUserId());
+            tsbzQtjspxsh.setStatus("2");
+        }
+
+        //区级
+        if (!schoolCommonController.isStringEmpty(tsbzQtjspxsh.getQjshyj()) && tsbzQtjspxsh.getQjshyj().equals("1")) {
+            tsbzQtjspxsh.setQjshr(SecurityUtils.getLoginUser().getUser().getUserId());
+            tsbzQtjspxsh.setStatus("9");
+
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
+            Date date = new Date();
+            System.out.println("year=" + sdf.format(date));
+
+            TsbzQtjspxjg tsbzQtjspxjg = new TsbzQtjspxjg();
+            tsbzQtjspxjg.setJsid(tsbzQtjspxsh.getJsid());
+            tsbzQtjspxjg.setFaid(tsbzQtjspxsh.getFaid());
+            tsbzQtjspxjg.setNf(sdf.format(date));
+            tsbzQtjspxjg.setCreateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
+            //目前缺少评选类型
+
+            tsbzQtjspxjgService.insertTsbzQtjspxjg(tsbzQtjspxjg);
+
+        }
         return toAjax(tsbzQtjspxshService.updateTsbzQtjspxsh(tsbzQtjspxsh));
     }
 

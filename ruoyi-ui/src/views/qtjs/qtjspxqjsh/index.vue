@@ -90,7 +90,7 @@
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['qtjs:qtjspxsh:remove']"
-          >删除</el-button
+          >退回</el-button
         >
       </el-col>
       <right-toolbar
@@ -104,7 +104,7 @@
       :data="qtjspxshList"
       @selection-change="handleSelectionChange"
     >
-      <el-table-column type="selection" width="55" align="center" />
+      <el-table-column type="selection" width="55" align="center" :selectable="isShow" />
       <!-- <el-table-column label="编号" align="center" prop="id" /> -->
       <el-table-column
         label="评选方案"
@@ -132,8 +132,13 @@
       />
       <el-table-column label="校级审核建议" align="center" prop="xjshjy" />
       <!-- <el-table-column label="区级审核人" align="center" prop="qjshr" /> -->
-      <el-table-column label="区级审核意见" align="center" prop="qjshyj"  :formatter="qjshyjFormat" />
-      <el-table-column label="区级审核建议" align="center" prop="qjshjy" /> 
+      <el-table-column
+        label="区级审核意见"
+        align="center"
+        prop="qjshyj"
+        :formatter="qjshyjFormat"
+      />
+      <el-table-column label="区级审核建议" align="center" prop="qjshjy" />
       <!-- <el-table-column label="创建人" align="center" prop="createuseird" />-->
       <el-table-column
         label="操作"
@@ -147,6 +152,7 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['qtjs:qtjspxsh:edit']"
+             v-show="isShow(scope.row)"
             >审核</el-button
           >
           <el-button
@@ -155,7 +161,8 @@
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['qtjs:qtjspxsh:remove']"
-            >删除</el-button
+             v-show="isShow(scope.row)"
+            >退回</el-button
           >
         </template>
       </el-table-column>
@@ -190,19 +197,19 @@
           <el-input v-model="jsxm" :disabled="true" />
           <el-input v-model="form.jsid" v-if="false" />
         </el-form-item>
-        <el-form-item label="校级审核意见" prop="xjshyj">
-          <el-select v-model="form.xjshyj" placeholder="请选择校级审核意见">
+        <el-form-item label="区级审核意见" prop="qjshyj">
+          <el-select v-model="form.qjshyj" placeholder="请选择区级审核意见">
             <el-option
-              v-for="dict in xjshyjOptions"
+              v-for="dict in qjshyjOptions"
               :key="dict.dictValue"
               :label="dict.dictLabel"
               :value="dict.dictValue"
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="校级审核建议" prop="xjshjy">
+        <el-form-item label="区级审核建议" prop="qjshjy">
           <el-input
-            v-model="form.xjshjy"
+            v-model="form.qjshjy"
             type="textarea"
             placeholder="请输入内容"
           />
@@ -222,11 +229,12 @@ import {
   getQtjspxsh,
   delQtjspxsh,
   updateQtjspxsh,
+  backQtjspxsh,
 } from "@/api/qtjs/qtjspxsh";
 import { listQtjspxfa, getQtjspxfa } from "@/api/qtjs/qtjspxfa";
 
 export default {
-  name: "Qtjspxshxx",
+  name: "Qtjspxshqj",
   data() {
     return {
       //教师姓名
@@ -297,6 +305,13 @@ export default {
     });
   },
   methods: {
+    //设置是否可用
+    isShow(row) {
+      if (row.status == "9") {
+        return false;
+      }
+      return true;
+    },
     // 方案字典翻译
     faFormat(row, column) {
       // return this.selectDictLabel(this.classOptions, row.classid);
@@ -419,7 +434,7 @@ export default {
         type: "warning",
       })
         .then(function () {
-          return delQtjspxsh(ids);
+          return backQtjspxsh(ids, "1");
         })
         .then(() => {
           this.getList();

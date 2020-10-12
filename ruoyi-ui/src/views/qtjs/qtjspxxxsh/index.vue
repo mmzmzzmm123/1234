@@ -104,7 +104,7 @@
       :data="qtjspxshList"
       @selection-change="handleSelectionChange"
     >
-      <el-table-column type="selection" width="55" align="center" />
+      <el-table-column type="selection" width="55" align="center" :selectable="isShow" />
       <!-- <el-table-column label="编号" align="center" prop="id" /> -->
       <el-table-column
         label="评选方案"
@@ -147,6 +147,7 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['qtjs:qtjspxsh:edit']"
+            v-show="isShow(scope.row)"
             >审核</el-button
           >
           <el-button
@@ -155,6 +156,7 @@
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['qtjs:qtjspxsh:remove']"
+            v-show="isShow(scope.row)"
             >删除</el-button
           >
         </template>
@@ -176,7 +178,7 @@
           <el-select
             v-model="form.faid"
             placeholder="请选择方案"
-            :disabled="true"
+            :disabled="true" 
           >
             <el-option
               v-for="dict in faOptions"
@@ -297,6 +299,15 @@ export default {
     });
   },
   methods: {
+    // 是否显示按钮
+    isShow(row) {
+      // console.log("rowstatus:" + row.status);
+      if (row.status == "0" || row.status == "9" || row.status == "2") {
+        return false;
+      } else {
+        return true;
+      }
+    },
     // 方案字典翻译
     faFormat(row, column) {
       // return this.selectDictLabel(this.classOptions, row.classid);
