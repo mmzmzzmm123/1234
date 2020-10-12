@@ -22,14 +22,14 @@
         </div>
 
         <div class="sousouright-iconadd">
-          <el-dropdown trigger="click" size="small" :hide-on-click="false">
+          <el-dropdown trigger="click" size="small" :hide-on-click="true" >
               <span class="el-dropdown-link">
           <i class="el-icon-plus" style="font-size: 18px;"/>
              </span>
             <el-dropdown-menu slot="dropdown" class="sq-dropdown">
               <el-dropdown-item class="filter-item" icon="el-icon-plus" @click.native="addbookmarkurl">添加连接
               </el-dropdown-item>
-              <el-dropdown-item class="filter-item" icon="el-icon-plus" command="b">添加文本</el-dropdown-item>
+              <el-dropdown-item class="filter-item" icon="el-icon-plus" @click.native="addbooNote" >添加文本</el-dropdown-item>
               <el-dropdown-item class="filter-item" icon="el-icon-plus" command="d">导入书签</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
@@ -59,9 +59,9 @@
 
           <div class="filter-tbar">
             <div class="filter-classification">
-              <div class="classification " @click="showopen(0)"><span>网页</span></div>
-              <div class="classification" @click="showopen(1)"><span>文本</span></div>
-              <div class="classification" @click="showopen(2)"><span>其他</span></div>
+              <div  :class="['classification',property=='0'?' classification-click':'']" @click="showopen(0)"><span>网页</span></div>
+              <div :class="['classification',property=='1'?' classification-click':'']" @click="showopen(1)"><span>文本</span></div>
+              <div :class="['classification',property=='2'?' classification-click':'']" @click="showopen(2)"><span>其他</span></div>
               <!--        <div class="classification" @click="showopen(3)"><span>其他</span></div>-->
             </div>
             <div class="setUpThe">
@@ -290,10 +290,12 @@
                       <i class="el-icon-position"></i>
                     </div>
                   </el-header>
-                  <div class="main-url-title">部分网站不允许内嵌套打开,请在设置中选择自己喜欢的打开方式!</div>
+<!--                  <div class="main-url-title">部分网站不允许内嵌套打开,请在设置中选择自己喜欢的打开方式!</div>-->
                   <div class="mianUrl-botoom"  v-loading="iframeLoading"  >
 <!--                    webkitallowfullscreen="true" mozallowfullscreen="true" allowfullscreen="true"-->
-                    <iframe sandbox="allow-forms allow-scripts allow-popups" class="openurl" :src="gourl"  target="_self"  tabindex="-1"  />
+<!--                    <iframe sandbox="allow-forms allow-scripts allow-popups" class="openurl" :src="gourl"  target="_self"  tabindex="-1"  />-->
+                    <router-view :key="$route.query.t"></router-view>
+
                   </div>
         </el-main>
       </el-container>
@@ -322,6 +324,7 @@
   import {
     selectBymenuNote,
     userGetNoteInfo,
+    addUserNote
   } from "@/api/note/note";
   import {format} from 'timeago.js';
 
@@ -332,6 +335,8 @@
 
     data: function () {
       return {
+        //网页0 文本1 其他1
+        property:0,
         sousuo: '',
         drawer: false,
         // 遮罩层
@@ -405,6 +410,7 @@
         noteParams: {
           pageNum: 1,
           pageSize: 15,
+          noteId: undefined,
           userId: undefined,
           title: undefined,
           description: undefined,
@@ -419,7 +425,8 @@
           topFlag: undefined,
           isShare: undefined,
           isEncryption: undefined,
-          createUserName: undefined
+          createUserName: undefined,
+          tiymceUeditor:undefined
         },
       }
     },
@@ -452,6 +459,7 @@
         // that.queryParams.menuId = 1;
       } else {
         that.queryParams.menuId = routedata;
+        that.noteParams.menuId = routedata;
       }
 
       //搜索值
@@ -477,14 +485,10 @@
 
     },
     mounted() {
-      this.newBookmark();
+
     },
     methods: {
-      /**初始化 分类全部的意思**/
-      newBookmark() {
-        //默认选中 全部
-        document.getElementsByClassName("classification")[0].classList.add("classification-click");
-      },
+
 
       /**自动获取高度**/
       getHeight() {
@@ -503,7 +507,7 @@
         //判断是否加载了所有数据
         var i = that.queryParams.pageNum + 1;
         that.$set(that.queryParams, 'pageNum', i)
-        console.log("this.queryParams.pageNum:" + that.queryParams.pageNum)
+        // console.log("this.queryParams.pageNum:" + that.queryParams.pageNum)
         var listcount = Math.ceil(that.total / 15);
         console.log("该目录共有页数:" + listcount)
 
@@ -512,55 +516,45 @@
           that.noMore = true;
           that.listnoMore = true;
           that.listloading = false
-          console.log("禁止滚动了")
+          // console.log("禁止滚动了")
           return;
         } else {
 
           this.listloading = true
           setTimeout(() => {
-            selectBymenuIdUserID(this.queryParams).then(response => {
-              if (response.rows.length != 0 && response.code == 200) {
-                console.log("response.rows" + response.rows)
-                this.bookmarkList = this.bookmarkList.concat(response.rows);
-
-                this.total = response.total;
-                this.listloading = false
-                console.log("请求完毕" + that.queryParams.pageNum)
-              } else {
-                //出错了
-                //加载完毕了 禁止滚动
-                this.noMore = true;
-                this.listloading = false
-              }
-            });
+            switch(this.property) {
+              case 0:
+                this. getListConcat();
+                break;
+              case 1:
+                this.getNoteList();
+                break;
+              default:
+            }
           }, 1000);
         }
 
-        // if (this.queryParams.pageNum = listcount) {
-        //   //加载完毕了 禁止滚动
-        //   that.noMore = true;
-        //   that.listnoMore = true;
-        //   that.listloading = false
-        //   console.log("刚刚好2页 禁止滚动了")
-        // }
 
       },
 
       /**切换显示 全部 网页 文本 其他**/
       showopen(e) {
-        //1 是文本
-        if (e==1){
-          this.getNoteList();
-        }else if(e==0){
-          this.getList();
-        }
-        document.getElementsByClassName("classification")[e].classList.add("classification-click");
-        for (var i = 0; i < 4; i++) {
-          if (i != e) {
-            document.getElementsByClassName("classification")[i].classList.remove('classification-click');
-          }
-        }
+        var that=this;
+        that.property=e;
+        console.log("queryParams"+this.queryParams.pageNum);
+        console.log("noteParams"+this.noteParams.pageNum);
 
+        switch(e) {
+          case 0:
+            this.getList();
+            break;
+          case 1:
+            this.getNoteList();
+            break;
+          default:
+            this.bookmarkList=null;
+
+        }
 
       },
       /** 转换书签菜单数据结构 */
@@ -695,6 +689,7 @@
           createTime: undefined,
           sqTags: [],
           sort: undefined,
+
         };
         this.resetForm("form");
       },
@@ -730,7 +725,29 @@
       /**切换排序规则**/
       handleCommand(command) {
         this.queryParams.sort = command;
-        this.getList();
+        switch(this.property) {
+          case 0:
+            this.getList();
+            break;
+          case 1:
+            this.getNoteList();
+            break;
+          default:
+            this.getList();
+        }
+
+
+      },
+      /**添加遍签**/
+      addbooNote() {
+        addUserNote(this.noteParams).then(response => {
+          if (response.code === 200) {
+            this.msgSuccess("新增成功");
+            this.getNoteList();
+          }
+        });
+
+
       },
 
       /** 查询书签管理列表 */
@@ -750,6 +767,25 @@
           }
         });
       },
+      /**查询书签 滚动加载分页拼接*/
+      getListConcat(){
+        this.loading = true;
+        selectBymenuIdUserID(this.queryParams).then(response => {
+          if (response.total != 0 && response.code == 200) {
+            console.log("response.rows" + response.rows)
+            this.bookmarkList = this.bookmarkList.concat(response.rows);
+            this.total = response.total;
+            this.listloading = false
+            this.loading = false;
+            console.log("请求完毕" + that.queryParams.pageNum)
+          } else {
+            //出错了加载完毕了 禁止滚动
+            this.noMore = true;
+            this.listloading = false
+            this.loading = false;
+          }
+        });
+      },
 
       /** 查询便签管理列表 */
       getNoteList() {
@@ -760,14 +796,49 @@
             this.loading = false;
         });
       },
+      /**查询书签 滚动加载分页拼接*/
+      getNoteListConcat(){
+        this.loading = true;
+        selectBymenuNote(this.queryParams).then(response => {
+          if (response.total != 0 && response.code == 200) {
+            this.bookmarkList = this.bookmarkList.concat(response.rows);
+            this.total = response.total;
+            this.loading = false;
+            this.listloading = false
+
+          }else {
+            //出错了加载完毕了 禁止滚动
+            this.noMore = true;
+            this.listloading = false
+            this.loading = false;
+          }
+        });
+      },
+      // /**网站内打开*/
+      // windowurl(url,bookmarkId) {
+      //   var that=this;
+      //   //网站内打开
+      //   that.iframeLoading=true;
+      //   this.gourl=url;
+      //   setTimeout(function(){
+      //     that.iframeLoading=false;
+      //   },1000);
+      // },
       /**网站内打开*/
-      windowurl(url,bookmarkId) {
+      windowurl(noteId, tiymceueditor,bookmarkId,url) {
         var that=this;
-        that.iframeLoading=true;
-        this.gourl=url;
-        setTimeout(function(){
-          that.iframeLoading=false;
-        },1000);
+        console.log("noteId:"+noteId)
+        console.log("tiymceueditor:"+tiymceueditor)
+
+
+        that.$router.push({
+          path: "/NqEdit",
+          query: {
+            Ueditor: tiymceueditor,
+            noteId:noteId,
+            t:Date.now(),
+          }
+        })
       },
       /**新窗口打开*/
       windowurlOpen() {

@@ -16,7 +16,7 @@
     <div>
     <tinymce
       ref="editor"
-      v-model="msg"
+      v-model="queryParams.UeditorContent"
       :disabled="disabled"
       @onClick="onClick"
     />
@@ -33,7 +33,9 @@
 </template>
 <script>
   import tinymce from '../../../components/TinyMCE'
-
+  import {
+    userUpdateNote,userGetNoteInfo
+  } from "@/api/note/note";
   const defaultForm = {
     status: 'draft',
     title: '', // 文章题目
@@ -57,17 +59,60 @@
       return{
         postForm: Object.assign({}, defaultForm),
         msg: "<span>请尽情创作吧!</span>",
-        disabled: false
+        disabled: false,
+        queryParams:{
+          noteId: undefined,
+          userId: undefined,
+          title: undefined,
+          description: undefined,
+          menuId: undefined,
+          background: undefined,
+          noteCount: undefined,
+          noteSort: undefined,
+          isState: undefined,
+          readProgress: undefined,
+          isStar: undefined,
+          isDelete: undefined,
+          topFlag: undefined,
+          isShare: undefined,
+          isEncryption: undefined,
+          createUserName: undefined,
+          tiymceUeditor:undefined,
+          UeditorContent:undefined,
+        },
       }
     },
+    created() {
+      var that = this;
+      var Ueditor = that.$route.query.Ueditor;
+      var noteId = that.$route.query.noteId;
+      this.queryParams.tiymceUeditor=Ueditor;
+      this.queryParams.noteId=noteId;
+
+      //查看对应的文章 信息和标题等等
+      this.getNoteList();
+
+    },
     methods: {
-      // 鼠标单击的事件
+      /** 实时更新文章的信息 */
+      UpdateNote(){
+        userUpdateNote(this.queryParams).then(response =>{
+            console.log("已保存:"+Date.now())
+        });
+      },
+      /** 查询便签管理列表 */
+      getNoteList() {
+        userGetNoteInfo(this.queryParams.noteId).then(response => {
+          this.queryParams = response.rows;
+        });
+      },
+      //鼠标单击的事件
       onClick (e, editor) {
         console.log('Element clicked')
         console.log(e)
         console.log(editor)
       },
-      // 清空内容
+      //清空内容
       clear () {
         this.$refs.editor.clear()
       }

@@ -66,4 +66,20 @@ public interface INmNoteService
      * @return 便签管理
      */
     public NmNote selectNmNoteuserById(Long noteId,Long userID);
+
+    /**
+     * 用户便签内容 实时储存到数据库
+     *
+     * @param  nmNote
+     * @return
+     */
+    public int userUpdateNote(NmNote nmNote);
+
+    /**
+     * redis的文章 转移更新到MongoDb
+     *
+     * @param
+     * @return
+     */
+    public void redisToMongonDB();
 }

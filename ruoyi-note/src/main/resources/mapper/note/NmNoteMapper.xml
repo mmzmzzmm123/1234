@@ -22,11 +22,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="isEncryption"    column="is_encryption"    />
         <result property="createTime"    column="create_time"    />
         <result property="updateTime"    column="update_time"    />
+        <result property="tiymceUeditor"    column="tiymce_ueditor"    />
     </resultMap>
 
 
     <sql id="selectNmNoteVo">
-        select note_id, user_id, title, description, menu_id, background, note_count, note_sort, is_state, read_progress, is_star, is_delete, top_flag, is_share, is_encryption, create_time, update_time from nm_note
+        select note_id, user_id, title, description, menu_id, background, note_count, note_sort, is_state, read_progress, is_star, is_delete, top_flag, is_share, is_encryption, create_time, update_time,tiymce_ueditor from nm_note
     </sql>
 
     <select id="selectNmNoteList" parameterType="NmNote" resultMap="NmNoteResult">
@@ -47,7 +48,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="topFlag != null "> and top_flag = #{topFlag}</if>
             <if test="isShare != null "> and is_share = #{isShare}</if>
             <if test="isEncryption != null "> and is_encryption = #{isEncryption}</if>
+            <if test="tiymceUeditor != null "> and tiymce_ueditor = #{tiymceUeditor}</if>
         </where>
+        order by create_time desc
     </select>
 
     <select id="selectNmNoteById" parameterType="Long" resultMap="NmNoteResult">
@@ -75,6 +78,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="isEncryption != null">is_encryption,</if>
             <if test="createTime != null">create_time,</if>
             <if test="updateTime != null">update_time,</if>
+            <if test="tiymceUeditor != null">tiymce_ueditor,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="noteId != null">#{noteId},</if>
@@ -94,6 +98,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="isEncryption != null">#{isEncryption},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="updateTime != null">#{updateTime},</if>
+            <if test="tiymceUeditor != null">#{tiymceUeditor},</if>
          </trim>
     </insert>
 
@@ -116,6 +121,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="isEncryption != null">is_encryption = #{isEncryption},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="tiymceUeditor != null">tiymce_ueditor = #{tiymceUeditor},</if>
         </trim>
         where note_id = #{noteId}
     </update>

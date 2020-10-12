@@ -2,7 +2,7 @@
   <div>
 
 
-    <div v-for="bm in bookmarkList" class="bookmark" :data-id="bm.id" @click="windowurl(bm.url,bm.bookmarkId)">
+    <div v-for="bm in bookmarkList" class="bookmark"   @click="winurl(bm.noteId,bm.tiymceUeditor,bm.bookmarkId,bm.url)">
       <div class="bookmark-item">
 
         <span class="bookmark-title" >{{bm.title}}</span>
@@ -48,9 +48,15 @@
         isdescription:false,
         noteTime:true,
         isBookmarkIcon:false,
+        Ueditor:undefined,
+
       }
     },
     created() {
+      var that=this;
+      //便签ID
+      that.Ueditor = that.$route.query.Ueditor;
+
       var a=2;
       if(a==2){
         //便签模式 只能这么显示
@@ -73,8 +79,9 @@
     },
 
     methods: {
-      windowurl(A, B) {
-        this.$emit('on-windowurl', A, B)
+      winurl:function(noteId,tiymceueditor,bookmarkId,url) {
+
+       this.$emit('on-windowurl', noteId, tiymceueditor,bookmarkId,url);
       }
 
     }

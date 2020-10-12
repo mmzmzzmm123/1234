@@ -8,8 +8,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
 
-import javax.persistence.Column;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 
 /**
@@ -27,6 +26,8 @@ public class NmNote
     private static final long serialVersionUID = 1L;
 
     /** Note便签ID */
+    @Id
+    @GeneratedValue(generator = "JDBC")//返回自增长主键
     @Column(name = "note_id")
     @Excel(name = "Note便签ID")
     private Long noteId;
@@ -110,6 +111,14 @@ public class NmNote
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "update_time")
     private Date updateTime;
+
+
+    @Column(name = "tiymce_ueditor")
+    private  Long tiymceUeditor;
+
+    /**富文本文章内容*/
+    @Transient
+    private  String UeditorContent;
 
 
 }

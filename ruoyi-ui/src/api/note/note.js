@@ -19,10 +19,25 @@ export function userGetNoteInfo(noteId) {
 
 
 
+// 新增便签管理
+export function addUserNote(data) {
+  return request({
+    url: '/note/note/addUserNote',
+    method: 'post',
+    data: data
+  })
+}
 
 
 
-
+// 修改便签文章的内容 实时保存
+export function userUpdateNote(data) {
+  return request({
+    url: '/note/note/userUpdateNote',
+    method: 'put',
+    data: data
+  })
+}
 
 
 // 查询便签管理列表

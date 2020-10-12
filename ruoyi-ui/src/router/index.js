@@ -161,6 +161,17 @@ export const constantRoutes = [
           title: '书签页面',icon:'user',
           requireAuth: false,//加该字段,表示进入这个路由是需要登录的true
         },
+        children: [
+          {
+            path: '/NqEdit',
+            name: 'NqEdit',
+            component: resolve => require(['../views/bookmark/common/NqEdit.vue'], resolve),
+            meta:{
+              title: 'Quill编辑器',icon:'user',
+              requireAuth: true,//加该字段,表示进入这个路由是需要登录的true
+            },
+          }
+        ]
       },{
         path: '/UserTagAll',
         name: 'UserTagAll',
@@ -183,14 +194,6 @@ export const constantRoutes = [
         component: resolve => require(['../views/bookmark/ceshi/index.vue'], resolve),
         meta:{
           title: '测试页面',icon:'user',
-          requireAuth: true,//加该字段,表示进入这个路由是需要登录的true
-        },
-      },{
-        path: '/NqEdit',
-        name: 'NqEdit',
-        component: resolve => require(['../views/bookmark/common/NqEdit.vue'], resolve),
-        meta:{
-          title: 'Quill编辑器',icon:'user',
           requireAuth: true,//加该字段,表示进入这个路由是需要登录的true
         },
       }

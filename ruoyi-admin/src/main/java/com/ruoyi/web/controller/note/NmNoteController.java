@@ -3,6 +3,7 @@ package com.ruoyi.web.controller.note;
 import java.util.List;
 
 import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.note.domain.NoteContentMgDb;
 import com.ruoyi.note.service.INoteRepositoryService;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -37,20 +38,6 @@ public class NmNoteController extends BaseController
     @Autowired
     private INmNoteService nmNoteService;
 
-    @Autowired
-    private INoteRepositoryService noteRepositoryService;
-
-
-    //测试
-    @GetMapping("/selectBymenuNote2")
-    public void save() {
-        NoteContentMgDb noteContentMgDb = new NoteContentMgDb();
-        noteContentMgDb.setId(7L);
-        noteContentMgDb.setNoteContent("宋人头2");
-        noteRepositoryService.save(noteContentMgDb);
-    }
-
-
 
     /**
      * 用户查看栏目下的所有便签
@@ -59,9 +46,8 @@ public class NmNoteController extends BaseController
     @GetMapping("/selectBymenuNote")
     public TableDataInfo selectBymenuNote(Long menuId)
     {
-        SysUser sysUser=getAuthUser();
         NmNote nmNote= new NmNote();
-        nmNote.setUserId(sysUser.getUserId());
+        nmNote.setUserId(getAuthUser().getUserId());
         nmNote.setMenuId(menuId);
         startPage();
         List<NmNote> list = nmNoteService.selectNmNoteList(nmNote);
@@ -69,15 +55,26 @@ public class NmNoteController extends BaseController
     }
 
 
+
     /**
-     * 用户新增便签
+     * 用户新增便签 直接创建成功
      */
     @PostMapping("/addUserNote")
     public AjaxResult userAddNote(@RequestBody NmNote nmNote)
     {
-        SysUser sysUser=getAuthUser();
-        nmNote.setUserId(sysUser.getUserId());
+
+        nmNote.setUserId(getAuthUser().getUserId());
         return toAjax(nmNoteService.insertNmNote(nmNote));
+    }
+
+    /**
+     * 实时更新文章信息 不用做缓存
+     */
+    @PostMapping("/userUpdateNote")
+    public AjaxResult userUpdateNote(@RequestBody NmNote nmNote)
+    {
+
+        return toAjax(nmNoteService.userUpdateNote(nmNote));
     }
 
     /**
