@@ -12,7 +12,7 @@ export function selectBymenuNote(query) {
 // 查询便签管理详细
 export function userGetNoteInfo(noteId) {
   return request({
-    url: '/note/note/userGetNoteInfo' + noteId,
+    url: '/note/note/userGetNoteInfo/' + noteId,
     method: 'get'
   })
 }

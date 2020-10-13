@@ -506,12 +506,15 @@
         var that = this;
         //判断是否加载了所有数据
         var i = that.queryParams.pageNum + 1;
+        var m = that.noteParams.pageNum + 1;
+
         that.$set(that.queryParams, 'pageNum', i)
+        that.$set(that.noteParams, 'pageNum', m)
         // console.log("this.queryParams.pageNum:" + that.queryParams.pageNum)
         var listcount = Math.ceil(that.total / 15);
         console.log("该目录共有页数:" + listcount)
 
-        if (i > listcount) {
+        if (i > listcount||m > listcount) {
           //加载完毕了 禁止滚动
           that.noMore = true;
           that.listnoMore = true;
@@ -524,10 +527,10 @@
           setTimeout(() => {
             switch(this.property) {
               case 0:
-                this. getListConcat();
+                this.getListConcat();
                 break;
               case 1:
-                this.getNoteList();
+                this.getNoteListConcat();
                 break;
               default:
             }
@@ -543,7 +546,9 @@
         that.property=e;
         console.log("queryParams"+this.queryParams.pageNum);
         console.log("noteParams"+this.noteParams.pageNum);
-
+        //初始化
+        this.queryParams.pageNum=1;
+        this.noteParams.pageNum=1;
         switch(e) {
           case 0:
             this.getList();
@@ -692,7 +697,32 @@
 
         };
         this.resetForm("form");
+      },    // 表单重置
+      resetNote() {
+        this.form = {
+          noteId: undefined,
+          userId: undefined,
+          title: undefined,
+          description: undefined,
+          menuId: undefined,
+          background: undefined,
+          noteCount: undefined,
+          noteSort: undefined,
+          isState: undefined,
+          readProgress: undefined,
+          isStar: undefined,
+          isDelete: undefined,
+          topFlag: undefined,
+          isShare: undefined,
+          isEncryption: undefined,
+          createTime: undefined,
+          updateTime: undefined,
+          createUserName: undefined
+        };
+        this.resetForm("form");
       },
+
+
       /** 回收站**/
       getrecycleList() {
         this.loading = true;
@@ -790,16 +820,16 @@
       /** 查询便签管理列表 */
       getNoteList() {
         this.loading = true;
-        selectBymenuNote(this.queryParams).then(response => {
+        selectBymenuNote(this.noteParams).then(response => {
             this.bookmarkList = response.rows;
             this.total = response.total;
             this.loading = false;
         });
       },
-      /**查询书签 滚动加载分页拼接*/
+      /**查询便签 滚动加载分页拼接*/
       getNoteListConcat(){
         this.loading = true;
-        selectBymenuNote(this.queryParams).then(response => {
+        selectBymenuNote(this.noteParams).then(response => {
           if (response.total != 0 && response.code == 200) {
             this.bookmarkList = this.bookmarkList.concat(response.rows);
             this.total = response.total;
