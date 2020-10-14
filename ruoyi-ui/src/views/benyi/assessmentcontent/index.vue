@@ -57,7 +57,7 @@
       <!-- <el-table-column label="编号" align="center" prop="id" /> -->
       <!-- <el-table-column label="父id" align="center" prop="parentid" /> -->
       <el-table-column label="名称" align="center" prop="name" />
-      <el-table-column label="是否元素" align="center" prop="iselement" />
+      <el-table-column label="是否元素" align="center" prop="iselement" :formatter="iselementFormat" />
       <el-table-column label="适用范围" align="center" prop="scope" :formatter="scopeFormat" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
@@ -90,17 +90,31 @@
     <!-- 添加或修改评估内容对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="父id" prop="parentid">
-          <el-input v-model="form.parentid" placeholder="请输入父id" />
+        <el-form-item label="所属模块" prop="parentid">
+          <el-select v-model="form.parentid" placeholder="请输入所属模块">
+            <el-option
+              v-for="dict in parentidOptions"
+              :key="dict.id"
+              :label="dict.name"
+              :value="dict.id"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="名称" prop="name">
           <el-input v-model="form.name" type="textarea" placeholder="请输入内容" />
         </el-form-item>
         <el-form-item label="是否元素" prop="iselement">
-          <el-input v-model="form.iselement" placeholder="请输入是否元素" />
+          <el-select v-model="form.iselement" placeholder="请选择是否元素">
+            <el-option
+              v-for="dict in iselementOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="适用范围" prop="scope">
-          <el-select v-model="form.scope" placeholder="请选择元素适用范围">
+          <el-select v-model="form.scope" placeholder="请选择元素适用范围" >
             <el-option
               v-for="dict in scopeOptions"
               :key="dict.dictValue"
@@ -145,6 +159,10 @@ export default {
       assessmentcontentList: [],
       // 范围选项
       scopeOptions: [],
+      // 是否元素选项
+      iselementOptions: [],
+      // 父类id
+      parentidOptions: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -161,7 +179,20 @@ export default {
       // 表单参数
       form: {},
       // 表单校验
-      rules: {}
+      rules: {
+        parentid: [
+          { required: true, message: "所属模块不能为空", trigger: "blur" }
+        ],
+        name: [
+          { required: true, message: "名称不能为空", trigger: "blur" }
+        ],
+        iselement: [
+          { required: true, message: "是否元素不能为空", trigger: "blur" }
+        ],
+        scope: [
+          { required: true, message: "范围不能为空", trigger: "blur" }
+        ],
+      }
     };
   },
   created() {
@@ -169,21 +200,37 @@ export default {
     this.getDicts("sys_dm_pgyssyfw").then(response => {
       this.scopeOptions = response.data;
     });
+    this.getDicts("sys_yes_no").then(response => {
+      this.iselementOptions = response.data;
+    });
+    this.getPartntid();
   },
   methods: {
     // 性别字典翻译
     scopeFormat(row, column) {
       return this.selectDictLabel(this.scopeOptions, row.scope);
     },
+    // 是否元素字典翻译
+    iselementFormat(row, column) {
+      return this.selectDictLabel(this.iselementOptions, row.iselement);
+    },
     /** 查询评估内容列表 */
     getList() {
       this.loading = true;
       listAssessmentcontent(this.queryParams).then(response => {
         this.assessmentcontentList = response.rows;
+        //console.log(this.assessmentcontentList);
         this.total = response.total;
         this.loading = false;
       });
     },
+    getPartntid() {
+      listAssessmentcontent(null).then(response => {
+        this.parentidOptions = response.rows;
+        console.log(this.parentidOptions);
+      });
+    },
+
     // 取消按钮
     cancel() {
       this.open = false;
