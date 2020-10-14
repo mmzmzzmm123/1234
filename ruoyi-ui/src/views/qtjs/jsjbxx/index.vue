@@ -8,13 +8,19 @@
       label-width="88px"
     >
       <el-form-item label="所属部门" prop="deptid">
-        <el-input
+        <el-select
           v-model="queryParams.deptid"
-          placeholder="请输入部门id"
+          placeholder="请选择部门"
           clearable
           size="small"
-          @keyup.enter.native="handleQuery"
-        />
+        >
+          <el-option
+            v-for="dict in deptOptions"
+            :key="dict.id"
+            :label="dict.xxmc"
+            :value="dict.id"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item label="教师姓名" prop="jsxm">
         <el-input
@@ -26,13 +32,19 @@
         />
       </el-form-item>
       <el-form-item label="性别" prop="xb">
-        <el-input
+        <el-select
           v-model="queryParams.xb"
-          placeholder="请输入性别"
+          placeholder="请选择性别"
           clearable
           size="small"
-          @keyup.enter.native="handleQuery"
-        />
+        >
+          <el-option
+            v-for="dict in xbOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item label="编制状态" prop="bzzt">
         <el-input
@@ -62,8 +74,16 @@
         />
       </el-form-item>
       <el-form-item>
-        <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+        <el-button
+          type="cyan"
+          icon="el-icon-search"
+          size="mini"
+          @click="handleQuery"
+          >搜索</el-button
+        >
+        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+          >重置</el-button
+        >
       </el-form-item>
     </el-form>
 
@@ -75,7 +95,8 @@
           size="mini"
           @click="handleAdd"
           v-hasPermi="['qtjs:jsjbxx:add']"
-        >新增</el-button>
+          >新增</el-button
+        >
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -85,7 +106,8 @@
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['qtjs:jsjbxx:edit']"
-        >修改</el-button>
+          >修改</el-button
+        >
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -95,22 +117,39 @@
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['qtjs:jsjbxx:remove']"
-        >删除</el-button>
+          >删除</el-button
+        >
       </el-col>
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+      <right-toolbar
+        :showSearch.sync="showSearch"
+        @queryTable="getList"
+      ></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="jsjbxxList" @selection-change="handleSelectionChange">
+    <el-table
+      v-loading="loading"
+      :data="jsjbxxList"
+      @selection-change="handleSelectionChange"
+    >
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="编号" align="center" prop="id" />
+      <!-- <el-table-column label="编号" align="center" prop="id" /> -->
       <el-table-column label="其他系统教师编号" align="center" prop="jsid" />
       <el-table-column label="教师姓名" align="center" prop="jsxm" />
-      <el-table-column label="性别" align="center" prop="xb" />
-      <el-table-column label="部门id" align="center" prop="deptid" />
+      <el-table-column
+        label="性别"
+        align="center"
+        prop="xb"
+        :formatter="xbFormat"
+      />
+      <el-table-column label="部门" align="center" prop="tsbzXxjbxx.xxmc" />
       <el-table-column label="编制状态" align="center" prop="bzzt" />
       <el-table-column label="岗位状态" align="center" prop="gwzt" />
       <el-table-column label="岗位类型" align="center" prop="gwlx" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column
+        label="操作"
+        align="center"
+        class-name="small-padding fixed-width"
+      >
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -118,20 +157,22 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['qtjs:jsjbxx:edit']"
-          >修改</el-button>
+            >修改</el-button
+          >
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['qtjs:jsjbxx:remove']"
-          >删除</el-button>
+            >删除</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
 
     <pagination
-      v-show="total>0"
+      v-show="total > 0"
       :total="total"
       :page.sync="queryParams.pageNum"
       :limit.sync="queryParams.pageSize"
@@ -214,6 +255,7 @@ import {
   addJsjbxx,
   updateJsjbxx,
 } from "@/api/qtjs/jsjbxx";
+import { listXxjbxx } from "@/api/qtjs/xxjbxx";
 
 export default {
   name: "Jsjbxx",
@@ -237,6 +279,10 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
+      // 性别字典
+      xbOptions: [],
+      //学校
+      deptOptions: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -265,9 +311,23 @@ export default {
     };
   },
   created() {
+    this.getxxList();
     this.getList();
+    this.getDicts("sys_user_sex").then((response) => {
+      this.xbOptions = response.data;
+    });
   },
   methods: {
+        //获取基地校列表
+    getxxList() {
+      listXxjbxx(null).then((response) => {
+        this.deptOptions = response.rows;
+      });
+    },
+    // 性别字典翻译
+    xbFormat(row, column) {
+      return this.selectDictLabel(this.xbOptions, row.xb);
+    },
     /** 查询教师基本信息列表 */
     getList() {
       this.loading = true;

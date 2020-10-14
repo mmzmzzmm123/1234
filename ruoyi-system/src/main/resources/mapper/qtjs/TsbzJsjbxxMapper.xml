@@ -23,37 +23,73 @@
         <result property="tzb" column="tzb"/>
         <result property="zks" column="zks"/>
         <result property="createTime" column="create_time"/>
+        <association property="tsbzXxjbxx" column="deptid" javaType="TsbzXxjbxx" resultMap="TsbzXxjbxxResult"/>
+    </resultMap>
+
+    <resultMap type="TsbzXxjbxx" id="TsbzXxjbxxResult">
+        <result property="id" column="id"/>
+        <result property="xxdm" column="xxdm"/>
+        <result property="countyid" column="countyid"/>
+        <result property="townid" column="townid"/>
+        <result property="villageid" column="villageid"/>
+        <result property="jyjxxdm" column="jyjxxdm"/>
+        <result property="xxmc" column="xxmc"/>
+        <result property="xxywmc" column="xxywmc"/>
+        <result property="xxdz" column="xxdz"/>
+        <result property="xxxz" column="xxxz"/>
+        <result property="dzzfzr" column="dzzfzr"/>
+        <result property="jxny" column="jxny"/>
+        <result property="xxbbm" column="xxbbm"/>
+        <result property="xxlbm" column="xxlbm"/>
+        <result property="szdqlbm" column="szdqlbm"/>
+        <result property="szdjjsxm" column="szdjjsxm"/>
+        <result property="szdmzsxm" column="szdmzsxm"/>
+        <result property="rxnl" column="rxnl"/>
+        <result property="zjxyym" column="zjxyym"/>
+        <result property="fjxyym" column="fjxyym"/>
+        <result property="zsqy" column="zsqy"/>
+        <result property="yzbm" column="yzbm"/>
+        <result property="lxdh" column="lxdh"/>
+        <result property="czdh" column="czdh"/>
+        <result property="dzxx" column="dzxx"/>
+        <result property="zydz" column="zydz"/>
+        <result property="zzjgdm" column="zzjgdm"/>
+        <result property="lsyg" column="lsyg"/>
+        <result property="dqxn" column="dqxn"/>
+        <result property="dqxq" column="dqxq"/>
+        <result property="createTime" column="create_time"/>
     </resultMap>
 
     <sql id="selectTsbzJsjbxxVo">
-        select id, jsid, jsxm, xb, deptid, dabh, zjlx, zjhm, bzzt, gwzt, gwlx, csrq, rjnx, zc, zyry, tzb, zks, create_time from tsbz_jsjbxx
+        select a.id, a.jsid, a.jsxm, a.xb, a.deptid, a.dabh, a.zjlx, a.zjhm, a.bzzt, a.gwzt, a.gwlx, a.csrq, a.rjnx, a.zc, a.zyry, a.tzb, a.zks, a.create_time,b.xxdm, b.countyid, b.townid, b.villageid, b.jyjxxdm, b.xxmc, b.xxywmc, b.xxdz, b.xxxz, b.dzzfzr, b.jxny, b.xxbbm, b.xxlbm, b.szdqlbm, b.szdjjsxm, b.szdmzsxm, b.rxnl, b.zjxyym, b.fjxyym, b.zsqy, b.yzbm, b.lxdh, b.czdh, b.dzxx, b.zydz, b.zzjgdm, b.lsyg, b.dqxn, b.dqxq from tsbz_jsjbxx a
+        left join tsbz_xxjbxx b on a.deptid=b.id
     </sql>
 
     <select id="selectTsbzJsjbxxList" parameterType="TsbzJsjbxx" resultMap="TsbzJsjbxxResult">
         <include refid="selectTsbzJsjbxxVo"/>
         <where>
-            <if test="jsid != null  and jsid != ''">and jsid = #{jsid}</if>
-            <if test="jsxm != null  and jsxm != ''">and jsxm = #{jsxm}</if>
-            <if test="xb != null  and xb != ''">and xb = #{xb}</if>
-            <if test="deptid != null  and deptid != ''">and deptid = #{deptid}</if>
-            <if test="dabh != null  and dabh != ''">and dabh = #{dabh}</if>
-            <if test="zjlx != null  and zjlx != ''">and zjlx = #{zjlx}</if>
-            <if test="zjhm != null  and zjhm != ''">and zjhm = #{zjhm}</if>
-            <if test="bzzt != null  and bzzt != ''">and bzzt = #{bzzt}</if>
-            <if test="gwzt != null  and gwzt != ''">and gwzt = #{gwzt}</if>
-            <if test="gwlx != null  and gwlx != ''">and gwlx = #{gwlx}</if>
-            <if test="csrq != null ">and csrq = #{csrq}</if>
-            <if test="rjnx != null ">and rjnx = #{rjnx}</if>
-            <if test="zc != null  and zc != ''">and zc = #{zc}</if>
-            <if test="zyry != null  and zyry != ''">and zyry = #{zyry}</if>
-            <if test="tzb != null  and tzb != ''">and tzb = #{tzb}</if>
-            <if test="zks != null  and zks != ''">and zks = #{zks}</if>
+            <if test="jsid != null  and jsid != ''">and a.jsid = #{jsid}</if>
+            <if test="jsxm != null  and jsxm != ''">and a.jsxm  like concat('%', #{jsxm}, '%')</if>
+            <if test="xb != null  and xb != ''">and a.xb = #{xb}</if>
+            <if test="deptid != null  and deptid != ''">and a.deptid = #{deptid}</if>
+            <if test="dabh != null  and dabh != ''">and a.dabh = #{dabh}</if>
+            <if test="zjlx != null  and zjlx != ''">and a.zjlx = #{zjlx}</if>
+            <if test="zjhm != null  and zjhm != ''">and a.zjhm = #{zjhm}</if>
+            <if test="bzzt != null  and bzzt != ''">and a.bzzt = #{bzzt}</if>
+            <if test="gwzt != null  and gwzt != ''">and a.gwzt = #{gwzt}</if>
+            <if test="gwlx != null  and gwlx != ''">and a.gwlx = #{gwlx}</if>
+            <if test="csrq != null ">and a.csrq = #{csrq}</if>
+            <if test="rjnx != null ">and a.rjnx = #{rjnx}</if>
+            <if test="zc != null  and zc != ''">and a.zc = #{zc}</if>
+            <if test="zyry != null  and zyry != ''">and a.zyry = #{zyry}</if>
+            <if test="tzb != null  and tzb != ''">and a.tzb = #{tzb}</if>
+            <if test="zks != null  and zks != ''">and a.zks = #{zks}</if>
         </where>
     </select>
 
     <select id="selectTsbzJsjbxxById" parameterType="String" resultMap="TsbzJsjbxxResult">
         <include refid="selectTsbzJsjbxxVo"/>
-        where id = #{id}
+        where a.id = #{id}
     </select>
 
     <insert id="insertTsbzJsjbxx" parameterType="TsbzJsjbxx">
