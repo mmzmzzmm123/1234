@@ -170,7 +170,7 @@ public class SysOrder extends BaseEntity {
      * 成交日期
      */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @Excel(name = "成交日期", width = 30, dateFormat = "yyyy-MM-dd")
+    @Excel(name = "成交时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date orderTime;
 
     public String getServeTime() {

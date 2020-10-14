@@ -1,5 +1,6 @@
 package com.ruoyi.custom.service.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import com.ruoyi.common.utils.DateUtils;
@@ -50,9 +51,10 @@ public class SysOrderServiceImpl implements ISysOrderService {
      */
     @Override
     public int insertSysOrder(SysOrder sysOrder) {
-        sysOrder.setCreateTime(DateUtils.getNowDate());
-        sysOrder.setOrderTime(DateUtils.getNowDate());
-        sysOrder.setOrderId(new Long(DateUtils.dateTimeNow()));
+        Date orderTime = DateUtils.getNowDate();
+        sysOrder.setCreateTime(orderTime);
+        sysOrder.setOrderTime(orderTime);
+        sysOrder.setOrderId(Long.parseLong(DateUtils.parseDateToStr(DateUtils.YYYYMMDDHHMMSS, orderTime)));
         return sysOrderMapper.insertSysOrder(sysOrder);
     }
 
