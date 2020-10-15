@@ -85,12 +85,49 @@ public class SchoolCommonController {
     }
 
     /**
+     * 学校id转部门id
+     **/
+    public Long xxIdToDeptId(String xxId) {
+        try {
+            long dept = 0;
+            SysDept sysDept = new SysDept();
+            sysDept.setSchoolid(xxId);
+            List<SysDept> list = deptService.selectDeptList(sysDept);
+            return list.get(0).getDeptId();
+        } catch (Exception e) {
+            //throw new CustomException("部门id转换学校id异常", HttpStatus.UNAUTHORIZED);
+            return null;
+        }
+    }
+
+    /**
      * 用户id转基地校教师id
      **/
     public Long userIdToJxjsId(Long userId) {
         try {
             SysUser sysUser = userService.selectUserById(userId);
-            return sysUser.getJsid();
+            if (sysUser.getJstype().equals("01")) {
+                return sysUser.getJsid();
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            //throw new CustomException("部门id转换学校id异常", HttpStatus.UNAUTHORIZED);
+            return null;
+        }
+    }
+
+    /**
+     * 用户id转学校教师id
+     **/
+    public Long userIdToxxjsId(Long userId) {
+        try {
+            SysUser sysUser = userService.selectUserById(userId);
+            if (sysUser.getJstype().equals("02")) {
+                return sysUser.getJsid();
+            } else {
+                return null;
+            }
         } catch (Exception e) {
             //throw new CustomException("部门id转换学校id异常", HttpStatus.UNAUTHORIZED);
             return null;

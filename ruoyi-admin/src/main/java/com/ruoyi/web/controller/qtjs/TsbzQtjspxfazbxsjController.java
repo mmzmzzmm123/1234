@@ -3,6 +3,7 @@ package com.ruoyi.web.controller.qtjs;
 import java.util.List;
 
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.web.controller.common.SchoolCommonController;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,6 +34,8 @@ import com.ruoyi.common.core.page.TableDataInfo;
 public class TsbzQtjspxfazbxsjController extends BaseController {
     @Autowired
     private ITsbzQtjspxfazbxsjService tsbzQtjspxfazbxsjService;
+    @Autowired
+    private SchoolCommonController schoolCommonController;
 
     /**
      * 查询群体教师评选指标数据列表
@@ -41,7 +44,7 @@ public class TsbzQtjspxfazbxsjController extends BaseController {
     @GetMapping("/list")
     public TableDataInfo list(TsbzQtjspxfazbxsj tsbzQtjspxfazbxsj) {
         startPage();
-        tsbzQtjspxfazbxsj.setCreateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
+        tsbzQtjspxfazbxsj.setCreateuserid(schoolCommonController.userIdToxxjsId(SecurityUtils.getLoginUser().getUser().getUserId()));
         List<TsbzQtjspxfazbxsj> list = tsbzQtjspxfazbxsjService.selectTsbzQtjspxfazbxsjList(tsbzQtjspxfazbxsj);
         return getDataTable(list);
     }
@@ -73,12 +76,12 @@ public class TsbzQtjspxfazbxsjController extends BaseController {
     /**
      * 新增群体教师评选指标数据
      */
-    @PreAuthorize("@ss.hasPermi('qtjs:qtjspxfazbxsj:add')")
+    @PreAuthorize("@ss.hasPermi('qtjs:qtjspxfazbxsj:edit')")
     @Log(title = "群体教师评选指标数据", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody TsbzQtjspxfazbxsj tsbzQtjspxfazbxsj) {
-        tsbzQtjspxfazbxsj.setJsid(SecurityUtils.getLoginUser().getUser().getUserId());
-        tsbzQtjspxfazbxsj.setCreateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
+        tsbzQtjspxfazbxsj.setJsid(schoolCommonController.userIdToxxjsId(SecurityUtils.getLoginUser().getUser().getUserId()));
+        tsbzQtjspxfazbxsj.setCreateuserid(schoolCommonController.userIdToxxjsId(SecurityUtils.getLoginUser().getUser().getUserId()));
         return toAjax(tsbzQtjspxfazbxsjService.insertTsbzQtjspxfazbxsj(tsbzQtjspxfazbxsj));
     }
 

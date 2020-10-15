@@ -72,7 +72,7 @@ public class TsbzQtjspxshController extends BaseController {
     @PreAuthorize("@ss.hasPermi('qtjs:qtjspxsh:list')" + "||@ss.hasPermi('qtjs:qtjspxfazbxsj:list')")
     @GetMapping("/listbyfaid")
     public TableDataInfo listByFaid(TsbzQtjspxsh tsbzQtjspxsh) {
-        tsbzQtjspxsh.setCreateuseird(SecurityUtils.getLoginUser().getUser().getUserId());
+        tsbzQtjspxsh.setCreateuseird(schoolCommonController.userIdToxxjsId(SecurityUtils.getLoginUser().getUser().getUserId()));
         List<TsbzQtjspxsh> list = tsbzQtjspxshService.selectTsbzQtjspxshList(tsbzQtjspxsh);
         return getDataTable(list);
     }
@@ -164,8 +164,8 @@ public class TsbzQtjspxshController extends BaseController {
         TsbzQtjspxsh tsbzQtjspxsh = new TsbzQtjspxsh();
         tsbzQtjspxsh.setFaid(id);
         tsbzQtjspxsh.setStatus("1");
-        tsbzQtjspxsh.setJsid(SecurityUtils.getLoginUser().getUser().getUserId());
-        tsbzQtjspxsh.setCreateuseird(SecurityUtils.getLoginUser().getUser().getUserId());
+        tsbzQtjspxsh.setJsid(schoolCommonController.userIdToxxjsId(SecurityUtils.getLoginUser().getUser().getUserId()));
+        tsbzQtjspxsh.setCreateuseird(schoolCommonController.userIdToxxjsId(SecurityUtils.getLoginUser().getUser().getUserId()));
         return toAjax(tsbzQtjspxshService.insertTsbzQtjspxsh(tsbzQtjspxsh));
     }
 }

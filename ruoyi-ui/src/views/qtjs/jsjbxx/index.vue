@@ -142,6 +142,7 @@
         :formatter="xbFormat"
       />
       <el-table-column label="部门" align="center" prop="tsbzXxjbxx.xxmc" />
+      <el-table-column label="教师档案号" align="center" prop="dabh" />
       <el-table-column label="编制状态" align="center" prop="bzzt" />
       <el-table-column label="岗位状态" align="center" prop="gwzt" />
       <el-table-column label="岗位类型" align="center" prop="gwlx" />
@@ -189,10 +190,34 @@
           <el-input v-model="form.jsxm" placeholder="请输入教师姓名" />
         </el-form-item>
         <el-form-item label="性别" prop="xb">
-          <el-input v-model="form.xb" placeholder="请输入性别" />
+          <el-select
+            v-model="form.xb"
+            placeholder="请选择性别"
+            clearable
+            size="small"
+          >
+            <el-option
+              v-for="dict in xbOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            />
+          </el-select>
         </el-form-item>
-        <el-form-item label="部门id" prop="deptid">
-          <el-input v-model="form.deptid" placeholder="请输入部门id" />
+        <el-form-item label="部门" prop="deptid">
+          <el-select
+            v-model="form.deptid"
+            placeholder="请选择部门"
+            clearable
+            size="small"
+          >
+            <el-option
+              v-for="dict in deptOptions"
+              :key="dict.id"
+              :label="dict.xxmc"
+              :value="dict.id"
+            />
+          </el-select>
         </el-form-item>
         <el-form-item label="教师档案号" prop="dabh">
           <el-input v-model="form.dabh" placeholder="请输入教师档案号" />
@@ -307,7 +332,23 @@ export default {
       // 表单参数
       form: {},
       // 表单校验
-      rules: {},
+      rules: {
+         jsxm: [
+          { required: true, message: "教师姓名不能为空", trigger: "blur" }
+        ],
+        xb: [
+          { required: true, message: "教师性别不能为空", trigger: "blur" }
+        ],
+        deptid: [
+          { required: true, message: "部门不能为空", trigger: "blur" }
+        ],
+        dabh: [
+          { required: true, message: "档案编号不能为空", trigger: "blur" }
+        ],
+        jsid: [
+          { required: true, message: "其他系统教师ID不能为空", trigger: "blur" }
+        ],
+      },
     };
   },
   created() {
@@ -318,7 +359,7 @@ export default {
     });
   },
   methods: {
-        //获取基地校列表
+    //获取基地校列表
     getxxList() {
       listXxjbxx(null).then((response) => {
         this.deptOptions = response.rows;

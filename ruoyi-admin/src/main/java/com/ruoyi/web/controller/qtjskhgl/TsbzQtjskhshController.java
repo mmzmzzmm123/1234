@@ -77,7 +77,7 @@ public class TsbzQtjskhshController extends BaseController {
     @PostMapping
     public AjaxResult add(@RequestBody TsbzQtjskhsh tsbzQtjskhsh) {
 
-        tsbzQtjskhsh.setJsid(schoolCommonController.userIdToJxjsId(SecurityUtils.getLoginUser().getUser().getUserId()));
+        tsbzQtjskhsh.setJsid(schoolCommonController.userIdToxxjsId(SecurityUtils.getLoginUser().getUser().getUserId()));
         tsbzQtjskhsh.setStatus("1");
         tsbzQtjskhsh.setCreateuseird(SecurityUtils.getLoginUser().getUser().getUserId());
 
@@ -91,7 +91,11 @@ public class TsbzQtjskhshController extends BaseController {
     @Log(title = "群体教师考核审核过程", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody TsbzQtjskhsh tsbzQtjskhsh) {
-
+        //校级
+        if (!schoolCommonController.isStringEmpty(tsbzQtjskhsh.getXjshyj()) && tsbzQtjskhsh.getXjshyj().equals("1")) {
+            tsbzQtjskhsh.setXjshr(SecurityUtils.getLoginUser().getUser().getUserId());
+            tsbzQtjskhsh.setStatus("2");
+        }
         //区级
         if (!schoolCommonController.isStringEmpty(tsbzQtjskhsh.getQjshyj()) && tsbzQtjskhsh.getQjshyj().equals("1")) {
             tsbzQtjskhsh.setQjshr(SecurityUtils.getLoginUser().getUser().getUserId());
@@ -132,8 +136,9 @@ public class TsbzQtjskhshController extends BaseController {
     public AjaxResult add(@PathVariable Long id) {
         TsbzQtjskhsh tsbzQtjskhsh = new TsbzQtjskhsh();
         tsbzQtjskhsh.setFaid(id);
-        tsbzQtjskhsh.setJsid(schoolCommonController.userIdToJxjsId(SecurityUtils.getLoginUser().getUser().getUserId()));
-        tsbzQtjskhsh.setCreateuseird(SecurityUtils.getLoginUser().getUser().getUserId());
+        tsbzQtjskhsh.setStatus("1");
+        tsbzQtjskhsh.setJsid(schoolCommonController.userIdToxxjsId(SecurityUtils.getLoginUser().getUser().getUserId()));
+        tsbzQtjskhsh.setCreateuseird(schoolCommonController.userIdToxxjsId(SecurityUtils.getLoginUser().getUser().getUserId()));
         return toAjax(tsbzQtjskhshService.insertTsbzQtjskhsh(tsbzQtjskhsh));
     }
 }

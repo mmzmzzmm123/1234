@@ -92,7 +92,7 @@
         where a.id = #{id}
     </select>
 
-    <insert id="insertTsbzJsjbxx" parameterType="TsbzJsjbxx">
+    <insert id="insertTsbzJsjbxx" parameterType="TsbzJsjbxx" useGeneratedKeys="true" keyProperty="id">
         insert into tsbz_jsjbxx
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>

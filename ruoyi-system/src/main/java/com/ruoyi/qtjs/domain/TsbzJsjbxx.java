@@ -20,7 +20,7 @@ public class TsbzJsjbxx extends BaseEntity {
     /**
      * 编号
      */
-    private String id;
+    private Long id;
 
     /**
      * 其他系统教师编号
@@ -129,11 +129,11 @@ public class TsbzJsjbxx extends BaseEntity {
 
     private TsbzXxjbxx tsbzXxjbxx;
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 

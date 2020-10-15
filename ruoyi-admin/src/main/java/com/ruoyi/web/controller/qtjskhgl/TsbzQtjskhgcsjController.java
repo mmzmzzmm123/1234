@@ -48,7 +48,7 @@ public class TsbzQtjskhgcsjController extends BaseController {
     @GetMapping("/list")
     public TableDataInfo list(TsbzQtjskhgcsj tsbzQtjskhgcsj) {
         startPage();
-        tsbzQtjskhgcsj.setCreateuserid(schoolCommonController.userIdToJxjsId(SecurityUtils.getLoginUser().getUser().getUserId()));
+        tsbzQtjskhgcsj.setCreateuserid(schoolCommonController.userIdToxxjsId(SecurityUtils.getLoginUser().getUser().getUserId()));
         List<TsbzQtjskhgcsj> list = tsbzQtjskhgcsjService.selectTsbzQtjskhgcsjList(tsbzQtjskhgcsj);
         return getDataTable(list);
     }
@@ -74,7 +74,7 @@ public class TsbzQtjskhgcsjController extends BaseController {
         AjaxResult ajax = AjaxResult.success();
         TsbzQtjskhgcsj tsbzQtjskhgcsj = new TsbzQtjskhgcsj();
         tsbzQtjskhgcsj.setId(id);
-        tsbzQtjskhgcsj.setCreateuserid(schoolCommonController.userIdToJxjsId(SecurityUtils.getLoginUser().getUser().getUserId()));
+        tsbzQtjskhgcsj.setCreateuserid(schoolCommonController.userIdToxxjsId(SecurityUtils.getLoginUser().getUser().getUserId()));
 
         //获取文件信息
         TsbzQtjskhgcwjsj tsbzQtjskhgcwjsj = new TsbzQtjskhgcwjsj();
@@ -96,7 +96,7 @@ public class TsbzQtjskhgcsjController extends BaseController {
     public AjaxResult add(@RequestBody TsbzQtjskhgcsj tsbzQtjskhgcsj) {
         String uuid = schoolCommonController.getUuid();
         tsbzQtjskhgcsj.setId(uuid);
-        tsbzQtjskhgcsj.setCreateuserid(schoolCommonController.userIdToJxjsId(SecurityUtils.getLoginUser().getUser().getUserId()));
+        tsbzQtjskhgcsj.setCreateuserid(schoolCommonController.userIdToxxjsId(SecurityUtils.getLoginUser().getUser().getUserId()));
 
         String filePaths = tsbzQtjskhgcsj.getFilepath();
         String fileNames = tsbzQtjskhgcsj.getFilename();
@@ -143,7 +143,7 @@ public class TsbzQtjskhgcsjController extends BaseController {
                 tsbzQtjskhgcwjsj.setFilepath(strArrFilePath[i]);
                 tsbzQtjskhgcwjsj.setFilename(strArrFileName[i]);
                 tsbzQtjskhgcwjsj.setGcid(tsbzQtjskhgcsj.getId());
-                tsbzQtjskhgcwjsj.setCreateuserid(schoolCommonController.userIdToJxjsId(SecurityUtils.getLoginUser().getUser().getUserId()));
+                tsbzQtjskhgcwjsj.setCreateuserid(schoolCommonController.userIdToxxjsId(SecurityUtils.getLoginUser().getUser().getUserId()));
                 tsbzQtjskhgcwjsjService.insertTsbzQtjskhgcwjsj(tsbzQtjskhgcwjsj);
             }
         }

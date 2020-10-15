@@ -15,7 +15,7 @@
     </resultMap>
 
     <resultMap type="TsbzQtjskhzbx" id="TsbzQtjskhzbxResult">
-        <result property="id"    column="id"    />
+        <result property="id"    column="zbxid"    />
         <result property="faid"    column="faid"    />
         <result property="khmk"    column="khmk"    />
         <result property="khnr"    column="khnr"    />
@@ -51,7 +51,7 @@ on a.faid=b.faid and a.id=b.zbid
 
     <select id="selectTsbzQtjskhgcsjById" parameterType="TsbzQtjskhgcsj" resultMap="TsbzQtjskhgcsjResult">
         <include refid="selectTsbzQtjskhgcsjVo"/>
-        where id = #{id}
+        where b.id = #{id}
     </select>
 
     <insert id="insertTsbzQtjskhgcsj" parameterType="TsbzQtjskhgcsj">

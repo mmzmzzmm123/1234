@@ -119,7 +119,7 @@
 
     <!-- 添加或修改群体教师考核审核过程对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+      <el-form ref="form" :model="form" :rules="rules" label-width="120px">
         <el-form-item label="考核方案" prop="faid">
           <el-select v-model="form.faid" size="small" :disabled="true">
             <el-option
