@@ -43,7 +43,7 @@ public class SysCommision extends BaseEntity {
     /**
      * 金额
      */
-    @Excel(name = "金额")
+    @Excel(name = "金额", scale = 2)
     private BigDecimal amount;
 
     /**

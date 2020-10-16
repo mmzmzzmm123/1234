@@ -58,8 +58,40 @@ public class SysCommisionController extends BaseController {
     @Log(title = "业务提成比例", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
     public AjaxResult export(SysCommision sysCommision) {
-        List<SysCommision> list = sysCommisionService.selectSysCommisionList(sysCommision);
+//        List<SysCommision> list = sysCommisionService.selectSysCommisionList(sysCommision);
         ExcelUtil<SysCommision> util = new ExcelUtil<SysCommision>(SysCommision.class);
+        List<SysCommision> list = sysCommisionService.selectSysCommisionDetail(sysCommision);
+        for (SysCommision detail : list) {
+            detail.setRate(0F);
+            SysCommision tmpQueryCom = new SysCommision();
+            tmpQueryCom.setUserId(detail.getUserId());
+            tmpQueryCom.setPostId(detail.getPostId());
+            List<SysCommision> tmpComList = sysCommisionService.selectSysCommisionList(tmpQueryCom);
+
+            float dAmount = detail.getAmount().floatValue();
+            for (int i = 0; i < tmpComList.size(); i++) {
+                SysCommision com = tmpComList.get(i);
+                float cAmount = com.getAmount().floatValue();
+                if (dAmount <= cAmount && i == 0) {
+                    // 第一条规则
+                    detail.setRate(com.getRate());
+                    break;
+                } else if (i == tmpComList.size() - 1 && dAmount > cAmount) {
+                    // 最后一条规则
+                    detail.setRate(com.getRate());
+                    break;
+                } else if (cAmount < dAmount && dAmount <= tmpComList.get(i + 1).getAmount().floatValue()) {
+                    // 中间规则
+                    detail.setRate(tmpComList.get(i + 1).getRate());
+                    break;
+                }
+            }
+
+            float amount = detail.getAmount().floatValue();
+            amount = amount * detail.getRate() / 100F;
+            detail.setCommision(new BigDecimal(amount));
+        }
+
         return util.exportExcel(list, "commision");
     }
 
