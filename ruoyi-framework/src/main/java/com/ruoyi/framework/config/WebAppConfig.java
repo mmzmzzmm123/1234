@@ -15,16 +15,7 @@ public class WebAppConfig extends WebMvcConfigurationSupport{
     public void addInterceptors(InterceptorRegistry registry){
         registry.addInterceptor(gInterceptor()).addPathPatterns("/**").excludePathPatterns("/sys/checkIsRemoteLogin");
         registry.addInterceptor(localInterceptor()).addPathPatterns("/**")
-                .excludePathPatterns("/user/login", "/user/reg","/user/forgetPassword",
-                        "/training/uploadData","/swagger-resources/**", "/webjars/**", "/v2/**",
-                        "/swagger-ui.html/**","/pay/wx/notify","/sms/getValidateCode","/sms/getWxValidateCode",
-                        "/sys/upgrade","/trainingpage/**","/static/**","/coachAdmin/**","/sys/getSysConfig",
-                        "/activity/**","/actuator/**","/sys/getShareImage","/pay/v2/wx/notify",
-                        "/user/wx/login","/user/wx/reg","/user/smsLogin", "/user/smsSecurity", "/user/smsReg","/sms/v4/getValidateCode",
-                        "/v3/wxpays/contracts/pay/notify", "/v3/wxpays/contracts/refund/notify",
-                        "/v3/wxpays/contracts/order/notify", "/v3/wxpays/contracts/notify","/v3/iapay/contracts/status/notify","/encryptDecrypt/getEncryptKey",
-                        "/v4/user/email/code", "/v4/user/email/reg", "/v4/user/email/login", "/v4/user/email/forgetPassword",
-                        "/v4/user/third/login","/v4/user/third/is_reg","/v4/user/third/reg","/payCallback/callback/**");
+                .excludePathPatterns("/user/login", "/user/reg","/user/forgetPassword");
     }
 
     @Override
