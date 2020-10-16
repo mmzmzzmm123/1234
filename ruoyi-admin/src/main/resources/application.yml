@@ -117,3 +117,14 @@ xss:
   excludes: /system/notice/*
   # 匹配链接
   urlPatterns: /system/*,/monitor/*,/tool/*
+
+
+aliyun.cdn.image = http://us-west.imagecdn.yesoulchina.com
+aliyun.cdn.video = http://us-west.videocdn.yesoulchina.com
+aliyun.oss.endpoint = http://oss-us-west-1.aliyuncs.com
+aliyun.oss.endpoint.img = http://oss-us-west-1.aliyuncs.com
+aliyun.oss.bucket.image = us-west-image-yesoulchina-com
+aliyun.oss.bucket.video = us-west-video-yesoulchina-com
+aliyun.oss.access.key.id = LTAI4Fywxx3qicFXx42x3bnc
+aliyun.oss.access.key.secret = ut9qeihGe71K6btLj8YecbsWhRj9o5
+aliyun.oss.dir.image = /test/courses/user-photo/
