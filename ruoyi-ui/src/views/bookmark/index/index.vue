@@ -1168,10 +1168,15 @@
       //节点点击
       OnClickzTree: function (event, treeId, treeNode) {
         var that = this;
+        var property=that.$store.state.property;
+        if (property==null||property==''||property==undefined){
+          property=0;
+        }
         that.$router.push({
           path: "/content",
           query: {
             menuId: treeNode.menuId,
+            property:property,
             t:Date.now(),
           }
         })

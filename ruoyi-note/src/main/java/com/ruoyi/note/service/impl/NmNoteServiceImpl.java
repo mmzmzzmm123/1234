@@ -83,6 +83,8 @@ public class NmNoteServiceImpl implements INmNoteService {
         nmNote.setCreateTime(DateUtils.getNowDate());
         nmNote.setTitle(DateUtil.now());
         nmNote.setTiymceUeditor(defaultUidGenerator.getUID());
+        //创建文章>>mongodb
+        redisCache.setCacheObject(Constants.NM_NOTE_CONTENT+nmNote.getTiymceUeditor(),"请开始你的创作!");
         return nmNoteMapper.insertSelective(nmNote);
     }
 

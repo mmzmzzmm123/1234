@@ -2,7 +2,7 @@
   <div>
 
     <el-container class="isbookmarkContainer">
-      <el-aside class="isBookmarkAside" >
+      <el-aside class="isBookmarkAside" :style="asideHeight">
       <el-header class="header-sousou">
         <div class="sousou-left">
           <div class="sousouleft-switch" @click="drawer = true"><i class="el-icon-s-unfold"/></div>
@@ -199,7 +199,7 @@
         <div class="bookmarklist" :style="datalist"  infinite-scroll-distance="10" v-loading="loading" v-if="showbookmark"
              v-infinite-scroll="load"
              infinite-scroll-disabled="disabled" style="overflow:auto;" infinite-scroll-immediate="false">
-    <BookmarkOne @on-windowurl="windowurl"  :listloading="listloading" :loading="loading" :bookmarkList="bookmarkList"></BookmarkOne>
+    <BookmarkOne @on-windowurl="windowurl" :property="property"  :listloading="listloading" :loading="loading" :bookmarkList="bookmarkList"></BookmarkOne>
 
           <p v-if="listloading" class="listhint"><i class="el-icon-loading"></i>加载中...</p>
           <p v-if="listnoMore" class="listhint">没有更多了</p>
@@ -279,11 +279,11 @@
           </el-dialog>
         </el-aside>
 
-        <el-main class="isBookmarkMain">
+        <el-main class="isBookmarkMain" v-if="isMain">
                   <el-header class="mianUrl-top" style="height: 50px">
                     <div class="mianUrl-top-left">
-                      <i class="el-icon-folder-delete"></i>
-                      <i class="el-icon-rank"></i>
+                      <i class="el-icon-folder-delete" @click="closeIsMain"></i>
+                      <i class="el-icon-rank" ></i>
                     </div>
                     <div class="mianUrl-top-right">
                       <i class="el-icon-edit-outline" @click="windowurlOpen"></i>
@@ -307,6 +307,7 @@
 </template>
 
 <script>
+
   import {listMenuByUserId} from "@/api/bookmark/menu";
   import Treeselect from "@riophae/vue-treeselect";
   import BookmarkOne from "../../../components/BookmarkList";
@@ -428,6 +429,13 @@
           createUserName: undefined,
           tiymceUeditor:undefined
         },
+        asideHeight: {
+          // width: "100%!important",
+          width: "400px!important",
+        },
+        isMain:true,
+        menuId:undefined,//当前目录
+
       }
     },
 
@@ -455,17 +463,25 @@
       var that = this;
       var routedata = that.$route.query.menuId;
       var sousuo = that.$route.query.sousuo;
+      var property = that.$route.query.property;
       if (routedata == undefined) {
         // that.queryParams.menuId = 1;
       } else {
         that.queryParams.menuId = routedata;
         that.noteParams.menuId = routedata;
       }
+      console.log("当前状态:"+that.property)
+      if (property != null && property != undefined && property != ''){
+        that.property =property;
+      }
+
 
       //搜索值
       if (sousuo != null && sousuo != undefined && sousuo != '') {
         this.queryParams.sousuo = sousuo;
       }
+
+
       if (routedata == 'BOOKMARK') {
         //全部书签
         this.getBookmarkList();
@@ -476,7 +492,7 @@
 
       } else {
         //根据menuId查询
-        this.getList();
+        this.getBypropertyList(that.property);
       }
 
       //自动获取高度
@@ -488,6 +504,14 @@
 
     },
     methods: {
+      closeIsMain(){
+        this.asideHeight.width="100%!important"
+        this.isMain=false;
+      },
+      openIsMain(){
+        this.asideHeight.width="400px!important"
+        this.isMain=true;
+      },
 
 
       /**自动获取高度**/
@@ -512,7 +536,7 @@
         that.$set(that.noteParams, 'pageNum', m)
         // console.log("this.queryParams.pageNum:" + that.queryParams.pageNum)
         var listcount = Math.ceil(that.total / 15);
-        console.log("该目录共有页数:" + listcount)
+
 
         if (i > listcount||m > listcount) {
           //加载完毕了 禁止滚动
@@ -536,30 +560,22 @@
             }
           }, 1000);
         }
-
-
       },
 
       /**切换显示 全部 网页 文本 其他**/
       showopen(e) {
         var that=this;
         that.property=e;
-        console.log("queryParams"+this.queryParams.pageNum);
-        console.log("noteParams"+this.noteParams.pageNum);
+        //缓存状态
+        that.$store.state.property=e;
+        this.showimg=false;
+        console.log("缓存property:"+that.$store.state.property)
+        // console.log("缓存property:"+store.state.property)
         //初始化
         this.queryParams.pageNum=1;
         this.noteParams.pageNum=1;
-        switch(e) {
-          case 0:
-            this.getList();
-            break;
-          case 1:
-            this.getNoteList();
-            break;
-          default:
-            this.bookmarkList=null;
-
-        }
+        this.bookmarkList=[];
+        this.getBypropertyList(e);
 
       },
       /** 转换书签菜单数据结构 */
@@ -751,11 +767,9 @@
           }
         });
       },
-
-      /**切换排序规则**/
-      handleCommand(command) {
-        this.queryParams.sort = command;
-        switch(this.property) {
+      /**根据条件查询*/
+      getBypropertyList(e){
+        switch(e) {
           case 0:
             this.getList();
             break;
@@ -763,9 +777,24 @@
             this.getNoteList();
             break;
           default:
-            this.getList();
-        }
+            this.loading = true;
 
+            //延迟只为了 动画效果 好看
+            setTimeout(()=>{
+              this.loading = false;
+              this.bookmarkList=[]
+              setTimeout(()=>{
+                this.showimg = true;
+              },80)
+            },200)
+
+        }
+      },
+
+      /**切换排序规则**/
+      handleCommand(command) {
+        this.queryParams.sort = command;
+        this.getBypropertyList(this.property);
 
       },
       /**添加遍签**/
@@ -784,12 +813,15 @@
       getList() {
         this.loading = true;
         selectBymenuIdUserID(this.queryParams).then(response => {
-          if (response.total != 0 && response.code == 200) {
+          if (response.code == 200) {
             this.bookmarkList = response.rows;
             this.total = response.total;
             this.loading = false;
-            if (this.total>0){
-              this.gourl=this.bookmarkList[0].url;
+            // if (this.total>0){
+            //   this.gourl=this.bookmarkList[0].url;
+            // }
+            if (this.bookmarkList==null||this.bookmarkList.length==0) {
+              this.showimg=true;
             }
           } else {
             this.showbookmark = false;
@@ -801,7 +833,7 @@
       getListConcat(){
         this.loading = true;
         selectBymenuIdUserID(this.queryParams).then(response => {
-          if (response.total != 0 && response.code == 200) {
+          if (response.code == 200) {
             console.log("response.rows" + response.rows)
             this.bookmarkList = this.bookmarkList.concat(response.rows);
             this.total = response.total;
@@ -824,13 +856,16 @@
             this.bookmarkList = response.rows;
             this.total = response.total;
             this.loading = false;
+            if (this.bookmarkList==null||this.bookmarkList.length==0) {
+              this.showimg=true;
+            }
         });
       },
       /**查询便签 滚动加载分页拼接*/
       getNoteListConcat(){
         this.loading = true;
         selectBymenuNote(this.noteParams).then(response => {
-          if (response.total != 0 && response.code == 200) {
+          if (response.code == 200) {
             this.bookmarkList = this.bookmarkList.concat(response.rows);
             this.total = response.total;
             this.loading = false;
@@ -841,6 +876,7 @@
             this.noMore = true;
             this.listloading = false
             this.loading = false;
+            this.showimg=true;
           }
         });
       },
@@ -854,21 +890,34 @@
       //     that.iframeLoading=false;
       //   },1000);
       // },
-      /**网站内打开*/
+      /**网站内便签打开 网页*/
       windowurl(noteId, tiymceueditor,bookmarkId,url) {
         var that=this;
         console.log("noteId:"+noteId)
         console.log("tiymceueditor:"+tiymceueditor)
+        this.openIsMain();
+        switch (that.property) {
+          case 0:
+            /**网页新窗口打开*/
+            window.open(url);
+            break;
+          case 1:
+            /**编辑器内部打开*/
+            that.$router.push({
+              path: "/NqEdit",
+              query: {
+                Ueditor: tiymceueditor,
+                noteId:noteId,
+                // menuId:that.noteParams.menuId,
+                property:that.property,
+                t:Date.now(),
+              }
+            })
+            break;
+          default:
+        }
 
 
-        that.$router.push({
-          path: "/NqEdit",
-          query: {
-            Ueditor: tiymceueditor,
-            noteId:noteId,
-            t:Date.now(),
-          }
-        })
       },
       /**新窗口打开*/
       windowurlOpen() {
@@ -1453,6 +1502,7 @@
     padding: 0px;
     background-color: #ffffff;
     width: 400px!important;
+    /*width: 100%!important;*/
     box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
   }
   .isBookmarkMain{

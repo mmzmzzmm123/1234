@@ -42,6 +42,7 @@
     components: {format},
     props: {
       bookmarkList: Array,
+      property: null,
     },
     data: function () {
       return {
@@ -49,25 +50,19 @@
         noteTime:true,
         isBookmarkIcon:false,
         Ueditor:undefined,
-
       }
     },
+    mounted(){
+      this.showView(this.property);
+    },
+    updated(){
+      this.showView(this.property);
+     },
     created() {
       var that=this;
       //便签ID
       that.Ueditor = that.$route.query.Ueditor;
 
-      var a=2;
-      if(a==2){
-        //便签模式 只能这么显示
-      this.isdescription=false;
-      this.noteTime=true;
-      this.isBookmarkIcon=false;
-      }else {
-      this.isdescription=true;
-      this.noteTime=false;
-      this.isBookmarkIcon=true;
-      }
     },
     filters: {
       //timeago.js插件
@@ -82,6 +77,27 @@
       winurl:function(noteId,tiymceueditor,bookmarkId,url) {
 
        this.$emit('on-windowurl', noteId, tiymceueditor,bookmarkId,url);
+      }
+      ,
+      showView(e) {
+        var that=this;
+        switch (e) {
+          case 0:
+            //网页模式
+            that.isdescription = true;
+            that.noteTime = false;
+            that.isBookmarkIcon = true;
+            break;
+          case 1:
+            //便签模式
+            that.isdescription = true;
+            that.noteTime = true;
+            that.isBookmarkIcon = false;
+            break;
+          default:
+
+        }
+
       }
 
     }

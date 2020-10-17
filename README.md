@@ -38,3 +38,18 @@ https://www.jianshu.com/p/c1ee7e4247bf
 @Synchronized : 同步方法安全的转化 
 @Getter(lazy=true) : 
 @Log : 支持各种logger对象，使用时用对应的注解，如：@Log4j
+
+
+
+
+beforCreate（创建之前） 
+Created（创建之后） 
+beforMount（载入之前） 
+Mounted（载入之后） 
+beforUpdate（更新之前） 
+Updated（更新之后） 
+beforDestroy（销毁之前） 
+Destroyed（销毁之后） 
+activate（keep-alive组件激活时调用） 
+deactivated（keep-alive组件停用时调用） 
+errorCaptured（这个组件的作用是接受子孙组件报错是调用，三个参数 错误对象、错误的组件、错误信息）
