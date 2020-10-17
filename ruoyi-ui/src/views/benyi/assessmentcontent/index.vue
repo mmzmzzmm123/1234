@@ -54,8 +54,6 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center" />
-      <!-- <el-table-column label="编号" align="center" prop="id" /> -->
-      <!-- <el-table-column label="父id" align="center" prop="parentid" /> -->
       <el-table-column label="名称" align="center" prop="name" />
       <el-table-column label="是否元素" align="center" prop="iselement" :formatter="iselementFormat" />
       <el-table-column label="适用范围" align="center" prop="scope" :formatter="scopeFormat" />
@@ -90,15 +88,13 @@
     <!-- 添加或修改评估内容对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="所属模块" prop="parentid">
-          <el-select v-model="form.parentid" placeholder="请输入所属模块">
-            <el-option
-              v-for="dict in parentidOptions"
-              :key="dict.id"
-              :label="dict.name"
-              :value="dict.id"
-            ></el-option>
-          </el-select>
+        <el-form-item label="所属模块" prop="parentId">
+          <treeselect
+            v-model="form.parentId"
+            :options="parentidOptions"
+            :normalizer="normalizer"
+            placeholder="选择上级部门"
+          />
         </el-form-item>
         <el-form-item label="名称" prop="name">
           <el-input v-model="form.name" type="textarea" placeholder="请输入内容" />
@@ -114,7 +110,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="适用范围" prop="scope">
-          <el-select v-model="form.scope" placeholder="请选择元素适用范围" >
+          <el-select v-model="form.scope" placeholder="请选择元素适用范围">
             <el-option
               v-for="dict in scopeOptions"
               :key="dict.dictValue"
@@ -140,9 +136,12 @@ import {
   addAssessmentcontent,
   updateAssessmentcontent
 } from "@/api/benyi/assessmentcontent";
+import Treeselect from "@riophae/vue-treeselect";
+import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 
 export default {
   name: "Assessmentcontent",
+  components: { Treeselect },
   data() {
     return {
       // 遮罩层
@@ -171,7 +170,7 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        parentid: undefined,
+        parentId: undefined,
         name: undefined,
         iselement: undefined,
         scope: undefined
@@ -180,18 +179,14 @@ export default {
       form: {},
       // 表单校验
       rules: {
-        parentid: [
+        parentId: [
           { required: true, message: "所属模块不能为空", trigger: "blur" }
         ],
-        name: [
-          { required: true, message: "名称不能为空", trigger: "blur" }
-        ],
+        name: [{ required: true, message: "名称不能为空", trigger: "blur" }],
         iselement: [
           { required: true, message: "是否元素不能为空", trigger: "blur" }
         ],
-        scope: [
-          { required: true, message: "范围不能为空", trigger: "blur" }
-        ],
+        scope: [{ required: true, message: "范围不能为空", trigger: "blur" }]
       }
     };
   },
@@ -203,7 +198,6 @@ export default {
     this.getDicts("sys_yes_no").then(response => {
       this.iselementOptions = response.data;
     });
-    this.getPartntid();
   },
   methods: {
     // 性别字典翻译
@@ -224,11 +218,25 @@ export default {
         this.loading = false;
       });
     },
-    getPartntid() {
+
+    /** 查询部门下拉树结构 */
+    getTreeselect() {
       listAssessmentcontent(null).then(response => {
-        this.parentidOptions = response.rows;
+        this.parentidOptions = this.handleTree(response.rows, "id");
         console.log(this.parentidOptions);
       });
+    },
+
+    /** 转换部门数据结构 */
+    normalizer(node) {
+      if (node.children && !node.children.length) {
+        delete node.children;
+      }
+      return {
+        id: node.id,
+        label: node.name,
+        children: node.children
+      };
     },
 
     // 取消按钮
@@ -240,7 +248,7 @@ export default {
     reset() {
       this.form = {
         id: undefined,
-        parentid: undefined,
+        parentId: undefined,
         name: undefined,
         iselement: undefined,
         scope: undefined,
@@ -265,14 +273,19 @@ export default {
       this.multiple = !selection.length;
     },
     /** 新增按钮操作 */
-    handleAdd() {
+    handleAdd(row) {
       this.reset();
+      this.getTreeselect();
+      if (row != undefined) {
+        this.form.parentId = row.id;
+      }
       this.open = true;
       this.title = "添加评估内容";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
+      this.getTreeselect();
       const id = row.id || this.ids;
       getAssessmentcontent(id).then(response => {
         this.form = response.data;

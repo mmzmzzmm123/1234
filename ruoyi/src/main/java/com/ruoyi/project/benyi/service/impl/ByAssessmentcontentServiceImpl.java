@@ -1,8 +1,13 @@
 package com.ruoyi.project.benyi.service.impl;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.framework.web.domain.TreeSelect;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.project.benyi.mapper.ByAssessmentcontentMapper;
@@ -40,6 +45,44 @@ public class ByAssessmentcontentServiceImpl implements IByAssessmentcontentServi
     @Override
     public List<ByAssessmentcontent> selectByAssessmentcontentList(ByAssessmentcontent byAssessmentcontent) {
         return byAssessmentcontentMapper.selectByAssessmentcontentList(byAssessmentcontent);
+    }
+
+    /**
+     * 构建前端所需要树结构
+     *
+     * @param byAssessmentcontents 部门列表
+     * @return 树结构列表
+     */
+    @Override
+    public List<ByAssessmentcontent> buildbyAssessmentcontentTree(List<ByAssessmentcontent> byAssessmentcontents)
+    {
+        List<ByAssessmentcontent> returnList = new ArrayList<ByAssessmentcontent>();
+        List<Long> tempList = new ArrayList<Long>();
+        for (ByAssessmentcontent byAssessmentcontent : byAssessmentcontents)
+        {
+            tempList.add(byAssessmentcontent.getId());
+        }
+        for (Iterator<ByAssessmentcontent> iterator = byAssessmentcontents.iterator(); iterator.hasNext();)
+        {
+            ByAssessmentcontent byAssessmentcontent = (ByAssessmentcontent) iterator.next();
+            // 如果是顶级节点, 遍历该父节点的所有子节点
+            if (!tempList.contains(byAssessmentcontent.getParentId()))
+            {
+                recursionFn(byAssessmentcontents, byAssessmentcontent);
+                returnList.add(byAssessmentcontent);
+            }
+        }
+        if (returnList.isEmpty())
+        {
+            returnList = byAssessmentcontents;
+        }
+        return returnList;
+    }
+
+    @Override
+    public List<TreeSelect> buildByAssessmentcontentTreeSelect(List<ByAssessmentcontent> byAssessmentcontents) {
+        List<ByAssessmentcontent> byAssessmentcontentTrees = buildbyAssessmentcontentTree(byAssessmentcontents);
+        return byAssessmentcontentTrees.stream().map(TreeSelect::new).collect(Collectors.toList());
     }
 
     /**
@@ -86,4 +129,54 @@ public class ByAssessmentcontentServiceImpl implements IByAssessmentcontentServi
     public int deleteByAssessmentcontentById(Long id) {
         return byAssessmentcontentMapper.deleteByAssessmentcontentById(id);
     }
+
+    /**
+     * 递归列表
+     */
+    private void recursionFn(List<ByAssessmentcontent> list, ByAssessmentcontent t)
+    {
+        // 得到子节点列表
+        List<ByAssessmentcontent> childList = getChildList(list, t);
+        t.setChildren(childList);
+        for (ByAssessmentcontent tChild : childList)
+        {
+            if (hasChild(list, tChild))
+            {
+                // 判断是否有子节点
+                Iterator<ByAssessmentcontent> it = childList.iterator();
+                while (it.hasNext())
+                {
+                    ByAssessmentcontent n = (ByAssessmentcontent) it.next();
+                    recursionFn(list, n);
+                }
+            }
+        }
+    }
+
+    /**
+     * 得到子节点列表
+     */
+    private List<ByAssessmentcontent> getChildList(List<ByAssessmentcontent> list, ByAssessmentcontent t)
+    {
+        List<ByAssessmentcontent> tlist = new ArrayList<ByAssessmentcontent>();
+        Iterator<ByAssessmentcontent> it = list.iterator();
+        while (it.hasNext())
+        {
+            ByAssessmentcontent n = (ByAssessmentcontent) it.next();
+            if (StringUtils.isNotNull(n.getParentId()) && n.getParentId().longValue() == t.getId().longValue())
+            {
+                tlist.add(n);
+            }
+        }
+        return tlist;
+    }
+
+    /**
+     * 判断是否有子节点
+     */
+    private boolean hasChild(List<ByAssessmentcontent> list, ByAssessmentcontent t)
+    {
+        return getChildList(list, t).size() > 0 ? true : false;
+    }
+
 }

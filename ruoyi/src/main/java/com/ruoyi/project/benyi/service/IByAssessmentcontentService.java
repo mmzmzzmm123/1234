@@ -2,6 +2,7 @@ package com.ruoyi.project.benyi.service;
 
 import java.util.List;
 
+import com.ruoyi.framework.web.domain.TreeSelect;
 import com.ruoyi.project.benyi.domain.ByAssessmentcontent;
 
 /**
@@ -26,6 +27,22 @@ public interface IByAssessmentcontentService {
      * @return 评估内容集合
      */
     public List<ByAssessmentcontent> selectByAssessmentcontentList(ByAssessmentcontent byAssessmentcontent);
+
+    /**
+     * 构建前端所需要树结构
+     *
+     * @param byAssessmentcontents 部门列表
+     * @return 树结构列表
+     */
+    List<ByAssessmentcontent> buildbyAssessmentcontentTree(List<ByAssessmentcontent> byAssessmentcontents);
+
+    /**
+     * 构建前端所需要下拉树结构
+     *
+     * @param byAssessmentcontents 部门列表
+     * @return 下拉树结构列表
+     */
+    public List<TreeSelect> buildByAssessmentcontentTreeSelect(List<ByAssessmentcontent> byAssessmentcontents);
 
     /**
      * 新增评估内容

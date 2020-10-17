@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.stream.Collectors;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.ruoyi.project.benyi.domain.ByAssessmentcontent;
 import com.ruoyi.project.benyi.domain.ByDayFlowDetail;
 import com.ruoyi.project.benyi.domain.ByMath;
 import com.ruoyi.project.benyi.domain.ByTheme;
@@ -35,6 +36,13 @@ public class TreeSelect implements Serializable
         this.id = dept.getDeptId();
         this.label = dept.getDeptName();
         this.children = dept.getChildren().stream().map(TreeSelect::new).collect(Collectors.toList());
+    }
+
+    public TreeSelect(ByAssessmentcontent byAssessmentcontent)
+    {
+        this.id = byAssessmentcontent.getId();
+        this.label = byAssessmentcontent.getName();
+        this.children = byAssessmentcontent.getChildren().stream().map(TreeSelect::new).collect(Collectors.toList());
     }
 
     public TreeSelect(SysMenu menu)

@@ -5,6 +5,9 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.framework.aspectj.lang.annotation.Excel;
 import com.ruoyi.framework.web.domain.BaseEntity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 评估内容对象 by_assessmentcontent
  *
@@ -23,7 +26,7 @@ public class ByAssessmentcontent extends BaseEntity {
      * 父id
      */
     @Excel(name = "父id")
-    private Long parentid;
+    private Long parentId;
 
     /**
      * 名称
@@ -37,6 +40,28 @@ public class ByAssessmentcontent extends BaseEntity {
     @Excel(name = "是否元素")
     private String iselement;
 
+    public String getParentName() {
+        return parentName;
+    }
+
+    public void setParentName(String parentName) {
+        this.parentName = parentName;
+    }
+
+    public List<ByAssessmentcontent> getChildren() {
+        return children;
+    }
+
+    public void setChildren(List<ByAssessmentcontent> children) {
+        this.children = children;
+    }
+
+    /** 父部门名称 */
+    private String parentName;
+
+    /** 子部门 */
+    private List<ByAssessmentcontent> children = new ArrayList<ByAssessmentcontent>();
+
     /**
      * 元素才有适用范围;应该以幼儿的岁数为准
      */
@@ -49,14 +74,6 @@ public class ByAssessmentcontent extends BaseEntity {
 
     public Long getId() {
         return id;
-    }
-
-    public void setParentid(Long parentid) {
-        this.parentid = parentid;
-    }
-
-    public Long getParentid() {
-        return parentid;
     }
 
     public void setName(String name) {
@@ -87,11 +104,19 @@ public class ByAssessmentcontent extends BaseEntity {
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
                 .append("id", getId())
-                .append("parentid", getParentid())
+                .append("parentId", getParentId())
                 .append("name", getName())
                 .append("iselement", getIselement())
                 .append("scope", getScope())
                 .append("createTime", getCreateTime())
                 .toString();
+    }
+
+    public Long getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
     }
 }

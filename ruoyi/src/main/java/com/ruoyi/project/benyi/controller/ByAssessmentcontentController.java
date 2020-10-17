@@ -1,6 +1,10 @@
 package com.ruoyi.project.benyi.controller;
 
 import java.util.List;
+
+import com.ruoyi.common.utils.ServletUtils;
+import com.ruoyi.framework.security.LoginUser;
+import com.ruoyi.framework.security.service.TokenService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,6 +36,8 @@ public class ByAssessmentcontentController extends BaseController
 {
     @Autowired
     private IByAssessmentcontentService byAssessmentcontentService;
+    @Autowired
+    private TokenService tokenService;
 
 /**
  * 查询评估内容列表
@@ -67,6 +73,18 @@ public class ByAssessmentcontentController extends BaseController
     {
         return AjaxResult.success(byAssessmentcontentService.selectByAssessmentcontentById(id));
     }
+
+
+
+    /**
+     * 获取部门下拉树列表
+     */
+    @GetMapping("/treeselect")
+    public AjaxResult treeselect(ByAssessmentcontent byAssessmentcontent) {
+        List<ByAssessmentcontent> byAssessmentcontents = byAssessmentcontentService.selectByAssessmentcontentList(byAssessmentcontent);
+        return AjaxResult.success(byAssessmentcontentService.buildByAssessmentcontentTreeSelect(byAssessmentcontents));
+    }
+
 
     /**
      * 新增评估内容

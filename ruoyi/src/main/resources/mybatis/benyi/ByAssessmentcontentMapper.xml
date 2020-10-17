@@ -6,7 +6,7 @@
 
     <resultMap type="ByAssessmentcontent" id="ByAssessmentcontentResult">
         <result property="id" column="id"/>
-        <result property="parentid" column="parentId"/>
+        <result property="parentId" column="parentId"/>
         <result property="name" column="name"/>
         <result property="iselement" column="iselement"/>
         <result property="scope" column="scope"/>
@@ -21,7 +21,7 @@
             resultMap="ByAssessmentcontentResult">
         <include refid="selectByAssessmentcontentVo"/>
         <where>
-            <if test="parentid != null ">and parentId = #{parentid}</if>
+            <if test="parentId != null ">and parentId = #{parentId}</if>
             <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
             <if test="iselement != null  and iselement != ''">and iselement = #{iselement}</if>
             <if test="scope != null  and scope != ''">and scope = #{scope}</if>
@@ -36,14 +36,14 @@
     <insert id="insertByAssessmentcontent" parameterType="ByAssessmentcontent" useGeneratedKeys="true" keyProperty="id">
         insert into by_assessmentcontent
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="parentid != null ">parentId,</if>
+            <if test="parentId != null ">parentId,</if>
             <if test="name != null  and name != ''">name,</if>
             <if test="iselement != null  and iselement != ''">iselement,</if>
             <if test="scope != null  and scope != ''">scope,</if>
             <if test="createTime != null ">create_time,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="parentid != null ">#{parentid},</if>
+            <if test="parentId != null ">#{parentId},</if>
             <if test="name != null  and name != ''">#{name},</if>
             <if test="iselement != null  and iselement != ''">#{iselement},</if>
             <if test="scope != null  and scope != ''">#{scope},</if>
@@ -54,7 +54,7 @@
     <update id="updateByAssessmentcontent" parameterType="ByAssessmentcontent">
         update by_assessmentcontent
         <trim prefix="SET" suffixOverrides=",">
-            <if test="parentid != null ">parentId = #{parentid},</if>
+            <if test="parentId != null ">parentId = #{parentId},</if>
             <if test="name != null  and name != ''">name = #{name},</if>
             <if test="iselement != null  and iselement != ''">iselement = #{iselement},</if>
             <if test="scope != null  and scope != ''">scope = #{scope},</if>
