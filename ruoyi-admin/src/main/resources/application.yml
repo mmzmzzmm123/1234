@@ -76,6 +76,14 @@ spring:
         max-active: 8
         # #连接池最大阻塞等待时间（使用负值表示没有限制）
         max-wait: -1ms
+    database: 0
+    jedis:
+      pool:
+        max-active: 8
+        max-idle: 10
+        max-wait: 50
+        max-idle: 20
+
 
 # token配置
 token:
@@ -119,12 +127,19 @@ xss:
   urlPatterns: /system/*,/monitor/*,/tool/*
 
 
-aliyun.cdn.image = http://us-west.imagecdn.yesoulchina.com
-aliyun.cdn.video = http://us-west.videocdn.yesoulchina.com
-aliyun.oss.endpoint = http://oss-us-west-1.aliyuncs.com
-aliyun.oss.endpoint.img = http://oss-us-west-1.aliyuncs.com
-aliyun.oss.bucket.image = us-west-image-yesoulchina-com
-aliyun.oss.bucket.video = us-west-video-yesoulchina-com
-aliyun.oss.access.key.id = LTAI4Fywxx3qicFXx42x3bnc
-aliyun.oss.access.key.secret = ut9qeihGe71K6btLj8YecbsWhRj9o5
-aliyun.oss.dir.image = /test/courses/user-photo/
+aliyun:
+  cdn:
+      image: http://us-west.imagecdn.yesoulchina.com
+      video: http://us-west.videocdn.yesoulchina.com
+  oss:
+      endpoint:
+          img: http://oss-us-west-1.aliyuncs.com
+      bucket:
+          image: us-west-image-yesoulchina-com
+          video: us-west-video-yesoulchina-com
+      access:
+          key:
+              id: LTAI4Fywxx3qicFXx42x3bnc
+              secret: ut9qeihGe71K6btLj8YecbsWhRj9o5
+      dir:
+          imgage: /test/courses/user-photo/
