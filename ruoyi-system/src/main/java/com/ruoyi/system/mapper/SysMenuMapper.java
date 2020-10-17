@@ -3,6 +3,7 @@ package com.ruoyi.system.mapper;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import com.ruoyi.common.core.domain.entity.SysMenu;
+import org.springframework.cache.annotation.Cacheable;
 
 /**
  * 菜单表 数据层
@@ -47,6 +48,7 @@ public interface SysMenuMapper
      *
      * @return 菜单列表
      */
+    @Cacheable(value = "menuTree",key = "#root.methodName",unless="#result == null")
     public List<SysMenu> selectMenuTreeAll();
 
     /**
