@@ -1,5 +1,7 @@
 package com.ruoyi.common.utils.file;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -138,5 +140,18 @@ public class FileUtils extends org.apache.commons.io.FileUtils
             filename = URLEncoder.encode(filename, "utf-8");
         }
         return filename;
+    }
+
+    public static String getFileFormatWithDot(String fileName, String contentType) {
+        String fileFormat = "";
+        if (StringUtils.isNotBlank(fileName)) {
+            fileFormat = fileName.substring(fileName.lastIndexOf("."));
+        }
+
+        if (StringUtils.isBlank(fileFormat) && StringUtils.isNotBlank(contentType)) {
+            fileFormat = fileName.substring(fileName.lastIndexOf("/"));
+        }
+
+        return fileFormat;
     }
 }

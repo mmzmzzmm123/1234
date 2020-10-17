@@ -37,6 +37,7 @@
         <common3.langs.version>3.9</common3.langs.version>
         <guava.version>23.0</guava.version>
         <redisson.version>3.8.1</redisson.version>
+        <dysnmsapi.version>1.1.0</dysnmsapi.version>
     </properties>
 	
     <!-- 依赖声明 -->
@@ -229,6 +230,12 @@
             <groupId>org.redisson</groupId>
             <artifactId>redisson</artifactId>
             <version>${redisson.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.aliyun</groupId>
+            <artifactId>aliyun-java-sdk-dysmsapi</artifactId>
+            <version>${dysnmsapi.version}</version>
         </dependency>
 
     </dependencies>

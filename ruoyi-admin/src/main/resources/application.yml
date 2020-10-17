@@ -143,3 +143,10 @@ aliyun:
               secret: ut9qeihGe71K6btLj8YecbsWhRj9o5
       dir:
           imgage: /test/courses/user-photo/
+
+# sms
+sms:
+  isopen: 1
+
+accessKeyId: LTAIvKtJWk3zZ3kI
+accessKeySecret: ONWTotCTp9y8MIkRjgNLx2QiL375T5
