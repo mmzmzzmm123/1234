@@ -63,7 +63,7 @@ spring:
     # 端口，默认为6379
     port: 6379
     # 密码
-    password: 
+    password: 123456
     # 连接超时时间
     timeout: 10s
     lettuce:
@@ -79,10 +79,10 @@ spring:
     database: 0
     jedis:
       pool:
-        max-active: 8
+        max-active: 20
         max-idle: 10
         max-wait: 50
-        max-idle: 20
+        m-idle: 20
 
 
 # token配置
