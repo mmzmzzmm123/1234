@@ -1,5 +1,6 @@
 package com.ruoyi.common.config;
 
+import com.ruoyi.common.utils.file.FileUtils;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -72,6 +73,10 @@ public class RuoYiConfig
 
     public static String getProfile()
     {
+        String osName = System.getProperty("os.name");
+        if (!osName.equals("Linux")) {
+            profile = FileUtils.getProjectPath() + "/upload";
+        }
         return profile;
     }
 

@@ -6,12 +6,13 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import javax.servlet.http.HttpServletRequest;
 
 /**
  * 文件处理工具类
- * 
+ *
  * @author ruoyi
  */
 public class FileUtils extends org.apache.commons.io.FileUtils
@@ -20,7 +21,7 @@ public class FileUtils extends org.apache.commons.io.FileUtils
 
     /**
      * 输出指定文件的byte数组
-     * 
+     *
      * @param filePath 文件路径
      * @param os 输出流
      * @return
@@ -76,7 +77,7 @@ public class FileUtils extends org.apache.commons.io.FileUtils
 
     /**
      * 删除文件
-     * 
+     *
      * @param filePath 文件
      * @return
      */
@@ -95,7 +96,7 @@ public class FileUtils extends org.apache.commons.io.FileUtils
 
     /**
      * 文件名称验证
-     * 
+     *
      * @param filename 文件名称
      * @return true 正常 false 非法
      */
@@ -106,7 +107,7 @@ public class FileUtils extends org.apache.commons.io.FileUtils
 
     /**
      * 下载文件名重新编码
-     * 
+     *
      * @param request 请求对象
      * @param fileName 文件名
      * @return 编码后的文件名
@@ -138,5 +139,29 @@ public class FileUtils extends org.apache.commons.io.FileUtils
             filename = URLEncoder.encode(filename, "utf-8");
         }
         return filename;
+    }
+
+    public static String getProjectPath() {
+        String currentPath = FileUtils.class.getResource("").getPath();
+        String classDir = FileUtils.class.getClassLoader().getResource("").getPath();
+        StringBuilder projectPath = new StringBuilder();
+
+        char[] chars = currentPath.toCharArray();
+        char[] chars1 = classDir.toCharArray();
+        for (int i = 0; i < chars.length && i < chars1.length; i++) {
+            if (!(chars[i] == chars1[i])) break;
+            projectPath.append(chars[i]);
+        }
+
+        File file = new File(projectPath.toString());
+        String path = "/";
+
+        try {
+            path = URLDecoder.decode(file.getAbsolutePath(), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        return path.replaceAll("\\\\", "/");
     }
 }
