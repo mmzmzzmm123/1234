@@ -259,8 +259,11 @@
       :total="total"
       :page.sync="queryParams.pageNum"
       :limit.sync="queryParams.pageSize"
+      layout="total, slot, sizes, prev, pager, next, jumper"
       @pagination="getList"
-    />
+    >
+      <span style="margin-right: 12px;">总计：{{toThousands(this.totalAmount)}} 元</span>
+    </pagination>
 
     <!-- 添加或修改销售订单对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
@@ -451,6 +454,8 @@
 
   const beginTime = dayjs().startOf('month').format('YYYY-MM-DD');
   const endTime = dayjs().format('YYYY-MM-DD');
+  // const beginTime = dayjs().format('YYYY-MM-DD');
+  // const endTime = dayjs().format('YYYY-MM-DD');
 
   export default {
     name: "Order",
@@ -612,6 +617,7 @@
           this.orderList = response.rows;
           this.total = response.total;
           this.loading = false;
+          this.totalAmount = response.rows.reduce((acc, cur) => cur.amount + acc, 0);
         });
       },// 收款方式字典翻译
       payTypeIdFormat(row, column) {

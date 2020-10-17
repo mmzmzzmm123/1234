@@ -10,7 +10,9 @@
       v-bind="$attrs"
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
-    />
+    >
+      <slot></slot>
+    </el-pagination>
   </div>
 </template>
 
