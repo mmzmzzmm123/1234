@@ -9,7 +9,7 @@ ruoyi:
   # 实例演示开关
   demoEnabled: true
   # 文件路径 示例（ Windows配置D:/ruoyi/uploadPath，Linux配置 /home/ruoyi/uploadPath）
-  profile: D:/ruoyi/uploadPath
+  profile: D:\MUFASA\Project\GITEE\RuoYi-Vue
   # 获取ip地址开关
   addressEnabled: false
   # 验证码类型 math 数组计算 char 字符验证
@@ -65,7 +65,7 @@ spring:
     # 密码
     password: slave
     # 连接超时时间 default 10s
-    timeout: 30000s
+    timeout: 10s
     lettuce:
       pool:
         # 连接池中的最小空闲连接

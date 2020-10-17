@@ -83,6 +83,26 @@
                 <version>2.1.1.RELEASE</version>
                 <configuration>
                     <fork>true</fork> <!-- 如果没有该配置，devtools不会生效 -->
+                    <mainClass>com.ruoyi.RuoYiApplication</mainClass>
+                    <layout>ZIP</layout>
+                    <includes>
+                        <include>
+                            <artifactId>ruoyi-common</artifactId>
+                            <groupId>com.ruoyi</groupId>
+                        </include>
+                        <include>
+                            <artifactId>ruoyi-framework</artifactId>
+                            <groupId>com.ruoyi</groupId>
+                        </include>
+                        <include>
+                            <artifactId>ruoyi-quartz</artifactId>
+                            <groupId>com.ruoyi</groupId>
+                        </include>
+                        <include>
+                            <artifactId>ruoyi-system</artifactId>
+                            <groupId>com.ruoyi</groupId>
+                        </include>
+                    </includes>
                 </configuration>
                 <executions>
                     <execution>
@@ -92,6 +112,51 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                            <!-- 需要排除的jar的 groupId -->
+                            <excludeGroupIds>
+                                <!--打包在lib目录下时需要排除的jar-->
+                                com.ruoyi
+                                <!--正则好像不行-->
+                                <!--com.linl*-->
+                            </excludeGroupIds>
+                            <!--<excludeArtifactIds>
+                                spring-boot-starter-test,
+                                &lt;!&ndash;&ndash;&gt;spring-boot-test,
+                                &lt;!&ndash;&ndash;&gt;spring-boot-test-autoconfigure,
+                                &lt;!&ndash;&ndash;&gt;json-path,
+                                &lt;!&ndash;&ndash;&gt;&lt;!&ndash;&ndash;&gt;json-smart,
+                                &lt;!&ndash;&ndash;&gt;&lt;!&ndash;&ndash;&gt;&lt;!&ndash;&ndash;&gt;accessors-smart,
+                                &lt;!&ndash;&ndash;&gt;&lt;!&ndash;&ndash;&gt;&lt;!&ndash;&ndash;&gt;&lt;!&ndash;&ndash;&gt;asm,
+                                &lt;!&ndash;&ndash;&gt;junit,
+                                &lt;!&ndash;&ndash;&gt;assertj-core,
+                                &lt;!&ndash;&ndash;&gt;mockito-core,
+                                &lt;!&ndash;&ndash;&gt;&lt;!&ndash;&ndash;&gt;byte-buddy-agent,
+                                &lt;!&ndash;&ndash;&gt;&lt;!&ndash;&ndash;&gt;objenesis,
+                                &lt;!&ndash;&ndash;&gt;hamcrest-core,
+                                &lt;!&ndash;&ndash;&gt;hamcrest-library,
+                                &lt;!&ndash;&ndash;&gt;jsonassert,
+                                &lt;!&ndash;&ndash;&gt;&lt;!&ndash;&ndash;&gt;android-json,
+                                &lt;!&ndash;&ndash;&gt;spring-test,
+                                &lt;!&ndash;&ndash;&gt;xmlunit-core,
+                            </excludeArtifactIds>-->
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
             <plugin>   
                 <groupId>org.apache.maven.plugins</groupId>   
                 <artifactId>maven-war-plugin</artifactId>   
