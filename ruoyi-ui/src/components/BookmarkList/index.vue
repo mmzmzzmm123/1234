@@ -56,12 +56,12 @@
       this.showView(this.property);
     },
     updated(){
-      this.showView(this.property);
+      // this.showView(this.property);
      },
     created() {
-      var that=this;
-      //便签ID
-      that.Ueditor = that.$route.query.Ueditor;
+      // var that=this;
+      // //便签ID
+      // that.Ueditor = that.$route.query.Ueditor;
 
     },
     filters: {
@@ -121,7 +121,7 @@
   }
 
   .bookmark:hover {
-    background-color: #D4D4D4;
+    background-color: #E8E8E8;
 
   }
 

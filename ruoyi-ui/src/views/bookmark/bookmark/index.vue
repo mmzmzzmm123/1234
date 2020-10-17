@@ -126,7 +126,7 @@
             <div class="nullbookmark-img">
             </div>
             <div style="color: #000000" class="nullbookmark-text">
-              此目录还未添加书签
+              此目录还未添加收藏
             </div>
           </div>
 
@@ -199,10 +199,10 @@
         <div class="bookmarklist" :style="datalist"  infinite-scroll-distance="10" v-loading="loading" v-if="showbookmark"
              v-infinite-scroll="load"
              infinite-scroll-disabled="disabled" style="overflow:auto;" infinite-scroll-immediate="false">
-    <BookmarkOne @on-windowurl="windowurl" :property="property"  :listloading="listloading" :loading="loading" :bookmarkList="bookmarkList"></BookmarkOne>
+    <BookmarkOne @on-windowurl="windowurl" :key="property" :property="property"  :listloading="listloading" :loading="loading" :bookmarkList="bookmarkList"></BookmarkOne>
 
           <p v-if="listloading" class="listhint"><i class="el-icon-loading"></i>加载中...</p>
-          <p v-if="listnoMore" class="listhint">没有更多了</p>
+          <p v-if="listnoMore&&!showimg" class="listhint">没有更多了</p>
         </div>
 
 
@@ -286,15 +286,16 @@
                       <i class="el-icon-rank" ></i>
                     </div>
                     <div class="mianUrl-top-right">
-                      <i class="el-icon-edit-outline" @click="windowurlOpen"></i>
-                      <i class="el-icon-position"></i>
+                      <i class="el-icon-edit-outline" ></i>
+                      <i class="el-icon-position" @click="windowurlOpen"></i>
                     </div>
                   </el-header>
 <!--                  <div class="main-url-title">部分网站不允许内嵌套打开,请在设置中选择自己喜欢的打开方式!</div>-->
                   <div class="mianUrl-botoom"  v-loading="iframeLoading"  >
 <!--                    webkitallowfullscreen="true" mozallowfullscreen="true" allowfullscreen="true"-->
 <!--                    <iframe sandbox="allow-forms allow-scripts allow-popups" class="openurl" :src="gourl"  target="_self"  tabindex="-1"  />-->
-                    <router-view :key="$route.query.t"></router-view>
+<!--                    <router-view :key="$route.query.t"></router-view>-->
+                  <TinyMceEdit :key="noteId" :ueditor="Ueditor"  :noteid="noteId"></TinyMceEdit>
 
                   </div>
         </el-main>
@@ -311,6 +312,7 @@
   import {listMenuByUserId} from "@/api/bookmark/menu";
   import Treeselect from "@riophae/vue-treeselect";
   import BookmarkOne from "../../../components/BookmarkList";
+  import TinyMceEdit from "../../../views/bookmark/common/NqEdit";
   import "@riophae/vue-treeselect/dist/vue-treeselect.css";
   import {
     selectBymenuIdUserID,
@@ -331,7 +333,7 @@
 
   export default {
     components: {
-      format, Treeselect,BookmarkOne
+      format, Treeselect,BookmarkOne,TinyMceEdit
     },
 
     data: function () {
@@ -436,6 +438,11 @@
         isMain:true,
         menuId:undefined,//当前目录
 
+        Ueditor:undefined,//点击的编辑器文章id
+        noteId:undefined, //点击的noteId
+
+
+
       }
     },
 
@@ -534,7 +541,6 @@
 
         that.$set(that.queryParams, 'pageNum', i)
         that.$set(that.noteParams, 'pageNum', m)
-        // console.log("this.queryParams.pageNum:" + that.queryParams.pageNum)
         var listcount = Math.ceil(that.total / 15);
 
 
@@ -543,10 +549,8 @@
           that.noMore = true;
           that.listnoMore = true;
           that.listloading = false
-          // console.log("禁止滚动了")
           return;
         } else {
-
           this.listloading = true
           setTimeout(() => {
             switch(this.property) {
@@ -817,9 +821,6 @@
             this.bookmarkList = response.rows;
             this.total = response.total;
             this.loading = false;
-            // if (this.total>0){
-            //   this.gourl=this.bookmarkList[0].url;
-            // }
             if (this.bookmarkList==null||this.bookmarkList.length==0) {
               this.showimg=true;
             }
@@ -880,22 +881,9 @@
           }
         });
       },
-      // /**网站内打开*/
-      // windowurl(url,bookmarkId) {
-      //   var that=this;
-      //   //网站内打开
-      //   that.iframeLoading=true;
-      //   this.gourl=url;
-      //   setTimeout(function(){
-      //     that.iframeLoading=false;
-      //   },1000);
-      // },
       /**网站内便签打开 网页*/
       windowurl(noteId, tiymceueditor,bookmarkId,url) {
         var that=this;
-        console.log("noteId:"+noteId)
-        console.log("tiymceueditor:"+tiymceueditor)
-        this.openIsMain();
         switch (that.property) {
           case 0:
             /**网页新窗口打开*/
@@ -903,16 +891,9 @@
             break;
           case 1:
             /**编辑器内部打开*/
-            that.$router.push({
-              path: "/NqEdit",
-              query: {
-                Ueditor: tiymceueditor,
-                noteId:noteId,
-                // menuId:that.noteParams.menuId,
-                property:that.property,
-                t:Date.now(),
-              }
-            })
+            this.openIsMain();
+            that.Ueditor=tiymceueditor;//点击的编辑器文章id
+            that.noteId=noteId; //点击的noteId
             break;
           default:
         }

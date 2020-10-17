@@ -72,7 +72,7 @@
           language: 'zh_CN',
           skin_url: '/tinymce/skins/ui/oxide',
           // skin_url: 'tinymce/skins/ui/oxide-dark',//暗色系
-          height: 300,
+          height: 600,
           menubar: 'file edit insert view format table',//菜单  //
           // 配置每个菜单栏的子菜单项（如下是默认配置）
           menu: {

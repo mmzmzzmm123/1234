@@ -118,7 +118,7 @@ public class NmNote
 
     /**富文本文章内容*/
     @Transient
-    private  String UeditorContent;
+    private  String ueditorContent;
 
 
 }
