@@ -547,7 +547,9 @@
         if (i > listcount||m > listcount) {
           //加载完毕了 禁止滚动
           that.noMore = true;
-          that.listnoMore = true;
+          if (that.queryParams.pageNum!=0&&that.noteParams.pageNum!=0) {
+            that.listnoMore = true;
+          }
           that.listloading = false
           return;
         } else {
