@@ -1,9 +1,12 @@
 package com.ruoyi.web.controller.custom;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.ruoyi.common.core.domain.entity.SysDictData;
 import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.custom.controller.OrderBaseController;
+import com.ruoyi.custom.page.OrderTableDataInfo;
 import com.ruoyi.system.service.ISysDictDataService;
 import com.ruoyi.system.service.ISysUserService;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -33,7 +36,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
  */
 @RestController
 @RequestMapping("/custom/order")
-public class SysOrderController extends BaseController {
+public class SysOrderController extends OrderBaseController {
     @Autowired
     private ISysOrderService sysOrderService;
 
@@ -48,10 +51,11 @@ public class SysOrderController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('custom:order:list')")
     @GetMapping("/list")
-    public TableDataInfo list(SysOrder sysOrder) {
+    public OrderTableDataInfo list(SysOrder sysOrder) {
         startPage();
         List<SysOrder> list = sysOrderService.selectSysOrderList(sysOrder);
         List<SysUser> userList = userService.selectAllUser();
+        BigDecimal totalAmount = sysOrderService.selectAllOrderAmount(sysOrder);
 
         for (SysOrder order : list) {
             for (SysUser user : userList) {
@@ -74,7 +78,7 @@ public class SysOrderController extends BaseController {
                 }
             }
         }
-        return getDataTable(list);
+        return getOrderDataTable(list, totalAmount.longValue());
     }
 
 

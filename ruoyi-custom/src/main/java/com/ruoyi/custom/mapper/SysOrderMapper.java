@@ -1,5 +1,6 @@
 package com.ruoyi.custom.mapper;
 
+import java.math.BigDecimal;
 import java.util.List;
 import com.ruoyi.custom.domain.SysOrder;
 
@@ -58,4 +59,11 @@ public interface SysOrderMapper
      * @return 结果
      */
     public int deleteSysOrderByIds(Long[] orderIds);
+
+    /**
+     * 计算所有订单总额
+     * @param sysOrder
+     * @return
+     */
+    public BigDecimal selectAllOrderAmount(SysOrder sysOrder);
 }

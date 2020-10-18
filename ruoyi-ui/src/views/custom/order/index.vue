@@ -617,7 +617,7 @@
           this.orderList = response.rows;
           this.total = response.total;
           this.loading = false;
-          this.totalAmount = response.rows.reduce((acc, cur) => cur.amount + acc, 0);
+          this.totalAmount = response.totalAmount;
         });
       },// 收款方式字典翻译
       payTypeIdFormat(row, column) {

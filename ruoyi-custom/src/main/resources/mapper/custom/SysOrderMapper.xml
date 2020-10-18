@@ -40,6 +40,30 @@
         LEFT JOIN (SELECT dict_label, dict_value FROM sys_dict_data WHERE dict_type = 'cus_serve_time') AS ser ON ser.dict_value = o.serve_time_id
     </sql>
 
+    <select id="selectAllOrderAmount" parameterType="SysOrder" resultType="BigDecimal">
+        SELECT SUM(amount) FROM sys_order
+        <where>
+            <if test="orderId != null  and orderId != ''">and order_id = #{orderId}</if>
+            <if test="customer != null  and customer != ''">and customer = #{customer}</if>
+            <if test="phone != null  and phone != ''">and phone = #{phone}</if>
+            <if test="payTypeId != null ">and pay_type_id = #{payTypeId}</if>
+            <if test="preSaleId != null ">and pre_sale_id = #{preSaleId}</if>
+            <if test="afterSaleId != null ">and after_sale_id = #{afterSaleId}</if>
+            <if test="nutritionistId != null ">and nutritionist_id = #{nutritionistId}</if>
+            <if test="nutriAssisId != null ">and nutri_assis_id = #{nutriAssisId}</if>
+            <if test="accountId != null ">and account_id = #{accountId}</if>
+            <if test="plannerId != null ">and planner_id = #{plannerId}</if>
+            <if test="plannerAssisId != null ">and planner_assis_id = #{plannerAssisId}</if>
+            <if test="operatorId != null ">and operator_id = #{operatorId}</if>
+            <if test="operatorAssisId != null ">and operator_assis_id = #{operatorAssisId}</if>
+            <if test="recommender != null  and recommender != ''">and recommender = #{recommender}</if>
+            <if test="beginTime != null and beginTime != ''">and date_format(order_time,'%y%m%d') &gt;= date_format(#{beginTime},'%y%m%d')</if>
+            <if test="endTime != null and endTime != ''">and date_format(order_time,'%y%m%d') &lt;= date_format(#{endTime},'%y%m%d')</if>
+            <if test="serveTimeId != null ">and serve_time_id = #{serveTimeId}</if>
+            <if test="reviewStatus != null ">and review_status = #{reviewStatus}</if>
+        </where>
+    </select>
+
     <select id="selectSysOrderList" parameterType="SysOrder" resultMap="SysOrderResult">
         <include refid="selectSysOrderVo"/>
         <where>

@@ -1,5 +1,6 @@
 package com.ruoyi.custom.service.impl;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -90,5 +91,15 @@ public class SysOrderServiceImpl implements ISysOrderService {
     @Override
     public int deleteSysOrderById(Long orderId) {
         return sysOrderMapper.deleteSysOrderById(orderId);
+    }
+
+    /**
+     * 计算所有订单总额
+     * @param sysOrder
+     * @return
+     */
+    @Override
+    public BigDecimal selectAllOrderAmount(SysOrder sysOrder) {
+        return sysOrderMapper.selectAllOrderAmount(sysOrder);
     }
 }
