@@ -34,7 +34,7 @@ export function addUserNote(data) {
 export function userUpdateNote(data) {
   return request({
     url: '/note/note/userUpdateNote',
-    method: 'put',
+    method: 'post',
     data: data
   })
 }

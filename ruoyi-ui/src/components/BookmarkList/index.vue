@@ -90,7 +90,7 @@
             break;
           case 1:
             //便签模式
-            that.isdescription = true;
+            that.isdescription = false;
             that.noteTime = true;
             that.isBookmarkIcon = false;
             break;

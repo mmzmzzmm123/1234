@@ -104,7 +104,32 @@ public class MongdbApplicationTests  extends BaseSpringBootTest{
      */
     @Test
     public void redisToMgDB(){
-
+        //模糊查询 获取所有的key
+        Collection<String> listNote= redisCache.keys(Constants.NM_NOTE_CONTENT+"*");
+        for(String str:listNote){
+            //文章UUID
+            String mgDbContentUUID=str.replace(Constants.NM_NOTE_CONTENT,"");
+            System.out.println("str:"+str);
+            //文章
+            String redisContent= redisCache.getCacheObject(str).toString();
+            //查询mongoDb  存在就修改 不存在就新增
+            List<NoteContentMgDb> listMgDbContent =  noteRepositoryService.findById(mgDbContentUUID);
+            if (listMgDbContent!=null&&!listMgDbContent.isEmpty()){
+                //修改
+                NoteContentMgDb noteContentMgDb = new NoteContentMgDb();
+                noteContentMgDb.setId(Long.valueOf(mgDbContentUUID));
+                noteContentMgDb.setNoteContent(redisContent);
+                noteRepositoryService.update(noteContentMgDb);
+            }else {
+                //新增
+                NoteContentMgDb noteContentMgDb = new NoteContentMgDb();
+                noteContentMgDb.setId(Long.valueOf(mgDbContentUUID));
+                noteContentMgDb.setNoteContent(redisContent);
+                noteRepositoryService.save(noteContentMgDb);
+            }
+            //删除对应缓存
+            //redisCache.deleteObject(str);
+        }
 
 
     }

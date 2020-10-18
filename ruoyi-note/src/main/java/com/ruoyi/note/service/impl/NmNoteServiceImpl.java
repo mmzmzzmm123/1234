@@ -157,7 +157,8 @@ public class NmNoteServiceImpl implements INmNoteService {
     public int userUpdateNote(NmNote nmNote) {
         //储存到redis中  只缓存频繁操作的文章内容
         redisCache.setCacheObject(Constants.NM_NOTE_CONTENT+nmNote.getTiymceUeditor(),nmNote.getUeditorContent());
-        return  1;
+        // 更新标题信息
+        return  nmNoteMapper.updateNmNote(nmNote);
     }
 
     /**
@@ -174,7 +175,7 @@ public class NmNoteServiceImpl implements INmNoteService {
             //文章UUID
             String mgDbContentUUID=str.replace(Constants.NM_NOTE_CONTENT,"");
             //文章
-            String redisContent= redisCache.getCacheObject(str);
+            String redisContent= redisCache.getCacheObject(str).toString();
             //查询mongoDb  存在就修改 不存在就新增
             List<NoteContentMgDb> listMgDbContent =  noteRepositoryService.findById(mgDbContentUUID);
             if (listMgDbContent!=null&&!listMgDbContent.isEmpty()){

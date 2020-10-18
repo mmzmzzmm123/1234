@@ -5,6 +5,10 @@
       <div class="mdui-textfield mdui-textfield-floating-label inputtop">
         <input class="mdui-textfield-input" v-model="queryParamsAndMg.title" type="text" required/>
       </div>
+      <div>
+        <span>{{queryParamsAndMg.updateTime==null?'0000:00:00':queryParamsAndMg.updateTime}}</span>
+        <span @click="updateEdit">{{updateOpn}}</span>
+      </div>
     </div>
         <div v-loading="loading"  v-if="!showEditor" class="mian" v-html="queryParamsAndMg.ueditorContent">
 
@@ -21,7 +25,7 @@
 
     <div v-if="showEditor"  STYLE="margin-top: 10px;margin-bottom: 10px">
       <button class="mdui-btn mdui-btn-raised mdui-color-indigo-300" @click="clear">清空内容</button>
-      <button class="mdui-btn mdui-btn-raised mdui-color-indigo-300" @click="clear">发布</button>
+      <button class="mdui-btn mdui-btn-raised mdui-color-indigo-300" @click="UpdateNote">发布</button>
       <button class="mdui-btn mdui-ripple mdui-btn-raised " @click="disabled = true">禁用</button>
       <button class="mdui-btn mdui-ripple mdui-btn-raised " @click="disabled = false">启用</button>
     </div>
@@ -94,6 +98,7 @@
         },
         showEditor:false,
         loading:false,
+        updateOpn:'编辑'
       }
     },
     created() {
@@ -103,12 +108,17 @@
       /** 实时更新文章的信息 */
       UpdateNote() {
         userUpdateNote(this.queryParamsAndMg).then(response => {
-          console.log("已保存:" + Date.now())
+          if (response.code==200){
+            console.log("已保存:" + Date.now())
+            this.$message({
+              message: '保存成功!',
+              type: 'success'
+            });
+          }
         });
       },
       /** 查询便签管理列表 */
       getNoteById() {
-        console.log("请求执行了!!!")
         var that = this;
         that.loading=true;
         var blueditor = that.ueditor != null && that.ueditor != '' && that.ueditor != undefined;
@@ -135,6 +145,16 @@
       //清空内容
       clear() {
         this.$refs.editor.clear()
+      },
+      updateEdit(){
+        var that=this;
+
+        that.showEditor=!that.showEditor;
+        if (that.showEditor) {
+          that.updateOpn='退出编辑';
+        }else {
+          that.updateOpn='编辑';
+        }
       }
     }
   }
@@ -168,11 +188,11 @@
     overflow: scroll;
   }
   .edit{
-    margin-left: 3px;
+    margin-left: 13px;
 
   }
   .nqtitle{
-    margin-left: 3px;
+    margin-left: 13px;
     margin-bottom: 10px;
   }
   .inputtop{

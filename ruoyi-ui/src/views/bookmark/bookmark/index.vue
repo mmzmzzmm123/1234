@@ -477,7 +477,7 @@
         that.queryParams.menuId = routedata;
         that.noteParams.menuId = routedata;
       }
-      console.log("当前状态:"+that.property)
+
       if (property != null && property != undefined && property != ''){
         that.property =property;
       }
@@ -575,7 +575,7 @@
         //缓存状态
         that.$store.state.property=e;
         this.showimg=false;
-        console.log("缓存property:"+that.$store.state.property)
+        // console.log("缓存property:"+that.$store.state.property)
         // console.log("缓存property:"+store.state.property)
         //初始化
         this.queryParams.pageNum=1;
@@ -837,7 +837,6 @@
         this.loading = true;
         selectBymenuIdUserID(this.queryParams).then(response => {
           if (response.code == 200) {
-            console.log("response.rows" + response.rows)
             this.bookmarkList = this.bookmarkList.concat(response.rows);
             this.total = response.total;
             this.listloading = false

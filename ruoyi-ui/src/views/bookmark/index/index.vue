@@ -575,10 +575,7 @@
             //颜色改变提醒
             resize[i].style.background = 'transparent';
             var startX = e.clientX;
-            console.log("鼠标按下后：" + e.clientX)
             resize[i].left = resize[i].offsetLeft;
-            console.log("鼠标按下后：" + resize[i].left)
-            console.log("鼠标按下后：" + resize[i].offsetLeft)
             // 鼠标拖动事件
             document.onmousemove = function (e) {
               var endX = e.clientX;
