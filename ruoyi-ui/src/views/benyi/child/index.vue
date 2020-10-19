@@ -1105,7 +1105,7 @@ export default {
             });
           } else {
             addChild(this.form).then((response) => {
-              console.log(response);
+              // console.log(response);
               if (response.code === 200) {
                 this.form_jhr.childid = response.data;
                 addContactpeople(this.form_jhr).then((res) => {

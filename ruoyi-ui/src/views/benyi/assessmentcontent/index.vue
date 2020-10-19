@@ -1,7 +1,12 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
-      <el-form-item label="名称" prop="name">
+    <el-form
+      :model="queryParams"
+      ref="queryForm"
+      :inline="true"
+      label-width="68px"
+    >
+      <el-form-item label="评估名称" prop="name">
         <el-input
           v-model="queryParams.name"
           placeholder="请输入名称"
@@ -11,8 +16,16 @@
         />
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+        <el-button
+          type="primary"
+          icon="el-icon-search"
+          size="mini"
+          @click="handleQuery"
+          >搜索</el-button
+        >
+        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+          >重置</el-button
+        >
       </el-form-item>
     </el-form>
 
@@ -24,7 +37,8 @@
           size="mini"
           @click="handleAdd"
           v-hasPermi="['benyi:assessmentcontent:add']"
-        >新增</el-button>
+          >新增</el-button
+        >
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -34,7 +48,8 @@
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['benyi:assessmentcontent:edit']"
-        >修改</el-button>
+          >修改</el-button
+        >
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -44,7 +59,8 @@
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['benyi:assessmentcontent:remove']"
-        >删除</el-button>
+          >删除</el-button
+        >
       </el-col>
     </el-row>
 
@@ -52,12 +68,29 @@
       v-loading="loading"
       :data="assessmentcontentList"
       @selection-change="handleSelectionChange"
+      row-key="id"
+      default-expand-all
+      :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
     >
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="名称" align="center" prop="name" />
-      <el-table-column label="是否元素" align="center" prop="iselement" :formatter="iselementFormat" />
-      <el-table-column label="适用范围" align="center" prop="scope" :formatter="scopeFormat" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="评估名称" align="center" prop="name" />
+      <el-table-column
+        label="是否元素"
+        align="center"
+        prop="iselement"
+        :formatter="iselementFormat"
+      />
+      <el-table-column
+        label="适用范围"
+        align="center"
+        prop="scope"
+        :formatter="scopeFormat"
+      />
+      <el-table-column
+        label="操作"
+        align="center"
+        class-name="small-padding fixed-width"
+      >
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -65,14 +98,16 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['benyi:assessmentcontent:edit']"
-          >修改</el-button>
+            >修改</el-button
+          >
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['benyi:assessmentcontent:remove']"
-          >删除</el-button>
+            >删除</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
@@ -97,7 +132,11 @@
           />
         </el-form-item>
         <el-form-item label="名称" prop="name">
-          <el-input v-model="form.name" type="textarea" placeholder="请输入内容" />
+          <el-input
+            v-model="form.name"
+            type="textarea"
+            placeholder="请输入内容"
+          />
         </el-form-item>
         <el-form-item label="是否元素" prop="iselement">
           <el-select v-model="form.iselement" placeholder="请选择是否元素">
@@ -134,7 +173,7 @@ import {
   getAssessmentcontent,
   delAssessmentcontent,
   addAssessmentcontent,
-  updateAssessmentcontent
+  updateAssessmentcontent,
 } from "@/api/benyi/assessmentcontent";
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
@@ -173,29 +212,29 @@ export default {
         parentId: undefined,
         name: undefined,
         iselement: undefined,
-        scope: undefined
+        scope: undefined,
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
         parentId: [
-          { required: true, message: "所属模块不能为空", trigger: "blur" }
+          { required: true, message: "所属模块不能为空", trigger: "blur" },
         ],
         name: [{ required: true, message: "名称不能为空", trigger: "blur" }],
         iselement: [
-          { required: true, message: "是否元素不能为空", trigger: "blur" }
+          { required: true, message: "是否元素不能为空", trigger: "blur" },
         ],
-        scope: [{ required: true, message: "范围不能为空", trigger: "blur" }]
-      }
+        scope: [{ required: true, message: "范围不能为空", trigger: "blur" }],
+      },
     };
   },
   created() {
     this.getList();
-    this.getDicts("sys_dm_pgyssyfw").then(response => {
+    this.getDicts("sys_dm_pgyssyfw").then((response) => {
       this.scopeOptions = response.data;
     });
-    this.getDicts("sys_yes_no").then(response => {
+    this.getDicts("sys_yes_no").then((response) => {
       this.iselementOptions = response.data;
     });
   },
@@ -211,8 +250,9 @@ export default {
     /** 查询评估内容列表 */
     getList() {
       this.loading = true;
-      listAssessmentcontent(this.queryParams).then(response => {
-        this.assessmentcontentList = response.rows;
+      listAssessmentcontent(this.queryParams).then((response) => {
+        // this.assessmentcontentList = response.rows;
+        this.assessmentcontentList = this.handleTree(response.rows, "id");
         //console.log(this.assessmentcontentList);
         this.total = response.total;
         this.loading = false;
@@ -221,7 +261,7 @@ export default {
 
     /** 查询部门下拉树结构 */
     getTreeselect() {
-      listAssessmentcontent(null).then(response => {
+      listAssessmentcontent(null).then((response) => {
         this.parentidOptions = this.handleTree(response.rows, "id");
         console.log(this.parentidOptions);
       });
@@ -235,7 +275,7 @@ export default {
       return {
         id: node.id,
         label: node.name,
-        children: node.children
+        children: node.children,
       };
     },
 
@@ -252,7 +292,7 @@ export default {
         name: undefined,
         iselement: undefined,
         scope: undefined,
-        createTime: undefined
+        createTime: undefined,
       };
       this.resetForm("form");
     },
@@ -268,7 +308,7 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.id);
+      this.ids = selection.map((item) => item.id);
       this.single = selection.length != 1;
       this.multiple = !selection.length;
     },
@@ -287,18 +327,18 @@ export default {
       this.reset();
       this.getTreeselect();
       const id = row.id || this.ids;
-      getAssessmentcontent(id).then(response => {
+      getAssessmentcontent(id).then((response) => {
         this.form = response.data;
         this.open = true;
         this.title = "修改评估内容";
       });
     },
     /** 提交按钮 */
-    submitForm: function() {
-      this.$refs["form"].validate(valid => {
+    submitForm: function () {
+      this.$refs["form"].validate((valid) => {
         if (valid) {
           if (this.form.id != undefined) {
-            updateAssessmentcontent(this.form).then(response => {
+            updateAssessmentcontent(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("修改成功");
                 this.open = false;
@@ -306,7 +346,7 @@ export default {
               }
             });
           } else {
-            addAssessmentcontent(this.form).then(response => {
+            addAssessmentcontent(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("新增成功");
                 this.open = false;
@@ -321,23 +361,23 @@ export default {
     handleDelete(row) {
       const ids = row.id || this.ids;
       this.$confirm(
-        '是否确认删除评估内容编号为"' + ids + '"的数据项?',
+        '是否确认删除评估内容的数据项?',
         "警告",
         {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
-          type: "warning"
+          type: "warning",
         }
       )
-        .then(function() {
+        .then(function () {
           return delAssessmentcontent(ids);
         })
         .then(() => {
           this.getList();
           this.msgSuccess("删除成功");
         })
-        .catch(function() {});
-    }
-  }
+        .catch(function () {});
+    },
+  },
 };
 </script>

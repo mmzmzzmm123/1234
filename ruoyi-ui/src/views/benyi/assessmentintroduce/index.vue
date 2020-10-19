@@ -72,7 +72,7 @@
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="编号" align="center" prop="id" /> -->
       <el-table-column label="标题" align="center" prop="title" />
-      <el-table-column label="内容" align="center" show-overflow-tooltip="true" prop="content" />
+      <el-table-column label="内容" align="center" :show-overflow-tooltip="true" prop="content" />
       <el-table-column
         label="操作"
         align="center"
