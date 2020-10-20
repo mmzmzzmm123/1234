@@ -154,7 +154,7 @@ export default {
         this.tbr = response.createusername;
         this.wxkc = response.data.wxkc;
         this.bz = response.data.remarks;
-        this.spyj = response.data.shyj;
+        this.spyj = response.data.spyj;
 
         this.themeFormat(response.data.themes);
 
