@@ -153,7 +153,7 @@ export default {
         this.classname = response.classname;
         this.tbr = response.createusername;
         this.wxkc = response.data.wxkc;
-        this.bz = response.data.remark;
+        this.bz = response.data.remarks;
         this.spyj = response.data.shyj;
 
         this.themeFormat(response.data.themes);
