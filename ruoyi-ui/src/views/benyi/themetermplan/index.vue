@@ -249,7 +249,7 @@ export default {
   },
   methods: {
     isShow(row) {
-      console.log(row.status);
+      //console.log(row.status);
       if (row.status == "0") {
         return true;
       } else {

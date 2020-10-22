@@ -43,6 +43,7 @@
             <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
             <if test="content != null  and content != ''">and content = #{content}</if>
             <if test="communicate != null  and communicate != ''">and communicate = #{communicate}</if>
+            <if test="classid != null  and classid != ''">and classid = #{classid}</if>
             <if test="parentId != null  and parentId != ''">and parent_id = #{parentId}</if>
             <if test="sort != null ">and sort = #{sort}</if>
         </where>

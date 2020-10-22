@@ -290,6 +290,7 @@ export default {
       this.loading = true;
       listClass(this.queryParams).then(response => {
         this.classList = response.rows;
+        console.log(this.classList);
         this.total = response.total;
         this.loading = false;
       });

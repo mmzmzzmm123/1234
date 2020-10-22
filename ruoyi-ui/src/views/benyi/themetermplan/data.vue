@@ -152,6 +152,7 @@ import {
   exportTermplanitem,
 } from "@/api/benyi/themetermplanitem";
 
+import { listClass } from "@/api/system/class";
 import { listTermplan, getTermplan } from "@/api/benyi/themetermplan";
 import { listTheme } from "@/api/benyi/theme";
 
@@ -193,6 +194,12 @@ export default {
         createuserid: undefined,
         updateuserid: undefined
       },
+      queryParams_class: {
+        bjbh: undefined
+      },
+      queryParams_classtype: {
+        classid: undefined
+      },
       // 表单参数
       form: {},
       // 表单校验
@@ -209,7 +216,9 @@ export default {
     //console.log(themeplanid);
     this.getThemePlan(themeplanid);
     this.getThemePlanList();
-    this.getThemeList();
+    this.getClassType();
+   
+    
   },
   methods: {
     // 主题--字典状态字典翻译
@@ -242,13 +251,7 @@ export default {
       });
       this.form.themeconent = text;
     },
-    //主题
-    getThemeList() {
-      listTheme(null).then((response) => {
-        //console.log(response.rows);
-        this.themeOptions = response.rows;
-      });
-    },
+    
     // 字典翻译
     themePlanFormat(row, column) {
       // return this.selectDictLabel(this.classOptions, row.classid);
@@ -265,9 +268,9 @@ export default {
     //计划详情
     getThemePlan(themeplanid) {
       getTermplan(themeplanid).then((response) => {
+        this.queryParams_class.bjbh = response.data.classid;
         this.queryParams.tpid = response.data.id;
         this.defaultThemeType = response.data.id;
-
         if (response.data.status == "0") {
           this.isShow = true;
         } else {
@@ -275,6 +278,19 @@ export default {
         }
 
         this.getList();
+      });
+    },
+    // 获取班级类型
+    getClassType() {
+      listClass(this.queryParams_class).then((response) => {
+        this.queryParams_classtype.classid = response.rows[0].bjtype;
+        this.getThemeList();
+      });
+    },
+    //主题
+    getThemeList() {
+      listTheme(this.queryParams_classtype).then((response) => {
+        this.themeOptions = response.rows;
       });
     },
     getThemePlanList() {
