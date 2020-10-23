@@ -161,6 +161,19 @@ export function toThousands(num) {
     result = ',' + num.slice(-3) + result;
     num = num.slice(0, num.length - 3);
   }
-  if (num) { result = num + result; }
+  if (num) {
+    result = num + result;
+  }
   return result;
+}
+
+export function searchToParams(paramStr) {
+  if (!paramStr) {
+    return {}
+  }
+  return paramStr.split('&').reduce((obj, cur) => {
+    const tarObj = cur.split('=');
+    obj[tarObj[0]] = tarObj[1];
+    return obj;
+  }, {})
 }

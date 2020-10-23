@@ -123,6 +123,11 @@ export const constantRoutes = [
         meta: { title: '修改生成配置' }
       }
     ]
+  },
+  {
+    path: '/contract',
+    hidden: true,
+    component: (resolve) => require(['@/views/custom/contract'], resolve),
   }
 ]
 
