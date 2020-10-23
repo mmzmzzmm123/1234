@@ -739,6 +739,24 @@ CREATE VIEW view_user_post AS (
   SELECT up.user_id, u.nick_name AS user_name, p.post_id, p.post_name
   FROM sys_post p, sys_user u, sys_user_post up
   WHERE p.post_id = up.post_id AND u.user_id = up.user_id
-  )
+  );
 
+-- ----------------------------
+-- 21、订单业务表字段
+-- ----------------------------
+drop table if exists sys_contract;
+create table sys_order (
+       id               bigint(20)      not null auto_increment    comment '合同编号',
+       name             varchar(30)     not null                   comment '客户姓名',
+       phone            varchar(30)                                comment '电话',
+       serve_time       tinyint                                    comment '服务时间',
+       amount           decimal(10,2)                              comment '金额',
+       path             varchar(255)                               comment '文件路径',
+       create_by        varchar(64)     default ''                 comment '创建者',
+       create_time      datetime                                   comment '创建时间',
+       update_by        varchar(64)     default ''                 comment '更新者',
+       update_time      datetime                                   comment '更新时间',
+       remark           varchar(500)    default null               comment '备注',
+       primary key (id)
+) engine=innodb auto_increment=1 comment = '合同表';
 

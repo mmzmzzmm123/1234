@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.custom.mapper.SysContractMapper">
+    
+    <resultMap type="SysContract" id="SysContractResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="phone"    column="phone"    />
+        <result property="serveTime"    column="serve_time"    />
+        <result property="amount"    column="amount"    />
+        <result property="path"    column="path"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectSysContractVo">
+        select id, name, phone, serve_time, amount, path, create_by, create_time, update_by, update_time, remark from sys_contract
+    </sql>
+
+    <select id="selectSysContractList" parameterType="SysContract" resultMap="SysContractResult">
+        <include refid="selectSysContractVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+        </where>
+    </select>
+    
+    <select id="selectSysContractById" parameterType="Long" resultMap="SysContractResult">
+        <include refid="selectSysContractVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSysContract" parameterType="SysContract" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_contract
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">name,</if>
+            <if test="phone != null">phone,</if>
+            <if test="serveTime != null">serve_time,</if>
+            <if test="amount != null">amount,</if>
+            <if test="path != null">path,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="serveTime != null">#{serveTime},</if>
+            <if test="amount != null">#{amount},</if>
+            <if test="path != null">#{path},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysContract" parameterType="SysContract">
+        update sys_contract
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="serveTime != null">serve_time = #{serveTime},</if>
+            <if test="amount != null">amount = #{amount},</if>
+            <if test="path != null">path = #{path},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysContractById" parameterType="Long">
+        delete from sys_contract where id = #{id}
+    </delete>
+
+    <delete id="deleteSysContractByIds" parameterType="String">
+        delete from sys_contract where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

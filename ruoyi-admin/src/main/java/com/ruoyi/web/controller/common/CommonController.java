@@ -98,17 +98,5 @@ public class CommonController {
         FileUtils.writeBytes(downloadPath, response.getOutputStream());
     }
 
-    /**
-     * 合同签单
-     */
-    @PostMapping("/common/contract")
-    public AjaxResult signContract(@RequestBody Contract contract) throws Exception {
-        try {
-            AjaxResult ajax = AjaxResult.success();
-            ajax.put("result", "hi");
-            return ajax;
-        } catch (Exception e) {
-            return AjaxResult.error(e.getMessage());
-        }
-    }
+
 }
