@@ -113,9 +113,12 @@ public class ByAssessmentcontentController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('benyi:assessmentcontent:remove')")
     @Log(title = "评估内容", businessType = BusinessType.DELETE)
-    @DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
+    @DeleteMapping("/{id}")
+    public AjaxResult remove(@PathVariable Long id)
     {
-        return toAjax(byAssessmentcontentService.deleteByAssessmentcontentByIds(ids));
+        if (byAssessmentcontentService.hasChildByAssessmentcontentId(id)) {
+            return AjaxResult.error("存在下级内容,不允许删除");
+        }
+        return toAjax(byAssessmentcontentService.deleteByAssessmentcontentById(id));
     }
 }

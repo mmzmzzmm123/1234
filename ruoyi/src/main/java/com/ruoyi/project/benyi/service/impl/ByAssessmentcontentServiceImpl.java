@@ -109,6 +109,18 @@ public class ByAssessmentcontentServiceImpl implements IByAssessmentcontentServi
     }
 
     /**
+     * 是否存在子节点
+     *
+     * @param id 内容ID
+     * @return 结果
+     */
+    @Override
+    public boolean hasChildByAssessmentcontentId(Long id) {
+        int result = byAssessmentcontentMapper.hasChildByAssessmentcontentId(id);
+        return result > 0 ? true : false;
+    }
+
+    /**
      * 批量删除评估内容
      *
      * @param ids 需要删除的评估内容ID

@@ -58,4 +58,12 @@ public interface ByAssessmentcontentMapper {
      * @return 结果
      */
     public int deleteByAssessmentcontentByIds(Long[] ids);
+
+    /**
+     * 是否存在子节点
+     *
+     * @param id 内容ID
+     * @return 结果
+     */
+    public int hasChildByAssessmentcontentId(Long id);
 }

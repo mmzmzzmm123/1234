@@ -23,14 +23,6 @@
           @click="handleQuery"
           >搜索</el-button
         >
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
-          >重置</el-button
-        >
-      </el-form-item>
-    </el-form>
-
-    <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
         <el-button
           type="primary"
           icon="el-icon-plus"
@@ -39,30 +31,11 @@
           v-hasPermi="['benyi:assessmentcontent:add']"
           >新增</el-button
         >
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['benyi:assessmentcontent:edit']"
-          >修改</el-button
+        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+          >重置</el-button
         >
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="danger"
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['benyi:assessmentcontent:remove']"
-          >删除</el-button
-        >
-      </el-col>
-    </el-row>
+      </el-form-item>
+    </el-form>
 
     <el-table
       v-loading="loading"
@@ -72,7 +45,6 @@
       default-expand-all
       :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
     >
-      <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="评估名称" align="center" prop="name" />
       <el-table-column
         label="是否元素"
@@ -93,6 +65,7 @@
       >
         <template slot-scope="scope">
           <el-button
+            v-if="scope.row.parentId !== 0"
             size="mini"
             type="text"
             icon="el-icon-edit"
@@ -101,6 +74,7 @@
             >修改</el-button
           >
           <el-button
+            v-if="scope.row.parentId !== 0"
             size="mini"
             type="text"
             icon="el-icon-delete"
@@ -251,9 +225,7 @@ export default {
     getList() {
       this.loading = true;
       listAssessmentcontent(this.queryParams).then((response) => {
-        // this.assessmentcontentList = response.rows;
         this.assessmentcontentList = this.handleTree(response.rows, "id");
-        //console.log(this.assessmentcontentList);
         this.total = response.total;
         this.loading = false;
       });
@@ -263,7 +235,6 @@ export default {
     getTreeselect() {
       listAssessmentcontent(null).then((response) => {
         this.parentidOptions = this.handleTree(response.rows, "id");
-        console.log(this.parentidOptions);
       });
     },
 
@@ -329,6 +300,7 @@ export default {
       const id = row.id || this.ids;
       getAssessmentcontent(id).then((response) => {
         this.form = response.data;
+        this.form.parentId = response.data.parentId;
         this.open = true;
         this.title = "修改评估内容";
       });
@@ -359,9 +331,8 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const ids = row.id || this.ids;
       this.$confirm(
-        '是否确认删除评估内容的数据项?',
+        '是否确认删除名称为"' + row.name + '"的数据项?',
         "警告",
         {
           confirmButtonText: "确定",
@@ -370,7 +341,7 @@ export default {
         }
       )
         .then(function () {
-          return delAssessmentcontent(ids);
+          return delAssessmentcontent(row.id);
         })
         .then(() => {
           this.getList();

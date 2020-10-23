@@ -33,6 +33,11 @@
         where id = #{id}
     </select>
 
+    <select id="hasChildByAssessmentcontentId" parameterType="Long" resultType="int">
+		select count(1) from by_assessmentcontent
+		where parentId = #{id}
+	</select>
+
     <insert id="insertByAssessmentcontent" parameterType="ByAssessmentcontent" useGeneratedKeys="true" keyProperty="id">
         insert into by_assessmentcontent
         <trim prefix="(" suffix=")" suffixOverrides=",">

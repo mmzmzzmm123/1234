@@ -61,6 +61,14 @@ public interface IByAssessmentcontentService {
     public int updateByAssessmentcontent(ByAssessmentcontent byAssessmentcontent);
 
     /**
+     * 是否存在内容子节点
+     *
+     * @param id 部门ID
+     * @return 结果
+     */
+    public boolean hasChildByAssessmentcontentId(Long id);
+
+    /**
      * 批量删除评估内容
      *
      * @param ids 需要删除的评估内容ID
