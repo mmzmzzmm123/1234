@@ -102,7 +102,7 @@ public class SysCommisionController extends BaseController {
     @GetMapping(value = "/{ruleId}")
     public AjaxResult getInfo(@PathVariable("ruleId") Long ruleId, SysCommision sysCommision) {
         sysCommision.setRuleId(ruleId);
-        System.out.println(sysCommision);
+//        System.out.println(sysCommision);
         return AjaxResult.success(sysCommisionService.selectSysCommisionById(sysCommision));
     }
 

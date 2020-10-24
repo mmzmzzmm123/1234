@@ -421,6 +421,19 @@
               <el-input v-model="form.recommender" placeholder="请输入推荐人"/>
             </el-form-item>
           </el-col>
+          <el-col :span="12">
+            <el-form-item label="成交时间" prop="orderTime">
+              <el-date-picker
+                style="width: 182.5px"
+                v-model="form.orderTime"
+                type="datetime"
+                placeholder="选择成交时间"
+                format="yyyy-MM-dd HH:mm"
+                value-format="yyyy-MM-dd HH:mm:ss"
+                :picker-options="orderPickerOptions">
+              </el-date-picker>
+            </el-form-item>
+          </el-col>
           <el-col :span="12" v-hasPermi="['custom:order:review']">
             <el-form-item label="审核状态" prop="reviewStatus">
               <el-select v-model="form.reviewStatus" placeholder="请选择审核状态">
@@ -449,7 +462,7 @@
 </template>
 
 <script>
-  import {listOrder, getOrder, delOrder, addOrder, updateOrder, exportOrder, getOptions} from "@/api/custom/order";
+  import {addOrder, delOrder, exportOrder, getOptions, getOrder, listOrder, updateOrder} from "@/api/custom/order";
   import dayjs from 'dayjs';
 
   const beginTime = dayjs().startOf('month').format('YYYY-MM-DD');
@@ -575,6 +588,11 @@
             }
           }]
         },
+        orderPickerOptions: {
+          disabledDate(time) {
+            return time.getTime() > Date.now();
+          },
+        }
       };
     },
     created() {
@@ -698,7 +716,7 @@
           operatorId: defaultOperator ? parseInt(defaultOperator.dictValue) : null,
           operatorAssisId: defaultOperatorAssis ? parseInt(defaultOperatorAssis.dictValue) : null,
           recommender: null,
-          orderTime: null,
+          orderTime: dayjs().format("YYYY-MM-DD HH:mm:ss"),
           serveTimeId: defaultServeTime ? parseInt(defaultServeTime.dictValue) : null,
           reviewStatus: 'no'
         };

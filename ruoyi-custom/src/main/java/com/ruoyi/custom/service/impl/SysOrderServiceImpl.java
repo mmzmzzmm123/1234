@@ -54,7 +54,7 @@ public class SysOrderServiceImpl implements ISysOrderService {
     public int insertSysOrder(SysOrder sysOrder) {
         Date orderTime = DateUtils.getNowDate();
         sysOrder.setCreateTime(orderTime);
-        sysOrder.setOrderTime(orderTime);
+//        sysOrder.setOrderTime(orderTime);
         sysOrder.setOrderId(Long.parseLong(DateUtils.parseDateToStr(DateUtils.YYYYMMDDHHMMSS, orderTime)));
         return sysOrderMapper.insertSysOrder(sysOrder);
     }

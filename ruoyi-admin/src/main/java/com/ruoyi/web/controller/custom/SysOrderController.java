@@ -56,6 +56,9 @@ public class SysOrderController extends OrderBaseController {
         List<SysOrder> list = sysOrderService.selectSysOrderList(sysOrder);
         List<SysUser> userList = userService.selectAllUser();
         BigDecimal totalAmount = sysOrderService.selectAllOrderAmount(sysOrder);
+        if(totalAmount == null) {
+            totalAmount = new BigDecimal(0);
+        }
 
         for (SysOrder order : list) {
             for (SysUser user : userList) {
