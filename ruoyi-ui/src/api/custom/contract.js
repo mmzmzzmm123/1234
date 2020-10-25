@@ -51,3 +51,10 @@ export function exportContract(query) {
     params: query
   })
 }
+
+export function getFile(id) {
+  return request({
+    url: '/custom/contract/file/' + id,
+    method: 'get',
+  })
+}

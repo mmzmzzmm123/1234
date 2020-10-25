@@ -91,8 +91,15 @@ public class SysContractController extends BaseController {
 
 
     @GetMapping("/file/{id}")
-    public String getContract(@PathVariable long id) {
-        return redirect("/swagger-ui.html");
+    public AjaxResult getfile(@PathVariable long id) {
+        try {
+            AjaxResult ajax = AjaxResult.success();
+//            ajax.put("url", "/login");
+            ajax.put("data", id);
+            return ajax;
+        } catch (Exception e) {
+            return AjaxResult.error(e.getMessage());
+        }
     }
 
     /**

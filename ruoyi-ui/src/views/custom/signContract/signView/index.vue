@@ -1,5 +1,5 @@
 <template>
-  <div v-if="show">
+  <div>
     <el-form ref="form" :model="form" :rules="rules" label-width="80px">
       <el-form-item label="姓名" prop="name">
         <el-input v-model="form.name" placeholder="请输入客户姓名"/>
@@ -13,14 +13,10 @@
 </template>
 
 <script>
-
-  import {getFile} from "@/api/custom/contract";
-
   export default {
-    name: 'sign',
+    name: 'signContract',
     data() {
       return {
-        show: false,
         form: {},
         rules: {
           name: [
@@ -32,22 +28,7 @@
         }
       }
     },
-    created() {
-      this.getContract();
-    },
     methods: {
-      getContract() {
-        const {pathname} = window.location;
-        const id = pathname.substring(pathname.lastIndexOf('/') + 1);
-        console.log(id)
-        getFile(id).then(result => {
-          if (result.url) {
-            this.$router.push(result.url);
-          } else if (result.data) {
-            this.show = true;
-          }
-        })
-      },
       submitForm() {
         this.$refs["form"].validate(valid => {
           if (valid) {
@@ -58,23 +39,3 @@
     }
   }
 </script>
-
-<style lang="scss" scoped>
-  .dashboard-editor-container {
-    padding: 32px;
-    background-color: rgb(240, 242, 245);
-    position: relative;
-
-    .chart-wrapper {
-      background: #fff;
-      padding: 16px 16px 0;
-      margin-bottom: 32px;
-    }
-  }
-
-  @media (max-width: 1024px) {
-    .chart-wrapper {
-      padding: 8px;
-    }
-  }
-</style>

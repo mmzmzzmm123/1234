@@ -125,9 +125,10 @@ export const constantRoutes = [
     ]
   },
   {
-    path: '/sign',
+    path: '/contract/:id(\\d+)',
     hidden: true,
     component: (resolve) => require(['@/views/custom/signContract'], resolve),
+    meta: { title: '合同' }
   }
 ]
 
