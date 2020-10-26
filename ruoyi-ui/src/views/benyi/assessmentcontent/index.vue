@@ -94,7 +94,7 @@
             v-model="form.parentId"
             :options="parentidOptions"
             :normalizer="normalizer"
-            placeholder="选择上级部门"
+            placeholder="选择上级内容"
           />
         </el-form-item>
         <el-form-item label="名称" prop="name">

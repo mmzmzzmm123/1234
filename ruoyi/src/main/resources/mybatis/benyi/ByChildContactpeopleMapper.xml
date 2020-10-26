@@ -135,7 +135,7 @@
             <if test="gmoffphone != null  and gmoffphone != ''">gmoffphone = #{gmoffphone},</if>
             <if test="createTime != null ">create_time = #{createTime},</if>
         </trim>
-        where id = #{id}
+        where id = #{id} or childid = #{childid}
     </update>
 
     <delete id="deleteByChildContactpeopleById" parameterType="Long">
