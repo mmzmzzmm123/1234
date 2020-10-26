@@ -48,6 +48,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
+          disabled="true"
           v-hasPermi="['benyi:contactpeople:add']"
         >新增</el-button>
       </el-col>
