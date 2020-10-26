@@ -86,14 +86,6 @@
       </el-table-column>
     </el-table>
 
-    <pagination
-      v-show="total > 0"
-      :total="total"
-      :page.sync="queryParams.pageNum"
-      :limit.sync="queryParams.pageSize"
-      @pagination="getList"
-    />
-
     <!-- 添加或修改评估内容对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
@@ -132,6 +124,13 @@
             ></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="序号" prop="sort">
+          <el-input-number
+            v-model="form.sort"
+            :min="0"
+            placeholder="请输入序号"
+          />
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -165,8 +164,6 @@ export default {
       single: true,
       // 非多个禁用
       multiple: true,
-      // 总条数
-      total: 0,
       // 评估内容表格数据
       assessmentcontentList: [],
       // 范围选项
@@ -181,8 +178,6 @@ export default {
       open: false,
       // 查询参数
       queryParams: {
-        pageNum: 1,
-        pageSize: 10,
         parentId: undefined,
         name: undefined,
         iselement: undefined,
@@ -200,6 +195,7 @@ export default {
           { required: true, message: "是否元素不能为空", trigger: "blur" },
         ],
         scope: [{ required: true, message: "范围不能为空", trigger: "blur" }],
+        sort: [{ required: true, message: "序号不能为空", trigger: "blur" }],
       },
     };
   },
@@ -226,7 +222,6 @@ export default {
       this.loading = true;
       listAssessmentcontent(this.queryParams).then((response) => {
         this.assessmentcontentList = this.handleTree(response.rows, "id");
-        this.total = response.total;
         this.loading = false;
       });
     },
@@ -264,6 +259,7 @@ export default {
         iselement: undefined,
         scope: undefined,
         createTime: undefined,
+        sort: 0,
       };
       this.resetForm("form");
     },
@@ -331,15 +327,11 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      this.$confirm(
-        '是否确认删除名称为"' + row.name + '"的数据项?',
-        "警告",
-        {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning",
-        }
-      )
+      this.$confirm('是否确认删除名称为"' + row.name + '"的数据项?', "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
         .then(function () {
           return delAssessmentcontent(row.id);
         })

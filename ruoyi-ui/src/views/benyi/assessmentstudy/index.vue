@@ -107,7 +107,7 @@ export default {
       getAssessmentcontentbyparentid(this.queryParams.id).then((response) => {
         var tmp = "";
         response.data.forEach((element) => {
-          tmp = tmp + element.name + "</br>";
+          tmp = tmp + element.sort + ". " + element.name + "</br>";
         });
         this.note = tmp;
       });

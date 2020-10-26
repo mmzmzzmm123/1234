@@ -11,10 +11,11 @@
         <result property="iselement" column="iselement"/>
         <result property="scope" column="scope"/>
         <result property="createTime" column="create_time"/>
+        <result property="sort"    column="sort"    />
     </resultMap>
 
     <sql id="selectByAssessmentcontentVo">
-        select id, parentId, name, iselement, scope, create_time from by_assessmentcontent
+        select id, parentId, name, iselement, scope, create_time, sort from by_assessmentcontent
     </sql>
 
     <select id="selectByAssessmentcontentList" parameterType="ByAssessmentcontent"
@@ -26,20 +27,23 @@
             <if test="iselement != null  and iselement != ''">and iselement = #{iselement}</if>
             <if test="scope != null  and scope != ''">and scope = #{scope}</if>
         </where>
+        order by sort
     </select>
 
     <select id="selectByAssessmentcontentstudyList" parameterType="ByAssessmentcontent"
             resultMap="ByAssessmentcontentResult">
-select -1 as id, -2 as parentId, title as name, 'N' as iselement  from by_assessmentintroduce
+select * from (
+select -1 as id, -2 as parentId, title as name, 'N' as iselement, 0 as sort  from by_assessmentintroduce
 union all
-select dict_value,-1,dict_label,'N' from sys_dict_data where dict_type='sys_dm_pgyssyfw'
+select dict_value,-1,dict_label,'N', 0 from sys_dict_data where dict_type='sys_dm_pgyssyfw'
 union all
-select id,parentId,name,iselement from by_assessmentcontent where scope=1 and parentId!=0 and iselement='N'
+select id,parentId,name,iselement,sort from by_assessmentcontent where scope=1 and parentId!=0 and iselement='N'
 union all
-select id,parentId,name,iselement from by_assessmentcontent where scope=2 and parentId!=0 and iselement='N'
+select id,parentId,name,iselement,sort from by_assessmentcontent where scope=2 and parentId!=0 and iselement='N'
 union all
-select id,parentId,name,iselement from by_assessmentcontent where scope=3 and parentId!=0 and iselement='N'
-
+select id,parentId,name,iselement,sort from by_assessmentcontent where scope=3 and parentId!=0 and iselement='N'
+) t
+order by t.sort
     </select>
 
     <select id="selectByAssessmentcontentById" parameterType="Long" resultMap="ByAssessmentcontentResult">
@@ -60,6 +64,7 @@ select id,parentId,name,iselement from by_assessmentcontent where scope=3 and pa
             <if test="iselement != null  and iselement != ''">iselement,</if>
             <if test="scope != null  and scope != ''">scope,</if>
             <if test="createTime != null ">create_time,</if>
+            <if test="sort != null ">sort,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="parentId != null ">#{parentId},</if>
@@ -67,6 +72,7 @@ select id,parentId,name,iselement from by_assessmentcontent where scope=3 and pa
             <if test="iselement != null  and iselement != ''">#{iselement},</if>
             <if test="scope != null  and scope != ''">#{scope},</if>
             <if test="createTime != null ">#{createTime},</if>
+            <if test="sort != null ">#{sort},</if>
         </trim>
     </insert>
 
@@ -78,6 +84,7 @@ select id,parentId,name,iselement from by_assessmentcontent where scope=3 and pa
             <if test="iselement != null  and iselement != ''">iselement = #{iselement},</if>
             <if test="scope != null  and scope != ''">scope = #{scope},</if>
             <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="sort != null ">sort = #{sort},</if>
         </trim>
         where id = #{id}
     </update>

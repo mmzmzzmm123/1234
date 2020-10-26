@@ -40,6 +40,12 @@ public class ByAssessmentcontent extends BaseEntity {
     @Excel(name = "是否元素")
     private String iselement;
 
+    /**
+     * 序号
+     */
+    @Excel(name = "序号")
+    private Long sort;
+
     public String getParentName() {
         return parentName;
     }
@@ -56,10 +62,14 @@ public class ByAssessmentcontent extends BaseEntity {
         this.children = children;
     }
 
-    /** 父部门名称 */
+    /**
+     * 父部门名称
+     */
     private String parentName;
 
-    /** 子部门 */
+    /**
+     * 子部门
+     */
     private List<ByAssessmentcontent> children = new ArrayList<ByAssessmentcontent>();
 
     /**
@@ -100,6 +110,14 @@ public class ByAssessmentcontent extends BaseEntity {
         return scope;
     }
 
+    public void setSort(Long sort) {
+        this.sort = sort;
+    }
+
+    public Long getSort() {
+        return sort;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
@@ -109,6 +127,7 @@ public class ByAssessmentcontent extends BaseEntity {
                 .append("iselement", getIselement())
                 .append("scope", getScope())
                 .append("createTime", getCreateTime())
+                .append("sort", getSort())
                 .toString();
     }
 
