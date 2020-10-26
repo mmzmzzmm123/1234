@@ -48,6 +48,17 @@ public class ByAssessmentcontentServiceImpl implements IByAssessmentcontentServi
     }
 
     /**
+     * 查询评估内容列表
+     *
+     * @param byAssessmentcontent 评估内容
+     * @return 评估内容集合
+     */
+    @Override
+    public List<ByAssessmentcontent> selectByAssessmentcontentstudyList(ByAssessmentcontent byAssessmentcontent){
+        return byAssessmentcontentMapper.selectByAssessmentcontentstudyList(byAssessmentcontent);
+    }
+
+    /**
      * 构建前端所需要树结构
      *
      * @param byAssessmentcontents 部门列表

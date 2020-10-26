@@ -32,33 +32,61 @@ import com.ruoyi.framework.web.page.TableDataInfo;
  */
 @RestController
 @RequestMapping("/benyi/assessmentcontent")
-public class ByAssessmentcontentController extends BaseController
-{
+public class ByAssessmentcontentController extends BaseController {
     @Autowired
     private IByAssessmentcontentService byAssessmentcontentService;
     @Autowired
     private TokenService tokenService;
 
-/**
- * 查询评估内容列表
- */
-@PreAuthorize("@ss.hasPermi('benyi:assessmentcontent:list')")
-@GetMapping("/list")
-        public TableDataInfo list(ByAssessmentcontent byAssessmentcontent)
-    {
+    /**
+     * 查询评估内容列表
+     */
+    @PreAuthorize("@ss.hasPermi('benyi:assessmentcontent:list')")
+    @GetMapping("/list")
+    public TableDataInfo list(ByAssessmentcontent byAssessmentcontent) {
         startPage();
         List<ByAssessmentcontent> list = byAssessmentcontentService.selectByAssessmentcontentList(byAssessmentcontent);
         return getDataTable(list);
     }
-    
+
+    /**
+     * 查询评估内容列表
+     */
+    @PreAuthorize("@ss.hasPermi('benyi:assessmentstudy:list')")
+    @GetMapping("/treeselectstudy")
+    public AjaxResult treeselectstudy(ByAssessmentcontent byAssessmentcontent) {
+        List<ByAssessmentcontent> list = byAssessmentcontentService.selectByAssessmentcontentstudyList(byAssessmentcontent);
+        return AjaxResult.success(byAssessmentcontentService.buildByAssessmentcontentTreeSelect(list));
+    }
+
+    /**
+     * 获取评估内容详细信息
+     */
+    @PreAuthorize("@ss.hasPermi('benyi:assessmentcontent:query')")
+    @GetMapping(value = "/byparentid/{id}")
+    public AjaxResult getInfobyparentId(@PathVariable("id") Long id) {
+        System.out.println("start:"+id);
+        ByAssessmentcontent byAssessmentcontent=new ByAssessmentcontent();
+        byAssessmentcontent.setParentId(id);
+        return AjaxResult.success(byAssessmentcontentService.selectByAssessmentcontentList(byAssessmentcontent));
+    }
+
+//    /**
+//     * 获取部门下拉树列表
+//     */
+//    @GetMapping("/treeselect")
+//    public AjaxResult treeselect(ByDayFlowDetail byDayFlowDetail) {
+//        List<ByDayFlowDetail> byDayFlowDetails = byDayFlowDetailService.selectByDayFlowDetailListTree(byDayFlowDetail);
+//        return AjaxResult.success(byDayFlowDetailService.buildDayFlowDetailTreeSelect(byDayFlowDetails));
+//    }
+
     /**
      * 导出评估内容列表
      */
     @PreAuthorize("@ss.hasPermi('benyi:assessmentcontent:export')")
     @Log(title = "评估内容", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
-    public AjaxResult export(ByAssessmentcontent byAssessmentcontent)
-    {
+    public AjaxResult export(ByAssessmentcontent byAssessmentcontent) {
         List<ByAssessmentcontent> list = byAssessmentcontentService.selectByAssessmentcontentList(byAssessmentcontent);
         ExcelUtil<ByAssessmentcontent> util = new ExcelUtil<ByAssessmentcontent>(ByAssessmentcontent.class);
         return util.exportExcel(list, "assessmentcontent");
@@ -69,11 +97,9 @@ public class ByAssessmentcontentController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('benyi:assessmentcontent:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
-    {
+    public AjaxResult getInfo(@PathVariable("id") Long id) {
         return AjaxResult.success(byAssessmentcontentService.selectByAssessmentcontentById(id));
     }
-
 
 
     /**
@@ -92,8 +118,7 @@ public class ByAssessmentcontentController extends BaseController
     @PreAuthorize("@ss.hasPermi('benyi:assessmentcontent:add')")
     @Log(title = "评估内容", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody ByAssessmentcontent byAssessmentcontent)
-    {
+    public AjaxResult add(@RequestBody ByAssessmentcontent byAssessmentcontent) {
         return toAjax(byAssessmentcontentService.insertByAssessmentcontent(byAssessmentcontent));
     }
 
@@ -103,8 +128,7 @@ public class ByAssessmentcontentController extends BaseController
     @PreAuthorize("@ss.hasPermi('benyi:assessmentcontent:edit')")
     @Log(title = "评估内容", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody ByAssessmentcontent byAssessmentcontent)
-    {
+    public AjaxResult edit(@RequestBody ByAssessmentcontent byAssessmentcontent) {
         return toAjax(byAssessmentcontentService.updateByAssessmentcontent(byAssessmentcontent));
     }
 
@@ -114,8 +138,7 @@ public class ByAssessmentcontentController extends BaseController
     @PreAuthorize("@ss.hasPermi('benyi:assessmentcontent:remove')")
     @Log(title = "评估内容", businessType = BusinessType.DELETE)
     @DeleteMapping("/{id}")
-    public AjaxResult remove(@PathVariable Long id)
-    {
+    public AjaxResult remove(@PathVariable Long id) {
         if (byAssessmentcontentService.hasChildByAssessmentcontentId(id)) {
             return AjaxResult.error("存在下级内容,不允许删除");
         }

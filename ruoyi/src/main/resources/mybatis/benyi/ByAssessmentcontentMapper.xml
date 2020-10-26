@@ -28,6 +28,20 @@
         </where>
     </select>
 
+    <select id="selectByAssessmentcontentstudyList" parameterType="ByAssessmentcontent"
+            resultMap="ByAssessmentcontentResult">
+select -1 as id, -2 as parentId, title as name, 'N' as iselement  from by_assessmentintroduce
+union all
+select dict_value,-1,dict_label,'N' from sys_dict_data where dict_type='sys_dm_pgyssyfw'
+union all
+select id,parentId,name,iselement from by_assessmentcontent where scope=1 and parentId!=0 and iselement='N'
+union all
+select id,parentId,name,iselement from by_assessmentcontent where scope=2 and parentId!=0 and iselement='N'
+union all
+select id,parentId,name,iselement from by_assessmentcontent where scope=3 and parentId!=0 and iselement='N'
+
+    </select>
+
     <select id="selectByAssessmentcontentById" parameterType="Long" resultMap="ByAssessmentcontentResult">
         <include refid="selectByAssessmentcontentVo"/>
         where id = #{id}

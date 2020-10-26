@@ -17,11 +17,28 @@ export function treeselect() {
     })
 }
 
+// 查询流程下拉树结构
+export function treeselectstudy() {
+    return request({
+        url: '/benyi/assessmentcontent/treeselectstudy',
+        method: 'get'
+    })
+}
+
 
 // 查询评估内容详细
 export function getAssessmentcontent(id) {
     return request({
         url: '/benyi/assessmentcontent/' + id,
+        method: 'get'
+    })
+}
+
+
+// 查询评估内容详细
+export function getAssessmentcontentbyparentid(id) {
+    return request({
+        url: '/benyi/assessmentcontent/byparentid/' + id,
         method: 'get'
     })
 }

@@ -28,6 +28,14 @@ public interface ByAssessmentcontentMapper {
     public List<ByAssessmentcontent> selectByAssessmentcontentList(ByAssessmentcontent byAssessmentcontent);
 
     /**
+     * 查询评估内容列表
+     *
+     * @param byAssessmentcontent 评估内容
+     * @return 评估内容集合
+     */
+    public List<ByAssessmentcontent> selectByAssessmentcontentstudyList(ByAssessmentcontent byAssessmentcontent);
+
+    /**
      * 新增评估内容
      *
      * @param byAssessmentcontent 评估内容
