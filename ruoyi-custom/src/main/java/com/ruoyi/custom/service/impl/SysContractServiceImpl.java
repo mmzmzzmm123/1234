@@ -100,7 +100,7 @@ public class SysContractServiceImpl implements ISysContractService {
     @Override
     public int signContract(SysContract sysContract) {
         String templatePath = "/Users/wonder/Documents/Workspaces/java/RuoYi-Vue/running/pdf/contract.pdf";
-        String filePath = "/Users/wonder/Documents/Workspaces/java/RuoYi-Vue/running" + sysContract.getPath();
+        String filePath = "/Users/wonder/Documents/Workspaces/java/RuoYi-Vue/running" + sysContract.getPath() + ".pdf";
         PdfReader reader;
         FileOutputStream out;
         ByteArrayOutputStream bos;
@@ -113,12 +113,15 @@ public class SysContractServiceImpl implements ISysContractService {
             stamper = new PdfStamper(reader, bos);
             AcroFields form = stamper.getAcroFields();
 
-            form.setField("name", sysContract.getName());
-            form.setField("phone", sysContract.getName());
-            form.setField("money", sysContract.getAmount().toString());
-            form.setField("moneyUpper", sysContract.getAmountUpper());
-            form.setField("date", sysContract.getName());
-            form.setField("cusId", sysContract.getCusId());
+            form.addSubstitutionFont(BaseFont.createFont("STSong-Light", "UniGB-UCS2-H", BaseFont.NOT_EMBEDDED));
+
+            form.setField("name", sysContract.getName(), true);
+            form.setField("time", sysContract.getServeTime().toString(), true);
+            form.setField("moneyUpper", sysContract.getAmountUpper(), true);
+            form.setField("money", sysContract.getAmount().intValue() + "", true);
+            form.setField("phone", sysContract.getPhone(), true);
+            form.setField("date", sysContract.getCreateTime().toString(), true);
+            form.setField("cusId", sysContract.getCusId(), true);
 
 
             stamper.setFormFlattening(true);// 如果为false那么生成的PDF文件还能编辑，一定要设为true
