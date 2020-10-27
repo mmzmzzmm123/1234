@@ -23,7 +23,7 @@ import {
   handleTree,
   parseTime,
   resetForm,
-  searchToParams,
+  digitUppercase,
   selectDictLabel,
   selectDictLabels,
   toThousands
@@ -43,7 +43,7 @@ Vue.prototype.selectDictLabels = selectDictLabels
 Vue.prototype.download = download
 Vue.prototype.handleTree = handleTree
 Vue.prototype.toThousands = toThousands
-Vue.prototype.searchToParams = searchToParams
+Vue.prototype.digitUppercase = digitUppercase
 
 Vue.prototype.msgSuccess = function (msg) {
   this.$message({showClose: true, message: msg, type: "success"});

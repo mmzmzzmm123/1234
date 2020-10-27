@@ -58,3 +58,11 @@ export function getFile(id) {
     method: 'get',
   })
 }
+
+export function signContract(data) {
+  return request({
+    url: '/custom/contract/',
+    method: 'put',
+    data: data
+  })
+}

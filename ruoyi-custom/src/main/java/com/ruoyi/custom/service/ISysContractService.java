@@ -58,4 +58,6 @@ public interface ISysContractService
      * @return 结果
      */
     public int deleteSysContractById(Long id);
+
+    public int signContract(SysContract sysContract);
 }

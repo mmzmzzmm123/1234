@@ -3,7 +3,6 @@ package com.ruoyi.web.controller.custom;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
-import com.ruoyi.common.core.domain.model.Contract;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.poi.ExcelUtil;
@@ -13,7 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 合同Controller
@@ -92,27 +93,35 @@ public class SysContractController extends BaseController {
 
     @GetMapping("/file/{id}")
     public AjaxResult getfile(@PathVariable long id) {
-        try {
-            AjaxResult ajax = AjaxResult.success();
-//            ajax.put("url", "/login");
-            ajax.put("data", id);
-            return ajax;
-        } catch (Exception e) {
-            return AjaxResult.error(e.getMessage());
+        AjaxResult ajax = AjaxResult.success();
+        SysContract contract = sysContractService.selectSysContractById(id);
+        if (contract.getPath() != null) {
+            ajax.put("url", contract.getPath());
+        } else {
+            Map<String, String> data = new HashMap<>();
+            data.put("name", contract.getName());
+            data.put("amount", contract.getAmount().toString());
+            data.put("serveTime", contract.getServeTime().toString());
+            ajax.put("data", data);
         }
+        return ajax;
     }
 
     /**
      * 合同签单
      */
     @PostMapping("/sign")
-    public AjaxResult signContract(@RequestBody Contract contract) throws Exception {
-        try {
+    public AjaxResult signContract(@RequestBody SysContract sysContract) {
+        sysContract.setStatus(1);
+        String path = "/file/" + sysContract.getId() + ".pdf";
+        sysContract.setPath(path);
+        int count = sysContractService.updateSysContract(sysContract);
+        if (count > 0) {
             AjaxResult ajax = AjaxResult.success();
-            ajax.put("result", "hi");
+            ajax.put("url", path);
             return ajax;
-        } catch (Exception e) {
-            return AjaxResult.error(e.getMessage());
+        } else {
+            return AjaxResult.error("操作失败");
         }
     }
 }
