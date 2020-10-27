@@ -72,7 +72,12 @@
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="编号" align="center" prop="id" /> -->
       <el-table-column label="标题" align="center" prop="title" />
-      <el-table-column label="内容" align="center" :show-overflow-tooltip="true" prop="content" />
+      <el-table-column
+        label="内容"
+        align="center"
+        :show-overflow-tooltip="true"
+        prop="content"
+      />
       <el-table-column
         label="操作"
         align="center"
@@ -114,7 +119,8 @@
           <el-input v-model="form.title" placeholder="请输入标题" />
         </el-form-item>
         <el-form-item label="内容" prop="content">
-          <el-input type="textarea" v-model="form.content" placeholder="请输入内容" />
+          <!-- <el-input type="textarea" v-model="form.content" placeholder="请输入内容" /> -->
+          <Editor v-model="form.content" placeholder="请输入内容" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -134,8 +140,13 @@ import {
   updateAssessmentintroduce,
 } from "@/api/benyi/assessmentintroduce";
 
+import Editor from "@/components/Editor";
+
 export default {
   name: "Assessmentintroduce",
+  components: {
+    Editor,
+  },
   data() {
     return {
       // 遮罩层
@@ -165,7 +176,7 @@ export default {
       form: {},
       // 表单校验
       rules: {
-          title: [{ required: true, message: "名称不能为空", trigger: "blur" }],
+        title: [{ required: true, message: "名称不能为空", trigger: "blur" }],
         content: [{ required: true, message: "内容不能为空", trigger: "blur" }],
       },
     };

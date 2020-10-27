@@ -45,6 +45,7 @@ import {
   getAssessmentcontent,
   getAssessmentcontentbyparentid,
 } from "@/api/benyi/assessmentcontent";
+import { listAssessmentintroduce } from "@/api/benyi/assessmentintroduce";
 
 export default {
   name: "Assessmentstudy",
@@ -55,10 +56,7 @@ export default {
       //标题
       title: "儿童学习与发展评估介绍",
       //目的
-      note:
-        "儿童学习与发展评估对象是幼儿园3-6岁儿童。本一的“儿童学习与发展评估”（以下称“评估”），是完全基于教育部《3-6岁儿童学习与发展指南》所构建。尽管“评估”具备工具性质，但更重要的事实是，它“通过提出3-6岁各年龄儿童学习与发展目标和相应的教育建议，帮助幼儿园教师和家长了解3-6岁幼儿学习与发展的基本规律和特点，建立对幼儿发展的合理期望，实施科学的保育和教育，让幼儿度过快乐而有意义的童年”（《指南》）。3-6岁三个年龄段的“儿童学习与发展评估”包括5大领域，11个分支领域，32个指标，以及若干个评估元素。评估以班级中每个孩子为基本单位。建议在班长和教师之间分配所评估孩子的数量。评估过程以日常生活对孩子的观察为主，随时在线记录和标记满足于各个指标的元素。其最终评估结果，将会在线自动生成“雷达图”。需要注意的是，评估的基本目的，是为了更有效地对每个孩子实施个性化教育。因此，不要把评估结果当成“测验”或“考核”手段或工具，更不要直接将结果拿给家长看，以免造成误读。",
-      // 根据一日流程id查到的名下任务列表
-      dayflowtaskList: [],
+      note: "",
       // 树状显示类型
       treeOptions: [],
       // 树结构
@@ -80,6 +78,7 @@ export default {
   },
   created() {
     this.getTreeselect();
+    this.getNote();
   },
   methods: {
     /** 查询部门下拉树结构 */
@@ -96,11 +95,21 @@ export default {
     // 节点单击事件
     handleNodeClick(data) {
       console.log("node:" + data.id);
-      this.queryParams.id = data.id;
       this.title = data.label;
-      this.getTaskList();
-      // console.log(this.dayflowtaskList[date.id])
-      // this.getStandardList();
+      if (data.id == "-1") {
+        this.getNote();
+      } else {
+        this.queryParams.id = data.id;
+
+        this.getTaskList();
+      }
+    },
+    /**查询评估介绍 */
+    getNote() {
+      listAssessmentintroduce(null).then((response) => {
+        console.log("评估介绍:" + response.rows[0].content);
+        this.note = response.rows[0].content;
+      });
     },
     /** 查询一日流程任务列表 */
     getTaskList() {

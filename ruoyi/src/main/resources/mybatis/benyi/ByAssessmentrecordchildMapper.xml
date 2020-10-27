@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.benyi.mapper.ByAssessmentrecordchildMapper">
+
+    <resultMap type="ByAssessmentrecordchild" id="ByAssessmentrecordchildResult">
+        <result property="id" column="id"/>
+        <result property="childid" column="childid"/>
+        <result property="xn" column="xn"/>
+        <result property="state" column="state"/>
+        <result property="scope" column="scope"/>
+        <result property="userid" column="userid"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <sql id="selectByAssessmentrecordchildVo">
+        select id, childid, xn, state, scope, userid, create_time from by_assessmentrecordchild
+    </sql>
+
+    <select id="selectByAssessmentrecordchildList" parameterType="ByAssessmentrecordchild"
+            resultMap="ByAssessmentrecordchildResult">
+        <include refid="selectByAssessmentrecordchildVo"/>
+        <where>
+            <if test="childid != null ">and childid = #{childid}</if>
+            <if test="xn != null  and xn != ''">and xn = #{xn}</if>
+            <if test="state != null  and state != ''">and state = #{state}</if>
+            <if test="scope != null  and scope != ''">and scope = #{scope}</if>
+            <if test="userid != null ">and userid = #{userid}</if>
+        </where>
+    </select>
+
+    <select id="selectByAssessmentrecordchildById" parameterType="Long" resultMap="ByAssessmentrecordchildResult">
+        <include refid="selectByAssessmentrecordchildVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertByAssessmentrecordchild" parameterType="ByAssessmentrecordchild" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into by_assessmentrecordchild
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="childid != null ">childid,</if>
+            <if test="xn != null  and xn != ''">xn,</if>
+            <if test="state != null  and state != ''">state,</if>
+            <if test="scope != null  and scope != ''">scope,</if>
+            <if test="userid != null ">userid,</if>
+            <if test="createTime != null ">create_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="childid != null ">#{childid},</if>
+            <if test="xn != null  and xn != ''">#{xn},</if>
+            <if test="state != null  and state != ''">#{state},</if>
+            <if test="scope != null  and scope != ''">#{scope},</if>
+            <if test="userid != null ">#{userid},</if>
+            <if test="createTime != null ">#{createTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateByAssessmentrecordchild" parameterType="ByAssessmentrecordchild">
+        update by_assessmentrecordchild
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="childid != null ">childid = #{childid},</if>
+            <if test="xn != null  and xn != ''">xn = #{xn},</if>
+            <if test="state != null  and state != ''">state = #{state},</if>
+            <if test="scope != null  and scope != ''">scope = #{scope},</if>
+            <if test="userid != null ">userid = #{userid},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteByAssessmentrecordchildById" parameterType="Long">
+        delete from by_assessmentrecordchild where id = #{id}
+    </delete>
+
+    <delete id="deleteByAssessmentrecordchildByIds" parameterType="String">
+        delete from by_assessmentrecordchild where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

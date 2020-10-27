@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.benyi.mapper.ByAssessmentchildMapper">
+
+    <resultMap type="ByAssessmentchild" id="ByAssessmentchildResult">
+        <result property="id" column="id"/>
+        <result property="childid" column="childid"/>
+        <result property="contentid" column="contentid"/>
+        <result property="type" column="type"/>
+        <result property="xn" column="xn"/>
+        <result property="userid" column="userid"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <sql id="selectByAssessmentchildVo">
+        select id, childid, contentid, type, xn, userid, create_time from by_assessmentchild
+    </sql>
+
+    <select id="selectByAssessmentchildList" parameterType="ByAssessmentchild" resultMap="ByAssessmentchildResult">
+        <include refid="selectByAssessmentchildVo"/>
+        <where>
+            <if test="childid != null ">and childid = #{childid}</if>
+            <if test="contentid != null ">and contentid = #{contentid}</if>
+            <if test="type != null  and type != ''">and type = #{type}</if>
+            <if test="xn != null  and xn != ''">and xn = #{xn}</if>
+            <if test="userid != null ">and userid = #{userid}</if>
+        </where>
+    </select>
+
+    <select id="selectByAssessmentchildById" parameterType="Long" resultMap="ByAssessmentchildResult">
+        <include refid="selectByAssessmentchildVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertByAssessmentchild" parameterType="ByAssessmentchild" useGeneratedKeys="true" keyProperty="id">
+        insert into by_assessmentchild
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="childid != null ">childid,</if>
+            <if test="contentid != null ">contentid,</if>
+            <if test="type != null  and type != ''">type,</if>
+            <if test="xn != null  and xn != ''">xn,</if>
+            <if test="userid != null ">userid,</if>
+            <if test="createTime != null ">create_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="childid != null ">#{childid},</if>
+            <if test="contentid != null ">#{contentid},</if>
+            <if test="type != null  and type != ''">#{type},</if>
+            <if test="xn != null  and xn != ''">#{xn},</if>
+            <if test="userid != null ">#{userid},</if>
+            <if test="createTime != null ">#{createTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateByAssessmentchild" parameterType="ByAssessmentchild">
+        update by_assessmentchild
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="childid != null ">childid = #{childid},</if>
+            <if test="contentid != null ">contentid = #{contentid},</if>
+            <if test="type != null  and type != ''">type = #{type},</if>
+            <if test="xn != null  and xn != ''">xn = #{xn},</if>
+            <if test="userid != null ">userid = #{userid},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteByAssessmentchildById" parameterType="Long">
+        delete from by_assessmentchild where id = #{id}
+    </delete>
+
+    <delete id="deleteByAssessmentchildByIds" parameterType="String">
+        delete from by_assessmentchild where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
