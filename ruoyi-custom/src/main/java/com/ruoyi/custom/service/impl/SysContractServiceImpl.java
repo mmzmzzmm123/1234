@@ -60,6 +60,7 @@ public class SysContractServiceImpl implements ISysContractService {
     public int insertSysContract(SysContract sysContract) {
         sysContract.setId(DateUtils.getNowDate().getTime());
         sysContract.setCreateTime(DateUtils.getNowDate());
+        sysContract.setPath("/file/contract/" + sysContract.getId());
         return sysContractMapper.insertSysContract(sysContract);
     }
 

@@ -94,7 +94,13 @@
       <el-table-column label="电话" align="center" prop="phone"/>
       <el-table-column label="服务时间" align="center" prop="serveTime" :formatter="serveTimeFormat"/>
       <el-table-column label="金额" align="center" prop="amount"/>
-      <el-table-column label="合同地址" align="center" prop="path"/>
+      <el-table-column label="合同地址" align="center" prop="path">
+        <template slot-scope="scope">
+          <el-button type="text" icon="el-icon-copy-document" @click="handleCopy(scope.row.path)" class="copyBtn"
+                     :data-clipboard-text="copyValue">复制
+          </el-button>
+        </template>
+      </el-table-column>
       <el-table-column label="备注" align="center" prop="remark"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
@@ -172,6 +178,8 @@
     updateContract
   } from "@/api/custom/contract";
 
+  import Clipboard from 'clipboard';
+
   export default {
     name: "Contract",
     data() {
@@ -196,6 +204,8 @@
         open: false,
         // 服务时间字典
         serveTimeOptions: [],
+        //
+        copyValue: '',
         // 查询参数
         queryParams: {
           pageNum: 1,
@@ -340,6 +350,16 @@
           this.download(response.msg);
         }).catch(function () {
         });
+      },
+      handleCopy(path) {
+        this.copyValue = window.location.origin + path;
+        const btnCopy = new Clipboard('.copyBtn');
+        // btnCopy.destroy();
+        this.$message({
+          message: '拷贝成功',
+          type: 'success'
+        });
+        // console.log(this.copyValue);
       }
     }
   };

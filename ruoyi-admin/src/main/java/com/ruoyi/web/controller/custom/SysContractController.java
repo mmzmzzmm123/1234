@@ -95,7 +95,7 @@ public class SysContractController extends BaseController {
     public AjaxResult getfile(@PathVariable long id) {
         AjaxResult ajax = AjaxResult.success();
         SysContract contract = sysContractService.selectSysContractById(id);
-        if (contract.getPath() != null && !contract.getPath().equals("")) {
+        if (contract.getStatus() == 1) {
             ajax.put("url", contract.getPath());
         } else {
             Map<String, String> data = new HashMap<>();
