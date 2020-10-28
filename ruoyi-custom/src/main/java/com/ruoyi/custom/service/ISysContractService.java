@@ -59,5 +59,5 @@ public interface ISysContractService
      */
     public int deleteSysContractById(Long id);
 
-    public int signContract(SysContract sysContract);
+    public boolean signContract(SysContract sysContract);
 }

@@ -43,7 +43,9 @@ public class SysContract extends BaseEntity {
      * 服务时间
      */
     @Excel(name = "服务时间")
-    private Integer serveTime;
+    private int serveTime;
+
+    private String serveTimeStr;
 
     /**
      * 金额
@@ -58,6 +60,11 @@ public class SysContract extends BaseEntity {
      */
     @Excel(name = "文件路径")
     private String path;
+
+    /**
+     * 签约日期
+     */
+    private String signDate;
 
     /**
      * 合同状态
@@ -89,11 +96,11 @@ public class SysContract extends BaseEntity {
         this.phone = phone;
     }
 
-    public Integer getServeTime() {
+    public int getServeTime() {
         return serveTime;
     }
 
-    public void setServeTime(Integer serveTime) {
+    public void setServeTime(int serveTime) {
         this.serveTime = serveTime;
     }
 
@@ -137,6 +144,23 @@ public class SysContract extends BaseEntity {
         this.cusId = cusId;
     }
 
+    public String getSignDate() {
+        return signDate;
+    }
+
+    public void setSignDate(String signDate) {
+        this.signDate = signDate;
+    }
+
+
+    public String getServeTimeStr() {
+        return serveTimeStr;
+    }
+
+    public void setServeTimeStr(String serveTimeStr) {
+        this.serveTimeStr = serveTimeStr;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
@@ -147,6 +171,8 @@ public class SysContract extends BaseEntity {
                 .append("phone", getPhone())
                 .append("serveTime", getServeTime())
                 .append("amount", getAmount())
+                .append("amountUpper", getAmountUpper())
+                .append("signDate", getSignDate())
                 .append("path", getPath())
                 .append("createBy", getCreateBy())
                 .append("createTime", getCreateTime())

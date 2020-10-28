@@ -60,7 +60,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="id != null">#{id},</if>
             <if test="status != null">#{status},</if>
             <if test="name != null and name != ''">#{name},</if>
-            <if test="cusId != null and cusId != ''">#{cus_id},</if>
+            <if test="cusId != null and cusId != ''">#{cusId},</if>
             <if test="phone != null">#{phone},</if>
             <if test="serveTime != null">#{serveTime},</if>
             <if test="amount != null">#{amount},</if>
@@ -76,9 +76,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <update id="updateSysContract" parameterType="SysContract">
         update sys_contract
         <trim prefix="SET" suffixOverrides=",">
-            <if test="status != null">name = #{status},</if>
+            <if test="status != null">status = #{status},</if>
             <if test="name != null and name != ''">name = #{name},</if>
-            <if test="cusId != null and cusId != ''">name = #{cus_id},</if>
+            <if test="cusId != null and cusId != ''">cus_id = #{cusId},</if>
             <if test="phone != null">phone = #{phone},</if>
             <if test="serveTime != null">serve_time = #{serveTime},</if>
             <if test="amount != null">amount = #{amount},</if>

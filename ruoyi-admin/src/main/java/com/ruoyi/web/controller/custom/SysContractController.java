@@ -95,13 +95,14 @@ public class SysContractController extends BaseController {
     public AjaxResult getfile(@PathVariable long id) {
         AjaxResult ajax = AjaxResult.success();
         SysContract contract = sysContractService.selectSysContractById(id);
-        if (contract.getPath() != null) {
+        if (contract.getPath() != null && !contract.getPath().equals("")) {
             ajax.put("url", contract.getPath());
         } else {
             Map<String, String> data = new HashMap<>();
+            data.put("id", contract.getId().toString());
             data.put("name", contract.getName());
             data.put("amount", contract.getAmount().toString());
-            data.put("serveTime", contract.getServeTime().toString());
+            data.put("serveTime", contract.getServeTime() + "");
             ajax.put("data", data);
         }
         return ajax;
@@ -115,8 +116,9 @@ public class SysContractController extends BaseController {
         sysContract.setStatus(1);
         String path = "/file/" + sysContract.getId() + ".pdf";
         sysContract.setPath(path);
-        int count = sysContractService.updateSysContract(sysContract);
-        if (count > 0) {
+        boolean result = sysContractService.signContract(sysContract);
+        if (result) {
+            sysContractService.updateSysContract(sysContract);
             AjaxResult ajax = AjaxResult.success();
             ajax.put("url", path);
             return ajax;

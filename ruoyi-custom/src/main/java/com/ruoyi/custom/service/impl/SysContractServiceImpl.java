@@ -98,9 +98,12 @@ public class SysContractServiceImpl implements ISysContractService {
     }
 
     @Override
-    public int signContract(SysContract sysContract) {
-        String templatePath = "/Users/wonder/Documents/Workspaces/java/RuoYi-Vue/running/pdf/contract.pdf";
-        String filePath = "/Users/wonder/Documents/Workspaces/java/RuoYi-Vue/running" + sysContract.getPath() + ".pdf";
+    public boolean signContract(SysContract sysContract) {
+//        String templatePath = "/Users/wonder/Documents/Workspaces/java/RuoYi-Vue/running/pdf/contract.pdf";
+//        String filePath = "/Users/wonder/Documents/Workspaces/java/RuoYi-Vue/running" + sysContract.getPath();
+        String templatePath = "/home/workspace/RuoYi-Vue/running/pdf/contract.pdf";
+        String filePath = "/home/www/web/long.busyinn.com/file" + sysContract.getPath();
+
         PdfReader reader;
         FileOutputStream out;
         ByteArrayOutputStream bos;
@@ -116,11 +119,11 @@ public class SysContractServiceImpl implements ISysContractService {
             form.addSubstitutionFont(BaseFont.createFont("STSong-Light", "UniGB-UCS2-H", BaseFont.NOT_EMBEDDED));
 
             form.setField("name", sysContract.getName(), true);
-            form.setField("time", sysContract.getServeTime().toString(), true);
+            form.setField("time", sysContract.getServeTimeStr(), true);
             form.setField("moneyUpper", sysContract.getAmountUpper(), true);
             form.setField("money", sysContract.getAmount().intValue() + "", true);
             form.setField("phone", sysContract.getPhone(), true);
-            form.setField("date", sysContract.getCreateTime().toString(), true);
+            form.setField("date", DateUtils.getDate(), true);
             form.setField("cusId", sysContract.getCusId(), true);
 
 
@@ -138,6 +141,8 @@ public class SysContractServiceImpl implements ISysContractService {
                 copy.addPage(importPage);
             }
             doc.close();
+
+            return true;
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -145,6 +150,6 @@ public class SysContractServiceImpl implements ISysContractService {
         } catch (DocumentException e) {
             e.printStackTrace();
         }
-        return 0;
+        return false;
     }
 }

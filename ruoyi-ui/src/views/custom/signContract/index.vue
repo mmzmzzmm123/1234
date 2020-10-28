@@ -9,10 +9,10 @@
         <span>￥{{form.amount}}</span>
       </el-form-item>
       <el-form-item label="服务时长" style="margin: 0">
-        <span>{{form.serveTime}}</span>
+        <span>{{form.serveTimeStr}}</span>
       </el-form-item>
-      <el-form-item label="姓名" prop="userName">
-        <el-input v-model="form.userName" placeholder="请输入客户姓名"/>
+      <el-form-item label="姓名" prop="cusName">
+        <el-input v-model="form.cusName" placeholder="请输入客户姓名"/>
       </el-form-item>
       <el-form-item label="证件号" prop="cusId">
         <el-input v-model="form.cusId" placeholder="请输入证件号"/>
@@ -50,8 +50,8 @@
         </p>
 
         <p>第二条 合作内容及费用
-        <div class="line-rule">11、经甲乙双方协商确定，乙方向甲方购买<b>{{form.serveTime}}</b>“胜唐体控瘦身指导服务”（以下简称服务）。</div>
-        <div class="line-rule">12、乙方向甲方购买<b>{{form.serveTime}}</b>，经甲乙双方协商确定，乙方向甲方支付疗程费用共为人民币：<b>{{form.amount}}</b>元，大写：<b>{{form.amountUppercase}}</b>）。
+        <div class="line-rule">11、经甲乙双方协商确定，乙方向甲方购买<b>{{form.serveTimeStr}}</b>“胜唐体控瘦身指导服务”（以下简称服务）。</div>
+        <div class="line-rule">12、乙方向甲方购买<b>{{form.serveTimeStr}}</b>，经甲乙双方协商确定，乙方向甲方支付疗程费用共为人民币：<b>{{form.amount}}</b>元，大写：<b>{{form.amountUppercase}}</b>）。
         </div>
         </p>
 
@@ -82,17 +82,17 @@
 <script>
 
   import {getFile, signContract} from "@/api/custom/contract";
-  import {digitUppercase} from "../../../utils/ruoyi";
+  import {digitUppercase, parseTime} from "../../../utils/ruoyi";
 
   export default {
     name: 'sign',
     data() {
 
-      const checkUserName = (rule, value, callback) => {
+      const checkCusName = (rule, value, callback) => {
         if (!value) {
           return callback(new Error('姓名不能为空'))
         }
-        if(value !== this.form.name){
+        if (value !== this.form.name) {
           return callback(new Error('输入姓名不匹配，请联系客服核对'))
         }
         callback();
@@ -159,8 +159,8 @@
           {label: '12个月', value: 360},
         ],
         rules: {
-          userName: [
-            {required: true, trigger: "blur", validator: checkUserName}
+          cusName: [
+            {required: true, trigger: "blur", validator: checkCusName}
           ],
           phone: [
             {required: true, trigger: "blur", validator: checkPhone}
@@ -188,8 +188,8 @@
           } else if (result.data) {
             this.form = result.data;
             this.form.amount = parseInt(result.data.amount);
-            this.form.amountUppercase = digitUppercase(this.form.amount);
-            this.form.serveTime = this.serveTimeIdOption.find(obj => obj.value === parseInt(result.data.serveTime)).label
+            this.form.amountUpper = digitUppercase(this.form.amount);
+            this.form.serveTimeStr = this.serveTimeIdOption.find(obj => obj.value === parseInt(result.data.serveTime)).label
             this.show = true;
           }
         })
@@ -197,9 +197,12 @@
       submitForm() {
         this.$refs["form"].validate(valid => {
           if (valid) {
+            this.form.signDate = parseTime(new Date(), '{y}-{m}-{d}');
+            console.log(this.form)
             signContract(this.form).then(result => {
               if (result.code === 200) {
-                // this.$router.push(result.url);
+                this.$router.push(result.url);
+                // console.log(result);
               }
             });
           }
