@@ -352,7 +352,7 @@
         });
       },
       handleCopy(path) {
-        this.copyValue = window.location.origin + path;
+        this.copyValue = window.location.origin.replace('long', 'stsign') + path;
         const btnCopy = new Clipboard('.copyBtn');
         // btnCopy.destroy();
         this.$message({
