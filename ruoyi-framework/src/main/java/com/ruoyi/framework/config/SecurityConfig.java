@@ -96,7 +96,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // 对于登录login 验证码captchaImage 允许匿名访问
                 .antMatchers(
                         "/login",
-                        "/captchaImage"
+                        "/captchaImage",
+                        "/custom/contract/sign",
+                        "/custom/contract/file/**"
                         ).anonymous()
                 .antMatchers(
                         HttpMethod.GET,
@@ -113,8 +115,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/webjars/**").anonymous()
                 .antMatchers("/*/api-docs").anonymous()
                 .antMatchers("/druid/**").anonymous()
-                .antMatchers("/custom/contract/sign").anonymous()
-                .antMatchers("/custom/contract/file/**").anonymous()
 
                 // 除上面外的所有请求全部需要鉴权认证
                 .anyRequest().authenticated()
