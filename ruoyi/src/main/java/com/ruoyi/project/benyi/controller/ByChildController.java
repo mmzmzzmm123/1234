@@ -11,6 +11,7 @@ import com.ruoyi.framework.security.service.TokenService;
 import com.ruoyi.project.benyi.domain.ByChildContactpeople;
 import com.ruoyi.project.benyi.service.IByChildContactpeopleService;
 import com.ruoyi.project.common.SchoolCommon;
+import com.ruoyi.project.system.service.ISysDictDataService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -48,6 +49,8 @@ public class ByChildController extends BaseController {
     private TokenService tokenService;
     @Autowired
     private IByChildContactpeopleService byChildContactpeopleService;
+    @Autowired
+    private ISysDictDataService sysDictDataService;
 
     /**
      * 查询幼儿信息列表
@@ -129,6 +132,8 @@ public class ByChildController extends BaseController {
      */
     @GetMapping("/getInfo")
     public AjaxResult getInfo_query(ByChild byChild) {
+        AjaxResult ajax = AjaxResult.success();
+
         if (schoolCommon.isStringEmpty(byChild.getName())) {
             return AjaxResult.error("请输入幼儿姓名");
         }
@@ -140,7 +145,14 @@ public class ByChildController extends BaseController {
         if (list == null || list.size() == 0) {
             return AjaxResult.error("未找到该幼儿的信息");
         }
-        return AjaxResult.success(list.get(0));
+        ajax.put(AjaxResult.DATA_TAG, list.get(0));
+        ajax.put("sexAll", sysDictDataService.selectDictDataByType("sys_user_sex"));
+        ajax.put("statusAll", sysDictDataService.selectDictDataByType("sys_normal_disable"));
+        ajax.put("mzAll", sysDictDataService.selectDictDataByType("sys_dm_mz"));
+        ajax.put("ynAll", sysDictDataService.selectDictDataByType("sys_yes_no"));
+        ajax.put("sourceAll", sysDictDataService.selectDictDataByType("sys_dm_ryqd"));
+        ajax.put("jtgxAll", sysDictDataService.selectDictDataByType("sys_dm_jtgx"));
+        return ajax;
     }
 
     /**

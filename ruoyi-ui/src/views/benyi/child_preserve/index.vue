@@ -235,7 +235,7 @@
                 </el-col>
                 <el-col :span="12">
                   <el-form-item label="与幼儿关系" prop="gfgx">
-                    <el-select v-model="form_jhr.gfgx" placeholder="请选择与幼儿关系" >
+                    <el-select v-model="form_jhr.gfgx" placeholder="请选择与幼儿关系" @input="onInput()" >
                       <el-option
                         v-for="dict in jtgxOptions"
                         :key="dict.dictValue"
@@ -269,7 +269,7 @@
                 </el-col>
                 <el-col :span="12">
                   <el-form-item label="与幼儿关系" prop="gmgx">
-                    <el-select v-model="form_jhr.gmgx" placeholder="请选择与幼儿关系 ">
+                    <el-select v-model="form_jhr.gmgx" placeholder="请选择与幼儿关系" @input="onInput()">
                       <el-option
                         v-for="dict in jtgxOptions"
                         :key="dict.dictValue"
@@ -389,24 +389,24 @@ export default {
   created() {
     // const sid = this.$route.params && this.$route.params.id;
     // this.queryParams.schoolid = sid;
-    this.getDicts("sys_user_sex").then(response => {
-      this.sexOptions = response.data;
-    });
-    this.getDicts("sys_normal_disable").then(response => {
-      this.statusOptions = response.data;
-    });
-    this.getDicts("sys_dm_mz").then(response => {
-      this.mzOptions = response.data;
-    });
-    this.getDicts("sys_yes_no").then(response => {
-      this.ynOptions = response.data;
-    });
-    this.getDicts("sys_dm_ryqd").then(response => {
-      this.sourceOptions = response.data;
-    });
-    this.getDicts("sys_dm_jtgx").then((response) => {
-      this.jtgxOptions = response.data;
-    });
+    // this.getDicts("sys_user_sex").then(response => {
+    //   this.sexOptions = response.data;
+    // });
+    // this.getDicts("sys_normal_disable").then(response => {
+    //   this.statusOptions = response.data;
+    // });
+    // this.getDicts("sys_dm_mz").then(response => {
+    //   this.mzOptions = response.data;
+    // });
+    // this.getDicts("sys_yes_no").then(response => {
+    //   this.ynOptions = response.data;
+    // });
+    // this.getDicts("sys_dm_ryqd").then(response => {
+    //   this.sourceOptions = response.data;
+    // });
+    // this.getDicts("sys_dm_jtgx").then((response) => {
+    //   this.jtgxOptions = response.data;
+    // });
   },
   components: {
     //省市区三级联动全局组件
@@ -417,26 +417,26 @@ export default {
     onInput() {
       this.$forceUpdate();
     },
-    // 性别字典翻译
-    xbFormat(row, column) {
-      return this.selectDictLabel(this.sexOptions, row.xb);
-    },
-    // 字典翻译
-    mzFormat(row, column) {
-      return this.selectDictLabel(this.mzOptions, row.mz);
-    },
-    // 字典翻译
-    ynFormat(row, column) {
-      return this.selectDictLabel(this.ynOptions, row.learnEnglish);
-    },
-    // 字典翻译
-    sourceFormat(row, column) {
-      return this.selectDictLabel(this.sourceOptions, row.source);
-    },
-    // 字典翻译
-    statusFormat(row, column) {
-      return this.selectDictLabel(this.statusOptions, row.status);
-    },
+    // // 性别字典翻译
+    // xbFormat(row, column) {
+    //   return this.selectDictLabel(this.sexOptions, row.xb);
+    // },
+    // // 字典翻译
+    // mzFormat(row, column) {
+    //   return this.selectDictLabel(this.mzOptions, row.mz);
+    // },
+    // // 字典翻译
+    // ynFormat(row, column) {
+    //   return this.selectDictLabel(this.ynOptions, row.learnEnglish);
+    // },
+    // // 字典翻译
+    // sourceFormat(row, column) {
+    //   return this.selectDictLabel(this.sourceOptions, row.source);
+    // },
+    // // 字典翻译
+    // statusFormat(row, column) {
+    //   return this.selectDictLabel(this.statusOptions, row.status);
+    // },
     // 字典翻译
     classFormat(row, column) {
       // return this.selectDictLabel(this.classOptions, row.classid);
@@ -450,13 +450,19 @@ export default {
       });
       return actions.join("");
     },
-    /** 查询入班体验申请列表 */
+    /** 查询幼儿信息 */
     getInfo() {
       getChild_query(this.queryParams).then(response => {
         if (response.code == "200") {
           this.hide = true;
           this.childList = response.rows;
           this.form = response.data;
+          this.sexOptions =  response.sexAll;
+          this.statusOptions =  response.statusAll;
+          this.mzOptions =  response.mzAll;
+          this.ynOptions =  response.ynAll;
+          this.sourceOptions =  response.sourceAll;
+          this.jtgxOptions =  response.jtgxAll;
           this.form_jhr.fathername = response.data.byChildContactpeople.fathername;
           this.form_jhr.mothername = response.data.byChildContactpeople.mothername;
           this.form_jhr.fphone = response.data.byChildContactpeople.fphone;
