@@ -51,7 +51,7 @@
 
         <p>第二条 合作内容及费用
         <div class="line-rule">11、经甲乙双方协商确定，乙方向甲方购买<b>{{form.serveTimeStr}}</b>“胜唐体控瘦身指导服务”（以下简称服务）。</div>
-        <div class="line-rule">12、乙方向甲方购买<b>{{form.serveTimeStr}}</b>，经甲乙双方协商确定，乙方向甲方支付疗程费用共为人民币：<b>{{form.amount}}</b>元，大写：<b>{{form.amountUppercase}}</b>）。
+        <div class="line-rule">12、乙方向甲方购买<b>{{form.serveTimeStr}}</b>，经甲乙双方协商确定，乙方向甲方支付疗程费用共为人民币：<b>{{form.amount}}</b>元，大写：<b>{{form.amountUpper}}</b>）。
         </div>
         </p>
 

@@ -6,6 +6,7 @@ import com.itextpdf.text.pdf.*;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.custom.domain.SysContract;
 import com.ruoyi.custom.mapper.SysContractMapper;
+import com.ruoyi.custom.page.PdfProcessInfo;
 import com.ruoyi.custom.service.ISysContractService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -99,7 +100,7 @@ public class SysContractServiceImpl implements ISysContractService {
     }
 
     @Override
-    public boolean signContract(SysContract sysContract) {
+    public PdfProcessInfo signContract(SysContract sysContract) {
 //        String templatePath = "/Users/wonder/Documents/Workspaces/java/RuoYi-Vue/running/pdf/contract.pdf";
 //        String filePath = "/Users/wonder/Documents/Workspaces/java/RuoYi-Vue/running" + sysContract.getPath();
         String templatePath = "/home/workspace/RuoYi-Vue/running/pdf/contract.pdf";
@@ -109,6 +110,8 @@ public class SysContractServiceImpl implements ISysContractService {
         FileOutputStream out;
         ByteArrayOutputStream bos;
         PdfStamper stamper;
+
+        PdfProcessInfo info = new PdfProcessInfo();
 
         try {
             out = new FileOutputStream(filePath);// 输出流到新的pdf,没有b2.pdf时会创建
@@ -143,14 +146,22 @@ public class SysContractServiceImpl implements ISysContractService {
             }
             doc.close();
 
-            return true;
+            info.setCode(1);
+            info.setMsg("success");
+
         } catch (FileNotFoundException e) {
             e.printStackTrace();
+            info.setCode(0);
+            info.setMsg(e.getMessage());
         } catch (IOException e) {
             e.printStackTrace();
+            info.setCode(0);
+            info.setMsg(e.getMessage());
         } catch (DocumentException e) {
             e.printStackTrace();
+            info.setCode(0);
+            info.setMsg(e.getMessage());
         }
-        return false;
+        return info;
     }
 }

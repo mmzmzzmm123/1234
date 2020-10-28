@@ -7,6 +7,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.custom.domain.SysContract;
+import com.ruoyi.custom.page.PdfProcessInfo;
 import com.ruoyi.custom.service.ISysContractService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -116,14 +117,14 @@ public class SysContractController extends BaseController {
         sysContract.setStatus(1);
         String path = "/file/" + sysContract.getId() + ".pdf";
         sysContract.setPath(path);
-        boolean result = sysContractService.signContract(sysContract);
-        if (result) {
+        PdfProcessInfo result = sysContractService.signContract(sysContract);
+        if (result.getCode() == 1) {
             sysContractService.updateSysContract(sysContract);
             AjaxResult ajax = AjaxResult.success();
             ajax.put("url", path);
             return ajax;
         } else {
-            return AjaxResult.error("操作失败");
+            return AjaxResult.error(result.getMsg());
         }
     }
 }
