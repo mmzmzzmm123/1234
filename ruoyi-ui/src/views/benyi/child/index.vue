@@ -868,12 +868,9 @@ export default {
         //console.log(domain);
         //this.user = response.data;
         this.inviteCode =
-          response.data.dept.deptName +
-          "幼儿信息维护链接" +
           "http://" +
           domain +
-          "/child_preserve/index/" +
-          response.data.dept.deptId;
+          "/benyi_child/child_preserve";
       });
     },
     // 给家长发送链接

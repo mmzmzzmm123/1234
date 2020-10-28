@@ -90,6 +90,18 @@ export const constantRoutes = [{
         hidden: true
     },
     {
+        path: '/benyi_child/child_preserve',
+        component: () =>
+            import ('@/views/benyi/child_preserve/index'),
+        hidden: true,
+        children: [{
+            path: '/benyi_child/child_preserve',
+            component: () =>
+                import ('@/views/benyi/child_preserve/index'),
+            hidden: true
+        }, ]
+    },
+    {
         path: '/experience/apply/:id(\\d+)',
         component: () =>
             import ('@/views/benyi/experience/choose'),
