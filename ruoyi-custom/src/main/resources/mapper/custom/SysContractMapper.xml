@@ -32,6 +32,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
             <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
         </where>
+        order by create_time desc
     </select>
     
     <select id="selectSysContractById" parameterType="Long" resultMap="SysContractResult">
