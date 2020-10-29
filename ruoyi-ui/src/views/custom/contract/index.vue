@@ -28,6 +28,16 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+      <el-form-item label="合同状态" prop="status">
+        <el-select v-model="queryParams.status" placeholder="请选择合同状态">
+          <el-option
+            v-for="dict in signStatusOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item>
         <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -80,20 +90,21 @@
     <el-table v-loading="loading" :data="contractList" @selection-change="handleSelectionChange">
       <!--      <el-table-column type="selection" width="55" align="center" />-->
       <el-table-column label="合同编号" align="center" prop="id"/>
-      <el-table-column label="合同状态" align="center" prop="status">
+      <el-table-column label="合同状态" align="center" prop="status" width="80">
         <template slot-scope="scope">
           <el-tag
-            :type="scope.row.status ? 'success' : 'danger'"
+            :type="scope.row.status === 'yes' ? 'success' : 'danger'"
             disable-transitions>
-            {{scope.row.status ? '已签订':'未签订'}}
+            {{scope.row.status === 'yes' ? '已签订':'未签订'}}
           </el-tag>
         </template>
       </el-table-column>
       <el-table-column label="客户姓名" align="center" prop="name"/>
-      <el-table-column label="证件号" align="center" prop="cusId"/>
-      <el-table-column label="电话" align="center" prop="phone"/>
-      <el-table-column label="服务时间" align="center" prop="serveTime" :formatter="serveTimeFormat"/>
+      <el-table-column label="证件号" align="center" prop="cusId" width="180"/>
+      <el-table-column label="电话" align="center" prop="phone" width="120"/>
+      <el-table-column label="服务时间" align="center" prop="serveTime" :formatter="serveTimeFormat" width="100"/>
       <el-table-column label="金额" align="center" prop="amount"/>
+      <el-table-column label="签订时间" align="center" prop="updateTime" width="180"/>
       <el-table-column label="合同地址" align="center" prop="path">
         <template slot-scope="scope">
           <el-button type="text" icon="el-icon-copy-document" @click="handleCopy(scope.row.path)" class="copyBtn"
@@ -153,9 +164,6 @@
         <el-form-item label="金额" prop="amount">
           <el-input v-model="form.amount" placeholder="请输入金额"/>
         </el-form-item>
-        <!--        <el-form-item label="文件路径" prop="path">-->
-        <!--          <el-input v-model="form.path" placeholder="请输入文件路径" />-->
-        <!--        </el-form-item>-->
         <el-form-item label="备注" prop="remark">
           <el-input v-model="form.remark" type="textarea" placeholder="请输入内容"/>
         </el-form-item>
@@ -204,6 +212,8 @@
         open: false,
         // 服务时间字典
         serveTimeOptions: [],
+        // 签约状态字典
+        signStatusOptions: [],
         //
         copyValue: '',
         // 查询参数
@@ -213,6 +223,7 @@
           id: null,
           name: null,
           phone: null,
+          status: null,
         },
         // 表单参数
         form: {},
@@ -229,6 +240,9 @@
       this.getDicts("cus_serve_time").then(response => {
         this.serveTimeOptions = response.data;
       });
+      this.getDicts("cus_sign_status").then(response => {
+        this.signStatusOptions = response.data;
+      });
     },
     methods: {
       /** 查询合同列表 */
@@ -243,6 +257,9 @@
       // 服务时间字典翻译
       serveTimeFormat(row, column) {
         return this.selectDictLabel(this.serveTimeOptions, row.serveTime);
+      },
+      signStatusFormat(row, column) {
+        return this.selectDictLabel(this.signStatusOptions, row.serveTime);
       },
       // 取消按钮
       cancel() {

@@ -207,7 +207,7 @@
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="成交时间" align="center" prop="orderTime" width="160" fixed="left">
+      <el-table-column label="成交时间" align="center" prop="orderTime" width="180" fixed="left">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.orderTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>

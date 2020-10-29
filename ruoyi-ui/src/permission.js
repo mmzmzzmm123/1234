@@ -49,7 +49,7 @@ router.beforeEach((to, from, next) => {
     }
   } else {
     // 没有token
-    if (whiteList.indexOf(to.path) !== -1 || to.path.startsWith('/file')) {
+    if (whiteList.indexOf(to.path) !== -1 || to.path.startsWith('/f/contract/')) {
       // 在免登录白名单，直接进入
       next()
     } else {

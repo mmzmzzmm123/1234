@@ -96,7 +96,7 @@ public class SysContractController extends BaseController {
     public AjaxResult getfile(@PathVariable long id) {
         AjaxResult ajax = AjaxResult.success();
         SysContract contract = sysContractService.selectSysContractById(id);
-        if (contract.getStatus() == 1) {
+        if (contract.getStatus().equals("yes")) {
             ajax.put("url", contract.getPath());
         } else {
             Map<String, String> data = new HashMap<>();
@@ -114,11 +114,11 @@ public class SysContractController extends BaseController {
      */
     @PostMapping("/sign")
     public AjaxResult signContract(@RequestBody SysContract sysContract) {
-        sysContract.setStatus(1);
         String path = "/file/" + sysContract.getId() + ".pdf";
         sysContract.setPath(path);
         PdfProcessInfo result = sysContractService.signContract(sysContract);
         if (result.getCode() == 1) {
+            sysContract.setStatus("yes");
             sysContractService.updateSysContract(sysContract);
             AjaxResult ajax = AjaxResult.success();
             ajax.put("url", path);

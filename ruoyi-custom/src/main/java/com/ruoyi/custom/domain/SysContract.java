@@ -70,7 +70,7 @@ public class SysContract extends BaseEntity {
      * 合同状态
      * 0-未签订；1-已签订
      */
-    private int Status;
+    private String Status;
 
     public Long getId() {
         return id;
@@ -128,11 +128,11 @@ public class SysContract extends BaseEntity {
         this.path = path;
     }
 
-    public int getStatus() {
+    public String getStatus() {
         return Status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(String status) {
         Status = status;
     }
 
