@@ -230,8 +230,14 @@
         // 表单校验
         rules: {
           name: [
-            {required: true, message: "客户姓名不能为空", trigger: "blur"}
+            {required: true, message: "请输入客户姓名", trigger: "blur"}
           ],
+          amount: [
+            {required: true, message: "请输入签订金额", trigger: "blur"}
+          ],
+          serveTime: [
+            {required: true, message: "请选择服务时间", trigger: "blur"}
+          ]
         }
       };
     },
