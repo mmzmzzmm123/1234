@@ -82,7 +82,7 @@
 <script>
 
   import {getFile, signContract} from "@/api/custom/contract";
-  import {digitUppercase, parseTime} from "../../../utils/ruoyi";
+  import {digitUppercase} from "../../../utils/ruoyi";
 
   export default {
     name: 'sign',
@@ -197,12 +197,9 @@
       submitForm() {
         this.$refs["form"].validate(valid => {
           if (valid) {
-            this.form.signDate = parseTime(new Date(), '{y}-{m}-{d}');
-            console.log(this.form)
             signContract(this.form).then(result => {
               if (result.code === 200) {
-                this.$router.push(result.url);
-                // console.log(result);
+                window.location.href = window.location.origin + result.url;
               }
             });
           }

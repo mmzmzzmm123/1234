@@ -147,6 +147,8 @@ public class SysContractServiceImpl implements ISysContractService {
             }
             doc.close();
 
+            Runtime.getRuntime().exec("chmod 644 " + filePath);
+
             info.setCode(1);
             info.setMsg("success");
 
