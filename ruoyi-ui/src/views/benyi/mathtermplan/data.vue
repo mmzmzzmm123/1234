@@ -83,7 +83,12 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="所属计划" align="center" prop="tpid" :formatter="mathPlanFormat" />
+      <el-table-column
+        label="所属计划"
+        align="center"
+        prop="tpid"
+        :formatter="mathPlanFormat"
+      />
       <el-table-column label="月份" align="center" prop="month" />
       <el-table-column label="游戏数学内容" align="center" prop="mathconent" />
       <el-table-column label="备注" align="center" prop="remark" />
@@ -135,7 +140,7 @@
               :value="item.id"
             />
           </el-select>
-        </el-form-item>  
+        </el-form-item>
         <el-form-item label="月份" prop="month">
           <el-date-picker
             v-model="form.month"
@@ -145,18 +150,24 @@
           >
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="选择内容" prop="mathconent">
-          <el-select v-model="form.mathconent" size="small" >
-            <el-option
-              v-for="item in mathOptions"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id"
-            />
-          </el-select>
+        <el-form-item label="选择方案" prop="mathconent">
+          <el-checkbox-group v-model="mathFaList" :max="max" @change="getMathFaContentValue">
+            <el-checkbox
+              v-for="(item, i) in mathFaOptions"
+              :label="item.id"
+              :key="i"
+              :max="max"
+              >{{ item.name }}</el-checkbox
+            >
+          </el-checkbox-group>
+          <el-input v-model="form.mathconent" v-if="false" />
         </el-form-item>
         <el-form-item label="备注" prop="remark">
-          <el-input v-model="form.remark" type="textarea" placeholder="请输入备注" />
+          <el-input
+            v-model="form.remark"
+            type="textarea"
+            placeholder="请输入备注"
+          />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -176,25 +187,31 @@ import {
   updateMathtermplanitem,
 } from "@/api/benyi/mathtermplanitem";
 // 获取游戏数学内容接口
+import { listMath, getMath } from "@/api/benyi/math";
+// 获取游戏数学方案
 import {
-  listMath,
-  getMath,
-} from "@/api/benyi/math";
+  listPlan,
+  getPlan,
+  delPlan,
+  addPlan,
+  updatePlan,
+} from "@/api/benyi/plan";
 
 // 获取班级接口
 import { listClass } from "@/api/system/class";
 // 获取游戏数学计划接口
-import {
-  listMathtermplan,
-  getMathtermplan,
-} from "@/api/benyi/mathtermplan";
+import { listMathtermplan, getMathtermplan } from "@/api/benyi/mathtermplan";
 
 export default {
   name: "Mathtermplanitem",
   data() {
     return {
+      //选中的chebox值
+      mathFaList: [],
+      // 最多选择方案个数
+      max: 5,
       // 是否显示按钮
-      isShow: true,  
+      isShow: true,
       // 遮罩层
       loading: true,
       // 选中数组
@@ -211,6 +228,8 @@ export default {
       mathPlanOptions: [],
       // 游戏数学内容选项
       mathOptions: [],
+      // 游戏数学方案选项
+      mathFaOptions: [],
       // 默认游戏数学类型
       defaultMathType: "",
       // 弹出层标题
@@ -228,10 +247,13 @@ export default {
         updateuserid: undefined,
       },
       queryParams_class: {
-        bjbh: undefined
+        bjbh: undefined,
       },
       queryParams_classtype: {
-        classtypeId: undefined
+        classtypeId: undefined,
+      },
+      queryParams_mathfa: {
+        mathid: undefined,
       },
       // 表单参数
       form: {},
@@ -275,6 +297,17 @@ export default {
         this.getList();
       });
     },
+    //获取选中的checkbox
+    getMathFaContentValue() {
+      //console.log(this.themeList);
+      var text = ";";
+      this.mathFaList.forEach(function (value, key, arr) {
+        //console.log(value); // 结果依次为1，2，3
+        text = text + value + ";";
+        //console.log(text);
+      });
+      this.form.mathconent = text;
+    },
     // 获取班级类型
     getClassType() {
       listClass(this.queryParams_class).then((response) => {
@@ -286,6 +319,15 @@ export default {
     getMathList() {
       listMath(this.queryParams_classtype).then((response) => {
         this.mathOptions = response.rows;
+        this.queryParams_mathfa.mathid = response.rows[0].id;
+        this.getMathFa();
+      });
+    },
+    // 获取游戏数学方案列表
+    getMathFa() {
+      listPlan(this.queryParams_mathfa).then((response) => {
+        this.mathFaOptions = response.rows;
+        console.log(this.mathFaOptions);
       });
     },
     // 获取游戏数学学期计划列表
