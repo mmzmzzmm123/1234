@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.benyi.mapper.ByMathTermplanitemMapper">
+
+    <resultMap type="ByMathTermplanitem" id="ByMathTermplanitemResult">
+                    <result property="id"    column="id"    />
+                    <result property="tpid"    column="tpid"    />
+                    <result property="month"    column="month"    />
+                    <result property="mathconent"    column="mathconent"    />
+                    <result property="remark"    column="remark"    />
+                    <result property="createuserid"    column="createuserid"    />
+                    <result property="createTime"    column="create_time"    />
+                    <result property="updateuserid"    column="updateuserid"    />
+                    <result property="updateTime"    column="update_time"    />
+            </resultMap>
+
+    <sql id="selectByMathTermplanitemVo">
+        select id, tpid, month, mathconent, remark, createuserid, create_time, updateuserid, update_time from by_math_termplanitem
+    </sql>
+
+    <select id="selectByMathTermplanitemList" parameterType="ByMathTermplanitem" resultMap="ByMathTermplanitemResult">
+        <include refid="selectByMathTermplanitemVo"/>
+        <where>
+                                                                                                    <if test="tpid != null  and tpid != ''"> and tpid = #{tpid}</if>
+                                                                                                            <if test="month != null "> and month = #{month}</if>
+                                                                                                            <if test="mathconent != null  and mathconent != ''"> and mathconent = #{mathconent}</if>
+                                                                                                                                        <if test="createuserid != null "> and createuserid = #{createuserid}</if>
+                                                                                                                                        <if test="updateuserid != null "> and updateuserid = #{updateuserid}</if>
+                                                                                    </where>
+    </select>
+
+    <select id="selectByMathTermplanitemById" parameterType="Long" resultMap="ByMathTermplanitemResult">
+        <include refid="selectByMathTermplanitemVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertByMathTermplanitem" parameterType="ByMathTermplanitem" useGeneratedKeys="true" keyProperty="id">
+        insert into by_math_termplanitem
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                                                                            <if test="tpid != null  and tpid != ''">tpid,</if>
+                                                                <if test="month != null ">month,</if>
+                                                                <if test="mathconent != null  and mathconent != ''">mathconent,</if>
+                                                                <if test="remark != null  and remark != ''">remark,</if>
+                                                                <if test="createuserid != null ">createuserid,</if>
+                                                                <if test="createTime != null ">create_time,</if>
+                                                                <if test="updateuserid != null ">updateuserid,</if>
+                                                                <if test="updateTime != null ">update_time,</if>
+                                    </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                                                                            <if test="tpid != null  and tpid != ''">#{tpid},</if>
+                                                                <if test="month != null ">#{month},</if>
+                                                                <if test="mathconent != null  and mathconent != ''">#{mathconent},</if>
+                                                                <if test="remark != null  and remark != ''">#{remark},</if>
+                                                                <if test="createuserid != null ">#{createuserid},</if>
+                                                                <if test="createTime != null ">#{createTime},</if>
+                                                                <if test="updateuserid != null ">#{updateuserid},</if>
+                                                                <if test="updateTime != null ">#{updateTime},</if>
+                                    </trim>
+    </insert>
+
+    <update id="updateByMathTermplanitem" parameterType="ByMathTermplanitem">
+        update by_math_termplanitem
+        <trim prefix="SET" suffixOverrides=",">
+                                                                            <if test="tpid != null  and tpid != ''">tpid = #{tpid},</if>
+                                                                <if test="month != null ">month = #{month},</if>
+                                                                <if test="mathconent != null  and mathconent != ''">mathconent = #{mathconent},</if>
+                                                                <if test="remark != null  and remark != ''">remark = #{remark},</if>
+                                                                <if test="createuserid != null ">createuserid = #{createuserid},</if>
+                                                                <if test="createTime != null ">create_time = #{createTime},</if>
+                                                                <if test="updateuserid != null ">updateuserid = #{updateuserid},</if>
+                                                                <if test="updateTime != null ">update_time = #{updateTime},</if>
+                                    </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteByMathTermplanitemById" parameterType="Long">
+        delete from by_math_termplanitem where id = #{id}
+    </delete>
+
+    <delete id="deleteByMathTermplanitemByIds" parameterType="String">
+        delete from by_math_termplanitem where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

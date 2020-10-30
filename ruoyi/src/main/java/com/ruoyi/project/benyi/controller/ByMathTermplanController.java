@@ -1,8 +1,11 @@
 package com.ruoyi.project.benyi.controller;
 
+import java.util.Date;
 import java.util.List;
 
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.project.benyi.domain.ByMathTermplanitem;
+import com.ruoyi.project.benyi.service.IByMathTermplanitemService;
 import com.ruoyi.project.common.SchoolCommon;
 import com.ruoyi.project.system.service.IByClassService;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -40,6 +43,8 @@ public class ByMathTermplanController extends BaseController
     private SchoolCommon schoolCommon;
     @Autowired
     private IByClassService byClassService;
+    @Autowired
+    private IByMathTermplanitemService byMathTermplanitemService;
 
 /**
  * 查询游戏数学学期计划列表
@@ -49,7 +54,13 @@ public class ByMathTermplanController extends BaseController
         public TableDataInfo list(ByMathTermplan byMathTermplan)
     {
         startPage();
-        List<ByMathTermplan> list = byMathTermplanService.selectByMathTermplanList(byMathTermplan);
+        byMathTermplan.setSchoolid(SecurityUtils.getLoginUser().getUser().getDept().getDeptId());
+        String classId = schoolCommon.getClassId();
+        List<ByMathTermplan> list = null;
+        if (schoolCommon.isSchool() && !schoolCommon.isStringEmpty(classId)) {
+            byMathTermplan.setClassid(classId);
+        }
+        list = byMathTermplanService.selectByMathTermplanList(byMathTermplan);
         return getDataTable(list);
     }
     
@@ -86,15 +97,32 @@ public class ByMathTermplanController extends BaseController
     {
         String classId = schoolCommon.getClassId();
 
-        int iCount = schoolCommon.getDifMonth(byMathTermplan.getStartmonth(), byMathTermplan.getEndmonth());
-        System.out.println("月份差=" + iCount);
-        String uuid = schoolCommon.getUuid();
-        byMathTermplan.setId(uuid);
-        byMathTermplan.setSchoolid(SecurityUtils.getLoginUser().getUser().getDept().getDeptId());
-        byMathTermplan.setCreateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
-        byMathTermplan.setClassid(classId);
-        byMathTermplan.setName(byClassService.selectByClassById(classId).getBjmc() + "-主题整合学期计划");
-        return toAjax(byMathTermplanService.insertByMathTermplan(byMathTermplan));
+        if (schoolCommon.isSchool() && !schoolCommon.isStringEmpty(classId)) {
+            int iCount = schoolCommon.getDifMonth(byMathTermplan.getStartmonth(), byMathTermplan.getEndmonth());
+            System.out.println("月份差=" + iCount);
+            String uuid = schoolCommon.getUuid();
+            byMathTermplan.setId(uuid);
+            byMathTermplan.setSchoolid(SecurityUtils.getLoginUser().getUser().getDept().getDeptId());
+            byMathTermplan.setCreateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
+            byMathTermplan.setClassid(classId);
+            byMathTermplan.setName(byClassService.selectByClassById(classId).getBjmc() + "-主题整合学期计划");
+
+            // 自动创建游戏数学学期计划明细
+            ByMathTermplanitem byMathTermplanitem = null;
+            for (int i = 0; i <= iCount; i++) {
+                byMathTermplanitem = new ByMathTermplanitem();
+                byMathTermplanitem.setTpid(uuid);
+                byMathTermplanitem.setCreateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
+                byMathTermplanitem.setMonth(schoolCommon.DateAddMonths(i, byMathTermplan.getStartmonth()));
+                //创建时间
+                byMathTermplanitem.setCreateTime(new Date());
+                //新增每月计划
+                byMathTermplanitemService.insertByMathTermplanitem(byMathTermplanitem);
+            }
+            return toAjax(byMathTermplanService.insertByMathTermplan(byMathTermplan));
+        }else {
+            return AjaxResult.error("当前用户非幼儿园教师，无法创建计划");
+        }
     }
 
     /**
@@ -116,6 +144,15 @@ public class ByMathTermplanController extends BaseController
     @DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable String[] ids)
     {
+        //首先判断当前id下是否存在子目录
+        for (int i = 0; i < ids.length; i++) {
+            ByMathTermplanitem byMathTermplanitem = new ByMathTermplanitem();
+            byMathTermplanitem.setTpid(ids[i]);
+            List<ByMathTermplanitem> list = byMathTermplanitemService.selectByMathTermplanitemList(byMathTermplanitem);
+            if (list != null && list.size() > 0) {
+                return AjaxResult.error("选中的计划下存在计划明细，无法删除");
+            }
+        }
         return toAjax(byMathTermplanService.deleteByMathTermplanByIds(ids));
     }
 
