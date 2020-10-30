@@ -236,7 +236,12 @@ export default {
       // 表单参数
       form: {},
       // 表单校验
-      rules: {},
+      rules: {
+        month: [{ required: true, message: "月份不能为空", trigger: "blur" }],
+        mathconent: [
+          { required: true, message: "内容不能为空", trigger: "blur" },
+        ],
+      },
     };
   },
   created() {

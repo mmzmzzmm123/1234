@@ -215,7 +215,7 @@
             value-format="yyyy-MM"
           ></el-date-picker>
         </el-form-item>
-        <el-form-item label="学年学期">
+        <el-form-item label="学年学期" prop="xnxq">
           <el-select v-model="form.xnxq" placeholder="请选择学年学期">
             <el-option
               v-for="dict in xnxqOptions"
