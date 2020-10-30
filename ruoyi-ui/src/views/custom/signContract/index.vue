@@ -50,15 +50,15 @@
         </p>
 
         <p>第二条 合作内容及费用
-        <div class="line-rule">11、经甲乙双方协商确定，乙方向甲方购买<b>{{form.serveTimeStr}}</b>“胜唐体控瘦身指导服务”（以下简称服务）。</div>
-        <div class="line-rule">12、乙方向甲方购买<b>{{form.serveTimeStr}}</b>，经甲乙双方协商确定，乙方向甲方支付疗程费用共为人民币：<b>{{form.amount}}</b>元，大写：<b>{{form.amountUpper}}</b>）。
+        <div class="line-rule">11、经甲乙双方协商确定，乙方向甲方购买 <b>{{form.serveTimeStr}}</b> “胜唐体控瘦身指导服务”（以下简称服务）。</div>
+        <div class="line-rule">12、乙方向甲方购买 <b>{{form.serveTimeStr}}</b> ，经甲乙双方协商确定，乙方向甲方支付疗程费用共为人民币：<b>{{form.amount}}</b> 元，大写：<b>{{form.amountUpper}}</b>）。
         </div>
         </p>
 
         <p>第三条 服务期约定
         <div class="line-rule">1、服务时间阶段（服务指导期、服务跟踪期、免费咨询期）具体安排，由甲方根据乙方的实际情况与乙方协商确定。</div>
         <div class="line-rule">2、因不可抗拒的因素（如意外怀孕等）而暂停服务指导，其后续服务期限由甲乙方协商确定。</div>
-        <div class="line-rule">3、减肥需要双方的配合，在不是甲方技术问题的情况下，乙方不执行营养师的指导导致没有达到预期效果，责任由乙方承担。根据个人体质不同，在调理营养健康的前提下，健康吃瘦25-35斤
+        <div class="line-rule">3、减肥需要双方的配合，在不是甲方技术问题的情况下，乙方不执行营养师的指导导致没有达到预期效果，责任由乙方承担。根据个人体质不同，在调理营养健康的前提下，健康吃瘦 <b>{{form.servePromise}}</b> 斤
         </div>
         <div class="line-rule">
           4、乙方应按甲方制定的饮食方案来饮食，承诺在未与甲方沟通前，不擅自吃方案之外的高热量、高油、高盐、高糖等不利于健康和减脂的饮食，服务期内擅自暴食导致体重上涨，次数超过3次视为乙方主动放弃营养减脂，且甲方无需免费延长服务时间。
@@ -92,9 +92,9 @@
         if (!value) {
           return callback(new Error('姓名不能为空'))
         }
-        if (value !== this.form.name) {
-          return callback(new Error('输入姓名不匹配，请联系客服核对'))
-        }
+        // if (value !== this.form.name) {
+        //   return callback(new Error('输入姓名不匹配，请联系客服核对'))
+        // }
         callback();
       }
 

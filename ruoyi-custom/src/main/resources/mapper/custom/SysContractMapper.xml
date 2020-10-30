@@ -11,6 +11,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="cusId"    column="cus_id"    />
         <result property="phone"    column="phone"    />
         <result property="serveTime"    column="serve_time"    />
+        <result property="servePromise"    column="serve_promise"    />
         <result property="amount"    column="amount"    />
         <result property="path"    column="path"    />
         <result property="createBy"    column="create_by"    />
@@ -21,7 +22,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectSysContractVo">
-        select id, status, name, phone, cus_id, serve_time, amount, path, create_by, create_time, update_by, update_time, remark from sys_contract
+        select id, status, name, phone, cus_id, serve_time, serve_promise, amount, path, create_by, create_time, update_by, update_time, remark from sys_contract
     </sql>
 
     <select id="selectSysContractList" parameterType="SysContract" resultMap="SysContractResult">
@@ -49,6 +50,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="cusId != null and cusId != ''">cus_id,</if>
             <if test="phone != null">phone,</if>
             <if test="serveTime != null">serve_time,</if>
+            <if test="servePromise != null">serve_promise,</if>
             <if test="amount != null">amount,</if>
             <if test="path != null">path,</if>
             <if test="createBy != null">create_by,</if>
@@ -64,6 +66,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="cusId != null and cusId != ''">#{cusId},</if>
             <if test="phone != null">#{phone},</if>
             <if test="serveTime != null">#{serveTime},</if>
+            <if test="servePromise != null">#{servePromise},</if>
             <if test="amount != null">#{amount},</if>
             <if test="path != null">#{path},</if>
             <if test="createBy != null">#{createBy},</if>
@@ -82,6 +85,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="cusId != null and cusId != ''">cus_id = #{cusId},</if>
             <if test="phone != null">phone = #{phone},</if>
             <if test="serveTime != null">serve_time = #{serveTime},</if>
+            <if test="servePromise != null">serve_promise = #{servePromise},</if>
             <if test="amount != null">amount = #{amount},</if>
             <if test="path != null">path = #{path},</if>
             <if test="createBy != null">create_by = #{createBy},</if>

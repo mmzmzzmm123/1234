@@ -89,8 +89,8 @@
 
     <el-table v-loading="loading" :data="contractList" @selection-change="handleSelectionChange">
       <!--      <el-table-column type="selection" width="55" align="center" />-->
-      <el-table-column label="合同编号" align="center" prop="id"/>
-      <el-table-column label="合同状态" align="center" prop="status" width="80">
+      <el-table-column label="合同编号" align="center" prop="id" fixed="left"/>
+      <el-table-column label="合同状态" align="center" prop="status" width="80" fixed="left">
         <template slot-scope="scope">
           <el-tag
             :type="scope.row.status === 'yes' ? 'success' : 'danger'"
@@ -99,10 +99,15 @@
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="客户姓名" align="center" prop="name"/>
-      <el-table-column label="证件号" align="center" prop="cusId" width="180"/>
+      <el-table-column label="客户姓名" align="center" prop="name" fixed="left"/>
+      <el-table-column label="证件号" align="center" prop="cusId" width="190"/>
       <el-table-column label="电话" align="center" prop="phone" width="120"/>
       <el-table-column label="服务时间" align="center" prop="serveTime" :formatter="serveTimeFormat" width="100"/>
+      <el-table-column label="服务承诺" align="center" prop="servePromise" width="100">
+        <template slot-scope="scope">
+          {{scope.row.servePromise ? `${scope.row.servePromise}斤`: ''}}
+        </template>
+      </el-table-column>
       <el-table-column label="金额" align="center" prop="amount"/>
       <el-table-column label="签订时间" align="center" prop="updateTime" width="180"/>
       <el-table-column label="合同地址" align="center" prop="path">
@@ -113,15 +118,16 @@
         </template>
       </el-table-column>
       <el-table-column label="备注" align="center" prop="remark"/>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
         <template slot-scope="scope">
-          <!--          <el-button-->
-          <!--            size="mini"-->
-          <!--            type="text"-->
-          <!--            icon="el-icon-edit"-->
-          <!--            @click="handleUpdate(scope.row)"-->
-          <!--            v-hasPermi="['custom:contract:edit']"-->
-          <!--          >修改</el-button>-->
+          <el-button
+            v-if="scope.row.status==='yes'"
+            size="mini"
+            type="text"
+            icon="el-icon-view"
+            @click="handleLook(scope.row.path)"
+          >查看
+          </el-button>
           <el-button
             size="mini"
             type="text"
@@ -143,13 +149,19 @@
     />
 
     <!-- 添加或修改合同对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+    <el-dialog :title="title" :visible.sync="open" width="550px" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="100px">
         <el-form-item label="客户姓名" prop="name">
           <el-input v-model="form.name" placeholder="请输入客户姓名"/>
         </el-form-item>
-        <el-form-item label="电话" prop="phone">
-          <el-input v-model="form.phone" placeholder="请输入电话"/>
+        <!--        <el-form-item label="电话" prop="phone">-->
+        <!--          <el-input v-model="form.phone" placeholder="请输入电话"/>-->
+        <!--        </el-form-item>-->
+        <el-form-item label="金额" prop="amount">
+          <el-input v-model="form.amount" placeholder="请输入金额"/>
+        </el-form-item>
+        <el-form-item label="服务承诺" prop="servePromise">
+          <el-input v-model="form.servePromise" placeholder="请输入服务承诺"/>
         </el-form-item>
         <el-form-item label="服务时间" prop="serveTime">
           <el-select v-model="form.serveTime" placeholder="请选择服务时间">
@@ -160,9 +172,6 @@
               :value="parseInt(dict.dictValue)"
             ></el-option>
           </el-select>
-        </el-form-item>
-        <el-form-item label="金额" prop="amount">
-          <el-input v-model="form.amount" placeholder="请输入金额"/>
         </el-form-item>
         <el-form-item label="备注" prop="remark">
           <el-input v-model="form.remark" type="textarea" placeholder="请输入内容"/>
@@ -234,6 +243,9 @@
           ],
           amount: [
             {required: true, message: "请输入签订金额", trigger: "blur"}
+          ],
+          servePromise: [
+            {required: true, message: "请输入承诺效果", trigger: "blur"}
           ],
           serveTime: [
             {required: true, message: "请选择服务时间", trigger: "blur"}
@@ -309,7 +321,7 @@
       handleAdd() {
         this.reset();
         this.open = true;
-        this.title = "添加合同";
+        this.title = "创建合同";
       },
       /** 修改按钮操作 */
       handleUpdate(row) {
@@ -377,12 +389,16 @@
       handleCopy(path) {
         this.copyValue = window.location.origin.replace('long', 'stsign') + path;
         const btnCopy = new Clipboard('.copyBtn');
-        // btnCopy.destroy();
         this.$message({
           message: '拷贝成功',
           type: 'success'
         });
-        // console.log(this.copyValue);
+        // btnCopy.destroy();
+      },
+      handleLook(path) {
+        const url = window.location.origin.replace('long', 'stsign') + path;
+        // const url = "http://stsign.busyinn.com" + path;
+        window.open(url, '_blank');
       }
     }
   };

@@ -72,6 +72,16 @@ public class SysContract extends BaseEntity {
      */
     private String Status;
 
+    private String servePromise;
+
+    public void setServePromise(String servePromise) {
+        this.servePromise = servePromise;
+    }
+
+    public String getServePromise() {
+        return servePromise;
+    }
+
     public Long getId() {
         return id;
     }

@@ -128,6 +128,7 @@ public class SysContractServiceImpl implements ISysContractService {
             form.setField("moneyUpper", sysContract.getAmountUpper(), true);
             form.setField("money", sysContract.getAmount().intValue() + "", true);
             form.setField("phone", sysContract.getPhone(), true);
+            form.setField("promise", sysContract.getServePromise(), true);
             form.setField("date", DateUtils.getDate(), true);
             form.setField("cusId", sysContract.getCusId(), true);
 
