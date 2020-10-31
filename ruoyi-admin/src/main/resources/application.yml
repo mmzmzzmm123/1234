@@ -82,9 +82,9 @@ token:
     # 令牌自定义标识
     header: Authorization
     # 令牌密钥
-    secret: abc4abcdefghijklmnopqrstuvwxyz
-    # 令牌有效期（默认30分钟）
-    expireTime: 300
+    secret: ab213c4abagagsdadefgh44uvwxyz
+    # 令牌有效期（默认30分钟） 一周10080 一个月 43200
+    expireTime: 10080
 
 # MyBatis配置
 mybatis:
