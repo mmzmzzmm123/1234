@@ -90,7 +90,7 @@
         :formatter="mathPlanFormat"
       />
       <el-table-column label="月份" align="center" prop="month" />
-      <el-table-column label="游戏数学内容" align="center" prop="mathconent" />
+      <el-table-column label="游戏数学内容" align="center" prop="mathconent" :formatter="mathFaFormat" />
       <el-table-column label="备注" align="center" prop="remark" />
       <el-table-column
         label="操作"
@@ -299,12 +299,9 @@ export default {
     },
     //获取选中的checkbox
     getMathFaContentValue() {
-      //console.log(this.themeList);
       var text = ";";
       this.mathFaList.forEach(function (value, key, arr) {
-        //console.log(value); // 结果依次为1，2，3
         text = text + value + ";";
-        //console.log(text);
       });
       this.form.mathconent = text;
     },
@@ -327,7 +324,6 @@ export default {
     getMathFa() {
       listPlan(this.queryParams_mathfa).then((response) => {
         this.mathFaOptions = response.rows;
-        console.log(this.mathFaOptions);
       });
     },
     // 获取游戏数学学期计划列表
@@ -348,6 +344,25 @@ export default {
         }
       });
       return actions.join("");
+    },
+    // 主题--字典状态字典翻译
+    mathFaFormat(row, column) {
+      if (row.mathconent != null) {
+        var ilength = row.mathconent.split(";").length - 1;
+        var names = "";
+        for (var i = 1; i < ilength; i++) {
+          names =
+            names +
+            this.selectMoeDictLabel(
+              this.mathFaOptions,
+              row.mathconent.split(";")[i]
+            ) +
+            "；";
+        }
+        //this.selectDictLabel(this.scopeOptions, row.xnxq);
+        return names;
+      }
+      return "";
     },
     // 取消按钮
     cancel() {
