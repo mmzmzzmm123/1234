@@ -94,20 +94,19 @@ export default {
     },
     // 节点单击事件
     handleNodeClick(data) {
-      console.log("node:" + data.id);
+      // console.log("node:" + data.id);
       this.title = data.label;
       if (data.id == "-1") {
         this.getNote();
       } else {
         this.queryParams.id = data.id;
-
         this.getTaskList();
       }
     },
     /**查询评估介绍 */
     getNote() {
       listAssessmentintroduce(null).then((response) => {
-        console.log("评估介绍:" + response.rows[0].content);
+        // console.log("评估介绍:" + response.rows[0].content);
         this.note = response.rows[0].content;
       });
     },

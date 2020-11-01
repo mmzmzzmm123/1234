@@ -1,7 +1,7 @@
 <template>
   <div class="result-container">
-    <h2 class="title">请输入幼儿姓名和手机号进行查询:</h2>
-    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
+    <h2 class="title search-title">幼儿信息查询</h2>
+    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px" class="search-form">
       <el-form-item label="幼儿姓名" prop="name">
         <el-input v-model="queryParams.name" placeholder="请输入幼儿姓名" clearable size="small" />
       </el-form-item>
@@ -14,34 +14,34 @@
       </el-form-item>
     </el-form>
     <div class="main" v-show="hide">
-      <h2 class="title">幼儿信息查询与维护</h2>
+      <h2 class="title">幼儿信息维护</h2>
       <div class="result-form">
-        <p class="form-title">提交核对幼儿信息</p>
+        <!-- <p class="form-title">提交核对幼儿信息</p> -->
         <el-tabs type="border-card">
           <el-tab-pane label="幼儿基础信息">
             <el-row :gutter="15">
               <el-form class="form" ref="form" :model="form" label-width="110px">
-                <el-col :span="12">
+                <el-col :xs="24" :sm="12">
                   <el-form-item label="家长联系方式" prop="phone">
                     <el-input v-model="form.phone" placeholder="请输入联系方式" :disabled="hide" />
                   </el-form-item>
                 </el-col>
-                <el-col :span="12">
+                <el-col :xs="24" :sm="12">
                   <el-form-item label="幼儿姓名" prop="name">
                     <el-input v-model="form.name" placeholder="请输入幼儿姓名" :disabled="hide" />
                   </el-form-item>
                 </el-col>
-                <el-col :span="12">
+                <el-col  :xs="24" :sm="12">
                   <el-form-item label="英文名" prop="enName">
                     <el-input v-model="form.enName" placeholder="请输入联系方式" />
                   </el-form-item>
                 </el-col>
-                <el-col :span="12">
+                <el-col  :xs="24" :sm="12">
                   <el-form-item label="小名" prop="infantName">
                     <el-input v-model="form.infantName" placeholder="请输入联系方式" />
                   </el-form-item>
                 </el-col>
-                <el-col :span="12">
+                <el-col  :xs="24" :sm="12">
                   <el-form-item label="性别" prop="xb">
                     <el-select v-model="form.xb" placeholder="请选择性别">
                       <el-option
@@ -53,7 +53,7 @@
                     </el-select>
                   </el-form-item>
                 </el-col>
-                <el-col :span="12">
+                <el-col  :xs="24" :sm="12">
                   <el-form-item label="民族" prop="mz">
                     <el-select v-model="form.mz" placeholder="请选择民族">
                       <el-option
@@ -65,12 +65,12 @@
                     </el-select>
                   </el-form-item>
                 </el-col>
-                <el-col :span="12">
+                <el-col  :xs="24" :sm="12">
                   <el-form-item label="证件号码" prop="zjhm">
                     <el-input v-model="form.zjhm" placeholder="请输入证件号码" />
                   </el-form-item>
                 </el-col>
-                <el-col :span="12">
+                <el-col  :xs="24" :sm="12">
                   <el-form-item label="幼儿出生日期" prop="csrq">
                     <el-date-picker
                       clearable
@@ -127,17 +127,17 @@
                     <el-input v-model="form.addrArea" v-if="false" />
                   </el-form-item>
                 </el-col>
-                <el-col :span="12">
+                <el-col  :xs="24" :sm="12">
                   <el-form-item label="详细地址" prop="addrDetail">
                     <el-input v-model="form.addrDetail" placeholder="请输入详细地址" />
                   </el-form-item>
                 </el-col>
-                <el-col :span="12">
+                <el-col  :xs="24" :sm="12">
                   <el-form-item label="曾就读园" prop="everSchool">
                     <el-input v-model="form.everSchool" placeholder="请输入曾经就读幼儿园" />
                   </el-form-item>
                 </el-col>
-                <el-col :span="12">
+                <el-col  :xs="24" :sm="12">
                   <el-form-item label="学习英语" prop="learnEnglish">
                     <el-radio-group v-model="form.learnEnglish">
                       <el-radio
@@ -148,7 +148,7 @@
                     </el-radio-group>
                   </el-form-item>
                 </el-col>
-                <el-col :span="12">
+                <el-col  :xs="24" :sm="12">
                   <el-form-item label="入园渠道" prop="source">
                     <el-select v-model="form.source" placeholder="请选择入园渠道">
                       <el-option
@@ -160,7 +160,7 @@
                     </el-select>
                   </el-form-item>
                 </el-col>
-                <el-col :span="12">
+                <el-col  :xs="24" :sm="12">
                   <el-form-item label="状态">
                     <el-radio-group v-model="form.status">
                       <el-radio
@@ -171,17 +171,17 @@
                     </el-radio-group>
                   </el-form-item>
                 </el-col>
-                <el-col :span="12">
+                <el-col  :xs="24" :sm="12">
                   <el-form-item label="第一语言" prop="firstLanguage">
                     <el-input v-model="form.firstLanguage" placeholder="请输入第一语言" maxlength="2" />
                   </el-form-item>
                 </el-col>
-                <el-col :span="12">
+                <el-col  :xs="24" :sm="12">
                   <el-form-item label="第二语言" prop="seconderLanguage">
                     <el-input v-model="form.seconderLanguage" placeholder="请输入第二语言" maxlength="2" />
                   </el-form-item>
                 </el-col>
-                <el-col :span="12">
+                <el-col  :xs="24" :sm="12">
                   <el-form-item label="其他语言" prop="otherLanguage">
                     <el-input v-model="form.otherLanguage" placeholder="请输入其他语言" />
                   </el-form-item>
@@ -194,46 +194,46 @@
           <el-tab-pane label="监护人信息">
             <el-form ref="form_jhr" :model="form_jhr" label-width="110px">
               <el-row :gutter="15">
-                <el-col :span="12">
+                <el-col  :xs="24" :sm="12">
                   <el-form-item label="父亲姓名" prop="fathername">
                     <el-input v-model="form_jhr.fathername" placeholder="请输入父亲姓名" @input="onInput()" />
                   </el-form-item>
                 </el-col>
-                <el-col :span="12">
+                <el-col  :xs="24" :sm="12">
                   <el-form-item label="联系电话" prop="fphone">
                     <el-input v-model="form_jhr.fphone" placeholder="请输入父亲联系电话" @input="onInput()"/>
                   </el-form-item>
                 </el-col>
-                <el-col :span="12">
+                <el-col  :xs="24" :sm="12">
                   <el-form-item label="办公电话" prop="foffphone">
                     <el-input v-model="form_jhr.foffphone" placeholder="请输入父亲办公电话" @input="onInput()"/>
                   </el-form-item>
                 </el-col>
               </el-row>
               <el-row :gutter="15">
-                <el-col :span="12">
+                <el-col  :xs="24" :sm="12">
                   <el-form-item label="母亲姓名" prop="mothername">
                     <el-input v-model="form_jhr.mothername" placeholder="请输入父亲姓名" @input="onInput()" />
                   </el-form-item>
                 </el-col>
-                <el-col :span="12">
+                <el-col  :xs="24" :sm="12">
                   <el-form-item label="联系电话" prop="mphone">
                     <el-input v-model="form_jhr.mphone" placeholder="请输入母亲姓名" @input="onInput()" />
                   </el-form-item>
                 </el-col>
-                <el-col :span="12">
+                <el-col  :xs="24" :sm="12">
                   <el-form-item label="办公电话" prop="moffphone">
                     <el-input v-model="form_jhr.moffphone" placeholder="请输入母亲办公电话" @input="onInput()"/>
                   </el-form-item>
                 </el-col>
               </el-row>
               <el-row :gutter="15">
-                <el-col :span="12">
+                <el-col  :xs="24" :sm="12">
                   <el-form-item label="其他联系人姓名" prop="grandfathername">
                     <el-input v-model="form_jhr.grandfathername" placeholder="请输入其他联系人姓名" @input="onInput()"/>
                   </el-form-item>
                 </el-col>
-                <el-col :span="12">
+                <el-col  :xs="24" :sm="12">
                   <el-form-item label="与幼儿关系" prop="gfgx">
                     <el-select v-model="form_jhr.gfgx" placeholder="请选择与幼儿关系" @input="onInput()" >
                       <el-option
@@ -245,12 +245,12 @@
                     </el-select>
                   </el-form-item>
                 </el-col>
-                <el-col :span="12">
+                <el-col  :xs="24" :sm="12">
                   <el-form-item label="联系电话" prop="gfphone">
                     <el-input v-model="form_jhr.gfphone" placeholder="请输入联系电话" @input="onInput()"/>
                   </el-form-item>
                 </el-col>
-                <el-col :span="12">
+                <el-col  :xs="24" :sm="12">
                   <el-form-item label="办公电话" prop="gfoffphone">
                     <el-input v-model="form_jhr.gfoffphone" placeholder="请输入办公电话" @input="onInput()" />
                   </el-form-item>
@@ -262,12 +262,12 @@
                 </el-col>
               </el-row>
               <el-row :gutter="15">
-                <el-col :span="12">
+                <el-col  :xs="24" :sm="12">
                   <el-form-item label="其他联系人姓名" prop="grandmothername">
                     <el-input v-model="form_jhr.grandmothername" placeholder="请输入其他联系人姓名" @input="onInput()"/>
                   </el-form-item>
                 </el-col>
-                <el-col :span="12">
+                <el-col  :xs="24" :sm="12">
                   <el-form-item label="与幼儿关系" prop="gmgx">
                     <el-select v-model="form_jhr.gmgx" placeholder="请选择与幼儿关系" @input="onInput()">
                       <el-option
@@ -279,12 +279,12 @@
                     </el-select>
                   </el-form-item>
                 </el-col>
-                <el-col :span="12">
+                <el-col  :xs="24" :sm="12">
                   <el-form-item label="联系电话" prop="gmphone">
                     <el-input v-model="form_jhr.gmphone" placeholder="请输入联系电话" @input="onInput()"/>
                   </el-form-item>
                 </el-col>
-                <el-col :span="12">
+                <el-col  :xs="24" :sm="12">
                   <el-form-item label="办公电话" prop="gmoffphone">
                     <el-input v-model="form_jhr.gmoffphone" placeholder="请输入办公电话" @input="onInput()"/>
                   </el-form-item>
@@ -298,7 +298,6 @@
             </el-form>
           </el-tab-pane>
         </el-tabs>
-
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="submitForm">提 交</el-button>
           <el-button @click="cancelSub">取 消</el-button>
@@ -566,13 +565,27 @@ export default {
 </script>
 <style lang="scss" scoped>
 .result-container {
-  padding: 60px 15px 0;
+  padding: 30px 15px 0;
+  .search-title {
+    font-size: 22px;
+    text-align: center;
+    border-bottom: 1px solid #f1f1f1;
+    padding-bottom: 15px;
+    margin: 0 auto 20px;
+  }
   .main {
     padding-top: 10px;
     border-top: 1px solid #eee;
     .title {
       text-align: center;
       font-size: 18px;
+    }
+    .dialog-footer {
+      margin: 10px auto 40px;
+      text-align: center;
+    }
+    .el-select {
+      width: 100%;
     }
     .result-form {
       .form-title {
@@ -592,7 +605,7 @@ export default {
         }
       }
       .form {
-        width: 500px;
+        // width: 500px;
         margin: 30px auto 0;
       }
     }
@@ -620,10 +633,21 @@ export default {
 }
 @media screen and (max-width: 768.89px) {
   .result-container {
+    .search-form {
+      div {
+        margin-bottom: 5px;
+      }
+    }
     .main {
       .result-form {
         .form {
           width: 100%;
+        }
+      }
+      ::v-deep .distpicker-address-wrapper {
+        select {
+          width: 100%;
+          margin-bottom: 5px;
         }
       }
     }
