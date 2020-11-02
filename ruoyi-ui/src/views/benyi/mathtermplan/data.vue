@@ -383,6 +383,7 @@ export default {
         updateTime: undefined,
       };
       this.resetForm("form");
+      this.mathFaList = [];
     },
     /** 搜索按钮操作 */
     handleQuery() {
@@ -416,6 +417,15 @@ export default {
         this.form = response.data;
         this.open = true;
         this.title = "修改游戏数学学期计划明细";
+        var mathconent = response.data.mathconent.split(";");
+        var array = [];
+        //console.log(arr);
+        mathconent.forEach(function (value, key, arr) {
+          if (value != "") {
+            array.push(parseInt(value));
+          }
+        });
+        this.mathFaList = array;
       });
     },
     /** 提交按钮 */

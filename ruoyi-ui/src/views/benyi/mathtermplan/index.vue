@@ -188,7 +188,6 @@
             icon="el-icon-view"
             @click="handleView(scope.row)"
             v-hasPermi="['benyi:mathtermplan:query']"
-            :disabled=true
           >预览</el-button>
         </template>
       </el-table-column>
@@ -492,12 +491,12 @@ export default {
         .catch(function () {});
     },
     /** 预览按钮操作 */
-    // handleView(row) {
-    //   const id = row.id;
-    //   this.$router.push({
-    //     path: "/benyi_course/mathtermplanprint/table/"+id,
-    //   });
-    // },
+    handleView(row) {
+      const id = row.id;
+      this.$router.push({
+        path: "/benyi_course/mathtermplanprint/table/"+id,
+      });
+    },
     
   },
 };
