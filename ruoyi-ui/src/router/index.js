@@ -290,6 +290,21 @@ export const constantRoutes = [{
         }]
     },
     {
+        path: '/benyi_course/mathtermplanprint',
+        component: Layout,
+        hidden: true,
+        children: [{
+            path: 'table/:id',
+            component: () =>
+                import ('@/views/benyi/mathtermplan/table'),
+            name: 'Mathtermplan2',
+            meta: {
+                title: '游戏数学学期计划(表格)',
+                icon: ''
+            }
+        }]
+    },
+    {
         path: '/benyi_course/themetermplan',
         component: Layout,
         hidden: true,

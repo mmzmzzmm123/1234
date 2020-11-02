@@ -345,7 +345,7 @@ export default {
       });
       return actions.join("");
     },
-    // 主题--字典状态字典翻译
+    // 游戏数学方案--字典状态字典翻译
     mathFaFormat(row, column) {
       if (row.mathconent != null) {
         var ilength = row.mathconent.split(";").length - 1;

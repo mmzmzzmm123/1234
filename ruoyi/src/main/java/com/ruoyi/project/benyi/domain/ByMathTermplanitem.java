@@ -31,8 +31,8 @@ public class ByMathTermplanitem extends BaseEntity {
     /**
      * 月份
      */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "月份", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM")
+    @Excel(name = "月份", width = 30, dateFormat = "yyyy-MM")
     private Date month;
 
     /**

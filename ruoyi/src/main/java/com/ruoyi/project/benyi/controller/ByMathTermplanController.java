@@ -8,6 +8,7 @@ import com.ruoyi.project.benyi.domain.ByMathTermplanitem;
 import com.ruoyi.project.benyi.service.IByMathTermplanitemService;
 import com.ruoyi.project.common.SchoolCommon;
 import com.ruoyi.project.system.service.IByClassService;
+import com.ruoyi.project.system.service.ISysUserService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -45,6 +46,8 @@ public class ByMathTermplanController extends BaseController
     private IByClassService byClassService;
     @Autowired
     private IByMathTermplanitemService byMathTermplanitemService;
+    @Autowired
+    private ISysUserService userService;
 
 /**
  * 查询游戏数学学期计划列表
@@ -84,7 +87,12 @@ public class ByMathTermplanController extends BaseController
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") String id)
     {
-        return AjaxResult.success(byMathTermplanService.selectByMathTermplanById(id));
+        AjaxResult ajax = AjaxResult.success();
+        ByMathTermplan byMathTermplan = byMathTermplanService.selectByMathTermplanById(id);
+        ajax.put(AjaxResult.DATA_TAG, byMathTermplan);
+        ajax.put("classname", byClassService.selectByClassById(byMathTermplan.getClassid()).getBjmc());
+        ajax.put("createusername", userService.selectUserById(byMathTermplan.getCreateuserid()).getNickName());
+        return ajax;
     }
 
     /**

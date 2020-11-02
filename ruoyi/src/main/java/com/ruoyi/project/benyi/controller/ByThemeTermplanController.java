@@ -86,7 +86,8 @@ public class ByThemeTermplanController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('benyi:themetermplan:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") String id) {
+    public AjaxResult getInfo(@PathVariable("id") String id)
+    {
         AjaxResult ajax = AjaxResult.success();
         ByThemeTermplan byThemeTermplan = byThemeTermplanService.selectByThemeTermplanById(id);
         ajax.put(AjaxResult.DATA_TAG, byThemeTermplan);
