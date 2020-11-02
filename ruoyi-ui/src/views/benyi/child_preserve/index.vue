@@ -468,7 +468,7 @@ export default {
                 updateContactpeople(this.form_jhr).then(response => {
                   if (response.code === 200) {
                     this.msgSuccess("修改成功");
-                    this.hide = false;
+                    // this.hide = false;
                   }
                 });
                 this.hide = false;

@@ -107,7 +107,16 @@ public class ByChildContactpeopleController extends BaseController {
     @Log(title = "幼儿紧急情况联系人", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody ByChildContactpeople byChildContactpeople) {
-        return toAjax(byChildContactpeopleService.updateByChildContactpeople(byChildContactpeople));
+        //如果存在，就更新，否则删除
+        ByChildContactpeople byChildContactpeoplenew = new ByChildContactpeople();
+        byChildContactpeoplenew.setChildid(byChildContactpeople.getChildid());
+        List<ByChildContactpeople> list = byChildContactpeopleService.selectByChildContactpeopleList(byChildContactpeoplenew);
+        if (list!=null&&list.size()>0){
+            return toAjax(byChildContactpeopleService.updateByChildContactpeople(byChildContactpeople));
+        }else{
+            return toAjax(byChildContactpeopleService.insertByChildContactpeople(byChildContactpeople));
+        }
+
     }
 
     /**
