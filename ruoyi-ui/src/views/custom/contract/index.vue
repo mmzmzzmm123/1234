@@ -387,7 +387,7 @@
         });
       },
       handleCopy(path) {
-        this.copyValue = window.location.origin.replace('long', 'stsign') + path;
+        this.copyValue = window.location.origin.replace('manage', 'sign') + path;
         const btnCopy = new Clipboard('.copyBtn');
         this.$message({
           message: '拷贝成功',
@@ -396,7 +396,7 @@
         // btnCopy.destroy();
       },
       handleLook(path) {
-        const url = window.location.origin.replace('long', 'stsign') + path;
+        const url = window.location.origin.replace('manage', 'sign') + path;
         // const url = "http://stsign.busyinn.com" + path;
         window.open(url, '_blank');
       }
