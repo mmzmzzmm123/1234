@@ -60,6 +60,7 @@ public class ByMathTermplanController extends BaseController
         byMathTermplan.setSchoolid(SecurityUtils.getLoginUser().getUser().getDept().getDeptId());
         String classId = schoolCommon.getClassId();
         List<ByMathTermplan> list = null;
+        // 判断当前是否为幼儿园账号
         if (schoolCommon.isSchool() && !schoolCommon.isStringEmpty(classId)) {
             byMathTermplan.setClassid(classId);
         }

@@ -63,35 +63,13 @@
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
-          type="primary"
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['benyi:mathtermplan:add']"
-          >新增</el-button
-        >
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
           type="success"
           icon="el-icon-edit"
           size="mini"
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['benyi:mathtermplan:edit']"
-          >修改</el-button
-        >
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="danger"
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['benyi:mathtermplan:remove']"
-          >删除</el-button
-        >
+        >审批</el-button>
       </el-col>
     </el-row>
 
@@ -163,25 +141,7 @@
             @click="handleUpdate(scope.row)"
             v-hasPermi="['benyi:mathtermplan:edit']"
             v-show="isShow(scope.row)"
-            >修改</el-button
-          >
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['benyi:mathtermplan:remove']"
-            v-show="isShow(scope.row)"
-            >删除</el-button
-          >
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-check"
-            @click="handleCheck(scope.row)"
-            v-hasPermi="['benyi:mathtermplan:edit']"
-            v-show="isShow(scope.row)"
-          >提交</el-button>
+          >审批</el-button>
           <el-button
             size="mini"
             type="text"
@@ -212,24 +172,30 @@
             start-placeholder="开始月份"
             end-placeholder="结束月份"
             value-format="yyyy-MM"
+            :disabled="true"
           ></el-date-picker>
         </el-form-item>
         <el-form-item label="学年学期" prop="xnxq">
-          <el-select v-model="form.xnxq" placeholder="请选择学年学期">
+          <el-select v-model="form.xnxq" placeholder="请选择学年学期" :disabled="true">
             <el-option
               v-for="dict in xnxqOptions"
               :key="dict.dictValue"
               :label="dict.dictLabel"
               :value="dict.dictValue"
-            ></el-option>
+            />
           </el-select>
         </el-form-item>
         <el-form-item label="备注" prop="remark">
-          <el-input
-            v-model="form.remark"
-            type="textarea"
-            placeholder="请输入备注"
-          />
+          <el-input v-model="form.remark" type="textarea" placeholder="请输入备注" :disabled="true" />
+        </el-form-item>
+        <el-form-item label="审批意见" prop="status">
+          <el-radio-group v-model="form.status">
+            <el-radio label="0">退回</el-radio>
+            <el-radio label="2">通过</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="审批建议" prop="shyj">
+          <el-input v-model="form.shyj" type="textarea" placeholder="请输入审核建议" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -288,7 +254,7 @@ export default {
         startmonth: undefined,
         endmonth: undefined,
         xnxq: undefined,
-        status: undefined,
+        status: "1",
         spr: undefined,
         sptime: undefined,
         spyj: undefined,
@@ -298,11 +264,8 @@ export default {
       form: {},
       // 表单校验
       rules: {
-        xnxq: [
-          { required: true, message: "学年学期不能为空", trigger: "blur" },
-        ],
-        startmonth: [
-          { required: true, message: "日期不能为空", trigger: "blur" },
+        status: [
+          { required: true, message: "状态不能为空", trigger: "blur" },
         ],
       },
     };
@@ -320,7 +283,7 @@ export default {
   methods: {
     isShow(row) {
       //console.log(row.status);
-      if (row.status == "0") {
+      if (row.status == "1") {
         return true;
       } else {
         return false;
@@ -376,7 +339,7 @@ export default {
         startmonth: undefined,
         endmonth: undefined,
         xnxq: undefined,
-        status: "0",
+        status: "2",
         spr: undefined,
         sptime: undefined,
         spyj: undefined,
@@ -402,12 +365,7 @@ export default {
       this.single = selection.length != 1;
       this.multiple = !selection.length;
     },
-    /** 新增按钮操作 */
-    handleAdd() {
-      this.reset();
-      this.open = true;
-      this.title = "添加游戏数学学期计划";
-    },
+    
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
@@ -418,7 +376,6 @@ export default {
         this.title = "修改游戏数学学期计划";
         const time = [];
         time.push(response.data.startmonth);
-        console.log(response.data.startmonth);
         time.push(response.data.endmonth);
         this.form.startmonth = time;
       });
@@ -438,37 +395,9 @@ export default {
                 this.getList();
               }
             });
-          } else {
-            addMathtermplan(this.form).then((response) => {
-              if (response.code === 200) {
-                this.msgSuccess("新增成功");
-                this.open = false;
-                this.getList();
-              }
-            });
-          }
+          } 
         }
       });
-    },
-    /** 删除按钮操作 */
-    handleDelete(row) {
-      const ids = row.id || this.ids;
-      this.$confirm(
-        '是否确认删除游戏数学学期计划数据项?',
-        "警告",
-        {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning",
-        })
-        .then(function () {
-          return delMathtermplan(ids);
-        })
-        .then(() => {
-          this.getList();
-          this.msgSuccess("删除成功");
-        })
-        .catch(function () {});
     },
     /** 提交按钮操作 */
     handleCheck(row) {
