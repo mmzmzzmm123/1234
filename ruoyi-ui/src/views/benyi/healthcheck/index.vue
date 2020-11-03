@@ -9,12 +9,28 @@
       size="small"
     >
       <el-form-item label="班级信息" prop="classInfo">
-        <el-select v-model="queryParams.classInfo" placeholder="请选择班级信息">
+        <el-select
+          v-model="queryParams.classInfo"
+          placeholder="请选择班级信息"
+          @change="classInfoChange"
+        >
           <el-option
             v-for="dict in classInfoOptions"
             :key="dict.bjbh"
             :label="dict.bjmc"
             :value="dict.bjbh"
+          ></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="幼儿姓名" prop="childId">
+        <el-select v-model="queryParams.childId" placeholder="请选择幼儿">
+          <el-option
+            v-for="dict in childInfoOptions.filter(
+              (c) => c.classid == this.queryParams.classInfo
+            )"
+            :key="dict.id"
+            :label="dict.name"
+            :value="dict.id"
           ></el-option>
         </el-select>
       </el-form-item>
@@ -111,7 +127,7 @@
           >删除</el-button
         >
       </el-col>
-      <el-col :span="1.5">
+      <!-- <el-col :span="1.5">
         <el-button
           type="warning"
           icon="el-icon-download"
@@ -120,7 +136,7 @@
           v-hasPermi="['benyi:healthcheck:export']"
           >导出</el-button
         >
-      </el-col>
+      </el-col> -->
     </el-row>
 
     <el-table
@@ -216,7 +232,7 @@
     <!-- 添加或修改儿童常规体检记录对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="800px" append-to-body>
       <el-row :gutter="15">
-        <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+        <el-form ref="form" :model="form" :rules="rules" label-width="100px">
           <el-col :span="12">
             <el-form-item label="班级信息" prop="classInfo">
               <el-select
@@ -235,7 +251,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="幼儿姓名" prop="childId">
-              <el-select v-model="form.childId" placeholder="请选择班级信息">
+              <el-select v-model="form.childId" placeholder="请选择幼儿">
                 <el-option
                   v-for="dict in childInfoOptions.filter(
                     (c) => c.classid == this.form.classInfo
@@ -248,16 +264,18 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="检查日期" prop="checkTime">
-              <el-date-picker
-                clearable
-                size="small"
-                style="width: 200px"
-                v-model="form.checkTime"
-                type="date"
-                value-format="yyyy-MM-dd"
-                placeholder="选择检查日期"
-              ></el-date-picker>
+            <el-form-item label="是否龋齿">
+              <el-select
+                v-model="form.decayedTooth"
+                placeholder="请选择是否龋齿"
+              >
+                <el-option
+                  v-for="dict in decayedToothOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                ></el-option>
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -276,18 +294,19 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="是否龋齿">
-              <el-select
-                v-model="form.decayedTooth"
-                placeholder="请选择是否龋齿"
-              >
-                <el-option
-                  v-for="dict in decayedToothOptions"
-                  :key="dict.dictValue"
-                  :label="dict.dictLabel"
-                  :value="dict.dictValue"
-                ></el-option>
-              </el-select>
+            <el-form-item label="左眼视力" prop="eyesVisionLeft">
+              <el-input
+                v-model="form.eyesVisionLeft"
+                placeholder="请输入左眼视力"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="右眼视力" prop="eyesVisionRight">
+              <el-input
+                v-model="form.eyesVisionRight"
+                placeholder="请输入右眼视力"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -314,27 +333,7 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
-            <el-form-item label="保健师" prop="doctorName">
-              <el-input v-model="form.doctorName" placeholder="请输入保健师" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="左眼视力" prop="eyesVisionLeft">
-              <el-input
-                v-model="form.eyesVisionLeft"
-                placeholder="请输入左眼视力"
-              />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="右眼视力" prop="eyesVisionRight">
-              <el-input
-                v-model="form.eyesVisionRight"
-                placeholder="请输入右眼视力"
-              />
-            </el-form-item>
-          </el-col>
+
           <el-col :span="12">
             <el-form-item label="身高(cm)" prop="height">
               <el-input
@@ -373,6 +372,24 @@
                   :value="dict.dictValue"
                 ></el-option>
               </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="保健师" prop="doctorName">
+              <el-input v-model="form.doctorName" placeholder="请输入保健师" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="检查日期" prop="checkTime">
+              <el-date-picker
+                clearable
+                size="small"
+                style="width: 200px"
+                v-model="form.checkTime"
+                type="date"
+                value-format="yyyy-MM-dd"
+                placeholder="选择检查日期"
+              ></el-date-picker>
             </el-form-item>
           </el-col>
         </el-form>
@@ -646,15 +663,11 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$confirm(
-        '是否确认删除儿童常规体检记录编号为"' + ids + '"的数据项?',
-        "警告",
-        {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning",
-        }
-      )
+      this.$confirm("是否确认删除儿童常规体检记录数据项?", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
         .then(function () {
           return delHealthcheck(ids);
         })
@@ -664,22 +677,22 @@ export default {
         })
         .catch(function () {});
     },
-    /** 导出按钮操作 */
-    handleExport() {
-      const queryParams = this.queryParams;
-      this.$confirm("是否确认导出所有儿童常规体检记录数据项?", "警告", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-      })
-        .then(function () {
-          return exportHealthcheck(queryParams);
-        })
-        .then((response) => {
-          this.download(response.msg);
-        })
-        .catch(function () {});
-    },
+    // /** 导出按钮操作 */
+    // handleExport() {
+    //   const queryParams = this.queryParams;
+    //   this.$confirm("是否确认导出所有儿童常规体检记录数据项?", "警告", {
+    //     confirmButtonText: "确定",
+    //     cancelButtonText: "取消",
+    //     type: "warning",
+    //   })
+    //     .then(function () {
+    //       return exportHealthcheck(queryParams);
+    //     })
+    //     .then((response) => {
+    //       this.download(response.msg);
+    //     })
+    //     .catch(function () {});
+    // },
   },
 };
 </script>

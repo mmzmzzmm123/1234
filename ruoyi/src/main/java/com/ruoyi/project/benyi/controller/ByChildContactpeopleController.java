@@ -111,12 +111,11 @@ public class ByChildContactpeopleController extends BaseController {
         ByChildContactpeople byChildContactpeoplenew = new ByChildContactpeople();
         byChildContactpeoplenew.setChildid(byChildContactpeople.getChildid());
         List<ByChildContactpeople> list = byChildContactpeopleService.selectByChildContactpeopleList(byChildContactpeoplenew);
-        if (list!=null&&list.size()>0){
+        if (list != null && list.size() > 0) {
             return toAjax(byChildContactpeopleService.updateByChildContactpeople(byChildContactpeople));
-        }else{
+        } else {
             return toAjax(byChildContactpeopleService.insertByChildContactpeople(byChildContactpeople));
         }
-
     }
 
     /**

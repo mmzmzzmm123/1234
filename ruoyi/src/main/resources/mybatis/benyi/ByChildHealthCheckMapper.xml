@@ -22,8 +22,8 @@
         <result property="totalAssessment" column="total_assessment"/>
         <result property="createtime" column="createtime"/>
         <result property="createuser" column="createuser"/>
-        <association property="byChild"    column="id" javaType="ByChild" resultMap="ByChildResult" />
-        <association property="byClass"    column="bjbh" javaType="ByClass" resultMap="ByClassResult" />
+        <association property="byChild" column="id" javaType="ByChild" resultMap="ByChildResult"/>
+        <association property="byClass" column="bjbh" javaType="ByClass" resultMap="ByClassResult"/>
     </resultMap>
 
     <resultMap type="ByClass" id="ByClassResult">
@@ -99,33 +99,32 @@
 
     <select id="selectByChildHealthCheckList" parameterType="ByChildHealthCheck" resultMap="ByChildHealthCheckResult">
         <include refid="selectByChildHealthCheckVo"/>
-        <where>
-            <if test="childId != null ">and child_id = #{childId}</if>
-            <if test="classInfo != null  and classInfo != ''">and class_info = #{classInfo}</if>
-            <if test="schoolName != null  and schoolName != ''">and school_name like concat('%', #{schoolName}, '%')
-            </if>
-            <if test="checkTime != null ">and check_time = #{checkTime}</if>
-            <if test="doctorName != null  and doctorName != ''">and doctor_name like concat('%', #{doctorName}, '%')
-            </if>
-            <if test="eyesVisionLeft != null  and eyesVisionLeft != ''">and eyes_vision_left = #{eyesVisionLeft}</if>
-            <if test="eyesVisionRight != null  and eyesVisionRight != ''">and eyes_vision_right = #{eyesVisionRight}
-            </if>
-            <if test="visionAssessment != null  and visionAssessment != ''">and vision_assessment =
-                #{visionAssessment}
-            </if>
-            <if test="decayedTooth != null  and decayedTooth != ''">and decayed_tooth = #{decayedTooth}</if>
-            <if test="weight != null ">and weight = #{weight}</if>
-            <if test="weightAssessment != null  and weightAssessment != ''">and weight_assessment =
-                #{weightAssessment}
-            </if>
-            <if test="height != null ">and height = #{height}</if>
-            <if test="heightAssessment != null  and heightAssessment != ''">and height_assessment =
-                #{heightAssessment}
-            </if>
-            <if test="totalAssessment != null  and totalAssessment != ''">and total_assessment = #{totalAssessment}</if>
-            <if test="createtime != null ">and createtime = #{createtime}</if>
-            <if test="createuser != null ">and createuser = #{createuser}</if>
-        </where>
+        where c.name is not null
+        <if test="childId != null ">and child_id = #{childId}</if>
+        <if test="classInfo != null  and classInfo != ''">and class_info = #{classInfo}</if>
+        <if test="schoolName != null  and schoolName != ''">and school_name like concat('%', #{schoolName}, '%')
+        </if>
+        <if test="checkTime != null ">and check_time = #{checkTime}</if>
+        <if test="doctorName != null  and doctorName != ''">and doctor_name like concat('%', #{doctorName}, '%')
+        </if>
+        <if test="eyesVisionLeft != null  and eyesVisionLeft != ''">and eyes_vision_left = #{eyesVisionLeft}</if>
+        <if test="eyesVisionRight != null  and eyesVisionRight != ''">and eyes_vision_right = #{eyesVisionRight}
+        </if>
+        <if test="visionAssessment != null  and visionAssessment != ''">and vision_assessment =
+            #{visionAssessment}
+        </if>
+        <if test="decayedTooth != null  and decayedTooth != ''">and decayed_tooth = #{decayedTooth}</if>
+        <if test="weight != null ">and weight = #{weight}</if>
+        <if test="weightAssessment != null  and weightAssessment != ''">and weight_assessment =
+            #{weightAssessment}
+        </if>
+        <if test="height != null ">and height = #{height}</if>
+        <if test="heightAssessment != null  and heightAssessment != ''">and height_assessment =
+            #{heightAssessment}
+        </if>
+        <if test="totalAssessment != null  and totalAssessment != ''">and total_assessment = #{totalAssessment}</if>
+        <if test="createtime != null ">and createtime = #{createtime}</if>
+        <if test="createuser != null ">and createuser = #{createuser}</if>
     </select>
 
     <select id="selectByChildHealthCheckById" parameterType="Long" resultMap="ByChildHealthCheckResult">

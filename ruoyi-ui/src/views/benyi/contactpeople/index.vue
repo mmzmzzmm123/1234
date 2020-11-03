@@ -42,16 +42,16 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
+      <!-- <el-col :span="1.5">
         <el-button
           type="primary"
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          disabled="true"
+          :disabled="true"
           v-hasPermi="['benyi:contactpeople:add']"
         >新增</el-button>
-      </el-col>
+      </el-col> -->
       <el-col :span="1.5">
         <el-button
           type="success"
@@ -122,7 +122,7 @@
         <el-row :gutter="15">
           <el-col :span="24">
             <el-form-item label="选择幼儿" prop="childid">
-              <el-select v-model="form.childid" placeholder="请输入选择幼儿" >
+              <el-select v-model="form.childid" placeholder="请输入选择幼儿" :disabled="true">
                 <el-option
                   v-for="dict in childOptions"
                   :key="dict.id"
@@ -390,11 +390,11 @@ export default {
       this.multiple = !selection.length;
     },
     /** 新增按钮操作 */
-    handleAdd() {
-      this.reset();
-      this.open = true;
-      this.title = "添加幼儿紧急情况联系人";
-    },
+    // handleAdd() {
+    //   this.reset();
+    //   this.open = true;
+    //   this.title = "添加幼儿紧急情况联系人";
+    // },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
@@ -433,7 +433,7 @@ export default {
     handleDelete(row) {
       const ids = row.id || this.ids;
       this.$confirm(
-        '是否确认删除幼儿紧急情况联系人编号为"' + ids + '"的数据项?',
+        '是否确认删除幼儿紧急情况联系人数据项?',
         "警告",
         {
           confirmButtonText: "确定",
