@@ -194,8 +194,8 @@
             <el-radio label="2">通过</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="审批建议" prop="shyj">
-          <el-input v-model="form.shyj" type="textarea" placeholder="请输入审核建议" />
+        <el-form-item label="审批建议" prop="spyj">
+          <el-input v-model="form.spyj" type="textarea" placeholder="请输入审核建议" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -257,7 +257,6 @@ export default {
         status: "1",
         spr: undefined,
         sptime: undefined,
-        spyj: undefined,
         createuserid: undefined,
       },
       // 表单参数
@@ -342,7 +341,6 @@ export default {
         status: "2",
         spr: undefined,
         sptime: undefined,
-        spyj: undefined,
         remark: undefined,
         createuserid: undefined,
         createTime: undefined,
@@ -390,7 +388,7 @@ export default {
           if (this.form.id != undefined) {
             updateMathtermplan(this.form).then((response) => {
               if (response.code === 200) {
-                this.msgSuccess("修改成功");
+                this.msgSuccess("审批成功");
                 this.open = false;
                 this.getList();
               }

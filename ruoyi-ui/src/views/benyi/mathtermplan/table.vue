@@ -138,7 +138,7 @@ export default {
         this.tbr = response.createusername;
         this.classname = response.classname;
         this.xnxq = response.data.xnxq;
-        this.spyj = response.data.shyj;
+        this.spyj = response.data.spyj;
       });
       this.listMathTermItemPlan();
     },
