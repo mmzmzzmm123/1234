@@ -162,6 +162,13 @@
         <el-form-item label="客户姓名" prop="name">
           <el-input v-model="form.name" placeholder="请输入客户姓名"/>
         </el-form-item>
+        <el-form-item label="金额" prop="amount">
+          <el-input v-model="form.amount" placeholder="请输入金额"/>
+        </el-form-item>
+        <el-form-item label="服务承诺" prop="servePromise">
+          <el-input style="width: 193px; margin-right: 12px" v-model="form.servePromise" placeholder="请输入服务承诺"/>
+          斤
+        </el-form-item>
         <el-form-item label="营养师" prop="nutritionistId">
           <el-select v-model="form.nutritionistId" placeholder="请选择营养师" clearable size="small">
             <el-option v-for="dict in nutritionistIdOptions"
@@ -169,12 +176,6 @@
                        :label="dict.dictLabel"
                        :value="parseInt(dict.dictValue)"/>
           </el-select>
-        </el-form-item>
-        <el-form-item label="金额" prop="amount">
-          <el-input v-model="form.amount" placeholder="请输入金额"/>
-        </el-form-item>
-        <el-form-item label="服务承诺" prop="servePromise">
-          <el-input v-model="form.servePromise" placeholder="请输入服务承诺"/>
         </el-form-item>
         <el-form-item label="服务时间" prop="serveTime">
           <el-select v-model="form.serveTime" placeholder="请选择服务时间">
@@ -199,14 +200,7 @@
 </template>
 
 <script>
-  import {
-    addContract,
-    delContract,
-    exportContract,
-    getContract,
-    listContract,
-    updateContract
-  } from "@/api/custom/contract";
+  import {addContract, listContract} from "@/api/custom/contract";
 
   import {getOptions} from "@/api/custom/order";
 
@@ -266,6 +260,9 @@
           ],
           serveTime: [
             {required: true, message: "请选择服务时间", trigger: "blur"}
+          ],
+          nutritionistId: [
+            {required: true, message: "请选择营养师", trigger: "blur"}
           ]
         }
       };
@@ -358,68 +355,69 @@
         this.title = "创建合同";
       },
       /** 修改按钮操作 */
-      handleUpdate(row) {
-        this.reset();
-        const id = row.id || this.ids
-        getContract(id).then(response => {
-          this.form = response.data;
-          this.open = true;
-          this.title = "修改合同";
-        });
-      },
+      // handleUpdate(row) {
+      //   this.reset();
+      //   const id = row.id || this.ids
+      //   getContract(id).then(response => {
+      //     this.form = response.data;
+      //     this.open = true;
+      //     this.title = "修改合同";
+      //   });
+      // },
       /** 提交按钮 */
       submitForm() {
         this.$refs["form"].validate(valid => {
           if (valid) {
-            if (this.form.id != null) {
-              updateContract(this.form).then(response => {
-                if (response.code === 200) {
-                  this.msgSuccess("修改成功");
-                  this.open = false;
-                  this.getList();
-                }
-              });
-            } else {
-              addContract(this.form).then(response => {
-                if (response.code === 200) {
-                  this.msgSuccess("新增成功");
-                  this.open = false;
-                  this.getList();
-                }
-              });
-            }
+            // if (this.form.id != null) {
+            //   updateContract(this.form).then(response => {
+            //     if (response.code === 200) {
+            //       this.msgSuccess("修改成功");
+            //       this.open = false;
+            //       this.getList();
+            //     }
+            //   });
+            // } else {
+            this.form.tutor = this.selectDictLabel(this.nutritionistIdOptions, this.form.nutritionistId)
+            addContract(this.form).then(response => {
+              if (response.code === 200) {
+                this.msgSuccess("新增成功");
+                this.open = false;
+                this.getList();
+              }
+            });
           }
+          // }
         });
       },
       /** 删除按钮操作 */
-      handleDelete(row) {
-        const ids = row.id || this.ids;
-        this.$confirm('是否确认删除合同编号为"' + ids + '"的数据项?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(function () {
-          return delContract(ids);
-        }).then(() => {
-          this.getList();
-          this.msgSuccess("删除成功");
-        }).catch(function () {
-        });
-      },
+      // handleDelete(row) {
+      //   const ids = row.id || this.ids;
+      //   this.$confirm('是否确认删除合同编号为"' + ids + '"的数据项?', "警告", {
+      //     confirmButtonText: "确定",
+      //     cancelButtonText: "取消",
+      //     type: "warning"
+      //   }).then(function () {
+      //     return delContract(ids);
+      //   }).then(() => {
+      //     this.getList();
+      //     this.msgSuccess("删除成功");
+      //   }).catch(function () {
+      //   });
+      // },
       /** 导出按钮操作 */
-      handleExport() {
-        const queryParams = this.queryParams;
-        this.$confirm('是否确认导出所有合同数据项?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(function () {
-          return exportContract(queryParams);
-        }).then(response => {
-          this.download(response.msg);
-        }).catch(function () {
-        });
-      },
+      // handleExport() {
+      //   const queryParams = this.queryParams;
+      //   this.$confirm('是否确认导出所有合同数据项?', "警告", {
+      //     confirmButtonText: "确定",
+      //     cancelButtonText: "取消",
+      //     type: "warning"
+      //   }).then(function () {
+      //     return exportContract(queryParams);
+      //   }).then(response => {
+      //     this.download(response.msg);
+      //   }).catch(function () {
+      //   });
+      // },
       handleCopy(path) {
         this.copyValue = window.location.origin.replace('manage', 'sign') + path;
         const btnCopy = new Clipboard('.copyBtn');

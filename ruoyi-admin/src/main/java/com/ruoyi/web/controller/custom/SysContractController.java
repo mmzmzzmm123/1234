@@ -37,6 +37,11 @@ public class SysContractController extends BaseController {
     public TableDataInfo list(SysContract sysContract) {
         startPage();
         List<SysContract> list = sysContractService.selectSysContractList(sysContract);
+        for (SysContract contract : list) {
+            if (contract.getSignName() != null && !contract.getSignName().equals("") && !contract.getName().equals(contract.getSignName())) {
+                contract.setName(contract.getName() + "（" + contract.getSignName() + "）");
+            }
+        }
         return getDataTable(list);
     }
 
@@ -101,7 +106,6 @@ public class SysContractController extends BaseController {
         } else {
             Map<String, String> data = new HashMap<>();
             data.put("id", contract.getId().toString());
-            data.put("name", contract.getName());
             data.put("amount", contract.getAmount().toString());
             data.put("serveTime", contract.getServeTime() + "");
             data.put("tutor", contract.getTutor());

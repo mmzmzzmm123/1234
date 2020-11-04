@@ -1,54 +1,56 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.custom.mapper.SysContractMapper">
-    
+
     <resultMap type="SysContract" id="SysContractResult">
-        <result property="id"    column="id"    />
-        <result property="status"    column="status"    />
-        <result property="name"    column="name"    />
-        <result property="cusId"    column="cus_id"    />
-        <result property="phone"    column="phone"    />
-        <result property="tutor"    column="tutor"    />
-        <result property="serveTime"    column="serve_time"    />
-        <result property="servePromise"    column="serve_promise"    />
-        <result property="amount"    column="amount"    />
-        <result property="path"    column="path"    />
-        <result property="createBy"    column="create_by"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="updateBy"    column="update_by"    />
-        <result property="updateTime"    column="update_time"    />
-        <result property="remark"    column="remark"    />
+        <result property="id" column="id"/>
+        <result property="status" column="status"/>
+        <result property="name" column="name"/>
+        <result property="signName" column="sign_name"/>
+        <result property="cusId" column="cus_id"/>
+        <result property="phone" column="phone"/>
+        <result property="tutor" column="tutor"/>
+        <result property="serveTime" column="serve_time"/>
+        <result property="servePromise" column="serve_promise"/>
+        <result property="amount" column="amount"/>
+        <result property="path" column="path"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="remark" column="remark"/>
     </resultMap>
 
     <sql id="selectSysContractVo">
-        select id, status, name, phone, cus_id, serve_time, tutor, serve_promise, amount, path, create_by, create_time, update_by, update_time, remark from sys_contract
+        select id, status, name, sign_name, phone, cus_id, serve_time, tutor, serve_promise, amount, path, create_by, create_time, update_by, update_time, remark from sys_contract
     </sql>
 
     <select id="selectSysContractList" parameterType="SysContract" resultMap="SysContractResult">
         <include refid="selectSysContractVo"/>
-        <where>  
-            <if test="id != null "> and id = #{id}</if>
-            <if test="status != null "> and status = #{status}</if>
-            <if test="tutor != null "> and tutor = #{tutor}</if>
-            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
-            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+        <where>
+            <if test="id != null ">and id = #{id}</if>
+            <if test="status != null ">and status = #{status}</if>
+            <if test="tutor != null and tutor != '' ">and tutor = #{tutor}</if>
+            <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
+            <if test="phone != null  and phone != ''">and phone = #{phone}</if>
         </where>
         order by create_time desc
     </select>
-    
+
     <select id="selectSysContractById" parameterType="Long" resultMap="SysContractResult">
         <include refid="selectSysContractVo"/>
         where id = #{id}
     </select>
-        
+
     <insert id="insertSysContract" parameterType="SysContract" useGeneratedKeys="true" keyProperty="id">
         insert into sys_contract
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
             <if test="status != null">status,</if>
             <if test="name != null and name != ''">name,</if>
+            <if test="signName != null and signName != ''">sign_name,</if>
             <if test="tutor != null and tutor != ''">tutor,</if>
             <if test="cusId != null and cusId != ''">cus_id,</if>
             <if test="phone != null">phone,</if>
@@ -61,12 +63,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">update_by,</if>
             <if test="updateTime != null">update_time,</if>
             <if test="remark != null">remark,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
             <if test="status != null">#{status},</if>
             <if test="name != null and name != ''">#{name},</if>
-            <if test="tutor != null and tutor != ''">#{tutor},</if>
+            <if test="signName != null and signName != ''">#{signName},</if>
+            <if test="tutor != null and name != ''">#{tutor},</if>
             <if test="cusId != null and cusId != ''">#{cusId},</if>
             <if test="phone != null">#{phone},</if>
             <if test="serveTime != null">#{serveTime},</if>
@@ -78,7 +81,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">#{updateBy},</if>
             <if test="updateTime != null">#{updateTime},</if>
             <if test="remark != null">#{remark},</if>
-         </trim>
+        </trim>
     </insert>
 
     <update id="updateSysContract" parameterType="SysContract">
@@ -86,7 +89,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="SET" suffixOverrides=",">
             <if test="status != null">status = #{status},</if>
             <if test="name != null and name != ''">name = #{name},</if>
-            <if test="tutor != null and tutor != ''">tutor = #{tutor},</if>
+            <if test="signName != null and signName != ''">sign_name = #{signName},</if>
+            <if test="tutor != null">tutor = #{tutor},</if>
             <if test="cusId != null and cusId != ''">cus_id = #{cusId},</if>
             <if test="phone != null">phone = #{phone},</if>
             <if test="serveTime != null">serve_time = #{serveTime},</if>
@@ -107,10 +111,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteSysContractByIds" parameterType="String">
-        delete from sys_contract where id in 
+        delete from sys_contract where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>
-    
+
 </mapper>

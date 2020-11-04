@@ -29,6 +29,11 @@ public class SysContract extends BaseEntity {
     private String name;
 
     /**
+     * 客户签名
+     */
+    private String signName;
+
+    /**
      * 客户身份证
      */
     private String cusId;
@@ -66,6 +71,9 @@ public class SysContract extends BaseEntity {
      */
     private String signDate;
 
+    /**
+     * 营养师
+     */
     private String tutor;
 
     /**
@@ -76,6 +84,14 @@ public class SysContract extends BaseEntity {
 
     private String servePromise;
 
+    public String getSignName() {
+        return signName;
+    }
+
+    public void setSignName(String signName) {
+        this.signName = signName;
+    }
+
     public String getTutor() {
         return tutor;
     }
@@ -84,12 +100,12 @@ public class SysContract extends BaseEntity {
         this.tutor = tutor;
     }
 
-    public void setServePromise(String servePromise) {
-        this.servePromise = servePromise;
-    }
-
     public String getServePromise() {
         return servePromise;
+    }
+
+    public void setServePromise(String servePromise) {
+        this.servePromise = servePromise;
     }
 
     public Long getId() {
@@ -128,16 +144,16 @@ public class SysContract extends BaseEntity {
         return amount;
     }
 
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
+    }
+
     public String getAmountUpper() {
         return amountUpper;
     }
 
     public void setAmountUpper(String amountUpper) {
         this.amountUpper = amountUpper;
-    }
-
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
     }
 
     public String getPath() {
