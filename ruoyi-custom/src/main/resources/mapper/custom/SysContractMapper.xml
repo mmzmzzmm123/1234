@@ -10,6 +10,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="name"    column="name"    />
         <result property="cusId"    column="cus_id"    />
         <result property="phone"    column="phone"    />
+        <result property="tutor"    column="tutor"    />
         <result property="serveTime"    column="serve_time"    />
         <result property="servePromise"    column="serve_promise"    />
         <result property="amount"    column="amount"    />
@@ -22,7 +23,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectSysContractVo">
-        select id, status, name, phone, cus_id, serve_time, serve_promise, amount, path, create_by, create_time, update_by, update_time, remark from sys_contract
+        select id, status, name, phone, cus_id, serve_time, tutor, serve_promise, amount, path, create_by, create_time, update_by, update_time, remark from sys_contract
     </sql>
 
     <select id="selectSysContractList" parameterType="SysContract" resultMap="SysContractResult">
@@ -30,6 +31,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <where>  
             <if test="id != null "> and id = #{id}</if>
             <if test="status != null "> and status = #{status}</if>
+            <if test="tutor != null "> and tutor = #{tutor}</if>
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
             <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
         </where>
@@ -47,6 +49,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="id != null">id,</if>
             <if test="status != null">status,</if>
             <if test="name != null and name != ''">name,</if>
+            <if test="tutor != null and tutor != ''">tutor,</if>
             <if test="cusId != null and cusId != ''">cus_id,</if>
             <if test="phone != null">phone,</if>
             <if test="serveTime != null">serve_time,</if>
@@ -63,6 +66,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="id != null">#{id},</if>
             <if test="status != null">#{status},</if>
             <if test="name != null and name != ''">#{name},</if>
+            <if test="tutor != null and tutor != ''">#{tutor},</if>
             <if test="cusId != null and cusId != ''">#{cusId},</if>
             <if test="phone != null">#{phone},</if>
             <if test="serveTime != null">#{serveTime},</if>
@@ -82,6 +86,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="SET" suffixOverrides=",">
             <if test="status != null">status = #{status},</if>
             <if test="name != null and name != ''">name = #{name},</if>
+            <if test="tutor != null and tutor != ''">tutor = #{tutor},</if>
             <if test="cusId != null and cusId != ''">cus_id = #{cusId},</if>
             <if test="phone != null">phone = #{phone},</if>
             <if test="serveTime != null">serve_time = #{serveTime},</if>

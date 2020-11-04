@@ -66,6 +66,8 @@ public class SysContract extends BaseEntity {
      */
     private String signDate;
 
+    private String tutor;
+
     /**
      * 合同状态
      * 0-未签订；1-已签订
@@ -73,6 +75,14 @@ public class SysContract extends BaseEntity {
     private String Status;
 
     private String servePromise;
+
+    public String getTutor() {
+        return tutor;
+    }
+
+    public void setTutor(String tutor) {
+        this.tutor = tutor;
+    }
 
     public void setServePromise(String servePromise) {
         this.servePromise = servePromise;
@@ -185,6 +195,7 @@ public class SysContract extends BaseEntity {
                 .append("signDate", getSignDate())
                 .append("path", getPath())
                 .append("createBy", getCreateBy())
+                .append("tutor", getTutor())
                 .append("createTime", getCreateTime())
                 .append("updateBy", getUpdateBy())
                 .append("updateTime", getUpdateTime())

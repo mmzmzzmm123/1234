@@ -28,6 +28,14 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+      <el-form-item label="主营养师" prop="nutritionistId">
+        <el-select v-model="queryParams.nutritionistId" placeholder="请选择主营养师" clearable size="small">
+          <el-option v-for="dict in nutritionistIdOptions"
+                     :key="dict.dictValue"
+                     :label="dict.dictLabel"
+                     :value="parseInt(dict.dictValue)"/>
+        </el-select>
+      </el-form-item>
       <el-form-item label="合同状态" prop="status">
         <el-select v-model="queryParams.status" placeholder="请选择合同状态">
           <el-option
@@ -154,9 +162,14 @@
         <el-form-item label="客户姓名" prop="name">
           <el-input v-model="form.name" placeholder="请输入客户姓名"/>
         </el-form-item>
-        <!--        <el-form-item label="电话" prop="phone">-->
-        <!--          <el-input v-model="form.phone" placeholder="请输入电话"/>-->
-        <!--        </el-form-item>-->
+        <el-form-item label="营养师" prop="nutritionistId">
+          <el-select v-model="form.nutritionistId" placeholder="请选择营养师" clearable size="small">
+            <el-option v-for="dict in nutritionistIdOptions"
+                       :key="dict.dictValue"
+                       :label="dict.dictLabel"
+                       :value="parseInt(dict.dictValue)"/>
+          </el-select>
+        </el-form-item>
         <el-form-item label="金额" prop="amount">
           <el-input v-model="form.amount" placeholder="请输入金额"/>
         </el-form-item>
@@ -195,6 +208,8 @@
     updateContract
   } from "@/api/custom/contract";
 
+  import {getOptions} from "@/api/custom/order";
+
   import Clipboard from 'clipboard';
 
   export default {
@@ -215,6 +230,8 @@
         total: 0,
         // 合同表格数据
         contractList: [],
+        // 营养师
+        nutritionistIdOptions: [],
         // 弹出层标题
         title: "",
         // 是否显示弹出层
@@ -255,6 +272,16 @@
     },
     created() {
       this.getList();
+      getOptions().then(response => {
+        const options = response.data.reduce((opts, cur) => {
+          if (!opts[cur.postCode]) {
+            opts[cur.postCode] = [{dictValue: 0, dictLabel: ' ', remark: null}];
+          }
+          opts[cur.postCode].push({dictValue: cur.userId, dictLabel: cur.userName, remark: cur.remark})
+          return opts;
+        }, {})
+        this.nutritionistIdOptions = options['nutri'] || [];
+      })
       this.getDicts("cus_serve_time").then(response => {
         this.serveTimeOptions = response.data;
       });
@@ -286,6 +313,8 @@
       },
       // 表单重置
       reset() {
+        const defaultNutritionist = this.nutritionistIdOptions.find(opt => opt.remark === 'default');
+
         this.form = {
           id: null,
           name: null,
@@ -294,12 +323,17 @@
           amount: null,
           path: null,
           createBy: null,
+          nutritionistId: defaultNutritionist ? parseInt(defaultNutritionist.dictValue) : null,
           createTime: null,
           updateBy: null,
           updateTime: null,
           remark: null
         };
         this.resetForm("form");
+      },
+      // 主营养师字典翻译
+      nutritionistIdFormat(row, column) {
+        return this.selectDictLabel(this.nutritionistIdOptions, row.nutritionistId);
       },
       /** 搜索按钮操作 */
       handleQuery() {

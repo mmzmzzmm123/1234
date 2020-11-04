@@ -104,6 +104,7 @@ public class SysContractController extends BaseController {
             data.put("name", contract.getName());
             data.put("amount", contract.getAmount().toString());
             data.put("serveTime", contract.getServeTime() + "");
+            data.put("tutor", contract.getTutor());
             data.put("servePromise", contract.getServePromise());
             ajax.put("data", data);
         }
