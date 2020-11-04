@@ -123,9 +123,9 @@ public class SysContractServiceImpl implements ISysContractService {
 
             form.addSubstitutionFont(BaseFont.createFont("STSong-Light", "UniGB-UCS2-H", BaseFont.NOT_EMBEDDED));
 
-            form.setField("name", sysContract.getName(), true);
-            form.setField("time", sysContract.getServeTimeStr(), true);
-            form.setField("tutor", sysContract.getServeTimeStr(), true);
+            form.setField("signName", sysContract.getSignName(), true);
+            form.setField("serveTime", sysContract.getServeTimeStr(), true);
+            form.setField("tutor", sysContract.getTutor(), true);
             form.setField("moneyUpper", sysContract.getAmountUpper(), true);
             form.setField("money", sysContract.getAmount().intValue() + "", true);
             form.setField("phone", sysContract.getPhone(), true);
