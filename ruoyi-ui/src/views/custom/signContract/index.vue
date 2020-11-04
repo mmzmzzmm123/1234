@@ -217,6 +217,7 @@
       submitForm() {
         this.$refs["form"].validate(valid => {
           if (valid) {
+            this.form.name = this.form.cusName;
             signContract(this.form).then(result => {
               if (result.code === 200) {
                 window.location.href = window.location.origin + result.url;
