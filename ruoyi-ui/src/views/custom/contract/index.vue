@@ -200,7 +200,7 @@
 </template>
 
 <script>
-  import {addContract, listContract} from "@/api/custom/contract";
+  import {addContract, delContract, listContract} from "@/api/custom/contract";
 
   import {getOptions} from "@/api/custom/order";
 
@@ -390,20 +390,20 @@
         });
       },
       /** 删除按钮操作 */
-      // handleDelete(row) {
-      //   const ids = row.id || this.ids;
-      //   this.$confirm('是否确认删除合同编号为"' + ids + '"的数据项?', "警告", {
-      //     confirmButtonText: "确定",
-      //     cancelButtonText: "取消",
-      //     type: "warning"
-      //   }).then(function () {
-      //     return delContract(ids);
-      //   }).then(() => {
-      //     this.getList();
-      //     this.msgSuccess("删除成功");
-      //   }).catch(function () {
-      //   });
-      // },
+      handleDelete(row) {
+        const ids = row.id || this.ids;
+        this.$confirm('是否确认删除合同编号为"' + ids + '"的数据项?', "警告", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }).then(function () {
+          return delContract(ids);
+        }).then(() => {
+          this.getList();
+          this.msgSuccess("删除成功");
+        }).catch(function () {
+        });
+      },
       /** 导出按钮操作 */
       // handleExport() {
       //   const queryParams = this.queryParams;
