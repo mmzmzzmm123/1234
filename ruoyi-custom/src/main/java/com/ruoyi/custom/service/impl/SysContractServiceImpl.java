@@ -104,7 +104,7 @@ public class SysContractServiceImpl implements ISysContractService {
     public PdfProcessInfo signContract(SysContract sysContract) {
 //        String templatePath = "/Users/wonder/Documents/Workspaces/java/RuoYi-Vue/running/pdf/contract.pdf";
 //        String filePath = "/Users/wonder/Documents/Workspaces/java/RuoYi-Vue/running" + sysContract.getPath();
-        String templatePath = "/home/workspace/RuoYi-Vue/running/pdf/contract.pdf";
+        String templatePath = "/home/workspace/ShengTangManage/running/pdf/contract.pdf";
         String filePath = "/home/web/manage.shengtangdiet.com" + sysContract.getPath();
 
         PdfReader reader;
