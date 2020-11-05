@@ -126,14 +126,12 @@ export default {
     // 获取游戏数学方案
     getMathList() {
       listPlan(null).then((response) => {
-        console.log(response.rows);
         this.mathOptions = response.rows;
       });
     },
     //获取教学学期计划
     getMathTermPlan(mathtermplanid) {
       getMathtermplan(mathtermplanid).then((response) => {
-        // console.log(response.data);
         this.title = response.data.name;
         this.tbr = response.createusername;
         this.classname = response.classname;
@@ -145,13 +143,11 @@ export default {
     //获取学期月份详细计划
     listMathTermItemPlan() {
       listMathtermplanitem(this.queryParams).then((response) => {
-        console.log(response.rows);
         this.bodyData.termplanitemList = response.rows;
       });
     },
     //打印
     prints() {
-      //console.log(this.$refs.printMe);
       this.$print(this.$refs.printMe);
     },
   },

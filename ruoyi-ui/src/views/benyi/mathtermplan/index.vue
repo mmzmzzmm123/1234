@@ -319,7 +319,6 @@ export default {
   },
   methods: {
     isShow(row) {
-      //console.log(row.status);
       if (row.status == "0") {
         return true;
       } else {
@@ -418,7 +417,6 @@ export default {
         this.title = "修改游戏数学学期计划";
         const time = [];
         time.push(response.data.startmonth);
-        console.log(response.data.startmonth);
         time.push(response.data.endmonth);
         this.form.startmonth = time;
       });

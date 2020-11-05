@@ -419,7 +419,6 @@ export default {
         this.title = "修改游戏数学学期计划明细";
         var mathconent = response.data.mathconent.split(";");
         var array = [];
-        //console.log(arr);
         mathconent.forEach(function (value, key, arr) {
           if (value != "") {
             array.push(parseInt(value));
