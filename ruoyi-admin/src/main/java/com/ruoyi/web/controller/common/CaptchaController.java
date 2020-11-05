@@ -68,19 +68,21 @@ public class CaptchaController
 
         redisCache.setCacheObject(verifyKey, code, Constants.CAPTCHA_EXPIRATION, TimeUnit.MINUTES);
         // 转换流信息写出
-        FastByteArrayOutputStream os = new FastByteArrayOutputStream();
-        try
+
+        try(FastByteArrayOutputStream os = new FastByteArrayOutputStream())
         {
             ImageIO.write(image, "jpg", os);
+            AjaxResult ajax = AjaxResult.success();
+            ajax.put("uuid", uuid);
+            ajax.put("img", Base64.encode(os.toByteArray()));
+            return ajax;
         }
         catch (IOException e)
         {
             return AjaxResult.error(e.getMessage());
         }
 
-        AjaxResult ajax = AjaxResult.success();
-        ajax.put("uuid", uuid);
-        ajax.put("img", Base64.encode(os.toByteArray()));
-        return ajax;
+
+
     }
 }
