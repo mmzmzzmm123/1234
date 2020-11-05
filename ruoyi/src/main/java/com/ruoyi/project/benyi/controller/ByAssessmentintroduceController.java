@@ -36,7 +36,7 @@ public class ByAssessmentintroduceController extends BaseController {
     /**
      * 查询评估体系介绍列表
      */
-    @PreAuthorize("@ss.hasPermi('benyi:assessmentintroduce:list')")
+    @PreAuthorize("@ss.hasPermi('benyi:assessmentintroduce:list')" + "||@ss.hasPermi('benyi:assessmentcontent:list')")
     @GetMapping("/list")
     public TableDataInfo list(ByAssessmentintroduce byAssessmentintroduce) {
         startPage();
@@ -59,7 +59,7 @@ public class ByAssessmentintroduceController extends BaseController {
     /**
      * 获取评估体系介绍详细信息
      */
-    @PreAuthorize("@ss.hasPermi('benyi:assessmentintroduce:query')")
+    @PreAuthorize("@ss.hasPermi('benyi:assessmentintroduce:query')" + "||@ss.hasPermi('benyi:assessmentcontent:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id) {
         return AjaxResult.success(byAssessmentintroduceService.selectByAssessmentintroduceById(id));

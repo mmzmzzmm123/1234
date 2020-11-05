@@ -26,6 +26,12 @@ public class ByAssessmentrecordchild extends BaseEntity {
     private Long childid;
 
     /**
+     * 班级编号
+     */
+    @Excel(name = "班级编号")
+    private String classid;
+
+    /**
      * 学年
      */
     @Excel(name = "学年")
@@ -65,6 +71,14 @@ public class ByAssessmentrecordchild extends BaseEntity {
         return childid;
     }
 
+    public void setClassid(String classid) {
+        this.classid = classid;
+    }
+
+    public String getClassid() {
+        return classid;
+    }
+
     public void setXn(String xn) {
         this.xn = xn;
     }
@@ -102,6 +116,7 @@ public class ByAssessmentrecordchild extends BaseEntity {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
                 .append("id", getId())
                 .append("childid", getChildid())
+                .append("classid", getClassid())
                 .append("xn", getXn())
                 .append("state", getState())
                 .append("scope", getScope())

@@ -2,11 +2,12 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ruoyi.project.benyi.mapper.ByAssessmentrecordchildMapper">
+<mapper namespace="com.ruoyi.project.system.mapper.ByAssessmentrecordchildMapper">
 
     <resultMap type="ByAssessmentrecordchild" id="ByAssessmentrecordchildResult">
         <result property="id" column="id"/>
         <result property="childid" column="childid"/>
+        <result property="classid" column="classid"/>
         <result property="xn" column="xn"/>
         <result property="state" column="state"/>
         <result property="scope" column="scope"/>
@@ -15,7 +16,7 @@
     </resultMap>
 
     <sql id="selectByAssessmentrecordchildVo">
-        select id, childid, xn, state, scope, userid, create_time from by_assessmentrecordchild
+        select id, childid, classid, xn, state, scope, userid, create_time from by_assessmentrecordchild
     </sql>
 
     <select id="selectByAssessmentrecordchildList" parameterType="ByAssessmentrecordchild"
@@ -23,6 +24,7 @@
         <include refid="selectByAssessmentrecordchildVo"/>
         <where>
             <if test="childid != null ">and childid = #{childid}</if>
+            <if test="classid != null  and classid != ''">and classid = #{classid}</if>
             <if test="xn != null  and xn != ''">and xn = #{xn}</if>
             <if test="state != null  and state != ''">and state = #{state}</if>
             <if test="scope != null  and scope != ''">and scope = #{scope}</if>
@@ -40,6 +42,7 @@
         insert into by_assessmentrecordchild
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="childid != null ">childid,</if>
+            <if test="classid != null  and classid != ''">classid,</if>
             <if test="xn != null  and xn != ''">xn,</if>
             <if test="state != null  and state != ''">state,</if>
             <if test="scope != null  and scope != ''">scope,</if>
@@ -48,6 +51,7 @@
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="childid != null ">#{childid},</if>
+            <if test="classid != null  and classid != ''">#{classid},</if>
             <if test="xn != null  and xn != ''">#{xn},</if>
             <if test="state != null  and state != ''">#{state},</if>
             <if test="scope != null  and scope != ''">#{scope},</if>
@@ -60,6 +64,7 @@
         update by_assessmentrecordchild
         <trim prefix="SET" suffixOverrides=",">
             <if test="childid != null ">childid = #{childid},</if>
+            <if test="classid != null  and classid != ''">classid = #{classid},</if>
             <if test="xn != null  and xn != ''">xn = #{xn},</if>
             <if test="state != null  and state != ''">state = #{state},</if>
             <if test="scope != null  and scope != ''">scope = #{scope},</if>

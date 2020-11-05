@@ -7,6 +7,7 @@
     <resultMap type="ByAssessmentchild" id="ByAssessmentchildResult">
         <result property="id" column="id"/>
         <result property="childid" column="childid"/>
+        <result property="classid" column="classid"/>
         <result property="contentid" column="contentid"/>
         <result property="type" column="type"/>
         <result property="xn" column="xn"/>
@@ -15,13 +16,14 @@
     </resultMap>
 
     <sql id="selectByAssessmentchildVo">
-        select id, childid, contentid, type, xn, userid, create_time from by_assessmentchild
+        select id, childid, classid, contentid, type, xn, userid, create_time from by_assessmentchild
     </sql>
 
     <select id="selectByAssessmentchildList" parameterType="ByAssessmentchild" resultMap="ByAssessmentchildResult">
         <include refid="selectByAssessmentchildVo"/>
         <where>
             <if test="childid != null ">and childid = #{childid}</if>
+            <if test="classid != null  and classid != ''">and classid = #{classid}</if>
             <if test="contentid != null ">and contentid = #{contentid}</if>
             <if test="type != null  and type != ''">and type = #{type}</if>
             <if test="xn != null  and xn != ''">and xn = #{xn}</if>
@@ -38,6 +40,7 @@
         insert into by_assessmentchild
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="childid != null ">childid,</if>
+            <if test="classid != null  and classid != ''">classid,</if>
             <if test="contentid != null ">contentid,</if>
             <if test="type != null  and type != ''">type,</if>
             <if test="xn != null  and xn != ''">xn,</if>
@@ -46,6 +49,7 @@
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="childid != null ">#{childid},</if>
+            <if test="classid != null  and classid != ''">#{classid},</if>
             <if test="contentid != null ">#{contentid},</if>
             <if test="type != null  and type != ''">#{type},</if>
             <if test="xn != null  and xn != ''">#{xn},</if>
@@ -58,6 +62,7 @@
         update by_assessmentchild
         <trim prefix="SET" suffixOverrides=",">
             <if test="childid != null ">childid = #{childid},</if>
+            <if test="classid != null  and classid != ''">classid = #{classid},</if>
             <if test="contentid != null ">contentid = #{contentid},</if>
             <if test="type != null  and type != ''">type = #{type},</if>
             <if test="xn != null  and xn != ''">xn = #{xn},</if>

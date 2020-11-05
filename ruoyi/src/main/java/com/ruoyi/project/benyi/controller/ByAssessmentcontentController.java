@@ -52,7 +52,7 @@ public class ByAssessmentcontentController extends BaseController {
     /**
      * 查询评估内容列表
      */
-    @PreAuthorize("@ss.hasPermi('benyi:assessmentstudy:list')")
+    @PreAuthorize("@ss.hasPermi('benyi:assessmentcontent:list')")
     @GetMapping("/treeselectstudy")
     public AjaxResult treeselectstudy(ByAssessmentcontent byAssessmentcontent) {
         List<ByAssessmentcontent> list = byAssessmentcontentService.selectByAssessmentcontentstudyList(byAssessmentcontent);
