@@ -65,7 +65,8 @@
 
         <p>第二条 合作内容及费用
         <div class="line-rule">经甲乙双方协商确定，乙方向甲方购买 <b>{{form.serveTimeStr}}</b> “胜唐体控瘦身指导服务”（以下简称服务）。
-          经甲乙双方协商一致，确定乙方向甲方支付服务费用为人民币 <b>{{form.amount}}</b>，大写：<b>{{form.amountUpper}}</b>。</div>
+          经甲乙双方协商一致，确定乙方向甲方支付服务费用为人民币 <b>{{form.amount}}</b>，大写：<b>{{form.amountUpper}}</b>。
+        </div>
         </p>
 
         <p>第三条 服务期约定
@@ -105,7 +106,7 @@
 <script>
 
   import {getFile, signContract} from "@/api/custom/contract";
-  import {digitUppercase} from "../../../utils/ruoyi";
+  import {digitUppercase, validatorIDCard} from "../../../utils/ruoyi";
 
   export default {
     name: 'sign',
@@ -139,21 +140,15 @@
       }
 
       const checkcusId = (rule, value, callback) => {
-        const phoneReg = /(^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$)|(^[1-9]\d{5}\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{2}$)/
         if (!value) {
           return callback(new Error('证件号码不能为空'))
         }
         setTimeout(() => {
-          // Number.isInteger是es6验证数字是否为整数的方法,实际输入的数字总是识别成字符串
-          // 所以在前面加了一个+实现隐式转换
-          if (!Number.isInteger(+value)) {
-            callback(new Error('请输入数字值'))
+          const {code, msg} = validatorIDCard(value);
+          if (code === 1) {
+            callback()
           } else {
-            if (phoneReg.test(value)) {
-              callback()
-            } else {
-              callback(new Error('证件号码格式不正确'))
-            }
+            return callback(new Error(msg))
           }
         }, 100)
       }

@@ -26,7 +26,8 @@ import {
   digitUppercase,
   selectDictLabel,
   selectDictLabels,
-  toThousands
+  toThousands,
+  validatorIDCard
 } from "@/utils/ruoyi";
 import Pagination from "@/components/Pagination";
 //自定义表格工具扩展
@@ -44,6 +45,7 @@ Vue.prototype.download = download
 Vue.prototype.handleTree = handleTree
 Vue.prototype.toThousands = toThousands
 Vue.prototype.digitUppercase = digitUppercase
+Vue.prototype.validatorIDCard = validatorIDCard
 
 Vue.prototype.msgSuccess = function (msg) {
   this.$message({showClose: true, message: msg, type: "success"});
