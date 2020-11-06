@@ -26,6 +26,14 @@ export function getChild(id) {
   })
 }
 
+// 查询幼儿信息详细
+export function getChildByAssessment(id) {
+  return request({
+    url: '/benyi/child/assessmentchild/' + id,
+    method: 'get'
+  })
+}
+
 // 查询维护幼儿详细
 export function getChild_query(query) {
   return request({

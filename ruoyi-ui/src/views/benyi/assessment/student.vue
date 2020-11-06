@@ -2,11 +2,11 @@
   <div class="app-container">
     <div class="flex align-center justify-between">
       <p class="title flex align-center">
-        <span>姓名：张三 </span>
-        <span>出生日期：男 </span>
-        <span>班级：圆圆班 </span>
-         <span>学期：2020-2021 </span>
-         <span>班长：2021 </span>
+        <span>姓名：{{ this.childName }} </span>
+        <span>出生日期：{{ this.childCsrq }} </span>
+        <span>班级：{{ this.bjmc }} </span>
+        <span>学期：{{ this.trem }} </span>
+        <span>班长：{{ this.zbjsxm }} </span>
       </p>
       <el-button
         type="primary"
@@ -36,7 +36,58 @@
       </el-table-column>
     </el-table> -->
     <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
-      <el-tab-pane label="健康" name="first">
+      <el-tab-pane
+        v-for="itemLy in assessmentcontentList.filter(
+          (p) => p.parentId == this.assessmentscope
+        )"
+        :key="itemLy.id"
+        :label="itemLy.name"
+        :name="itemLy.name"
+      >
+        <div
+          class="block"
+          v-for="itemFzly in assessmentcontentList.filter(
+            (p) => p.parentId == itemLy.id
+          )"
+          :key="itemFzly.id"
+        >
+          <h2 class="block-item-title flex align-center">
+            {{ itemFzly.name }}
+          </h2>
+          <ul class="block-content">
+            <li
+              v-for="itemMb in assessmentcontentList.filter(
+                (p) => p.parentId == itemFzly.id
+              )"
+              :key="itemMb.id"
+            >
+              <p class="block-content-title">
+                <span class="num">{{ itemMb.sort }}. </span>{{ itemMb.name }}
+              </p>
+              <div
+                class="checkbox-content"
+                v-for="itemYs in assessmentcontentList.filter(
+                  (p) => p.parentId == itemMb.id
+                )"
+                :key="itemYs.id"
+              >
+                <p class="checkbox-item flex align-center">
+                  <el-checkbox v-model="itemYs.id">{{
+                    itemYs.name
+                  }}</el-checkbox>
+                </p>
+                <div class="check-info" v-if="itemYs.ckbz">
+                  {{ itemYs.ckbz }}
+                  <!-- <p>男孩：身高：94.9-111.7厘米，体重：12.7-21.2公斤</p>
+                  <p>女孩：身高：94.1-111.3厘米，体重：12.3-21.5公斤</p> -->
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </el-tab-pane>
+
+      <!-- <el-tab-pane label="健康" name="first">
         <div class="block">
           <h2 class="block-item-title flex align-center">身心状况</h2>
           <ul class="block-content">
@@ -90,7 +141,7 @@
       <el-tab-pane label="语言" name="second">配置管理</el-tab-pane>
       <el-tab-pane label="社会" name="third">角色管理</el-tab-pane>
       <el-tab-pane label="科学" name="fourth">定时任务补偿</el-tab-pane>
-      <el-tab-pane label="艺术" name="five">定时任务补偿</el-tab-pane>
+      <el-tab-pane label="艺术" name="five">定时任务补偿</el-tab-pane> -->
     </el-tabs>
   </div>
 </template>
@@ -104,12 +155,19 @@ import {
   exportAssessmentcontent,
 } from "@/api/benyi/assessmentcontent";
 
+import { getChildByAssessment } from "@/api/benyi/child";
+
 export default {
   name: "Assessmentstudent",
 
   data() {
     return {
-      checkedValues: [],
+      childName: "",
+      childCsrq: "",
+      bjmc: "",
+      trem: "",
+      zbjsxm: "",
+      assessmentscope: "",
       // 遮罩层
       loading: true,
       // 选中数组
@@ -124,19 +182,44 @@ export default {
         scope: undefined,
         sort: undefined,
       },
-      activeName: "first",
+      activeName: "健康",
       checked: false,
     };
   },
   created() {
-    this.getList();
+    // this.getList();
+    const childId = this.$route.params && this.$route.params.id;
+    console.log("childId:" + childId);
+    this.getChild(childId);
   },
   methods: {
+    getChild(childId) {
+      getChildByAssessment(childId).then((response) => {
+        console.log(response);
+        if (response.code == "200") {
+          this.childName = response.data.name;
+          this.childCsrq = response.data.csrq;
+          this.trem = response.trem;
+          this.bjmc = response.data.bjmc;
+          this.zbjsxm = response.data.zbjsmc;
+          if (response.isAssessment == "0") {
+            this.msgError(
+              "当前幼儿出生日期不符合评估范围，幼儿评估范围为36-72个月"
+            );
+          } else {
+            this.assessmentscope = response.isAssessment;
+
+            this.getList();
+          }
+        }
+      });
+    },
     /** 查询评估内容列表 */
     getList() {
       this.loading = true;
       listAssessmentcontent(this.queryParams).then((response) => {
-        this.assessmentcontentList = this.handleTree(response.rows, "id");
+        console.log("rows:" + response.rows);
+        this.assessmentcontentList = response.rows;
         this.loading = false;
       });
     },
@@ -150,12 +233,8 @@ export default {
       this.resetForm("queryForm");
       this.handleQuery();
     },
-    // 多选框选中数据
-    handleSelectionChange(row) {},
     /** 提交按钮 */
-    submitForm: function () {
-      console.log("checkedValues:" + this.checkedValues);
-    },
+    submitForm: function () {},
     handleClick(tab) {
       // this.activeName = tab
     },

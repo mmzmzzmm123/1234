@@ -104,6 +104,14 @@
             placeholder="请输入内容"
           />
         </el-form-item>
+        <el-form-item label="参考标准" prop="ckbz">
+          <el-input
+            v-model="form.ckbz"
+            type="textarea"
+            placeholder="请输入内容"
+          />
+        </el-form-item>
+
         <el-form-item label="是否元素" prop="iselement">
           <el-select v-model="form.iselement" placeholder="请选择是否元素">
             <el-option
@@ -260,6 +268,7 @@ export default {
         scope: undefined,
         createTime: undefined,
         sort: 0,
+        ckbz: undefined,
       };
       this.resetForm("form");
     },

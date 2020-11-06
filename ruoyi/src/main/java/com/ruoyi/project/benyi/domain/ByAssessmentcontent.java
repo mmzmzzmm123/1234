@@ -46,6 +46,13 @@ public class ByAssessmentcontent extends BaseEntity {
     @Excel(name = "序号")
     private Long sort;
 
+    /**
+     * 参考标准
+     */
+    @Excel(name = "参考标准")
+    private String ckbz;
+
+
     public String getParentName() {
         return parentName;
     }
@@ -118,6 +125,16 @@ public class ByAssessmentcontent extends BaseEntity {
         return sort;
     }
 
+    public void setCkbz(String ckbz) {
+        this.ckbz = ckbz;
+    }
+
+    public String getCkbz() {
+        return ckbz;
+
+    }
+
+
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
@@ -128,6 +145,7 @@ public class ByAssessmentcontent extends BaseEntity {
                 .append("scope", getScope())
                 .append("createTime", getCreateTime())
                 .append("sort", getSort())
+                .append("ckbz", getCkbz())
                 .toString();
     }
 

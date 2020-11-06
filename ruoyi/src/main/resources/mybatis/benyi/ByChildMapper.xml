@@ -109,9 +109,10 @@
 
     <sql id="selectByChildVo">
         select c.id, c.schoolid, c.classid, c.name, c.en_name, c.infant_name, c.phone, c.xb, c.mz, c.zjhm, c.csrq, c.birth_province, c.birth_provincename, c.birth_city, c.birth_cityname, c.birth_area, c.birth_areaname, c.registered_province, c.registered_provincename, c.registered_city, c.registered_cityname, c.registered_area, c.registered_areaname, c.addr_province, c.addr_provincename, c.addr_city, c.addr_cityname, c.addr_area, c.addr_areaname, c.addr_detail, c.ever_school, c.learn_english, c.source, c.status, c.enter_date, c.out_date, c.first_language, c.seconder_language, c.other_language, c.createuserid, c.create_time, p.fathername, p.mothername,
-        p.childid, p.fphone, p.foffphone, p.mphone, p.moffphone, p.grandfathername, p.gfgx, p.gfphone, p.gfoffphone, p.gfaddress, p.grandmothername, p.gmgx, p.gmphone, p.gmaddress, p.gmoffphone, p.create_time
+        p.childid, p.fphone, p.foffphone, p.mphone, p.moffphone, p.grandfathername, p.gfgx, p.gfphone, p.gfoffphone, p.gfaddress, p.grandmothername, p.gmgx, p.gmphone, p.gmaddress, p.gmoffphone, p.create_time,a.bjmc,(select nick_name from sys_user where user_id=a.zbjs) as zbjsmc
         from by_child c
         left join by_child_contactpeople p on c.id=p.childid
+        left join by_class a on c.classid=a.bjbh
     </sql>
 
     <select id="selectByChildList" parameterType="ByChild" resultMap="ByChildResult">

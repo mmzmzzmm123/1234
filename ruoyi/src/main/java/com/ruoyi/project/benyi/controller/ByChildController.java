@@ -1,5 +1,6 @@
 package com.ruoyi.project.benyi.controller;
 
+import java.util.Date;
 import java.util.List;
 
 import java.util.ArrayList;
@@ -125,6 +126,37 @@ public class ByChildController extends BaseController {
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id) {
         return AjaxResult.success(byChildService.selectByChildById(id));
+    }
+
+    /**
+     * 获取幼儿信息详细信息-评估用
+     */
+    @PreAuthorize("@ss.hasPermi('benyi:child:query')")
+    @GetMapping(value = "/assessmentchild/{id}")
+    public AjaxResult getChildInfo(@PathVariable("id") Long id) {
+        AjaxResult ajax = AjaxResult.success();
+        ByChild byChild = byChildService.selectByChildById(id);
+        ajax.put(AjaxResult.DATA_TAG, byChild);
+        //根据生日判断评估适用项 36-48:1 48-60:2 60-72:3
+        System.out.println("csrq:"+byChild.getCsrq());
+        if (byChild.getCsrq() != null) {
+            int iMonths = schoolCommon.getDifMonth(new Date(), byChild.getCsrq());
+            if (iMonths >= 36 && iMonths <= 48) {
+                ajax.put("isAssessment", 1);
+            } else if (iMonths >= 48 && iMonths < 60) {
+                ajax.put("isAssessment", 2);
+            } else if (iMonths >= 60 && iMonths <= 72) {
+                ajax.put("isAssessment", 3);
+            }else{
+                ajax.put("isAssessment", 0);
+            }
+        } else {
+            ajax.put("isAssessment", 0);
+        }
+
+        ajax.put("trem",schoolCommon.getCurrentXnXq());
+
+        return ajax;
     }
 
     /**
