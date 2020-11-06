@@ -13,6 +13,7 @@
         icon="el-icon-s-data"
         size="mini"
         @click="submitForm"
+        v-hasPermi="['benyi:assessmentchild:add']"
         >生成图表</el-button
       >
     </div>
@@ -72,9 +73,14 @@
                 :key="itemYs.id"
               >
                 <p class="checkbox-item flex align-center">
-                  <el-checkbox v-model="itemYs.id">{{
-                    itemYs.name
-                  }}</el-checkbox>
+                  <el-checkbox-group
+                    v-model="checkList"
+                    @change="handlecheckedItemsChange"
+                  >
+                    <el-checkbox :label="itemYs.id" :key="itemYs.id">{{
+                      itemYs.name
+                    }}</el-checkbox>
+                  </el-checkbox-group>
                 </p>
                 <div class="check-info" v-if="itemYs.ckbz">
                   {{ itemYs.ckbz }}
@@ -156,15 +162,21 @@ import {
 } from "@/api/benyi/assessmentcontent";
 
 import { getChildByAssessment } from "@/api/benyi/child";
+import {
+  addAssessmentchild,
+  updateAssessmentchild,
+} from "@/api/benyi/assessmentchild";
 
 export default {
   name: "Assessmentstudent",
 
   data() {
     return {
+      childId: "",
       childName: "",
       childCsrq: "",
       bjmc: "",
+      classid: "",
       trem: "",
       zbjsxm: "",
       assessmentscope: "",
@@ -174,6 +186,8 @@ export default {
       ids: [],
       // 评估内容表格数据
       assessmentcontentList: [],
+      // 表单参数
+      form: {},
       // 查询参数
       queryParams: {
         parentid: undefined,
@@ -184,23 +198,26 @@ export default {
       },
       activeName: "健康",
       checked: false,
+      checkList: [],
     };
   },
   created() {
     // this.getList();
     const childId = this.$route.params && this.$route.params.id;
-    console.log("childId:" + childId);
+    this.childId = childId;
+    // console.log("childId:" + childId);
     this.getChild(childId);
   },
   methods: {
     getChild(childId) {
       getChildByAssessment(childId).then((response) => {
-        console.log(response);
+        // console.log(response);
         if (response.code == "200") {
           this.childName = response.data.name;
           this.childCsrq = response.data.csrq;
           this.trem = response.trem;
           this.bjmc = response.data.bjmc;
+          this.classid = response.data.classid;
           this.zbjsxm = response.data.zbjsmc;
           if (response.isAssessment == "0") {
             this.msgError(
@@ -218,7 +235,7 @@ export default {
     getList() {
       this.loading = true;
       listAssessmentcontent(this.queryParams).then((response) => {
-        console.log("rows:" + response.rows);
+        // console.log("rows:" + response.rows);
         this.assessmentcontentList = response.rows;
         this.loading = false;
       });
@@ -233,10 +250,54 @@ export default {
       this.resetForm("queryForm");
       this.handleQuery();
     },
+    // // 表单重置
+    // reset() {
+    //   this.form = {
+    //     id: undefined,
+    //     childid: undefined,
+    //     classid: undefined,
+    //     contentid: undefined,
+    //     type: undefined,
+    //     xn: undefined,
+    //     userid: undefined,
+    //     createTime: undefined,
+    //   };
+    //   this.resetForm("form");
+    // },
     /** 提交按钮 */
-    submitForm: function () {},
+    submitForm: function () {
+      var items = "";
+      this.checkList.forEach((item) => {
+        //当全选被选中的时候，循环遍历源数据，把数据的每一项加入到默认选中的数组去
+        items = items + item + ",";
+      });
+      // console.log(items);
+      // console.log("提交："+this.checkList.length);
+      if (this.checkList.length == 0) {
+        this.msgError("请至少选择一项数据");
+      } else {
+        this.form.childid = this.childId;
+        this.form.classid = this.classid;
+        this.form.items = items;
+        this.form.type = "Y";
+        this.form.xn = this.trem;
+        addAssessmentchild(this.form).then((response) => {
+          if (response.code === 200) {
+            this.msgSuccess("评估成功");
+          }
+        });
+      }
+    },
     handleClick(tab) {
       // this.activeName = tab
+    },
+    handlecheckedItemsChange(value) {
+      // var items = "";
+      // this.checkList.forEach((item) => {
+      //   //当全选被选中的时候，循环遍历源数据，把数据的每一项加入到默认选中的数组去
+      //   items = items + item + ",";
+      // });
+      // console.log(items);
     },
   },
 };

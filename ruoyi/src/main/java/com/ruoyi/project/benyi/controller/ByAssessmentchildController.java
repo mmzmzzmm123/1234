@@ -2,6 +2,8 @@ package com.ruoyi.project.benyi.controller;
 
 import java.util.List;
 
+import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.project.common.SchoolCommon;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,6 +34,8 @@ import com.ruoyi.framework.web.page.TableDataInfo;
 public class ByAssessmentchildController extends BaseController {
     @Autowired
     private IByAssessmentchildService byAssessmentchildService;
+    @Autowired
+    private SchoolCommon schoolCommon;
 
     /**
      * 查询幼儿评估列表
@@ -72,7 +76,23 @@ public class ByAssessmentchildController extends BaseController {
     @Log(title = "幼儿评估", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody ByAssessmentchild byAssessmentchild) {
-        return toAjax(byAssessmentchildService.insertByAssessmentchild(byAssessmentchild));
+        int iCount = 0;
+        byAssessmentchild.setUserid(SecurityUtils.getLoginUser().getUser().getUserId());
+        String strItems = byAssessmentchild.getItems();
+        //System.out.println("执行嘛？"+strItems);
+        //判断选中的checkbox是否为空
+        if (schoolCommon.isStringEmpty(strItems)) {
+            return AjaxResult.error("请至少选择一个评估项");
+        } else {
+            String[] strArr = strItems.split(",");
+            for (int i = 0; i < strArr.length; i++) {
+                //System.out.println("contentid:"+strArr[i]);
+                byAssessmentchild.setContentid(Long.valueOf(strArr[i]));
+                iCount = byAssessmentchildService.insertByAssessmentchild(byAssessmentchild);
+            }
+        }
+
+        return toAjax(iCount);
     }
 
     /**

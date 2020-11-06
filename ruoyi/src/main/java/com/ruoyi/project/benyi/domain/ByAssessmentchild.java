@@ -55,6 +55,11 @@ public class ByAssessmentchild extends BaseEntity {
     @Excel(name = "创建人")
     private Long userid;
 
+    /**
+     * 临时创建用
+     */
+    private String items;
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -111,6 +116,15 @@ public class ByAssessmentchild extends BaseEntity {
         return userid;
     }
 
+    public void setItems(String items) {
+        this.items = items;
+    }
+
+    public String getItems() {
+        return items;
+    }
+
+
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
@@ -122,6 +136,7 @@ public class ByAssessmentchild extends BaseEntity {
                 .append("xn", getXn())
                 .append("userid", getUserid())
                 .append("createTime", getCreateTime())
+                .append("items", getItems())
                 .toString();
     }
 }
