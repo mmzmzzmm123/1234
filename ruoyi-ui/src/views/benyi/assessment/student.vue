@@ -269,27 +269,38 @@ export default {
     // },
     /** 提交按钮 */
     submitForm: function () {
-      var items = "";
-      this.checkList.forEach((item) => {
-        //当全选被选中的时候，循环遍历源数据，把数据的每一项加入到默认选中的数组去
-        items = items + item + ",";
-      });
-      // console.log(items);
-      // console.log("提交："+this.checkList.length);
-      if (this.checkList.length == 0) {
-        this.msgError("请至少选择一项数据");
-      } else {
-        this.form.childid = this.childId;
-        this.form.classid = this.classid;
-        this.form.items = items;
-        this.form.type = "Y";
-        this.form.xn = this.trem;
-        addAssessmentchild(this.form).then((response) => {
-          if (response.code === 200) {
-            this.msgSuccess("评估成功");
+      this.$confirm("确认生成图表数据?生成后数据不能取消", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+        callback: (action) => {
+          if (action === "confirm") {
+            // console.log('按下 确定')
+            var items = "";
+            this.checkList.forEach((item) => {
+              //当全选被选中的时候，循环遍历源数据，把数据的每一项加入到默认选中的数组去
+              items = items + item + ",";
+            });
+            // console.log(items);
+            // console.log("提交："+this.checkList.length);
+            if (this.checkList.length == 0) {
+              this.msgError("请至少选择一项数据");
+            } else {
+              this.form.childid = this.childId;
+              this.form.classid = this.classid;
+              this.form.items = items;
+              this.form.type = "Y";
+              this.form.xn = this.trem;
+              addAssessmentchild(this.form).then((response) => {
+                if (response.code === 200) {
+                  this.msgSuccess("评估成功");
+                }
+              });
+            }
+          } else {
           }
-        });
-      }
+        },
+      });
     },
     handleClick(tab) {
       // this.activeName = tab
