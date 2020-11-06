@@ -9,7 +9,9 @@ import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.framework.security.LoginUser;
 import com.ruoyi.framework.security.service.TokenService;
+import com.ruoyi.project.benyi.domain.ByAssessmentchild;
 import com.ruoyi.project.benyi.domain.ByChildContactpeople;
+import com.ruoyi.project.benyi.service.IByAssessmentchildService;
 import com.ruoyi.project.benyi.service.IByChildContactpeopleService;
 import com.ruoyi.project.common.SchoolCommon;
 import com.ruoyi.project.system.service.ISysDictDataService;
@@ -52,6 +54,8 @@ public class ByChildController extends BaseController {
     private IByChildContactpeopleService byChildContactpeopleService;
     @Autowired
     private ISysDictDataService sysDictDataService;
+    @Autowired
+    private IByAssessmentchildService byAssessmentchildService;
 
     /**
      * 查询幼儿信息列表
@@ -138,7 +142,7 @@ public class ByChildController extends BaseController {
         ByChild byChild = byChildService.selectByChildById(id);
         ajax.put(AjaxResult.DATA_TAG, byChild);
         //根据生日判断评估适用项 36-48:1 48-60:2 60-72:3
-        System.out.println("csrq:"+byChild.getCsrq());
+        System.out.println("csrq:" + byChild.getCsrq());
         if (byChild.getCsrq() != null) {
             int iMonths = schoolCommon.getDifMonth(new Date(), byChild.getCsrq());
             if (iMonths >= 36 && iMonths <= 48) {
@@ -147,15 +151,19 @@ public class ByChildController extends BaseController {
                 ajax.put("isAssessment", 2);
             } else if (iMonths >= 60 && iMonths <= 72) {
                 ajax.put("isAssessment", 3);
-            }else{
+            } else {
                 ajax.put("isAssessment", 0);
             }
         } else {
             ajax.put("isAssessment", 0);
         }
 
-        ajax.put("trem",schoolCommon.getCurrentXnXq());
-
+        ajax.put("trem", schoolCommon.getCurrentXnXq());
+        ByAssessmentchild byAssessmentchild = new ByAssessmentchild();
+        byAssessmentchild.setChildid(id);
+        byAssessmentchild.setXn(schoolCommon.getCurrentXnXq());
+        List<ByAssessmentchild> list = byAssessmentchildService.selectByAssessmentchildList(byAssessmentchild);
+        ajax.put("ByAssessmentchild", list);
         return ajax;
     }
 

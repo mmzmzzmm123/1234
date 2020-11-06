@@ -88,7 +88,15 @@ public class ByAssessmentchildController extends BaseController {
             for (int i = 0; i < strArr.length; i++) {
                 //System.out.println("contentid:"+strArr[i]);
                 byAssessmentchild.setContentid(Long.valueOf(strArr[i]));
-                iCount = byAssessmentchildService.insertByAssessmentchild(byAssessmentchild);
+                //先判断该项指标是否已添加，添加后不可继续维护
+                ByAssessmentchild byAssessmentchildNew = new ByAssessmentchild();
+                byAssessmentchildNew.setContentid(Long.valueOf(strArr[i]));
+                byAssessmentchildNew.setChildid(byAssessmentchild.getChildid());
+                List<ByAssessmentchild> list = byAssessmentchildService.selectByAssessmentchildList(byAssessmentchildNew);
+                if (list != null && list.size() > 0) {
+                } else {
+                    iCount = byAssessmentchildService.insertByAssessmentchild(byAssessmentchild);
+                }
             }
         }
 

@@ -219,6 +219,9 @@ export default {
           this.bjmc = response.data.bjmc;
           this.classid = response.data.classid;
           this.zbjsxm = response.data.zbjsmc;
+          response.ByAssessmentchild.forEach((item) =>
+            this.checkList.push(item.contentid)
+          );
           if (response.isAssessment == "0") {
             this.msgError(
               "当前幼儿出生日期不符合评估范围，幼儿评估范围为36-72个月"
