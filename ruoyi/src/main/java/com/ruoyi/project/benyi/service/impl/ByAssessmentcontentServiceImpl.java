@@ -202,4 +202,26 @@ public class ByAssessmentcontentServiceImpl implements IByAssessmentcontentServi
         return getChildList(list, t).size() > 0 ? true : false;
     }
 
+    /**
+     * 节点元素个数
+     *
+     * @param byAssessmentcontent 内容ID
+     * @return 结果
+     */
+    @Override
+    public int selectCountElement(ByAssessmentcontent byAssessmentcontent){
+        return byAssessmentcontentMapper.selectCountElement(byAssessmentcontent);
+    }
+
+    /**
+     * 节点元素个数根据child
+     *
+     * @param byAssessmentcontent 内容ID
+     * @return 结果
+     */
+    @Override
+    public int selectCountElementByChild(ByAssessmentcontent byAssessmentcontent){
+        return byAssessmentcontentMapper.selectCountElementByChild(byAssessmentcontent);
+    }
+
 }

@@ -74,4 +74,20 @@ public interface ByAssessmentcontentMapper {
      * @return 结果
      */
     public int hasChildByAssessmentcontentId(Long id);
+
+    /**
+     * 节点元素个数
+     *
+     * @param byAssessmentcontent 内容ID
+     * @return 结果
+     */
+    public int selectCountElement(ByAssessmentcontent byAssessmentcontent);
+
+    /**
+     * 节点元素个数根据child
+     *
+     * @param byAssessmentcontent 内容ID
+     * @return 结果
+     */
+    public int selectCountElementByChild(ByAssessmentcontent byAssessmentcontent);
 }

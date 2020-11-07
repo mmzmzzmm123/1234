@@ -4,6 +4,8 @@ import java.util.List;
 
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.project.common.SchoolCommon;
+import com.ruoyi.project.system.domain.SysDictData;
+import com.ruoyi.project.system.service.ISysDictDataService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,6 +38,8 @@ public class ByAssessmentchildController extends BaseController {
     private IByAssessmentchildService byAssessmentchildService;
     @Autowired
     private SchoolCommon schoolCommon;
+    @Autowired
+    private ISysDictDataService dictDataService;
 
     /**
      * 查询幼儿评估列表
@@ -46,6 +50,14 @@ public class ByAssessmentchildController extends BaseController {
         startPage();
         List<ByAssessmentchild> list = byAssessmentchildService.selectByAssessmentchildList(byAssessmentchild);
         return getDataTable(list);
+    }
+
+    @GetMapping(value = "/getdicdata/{id}")
+    public AjaxResult getListDicData(@PathVariable("id") Long id) {
+        AjaxResult ajaxResult = AjaxResult.success();
+        List<SysDictData> list = dictDataService.selectDictDataByChildId(id);
+        ajaxResult.put("dictdata", list);
+        return ajaxResult;
     }
 
     /**

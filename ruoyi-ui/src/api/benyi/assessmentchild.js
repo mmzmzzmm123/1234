@@ -17,6 +17,14 @@ export function getAssessmentchild(id) {
   })
 }
 
+// 查询幼儿评估字典
+export function getAssessmentDictData(id) {
+  return request({
+    url: '/benyi/assessmentchild/getdicdata/' + id,
+    method: 'get'
+  })
+}
+
 // 新增幼儿评估
 export function addAssessmentchild(data) {
   return request({

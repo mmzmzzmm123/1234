@@ -2,17 +2,22 @@
   <div class="app-container">
     <div class="flex align-center justify-between">
       <p class="title flex align-center">
-        <span>{{ this.childName }}同学，评估结果图表 </span>
+        <span>幼儿：{{ this.childName }} 评估结果图表 </span>
       </p>
     </div>
     <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
-      <el-tab-pane label="儿童学习与发展评估(36-48)" name="first">
+      <el-tab-pane
+        v-for="item in tabsList"
+        :key="item.dictValue"
+        :label="item.dictLabel"
+        :name="item.dictLabel"
+      >
         <div>
-          <radar-chart />
+          <radar-chart :psMsg="item.dictValue" />
         </div>
         <div class="block">
           <h2 class="block-item-title flex align-center">评估建议</h2>
-          <ul class="block-content">
+          <!-- <ul class="block-content">
             <li>
               <p class="block-content-title">
                 <span class="num">1. </span>具有健康的体态
@@ -50,11 +55,9 @@
                 <div class="check-info"></div>
               </div>
             </li>
-          </ul>
+          </ul> -->
         </div>
       </el-tab-pane>
-      <el-tab-pane label="儿童学习与发展评估(48-60)" name="second">配置管理</el-tab-pane>
-      <el-tab-pane label="儿童学习与发展评估(60-72)" name="third">角色管理</el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -62,17 +65,9 @@
 import {
   listAssessmentcontent,
   getAssessmentcontent,
-  delAssessmentcontent,
-  addAssessmentcontent,
-  updateAssessmentcontent,
-  exportAssessmentcontent,
 } from "@/api/benyi/assessmentcontent";
-
 import { getChildByAssessment } from "@/api/benyi/child";
-import {
-  addAssessmentchild,
-  updateAssessmentchild,
-} from "@/api/benyi/assessmentchild";
+import { getAssessmentDictData } from "@/api/benyi/assessmentchild";
 import RadarChart from "@/views/dashboard/RadarChart";
 
 export default {
@@ -84,31 +79,13 @@ export default {
     return {
       childId: "",
       childName: "",
-      childCsrq: "",
-      bjmc: "",
       classid: "",
-      trem: "",
-      zbjsxm: "",
       assessmentscope: "",
+      // tabs列表
+      tabsList: [],
       // 遮罩层
       loading: true,
-      // 选中数组
-      ids: [],
-      // 评估内容表格数据
-      assessmentcontentList: [],
-      // 表单参数
-      form: {},
-      // 查询参数
-      queryParams: {
-        parentid: undefined,
-        name: undefined,
-        iselement: undefined,
-        scope: undefined,
-        sort: undefined,
-      },
-      activeName: "first",
-      checked: false,
-      checkList: [],
+      activeName: "",
     };
   },
   created() {
@@ -117,6 +94,7 @@ export default {
     this.childId = childId;
     // console.log("childId:" + childId);
     this.getChild(childId);
+    this.getList(childId);
   },
   methods: {
     getChild(childId) {
@@ -124,45 +102,25 @@ export default {
         // console.log(response);
         if (response.code == "200") {
           this.childName = response.data.name;
-          this.childCsrq = response.data.csrq;
-          this.trem = response.trem;
-          this.bjmc = response.data.bjmc;
           this.classid = response.data.classid;
-          this.zbjsxm = response.data.zbjsmc;
-          response.ByAssessmentchild.forEach((item) =>
-            this.checkList.push(item.contentid)
-          );
-          if (response.isAssessment == "0") {
-            this.msgError(
-              "当前幼儿出生日期不符合评估范围，幼儿评估范围为36-72个月"
-            );
-          } else {
-            this.assessmentscope = response.isAssessment;
-
-            this.getList();
-          }
         }
       });
     },
     /** 查询评估内容列表 */
-    getList() {
-      this.loading = true;
-      listAssessmentcontent(this.queryParams).then((response) => {
-        // console.log("rows:" + response.rows);
-        this.assessmentcontentList = response.rows;
-        this.loading = false;
+    getList(childId) {
+      getAssessmentDictData(childId).then((response) => {
+        // console.log("rows:" + response.dictdata.length);
+        if (response.dictdata.length > 0) {
+          this.activeName = response.dictdata[0].dictLabel;
+          this.tabsList = response.dictdata;
+        } else {
+          this.msgError("该幼儿尚未提交评估数据，无法展示数据");
+        }
       });
     },
     handleClick(tab) {
-      // this.activeName = tab
-    },
-    handlecheckedItemsChange(value) {
-      // var items = "";
-      // this.checkList.forEach((item) => {
-      //   //当全选被选中的时候，循环遍历源数据，把数据的每一项加入到默认选中的数组去
-      //   items = items + item + ",";
-      // });
-      // console.log(items);
+    //   this.activeName = tab.name;
+    //   console.log(tab.name);
     },
   },
 };

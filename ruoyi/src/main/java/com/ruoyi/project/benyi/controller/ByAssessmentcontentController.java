@@ -1,5 +1,6 @@
 package com.ruoyi.project.benyi.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.ruoyi.common.utils.ServletUtils;
@@ -65,8 +66,8 @@ public class ByAssessmentcontentController extends BaseController {
     @PreAuthorize("@ss.hasPermi('benyi:assessmentcontent:query')")
     @GetMapping(value = "/byparentid/{id}")
     public AjaxResult getInfobyparentId(@PathVariable("id") Long id) {
-        System.out.println("start:"+id);
-        ByAssessmentcontent byAssessmentcontent=new ByAssessmentcontent();
+        System.out.println("start:" + id);
+        ByAssessmentcontent byAssessmentcontent = new ByAssessmentcontent();
         byAssessmentcontent.setParentId(id);
         return AjaxResult.success(byAssessmentcontentService.selectByAssessmentcontentList(byAssessmentcontent));
     }
@@ -144,4 +145,35 @@ public class ByAssessmentcontentController extends BaseController {
         }
         return toAjax(byAssessmentcontentService.deleteByAssessmentcontentById(id));
     }
+
+    @GetMapping(value = "/getassessmentstatistics/{childid}/{scope}")
+    public AjaxResult getAssessmentStatistics(@PathVariable("childid") Long childid, @PathVariable("scope") String scope) {
+        AjaxResult ajaxResult = AjaxResult.success();
+        String[] strArr = new String[]{"健康", "语言", "社会", "科学", "艺术"};
+        List<Double> douArr = new ArrayList<Double>();
+        for (int i = 0; i < strArr.length; i++) {
+            ByAssessmentcontent byAssessmentcontent = new ByAssessmentcontent();
+            byAssessmentcontent.setScope(scope);
+            byAssessmentcontent.setName(strArr[i]);
+            //获取{"健康", "语言", "社会", "科学", "艺术"} 对应的值
+            List<ByAssessmentcontent> list = byAssessmentcontentService.selectByAssessmentcontentList(byAssessmentcontent);
+            if (list != null && list.size() > 0) {
+                Long id = list.get(0).getId();
+                byAssessmentcontent.setId(id);
+                byAssessmentcontent.setSort(childid);
+                int count = byAssessmentcontentService.selectCountElement(byAssessmentcontent);
+                int countChild = byAssessmentcontentService.selectCountElementByChild(byAssessmentcontent);
+                if (scope.equals("1")) {
+                    douArr.add((((double) 48 / count) * countChild));
+                } else if (scope.equals("2")) {
+                    douArr.add((((double) 60 / count) * countChild));
+                } else if (scope.equals("3")) {
+                    douArr.add((((double) 72 / count) * countChild));
+                }
+            }
+        }
+        ajaxResult.put("statistics", douArr);
+        return ajaxResult;
+    }
+
 }

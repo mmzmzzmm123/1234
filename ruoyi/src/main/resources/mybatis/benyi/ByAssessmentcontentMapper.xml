@@ -57,6 +57,18 @@ order by t.sort
 		where parentId = #{id}
 	</select>
 
+    <select id="selectCountElement" parameterType="ByAssessmentcontent" resultType="int">
+		select count(*) from by_assessmentcontent where find_in_set(id, getChildLst(#{id})) and scope=#{scope} and iselement='Y';
+	</select>
+
+    <!--sort 暂且代替childid-->
+    <select id="selectCountElementByChild" parameterType="ByAssessmentcontent" resultType="int">
+		select count(*) from (
+select a.* from by_assessmentcontent a
+right join by_assessmentchild b on a.id=b.contentid where b.childid=#{sort} and b.scope=#{scope}) temp
+where find_in_set(id, getChildLst(#{id})) ;
+	</select>
+
     <insert id="insertByAssessmentcontent" parameterType="ByAssessmentcontent" useGeneratedKeys="true" keyProperty="id">
         insert into by_assessmentcontent
         <trim prefix="(" suffix=")" suffixOverrides=",">

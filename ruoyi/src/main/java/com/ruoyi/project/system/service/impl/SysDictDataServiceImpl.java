@@ -68,6 +68,17 @@ public class SysDictDataServiceImpl implements ISysDictDataService
     }
 
     /**
+     * 根据条件分页查询字典数据
+     *
+     * @param childId 字典数据信息
+     * @return 字典数据集合信息
+     */
+    @Override
+    public List<SysDictData> selectDictDataByChildId(Long childId){
+        return dictDataMapper.selectDictDataByChildId(childId);
+    }
+
+    /**
      * 通过字典ID删除字典数据信息
      * 
      * @param dictCode 字典数据ID
