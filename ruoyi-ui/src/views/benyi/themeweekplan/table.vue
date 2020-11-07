@@ -215,7 +215,7 @@ export default {
     //主题活动
     getThemeActivityList(themeid) {
       listActivityByThemeId(themeid).then((response) => {
-        //console.log(response.rows);
+        console.log(response.rows);
         this.themeactivityOptions = response.rows;
       });
     },
