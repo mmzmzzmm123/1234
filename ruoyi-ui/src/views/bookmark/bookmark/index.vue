@@ -505,9 +505,11 @@
       //自动获取高度
       window.addEventListener('resize', this.getHeight);
       this.getHeight()
+      
 
     },
     mounted() {
+      this.closeIsMain()
 
     },
     methods: {
@@ -1350,6 +1352,7 @@
   .bookmark {
     height: 70px;
     /*border-bottom: 1px solid #D9D9D9;*/
+   
   }
 
   .bookmark2 {
@@ -1475,10 +1478,9 @@
   }
 
   .sousou-left {
-    /*width: 50px!important;*/
-    /*height: 50px;*/
-    /*margin-top: 12px!important;*/
-    /*background-color: red;*/
+   
+    margin-left: 12px;
+   
   }
   .isBookmarkAside{
     padding: 0px;

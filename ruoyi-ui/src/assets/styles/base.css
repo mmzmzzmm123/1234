@@ -49,6 +49,9 @@
     .isresize{
       display: none;
     }
+    .filter-classification{
+      margin-left: 12px;
+    }
   .sousouleft-switch{
     display: block!important;
   }

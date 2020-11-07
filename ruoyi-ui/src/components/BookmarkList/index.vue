@@ -108,7 +108,7 @@
   .bookmark-item {
     display: flex;
     height: 24px;
-    font-size: 13px;
+    /* font-size: 13px; */
     overflow: hidden;
   }
 
@@ -141,6 +141,8 @@
     -webkit-text-overflow: ellipsis;
     overflow: hidden;
     position: relative;
+    font-size: 1.05rem;
+    font-weight: 500;
   }
 
   .bookmark-time {
@@ -149,7 +151,7 @@
     margin-right: 10px;
   }
   .bookmark-description{
-    font-size: 10px;
+    font-size: 0.95rem;
     overflow: hidden;
     color: #b1b1b1;
     text-overflow:ellipsis;
@@ -162,7 +164,7 @@
   }
 
   .info {
-    font-size: 12px;
+    font-size: 0.95rem;
     display: flex;
     align-items: center;
   }

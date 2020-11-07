@@ -65,7 +65,7 @@
       </transition>
 
       <div class="isresize" style="cursor:w-resize">
-<!--        <i class="el-icon-caret-top"></i>-->
+
       </div>
       <!--    <el-drawer-->
       <!--      title="我是标题"-->
@@ -1114,7 +1114,7 @@
           //console.log("addDiyDom:统计2"+$.fn.zTree.getZTreeObj("treeDemo").getCheckedNodes()[0]);
 
 
-          var editStr = "<span class=" + treeNode.tId + "_count style='color: #9e9e9e;float:right;display: inline-block;margin-right: 15px;font-size:8px' onfocus='this.blur();'>" + treeNode.bookmarkCount + "</span>";
+          var editStr = "<span class=" + treeNode.tId + "_count style='color: #9e9e9e;float:right;display: inline-block;margin-right: 15px;font-size:0.8rem' onfocus='this.blur();'>" + treeNode.bookmarkCount + "</span>";
           switchObjspan.after(editStr);
         }
       },
@@ -1128,7 +1128,7 @@
         if (confCount > 0) return;
         //if (treeNode.parentNode && treeNode.parentNode.id!=1) return;
         var switchObjspan = $("#" + treeNode.tId + "_span");
-        var editStr = "<span class=" + treeNode.tId + "_sz data-parentId=" + treeNode.parentId + " data-menuId=" + treeNode.menuId + " onclick='editBookmark(this)' style='color: #9e9e9e;float:right;display: inline-block;margin-right: 15px;font-size:8px' onfocus='this.blur();'><i class='el-icon-edit'></i></span>";
+        var editStr = "<span class=" + treeNode.tId + "_sz data-parentId=" + treeNode.parentId + " data-menuId=" + treeNode.menuId + " onclick='editBookmark(this)' style='color: #9e9e9e;float:right;display: inline-block;margin-right: 15px;font-size:0.8rem' onfocus='this.blur();'><i class='el-icon-edit'></i></span>";
         switchObjspan.after(editStr);
 
         $("." + treeNode.tId + "_count").unbind().remove();
@@ -1146,7 +1146,7 @@
 
         $("." + treeNode.tId + "_sz").unbind().remove();
         var switchObjspan = $("#" + treeNode.tId + "_span");
-        var editStr = "<span class=" + treeNode.tId + "_count onclick='alert(1111111);return false;' style='color: #9e9e9e;float:right;display: inline-block;margin-right: 15px;font-size:8px' onfocus='this.blur();'>" + treeNode.bookmarkCount + "</span>";
+        var editStr = "<span class=" + treeNode.tId + "_count onclick='alert(1111111);return false;' style='color: #9e9e9e;float:right;display: inline-block;margin-right: 15px;font-size:0.8rem' onfocus='this.blur();'>" + treeNode.bookmarkCount + "</span>";
         switchObjspan.after(editStr);
 
       },
@@ -1515,8 +1515,9 @@
   .logoname span {
     margin-left: 8px;
     font-family: "PingFang SC";
-    font-size: 20px;
-    font-weight: 400;
+    font-size: 120%;
+    font-weight: 800;
+ 
   }
 
   .logoright i {
@@ -1765,15 +1766,13 @@
 
   /*拖拽区div样式*/
   .isresize {
-    width: 7px;
-    font-size: 25px;
+    /* width: 5px; */
     display: -webkit-flex;
     justify-content: center;
     align-items: center;
-    background-color: transparent;
-    color: transparent;
+    background-color: red;
+    color: red;
     z-index: 1;
-    margin-left: -4px!important;
   }
 
   /*拖拽区鼠标悬停样式*/
