@@ -43,7 +43,16 @@
         prop="classid"
         :formatter="classFormat"
       />
-      <el-table-column label="幼儿姓名" align="center" prop="name" />
+      <el-table-column label="幼儿姓名" align="center" prop="name">
+        <template slot-scope="scope">
+          <router-link
+            :to="'/benyi/assessmentchildhistory/student/' + scope.row.id"
+            class="link-dayflow"
+          >
+            <span>{{ scope.row.name }}</span>
+          </router-link>
+        </template>
+      </el-table-column>
       <el-table-column label="幼儿出生日期" align="center" prop="csrq" />
       <el-table-column
         label="性别"

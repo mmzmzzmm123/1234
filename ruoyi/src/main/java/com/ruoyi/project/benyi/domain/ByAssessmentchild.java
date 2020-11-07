@@ -59,6 +59,13 @@ public class ByAssessmentchild extends BaseEntity {
      * 临时创建用
      */
     private String items;
+    /**
+     * 适用范围
+     */
+
+    @Excel(name = "适用范围")
+    private String scope;
+
 
     public void setId(Long id) {
         this.id = id;
@@ -124,6 +131,14 @@ public class ByAssessmentchild extends BaseEntity {
         return items;
     }
 
+    public void setScope(String scope) {
+        this.scope = scope;
+    }
+
+    public String getScope() {
+        return scope;
+    }
+
 
     @Override
     public String toString() {
@@ -137,6 +152,7 @@ public class ByAssessmentchild extends BaseEntity {
                 .append("userid", getUserid())
                 .append("createTime", getCreateTime())
                 .append("items", getItems())
+                .append("scope", getScope())
                 .toString();
     }
 }

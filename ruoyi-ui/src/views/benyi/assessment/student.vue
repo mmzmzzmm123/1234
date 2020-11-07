@@ -228,7 +228,6 @@ export default {
             );
           } else {
             this.assessmentscope = response.isAssessment;
-
             this.getList();
           }
         }
@@ -242,16 +241,6 @@ export default {
         this.assessmentcontentList = response.rows;
         this.loading = false;
       });
-    },
-    /** 搜索按钮操作 */
-    handleQuery() {
-      this.queryParams.pageNum = 1;
-      this.getList();
-    },
-    /** 重置按钮操作 */
-    resetQuery() {
-      this.resetForm("queryForm");
-      this.handleQuery();
     },
     // // 表单重置
     // reset() {
@@ -291,6 +280,7 @@ export default {
               this.form.items = items;
               this.form.type = "Y";
               this.form.xn = this.trem;
+              this.form.scope = this.assessmentscope;
               addAssessmentchild(this.form).then((response) => {
                 if (response.code === 200) {
                   this.msgSuccess("评估成功");

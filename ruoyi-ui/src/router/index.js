@@ -440,6 +440,21 @@ export const constantRoutes = [{
         }]
     },
     {
+        path: '/benyi/assessmentchildhistory',
+        component: Layout,
+        hidden: true,
+        children: [{
+            path: 'student/:id(\\d+)',
+            component: () =>
+                import ('@/views/benyi/assessment/history'),
+            name: 'assessmentchildhistory',
+            meta: {
+                title: '幼儿评估图表',
+                icon: ''
+            }
+        }]
+    },
+    {
         path: '/job',
         component: Layout,
         hidden: true,

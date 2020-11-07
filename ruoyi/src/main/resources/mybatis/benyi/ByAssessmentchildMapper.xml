@@ -13,10 +13,11 @@
         <result property="xn" column="xn"/>
         <result property="userid" column="userid"/>
         <result property="createTime" column="create_time"/>
+        <result property="scope"    column="scope"    />
     </resultMap>
 
     <sql id="selectByAssessmentchildVo">
-        select id, childid, classid, contentid, type, xn, userid, create_time from by_assessmentchild
+        select id, childid, classid, contentid, type, xn, userid, create_time, scope from by_assessmentchild
     </sql>
 
     <select id="selectByAssessmentchildList" parameterType="ByAssessmentchild" resultMap="ByAssessmentchildResult">
@@ -46,6 +47,7 @@
             <if test="xn != null  and xn != ''">xn,</if>
             <if test="userid != null ">userid,</if>
             <if test="createTime != null ">create_time,</if>
+            <if test="scope != null  and scope != ''">scope,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="childid != null ">#{childid},</if>
@@ -55,6 +57,8 @@
             <if test="xn != null  and xn != ''">#{xn},</if>
             <if test="userid != null ">#{userid},</if>
             <if test="createTime != null ">#{createTime},</if>
+            <if test="scope != null  and scope != ''">#{scope},</if>
+
         </trim>
     </insert>
 
@@ -68,6 +72,7 @@
             <if test="xn != null  and xn != ''">xn = #{xn},</if>
             <if test="userid != null ">userid = #{userid},</if>
             <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="scope != null  and scope != ''">scope = #{scope},</if>
         </trim>
         where id = #{id}
     </update>
