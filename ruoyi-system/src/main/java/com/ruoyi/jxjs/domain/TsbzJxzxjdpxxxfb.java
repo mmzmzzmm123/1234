@@ -1,9 +1,12 @@
 package com.ruoyi.jxjs.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
+
+import java.util.Date;
 
 /**
  * 基地培训信息发布对象 tsbz_jxzxjdpxxxfb
@@ -45,6 +48,11 @@ public class TsbzJxzxjdpxxxfb extends BaseEntity
     /** 创建人 */
     @Excel(name = "创建人")
     private Long createUserid;
+
+    /** 创建时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "访问时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
+    private Date createTime;
 
     public void setId(Long id) 
     {
@@ -132,5 +140,14 @@ public class TsbzJxzxjdpxxxfb extends BaseEntity
             .append("createUserid", getCreateUserid())
             .append("createTime", getCreateTime())
             .toString();
+    }
+
+    @Override
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 }

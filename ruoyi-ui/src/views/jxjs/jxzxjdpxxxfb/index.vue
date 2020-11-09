@@ -1,64 +1,10 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="基地校ID" prop="jdxid">
-        <el-input
-          v-model="queryParams.jdxid"
-          placeholder="请输入基地校ID"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
       <el-form-item label="培训信息名称" prop="name">
         <el-input
           v-model="queryParams.name"
           placeholder="请输入培训信息名称"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="培训计划" prop="pxjh">
-        <el-input
-          v-model="queryParams.pxjh"
-          placeholder="请输入培训计划"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="培训方案" prop="pxfa">
-        <el-input
-          v-model="queryParams.pxfa"
-          placeholder="请输入培训方案"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="培训总结" prop="pxzj">
-        <el-input
-          v-model="queryParams.pxzj"
-          placeholder="请输入培训总结"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="备用字段" prop="pxBeiyong">
-        <el-input
-          v-model="queryParams.pxBeiyong"
-          placeholder="请输入备用字段"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="创建人" prop="createUserid">
-        <el-input
-          v-model="queryParams.createUserid"
-          placeholder="请输入创建人"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
@@ -100,30 +46,24 @@
           v-hasPermi="['jxjs:jxzxjdpxxxfb:remove']"
         >删除</el-button>
       </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['jxjs:jxzxjdpxxxfb:export']"
-        >导出</el-button>
-      </el-col>
 	  <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="jxzxjdpxxxfbList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="编号" align="center" prop="id" />
-      <el-table-column label="基地校ID" align="center" prop="jdxid" />
       <el-table-column label="培训信息名称" align="center" prop="name" />
-      <el-table-column label="培训计划" align="center" prop="pxjh" />
-      <el-table-column label="培训方案" align="center" prop="pxfa" />
-      <el-table-column label="培训总结" align="center" prop="pxzj" />
-      <el-table-column label="备用字段" align="center" prop="pxBeiyong" />
-      <el-table-column label="创建人" align="center" prop="createUserid" />
+      <el-table-column label="基地校名称" align="center" prop="jdxid" :formatter="jdxFormat" />      
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-check"
+            @click="handleCheck(scope.row)"
+            v-hasPermi="['jxjs:jxzxjdpxxxfb:edit']"
+            >查看</el-button
+          >
           <el-button
             size="mini"
             type="text"
@@ -151,28 +91,19 @@
     />
 
     <!-- 添加或修改基地培训信息发布对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="基地校ID" prop="jdxid">
-          <el-input v-model="form.jdxid" placeholder="请输入基地校ID" />
-        </el-form-item>
-        <el-form-item label="培训信息名称" prop="name">
+    <el-dialog :title="title" :visible.sync="open" width="800px" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="120px">
+        <el-form-item label="培训名称" prop="name">
           <el-input v-model="form.name" placeholder="请输入培训信息名称" />
         </el-form-item>
         <el-form-item label="培训计划" prop="pxjh">
-          <el-input v-model="form.pxjh" placeholder="请输入培训计划" />
+          <Editor v-model="form.pxjh" placeholder="请输入培训计划" />
         </el-form-item>
         <el-form-item label="培训方案" prop="pxfa">
-          <el-input v-model="form.pxfa" placeholder="请输入培训方案" />
+          <Editor v-model="form.pxfa" placeholder="请输入培训方案" />
         </el-form-item>
         <el-form-item label="培训总结" prop="pxzj">
-          <el-input v-model="form.pxzj" placeholder="请输入培训总结" />
-        </el-form-item>
-        <el-form-item label="备用字段" prop="pxBeiyong">
-          <el-input v-model="form.pxBeiyong" placeholder="请输入备用字段" />
-        </el-form-item>
-        <el-form-item label="创建人" prop="createUserid">
-          <el-input v-model="form.createUserid" placeholder="请输入创建人" />
+          <Editor v-model="form.pxzj" placeholder="请输入培训总结" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -185,9 +116,14 @@
 
 <script>
 import { listJxzxjdpxxxfb, getJxzxjdpxxxfb, delJxzxjdpxxxfb, addJxzxjdpxxxfb, updateJxzxjdpxxxfb, exportJxzxjdpxxxfb } from "@/api/jxjs/jxzxjdpxxxfb";
+import Editor from "@/components/Editor";
+import { listJdx, getJdx, } from "@/api/jxjs/jdx";
 
 export default {
   name: "Jxzxjdpxxxfb",
+  components: {
+    Editor
+  },
   data() {
     return {
       // 遮罩层
@@ -204,6 +140,8 @@ export default {
       total: 0,
       // 基地培训信息发布表格数据
       jxzxjdpxxxfbList: [],
+      // 基地校选项
+      jdxOptions: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -224,11 +162,24 @@ export default {
       form: {},
       // 表单校验
       rules: {
+        name: [
+          { required: true, message: "名称不能为空", trigger: "blur" },
+        ],
+        pxjh: [
+          { required: true, message: "培训计划不能为空", trigger: "blur" },
+        ],
+        pxfa: [
+          { required: true, message: "培训方案不能为空", trigger: "blur" },
+        ],
+        pxzj: [
+          { required: true, message: "培训总结不能为空", trigger: "blur" },
+        ],
       }
     };
   },
   created() {
     this.getList();
+    this.getJdxList();
   },
   methods: {
     /** 查询基地培训信息发布列表 */
@@ -236,9 +187,29 @@ export default {
       this.loading = true;
       listJxzxjdpxxxfb(this.queryParams).then(response => {
         this.jxzxjdpxxxfbList = response.rows;
+        //console.log(response.rows);
         this.total = response.total;
         this.loading = false;
       });
+    },
+    // 获取基地校信息
+    getJdxList() {
+      listJdx(null).then((response) => {
+        this.jdxOptions = response.rows;
+      });
+    },
+    // 字典翻译
+    jdxFormat(row, column) {
+      var actions = [];
+      var datas = this.jdxOptions;
+      console.log(this.jdxOptions);
+      Object.keys(datas).map((key) => {
+        if (datas[key].id == "" + row.jdxid) {
+          actions.push(datas[key].jdxmc);
+          return false;
+        }
+      });
+      return actions.join("");
     },
     // 取消按钮
     cancel() {
@@ -281,6 +252,16 @@ export default {
       this.reset();
       this.open = true;
       this.title = "添加基地培训信息发布";
+    },
+    /** 查看按钮操作 */
+    handleCheck(row) {
+      this.reset();
+      const id = row.id || this.ids
+      getJxzxjdpxxxfb(id).then(response => {
+        this.form = response.data;
+        this.open = true;
+        this.title = "修改基地培训信息发布";
+      });
     },
     /** 修改按钮操作 */
     handleUpdate(row) {

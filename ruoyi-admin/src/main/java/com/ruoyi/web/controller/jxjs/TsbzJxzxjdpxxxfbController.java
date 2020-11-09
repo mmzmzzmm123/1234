@@ -1,6 +1,10 @@
 package com.ruoyi.web.controller.jxjs;
 
+import java.util.Date;
 import java.util.List;
+
+import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.web.controller.common.SchoolCommonController;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,6 +36,8 @@ public class TsbzJxzxjdpxxxfbController extends BaseController
 {
     @Autowired
     private ITsbzJxzxjdpxxxfbService tsbzJxzxjdpxxxfbService;
+    @Autowired
+    private SchoolCommonController schoolCommonController;
 
     /**
      * 查询基地培训信息发布列表
@@ -40,6 +46,11 @@ public class TsbzJxzxjdpxxxfbController extends BaseController
     @GetMapping("/list")
     public TableDataInfo list(TsbzJxzxjdpxxxfb tsbzJxzxjdpxxxfb)
     {
+        //首先判断是否为学校用户
+        String jdxId = schoolCommonController.deptIdToJdxId();
+        if (!schoolCommonController.isStringEmpty(jdxId)) {
+            tsbzJxzxjdpxxxfb.setJdxid(jdxId);
+        }
         startPage();
         List<TsbzJxzxjdpxxxfb> list = tsbzJxzxjdpxxxfbService.selectTsbzJxzxjdpxxxfbList(tsbzJxzxjdpxxxfb);
         return getDataTable(list);
@@ -76,7 +87,15 @@ public class TsbzJxzxjdpxxxfbController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody TsbzJxzxjdpxxxfb tsbzJxzxjdpxxxfb)
     {
-        return toAjax(tsbzJxzxjdpxxxfbService.insertTsbzJxzxjdpxxxfb(tsbzJxzxjdpxxxfb));
+        AjaxResult ajax = AjaxResult.success();
+        String jdxId = schoolCommonController.deptIdToJdxId();
+        if (!schoolCommonController.isStringEmpty(jdxId)) {
+            tsbzJxzxjdpxxxfb.setJdxid(jdxId);
+            tsbzJxzxjdpxxxfb.setCreateTime(new Date());
+            tsbzJxzxjdpxxxfb.setCreateUserid(SecurityUtils.getLoginUser().getUser().getUserId());
+            return toAjax(tsbzJxzxjdpxxxfbService.insertTsbzJxzxjdpxxxfb(tsbzJxzxjdpxxxfb));
+        }
+        return AjaxResult.error("当前用户非基地校用户,无法创建基地培训信息");
     }
 
     /**
