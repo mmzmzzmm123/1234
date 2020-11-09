@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.jxjs.mapper.TsbzJxzxpxpjMapper">
+    
+    <resultMap type="TsbzJxzxpxpj" id="TsbzJxzxpxpjResult">
+        <result property="id"    column="id"    />
+        <result property="jdxid"    column="jdxid"    />
+        <result property="jsid"    column="jsid"    />
+        <result property="pxbx"    column="pxbx"    />
+        <result property="pxnf"    column="pxnf"    />
+        <result property="pxBeiyong"    column="px_beiyong"    />
+        <result property="createUserid"    column="create_userid"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectTsbzJxzxpxpjVo">
+        select id, jdxid, jsid, pxbx, pxnf, px_beiyong, create_userid, create_time from tsbz_jxzxpxpj
+    </sql>
+
+    <select id="selectTsbzJxzxpxpjList" parameterType="TsbzJxzxpxpj" resultMap="TsbzJxzxpxpjResult">
+        <include refid="selectTsbzJxzxpxpjVo"/>
+        <where>  
+            <if test="jdxid != null  and jdxid != ''"> and jdxid = #{jdxid}</if>
+            <if test="jsid != null "> and jsid = #{jsid}</if>
+            <if test="pxbx != null  and pxbx != ''"> and pxbx = #{pxbx}</if>
+            <if test="pxnf != null "> and pxnf = #{pxnf}</if>
+            <if test="pxBeiyong != null  and pxBeiyong != ''"> and px_beiyong = #{pxBeiyong}</if>
+            <if test="createUserid != null "> and create_userid = #{createUserid}</if>
+        </where>
+    </select>
+    
+    <select id="selectTsbzJxzxpxpjById" parameterType="Long" resultMap="TsbzJxzxpxpjResult">
+        <include refid="selectTsbzJxzxpxpjVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTsbzJxzxpxpj" parameterType="TsbzJxzxpxpj" useGeneratedKeys="true" keyProperty="id">
+        insert into tsbz_jxzxpxpj
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="jdxid != null">jdxid,</if>
+            <if test="jsid != null">jsid,</if>
+            <if test="pxbx != null">pxbx,</if>
+            <if test="pxnf != null">pxnf,</if>
+            <if test="pxBeiyong != null">px_beiyong,</if>
+            <if test="createUserid != null">create_userid,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="jdxid != null">#{jdxid},</if>
+            <if test="jsid != null">#{jsid},</if>
+            <if test="pxbx != null">#{pxbx},</if>
+            <if test="pxnf != null">#{pxnf},</if>
+            <if test="pxBeiyong != null">#{pxBeiyong},</if>
+            <if test="createUserid != null">#{createUserid},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTsbzJxzxpxpj" parameterType="TsbzJxzxpxpj">
+        update tsbz_jxzxpxpj
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="jdxid != null">jdxid = #{jdxid},</if>
+            <if test="jsid != null">jsid = #{jsid},</if>
+            <if test="pxbx != null">pxbx = #{pxbx},</if>
+            <if test="pxnf != null">pxnf = #{pxnf},</if>
+            <if test="pxBeiyong != null">px_beiyong = #{pxBeiyong},</if>
+            <if test="createUserid != null">create_userid = #{createUserid},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTsbzJxzxpxpjById" parameterType="Long">
+        delete from tsbz_jxzxpxpj where id = #{id}
+    </delete>
+
+    <delete id="deleteTsbzJxzxpxpjByIds" parameterType="String">
+        delete from tsbz_jxzxpxpj where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>
