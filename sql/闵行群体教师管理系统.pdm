@@ -1840,8 +1840,8 @@ TableComment 0 新宋体,8,N</a:FontList>
 </o:TableSymbol>
 <o:TableSymbol Id="o37">
 <a:CreationDate>1600226112</a:CreationDate>
-<a:ModificationDate>1600226164</a:ModificationDate>
-<a:Rect>((-13540,-60634), (-1078,-48962))</a:Rect>
+<a:ModificationDate>1601114586</a:ModificationDate>
+<a:Rect>((-15490,-61759), (-3028,-50087))</a:Rect>
 <a:LineColor>12615680</a:LineColor>
 <a:FillColor>16570034</a:FillColor>
 <a:ShadowColor>12632256</a:ShadowColor>
@@ -1863,8 +1863,8 @@ TableComment 0 新宋体,8,N</a:FontList>
 </o:TableSymbol>
 <o:TableSymbol Id="o39">
 <a:CreationDate>1600227093</a:CreationDate>
-<a:ModificationDate>1600227093</a:ModificationDate>
-<a:Rect>((414,-58288), (12104,-50740))</a:Rect>
+<a:ModificationDate>1601114587</a:ModificationDate>
+<a:Rect>((-1686,-59263), (10004,-51715))</a:Rect>
 <a:LineColor>12615680</a:LineColor>
 <a:FillColor>16570034</a:FillColor>
 <a:ShadowColor>12632256</a:ShadowColor>
@@ -3895,11 +3895,10 @@ TableComment 0 新宋体,8,N</a:FontList>
 <a:Code>id</a:Code>
 <a:CreationDate>1599794744</a:CreationDate>
 <a:Creator>Administrator</a:Creator>
-<a:ModificationDate>1599795810</a:ModificationDate>
+<a:ModificationDate>1602726611</a:ModificationDate>
 <a:Modifier>Administrator</a:Modifier>
 <a:Comment>编号</a:Comment>
-<a:DataType>varchar(32)</a:DataType>
-<a:Length>32</a:Length>
+<a:DataType>int</a:DataType>
 <a:Mandatory>1</a:Mandatory>
 </o:Column>
 <o:Column Id="o195">
@@ -4703,10 +4702,10 @@ TableComment 0 新宋体,8,N</a:FontList>
 <o:Table Id="o34">
 <a:ObjectID>D2FF05E1-3560-4140-9913-78B8E58AB379</a:ObjectID>
 <a:Name>群体教师评选方案指标</a:Name>
-<a:Code>tsbz_ptjspxfazbx</a:Code>
+<a:Code>tsbz_qtjspxfazbx</a:Code>
 <a:CreationDate>1600141717</a:CreationDate>
 <a:Creator>Administrator</a:Creator>
-<a:ModificationDate>1600225283</a:ModificationDate>
+<a:ModificationDate>1602468697</a:ModificationDate>
 <a:Modifier>Administrator</a:Modifier>
 <a:Comment>群体教师评选方案指标</a:Comment>
 <c:Columns>

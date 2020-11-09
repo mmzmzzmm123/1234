@@ -5,7 +5,6 @@
       ref="queryForm"
       :inline="true"
       v-show="showSearch"
-      label-width="119px"
     >
       <el-form-item label="学校名称" prop="xxmc">
         <el-input
@@ -37,7 +36,10 @@
         </el-select>
       </el-form-item>
       <el-form-item label="所在地区类别码" prop="szdqlbm">
-        <el-select v-model="queryParams.szdqlbm" placeholder="请选择所在地区类别码">
+        <el-select
+          v-model="queryParams.szdqlbm"
+          placeholder="请选择所在地区类别码"
+        >
           <el-option
             v-for="dict in szdqlbmOptions"
             :key="dict.dictValue"
@@ -56,8 +58,16 @@
         />
       </el-form-item>-->
       <el-form-item>
-        <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+        <el-button
+          type="cyan"
+          icon="el-icon-search"
+          size="mini"
+          @click="handleQuery"
+          >搜索</el-button
+        >
+        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+          >重置</el-button
+        >
       </el-form-item>
     </el-form>
 
@@ -69,7 +79,8 @@
           size="mini"
           @click="handleAdd"
           v-hasPermi="['qtjs:xxjbxx:add']"
-        >新增</el-button>
+          >新增</el-button
+        >
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -79,7 +90,8 @@
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['qtjs:xxjbxx:edit']"
-        >修改</el-button>
+          >修改</el-button
+        >
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -89,9 +101,10 @@
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['qtjs:xxjbxx:remove']"
-        >删除</el-button>
+          >删除</el-button
+        >
       </el-col>
-      <el-col :span="1.5">
+      <!-- <el-col :span="1.5">
         <el-button
           type="warning"
           icon="el-icon-download"
@@ -99,19 +112,50 @@
           @click="handleExport"
           v-hasPermi="['qtjs:xxjbxx:export']"
         >导出</el-button>
-      </el-col>
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+      </el-col> -->
+      <right-toolbar
+        :showSearch.sync="showSearch"
+        @queryTable="getList"
+      ></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="xxjbxxList" @selection-change="handleSelectionChange">
+    <el-table
+      v-loading="loading"
+      :data="xxjbxxList"
+      @selection-change="handleSelectionChange"
+    >
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="学校名称" align="center" prop="xxmc" />
       <el-table-column label="区县" align="center" prop="countyid" />
-      <el-table-column label="学校办别码" align="center" prop="xxbbm" :formatter="xxbbFormat" />
-      <el-table-column label="学校类别码" align="center" prop="xxlbm" :formatter="xxlbmFormat" />
-      <el-table-column label="当前学年" align="center" prop="dqxn" :formatter="dqxnFormat" />
-      <el-table-column label="当前学期" align="center" prop="dqxq" :formatter="dqxqFormat"/>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column
+        label="学校办别码"
+        align="center"
+        prop="xxbbm"
+        :formatter="xxbbFormat"
+      />
+      <el-table-column
+        label="学校类别码"
+        align="center"
+        prop="xxlbm"
+        :formatter="xxlbmFormat"
+      />
+      <el-table-column
+        label="当前学年"
+        align="center"
+        prop="dqxn"
+        :formatter="dqxnFormat"
+      />
+      <el-table-column
+        label="当前学期"
+        align="center"
+        prop="dqxq"
+        :formatter="dqxqFormat"
+      />
+      <el-table-column
+        label="操作"
+        align="center"
+        class-name="small-padding fixed-width"
+      >
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -119,20 +163,22 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['qtjs:xxjbxx:edit']"
-          >修改</el-button>
+            >修改</el-button
+          >
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['qtjs:xxjbxx:remove']"
-          >删除</el-button>
+            >删除</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
 
     <pagination
-      v-show="total>0"
+      v-show="total > 0"
       :total="total"
       :page.sync="queryParams.pageNum"
       :limit.sync="queryParams.pageSize"
@@ -150,17 +196,29 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="区县" prop="countyid">
-              <el-input v-model="form.countyid" placeholder="请输入区县" maxlength="6" />
+              <el-input
+                v-model="form.countyid"
+                placeholder="请输入区县"
+                maxlength="6"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="乡镇(街道)" prop="townid">
-              <el-input v-model="form.townid" placeholder="请输入乡镇(街道)" maxlength="9" />
+              <el-input
+                v-model="form.townid"
+                placeholder="请输入乡镇(街道)"
+                maxlength="9"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="村委(居委)" prop="villageid">
-              <el-input v-model="form.villageid" placeholder="请输入村委(居委)" maxlength="11" />
+              <el-input
+                v-model="form.villageid"
+                placeholder="请输入村委(居委)"
+                maxlength="11"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="24">
@@ -309,7 +367,7 @@ import {
   delXxjbxx,
   addXxjbxx,
   updateXxjbxx,
-  exportXxjbxx
+  // exportXxjbxx,
 } from "@/api/qtjs/xxjbxx";
 
 export default {
@@ -378,52 +436,58 @@ export default {
         zzjgdm: null,
         lsyg: null,
         dqxn: null,
-        dqxq: null
+        dqxq: null,
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
         xxmc: [
-          { required: true, message: "学校名称不能为空", trigger: "blur" }
+          { required: true, message: "学校名称不能为空", trigger: "blur" },
         ],
         xxlbm: [
-          { required: true, message: "学校类别不能为空", trigger: "blur" }
+          { required: true, message: "学校类别不能为空", trigger: "blur" },
         ],
         xxbbm: [
-          { required: true, message: "学校办别不能为空", trigger: "blur" }
+          { required: true, message: "学校办别不能为空", trigger: "blur" },
         ],
         countyid: [
-          { required: true, message: "学校区县不能为空", trigger: "blur" }
+          { required: true, message: "学校区县不能为空", trigger: "blur" },
         ],
         townid: [
-          { required: true, message: "学校乡镇不能为空", trigger: "blur" }
+          { required: true, message: "学校乡镇不能为空", trigger: "blur" },
         ],
-        xxdz: [{ required: true, message: "学校地址不能为空", trigger: "blur" }],
+        xxdz: [
+          { required: true, message: "学校地址不能为空", trigger: "blur" },
+        ],
         villageid: [{ required: true, message: "村不能为空", trigger: "blur" }],
-        dqxn: [{ required: true, message: "当前学年不能为空", trigger: "blur" }],
-        dqxq: [{ required: true, message: "当前学期不能为空", trigger: "blur" }],
-      }
+        dqxn: [
+          { required: true, message: "当前学年不能为空", trigger: "blur" },
+        ],
+        dqxq: [
+          { required: true, message: "当前学期不能为空", trigger: "blur" },
+        ],
+      },
     };
   },
   created() {
     this.getList();
-    this.getDicts("sys_dm_bxlx").then(response => {
+    this.getDicts("sys_dm_bxlx").then((response) => {
       this.xxlbmOptions = response.data;
     });
-    this.getDicts("sys_dm_xxbb").then(response => {
+    this.getDicts("sys_dm_xxbb").then((response) => {
       this.xxbbOptions = response.data;
     });
-    this.getDicts("sys_dm_szdqlb").then(response => {
+    this.getDicts("sys_dm_szdqlb").then((response) => {
       this.szdqlbmOptions = response.data;
     });
-    this.getDicts("sys_dm_szdjjsxm").then(response => {
+    this.getDicts("sys_dm_szdjjsxm").then((response) => {
       this.szdjjsxmOptions = response.data;
     });
-    this.getDicts("sys_dm_rxnf").then(response => {
+    this.getDicts("sys_dm_rxnf").then((response) => {
       this.dqxnOptions = response.data;
     });
-    this.getDicts("sys_dm_dqxq").then(response => {
+    this.getDicts("sys_dm_dqxq").then((response) => {
       this.dqxqOptions = response.data;
     });
   },
@@ -431,7 +495,7 @@ export default {
     /** 查询学校信息列表 */
     getList() {
       this.loading = true;
-      listXxjbxx(this.queryParams).then(response => {
+      listXxjbxx(this.queryParams).then((response) => {
         this.xxjbxxList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -495,7 +559,7 @@ export default {
         lsyg: null,
         dqxn: null,
         dqxq: null,
-        createTime: null
+        createTime: null,
       };
       this.resetForm("form");
     },
@@ -511,7 +575,7 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.id);
+      this.ids = selection.map((item) => item.id);
       this.single = selection.length !== 1;
       this.multiple = !selection.length;
     },
@@ -525,7 +589,7 @@ export default {
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids;
-      getXxjbxx(id).then(response => {
+      getXxjbxx(id).then((response) => {
         this.form = response.data;
         this.open = true;
         this.title = "修改学校信息";
@@ -533,10 +597,10 @@ export default {
     },
     /** 提交按钮 */
     submitForm() {
-      this.$refs["form"].validate(valid => {
+      this.$refs["form"].validate((valid) => {
         if (valid) {
           if (this.form.id != null) {
-            updateXxjbxx(this.form).then(response => {
+            updateXxjbxx(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("修改成功");
                 this.open = false;
@@ -544,7 +608,7 @@ export default {
               }
             });
           } else {
-            addXxjbxx(this.form).then(response => {
+            addXxjbxx(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("新增成功");
                 this.open = false;
@@ -564,34 +628,34 @@ export default {
         {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
-          type: "warning"
+          type: "warning",
         }
       )
-        .then(function() {
+        .then(function () {
           return delXxjbxx(ids);
         })
         .then(() => {
           this.getList();
           this.msgSuccess("删除成功");
         })
-        .catch(function() {});
+        .catch(function () {});
     },
-    /** 导出按钮操作 */
-    handleExport() {
-      const queryParams = this.queryParams;
-      this.$confirm("是否确认导出所有学校信息数据项?", "警告", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      })
-        .then(function() {
-          return exportXxjbxx(queryParams);
-        })
-        .then(response => {
-          this.download(response.msg);
-        })
-        .catch(function() {});
-    }
-  }
+    // /** 导出按钮操作 */
+    // handleExport() {
+    //   const queryParams = this.queryParams;
+    //   this.$confirm("是否确认导出所有学校信息数据项?", "警告", {
+    //     confirmButtonText: "确定",
+    //     cancelButtonText: "取消",
+    //     type: "warning"
+    //   })
+    //     .then(function() {
+    //       return exportXxjbxx(queryParams);
+    //     })
+    //     .then(response => {
+    //       this.download(response.msg);
+    //     })
+    //     .catch(function() {});
+    // }
+  },
 };
 </script>

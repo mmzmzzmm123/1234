@@ -17,7 +17,12 @@
         />
       </el-form-item>
       <el-form-item label="性别" prop="xb">
-        <el-select v-model="queryParams.xb" placeholder="请选择性别" clearable size="small">
+        <el-select
+          v-model="queryParams.xb"
+          placeholder="请选择性别"
+          clearable
+          size="small"
+        >
           <el-option
             v-for="dict in xbOptions"
             :key="dict.dictValue"
@@ -27,7 +32,12 @@
         </el-select>
       </el-form-item>
       <el-form-item label="政治面貌" prop="zzmm">
-        <el-select v-model="queryParams.zzmm" placeholder="请选择政治面貌" clearable size="small">
+        <el-select
+          v-model="queryParams.zzmm"
+          placeholder="请选择政治面貌"
+          clearable
+          size="small"
+        >
           <el-option
             v-for="dict in zzmmOptions"
             :key="dict.dictValue"
@@ -37,7 +47,12 @@
         </el-select>
       </el-form-item>
       <el-form-item label="民族" prop="mz">
-        <el-select v-model="queryParams.mz" placeholder="请选择民族" clearable size="small">
+        <el-select
+          v-model="queryParams.mz"
+          placeholder="请选择民族"
+          clearable
+          size="small"
+        >
           <el-option
             v-for="dict in mzOptions"
             :key="dict.dictValue"
@@ -47,7 +62,12 @@
         </el-select>
       </el-form-item>
       <el-form-item label="任教学段" prop="rjxd">
-        <el-select v-model="queryParams.rjxd" placeholder="请选择任教学段" clearable size="small">
+        <el-select
+          v-model="queryParams.rjxd"
+          placeholder="请选择任教学段"
+          clearable
+          size="small"
+        >
           <el-option
             v-for="dict in rjxdOptions"
             :key="dict.dictValue"
@@ -57,7 +77,12 @@
         </el-select>
       </el-form-item>
       <el-form-item label="任教学科" prop="rjxk">
-        <el-select v-model="queryParams.rjxk" placeholder="请选择任教学科" clearable size="small">
+        <el-select
+          v-model="queryParams.rjxk"
+          placeholder="请选择任教学科"
+          clearable
+          size="small"
+        >
           <el-option
             v-for="dict in rjxkOptions"
             :key="dict.dictValue"
@@ -67,7 +92,12 @@
         </el-select>
       </el-form-item>
       <el-form-item label="任教年级" prop="rjnj">
-        <el-select v-model="queryParams.rjnj" placeholder="请选择任教年级" clearable size="small">
+        <el-select
+          v-model="queryParams.rjnj"
+          placeholder="请选择任教年级"
+          clearable
+          size="small"
+        >
           <el-option
             v-for="dict in rjnjOptions"
             :key="dict.dictValue"
@@ -77,7 +107,12 @@
         </el-select>
       </el-form-item>
       <el-form-item label="学历" prop="xl">
-        <el-select v-model="queryParams.xl" placeholder="请选择学历" clearable size="small">
+        <el-select
+          v-model="queryParams.xl"
+          placeholder="请选择学历"
+          clearable
+          size="small"
+        >
           <el-option
             v-for="dict in xlOptions"
             :key="dict.dictValue"
@@ -87,7 +122,12 @@
         </el-select>
       </el-form-item>
       <el-form-item label="学位" prop="xw">
-        <el-select v-model="queryParams.xw" placeholder="请选择学位" clearable size="small">
+        <el-select
+          v-model="queryParams.xw"
+          placeholder="请选择学位"
+          clearable
+          size="small"
+        >
           <el-option
             v-for="dict in xwOptions"
             :key="dict.dictValue"
@@ -97,7 +137,12 @@
         </el-select>
       </el-form-item>
       <el-form-item label="师范生" prop="sfsfs">
-        <el-select v-model="queryParams.sfsfs" placeholder="请选择是否师范生" clearable size="small">
+        <el-select
+          v-model="queryParams.sfsfs"
+          placeholder="请选择是否师范生"
+          clearable
+          size="small"
+        >
           <el-option
             v-for="dict in sfsfsOptions"
             :key="dict.dictValue"
@@ -107,7 +152,12 @@
         </el-select>
       </el-form-item>
       <el-form-item label="录取年份" prop="lqnf">
-        <el-select v-model="queryParams.lqnf" placeholder="请选择录取年份" clearable size="small">
+        <el-select
+          v-model="queryParams.lqnf"
+          placeholder="请选择录取年份"
+          clearable
+          size="small"
+        >
           <el-option
             v-for="dict in lqnfOptions"
             :key="dict.dictValue"
@@ -144,8 +194,16 @@
         />
       </el-form-item>-->
       <el-form-item>
-        <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+        <el-button
+          type="cyan"
+          icon="el-icon-search"
+          size="mini"
+          @click="handleQuery"
+          >搜索</el-button
+        >
+        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+          >重置</el-button
+        >
       </el-form-item>
     </el-form>
 
@@ -157,7 +215,8 @@
           size="mini"
           @click="handleAdd"
           v-hasPermi="['jxjs:jxjsjbxx:add']"
-        >新增</el-button>
+          >新增</el-button
+        >
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -167,7 +226,8 @@
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['jxjs:jxjsjbxx:edit']"
-        >修改</el-button>
+          >修改</el-button
+        >
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -177,22 +237,65 @@
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['jxjs:jxjsjbxx:remove']"
-        >删除</el-button>
+          >删除</el-button
+        >
       </el-col>
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+      <right-toolbar
+        :showSearch.sync="showSearch"
+        @queryTable="getList"
+      ></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="jxjsjbxxList" @selection-change="handleSelectionChange">
+    <el-table
+      v-loading="loading"
+      :data="jxjsjbxxList"
+      @selection-change="handleSelectionChange"
+    >
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="编号" align="center" prop="id" /> -->
       <el-table-column label="姓名" align="center" prop="name" />
-      <el-table-column label="性别" align="center" prop="xb" :formatter="xbFormat" />
-      <el-table-column label="政治面貌" align="center" prop="zzmm" :formatter="zzmmFormat" />
-      <el-table-column label="民族" align="center" prop="mz" :formatter="mzFormat" />
-      <el-table-column label="学历" align="center" prop="xl" :formatter="xlFormat" />
-      <el-table-column label="学位" align="center" prop="xw" :formatter="xwFormat" />
-      <el-table-column label="是否师范生" align="center" prop="sfsfs" :formatter="sfsfsFormat" />
-      <el-table-column label="录取年份" align="center" prop="lqnf" :formatter="lqnfFormat" />
+      <el-table-column
+        label="性别"
+        align="center"
+        prop="xb"
+        :formatter="xbFormat"
+      />
+      <el-table-column
+        label="政治面貌"
+        align="center"
+        prop="zzmm"
+        :formatter="zzmmFormat"
+      />
+      <el-table-column
+        label="民族"
+        align="center"
+        prop="mz"
+        :formatter="mzFormat"
+      />
+      <el-table-column
+        label="学历"
+        align="center"
+        prop="xl"
+        :formatter="xlFormat"
+      />
+      <el-table-column
+        label="学位"
+        align="center"
+        prop="xw"
+        :formatter="xwFormat"
+      />
+      <el-table-column
+        label="是否师范生"
+        align="center"
+        prop="sfsfs"
+        :formatter="sfsfsFormat"
+      />
+      <el-table-column
+        label="录取年份"
+        align="center"
+        prop="lqnf"
+        :formatter="lqnfFormat"
+      />
       <!-- <el-table-column label="出生日期" align="center" prop="csrq" width="180">
       <el-table-column label="聘任单位" align="center" prop="prdwid" />
       <el-table-column label="聘任单位名称" align="center" prop="prdwmc" />
@@ -205,7 +308,11 @@
           <span>{{ parseTime(scope.row.csrq, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>-->
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column
+        label="操作"
+        align="center"
+        class-name="small-padding fixed-width"
+      >
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -213,20 +320,22 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['jxjs:jxjsjbxx:edit']"
-          >修改</el-button>
+            >修改</el-button
+          >
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['jxjs:jxjsjbxx:remove']"
-          >删除</el-button>
+            >删除</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
 
     <pagination
-      v-show="total>0"
+      v-show="total > 0"
       :total="total"
       :page.sync="queryParams.pageNum"
       :limit.sync="queryParams.pageSize"
@@ -234,146 +343,192 @@
     />
 
     <!-- 添加或修改见习教师基本信息对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="880px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="100px">
-        <el-form-item label="姓名" prop="name">
-          <el-input v-model="form.name" placeholder="请输入姓名" />
-        </el-form-item>
-        <el-form-item label="进修编号" prop="jxbh">
-          <el-input v-model="form.jxbh" placeholder="请输入进修编号" />
-        </el-form-item>
-        <el-form-item label="性别" prop="xb">
-          <el-select v-model="form.xb" placeholder="请选择性别">
-            <el-option
-              v-for="dict in xbOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="出生日期" prop="csrq">
-          <el-date-picker
-            clearable
-            size="small"
-            style="width: 200px"
-            v-model="form.csrq"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="选择出生日期"
-          ></el-date-picker>
-        </el-form-item>
-        <el-form-item label="电子邮件" prop="email">
-          <el-input v-model="form.email" placeholder="请输入电子邮件" />
-        </el-form-item>
-        <el-form-item label="联系电话" prop="phone">
-          <el-input v-model="form.phone" placeholder="请输入联系电话" maxlength="11" />
-        </el-form-item>
-        <el-form-item label="邮编" prop="yzbm">
-          <el-input v-model="form.yzbm" placeholder="请输入邮编" />
-        </el-form-item>
-        <el-form-item label="政治面貌" prop="zzmm">
-          <el-select v-model="form.zzmm" placeholder="请选择政治面貌">
-            <el-option
-              v-for="dict in zzmmOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="民族" prop="mz">
-          <el-select v-model="form.mz" placeholder="请选择民族">
-            <el-option
-              v-for="dict in mzOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="聘任单位" prop="prdwid">
-          <el-input v-model="form.prdwid" placeholder="请输入聘任单位" />
-        </el-form-item>
-        <el-form-item label="聘任单位名称" prop="prdwmc">
-          <el-input v-model="form.prdwmc" type="textarea" placeholder="请输入内容" />
-        </el-form-item>
-        <el-form-item label="基地校" prop="jdxid">
-          <el-input v-model="form.jdxid" placeholder="请输入基地校" />
-        </el-form-item>
-        <el-form-item label="任教学段" prop="rjxd">
-          <el-select v-model="form.rjxd" placeholder="请选择任教学段">
-            <el-option
-              v-for="dict in rjxdOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="任教学科" prop="rjxk">
-          <el-select v-model="form.rjxk" placeholder="请选择任教学科">
-            <el-option
-              v-for="dict in rjxkOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="任教年级" prop="rjnj">
-          <el-select v-model="form.rjnj" placeholder="请选择任教年级">
-            <el-option
-              v-for="dict in rjnjOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="毕业院校" prop="byyx">
-          <el-input v-model="form.byyx" placeholder="请输入毕业院校" />
-        </el-form-item>
-        <el-form-item label="学历" prop="xl">
-          <el-select v-model="form.xl" placeholder="请选择学历">
-            <el-option
-              v-for="dict in xlOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="学位" prop="xw">
-          <el-select v-model="form.xw" placeholder="请选择学位">
-            <el-option
-              v-for="dict in xwOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="是否师范生" prop="sfsfs">
-          <el-select v-model="form.sfsfs" placeholder="请选择是否师范生">
-            <el-option
-              v-for="dict in sfsfsOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="录取年份" prop="lqnf">
-          <el-select v-model="form.lqnf" placeholder="请选择录取年份">
-            <el-option
-              v-for="dict in lqnfOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            ></el-option>
-          </el-select>
-        </el-form-item>
+        <el-row :gutter="15">
+          <el-col :span="12">
+            <el-form-item label="姓名" prop="name">
+              <el-input v-model="form.name" placeholder="请输入姓名" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="进修编号" prop="jxbh">
+              <el-input v-model="form.jxbh" placeholder="请输入进修编号" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="性别" prop="xb">
+              <el-select v-model="form.xb" placeholder="请选择性别">
+                <el-option
+                  v-for="dict in xbOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="出生日期" prop="csrq">
+              <el-date-picker
+                clearable
+                size="small"
+                style="width: 200px"
+                v-model="form.csrq"
+                type="date"
+                value-format="yyyy-MM-dd"
+                placeholder="选择出生日期"
+              ></el-date-picker>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="电子邮件" prop="email">
+              <el-input v-model="form.email" placeholder="请输入电子邮件" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="联系电话" prop="phone">
+              <el-input
+                v-model="form.phone"
+                placeholder="请输入联系电话"
+                maxlength="11"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="邮编" prop="yzbm">
+              <el-input v-model="form.yzbm" placeholder="请输入邮编" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="政治面貌" prop="zzmm">
+              <el-select v-model="form.zzmm" placeholder="请选择政治面貌">
+                <el-option
+                  v-for="dict in zzmmOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="民族" prop="mz">
+              <el-select v-model="form.mz" placeholder="请选择民族">
+                <el-option
+                  v-for="dict in mzOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="聘任单位" prop="prdwid">
+              <el-input v-model="form.prdwid" placeholder="请输入聘任单位" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="聘任单位名称" prop="prdwmc">
+              <el-input v-model="form.prdwmc" placeholder="请输入内容" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="基地校" prop="jdxid">
+              <el-input v-model="form.jdxid" placeholder="请输入基地校" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="任教学段" prop="rjxd">
+              <el-select v-model="form.rjxd" placeholder="请选择任教学段">
+                <el-option
+                  v-for="dict in rjxdOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="任教学科" prop="rjxk">
+              <el-select v-model="form.rjxk" placeholder="请选择任教学科">
+                <el-option
+                  v-for="dict in rjxkOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="任教年级" prop="rjnj">
+              <el-select v-model="form.rjnj" placeholder="请选择任教年级">
+                <el-option
+                  v-for="dict in rjnjOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="毕业院校" prop="byyx">
+              <el-input v-model="form.byyx" placeholder="请输入毕业院校" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="学历" prop="xl">
+              <el-select v-model="form.xl" placeholder="请选择学历">
+                <el-option
+                  v-for="dict in xlOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="学位" prop="xw">
+              <el-select v-model="form.xw" placeholder="请选择学位">
+                <el-option
+                  v-for="dict in xwOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="是否师范生" prop="sfsfs">
+              <el-select v-model="form.sfsfs" placeholder="请选择是否师范生">
+                <el-option
+                  v-for="dict in sfsfsOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="录取年份" prop="lqnf">
+              <el-select v-model="form.lqnf" placeholder="请选择录取年份">
+                <el-option
+                  v-for="dict in lqnfOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -654,15 +809,11 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$confirm(
-        '是否确认删除见习教师基本信息数据项?',
-        "警告",
-        {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning",
-        }
-      )
+      this.$confirm("是否确认删除见习教师基本信息数据项?", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
         .then(function () {
           return delJxjsjbxx(ids);
         })
