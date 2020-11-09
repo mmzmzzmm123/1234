@@ -24,7 +24,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <where>
             <if test="id != null  and id != ''"> and id = #{id}</if>
             <if test="otherid != null  and otherid != ''"> and otherid = #{otherid}</if>
-            <if test="jdxmc != null  and jdxmc != ''"> and jdxmc = #{jdxmc}</if>
+            <if test="jdxmc != null  and jdxmc != ''"> and jdxmc like concat('%', #{jdxmc}, '%')</if>
             <if test="xxlb != null  and xxlb != ''"> and xxlb = #{xxlb}</if>
             <if test="bxlx != null  and bxlx != ''"> and bxlx = #{bxlx}</if>
             <if test="xxbb != null  and xxbb != ''"> and xxbb = #{xxbb}</if>

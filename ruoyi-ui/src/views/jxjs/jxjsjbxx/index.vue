@@ -7,10 +7,10 @@
       v-show="showSearch"
       label-width="68px"
     >
-      <el-form-item label="姓名" prop="name">
+      <el-form-item label="教师姓名" prop="name">
         <el-input
           v-model="queryParams.name"
-          placeholder="请输入姓名"
+          placeholder="请输入教师姓名"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
@@ -253,7 +253,7 @@
     >
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="编号" align="center" prop="id" /> -->
-      <el-table-column label="姓名" align="center" prop="name" />
+      <el-table-column label="教师姓名" align="center" prop="name" />
       <el-table-column
         label="性别"
         align="center"
@@ -347,8 +347,8 @@
       <el-form ref="form" :model="form" :rules="rules" label-width="100px">
         <el-row :gutter="15">
           <el-col :span="12">
-            <el-form-item label="姓名" prop="name">
-              <el-input v-model="form.name" placeholder="请输入姓名" />
+            <el-form-item label="教师姓名" prop="name">
+              <el-input v-model="form.name" placeholder="请输入教师姓名" />
             </el-form-item>
           </el-col>
           <el-col :span="12">

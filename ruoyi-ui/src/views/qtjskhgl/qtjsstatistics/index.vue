@@ -146,7 +146,7 @@ export default {
     this.getKhfa();
   },
   methods: {
-    //获取基地校列表
+    //获取学校列表
     getXxList() {
       listXxjbxx(null).then((response) => {
         this.xxOptions = response.rows;

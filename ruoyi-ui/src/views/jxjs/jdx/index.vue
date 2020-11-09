@@ -45,8 +45,8 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="办学类型" prop="bxlx">
-        <el-select v-model="queryParams.bxlx" placeholder="请选择办学类型">
+      <el-form-item label="学校类别" prop="bxlx">
+        <el-select v-model="queryParams.bxlx" placeholder="请选择学校类别">
           <el-option
             v-for="dict in bxlxOptions"
             :key="dict.dictValue"
@@ -56,8 +56,16 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+        <el-button
+          type="cyan"
+          icon="el-icon-search"
+          size="mini"
+          @click="handleQuery"
+          >搜索</el-button
+        >
+        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+          >重置</el-button
+        >
       </el-form-item>
     </el-form>
 
@@ -69,7 +77,8 @@
           size="mini"
           @click="handleAdd"
           v-hasPermi="['jxjs:jdx:add']"
-        >新增</el-button>
+          >新增</el-button
+        >
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -79,7 +88,8 @@
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['jxjs:jdx:edit']"
-        >修改</el-button>
+          >修改</el-button
+        >
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -89,27 +99,61 @@
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['jxjs:jdx:remove']"
-        >删除</el-button>
+          >删除</el-button
+        >
       </el-col>
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+      <right-toolbar
+        :showSearch.sync="showSearch"
+        @queryTable="getList"
+      ></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="jdxList" @selection-change="handleSelectionChange">
+    <el-table
+      v-loading="loading"
+      :data="jdxList"
+      @selection-change="handleSelectionChange"
+    >
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="标识" align="center" prop="id" /> -->
       <!-- <el-table-column label="基地校名称" align="center" prop="jdxmc" /> -->
-      <el-table-column label="基地校名称" align="center" :show-overflow-tooltip="true">
+      <el-table-column
+        label="基地校名称"
+        align="center"
+        :show-overflow-tooltip="true"
+      >
         <template slot-scope="scope">
-          <router-link :to="'/jxjs/jdx/jxjsjbxx/data/' + scope.row.id" class="link-type">
+          <router-link
+            :to="'/jxjs/jdx/jxjsjbxx/data/' + scope.row.id"
+            class="link-type"
+          >
             <span>{{ scope.row.jdxmc }}</span>
           </router-link>
         </template>
       </el-table-column>
       <!-- <el-table-column label="学校类别" align="center" prop="xxlb" /> -->
-      <el-table-column label="学校办别" align="center" prop="xxbb" :formatter="xxbbFormat" />
-      <el-table-column label="办学类型" align="center" prop="bxlx" :formatter="bxlxFormat" />
-      <el-table-column label="基地校年份" align="center" prop="jdxnf" :formatter="nfFormat" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column
+        label="学校办别"
+        align="center"
+        prop="xxbb"
+        :formatter="xxbbFormat"
+      />
+      <el-table-column
+        label="学校类别"
+        align="center"
+        prop="bxlx"
+        :formatter="bxlxFormat"
+      />
+      <el-table-column
+        label="基地校年份"
+        align="center"
+        prop="jdxnf"
+        :formatter="nfFormat"
+      />
+      <el-table-column
+        label="操作"
+        align="center"
+        class-name="small-padding fixed-width"
+      >
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -117,27 +161,30 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['jxjs:jdx:edit']"
-          >修改</el-button>
+            >修改</el-button
+          >
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['jxjs:jdx:remove']"
-          >删除</el-button>
+            >删除</el-button
+          >
           <el-button
             size="mini"
             type="text"
             icon="el-icon-user"
             @click="handleFpjs(scope.row)"
             v-hasPermi="['jxjs:jdx:edit']"
-          >分配教师</el-button>
+            >分配教师</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
 
     <pagination
-      v-show="total>0"
+      v-show="total > 0"
       :total="total"
       :page.sync="queryParams.pageNum"
       :limit.sync="queryParams.pageSize"
@@ -145,15 +192,24 @@
     />
 
     <!-- 添加或修改基地校对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="800px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="460px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
         <el-form-item label="基地校名称" prop="jdxmc">
-          <el-input v-model="form.jdxmc" type="textarea" placeholder="请输入基地校名称" />
+          <!-- <el-input
+            v-model="form.jdxmc"
+            type="textarea"
+            placeholder="请输入基地校名称"
+          /> -->
+          <el-select v-model="form.jdxmc" filterable size="small">
+            <el-option
+              v-for="item in xxOptions"
+              :key="item.id"
+              :label="item.xxmc"
+              :value="item.id"
+            />
+          </el-select>
         </el-form-item>
-        <!-- <el-form-item label="学校类别" prop="xxlb">
-          <el-input v-model="form.xxlb" placeholder="请输入学校类别" />
-        </el-form-item>-->
-        <el-form-item label="学校办别" prop="xxbb">
+        <!-- <el-form-item label="学校办别" prop="xxbb">
           <el-select v-model="form.xxbb" placeholder="请选择学校办别">
             <el-option
               v-for="dict in xxbbOptions"
@@ -172,7 +228,7 @@
               :value="dict.dictValue"
             ></el-option>
           </el-select>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="入选年份" prop="jdxnf">
           <el-select v-model="form.jdxnf" placeholder="请选择入选年份">
             <el-option
@@ -191,8 +247,16 @@
     </el-dialog>
 
     <!-- 添加或修改基地校对话框 -->
-    <el-dialog title="基地校分配见习教师" :visible.sync="open_fpjs" width="600px" append-to-body>
-      <el-table :data="jxjsjbxxList" @selection-change="handleSelectionChangeFpjs">
+    <el-dialog
+      title="基地校分配见习教师"
+      :visible.sync="open_fpjs"
+      width="600px"
+      append-to-body
+    >
+      <el-table
+        :data="jxjsjbxxList"
+        @selection-change="handleSelectionChangeFpjs"
+      >
         <el-table-column type="selection" width="55" align="center" />
         <el-table-column label="姓名" align="center" prop="name" />
         <el-table-column label="录取年份" align="center" prop="lqnf" />
@@ -207,7 +271,7 @@
 
 <script>
 import { listJdx, getJdx, delJdx, addJdx, updateJdx } from "@/api/jxjs/jdx";
-
+import { listXxjbxx, getXxjbxx } from "@/api/qtjs/xxjbxx";
 import {
   listJxjsjbxxnotjdx,
   getJxjsjbxx,
@@ -245,6 +309,8 @@ export default {
       nfOptions: [],
       xxbbOptions: [],
       bxlxOptions: [],
+      //学校列表
+      xxOptions: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -280,6 +346,7 @@ export default {
   },
   created() {
     this.getList();
+    this.getXxList();
     this.getDicts("sys_dm_rxnf").then((response) => {
       this.nfOptions = response.data;
     });
@@ -291,6 +358,12 @@ export default {
     });
   },
   methods: {
+    //获取学校列表
+    getXxList() {
+      listXxjbxx(null).then((response) => {
+        this.xxOptions = response.rows;
+      });
+    },
     // 字典翻译
     nfFormat(row, column) {
       return this.selectDictLabel(this.nfOptions, row.jdxnf);
@@ -418,7 +491,7 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$confirm('是否确认删除基地校数据项?', "警告", {
+      this.$confirm("是否确认删除基地校数据项?", "警告", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",

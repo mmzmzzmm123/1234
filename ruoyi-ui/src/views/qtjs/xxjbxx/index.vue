@@ -15,8 +15,8 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="学校类别码" prop="xxlbm">
-        <el-select v-model="queryParams.xxlbm" placeholder="请选择学校类别码">
+      <el-form-item label="学校类别" prop="xxlbm">
+        <el-select v-model="queryParams.xxlbm" placeholder="请选择学校类别">
           <el-option
             v-for="dict in xxlbmOptions"
             :key="dict.dictValue"
@@ -35,10 +35,10 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="所在地区类别码" prop="szdqlbm">
+      <el-form-item label="所在地区类别" prop="szdqlbm">
         <el-select
           v-model="queryParams.szdqlbm"
-          placeholder="请选择所在地区类别码"
+          placeholder="请选择所在地区类别"
         >
           <el-option
             v-for="dict in szdqlbmOptions"
@@ -128,13 +128,13 @@
       <el-table-column label="学校名称" align="center" prop="xxmc" />
       <el-table-column label="区县" align="center" prop="countyid" />
       <el-table-column
-        label="学校办别码"
+        label="学校办别"
         align="center"
         prop="xxbbm"
         :formatter="xxbbFormat"
       />
       <el-table-column
-        label="学校类别码"
+        label="学校类别"
         align="center"
         prop="xxlbm"
         :formatter="xxlbmFormat"

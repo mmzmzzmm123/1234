@@ -7,6 +7,8 @@ import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.jxjs.domain.TsbzJxjsjbxx;
 import com.ruoyi.jxjs.service.ITsbzJxjsjbxxService;
+import com.ruoyi.qtjs.domain.TsbzXxjbxx;
+import com.ruoyi.qtjs.service.ITsbzXxjbxxService;
 import com.ruoyi.system.service.ISysDeptService;
 import com.ruoyi.system.service.ISysUserService;
 import com.ruoyi.web.controller.common.SchoolCommonController;
@@ -48,11 +50,13 @@ public class TsbzJdxController extends BaseController {
     private ISysDeptService deptService;
     @Autowired
     private ISysUserService userService;
+    @Autowired
+    private ITsbzXxjbxxService tsbzXxjbxxService;
 
     /**
      * 查询基地校列表
      */
-    @PreAuthorize("@ss.hasPermi('jxjs:jdx:list')"+ "||@ss.hasPermi('jxjs:jxzxmd:list')")
+    @PreAuthorize("@ss.hasPermi('jxjs:jdx:list')" + "||@ss.hasPermi('jxjs:jxzxmd:list')")
     @GetMapping("/list")
     public TableDataInfo list(TsbzJdx tsbzJdx) {
         //首先判断是否为学校用户
@@ -83,7 +87,9 @@ public class TsbzJdxController extends BaseController {
     @PreAuthorize("@ss.hasPermi('jxjs:jdx:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") String id) {
-        return AjaxResult.success(tsbzJdxService.selectTsbzJdxById(id));
+        TsbzJdx tsbzJdx = tsbzJdxService.selectTsbzJdxById(id);
+        tsbzJdx.setJdxmc(tsbzJdx.getOtherid());//把名称 设置为id
+        return AjaxResult.success(tsbzJdx);
     }
 
     /**
@@ -95,6 +101,12 @@ public class TsbzJdxController extends BaseController {
     public AjaxResult add(@RequestBody TsbzJdx tsbzJdx) {
         String uuid = schoolCommonController.getUuid();
         tsbzJdx.setId(uuid);
+        //此时传过来的tsbzJdx.getJdxmc 是学校代码 获取学校信息
+        TsbzXxjbxx tsbzXxjbxx = tsbzXxjbxxService.selectTsbzXxjbxxById(tsbzJdx.getJdxmc());
+        tsbzJdx.setJdxmc(tsbzXxjbxx.getXxmc());
+        tsbzJdx.setXxbb(tsbzXxjbxx.getXxbbm());//学校办别
+        tsbzJdx.setBxlx(tsbzXxjbxx.getXxlbm());//学校类别
+        tsbzJdx.setOtherid(tsbzXxjbxx.getId());//其他系统学校代码
         //将当前记录插入的dept表
         SysDept dept = new SysDept();
         dept.setSchoolid(uuid);
@@ -115,6 +127,13 @@ public class TsbzJdxController extends BaseController {
     @Log(title = "基地校", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody TsbzJdx tsbzJdx) {
+        //此时传过来的tsbzJdx.getJdxmc 是学校代码 获取学校信息
+        TsbzXxjbxx tsbzXxjbxx = tsbzXxjbxxService.selectTsbzXxjbxxById(tsbzJdx.getJdxmc());
+        tsbzJdx.setJdxmc(tsbzXxjbxx.getXxmc());
+        tsbzJdx.setXxbb(tsbzXxjbxx.getXxbbm());//学校办别
+        tsbzJdx.setBxlx(tsbzXxjbxx.getXxlbm());//学校类别
+        tsbzJdx.setOtherid(tsbzXxjbxx.getId());//其他系统学校代码
+
         //创建dept实例  并且向要添加的dept中设置各个参数
         SysDept dept = new SysDept();
         //设置schoolID为xxdm
