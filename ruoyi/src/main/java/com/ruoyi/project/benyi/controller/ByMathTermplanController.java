@@ -114,7 +114,7 @@ public class ByMathTermplanController extends BaseController
             byMathTermplan.setSchoolid(SecurityUtils.getLoginUser().getUser().getDept().getDeptId());
             byMathTermplan.setCreateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
             byMathTermplan.setClassid(classId);
-            byMathTermplan.setName(byClassService.selectByClassById(classId).getBjmc() + "-主题整合学期计划");
+            byMathTermplan.setName(byClassService.selectByClassById(classId).getBjmc() + "-游戏数学学期计划");
 
             // 自动创建游戏数学学期计划明细
             ByMathTermplanitem byMathTermplanitem = null;
@@ -166,10 +166,10 @@ public class ByMathTermplanController extends BaseController
     }
 
     /**
-     * 提交主题整合学期计划
+     * 提交游戏数学学期计划
      */
     @PreAuthorize("@ss.hasPermi('benyi:themetermplan:edit')")
-    @Log(title = "主题整合学期计划", businessType = BusinessType.UPDATE)
+    @Log(title = "游戏数学学期计划", businessType = BusinessType.UPDATE)
     @PostMapping("/check/{id}")
     public AjaxResult check(@PathVariable String id) {
         ByMathTermplan byMathTermplan = new ByMathTermplan();
