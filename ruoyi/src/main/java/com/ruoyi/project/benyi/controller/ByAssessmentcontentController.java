@@ -151,8 +151,9 @@ public class ByAssessmentcontentController extends BaseController {
         AjaxResult ajaxResult = AjaxResult.success();
         String[] strArr = new String[]{"健康", "语言", "社会", "科学", "艺术"};
         List<Double> douArr = new ArrayList<Double>();
+        ByAssessmentcontent byAssessmentcontent = null;
         for (int i = 0; i < strArr.length; i++) {
-            ByAssessmentcontent byAssessmentcontent = new ByAssessmentcontent();
+            byAssessmentcontent = new ByAssessmentcontent();
             byAssessmentcontent.setScope(scope);
             byAssessmentcontent.setName(strArr[i]);
             //获取{"健康", "语言", "社会", "科学", "艺术"} 对应的值

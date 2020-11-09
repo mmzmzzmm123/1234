@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-row :gutter="20">
-      <el-col :span="4" :xs="24">
+      <el-col :span="8" :xs="24">
         <div class="head-container">
           <el-input
             v-model="name"
@@ -24,7 +24,7 @@
           />
         </div>
       </el-col>
-      <el-col :span="20" :xs="24">
+      <el-col :span="16" :xs="24">
         <el-card class="box-card">
           <div slot="header" class="clearfix">
             <span class="box-card-title">{{ title }}</span>

@@ -24,7 +24,8 @@
         <include refid="selectByAssessmentcontentVo"/>
         <where>
             <if test="parentId != null ">and parentId = #{parentId}</if>
-            <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
+            <!--<if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>-->
+            <if test="name != null  and name != ''">and name  = #{name}</if>
             <if test="iselement != null  and iselement != ''">and iselement = #{iselement}</if>
             <if test="scope != null  and scope != ''">and scope = #{scope}</if>
         </where>
