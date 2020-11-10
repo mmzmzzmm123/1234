@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.jxzxkhgl.mapper.TsbzDsjbxxMapper">
+    
+    <resultMap type="TsbzDsjbxx" id="TsbzDsjbxxResult">
+        <result property="id"    column="id"    />
+        <result property="jsid"    column="jsid"    />
+        <result property="jsxm"    column="jsxm"    />
+        <result property="xb"    column="xb"    />
+        <result property="deptid"    column="deptid"    />
+        <result property="dabh"    column="dabh"    />
+        <result property="zjlx"    column="zjlx"    />
+        <result property="zjhm"    column="zjhm"    />
+        <result property="bzzt"    column="bzzt"    />
+        <result property="gwzt"    column="gwzt"    />
+        <result property="gwlx"    column="gwlx"    />
+        <result property="csrq"    column="csrq"    />
+        <result property="rjnx"    column="rjnx"    />
+        <result property="zc"    column="zc"    />
+        <result property="zyry"    column="zyry"    />
+        <result property="tzb"    column="tzb"    />
+        <result property="zks"    column="zks"    />
+        <result property="xd"    column="xd"    />
+        <result property="xk"    column="xk"    />
+        <result property="dslx"    column="dslx"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectTsbzDsjbxxVo">
+        select id, jsid, jsxm, xb, deptid, dabh, zjlx, zjhm, bzzt, gwzt, gwlx, csrq, rjnx, zc, zyry, tzb, zks, xd, xk, dslx, create_time from tsbz_dsjbxx
+    </sql>
+
+    <select id="selectTsbzDsjbxxList" parameterType="TsbzDsjbxx" resultMap="TsbzDsjbxxResult">
+        <include refid="selectTsbzDsjbxxVo"/>
+        <where>  
+            <if test="jsid != null  and jsid != ''"> and jsid = #{jsid}</if>
+            <if test="jsxm != null  and jsxm != ''"> and jsxm = #{jsxm}</if>
+            <if test="xb != null  and xb != ''"> and xb = #{xb}</if>
+            <if test="deptid != null  and deptid != ''"> and deptid = #{deptid}</if>
+            <if test="dabh != null  and dabh != ''"> and dabh = #{dabh}</if>
+            <if test="zjlx != null  and zjlx != ''"> and zjlx = #{zjlx}</if>
+            <if test="zjhm != null  and zjhm != ''"> and zjhm = #{zjhm}</if>
+            <if test="bzzt != null  and bzzt != ''"> and bzzt = #{bzzt}</if>
+            <if test="gwzt != null  and gwzt != ''"> and gwzt = #{gwzt}</if>
+            <if test="gwlx != null  and gwlx != ''"> and gwlx = #{gwlx}</if>
+            <if test="csrq != null "> and csrq = #{csrq}</if>
+            <if test="rjnx != null "> and rjnx = #{rjnx}</if>
+            <if test="zc != null  and zc != ''"> and zc = #{zc}</if>
+            <if test="zyry != null  and zyry != ''"> and zyry = #{zyry}</if>
+            <if test="tzb != null  and tzb != ''"> and tzb = #{tzb}</if>
+            <if test="zks != null  and zks != ''"> and zks = #{zks}</if>
+            <if test="xd != null  and xd != ''"> and xd = #{xd}</if>
+            <if test="xk != null  and xk != ''"> and xk = #{xk}</if>
+            <if test="dslx != null  and dslx != ''"> and dslx = #{dslx}</if>
+        </where>
+    </select>
+    
+    <select id="selectTsbzDsjbxxById" parameterType="Long" resultMap="TsbzDsjbxxResult">
+        <include refid="selectTsbzDsjbxxVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTsbzDsjbxx" parameterType="TsbzDsjbxx" useGeneratedKeys="true" keyProperty="id">
+        insert into tsbz_dsjbxx
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="jsid != null">jsid,</if>
+            <if test="jsxm != null">jsxm,</if>
+            <if test="xb != null">xb,</if>
+            <if test="deptid != null">deptid,</if>
+            <if test="dabh != null">dabh,</if>
+            <if test="zjlx != null">zjlx,</if>
+            <if test="zjhm != null">zjhm,</if>
+            <if test="bzzt != null">bzzt,</if>
+            <if test="gwzt != null">gwzt,</if>
+            <if test="gwlx != null">gwlx,</if>
+            <if test="csrq != null">csrq,</if>
+            <if test="rjnx != null">rjnx,</if>
+            <if test="zc != null">zc,</if>
+            <if test="zyry != null">zyry,</if>
+            <if test="tzb != null">tzb,</if>
+            <if test="zks != null">zks,</if>
+            <if test="xd != null">xd,</if>
+            <if test="xk != null">xk,</if>
+            <if test="dslx != null">dslx,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="jsid != null">#{jsid},</if>
+            <if test="jsxm != null">#{jsxm},</if>
+            <if test="xb != null">#{xb},</if>
+            <if test="deptid != null">#{deptid},</if>
+            <if test="dabh != null">#{dabh},</if>
+            <if test="zjlx != null">#{zjlx},</if>
+            <if test="zjhm != null">#{zjhm},</if>
+            <if test="bzzt != null">#{bzzt},</if>
+            <if test="gwzt != null">#{gwzt},</if>
+            <if test="gwlx != null">#{gwlx},</if>
+            <if test="csrq != null">#{csrq},</if>
+            <if test="rjnx != null">#{rjnx},</if>
+            <if test="zc != null">#{zc},</if>
+            <if test="zyry != null">#{zyry},</if>
+            <if test="tzb != null">#{tzb},</if>
+            <if test="zks != null">#{zks},</if>
+            <if test="xd != null">#{xd},</if>
+            <if test="xk != null">#{xk},</if>
+            <if test="dslx != null">#{dslx},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTsbzDsjbxx" parameterType="TsbzDsjbxx">
+        update tsbz_dsjbxx
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="jsid != null">jsid = #{jsid},</if>
+            <if test="jsxm != null">jsxm = #{jsxm},</if>
+            <if test="xb != null">xb = #{xb},</if>
+            <if test="deptid != null">deptid = #{deptid},</if>
+            <if test="dabh != null">dabh = #{dabh},</if>
+            <if test="zjlx != null">zjlx = #{zjlx},</if>
+            <if test="zjhm != null">zjhm = #{zjhm},</if>
+            <if test="bzzt != null">bzzt = #{bzzt},</if>
+            <if test="gwzt != null">gwzt = #{gwzt},</if>
+            <if test="gwlx != null">gwlx = #{gwlx},</if>
+            <if test="csrq != null">csrq = #{csrq},</if>
+            <if test="rjnx != null">rjnx = #{rjnx},</if>
+            <if test="zc != null">zc = #{zc},</if>
+            <if test="zyry != null">zyry = #{zyry},</if>
+            <if test="tzb != null">tzb = #{tzb},</if>
+            <if test="zks != null">zks = #{zks},</if>
+            <if test="xd != null">xd = #{xd},</if>
+            <if test="xk != null">xk = #{xk},</if>
+            <if test="dslx != null">dslx = #{dslx},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTsbzDsjbxxById" parameterType="Long">
+        delete from tsbz_dsjbxx where id = #{id}
+    </delete>
+
+    <delete id="deleteTsbzDsjbxxByIds" parameterType="String">
+        delete from tsbz_dsjbxx where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

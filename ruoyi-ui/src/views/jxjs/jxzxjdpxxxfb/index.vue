@@ -1,10 +1,10 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="培训信息名称" prop="name">
+      <el-form-item label="培训名称" prop="name">
         <el-input
           v-model="queryParams.name"
-          placeholder="请输入培训信息名称"
+          placeholder="请输入培训名称"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"

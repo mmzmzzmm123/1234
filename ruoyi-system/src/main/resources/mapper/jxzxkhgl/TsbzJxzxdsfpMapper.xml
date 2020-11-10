@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.jxzxkhgl.mapper.TsbzJxzxdsfpMapper">
+
+    <resultMap type="TsbzJxzxdsfp" id="TsbzJxzxdsfpResult">
+        <result property="id" column="id"/>
+        <result property="jxjsid" column="jxjsid"/>
+        <result property="dsid" column="dsid"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <sql id="selectTsbzJxzxdsfpVo">
+        select id, jxjsid, dsid, create_time from tsbz_jxzxdsfp
+    </sql>
+
+    <select id="selectTsbzJxzxdsfpList" parameterType="TsbzJxzxdsfp" resultMap="TsbzJxzxdsfpResult">
+        <include refid="selectTsbzJxzxdsfpVo"/>
+        <where>
+            <if test="jxjsid != null ">and jxjsid = #{jxjsid}</if>
+            <if test="dsid != null ">and dsid = #{dsid}</if>
+        </where>
+    </select>
+
+    <select id="selectTsbzJxzxdsfpById" parameterType="Long" resultMap="TsbzJxzxdsfpResult">
+        <include refid="selectTsbzJxzxdsfpVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertTsbzJxzxdsfp" parameterType="TsbzJxzxdsfp" useGeneratedKeys="true" keyProperty="id">
+        insert into tsbz_jxzxdsfp
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="jxjsid != null">jxjsid,</if>
+            <if test="dsid != null">dsid,</if>
+            <if test="createTime != null">create_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="jxjsid != null">#{jxjsid},</if>
+            <if test="dsid != null">#{dsid},</if>
+            <if test="createTime != null">#{createTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateTsbzJxzxdsfp" parameterType="TsbzJxzxdsfp">
+        update tsbz_jxzxdsfp
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="jxjsid != null">jxjsid = #{jxjsid},</if>
+            <if test="dsid != null">dsid = #{dsid},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTsbzJxzxdsfpById" parameterType="Long">
+        delete from tsbz_jxzxdsfp where id = #{id}
+    </delete>
+
+    <delete id="deleteTsbzJxzxdsfpByIds" parameterType="String">
+        delete from tsbz_jxzxdsfp where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
