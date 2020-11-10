@@ -38,7 +38,7 @@ public class SysContractController extends BaseController {
         startPage();
         List<SysContract> list = sysContractService.selectSysContractList(sysContract);
         for (SysContract contract : list) {
-            if (contract.getSignName() != null && !contract.getSignName().equals("") && !contract.getName().equals(contract.getSignName())) {
+            if (contract.getSignName() != null && !contract.getSignName().equals("") && !contract.getName().trim().equals(contract.getSignName())) {
                 contract.setName(contract.getName() + "（" + contract.getSignName() + "）");
             }
         }
