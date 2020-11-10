@@ -46,15 +46,6 @@
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
-          type="primary"
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['jxjs:jxzxpxpj:add']"
-        >新增</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
           type="success"
           icon="el-icon-edit"
           size="mini"
@@ -63,7 +54,7 @@
           v-hasPermi="['jxjs:jxzxpxpj:edit']"
         >修改</el-button>
       </el-col>
-      <el-col :span="1.5">
+      <!-- <el-col :span="1.5">
         <el-button
           type="danger"
           icon="el-icon-delete"
@@ -72,7 +63,7 @@
           @click="handleDelete"
           v-hasPermi="['jxjs:jxzxpxpj:remove']"
         >删除</el-button>
-      </el-col>
+      </el-col> -->
 	  <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
@@ -168,6 +159,8 @@ export default {
       total: 0,
       // 见习之星教师培训评价表格数据
       jxzxpxpjList: [],
+      // 教师选项
+      jsOptions: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -204,9 +197,29 @@ export default {
       this.loading = true;
       listJxzxpxpj(this.queryParams).then(response => {
         this.jxzxpxpjList = response.rows;
+        console.log(this.jxzxpxpjList);
         this.total = response.total;
         this.loading = false;
       });
+    },
+    // 获取教师列表
+    getJsList() {
+      listJxjsjbxx(null).then((response) => {
+        this.jsOptions = response.rows;
+      });
+    },
+    // 教师字典翻译
+    jsFormat(row, column) {
+      // return this.selectDictLabel(this.classOptions, row.classid);
+      var actions = [];
+      var datas = this.jsOptions;
+      Object.keys(datas).map((key) => {
+        if (datas[key].id == "" + row.jsid) {
+          actions.push(datas[key].name);
+          return false;
+        }
+      });
+      return actions.join("");
     },
     // 培训表现字典翻译
     pxbxFormat(row, column) {
@@ -252,6 +265,7 @@ export default {
       this.reset();
       this.open = true;
       this.title = "添加见习之星教师培训评价";
+      
     },
     /** 修改按钮操作 */
     handleUpdate(row) {

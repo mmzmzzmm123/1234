@@ -16,19 +16,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectTsbzJxzxpxpjVo">
-        select id, jdxid, jsid, pxbx, pxnf, px_beiyong, create_userid, create_time from tsbz_jxzxpxpj
+        select p.id, p.jdxid, p.jsid, p.pxbx, p.pxnf, p.px_beiyong, p.create_userid, p.create_time, j.id, j.name, j.jdxid4
+        from tsbz_jxzxpxpj p
+        right join tsbz_jxjsjbxx j on p.jdxid=j.jdxid
+
     </sql>
 
     <select id="selectTsbzJxzxpxpjList" parameterType="TsbzJxzxpxpj" resultMap="TsbzJxzxpxpjResult">
         <include refid="selectTsbzJxzxpxpjVo"/>
-        <where>  
-            <if test="jdxid != null  and jdxid != ''"> and jdxid = #{jdxid}</if>
-            <if test="jsid != null "> and jsid = #{jsid}</if>
-            <if test="pxbx != null  and pxbx != ''"> and pxbx = #{pxbx}</if>
-            <if test="pxnf != null "> and pxnf = #{pxnf}</if>
-            <if test="pxBeiyong != null  and pxBeiyong != ''"> and px_beiyong = #{pxBeiyong}</if>
-            <if test="createUserid != null "> and create_userid = #{createUserid}</if>
-        </where>
+        where p.jdxid = #{jdxid}
     </select>
     
     <select id="selectTsbzJxzxpxpjById" parameterType="Long" resultMap="TsbzJxzxpxpjResult">
