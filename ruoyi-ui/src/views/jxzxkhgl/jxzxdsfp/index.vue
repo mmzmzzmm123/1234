@@ -7,23 +7,35 @@
       v-show="showSearch"
       label-width="68px"
     >
-      <el-form-item label="见习之星编号" prop="jxjsid">
-        <el-input
+      <el-form-item label="见习之星" prop="jxjsid">
+        <el-select
           v-model="queryParams.jxjsid"
-          placeholder="请输入见习之星编号"
-          clearable
+          placeholder="请选择见习之星"
+          filterable
           size="small"
-          @keyup.enter.native="handleQuery"
-        />
+        >
+          <el-option
+            v-for="dict in jxzxOptions"
+            :key="dict.jsid"
+            :label="dict.tsbzJxjsjbxx.name"
+            :value="dict.jsid"
+          />
+        </el-select>
       </el-form-item>
-      <el-form-item label="导师编号" prop="dsid">
-        <el-input
+      <el-form-item label="见习导师" prop="dsid">
+        <el-select
           v-model="queryParams.dsid"
-          placeholder="请输入导师编号"
-          clearable
+          placeholder="请选择见习导师"
+          filterable
           size="small"
-          @keyup.enter.native="handleQuery"
-        />
+        >
+          <el-option
+            v-for="dict in dsOptions"
+            :key="dict.id"
+            :label="dict.jsxm"
+            :value="dict.id"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button
@@ -72,16 +84,6 @@
           >删除</el-button
         >
       </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['jxzxkhgl:jxzxdsfp:export']"
-          >导出</el-button
-        >
-      </el-col>
       <right-toolbar
         :showSearch.sync="showSearch"
         @queryTable="getList"
@@ -95,8 +97,18 @@
     >
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="编号" align="center" prop="id" />
-      <el-table-column label="见习之星编号" align="center" prop="jxjsid" />
-      <el-table-column label="导师编号" align="center" prop="dsid" />
+      <el-table-column
+        label="见习之星"
+        align="center"
+        prop="jxjsid"
+        :formatter="jxzxFormat"
+      />
+      <el-table-column
+        label="见习导师"
+        align="center"
+        prop="dsid"
+        :formatter="dsFormat"
+      />
       <el-table-column
         label="操作"
         align="center"
@@ -134,11 +146,35 @@
     <!-- 添加或修改见习导师分配对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="见习之星编号" prop="jxjsid">
-          <el-input v-model="form.jxjsid" placeholder="请输入见习之星编号" />
+        <el-form-item label="见习之星" prop="jxjsid">
+          <el-select
+            v-model="form.jxjsid"
+            placeholder="请选择见习之星"
+            filterable
+            size="small"
+          >
+            <el-option
+              v-for="dict in jxzxOptions"
+              :key="dict.jsid"
+              :label="dict.tsbzJxjsjbxx.name"
+              :value="dict.jsid"
+            />
+          </el-select>
         </el-form-item>
-        <el-form-item label="导师编号" prop="dsid">
-          <el-input v-model="form.dsid" placeholder="请输入导师编号" />
+        <el-form-item label="见习导师" prop="dsid">
+          <el-select
+            v-model="form.dsid"
+            placeholder="请选择见习导师"
+            filterable
+            size="small"
+          >
+            <el-option
+              v-for="dict in dsOptions"
+              :key="dict.id"
+              :label="dict.jsxm"
+              :value="dict.id"
+            />
+          </el-select>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -156,8 +192,9 @@ import {
   delJxzxdsfp,
   addJxzxdsfp,
   updateJxzxdsfp,
-  exportJxzxdsfp,
 } from "@/api/jxzxkhgl/jxzxdsfp";
+import { listDsjbxx } from "@/api/jxzxkhgl/dsjbxx";
+import { listJxzxmd, getJxzxmd } from "@/api/jxjs/jxzxmd";
 
 export default {
   name: "Jxzxdsfp",
@@ -177,6 +214,10 @@ export default {
       total: 0,
       // 见习导师分配表格数据
       jxzxdsfpList: [],
+      //导师
+      dsOptions: [],
+      //导师
+      jxzxOptions: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -191,13 +232,57 @@ export default {
       // 表单参数
       form: {},
       // 表单校验
-      rules: {},
+      rules: {
+        jxjsid: [
+          { required: true, message: "见习之星不能为空", trigger: "blur" },
+        ],
+        dsid: [{ required: true, message: "导师不能为空", trigger: "blur" }],
+      },
     };
   },
   created() {
+    this.getJxzxList();
+    this.getDsList();
     this.getList();
   },
   methods: {
+    // 见习教师字典翻译
+    jxzxFormat(row, column) {
+      var actions = [];
+      var datas = this.jxzxOptions;
+      Object.keys(datas).map((key) => {
+        if (datas[key].jsid == "" + row.jxjsid) {
+          actions.push(datas[key].tsbzJxjsjbxx.name);
+          return false;
+        }
+      });
+      return actions.join("");
+    },
+    // 导师字典翻译
+    dsFormat(row, column) {
+      var actions = [];
+      var datas = this.dsOptions;
+      Object.keys(datas).map((key) => {
+        if (datas[key].id == "" + row.dsid) {
+          actions.push(datas[key].jsxm);
+          return false;
+        }
+      });
+      return actions.join("");
+    },
+    /** 查询导师基本信息列表 */
+    getJxzxList() {
+      listJxzxmd(null).then((response) => {
+        // console.log(response.rows);
+        this.jxzxOptions = response.rows;
+      });
+    },
+    /** 查询导师基本信息列表 */
+    getDsList() {
+      listDsjbxx(null).then((response) => {
+        this.dsOptions = response.rows;
+      });
+    },
     /** 查询见习导师分配列表 */
     getList() {
       this.loading = true;
@@ -296,22 +381,6 @@ export default {
         .then(() => {
           this.getList();
           this.msgSuccess("删除成功");
-        })
-        .catch(function () {});
-    },
-    /** 导出按钮操作 */
-    handleExport() {
-      const queryParams = this.queryParams;
-      this.$confirm("是否确认导出所有见习导师分配数据项?", "警告", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-      })
-        .then(function () {
-          return exportJxzxdsfp(queryParams);
-        })
-        .then((response) => {
-          this.download(response.msg);
         })
         .catch(function () {});
     },

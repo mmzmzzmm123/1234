@@ -1,37 +1,71 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.jxjs.mapper.TsbzJxzxpxpjMapper">
-    
+
     <resultMap type="TsbzJxzxpxpj" id="TsbzJxzxpxpjResult">
-        <result property="id"    column="id"    />
-        <result property="jdxid"    column="jdxid"    />
-        <result property="jsid"    column="jsid"    />
-        <result property="pxbx"    column="pxbx"    />
-        <result property="pxnf"    column="pxnf"    />
-        <result property="pxBeiyong"    column="px_beiyong"    />
-        <result property="createUserid"    column="create_userid"    />
-        <result property="createTime"    column="create_time"    />
+        <result property="id" column="id"/>
+        <result property="jdxid" column="jdxid"/>
+        <result property="jsid" column="jsid"/>
+        <result property="pxbx" column="pxbx"/>
+        <result property="pxnf" column="pxnf"/>
+        <result property="pxBeiyong" column="px_beiyong"/>
+        <result property="createUserid" column="create_userid"/>
+        <result property="createTime" column="create_time"/>
+        <result property="jdxmc" column="jdxmc"/>
+        <association property="tsbzJxjsjbxx" column="jsid" javaType="TsbzJxjsjbxx" resultMap="TsbzJxjsjbxxResult"/>
+    </resultMap>
+
+    <resultMap type="TsbzJxjsjbxx" id="TsbzJxjsjbxxResult">
+        <result property="id" column="id"/>
+        <result property="otherid" column="otherid"/>
+        <result property="name" column="name"/>
+        <result property="jxbh" column="jxbh"/>
+        <result property="xb" column="xb"/>
+        <result property="csrq" column="csrq"/>
+        <result property="email" column="email"/>
+        <result property="phone" column="phone"/>
+        <result property="yzbm" column="yzbm"/>
+        <result property="zzmm" column="zzmm"/>
+        <result property="mz" column="mz"/>
+        <result property="prdwid" column="prdwid"/>
+        <result property="prdwmc" column="prdwmc"/>
+        <result property="jdxid" column="jdxid"/>
+        <result property="rjxd" column="rjxd"/>
+        <result property="rjxk" column="rjxk"/>
+        <result property="rjnj" column="rjnj"/>
+        <result property="byyx" column="byyx"/>
+        <result property="xl" column="xl"/>
+        <result property="xw" column="xw"/>
+        <result property="sfsfs" column="sfsfs"/>
+        <result property="lqnf" column="lqnf"/>
+        <result property="createTime" column="create_time"/>
     </resultMap>
 
     <sql id="selectTsbzJxzxpxpjVo">
-        select p.id, p.jdxid, p.jsid, p.pxbx, p.pxnf, p.px_beiyong, p.create_userid, p.create_time, j.id, j.name, j.jdxid4
-        from tsbz_jxzxpxpj p
-        right join tsbz_jxjsjbxx j on p.jdxid=j.jdxid
-
+        select p.id,j.id as jsid, p.pxbx, p.pxnf, p.px_beiyong, p.create_userid, j.create_time,j.name, j.jdxid,c.jdxmc as jdxmc
+        from tsbz_jxjsjbxx j
+        left join  tsbz_jxzxpxpj p on p.jsid=j.id
+        left join tsbz_jdx c on j.jdxid=c.id
     </sql>
 
     <select id="selectTsbzJxzxpxpjList" parameterType="TsbzJxzxpxpj" resultMap="TsbzJxzxpxpjResult">
         <include refid="selectTsbzJxzxpxpjVo"/>
-        where p.jdxid = #{jdxid}
+        <where>
+            <if test="jdxid != null  and jdxid != ''">and j.jdxid = #{jdxid}</if>
+            <if test="pxnf != null">and p.pxnf = #{pxnf}</if>
+            <if test="pxbx != null  and pxbx != ''">and p.pxbx = #{pxbx}</if>
+            <if test="jsid != null  and jsid != ''">and j.id = #{jsid}</if>
+        </where>
+        order by j.id
     </select>
-    
+
     <select id="selectTsbzJxzxpxpjById" parameterType="Long" resultMap="TsbzJxzxpxpjResult">
         <include refid="selectTsbzJxzxpxpjVo"/>
-        where id = #{id}
+        where p.id = #{id}
     </select>
-        
+
     <insert id="insertTsbzJxzxpxpj" parameterType="TsbzJxzxpxpj" useGeneratedKeys="true" keyProperty="id">
         insert into tsbz_jxzxpxpj
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -42,7 +76,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="pxBeiyong != null">px_beiyong,</if>
             <if test="createUserid != null">create_userid,</if>
             <if test="createTime != null">create_time,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="jdxid != null">#{jdxid},</if>
             <if test="jsid != null">#{jsid},</if>
@@ -51,7 +85,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="pxBeiyong != null">#{pxBeiyong},</if>
             <if test="createUserid != null">#{createUserid},</if>
             <if test="createTime != null">#{createTime},</if>
-         </trim>
+        </trim>
     </insert>
 
     <update id="updateTsbzJxzxpxpj" parameterType="TsbzJxzxpxpj">
@@ -73,10 +107,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteTsbzJxzxpxpjByIds" parameterType="String">
-        delete from tsbz_jxzxpxpj where id in 
+        delete from tsbz_jxzxpxpj where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>
-    
+
 </mapper>
