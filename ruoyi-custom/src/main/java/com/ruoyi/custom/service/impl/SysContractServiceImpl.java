@@ -132,6 +132,11 @@ public class SysContractServiceImpl implements ISysContractService {
             form.setField("promise", sysContract.getServePromise(), true);
             form.setField("date", DateUtils.getDate(), true);
             form.setField("cusId", sysContract.getCusId(), true);
+            String remark = "";
+            if (sysContract.getRemark() != null && !sysContract.getRemark().equals("")) {
+                remark = "（备注：" + sysContract.getRemark() + ")";
+            }
+            form.setField("remark", remark, true);
 
 
             stamper.setFormFlattening(true);// 如果为false那么生成的PDF文件还能编辑，一定要设为true

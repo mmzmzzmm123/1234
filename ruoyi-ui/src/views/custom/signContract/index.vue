@@ -15,7 +15,10 @@
         <span>{{form.serveTimeStr}}</span>
       </el-form-item>
       <el-form-item label="服务承诺" style="margin: 0">
-        <span>健康吃瘦{{form.serveTimeStr}}斤</span>
+        <span>健康吃瘦{{form.servePromise}}斤</span>
+      </el-form-item>
+      <el-form-item v-if="form.remark" label="备注" style="margin: 0">
+        <span>{{form.remark}}</span>
       </el-form-item>
       <el-form-item label="姓名" prop="signName">
         <el-input v-model="form.signName" placeholder="请输入客户姓名"/>
@@ -65,7 +68,8 @@
 
         <p>第二条 合作内容及费用
         <div class="line-rule">经甲乙双方协商确定，乙方向甲方购买 <b>{{form.serveTimeStr}}</b> “胜唐体控瘦身指导服务”（以下简称服务）。
-          经甲乙双方协商一致，确定乙方向甲方支付服务费用为人民币 <b>{{form.amount}}</b>，大写：<b>{{form.amountUpper}}</b>。
+          经甲乙双方协商一致，确定乙方向甲方支付服务费用为人民币 <b>{{form.amount}}</b>，大写：<b>{{form.amountUpper}}</b>。<b>{{form.remark ?
+            `（备注：${form.remark}）`:''}}</b>
         </div>
         </p>
 
