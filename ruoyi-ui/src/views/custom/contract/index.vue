@@ -97,7 +97,7 @@
 
     <el-table v-loading="loading" :data="contractList" @selection-change="handleSelectionChange">
       <!--      <el-table-column type="selection" width="55" align="center" />-->
-      <el-table-column label="合同编号" align="center" prop="id" fixed="left"/>
+      <el-table-column label="合同编号" align="center" prop="id" fixed="left" width="150"/>
       <el-table-column label="合同状态" align="center" prop="status" width="80" fixed="left">
         <template slot-scope="scope">
           <el-tag
@@ -107,7 +107,7 @@
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="客户姓名" align="center" prop="name" fixed="left"/>
+      <el-table-column label="客户姓名" align="center" prop="name" fixed="left" width="200"/>
       <el-table-column label="证件号" align="center" prop="cusId" width="190"/>
       <el-table-column label="电话" align="center" prop="phone" width="120"/>
       <el-table-column label="服务时间" align="center" prop="serveTime" :formatter="serveTimeFormat" width="100"/>
@@ -116,17 +116,17 @@
           {{scope.row.servePromise ? `${scope.row.servePromise}斤`: ''}}
         </template>
       </el-table-column>
-      <el-table-column label="金额" align="center" prop="amount"/>
+      <el-table-column label="金额" align="center" prop="amount" width="100"/>
       <el-table-column label="签订时间" align="center" prop="updateTime" width="180"/>
-      <el-table-column label="合同地址" align="center" prop="path">
+      <el-table-column label="合同地址" align="center" prop="path" width="80">
         <template slot-scope="scope">
           <el-button type="text" icon="el-icon-copy-document" @click="handleCopy(scope.row.path)" class="copyBtn"
                      :data-clipboard-text="copyValue">复制
           </el-button>
         </template>
       </el-table-column>
-      <el-table-column label="备注" align="center" prop="remark"/>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
+      <el-table-column label="备注" align="center" prop="remark" width="120"/>
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right" width="150">
         <template slot-scope="scope">
           <el-button
             v-if="scope.row.status==='yes'"
