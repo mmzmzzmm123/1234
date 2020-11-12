@@ -65,6 +65,14 @@
       >
         <template slot-scope="scope">
           <el-button
+            v-if="scope.row.iselement != 'Y'"
+            size="mini"
+            type="text"
+            icon="el-icon-plus"
+            @click="handleAdd(scope.row)"
+            v-hasPermi="['benyi:assessmentcontent:add']"
+          >新增</el-button>
+          <el-button
             v-if="scope.row.parentId !== 0"
             size="mini"
             type="text"
