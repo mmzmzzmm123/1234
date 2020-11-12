@@ -55,7 +55,7 @@ public class SysCommision extends BaseEntity {
     /**
      * 提成
      */
-    @Excel(name = "提成")
+    @Excel(name = "提成", scale = 2)
     private BigDecimal commision;
 
     public BigDecimal getCommision() {
