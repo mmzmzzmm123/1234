@@ -16,10 +16,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="createTime"    column="create_time"    />
         <result property="filePath"    column="file_path"    />
         <result property="fileName"    column="file_name"    />
+        <result property="pxfaFilepath"    column="pxfa_filepath"    />
+        <result property="pxfaFilename"    column="pxfa_filename"    />
+        <result property="pxzjFilepath"    column="pxzj_filepath"    />
+        <result property="pxzjFilename"    column="pxzj_filename"    />
     </resultMap>
 
     <sql id="selectTsbzJxzxjdpxxxfbVo">
-        select id, jdxid, name, pxjh, pxfa, pxzj, px_beiyong, create_userid, create_time, file_path, file_name from tsbz_jxzxjdpxxxfb
+        select id, jdxid, name, pxjh, pxfa, pxzj, px_beiyong, create_userid, create_time, file_path, file_name, pxfa_filepath, pxfa_filename, pxzj_filepath, pxzj_filename from tsbz_jxzxjdpxxxfb
     </sql>
 
     <select id="selectTsbzJxzxjdpxxxfbList" parameterType="TsbzJxzxjdpxxxfb" resultMap="TsbzJxzxjdpxxxfbResult">
@@ -34,6 +38,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createUserid != null "> and create_userid = #{createUserid}</if>
             <if test="filePath != null  and filePath != ''"> and file_path = #{filePath}</if>
             <if test="fileName != null  and fileName != ''"> and file_name like concat('%', #{fileName}, '%')</if>
+            <if test="pxfaFilepath != null  and pxfaFilepath != ''"> and pxfa_filepath = #{pxfaFilepath}</if>
+            <if test="pxfaFilename != null  and pxfaFilename != ''"> and pxfa_filename like concat('%', #{pxfaFilename}, '%')</if>
+            <if test="pxzjFilepath != null  and pxzjFilepath != ''"> and pxzj_filepath = #{pxzjFilepath}</if>
+            <if test="pxzjFilename != null  and pxzjFilename != ''"> and pxzj_filename like concat('%', #{pxzjFilename}, '%')</if>
         </where>
     </select>
     
@@ -55,6 +63,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">create_time,</if>
             <if test="filePath != null">file_path,</if>
             <if test="fileName != null">file_name,</if>
+            <if test="pxfaFilepath != null">pxfa_filepath,</if>
+            <if test="pxfaFilename != null">pxfa_filename,</if>
+            <if test="pxzjFilepath != null">pxzj_filepath,</if>
+            <if test="pxzjFilename != null">pxzj_filename,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="jdxid != null">#{jdxid},</if>
@@ -67,6 +79,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">#{createTime},</if>
             <if test="filePath != null">#{filePath},</if>
             <if test="fileName != null">#{fileName},</if>
+            <if test="pxfaFilepath != null">#{pxfaFilepath},</if>
+            <if test="pxfaFilename != null">#{pxfaFilename},</if>
+            <if test="pxzjFilepath != null">#{pxzjFilepath},</if>
+            <if test="pxzjFilename != null">#{pxzjFilename},</if>
          </trim>
     </insert>
 
@@ -83,6 +99,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="filePath != null">file_path = #{filePath},</if>
             <if test="fileName != null">file_name = #{fileName},</if>
+            <if test="pxfaFilepath != null">pxfa_filepath = #{pxfaFilepath},</if>
+            <if test="pxfaFilename != null">pxfa_filename = #{pxfaFilename},</if>
+            <if test="pxzjFilepath != null">pxzj_filepath = #{pxzjFilepath},</if>
+            <if test="pxzjFilename != null">pxzj_filename = #{pxzjFilename},</if>
         </trim>
         where id = #{id}
     </update>

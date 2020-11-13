@@ -83,6 +83,24 @@ public class TsbzJxzxjdpxxxfb extends BaseEntity {
     @Excel(name = "文件名称")
     private String fileName;
 
+    /** 培训方案文件路径 */
+    @Excel(name = "培训方案文件路径")
+    private String pxfaFilepath;
+
+    /** 培训方案文件名称 */
+    @Excel(name = "培训方案文件名称")
+    private String pxfaFilename;
+
+
+
+    /** 培训总结文件路径 */
+    @Excel(name = "培训总结文件路径")
+    private String pxzjFilepath;
+
+    /** 培训总结文件名称 */
+    @Excel(name = "培训总结文件名称")
+    private String pxzjFilename;
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -163,6 +181,38 @@ public class TsbzJxzxjdpxxxfb extends BaseEntity {
         return fileName;
     }
 
+    public String getPxfaFilepath() {
+        return pxfaFilepath;
+    }
+
+    public void setPxfaFilepath(String pxfaFilepath) {
+        this.pxfaFilepath = pxfaFilepath;
+    }
+
+    public String getPxfaFilename() {
+        return pxfaFilename;
+    }
+
+    public void setPxfaFilename(String pxfaFilename) {
+        this.pxfaFilename = pxfaFilename;
+    }
+
+    public String getPxzjFilepath() {
+        return pxzjFilepath;
+    }
+
+    public void setPxzjFilepath(String pxzjFilepath) {
+        this.pxzjFilepath = pxzjFilepath;
+    }
+
+    public String getPxzjFilename() {
+        return pxzjFilename;
+    }
+
+    public void setPxzjFilename(String pxzjFilename) {
+        this.pxzjFilename = pxzjFilename;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
@@ -177,6 +227,10 @@ public class TsbzJxzxjdpxxxfb extends BaseEntity {
                 .append("createTime", getCreateTime())
                 .append("filePath", getFilePath())
                 .append("fileName", getFileName())
+                .append("pxfaFilepath", getPxfaFilepath())
+                .append("pxfaFilename", getPxfaFilename())
+                .append("pxzjFilepath", getPxzjFilepath())
+                .append("pxzjFilename", getPxzjFilename())
                 .toString();
     }
 
