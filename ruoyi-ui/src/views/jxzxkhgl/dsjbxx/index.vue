@@ -210,7 +210,20 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="教师性别" prop="xb">
-              <el-input v-model="form.xb" placeholder="请输入性别" />
+              <!-- <el-input v-model="form.xb" placeholder="请输入性别" /> -->
+              <el-select
+                v-model="form.xb"
+                placeholder="请选择性别"
+                clearable
+                size="small"
+              >
+                <el-option
+                  v-for="dict in xbOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="12">

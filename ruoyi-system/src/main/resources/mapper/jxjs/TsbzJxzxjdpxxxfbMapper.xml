@@ -14,10 +14,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="pxBeiyong"    column="px_beiyong"    />
         <result property="createUserid"    column="create_userid"    />
         <result property="createTime"    column="create_time"    />
+        <result property="filePath"    column="file_path"    />
+        <result property="fileName"    column="file_name"    />
     </resultMap>
 
     <sql id="selectTsbzJxzxjdpxxxfbVo">
-        select id, jdxid, name, pxjh, pxfa, pxzj, px_beiyong, create_userid, create_time from tsbz_jxzxjdpxxxfb
+        select id, jdxid, name, pxjh, pxfa, pxzj, px_beiyong, create_userid, create_time, file_path, file_name from tsbz_jxzxjdpxxxfb
     </sql>
 
     <select id="selectTsbzJxzxjdpxxxfbList" parameterType="TsbzJxzxjdpxxxfb" resultMap="TsbzJxzxjdpxxxfbResult">
@@ -30,6 +32,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="pxzj != null  and pxzj != ''"> and pxzj = #{pxzj}</if>
             <if test="pxBeiyong != null  and pxBeiyong != ''"> and px_beiyong = #{pxBeiyong}</if>
             <if test="createUserid != null "> and create_userid = #{createUserid}</if>
+            <if test="filePath != null  and filePath != ''"> and file_path = #{filePath}</if>
+            <if test="fileName != null  and fileName != ''"> and file_name like concat('%', #{fileName}, '%')</if>
         </where>
     </select>
     
@@ -49,6 +53,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="pxBeiyong != null">px_beiyong,</if>
             <if test="createUserid != null">create_userid,</if>
             <if test="createTime != null">create_time,</if>
+            <if test="filePath != null">file_path,</if>
+            <if test="fileName != null">file_name,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="jdxid != null">#{jdxid},</if>
@@ -59,6 +65,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="pxBeiyong != null">#{pxBeiyong},</if>
             <if test="createUserid != null">#{createUserid},</if>
             <if test="createTime != null">#{createTime},</if>
+            <if test="filePath != null">#{filePath},</if>
+            <if test="fileName != null">#{fileName},</if>
          </trim>
     </insert>
 
@@ -73,6 +81,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="pxBeiyong != null">px_beiyong = #{pxBeiyong},</if>
             <if test="createUserid != null">create_userid = #{createUserid},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="filePath != null">file_path = #{filePath},</if>
+            <if test="fileName != null">file_name = #{fileName},</if>
         </trim>
         where id = #{id}
     </update>

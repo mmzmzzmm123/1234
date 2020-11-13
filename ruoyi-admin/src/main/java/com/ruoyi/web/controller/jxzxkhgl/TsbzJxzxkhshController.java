@@ -154,7 +154,8 @@ public class TsbzJxzxkhshController extends BaseController {
     public AjaxResult add(@PathVariable Long id) {
         TsbzJxzxkhsh tsbzJxzxkhsh = new TsbzJxzxkhsh();
         tsbzJxzxkhsh.setFaid(id);
-        tsbzJxzxkhsh.setStatus("1");
+        tsbzJxzxkhsh.setStatus("2");
+        tsbzJxzxkhsh.setXjshyj("1");//默认学校同意
         tsbzJxzxkhsh.setJsid(schoolCommonController.userIdToJxjsId(SecurityUtils.getLoginUser().getUser().getUserId()));
         tsbzJxzxkhsh.setCreateuseird(SecurityUtils.getLoginUser().getUser().getUserId());
         return toAjax(tsbzJxzxkhshService.insertTsbzJxzxkhsh(tsbzJxzxkhsh));

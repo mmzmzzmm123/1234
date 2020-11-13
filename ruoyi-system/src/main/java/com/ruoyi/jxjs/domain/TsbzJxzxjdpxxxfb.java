@@ -10,136 +10,174 @@ import java.util.Date;
 
 /**
  * 基地培训信息发布对象 tsbz_jxzxjdpxxxfb
- * 
+ *
  * @author ruoyi
  * @date 2020-11-09
  */
-public class TsbzJxzxjdpxxxfb extends BaseEntity
-{
+public class TsbzJxzxjdpxxxfb extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
-    /** 编号 */
+    /**
+     * 编号
+     */
     private Long id;
 
-    /** 基地校ID */
+    /**
+     * 基地校ID
+     */
     @Excel(name = "基地校ID")
     private String jdxid;
 
-    /** 培训信息名称 */
+    /**
+     * 培训信息名称
+     */
     @Excel(name = "培训信息名称")
     private String name;
 
-    /** 培训计划 */
+    /**
+     * 培训计划
+     */
     @Excel(name = "培训计划")
     private String pxjh;
 
-    /** 培训方案 */
+    /**
+     * 培训方案
+     */
     @Excel(name = "培训方案")
     private String pxfa;
 
-    /** 培训总结 */
+    /**
+     * 培训总结
+     */
     @Excel(name = "培训总结")
     private String pxzj;
 
-    /** 备用字段 */
+    /**
+     * 备用字段
+     */
     @Excel(name = "备用字段")
     private String pxBeiyong;
 
-    /** 创建人 */
+    /**
+     * 创建人
+     */
     @Excel(name = "创建人")
     private Long createUserid;
 
-    /** 创建时间 */
+    /**
+     * 创建时间
+     */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Excel(name = "访问时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
-    public void setId(Long id) 
-    {
+    /**
+     * 文件路径
+     */
+    @Excel(name = "文件路径")
+    private String filePath;
+
+    /**
+     * 文件名称
+     */
+    @Excel(name = "文件名称")
+    private String fileName;
+
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public Long getId() 
-    {
+    public Long getId() {
         return id;
     }
-    public void setJdxid(String jdxid) 
-    {
+
+    public void setJdxid(String jdxid) {
         this.jdxid = jdxid;
     }
 
-    public String getJdxid() 
-    {
+    public String getJdxid() {
         return jdxid;
     }
-    public void setName(String name) 
-    {
+
+    public void setName(String name) {
         this.name = name;
     }
 
-    public String getName() 
-    {
+    public String getName() {
         return name;
     }
-    public void setPxjh(String pxjh) 
-    {
+
+    public void setPxjh(String pxjh) {
         this.pxjh = pxjh;
     }
 
-    public String getPxjh() 
-    {
+    public String getPxjh() {
         return pxjh;
     }
-    public void setPxfa(String pxfa) 
-    {
+
+    public void setPxfa(String pxfa) {
         this.pxfa = pxfa;
     }
 
-    public String getPxfa() 
-    {
+    public String getPxfa() {
         return pxfa;
     }
-    public void setPxzj(String pxzj) 
-    {
+
+    public void setPxzj(String pxzj) {
         this.pxzj = pxzj;
     }
 
-    public String getPxzj() 
-    {
+    public String getPxzj() {
         return pxzj;
     }
-    public void setPxBeiyong(String pxBeiyong) 
-    {
+
+    public void setPxBeiyong(String pxBeiyong) {
         this.pxBeiyong = pxBeiyong;
     }
 
-    public String getPxBeiyong() 
-    {
+    public String getPxBeiyong() {
         return pxBeiyong;
     }
-    public void setCreateUserid(Long createUserid) 
-    {
+
+    public void setCreateUserid(Long createUserid) {
         this.createUserid = createUserid;
     }
 
-    public Long getCreateUserid() 
-    {
+    public Long getCreateUserid() {
         return createUserid;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
+    }
+
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    public String getFileName() {
+        return fileName;
     }
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("id", getId())
-            .append("jdxid", getJdxid())
-            .append("name", getName())
-            .append("pxjh", getPxjh())
-            .append("pxfa", getPxfa())
-            .append("pxzj", getPxzj())
-            .append("pxBeiyong", getPxBeiyong())
-            .append("createUserid", getCreateUserid())
-            .append("createTime", getCreateTime())
-            .toString();
+        return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
+                .append("id", getId())
+                .append("jdxid", getJdxid())
+                .append("name", getName())
+                .append("pxjh", getPxjh())
+                .append("pxfa", getPxfa())
+                .append("pxzj", getPxzj())
+                .append("pxBeiyong", getPxBeiyong())
+                .append("createUserid", getCreateUserid())
+                .append("createTime", getCreateTime())
+                .append("filePath", getFilePath())
+                .append("fileName", getFileName())
+                .toString();
     }
 
     @Override

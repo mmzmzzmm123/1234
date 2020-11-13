@@ -1,6 +1,12 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
+    <el-form
+      :model="queryParams"
+      ref="queryForm"
+      :inline="true"
+      v-show="showSearch"
+      label-width="68px"
+    >
       <el-form-item label="培训名称" prop="name">
         <el-input
           v-model="queryParams.name"
@@ -11,8 +17,16 @@
         />
       </el-form-item>
       <el-form-item>
-        <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+        <el-button
+          type="cyan"
+          icon="el-icon-search"
+          size="mini"
+          @click="handleQuery"
+          >搜索</el-button
+        >
+        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+          >重置</el-button
+        >
       </el-form-item>
     </el-form>
 
@@ -24,7 +38,8 @@
           size="mini"
           @click="handleAdd"
           v-hasPermi="['jxjs:jxzxjdpxxxfb:add']"
-        >新增</el-button>
+          >新增</el-button
+        >
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -34,7 +49,8 @@
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['jxjs:jxzxjdpxxxfb:edit']"
-        >修改</el-button>
+          >修改</el-button
+        >
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -44,22 +60,39 @@
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['jxjs:jxzxjdpxxxfb:remove']"
-        >删除</el-button>
+          >删除</el-button
+        >
       </el-col>
-	  <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+      <right-toolbar
+        :showSearch.sync="showSearch"
+        @queryTable="getList"
+      ></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="jxzxjdpxxxfbList" @selection-change="handleSelectionChange">
+    <el-table
+      v-loading="loading"
+      :data="jxzxjdpxxxfbList"
+      @selection-change="handleSelectionChange"
+    >
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="编号" align="center" prop="id" />
       <el-table-column label="培训信息名称" align="center" prop="name" />
-      <el-table-column label="基地校名称" align="center" prop="jdxid" :formatter="jdxFormat" />      
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column
+        label="基地校名称"
+        align="center"
+        prop="jdxid"
+        :formatter="jdxFormat"
+      />
+      <el-table-column
+        label="操作"
+        align="center"
+        class-name="small-padding fixed-width"
+      >
         <template slot-scope="scope">
           <el-button
             size="mini"
             type="text"
-            icon="el-icon-check"
+            icon="el-icon-view"
             @click="handleCheck(scope.row)"
             v-hasPermi="['jxjs:jxzxjdpxxxfb:edit']"
             >查看</el-button
@@ -70,20 +103,22 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['jxjs:jxzxjdpxxxfb:edit']"
-          >修改</el-button>
+            >修改</el-button
+          >
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['jxjs:jxzxjdpxxxfb:remove']"
-          >删除</el-button>
+            >删除</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
-      v-show="total>0"
+      v-show="total > 0"
       :total="total"
       :page.sync="queryParams.pageNum"
       :limit.sync="queryParams.pageSize"
@@ -99,6 +134,23 @@
         <el-form-item label="培训计划" prop="pxjh">
           <Editor v-model="form.pxjh" placeholder="请输入培训计划" />
         </el-form-item>
+        <el-form-item label="培训计划文件" prop="filePath">
+          <el-input v-model="form.filePath" v-if="false" />
+          <el-upload
+            class="upload-demo"
+            :action="uploadFileUrl"
+            :headers="headers"
+            :on-preview="handlePreview"
+            :on-remove="handleRemove"
+            :before-remove="beforeRemove"
+            :limit="1"
+            :on-exceed="handleExceed"
+            :file-list="fileList"
+            :on-success="handleAvatarSuccess"
+          >
+            <el-button size="small" type="primary">选择文件</el-button>
+          </el-upload>
+        </el-form-item>
         <el-form-item label="培训方案" prop="pxfa">
           <Editor v-model="form.pxfa" placeholder="请输入培训方案" />
         </el-form-item>
@@ -107,7 +159,9 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button type="primary" v-if="show" @click="submitForm"
+          >确 定</el-button
+        >
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
@@ -115,17 +169,26 @@
 </template>
 
 <script>
-import { listJxzxjdpxxxfb, getJxzxjdpxxxfb, delJxzxjdpxxxfb, addJxzxjdpxxxfb, updateJxzxjdpxxxfb, exportJxzxjdpxxxfb } from "@/api/jxjs/jxzxjdpxxxfb";
+import {
+  listJxzxjdpxxxfb,
+  getJxzxjdpxxxfb,
+  delJxzxjdpxxxfb,
+  addJxzxjdpxxxfb,
+  updateJxzxjdpxxxfb,
+  exportJxzxjdpxxxfb,
+} from "@/api/jxjs/jxzxjdpxxxfb";
 import Editor from "@/components/Editor";
-import { listJdx, getJdx, } from "@/api/jxjs/jdx";
+import { listJdx, getJdx } from "@/api/jxjs/jdx";
+import { getToken } from "@/utils/auth";
 
 export default {
   name: "Jxzxjdpxxxfb",
   components: {
-    Editor
+    Editor,
   },
   data() {
     return {
+      show: true,
       // 遮罩层
       loading: true,
       // 选中数组
@@ -142,6 +205,7 @@ export default {
       jxzxjdpxxxfbList: [],
       // 基地校选项
       jdxOptions: [],
+      fileList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -157,24 +221,28 @@ export default {
         pxzj: null,
         pxBeiyong: null,
         createUserid: null,
+        filePath: null,
+        fileName: null,
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
-        name: [
-          { required: true, message: "名称不能为空", trigger: "blur" },
-        ],
+        name: [{ required: true, message: "名称不能为空", trigger: "blur" }],
         pxjh: [
           { required: true, message: "培训计划不能为空", trigger: "blur" },
         ],
-        pxfa: [
-          { required: true, message: "培训方案不能为空", trigger: "blur" },
-        ],
-        pxzj: [
-          { required: true, message: "培训总结不能为空", trigger: "blur" },
-        ],
-      }
+        // pxfa: [
+        //   { required: true, message: "培训方案不能为空", trigger: "blur" },
+        // ],
+        // pxzj: [
+        //   { required: true, message: "培训总结不能为空", trigger: "blur" },
+        // ],
+      },
+      uploadFileUrl: process.env.VUE_APP_BASE_API + "/common/upload", // 上传的图片服务器地址
+      headers: {
+        Authorization: "Bearer " + getToken(),
+      },
     };
   },
   created() {
@@ -182,10 +250,38 @@ export default {
     this.getJdxList();
   },
   methods: {
+    handleAvatarSuccess(res, file) {
+      console.log(res, file);
+      if (res.code == "200") {
+        this.form.filePath = res.fileName;
+        this.form.fileName = file.name;
+      } else {
+        this.msgError(res.msg);
+      }
+    },
+    handleRemove(file, fileList) {
+      //console.log(file, fileList);
+      if (file.response.code == "200") {
+        this.form.fawj = "";
+      }
+    },
+    handlePreview(file) {
+      //console.log(file);
+    },
+    handleExceed(files, fileList) {
+      this.$message.warning(
+        `当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${
+          files.length + fileList.length
+        } 个文件`
+      );
+    },
+    beforeRemove(file, fileList) {
+      return this.$confirm(`确定移除 ${file.name}？`);
+    },
     /** 查询基地培训信息发布列表 */
     getList() {
       this.loading = true;
-      listJxzxjdpxxxfb(this.queryParams).then(response => {
+      listJxzxjdpxxxfb(this.queryParams).then((response) => {
         this.jxzxjdpxxxfbList = response.rows;
         //console.log(response.rows);
         this.total = response.total;
@@ -227,9 +323,12 @@ export default {
         pxzj: null,
         pxBeiyong: null,
         createUserid: null,
-        createTime: null
+        createTime: null,
+        filePath: null,
+        fileName: null,
       };
       this.resetForm("form");
+      this.fileList = [];
     },
     /** 搜索按钮操作 */
     handleQuery() {
@@ -243,42 +342,59 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.id)
-      this.single = selection.length!==1
-      this.multiple = !selection.length
+      this.ids = selection.map((item) => item.id);
+      this.single = selection.length !== 1;
+      this.multiple = !selection.length;
     },
     /** 新增按钮操作 */
     handleAdd() {
+      this.show = true;
       this.reset();
       this.open = true;
       this.title = "添加基地培训信息发布";
     },
     /** 查看按钮操作 */
     handleCheck(row) {
+      this.show = false;
       this.reset();
-      const id = row.id || this.ids
-      getJxzxjdpxxxfb(id).then(response => {
+      const id = row.id || this.ids;
+      getJxzxjdpxxxfb(id).then((response) => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改基地培训信息发布";
+        this.title = "查看基地培训信息发布";
+        if (response.data.fileName == null || response.data.fileName == "") {
+        } else {
+          this.fileList.push({
+            name: response.data.fileName,
+            url: response.data.filePath,
+          });
+        }
       });
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
+      this.show = true;
       this.reset();
-      const id = row.id || this.ids
-      getJxzxjdpxxxfb(id).then(response => {
+      const id = row.id || this.ids;
+      getJxzxjdpxxxfb(id).then((response) => {
         this.form = response.data;
         this.open = true;
         this.title = "修改基地培训信息发布";
+        if (response.data.fileName == null || response.data.fileName == "") {
+        } else {
+          this.fileList.push({
+            name: response.data.fileName,
+            url: response.data.filePath,
+          });
+        }
       });
     },
     /** 提交按钮 */
     submitForm() {
-      this.$refs["form"].validate(valid => {
+      this.$refs["form"].validate((valid) => {
         if (valid) {
           if (this.form.id != null) {
-            updateJxzxjdpxxxfb(this.form).then(response => {
+            updateJxzxjdpxxxfb(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("修改成功");
                 this.open = false;
@@ -286,7 +402,7 @@ export default {
               }
             });
           } else {
-            addJxzxjdpxxxfb(this.form).then(response => {
+            addJxzxjdpxxxfb(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("新增成功");
                 this.open = false;
@@ -300,30 +416,40 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$confirm('是否确认删除基地培训信息发布编号为"' + ids + '"的数据项?', "警告", {
+      this.$confirm(
+        '是否确认删除基地培训信息发布编号为"' + ids + '"的数据项?',
+        "警告",
+        {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
+          type: "warning",
+        }
+      )
+        .then(function () {
           return delJxzxjdpxxxfb(ids);
-        }).then(() => {
+        })
+        .then(() => {
           this.getList();
           this.msgSuccess("删除成功");
-        }).catch(function() {});
+        })
+        .catch(function () {});
     },
     /** 导出按钮操作 */
     handleExport() {
       const queryParams = this.queryParams;
-      this.$confirm('是否确认导出所有基地培训信息发布数据项?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
+      this.$confirm("是否确认导出所有基地培训信息发布数据项?", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(function () {
           return exportJxzxjdpxxxfb(queryParams);
-        }).then(response => {
+        })
+        .then((response) => {
           this.download(response.msg);
-        }).catch(function() {});
-    }
-  }
+        })
+        .catch(function () {});
+    },
+  },
 };
 </script>
