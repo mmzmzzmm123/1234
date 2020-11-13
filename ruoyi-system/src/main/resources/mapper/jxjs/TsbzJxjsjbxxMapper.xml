@@ -61,6 +61,7 @@
             <if test="sfsfs != null  and sfsfs != ''">and sfsfs = #{sfsfs}</if>
             <if test="lqnf != null  and lqnf != ''">and lqnf = #{lqnf}</if>
         </where>
+        order by CONVERT( name USING gbk ) COLLATE gbk_chinese_ci ASC
     </select>
 
     <select id="selectTsbzJxjsjbxxListnotjdx" parameterType="TsbzJxjsjbxx" resultMap="TsbzJxjsjbxxResult">
@@ -87,6 +88,7 @@
         <if test="xw != null  and xw != ''">and xw = #{xw}</if>
         <if test="sfsfs != null  and sfsfs != ''">and sfsfs = #{sfsfs}</if>
         <if test="lqnf != null  and lqnf != ''">and lqnf = #{lqnf}</if>
+        order by CONVERT( name USING gbk ) COLLATE gbk_chinese_ci ASC
     </select>
 
     <select id="selectTsbzJxjsjbxxListnotjdcx" parameterType="TsbzJxjsjbxx" resultMap="TsbzJxjsjbxxResult">
@@ -113,6 +115,7 @@
         <if test="xw != null  and xw != ''">and xw = #{xw}</if>
         <if test="sfsfs != null  and sfsfs != ''">and sfsfs = #{sfsfs}</if>
         <if test="lqnf != null  and lqnf != ''">and lqnf = #{lqnf}</if>
+        order by CONVERT( name USING gbk ) COLLATE gbk_chinese_ci ASC
     </select>
 
     <select id="selectTsbzJxjsjbxxById" parameterType="Long" resultMap="TsbzJxjsjbxxResult">

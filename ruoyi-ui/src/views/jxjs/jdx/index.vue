@@ -250,15 +250,101 @@
     <el-dialog
       title="基地校分配见习教师"
       :visible.sync="open_fpjs"
-      width="600px"
+      width="900px"
       append-to-body
     >
+      <el-form
+        :model="queryParams_fpjs"
+        ref="queryForm_fpjs"
+        :inline="true"
+        v-show="showSearch"
+        label-width="68px"
+      >
+        <el-form-item label="任教学段" prop="rjxd">
+          <el-select
+            v-model="queryParams_fpjs.rjxd"
+            placeholder="请选择任教学段"
+            clearable
+            size="small"
+          >
+            <el-option
+              v-for="dict in rjxdOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="任教学科" prop="rjxk">
+          <el-select
+            v-model="queryParams_fpjs.rjxk"
+            placeholder="请选择任教学科"
+            clearable
+            size="small"
+          >
+            <el-option
+              v-for="dict in rjxkOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="聘任单位" prop="prdwmc">
+          <el-input
+            v-model="queryParams_fpjs.prdwmc"
+            placeholder="请输入聘任单位"
+            clearable
+            size="small"
+          />
+        </el-form-item>
+        <el-form-item label="教师姓名" prop="name">
+          <el-input
+            v-model="queryParams_fpjs.name"
+            placeholder="请输入教师姓名"
+            clearable
+            size="small"
+          />
+        </el-form-item>
+        <el-form-item>
+          <el-button
+            type="cyan"
+            icon="el-icon-search"
+            size="mini"
+            @click="handleQuery_fpjs"
+            >搜索</el-button
+          >
+          <el-button icon="el-icon-refresh" size="mini" @click="resetQuery_fpjs"
+            >重置</el-button
+          >
+          <el-button type="primary" icon="el-icon-plus"  size="mini"  @click="submitForm_fpjs">确 定</el-button>
+        </el-form-item>
+      </el-form>
       <el-table
         :data="jxjsjbxxList"
         @selection-change="handleSelectionChangeFpjs"
       >
         <el-table-column type="selection" width="55" align="center" />
         <el-table-column label="姓名" align="center" prop="name" />
+        <el-table-column
+          label="性别"
+          align="center"
+          prop="xb"
+          :formatter="xbFormat"
+        />
+        <el-table-column label="聘任单位名称" align="center" prop="prdwmc" />
+        <el-table-column
+          label="任教学段"
+          align="center"
+          prop="rjxd"
+          :formatter="rjxdFormat"
+        />
+        <el-table-column
+          label="任教学科"
+          align="center"
+          prop="rjxk"
+          :formatter="rjxkFormat"
+        />
         <el-table-column label="录取年份" align="center" prop="lqnf" />
       </el-table>
       <div slot="footer" class="dialog-footer">
@@ -309,6 +395,9 @@ export default {
       nfOptions: [],
       xxbbOptions: [],
       bxlxOptions: [],
+      xbOptions: [],
+      rjxdOptions: [],
+      rjxkOptions: [],
       //学校列表
       xxOptions: [],
       // 查询参数
@@ -321,6 +410,15 @@ export default {
         bxlx: null,
         xxbb: null,
         jdxnf: null,
+      },
+      queryParams_fpjs: {
+        name: null,
+        xb: null,
+        prdwid: null,
+        prdwmc: null,
+        jdxid: null,
+        rjxd: null,
+        rjxk: null,
       },
       // 表单参数
       form: {},
@@ -356,6 +454,15 @@ export default {
     this.getDicts("sys_dm_bxlx").then((response) => {
       this.bxlxOptions = response.data;
     });
+    this.getDicts("sys_user_sex").then((response) => {
+      this.xbOptions = response.data;
+    });
+    this.getDicts("sys_dm_rjxd").then((response) => {
+      this.rjxdOptions = response.data;
+    });
+    this.getDicts("sys_dm_rjxk").then((response) => {
+      this.rjxkOptions = response.data;
+    });
   },
   methods: {
     //获取学校列表
@@ -363,6 +470,18 @@ export default {
       listXxjbxx(null).then((response) => {
         this.xxOptions = response.rows;
       });
+    },
+    // 性别字典翻译
+    xbFormat(row, column) {
+      return this.selectDictLabel(this.xbOptions, row.xb);
+    },
+    // 任教学段字典翻译
+    rjxdFormat(row, column) {
+      return this.selectDictLabel(this.rjxdOptions, row.rjxd);
+    },
+    // 任教学科字典翻译
+    rjxkFormat(row, column) {
+      return this.selectDictLabel(this.rjxkOptions, row.rjxk);
     },
     // 字典翻译
     nfFormat(row, column) {
@@ -387,7 +506,7 @@ export default {
     },
     /** 查询基地校列表 */
     getJxjsList() {
-      listJxjsjbxxnotjdx(null).then((response) => {
+      listJxjsjbxxnotjdx(this.queryParams_fpjs).then((response) => {
         this.jxjsjbxxList = response.rows;
       });
     },
@@ -419,10 +538,20 @@ export default {
       this.queryParams.pageNum = 1;
       this.getList();
     },
+    /** 搜索按钮操作 */
+    handleQuery_fpjs() {
+      this.queryParams.pageNum = 1;
+      this.getJxjsList();
+    },
     /** 重置按钮操作 */
     resetQuery() {
       this.resetForm("queryForm");
       this.handleQuery();
+    },
+    /** 重置按钮操作 */
+    resetQuery_fpjs() {
+      this.resetForm("queryForm_fpjs");
+      this.handleQuery_fpjs();
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
@@ -479,7 +608,7 @@ export default {
       if (this.jsIds == null || this.jsIds.length == 0) {
         this.msgError("请选择要分配的教师");
       } else {
-        console.log(this.jsIds[0]);
+        // console.log(this.jsIds[0]);
         updateJxjsJdx(this.jsIds, this.jdxid).then((response) => {
           if (response.code === 200) {
             this.msgSuccess("分配成功");
@@ -508,7 +637,7 @@ export default {
     /** 分配教师按钮操作 */
     handleFpjs(row) {
       const ids = row.id || this.ids;
-      console.log(ids);
+      // console.log(ids);
       this.jdxid = ids;
       this.open_fpjs = true;
       this.getJxjsList();
