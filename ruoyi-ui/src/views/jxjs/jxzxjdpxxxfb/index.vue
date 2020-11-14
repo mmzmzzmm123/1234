@@ -199,6 +199,48 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+
+    <!-- 查看基地培训信息发布对话框 -->
+    <!-- 查看基地培训信息发布对话框 -->
+    <el-dialog
+      :title="title_look"
+      :visible.sync="open_look"
+      width="800px"
+      append-to-body
+    >
+      <el-form ref="form" :model="form" label-width="120px">
+        <el-form-item label="培训名称" prop="name">
+          {{ form.name }}
+        </el-form-item>
+        <el-form-item label="培训计划" prop="pxjh">
+          <span v-html="form.pxjh"></span>
+        </el-form-item>
+        <el-form-item label="培训计划文件" prop="fileName">
+            <el-link type="primary" :href="form.filePath">{{
+            form.fileName
+          }}</el-link></el-form-item
+        >
+        <el-form-item label="培训方案" prop="pxfa">
+          <span v-html="form.pxfa"></span>
+        </el-form-item>
+        <el-form-item label="培训方案文件" prop="pxfaFilename">
+           <el-link type="primary" :href="form.pxfaFilepath">{{
+            form.pxfaFilename
+          }}</el-link></el-form-item
+        >
+        <el-form-item label="培训总结" prop="pxzj">
+          <span v-html="form.pxzj"></span>
+        </el-form-item>
+        <el-form-item label="培训总结文件" prop="pxzjFilename">
+          <el-link type="primary" :href="form.pxzjFilepath">{{
+            form.pxzjFilename
+          }}</el-link>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="cancel_look">取 消</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -247,8 +289,10 @@ export default {
       pxzjfileList: [],
       // 弹出层标题
       title: "",
+      title_look: "",
       // 是否显示弹出层
       open: false,
+      open_look: false,
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -406,6 +450,11 @@ export default {
       this.open = false;
       this.reset();
     },
+    // 取消按钮
+    cancel_look() {
+      this.open_look = false;
+      this.reset();
+    },
     // 表单重置
     reset() {
       this.form = {
@@ -423,7 +472,7 @@ export default {
         pxfaFilepath: null,
         pxfaFilename: null,
         pxzjFilepath: null,
-        pxzjFilename: null
+        pxzjFilename: null,
       };
       this.resetForm("form");
       this.fileList = [];
@@ -455,13 +504,12 @@ export default {
     },
     /** 查看按钮操作 */
     handleCheck(row) {
-      this.show = false;
       this.reset();
       const id = row.id || this.ids;
       getJxzxjdpxxxfb(id).then((response) => {
         this.form = response.data;
-        this.open = true;
-        this.title = "查看基地培训信息发布";
+        this.open_look = true;
+        this.title_look = "查看基地培训信息发布";
         if (response.data.fileName == null || response.data.fileName == "") {
         } else {
           this.fileList.push({
@@ -469,14 +517,20 @@ export default {
             url: response.data.filePath,
           });
         }
-        if (response.data.pxfaFilename == null || response.data.pxfaFilename == "") {
+        if (
+          response.data.pxfaFilename == null ||
+          response.data.pxfaFilename == ""
+        ) {
         } else {
           this.pxfafileList.push({
             name: response.data.pxfaFilename,
             url: response.data.pxfaFilepath,
           });
         }
-        if (response.data.pxzjFilename == null || response.data.pxzjFilename == "") {
+        if (
+          response.data.pxzjFilename == null ||
+          response.data.pxzjFilename == ""
+        ) {
         } else {
           this.pxzjfileList.push({
             name: response.data.pxzjFilename,
@@ -502,14 +556,20 @@ export default {
             url: response.data.filePath,
           });
         }
-        if (response.data.pxfaFilename == null || response.data.pxfaFilename == "") {
+        if (
+          response.data.pxfaFilename == null ||
+          response.data.pxfaFilename == ""
+        ) {
         } else {
           this.pxfafileList.push({
             name: response.data.pxfaFilename,
             url: response.data.pxfaFilepath,
           });
         }
-        if (response.data.pxzjFilename == null || response.data.pxzjFilename == "") {
+        if (
+          response.data.pxzjFilename == null ||
+          response.data.pxzjFilename == ""
+        ) {
         } else {
           this.pxzjfileList.push({
             name: response.data.pxzjFilename,
