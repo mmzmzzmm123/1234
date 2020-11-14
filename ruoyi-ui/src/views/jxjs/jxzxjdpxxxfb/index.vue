@@ -216,7 +216,7 @@
           <span v-html="form.pxjh"></span>
         </el-form-item>
         <el-form-item label="培训计划文件" prop="fileName">
-            <el-link type="primary" :href="form.filePath">{{
+          <el-link type="primary" :href="downUrl + form.filePath">{{
             form.fileName
           }}</el-link></el-form-item
         >
@@ -224,7 +224,7 @@
           <span v-html="form.pxfa"></span>
         </el-form-item>
         <el-form-item label="培训方案文件" prop="pxfaFilename">
-           <el-link type="primary" :href="form.pxfaFilepath">{{
+          <el-link type="primary" :href="downUrl + form.pxfaFilepath">{{
             form.pxfaFilename
           }}</el-link></el-form-item
         >
@@ -232,7 +232,7 @@
           <span v-html="form.pxzj"></span>
         </el-form-item>
         <el-form-item label="培训总结文件" prop="pxzjFilename">
-          <el-link type="primary" :href="form.pxzjFilepath">{{
+          <el-link type="primary" :href="downUrl + form.pxzjFilepath">{{
             form.pxzjFilename
           }}</el-link>
         </el-form-item>
@@ -321,6 +321,7 @@ export default {
         ],
       },
       uploadFileUrl: process.env.VUE_APP_BASE_API + "/common/upload", // 上传的图片服务器地址
+      downUrl: process.env.VUE_APP_BASE_API,
       headers: {
         Authorization: "Bearer " + getToken(),
       },
