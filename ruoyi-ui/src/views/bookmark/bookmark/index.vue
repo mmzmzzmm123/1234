@@ -9,9 +9,9 @@
           <div class="sousou-leftico" @click="drawer = true"><img
             src="https://favicon.lucq.fun/?url=https://www.baidu.com"/></div>
         </div>
-        <div class="sousou-input">
+        <div class="sousou-input" >
           <el-input slot="reference" @keyup.enter.native="gosousuo" placeholder="请输入要查找的关键词" v-model="sousuo"
-                    size="small">
+                    size="small" >
             <i slot="prefix" class="el-input__icon el-icon-search"></i>
           </el-input>
         </div>
@@ -1411,6 +1411,7 @@
   .sousou-input i {
     font-size: 15px;
   }
+ 
 
   .header-list {
     display: flex;

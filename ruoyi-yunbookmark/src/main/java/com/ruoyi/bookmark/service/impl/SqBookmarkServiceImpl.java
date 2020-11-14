@@ -101,6 +101,9 @@ public class SqBookmarkServiceImpl implements ISqBookmarkService
     @Override
     public int insertSqBookmark(SqBookmark sqBookmark)
     {
+        if(null==sqBookmark.getDescription()||"".equals(sqBookmark.getDescription())){
+            sqBookmark.setDescription(sqBookmark.getTitle());
+        }
 
       int i= sqBookmarkMapper.insertSqBookmark(sqBookmark);
         //传入的标签
