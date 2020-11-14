@@ -211,7 +211,7 @@ $color: #45b984;
   .full-calendar {
     padding: 20px;
     height: calc(100% - 30px);
-    /deep/ {
+    ::v-deep {
       .fc-unthemed thead,
       .fc-unthemed .fc-content,
       .fc-unthemed th,

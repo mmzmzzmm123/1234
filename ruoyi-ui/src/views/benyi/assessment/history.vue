@@ -15,6 +15,21 @@
         <div>
           <radar-chart :psMsg="item.dictValue" />
         </div>
+        <div>
+          <radar-chart_jk :psMsg="item.dictValue" />
+        </div>
+        <div>
+          <radar-chart_yy :psMsg="item.dictValue" />
+        </div>
+        <div>
+          <radar-chart_sh :psMsg="item.dictValue" />
+        </div>
+        <div>
+          <radar-chart_kx :psMsg="item.dictValue" />
+        </div>
+        <div>
+          <radar-chart_ys :psMsg="item.dictValue" />
+        </div>
         <div class="block">
           <h2 class="block-item-title flex align-center">评估建议</h2>
           <!-- <ul class="block-content">
@@ -69,11 +84,21 @@ import {
 import { getChildByAssessment } from "@/api/benyi/child";
 import { getAssessmentDictData } from "@/api/benyi/assessmentchild";
 import RadarChart from "@/views/dashboard/RadarChart";
+import RadarChart_jk from "@/views/dashboard/RadarChart_jk";
+import RadarChart_yy from "@/views/dashboard/RadarChart_yy";
+import RadarChart_sh from "@/views/dashboard/RadarChart_sh";
+import RadarChart_kx from "@/views/dashboard/RadarChart_kx";
+import RadarChart_ys from "@/views/dashboard/RadarChart_ys";
 
 export default {
   name: "Assessmentstudent",
   components: {
     RadarChart,
+    RadarChart_jk,
+    RadarChart_yy,
+    RadarChart_sh,
+    RadarChart_kx,
+    RadarChart_ys,
   },
   data() {
     return {
