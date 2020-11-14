@@ -630,6 +630,8 @@ export default {
           { required: true, message: "出生日期不能为空", trigger: "blur" },
         ],
         phone: [{ required: true, message: "电话不能为空", trigger: "blur" }],
+        rjxd: [{ required: true, message: "任教学段不能为空", trigger: "blur" }],
+        rjxk: [{ required: true, message: "任教学科不能为空", trigger: "blur" }],
       },
     };
   },

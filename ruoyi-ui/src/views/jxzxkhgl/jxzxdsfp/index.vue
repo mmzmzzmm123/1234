@@ -240,6 +240,11 @@ export default {
         rjxd: null,
         rjxk: null,
       },
+      // 查询导师
+      queryParams_ds: {
+        xd: null,
+        xk: null,
+      },
       // 表单参数
       form: {},
       // 表单校验
@@ -259,7 +264,7 @@ export default {
       this.rjxkOptions = response.data;
     });
     this.getJxzxList();
-    this.getDsList();
+    // this.getDsList();
     this.getList();
     
   },
@@ -305,7 +310,8 @@ export default {
     },
     /** 查询导师基本信息列表 */
     getDsList() {
-      listDsjbxx(null).then((response) => {
+      listDsjbxx(this.queryParams_ds).then((response) => {
+        // console.log(response.rows);
         this.dsOptions = response.rows;
       });
     },
@@ -362,17 +368,33 @@ export default {
     /** 分配按钮操作 */
     handleUpdate(row) {
       this.reset();
+      // 给请求导师的query赋值
+      this.queryParams_ds.xd = row.rjxd;
+      this.queryParams_ds.xk = row.rjxk;
       const id = row.id || this.ids;
       this.reset();
       if (id == "" || id == null) {
-        this.form.jxjsid = row.jxjsid;
-        this.open = true;
-        this.title = "添加见习导师分配";
+        this.getDsList();
+        // 判断是否有对应导师
+        if (this.dsOptions.length<1) {
+          this.msgError("没有对应的学段和学科导师")
+        } else {
+          this.form.jxjsid = row.jxjsid;
+          this.open = true;
+          this.title = "添加见习导师分配";
+        }     
       } else {
         getJxzxdsfp(id).then((response) => {
-          this.form = response.data;
-          this.open = true;
-          this.title = "修改见习导师分配";
+          this.getDsList();
+          if (this.dsOptions.length<1) {
+            this.msgError("没有对应的学段和学科导师")
+          } else {
+            console.log(this.dsOptions);
+            this.form = response.data;
+            this.open = true;
+            this.title = "修改见习导师分配";
+          }
+          
       });
       }
     },
