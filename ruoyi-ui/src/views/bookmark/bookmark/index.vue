@@ -119,7 +119,7 @@
           <div v-if="queryParams.sousuo!=''" class="sousuoContent">
             <i class="el-icon-success"></i>
             <!--      <span> 当前搜索的内容是:{{queryParams.sousuo}}</span>-->
-            <span> 共为您找到约{{total}}个结果</span>
+            <span> "{{sousuo}}"共为您找到约{{total}}个结果</span>
           </div>
 
           <div class="nullbookmark" v-if="showimg">
@@ -199,7 +199,7 @@
         <div class="bookmarklist" :style="datalist"  infinite-scroll-distance="10" v-loading="loading" v-if="showbookmark"
              v-infinite-scroll="load"
              infinite-scroll-disabled="disabled" style="overflow:auto;" infinite-scroll-immediate="false">
-    <BookmarkOne @on-windowurl="windowurl" :key="property" :property="property"  :listloading="listloading" :loading="loading" :bookmarkList="bookmarkList"></BookmarkOne>
+    <BookmarkOne @on-windowurl="windowurl" :key="property" :property="property" :highlighted="highlighted" :sousuo="sousuo"  :listloading="listloading" :loading="loading" :bookmarkList="bookmarkList"></BookmarkOne>
 
           <p v-if="listloading" class="listhint"><i class="el-icon-loading"></i>加载中...</p>
           <p v-if="listnoMore&&!showimg" class="listhint">没有更多了</p>
@@ -486,6 +486,7 @@
       //搜索值
       if (sousuo != null && sousuo != undefined && sousuo != '') {
         this.queryParams.sousuo = sousuo;
+        this.sousuo=sousuo
       }
 
 
@@ -505,7 +506,7 @@
       //自动获取高度
       window.addEventListener('resize', this.getHeight);
       this.getHeight()
-      
+
 
     },
     mounted() {
@@ -836,6 +837,7 @@
       },
       /**查询书签 滚动加载分页拼接*/
       getListConcat(){
+        var that=this;
         this.loading = true;
         selectBymenuIdUserID(this.queryParams).then(response => {
           if (response.code == 200) {
@@ -908,67 +910,17 @@
        window.open(this.gourl);
       },
 
-      /**搜索高亮 开始**/
-      highLight(item, highLight) {
-        return this.highLightTableMsg(item, highLight)
-      },
-      highLightTableMsg(msg, highLightStr) {
-        if (msg == null) {
-          msg = ''
-        }
-        if (highLightStr == null) {
-          highLightStr = ''
-        }
-        if (msg instanceof Object) {
-          msg = JSON.stringify(msg)
-        }
-        if (highLightStr instanceof Object) {
-          highLightStr = JSON.stringify(highLightStr)
-        }
-        if (!(msg instanceof String)) {
-          msg = msg.toString()
-        }
-        if (!(highLightStr instanceof String)) {
-          highLightStr = highLightStr.toString()
-        }
-        var htmlStr = ''
-        if (highLightStr.length > 0) {
-          if (msg.indexOf(highLightStr) !== -1) {
-            assemblyStr(msg, highLightStr)
 
-          } else {
-            htmlStr = '<span>' + msg + '</span>'
-          }
-        } else {
-          htmlStr = '<span>' + msg + '</span>'
-        }
-
-        function assemblyStr(msgAssembly, highLightAssembly) {
-          if (msgAssembly.indexOf(highLightAssembly) !== -1) {
-            var length = highLightAssembly.length
-            // alert(length)
-            var start = msgAssembly.indexOf(highLightAssembly)
-            htmlStr = htmlStr + '<span>' + msgAssembly.substring(0, start) + '</span>' + '<span style="color:red;">' + highLightAssembly + '</span>'
-            msgAssembly = msgAssembly.substring(start + length, msgAssembly.length)
-            assemblyStr(msgAssembly, highLightAssembly)
-          } else {
-            htmlStr = htmlStr + '<span>' + msgAssembly + '</span>'
-          }
-        }
-
-        return htmlStr;
-      },
-      /**搜索高亮 结束**/
       /**搜索功能**/
       gosousuo() {
         var that = this;
-        // that.$router.push({
-        //   path: "/content",
-        //   query: {
-        //     sousuo: this.sousuo,
-        //     t:Date.now(),
-        //   }
-        // })
+        that.$router.push({
+          path: "/content",
+          query: {
+            sousuo: this.sousuo,
+            t:Date.now(),
+          }
+        })
       },
 
       /** 查询部门下拉树结构 */
@@ -1352,7 +1304,7 @@
   .bookmark {
     height: 70px;
     /*border-bottom: 1px solid #D9D9D9;*/
-   
+
   }
 
   .bookmark2 {
@@ -1478,9 +1430,9 @@
   }
 
   .sousou-left {
-   
+
     margin-left: 12px;
-   
+
   }
   .isBookmarkAside{
     padding: 0px;

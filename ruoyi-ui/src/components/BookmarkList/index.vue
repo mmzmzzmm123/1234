@@ -4,12 +4,16 @@
 
     <div v-for="bm in bookmarkList" class="bookmark"   @click="winurl(bm.noteId,bm.tiymceUeditor,bm.bookmarkId,bm.url)">
       <div class="bookmark-item">
+         <span class="bookmark-title" v-if="highlighted" v-html="highLight(bm.title,sousuo)"/>
 
-        <span class="bookmark-title" >{{bm.title}}</span>
+        <span class="bookmark-title" v-if="!highlighted">{{bm.title}}</span>
         <div class="bookmark-time" v-if="noteTime">{{bm.createTime|changeTime}}</div>
       </div>
       <div class="bookmark-description" v-if="isdescription">
-        <span >{{bm.description}}</span>
+
+        <span v-if="highlighted" v-html="highLight(bm.description,sousuo)"></span>
+
+        <span v-if="!highlighted">{{bm.description}}</span>
       </div>
       <div class="info-wrap" v-if="isBookmarkIcon">
         <div class="info">
@@ -43,6 +47,8 @@
     props: {
       bookmarkList: Array,
       property: null,
+      highlighted: null,//搜索是否高亮
+      sousuo:null
     },
     data: function () {
       return {
@@ -98,7 +104,60 @@
 
         }
 
-      }
+      },
+
+      /**搜索高亮 开始**/
+      highLight(item, highLight) {
+        return this.highLightTableMsg(item, highLight)
+      },
+      highLightTableMsg(msg, highLightStr) {
+        if (msg == null) {
+          msg = ''
+        }
+        if (highLightStr == null) {
+          highLightStr = ''
+        }
+        if (msg instanceof Object) {
+          msg = JSON.stringify(msg)
+        }
+        if (highLightStr instanceof Object) {
+          highLightStr = JSON.stringify(highLightStr)
+        }
+        if (!(msg instanceof String)) {
+          msg = msg.toString()
+        }
+        if (!(highLightStr instanceof String)) {
+          highLightStr = highLightStr.toString()
+        }
+        var htmlStr = ''
+        if (highLightStr.length > 0) {
+          if (msg.toLowerCase().indexOf(highLightStr) !== -1) {
+            assemblyStr(msg, highLightStr)
+
+          } else {
+            htmlStr = '<span>' + msg + '</span>'
+          }
+        } else {
+          htmlStr = '<span>' + msg + '</span>'
+        }
+
+        function assemblyStr(msgAssembly, highLightAssembly) {
+          var isend=highLightAssembly.length;
+          if (msgAssembly.toLowerCase().indexOf(highLightAssembly) !== -1) {
+            var length = highLightAssembly.length
+
+            var start = msgAssembly.toLowerCase().indexOf(highLightAssembly)
+            htmlStr = htmlStr + '<span>' + msgAssembly.substring(0, start) + '</span>' + '<span style="color:red;">' + msgAssembly.substring(start, start+isend) + '</span>'
+            msgAssembly = msgAssembly.substring(start + length, msgAssembly.length)
+            assemblyStr(msgAssembly, highLightAssembly)
+          } else {
+            htmlStr = htmlStr + '<span>' + msgAssembly + '</span>'
+          }
+        }
+
+        return htmlStr;
+      },
+      /**搜索高亮 结束**/
 
     }
   }
