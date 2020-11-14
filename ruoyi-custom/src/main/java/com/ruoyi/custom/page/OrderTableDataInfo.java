@@ -2,6 +2,7 @@ package com.ruoyi.custom.page;
 
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.List;
 
 public class OrderTableDataInfo implements Serializable {
@@ -30,7 +31,7 @@ public class OrderTableDataInfo implements Serializable {
     /**
      * 金额总数
      */
-    private long totalAmount;
+    private BigDecimal totalAmount;
 
     /**
      * 表格数据对象
@@ -81,11 +82,11 @@ public class OrderTableDataInfo implements Serializable {
         this.msg = msg;
     }
 
-    public void setTotalAmount(long totalAmount) {
+    public void setTotalAmount(BigDecimal totalAmount) {
         this.totalAmount = totalAmount;
     }
 
-    public long getTotalAmount() {
+    public BigDecimal getTotalAmount() {
         return totalAmount;
     }
 }

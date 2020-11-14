@@ -81,7 +81,7 @@ public class SysOrderController extends OrderBaseController {
                 }
             }
         }
-        return getOrderDataTable(list, totalAmount.longValue());
+        return getOrderDataTable(list, totalAmount);
     }
 
 
