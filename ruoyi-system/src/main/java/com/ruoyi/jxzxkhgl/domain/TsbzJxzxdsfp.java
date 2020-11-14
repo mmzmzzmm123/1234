@@ -36,6 +36,25 @@ public class TsbzJxzxdsfp extends BaseEntity {
 
     private String jdxmc;
 
+    public String getRjxd() {
+        return rjxd;
+    }
+
+    public void setRjxd(String rjxd) {
+        this.rjxd = rjxd;
+    }
+
+    public String getRjxk() {
+        return rjxk;
+    }
+
+    public void setRjxk(String rjxk) {
+        this.rjxk = rjxk;
+    }
+
+    private String rjxd;
+    private String rjxk;
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -85,6 +104,8 @@ public class TsbzJxzxdsfp extends BaseEntity {
                 .append("createTime", getCreateTime())
                 .append("tsbzJxjsjbxx", getTsbzJxjsjbxx())
                 .append("jdxmc", getJdxmc())
+                .append("rjxd", getRjxd())
+                .append("rjxk", getRjxk())
                 .toString();
     }
 }

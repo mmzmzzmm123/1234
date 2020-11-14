@@ -52,7 +52,7 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
+      <!-- <el-col :span="1.5">
         <el-button
           type="primary"
           icon="el-icon-plus"
@@ -61,7 +61,7 @@
           v-hasPermi="['jxzxkhgl:jxzxdsfp:add']"
           >新增</el-button
         >
-      </el-col>
+      </el-col> -->
       <el-col :span="1.5">
         <el-button
           type="success"
@@ -70,10 +70,10 @@
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['jxzxkhgl:jxzxdsfp:edit']"
-          >修改</el-button
+          >分配</el-button
         >
       </el-col>
-      <el-col :span="1.5">
+      <!-- <el-col :span="1.5">
         <el-button
           type="danger"
           icon="el-icon-delete"
@@ -83,7 +83,7 @@
           v-hasPermi="['jxzxkhgl:jxzxdsfp:remove']"
           >删除</el-button
         >
-      </el-col>
+      </el-col> -->
       <right-toolbar
         :showSearch.sync="showSearch"
         @queryTable="getList"
@@ -97,12 +97,15 @@
     >
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="编号" align="center" prop="id" />
+      <el-table-column label="基地校" align="center" prop="jdxmc" />
       <el-table-column
         label="见习之星"
         align="center"
         prop="jxjsid"
         :formatter="jxzxFormat"
       />
+      <el-table-column label="任教学段" align="center" prop="rjxd" :formatter="rjxdFormat"/>
+      <el-table-column label="任教学科" align="center" prop="rjxk" :formatter="rjxkFormat"/>
       <el-table-column
         label="见习导师"
         align="center"
@@ -121,7 +124,7 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['jxzxkhgl:jxzxdsfp:edit']"
-            >修改</el-button
+            >分配</el-button
           >
           <el-button
             size="mini"
@@ -129,7 +132,7 @@
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['jxzxkhgl:jxzxdsfp:remove']"
-            >删除</el-button
+            >清空</el-button
           >
         </template>
       </el-table-column>
@@ -152,6 +155,7 @@
             placeholder="请选择见习之星"
             filterable
             size="small"
+            :disabled = true
           >
             <el-option
               v-for="dict in jxzxOptions"
@@ -214,9 +218,13 @@ export default {
       total: 0,
       // 见习导师分配表格数据
       jxzxdsfpList: [],
-      //导师
+      // 任教学段字典
+      rjxdOptions: [],
+      // 任教学科字典
+      rjxkOptions: [],
+      // 导师
       dsOptions: [],
-      //导师
+      // 见习之星
       jxzxOptions: [],
       // 弹出层标题
       title: "",
@@ -228,6 +236,9 @@ export default {
         pageSize: 10,
         jxjsid: null,
         dsid: null,
+        jdxmc: null,
+        rjxd: null,
+        rjxk: null,
       },
       // 表单参数
       form: {},
@@ -241,9 +252,16 @@ export default {
     };
   },
   created() {
+    this.getDicts("sys_dm_rjxd").then((response) => {
+      this.rjxdOptions = response.data;
+    });
+    this.getDicts("sys_dm_rjxk").then((response) => {
+      this.rjxkOptions = response.data;
+    });
     this.getJxzxList();
     this.getDsList();
     this.getList();
+    
   },
   methods: {
     // 见习教师字典翻译
@@ -257,6 +275,14 @@ export default {
         }
       });
       return actions.join("");
+    },
+    // 任教学段字典翻译
+    rjxdFormat(row, column) {
+      return this.selectDictLabel(this.rjxdOptions, row.rjxd);
+    },
+    // 任教学科字典翻译
+    rjxkFormat(row, column) {
+      return this.selectDictLabel(this.rjxkOptions, row.rjxk);
     },
     // 导师字典翻译
     dsFormat(row, column) {
@@ -287,6 +313,7 @@ export default {
     getList() {
       this.loading = true;
       listJxzxdsfp(this.queryParams).then((response) => {
+        // console.log(response.rows);
         this.jxzxdsfpList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -304,6 +331,9 @@ export default {
         jxjsid: null,
         dsid: null,
         createTime: null,
+        jdxmc: null,
+        rjxd: null,
+        rjxk: null,
       };
       this.resetForm("form");
     },
@@ -329,15 +359,22 @@ export default {
       this.open = true;
       this.title = "添加见习导师分配";
     },
-    /** 修改按钮操作 */
+    /** 分配按钮操作 */
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids;
-      getJxzxdsfp(id).then((response) => {
-        this.form = response.data;
+      this.reset();
+      if (id == "" || id == null) {
+        this.form.jxjsid = row.jxjsid;
         this.open = true;
-        this.title = "修改见习导师分配";
+        this.title = "添加见习导师分配";
+      } else {
+        getJxzxdsfp(id).then((response) => {
+          this.form = response.data;
+          this.open = true;
+          this.title = "修改见习导师分配";
       });
+      }
     },
     /** 提交按钮 */
     submitForm() {
@@ -363,11 +400,15 @@ export default {
         }
       });
     },
-    /** 删除按钮操作 */
+    /** 清空按钮操作 */
     handleDelete(row) {
-      const ids = row.id || this.ids;
+      const ids = row.id;
+      if (ids == null || ids == "") {
+        this.msgError("未评价，不可清空");
+        return;
+      }
       this.$confirm(
-        '是否确认删除见习导师分配编号为"' + ids + '"的数据项?',
+        '是否确认清空编号为"' + ids + '"的数据项?',
         "警告",
         {
           confirmButtonText: "确定",
@@ -380,7 +421,7 @@ export default {
         })
         .then(() => {
           this.getList();
-          this.msgSuccess("删除成功");
+          this.msgSuccess("清除成功");
         })
         .catch(function () {});
     },

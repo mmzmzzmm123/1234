@@ -10,6 +10,8 @@
         <result property="dsid" column="dsid"/>
         <result property="createTime" column="create_time"/>
         <result property="jdxmc" column="jdxmc"/>
+        <result property="rjxd" column="rjxd"/>
+        <result property="rjxk" column="rjxk"/>
         <association property="tsbzJxjsjbxx" column="jxjsid" javaType="TsbzJxjsjbxx" resultMap="TsbzJxjsjbxxResult"/>
     </resultMap>
 
@@ -42,14 +44,20 @@
     <sql id="selectTsbzJxzxdsfpVo">
 --         select id, jxjsid, dsid, create_time from tsbz_jxzxdsfp
 select a.id, a.jxjsid, a.dsid, a.create_time,
-b.name, b.jxbh, b.xb, b.csrq, b.email, b.phone, b.yzbm, b.zzmm, b.mz, b.prdwid, b.prdwmc, b.jdxid, b.rjxd, b.rjxk, b.rjnj, b.byyx, b.xl, b.xw, b.sfsfs, b.lqnf,c.jdxmc as jdxmc
+b.name, b.jxbh, b.xb, b.csrq, b.email, b.phone, b.yzbm, b.zzmm, b.mz, b.prdwid, b.prdwmc, b.jdxid, b.rjxd, b.rjxk, b.rjnj, b.byyx, b.xl, b.xw, b.sfsfs, b.lqnf,
+c.jdxmc as jdxmc
 from tsbz_jxzxdsfp a
 left join tsbz_jxjsjbxx b on a.jxjsid=b.id
 left join tsbz_jdx c on b.jdxid=c.id
     </sql>
 
     <select id="selectTsbzJxzxdsfpList" parameterType="TsbzJxzxdsfp" resultMap="TsbzJxzxdsfpResult">
-        <include refid="selectTsbzJxzxdsfpVo"/>
+        select a.id, b.jsid as jxjsid, a.dsid, a.create_time,
+        c.rjxd as rjxd, c.rjxk as rjxk, d.jdxmc as jdxmc
+        from tsbz_jxzxdsfp a
+        right join tsbz_jxzxmd b on a.jxjsid=b.jsid
+        left join tsbz_jxjsjbxx c on b.jsid=c.id
+        left join tsbz_jdx d on c.jdxid=d.id
         <where>
             <if test="jxjsid != null ">and a.jxjsid = #{jxjsid}</if>
             <if test="dsid != null ">and a.dsid = #{dsid}</if>
