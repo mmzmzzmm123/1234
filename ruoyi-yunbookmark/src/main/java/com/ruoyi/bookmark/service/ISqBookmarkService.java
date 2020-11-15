@@ -28,6 +28,7 @@ public interface ISqBookmarkService
     public List<SqBookmark> selectBymenuIdUserID(Long menuID,Long userID,Integer sort,String sousou);
 
 
+
     /**
      * 查询书签管理
      *
@@ -101,4 +102,13 @@ public interface ISqBookmarkService
      * @return
      */
     public int selectByMenuIdCount(Long menuId);
+
+    /**
+     * 通过url 查询用户是否已经添加
+     *
+     * @param  url
+     * @param  userId
+     * @return
+     */
+    List<SqBookmark> selectByUrlUserID(String url, Long userId);
 }

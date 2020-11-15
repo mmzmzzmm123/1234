@@ -4,6 +4,7 @@ package com.ruoyi.bookmark.service.impl;
 import java.util.*;
 
 import cn.hutool.core.date.DateUtil;
+import com.github.pagehelper.PageHelper;
 import com.ruoyi.bookmark.domain.SqBookmarkTag;
 
 import com.ruoyi.bookmark.domain.SqMenu;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 import com.ruoyi.bookmark.mapper.SqBookmarkMapper;
 import com.ruoyi.bookmark.domain.SqBookmark;
 import com.ruoyi.bookmark.service.ISqBookmarkService;
+import tk.mybatis.mapper.entity.Example;
 
 
 /**
@@ -282,6 +284,26 @@ public class SqBookmarkServiceImpl implements ISqBookmarkService
        }else {
            return 0;
        }
+    }
+
+    /**
+     * 通过url 查询用户是否已经添加
+     *
+     * @param  url
+     * @param  userId
+     * @return
+     */
+    @Override
+    public List<SqBookmark> selectByUrlUserID(String url, Long userId) {
+
+        Example example = new Example(SqBookmark.class);
+        // 排序
+        example.setOrderByClause("create_time desc");
+        // 条件查询
+        example.createCriteria()
+                .andEqualTo("url", url)
+                .andEqualTo("userid",userId);
+        return sqBookmarkMapper.selectByExample(example);
     }
 
 

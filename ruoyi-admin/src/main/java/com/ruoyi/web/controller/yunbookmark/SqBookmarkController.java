@@ -53,6 +53,23 @@ public class SqBookmarkController extends BaseController
         return getDataTable(list);
     }
 
+    /**
+     * 通过url 查询用户 是否已经添加了此书签
+     *
+     * 如果有多条 返回最新的一条
+     * @return
+     */
+    @GetMapping("/selectByUrlUserID")
+    public AjaxResult selectByUrlUserID(String url) {
+        SysUser sysUser=getAuthUser();
+        startPage();
+        List<SqBookmark> list = sqBookmarkService.selectByUrlUserID(url,sysUser.getUserId());
+        if (list!=null&&!list.isEmpty()){
+            return AjaxResult.success(list.get(0));
+        }
+        return AjaxResult.success(list);
+    }
+
 
     /**
      * 查询用户栏目下的书签
