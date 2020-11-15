@@ -6,12 +6,17 @@
 import echarts from "echarts";
 require("echarts/theme/macarons"); // echarts theme
 import resize from "./mixins/resize";
-import { getAssessmentStatistics } from "@/api/benyi/assessmentcontent";
+import {
+  getAssessmentStatisticsmb,
+  getAssessmentStatisticsbymb,
+} from "@/api/benyi/assessmentcontent";
 
 const animationDuration = 3000;
 
 export default {
+  mbvalues: [],
   values: [],
+  names: [],
   mixins: [resize],
   props: {
     className: {
@@ -42,9 +47,9 @@ export default {
     this.childId = childId;
     // console.log("child-chart:" + childId);
     // console.log("psMsg:" + this.psMsg);
-    // this.$nextTick(() => {
-    //   this.initChart();
-    // });
+    this.$nextTick(() => {
+      this.initChart();
+    });
   },
   beforeDestroy() {
     if (!this.chart) {
@@ -55,13 +60,12 @@ export default {
   },
   methods: {
     async getData() {
-      await getAssessmentStatistics(this.childId, this.psMsg).then(
+      await getAssessmentStatisticsbymb(this.childId, this.psMsg, 0).then(
         (response) => {
-          console.log(response);
           let value = [];
           let len = response.statistics;
           for (var j = 0; j < len.length; j++) {
-            console.log(len[j]);
+            // console.log(len[j]);
             if (len[j] == "NaN") {
               value.push(0);
             } else {
@@ -74,8 +78,34 @@ export default {
         }
       );
     },
+    async getNameData() {
+      await getAssessmentStatisticsmb(this.childId, this.psMsg, 0).then(
+        (response) => {
+          let value = [];
+          let mbvalues=[];
+          let len = response.mb;
+          for (var j = 0; j < len.length; j++) {
+            // console.log(len[j]);
+            if (this.psMsg == "1") {
+              len[j].max = 48;
+            } else if (this.psMsg == "2") {
+              len[j].max = 60;
+            } else if (this.psMsg == "3") {
+              len[j].max = 72;
+            }
+            mbvalues.push(len[j].max);
+            value.push(len[j]);
+          }
+          this.mbvalues=mbvalues;
+          this.names = value;
+          //console.log(this.names);
+          //console.log(this.values);
+        }
+      );
+    },
     async initChart() {
       await this.getData();
+      await this.getNameData();
       this.chart = echarts.init(this.$el, "macarons");
 
       if (this.psMsg == "3") {
@@ -101,13 +131,7 @@ export default {
                 shadowOffsetY: 15,
               },
             },
-            indicator: [
-              { name: "健康", max: 100 },
-              { name: "语言", max: 100 },
-              { name: "社会", max: 100 },
-              { name: "科学", max: 100 },
-              { name: "艺术", max: 100 },
-            ],
+            indicator: this.names,
           },
           legend: {
             left: "center",
@@ -129,7 +153,7 @@ export default {
               },
               data: [
                 {
-                  value: [72, 72, 72, 72, 72],
+                  value: this.mbvalues,
                   name: "60-72个月幼儿测评范围值",
                 },
                 {
@@ -164,13 +188,7 @@ export default {
                 shadowOffsetY: 15,
               },
             },
-            indicator: [
-              { name: "健康", max: 100 },
-              { name: "语言", max: 100 },
-              { name: "社会", max: 100 },
-              { name: "科学", max: 100 },
-              { name: "艺术", max: 100 },
-            ],
+            indicator: this.names,
           },
           legend: {
             left: "center",
@@ -192,7 +210,7 @@ export default {
               },
               data: [
                 {
-                  value: [60, 60, 60, 60, 60],
+                  value: this.mbvalues,
                   name: "48-60个月幼儿测评范围值",
                 },
                 {
@@ -227,13 +245,7 @@ export default {
                 shadowOffsetY: 15,
               },
             },
-            indicator: [
-              { name: "健康", max: 100 },
-              { name: "语言", max: 100 },
-              { name: "社会", max: 100 },
-              { name: "科学", max: 100 },
-              { name: "艺术", max: 100 },
-            ],
+            indicator: this.names,
           },
           legend: {
             left: "center",
@@ -255,7 +267,7 @@ export default {
               },
               data: [
                 {
-                  value: [48, 48, 48, 48, 48],
+                  value: this.mbvalues,
                   name: "36-48个月幼儿测评范围值",
                 },
                 {

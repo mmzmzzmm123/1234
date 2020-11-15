@@ -85,3 +85,19 @@ export function getAssessmentStatistics(childid, scope) {
     method: 'get'
   })
 }
+
+// 查询领域目标
+export function getAssessmentStatisticsmb(childid, scope, type) {
+  return request({
+    url: '/benyi/assessmentcontent/getassessmentstatisticsmb/' + childid + '/' + scope + '/' + type,
+    method: 'get'
+  })
+}
+
+// 查询评估统计
+export function getAssessmentStatisticsbymb(childid, scope, type) {
+  return request({
+    url: '/benyi/assessmentcontent/getassessmentstatisticsbymb/' + childid + '/' + scope + '/' + type,
+    method: 'get'
+  })
+}

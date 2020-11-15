@@ -90,4 +90,12 @@ public interface ByAssessmentcontentMapper {
      * @return 结果
      */
     public int selectCountElementByChild(ByAssessmentcontent byAssessmentcontent);
+
+    /**
+     * 节点根据id
+     *
+     * @param id 内容ID
+     * @return 结果
+     */
+    public List<ByAssessmentcontent> selectNodeByid(Long id);
 }
