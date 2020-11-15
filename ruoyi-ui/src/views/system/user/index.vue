@@ -10,11 +10,11 @@
             clearable
             size="small"
             prefix-icon="el-icon-search"
-            style="margin-bottom: 20px"
           />
-        </div>
-        <div class="head-container">
           <el-tree
+            v-if="
+              deptOptions && deptOptions.length >= 1 && deptOptions[0].children
+            "
             :data="deptOptions"
             :props="defaultProps"
             :expand-on-click-node="false"
@@ -23,76 +23,90 @@
             default-expand-all
             @node-click="handleNodeClick"
           />
+          <h3 class="one-user" v-else>
+            {{ deptOptions[0] && deptOptions[0].label }}
+          </h3>
         </div>
       </el-col>
       <!--用户数据-->
       <el-col :span="20" :xs="24">
-        <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
-          <el-form-item label="登录账号" prop="userName">
-            <el-input
-              v-model="queryParams.userName"
-              placeholder="请输入用户名称"
-              clearable
-              size="small"
-              style="width: 240px"
-              @keyup.enter.native="handleQuery"
-            />
-          </el-form-item>
-          <el-form-item label="状态" prop="status">
-            <el-select
-              v-model="queryParams.status"
-              placeholder="用户状态"
-              clearable
-              size="small"
-              style="width: 240px"
-            >
-              <el-option
-                v-for="dict in statusOptions"
-                :key="dict.dictValue"
-                :label="dict.dictLabel"
-                :value="dict.dictValue"
+        <div class="box-shadow">
+          <el-form
+            :model="queryParams"
+            ref="queryForm"
+            :inline="true"
+            label-width="68px"
+          >
+            <el-form-item label="登录账号" prop="userName">
+              <el-input
+                v-model="queryParams.userName"
+                placeholder="请输入用户名称"
+                clearable
+                size="small"
+                style="width: 240px"
+                @keyup.enter.native="handleQuery"
               />
-            </el-select>
-          </el-form-item>
-          <el-form-item label="创建时间">
-            <el-date-picker
-              v-model="dateRange"
-              size="small"
-              style="width: 240px"
-              value-format="yyyy-MM-dd"
-              type="daterange"
-              range-separator="-"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
-            ></el-date-picker>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-            <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-          </el-form-item>
-        </el-form>
+            </el-form-item>
+            <el-form-item label="状态" prop="status">
+              <el-select
+                v-model="queryParams.status"
+                placeholder="用户状态"
+                clearable
+                size="small"
+                style="width: 240px"
+              >
+                <el-option
+                  v-for="dict in statusOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                />
+              </el-select>
+            </el-form-item>
+            <el-form-item label="创建时间">
+              <el-date-picker
+                v-model="dateRange"
+                size="small"
+                style="width: 240px"
+                value-format="yyyy-MM-dd"
+                type="daterange"
+                range-separator="-"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
+              ></el-date-picker>
+            </el-form-item>
+            <el-form-item>
+              <el-button
+                type="primary"
+                icon="el-icon-search"
+                size="mini"
+                @click="handleQuery"
+                >搜索</el-button
+              >
+              <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+                >重置</el-button
+              >
+            </el-form-item>
+          </el-form>
 
-        <el-row :gutter="10" class="mb8">
-          <el-col :span="1.5">
+          <div class="mb8 btn-list">
             <el-button
               type="primary"
               icon="el-icon-plus"
               size="mini"
               @click="handleAdd"
               v-hasPermi="['system:user:add']"
-            >新增</el-button>
-          </el-col>
-          <el-col :span="1.5">
-            <el-button
-              type="success"
-              icon="el-icon-edit"
-              size="mini"
-              :disabled="single"
-              @click="handleUpdate"
-              v-hasPermi="['system:user:edit']"
-            >修改</el-button>
-          </el-col>
-          <el-col :span="1.5">
+              >新增</el-button
+            >
+            <!-- <el-button
+            type="success"
+            icon="el-icon-edit"
+            size="mini"
+            :disabled="single"
+            @click="handleUpdate"
+            v-hasPermi="['system:user:edit']"
+            >修改</el-button
+          > -->
             <el-button
               type="danger"
               icon="el-icon-delete"
@@ -100,109 +114,120 @@
               :disabled="multiple"
               @click="handleDelete"
               v-hasPermi="['system:user:remove']"
-            >删除</el-button>
-          </el-col>
-          <el-col :span="1.5">
+              >删除</el-button
+            >
             <el-button
               type="info"
               icon="el-icon-upload2"
               size="mini"
               @click="handleImport"
               v-hasPermi="['system:user:import']"
-            >导入</el-button>
-          </el-col>
-          <el-col :span="1.5">
+              >导入</el-button
+            >
             <el-button
               type="warning"
               icon="el-icon-download"
               size="mini"
               @click="handleExport"
               v-hasPermi="['system:user:export']"
-            >导出</el-button>
-          </el-col>
-        </el-row>
+              >导出</el-button
+            >
+          </div>
 
-        <el-table v-loading="loading" :data="userList" @selection-change="handleSelectionChange">
-          <el-table-column type="selection" width="40" align="center" />
-          <el-table-column label="用户编号" align="center" prop="userId" />
-          <el-table-column
-            label="登录账号"
-            align="center"
-            prop="userName"
-            :show-overflow-tooltip="true"
-          />
-          <el-table-column
-            label="用户姓名"
-            align="center"
-            prop="nickName"
-            :show-overflow-tooltip="true"
-          />
-          <el-table-column
-            label="部门"
-            align="center"
-            prop="dept.deptName"
-            :show-overflow-tooltip="true"
-          />
-          <el-table-column label="状态" align="center">
-            <template slot-scope="scope">
-              <el-switch
-                v-model="scope.row.status"
-                active-value="0"
-                inactive-value="1"
-                @change="handleStatusChange(scope.row)"
-              ></el-switch>
-            </template>
-          </el-table-column>
-          <el-table-column label="创建时间" align="center" prop="createTime" width="160">
-            <template slot-scope="scope">
-              <span>{{ parseTime(scope.row.createTime) }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            label="操作"
-            align="center"
-            width="180"
-            class-name="small-padding fixed-width"
+          <el-table
+            v-loading="loading"
+            :data="userList"
+            @selection-change="handleSelectionChange"
           >
-            <template slot-scope="scope">
-              <el-button
-                size="mini"
-                type="text"
-                icon="el-icon-edit"
-                @click="handleUpdate(scope.row)"
-                v-hasPermi="['system:user:edit']"
-              >修改</el-button>
-              <el-button
-                v-if="scope.row.userId !== 1"
-                size="mini"
-                type="text"
-                icon="el-icon-delete"
-                @click="handleDelete(scope.row)"
-                v-hasPermi="['system:user:remove']"
-              >删除</el-button>
-              <el-button
-                size="mini"
-                type="text"
-                icon="el-icon-key"
-                @click="handleResetPwd(scope.row)"
-                v-hasPermi="['system:user:resetPwd']"
-              >重置</el-button>
-            </template>
-          </el-table-column>
-        </el-table>
+            <el-table-column type="selection" width="40" align="center" />
+            <el-table-column label="用户编号" align="center" prop="userId" />
+            <el-table-column
+              label="登录账号"
+              align="center"
+              prop="userName"
+              :show-overflow-tooltip="true"
+            />
+            <el-table-column
+              label="用户姓名"
+              align="center"
+              prop="nickName"
+              :show-overflow-tooltip="true"
+            />
+            <el-table-column
+              label="部门"
+              align="center"
+              prop="dept.deptName"
+              :show-overflow-tooltip="true"
+            />
+            <el-table-column label="状态" align="center">
+              <template slot-scope="scope">
+                <el-switch
+                  v-model="scope.row.status"
+                  active-value="0"
+                  inactive-value="1"
+                  @change="handleStatusChange(scope.row)"
+                ></el-switch>
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="创建时间"
+              align="center"
+              prop="createTime"
+              width="160"
+            >
+              <template slot-scope="scope">
+                <span>{{ parseTime(scope.row.createTime) }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="操作"
+              align="center"
+              width="180"
+              class-name="small-padding fixed-width"
+            >
+              <template slot-scope="scope">
+                <el-button
+                  size="mini"
+                  type="text"
+                  icon="el-icon-edit"
+                  @click="handleUpdate(scope.row)"
+                  v-hasPermi="['system:user:edit']"
+                  >修改</el-button
+                >
+                <el-button
+                  v-if="scope.row.userId !== 1"
+                  size="mini"
+                  type="text"
+                  icon="el-icon-delete"
+                  @click="handleDelete(scope.row)"
+                  v-hasPermi="['system:user:remove']"
+                  >删除</el-button
+                >
+                <el-button
+                  size="mini"
+                  type="text"
+                  icon="el-icon-key"
+                  @click="handleResetPwd(scope.row)"
+                  v-hasPermi="['system:user:resetPwd']"
+                  >重置</el-button
+                >
+              </template>
+            </el-table-column>
+          </el-table>
 
-        <pagination
-          v-show="total>0"
-          :total="total"
-          :page.sync="queryParams.pageNum"
-          :limit.sync="queryParams.pageSize"
-          @pagination="getList"
-        />
+          <pagination
+            v-show="total > 0"
+            :total="total"
+            :page.sync="queryParams.pageNum"
+            :limit.sync="queryParams.pageSize"
+            @pagination="getList"
+          />
+        </div>
       </el-col>
     </el-row>
 
     <!-- 添加或修改参数配置对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="600px">
+    <el-dialog :title="title" :visible.sync="open" class="v-dialog">
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-row>
           <el-col :span="12">
@@ -212,17 +237,33 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="归属部门" prop="deptId">
-              <treeselect v-model="form.deptId" :options="deptOptions" placeholder="请选择归属部门" />
+              <treeselect
+                v-model="form.deptId"
+                :options="deptOptions"
+                placeholder="请选择归属部门"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="登录账号" prop="userName">
-              <el-input v-model="form.userName" placeholder="请输入手机号码" maxlength="11" />
+              <el-input
+                v-model="form.userName"
+                placeholder="请输入手机号码"
+                maxlength="11"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item v-if="form.userId == undefined" label="用户密码" prop="password">
-              <el-input v-model="form.password" placeholder="请输入用户密码" type="password" />
+            <el-form-item
+              v-if="form.userId == undefined"
+              label="用户密码"
+              prop="password"
+            >
+              <el-input
+                v-model="form.password"
+                placeholder="请输入用户密码"
+                type="password"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -244,7 +285,8 @@
                   v-for="dict in statusOptions"
                   :key="dict.dictValue"
                   :label="dict.dictValue"
-                >{{dict.dictLabel}}</el-radio>
+                  >{{ dict.dictLabel }}</el-radio
+                >
               </el-radio-group>
             </el-form-item>
           </el-col>
@@ -289,7 +331,11 @@
           </el-col>
           <el-col :span="24">
             <el-form-item label="备注">
-              <el-input v-model="form.remark" type="textarea" placeholder="请输入内容"></el-input>
+              <el-input
+                v-model="form.remark"
+                type="textarea"
+                placeholder="请输入内容"
+              ></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -320,10 +366,16 @@
           <em>点击上传</em>
         </div>
         <div class="el-upload__tip" slot="tip">
-          <el-checkbox v-model="upload.updateSupport" />是否更新已经存在的用户数据
-          <el-link type="info" style="font-size:12px" @click="importTemplate">下载模板</el-link>
+          <el-checkbox
+            v-model="upload.updateSupport"
+          />是否更新已经存在的用户数据
+          <el-link type="info" style="font-size:12px" @click="importTemplate"
+            >下载模板</el-link
+          >
         </div>
-        <div class="el-upload__tip" style="color:red" slot="tip">提示：仅允许导入“xls”或“xlsx”格式文件！</div>
+        <div class="el-upload__tip" style="color:red" slot="tip">
+          提示：仅允许导入“xls”或“xlsx”格式文件！
+        </div>
       </el-upload>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitFileForm">确 定</el-button>
@@ -370,7 +422,7 @@ export default {
       // 弹出层标题
       title: "",
       // 部门树选项
-      deptOptions: undefined,
+      deptOptions: [],
       // 是否显示弹出层
       open: false,
       // 部门名称
@@ -390,7 +442,7 @@ export default {
       //多幼儿园选项
       kindergartenOptions: [],
       //是否幼儿园
-      isSchool:undefined,
+      isSchool: undefined,
       // 表单参数
       form: {},
       defaultProps: {
@@ -558,11 +610,11 @@ export default {
         this.postOptions = response.posts;
         this.roleOptions = response.roles;
         //console.log("school="+response.isSchool);
-        if (response.isSchool=="0") {
-          this.isSchool=true;
+        if (response.isSchool == "0") {
+          this.isSchool = true;
           this.kindergartenOptions = response.kindergartens;
-        }else{
-          this.isSchool=false;
+        } else {
+          this.isSchool = false;
         }
         this.open = true;
         this.title = "添加用户";
@@ -580,13 +632,13 @@ export default {
         this.roleOptions = response.roles;
         this.form.postIds = response.postIds;
         this.form.roleIds = response.roleIds;
-        this.form.deptIds=response.kindergartenIds;
+        this.form.deptIds = response.kindergartenIds;
         //console.log("school="+response.isSchool);
-        if (response.isSchool=="0") {
-          this.isSchool=true;
+        if (response.isSchool == "0") {
+          this.isSchool = true;
           this.kindergartenOptions = response.kindergartens;
-        }else{
-          this.isSchool=false;
+        } else {
+          this.isSchool = false;
         }
         this.open = true;
         this.title = "修改用户";
@@ -705,3 +757,21 @@ export default {
   }
 };
 </script>
+<style lang="scss" scoped>
+.head-container {
+  .el-input {
+    margin-bottom: 10px;
+  }
+}
+.one-user {
+  margin: 0;
+  font-size: 16px;
+  padding: 5px;
+  margin-bottom: 10px;
+}
+.box-shadow {
+  border-radius: 5px;
+  padding: 10px 15px;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+}
+</style>

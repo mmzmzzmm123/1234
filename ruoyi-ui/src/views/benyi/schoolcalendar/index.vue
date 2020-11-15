@@ -1,8 +1,18 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
+    <el-form
+      :model="queryParams"
+      ref="queryForm"
+      :inline="true"
+      label-width="68px"
+    >
       <el-form-item label="活动类型" prop="type">
-        <el-select v-model="queryParams.type" placeholder="请选择活动类型" clearable size="small">
+        <el-select
+          v-model="queryParams.type"
+          placeholder="请选择活动类型"
+          clearable
+          size="small"
+        >
           <el-option
             v-for="dict in schoolcalendartypeOptions"
             :key="dict.dictValue"
@@ -12,7 +22,12 @@
         </el-select>
       </el-form-item>
       <el-form-item label="适用范围" prop="scope">
-        <el-select v-model="queryParams.scope" placeholder="请选择适用范围" clearable size="small">
+        <el-select
+          v-model="queryParams.scope"
+          placeholder="请选择适用范围"
+          clearable
+          size="small"
+        >
           <el-option
             v-for="dict in scopeOptions"
             :key="dict.dictValue"
@@ -22,7 +37,12 @@
         </el-select>
       </el-form-item>
       <el-form-item label="学年学期" prop="xnxq">
-        <el-select v-model="queryParams.xnxq" placeholder="请选择学年学期" clearable size="small">
+        <el-select
+          v-model="queryParams.xnxq"
+          placeholder="请选择学年学期"
+          clearable
+          size="small"
+        >
           <el-option
             v-for="dict in xnxqOptions"
             :key="dict.dictValue"
@@ -44,58 +64,66 @@
         ></el-date-picker>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+        <el-button
+          type="primary"
+          icon="el-icon-search"
+          size="mini"
+          @click="handleQuery"
+          >搜索</el-button
+        >
+        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+          >重置</el-button
+        >
       </el-form-item>
     </el-form>
 
-    <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          type="primary"
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['benyi:schoolcalendar:add']"
-        >新增</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
+    <div class="mb8 btn-list">
+      <el-button
+        type="primary"
+        icon="el-icon-plus"
+        size="mini"
+        @click="handleAdd"
+        v-hasPermi="['benyi:schoolcalendar:add']"
+        >新增</el-button
+      >
+      <!-- <el-button
           type="success"
           icon="el-icon-edit"
           size="mini"
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['benyi:schoolcalendar:edit']"
-        >修改</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="danger"
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['benyi:schoolcalendar:remove']"
-        >删除</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['benyi:schoolcalendar:export']"
-        >导出</el-button>
-      </el-col>
-    </el-row>
+        >修改</el-button> -->
+      <el-button
+        type="danger"
+        icon="el-icon-delete"
+        size="mini"
+        :disabled="multiple"
+        @click="handleDelete"
+        v-hasPermi="['benyi:schoolcalendar:remove']"
+        >删除</el-button
+      >
+      <el-button
+        type="warning"
+        icon="el-icon-download"
+        size="mini"
+        @click="handleExport"
+        v-hasPermi="['benyi:schoolcalendar:export']"
+        >导出</el-button
+      >
+    </div>
 
     <el-table
       v-loading="loading"
       :data="schoolcalendarList"
       @selection-change="handleSelectionChange"
     >
-      <el-table-column type="selection" width="55" align="center" :selectable="checkSelectable" />
+      <el-table-column
+        type="selection"
+        width="55"
+        align="center"
+        :selectable="checkSelectable"
+      />
       <!-- <el-table-column label="编号" align="center" prop="id" /> -->
       <el-table-column label="名称" align="center" prop="name" />
       <el-table-column
@@ -104,16 +132,46 @@
         :formatter="schoolcalendartypeFormat"
         prop="type"
       />
-      <el-table-column label="适用范围" align="center" :formatter="scopeFormat" prop="scope" />
-      <el-table-column label="学年学期" align="center" :formatter="xnxqFormat" prop="xnxq" />
-      <el-table-column label="活动开始时间" align="center" prop="activitytime" width="180" />
-      <el-table-column label="活动截止时间" align="center" prop="activityendtime" width="180" />
-      <el-table-column label="创建时间" align="center" prop="createtime" width="180">
+      <el-table-column
+        label="适用范围"
+        align="center"
+        :formatter="scopeFormat"
+        prop="scope"
+      />
+      <el-table-column
+        label="学年学期"
+        align="center"
+        :formatter="xnxqFormat"
+        prop="xnxq"
+      />
+      <el-table-column
+        label="活动开始时间"
+        align="center"
+        prop="activitytime"
+        width="180"
+      />
+      <el-table-column
+        label="活动截止时间"
+        align="center"
+        prop="activityendtime"
+        width="180"
+      />
+      <el-table-column
+        label="创建时间"
+        align="center"
+        prop="createtime"
+        width="180"
+      >
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createtime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column
+        label="操作"
+        align="center"
+        width="120"
+        class-name="small-padding fixed-width"
+      >
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -122,7 +180,8 @@
             @click="handleUpdate(scope.row)"
             v-hasPermi="['benyi:schoolcalendar:edit']"
             :disabled="!checkSelectable(scope.row)"
-          >修改</el-button>
+            >修改</el-button
+          >
           <el-button
             size="mini"
             type="text"
@@ -130,13 +189,14 @@
             @click="handleDelete(scope.row)"
             v-hasPermi="['benyi:schoolcalendar:remove']"
             :disabled="!checkSelectable(scope.row)"
-          >删除</el-button>
+            >删除</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
 
     <pagination
-      v-show="total>0"
+      v-show="total > 0"
       :total="total"
       :page.sync="queryParams.pageNum"
       :limit.sync="queryParams.pageSize"
@@ -147,10 +207,19 @@
     <el-dialog :title="title" :visible.sync="open" width="500px">
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="名称" prop="name">
-          <el-input v-model="form.name" type="textarea" placeholder="请输入内容" />
+          <el-input
+            v-model="form.name"
+            type="textarea"
+            placeholder="请输入内容"
+          />
         </el-form-item>
         <el-form-item label="活动类型" prop="type">
-          <el-select v-model="form.type" placeholder="请选择活动类型" clearable size="small">
+          <el-select
+            v-model="form.type"
+            placeholder="请选择活动类型"
+            clearable
+            size="small"
+          >
             <el-option
               v-for="dict in schoolcalendartypeOptions"
               :key="dict.dictValue"
@@ -160,7 +229,13 @@
           </el-select>
         </el-form-item>
         <el-form-item label="适用范围" prop="scope">
-          <el-select v-model="form.scope" multiple placeholder="请选择适用范围" clearable size="small">
+          <el-select
+            v-model="form.scope"
+            multiple
+            placeholder="请选择适用范围"
+            clearable
+            size="small"
+          >
             <el-option
               v-for="dict in scopeOptions"
               :key="dict.dictValue"
@@ -368,11 +443,11 @@ export default {
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids;
-      var myArray=new Array(2);
+      var myArray = new Array(2);
       getSchoolcalendar(id).then(response => {
         this.form = response.data;
-        myArray[0]=response.data.activitytime;
-        myArray[1]=response.data.activityendtime;
+        myArray[0] = response.data.activitytime;
+        myArray[1] = response.data.activityendtime;
         //console.log(myArray);
         this.form.activitytime = myArray;
         this.scopeOptions = response.scopes;

@@ -36,7 +36,7 @@
       </el-form-item>
     </el-form>
     <el-row v-loading="loading">
-      <el-col :xs="12" :sm="6" v-for="(o, index) in videoList" :key="index" style="padding: 10px;">
+      <el-col :xs="24" :sm="8" :md="6" v-for="(o, index) in videoList" :key="index" style="padding: 10px;">
         <el-card :body-style="{ padding: '2px' }">
           <video-player
             class="vjs-custom-skin"
@@ -214,6 +214,7 @@ export default {
 }
 
 .info-title-name {
+  padding-top: 5px;
   font-size: 12px;
 }
 </style>

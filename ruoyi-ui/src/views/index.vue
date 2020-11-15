@@ -1,6 +1,6 @@
 <template>
   <div class="dashboard-editor-container">
-    <el-row :gutter="32">
+    <el-row :gutter="30">
       <el-col :xs="24" :sm="24" :lg="8">
         <div class="chart-wrapper">
           <raddar-chart />
@@ -19,10 +19,10 @@
     </el-row>
     <el-row :gutter="32">
       <!-- <el-calendar v-model="value" id="calendar">-->
-        <!-- 这里使用的是 2.5 slot 语法，对于新项目请使用 2.6 slot 语法-->
-         <!--<template slot="dateCell" slot-scope="{date, data}">-->
-          <!--自定义内容-->
-           <!--<div>
+      <!-- 这里使用的是 2.5 slot 语法，对于新项目请使用 2.6 slot 语法-->
+      <!--<template slot="dateCell" slot-scope="{date, data}">-->
+      <!--自定义内容-->
+      <!--<div>
             <div class="calendar-day">{{ data.day.split('-').slice(2).join('-') }}</div>
             <div v-for="(item,index) in calendarData" :key="index">
               <div v-if="(item.years).indexOf(data.day.split('-').slice(0)[0])!=-1">
@@ -88,10 +88,27 @@ export default {
   background-color: rgb(240, 242, 245);
   position: relative;
 
+  .el-card.is-always-shadow {
+    box-shadow: none;
+    border: 0;
+  }
+
   .chart-wrapper {
     background: #fff;
     padding: 16px 16px 0;
     margin-bottom: 32px;
+  }
+}
+
+@media (max-width: 1366.98px) {
+  .chart-wrapper {
+    ::v-deep.fc-toolbar h2 {
+      font-size: 1.2em;
+    }
+    ::v-deep.chart {
+      overflow: hidden;
+      overflow-y: auto;
+    }
   }
 }
 

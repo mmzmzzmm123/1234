@@ -82,3 +82,27 @@
 .el-range-separator {
   box-sizing: content-box;
 }
+.v-dialog .el-dialog {
+  width: 500px;
+}
+.big-dialog .el-dialog {
+  width: 800px;
+}
+
+@media (max-width: 768.98px) {
+  .v-dialog .el-dialog, .big-dialog .el-dialog {
+    width: 96%;
+    .el-dialog__body {
+      max-height: 68vh;
+      overflow-y: auto;
+    }
+  }
+  .el-card {
+    .el-card__body {
+      padding: 10px;
+    }
+  }
+  .el-form-item {
+    margin-bottom: 10px;
+  }
+}

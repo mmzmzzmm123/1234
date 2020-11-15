@@ -1,6 +1,11 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
+    <el-form
+      :model="queryParams"
+      ref="queryForm"
+      :inline="true"
+      label-width="68px"
+    >
       <el-form-item label="标题" prop="title">
         <el-input
           v-model="queryParams.title"
@@ -21,21 +26,28 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+        <el-button
+          type="primary"
+          icon="el-icon-search"
+          size="mini"
+          @click="handleQuery"
+          >搜索</el-button
+        >
+        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+          >重置</el-button
+        >
       </el-form-item>
     </el-form>
 
-    <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          type="primary"
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['benyi:recruitstudentsnotice:add']"
-        >新增</el-button>
-      </el-col>
+    <div class="mb8 btn-list">
+      <el-button
+        type="primary"
+        icon="el-icon-plus"
+        size="mini"
+        @click="handleAdd"
+        v-hasPermi="['benyi:recruitstudentsnotice:add']"
+        >新增</el-button
+      >
       <!-- <el-col :span="1.5">
         <el-button
           type="success"
@@ -56,14 +68,27 @@
           v-hasPermi="['benyi:recruitstudentsnotice:remove']"
         >删除</el-button>
       </el-col>-->
-    </el-row>
+    </div>
 
-    <el-table v-loading="loading" :data="noticeList" @selection-change="handleSelectionChange">
+    <el-table
+      v-loading="loading"
+      :data="noticeList"
+      @selection-change="handleSelectionChange"
+    >
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="编号" align="center" prop="id" /> -->
       <el-table-column label="标题" align="center" prop="title" />
-      <el-table-column label="类型" align="center" prop="type" :formatter="typeFormat" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column
+        label="类型"
+        align="center"
+        prop="type"
+        :formatter="typeFormat"
+      />
+      <el-table-column
+        label="操作"
+        align="center"
+        class-name="small-padding fixed-width"
+      >
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -72,7 +97,8 @@
             @click="handleCopy(scope.row)"
             v-hasPermi="['benyi:recruitstudentsnotice:edit']"
             v-show="!selectable(scope.row)"
-          >复制</el-button>
+            >复制</el-button
+          >
           <el-button
             size="mini"
             type="text"
@@ -80,7 +106,8 @@
             @click="handleUpdate(scope.row)"
             v-hasPermi="['benyi:recruitstudentsnotice:edit']"
             v-show="selectable(scope.row)"
-          >修改</el-button>
+            >修改</el-button
+          >
           <el-button
             size="mini"
             type="text"
@@ -88,20 +115,22 @@
             @click="handleDelete(scope.row)"
             v-hasPermi="['benyi:recruitstudentsnotice:remove']"
             v-show="selectable(scope.row)"
-          >删除</el-button>
+            >删除</el-button
+          >
           <el-button
             size="mini"
             type="text"
             icon="el-icon-view"
-            @click="handleView(scope.row,scope.index)"
+            @click="handleView(scope.row, scope.index)"
             v-hasPermi="['benyi:recruitstudentsnotice:query']"
-          >详细</el-button>
+            >详细</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
 
     <pagination
-      v-show="total>0"
+      v-show="total > 0"
       :total="total"
       :page.sync="queryParams.pageNum"
       :limit.sync="queryParams.pageSize"
@@ -109,7 +138,7 @@
     />
 
     <!-- 添加或修改入园通知书对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="800px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" class="big-dialog" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="标题" prop="title">
           <el-input v-model="form.title" placeholder="请输入标题" />
@@ -119,7 +148,9 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" v-show="isshow" @click="submitForm">确 定</el-button>
+        <el-button type="primary" v-show="isshow" @click="submitForm"
+          >确 定</el-button
+        >
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
@@ -133,7 +164,7 @@ import {
   delNotice,
   addNotice,
   updateNotice,
-  copyNotice,
+  copyNotice
 } from "@/api/benyi/recruitstudentsnotice";
 
 import Editor from "@/components/Editor";
@@ -141,7 +172,7 @@ import Editor from "@/components/Editor";
 export default {
   name: "Notice",
   components: {
-    Editor,
+    Editor
   },
   data() {
     return {
@@ -171,17 +202,17 @@ export default {
         title: undefined,
         content: undefined,
         type: undefined,
-        schoolid: undefined,
+        schoolid: undefined
       },
       // 表单参数
       form: {},
       // 表单校验
-      rules: {},
+      rules: {}
     };
   },
   created() {
     this.getList();
-    this.getDicts("sys_dm_noticetype").then((response) => {
+    this.getDicts("sys_dm_noticetype").then(response => {
       this.typeOptions = response.data;
     });
   },
@@ -201,7 +232,7 @@ export default {
     /** 查询入园通知书列表 */
     getList() {
       this.loading = true;
-      listNotice(this.queryParams).then((response) => {
+      listNotice(this.queryParams).then(response => {
         this.noticeList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -220,7 +251,7 @@ export default {
         content: undefined,
         type: undefined,
         schoolid: undefined,
-        createTime: undefined,
+        createTime: undefined
       };
       this.resetForm("form");
     },
@@ -236,7 +267,7 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map((item) => item.id);
+      this.ids = selection.map(item => item.id);
       this.single = selection.length != 1;
       this.multiple = !selection.length;
     },
@@ -244,7 +275,7 @@ export default {
     handleView(row) {
       this.reset();
       const id = row.id || this.ids;
-      getNotice(id).then((response) => {
+      getNotice(id).then(response => {
         this.form = response.data;
         this.open = true;
         this.title = "入园通知书详情";
@@ -262,7 +293,7 @@ export default {
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids;
-      getNotice(id).then((response) => {
+      getNotice(id).then(response => {
         this.form = response.data;
         this.open = true;
         this.title = "修改入园通知书";
@@ -270,11 +301,11 @@ export default {
       });
     },
     /** 提交按钮 */
-    submitForm: function () {
-      this.$refs["form"].validate((valid) => {
+    submitForm: function() {
+      this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.id != undefined) {
-            updateNotice(this.form).then((response) => {
+            updateNotice(this.form).then(response => {
               if (response.code === 200) {
                 this.msgSuccess("修改成功");
                 this.open = false;
@@ -282,7 +313,7 @@ export default {
               }
             });
           } else {
-            addNotice(this.form).then((response) => {
+            addNotice(this.form).then(response => {
               if (response.code === 200) {
                 this.msgSuccess("新增成功");
                 this.open = false;
@@ -302,17 +333,17 @@ export default {
         {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
-          type: "warning",
+          type: "warning"
         }
       )
-        .then(function () {
+        .then(function() {
           return delNotice(ids);
         })
         .then(() => {
           this.getList();
           this.msgSuccess("删除成功");
         })
-        .catch(function () {});
+        .catch(function() {});
     },
     /** 复制按钮操作 */
     handleCopy(row) {
@@ -320,17 +351,17 @@ export default {
       this.$confirm('确认复制入园通知书编号为"' + id + '"的数据项?', "警告", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning",
+        type: "warning"
       })
-        .then(function () {
+        .then(function() {
           return copyNotice(id);
         })
         .then(() => {
           this.getList();
           this.msgSuccess("复制成功");
         })
-        .catch(function () {});
-    },
-  },
+        .catch(function() {});
+    }
+  }
 };
 </script>

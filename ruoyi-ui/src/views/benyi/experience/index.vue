@@ -47,46 +47,40 @@
       </el-form-item>
     </el-form>
 
-    <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-tooltip
-          effect="dark"
-          content="点我，可以复制内容发送给家长填报《入园体验申请》呦"
-          placement="top-start"
-        >
-          <el-button
-            type="primary"
-            icon="el-icon-plus"
-            size="mini"
-            @click="copy($event, inviteCode)"
-            v-hasPermi="['benyi:experience:add']"
-            >一键复制</el-button
-          >
-        </el-tooltip>
-      </el-col>
-      <el-col :span="1.5">
+    <div class="mb8 btn-list">
+      <el-tooltip
+        effect="dark"
+        content="点我，可以复制内容发送给家长填报《入园体验申请》呦"
+        placement="top-start"
+      >
         <el-button
-          type="success"
-          icon="el-icon-edit"
+          type="primary"
+          icon="el-icon-plus"
           size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['benyi:experience:edit']"
-          >回复</el-button
+          @click="copy($event, inviteCode)"
+          v-hasPermi="['benyi:experience:add']"
+          >一键复制</el-button
         >
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="danger"
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['benyi:experience:remove']"
-          >删除</el-button
-        >
-      </el-col>
-    </el-row>
+      </el-tooltip>
+      <el-button
+        type="success"
+        icon="el-icon-edit"
+        size="mini"
+        :disabled="single"
+        @click="handleUpdate"
+        v-hasPermi="['benyi:experience:edit']"
+        >回复</el-button
+      >
+      <el-button
+        type="danger"
+        icon="el-icon-delete"
+        size="mini"
+        :disabled="multiple"
+        @click="handleDelete"
+        v-hasPermi="['benyi:experience:remove']"
+        >删除</el-button
+      >
+    </div>
 
     <el-table
       v-loading="loading"
@@ -171,7 +165,7 @@
     />
 
     <!-- 添加或修改入班体验申请对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="800px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" class="big-dialog" append-to-body>
       <el-row :gutter="15">
         <el-form ref="form" :model="form" :rules="rules" label-width="120px">
           <el-col :span="12">
@@ -344,7 +338,7 @@ import {
   delExperience,
   addExperience,
   updateExperience,
-  exportExperience,
+  exportExperience
 } from "@/api/benyi/experience";
 
 import { listHalfdayplan } from "@/api/benyi/halfdayplan";
@@ -398,73 +392,73 @@ export default {
         yzzs: undefined,
         tyjg: undefined,
         rysj: undefined,
-        tynrid: undefined,
+        tynrid: undefined
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
         jzxm: [
-          { required: true, message: "家长姓名不能为空", trigger: "blur" },
+          { required: true, message: "家长姓名不能为空", trigger: "blur" }
         ],
         yexm: [
-          { required: true, message: "幼儿姓名不能为空", trigger: "blur" },
+          { required: true, message: "幼儿姓名不能为空", trigger: "blur" }
         ],
         csrq: [
-          { required: true, message: "幼儿出生日期不能为空", trigger: "blur" },
+          { required: true, message: "幼儿出生日期不能为空", trigger: "blur" }
         ],
         lxfs: [
           {
             required: true,
             pattern: /^1[3|4|5|6|7|8|9][0-9]\d{8}$/,
             message: "请输入正确的手机号码",
-            trigger: "blur",
-          },
+            trigger: "blur"
+          }
         ],
         nrysj: [
-          { required: true, message: "拟入园时间不能为空", trigger: "blur" },
+          { required: true, message: "拟入园时间不能为空", trigger: "blur" }
         ],
         sqtysj: [
-          { required: true, message: "申请体验时间不能为空", trigger: "blur" },
+          { required: true, message: "申请体验时间不能为空", trigger: "blur" }
         ],
         swxw: [
-          { required: true, message: "下午或下午不能为空", trigger: "blur" },
+          { required: true, message: "下午或下午不能为空", trigger: "blur" }
         ],
         hfrn: [
-          { required: true, message: "回复内容不能为空", trigger: "blur" },
+          { required: true, message: "回复内容不能为空", trigger: "blur" }
         ],
         yzzs: [
-          { required: true, message: "园长指示不能为空", trigger: "blur" },
+          { required: true, message: "园长指示不能为空", trigger: "blur" }
         ],
         tynrid: [
-          { required: true, message: "体验内容不能为空", trigger: "blur" },
-        ],
-      },
+          { required: true, message: "体验内容不能为空", trigger: "blur" }
+        ]
+      }
     };
   },
   created() {
     this.getList();
     this.getUser();
     this.getTynr();
-    this.getDicts("sys_dm_swxw").then((response) => {
+    this.getDicts("sys_dm_swxw").then(response => {
       this.swxwOptions = response.data;
     });
-    this.getDicts("sys_yes_no").then((response) => {
+    this.getDicts("sys_yes_no").then(response => {
       this.ynOptions = response.data;
     });
-    this.getDicts("sys_dm_tyjg").then((response) => {
+    this.getDicts("sys_dm_tyjg").then(response => {
       this.tyjgOptions = response.data;
     });
   },
   methods: {
     getTynr() {
-      listHalfdayplan(null).then((response) => {
+      listHalfdayplan(null).then(response => {
         //console.log(response.rows);
         this.tynrOptions = response.rows;
       });
     },
     getUser() {
-      getUserProfile().then((response) => {
+      getUserProfile().then(response => {
         var domain = window.location.host;
         //console.log(domain);
         //this.user = response.data;
@@ -481,7 +475,7 @@ export default {
     tynrFormat(row, column) {
       var actions = [];
       var datas = this.tynrOptions;
-      Object.keys(datas).map((key) => {
+      Object.keys(datas).map(key => {
         if (datas[key].id == row.tynrid) {
           actions.push(datas[key].title);
           return false;
@@ -500,7 +494,7 @@ export default {
     /** 查询入班体验申请列表 */
     getList() {
       this.loading = true;
-      listExperience(this.queryParams).then((response) => {
+      listExperience(this.queryParams).then(response => {
         this.experienceList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -531,7 +525,7 @@ export default {
         tyjg: undefined,
         rysj: undefined,
         tynrid: undefined,
-        createTime: undefined,
+        createTime: undefined
       };
       this.resetForm("form");
     },
@@ -547,7 +541,7 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map((item) => item.id);
+      this.ids = selection.map(item => item.id);
       this.single = selection.length != 1;
       this.multiple = !selection.length;
     },
@@ -559,14 +553,14 @@ export default {
     },
     copy(e, text) {
       const clipboard = new Clipboard(e.target, { text: () => text });
-      clipboard.on("success", (e) => {
+      clipboard.on("success", e => {
         this.msgSuccess("复制成功");
         // 释放内存
         clipboard.off("error");
         clipboard.off("success");
         clipboard.destroy();
       });
-      clipboard.on("error", (e) => {
+      clipboard.on("error", e => {
         // 不支持复制
         this.msgError("手机权限不支持复制功能");
         // 释放内存
@@ -580,7 +574,7 @@ export default {
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids;
-      getExperience(id).then((response) => {
+      getExperience(id).then(response => {
         this.form = response.data;
         this.open = true;
         this.title = "修改入班体验申请";
@@ -596,11 +590,11 @@ export default {
       });
     },
     /** 提交按钮 */
-    submitForm: function () {
-      this.$refs["form"].validate((valid) => {
+    submitForm: function() {
+      this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.id != undefined) {
-            updateExperience(this.form).then((response) => {
+            updateExperience(this.form).then(response => {
               if (response.code === 200) {
                 this.msgSuccess("修改成功");
                 this.open = false;
@@ -608,7 +602,7 @@ export default {
               }
             });
           } else {
-            addExperience(this.form).then((response) => {
+            addExperience(this.form).then(response => {
               if (response.code === 200) {
                 this.msgSuccess("新增成功");
                 this.open = false;
@@ -628,18 +622,18 @@ export default {
         {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
-          type: "warning",
+          type: "warning"
         }
       )
-        .then(function () {
+        .then(function() {
           return delExperience(ids);
         })
         .then(() => {
           this.getList();
           this.msgSuccess("删除成功");
         })
-        .catch(function () {});
-    },
-  },
+        .catch(function() {});
+    }
+  }
 };
 </script>

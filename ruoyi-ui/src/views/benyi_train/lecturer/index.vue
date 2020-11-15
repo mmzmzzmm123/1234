@@ -1,6 +1,11 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
+    <el-form
+      :model="queryParams"
+      ref="queryForm"
+      :inline="true"
+      label-width="68px"
+    >
       <el-form-item label="讲师姓名" prop="name">
         <el-input
           v-model="queryParams.name"
@@ -11,63 +16,81 @@
         />
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+        <el-button
+          type="primary"
+          icon="el-icon-search"
+          size="mini"
+          @click="handleQuery"
+          >搜索</el-button
+        >
+        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+          >重置</el-button
+        >
       </el-form-item>
     </el-form>
 
-    <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          type="primary"
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['benyi:lecturer:add']"
-        >新增</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['benyi:lecturer:edit']"
-        >修改</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="danger"
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['benyi:lecturer:remove']"
-        >删除</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['benyi:lecturer:export']"
-        >导出</el-button>
-      </el-col>
-    </el-row>
+    <div class="mb8 btn-list">
+      <el-button
+        type="primary"
+        icon="el-icon-plus"
+        size="mini"
+        @click="handleAdd"
+        v-hasPermi="['benyi:lecturer:add']"
+        >新增</el-button
+      >
+      <!-- <el-button
+        type="success"
+        icon="el-icon-edit"
+        size="mini"
+        :disabled="single"
+        @click="handleUpdate"
+        v-hasPermi="['benyi:lecturer:edit']"
+        >修改</el-button
+      > -->
+      <el-button
+        type="danger"
+        icon="el-icon-delete"
+        size="mini"
+        :disabled="multiple"
+        @click="handleDelete"
+        v-hasPermi="['benyi:lecturer:remove']"
+        >删除</el-button
+      >
+      <el-button
+        type="warning"
+        icon="el-icon-download"
+        size="mini"
+        @click="handleExport"
+        v-hasPermi="['benyi:lecturer:export']"
+        >导出</el-button
+      >
+    </div>
 
-    <el-table v-loading="loading" :data="lecturerList" @selection-change="handleSelectionChange">
+    <el-table
+      v-loading="loading"
+      :data="lecturerList"
+      @selection-change="handleSelectionChange"
+    >
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="编号" align="center" prop="id" />
+      <el-table-column label="编号" width="80" align="center" prop="id" />
       <el-table-column label="讲师姓名" align="center" prop="name" />
       <el-table-column label="讲师简介" align="center" prop="information" />
-      <el-table-column label="创建时间" align="center" prop="createtime" width="180">
+      <el-table-column
+        label="创建时间"
+        align="center"
+        prop="createtime"
+        width="180"
+      >
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createtime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column
+        label="操作"
+        align="center"
+        width="150"
+        class-name="small-padding fixed-width"
+      >
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -75,20 +98,22 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['benyi:lecturer:edit']"
-          >修改</el-button>
+            >修改</el-button
+          >
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['benyi:lecturer:remove']"
-          >删除</el-button>
+            >删除</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
 
     <pagination
-      v-show="total>0"
+      v-show="total > 0"
       :total="total"
       :page.sync="queryParams.pageNum"
       :limit.sync="queryParams.pageSize"
@@ -96,13 +121,17 @@
     />
 
     <!-- 添加或修改讲师对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px">
+    <el-dialog :title="title" :visible.sync="open" class="v-dialog">
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="讲师姓名" prop="name">
           <el-input v-model="form.name" placeholder="请输入姓名" />
         </el-form-item>
         <el-form-item label="讲师简介" prop="information">
-          <el-input v-model="form.information" type="textarea" placeholder="请输入内容" />
+          <el-input
+            v-model="form.information"
+            type="textarea"
+            placeholder="请输入内容"
+          />
           <el-input v-model="form.imgurl" v-if="false" />
         </el-form-item>
         <el-form-item label="选择照片" prop="imgurl">
@@ -344,15 +373,15 @@ export default {
 };
 </script>
 
-<style>
-.avatar-uploader .el-upload {
+<style lang="scss" scoped>
+.avatar-uploader ::v-deep.el-upload {
   border: 1px dashed #d9d9d9;
   border-radius: 6px;
   cursor: pointer;
   position: relative;
   overflow: hidden;
 }
-.avatar-uploader .el-upload:hover {
+.avatar-uploader ::v-deep.el-upload:hover {
   border-color: #409eff;
 }
 .avatar-uploader-icon {
