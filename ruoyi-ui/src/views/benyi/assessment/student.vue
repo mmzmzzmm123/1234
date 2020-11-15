@@ -45,7 +45,7 @@
         :label="itemLy.name"
         :name="itemLy.name"
       >
-        <div
+        <div v-loading="loading"
           class="block"
           v-for="itemFzly in assessmentcontentList.filter(
             (p) => p.parentId == itemLy.id

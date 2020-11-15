@@ -70,6 +70,12 @@ right join by_assessmentchild b on a.id=b.contentid where b.childid=#{sort} and 
 where find_in_set(id, getChildLst(#{id})) ;
 	</select>
 
+    <!--根据节点id获取领域目标-->
+    <select id="selectNodeByid" parameterType="Long" resultMap="ByAssessmentcontentResult">
+		select id, parentId, name, iselement, scope, create_time, sort, ckbz  from by_assessmentcontent
+where find_in_set(id, getChildLst(#{id})) and parentId>#{id} and iselement='N';
+	</select>
+
     <insert id="insertByAssessmentcontent" parameterType="ByAssessmentcontent" useGeneratedKeys="true" keyProperty="id">
         insert into by_assessmentcontent
         <trim prefix="(" suffix=")" suffixOverrides=",">

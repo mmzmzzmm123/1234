@@ -177,4 +177,51 @@ public class ByAssessmentcontentController extends BaseController {
         return ajaxResult;
     }
 
+    ///根据id获取领域目标
+    @GetMapping(value = "/getassessmentstatisticsmb/{childid}/{scope}/{type}")
+    public AjaxResult getAssessmentStatisticsmb(@PathVariable("childid") Long childid, @PathVariable("scope") String scope, @PathVariable("type") String type) {
+        AjaxResult ajaxResult = AjaxResult.success();
+        String[] strArr = new String[]{"健康", "语言", "社会", "科学", "艺术"};
+        ByAssessmentcontent byAssessmentcontent = new ByAssessmentcontent();
+        byAssessmentcontent.setName(strArr[Integer.parseInt(type)]);
+        byAssessmentcontent.setScope(scope);
+
+        long a = byAssessmentcontentService.selectByAssessmentcontentList(byAssessmentcontent).get(0).getId();
+        List<ByAssessmentcontent> list = byAssessmentcontentService.selectNodeByid(a);
+        ajaxResult.put("mb", list);
+        return ajaxResult;
+    }
+
+    ///统计结果
+    @GetMapping(value = "/getassessmentstatisticsbymb/{childid}/{scope}/{type}")
+    public AjaxResult getAssessmentStatisticsbymb(@PathVariable("childid") Long childid, @PathVariable("scope") String scope, @PathVariable("type") String type) {
+        AjaxResult ajaxResult = AjaxResult.success();
+        String[] strArr = new String[]{"健康", "语言", "社会", "科学", "艺术"};
+        ByAssessmentcontent byAssessmentcontent0 = new ByAssessmentcontent();
+        byAssessmentcontent0.setName(strArr[Integer.parseInt(type)]);
+        byAssessmentcontent0.setScope(scope);
+        long a = byAssessmentcontentService.selectByAssessmentcontentList(byAssessmentcontent0).get(0).getId();
+        List<ByAssessmentcontent> list0 = byAssessmentcontentService.selectNodeByid(a);
+
+        List<Double> douArr = new ArrayList<Double>();
+        ByAssessmentcontent byAssessmentcontent = null;
+        for (int i = 0; i < list0.size(); i++) {
+            byAssessmentcontent = new ByAssessmentcontent();
+            byAssessmentcontent.setScope(scope);
+            byAssessmentcontent.setId(list0.get(i).getId());
+            byAssessmentcontent.setSort(childid);
+            int count = byAssessmentcontentService.selectCountElement(byAssessmentcontent);
+            int countChild = byAssessmentcontentService.selectCountElementByChild(byAssessmentcontent);
+            if (scope.equals("1")) {
+                douArr.add((((double) 48 / count) * countChild));
+            } else if (scope.equals("2")) {
+                douArr.add((((double) 60 / count) * countChild));
+            } else if (scope.equals("3")) {
+                douArr.add((((double) 72 / count) * countChild));
+            }
+        }
+        ajaxResult.put("statistics", douArr);
+        return ajaxResult;
+    }
+
 }

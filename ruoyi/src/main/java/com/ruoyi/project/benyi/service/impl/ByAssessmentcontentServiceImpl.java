@@ -224,4 +224,15 @@ public class ByAssessmentcontentServiceImpl implements IByAssessmentcontentServi
         return byAssessmentcontentMapper.selectCountElementByChild(byAssessmentcontent);
     }
 
+    /**
+     * 节点根据id
+     *
+     * @param id 内容ID
+     * @return 结果
+     */
+    @Override
+    public List<ByAssessmentcontent> selectNodeByid(Long id){
+        return byAssessmentcontentMapper.selectNodeByid(id);
+    }
+
 }
