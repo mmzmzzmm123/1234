@@ -1,5 +1,9 @@
 <template>
-  <div :class="className" :style="{ height: height, width: width }" />
+  <div
+    v-loading="loading"
+    :class="className"
+    :style="{ height: height, width: width }"
+  />
 </template>
 
 <script>
@@ -35,6 +39,8 @@ export default {
     return {
       chart: null,
       childId: "",
+      // 遮罩层
+      loading: true,
     };
   },
   mounted() {
@@ -75,11 +81,22 @@ export default {
       );
     },
     async initChart() {
+      this.loading = true;
       await this.getData();
+      this.loading = false;
       this.chart = echarts.init(this.$el, "macarons");
 
       if (this.psMsg == "3") {
         this.chart.setOption({
+          title: {
+            text: "幼儿学习与发展评估结果综合统计",
+            textStyle: {
+              fontSize: 14,
+              lineHeight: 20,
+            },
+            top: "top",
+            left: "center",
+          },
           tooltip: {
             trigger: "axis",
             axisPointer: {
@@ -89,7 +106,7 @@ export default {
           },
           radar: {
             radius: "66%",
-            center: ["50%", "42%"],
+            center: ["50%", "52%"],
             splitNumber: 8,
             splitArea: {
               areaStyle: {
@@ -143,6 +160,15 @@ export default {
         });
       } else if (this.psMsg == "2") {
         this.chart.setOption({
+          title: {
+            text: "幼儿学习与发展评估结果综合统计",
+            textStyle: {
+              fontSize: 14,
+              lineHeight: 20,
+            },
+            top: "top",
+            left: "center",
+          },
           tooltip: {
             trigger: "axis",
             axisPointer: {
@@ -152,7 +178,7 @@ export default {
           },
           radar: {
             radius: "66%",
-            center: ["50%", "42%"],
+            center: ["50%", "52%"],
             splitNumber: 8,
             splitArea: {
               areaStyle: {
@@ -206,6 +232,15 @@ export default {
         });
       } else if (this.psMsg == "1") {
         this.chart.setOption({
+          title: {
+            text: "幼儿学习与发展评估结果综合统计",
+            textStyle: {
+              fontSize: 14,
+              lineHeight: 20,
+            },
+            top: "top",
+            left: "center",
+          },
           tooltip: {
             trigger: "axis",
             axisPointer: {
@@ -215,7 +250,7 @@ export default {
           },
           radar: {
             radius: "66%",
-            center: ["50%", "42%"],
+            center: ["50%", "52%"],
             splitNumber: 8,
             splitArea: {
               areaStyle: {

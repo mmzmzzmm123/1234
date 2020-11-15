@@ -31,7 +31,7 @@
           <radar-chart_ys :psMsg="item.dictValue" />
         </div>
         <div class="block">
-          <h2 class="block-item-title flex align-center">评估建议</h2>
+          <h2 class="block-item-title flex align-center">教育建议</h2>
           <!-- <ul class="block-content">
             <li>
               <p class="block-content-title">
@@ -108,8 +108,6 @@ export default {
       assessmentscope: "",
       // tabs列表
       tabsList: [],
-      // 遮罩层
-      loading: true,
       activeName: "",
     };
   },

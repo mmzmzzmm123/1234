@@ -1,5 +1,9 @@
 <template>
-  <div :class="className" :style="{ height: height, width: width }" />
+  <div
+    v-loading="loading"
+    :class="className"
+    :style="{ height: height, width: width }"
+  />
 </template>
 
 <script>
@@ -40,6 +44,8 @@ export default {
     return {
       chart: null,
       childId: "",
+      // 遮罩层
+      loading: true,
     };
   },
   mounted() {
@@ -82,7 +88,7 @@ export default {
       await getAssessmentStatisticsmb(this.childId, this.psMsg, 3).then(
         (response) => {
           let value = [];
-          let mbvalues=[];
+          let mbvalues = [];
           let len = response.mb;
           for (var j = 0; j < len.length; j++) {
             // console.log(len[j]);
@@ -96,7 +102,7 @@ export default {
             mbvalues.push(len[j].max);
             value.push(len[j]);
           }
-          this.mbvalues=mbvalues;
+          this.mbvalues = mbvalues;
           this.names = value;
           //console.log(this.names);
           //console.log(this.values);
@@ -104,12 +110,23 @@ export default {
       );
     },
     async initChart() {
+      this.loading = true;
       await this.getData();
       await this.getNameData();
+      this.loading = false;
       this.chart = echarts.init(this.$el, "macarons");
 
       if (this.psMsg == "3") {
         this.chart.setOption({
+          title: {
+            text: "幼儿评估结果-科学",
+            textStyle: {
+              fontSize: 14,
+              lineHeight: 20,
+            },
+            top: "top",
+            left: "center",
+          },
           tooltip: {
             trigger: "axis",
             axisPointer: {
@@ -119,7 +136,7 @@ export default {
           },
           radar: {
             radius: "66%",
-            center: ["50%", "42%"],
+            center: ["50%", "50%"],
             splitNumber: 8,
             splitArea: {
               areaStyle: {
@@ -167,6 +184,15 @@ export default {
         });
       } else if (this.psMsg == "2") {
         this.chart.setOption({
+          title: {
+            text: "幼儿评估结果-科学",
+            textStyle: {
+              fontSize: 14,
+              lineHeight: 20,
+            },
+            top: "top",
+            left: "center",
+          },
           tooltip: {
             trigger: "axis",
             axisPointer: {
@@ -176,7 +202,7 @@ export default {
           },
           radar: {
             radius: "66%",
-            center: ["50%", "42%"],
+            center: ["50%", "50%"],
             splitNumber: 8,
             splitArea: {
               areaStyle: {
@@ -224,6 +250,15 @@ export default {
         });
       } else if (this.psMsg == "1") {
         this.chart.setOption({
+          title: {
+            text: "幼儿评估结果-科学",
+            textStyle: {
+              fontSize: 14,
+              lineHeight: 20,
+            },
+            top: "top",
+            left: "center",
+          },
           tooltip: {
             trigger: "axis",
             axisPointer: {
@@ -233,7 +268,7 @@ export default {
           },
           radar: {
             radius: "66%",
-            center: ["50%", "42%"],
+            center: ["50%", "50%"],
             splitNumber: 8,
             splitArea: {
               areaStyle: {
