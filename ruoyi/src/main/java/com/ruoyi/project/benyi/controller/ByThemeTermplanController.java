@@ -112,9 +112,11 @@ public class ByThemeTermplanController extends BaseController {
             List<ByThemeTermplan> list = null;
             xnxqNew = byThemeTermplan.getXnxq();
             mybyThemeTermplan.setXnxq(xnxqNew);
+            mybyThemeTermplan.setClassid(classId);
             mybyThemeTermplan.setStartmonth(null);
             mybyThemeTermplan.setEndmonth(null);
             list = byThemeTermplanService.selectByThemeTermplanList(mybyThemeTermplan);
+            System.out.println(list + "学期列表");
             // 判断是否存在当前学期计划
             if (list != null && list.size() > 0) {
                 return AjaxResult.error("当前学年学期计划已经存在，无法创建学期计划");
