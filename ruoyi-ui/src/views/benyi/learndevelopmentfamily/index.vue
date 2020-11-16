@@ -1,6 +1,11 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
+    <el-form
+      :model="queryParams"
+      ref="queryForm"
+      :inline="true"
+      label-width="68px"
+    >
       <el-form-item label="幼儿" prop="childid">
         <el-select v-model="queryParams.childid" placeholder="请选择">
           <el-option
@@ -22,48 +27,67 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+        <el-button
+          type="primary"
+          icon="el-icon-search"
+          size="mini"
+          @click="handleQuery"
+          >搜索</el-button
+        >
+        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+          >重置</el-button
+        >
       </el-form-item>
     </el-form>
 
-    <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          type="primary"
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['benyi:learndevelopmentfamily:add']"
-        >新增</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['benyi:learndevelopmentfamily:edit']"
-        >修改</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="danger"
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['benyi:learndevelopmentfamily:remove']"
-        >删除</el-button>
-      </el-col>
-    </el-row>
+    <div class="mb8 btn-list">
+      <el-button
+        type="primary"
+        icon="el-icon-plus"
+        size="mini"
+        @click="handleAdd"
+        v-hasPermi="['benyi:learndevelopmentfamily:add']"
+        >新增</el-button
+      >
+      <!-- <el-button
+        type="success"
+        icon="el-icon-edit"
+        size="mini"
+        :disabled="single"
+        @click="handleUpdate"
+        v-hasPermi="['benyi:learndevelopmentfamily:edit']"
+        >修改</el-button
+      > -->
+      <el-button
+        type="danger"
+        icon="el-icon-delete"
+        size="mini"
+        :disabled="multiple"
+        @click="handleDelete"
+        v-hasPermi="['benyi:learndevelopmentfamily:remove']"
+        >删除</el-button
+      >
+    </div>
 
-    <el-table v-loading="loading" :data="familyList" @selection-change="handleSelectionChange">
+    <el-table
+      v-loading="loading"
+      :data="familyList"
+      @selection-change="handleSelectionChange"
+    >
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="编号" align="center" prop="id" /> -->
-      <el-table-column label="幼儿" align="center" prop="childid" :formatter="childFormat" />
-      <el-table-column label="学年学期" align="center" prop="xnxq" :formatter="xnxqFormat" />
+      <el-table-column
+        label="幼儿"
+        align="center"
+        prop="childid"
+        :formatter="childFormat"
+      />
+      <el-table-column
+        label="学年学期"
+        align="center"
+        prop="xnxq"
+        :formatter="xnxqFormat"
+      />
       <!-- <el-table-column label="作品照片" align="center" prop="zpimgs" />
       <el-table-column label="作品照片备注" align="center" prop="zpimgremarks" />
       <el-table-column label="生活照片" align="center" prop="shimgs" />
@@ -73,7 +97,12 @@
       <el-table-column label="教师评语" align="center" prop="jspy" />
       <el-table-column label="教师评语备注" align="center" prop="jspyremarks" />
       <el-table-column label="创建人" align="center" prop="createuserid" />-->
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column
+        label="操作"
+        align="center"
+        width="100"
+        class-name="small-padding fixed-width"
+      >
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -81,20 +110,22 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['benyi:learndevelopmentfamily:edit']"
-          >修改</el-button>
+            >修改</el-button
+          >
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['benyi:learndevelopmentfamily:remove']"
-          >删除</el-button>
+            >删除</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
 
     <pagination
-      v-show="total>0"
+      v-show="total > 0"
       :total="total"
       :page.sync="queryParams.pageNum"
       :limit.sync="queryParams.pageSize"
@@ -102,7 +133,7 @@
     />
 
     <!-- 添加或修改儿童学习与发展档案（家长）对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="800px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" class="big-dialog" append-to-body>
       <el-row :gutter="15">
         <el-form ref="form" :model="form" :rules="rules" label-width="80px">
           <el-col :span="12">
@@ -136,7 +167,11 @@
           </el-col>
           <el-col :span="24">
             <el-form-item label="备注" prop="zpimgremarks">
-              <el-input v-model="form.zpimgremarks" type="textarea" placeholder="请输入作品照片备注" />
+              <el-input
+                v-model="form.zpimgremarks"
+                type="textarea"
+                placeholder="请输入作品照片备注"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="24">
@@ -146,7 +181,11 @@
           </el-col>
           <el-col :span="24">
             <el-form-item label="备注" prop="shimgsremarks">
-              <el-input v-model="form.shimgsremarks" type="textarea" placeholder="请输入生活照片备注" />
+              <el-input
+                v-model="form.shimgsremarks"
+                type="textarea"
+                placeholder="请输入生活照片备注"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="24">
@@ -156,7 +195,11 @@
           </el-col>
           <el-col :span="24">
             <el-form-item label="备注" prop="yqsjremarks">
-              <el-input v-model="form.yqsjremarks" type="textarea" placeholder="请输入有趣事件备注" />
+              <el-input
+                v-model="form.yqsjremarks"
+                type="textarea"
+                placeholder="请输入有趣事件备注"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="24">
@@ -166,7 +209,11 @@
           </el-col>
           <el-col :span="24">
             <el-form-item label="备注" prop="jspyremarks">
-              <el-input v-model="form.jspyremarks" type="textarea" placeholder="请输入教师评语备注" />
+              <el-input
+                v-model="form.jspyremarks"
+                type="textarea"
+                placeholder="请输入教师评语备注"
+              />
             </el-form-item>
           </el-col>
         </el-form>
@@ -185,7 +232,7 @@ import {
   getFamily,
   delFamily,
   addFamily,
-  updateFamily,
+  updateFamily
 } from "@/api/benyi/learndevelopmentfamily";
 
 import { listChild } from "@/api/benyi/child";
@@ -195,7 +242,7 @@ import Editor from "@/components/Editor";
 export default {
   name: "Family",
   components: {
-    Editor,
+    Editor
   },
   data() {
     return {
@@ -233,23 +280,21 @@ export default {
         yqsjremarks: undefined,
         jspy: undefined,
         jspyremarks: undefined,
-        createuserid: undefined,
+        createuserid: undefined
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
         childid: [{ required: true, message: "幼儿不能为空", trigger: "blur" }],
-        xnxq: [
-          { required: true, message: "学年学期不能为空", trigger: "blur" },
-        ],
-      },
+        xnxq: [{ required: true, message: "学年学期不能为空", trigger: "blur" }]
+      }
     };
   },
   created() {
     this.getList();
     this.getChildList();
-    this.getDicts("sys_xnxq").then((response) => {
+    this.getDicts("sys_xnxq").then(response => {
       this.xnxqOptions = response.data;
     });
   },
@@ -259,7 +304,7 @@ export default {
       // return this.selectDictLabel(this.classOptions, row.classid);
       var actions = [];
       var datas = this.childOptions;
-      Object.keys(datas).map((key) => {
+      Object.keys(datas).map(key => {
         if (datas[key].id == "" + row.childid) {
           actions.push(datas[key].name);
           return false;
@@ -273,14 +318,14 @@ export default {
     },
     //获取幼儿列表
     getChildList() {
-      listChild(null).then((response) => {
+      listChild(null).then(response => {
         this.childOptions = response.rows;
       });
     },
     /** 查询儿童学习与发展档案（家长）列表 */
     getList() {
       this.loading = true;
-      listFamily(this.queryParams).then((response) => {
+      listFamily(this.queryParams).then(response => {
         this.familyList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -306,7 +351,7 @@ export default {
         jspy: undefined,
         jspyremarks: undefined,
         createuserid: undefined,
-        createTime: undefined,
+        createTime: undefined
       };
       this.resetForm("form");
     },
@@ -322,7 +367,7 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map((item) => item.id);
+      this.ids = selection.map(item => item.id);
       this.single = selection.length != 1;
       this.multiple = !selection.length;
     },
@@ -336,18 +381,18 @@ export default {
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids;
-      getFamily(id).then((response) => {
+      getFamily(id).then(response => {
         this.form = response.data;
         this.open = true;
         this.title = "修改儿童学习与发展档案（家长）";
       });
     },
     /** 提交按钮 */
-    submitForm: function () {
-      this.$refs["form"].validate((valid) => {
+    submitForm: function() {
+      this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.id != undefined) {
-            updateFamily(this.form).then((response) => {
+            updateFamily(this.form).then(response => {
               if (response.code === 200) {
                 this.msgSuccess("修改成功");
                 this.open = false;
@@ -355,7 +400,7 @@ export default {
               }
             });
           } else {
-            addFamily(this.form).then((response) => {
+            addFamily(this.form).then(response => {
               if (response.code === 200) {
                 this.msgSuccess("新增成功");
                 this.open = false;
@@ -375,18 +420,18 @@ export default {
         {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
-          type: "warning",
+          type: "warning"
         }
       )
-        .then(function () {
+        .then(function() {
           return delFamily(ids);
         })
         .then(() => {
           this.getList();
           this.msgSuccess("删除成功");
         })
-        .catch(function () {});
-    },
-  },
+        .catch(function() {});
+    }
+  }
 };
 </script>

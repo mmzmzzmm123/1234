@@ -1,8 +1,17 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
+    <el-form
+      :model="queryParams"
+      ref="queryForm"
+      :inline="true"
+      label-width="68px"
+    >
       <el-form-item label="用户名称" prop="userid">
-         <el-select v-model="queryParams.userid" filterable  placeholder="请选择用户" >
+        <el-select
+          v-model="queryParams.userid"
+          filterable
+          placeholder="请选择用户"
+        >
           <el-option
             v-for="item in teacherListAll"
             :key="item.userid"
@@ -21,7 +30,12 @@
         />
       </el-form-item>-->
       <el-form-item label="学历" prop="xl">
-        <el-select v-model="queryParams.xl" placeholder="请选择学历" clearable size="small">
+        <el-select
+          v-model="queryParams.xl"
+          placeholder="请选择学历"
+          clearable
+          size="small"
+        >
           <el-option
             v-for="dict in xlOptions"
             :key="dict.dictValue"
@@ -31,51 +45,80 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+        <el-button
+          type="primary"
+          icon="el-icon-search"
+          size="mini"
+          @click="handleQuery"
+          >搜索</el-button
+        >
+        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+          >重置</el-button
+        >
       </el-form-item>
     </el-form>
 
-    <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['system:teacher:edit']"
-        >修改</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="danger"
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['system:teacher:remove']"
-        >清空</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['system:teacher:export']"
-        >导出</el-button>
-      </el-col>
-    </el-row>
+    <div class="mb8 btn-list">
+      <!-- <el-button
+        type="success"
+        icon="el-icon-edit"
+        size="mini"
+        :disabled="single"
+        @click="handleUpdate"
+        v-hasPermi="['system:teacher:edit']"
+        >修改</el-button
+      > -->
+      <el-button
+        type="danger"
+        icon="el-icon-delete"
+        size="mini"
+        :disabled="multiple"
+        @click="handleDelete"
+        v-hasPermi="['system:teacher:remove']"
+        >清空</el-button
+      >
+      <el-button
+        type="warning"
+        icon="el-icon-download"
+        size="mini"
+        @click="handleExport"
+        v-hasPermi="['system:teacher:export']"
+        >导出</el-button
+      >
+    </div>
 
-    <el-table v-loading="loading" :data="teacherList" @selection-change="handleSelectionChange">
+    <el-table
+      v-loading="loading"
+      :data="teacherList"
+      @selection-change="handleSelectionChange"
+    >
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="用户名称" align="center" prop="user.nickName" />
-      <el-table-column label="出生日期" align="center" prop="csrq" width="180"></el-table-column>
+      <el-table-column
+        label="出生日期"
+        align="center"
+        prop="csrq"
+        width="180"
+      ></el-table-column>
       <el-table-column label="毕业院校" align="center" prop="byyx" />
-      <el-table-column label="学历" align="center" prop="xl" :formatter="xlFormat" />
-      <el-table-column label="参加工作日期" align="center" prop="cjgzrq" width="180"></el-table-column>
-      <el-table-column label="创建时间" align="center" prop="createtime" width="180">
+      <el-table-column
+        label="学历"
+        align="center"
+        prop="xl"
+        :formatter="xlFormat"
+      />
+      <el-table-column
+        label="参加工作日期"
+        align="center"
+        prop="cjgzrq"
+        width="180"
+      ></el-table-column>
+      <el-table-column
+        label="创建时间"
+        align="center"
+        prop="createtime"
+        width="180"
+      >
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createtime) }}</span>
         </template>
@@ -86,7 +129,12 @@
       <el-table-column label="学位" align="center" prop="xw" :formatter="xwFormat" />
       <el-table-column label="资格证书" align="center" prop="zgzs" :formatter="zgzsFormat" />
       <el-table-column label="创建人" align="center" prop="createuserid" />-->
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column
+        label="操作"
+        align="center"
+        width="200"
+        class-name="small-padding fixed-width"
+      >
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -94,27 +142,30 @@
             icon="el-icon-edit"
             @click="handleDetail(scope.row)"
             v-hasPermi="['system:teacher:edit']"
-          >详情</el-button>
+            >详情</el-button
+          >
           <el-button
             size="mini"
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['system:teacher:edit']"
-          >修改</el-button>
+            >修改</el-button
+          >
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['system:teacher:remove']"
-          >清空</el-button>
+            >清空</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
 
     <pagination
-      v-show="total>0"
+      v-show="total > 0"
       :total="total"
       :page.sync="queryParams.pageNum"
       :limit.sync="queryParams.pageSize"
@@ -122,16 +173,26 @@
     />
 
     <!-- 添加或修改教师基本信息对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px">
-      <el-form ref="form" :model="form" :rules="rules" label-width="100px" :disabled="flag">
+    <el-dialog :title="title" :visible.sync="open" class="v-dialog">
+      <el-form
+        ref="form"
+        :model="form"
+        :rules="rules"
+        label-width="100px"
+        :disabled="flag"
+      >
         <el-form-item label="id" prop="id" v-show="false">
           <el-input v-model="form.id" />
         </el-form-item>
-        <el-form-item label="用户名称" prop="teacherMingCheng" >
-          <el-input v-model="teacherMingCheng" :disabled="true"/>
+        <el-form-item label="用户名称" prop="teacherMingCheng">
+          <el-input v-model="teacherMingCheng" :disabled="true" />
         </el-form-item>
         <el-form-item label="证件号码" prop="zjhm">
-          <el-input v-model="form.zjhm" placeholder="请输入证件号码" maxlength="18" />
+          <el-input
+            v-model="form.zjhm"
+            placeholder="请输入证件号码"
+            maxlength="18"
+          />
         </el-form-item>
         <el-form-item label="出生日期" prop="csrq">
           <el-date-picker
@@ -271,7 +332,7 @@ export default {
             message: "请输入正确的身份证号",
             trigger: "blur"
           }
-        ],
+        ]
       }
     };
   },
@@ -386,7 +447,7 @@ export default {
         this.flag = true;
         this.title = "教师基本信息详情";
       });
-  },
+    },
     /** 提交按钮 */
     submitForm: function() {
       this.$refs["form"].validate(valid => {

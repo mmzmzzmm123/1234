@@ -1,6 +1,11 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
+    <el-form
+      :model="queryParams"
+      ref="queryForm"
+      :inline="true"
+      label-width="68px"
+    >
       <el-form-item label="班级编码" prop="classid">
         <el-select v-model="queryParams.classid" placeholder="请选择班级">
           <el-option
@@ -21,7 +26,12 @@
         />
       </el-form-item>
       <el-form-item label="出勤类型" prop="type">
-        <el-select v-model="queryParams.type" placeholder="请选择出勤类型" clearable size="small">
+        <el-select
+          v-model="queryParams.type"
+          placeholder="请选择出勤类型"
+          clearable
+          size="small"
+        >
           <el-option
             v-for="dict in checkinOptions"
             :key="dict.dictValue"
@@ -30,8 +40,8 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="考勤时间" prop="createTime">     
-       <el-date-picker
+      <el-form-item label="考勤时间" prop="createTime">
+        <el-date-picker
           clearable
           size="small"
           style="width: 200px"
@@ -42,67 +52,99 @@
         ></el-date-picker>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+        <el-button
+          type="primary"
+          icon="el-icon-search"
+          size="mini"
+          @click="handleQuery"
+          >搜索</el-button
+        >
+        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+          >重置</el-button
+        >
       </el-form-item>
     </el-form>
 
-    <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          type="primary"
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['benyi:checkindetail:add']"
-        >新增</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
+    <div class="mb8 btn-list">
+      <el-button
+        type="primary"
+        icon="el-icon-plus"
+        size="mini"
+        @click="handleAdd"
+        v-hasPermi="['benyi:checkindetail:add']"
+        >新增</el-button
+      >
+      <!-- <el-button
           type="success"
           icon="el-icon-edit"
           size="mini"
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['benyi:checkindetail:edit']"
-        >修改</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="danger"
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['benyi:checkindetail:remove']"
-        >删除</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['benyi:checkindetail:export']"
-        >导出</el-button>
-      </el-col>
-    </el-row>
+        >修改</el-button> -->
+      <el-button
+        type="danger"
+        icon="el-icon-delete"
+        size="mini"
+        :disabled="multiple"
+        @click="handleDelete"
+        v-hasPermi="['benyi:checkindetail:remove']"
+        >删除</el-button
+      >
+      <el-button
+        type="warning"
+        icon="el-icon-download"
+        size="mini"
+        @click="handleExport"
+        v-hasPermi="['benyi:checkindetail:export']"
+        >导出</el-button
+      >
+    </div>
 
-    <el-table v-loading="loading" :data="detailList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" :selectable="checkSelectable" />
+    <el-table
+      v-loading="loading"
+      :data="detailList"
+      @selection-change="handleSelectionChange"
+    >
+      <el-table-column
+        type="selection"
+        width="55"
+        align="center"
+        :selectable="checkSelectable"
+      />
       <!-- <el-table-column label="编号" align="center" prop="id" /> -->
       <!-- <el-table-column label="学校编码" align="center" prop="schoolid" /> -->
-      <el-table-column label="班级名称" align="center" prop="classid" :formatter="classFormat" />
+      <el-table-column
+        label="班级名称"
+        align="center"
+        prop="classid"
+        :formatter="classFormat"
+      />
       <!-- <el-table-column label="幼儿编码" align="center" prop="childid" /> -->
       <el-table-column label="幼儿姓名" align="center" prop="childname" />
-      <el-table-column label="出勤类型" align="center" prop="type" :formatter="typeFormat" />
-      <el-table-column label="考勤时间" align="center" prop="createTime" width="180">
+      <el-table-column
+        label="出勤类型"
+        align="center"
+        prop="type"
+        :formatter="typeFormat"
+      />
+      <el-table-column
+        label="考勤时间"
+        align="center"
+        prop="createTime"
+        width="180"
+      >
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
       </el-table-column>
       <!-- <el-table-column label="创建人" align="center" prop="createuserid" /> -->
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column
+        label="操作"
+        align="center"
+        width="100"
+        class-name="small-padding fixed-width"
+      >
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -111,7 +153,8 @@
             @click="handleUpdate(scope.row)"
             v-hasPermi="['benyi:checkindetail:edit']"
             :disabled="!checkSelectable(scope.row)"
-          >修改</el-button>
+            >修改</el-button
+          >
           <el-button
             size="mini"
             type="text"
@@ -119,13 +162,14 @@
             @click="handleDelete(scope.row)"
             v-hasPermi="['benyi:checkindetail:remove']"
             :disabled="!checkSelectable(scope.row)"
-          >删除</el-button>
+            >删除</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
 
     <pagination
-      v-show="total>0"
+      v-show="total > 0"
       :total="total"
       :page.sync="queryParams.pageNum"
       :limit.sync="queryParams.pageSize"
@@ -133,7 +177,7 @@
     />
 
     <!-- 添加或修改幼儿考勤对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" class="v-dialog" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="选择幼儿" prop="childname">
           <el-checkbox
@@ -141,15 +185,20 @@
             v-model="checkAll"
             @change="handleCheckAllChange"
             :disabled="isable"
-          >全选</el-checkbox>
+            >全选</el-checkbox
+          >
           <div style="margin: 15px 0;"></div>
-          <el-checkbox-group v-model="checkedChilds" @change="handlecheckedChildsChange">
+          <el-checkbox-group
+            v-model="checkedChilds"
+            @change="handlecheckedChildsChange"
+          >
             <el-checkbox
               v-for="child in childs"
               :label="child.id"
               :key="child.id"
               :disabled="isable"
-            >{{child.name}}</el-checkbox>
+              >{{ child.name }}</el-checkbox
+            >
           </el-checkbox-group>
           <el-input v-model="form.childname" v-if="false" />
         </el-form-item>

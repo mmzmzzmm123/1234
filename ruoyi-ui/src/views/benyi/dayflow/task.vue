@@ -1,6 +1,11 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
+    <el-form
+      :model="queryParams"
+      ref="queryForm"
+      :inline="true"
+      label-width="68px"
+    >
       <el-form-item label="流程名称" prop="detailId">
         <el-select v-model="queryParams.detailId" size="small">
           <el-option
@@ -21,49 +26,64 @@
         />
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+        <el-button
+          type="primary"
+          icon="el-icon-search"
+          size="mini"
+          @click="handleQuery"
+          >搜索</el-button
+        >
+        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+          >重置</el-button
+        >
       </el-form-item>
     </el-form>
 
-    <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          type="primary"
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['benyi:dayflowtask:add']"
-        >新增</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['benyi:dayflowtask:edit']"
-        >修改</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="danger"
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['benyi:dayflowtask:remove']"
-        >删除</el-button>
-      </el-col>
-    </el-row>
+    <div class="mb8 btn-list">
+      <el-button
+        type="primary"
+        icon="el-icon-plus"
+        size="mini"
+        @click="handleAdd"
+        v-hasPermi="['benyi:dayflowtask:add']"
+        >新增</el-button
+      >
+      <el-button
+        type="success"
+        icon="el-icon-edit"
+        size="mini"
+        :disabled="single"
+        @click="handleUpdate"
+        v-hasPermi="['benyi:dayflowtask:edit']"
+        >修改</el-button
+      >
+      <el-button
+        type="danger"
+        icon="el-icon-delete"
+        size="mini"
+        :disabled="multiple"
+        @click="handleDelete"
+        v-hasPermi="['benyi:dayflowtask:remove']"
+        >删除</el-button
+      >
+    </div>
 
-    <el-table v-loading="loading" :data="dayflowtaskList" @selection-change="handleSelectionChange">
+    <el-table
+      v-loading="loading"
+      :data="dayflowtaskList"
+      @selection-change="handleSelectionChange"
+    >
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="任务名称" align="center" :show-overflow-tooltip="true">
+      <el-table-column
+        label="任务名称"
+        align="center"
+        :show-overflow-tooltip="true"
+      >
         <template slot-scope="scope">
           <router-link
-            :to="'/dayflow/dayflowmanger/dayflowtask/standard/' + scope.row.code"
+            :to="
+              '/dayflow/dayflowmanger/dayflowtask/standard/' + scope.row.code
+            "
             class="link-dayflow"
           >
             <span>{{ scope.row.taskLable }}</span>
@@ -77,10 +97,19 @@
         :show-overflow-tooltip="true"
       />
       <el-table-column label="任务排序" align="center" prop="taskSort" />
-       <el-table-column label="标准数量" align="center" prop="standardCount" />
+      <el-table-column label="标准数量" align="center" prop="standardCount" />
       <el-table-column label="备注" align="center" prop="remark" />
-      <el-table-column label="创建时间" align="center" prop="createtime" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column
+        label="创建时间"
+        align="center"
+        prop="createtime"
+        width="160"
+      />
+      <el-table-column
+        label="操作"
+        align="center"
+        class-name="small-padding fixed-width"
+      >
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -88,20 +117,22 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['benyi:dayflowtask:edit']"
-          >修改</el-button>
+            >修改</el-button
+          >
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['benyi:dayflowtask:remove']"
-          >删除</el-button>
+            >删除</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
 
     <pagination
-      v-show="total>0"
+      v-show="total > 0"
       :total="total"
       :page.sync="queryParams.pageNum"
       :limit.sync="queryParams.pageSize"
@@ -125,10 +156,18 @@
           <el-input v-model="form.taskLable" placeholder="请输入任务名称" />
         </el-form-item>
         <el-form-item label="任务解读" prop="taskContent">
-          <el-input v-model="form.taskContent" type="textarea" placeholder="请输入内容" />
+          <el-input
+            v-model="form.taskContent"
+            type="textarea"
+            placeholder="请输入内容"
+          />
         </el-form-item>
         <el-form-item label="任务排序" prop="taskSort">
-          <el-input-number v-model="form.taskSort" controls-position="right" :min="0" />
+          <el-input-number
+            v-model="form.taskSort"
+            controls-position="right"
+            :min="0"
+          />
         </el-form-item>
         <el-form-item label="备注" prop="remark">
           <el-input v-model="form.remark" placeholder="请输入备注" />
@@ -195,7 +234,7 @@ export default {
           { required: true, message: "任务名称(标签)不能为空", trigger: "blur" }
         ],
         taskSort: [
-           { required: true, message: "任务排序不能为空", trigger: "blur" }
+          { required: true, message: "任务排序不能为空", trigger: "blur" }
         ]
       }
     };

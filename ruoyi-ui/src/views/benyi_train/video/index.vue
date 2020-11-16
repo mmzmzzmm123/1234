@@ -1,6 +1,11 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
+    <el-form
+      :model="queryParams"
+      ref="queryForm"
+      :inline="true"
+      label-width="68px"
+    >
       <el-form-item label="所属类别" prop="type">
         <el-cascader
           placeholder="请选择所属类别"
@@ -11,7 +16,11 @@
         ></el-cascader>
       </el-form-item>
       <el-form-item label="讲师姓名" prop="lecturer">
-        <el-select v-model="queryParams.lecturer" filterable placeholder="请选择讲师">
+        <el-select
+          v-model="queryParams.lecturer"
+          filterable
+          placeholder="请选择讲师"
+        >
           <el-option
             v-for="item in lecturerOptions"
             :key="item.id"
@@ -30,47 +39,61 @@
         />
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+        <el-button
+          type="primary"
+          icon="el-icon-search"
+          size="mini"
+          @click="handleQuery"
+          >搜索</el-button
+        >
+        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+          >重置</el-button
+        >
       </el-form-item>
     </el-form>
 
-    <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          type="primary"
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['benyi:video:add']"
-        >新增</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['benyi:video:edit']"
-        >修改</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="danger"
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['benyi:video:remove']"
-        >删除</el-button>
-      </el-col>
-    </el-row>
+    <div class="mb8 btn-list">
+      <el-button
+        type="primary"
+        icon="el-icon-plus"
+        size="mini"
+        @click="handleAdd"
+        v-hasPermi="['benyi:video:add']"
+        >新增</el-button
+      >
+      <!-- <el-button
+        type="success"
+        icon="el-icon-edit"
+        size="mini"
+        :disabled="single"
+        @click="handleUpdate"
+        v-hasPermi="['benyi:video:edit']"
+        >修改</el-button
+      > -->
+      <el-button
+        type="danger"
+        icon="el-icon-delete"
+        size="mini"
+        :disabled="multiple"
+        @click="handleDelete"
+        v-hasPermi="['benyi:video:remove']"
+        >删除</el-button
+      >
+    </div>
 
-    <el-table v-loading="loading" :data="videoList" @selection-change="handleSelectionChange">
+    <el-table
+      v-loading="loading"
+      :data="videoList"
+      @selection-change="handleSelectionChange"
+    >
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="编号" align="center" prop="id" />
-      <el-table-column label="培训视频标题" align="center" prop="title" :show-overflow-tooltip="true" />
+      <el-table-column
+        label="培训视频标题"
+        align="center"
+        prop="title"
+        :show-overflow-tooltip="true"
+      />
       <el-table-column
         label="视频简介"
         align="center"
@@ -92,15 +115,26 @@
             size="mini"
             type="text"
             @click="lookDetails(scope.row)"
-          >{{ scope.row.avgscore }}</el-button>
+            >{{ scope.row.avgscore }}</el-button
+          >
         </template>
       </el-table-column>
-      <el-table-column label="创建时间" align="center" prop="createtime" width="180">
+      <el-table-column
+        label="创建时间"
+        align="center"
+        prop="createtime"
+        width="180"
+      >
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createtime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column
+        label="操作"
+        align="center"
+        width="160"
+        class-name="small-padding fixed-width"
+      >
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -108,20 +142,22 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['benyi:video:edit']"
-          >修改</el-button>
+            >修改</el-button
+          >
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['benyi:video:remove']"
-          >删除</el-button>
+            >删除</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
 
     <pagination
-      v-show="total>0"
+      v-show="total > 0"
       :total="total"
       :page.sync="queryParams.pageNum"
       :limit.sync="queryParams.pageSize"
@@ -129,7 +165,7 @@
     />
 
     <!-- 添加或修改培训对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px">
+    <el-dialog :title="title" :visible.sync="open" class="v-dialog">
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="所属类别" prop="type">
           <el-cascader
@@ -143,10 +179,18 @@
           ></el-cascader>
         </el-form-item>
         <el-form-item label="视频标题" prop="title">
-          <el-input v-model="form.title" type="textarea" placeholder="请输入内容" />
+          <el-input
+            v-model="form.title"
+            type="textarea"
+            placeholder="请输入内容"
+          />
         </el-form-item>
         <el-form-item label="视频简介" prop="information">
-          <el-input v-model="form.information" type="textarea" placeholder="请输入内容" />
+          <el-input
+            v-model="form.information"
+            type="textarea"
+            placeholder="请输入内容"
+          />
         </el-form-item>
         <el-form-item label="培训讲师" prop="lecturer">
           <el-select v-model="form.lecturer" placeholder="请选择讲师">
@@ -183,7 +227,11 @@
               v-else-if="imageUrl.length < 1 && imgFlag == false"
               class="el-icon-plus avatar-uploader-icon"
             ></i>
-            <el-progress v-if="imgFlag == true" type="circle" :percentage="percent"></el-progress>
+            <el-progress
+              v-if="imgFlag == true"
+              type="circle"
+              :percentage="percent"
+            ></el-progress>
           </el-upload>
         </el-form-item>
       </el-form>
@@ -194,14 +242,23 @@
     </el-dialog>
 
     <!-- 添加或修改培训对话框 -->
-    <el-dialog title="查看分数和评价详情页" :visible.sync="opendetail" width="800px">
+    <el-dialog
+      title="查看分数和评价详情页"
+      :visible.sync="opendetail"
+      class="big-dialog"
+    >
       <el-table v-loading="loading" :data="scoreandfreeList">
         <el-table-column label="分数" align="center" prop="score" />
-        <el-table-column label="评价" align="center" prop="content" :show-overflow-tooltip="true" />
+        <el-table-column
+          label="评价"
+          align="center"
+          prop="content"
+          :show-overflow-tooltip="true"
+        />
       </el-table>
 
       <pagination
-        v-show="detailtotal>0"
+        v-show="detailtotal > 0"
         :total="detailtotal"
         :page.sync="queryParams.pageNum"
         :limit.sync="queryParams.pageSize"
@@ -576,7 +633,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .avatar-uploader ::v-deep .el-upload {
   border: 1px dashed #d9d9d9;
   border-radius: 6px;

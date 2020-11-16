@@ -1,8 +1,18 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
+    <el-form
+      :model="queryParams"
+      ref="queryForm"
+      :inline="true"
+      label-width="68px"
+    >
       <el-form-item label="班级类型" prop="bjtype">
-        <el-select v-model="queryParams.bjtype" placeholder="请选择班级类型" clearable size="small">
+        <el-select
+          v-model="queryParams.bjtype"
+          placeholder="请选择班级类型"
+          clearable
+          size="small"
+        >
           <el-option
             v-for="dict in bjtypeOptions"
             :key="dict.dictValue"
@@ -21,7 +31,11 @@
         />
       </el-form-item>
       <el-form-item label="主班教师" prop="zbjs">
-        <el-select v-model="queryParams.zbjs" filterable placeholder="请选择主班教师">
+        <el-select
+          v-model="queryParams.zbjs"
+          filterable
+          placeholder="请选择主班教师"
+        >
           <el-option
             v-for="item in zbjsOptions"
             :key="item.userId"
@@ -32,7 +46,11 @@
         </el-select>
       </el-form-item>
       <el-form-item label="配班教师" prop="pbjs">
-         <el-select v-model="queryParams.pbjs" filterable placeholder="请选择配班教师">
+        <el-select
+          v-model="queryParams.pbjs"
+          filterable
+          placeholder="请选择配班教师"
+        >
           <el-option
             v-for="item in pbjsOptions"
             :key="item.userId"
@@ -43,7 +61,11 @@
         </el-select>
       </el-form-item>
       <el-form-item label="助理教师" prop="zljs">
-         <el-select v-model="queryParams.zljs" filterable placeholder="请选择助理教师">
+        <el-select
+          v-model="queryParams.zljs"
+          filterable
+          placeholder="请选择助理教师"
+        >
           <el-option
             v-for="item in zljsOptions"
             :key="item.userId"
@@ -54,66 +76,94 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+        <el-button
+          type="primary"
+          icon="el-icon-search"
+          size="mini"
+          @click="handleQuery"
+          >搜索</el-button
+        >
+        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+          >重置</el-button
+        >
       </el-form-item>
     </el-form>
 
-    <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          type="primary"
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['system:class:add']"
-        >新增</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['system:class:edit']"
-        >修改</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="danger"
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['system:class:remove']"
-        >删除</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['system:class:export']"
-        >导出</el-button>
-      </el-col>
-    </el-row>
+    <div class="mb8 btn-list">
+      <el-button
+        type="primary"
+        icon="el-icon-plus"
+        size="mini"
+        @click="handleAdd"
+        v-hasPermi="['system:class:add']"
+        >新增</el-button
+      >
+      <!-- <el-button
+        type="success"
+        icon="el-icon-edit"
+        size="mini"
+        :disabled="single"
+        @click="handleUpdate"
+        v-hasPermi="['system:class:edit']"
+        >修改</el-button
+      > -->
+      <el-button
+        type="danger"
+        icon="el-icon-delete"
+        size="mini"
+        :disabled="multiple"
+        @click="handleDelete"
+        v-hasPermi="['system:class:remove']"
+        >删除</el-button
+      >
+      <el-button
+        type="warning"
+        icon="el-icon-download"
+        size="mini"
+        @click="handleExport"
+        v-hasPermi="['system:class:export']"
+        >导出</el-button
+      >
+    </div>
 
-    <el-table v-loading="loading" :data="classList" @selection-change="handleSelectionChange">
+    <el-table
+      v-loading="loading"
+      :data="classList"
+      @selection-change="handleSelectionChange"
+    >
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="班级编号" align="center" prop="bjbh" v-if="false" />>
-      <el-table-column label="班级类型" align="center" :formatter="bjtypeFormat" prop="bjtype" />
+      <el-table-column
+        label="班级编号"
+        align="center"
+        prop="bjbh"
+        v-if="false"
+      />>
+      <el-table-column
+        label="班级类型"
+        align="center"
+        :formatter="bjtypeFormat"
+        prop="bjtype"
+      />
       <el-table-column label="班级名称" align="center" prop="bjmc" />
       <el-table-column label="主班教师" align="center" prop="zbjsxm" />
       <el-table-column label="配班教师" align="center" prop="pbjsxm" />
       <el-table-column label="助理教师" align="center" prop="zljsxm" />
-      <el-table-column label="创建时间" align="center" prop="createtime" width="180">
+      <el-table-column
+        label="创建时间"
+        align="center"
+        prop="createtime"
+        width="180"
+      >
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createtime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column
+        label="操作"
+        width="220"
+        align="center"
+        class-name="small-padding fixed-width"
+      >
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -121,27 +171,30 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['system:class:edit']"
-          >修改</el-button>
+            >修改</el-button
+          >
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['system:class:remove']"
-          >删除班级</el-button>
+            >删除班级</el-button
+          >
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleEditJs(scope.row)"
             v-hasPermi="['system:class:edit']"
-          >清空教师</el-button>
+            >清空教师</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
 
     <pagination
-      v-show="total>0"
+      v-show="total > 0"
       :total="total"
       :page.sync="queryParams.pageNum"
       :limit.sync="queryParams.pageSize"
@@ -149,7 +202,7 @@
     />
 
     <!-- 添加或修改班级信息对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px">
+    <el-dialog :title="title" :visible.sync="open" class="v-dialog">
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="班级类型" prop="bjtype">
           <el-select v-model="form.bjtype" placeholder="请选择班级类型">

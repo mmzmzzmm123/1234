@@ -26,7 +26,7 @@
         <el-select v-model="queryParams.childId" placeholder="请选择幼儿">
           <el-option
             v-for="dict in childInfoOptions.filter(
-              (c) => c.classid == this.queryParams.classInfo
+              c => c.classid == this.queryParams.classInfo
             )"
             :key="dict.id"
             :label="dict.name"
@@ -94,19 +94,16 @@
       </el-form-item>
     </el-form>
 
-    <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          type="primary"
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['benyi:healthcheck:add']"
-          >新增</el-button
-        >
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
+    <div class="mb8 btn-list">
+      <el-button
+        type="primary"
+        icon="el-icon-plus"
+        size="mini"
+        @click="handleAdd"
+        v-hasPermi="['benyi:healthcheck:add']"
+        >新增</el-button
+      >
+      <!-- <el-button
           type="success"
           icon="el-icon-edit"
           size="mini"
@@ -114,19 +111,16 @@
           @click="handleUpdate"
           v-hasPermi="['benyi:healthcheck:edit']"
           >修改</el-button
-        >
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="danger"
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['benyi:healthcheck:remove']"
-          >删除</el-button
-        >
-      </el-col>
+        > -->
+      <el-button
+        type="danger"
+        icon="el-icon-delete"
+        size="mini"
+        :disabled="multiple"
+        @click="handleDelete"
+        v-hasPermi="['benyi:healthcheck:remove']"
+        >删除</el-button
+      >
       <!-- <el-col :span="1.5">
         <el-button
           type="warning"
@@ -137,7 +131,7 @@
           >导出</el-button
         >
       </el-col> -->
-    </el-row>
+    </div>
 
     <el-table
       v-loading="loading"
@@ -198,6 +192,7 @@
       <el-table-column
         label="操作"
         align="center"
+        width="100"
         class-name="small-padding fixed-width"
       >
         <template slot-scope="scope">
@@ -230,7 +225,7 @@
     />
 
     <!-- 添加或修改儿童常规体检记录对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="800px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" class="big-dialog" append-to-body>
       <el-row :gutter="15">
         <el-form ref="form" :model="form" :rules="rules" label-width="100px">
           <el-col :span="12">
@@ -254,7 +249,7 @@
               <el-select v-model="form.childId" placeholder="请选择幼儿">
                 <el-option
                   v-for="dict in childInfoOptions.filter(
-                    (c) => c.classid == this.form.classInfo
+                    c => c.classid == this.form.classInfo
                   )"
                   :key="dict.id"
                   :label="dict.name"
@@ -410,7 +405,7 @@ import {
   delHealthcheck,
   addHealthcheck,
   updateHealthcheck,
-  exportHealthcheck,
+  exportHealthcheck
 } from "@/api/benyi/healthcheck";
 import { listClass } from "@/api/system/class";
 import { listChild } from "@/api/benyi/child";
@@ -469,7 +464,7 @@ export default {
         heightAssessment: undefined,
         totalAssessment: undefined,
         createtime: undefined,
-        createuser: undefined,
+        createuser: undefined
       },
       // 表单参数
       form: {},
@@ -477,47 +472,47 @@ export default {
       // 表单校验
       rules: {
         classInfo: [
-          { required: true, message: "班级信息不能为空", trigger: "blur" },
+          { required: true, message: "班级信息不能为空", trigger: "blur" }
         ],
         childId: [
-          { required: true, message: "幼儿姓名不能为空", trigger: "blur" },
+          { required: true, message: "幼儿姓名不能为空", trigger: "blur" }
         ],
         checkTime: [
-          { required: true, message: "检查时间不能为空", trigger: "blur" },
+          { required: true, message: "检查时间不能为空", trigger: "blur" }
         ],
         doctorName: [
-          { required: true, message: "保健医不能为空", trigger: "blur" },
+          { required: true, message: "保健医不能为空", trigger: "blur" }
         ],
         totalAssessment: [
-          { required: true, message: "总评价不能为空", trigger: "blur" },
+          { required: true, message: "总评价不能为空", trigger: "blur" }
         ],
         weight: [
           {
             required: true,
             message: "输入内容必须是数字,且不能超过六位数",
-            trigger: "blur",
-          },
-        ],
-      },
+            trigger: "blur"
+          }
+        ]
+      }
     };
   },
   created() {
     this.getList();
     this.getclassinfo();
 
-    this.getDicts("sys_vision_assessment").then((response) => {
+    this.getDicts("sys_vision_assessment").then(response => {
       this.visionAssessmentOptions = response.data;
     });
-    this.getDicts("sys_decayed_tooth").then((response) => {
+    this.getDicts("sys_decayed_tooth").then(response => {
       this.decayedToothOptions = response.data;
     });
-    this.getDicts("sys_weight_assessment").then((response) => {
+    this.getDicts("sys_weight_assessment").then(response => {
       this.weightAssessmentOptions = response.data;
     });
-    this.getDicts("sys_height_assessment").then((response) => {
+    this.getDicts("sys_height_assessment").then(response => {
       this.heightAssessmentOptions = response.data;
     });
-    this.getDicts("sys_dm_tyjg").then((response) => {
+    this.getDicts("sys_dm_tyjg").then(response => {
       this.totalAssessmentOptions = response.data;
     });
   },
@@ -525,14 +520,14 @@ export default {
     // 班级选择框变化后触发
     classInfoChange() {
       this.queryParams.childId = null;
-      listChild(null).then((response) => {
+      listChild(null).then(response => {
         this.childInfoOptions = response.rows;
       });
     },
     /** 查询儿童常规体检记录列表 */
     getList() {
       this.loading = true;
-      listHealthcheck(this.queryParams).then((response) => {
+      listHealthcheck(this.queryParams).then(response => {
         this.healthcheckList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -540,7 +535,7 @@ export default {
     },
     // 查询所有班级信息
     getclassinfo() {
-      listClass(null).then((response) => {
+      listClass(null).then(response => {
         this.classInfoOptions = response.rows;
       });
     },
@@ -600,7 +595,7 @@ export default {
         heightAssessment: undefined,
         totalAssessment: undefined,
         createtime: undefined,
-        createuser: undefined,
+        createuser: undefined
       };
       this.resetForm("form");
     },
@@ -616,7 +611,7 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map((item) => item.id);
+      this.ids = selection.map(item => item.id);
       this.single = selection.length != 1;
       this.multiple = !selection.length;
     },
@@ -630,18 +625,18 @@ export default {
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids;
-      getHealthcheck(id).then((response) => {
+      getHealthcheck(id).then(response => {
         this.form = response.data;
         this.open = true;
         this.title = "修改儿童常规体检记录";
       });
     },
     /** 提交按钮 */
-    submitForm: function () {
-      this.$refs["form"].validate((valid) => {
+    submitForm: function() {
+      this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.id != undefined) {
-            updateHealthcheck(this.form).then((response) => {
+            updateHealthcheck(this.form).then(response => {
               if (response.code === 200) {
                 this.msgSuccess("修改成功");
                 this.open = false;
@@ -649,7 +644,7 @@ export default {
               }
             });
           } else {
-            addHealthcheck(this.form).then((response) => {
+            addHealthcheck(this.form).then(response => {
               if (response.code === 200) {
                 this.msgSuccess("新增成功");
                 this.open = false;
@@ -666,17 +661,17 @@ export default {
       this.$confirm("是否确认删除儿童常规体检记录数据项?", "警告", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning",
+        type: "warning"
       })
-        .then(function () {
+        .then(function() {
           return delHealthcheck(ids);
         })
         .then(() => {
           this.getList();
           this.msgSuccess("删除成功");
         })
-        .catch(function () {});
-    },
+        .catch(function() {});
+    }
     // /** 导出按钮操作 */
     // handleExport() {
     //   const queryParams = this.queryParams;
@@ -693,6 +688,6 @@ export default {
     //     })
     //     .catch(function () {});
     // },
-  },
+  }
 };
 </script>

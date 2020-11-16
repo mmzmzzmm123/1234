@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
-    <el-row>
-      <el-col :xs="24" :sm="12" style="padding: 10px;">
+    <el-row :gutter="10">
+      <el-col :xs="24" :sm="12">
         <el-card>
           <video-player
             class="vjs-custom-skin"
@@ -11,7 +11,7 @@
           ></video-player>
         </el-card>
       </el-col>
-      <el-col :xs="24" :sm="12" style="padding: 10px;">
+      <el-col :xs="24" :sm="12">
         <el-card>
           <div slot="header" class="clearfix">
             <span>内容介绍</span>
@@ -44,13 +44,18 @@
                 />
               </el-form-item>
             </div>
+            <div class="item">
+              <el-form-item label="">
+                <el-button
+                class="sub-btn"
+                type="primary"
+                :disabled="dis"
+                @click="submitForm"
+                v-hasPermi="['benyi:feedback_score:add']"
+              >提交</el-button>
+              </el-form-item>
+            </div>
           </el-form>
-          <el-button
-            type="primary"
-            :disabled="dis"
-            @click="submitForm"
-            v-hasPermi="['benyi:feedback_score:add']"
-          >提交</el-button>
         </el-card>
       </el-col>
     </el-row>
@@ -176,3 +181,16 @@ export default {
   }
 };
 </script>
+<style lang="scss" scoped>
+.sub-btn {
+  margin-top: 5px;
+}
+.el-rate {
+  margin-top: 8px;
+}
+.item {
+  ::v-deep.el-form-item {
+    margin-bottom: 5px;
+  }
+}
+</style>

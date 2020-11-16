@@ -40,10 +40,10 @@
       </el-form-item>
     </el-form>
 
-    <div ref="printMe">
+    <div ref="printMe" class="print-me">
       <h2 style="text-align: center">{{ this.deptName }}班级儿童考勤表</h2>
       <h4 style="text-align: left">
-        考勤月份：{{ this.month }} ------ 班级总数：{{ this.classcount }} ------
+        考勤月份：{{ this.month }} ---- 班级总数：{{ this.classcount }} ----
         幼儿总数：{{ this.chilidcount }}
       </h4>
       <el-table
@@ -399,3 +399,15 @@ export default {
   },
 };
 </script>
+<style lang="scss" scoped>
+.print-me {
+  @media (max-width: 768.98px) {
+    h2 {
+      font-size: 14px;
+    }
+    h4 {
+      font-size: 12px;
+    }
+  }
+}
+</style>

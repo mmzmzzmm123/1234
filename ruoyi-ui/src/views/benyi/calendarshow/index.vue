@@ -166,6 +166,11 @@ export default {
 }
 .btn {
   width: 96px;
+  @media (max-width: 768.98px) {
+    width: auto;
+    padding: 6px 7px;
+    font-size: 12px;
+  }
 }
 .no-border-btn {
   border: none;
@@ -175,6 +180,14 @@ export default {
     .fc-left > .fc-today-button, .fc-right > .fc-listWeek-button {
       display: none;
     }
+  }
+}
+@media (max-width: 768.98px) {
+  .fc button {
+    height: 30px;
+  }
+  .fc-toolbar h2 {
+    font-size: 16px;
   }
 }
 </style>

@@ -52,8 +52,8 @@
             <p class="text"><b>入场券：</b>一个家庭一张票，所有家庭持票入场，允许一个家长带领一名幼儿，摊主家庭的另外一位家长需要出示摊位号。</p>
             <p class="text">入场券可以做成正副联、也可以做成单张。如图：</p>
             <p class="imgs">
-              <img src="../../../assets/image/activity/1.png" alt="">
-              <img src="../../../assets/image/activity/2.png" alt="">
+              <img class="img2" src="../../../assets/image/activity/1.png" alt="">
+              <img class="img2" src="../../../assets/image/activity/2.png" alt="">
             </p>
             <p class="text">入场券幼儿园可以自己设计制作，正面背景是幼儿园图片，写上活动名称及时间、地点。入场券的背面写上注意事项和活动规则。</p>
             <p class="text"><b>摊位号：</b>需要准备2套摊位号。1套在交摊位费报名时发给摊主，方便摊主在活动当天直接按号就位。另1套放在抽奖箱中用于抽奖时使用。</p>
@@ -65,8 +65,8 @@
             <p class="text">另一种是不同面值的人民币若干，1元、5元和10元。方便活动结束后家长用剩余的游戏币兑换人民币。</p>
             <p class="text"><b>管理员和摊主挂牌：</b>可制作袖章或颈挂牌明确身份。</p>
             <p class="imgs">
-              <img src="../../../assets/image/activity/4.png" alt="">
-              <img src="../../../assets/image/activity/5.png" alt="">
+              <img class="img2" src="../../../assets/image/activity/4.png" alt="">
+              <img class="img2" src="../../../assets/image/activity/5.png" alt="">
             </p>
             <p class="text"><b>奖品：</b>摊主可凭摊位号参与抽奖活动，根据摊主人数合理安排奖品的等级和每个等级的人数。如：一等奖5名、二等奖10名、三等奖15名。</p>
             <p class="text">其他人员可凭入场券每个孩子均可获得一份参与奖品。</p>
@@ -241,6 +241,9 @@ export default {
   margin: 0 auto;
   color: #333;
   height: 100%;
+  @media (max-width: 768.98px) {
+    padding: 0 3%;
+  }
   ::v-deep .el-tabs__item {
     font-weight: bold;
   }
@@ -295,6 +298,10 @@ export default {
       img {
         flex: 1;
         padding: 5px;
+        width: 100%;
+        &.img2 {
+          width: 50%;
+        }
       }
     }
     .row-item {
