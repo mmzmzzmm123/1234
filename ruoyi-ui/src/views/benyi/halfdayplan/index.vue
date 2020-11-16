@@ -6,7 +6,7 @@
       :inline="true"
       label-width="68px"
     >
-      <el-form-item label="标题" prop="title">
+      <el-form-item label="体验标题" prop="title">
         <el-input
           v-model="queryParams.title"
           placeholder="请输入标题"

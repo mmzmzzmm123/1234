@@ -86,14 +86,14 @@
         v-hasPermi="['benyi:schoolcalendar:add']"
         >新增</el-button
       >
-      <!-- <el-button
+      <el-button
           type="success"
           icon="el-icon-edit"
           size="mini"
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['benyi:schoolcalendar:edit']"
-        >修改</el-button> -->
+        >修改</el-button>
       <el-button
         type="danger"
         icon="el-icon-delete"

@@ -38,7 +38,7 @@
         v-hasPermi="['benyi:lecturer:add']"
         >新增</el-button
       >
-      <!-- <el-button
+      <el-button
         type="success"
         icon="el-icon-edit"
         size="mini"
@@ -46,7 +46,7 @@
         @click="handleUpdate"
         v-hasPermi="['benyi:lecturer:edit']"
         >修改</el-button
-      > -->
+      >
       <el-button
         type="danger"
         icon="el-icon-delete"

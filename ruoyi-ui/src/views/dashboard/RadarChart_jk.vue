@@ -128,7 +128,7 @@ export default {
             left: "center",
           },
           tooltip: {
-            trigger: "axis",
+            trigger: "item",
             axisPointer: {
               // 坐标轴指示器，坐标轴触发有效
               type: "shadow", // 默认为直线，可选为：'line' | 'shadow'
@@ -137,7 +137,7 @@ export default {
           radar: {
             radius: "66%",
             center: ["50%", "50%"],
-            splitNumber: 8,
+            splitNumber: 12,
             splitArea: {
               areaStyle: {
                 color: "rgba(127,95,132,.3)",
@@ -194,7 +194,7 @@ export default {
             left: "center",
           },
           tooltip: {
-            trigger: "axis",
+            trigger: "item",
             axisPointer: {
               // 坐标轴指示器，坐标轴触发有效
               type: "shadow", // 默认为直线，可选为：'line' | 'shadow'
@@ -203,7 +203,7 @@ export default {
           radar: {
             radius: "66%",
             center: ["50%", "50%"],
-            splitNumber: 8,
+            splitNumber: 10,
             splitArea: {
               areaStyle: {
                 color: "rgba(127,95,132,.3)",
@@ -260,7 +260,7 @@ export default {
             left: "center",
           },
           tooltip: {
-            trigger: "axis",
+            trigger: 'item',
             axisPointer: {
               // 坐标轴指示器，坐标轴触发有效
               type: "shadow", // 默认为直线，可选为：'line' | 'shadow'

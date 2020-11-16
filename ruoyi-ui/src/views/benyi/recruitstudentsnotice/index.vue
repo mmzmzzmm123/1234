@@ -4,9 +4,9 @@
       :model="queryParams"
       ref="queryForm"
       :inline="true"
-      label-width="68px"
+      label-width="90px"
     >
-      <el-form-item label="标题" prop="title">
+      <el-form-item label="通知书标题" prop="title">
         <el-input
           v-model="queryParams.title"
           placeholder="请输入标题"
@@ -15,7 +15,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="类型" prop="type">
+      <el-form-item label="通知书类型" prop="type">
         <el-select v-model="queryParams.type" placeholder="请选择">
           <el-option
             v-for="dict in typeOptions"
