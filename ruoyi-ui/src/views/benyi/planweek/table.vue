@@ -34,28 +34,23 @@
             <span>周教学目标</span>
           </td>
           <td style="width: 140px;">社会</td>
-          <td>{{sh}}</td>
-          <td  colspan="4"></td>
+          <td v-html="sh" colspan="5"></td>
         </tr>
         <tr class="align-center"> 
           <td>语言</td>
-          <td>{{yy}}</td>
-          <td  colspan="4"></td>
+          <td v-html="yy" colspan="5"></td>
         </tr>
         <tr class="align-center">
           <td>健康</td>
-          <td>{{jk}}</td>
-          <td colspan="4"></td>
+          <td v-html="jk" colspan="5"></td>
         </tr>
         <tr class="align-center">
           <td>科学</td>
-          <td>{{kx}}</td>
-          <td colspan="4"></td>
+          <td v-html="kx" colspan="5"></td>
         </tr>
         <tr class="align-center">
           <td>艺术</td>
-          <td>{{ys}}</td>
-          <td colspan="4"></td>
+          <td v-html="ys" colspan="5"></td>
         </tr>
 
         <tr v-for="item in planweekitemList" :key="item.id">
@@ -77,7 +72,7 @@
           <td class="align-center">{{item.activitytime}}</td>
           <td class="align-center">{{item.day}}</td>
           <td class="align-center">{{activitytypeFormat(item.activitytype)}}</td>
-          <td class="align-center">{{(item.content)}}</td>
+          <td class="align-center" v-html="item.content"></td>
         </tr>
       </table>
       <!-- <p

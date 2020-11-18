@@ -1,6 +1,11 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
+    <el-form
+      :model="queryParams"
+      ref="queryForm"
+      :inline="true"
+      label-width="68px"
+    >
       <el-form-item label="周计划" prop="wid">
         <el-select v-model="queryParams.wid" size="small">
           <el-option
@@ -12,7 +17,12 @@
         </el-select>
       </el-form-item>
       <el-form-item label="活动类型" prop="activitytype">
-        <el-select v-model="queryParams.activitytype" placeholder="请选择活动类型" clearable size="small">
+        <el-select
+          v-model="queryParams.activitytype"
+          placeholder="请选择活动类型"
+          clearable
+          size="small"
+        >
           <el-option
             v-for="dict in activitytypeOptions"
             :key="dict.dictValue"
@@ -33,8 +43,16 @@
         ></el-date-picker>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+        <el-button
+          type="primary"
+          icon="el-icon-search"
+          size="mini"
+          @click="handleQuery"
+          >搜索</el-button
+        >
+        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+          >重置</el-button
+        >
       </el-form-item>
     </el-form>
 
@@ -46,7 +64,8 @@
           size="mini"
           @click="handleAdd"
           v-hasPermi="['benyi:planweek:add']"
-        >新增</el-button>
+          >新增</el-button
+        >
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -56,7 +75,8 @@
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['benyi:planweek:edit']"
-        >修改</el-button>
+          >修改</el-button
+        >
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -66,7 +86,8 @@
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['benyi:planweek:remove']"
-        >删除</el-button>
+          >删除</el-button
+        >
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -75,7 +96,8 @@
           size="mini"
           @click="handleExport"
           v-hasPermi="['benyi:planweek:export']"
-        >导出</el-button>
+          >导出</el-button
+        >
       </el-col>
     </el-row>
 
@@ -86,21 +108,39 @@
     >
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="编号" align="center" prop="id" />
-      <el-table-column label="活动内容" align="center" prop="content" />
-      <el-table-column label="所属计划" align="center" prop="wid" :formatter="themePlanFormat" />
+      <el-table-column label="活动内容" align="center" prop="content">
+        <template slot-scope="scope">
+          <div v-html="scope.row.content"></div>
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="所属计划"
+        align="center"
+        prop="wid"
+        :formatter="themePlanFormat"
+      />
       <el-table-column
         label="活动类型"
         align="center"
         prop="activitytype"
         :formatter="activitytypeFormat"
       />
-      <el-table-column label="活动时间" align="center" prop="activitytime" width="180">
+      <el-table-column
+        label="活动时间"
+        align="center"
+        prop="activitytime"
+        width="180"
+      >
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.activitytime, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.activitytime, "{y}-{m}-{d}") }}</span>
         </template>
       </el-table-column>
       <el-table-column label="星期" align="center" prop="day" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column
+        label="操作"
+        align="center"
+        class-name="small-padding fixed-width"
+      >
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -108,20 +148,22 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['benyi:planweek:edit']"
-          >修改</el-button>
+            >修改</el-button
+          >
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['benyi:planweek:remove']"
-          >删除</el-button>
+            >删除</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
 
     <pagination
-      v-show="total>0"
+      v-show="total > 0"
       :total="total"
       :page.sync="queryParams.pageNum"
       :limit.sync="queryParams.pageSize"
@@ -129,7 +171,12 @@
     />
 
     <!-- 添加或修改周计划(家长和教育部门细化)对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="1024px" append-to-body>
+    <el-dialog
+      :title="title"
+      :visible.sync="open"
+      width="1024px"
+      append-to-body
+    >
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="所属计划" prop="wid">
           <el-select v-model="form.wid" size="small" :disabled="true">
@@ -160,8 +207,8 @@
             type="date"
             value-format="yyyy-MM-dd"
             placeholder="选择活动时间"
-            :picker-options="pickerOptions7"
-          >></el-date-picker>
+            >></el-date-picker
+          >
         </el-form-item>
         <el-form-item label="活动内容" prop="content">
           <Editor v-model="form.content" placeholder="请输入活动内容" />
@@ -185,7 +232,7 @@ import {
   delPlanweekitem,
   addPlanweekitem,
   updatePlanweekitem,
-  exportPlanweekitem
+  exportPlanweekitem,
 } from "@/api/benyi/planweekitem";
 
 import Editor from "@/components/Editor";
@@ -199,12 +246,12 @@ const weekArr = [
   "星期三",
   "星期四",
   "星期五",
-  "星期六"
+  "星期六",
 ];
 export default {
   name: "Planweekitem",
   components: {
-    Editor
+    Editor,
   },
   data() {
     return {
@@ -240,7 +287,7 @@ export default {
         activitytime: undefined,
         createuserid: undefined,
         updateuserid: undefined,
-        day: undefined
+        day: undefined,
       },
       // 日期控件 只显示今天和今天以后一周时间区间
       pickerOptions7: {
@@ -250,7 +297,7 @@ export default {
           let threeMonths = curDate + three;
           let datestart = Date.now() - 86400000;
           return time.getTime() < datestart || time.getTime() > threeMonths;
-        }
+        },
       },
 
       // 表单参数
@@ -258,32 +305,32 @@ export default {
       // 表单校验
       rules: {
         activitytype: [
-          { required: true, message: "活动类型不能为空", trigger: "blur" }
+          { required: true, message: "活动类型不能为空", trigger: "blur" },
         ],
         content: [
-          { required: true, message: "活动内容不能为空", trigger: "blur" }
+          { required: true, message: "活动内容不能为空", trigger: "blur" },
         ],
         activitytime: [
-          { required: true, message: "活动时间不能为空", trigger: "blur" }
+          { required: true, message: "活动时间不能为空", trigger: "blur" },
         ],
         // day: [
         //   { required: true, message: "星期不能为空", trigger: "blur" }
         // ]
-      }
+      },
     };
   },
   created() {
     const planweekid = this.$route.params && this.$route.params.id;
     this.getPlanweek2(planweekid);
     this.getPlanWeekList();
-    this.getDicts("sys_dm_qyhdxs").then(response => {
+    this.getDicts("sys_dm_qyhdxs").then((response) => {
       this.activitytypeOptions = response.data;
     });
   },
   methods: {
     // 周计划
     getPlanweek2(planweekid) {
-      getPlanweek(planweekid).then(response => {
+      getPlanweek(planweekid).then((response) => {
         this.queryParams.wid = response.data.id;
         this.defaultWeekType = response.data.id;
         this.getList();
@@ -292,7 +339,7 @@ export default {
     /** 查询周计划(家长和教育部门细化)列表 */
     getList() {
       this.loading = true;
-      listPlanweekitem(this.queryParams).then(response => {
+      listPlanweekitem(this.queryParams).then((response) => {
         this.planweekitemList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -300,7 +347,7 @@ export default {
     },
     // 查询周计划选项
     getPlanWeekList() {
-      listPlanweek().then(response => {
+      listPlanweek().then((response) => {
         this.planweekOptions = response.rows;
       });
     },
@@ -309,7 +356,7 @@ export default {
       // return this.selectDictLabel(this.classOptions, row.classid);
       var actions = [];
       var datas = this.planweekOptions;
-      Object.keys(datas).map(key => {
+      Object.keys(datas).map((key) => {
         if (datas[key].id == "" + row.wid) {
           actions.push(datas[key].name);
           return false;
@@ -338,7 +385,7 @@ export default {
         createTime: undefined,
         updateuserid: undefined,
         updateTime: undefined,
-        day: undefined
+        day: undefined,
       };
       this.resetForm("form");
     },
@@ -355,7 +402,7 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.id);
+      this.ids = selection.map((item) => item.id);
       this.single = selection.length != 1;
       this.multiple = !selection.length;
     },
@@ -370,18 +417,18 @@ export default {
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids;
-      getPlanweekitem(id).then(response => {
+      getPlanweekitem(id).then((response) => {
         this.form = response.data;
         this.open = true;
         this.title = "修改周计划(家长和教育部门细化)";
       });
     },
     /** 提交按钮 */
-    submitForm: function() {
-      this.$refs["form"].validate(valid => {
+    submitForm: function () {
+      this.$refs["form"].validate((valid) => {
         if (valid) {
           if (this.form.id != undefined) {
-            updatePlanweekitem(this.form).then(response => {
+            updatePlanweekitem(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("修改成功");
                 this.open = false;
@@ -389,7 +436,7 @@ export default {
               }
             });
           } else {
-            addPlanweekitem(this.form).then(response => {
+            addPlanweekitem(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("新增成功");
                 this.open = false;
@@ -404,22 +451,22 @@ export default {
     handleDelete(row) {
       const ids = row.id || this.ids;
       this.$confirm(
-        '是否确认删除周计划(家长和教育部门细化)编号为"' + ids + '"的数据项?',
+        '是否确认删除周计划(家长和教育部门细化)数据项?',
         "警告",
         {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
-          type: "warning"
+          type: "warning",
         }
       )
-        .then(function() {
+        .then(function () {
           return delPlanweekitem(ids);
         })
         .then(() => {
           this.getList();
           this.msgSuccess("删除成功");
         })
-        .catch(function() {});
+        .catch(function () {});
     },
     /** 导出按钮操作 */
     handleExport() {
@@ -430,17 +477,17 @@ export default {
         {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
-          type: "warning"
+          type: "warning",
         }
       )
-        .then(function() {
+        .then(function () {
           return exportPlanweekitem(queryParams);
         })
-        .then(response => {
+        .then((response) => {
           this.download(response.msg);
         })
-        .catch(function() {});
-    }
-  }
+        .catch(function () {});
+    },
+  },
 };
 </script>

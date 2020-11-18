@@ -77,7 +77,11 @@
         align="center"
         :show-overflow-tooltip="true"
         prop="content"
-      />
+      >
+      <template slot-scope="scope">
+          <div v-html="scope.row.content"></div>
+        </template>
+      </el-table-column>
       <el-table-column
         label="操作"
         align="center"

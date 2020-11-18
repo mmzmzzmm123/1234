@@ -383,7 +383,7 @@ export default {
         id: undefined,
         schoolid: undefined,
         classid: undefined,
-        name: undefined,
+        name: '教学计划',
         starttime: undefined,
         endtime: undefined,
         themeofweek: undefined,
@@ -486,7 +486,7 @@ export default {
     handleDelete(row) {
       const ids = row.id || this.ids;
       this.$confirm(
-        '是否确认删除周计划(家长和教育部门)编号为"' + ids + '"的数据项?',
+        '是否确认删除周计划(家长和教育部门)数据项?',
         "警告",
         {
           confirmButtonText: "确定",

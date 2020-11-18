@@ -1,5 +1,6 @@
 package com.ruoyi.project.benyi.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import com.ruoyi.common.utils.SecurityUtils;
@@ -98,6 +99,8 @@ public class ByPlanweekController extends BaseController {
         // 首先判断当前账户是否为幼儿园账号
         if (schoolCommon.isSchool() && !schoolCommon.isStringEmpty(classId)) {
             String uuid = schoolCommon.getUuid();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            byPlanweek.setName(byPlanweek.getName()+"("+sdf.format(byPlanweek.getStarttime())+'-'+sdf.format(byPlanweek.getEndtime())+")");
             byPlanweek.setId(uuid);
             //学校id
             byPlanweek.setSchoolid(SecurityUtils.getLoginUser().getUser().getDept().getDeptId());
