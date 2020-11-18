@@ -50,17 +50,15 @@ public class ByClassController extends BaseController {
     //@PreAuthorize("@ss.hasPermi('system:class:list')"+ "||@ss.hasPermi('system:school:list')")
     @GetMapping("/list")
     public TableDataInfo list(ByClass byClass) {
-        startPage();
         List<ByClass> list = null;
         String classId = schoolCommon.getClassId();
         //如果是幼儿园教师 只显示当前班级
         if (schoolCommon.isSchool() && !schoolCommon.isStringEmpty(classId)) {
             byClass.setBjbh(classId);
-            list = byClassService.selectByClassList(byClass);
         } else {
-            list = byClassService.selectByClassList(byClass);
         }
-
+        startPage();
+        list = byClassService.selectByClassList(byClass);
         return getDataTable(list);
     }
 

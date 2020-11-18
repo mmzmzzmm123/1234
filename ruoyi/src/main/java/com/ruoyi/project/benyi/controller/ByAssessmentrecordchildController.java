@@ -1,6 +1,7 @@
 package com.ruoyi.project.benyi.controller;
 
 import java.util.List;
+
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,31 +29,28 @@ import com.ruoyi.framework.web.page.TableDataInfo;
  */
 @RestController
 @RequestMapping("/benyi/assessmentrecordchild")
-public class ByAssessmentrecordchildController extends BaseController
-{
+public class ByAssessmentrecordchildController extends BaseController {
     @Autowired
     private IByAssessmentrecordchildService byAssessmentrecordchildService;
 
-/**
- * 查询幼儿评估记录列表
- */
-@PreAuthorize("@ss.hasPermi('benyi:assessmentrecordchild:list')")
-@GetMapping("/list")
-        public TableDataInfo list(ByAssessmentrecordchild byAssessmentrecordchild)
-    {
+    /**
+     * 查询幼儿评估记录列表
+     */
+    @PreAuthorize("@ss.hasPermi('benyi:assessmentrecordchild:list')")
+    @GetMapping("/list")
+    public TableDataInfo list(ByAssessmentrecordchild byAssessmentrecordchild) {
         startPage();
         List<ByAssessmentrecordchild> list = byAssessmentrecordchildService.selectByAssessmentrecordchildList(byAssessmentrecordchild);
         return getDataTable(list);
     }
-    
+
     /**
      * 导出幼儿评估记录列表
      */
     @PreAuthorize("@ss.hasPermi('benyi:assessmentrecordchild:export')")
     @Log(title = "幼儿评估记录", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
-    public AjaxResult export(ByAssessmentrecordchild byAssessmentrecordchild)
-    {
+    public AjaxResult export(ByAssessmentrecordchild byAssessmentrecordchild) {
         List<ByAssessmentrecordchild> list = byAssessmentrecordchildService.selectByAssessmentrecordchildList(byAssessmentrecordchild);
         ExcelUtil<ByAssessmentrecordchild> util = new ExcelUtil<ByAssessmentrecordchild>(ByAssessmentrecordchild.class);
         return util.exportExcel(list, "assessmentrecordchild");
@@ -63,8 +61,7 @@ public class ByAssessmentrecordchildController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('benyi:assessmentrecordchild:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
-    {
+    public AjaxResult getInfo(@PathVariable("id") Long id) {
         return AjaxResult.success(byAssessmentrecordchildService.selectByAssessmentrecordchildById(id));
     }
 
@@ -74,8 +71,7 @@ public class ByAssessmentrecordchildController extends BaseController
     @PreAuthorize("@ss.hasPermi('benyi:assessmentrecordchild:add')")
     @Log(title = "幼儿评估记录", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody ByAssessmentrecordchild byAssessmentrecordchild)
-    {
+    public AjaxResult add(@RequestBody ByAssessmentrecordchild byAssessmentrecordchild) {
         return toAjax(byAssessmentrecordchildService.insertByAssessmentrecordchild(byAssessmentrecordchild));
     }
 
@@ -85,8 +81,7 @@ public class ByAssessmentrecordchildController extends BaseController
     @PreAuthorize("@ss.hasPermi('benyi:assessmentrecordchild:edit')")
     @Log(title = "幼儿评估记录", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody ByAssessmentrecordchild byAssessmentrecordchild)
-    {
+    public AjaxResult edit(@RequestBody ByAssessmentrecordchild byAssessmentrecordchild) {
         return toAjax(byAssessmentrecordchildService.updateByAssessmentrecordchild(byAssessmentrecordchild));
     }
 
@@ -96,8 +91,7 @@ public class ByAssessmentrecordchildController extends BaseController
     @PreAuthorize("@ss.hasPermi('benyi:assessmentrecordchild:remove')")
     @Log(title = "幼儿评估记录", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
-    {
+    public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(byAssessmentrecordchildService.deleteByAssessmentrecordchildByIds(ids));
     }
 }

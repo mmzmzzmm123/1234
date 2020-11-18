@@ -48,7 +48,6 @@ public class ByChildCheckinDetailController extends BaseController {
     @PreAuthorize("@ss.hasPermi('benyi:checkindetail:list')")
     @GetMapping("/list")
     public TableDataInfo list(ByChildCheckinDetail byChildCheckinDetail) {
-        startPage();
         System.out.println("checkintime=" + byChildCheckinDetail.getCreateTime());
         if (byChildCheckinDetail.getCreateTime() == null) {
             byChildCheckinDetail.setCreateTime(new Date());
@@ -60,7 +59,7 @@ public class ByChildCheckinDetailController extends BaseController {
         if (!schoolCommon.isStringEmpty(classId)) {
             byChildCheckinDetail.setClassid(classId);
         }
-
+        startPage();
         List<ByChildCheckinDetail> list = byChildCheckinDetailService.selectByChildCheckinDetailList(byChildCheckinDetail);
         return getDataTable(list);
     }

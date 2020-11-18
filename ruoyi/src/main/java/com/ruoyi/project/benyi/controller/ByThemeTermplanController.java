@@ -57,7 +57,6 @@ public class ByThemeTermplanController extends BaseController {
     @PreAuthorize("@ss.hasPermi('benyi:themetermplan:list')")
     @GetMapping("/list")
     public TableDataInfo list(ByThemeTermplan byThemeTermplan) {
-        startPage();
         byThemeTermplan.setSchoolid(SecurityUtils.getLoginUser().getUser().getDept().getDeptId());
         String classId = schoolCommon.getClassId();
         List<ByThemeTermplan> list = null;
@@ -65,6 +64,7 @@ public class ByThemeTermplanController extends BaseController {
         if (schoolCommon.isSchool() && !schoolCommon.isStringEmpty(classId)) {
             byThemeTermplan.setClassid(classId);
         }
+        startPage();
         list = byThemeTermplanService.selectByThemeTermplanList(byThemeTermplan);
         return getDataTable(list);
     }

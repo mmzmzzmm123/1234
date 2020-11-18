@@ -1,6 +1,7 @@
 package com.ruoyi.project.benyi.controller;
 
 import java.util.List;
+
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,31 +29,28 @@ import com.ruoyi.framework.web.page.TableDataInfo;
  */
 @RestController
 @RequestMapping("/benyi/unscramble")
-public class ByDayFlowUnscrambleController extends BaseController
-{
+public class ByDayFlowUnscrambleController extends BaseController {
     @Autowired
     private IByDayFlowUnscrambleService byDayFlowUnscrambleService;
 
-/**
- * 查询一日流程解读列表
- */
-@PreAuthorize("@ss.hasPermi('benyi:unscramble:list')"+ "||@ss.hasPermi('benyi:dayflowmanger:list')")
-@GetMapping("/list")
-        public TableDataInfo list(ByDayFlowUnscramble byDayFlowUnscramble)
-    {
+    /**
+     * 查询一日流程解读列表
+     */
+    @PreAuthorize("@ss.hasPermi('benyi:unscramble:list')" + "||@ss.hasPermi('benyi:dayflowmanger:list')")
+    @GetMapping("/list")
+    public TableDataInfo list(ByDayFlowUnscramble byDayFlowUnscramble) {
         startPage();
         List<ByDayFlowUnscramble> list = byDayFlowUnscrambleService.selectByDayFlowUnscrambleList(byDayFlowUnscramble);
         return getDataTable(list);
     }
-    
+
     /**
      * 导出一日流程解读列表
      */
     @PreAuthorize("@ss.hasPermi('benyi:unscramble:export')")
     @Log(title = "一日流程解读", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
-    public AjaxResult export(ByDayFlowUnscramble byDayFlowUnscramble)
-    {
+    public AjaxResult export(ByDayFlowUnscramble byDayFlowUnscramble) {
         List<ByDayFlowUnscramble> list = byDayFlowUnscrambleService.selectByDayFlowUnscrambleList(byDayFlowUnscramble);
         ExcelUtil<ByDayFlowUnscramble> util = new ExcelUtil<ByDayFlowUnscramble>(ByDayFlowUnscramble.class);
         return util.exportExcel(list, "unscramble");
@@ -63,8 +61,7 @@ public class ByDayFlowUnscrambleController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('benyi:unscramble:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
-    {
+    public AjaxResult getInfo(@PathVariable("id") Long id) {
         return AjaxResult.success(byDayFlowUnscrambleService.selectByDayFlowUnscrambleById(id));
     }
 
@@ -74,8 +71,7 @@ public class ByDayFlowUnscrambleController extends BaseController
     @PreAuthorize("@ss.hasPermi('benyi:unscramble:add')")
     @Log(title = "一日流程解读", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody ByDayFlowUnscramble byDayFlowUnscramble)
-    {
+    public AjaxResult add(@RequestBody ByDayFlowUnscramble byDayFlowUnscramble) {
         return toAjax(byDayFlowUnscrambleService.insertByDayFlowUnscramble(byDayFlowUnscramble));
     }
 
@@ -85,8 +81,7 @@ public class ByDayFlowUnscrambleController extends BaseController
     @PreAuthorize("@ss.hasPermi('benyi:unscramble:edit')")
     @Log(title = "一日流程解读", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody ByDayFlowUnscramble byDayFlowUnscramble)
-    {
+    public AjaxResult edit(@RequestBody ByDayFlowUnscramble byDayFlowUnscramble) {
         return toAjax(byDayFlowUnscrambleService.updateByDayFlowUnscramble(byDayFlowUnscramble));
     }
 
@@ -96,8 +91,7 @@ public class ByDayFlowUnscrambleController extends BaseController
     @PreAuthorize("@ss.hasPermi('benyi:unscramble:remove')")
     @Log(title = "一日流程解读", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
-    {
+    public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(byDayFlowUnscrambleService.deleteByDayFlowUnscrambleByIds(ids));
     }
 }

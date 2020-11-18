@@ -31,33 +31,30 @@ import com.ruoyi.framework.web.page.TableDataInfo;
  */
 @RestController
 @RequestMapping("/benyi/planweekitem")
-public class ByPlanweekitemController extends BaseController
-{
+public class ByPlanweekitemController extends BaseController {
     @Autowired
     private IByPlanweekitemService byPlanweekitemService;
     @Autowired
     private SchoolCommon schoolCommon;
 
-/**
- * 查询周计划(家长和教育部门细化)列表
- */
-@PreAuthorize("@ss.hasPermi('benyi:planweek:list')")
-@GetMapping("/list")
-        public TableDataInfo list(ByPlanweekitem byPlanweekitem)
-    {
+    /**
+     * 查询周计划(家长和教育部门细化)列表
+     */
+    @PreAuthorize("@ss.hasPermi('benyi:planweek:list')")
+    @GetMapping("/list")
+    public TableDataInfo list(ByPlanweekitem byPlanweekitem) {
         startPage();
         List<ByPlanweekitem> list = byPlanweekitemService.selectByPlanweekitemList(byPlanweekitem);
         return getDataTable(list);
     }
-    
+
     /**
      * 导出周计划(家长和教育部门细化)列表
      */
     @PreAuthorize("@ss.hasPermi('benyi:planweek:export')")
     @Log(title = "周计划(家长和教育部门细化)", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
-    public AjaxResult export(ByPlanweekitem byPlanweekitem)
-    {
+    public AjaxResult export(ByPlanweekitem byPlanweekitem) {
         List<ByPlanweekitem> list = byPlanweekitemService.selectByPlanweekitemList(byPlanweekitem);
         ExcelUtil<ByPlanweekitem> util = new ExcelUtil<ByPlanweekitem>(ByPlanweekitem.class);
         return util.exportExcel(list, "planweekitem");
@@ -68,8 +65,7 @@ public class ByPlanweekitemController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('benyi:planweek:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
-    {
+    public AjaxResult getInfo(@PathVariable("id") Long id) {
         return AjaxResult.success(byPlanweekitemService.selectByPlanweekitemById(id));
     }
 
@@ -79,23 +75,22 @@ public class ByPlanweekitemController extends BaseController
     @PreAuthorize("@ss.hasPermi('benyi:planweek:add')")
     @Log(title = "周计划(家长和教育部门细化)", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody ByPlanweekitem byPlanweekitem)
-    {
+    public AjaxResult add(@RequestBody ByPlanweekitem byPlanweekitem) {
         byPlanweekitem.setCreateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
         String dayTurn = String.valueOf(schoolCommon.dateToWeek(byPlanweekitem.getActivitytime()));
         if (dayTurn.equals("1")) {
             dayTurn = "一";
-        }else  if (dayTurn.equals("2")) {
+        } else if (dayTurn.equals("2")) {
             dayTurn = "二";
-        }else  if (dayTurn.equals("3")) {
+        } else if (dayTurn.equals("3")) {
             dayTurn = "三";
-        }else  if (dayTurn.equals("4")) {
+        } else if (dayTurn.equals("4")) {
             dayTurn = "四";
-        }else  if (dayTurn.equals("5")) {
+        } else if (dayTurn.equals("5")) {
             dayTurn = "五";
-        }else  if (dayTurn.equals("6")) {
+        } else if (dayTurn.equals("6")) {
             dayTurn = "六";
-        }else  if (dayTurn.equals("7")) {
+        } else if (dayTurn.equals("7")) {
             dayTurn = "七";
         }
         byPlanweekitem.setDay("星期" + dayTurn);
@@ -108,23 +103,22 @@ public class ByPlanweekitemController extends BaseController
     @PreAuthorize("@ss.hasPermi('benyi:planweek:edit')")
     @Log(title = "周计划(家长和教育部门细化)", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody ByPlanweekitem byPlanweekitem)
-    {
+    public AjaxResult edit(@RequestBody ByPlanweekitem byPlanweekitem) {
         byPlanweekitem.setUpdateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
         String dayTurn = String.valueOf(schoolCommon.dateToWeek(byPlanweekitem.getActivitytime()));
         if (dayTurn.equals("1")) {
             dayTurn = "一";
-        }else  if (dayTurn.equals("2")) {
+        } else if (dayTurn.equals("2")) {
             dayTurn = "二";
-        }else  if (dayTurn.equals("3")) {
+        } else if (dayTurn.equals("3")) {
             dayTurn = "三";
-        }else  if (dayTurn.equals("4")) {
+        } else if (dayTurn.equals("4")) {
             dayTurn = "四";
-        }else  if (dayTurn.equals("5")) {
+        } else if (dayTurn.equals("5")) {
             dayTurn = "五";
-        }else  if (dayTurn.equals("6")) {
+        } else if (dayTurn.equals("6")) {
             dayTurn = "六";
-        }else  if (dayTurn.equals("7")) {
+        } else if (dayTurn.equals("7")) {
             dayTurn = "日";
         }
         byPlanweekitem.setDay("星期" + dayTurn);
@@ -137,8 +131,7 @@ public class ByPlanweekitemController extends BaseController
     @PreAuthorize("@ss.hasPermi('benyi:planweek:remove')")
     @Log(title = "周计划(家长和教育部门细化)", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
-    {
+    public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(byPlanweekitemService.deleteByPlanweekitemByIds(ids));
     }
 }

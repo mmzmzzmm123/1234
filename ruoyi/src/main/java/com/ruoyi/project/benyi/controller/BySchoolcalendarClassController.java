@@ -49,8 +49,8 @@ public class BySchoolcalendarClassController extends BaseController {
     public TableDataInfo list(BySchoolcalendarClass bySchoolcalendarClass) {
         String strClassId = schoolCommon.getClassId();
         if (!schoolCommon.isStringEmpty(strClassId)) {
-            startPage();
             bySchoolcalendarClass.setClassid(strClassId);
+            startPage();
             List<BySchoolcalendarClass> list = bySchoolcalendarClassService.selectBySchoolcalendarClassList(bySchoolcalendarClass);
             //System.out.println("---------------------分页"+list);
             return getDataTable(list);

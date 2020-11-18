@@ -1,6 +1,7 @@
 package com.ruoyi.project.benyi.controller;
 
 import java.util.List;
+
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,31 +29,28 @@ import com.ruoyi.framework.web.page.TableDataInfo;
  */
 @RestController
 @RequestMapping("/benyi/math")
-public class ByMathController extends BaseController
-{
+public class ByMathController extends BaseController {
     @Autowired
     private IByMathService byMathService;
 
-/**
- * 查询游戏数学列表
- */
-@PreAuthorize("@ss.hasPermi('benyi:math:list')")
-@GetMapping("/list")
-        public TableDataInfo list(ByMath byMath)
-    {
+    /**
+     * 查询游戏数学列表
+     */
+    @PreAuthorize("@ss.hasPermi('benyi:math:list')")
+    @GetMapping("/list")
+    public TableDataInfo list(ByMath byMath) {
         startPage();
         List<ByMath> list = byMathService.selectByMathList(byMath);
         return getDataTable(list);
     }
-    
+
     /**
      * 导出游戏数学列表
      */
     @PreAuthorize("@ss.hasPermi('benyi:math:export')")
     @Log(title = "游戏数学", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
-    public AjaxResult export(ByMath byMath)
-    {
+    public AjaxResult export(ByMath byMath) {
         List<ByMath> list = byMathService.selectByMathList(byMath);
         ExcelUtil<ByMath> util = new ExcelUtil<ByMath>(ByMath.class);
         return util.exportExcel(list, "math");
@@ -63,8 +61,7 @@ public class ByMathController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('benyi:math:query')" + "||@ss.hasPermi('benyi:math:list')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
-    {
+    public AjaxResult getInfo(@PathVariable("id") Long id) {
         return AjaxResult.success(byMathService.selectByMathById(id));
     }
 
@@ -86,8 +83,7 @@ public class ByMathController extends BaseController
     @PreAuthorize("@ss.hasPermi('benyi:math:add')")
     @Log(title = "游戏数学", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody ByMath byMath)
-    {
+    public AjaxResult add(@RequestBody ByMath byMath) {
         return toAjax(byMathService.insertByMath(byMath));
     }
 
@@ -97,8 +93,7 @@ public class ByMathController extends BaseController
     @PreAuthorize("@ss.hasPermi('benyi:math:edit')")
     @Log(title = "游戏数学", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody ByMath byMath)
-    {
+    public AjaxResult edit(@RequestBody ByMath byMath) {
         return toAjax(byMathService.updateByMath(byMath));
     }
 
@@ -108,8 +103,7 @@ public class ByMathController extends BaseController
     @PreAuthorize("@ss.hasPermi('benyi:math:remove')")
     @Log(title = "游戏数学", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
-    {
+    public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(byMathService.deleteByMathByIds(ids));
     }
 }

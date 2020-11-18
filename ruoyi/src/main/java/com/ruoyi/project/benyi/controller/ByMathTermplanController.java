@@ -36,8 +36,7 @@ import com.ruoyi.framework.web.page.TableDataInfo;
  */
 @RestController
 @RequestMapping("/benyi/mathtermplan")
-public class ByMathTermplanController extends BaseController
-{
+public class ByMathTermplanController extends BaseController {
     @Autowired
     private IByMathTermplanService byMathTermplanService;
     @Autowired
@@ -49,14 +48,12 @@ public class ByMathTermplanController extends BaseController
     @Autowired
     private ISysUserService userService;
 
-/**
- * 查询游戏数学学期计划列表
- */
-@PreAuthorize("@ss.hasPermi('benyi:mathtermplan:list')")
-@GetMapping("/list")
-        public TableDataInfo list(ByMathTermplan byMathTermplan)
-    {
-        startPage();
+    /**
+     * 查询游戏数学学期计划列表
+     */
+    @PreAuthorize("@ss.hasPermi('benyi:mathtermplan:list')")
+    @GetMapping("/list")
+    public TableDataInfo list(ByMathTermplan byMathTermplan) {
         byMathTermplan.setSchoolid(SecurityUtils.getLoginUser().getUser().getDept().getDeptId());
         String classId = schoolCommon.getClassId();
         List<ByMathTermplan> list = null;
@@ -64,18 +61,18 @@ public class ByMathTermplanController extends BaseController
         if (schoolCommon.isSchool() && !schoolCommon.isStringEmpty(classId)) {
             byMathTermplan.setClassid(classId);
         }
+        startPage();
         list = byMathTermplanService.selectByMathTermplanList(byMathTermplan);
         return getDataTable(list);
     }
-    
+
     /**
      * 导出游戏数学学期计划列表
      */
     @PreAuthorize("@ss.hasPermi('benyi:mathtermplan:export')")
     @Log(title = "游戏数学学期计划", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
-    public AjaxResult export(ByMathTermplan byMathTermplan)
-    {
+    public AjaxResult export(ByMathTermplan byMathTermplan) {
         List<ByMathTermplan> list = byMathTermplanService.selectByMathTermplanList(byMathTermplan);
         ExcelUtil<ByMathTermplan> util = new ExcelUtil<ByMathTermplan>(ByMathTermplan.class);
         return util.exportExcel(list, "mathtermplan");
@@ -86,8 +83,7 @@ public class ByMathTermplanController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('benyi:mathtermplan:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") String id)
-    {
+    public AjaxResult getInfo(@PathVariable("id") String id) {
         AjaxResult ajax = AjaxResult.success();
         ByMathTermplan byMathTermplan = byMathTermplanService.selectByMathTermplanById(id);
         ajax.put(AjaxResult.DATA_TAG, byMathTermplan);
@@ -102,8 +98,7 @@ public class ByMathTermplanController extends BaseController
     @PreAuthorize("@ss.hasPermi('benyi:mathtermplan:add')")
     @Log(title = "游戏数学学期计划", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody ByMathTermplan byMathTermplan)
-    {
+    public AjaxResult add(@RequestBody ByMathTermplan byMathTermplan) {
         String classId = schoolCommon.getClassId();
 
         if (schoolCommon.isSchool() && !schoolCommon.isStringEmpty(classId)) {
@@ -129,7 +124,7 @@ public class ByMathTermplanController extends BaseController
                 byMathTermplanitemService.insertByMathTermplanitem(byMathTermplanitem);
             }
             return toAjax(byMathTermplanService.insertByMathTermplan(byMathTermplan));
-        }else {
+        } else {
             return AjaxResult.error("当前用户非幼儿园教师，无法创建计划");
         }
     }
@@ -140,8 +135,7 @@ public class ByMathTermplanController extends BaseController
     @PreAuthorize("@ss.hasPermi('benyi:mathtermplan:edit')")
     @Log(title = "游戏数学学期计划", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody ByMathTermplan byMathTermplan)
-    {
+    public AjaxResult edit(@RequestBody ByMathTermplan byMathTermplan) {
         return toAjax(byMathTermplanService.updateByMathTermplan(byMathTermplan));
     }
 
@@ -151,8 +145,7 @@ public class ByMathTermplanController extends BaseController
     @PreAuthorize("@ss.hasPermi('benyi:mathtermplan:remove')")
     @Log(title = "游戏数学学期计划", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable String[] ids)
-    {
+    public AjaxResult remove(@PathVariable String[] ids) {
         //首先判断当前id下是否存在子目录
         for (int i = 0; i < ids.length; i++) {
             ByMathTermplanitem byMathTermplanitem = new ByMathTermplanitem();

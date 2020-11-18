@@ -62,7 +62,6 @@ public class ByThemeMonthplanController extends BaseController {
     @PreAuthorize("@ss.hasPermi('benyi:thememonthplan:list')")
     @GetMapping("/list")
     public TableDataInfo list(ByThemeMonthplan byThemeMonthplan) {
-        startPage();
         byThemeMonthplan.setSchoolid(SecurityUtils.getLoginUser().getUser().getDept().getDeptId());
         String classId = schoolCommon.getClassId();
         List<ByThemeMonthplan> list = null;
@@ -70,6 +69,7 @@ public class ByThemeMonthplanController extends BaseController {
         if (schoolCommon.isSchool() && !schoolCommon.isStringEmpty(classId)) {
             byThemeMonthplan.setClassid(classId);
         }
+        startPage();
         list = byThemeMonthplanService.selectByThemeMonthplanList(byThemeMonthplan);
         return getDataTable(list);
     }

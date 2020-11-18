@@ -43,13 +43,13 @@ public class ByChildContactpeopleController extends BaseController {
     @PreAuthorize("@ss.hasPermi('benyi:contactpeople:list')")
     @GetMapping("/list")
     public TableDataInfo list(ByChildContactpeople byChildContactpeople) {
-        startPage();
         byChildContactpeople.setSchoolid(SecurityUtils.getLoginUser().getUser().getDept().getDeptId());
         //判断是否为班主任
         String classId = schoolCommon.getClassId();
         if (!schoolCommon.isStringEmpty(classId)) {
             byChildContactpeople.setClassid(classId);
         }
+        startPage();
         List<ByChildContactpeople> list = byChildContactpeopleService.selectByChildContactpeopleList(byChildContactpeople);
         return getDataTable(list);
     }

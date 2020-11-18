@@ -52,11 +52,12 @@ public class ByTrainVideoController extends BaseController {
     @PreAuthorize("@ss.hasPermi('benyi:video:list')")
     @GetMapping("/list")
     public TableDataInfo list(ByTrainVideo byTrainVideo) {
-        startPage();
+
         //判断type是否为空
         if (!schoolCommon.isStringEmpty(byTrainVideo.getType())) {
             byTrainVideo.setType(byTrainVideo.getType() + ",");
         }
+        startPage();
         List<ByTrainVideo> list = byTrainVideoService.selectByTrainVideoList(byTrainVideo);
 
         if (list != null && list.size() > 0) {

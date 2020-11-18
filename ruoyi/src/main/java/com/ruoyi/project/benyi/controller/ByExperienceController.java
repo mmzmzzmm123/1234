@@ -43,8 +43,8 @@ public class ByExperienceController extends BaseController {
     @PreAuthorize("@ss.hasPermi('benyi:experience:list')")
     @GetMapping("/list")
     public TableDataInfo list(ByExperience byExperience) {
-        startPage();
         byExperience.setSchoolid(SecurityUtils.getLoginUser().getUser().getDept().getDeptId());
+        startPage();
         List<ByExperience> list = byExperienceService.selectByExperienceList(byExperience);
         return getDataTable(list);
     }

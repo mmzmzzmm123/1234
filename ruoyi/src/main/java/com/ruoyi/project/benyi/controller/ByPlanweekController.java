@@ -57,13 +57,13 @@ public class ByPlanweekController extends BaseController {
     @PreAuthorize("@ss.hasPermi('benyi:planweek:list')")
     @GetMapping("/list")
     public TableDataInfo list(ByPlanweek byPlanweek) {
-        startPage();
         byPlanweek.setSchoolid(SecurityUtils.getLoginUser().getUser().getDept().getDeptId());
         String classId = schoolCommon.getClassId();
         List<ByPlanweek> list =null;
         //首先判断当前账户是否为幼儿园账号
         if (schoolCommon.isSchool() && !schoolCommon.isStringEmpty(classId)) {
             byPlanweek.setClassid(classId);
+            startPage();
             list = byPlanweekService.selectByPlanweekList(byPlanweek);
         }
 

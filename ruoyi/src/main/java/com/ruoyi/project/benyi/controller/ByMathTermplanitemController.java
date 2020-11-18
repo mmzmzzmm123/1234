@@ -1,6 +1,7 @@
 package com.ruoyi.project.benyi.controller;
 
 import java.util.List;
+
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,31 +29,28 @@ import com.ruoyi.framework.web.page.TableDataInfo;
  */
 @RestController
 @RequestMapping("/benyi/mathtermplanitem")
-public class ByMathTermplanitemController extends BaseController
-{
+public class ByMathTermplanitemController extends BaseController {
     @Autowired
     private IByMathTermplanitemService byMathTermplanitemService;
 
-/**
- * 查询游戏数学学期计划明细列表
- */
-@PreAuthorize("@ss.hasPermi('benyi:mathtermplan:list')")
-@GetMapping("/list")
-        public TableDataInfo list(ByMathTermplanitem byMathTermplanitem)
-    {
+    /**
+     * 查询游戏数学学期计划明细列表
+     */
+    @PreAuthorize("@ss.hasPermi('benyi:mathtermplan:list')")
+    @GetMapping("/list")
+    public TableDataInfo list(ByMathTermplanitem byMathTermplanitem) {
         startPage();
         List<ByMathTermplanitem> list = byMathTermplanitemService.selectByMathTermplanitemList(byMathTermplanitem);
         return getDataTable(list);
     }
-    
+
     /**
      * 导出游戏数学学期计划明细列表
      */
     @PreAuthorize("@ss.hasPermi('benyi:mathtermplan:export')")
     @Log(title = "游戏数学学期计划明细", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
-    public AjaxResult export(ByMathTermplanitem byMathTermplanitem)
-    {
+    public AjaxResult export(ByMathTermplanitem byMathTermplanitem) {
         List<ByMathTermplanitem> list = byMathTermplanitemService.selectByMathTermplanitemList(byMathTermplanitem);
         ExcelUtil<ByMathTermplanitem> util = new ExcelUtil<ByMathTermplanitem>(ByMathTermplanitem.class);
         return util.exportExcel(list, "mathtermplanitem");
@@ -63,8 +61,7 @@ public class ByMathTermplanitemController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('benyi:mathtermplan:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
-    {
+    public AjaxResult getInfo(@PathVariable("id") Long id) {
         return AjaxResult.success(byMathTermplanitemService.selectByMathTermplanitemById(id));
     }
 
@@ -74,8 +71,7 @@ public class ByMathTermplanitemController extends BaseController
     @PreAuthorize("@ss.hasPermi('benyi:mathtermplan:add')")
     @Log(title = "游戏数学学期计划明细", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody ByMathTermplanitem byMathTermplanitem)
-    {
+    public AjaxResult add(@RequestBody ByMathTermplanitem byMathTermplanitem) {
         return toAjax(byMathTermplanitemService.insertByMathTermplanitem(byMathTermplanitem));
     }
 
@@ -85,8 +81,7 @@ public class ByMathTermplanitemController extends BaseController
     @PreAuthorize("@ss.hasPermi('benyi:mathtermplan:edit')")
     @Log(title = "游戏数学学期计划明细", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody ByMathTermplanitem byMathTermplanitem)
-    {
+    public AjaxResult edit(@RequestBody ByMathTermplanitem byMathTermplanitem) {
         return toAjax(byMathTermplanitemService.updateByMathTermplanitem(byMathTermplanitem));
     }
 
@@ -96,8 +91,7 @@ public class ByMathTermplanitemController extends BaseController
     @PreAuthorize("@ss.hasPermi('benyi:mathtermplan:remove')")
     @Log(title = "游戏数学学期计划明细", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
-    {
+    public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(byMathTermplanitemService.deleteByMathTermplanitemByIds(ids));
     }
 }

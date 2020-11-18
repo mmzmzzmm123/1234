@@ -65,7 +65,6 @@ public class ByThemeWeekplanController extends BaseController {
     @PreAuthorize("@ss.hasPermi('benyi:themeweekplan:list')")
     @GetMapping("/list")
     public TableDataInfo list(ByThemeWeekplan byThemeWeekplan) {
-        startPage();
 
         byThemeWeekplan.setSchoolid(SecurityUtils.getLoginUser().getUser().getDept().getDeptId());
         String classId = schoolCommon.getClassId();
@@ -74,6 +73,7 @@ public class ByThemeWeekplanController extends BaseController {
         if (schoolCommon.isSchool() && !schoolCommon.isStringEmpty(classId)) {
             byThemeWeekplan.setClassid(classId);
         }
+        startPage();
         list = byThemeWeekplanService.selectByThemeWeekplanList(byThemeWeekplan);
 
         return getDataTable(list);

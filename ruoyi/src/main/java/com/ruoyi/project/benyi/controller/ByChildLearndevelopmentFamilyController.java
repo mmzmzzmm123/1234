@@ -43,12 +43,12 @@ public class ByChildLearndevelopmentFamilyController extends BaseController {
     @PreAuthorize("@ss.hasPermi('benyi:learndevelopmentfamily:list')")
     @GetMapping("/list")
     public TableDataInfo list(ByChildLearndevelopmentFamily byChildLearndevelopmentFamily) {
-        startPage();
         byChildLearndevelopmentFamily.setSchoolid(SecurityUtils.getLoginUser().getUser().getDept().getDeptId());
         //判断是否为班主任
         if (!schoolCommon.isStringEmpty(schoolCommon.getClassId())) {
             byChildLearndevelopmentFamily.setClassid(schoolCommon.getClassId());
         }
+        startPage();
         List<ByChildLearndevelopmentFamily> list = byChildLearndevelopmentFamilyService.selectByChildLearndevelopmentFamilyList(byChildLearndevelopmentFamily);
         return getDataTable(list);
     }
