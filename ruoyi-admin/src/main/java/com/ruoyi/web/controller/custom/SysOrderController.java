@@ -80,6 +80,9 @@ public class SysOrderController extends OrderBaseController {
                     order.setOperatorAssis(user.getNickName());
                 }
             }
+            if(order.getPhone() != null && !order.getPhone().equals("")) {
+                order.setPhone(order.getPhone().replaceAll("(\\d{3})\\d{4}(\\d{4})", "$1****$2"));
+            }
         }
         return getOrderDataTable(list, totalAmount.longValue());
     }

@@ -41,6 +41,9 @@ public class SysContractController extends BaseController {
             if (contract.getSignName() != null && !contract.getSignName().equals("") && !contract.getName().trim().equals(contract.getSignName())) {
                 contract.setName(contract.getName() + "（" + contract.getSignName() + "）");
             }
+            if(contract.getPhone() != null && !contract.getPhone().equals("")) {
+                contract.setPhone(contract.getPhone().replaceAll("(\\d{3})\\d{4}(\\d{4})", "$1****$2"));
+            }
         }
         return getDataTable(list);
     }
