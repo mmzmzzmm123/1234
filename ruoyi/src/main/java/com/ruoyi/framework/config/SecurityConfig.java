@@ -105,12 +105,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/benyi/experience/add").anonymous()//半日入园体验申请
                 .antMatchers("/benyi/experience/getInfo**").anonymous()//半日入园体验明细
                 .antMatchers("/benyi/halfdayplan/getInfo/**").anonymous()//半日入园内容
-                .antMatchers("/benyi/child/add").anonymous()//幼儿维护申请
-                .antMatchers("/benyi/child/edit**").anonymous()//幼儿维护修改
+//                .antMatchers("/benyi/child/add").anonymous()//幼儿维护申请
+                .antMatchers("/benyi/child/edit").anonymous()//幼儿维护修改
                 .antMatchers("/benyi/child/getChild_query").anonymous()//幼儿维护申请明细
-                .antMatchers("/benyi/contactpeople/add").anonymous()//家长维护申请
-                .antMatchers("/benyi/contactpeople/edit**").anonymous()//家长维护修改
+//                .antMatchers("/benyi/contactpeople/add").anonymous()//家长维护申请
+                .antMatchers("/benyi/contactpeople/edit").anonymous()//家长维护修改
                 .antMatchers("/benyi/contactpeople/getInfo**").anonymous()//监护人维护明细
+                .antMatchers("/benyi/child/getInfo").anonymous()//幼儿信息维护明细
 
                 // 除上面外的所有请求全部需要鉴权认证
                 .anyRequest().authenticated()

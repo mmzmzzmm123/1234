@@ -240,6 +240,11 @@ public class ByChildController extends BaseController {
         return toAjax(byChildService.updateByChild(byChild));
     }
 
+    @PutMapping("/edit")
+    public AjaxResult editchild(@RequestBody ByChild byChild) {
+        return toAjax(byChildService.updateByChild(byChild));
+    }
+
     /**
      * 修改幼儿信息
      */

@@ -62,6 +62,15 @@ export function updateChild(data) {
 }
 
 // 修改幼儿信息
+export function updateChild_jz(data) {
+  return request({
+    url: '/benyi/child/edit',
+    method: 'put',
+    data: data
+  })
+}
+
+// 修改幼儿信息
 export function updateChild_tb(data, id) {
   return request({
     url: '/benyi/child/' + id,

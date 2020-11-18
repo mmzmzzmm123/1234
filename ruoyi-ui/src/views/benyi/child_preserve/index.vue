@@ -308,14 +308,10 @@
 </template>
 
 <script>
-import { getChild_query, updateChild } from "@/api/benyi/child";
+import { getChild_query, updateChild_jz } from "@/api/benyi/child";
 import {
-  listContactpeople,
   getContactpeople,
-  getContactpeopleByChildId,
-  delContactpeople,
-  addContactpeople,
-  updateContactpeople,
+  updateContactpeople_jz,
 } from "@/api/benyi/contactpeople";
 
 import { listClass } from "@/api/system/class";
@@ -462,10 +458,10 @@ export default {
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.id != undefined) {
-            updateChild(this.form).then(response => {
+            updateChild_jz(this.form).then(response => {
               if (response.code === 200) {
                 this.form_jhr.childid = this.form.id;
-                updateContactpeople(this.form_jhr).then(response => {
+                updateContactpeople_jz(this.form_jhr).then(response => {
                   if (response.code === 200) {
                     this.msgSuccess("修改成功");
                     // this.hide = false;

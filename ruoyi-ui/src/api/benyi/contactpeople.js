@@ -44,6 +44,15 @@ export function updateContactpeople(data) {
   })
 }
 
+// 修改幼儿紧急情况联系人
+export function updateContactpeople_jz(data) {
+  return request({
+    url: '/benyi/contactpeople/edit',
+    method: 'put',
+    data: data
+  })
+}
+
 // 删除幼儿紧急情况联系人
 export function delContactpeople(id) {
   return request({

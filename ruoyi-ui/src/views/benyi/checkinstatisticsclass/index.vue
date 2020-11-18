@@ -176,6 +176,7 @@ export default {
     },
     getList() {
       this.loading = true;
+      this.tableData = [];
       if (this.queryParams.month == "") {
         this.queryParams.month = this.month;
       }
@@ -271,7 +272,7 @@ export default {
           }
           if (res.indexOf("%") != -1) {
             // console.log(res.split("%")[0]);
-            sum = sum + parseInt(res.split("%")[0])/100;
+            sum = sum + parseInt(res.split("%")[0]) / 100;
           }
         }
       });

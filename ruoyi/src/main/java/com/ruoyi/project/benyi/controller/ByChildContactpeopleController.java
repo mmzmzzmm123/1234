@@ -118,6 +118,19 @@ public class ByChildContactpeopleController extends BaseController {
         }
     }
 
+    @PutMapping("/edit")
+    public AjaxResult editContactpeople(@RequestBody ByChildContactpeople byChildContactpeople) {
+        //如果存在，就更新，否则删除
+        ByChildContactpeople byChildContactpeoplenew = new ByChildContactpeople();
+        byChildContactpeoplenew.setChildid(byChildContactpeople.getChildid());
+        List<ByChildContactpeople> list = byChildContactpeopleService.selectByChildContactpeopleList(byChildContactpeoplenew);
+        if (list != null && list.size() > 0) {
+            return toAjax(byChildContactpeopleService.updateByChildContactpeople(byChildContactpeople));
+        } else {
+            return toAjax(byChildContactpeopleService.insertByChildContactpeople(byChildContactpeople));
+        }
+    }
+
     /**
      * 删除幼儿紧急情况联系人
      */
