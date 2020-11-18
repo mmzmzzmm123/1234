@@ -198,15 +198,15 @@
 
     <el-table v-loading="loading" :data="orderList" @selection-change="handleSelectionChange">
       <el-table-column label="编号" align="center" prop="orderId" width="150" fixed="left"/>
-<!--      <el-table-column label="审核状态" align="center" prop="reviewStatus" width="80" fixed="left">-->
-<!--        <template slot-scope="scope">-->
-<!--          <el-tag-->
-<!--            :type="scope.row.reviewStatus === 'yes' ? 'success' : 'danger'"-->
-<!--            disable-transitions>-->
-<!--            {{scope.row.reviewStatus === 'yes' ? '已审核':'未审核'}}-->
-<!--          </el-tag>-->
-<!--        </template>-->
-<!--      </el-table-column>-->
+      <el-table-column label="审核状态" align="center" prop="reviewStatus" width="80" fixed="left">
+        <template slot-scope="scope">
+          <el-tag
+            :type="scope.row.reviewStatus === 'yes' ? 'success' : 'danger'"
+            disable-transitions>
+            {{scope.row.reviewStatus === 'yes' ? '已审核':'未审核'}}
+          </el-tag>
+        </template>
+      </el-table-column>
       <el-table-column label="成交时间" align="center" prop="orderTime" width="180" fixed="left">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.orderTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
@@ -434,18 +434,18 @@
               </el-date-picker>
             </el-form-item>
           </el-col>
-<!--          <el-col :span="12" v-hasPermi="['custom:order:review']">-->
-<!--            <el-form-item label="审核状态" prop="reviewStatus">-->
-<!--              <el-select v-model="form.reviewStatus" placeholder="请选择审核状态">-->
-<!--                <el-option-->
-<!--                  v-for="dict in reviewStatusOptions"-->
-<!--                  :key="dict.dictValue"-->
-<!--                  :label="dict.dictLabel"-->
-<!--                  :value="dict.dictValue"-->
-<!--                />-->
-<!--              </el-select>-->
-<!--            </el-form-item>-->
-<!--          </el-col>-->
+          <el-col :span="12" v-hasPermi="['custom:order:review']">
+            <el-form-item label="审核状态" prop="reviewStatus">
+              <el-select v-model="form.reviewStatus" placeholder="请选择审核状态" @change="handleOnRviewChange">
+                <el-option
+                  v-for="dict in reviewStatusOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
           <el-col>
             <el-form-item label="备注" prop="remark">
               <el-input v-model="form.remark" type="textarea" placeholder="请输入内容"/>
@@ -469,7 +469,6 @@
   const endTime = dayjs().format('YYYY-MM-DD');
   // const beginTime = dayjs().format('YYYY-MM-DD');
   // const endTime = dayjs().format('YYYY-MM-DD');
-
   export default {
     name: "Order",
     data() {
@@ -492,6 +491,8 @@
         title: "",
         // 是否显示弹出层
         open: false,
+        //
+        review: 'no',
         //
         daterange: [beginTime, endTime],
         // 收款方式字典
@@ -558,7 +559,7 @@
             {required: true, message: "服务时长不能为空", trigger: "blur"}
           ],
           // reviewStatus: [
-          //   {required: true, message: "请对数据进行审核", trigger: "blur"}
+          //   {trigger: "change", validator: handleOnPreviewChange}
           // ]
         },
         pickerOptions: {
@@ -680,6 +681,7 @@
       // 取消按钮
       cancel() {
         this.open = false;
+        this.review = 'no';
         this.reset();
       },
       // 表单重置
@@ -718,7 +720,7 @@
           recommender: null,
           orderTime: dayjs().format("YYYY-MM-DD HH:mm:ss"),
           serveTimeId: defaultServeTime ? parseInt(defaultServeTime.dictValue) : null,
-          reviewStatus: 'yes'
+          reviewStatus: this.review
         };
         this.resetForm("form");
       },
@@ -760,6 +762,7 @@
         this.$refs["form"].validate(valid => {
           if (valid) {
             if (this.form.orderId != null) {
+              this.form.reviewStatus = this.review;
               updateOrder(this.form).then(response => {
                 if (response.code === 200) {
                   this.msgSuccess("修改成功");
@@ -807,6 +810,9 @@
           this.download(response.msg);
         }).catch(function () {
         });
+      },
+      handleOnRviewChange(val) {
+        this.review = val;
       }
     }
   };

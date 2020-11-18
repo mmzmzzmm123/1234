@@ -5,11 +5,12 @@ import com.ruoyi.common.constant.HttpStatus;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.custom.page.OrderTableDataInfo;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class OrderBaseController extends BaseController {
 
-    protected OrderTableDataInfo getOrderDataTable(List<?> list, long totalAmount) {
+    protected OrderTableDataInfo getOrderDataTable(List<?> list, BigDecimal totalAmount) {
         OrderTableDataInfo rspData = new OrderTableDataInfo();
         rspData.setCode(HttpStatus.SUCCESS);
         rspData.setMsg("查询成功");

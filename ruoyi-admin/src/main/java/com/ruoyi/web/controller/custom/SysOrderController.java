@@ -84,7 +84,7 @@ public class SysOrderController extends OrderBaseController {
                 order.setPhone(order.getPhone().replaceAll("(\\d{3})\\d{4}(\\d{4})", "$1****$2"));
             }
         }
-        return getOrderDataTable(list, totalAmount.longValue());
+        return getOrderDataTable(list, totalAmount);
     }
 
 

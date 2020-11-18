@@ -155,16 +155,10 @@ export function handleTree(data, id, parentId, children, rootId) {
 }
 
 /** 数字逢三位加逗号 */
-export function toThousands(num) {
-  var num = (num || 0).toString(), result = '';
-  while (num.length > 3) {
-    result = ',' + num.slice(-3) + result;
-    num = num.slice(0, num.length - 3);
-  }
-  if (num) {
-    result = num + result;
-  }
-  return result;
+export function toThousands(num){
+  const str = num.toString();
+  const reg = str.indexOf(".") > -1 ? /(\d)(?=(\d{3})+\.)/g : /(\d)(?=(?:\d{3})+$)/g;
+  return str.replace(reg,"$1,");
 }
 
 export function digitUppercase(n) {
