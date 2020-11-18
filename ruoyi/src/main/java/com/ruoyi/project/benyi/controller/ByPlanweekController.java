@@ -58,7 +58,15 @@ public class ByPlanweekController extends BaseController {
     @GetMapping("/list")
     public TableDataInfo list(ByPlanweek byPlanweek) {
         startPage();
-        List<ByPlanweek> list = byPlanweekService.selectByPlanweekList(byPlanweek);
+        byPlanweek.setSchoolid(SecurityUtils.getLoginUser().getUser().getDept().getDeptId());
+        String classId = schoolCommon.getClassId();
+        List<ByPlanweek> list =null;
+        //首先判断当前账户是否为幼儿园账号
+        if (schoolCommon.isSchool() && !schoolCommon.isStringEmpty(classId)) {
+            byPlanweek.setClassid(classId);
+            list = byPlanweekService.selectByPlanweekList(byPlanweek);
+        }
+
         return getDataTable(list);
     }
 
