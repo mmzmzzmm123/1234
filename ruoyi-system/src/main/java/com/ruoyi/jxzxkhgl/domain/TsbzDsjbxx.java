@@ -137,6 +137,9 @@ public class TsbzDsjbxx extends BaseEntity {
     @Excel(name = "导师类型")
     private String dslx;
 
+    // 导师名下学生数量
+    private Long dsxscount;
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -321,6 +324,16 @@ public class TsbzDsjbxx extends BaseEntity {
                 .append("xk", getXk())
                 .append("dslx", getDslx())
                 .append("createTime", getCreateTime())
+                .append("dsxscount", getDsxscount())
                 .toString();
+    }
+
+
+    public Long getDsxscount() {
+        return dsxscount;
+    }
+
+    public void setDsxscount(Long dsxscount) {
+        this.dsxscount = dsxscount;
     }
 }

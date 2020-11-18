@@ -26,14 +26,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="xk"    column="xk"    />
         <result property="dslx"    column="dslx"    />
         <result property="createTime"    column="create_time"    />
+        <result property="dsxscount"    column="dsxscount"    />
     </resultMap>
 
     <sql id="selectTsbzDsjbxxVo">
-        select id, jsid, jsxm, xb, deptid, dabh, zjlx, zjhm, bzzt, gwzt, gwlx, csrq, rjnx, zc, zyry, tzb, zks, xd, xk, dslx, create_time from tsbz_dsjbxx
+        select id, jsid, jsxm, xb, deptid, dabh, zjlx, zjhm, bzzt, gwzt, gwlx, csrq, rjnx, zc, zyry, tzb, zks, xd, xk, dslx, create_time
+        from tsbz_dsjbxx
     </sql>
 
     <select id="selectTsbzDsjbxxList" parameterType="TsbzDsjbxx" resultMap="TsbzDsjbxxResult">
-        <include refid="selectTsbzDsjbxxVo"/>
+        select (select count(*) from tsbz_jxzxdsfp b,tsbz_jxzxmd c where b.jxjsid=c.jsid and b.dsid=a.id and c.nf='2020') as dsxscount,
+        a.id, a.jsid, a.jsxm, a.xb, a.deptid, a.dabh, a.zjlx, a.zjhm, a.bzzt, a.gwzt, a.gwlx,
+        a.csrq, a.rjnx, a.zc, a.zyry, a.tzb, a.zks, a.xd, a.xk, a.dslx, a.create_time
+        from tsbz_dsjbxx a
         <where>  
             <if test="jsid != null  and jsid != ''"> and jsid = #{jsid}</if>
             <if test="jsxm != null  and jsxm != ''"> and jsxm = #{jsxm}</if>

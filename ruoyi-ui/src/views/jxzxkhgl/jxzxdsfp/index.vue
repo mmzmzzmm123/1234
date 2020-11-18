@@ -30,7 +30,7 @@
           size="small"
         >
           <el-option
-            v-for="dict in dsOptions"
+            v-for="dict in dsjbxxList"
             :key="dict.id"
             :label="dict.jsxm"
             :value="dict.id"
@@ -52,16 +52,6 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-      <!-- <el-col :span="1.5">
-        <el-button
-          type="primary"
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['jxzxkhgl:jxzxdsfp:add']"
-          >新增</el-button
-        >
-      </el-col> -->
       <el-col :span="1.5">
         <el-button
           type="success"
@@ -73,17 +63,6 @@
           >分配</el-button
         >
       </el-col>
-      <!-- <el-col :span="1.5">
-        <el-button
-          type="danger"
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['jxzxkhgl:jxzxdsfp:remove']"
-          >删除</el-button
-        >
-      </el-col> -->
       <right-toolbar
         :showSearch.sync="showSearch"
         @queryTable="getList"
@@ -104,8 +83,18 @@
         prop="jxjsid"
         :formatter="jxzxFormat"
       />
-      <el-table-column label="任教学段" align="center" prop="rjxd" :formatter="rjxdFormat"/>
-      <el-table-column label="任教学科" align="center" prop="rjxk" :formatter="rjxkFormat"/>
+      <el-table-column
+        label="任教学段"
+        align="center"
+        prop="rjxd"
+        :formatter="rjxdFormat"
+      />
+      <el-table-column
+        label="任教学科"
+        align="center"
+        prop="rjxk"
+        :formatter="rjxkFormat"
+      />
       <el-table-column
         label="见习导师"
         align="center"
@@ -155,7 +144,7 @@
             placeholder="请选择见习之星"
             filterable
             size="small"
-            :disabled = true
+            :disabled="true"
           >
             <el-option
               v-for="dict in jxzxOptions"
@@ -165,25 +154,122 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="见习导师" prop="dsid">
-          <el-select
-            v-model="form.dsid"
-            placeholder="请选择见习导师"
-            filterable
-            size="small"
-          >
-            <el-option
-              v-for="dict in dsOptions"
+        <el-form-item label="见习导师" prop="dsid" placeholder="请选择见习之星">
+          <el-radio-group v-model="form.dsid">
+            <el-radio
+              v-for="dict in dsjbxxList"
               :key="dict.id"
-              :label="dict.jsxm"
-              :value="dict.id"
-            />
-          </el-select>
+              :label="dict.id"
+              >{{ dict.jsxm + "(名下学生" + dict.dsxscount + "人)" }}</el-radio
+            >
+          </el-radio-group>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <!-- <el-button type="primary" @click="submitForm">确 定</el-button> -->
         <el-button @click="cancel">取 消</el-button>
+      </div>
+    </el-dialog>
+
+    <!-- 分配老师对话框 -->
+    <el-dialog
+      title="分配导师"
+      :visible.sync="open_dsfp"
+      width="900px"
+      append-to-body
+    >
+      <el-form
+        :model="queryParams_ds"
+        ref="queryForm_ds"
+        :inline="true"
+        v-show="showSearch"
+        label-width="68px"
+      >
+        <el-form-item label="见习导师" prop="jsxm">
+          <el-input
+            v-model="queryParams_ds.jsxm"
+            placeholder="请输入教师姓名"
+            clearable
+            size="small"
+          />
+        </el-form-item>
+        <el-form-item label="任教学段" prop="xd">
+          <el-select
+            v-model="queryParams_ds.xd"
+            placeholder="请选择任教学段"
+            clearable
+            size="small"
+            :disabled="true"
+          >
+            <el-option
+              v-for="dict in rjxdOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="任教学科" prop="xk">
+          <el-select
+            v-model="queryParams_ds.xk"
+            placeholder="请选择任教学科"
+            clearable
+            size="small"
+            :disabled="true"
+          >
+            <el-option
+              v-for="dict in rjxkOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button
+            type="cyan"
+            icon="el-icon-search"
+            size="mini"
+            @click="handleQuery_dsfp"
+            >搜索</el-button
+          >
+          <el-button icon="el-icon-refresh" size="mini" @click="resetQuery_dsfp"
+            >重置</el-button
+          >
+        </el-form-item>
+      </el-form>
+      <el-table
+        :data="dsjbxxList"
+        @selection-change="handleSelectionChangeDsfp"
+      >
+        <el-table-column type="selection" width="55" align="center" />
+        <el-table-column
+          label="导师姓名"
+          align="center"
+          prop="jsxm"
+          :formatter="dsFormatNew"
+        />
+        <el-table-column
+          label="任教学段"
+          align="center"
+          prop="xd"
+          :formatter="rjxdFormatDs"
+        />
+        <el-table-column
+          label="任教学科"
+          align="center"
+          prop="xk"
+          :formatter="rjxkFormatDs"
+        />
+        <el-table-column
+          label="名下学生数量（人）"
+          align="center"
+          prop="dsxscount"
+        />
+      </el-table>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitForm_dsfp">确 定</el-button>
+        <el-button @click="cancel_dsfp">取 消</el-button>
       </div>
     </el-dialog>
   </div>
@@ -197,7 +283,7 @@ import {
   addJxzxdsfp,
   updateJxzxdsfp,
 } from "@/api/jxzxkhgl/jxzxdsfp";
-import { listDsjbxx } from "@/api/jxzxkhgl/dsjbxx";
+import { listDsjbxx, getDsjbxx } from "@/api/jxzxkhgl/dsjbxx";
 import { listJxzxmd, getJxzxmd } from "@/api/jxjs/jxzxmd";
 
 export default {
@@ -223,13 +309,19 @@ export default {
       // 任教学科字典
       rjxkOptions: [],
       // 导师
-      dsOptions: [],
+      dsjbxxList: [],
+      // 全部导师列表
+      dsAllOptions: [],
       // 见习之星
       jxzxOptions: [],
+      // 选择的导师id
+      dsidChose: "",
       // 弹出层标题
       title: "",
       // 是否显示弹出层
       open: false,
+      // 是否显示弹出层
+      open_dsfp: false,
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -244,6 +336,8 @@ export default {
       queryParams_ds: {
         xd: null,
         xk: null,
+        jsxm: null,
+        dsxscount: null,
       },
       // 表单参数
       form: {},
@@ -266,7 +360,7 @@ export default {
     this.getJxzxList();
     // this.getDsList();
     this.getList();
-    
+    this.getAllDsList();
   },
   methods: {
     // 见习教师字典翻译
@@ -289,10 +383,18 @@ export default {
     rjxkFormat(row, column) {
       return this.selectDictLabel(this.rjxkOptions, row.rjxk);
     },
+    // 导师任教学段字典翻译
+    rjxdFormatDs(row, column) {
+      return this.selectDictLabel(this.rjxdOptions, row.xd);
+    },
+    // 导师任教学科字典翻译
+    rjxkFormatDs(row, column) {
+      return this.selectDictLabel(this.rjxkOptions, row.xk);
+    },
     // 导师字典翻译
     dsFormat(row, column) {
       var actions = [];
-      var datas = this.dsOptions;
+      var datas = this.dsAllOptions;
       Object.keys(datas).map((key) => {
         if (datas[key].id == "" + row.dsid) {
           actions.push(datas[key].jsxm);
@@ -301,25 +403,45 @@ export default {
       });
       return actions.join("");
     },
-    /** 查询导师基本信息列表 */
+    // 新页面导师字典翻译
+    dsFormatNew(row, column) {
+      var actions = [];
+      var datas = this.dsAllOptions;
+      Object.keys(datas).map((key) => {
+        if (datas[key].id == "" + row.id) {
+          actions.push(datas[key].jsxm);
+          return false;
+        }
+      });
+      return actions.join("");
+    },
+    /** 查询见习之星白名单信息列表 */
     getJxzxList() {
       listJxzxmd(null).then((response) => {
-        // console.log(response.rows);
         this.jxzxOptions = response.rows;
       });
     },
     /** 查询导师基本信息列表 */
     getDsList() {
       listDsjbxx(this.queryParams_ds).then((response) => {
-        // console.log(response.rows);
-        this.dsOptions = response.rows;
+        this.dsjbxxList = response.rows;
+      });
+    },
+    getDsjbxxFa() {
+      getDsjbxx(null).then((response) => {
+        this.dsAllOptions = response.rows;
+      });
+    },
+    /** 查询导师基本信息列表 */
+    getAllDsList() {
+      listDsjbxx(null).then((response) => {
+        this.dsAllOptions = response.rows;
       });
     },
     /** 查询见习导师分配列表 */
     getList() {
       this.loading = true;
       listJxzxdsfp(this.queryParams).then((response) => {
-        // console.log(response.rows);
         this.jxzxdsfpList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -329,6 +451,10 @@ export default {
     cancel() {
       this.open = false;
       this.reset();
+    },
+    // 取消按钮
+    cancel_dsfp() {
+      this.open_dsfp = false;
     },
     // 表单重置
     reset() {
@@ -348,10 +474,20 @@ export default {
       this.queryParams.pageNum = 1;
       this.getList();
     },
+    /** 搜索按钮操作 */
+    handleQuery_dsfp() {
+      this.queryParams.pageNum = 1;
+      this.getDsList();
+    },
     /** 重置按钮操作 */
     resetQuery() {
       this.resetForm("queryForm");
       this.handleQuery();
+    },
+    /** 重置按钮操作 */
+    resetQuery_dsfp() {
+      this.resetForm("queryForm_ds");
+      this.handleQuery_dsfp();
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
@@ -359,68 +495,69 @@ export default {
       this.single = selection.length !== 1;
       this.multiple = !selection.length;
     },
+    // 导师选择框
+    // 多选框选中数据
+    handleSelectionChangeDsfp(selection) {
+      this.dsidChose = selection.map((item) => item.id);
+      // console.log(this.dsidChose[0]);
+    },
     /** 新增按钮操作 */
     handleAdd() {
       this.reset();
       this.open = true;
       this.title = "添加见习导师分配";
     },
+    /** 分配教师提交按钮 */
+    submitForm_dsfp() {
+      if (this.dsidChose == null || this.dsidChose == "") {
+        this.msgError("请选择要分配的教师");
+      } else if (this.dsidChose.length > 1) {
+        this.msgError("只能选择一名导师");
+      } else {
+        this.form.dsid = this.dsidChose[0];
+        if (this.form.id != null) {
+          updateJxzxdsfp(this.form).then((response) => {
+            if (response.code === 200) {
+              this.msgSuccess("修改分配成功");
+              this.open_dsfp = false;
+              this.getList();
+            }
+          });
+        } else {
+          addJxzxdsfp(this.form).then((response) => {
+            if (response.code === 200) {
+              this.msgSuccess("新增分配成功");
+              this.open_dsfp = false;
+              this.getList();
+            }
+          });
+        }
+      }
+    },
     /** 分配按钮操作 */
     handleUpdate(row) {
-      this.reset();
       // 给请求导师的query赋值
       this.queryParams_ds.xd = row.rjxd;
       this.queryParams_ds.xk = row.rjxk;
       const id = row.id || this.ids;
-      this.reset();
-      if (id == "" || id == null) {
-        this.getDsList();
-        // 判断是否有对应导师
-        if (this.dsOptions.length<1) {
-          this.msgError("没有对应的学段和学科导师")
-        } else {
-          this.form.jxjsid = row.jxjsid;
-          this.open = true;
-          this.title = "添加见习导师分配";
-        }     
+      if (id.length > 1) {
+        this.msgError("只支持单选");
       } else {
-        getJxzxdsfp(id).then((response) => {
+        this.reset();
+        if (id == "" || id == null) {
           this.getDsList();
-          if (this.dsOptions.length<1) {
-            this.msgError("没有对应的学段和学科导师")
-          } else {
-            console.log(this.dsOptions);
+          this.form.jxjsid = row.jxjsid;
+          this.open_dsfp = true;
+          this.title = "添加见习导师分配";
+        } else {
+          getJxzxdsfp(id).then((response) => {
+            this.getDsList();
             this.form = response.data;
-            this.open = true;
+            this.open_dsfp = true;
             this.title = "修改见习导师分配";
-          }
-          
-      });
-      }
-    },
-    /** 提交按钮 */
-    submitForm() {
-      this.$refs["form"].validate((valid) => {
-        if (valid) {
-          if (this.form.id != null) {
-            updateJxzxdsfp(this.form).then((response) => {
-              if (response.code === 200) {
-                this.msgSuccess("修改成功");
-                this.open = false;
-                this.getList();
-              }
-            });
-          } else {
-            addJxzxdsfp(this.form).then((response) => {
-              if (response.code === 200) {
-                this.msgSuccess("新增成功");
-                this.open = false;
-                this.getList();
-              }
-            });
-          }
+          });
         }
-      });
+      }
     },
     /** 清空按钮操作 */
     handleDelete(row) {
@@ -429,15 +566,11 @@ export default {
         this.msgError("未评价，不可清空");
         return;
       }
-      this.$confirm(
-        '是否确认清空编号为"' + ids + '"的数据项?',
-        "警告",
-        {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning",
-        }
-      )
+      this.$confirm('是否确认清空编号为"' + ids + '"的数据项?', "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
         .then(function () {
           return delJxzxdsfp(ids);
         })
