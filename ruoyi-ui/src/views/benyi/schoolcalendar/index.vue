@@ -1,80 +1,87 @@
 <template>
   <div class="app-container">
-    <el-form
-      :model="queryParams"
-      ref="queryForm"
-      :inline="true"
-      label-width="68px"
-    >
-      <el-form-item label="活动类型" prop="type">
-        <el-select
-          v-model="queryParams.type"
-          placeholder="请选择活动类型"
-          clearable
-          size="small"
-        >
-          <el-option
-            v-for="dict in schoolcalendartypeOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="适用范围" prop="scope">
-        <el-select
-          v-model="queryParams.scope"
-          placeholder="请选择适用范围"
-          clearable
-          size="small"
-        >
-          <el-option
-            v-for="dict in scopeOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="学年学期" prop="xnxq">
-        <el-select
-          v-model="queryParams.xnxq"
-          placeholder="请选择学年学期"
-          clearable
-          size="small"
-        >
-          <el-option
-            v-for="dict in xnxqOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="活动时间" prop="activitytime">
-        <el-date-picker
-          v-model="dateRange"
-          size="small"
-          style="width: 240px"
-          value-format="yyyy-MM-dd"
-          type="daterange"
-          range-separator="-"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-        ></el-date-picker>
-      </el-form-item>
-      <el-form-item>
-        <el-button
-          type="primary"
-          icon="el-icon-search"
-          size="mini"
-          @click="handleQuery"
-          >搜索</el-button
-        >
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
-          >重置</el-button
-        >
-      </el-form-item>
+    <el-form :model="queryParams" ref="queryForm" label-width="70px">
+      <el-row :gutter="10">
+        <el-col :xs="24" :ms="12" :md="5">
+          <el-form-item label="活动类型" prop="type">
+            <el-select
+              v-model="queryParams.type"
+              placeholder="请选择活动类型"
+              clearable
+              size="small"
+            >
+              <el-option
+                v-for="dict in schoolcalendartypeOptions"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="dict.dictValue"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :ms="12" :md="5">
+          <el-form-item label="适用范围" prop="scope">
+            <el-select
+              v-model="queryParams.scope"
+              placeholder="请选择适用范围"
+              clearable
+              size="small"
+            >
+              <el-option
+                v-for="dict in scopeOptions"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="dict.dictValue"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :ms="12" :md="5">
+          <el-form-item label="学年学期" prop="xnxq">
+            <el-select
+              v-model="queryParams.xnxq"
+              placeholder="请选择学年学期"
+              clearable
+              size="small"
+            >
+              <el-option
+                v-for="dict in xnxqOptions"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="dict.dictValue"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :ms="12" :md="5">
+          <el-form-item label="活动时间" prop="activitytime">
+            <el-date-picker
+              class="my-date-picker"
+              v-model="dateRange"
+              size="small"
+              value-format="yyyy-MM-dd"
+              type="daterange"
+              range-separator="-"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+            ></el-date-picker>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :ms="12" :md="4">
+          <el-form-item class="no-margin">
+            <el-button
+              type="primary"
+              icon="el-icon-search"
+              size="mini"
+              @click="handleQuery"
+              >搜索</el-button
+            >
+            <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+              >重置</el-button
+            >
+          </el-form-item>
+        </el-col>
+      </el-row>
     </el-form>
 
     <div class="mb8 btn-list">
@@ -122,7 +129,7 @@
     >
       <el-table-column
         type="selection"
-        width="55"
+        width="38"
         align="center"
         :selectable="checkSelectable"
       />
@@ -172,8 +179,8 @@
         fixed="right"
         label="操作"
         align="center"
-        width="120"
-        class-name="small-padding fixed-width"
+        width="60"
+        class-name="small-padding fixed-width edit-btns"
       >
         <template slot-scope="scope">
           <el-button
@@ -278,7 +285,7 @@ import {
   delSchoolcalendar,
   addSchoolcalendar,
   updateSchoolcalendar,
-  exportSchoolcalendar,
+  exportSchoolcalendar
 } from "@/api/benyi/schoolcalendar";
 
 export default {
@@ -315,7 +322,7 @@ export default {
       pickerOptions0: {
         disabledDate(time) {
           return time.getTime() < Date.now() - 8.64e7;
-        },
+        }
       },
       // 查询参数
       queryParams: {
@@ -328,7 +335,7 @@ export default {
         deptid: undefined,
         activitytime: undefined,
         createuserid: undefined,
-        createtime: undefined,
+        createtime: undefined
       },
       // 表单参数
       form: {},
@@ -336,26 +343,26 @@ export default {
       rules: {
         name: [{ required: true, message: "名称不能为空", trigger: "blur" }],
         type: [
-          { required: true, message: "活动类型不能为空", trigger: "blur" },
+          { required: true, message: "活动类型不能为空", trigger: "blur" }
         ],
         scope: [
-          { required: true, message: "活动范围不能为空", trigger: "blur" },
+          { required: true, message: "活动范围不能为空", trigger: "blur" }
         ],
         activitytime: [
-          { required: true, message: "活动时间不能为空", trigger: "blur" },
-        ],
-      },
+          { required: true, message: "活动时间不能为空", trigger: "blur" }
+        ]
+      }
     };
   },
   created() {
     this.getList();
-    this.getDicts("sys_schoolcalendartype").then((response) => {
+    this.getDicts("sys_schoolcalendartype").then(response => {
       this.schoolcalendartypeOptions = response.data;
     });
-    this.getDicts("sys_yebjlx").then((response) => {
+    this.getDicts("sys_yebjlx").then(response => {
       this.scopeOptions = response.data;
     });
-    this.getDicts("sys_xnxq").then((response) => {
+    this.getDicts("sys_xnxq").then(response => {
       this.xnxqOptions = response.data;
     });
   },
@@ -397,7 +404,7 @@ export default {
       this.loading = true;
       listSchoolcalendar(
         this.addDateRange(this.queryParams, this.dateRange)
-      ).then((response) => {
+      ).then(response => {
         this.schoolcalendarList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -415,7 +422,7 @@ export default {
         name: undefined,
         type: undefined,
         scope: undefined,
-        activitytime: undefined,
+        activitytime: undefined
       };
       this.resetForm("form");
     },
@@ -432,7 +439,7 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map((item) => item.id);
+      this.ids = selection.map(item => item.id);
       this.single = selection.length != 1;
       this.multiple = !selection.length;
     },
@@ -447,7 +454,7 @@ export default {
       this.reset();
       const id = row.id || this.ids;
       var myArray = new Array(2);
-      getSchoolcalendar(id).then((response) => {
+      getSchoolcalendar(id).then(response => {
         this.form = response.data;
         myArray[0] = response.data.activitytime;
         myArray[1] = response.data.activityendtime;
@@ -460,8 +467,8 @@ export default {
       });
     },
     /** 提交按钮 */
-    submitForm: function () {
-      this.$refs["form"].validate((valid) => {
+    submitForm: function() {
+      this.$refs["form"].validate(valid => {
         if (valid) {
           var arrscope = this.form.scope;
           this.form.scope = arrscope.join(";");
@@ -472,7 +479,7 @@ export default {
           this.form.activityendtime = v2;
 
           if (this.form.id != undefined) {
-            updateSchoolcalendar(this.form).then((response) => {
+            updateSchoolcalendar(this.form).then(response => {
               if (response.code === 200) {
                 this.msgSuccess("修改成功");
                 this.open = false;
@@ -483,7 +490,7 @@ export default {
             });
           } else {
             //console.log(this.form.activitytime[1]);
-            addSchoolcalendar(this.form).then((response) => {
+            addSchoolcalendar(this.form).then(response => {
               if (response.code === 200) {
                 this.msgSuccess("新增成功");
                 this.open = false;
@@ -505,17 +512,17 @@ export default {
         {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
-          type: "warning",
+          type: "warning"
         }
       )
-        .then(function () {
+        .then(function() {
           return delSchoolcalendar(ids);
         })
         .then(() => {
           this.getList();
           this.msgSuccess("删除成功");
         })
-        .catch(function () {});
+        .catch(function() {});
     },
     /** 导出按钮操作 */
     handleExport() {
@@ -523,16 +530,33 @@ export default {
       this.$confirm("是否确认导出所有园历管理数据项?", "警告", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning",
+        type: "warning"
       })
-        .then(function () {
+        .then(function() {
           return exportSchoolcalendar(queryParams);
         })
-        .then((response) => {
+        .then(response => {
           this.download(response.msg);
         })
-        .catch(function () {});
-    },
-  },
+        .catch(function() {});
+    }
+  }
 };
 </script>
+<style lang="scss" scoped>
+.el-select {
+  width: 100%;
+}
+.my-date-picker {
+  width: 100%;
+}
+.edit-btns {
+  .el-button {
+    display: block;
+    margin: 0 auto;
+  }
+}
+.no-margin ::v-deep.el-form-item__content {
+  margin: 0 !important;
+}
+</style>
