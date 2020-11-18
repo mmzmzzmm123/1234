@@ -128,6 +128,7 @@
 
     <el-table
       v-loading="loading"
+      border
       :data="classList"
       @selection-change="handleSelectionChange"
     >
@@ -137,14 +138,14 @@
         align="center"
         prop="bjbh"
         v-if="false"
-      />>
+      />
+      <el-table-column fixed label="班级名称" align="center" prop="bjmc" />
       <el-table-column
         label="班级类型"
         align="center"
         :formatter="bjtypeFormat"
         prop="bjtype"
-      />
-      <el-table-column label="班级名称" align="center" prop="bjmc" />
+      /> 
       <el-table-column label="主班教师" align="center" prop="zbjsxm" />
       <el-table-column label="配班教师" align="center" prop="pbjsxm" />
       <el-table-column label="助理教师" align="center" prop="zljsxm" />
@@ -159,6 +160,7 @@
         </template>
       </el-table-column>
       <el-table-column
+        fixed="right"
         label="操作"
         width="220"
         align="center"
@@ -267,7 +269,7 @@ import {
   addClass,
   updateClass,
   exportClass,
-  delJsClass
+  delJsClass,
 } from "@/api/system/class";
 import { getUsersByRoleId } from "@/api/system/user";
 
@@ -312,26 +314,28 @@ export default {
         zbjsxm: undefined,
         pbjsxm: undefined,
         zljsxm: undefined,
-        createtime: undefined
+        createtime: undefined,
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
         bjtype: [
-          { required: true, message: "班级类型不能为空", trigger: "blur" }
+          { required: true, message: "班级类型不能为空", trigger: "blur" },
         ],
-        bjmc: [{ required: true, message: "班级名称不能为空", trigger: "blur" }]
-      }
+        bjmc: [
+          { required: true, message: "班级名称不能为空", trigger: "blur" },
+        ],
+      },
     };
   },
   created() {
     this.getList();
-    this.getDicts("sys_yebjlx").then(response => {
+    this.getDicts("sys_yebjlx").then((response) => {
       this.bjtypeOptions = response.data;
     });
     //获取主班教师角色用户列表
-    getUsersByRoleId().then(response => {
+    getUsersByRoleId().then((response) => {
       this.zbjsOptions = response.zbjs;
       this.pbjsOptions = response.pbjs;
       this.zljsOptions = response.zljs;
@@ -341,7 +345,7 @@ export default {
     /** 查询班级信息列表 */
     getList() {
       this.loading = true;
-      listClass(this.queryParams).then(response => {
+      listClass(this.queryParams).then((response) => {
         this.classList = response.rows;
         console.log(this.classList);
         this.total = response.total;
@@ -367,7 +371,7 @@ export default {
         zbjs: undefined,
         pbjs: undefined,
         zljs: undefined,
-        createtime: undefined
+        createtime: undefined,
       };
       this.resetForm("form");
     },
@@ -383,7 +387,7 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.bjbh);
+      this.ids = selection.map((item) => item.bjbh);
       this.single = selection.length != 1;
       this.multiple = !selection.length;
     },
@@ -393,7 +397,7 @@ export default {
       this.open = true;
       this.title = "添加班级信息";
       //获取主班教师角色用户列表
-      getUsersByRoleId().then(response => {
+      getUsersByRoleId().then((response) => {
         this.zbjsOptions = response.zbjs;
         this.pbjsOptions = response.pbjs;
         this.zljsOptions = response.zljs;
@@ -403,13 +407,13 @@ export default {
     handleUpdate(row) {
       this.reset();
       const bjbh = row.bjbh || this.ids;
-      getClass(bjbh).then(response => {
+      getClass(bjbh).then((response) => {
         this.form = response.data;
         this.open = true;
         this.title = "修改班级信息";
 
         //获取主班教师角色用户列表
-        getUsersByRoleId().then(response => {
+        getUsersByRoleId().then((response) => {
           this.zbjsOptions = response.zbjs;
           this.pbjsOptions = response.pbjs;
           this.zljsOptions = response.zljs;
@@ -417,11 +421,11 @@ export default {
       });
     },
     /** 提交按钮 */
-    submitForm: function() {
-      this.$refs["form"].validate(valid => {
+    submitForm: function () {
+      this.$refs["form"].validate((valid) => {
         if (valid) {
           if (this.form.bjbh != undefined) {
-            updateClass(this.form).then(response => {
+            updateClass(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("修改成功");
                 this.open = false;
@@ -431,7 +435,7 @@ export default {
               }
             });
           } else {
-            addClass(this.form).then(response => {
+            addClass(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("新增成功");
                 this.open = false;
@@ -450,32 +454,32 @@ export default {
       this.$confirm("是否确认删除选中的班级信息?", "警告", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning"
+        type: "warning",
       })
-        .then(function() {
+        .then(function () {
           return delClass(bjbhs);
         })
         .then(() => {
           this.getList();
           this.msgSuccess("删除成功");
         })
-        .catch(function() {});
+        .catch(function () {});
     },
     handleEditJs(row) {
       const bjbhs = row.bjbh || this.ids;
       this.$confirm("是否确认清空选中的班级教师信息?", "警告", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning"
+        type: "warning",
       })
-        .then(function() {
+        .then(function () {
           return delJsClass(bjbhs);
         })
         .then(() => {
           this.getList();
           this.msgSuccess("清空成功");
         })
-        .catch(function() {});
+        .catch(function () {});
     },
     /** 导出按钮操作 */
     handleExport() {
@@ -483,16 +487,16 @@ export default {
       this.$confirm("是否确认导出所有班级信息数据项?", "警告", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning"
+        type: "warning",
       })
-        .then(function() {
+        .then(function () {
           return exportClass(queryParams);
         })
-        .then(response => {
+        .then((response) => {
           this.download(response.msg);
         })
-        .catch(function() {});
-    }
-  }
+        .catch(function () {});
+    },
+  },
 };
 </script>

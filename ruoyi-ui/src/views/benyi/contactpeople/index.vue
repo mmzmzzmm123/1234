@@ -86,6 +86,7 @@
     </div>
 
     <el-table
+    border
       v-loading="loading"
       :data="contactpeopleList"
       @selection-change="handleSelectionChange"

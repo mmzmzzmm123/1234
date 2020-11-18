@@ -75,13 +75,14 @@
         >新增</el-button
       >
       <el-button
-          type="success"
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['benyi:checkindetail:edit']"
-        >修改</el-button>
+        type="success"
+        icon="el-icon-edit"
+        size="mini"
+        :disabled="single"
+        @click="handleUpdate"
+        v-hasPermi="['benyi:checkindetail:edit']"
+        >修改</el-button
+      >
       <el-button
         type="danger"
         icon="el-icon-delete"
@@ -102,6 +103,7 @@
     </div>
 
     <el-table
+      border
       v-loading="loading"
       :data="detailList"
       @selection-change="handleSelectionChange"
@@ -114,14 +116,14 @@
       />
       <!-- <el-table-column label="编号" align="center" prop="id" /> -->
       <!-- <el-table-column label="学校编码" align="center" prop="schoolid" /> -->
+      <!-- <el-table-column label="幼儿编码" align="center" prop="childid" /> -->
+      <el-table-column fixed label="幼儿姓名" align="center" prop="childname" />
       <el-table-column
         label="班级名称"
         align="center"
         prop="classid"
         :formatter="classFormat"
       />
-      <!-- <el-table-column label="幼儿编码" align="center" prop="childid" /> -->
-      <el-table-column label="幼儿姓名" align="center" prop="childname" />
       <el-table-column
         label="出勤类型"
         align="center"
@@ -140,6 +142,7 @@
       </el-table-column>
       <!-- <el-table-column label="创建人" align="center" prop="createuserid" /> -->
       <el-table-column
+        fixed="right"
         label="操作"
         align="center"
         width="120"
@@ -177,7 +180,12 @@
     />
 
     <!-- 添加或修改幼儿考勤对话框 -->
-    <el-dialog :title="title" :visible.sync="open" class="v-dialog" append-to-body>
+    <el-dialog
+      :title="title"
+      :visible.sync="open"
+      class="v-dialog"
+      append-to-body
+    >
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="选择幼儿" prop="childname">
           <el-checkbox
@@ -187,7 +195,7 @@
             :disabled="isable"
             >全选</el-checkbox
           >
-          <div style="margin: 15px 0;"></div>
+          <div style="margin: 15px 0"></div>
           <el-checkbox-group
             v-model="checkedChilds"
             @change="handlecheckedChildsChange"
@@ -228,7 +236,7 @@ import {
   delDetail,
   addDetail,
   updateDetail,
-  exportDetail
+  exportDetail,
 } from "@/api/benyi/checkindetail";
 
 import { listByCheck, listChild } from "@/api/benyi/child";
@@ -274,7 +282,7 @@ export default {
         childname: undefined,
         type: undefined,
         createuserid: undefined,
-        createTime: undefined
+        createTime: undefined,
       },
       // 表单参数
       form: {},
@@ -284,17 +292,19 @@ export default {
           {
             required: true,
             message: "请至少选择一个幼儿",
-            trigger: "blur"
-          }
+            trigger: "blur",
+          },
         ],
-        type: [{ required: true, message: "出勤类型不能为空", trigger: "blur" }]
-      }
+        type: [
+          { required: true, message: "出勤类型不能为空", trigger: "blur" },
+        ],
+      },
     };
   },
   created() {
     this.getList();
     this.getClassList();
-    this.getDicts("sys_dm_cqzt").then(response => {
+    this.getDicts("sys_dm_cqzt").then((response) => {
       this.checkinOptions = response.data;
     });
   },
@@ -311,7 +321,7 @@ export default {
     },
     //班级列表
     getClassList() {
-      listClass(null).then(response => {
+      listClass(null).then((response) => {
         this.classOptions = response.rows;
       });
     },
@@ -324,7 +334,7 @@ export default {
       // return this.selectDictLabel(this.classOptions, row.classid);
       var actions = [];
       var datas = this.classOptions;
-      Object.keys(datas).map(key => {
+      Object.keys(datas).map((key) => {
         if (datas[key].bjbh == "" + row.classid) {
           actions.push(datas[key].bjmc);
           return false;
@@ -335,7 +345,7 @@ export default {
     /** 查询幼儿考勤列表 */
     getList() {
       this.loading = true;
-      listDetail(this.queryParams).then(response => {
+      listDetail(this.queryParams).then((response) => {
         this.detailList = response.rows;
         // console.log(response.rows);
         this.total = response.total;
@@ -357,7 +367,7 @@ export default {
         childname: undefined,
         type: undefined,
         createuserid: undefined,
-        createTime: undefined
+        createTime: undefined,
       };
       this.resetForm("form");
 
@@ -375,7 +385,7 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.id);
+      this.ids = selection.map((item) => item.id);
       this.single = selection.length != 1;
       this.multiple = !selection.length;
     },
@@ -385,7 +395,7 @@ export default {
       this.isable = false;
       this.open = true;
       this.title = "幼儿考勤";
-      listByCheck(null).then(response => {
+      listByCheck(null).then((response) => {
         this.childs = response.rows;
       });
     },
@@ -394,9 +404,9 @@ export default {
       this.reset();
       this.isable = true;
       const id = row.id || this.ids;
-      getDetail(id).then(response => {
+      getDetail(id).then((response) => {
         this.form = response.data;
-        listChild(null).then(response => {
+        listChild(null).then((response) => {
           this.childs = response.rows;
         });
         this.checkedChilds.push(response.data.childid);
@@ -405,8 +415,8 @@ export default {
       });
     },
     /** 提交按钮 */
-    submitForm: function() {
-      this.$refs["form"].validate(valid => {
+    submitForm: function () {
+      this.$refs["form"].validate((valid) => {
         if (valid) {
           if (this.form.childname == "") {
             this.msgError("请至少选择一个幼儿");
@@ -414,7 +424,7 @@ export default {
           }
           if (valid) {
             if (this.form.id != undefined) {
-              updateDetail(this.form).then(response => {
+              updateDetail(this.form).then((response) => {
                 if (response.code === 200) {
                   this.msgSuccess("修改考勤成功");
                   this.open = false;
@@ -423,7 +433,7 @@ export default {
               });
             } else {
               //提交
-              addDetail(this.form).then(response => {
+              addDetail(this.form).then((response) => {
                 if (response.code === 200) {
                   this.msgSuccess("添加考勤成功");
                   this.open = false;
@@ -444,17 +454,17 @@ export default {
         {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
-          type: "warning"
+          type: "warning",
         }
       )
-        .then(function() {
+        .then(function () {
           return delDetail(ids);
         })
         .then(() => {
           this.getList();
           this.msgSuccess("删除成功");
         })
-        .catch(function() {});
+        .catch(function () {});
     },
     /** 导出按钮操作 */
     handleExport() {
@@ -462,21 +472,21 @@ export default {
       this.$confirm("是否确认导出所有幼儿考勤数据项?", "警告", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning"
+        type: "warning",
       })
-        .then(function() {
+        .then(function () {
           return exportDetail(queryParams);
         })
-        .then(response => {
+        .then((response) => {
           this.download(response.msg);
         })
-        .catch(function() {});
+        .catch(function () {});
     },
     handleCheckAllChange(val) {
       // this.checkedChilds = val ? this.childs : [];
       // this.isIndeterminate = false;
       this.checkedChilds = [];
-      this.childs.forEach(item => {
+      this.childs.forEach((item) => {
         //当全选被选中的时候，循环遍历源数据，把数据的每一项加入到默认选中的数组去
         this.checkedChilds.push(item.id);
       });
@@ -485,7 +495,7 @@ export default {
 
       //console.log(this.checkedChilds);
       var cids = "";
-      this.checkedChilds.forEach(item => {
+      this.checkedChilds.forEach((item) => {
         //当全选被选中的时候，循环遍历源数据，把数据的每一项加入到默认选中的数组去
         cids = cids + item + ",";
       });
@@ -500,13 +510,13 @@ export default {
 
       //console.log(this.checkedChilds);
       var cids = "";
-      this.checkedChilds.forEach(item => {
+      this.checkedChilds.forEach((item) => {
         //当全选被选中的时候，循环遍历源数据，把数据的每一项加入到默认选中的数组去
         cids = cids + item + ",";
       });
       console.log(cids);
       this.form.childname = cids;
-    }
-  }
+    },
+  },
 };
 </script>

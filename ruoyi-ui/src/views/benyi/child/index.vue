@@ -71,14 +71,14 @@
         >新增</el-button
       >
       <el-button
-          type="success"
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['benyi:child:edit']"
-          >修改</el-button
-        >
+        type="success"
+        icon="el-icon-edit"
+        size="mini"
+        :disabled="single"
+        @click="handleUpdate"
+        v-hasPermi="['benyi:child:edit']"
+        >修改</el-button
+      >
       <el-button
         type="danger"
         icon="el-icon-delete"
@@ -123,20 +123,26 @@
 
     <el-table
       v-loading="loading"
+      border
       :data="childList"
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="编号" align="center" prop="id" /> -->
       <!-- <el-table-column label="幼儿园名称" align="center" prop="schoolid" /> -->
+      <el-table-column fixed label="姓名" align="center" prop="name" />
       <el-table-column
         label="班级名称"
         align="center"
         prop="classid"
         :formatter="classFormat"
       />
-      <el-table-column label="姓名" align="center" prop="name" />
-      <el-table-column label="家长手机号码" width="120" align="center" prop="phone" />
+      <el-table-column
+        label="家长手机号码"
+        width="120"
+        align="center"
+        prop="phone"
+      />
       <el-table-column
         label="性别"
         align="center"
@@ -179,6 +185,7 @@
         :formatter="statusFormat"
       />
       <el-table-column
+        fixed="right"
         label="操作"
         align="center"
         width="120"
@@ -214,7 +221,12 @@
     />
 
     <!-- 添加或修改幼儿信息对话框 -->
-    <el-dialog :title="title" :visible.sync="open" class="big-dialog" append-to-body>
+    <el-dialog
+      :title="title"
+      :visible.sync="open"
+      class="big-dialog"
+      append-to-body
+    >
       <el-tabs type="border-card">
         <el-tab-pane label="幼儿基础信息">
           <el-row :gutter="15">
@@ -659,7 +671,7 @@ import {
   addChild,
   updateChild,
   updateChild_tb,
-  importTemplate
+  importTemplate,
 } from "@/api/benyi/child";
 import {
   listContactpeople,
@@ -667,7 +679,7 @@ import {
   getContactpeopleByChildId,
   delContactpeople,
   addContactpeople,
-  updateContactpeople
+  updateContactpeople,
 } from "@/api/benyi/contactpeople";
 
 import { listClass } from "@/api/system/class";
@@ -687,22 +699,22 @@ export default {
       placeholders: {
         province: "请选择省",
         city: "请选择市",
-        area: "请选择区"
+        area: "请选择区",
       },
       diglogForm: {
         province: null,
         city: null,
-        area: null
+        area: null,
       },
       diglogForm1: {
         province: null,
         city: null,
-        area: null
+        area: null,
       },
       diglogForm2: {
         province: null,
         city: null,
-        area: null
+        area: null,
       },
       // 连接内容
       inviteCode: "",
@@ -750,7 +762,7 @@ export default {
         // 设置上传的请求头部
         headers: { Authorization: "Bearer " + getToken() },
         // 上传的地址
-        url: process.env.VUE_APP_BASE_API + "/benyi/child/importData"
+        url: process.env.VUE_APP_BASE_API + "/benyi/child/importData",
       },
       // 查询参数
       queryParams: {
@@ -794,7 +806,7 @@ export default {
         firstLanguage: undefined,
         seconderLanguage: undefined,
         otherLanguage: undefined,
-        createuserid: undefined
+        createuserid: undefined,
       },
       // 表单参数
       form: {},
@@ -805,44 +817,44 @@ export default {
       // 表单校验
       rules: {
         name: [
-          { required: true, message: "幼儿姓名不能为空", trigger: "blur" }
+          { required: true, message: "幼儿姓名不能为空", trigger: "blur" },
         ],
         phone: [
-          { required: true, message: "家长手机号码不能为空", trigger: "blur" }
+          { required: true, message: "家长手机号码不能为空", trigger: "blur" },
         ],
-        classid: [{ required: true, message: "班级不能为空", trigger: "blur" }]
+        classid: [{ required: true, message: "班级不能为空", trigger: "blur" }],
       },
       rules_tb: {
-        classid: [{ required: true, message: "班级不能为空", trigger: "blur" }]
-      }
+        classid: [{ required: true, message: "班级不能为空", trigger: "blur" }],
+      },
     };
   },
   created() {
     this.getList();
     this.getClassList();
-    this.getDicts("sys_user_sex").then(response => {
+    this.getDicts("sys_user_sex").then((response) => {
       this.sexOptions = response.data;
     });
-    this.getDicts("sys_normal_disable").then(response => {
+    this.getDicts("sys_normal_disable").then((response) => {
       this.statusOptions = response.data;
     });
-    this.getDicts("sys_dm_mz").then(response => {
+    this.getDicts("sys_dm_mz").then((response) => {
       this.mzOptions = response.data;
     });
-    this.getDicts("sys_yes_no").then(response => {
+    this.getDicts("sys_yes_no").then((response) => {
       this.ynOptions = response.data;
     });
-    this.getDicts("sys_dm_ryqd").then(response => {
+    this.getDicts("sys_dm_ryqd").then((response) => {
       this.sourceOptions = response.data;
     });
-    this.getDicts("sys_dm_jtgx").then(response => {
+    this.getDicts("sys_dm_jtgx").then((response) => {
       this.jtgxOptions = response.data;
     });
     this.getLink();
   },
   components: {
     //省市区三级联动全局组件
-    VDistpicker
+    VDistpicker,
   },
   methods: {
     /** 导入按钮操作 */
@@ -852,7 +864,7 @@ export default {
     },
     // 链接内容
     getLink() {
-      getUserProfile().then(response => {
+      getUserProfile().then((response) => {
         var domain = window.location.host;
         //console.log(domain);
         //this.user = response.data;
@@ -862,14 +874,14 @@ export default {
     // 给家长发送链接
     copy(e, text) {
       const clipboard = new Clipboard(e.target, { text: () => text });
-      clipboard.on("success", e => {
+      clipboard.on("success", (e) => {
         this.msgSuccess("复制成功");
         // 释放内存
         clipboard.off("error");
         clipboard.off("success");
         clipboard.destroy();
       });
-      clipboard.on("error", e => {
+      clipboard.on("error", (e) => {
         // 不支持复制
         this.msgError("手机权限不支持复制功能");
         // 释放内存
@@ -904,7 +916,7 @@ export default {
       // return this.selectDictLabel(this.classOptions, row.classid);
       var actions = [];
       var datas = this.classOptions;
-      Object.keys(datas).map(key => {
+      Object.keys(datas).map((key) => {
         if (datas[key].bjbh == "" + row.classid) {
           actions.push(datas[key].bjmc);
           return false;
@@ -913,14 +925,14 @@ export default {
       return actions.join("");
     },
     getClassList() {
-      listClass(null).then(response => {
+      listClass(null).then((response) => {
         this.classOptions = response.rows;
       });
     },
     /** 查询幼儿信息列表 */
     getList() {
       this.loading = true;
-      listChild(this.queryParams).then(response => {
+      listChild(this.queryParams).then((response) => {
         this.childList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -979,7 +991,7 @@ export default {
         seconderLanguage: undefined,
         otherLanguage: undefined,
         createuserid: undefined,
-        createTime: undefined
+        createTime: undefined,
       };
 
       this.diglogForm.province = "";
@@ -1015,7 +1027,7 @@ export default {
         gmphone: undefined,
         gmaddress: undefined,
         gmoffphone: undefined,
-        createTime: undefined
+        createTime: undefined,
       };
       this.resetForm("form_jhr");
     },
@@ -1031,7 +1043,7 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.id);
+      this.ids = selection.map((item) => item.id);
       this.single = selection.length != 1;
       this.multiple = !selection.length;
     },
@@ -1045,7 +1057,7 @@ export default {
     async handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids;
-      await getChild(id).then(response => {
+      await getChild(id).then((response) => {
         this.form = response.data;
 
         this.diglogForm.province = response.data.birthProvincename;
@@ -1064,20 +1076,20 @@ export default {
         this.title = "修改幼儿信息";
 
         //根据幼儿id获取监护人信息
-        getContactpeopleByChildId(this.form.id).then(res => {
+        getContactpeopleByChildId(this.form.id).then((res) => {
           // console.log("childid:" + this.form.id + ";jhr:" + res.data);
           this.form_jhr = res.data;
         });
       });
     },
     /** 提交按钮 */
-    submitForm: function() {
-      this.$refs["form"].validate(valid => {
+    submitForm: function () {
+      this.$refs["form"].validate((valid) => {
         if (valid) {
           if (this.form.id != undefined) {
-            updateChild(this.form).then(response => {
+            updateChild(this.form).then((response) => {
               if (response.code === 200) {
-                updateContactpeople(this.form_jhr).then(res => {
+                updateContactpeople(this.form_jhr).then((res) => {
                   if (res.code === 200) {
                     this.msgSuccess("修改成功");
                     this.open = false;
@@ -1087,11 +1099,11 @@ export default {
               }
             });
           } else {
-            addChild(this.form).then(response => {
+            addChild(this.form).then((response) => {
               // console.log(response);
               if (response.code === 200) {
                 this.form_jhr.childid = response.data;
-                addContactpeople(this.form_jhr).then(res => {
+                addContactpeople(this.form_jhr).then((res) => {
                   this.msgSuccess("新增成功");
                   this.open = false;
                   this.getList();
@@ -1103,11 +1115,11 @@ export default {
       });
     },
     /** 提交按钮 */
-    submitForm_tb: function() {
-      this.$refs["form"].validate(valid => {
+    submitForm_tb: function () {
+      this.$refs["form"].validate((valid) => {
         if (valid) {
           console.log(this.ids + "---" + this.form.classid);
-          updateChild_tb(this.form, this.ids).then(response => {
+          updateChild_tb(this.form, this.ids).then((response) => {
             if (response.code === 200) {
               this.msgSuccess("调班成功");
               this.open_tb = false;
@@ -1127,23 +1139,19 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$confirm(
-        '是否确认删除幼儿信息编号为"' + ids + '"的数据项?',
-        "警告",
-        {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }
-      )
-        .then(function() {
+      this.$confirm("是否确认删除幼儿信息数据项?", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(function () {
           return delChild(ids);
         })
         .then(() => {
           this.getList();
           this.msgSuccess("删除成功");
         })
-        .catch(function() {});
+        .catch(function () {});
     },
     //所在省市区触发联动方法
     onSelected_brith(data) {
@@ -1201,7 +1209,7 @@ export default {
     },
     /** 下载模板操作 */
     importTemplate() {
-      importTemplate().then(response => {
+      importTemplate().then((response) => {
         this.download(response.msg);
       });
     },
@@ -1220,7 +1228,7 @@ export default {
     // 提交上传文件
     submitFileForm() {
       this.$refs.upload.submit();
-    }
-  }
+    },
+  },
 };
 </script>

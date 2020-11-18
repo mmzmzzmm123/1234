@@ -32,18 +32,13 @@
     <el-table
       v-loading="loading"
       :data="childList"
+      border
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="编号" align="center" prop="id" /> -->
       <!-- <el-table-column label="幼儿园名称" align="center" prop="schoolid" /> -->
-      <el-table-column
-        label="班级名称"
-        align="center"
-        prop="classid"
-        :formatter="classFormat"
-      />
-      <el-table-column label="幼儿姓名" align="center" prop="name">
+      <el-table-column fixed label="幼儿姓名" align="center" prop="name">
         <template slot-scope="scope">
           <router-link
             :to="'/benyi/assessmentchildhistory/student/' + scope.row.id"
@@ -53,6 +48,12 @@
           </router-link>
         </template>
       </el-table-column>
+      <el-table-column
+        label="班级名称"
+        align="center"
+        prop="classid"
+        :formatter="classFormat"
+      />
       <el-table-column label="幼儿出生日期" align="center" prop="csrq" />
       <el-table-column
         label="性别"
@@ -67,6 +68,7 @@
         :formatter="statusFormat"
       />
       <el-table-column
+        fixed="right"
         label="操作"
         align="center"
         class-name="small-padding fixed-width"

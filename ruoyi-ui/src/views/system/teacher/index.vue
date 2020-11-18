@@ -89,11 +89,17 @@
 
     <el-table
       v-loading="loading"
+      border
       :data="teacherList"
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="用户名称" align="center" prop="user.nickName" />
+      <el-table-column
+        fixed
+        label="用户名称"
+        align="center"
+        prop="user.nickName"
+      />
       <el-table-column
         label="出生日期"
         align="center"
@@ -130,6 +136,7 @@
       <el-table-column label="资格证书" align="center" prop="zgzs" :formatter="zgzsFormat" />
       <el-table-column label="创建人" align="center" prop="createuserid" />-->
       <el-table-column
+        fixed="right"
         label="操作"
         align="center"
         width="200"
@@ -139,7 +146,7 @@
           <el-button
             size="mini"
             type="text"
-            icon="el-icon-edit"
+            icon="el-icon-view"
             @click="handleDetail(scope.row)"
             v-hasPermi="['system:teacher:edit']"
             >详情</el-button
@@ -249,7 +256,9 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button type="primary" v-show="!flag" @click="submitForm"
+          >确 定</el-button
+        >
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
@@ -264,7 +273,7 @@ import {
   delTeacher,
   addTeacher,
   updateTeacher,
-  exportTeacher
+  exportTeacher,
 } from "@/api/system/teacher";
 
 export default {
@@ -301,7 +310,7 @@ export default {
       pickerOptions0: {
         disabledDate(time) {
           return time.getTime() > Date.now() - 8.64e7;
-        }
+        },
       },
       //修改和查看详情的标志  当查看详情时不允许编辑页面
       flag: "",
@@ -319,7 +328,7 @@ export default {
         cjgzrq: undefined,
         zgzs: undefined,
         createuserid: undefined,
-        createtime: undefined
+        createtime: undefined,
       },
       // 表单参数
       form: {},
@@ -330,22 +339,22 @@ export default {
             required: false,
             pattern: /^\d{18}$/,
             message: "请输入正确的身份证号",
-            trigger: "blur"
-          }
-        ]
-      }
+            trigger: "blur",
+          },
+        ],
+      },
     };
   },
   created() {
     this.getList();
     this.getList2();
-    this.getDicts("sys_jsxl").then(response => {
+    this.getDicts("sys_jsxl").then((response) => {
       this.xlOptions = response.data;
     });
-    this.getDicts("sys_jsxw").then(response => {
+    this.getDicts("sys_jsxw").then((response) => {
       this.xwOptions = response.data;
     });
-    this.getDicts("sys_jszgzs").then(response => {
+    this.getDicts("sys_jszgzs").then((response) => {
       this.zgzsOptions = response.data;
     });
   },
@@ -353,7 +362,7 @@ export default {
     /** 查询教师基本信息列表 */
     getList() {
       this.loading = true;
-      listTeacher(this.queryParams).then(response => {
+      listTeacher(this.queryParams).then((response) => {
         this.teacherList = response.rows;
         console.log(response);
         this.total = response.total;
@@ -361,7 +370,7 @@ export default {
       });
     },
     getList2() {
-      listTeacher2(this.queryParams).then(response => {
+      listTeacher2(this.queryParams).then((response) => {
         this.teacherListAll = response.rows;
       });
     },
@@ -397,7 +406,7 @@ export default {
         cjgzrq: undefined,
         zgzs: undefined,
         createuserid: undefined,
-        createtime: undefined
+        createtime: undefined,
       };
       this.resetForm("form");
     },
@@ -413,7 +422,7 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.id);
+      this.ids = selection.map((item) => item.id);
       this.single = selection.length != 1;
       this.multiple = !selection.length;
     },
@@ -427,7 +436,7 @@ export default {
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids;
-      getTeacher(id).then(response => {
+      getTeacher(id).then((response) => {
         this.form = response.data;
         this.teacherMingCheng = this.form.user.nickName;
         this.open = true;
@@ -439,7 +448,7 @@ export default {
     handleDetail(row) {
       this.reset();
       const id = row.id;
-      getTeacher(id).then(response => {
+      getTeacher(id).then((response) => {
         this.form = response.data;
         this.teacherMingCheng = this.form.user.nickName;
         this.open = true;
@@ -449,11 +458,11 @@ export default {
       });
     },
     /** 提交按钮 */
-    submitForm: function() {
-      this.$refs["form"].validate(valid => {
+    submitForm: function () {
+      this.$refs["form"].validate((valid) => {
         if (valid) {
           if (this.form.id != undefined) {
-            updateTeacher(this.form).then(response => {
+            updateTeacher(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("修改成功");
                 this.open = false;
@@ -463,7 +472,7 @@ export default {
               }
             });
           } else {
-            addTeacher(this.form).then(response => {
+            addTeacher(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("新增成功");
                 this.open = false;
@@ -485,17 +494,17 @@ export default {
         {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
-          type: "warning"
+          type: "warning",
         }
       )
-        .then(function() {
+        .then(function () {
           return delTeacher(ids);
         })
         .then(() => {
           this.getList();
           this.msgSuccess("删除成功");
         })
-        .catch(function() {});
+        .catch(function () {});
     },
     /** 导出按钮操作 */
     handleExport() {
@@ -503,16 +512,16 @@ export default {
       this.$confirm("是否确认导出所有教师基本信息数据项?", "警告", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning"
+        type: "warning",
       })
-        .then(function() {
+        .then(function () {
           return exportTeacher(queryParams);
         })
-        .then(response => {
+        .then((response) => {
           this.download(response.msg);
         })
-        .catch(function() {});
-    }
-  }
+        .catch(function () {});
+    },
+  },
 };
 </script>
