@@ -262,7 +262,7 @@
           :formatter="rjxkFormatDs"
         />
         <el-table-column
-          label="名下学生数量（人）"
+          label="已分配学员数量（人）"
           align="center"
           prop="dsxscount"
         />
@@ -539,25 +539,32 @@ export default {
       // 给请求导师的query赋值
       this.queryParams_ds.xd = row.rjxd;
       this.queryParams_ds.xk = row.rjxk;
-      const id = row.id || this.ids;
-      if (id.length > 1) {
-        this.msgError("只支持单选");
-      } else {
-        this.reset();
-        if (id == "" || id == null) {
-          this.getDsList();
-          this.form.jxjsid = row.jxjsid;
-          this.open_dsfp = true;
-          this.title = "添加见习导师分配";
+      listDsjbxx(this.queryParams_ds).then((response) => {
+        this.dsjbxxList = response.rows;
+        if (this.dsjbxxList.length < 1) {
+          this.msgError("当前学段学科没有相匹配的导师");
         } else {
-          getJxzxdsfp(id).then((response) => {
-            this.getDsList();
-            this.form = response.data;
-            this.open_dsfp = true;
-            this.title = "修改见习导师分配";
-          });
+          const id = row.id || this.ids;
+          if (id.length > 1) {
+            this.msgError("只支持单选");
+          } else {
+            this.reset();
+            if (id == "" || id == null) {
+              this.getDsList();
+              this.form.jxjsid = row.jxjsid;
+              this.open_dsfp = true;
+              this.title = "添加见习导师分配";
+            } else {
+              getJxzxdsfp(id).then((response) => {
+                this.getDsList();
+                this.form = response.data;
+                this.open_dsfp = true;
+                this.title = "修改见习导师分配";
+              });
+            }
+          }
         }
-      }
+      });
     },
     /** 清空按钮操作 */
     handleDelete(row) {
