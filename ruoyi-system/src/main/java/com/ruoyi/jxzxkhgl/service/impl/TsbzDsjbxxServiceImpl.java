@@ -1,7 +1,11 @@
 package com.ruoyi.jxzxkhgl.service.impl;
 
 import java.util.List;
+
+import com.ruoyi.common.exception.CustomException;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.common.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.jxzxkhgl.mapper.TsbzDsjbxxMapper;
@@ -91,5 +95,32 @@ public class TsbzDsjbxxServiceImpl implements ITsbzDsjbxxService
     public int deleteTsbzDsjbxxById(Long id)
     {
         return tsbzDsjbxxMapper.deleteTsbzDsjbxxById(id);
+    }
+
+    /**
+     * 导入导师数据
+     *
+     * @param dsjbxxList 用户数据列表
+     * @param isUpdateSupport 是否更新支持，如果已存在，则进行更新数据
+     * @param operName 操作用户
+     * @return 结果
+     */
+    @Override
+    public String importDsjbxx(List<TsbzDsjbxx> dsjbxxList, Boolean isUpdateSupport, String operName) {
+        if (StringUtils.isNull(dsjbxxList) || dsjbxxList.size() == 0)
+        {
+            throw new CustomException("导入用户数据不能为空！");
+        }
+        int successNum = 0;
+        StringBuilder successMsg = new StringBuilder();
+        for (TsbzDsjbxx tsbzDsjbxx : dsjbxxList)
+        {
+            tsbzDsjbxx.setCreateBy(operName);
+            this.insertTsbzDsjbxx(tsbzDsjbxx);
+            successNum++;
+            successMsg.append("<br/>" + successNum + "、导师名称 " + tsbzDsjbxx.getJsxm() + " 导入成功");
+        }
+        successMsg.insert(0, "恭喜您，数据已全部导入成功！共 " + successNum + " 条，数据如下：");
+        return successMsg.toString();
     }
 }
