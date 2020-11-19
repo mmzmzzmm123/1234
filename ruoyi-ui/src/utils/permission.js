@@ -34,14 +34,9 @@ export function checkRole(value) {
     const roles = store.getters && store.getters.roles
     const permissionRoles = value
 
-    const hasRole = roles.some(role => {
+    return  !roles.some(role => {
       return permissionRoles.includes(role)
     })
-
-    if (!hasRole) {
-      return false
-    }
-    return true
   } else {
     console.error(`need roles! Like checkRole="['admin','editor']"`)
     return false
