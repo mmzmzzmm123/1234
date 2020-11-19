@@ -1,27 +1,26 @@
 <template>
   <div class="app-container">
-    <el-form
-      :model="queryParams"
-      ref="queryForm"
-      :inline="true"
-      label-width="68px"
-    >
-      <el-form-item label="活动类型" prop="type">
-        <el-select
-          v-model="queryParams.type"
-          placeholder="请选择活动类型"
-          clearable
-          size="small"
-        >
-          <el-option
-            v-for="dict in typeOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
-          />
-        </el-select>
-      </el-form-item>
-      <!--<el-form-item label="所属班级" prop="classid">
+    <el-form :model="queryParams" ref="queryForm" label-width="70px">
+      <el-row :gutter="10">
+        <el-col :xs="24" :ms="12" :md="5">
+          <el-form-item label="活动类型" prop="type">
+            <el-select
+              v-model="queryParams.type"
+              placeholder="请选择活动类型"
+              clearable
+              size="small"
+            >
+              <el-option
+                v-for="dict in typeOptions"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="dict.dictValue"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :ms="12" :md="5">
+          <!--<el-form-item label="所属班级" prop="classid">
         <el-select v-model="queryParams.classid"  placeholder="请选择班级" >
           <el-option
             v-for="item in classListAll"
@@ -31,90 +30,88 @@
           />
         </el-select>
       </el-form-item>-->
-      <el-form-item label="学年学期" prop="xnxq">
-        <el-select
-          v-model="queryParams.xnxq"
-          placeholder="请选择学年学期"
-          clearable
-          size="small"
-        >
-          <el-option
-            v-for="dict in xnxqOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="活动时间" prop="activitytime">
-        <el-date-picker
-          clearable
-          size="small"
-          style="width: 200px"
-          v-model="queryParams.activitytime"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="选择活动时间"
-        ></el-date-picker>
-      </el-form-item>
-      <el-form-item>
-        <el-button
-          type="primary"
-          icon="el-icon-search"
-          size="mini"
-          @click="handleQuery"
-          >搜索</el-button
-        >
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
-          >重置</el-button
-        >
-      </el-form-item>
+          <el-form-item label="学年学期" prop="xnxq">
+            <el-select
+              v-model="queryParams.xnxq"
+              placeholder="请选择学年学期"
+              clearable
+              size="small"
+            >
+              <el-option
+                v-for="dict in xnxqOptions"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="dict.dictValue"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :ms="12" :md="5">
+          <el-form-item label="活动时间" prop="activitytime">
+            <el-date-picker
+              class="my-date-picker"
+              clearable
+              size="small"
+              v-model="queryParams.activitytime"
+              type="date"
+              value-format="yyyy-MM-dd"
+              placeholder="选择活动时间"
+            ></el-date-picker>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :ms="12" :md="4">
+          <el-form-item class="no-margin">
+            <el-button
+              type="primary"
+              icon="el-icon-search"
+              size="mini"
+              @click="handleQuery"
+              >搜索</el-button
+            >
+            <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+              >重置</el-button
+            >
+          </el-form-item>
+        </el-col>
+      </el-row>
     </el-form>
 
-    <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          type="primary"
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['benyi:schoolcalendarclass:add']"
-          >新增</el-button
-        >
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['benyi:schoolcalendarclass:edit']"
-          >修改</el-button
-        >
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="danger"
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['benyi:schoolcalendarclass:remove']"
-          >删除</el-button
-        >
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['benyi:schoolcalendarclass:export']"
-          >导出</el-button
-        >
-      </el-col>
-    </el-row>
+    <div class="mb8 btn-list">
+      <el-button
+        type="primary"
+        icon="el-icon-plus"
+        size="mini"
+        @click="handleAdd"
+        v-hasPermi="['benyi:schoolcalendarclass:add']"
+        >新增</el-button
+      >
+      <el-button
+        type="success"
+        icon="el-icon-edit"
+        size="mini"
+        :disabled="single"
+        @click="handleUpdate"
+        v-hasPermi="['benyi:schoolcalendarclass:edit']"
+        >修改</el-button
+      >
+      <el-button
+        type="danger"
+        icon="el-icon-delete"
+        size="mini"
+        :disabled="multiple"
+        @click="handleDelete"
+        v-hasPermi="['benyi:schoolcalendarclass:remove']"
+        >删除</el-button
+      >
+      <el-button
+        type="warning"
+        icon="el-icon-download"
+        size="mini"
+        @click="handleExport"
+        v-hasPermi="['benyi:schoolcalendarclass:export']"
+        >导出</el-button
+      >
+    </div>
 
     <el-table
       border
@@ -489,3 +486,20 @@ export default {
   },
 };
 </script>
+<style lang="scss" scoped>
+.el-select {
+  width: 100%;
+}
+.my-date-picker {
+  width: 100%;
+}
+.edit-btns {
+  .el-button {
+    display: block;
+    margin: 0 auto;
+  }
+}
+.no-margin ::v-deep.el-form-item__content {
+  margin: 0 !important;
+}
+</style>

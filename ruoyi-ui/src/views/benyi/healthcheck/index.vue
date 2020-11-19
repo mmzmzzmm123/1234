@@ -3,73 +3,84 @@
     <el-form
       :model="queryParams"
       ref="queryForm"
-      :inline="true"
-      label-width="68px"
+      label-width="70px"
       clearable
       size="small"
     >
-      <el-form-item label="班级信息" prop="classInfo">
-        <el-select
-          v-model="queryParams.classInfo"
-          placeholder="请选择班级信息"
-          @change="classInfoChange"
-        >
-          <el-option
-            v-for="dict in classInfoOptions"
-            :key="dict.bjbh"
-            :label="dict.bjmc"
-            :value="dict.bjbh"
-          ></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="幼儿姓名" prop="childId">
-        <el-select v-model="queryParams.childId" placeholder="请选择幼儿">
-          <el-option
-            v-for="dict in childInfoOptions.filter(
-              c => c.classid == this.queryParams.classInfo
-            )"
-            :key="dict.id"
-            :label="dict.name"
-            :value="dict.id"
-          ></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="检查日期" prop="checkTime">
-        <el-date-picker
-          clearable
-          size="small"
-          style="width: 200px"
-          v-model="queryParams.checkTime"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="选择检查日期"
-        ></el-date-picker>
-      </el-form-item>
-      <el-form-item label="保健师" prop="doctorName">
-        <el-input
-          v-model="queryParams.doctorName"
-          placeholder="请输入保健师"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="总评价" prop="totalAssessment">
-        <el-select
-          v-model="queryParams.totalAssessment"
-          placeholder="请选择总评价"
-          clearable
-          size="small"
-        >
-          <el-option
-            v-for="dict in totalAssessmentOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
-          />
-        </el-select>
-      </el-form-item>
-      <!-- <el-form-item label="创建时间" prop="createtime">
+      <el-row :gutter="10">
+        <el-col :xs="24" :ms="12" :md="5">
+          <el-form-item label="班级信息" prop="classInfo">
+            <el-select
+              v-model="queryParams.classInfo"
+              placeholder="请选择班级信息"
+              @change="classInfoChange"
+            >
+              <el-option
+                v-for="dict in classInfoOptions"
+                :key="dict.bjbh"
+                :label="dict.bjmc"
+                :value="dict.bjbh"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :ms="12" :md="5">
+          <el-form-item label="幼儿姓名" prop="childId">
+            <el-select v-model="queryParams.childId" placeholder="请选择幼儿">
+              <el-option
+                v-for="dict in childInfoOptions.filter(
+                  (c) => c.classid == this.queryParams.classInfo
+                )"
+                :key="dict.id"
+                :label="dict.name"
+                :value="dict.id"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :ms="12" :md="5">
+          <el-form-item label="检查日期" prop="checkTime">
+            <el-date-picker
+              class="my-date-picker"
+              clearable
+              size="small"
+              v-model="queryParams.checkTime"
+              type="date"
+              value-format="yyyy-MM-dd"
+              placeholder="选择检查日期"
+            ></el-date-picker>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :ms="12" :md="5">
+          <el-form-item label="保健师" prop="doctorName">
+            <el-input
+              v-model="queryParams.doctorName"
+              placeholder="请输入保健师"
+              clearable
+              size="small"
+              @keyup.enter.native="handleQuery"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :ms="12" :md="5">
+          <el-form-item label="总评价" prop="totalAssessment">
+            <el-select
+              v-model="queryParams.totalAssessment"
+              placeholder="请选择总评价"
+              clearable
+              size="small"
+            >
+              <el-option
+                v-for="dict in totalAssessmentOptions"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="dict.dictValue"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :ms="12" :md="4">
+          <!-- <el-form-item label="创建时间" prop="createtime">
         <el-date-picker
           clearable
           size="small"
@@ -80,18 +91,20 @@
           placeholder="选择创建时间"
         ></el-date-picker>
       </el-form-item>-->
-      <el-form-item>
-        <el-button
-          type="primary"
-          icon="el-icon-search"
-          size="mini"
-          @click="handleQuery"
-          >搜索</el-button
-        >
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
-          >重置</el-button
-        >
-      </el-form-item>
+          <el-form-item class="no-margin">
+            <el-button
+              type="primary"
+              icon="el-icon-search"
+              size="mini"
+              @click="handleQuery"
+              >搜索</el-button
+            >
+            <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+              >重置</el-button
+            >
+          </el-form-item>
+        </el-col>
+      </el-row>
     </el-form>
 
     <div class="mb8 btn-list">
@@ -104,14 +117,14 @@
         >新增</el-button
       >
       <el-button
-          type="success"
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['benyi:healthcheck:edit']"
-          >修改</el-button
-        >
+        type="success"
+        icon="el-icon-edit"
+        size="mini"
+        :disabled="single"
+        @click="handleUpdate"
+        v-hasPermi="['benyi:healthcheck:edit']"
+        >修改</el-button
+      >
       <el-button
         type="danger"
         icon="el-icon-delete"
@@ -134,14 +147,20 @@
     </div>
 
     <el-table
+      border
       v-loading="loading"
       :data="healthcheckList"
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="体检表编号" align="center" prop="id" /> -->
+      <el-table-column
+        fixed
+        label="幼儿姓名"
+        align="center"
+        prop="byChild.name"
+      />
       <el-table-column label="班级信息" align="center" prop="byClass.bjmc" />
-      <el-table-column label="幼儿姓名" align="center" prop="byChild.name" />
       <el-table-column
         label="检查日期"
         align="center"
@@ -190,6 +209,7 @@
         </template>
       </el-table-column>
       <el-table-column
+        fixed="right"
         label="操作"
         align="center"
         width="100"
@@ -225,7 +245,12 @@
     />
 
     <!-- 添加或修改儿童常规体检记录对话框 -->
-    <el-dialog :title="title" :visible.sync="open" class="big-dialog" append-to-body>
+    <el-dialog
+      :title="title"
+      :visible.sync="open"
+      class="big-dialog"
+      append-to-body
+    >
       <el-row :gutter="15">
         <el-form ref="form" :model="form" :rules="rules" label-width="100px">
           <el-col :span="12">
@@ -249,7 +274,7 @@
               <el-select v-model="form.childId" placeholder="请选择幼儿">
                 <el-option
                   v-for="dict in childInfoOptions.filter(
-                    c => c.classid == this.form.classInfo
+                    (c) => c.classid == this.form.classInfo
                   )"
                   :key="dict.id"
                   :label="dict.name"
@@ -405,7 +430,7 @@ import {
   delHealthcheck,
   addHealthcheck,
   updateHealthcheck,
-  exportHealthcheck
+  exportHealthcheck,
 } from "@/api/benyi/healthcheck";
 import { listClass } from "@/api/system/class";
 import { listChild } from "@/api/benyi/child";
@@ -464,7 +489,7 @@ export default {
         heightAssessment: undefined,
         totalAssessment: undefined,
         createtime: undefined,
-        createuser: undefined
+        createuser: undefined,
       },
       // 表单参数
       form: {},
@@ -472,47 +497,47 @@ export default {
       // 表单校验
       rules: {
         classInfo: [
-          { required: true, message: "班级信息不能为空", trigger: "blur" }
+          { required: true, message: "班级信息不能为空", trigger: "blur" },
         ],
         childId: [
-          { required: true, message: "幼儿姓名不能为空", trigger: "blur" }
+          { required: true, message: "幼儿姓名不能为空", trigger: "blur" },
         ],
         checkTime: [
-          { required: true, message: "检查时间不能为空", trigger: "blur" }
+          { required: true, message: "检查时间不能为空", trigger: "blur" },
         ],
         doctorName: [
-          { required: true, message: "保健医不能为空", trigger: "blur" }
+          { required: true, message: "保健医不能为空", trigger: "blur" },
         ],
         totalAssessment: [
-          { required: true, message: "总评价不能为空", trigger: "blur" }
+          { required: true, message: "总评价不能为空", trigger: "blur" },
         ],
         weight: [
           {
             required: true,
             message: "输入内容必须是数字,且不能超过六位数",
-            trigger: "blur"
-          }
-        ]
-      }
+            trigger: "blur",
+          },
+        ],
+      },
     };
   },
   created() {
     this.getList();
     this.getclassinfo();
 
-    this.getDicts("sys_vision_assessment").then(response => {
+    this.getDicts("sys_vision_assessment").then((response) => {
       this.visionAssessmentOptions = response.data;
     });
-    this.getDicts("sys_decayed_tooth").then(response => {
+    this.getDicts("sys_decayed_tooth").then((response) => {
       this.decayedToothOptions = response.data;
     });
-    this.getDicts("sys_weight_assessment").then(response => {
+    this.getDicts("sys_weight_assessment").then((response) => {
       this.weightAssessmentOptions = response.data;
     });
-    this.getDicts("sys_height_assessment").then(response => {
+    this.getDicts("sys_height_assessment").then((response) => {
       this.heightAssessmentOptions = response.data;
     });
-    this.getDicts("sys_dm_tyjg").then(response => {
+    this.getDicts("sys_dm_tyjg").then((response) => {
       this.totalAssessmentOptions = response.data;
     });
   },
@@ -520,14 +545,14 @@ export default {
     // 班级选择框变化后触发
     classInfoChange() {
       this.queryParams.childId = null;
-      listChild(null).then(response => {
+      listChild(null).then((response) => {
         this.childInfoOptions = response.rows;
       });
     },
     /** 查询儿童常规体检记录列表 */
     getList() {
       this.loading = true;
-      listHealthcheck(this.queryParams).then(response => {
+      listHealthcheck(this.queryParams).then((response) => {
         this.healthcheckList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -535,7 +560,7 @@ export default {
     },
     // 查询所有班级信息
     getclassinfo() {
-      listClass(null).then(response => {
+      listClass(null).then((response) => {
         this.classInfoOptions = response.rows;
       });
     },
@@ -595,7 +620,7 @@ export default {
         heightAssessment: undefined,
         totalAssessment: undefined,
         createtime: undefined,
-        createuser: undefined
+        createuser: undefined,
       };
       this.resetForm("form");
     },
@@ -611,7 +636,7 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.id);
+      this.ids = selection.map((item) => item.id);
       this.single = selection.length != 1;
       this.multiple = !selection.length;
     },
@@ -625,18 +650,18 @@ export default {
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids;
-      getHealthcheck(id).then(response => {
+      getHealthcheck(id).then((response) => {
         this.form = response.data;
         this.open = true;
         this.title = "修改儿童常规体检记录";
       });
     },
     /** 提交按钮 */
-    submitForm: function() {
-      this.$refs["form"].validate(valid => {
+    submitForm: function () {
+      this.$refs["form"].validate((valid) => {
         if (valid) {
           if (this.form.id != undefined) {
-            updateHealthcheck(this.form).then(response => {
+            updateHealthcheck(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("修改成功");
                 this.open = false;
@@ -644,7 +669,7 @@ export default {
               }
             });
           } else {
-            addHealthcheck(this.form).then(response => {
+            addHealthcheck(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("新增成功");
                 this.open = false;
@@ -661,17 +686,17 @@ export default {
       this.$confirm("是否确认删除儿童常规体检记录数据项?", "警告", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning"
+        type: "warning",
       })
-        .then(function() {
+        .then(function () {
           return delHealthcheck(ids);
         })
         .then(() => {
           this.getList();
           this.msgSuccess("删除成功");
         })
-        .catch(function() {});
-    }
+        .catch(function () {});
+    },
     // /** 导出按钮操作 */
     // handleExport() {
     //   const queryParams = this.queryParams;
@@ -688,6 +713,24 @@ export default {
     //     })
     //     .catch(function () {});
     // },
-  }
+  },
 };
 </script>
+<style lang="scss" scoped>
+.el-select {
+  width: 100%;
+}
+.my-date-picker {
+  width: 100%;
+}
+.edit-btns {
+  .el-button {
+    display: block;
+    margin: 0 auto;
+  }
+}
+.no-margin ::v-deep.el-form-item__content {
+  margin: 0 !important;
+}
+</style>
+

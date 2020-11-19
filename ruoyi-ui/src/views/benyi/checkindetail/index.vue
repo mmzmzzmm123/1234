@@ -1,68 +1,75 @@
 <template>
   <div class="app-container">
-    <el-form
-      :model="queryParams"
-      ref="queryForm"
-      :inline="true"
-      label-width="68px"
-    >
-      <el-form-item label="班级编码" prop="classid">
-        <el-select v-model="queryParams.classid" placeholder="请选择班级">
-          <el-option
-            v-for="dict in classOptions"
-            :key="dict.bjbh"
-            :label="dict.bjmc"
-            :value="dict.bjbh"
-          ></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="幼儿姓名" prop="childname">
-        <el-input
-          v-model="queryParams.childname"
-          placeholder="请输入幼儿姓名"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="出勤类型" prop="type">
-        <el-select
-          v-model="queryParams.type"
-          placeholder="请选择出勤类型"
-          clearable
-          size="small"
-        >
-          <el-option
-            v-for="dict in checkinOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="考勤时间" prop="createTime">
-        <el-date-picker
-          clearable
-          size="small"
-          style="width: 200px"
-          v-model="queryParams.createTime"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="选择考勤时间"
-        ></el-date-picker>
-      </el-form-item>
-      <el-form-item>
-        <el-button
-          type="primary"
-          icon="el-icon-search"
-          size="mini"
-          @click="handleQuery"
-          >搜索</el-button
-        >
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
-          >重置</el-button
-        >
-      </el-form-item>
+    <el-form :model="queryParams" ref="queryForm" label-width="70px">
+      <el-row :gutter="10">
+        <el-col :xs="24" :ms="12" :md="5">
+          <el-form-item label="班级名称" prop="classid">
+            <el-select v-model="queryParams.classid" placeholder="请选择班级">
+              <el-option
+                v-for="dict in classOptions"
+                :key="dict.bjbh"
+                :label="dict.bjmc"
+                :value="dict.bjbh"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :ms="12" :md="5">
+          <el-form-item label="幼儿姓名" prop="childname">
+            <el-input
+              v-model="queryParams.childname"
+              placeholder="请输入幼儿姓名"
+              clearable
+              size="small"
+              @keyup.enter.native="handleQuery"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :ms="12" :md="5">
+          <el-form-item label="出勤类型" prop="type">
+            <el-select
+              v-model="queryParams.type"
+              placeholder="请选择出勤类型"
+              clearable
+              size="small"
+            >
+              <el-option
+                v-for="dict in checkinOptions"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="dict.dictValue"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :ms="12" :md="5">
+          <el-form-item label="考勤时间" prop="createTime">
+            <el-date-picker
+              class="my-date-picker"
+              clearable
+              size="small"
+              v-model="queryParams.createTime"
+              type="date"
+              value-format="yyyy-MM-dd"
+              placeholder="选择考勤时间"
+            ></el-date-picker>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :ms="12" :md="4">
+          <el-form-item class="no-margin">
+            <el-button
+              type="primary"
+              icon="el-icon-search"
+              size="mini"
+              @click="handleQuery"
+              >搜索</el-button
+            >
+            <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+              >重置</el-button
+            >
+          </el-form-item>
+        </el-col>
+      </el-row>
     </el-form>
 
     <div class="mb8 btn-list">
@@ -499,7 +506,7 @@ export default {
         //当全选被选中的时候，循环遍历源数据，把数据的每一项加入到默认选中的数组去
         cids = cids + item + ",";
       });
-      console.log(cids);
+      // console.log(cids);
       this.form.childname = cids;
     },
     handlecheckedChildsChange(value) {
@@ -514,9 +521,26 @@ export default {
         //当全选被选中的时候，循环遍历源数据，把数据的每一项加入到默认选中的数组去
         cids = cids + item + ",";
       });
-      console.log(cids);
+      // console.log(cids);
       this.form.childname = cids;
     },
   },
 };
 </script>
+<style lang="scss" scoped>
+.el-select {
+  width: 100%;
+}
+.my-date-picker {
+  width: 100%;
+}
+.edit-btns {
+  .el-button {
+    display: block;
+    margin: 0 auto;
+  }
+}
+.no-margin ::v-deep.el-form-item__content {
+  margin: 0 !important;
+}
+</style>

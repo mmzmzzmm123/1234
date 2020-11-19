@@ -1,92 +1,101 @@
 <template>
   <div class="app-container">
-    <el-form
-      :model="queryParams"
-      ref="queryForm"
-      :inline="true"
-      label-width="68px"
-    >
-      <el-form-item label="班级类型" prop="bjtype">
-        <el-select
-          v-model="queryParams.bjtype"
-          placeholder="请选择班级类型"
-          clearable
-          size="small"
-        >
-          <el-option
-            v-for="dict in bjtypeOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="班级名称" prop="bjmc">
-        <el-input
-          v-model="queryParams.bjmc"
-          placeholder="请输入班级名称"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="主班教师" prop="zbjs">
-        <el-select
-          v-model="queryParams.zbjs"
-          filterable
-          placeholder="请选择主班教师"
-        >
-          <el-option
-            v-for="item in zbjsOptions"
-            :key="item.userId"
-            :label="item.nickName"
-            :value="item.userId"
-            :disabled="item.status == 1"
-          ></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="配班教师" prop="pbjs">
-        <el-select
-          v-model="queryParams.pbjs"
-          filterable
-          placeholder="请选择配班教师"
-        >
-          <el-option
-            v-for="item in pbjsOptions"
-            :key="item.userId"
-            :label="item.nickName"
-            :value="item.userId"
-            :disabled="item.status == 1"
-          ></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="助理教师" prop="zljs">
-        <el-select
-          v-model="queryParams.zljs"
-          filterable
-          placeholder="请选择助理教师"
-        >
-          <el-option
-            v-for="item in zljsOptions"
-            :key="item.userId"
-            :label="item.nickName"
-            :value="item.userId"
-            :disabled="item.status == 1"
-          ></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item>
-        <el-button
-          type="primary"
-          icon="el-icon-search"
-          size="mini"
-          @click="handleQuery"
-          >搜索</el-button
-        >
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
-          >重置</el-button
-        >
-      </el-form-item>
+    <el-form :model="queryParams" ref="queryForm" label-width="70px">
+      <el-row :gutter="10">
+        <el-col :xs="24" :ms="12" :md="4">
+          <el-form-item label="班级类型" prop="bjtype">
+            <el-select
+              v-model="queryParams.bjtype"
+              placeholder="请选择班级类型"
+              clearable
+              size="small"
+            >
+              <el-option
+                v-for="dict in bjtypeOptions"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="dict.dictValue"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :ms="12" :md="4">
+          <el-form-item label="班级名称" prop="bjmc">
+            <el-input
+              v-model="queryParams.bjmc"
+              placeholder="请输入班级名称"
+              clearable
+              size="small"
+              @keyup.enter.native="handleQuery"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :ms="12" :md="4">
+          <el-form-item label="主班教师" prop="zbjs">
+            <el-select
+              v-model="queryParams.zbjs"
+              filterable
+              placeholder="请选择主班教师"
+            >
+              <el-option
+                v-for="item in zbjsOptions"
+                :key="item.userId"
+                :label="item.nickName"
+                :value="item.userId"
+                :disabled="item.status == 1"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :ms="12" :md="4">
+          <el-form-item label="配班教师" prop="pbjs">
+            <el-select
+              v-model="queryParams.pbjs"
+              filterable
+              placeholder="请选择配班教师"
+            >
+              <el-option
+                v-for="item in pbjsOptions"
+                :key="item.userId"
+                :label="item.nickName"
+                :value="item.userId"
+                :disabled="item.status == 1"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :ms="12" :md="4">
+          <el-form-item label="助理教师" prop="zljs">
+            <el-select
+              v-model="queryParams.zljs"
+              filterable
+              placeholder="请选择助理教师"
+            >
+              <el-option
+                v-for="item in zljsOptions"
+                :key="item.userId"
+                :label="item.nickName"
+                :value="item.userId"
+                :disabled="item.status == 1"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :ms="12" :md="4">
+          <el-form-item class="no-margin">
+            <el-button
+              type="primary"
+              icon="el-icon-search"
+              size="mini"
+              @click="handleQuery"
+              >搜索</el-button
+            >
+            <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+              >重置</el-button
+            >
+          </el-form-item>
+        </el-col>
+      </el-row>
     </el-form>
 
     <div class="mb8 btn-list">
@@ -145,7 +154,7 @@
         align="center"
         :formatter="bjtypeFormat"
         prop="bjtype"
-      /> 
+      />
       <el-table-column label="主班教师" align="center" prop="zbjsxm" />
       <el-table-column label="配班教师" align="center" prop="pbjsxm" />
       <el-table-column label="助理教师" align="center" prop="zljsxm" />
@@ -347,7 +356,7 @@ export default {
       this.loading = true;
       listClass(this.queryParams).then((response) => {
         this.classList = response.rows;
-        console.log(this.classList);
+        // console.log(this.classList);
         this.total = response.total;
         this.loading = false;
       });
@@ -500,3 +509,20 @@ export default {
   },
 };
 </script>
+<style lang="scss" scoped>
+.el-select {
+  width: 100%;
+}
+.my-date-picker {
+  width: 100%;
+}
+.edit-btns {
+  .el-button {
+    display: block;
+    margin: 0 auto;
+  }
+}
+.no-margin ::v-deep.el-form-item__content {
+  margin: 0 !important;
+}
+</style>

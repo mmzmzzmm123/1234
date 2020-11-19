@@ -1,43 +1,44 @@
 <template>
   <div class="app-container">
-    <el-form
-      :model="queryParams"
-      ref="queryForm"
-      :inline="true"
-      label-width="68px"
-    >
-      <el-form-item label="选择月份" prop="month">
-        <el-date-picker
-          clearable
-          size="small"
-          style="width: 200px"
-          v-model="queryParams.month"
-          type="month"
-          value-format="yyyy-MM"
-          :default-value="new Date()"
-          placeholder="选择计划月份"
-        ></el-date-picker>
-      </el-form-item>
-      <el-form-item>
-        <el-button
-          type="primary"
-          icon="el-icon-search"
-          size="mini"
-          @click="handleQuery"
-          >搜索</el-button
-        >
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
-          >重置</el-button
-        >
-        <el-button
-          type="primary"
-          plain
-          size="mini"
-          icon="el-icon-printer"
-          @click="prints"
-          >打印</el-button
-        >
-      </el-form-item>
+    <el-form :model="queryParams" ref="queryForm" label-width="70px">
+      <el-row :gutter="10">
+        <el-col :xs="24" :ms="12" :md="5">
+          <el-form-item label="选择月份" prop="month">
+            <el-date-picker
+              class="my-date-picker"
+              clearable
+              size="small"
+              v-model="queryParams.month"
+              type="month"
+              value-format="yyyy-MM"
+              :default-value="new Date()"
+              placeholder="选择计划月份"
+            ></el-date-picker>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :ms="12" :md="6">
+          <el-form-item class="no-margin">
+            <el-button
+              type="primary"
+              icon="el-icon-search"
+              size="mini"
+              @click="handleQuery"
+              >搜索</el-button
+            >
+            <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+              >重置</el-button
+            >
+            <el-button
+              type="primary"
+              plain
+              size="mini"
+              icon="el-icon-printer"
+              @click="prints"
+              >打印</el-button
+            >
+          </el-form-item>
+        </el-col>
+      </el-row>
     </el-form>
 
     <div ref="printMe" class="print-me">
@@ -409,5 +410,14 @@ export default {
       font-size: 12px;
     }
   }
+}
+.el-select {
+  width: 100%;
+}
+.my-date-picker {
+  width: 100%;
+}
+.no-margin ::v-deep.el-form-item__content {
+  margin: 0 !important;
 }
 </style>

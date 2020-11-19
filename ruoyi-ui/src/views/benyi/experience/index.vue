@@ -1,50 +1,55 @@
 <template>
   <div class="app-container">
-    <el-form
-      :model="queryParams"
-      ref="queryForm"
-      :inline="true"
-      label-width="68px"
-    >
-      <el-form-item label="家长姓名" prop="jzxm">
-        <el-input
-          v-model="queryParams.jzxm"
-          placeholder="请输入家长姓名"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="幼儿姓名" prop="yexm">
-        <el-input
-          v-model="queryParams.yexm"
-          placeholder="请输入幼儿姓名"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="联系方式" prop="lxfs">
-        <el-input
-          v-model="queryParams.lxfs"
-          placeholder="请输入联系方式"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item>
-        <el-button
-          type="primary"
-          icon="el-icon-search"
-          size="mini"
-          @click="handleQuery"
-          >搜索</el-button
-        >
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
-          >重置</el-button
-        >
-      </el-form-item>
+    <el-form :model="queryParams" ref="queryForm" label-width="70px">
+      <el-row :gutter="10">
+        <el-col :xs="24" :ms="12" :md="5">
+          <el-form-item label="家长姓名" prop="jzxm">
+            <el-input
+              v-model="queryParams.jzxm"
+              placeholder="请输入家长姓名"
+              clearable
+              size="small"
+              @keyup.enter.native="handleQuery"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :ms="12" :md="5">
+          <el-form-item label="幼儿姓名" prop="yexm">
+            <el-input
+              v-model="queryParams.yexm"
+              placeholder="请输入幼儿姓名"
+              clearable
+              size="small"
+              @keyup.enter.native="handleQuery"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :ms="12" :md="5">
+          <el-form-item label="联系方式" prop="lxfs">
+            <el-input
+              v-model="queryParams.lxfs"
+              placeholder="请输入联系方式"
+              clearable
+              size="small"
+              @keyup.enter.native="handleQuery"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :ms="12" :md="4">
+          <el-form-item class="no-margin">
+            <el-button
+              type="primary"
+              icon="el-icon-search"
+              size="mini"
+              @click="handleQuery"
+              >搜索</el-button
+            >
+            <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+              >重置</el-button
+            >
+          </el-form-item>
+        </el-col>
+      </el-row>
     </el-form>
 
     <div class="mb8 btn-list">
@@ -83,13 +88,14 @@
     </div>
 
     <el-table
+      border
       v-loading="loading"
       :data="experienceList"
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="编号" align="center" prop="id" /> -->
-      <el-table-column label="幼儿姓名" align="center" prop="yexm" />
+      <el-table-column fixed label="幼儿姓名" align="center" prop="yexm" />
       <el-table-column label="家长姓名" align="center" prop="jzxm" />
       <el-table-column
         label="幼儿出生日期"
@@ -131,9 +137,11 @@
         :formatter="tynrFormat"
       />
       <el-table-column
+        fixed="right"
         label="操作"
         align="center"
-        class-name="small-padding fixed-width"
+        width="60"
+        class-name="small-padding fixed-width edit-btns"
       >
         <template slot-scope="scope">
           <el-button
@@ -165,7 +173,12 @@
     />
 
     <!-- 添加或修改入班体验申请对话框 -->
-    <el-dialog :title="title" :visible.sync="open" class="big-dialog" append-to-body>
+    <el-dialog
+      :title="title"
+      :visible.sync="open"
+      class="big-dialog"
+      append-to-body
+    >
       <el-row :gutter="15">
         <el-form ref="form" :model="form" :rules="rules" label-width="120px">
           <el-col :span="12">
@@ -338,7 +351,7 @@ import {
   delExperience,
   addExperience,
   updateExperience,
-  exportExperience
+  exportExperience,
 } from "@/api/benyi/experience";
 
 import { listHalfdayplan } from "@/api/benyi/halfdayplan";
@@ -392,73 +405,73 @@ export default {
         yzzs: undefined,
         tyjg: undefined,
         rysj: undefined,
-        tynrid: undefined
+        tynrid: undefined,
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
         jzxm: [
-          { required: true, message: "家长姓名不能为空", trigger: "blur" }
+          { required: true, message: "家长姓名不能为空", trigger: "blur" },
         ],
         yexm: [
-          { required: true, message: "幼儿姓名不能为空", trigger: "blur" }
+          { required: true, message: "幼儿姓名不能为空", trigger: "blur" },
         ],
         csrq: [
-          { required: true, message: "幼儿出生日期不能为空", trigger: "blur" }
+          { required: true, message: "幼儿出生日期不能为空", trigger: "blur" },
         ],
         lxfs: [
           {
             required: true,
             pattern: /^1[3|4|5|6|7|8|9][0-9]\d{8}$/,
             message: "请输入正确的手机号码",
-            trigger: "blur"
-          }
+            trigger: "blur",
+          },
         ],
         nrysj: [
-          { required: true, message: "拟入园时间不能为空", trigger: "blur" }
+          { required: true, message: "拟入园时间不能为空", trigger: "blur" },
         ],
         sqtysj: [
-          { required: true, message: "申请体验时间不能为空", trigger: "blur" }
+          { required: true, message: "申请体验时间不能为空", trigger: "blur" },
         ],
         swxw: [
-          { required: true, message: "下午或下午不能为空", trigger: "blur" }
+          { required: true, message: "下午或下午不能为空", trigger: "blur" },
         ],
         hfrn: [
-          { required: true, message: "回复内容不能为空", trigger: "blur" }
+          { required: true, message: "回复内容不能为空", trigger: "blur" },
         ],
         yzzs: [
-          { required: true, message: "园长指示不能为空", trigger: "blur" }
+          { required: true, message: "园长指示不能为空", trigger: "blur" },
         ],
         tynrid: [
-          { required: true, message: "体验内容不能为空", trigger: "blur" }
-        ]
-      }
+          { required: true, message: "体验内容不能为空", trigger: "blur" },
+        ],
+      },
     };
   },
   created() {
     this.getList();
     this.getUser();
     this.getTynr();
-    this.getDicts("sys_dm_swxw").then(response => {
+    this.getDicts("sys_dm_swxw").then((response) => {
       this.swxwOptions = response.data;
     });
-    this.getDicts("sys_yes_no").then(response => {
+    this.getDicts("sys_yes_no").then((response) => {
       this.ynOptions = response.data;
     });
-    this.getDicts("sys_dm_tyjg").then(response => {
+    this.getDicts("sys_dm_tyjg").then((response) => {
       this.tyjgOptions = response.data;
     });
   },
   methods: {
     getTynr() {
-      listHalfdayplan(null).then(response => {
+      listHalfdayplan(null).then((response) => {
         //console.log(response.rows);
         this.tynrOptions = response.rows;
       });
     },
     getUser() {
-      getUserProfile().then(response => {
+      getUserProfile().then((response) => {
         var domain = window.location.host;
         //console.log(domain);
         //this.user = response.data;
@@ -475,7 +488,7 @@ export default {
     tynrFormat(row, column) {
       var actions = [];
       var datas = this.tynrOptions;
-      Object.keys(datas).map(key => {
+      Object.keys(datas).map((key) => {
         if (datas[key].id == row.tynrid) {
           actions.push(datas[key].title);
           return false;
@@ -494,7 +507,7 @@ export default {
     /** 查询入班体验申请列表 */
     getList() {
       this.loading = true;
-      listExperience(this.queryParams).then(response => {
+      listExperience(this.queryParams).then((response) => {
         this.experienceList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -525,7 +538,7 @@ export default {
         tyjg: undefined,
         rysj: undefined,
         tynrid: undefined,
-        createTime: undefined
+        createTime: undefined,
       };
       this.resetForm("form");
     },
@@ -541,7 +554,7 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.id);
+      this.ids = selection.map((item) => item.id);
       this.single = selection.length != 1;
       this.multiple = !selection.length;
     },
@@ -553,14 +566,14 @@ export default {
     },
     copy(e, text) {
       const clipboard = new Clipboard(e.target, { text: () => text });
-      clipboard.on("success", e => {
+      clipboard.on("success", (e) => {
         this.msgSuccess("复制成功");
         // 释放内存
         clipboard.off("error");
         clipboard.off("success");
         clipboard.destroy();
       });
-      clipboard.on("error", e => {
+      clipboard.on("error", (e) => {
         // 不支持复制
         this.msgError("手机权限不支持复制功能");
         // 释放内存
@@ -574,7 +587,7 @@ export default {
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids;
-      getExperience(id).then(response => {
+      getExperience(id).then((response) => {
         this.form = response.data;
         this.open = true;
         this.title = "修改入班体验申请";
@@ -590,11 +603,11 @@ export default {
       });
     },
     /** 提交按钮 */
-    submitForm: function() {
-      this.$refs["form"].validate(valid => {
+    submitForm: function () {
+      this.$refs["form"].validate((valid) => {
         if (valid) {
           if (this.form.id != undefined) {
-            updateExperience(this.form).then(response => {
+            updateExperience(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("修改成功");
                 this.open = false;
@@ -602,7 +615,7 @@ export default {
               }
             });
           } else {
-            addExperience(this.form).then(response => {
+            addExperience(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("新增成功");
                 this.open = false;
@@ -622,18 +635,35 @@ export default {
         {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
-          type: "warning"
+          type: "warning",
         }
       )
-        .then(function() {
+        .then(function () {
           return delExperience(ids);
         })
         .then(() => {
           this.getList();
           this.msgSuccess("删除成功");
         })
-        .catch(function() {});
-    }
-  }
+        .catch(function () {});
+    },
+  },
 };
 </script>
+<style lang="scss" scoped>
+.el-select {
+  width: 100%;
+}
+.my-date-picker {
+  width: 100%;
+}
+.edit-btns {
+  .el-button {
+    display: block;
+    margin: 0 auto;
+  }
+}
+.no-margin ::v-deep.el-form-item__content {
+  margin: 0 !important;
+}
+</style>

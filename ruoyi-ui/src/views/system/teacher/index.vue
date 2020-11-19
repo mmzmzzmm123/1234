@@ -1,26 +1,25 @@
 <template>
   <div class="app-container">
-    <el-form
-      :model="queryParams"
-      ref="queryForm"
-      :inline="true"
-      label-width="68px"
-    >
-      <el-form-item label="用户名称" prop="userid">
-        <el-select
-          v-model="queryParams.userid"
-          filterable
-          placeholder="请选择用户"
-        >
-          <el-option
-            v-for="item in teacherListAll"
-            :key="item.userid"
-            :label="item.user.nickName"
-            :value="item.userid"
-          />
-        </el-select>
-      </el-form-item>
-      <!--<el-form-item label="证件号码" prop="zjhm">
+    <el-form :model="queryParams" ref="queryForm" label-width="70px">
+      <el-row :gutter="10">
+        <el-col :xs="24" :ms="12" :md="5">
+          <el-form-item label="用户名称" prop="userid">
+            <el-select
+              v-model="queryParams.userid"
+              filterable
+              placeholder="请选择用户"
+            >
+              <el-option
+                v-for="item in teacherListAll"
+                :key="item.userid"
+                :label="item.user.nickName"
+                :value="item.userid"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :ms="12" :md="5">
+          <!--<el-form-item label="证件号码" prop="zjhm">
         <el-input
           v-model="queryParams.zjhm"
           placeholder="请输入证件号码"
@@ -29,33 +28,37 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>-->
-      <el-form-item label="学历" prop="xl">
-        <el-select
-          v-model="queryParams.xl"
-          placeholder="请选择学历"
-          clearable
-          size="small"
-        >
-          <el-option
-            v-for="dict in xlOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item>
-        <el-button
-          type="primary"
-          icon="el-icon-search"
-          size="mini"
-          @click="handleQuery"
-          >搜索</el-button
-        >
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
-          >重置</el-button
-        >
-      </el-form-item>
+          <el-form-item label="教师学历" prop="xl">
+            <el-select
+              v-model="queryParams.xl"
+              placeholder="请选择学历"
+              clearable
+              size="small"
+            >
+              <el-option
+                v-for="dict in xlOptions"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="dict.dictValue"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :ms="12" :md="4">
+          <el-form-item class="no-margin">
+            <el-button
+              type="primary"
+              icon="el-icon-search"
+              size="mini"
+              @click="handleQuery"
+              >搜索</el-button
+            >
+            <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+              >重置</el-button
+            >
+          </el-form-item>
+        </el-col>
+      </el-row>
     </el-form>
 
     <div class="mb8 btn-list">
@@ -364,7 +367,7 @@ export default {
       this.loading = true;
       listTeacher(this.queryParams).then((response) => {
         this.teacherList = response.rows;
-        console.log(response);
+        // console.log(response);
         this.total = response.total;
         this.loading = false;
       });
@@ -525,3 +528,20 @@ export default {
   },
 };
 </script>
+<style lang="scss" scoped>
+.el-select {
+  width: 100%;
+}
+.my-date-picker {
+  width: 100%;
+}
+.edit-btns {
+  .el-button {
+    display: block;
+    margin: 0 auto;
+  }
+}
+.no-margin ::v-deep.el-form-item__content {
+  margin: 0 !important;
+}
+</style>

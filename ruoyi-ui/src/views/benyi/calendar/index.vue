@@ -1,93 +1,135 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
-      <el-form-item label="活动类型" prop="type">
-        <el-select v-model="queryParams.type" placeholder="请选择活动类型" clearable size="small">
-          <el-option
-            v-for="dict in calendartypeOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="活动时间" prop="activitytime">
-        <el-date-picker
-          clearable
-          size="small"
-          style="width: 200px"
-          v-model="queryParams.activitytime"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="选择活动时间"
-        ></el-date-picker>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-      </el-form-item>
+    <el-form :model="queryParams" ref="queryForm" label-width="70px">
+      <el-row :gutter="10">
+        <el-col :xs="24" :ms="12" :md="5">
+          <el-form-item label="活动类型" prop="type">
+            <el-select
+              v-model="queryParams.type"
+              placeholder="请选择活动类型"
+              clearable
+              size="small"
+            >
+              <el-option
+                v-for="dict in calendartypeOptions"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="dict.dictValue"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :ms="12" :md="5">
+          <el-form-item label="活动时间" prop="activitytime">
+            <el-date-picker
+              class="my-date-picker"
+              clearable
+              size="small"
+              v-model="queryParams.activitytime"
+              type="date"
+              value-format="yyyy-MM-dd"
+              placeholder="选择活动时间"
+            ></el-date-picker>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :ms="12" :md="4">
+          <el-form-item class="no-margin"> 
+            <el-button
+              type="primary"
+              icon="el-icon-search"
+              size="mini"
+              @click="handleQuery"
+              >搜索</el-button
+            >
+            <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+              >重置</el-button
+            >
+          </el-form-item>
+        </el-col>
+      </el-row>
     </el-form>
 
-    <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          type="primary"
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['benyi:calendar:add']"
-        >新增</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['benyi:calendar:edit']"
-        >修改</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="danger"
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['benyi:calendar:remove']"
-        >删除</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['benyi:calendar:export']"
-        >导出</el-button>
-      </el-col>
-    </el-row>
+    <div class="mb8 btn-list">
+      <el-button
+        type="primary"
+        icon="el-icon-plus"
+        size="mini"
+        @click="handleAdd"
+        v-hasPermi="['benyi:calendar:add']"
+        >新增</el-button
+      >
+      <el-button
+        type="success"
+        icon="el-icon-edit"
+        size="mini"
+        :disabled="single"
+        @click="handleUpdate"
+        v-hasPermi="['benyi:calendar:edit']"
+        >修改</el-button
+      >
+      <el-button
+        type="danger"
+        icon="el-icon-delete"
+        size="mini"
+        :disabled="multiple"
+        @click="handleDelete"
+        v-hasPermi="['benyi:calendar:remove']"
+        >删除</el-button
+      >
+      <el-button
+        type="warning"
+        icon="el-icon-download"
+        size="mini"
+        @click="handleExport"
+        v-hasPermi="['benyi:calendar:export']"
+        >导出</el-button
+      >
+    </div>
 
-    <el-table v-loading="loading" :data="calendarList" @selection-change="handleSelectionChange">
+    <el-table
+      border
+      v-loading="loading"
+      :data="calendarList"
+      @selection-change="handleSelectionChange"
+    >
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="标识" align="center" prop="id" /> -->
-      <el-table-column label="名称" align="center" prop="name" />
+      <el-table-column fixed label="名称" align="center" prop="name" />
       <el-table-column
         label="活动类型"
         align="center"
         :formatter="calendartypeFormat"
         prop="type"
       />
-      <el-table-column label="活动开始时间" align="center" prop="activitytime" width="180"></el-table-column>
-      <el-table-column label="活动结束时间" align="center" prop="activityendtime" width="180"></el-table-column>
+      <el-table-column
+        label="活动开始时间"
+        align="center"
+        prop="activitytime"
+        width="180"
+      ></el-table-column>
+      <el-table-column
+        label="活动结束时间"
+        align="center"
+        prop="activityendtime"
+        width="180"
+      ></el-table-column>
       <el-table-column label="活动样式颜色" align="center" prop="stylecolor" />
-      <el-table-column label="创建时间" align="center" prop="createtime" width="180">
+      <el-table-column
+        label="创建时间"
+        align="center"
+        prop="createtime"
+        width="180"
+      >
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createtime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column
+        fixed="right"
+        label="操作"
+        align="center"
+        class-name="small-padding fixed-width"
+      >
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -95,20 +137,22 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['benyi:calendar:edit']"
-          >修改</el-button>
+            >修改</el-button
+          >
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['benyi:calendar:remove']"
-          >删除</el-button>
+            >删除</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
 
     <pagination
-      v-show="total>0"
+      v-show="total > 0"
       :total="total"
       :page.sync="queryParams.pageNum"
       :limit.sync="queryParams.pageSize"
@@ -119,17 +163,26 @@
     <el-dialog :title="title" :visible.sync="open" width="500px">
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="名称" prop="name">
-          <el-input v-model="form.name" type="textarea" placeholder="请输入内容" />
+          <el-input
+            v-model="form.name"
+            type="textarea"
+            placeholder="请输入内容"
+          />
         </el-form-item>
         <el-form-item label="活动类型">
-          <el-select v-model="form.type" placeholder="请选择活动类型" clearable size="small">
-          <el-option
-            v-for="dict in calendartypeOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
-          />
-        </el-select>
+          <el-select
+            v-model="form.type"
+            placeholder="请选择活动类型"
+            clearable
+            size="small"
+          >
+            <el-option
+              v-for="dict in calendartypeOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            />
+          </el-select>
         </el-form-item>
         <el-form-item label="起始时间" prop="activitytime">
           <el-date-picker
@@ -169,7 +222,7 @@ import {
   delCalendar,
   addCalendar,
   updateCalendar,
-  exportCalendar
+  exportCalendar,
 } from "@/api/benyi/calendar";
 
 export default {
@@ -204,29 +257,29 @@ export default {
         activityendtime: undefined,
         stylecolor: undefined,
         createuserid: undefined,
-        createtime: undefined
+        createtime: undefined,
       },
       // 表单参数
       form: {},
       // 表单校验
-      rules: {}
+      rules: {},
     };
   },
   created() {
     this.getList();
-    this.getDicts("sys_schoolcalendartype").then(response => {
+    this.getDicts("sys_schoolcalendartype").then((response) => {
       this.calendartypeOptions = response.data;
     });
   },
   methods: {
-       // 学校园历类型--字典状态字典翻译
+    // 学校园历类型--字典状态字典翻译
     calendartypeFormat(row, column) {
       return this.selectDictLabel(this.calendartypeOptions, row.type);
     },
     /** 查询园历管理(本一)列表 */
     getList() {
       this.loading = true;
-      listCalendar(this.queryParams).then(response => {
+      listCalendar(this.queryParams).then((response) => {
         this.calendarList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -247,7 +300,7 @@ export default {
         activityendtime: undefined,
         stylecolor: undefined,
         createuserid: undefined,
-        createtime: undefined
+        createtime: undefined,
       };
       this.resetForm("form");
     },
@@ -263,7 +316,7 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.id);
+      this.ids = selection.map((item) => item.id);
       this.single = selection.length != 1;
       this.multiple = !selection.length;
     },
@@ -277,18 +330,18 @@ export default {
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids;
-      getCalendar(id).then(response => {
+      getCalendar(id).then((response) => {
         this.form = response.data;
         this.open = true;
         this.title = "修改园历管理(本一)";
       });
     },
     /** 提交按钮 */
-    submitForm: function() {
-      this.$refs["form"].validate(valid => {
+    submitForm: function () {
+      this.$refs["form"].validate((valid) => {
         if (valid) {
           if (this.form.id != undefined) {
-            updateCalendar(this.form).then(response => {
+            updateCalendar(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("修改成功");
                 this.open = false;
@@ -298,7 +351,7 @@ export default {
               }
             });
           } else {
-            addCalendar(this.form).then(response => {
+            addCalendar(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("新增成功");
                 this.open = false;
@@ -320,17 +373,17 @@ export default {
         {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
-          type: "warning"
+          type: "warning",
         }
       )
-        .then(function() {
+        .then(function () {
           return delCalendar(ids);
         })
         .then(() => {
           this.getList();
           this.msgSuccess("删除成功");
         })
-        .catch(function() {});
+        .catch(function () {});
     },
     /** 导出按钮操作 */
     handleExport() {
@@ -338,16 +391,33 @@ export default {
       this.$confirm("是否确认导出所有园历管理(本一)数据项?", "警告", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning"
+        type: "warning",
       })
-        .then(function() {
+        .then(function () {
           return exportCalendar(queryParams);
         })
-        .then(response => {
+        .then((response) => {
           this.download(response.msg);
         })
-        .catch(function() {});
-    }
-  }
+        .catch(function () {});
+    },
+  },
 };
 </script>
+<style lang="scss" scoped>
+.el-select {
+  width: 100%;
+}
+.my-date-picker {
+  width: 100%;
+}
+.edit-btns {
+  .el-button {
+    display: block;
+    margin: 0 auto;
+  }
+}
+.no-margin ::v-deep.el-form-item__content {
+  margin: 0 !important;
+}
+</style>

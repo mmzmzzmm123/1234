@@ -1,43 +1,46 @@
 <template>
   <div class="app-container">
-    <el-form
-      :model="queryParams"
-      ref="queryForm"
-      :inline="true"
-      label-width="68px"
-    >
-      <el-form-item label="幼儿" prop="childid">
-        <el-select v-model="queryParams.childid" placeholder="请选择">
-          <el-option
-            v-for="dict in childOptions"
-            :key="dict.id"
-            :label="dict.name"
-            :value="dict.id"
-          ></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="学年学期" prop="xnxq">
-        <el-select v-model="queryParams.xnxq" placeholder="请选择">
-          <el-option
-            v-for="dict in xnxqOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
-          ></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item>
-        <el-button
-          type="primary"
-          icon="el-icon-search"
-          size="mini"
-          @click="handleQuery"
-          >搜索</el-button
-        >
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
-          >重置</el-button
-        >
-      </el-form-item>
+    <el-form :model="queryParams" ref="queryForm" label-width="70px">
+      <el-row :gutter="10">
+        <el-col :xs="24" :ms="12" :md="5">
+          <el-form-item label="幼儿姓名" prop="childid">
+            <el-select v-model="queryParams.childid" placeholder="请选择幼儿">
+              <el-option
+                v-for="dict in childOptions"
+                :key="dict.id"
+                :label="dict.name"
+                :value="dict.id"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :ms="12" :md="5">
+          <el-form-item label="学年学期" prop="xnxq">
+            <el-select v-model="queryParams.xnxq" placeholder="请选择">
+              <el-option
+                v-for="dict in xnxqOptions"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="dict.dictValue"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :ms="12" :md="4">
+          <el-form-item class="no-margin">
+            <el-button
+              type="primary"
+              icon="el-icon-search"
+              size="mini"
+              @click="handleQuery"
+              >搜索</el-button
+            >
+            <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+              >重置</el-button
+            >
+          </el-form-item>
+        </el-col>
+      </el-row>
     </el-form>
 
     <div class="mb8 btn-list">
@@ -50,13 +53,14 @@
         >新增</el-button
       >
       <el-button
-          type="success"
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['benyi:learndevelopmentteacher:edit']"
-        >修改</el-button>
+        type="success"
+        icon="el-icon-edit"
+        size="mini"
+        :disabled="single"
+        @click="handleUpdate"
+        v-hasPermi="['benyi:learndevelopmentteacher:edit']"
+        >修改</el-button
+      >
       <el-button
         type="danger"
         icon="el-icon-delete"
@@ -69,6 +73,7 @@
     </div>
 
     <el-table
+      border
       v-loading="loading"
       :data="teacherList"
       @selection-change="handleSelectionChange"
@@ -76,6 +81,7 @@
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="编号" align="center" prop="id" /> -->
       <el-table-column
+        fixed
         label="幼儿"
         align="center"
         prop="childid"
@@ -97,6 +103,7 @@
       <el-table-column label="教育计划备注" align="center" prop="jyjhremarks" />
       <el-table-column label="创建人" align="center" prop="createuserid" />-->
       <el-table-column
+        fixed="right"
         label="操作"
         align="center"
         width="120"
@@ -132,12 +139,17 @@
     />
 
     <!-- 添加或修改儿童学习与发展档案（教师）对话框 -->
-    <el-dialog :title="title" :visible.sync="open" class="big-dialog" append-to-body>
+    <el-dialog
+      :title="title"
+      :visible.sync="open"
+      class="big-dialog"
+      append-to-body
+    >
       <el-row :gutter="15">
         <el-form ref="form" :model="form" :rules="rules" label-width="90px">
           <el-col :span="12">
-            <el-form-item label="幼儿" prop="childid">
-              <el-select v-model="form.childid" placeholder="请选择">
+            <el-form-item label="幼儿姓名" prop="childid">
+              <el-select v-model="form.childid" placeholder="请选择幼儿">
                 <el-option
                   v-for="dict in childOptions"
                   :key="dict.id"
@@ -149,7 +161,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="学年学期" prop="xnxq">
-              <el-select v-model="form.xnxq" placeholder="请选择">
+              <el-select v-model="form.xnxq" placeholder="请选择学年学期">
                 <el-option
                   v-for="dict in xnxqOptions"
                   :key="dict.dictValue"
@@ -231,7 +243,7 @@ import {
   getTeacher,
   delTeacher,
   addTeacher,
-  updateTeacher
+  updateTeacher,
 } from "@/api/benyi/learndevelopmentteacher";
 
 import { listChild } from "@/api/benyi/child";
@@ -241,7 +253,7 @@ import Editor from "@/components/Editor";
 export default {
   name: "Teacher",
   components: {
-    Editor
+    Editor,
   },
   data() {
     return {
@@ -279,21 +291,23 @@ export default {
         pgjgremarks: undefined,
         jyjh: undefined,
         jyjhremarks: undefined,
-        createuserid: undefined
+        createuserid: undefined,
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
         childid: [{ required: true, message: "幼儿不能为空", trigger: "blur" }],
-        xnxq: [{ required: true, message: "学年学期不能为空", trigger: "blur" }]
-      }
+        xnxq: [
+          { required: true, message: "学年学期不能为空", trigger: "blur" },
+        ],
+      },
     };
   },
   created() {
     this.getList();
     this.getChildList();
-    this.getDicts("sys_xnxq").then(response => {
+    this.getDicts("sys_xnxq").then((response) => {
       this.xnxqOptions = response.data;
     });
   },
@@ -303,7 +317,7 @@ export default {
       // return this.selectDictLabel(this.classOptions, row.classid);
       var actions = [];
       var datas = this.childOptions;
-      Object.keys(datas).map(key => {
+      Object.keys(datas).map((key) => {
         if (datas[key].id == "" + row.childid) {
           actions.push(datas[key].name);
           return false;
@@ -317,14 +331,14 @@ export default {
     },
     //获取幼儿列表
     getChildList() {
-      listChild(null).then(response => {
+      listChild(null).then((response) => {
         this.childOptions = response.rows;
       });
     },
     /** 查询儿童学习与发展档案（教师）列表 */
     getList() {
       this.loading = true;
-      listTeacher(this.queryParams).then(response => {
+      listTeacher(this.queryParams).then((response) => {
         this.teacherList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -350,7 +364,7 @@ export default {
         jyjh: undefined,
         jyjhremarks: undefined,
         createuserid: undefined,
-        createTime: undefined
+        createTime: undefined,
       };
       this.resetForm("form");
     },
@@ -366,7 +380,7 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.id);
+      this.ids = selection.map((item) => item.id);
       this.single = selection.length != 1;
       this.multiple = !selection.length;
     },
@@ -380,18 +394,18 @@ export default {
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids;
-      getTeacher(id).then(response => {
+      getTeacher(id).then((response) => {
         this.form = response.data;
         this.open = true;
         this.title = "修改儿童学习与发展档案（教师）";
       });
     },
     /** 提交按钮 */
-    submitForm: function() {
-      this.$refs["form"].validate(valid => {
+    submitForm: function () {
+      this.$refs["form"].validate((valid) => {
         if (valid) {
           if (this.form.id != undefined) {
-            updateTeacher(this.form).then(response => {
+            updateTeacher(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("修改成功");
                 this.open = false;
@@ -399,7 +413,7 @@ export default {
               }
             });
           } else {
-            addTeacher(this.form).then(response => {
+            addTeacher(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("新增成功");
                 this.open = false;
@@ -419,18 +433,35 @@ export default {
         {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
-          type: "warning"
+          type: "warning",
         }
       )
-        .then(function() {
+        .then(function () {
           return delTeacher(ids);
         })
         .then(() => {
           this.getList();
           this.msgSuccess("删除成功");
         })
-        .catch(function() {});
-    }
-  }
+        .catch(function () {});
+    },
+  },
 };
 </script>
+<style lang="scss" scoped>
+.el-select {
+  width: 100%;
+}
+.my-date-picker {
+  width: 100%;
+}
+.edit-btns {
+  .el-button {
+    display: block;
+    margin: 0 auto;
+  }
+}
+.no-margin ::v-deep.el-form-item__content {
+  margin: 0 !important;
+}
+</style>

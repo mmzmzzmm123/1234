@@ -1,32 +1,33 @@
 <template>
   <div class="app-container">
-    <el-form
-      :model="queryParams"
-      ref="queryForm"
-      :inline="true"
-      label-width="68px"
-    >
-      <el-form-item label="体验标题" prop="title">
-        <el-input
-          v-model="queryParams.title"
-          placeholder="请输入标题"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item>
-        <el-button
-          type="primary"
-          icon="el-icon-search"
-          size="mini"
-          @click="handleQuery"
-          >搜索</el-button
-        >
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
-          >重置</el-button
-        >
-      </el-form-item>
+    <el-form :model="queryParams" ref="queryForm" label-width="70px">
+      <el-row :gutter="10">
+        <el-col :xs="24" :ms="12" :md="5">
+          <el-form-item label="体验标题" prop="title">
+            <el-input
+              v-model="queryParams.title"
+              placeholder="请输入标题"
+              clearable
+              size="small"
+              @keyup.enter.native="handleQuery"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :ms="12" :md="5">
+          <el-form-item class="no-margin">
+            <el-button
+              type="primary"
+              icon="el-icon-search"
+              size="mini"
+              @click="handleQuery"
+              >搜索</el-button
+            >
+            <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+              >重置</el-button
+            >
+          </el-form-item>
+        </el-col>
+      </el-row>
     </el-form>
 
     <div class="mb8 btn-list">
@@ -41,13 +42,14 @@
     </div>
 
     <el-table
+      border
       v-loading="loading"
       :data="halfdayplanList"
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="编号" align="center" prop="id" /> -->
-      <el-table-column label="标题" align="center" prop="title" />
+      <el-table-column fixed label="标题" align="center" prop="title" />
       <el-table-column
         label="类型"
         align="center"
@@ -55,8 +57,10 @@
         :formatter="typeFormat"
       />
       <el-table-column
+        fixed="right"
         label="操作"
         align="center"
+        width="180"
         class-name="small-padding fixed-width"
       >
         <template slot-scope="scope">
@@ -108,7 +112,12 @@
     />
 
     <!-- 添加或修改入园半日体验计划对话框 -->
-    <el-dialog :title="title" :visible.sync="open" class="big-dialog" append-to-body>
+    <el-dialog
+      :title="title"
+      :visible.sync="open"
+      class="big-dialog"
+      append-to-body
+    >
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="标题" prop="title">
           <el-input v-model="form.title" placeholder="请输入标题" />
@@ -134,7 +143,7 @@ import {
   delHalfdayplan,
   addHalfdayplan,
   updateHalfdayplan,
-  copyHalfdayplan
+  copyHalfdayplan,
 } from "@/api/benyi/halfdayplan";
 
 import Editor from "@/components/Editor";
@@ -142,7 +151,7 @@ import Editor from "@/components/Editor";
 export default {
   name: "Halfdayplan",
   components: {
-    Editor
+    Editor,
   },
   data() {
     return {
@@ -172,20 +181,20 @@ export default {
         schoolid: undefined,
         classid: undefined,
         title: undefined,
-        content: undefined
+        content: undefined,
       },
       // 表单参数
       form: { name: "", phone: "" },
       // 表单校验
       rules: {
         title: [{ required: true, message: "标题不能为空", trigger: "blur" }],
-        content: [{ required: true, message: "内容不能为空", trigger: "blur" }]
-      }
+        content: [{ required: true, message: "内容不能为空", trigger: "blur" }],
+      },
     };
   },
   created() {
     this.getList();
-    this.getDicts("sys_dm_noticetype").then(response => {
+    this.getDicts("sys_dm_noticetype").then((response) => {
       this.typeOptions = response.data;
     });
   },
@@ -205,7 +214,7 @@ export default {
     /** 查询入园半日体验计划列表 */
     getList() {
       this.loading = true;
-      listHalfdayplan(this.queryParams).then(response => {
+      listHalfdayplan(this.queryParams).then((response) => {
         this.halfdayplanList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -224,7 +233,7 @@ export default {
         classid: undefined,
         title: undefined,
         content: undefined,
-        createTime: undefined
+        createTime: undefined,
       };
       this.resetForm("form");
     },
@@ -240,7 +249,7 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.id);
+      this.ids = selection.map((item) => item.id);
       this.single = selection.length != 1;
       this.multiple = !selection.length;
     },
@@ -248,7 +257,7 @@ export default {
     handleView(row) {
       this.reset();
       const id = row.id || this.ids;
-      getHalfdayplan(id).then(response => {
+      getHalfdayplan(id).then((response) => {
         this.form = response.data;
         this.open = true;
         this.title = "入园半日体验计划详情";
@@ -266,7 +275,7 @@ export default {
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids;
-      getHalfdayplan(id).then(response => {
+      getHalfdayplan(id).then((response) => {
         this.form = response.data;
         this.open = true;
         this.title = "修改入园半日体验计划";
@@ -274,11 +283,11 @@ export default {
       });
     },
     /** 提交按钮 */
-    submitForm: function() {
-      this.$refs["form"].validate(valid => {
+    submitForm: function () {
+      this.$refs["form"].validate((valid) => {
         if (valid) {
           if (this.form.id != undefined) {
-            updateHalfdayplan(this.form).then(response => {
+            updateHalfdayplan(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("修改成功");
                 this.open = false;
@@ -286,7 +295,7 @@ export default {
               }
             });
           } else {
-            addHalfdayplan(this.form).then(response => {
+            addHalfdayplan(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("新增成功");
                 this.open = false;
@@ -306,17 +315,17 @@ export default {
         {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
-          type: "warning"
+          type: "warning",
         }
       )
-        .then(function() {
+        .then(function () {
           return delHalfdayplan(ids);
         })
         .then(() => {
           this.getList();
           this.msgSuccess("删除成功");
         })
-        .catch(function() {});
+        .catch(function () {});
     },
     /** 复制按钮操作 */
     handleCopy(row) {
@@ -327,18 +336,35 @@ export default {
         {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
-          type: "warning"
+          type: "warning",
         }
       )
-        .then(function() {
+        .then(function () {
           return copyHalfdayplan(id);
         })
         .then(() => {
           this.getList();
           this.msgSuccess("复制成功");
         })
-        .catch(function() {});
-    }
-  }
+        .catch(function () {});
+    },
+  },
 };
 </script>
+<style lang="scss" scoped>
+.el-select {
+  width: 100%;
+}
+.my-date-picker {
+  width: 100%;
+}
+.edit-btns {
+  .el-button {
+    display: block;
+    margin: 0 auto;
+  }
+}
+.no-margin ::v-deep.el-form-item__content {
+  margin: 0 !important;
+}
+</style>

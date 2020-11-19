@@ -1,57 +1,61 @@
 <template>
   <div class="app-container">
-    <el-form
-      :model="queryParams"
-      ref="queryForm"
-      :inline="true"
-      label-width="68px"
-    >
-      <el-form-item label="选择幼儿" prop="childid">
-        <el-select
-          v-model="queryParams.childid"
-          placeholder="请输入选择幼儿"
-          clearable
-          size="small"
-          style="width: 240px"
-        >
-          <el-option
-            v-for="dict in childOptions"
-            :key="dict.id"
-            :label="dict.name"
-            :value="dict.id"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="父亲姓名" prop="fathername">
-        <el-input
-          v-model="queryParams.fathername"
-          placeholder="请输入父亲姓名"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="母亲姓名" prop="mothername">
-        <el-input
-          v-model="queryParams.mothername"
-          placeholder="请输入母亲姓名"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item>
-        <el-button
-          type="primary"
-          icon="el-icon-search"
-          size="mini"
-          @click="handleQuery"
-          >搜索</el-button
-        >
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
-          >重置</el-button
-        >
-      </el-form-item>
+    <el-form :model="queryParams" ref="queryForm" label-width="70px">
+      <el-row :gutter="10">
+        <el-col :xs="24" :ms="12" :md="5">
+          <el-form-item label="幼儿姓名" prop="childid">
+            <el-select
+              v-model="queryParams.childid"
+              placeholder="请输入选择幼儿"
+              clearable
+              size="small"
+            >
+              <el-option
+                v-for="dict in childOptions"
+                :key="dict.id"
+                :label="dict.name"
+                :value="dict.id"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :ms="12" :md="5">
+          <el-form-item label="父亲姓名" prop="fathername">
+            <el-input
+              v-model="queryParams.fathername"
+              placeholder="请输入父亲姓名"
+              clearable
+              size="small"
+              @keyup.enter.native="handleQuery"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :ms="12" :md="5">
+          <el-form-item label="母亲姓名" prop="mothername">
+            <el-input
+              v-model="queryParams.mothername"
+              placeholder="请输入母亲姓名"
+              clearable
+              size="small"
+              @keyup.enter.native="handleQuery"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :ms="12" :md="4">
+          <el-form-item class="no-margin">
+            <el-button
+              type="primary"
+              icon="el-icon-search"
+              size="mini"
+              @click="handleQuery"
+              >搜索</el-button
+            >
+            <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+              >重置</el-button
+            >
+          </el-form-item>
+        </el-col>
+      </el-row>
     </el-form>
 
     <div class="mb8 btn-list">
@@ -86,7 +90,7 @@
     </div>
 
     <el-table
-    border
+      border
       v-loading="loading"
       :data="contactpeopleList"
       @selection-change="handleSelectionChange"
@@ -100,11 +104,31 @@
         :formatter="childFormat"
       />
       <el-table-column label="父亲姓名" align="center" prop="fathername" />
-      <el-table-column label="父亲联系电话" width="120" align="center" prop="fphone" />
-      <el-table-column label="父亲办公电话" width="120" align="center" prop="foffphone" />
+      <el-table-column
+        label="父亲联系电话"
+        width="120"
+        align="center"
+        prop="fphone"
+      />
+      <el-table-column
+        label="父亲办公电话"
+        width="120"
+        align="center"
+        prop="foffphone"
+      />
       <el-table-column label="母亲姓名" align="center" prop="mothername" />
-      <el-table-column label="母亲联系电话" width="120" align="center" prop="mphone" />
-      <el-table-column label="母亲办公电话" width="120" align="center" prop="moffphone" />
+      <el-table-column
+        label="母亲联系电话"
+        width="120"
+        align="center"
+        prop="mphone"
+      />
+      <el-table-column
+        label="母亲办公电话"
+        width="120"
+        align="center"
+        prop="moffphone"
+      />
       <el-table-column
         label="操作"
         align="center"
@@ -141,7 +165,12 @@
     />
 
     <!-- 添加或修改幼儿紧急情况联系人对话框 -->
-    <el-dialog :title="title" :visible.sync="open" class="big-dialog" append-to-body>
+    <el-dialog
+      :title="title"
+      :visible.sync="open"
+      class="big-dialog"
+      append-to-body
+    >
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
         <el-row :gutter="15">
           <el-col :span="24">
@@ -306,7 +335,7 @@ import {
   getContactpeople,
   delContactpeople,
   addContactpeople,
-  updateContactpeople
+  updateContactpeople,
 } from "@/api/benyi/contactpeople";
 
 import { listChild } from "@/api/benyi/child";
@@ -355,20 +384,20 @@ export default {
         gmgx: undefined,
         gmphone: undefined,
         gmaddress: undefined,
-        gmoffphone: undefined
+        gmoffphone: undefined,
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
-        childid: [{ required: true, message: "请选择幼儿", trigger: "blur" }]
-      }
+        childid: [{ required: true, message: "请选择幼儿", trigger: "blur" }],
+      },
     };
   },
   created() {
     this.getList();
     this.getChildList();
-    this.getDicts("sys_dm_jtgx").then(response => {
+    this.getDicts("sys_dm_jtgx").then((response) => {
       this.jtgxOptions = response.data;
     });
   },
@@ -378,7 +407,7 @@ export default {
       // return this.selectDictLabel(this.classOptions, row.classid);
       var actions = [];
       var datas = this.childOptions;
-      Object.keys(datas).map(key => {
+      Object.keys(datas).map((key) => {
         if (datas[key].id == "" + row.childid) {
           actions.push(datas[key].name);
           return false;
@@ -388,14 +417,14 @@ export default {
     },
     /** 查询幼儿信息列表 */
     getChildList() {
-      listChild(null).then(response => {
+      listChild(null).then((response) => {
         this.childOptions = response.rows;
       });
     },
     /** 查询幼儿紧急情况联系人列表 */
     getList() {
       this.loading = true;
-      listContactpeople(this.queryParams).then(response => {
+      listContactpeople(this.queryParams).then((response) => {
         this.contactpeopleList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -427,7 +456,7 @@ export default {
         gmphone: undefined,
         gmaddress: undefined,
         gmoffphone: undefined,
-        createTime: undefined
+        createTime: undefined,
       };
       this.resetForm("form");
     },
@@ -443,7 +472,7 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.id);
+      this.ids = selection.map((item) => item.id);
       this.single = selection.length != 1;
       this.multiple = !selection.length;
     },
@@ -457,18 +486,18 @@ export default {
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids;
-      getContactpeople(id).then(response => {
+      getContactpeople(id).then((response) => {
         this.form = response.data;
         this.open = true;
         this.title = "修改幼儿紧急情况联系人";
       });
     },
     /** 提交按钮 */
-    submitForm: function() {
-      this.$refs["form"].validate(valid => {
+    submitForm: function () {
+      this.$refs["form"].validate((valid) => {
         if (valid) {
           if (this.form.id != undefined) {
-            updateContactpeople(this.form).then(response => {
+            updateContactpeople(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("修改成功");
                 this.open = false;
@@ -476,7 +505,7 @@ export default {
               }
             });
           } else {
-            addContactpeople(this.form).then(response => {
+            addContactpeople(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("新增成功");
                 this.open = false;
@@ -493,17 +522,35 @@ export default {
       this.$confirm("是否确认删除幼儿紧急情况联系人数据项?", "警告", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning"
+        type: "warning",
       })
-        .then(function() {
+        .then(function () {
           return delContactpeople(ids);
         })
         .then(() => {
           this.getList();
           this.msgSuccess("删除成功");
         })
-        .catch(function() {});
-    }
-  }
+        .catch(function () {});
+    },
+  },
 };
 </script>
+<style lang="scss" scoped>
+.el-select {
+  width: 100%;
+}
+.my-date-picker {
+  width: 100%;
+}
+.edit-btns {
+  .el-button {
+    display: block;
+    margin: 0 auto;
+  }
+}
+.no-margin ::v-deep.el-form-item__content {
+  margin: 0 !important;
+}
+</style>
+

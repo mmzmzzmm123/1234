@@ -63,11 +63,11 @@ export default {
     async getData() {
       await getAssessmentStatistics(this.childId, this.psMsg).then(
         (response) => {
-          console.log(response);
+          // console.log(response);
           let value = [];
           let len = response.statistics;
           for (var j = 0; j < len.length; j++) {
-            console.log(len[j]);
+            // console.log(len[j]);
             if (len[j] == "NaN") {
               value.push(0);
             } else {

@@ -31,62 +31,68 @@
       <!--用户数据-->
       <el-col :span="20" :xs="24">
         <div class="box-shadow">
-          <el-form
-            :model="queryParams"
-            ref="queryForm"
-            :inline="true"
-            label-width="68px"
-          >
-            <el-form-item label="登录账号" prop="userName">
-              <el-input
-                v-model="queryParams.userName"
-                placeholder="请输入用户名称"
-                clearable
-                size="small"
-                style="width: 240px"
-                @keyup.enter.native="handleQuery"
-              />
-            </el-form-item>
-            <el-form-item label="状态" prop="status">
-              <el-select
-                v-model="queryParams.status"
-                placeholder="用户状态"
-                clearable
-                size="small"
-                style="width: 240px"
-              >
-                <el-option
-                  v-for="dict in statusOptions"
-                  :key="dict.dictValue"
-                  :label="dict.dictLabel"
-                  :value="dict.dictValue"
-                />
-              </el-select>
-            </el-form-item>
-            <el-form-item label="创建时间">
-              <el-date-picker
-                v-model="dateRange"
-                size="small"
-                style="width: 240px"
-                value-format="yyyy-MM-dd"
-                type="daterange"
-                range-separator="-"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期"
-              ></el-date-picker>
-            </el-form-item>
-            <el-form-item>
-              <el-button
-                type="primary"
-                icon="el-icon-search"
-                size="mini"
-                @click="handleQuery"
-                >搜索</el-button
-              >
-              <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
-                >重置</el-button
-              >
-            </el-form-item>
+          <el-form :model="queryParams" ref="queryForm" label-width="70px">
+            <el-row :gutter="10">
+              <el-col :xs="24" :ms="12" :md="5">
+                <el-form-item label="登录账号" prop="userName">
+                  <el-input
+                    v-model="queryParams.userName"
+                    placeholder="请输入用户名称"
+                    clearable
+                    size="small"
+                    @keyup.enter.native="handleQuery"
+                  />
+                </el-form-item>
+              </el-col>
+              <el-col :xs="24" :ms="12" :md="5">
+                <el-form-item label="用户状态" prop="status">
+                  <el-select
+                    v-model="queryParams.status"
+                    placeholder="用户状态"
+                    clearable
+                    size="small"
+                  >
+                    <el-option
+                      v-for="dict in statusOptions"
+                      :key="dict.dictValue"
+                      :label="dict.dictLabel"
+                      :value="dict.dictValue"
+                    />
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :xs="24" :ms="12" :md="5">
+                <el-form-item label="创建时间">
+                  <el-date-picker
+                    v-model="dateRange"
+                    size="small"
+                    class="my-date-picker"
+                    value-format="yyyy-MM-dd"
+                    type="daterange"
+                    range-separator="-"
+                    start-placeholder="开始日期"
+                    end-placeholder="结束日期"
+                  ></el-date-picker>
+                </el-form-item>
+              </el-col>
+              <el-col :xs="24" :ms="12" :md="4">
+                <el-form-item class="no-margin">
+                  <el-button
+                    type="primary"
+                    icon="el-icon-search"
+                    size="mini"
+                    @click="handleQuery"
+                    >搜索</el-button
+                  >
+                  <el-button
+                    icon="el-icon-refresh"
+                    size="mini"
+                    @click="resetQuery"
+                    >重置</el-button
+                  >
+                </el-form-item>
+              </el-col>
+            </el-row>
           </el-form>
 
           <div class="mb8 btn-list">
@@ -99,14 +105,14 @@
               >新增</el-button
             >
             <el-button
-            type="success"
-            icon="el-icon-edit"
-            size="mini"
-            :disabled="single"
-            @click="handleUpdate"
-            v-hasPermi="['system:user:edit']"
-            >修改</el-button
-          >
+              type="success"
+              icon="el-icon-edit"
+              size="mini"
+              :disabled="single"
+              @click="handleUpdate"
+              v-hasPermi="['system:user:edit']"
+              >修改</el-button
+            >
             <el-button
               type="danger"
               icon="el-icon-delete"
@@ -135,13 +141,15 @@
           </div>
 
           <el-table
+          border
             v-loading="loading"
             :data="userList"
             @selection-change="handleSelectionChange"
           >
             <el-table-column type="selection" width="40" align="center" />
-            <el-table-column label="用户编号" align="center" prop="userId" />
+            <!-- <el-table-column label="用户编号" align="center" prop="userId" /> -->
             <el-table-column
+            fixed
               label="登录账号"
               align="center"
               prop="userName"
@@ -180,6 +188,7 @@
               </template>
             </el-table-column>
             <el-table-column
+            fixed="right"
               label="操作"
               align="center"
               width="180"
@@ -369,11 +378,11 @@
           <el-checkbox
             v-model="upload.updateSupport"
           />是否更新已经存在的用户数据
-          <el-link type="info" style="font-size:12px" @click="importTemplate"
+          <el-link type="info" style="font-size: 12px" @click="importTemplate"
             >下载模板</el-link
           >
         </div>
-        <div class="el-upload__tip" style="color:red" slot="tip">
+        <div class="el-upload__tip" style="color: red" slot="tip">
           提示：仅允许导入“xls”或“xlsx”格式文件！
         </div>
       </el-upload>
@@ -395,7 +404,7 @@ import {
   exportUser,
   resetUserPwd,
   changeUserStatus,
-  importTemplate
+  importTemplate,
 } from "@/api/system/user";
 import { getToken } from "@/utils/auth";
 import { treeselect } from "@/api/system/dept";
@@ -447,7 +456,7 @@ export default {
       form: {},
       defaultProps: {
         children: "children",
-        label: "label"
+        label: "label",
       },
       // 用户导入参数
       upload: {
@@ -462,7 +471,7 @@ export default {
         // 设置上传的请求头部
         headers: { Authorization: "Bearer " + getToken() },
         // 上传的地址
-        url: process.env.VUE_APP_BASE_API + "/system/user/importData"
+        url: process.env.VUE_APP_BASE_API + "/system/user/importData",
       },
       // 查询参数
       queryParams: {
@@ -470,7 +479,7 @@ export default {
         pageSize: 10,
         userName: undefined,
         status: undefined,
-        deptId: undefined
+        deptId: undefined,
       },
       // 表单校验
       rules: {
@@ -479,37 +488,37 @@ export default {
             required: true,
             pattern: /^1[3|4|5|6|7|8|9][0-9]\d{8}$/,
             message: "请输入正确的手机号码",
-            trigger: "blur"
-          }
+            trigger: "blur",
+          },
         ],
         nickName: [
-          { required: true, message: "用户昵称不能为空", trigger: "blur" }
+          { required: true, message: "用户昵称不能为空", trigger: "blur" },
         ],
         deptId: [
-          { required: true, message: "归属部门不能为空", trigger: "blur" }
+          { required: true, message: "归属部门不能为空", trigger: "blur" },
         ],
         password: [
-          { required: true, message: "用户密码不能为空", trigger: "blur" }
-        ]
-      }
+          { required: true, message: "用户密码不能为空", trigger: "blur" },
+        ],
+      },
     };
   },
   watch: {
     // 根据名称筛选部门树
     deptName(val) {
       this.$refs.tree.filter(val);
-    }
+    },
   },
   created() {
     this.getList();
     this.getTreeselect();
-    this.getDicts("sys_normal_disable").then(response => {
+    this.getDicts("sys_normal_disable").then((response) => {
       this.statusOptions = response.data;
     });
-    this.getDicts("sys_user_sex").then(response => {
+    this.getDicts("sys_user_sex").then((response) => {
       this.sexOptions = response.data;
     });
-    this.getConfigKey("sys.user.initPassword").then(response => {
+    this.getConfigKey("sys.user.initPassword").then((response) => {
       this.initPassword = response.msg;
     });
   },
@@ -518,7 +527,7 @@ export default {
     getList() {
       this.loading = true;
       listUser(this.addDateRange(this.queryParams, this.dateRange)).then(
-        response => {
+        (response) => {
           this.userList = response.rows;
           this.total = response.total;
           this.loading = false;
@@ -527,7 +536,7 @@ export default {
     },
     /** 查询部门下拉树结构 */
     getTreeselect() {
-      treeselect().then(response => {
+      treeselect().then((response) => {
         this.deptOptions = response.data;
         //console.log(this.deptOptions);
       });
@@ -551,16 +560,16 @@ export default {
         {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
-          type: "warning"
+          type: "warning",
         }
       )
-        .then(function() {
+        .then(function () {
           return changeUserStatus(row.userId, row.status);
         })
         .then(() => {
           this.msgSuccess(text + "成功");
         })
-        .catch(function() {
+        .catch(function () {
           row.status = row.status === "0" ? "1" : "0";
         });
     },
@@ -581,7 +590,7 @@ export default {
         status: "0",
         remark: undefined,
         postIds: [],
-        roleIds: []
+        roleIds: [],
       };
       this.resetForm("form");
     },
@@ -598,7 +607,7 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.userId);
+      this.ids = selection.map((item) => item.userId);
       this.single = selection.length != 1;
       this.multiple = !selection.length;
     },
@@ -606,7 +615,7 @@ export default {
     handleAdd() {
       this.reset();
       this.getTreeselect();
-      getUser().then(response => {
+      getUser().then((response) => {
         this.postOptions = response.posts;
         this.roleOptions = response.roles;
         //console.log("school="+response.isSchool);
@@ -626,7 +635,7 @@ export default {
       this.reset();
       this.getTreeselect();
       const userId = row.userId || this.ids;
-      getUser(userId).then(response => {
+      getUser(userId).then((response) => {
         this.form = response.data;
         this.postOptions = response.posts;
         this.roleOptions = response.roles;
@@ -649,10 +658,10 @@ export default {
     handleResetPwd(row) {
       this.$prompt('请输入"' + row.userName + '"的新密码', "提示", {
         confirmButtonText: "确定",
-        cancelButtonText: "取消"
+        cancelButtonText: "取消",
       })
         .then(({ value }) => {
-          resetUserPwd(row.userId, value).then(response => {
+          resetUserPwd(row.userId, value).then((response) => {
             if (response.code === 200) {
               this.msgSuccess("修改成功，新密码是：" + value);
             } else {
@@ -663,11 +672,11 @@ export default {
         .catch(() => {});
     },
     /** 提交按钮 */
-    submitForm: function() {
-      this.$refs["form"].validate(valid => {
+    submitForm: function () {
+      this.$refs["form"].validate((valid) => {
         if (valid) {
           if (this.form.userId != undefined) {
-            updateUser(this.form).then(response => {
+            updateUser(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("修改成功");
                 this.open = false;
@@ -677,7 +686,7 @@ export default {
               }
             });
           } else {
-            addUser(this.form).then(response => {
+            addUser(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("新增成功");
                 this.open = false;
@@ -699,17 +708,17 @@ export default {
         {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
-          type: "warning"
+          type: "warning",
         }
       )
-        .then(function() {
+        .then(function () {
           return delUser(userIds);
         })
         .then(() => {
           this.getList();
           this.msgSuccess("删除成功");
         })
-        .catch(function() {});
+        .catch(function () {});
     },
     /** 导出按钮操作 */
     handleExport() {
@@ -717,15 +726,15 @@ export default {
       this.$confirm("是否确认导出所有用户数据项?", "警告", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning"
+        type: "warning",
       })
-        .then(function() {
+        .then(function () {
           return exportUser(queryParams);
         })
-        .then(response => {
+        .then((response) => {
           this.download(response.msg);
         })
-        .catch(function() {});
+        .catch(function () {});
     },
     /** 导入按钮操作 */
     handleImport() {
@@ -734,7 +743,7 @@ export default {
     },
     /** 下载模板操作 */
     importTemplate() {
-      importTemplate().then(response => {
+      importTemplate().then((response) => {
         this.download(response.msg);
       });
     },
@@ -753,8 +762,8 @@ export default {
     // 提交上传文件
     submitFileForm() {
       this.$refs.upload.submit();
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>
@@ -773,5 +782,20 @@ export default {
   border-radius: 5px;
   padding: 10px 15px;
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+}
+.el-select {
+  width: 100%;
+}
+.my-date-picker {
+  width: 100%;
+}
+.edit-btns {
+  .el-button {
+    display: block;
+    margin: 0 auto;
+  }
+}
+.no-margin ::v-deep.el-form-item__content {
+  margin: 0 !important;
 }
 </style>
