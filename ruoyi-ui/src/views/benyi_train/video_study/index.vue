@@ -1,17 +1,19 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
-      <el-form-item label="视频类别" prop="type">
-        <el-cascader
-          placeholder="请选择视频类别"
-          v-model="queryParams.type"
-          :options="optionTypes"
-          :props="{ checkStrictly: true, value: 'id', label: 'name' }"
-          clearable
-        ></el-cascader>
-      </el-form-item>
-      <!-- 博士要求注释掉，不需要该过滤条件 2020-05-30 zlp -->
-      <!-- <el-form-item label="讲师姓名" prop="lecturer">
+    <el-form :model="queryParams" ref="queryForm" label-width="70px">
+      <el-row :gutter="10">
+        <el-col :xs="24" :ms="12" :md="5">
+          <el-form-item label="视频类别" prop="type">
+            <el-cascader
+              placeholder="请选择视频类别"
+              v-model="queryParams.type"
+              :options="optionTypes"
+              :props="{ checkStrictly: true, value: 'id', label: 'name' }"
+              clearable
+            ></el-cascader>
+          </el-form-item>
+          <!-- 博士要求注释掉，不需要该过滤条件 2020-05-30 zlp -->
+          <!-- <el-form-item label="讲师姓名" prop="lecturer">
         <el-select v-model="queryParams.lecturer" filterable placeholder="请选择讲师">
           <el-option
             v-for="item in lecturerOptions"
@@ -30,13 +32,32 @@
           placeholder="请输入培训视频标题"
         />
       </el-form-item>-->
-      <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-      </el-form-item>
+        </el-col>
+        <el-col :xs="24" :ms="12" :md="6">
+          <el-form-item class="no-margin">
+            <el-button
+              type="primary"
+              icon="el-icon-search"
+              size="mini"
+              @click="handleQuery"
+              >搜索</el-button
+            >
+            <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+              >重置</el-button
+            >
+          </el-form-item>
+        </el-col>
+      </el-row>
     </el-form>
     <el-row v-loading="loading">
-      <el-col :xs="24" :sm="8" :md="6" v-for="(o, index) in videoList" :key="index" style="padding: 10px;">
+      <el-col
+        :xs="24"
+        :sm="8"
+        :md="6"
+        v-for="(o, index) in videoList"
+        :key="index"
+        style="padding: 10px"
+      >
         <el-card :body-style="{ padding: '2px' }">
           <video-player
             class="vjs-custom-skin"
@@ -47,12 +68,15 @@
           <div class="to-detail">
             <el-tooltip effect="dark" :content="o.title" placement="bottom">
               <div>
-                <router-link :to="'/video_study/study/detail/' + o.id" class="link-type">
-                  <p class="info-title">{{o.title}}</p>
+                <router-link
+                  :to="'/video_study/study/detail/' + o.id"
+                  class="link-type"
+                >
+                  <p class="info-title">{{ o.title }}</p>
                 </router-link>
               </div>
             </el-tooltip>
-            <p class="info-title info-title-name">讲师:{{o.lecturername}}</p>
+            <p class="info-title info-title-name">讲师:{{ o.lecturername }}</p>
             <div class="bottom">
               <time class="time">{{ parseTime(o.createtime) }}</time>
               <!-- <el-button type="text" class="button">进入详情页</el-button> -->
@@ -63,7 +87,7 @@
     </el-row>
 
     <pagination
-      v-show="total>0"
+      v-show="total > 0"
       :total="total"
       :page.sync="queryParams.pageNum"
       :page-sizes="[8, 16, 32, 64]"
@@ -74,7 +98,11 @@
 </template>
 
 <script>
-import { listVideo, getVideo, privateDownloadUrl } from "@/api/benyi_train/video";
+import {
+  listVideo,
+  getVideo,
+  privateDownloadUrl,
+} from "@/api/benyi_train/video";
 import { listAllLecturer } from "@/api/benyi_train/lecturer";
 import { listMoedata } from "@/api/system/moedata";
 
@@ -100,19 +128,19 @@ export default {
         title: undefined,
         lecturer: undefined,
         type: undefined,
-        status:"0",
+        status: "0",
         pageNum: 1,
-        pageSize: 8
-      }
+        pageSize: 8,
+      },
     };
   },
   created() {
     this.getList();
-    listAllLecturer().then(response => {
+    listAllLecturer().then((response) => {
       //console.log(response.lecturer);
       this.lecturerOptions = response.lecturer;
     });
-    listMoedata(this.queryParams).then(response => {
+    listMoedata(this.queryParams).then((response) => {
       //第一步转换数组
       this.optionTypes = this.handleTree(response.data, "id", "pid");
       //第二步移除children为0的数组，也就是将children为0 设置为undefined
@@ -137,9 +165,9 @@ export default {
     /** 查询培训列表 */
     getList() {
       this.loading = true;
-      listVideo(this.queryParams).then(response => {
+      listVideo(this.queryParams).then((response) => {
         this.videoList = response.rows;
-        this.playerOptions = response.rows.map(ele => {
+        this.playerOptions = response.rows.map((ele) => {
           return {
             autoplay: false,
             muted: true,
@@ -150,8 +178,8 @@ export default {
               {
                 type: ele.filetype,
                 // mp4
-                src:  ele.videourl
-              }
+                src: ele.videourl,
+              },
             ],
             notSupportedMessage: "此视频暂无法播放，请稍后再试",
             poster: "",
@@ -159,8 +187,8 @@ export default {
               timeDivider: true,
               durationDisplay: false,
               remainingTimeDisplay: false,
-              fullscreenToggle: true //全屏按钮
-            }
+              fullscreenToggle: true, //全屏按钮
+            },
           };
         });
         this.total = response.total;
@@ -182,8 +210,8 @@ export default {
     resetQuery() {
       this.resetForm("queryForm");
       this.handleQuery();
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -216,5 +244,12 @@ export default {
 .info-title-name {
   padding-top: 5px;
   font-size: 12px;
+}
+
+.el-cascader {
+  width: 100%;
+}
+.no-margin ::v-deep.el-form-item__content {
+  margin: 0 !important;
 }
 </style>
