@@ -48,6 +48,17 @@ public class ByAssessmentcontentServiceImpl implements IByAssessmentcontentServi
     }
 
     /**
+     * 查询幼儿未评估内容列表
+     *
+     * @param childId 幼儿id
+     * @return 评估内容集合
+     */
+    @Override
+    public List<ByAssessmentcontent> selectNoByAssessmentcontentListByChild(Long childId){
+        return byAssessmentcontentMapper.selectNoByAssessmentcontentListByChild(childId);
+    }
+
+    /**
      * 查询评估内容列表
      *
      * @param byAssessmentcontent 评估内容

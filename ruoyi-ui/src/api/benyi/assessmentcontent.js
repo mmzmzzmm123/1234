@@ -9,6 +9,16 @@ export function listAssessmentcontent(query) {
   })
 }
 
+// 查询评估内容列表
+export function listNoAssessmentcontentByChild(childid) {
+  return request({
+    url: '/benyi/assessmentcontent/noassessment/list/' + childid,
+    method: 'get'
+  })
+}
+
+
+
 // 查询部门下拉树结构
 export function treeselect() {
   return request({

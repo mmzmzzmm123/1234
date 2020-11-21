@@ -52,6 +52,10 @@ public class ByAssessmentcontent extends BaseEntity {
     @Excel(name = "参考标准")
     private String ckbz;
 
+    @Excel(name = "教育建议")
+    private String jyjy;
+
+    private Long childid;
 
     public String getParentName() {
         return parentName;
@@ -131,7 +135,22 @@ public class ByAssessmentcontent extends BaseEntity {
 
     public String getCkbz() {
         return ckbz;
+    }
 
+    public void setJyjy(String jyjy) {
+        this.jyjy = jyjy;
+    }
+
+    public String getJyjy() {
+        return jyjy;
+    }
+
+    public void setChildid(Long childid) {
+        this.childid = childid;
+    }
+
+    public Long getChildid() {
+        return childid;
     }
 
 
@@ -146,6 +165,8 @@ public class ByAssessmentcontent extends BaseEntity {
                 .append("createTime", getCreateTime())
                 .append("sort", getSort())
                 .append("ckbz", getCkbz())
+                .append("jyjy", getJyjy())
+                .append("childid", getChildid())
                 .toString();
     }
 

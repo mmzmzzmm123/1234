@@ -18,6 +18,53 @@
         <div>
           <radar-chart_jk :psMsg="item.dictValue" />
         </div>
+        <div class="block">
+          <h2 class="block-item-title flex align-center">教育建议</h2>
+          <div
+            class="block"
+            v-for="itemLy in assessmentcontentList.filter(
+              (p) => p.parentId == item.dictValue && p.name == '健康'
+            )"
+            :key="itemLy.id"
+          >
+            {{ itemLy.name }}
+            <div
+              class="block"
+              v-for="itemFzly in assessmentcontentList.filter(
+                (p) => p.parentId == itemLy.id
+              )"
+              :key="itemFzly.id"
+            >
+              <h2 class="block-item-title flex align-center">
+                {{ itemFzly.name }}
+              </h2>
+              <ul class="block-content">
+                <li
+                  v-for="itemMb in assessmentcontentList.filter(
+                    (p) => p.parentId == itemFzly.id
+                  )"
+                  :key="itemMb.id"
+                >
+                  <p class="block-content-title">
+                    <span class="num">{{ itemMb.sort }}. </span
+                    >{{ itemMb.name }}
+                  </p>
+                  <div
+                    class="checkbox-content"
+                    v-for="itemYs in assessmentcontentList.filter(
+                      (p) => p.parentId == itemMb.id
+                    )"
+                    :key="itemYs.id"
+                  >
+                    <p class="checkbox-item flex align-center">
+                      {{ itemYs.jyjy }}
+                    </p>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
         <div>
           <radar-chart_yy :psMsg="item.dictValue" />
         </div>
@@ -30,57 +77,12 @@
         <div>
           <radar-chart_ys :psMsg="item.dictValue" />
         </div>
-        <div class="block">
-          <h2 class="block-item-title flex align-center">教育建议</h2>
-          <!-- <ul class="block-content">
-            <li>
-              <p class="block-content-title">
-                <span class="num">1. </span>具有健康的体态
-              </p>
-              <div class="checkbox-content">
-                <p class="checkbox-item flex align-center">
-                  身高和体重适宜
-                </p>
-                <div class="check-info">
-                  参考标准：
-                  <p>男孩：身高：94.9-111.7厘米，体重：12.7-21.2公斤</p>
-                  <p>女孩：身高：94.1-111.3厘米，体重：12.3-21.5公斤</p>
-                </div>
-              </div>
-              <div class="checkbox-content">
-                <p class="checkbox-item flex align-center">在提醒下能自然坐直、站直
-                </p>
-                <div class="check-info"></div>
-              </div>
-            </li>
-            <li>
-              <p class="block-content-title">
-                <span class="num">2. </span>情绪安定愉快
-              </p>
-              <div class="checkbox-content">
-                <p class="checkbox-item flex align-center">
-                 情绪比较稳定，很少因一点小事哭闹不止
-                </p>
-                <div class="check-info"></div>
-              </div>
-              <div class="checkbox-content">
-                <p class="checkbox-item flex align-center">
-                 有比较强烈的情绪反应时，能在成人的安抚下逐渐平静下来
-                </p>
-                <div class="check-info"></div>
-              </div>
-            </li>
-          </ul> -->
-        </div>
       </el-tab-pane>
     </el-tabs>
   </div>
 </template>
 <script>
-import {
-  listAssessmentcontent,
-  getAssessmentcontent,
-} from "@/api/benyi/assessmentcontent";
+import { listNoAssessmentcontentByChild } from "@/api/benyi/assessmentcontent";
 import { getChildByAssessment } from "@/api/benyi/child";
 import { getAssessmentDictData } from "@/api/benyi/assessmentchild";
 import RadarChart from "@/views/dashboard/RadarChart";
@@ -109,6 +111,8 @@ export default {
       // tabs列表
       tabsList: [],
       activeName: "",
+      // 评估内容表格数据
+      assessmentcontentList: [],
     };
   },
   created() {
@@ -118,8 +122,16 @@ export default {
     // console.log("childId:" + childId);
     this.getChild(childId);
     this.getList(childId);
+    this.getNoAssessmentList();
   },
   methods: {
+    /** 查询幼儿未评估内容列表 */
+    getNoAssessmentList() {
+      listNoAssessmentcontentByChild(this.childId).then((response) => {
+        // console.log("rows:" + response.rows);
+        this.assessmentcontentList = response.rows;
+      });
+    },
     getChild(childId) {
       getChildByAssessment(childId).then((response) => {
         // console.log(response);
@@ -142,8 +154,8 @@ export default {
       });
     },
     handleClick(tab) {
-    //   this.activeName = tab.name;
-    //   console.log(tab.name);
+      //   this.activeName = tab.name;
+      //   console.log(tab.name);
     },
   },
 };

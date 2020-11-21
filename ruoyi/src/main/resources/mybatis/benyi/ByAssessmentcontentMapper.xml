@@ -13,10 +13,13 @@
         <result property="createTime" column="create_time"/>
         <result property="sort" column="sort"/>
         <result property="ckbz" column="ckbz"/>
+        <result property="jyjy"    column="jyjy"    />
+
+        <result property="childid"    column="childid"    />
     </resultMap>
 
     <sql id="selectByAssessmentcontentVo">
-        select id, parentId, name, iselement, scope, create_time, sort, ckbz from by_assessmentcontent
+        select id, parentId, name, iselement, scope, create_time, sort, ckbz, jyjy from by_assessmentcontent
     </sql>
 
     <select id="selectByAssessmentcontentList" parameterType="ByAssessmentcontent"
@@ -76,6 +79,12 @@ where find_in_set(id, getChildLst(#{id})) ;
 where find_in_set(id, getChildLst(#{id})) and parentId>#{id} and iselement='N';
 	</select>
 
+    <!--根据幼儿id获取未评选的指标-->
+    <select id="selectNoByAssessmentcontentListByChild" parameterType="Long" resultMap="ByAssessmentcontentResult">
+		SELECT id, parentId, name, iselement, scope, create_time, sort, ckbz, jyjy  FROM by_assessmentcontent
+where id not in(select contentid from by_assessmentchild where childid=#{childid})
+	</select>
+
     <insert id="insertByAssessmentcontent" parameterType="ByAssessmentcontent" useGeneratedKeys="true" keyProperty="id">
         insert into by_assessmentcontent
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -86,6 +95,7 @@ where find_in_set(id, getChildLst(#{id})) and parentId>#{id} and iselement='N';
             <if test="createTime != null ">create_time,</if>
             <if test="sort != null ">sort,</if>
             <if test="ckbz != null  and ckbz != ''">ckbz,</if>
+            <if test="jyjy != null  and jyjy != ''">jyjy,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="parentId != null ">#{parentId},</if>
@@ -95,6 +105,7 @@ where find_in_set(id, getChildLst(#{id})) and parentId>#{id} and iselement='N';
             <if test="createTime != null ">#{createTime},</if>
             <if test="sort != null ">#{sort},</if>
             <if test="ckbz != null  and ckbz != ''">#{ckbz},</if>
+            <if test="jyjy != null  and jyjy != ''">#{jyjy},</if>
         </trim>
     </insert>
 
@@ -108,6 +119,7 @@ where find_in_set(id, getChildLst(#{id})) and parentId>#{id} and iselement='N';
             <if test="createTime != null ">create_time = #{createTime},</if>
             <if test="sort != null ">sort = #{sort},</if>
             <if test="ckbz != null  and ckbz != ''">ckbz = #{ckbz},</if>
+            <if test="jyjy != null  and jyjy != ''">jyjy = #{jyjy},</if>
         </trim>
         where id = #{id}
     </update>

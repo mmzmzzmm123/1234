@@ -51,6 +51,16 @@ public class ByAssessmentcontentController extends BaseController {
     }
 
     /**
+     * 查询幼儿未评估内容列表
+     */
+    @PreAuthorize("@ss.hasPermi('benyi:assessmentcontent:list')")
+    @GetMapping("/noassessment/list/{child}")
+    public TableDataInfo listno(@PathVariable("child") Long child) {
+        List<ByAssessmentcontent> list = byAssessmentcontentService.selectNoByAssessmentcontentListByChild(child);
+        return getDataTable(list);
+    }
+
+    /**
      * 查询评估内容列表
      */
     @PreAuthorize("@ss.hasPermi('benyi:assessmentcontent:list')")

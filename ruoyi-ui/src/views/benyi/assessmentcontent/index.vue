@@ -71,7 +71,8 @@
             icon="el-icon-plus"
             @click="handleAdd(scope.row)"
             v-hasPermi="['benyi:assessmentcontent:add']"
-          >新增</el-button>
+            >新增</el-button
+          >
           <el-button
             v-if="scope.row.parentId !== 0"
             size="mini"
@@ -145,6 +146,13 @@
             v-model="form.sort"
             :min="0"
             placeholder="请输入序号"
+          />
+        </el-form-item>
+        <el-form-item label="教育建议" prop="jyjy">
+          <el-input
+            v-model="form.jyjy"
+            type="textarea"
+            placeholder="请输入内容"
           />
         </el-form-item>
       </el-form>
@@ -277,6 +285,7 @@ export default {
         createTime: undefined,
         sort: 0,
         ckbz: undefined,
+        jyjy: undefined,
       };
       this.resetForm("form");
     },
