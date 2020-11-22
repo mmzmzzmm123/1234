@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <div class="flex align-center justify-between">
+    <div class="flex align-center justify-between student-main-title">
       <p class="title flex align-center">
         <span>姓名：{{ this.childName }} </span>
         <span>出生日期：{{ this.childCsrq }} </span>
@@ -39,16 +39,17 @@
     <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
       <el-tab-pane
         v-for="itemLy in assessmentcontentList.filter(
-          (p) => p.parentId == this.assessmentscope
+          p => p.parentId == this.assessmentscope
         )"
         :key="itemLy.id"
         :label="itemLy.name"
         :name="itemLy.name"
       >
-        <div v-loading="loading"
+        <div
+          v-loading="loading"
           class="block"
           v-for="itemFzly in assessmentcontentList.filter(
-            (p) => p.parentId == itemLy.id
+            p => p.parentId == itemLy.id
           )"
           :key="itemFzly.id"
         >
@@ -58,7 +59,7 @@
           <ul class="block-content">
             <li
               v-for="itemMb in assessmentcontentList.filter(
-                (p) => p.parentId == itemFzly.id
+                p => p.parentId == itemFzly.id
               )"
               :key="itemMb.id"
             >
@@ -68,7 +69,7 @@
               <div
                 class="checkbox-content"
                 v-for="itemYs in assessmentcontentList.filter(
-                  (p) => p.parentId == itemMb.id
+                  p => p.parentId == itemMb.id
                 )"
                 :key="itemYs.id"
               >
@@ -158,13 +159,13 @@ import {
   delAssessmentcontent,
   addAssessmentcontent,
   updateAssessmentcontent,
-  exportAssessmentcontent,
+  exportAssessmentcontent
 } from "@/api/benyi/assessmentcontent";
 
 import { getChildByAssessment } from "@/api/benyi/child";
 import {
   addAssessmentchild,
-  updateAssessmentchild,
+  updateAssessmentchild
 } from "@/api/benyi/assessmentchild";
 
 export default {
@@ -194,11 +195,11 @@ export default {
         name: undefined,
         iselement: undefined,
         scope: undefined,
-        sort: undefined,
+        sort: undefined
       },
       activeName: "健康",
       checked: false,
-      checkList: [],
+      checkList: []
     };
   },
   created() {
@@ -210,7 +211,7 @@ export default {
   },
   methods: {
     getChild(childId) {
-      getChildByAssessment(childId).then((response) => {
+      getChildByAssessment(childId).then(response => {
         // console.log(response);
         if (response.code == "200") {
           this.childName = response.data.name;
@@ -219,7 +220,7 @@ export default {
           this.bjmc = response.data.bjmc;
           this.classid = response.data.classid;
           this.zbjsxm = response.data.zbjsmc;
-          response.ByAssessmentchild.forEach((item) =>
+          response.ByAssessmentchild.forEach(item =>
             this.checkList.push(item.contentid)
           );
           if (response.isAssessment == "0") {
@@ -236,7 +237,7 @@ export default {
     /** 查询评估内容列表 */
     getList() {
       this.loading = true;
-      listAssessmentcontent(this.queryParams).then((response) => {
+      listAssessmentcontent(this.queryParams).then(response => {
         // console.log("rows:" + response.rows);
         this.assessmentcontentList = response.rows;
         this.loading = false;
@@ -257,16 +258,16 @@ export default {
     //   this.resetForm("form");
     // },
     /** 提交按钮 */
-    submitForm: function () {
+    submitForm: function() {
       this.$confirm("确认生成图表数据?生成后数据不能取消", "警告", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
-        callback: (action) => {
+        callback: action => {
           if (action === "confirm") {
             // console.log('按下 确定')
             var items = "";
-            this.checkList.forEach((item) => {
+            this.checkList.forEach(item => {
               //当全选被选中的时候，循环遍历源数据，把数据的每一项加入到默认选中的数组去
               items = items + item + ",";
             });
@@ -281,7 +282,7 @@ export default {
               this.form.type = "Y";
               this.form.xn = this.trem;
               this.form.scope = this.assessmentscope;
-              addAssessmentchild(this.form).then((response) => {
+              addAssessmentchild(this.form).then(response => {
                 if (response.code === 200) {
                   this.msgSuccess("评估成功");
                 }
@@ -289,7 +290,7 @@ export default {
             }
           } else {
           }
-        },
+        }
       });
     },
     handleClick(tab) {
@@ -302,8 +303,8 @@ export default {
       //   items = items + item + ",";
       // });
       // console.log(items);
-    },
-  },
+    }
+  }
 };
 </script>
 <style lang="scss" scoped>
@@ -319,9 +320,12 @@ div {
 .title {
   padding: 10px 0;
   font-weight: 600;
+  flex-wrap: wrap;
+  padding-right: 10px;
+  line-height: 20px;
   span {
     font-size: 16px;
-    padding: 2px;
+    padding: 0 4px;
     // &:nth-of-type(2) {
     //   font-size: 14px;
     //   font-weight: normal;
@@ -375,6 +379,18 @@ div {
         padding-left: 10px;
       }
     }
+    .el-checkbox {
+      display: flex;
+      white-space: normal;
+      .el-checkbox__input {
+        margin-top: 2px;
+      }
+    }
+  }
+}
+@media (max-width: 768.98px) {
+  .title span {
+    font-size: 12px;
   }
 }
 </style>

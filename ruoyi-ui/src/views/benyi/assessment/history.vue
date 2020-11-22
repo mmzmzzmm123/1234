@@ -12,60 +12,88 @@
         :label="item.dictLabel"
         :name="item.dictLabel"
       >
-        <div>
+        <h2 class="result-title">综合评估结果</h2>
+        <div class="comprehensive">
           <radar-chart :psMsg="item.dictValue" />
         </div>
-        <div>
-          <radar-chart_jk :psMsg="item.dictValue" />
-        </div>
-        <div class="block">
-          <h2 class="block-item-title flex align-center">教育建议</h2>
-          <div
-            class="block"
-            v-for="itemLy in assessmentcontentList.filter(
-              (p) => p.parentId == item.dictValue && p.name == '健康'
-            )"
-            :key="itemLy.id"
-          >
-            {{ itemLy.name }}
-            <div
-              class="block"
-              v-for="itemFzly in assessmentcontentList.filter(
-                (p) => p.parentId == itemLy.id
-              )"
-              :key="itemFzly.id"
-            >
-              <h2 class="block-item-title flex align-center">
-                {{ itemFzly.name }}
-              </h2>
-              <ul class="block-content">
-                <li
-                  v-for="itemMb in assessmentcontentList.filter(
-                    (p) => p.parentId == itemFzly.id
+        <h2 class="result-title">各项评估结果</h2>
+        <el-tabs
+          v-model="childTab"
+          @tab-click="handleTabClick"
+        >
+          <el-tab-pane label="健康" name="one">
+            <radar-chart_jk :psMsg="item.dictValue" v-if="childTab === 'one'" />
+            <div class="block">
+              <h2 class="block-item-title flex align-center">教育建议</h2>
+              <div
+                class="block"
+                v-for="itemLy in assessmentcontentList.filter(
+                  p => p.parentId == item.dictValue && p.name == '健康'
+                )"
+                :key="itemLy.id"
+              >
+                {{ itemLy.name }}
+                <div
+                  class="block"
+                  v-for="itemFzly in assessmentcontentList.filter(
+                    p => p.parentId == itemLy.id
                   )"
-                  :key="itemMb.id"
+                  :key="itemFzly.id"
                 >
-                  <p class="block-content-title">
-                    <span class="num">{{ itemMb.sort }}. </span
-                    >{{ itemMb.name }}
-                  </p>
-                  <div
-                    class="checkbox-content"
-                    v-for="itemYs in assessmentcontentList.filter(
-                      (p) => p.parentId == itemMb.id
-                    )"
-                    :key="itemYs.id"
-                  >
-                    <p class="checkbox-item flex align-center">
-                      {{ itemYs.jyjy }}
-                    </p>
-                  </div>
-                </li>
-              </ul>
+                  <h2 class="block-item-title flex align-center">
+                    {{ itemFzly.name }}
+                  </h2>
+                  <ul class="block-content">
+                    <li
+                      v-for="itemMb in assessmentcontentList.filter(
+                        p => p.parentId == itemFzly.id
+                      )"
+                      :key="itemMb.id"
+                    >
+                      <p class="block-content-title">
+                        <span class="num">{{ itemMb.sort }}. </span
+                        >{{ itemMb.name }}
+                      </p>
+                      <div
+                        class="checkbox-content"
+                        v-for="itemYs in assessmentcontentList.filter(
+                          p => p.parentId == itemMb.id
+                        )"
+                        :key="itemYs.id"
+                      >
+                        <p class="checkbox-item flex align-center">
+                          {{ itemYs.jyjy }}
+                        </p>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-        <div>
+          </el-tab-pane>
+          <el-tab-pane label="语言" name="two">
+            <radar-chart_yy :psMsg="item.dictValue" v-if="childTab === 'two'" />
+          </el-tab-pane>
+          <el-tab-pane label="社会" name="three">
+            <radar-chart_sh
+              :psMsg="item.dictValue"
+              v-if="childTab === 'three'"
+            />
+          </el-tab-pane>
+          <el-tab-pane label="科学" name="four">
+            <radar-chart_kx
+              :psMsg="item.dictValue"
+              v-if="childTab === 'four'"
+            />
+          </el-tab-pane>
+          <el-tab-pane label="艺术" name="five">
+            <radar-chart_ys
+              :psMsg="item.dictValue"
+              v-if="childTab === 'five'"
+            />
+          </el-tab-pane>
+        </el-tabs>
+        <!-- <div>sf
           <radar-chart_yy :psMsg="item.dictValue" />
         </div>
         <div>
@@ -76,7 +104,7 @@
         </div>
         <div>
           <radar-chart_ys :psMsg="item.dictValue" />
-        </div>
+        </div> -->
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -100,7 +128,7 @@ export default {
     RadarChart_yy,
     RadarChart_sh,
     RadarChart_kx,
-    RadarChart_ys,
+    RadarChart_ys
   },
   data() {
     return {
@@ -113,6 +141,7 @@ export default {
       activeName: "",
       // 评估内容表格数据
       assessmentcontentList: [],
+      childTab: "one"
     };
   },
   created() {
@@ -127,13 +156,13 @@ export default {
   methods: {
     /** 查询幼儿未评估内容列表 */
     getNoAssessmentList() {
-      listNoAssessmentcontentByChild(this.childId).then((response) => {
+      listNoAssessmentcontentByChild(this.childId).then(response => {
         // console.log("rows:" + response.rows);
         this.assessmentcontentList = response.rows;
       });
     },
     getChild(childId) {
-      getChildByAssessment(childId).then((response) => {
+      getChildByAssessment(childId).then(response => {
         // console.log(response);
         if (response.code == "200") {
           this.childName = response.data.name;
@@ -143,7 +172,7 @@ export default {
     },
     /** 查询评估内容列表 */
     getList(childId) {
-      getAssessmentDictData(childId).then((response) => {
+      getAssessmentDictData(childId).then(response => {
         // console.log("rows:" + response.dictdata.length);
         if (response.dictdata.length > 0) {
           this.activeName = response.dictdata[0].dictLabel;
@@ -157,7 +186,10 @@ export default {
       //   this.activeName = tab.name;
       //   console.log(tab.name);
     },
-  },
+    handleTabClick(tab) {
+      this.childTab = tab.name;
+    }
+  }
 };
 </script>
 <style lang="scss" scoped>
@@ -169,6 +201,14 @@ div {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+}
+.comprehensive {
+  margin-bottom: 40px;
+}
+.result-title {
+  font-size: 18px;
+  margin-bottom: 15px;
+  text-align: center;
 }
 .title {
   padding: 10px 0;

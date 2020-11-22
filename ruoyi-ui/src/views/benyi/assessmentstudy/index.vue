@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-row :gutter="20">
+    <el-row :gutter="20" type="flex">
       <el-col :span="8" :xs="24">
         <div class="head-container">
           <el-input
@@ -11,8 +11,6 @@
             prefix-icon="el-icon-search"
             style="margin-bottom: 20px"
           />
-        </div>
-        <div class="head-container">
           <el-tree
             :data="treeOptions"
             :props="defaultProps"
@@ -43,7 +41,7 @@
 import {
   treeselectstudy,
   getAssessmentcontent,
-  getAssessmentcontentbyparentid,
+  getAssessmentcontentbyparentid
 } from "@/api/benyi/assessmentcontent";
 import { listAssessmentintroduce } from "@/api/benyi/assessmentintroduce";
 
@@ -62,19 +60,19 @@ export default {
       // 树结构
       defaultProps: {
         children: "children",
-        label: "label",
+        label: "label"
       },
       // 查询参数
       queryParams: {
-        id: undefined,
-      },
+        id: undefined
+      }
     };
   },
   watch: {
     // 根据名称筛选部门树
     name(val) {
       this.$refs.tree.filter(val);
-    },
+    }
   },
   created() {
     this.getTreeselect();
@@ -83,7 +81,7 @@ export default {
   methods: {
     /** 查询部门下拉树结构 */
     getTreeselect() {
-      treeselectstudy().then((response) => {
+      treeselectstudy().then(response => {
         this.treeOptions = response.data;
       });
     },
@@ -105,22 +103,22 @@ export default {
     },
     /**查询评估介绍 */
     getNote() {
-      listAssessmentintroduce(null).then((response) => {
+      listAssessmentintroduce(null).then(response => {
         // console.log("评估介绍:" + response.rows[0].content);
         this.note = response.rows[0].content;
       });
     },
     /** 查询一日流程任务列表 */
     getTaskList() {
-      getAssessmentcontentbyparentid(this.queryParams.id).then((response) => {
+      getAssessmentcontentbyparentid(this.queryParams.id).then(response => {
         var tmp = "";
-        response.data.forEach((element) => {
+        response.data.forEach(element => {
           tmp = tmp + element.sort + ". " + element.name + "</br>";
         });
         this.note = tmp;
       });
-    },
-  },
+    }
+  }
 };
 </script>
 <style lang="scss" scoped>
@@ -189,5 +187,13 @@ div {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+}
+.el-tree{
+  max-height: calc(100vh - 180px);
+  overflow-y: auto;
+}
+.el-card {
+  max-height: calc(100vh - 130px);
+  overflow-y: auto;
 }
 </style>
