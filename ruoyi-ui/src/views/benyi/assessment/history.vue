@@ -93,7 +93,7 @@
             />
           </el-tab-pane>
         </el-tabs>
-        <!-- <div>
+        <!-- <div>sf
           <radar-chart_yy :psMsg="item.dictValue" />
         </div>
         <div>
