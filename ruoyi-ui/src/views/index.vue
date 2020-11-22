@@ -13,7 +13,7 @@
       </el-col>
       <el-col :xs="24" :sm="24" :lg="8">
         <div class="chart-wrapper">
-          <bar-chart />
+          <bar-chart/>
         </div>
       </el-col>
     </el-row>
@@ -88,6 +88,7 @@ export default {
   background-color: rgb(240, 242, 245);
   position: relative;
 
+
   .el-card.is-always-shadow {
     box-shadow: none;
     border: 0;
@@ -95,7 +96,7 @@ export default {
 
   .chart-wrapper {
     background: #fff;
-    padding: 16px 16px 0;
+    padding: 16px;
     margin-bottom: 32px;
   }
 }
@@ -113,8 +114,14 @@ export default {
 }
 
 @media (max-width: 1024px) {
-  .chart-wrapper {
+  .dashboard-editor-container .chart-wrapper {
     padding: 8px;
+  }
+}
+
+@media (max-width: 768.98px) {
+  .dashboard-editor-container {
+    padding: 10px;
   }
 }
 </style>

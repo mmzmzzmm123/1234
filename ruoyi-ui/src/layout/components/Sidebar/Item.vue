@@ -21,7 +21,11 @@ export default {
     }
 
     if (title) {
-      vnodes.push(<span slot='title'>{(title)}</span>)
+      vnodes.push(
+        <el-tooltip slot='title' effect='dark' content={(title)} placement="bottom">
+        <span>{(title)}</span>
+        </el-tooltip>
+      )
     }
     return vnodes
   }

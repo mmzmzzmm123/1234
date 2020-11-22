@@ -1,23 +1,21 @@
 <template>
-  <div :class="className" :style="{height:height,width:width}">
-    <el-row :gutter="24">
-      <el-col :span="24" :xs="24">
-        <div>
-          <FullCalendar
-            ref="fullCalendar"
-            defaultView="dayGridMonth"
-            locale="zh-cn" 
-            :buttonText="buttonText"
-            :plugins="calendarPlugins"
-            :events="calendarEvents"
-            :eventLimit="true"
-            :displayEventEnd="true"
-            eventLimitText="更多"
-            @eventClick="handleEventClick"
-          />
-        </div>
-      </el-col>
-    </el-row>
+  <div
+    class="xs-height"
+    :class="className"
+    :style="{ height: height, width: width }"
+  >
+    <FullCalendar
+      ref="fullCalendar"
+      defaultView="dayGridMonth"
+      locale="zh-cn"
+      :buttonText="buttonText"
+      :plugins="calendarPlugins"
+      :events="calendarEvents"
+      :eventLimit="true"
+      :displayEventEnd="true"
+      eventLimitText="更多"
+      @eventClick="handleEventClick"
+    />
   </div>
 </template>
 
@@ -49,7 +47,7 @@ export default {
   },
   data() {
     return {
-       header: {
+      header: {
         left: "prev,next today",
         center: "title",
         right: "dayGridMonth, listWeek"
@@ -96,7 +94,7 @@ export default {
 };
 </script>
 
-<style  lang="scss" scope>
+<style lang="scss" scope>
 // you must include each plugins' css
 // paths prefixed with ~ signify node_modules
 @import "~@fullcalendar/core/main.css";
@@ -108,6 +106,9 @@ export default {
   height: 100%;
 }
 .fc-widget-content {
+  .fc-scroller.fc-day-grid-container {
+    height: 100% !important;
+  }
   .fc-sun,
   .fc-sat {
     background: rgba(245, 246, 248, 0.6);
@@ -122,8 +123,7 @@ export default {
       width: auto;
     }
   }
-  @media screen and (min-width: 769px) {
-  }
+
   .el-col {
     margin-bottom: 10px;
     text-align: center;
@@ -143,5 +143,18 @@ export default {
     }
   }
 }
+@media (max-width: 768.98px) {
+  .xs-height {
+    height: 100% !important;
+    .fc button {
+      height: 30px;
+    }
+    .fc-toolbar h2 {
+      font-size: 16px !important;
+    }
+    .fc-ltr .fc-dayGrid-view .fc-day-top .fc-day-number {
+      font-size: 12px;
+    }
+  }
+}
 </style>
-
