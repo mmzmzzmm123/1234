@@ -141,7 +141,7 @@
       :data="classList"
       @selection-change="handleSelectionChange"
     >
-      <el-table-column type="selection" width="55" align="center" />
+      <el-table-column type="selection" width="45" align="center" />
       <el-table-column
         label="班级编号"
         align="center"

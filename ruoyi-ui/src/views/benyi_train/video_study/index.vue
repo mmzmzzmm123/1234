@@ -103,7 +103,7 @@
 import {
   listVideo,
   getVideo,
-  privateDownloadUrl,
+  privateDownloadUrl
 } from "@/api/benyi_train/video";
 import { listAllLecturer } from "@/api/benyi_train/lecturer";
 import { listMoedata } from "@/api/system/moedata";
@@ -132,17 +132,17 @@ export default {
         type: undefined,
         status: "0",
         pageNum: 1,
-        pageSize: 8,
-      },
+        pageSize: 8
+      }
     };
   },
   created() {
     this.getList();
-    listAllLecturer().then((response) => {
+    listAllLecturer().then(response => {
       //console.log(response.lecturer);
       this.lecturerOptions = response.lecturer;
     });
-    listMoedata(this.queryParams).then((response) => {
+    listMoedata(this.queryParams).then(response => {
       //第一步转换数组
       this.optionTypes = this.handleTree(response.data, "id", "pid");
       //第二步移除children为0的数组，也就是将children为0 设置为undefined
@@ -172,9 +172,9 @@ export default {
     /** 查询培训列表 */
     getList() {
       this.loading = true;
-      listVideo(this.queryParams).then((response) => {
+      listVideo(this.queryParams).then(response => {
         this.videoList = response.rows;
-        this.playerOptions = response.rows.map((ele) => {
+        this.playerOptions = response.rows.map(ele => {
           return {
             autoplay: false,
             muted: true,
@@ -185,8 +185,8 @@ export default {
               {
                 type: ele.filetype,
                 // mp4
-                src: ele.videourl,
-              },
+                src: ele.videourl
+              }
             ],
             notSupportedMessage: "此视频暂无法播放，请稍后再试",
             poster: "",
@@ -194,8 +194,8 @@ export default {
               timeDivider: true,
               durationDisplay: false,
               remainingTimeDisplay: false,
-              fullscreenToggle: true, //全屏按钮
-            },
+              fullscreenToggle: true //全屏按钮
+            }
           };
         });
         this.total = response.total;
@@ -217,8 +217,8 @@ export default {
     resetQuery() {
       this.resetForm("queryForm");
       this.handleQuery();
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -258,5 +258,11 @@ export default {
 }
 .no-margin ::v-deep.el-form-item__content {
   margin: 0 !important;
+}
+
+@media (max-width: 768.98px) {
+  .el-cascader-node__label {
+    max-width: 200px;
+  }
 }
 </style>
