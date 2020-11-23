@@ -98,6 +98,7 @@
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="编号" align="center" prop="id" /> -->
       <el-table-column
+        fixed
         label="幼儿"
         align="center"
         prop="childid"
@@ -130,10 +131,11 @@
         prop="moffphone"
       />
       <el-table-column
+        fixed="right"
         label="操作"
         align="center"
-        width="120"
-        class-name="small-padding fixed-width"
+        width="60"
+        class-name="small-padding fixed-width edit-btns"
       >
         <template slot-scope="scope">
           <el-button

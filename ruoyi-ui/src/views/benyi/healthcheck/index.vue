@@ -165,7 +165,6 @@
         label="检查日期"
         align="center"
         prop="checkTime"
-        width="180"
       >
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.checkTime, "{y}-{m}-{d}") }}</span>
@@ -196,7 +195,7 @@
         prop="totalAssessment"
         :formatter="totalAssessmentFormat"
       />
-      <el-table-column
+      <!-- <el-table-column
         label="创建时间"
         align="center"
         prop="createtime"
@@ -207,13 +206,13 @@
             parseTime(scope.row.createtime, "{y}-{m}-{d} {h}:{i}:{s}")
           }}</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column
         fixed="right"
         label="操作"
         align="center"
-        width="100"
-        class-name="small-padding fixed-width"
+        width="60"
+        class-name="small-padding fixed-width edit-btns"
       >
         <template slot-scope="scope">
           <el-button

@@ -158,7 +158,7 @@
       <el-table-column label="主班教师" align="center" prop="zbjsxm" />
       <el-table-column label="配班教师" align="center" prop="pbjsxm" />
       <el-table-column label="助理教师" align="center" prop="zljsxm" />
-      <el-table-column
+      <!-- <el-table-column
         label="创建时间"
         align="center"
         prop="createtime"
@@ -167,13 +167,13 @@
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createtime) }}</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column
         fixed="right"
         label="操作"
-        width="220"
+        width="80"
         align="center"
-        class-name="small-padding fixed-width"
+        class-name="small-padding fixed-width edit-btns"
       >
         <template slot-scope="scope">
           <el-button

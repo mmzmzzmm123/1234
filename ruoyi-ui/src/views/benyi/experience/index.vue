@@ -101,7 +101,6 @@
         label="幼儿出生日期"
         align="center"
         prop="csrq"
-        width="180"
       >
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.csrq, "{y}-{m}-{d}") }}</span>
@@ -112,7 +111,6 @@
         label="申请体验时间"
         align="center"
         prop="sqtysj"
-        width="180"
       >
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.sqtysj, "{y}-{m}-{d}") }}</span>

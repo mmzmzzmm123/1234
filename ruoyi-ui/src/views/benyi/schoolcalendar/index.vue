@@ -157,24 +157,21 @@
         label="活动开始时间"
         align="center"
         prop="activitytime"
-        width="180"
       />
       <el-table-column
         label="活动截止时间"
         align="center"
         prop="activityendtime"
-        width="180"
       />
-      <el-table-column
+      <!-- <el-table-column
         label="创建时间"
         align="center"
         prop="createtime"
-        width="180"
       >
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createtime) }}</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column
         fixed="right"
         label="操作"

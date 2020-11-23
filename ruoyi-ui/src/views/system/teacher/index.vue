@@ -107,7 +107,6 @@
         label="出生日期"
         align="center"
         prop="csrq"
-        width="180"
       ></el-table-column>
       <el-table-column label="毕业院校" align="center" prop="byyx" />
       <el-table-column
@@ -120,9 +119,8 @@
         label="参加工作日期"
         align="center"
         prop="cjgzrq"
-        width="180"
       ></el-table-column>
-      <el-table-column
+      <!-- <el-table-column
         label="创建时间"
         align="center"
         prop="createtime"
@@ -131,7 +129,7 @@
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createtime) }}</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <!--<el-table-column label="标识" align="center" prop="id" />
       <el-table-column label="证件号码" align="center" prop="zjhm" />
       <el-table-column label="专业" align="center" prop="zy" />
@@ -142,8 +140,8 @@
         fixed="right"
         label="操作"
         align="center"
-        width="200"
-        class-name="small-padding fixed-width"
+        width="60"
+        class-name="small-padding fixed-width edit-btns"
       >
         <template slot-scope="scope">
           <el-button

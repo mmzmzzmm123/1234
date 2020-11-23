@@ -73,24 +73,212 @@
           </el-tab-pane>
           <el-tab-pane label="语言" name="two">
             <radar-chart_yy :psMsg="item.dictValue" v-if="childTab === 'two'" />
+            <div class="block">
+              <h2 class="block-item-title flex align-center">教育建议</h2>
+              <div
+                class="block"
+                v-for="itemLy in assessmentcontentList.filter(
+                  p => p.parentId == item.dictValue && p.name == '语言'
+                )"
+                :key="itemLy.id"
+              >
+                {{ itemLy.name }}
+                <div
+                  class="block"
+                  v-for="itemFzly in assessmentcontentList.filter(
+                    p => p.parentId == itemLy.id
+                  )"
+                  :key="itemFzly.id"
+                >
+                  <h2 class="block-item-title flex align-center">
+                    {{ itemFzly.name }}
+                  </h2>
+                  <ul class="block-content">
+                    <li
+                      v-for="itemMb in assessmentcontentList.filter(
+                        p => p.parentId == itemFzly.id
+                      )"
+                      :key="itemMb.id"
+                    >
+                      <p class="block-content-title">
+                        <span class="num">{{ itemMb.sort }}. </span
+                        >{{ itemMb.name }}
+                      </p>
+                      <div
+                        class="checkbox-content"
+                        v-for="itemYs in assessmentcontentList.filter(
+                          p => p.parentId == itemMb.id
+                        )"
+                        :key="itemYs.id"
+                      >
+                        <p class="checkbox-item flex align-center">
+                          {{ itemYs.jyjy }}
+                        </p>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
           </el-tab-pane>
           <el-tab-pane label="社会" name="three">
             <radar-chart_sh
               :psMsg="item.dictValue"
               v-if="childTab === 'three'"
             />
+            <div class="block">
+              <h2 class="block-item-title flex align-center">教育建议</h2>
+              <div
+                class="block"
+                v-for="itemLy in assessmentcontentList.filter(
+                  p => p.parentId == item.dictValue && p.name == '社会'
+                )"
+                :key="itemLy.id"
+              >
+                {{ itemLy.name }}
+                <div
+                  class="block"
+                  v-for="itemFzly in assessmentcontentList.filter(
+                    p => p.parentId == itemLy.id
+                  )"
+                  :key="itemFzly.id"
+                >
+                  <h2 class="block-item-title flex align-center">
+                    {{ itemFzly.name }}
+                  </h2>
+                  <ul class="block-content">
+                    <li
+                      v-for="itemMb in assessmentcontentList.filter(
+                        p => p.parentId == itemFzly.id
+                      )"
+                      :key="itemMb.id"
+                    >
+                      <p class="block-content-title">
+                        <span class="num">{{ itemMb.sort }}. </span
+                        >{{ itemMb.name }}
+                      </p>
+                      <div
+                        class="checkbox-content"
+                        v-for="itemYs in assessmentcontentList.filter(
+                          p => p.parentId == itemMb.id
+                        )"
+                        :key="itemYs.id"
+                      >
+                        <p class="checkbox-item flex align-center">
+                          {{ itemYs.jyjy }}
+                        </p>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
           </el-tab-pane>
           <el-tab-pane label="科学" name="four">
             <radar-chart_kx
               :psMsg="item.dictValue"
               v-if="childTab === 'four'"
             />
+            <div class="block">
+              <h2 class="block-item-title flex align-center">教育建议</h2>
+              <div
+                class="block"
+                v-for="itemLy in assessmentcontentList.filter(
+                  p => p.parentId == item.dictValue && p.name == '科学'
+                )"
+                :key="itemLy.id"
+              >
+                {{ itemLy.name }}
+                <div
+                  class="block"
+                  v-for="itemFzly in assessmentcontentList.filter(
+                    p => p.parentId == itemLy.id
+                  )"
+                  :key="itemFzly.id"
+                >
+                  <h2 class="block-item-title flex align-center">
+                    {{ itemFzly.name }}
+                  </h2>
+                  <ul class="block-content">
+                    <li
+                      v-for="itemMb in assessmentcontentList.filter(
+                        p => p.parentId == itemFzly.id
+                      )"
+                      :key="itemMb.id"
+                    >
+                      <p class="block-content-title">
+                        <span class="num">{{ itemMb.sort }}. </span
+                        >{{ itemMb.name }}
+                      </p>
+                      <div
+                        class="checkbox-content"
+                        v-for="itemYs in assessmentcontentList.filter(
+                          p => p.parentId == itemMb.id
+                        )"
+                        :key="itemYs.id"
+                      >
+                        <p class="checkbox-item flex align-center">
+                          {{ itemYs.jyjy }}
+                        </p>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
           </el-tab-pane>
           <el-tab-pane label="艺术" name="five">
             <radar-chart_ys
               :psMsg="item.dictValue"
               v-if="childTab === 'five'"
             />
+            <div class="block">
+              <h2 class="block-item-title flex align-center">教育建议</h2>
+              <div
+                class="block"
+                v-for="itemLy in assessmentcontentList.filter(
+                  p => p.parentId == item.dictValue && p.name == '艺术'
+                )"
+                :key="itemLy.id"
+              >
+                {{ itemLy.name }}
+                <div
+                  class="block"
+                  v-for="itemFzly in assessmentcontentList.filter(
+                    p => p.parentId == itemLy.id
+                  )"
+                  :key="itemFzly.id"
+                >
+                  <h2 class="block-item-title flex align-center">
+                    {{ itemFzly.name }}
+                  </h2>
+                  <ul class="block-content">
+                    <li
+                      v-for="itemMb in assessmentcontentList.filter(
+                        p => p.parentId == itemFzly.id
+                      )"
+                      :key="itemMb.id"
+                    >
+                      <p class="block-content-title">
+                        <span class="num">{{ itemMb.sort }}. </span
+                        >{{ itemMb.name }}
+                      </p>
+                      <div
+                        class="checkbox-content"
+                        v-for="itemYs in assessmentcontentList.filter(
+                          p => p.parentId == itemMb.id
+                        )"
+                        :key="itemYs.id"
+                      >
+                        <p class="checkbox-item flex align-center">
+                          {{ itemYs.jyjy }}
+                        </p>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
           </el-tab-pane>
         </el-tabs>
         <!-- <div>sf

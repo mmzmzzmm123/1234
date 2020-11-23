@@ -144,9 +144,8 @@
         label="活动时间"
         align="center"
         prop="activitytime"
-        width="180"
       />
-      <el-table-column
+      <!-- <el-table-column
         label="创建时间"
         align="center"
         prop="createtime"
@@ -155,12 +154,13 @@
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createtime) }}</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column
         fixed="right"
         label="操作"
         align="center"
-        class-name="small-padding fixed-width"
+        width="60"
+        class-name="small-padding fixed-width edit-btns"
       >
         <template slot-scope="scope">
           <el-button
