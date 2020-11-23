@@ -105,4 +105,20 @@
   .el-form-item {
     margin-bottom: 10px;
   }
+  .box-shadow {
+    padding: 10px 8px !important;
+  }
+  .el-picker-panel {
+    left: 0 !important;
+    width: 100%;
+  }
+  .el-date-range-picker .el-picker-panel__body {
+    min-width: 100%;
+    height: 329px;
+    overflow-y: auto;
+  }
+  .el-date-range-picker__content.is-left, .el-date-range-picker__content.is-right {
+    width: 100%;
+    float: none;
+  }
 }
