@@ -49,7 +49,7 @@
     <select id="selectByChildLearndevelopmentTeacherById" parameterType="Long"
             resultMap="ByChildLearndevelopmentTeacherResult">
         <include refid="selectByChildLearndevelopmentTeacherVo"/>
-        where id = #{id}
+        where a.id = #{id}
     </select>
 
     <insert id="insertByChildLearndevelopmentTeacher" parameterType="ByChildLearndevelopmentTeacher">
