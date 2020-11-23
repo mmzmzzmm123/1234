@@ -40,7 +40,7 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
+      <!-- <el-col :span="1.5">
         <el-button
           type="primary"
           icon="el-icon-plus"
@@ -50,7 +50,7 @@
           v-show="isShow"
           >新增</el-button
         >
-      </el-col>
+      </el-col> -->
       <el-col :span="1.5">
         <el-button
           type="success"
@@ -60,7 +60,7 @@
           @click="handleUpdate"
           v-hasPermi="['benyi:mathtermplan:edit']"
           v-show="isShow"
-          >修改</el-button
+          >填充</el-button
         >
       </el-col>
       <el-col :span="1.5">
@@ -105,7 +105,7 @@
             @click="handleUpdate(scope.row)"
             v-hasPermi="['benyi:mathtermplan:edit']"
             v-show="isShow"
-            >修改</el-button
+            >填充</el-button
           >
           <el-button
             size="mini"
@@ -409,14 +409,14 @@ export default {
       this.title = "添加游戏数学学期计划明细";
       this.form.tpid = this.queryParams.tpid;
     },
-    /** 修改按钮操作 */
+    /**填充按钮操作 */
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids;
       getMathtermplanitem(id).then((response) => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改游戏数学学期计划明细";
+        this.title = "填充游戏数学学期计划明细";
         var mathconent = response.data.mathconent.split(";");
         var array = [];
         mathconent.forEach(function (value, key, arr) {
@@ -434,7 +434,7 @@ export default {
           if (this.form.id != undefined) {
             updateMathtermplanitem(this.form).then((response) => {
               if (response.code === 200) {
-                this.msgSuccess("修改成功");
+                this.msgSuccess("填充成功");
                 this.open = false;
                 this.getList();
               }

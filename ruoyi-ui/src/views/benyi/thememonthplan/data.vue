@@ -27,7 +27,7 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
+      <!-- <el-col :span="1.5">
         <el-button
           type="primary"
           icon="el-icon-plus"
@@ -36,7 +36,7 @@
           v-hasPermi="['benyi:thememonthplan:add']"
           v-show="isShow"
         >新增</el-button>
-      </el-col>
+      </el-col> -->
       <el-col :span="1.5">
         <el-button
           type="success"
@@ -46,7 +46,7 @@
           @click="handleUpdate"
           v-hasPermi="['benyi:thememonthplan:edit']"
           v-show="isShow"
-        >修改</el-button>
+        >填充</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -92,7 +92,7 @@
             @click="handleUpdate(scope.row)"
             v-hasPermi="['benyi:thememonthplan:edit']"
             v-show="isShow"
-          >修改</el-button>
+          >填充</el-button>
           <el-button
             size="mini"
             type="text"
@@ -387,14 +387,14 @@ export default {
       this.title = "添加主题整合周计划";
       this.form.mpid = this.queryParams.mpid;
     },
-    /** 修改按钮操作 */
+    /** 填充按钮操作 */
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids;
       getMonthplanitem(id).then((response) => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改主题整合周计划明细";
+        this.title = "填充主题整合周计划明细";
         var activityid = response.data.activityid.split(";");
         var array = [];
         //console.log(arr);
@@ -414,7 +414,7 @@ export default {
           if (this.form.id != undefined) {
             updateMonthplanitem(this.form).then((response) => {
               if (response.code === 200) {
-                this.msgSuccess("修改成功");
+                this.msgSuccess("填充成功");
                 this.open = false;
                 this.getList();
               }

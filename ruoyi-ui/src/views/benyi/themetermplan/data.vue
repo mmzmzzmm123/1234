@@ -28,7 +28,7 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
+      <!-- <el-col :span="1.5">
         <el-button
           type="primary"
           icon="el-icon-plus"
@@ -37,7 +37,7 @@
           v-hasPermi="['benyi:themetermplan:add']"
           v-show="isShow"
         >新增</el-button>
-      </el-col>
+      </el-col> -->
       <el-col :span="1.5">
         <el-button
           type="success"
@@ -47,7 +47,7 @@
           @click="handleUpdate"
           v-hasPermi="['benyi:themetermplan:edit']"
           v-show="isShow"
-        >修改</el-button>
+        >填充</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -82,7 +82,7 @@
             @click="handleUpdate(scope.row)"
             v-hasPermi="['benyi:themetermplan:edit']"
             v-show="isShow"
-          >修改</el-button>
+          >填充</el-button>
           <el-button
             size="mini"
             type="text"
@@ -351,14 +351,14 @@ export default {
       this.title = "添加主题整合学期计划明细";
       this.form.tpid = this.queryParams.tpid;
     },
-    /** 修改按钮操作 */
+    /**填充按钮操作 */
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids;
       getTermplanitem(id).then((response) => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改主题整合学期计划明细";
+        this.title = "填充主题整合学期计划明细";
         var themeconent = response.data.themeconent.split(";");
         var array = [];
         //console.log(arr);
@@ -378,7 +378,7 @@ export default {
           if (this.form.id != undefined) {
             updateTermplanitem(this.form).then((response) => {
               if (response.code === 200) {
-                this.msgSuccess("修改成功");
+                this.msgSuccess("填充成功");
                 this.open = false;
                 this.getList();
               }

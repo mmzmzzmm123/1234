@@ -348,6 +348,7 @@ export default {
     getClassList() {
       listClass(null).then(response => {
         this.classOptions = response.rows;
+        console.log(this.classOptions);
       });
     },
     
