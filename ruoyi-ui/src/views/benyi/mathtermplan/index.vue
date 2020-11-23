@@ -1,108 +1,113 @@
 <template>
   <div class="app-container">
-    <el-form
-      :model="queryParams"
-      ref="queryForm"
-      :inline="true"
-      label-width="68px"
-    >
-      <el-form-item label="班级编码" prop="classid">
-        <el-select v-model="queryParams.classid" placeholder="请选择班级">
-          <el-option
-            v-for="dict in classOptions"
-            :key="dict.bjbh"
-            :label="dict.bjmc"
-            :value="dict.bjbh"
-          ></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="学年学期" prop="xnxq">
-        <el-select
-          v-model="queryParams.xnxq"
-          placeholder="请选择学年学期"
-          clearable
-          size="small"
-        >
-          <el-option
-            v-for="dict in xnxqOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="状态" prop="status">
-        <el-select
-          v-model="queryParams.status"
-          placeholder="请选择状态"
-          clearable
-          size="small"
-        >
-          <el-option
-            v-for="dict in statusOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item>
-        <el-button
-          type="primary"
-          icon="el-icon-search"
-          size="mini"
-          @click="handleQuery"
-          >搜索</el-button
-        >
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
-          >重置</el-button
-        >
-      </el-form-item>
+    <el-form :model="queryParams" ref="queryForm" label-width="70px">
+      <el-row :gutter="10">
+        <el-col :xs="24" :ms="12" :md="5">
+          <el-form-item label="选择班级" prop="classid">
+            <el-select v-model="queryParams.classid" placeholder="请选择班级">
+              <el-option
+                v-for="dict in classOptions"
+                :key="dict.bjbh"
+                :label="dict.bjmc"
+                :value="dict.bjbh"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :ms="12" :md="5">
+          <el-form-item label="学年学期" prop="xnxq">
+            <el-select
+              v-model="queryParams.xnxq"
+              placeholder="请选择学年学期"
+              clearable
+              size="small"
+            >
+              <el-option
+                v-for="dict in xnxqOptions"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="dict.dictValue"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :ms="12" :md="5">
+          <el-form-item label="状态" prop="status">
+            <el-select
+              v-model="queryParams.status"
+              placeholder="请选择状态"
+              clearable
+              size="small"
+            >
+              <el-option
+                v-for="dict in statusOptions"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="dict.dictValue"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :ms="12" :md="4">
+          <el-form-item class="no-margin">
+            <el-button
+              type="primary"
+              icon="el-icon-search"
+              size="mini"
+              @click="handleQuery"
+              >搜索</el-button
+            >
+            <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+              >重置</el-button
+            >
+          </el-form-item>
+        </el-col>
+      </el-row>
     </el-form>
 
-    <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          type="primary"
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['benyi:mathtermplan:add']"
-          >新增</el-button
-        >
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['benyi:mathtermplan:edit']"
-          >修改</el-button
-        >
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="danger"
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['benyi:mathtermplan:remove']"
-          >删除</el-button
-        >
-      </el-col>
-    </el-row>
+    <div class="mb8 btn-list">
+      <el-button
+        type="primary"
+        icon="el-icon-plus"
+        size="mini"
+        @click="handleAdd"
+        v-hasPermi="['benyi:mathtermplan:add']"
+        >新增</el-button
+      >
+      <el-button
+        type="success"
+        icon="el-icon-edit"
+        size="mini"
+        :disabled="single"
+        @click="handleUpdate"
+        v-hasPermi="['benyi:mathtermplan:edit']"
+        >修改</el-button
+      >
+      <el-button
+        type="danger"
+        icon="el-icon-delete"
+        size="mini"
+        :disabled="multiple"
+        @click="handleDelete"
+        v-hasPermi="['benyi:mathtermplan:remove']"
+        >删除</el-button
+      >
+    </div>
 
     <el-table
+    border
       v-loading="loading"
       :data="mathtermplanList"
       @selection-change="handleSelectionChange"
     >
-      <el-table-column type="selection" width="55" align="center" :selectable="isShow" />
-      <el-table-column label="班级名称" align="center" prop="classid" :formatter="classFormat"/>
       <el-table-column
+        type="selection"
+        width="55"
+        align="center"
+        :selectable="isShow"
+      />
+      <el-table-column
+      fixed
         label="计划名称"
         align="center"
         prop="name"
@@ -118,10 +123,15 @@
         </template>
       </el-table-column>
       <el-table-column
+        label="班级名称"
+        align="center"
+        prop="classid"
+        :formatter="classFormat"
+      />
+      <el-table-column
         label="开始月份"
         align="center"
         prop="startmonth"
-        width="180"
       >
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.startmonth, "{y}-{m}") }}</span>
@@ -131,7 +141,6 @@
         label="结束月份"
         align="center"
         prop="endmonth"
-        width="180"
       >
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.endmonth, "{y}-{m}") }}</span>
@@ -153,7 +162,9 @@
       <el-table-column
         label="操作"
         align="center"
-        class-name="small-padding fixed-width"
+        fixed="right"
+        width="60"
+        class-name="small-padding fixed-width edit-btns"
       >
         <template slot-scope="scope">
           <el-button
@@ -181,14 +192,16 @@
             @click="handleCheck(scope.row)"
             v-hasPermi="['benyi:mathtermplan:edit']"
             v-show="isShow(scope.row)"
-          >提交</el-button>
+            >提交</el-button
+          >
           <el-button
             size="mini"
             type="text"
             icon="el-icon-view"
             @click="handleView(scope.row)"
             v-hasPermi="['benyi:mathtermplan:query']"
-          >预览</el-button>
+            >预览</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
@@ -202,7 +215,7 @@
     />
 
     <!-- 添加或修改游戏数学学期计划对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" class="v-dialog" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="月份" prop="startmonth">
           <el-date-picker
@@ -212,6 +225,7 @@
             start-placeholder="开始月份"
             end-placeholder="结束月份"
             value-format="yyyy-MM"
+            class="my-date-picker"
           ></el-date-picker>
         </el-form-item>
         <el-form-item label="学年学期" prop="xnxq">
@@ -451,14 +465,11 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$confirm(
-        '是否确认删除游戏数学学期计划数据项?',
-        "警告",
-        {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning",
-        })
+      this.$confirm("是否确认删除游戏数学学期计划数据项?", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
         .then(function () {
           return delMathtermplan(ids);
         })
@@ -471,15 +482,11 @@ export default {
     /** 提交按钮操作 */
     handleCheck(row) {
       const id = row.id;
-      this.$confirm(
-        "是否确认提交游戏数学学期计划?提交后数据无法维护",
-        "警告",
-        {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning",
-        }
-      )
+      this.$confirm("是否确认提交游戏数学学期计划?提交后数据无法维护", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
         .then(function () {
           return checkTermplan(id);
         })
@@ -493,10 +500,26 @@ export default {
     handleView(row) {
       const id = row.id;
       this.$router.push({
-        path: "/benyi_course/mathtermplanprint/table/"+id,
+        path: "/benyi_course/mathtermplanprint/table/" + id,
       });
     },
-    
   },
 };
 </script>
+<style lang="scss" scoped>
+.el-select {
+  width: 100%;
+}
+.my-date-picker {
+  width: 100%;
+}
+.edit-btns {
+  .el-button {
+    display: block;
+    margin: 0 auto;
+  }
+}
+.no-margin ::v-deep.el-form-item__content {
+  margin: 0 !important;
+}
+</style>

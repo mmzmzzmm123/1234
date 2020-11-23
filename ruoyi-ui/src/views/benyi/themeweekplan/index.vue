@@ -1,114 +1,184 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
-      <el-form-item label="计划名称" prop="name">
-        <el-input
-          v-model="queryParams.name"
-          placeholder="请输入计划名称"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="学年学期" prop="xnxq">
-        <el-select v-model="queryParams.xnxq" placeholder="请选择学年学期" clearable size="small">
-          <el-option
-            v-for="dict in xnxqOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="所属月份" prop="month">
-        <el-date-picker
-          clearable
-          size="small"
-          style="width: 200px"
-          v-model="queryParams.month"
-          type="month"
-          value-format="yyyy-MM"
-          placeholder="选择所属月份"
-        ></el-date-picker>
-      </el-form-item>
-      <el-form-item label="所属周次" prop="zc">
-        <el-input-number
-          v-model="queryParams.zc"
-          placeholder="周次"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="状态" prop="status">
-        <el-select v-model="queryParams.status" placeholder="请选择状态" clearable size="small">
-          <el-option
-            v-for="dict in statusOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-      </el-form-item>
+    <el-form :model="queryParams" ref="queryForm" label-width="70px">
+      <el-row :gutter="10">
+        <el-col :xs="24" :ms="12" :md="5">
+          <el-form-item label="计划名称" prop="name">
+            <el-input
+              v-model="queryParams.name"
+              placeholder="请输入计划名称"
+              clearable
+              size="small"
+              @keyup.enter.native="handleQuery"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :ms="12" :md="5">
+          <el-form-item label="学年学期" prop="xnxq">
+            <el-select
+              v-model="queryParams.xnxq"
+              placeholder="请选择学年学期"
+              clearable
+              size="small"
+            >
+              <el-option
+                v-for="dict in xnxqOptions"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="dict.dictValue"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :ms="12" :md="5">
+          <el-form-item label="所属月份" prop="month">
+            <el-date-picker
+              clearable
+              size="small"
+              class="my-date-picker"
+              v-model="queryParams.month"
+              type="month"
+              value-format="yyyy-MM"
+              placeholder="选择所属月份"
+            ></el-date-picker>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :ms="12" :md="5">
+          <el-form-item label="所属周次" prop="zc">
+            <el-input-number
+              v-model="queryParams.zc"
+              placeholder="周次"
+              clearable
+              size="small"
+              class="my-date-picker"
+              @keyup.enter.native="handleQuery"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :ms="12" :md="5">
+          <el-form-item label="状态" prop="status">
+            <el-select
+              v-model="queryParams.status"
+              placeholder="请选择状态"
+              clearable
+              size="small"
+            >
+              <el-option
+                v-for="dict in statusOptions"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="dict.dictValue"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :ms="12" :md="4">
+          <el-form-item class="no-margin">
+            <el-button
+              type="primary"
+              icon="el-icon-search"
+              size="mini"
+              @click="handleQuery"
+              >搜索</el-button
+            >
+            <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+              >重置</el-button
+            >
+          </el-form-item>
+        </el-col>
+      </el-row>
     </el-form>
 
-    <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          type="primary"
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['benyi:themeweekplan:add']"
-        >新增</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['benyi:themeweekplan:edit']"
-        >修改</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="danger"
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['benyi:themeweekplan:remove']"
-        >删除</el-button>
-      </el-col>
-    </el-row>
+    <div class="mb8 btn-list">
+      <el-button
+        type="primary"
+        icon="el-icon-plus"
+        size="mini"
+        @click="handleAdd"
+        v-hasPermi="['benyi:themeweekplan:add']"
+        >新增</el-button
+      >
+      <el-button
+        type="success"
+        icon="el-icon-edit"
+        size="mini"
+        :disabled="single"
+        @click="handleUpdate"
+        v-hasPermi="['benyi:themeweekplan:edit']"
+        >修改</el-button
+      >
+      <el-button
+        type="danger"
+        icon="el-icon-delete"
+        size="mini"
+        :disabled="multiple"
+        @click="handleDelete"
+        v-hasPermi="['benyi:themeweekplan:remove']"
+        >删除</el-button
+      >
+    </div>
 
-    <el-table v-loading="loading" :data="weekplanList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" :selectable="isShow" />
+    <el-table
+    border
+      v-loading="loading"
+      :data="weekplanList"
+      @selection-change="handleSelectionChange"
+    >
+      <el-table-column
+        type="selection"
+        width="55"
+        align="center"
+        :selectable="isShow"
+      />
       <!-- <el-table-column label="编号" align="center" prop="id" /> -->
-      <el-table-column label="计划名称" align="center" prop="name" :show-overflow-tooltip="true">
+      <el-table-column
+      fixed
+        label="计划名称"
+        align="center"
+        prop="name"
+        :show-overflow-tooltip="true"
+      >
         <template slot-scope="scope">
-          <router-link :to="'/benyi_course/themeweekplan/data/' + scope.row.id" class="link-type">
+          <router-link
+            :to="'/benyi_course/themeweekplan/data/' + scope.row.id"
+            class="link-type"
+          >
             <span>{{ scope.row.name }}</span>
           </router-link>
         </template>
       </el-table-column>
-      <el-table-column label="班级名称" align="center" prop="classid" :formatter="classFormat" />
-      <el-table-column label="所属月份" align="center" prop="month" width="180">
+      <el-table-column
+        label="班级名称"
+        align="center"
+        prop="classid"
+        :formatter="classFormat"
+      />
+      <el-table-column label="所属月份" align="center" prop="month">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.month, '{y}-{m}') }}</span>
+          <span>{{ parseTime(scope.row.month, "{y}-{m}") }}</span>
         </template>
       </el-table-column>
       <el-table-column label="所属周次" align="center" prop="zc" />
-      <el-table-column label="学年学期" align="center" prop="xnxq" :formatter="xnxqFormat" />
+      <el-table-column
+        label="学年学期"
+        align="center"
+        prop="xnxq"
+        :formatter="xnxqFormat"
+      />
       <el-table-column label="备注" align="center" prop="remark" />
-      <el-table-column label="状态" align="center" prop="status" :formatter="statusFormat" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="300">
+      <el-table-column
+        label="状态"
+        align="center"
+        prop="status"
+        :formatter="statusFormat"
+      />
+      <el-table-column
+      fixed="right"
+        label="操作"
+        align="center"
+        class-name="small-padding fixed-width edit-btns"
+        width="60"
+      >
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -117,7 +187,8 @@
             @click="handleUpdate(scope.row)"
             v-hasPermi="['benyi:themeweekplan:edit']"
             v-show="isShow(scope.row)"
-          >修改</el-button>
+            >修改</el-button
+          >
           <el-button
             size="mini"
             type="text"
@@ -125,7 +196,8 @@
             @click="handleDelete(scope.row)"
             v-hasPermi="['benyi:themeweekplan:remove']"
             v-show="isShow(scope.row)"
-          >删除</el-button>
+            >删除</el-button
+          >
           <el-button
             size="mini"
             type="text"
@@ -133,20 +205,22 @@
             @click="handleCheck(scope.row)"
             v-hasPermi="['benyi:themeweekplan:edit']"
             v-show="isShow(scope.row)"
-          >提交</el-button>
+            >提交</el-button
+          >
           <el-button
             size="mini"
             type="text"
             icon="el-icon-view"
             @click="handleView(scope.row)"
             v-hasPermi="['benyi:themeweekplan:query']"
-          >预览</el-button>
+            >预览</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
 
     <pagination
-      v-show="total>0"
+      v-show="total > 0"
       :total="total"
       :page.sync="queryParams.pageNum"
       :limit.sync="queryParams.pageSize"
@@ -154,10 +228,14 @@
     />
 
     <!-- 添加或修改主题整合周计划（根据月计划明细）对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" class="v-dialog" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="学年学期" prop="xnxq">
-          <el-select v-model="form.xnxq" placeholder="请选择学年学期" :disabled="disable">
+          <el-select
+            v-model="form.xnxq"
+            placeholder="请选择学年学期"
+            :disabled="disable"
+          >
             <el-option
               v-for="dict in xnxqOptions"
               :key="dict.dictValue"
@@ -170,7 +248,7 @@
           <el-date-picker
             clearable
             size="small"
-            style="width: 200px"
+            class="my-date-picker"
             v-model="form.month"
             type="month"
             value-format="yyyy-MM"
@@ -179,10 +257,19 @@
           ></el-date-picker>
         </el-form-item>
         <el-form-item label="所属周次" prop="zc">
-          <el-input-number v-model="form.zc" placeholder="周次" :disabled="disable" />
+          <el-input-number
+            v-model="form.zc"
+            placeholder="周次"
+            class="my-date-picker"
+            :disabled="disable"
+          />
         </el-form-item>
         <el-form-item label="备注" prop="remar">
-          <el-input v-model="form.remark" type="textarea" placeholder="请输入内容" />
+          <el-input
+            v-model="form.remark"
+            type="textarea"
+            placeholder="请输入内容"
+          />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -435,9 +522,26 @@ export default {
     handleView(row) {
       const id = row.id;
       this.$router.push({
-        path: "/benyi_course/themeweekplanprint/table/"+id,
+        path: "/benyi_course/themeweekplanprint/table/" + id,
       });
     },
   },
 };
 </script>
+<style lang="scss" scoped>
+.el-select {
+  width: 100%;
+}
+.my-date-picker {
+  width: 100%;
+}
+.edit-btns {
+  .el-button {
+    display: block;
+    margin: 0 auto;
+  }
+}
+.no-margin ::v-deep.el-form-item__content {
+  margin: 0 !important;
+}
+</style>

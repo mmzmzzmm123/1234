@@ -129,7 +129,7 @@
     >
       <el-table-column
         type="selection"
-        width="38"
+        width="55"
         align="center"
         :selectable="checkSelectable"
       />
@@ -211,12 +211,11 @@
     />
 
     <!-- 添加或修改园历管理对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px">
+    <el-dialog :title="title" :visible.sync="open" class="v-dialog">
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="名称" prop="name">
+        <el-form-item label="事件名称" prop="name">
           <el-input
             v-model="form.name"
-            type="textarea"
             placeholder="请输入内容"
           />
         </el-form-item>
@@ -255,7 +254,7 @@
           <el-date-picker
             clearable
             size="small"
-            style="width: 240px"
+            class="my-date-picker"
             v-model="form.activitytime"
             type="daterange"
             value-format="yyyy-MM-dd"

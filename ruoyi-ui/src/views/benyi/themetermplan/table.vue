@@ -132,7 +132,7 @@ export default {
     //获取教学学期计划
     getThemeTermPlan(themetermplanid) {
       getTermplan(themetermplanid).then((response) => {
-        console.log(response.data);
+        // console.log(response.data);
         this.title = response.data.name;
         this.tbr = response.createusername;
         this.classname = response.classname;
@@ -144,7 +144,7 @@ export default {
     //获取学期月份详细计划
     getThemeTermItemPlan() {
       listTermplanitem(this.queryParams).then((response) => {
-        console.log(response.rows);
+        // console.log(response.rows);
         this.bodyData.termplanitemList = response.rows;
       });
     },

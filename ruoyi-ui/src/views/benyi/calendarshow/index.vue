@@ -7,8 +7,9 @@
             <el-button
               type="primary"
               class="btn no-border-btn"
-              :style="{background: `${item.color}`}"
-            >{{item.title}}</el-button>
+              :style="{ background: `${item.color}` }"
+              >{{ item.title }}</el-button
+            >
           </el-col>
         </el-row>
       </el-col>
@@ -45,32 +46,32 @@ import { getAllSchoolCalendars } from "@/api/benyi/calendar";
 export default {
   name: "fullcalendar_page",
   components: {
-    FullCalendar
+    FullCalendar,
   },
   data() {
     return {
       btns: [
         {
           color: "#52c41a",
-          title: "家长参与"
+          title: "家长参与",
         },
         {
           color: "#135200",
-          title: "大型活动"
+          title: "大型活动",
         },
         {
           color: "#1890ff",
-          title: "教学活动"
+          title: "教学活动",
         },
         {
           color: "#eb2f96",
-          title: "节假日"
-        }
+          title: "节假日",
+        },
       ],
       views: {
         list: {
-          noEventsMessage: "暂无日程"
-        }
+          noEventsMessage: "暂无日程",
+        },
       },
       // header: {
       //   left: "prev,next today",
@@ -84,22 +85,22 @@ export default {
       //   day: "日",
       //   list: "周列表"
       // },
-       header: {
+      header: {
         left: "prev,next today",
         center: "title",
-        right: "dayGridMonth, listWeek"
+        right: "dayGridMonth, listWeek",
       },
       buttonText: {
         today: "今天",
         month: "月",
-        list: "周列表"
+        list: "周列表",
       },
       calendarPlugins: [
         // plugins must be defined in the JS
         dayGridPlugin,
         //timeGridPlugin,
         //interactionPlugin, // needed for dateClick
-        listPlugin
+        listPlugin,
       ],
       calendarWeekends: true,
       calendarEvents: [
@@ -112,22 +113,22 @@ export default {
       ],
       calendarApi: null,
       calendarData: [],
-      queryParams: {}
+      queryParams: {},
     };
   },
   created() {
-    getAllSchoolCalendars(this.queryParams).then(response => {
+    getAllSchoolCalendars(this.queryParams).then((response) => {
       this.calendarEvents = response.calendarData;
     });
   },
   methods: {
     handleEventClick(info) {
-       this.msgSuccess("活动: " + info.event.title);
-    }
+      this.msgSuccess("活动: " + info.event.title);
+    },
   },
   mounted() {
     this.calendarApi = this.$refs.fullCalendar.getApi();
-  }
+  },
 };
 </script>
 
@@ -143,12 +144,15 @@ export default {
   height: 100%;
 }
 .fc-widget-content {
-          .fc-sun,
-          .fc-sat {
-            background: rgba(245, 246, 248, 0.6);
-            //background: rgba(109, 113, 121, 0.6);
-          }
-		}
+  .fc-scroller.fc-day-grid-container {
+    height: 100% !important;
+  }
+  .fc-sun,
+  .fc-sat {
+    background: rgba(245, 246, 248, 0.6);
+    //background: rgba(109, 113, 121, 0.6);
+  }
+}
 .xs-btns-style {
   @media screen and (max-width: 768px) {
     display: flex;
@@ -177,17 +181,21 @@ export default {
 }
 .fc-header-toolbar {
   @media screen and (max-width: 768px) {
-    .fc-left > .fc-today-button, .fc-right > .fc-listWeek-button {
+    .fc-left > .fc-today-button,
+    .fc-right > .fc-listWeek-button {
       display: none;
     }
   }
 }
 @media (max-width: 768.98px) {
-  .fc button {
-    height: 30px;
-  }
-  .fc-toolbar h2 {
-    font-size: 16px;
+  .xs-height {
+    height: 100% !important;
+    .fc button {
+      height: 30px;
+    }
+    .fc-toolbar h2 {
+      font-size: 16px;
+    }
   }
 }
 </style>

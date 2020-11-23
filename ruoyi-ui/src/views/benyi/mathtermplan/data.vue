@@ -1,46 +1,49 @@
 <template>
   <div class="app-container">
-    <el-form
-      :model="queryParams"
-      ref="queryForm"
-      :inline="true"
-      label-width="102px"
-    >
-      <el-form-item label="学期计划" prop="tpid">
-        <el-select v-model="queryParams.tpid" size="small">
-          <el-option
-            v-for="item in mathPlanOptions"
-            :key="item.id"
-            :label="item.name"
-            :value="item.id"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="游戏数学内容" prop="mathconent">
-        <el-input
-          v-model="queryParams.mathconent"
-          placeholder="请输入游戏数学内容"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item>
-        <el-button
-          type="primary"
-          icon="el-icon-search"
-          size="mini"
-          @click="handleQuery"
-          >搜索</el-button
-        >
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
-          >重置</el-button
-        >
-      </el-form-item>
+    <el-form :model="queryParams" ref="queryForm" label-width="70px">
+      <el-row :gutter="10">
+        <el-col :xs="24" :ms="12" :md="5">
+          <el-form-item label="学期计划" prop="tpid">
+            <el-select v-model="queryParams.tpid" size="small">
+              <el-option
+                v-for="item in mathPlanOptions"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :ms="12" :md="5">
+          <el-form-item label="游戏数学" prop="mathconent">
+            <el-input
+              v-model="queryParams.mathconent"
+              placeholder="请输入游戏数学内容"
+              clearable
+              size="small"
+              @keyup.enter.native="handleQuery"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :ms="12" :md="4">
+          <el-form-item class="no-margin">
+            <el-button
+              type="primary"
+              icon="el-icon-search"
+              size="mini"
+              @click="handleQuery"
+              >搜索</el-button
+            >
+            <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+              >重置</el-button
+            >
+          </el-form-item>
+        </el-col>
+      </el-row>
     </el-form>
 
-    <el-row :gutter="10" class="mb8">
-      <!-- <el-col :span="1.5">
+    <div class="mb8 btn-list">
+      <!-- 
         <el-button
           type="primary"
           icon="el-icon-plus"
@@ -50,39 +53,43 @@
           v-show="isShow"
           >新增</el-button
         >
-      </el-col> -->
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['benyi:mathtermplan:edit']"
-          v-show="isShow"
-          >填充</el-button
-        >
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="danger"
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['benyi:mathtermplan:remove']"
-          v-show="isShow"
-          >删除</el-button
-        >
-      </el-col>
-    </el-row>
+      -->
+      <el-button
+        type="success"
+        icon="el-icon-edit"
+        size="mini"
+        :disabled="single"
+        @click="handleUpdate"
+        v-hasPermi="['benyi:mathtermplan:edit']"
+        v-show="isShow"
+        >填充</el-button
+      >
+      <el-button
+        type="danger"
+        icon="el-icon-delete"
+        size="mini"
+        :disabled="multiple"
+        @click="handleDelete"
+        v-hasPermi="['benyi:mathtermplan:remove']"
+        v-show="isShow"
+        >删除</el-button
+      >
+    </div>
 
     <el-table
+    border
       v-loading="loading"
       :data="mathtermplanitemList"
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center" />
+      <el-table-column
+      fixed
+        label="游戏数学内容"
+        align="center"
+        prop="mathconent"
+        :formatter="mathFaFormat"
+      />
       <el-table-column
         label="所属计划"
         align="center"
@@ -90,12 +97,13 @@
         :formatter="mathPlanFormat"
       />
       <el-table-column label="月份" align="center" prop="month" />
-      <el-table-column label="游戏数学内容" align="center" prop="mathconent" :formatter="mathFaFormat" />
       <el-table-column label="备注" align="center" prop="remark" />
       <el-table-column
         label="操作"
         align="center"
-        class-name="small-padding fixed-width"
+        fixed="right"
+        width="60"
+        class-name="small-padding fixed-width edit-btns"
       >
         <template slot-scope="scope">
           <el-button
@@ -129,7 +137,7 @@
     />
 
     <!-- 添加或修改游戏数学学期计划明细对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" class="v-dialog" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="所属计划" prop="tpid">
           <el-select v-model="form.tpid" size="small" :disabled="true">
@@ -147,11 +155,16 @@
             type="month"
             value-format="yyyy-MM"
             placeholder="选择月份"
+            class="my-date-picker"
           >
           </el-date-picker>
         </el-form-item>
         <el-form-item label="选择方案" prop="mathconent">
-          <el-checkbox-group v-model="mathFaList" :max="max" @change="getMathFaContentValue">
+          <el-checkbox-group
+            v-model="mathFaList"
+            :max="max"
+            @change="getMathFaContentValue"
+          >
             <el-checkbox
               v-for="(item, i) in mathFaOptions"
               :label="item.id"
@@ -475,3 +488,20 @@ export default {
   },
 };
 </script>
+<style lang="scss" scoped>
+.el-select {
+  width: 100%;
+}
+.my-date-picker {
+  width: 100%;
+}
+.edit-btns {
+  .el-button {
+    display: block;
+    margin: 0 auto;
+  }
+}
+.no-margin ::v-deep.el-form-item__content {
+  margin: 0 !important;
+}
+</style>

@@ -3,6 +3,18 @@
     <el-form :model="queryParams" ref="queryForm" label-width="70px">
       <el-row :gutter="10">
         <el-col :xs="24" :ms="12" :md="5">
+           <el-form-item label="选择班级" prop="classid">
+            <el-select v-model="queryParams.classid" placeholder="请选择班级">
+              <el-option
+                v-for="dict in classOptions"
+                :key="dict.bjbh"
+                :label="dict.bjmc"
+                :value="dict.bjbh"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :ms="12" :md="5">
           <el-form-item label="幼儿姓名" prop="name">
             <el-input
               v-model="queryParams.name"

@@ -6,10 +6,12 @@
           <el-form-item label="视频类别" prop="type">
             <el-cascader
               placeholder="请选择视频类别"
+              ref="example"
               v-model="queryParams.type"
               :options="optionTypes"
               :props="{ checkStrictly: true, value: 'id', label: 'name' }"
               clearable
+              @change="exampleChange"
             ></el-cascader>
           </el-form-item>
           <!-- 博士要求注释掉，不需要该过滤条件 2020-05-30 zlp -->
@@ -148,6 +150,11 @@ export default {
     });
   },
   methods: {
+    exampleChange(e) {
+      // console.log(e);
+      // 目的是选择之后将下拉界面收起
+      this.$refs.example.toggleDropDownVisible();
+    },
     // 递归判断列表，把最后的children设为undefined
     getTreeData(data) {
       for (var i = 0; i < data.length; i++) {

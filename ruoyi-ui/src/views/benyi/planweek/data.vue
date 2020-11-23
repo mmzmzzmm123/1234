@@ -1,114 +1,103 @@
 <template>
   <div class="app-container">
-    <el-form
-      :model="queryParams"
-      ref="queryForm"
-      :inline="true"
-      label-width="68px"
-    >
-      <el-form-item label="周计划" prop="wid">
-        <el-select v-model="queryParams.wid" size="small">
-          <el-option
-            v-for="item in planweekOptions"
-            :key="item.id"
-            :label="item.name"
-            :value="item.id"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="活动类型" prop="activitytype">
-        <el-select
-          v-model="queryParams.activitytype"
-          placeholder="请选择活动类型"
-          clearable
-          size="small"
-        >
-          <el-option
-            v-for="dict in activitytypeOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="活动时间" prop="activitytime">
-        <el-date-picker
-          clearable
-          size="small"
-          style="width: 200px"
-          v-model="queryParams.activitytime"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="选择活动时间"
-        ></el-date-picker>
-      </el-form-item>
-      <el-form-item>
-        <el-button
-          type="primary"
-          icon="el-icon-search"
-          size="mini"
-          @click="handleQuery"
-          >搜索</el-button
-        >
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
-          >重置</el-button
-        >
-      </el-form-item>
+    <el-form :model="queryParams" ref="queryForm" label-width="70px">
+      <el-row :gutter="10">
+        <el-col :xs="24" :ms="12" :md="5">
+          <el-form-item label="周计划" prop="wid">
+            <el-select v-model="queryParams.wid" size="small">
+              <el-option
+                v-for="item in planweekOptions"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :ms="12" :md="5">
+          <el-form-item label="活动类型" prop="activitytype">
+            <el-select
+              v-model="queryParams.activitytype"
+              placeholder="请选择活动类型"
+              clearable
+              size="small"
+            >
+              <el-option
+                v-for="dict in activitytypeOptions"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="dict.dictValue"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :ms="12" :md="5">
+          <el-form-item label="活动时间" prop="activitytime">
+            <el-date-picker
+              clearable
+              size="small"
+              class="my-date-picker"
+              v-model="queryParams.activitytime"
+              type="date"
+              value-format="yyyy-MM-dd"
+              placeholder="选择活动时间"
+            ></el-date-picker>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :ms="12" :md="4">
+          <el-form-item class="no-margin">
+            <el-button
+              type="primary"
+              icon="el-icon-search"
+              size="mini"
+              @click="handleQuery"
+              >搜索</el-button
+            >
+            <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+              >重置</el-button
+            >
+          </el-form-item>
+        </el-col>
+      </el-row>
     </el-form>
-
-    <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          type="primary"
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['benyi:planweek:add']"
-          >新增</el-button
-        >
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['benyi:planweek:edit']"
-          >修改</el-button
-        >
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="danger"
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['benyi:planweek:remove']"
-          >删除</el-button
-        >
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['benyi:planweek:export']"
-          >导出</el-button
-        >
-      </el-col>
-    </el-row>
+    <div class="mb8 btn-list">
+      <el-button
+        type="primary"
+        icon="el-icon-plus"
+        size="mini"
+        @click="handleAdd"
+        v-hasPermi="['benyi:planweek:add']"
+        >新增</el-button
+      >
+      <el-button
+        type="success"
+        icon="el-icon-edit"
+        size="mini"
+        :disabled="single"
+        @click="handleUpdate"
+        v-hasPermi="['benyi:planweek:edit']"
+        >修改</el-button
+      >
+      <el-button
+        type="danger"
+        icon="el-icon-delete"
+        size="mini"
+        :disabled="multiple"
+        @click="handleDelete"
+        v-hasPermi="['benyi:planweek:remove']"
+        >删除</el-button
+      >
+    </div>
 
     <el-table
+      border
       v-loading="loading"
       :data="planweekitemList"
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="编号" align="center" prop="id" />
-      <el-table-column label="活动内容" align="center" prop="content">
+      <!-- <el-table-column label="编号" align="center" prop="id" /> -->
+      <el-table-column label="活动内容" align="center" fixed prop="content">
         <template slot-scope="scope">
           <div v-html="scope.row.content"></div>
         </template>
@@ -125,21 +114,18 @@
         prop="activitytype"
         :formatter="activitytypeFormat"
       />
-      <el-table-column
-        label="活动时间"
-        align="center"
-        prop="activitytime"
-        width="180"
-      >
+      <el-table-column label="活动时间" align="center" prop="activitytime">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.activitytime, "{y}-{m}-{d}") }}</span>
         </template>
       </el-table-column>
       <el-table-column label="星期" align="center" prop="day" />
       <el-table-column
+        fixed="right"
         label="操作"
         align="center"
-        class-name="small-padding fixed-width"
+        width="60"
+        class-name="small-padding fixed-width edit-btns"
       >
         <template slot-scope="scope">
           <el-button
@@ -174,7 +160,7 @@
     <el-dialog
       :title="title"
       :visible.sync="open"
-      width="1024px"
+      class="v-dialog"
       append-to-body
     >
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
@@ -202,7 +188,7 @@
           <el-date-picker
             clearable
             size="small"
-            style="width: 200px"
+            class="my-date-picker"
             v-model="form.activitytime"
             type="date"
             value-format="yyyy-MM-dd"
@@ -410,7 +396,7 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加周计划(家长和教育部门细化)";
+      this.title = "添加周计划(家长和教育部门)细化";
       this.form.wid = this.queryParams.wid;
     },
     /** 修改按钮操作 */
@@ -450,15 +436,11 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$confirm(
-        '是否确认删除周计划(家长和教育部门细化)数据项?',
-        "警告",
-        {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning",
-        }
-      )
+      this.$confirm("是否确认删除周计划(家长和教育部门细化)数据项?", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
         .then(function () {
           return delPlanweekitem(ids);
         })
@@ -491,3 +473,20 @@ export default {
   },
 };
 </script>
+<style lang="scss" scoped>
+.el-select {
+  width: 100%;
+}
+.my-date-picker {
+  width: 100%;
+}
+.edit-btns {
+  .el-button {
+    display: block;
+    margin: 0 auto;
+  }
+}
+.no-margin ::v-deep.el-form-item__content {
+  margin: 0 !important;
+}
+</style>

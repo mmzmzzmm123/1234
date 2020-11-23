@@ -1,79 +1,101 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
-      <el-form-item label="学期计划" prop="tpid">
-        <el-select v-model="queryParams.tpid" size="small">
-          <el-option
-            v-for="item in themePlanOptions"
-            :key="item.id"
-            :label="item.name"
-            :value="item.id"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="主题内容" prop="themeconent">
-        <el-select v-model="queryParams.themeconent" size="small">
-          <el-option
-            v-for="item in themeOptions"
-            :key="item.id"
-            :label="item.name"
-            :value="item.id"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-      </el-form-item>
+    <el-form :model="queryParams" ref="queryForm" label-width="70px">
+      <el-row :gutter="10">
+        <el-col :xs="24" :ms="12" :md="5">
+          <el-form-item label="学期计划" prop="tpid">
+            <el-select v-model="queryParams.tpid" size="small">
+              <el-option
+                v-for="item in themePlanOptions"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :ms="12" :md="5">
+          <el-form-item label="主题内容" prop="themeconent">
+            <el-select v-model="queryParams.themeconent" size="small">
+              <el-option
+                v-for="item in themeOptions"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :ms="12" :md="4">
+          <el-form-item class="no-margin">
+            <el-button
+              type="primary"
+              icon="el-icon-search"
+              size="mini"
+              @click="handleQuery"
+              >搜索</el-button
+            >
+            <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+              >重置</el-button
+            >
+          </el-form-item>
+        </el-col>
+      </el-row>
     </el-form>
 
-    <el-row :gutter="10" class="mb8">
-      <!-- <el-col :span="1.5">
-        <el-button
-          type="primary"
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['benyi:themetermplan:add']"
-          v-show="isShow"
-        >新增</el-button>
-      </el-col> -->
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['benyi:themetermplan:edit']"
-          v-show="isShow"
-        >填充</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="danger"
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['benyi:themetermplan:remove']"
-          v-show="isShow"
-        >删除</el-button>
-      </el-col>
-    </el-row>
+    <div class="mb8 btn-list">
+      <el-button
+        type="success"
+        icon="el-icon-edit"
+        size="mini"
+        :disabled="single"
+        @click="handleUpdate"
+        v-hasPermi="['benyi:themetermplan:edit']"
+        v-show="isShow"
+        >填充</el-button
+      >
+      <el-button
+        type="danger"
+        icon="el-icon-delete"
+        size="mini"
+        :disabled="multiple"
+        @click="handleDelete"
+        v-hasPermi="['benyi:themetermplan:remove']"
+        v-show="isShow"
+        >删除</el-button
+      >
+    </div>
 
     <el-table
+      border
       v-loading="loading"
       :data="termplanitemList"
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="编号" align="center" prop="id" /> -->
-      <el-table-column label="学期计划" align="center" prop="tpid" :formatter="themePlanFormat" />
+      <el-table-column
+        fixed
+        label="主题内容"
+        align="center"
+        prop="themeconent"
+        :formatter="themeFormat"
+      />
+      <el-table-column
+        label="学期计划"
+        align="center"
+        prop="tpid"
+        :formatter="themePlanFormat"
+      />
       <el-table-column label="月份" align="center" prop="month" />
-      <el-table-column label="主题内容" align="center" prop="themeconent" :formatter="themeFormat" />
       <el-table-column label="备注" align="center" prop="remark" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column
+        label="操作"
+        fixed="right"
+        align="center"
+        width="60"
+        class-name="small-padding fixed-width edit-btns"
+      >
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -82,7 +104,8 @@
             @click="handleUpdate(scope.row)"
             v-hasPermi="['benyi:themetermplan:edit']"
             v-show="isShow"
-          >填充</el-button>
+            >填充</el-button
+          >
           <el-button
             size="mini"
             type="text"
@@ -90,13 +113,14 @@
             @click="handleDelete(scope.row)"
             v-hasPermi="['benyi:themetermplan:remove']"
             v-show="isShow"
-          >删除</el-button>
+            >删除</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
 
     <pagination
-      v-show="total>0"
+      v-show="total > 0"
       :total="total"
       :page.sync="queryParams.pageNum"
       :limit.sync="queryParams.pageSize"
@@ -104,7 +128,12 @@
     />
 
     <!-- 添加或修改主题整合学期计划明细对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+    <el-dialog
+      :title="title"
+      :visible.sync="open"
+      class="v-dialog"
+      append-to-body
+    >
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="所属计划" prop="tpid">
           <el-select v-model="form.tpid" size="small" :disabled="true">
@@ -118,20 +147,35 @@
         </el-form-item>
         <el-form-item label="月份" prop="month">
           <el-date-picker
+            class="my-date-picker"
             v-model="form.month"
             type="month"
             placeholder="请选择月"
             value-format="yyyy-MM"
+            :disabled="true"
           ></el-date-picker>
         </el-form-item>
         <el-form-item label="选择主题" prop="themeconent">
-          <el-checkbox-group v-model="themeList" :max="max" @change="getThemeconentValue">
-            <el-checkbox v-for="(item,i) in themeOptions" :label="item.id" :key="i">{{item.name}}</el-checkbox>
+          <el-checkbox-group
+            v-model="themeList"
+            :max="max"
+            @change="getThemeconentValue"
+          >
+            <el-checkbox
+              v-for="(item, i) in themeOptions"
+              :label="item.id"
+              :key="i"
+              >{{ item.name }}</el-checkbox
+            >
           </el-checkbox-group>
           <el-input v-model="form.themeconent" v-if="false" />
         </el-form-item>
         <el-form-item label="备注" prop="remark">
-          <el-input v-model="form.remark" type="textarea" placeholder="请输入备注" />
+          <el-input
+            v-model="form.remark"
+            type="textarea"
+            placeholder="请输入备注"
+          />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -192,13 +236,13 @@ export default {
         tpid: undefined,
         themeconent: undefined,
         createuserid: undefined,
-        updateuserid: undefined
+        updateuserid: undefined,
       },
       queryParams_class: {
-        bjbh: undefined
+        bjbh: undefined,
       },
       queryParams_classtype: {
-        classid: undefined
+        classid: undefined,
       },
       // 表单参数
       form: {},
@@ -217,8 +261,6 @@ export default {
     this.getThemePlan(themeplanid);
     this.getThemePlanList();
     this.getClassType();
-   
-    
   },
   methods: {
     // 主题--字典状态字典翻译
@@ -251,7 +293,7 @@ export default {
       });
       this.form.themeconent = text;
     },
-    
+
     // 字典翻译
     themePlanFormat(row, column) {
       // return this.selectDictLabel(this.classOptions, row.classid);
@@ -322,7 +364,7 @@ export default {
         createuserid: undefined,
         month: undefined,
         updateuserid: undefined,
-        updateTime: undefined
+        updateTime: undefined,
       };
       this.resetForm("form");
       this.themeList = [];
@@ -419,3 +461,20 @@ export default {
   },
 };
 </script>
+<style lang="scss" scoped>
+.el-select {
+  width: 100%;
+}
+.my-date-picker {
+  width: 100%;
+}
+.edit-btns {
+  .el-button {
+    display: block;
+    margin: 0 auto;
+  }
+}
+.no-margin ::v-deep.el-form-item__content {
+  margin: 0 !important;
+}
+</style>

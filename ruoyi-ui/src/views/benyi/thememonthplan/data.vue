@@ -1,89 +1,121 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
-      <el-form-item label="月计划" prop="mpid">
-        <el-select v-model="queryParams.mpid" size="small">
-          <el-option
-            v-for="item in themeMonthPlanOptions"
-            :key="item.id"
-            :label="item.name"
-            :value="item.id"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="周次" prop="zc">
-        <el-input-number
-          v-model="queryParams.zc"
-          placeholder="周次"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-      </el-form-item>
+    <el-form :model="queryParams" ref="queryForm" label-width="70px">
+      <el-row :gutter="10">
+        <el-col :xs="24" :ms="12" :md="5">
+          <el-form-item label="月计划" prop="mpid">
+            <el-select v-model="queryParams.mpid" size="small">
+              <el-option
+                v-for="item in themeMonthPlanOptions"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :ms="12" :md="5">
+          <el-form-item label="周次" prop="zc">
+            <el-input-number
+              v-model="queryParams.zc"
+              placeholder="周次"
+              clearable
+              size="small"
+              class="my-date-picker"
+              @keyup.enter.native="handleQuery"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :ms="12" :md="4">
+          <el-form-item class="no-margin">
+            <el-button
+              type="primary"
+              icon="el-icon-search"
+              size="mini"
+              @click="handleQuery"
+              >搜索</el-button
+            >
+            <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+              >重置</el-button
+            >
+          </el-form-item>
+        </el-col>
+      </el-row>
     </el-form>
 
-    <el-row :gutter="10" class="mb8">
-      <!-- <el-col :span="1.5">
-        <el-button
-          type="primary"
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['benyi:thememonthplan:add']"
-          v-show="isShow"
-        >新增</el-button>
-      </el-col> -->
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['benyi:thememonthplan:edit']"
-          v-show="isShow"
-        >填充</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="danger"
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['benyi:thememonthplan:remove']"
-          v-show="isShow"
-        >删除</el-button>
-      </el-col>
-    </el-row>
+    <div class="mb8 btn-list">
+      <el-button
+        type="primary"
+        icon="el-icon-plus"
+        size="mini"
+        @click="handleAdd"
+        v-hasPermi="['benyi:thememonthplan:add']"
+        v-show="isShow"
+        >新增</el-button
+      >
+      <el-button
+        type="success"
+        icon="el-icon-edit"
+        size="mini"
+        :disabled="single"
+        @click="handleUpdate"
+        v-hasPermi="['benyi:thememonthplan:edit']"
+        v-show="isShow"
+        >填充</el-button
+      >
+      <el-button
+        type="danger"
+        icon="el-icon-delete"
+        size="mini"
+        :disabled="multiple"
+        @click="handleDelete"
+        v-hasPermi="['benyi:thememonthplan:remove']"
+        v-show="isShow"
+        >删除</el-button
+      >
+    </div>
 
-    <el-table v-loading="loading" :data="weekplanList" @selection-change="handleSelectionChange">
+    <el-table
+      border
+      v-loading="loading"
+      :data="weekplanList"
+      @selection-change="handleSelectionChange"
+    >
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="编号" align="center" prop="id" /> -->
-      <el-table-column label="所属月计划" align="center" prop="mpid" :formatter="themeMonthPlanFormat" />
-      <el-table-column label="周次" align="center" prop="zc" />
-      <el-table-column label="开始时间" align="center" prop="starttime" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.starttime, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="结束时间" align="center" prop="endtime" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.endtime, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>
       <el-table-column
+        fixed
         label="活动"
         align="center"
         prop="activityid"
         :formatter="themeactivityFormat"
       />
+      <el-table-column
+        label="所属月计划"
+        align="center"
+        prop="mpid"
+        :formatter="themeMonthPlanFormat"
+      />
+      <el-table-column label="周次" align="center" prop="zc" />
+      <el-table-column label="开始时间" align="center" prop="starttime">
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.starttime, "{y}-{m}-{d}") }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="结束时间" align="center" prop="endtime">
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.endtime, "{y}-{m}-{d}") }}</span>
+        </template>
+      </el-table-column>
+
       <el-table-column label="家长支持" align="center" prop="jzzc" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column
+        fixed="right"
+        label="操作"
+        align="center"
+        width="60"
+        class-name="small-padding fixed-width edit-btns"
+      >
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -92,7 +124,8 @@
             @click="handleUpdate(scope.row)"
             v-hasPermi="['benyi:thememonthplan:edit']"
             v-show="isShow"
-          >填充</el-button>
+            >填充</el-button
+          >
           <el-button
             size="mini"
             type="text"
@@ -100,13 +133,14 @@
             @click="handleDelete(scope.row)"
             v-hasPermi="['benyi:thememonthplan:remove']"
             v-show="isShow"
-          >删除</el-button>
+            >删除</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
 
     <pagination
-      v-show="total>0"
+      v-show="total > 0"
       :total="total"
       :page.sync="queryParams.pageNum"
       :limit.sync="queryParams.pageSize"
@@ -114,7 +148,12 @@
     />
 
     <!-- 添加或修改主题整合周计划对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+    <el-dialog
+      :title="title"
+      :visible.sync="open"
+      class="v-dialog"
+      append-to-body
+    >
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="月计划" prop="mpid">
           <el-select v-model="form.mpid" size="small" :disabled="true">
@@ -127,13 +166,13 @@
           </el-select>
         </el-form-item>
         <el-form-item label="周次" prop="zc">
-          <el-input-number v-model="form.zc" placeholder="请输入周次" />
+          <el-input-number class="my-date-picker" v-model="form.zc" placeholder="请输入周次" />
         </el-form-item>
         <el-form-item label="开始时间" prop="starttime">
           <el-date-picker
             clearable
             size="small"
-            style="width: 200px"
+            class="my-date-picker"
             v-model="form.starttime"
             type="date"
             value-format="yyyy-MM-dd"
@@ -144,7 +183,7 @@
           <el-date-picker
             clearable
             size="small"
-            style="width: 200px"
+            class="my-date-picker"
             v-model="form.endtime"
             type="date"
             value-format="yyyy-MM-dd"
@@ -158,15 +197,20 @@
             @change="getThemeActivityIdValue"
           >
             <el-checkbox
-              v-for="(item,i) in themeactivityOptions"
+              v-for="(item, i) in themeactivityOptions"
               :label="item.id"
               :key="i"
-            >{{item.name}}</el-checkbox>
+              >{{ item.name }}</el-checkbox
+            >
           </el-checkbox-group>
           <el-input v-model="form.activityid" v-if="false" />
         </el-form-item>
         <el-form-item label="家长支持" prop="jzzc">
-          <el-input v-model="form.jzzc" type="textarea" placeholder="请输入内容" />
+          <el-input
+            v-model="form.jzzc"
+            type="textarea"
+            placeholder="请输入内容"
+          />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -307,7 +351,7 @@ export default {
       getMonthplan(thememonthplanid).then((response) => {
         this.queryParams.mpid = response.data.id;
         this.defaultThemeMonthType = response.data.id;
-        console.log(response.data.themes);
+        // console.log(response.data.themes);
         var themeids = response.data.themes.split(";");
         var array = [];
         //console.log(arr);
@@ -471,3 +515,20 @@ export default {
   },
 };
 </script>
+<style lang="scss" scoped>
+.el-select {
+  width: 100%;
+}
+.my-date-picker {
+  width: 100%;
+}
+.edit-btns {
+  .el-button {
+    display: block;
+    margin: 0 auto;
+  }
+}
+.no-margin ::v-deep.el-form-item__content {
+  margin: 0 !important;
+}
+</style>

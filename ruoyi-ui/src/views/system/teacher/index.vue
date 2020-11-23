@@ -206,7 +206,7 @@
           <el-date-picker
             clearable
             size="small"
-            style="width: 200px"
+            class="my-date-picker"
             v-model="form.csrq"
             type="date"
             :picker-options="pickerOptions0"
@@ -244,7 +244,7 @@
           <el-date-picker
             clearable
             size="small"
-            style="width: 200px"
+            class="my-date-picker"
             v-model="form.cjgzrq"
             type="date"
             value-format="yyyy-MM-dd"
@@ -451,6 +451,23 @@ export default {
       const id = row.id;
       getTeacher(id).then((response) => {
         this.form = response.data;
+        // console.log("csrq:" + response.data.csrq);
+        if (response.data.zjhm == "" || response.data.zjhm == null) {
+          this.form.zjhm = " ";
+        }
+        if (response.data.byyx == "" || response.data.byyx == null) {
+          this.form.byyx = " ";
+        }
+        if (response.data.zy == "" || response.data.zy == null) {
+          this.form.zy = " ";
+        }
+        if (response.data.xl == "" || response.data.xl == null) {
+          this.form.xl = " ";
+        }
+        if (response.data.xw == "" || response.data.xw == null) {
+          this.form.xw = " ";
+        }
+
         this.teacherMingCheng = this.form.user.nickName;
         this.open = true;
         //详情页不允许编辑页面
@@ -489,15 +506,11 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$confirm(
-        '是否确认清空教师基本信息编号为"' + ids + '"的数据项?',
-        "警告",
-        {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning",
-        }
-      )
+      this.$confirm("是否确认清空教师基本信息数据项?", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
         .then(function () {
           return delTeacher(ids);
         })
