@@ -456,7 +456,7 @@ export default {
     handleDelete(row) {
       const ids = row.id || this.ids;
       this.$confirm(
-        '是否确认删除幼儿考勤编号为"' + ids + '"的数据项?',
+        '是否确认删除幼儿考勤的数据项?',
         "警告",
         {
           confirmButtonText: "确定",

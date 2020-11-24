@@ -224,10 +224,13 @@ public class ByAssessmentcontentController extends BaseController {
             int countChild = byAssessmentcontentService.selectCountElementByChild(byAssessmentcontent);
             if (scope.equals("1")) {
                 douArr.add((((double) 48 / count) * countChild));
+                System.out.println("48:"+count+"-"+countChild);
             } else if (scope.equals("2")) {
                 douArr.add((((double) 60 / count) * countChild));
+                System.out.println("60:"+count+"-"+countChild);
             } else if (scope.equals("3")) {
                 douArr.add((((double) 72 / count) * countChild));
+                System.out.println("72:"+count+"-"+countChild);
             }
         }
         ajaxResult.put("statistics", douArr);

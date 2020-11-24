@@ -87,7 +87,6 @@
         type="selection"
         width="55"
         align="center"
-        :selectable="isShow"
       />
       <el-table-column
         fixed
@@ -148,7 +147,7 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['benyi:themetermplan:edit']"
-            v-show="isShow(scope.row)"
+
             >审批</el-button
           >
           <el-button
@@ -305,14 +304,6 @@ export default {
     });
   },
   methods: {
-    isShow(row) {
-      // console.log(row.status);
-      if (row.status == "1") {
-        return true;
-      } else {
-        return false;
-      }
-    },
     // 字典翻译
     classFormat(row, column) {
       // return this.selectDictLabel(this.classOptions, row.classid);

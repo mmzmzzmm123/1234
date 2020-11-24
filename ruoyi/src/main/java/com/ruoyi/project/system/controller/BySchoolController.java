@@ -143,6 +143,7 @@ public class BySchoolController extends BaseController
         //通过selectdeptlist来获取deptid
         dept.setDeptId(deptService.selectDeptList(dept).get(0).getDeptId());
         dept.setStatus(bySchool.getStatus());
+        dept.setDeptName(bySchool.getSchoolName());
         deptService.updateDept(dept);
         return toAjax(bySchoolService.updateBySchool(bySchool));
     }

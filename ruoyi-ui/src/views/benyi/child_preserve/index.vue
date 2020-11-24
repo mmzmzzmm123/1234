@@ -509,7 +509,11 @@ export default {
         phone: undefined,
       },
       // 表单参数
-      form: {},
+      form: {
+        // csrq: [
+        //   { required: true, message: "出生日期不能为空", trigger: "blur" },
+        // ],
+      },
       // 监护人表单参数
       form_jhr: {},
     };
