@@ -164,7 +164,7 @@ public class ByCalendarController extends BaseController {
             //根据不同的幼儿园加载幼儿园园历
             //(long)207
             listvi.addAll(getbySchoolcalendars(schoolId, formatter, hashMap));
-            //根据不同的幼儿园加载幼儿园园历
+            //根据不同的幼儿园加载教职工
             listvi.addAll(getbyteacherBiths(schoolId, formatter, hashMap));
         }
 //        listvi.addAll(getbySchoolcalendars((long)207,formatter,hashMap));
@@ -218,8 +218,13 @@ public class ByCalendarController extends BaseController {
     private List<ByCalendarShow> getbyteacherBiths(Long schoolId, SimpleDateFormat formatter, HashMap<String, String> hashMap) {
         SysUser sysUser = new SysUser();
         sysUser.setDeptId(schoolId);
+
         ByTeacherJbxx byTeacherJbxx = new ByTeacherJbxx();
         byTeacherJbxx.setUser(sysUser);
+        String classId = schoolCommon.getClassId();
+        if (!schoolCommon.isStringEmpty(classId)) {
+            byTeacherJbxx.setUserid(SecurityUtils.getLoginUser().getUser().getUserId());
+        }
         List<ByTeacherJbxx> listTeacherBirth = byTeacherJbxxService.selectByTeacherJbxxList(byTeacherJbxx);
 
         List<ByCalendarShow> listvi = new ArrayList<>();
