@@ -2,12 +2,12 @@
   <div class="sidebar-logo-container" :class="{'collapse':collapse}">
     <transition name="sidebarLogoFade">
       <router-link v-if="collapse" key="collapse" class="sidebar-logo-link" to="/">
-        <img v-if="logo" :src="logo" class="sidebar-logo">
-        <h1 v-else class="sidebar-title">{{ title }} </h1>
+        <img v-if="logo" :src="logocollapse" class="sidebar-logo">
+        <!-- <h1 v-else class="sidebar-title">{{ title }} </h1> -->
       </router-link>
       <router-link v-else key="expand" class="sidebar-logo-link" to="/">
         <img v-if="logo" :src="logo" class="sidebar-logo">
-        <h1 class="sidebar-title">{{ title }} </h1>
+        <!-- <h1 class="sidebar-title">{{ title }} </h1> -->
       </router-link>
     </transition>
   </div>
@@ -15,6 +15,7 @@
 
 <script>
 import logoImg from '@/assets/logo/logo.png'
+import logoImgcollapse from '@/assets/logo/logo-new.png'
 
 export default {
   name: 'SidebarLogo',
@@ -26,8 +27,9 @@ export default {
   },
   data() {
     return {
-      title: '闵行群体教师管理系统',
-      logo: logoImg
+      title: '群体教师管理系统',
+      logo: logoImg,
+      logocollapse: logoImgcollapse
     }
   }
 }
@@ -48,7 +50,7 @@ export default {
   width: 100%;
   height: 50px;
   line-height: 50px;
-  background: #2b2f3a;
+  background: #fff;
   text-align: center;
   overflow: hidden;
 
@@ -57,8 +59,8 @@ export default {
     width: 100%;
 
     & .sidebar-logo {
-      width: 32px;
-      height: 32px;
+      width: 100%;
+      height: 22px;
       vertical-align: middle;
       margin-right: 12px;
     }
