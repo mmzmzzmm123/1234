@@ -216,6 +216,8 @@ public class SysContract extends BaseEntity {
                 .append("updateBy", getUpdateBy())
                 .append("updateTime", getUpdateTime())
                 .append("remark", getRemark())
+                .append("signName", getSignName())
+
                 .toString();
     }
 }
