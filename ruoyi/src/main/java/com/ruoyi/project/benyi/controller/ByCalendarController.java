@@ -10,9 +10,11 @@ import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.project.benyi.domain.*;
 import com.ruoyi.project.benyi.service.*;
 import com.ruoyi.project.common.SchoolCommon;
+import com.ruoyi.project.system.domain.ByClass;
 import com.ruoyi.project.system.domain.ByTeacherJbxx;
 import com.ruoyi.project.system.domain.SysDictData;
 import com.ruoyi.project.system.domain.SysUser;
+import com.ruoyi.project.system.service.IByClassService;
 import com.ruoyi.project.system.service.IByTeacherJbxxService;
 import com.ruoyi.project.system.service.ISysDictDataService;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -61,6 +63,8 @@ public class ByCalendarController extends BaseController {
     private IByThemeActivityService byThemeActivityService;
     @Autowired
     private IByChildService byChildService;
+    @Autowired
+    private IByClassService byClassService;
 
     /**
      * 查询园历管理(本一)列表
@@ -196,6 +200,14 @@ public class ByCalendarController extends BaseController {
         BySchoolcalendar bySchoolcalendar = new BySchoolcalendar();
         //设置幼儿园
         bySchoolcalendar.setDeptid(schoolId);
+        //班级类型
+        String classId = schoolCommon.getClassId();
+        if (!schoolCommon.isStringEmpty(classId)) {
+            ByClass byClass=new ByClass();
+            byClass=byClassService.selectByClassById(classId);
+            bySchoolcalendar.setScope(byClass.getBjtype());
+        }
+
 
         List<BySchoolcalendar> bySchoolcalendarList = bySchoolcalendarService.selectBySchoolcalendarList(bySchoolcalendar);
         if (bySchoolcalendarList.size() > 0) {
