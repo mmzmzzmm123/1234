@@ -111,7 +111,6 @@
         type="selection"
         width="55"
         align="center"
-        :selectable="isShow"
       />
       <!-- <el-table-column label="编号" align="center" prop="id" /> -->
       <el-table-column
@@ -168,8 +167,7 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['benyi:themeweekplan:edit']"
-            v-show="isShow(scope.row)"
+            v-hasPermi="['benyi:themeweekplan:edit']" 
             >审批</el-button
           >
           <el-button
@@ -336,13 +334,6 @@ export default {
     });
   },
   methods: {
-    isShow(row) {
-      if (row.status == "1") {
-        return true;
-      } else {
-        return false;
-      }
-    },
     //班级列表
     getClassList() {
       listClass(null).then((response) => {

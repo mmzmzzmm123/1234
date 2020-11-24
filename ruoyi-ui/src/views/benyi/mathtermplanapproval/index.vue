@@ -87,7 +87,6 @@
         type="selection"
         width="55"
         align="center"
-        :selectable="isShow"
       />
       <el-table-column
         fixed
@@ -148,7 +147,6 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['benyi:mathtermplan:edit']"
-            v-show="isShow(scope.row)"
             >审批</el-button
           >
           <el-button
@@ -307,14 +305,6 @@ export default {
     });
   },
   methods: {
-    isShow(row) {
-      //console.log(row.status);
-      if (row.status == "1") {
-        return true;
-      } else {
-        return false;
-      }
-    },
     // 查询班级列表
     getClassList() {
       listClass(null).then((response) => {
