@@ -42,4 +42,6 @@ nbdist/
 !*/build/*.java
 !*/build/*.html
 !*/build/*.xml
-running/*
+running/file/*
+running/logs/*
+running/uploadPath/*
