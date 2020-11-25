@@ -17,10 +17,7 @@
           <radar-chart :psMsg="item.dictValue" />
         </div>
         <h2 class="result-title">各项评估结果</h2>
-        <el-tabs
-          v-model="childTab"
-          @tab-click="handleTabClick"
-        >
+        <el-tabs v-model="childTab" @tab-click="handleTabClick">
           <el-tab-pane label="健康" name="one">
             <radar-chart_jk :psMsg="item.dictValue" v-if="childTab === 'one'" />
             <div class="block">
@@ -28,7 +25,7 @@
               <div
                 class="block"
                 v-for="itemLy in assessmentcontentList.filter(
-                  p => p.parentId == item.dictValue && p.name == '健康'
+                  (p) => p.parentId == item.dictValue && p.name == '健康'
                 )"
                 :key="itemLy.id"
               >
@@ -36,7 +33,7 @@
                 <div
                   class="block"
                   v-for="itemFzly in assessmentcontentList.filter(
-                    p => p.parentId == itemLy.id
+                    (p) => p.parentId == itemLy.id
                   )"
                   :key="itemFzly.id"
                 >
@@ -46,9 +43,16 @@
                   <ul class="block-content">
                     <li
                       v-for="itemMb in assessmentcontentList.filter(
-                        p => p.parentId == itemFzly.id
+                        (p) => p.parentId == itemFzly.id
                       )"
                       :key="itemMb.id"
+                      v-show="
+                        assessmentcontentList.filter(
+                          (p) => p.parentId == itemMb.id
+                        ).length == 0
+                          ? false
+                          : true
+                      "
                     >
                       <p class="block-content-title">
                         <span class="num">{{ itemMb.sort }}. </span
@@ -56,13 +60,13 @@
                       </p>
                       <div
                         class="checkbox-content"
-                        v-for="itemYs in assessmentcontentList.filter(
-                          p => p.parentId == itemMb.id
+                        v-for="(itemYs, i) in assessmentcontentList.filter(
+                          (p) => p.parentId == itemMb.id
                         )"
                         :key="itemYs.id"
                       >
                         <p class="checkbox-item flex align-center">
-                          {{ itemYs.jyjy }}
+                          建议{{ i + 1 }}.{{ itemYs.jyjy }}
                         </p>
                       </div>
                     </li>
@@ -78,7 +82,7 @@
               <div
                 class="block"
                 v-for="itemLy in assessmentcontentList.filter(
-                  p => p.parentId == item.dictValue && p.name == '语言'
+                  (p) => p.parentId == item.dictValue && p.name == '语言'
                 )"
                 :key="itemLy.id"
               >
@@ -86,7 +90,7 @@
                 <div
                   class="block"
                   v-for="itemFzly in assessmentcontentList.filter(
-                    p => p.parentId == itemLy.id
+                    (p) => p.parentId == itemLy.id
                   )"
                   :key="itemFzly.id"
                 >
@@ -96,9 +100,16 @@
                   <ul class="block-content">
                     <li
                       v-for="itemMb in assessmentcontentList.filter(
-                        p => p.parentId == itemFzly.id
+                        (p) => p.parentId == itemFzly.id
                       )"
                       :key="itemMb.id"
+                       v-show="
+                        assessmentcontentList.filter(
+                          (p) => p.parentId == itemMb.id
+                        ).length == 0
+                          ? false
+                          : true
+                      "
                     >
                       <p class="block-content-title">
                         <span class="num">{{ itemMb.sort }}. </span
@@ -106,13 +117,13 @@
                       </p>
                       <div
                         class="checkbox-content"
-                        v-for="itemYs in assessmentcontentList.filter(
-                          p => p.parentId == itemMb.id
+                        v-for="(itemYs, i) in assessmentcontentList.filter(
+                          (p) => p.parentId == itemMb.id
                         )"
                         :key="itemYs.id"
                       >
                         <p class="checkbox-item flex align-center">
-                          {{ itemYs.jyjy }}
+                          建议{{ i + 1 }}.{{ itemYs.jyjy }}
                         </p>
                       </div>
                     </li>
@@ -131,7 +142,7 @@
               <div
                 class="block"
                 v-for="itemLy in assessmentcontentList.filter(
-                  p => p.parentId == item.dictValue && p.name == '社会'
+                  (p) => p.parentId == item.dictValue && p.name == '社会'
                 )"
                 :key="itemLy.id"
               >
@@ -139,7 +150,7 @@
                 <div
                   class="block"
                   v-for="itemFzly in assessmentcontentList.filter(
-                    p => p.parentId == itemLy.id
+                    (p) => p.parentId == itemLy.id
                   )"
                   :key="itemFzly.id"
                 >
@@ -149,9 +160,16 @@
                   <ul class="block-content">
                     <li
                       v-for="itemMb in assessmentcontentList.filter(
-                        p => p.parentId == itemFzly.id
+                        (p) => p.parentId == itemFzly.id
                       )"
                       :key="itemMb.id"
+                       v-show="
+                        assessmentcontentList.filter(
+                          (p) => p.parentId == itemMb.id
+                        ).length == 0
+                          ? false
+                          : true
+                      "
                     >
                       <p class="block-content-title">
                         <span class="num">{{ itemMb.sort }}. </span
@@ -159,13 +177,13 @@
                       </p>
                       <div
                         class="checkbox-content"
-                        v-for="itemYs in assessmentcontentList.filter(
-                          p => p.parentId == itemMb.id
+                        v-for="(itemYs, i) in assessmentcontentList.filter(
+                          (p) => p.parentId == itemMb.id
                         )"
                         :key="itemYs.id"
                       >
                         <p class="checkbox-item flex align-center">
-                          {{ itemYs.jyjy }}
+                          建议{{ i + 1 }}.{{ itemYs.jyjy }}
                         </p>
                       </div>
                     </li>
@@ -184,7 +202,7 @@
               <div
                 class="block"
                 v-for="itemLy in assessmentcontentList.filter(
-                  p => p.parentId == item.dictValue && p.name == '科学'
+                  (p) => p.parentId == item.dictValue && p.name == '科学'
                 )"
                 :key="itemLy.id"
               >
@@ -192,7 +210,7 @@
                 <div
                   class="block"
                   v-for="itemFzly in assessmentcontentList.filter(
-                    p => p.parentId == itemLy.id
+                    (p) => p.parentId == itemLy.id
                   )"
                   :key="itemFzly.id"
                 >
@@ -202,9 +220,16 @@
                   <ul class="block-content">
                     <li
                       v-for="itemMb in assessmentcontentList.filter(
-                        p => p.parentId == itemFzly.id
+                        (p) => p.parentId == itemFzly.id
                       )"
                       :key="itemMb.id"
+                       v-show="
+                        assessmentcontentList.filter(
+                          (p) => p.parentId == itemMb.id
+                        ).length == 0
+                          ? false
+                          : true
+                      "
                     >
                       <p class="block-content-title">
                         <span class="num">{{ itemMb.sort }}. </span
@@ -212,13 +237,13 @@
                       </p>
                       <div
                         class="checkbox-content"
-                        v-for="itemYs in assessmentcontentList.filter(
-                          p => p.parentId == itemMb.id
+                        v-for="(itemYs, i) in assessmentcontentList.filter(
+                          (p) => p.parentId == itemMb.id
                         )"
                         :key="itemYs.id"
                       >
                         <p class="checkbox-item flex align-center">
-                          {{ itemYs.jyjy }}
+                          建议{{ i + 1 }}.{{ itemYs.jyjy }}
                         </p>
                       </div>
                     </li>
@@ -237,7 +262,7 @@
               <div
                 class="block"
                 v-for="itemLy in assessmentcontentList.filter(
-                  p => p.parentId == item.dictValue && p.name == '艺术'
+                  (p) => p.parentId == item.dictValue && p.name == '艺术'
                 )"
                 :key="itemLy.id"
               >
@@ -245,7 +270,7 @@
                 <div
                   class="block"
                   v-for="itemFzly in assessmentcontentList.filter(
-                    p => p.parentId == itemLy.id
+                    (p) => p.parentId == itemLy.id
                   )"
                   :key="itemFzly.id"
                 >
@@ -255,9 +280,16 @@
                   <ul class="block-content">
                     <li
                       v-for="itemMb in assessmentcontentList.filter(
-                        p => p.parentId == itemFzly.id
+                        (p) => p.parentId == itemFzly.id
                       )"
                       :key="itemMb.id"
+                       v-show="
+                        assessmentcontentList.filter(
+                          (p) => p.parentId == itemMb.id
+                        ).length == 0
+                          ? false
+                          : true
+                      "
                     >
                       <p class="block-content-title">
                         <span class="num">{{ itemMb.sort }}. </span
@@ -265,13 +297,13 @@
                       </p>
                       <div
                         class="checkbox-content"
-                        v-for="itemYs in assessmentcontentList.filter(
-                          p => p.parentId == itemMb.id
+                        v-for="(itemYs, i) in assessmentcontentList.filter(
+                          (p) => p.parentId == itemMb.id
                         )"
                         :key="itemYs.id"
                       >
                         <p class="checkbox-item flex align-center">
-                          {{ itemYs.jyjy }}
+                          建议{{ i + 1 }}.{{ itemYs.jyjy }}
                         </p>
                       </div>
                     </li>
@@ -316,20 +348,19 @@ export default {
     RadarChart_yy,
     RadarChart_sh,
     RadarChart_kx,
-    RadarChart_ys
+    RadarChart_ys,
   },
   data() {
     return {
       childId: "",
       childName: "",
       classid: "",
-      assessmentscope: "",
       // tabs列表
       tabsList: [],
       activeName: "",
       // 评估内容表格数据
       assessmentcontentList: [],
-      childTab: "one"
+      childTab: "one",
     };
   },
   created() {
@@ -344,13 +375,13 @@ export default {
   methods: {
     /** 查询幼儿未评估内容列表 */
     getNoAssessmentList() {
-      listNoAssessmentcontentByChild(this.childId).then(response => {
+      listNoAssessmentcontentByChild(this.childId).then((response) => {
         // console.log("rows:" + response.rows);
         this.assessmentcontentList = response.rows;
       });
     },
     getChild(childId) {
-      getChildByAssessment(childId).then(response => {
+      getChildByAssessment(childId).then((response) => {
         // console.log(response);
         if (response.code == "200") {
           this.childName = response.data.name;
@@ -360,7 +391,7 @@ export default {
     },
     /** 查询评估内容列表 */
     getList(childId) {
-      getAssessmentDictData(childId).then(response => {
+      getAssessmentDictData(childId).then((response) => {
         // console.log("rows:" + response.dictdata.length);
         if (response.dictdata.length > 0) {
           this.activeName = response.dictdata[0].dictLabel;
@@ -376,8 +407,8 @@ export default {
     },
     handleTabClick(tab) {
       this.childTab = tab.name;
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>
