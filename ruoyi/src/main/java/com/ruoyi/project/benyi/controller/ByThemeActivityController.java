@@ -120,7 +120,21 @@ public class ByThemeActivityController extends BaseController {
     @PreAuthorize("@ss.hasPermi('benyi:theme:list')"+ "||@ss.hasPermi('benyi:thememonthplan:list')")
     @PostMapping("/listbythemeid/{ids}")
     public TableDataInfo listbythemeid(@PathVariable Long[] ids) {
+//        System.out.println("ids:"+ids);
         List<ByThemeActivity> list = byThemeActivityService.selectByThemeActivityByThemeIds(ids);
+//        System.out.println(list.size());
+        return getDataTable(list);
+    }
+
+    /**
+     * 查询主题整合活动列表
+     */
+    @PreAuthorize("@ss.hasPermi('benyi:theme:list')"+ "||@ss.hasPermi('benyi:thememonthplan:list')")
+    @PostMapping("/listbyid/{ids}")
+    public TableDataInfo listbyid(@PathVariable Long[] ids) {
+//        System.out.println("ids:"+ids);
+        List<ByThemeActivity> list = byThemeActivityService.selectByThemeActivityByIds(ids);
+//        System.out.println(list.size());
         return getDataTable(list);
     }
 }

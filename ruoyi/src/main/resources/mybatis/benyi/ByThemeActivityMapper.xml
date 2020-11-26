@@ -117,4 +117,13 @@
         order by themeid,sort
     </select>
 
+    <select id="selectByThemeActivityByIds" parameterType="String" resultMap="ByThemeActivityResult">
+        <include refid="selectByThemeActivityVo"/>
+        where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        order by themeid,sort
+    </select>
+
 </mapper>

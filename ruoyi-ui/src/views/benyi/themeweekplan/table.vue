@@ -69,7 +69,7 @@ import {
 } from "@/api/benyi/themeweekplanitem";
 
 import { listWeekplan, getWeekplan } from "@/api/benyi/themeweekplan";
-import { listActivityByThemeId } from "@/api/benyi/activity";
+import { listActivityById } from "@/api/benyi/activity";
 import { listMonthplan } from "@/api/benyi/thememonthplan";
 import { listMonthplanitem } from "@/api/benyi/thememonthplanitem";
 import { listThemeByIds, listThemeByActivityIds } from "@/api/benyi/theme";
@@ -150,6 +150,7 @@ export default {
       queryParams_MonPlan: {
         xnxq: undefined,
         month: undefined,
+        classid:undefined,
         status: "2",
       },
       queryParams_MonPlanItem: {
@@ -214,15 +215,15 @@ export default {
     },
     //主题活动
     getThemeActivityList(themeid) {
-      listActivityByThemeId(themeid).then((response) => {
-        console.log(response.rows);
+      listActivityById(themeid).then((response) => {
+        // console.log(response.rows);
         this.themeactivityOptions = response.rows;
       });
     },
     //获取周教学计划详情
     getThemeWeekPlan(themeweekplanid) {
       getWeekplan(themeweekplanid).then((response) => {
-        //(response);
+        console.log(response.data.classid);
         this.queryParams.wpid = response.data.id;
         this.title = response.data.name;
         this.zc = response.data.zc;
@@ -235,8 +236,9 @@ export default {
         //查找活动id
         this.queryParams_MonPlan.month = response.data.month;
         this.queryParams_MonPlan.xnxq = response.data.xnxq;
+        this.queryParams_MonPlan.classid=response.data.classid;
         listMonthplan(this.queryParams_MonPlan).then((resMonPlan) => {
-          //console.log(resMonPlan.rows);
+          console.log(resMonPlan.rows);
           //获取的月主题
           var monththemeids = resMonPlan.rows[0].themes;
 

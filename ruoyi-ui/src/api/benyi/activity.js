@@ -59,3 +59,11 @@ export function listActivityByThemeId(id) {
     method: 'post'
   })
 }
+
+// 查询主题整合活动
+export function listActivityById(id) {
+  return request({
+    url: '/benyi/activity/listbyid/' + id,
+    method: 'post'
+  })
+}

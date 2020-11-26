@@ -274,7 +274,7 @@ import {
 } from "@/api/benyi/themeweekplanitem";
 
 import { listWeekplan, getWeekplan } from "@/api/benyi/themeweekplan";
-import { listActivityByThemeId } from "@/api/benyi/activity";
+import { listActivityById } from "@/api/benyi/activity";
 import { listMonthplan } from "@/api/benyi/thememonthplan";
 import { listMonthplanitem } from "@/api/benyi/thememonthplanitem";
 
@@ -390,7 +390,7 @@ export default {
     },
     //主题活动
     getThemeActivityList(themeid) {
-      listActivityByThemeId(themeid).then((response) => {
+      listActivityById(themeid).then((response) => {
         //console.log(response.rows);
         this.themeactivityOptions = response.rows;
       });

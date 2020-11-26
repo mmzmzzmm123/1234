@@ -1,9 +1,15 @@
 <template>
   <div class="table-container" ref="printMe">
-    <h2 class="title">{{title}}</h2>
+    <h2 class="title">{{ title }}</h2>
     <div class="table">
       <div class="print no-print">
-        <el-button type="primary" plain size="mini" icon="el-icon-printer" @click="prints"></el-button>
+        <el-button
+          type="primary"
+          plain
+          size="mini"
+          icon="el-icon-printer"
+          @click="prints"
+        ></el-button>
       </div>
       <table>
         <tr class="align-center">
@@ -13,34 +19,42 @@
           </td>-->
           <td>
             <b class="table-title">班级：</b>
-            {{classname}}
+            {{ classname }}
           </td>
           <td>
             <b class="table-title">月份：</b>
-            {{month}}
+            {{ month }}
           </td>
           <td colspan="2">
             <b class="table-title">月主题：</b>
-            {{monththeme}}
+            {{ monththeme }}
           </td>
           <td>
             <b class="table-title">制表人：</b>
-            {{tbr}}
+            {{ tbr }}
           </td>
         </tr>
         <tr class="align-center table-bg">
           <td v-for="h in bodyData.title" :key="h.prop">
-            <b>{{h.label}}</b>
+            <b>{{ h.label }}</b>
           </td>
         </tr>
         <tr v-for="item in bodyData.monthplanitemList" :key="item.id">
-          <td v-if="item.theme" :rowspan="bodyData.monthplanitemList.length" class="align-center">
-            <span>{{monththeme}}</span>
+          <td
+            v-if="item.theme"
+            :rowspan="bodyData.monthplanitemList.length"
+            class="align-center"
+          >
+            <span>{{ monththeme }}</span>
           </td>
-          <td class="align-center">{{item.zc}}</td>
-          <td class="align-center">{{item.starttime}}---{{item.endtime}}</td>
-          <td class="align-center">{{themeactivityFormat(item.activityid)}}</td>
-          <td>{{item.jzzc}}</td>
+          <td class="align-center">{{ item.zc }}</td>
+          <td class="align-center">
+            {{ item.starttime }}---{{ item.endtime }}
+          </td>
+          <td class="align-center">
+            {{ themeactivityFormat(item.activityid) }}
+          </td>
+          <td>{{ item.jzzc }}</td>
         </tr>
         <tr>
           <td class="align-center">本月微型课程</td>
@@ -48,11 +62,11 @@
         </tr>
         <tr>
           <td class="align-center">备注</td>
-          <td colspan="4">{{bz}}</td>
+          <td colspan="4">{{ bz }}</td>
         </tr>
         <tr>
           <td class="align-center">教学主管审批</td>
-          <td colspan="4">{{spyj}}</td>
+          <td colspan="4">{{ spyj }}</td>
         </tr>
       </table>
       <!-- <p
@@ -63,7 +77,7 @@
 </template>
 
 <script>
-import { listActivityByThemeId } from "@/api/benyi/activity";
+import { listActivityById } from "@/api/benyi/activity";
 import { listMonthplan, getMonthplan } from "@/api/benyi/thememonthplan";
 import { listMonthplanitem } from "@/api/benyi/thememonthplanitem";
 import { listThemeByIds, listThemeByActivityIds } from "@/api/benyi/theme";
@@ -210,7 +224,7 @@ export default {
           }
 
           this.bodyData.monthplanitemList[0].theme = activityIds;
-        }else{
+        } else {
           this.bodyData.monthplanitemList[0].theme = " ";
         }
       });
@@ -221,6 +235,8 @@ export default {
         var ilength = activityid.split(";").length - 1;
         var names = "";
         for (var i = 1; i < ilength; i++) {
+          // console.log(activityid.split(";")[i]);
+          // console.log(this.themeactivityOptions);
           names =
             names +
             this.selectMoeDictLabel(
@@ -230,14 +246,16 @@ export default {
             "；";
         }
         //this.selectDictLabel(this.scopeOptions, row.xnxq);
+        // console.log(names);
         return names;
       }
       return "";
     },
     //主题活动
     getThemeActivityList(themeid) {
-      listActivityByThemeId(themeid).then((response) => {
-        //console.log(response.rows);
+      listActivityById(themeid).then((response) => {
+        // console.log("111" + themeid);
+        // console.log("222" + response.rows);
         this.themeactivityOptions = response.rows;
       });
     },

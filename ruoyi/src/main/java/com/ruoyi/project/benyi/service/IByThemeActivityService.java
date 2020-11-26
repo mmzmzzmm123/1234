@@ -66,4 +66,12 @@ public interface IByThemeActivityService {
      * @return 主题整合活动集合
      */
     public List<ByThemeActivity> selectByThemeActivityByThemeIds(Long[] ids);
+
+    /**
+     * 查询主题整合活动列表
+     *
+     * @param ids 主题整合活动
+     * @return 主题整合活动集合
+     */
+    public List<ByThemeActivity> selectByThemeActivityByIds(Long[] ids);
 }

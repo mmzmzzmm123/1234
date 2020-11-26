@@ -97,4 +97,15 @@ public class ByThemeActivityServiceImpl implements IByThemeActivityService {
     public List<ByThemeActivity> selectByThemeActivityByThemeIds(Long[] ids){
         return byThemeActivityMapper.selectByThemeActivityByThemeIds(ids);
     }
+
+    /**
+     * 查询主题整合活动列表
+     *
+     * @param ids 主题整合活动
+     * @return 主题整合活动集合
+     */
+    @Override
+    public List<ByThemeActivity> selectByThemeActivityByIds(Long[] ids){
+        return byThemeActivityMapper.selectByThemeActivityByIds(ids);
+    }
 }
