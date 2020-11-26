@@ -1,32 +1,22 @@
 package com.stdiet.web.controller.custom;
 
-import java.math.BigDecimal;
-import java.util.List;
-
-import com.stdiet.common.core.domain.entity.SysDictData;
+import com.stdiet.common.annotation.Log;
+import com.stdiet.common.core.domain.AjaxResult;
 import com.stdiet.common.core.domain.entity.SysUser;
+import com.stdiet.common.enums.BusinessType;
+import com.stdiet.common.utils.poi.ExcelUtil;
 import com.stdiet.custom.controller.OrderBaseController;
+import com.stdiet.custom.domain.SysOrder;
 import com.stdiet.custom.page.OrderTableDataInfo;
+import com.stdiet.custom.service.ISysOrderService;
 import com.stdiet.system.service.ISysDictDataService;
 import com.stdiet.system.service.ISysUserService;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import com.stdiet.common.annotation.Log;
-import com.stdiet.common.core.controller.BaseController;
-import com.stdiet.common.core.domain.AjaxResult;
-import com.stdiet.common.enums.BusinessType;
-import com.stdiet.custom.domain.SysOrder;
-import com.stdiet.custom.service.ISysOrderService;
-import com.stdiet.common.utils.poi.ExcelUtil;
-import com.stdiet.common.core.page.TableDataInfo;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * 销售订单Controller
@@ -56,7 +46,7 @@ public class SysOrderController extends OrderBaseController {
         List<SysOrder> list = sysOrderService.selectSysOrderList(sysOrder);
         List<SysUser> userList = userService.selectAllUser();
         BigDecimal totalAmount = sysOrderService.selectAllOrderAmount(sysOrder);
-        if(totalAmount == null) {
+        if (totalAmount == null) {
             totalAmount = new BigDecimal(0);
         }
 
@@ -64,23 +54,30 @@ public class SysOrderController extends OrderBaseController {
             for (SysUser user : userList) {
                 if (user.getUserId().equals(order.getPreSaleId())) {
                     order.setPreSale(user.getNickName());
-                } else if (user.getUserId().equals(order.getAfterSaleId())) {
+                }
+                if (user.getUserId().equals(order.getAfterSaleId())) {
                     order.setAfterSale(user.getNickName());
-                } else if (user.getUserId().equals(order.getNutritionistId())) {
+                }
+                if (user.getUserId().equals(order.getNutritionistId())) {
                     order.setNutritionist(user.getNickName());
-                } else if (user.getUserId().equals(order.getNutriAssisId())) {
+                }
+                if (user.getUserId().equals(order.getNutriAssisId())) {
                     order.setNutriAssis(user.getNickName());
-                } else if (user.getUserId().equals(order.getOperatorId())) {
+                }
+                if (user.getUserId().equals(order.getOperatorId())) {
                     order.setOperator(user.getNickName());
-                } else if (user.getUserId().equals(order.getPlannerId())) {
+                }
+                if (user.getUserId().equals(order.getPlannerId())) {
                     order.setPlanner(user.getNickName());
-                } else if (user.getUserId().equals(order.getPlannerAssisId())) {
+                }
+                if (user.getUserId().equals(order.getPlannerAssisId())) {
                     order.setPlannerAssis(user.getNickName());
-                } else if (user.getUserId().equals(order.getOperatorAssisId())) {
+                }
+                if (user.getUserId().equals(order.getOperatorAssisId())) {
                     order.setOperatorAssis(user.getNickName());
                 }
             }
-            if(order.getPhone() != null && !order.getPhone().equals("")) {
+            if (order.getPhone() != null && !order.getPhone().equals("")) {
                 order.setPhone(order.getPhone().replaceAll("(\\d{3})\\d{4}(\\d{4})", "$1****$2"));
             }
         }
@@ -102,19 +99,26 @@ public class SysOrderController extends OrderBaseController {
             for (SysUser user : userList) {
                 if (user.getUserId().equals(order.getPreSaleId())) {
                     order.setPreSale(user.getNickName());
-                } else if (user.getUserId().equals(order.getAfterSaleId())) {
+                }
+                if (user.getUserId().equals(order.getAfterSaleId())) {
                     order.setAfterSale(user.getNickName());
-                } else if (user.getUserId().equals(order.getNutritionistId())) {
+                }
+                if (user.getUserId().equals(order.getNutritionistId())) {
                     order.setNutritionist(user.getNickName());
-                } else if (user.getUserId().equals(order.getNutriAssisId())) {
+                }
+                if (user.getUserId().equals(order.getNutriAssisId())) {
                     order.setNutriAssis(user.getNickName());
-                } else if (user.getUserId().equals(order.getOperatorId())) {
+                }
+                if (user.getUserId().equals(order.getOperatorId())) {
                     order.setOperator(user.getNickName());
-                } else if (user.getUserId().equals(order.getPlannerId())) {
+                }
+                if (user.getUserId().equals(order.getPlannerId())) {
                     order.setPlanner(user.getNickName());
-                } else if (user.getUserId().equals(order.getPlannerAssisId())) {
+                }
+                if (user.getUserId().equals(order.getPlannerAssisId())) {
                     order.setPlannerAssis(user.getNickName());
-                } else if (user.getUserId().equals(order.getOperatorAssisId())) {
+                }
+                if (user.getUserId().equals(order.getOperatorAssisId())) {
                     order.setOperatorAssis(user.getNickName());
                 }
             }
