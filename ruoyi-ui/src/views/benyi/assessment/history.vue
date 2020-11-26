@@ -70,6 +70,24 @@
                         </p>
                       </div>
                     </li>
+                    <li
+                      v-for="itemMb in assessmentcontentList.filter(
+                        (p) => p.parentId == itemFzly.id
+                      )"
+                      :key="itemMb.id"
+                      v-show="
+                        assessmentcontentList.filter(
+                          (p) => p.parentId == itemMb.id
+                        ).length == 0
+                          ? true
+                          : false
+                      "
+                    >
+                      <p class="block-content-title">
+                        <span class="num">{{ itemMb.sort }}. </span
+                        >{{ itemMb.name }} (满足标准)
+                      </p>
+                    </li>
                   </ul>
                 </div>
               </div>
@@ -103,7 +121,7 @@
                         (p) => p.parentId == itemFzly.id
                       )"
                       :key="itemMb.id"
-                       v-show="
+                      v-show="
                         assessmentcontentList.filter(
                           (p) => p.parentId == itemMb.id
                         ).length == 0
@@ -126,6 +144,24 @@
                           建议{{ i + 1 }}.{{ itemYs.jyjy }}
                         </p>
                       </div>
+                    </li>
+                    <li
+                      v-for="itemMb in assessmentcontentList.filter(
+                        (p) => p.parentId == itemFzly.id
+                      )"
+                      :key="itemMb.id"
+                      v-show="
+                        assessmentcontentList.filter(
+                          (p) => p.parentId == itemMb.id
+                        ).length == 0
+                          ? true
+                          : false
+                      "
+                    >
+                      <p class="block-content-title">
+                        <span class="num">{{ itemMb.sort }}. </span
+                        >{{ itemMb.name }} (满足标准)
+                      </p>
                     </li>
                   </ul>
                 </div>
@@ -163,7 +199,7 @@
                         (p) => p.parentId == itemFzly.id
                       )"
                       :key="itemMb.id"
-                       v-show="
+                      v-show="
                         assessmentcontentList.filter(
                           (p) => p.parentId == itemMb.id
                         ).length == 0
@@ -186,6 +222,24 @@
                           建议{{ i + 1 }}.{{ itemYs.jyjy }}
                         </p>
                       </div>
+                    </li>
+                    <li
+                      v-for="itemMb in assessmentcontentList.filter(
+                        (p) => p.parentId == itemFzly.id
+                      )"
+                      :key="itemMb.id"
+                      v-show="
+                        assessmentcontentList.filter(
+                          (p) => p.parentId == itemMb.id
+                        ).length == 0
+                          ? true
+                          : false
+                      "
+                    >
+                      <p class="block-content-title">
+                        <span class="num">{{ itemMb.sort }}. </span
+                        >{{ itemMb.name }} (满足标准)
+                      </p>
                     </li>
                   </ul>
                 </div>
@@ -223,7 +277,7 @@
                         (p) => p.parentId == itemFzly.id
                       )"
                       :key="itemMb.id"
-                       v-show="
+                      v-show="
                         assessmentcontentList.filter(
                           (p) => p.parentId == itemMb.id
                         ).length == 0
@@ -246,6 +300,24 @@
                           建议{{ i + 1 }}.{{ itemYs.jyjy }}
                         </p>
                       </div>
+                    </li>
+                    <li
+                      v-for="itemMb in assessmentcontentList.filter(
+                        (p) => p.parentId == itemFzly.id
+                      )"
+                      :key="itemMb.id"
+                      v-show="
+                        assessmentcontentList.filter(
+                          (p) => p.parentId == itemMb.id
+                        ).length == 0
+                          ? true
+                          : false
+                      "
+                    >
+                      <p class="block-content-title">
+                        <span class="num">{{ itemMb.sort }}. </span
+                        >{{ itemMb.name }} (满足标准)
+                      </p>
                     </li>
                   </ul>
                 </div>
@@ -283,7 +355,7 @@
                         (p) => p.parentId == itemFzly.id
                       )"
                       :key="itemMb.id"
-                       v-show="
+                      v-show="
                         assessmentcontentList.filter(
                           (p) => p.parentId == itemMb.id
                         ).length == 0
@@ -306,6 +378,24 @@
                           建议{{ i + 1 }}.{{ itemYs.jyjy }}
                         </p>
                       </div>
+                    </li>
+                    <li
+                      v-for="itemMb in assessmentcontentList.filter(
+                        (p) => p.parentId == itemFzly.id
+                      )"
+                      :key="itemMb.id"
+                      v-show="
+                        assessmentcontentList.filter(
+                          (p) => p.parentId == itemMb.id
+                        ).length == 0
+                          ? true
+                          : false
+                      "
+                    >
+                      <p class="block-content-title">
+                        <span class="num">{{ itemMb.sort }}. </span
+                        >{{ itemMb.name }} (满足标准)
+                      </p>
                     </li>
                   </ul>
                 </div>

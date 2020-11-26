@@ -76,13 +76,14 @@ where find_in_set(id, getChildLst(#{id})) ;
     <!--根据节点id获取领域目标-->
     <select id="selectNodeByid" parameterType="Long" resultMap="ByAssessmentcontentResult">
 		select id, parentId, name, iselement, scope, create_time, sort, ckbz  from by_assessmentcontent
-where find_in_set(id, getChildLst(#{id})) and parentId>#{id} and iselement='N';
+where find_in_set(id, getChildLst(#{id})) and parentId>#{id} and iselement='N' order by id;
 	</select>
 
     <!--根据幼儿id获取未评选的指标-->
     <select id="selectNoByAssessmentcontentListByChild" parameterType="Long" resultMap="ByAssessmentcontentResult">
 		SELECT id, parentId, name, iselement, scope, create_time, sort, ckbz, jyjy  FROM by_assessmentcontent
 where id not in(select contentid from by_assessmentchild where childid=#{childid})
+order by id;
 	</select>
 
     <insert id="insertByAssessmentcontent" parameterType="ByAssessmentcontent" useGeneratedKeys="true" keyProperty="id">
