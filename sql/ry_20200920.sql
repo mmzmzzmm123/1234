@@ -712,6 +712,7 @@ create table sys_order (
   order_id         bigint(20)      not null auto_increment    comment '编号',
   customer         varchar(30)     not null                   comment '客户姓名',
   phone            varchar(30)                                comment '电话',
+  weight           decimal(10,2)                              comment '体重',
   review_status    varchar(10)     default 'no'               comment '审核状态',
   pay_type_id      bigint(20)                                 comment '收款方式ID',
   pre_sale_id      bigint(20)                                 comment '售前ID',
@@ -726,11 +727,13 @@ create table sys_order (
   serve_month      tinyint                                    comment '服务月数',
   amount           decimal(10,2)                              comment '金额',
   order_time       datetime                                   comment '成交日期',
+  start_time       datetime                                   comment '起始日期',
   create_by        varchar(64)     default ''                 comment '创建者',
   create_time      datetime                                   comment '创建时间',
   update_by        varchar(64)     default ''                 comment '更新者',
   update_time      datetime                                   comment '更新时间',
   remark           varchar(500)    default null               comment '备注',
+
   primary key (order_id)
 ) engine=innodb auto_increment=1 comment = '销售订单表';
 
@@ -760,3 +763,46 @@ create table sys_order (
        primary key (id)
 ) engine=innodb auto_increment=1 comment = '合同表';
 
+-- ----------------------------
+-- 22、微信用户信息表字段
+-- ----------------------------
+drop table if exists sys_wx_user_info;
+create table sys_wx_user_info (
+       openid           varchar(100)    not null                   comment '微信openid',
+       nick_name        varchar(30)                                comment '昵称',
+       phone            varchar(30)                                comment '电话',
+       avatar_url       varchar(255)                               comment '用户头像',
+       gender           tinyint                                    comment '性别',
+       path             varchar(255)                               comment '文件路径',
+       city             varchar(16)                                comment '城市',
+       province         varchar(16)                                comment '省份',
+       country          varchar(16)                                comment '国家',
+       create_by        varchar(64)     default ''                 comment '创建者',
+       create_time      datetime                                   comment '创建时间',
+       update_by        varchar(64)     default ''                 comment '更新者',
+       update_time      datetime                                   comment '更新时间',
+       remark           varchar(500)    default null               comment '备注',
+       primary key (openid)
+) engine=innodb comment = '微信用户表';
+
+-- ----------------------------
+-- 23、微信小程序打卡表字段
+-- ----------------------------
+drop table if exists sys_wx_user_log;
+create table sys_wx_user_log (
+       openid           varchar(100)    not null                   comment '微信openid',
+       weight           decimal(10,2)                              comment '体重',
+       sleep_time       datetime                                   comment '睡觉时间',
+       wakeup_time      datetime                                   comment '起床时间',
+       sport            tinyint                                    comment '运动情况',
+       diet             tinyint                                    comment '饮食情况',
+       sleep_quality    tinyint                                    comment '睡眠质量',
+       defecation       tinyint                                    comment '排便情况',
+       water            tinyint                                    comment '饮水量',
+       create_by        varchar(64)     default ''                 comment '创建者',
+       create_time      datetime                                   comment '创建时间',
+       update_by        varchar(64)     default ''                 comment '更新者',
+       update_time      datetime                                   comment '更新时间',
+       remark           varchar(500)    default null               comment '备注',
+       primary key (openid)
+) engine=innodb comment = '微信用户记录';
