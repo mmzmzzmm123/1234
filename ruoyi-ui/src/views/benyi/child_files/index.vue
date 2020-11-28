@@ -13,7 +13,7 @@
       </el-col>
     </el-row> -->
     <ul class="infinite-list" v-infinite-scroll="load" style="overflow:auto">
-      <li v-for="(ele, i) in filesList" :key="i" class="flex align-center justify-between infinite-list-item">
+      <li v-for="(ele, i) in filesList" :key="i" class="flex align-center infinite-list-item">
         <div class="left">
           <span>{{i + 1}}.</span>
           <i class="el-icon-document icon"></i>{{ele.name}}
@@ -74,6 +74,7 @@ export default {
   }
   .left {
     font-size: 14px;
+    flex: 1;
     .icon {
       margin: 0 3px 0 5px;
     }

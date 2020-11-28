@@ -179,7 +179,7 @@
     >
       <el-row :gutter="15">
         <el-form ref="form" :model="form" :rules="rules" label-width="120px">
-          <el-col :span="12">
+          <el-col  :xs="24" :sm="12" :md="12">
             <el-form-item label="家长姓名" prop="jzxm">
               <el-input
                 v-model="form.jzxm"
@@ -188,7 +188,7 @@
               />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col  :xs="24" :sm="12" :md="12">
             <el-form-item label="联系方式" prop="lxfs">
               <el-input
                 v-model="form.lxfs"
@@ -197,7 +197,7 @@
               />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col  :xs="24" :sm="12" :md="12">
             <el-form-item label="幼儿姓名" prop="yexm">
               <el-input
                 v-model="form.yexm"
@@ -206,12 +206,11 @@
               />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col  :xs="24" :sm="12" :md="12">
             <el-form-item label="出生日期" prop="csrq">
               <el-date-picker
                 clearable
                 size="small"
-                style="width: 200px"
                 v-model="form.csrq"
                 type="date"
                 value-format="yyyy-MM-dd"
@@ -220,12 +219,11 @@
               ></el-date-picker>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col  :xs="24" :sm="12" :md="12">
             <el-form-item label="拟入园时间" prop="nrysj">
               <el-date-picker
                 clearable
                 size="small"
-                style="width: 200px"
                 v-model="form.nrysj"
                 type="date"
                 value-format="yyyy-MM-dd"
@@ -234,12 +232,11 @@
               ></el-date-picker>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col  :xs="24" :sm="12" :md="12">
             <el-form-item label="申请体验时间" prop="sqtysj">
               <el-date-picker
                 clearable
                 size="small"
-                style="width: 200px"
                 v-model="form.sqtysj"
                 type="date"
                 value-format="yyyy-MM-dd"
@@ -248,7 +245,7 @@
               ></el-date-picker>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col  :xs="24" :sm="12" :md="12">
             <el-form-item label="上午或下午" prop="swxw">
               <el-select
                 v-model="form.swxw"
@@ -265,7 +262,7 @@
               <el-input v-model="form.schoolid" v-if="false" />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col  :xs="24" :sm="12" :md="12">
             <el-form-item label="是否回复" prop="sfhf">
               <el-radio-group v-model="form.sfhf">
                 <el-radio
@@ -295,7 +292,7 @@
               />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col  :xs="24" :sm="12" :md="12">
             <el-form-item label="体验内容" prop="tynrid">
               <el-select v-model="form.tynrid" placeholder="请选择">
                 <el-option
@@ -307,7 +304,7 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col  :xs="24" :sm="12" :md="12">
             <el-form-item label="体验结果" prop="tyjg">
               <el-select v-model="form.tyjg" placeholder="请选择">
                 <el-option
@@ -319,12 +316,11 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col  :xs="24" :sm="12" :md="12">
             <el-form-item label="入园时间" prop="rysj">
               <el-date-picker
                 clearable
                 size="small"
-                style="width: 200px"
                 v-model="form.rysj"
                 type="date"
                 value-format="yyyy-MM-dd"

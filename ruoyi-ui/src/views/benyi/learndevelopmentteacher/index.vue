@@ -147,7 +147,7 @@
     >
       <el-row :gutter="15">
         <el-form ref="form" :model="form" :rules="rules" label-width="90px">
-          <el-col :span="12">
+          <el-col  :xs="24" :sm="12" :md="12">
             <el-form-item label="幼儿姓名" prop="childid">
               <el-select v-model="form.childid" placeholder="请选择幼儿">
                 <el-option
@@ -159,7 +159,7 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col  :xs="24" :sm="12" :md="12">
             <el-form-item label="学年学期" prop="xnxq">
               <el-select v-model="form.xnxq" placeholder="请选择学年学期">
                 <el-option

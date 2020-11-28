@@ -191,7 +191,7 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col  :xs="24" :sm="12" :md="12">
             <el-form-item label="父亲姓名" prop="fathername">
               <el-input
                 v-model="form.fathername"
@@ -199,7 +199,7 @@
               />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col  :xs="24" :sm="12" :md="12">
             <el-form-item label="联系电话" prop="fphone">
               <el-input
                 v-model="form.fphone"
@@ -207,7 +207,7 @@
               />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col  :xs="24" :sm="12" :md="12">
             <el-form-item label="办公电话" prop="foffphone">
               <el-input
                 v-model="form.foffphone"
@@ -217,7 +217,7 @@
           </el-col>
         </el-row>
         <el-row :gutter="15">
-          <el-col :span="12">
+          <el-col  :xs="24" :sm="12" :md="12">
             <el-form-item label="母亲姓名" prop="mothername">
               <el-input
                 v-model="form.mothername"
@@ -225,7 +225,7 @@
               />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col  :xs="24" :sm="12" :md="12">
             <el-form-item label="联系电话" prop="mphone">
               <el-input
                 v-model="form.mphone"
@@ -233,7 +233,7 @@
               />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col  :xs="24" :sm="12" :md="12">
             <el-form-item label="办公电话" prop="moffphone">
               <el-input
                 v-model="form.moffphone"
@@ -243,7 +243,7 @@
           </el-col>
         </el-row>
         <el-row :gutter="15">
-          <el-col :span="12">
+          <el-col  :xs="24" :sm="12" :md="12">
             <el-form-item label="其他联系人姓名" prop="grandfathername">
               <el-input
                 v-model="form.grandfathername"
@@ -251,7 +251,7 @@
               />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col  :xs="24" :sm="12" :md="12">
             <el-form-item label="与幼儿关系" prop="gfgx">
               <el-select v-model="form.gfgx" placeholder="请选择与幼儿关系">
                 <el-option
@@ -263,12 +263,12 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col  :xs="24" :sm="12" :md="12">
             <el-form-item label="联系电话" prop="gfphone">
               <el-input v-model="form.gfphone" placeholder="请输入联系电话" />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col  :xs="24" :sm="12" :md="12">
             <el-form-item label="办公电话" prop="gfoffphone">
               <el-input
                 v-model="form.gfoffphone"
@@ -283,7 +283,7 @@
           </el-col>
         </el-row>
         <el-row :gutter="15">
-          <el-col :span="12">
+          <el-col  :xs="24" :sm="12" :md="12">
             <el-form-item label="其他联系人姓名" prop="grandmothername">
               <el-input
                 v-model="form.grandmothername"
@@ -291,7 +291,7 @@
               />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col  :xs="24" :sm="12" :md="12">
             <el-form-item label="与幼儿关系" prop="gmgx">
               <el-select v-model="form.gmgx" placeholder="请选择与幼儿关系">
                 <el-option
@@ -303,12 +303,12 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col  :xs="24" :sm="12" :md="12">
             <el-form-item label="联系电话" prop="gmphone">
               <el-input v-model="form.gmphone" placeholder="请输入联系电话" />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col  :xs="24" :sm="12" :md="12">
             <el-form-item label="办公电话" prop="gmoffphone">
               <el-input
                 v-model="form.gmoffphone"

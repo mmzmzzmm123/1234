@@ -3,7 +3,7 @@
     <el-form :model="queryParams" ref="queryForm" label-width="70px">
       <el-row :gutter="10">
         <el-col :xs="24" :ms="12" :md="5">
-           <el-form-item label="选择班级" prop="classid">
+          <el-form-item label="选择班级" prop="classid">
             <el-select v-model="queryParams.classid" placeholder="请选择班级">
               <el-option
                 v-for="dict in classOptions"
@@ -244,19 +244,19 @@
     >
       <el-tabs type="border-card">
         <el-tab-pane label="幼儿基础信息">
-          <el-row :gutter="15">
+          <el-row :gutter="10">
             <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-              <el-col :span="12">
+              <el-col :xs="24" :sm="12" :md="12">
                 <el-form-item label="姓名" prop="name">
                   <el-input v-model="form.name" placeholder="请输入姓名" />
                 </el-form-item>
               </el-col>
-              <el-col :span="12">
+              <el-col :xs="24" :sm="12" :md="12">
                 <el-form-item label="英文名" prop="enName">
                   <el-input v-model="form.enName" placeholder="请输入英文名" />
                 </el-form-item>
               </el-col>
-              <el-col :span="12">
+              <el-col :xs="24" :sm="12" :md="12">
                 <el-form-item label="小名" prop="infantName">
                   <el-input
                     v-model="form.infantName"
@@ -264,7 +264,7 @@
                   />
                 </el-form-item>
               </el-col>
-              <el-col :span="12">
+              <el-col :xs="24" :sm="12" :md="12">
                 <el-form-item label="手机号码" prop="phone">
                   <el-input
                     v-model="form.phone"
@@ -272,7 +272,7 @@
                   />
                 </el-form-item>
               </el-col>
-              <el-col :span="12">
+              <el-col :xs="24" :sm="12" :md="12">
                 <el-form-item label="性别" prop="xb">
                   <el-select v-model="form.xb" placeholder="请选择性别">
                     <el-option
@@ -284,7 +284,7 @@
                   </el-select>
                 </el-form-item>
               </el-col>
-              <el-col :span="12">
+              <el-col :xs="24" :sm="12" :md="12">
                 <el-form-item label="民族" prop="mz">
                   <el-select v-model="form.mz" placeholder="请选择民族">
                     <el-option
@@ -296,17 +296,16 @@
                   </el-select>
                 </el-form-item>
               </el-col>
-              <el-col :span="12">
+              <el-col :xs="24" :sm="12" :md="12">
                 <el-form-item label="证件号码" prop="zjhm">
                   <el-input v-model="form.zjhm" placeholder="请输入证件号码" />
                 </el-form-item>
               </el-col>
-              <el-col :span="12">
+              <el-col :xs="24" :sm="12" :md="12">
                 <el-form-item label="出生日期" prop="csrq">
                   <el-date-picker
                     clearable
                     size="small"
-                    style="width: 200px"
                     v-model="form.csrq"
                     type="date"
                     value-format="yyyy-MM-dd"
@@ -359,7 +358,7 @@
                   <el-input v-model="form.addrArea" v-if="false" />
                 </el-form-item>
               </el-col>
-              <el-col :span="12">
+              <el-col :xs="24" :sm="12" :md="12">
                 <el-form-item label="详细地址" prop="addrDetail">
                   <el-input
                     v-model="form.addrDetail"
@@ -367,7 +366,7 @@
                   />
                 </el-form-item>
               </el-col>
-              <el-col :span="12">
+              <el-col :xs="24" :sm="12" :md="12">
                 <el-form-item label="曾就读园" prop="everSchool">
                   <el-input
                     v-model="form.everSchool"
@@ -375,7 +374,7 @@
                   />
                 </el-form-item>
               </el-col>
-              <el-col :span="12">
+              <el-col :xs="24" :sm="12" :md="12">
                 <el-form-item label="学习英语" prop="learnEnglish">
                   <el-radio-group v-model="form.learnEnglish">
                     <el-radio
@@ -387,7 +386,7 @@
                   </el-radio-group>
                 </el-form-item>
               </el-col>
-              <el-col :span="12">
+              <el-col :xs="24" :sm="12" :md="12">
                 <el-form-item label="入园渠道" prop="source">
                   <el-select v-model="form.source" placeholder="请选择入园渠道">
                     <el-option
@@ -399,7 +398,7 @@
                   </el-select>
                 </el-form-item>
               </el-col>
-              <el-col :span="12">
+              <el-col :xs="24" :sm="12" :md="12">
                 <el-form-item label="状态">
                   <el-radio-group v-model="form.status">
                     <el-radio
@@ -411,7 +410,7 @@
                   </el-radio-group>
                 </el-form-item>
               </el-col>
-              <el-col :span="12">
+              <el-col :xs="24" :sm="12" :md="12">
                 <el-form-item label="第一语言" prop="firstLanguage">
                   <el-input
                     v-model="form.firstLanguage"
@@ -420,7 +419,7 @@
                   />
                 </el-form-item>
               </el-col>
-              <el-col :span="12">
+              <el-col :xs="24" :sm="12" :md="12">
                 <el-form-item label="第二语言" prop="seconderLanguage">
                   <el-input
                     v-model="form.seconderLanguage"
@@ -429,7 +428,7 @@
                   />
                 </el-form-item>
               </el-col>
-              <el-col :span="12">
+              <el-col :xs="24" :sm="12" :md="12">
                 <el-form-item label="其他语言" prop="otherLanguage">
                   <el-input
                     v-model="form.otherLanguage"
@@ -437,7 +436,7 @@
                   />
                 </el-form-item>
               </el-col>
-              <el-col :span="12">
+              <el-col :xs="24" :sm="12" :md="12">
                 <el-form-item label="选择班级" prop="classid">
                   <el-select v-model="form.classid" placeholder="请选择班级">
                     <el-option
@@ -459,8 +458,8 @@
             :rules="rules_jhr"
             label-width="120px"
           >
-            <el-row :gutter="15">
-              <el-col :span="12">
+            <el-row :gutter="10">
+              <el-col :xs="24" :sm="12" :md="12">
                 <el-form-item label="父亲姓名" prop="fathername">
                   <el-input
                     v-model="form_jhr.fathername"
@@ -468,7 +467,7 @@
                   />
                 </el-form-item>
               </el-col>
-              <el-col :span="12">
+              <el-col :xs="24" :sm="12" :md="12">
                 <el-form-item label="联系电话" prop="fphone">
                   <el-input
                     v-model="form_jhr.fphone"
@@ -476,7 +475,7 @@
                   />
                 </el-form-item>
               </el-col>
-              <el-col :span="12">
+              <el-col :xs="24" :sm="12" :md="12">
                 <el-form-item label="办公电话" prop="foffphone">
                   <el-input
                     v-model="form_jhr.foffphone"
@@ -485,8 +484,8 @@
                 </el-form-item>
               </el-col>
             </el-row>
-            <el-row :gutter="15">
-              <el-col :span="12">
+            <el-row :gutter="10">
+              <el-col :xs="24" :sm="12" :md="12">
                 <el-form-item label="母亲姓名" prop="mothername">
                   <el-input
                     v-model="form_jhr.mothername"
@@ -494,7 +493,7 @@
                   />
                 </el-form-item>
               </el-col>
-              <el-col :span="12">
+              <el-col :xs="24" :sm="12" :md="12">
                 <el-form-item label="联系电话" prop="mphone">
                   <el-input
                     v-model="form_jhr.mphone"
@@ -502,7 +501,7 @@
                   />
                 </el-form-item>
               </el-col>
-              <el-col :span="12">
+              <el-col :xs="24" :sm="12" :md="12">
                 <el-form-item label="办公电话" prop="moffphone">
                   <el-input
                     v-model="form_jhr.moffphone"
@@ -511,8 +510,8 @@
                 </el-form-item>
               </el-col>
             </el-row>
-            <el-row :gutter="15">
-              <el-col :span="12">
+            <el-row :gutter="10">
+              <el-col :xs="24" :sm="12" :md="12">
                 <el-form-item label="其他联系人姓名" prop="grandfathername">
                   <el-input
                     v-model="form_jhr.grandfathername"
@@ -520,7 +519,7 @@
                   />
                 </el-form-item>
               </el-col>
-              <el-col :span="12">
+              <el-col :xs="24" :sm="12" :md="12">
                 <el-form-item label="与幼儿关系" prop="gfgx">
                   <el-select
                     v-model="form_jhr.gfgx"
@@ -535,7 +534,7 @@
                   </el-select>
                 </el-form-item>
               </el-col>
-              <el-col :span="12">
+              <el-col :xs="24" :sm="12" :md="12">
                 <el-form-item label="联系电话" prop="gfphone">
                   <el-input
                     v-model="form_jhr.gfphone"
@@ -543,7 +542,7 @@
                   />
                 </el-form-item>
               </el-col>
-              <el-col :span="12">
+              <el-col :xs="24" :sm="12" :md="12">
                 <el-form-item label="办公电话" prop="gfoffphone">
                   <el-input
                     v-model="form_jhr.gfoffphone"
@@ -560,8 +559,8 @@
                 </el-form-item>
               </el-col>
             </el-row>
-            <el-row :gutter="15">
-              <el-col :span="12">
+            <el-row :gutter="10">
+              <el-col :xs="24" :sm="12" :md="12">
                 <el-form-item label="其他联系人姓名" prop="grandmothername">
                   <el-input
                     v-model="form_jhr.grandmothername"
@@ -569,7 +568,7 @@
                   />
                 </el-form-item>
               </el-col>
-              <el-col :span="12">
+              <el-col :xs="24" :sm="12" :md="12">
                 <el-form-item label="与幼儿关系" prop="gmgx">
                   <el-select
                     v-model="form_jhr.gmgx"
@@ -584,7 +583,7 @@
                   </el-select>
                 </el-form-item>
               </el-col>
-              <el-col :span="12">
+              <el-col :xs="24" :sm="12" :md="12">
                 <el-form-item label="联系电话" prop="gmphone">
                   <el-input
                     v-model="form_jhr.gmphone"
@@ -592,7 +591,7 @@
                   />
                 </el-form-item>
               </el-col>
-              <el-col :span="12">
+              <el-col :xs="24" :sm="12" :md="12">
                 <el-form-item label="办公电话" prop="gmoffphone">
                   <el-input
                     v-model="form_jhr.gmoffphone"
@@ -621,7 +620,7 @@
     <el-dialog
       title="幼儿调班"
       :visible.sync="open_tb"
-      width="400px"
+      class="big-dialog"
       append-to-body
     >
       <el-form ref="form" :model="form" :rules="rules_tb" label-width="80px">
@@ -643,7 +642,7 @@
     </el-dialog>
 
     <!-- 用户导入对话框 -->
-    <el-dialog :title="upload.title" :visible.sync="upload.open" width="400px">
+    <el-dialog :title="upload.title" :visible.sync="upload.open" class="big-dialog">
       <el-upload
         ref="upload"
         :limit="1"
@@ -686,7 +685,7 @@ import {
   addChild,
   updateChild,
   updateChild_tb,
-  importTemplate,
+  importTemplate
 } from "@/api/benyi/child";
 import {
   listContactpeople,
@@ -694,7 +693,7 @@ import {
   getContactpeopleByChildId,
   delContactpeople,
   addContactpeople,
-  updateContactpeople,
+  updateContactpeople
 } from "@/api/benyi/contactpeople";
 
 import { listClass } from "@/api/system/class";
@@ -714,22 +713,22 @@ export default {
       placeholders: {
         province: "请选择省",
         city: "请选择市",
-        area: "请选择区",
+        area: "请选择区"
       },
       diglogForm: {
         province: null,
         city: null,
-        area: null,
+        area: null
       },
       diglogForm1: {
         province: null,
         city: null,
-        area: null,
+        area: null
       },
       diglogForm2: {
         province: null,
         city: null,
-        area: null,
+        area: null
       },
       // 连接内容
       inviteCode: "",
@@ -777,7 +776,7 @@ export default {
         // 设置上传的请求头部
         headers: { Authorization: "Bearer " + getToken() },
         // 上传的地址
-        url: process.env.VUE_APP_BASE_API + "/benyi/child/importData",
+        url: process.env.VUE_APP_BASE_API + "/benyi/child/importData"
       },
       // 查询参数
       queryParams: {
@@ -821,7 +820,7 @@ export default {
         firstLanguage: undefined,
         seconderLanguage: undefined,
         otherLanguage: undefined,
-        createuserid: undefined,
+        createuserid: undefined
       },
       // 表单参数
       form: {},
@@ -832,44 +831,44 @@ export default {
       // 表单校验
       rules: {
         name: [
-          { required: true, message: "幼儿姓名不能为空", trigger: "blur" },
+          { required: true, message: "幼儿姓名不能为空", trigger: "blur" }
         ],
         phone: [
-          { required: true, message: "家长手机号码不能为空", trigger: "blur" },
+          { required: true, message: "家长手机号码不能为空", trigger: "blur" }
         ],
-        classid: [{ required: true, message: "班级不能为空", trigger: "blur" }],
+        classid: [{ required: true, message: "班级不能为空", trigger: "blur" }]
       },
       rules_tb: {
-        classid: [{ required: true, message: "班级不能为空", trigger: "blur" }],
-      },
+        classid: [{ required: true, message: "班级不能为空", trigger: "blur" }]
+      }
     };
   },
   created() {
     this.getList();
     this.getClassList();
-    this.getDicts("sys_user_sex").then((response) => {
+    this.getDicts("sys_user_sex").then(response => {
       this.sexOptions = response.data;
     });
-    this.getDicts("sys_normal_disable").then((response) => {
+    this.getDicts("sys_normal_disable").then(response => {
       this.statusOptions = response.data;
     });
-    this.getDicts("sys_dm_mz").then((response) => {
+    this.getDicts("sys_dm_mz").then(response => {
       this.mzOptions = response.data;
     });
-    this.getDicts("sys_yes_no").then((response) => {
+    this.getDicts("sys_yes_no").then(response => {
       this.ynOptions = response.data;
     });
-    this.getDicts("sys_dm_ryqd").then((response) => {
+    this.getDicts("sys_dm_ryqd").then(response => {
       this.sourceOptions = response.data;
     });
-    this.getDicts("sys_dm_jtgx").then((response) => {
+    this.getDicts("sys_dm_jtgx").then(response => {
       this.jtgxOptions = response.data;
     });
     this.getLink();
   },
   components: {
     //省市区三级联动全局组件
-    VDistpicker,
+    VDistpicker
   },
   methods: {
     /** 导入按钮操作 */
@@ -879,7 +878,7 @@ export default {
     },
     // 链接内容
     getLink() {
-      getUserProfile().then((response) => {
+      getUserProfile().then(response => {
         var domain = window.location.host;
         //console.log(domain);
         //this.user = response.data;
@@ -889,14 +888,14 @@ export default {
     // 给家长发送链接
     copy(e, text) {
       const clipboard = new Clipboard(e.target, { text: () => text });
-      clipboard.on("success", (e) => {
+      clipboard.on("success", e => {
         this.msgSuccess("复制成功");
         // 释放内存
         clipboard.off("error");
         clipboard.off("success");
         clipboard.destroy();
       });
-      clipboard.on("error", (e) => {
+      clipboard.on("error", e => {
         // 不支持复制
         this.msgError("手机权限不支持复制功能");
         // 释放内存
@@ -931,7 +930,7 @@ export default {
       // return this.selectDictLabel(this.classOptions, row.classid);
       var actions = [];
       var datas = this.classOptions;
-      Object.keys(datas).map((key) => {
+      Object.keys(datas).map(key => {
         if (datas[key].bjbh == "" + row.classid) {
           actions.push(datas[key].bjmc);
           return false;
@@ -940,14 +939,14 @@ export default {
       return actions.join("");
     },
     getClassList() {
-      listClass(null).then((response) => {
+      listClass(null).then(response => {
         this.classOptions = response.rows;
       });
     },
     /** 查询幼儿信息列表 */
     getList() {
       this.loading = true;
-      listChild(this.queryParams).then((response) => {
+      listChild(this.queryParams).then(response => {
         this.childList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -1006,7 +1005,7 @@ export default {
         seconderLanguage: undefined,
         otherLanguage: undefined,
         createuserid: undefined,
-        createTime: undefined,
+        createTime: undefined
       };
 
       this.diglogForm.province = "";
@@ -1042,7 +1041,7 @@ export default {
         gmphone: undefined,
         gmaddress: undefined,
         gmoffphone: undefined,
-        createTime: undefined,
+        createTime: undefined
       };
       this.resetForm("form_jhr");
     },
@@ -1058,7 +1057,7 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map((item) => item.id);
+      this.ids = selection.map(item => item.id);
       this.single = selection.length != 1;
       this.multiple = !selection.length;
     },
@@ -1072,7 +1071,7 @@ export default {
     async handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids;
-      await getChild(id).then((response) => {
+      await getChild(id).then(response => {
         this.form = response.data;
 
         this.diglogForm.province = response.data.birthProvincename;
@@ -1091,20 +1090,20 @@ export default {
         this.title = "修改幼儿信息";
 
         //根据幼儿id获取监护人信息
-        getContactpeopleByChildId(this.form.id).then((res) => {
+        getContactpeopleByChildId(this.form.id).then(res => {
           // console.log("childid:" + this.form.id + ";jhr:" + res.data);
           this.form_jhr = res.data;
         });
       });
     },
     /** 提交按钮 */
-    submitForm: function () {
-      this.$refs["form"].validate((valid) => {
+    submitForm: function() {
+      this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.id != undefined) {
-            updateChild(this.form).then((response) => {
+            updateChild(this.form).then(response => {
               if (response.code === 200) {
-                updateContactpeople(this.form_jhr).then((res) => {
+                updateContactpeople(this.form_jhr).then(res => {
                   if (res.code === 200) {
                     this.msgSuccess("修改成功");
                     this.open = false;
@@ -1114,11 +1113,11 @@ export default {
               }
             });
           } else {
-            addChild(this.form).then((response) => {
+            addChild(this.form).then(response => {
               // console.log(response);
               if (response.code === 200) {
                 this.form_jhr.childid = response.data;
-                addContactpeople(this.form_jhr).then((res) => {
+                addContactpeople(this.form_jhr).then(res => {
                   this.msgSuccess("新增成功");
                   this.open = false;
                   this.getList();
@@ -1130,11 +1129,11 @@ export default {
       });
     },
     /** 提交按钮 */
-    submitForm_tb: function () {
-      this.$refs["form"].validate((valid) => {
+    submitForm_tb: function() {
+      this.$refs["form"].validate(valid => {
         if (valid) {
           // console.log(this.ids + "---" + this.form.classid);
-          updateChild_tb(this.form, this.ids).then((response) => {
+          updateChild_tb(this.form, this.ids).then(response => {
             if (response.code === 200) {
               this.msgSuccess("调班成功");
               this.open_tb = false;
@@ -1157,16 +1156,16 @@ export default {
       this.$confirm("是否确认删除幼儿信息数据项?", "警告", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning",
+        type: "warning"
       })
-        .then(function () {
+        .then(function() {
           return delChild(ids);
         })
         .then(() => {
           this.getList();
           this.msgSuccess("删除成功");
         })
-        .catch(function () {});
+        .catch(function() {});
     },
     //所在省市区触发联动方法
     onSelected_brith(data) {
@@ -1224,7 +1223,7 @@ export default {
     },
     /** 下载模板操作 */
     importTemplate() {
-      importTemplate().then((response) => {
+      importTemplate().then(response => {
         this.download(response.msg);
       });
     },
@@ -1243,8 +1242,8 @@ export default {
     // 提交上传文件
     submitFileForm() {
       this.$refs.upload.submit();
-    },
-  },
+    }
+  }
 };
 </script>
 <style lang="scss" scoped>
@@ -1262,5 +1261,10 @@ export default {
 }
 .no-margin ::v-deep.el-form-item__content {
   margin: 0 !important;
+}
+@media screen and (max-width: 768.98px) {
+  ::v-deep .el-dialog__body {
+    padding: 20px 5px !important;
+  }
 }
 </style>

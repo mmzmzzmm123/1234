@@ -252,7 +252,7 @@
     >
       <el-row :gutter="15">
         <el-form ref="form" :model="form" :rules="rules" label-width="100px">
-          <el-col :span="12">
+          <el-col  :xs="24" :sm="12" :md="12">
             <el-form-item label="班级信息" prop="classInfo">
               <el-select
                 v-model="form.classInfo"
@@ -268,7 +268,7 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col  :xs="24" :sm="12" :md="12">
             <el-form-item label="幼儿姓名" prop="childId">
               <el-select v-model="form.childId" placeholder="请选择幼儿">
                 <el-option
@@ -282,7 +282,7 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col  :xs="24" :sm="12" :md="12">
             <el-form-item label="是否龋齿">
               <el-select
                 v-model="form.decayedTooth"
@@ -297,7 +297,7 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col  :xs="24" :sm="12" :md="12">
             <el-form-item label="视力评价">
               <el-select
                 v-model="form.visionAssessment"
@@ -312,7 +312,7 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col  :xs="24" :sm="12" :md="12">
             <el-form-item label="左眼视力" prop="eyesVisionLeft">
               <el-input
                 v-model="form.eyesVisionLeft"
@@ -320,7 +320,7 @@
               />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col  :xs="24" :sm="12" :md="12">
             <el-form-item label="右眼视力" prop="eyesVisionRight">
               <el-input
                 v-model="form.eyesVisionRight"
@@ -328,7 +328,7 @@
               />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col  :xs="24" :sm="12" :md="12">
             <el-form-item label="体重(kg)" prop="weight">
               <el-input
                 v-model="form.weight"
@@ -337,7 +337,7 @@
               />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col  :xs="24" :sm="12" :md="12">
             <el-form-item label="体重评价">
               <el-select
                 v-model="form.weightAssessment"
@@ -353,7 +353,7 @@
             </el-form-item>
           </el-col>
 
-          <el-col :span="12">
+          <el-col  :xs="24" :sm="12" :md="12">
             <el-form-item label="身高(cm)" prop="height">
               <el-input
                 v-model="form.height"
@@ -363,7 +363,7 @@
               />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col  :xs="24" :sm="12" :md="12">
             <el-form-item label="身高评价">
               <el-select
                 v-model="form.heightAssessment"
@@ -378,7 +378,7 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col  :xs="24" :sm="12" :md="12">
             <el-form-item label="总评价">
               <el-select
                 v-model="form.totalAssessment"
@@ -393,17 +393,16 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col  :xs="24" :sm="12" :md="12">
             <el-form-item label="保健师" prop="doctorName">
               <el-input v-model="form.doctorName" placeholder="请输入保健师" />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col  :xs="24" :sm="12" :md="12">
             <el-form-item label="检查日期" prop="checkTime">
               <el-date-picker
                 clearable
                 size="small"
-                style="width: 200px"
                 v-model="form.checkTime"
                 type="date"
                 value-format="yyyy-MM-dd"

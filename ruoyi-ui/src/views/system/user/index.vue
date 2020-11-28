@@ -239,12 +239,12 @@
     <el-dialog :title="title" :visible.sync="open" class="v-dialog">
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-row>
-          <el-col :span="12">
+          <el-col :xs="24" :sm="12" :md="12">
             <el-form-item label="用户姓名" prop="nickName">
               <el-input v-model="form.nickName" placeholder="请输入用户姓名" />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :xs="24" :sm="12" :md="12">
             <el-form-item label="归属部门" prop="deptId">
               <treeselect
                 v-model="form.deptId"
@@ -253,7 +253,7 @@
               />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :xs="24" :sm="12" :md="12">
             <el-form-item label="登录账号" prop="userName">
               <el-input
                 v-model="form.userName"
@@ -262,7 +262,7 @@
               />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :xs="24" :sm="12" :md="12">
             <el-form-item
               v-if="form.userId == undefined"
               label="用户密码"
@@ -275,7 +275,7 @@
               />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :xs="24" :sm="12" :md="12">
             <el-form-item label="用户性别">
               <el-select v-model="form.sex" placeholder="请选择">
                 <el-option
@@ -287,7 +287,7 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :xs="24" :sm="12" :md="12">
             <el-form-item label="状态">
               <el-radio-group v-model="form.status">
                 <el-radio
@@ -299,7 +299,7 @@
               </el-radio-group>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :xs="24" :sm="12" :md="12">
             <el-form-item label="岗位">
               <el-select v-model="form.postIds" multiple placeholder="请选择">
                 <el-option
@@ -312,7 +312,7 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :xs="24" :sm="12" :md="12">
             <el-form-item label="角色">
               <el-select v-model="form.roleIds" multiple placeholder="请选择">
                 <el-option
@@ -325,7 +325,7 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :xs="24" :sm="12" :md="12">
             <el-form-item v-if="isSchool" label="多幼儿园">
               <el-select v-model="form.deptIds" multiple placeholder="请选择">
                 <el-option
@@ -338,7 +338,7 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="24">
+          <el-col :xs="24" :sm="12" :md="12">
             <el-form-item label="备注">
               <el-input
                 v-model="form.remark"
