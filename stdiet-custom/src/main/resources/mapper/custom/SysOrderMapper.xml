@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.stdiet.custom.mapper.SysOrderMapper">
+
+    <resultMap type="SysOrder" id="SysOrderResult">
+        <result property="orderId" column="order_id"/>
+        <result property="customer" column="customer"/>
+        <result property="phone" column="phone"/>
+        <result property="amount" column="amount"/>
+        <result property="payTypeId" column="pay_type_id"/>
+        <result property="payType" column="pay_type"/>
+        <result property="preSaleId" column="pre_sale_id"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="afterSaleId" column="after_sale_id"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="nutritionistId" column="nutritionist_id"/>
+        <result property="remark" column="remark"/>
+        <result property="nutriAssisId" column="nutri_assis_id"/>
+        <result property="accountId" column="account_id"/>
+        <result property="account" column="account"/>
+        <result property="plannerId" column="planner_id"/>
+        <result property="plannerAssisId" column="planner_assis_id"/>
+        <result property="operatorId" column="operator_id"/>
+        <result property="operatorAssisId" column="operator_assis_id"/>
+        <result property="recommender" column="recommender"/>
+        <result property="orderTime" column="order_time"/>
+        <result property="serveTime" column="serve_time"/>
+        <result property="serveTimeId" column="serve_time_id"/>
+        <result property="reviewStatus" column="review_status"/>
+    </resultMap>
+
+    <sql id="selectSysOrderVo">
+        select o.order_id, o.review_status, o.customer, o.phone, o.amount, ser.dict_label as serve_time, o.serve_time_id, o.pay_type_id, pay.dict_label as pay_type, o.pre_sale_id, o.create_by, o.create_time, o.after_sale_id, o.update_by, o.update_time, o.nutritionist_id, o.remark, o.nutri_assis_id, o.account_id, acc.dict_label as account, o.planner_id, o.planner_assis_id, o.operator_id, o.operator_assis_id, o.recommender, o.order_time from sys_order o
+        LEFT JOIN (SELECT dict_label, dict_value FROM sys_dict_data WHERE dict_type = 'cus_pay_type') AS pay ON pay.dict_value = o.pay_type_id
+        LEFT JOIN (SELECT dict_label, dict_value FROM sys_dict_data WHERE dict_type = 'cus_account') AS acc ON acc.dict_value = o.account_id
+        LEFT JOIN (SELECT dict_label, dict_value FROM sys_dict_data WHERE dict_type = 'cus_serve_time') AS ser ON ser.dict_value = o.serve_time_id
+    </sql>
+
+    <select id="selectAllOrderAmount" parameterType="SysOrder" resultType="BigDecimal">
+        SELECT SUM(amount) FROM sys_order
+        <where>
+            <if test="orderId != null  and orderId != ''">and order_id = #{orderId}</if>
+            <if test="customer != null  and customer != ''">and customer = #{customer}</if>
+            <if test="phone != null  and phone != ''">and phone = #{phone}</if>
+            <if test="payTypeId != null ">and pay_type_id = #{payTypeId}</if>
+            <if test="preSaleId != null ">and pre_sale_id = #{preSaleId}</if>
+            <if test="afterSaleId != null ">and after_sale_id = #{afterSaleId}</if>
+            <if test="nutritionistId != null ">and nutritionist_id = #{nutritionistId}</if>
+            <if test="nutriAssisId != null ">and nutri_assis_id = #{nutriAssisId}</if>
+            <if test="accountId != null ">and account_id = #{accountId}</if>
+            <if test="plannerId != null ">and planner_id = #{plannerId}</if>
+            <if test="plannerAssisId != null ">and planner_assis_id = #{plannerAssisId}</if>
+            <if test="operatorId != null ">and operator_id = #{operatorId}</if>
+            <if test="operatorAssisId != null ">and operator_assis_id = #{operatorAssisId}</if>
+            <if test="recommender != null  and recommender != ''">and recommender = #{recommender}</if>
+            <if test="beginTime != null and beginTime != ''">and date_format(order_time,'%y%m%d') &gt;= date_format(#{beginTime},'%y%m%d')</if>
+            <if test="endTime != null and endTime != ''">and date_format(order_time,'%y%m%d') &lt;= date_format(#{endTime},'%y%m%d')</if>
+            <if test="serveTimeId != null ">and serve_time_id = #{serveTimeId}</if>
+            <if test="reviewStatus != null ">and review_status = #{reviewStatus}</if>
+        </where>
+    </select>
+
+    <select id="selectSysOrderList" parameterType="SysOrder" resultMap="SysOrderResult">
+        <include refid="selectSysOrderVo"/>
+        <where>
+            <if test="orderId != null  and orderId != ''">and order_id = #{orderId}</if>
+            <if test="customer != null  and customer != ''">and customer = #{customer}</if>
+            <if test="phone != null  and phone != ''">and phone = #{phone}</if>
+            <if test="payTypeId != null ">and pay_type_id = #{payTypeId}</if>
+            <if test="preSaleId != null ">and pre_sale_id = #{preSaleId}</if>
+            <if test="afterSaleId != null ">and after_sale_id = #{afterSaleId}</if>
+            <if test="nutritionistId != null ">and nutritionist_id = #{nutritionistId}</if>
+            <if test="nutriAssisId != null ">and nutri_assis_id = #{nutriAssisId}</if>
+            <if test="accountId != null ">and account_id = #{accountId}</if>
+            <if test="plannerId != null ">and planner_id = #{plannerId}</if>
+            <if test="plannerAssisId != null ">and planner_assis_id = #{plannerAssisId}</if>
+            <if test="operatorId != null ">and operator_id = #{operatorId}</if>
+            <if test="operatorAssisId != null ">and operator_assis_id = #{operatorAssisId}</if>
+            <if test="recommender != null  and recommender != ''">and recommender = #{recommender}</if>
+            <if test="beginTime != null and beginTime != ''">and date_format(order_time,'%y%m%d') &gt;= date_format(#{beginTime},'%y%m%d')</if>
+            <if test="endTime != null and endTime != ''">and date_format(order_time,'%y%m%d') &lt;= date_format(#{endTime},'%y%m%d')</if>
+            <if test="serveTimeId != null ">and serve_time_id = #{serveTimeId}</if>
+            <if test="reviewStatus != null ">and review_status = #{reviewStatus}</if>
+        </where>
+        order by order_time desc
+    </select>
+
+    <select id="selectSysOrderById" parameterType="Long" resultMap="SysOrderResult">
+        <include refid="selectSysOrderVo"/>
+        where order_id = #{orderId}
+    </select>
+
+    <insert id="insertSysOrder" parameterType="SysOrder" useGeneratedKeys="true" keyProperty="orderId">
+        insert into sys_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderId != null and orderId != ''">order_id,</if>
+            <if test="customer != null and customer != ''">customer,</if>
+            <if test="phone != null">phone,</if>
+            <if test="amount != null">amount,</if>
+            <if test="payTypeId != null">pay_type_id,</if>
+            <if test="preSaleId != null">pre_sale_id,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="afterSaleId != null">after_sale_id,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="nutritionistId != null">nutritionist_id,</if>
+            <if test="remark != null">remark,</if>
+            <if test="nutriAssisId != null">nutri_assis_id,</if>
+            <if test="accountId != null">account_id,</if>
+            <if test="plannerId != null">planner_id,</if>
+            <if test="plannerAssisId != null">planner_assis_id,</if>
+            <if test="operatorId != null">operator_id,</if>
+            <if test="operatorAssisId != null">operator_assis_id,</if>
+            <if test="recommender != null">recommender,</if>
+            <if test="orderTime != null">order_time,</if>
+            <if test="serveTimeId != null">serve_time_id,</if>
+            <if test="reviewStatus != null">review_status,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="orderId != null and orderId != ''">#{orderId},</if>
+            <if test="customer != null and customer != ''">#{customer},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="amount != null">#{amount},</if>
+            <if test="payTypeId != null">#{payTypeId},</if>
+            <if test="preSaleId != null">#{preSaleId},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="afterSaleId != null">#{afterSaleId},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="nutritionistId != null">#{nutritionistId},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="nutriAssisId != null">#{nutriAssisId},</if>
+            <if test="accountId != null">#{accountId},</if>
+            <if test="plannerId != null">#{plannerId},</if>
+            <if test="plannerAssisId != null">#{plannerAssisId},</if>
+            <if test="operatorId != null">#{operatorId},</if>
+            <if test="operatorAssisId != null">#{operatorAssisId},</if>
+            <if test="recommender != null">#{recommender},</if>
+            <if test="orderTime != null">#{orderTime},</if>
+            <if test="serveTimeId != null">#{serveTimeId},</if>
+            <if test="reviewStatus != null">#{reviewStatus},</if>
+        </trim>
+    </insert>
+
+    <update id="updateSysOrder" parameterType="SysOrder">
+        update sys_order
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="customer != null and customer != ''">customer = #{customer},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="amount != null">amount = #{amount},</if>
+            <if test="payTypeId != null">pay_type_id = #{payTypeId},</if>
+            <if test="preSaleId != null">pre_sale_id = #{preSaleId},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="afterSaleId != null">after_sale_id = #{afterSaleId},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="nutritionistId != null">nutritionist_id = #{nutritionistId},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="nutriAssisId != null">nutri_assis_id = #{nutriAssisId},</if>
+            <if test="accountId != null">account_id = #{accountId},</if>
+            <if test="plannerId != null">planner_id = #{plannerId},</if>
+            <if test="plannerAssisId != null">planner_assis_id = #{plannerAssisId},</if>
+            <if test="operatorId != null">operator_id = #{operatorId},</if>
+            <if test="operatorAssisId != null">operator_assis_id = #{operatorAssisId},</if>
+            <if test="recommender != null">recommender = #{recommender},</if>
+            <if test="orderTime != null">order_time = #{orderTime},</if>
+            <if test="serveTimeId != null">serve_time_id = #{serveTimeId},</if>
+            <if test="reviewStatus != null">review_status = #{reviewStatus},</if>
+        </trim>
+        where order_id = #{orderId}
+    </update>
+
+    <delete id="deleteSysOrderById" parameterType="Long">
+        delete from sys_order where order_id = #{orderId}
+    </delete>
+
+    <delete id="deleteSysOrderByIds" parameterType="String">
+        delete from sys_order where order_id in
+        <foreach item="orderId" collection="array" open="(" separator="," close=")">
+            #{orderId}
+        </foreach>
+    </delete>
+
+</mapper>

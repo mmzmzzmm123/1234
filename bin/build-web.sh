@@ -1,5 +1,5 @@
 #!/usr/bin/sh
-cd /home/workspace/ShengTangManage/ruoyi-ui
+cd /home/workspace/ShengTangManage/stdiet-ui
 git pull origin master
 yarn
 yarn build:prod
