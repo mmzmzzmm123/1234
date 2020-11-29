@@ -769,11 +769,11 @@ create table sys_order (
 drop table if exists sys_wx_user_info;
 create table sys_wx_user_info (
        openid           varchar(100)    not null                   comment '微信openid',
+       appid            varchar(100)                               comment '微信appid',
        nick_name        varchar(30)                                comment '昵称',
        phone            varchar(30)                                comment '电话',
        avatar_url       varchar(255)                               comment '用户头像',
-       gender           tinyint                                    comment '性别',
-       path             varchar(255)                               comment '文件路径',
+       sex              char(1)                                    comment '用户性别（0男 1女 2未知）',
        city             varchar(16)                                comment '城市',
        province         varchar(16)                                comment '省份',
        country          varchar(16)                                comment '国家',
@@ -790,14 +790,17 @@ create table sys_wx_user_info (
 -- ----------------------------
 drop table if exists sys_wx_user_log;
 create table sys_wx_user_log (
-       openid           varchar(100)    not null                   comment '微信openid',
+       openid           varchar(100)    not null default 'manual'  comment '微信openid',
+       appid            varchar(100)                               comment '微信appid',
        weight           decimal(10,2)                              comment '体重',
+       phone            varchar(30)                                comment '电话',
        sleep_time       datetime                                   comment '睡觉时间',
+       avatar_url       varchar(255)                               comment '用户头像',
        wakeup_time      datetime                                   comment '起床时间',
-       sport            tinyint                                    comment '运动情况',
-       diet             tinyint                                    comment '饮食情况',
-       sleep_quality    tinyint                                    comment '睡眠质量',
-       defecation       tinyint                                    comment '排便情况',
+       sport            char(1)                                    comment '运动情况（Y是 N否）',
+       diet             char(1)                                    comment '饮食情况（Y是 N否）',
+       insomnia         char(1)                                    comment '熬夜失眠（Y是 N否）',
+       defecation       char(1)                                    comment '排便情况',
        water            tinyint                                    comment '饮水量',
        create_by        varchar(64)     default ''                 comment '创建者',
        create_time      datetime                                   comment '创建时间',

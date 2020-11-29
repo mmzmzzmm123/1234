@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.stdiet.custom.mapper.SysWxUserLogMapper">
+
+    <resultMap type="SysWxUserLog" id="SysWxUserLogResult">
+        <result property="openid"    column="openid"    />
+        <result property="weight"    column="weight"    />
+        <result property="appid"    column="appid"    />
+        <result property="phone"    column="phone"    />
+        <result property="sleepTime"    column="sleep_time"    />
+        <result property="wakeupTime"    column="wakeup_time"    />
+        <result property="sport"    column="sport"    />
+        <result property="avatarUrl"    column="avatar_url"    />
+        <result property="diet"    column="diet"    />
+        <result property="insomnia"    column="insomnia"    />
+        <result property="defecation"    column="defecation"    />
+        <result property="water"    column="water"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectSysWxUserLogVo">
+        select openid, weight, appid, phone, sleep_time, wakeup_time, sport, avatar_url, diet, insomnia, defecation, water, create_by, create_time, update_by, update_time, remark from sys_wx_user_log
+    </sql>
+
+    <select id="selectSysWxUserLogList" parameterType="SysWxUserLog" resultMap="SysWxUserLogResult">
+        <include refid="selectSysWxUserLogVo"/>
+        <where>
+            <if test="appid != null  and appid != ''"> and appid = #{appid}</if>
+            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+        </where>
+    </select>
+
+    <select id="selectSysWxUserLogById" parameterType="String" resultMap="SysWxUserLogResult">
+        <include refid="selectSysWxUserLogVo"/>
+        where openid = #{openid}
+    </select>
+
+    <insert id="insertSysWxUserLog" parameterType="SysWxUserLog">
+        insert into sys_wx_user_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="openid != null">openid,</if>
+            <if test="weight != null">weight,</if>
+            <if test="appid != null">appid,</if>
+            <if test="phone != null">phone,</if>
+            <if test="sleepTime != null">sleep_time,</if>
+            <if test="wakeupTime != null">wakeup_time,</if>
+            <if test="sport != null">sport,</if>
+            <if test="avatarUrl != null">avatar_url,</if>
+            <if test="diet != null">diet,</if>
+            <if test="insomnia != null">insomnia,</if>
+            <if test="defecation != null">defecation,</if>
+            <if test="water != null">water,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="openid != null">#{openid},</if>
+            <if test="weight != null">#{weight},</if>
+            <if test="appid != null">#{appid},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="sleepTime != null">#{sleepTime},</if>
+            <if test="wakeupTime != null">#{wakeupTime},</if>
+            <if test="sport != null">#{sport},</if>
+            <if test="avatarUrl != null">#{avatarUrl},</if>
+            <if test="diet != null">#{diet},</if>
+            <if test="insomnia != null">#{insomnia},</if>
+            <if test="defecation != null">#{defecation},</if>
+            <if test="water != null">#{water},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+        </trim>
+    </insert>
+
+    <update id="updateSysWxUserLog" parameterType="SysWxUserLog">
+        update sys_wx_user_log
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="weight != null">weight = #{weight},</if>
+            <if test="appid != null">appid = #{appid},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="sleepTime != null">sleep_time = #{sleepTime},</if>
+            <if test="wakeupTime != null">wakeup_time = #{wakeupTime},</if>
+            <if test="sport != null">sport = #{sport},</if>
+            <if test="avatarUrl != null">avatar_url = #{avatarUrl},</if>
+            <if test="diet != null">diet = #{diet},</if>
+            <if test="insomnia != null">insomnia = #{insomnia},</if>
+            <if test="defecation != null">defecation = #{defecation},</if>
+            <if test="water != null">water = #{water},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where openid = #{openid}
+    </update>
+
+    <delete id="deleteSysWxUserLogById" parameterType="String">
+        delete from sys_wx_user_log where openid = #{openid}
+    </delete>
+
+    <delete id="deleteSysWxUserLogByIds" parameterType="String">
+        delete from sys_wx_user_log where openid in
+        <foreach item="openid" collection="array" open="(" separator="," close=")">
+            #{openid}
+        </foreach>
+    </delete>
+
+</mapper>

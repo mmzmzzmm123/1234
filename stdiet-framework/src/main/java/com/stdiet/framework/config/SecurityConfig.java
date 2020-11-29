@@ -98,7 +98,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/login",
                         "/captchaImage",
                         "/custom/contract/sign",
-                        "/custom/contract/file/**"
+                        "/custom/contract/file/**",
+                        "/custom/wxUserInfo/wx/**",
+                        "/custom/wxUserLog/wx/**"
                         ).anonymous()
                 .antMatchers(
                         HttpMethod.GET,

@@ -9,6 +9,10 @@
         <result property="customer" column="customer"/>
         <result property="phone" column="phone"/>
         <result property="amount" column="amount"/>
+        <result property="weight" column="weight"/>
+        <result property="startTime" column="start_time"/>
+        <result property="pauseTime" column="pause_time"/>
+        <result property="status" column="status"/>
         <result property="payTypeId" column="pay_type_id"/>
         <result property="payType" column="pay_type"/>
         <result property="preSaleId" column="pre_sale_id"/>
@@ -34,7 +38,10 @@
     </resultMap>
 
     <sql id="selectSysOrderVo">
-        select o.order_id, o.review_status, o.customer, o.phone, o.amount, ser.dict_label as serve_time, o.serve_time_id, o.pay_type_id, pay.dict_label as pay_type, o.pre_sale_id, o.create_by, o.create_time, o.after_sale_id, o.update_by, o.update_time, o.nutritionist_id, o.remark, o.nutri_assis_id, o.account_id, acc.dict_label as account, o.planner_id, o.planner_assis_id, o.operator_id, o.operator_assis_id, o.recommender, o.order_time from sys_order o
+        select o.order_id, o.review_status, o.customer, o.phone, o.amount, o.start_time, o.pause_time, o.status, o.weight, ser.dict_label as serve_time,
+        o.serve_time_id, o.pay_type_id, pay.dict_label as pay_type, o.pre_sale_id, o.create_by, o.create_time, o.after_sale_id, o.update_by, o.update_time,
+        o.nutritionist_id, o.remark, o.nutri_assis_id, o.account_id, acc.dict_label as account, o.planner_id, o.planner_assis_id, o.operator_id, o.operator_assis_id,
+        o.recommender, o.order_time from sys_order o
         LEFT JOIN (SELECT dict_label, dict_value FROM sys_dict_data WHERE dict_type = 'cus_pay_type') AS pay ON pay.dict_value = o.pay_type_id
         LEFT JOIN (SELECT dict_label, dict_value FROM sys_dict_data WHERE dict_type = 'cus_account') AS acc ON acc.dict_value = o.account_id
         LEFT JOIN (SELECT dict_label, dict_value FROM sys_dict_data WHERE dict_type = 'cus_serve_time') AS ser ON ser.dict_value = o.serve_time_id
@@ -46,6 +53,7 @@
             <if test="orderId != null  and orderId != ''">and order_id = #{orderId}</if>
             <if test="customer != null  and customer != ''">and customer = #{customer}</if>
             <if test="phone != null  and phone != ''">and phone = #{phone}</if>
+            <if test="status != null ">and status = #{status}</if>
             <if test="payTypeId != null ">and pay_type_id = #{payTypeId}</if>
             <if test="preSaleId != null ">and pre_sale_id = #{preSaleId}</if>
             <if test="afterSaleId != null ">and after_sale_id = #{afterSaleId}</if>
@@ -70,6 +78,7 @@
             <if test="orderId != null  and orderId != ''">and order_id = #{orderId}</if>
             <if test="customer != null  and customer != ''">and customer = #{customer}</if>
             <if test="phone != null  and phone != ''">and phone = #{phone}</if>
+            <if test="status != null ">and status = #{status}</if>
             <if test="payTypeId != null ">and pay_type_id = #{payTypeId}</if>
             <if test="preSaleId != null ">and pre_sale_id = #{preSaleId}</if>
             <if test="afterSaleId != null ">and after_sale_id = #{afterSaleId}</if>
@@ -101,6 +110,10 @@
             <if test="customer != null and customer != ''">customer,</if>
             <if test="phone != null">phone,</if>
             <if test="amount != null">amount,</if>
+            <if test="status != null">status,</if>
+            <if test="pauseTime != null">pause_time,</if>
+            <if test="startTime != null">start_time,</if>
+            <if test="weight != null">weight,</if>
             <if test="payTypeId != null">pay_type_id,</if>
             <if test="preSaleId != null">pre_sale_id,</if>
             <if test="createBy != null">create_by,</if>
@@ -126,6 +139,10 @@
             <if test="customer != null and customer != ''">#{customer},</if>
             <if test="phone != null">#{phone},</if>
             <if test="amount != null">#{amount},</if>
+            <if test="status != null">#{status},</if>
+            <if test="pauseTime != null">#{pauseTime},</if>
+            <if test="startTime != null">#{startTime},</if>
+            <if test="weight != null">#{weight},</if>
             <if test="payTypeId != null">#{payTypeId},</if>
             <if test="preSaleId != null">#{preSaleId},</if>
             <if test="createBy != null">#{createBy},</if>
@@ -154,6 +171,10 @@
             <if test="customer != null and customer != ''">customer = #{customer},</if>
             <if test="phone != null">phone = #{phone},</if>
             <if test="amount != null">amount = #{amount},</if>
+            <if test="weight != null">weight = #{weight},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="pauseTime != null">pause_time = #{pauseTime},</if>
+            <if test="startTime != null">start_time = #{startTime},</if>
             <if test="payTypeId != null">pay_type_id = #{payTypeId},</if>
             <if test="preSaleId != null">pre_sale_id = #{preSaleId},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
