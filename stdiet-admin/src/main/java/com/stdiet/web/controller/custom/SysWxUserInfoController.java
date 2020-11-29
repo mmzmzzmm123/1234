@@ -1,25 +1,22 @@
 package com.stdiet.web.controller.custom;
 
-import java.util.List;
-
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import com.stdiet.common.annotation.Log;
 import com.stdiet.common.core.controller.BaseController;
 import com.stdiet.common.core.domain.AjaxResult;
-import com.stdiet.common.enums.BusinessType;
-import com.stdiet.custom.domain.SysWxUserInfo;
-import com.stdiet.custom.service.ISysWxUserInfoService;
-import com.stdiet.common.utils.poi.ExcelUtil;
 import com.stdiet.common.core.page.TableDataInfo;
+import com.stdiet.common.enums.BusinessType;
+import com.stdiet.common.utils.StringUtils;
+import com.stdiet.common.utils.poi.ExcelUtil;
+import com.stdiet.custom.domain.SysOrder;
+import com.stdiet.custom.domain.SysWxUserInfo;
+import com.stdiet.custom.page.WxServeInfo;
+import com.stdiet.custom.service.ISysOrderService;
+import com.stdiet.custom.service.ISysWxUserInfoService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * 微信用户Controller
@@ -32,6 +29,9 @@ import com.stdiet.common.core.page.TableDataInfo;
 public class SysWxUserInfoController extends BaseController {
     @Autowired
     private ISysWxUserInfoService sysWxUserInfoService;
+
+    @Autowired
+    private ISysOrderService sysOrderService;
 
     /**
      * 查询微信用户列表
@@ -95,17 +95,41 @@ public class SysWxUserInfoController extends BaseController {
         return toAjax(sysWxUserInfoService.deleteSysWxUserInfoByIds(openids));
     }
 
-    @PostMapping("/wx/adduser")
+    @PostMapping("/wx/serveinfo")
     public AjaxResult addUser(@RequestBody SysWxUserInfo sysWxUserInfo) {
 
+        // 查询微信用户
         SysWxUserInfo userInfo = sysWxUserInfoService.selectSysWxUserInfoById(sysWxUserInfo.getOpenid());
-        int resultCode = 0;
-        if (userInfo == null) {
-            resultCode = sysWxUserInfoService.insertSysWxUserInfo(sysWxUserInfo);
-        } else {
-            sysWxUserInfo.setPhone(userInfo.getPhone());
-            resultCode = sysWxUserInfoService.updateSysWxUserInfo(sysWxUserInfo);
+        if (StringUtils.isNull(userInfo) && StringUtils.isEmpty(sysWxUserInfo.getPhone())
+                || StringUtils.isEmpty(userInfo.getPhone()) && StringUtils.isEmpty(sysWxUserInfo.getPhone())) {
+            return AjaxResult.error(5001, "没有手机号");
         }
-        return toAjax(resultCode);
+
+        // 插入/更新用户信息
+        if (StringUtils.isNull(userInfo)) {
+            sysWxUserInfoService.insertSysWxUserInfo(sysWxUserInfo);
+        } else {
+            if (StringUtils.isNotEmpty(userInfo.getPhone())) {
+                sysWxUserInfo.setPhone(userInfo.getPhone());
+            }
+            sysWxUserInfoService.updateSysWxUserInfo(sysWxUserInfo);
+        }
+
+        // 查找订单记录
+        SysOrder querySysOrder = new SysOrder();
+        querySysOrder.setPhone(sysWxUserInfo.getPhone());
+        List<SysOrder> list = sysOrderService.selectSysOrderList(querySysOrder);
+
+        if (list.isEmpty()) {
+            return AjaxResult.error(5002, "没有订单信息");
+        }
+
+        WxServeInfo wxServeInfo = new WxServeInfo();
+        wxServeInfo.setServeStatus(list.get(0).getStatus());
+        wxServeInfo.setServeTime(list.get(0).getServeTime());
+        wxServeInfo.setStartTime(list.get(list.size() - 1).getStartTime());
+        wxServeInfo.setWeight(list.get(list.size() - 1).getWeight());
+
+        return AjaxResult.success(wxServeInfo);
     }
 }

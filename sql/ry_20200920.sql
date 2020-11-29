@@ -790,22 +790,23 @@ create table sys_wx_user_info (
 -- ----------------------------
 drop table if exists sys_wx_user_log;
 create table sys_wx_user_log (
-       openid           varchar(100)    not null default 'manual'  comment '微信openid',
+       id               BIGINT(20)       not null auto_increment   comment 'id',
+       openid           varchar(100)     default 'manual'          comment '微信openid',
        appid            varchar(100)                               comment '微信appid',
        weight           decimal(10,2)                              comment '体重',
        phone            varchar(30)                                comment '电话',
-       sleep_time       datetime                                   comment '睡觉时间',
+       sleep_time       varchar(10)                                comment '睡觉时间',
        avatar_url       varchar(255)                               comment '用户头像',
-       wakeup_time      datetime                                   comment '起床时间',
+       wakeup_time      varchar(10)                                comment '起床时间',
        sport            char(1)                                    comment '运动情况（Y是 N否）',
        diet             char(1)                                    comment '饮食情况（Y是 N否）',
        insomnia         char(1)                                    comment '熬夜失眠（Y是 N否）',
        defecation       char(1)                                    comment '排便情况',
-       water            tinyint                                    comment '饮水量',
+       water            bigint(20)                                 comment '饮水量',
        create_by        varchar(64)     default ''                 comment '创建者',
        create_time      datetime                                   comment '创建时间',
        update_by        varchar(64)     default ''                 comment '更新者',
        update_time      datetime                                   comment '更新时间',
        remark           varchar(500)    default null               comment '备注',
-       primary key (openid)
+       primary key (id)
 ) engine=innodb comment = '微信用户记录';

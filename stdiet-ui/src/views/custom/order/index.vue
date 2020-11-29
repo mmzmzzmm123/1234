@@ -585,6 +585,9 @@
           ],
           phone: [
             {required: true, message: "手机号不能为空", trigger: "blur"}
+          ],
+          startTime: [
+            {required: true, message: "开始时间不能为空", trigger: "blur"}
           ]
           // payTypeId: [
           //   {required: true, message: "收款方式不能为空", trigger: "blur"}

@@ -34,6 +34,7 @@
             <if test="appid != null  and appid != ''"> and appid = #{appid}</if>
             <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
         </where>
+        order by create_time asc
     </select>
 
     <select id="selectSysWxUserLogById" parameterType="String" resultMap="SysWxUserLogResult">

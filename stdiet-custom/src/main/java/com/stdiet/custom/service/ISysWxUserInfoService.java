@@ -58,4 +58,6 @@ public interface ISysWxUserInfoService
      * @return 结果
      */
     public int deleteSysWxUserInfoById(String openid);
+
+
 }

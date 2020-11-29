@@ -12,7 +12,7 @@ import com.stdiet.common.core.domain.BaseEntity;
  * 微信用户记录对象 sys_wx_user_log
  *
  * @author wonder
- * @date 2020-11-28
+ * @date 2020-11-29
  */
 public class SysWxUserLog extends BaseEntity
 {
@@ -34,34 +34,32 @@ public class SysWxUserLog extends BaseEntity
     private String phone;
 
     /** 睡觉时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "睡觉时间", width = 30, dateFormat = "yyyy-MM-dd")
-    private Date sleepTime;
+    @Excel(name = "睡觉时间")
+    private String sleepTime;
 
     /** 起床时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "起床时间", width = 30, dateFormat = "yyyy-MM-dd")
-    private Date wakeupTime;
+    @Excel(name = "起床时间")
+    private String wakeupTime;
 
-    /** 运动情况 */
-    @Excel(name = "运动情况")
-    private Long sport;
+    /** 运动情况（Y是 N否） */
+    @Excel(name = "运动情况", readConverterExp = "Y=是,N=否")
+    private String sport;
 
     /** 用户头像 */
     @Excel(name = "用户头像")
     private String avatarUrl;
 
-    /** 饮食情况 */
-    @Excel(name = "饮食情况")
-    private Long diet;
+    /** 饮食情况（Y是 N否） */
+    @Excel(name = "饮食情况", readConverterExp = "Y=是,N=否")
+    private String diet;
 
     /** 熬夜失眠（Y是 N否） */
     @Excel(name = "熬夜失眠", readConverterExp = "Y=是,N=否")
     private String insomnia;
 
-    /** 排便情况 */
-    @Excel(name = "排便情况")
-    private Long defecation;
+    /** 排便情况（Y是 N否） */
+    @Excel(name = "排便情况", readConverterExp = "Y=是,N=否")
+    private String defecation;
 
     /** 饮水量 */
     @Excel(name = "饮水量")
@@ -103,30 +101,30 @@ public class SysWxUserLog extends BaseEntity
     {
         return phone;
     }
-    public void setSleepTime(Date sleepTime)
+    public void setSleepTime(String sleepTime)
     {
         this.sleepTime = sleepTime;
     }
 
-    public Date getSleepTime()
+    public String getSleepTime()
     {
         return sleepTime;
     }
-    public void setWakeupTime(Date wakeupTime)
+    public void setWakeupTime(String wakeupTime)
     {
         this.wakeupTime = wakeupTime;
     }
 
-    public Date getWakeupTime()
+    public String getWakeupTime()
     {
         return wakeupTime;
     }
-    public void setSport(Long sport)
+    public void setSport(String sport)
     {
         this.sport = sport;
     }
 
-    public Long getSport()
+    public String getSport()
     {
         return sport;
     }
@@ -139,12 +137,12 @@ public class SysWxUserLog extends BaseEntity
     {
         return avatarUrl;
     }
-    public void setDiet(Long diet)
+    public void setDiet(String diet)
     {
         this.diet = diet;
     }
 
-    public Long getDiet()
+    public String getDiet()
     {
         return diet;
     }
@@ -157,12 +155,12 @@ public class SysWxUserLog extends BaseEntity
     {
         return insomnia;
     }
-    public void setDefecation(Long defecation)
+    public void setDefecation(String defecation)
     {
         this.defecation = defecation;
     }
 
-    public Long getDefecation()
+    public String getDefecation()
     {
         return defecation;
     }
