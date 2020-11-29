@@ -42,6 +42,14 @@ public class SysOrder extends BaseEntity {
     @Excel(name = "金额")
     private BigDecimal amount;
 
+    private BigDecimal weight;
+
+    private String status;
+
+    private Date startTime;
+
+    private Date pauseTime;
+
     /**
      * 收款方式
      */
@@ -172,6 +180,40 @@ public class SysOrder extends BaseEntity {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Excel(name = "成交时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date orderTime;
+
+    public Date getStartTime() {
+        return startTime;
+    }
+
+    public BigDecimal getWeight() {
+        return weight;
+    }
+
+    public Date getPauseTime() {
+        return pauseTime;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
+    }
+
+    public void setPauseTime(Date pauseTime) {
+        this.pauseTime = pauseTime;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+
+
+    public void setWeight(BigDecimal weight) {
+        this.weight = weight;
+    }
 
     public String getServeTime() {
         return serveTime;
@@ -442,6 +484,10 @@ public class SysOrder extends BaseEntity {
                 .append("serveTimeId", getServeTimeId())
                 .append("serveTime", getServeTime())
                 .append("reviewStatus", getReviewStatus())
+                .append("status", getStatus())
+                .append("startTime", getStartTime())
+                .append("pauseTime", getPauseTime())
+                .append("weight", getWeight())
                 .toString();
     }
 }

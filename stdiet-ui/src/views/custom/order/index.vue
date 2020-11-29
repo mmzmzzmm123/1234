@@ -3,10 +3,10 @@
     <el-row>
       <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="70px">
         <el-col :span="6">
-          <el-form-item label="订单编号" prop="orderId">
+          <el-form-item label="手机号" prop="phone">
             <el-input
-              v-model="queryParams.orderId"
-              placeholder="请输入订单编号"
+              v-model="queryParams.phone"
+              placeholder="请输入手机号"
               clearable
               size="small"
               @keyup.enter.native="handleQuery"
@@ -197,7 +197,15 @@
     </el-row>
 
     <el-table v-loading="loading" :data="orderList" @selection-change="handleSelectionChange">
-      <el-table-column label="编号" align="center" prop="orderId" width="150" fixed="left"/>
+      <el-table-column label="订单状态" align="center" prop="orderId" width="80" fixed="left">
+        <template slot-scope="scope">
+          <el-tag
+            :type="scope.row.reviewStatus === '2' ? 'success' : scope.row.status ==='0'? '': 'danger'"
+            disable-transitions>
+            {{scope.row.reviewStatus === '2' ? '已完成': scope.row.status ==='0'? '进行中': '已暂停'}}
+          </el-tag>
+        </template>
+      </el-table-column>
       <el-table-column label="审核状态" align="center" prop="reviewStatus" width="80" fixed="left">
         <template slot-scope="scope">
           <el-tag
@@ -214,11 +222,16 @@
       </el-table-column>
       <el-table-column label="客户姓名" align="center" prop="customer" width="120" fixed="left"/>
       <el-table-column label="金额" align="center" prop="amount" width="120" fixed="left">
-        <template scope="scope">
+        <template slot-scope="scope">
           {{toThousands(scope.row.amount)}}
         </template>
       </el-table-column>
-      <el-table-column label="电话" align="center" prop="phone" width="120"/>
+      <el-table-column label="体重" align="center" prop="weight" width="80">
+        <template slot-scope="scope">
+          {{scope.row.weight ? `${scope.row.weight}kg` : ''}}
+        </template>
+      </el-table-column>
+      <el-table-column label="手机号" align="center" prop="phone" width="120"/>
       <el-table-column label="服务时长" align="center" prop="serveTime" width="80"/>
       <el-table-column label="收款方式" align="center" prop="payType" width="120"/>
       <el-table-column label="售前" align="center" prop="preSale" width="120"/>
@@ -266,27 +279,32 @@
     </pagination>
 
     <!-- 添加或修改销售订单对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="720px" append-to-body>
       <el-row :gutter="15">
         <el-form ref="form" :model="form" :rules="rules" label-width="90px">
-          <el-col :span="12">
+          <el-col :span="8">
             <el-form-item label="客户姓名" prop="customer">
-              <el-input v-model="form.customer" placeholder="请输入客户姓名"/>
+              <el-input v-model="form.customer" placeholder="请输入姓名"/>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="8">
+            <el-form-item label="体重" prop="weight">
+              <el-input v-model="form.weight" placeholder="请输入体重"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
             <el-form-item label="电话" prop="phone">
               <el-input v-model="form.phone" placeholder="请输入电话"/>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
-            <el-form-item label="金额" prop="amount">
+          <el-col :span="8">
+            <el-form-item label="成交金额" prop="amount">
               <el-input v-model="form.amount" placeholder="请输入金额"/>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="8">
             <el-form-item label="收款方式" prop="payTypeId">
-              <el-select v-model="form.payTypeId" placeholder="请选择收款方式">
+              <el-select v-model="form.payTypeId" placeholder="请选择">
                 <el-option
                   v-for="dict in payTypeIdOptions"
                   :key="dict.dictValue"
@@ -296,9 +314,9 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
-            <el-form-item label="账号" prop="accountId">
-              <el-select v-model="form.accountId" placeholder="请选择账号">
+          <el-col :span="8">
+            <el-form-item label="收款账号" prop="accountId">
+              <el-select v-model="form.accountId" placeholder="请选择">
                 <el-option
                   v-for="dict in accountIdOptions"
                   :key="dict.dictValue"
@@ -308,9 +326,9 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="8">
             <el-form-item label="服务时长" prop="serveTime">
-              <el-select v-model="form.serveTimeId" placeholder="请选服务时长">
+              <el-select v-model="form.serveTimeId" placeholder="请选服">
                 <el-option
                   v-for="dict in serveTimeIdOption"
                   :key="dict.dictValue"
@@ -320,9 +338,9 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="8">
             <el-form-item label="售前" prop="preSaleId">
-              <el-select v-model="form.preSaleId" placeholder="请选择售前">
+              <el-select v-model="form.preSaleId" placeholder="请选择">
                 <el-option
                   v-for="dict in preSaleIdOptions"
                   :key="dict.dictValue"
@@ -332,9 +350,9 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="8">
             <el-form-item label="售后" prop="afterSaleId">
-              <el-select v-model="form.afterSaleId" placeholder="请选择售后">
+              <el-select v-model="form.afterSaleId" placeholder="请选择">
                 <el-option
                   v-for="dict in afterSaleIdOptions"
                   :key="dict.dictValue"
@@ -344,9 +362,9 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="8">
             <el-form-item label="主营养师" prop="nutritionistId">
-              <el-select v-model="form.nutritionistId" placeholder="请选择主营养师">
+              <el-select v-model="form.nutritionistId" placeholder="请选择">
                 <el-option
                   v-for="dict in nutritionistIdOptions"
                   :key="dict.dictValue"
@@ -356,9 +374,9 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="8">
             <el-form-item label="助理营养师" prop="nutriAssisId">
-              <el-select v-model="form.nutriAssisId" placeholder="请选择助理营养师">
+              <el-select v-model="form.nutriAssisId" placeholder="请选择">
                 <el-option
                   v-for="dict in nutriAssisIdOptions"
                   :key="dict.dictValue"
@@ -368,9 +386,9 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="8">
             <el-form-item label="策划" prop="plannerId">
-              <el-select v-model="form.plannerId" placeholder="请选择策划">
+              <el-select v-model="form.plannerId" placeholder="请选择">
                 <el-option
                   v-for="dict in plannerIdOptions"
                   :key="dict.dictValue"
@@ -380,9 +398,9 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="8">
             <el-form-item label="策划助理" prop="plannerAssisId">
-              <el-select v-model="form.plannerAssisId" placeholder="请选择策划助理">
+              <el-select v-model="form.plannerAssisId" placeholder="请选择">
                 <el-option
                   v-for="dict in plannerAssisIdOptions"
                   :key="dict.dictValue"
@@ -392,9 +410,9 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="8">
             <el-form-item label="运营" prop="operatorId">
-              <el-select v-model="form.operatorId" placeholder="请选择运营">
+              <el-select v-model="form.operatorId" placeholder="请选择">
                 <el-option
                   v-for="dict in operatorIdOptions"
                   :key="dict.dictValue"
@@ -404,9 +422,9 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="8">
             <el-form-item label="运营助理" prop="operatorAssisId">
-              <el-select v-model="form.operatorAssisId" placeholder="请选择运营">
+              <el-select v-model="form.operatorAssisId" placeholder="请选择">
                 <el-option
                   v-for="dict in operatorAssisIdOptions"
                   :key="dict.dictValue"
@@ -416,9 +434,21 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="8">
             <el-form-item label="推荐人" prop="recommender">
               <el-input v-model="form.recommender" placeholder="请输入推荐人"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8" v-hasPermi="['custom:order:review']">
+            <el-form-item label="审核状态" prop="reviewStatus">
+              <el-select v-model="form.reviewStatus" placeholder="请选择审核状态" @change="handleOnRviewChange">
+                <el-option
+                  v-for="dict in reviewStatusOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -434,16 +464,17 @@
               </el-date-picker>
             </el-form-item>
           </el-col>
-          <el-col :span="12" v-hasPermi="['custom:order:review']">
-            <el-form-item label="审核状态" prop="reviewStatus">
-              <el-select v-model="form.reviewStatus" placeholder="请选择审核状态" @change="handleOnRviewChange">
-                <el-option
-                  v-for="dict in reviewStatusOptions"
-                  :key="dict.dictValue"
-                  :label="dict.dictLabel"
-                  :value="dict.dictValue"
-                />
-              </el-select>
+          <el-col :span="12">
+            <el-form-item label="开始时间" prop="startTime">
+              <el-date-picker
+                style="width: 182.5px"
+                v-model="form.startTime"
+                type="date"
+                placeholder="选择开始日期"
+                format="yyyy-MM-dd"
+                value-format="yyyy-MM-dd"
+                :picker-options="startPickerOptions">
+              </el-date-picker>
             </el-form-item>
           </el-col>
           <el-col>
@@ -546,18 +577,27 @@
           customer: [
             {required: true, message: "客户姓名不能为空", trigger: "blur"}
           ],
+          weight: [
+            {required: true, message: "客户体重不能为空", trigger: "blur"}
+          ],
           amount: [
             {required: true, message: "金额不能为空", trigger: "blur"}
           ],
-          payTypeId: [
-            {required: true, message: "收款方式不能为空", trigger: "blur"}
+          phone: [
+            {required: true, message: "手机号不能为空", trigger: "blur"}
           ],
-          accountId: [
-            {required: true, message: "账号不能为空", trigger: "blur"}
-          ],
-          serveTimeId: [
-            {required: true, message: "服务时长不能为空", trigger: "blur"}
-          ],
+          startTime: [
+            {required: true, message: "开始时间不能为空", trigger: "blur"}
+          ]
+          // payTypeId: [
+          //   {required: true, message: "收款方式不能为空", trigger: "blur"}
+          // ],
+          // accountId: [
+          //   {required: true, message: "账号不能为空", trigger: "blur"}
+          // ],
+          // serveTimeId: [
+          //   {required: true, message: "服务时长不能为空", trigger: "blur"}
+          // ],
           // reviewStatus: [
           //   {trigger: "change", validator: handleOnPreviewChange}
           // ]
@@ -592,6 +632,11 @@
         orderPickerOptions: {
           disabledDate(time) {
             return time.getTime() > Date.now();
+          },
+        },
+        startPickerOptions: {
+          disabledDate(time) {
+            return time.getTime() < Date.now();
           },
         }
       };
@@ -702,6 +747,9 @@
           customer: null,
           phone: null,
           amount: null,
+          weight: null,
+          startTime: dayjs().format("YYYY-MM-DD"),
+          pauseTime: null,
           payTypeId: defaultPayType ? parseInt(defaultPayType.dictValue) : null,
           preSaleId: defaultPresale ? parseInt(defaultPresale.dictValue) : null,
           createBy: null,
@@ -771,6 +819,7 @@
                 }
               });
             } else {
+              this.form.status = '0';
               addOrder(this.form).then(response => {
                 if (response.code === 200) {
                   this.msgSuccess("新增成功");
@@ -813,7 +862,30 @@
       },
       handleOnRviewChange(val) {
         this.review = val;
+      },
+      handleStatusClick(data) {
+        console.log(data);
       }
     }
   };
 </script>
+
+<style lang="scss" scoped>
+  .s_success {
+    color: #1ab394;
+    font-size: 22px;
+  }
+
+  .s_pause {
+    color: #f56c6c;
+    font-size: 22px;
+    cursor: pointer;
+  }
+
+  .s_play {
+    color: #1c84c6;
+    font-size: 22px;
+    cursor: pointer;
+  }
+
+</style>
