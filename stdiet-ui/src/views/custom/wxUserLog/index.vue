@@ -1,8 +1,8 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="微信appid" prop="appid">
-        <el-select v-model="queryParams.appid" placeholder="请选择微信appid" clearable size="small">
+      <el-form-item label="微信应用" prop="appid">
+        <el-select v-model="queryParams.appid" placeholder="请选择微信应用" clearable size="small">
           <el-option
             v-for="dict in appidOptions"
             :key="dict.dictValue"
@@ -11,7 +11,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="电话" prop="phone">
+      <el-form-item label="手机号" prop="phone">
         <el-input
           v-model="queryParams.phone"
           placeholder="请输入电话"
@@ -76,9 +76,9 @@
       </el-table-column>
 <!--      <el-table-column type="selection" width="55" align="center" />-->
 <!--      <el-table-column label="微信openid" align="center" prop="openid" />-->
-      <el-table-column label="体重" align="center" prop="weight" />
-      <el-table-column label="微信appid" align="center" prop="appid" :formatter="appidFormat" />
-      <el-table-column label="电话" align="center" prop="phone" />
+      <el-table-column label="当天体重" align="center" prop="weight" />
+      <el-table-column label="微信应用" align="center" prop="appid" :formatter="appidFormat" />
+      <el-table-column label="手机号" align="center" prop="phone" />
       <el-table-column label="睡觉时间" align="center" prop="sleepTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.sleepTime, '{y}-{m}-{d}') }}</span>
