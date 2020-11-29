@@ -102,8 +102,8 @@ public class SysContractServiceImpl implements ISysContractService {
 
     @Override
     public PdfProcessInfo signContract(SysContract sysContract) {
-//        String templatePath = "/Users/wonder/Documents/Workspaces/java/RuoYi-Vue/running/pdf/contract.pdf";
-//        String filePath = "/Users/wonder/Documents/Workspaces/java/RuoYi-Vue/running" + sysContract.getPath();
+//        String templatePath = "/Users/wonder/Documents/Workspaces/java/ShengTangMange/running/pdf/contract.pdf";
+//        String filePath = "/Users/wonder/Documents/Workspaces/java/ShengTangMange/running" + sysContract.getPath();
         String templatePath = "/home/workspace/ShengTangManage/running/pdf/contract.pdf";
         String filePath = "/home/web/manage.shengtangdiet.com" + sysContract.getPath();
 
@@ -122,7 +122,7 @@ public class SysContractServiceImpl implements ISysContractService {
             AcroFields form = stamper.getAcroFields();
 
             form.addSubstitutionFont(BaseFont.createFont("STSong-Light", "UniGB-UCS2-H", BaseFont.NOT_EMBEDDED));
-            form.setField("signName", sysContract.getSignName(), true);
+            form.setField("name", sysContract.getSignName(), true);
             form.setField("serveTime", sysContract.getServeTimeStr(), true);
             form.setField("tutor", sysContract.getTutor(), true);
             form.setField("moneyUpper", sysContract.getAmountUpper(), true);

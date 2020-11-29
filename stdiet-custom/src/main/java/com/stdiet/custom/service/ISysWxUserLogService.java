@@ -2,6 +2,7 @@ package com.stdiet.custom.service;
 
 import java.util.List;
 import com.stdiet.custom.domain.SysWxUserLog;
+import com.stdiet.custom.page.WxLogInfo;
 
 /**
  * 微信用户记录Service接口
@@ -26,6 +27,8 @@ public interface ISysWxUserLogService
      * @return 微信用户记录集合
      */
     public List<SysWxUserLog> selectSysWxUserLogList(SysWxUserLog sysWxUserLog);
+
+    public List<WxLogInfo> selectWxLogInfoList(SysWxUserLog sysWxUserLog);
 
     /**
      * 新增微信用户记录

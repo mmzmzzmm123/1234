@@ -129,6 +129,7 @@ public class SysWxUserInfoController extends BaseController {
         wxServeInfo.setServeTime(list.get(0).getServeTime());
         wxServeInfo.setStartTime(list.get(list.size() - 1).getStartTime());
         wxServeInfo.setWeight(list.get(list.size() - 1).getWeight());
+        wxServeInfo.setPhone(list.get(0).getPhone());
 
         return AjaxResult.success(wxServeInfo);
     }

@@ -17,6 +17,16 @@ public class WxServeInfo implements Serializable {
 
     private String weight;
 
+    private String phone;
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
     public String getServeTime() {
         return serveTime;
     }
@@ -62,6 +72,7 @@ public class WxServeInfo implements Serializable {
                 ", serveStatus='" + serveStatus + '\'' +
                 ", startTime='" + startTime + '\'' +
                 ", weight='" + weight + '\'' +
+                ", phone='" + phone + '\'' +
                 '}';
     }
 }

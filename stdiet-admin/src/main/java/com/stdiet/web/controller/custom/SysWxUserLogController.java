@@ -10,6 +10,7 @@ import com.stdiet.common.utils.poi.ExcelUtil;
 import com.stdiet.custom.domain.SysOrder;
 import com.stdiet.custom.domain.SysWxUserInfo;
 import com.stdiet.custom.domain.SysWxUserLog;
+import com.stdiet.custom.page.WxLogInfo;
 import com.stdiet.custom.service.ISysOrderService;
 import com.stdiet.custom.service.ISysWxUserInfoService;
 import com.stdiet.custom.service.ISysWxUserLogService;
@@ -98,11 +99,9 @@ public class SysWxUserLogController extends BaseController {
         return toAjax(sysWxUserLogService.deleteSysWxUserLogByIds(openids));
     }
 
-    @GetMapping(value = "/wx/logs/{openid}")
-    public AjaxResult getLogs(@PathVariable String openId) {
-        SysWxUserLog querySysWxUserLog = new SysWxUserLog();
-        querySysWxUserLog.setOpenid(openId);
-        List<SysWxUserLog> list = sysWxUserLogService.selectSysWxUserLogList(querySysWxUserLog);
+    @GetMapping(value = "/wx/logs/list")
+    public AjaxResult getLogs(SysWxUserLog sysWxUserLog ) {
+        List<WxLogInfo> list = sysWxUserLogService.selectWxLogInfoList(sysWxUserLog);
         return AjaxResult.success(list);
     }
 

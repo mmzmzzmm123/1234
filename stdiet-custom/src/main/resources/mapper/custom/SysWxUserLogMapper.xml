@@ -24,11 +24,32 @@
         <result property="remark"    column="remark"    />
     </resultMap>
 
+    <resultMap type="com.stdiet.custom.page.WxLogInfo" id="WxLogInfo">
+        <result property="weight"    column="weight"    />
+        <result property="sleepTime"    column="sleep_time"    />
+        <result property="wakeupTime"    column="wakeup_time"    />
+        <result property="sport"    column="sport"    />
+        <result property="diet"    column="diet"    />
+        <result property="insomnia"    column="insomnia"    />
+        <result property="defecation"    column="defecation"    />
+        <result property="water"    column="water"    />
+        <result property="date"    column="create_time"    />
+    </resultMap>
+
     <sql id="selectSysWxUserLogVo">
         select openid, weight, appid, phone, sleep_time, wakeup_time, sport, avatar_url, diet, insomnia, defecation, water, create_by, create_time, update_by, update_time, remark from sys_wx_user_log
     </sql>
 
     <select id="selectSysWxUserLogList" parameterType="SysWxUserLog" resultMap="SysWxUserLogResult">
+        <include refid="selectSysWxUserLogVo"/>
+        <where>
+            <if test="appid != null  and appid != ''"> and appid = #{appid}</if>
+            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="selectWxLogInfoList" parameterType="SysWxUserLog" resultMap="WxLogInfo">
         <include refid="selectSysWxUserLogVo"/>
         <where>
             <if test="appid != null  and appid != ''"> and appid = #{appid}</if>
