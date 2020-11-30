@@ -180,7 +180,7 @@ export function digitUppercase(n) {
   s = s || '整';
   n = Math.floor(n);
   for (let i = 0; i < unit[0].length && n > 0; i++) {
-    const p = '';
+    let p = '';
     for (let j = 0; j < unit[1].length && n > 0; j++) {
       p = digit[n % 10] + unit[1][j] + p;
       n = Math.floor(n / 10);
