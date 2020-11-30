@@ -110,6 +110,12 @@ public class ByClass extends BaseEntity {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createtime;
 
+    /***
+     * 幼儿总数
+     */
+    private Long childcount;
+    private Long childcheckincount;
+
     public String getMonth() {
         return month;
     }
@@ -529,6 +535,22 @@ public class ByClass extends BaseEntity {
         return createtime;
     }
 
+    public Long getChildcount() {
+        return childcount;
+    }
+
+    public void setChildcount(Long childcount) {
+        this.childcount = childcount;
+    }
+
+    public Long getChildcheckincount() {
+        return childcheckincount;
+    }
+
+    public void setChildcheckincount(Long childcheckincount) {
+        this.childcheckincount = childcheckincount;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
@@ -548,6 +570,8 @@ public class ByClass extends BaseEntity {
                 .append("zljsxm", getZljsxm())
                 .append("isdel", getIsdel())
                 .append("createtime", getCreatetime())
+                .append("childcount", getChildcount())
+                .append("childcheckincount", getChildcheckincount())
                 .append("month", getMonth())
                 .append("day1", getDay1())
                 .append("day2", getDay2())

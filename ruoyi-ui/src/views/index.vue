@@ -13,11 +13,16 @@
       </el-col>
       <el-col :xs="24" :sm="24" :lg="8">
         <div class="chart-wrapper">
-          <bar-chart/>
+          <bar-chart />
         </div>
       </el-col>
     </el-row>
-    <el-row :gutter="32">
+    <el-row :gutter="30">
+      <el-col :xs="24" :sm="24" :lg="24">
+        <div class="chart-wrapper">
+          <line-chart />
+        </div>
+      </el-col>
       <!-- <el-calendar v-model="value" id="calendar">-->
       <!-- 这里使用的是 2.5 slot 语法，对于新项目请使用 2.6 slot 语法-->
       <!--<template slot="dateCell" slot-scope="{date, data}">-->
@@ -49,6 +54,7 @@
 import RaddarChart from "./dashboard/RaddarChart";
 import PieChart from "./dashboard/PieChart";
 import BarChart from "./dashboard/BarChart";
+import LineChart from "./dashboard/LineChart";
 //import { getSchoolCalendars } from "@/api/benyi/schoolcalendar";
 //备用进行班级园历显示操作import { getSchoolCalendarsClass } from "@/api/benyi/schoolcalendarclass";
 
@@ -58,14 +64,16 @@ export default {
   components: {
     RaddarChart,
     PieChart,
-    BarChart
+    BarChart,
+    LineChart,
   },
   data() {
     return {
       calendarData: [],
       value: new Date(),
       // 查询参数
-      queryParams: {}
+      queryParams: {},
+      // lineChartData: lineChartData.newVisitis,
     };
   },
   created() {
@@ -78,7 +86,10 @@ export default {
     //     this.calendarData = response.calendarData;
     //   });
     // }
-  }
+    // handleSetLineChartData(type) {
+    //   this.lineChartData = lineChartData[type];
+    // },
+  },
 };
 </script>
 
@@ -87,7 +98,6 @@ export default {
   padding: 32px;
   background-color: rgb(240, 242, 245);
   position: relative;
-
 
   .el-card.is-always-shadow {
     box-shadow: none;

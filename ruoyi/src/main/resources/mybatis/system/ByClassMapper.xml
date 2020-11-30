@@ -19,6 +19,8 @@
         <result property="pbjsxm" column="pbjsxm"/>
         <result property="zljs" column="zljs"/>
         <result property="zljsxm" column="zljsxm"/>
+        <result property="childcount" column="childcount"/>
+        <result property="childcheckincount" column="childcheckincount"/>
         <result property="isdel" column="isdel"/>
         <result property="createtime" column="createtime"/>
         <result property="month" column="month"/>
@@ -61,6 +63,8 @@
         zbjs, (select nick_name from sys_user where sys_user.user_id=zbjs) zbjsxm,
         pbjs, (select nick_name from sys_user where sys_user.user_id=pbjs) pbjsxm,
         zljs, (select nick_name from sys_user where sys_user.user_id=zljs) zljsxm,
+        (select count(*) from by_child WHERE by_child.classid=d.bjbh) childcount,
+        (select count(*) from by_child_checkin_detail WHERE by_child_checkin_detail.classid=d.bjbh and type='01' and date_format(by_child_checkin_detail.create_time,'%Y-%m-%d')=date_format(sysdate(),'%Y-%m-%d')) childcheckincount,
         isdel, createtime from by_class d
     </sql>
 
