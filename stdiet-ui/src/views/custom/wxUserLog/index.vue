@@ -34,7 +34,8 @@
           size="mini"
           @click="handleAdd"
           v-hasPermi="['custom:wxUserLog:add']"
-        >新增</el-button>
+        >新增
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -44,7 +45,8 @@
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['custom:wxUserLog:edit']"
-        >修改</el-button>
+        >修改
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -54,7 +56,8 @@
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['custom:wxUserLog:remove']"
-        >删除</el-button>
+        >删除
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -63,7 +66,8 @@
           size="mini"
           @click="handleExport"
           v-hasPermi="['custom:wxUserLog:export']"
-        >导出</el-button>
+        >导出
+        </el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
@@ -74,27 +78,35 @@
           <el-image :src="scope.row.avatarUrl" style="width: 32px; height: 32px; border-radius: 50%"/>
         </template>
       </el-table-column>
-<!--      <el-table-column type="selection" width="55" align="center" />-->
-<!--      <el-table-column label="微信openid" align="center" prop="openid" />-->
-      <el-table-column label="当天体重" align="center" prop="weight" />
-      <el-table-column label="微信应用" align="center" prop="appid" :formatter="appidFormat" />
-      <el-table-column label="手机号" align="center" prop="phone" />
-      <el-table-column label="睡觉时间" align="center" prop="sleepTime" width="180">
+      <!--      <el-table-column type="selection" width="55" align="center" />-->
+      <!--      <el-table-column label="微信openid" align="center" prop="openid" />-->
+      <el-table-column label="当天体重" align="center" prop="weight">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.sleepTime, '{y}-{m}-{d}') }}</span>
+          <span>{{`${scope.row.weight} kg` }}</span>
         </template>
+      </el-table-column>
+      <el-table-column label="微信应用" align="center" prop="appid" :formatter="appidFormat"/>
+      <el-table-column label="手机号" align="center" prop="phone"/>
+      <el-table-column label="睡觉时间" align="center" prop="sleepTime" width="180">
+        <!--        <template slot-scope="scope">-->
+        <!--          <span>{{ parseTime(scope.row.sleepTime, '{y}-{m}-{d}') }}</span>-->
+        <!--        </template>-->
       </el-table-column>
       <el-table-column label="起床时间" align="center" prop="wakeupTime" width="180">
+        <!--        <template slot-scope="scope">-->
+        <!--          <span>{{ parseTime(scope.row.wakeupTime, '{y}-{m}-{d}') }}</span>-->
+        <!--        </template>-->
+      </el-table-column>
+      <el-table-column label="运动锻炼" align="center" prop="sport" :formatter="sportFormat"/>
+      <el-table-column label="按食谱" align="center" prop="diet" :formatter="dietFormat"/>
+      <el-table-column label="熬夜失眠" align="center" prop="insomnia" :formatter="insomniaFormat"/>
+      <el-table-column label="起床排便" align="center" prop="defecation" :formatter="defecationFormat"/>
+      <el-table-column label="饮水量" align="center" prop="water">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.wakeupTime, '{y}-{m}-{d}') }}</span>
+          <span>{{`${scope.row.water} ml`}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="运动情况" align="center" prop="sport" :formatter="sportFormat" />
-      <el-table-column label="饮食情况" align="center" prop="diet" :formatter="dietFormat" />
-      <el-table-column label="熬夜失眠" align="center" prop="insomnia" :formatter="insomniaFormat" />
-      <el-table-column label="排便情况" align="center" prop="defecation" :formatter="defecationFormat" />
-      <el-table-column label="饮水量" align="center" prop="water" />
-      <el-table-column label="备注" align="center" prop="remark" />
+      <el-table-column label="备注" align="center" prop="remark"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -103,14 +115,16 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['custom:wxUserLog:edit']"
-          >修改</el-button>
+          >修改
+          </el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['custom:wxUserLog:remove']"
-          >删除</el-button>
+          >删除
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -127,7 +141,7 @@
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="体重" prop="weight">
-          <el-input v-model="form.weight" placeholder="请输入体重" />
+          <el-input v-model="form.weight" placeholder="请输入体重"/>
         </el-form-item>
         <el-form-item label="微信appid" prop="appid">
           <el-select v-model="form.appid" placeholder="请选择微信appid">
@@ -140,7 +154,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="电话" prop="phone">
-          <el-input v-model="form.phone" placeholder="请输入电话" />
+          <el-input v-model="form.phone" placeholder="请输入电话"/>
         </el-form-item>
         <el-form-item label="睡觉时间" prop="sleepTime">
           <el-date-picker clearable size="small" style="width: 200px"
@@ -169,7 +183,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="用户头像" prop="avatarUrl">
-          <el-input v-model="form.avatarUrl" placeholder="请输入用户头像" />
+          <el-input v-model="form.avatarUrl" placeholder="请输入用户头像"/>
         </el-form-item>
         <el-form-item label="饮食情况" prop="diet">
           <el-select v-model="form.diet" placeholder="请选择饮食情况">
@@ -202,10 +216,10 @@
           </el-select>
         </el-form-item>
         <el-form-item label="饮水量" prop="water">
-          <el-input v-model="form.water" placeholder="请输入饮水量" />
+          <el-input v-model="form.water" placeholder="请输入饮水量"/>
         </el-form-item>
         <el-form-item label="备注" prop="remark">
-          <el-input v-model="form.remark" type="textarea" placeholder="请输入内容" />
+          <el-input v-model="form.remark" type="textarea" placeholder="请输入内容"/>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -217,7 +231,14 @@
 </template>
 
 <script>
-  import { listWxUserLog, getWxUserLog, delWxUserLog, addWxUserLog, updateWxUserLog, exportWxUserLog } from "@/api/custom/wxUserLog";
+  import {
+    addWxUserLog,
+    delWxUserLog,
+    exportWxUserLog,
+    getWxUserLog,
+    listWxUserLog,
+    updateWxUserLog
+  } from "@/api/custom/wxUserLog";
 
   export default {
     name: "WxUserLog",
@@ -261,8 +282,7 @@
         // 表单参数
         form: {},
         // 表单校验
-        rules: {
-        }
+        rules: {}
       };
     },
     created() {
@@ -354,7 +374,7 @@
       // 多选框选中数据
       handleSelectionChange(selection) {
         this.ids = selection.map(item => item.openid)
-        this.single = selection.length!==1
+        this.single = selection.length !== 1
         this.multiple = !selection.length
       },
       /** 新增按钮操作 */
@@ -404,12 +424,13 @@
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
-        }).then(function() {
+        }).then(function () {
           return delWxUserLog(openids);
         }).then(() => {
           this.getList();
           this.msgSuccess("删除成功");
-        }).catch(function() {});
+        }).catch(function () {
+        });
       },
       /** 导出按钮操作 */
       handleExport() {
@@ -418,11 +439,12 @@
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
-        }).then(function() {
+        }).then(function () {
           return exportWxUserLog(queryParams);
         }).then(response => {
           this.download(response.msg);
-        }).catch(function() {});
+        }).catch(function () {
+        });
       }
     }
   };
