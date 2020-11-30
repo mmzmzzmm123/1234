@@ -4,6 +4,7 @@ import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.pdf.*;
 import com.stdiet.common.utils.DateUtils;
+import com.stdiet.common.utils.StringUtils;
 import com.stdiet.custom.domain.SysContract;
 import com.stdiet.custom.mapper.SysContractMapper;
 import com.stdiet.custom.page.PdfProcessInfo;
@@ -102,8 +103,8 @@ public class SysContractServiceImpl implements ISysContractService {
 
     @Override
     public PdfProcessInfo signContract(SysContract sysContract) {
-//        String templatePath = "/Users/wonder/Documents/Workspaces/java/ShengTangMange/running/pdf/contract.pdf";
-//        String filePath = "/Users/wonder/Documents/Workspaces/java/ShengTangMange/running" + sysContract.getPath();
+//        String templatePath = "/Users/wonder/Documents/Workspaces/java/ShengTangManage/running/pdf/contract.pdf";
+//        String filePath = "/Users/wonder/Documents/Workspaces/java/ShengTangManage/running" + sysContract.getPath();
         String templatePath = "/home/workspace/ShengTangManage/running/pdf/contract.pdf";
         String filePath = "/home/web/manage.shengtangdiet.com" + sysContract.getPath();
 
@@ -130,12 +131,11 @@ public class SysContractServiceImpl implements ISysContractService {
             form.setField("phone", sysContract.getPhone(), true);
             form.setField("promise", sysContract.getServePromise(), true);
             form.setField("date", DateUtils.getDate(), true);
+//            form.setField("date", sysContract.getSignDate());
             form.setField("cusId", sysContract.getCusId(), true);
-            String remark = "";
-            if (sysContract.getRemark() != null && !sysContract.getRemark().equals("")) {
-                remark = "（备注：" + sysContract.getRemark() + ")";
+            if (StringUtils.isNotEmpty(sysContract.getRemark())) {
+                form.setField("remark", "（备注：" + sysContract.getRemark() + ")", true);
             }
-            form.setField("remark", remark, true);
 
 
             stamper.setFormFlattening(true);// 如果为false那么生成的PDF文件还能编辑，一定要设为true
