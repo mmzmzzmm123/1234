@@ -9,6 +9,7 @@ import com.stdiet.common.utils.StringUtils;
 import com.stdiet.common.utils.poi.ExcelUtil;
 import com.stdiet.custom.domain.SysOrder;
 import com.stdiet.custom.domain.SysWxUserInfo;
+import com.stdiet.custom.domain.SysWxUserLog;
 import com.stdiet.custom.page.WxServeInfo;
 import com.stdiet.custom.service.ISysOrderService;
 import com.stdiet.custom.service.ISysWxUserInfoService;
@@ -41,6 +42,13 @@ public class SysWxUserInfoController extends BaseController {
     public TableDataInfo list(SysWxUserInfo sysWxUserInfo) {
         startPage();
         List<SysWxUserInfo> list = sysWxUserInfoService.selectSysWxUserInfoList(sysWxUserInfo);
+
+        for (SysWxUserInfo userInfo : list) {
+            if (StringUtils.isNotEmpty(userInfo.getPhone())) {
+                userInfo.setPhone(userInfo.getPhone().replaceAll("(\\d{3})\\d{4}(\\d{4})", "$1****$2"));
+            }
+        }
+
         return getDataTable(list);
     }
 

@@ -45,6 +45,13 @@ public class SysWxUserLogController extends BaseController {
     public TableDataInfo list(SysWxUserLog sysWxUserLog) {
         startPage();
         List<SysWxUserLog> list = sysWxUserLogService.selectSysWxUserLogList(sysWxUserLog);
+
+        for (SysWxUserLog userLog : list) {
+            if (StringUtils.isNotEmpty(userLog.getPhone())) {
+                userLog.setPhone(userLog.getPhone().replaceAll("(\\d{3})\\d{4}(\\d{4})", "$1****$2"));
+            }
+        }
+
         return getDataTable(list);
     }
 
