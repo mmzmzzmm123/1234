@@ -86,6 +86,9 @@ export default {
     },
     setOptions() {
       this.chart.setOption({
+        title: {
+          text: "考勤统计", 
+        },
         xAxis: {
           data: this.classOptions,
           boundaryGap: false,

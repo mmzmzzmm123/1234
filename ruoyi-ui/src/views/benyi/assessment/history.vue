@@ -56,25 +56,17 @@
                     >
                       <p class="block-content-title">
                         <span class="num">{{ itemMb.sort }}. </span
-                        >{{ itemMb.name }}
+                        >{{ itemMb.name }}(未满足评估标准)
                       </p>
-                      <div
-                        class="checkbox-content"
-                        v-for="(itemYs, i) in assessmentcontentList.filter(
-                          (p) => p.parentId == itemMb.id
-                        )"
-                        :key="itemYs.id"
-                      >
-                        <p class="checkbox-item flex align-center">
-                          建议{{ i + 1 }}.{{ itemYs.jyjy }}
-                        </p>
-                      </div>
+                      <p class="checkbox-item flex align-center">
+                        教育建议 {{ itemMb.jyjy }}
+                      </p>
                     </li>
                     <li
-                      v-for="itemMb in assessmentcontentList.filter(
+                      v-for="(itemMb,index) in assessmentcontentList.filter(
                         (p) => p.parentId == itemFzly.id
                       )"
-                      :key="itemMb.id"
+                      :key="index"
                       v-show="
                         assessmentcontentList.filter(
                           (p) => p.parentId == itemMb.id
@@ -85,7 +77,7 @@
                     >
                       <p class="block-content-title">
                         <span class="num">{{ itemMb.sort }}. </span
-                        >{{ itemMb.name }} (满足标准)
+                        >{{ itemMb.name }} (满足评估标准)
                       </p>
                     </li>
                   </ul>
@@ -131,25 +123,17 @@
                     >
                       <p class="block-content-title">
                         <span class="num">{{ itemMb.sort }}. </span
-                        >{{ itemMb.name }}
+                        >{{ itemMb.name }}(未满足评估标准)
                       </p>
-                      <div
-                        class="checkbox-content"
-                        v-for="(itemYs, i) in assessmentcontentList.filter(
-                          (p) => p.parentId == itemMb.id
-                        )"
-                        :key="itemYs.id"
-                      >
-                        <p class="checkbox-item flex align-center">
-                          建议{{ i + 1 }}.{{ itemYs.jyjy }}
-                        </p>
-                      </div>
+                      <p class="checkbox-item flex align-center">
+                        教育建议 {{ itemMb.jyjy }}
+                      </p>
                     </li>
                     <li
-                      v-for="itemMb in assessmentcontentList.filter(
+                      v-for="(itemMb,index) in assessmentcontentList.filter(
                         (p) => p.parentId == itemFzly.id
                       )"
-                      :key="itemMb.id"
+                      :key="index"
                       v-show="
                         assessmentcontentList.filter(
                           (p) => p.parentId == itemMb.id
@@ -160,7 +144,7 @@
                     >
                       <p class="block-content-title">
                         <span class="num">{{ itemMb.sort }}. </span
-                        >{{ itemMb.name }} (满足标准)
+                        >{{ itemMb.name }} (满足评估标准)
                       </p>
                     </li>
                   </ul>
@@ -209,25 +193,17 @@
                     >
                       <p class="block-content-title">
                         <span class="num">{{ itemMb.sort }}. </span
-                        >{{ itemMb.name }}
+                        >{{ itemMb.name }}(未满足评估标准)
                       </p>
-                      <div
-                        class="checkbox-content"
-                        v-for="(itemYs, i) in assessmentcontentList.filter(
-                          (p) => p.parentId == itemMb.id
-                        )"
-                        :key="itemYs.id"
-                      >
-                        <p class="checkbox-item flex align-center">
-                          建议{{ i + 1 }}.{{ itemYs.jyjy }}
-                        </p>
-                      </div>
+                      <p class="checkbox-item flex align-center">
+                        教育建议 {{ itemMb.jyjy }}
+                      </p>
                     </li>
                     <li
-                      v-for="itemMb in assessmentcontentList.filter(
+                      v-for="(itemMb,index) in assessmentcontentList.filter(
                         (p) => p.parentId == itemFzly.id
                       )"
-                      :key="itemMb.id"
+                      :key="index"
                       v-show="
                         assessmentcontentList.filter(
                           (p) => p.parentId == itemMb.id
@@ -238,7 +214,7 @@
                     >
                       <p class="block-content-title">
                         <span class="num">{{ itemMb.sort }}. </span
-                        >{{ itemMb.name }} (满足标准)
+                        >{{ itemMb.name }} (满足评估标准)
                       </p>
                     </li>
                   </ul>
@@ -287,25 +263,17 @@
                     >
                       <p class="block-content-title">
                         <span class="num">{{ itemMb.sort }}. </span
-                        >{{ itemMb.name }}
+                        >{{ itemMb.name }}(未满足评估标准)
                       </p>
-                      <div
-                        class="checkbox-content"
-                        v-for="(itemYs, i) in assessmentcontentList.filter(
-                          (p) => p.parentId == itemMb.id
-                        )"
-                        :key="itemYs.id"
-                      >
-                        <p class="checkbox-item flex align-center">
-                          建议{{ i + 1 }}.{{ itemYs.jyjy }}
-                        </p>
-                      </div>
+                      <p class="checkbox-item flex align-center">
+                        教育建议 {{ itemMb.jyjy }}
+                      </p>
                     </li>
                     <li
-                      v-for="itemMb in assessmentcontentList.filter(
+                      v-for="(itemMb,index) in assessmentcontentList.filter(
                         (p) => p.parentId == itemFzly.id
                       )"
-                      :key="itemMb.id"
+                      :key="index"
                       v-show="
                         assessmentcontentList.filter(
                           (p) => p.parentId == itemMb.id
@@ -316,7 +284,7 @@
                     >
                       <p class="block-content-title">
                         <span class="num">{{ itemMb.sort }}. </span
-                        >{{ itemMb.name }} (满足标准)
+                        >{{ itemMb.name }} (满足评估标准)
                       </p>
                     </li>
                   </ul>
@@ -365,25 +333,17 @@
                     >
                       <p class="block-content-title">
                         <span class="num">{{ itemMb.sort }}. </span
-                        >{{ itemMb.name }}
+                        >{{ itemMb.name }}(未满足评估标准)
                       </p>
-                      <div
-                        class="checkbox-content"
-                        v-for="(itemYs, i) in assessmentcontentList.filter(
-                          (p) => p.parentId == itemMb.id
-                        )"
-                        :key="itemYs.id"
-                      >
-                        <p class="checkbox-item flex align-center">
-                          建议{{ i + 1 }}.{{ itemYs.jyjy }}
-                        </p>
-                      </div>
+                      <p class="checkbox-item flex align-center">
+                        教育建议 {{ itemMb.jyjy }}
+                      </p>
                     </li>
                     <li
-                      v-for="itemMb in assessmentcontentList.filter(
+                      v-for="(itemMb,index) in assessmentcontentList.filter(
                         (p) => p.parentId == itemFzly.id
                       )"
-                      :key="itemMb.id"
+                      :key="index"
                       v-show="
                         assessmentcontentList.filter(
                           (p) => p.parentId == itemMb.id
@@ -394,7 +354,7 @@
                     >
                       <p class="block-content-title">
                         <span class="num">{{ itemMb.sort }}. </span
-                        >{{ itemMb.name }} (满足标准)
+                        >{{ itemMb.name }} (满足评估标准)
                       </p>
                     </li>
                   </ul>

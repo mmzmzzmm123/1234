@@ -65,6 +65,9 @@ export default {
       this.chart = echarts.init(this.$el, "macarons");
 
       this.chart.setOption({
+        title: {
+          text: "教职工学历统计", 
+        },
         tooltip: {
           trigger: "item",
           formatter: "{a} <br/>{b} : {c} ({d}%)"
