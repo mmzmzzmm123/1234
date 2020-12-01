@@ -96,7 +96,7 @@
     </el-table>
 
     <!-- 添加或修改评估内容对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="800px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="所属模块" prop="parentId">
           <treeselect
@@ -149,11 +149,12 @@
           />
         </el-form-item>
         <el-form-item label="教育建议" prop="jyjy">
-          <el-input
+          <!-- <el-input
             v-model="form.jyjy"
             type="textarea"
             placeholder="请输入内容"
-          />
+          /> -->
+          <Editor v-model="form.jyjy" placeholder="请输入内容" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -174,10 +175,11 @@ import {
 } from "@/api/benyi/assessmentcontent";
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
+import Editor from "@/components/Editor";
 
 export default {
   name: "Assessmentcontent",
-  components: { Treeselect },
+  components: { Treeselect, Editor },
   data() {
     return {
       // 遮罩层

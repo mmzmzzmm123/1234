@@ -58,12 +58,11 @@
                         <span class="num">{{ itemMb.sort }}. </span
                         >{{ itemMb.name }}(未满足评估标准)
                       </p>
-                      <p class="checkbox-item flex align-center">
-                        教育建议 {{ itemMb.jyjy }}
-                      </p>
+                      <p class="checkbox-item">教育建议</p>
+                      <p class="checkbox-item" v-html="itemMb.jyjy"></p>
                     </li>
                     <li
-                      v-for="(itemMb,index) in assessmentcontentList.filter(
+                      v-for="(itemMb, index) in assessmentcontentList.filter(
                         (p) => p.parentId == itemFzly.id
                       )"
                       :key="index"
@@ -125,12 +124,11 @@
                         <span class="num">{{ itemMb.sort }}. </span
                         >{{ itemMb.name }}(未满足评估标准)
                       </p>
-                      <p class="checkbox-item flex align-center">
-                        教育建议 {{ itemMb.jyjy }}
-                      </p>
+                      <p class="checkbox-item">教育建议</p>
+                      <p class="checkbox-item" v-html="itemMb.jyjy"></p>
                     </li>
                     <li
-                      v-for="(itemMb,index) in assessmentcontentList.filter(
+                      v-for="(itemMb, index) in assessmentcontentList.filter(
                         (p) => p.parentId == itemFzly.id
                       )"
                       :key="index"
@@ -195,12 +193,11 @@
                         <span class="num">{{ itemMb.sort }}. </span
                         >{{ itemMb.name }}(未满足评估标准)
                       </p>
-                      <p class="checkbox-item flex align-center">
-                        教育建议 {{ itemMb.jyjy }}
-                      </p>
+                      <p class="checkbox-item">教育建议</p>
+                      <p class="checkbox-item" v-html="itemMb.jyjy"></p>
                     </li>
                     <li
-                      v-for="(itemMb,index) in assessmentcontentList.filter(
+                      v-for="(itemMb, index) in assessmentcontentList.filter(
                         (p) => p.parentId == itemFzly.id
                       )"
                       :key="index"
@@ -265,12 +262,11 @@
                         <span class="num">{{ itemMb.sort }}. </span
                         >{{ itemMb.name }}(未满足评估标准)
                       </p>
-                      <p class="checkbox-item flex align-center">
-                        教育建议 {{ itemMb.jyjy }}
-                      </p>
+                      <p class="checkbox-item">教育建议</p>
+                      <p class="checkbox-item" v-html="itemMb.jyjy"></p>
                     </li>
                     <li
-                      v-for="(itemMb,index) in assessmentcontentList.filter(
+                      v-for="(itemMb, index) in assessmentcontentList.filter(
                         (p) => p.parentId == itemFzly.id
                       )"
                       :key="index"
@@ -335,12 +331,11 @@
                         <span class="num">{{ itemMb.sort }}. </span
                         >{{ itemMb.name }}(未满足评估标准)
                       </p>
-                      <p class="checkbox-item flex align-center">
-                        教育建议 {{ itemMb.jyjy }}
-                      </p>
+                      <p class="checkbox-item">教育建议</p>
+                      <p class="checkbox-item" v-html="itemMb.jyjy"></p>
                     </li>
                     <li
-                      v-for="(itemMb,index) in assessmentcontentList.filter(
+                      v-for="(itemMb, index) in assessmentcontentList.filter(
                         (p) => p.parentId == itemFzly.id
                       )"
                       :key="index"
@@ -521,22 +516,9 @@ div {
         font-size: 16px;
       }
     }
-    .checkbox-content {
-      padding-left: 20px;
-      margin-bottom: 15px;
-    }
     .checkbox-item {
       font-size: 14px;
       line-height: 22px;
-    }
-    .check-info {
-      padding-left: 24px;
-      line-height: 18px;
-      font-size: 12px;
-      color: #999;
-      p {
-        padding-left: 10px;
-      }
     }
   }
 }
