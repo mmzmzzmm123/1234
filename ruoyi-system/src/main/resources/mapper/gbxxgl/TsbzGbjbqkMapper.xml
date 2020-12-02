@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.gbxxgl.mapper.TsbzGbjbqkMapper">
+    
+    <resultMap type="TsbzGbjbqk" id="TsbzGbjbqkResult">
+        <result property="id"    column="id"    />
+        <result property="otherid"    column="otherid"    />
+        <result property="name"    column="name"    />
+        <result property="xb"    column="xb"    />
+        <result property="dwmc"    column="dwmc"    />
+        <result property="dwjc"    column="dwjc"    />
+        <result property="xrxzzw"    column="xrxzzw"    />
+        <result property="xrdnzw"    column="xrdnzw"    />
+        <result property="xrqtzw"    column="xrqtzw"    />
+        <result property="rxzwny"    column="rxzwny"    />
+        <result property="xrxzzj"    column="xrxzzj"    />
+        <result property="xzzjqdny"    column="xzzjqdny"    />
+        <result property="sfhbgb"    column="sfhbgb"    />
+        <result property="hbgbqdny"    column="hbgbqdny"    />
+        <result property="sfzh"    column="sfzh"    />
+        <result property="updatetime"    column="updatetime"    />
+        <result property="mz"    column="mz"    />
+        <result property="jg"    column="jg"    />
+        <result property="csd"    column="csd"    />
+        <result property="csrq"    column="csrq"    />
+        <result property="cjgzny"    column="cjgzny"    />
+        <result property="jtzz"    column="jtzz"    />
+        <result property="dwdz"    column="dwdz"    />
+        <result property="xl"    column="xl"    />
+        <result property="xw"    column="xw"    />
+        <result property="byyx"    column="byyx"    />
+        <result property="jylx"    column="jylx"    />
+        <result property="zc"    column="zc"    />
+        <result property="jzcyqk"    column="jzcyqk"    />
+        <result property="nfkc"    column="nfkc"    />
+        <result property="hyzk"    column="hyzk"    />
+        <result property="zzmm"    column="zzmm"    />
+        <result property="rdsj"    column="rdsj"    />
+        <result property="bgsdh"    column="bgsdh"    />
+        <result property="phone"    column="phone"    />
+        <result property="rjxk"    column="rjxk"    />
+        <result property="jkzk"    column="jkzk"    />
+    </resultMap>
+
+    <sql id="selectTsbzGbjbqkVo">
+        select id, otherid, name, xb, dwmc, dwjc, xrxzzw, xrdnzw, xrqtzw, rxzwny, xrxzzj, xzzjqdny, sfhbgb, hbgbqdny, sfzh, updatetime, mz, jg, csd, csrq, cjgzny, jtzz, dwdz, xl, xw, byyx, jylx, zc, jzcyqk, nfkc, hyzk, zzmm, rdsj, bgsdh, phone, rjxk, jkzk from tsbz_gbjbqk
+    </sql>
+
+    <select id="selectTsbzGbjbqkList" parameterType="TsbzGbjbqk" resultMap="TsbzGbjbqkResult">
+        <include refid="selectTsbzGbjbqkVo"/>
+        <where>  
+            <if test="otherid != null  and otherid != ''"> and otherid = #{otherid}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="xb != null  and xb != ''"> and xb = #{xb}</if>
+            <if test="dwmc != null  and dwmc != ''"> and dwmc = #{dwmc}</if>
+            <if test="dwjc != null  and dwjc != ''"> and dwjc = #{dwjc}</if>
+            <if test="xrxzzw != null  and xrxzzw != ''"> and xrxzzw = #{xrxzzw}</if>
+            <if test="xrdnzw != null  and xrdnzw != ''"> and xrdnzw = #{xrdnzw}</if>
+            <if test="xrqtzw != null  and xrqtzw != ''"> and xrqtzw = #{xrqtzw}</if>
+            <if test="rxzwny != null "> and rxzwny = #{rxzwny}</if>
+            <if test="xrxzzj != null  and xrxzzj != ''"> and xrxzzj = #{xrxzzj}</if>
+            <if test="xzzjqdny != null "> and xzzjqdny = #{xzzjqdny}</if>
+            <if test="sfhbgb != null  and sfhbgb != ''"> and sfhbgb = #{sfhbgb}</if>
+            <if test="hbgbqdny != null "> and hbgbqdny = #{hbgbqdny}</if>
+            <if test="sfzh != null  and sfzh != ''"> and sfzh = #{sfzh}</if>
+            <if test="updatetime != null "> and updatetime = #{updatetime}</if>
+            <if test="mz != null  and mz != ''"> and mz = #{mz}</if>
+            <if test="jg != null  and jg != ''"> and jg = #{jg}</if>
+            <if test="csd != null  and csd != ''"> and csd = #{csd}</if>
+            <if test="csrq != null "> and csrq = #{csrq}</if>
+            <if test="cjgzny != null "> and cjgzny = #{cjgzny}</if>
+            <if test="jtzz != null  and jtzz != ''"> and jtzz = #{jtzz}</if>
+            <if test="dwdz != null  and dwdz != ''"> and dwdz = #{dwdz}</if>
+            <if test="xl != null  and xl != ''"> and xl = #{xl}</if>
+            <if test="xw != null  and xw != ''"> and xw = #{xw}</if>
+            <if test="byyx != null  and byyx != ''"> and byyx = #{byyx}</if>
+            <if test="jylx != null  and jylx != ''"> and jylx = #{jylx}</if>
+            <if test="zc != null  and zc != ''"> and zc = #{zc}</if>
+            <if test="jzcyqk != null  and jzcyqk != ''"> and jzcyqk = #{jzcyqk}</if>
+            <if test="nfkc != null  and nfkc != ''"> and nfkc = #{nfkc}</if>
+            <if test="hyzk != null  and hyzk != ''"> and hyzk = #{hyzk}</if>
+            <if test="zzmm != null  and zzmm != ''"> and zzmm = #{zzmm}</if>
+            <if test="rdsj != null "> and rdsj = #{rdsj}</if>
+            <if test="bgsdh != null  and bgsdh != ''"> and bgsdh = #{bgsdh}</if>
+            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+            <if test="rjxk != null  and rjxk != ''"> and rjxk = #{rjxk}</if>
+            <if test="jkzk != null  and jkzk != ''"> and jkzk = #{jkzk}</if>
+        </where>
+    </select>
+    
+    <select id="selectTsbzGbjbqkById" parameterType="Long" resultMap="TsbzGbjbqkResult">
+        <include refid="selectTsbzGbjbqkVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTsbzGbjbqk" parameterType="TsbzGbjbqk" useGeneratedKeys="true" keyProperty="id">
+        insert into tsbz_gbjbqk
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="otherid != null">otherid,</if>
+            <if test="name != null">name,</if>
+            <if test="xb != null">xb,</if>
+            <if test="dwmc != null">dwmc,</if>
+            <if test="dwjc != null">dwjc,</if>
+            <if test="xrxzzw != null">xrxzzw,</if>
+            <if test="xrdnzw != null">xrdnzw,</if>
+            <if test="xrqtzw != null">xrqtzw,</if>
+            <if test="rxzwny != null">rxzwny,</if>
+            <if test="xrxzzj != null">xrxzzj,</if>
+            <if test="xzzjqdny != null">xzzjqdny,</if>
+            <if test="sfhbgb != null">sfhbgb,</if>
+            <if test="hbgbqdny != null">hbgbqdny,</if>
+            <if test="sfzh != null">sfzh,</if>
+            <if test="updatetime != null">updatetime,</if>
+            <if test="mz != null">mz,</if>
+            <if test="jg != null">jg,</if>
+            <if test="csd != null">csd,</if>
+            <if test="csrq != null">csrq,</if>
+            <if test="cjgzny != null">cjgzny,</if>
+            <if test="jtzz != null">jtzz,</if>
+            <if test="dwdz != null">dwdz,</if>
+            <if test="xl != null">xl,</if>
+            <if test="xw != null">xw,</if>
+            <if test="byyx != null">byyx,</if>
+            <if test="jylx != null">jylx,</if>
+            <if test="zc != null">zc,</if>
+            <if test="jzcyqk != null">jzcyqk,</if>
+            <if test="nfkc != null">nfkc,</if>
+            <if test="hyzk != null">hyzk,</if>
+            <if test="zzmm != null">zzmm,</if>
+            <if test="rdsj != null">rdsj,</if>
+            <if test="bgsdh != null">bgsdh,</if>
+            <if test="phone != null">phone,</if>
+            <if test="rjxk != null">rjxk,</if>
+            <if test="jkzk != null">jkzk,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="otherid != null">#{otherid},</if>
+            <if test="name != null">#{name},</if>
+            <if test="xb != null">#{xb},</if>
+            <if test="dwmc != null">#{dwmc},</if>
+            <if test="dwjc != null">#{dwjc},</if>
+            <if test="xrxzzw != null">#{xrxzzw},</if>
+            <if test="xrdnzw != null">#{xrdnzw},</if>
+            <if test="xrqtzw != null">#{xrqtzw},</if>
+            <if test="rxzwny != null">#{rxzwny},</if>
+            <if test="xrxzzj != null">#{xrxzzj},</if>
+            <if test="xzzjqdny != null">#{xzzjqdny},</if>
+            <if test="sfhbgb != null">#{sfhbgb},</if>
+            <if test="hbgbqdny != null">#{hbgbqdny},</if>
+            <if test="sfzh != null">#{sfzh},</if>
+            <if test="updatetime != null">#{updatetime},</if>
+            <if test="mz != null">#{mz},</if>
+            <if test="jg != null">#{jg},</if>
+            <if test="csd != null">#{csd},</if>
+            <if test="csrq != null">#{csrq},</if>
+            <if test="cjgzny != null">#{cjgzny},</if>
+            <if test="jtzz != null">#{jtzz},</if>
+            <if test="dwdz != null">#{dwdz},</if>
+            <if test="xl != null">#{xl},</if>
+            <if test="xw != null">#{xw},</if>
+            <if test="byyx != null">#{byyx},</if>
+            <if test="jylx != null">#{jylx},</if>
+            <if test="zc != null">#{zc},</if>
+            <if test="jzcyqk != null">#{jzcyqk},</if>
+            <if test="nfkc != null">#{nfkc},</if>
+            <if test="hyzk != null">#{hyzk},</if>
+            <if test="zzmm != null">#{zzmm},</if>
+            <if test="rdsj != null">#{rdsj},</if>
+            <if test="bgsdh != null">#{bgsdh},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="rjxk != null">#{rjxk},</if>
+            <if test="jkzk != null">#{jkzk},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTsbzGbjbqk" parameterType="TsbzGbjbqk">
+        update tsbz_gbjbqk
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="otherid != null">otherid = #{otherid},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="xb != null">xb = #{xb},</if>
+            <if test="dwmc != null">dwmc = #{dwmc},</if>
+            <if test="dwjc != null">dwjc = #{dwjc},</if>
+            <if test="xrxzzw != null">xrxzzw = #{xrxzzw},</if>
+            <if test="xrdnzw != null">xrdnzw = #{xrdnzw},</if>
+            <if test="xrqtzw != null">xrqtzw = #{xrqtzw},</if>
+            <if test="rxzwny != null">rxzwny = #{rxzwny},</if>
+            <if test="xrxzzj != null">xrxzzj = #{xrxzzj},</if>
+            <if test="xzzjqdny != null">xzzjqdny = #{xzzjqdny},</if>
+            <if test="sfhbgb != null">sfhbgb = #{sfhbgb},</if>
+            <if test="hbgbqdny != null">hbgbqdny = #{hbgbqdny},</if>
+            <if test="sfzh != null">sfzh = #{sfzh},</if>
+            <if test="updatetime != null">updatetime = #{updatetime},</if>
+            <if test="mz != null">mz = #{mz},</if>
+            <if test="jg != null">jg = #{jg},</if>
+            <if test="csd != null">csd = #{csd},</if>
+            <if test="csrq != null">csrq = #{csrq},</if>
+            <if test="cjgzny != null">cjgzny = #{cjgzny},</if>
+            <if test="jtzz != null">jtzz = #{jtzz},</if>
+            <if test="dwdz != null">dwdz = #{dwdz},</if>
+            <if test="xl != null">xl = #{xl},</if>
+            <if test="xw != null">xw = #{xw},</if>
+            <if test="byyx != null">byyx = #{byyx},</if>
+            <if test="jylx != null">jylx = #{jylx},</if>
+            <if test="zc != null">zc = #{zc},</if>
+            <if test="jzcyqk != null">jzcyqk = #{jzcyqk},</if>
+            <if test="nfkc != null">nfkc = #{nfkc},</if>
+            <if test="hyzk != null">hyzk = #{hyzk},</if>
+            <if test="zzmm != null">zzmm = #{zzmm},</if>
+            <if test="rdsj != null">rdsj = #{rdsj},</if>
+            <if test="bgsdh != null">bgsdh = #{bgsdh},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="rjxk != null">rjxk = #{rjxk},</if>
+            <if test="jkzk != null">jkzk = #{jkzk},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTsbzGbjbqkById" parameterType="Long">
+        delete from tsbz_gbjbqk where id = #{id}
+    </delete>
+
+    <delete id="deleteTsbzGbjbqkByIds" parameterType="String">
+        delete from tsbz_gbjbqk where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

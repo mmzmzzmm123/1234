@@ -354,7 +354,7 @@
       </div>
     </el-dialog>
 
-    <!-- 用户导入对话框 -->
+    <!-- 导师导入对话框 -->
     <el-dialog
       :title="upload.title"
       :visible.sync="upload.open"
@@ -381,7 +381,7 @@
         <div class="el-upload__tip" slot="tip">
           <el-checkbox
             v-model="upload.updateSupport"
-          />是否更新已经存在的用户数据
+          />是否更新已经存在的导师数据
           <el-link type="info" style="font-size: 12px" @click="importTemplate"
             >下载模板</el-link
           >
@@ -486,7 +486,7 @@ export default {
         title: "",
         // 是否禁用上传
         isUploading: false,
-        // 是否更新已经存在的用户数据
+        // 是否更新已经存在的导师数据
         updateSupport: 0,
         // 设置上传的请求头部
         headers: { Authorization: "Bearer " + getToken() },

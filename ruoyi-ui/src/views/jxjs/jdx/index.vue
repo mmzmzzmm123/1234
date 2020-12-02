@@ -290,14 +290,6 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="聘任单位" prop="prdwmc">
-          <el-input
-            v-model="queryParams_fpjs.prdwmc"
-            placeholder="请输入聘任单位"
-            clearable
-            size="small"
-          />
-        </el-form-item>
         <el-form-item label="教师姓名" prop="name">
           <el-input
             v-model="queryParams_fpjs.name"
