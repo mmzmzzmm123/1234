@@ -1,5 +1,6 @@
 package com.stdiet.web.controller.custom;
 
+import com.itextpdf.io.util.DateTimeUtil;
 import com.stdiet.common.annotation.Log;
 import com.stdiet.common.core.controller.BaseController;
 import com.stdiet.common.core.domain.AjaxResult;
@@ -7,7 +8,6 @@ import com.stdiet.common.core.page.TableDataInfo;
 import com.stdiet.common.enums.BusinessType;
 import com.stdiet.common.utils.StringUtils;
 import com.stdiet.common.utils.poi.ExcelUtil;
-import com.stdiet.custom.domain.SysOrder;
 import com.stdiet.custom.domain.SysWxUserInfo;
 import com.stdiet.custom.domain.SysWxUserLog;
 import com.stdiet.custom.page.WxLogInfo;
@@ -107,7 +107,7 @@ public class SysWxUserLogController extends BaseController {
     }
 
     @GetMapping(value = "/wx/logs/list")
-    public AjaxResult getLogs(SysWxUserLog sysWxUserLog ) {
+    public AjaxResult getLogs(SysWxUserLog sysWxUserLog) {
         List<WxLogInfo> list = sysWxUserLogService.selectWxLogInfoList(sysWxUserLog);
         return AjaxResult.success(list);
     }
@@ -116,12 +116,13 @@ public class SysWxUserLogController extends BaseController {
     public AjaxResult addLog(@RequestBody SysWxUserLog sysWxUserLog) {
         // 查询微信用户
         SysWxUserInfo userInfo = sysWxUserInfoService.selectSysWxUserInfoById(sysWxUserLog.getOpenid());
-        if(StringUtils.isNull(userInfo)) {
+        if (StringUtils.isNull(userInfo)) {
             return AjaxResult.error(5003, "没有用户信息");
         }
         // 提取有用值
         sysWxUserLog.setAvatarUrl(userInfo.getAvatarUrl());
         sysWxUserLog.setPhone(userInfo.getPhone());
+        sysWxUserLog.setLogTime(DateTimeUtil.getCurrentTimeDate());
         return add(sysWxUserLog);
     }
 }

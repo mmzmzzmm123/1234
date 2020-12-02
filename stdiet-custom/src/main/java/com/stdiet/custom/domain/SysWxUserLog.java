@@ -65,6 +65,17 @@ public class SysWxUserLog extends BaseEntity
     @Excel(name = "饮水量")
     private Long water;
 
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date logTime;
+
+    public void setLogTime(Date logTime) {
+        this.logTime = logTime;
+    }
+
+    public Date getLogTime() {
+        return logTime;
+    }
+
     public void setOpenid(String openid)
     {
         this.openid = openid;
@@ -194,6 +205,7 @@ public class SysWxUserLog extends BaseEntity
                 .append("updateBy", getUpdateBy())
                 .append("updateTime", getUpdateTime())
                 .append("remark", getRemark())
+                .append("logTime", getLogTime())
                 .toString();
     }
 }
