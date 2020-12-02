@@ -108,22 +108,12 @@ export default {
             radius: "66%",
             center: ["50%", "52%"],
             splitNumber: 12,
-            splitArea: {
-              areaStyle: {
-                color: "rgba(127,95,132,.3)",
-                opacity: 1,
-                shadowBlur: 45,
-                shadowColor: "rgba(0,0,0,.5)",
-                shadowOffsetX: 0,
-                shadowOffsetY: 15,
-              },
-            },
             indicator: [
-              { name: "健康", max: 100 },
-              { name: "语言", max: 100 },
-              { name: "社会", max: 100 },
-              { name: "科学", max: 100 },
-              { name: "艺术", max: 100 },
+              { name: "健康", max: 72 },
+              { name: "语言", max: 72 },
+              { name: "社会", max: 72 },
+              { name: "科学", max: 72 },
+              { name: "艺术", max: 72 },
             ],
           },
           legend: {
@@ -134,6 +124,15 @@ export default {
           series: [
             {
               type: "radar",
+              label: {
+                normal: {
+                  show: true,
+                  formatter: (params) => {
+                    return params.value;
+                  },
+                  fontSize: 14,
+                },
+              },
               symbolSize: 0,
               areaStyle: {
                 normal: {
@@ -148,10 +147,35 @@ export default {
                 {
                   value: [72, 72, 72, 72, 72],
                   name: "60-72个月幼儿测评范围值",
+                  symbol: "circle",
+                  symbolSize: 10,
+                  lineStyle: {
+                    normal: {
+                      type: "solid",
+                    },
+                  },
+                  itemStyle: {
+                    color: "#f08080",
+                  },
+                  areaStyle: {
+                    opacity: 0.7,
+                  },
                 },
                 {
                   value: this.values,
                   name: "幼儿实际测评值",
+                  symbolSize: 5,
+                  lineStyle: {
+                    normal: {
+                      type: "dotted",
+                    },
+                  },
+                  itemStyle: {
+                    color: "#ebcc7b",
+                  },
+                  areaStyle: {
+                    opacity: 0.5,
+                  },
                 },
               ],
               animationDuration: animationDuration,
@@ -180,22 +204,12 @@ export default {
             radius: "66%",
             center: ["50%", "52%"],
             splitNumber: 10,
-            splitArea: {
-              areaStyle: {
-                color: "rgba(127,95,132,.3)",
-                opacity: 1,
-                shadowBlur: 45,
-                shadowColor: "rgba(0,0,0,.5)",
-                shadowOffsetX: 0,
-                shadowOffsetY: 15,
-              },
-            },
             indicator: [
-              { name: "健康", max: 100 },
-              { name: "语言", max: 100 },
-              { name: "社会", max: 100 },
-              { name: "科学", max: 100 },
-              { name: "艺术", max: 100 },
+              { name: "健康", max: 72 },
+              { name: "语言", max: 72 },
+              { name: "社会", max: 72 },
+              { name: "科学", max: 72 },
+              { name: "艺术", max: 72 },
             ],
           },
           legend: {
@@ -206,6 +220,15 @@ export default {
           series: [
             {
               type: "radar",
+              label: {
+                normal: {
+                  show: true,
+                  formatter: (params) => {
+                    return params.value;
+                  },
+                  fontSize: 14,
+                },
+              },
               symbolSize: 0,
               areaStyle: {
                 normal: {
@@ -220,10 +243,35 @@ export default {
                 {
                   value: [60, 60, 60, 60, 60],
                   name: "48-60个月幼儿测评范围值",
+                  symbol: "circle",
+                  symbolSize: 10,
+                  lineStyle: {
+                    normal: {
+                      type: "solid",
+                    },
+                  },
+                  itemStyle: {
+                    color: "#f08080",
+                  },
+                  areaStyle: {
+                    opacity: 0.7,
+                  },
                 },
                 {
                   value: this.values,
                   name: "幼儿实际测评值",
+                  symbolSize: 5,
+                  lineStyle: {
+                    normal: {
+                      type: "dotted",
+                    },
+                  },
+                  itemStyle: {
+                    color: "#ebcc7b",
+                  },
+                  areaStyle: {
+                    opacity: 0.5,
+                  },
                 },
               ],
               animationDuration: animationDuration,
@@ -252,22 +300,12 @@ export default {
             radius: "66%",
             center: ["50%", "52%"],
             splitNumber: 8,
-            splitArea: {
-              areaStyle: {
-                color: "rgba(127,95,132,.3)",
-                opacity: 1,
-                shadowBlur: 45,
-                shadowColor: "rgba(0,0,0,.5)",
-                shadowOffsetX: 0,
-                shadowOffsetY: 15,
-              },
-            },
             indicator: [
-              { name: "健康", max: 100 },
-              { name: "语言", max: 100 },
-              { name: "社会", max: 100 },
-              { name: "科学", max: 100 },
-              { name: "艺术", max: 100 },
+              { name: "健康", max: 72 },
+              { name: "语言", max: 72 },
+              { name: "社会", max: 72 },
+              { name: "科学", max: 72 },
+              { name: "艺术", max: 72 },
             ],
           },
           legend: {
@@ -278,6 +316,15 @@ export default {
           series: [
             {
               type: "radar",
+              label: {
+                normal: {
+                  show: true,
+                  formatter: (params) => {
+                    return params.value;
+                  },
+                  fontSize: 14,
+                },
+              },
               symbolSize: 0,
               areaStyle: {
                 normal: {
@@ -292,10 +339,35 @@ export default {
                 {
                   value: [48, 48, 48, 48, 48],
                   name: "36-48个月幼儿测评范围值",
+                  symbol: "circle",
+                  symbolSize: 10,
+                  lineStyle: {
+                    normal: {
+                      type: "solid",
+                    },
+                  },
+                  itemStyle: {
+                    color: "#f08080",
+                  },
+                  areaStyle: {
+                    opacity: 0.7,
+                  },
                 },
                 {
                   value: this.values,
                   name: "幼儿实际测评值",
+                  symbolSize: 5,
+                  lineStyle: {
+                    normal: {
+                      type: "dotted",
+                    },
+                  },
+                  itemStyle: {
+                    color: "#ebcc7b",
+                  },
+                  areaStyle: {
+                    opacity: 0.5,
+                  },
                 },
               ],
               animationDuration: animationDuration,

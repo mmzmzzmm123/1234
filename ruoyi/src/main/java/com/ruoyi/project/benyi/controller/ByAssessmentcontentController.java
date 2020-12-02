@@ -3,9 +3,7 @@ package com.ruoyi.project.benyi.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ruoyi.common.utils.ServletUtils;
-import com.ruoyi.framework.security.LoginUser;
-import com.ruoyi.framework.security.service.TokenService;
+import com.ruoyi.project.common.SchoolCommon;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,7 +35,7 @@ public class ByAssessmentcontentController extends BaseController {
     @Autowired
     private IByAssessmentcontentService byAssessmentcontentService;
     @Autowired
-    private TokenService tokenService;
+    private SchoolCommon schoolCommon;
 
     /**
      * 查询评估内容列表
@@ -170,7 +168,7 @@ public class ByAssessmentcontentController extends BaseController {
     public AjaxResult getAssessmentStatistics(@PathVariable("childid") Long childid, @PathVariable("scope") String scope) {
         AjaxResult ajaxResult = AjaxResult.success();
         String[] strArr = new String[]{"健康", "语言", "社会", "科学", "艺术"};
-        List<Double> douArr = new ArrayList<Double>();
+        List<String> douArr = new ArrayList<String>();
         ByAssessmentcontent byAssessmentcontent = null;
         for (int i = 0; i < strArr.length; i++) {
             byAssessmentcontent = new ByAssessmentcontent();
@@ -185,11 +183,11 @@ public class ByAssessmentcontentController extends BaseController {
                 int count = byAssessmentcontentService.selectCountElement(byAssessmentcontent);
                 int countChild = byAssessmentcontentService.selectCountElementByChild(byAssessmentcontent);
                 if (scope.equals("1")) {
-                    douArr.add((((double) 48 / count) * countChild));
+                    douArr.add((schoolCommon.format1((double) 48 * countChild / count)));
                 } else if (scope.equals("2")) {
-                    douArr.add((((double) 60 / count) * countChild));
+                    douArr.add((schoolCommon.format1(((double) 60 * countChild / count))));
                 } else if (scope.equals("3")) {
-                    douArr.add((((double) 72 / count) * countChild));
+                    douArr.add((schoolCommon.format1(((double) 72 * countChild / count))));
                 }
             }
         }
@@ -234,13 +232,13 @@ public class ByAssessmentcontentController extends BaseController {
             int countChild = byAssessmentcontentService.selectCountElementByChild(byAssessmentcontent);
             if (scope.equals("1")) {
                 douArr.add((((double) 48 / count) * countChild));
-                System.out.println("48:"+count+"-"+countChild);
+                System.out.println("48:" + count + "-" + countChild);
             } else if (scope.equals("2")) {
                 douArr.add((((double) 60 / count) * countChild));
-                System.out.println("60:"+count+"-"+countChild);
+                System.out.println("60:" + count + "-" + countChild);
             } else if (scope.equals("3")) {
                 douArr.add((((double) 72 / count) * countChild));
-                System.out.println("72:"+count+"-"+countChild);
+                System.out.println("72:" + count + "-" + countChild);
             }
         }
         ajaxResult.put("statistics", douArr);

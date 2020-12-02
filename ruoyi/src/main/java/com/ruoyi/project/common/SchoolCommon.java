@@ -12,6 +12,8 @@ import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -240,6 +242,16 @@ public class SchoolCommon {
         if (w < 0)
             w = 0;
         return weekDays[w];
+    }
+
+    /**
+     * 使用BigDecimal，保留小数点后两位
+     */
+    public String format1(double value) {
+
+        BigDecimal bd = new BigDecimal(value);
+        bd = bd.setScale(2, RoundingMode.HALF_UP);
+        return bd.toString();
     }
 
 }

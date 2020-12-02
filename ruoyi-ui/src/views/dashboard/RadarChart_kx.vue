@@ -138,16 +138,6 @@ export default {
             radius: "66%",
             center: ["50%", "50%"],
             splitNumber: 12,
-            splitArea: {
-              areaStyle: {
-                color: "rgba(127,95,132,.3)",
-                opacity: 1,
-                shadowBlur: 45,
-                shadowColor: "rgba(0,0,0,.5)",
-                shadowOffsetX: 0,
-                shadowOffsetY: 15,
-              },
-            },
             indicator: this.names,
           },
           legend: {
@@ -158,6 +148,15 @@ export default {
           series: [
             {
               type: "radar",
+              label: {
+                normal: {
+                  show: true,
+                  formatter: (params) => {
+                    return params.value;
+                  },
+                  fontSize: 14,
+                },
+              },
               symbolSize: 0,
               areaStyle: {
                 normal: {
@@ -172,10 +171,35 @@ export default {
                 {
                   value: this.mbvalues,
                   name: "60-72个月幼儿测评范围值",
+                  symbol: "circle",
+                  symbolSize: 10,
+                  lineStyle: {
+                    normal: {
+                      type: "solid",
+                    },
+                  },
+                  itemStyle: {
+                    color: "#f08080",
+                  },
+                  areaStyle: {
+                    opacity: 0.7,
+                  },
                 },
                 {
                   value: this.values,
                   name: "幼儿实际测评值",
+                  symbolSize: 5,
+                  lineStyle: {
+                    normal: {
+                      type: "dotted",
+                    },
+                  },
+                  itemStyle: {
+                    color: "#ebcc7b",
+                  },
+                  areaStyle: {
+                    opacity: 0.5,
+                  },
                 },
               ],
               animationDuration: animationDuration,
@@ -204,16 +228,6 @@ export default {
             radius: "66%",
             center: ["50%", "50%"],
             splitNumber: 10,
-            splitArea: {
-              areaStyle: {
-                color: "rgba(127,95,132,.3)",
-                opacity: 1,
-                shadowBlur: 45,
-                shadowColor: "rgba(0,0,0,.5)",
-                shadowOffsetX: 0,
-                shadowOffsetY: 15,
-              },
-            },
             indicator: this.names,
           },
           legend: {
@@ -224,6 +238,15 @@ export default {
           series: [
             {
               type: "radar",
+              label: {
+                normal: {
+                  show: true,
+                  formatter: (params) => {
+                    return params.value;
+                  },
+                  fontSize: 14,
+                },
+              },
               symbolSize: 0,
               areaStyle: {
                 normal: {
@@ -238,10 +261,35 @@ export default {
                 {
                   value: this.mbvalues,
                   name: "48-60个月幼儿测评范围值",
+                  symbol: "circle",
+                  symbolSize: 10,
+                  lineStyle: {
+                    normal: {
+                      type: "solid",
+                    },
+                  },
+                  itemStyle: {
+                    color: "#f08080",
+                  },
+                  areaStyle: {
+                    opacity: 0.7,
+                  },
                 },
                 {
                   value: this.values,
                   name: "幼儿实际测评值",
+                  symbolSize: 5,
+                  lineStyle: {
+                    normal: {
+                      type: "dotted",
+                    },
+                  },
+                  itemStyle: {
+                    color: "#ebcc7b",
+                  },
+                  areaStyle: {
+                    opacity: 0.5,
+                  },
                 },
               ],
               animationDuration: animationDuration,
@@ -270,16 +318,6 @@ export default {
             radius: "66%",
             center: ["50%", "50%"],
             splitNumber: 8,
-            splitArea: {
-              areaStyle: {
-                color: "rgba(127,95,132,.3)",
-                opacity: 1,
-                shadowBlur: 45,
-                shadowColor: "rgba(0,0,0,.5)",
-                shadowOffsetX: 0,
-                shadowOffsetY: 15,
-              },
-            },
             indicator: this.names,
           },
           legend: {
@@ -290,6 +328,15 @@ export default {
           series: [
             {
               type: "radar",
+              label: {
+                normal: {
+                  show: true,
+                  formatter: (params) => {
+                    return params.value;
+                  },
+                  fontSize: 14,
+                },
+              },
               symbolSize: 0,
               areaStyle: {
                 normal: {
@@ -304,10 +351,35 @@ export default {
                 {
                   value: this.mbvalues,
                   name: "36-48个月幼儿测评范围值",
+                  symbol: "circle",
+                  symbolSize: 10,
+                  lineStyle: {
+                    normal: {
+                      type: "solid",
+                    },
+                  },
+                  itemStyle: {
+                    color: "#f08080",
+                  },
+                  areaStyle: {
+                    opacity: 0.7,
+                  },
                 },
                 {
                   value: this.values,
                   name: "幼儿实际测评值",
+                  symbolSize: 5,
+                  lineStyle: {
+                    normal: {
+                      type: "dotted",
+                    },
+                  },
+                  itemStyle: {
+                    color: "#ebcc7b",
+                  },
+                  areaStyle: {
+                    opacity: 0.5,
+                  },
                 },
               ],
               animationDuration: animationDuration,
