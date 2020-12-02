@@ -42,11 +42,11 @@ select -1 as id, -2 as parentId, title as name, 'N' as iselement, 0 as sort  fro
 union all
 select dict_value,-1,dict_label,'N', 0 from sys_dict_data where dict_type='sys_dm_pgyssyfw'
 union all
-select id,parentId,name,iselement,sort from by_assessmentcontent where scope=1 and parentId!=0 and iselement='N'
+select id,parentId,name,iselement,sort from by_assessmentcontent where scope=1 and parentId=1 and iselement='N'
 union all
-select id,parentId,name,iselement,sort from by_assessmentcontent where scope=2 and parentId!=0 and iselement='N'
+select id,parentId,name,iselement,sort from by_assessmentcontent where scope=2 and parentId=2 and iselement='N'
 union all
-select id,parentId,name,iselement,sort from by_assessmentcontent where scope=3 and parentId!=0 and iselement='N'
+select id,parentId,name,iselement,sort from by_assessmentcontent where scope=3 and parentId=3 and iselement='N'
 ) t
 order by t.sort
     </select>
@@ -77,6 +77,12 @@ where find_in_set(id, getChildLst(#{id})) ;
     <select id="selectNodeByid" parameterType="Long" resultMap="ByAssessmentcontentResult">
 		select id, parentId, name, iselement, scope, create_time, sort, ckbz  from by_assessmentcontent
 where find_in_set(id, getChildLst(#{id})) and parentId>#{id} and iselement='N' order by id;
+	</select>
+
+    <!--根据节点id获取领域目标-->
+    <select id="selectChildNodeByParentid" parameterType="Long" resultMap="ByAssessmentcontentResult">
+		select id, parentId, name, iselement, scope, create_time, sort, ckbz  from by_assessmentcontent
+where find_in_set(id, getChildLst(#{id})) and id!=#{id} order by id;
 	</select>
 
     <!--根据幼儿id获取未评选的指标-->

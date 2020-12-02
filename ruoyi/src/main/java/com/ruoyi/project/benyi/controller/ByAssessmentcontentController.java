@@ -71,6 +71,16 @@ public class ByAssessmentcontentController extends BaseController {
     }
 
     /**
+     * 查询评估内容列表 根据id
+     */
+    @PreAuthorize("@ss.hasPermi('benyi:assessmentcontent:list')")
+    @GetMapping("/childnote/{id}")
+    public AjaxResult childnote(@PathVariable("id") Long id) {
+        List<ByAssessmentcontent> list = byAssessmentcontentService.selectChildNodeByParentid(id);
+        return AjaxResult.success(list);
+    }
+
+    /**
      * 获取评估内容详细信息
      */
     @PreAuthorize("@ss.hasPermi('benyi:assessmentcontent:query')")

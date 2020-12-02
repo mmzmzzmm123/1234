@@ -17,7 +17,13 @@ export function listNoAssessmentcontentByChild(childid) {
   })
 }
 
-
+// 查询所有子节点
+export function childnote(id) {
+  return request({
+    url: '/benyi/assessmentcontent/childnote/' + id,
+    method: 'get'
+  })
+}
 
 // 查询部门下拉树结构
 export function treeselect() {
