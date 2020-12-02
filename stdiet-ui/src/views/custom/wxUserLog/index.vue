@@ -37,38 +37,38 @@
         >新增
         </el-button>
       </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['custom:wxUserLog:edit']"
-        >修改
-        </el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="danger"
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['custom:wxUserLog:remove']"
-        >删除
-        </el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['custom:wxUserLog:export']"
-        >导出
-        </el-button>
-      </el-col>
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          type="success"-->
+<!--          icon="el-icon-edit"-->
+<!--          size="mini"-->
+<!--          :disabled="single"-->
+<!--          @click="handleUpdate"-->
+<!--          v-hasPermi="['custom:wxUserLog:edit']"-->
+<!--        >修改-->
+<!--        </el-button>-->
+<!--      </el-col>-->
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          type="danger"-->
+<!--          icon="el-icon-delete"-->
+<!--          size="mini"-->
+<!--          :disabled="multiple"-->
+<!--          @click="handleDelete"-->
+<!--          v-hasPermi="['custom:wxUserLog:remove']"-->
+<!--        >删除-->
+<!--        </el-button>-->
+<!--      </el-col>-->
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          type="warning"-->
+<!--          icon="el-icon-download"-->
+<!--          size="mini"-->
+<!--          @click="handleExport"-->
+<!--          v-hasPermi="['custom:wxUserLog:export']"-->
+<!--        >导出-->
+<!--        </el-button>-->
+<!--      </el-col>-->
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
@@ -87,10 +87,15 @@
       </el-table-column>
       <el-table-column label="微信应用" align="center" prop="appid" :formatter="appidFormat"/>
       <el-table-column label="手机号" align="center" prop="phone"/>
+      <el-table-column label="打卡日期" align="center" prop="logTime" width="180">
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.logTime, '{y}-{m}-{d}') }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="睡觉时间" align="center" prop="sleepTime" width="180">
-        <!--        <template slot-scope="scope">-->
-        <!--          <span>{{ parseTime(scope.row.sleepTime, '{y}-{m}-{d}') }}</span>-->
-        <!--        </template>-->
+        <!--                <template slot-scope="scope">-->
+        <!--                  <span>{{ parseTime(scope.row.sleepTime, '{y}-{m}-{d}') }}</span>-->
+        <!--                </template>-->
       </el-table-column>
       <el-table-column label="起床时间" align="center" prop="wakeupTime" width="180">
         <!--        <template slot-scope="scope">-->
@@ -138,90 +143,128 @@
     />
 
     <!-- 添加或修改微信用户记录对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="体重" prop="weight">
-          <el-input v-model="form.weight" placeholder="请输入体重"/>
-        </el-form-item>
-        <el-form-item label="微信appid" prop="appid">
-          <el-select v-model="form.appid" placeholder="请选择微信appid">
-            <el-option
-              v-for="dict in appidOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="电话" prop="phone">
-          <el-input v-model="form.phone" placeholder="请输入电话"/>
-        </el-form-item>
-        <el-form-item label="睡觉时间" prop="sleepTime">
-          <el-date-picker clearable size="small" style="width: 200px"
-                          v-model="form.sleepTime"
-                          type="date"
-                          value-format="yyyy-MM-dd"
-                          placeholder="选择睡觉时间">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="起床时间" prop="wakeupTime">
-          <el-date-picker clearable size="small" style="width: 200px"
-                          v-model="form.wakeupTime"
-                          type="date"
-                          value-format="yyyy-MM-dd"
-                          placeholder="选择起床时间">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="运动情况" prop="sport">
-          <el-select v-model="form.sport" placeholder="请选择运动情况">
-            <el-option
-              v-for="dict in sportOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="parseInt(dict.dictValue)"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="用户头像" prop="avatarUrl">
-          <el-input v-model="form.avatarUrl" placeholder="请输入用户头像"/>
-        </el-form-item>
-        <el-form-item label="饮食情况" prop="diet">
-          <el-select v-model="form.diet" placeholder="请选择饮食情况">
-            <el-option
-              v-for="dict in dietOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="parseInt(dict.dictValue)"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="熬夜失眠" prop="insomnia">
-          <el-select v-model="form.insomnia" placeholder="请选择熬夜失眠">
-            <el-option
-              v-for="dict in insomniaOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="排便情况" prop="defecation">
-          <el-select v-model="form.defecation" placeholder="请选择排便情况">
-            <el-option
-              v-for="dict in defecationOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="parseInt(dict.dictValue)"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="饮水量" prop="water">
-          <el-input v-model="form.water" placeholder="请输入饮水量"/>
-        </el-form-item>
-        <el-form-item label="备注" prop="remark">
-          <el-input v-model="form.remark" type="textarea" placeholder="请输入内容"/>
-        </el-form-item>
-      </el-form>
+    <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
+      <el-row :gutter="15">
+        <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+          <el-col :span="12">
+            <el-form-item label="体重" prop="weight">
+              <el-input v-model="form.weight" placeholder="请输入体重"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="电话" prop="phone">
+              <el-input v-model="form.phone" placeholder="请输入电话"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="打卡日期" prop="logTime">
+              <el-date-picker clearable size="small" style="width: 200px"
+                              v-model="form.logTime"
+                              type="date"
+                              value-format="yyyy-MM-dd"
+                              :picker-options="logTimePickerOptions"
+                              placeholder="选择睡觉时间">
+              </el-date-picker>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="睡觉时间" prop="sleepTime">
+              <el-time-select clearable size="small" style="width: 200px"
+                              v-model="form.sleepTime"
+                              :picker-options="{
+                                start: '00:00',
+                                step: '00:15',
+                                end: '23:45'
+                              }"
+                              placeholder="选择睡觉时间">
+              </el-time-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="起床时间" prop="wakeupTime">
+              <el-time-select clearable size="small" style="width: 200px"
+                              v-model="form.wakeupTime"
+                              :picker-options="{
+                                start: '00:00',
+                                step: '00:15',
+                                end: '23:45'
+                              }"
+                              placeholder="选择睡觉时间">
+              </el-time-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="运动锻炼" prop="sport">
+              <el-select v-model="form.sport" placeholder="请选择运动情况">
+                <el-option
+                  v-for="dict in sportOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="按食谱" prop="diet">
+              <el-select v-model="form.diet" placeholder="请选择饮食情况">
+                <el-option
+                  v-for="dict in dietOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="熬夜失眠" prop="insomnia">
+              <el-select v-model="form.insomnia" placeholder="请选择熬夜失眠">
+                <el-option
+                  v-for="dict in insomniaOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="起床排便" prop="defecation">
+              <el-select v-model="form.defecation" placeholder="请选择排便情况">
+                <el-option
+                  v-for="dict in defecationOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col>
+            <el-form-item label="饮水量" prop="water">
+              <el-input v-model="form.water" placeholder="请输入饮水量"/>
+            </el-form-item>
+          </el-col>
+          <el-col>
+            <el-form-item label="微信应用" prop="appid">
+              <el-select v-model="form.appid" placeholder="请选择微信appid">
+                <el-option
+                  v-for="dict in appidOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col>
+            <el-form-item label="备注" prop="remark">
+              <el-input v-model="form.remark" type="textarea" placeholder="请输入内容"/>
+            </el-form-item>
+          </el-col>
+        </el-form>
+      </el-row>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
@@ -282,7 +325,12 @@
         // 表单参数
         form: {},
         // 表单校验
-        rules: {}
+        rules: {},
+        logTimePickerOptions: {
+          disabledDate(time) {
+            return time.getTime() > Date.now();
+          },
+        },
       };
     },
     created() {
@@ -340,10 +388,13 @@
       },
       // 表单重置
       reset() {
+        const defaultAppidType = this.appidOptions.find(opt => opt.remark === 'default');
+
         this.form = {
+          id: null,
           openid: null,
           weight: null,
-          appid: null,
+          appid: defaultAppidType ? defaultAppidType.dictValue : null,
           phone: null,
           sleepTime: null,
           wakeupTime: null,
@@ -357,7 +408,8 @@
           createTime: null,
           updateBy: null,
           updateTime: null,
-          remark: null
+          remark: null,
+          logTime: null
         };
         this.resetForm("form");
       },
@@ -397,7 +449,8 @@
       submitForm() {
         this.$refs["form"].validate(valid => {
           if (valid) {
-            if (this.form.openid != null) {
+            console.log(this.form)
+            if (this.form.id != null) {
               updateWxUserLog(this.form).then(response => {
                 if (response.code === 200) {
                   this.msgSuccess("修改成功");

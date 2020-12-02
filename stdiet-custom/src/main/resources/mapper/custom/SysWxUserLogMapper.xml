@@ -9,8 +9,10 @@
         <result property="weight"    column="weight"    />
         <result property="appid"    column="appid"    />
         <result property="phone"    column="phone"    />
-        <result property="sleepTime"    column="sleep_time"    />
+        <result property="phone"    column="phone"    />
+        <result property="logTime"    column="log_time"    />
         <result property="wakeupTime"    column="wakeup_time"    />
+        <result property="sleepTime"    column="sleep_time"    />
         <result property="sport"    column="sport"    />
         <result property="avatarUrl"    column="avatar_url"    />
         <result property="diet"    column="diet"    />
@@ -33,11 +35,11 @@
         <result property="insomnia"    column="insomnia"    />
         <result property="defecation"    column="defecation"    />
         <result property="water"    column="water"    />
-        <result property="date"    column="create_time"    />
+        <result property="date"    column="log_time"    />
     </resultMap>
 
     <sql id="selectSysWxUserLogVo">
-        select openid, weight, appid, phone, sleep_time, wakeup_time, sport, avatar_url, diet, insomnia, defecation, water, create_by, create_time, update_by, update_time, remark from sys_wx_user_log
+        select openid, weight, appid, phone, log_time, sleep_time, wakeup_time, sport, avatar_url, diet, insomnia, defecation, water, create_by, create_time, update_by, update_time, remark from sys_wx_user_log
     </sql>
 
     <select id="selectSysWxUserLogList" parameterType="SysWxUserLog" resultMap="SysWxUserLogResult">
@@ -70,6 +72,7 @@
             <if test="weight != null">weight,</if>
             <if test="appid != null">appid,</if>
             <if test="phone != null">phone,</if>
+            <if test="logTime != null">log_time,</if>
             <if test="sleepTime != null">sleep_time,</if>
             <if test="wakeupTime != null">wakeup_time,</if>
             <if test="sport != null">sport,</if>
@@ -89,6 +92,7 @@
             <if test="weight != null">#{weight},</if>
             <if test="appid != null">#{appid},</if>
             <if test="phone != null">#{phone},</if>
+            <if test="logTime != null">#{logTime},</if>
             <if test="sleepTime != null">#{sleepTime},</if>
             <if test="wakeupTime != null">#{wakeupTime},</if>
             <if test="sport != null">#{sport},</if>
@@ -111,6 +115,7 @@
             <if test="weight != null">weight = #{weight},</if>
             <if test="appid != null">appid = #{appid},</if>
             <if test="phone != null">phone = #{phone},</if>
+            <if test="logTime != null">log_time = #{logTime},</if>
             <if test="sleepTime != null">sleep_time = #{sleepTime},</if>
             <if test="wakeupTime != null">wakeup_time = #{wakeupTime},</if>
             <if test="sport != null">sport = #{sport},</if>

@@ -109,7 +109,7 @@ public class SysWxUserInfoController extends BaseController {
         // 查询微信用户
         SysWxUserInfo userInfo = sysWxUserInfoService.selectSysWxUserInfoById(sysWxUserInfo.getOpenid());
         if (StringUtils.isNull(userInfo) && StringUtils.isEmpty(sysWxUserInfo.getPhone())
-                || StringUtils.isEmpty(userInfo.getPhone()) && StringUtils.isEmpty(sysWxUserInfo.getPhone())) {
+                || StringUtils.isNotNull(userInfo) && StringUtils.isEmpty(userInfo.getPhone()) && StringUtils.isEmpty(sysWxUserInfo.getPhone())) {
             return AjaxResult.error(5001, "没有手机号");
         }
 
