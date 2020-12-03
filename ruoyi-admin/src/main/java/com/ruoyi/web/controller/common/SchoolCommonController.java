@@ -31,13 +31,15 @@ public class SchoolCommonController {
         String jdxId = "";//转换值
         try {
             SysDept sysDept = getDept();
-            TsbzJdx tsbzJdx = new TsbzJdx();
-
             String strSchoolId = sysDept.getSchoolid();
             System.out.println("schoolId is Empty======:" + isStringEmpty(strSchoolId));
             if (sysDept != null && !isStringEmpty(strSchoolId)) {
-                jdxId = strSchoolId;
-                return jdxId;
+                TsbzJdx tsbzJdx = new TsbzJdx();
+                tsbzJdx.setOtherid(strSchoolId);
+                List<TsbzJdx> list = tsbzJdxService.selectTsbzJdxList(tsbzJdx);
+                if (list != null && list.size() > 0) {
+                    jdxId = list.get(0).getId();
+                }
             }
             return jdxId;
         } catch (Exception e) {
@@ -53,7 +55,6 @@ public class SchoolCommonController {
         String xxId = "";//转换值
         try {
             SysDept sysDept = getDept();
-            TsbzJdx tsbzJdx = new TsbzJdx();
 
             String strSchoolId = sysDept.getSchoolid();
             System.out.println("schoolId is Empty======:" + isStringEmpty(strSchoolId));
@@ -73,7 +74,6 @@ public class SchoolCommonController {
      **/
     public Long jdxIdToDeptId(String jxdId) {
         try {
-            long dept = 0;
             SysDept sysDept = new SysDept();
             sysDept.setSchoolid(jxdId);
             List<SysDept> list = deptService.selectDeptList(sysDept);
@@ -89,7 +89,6 @@ public class SchoolCommonController {
      **/
     public Long xxIdToDeptId(String xxId) {
         try {
-            long dept = 0;
             SysDept sysDept = new SysDept();
             sysDept.setSchoolid(xxId);
             List<SysDept> list = deptService.selectDeptList(sysDept);

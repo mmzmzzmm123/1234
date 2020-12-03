@@ -154,7 +154,7 @@ public class TsbzJdcxController extends BaseController {
             //新建用户
             SysUser user = new SysUser();
             TsbzJxjsjbxx tsbzJxjsjbxx = tsbzJxjsjbxxService.selectTsbzJxjsjbxxById(tsbzJdcx.getJsid());
-            user.setDeptId(schoolCommonController.jdxIdToDeptId(tsbzJxjsjbxx.getJdxid()));
+            user.setDeptId(schoolCommonController.jdxIdToDeptId(tsbzJxjsjbxx.getOtherid()));
             user.setUserName(tsbzJxjsjbxx.getJxbh());
             user.setNickName(tsbzJxjsjbxx.getName());
             user.setDelFlag("0");

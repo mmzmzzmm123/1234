@@ -439,7 +439,7 @@ export default {
       var actions = [];
       var datas = this.jdxOptions;
       Object.keys(datas).map((key) => {
-        if (datas[key].otherid == "" + row.jdxid) {
+        if (datas[key].id == "" + row.jdxid) {
           actions.push(datas[key].jdxmc);
           return false;
         }
