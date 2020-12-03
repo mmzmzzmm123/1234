@@ -23,6 +23,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="updatetime"    column="updatetime"    />
         <result property="mz"    column="mz"    />
         <result property="jg"    column="jg"    />
+        <result property="jgProvince"    column="jg_province"    />
+        <result property="jgCityname"    column="jg_cityname"    />
+        <result property="jgCity"    column="jg_city"    />
+        <result property="jgAreaname"    column="jg_areaname"    />
+        <result property="jgArea"    column="jg_area"    />
+        <result property="csdProvince"    column="csd_province"    />
+        <result property="csdCityname"    column="csd_cityname"    />
+        <result property="csdCity"    column="csd_city"    />
+        <result property="csdAreaname"    column="csd_areaname"    />
+        <result property="csdArea"    column="csd_area"    />
         <result property="csd"    column="csd"    />
         <result property="csrq"    column="csrq"    />
         <result property="cjgzny"    column="cjgzny"    />
@@ -45,7 +55,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectTsbzGbjbqkVo">
-        select id, otherid, name, xb, dwmc, dwjc, xrxzzw, xrdnzw, xrqtzw, rxzwny, xrxzzj, xzzjqdny, sfhbgb, hbgbqdny, sfzh, updatetime, mz, jg, csd, csrq, cjgzny, jtzz, dwdz, xl, xw, byyx, jylx, zc, jzcyqk, nfkc, hyzk, zzmm, rdsj, bgsdh, phone, rjxk, jkzk from tsbz_gbjbqk
+        select id, otherid, name, xb, dwmc, dwjc, xrxzzw, xrdnzw, xrqtzw, rxzwny, xrxzzj, xzzjqdny, sfhbgb, hbgbqdny, sfzh, updatetime, mz, jg, jg_province, jg_cityname, jg_city, jg_areaname, jg_area, csd, csd_province, csd_cityname, csd_city, csd_areaname, csd_area,  csrq, cjgzny, jtzz, dwdz, xl, xw, byyx, jylx, zc, jzcyqk, nfkc, hyzk, zzmm, rdsj, bgsdh, phone, rjxk, jkzk from tsbz_gbjbqk
     </sql>
 
     <select id="selectTsbzGbjbqkList" parameterType="TsbzGbjbqk" resultMap="TsbzGbjbqkResult">
@@ -68,6 +78,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updatetime != null "> and updatetime = #{updatetime}</if>
             <if test="mz != null  and mz != ''"> and mz = #{mz}</if>
             <if test="jg != null  and jg != ''"> and jg = #{jg}</if>
+            <if test="jgProvince != null  and jgProvince != ''"> and jg_province = #{jgProvince}</if>
+            <if test="jgCity != null  and jgCity != ''"> and jg_city = #{jgCity}</if>
+            <if test="jgCityname != null  and jgCityname != ''"> and jg_cityname = #{jgCityname}</if>
+            <if test="jgArea != null  and jgArea != ''"> and jg_area = #{jgArea}</if>
+            <if test="jgAreaname != null  and jgAreaname != ''"> and jg_areaname = #{jgAreaname}</if>
+            <if test="csdProvince != null  and csdProvince != ''"> and csd_province = #{csdProvince}</if>
+            <if test="csdCity != null  and csdCity != ''"> and csd_city = #{csdCity}</if>
+            <if test="csdCityname != null  and csdCityname != ''"> and csd_cityname = #{csdCityname}</if>
+            <if test="csdArea != null  and csdArea != ''"> and csd_area = #{csdArea}</if>
+            <if test="csdAreaname != null  and csdAreaname != ''"> and csd_areaname = #{csdAreaname}</if>
             <if test="csd != null  and csd != ''"> and csd = #{csd}</if>
             <if test="csrq != null "> and csrq = #{csrq}</if>
             <if test="cjgzny != null "> and cjgzny = #{cjgzny}</if>
@@ -115,6 +135,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updatetime != null">updatetime,</if>
             <if test="mz != null">mz,</if>
             <if test="jg != null">jg,</if>
+            <if test="jgProvince != null">jg_province,</if>
+            <if test="jgCity != null">jg_city,</if>
+            <if test="jgCityname != null">jg_cityname,</if>
+            <if test="jgArea != null">jg_area,</if>
+            <if test="jgAreaname != null">jg_areaname,</if>
+            <if test="csdProvince != null">csd_province,</if>
+            <if test="csdCity != null">csd_city,</if>
+            <if test="csdCityname != null">csd_cityname,</if>
+            <if test="csdArea != null">csd_area,</if>
+            <if test="csdAreaname != null">csd_areaname,</if>
             <if test="csd != null">csd,</if>
             <if test="csrq != null">csrq,</if>
             <if test="cjgzny != null">cjgzny,</if>
@@ -153,6 +183,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updatetime != null">#{updatetime},</if>
             <if test="mz != null">#{mz},</if>
             <if test="jg != null">#{jg},</if>
+            <if test="jgProvince != null">#{jgProvince},</if>
+            <if test="jgCity != null">#{jgCity},</if>
+            <if test="jgCityname != null">#{jgCityname},</if>
+            <if test="jgArea != null">#{jgArea},</if>
+            <if test="jgAreaname != null">#{jgAreaname},</if>
+            <if test="csdProvince != null">#{csdProvince},</if>
+            <if test="csdCity != null">#{csdCity},</if>
+            <if test="csdCityname != null">#{csdCityname},</if>
+            <if test="csdArea != null">#{csdArea},</if>
+            <if test="csdAreaname != null">#{csdAreaname},</if>
             <if test="csd != null">#{csd},</if>
             <if test="csrq != null">#{csrq},</if>
             <if test="cjgzny != null">#{cjgzny},</if>
@@ -195,6 +235,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updatetime != null">updatetime = #{updatetime},</if>
             <if test="mz != null">mz = #{mz},</if>
             <if test="jg != null">jg = #{jg},</if>
+            <if test="jgProvince != null">jg_province = #{jgProvince},</if>
+            <if test="jgCity != null">jg_city = #{jgCity},</if>
+            <if test="jgCityname != null">jg_cityname = #{jgCityname},</if>
+            <if test="jgArea != null">jg_area = #{jgArea},</if>
+            <if test="jgAreaname != null">jg_areaname = #{jgAreaname},</if>
+            <if test="csdProvince != null">csd_province = #{csdProvince},</if>
+            <if test="csdCity != null">csd_city = #{csdCity},</if>
+            <if test="csdCityname != null">csd_cityname = #{csdCityname},</if>
+            <if test="csdArea != null">csd_area = #{csdArea},</if>
+            <if test="csdAreaname != null">csd_areaname = #{csdAreaname},</if>
             <if test="csd != null">csd = #{csd},</if>
             <if test="csrq != null">csrq = #{csrq},</if>
             <if test="cjgzny != null">cjgzny = #{cjgzny},</if>
