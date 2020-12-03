@@ -200,7 +200,12 @@
             type="textarea"
             placeholder="请输入基地校名称"
           /> -->
-          <el-select v-model="form.jdxmc" filterable size="small">
+          <el-select
+            v-model="form.jdxmc"
+            filterable
+            :disabled="isable"
+            size="small"
+          >
             <el-option
               v-for="item in xxOptions"
               :key="item.id"
@@ -230,7 +235,7 @@
           </el-select>
         </el-form-item> -->
         <el-form-item label="入选年份" prop="jdxnf">
-          <el-select v-model="form.jdxnf" placeholder="请选择入选年份">
+          <el-select v-model="form.jdxnf" :disabled="isable" placeholder="请选择入选年份">
             <el-option
               v-for="dict in nfOptions"
               :key="dict.dictValue"
@@ -309,7 +314,13 @@
           <el-button icon="el-icon-refresh" size="mini" @click="resetQuery_fpjs"
             >重置</el-button
           >
-          <el-button type="primary" icon="el-icon-plus"  size="mini"  @click="submitForm_fpjs">确 定</el-button>
+          <el-button
+            type="primary"
+            icon="el-icon-plus"
+            size="mini"
+            @click="submitForm_fpjs"
+            >确 定</el-button
+          >
         </el-form-item>
       </el-form>
       <el-table
@@ -390,6 +401,7 @@ export default {
       xbOptions: [],
       rjxdOptions: [],
       rjxkOptions: [],
+      isable: true,
       //学校列表
       xxOptions: [],
       // 查询参数
@@ -559,6 +571,7 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
+      this.isable = false;
       this.title = "添加基地校";
     },
     /** 修改按钮操作 */
@@ -568,6 +581,7 @@ export default {
       getJdx(id).then((response) => {
         this.form = response.data;
         this.open = true;
+        this.isable = true;
         this.title = "修改基地校";
       });
     },

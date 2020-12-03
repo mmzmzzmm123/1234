@@ -159,4 +159,16 @@ public class TsbzJxjsjbxxController extends BaseController {
     public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(tsbzJxjsjbxxService.deleteTsbzJxjsjbxxByIds(ids));
     }
+
+    /**
+     * 删除见习教师基地校id
+     */
+    @Log(title = "见习教师基本信息", businessType = BusinessType.UPDATE)
+    @PostMapping("/clearjdx/{id}")
+    public AjaxResult clearjdx(@PathVariable Long id) {
+        TsbzJxjsjbxx tsbzJxjsjbxx = new TsbzJxjsjbxx();
+        tsbzJxjsjbxx.setId(id);
+        tsbzJxjsjbxx.setJdxid(" ");
+        return toAjax(tsbzJxjsjbxxService.updateTsbzJxjsjbxx(tsbzJxjsjbxx));
+    }
 }

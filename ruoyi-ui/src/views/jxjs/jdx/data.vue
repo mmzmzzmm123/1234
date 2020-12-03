@@ -17,7 +17,12 @@
         />
       </el-form-item>
       <el-form-item label="性别" prop="xb">
-        <el-select v-model="queryParams.xb" placeholder="请选择性别" clearable size="small">
+        <el-select
+          v-model="queryParams.xb"
+          placeholder="请选择性别"
+          clearable
+          size="small"
+        >
           <el-option
             v-for="dict in xbOptions"
             :key="dict.dictValue"
@@ -27,7 +32,12 @@
         </el-select>
       </el-form-item>
       <el-form-item label="政治面貌" prop="zzmm">
-        <el-select v-model="queryParams.zzmm" placeholder="请选择政治面貌" clearable size="small">
+        <el-select
+          v-model="queryParams.zzmm"
+          placeholder="请选择政治面貌"
+          clearable
+          size="small"
+        >
           <el-option
             v-for="dict in zzmmOptions"
             :key="dict.dictValue"
@@ -37,7 +47,12 @@
         </el-select>
       </el-form-item>
       <el-form-item label="民族" prop="mz">
-        <el-select v-model="queryParams.mz" placeholder="请选择民族" clearable size="small">
+        <el-select
+          v-model="queryParams.mz"
+          placeholder="请选择民族"
+          clearable
+          size="small"
+        >
           <el-option
             v-for="dict in mzOptions"
             :key="dict.dictValue"
@@ -47,7 +62,12 @@
         </el-select>
       </el-form-item>
       <el-form-item label="任教学段" prop="rjxd">
-        <el-select v-model="queryParams.rjxd" placeholder="请选择任教学段" clearable size="small">
+        <el-select
+          v-model="queryParams.rjxd"
+          placeholder="请选择任教学段"
+          clearable
+          size="small"
+        >
           <el-option
             v-for="dict in rjxdOptions"
             :key="dict.dictValue"
@@ -57,7 +77,12 @@
         </el-select>
       </el-form-item>
       <el-form-item label="任教学科" prop="rjxk">
-        <el-select v-model="queryParams.rjxk" placeholder="请选择任教学科" clearable size="small">
+        <el-select
+          v-model="queryParams.rjxk"
+          placeholder="请选择任教学科"
+          clearable
+          size="small"
+        >
           <el-option
             v-for="dict in rjxkOptions"
             :key="dict.dictValue"
@@ -67,7 +92,12 @@
         </el-select>
       </el-form-item>
       <el-form-item label="任教年级" prop="rjnj">
-        <el-select v-model="queryParams.rjnj" placeholder="请选择任教年级" clearable size="small">
+        <el-select
+          v-model="queryParams.rjnj"
+          placeholder="请选择任教年级"
+          clearable
+          size="small"
+        >
           <el-option
             v-for="dict in rjnjOptions"
             :key="dict.dictValue"
@@ -77,7 +107,12 @@
         </el-select>
       </el-form-item>
       <el-form-item label="学历" prop="xl">
-        <el-select v-model="queryParams.xl" placeholder="请选择学历" clearable size="small">
+        <el-select
+          v-model="queryParams.xl"
+          placeholder="请选择学历"
+          clearable
+          size="small"
+        >
           <el-option
             v-for="dict in xlOptions"
             :key="dict.dictValue"
@@ -87,7 +122,12 @@
         </el-select>
       </el-form-item>
       <el-form-item label="学位" prop="xw">
-        <el-select v-model="queryParams.xw" placeholder="请选择学位" clearable size="small">
+        <el-select
+          v-model="queryParams.xw"
+          placeholder="请选择学位"
+          clearable
+          size="small"
+        >
           <el-option
             v-for="dict in xwOptions"
             :key="dict.dictValue"
@@ -97,7 +137,12 @@
         </el-select>
       </el-form-item>
       <el-form-item label="师范生" prop="sfsfs">
-        <el-select v-model="queryParams.sfsfs" placeholder="请选择是否师范生" clearable size="small">
+        <el-select
+          v-model="queryParams.sfsfs"
+          placeholder="请选择是否师范生"
+          clearable
+          size="small"
+        >
           <el-option
             v-for="dict in sfsfsOptions"
             :key="dict.dictValue"
@@ -107,7 +152,12 @@
         </el-select>
       </el-form-item>
       <el-form-item label="录取年份" prop="lqnf">
-        <el-select v-model="queryParams.lqnf" placeholder="请选择录取年份" clearable size="small">
+        <el-select
+          v-model="queryParams.lqnf"
+          placeholder="请选择录取年份"
+          clearable
+          size="small"
+        >
           <el-option
             v-for="dict in lqnfOptions"
             :key="dict.dictValue"
@@ -144,22 +194,69 @@
         />
       </el-form-item>-->
       <el-form-item>
-        <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+        <el-button
+          type="cyan"
+          icon="el-icon-search"
+          size="mini"
+          @click="handleQuery"
+          >搜索</el-button
+        >
+        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+          >重置</el-button
+        >
       </el-form-item>
     </el-form>
 
-    <el-table v-loading="loading" :data="jxjsjbxxList" @selection-change="handleSelectionChange">
+    <el-table
+      v-loading="loading"
+      :data="jxjsjbxxList"
+      @selection-change="handleSelectionChange"
+    >
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="编号" align="center" prop="id" />
+      <!-- <el-table-column label="编号" align="center" prop="id" /> -->
       <el-table-column label="姓名" align="center" prop="name" />
-      <el-table-column label="性别" align="center" prop="xb" :formatter="xbFormat" />
-      <el-table-column label="政治面貌" align="center" prop="zzmm" :formatter="zzmmFormat" />
-      <el-table-column label="民族" align="center" prop="mz" :formatter="mzFormat" />
-      <el-table-column label="学历" align="center" prop="xl" :formatter="xlFormat" />
-      <el-table-column label="学位" align="center" prop="xw" :formatter="xwFormat" />
-      <el-table-column label="是否师范生" align="center" prop="sfsfs" :formatter="sfsfsFormat" />
-      <el-table-column label="录取年份" align="center" prop="lqnf" :formatter="lqnfFormat" />
+      <el-table-column
+        label="性别"
+        align="center"
+        prop="xb"
+        :formatter="xbFormat"
+      />
+      <el-table-column
+        label="政治面貌"
+        align="center"
+        prop="zzmm"
+        :formatter="zzmmFormat"
+      />
+      <el-table-column
+        label="民族"
+        align="center"
+        prop="mz"
+        :formatter="mzFormat"
+      />
+      <el-table-column
+        label="学历"
+        align="center"
+        prop="xl"
+        :formatter="xlFormat"
+      />
+      <el-table-column
+        label="学位"
+        align="center"
+        prop="xw"
+        :formatter="xwFormat"
+      />
+      <el-table-column
+        label="是否师范生"
+        align="center"
+        prop="sfsfs"
+        :formatter="sfsfsFormat"
+      />
+      <el-table-column
+        label="录取年份"
+        align="center"
+        prop="lqnf"
+        :formatter="lqnfFormat"
+      />
       <!-- <el-table-column label="出生日期" align="center" prop="csrq" width="180">
       <el-table-column label="聘任单位" align="center" prop="prdwid" />
       <el-table-column label="聘任单位名称" align="center" prop="prdwmc" />
@@ -172,7 +269,11 @@
           <span>{{ parseTime(scope.row.csrq, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>-->
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column
+        label="操作"
+        align="center"
+        class-name="small-padding fixed-width"
+      >
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -180,13 +281,14 @@
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['jxjs:jxjsjbxx:remove']"
-          >删除</el-button>
+            >移除</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
 
     <pagination
-      v-show="total>0"
+      v-show="total > 0"
       :total="total"
       :page.sync="queryParams.pageNum"
       :limit.sync="queryParams.pageSize"
@@ -196,7 +298,7 @@
 </template>
 
 <script>
-import { listJxjsjbxx, getJxjsjbxx, updateJxjsjbxx } from "@/api/jxjs/jxjsjbxx";
+import { listJxjsjbxx, getJxjsjbxx, clearJxjsjdx } from "@/api/jxjs/jxjsjbxx";
 
 export default {
   name: "Jxjsjbxx",
@@ -375,35 +477,6 @@ export default {
       this.open = false;
       this.reset();
     },
-    // 表单重置
-    reset() {
-      this.form = {
-        id: null,
-        otherid: null,
-        name: null,
-        jxbh: null,
-        xb: null,
-        csrq: null,
-        email: null,
-        phone: null,
-        yzbm: null,
-        zzmm: null,
-        mz: null,
-        prdwid: null,
-        prdwmc: null,
-        jdxid: null,
-        rjxd: null,
-        rjxk: null,
-        rjnj: null,
-        byyx: null,
-        xl: null,
-        xw: null,
-        sfsfs: null,
-        lqnf: null,
-        createTime: null,
-      };
-      this.resetForm("form");
-    },
     /** 搜索按钮操作 */
     handleQuery() {
       this.queryParams.pageNum = 1;
@@ -422,22 +495,18 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const ids = row.id || this.ids;
-      this.$confirm(
-        '是否确认删除见习教师基本信息编号为"' + ids + '"的数据项?',
-        "警告",
-        {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning",
-        }
-      )
+      const ids = row.id;
+      this.$confirm("是否确认移除分配的见习教师信息?", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
         .then(function () {
-          return delJxjsjbxx(ids);
+           return clearJxjsjdx(ids);
         })
         .then(() => {
           this.getList();
-          this.msgSuccess("删除成功");
+          this.msgSuccess("移除成功");
         })
         .catch(function () {});
     },

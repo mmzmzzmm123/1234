@@ -97,7 +97,6 @@
           type="info"
           icon="el-icon-upload2"
           size="mini"
-          @click="handleImport"
           v-hasPermi="['jxjs:jxjscj:import']"
           >导入</el-button
         >

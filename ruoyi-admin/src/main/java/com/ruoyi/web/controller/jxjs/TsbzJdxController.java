@@ -101,22 +101,40 @@ public class TsbzJdxController extends BaseController {
     public AjaxResult add(@RequestBody TsbzJdx tsbzJdx) {
         String uuid = schoolCommonController.getUuid();
         tsbzJdx.setId(uuid);
+        //先判断是否已经创建当前学年的基地校
+        TsbzJdx tsbzJdxNew = new TsbzJdx();
+        tsbzJdxNew.setOtherid(tsbzJdx.getJdxmc());
+        tsbzJdxNew.setJdxnf(tsbzJdx.getJdxnf());
+        List<TsbzJdx> selectList = tsbzJdxService.selectTsbzJdxList(tsbzJdxNew);
+        if (selectList != null && selectList.size() > 0) {
+            return AjaxResult.error("当前学年基地校已创建，无法重复创建");
+        }
+
         //此时传过来的tsbzJdx.getJdxmc 是学校代码 获取学校信息
         TsbzXxjbxx tsbzXxjbxx = tsbzXxjbxxService.selectTsbzXxjbxxById(tsbzJdx.getJdxmc());
+        String xxId = tsbzXxjbxx.getId();
         tsbzJdx.setJdxmc(tsbzXxjbxx.getXxmc());
         tsbzJdx.setXxbb(tsbzXxjbxx.getXxbbm());//学校办别
         tsbzJdx.setBxlx(tsbzXxjbxx.getXxlbm());//学校类别
-        tsbzJdx.setOtherid(tsbzXxjbxx.getId());//其他系统学校代码
-        //将当前记录插入的dept表
-        SysDept dept = new SysDept();
-        dept.setSchoolid(uuid);
-        dept.setDeptName(tsbzJdx.getJdxmc());
-        dept.setCreateBy(SecurityUtils.getLoginUser().getUser().getUserName());
-        dept.setParentId(200L);
-        dept.setAncestors("0,100,200");
-        dept.setOrderNum(String.valueOf(tsbzJdxService.selectTsbzJdxList(null).size()));
-        deptService.insertDept(dept);
-        System.out.println(dept + "======================");
+        tsbzJdx.setOtherid(xxId);//其他系统学校代码
+        //首先判断当前的学校是否为基地校
+        SysDept selectSysDept = new SysDept();
+        selectSysDept.setSchoolid(xxId);
+        selectSysDept.setDelFlag("0");
+        List<SysDept> list = deptService.selectDeptList(selectSysDept);
+        //没创建则创建到dept表
+        if (list.size() <= 0) {
+            //将当前记录插入的dept表
+            SysDept dept = new SysDept();
+            dept.setSchoolid(xxId);
+            dept.setDeptName(tsbzJdx.getJdxmc());
+            dept.setCreateBy(SecurityUtils.getLoginUser().getUser().getUserName());
+            dept.setParentId(200L);
+            dept.setAncestors("0,100,200");
+            dept.setOrderNum(String.valueOf(tsbzJdxService.selectTsbzJdxList(null).size()));
+            deptService.insertDept(dept);
+        }
+
         return toAjax(tsbzJdxService.insertTsbzJdx(tsbzJdx));
     }
 
@@ -134,14 +152,14 @@ public class TsbzJdxController extends BaseController {
         tsbzJdx.setBxlx(tsbzXxjbxx.getXxlbm());//学校类别
         tsbzJdx.setOtherid(tsbzXxjbxx.getId());//其他系统学校代码
 
-        //创建dept实例  并且向要添加的dept中设置各个参数
-        SysDept dept = new SysDept();
-        //设置schoolID为xxdm
-        dept.setSchoolid(tsbzJdx.getId());
-        SysDept deptNew = deptService.selectDeptList(dept).get(0);
-        deptNew.setDeptName(tsbzJdx.getJdxmc());
-        deptNew.setUpdateBy(SecurityUtils.getLoginUser().getUser().getUserName());
-        deptService.updateDept(deptNew);
+//        //创建dept实例  并且向要添加的dept中设置各个参数
+//        SysDept dept = new SysDept();
+//        //设置schoolID为xxdm
+//        dept.setSchoolid(tsbzJdx.getId());
+//        SysDept deptNew = deptService.selectDeptList(dept).get(0);
+//        deptNew.setDeptName(tsbzJdx.getJdxmc());
+//        deptNew.setUpdateBy(SecurityUtils.getLoginUser().getUser().getUserName());
+//        deptService.updateDept(deptNew);
         return toAjax(tsbzJdxService.updateTsbzJdx(tsbzJdx));
     }
 
@@ -169,22 +187,25 @@ public class TsbzJdxController extends BaseController {
         for (int i = 0; i < ids.length; i++) {
             dept = new SysDept();
             dept.setSchoolid(ids[i]);
-            dept = deptService.selectDeptList(dept).get(0);
+            List<SysDept> listDept = deptService.selectDeptList(dept);
+            if (listDept != null && listDept.size() > 0) {
+                dept = listDept.get(0);
 
-            SysUser user = new SysUser();
-            user.setDeptId(dept.getDeptId());
-            List<SysUser> list = userService.selectUserList(user);
-            if (list != null && list.size() > 0) {
-                return AjaxResult.error("当前选中的基地校存在用户数据，无法删除");
+                SysUser user = new SysUser();
+                user.setDeptId(dept.getDeptId());
+                List<SysUser> list = userService.selectUserList(user);
+                if (list != null && list.size() > 0) {
+                    return AjaxResult.error("当前选中的基地校存在用户数据，无法删除");
+                }
             }
         }
-        //删除过程
-        for (int i = 0; i < ids.length; i++) {
-            dept = new SysDept();
-            dept.setSchoolid(ids[i]);
-            dept = deptService.selectDeptList(dept).get(0);
-            deptService.deleteDeptById(dept.getDeptId());
-        }
+//        //删除过程
+//        for (int i = 0; i < ids.length; i++) {
+//            dept = new SysDept();
+//            dept.setSchoolid(ids[i]);
+//            dept = deptService.selectDeptList(dept).get(0);
+//            deptService.deleteDeptById(dept.getDeptId());
+//        }
         return toAjax(tsbzJdxService.deleteTsbzJdxByIds(ids));
     }
 }

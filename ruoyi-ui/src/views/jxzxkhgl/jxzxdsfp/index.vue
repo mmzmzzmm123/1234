@@ -570,7 +570,7 @@ export default {
     handleDelete(row) {
       const ids = row.id;
       if (ids == null || ids == "") {
-        this.msgError("未评价，不可清空");
+        this.msgError("未分配导师，不可清空");
         return;
       }
       this.$confirm('是否确认清空编号为"' + ids + '"的数据项?', "警告", {

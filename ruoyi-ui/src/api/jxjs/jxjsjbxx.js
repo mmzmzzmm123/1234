@@ -69,6 +69,13 @@ export function delJxjsjbxx(id) {
   })
 }
 
+export function clearJxjsjdx(id){
+  return request({
+    url: '/jxjs/jxjsjbxx/clearjdx/' + id,
+    method: 'post'
+  })
+}
+
 // 导出见习教师基本信息
 export function exportJxjsjbxx(query) {
   return request({
