@@ -125,4 +125,10 @@ public class SysWxUserLogController extends BaseController {
         sysWxUserLog.setLogTime(DateTimeUtil.getCurrentTimeDate());
         return add(sysWxUserLog);
     }
+
+    @GetMapping(value = "/wx/logs/check/{openid}")
+    public AjaxResult checkLog(@PathVariable String openid) {
+        int count = sysWxUserLogService.checkWxLogInfoCount(openid);
+        return AjaxResult.success(count);
+    }
 }

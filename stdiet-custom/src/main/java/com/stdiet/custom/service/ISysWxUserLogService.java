@@ -1,6 +1,8 @@
 package com.stdiet.custom.service;
 
 import java.util.List;
+
+import com.stdiet.custom.domain.SysWxUserInfo;
 import com.stdiet.custom.domain.SysWxUserLog;
 import com.stdiet.custom.page.WxLogInfo;
 
@@ -61,4 +63,6 @@ public interface ISysWxUserLogService
      * @return 结果
      */
     public int deleteSysWxUserLogById(String openid);
+
+    public int checkWxLogInfoCount(String openid);
 }

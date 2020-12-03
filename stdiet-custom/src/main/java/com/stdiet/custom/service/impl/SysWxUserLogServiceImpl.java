@@ -3,6 +3,7 @@ package com.stdiet.custom.service.impl;
 import java.util.List;
 
 import com.stdiet.common.utils.DateUtils;
+import com.stdiet.custom.domain.SysWxUserInfo;
 import com.stdiet.custom.page.WxLogInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -93,4 +94,11 @@ public class SysWxUserLogServiceImpl implements ISysWxUserLogService {
     public int deleteSysWxUserLogById(String openid) {
         return sysWxUserLogMapper.deleteSysWxUserLogById(openid);
     }
+
+    @Override
+    public int checkWxLogInfoCount(String openid) {
+        return sysWxUserLogMapper.checkWxLogInfoCount(openid);
+    }
+
+
 }

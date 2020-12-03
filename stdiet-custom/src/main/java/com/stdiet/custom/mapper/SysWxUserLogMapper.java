@@ -1,6 +1,8 @@
 package com.stdiet.custom.mapper;
 
 import java.util.List;
+
+import com.stdiet.custom.domain.SysWxUserInfo;
 import com.stdiet.custom.domain.SysWxUserLog;
 import com.stdiet.custom.page.WxLogInfo;
 
@@ -61,4 +63,7 @@ public interface SysWxUserLogMapper
      * @return 结果
      */
     public int deleteSysWxUserLogByIds(String[] openids);
+
+    public int checkWxLogInfoCount(String openid);
+
 }

@@ -42,6 +42,10 @@
         select openid, weight, appid, phone, log_time, sleep_time, wakeup_time, sport, avatar_url, diet, insomnia, defecation, water, create_by, create_time, update_by, update_time, remark from sys_wx_user_log
     </sql>
 
+    <select id="checkWxLogInfoCount" parameterType="String" resultType="Integer" >
+        select count(*) from sys_wx_user_log where to_days(log_time) = to_days(now()) and openid = #{openid}
+    </select>
+
     <select id="selectSysWxUserLogList" parameterType="SysWxUserLog" resultMap="SysWxUserLogResult">
         <include refid="selectSysWxUserLogVo"/>
         <where>
