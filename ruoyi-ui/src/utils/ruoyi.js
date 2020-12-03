@@ -1,4 +1,4 @@
-/**
+﻿/**
  * 通用js方法封装处理
  * Copyright (c) 2019 ruoyi
  */
@@ -54,12 +54,15 @@ export function resetForm(refName) {
 }
 
 // 添加日期范围
-export function addDateRange (params = {}, dateRange) {
-	if (dateRange != null && dateRange !== '') {
-	  params.beginTime = this.dateRange[0]
-	  params.endTime = this.dateRange[1]
+export function addDateRange(params, dateRange) {
+	var search = params;
+	search.beginTime = "";
+	search.endTime = "";
+	if (null != dateRange && '' != dateRange) {
+		search.beginTime = dateRange[0];
+		search.endTime = dateRange[1];
 	}
-	return params
+	return search;
 }
 
 // 回显数据字典
@@ -128,7 +131,7 @@ export function handleTree(data, id, parentId, children, rootId) {
 	id = id || 'id'
 	parentId = parentId || 'parentId'
 	children = children || 'children'
-	rootId = rootId || 0
+	rootId = rootId || Math.min.apply(Math, data.map(item => { return item[parentId] })) || 0
 	//对源数据深度克隆
 	const cloneData = JSON.parse(JSON.stringify(data))
 	//循环所有项

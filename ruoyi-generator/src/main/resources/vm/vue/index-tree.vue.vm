@@ -66,7 +66,7 @@
           v-hasPermi="['${moduleName}:${businessName}:add']"
         >新增</el-button>
       </el-col>
-	  <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
     <el-table
@@ -139,8 +139,16 @@
         <el-form-item label="${comment}" prop="${field}">
           <el-input v-model="form.${field}" placeholder="请输入${comment}" />
         </el-form-item>
-#elseif($column.htmlType == "select" && "" != $dictType)
+#elseif($column.htmlType == "uploadImage")
         <el-form-item label="${comment}">
+          <uploadImage v-model="form.${field}"/>
+        </el-form-item>
+#elseif($column.htmlType == "editor")
+        <el-form-item label="${comment}">
+          <editor v-model="form.${field}" :min-height="192"/>
+        </el-form-item>
+#elseif($column.htmlType == "select" && "" != $dictType)
+        <el-form-item label="${comment}" prop="${field}">
           <el-select v-model="form.${field}" placeholder="请选择${comment}">
             <el-option
               v-for="dict in ${field}Options"
@@ -152,7 +160,7 @@
           </el-select>
         </el-form-item>
 #elseif($column.htmlType == "select" && $dictType)
-        <el-form-item label="${comment}">
+        <el-form-item label="${comment}" prop="${field}">
           <el-select v-model="form.${field}" placeholder="请选择${comment}">
             <el-option label="请选择字典生成" value="" />
           </el-select>
@@ -221,10 +229,36 @@
 import { list${BusinessName}, get${BusinessName}, del${BusinessName}, add${BusinessName}, update${BusinessName}, export${BusinessName} } from "@/api/${moduleName}/${businessName}";
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
+#foreach($column in $columns)
+#if($column.insert && !$column.superColumn && !$column.pk && $column.htmlType == "uploadImage")
+import UploadImage from '@/components/UploadImage';
+#break
+#end
+#end
+#foreach($column in $columns)
+#if($column.insert && !$column.superColumn && !$column.pk && $column.htmlType == "editor")
+import Editor from '@/components/Editor';
+#break
+#end
+#end
 
 export default {
   name: "${BusinessName}",
-  components: { Treeselect },
+  components: {
+#foreach($column in $columns)
+#if($column.insert && !$column.superColumn && !$column.pk && $column.htmlType == "uploadImage")
+    UploadImage,
+#break
+#end
+#end
+#foreach($column in $columns)
+#if($column.insert && !$column.superColumn && !$column.pk && $column.htmlType == "editor")
+    Editor,
+#break
+#end
+#end
+    Treeselect
+  },
   data() {
     return {
       // 遮罩层
@@ -272,9 +306,8 @@ export default {
 #else
 #set($comment=$column.columnComment)
 #end
-#set($comment=$column.columnComment)
         $column.javaField: [
-          { required: true, message: "$comment不能为空", trigger: "blur" }
+          { required: true, message: "$comment不能为空", trigger: #if($column.htmlType == "select")"change"#else"blur"#end }
         ]#if($velocityCount != $columns.size()),#end
 
 #end
@@ -403,19 +436,15 @@ export default {
 #end
           if (this.form.${pkColumn.javaField} != null) {
             update${BusinessName}(this.form).then(response => {
-              if (response.code === 200) {
-                this.msgSuccess("修改成功");
-                this.open = false;
-                this.getList();
-              }
+              this.msgSuccess("修改成功");
+              this.open = false;
+              this.getList();
             });
           } else {
             add${BusinessName}(this.form).then(response => {
-              if (response.code === 200) {
-                this.msgSuccess("新增成功");
-                this.open = false;
-                this.getList();
-              }
+              this.msgSuccess("新增成功");
+              this.open = false;
+              this.getList();
             });
           }
         }
@@ -432,7 +461,7 @@ export default {
         }).then(() => {
           this.getList();
           this.msgSuccess("删除成功");
-        }).catch(function() {});
+        })
     }
   }
 };
