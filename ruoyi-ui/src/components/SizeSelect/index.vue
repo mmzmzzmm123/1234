@@ -55,3 +55,8 @@ export default {
 
 }
 </script>
+<style lang="scss" scoped>
+  .svg-icon {
+    color: #ffffff;
+  }
+</style>

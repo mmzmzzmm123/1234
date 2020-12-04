@@ -199,7 +199,7 @@ export default {
         this.left = left
       }
 
-      this.top = e.clientY
+      this.top = e.clientY - 50
       this.visible = true
       this.selectedTag = tag
     },

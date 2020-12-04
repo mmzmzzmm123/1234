@@ -26,7 +26,7 @@ export default {
   },
   data() {
     return {
-      title: '若依管理系统',
+      title: '道路旅客运输企业安全风险防控系统',
       logo: logoImg
     }
   }

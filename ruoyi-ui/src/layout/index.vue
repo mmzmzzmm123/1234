@@ -1,5 +1,22 @@
 <template>
+  <!-- 个人调整布局 wh 2020-12-04 -->
   <div :class="classObj" class="app-wrapper">
+    <div v-if="device==='mobile'&&sidebar.opened" class="drawer-bg" @click="handleClickOutside" />
+    <navbar />
+    <sidebar class="sidebar-container" />
+    <div :class="{hasTagsView:needTagsView}" class="main-container">
+      <div :class="{'fixed-header':fixedHeader}">
+        <tags-view v-if="needTagsView" />
+      </div>
+      <app-main />
+      <right-panel v-if="showSettings">
+        <settings />
+      </right-panel>
+    </div>
+  </div>
+
+  <!-- 原有布局 -->
+  <!--<div :class="classObj" class="app-wrapper">
     <div v-if="device==='mobile'&&sidebar.opened" class="drawer-bg" @click="handleClickOutside" />
     <sidebar class="sidebar-container" />
     <div :class="{hasTagsView:needTagsView}" class="main-container">
@@ -12,7 +29,7 @@
         <settings />
       </right-panel>
     </div>
-  </div>
+  </div>-->
 </template>
 
 <script>
@@ -99,4 +116,29 @@ export default {
   .mobile .fixed-header {
     width: 100%;
   }
+
+  /*个人调整属性 wh 2020-12-04 start*/
+  #app {
+    .sidebar-container {
+      top: 50px;
+    }
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 9;
+      -webkit-transition: width 0.28s;
+      transition: width 0.28s;
+      background: #1764b3;
+      color: #fff !important;
+    }
+    .fixed-header {
+      top: 50px;
+    }
+    .main-container {
+      min-height: calc(100% - 50px);
+    }
+  }
+  /*个人调整属性 wh 2020-12-04 end*/
 </style>

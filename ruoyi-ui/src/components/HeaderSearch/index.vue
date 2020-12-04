@@ -156,7 +156,9 @@ export default {
     font-size: 18px;
     vertical-align: middle;
   }
-
+  .svg-icon {
+    color: #ffffff;
+  }
   .header-search-select {
     font-size: 18px;
     transition: width 0.2s;

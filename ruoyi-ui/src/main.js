@@ -22,6 +22,7 @@ import { parseTime, resetForm, addDateRange, selectDictLabel, selectDictLabels, 
 import Pagination from "@/components/Pagination";
 //自定义表格工具扩展
 import RightToolbar from "@/components/RightToolbar"
+import  echars from '../static/plugins/echarts-3.8.5/echarts.min'
 
 // 全局方法挂载
 Vue.prototype.getDicts = getDicts
@@ -71,5 +72,6 @@ new Vue({
   el: '#app',
   router,
   store,
+  echars,
   render: h => h(App)
 })
