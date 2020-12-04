@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import javax.servlet.http.HttpServletRequest;
+
+import com.ruoyi.common.utils.CacheComUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -64,7 +66,7 @@ public class TokenService
             // 解析对应的权限以及用户信息
             String uuid = (String) claims.get(Constants.LOGIN_USER_KEY);
             String userKey = getTokenKey(uuid);
-            LoginUser user = redisCache.getCacheObject(userKey);
+            LoginUser user = CacheComUtils.get(getCacheName(),userKey);
             return user;
         }
         return null;
@@ -89,7 +91,7 @@ public class TokenService
         if (StringUtils.isNotEmpty(token))
         {
             String userKey = getTokenKey(token);
-            redisCache.deleteObject(userKey);
+            CacheComUtils.remove(getCacheName(), userKey);
         }
     }
 
@@ -138,7 +140,7 @@ public class TokenService
         loginUser.setExpireTime(loginUser.getLoginTime() + expireTime * MILLIS_MINUTE);
         // 根据uuid将loginUser缓存
         String userKey = getTokenKey(loginUser.getToken());
-        redisCache.setCacheObject(userKey, loginUser, expireTime, TimeUnit.MINUTES);
+        CacheComUtils.put(getCacheName(), userKey, loginUser, expireTime, TimeUnit.MINUTES);
     }
 
     /**
@@ -212,6 +214,15 @@ public class TokenService
         return token;
     }
 
+    /**
+     * 获取cache name
+     *
+     * @return 缓存名
+     */
+    private String getCacheName()
+    {
+        return Constants.LOGIN_TOKEN_CACHE;
+    }
     private String getTokenKey(String uuid)
     {
         return Constants.LOGIN_TOKEN_KEY + uuid;

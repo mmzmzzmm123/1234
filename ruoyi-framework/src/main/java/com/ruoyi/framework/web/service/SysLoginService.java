@@ -1,6 +1,8 @@
 package com.ruoyi.framework.web.service;
 
 import javax.annotation.Resource;
+
+import com.ruoyi.common.utils.CacheComUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -20,7 +22,7 @@ import com.ruoyi.framework.manager.factory.AsyncFactory;
 
 /**
  * 登录校验方法
- * 
+ *
  * @author ruoyi
  */
 @Component
@@ -37,7 +39,7 @@ public class SysLoginService
 
     /**
      * 登录验证
-     * 
+     *
      * @param username 用户名
      * @param password 密码
      * @param code 验证码
@@ -46,9 +48,9 @@ public class SysLoginService
      */
     public String login(String username, String password, String code, String uuid)
     {
-        String verifyKey = Constants.CAPTCHA_CODE_KEY + uuid;
-        String captcha = redisCache.getCacheObject(verifyKey);
-        redisCache.deleteObject(verifyKey);
+        String verifyKey = getCacheKey(uuid);
+        String captcha = CacheComUtils.get(getCacheName(), verifyKey);
+        CacheComUtils.remove(getCacheName(), verifyKey);
         if (captcha == null)
         {
             AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, MessageUtils.message("user.jcaptcha.expire")));
@@ -84,5 +86,25 @@ public class SysLoginService
         LoginUser loginUser = (LoginUser) authentication.getPrincipal();
         // 生成token
         return tokenService.createToken(loginUser);
+    }
+
+    /**
+     * 获取cache name
+     *
+     * @return 缓存名
+     */
+    private String getCacheName()
+    {
+        return Constants.CAPTCHA_CODE_CACHE;
+    }
+    /**
+     * 设置cache key
+     *
+     * @param configKey 参数键
+     * @return 缓存键key
+     */
+    private String getCacheKey(String configKey)
+    {
+        return Constants.CAPTCHA_CODE_KEY + configKey;
     }
 }

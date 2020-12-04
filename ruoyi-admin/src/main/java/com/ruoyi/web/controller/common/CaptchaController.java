@@ -6,6 +6,8 @@ import java.util.concurrent.TimeUnit;
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.common.utils.CacheComUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.FastByteArrayOutputStream;
@@ -20,7 +22,7 @@ import com.ruoyi.common.utils.uuid.IdUtils;
 
 /**
  * 验证码操作处理
- * 
+ *
  * @author ruoyi
  */
 @RestController
@@ -34,7 +36,7 @@ public class CaptchaController
 
     @Autowired
     private RedisCache redisCache;
-    
+
     // 验证码类型
     @Value("${ruoyi.captchaType}")
     private String captchaType;
@@ -65,8 +67,8 @@ public class CaptchaController
             capStr = code = captchaProducer.createText();
             image = captchaProducer.createImage(capStr);
         }
-
-        redisCache.setCacheObject(verifyKey, code, Constants.CAPTCHA_EXPIRATION, TimeUnit.MINUTES);
+        //保存验证码信息
+        CacheComUtils.setCaptcha(uuid, code);
         // 转换流信息写出
         FastByteArrayOutputStream os = new FastByteArrayOutputStream();
         try

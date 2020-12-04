@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+
+import com.ruoyi.common.utils.CacheComUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,7 +27,7 @@ import com.ruoyi.system.service.ISysUserOnlineService;
 
 /**
  * 在线用户监控
- * 
+ *
  * @author ruoyi
  */
 @RestController
@@ -42,11 +44,11 @@ public class SysUserOnlineController extends BaseController
     @GetMapping("/list")
     public TableDataInfo list(String ipaddr, String userName)
     {
-        Collection<String> keys = redisCache.keys(Constants.LOGIN_TOKEN_KEY + "*");
+        Collection<String> keys = CacheComUtils.keys(Constants.LOGIN_TOKEN_CACHE);
         List<SysUserOnline> userOnlineList = new ArrayList<SysUserOnline>();
         for (String key : keys)
         {
-            LoginUser user = redisCache.getCacheObject(key);
+            LoginUser user = CacheComUtils.get(Constants.LOGIN_TOKEN_CACHE, key);
             if (StringUtils.isNotEmpty(ipaddr) && StringUtils.isNotEmpty(userName))
             {
                 if (StringUtils.equals(ipaddr, user.getIpaddr()) && StringUtils.equals(userName, user.getUsername()))
@@ -86,7 +88,7 @@ public class SysUserOnlineController extends BaseController
     @DeleteMapping("/{tokenId}")
     public AjaxResult forceLogout(@PathVariable String tokenId)
     {
-        redisCache.deleteObject(Constants.LOGIN_TOKEN_KEY + tokenId);
+        CacheComUtils.remove(Constants.LOGIN_TOKEN_CACHE,Constants.LOGIN_TOKEN_KEY + tokenId);
         return AjaxResult.success();
     }
 }
