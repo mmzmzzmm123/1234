@@ -27,6 +27,7 @@ import Video from 'video.js'
 import 'video.js/dist/video-js.css';
 import 'vue-video-player/src/custom-theme.css';
 import Print from '@/utils/print'
+import PrintECharts from '@/utils/print_echarts'
 // 全局方法挂载
 Vue.prototype.getDicts = getDicts
 Vue.prototype.getConfigKey = getConfigKey
@@ -41,6 +42,7 @@ Vue.prototype.handleTree = handleTree
 Vue.prototype.$video = Video
 Vue.use(VideoPlayer);
 Vue.use(Print);
+Vue.use(PrintECharts);
 
 
 import LunarFullCalendar from "vue-lunar-full-calendar";

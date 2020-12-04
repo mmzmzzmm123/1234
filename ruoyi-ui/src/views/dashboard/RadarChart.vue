@@ -3,6 +3,7 @@
     v-loading="loading"
     :class="className"
     :style="{ height: height, width: width }"
+    id="seven"
   />
 </template>
 

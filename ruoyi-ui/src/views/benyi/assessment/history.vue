@@ -1,8 +1,13 @@
 <template>
-  <div class="app-container">
+  <div class="app-container" ref="printMe">
     <div class="flex align-center justify-between">
       <p class="title flex align-center">
-        <span>幼儿：{{ this.childName }} 评估结果图表 </span>
+        <span
+          >幼儿姓名：{{ this.childName }} 出身日期：{{
+            this.bridth
+          }} 
+          评估结果图表
+        </span>
       </p>
     </div>
     <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
@@ -12,6 +17,15 @@
         :label="item.dictLabel"
         :name="item.dictLabel"
       >
+        <div class="print no-print">
+          <el-button
+            type="primary"
+            plain
+            size="mini"
+            icon="el-icon-printer"
+            @click="prints"
+          ></el-button>
+        </div>
         <h2 class="result-title">综合评估结果</h2>
         <div class="comprehensive">
           <radar-chart :psMsg="item.dictValue" />
@@ -358,18 +372,6 @@
             </div>
           </el-tab-pane>
         </el-tabs>
-        <!-- <div>sf
-          <radar-chart_yy :psMsg="item.dictValue" />
-        </div>
-        <div>
-          <radar-chart_sh :psMsg="item.dictValue" />
-        </div>
-        <div>
-          <radar-chart_kx :psMsg="item.dictValue" />
-        </div>
-        <div>
-          <radar-chart_ys :psMsg="item.dictValue" />
-        </div> -->
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -399,6 +401,7 @@ export default {
     return {
       childId: "",
       childName: "",
+      bridth: "",
       classid: "",
       // tabs列表
       tabsList: [],
@@ -418,6 +421,10 @@ export default {
     this.getNoAssessmentList();
   },
   methods: {
+    //打印
+    prints() {
+      this.$printecharts(this.$refs.printMe);
+    },
     /** 查询幼儿未评估内容列表 */
     getNoAssessmentList() {
       listNoAssessmentcontentByChild(this.childId).then((response) => {
@@ -430,6 +437,7 @@ export default {
         // console.log(response);
         if (response.code == "200") {
           this.childName = response.data.name;
+          this.bridth = response.data.csrq;
           this.classid = response.data.classid;
         }
       });
