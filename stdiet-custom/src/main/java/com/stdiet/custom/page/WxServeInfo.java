@@ -62,7 +62,7 @@ public class WxServeInfo implements Serializable {
     }
 
     public void setWeight(BigDecimal weight) {
-        this.weight = weight.toString() + "kg";
+        this.weight = weight.toString() + "斤";
     }
 
     @Override
