@@ -228,7 +228,7 @@
       </el-table-column>
       <el-table-column label="体重" align="center" prop="weight" width="80">
         <template slot-scope="scope">
-          {{scope.row.weight ? `${scope.row.weight}kg` : ''}}
+          {{scope.row.weight ? `${scope.row.weight}斤` : ''}}
         </template>
       </el-table-column>
       <el-table-column label="手机号" align="center" prop="phone" width="120"/>
@@ -289,7 +289,8 @@
           </el-col>
           <el-col :span="8">
             <el-form-item label="体重" prop="weight">
-              <el-input v-model="form.weight" placeholder="请输入体重"/>
+                <el-input style="width: 100px" v-model="form.weight" placeholder="请输入体重"/>
+                斤
             </el-form-item>
           </el-col>
           <el-col :span="8">
@@ -473,7 +474,7 @@
                 placeholder="选择开始日期"
                 format="yyyy-MM-dd"
                 value-format="yyyy-MM-dd"
-                :picker-options="startPickerOptions">
+              >
               </el-date-picker>
             </el-form-item>
           </el-col>
