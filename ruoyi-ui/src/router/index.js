@@ -1,10 +1,10 @@
-import Vue from 'vue'
-import Router from 'vue-router'
+import Vue from "vue";
+import Router from "vue-router";
 
-Vue.use(Router)
+Vue.use(Router);
 
 /* Layout */
-import Layout from '@/layout'
+import Layout from "@/layout";
 
 /**
  * Note: 路由配置项
@@ -25,191 +25,226 @@ import Layout from '@/layout'
  */
 
 // 公共路由
-export const constantRoutes = [{
-        path: '/redirect',
-        component: Layout,
-        hidden: true,
-        children: [{
-            path: '/redirect/:path(.*)',
-            component: (resolve) => require(['@/views/redirect'], resolve)
-        }]
-    },
-    {
-        path: '/login',
-        component: (resolve) => require(['@/views/login'], resolve),
-        hidden: true
-    },
-    {
-        path: '/404',
-        component: (resolve) => require(['@/views/error/404'], resolve),
-        hidden: true
-    },
-    {
-        path: '/401',
-        component: (resolve) => require(['@/views/error/401'], resolve),
-        hidden: true
-    },
-    {
-        path: '',
-        component: Layout,
-        redirect: 'index',
-        children: [{
-            path: 'index',
-            component: (resolve) => require(['@/views/index'], resolve),
-            name: '首页',
-            meta: {
-                title: '首页',
-                icon: 'dashboard',
-                noCache: true,
-                affix: true
-            }
-        }]
-    },
-    {
-        path: '/user',
-        component: Layout,
-        hidden: true,
-        redirect: 'noredirect',
-        children: [{
-            path: 'profile',
-            component: (resolve) => require(['@/views/system/user/profile/index'], resolve),
-            name: 'Profile',
-            meta: {
-                title: '个人中心',
-                icon: 'user'
-            }
-        }]
-    },
-    {
-        path: '/dict',
-        component: Layout,
-        hidden: true,
-        children: [{
-            path: 'type/data/:dictId(\\d+)',
-            component: (resolve) => require(['@/views/system/dict/data'], resolve),
-            name: 'Data',
-            meta: {
-                title: '字典数据',
-                icon: ''
-            }
-        }]
-    },
-    {
-        path: '/jxjs',
-        component: Layout,
-        hidden: true,
-        children: [{
-            path: 'jdx/jxjsjbxx/data/:id',
-            component: (resolve) => require(['@/views/jxjs/jdx/data'], resolve),
-            name: 'jdxjxjsjbxx',
-            meta: {
-                title: '基地校见习教师',
-                icon: ''
-            }
-        }]
-    },
-    {
-        path: '/jxzxkhgl',
-        component: Layout,
-        hidden: true,
-        children: [{
-            path: 'jxzxkhfa/data/:id',
-            component: (resolve) => require(['@/views/jxzxkhgl/jxzxkhfa/data'], resolve),
-            name: 'jxzxkhfa1',
-            meta: {
-                title: '考核指标',
-                icon: ''
-            }
-        }]
-    },
-    {
-        path: '/jxzxkhgl',
-        component: Layout,
-        hidden: true,
-        children: [{
-            path: 'jxzxxxsh/data/:id',
-            component: (resolve) => require(['@/views/jxzxkhgl/jxzxxxsh/data'], resolve),
-            name: 'jxzxxxsh1',
-            meta: {
-                title: '教师详情页',
-                icon: ''
-            }
-        }]
-    },
-    {
-        path: '/qtjs',
-        component: Layout,
-        hidden: true,
-        children: [{
-            path: 'qtjspxfa/data/:id',
-            component: (resolve) => require(['@/views/qtjs/qtjspxfa/data'], resolve),
-            name: 'qtjspxfa1',
-            meta: {
-                title: '评选方案指标',
-                icon: ''
-            }
-        }]
-    },
-    {
-        path: '/qtjskhgl',
-        component: Layout,
-        hidden: true,
-        children: [{
-            path: 'qtjskhfa/data/:id',
-            component: (resolve) => require(['@/views/qtjskhgl/qtjskhfa/data'], resolve),
-            name: 'qtjskhfa1',
-            meta: {
-                title: '考核方案指标',
-                icon: ''
-            }
-        }]
-    },
-    {
-        path: '/qtjskhgl',
-        component: Layout,
-        hidden: true,
-        children: [{
-            path: 'qtjsxxsh/data/:id',
-            component: (resolve) => require(['@/views/qtjskhgl/qtjsxxsh/data'], resolve),
-            name: 'qtjsxxsh1',
-            meta: {
-                title: '教师详情页',
-                icon: ''
-            }
-        }]
-    },
-    {
-        path: '/job',
-        component: Layout,
-        hidden: true,
-        children: [{
-            path: 'log',
-            component: (resolve) => require(['@/views/monitor/job/log'], resolve),
-            name: 'JobLog',
-            meta: {
-                title: '调度日志'
-            }
-        }]
-    },
-    {
-        path: '/gen',
-        component: Layout,
-        hidden: true,
-        children: [{
-            path: 'edit/:tableId(\\d+)',
-            component: (resolve) => require(['@/views/tool/gen/editTable'], resolve),
-            name: 'GenEdit',
-            meta: {
-                title: '修改生成配置'
-            }
-        }]
-    }
-]
+export const constantRoutes = [
+  {
+    path: "/redirect",
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: "/redirect/:path(.*)",
+        component: resolve => require(["@/views/redirect"], resolve)
+      }
+    ]
+  },
+  {
+    path: "/gkkzm",
+    component: resolve => require(["@/views/jxjs/gkkzm"], resolve),
+    hidden: true
+  },
+  {
+    path: "/login",
+    component: resolve => require(["@/views/login"], resolve),
+    hidden: true
+  },
+  {
+    path: "/404",
+    component: resolve => require(["@/views/error/404"], resolve),
+    hidden: true
+  },
+  {
+    path: "/401",
+    component: resolve => require(["@/views/error/401"], resolve),
+    hidden: true
+  },
+  {
+    path: "",
+    component: Layout,
+    redirect: "index",
+    children: [
+      {
+        path: "index",
+        component: resolve => require(["@/views/index"], resolve),
+        name: "首页",
+        meta: {
+          title: "首页",
+          icon: "dashboard",
+          noCache: true,
+          affix: true
+        }
+      }
+    ]
+  },
+  {
+    path: "/user",
+    component: Layout,
+    hidden: true,
+    redirect: "noredirect",
+    children: [
+      {
+        path: "profile",
+        component: resolve =>
+          require(["@/views/system/user/profile/index"], resolve),
+        name: "Profile",
+        meta: {
+          title: "个人中心",
+          icon: "user"
+        }
+      }
+    ]
+  },
+  {
+    path: "/dict",
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: "type/data/:dictId(\\d+)",
+        component: resolve => require(["@/views/system/dict/data"], resolve),
+        name: "Data",
+        meta: {
+          title: "字典数据",
+          icon: ""
+        }
+      }
+    ]
+  },
+  {
+    path: "/jxjs",
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: "jdx/jxjsjbxx/data/:id",
+        component: resolve => require(["@/views/jxjs/jdx/data"], resolve),
+        name: "jdxjxjsjbxx",
+        meta: {
+          title: "基地校见习教师",
+          icon: ""
+        }
+      }
+    ]
+  },
+  {
+    path: "/jxzxkhgl",
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: "jxzxkhfa/data/:id",
+        component: resolve =>
+          require(["@/views/jxzxkhgl/jxzxkhfa/data"], resolve),
+        name: "jxzxkhfa1",
+        meta: {
+          title: "考核指标",
+          icon: ""
+        }
+      }
+    ]
+  },
+  {
+    path: "/jxzxkhgl",
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: "jxzxxxsh/data/:id",
+        component: resolve =>
+          require(["@/views/jxzxkhgl/jxzxxxsh/data"], resolve),
+        name: "jxzxxxsh1",
+        meta: {
+          title: "教师详情页",
+          icon: ""
+        }
+      }
+    ]
+  },
+  {
+    path: "/qtjs",
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: "qtjspxfa/data/:id",
+        component: resolve => require(["@/views/qtjs/qtjspxfa/data"], resolve),
+        name: "qtjspxfa1",
+        meta: {
+          title: "评选方案指标",
+          icon: ""
+        }
+      }
+    ]
+  },
+  {
+    path: "/qtjskhgl",
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: "qtjskhfa/data/:id",
+        component: resolve =>
+          require(["@/views/qtjskhgl/qtjskhfa/data"], resolve),
+        name: "qtjskhfa1",
+        meta: {
+          title: "考核方案指标",
+          icon: ""
+        }
+      }
+    ]
+  },
+  {
+    path: "/qtjskhgl",
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: "qtjsxxsh/data/:id",
+        component: resolve =>
+          require(["@/views/qtjskhgl/qtjsxxsh/data"], resolve),
+        name: "qtjsxxsh1",
+        meta: {
+          title: "教师详情页",
+          icon: ""
+        }
+      }
+    ]
+  },
+  {
+    path: "/job",
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: "log",
+        component: resolve => require(["@/views/monitor/job/log"], resolve),
+        name: "JobLog",
+        meta: {
+          title: "调度日志"
+        }
+      }
+    ]
+  },
+  {
+    path: "/gen",
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: "edit/:tableId(\\d+)",
+        component: resolve => require(["@/views/tool/gen/editTable"], resolve),
+        name: "GenEdit",
+        meta: {
+          title: "修改生成配置"
+        }
+      }
+    ]
+  }
+];
 
 export default new Router({
-    mode: 'history', // 去掉url中的#
-    scrollBehavior: () => ({
-        y: 0
-    }),
-    routes: constantRoutes
-})
+  mode: "history", // 去掉url中的#
+  scrollBehavior: () => ({
+    y: 0
+  }),
+  routes: constantRoutes
+});
