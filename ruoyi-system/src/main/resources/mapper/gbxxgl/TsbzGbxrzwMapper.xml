@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.gbxxgl.mapper.TsbzGbxrzwMapper">
+    
+    <resultMap type="TsbzGbxrzw" id="TsbzGbxrzwResult">
+        <result property="id"    column="id"    />
+        <result property="gbid"    column="gbid"    />
+        <result property="rzny"    column="rzny"    />
+        <result property="xzzw"    column="xzzw"    />
+        <result property="xxzwjb"    column="xxzwjb"    />
+        <result property="dnzw"    column="dnzw"    />
+        <result property="dnzwsx"    column="dnzwsx"    />
+        <result property="qtzw"    column="qtzw"    />
+        <result property="createuser"    column="createuser"    />
+        <result property="createtime"    column="createtime"    />
+    </resultMap>
+
+    <sql id="selectTsbzGbxrzwVo">
+        select id, gbid, rzny, xzzw, xxzwjb, dnzw, dnzwsx, qtzw, createuser, createtime from tsbz_gbxrzw
+    </sql>
+
+    <select id="selectTsbzGbxrzwList" parameterType="TsbzGbxrzw" resultMap="TsbzGbxrzwResult">
+        <include refid="selectTsbzGbxrzwVo"/>
+        <where>  
+            <if test="gbid != null "> and gbid = #{gbid}</if>
+            <if test="rzny != null "> and rzny = #{rzny}</if>
+            <if test="xzzw != null  and xzzw != ''"> and xzzw = #{xzzw}</if>
+            <if test="xxzwjb != null  and xxzwjb != ''"> and xxzwjb = #{xxzwjb}</if>
+            <if test="dnzw != null  and dnzw != ''"> and dnzw = #{dnzw}</if>
+            <if test="dnzwsx != null  and dnzwsx != ''"> and dnzwsx = #{dnzwsx}</if>
+            <if test="qtzw != null  and qtzw != ''"> and qtzw = #{qtzw}</if>
+            <if test="createuser != null "> and createuser = #{createuser}</if>
+            <if test="createtime != null "> and createtime = #{createtime}</if>
+        </where>
+    </select>
+    
+    <select id="selectTsbzGbxrzwById" parameterType="Long" resultMap="TsbzGbxrzwResult">
+        <include refid="selectTsbzGbxrzwVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTsbzGbxrzw" parameterType="TsbzGbxrzw">
+        insert into tsbz_gbxrzw
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="gbid != null">gbid,</if>
+            <if test="rzny != null">rzny,</if>
+            <if test="xzzw != null">xzzw,</if>
+            <if test="xxzwjb != null">xxzwjb,</if>
+            <if test="dnzw != null">dnzw,</if>
+            <if test="dnzwsx != null">dnzwsx,</if>
+            <if test="qtzw != null">qtzw,</if>
+            <if test="createuser != null">createuser,</if>
+            <if test="createtime != null">createtime,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="gbid != null">#{gbid},</if>
+            <if test="rzny != null">#{rzny},</if>
+            <if test="xzzw != null">#{xzzw},</if>
+            <if test="xxzwjb != null">#{xxzwjb},</if>
+            <if test="dnzw != null">#{dnzw},</if>
+            <if test="dnzwsx != null">#{dnzwsx},</if>
+            <if test="qtzw != null">#{qtzw},</if>
+            <if test="createuser != null">#{createuser},</if>
+            <if test="createtime != null">#{createtime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTsbzGbxrzw" parameterType="TsbzGbxrzw">
+        update tsbz_gbxrzw
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="gbid != null">gbid = #{gbid},</if>
+            <if test="rzny != null">rzny = #{rzny},</if>
+            <if test="xzzw != null">xzzw = #{xzzw},</if>
+            <if test="xxzwjb != null">xxzwjb = #{xxzwjb},</if>
+            <if test="dnzw != null">dnzw = #{dnzw},</if>
+            <if test="dnzwsx != null">dnzwsx = #{dnzwsx},</if>
+            <if test="qtzw != null">qtzw = #{qtzw},</if>
+            <if test="createuser != null">createuser = #{createuser},</if>
+            <if test="createtime != null">createtime = #{createtime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTsbzGbxrzwById" parameterType="Long">
+        delete from tsbz_gbxrzw where id = #{id}
+    </delete>
+
+    <delete id="deleteTsbzGbxrzwByIds" parameterType="String">
+        delete from tsbz_gbxrzw where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>
