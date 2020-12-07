@@ -155,10 +155,10 @@ export function handleTree(data, id, parentId, children, rootId) {
 }
 
 /** 数字逢三位加逗号 */
-export function toThousands(num){
+export function toThousands(num) {
   const str = num.toString();
   const reg = str.indexOf(".") > -1 ? /(\d)(?=(\d{3})+\.)/g : /(\d)(?=(?:\d{3})+$)/g;
-  return str.replace(reg,"$1,");
+  return str.replace(reg, "$1,");
 }
 
 export function digitUppercase(n) {
@@ -210,44 +210,73 @@ export function digitUppercase(n) {
 *   十五，十六，十七都是数字0-9
 *   十八位可能是数字0-9，也可能是X
 * */
-export function validatorIDCard(idcode) {
-  if (typeof idcode !== 'string') {
-    return {
-      code: -1,
-      msg: "为了避免javascript数值范围误差，idcode 必须是字符串"
+export function validatorIDCard(idcode, type) {
+  if (type === 1) {
+    if (typeof idcode !== 'string') {
+      return {
+        code: -1,
+        msg: "为了避免javascript数值范围误差，idcode 必须是字符串"
+      }
     }
-  }
-  const idcard_patter = /^[1-9][0-9]{5}([1][9][0-9]{2}|[2][0][0|1][0-9])([0][1-9]|[1][0|1|2])([0][1-9]|[1|2][0-9]|[3][0|1])[0-9]{3}([0-9]|[X])$/;
-  // 判断格式是否正确
-  const format = idcard_patter.test(idcode);
-  if (!format) {
-    return {
-      code: -1,
-      msg: "身份证号码格式错误"
+    const idcard_patter = /^[1-9][0-9]{5}([1][9][0-9]{2}|[2][0][0|1][0-9])([0][1-9]|[1][0|1|2])([0][1-9]|[1|2][0-9]|[3][0|1])[0-9]{3}([0-9]|[X])$/;
+    // 判断格式是否正确
+    const format = idcard_patter.test(idcode);
+    if (!format) {
+      return {
+        code: -1,
+        msg: "身份证号码格式错误"
+      }
     }
-  }
-  // 加权因子
-  const weight_factor = [7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2];
-  // 校验码
-  const check_code = ['1', '0', 'X', '9', '8', '7', '6', '5', '4', '3', '2'];
-  const last = idcode[17];//最后一位
-  const seventeen = idcode.substring(0, 17);
-  // ISO 7064:1983.MOD 11-2
-  // 判断最后一位校验码是否正确
-  const arr = seventeen.split("");
-  const len = arr.length;
-  let num = 0;
-  for (let i = 0; i < len; i++) {
-    num += arr[i] * weight_factor[i];
-  }
-  // 获取余数
-  const resisue = num % 11;
-  const last_no = check_code[resisue];
-  // 返回验证结果，校验码和格式同时正确才算是合法的身份证号码
-  const result = last === last_no ? true : false;
-  return {
-    code: result ? 1 : -1,
-    msg: !result ? "身份证号码格式错误" : ""
+    // 加权因子
+    const weight_factor = [7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2];
+    // 校验码
+    const check_code = ['1', '0', 'X', '9', '8', '7', '6', '5', '4', '3', '2'];
+    const last = idcode[17];//最后一位
+    const seventeen = idcode.substring(0, 17);
+    // ISO 7064:1983.MOD 11-2
+    // 判断最后一位校验码是否正确
+    const arr = seventeen.split("");
+    const len = arr.length;
+    let num = 0;
+    for (let i = 0; i < len; i++) {
+      num += arr[i] * weight_factor[i];
+    }
+    // 获取余数
+    const resisue = num % 11;
+    const last_no = check_code[resisue];
+    // 返回验证结果，校验码和格式同时正确才算是合法的身份证号码
+    const result = last === last_no ? true : false;
+    return {
+      code: result ? 1 : -1,
+      msg: !result ? "身份证号码不合规" : "校验通过"
+    }
+  } else if (type === 2) {
+    const reg = /^([A-Z]\d{6,10}(\(\w{1}\))?)$/;
+    if (reg.test(idcode) === false) {
+      return {code: -1, msg: '港澳居民来往内地通行证号码不合规'};
+    } else {
+      return {code: 1, msg: '校验通过'};
+    }
+  } else if (type === 3) {
+    // 台湾居民来往大陆通行证
+    // 规则： 新版8位或18位数字， 旧版10位数字 + 英文字母
+    // 样本： 12345678 或 1234567890B
+    const reg = /^\d{8}|^[a-zA-Z0-9]{10}|^\d{18}$/;
+    if (reg.test(card) === false) {
+      return {code: -1, msg: '台湾居民来往大陆通行证号码不合规'};
+    } else {
+      return {code: 1, msg: '校验通过'};
+    }
+  } else if (type === 4) {
+    // 军官证
+    // 规则： 军/兵/士/文/职/广/（其他中文） + "字第" + 4到8位字母或数字 + "号"
+    // 样本： 军字第2001988号, 士字第P011816X号
+    const reg = /^[\u4E00-\u9FA5](字第)([0-9a-zA-Z]{4,8})(号?)$/;
+    if (reg.test(card) === false) {
+      return {code: -1, msg: '军官证号不合规'};
+    } else {
+      return {code: 1, msg: '校验通过'};
+    }
   }
 }
 
