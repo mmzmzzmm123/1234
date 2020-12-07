@@ -6,7 +6,8 @@ import 'normalize.css/normalize.css' // a modern alternative to CSS resets
 
 import Element from 'element-ui'
 import './assets/styles/element-variables.scss'
-
+import Print from '@/utils/print'
+import PrintECharts from '@/utils/print_echarts'
 import '@/assets/styles/index.scss' // global css
 import '@/assets/styles/ruoyi.scss' // ruoyi css
 import App from './App'
@@ -51,7 +52,8 @@ Vue.component('Pagination', Pagination)
 Vue.component('RightToolbar', RightToolbar)
 
 Vue.use(permission)
-
+Vue.use(Print);
+Vue.use(PrintECharts);
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api
