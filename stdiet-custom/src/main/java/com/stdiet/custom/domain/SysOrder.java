@@ -181,6 +181,7 @@ public class SysOrder extends BaseEntity {
     @Excel(name = "成交时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date orderTime;
 
+    @JsonFormat(pattern = "yyyy-MM-dd")
     public Date getStartTime() {
         return startTime;
     }
