@@ -64,6 +64,7 @@ left join tsbz_jdx c on b.jdxid=c.id
             <if test="zhdf != null ">and a.zhdf = #{zhdf}</if>
             <if test="xnxq != null  and xnxq != ''">and a.xnxq = #{xnxq}</if>
             <if test="createuserid != null ">and a.createuserid = #{createuserid}</if>
+            <if test="tsbzJxjsjbxx.jdxid != null  and tsbzJxjsjbxx.jdxid != ''">and b.jdxid = #{tsbzJxjsjbxx.jdxid}</if>
         </where>
     </select>
 

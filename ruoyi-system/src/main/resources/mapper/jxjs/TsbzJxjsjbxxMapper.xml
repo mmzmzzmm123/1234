@@ -206,6 +206,14 @@
         where id = #{id}
     </update>
 
+    <update id="clearTsbzJxjsjdx" parameterType="Long">
+        update tsbz_jxjsjbxx
+        <trim prefix="SET" suffixOverrides=",">
+            jdxid = NULL
+        </trim>
+        where id = #{id}
+    </update>
+
     <delete id="deleteTsbzJxjsjbxxById" parameterType="Long">
         delete from tsbz_jxjsjbxx where id = #{id}
     </delete>

@@ -195,7 +195,7 @@
             v-model="form.alfxdf"
             :precision="2"
             :step="0.1"
-            :max="10"
+            :max="100"
             placeholder="请输入案例分析得分"
           ></el-input-number>
         </el-form-item>
@@ -204,7 +204,7 @@
             v-model="form.jasjdf"
             :precision="2"
             :step="0.1"
-            :max="10"
+            :max="100"
             placeholder="请输入教案设计得分"
           />
         </el-form-item>
@@ -213,7 +213,7 @@
             v-model="form.gbzdf"
             :precision="2"
             :step="0.1"
-            :max="10"
+            :max="100"
             placeholder="请输入钢笔字得分"
           />
         </el-form-item>

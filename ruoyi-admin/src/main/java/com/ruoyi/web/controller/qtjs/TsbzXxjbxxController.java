@@ -53,11 +53,10 @@ public class TsbzXxjbxxController extends BaseController
     /**
      * 查询学校信息列表
      */
-    @PreAuthorize("@ss.hasPermi('qtjs:xxjbxx:list')")
+    @PreAuthorize("@ss.hasPermi('qtjs:xxjbxx:list')" + "||@ss.hasPermi('jxjs:jdx:list')")
     @GetMapping("/list")
     public TableDataInfo list(TsbzXxjbxx tsbzXxjbxx)
     {
-
         startPage();
         List<TsbzXxjbxx> list = tsbzXxjbxxService.selectTsbzXxjbxxList(tsbzXxjbxx);
         return getDataTable(list);

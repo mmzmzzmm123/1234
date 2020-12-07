@@ -77,7 +77,7 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
+      <!-- <el-col :span="1.5">
         <el-button
           type="success"
           icon="el-icon-edit"
@@ -87,7 +87,7 @@
           v-hasPermi="['jxjs:jxzxpxpj:edit']"
           >评价</el-button
         >
-      </el-col>
+      </el-col> -->
       <!-- <el-col :span="1.5">
         <el-button
           type="danger"
@@ -275,7 +275,7 @@ export default {
       this.loading = true;
       listJxzxpxpj(this.queryParams).then((response) => {
         this.jxzxpxpjList = response.rows;
-        console.log(this.jxzxpxpjList);
+        // console.log(this.jxzxpxpjList);
         this.total = response.total;
         this.loading = false;
       });
@@ -333,6 +333,7 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
+      // console.log(this.ids);
       this.jsxm = row.tsbzJxjsjbxx.name;
       const id = row.id || this.ids;
       this.reset();

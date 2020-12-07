@@ -88,6 +88,17 @@ public class TsbzJxjsjbxxServiceImpl implements ITsbzJxjsjbxxService {
     }
 
     /**
+     * 清空见习教师基本信息基地校id
+     *
+     * @param id 见习教师基本信息ID
+     * @return 结果
+     */
+    @Override
+    public int clearTsbzJxjsjdx(Long id){
+        return tsbzJxjsjbxxMapper.clearTsbzJxjsjdx(id);
+    }
+
+    /**
      * 批量删除见习教师基本信息
      *
      * @param ids 需要删除的见习教师基本信息ID

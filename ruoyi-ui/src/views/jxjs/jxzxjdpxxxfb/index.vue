@@ -7,6 +7,15 @@
       v-show="showSearch"
       label-width="68px"
     >
+      <el-form-item label="培训年份" prop="pxBeiyong">
+        <el-date-picker
+          v-model="queryParams.pxBeiyong"
+          type="year"
+          value-format="yyyy-MM-dd"
+          placeholder="选择培训年份"
+        >
+        </el-date-picker>
+      </el-form-item>
       <el-form-item label="培训名称" prop="name">
         <el-input
           v-model="queryParams.name"
@@ -75,8 +84,13 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="编号" align="center" prop="id" />
+      <!-- <el-table-column label="编号" align="center" prop="id" /> -->
       <el-table-column label="培训信息名称" align="center" prop="name" />
+      <el-table-column label="培训年份" align="center" prop="pxBeiyong"
+        ><template slot-scope="scope">
+          <span>{{ parseTime(scope.row.pxBeiyong, "{y}") }}</span>
+        </template>
+      </el-table-column>
       <el-table-column
         label="基地校名称"
         align="center"
@@ -130,6 +144,15 @@
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
         <el-form-item label="培训名称" prop="name">
           <el-input v-model="form.name" placeholder="请输入培训信息名称" />
+        </el-form-item>
+        <el-form-item label="培训年份" prop="pxBeiyong">
+          <el-date-picker
+            v-model="form.pxBeiyong"
+            type="year"
+            value-format="yyyy-MM-dd"
+            placeholder="选择培训年份"
+          >
+          </el-date-picker>
         </el-form-item>
         <el-form-item label="培训计划" prop="pxjh">
           <Editor v-model="form.pxjh" placeholder="请输入培训计划" />
@@ -211,6 +234,9 @@
       <el-form ref="form" :model="form" label-width="120px">
         <el-form-item label="培训名称" prop="name">
           {{ form.name }}
+        </el-form-item>
+        <el-form-item label="培训年份" prop="name">
+          {{ parseTime(form.pxBeiyong, "{y}") }}
         </el-form-item>
         <el-form-item label="培训计划" prop="pxjh">
           <span v-html="form.pxjh"></span>
@@ -510,7 +536,7 @@ export default {
       getJxzxjdpxxxfb(id).then((response) => {
         this.form = response.data;
         this.open_look = true;
-        this.title_look = "查看基地培训信息发布";
+        this.title_look = "基地培训信息详情";
         if (response.data.fileName == null || response.data.fileName == "") {
         } else {
           this.fileList.push({
@@ -606,15 +632,11 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$confirm(
-        '是否确认删除基地培训信息发布编号为"' + ids + '"的数据项?',
-        "警告",
-        {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning",
-        }
-      )
+      this.$confirm("是否确认删除基地培训信息数据项?", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
         .then(function () {
           return delJxzxjdpxxxfb(ids);
         })

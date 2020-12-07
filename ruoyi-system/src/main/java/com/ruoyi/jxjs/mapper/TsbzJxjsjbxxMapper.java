@@ -61,6 +61,14 @@ public interface TsbzJxjsjbxxMapper
     public int updateTsbzJxjsjbxx(TsbzJxjsjbxx tsbzJxjsjbxx);
 
     /**
+     * 清空见习教师基本信息基地校id
+     *
+     * @param id 见习教师基本信息ID
+     * @return 结果
+     */
+    public int clearTsbzJxjsjdx(Long id);
+
+    /**
      * 删除见习教师基本信息
      * 
      * @param id 见习教师基本信息ID
