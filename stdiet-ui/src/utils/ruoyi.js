@@ -251,8 +251,9 @@ export function validatorIDCard(idcode, type) {
       msg: !result ? "身份证号码不合规" : "校验通过"
     }
   } else if (type === 2) {
-    const reg = /^([A-Z]\d{6,10}(\(\w{1}\))?)$/;
-    if (reg.test(idcode) === false) {
+    const hkReg = /^([A-Z]\d{6,10}(\(\w{1}\))?)$/;
+    const mcReg = /^[1|5|7][0-9]{6}\([0-9Aa]\)/;
+    if (!hkReg.test(idcode) && !mcReg.test(idcode)) {
       return {code: -1, msg: '港澳居民来往内地通行证号码不合规'};
     } else {
       return {code: 1, msg: '校验通过'};
