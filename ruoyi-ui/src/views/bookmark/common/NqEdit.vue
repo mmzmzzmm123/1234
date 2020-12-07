@@ -3,11 +3,12 @@
 
     <div class="nqtitle">
       <div class="mdui-textfield mdui-textfield-floating-label inputtop">
-        <input class="mdui-textfield-input" v-model="queryParamsAndMg.title" type="text" required/>
+        <input class="mdui-textfield-input edittitle" v-model="queryParamsAndMg.title" type="text" required/>
       </div>
-      <div>
-        <span>{{queryParamsAndMg.updateTime==null?'0000:00:00':queryParamsAndMg.updateTime}}</span>
-        <span @click="updateEdit">{{updateOpn}}</span>
+      <div class="common">
+        <el-tag type="info" size="small" >{{queryParamsAndMg.updateTime==null?'0000:00:00':queryParamsAndMg.updateTime}}</el-tag>
+        <el-link type="info" icon="el-icon-edit" class="editNote" @click="updateEdit">{{updateOpn}}</el-link>
+        <el-link type="info"  icon="el-icon-delete" class="editNote">删除</el-link>
       </div>
     </div>
         <div v-loading="loading"  v-if="!showEditor" class="mian" v-html="queryParamsAndMg.ueditorContent">
@@ -172,6 +173,10 @@
     width: 50%;
 
   }
+  .edittitle{
+    font-weight: 800;
+    font-size: 22px;
+  }
 
   .mian {
     height: 100%;
@@ -181,6 +186,11 @@
     padding: 10px;
     margin-bottom: 10px;
     opacity: 0.9;
+    margin: 15px;
+    border: 1px solid #D4D4D4;
+    padding-left: 20px;
+    padding-right: 20px;
+    background: #fafcff;
   }
 
   .home {
@@ -191,12 +201,23 @@
     margin-left: 13px;
 
   }
+  .editNote{
+    margin-left: 10px;
+    font-weight: 600;
+    font-size: 16px;
+
+  }
   .nqtitle{
     margin-left: 13px;
     margin-bottom: 10px;
   }
   .inputtop{
     padding-top: 6px;
+  }
+  .common{
+    display: flex;
+    align-items: center;
+    height: 22px;
   }
 
 </style>
