@@ -13,6 +13,7 @@ import com.stdiet.custom.domain.SysWxUserLog;
 import com.stdiet.custom.page.WxServeInfo;
 import com.stdiet.custom.service.ISysOrderService;
 import com.stdiet.custom.service.ISysWxUserInfoService;
+import org.aspectj.weaver.loadtime.Aj;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -140,5 +141,18 @@ public class SysWxUserInfoController extends BaseController {
         wxServeInfo.setPhone(list.get(0).getPhone());
 
         return AjaxResult.success(wxServeInfo);
+    }
+
+    @GetMapping("/wx/user/list")
+    public AjaxResult userList(SysWxUserInfo sysWxUserInfo) {
+        startPage();
+        List<SysWxUserInfo> list = sysWxUserInfoService.selectSysWxUserInfoList(sysWxUserInfo);
+
+        for (SysWxUserInfo userInfo : list) {
+            if (StringUtils.isNotEmpty(userInfo.getPhone())) {
+                userInfo.setPhone(userInfo.getPhone().replaceAll("(\\d{3})\\d{4}(\\d{4})", "$1****$2"));
+            }
+        }
+        return AjaxResult.success(list);
     }
 }
