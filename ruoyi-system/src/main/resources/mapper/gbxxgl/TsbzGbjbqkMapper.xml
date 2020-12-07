@@ -9,6 +9,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="otherid"    column="otherid"    />
         <result property="name"    column="name"    />
         <result property="xb"    column="xb"    />
+        <result property="deptId"    column="dept_id"    />
         <result property="dwmc"    column="dwmc"    />
         <result property="dwjc"    column="dwjc"    />
         <result property="xrxzzw"    column="xrxzzw"    />
@@ -55,7 +56,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectTsbzGbjbqkVo">
-        select id, otherid, name, xb, dwmc, dwjc, xrxzzw, xrdnzw, xrqtzw, rxzwny, xrxzzj, xzzjqdny, sfhbgb, hbgbqdny, sfzh, updatetime, mz, jg, jg_province, jg_cityname, jg_city, jg_areaname, jg_area, csd, csd_province, csd_cityname, csd_city, csd_areaname, csd_area,  csrq, cjgzny, jtzz, dwdz, xl, xw, byyx, jylx, zc, jzcyqk, nfkc, hyzk, zzmm, rdsj, bgsdh, phone, rjxk, jkzk from tsbz_gbjbqk
+        select id, otherid, name, xb, dept_id, dwmc, dwjc, xrxzzw, xrdnzw, xrqtzw, rxzwny, xrxzzj, xzzjqdny, sfhbgb, hbgbqdny, sfzh, updatetime, mz, jg, jg_province, jg_cityname, jg_city, jg_areaname, jg_area, csd, csd_province, csd_cityname, csd_city, csd_areaname, csd_area,  csrq, cjgzny, jtzz, dwdz, xl, xw, byyx, jylx, zc, jzcyqk, nfkc, hyzk, zzmm, rdsj, bgsdh, phone, rjxk, jkzk from tsbz_gbjbqk
     </sql>
 
     <select id="selectTsbzGbjbqkList" parameterType="TsbzGbjbqk" resultMap="TsbzGbjbqkResult">
@@ -64,6 +65,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="otherid != null  and otherid != ''"> and otherid = #{otherid}</if>
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
             <if test="xb != null  and xb != ''"> and xb = #{xb}</if>
+            <if test="deptId != null  and deptId != ''"> and dept_id = #{deptId}</if>
             <if test="dwmc != null  and dwmc != ''"> and dwmc = #{dwmc}</if>
             <if test="dwjc != null  and dwjc != ''"> and dwjc = #{dwjc}</if>
             <if test="xrxzzw != null  and xrxzzw != ''"> and xrxzzw = #{xrxzzw}</if>
@@ -121,6 +123,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="otherid != null">otherid,</if>
             <if test="name != null">name,</if>
             <if test="xb != null">xb,</if>
+            <if test="deptId != null">dept_id,</if>
             <if test="dwmc != null">dwmc,</if>
             <if test="dwjc != null">dwjc,</if>
             <if test="xrxzzw != null">xrxzzw,</if>
@@ -169,6 +172,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="otherid != null">#{otherid},</if>
             <if test="name != null">#{name},</if>
             <if test="xb != null">#{xb},</if>
+            <if test="deptId != null">#{deptId},</if>
             <if test="dwmc != null">#{dwmc},</if>
             <if test="dwjc != null">#{dwjc},</if>
             <if test="xrxzzw != null">#{xrxzzw},</if>

@@ -91,6 +91,16 @@
           />
         </el-select>
       </el-form-item>
+      <el-form-item label="单位名称" prop="deptId">
+        <el-select v-model="form.deptId" placeholder="请选择单位名称">
+                <el-option
+                  v-for="dict in deptOptions"
+                  :key="dict.deptId"
+                  :label="dict.deptName"
+                  :value="dict.deptId"
+                ></el-option>
+              </el-select>
+      </el-form-item>
       <el-form-item label="行政职务" prop="xrxzzw">
         <el-select
           v-model="queryParams.xrxzzw"
@@ -374,7 +384,7 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="单位名称" align="center" prop="dwmc" />
+      <el-table-column label="单位名称" align="center" prop="deptId" :formatter="deptFormat"/>
       <el-table-column label="教师姓名" align="center" prop="name" />
       <el-table-column
         label="性别"
@@ -582,8 +592,15 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="单位名称" prop="dwmc">
-              <el-input v-model="form.dwmc" placeholder="请输入单位名称" />
+            <el-form-item label="单位名称" prop="deptId">
+              <el-select v-model="form.deptId" placeholder="请选择教育类型">
+                <el-option
+                  v-for="dict in deptOptions"
+                  :key="dict.deptId"
+                  :label="dict.deptName"
+                  :value="dict.deptId"
+                ></el-option>
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -969,7 +986,14 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="单位名称" prop="dwmc">
-              <el-input v-model="form.dwmc" placeholder="请输入单位名称" :disabled="true"/>
+              <el-select v-model="form.deptId" placeholder="请选择教育类型" :disabled="true">
+                <el-option
+                  v-for="dict in deptOptions"
+                  :key="dict.deptId"
+                  :label="dict.deptName"
+                  :value="dict.deptId"
+                ></el-option>
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -1240,6 +1264,10 @@ import {
   updateGbjbqk,
   exportGbjbqk,
 } from "@/api/gbxxgl/gbjbqk";
+import {
+  listDept,
+  getDept,
+} from "@/api/system/dept";
 
 //导入省市区三级联动库
 import VDistpicker from "v-distpicker";
@@ -1315,6 +1343,8 @@ export default {
       rjxkOptions: [],
       // 健康状况字典
       jkzkOptions: [],
+      // 部门选项
+      deptOptions: [],
       // 详情页title
       title_look: "",
       // 详情页显示
@@ -1326,6 +1356,7 @@ export default {
         otherid: null,
         name: null,
         xb: null,
+        deptId: null,
         dwmc: null,
         dwjc: null,
         xrxzzw: null,
@@ -1392,6 +1423,7 @@ export default {
   },
   created() {
     this.getList();
+    this.getDeptList();
     this.getDicts("sys_user_sex").then((response) => {
       this.xbOptions = response.data;
     });
@@ -1495,6 +1527,24 @@ export default {
         this.loading = false;
       });
     },
+    // 查询部门
+    getDeptList() {
+      listDept(null).then((response) => {
+        this.deptOptions = response.data;
+      });
+    },
+    // 部门字典翻译
+    deptFormat(row, column) {
+      var actions = [];
+      var datas = this.deptOptions;
+      Object.keys(datas).map((key) => {
+        if (datas[key].deptId == "" + row.deptId) {
+          actions.push(datas[key].deptName);
+          return false;
+        }
+      });
+      return actions.join("");
+    },  
     // 性别字典翻译
     xbFormat(row, column) {
       return this.selectDictLabel(this.xbOptions, row.xb);
@@ -1580,6 +1630,7 @@ export default {
         otherid: null,
         name: null,
         xb: null,
+        deptId: null,
         dwmc: null,
         dwjc: null,
         xrxzzw: null,

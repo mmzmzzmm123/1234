@@ -46,6 +46,10 @@ public class TsbzGbjbqk extends BaseEntity {
     @Excel(name = "单位名称")
     private String dwmc;
 
+    /**部门id*/
+    @Excel(name = "部门Id")
+    private Long deptId;
+
     /**
      * 单位简称
      */
@@ -724,6 +728,7 @@ public class TsbzGbjbqk extends BaseEntity {
                 .append("csdCity", getCsdCity())
                 .append("csdAreaname", getCsdAreaname())
                 .append("csdArea", getCsdArea())
+                .append("deptId", getDeptId())
 
 
                 .toString();
@@ -735,5 +740,13 @@ public class TsbzGbjbqk extends BaseEntity {
 
     public void setUpdatetime(Date updatetime) {
         this.updatetime = updatetime;
+    }
+
+    public Long getDeptId() {
+        return deptId;
+    }
+
+    public void setDeptId(Long deptId) {
+        this.deptId = deptId;
     }
 }

@@ -238,7 +238,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="基地校" prop="deptid">
-              <el-input v-model="form.deptid" placeholder="请输入部门id" />
+              <el-input v-model="form.deptid" placeholder="请输入部门" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
