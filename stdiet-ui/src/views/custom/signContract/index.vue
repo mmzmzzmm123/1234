@@ -23,6 +23,15 @@
       <el-form-item label="姓名" prop="signName">
         <el-input v-model="form.signName" placeholder="请输入客户姓名"/>
       </el-form-item>
+      <el-form-item label="证件类型">
+        <el-select v-model="idType">
+          <el-option
+            v-for="opt in idTypeOptions"
+            :key="opt.value"
+            :label="opt.label"
+            :value="opt.value"/>
+        </el-select>
+      </el-form-item>
       <el-form-item label="证件号" prop="cusId">
         <el-input v-model="form.cusId" placeholder="请输入证件号"/>
       </el-form-item>
@@ -148,7 +157,7 @@
           return callback(new Error('证件号码不能为空'))
         }
         setTimeout(() => {
-          const {code, msg} = validatorIDCard(value);
+          const {code, msg} = validatorIDCard(value, this.idType);
           if (code === 1) {
             callback()
           } else {
@@ -162,6 +171,14 @@
         form: {},
         read: false,
         dialogVisible: false,
+        idType: 1,
+        idTypeOptions: [
+          {label: '身份证', value: 1},
+          {label: '港澳身份证', value: 2},
+          {label: '台湾身份证', value: 3},
+          {label: '护照', value: 4},
+          {label: '军官证', value: 5},
+        ],
         serveTimeIdOption: [
           {label: '7天', value: 7},
           {label: '1个月', value: 30},
