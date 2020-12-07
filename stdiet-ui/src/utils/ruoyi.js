@@ -252,7 +252,7 @@ export function validatorIDCard(idcode, type) {
     }
   } else if (type === 2) {
     const hkReg = /^([A-Z]\d{6,10}(\(\w{1}\))?)$/;
-    const mcReg = /^[1|5|7][0-9]{6}\([0-9Aa]\)/;
+    const mcReg = /^[1|5|7][0-9]{6}[0-9Aa]{1}$/;
     if (!hkReg.test(idcode) && !mcReg.test(idcode)) {
       return {code: -1, msg: '港澳居民来往内地通行证号码不合规'};
     } else {
