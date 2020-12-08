@@ -25,8 +25,8 @@ public class TsbzGbxrzw extends BaseEntity
     private Long gbid;
 
     /** 任职年月 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "任职年月", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM")
+    @Excel(name = "任职年月", width = 30, dateFormat = "yyyy-MM")
     private Date rzny;
 
     /** 行政职务 */
@@ -55,7 +55,9 @@ public class TsbzGbxrzw extends BaseEntity
 
     /** 创建时间 */
     @Excel(name = "创建时间")
-    private Long createtime;
+    private Date createtime;
+
+    private Long deptId;
 
     public void setId(Long id) 
     {
@@ -152,14 +154,23 @@ public class TsbzGbxrzw extends BaseEntity
             .append("qtzw", getQtzw())
             .append("createuser", getCreateuser())
             .append("createtime", getCreatetime())
+            .append("deptid", getDeptId())
             .toString();
     }
 
-    public Long getCreatetime() {
+    public Date getCreatetime() {
         return createtime;
     }
 
-    public void setCreatetime(Long createtime) {
+    public void setCreatetime(Date createtime) {
         this.createtime = createtime;
+    }
+
+    public Long getDeptId() {
+        return deptId;
+    }
+
+    public void setDeptId(Long deptId) {
+        this.deptId = deptId;
     }
 }

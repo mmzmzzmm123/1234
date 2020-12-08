@@ -22,8 +22,8 @@
           size="small"
           style="width: 200px"
           v-model="queryParams.rzny"
-          type="date"
-          value-format="yyyy-MM-dd"
+          type="month"
+          value-format="yyyy-MM"
           placeholder="选择任职年月"
         >
         </el-date-picker>
@@ -172,11 +172,11 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="编号" align="center" prop="id" />
-      <el-table-column label="姓名" align="center" prop="gbid" />
+      <!-- <el-table-column label="编号" align="center" prop="id" /> -->
+      <el-table-column label="姓名" align="center" prop="gbid" :formatter="gbmcFormat" />
       <el-table-column label="任职年月" align="center" prop="rzny" width="180">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.rzny, "{y}-{m}-{d}") }}</span>
+          <span>{{ parseTime(scope.row.rzny, "{y}-{m}") }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -246,9 +246,9 @@
     <!-- 添加或修改干部任职情况-现任职务对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
-        <el-form-item label="归属部门" prop="dept">
+        <el-form-item label="归属部门" prop="deptId">
           <treeselect
-            v-model="form.dept"
+            v-model="form.deptId"
             :options="deptOptions"
             :disable-branch-nodes="true"
             :show-count="true"
@@ -271,8 +271,8 @@
             size="small"
             style="width: 200px"
             v-model="form.rzny"
-            type="date"
-            value-format="yyyy-MM-dd"
+            type="month"
+            value-format="yyyy-MM"
             placeholder="选择任职年月"
           >
           </el-date-picker>
@@ -387,6 +387,8 @@ export default {
       deptOptions: [],
       // 干部选项
       gbOptions: [],
+      // 干部名称
+      gbmcOptions: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -400,7 +402,7 @@ export default {
         qtzw: null,
         createuser: null,
         createtime: null,
-        dept: null,
+        deptId: null,
       },
       // 查询参数
       queryParams_gb: {
@@ -409,16 +411,24 @@ export default {
       // 表单参数
       form: {},
       // 表单校验
-      rules: {},
+      rules: {
+        gbid: [
+          { required: true, message: "干部姓名不能为空", trigger: "blur" },
+        ],
+        rzny: [
+          { required: true, message: "任职年月不能为空", trigger: "blur" },
+        ],
+      },
     };
   },
   watch: {
     // 监听deptId
-    "form.dept": "handleBucketClick",
+    "form.deptId": "handleBucketClick",
   },
   created() {
     this.getList();
     this.getTreeselect();
+    this.getGbjbqkList();
     this.getDicts("sys_dm_xrxzzw").then((response) => {
       this.xzzwOptions = response.data;
     });
@@ -445,6 +455,13 @@ export default {
         this.loading = false;
       });
     },
+    /** 查询干部列表 */
+    getGbjbqkList() {
+      this.loading = true;
+      listGbjbqk(null).then((response) => {
+        this.gbmcOptions = response.rows;
+      });
+    },
     /** 查询部门下拉树结构 */
     getTreeselect() {
       treeselect().then((response) => {
@@ -452,18 +469,18 @@ export default {
       });
     },
 
-    // // 部门字典翻译
-    // deptFormat(row, column) {
-    //   var actions = [];
-    //   var datas = this.deptOptions;
-    //   Object.keys(datas).map((key) => {
-    //     if (datas[key].deptId == "" + row.deptId) {
-    //       actions.push(datas[key].deptName);
-    //       return false;
-    //     }
-    //   });
-    //   return actions.join("");
-    // },
+    // 干部字典翻译
+    gbmcFormat(row, column) {
+      var actions = [];
+      var datas = this.gbmcOptions;
+      Object.keys(datas).map((key) => {
+        if (datas[key].id == "" + row.gbid) {
+          actions.push(datas[key].name);
+          return false;
+        }
+      });
+      return actions.join("");
+    },
     handleBucketClick(value) {
       // console.log(value);
       this.queryParams_gb.deptId = value;
@@ -512,7 +529,7 @@ export default {
         qtzw: null,
         createuser: null,
         createtime: null,
-        dept: null,
+        deptId: null,
       };
       this.resetForm("form");
     },
@@ -545,7 +562,9 @@ export default {
       this.getTreeselect();
       const id = row.id || this.ids;
       getGbxrzw(id).then((response) => {
+        this.form.deptId = response.data.deptId;
         this.form = response.data;
+        //console.log(response.data);
         this.open = true;
         this.title = "修改干部任职情况-现任职务";
       });

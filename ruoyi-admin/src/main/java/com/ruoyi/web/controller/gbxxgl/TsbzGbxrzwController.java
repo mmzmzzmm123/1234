@@ -1,6 +1,9 @@
 package com.ruoyi.web.controller.gbxxgl;
 
+import java.util.Date;
 import java.util.List;
+
+import com.ruoyi.common.utils.SecurityUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -76,6 +79,17 @@ public class TsbzGbxrzwController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody TsbzGbxrzw tsbzGbxrzw)
     {
+        //先判断是否已经创建当前任职年月的干部信息
+        TsbzGbxrzw tsbzGbxrzwNew = new TsbzGbxrzw();
+        tsbzGbxrzwNew.setGbid(tsbzGbxrzw.getGbid());
+        tsbzGbxrzwNew.setRzny(tsbzGbxrzw.getRzny());
+        List<TsbzGbxrzw> selectList = tsbzGbxrzwService.selectTsbzGbxrzwList(tsbzGbxrzwNew);
+        if (selectList != null && selectList.size() > 0) {
+            return AjaxResult.error("当前干部任职年月信息已创建,无法重复创建");
+        }
+
+        tsbzGbxrzw.setCreatetime(new Date());
+        tsbzGbxrzw.setCreateuser(SecurityUtils.getLoginUser().getUser().getUserId());
         return toAjax(tsbzGbxrzwService.insertTsbzGbxrzw(tsbzGbxrzw));
     }
 
@@ -87,6 +101,14 @@ public class TsbzGbxrzwController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody TsbzGbxrzw tsbzGbxrzw)
     {
+//        //先判断是否已经创建当前任职年月的干部信息
+//        TsbzGbxrzw tsbzGbxrzwNew = new TsbzGbxrzw();
+//        tsbzGbxrzwNew.setGbid(tsbzGbxrzw.getGbid());
+//        tsbzGbxrzwNew.setRzny(tsbzGbxrzw.getRzny());
+//        List<TsbzGbxrzw> selectList = tsbzGbxrzwService.selectTsbzGbxrzwList(tsbzGbxrzwNew);
+//        if (selectList != null && selectList.size() > 0) {
+//            return AjaxResult.error("当前干部任职年月信息已创建,无法重复创建");
+//        }
         return toAjax(tsbzGbxrzwService.updateTsbzGbxrzw(tsbzGbxrzw));
     }
 
