@@ -253,7 +253,6 @@
             :disable-branch-nodes="true"
             :show-count="true"
             placeholder="请选择归属部门"
-            @node-click="handleBucketClick"
           />
         </el-form-item>
         <el-form-item label="姓名" prop="gbid">
@@ -413,6 +412,10 @@ export default {
       rules: {},
     };
   },
+  watch: {
+    // 监听deptId
+    "form.dept": "handleBucketClick",
+  },
   created() {
     this.getList();
     this.getTreeselect();
@@ -462,11 +465,11 @@ export default {
     //   return actions.join("");
     // },
     handleBucketClick(value) {
-      console.log(value);
+      // console.log(value);
       this.queryParams_gb.deptId = value;
       if (this.queryParams_gb.deptId != null) {
         listGbjbqk(this.queryParams_gb).then((response) => {
-          console.log(response.rows);
+          // console.log(response.rows);
           this.gbOptions = response.rows;
         });
       }
