@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.gbxxgl.mapper.TsbzGbgzjlMapper">
+
+    <resultMap type="TsbzGbgzjl" id="TsbzGbgzjlResult">
+        <result property="id" column="id"/>
+        <result property="gbid" column="gbid"/>
+        <result property="gzdwid" column="gzdwid"/>
+        <result property="gzdwmc" column="gzdwmc"/>
+        <result property="qsny" column="qsny"/>
+        <result property="zzny" column="zzny"/>
+        <result property="zzzw" column="zzzw"/>
+        <result property="dnzw" column="dnzw"/>
+        <result property="qtzw" column="qtzw"/>
+        <result property="rjxk" column="rjxk"/>
+        <result property="gzgw" column="gzgw"/>
+        <result property="createUserid" column="create_userid"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <sql id="selectTsbzGbgzjlVo">
+        select id, gbid, gzdwid, gzdwmc, qsny, zzny, zzzw, dnzw, qtzw, rjxk, gzgw, create_userid, create_time from tsbz_gbgzjl
+    </sql>
+
+    <select id="selectTsbzGbgzjlList" parameterType="TsbzGbgzjl" resultMap="TsbzGbgzjlResult">
+        <include refid="selectTsbzGbgzjlVo"/>
+        <where>
+            <if test="gbid != null ">and gbid = #{gbid}</if>
+            <if test="gzdwid != null  and gzdwid != ''">and gzdwid = #{gzdwid}</if>
+            <if test="gzdwmc != null  and gzdwmc != ''">and gzdwmc = #{gzdwmc}</if>
+            <if test="qsny != null ">and qsny = #{qsny}</if>
+            <if test="zzny != null ">and zzny = #{zzny}</if>
+            <if test="zzzw != null  and zzzw != ''">and zzzw = #{zzzw}</if>
+            <if test="dnzw != null  and dnzw != ''">and dnzw = #{dnzw}</if>
+            <if test="qtzw != null  and qtzw != ''">and qtzw = #{qtzw}</if>
+            <if test="rjxk != null  and rjxk != ''">and rjxk = #{rjxk}</if>
+            <if test="gzgw != null  and gzgw != ''">and gzgw = #{gzgw}</if>
+            <if test="createUserid != null ">and create_userid = #{createUserid}</if>
+        </where>
+    </select>
+
+    <select id="selectTsbzGbgzjlById" parameterType="Long" resultMap="TsbzGbgzjlResult">
+        <include refid="selectTsbzGbgzjlVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertTsbzGbgzjl" parameterType="TsbzGbgzjl" useGeneratedKeys="true" keyProperty="id">
+        insert into tsbz_gbgzjl
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="gbid != null">gbid,</if>
+            <if test="gzdwid != null">gzdwid,</if>
+            <if test="gzdwmc != null">gzdwmc,</if>
+            <if test="qsny != null">qsny,</if>
+            <if test="zzny != null">zzny,</if>
+            <if test="zzzw != null">zzzw,</if>
+            <if test="dnzw != null">dnzw,</if>
+            <if test="qtzw != null">qtzw,</if>
+            <if test="rjxk != null">rjxk,</if>
+            <if test="gzgw != null">gzgw,</if>
+            <if test="createUserid != null">create_userid,</if>
+            <if test="createTime != null">create_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="gbid != null">#{gbid},</if>
+            <if test="gzdwid != null">#{gzdwid},</if>
+            <if test="gzdwmc != null">#{gzdwmc},</if>
+            <if test="qsny != null">#{qsny},</if>
+            <if test="zzny != null">#{zzny},</if>
+            <if test="zzzw != null">#{zzzw},</if>
+            <if test="dnzw != null">#{dnzw},</if>
+            <if test="qtzw != null">#{qtzw},</if>
+            <if test="rjxk != null">#{rjxk},</if>
+            <if test="gzgw != null">#{gzgw},</if>
+            <if test="createUserid != null">#{createUserid},</if>
+            <if test="createTime != null">#{createTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateTsbzGbgzjl" parameterType="TsbzGbgzjl">
+        update tsbz_gbgzjl
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="gbid != null">gbid = #{gbid},</if>
+            <if test="gzdwid != null">gzdwid = #{gzdwid},</if>
+            <if test="gzdwmc != null">gzdwmc = #{gzdwmc},</if>
+            <if test="qsny != null">qsny = #{qsny},</if>
+            <if test="zzny != null">zzny = #{zzny},</if>
+            <if test="zzzw != null">zzzw = #{zzzw},</if>
+            <if test="dnzw != null">dnzw = #{dnzw},</if>
+            <if test="qtzw != null">qtzw = #{qtzw},</if>
+            <if test="rjxk != null">rjxk = #{rjxk},</if>
+            <if test="gzgw != null">gzgw = #{gzgw},</if>
+            <if test="createUserid != null">create_userid = #{createUserid},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTsbzGbgzjlById" parameterType="Long">
+        delete from tsbz_gbgzjl where id = #{id}
+    </delete>
+
+    <delete id="deleteTsbzGbgzjlByIds" parameterType="String">
+        delete from tsbz_gbgzjl where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

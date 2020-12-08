@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.gbxxgl.mapper.TsbzGuazhijlMapper">
+
+    <resultMap type="TsbzGuazhijl" id="TsbzGuazhijlResult">
+        <result property="id" column="id"/>
+        <result property="gbid" column="gbid"/>
+        <result property="gzdw" column="gzdw"/>
+        <result property="qsny" column="qsny"/>
+        <result property="zzny" column="zzny"/>
+        <result property="djds" column="djds"/>
+        <result property="createUserid" column="create_userid"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <sql id="selectTsbzGuazhijlVo">
+        select id, gbid, gzdw, qsny, zzny, djds, create_userid, create_time from tsbz_guazhijl
+    </sql>
+
+    <select id="selectTsbzGuazhijlList" parameterType="TsbzGuazhijl" resultMap="TsbzGuazhijlResult">
+        <include refid="selectTsbzGuazhijlVo"/>
+        <where>
+            <if test="gbid != null ">and gbid = #{gbid}</if>
+            <if test="gzdw != null  and gzdw != ''">and gzdw = #{gzdw}</if>
+            <if test="qsny != null ">and qsny = #{qsny}</if>
+            <if test="zzny != null ">and zzny = #{zzny}</if>
+            <if test="djds != null  and djds != ''">and djds = #{djds}</if>
+            <if test="createUserid != null ">and create_userid = #{createUserid}</if>
+        </where>
+    </select>
+
+    <select id="selectTsbzGuazhijlById" parameterType="Long" resultMap="TsbzGuazhijlResult">
+        <include refid="selectTsbzGuazhijlVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertTsbzGuazhijl" parameterType="TsbzGuazhijl" useGeneratedKeys="true" keyProperty="id">
+        insert into tsbz_guazhijl
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="gbid != null">gbid,</if>
+            <if test="gzdw != null">gzdw,</if>
+            <if test="qsny != null">qsny,</if>
+            <if test="zzny != null">zzny,</if>
+            <if test="djds != null">djds,</if>
+            <if test="createUserid != null">create_userid,</if>
+            <if test="createTime != null">create_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="gbid != null">#{gbid},</if>
+            <if test="gzdw != null">#{gzdw},</if>
+            <if test="qsny != null">#{qsny},</if>
+            <if test="zzny != null">#{zzny},</if>
+            <if test="djds != null">#{djds},</if>
+            <if test="createUserid != null">#{createUserid},</if>
+            <if test="createTime != null">#{createTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateTsbzGuazhijl" parameterType="TsbzGuazhijl">
+        update tsbz_guazhijl
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="gbid != null">gbid = #{gbid},</if>
+            <if test="gzdw != null">gzdw = #{gzdw},</if>
+            <if test="qsny != null">qsny = #{qsny},</if>
+            <if test="zzny != null">zzny = #{zzny},</if>
+            <if test="djds != null">djds = #{djds},</if>
+            <if test="createUserid != null">create_userid = #{createUserid},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTsbzGuazhijlById" parameterType="Long">
+        delete from tsbz_guazhijl where id = #{id}
+    </delete>
+
+    <delete id="deleteTsbzGuazhijlByIds" parameterType="String">
+        delete from tsbz_guazhijl where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

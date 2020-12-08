@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.gbxxgl.mapper.TsbzGbpxjlMapper">
+
+    <resultMap type="TsbzGbpxjl" id="TsbzGbpxjlResult">
+        <result property="id" column="id"/>
+        <result property="gbid" column="gbid"/>
+        <result property="pxbmc" column="pxbmc"/>
+        <result property="pxdd" column="pxdd"/>
+        <result property="pxjb" column="pxjb"/>
+        <result property="zw" column="zw"/>
+        <result property="qsny" column="qsny"/>
+        <result property="zzny" column="zzny"/>
+        <result property="createUserid" column="create_userid"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <sql id="selectTsbzGbpxjlVo">
+        select id, gbid, pxbmc, pxdd, pxjb, zw, qsny, zzny, create_userid, create_time from tsbz_gbpxjl
+    </sql>
+
+    <select id="selectTsbzGbpxjlList" parameterType="TsbzGbpxjl" resultMap="TsbzGbpxjlResult">
+        <include refid="selectTsbzGbpxjlVo"/>
+        <where>
+            <if test="gbid != null ">and gbid = #{gbid}</if>
+            <if test="pxbmc != null  and pxbmc != ''">and pxbmc = #{pxbmc}</if>
+            <if test="pxdd != null  and pxdd != ''">and pxdd = #{pxdd}</if>
+            <if test="pxjb != null  and pxjb != ''">and pxjb = #{pxjb}</if>
+            <if test="zw != null  and zw != ''">and zw = #{zw}</if>
+            <if test="qsny != null ">and qsny = #{qsny}</if>
+            <if test="zzny != null ">and zzny = #{zzny}</if>
+            <if test="createUserid != null ">and create_userid = #{createUserid}</if>
+        </where>
+    </select>
+
+    <select id="selectTsbzGbpxjlById" parameterType="Long" resultMap="TsbzGbpxjlResult">
+        <include refid="selectTsbzGbpxjlVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertTsbzGbpxjl" parameterType="TsbzGbpxjl" useGeneratedKeys="true" keyProperty="id">
+        insert into tsbz_gbpxjl
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="gbid != null">gbid,</if>
+            <if test="pxbmc != null">pxbmc,</if>
+            <if test="pxdd != null">pxdd,</if>
+            <if test="pxjb != null">pxjb,</if>
+            <if test="zw != null">zw,</if>
+            <if test="qsny != null">qsny,</if>
+            <if test="zzny != null">zzny,</if>
+            <if test="createUserid != null">create_userid,</if>
+            <if test="createTime != null">create_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="gbid != null">#{gbid},</if>
+            <if test="pxbmc != null">#{pxbmc},</if>
+            <if test="pxdd != null">#{pxdd},</if>
+            <if test="pxjb != null">#{pxjb},</if>
+            <if test="zw != null">#{zw},</if>
+            <if test="qsny != null">#{qsny},</if>
+            <if test="zzny != null">#{zzny},</if>
+            <if test="createUserid != null">#{createUserid},</if>
+            <if test="createTime != null">#{createTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateTsbzGbpxjl" parameterType="TsbzGbpxjl">
+        update tsbz_gbpxjl
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="gbid != null">gbid = #{gbid},</if>
+            <if test="pxbmc != null">pxbmc = #{pxbmc},</if>
+            <if test="pxdd != null">pxdd = #{pxdd},</if>
+            <if test="pxjb != null">pxjb = #{pxjb},</if>
+            <if test="zw != null">zw = #{zw},</if>
+            <if test="qsny != null">qsny = #{qsny},</if>
+            <if test="zzny != null">zzny = #{zzny},</if>
+            <if test="createUserid != null">create_userid = #{createUserid},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTsbzGbpxjlById" parameterType="Long">
+        delete from tsbz_gbpxjl where id = #{id}
+    </delete>
+
+    <delete id="deleteTsbzGbpxjlByIds" parameterType="String">
+        delete from tsbz_gbpxjl where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
