@@ -45,11 +45,11 @@ public class TsbzJxjscjController extends BaseController {
     public TableDataInfo list(TsbzJxjscj tsbzJxjscj) {
         //首先判断是否为学校用户
         String jdxId = schoolCommonController.deptIdToJdxId();
+        TsbzJxjsjbxx tsbzJxjsjbxx = new TsbzJxjsjbxx();
         if (!schoolCommonController.isStringEmpty(jdxId)) {
-            TsbzJxjsjbxx tsbzJxjsjbxx=new TsbzJxjsjbxx();
             tsbzJxjsjbxx.setJdxid(jdxId);
-            tsbzJxjscj.setTsbzJxjsjbxx(tsbzJxjsjbxx);
         }
+        tsbzJxjscj.setTsbzJxjsjbxx(tsbzJxjsjbxx);
 
         startPage();
         List<TsbzJxjscj> list = tsbzJxjscjService.selectTsbzJxjscjList(tsbzJxjscj);
