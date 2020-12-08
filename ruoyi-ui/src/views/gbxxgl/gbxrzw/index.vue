@@ -253,10 +253,11 @@
             :disable-branch-nodes="true"
             :show-count="true"
             placeholder="请选择归属部门"
+            :disabled="flag"
           />
         </el-form-item>
         <el-form-item label="姓名" prop="gbid">
-          <el-select v-model="form.gbid" placeholder="姓名">
+          <el-select v-model="form.gbid" placeholder="姓名" :disabled="flag">
             <el-option
               v-for="dict in gbOptions"
               :key="dict.id"
@@ -357,6 +358,7 @@ export default {
     return {
       // 遮罩层
       loading: true,
+      flag: null,
       // 选中数组
       ids: [],
       // 非单个禁用
@@ -553,6 +555,7 @@ export default {
     handleAdd() {
       this.reset();
       this.getTreeselect();
+      this.flag = false;
       this.open = true;
       this.title = "添加干部任职情况-现任职务";
     },
@@ -564,7 +567,8 @@ export default {
       getGbxrzw(id).then((response) => {
         this.form.deptId = response.data.deptId;
         this.form = response.data;
-        //console.log(response.data);
+        // console.log(response.data);
+        this.flag = true;
         this.open = true;
         this.title = "修改干部任职情况-现任职务";
       });

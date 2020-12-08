@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.gbxxgl.mapper.TsbzGbshzwMapper">
+    
+    <resultMap type="TsbzGbshzw" id="TsbzGbshzwResult">
+        <result property="id"    column="id"    />
+        <result property="gbid"    column="gbid"    />
+        <result property="rzqsny"    column="rzqsny"    />
+        <result property="rzzzny"    column="rzzzny"    />
+        <result property="jb"    column="jb"    />
+        <result property="jibie"    column="jibie"    />
+        <result property="name"    column="name"    />
+        <result property="createuser"    column="createuser"    />
+        <result property="createtime"    column="createtime"    />
+    </resultMap>
+
+    <sql id="selectTsbzGbshzwVo">
+        select id, gbid, rzqsny, rzzzny, jb, jibie, name, createuser, createtime from tsbz_gbshzw
+    </sql>
+
+    <select id="selectTsbzGbshzwList" parameterType="TsbzGbshzw" resultMap="TsbzGbshzwResult">
+        <include refid="selectTsbzGbshzwVo"/>
+        <where>  
+            <if test="gbid != null "> and gbid = #{gbid}</if>
+            <if test="rzqsny != null "> and rzqsny = #{rzqsny}</if>
+            <if test="rzzzny != null "> and rzzzny = #{rzzzny}</if>
+            <if test="jb != null  and jb != ''"> and jb = #{jb}</if>
+            <if test="jibie != null  and jibie != ''"> and jibie = #{jibie}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="createuser != null "> and createuser = #{createuser}</if>
+            <if test="createtime != null "> and createtime = #{createtime}</if>
+        </where>
+    </select>
+    
+    <select id="selectTsbzGbshzwById" parameterType="Long" resultMap="TsbzGbshzwResult">
+        select a.id, a.gbid, a.rzqsny, a.rzzzny, a.jb, a.jibie, a.name, a.createuser, a.createtime,
+        b.dept_id as deptid
+        from tsbz_gbshzw a
+        left join tsbz_gbjbqk b
+        on a.gbid=b.id
+        where a.id = #{id}
+    </select>
+        
+    <insert id="insertTsbzGbshzw" parameterType="TsbzGbshzw">
+        insert into tsbz_gbshzw
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="gbid != null">gbid,</if>
+            <if test="rzqsny != null">rzqsny,</if>
+            <if test="rzzzny != null">rzzzny,</if>
+            <if test="jb != null">jb,</if>
+            <if test="jibie != null">jibie,</if>
+            <if test="name != null">name,</if>
+            <if test="createuser != null">createuser,</if>
+            <if test="createtime != null">createtime,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="gbid != null">#{gbid},</if>
+            <if test="rzqsny != null">#{rzqsny},</if>
+            <if test="rzzzny != null">#{rzzzny},</if>
+            <if test="jb != null">#{jb},</if>
+            <if test="jibie != null">#{jibie},</if>
+            <if test="name != null">#{name},</if>
+            <if test="createuser != null">#{createuser},</if>
+            <if test="createtime != null">#{createtime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTsbzGbshzw" parameterType="TsbzGbshzw">
+        update tsbz_gbshzw
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="gbid != null">gbid = #{gbid},</if>
+            <if test="rzqsny != null">rzqsny = #{rzqsny},</if>
+            <if test="rzzzny != null">rzzzny = #{rzzzny},</if>
+            <if test="jb != null">jb = #{jb},</if>
+            <if test="jibie != null">jibie = #{jibie},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="createuser != null">createuser = #{createuser},</if>
+            <if test="createtime != null">createtime = #{createtime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTsbzGbshzwById" parameterType="Long">
+        delete from tsbz_gbshzw where id = #{id}
+    </delete>
+
+    <delete id="deleteTsbzGbshzwByIds" parameterType="String">
+        delete from tsbz_gbshzw where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>
