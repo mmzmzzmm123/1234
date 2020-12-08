@@ -254,20 +254,20 @@
     </pluginRepositories>
 
     <profiles>
-        <!-- dev开发环境配置,release为生产环境配置 -->
         <profile>
-            <id>dev</id>
+            <id>local</id>
             <properties>
-                <profileActive>dev</profileActive>
+                <profileActive>local</profileActive>
             </properties>
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
         </profile>
+        <!-- dev开发环境配置,release为生产环境配置 -->
         <profile>
-            <id>local</id>
+            <id>dev</id>
             <properties>
-                <profileActive>local</profileActive>
+                <profileActive>dev</profileActive>
             </properties>
         </profile>
         <profile>

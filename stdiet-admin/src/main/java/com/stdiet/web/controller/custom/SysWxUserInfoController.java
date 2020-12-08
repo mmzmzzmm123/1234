@@ -144,15 +144,15 @@ public class SysWxUserInfoController extends BaseController {
     }
 
     @GetMapping("/wx/user/list")
-    public AjaxResult userList(SysWxUserInfo sysWxUserInfo) {
+    public TableDataInfo userList(SysWxUserInfo sysWxUserInfo) {
         startPage();
-        List<SysWxUserInfo> list = sysWxUserInfoService.selectSysWxUserInfoList(sysWxUserInfo);
+        List<SysWxUserInfo> list = sysWxUserInfoService.selectSysWxUserInfoListNot(sysWxUserInfo);
 
         for (SysWxUserInfo userInfo : list) {
             if (StringUtils.isNotEmpty(userInfo.getPhone())) {
                 userInfo.setPhone(userInfo.getPhone().replaceAll("(\\d{3})\\d{4}(\\d{4})", "$1****$2"));
             }
         }
-        return AjaxResult.success(list);
+        return getDataTable(list);
     }
 }
