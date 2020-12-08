@@ -1400,6 +1400,8 @@ export default {
         phone: null,
         rjxk: null,
         jkzk: null,
+        createUser: null,
+        createTime: null,        
       },
       // 表单参数
       form: {},
@@ -1674,6 +1676,8 @@ export default {
         phone: null,
         rjxk: null,
         jkzk: null,
+        createTime: null,
+        createUser: null,
       };
       this.diglogForm.province = "";
       this.diglogForm.city = "";

@@ -156,6 +156,7 @@ public class TsbzGbjbqk extends BaseEntity {
     private String jgArea;
 
 
+
     /**
      * 出生地所在省名称
      */
@@ -198,6 +199,18 @@ public class TsbzGbjbqk extends BaseEntity {
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "出生日期", width = 30, dateFormat = "yyyy-MM-dd")
     private Date csrq;
+
+
+
+    /**
+     * 创建时间
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "创建时间", width = 30, dateFormat = "yyyy-MM-dd")
+    private Date createTime;
+
+    // 创建人
+    private Long createUser;
 
     /**
      * 参加工作年月
@@ -729,6 +742,8 @@ public class TsbzGbjbqk extends BaseEntity {
                 .append("csdAreaname", getCsdAreaname())
                 .append("csdArea", getCsdArea())
                 .append("deptId", getDeptId())
+                .append("createTime", getCreateTime())
+                .append("createUser", getCreateUser())
 
 
                 .toString();
@@ -749,4 +764,23 @@ public class TsbzGbjbqk extends BaseEntity {
     public void setDeptId(Long deptId) {
         this.deptId = deptId;
     }
+
+    @Override
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    @Override
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Long getCreateUser() {
+        return createUser;
+    }
+
+    public void setCreateUser(Long createUser) {
+        this.createUser = createUser;
+    }
 }
+

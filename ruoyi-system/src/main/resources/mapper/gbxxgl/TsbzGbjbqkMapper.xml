@@ -53,10 +53,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="phone"    column="phone"    />
         <result property="rjxk"    column="rjxk"    />
         <result property="jkzk"    column="jkzk"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createUser"    column="create_user"    />
     </resultMap>
 
     <sql id="selectTsbzGbjbqkVo">
-        select id, otherid, name, xb, dept_id, dwmc, dwjc, xrxzzw, xrdnzw, xrqtzw, rxzwny, xrxzzj, xzzjqdny, sfhbgb, hbgbqdny, sfzh, updatetime, mz, jg, jg_province, jg_cityname, jg_city, jg_areaname, jg_area, csd, csd_province, csd_cityname, csd_city, csd_areaname, csd_area,  csrq, cjgzny, jtzz, dwdz, xl, xw, byyx, jylx, zc, jzcyqk, nfkc, hyzk, zzmm, rdsj, bgsdh, phone, rjxk, jkzk from tsbz_gbjbqk
+        select id, otherid, name, xb, dept_id, dwmc, dwjc, xrxzzw, xrdnzw, xrqtzw, rxzwny, xrxzzj, xzzjqdny, sfhbgb, hbgbqdny, sfzh, updatetime, mz, jg, jg_province, jg_cityname, jg_city, jg_areaname, jg_area, csd, csd_province, csd_cityname, csd_city, csd_areaname, csd_area,  csrq, cjgzny, jtzz, dwdz, xl, xw, byyx, jylx, zc, jzcyqk, nfkc, hyzk, zzmm, rdsj, bgsdh, phone, rjxk, jkzk, create_user, create_time from tsbz_gbjbqk
     </sql>
 
     <select id="selectTsbzGbjbqkList" parameterType="TsbzGbjbqk" resultMap="TsbzGbjbqkResult">
@@ -109,6 +111,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
             <if test="rjxk != null  and rjxk != ''"> and rjxk = #{rjxk}</if>
             <if test="jkzk != null  and jkzk != ''"> and jkzk = #{jkzk}</if>
+            <if test="createUser != null  and createUser != ''"> and create_user = #{createUser}</if>
+            <if test="createTime != null  and createTime != ''"> and create_time = #{createTime}</if>
         </where>
     </select>
     
@@ -167,6 +171,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="phone != null">phone,</if>
             <if test="rjxk != null">rjxk,</if>
             <if test="jkzk != null">jkzk,</if>
+            <if test="createUser != null">create_user,</if>
+            <if test="createTime != null">create_time,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="otherid != null">#{otherid},</if>
@@ -216,6 +222,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="phone != null">#{phone},</if>
             <if test="rjxk != null">#{rjxk},</if>
             <if test="jkzk != null">#{jkzk},</if>
+            <if test="createUser != null">#{create_user},</if>
+            <if test="createTime != null">#{create_time},</if>
          </trim>
     </insert>
 
@@ -268,6 +276,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="phone != null">phone = #{phone},</if>
             <if test="rjxk != null">rjxk = #{rjxk},</if>
             <if test="jkzk != null">jkzk = #{jkzk},</if>
+            <if test="createUser != null">create_user = #{createUser},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
         </trim>
         where id = #{id}
     </update>
