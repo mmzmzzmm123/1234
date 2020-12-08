@@ -27,6 +27,8 @@ public interface SysWxUserInfoMapper
      */
     public List<SysWxUserInfo> selectSysWxUserInfoList(SysWxUserInfo sysWxUserInfo);
 
+    public List<SysWxUserInfo> selectSysWxUserInfoListNot(SysWxUserInfo sysWxUserInfo);
+
     /**
      * 新增微信用户
      *

@@ -44,6 +44,11 @@ public class SysWxUserInfoServiceImpl implements ISysWxUserInfoService
         return sysWxUserInfoMapper.selectSysWxUserInfoList(sysWxUserInfo);
     }
 
+    @Override
+    public List<SysWxUserInfo> selectSysWxUserInfoListNot(SysWxUserInfo sysWxUserInfo) {
+        return sysWxUserInfoMapper.selectSysWxUserInfoListNot(sysWxUserInfo);
+    }
+
     /**
      * 新增微信用户
      *

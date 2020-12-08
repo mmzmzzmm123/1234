@@ -35,6 +35,17 @@
         </where>
     </select>
 
+    <select id="selectSysWxUserInfoListNot" parameterType="SysWxUserInfo" resultMap="SysWxUserInfoResult">
+        <include refid="selectSysWxUserInfoVo"/>
+        <where>
+            <if test="nickName != null  and nickName != ''"> and nick_name like concat('%', #{nickName}, '%')</if>
+            <if test="appid != null  and appid != ''"> and appid = #{appid}</if>
+            <if test="openid != null  and openid != ''"> and openid != #{openid}</if>
+            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+            <if test="sex != null  and sex != ''"> and sex = #{sex}</if>
+        </where>
+    </select>
+
     <select id="selectSysWxUserInfoById" parameterType="String" resultMap="SysWxUserInfoResult">
         <include refid="selectSysWxUserInfoVo"/>
         where openid = #{openid}
