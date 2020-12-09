@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.gbxxgl.mapper.TsbzGbcrjqkMapper">
+    
+    <resultMap type="TsbzGbcrjqk" id="TsbzGbcrjqkResult">
+        <result property="id"    column="id"    />
+        <result property="gbid"    column="gbid"    />
+        <result property="qsrq"    column="qsrq"    />
+        <result property="zzrq"    column="zzrq"    />
+        <result property="xz"    column="xz"    />
+        <result property="mdd"    column="mdd"    />
+        <result property="sy"    column="sy"    />
+        <result property="createUser"    column="create_user"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectTsbzGbcrjqkVo">
+        select id, gbid, qsrq, zzrq, xz, mdd, sy, create_user, create_time from tsbz_gbcrjqk
+    </sql>
+
+    <select id="selectTsbzGbcrjqkList" parameterType="TsbzGbcrjqk" resultMap="TsbzGbcrjqkResult">
+        <include refid="selectTsbzGbcrjqkVo"/>
+        <where>  
+            <if test="gbid != null "> and gbid = #{gbid}</if>
+            <if test="qsrq != null "> and qsrq = #{qsrq}</if>
+            <if test="zzrq != null "> and zzrq = #{zzrq}</if>
+            <if test="xz != null  and xz != ''"> and xz = #{xz}</if>
+            <if test="mdd != null  and mdd != ''"> and mdd = #{mdd}</if>
+            <if test="sy != null  and sy != ''"> and sy = #{sy}</if>
+            <if test="createUser != null "> and create_user = #{createUser}</if>
+        </where>
+    </select>
+    
+    <select id="selectTsbzGbcrjqkById" parameterType="Long" resultMap="TsbzGbcrjqkResult">
+        select a.id, a.gbid, a.qsrq, a.zzrq, a.xz, a.mdd, a.sy, a.create_user, a.create_time,
+        b.dept_id as deptid
+        from tsbz_gbcrjqk a
+        left join tsbz_gbjbqk b
+        on a.gbid=b.id
+        where a.id = #{id}
+    </select>
+        
+    <insert id="insertTsbzGbcrjqk" parameterType="TsbzGbcrjqk" useGeneratedKeys="true" keyProperty="id">
+        insert into tsbz_gbcrjqk
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="gbid != null">gbid,</if>
+            <if test="qsrq != null">qsrq,</if>
+            <if test="zzrq != null">zzrq,</if>
+            <if test="xz != null">xz,</if>
+            <if test="mdd != null">mdd,</if>
+            <if test="sy != null">sy,</if>
+            <if test="createUser != null">create_user,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="gbid != null">#{gbid},</if>
+            <if test="qsrq != null">#{qsrq},</if>
+            <if test="zzrq != null">#{zzrq},</if>
+            <if test="xz != null">#{xz},</if>
+            <if test="mdd != null">#{mdd},</if>
+            <if test="sy != null">#{sy},</if>
+            <if test="createUser != null">#{createUser},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTsbzGbcrjqk" parameterType="TsbzGbcrjqk">
+        update tsbz_gbcrjqk
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="gbid != null">gbid = #{gbid},</if>
+            <if test="qsrq != null">qsrq = #{qsrq},</if>
+            <if test="zzrq != null">zzrq = #{zzrq},</if>
+            <if test="xz != null">xz = #{xz},</if>
+            <if test="mdd != null">mdd = #{mdd},</if>
+            <if test="sy != null">sy = #{sy},</if>
+            <if test="createUser != null">create_user = #{createUser},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTsbzGbcrjqkById" parameterType="Long">
+        delete from tsbz_gbcrjqk where id = #{id}
+    </delete>
+
+    <delete id="deleteTsbzGbcrjqkByIds" parameterType="String">
+        delete from tsbz_gbcrjqk where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

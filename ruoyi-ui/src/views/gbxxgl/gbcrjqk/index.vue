@@ -1,49 +1,42 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="102px">
+    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
       <el-form-item label="姓名" prop="gbid">
         <el-input
           v-model="queryParams.gbid"
-          placeholder="请输入姓名"
+          placeholder="请输入干部姓名"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="职务级别" prop="jibie">
-        <el-select v-model="queryParams.jibie" placeholder="请选择职务级别" clearable size="small">
+      <el-form-item label="性质" prop="xz">
+        <el-select v-model="queryParams.xz" placeholder="请选择性质" clearable size="small">
           <el-option
-            v-for="dict in jibieOptions"
+            v-for="dict in xzOptions"
             :key="dict.dictValue"
             :label="dict.dictLabel"
             :value="dict.dictValue"
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="职务名称" prop="name">
+      <el-form-item label="事由" prop="sy">
         <el-input
-          v-model="queryParams.name"
-          placeholder="请输入职务名称"
+          v-model="queryParams.sy"
+          placeholder="请输入事由"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="任职起始年月" prop="rzqsny">
-        <el-date-picker clearable size="small" style="width: 200px"
-          v-model="queryParams.rzqsny"
-          type="month"
-          value-format="yyyy-MM"
-          placeholder="选择任职起始年月">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item label="任职终止年月" prop="rzzzny">
-        <el-date-picker clearable size="small" style="width: 200px"
-          v-model="queryParams.rzzzny"
-          type="month"
-          value-format="yyyy-MM"
-          placeholder="选择任职终止年月">
-        </el-date-picker>
+      <el-form-item label="目的地" prop="mdd">
+        <el-input
+          v-model="queryParams.mdd"
+          placeholder="请输入目的地"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
       </el-form-item>
       <el-form-item>
         <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -58,7 +51,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['gbxxgl:gbshzw:add']"
+          v-hasPermi="['gbxxgl:gbcrjqk:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -68,7 +61,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['gbxxgl:gbshzw:edit']"
+          v-hasPermi="['gbxxgl:gbcrjqk:edit']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -78,28 +71,38 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['gbxxgl:gbshzw:remove']"
+          v-hasPermi="['gbxxgl:gbcrjqk:remove']"
         >删除</el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="warning"
+          icon="el-icon-download"
+          size="mini"
+          @click="handleExport"
+          v-hasPermi="['gbxxgl:gbcrjqk:export']"
+        >导出</el-button>
       </el-col>
 	  <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="gbshzwList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="gbcrjqkList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="姓名" align="center" prop="gbid" :formatter="gbmcFormat" />
-      <el-table-column label="任职起始年月" align="center" prop="rzqsny" width="180">
+      <el-table-column label="编号" align="center" prop="id" />
+      <el-table-column label="姓名" align="center" prop="gbid" :formatter="gbmcFormat"/>
+      <el-table-column label="起始日期" align="center" prop="qsrq" width="180">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.rzqsny, '{y}-{m}') }}</span>
+          <span>{{ parseTime(scope.row.qsrq, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="任职终止年月" align="center" prop="rzzzny" width="180">
+      <el-table-column label="终止日期" align="center" prop="zzrq" width="180">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.rzzzny, '{y}-{m}') }}</span>
+          <span>{{ parseTime(scope.row.zzrq, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="届别" align="center" prop="jb" :formatter="jbFormat" />
-      <el-table-column label="职务级别" align="center" prop="jibie" :formatter="jibieFormat" />
-      <el-table-column label="职务名称" align="center" prop="name" />
+      <el-table-column label="性质" align="center" prop="xz" :formatter="xzFormat" />
+      <el-table-column label="目的地" align="center" prop="mdd" />
+      <el-table-column label="事由" align="center" prop="sy" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -107,14 +110,14 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['gbxxgl:gbshzw:edit']"
+            v-hasPermi="['gbxxgl:gbcrjqk:edit']"
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['gbxxgl:gbshzw:remove']"
+            v-hasPermi="['gbxxgl:gbcrjqk:remove']"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -128,9 +131,9 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改干部任职情况-社会职务对话框 -->
+    <!-- 添加或修改干部出入境情况对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="120px">
+      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="归属部门" prop="deptId" >
           <treeselect
             v-model="form.deptId"
@@ -151,44 +154,37 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="届别" prop="jb">
-          <el-select v-model="form.jb" placeholder="请选择届别">
+        <el-form-item label="起始日期" prop="qsrq">
+          <el-date-picker clearable size="small" style="width: 200px"
+            v-model="form.qsrq"
+            type="date"
+            value-format="yyyy-MM-dd"
+            placeholder="选择起始日期">
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item label="终止日期" prop="zzrq">
+          <el-date-picker clearable size="small" style="width: 200px"
+            v-model="form.zzrq"
+            type="date"
+            value-format="yyyy-MM-dd"
+            placeholder="选择终止日期">
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item label="性质" prop="xz">
+          <el-select v-model="form.xz" placeholder="请选择性质">
             <el-option
-              v-for="dict in jbOptions"
+              v-for="dict in xzOptions"
               :key="dict.dictValue"
               :label="dict.dictLabel"
               :value="dict.dictValue"
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="职务级别" prop="jibie">
-          <el-select v-model="form.jibie" placeholder="请选择职务级别">
-            <el-option
-              v-for="dict in jibieOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            ></el-option>
-          </el-select>
+        <el-form-item label="目的地" prop="mdd">
+          <el-input v-model="form.mdd" placeholder="请输入目的地" />
         </el-form-item>
-        <el-form-item label="职务名称" prop="name">
-          <el-input v-model="form.name" placeholder="请输入职务名称" />
-        </el-form-item>
-        <el-form-item label="任职起始年月" prop="rzqsny">
-          <el-date-picker clearable size="small" style="width: 200px"
-            v-model="form.rzqsny"
-            type="month"
-            value-format="yyyy-MM"
-            placeholder="选择任职起始年月">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="任职终止年月" prop="rzzzny">
-          <el-date-picker clearable size="small" style="width: 200px"
-            v-model="form.rzzzny"
-            type="month"
-            value-format="yyyy-MM"
-            placeholder="选择任职终止年月">
-          </el-date-picker>
+        <el-form-item label="事由" prop="sy">
+          <el-input v-model="form.sy" placeholder="请输入事由" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -200,20 +196,21 @@
 </template>
 
 <script>
-import { listGbshzw, getGbshzw, delGbshzw, addGbshzw, updateGbshzw, exportGbshzw } from "@/api/gbxxgl/gbshzw";
+import { listGbcrjqk, getGbcrjqk, delGbcrjqk, addGbcrjqk, updateGbcrjqk, exportGbcrjqk } from "@/api/gbxxgl/gbcrjqk";
 import { listGbjbqk, getGbjbqk } from "@/api/gbxxgl/gbjbqk";
 import { treeselect } from "@/api/system/dept";
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 
 export default {
-  name: "Gbshzw",
+  name: "Gbcrjqk",
   components: { Treeselect },
   data() {
     return {
+      // 修改置灰标志
+      flag: null,
       // 遮罩层
       loading: true,
-      flag: null,
       // 选中数组
       ids: [],
       // 非单个禁用
@@ -224,16 +221,14 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      // 干部任职情况-社会职务表格数据
-      gbshzwList: [],
+      // 干部出入境情况表格数据
+      gbcrjqkList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
       open: false,
-      // 届别字典
-      jbOptions: [],
-      // 职务级别字典
-      jibieOptions: [],
+      // 性质字典
+      xzOptions: [],
       // 部门选项
       deptOptions: [],
       // 干部选项
@@ -245,13 +240,13 @@ export default {
         pageNum: 1,
         pageSize: 10,
         gbid: null,
-        rzqsny: null,
-        rzzzny: null,
-        jb: null,
-        jibie: null,
-        name: null,
-        createuser: null,
-        createtime: null,
+        qsrq: null,
+        zzrq: null,
+        xz: null,
+        mdd: null,
+        sy: null,
+        createUser: null,
+        createTime: null,
         deptId: null,
       },
       // 查询参数
@@ -266,13 +261,13 @@ export default {
           { required: true, message: "部门不能为空", trigger: "blur" }
         ],
         gbid: [
-          { required: true, message: "干部姓名不能为空", trigger: "blur" },
+          { required: true, message: "干部ID不能为空", trigger: "blur" }
         ],
-        rzqsny: [
-          { required: true, message: "任职起始年月不能为空", trigger: "blur" },
+        qsrq: [
+          { required: true, message: "起始日期不能为空", trigger: "blur" }
         ],
-        rzzzny: [
-          { required: true, message: "任职终止年月不能为空", trigger: "blur" },
+        zzrq: [
+          { required: true, message: "终止日期不能为空", trigger: "blur" }
         ],
       }
     };
@@ -285,19 +280,16 @@ export default {
     this.getList();
     this.getTreeselect();
     this.getGbjbqkList();
-    this.getDicts("sys_dm_jiebie").then(response => {
-      this.jbOptions = response.data;
-    });
-    this.getDicts("sys_dm_jibie").then(response => {
-      this.jibieOptions = response.data;
+    this.getDicts("sys_dm_gbcrjxz").then(response => {
+      this.xzOptions = response.data;
     });
   },
   methods: {
-    /** 查询干部任职情况-社会职务列表 */
+    /** 查询干部出入境情况列表 */
     getList() {
       this.loading = true;
-      listGbshzw(this.queryParams).then(response => {
-        this.gbshzwList = response.rows;
+      listGbcrjqk(this.queryParams).then(response => {
+        this.gbcrjqkList = response.rows;
         this.total = response.total;
         this.loading = false;
       });
@@ -339,13 +331,9 @@ export default {
         });
       }
     },
-    // 届别字典翻译
-    jbFormat(row, column) {
-      return this.selectDictLabel(this.jbOptions, row.jb);
-    },
-    // 职务级别字典翻译
-    jibieFormat(row, column) {
-      return this.selectDictLabel(this.jibieOptions, row.jibie);
+    // 性质字典翻译
+    xzFormat(row, column) {
+      return this.selectDictLabel(this.xzOptions, row.xz);
     },
     // 取消按钮
     cancel() {
@@ -357,13 +345,13 @@ export default {
       this.form = {
         id: null,
         gbid: null,
-        rzqsny: null,
-        rzzzny: null,
-        jb: null,
-        jibie: null,
-        name: null,
-        createuser: null,
-        createtime: null,
+        qsrq: null,
+        zzrq: null,
+        xz: null,
+        mdd: null,
+        sy: null,
+        createUser: null,
+        createTime: null,
         deptId: null,
       };
       this.resetForm("form");
@@ -390,20 +378,19 @@ export default {
       this.getTreeselect();
       this.flag = false;
       this.open = true;
-      this.title = "添加干部任职情况-社会职务";
+      this.title = "添加干部出入境情况";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      
       this.getTreeselect();
       const id = row.id || this.ids
-      getGbshzw(id).then(response => {
+      getGbcrjqk(id).then(response => {
         this.form.deptId = response.data.deptId;
         this.form = response.data;
         this.flag = true;
         this.open = true;
-        this.title = "修改干部任职情况-社会职务";
+        this.title = "修改干部出入境情况";
       });
     },
     /** 提交按钮 */
@@ -411,7 +398,7 @@ export default {
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.id != null) {
-            updateGbshzw(this.form).then(response => {
+            updateGbcrjqk(this.form).then(response => {
               if (response.code === 200) {
                 this.msgSuccess("修改成功");
                 this.open = false;
@@ -419,7 +406,7 @@ export default {
               }
             });
           } else {
-            addGbshzw(this.form).then(response => {
+            addGbcrjqk(this.form).then(response => {
               if (response.code === 200) {
                 this.msgSuccess("新增成功");
                 this.open = false;
@@ -433,12 +420,12 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$confirm('是否确认删除干部任职情况-社会职务编号为"' + ids + '"的数据项?', "警告", {
+      this.$confirm('是否确认删除干部出入境情况编号为"' + ids + '"的数据项?', "警告", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
         }).then(function() {
-          return delGbshzw(ids);
+          return delGbcrjqk(ids);
         }).then(() => {
           this.getList();
           this.msgSuccess("删除成功");
@@ -447,12 +434,12 @@ export default {
     /** 导出按钮操作 */
     handleExport() {
       const queryParams = this.queryParams;
-      this.$confirm('是否确认导出所有干部任职情况-社会职务数据项?', "警告", {
+      this.$confirm('是否确认导出所有干部出入境情况数据项?', "警告", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
         }).then(function() {
-          return exportGbshzw(queryParams);
+          return exportGbcrjqk(queryParams);
         }).then(response => {
           this.download(response.msg);
         }).catch(function() {});
