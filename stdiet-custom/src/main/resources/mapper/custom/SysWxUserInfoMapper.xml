@@ -5,20 +5,20 @@
 <mapper namespace="com.stdiet.custom.mapper.SysWxUserInfoMapper">
 
     <resultMap type="SysWxUserInfo" id="SysWxUserInfoResult">
-        <result property="openid"    column="openid"    />
-        <result property="nickName"    column="nick_name"    />
-        <result property="appid"    column="appid"    />
-        <result property="phone"    column="phone"    />
-        <result property="avatarUrl"    column="avatar_url"    />
-        <result property="sex"    column="sex"    />
-        <result property="city"    column="city"    />
-        <result property="province"    column="province"    />
-        <result property="country"    column="country"    />
-        <result property="createBy"    column="create_by"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="updateBy"    column="update_by"    />
-        <result property="updateTime"    column="update_time"    />
-        <result property="remark"    column="remark"    />
+        <result property="openid" column="openid"/>
+        <result property="nickName" column="nick_name"/>
+        <result property="appid" column="appid"/>
+        <result property="phone" column="phone"/>
+        <result property="avatarUrl" column="avatar_url"/>
+        <result property="sex" column="sex"/>
+        <result property="city" column="city"/>
+        <result property="province" column="province"/>
+        <result property="country" column="country"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="remark" column="remark"/>
     </resultMap>
 
     <sql id="selectSysWxUserInfoVo">
@@ -28,21 +28,18 @@
     <select id="selectSysWxUserInfoList" parameterType="SysWxUserInfo" resultMap="SysWxUserInfoResult">
         <include refid="selectSysWxUserInfoVo"/>
         <where>
-            <if test="nickName != null  and nickName != ''"> and nick_name like concat('%', #{nickName}, '%')</if>
-            <if test="appid != null  and appid != ''"> and appid = #{appid}</if>
-            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
-            <if test="sex != null  and sex != ''"> and sex = #{sex}</if>
+            <if test="nickName != null  and nickName != ''">and nick_name like concat('%', #{nickName}, '%')</if>
+            <if test="appid != null  and appid != ''">and appid = #{appid}</if>
+            <if test="phone != null  and phone != ''">and phone = #{phone}</if>
+            <if test="sex != null  and sex != ''">and sex = #{sex}</if>
         </where>
     </select>
 
     <select id="selectSysWxUserInfoListNot" parameterType="SysWxUserInfo" resultMap="SysWxUserInfoResult">
-        <include refid="selectSysWxUserInfoVo"/>
+        select openid, nick_name, appid, phone, avatar_url, sex from sys_wx_user_info right join sys_order using(phone)
         <where>
-            <if test="nickName != null  and nickName != ''"> and nick_name like concat('%', #{nickName}, '%')</if>
-            <if test="appid != null  and appid != ''"> and appid = #{appid}</if>
-            <if test="openid != null  and openid != ''"> and openid != #{openid}</if>
-            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
-            <if test="sex != null  and sex != ''"> and sex = #{sex}</if>
+            <if test="appid != null  and appid != ''">and appid = #{appid}</if>
+            <if test="openid != null  and openid != ''">and openid != #{openid}</if>
         </where>
     </select>
 
