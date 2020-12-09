@@ -148,11 +148,11 @@ public class SysWxUserInfoController extends BaseController {
         startPage();
         List<SysWxUserInfo> list = sysWxUserInfoService.selectSysWxUserInfoListNot(sysWxUserInfo);
 
-        for (SysWxUserInfo userInfo : list) {
-            if (StringUtils.isNotEmpty(userInfo.getPhone())) {
-                userInfo.setPhone(userInfo.getPhone().replaceAll("(\\d{3})\\d{4}(\\d{4})", "$1****$2"));
-            }
-        }
+//        for (SysWxUserInfo userInfo : list) {
+//            if (StringUtils.isNotEmpty(userInfo.getPhone())) {
+//                userInfo.setPhone(userInfo.getPhone().replaceAll("(\\d{3})\\d{4}(\\d{4})", "$1****$2"));
+//            }
+//        }
         return getDataTable(list);
     }
 }

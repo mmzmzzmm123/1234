@@ -5,61 +5,68 @@
 <mapper namespace="com.stdiet.custom.mapper.SysWxUserLogMapper">
 
     <resultMap type="SysWxUserLog" id="SysWxUserLogResult">
-        <result property="openid"    column="openid"    />
-        <result property="weight"    column="weight"    />
-        <result property="appid"    column="appid"    />
-        <result property="phone"    column="phone"    />
-        <result property="phone"    column="phone"    />
-        <result property="logTime"    column="log_time"    />
-        <result property="wakeupTime"    column="wakeup_time"    />
-        <result property="sleepTime"    column="sleep_time"    />
-        <result property="sport"    column="sport"    />
-        <result property="avatarUrl"    column="avatar_url"    />
-        <result property="diet"    column="diet"    />
-        <result property="insomnia"    column="insomnia"    />
-        <result property="defecation"    column="defecation"    />
-        <result property="water"    column="water"    />
-        <result property="createBy"    column="create_by"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="updateBy"    column="update_by"    />
-        <result property="updateTime"    column="update_time"    />
-        <result property="remark"    column="remark"    />
+        <result property="openid" column="openid"/>
+        <result property="weight" column="weight"/>
+        <result property="appid" column="appid"/>
+        <result property="phone" column="phone"/>
+        <result property="phone" column="phone"/>
+        <result property="logTime" column="log_time"/>
+        <result property="wakeupTime" column="wakeup_time"/>
+        <result property="sleepTime" column="sleep_time"/>
+        <result property="sport" column="sport"/>
+        <result property="avatarUrl" column="avatar_url"/>
+        <result property="diet" column="diet"/>
+        <result property="insomnia" column="insomnia"/>
+        <result property="defecation" column="defecation"/>
+        <result property="water" column="water"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="remark" column="remark"/>
     </resultMap>
 
     <resultMap type="com.stdiet.custom.page.WxLogInfo" id="WxLogInfo">
-        <result property="weight"    column="weight"    />
-        <result property="sleepTime"    column="sleep_time"    />
-        <result property="wakeupTime"    column="wakeup_time"    />
-        <result property="sport"    column="sport"    />
-        <result property="diet"    column="diet"    />
-        <result property="insomnia"    column="insomnia"    />
-        <result property="defecation"    column="defecation"    />
-        <result property="water"    column="water"    />
-        <result property="date"    column="log_time"    />
+        <result property="weight" column="weight"/>
+        <result property="sleepTime" column="sleep_time"/>
+        <result property="wakeupTime" column="wakeup_time"/>
+        <result property="sport" column="sport"/>
+        <result property="diet" column="diet"/>
+        <result property="insomnia" column="insomnia"/>
+        <result property="defecation" column="defecation"/>
+        <result property="water" column="water"/>
+        <result property="date" column="log_time"/>
     </resultMap>
 
     <sql id="selectSysWxUserLogVo">
         select openid, weight, appid, phone, log_time, sleep_time, wakeup_time, sport, avatar_url, diet, insomnia, defecation, water, create_by, create_time, update_by, update_time, remark from sys_wx_user_log
     </sql>
 
-    <select id="checkWxLogInfoCount" parameterType="String" resultType="Integer" >
+    <select id="checkWxLogInfoCount" parameterType="String" resultType="Integer">
         select count(*) from sys_wx_user_log where to_days(log_time) = to_days(now()) and openid = #{openid}
     </select>
 
     <select id="selectSysWxUserLogList" parameterType="SysWxUserLog" resultMap="SysWxUserLogResult">
         <include refid="selectSysWxUserLogVo"/>
         <where>
-            <if test="openid != null  and openid != ''"> and openid = #{openid}</if>
-            <if test="phone != null  and phone != ''"> or phone = #{phone}</if>
+            <if test="openid != null  and openid != ''">and openid = #{openid}</if>
+            <if test="phone != null  and phone != ''">or phone = #{phone}</if>
         </where>
         order by create_time desc
     </select>
 
     <select id="selectWxLogInfoList" parameterType="SysWxUserLog" resultMap="WxLogInfo">
-        <include refid="selectSysWxUserLogVo"/>
+        SELECT * FROM sys_wx_user_log log
         <where>
-            <if test="openid != null  and openid != ''"> and openid = #{openid}</if>
-            <if test="phone != null  and phone != ''"> or phone = #{phone}</if>
+            <choose>
+                <when test="phone == null or phone == ''">
+                    (SELECT phone FROM sys_wx_user_info WHERE openid = #{openid}) = log.phone
+                </when>
+                <otherwise>
+                    <if test="openid != null  and openid != ''">and openid = #{openid}</if>
+                    <if test="phone != null  and phone != ''">or phone = #{phone}</if>
+                </otherwise>
+            </choose>
         </where>
         order by log_time asc
     </select>
