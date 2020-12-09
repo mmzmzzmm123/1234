@@ -121,12 +121,12 @@
       <el-table-column label="教育类型" align="center" prop="jylx" :formatter="jylxFormat"/>
       <el-table-column label="学历" align="center" prop="xl" :formatter="xlFormat"/>
       <el-table-column label="学位" align="center" prop="xw" :formatter="xwFormat"/>
-      <el-table-column label="起始年月" align="center" prop="qsny" width="180">
+      <el-table-column label="起始年月" align="center" prop="qsny" >
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.qsny, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="终止年月" align="center" prop="zzny" width="180">
+      <el-table-column label="终止年月" align="center" prop="zzny">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.zzny, '{y}-{m}-{d}') }}</span>
         </template>
@@ -134,7 +134,7 @@
       <el-table-column label="毕业院校" align="center" prop="byyx" />
       <el-table-column label="专业" align="center" prop="zy" :formatter="zyFormat"/>
       <el-table-column label="职务" align="center" prop="zw" :formatter="zyFormat"/>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="180px">
         <template slot-scope="scope">
           <el-button
             size="mini"

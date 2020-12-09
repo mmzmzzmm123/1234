@@ -74,7 +74,7 @@
       <el-table-column label="当前状态" align="center" prop="dqzt" :formatter="dqztFormat" />
       <el-table-column label="基地校意见" align="center" prop="jdxshzt" :formatter="jdxshztFormat" />
       <el-table-column label="上报理由" align="center" prop="sbly" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="210px">
         <template slot-scope="scope">
           <el-button
             size="mini"

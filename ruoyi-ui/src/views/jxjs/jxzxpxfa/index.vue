@@ -37,7 +37,12 @@
         </el-select>
       </el-form-item>
       <el-form-item label="评选学段" prop="pxxd">
-        <el-select v-model="queryParams.pxxd" placeholder="请选择评选学段" clearable size="small">
+        <el-select
+          v-model="queryParams.pxxd"
+          placeholder="请选择评选学段"
+          clearable
+          size="small"
+        >
           <el-option
             v-for="dict in pxxdOptions"
             :key="dict.dictValue"
@@ -47,7 +52,12 @@
         </el-select>
       </el-form-item>
       <el-form-item label="评选学科" prop="pxxk">
-        <el-select v-model="queryParams.pxxk" placeholder="请选择评选学科" clearable size="small">
+        <el-select
+          v-model="queryParams.pxxk"
+          placeholder="请选择评选学科"
+          clearable
+          size="small"
+        >
           <el-option
             v-for="dict in pxxkOptions"
             :key="dict.dictValue"
@@ -57,8 +67,16 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+        <el-button
+          type="cyan"
+          icon="el-icon-search"
+          size="mini"
+          @click="handleQuery"
+          >搜索</el-button
+        >
+        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+          >重置</el-button
+        >
       </el-form-item>
     </el-form>
 
@@ -70,7 +88,8 @@
           size="mini"
           @click="handleAdd"
           v-hasPermi="['jxjs:jxzxpxfa:add']"
-        >新增</el-button>
+          >新增</el-button
+        >
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -80,7 +99,8 @@
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['jxjs:jxzxpxfa:edit']"
-        >修改</el-button>
+          >修改</el-button
+        >
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -90,12 +110,20 @@
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['jxjs:jxzxpxfa:remove']"
-        >删除</el-button>
+          >删除</el-button
+        >
       </el-col>
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+      <right-toolbar
+        :showSearch.sync="showSearch"
+        @queryTable="getList"
+      ></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="jxzxpxfaList" @selection-change="handleSelectionChange">
+    <el-table
+      v-loading="loading"
+      :data="jxzxpxfaList"
+      @selection-change="handleSelectionChange"
+    >
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="编号" align="center" prop="id" /> -->
       <el-table-column label="方案名称" align="center" prop="name" />
@@ -109,20 +137,45 @@
           ></el-switch>
         </template>
       </el-table-column>
-      <el-table-column label="方案有效开始时间" align="center" prop="fayxkssj" width="180">
+      <el-table-column
+        label="方案有效开始时间"
+        align="center"
+        prop="fayxkssj"
+        width="180"
+      >
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.fayxkssj, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.fayxkssj, "{y}-{m}-{d}") }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="方案有效结束时间" align="center" prop="fayxjssj" width="180">
+      <el-table-column
+        label="方案有效结束时间"
+        align="center"
+        prop="fayxjssj"
+        width="180"
+      >
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.fayxjssj, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.fayxjssj, "{y}-{m}-{d}") }}</span>
         </template>
       </el-table-column>
       <el-table-column label="所属年份" align="center" prop="nf" />
-      <el-table-column label="评选学段" align="center" prop="pxxd" :formatter="pxxdFormat" />
-      <el-table-column label="评选学科" align="center" prop="pxxk" :formatter="pxxkFormat" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column
+        label="评选学段"
+        align="center"
+        prop="pxxd"
+        :formatter="pxxdFormat"
+      />
+      <el-table-column
+        label="评选学科"
+        align="center"
+        prop="pxxk"
+        :formatter="pxxkFormat"
+      />
+      <el-table-column
+        label="操作"
+        align="center"
+        class-name="small-padding fixed-width"
+        width="180px"
+      >
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -130,27 +183,30 @@
             icon="el-icon-document-copy"
             @click="handleCopy(scope.row)"
             v-hasPermi="['jxjs:jxzxpxfa:add']"
-          >复制</el-button>
+            >复制</el-button
+          >
           <el-button
             size="mini"
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['jxjs:jxzxpxfa:edit']"
-          >修改</el-button>
+            >修改</el-button
+          >
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['jxjs:jxzxpxfa:remove']"
-          >删除</el-button>
+            >删除</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
 
     <pagination
-      v-show="total>0"
+      v-show="total > 0"
       :total="total"
       :page.sync="queryParams.pageNum"
       :limit.sync="queryParams.pageSize"
@@ -158,7 +214,12 @@
     />
 
     <!-- 添加或修改见习之星评选方案对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="1024px" append-to-body>
+    <el-dialog
+      :title="title"
+      :visible.sync="open"
+      width="1024px"
+      append-to-body
+    >
       <el-form ref="form" :model="form" :rules="rules" label-width="110px">
         <el-form-item label="方案名称" prop="name">
           <el-input v-model="form.name" placeholder="请输入方案名称" />
@@ -166,7 +227,7 @@
         <el-form-item label="方案内容" prop="fanr">
           <Editor v-model="form.fanr" placeholder="请输入方案内容" />
         </el-form-item>
-        <el-form-item label="方案文件" prop="fawj" >
+        <el-form-item label="方案文件" prop="fawj">
           <el-input v-model="form.fawj" v-if="false" />
           <el-upload
             class="upload-demo"
@@ -189,7 +250,8 @@
               v-for="dict in faztOptions"
               :key="dict.dictValue"
               :label="dict.dictValue"
-            >{{dict.dictLabel}}</el-radio>
+              >{{ dict.dictLabel }}</el-radio
+            >
           </el-radio-group>
         </el-form-item>
         <el-form-item label="方案有效时间" prop="fayxkssj">
@@ -257,7 +319,7 @@ import Editor from "@/components/Editor";
 export default {
   name: "Jxzxpxfa",
   components: {
-    Editor
+    Editor,
   },
   data() {
     return {
@@ -415,7 +477,7 @@ export default {
         })
         .catch(function () {});
     },
-    
+
     // // 一键
     // getUser() {
     //   getUserProfile().then((response) => {

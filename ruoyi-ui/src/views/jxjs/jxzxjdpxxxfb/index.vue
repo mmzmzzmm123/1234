@@ -101,6 +101,7 @@
         label="操作"
         align="center"
         class-name="small-padding fixed-width"
+        width="180px"
       >
         <template slot-scope="scope">
           <el-button

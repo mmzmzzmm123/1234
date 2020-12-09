@@ -174,7 +174,7 @@
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="编号" align="center" prop="id" /> -->
       <el-table-column label="姓名" align="center" prop="gbid" :formatter="gbmcFormat" />
-      <el-table-column label="任职年月" align="center" prop="rzny" width="180">
+      <el-table-column label="任职年月" align="center" prop="rzny">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.rzny, "{y}-{m}") }}</span>
         </template>
@@ -213,6 +213,7 @@
         label="操作"
         align="center"
         class-name="small-padding fixed-width"
+        width="180px"
       >
         <template slot-scope="scope">
           <el-button

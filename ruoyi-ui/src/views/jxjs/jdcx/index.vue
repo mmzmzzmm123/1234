@@ -9,22 +9,53 @@
     >
       <el-form-item label="评选方案" prop="faid">
         <el-select v-model="queryParams.faid" placeholder="请选择方案">
-          <el-option v-for="dict in faOptions" :key="dict.id" :label="dict.name" :value="dict.id"></el-option>
+          <el-option
+            v-for="dict in faOptions"
+            :key="dict.id"
+            :label="dict.name"
+            :value="dict.id"
+          ></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="基地校" prop="jdxid">
-        <el-select v-model="queryParams.jdxid" filterable placeholder="请选择基地校">
-          <el-option v-for="item in jdxOptions" :key="item.id" :label="item.jdxmc" :value="item.id"></el-option>
+        <el-select
+          v-model="queryParams.jdxid"
+          filterable
+          placeholder="请选择基地校"
+        >
+          <el-option
+            v-for="item in jdxOptions"
+            :key="item.id"
+            :label="item.jdxmc"
+            :value="item.id"
+          ></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="选择教师" prop="jsid">
-        <el-select v-model="queryParams.jsid" filterable placeholder="请选择教师">
-          <el-option v-for="item in jsOptions" :key="item.id" :label="item.name" :value="item.id"></el-option>
+        <el-select
+          v-model="queryParams.jsid"
+          filterable
+          placeholder="请选择教师"
+        >
+          <el-option
+            v-for="item in jsOptions"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
+          ></el-option>
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+        <el-button
+          type="cyan"
+          icon="el-icon-search"
+          size="mini"
+          @click="handleQuery"
+          >搜索</el-button
+        >
+        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+          >重置</el-button
+        >
       </el-form-item>
     </el-form>
 
@@ -37,7 +68,8 @@
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['jxjs:jdcx:edit']"
-        >审核</el-button>
+          >审核</el-button
+        >
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -47,21 +79,49 @@
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['jxjs:jdcx:remove']"
-        >退回</el-button>
+          >退回</el-button
+        >
       </el-col>
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+      <right-toolbar
+        :showSearch.sync="showSearch"
+        @queryTable="getList"
+      ></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="jdcxList" @selection-change="handleSelectionChange">
+    <el-table
+      v-loading="loading"
+      :data="jdcxList"
+      @selection-change="handleSelectionChange"
+    >
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="方案名称" align="center" prop="faname" />
       <el-table-column label="基地校名称" align="center" prop="jdxmc" />
-      <el-table-column label="教师姓名" align="center" prop="jsname"  />
-      <el-table-column label="当前状态" align="center" prop="dqzt" :formatter="dqztFormat" />
-      <el-table-column label="基地校审核意见" align="center" prop="jdxshzt" :formatter="jdxshztFormat" />
-      <el-table-column label="区级审核状态" align="center" prop="qjshzt" :formatter="qjshztFormat" />
+      <el-table-column label="教师姓名" align="center" prop="jsname" />
+      <el-table-column
+        label="当前状态"
+        align="center"
+        prop="dqzt"
+        :formatter="dqztFormat"
+      />
+      <el-table-column
+        label="基地校审核意见"
+        align="center"
+        prop="jdxshzt"
+        :formatter="jdxshztFormat"
+      />
+      <el-table-column
+        label="区级审核状态"
+        align="center"
+        prop="qjshzt"
+        :formatter="qjshztFormat"
+      />
       <el-table-column label="区级审核建议" align="center" prop="qjshyj" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column
+        label="操作"
+        align="center"
+        class-name="small-padding fixed-width"
+        width="180px"
+      >
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -69,20 +129,22 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['jxjs:jdcx:edit']"
-          >审核</el-button>
+            >审核</el-button
+          >
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['jxjs:jdcx:remove']"
-          >退回</el-button>
+            >退回</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
 
     <pagination
-      v-show="total>0"
+      v-show="total > 0"
       :total="total"
       :page.sync="queryParams.pageNum"
       :limit.sync="queryParams.pageSize"
@@ -93,13 +155,31 @@
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="110px">
         <el-form-item label="方案编号" prop="faid">
-          <el-select v-model="form.faid" placeholder="请选择方案" :disabled="true">
-            <el-option v-for="dict in faOptions" :key="dict.id" :label="dict.name" :value="dict.id"></el-option>
+          <el-select
+            v-model="form.faid"
+            placeholder="请选择方案"
+            :disabled="true"
+          >
+            <el-option
+              v-for="dict in faOptions"
+              :key="dict.id"
+              :label="dict.name"
+              :value="dict.id"
+            ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="教师名称" prop="jsid">
-          <el-select v-model="form.jsid" placeholder="请选择教师" :disabled="true">
-            <el-option v-for="dict in jsOptions" :key="dict.id" :label="dict.name" :value="dict.id"></el-option>
+          <el-select
+            v-model="form.jsid"
+            placeholder="请选择教师"
+            :disabled="true"
+          >
+            <el-option
+              v-for="dict in jsOptions"
+              :key="dict.id"
+              :label="dict.name"
+              :value="dict.id"
+            ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="区级审核意见" prop="qjshzt">
@@ -113,7 +193,11 @@
           </el-select>
         </el-form-item>
         <el-form-item label="区级审核建议" prop="qjshyj">
-          <el-input v-model="form.qjshyj" type="textarea" placeholder="请输入审核建议" />
+          <el-input
+            v-model="form.qjshyj"
+            type="textarea"
+            placeholder="请输入审核建议"
+          />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">

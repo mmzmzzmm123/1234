@@ -5,7 +5,7 @@
       ref="queryForm"
       :inline="true"
       v-show="showSearch"
-      label-width="68px"
+      label-width="70px"
     >
       <el-form-item label="所属部门" prop="deptid">
         <el-select
@@ -179,6 +179,7 @@
         label="操作"
         align="center"
         class-name="small-padding fixed-width"
+        width="180px"
       >
         <template slot-scope="scope">
           <el-button

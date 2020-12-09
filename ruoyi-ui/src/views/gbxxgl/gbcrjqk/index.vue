@@ -88,14 +88,14 @@
 
     <el-table v-loading="loading" :data="gbcrjqkList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="编号" align="center" prop="id" />
+      <!-- <el-table-column label="编号" align="center" prop="id" /> -->
       <el-table-column label="姓名" align="center" prop="gbid" :formatter="gbmcFormat"/>
-      <el-table-column label="起始日期" align="center" prop="qsrq" width="180">
+      <el-table-column label="起始日期" align="center" prop="qsrq">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.qsrq, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="终止日期" align="center" prop="zzrq" width="180">
+      <el-table-column label="终止日期" align="center" prop="zzrq">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.zzrq, '{y}-{m}-{d}') }}</span>
         </template>
@@ -103,7 +103,7 @@
       <el-table-column label="性质" align="center" prop="xz" :formatter="xzFormat" />
       <el-table-column label="目的地" align="center" prop="mdd" />
       <el-table-column label="事由" align="center" prop="sy" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="180px">
         <template slot-scope="scope">
           <el-button
             size="mini"

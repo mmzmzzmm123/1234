@@ -87,12 +87,12 @@
     <el-table v-loading="loading" :data="gbshzwList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="姓名" align="center" prop="gbid" :formatter="gbmcFormat" />
-      <el-table-column label="任职起始年月" align="center" prop="rzqsny" width="180">
+      <el-table-column label="任职起始年月" align="center" prop="rzqsny">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.rzqsny, '{y}-{m}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="任职终止年月" align="center" prop="rzzzny" width="180">
+      <el-table-column label="任职终止年月" align="center" prop="rzzzny">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.rzzzny, '{y}-{m}') }}</span>
         </template>
@@ -100,7 +100,7 @@
       <el-table-column label="届别" align="center" prop="jb" :formatter="jbFormat" />
       <el-table-column label="职务级别" align="center" prop="jibie" :formatter="jibieFormat" />
       <el-table-column label="职务名称" align="center" prop="name" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="180px">
         <template slot-scope="scope">
           <el-button
             size="mini"

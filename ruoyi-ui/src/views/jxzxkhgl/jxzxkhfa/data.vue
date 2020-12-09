@@ -114,7 +114,7 @@
       <el-table-column label="考核内容" align="center" prop="khnr" />
       <el-table-column label="关键字段" align="center" prop="gjzd" :show-overflow-tooltip="true" />
       <el-table-column label="提交文件数量" align="center" prop="tjsl" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="180px">
         <template slot-scope="scope">
           <el-button
             size="mini"

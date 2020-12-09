@@ -9,22 +9,53 @@
     >
       <el-form-item label="评选方案" prop="faid">
         <el-select v-model="queryParams.faid" placeholder="请选择方案">
-          <el-option v-for="dict in faOptions" :key="dict.id" :label="dict.name" :value="dict.id"></el-option>
+          <el-option
+            v-for="dict in faOptions"
+            :key="dict.id"
+            :label="dict.name"
+            :value="dict.id"
+          ></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="基地校" prop="jdxid">
-        <el-select v-model="queryParams.jdxid" filterable placeholder="请选择基地校">
-          <el-option v-for="item in jdxOptions" :key="item.id" :label="item.jdxmc" :value="item.id"></el-option>
+        <el-select
+          v-model="queryParams.jdxid"
+          filterable
+          placeholder="请选择基地校"
+        >
+          <el-option
+            v-for="item in jdxOptions"
+            :key="item.id"
+            :label="item.jdxmc"
+            :value="item.id"
+          ></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="选择教师" prop="jsid">
-        <el-select v-model="queryParams.jsid" filterable placeholder="请选择教师">
-          <el-option v-for="item in jsOptions" :key="item.id" :label="item.name" :value="item.id"></el-option>
+        <el-select
+          v-model="queryParams.jsid"
+          filterable
+          placeholder="请选择教师"
+        >
+          <el-option
+            v-for="item in jsOptions"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
+          ></el-option>
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+        <el-button
+          type="cyan"
+          icon="el-icon-search"
+          size="mini"
+          @click="handleQuery"
+          >搜索</el-button
+        >
+        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+          >重置</el-button
+        >
       </el-form-item>
     </el-form>
 
@@ -37,7 +68,8 @@
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['jxjs:jdcx:edit']"
-        >确认面试</el-button>
+          >确认面试</el-button
+        >
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -46,7 +78,8 @@
           size="mini"
           @click="handleImport"
           v-hasPermi="['jxjs:jdcx:import']"
-        >成绩导入</el-button>
+          >成绩导入</el-button
+        >
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -55,24 +88,65 @@
           size="mini"
           @click="handleExport"
           v-hasPermi="['jxjs:jxjsjbxx:export']"
-        >导出笔试名单</el-button>
+          >导出笔试名单</el-button
+        >
       </el-col>
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+      <right-toolbar
+        :showSearch.sync="showSearch"
+        @queryTable="getList"
+      ></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="jdcxList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" :selectable="isShow" />
-      <el-table-column label="方案名称" align="center" prop="faname" />
-      <el-table-column label="基地校" align="center" prop="jdxmc" />
-      <el-table-column label="教师姓名" align="center" prop="jsname" />
-      <el-table-column label="区级审核意见" align="center" prop="qjshzt" :formatter="qjshztFormat" />
-      <el-table-column label="性别" align="center" prop="xb" :formatter="xbFormat" />
-      <el-table-column label="学段" align="center" prop="rjxd" :formatter="xdFormat" />
-      <el-table-column label="学科" align="center" prop="rjxk" :formatter="xkFormat" />
+    <el-table
+      v-loading="loading"
+      :data="jdcxList"
+      @selection-change="handleSelectionChange"
+    >
+      <el-table-column
+        type="selection"
+        width="55"
+        align="center"
+        :selectable="isShow"
+      />
+      <el-table-column label="方案名称" fixed align="center" prop="faname" />
+      <el-table-column label="基地校" fixed align="center" prop="jdxmc" />
+      <el-table-column label="教师姓名" fixed align="center" prop="jsname" />
+      <el-table-column
+        label="区级审核意见"
+        align="center"
+        prop="qjshzt"
+        :formatter="qjshztFormat"
+      />
+      <el-table-column
+        label="性别"
+        align="center"
+        prop="xb"
+        :formatter="xbFormat"
+      />
+      <el-table-column
+        label="学段"
+        align="center"
+        prop="rjxd"
+        :formatter="xdFormat"
+      />
+      <el-table-column
+        label="学科"
+        align="center"
+        prop="rjxk"
+        :formatter="xkFormat"
+      />
       <el-table-column label="联系方式" align="center" prop="phone" />
       <el-table-column label="聘任校" align="center" prop="prdwmc" />
-
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="案例分析得分" align="center" prop="alfxdf" />
+      <el-table-column label="教案设计得分" align="center" prop="jasjdf" />
+      <el-table-column label="钢笔字得分" align="center" prop="gbzdf" />
+      <el-table-column label="笔试综合得分" align="center" prop="zhdf" />
+      <el-table-column
+        label="操作"
+        fixed="right"
+        align="center"
+        class-name="small-padding fixed-width"
+      >
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -81,13 +155,14 @@
             @click="handleUpdate(scope.row)"
             v-hasPermi="['jxjs:jdcx:edit']"
             v-show="isShow(scope.row)"
-          >确认面试</el-button>
+            >确认面试</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
 
     <pagination
-      v-show="total>0"
+      v-show="total > 0"
       :total="total"
       :page.sync="queryParams.pageNum"
       :limit.sync="queryParams.pageSize"
@@ -103,7 +178,8 @@
               v-for="dict in msqrOptions"
               :key="dict.dictValue"
               :label="dict.dictValue"
-            >{{dict.dictLabel}}</el-radio>
+              >{{ dict.dictLabel }}</el-radio
+            >
           </el-radio-group>
         </el-form-item>
       </el-form>
@@ -113,8 +189,15 @@
       </div>
     </el-dialog>
     <!-- excel导入对话框lu -->
-    <el-dialog :title="upload.title" :visible.sync="upload.open" width="400px" append-to-body>
-      <el-link type="info" style="font-size:14px" @click="importTemplate">下载模板</el-link>
+    <el-dialog
+      :title="upload.title"
+      :visible.sync="upload.open"
+      width="400px"
+      append-to-body
+    >
+      <el-link type="info" style="font-size: 14px" @click="importTemplate"
+        >下载模板</el-link
+      >
       <el-upload
         ref="upload"
         :limit="1"
@@ -135,13 +218,20 @@
         <div class="el-upload__tip" slot="tip">
           <!-- <el-form-item label="评选方案" prop="faid"> -->
           <el-select v-model="upload.faide" placeholder="请选择方案">
-            <el-option v-for="dict in faOptions" :key="dict.id" :label="dict.name" :value="dict.id"></el-option>
+            <el-option
+              v-for="dict in faOptions"
+              :key="dict.id"
+              :label="dict.name"
+              :value="dict.id"
+            ></el-option>
           </el-select>
           <br />
           <!-- </el-form-item> -->
           <!-- <el-checkbox v-model="upload.updateSupport" />是否更新已经存在的用户数据 -->
         </div>
-        <div class="el-upload__tip" style="color:red" slot="tip">提示：仅允许导入“xls”或“xlsx”格式文件！</div>
+        <div class="el-upload__tip" style="color: red" slot="tip">
+          提示：仅允许导入“xls”或“xlsx”格式文件！
+        </div>
       </el-upload>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitFileForm">确 定</el-button>

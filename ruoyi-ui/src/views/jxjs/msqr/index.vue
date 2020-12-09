@@ -74,9 +74,9 @@
       <el-table-column type="selection" width="55" align="center" :selectable="isShow" />
       <!-- <el-table-column label="编号" align="center" prop="id" /> -->
       <!-- <el-table-column label="方案名称" align="center" prop="faid" :formatter="faFormat" /> -->
-      <el-table-column label="方案名称" align="center" prop="faname" />
-      <el-table-column label="基地校" align="center" prop="jdxmc" />
-      <el-table-column label="教师姓名" align="center" prop="jsname" />
+      <el-table-column label="方案名称" fixed align="center" prop="faname" />
+      <el-table-column label="基地校" fixed align="center" prop="jdxmc" />
+      <el-table-column label="教师姓名" fixed align="center" prop="jsname" />
       <el-table-column label="当前状态" align="center" prop="dqzt" :formatter="dqztFormat" />
       <el-table-column label="录取状态" align="center" prop="lqzt" :formatter="lqztFormat" />
       <el-table-column label="区级审核意见" align="center" prop="qjshzt" :formatter="qjshztFormat" />
@@ -90,7 +90,7 @@
       <el-table-column label="演讲得分" align="center" prop="yjdf" />
       <el-table-column label="面试综合得分" align="center" prop="zhdf2" />
 
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="操作" fixed="right"  align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
             size="mini"

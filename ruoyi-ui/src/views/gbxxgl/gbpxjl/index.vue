@@ -92,17 +92,17 @@
       <el-table-column label="培训地点" align="center" prop="pxdd" />
       <el-table-column label="培训级别" align="center" prop="pxjb" :formatter="pxjbFormat"/>
       <el-table-column label="职务" align="center" prop="zw" :formatter="zwFormat"/>
-      <el-table-column label="起始年月" align="center" prop="qsny" width="180">
+      <el-table-column label="起始年月" align="center" prop="qsny">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.qsny, '{y}-{m}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="终止年月" align="center" prop="zzny" width="180">
+      <el-table-column label="终止年月" align="center" prop="zzny" >
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.zzny, '{y}-{m}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="180px">
         <template slot-scope="scope">
           <el-button
             size="mini"

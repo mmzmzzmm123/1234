@@ -91,7 +91,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="单位名称" prop="deptId">
+      <!-- <el-form-item label="单位名称" prop="deptId">
         <el-select v-model="form.deptId" placeholder="请选择单位名称">
                 <el-option
                   v-for="dict in deptOptions"
@@ -100,7 +100,7 @@
                   :value="dict.deptId"
                 ></el-option>
               </el-select>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="行政职务" prop="xrxzzw">
         <el-select
           v-model="queryParams.xrxzzw"
@@ -170,7 +170,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="出生日期" prop="csrq">
+      <!-- <el-form-item label="出生日期" prop="csrq">
         <el-date-picker
           clearable
           size="small"
@@ -181,7 +181,7 @@
           placeholder="选择出生日期"
         >
         </el-date-picker>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="教育类型" prop="jylx">
         <el-select
           v-model="queryParams.jylx"
@@ -297,7 +297,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="参加工作年月" prop="cjgzny">
+      <!-- <el-form-item label="参加工作年月" prop="cjgzny">
         <el-date-picker
           clearable
           size="small"
@@ -308,7 +308,7 @@
           placeholder="选择参加工作年月"
         >
         </el-date-picker>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="是否后备干部" prop="sfhbgb">
         <el-select
           v-model="queryParams.sfhbgb"
@@ -340,7 +340,6 @@
 
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
-        
         <el-button
           type="primary"
           icon="el-icon-plus"
@@ -384,7 +383,12 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="单位名称" align="center" prop="deptId" :formatter="deptFormat"/>
+      <el-table-column
+        label="单位名称"
+        align="center"
+        prop="deptId"
+        :formatter="deptFormat"
+      />
       <el-table-column label="教师姓名" align="center" prop="name" />
       <el-table-column
         label="性别"
@@ -398,17 +402,12 @@
         prop="xrxzzw"
         :formatter="xrxzzwFormat"
       />
-      <el-table-column label="出生日期" align="center" prop="csrq" width="180">
+      <el-table-column label="出生日期" align="center" prop="csrq">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.csrq, "{y}-{m}-{d}") }}</span>
         </template>
       </el-table-column>
-      <el-table-column
-        label="参加工作年月"
-        align="center"
-        prop="cjgzny"
-        width="180"
-      >
+      <el-table-column label="参加工作年月" align="center" prop="cjgzny">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.cjgzny, "{y}-{m}") }}</span>
         </template>
@@ -430,11 +429,12 @@
         align="center"
         prop="mz"
         :formatter="mzFormat"
-      /> 
+      />
       <el-table-column
         label="操作"
         align="center"
         class-name="small-padding fixed-width"
+        width="210px"
       >
         <template slot-scope="scope">
           <el-button
@@ -474,16 +474,16 @@
     />
 
     <!-- 添加或修改干部基本情况对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="880px" >
-      <el-form ref="form" :model="form" :rules="rules" label-width="140px" >
+    <el-dialog :title="title" :visible.sync="open" width="980px">
+      <el-form ref="form" :model="form" :rules="rules" label-width="140px">
         <el-row :gutter="15">
           <el-col :span="12">
-            <el-form-item label="姓名" prop="name" >
-              <el-input v-model="form.name" placeholder="请输入教师姓名" />
+            <el-form-item label="干部姓名" prop="name">
+              <el-input v-model="form.name" placeholder="请输入干部姓名" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="性别" prop="xb">
+            <el-form-item label="干部性别" prop="xb">
               <el-select v-model="form.xb" placeholder="请选择性别">
                 <el-option
                   v-for="dict in xbOptions"
@@ -495,7 +495,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="民族" prop="mz">
+            <el-form-item label="干部民族" prop="mz">
               <el-select v-model="form.mz" placeholder="请选择民族">
                 <el-option
                   v-for="dict in mzOptions"
@@ -507,7 +507,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="学历" prop="xl">
+            <el-form-item label="干部学历" prop="xl">
               <el-select v-model="form.xl" placeholder="请选择学历">
                 <el-option
                   v-for="dict in xlOptions"
@@ -519,7 +519,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="学位" prop="xw">
+            <el-form-item label="干部学位" prop="xw">
               <el-select v-model="form.xw" placeholder="请选择学位">
                 <el-option
                   v-for="dict in xwOptions"
@@ -531,7 +531,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="职称" prop="zc">
+            <el-form-item label="干部职称" prop="zc">
               <el-select v-model="form.zc" placeholder="请选择职称">
                 <el-option
                   v-for="dict in zcOptions"
@@ -542,50 +542,37 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
-            <el-form-item label="籍贯" prop="jg">
+          <el-col :span="24">
+            <el-form-item label="干部籍贯" prop="jg">
               <v-distpicker
-                    v-model="form.jg"
-                    :placeholders="placeholders"
-                    :province="diglogForm.province"
-                    :city="diglogForm.city"
-                    :area="diglogForm.area"
-                    @selected="onSelected_jg"
-                  ></v-distpicker>
-                  <el-input v-model="form.jgProvince" v-if="false" />
-                  <el-input v-model="form.jgCity" v-if="false" />
-                  <el-input v-model="form.jgArea" v-if="false" />
+                v-model="form.jg"
+                :placeholders="placeholders"
+                :province="diglogForm.province"
+                :city="diglogForm.city"
+                :area="diglogForm.area"
+                @selected="onSelected_jg"
+              ></v-distpicker>
+              <el-input v-model="form.jgProvince" v-if="false" />
+              <el-input v-model="form.jgCity" v-if="false" />
+              <el-input v-model="form.jgArea" v-if="false" />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
-            <el-form-item label="出生地" prop="csd">
+          <el-col :span="24">
+            <el-form-item label="干部出生地" prop="csd">
               <v-distpicker
-                    v-model="form.csd"
-                    :placeholders="placeholders"
-                    :province="diglogForm1.province"
-                    :city="diglogForm1.city"
-                    :area="diglogForm1.area"
-                    @selected="onSelected_csd"
-                  ></v-distpicker>
-                  <el-input v-model="form.csdProvince" v-if="false" />
-                  <el-input v-model="form.csdCity" v-if="false" />
-                  <el-input v-model="form.csdArea" v-if="false" />
+                v-model="form.csd"
+                :placeholders="placeholders"
+                :province="diglogForm1.province"
+                :city="diglogForm1.city"
+                :area="diglogForm1.area"
+                @selected="onSelected_csd"
+              ></v-distpicker>
+              <el-input v-model="form.csdProvince" v-if="false" />
+              <el-input v-model="form.csdCity" v-if="false" />
+              <el-input v-model="form.csdArea" v-if="false" />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
-            <el-form-item label="出生日期" prop="csrq">
-              <el-date-picker
-                clearable
-                size="small"
-                style="width: 200px"
-                v-model="form.csrq"
-                type="date"
-                value-format="yyyy-MM-dd"
-                placeholder="选择出生日期"
-              >
-              </el-date-picker>
-            </el-form-item>
-          </el-col>
+
           <el-col :span="12">
             <el-form-item label="手机号码" prop="phone">
               <el-input v-model="form.phone" placeholder="请输入手机号码" />
@@ -603,9 +590,14 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <!-- <el-col :span="12">
             <el-form-item label="单位简称" prop="dwjc">
               <el-input v-model="form.dwjc" placeholder="请输入单位简称" />
+            </el-form-item>
+          </el-col> -->
+          <el-col :span="12">
+            <el-form-item label="单位地址" prop="dwdz">
+              <el-input v-model="form.dwdz" placeholder="请输入单位地址" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -613,12 +605,6 @@
               <el-input v-model="form.jtzz" placeholder="请输入家庭住址" />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
-            <el-form-item label="单位地址" prop="dwdz">
-              <el-input v-model="form.dwdz" placeholder="请输入单位地址" />
-            </el-form-item>
-          </el-col>
-          
           <el-col :span="12">
             <el-form-item label="毕业院校" prop="byyx">
               <el-input v-model="form.byyx" placeholder="请输入毕业院校" />
@@ -639,6 +625,19 @@
           <el-col :span="12">
             <el-form-item label="身份证号" prop="sfzh">
               <el-input v-model="form.sfzh" placeholder="请输入身份证号" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="出生日期" prop="csrq">
+              <el-date-picker
+                clearable
+                size="small"
+                v-model="form.csrq"
+                type="date"
+                value-format="yyyy-MM-dd"
+                placeholder="选择出生日期"
+              >
+              </el-date-picker>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -670,7 +669,6 @@
               <el-date-picker
                 clearable
                 size="small"
-                style="width: 200px"
                 v-model="form.rdsj"
                 type="month"
                 value-format="yyyy-MM"
@@ -856,25 +854,31 @@
       </div>
     </el-dialog>
 
-
     <!-- 查看干部详情对话框 -->
     <el-dialog
       :title="title_look"
       :visible.sync="open_look"
-      width="800px"
+      width="980px"
       append-to-body
     >
-      
       <el-form ref="form" :model="form" label-width="140px">
         <el-row :gutter="15">
           <el-col :span="12">
-            <el-form-item label="姓名" prop="name">
-              <el-input v-model="form.name" placeholder="请输入教师姓名" :disabled="true" />
+            <el-form-item label="干部姓名" prop="name">
+              <el-input
+                v-model="form.name"
+                placeholder="请输入干部姓名"
+                :disabled="true"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="性别" prop="xb">
-              <el-select v-model="form.xb" placeholder="请选择性别" :disabled="true">
+            <el-form-item label="干部性别" prop="xb">
+              <el-select
+                v-model="form.xb"
+                placeholder="请选择性别"
+                :disabled="true"
+              >
                 <el-option
                   v-for="dict in xbOptions"
                   :key="dict.dictValue"
@@ -885,8 +889,12 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="民族" prop="mz">
-              <el-select v-model="form.mz" placeholder="请选择民族" :disabled="true">
+            <el-form-item label="干部民族" prop="mz">
+              <el-select
+                v-model="form.mz"
+                placeholder="请选择民族"
+                :disabled="true"
+              >
                 <el-option
                   v-for="dict in mzOptions"
                   :key="dict.dictValue"
@@ -897,8 +905,12 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="学历" prop="xl">
-              <el-select v-model="form.xl" placeholder="请选择学历" :disabled="true">
+            <el-form-item label="干部学历" prop="xl">
+              <el-select
+                v-model="form.xl"
+                placeholder="请选择学历"
+                :disabled="true"
+              >
                 <el-option
                   v-for="dict in xlOptions"
                   :key="dict.dictValue"
@@ -909,8 +921,12 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="学位" prop="xw">
-              <el-select v-model="form.xw" placeholder="请选择学位" :disabled="true">
+            <el-form-item label="干部学位" prop="xw">
+              <el-select
+                v-model="form.xw"
+                placeholder="请选择学位"
+                :disabled="true"
+              >
                 <el-option
                   v-for="dict in xwOptions"
                   :key="dict.dictValue"
@@ -921,8 +937,12 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="职称" prop="zc">
-              <el-select v-model="form.zc" placeholder="请选择职称" :disabled="true">
+            <el-form-item label="干部职称" prop="zc">
+              <el-select
+                v-model="form.zc"
+                placeholder="请选择职称"
+                :disabled="true"
+              >
                 <el-option
                   v-for="dict in zcOptions"
                   :key="dict.dictValue"
@@ -932,40 +952,122 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
-            <el-form-item label="籍贯" prop="jg">
+          <el-col :span="24">
+            <el-form-item label="干部籍贯" prop="jg">
               <v-distpicker
-                    v-model="form.jg"
-                    :placeholders="placeholders"
-                    :province="diglogForm.province"
-                    :city="diglogForm.city"
-                    :area="diglogForm.area"
-                    @selected="onSelected_jg"
-                    :disabled="true"
-                  ></v-distpicker>
-                  <el-input v-model="form.jgProvince" v-if="false" />
-                  <el-input v-model="form.jgCity" v-if="false" />
-                  <el-input v-model="form.jgArea" v-if="false" />
+                v-model="form.jg"
+                :placeholders="placeholders"
+                :province="diglogForm.province"
+                :city="diglogForm.city"
+                :area="diglogForm.area"
+                @selected="onSelected_jg"
+                :disabled="true"
+              ></v-distpicker>
+              <el-input v-model="form.jgProvince" v-if="false" />
+              <el-input v-model="form.jgCity" v-if="false" />
+              <el-input v-model="form.jgArea" v-if="false" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="干部出生地" prop="csd">
+              <v-distpicker
+                v-model="form.csd"
+                :placeholders="placeholders"
+                :province="diglogForm1.province"
+                :city="diglogForm1.city"
+                :area="diglogForm1.area"
+                @selected="onSelected_csd"
+                :disabled="true"
+              ></v-distpicker>
+              <el-input v-model="form.csdProvince" v-if="false" />
+              <el-input v-model="form.csdCity" v-if="false" />
+              <el-input v-model="form.csdArea" v-if="false" />
+            </el-form-item>
+          </el-col> 
+          <el-col :span="12">
+            <el-form-item label="手机号码" prop="phone">
+              <el-input
+                v-model="form.phone"
+                placeholder="请输入手机号码"
+                :disabled="true"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="出生地" prop="csd">
-              <v-distpicker
-                    v-model="form.csd"
-                    :placeholders="placeholders"
-                    :province="diglogForm1.province"
-                    :city="diglogForm1.city"
-                    :area="diglogForm1.area"
-                    @selected="onSelected_csd"
-                    :disabled="true"
-                  ></v-distpicker>
-                  <el-input v-model="form.csdProvince" v-if="false" />
-                  <el-input v-model="form.csdCity" v-if="false" />
-                  <el-input v-model="form.csdArea" v-if="false" />
+            <el-form-item label="单位名称" prop="dwmc">
+              <el-select
+                v-model="form.deptId"
+                placeholder="请选择教育类型"
+                :disabled="true"
+              >
+                <el-option
+                  v-for="dict in deptOptions"
+                  :key="dict.deptId"
+                  :label="dict.deptName"
+                  :value="dict.deptId"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <!-- <el-col :span="12">
+            <el-form-item label="单位简称" prop="dwjc">
+              <el-input v-model="form.dwjc" placeholder="请输入单位简称" :disabled="true"/>
+            </el-form-item>
+          </el-col> -->
+          <el-col :span="12">
+            <el-form-item label="单位地址" prop="dwdz">
+              <el-input
+                v-model="form.dwdz"
+                placeholder="请输入单位地址"
+                :disabled="true"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="出生日期" prop="csrq" >
+            <el-form-item label="家庭住址" prop="jtzz">
+              <el-input
+                v-model="form.jtzz"
+                placeholder="请输入家庭住址"
+                :disabled="true"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="毕业院校" prop="byyx">
+              <el-input
+                v-model="form.byyx"
+                placeholder="请输入毕业院校"
+                :disabled="true"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="教育类型" prop="jylx">
+              <el-select
+                v-model="form.jylx"
+                placeholder="请选择教育类型"
+                :disabled="true"
+              >
+                <el-option
+                  v-for="dict in jylxOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="身份证号" prop="sfzh">
+              <el-input
+                v-model="form.sfzh"
+                placeholder="请输入身份证号"
+                :disabled="true"
+              />
+            </el-form-item>
+          </el-col>
+           <el-col :span="12">
+            <el-form-item label="出生日期" prop="csrq">
               <el-date-picker
                 clearable
                 size="small"
@@ -980,63 +1082,12 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="手机号码" prop="phone">
-              <el-input v-model="form.phone" placeholder="请输入手机号码" :disabled="true"/>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="单位名称" prop="dwmc">
-              <el-select v-model="form.deptId" placeholder="请选择教育类型" :disabled="true">
-                <el-option
-                  v-for="dict in deptOptions"
-                  :key="dict.deptId"
-                  :label="dict.deptName"
-                  :value="dict.deptId"
-                ></el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="单位简称" prop="dwjc">
-              <el-input v-model="form.dwjc" placeholder="请输入单位简称" :disabled="true"/>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="家庭住址" prop="jtzz">
-              <el-input v-model="form.jtzz" placeholder="请输入家庭住址" :disabled="true"/>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="单位地址" prop="dwdz">
-              <el-input v-model="form.dwdz" placeholder="请输入单位地址" :disabled="true"/>
-            </el-form-item>
-          </el-col>
-          
-          <el-col :span="12">
-            <el-form-item label="毕业院校" prop="byyx">
-              <el-input v-model="form.byyx" placeholder="请输入毕业院校" :disabled="true"/>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="教育类型" prop="jylx">
-              <el-select v-model="form.jylx" placeholder="请选择教育类型" :disabled="true">
-                <el-option
-                  v-for="dict in jylxOptions"
-                  :key="dict.dictValue"
-                  :label="dict.dictLabel"
-                  :value="dict.dictValue"
-                ></el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="身份证号" prop="sfzh">
-              <el-input v-model="form.sfzh" placeholder="请输入身份证号" :disabled="true"/>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
             <el-form-item label="婚姻状况" prop="hyzk">
-              <el-select v-model="form.hyzk" placeholder="请选择婚姻状况" :disabled="true">
+              <el-select
+                v-model="form.hyzk"
+                placeholder="请选择婚姻状况"
+                :disabled="true"
+              >
                 <el-option
                   v-for="dict in hyzkOptions"
                   :key="dict.dictValue"
@@ -1048,7 +1099,11 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="政治面貌" prop="zzmm">
-              <el-select v-model="form.zzmm" placeholder="请选择政治面貌" :disabled="true">
+              <el-select
+                v-model="form.zzmm"
+                placeholder="请选择政治面貌"
+                :disabled="true"
+              >
                 <el-option
                   v-for="dict in zzmmOptions"
                   :key="dict.dictValue"
@@ -1075,7 +1130,11 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="任教学科" prop="rjxk">
-              <el-select v-model="form.rjxk" placeholder="请选择任教学科" :disabled="true">
+              <el-select
+                v-model="form.rjxk"
+                placeholder="请选择任教学科"
+                :disabled="true"
+              >
                 <el-option
                   v-for="dict in rjxkOptions"
                   :key="dict.dictValue"
@@ -1087,7 +1146,11 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="健康状况" prop="jkzk">
-              <el-select v-model="form.jkzk" placeholder="请选择健康状况" :disabled="true">
+              <el-select
+                v-model="form.jkzk"
+                placeholder="请选择健康状况"
+                :disabled="true"
+              >
                 <el-option
                   v-for="dict in jkzkOptions"
                   :key="dict.dictValue"
@@ -1099,7 +1162,11 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="能否开车" prop="nfkc">
-              <el-select v-model="form.nfkc" placeholder="请选择能否开车" :disabled="true">
+              <el-select
+                v-model="form.nfkc"
+                placeholder="请选择能否开车"
+                :disabled="true"
+              >
                 <el-option
                   v-for="dict in nfkcOptions"
                   :key="dict.dictValue"
@@ -1111,7 +1178,11 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="驾照持有情况" prop="jzcyqk">
-              <el-select v-model="form.jzcyqk" placeholder="请选择驾照持有情况" :disabled="true">
+              <el-select
+                v-model="form.jzcyqk"
+                placeholder="请选择驾照持有情况"
+                :disabled="true"
+              >
                 <el-option
                   v-for="dict in jzcyqkOptions"
                   :key="dict.dictValue"
@@ -1123,7 +1194,11 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="现任行政职务" prop="xrxzzw">
-              <el-select v-model="form.xrxzzw" placeholder="请选择现任行政职务" :disabled="true">
+              <el-select
+                v-model="form.xrxzzw"
+                placeholder="请选择现任行政职务"
+                :disabled="true"
+              >
                 <el-option
                   v-for="dict in xrxzzwOptions"
                   :key="dict.dictValue"
@@ -1135,7 +1210,11 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="现任党内职务" prop="xrdnzw">
-              <el-select v-model="form.xrdnzw" placeholder="请选择现任党内职务" :disabled="true">
+              <el-select
+                v-model="form.xrdnzw"
+                placeholder="请选择现任党内职务"
+                :disabled="true"
+              >
                 <el-option
                   v-for="dict in xrdnzwOptions"
                   :key="dict.dictValue"
@@ -1147,7 +1226,11 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="现任群团职务" prop="xrqtzw">
-              <el-select v-model="form.xrqtzw" placeholder="请选择现任群团职务" :disabled="true">
+              <el-select
+                v-model="form.xrqtzw"
+                placeholder="请选择现任群团职务"
+                :disabled="true"
+              >
                 <el-option
                   v-for="dict in xrqtzwOptions"
                   :key="dict.dictValue"
@@ -1174,7 +1257,11 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="现任校长职级" prop="xrxzzj">
-              <el-select v-model="form.xrxzzj" placeholder="请选择现任校长职级" :disabled="true">
+              <el-select
+                v-model="form.xrxzzj"
+                placeholder="请选择现任校长职级"
+                :disabled="true"
+              >
                 <el-option
                   v-for="dict in xrxzzjOptions"
                   :key="dict.dictValue"
@@ -1201,7 +1288,11 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="是否后备干部" prop="sfhbgb">
-              <el-select v-model="form.sfhbgb" placeholder="请选择是否后备干部" :disabled="true">
+              <el-select
+                v-model="form.sfhbgb"
+                placeholder="请选择是否后备干部"
+                :disabled="true"
+              >
                 <el-option
                   v-for="dict in sfhbgbOptions"
                   :key="dict.dictValue"
@@ -1243,7 +1334,11 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="办公室电话" prop="bgsdh">
-              <el-input v-model="form.bgsdh" placeholder="请输入办公室电话" :disabled="true"/>
+              <el-input
+                v-model="form.bgsdh"
+                placeholder="请输入办公室电话"
+                :disabled="true"
+              />
             </el-form-item>
           </el-col>
         </el-row>
@@ -1264,10 +1359,7 @@ import {
   updateGbjbqk,
   exportGbjbqk,
 } from "@/api/gbxxgl/gbjbqk";
-import {
-  listDept,
-  getDept,
-} from "@/api/system/dept";
+import { listDept, getDept } from "@/api/system/dept";
 
 //导入省市区三级联动库
 import VDistpicker from "v-distpicker";
@@ -1401,7 +1493,7 @@ export default {
         rjxk: null,
         jkzk: null,
         createUser: null,
-        createTime: null,        
+        createTime: null,
       },
       // 表单参数
       form: {},
@@ -1410,16 +1502,11 @@ export default {
         name: [
           { required: true, message: "干部姓名不能为空", trigger: "blur" },
         ],
-        phone: [
-          { required: true, message: "电话不能为空", trigger: "blur" },
-        ],
-        xb: [
-          { required: true, message: "性别不能为空", trigger: "blur" },
-        ],
+        phone: [{ required: true, message: "电话不能为空", trigger: "blur" }],
+        xb: [{ required: true, message: "性别不能为空", trigger: "blur" }],
         sfhbgb: [
           { required: true, message: "是否储备干部不能为空", trigger: "blur" },
         ],
-
       },
     };
   },
@@ -1483,14 +1570,13 @@ export default {
     VDistpicker,
   },
   methods: {
-    
     //所在省市区触发联动方法
     onSelected_jg(data) {
       // console.log("onSelected_brith=" + data);
       if (
         data.province.code == undefined ||
         data.city.code == undefined ||
-        data.area.code == undefined 
+        data.area.code == undefined
       ) {
         this.form.jg = undefined;
       } else {
@@ -1508,7 +1594,7 @@ export default {
       if (
         data.province.code == undefined ||
         data.city.code == undefined ||
-        data.area.code == undefined 
+        data.area.code == undefined
       ) {
         this.form.csd = undefined;
       } else {
@@ -1546,7 +1632,7 @@ export default {
         }
       });
       return actions.join("");
-    },  
+    },
     // 性别字典翻译
     xbFormat(row, column) {
       return this.selectDictLabel(this.xbOptions, row.xb);

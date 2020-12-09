@@ -78,18 +78,18 @@
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="姓名" align="center" prop="gbid" :formatter="gbmcFormat"/>
       <el-table-column label="挂职单位名称" align="center" prop="gzdw" />
-      <el-table-column label="起始年月" align="center" prop="qsny" width="180">
+      <el-table-column label="起始年月" align="center" prop="qsny" >
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.qsny, '{y}-{m}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="终止年月" align="center" prop="zzny" width="180">
+      <el-table-column label="终止年月" align="center" prop="zzny" >
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.zzny, '{y}-{m}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="带教导师" align="center" prop="djds" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="180px">
         <template slot-scope="scope">
           <el-button
             size="mini"
