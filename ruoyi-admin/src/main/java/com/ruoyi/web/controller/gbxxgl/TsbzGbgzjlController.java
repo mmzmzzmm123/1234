@@ -72,6 +72,14 @@ public class TsbzGbgzjlController extends BaseController {
     @Log(title = "干部工作经历", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody TsbzGbgzjl tsbzGbgzjl) {
+        //先判断是否已经创建当前任职年月的干部信息
+        TsbzGbgzjl tsbzGbgzjlNew = new TsbzGbgzjl();
+        tsbzGbgzjlNew.setGbid(tsbzGbgzjl.getGbid());
+        tsbzGbgzjlNew.setQsny(tsbzGbgzjl.getQsny());
+        List<TsbzGbgzjl> selectList = tsbzGbgzjlService.selectTsbzGbgzjlList(tsbzGbgzjlNew);
+        if (selectList != null && selectList.size() > 0) {
+            return AjaxResult.error("当前干部任职年月工作经历已创建,无法重复创建");
+        }
         return toAjax(tsbzGbgzjlService.insertTsbzGbgzjl(tsbzGbgzjl));
     }
 
