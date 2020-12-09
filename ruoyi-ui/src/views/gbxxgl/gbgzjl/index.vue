@@ -76,13 +76,14 @@
         </el-select>
       </el-form-item>
       <el-form-item label="工作岗位" prop="gzgw">
-        <el-input
-          v-model="queryParams.gzgw"
-          placeholder="请输入工作岗位"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+        <el-select v-model="queryParams.gzgw" placeholder="请选择工作岗位" clearable size="small">
+          <el-option
+            v-for="dict in gzgwOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -141,7 +142,7 @@
       <el-table-column label="党内职务" align="center" prop="dnzw" :formatter="dnzwFormat"/>
       <el-table-column label="群团职务" align="center" prop="qtzw" :formatter="qtzwFormat"/>
       <el-table-column label="任教学科" align="center" prop="rjxk" :formatter="rjxkFormat"/>
-      <el-table-column label="工作岗位" align="center" prop="gzgw" />
+      <el-table-column label="工作岗位" align="center" prop="gzgw" :formatter="gzgwFormat"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -196,9 +197,7 @@
         <el-form-item label="工作单位" prop="gzdwmc">
           <el-input v-model="form.gzdwmc" placeholder="请输入工作单位名称" />
         </el-form-item>
-        <el-form-item label="工作岗位" prop="gzgw">
-          <el-input v-model="form.gzgw" placeholder="请输入工作岗位" />
-        </el-form-item>
+        
         <el-form-item label="起始年月" prop="qsny">
           <el-date-picker clearable size="small" style="width: 200px"
             v-model="form.qsny"
@@ -214,6 +213,17 @@
             value-format="yyyy-MM"
             placeholder="选择终止年月">
           </el-date-picker>
+        </el-form-item>
+        <el-form-item label="工作岗位" prop="gzgw">
+          <el-select v-model="form.gzgw" placeholder="请选择工作岗位">
+            <el-option
+              v-for="dict in gzgwOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            ></el-option>
+          </el-select>
+          <el-input v-model="form.gzgw" placeholder="请输入工作岗位" />
         </el-form-item>
         <el-form-item label="执行职务" prop="zzzw">
           <el-select v-model="form.zzzw" placeholder="请选择执行职务">
@@ -310,6 +320,8 @@ export default {
       gbOptions: [],
       // 干部名称
       gbmcOptions: [],
+      // 工作岗位字典
+      gzgwOptions: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -369,6 +381,9 @@ export default {
     });
     this.getDicts("sys_dm_rjxk").then(response => {
       this.rjxkOptions = response.data;
+    });
+    this.getDicts("sys_dm_gzgw").then(response => {
+      this.gzgwOptions = response.data;
     });
   },
   methods: {
@@ -433,6 +448,10 @@ export default {
     // 任教学科字典翻译
     rjxkFormat(row, column) {
       return this.selectDictLabel(this.rjxkOptions, row.rjxk);
+    },
+    // 工作岗位字典翻译
+    gzgwFormat(row, column) {
+      return this.selectDictLabel(this.gzgwOptions, row.gzgw);
     },
     // 取消按钮
     cancel() {

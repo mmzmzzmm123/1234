@@ -1,84 +1,80 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="干部编号" prop="gbid">
+      <el-form-item label="姓名" prop="gbid">
         <el-input
           v-model="queryParams.gbid"
-          placeholder="请输入干部编号"
+          placeholder="请输入干部姓名"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
       <el-form-item label="教育类型" prop="jylx">
-        <el-input
-          v-model="queryParams.jylx"
-          placeholder="请输入教育类型"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+        <el-select v-model="queryParams.jylx" placeholder="请选择教育类型" clearable size="small">
+          <el-option
+            v-for="dict in jylxOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item label="学历" prop="xl">
-        <el-input
-          v-model="queryParams.xl"
-          placeholder="请输入学历"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+        <el-select v-model="queryParams.xl" placeholder="请选择学历" clearable size="small">
+          <el-option
+            v-for="dict in xlOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item label="学位" prop="xw">
-        <el-input
-          v-model="queryParams.xw"
-          placeholder="请输入学位"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+        <el-select v-model="queryParams.xw" placeholder="请选择学位" clearable size="small">
+          <el-option
+            v-for="dict in xwOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item label="起始年月" prop="qsny">
         <el-date-picker clearable size="small" style="width: 200px"
           v-model="queryParams.qsny"
-          type="date"
-          value-format="yyyy-MM-dd"
+          type="month"
+          value-format="yyyy-MM"
           placeholder="选择起始年月">
         </el-date-picker>
       </el-form-item>
       <el-form-item label="终止年月" prop="zzny">
         <el-date-picker clearable size="small" style="width: 200px"
           v-model="queryParams.zzny"
-          type="date"
-          value-format="yyyy-MM-dd"
+          type="month"
+          value-format="yyyy-MM"
           placeholder="选择终止年月">
         </el-date-picker>
       </el-form-item>
       <el-form-item label="专业" prop="zy">
-        <el-input
-          v-model="queryParams.zy"
-          placeholder="请输入专业"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+        <el-select v-model="queryParams.zy" placeholder="请选择专业" clearable size="small">
+          <el-option
+            v-for="dict in zyOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item label="职务" prop="zw">
-        <el-input
-          v-model="queryParams.zw"
-          placeholder="请输入职务"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="创建人" prop="createUserid">
-        <el-input
-          v-model="queryParams.createUserid"
-          placeholder="请输入创建人"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+        <el-select v-model="queryParams.zw" placeholder="请选择职务" clearable size="small">
+          <el-option
+            v-for="dict in zwOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -130,11 +126,10 @@
 
     <el-table v-loading="loading" :data="gbxxjlList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="编号" align="center" prop="id" />
-      <el-table-column label="干部编号" align="center" prop="gbid" />
-      <el-table-column label="教育类型" align="center" prop="jylx" />
-      <el-table-column label="学历" align="center" prop="xl" />
-      <el-table-column label="学位" align="center" prop="xw" />
+      <el-table-column label="姓名" align="center" prop="gbid" :formatter="gbmcFormat"/>
+      <el-table-column label="教育类型" align="center" prop="jylx" :formatter="jylxFormat"/>
+      <el-table-column label="学历" align="center" prop="xl" :formatter="xlFormat"/>
+      <el-table-column label="学位" align="center" prop="xw" :formatter="xwFormat"/>
       <el-table-column label="起始年月" align="center" prop="qsny" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.qsny, '{y}-{m}-{d}') }}</span>
@@ -146,9 +141,8 @@
         </template>
       </el-table-column>
       <el-table-column label="毕业院校" align="center" prop="byyx" />
-      <el-table-column label="专业" align="center" prop="zy" />
-      <el-table-column label="职务" align="center" prop="zw" />
-      <el-table-column label="创建人" align="center" prop="createUserid" />
+      <el-table-column label="专业" align="center" prop="zy" :formatter="zyFormat"/>
+      <el-table-column label="职务" align="center" prop="zw" :formatter="zyFormat"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -180,45 +174,94 @@
     <!-- 添加或修改干部学习经历对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="干部编号" prop="gbid">
-          <el-input v-model="form.gbid" placeholder="请输入干部编号" />
+        <el-form-item label="归属部门" prop="deptId" >
+          <treeselect
+            v-model="form.deptId"
+            :options="deptOptions"
+            :disable-branch-nodes="true"
+            :show-count="true"
+            placeholder="请选择归属部门"
+            :disabled="flag"
+          />
         </el-form-item>
-        <el-form-item label="教育类型" prop="jylx">
-          <el-input v-model="form.jylx" placeholder="请输入教育类型" />
+        <el-form-item label="姓名" prop="gbid">
+          <el-select v-model="form.gbid" placeholder="请选择姓名" :disabled="flag">
+            <el-option
+              v-for="dict in gbOptions"
+              :key="dict.id"
+              :label="dict.name"
+              :value="dict.id"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="学历" prop="xl">
-          <el-input v-model="form.xl" placeholder="请输入学历" />
+          <el-select v-model="form.xl" placeholder="请选择学历">
+            <el-option
+              v-for="dict in xlOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="学位" prop="xw">
-          <el-input v-model="form.xw" placeholder="请输入学位" />
+          <el-select v-model="form.xw" placeholder="请选择学位">
+            <el-option
+              v-for="dict in xwOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="专业" prop="zy">
+          <el-select v-model="form.zy" placeholder="请选择专业">
+            <el-option
+              v-for="dict in zyOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="职务" prop="zw">
+          <el-select v-model="form.zw" placeholder="请选择职务">
+            <el-option
+              v-for="dict in zwOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="起始年月" prop="qsny">
           <el-date-picker clearable size="small" style="width: 200px"
             v-model="form.qsny"
-            type="date"
-            value-format="yyyy-MM-dd"
+            type="month"
+            value-format="yyyy-MM"
             placeholder="选择起始年月">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="终止年月" prop="zzny">
           <el-date-picker clearable size="small" style="width: 200px"
             v-model="form.zzny"
-            type="date"
-            value-format="yyyy-MM-dd"
+            type="month"
+            value-format="yyyy-MM"
             placeholder="选择终止年月">
           </el-date-picker>
         </el-form-item>
+        <el-form-item label="教育类型" prop="jylx">
+          <el-select v-model="form.jylx" placeholder="请选择教育类型">
+            <el-option
+              v-for="dict in jylxOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            ></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="毕业院校" prop="byyx">
           <el-input v-model="form.byyx" type="textarea" placeholder="请输入内容" />
-        </el-form-item>
-        <el-form-item label="专业" prop="zy">
-          <el-input v-model="form.zy" placeholder="请输入专业" />
-        </el-form-item>
-        <el-form-item label="职务" prop="zw">
-          <el-input v-model="form.zw" placeholder="请输入职务" />
-        </el-form-item>
-        <el-form-item label="创建人" prop="createUserid">
-          <el-input v-model="form.createUserid" placeholder="请输入创建人" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -231,11 +274,17 @@
 
 <script>
 import { listGbxxjl, getGbxxjl, delGbxxjl, addGbxxjl, updateGbxxjl, exportGbxxjl } from "@/api/gbxxgl/gbxxjl";
+import { listGbjbqk, getGbjbqk } from "@/api/gbxxgl/gbjbqk";
+import { treeselect } from "@/api/system/dept";
+import Treeselect from "@riophae/vue-treeselect";
+import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 
 export default {
   name: "Gbxxjl",
+  components: { Treeselect },
   data() {
     return {
+      flag: null,
       // 遮罩层
       loading: true,
       // 选中数组
@@ -254,6 +303,22 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
+      // 部门选项
+      deptOptions: [],
+      // 干部选项
+      gbOptions: [],
+      // 干部名称
+      gbmcOptions: [],
+      // 教育类型字典
+      jylxOptions: [],
+      // 学历字典
+      xlOptions: [],
+      // 学位字典
+      xwOptions: [],
+      // 专业字典
+      zyOptions: [],
+      // 职务字典
+      zwOptions: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -268,16 +333,54 @@ export default {
         zy: null,
         zw: null,
         createUserid: null,
+        deptId: null,
+      },
+      // 查询参数
+      queryParams_gb: {
+        deptId: null,
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
+        deptId: [
+          { required: true, message: "部门不能为空", trigger: "blur" }
+        ],
+        gbid: [
+          { required: true, message: "干部姓名不能为空", trigger: "blur" },
+        ],
+        qsny: [
+          { required: true, message: "任职起始年月不能为空", trigger: "blur" },
+        ],
+        zzny: [
+          { required: true, message: "任职终止年月不能为空", trigger: "blur" },
+        ],
       }
     };
   },
+  watch: {
+    // 监听deptId
+    "form.deptId": "handleBucketClick",
+  },
   created() {
     this.getList();
+    this.getTreeselect();
+    this.getGbjbqkList();
+    this.getDicts("sys_dm_jylx").then(response => {
+      this.jylxOptions = response.data;
+    });
+    this.getDicts("sys_dm_xl").then(response => {
+      this.xlOptions = response.data;
+    });
+    this.getDicts("sys_dm_xw").then(response => {
+      this.xwOptions = response.data;
+    });
+    this.getDicts("sys_dm_zy").then(response => {
+      this.zyOptions = response.data;
+    });
+    this.getDicts("sys_dm_xrxzzw").then(response => {
+      this.zwOptions = response.data;
+    });
   },
   methods: {
     /** 查询干部学习经历列表 */
@@ -288,6 +391,63 @@ export default {
         this.total = response.total;
         this.loading = false;
       });
+    },
+    /** 查询干部列表 */
+    getGbjbqkList() {
+      this.loading = true;
+      listGbjbqk(null).then((response) => {
+        this.gbmcOptions = response.rows;
+      });
+    },
+    /** 查询部门下拉树结构 */
+    getTreeselect() {
+      treeselect().then((response) => {
+        this.deptOptions = response.data;
+      });
+    },
+
+    // 干部字典翻译
+    gbmcFormat(row, column) {
+      var actions = [];
+      var datas = this.gbmcOptions;
+      Object.keys(datas).map((key) => {
+        if (datas[key].id == "" + row.gbid) {
+          actions.push(datas[key].name);
+          return false;
+        }
+      });
+      return actions.join("");
+    },
+    // 部门监听
+    handleBucketClick(value) {
+      // console.log(value);
+      this.queryParams_gb.deptId = value;
+      if (this.queryParams_gb.deptId != null) {
+        listGbjbqk(this.queryParams_gb).then((response) => {
+          // console.log(response.rows);
+          this.gbOptions = response.rows;
+        });
+      }
+    },
+    // 教育类型字典翻译
+    jylxFormat(row, column) {
+      return this.selectDictLabel(this.jylxOptions, row.jylx);
+    },
+    // 学历字典翻译
+    xlFormat(row, column) {
+      return this.selectDictLabel(this.xlOptions, row.xl);
+    },
+    // 学位字典翻译
+    xwFormat(row, column) {
+      return this.selectDictLabel(this.xwOptions, row.xw);
+    },
+    // 学位字典翻译
+    zyFormat(row, column) {
+      return this.selectDictLabel(this.zyOptions, row.zy);
+    },
+    // 职务字典翻译
+    zwFormat(row, column) {
+      return this.selectDictLabel(this.zwOptions, row.zw);
     },
     // 取消按钮
     cancel() {
@@ -308,7 +468,8 @@ export default {
         zy: null,
         zw: null,
         createUserid: null,
-        createTime: null
+        createTime: null,
+        deptId: null,
       };
       this.resetForm("form");
     },
@@ -331,6 +492,8 @@ export default {
     /** 新增按钮操作 */
     handleAdd() {
       this.reset();
+      this.getTreeselect();
+      this.flag = false;
       this.open = true;
       this.title = "添加干部学习经历";
     },
@@ -340,6 +503,8 @@ export default {
       const id = row.id || this.ids
       getGbxxjl(id).then(response => {
         this.form = response.data;
+        this.form.deptId = response.data.deptId;
+        this.flag = true;
         this.open = true;
         this.title = "修改干部学习经历";
       });
