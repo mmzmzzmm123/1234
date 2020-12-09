@@ -1,6 +1,9 @@
 package com.ruoyi.web.controller.gbxxgl;
 
+import java.util.Date;
 import java.util.List;
+
+import com.ruoyi.common.utils.SecurityUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -84,6 +87,9 @@ public class TsbzGbcrjqkController extends BaseController
         if (selectList != null && selectList.size() > 0) {
             return AjaxResult.error("当前干部出入境信息已创建,无法重复创建");
         }
+
+        tsbzGbcrjqk.setCreateUser(SecurityUtils.getLoginUser().getUser().getUserId());
+        tsbzGbcrjqk.setCreateTime(new Date());
         return toAjax(tsbzGbcrjqkService.insertTsbzGbcrjqk(tsbzGbcrjqk));
     }
 

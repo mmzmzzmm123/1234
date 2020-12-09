@@ -1,7 +1,9 @@
 package com.ruoyi.web.controller.gbxxgl;
 
+import java.util.Date;
 import java.util.List;
 
+import com.ruoyi.common.utils.SecurityUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -80,6 +82,8 @@ public class TsbzGbgzjlController extends BaseController {
         if (selectList != null && selectList.size() > 0) {
             return AjaxResult.error("当前干部任职年月工作经历已创建,无法重复创建");
         }
+        tsbzGbgzjl.setCreateUserid(SecurityUtils.getLoginUser().getUser().getUserId());
+        tsbzGbgzjl.setCreateTime(new Date());
         return toAjax(tsbzGbgzjlService.insertTsbzGbgzjl(tsbzGbgzjl));
     }
 

@@ -1,6 +1,9 @@
 package com.ruoyi.web.controller.gbxxgl;
 
+import java.util.Date;
 import java.util.List;
+
+import com.ruoyi.common.utils.SecurityUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -76,6 +79,8 @@ public class TsbzGbjbqkController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody TsbzGbjbqk tsbzGbjbqk)
     {
+        tsbzGbjbqk.setCreateUser(SecurityUtils.getLoginUser().getUser().getUserId());
+        tsbzGbjbqk.setCreateTime(new Date());
         return toAjax(tsbzGbjbqkService.insertTsbzGbjbqk(tsbzGbjbqk));
     }
 
