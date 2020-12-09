@@ -8,13 +8,14 @@
       label-width="102px"
     >
       <el-form-item label="姓名" prop="gbid">
-        <el-input
-          v-model="queryParams.gbid"
-          placeholder="姓名"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+        <el-select v-model="queryParams.gbid" filterable  placeholder="请选择或输入姓名" clearable size="small">
+          <el-option
+            v-for="dict in gbmcOptions"
+            :key="dict.id"
+            :label="dict.name"
+            :value="dict.id"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item label="任职年月" prop="rzny">
         <el-date-picker

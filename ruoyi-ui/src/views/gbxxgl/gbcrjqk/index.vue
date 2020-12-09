@@ -2,13 +2,14 @@
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
       <el-form-item label="姓名" prop="gbid">
-        <el-input
-          v-model="queryParams.gbid"
-          placeholder="请输入干部姓名"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+        <el-select v-model="queryParams.gbid" filterable  placeholder="请选择或输入姓名" clearable size="small">
+          <el-option
+            v-for="dict in gbmcOptions"
+            :key="dict.id"
+            :label="dict.name"
+            :value="dict.id"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item label="性质" prop="xz">
         <el-select v-model="queryParams.xz" placeholder="请选择性质" clearable size="small">
