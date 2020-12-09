@@ -134,7 +134,8 @@
 
       const checkPhone = (rule, value, callback) => {
         const phoneReg = /^1[3|4|5|6|7|8|9][0-9]{9}$/
-        const hkPhoneReg = /^(5|6|8|9)\\d{7}$/
+        const hkPhoneReg = /^(5|6|8|9)\d{7}$/
+        console.log(hkPhoneReg.test(value))
         if (!value) {
           return callback(new Error('电话号码不能为空'))
         }
