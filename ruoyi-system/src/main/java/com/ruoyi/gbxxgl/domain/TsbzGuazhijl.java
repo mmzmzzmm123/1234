@@ -37,15 +37,15 @@ public class TsbzGuazhijl extends BaseEntity {
     /**
      * 起始年月
      */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "起始年月", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM")
+    @Excel(name = "起始年月", width = 30, dateFormat = "yyyy-MM")
     private Date qsny;
 
     /**
      * 终止年月
      */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "终止年月", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM")
+    @Excel(name = "终止年月", width = 30, dateFormat = "yyyy-MM")
     private Date zzny;
 
     /**
@@ -59,6 +59,31 @@ public class TsbzGuazhijl extends BaseEntity {
      */
     @Excel(name = "创建人")
     private Long createUserid;
+
+    @Override
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    @Override
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Long getDeptId() {
+        return deptId;
+    }
+
+    public void setDeptId(Long deptId) {
+        this.deptId = deptId;
+    }
+
+    /** 创建时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "创建时间", width = 30, dateFormat = "yyyy-MM-dd")
+    private Date createTime;
+
+    private Long deptId;
 
     public void setId(Long id) {
         this.id = id;
@@ -127,6 +152,7 @@ public class TsbzGuazhijl extends BaseEntity {
                 .append("djds", getDjds())
                 .append("createUserid", getCreateUserid())
                 .append("createTime", getCreateTime())
+                .append("deptid", getDeptId())
                 .toString();
     }
 }

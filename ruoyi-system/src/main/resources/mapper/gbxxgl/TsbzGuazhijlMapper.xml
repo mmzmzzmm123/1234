@@ -32,8 +32,12 @@
     </select>
 
     <select id="selectTsbzGuazhijlById" parameterType="Long" resultMap="TsbzGuazhijlResult">
-        <include refid="selectTsbzGuazhijlVo"/>
-        where id = #{id}
+        select a.id, a.gbid, a.gzdw, a.qsny, a.zzny, a.djds, a.create_userid, a.create_time,
+        b.dept_id as deptid
+        from tsbz_guazhijl a
+        left join tsbz_gbjbqk b
+        on a.gbid=b.id
+        where a.id = #{id}
     </select>
 
     <insert id="insertTsbzGuazhijl" parameterType="TsbzGuazhijl" useGeneratedKeys="true" keyProperty="id">

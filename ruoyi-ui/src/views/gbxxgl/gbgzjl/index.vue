@@ -223,7 +223,6 @@
               :value="dict.dictValue"
             ></el-option>
           </el-select>
-          <el-input v-model="form.gzgw" placeholder="请输入工作岗位" />
         </el-form-item>
         <el-form-item label="执行职务" prop="zzzw">
           <el-select v-model="form.zzzw" placeholder="请选择执行职务">
