@@ -15,57 +15,51 @@
         </div>
         <br />
         <div class="vertical-middle">
-          <h2 class="title">教育教学公开课证明</h2>
+          <h2 class="title">见习之星证明</h2>
           <div>
             <h3 class="info text-indent">
-              <b class="name">幼教</b>
-              <span>学科&nbsp;</span>
-              <b>吴丹</b>
-              <span>老师在区教研活动中执教</span>
-              <b>中班艺术活动《好玩的纸巾》</b>。
+              <!-- <b class="name">幼教</b>
+              <span>学科&nbsp;</span> -->
+              <b>{{ jsxm }}</b>
+              <span>老师在{{ nf }}年《{{ famc }}》方案中获得</span>
+              <b>《见习之星》</b>荣誉称号。
             </h3>
             <div class="zm-content">
               <h3 class="flex line-text">
-                <span class="left-text text-indent">上课学校：</span>
-                <div class="right-text">颛桥一幼</div>
+                <span class="left-text text-indent">基地学校：</span>
+                <div class="right-text">{{ jdxmc }}</div>
               </h3>
               <h3 class="flex line-text">
-                <span class="left-text text-indent">上课日期：</span>
-                <div class="right-text">2020-12-03</div>
-              </h3>
-              <h3 class="flex line-text">
-                <span class="left-text text-indent">评价：</span>
-                <div class="right-text">优秀</div>
+                <span class="left-text text-indent">评选日期：</span>
+                <div class="right-text">{{ parseTime(create_time, '{y}-{m}-{d}')  }}</div>
               </h3>
               <h3 class="flex line-text">
                 <span class="left-text text-indent">证明编号：</span>
-                <div class="right-text">【幼教202012024850】</div>
+                <div class="right-text">【见习之星{{ zsbh }}】</div>
               </h3>
             </div>
           </div>
           <div class="zm-zm">
-            <h3 class="text-indent">
-              特此证明
-            </h3>
+            <h3 class="text-indent">特此证明</h3>
           </div>
-          <div style="margin:60px 0px 0px 0px;width: 600px;height: 160px;">
-            <div style="margin-top: 20px;margin-left: 30px;float: left">
+          <div style="margin: 60px 0px 0px 0px; width: 600px; height: 160px">
+            <div style="margin-top: 20px; margin-left: 30px; float: left">
               <img src="./img/ewm.png" width="150px" height="150px" />
             </div>
             <div class="school-info">
               <div>
-                <h3 style="line-height: 40px;">闵行区教育学院</h3>
-                <h3 style="line-height: 40px;">
+                <h3 style="line-height: 40px">闵行区教育学院</h3>
+                <h3 style="line-height: 40px">
                   证明签发部门&nbsp;&nbsp;&nbsp;(公章)：
                 </h3>
-                <h3 style="line-height: 40px;">证明签发人：</h3>
-                <h3 style="line-height: 40px;">
-                  日期：<span id="certificateDate">2020年12月06日</span>
+                <h3 style="line-height: 40px">证明签发人：</h3>
+                <h3 style="line-height: 40px">
+                  日期：<span id="certificateDate">{{ parseTime(create_time, '{y}年{m}月{d}日')  }}</span>
                 </h3>
               </div>
             </div>
           </div>
-          <div class="row" style="margin-top: 180px;margin-bottom:10px;">
+          <div class="row" style="margin-top: 180px; margin-bottom: 10px">
             <h5 class="text-center">
               郑重说明：本证明盖有公章且有相关部门及教研员盖章签字方可有效，复印件交学校存档。
             </h5>
@@ -76,15 +70,48 @@
   </div>
 </template>
 <script>
+import { getJxzxmdInfo } from "@/api/jxjs/jxzxmd";
 export default {
-  name: "gkkzm", // 公开课证明
+  name: "jxzxzm", // 见习之星证明
+  data() {
+    return {
+      //见习教师姓名
+      jsxm: "",
+      //方案名称
+      famc: "",
+      //年份
+      nf: "",
+      //基地校名称
+      jdxmc: "",
+      //证书编号
+      zsbh: "",
+      //证书时间
+      create_time: "",
+    };
+  },
+  created() {
+    const id = this.$route.params && this.$route.params.id;
+    // console.log(id);
+    this.getData(id);
+  },
   methods: {
+    getData(id) {
+      getJxzxmdInfo(id).then((response) => {
+        console.log(response);
+        this.nf = response.data.nf;
+        this.create_time = response.data.createTime;
+        this.jsxm = response.data.tsbzJxjsjbxx.name;
+        this.jdxmc = response.data.jdxmc;
+        this.famc = response.data.pxfamc;
+        this.zsbh = response.data.zsbh;
+      });
+    },
     //打印
     prints() {
       //console.log(this.$refs.printMe);
       this.$print(this.$refs.printMe);
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>

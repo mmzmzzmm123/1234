@@ -73,6 +73,19 @@ public class TsbzJxzxmdController extends BaseController {
         return AjaxResult.success(tsbzJxzxmdService.selectTsbzJxzxmdById(id));
     }
 
+    @GetMapping(value = "/zm/{id}")
+    public AjaxResult getZmInfo(@PathVariable("id") Long id) {
+        TsbzJxzxmd tsbzJxzxmd = tsbzJxzxmdService.selectTsbzJxzxmdById(id);
+        AjaxResult ajaxResult = AjaxResult.success(tsbzJxzxmd);
+//        ajaxResult.put("jsxm", tsbzJxzxmd.getTsbzJxjsjbxx().getName());
+//        ajaxResult.put("famc", tsbzJxzxmd.getPxfamc());
+//        ajaxResult.put("nf", tsbzJxzxmd.getNf());
+//        ajaxResult.put("jdxmc", tsbzJxzxmd.getJdxmc());
+//        ajaxResult.put("zsbh", tsbzJxzxmd.getZsbh());
+//        ajaxResult.put("create_time", tsbzJxzxmd.getCreateTime());
+        return ajaxResult;
+    }
+
     /**
      * 新增见习之星名单
      */

@@ -20,6 +20,14 @@ public interface ITsbzJxzxmdService
     public TsbzJxzxmd selectTsbzJxzxmdById(Long id);
 
     /**
+     * 查询见习之星名单
+     *
+     * @param nf 见习之星年份
+     * @return 见习之星名单
+     */
+    public TsbzJxzxmd selectMaxZsbhByNf(String nf);
+
+    /**
      * 查询见习之星名单列表
      * 
      * @param tsbzJxzxmd 见习之星名单

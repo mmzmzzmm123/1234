@@ -45,6 +45,12 @@ public class TsbzJxzxmd extends BaseEntity {
     @Excel(name = "评选方案id")
     private Long pxfaid;
 
+    /**
+     * 证书编号
+     */
+    @Excel(name = "证书编号")
+    private String zsbh;
+
 
     private BigDecimal bfb;
     private String faid;
@@ -104,7 +110,7 @@ public class TsbzJxzxmd extends BaseEntity {
         this.pxfamc = pxfamc;
     }
 
-    private  String pxfamc;
+    private String pxfamc;
 
     public void setId(Long id) {
         this.id = id;
@@ -170,6 +176,14 @@ public class TsbzJxzxmd extends BaseEntity {
         this.tsbzJxjsjbxx = tsbzJxjsjbxx;
     }
 
+    public void setZsbh(String zsbh) {
+        this.zsbh = zsbh;
+    }
+
+    public String getZsbh() {
+        return zsbh;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
@@ -187,7 +201,8 @@ public class TsbzJxzxmd extends BaseEntity {
                 .append("prdwmc", getPrdwmc())
                 .append("jdxid", getJdxid())
                 .append("jdxmc", getJdxmc())
-                .append("pxfamc",getPxfamc())
+                .append("pxfamc", getPxfamc())
+                .append("zsbh", getZsbh())
                 .toString();
     }
 }

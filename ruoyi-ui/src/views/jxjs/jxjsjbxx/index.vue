@@ -303,7 +303,7 @@
       <el-table-column label="任教学段" align="center" prop="rjxd" :formatter="rjxdFormat" />
       <el-table-column label="任教学科" align="center" prop="rjxk" :formatter="rjxkFormat" />
       <el-table-column label="任教年级" align="center" prop="rjnj" :formatter="rjnjFormat" />
-      <el-table-column label="毕业院校" align="center" prop="byyx" /> 
+      <el-table-column label="毕业院校" align="center" prop="byyx" />
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.csrq, '{y}-{m}-{d}') }}</span>
         </template>
@@ -424,21 +424,21 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <!-- <el-col :span="12">
             <el-form-item label="聘任单位" prop="prdwid">
               <el-input v-model="form.prdwid" placeholder="请输入聘任单位" />
             </el-form-item>
-          </el-col>
+          </el-col> -->
           <el-col :span="12">
-            <el-form-item label="聘任单位名称" prop="prdwmc">
-              <el-input v-model="form.prdwmc" placeholder="请输入内容" />
+            <el-form-item label="聘任单位" prop="prdwmc">
+              <el-input v-model="form.prdwmc" placeholder="请输入聘任单位名称" />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <!-- <el-col :span="12">
             <el-form-item label="基地校" prop="jdxid">
-              <el-input v-model="form.jdxid" placeholder="请输入基地校" />
+              <el-input v-model="form.jdxid" disabled="true" />
             </el-form-item>
-          </el-col>
+          </el-col> -->
           <el-col :span="12">
             <el-form-item label="任教学段" prop="rjxd">
               <el-select v-model="form.rjxd" placeholder="请选择任教学段">

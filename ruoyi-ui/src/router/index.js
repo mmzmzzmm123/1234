@@ -38,11 +38,6 @@ export const constantRoutes = [
     ]
   },
   {
-    path: "/gkkzm",
-    component: resolve => require(["@/views/jxjs/gkkzm"], resolve),
-    hidden: true
-  },
-  {
     path: "/login",
     component: resolve => require(["@/views/login"], resolve),
     hidden: true
@@ -120,6 +115,22 @@ export const constantRoutes = [
         name: "jdxjxjsjbxx",
         meta: {
           title: "基地校见习教师",
+          icon: ""
+        }
+      }
+    ]
+  },
+  {
+    path: "/zm",
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: "jxjs/jxzxzm/:id",
+        component: resolve => require(["@/views/jxjs/jxzxzm"], resolve),
+        name: "jxzxzm",
+        meta: {
+          title: "见习之星证明",
           icon: ""
         }
       }

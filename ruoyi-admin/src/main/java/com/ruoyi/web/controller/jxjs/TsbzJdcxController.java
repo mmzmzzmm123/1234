@@ -143,12 +143,19 @@ public class TsbzJdcxController extends BaseController {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
             Date date = new Date();
             System.out.println("year=" + sdf.format(date));
+            String nf = sdf.format(date);
 
             TsbzJxzxmd tsbzJxzxmd = new TsbzJxzxmd();
             tsbzJxzxmd.setJsid(tsbzJdcx.getJsid());
             tsbzJxzxmd.setPxfaid(tsbzJdcx.getFaid());
-            tsbzJxzxmd.setNf(sdf.format(date));
+            tsbzJxzxmd.setNf(nf);
             tsbzJxzxmd.setCreateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
+            TsbzJxzxmd tsbzJxzxmdNew = tsbzJxzxmdService.selectMaxZsbhByNf(nf);
+            String strZsbh = "";
+            if (tsbzJxzxmdNew != null) {
+                strZsbh = tsbzJxzxmdNew.getZsbh();
+            }
+            tsbzJxzxmd.setZsbh(Zsbh(nf, strZsbh));
             tsbzJxzxmdService.insertTsbzJxzxmd(tsbzJxzxmd);
 
             //新建用户
@@ -176,6 +183,16 @@ public class TsbzJdcxController extends BaseController {
         }
 
         return toAjax(tsbzJdcxService.updateTsbzJdcx(tsbzJdcx));
+    }
+
+    public String Zsbh(String nf, String strBh) {
+        if (schoolCommonController.isStringEmpty(strBh)) {
+            strBh = nf + "000000";
+        }
+        Integer iBh = Integer.parseInt(strBh);
+        iBh = iBh + 1;
+
+        return String.valueOf(iBh);
     }
 
     /**
