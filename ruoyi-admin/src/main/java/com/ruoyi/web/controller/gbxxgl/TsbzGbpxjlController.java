@@ -1,7 +1,9 @@
 package com.ruoyi.web.controller.gbxxgl;
 
+import java.util.Date;
 import java.util.List;
 
+import com.ruoyi.common.utils.SecurityUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -72,6 +74,20 @@ public class TsbzGbpxjlController extends BaseController {
     @Log(title = "干部培训经历", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody TsbzGbpxjl tsbzGbpxjl) {
+
+        //先判断是否已经创建当前任职年月的干部信息
+        TsbzGbpxjl tsbzGbpxjlNew = new TsbzGbpxjl();
+        tsbzGbpxjlNew.setGbid(tsbzGbpxjl.getGbid());
+        tsbzGbpxjlNew.setQsny(tsbzGbpxjl.getQsny());
+        tsbzGbpxjlNew.setZzny(tsbzGbpxjl.getZzny());
+        List<TsbzGbpxjl> selectList = tsbzGbpxjlService.selectTsbzGbpxjlList(tsbzGbpxjlNew);
+        if (selectList != null && selectList.size() > 0) {
+            return AjaxResult.error("当前干部任职年月信息已创建,无法重复创建");
+        }
+
+        tsbzGbpxjl.setCreateTime(new Date());
+        tsbzGbpxjl.setCreateUserid(SecurityUtils.getLoginUser().getUser().getUserId());
+
         return toAjax(tsbzGbpxjlService.insertTsbzGbpxjl(tsbzGbpxjl));
     }
 

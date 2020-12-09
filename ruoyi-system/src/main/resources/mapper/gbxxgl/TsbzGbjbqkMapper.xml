@@ -222,8 +222,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="phone != null">#{phone},</if>
             <if test="rjxk != null">#{rjxk},</if>
             <if test="jkzk != null">#{jkzk},</if>
-            <if test="createUser != null">#{create_user},</if>
-            <if test="createTime != null">#{create_time},</if>
+            <if test="createUser != null">#{createUser},</if>
+            <if test="createTime != null">#{createTime},</if>
          </trim>
     </insert>
 

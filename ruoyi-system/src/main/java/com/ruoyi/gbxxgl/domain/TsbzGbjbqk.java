@@ -209,7 +209,9 @@ public class TsbzGbjbqk extends BaseEntity {
     @Excel(name = "创建时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date createTime;
 
-    // 创建人
+
+    /** 创建人 */
+    @Excel(name = "创建人")
     private Long createUser;
 
     /**
@@ -691,6 +693,41 @@ public class TsbzGbjbqk extends BaseEntity {
         this.csdArea = csdArea;
     }
 
+    public Long getCreateUser() {
+        return createUser;
+    }
+
+    public void setCreateUser(Long createUser) {
+        this.createUser = createUser;
+    }
+
+    public Date getUpdatetime() {
+        return updatetime;
+    }
+
+    public void setUpdatetime(Date updatetime) {
+        this.updatetime = updatetime;
+    }
+
+    public Long getDeptId() {
+        return deptId;
+    }
+
+    public void setDeptId(Long deptId) {
+        this.deptId = deptId;
+    }
+
+    @Override
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    @Override
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
@@ -749,38 +786,7 @@ public class TsbzGbjbqk extends BaseEntity {
                 .toString();
     }
 
-    public Date getUpdatetime() {
-        return updatetime;
-    }
 
-    public void setUpdatetime(Date updatetime) {
-        this.updatetime = updatetime;
-    }
 
-    public Long getDeptId() {
-        return deptId;
-    }
-
-    public void setDeptId(Long deptId) {
-        this.deptId = deptId;
-    }
-
-    @Override
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    @Override
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public Long getCreateUser() {
-        return createUser;
-    }
-
-    public void setCreateUser(Long createUser) {
-        this.createUser = createUser;
-    }
 }
 
