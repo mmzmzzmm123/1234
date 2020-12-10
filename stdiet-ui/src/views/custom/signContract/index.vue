@@ -35,7 +35,7 @@
       <el-form-item label="证件号" prop="cusId">
         <el-input v-model="form.cusId" placeholder="请输入证件号"/>
       </el-form-item>
-      <el-form-item label="电话" prop="phone">
+      <el-form-item label="电话">
         <el-input v-model="form.phone" placeholder="请输入电话"/>
       </el-form-item>
     </el-form>
