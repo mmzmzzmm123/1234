@@ -171,10 +171,35 @@ export default {
                 {
                   value: this.mbvalues,
                   name: "60-72个月幼儿测评范围值",
+                  symbol: "circle",
+                  symbolSize: 10,
+                  lineStyle: {
+                    normal: {
+                      type: "solid",
+                    },
+                  },
+                  itemStyle: {
+                    color: "#f08080",
+                  },
+                  areaStyle: {
+                    opacity: 0.7,
+                  },
                 },
                 {
                   value: this.values,
                   name: "幼儿实际测评值",
+                  symbolSize: 5,
+                  lineStyle: {
+                    normal: {
+                      type: "dotted",
+                    },
+                  },
+                  itemStyle: {
+                    color: "#ebcc7b",
+                  },
+                  areaStyle: {
+                    opacity: 0.5,
+                  },
                 },
               ],
               animationDuration: animationDuration,
@@ -236,10 +261,35 @@ export default {
                 {
                   value: this.mbvalues,
                   name: "48-60个月幼儿测评范围值",
+                  symbol: "circle",
+                  symbolSize: 10,
+                  lineStyle: {
+                    normal: {
+                      type: "solid",
+                    },
+                  },
+                  itemStyle: {
+                    color: "#f08080",
+                  },
+                  areaStyle: {
+                    opacity: 0.7,
+                  },
                 },
                 {
                   value: this.values,
                   name: "幼儿实际测评值",
+                  symbolSize: 5,
+                  lineStyle: {
+                    normal: {
+                      type: "dotted",
+                    },
+                  },
+                  itemStyle: {
+                    color: "#ebcc7b",
+                  },
+                  areaStyle: {
+                    opacity: 0.5,
+                  },
                 },
               ],
               animationDuration: animationDuration,

@@ -3,10 +3,9 @@
     <div class="flex align-center justify-between">
       <p class="title flex align-center">
         <span
-          >幼儿姓名：{{ this.childName }} 出身日期：{{
-            this.bridth
-          }} 
-          评估结果图表
+          >幼儿姓名：{{ this.childName }} 出身日期：{{ this.bridth }} （{{
+            this.months
+          }}个月） 评估结果图表
         </span>
       </p>
     </div>
@@ -403,6 +402,7 @@ export default {
       childName: "",
       bridth: "",
       classid: "",
+      months: "",
       // tabs列表
       tabsList: [],
       activeName: "",
@@ -439,6 +439,7 @@ export default {
           this.childName = response.data.name;
           this.bridth = response.data.csrq;
           this.classid = response.data.classid;
+          this.months = response.months;
         }
       });
     },

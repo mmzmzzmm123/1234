@@ -27,17 +27,20 @@
 
     <el-table
       v-loading="loading"
+      border
       :data="schoolchargeList"
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="园所名称" align="center" prop="dept.deptName" />
+      <el-table-column label="园所名称" fixed="" align="center" prop="dept.deptName" />
       <el-table-column label="保育费/月" align="center" prop="byf" />
       <el-table-column label="伙食费/天" align="center" prop="hsf" />
       <el-table-column
         label="操作"
         align="center"
-        class-name="small-padding fixed-width"
+        class-name="small-padding fixed-width  edit-btns"
+        width="60"
+        fixed="right"
       >
         <template slot-scope="scope">
           <el-button
@@ -69,7 +72,7 @@
     />
 
     <!-- 添加或修改园所收费标准对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" class="v-dialog">
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="保育费(月)" prop="byf">
           <el-input-number v-model="form.byf" :precision="2" placeholder="请输入保育费" />
@@ -225,3 +228,11 @@ export default {
   },
 };
 </script>
+<style lang="scss" scoped>
+.edit-btns {
+  .el-button {
+    display: block;
+    margin: 0 auto;
+  }
+}
+</style>

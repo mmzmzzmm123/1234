@@ -155,6 +155,7 @@ public class ByChildController extends BaseController {
             } else {
                 ajax.put("isAssessment", 0);
             }
+            ajax.put("months", iMonths);
         } else {
             ajax.put("isAssessment", 0);
         }
