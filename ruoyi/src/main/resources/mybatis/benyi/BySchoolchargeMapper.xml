@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.benyi.mapper.BySchoolchargeMapper">
+
+    <resultMap type="BySchoolcharge" id="BySchoolchargeResult">
+        <result property="id" column="id"/>
+        <result property="deptId" column="dept_id"/>
+        <result property="byf" column="byf"/>
+        <result property="hsf" column="hsf"/>
+        <result property="createUserid" column="create_userid"/>
+        <result property="createTime" column="create_time"/>
+        <association property="dept" column="dept_id" javaType="SysDept" resultMap="deptResult"/>
+    </resultMap>
+
+    <resultMap id="deptResult" type="SysDept">
+        <id property="deptId" column="dept_id"/>
+        <result property="parentId" column="parent_id"/>
+        <result property="deptName" column="dept_name"/>
+        <result property="orderNum" column="order_num"/>
+        <result property="leader" column="leader"/>
+        <result property="status" column="dept_status"/>
+    </resultMap>
+
+    <sql id="selectBySchoolchargeVo">
+        select a.id, a.dept_id, a.byf, a.hsf, a.create_userid, a.create_time,b.dept_name from by_schoolcharge a
+        right join sys_dept b on a.dept_id=b.dept_id
+    </sql>
+
+    <select id="selectBySchoolchargeList" parameterType="BySchoolcharge" resultMap="BySchoolchargeResult">
+        <include refid="selectBySchoolchargeVo"/>
+        where school_id is not null and del_flag=0
+            <if test="byf != null ">and byf = #{byf}</if>
+            <if test="hsf != null ">and hsf = #{hsf}</if>
+            <if test="createUserid != null ">and create_userid = #{createUserid}</if>
+        <!-- 数据范围过滤 -->
+        ${dataScope}
+    </select>
+
+    <select id="selectBySchoolchargeById" parameterType="Long" resultMap="BySchoolchargeResult">
+        <include refid="selectBySchoolchargeVo"/>
+        where a.id = #{id}
+    </select>
+
+    <insert id="insertBySchoolcharge" parameterType="BySchoolcharge" useGeneratedKeys="true" keyProperty="id">
+        insert into by_schoolcharge
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="deptId != null ">dept_id,</if>
+            <if test="byf != null ">byf,</if>
+            <if test="hsf != null ">hsf,</if>
+            <if test="createUserid != null ">create_userid,</if>
+            <if test="createTime != null ">create_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="deptId != null ">#{deptId},</if>
+            <if test="byf != null ">#{byf},</if>
+            <if test="hsf != null ">#{hsf},</if>
+            <if test="createUserid != null ">#{createUserid},</if>
+            <if test="createTime != null ">#{createTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateBySchoolcharge" parameterType="BySchoolcharge">
+        update by_schoolcharge
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="deptId != null ">dept_id = #{deptId},</if>
+            <if test="byf != null ">byf = #{byf},</if>
+            <if test="hsf != null ">hsf = #{hsf},</if>
+            <if test="createUserid != null ">create_userid = #{createUserid},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBySchoolchargeById" parameterType="Long">
+        delete from by_schoolcharge where id = #{id}
+    </delete>
+
+    <delete id="deleteBySchoolchargeByIds" parameterType="String">
+        delete from by_schoolcharge where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
