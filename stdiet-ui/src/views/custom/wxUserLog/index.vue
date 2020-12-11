@@ -86,7 +86,7 @@
         </template>
       </el-table-column>
       <el-table-column label="微信应用" align="center" prop="appid" :formatter="appidFormat"/>
-      <el-table-column label="手机号" align="center" prop="phone"/>
+      <el-table-column label="手机号" align="center" prop="phone" width="180"/>
       <el-table-column label="打卡日期" align="center" prop="logTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.logTime, '{y}-{m}-{d}') }}</span>
