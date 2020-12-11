@@ -514,6 +514,11 @@ export default {
         //   { required: true, message: "出生日期不能为空", trigger: "blur" },
         // ],
       },
+      rules: {
+        csrq: [
+          { required: true, message: "幼儿生日不能为空", trigger: "blur" },
+        ],
+      },  
       // 监护人表单参数
       form_jhr: {},
     };

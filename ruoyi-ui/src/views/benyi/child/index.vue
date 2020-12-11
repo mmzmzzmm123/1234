@@ -834,6 +834,9 @@ export default {
         name: [
           { required: true, message: "幼儿姓名不能为空", trigger: "blur" },
         ],
+        csrq: [
+          { required: true, message: "幼儿出生日期不能为空", trigger: "blur" },
+        ],
         phone: [
           { required: true, message: "家长手机号码不能为空", trigger: "blur" },
         ],
