@@ -82,7 +82,7 @@
       <!--      <el-table-column label="微信openid" align="center" prop="openid" />-->
       <el-table-column label="当天体重" align="center" prop="weight">
         <template slot-scope="scope">
-          <span>{{`${scope.row.weight} kg` }}</span>
+          <span>{{`${scope.row.weight} 斤` }}</span>
         </template>
       </el-table-column>
       <el-table-column label="微信应用" align="center" prop="appid" :formatter="appidFormat"/>
