@@ -45,6 +45,18 @@ public class BySchoolchargeServiceImpl implements IBySchoolchargeService {
     }
 
     /**
+     * 查询幼儿收费列表
+     *
+     * @param bySchoolcharge 收费标准
+     * @return 幼儿收费集合
+     */
+    @Override
+    @DataScope(deptAlias = "b")
+    public List<BySchoolcharge> selectByChildchargeList(BySchoolcharge bySchoolcharge){
+        return bySchoolchargeMapper.selectByChildchargeList(bySchoolcharge);
+    }
+
+    /**
      * 新增园所收费标准
      *
      * @param bySchoolcharge 园所收费标准

@@ -46,6 +46,17 @@ public class BySchoolchargeController extends BaseController {
     }
 
     /**
+     * 查询幼儿收费列表
+     */
+    @PreAuthorize("@ss.hasPermi('benyi:schoolcharge:list')")
+    @GetMapping("/child/list")
+    public TableDataInfo childlist(BySchoolcharge bySchoolcharge) {
+        startPage();
+        List<BySchoolcharge> list = bySchoolchargeService.selectByChildchargeList(bySchoolcharge);
+        return getDataTable(list);
+    }
+
+    /**
      * 导出园所收费标准列表
      */
     @PreAuthorize("@ss.hasPermi('benyi:schoolcharge:export')")

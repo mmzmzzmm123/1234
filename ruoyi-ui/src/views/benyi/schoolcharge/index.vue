@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-row :gutter="10" class="mb8">
+    <!-- <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
           type="success"
@@ -23,7 +23,7 @@
           >删除</el-button
         >
       </el-col>
-    </el-row>
+    </el-row> -->
 
     <el-table
       v-loading="loading"
@@ -32,9 +32,20 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="园所名称" fixed="" align="center" prop="dept.deptName" />
-      <el-table-column label="保育费/月" align="center" prop="byf" />
-      <el-table-column label="伙食费/天" align="center" prop="hsf" />
+      <el-table-column
+        label="园所名称"
+        fixed=""
+        align="center"
+        prop="dept.deptName"
+      />
+      <el-table-column label="保育费（大班）/月" align="center" prop="byf" />
+      <el-table-column label="伙食费（大班）/天" align="center" prop="hsf" />
+      <el-table-column label="保育费（中班）/月" align="center" prop="byfZ" />
+      <el-table-column label="伙食费（中班）/天" align="center" prop="hsfZ" />
+      <el-table-column label="保育费（小班）/月" align="center" prop="byfX" />
+      <el-table-column label="伙食费（小班）/天" align="center" prop="hsfX" />
+      <el-table-column label="保育费（拖班）/月" align="center" prop="byfT" />
+      <el-table-column label="伙食费（拖班）/天" align="center" prop="hsfT" />
       <el-table-column
         label="操作"
         align="center"
@@ -73,12 +84,62 @@
 
     <!-- 添加或修改园所收费标准对话框 -->
     <el-dialog :title="title" :visible.sync="open" class="v-dialog">
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="保育费(月)" prop="byf">
-          <el-input-number v-model="form.byf" :precision="2" placeholder="请输入保育费" />
+      <el-form ref="form" :model="form" :rules="rules" label-width="120px">
+        <el-form-item label="保育费大班(月)" prop="byf">
+          <el-input-number
+            v-model="form.byf"
+            :precision="2"
+            placeholder="请输入保育费"
+          />
         </el-form-item>
-        <el-form-item label="伙食费(天)" prop="hsf">
-          <el-input-number v-model="form.hsf" :precision="2" placeholder="请输入伙食费" />
+        <el-form-item label="伙食费大班(天)" prop="hsf">
+          <el-input-number
+            v-model="form.hsf"
+            :precision="2"
+            placeholder="请输入伙食费"
+          />
+        </el-form-item>
+        <el-form-item label="保育费中班(月)" prop="byfZ">
+          <el-input-number
+            v-model="form.byfZ"
+            :precision="2"
+            placeholder="请输入保育费"
+          />
+        </el-form-item>
+        <el-form-item label="伙食费中班(天)" prop="hsfZ">
+          <el-input-number
+            v-model="form.hsfZ"
+            :precision="2"
+            placeholder="请输入伙食费"
+          />
+        </el-form-item>
+        <el-form-item label="保育费小班(月)" prop="byfX">
+          <el-input-number
+            v-model="form.byfX"
+            :precision="2"
+            placeholder="请输入保育费"
+          />
+        </el-form-item>
+        <el-form-item label="伙食费小班(天)" prop="hsfX">
+          <el-input-number
+            v-model="form.hsfX"
+            :precision="2"
+            placeholder="请输入伙食费"
+          />
+        </el-form-item>
+        <el-form-item label="保育费拖班(月)" prop="byfT">
+          <el-input-number
+            v-model="form.byfT"
+            :precision="2"
+            placeholder="请输入保育费"
+          />
+        </el-form-item>
+        <el-form-item label="伙食费拖班(天)" prop="hsT">
+          <el-input-number
+            v-model="form.hsfT"
+            :precision="2"
+            placeholder="请输入伙食费"
+          />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -158,6 +219,12 @@ export default {
         deptId: undefined,
         byf: undefined,
         hsf: undefined,
+        byfZ: undefined,
+        hsfZ: undefined,
+        byfX: undefined,
+        hsfX: undefined,
+        byfT: undefined,
+        hsfT: undefined,
         createUserid: undefined,
         createTime: undefined,
       };

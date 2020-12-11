@@ -4,7 +4,7 @@
       :model="queryParams"
       ref="queryForm"
       :inline="true"
-      label-width="68px"
+      label-width="70px"
     >
       <el-form-item label="选择月份" prop="month">
         <el-date-picker

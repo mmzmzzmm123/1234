@@ -9,6 +9,15 @@ export function listSchoolcharge(query) {
   })
 }
 
+// 查询幼儿收费列表
+export function listChildcharge(query) {
+  return request({
+    url: '/benyi/schoolcharge/child/list',
+    method: 'get',
+    params: query
+  })
+}
+
 // 查询园所收费标准详细
 export function getSchoolcharge(id) {
   return request({
