@@ -82,11 +82,11 @@
       <!--      <el-table-column label="微信openid" align="center" prop="openid" />-->
       <el-table-column label="当天体重" align="center" prop="weight">
         <template slot-scope="scope">
-          <span>{{`${scope.row.weight} kg` }}</span>
+          <span>{{`${scope.row.weight} 斤` }}</span>
         </template>
       </el-table-column>
       <el-table-column label="微信应用" align="center" prop="appid" :formatter="appidFormat"/>
-      <el-table-column label="手机号" align="center" prop="phone"/>
+      <el-table-column label="手机号" align="center" prop="phone" width="180"/>
       <el-table-column label="打卡日期" align="center" prop="logTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.logTime, '{y}-{m}-{d}') }}</span>

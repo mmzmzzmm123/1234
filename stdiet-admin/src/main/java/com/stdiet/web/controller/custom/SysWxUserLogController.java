@@ -108,7 +108,6 @@ public class SysWxUserLogController extends BaseController {
 
     @GetMapping(value = "/wx/logs/list")
     public AjaxResult getLogs(SysWxUserLog sysWxUserLog) {
-        System.out.println(sysWxUserLog.toString());
         List<WxLogInfo> list = sysWxUserLogService.selectWxLogInfoList(sysWxUserLog);
         return AjaxResult.success(list);
     }
