@@ -12,6 +12,9 @@ import store from './store'
 import router from './router'
 import permission from './directive/permission'
 
+// XY 工具
+import xy from "@/utils/xy";
+
 import './assets/icons' // icon
 import './permission' // permission control
 import { getDicts } from "@/api/system/dict/data";
