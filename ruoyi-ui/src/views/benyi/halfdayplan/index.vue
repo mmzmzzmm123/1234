@@ -133,6 +133,37 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+
+    <!-- 添加或修改入园半日体验计划对话框 -->
+    <el-dialog
+      :title="title_view"
+      :visible.sync="open_view"
+      class="big-dialog"
+      append-to-body
+    >
+      <el-button
+        type="primary"
+        plain
+        size="mini"
+        icon="el-icon-printer"
+        @click="prints"
+        >打印</el-button
+      >
+      <div ref="printMe">
+        <el-form ref="form" :model="form" label-width="80px">
+          <el-form-item prop="title">
+            <h2 style="text-align: center">{{ form.title }}</h2>
+          </el-form-item>
+          <el-form-item prop="content">
+            <!-- <Editor v-model="form.content" placeholder="请输入内容" /> -->
+            <span v-html="form.content"></span>
+          </el-form-item>
+        </el-form>
+      </div>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="cancel_view">取 消</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -171,8 +202,10 @@ export default {
       typeOptions: [],
       // 弹出层标题
       title: "",
+      title_view: "",
       // 是否显示弹出层
       open: false,
+      open_view: false,
       isshow: true,
       // 查询参数
       queryParams: {
@@ -225,6 +258,10 @@ export default {
       this.open = false;
       this.reset();
     },
+    cancel_view() {
+      this.open_view = false;
+      this.reset();
+    },
     // 表单重置
     reset() {
       this.form = {
@@ -259,8 +296,8 @@ export default {
       const id = row.id || this.ids;
       getHalfdayplan(id).then((response) => {
         this.form = response.data;
-        this.open = true;
-        this.title = "入园半日体验计划详情";
+        this.open_view = true;
+        this.title_view = "入园半日体验计划详情";
         this.isshow = false;
       });
     },
@@ -309,15 +346,11 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$confirm(
-        '是否确认删除入园半日体验计划编号为"' + ids + '"的数据项?',
-        "警告",
-        {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning",
-        }
-      )
+      this.$confirm("是否确认删除入园半日体验计划数据项?", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
         .then(function () {
           return delHalfdayplan(ids);
         })
@@ -330,15 +363,11 @@ export default {
     /** 复制按钮操作 */
     handleCopy(row) {
       const id = row.id || this.ids;
-      this.$confirm(
-        '确认复制入园半日体验计划编号为"' + id + '"的数据项?',
-        "警告",
-        {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning",
-        }
-      )
+      this.$confirm("确认复制入园半日体验计划数据项?", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
         .then(function () {
           return copyHalfdayplan(id);
         })
@@ -347,6 +376,11 @@ export default {
           this.msgSuccess("复制成功");
         })
         .catch(function () {});
+    },
+    //打印
+    prints() {
+      //console.log(this.$refs.printMe);
+      this.$print(this.$refs.printMe);
     },
   },
 };
