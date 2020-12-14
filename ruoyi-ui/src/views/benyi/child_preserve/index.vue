@@ -48,6 +48,7 @@
               <el-form
                 class="form"
                 ref="form"
+                :rules="rules"
                 :model="form"
                 label-width="110px"
               >
