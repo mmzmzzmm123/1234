@@ -17,11 +17,17 @@ import com.ruoyi.common.utils.file.FileUploadUtils;
 import com.ruoyi.common.utils.file.FileUtils;
 import com.ruoyi.framework.config.ServerConfig;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
+
 /**
  * 通用请求处理
  * 
  * @author ruoyi
  */
+@Api("通用请求处理")
 @RestController
 public class CommonController
 {
@@ -36,7 +42,12 @@ public class CommonController
      * @param fileName 文件名称
      * @param delete 是否删除
      */
+    @ApiOperation("通用下载请求")
     @GetMapping("common/download")
+    @ApiImplicitParams({
+		@ApiImplicitParam(name = "fileName", value = "文件名称", required = true, dataType = "String"),
+		@ApiImplicitParam(name = "delete", value = "是否删除", required = true, dataType = "boolean")
+	})
     public void fileDownload(String fileName, Boolean delete, HttpServletResponse response, HttpServletRequest request)
     {
         try

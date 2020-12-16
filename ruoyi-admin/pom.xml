@@ -73,6 +73,12 @@
             <artifactId>ruoyi-generator</artifactId>
         </dependency>
 
+		<!-- 酒店房价牌-->
+		<dependency>
+			<groupId>com.ruoyi</groupId>
+			<artifactId>ruoyi-hotel</artifactId>
+		</dependency>
+
     </dependencies>
 
     <build>
