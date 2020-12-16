@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.hotel.mapper.HtlDisplayThemeMapper">
+    
+    <resultMap type="HtlDisplayTheme" id="HtlDisplayThemeResult">
+        <result property="hotelId"    column="hotel_id"    />
+        <result property="themeName"    column="theme_name"    />
+        <result property="themePicturePath"    column="theme_picture_path"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectHtlDisplayThemeVo">
+        select hotel_id, theme_name, theme_picture_path, create_by, create_time, update_by, update_time from htl_display_theme
+    </sql>
+
+    <select id="selectHtlDisplayThemeList" parameterType="HtlDisplayTheme" resultMap="HtlDisplayThemeResult">
+        <include refid="selectHtlDisplayThemeVo"/>
+        <where>  
+            <if test="themeName != null  and themeName != ''"> and theme_name like concat('%', #{themeName}, '%')</if>
+            <if test="themePicturePath != null  and themePicturePath != ''"> and theme_picture_path = #{themePicturePath}</if>
+        </where>
+    </select>
+    
+    <select id="selectHtlDisplayThemeById" parameterType="Long" resultMap="HtlDisplayThemeResult">
+        <include refid="selectHtlDisplayThemeVo"/>
+        where hotel_id = #{hotelId}
+    </select>
+        
+    <insert id="insertHtlDisplayTheme" parameterType="HtlDisplayTheme">
+        insert into htl_display_theme
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="hotelId != null">hotel_id,</if>
+            <if test="themeName != null">theme_name,</if>
+            <if test="themePicturePath != null">theme_picture_path,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="hotelId != null">#{hotelId},</if>
+            <if test="themeName != null">#{themeName},</if>
+            <if test="themePicturePath != null">#{themePicturePath},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateHtlDisplayTheme" parameterType="HtlDisplayTheme">
+        update htl_display_theme
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="themeName != null">theme_name = #{themeName},</if>
+            <if test="themePicturePath != null">theme_picture_path = #{themePicturePath},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where hotel_id = #{hotelId}
+    </update>
+
+    <delete id="deleteHtlDisplayThemeById" parameterType="Long">
+        delete from htl_display_theme where hotel_id = #{hotelId}
+    </delete>
+
+    <delete id="deleteHtlDisplayThemeByIds" parameterType="String">
+        delete from htl_display_theme where hotel_id in 
+        <foreach item="hotelId" collection="array" open="(" separator="," close=")">
+            #{hotelId}
+        </foreach>
+    </delete>
+    
+</mapper>

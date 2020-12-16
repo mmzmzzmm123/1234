@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.hotel.mapper.HtlHotelInfoMapper">
+    
+    <resultMap type="HtlHotelInfo" id="HtlHotelInfoResult">
+        <result property="hotelId"    column="hotel_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="hotelName"    column="hotel_name"    />
+        <result property="logoPath"    column="logo_path"    />
+        <result property="cityId"    column="city_id"    />
+        <result property="qrCodePath"    column="qr_code_path"    />
+        <result property="notice"    column="notice"    />
+        <result property="reservationPhone"    column="reservation_phone"    />
+        <result property="serviceItems"    column="service_items"    />
+        <result property="effectiveTime"    column="effective_time"    />
+        <result property="expireTime"    column="expire_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectHtlHotelInfoVo">
+        select hotel_id, user_id, hotel_name, logo_path, city_id, qr_code_path, notice, reservation_phone, service_items, effective_time, expire_time, create_by, create_time, update_by, update_time from htl_hotel_info
+    </sql>
+
+    <select id="selectHtlHotelInfoList" parameterType="HtlHotelInfo" resultMap="HtlHotelInfoResult">
+        <include refid="selectHtlHotelInfoVo"/>
+        <where>  
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="hotelName != null  and hotelName != ''"> and hotel_name like concat('%', #{hotelName}, '%')</if>
+            <if test="logoPath != null  and logoPath != ''"> and logo_path = #{logoPath}</if>
+            <if test="cityId != null "> and city_id = #{cityId}</if>
+            <if test="qrCodePath != null  and qrCodePath != ''"> and qr_code_path = #{qrCodePath}</if>
+            <if test="notice != null  and notice != ''"> and notice = #{notice}</if>
+            <if test="reservationPhone != null  and reservationPhone != ''"> and reservation_phone = #{reservationPhone}</if>
+            <if test="serviceItems != null  and serviceItems != ''"> and service_items = #{serviceItems}</if>
+            <if test="effectiveTime != null "> and effective_time = #{effectiveTime}</if>
+            <if test="expireTime != null "> and expire_time = #{expireTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectHtlHotelInfoById" parameterType="Long" resultMap="HtlHotelInfoResult">
+        <include refid="selectHtlHotelInfoVo"/>
+        where hotel_id = #{hotelId}
+    </select>
+    
+    <select id="selectHtlHotelInfoByUserId" parameterType="Long" resultMap="HtlHotelInfoResult">
+        <include refid="selectHtlHotelInfoVo"/>
+        where user_id = #{userId}
+    </select>
+        
+    <insert id="insertHtlHotelInfo" parameterType="HtlHotelInfo" useGeneratedKeys="true" keyProperty="hotelId">
+        insert into htl_hotel_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="hotelName != null">hotel_name,</if>
+            <if test="logoPath != null">logo_path,</if>
+            <if test="cityId != null">city_id,</if>
+            <if test="qrCodePath != null">qr_code_path,</if>
+            <if test="notice != null">notice,</if>
+            <if test="reservationPhone != null">reservation_phone,</if>
+            <if test="serviceItems != null">service_items,</if>
+            <if test="effectiveTime != null">effective_time,</if>
+            <if test="expireTime != null">expire_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="hotelName != null">#{hotelName},</if>
+            <if test="logoPath != null">#{logoPath},</if>
+            <if test="cityId != null">#{cityId},</if>
+            <if test="qrCodePath != null">#{qrCodePath},</if>
+            <if test="notice != null">#{notice},</if>
+            <if test="reservationPhone != null">#{reservationPhone},</if>
+            <if test="serviceItems != null">#{serviceItems},</if>
+            <if test="effectiveTime != null">#{effectiveTime},</if>
+            <if test="expireTime != null">#{expireTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateHtlHotelInfo" parameterType="HtlHotelInfo">
+        update htl_hotel_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="hotelName != null">hotel_name = #{hotelName},</if>
+            <if test="logoPath != null">logo_path = #{logoPath},</if>
+            <if test="cityId != null">city_id = #{cityId},</if>
+            <if test="qrCodePath != null">qr_code_path = #{qrCodePath},</if>
+            <if test="notice != null">notice = #{notice},</if>
+            <if test="reservationPhone != null">reservation_phone = #{reservationPhone},</if>
+            <if test="serviceItems != null">service_items = #{serviceItems},</if>
+            <if test="effectiveTime != null">effective_time = #{effectiveTime},</if>
+            <if test="expireTime != null">expire_time = #{expireTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where hotel_id = #{hotelId}
+    </update>
+
+    <delete id="deleteHtlHotelInfoById" parameterType="Long">
+        delete from htl_hotel_info where hotel_id = #{hotelId}
+    </delete>
+
+    <delete id="deleteHtlHotelInfoByIds" parameterType="String">
+        delete from htl_hotel_info where hotel_id in 
+        <foreach item="hotelId" collection="array" open="(" separator="," close=")">
+            #{hotelId}
+        </foreach>
+    </delete>
+    
+</mapper>
