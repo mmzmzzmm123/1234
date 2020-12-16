@@ -2,6 +2,8 @@ package com.stdiet.custom.mapper;
 
 import java.util.List;
 import com.stdiet.custom.domain.SysIngredient;
+import com.stdiet.custom.domain.SysIngredientNotRec;
+import com.stdiet.custom.domain.SysIngredientRec;
 
 /**
  * 食材Mapper接口
@@ -58,4 +60,12 @@ public interface SysIngredientMapper
      * @return 结果
      */
     public int deleteSysIngredientByIds(Long[] ids);
+
+    public int batchIngredientRec(List<SysIngredientRec> ingredientRecList);
+
+    public int batchIngredientNotRec(List<SysIngredientNotRec> ingredientNotRecList);
+
+    public int deleteIngredentRecByIngredientId(Long recId);
+
+    public int deleteIngredentNotRecByIngredientId(Long notRecId);
 }

@@ -44,28 +44,31 @@
           size="mini"
           @click="handleAdd"
           v-hasPermi="['custom:ingredient:add']"
-        >新增</el-button>
+        >新增
+        </el-button>
       </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['custom:ingredient:edit']"
-        >修改</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="danger"
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['custom:ingredient:remove']"
-        >删除</el-button>
-      </el-col>
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          type="success"-->
+<!--          icon="el-icon-edit"-->
+<!--          size="mini"-->
+<!--          :disabled="single"-->
+<!--          @click="handleUpdate"-->
+<!--          v-hasPermi="['custom:ingredient:edit']"-->
+<!--        >修改-->
+<!--        </el-button>-->
+<!--      </el-col>-->
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          type="danger"-->
+<!--          icon="el-icon-delete"-->
+<!--          size="mini"-->
+<!--          :disabled="multiple"-->
+<!--          @click="handleDelete"-->
+<!--          v-hasPermi="['custom:ingredient:remove']"-->
+<!--        >删除-->
+<!--        </el-button>-->
+<!--      </el-col>-->
       <el-col :span="1.5">
         <el-button
           type="warning"
@@ -73,26 +76,24 @@
           size="mini"
           @click="handleExport"
           v-hasPermi="['custom:ingredient:export']"
-        >导出</el-button>
+        >导出
+        </el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="ingredientList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="id" align="center" prop="id" />
-      <el-table-column label="食材名称" align="center" prop="name" />
-      <el-table-column label="食材类别" align="center" prop="type" :formatter="typeFormat" />
-      <el-table-column label="推荐分量" align="center" prop="recEstimation" />
-      <el-table-column label="推荐分量单位" align="center" prop="recEstUnit" :formatter="recEstUnitFormat" />
-      <el-table-column label="推荐分量" align="center" prop="recPortion" />
-      <el-table-column label="蛋白质比例" align="center" prop="proteinRatio" />
-      <el-table-column label="脂肪比例" align="center" prop="fatRatio" />
-      <el-table-column label="碳水比例" align="center" prop="carbonRatio" />
-      <el-table-column label="地域" align="center" prop="area" :formatter="areaFormat" />
-      <el-table-column label="忌口人群" align="center" prop="notRec" :formatter="notRecFormat" />
-      <el-table-column label="推荐人群" align="center" prop="recommend" :formatter="recommendFormat" />
-      <el-table-column label="备注" align="center" prop="remark" />
+      <!--      <el-table-column type="selection" width="55" align="center" />-->
+      <!--      <el-table-column label="id" align="center" prop="id" />-->
+      <el-table-column label="食材名称" align="center" prop="name"/>
+      <el-table-column label="食材类别" align="center" prop="type" :formatter="typeFormat"/>
+      <el-table-column label="蛋白质比例(100g)" align="center" prop="proteinRatio"/>
+      <el-table-column label="脂肪比例(100g)" align="center" prop="fatRatio"/>
+      <el-table-column label="碳水比例(100g)" align="center" prop="carbonRatio"/>
+      <el-table-column label="地域" align="center" prop="area" :formatter="areaFormat"/>
+      <el-table-column label="忌口人群" align="center" prop="notRecIds" :formatter="notRecFormat"/>
+      <el-table-column label="推荐人群" align="center" prop="recIds" :formatter="recommendFormat"/>
+      <el-table-column label="备注" align="center" prop="remark"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -101,14 +102,16 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['custom:ingredient:edit']"
-          >修改</el-button>
+          >修改
+          </el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['custom:ingredient:remove']"
-          >删除</el-button>
+          >删除
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -122,80 +125,87 @@
     />
 
     <!-- 添加或修改食材对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="食材名称" prop="name">
-          <el-input v-model="form.name" placeholder="请输入食材名称" />
-        </el-form-item>
-        <el-form-item label="食材类别" prop="type">
-          <el-select v-model="form.type" placeholder="请选择食材类别">
-            <el-option
-              v-for="dict in typeOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="推荐分量" prop="recEstimation">
-          <el-input v-model="form.recEstimation" placeholder="请输入推荐分量" />
-        </el-form-item>
-        <el-form-item label="推荐分量单位" prop="recEstUnit">
-          <el-select v-model="form.recEstUnit" placeholder="请选择推荐分量单位">
-            <el-option
-              v-for="dict in recEstUnitOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="parseInt(dict.dictValue)"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="推荐分量" prop="recPortion">
-          <el-input v-model="form.recPortion" placeholder="请输入推荐分量" />
-        </el-form-item>
-        <el-form-item label="蛋白质比例" prop="proteinRatio">
-          <el-input v-model="form.proteinRatio" placeholder="请输入蛋白质比例" />
-        </el-form-item>
-        <el-form-item label="脂肪比例" prop="fatRatio">
-          <el-input v-model="form.fatRatio" placeholder="请输入脂肪比例" />
-        </el-form-item>
-        <el-form-item label="碳水比例" prop="carbonRatio">
-          <el-input v-model="form.carbonRatio" placeholder="请输入碳水比例" />
-        </el-form-item>
-        <el-form-item label="地域" prop="area">
-          <el-select v-model="form.area" placeholder="请选择地域">
-            <el-option
-              v-for="dict in areaOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="忌口人群">
-          <el-checkbox-group v-model="form.notRec">
-            <el-checkbox
-              v-for="dict in notRecOptions"
-              :key="dict.dictValue"
-              :label="dict.dictValue">
-              {{dict.dictLabel}}
-            </el-checkbox>
-          </el-checkbox-group>
-        </el-form-item>
-        <el-form-item label="推荐人群">
-          <el-checkbox-group v-model="form.recommend">
-            <el-checkbox
-              v-for="dict in recommendOptions"
-              :key="dict.dictValue"
-              :label="dict.dictValue">
-              {{dict.dictLabel}}
-            </el-checkbox>
-          </el-checkbox-group>
-        </el-form-item>
-        <el-form-item label="备注" prop="remark">
-          <el-input v-model="form.remark" type="textarea" placeholder="请输入内容" />
-        </el-form-item>
-      </el-form>
+    <el-dialog :title="title" :visible.sync="open" width="620px" append-to-body>
+      <el-row :gutter="15">
+        <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+          <el-col :span="12">
+            <el-form-item label="食材名称" prop="name" label-width="90px">
+              <el-input v-model="form.name" placeholder="请输入食材名称"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="蛋白质比例" prop="proteinRatio" label-width="90px">
+              <el-input v-model="form.proteinRatio" placeholder="请输入蛋白质比例" style="width: 150px"/>
+              /100g
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="脂肪比例" prop="fatRatio" label-width="90px">
+              <el-input v-model="form.fatRatio" placeholder="请输入脂肪比例" style="width: 150px"/>
+              /100g
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="碳水比例" prop="carbonRatio" label-width="90px">
+              <el-input v-model="form.carbonRatio" placeholder="请输入碳水比例" style="width: 150px"/>
+              /100g
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="食材类别" prop="type" label-width="90px">
+              <el-select v-model="form.type" placeholder="请选择食材类别">
+                <el-option
+                  v-for="dict in typeOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="地域" prop="area" label-width="90px">
+              <el-select v-model="form.area" placeholder="请选择地域">
+                <el-option
+                  v-for="dict in areaOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="忌口人群" label-width="90px">
+              <el-checkbox-group v-model="form.notRecIds">
+                <el-checkbox
+                  v-for="dict in notRecOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictValue">
+                  {{dict.dictLabel}}
+                </el-checkbox>
+              </el-checkbox-group>
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="推荐人群" label-width="90px">
+              <el-checkbox-group v-model="form.recIds">
+                <el-checkbox
+                  v-for="dict in recommendOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictValue">
+                  {{dict.dictLabel}}
+                </el-checkbox>
+              </el-checkbox-group>
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="备注" prop="remark" label-width="90px">
+              <el-input v-model="form.remark" type="textarea" placeholder="请输入内容"/>
+            </el-form-item>
+          </el-col>
+        </el-form>
+      </el-row>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
@@ -205,7 +215,14 @@
 </template>
 
 <script>
-  import { listIngredient, getIngredient, delIngredient, addIngredient, updateIngredient, exportIngredient } from "@/api/custom/ingredient";
+  import {
+    addIngredient,
+    delIngredient,
+    exportIngredient,
+    getIngredient,
+    listIngredient,
+    updateIngredient
+  } from "@/api/custom/ingredient";
 
   export default {
     name: "Ingredient",
@@ -231,8 +248,6 @@
         open: false,
         // 食材类别字典
         typeOptions: [],
-        // 推荐分量单位字典
-        recEstUnitOptions: [],
         // 地域字典
         areaOptions: [],
         // 忌口人群字典
@@ -246,23 +261,19 @@
           name: null,
           type: null,
           area: null,
-          notRec: null,
-          recommend: null,
+          notRecIds: null,
+          recIds: null,
         },
         // 表单参数
         form: {},
         // 表单校验
-        rules: {
-        }
+        rules: {}
       };
     },
     created() {
       this.getList();
       this.getDicts("cus_ing_type").then(response => {
         this.typeOptions = response.data;
-      });
-      this.getDicts("cus_cus_unit").then(response => {
-        this.recEstUnitOptions = response.data;
       });
       this.getDicts("cus_area").then(response => {
         this.areaOptions = response.data;
@@ -288,21 +299,17 @@
       typeFormat(row, column) {
         return this.selectDictLabel(this.typeOptions, row.type);
       },
-      // 推荐分量单位字典翻译
-      recEstUnitFormat(row, column) {
-        return this.selectDictLabel(this.recEstUnitOptions, row.recEstUnit);
-      },
       // 地域字典翻译
       areaFormat(row, column) {
         return this.selectDictLabel(this.areaOptions, row.area);
       },
       // 忌口人群字典翻译
       notRecFormat(row, column) {
-        return this.selectDictLabels(this.notRecOptions, row.notRec);
+        return this.selectDictLabels(this.notRecOptions, row.notRecIds.join(','));
       },
       // 推荐人群字典翻译
       recommendFormat(row, column) {
-        return this.selectDictLabels(this.recommendOptions, row.recommend);
+        return this.selectDictLabels(this.recommendOptions, row.recIds.join(','));
       },
       // 取消按钮
       cancel() {
@@ -315,15 +322,12 @@
           id: null,
           name: null,
           type: null,
-          recEstimation: null,
-          recEstUnit: null,
-          recPortion: null,
           proteinRatio: null,
           fatRatio: null,
           carbonRatio: null,
           area: null,
-          notRec: [],
-          recommend: [],
+          notRecIds: [],
+          recIds: [],
           remark: null,
           createBy: null,
           createTime: null,
@@ -345,7 +349,7 @@
       // 多选框选中数据
       handleSelectionChange(selection) {
         this.ids = selection.map(item => item.id)
-        this.single = selection.length!==1
+        this.single = selection.length !== 1
         this.multiple = !selection.length
       },
       /** 新增按钮操作 */
@@ -360,8 +364,8 @@
         const id = row.id || this.ids
         getIngredient(id).then(response => {
           this.form = response.data;
-          this.form.notRec = this.form.notRec.split(",");
-          this.form.recommend = this.form.recommend.split(",");
+          // this.form.notRecIds = this.form.notRecIds.split(",");
+          // this.form.recIds = this.form.recIds.split(",");
           this.open = true;
           this.title = "修改食材";
         });
@@ -370,8 +374,8 @@
       submitForm() {
         this.$refs["form"].validate(valid => {
           if (valid) {
-            this.form.notRec = this.form.notRec.join(",");
-            this.form.recommend = this.form.recommend.join(",");
+            // this.form.notRecIds = this.form.notRecIds.join(",");
+            // this.form.recIds = this.form.recIds.join(",");
             if (this.form.id != null) {
               updateIngredient(this.form).then(response => {
                 if (response.code === 200) {
@@ -399,12 +403,13 @@
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
-        }).then(function() {
+        }).then(function () {
           return delIngredient(ids);
         }).then(() => {
           this.getList();
           this.msgSuccess("删除成功");
-        }).catch(function() {});
+        }).catch(function () {
+        });
       },
       /** 导出按钮操作 */
       handleExport() {
@@ -413,11 +418,12 @@
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
-        }).then(function() {
+        }).then(function () {
           return exportIngredient(queryParams);
         }).then(response => {
           this.download(response.msg);
-        }).catch(function() {});
+        }).catch(function () {
+        });
       }
     }
   };

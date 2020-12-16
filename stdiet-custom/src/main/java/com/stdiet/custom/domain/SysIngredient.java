@@ -63,7 +63,27 @@ public class SysIngredient extends BaseEntity
     @Excel(name = "推荐")
     private String recommend;
 
-    public void setId(Long id) 
+    private Long[] recIds;
+
+    private Long[] notRecIds;
+
+    public Long[] getRecIds() {
+        return recIds;
+    }
+
+    public Long[] getNotRecIds() {
+        return notRecIds;
+    }
+
+    public void setNotRecIds(Long[] notRecIds) {
+        this.notRecIds = notRecIds;
+    }
+
+    public void setRedIds(Long[] recIds) {
+        this.recIds = recIds;
+    }
+
+    public void setId(Long id)
     {
         this.id = id;
     }
@@ -153,21 +173,21 @@ public class SysIngredient extends BaseEntity
     {
         return area;
     }
-    public void setNotRec(String notRec) 
+    public void setNotRec(String notRec)
     {
         this.notRec = notRec;
     }
 
-    public String getNotRec() 
+    public String getNotRec()
     {
         return notRec;
     }
-    public void setRecommend(String recommend) 
+    public void setRecommend(String recommend)
     {
         this.recommend = recommend;
     }
 
-    public String getRecommend() 
+    public String getRecommend()
     {
         return recommend;
     }

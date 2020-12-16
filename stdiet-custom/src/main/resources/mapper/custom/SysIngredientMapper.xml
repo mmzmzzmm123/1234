@@ -8,16 +8,11 @@
         <result property="id"    column="id"    />
         <result property="name"    column="name"    />
         <result property="type"    column="type"    />
-        <result property="recEstimation"    column="rec_estimation"    />
-        <result property="recEstUnit"    column="rec_est_unit"    />
-        <result property="recPortion"    column="rec_portion"    />
         <result property="proteinRatio"    column="protein_ratio"    />
         <result property="fatRatio"    column="fat_ratio"    />
         <result property="carbonRatio"    column="carbon_ratio"    />
-        <result property="remark"    column="remark"    />
         <result property="area"    column="area"    />
-        <result property="notRec"    column="not_rec"    />
-        <result property="recommend"    column="recommend"    />
+        <result property="remark"    column="remark"    />
         <result property="createBy"    column="create_by"    />
         <result property="createTime"    column="create_time"    />
         <result property="updateBy"    column="update_by"    />
@@ -25,7 +20,7 @@
     </resultMap>
 
     <sql id="selectSysIngredientVo">
-        select id, name, type, rec_estimation, rec_est_unit, rec_portion, protein_ratio, fat_ratio, carbon_ratio, remark, area, not_rec, recommend, create_by, create_time, update_by, update_time from sys_ingredient
+        select id, name, type, protein_ratio, fat_ratio, carbon_ratio, area, remark, create_by, create_time, update_by, update_time from sys_ingredient
     </sql>
 
     <select id="selectSysIngredientList" parameterType="SysIngredient" resultMap="SysIngredientResult">
@@ -34,8 +29,6 @@
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
             <if test="type != null  and type != ''"> and type = #{type}</if>
             <if test="area != null  and area != ''"> and area = #{area}</if>
-            <if test="notRec != null  and notRec != ''"> and not_rec like concat('%', #{notRec}, '%')</if>
-            <if test="recommend != null  and recommend != ''"> and recommend like concat('%', #{recommend}, '%')</if>
         </where>
     </select>
 
@@ -49,16 +42,11 @@
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="name != null">name,</if>
             <if test="type != null">type,</if>
-            <if test="recEstimation != null">rec_estimation,</if>
-            <if test="recEstUnit != null">rec_est_unit,</if>
-            <if test="recPortion != null">rec_portion,</if>
             <if test="proteinRatio != null">protein_ratio,</if>
             <if test="fatRatio != null">fat_ratio,</if>
             <if test="carbonRatio != null">carbon_ratio,</if>
-            <if test="remark != null">remark,</if>
             <if test="area != null">area,</if>
-            <if test="notRec != null">not_rec,</if>
-            <if test="recommend != null">recommend,</if>
+            <if test="remark != null">remark,</if>
             <if test="createBy != null">create_by,</if>
             <if test="createTime != null">create_time,</if>
             <if test="updateBy != null">update_by,</if>
@@ -67,16 +55,11 @@
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="name != null">#{name},</if>
             <if test="type != null">#{type},</if>
-            <if test="recEstimation != null">#{recEstimation},</if>
-            <if test="recEstUnit != null">#{recEstUnit},</if>
-            <if test="recPortion != null">#{recPortion},</if>
             <if test="proteinRatio != null">#{proteinRatio},</if>
             <if test="fatRatio != null">#{fatRatio},</if>
             <if test="carbonRatio != null">#{carbonRatio},</if>
-            <if test="remark != null">#{remark},</if>
             <if test="area != null">#{area},</if>
-            <if test="notRec != null">#{notRec},</if>
-            <if test="recommend != null">#{recommend},</if>
+            <if test="remark != null">#{remark},</if>
             <if test="createBy != null">#{createBy},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="updateBy != null">#{updateBy},</if>
@@ -84,21 +67,38 @@
         </trim>
     </insert>
 
+    <insert id="batchIngredientRec" >
+        insert into sys_ingredient_rec(ingredient_id, rec_id) values
+        <foreach collection="list" separator="," item="item" index="index">
+            (#{item.ingredientId},#{item.recommandId})
+        </foreach>
+    </insert>
+
+    <insert id="batchIngredientNotRec" >
+        insert into sys_ingredient_not_rec(ingredient_id, not_rec_id) values
+        <foreach collection="list" separator="," item="item" index="index">
+            (#{item.ingredientId},#{item.notRecommandId})
+        </foreach>
+    </insert>
+
+    <delete id="deleteIngredentRecByIngredientId" parameterType="Long">
+        delete from sys_ingredient_rec where ingredient_id=#{ingredientId}
+    </delete>
+
+    <delete id="deleteIngredentNotRecByIngredientId" parameterType="Long">
+        delete from sys_ingredient_not_rec where ingredient_id=#{ingredientId}
+    </delete>
+
     <update id="updateSysIngredient" parameterType="SysIngredient">
         update sys_ingredient
         <trim prefix="SET" suffixOverrides=",">
             <if test="name != null">name = #{name},</if>
             <if test="type != null">type = #{type},</if>
-            <if test="recEstimation != null">rec_estimation = #{recEstimation},</if>
-            <if test="recEstUnit != null">rec_est_unit = #{recEstUnit},</if>
-            <if test="recPortion != null">rec_portion = #{recPortion},</if>
             <if test="proteinRatio != null">protein_ratio = #{proteinRatio},</if>
             <if test="fatRatio != null">fat_ratio = #{fatRatio},</if>
             <if test="carbonRatio != null">carbon_ratio = #{carbonRatio},</if>
-            <if test="remark != null">remark = #{remark},</if>
             <if test="area != null">area = #{area},</if>
-            <if test="notRec != null">not_rec = #{notRec},</if>
-            <if test="recommend != null">recommend = #{recommend},</if>
+            <if test="remark != null">remark = #{remark},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateBy != null">update_by = #{updateBy},</if>
