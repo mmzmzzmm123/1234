@@ -193,6 +193,13 @@
                 <artifactId>ruoyi-common</artifactId>
                 <version>${ruoyi.version}</version>
             </dependency>
+			
+			<!-- 酒店房价牌-->
+			<dependency>
+				<groupId>com.ruoyi</groupId>
+				<artifactId>ruoyi-hotel</artifactId>
+				<version>${ruoyi.version}</version>
+			</dependency>
 
         </dependencies>
     </dependencyManagement>
@@ -204,6 +211,7 @@
         <module>ruoyi-quartz</module>
         <module>ruoyi-generator</module>
         <module>ruoyi-common</module>
+		<module>ruoyi-hotel</module>
     </modules>
     <packaging>pom</packaging>
 
