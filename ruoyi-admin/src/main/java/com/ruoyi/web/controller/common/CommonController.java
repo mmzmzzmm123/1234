@@ -42,7 +42,6 @@ public class CommonController
      * @param fileName 文件名称
      * @param delete 是否删除
      */
-    @ApiOperation("通用下载请求")
     @GetMapping("common/download")
     @ApiImplicitParams({
 		@ApiImplicitParam(name = "fileName", value = "文件名称", required = true, dataType = "String"),
@@ -102,6 +101,7 @@ public class CommonController
     /**
      * 本地资源通用下载
      */
+    @ApiOperation("本地资源通用下载")
     @GetMapping("/common/download/resource")
     public void resourceDownload(String name, HttpServletRequest request, HttpServletResponse response) throws Exception
     {
