@@ -68,7 +68,7 @@ public class BaseException extends RuntimeException
         {
             message = MessageUtils.message(code, args);
         }
-        if (message == null)
+        if (StringUtils.isEmpty(message))
         {
             message = defaultMessage;
         }
