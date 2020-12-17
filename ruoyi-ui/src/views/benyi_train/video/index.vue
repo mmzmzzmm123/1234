@@ -417,7 +417,7 @@ export default {
       this.imageUrl = "";
     },
     handleSuccessVideo(response) {
-      console.log("上传完成", response);
+      // console.log("上传完成", response);
       this.imgFlag = false;
       this.percent = 0;
       if (response.hash) {
@@ -429,14 +429,14 @@ export default {
     handleError(err, file, fileList) {
       // 上传失败异常处理
       const error = JSON.parse(JSON.stringify(err));
-      console.log(err);
-      console.log(error);
+      // console.log(err);
+      // console.log(error);
       this.msgError(error.status.toString());
       this.imgFlag = false;
       this.percent = 0;
     },
     videoBeforeUpload(file) {
-      console.log(file);
+      // console.log(file);
       const _self = this;
       const isVideo =
         file.type === "video/mp4" ||
@@ -460,7 +460,7 @@ export default {
     //上传进度
     uploadProcess(event, file, fileList) {
       this.imgFlag = true;
-      console.log(event.percent);
+      // console.log(event.percent);
       this.percent = Math.floor(event.percent);
     },
     /** 查询培训列表 */

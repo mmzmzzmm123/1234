@@ -66,7 +66,7 @@ export default {
         // console.log( response);
         if (response.total <= 1) {
         } else {
-          console.log(response);
+          // console.log(response);
           this.deptsOptions = response.rows;
         }
       });

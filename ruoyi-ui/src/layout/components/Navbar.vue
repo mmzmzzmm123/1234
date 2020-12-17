@@ -10,7 +10,7 @@
     <breadcrumb id="breadcrumb-container" class="breadcrumb-container" />
 
     <div class="right-menu">
-      <template v-if="device!=='mobile'">
+      <template v-if="device !== 'mobile'">
         <search id="header-search" class="right-menu-item" />
 
         <el-tooltip content="系统使用文档" effect="dark" placement="bottom">
@@ -24,7 +24,10 @@
         </el-tooltip>
       </template>
 
-      <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
+      <el-dropdown
+        class="avatar-container right-menu-item hover-effect"
+        trigger="click"
+      >
         <div class="avatar-wrapper">
           <img :src="avatar" class="user-avatar" />
           <i class="el-icon-caret-bottom" />
@@ -55,7 +58,7 @@ import Hamburger from "@/components/Hamburger";
 import Screenfull from "@/components/Screenfull";
 import SizeSelect from "@/components/SizeSelect";
 import Search from "@/components/HeaderSearch";
-import RuoYiDoc from '@/components/BenYi/Doc'
+import RuoYiDoc from "@/components/BenYi/Doc";
 import { getDeptsInfo } from "@/api/system/dept";
 
 export default {
@@ -65,7 +68,7 @@ export default {
     Screenfull,
     SizeSelect,
     Search,
-    RuoYiDoc 
+    RuoYiDoc,
   },
   computed: {
     ...mapGetters(["sidebar", "avatar", "device"]),
@@ -76,14 +79,14 @@ export default {
       set(val) {
         this.$store.dispatch("settings/changeSetting", {
           key: "showSettings",
-          value: val
+          value: val,
         });
-      }
-    }
+      },
+    },
   },
   data() {
     return {
-      isMoreSchool: undefined
+      isMoreSchool: undefined,
     };
   },
   created() {
@@ -91,7 +94,7 @@ export default {
   },
   methods: {
     getDepts() {
-      getDeptsInfo().then(response => {
+      getDeptsInfo().then((response) => {
         // console.log("school=" + response.total);
         // console.log( response);
         if (response.total <= 1) {
@@ -106,18 +109,26 @@ export default {
     },
     async logout() {
       this.$confirm("确定注销并退出系统吗？", "提示", {
+        cancelButtonClass: "btn-custom-cancel",
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning"
+        type: "warning",
       }).then(() => {
         this.$store.dispatch("LogOut").then(() => {
           location.reload();
         });
       });
-    }
-  }
+    },
+  },
 };
 </script>
+
+<style lang="scss">
+.btn-custom-cancel {
+  float: right;
+  margin-left: 20px;
+}
+</style>
 
 <style lang="scss" scoped>
 .navbar {

@@ -27,26 +27,34 @@
       <el-col :span="20" :xs="24">
         <el-card class="box-card">
           <div slot="header" class="clearfix">
-            <span class="box-card-title">{{title}}</span>
+            <span class="box-card-title">{{ title }}</span>
           </div>
           <div class="text item" v-show="title1">
-            <h3 class="box-card-title">{{title1}}</h3>
+            <h3 class="box-card-title">{{ title1 }}</h3>
             <div class="pad-left" v-html="note"></div>
           </div>
           <div class="text item" v-show="title2">
-            <h3 class="box-card-title">{{title2}}</h3>
-            <div class="pad-left">
-               <Editor v-model="communicate" />
+            <h3 class="box-card-title">
+              {{ title2 }}
+            </h3>
+            <div ref="printMe">
+              <Editor v-model="communicate" />
             </div>
           </div>
           <div class="text item" v-show="title3">
-            <h3 class="box-card-title">{{title3}}</h3>
+            <h3 class="box-card-title">{{ title3 }}</h3>
 
             <div class="pad-left">
-              <div v-for="(item, index) in activityList" :key="index" class="text item">
-                <h3 class="box-card-case mr">活动{{item.sort}} - {{item.name}}</h3>
-                <h3 class="box-card-info">活动形式：{{fieldFormat(item)}}</h3>
-                <h3 class="box-card-info">重点领域：{{typeFormat(item)}}</h3>
+              <div
+                v-for="(item, index) in activityList"
+                :key="index"
+                class="text item"
+              >
+                <h3 class="box-card-case mr">
+                  活动{{ item.sort }} - {{ item.name }}
+                </h3>
+                <h3 class="box-card-info">活动形式：{{ fieldFormat(item) }}</h3>
+                <h3 class="box-card-info">重点领域：{{ typeFormat(item) }}</h3>
                 <h3 class="box-card-info">活动目标</h3>
                 <div class="text item pad-left" v-html="item.target"></div>
                 <h3 class="box-card-info">活动材料</h3>
@@ -76,7 +84,7 @@ import Editor from "@/components/Editor";
 export default {
   name: "Detail",
   components: {
-    Editor
+    Editor,
   },
   data() {
     return {
@@ -107,26 +115,26 @@ export default {
       // 树结构
       defaultProps: {
         children: "children",
-        label: "label"
+        label: "label",
       },
       // 查询参数
       queryParams: {
-        themeid: undefined
-      }
+        themeid: undefined,
+      },
     };
   },
   watch: {
     // 根据名称筛选部门树
     name(val) {
       this.$refs.tree.filter(val);
-    }
+    },
   },
   created() {
     this.getTreeselect();
-    this.getDicts("sys_theme_type").then(response => {
+    this.getDicts("sys_theme_type").then((response) => {
       this.typeOptions = response.data;
     });
-    this.getDicts("sys_theme_field").then(response => {
+    this.getDicts("sys_theme_field").then((response) => {
       this.fieldOptions = response.data;
     });
   },
@@ -161,7 +169,7 @@ export default {
     },
     /** 查询部门下拉树结构 */
     getTreeselect() {
-      treeselect().then(response => {
+      treeselect().then((response) => {
         this.treeOptions = response.data;
       });
     },
@@ -183,7 +191,7 @@ export default {
       // this.getStandardList();
     },
     getThemeDetails() {
-      getTheme(this.id).then(response => {
+      getTheme(this.id).then((response) => {
         console.log(response);
         if (response.code == "200") {
           this.title1 = "主题网络";
@@ -193,7 +201,7 @@ export default {
           this.communicate = response.data.communicate;
           this.queryParams.themeid = response.data.id;
 
-          listActivity(this.queryParams).then(req => {
+          listActivity(this.queryParams).then((req) => {
             console.log(req);
             if (req.code == "200") {
               this.activityList = req.rows;
@@ -201,8 +209,8 @@ export default {
           });
         }
       });
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>
