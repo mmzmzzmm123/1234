@@ -8,7 +8,7 @@ spring:
         druid:
             # 主库数据源
             master:
-                url: jdbc:mysql://172.16.71.91:63306/g-signature?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+                url: jdbc:mysql://10.10.45.16:63306/g-signature?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
                 username: g-signature
                 password: g-signature
             # 从库数据源
