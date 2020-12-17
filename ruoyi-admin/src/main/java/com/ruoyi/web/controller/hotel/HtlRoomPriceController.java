@@ -1,5 +1,6 @@
 package com.ruoyi.web.controller.hotel;
 
+import java.math.BigDecimal;
 import java.util.List;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ import com.ruoyi.hotel.service.IHtlHotelInfoService;
 import com.ruoyi.hotel.service.IHtlRoomPriceService;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
@@ -115,12 +117,14 @@ public class HtlRoomPriceController extends BaseController
     @ApiOperation("修改房间价格")
     @PreAuthorize("@ss.hasPermi('hotel:roomPrice:edit')")
     @Log(title = "房间价格", businessType = BusinessType.UPDATE)
+    @ApiImplicitParam(name = "roomRateId", value = "房价ID", required = true, dataType = "long")
     @PutMapping("/edit")
-    public AjaxResult edit(RoomPriceEntity roomPriceEntity)
+    public AjaxResult edit(Long roomRateId, RoomPriceEntity roomPriceEntity)
     {
     	SysUser sysUser = SecurityUtils.getLoginUser().getUser();
     	HtlRoomPrice htlRoomPrice = new HtlRoomPrice();
 		BeanUtils.copyBeanProp(htlRoomPrice, roomPriceEntity);
+		htlRoomPrice.setRoomRateId(roomRateId);
 		htlRoomPrice.setUpdateBy(sysUser.getUserName());
 		htlRoomPrice.setUpdateTime(DateUtils.getNowDate());
         htlRoomPriceService.updateHtlRoomPrice(htlRoomPrice);
@@ -133,6 +137,7 @@ public class HtlRoomPriceController extends BaseController
     @ApiOperation("删除房间价格")
     @PreAuthorize("@ss.hasPermi('hotel:roomPrice:remove')")
     @Log(title = "房间价格", businessType = BusinessType.DELETE)
+    @ApiImplicitParam(name = "roomRateId", value = "房价ID", required = true, dataType = "long")
 	@DeleteMapping("/delete")
 	public AjaxResult remove(Long roomRateId)
     {
@@ -150,35 +155,35 @@ public class HtlRoomPriceController extends BaseController
 @ApiModel("房价实体")
 class RoomPriceEntity
 {
-	public String getRoomPrice1() {
+	public BigDecimal getRoomPrice1() {
 		return roomPrice1;
 	}
 
-	public void setRoomPrice1(String roomPrice1) {
+	public void setRoomPrice1(BigDecimal roomPrice1) {
 		this.roomPrice1 = roomPrice1;
 	}
 
-	public String getRoomPrice2() {
+	public BigDecimal getRoomPrice2() {
 		return roomPrice2;
 	}
 
-	public void setRoomPrice2(String roomPrice2) {
+	public void setRoomPrice2(BigDecimal roomPrice2) {
 		this.roomPrice2 = roomPrice2;
 	}
 
-	public String getRoomPrice3() {
+	public BigDecimal getRoomPrice3() {
 		return roomPrice3;
 	}
 
-	public void setRoomPrice3(String roomPrice3) {
+	public void setRoomPrice3(BigDecimal roomPrice3) {
 		this.roomPrice3 = roomPrice3;
 	}
 
-	public String getRoomPrice4() {
+	public BigDecimal getRoomPrice4() {
 		return roomPrice4;
 	}
 
-	public void setRoomPrice4(String roomPrice4) {
+	public void setRoomPrice4(BigDecimal roomPrice4) {
 		this.roomPrice4 = roomPrice4;
 	}
 
@@ -199,16 +204,16 @@ class RoomPriceEntity
 	}
 
 	@ApiModelProperty("房价1")
-	private String roomPrice1;
+	private BigDecimal roomPrice1;
 
 	@ApiModelProperty("房价2")
-	private String roomPrice2;
+	private BigDecimal roomPrice2;
 
 	@ApiModelProperty("房价3")
-	private String roomPrice3;
+	private BigDecimal roomPrice3;
 	
 	@ApiModelProperty("房价4")
-	private String roomPrice4;
+	private BigDecimal roomPrice4;
 
 	@ApiModelProperty("房间类型")
 	private String roomType;
