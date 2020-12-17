@@ -29,13 +29,16 @@ export default {
     variables() {
       return variables;
     },
-	sideTheme() {
+	  sideTheme() {
       return this.$store.state.settings.sideTheme
+    },
+    title() {
+      return this.$store.state.settings.title
     }
   },
   data() {
     return {
-      title: '若依管理系统',
+      // title: '若依管理系统',
       logo: logoImg
     }
   }
@@ -69,7 +72,7 @@ export default {
       width: 32px;
       height: 32px;
       vertical-align: middle;
-      margin-right: 12px;
+      margin-right: 6px;
     }
 
     & .sidebar-title {
