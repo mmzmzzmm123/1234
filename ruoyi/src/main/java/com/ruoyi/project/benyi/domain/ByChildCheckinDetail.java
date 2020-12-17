@@ -55,6 +55,8 @@ public class ByChildCheckinDetail extends BaseEntity {
     @Excel(name = "创建人")
     private Long createuserid;
 
+    private int count;
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -111,6 +113,10 @@ public class ByChildCheckinDetail extends BaseEntity {
         return createuserid;
     }
 
+    public void setCount(int count){this.count=count;}
+
+    public int getCount(){return  count;}
+
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
@@ -122,6 +128,7 @@ public class ByChildCheckinDetail extends BaseEntity {
                 .append("type", getType())
                 .append("createuserid", getCreateuserid())
                 .append("createTime", getCreateTime())
+                .append("count", getCount())
                 .toString();
     }
 }

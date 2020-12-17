@@ -28,6 +28,14 @@ public interface ByChildCheckinDetailMapper {
     public List<ByChildCheckinDetail> selectByChildCheckinDetailList(ByChildCheckinDetail byChildCheckinDetail);
 
     /**
+     * 查询幼儿考勤列表根据每天进行分组
+     *
+     * @param byChildCheckinDetail 幼儿考勤
+     * @return 幼儿考勤集合
+     */
+    public List<ByChildCheckinDetail> selectByChildCheckinGroupDaysList(ByChildCheckinDetail byChildCheckinDetail);
+
+    /**
      * 新增幼儿考勤
      *
      * @param byChildCheckinDetail 幼儿考勤

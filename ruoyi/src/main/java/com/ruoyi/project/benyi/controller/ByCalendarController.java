@@ -65,6 +65,8 @@ public class ByCalendarController extends BaseController {
     private IByChildService byChildService;
     @Autowired
     private IByClassService byClassService;
+    @Autowired
+    private IByChildCheckinDetailService byChildCheckinDetailService;
 
     /**
      * 查询园历管理(本一)列表
@@ -185,6 +187,9 @@ public class ByCalendarController extends BaseController {
             listvi.addAll(getbychilds(classId, formatter));
         }
 
+        //幼儿出勤人数
+        listvi.addAll(getbychildcheckdata(classId,formatter));
+
         AjaxResult ajax = AjaxResult.success();
         ajax.put("calendarData", listvi);
         return ajax;
@@ -203,8 +208,8 @@ public class ByCalendarController extends BaseController {
         //班级类型
         String classId = schoolCommon.getClassId();
         if (!schoolCommon.isStringEmpty(classId)) {
-            ByClass byClass=new ByClass();
-            byClass=byClassService.selectByClassById(classId);
+            ByClass byClass = new ByClass();
+            byClass = byClassService.selectByClassById(classId);
             bySchoolcalendar.setScope(byClass.getBjtype());
         }
 
@@ -393,6 +398,32 @@ public class ByCalendarController extends BaseController {
                     by.setColor("#b37feb");
                     listvi.add(by);
                 }
+            }
+        }
+        return listvi;
+    }
+
+    //获取学校或班级考勤数据列表
+    private List<ByCalendarShow> getbychildcheckdata(String classId, SimpleDateFormat formatter) {
+        List<ByCalendarShow> listvi = new ArrayList<>();
+
+        Long deptId = SecurityUtils.getLoginUser().getUser().getDept().getDeptId();
+        ByChildCheckinDetail byChildCheckinDetail = new ByChildCheckinDetail();
+        byChildCheckinDetail.setSchoolid(deptId);
+        byChildCheckinDetail.setClassid(classId);
+        List<ByChildCheckinDetail> list = byChildCheckinDetailService.selectByChildCheckinGroupDaysList(byChildCheckinDetail);
+        if (list != null && list.size() > 0) {
+            ByCalendarShow by = null;
+            for (int i = 0; i < list.size(); i++) {
+                by = new ByCalendarShow();
+                ByChildCheckinDetail byNewChildCheckinDetail = list.get(i);
+
+                by.setTitle("幼儿出勤人数："+byNewChildCheckinDetail.getCount());
+                String timefor = formatter.format(byNewChildCheckinDetail.getCreateTime());
+                by.setStart(timefor);
+                by.setEnd(timefor);
+                by.setColor("#85a5ff");
+                listvi.add(by);
             }
         }
         return listvi;

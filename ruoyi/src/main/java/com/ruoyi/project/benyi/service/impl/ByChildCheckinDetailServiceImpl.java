@@ -1,8 +1,9 @@
 package com.ruoyi.project.benyi.service.impl;
 
 import java.util.List;
-                                                                                                        import com.ruoyi.common.utils.DateUtils;
-            import org.springframework.beans.factory.annotation.Autowired;
+
+import com.ruoyi.common.utils.DateUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.project.benyi.mapper.ByChildCheckinDetailMapper;
 import com.ruoyi.project.benyi.domain.ByChildCheckinDetail;
@@ -15,8 +16,7 @@ import com.ruoyi.project.benyi.service.IByChildCheckinDetailService;
  * @date 2020-07-21
  */
 @Service
-public class ByChildCheckinDetailServiceImpl implements IByChildCheckinDetailService
-{
+public class ByChildCheckinDetailServiceImpl implements IByChildCheckinDetailService {
     @Autowired
     private ByChildCheckinDetailMapper byChildCheckinDetailMapper;
 
@@ -27,8 +27,7 @@ public class ByChildCheckinDetailServiceImpl implements IByChildCheckinDetailSer
      * @return 幼儿考勤
      */
     @Override
-    public ByChildCheckinDetail selectByChildCheckinDetailById(Long id)
-    {
+    public ByChildCheckinDetail selectByChildCheckinDetailById(Long id) {
         return byChildCheckinDetailMapper.selectByChildCheckinDetailById(id);
     }
 
@@ -39,9 +38,19 @@ public class ByChildCheckinDetailServiceImpl implements IByChildCheckinDetailSer
      * @return 幼儿考勤
      */
     @Override
-    public List<ByChildCheckinDetail> selectByChildCheckinDetailList(ByChildCheckinDetail byChildCheckinDetail)
-    {
+    public List<ByChildCheckinDetail> selectByChildCheckinDetailList(ByChildCheckinDetail byChildCheckinDetail) {
         return byChildCheckinDetailMapper.selectByChildCheckinDetailList(byChildCheckinDetail);
+    }
+
+    /**
+     * 查询幼儿考勤列表根据每天进行分组
+     *
+     * @param byChildCheckinDetail 幼儿考勤
+     * @return 幼儿考勤集合
+     */
+    @Override
+    public List<ByChildCheckinDetail> selectByChildCheckinGroupDaysList(ByChildCheckinDetail byChildCheckinDetail) {
+        return byChildCheckinDetailMapper.selectByChildCheckinGroupDaysList(byChildCheckinDetail);
     }
 
     /**
@@ -51,10 +60,9 @@ public class ByChildCheckinDetailServiceImpl implements IByChildCheckinDetailSer
      * @return 结果
      */
     @Override
-    public int insertByChildCheckinDetail(ByChildCheckinDetail byChildCheckinDetail)
-    {
-                                                                                                                                                                                byChildCheckinDetail.setCreateTime(DateUtils.getNowDate());
-                            return byChildCheckinDetailMapper.insertByChildCheckinDetail(byChildCheckinDetail);
+    public int insertByChildCheckinDetail(ByChildCheckinDetail byChildCheckinDetail) {
+        byChildCheckinDetail.setCreateTime(DateUtils.getNowDate());
+        return byChildCheckinDetailMapper.insertByChildCheckinDetail(byChildCheckinDetail);
     }
 
     /**
@@ -64,9 +72,8 @@ public class ByChildCheckinDetailServiceImpl implements IByChildCheckinDetailSer
      * @return 结果
      */
     @Override
-    public int updateByChildCheckinDetail(ByChildCheckinDetail byChildCheckinDetail)
-    {
-                                                                                                                                                                                return byChildCheckinDetailMapper.updateByChildCheckinDetail(byChildCheckinDetail);
+    public int updateByChildCheckinDetail(ByChildCheckinDetail byChildCheckinDetail) {
+        return byChildCheckinDetailMapper.updateByChildCheckinDetail(byChildCheckinDetail);
     }
 
     /**
@@ -76,8 +83,7 @@ public class ByChildCheckinDetailServiceImpl implements IByChildCheckinDetailSer
      * @return 结果
      */
     @Override
-    public int deleteByChildCheckinDetailByIds(Long[] ids)
-    {
+    public int deleteByChildCheckinDetailByIds(Long[] ids) {
         return byChildCheckinDetailMapper.deleteByChildCheckinDetailByIds(ids);
     }
 
@@ -88,8 +94,7 @@ public class ByChildCheckinDetailServiceImpl implements IByChildCheckinDetailSer
      * @return 结果
      */
     @Override
-    public int deleteByChildCheckinDetailById(Long id)
-    {
+    public int deleteByChildCheckinDetailById(Long id) {
         return byChildCheckinDetailMapper.deleteByChildCheckinDetailById(id);
     }
 }

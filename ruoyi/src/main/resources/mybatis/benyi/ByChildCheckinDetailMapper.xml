@@ -13,6 +13,7 @@
         <result property="type" column="type"/>
         <result property="createuserid" column="createuserid"/>
         <result property="createTime" column="create_time"/>
+        <result property="count" column="count"/>
     </resultMap>
 
     <sql id="selectByChildCheckinDetailVo">
@@ -31,6 +32,17 @@
             <if test="createuserid != null ">and createuserid = #{createuserid}</if>
             <if test="createTime != null ">and to_days(create_time) =to_days(#{createTime})</if>
         </where>
+    </select>
+
+    <select id="selectByChildCheckinGroupDaysList" parameterType="ByChildCheckinDetail"
+            resultMap="ByChildCheckinDetailResult">
+        select count(*) as count, t.create_time from (select id, schoolid, classid, childid, childname, type, createuserid, DATE_FORMAT(create_time,'%Y-%m-%d') as create_time
+        from by_child_checkin_detail
+        where type='01'
+        <if test="schoolid != null ">and schoolid = #{schoolid}</if>
+        <if test="classid != null  and classid != ''">and classid = #{classid}</if>
+        ) t
+        group by t.create_time
     </select>
 
     <select id="selectByChildCheckinDetailById" parameterType="Long" resultMap="ByChildCheckinDetailResult">
