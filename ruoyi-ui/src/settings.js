@@ -1,5 +1,5 @@
 module.exports = {
-  title: '若依管理系统',
+  title: '元年私募电子签约平台',
 
   /**
    * 侧边栏主题 深色主题theme-dark，浅色主题theme-light
