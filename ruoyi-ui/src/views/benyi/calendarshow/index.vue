@@ -123,7 +123,7 @@ export default {
   },
   methods: {
     handleEventClick(info) {
-      this.msgSuccess("活动: " + info.event.title);
+      this.msgSuccess("事件: " + info.event.title);
     },
   },
   mounted() {

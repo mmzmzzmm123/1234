@@ -3,7 +3,7 @@
     <el-form :model="queryParams" ref="queryForm" label-width="70px">
       <el-row :gutter="10">
         <el-col :xs="24" :ms="12" :md="5">
-           <el-form-item label="选择班级" prop="classid">
+          <el-form-item label="选择班级" prop="classid">
             <el-select v-model="queryParams.classid" placeholder="请选择班级">
               <el-option
                 v-for="dict in classOptions"
@@ -942,6 +942,8 @@ export default {
     getClassList() {
       listClass(null).then((response) => {
         this.classOptions = response.rows;
+        // console.log(response.rows[0].bjbh);
+        // this.form.classid = response.rows[0].bjbh;
       });
     },
     /** 查询幼儿信息列表 */
@@ -1067,6 +1069,7 @@ export default {
       this.reset();
       this.open = true;
       this.title = "添加幼儿信息";
+      this.form.classid = this.classOptions[0].bjbh;
     },
     /** 修改按钮操作 */
     async handleUpdate(row) {
