@@ -103,6 +103,20 @@
            </plugin>   
         </plugins>
         <finalName>${project.artifactId}</finalName>
+        <resources>
+            <resource>
+                <directory>${project.basedir}/src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>**/messages.properties</include>
+                    <include>**/mybatis/**.xml</include>
+                    <include>**/application.yml</include>
+                    <include>**/application-${profileActive}.yml</include>
+                    <include>**/banner.txt</include>
+                    <include>**/logback.xml</include>
+                </includes>
+            </resource>
+        </resources>
     </build>
 
     <profiles>
