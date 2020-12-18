@@ -524,6 +524,8 @@
         // 是否显示弹出层
         open: false,
         //
+        totalAmount: 0,
+        //
         review: 'no',
         //
         daterange: [beginTime, endTime],

@@ -36,7 +36,7 @@
     </select>
 
     <select id="selectSysWxUserInfoListNot" parameterType="SysWxUserInfo" resultMap="SysWxUserInfoResult">
-        select user.openid, user.nick_name, user.appid, user.phone, user.avatar_url, user.sex, user.update_time from sys_wx_user_info user
+        select distinct user.openid, user.nick_name, user.appid, user.phone, user.avatar_url, user.sex, user.update_time from sys_wx_user_info user
         right join sys_order
         on user.phone = sys_order.phone
         <where>

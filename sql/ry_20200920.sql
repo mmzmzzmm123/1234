@@ -810,3 +810,60 @@ create table sys_wx_user_log (
        remark           varchar(500)    default null               comment '备注',
        primary key (id)
 ) engine=innodb comment = '微信用户记录';
+
+
+-- ----------------------------
+-- 24、食材
+-- ----------------------------
+drop table if exists sys_ingredient;
+create table sys_ingredient(
+        id              BIGINT(20)       not null auto_increment   comment 'id',
+        name            varchar(20)                                comment '食材名称',
+        type            varchar(20)                                comment '食材类别',
+        rec_estimation  tinyint                                    comment '推荐分量估算',
+        rec_est_unit    bigint(20)                                 comment '推荐分量估算单位id',
+        rec_portion     tinyint                                    comment '推荐分量',
+        protein_ratio   decimal(10,3)                              comment '蛋白质比例',
+        fat_ratio       decimal(10,3)                              comment '脂肪比例',
+        carbon_ratio    decimal(10,3)                              comment '碳水比例',
+        remark          varchar(500)                               comment '备注',
+        area            varchar(20)                                comment '地域',
+        not_rec         varchar(500)                               comment '忌口',
+        recommend       varchar(500)                               comment '推荐',
+        create_by       varchar(64)     default ''                comment '创建者',
+        create_time     datetime                                  comment '创建时间',
+        update_by       varchar(64)     default ''                comment '更新者',
+        update_time     datetime                                  comment '更新时间',
+        primary key (id)
+) engine=innodb comment = '食材';
+
+drop table if exists sys_dishes;
+create table sys_dishes(
+           id              BIGINT(20)       not null auto_increment   comment 'id',
+           name            varchar(20)                                comment '菜品名称',
+           type            varchar(20)                                comment '菜品类型',
+           not_rec         varchar(500)                               comment '忌口',
+           recommend       varchar(500)                               comment '推荐',
+           methods         text                                       comment '做法',
+           create_by       varchar(64)     default ''                comment '创建者',
+           create_time     datetime                                  comment '创建时间',
+           update_by       varchar(64)     default ''                comment '更新者',
+           update_time     datetime                                  comment '更新时间',
+           primary key (id)
+) engine=innodb comment = '菜品';
+
+drop table if exists sys_dishes_ingredient;
+create table sys_dishes_ingredient(
+           id              BIGINT(20)       not null auto_increment   comment 'id',
+           dishes_id       varchar(20)                                comment '菜品id',
+           ingredient_id   varchar(20)                                comment '食材id',
+           ing_weight      decimal(10,2)                              comment '食材重量',
+           primary key (id)
+) engine=innodb comment = '菜品食材';
+
+drop table if exists sys_physical_signs;
+create table sys_physical_signs(
+           id              BIGINT(20)       not null auto_increment   comment 'id',
+           name            varchar(20)                                comment '体征名称',
+           primary key (id)
+) engine=innodb comment = '体征';
