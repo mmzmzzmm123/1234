@@ -9,7 +9,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * 房间图片对象 htl_room_picture
  * 
  * @author sucheng
- * @date 2020-12-09
+ * @date 2020-12-20
  */
 public class HtlRoomPicture extends BaseEntity
 {
@@ -29,6 +29,10 @@ public class HtlRoomPicture extends BaseEntity
     /** 图片名称 */
     @Excel(name = "图片名称")
     private String pictureName;
+
+    /** 排列序号 */
+    @Excel(name = "排列序号")
+    private Integer orderNum;
 
     /** 状态（0：启用；1：停用） */
     @Excel(name = "状态", readConverterExp = "0=：启用；1：停用")
@@ -70,6 +74,15 @@ public class HtlRoomPicture extends BaseEntity
     {
         return pictureName;
     }
+    public void setOrderNum(Integer orderNum) 
+    {
+        this.orderNum = orderNum;
+    }
+
+    public Integer getOrderNum() 
+    {
+        return orderNum;
+    }
     public void setStatus(Integer status) 
     {
         this.status = status;
@@ -87,8 +100,9 @@ public class HtlRoomPicture extends BaseEntity
             .append("hotelId", getHotelId())
             .append("picturePath", getPicturePath())
             .append("pictureName", getPictureName())
-            .append("createBy", getCreateBy())
+            .append("orderNum", getOrderNum())
             .append("status", getStatus())
+            .append("createBy", getCreateBy())
             .append("createTime", getCreateTime())
             .append("updateBy", getUpdateBy())
             .append("updateTime", getUpdateTime())

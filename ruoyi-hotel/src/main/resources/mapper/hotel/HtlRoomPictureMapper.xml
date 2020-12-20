@@ -9,15 +9,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="hotelId"    column="hotel_id"    />
         <result property="picturePath"    column="picture_path"    />
         <result property="pictureName"    column="picture_name"    />
-        <result property="createBy"    column="create_by"    />
+        <result property="orderNum"    column="order_num"    />
         <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
         <result property="createTime"    column="create_time"    />
         <result property="updateBy"    column="update_by"    />
         <result property="updateTime"    column="update_time"    />
     </resultMap>
 
     <sql id="selectHtlRoomPictureVo">
-        select picture_id, hotel_id, picture_path, picture_name, create_by, status, create_time, update_by, update_time from htl_room_picture
+        select picture_id, hotel_id, picture_path, picture_name, order_num, status, create_by, create_time, update_by, update_time from htl_room_picture
     </sql>
 
     <select id="selectHtlRoomPictureList" parameterType="HtlRoomPicture" resultMap="HtlRoomPictureResult">
@@ -26,6 +27,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="hotelId != null "> and hotel_id = #{hotelId}</if>
             <if test="picturePath != null  and picturePath != ''"> and picture_path = #{picturePath}</if>
             <if test="pictureName != null  and pictureName != ''"> and picture_name like concat('%', #{pictureName}, '%')</if>
+            <if test="orderNum != null "> and order_num = #{orderNum}</if>
             <if test="status != null "> and status = #{status}</if>
         </where>
     </select>
@@ -41,8 +43,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="hotelId != null">hotel_id,</if>
             <if test="picturePath != null">picture_path,</if>
             <if test="pictureName != null">picture_name,</if>
-            <if test="createBy != null">create_by,</if>
+            <if test="orderNum != null">order_num,</if>
             <if test="status != null">status,</if>
+            <if test="createBy != null">create_by,</if>
             <if test="createTime != null">create_time,</if>
             <if test="updateBy != null">update_by,</if>
             <if test="updateTime != null">update_time,</if>
@@ -51,8 +54,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="hotelId != null">#{hotelId},</if>
             <if test="picturePath != null">#{picturePath},</if>
             <if test="pictureName != null">#{pictureName},</if>
-            <if test="createBy != null">#{createBy},</if>
+            <if test="orderNum != null">#{orderNum},</if>
             <if test="status != null">#{status},</if>
+            <if test="createBy != null">#{createBy},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="updateBy != null">#{updateBy},</if>
             <if test="updateTime != null">#{updateTime},</if>
@@ -65,8 +69,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="hotelId != null">hotel_id = #{hotelId},</if>
             <if test="picturePath != null">picture_path = #{picturePath},</if>
             <if test="pictureName != null">picture_name = #{pictureName},</if>
-            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="orderNum != null">order_num = #{orderNum},</if>
             <if test="status != null">status = #{status},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateBy != null">update_by = #{updateBy},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
