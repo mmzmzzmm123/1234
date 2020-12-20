@@ -120,6 +120,7 @@ public class HtlRoomPictureController extends BaseController
     		htlRoomPicture.setPictureName(file.getOriginalFilename());
     		htlRoomPicture.setHotelId(hotelId);
     		htlRoomPicture.setPicturePath(pic);
+			htlRoomPicture.setOrderNum(99);// 默认最后一个
 			htlRoomPicture.setStatus(1);// 停用
     		htlRoomPicture.setCreateBy(sysUser.getUserName());
     		htlRoomPicture.setCreateTime(DateUtils.getNowDate());
@@ -143,7 +144,7 @@ public class HtlRoomPictureController extends BaseController
             String pic = FileUploadUtils.upload(RuoYiConfig.getAvatarPath(), file);
             SysUser sysUser = SecurityUtils.getLoginUser().getUser();
             HtlRoomPicture htlRoomPicture =  htlRoomPictureService.selectHtlRoomPictureById(pictureId);
-    		htlRoomPicture.setPictureName(file.getOriginalFilename());
+//    		htlRoomPicture.setPictureName(file.getOriginalFilename());
     		htlRoomPicture.setPicturePath(pic);
     		htlRoomPicture.setUpdateBy(sysUser.getUserName());
     		htlRoomPicture.setUpdateTime(DateUtils.getNowDate());
@@ -172,6 +173,33 @@ public class HtlRoomPictureController extends BaseController
 		}
         SysUser sysUser = SecurityUtils.getLoginUser().getUser();
 		htlRoomPicture.setStatus(status);
+		htlRoomPicture.setUpdateBy(sysUser.getUserName());
+		htlRoomPicture.setUpdateTime(DateUtils.getNowDate());
+		htlRoomPictureService.updateHtlRoomPicture(htlRoomPicture);
+		return AjaxResult.success(htlRoomPicture);
+    }
+    
+    /**
+     * 编辑图片名称和序号
+     */
+    @ApiOperation("编辑图片名称和序号")
+    @PreAuthorize("@ss.hasPermi('hotel:roomPicture:edit')")
+    @Log(title = "房间图片", businessType = BusinessType.UPDATE)
+    @PostMapping(value = "/edit")
+	@ApiImplicitParams({ 
+		@ApiImplicitParam(name = "pictureId", value = "图片ID", required = true, dataType = "long"),
+		@ApiImplicitParam(name = "name", value = "图片名称", required = true, dataType = "String"),
+		@ApiImplicitParam(name = "orderNum", value = "图片序号", required = true, dataType = "int") 
+	})
+	public AjaxResult edit(Long pictureId, String name, Integer orderNum) throws IOException
+    {
+		HtlRoomPicture htlRoomPicture = htlRoomPictureService.selectHtlRoomPictureById(pictureId);
+		if (null == htlRoomPicture) {
+			return AjaxResult.error("未找到照片信息，请检查传入参数");
+		}
+		SysUser sysUser = SecurityUtils.getLoginUser().getUser();
+		htlRoomPicture.setPictureName(name);
+		htlRoomPicture.setOrderNum(orderNum);
 		htlRoomPicture.setUpdateBy(sysUser.getUserName());
 		htlRoomPicture.setUpdateTime(DateUtils.getNowDate());
 		htlRoomPictureService.updateHtlRoomPicture(htlRoomPicture);
