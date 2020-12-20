@@ -188,17 +188,17 @@ public class HtlRoomPictureController extends BaseController
     @PostMapping(value = "/edit")
 	@ApiImplicitParams({ 
 		@ApiImplicitParam(name = "pictureId", value = "图片ID", required = true, dataType = "long"),
-		@ApiImplicitParam(name = "name", value = "图片名称", required = true, dataType = "String"),
+		@ApiImplicitParam(name = "pictureName", value = "图片名称", required = true, dataType = "String"),
 		@ApiImplicitParam(name = "orderNum", value = "图片序号", required = true, dataType = "int") 
 	})
-	public AjaxResult edit(Long pictureId, String name, Integer orderNum) throws IOException
+	public AjaxResult edit(Long pictureId, String pictureName, Integer orderNum) throws IOException
     {
 		HtlRoomPicture htlRoomPicture = htlRoomPictureService.selectHtlRoomPictureById(pictureId);
 		if (null == htlRoomPicture) {
 			return AjaxResult.error("未找到照片信息，请检查传入参数");
 		}
 		SysUser sysUser = SecurityUtils.getLoginUser().getUser();
-		htlRoomPicture.setPictureName(name);
+		htlRoomPicture.setPictureName(pictureName);
 		htlRoomPicture.setOrderNum(orderNum);
 		htlRoomPicture.setUpdateBy(sysUser.getUserName());
 		htlRoomPicture.setUpdateTime(DateUtils.getNowDate());
