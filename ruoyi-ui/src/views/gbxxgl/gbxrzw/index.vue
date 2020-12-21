@@ -7,8 +7,8 @@
       v-show="showSearch"
       label-width="102px"
     >
-      <el-form-item label="姓名" prop="gbid">
-        <el-select v-model="queryParams.gbid" filterable  placeholder="请选择或输入姓名" clearable size="small">
+      <el-form-item label="干部姓名" prop="gbid">
+        <el-select v-model="queryParams.gbid" filterable  placeholder="请选择或输入干部姓名" clearable size="small">
           <el-option
             v-for="dict in gbmcOptions"
             :key="dict.id"
@@ -21,7 +21,6 @@
         <el-date-picker
           clearable
           size="small"
-          style="width: 200px"
           v-model="queryParams.rzny"
           type="month"
           value-format="yyyy-MM"
@@ -33,7 +32,6 @@
         <el-date-picker
           clearable
           size="small"
-          style="width: 200px"
           v-model="queryParams.zzny"
           type="month"
           value-format="yyyy-MM"
@@ -187,7 +185,7 @@
     >
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="编号" align="center" prop="id" /> -->
-      <el-table-column label="姓名" align="center" prop="gbid" :formatter="gbmcFormat" />
+      <el-table-column label="干部姓名" align="center" prop="gbid" :formatter="gbmcFormat" />
       <el-table-column label="起始年月" align="center" prop="rzny">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.rzny, "{y}-{m}") }}</span>
@@ -276,8 +274,8 @@
             :disabled="flag"
           />
         </el-form-item>
-        <el-form-item label="姓名" prop="gbid">
-          <el-select v-model="form.gbid" placeholder="姓名" :disabled="flag">
+        <el-form-item label="干部姓名" prop="gbid">
+          <el-select v-model="form.gbid" placeholder="干部姓名" :disabled="flag">
             <el-option
               v-for="dict in gbOptions"
               :key="dict.id"
@@ -289,8 +287,7 @@
         <el-form-item label="起始年月" prop="rzny">
           <el-date-picker
             clearable
-            size="small"
-            style="width: 200px"
+            size="small"    
             v-model="form.rzny"
             type="month"
             value-format="yyyy-MM"
@@ -302,7 +299,6 @@
           <el-date-picker
             clearable
             size="small"
-            style="width: 200px"
             v-model="form.zzny"
             type="month"
             value-format="yyyy-MM"

@@ -1,8 +1,8 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="102px">
-      <el-form-item label="姓名" prop="gbid">
-        <el-select v-model="queryParams.gbid" filterable  placeholder="请选择或输入姓名" clearable size="small">
+      <el-form-item label="干部姓名" prop="gbid">
+        <el-select v-model="queryParams.gbid" filterable  placeholder="请选择或输入干部姓名" clearable size="small">
           <el-option
             v-for="dict in gbmcOptions"
             :key="dict.id"
@@ -31,7 +31,7 @@
         />
       </el-form-item>
       <el-form-item label="任职起始年月" prop="rzqsny">
-        <el-date-picker clearable size="small" style="width: 200px"
+        <el-date-picker clearable size="small"
           v-model="queryParams.rzqsny"
           type="month"
           value-format="yyyy-MM"
@@ -39,7 +39,7 @@
         </el-date-picker>
       </el-form-item>
       <el-form-item label="任职终止年月" prop="rzzzny">
-        <el-date-picker clearable size="small" style="width: 200px"
+        <el-date-picker clearable size="small"
           v-model="queryParams.rzzzny"
           type="month"
           value-format="yyyy-MM"
@@ -87,7 +87,7 @@
 
     <el-table v-loading="loading" :data="gbshzwList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="姓名" align="center" prop="gbid" :formatter="gbmcFormat" />
+      <el-table-column label="干部姓名" align="center" prop="gbid" :formatter="gbmcFormat" />
       <el-table-column label="任职起始年月" align="center" prop="rzqsny">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.rzqsny, '{y}-{m}') }}</span>
@@ -142,8 +142,8 @@
             :disabled="flag"
           />
         </el-form-item>
-        <el-form-item label="姓名" prop="gbid">
-          <el-select v-model="form.gbid" placeholder="姓名" :disabled="flag">
+        <el-form-item label="干部姓名" prop="gbid">
+          <el-select v-model="form.gbid" placeholder="干部姓名" :disabled="flag">
             <el-option
               v-for="dict in gbOptions"
               :key="dict.id"
@@ -176,7 +176,7 @@
           <el-input v-model="form.name" placeholder="请输入职务名称" />
         </el-form-item>
         <el-form-item label="任职起始年月" prop="rzqsny">
-          <el-date-picker clearable size="small" style="width: 200px"
+          <el-date-picker clearable size="small"
             v-model="form.rzqsny"
             type="month"
             value-format="yyyy-MM"
@@ -184,7 +184,7 @@
           </el-date-picker>
         </el-form-item>
         <el-form-item label="任职终止年月" prop="rzzzny">
-          <el-date-picker clearable size="small" style="width: 200px"
+          <el-date-picker clearable size="small"
             v-model="form.rzzzny"
             type="month"
             value-format="yyyy-MM"

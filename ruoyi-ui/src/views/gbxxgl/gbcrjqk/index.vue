@@ -1,8 +1,8 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="姓名" prop="gbid">
-        <el-select v-model="queryParams.gbid" filterable  placeholder="请选择或输入姓名" clearable size="small">
+      <el-form-item label="干部姓名" prop="gbid">
+        <el-select v-model="queryParams.gbid" filterable  placeholder="请选择或输入干部姓名" clearable size="small">
           <el-option
             v-for="dict in gbmcOptions"
             :key="dict.id"
@@ -90,7 +90,7 @@
     <el-table v-loading="loading" :data="gbcrjqkList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="编号" align="center" prop="id" /> -->
-      <el-table-column label="姓名" align="center" prop="gbid" :formatter="gbmcFormat"/>
+      <el-table-column label="干部姓名" align="center" prop="gbid" :formatter="gbmcFormat"/>
       <el-table-column label="起始日期" align="center" prop="qsrq">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.qsrq, '{y}-{m}-{d}') }}</span>
@@ -145,8 +145,8 @@
             :disabled="flag"
           />
         </el-form-item>
-        <el-form-item label="姓名" prop="gbid">
-          <el-select v-model="form.gbid" placeholder="姓名" :disabled="flag">
+        <el-form-item label="干部姓名" prop="gbid">
+          <el-select v-model="form.gbid" placeholder="干部姓名" :disabled="flag">
             <el-option
               v-for="dict in gbOptions"
               :key="dict.id"
