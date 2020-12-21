@@ -1,8 +1,40 @@
 import axios from 'axios'
-import { Notification, MessageBox, Message } from 'element-ui'
+import { Notification, MessageBox, Message, Loading } from 'element-ui'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
 import errorCode from '@/utils/errorCode'
+
+let loading = null;
+
+//开始 加载loading
+let startLoading = ()=>{
+  loading = Loading.service({
+    lock: true,
+    text: '加载中……',
+    background: 'rgb(0,0,0,0.1)'
+  })
+}
+//结束 取消loading加载
+let endLoading = ()=>{
+  loading.close()
+}
+
+let needLoadingRequestCount = 0 //声明一个变量
+
+let showFullScreenLoading = ()=> {
+  if (needLoadingRequestCount === 0) { //当等于0时证明第一次请求 这时开启loading
+    startLoading()
+  }
+  needLoadingRequestCount++ //全局变量值++
+}
+
+let tryHideFullScreenLoading=()=> {
+  if (needLoadingRequestCount <= 0) return //小于等于0 证明没有开启loading 此时return
+  needLoadingRequestCount-- //正常响应后 全局变量 --
+  if (needLoadingRequestCount === 0) {  //等于0 时证明全部加载完毕 此时结束loading 加载
+    endLoading()
+  }
+}
 
 axios.defaults.headers['Content-Type'] = 'application/json;charset=utf-8'
 // 创建axios实例
@@ -14,6 +46,8 @@ const service = axios.create({
 })
 // request拦截器
 service.interceptors.request.use(config => {
+  //开启loading加载
+  showFullScreenLoading();
   // 是否需要设置 token
   const isToken = (config.headers || {}).isToken === false
   if (getToken() && !isToken) {
@@ -49,6 +83,8 @@ service.interceptors.request.use(config => {
 
 // 响应拦截器
 service.interceptors.response.use(res => {
+    //关闭loading加载
+    tryHideFullScreenLoading()
     // 未设置状态码则默认成功状态
     const code = res.data.code || 200;
     // 获取错误信息
