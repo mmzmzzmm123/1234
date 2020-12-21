@@ -95,6 +95,22 @@ export default {
         this.cache = response.data;
         this.loading.close();
 
+        // 单位统一转换成KB
+        let maxmemory_human = parseFloat(this.cache.info.maxmemory_human)
+        let used_memory_human = parseFloat(this.cache.info.used_memory_human)
+        let reg_g = /G$/
+        let reg_m = /M$/
+        if (reg_g.test(this.cache.info.maxmemory_human)) {
+          maxmemory_human = maxmemory_human * 1024 * 1024
+        } else if (reg_m.test(this.cache.info.maxmemory_human)) {
+          maxmemory_human = maxmemory_human * 1024
+        }
+        if (reg_g.test(this.cache.info.used_memory_human)) {
+          used_memory_human = used_memory_human * 1024 * 1024
+        } else if (reg_m.test(this.cache.info.used_memory_human)) {
+          used_memory_human = used_memory_human * 1024
+        }
+
         this.commandstats = echarts.init(this.$refs.commandstats, "macarons");
         this.commandstats.setOption({
           tooltip: {
@@ -130,7 +146,7 @@ export default {
               },
               data: [
                 {
-                  value: parseFloat(this.cache.info.used_memory_human),
+                  value: used_memory_human / maxmemory_human * 100,
                   name: "内存消耗",
                 },
               ],
