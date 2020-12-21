@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.gbxxgl.mapper.TsbzGbndkhMapper">
+
+    <resultMap type="TsbzGbndkh" id="TsbzGbndkhResult">
+        <result property="id" column="id"/>
+        <result property="gbid" column="gbid"/>
+        <result property="xn" column="xn"/>
+        <result property="khjg" column="khjg"/>
+        <result property="nd" column="nd"/>
+        <result property="isdel" column="isdel"/>
+        <result property="createUserid" column="create_userid"/>
+        <result property="createTime" column="create_time"/>
+        <association property="tsbzGbjbqk" column="gbid" javaType="TsbzGbjbqk" resultMap="TsbzGbjbqkResult"/>
+    </resultMap>
+
+    <resultMap type="TsbzGbjbqk" id="TsbzGbjbqkResult">
+        <result property="id" column="id"/>
+        <result property="otherid" column="otherid"/>
+        <result property="name" column="name"/>
+        <result property="xb" column="xb"/>
+        <result property="deptId" column="dept_id"/>
+        <result property="dwmc" column="dwmc"/>
+        <result property="dwjc" column="dwjc"/>
+        <result property="xrxzzw" column="xrxzzw"/>
+        <result property="xrdnzw" column="xrdnzw"/>
+        <result property="xrqtzw" column="xrqtzw"/>
+        <result property="rxzwny" column="rxzwny"/>
+        <result property="xrxzzj" column="xrxzzj"/>
+        <result property="xzzjqdny" column="xzzjqdny"/>
+        <result property="sfhbgb" column="sfhbgb"/>
+        <result property="hbgbqdny" column="hbgbqdny"/>
+        <result property="sfzh" column="sfzh"/>
+        <result property="updatetime" column="updatetime"/>
+        <result property="mz" column="mz"/>
+        <result property="jg" column="jg"/>
+        <result property="jgProvince" column="jg_province"/>
+        <result property="jgCityname" column="jg_cityname"/>
+        <result property="jgCity" column="jg_city"/>
+        <result property="jgAreaname" column="jg_areaname"/>
+        <result property="jgArea" column="jg_area"/>
+        <result property="csdProvince" column="csd_province"/>
+        <result property="csdCityname" column="csd_cityname"/>
+        <result property="csdCity" column="csd_city"/>
+        <result property="csdAreaname" column="csd_areaname"/>
+        <result property="csdArea" column="csd_area"/>
+        <result property="csd" column="csd"/>
+        <result property="csrq" column="csrq"/>
+        <result property="cjgzny" column="cjgzny"/>
+        <result property="jtzz" column="jtzz"/>
+        <result property="dwdz" column="dwdz"/>
+        <result property="xl" column="xl"/>
+        <result property="xw" column="xw"/>
+        <result property="byyx" column="byyx"/>
+        <result property="jylx" column="jylx"/>
+        <result property="zc" column="zc"/>
+        <result property="jzcyqk" column="jzcyqk"/>
+        <result property="nfkc" column="nfkc"/>
+        <result property="hyzk" column="hyzk"/>
+        <result property="zzmm" column="zzmm"/>
+        <result property="rdsj" column="rdsj"/>
+        <result property="bgsdh" column="bgsdh"/>
+        <result property="phone" column="phone"/>
+        <result property="rjxk" column="rjxk"/>
+        <result property="jkzk" column="jkzk"/>
+        <result property="createTime" column="create_time"/>
+        <result property="createUser" column="create_user"/>
+    </resultMap>
+
+    <sql id="selectTsbzGbndkhVo">
+        select a.id, a.gbid, a.xn, a.khjg, a.nd, a.isdel, a.create_userid, a.create_time,b.name,b.dept_id from tsbz_gbndkh a
+        left join tsbz_gbjbqk b on a.gbid=b.id
+    </sql>
+
+    <select id="selectTsbzGbndkhList" parameterType="TsbzGbndkh" resultMap="TsbzGbndkhResult">
+        <include refid="selectTsbzGbndkhVo"/>
+        <where>
+            a.isdel = 0
+            <if test="gbid != null ">and a.gbid = #{gbid}</if>
+            <if test="xn != null  and xn != ''">and a.xn = #{xn}</if>
+            <if test="khjg != null  and khjg != ''">and a.khjg = #{khjg}</if>
+            <if test="nd != null ">and a.nd = #{nd}</if>
+            <if test="createUserid != null ">and a.create_userid = #{createUserid}</if>
+        </where>
+    </select>
+
+    <select id="selectTsbzGbndkhById" parameterType="Long" resultMap="TsbzGbndkhResult">
+        <include refid="selectTsbzGbndkhVo"/>
+        where a.id = #{id}
+    </select>
+
+    <insert id="insertTsbzGbndkh" parameterType="TsbzGbndkh" useGeneratedKeys="true" keyProperty="id">
+        insert into tsbz_gbndkh
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="gbid != null">gbid,</if>
+            <if test="xn != null">xn,</if>
+            <if test="khjg != null">khjg,</if>
+            <if test="nd != null">nd,</if>
+            <if test="isdel != null">isdel,</if>
+            <if test="createUserid != null">create_userid,</if>
+            <if test="createTime != null">create_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="gbid != null">#{gbid},</if>
+            <if test="xn != null">#{xn},</if>
+            <if test="khjg != null">#{khjg},</if>
+            <if test="nd != null">#{nd},</if>
+            <if test="isdel != null">#{isdel},</if>
+            <if test="createUserid != null">#{createUserid},</if>
+            <if test="createTime != null">#{createTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateTsbzGbndkh" parameterType="TsbzGbndkh">
+        update tsbz_gbndkh
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="gbid != null">gbid = #{gbid},</if>
+            <if test="xn != null">xn = #{xn},</if>
+            <if test="khjg != null">khjg = #{khjg},</if>
+            <if test="nd != null">nd = #{nd},</if>
+            <if test="isdel != null">isdel = #{isdel},</if>
+            <if test="createUserid != null">create_userid = #{createUserid},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTsbzGbndkhById" parameterType="Long">
+        delete from tsbz_gbndkh where id = #{id}
+    </delete>
+
+    <delete id="deleteTsbzGbndkhByIds" parameterType="String">
+        delete from tsbz_gbndkh where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
