@@ -233,6 +233,10 @@ public class TsbzGbjbqk extends BaseEntity {
     @Excel(name = "单位地址")
     private String dwdz;
 
+    /** 第一学历 */
+    @Excel(name = "第一学历")
+    private String dyxl;
+
     /**
      * 学历
      */
@@ -781,12 +785,19 @@ public class TsbzGbjbqk extends BaseEntity {
                 .append("deptId", getDeptId())
                 .append("createTime", getCreateTime())
                 .append("createUser", getCreateUser())
+                .append("dyxl", getDyxl())
 
 
                 .toString();
     }
 
 
+    public String getDyxl() {
+        return dyxl;
+    }
 
+    public void setDyxl(String dyxl) {
+        this.dyxl = dyxl;
+    }
 }
 

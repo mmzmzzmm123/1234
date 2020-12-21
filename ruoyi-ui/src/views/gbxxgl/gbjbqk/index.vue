@@ -46,6 +46,16 @@
           />
         </el-select>
       </el-form-item>
+      <el-form-item label="第一学历" prop="dyxl">
+        <el-select v-model="queryParams.dyxl" placeholder="请选择第一学历" clearable size="small">
+          <el-option
+            v-for="dict in dyxlOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item label="学历" prop="xl">
         <el-select
           v-model="queryParams.xl"
@@ -507,6 +517,18 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
+            <el-form-item label="第一学历" prop="dyxl">
+          <el-select v-model="form.dyxl" placeholder="请选择第一学历">
+            <el-option
+              v-for="dict in dyxlOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+          </el-col>  
+          <el-col :span="12">
             <el-form-item label="干部学历" prop="xl">
               <el-select v-model="form.xl" placeholder="请选择学历">
                 <el-option
@@ -897,6 +919,22 @@
               >
                 <el-option
                   v-for="dict in mzOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="第一学历" prop="dyxl">
+              <el-select
+                v-model="form.dyxl"
+                placeholder="请选择学历"
+                :disabled="true"
+              >
+                <el-option
+                  v-for="dict in dyxlOptions"
                   :key="dict.dictValue"
                   :label="dict.dictLabel"
                   :value="dict.dictValue"
@@ -1417,6 +1455,8 @@ export default {
       mzOptions: [],
       // 学历字典
       xlOptions: [],
+      // 第一学历字典
+      dyxlOptions: [],
       // 学位字典
       xwOptions: [],
       // 教育类型字典
@@ -1478,6 +1518,7 @@ export default {
         cjgzny: null,
         jtzz: null,
         dwdz: null,
+        dyxl: null,
         xl: null,
         xw: null,
         byyx: null,
@@ -1563,6 +1604,9 @@ export default {
     });
     this.getDicts("sys_dm_jkzk").then((response) => {
       this.jkzkOptions = response.data;
+    });
+    this.getDicts("sys_dm_dyxl").then(response => {
+      this.dyxlOptions = response.data;
     });
   },
   components: {
@@ -1748,6 +1792,7 @@ export default {
         cjgzny: null,
         jtzz: null,
         dwdz: null,
+        dyxl: null,
         xl: null,
         xw: null,
         byyx: null,

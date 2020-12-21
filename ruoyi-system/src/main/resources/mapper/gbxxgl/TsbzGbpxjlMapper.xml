@@ -10,6 +10,7 @@
         <result property="pxbmc" column="pxbmc"/>
         <result property="pxdd" column="pxdd"/>
         <result property="pxjb" column="pxjb"/>
+        <result property="pxlb" column="pxlb"/>
         <result property="zw" column="zw"/>
         <result property="qsny" column="qsny"/>
         <result property="zzny" column="zzny"/>
@@ -18,7 +19,7 @@
     </resultMap>
 
     <sql id="selectTsbzGbpxjlVo">
-        select id, gbid, pxbmc, pxdd, pxjb, zw, qsny, zzny, create_userid, create_time from tsbz_gbpxjl
+        select id, gbid, pxbmc, pxdd, pxjb, pxlb, zw, qsny, zzny, create_userid, create_time from tsbz_gbpxjl
     </sql>
 
     <select id="selectTsbzGbpxjlList" parameterType="TsbzGbpxjl" resultMap="TsbzGbpxjlResult">
@@ -28,6 +29,7 @@
             <if test="pxbmc != null  and pxbmc != ''">and pxbmc = #{pxbmc}</if>
             <if test="pxdd != null  and pxdd != ''">and pxdd = #{pxdd}</if>
             <if test="pxjb != null  and pxjb != ''">and pxjb = #{pxjb}</if>
+            <if test="pxlb != null  and pxlb != ''">and pxlb = #{pxlb}</if>
             <if test="zw != null  and zw != ''">and zw = #{zw}</if>
             <if test="qsny != null ">and qsny = #{qsny}</if>
             <if test="zzny != null ">and zzny = #{zzny}</if>
@@ -36,7 +38,7 @@
     </select>
 
     <select id="selectTsbzGbpxjlById" parameterType="Long" resultMap="TsbzGbpxjlResult">
-        select a.id, a.gbid, a.pxbmc, a.pxdd, a.pxjb, a.zw, a.qsny, a.zzny, a.create_userid, a.create_time,
+        select a.id, a.gbid, a.pxbmc, a.pxdd, a.pxjb, a.pxlb, a.zw, a.qsny, a.zzny, a.create_userid, a.create_time,
         b.dept_id as deptid
         from tsbz_gbpxjl a
         left join tsbz_gbjbqk b
@@ -51,6 +53,7 @@
             <if test="pxbmc != null">pxbmc,</if>
             <if test="pxdd != null">pxdd,</if>
             <if test="pxjb != null">pxjb,</if>
+            <if test="pxlb != null">pxlb,</if>
             <if test="zw != null">zw,</if>
             <if test="qsny != null">qsny,</if>
             <if test="zzny != null">zzny,</if>
@@ -62,6 +65,7 @@
             <if test="pxbmc != null">#{pxbmc},</if>
             <if test="pxdd != null">#{pxdd},</if>
             <if test="pxjb != null">#{pxjb},</if>
+            <if test="pxlb != null">#{pxlb},</if>
             <if test="zw != null">#{zw},</if>
             <if test="qsny != null">#{qsny},</if>
             <if test="zzny != null">#{zzny},</if>
@@ -77,6 +81,7 @@
             <if test="pxbmc != null">pxbmc = #{pxbmc},</if>
             <if test="pxdd != null">pxdd = #{pxdd},</if>
             <if test="pxjb != null">pxjb = #{pxjb},</if>
+            <if test="pxlb != null">pxlb = #{pxlb},</if>
             <if test="zw != null">zw = #{zw},</if>
             <if test="qsny != null">qsny = #{qsny},</if>
             <if test="zzny != null">zzny = #{zzny},</if>

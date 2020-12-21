@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.List;
 
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.gbxxgl.domain.TsbzGbgzjl;
+import com.ruoyi.gbxxgl.service.ITsbzGbgzjlService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,6 +37,8 @@ public class TsbzGbxrzwController extends BaseController
 {
     @Autowired
     private ITsbzGbxrzwService tsbzGbxrzwService;
+    @Autowired
+    private ITsbzGbgzjlService tsbzGbgzjlService;
 
     /**
      * 查询干部任职情况-现任职务列表
@@ -90,6 +94,23 @@ public class TsbzGbxrzwController extends BaseController
 
         tsbzGbxrzw.setCreatetime(new Date());
         tsbzGbxrzw.setCreateuser(SecurityUtils.getLoginUser().getUser().getUserId());
+
+        // 同步更新工作经历
+        TsbzGbgzjl tsbzGbgzjlNew = new TsbzGbgzjl();
+        tsbzGbgzjlNew.setGbid(tsbzGbxrzw.getGbid());
+        tsbzGbgzjlNew.setRjxk(null);
+        tsbzGbgzjlNew.setGzgw("2");
+        tsbzGbgzjlNew.setQsny(tsbzGbxrzw.getRzny());
+        tsbzGbgzjlNew.setZzzw(tsbzGbxrzw.getXzzw());
+        tsbzGbgzjlNew.setDnzw(tsbzGbxrzw.getDnzw());
+        tsbzGbgzjlNew.setQtzw(tsbzGbxrzw.getQtzw());
+        if (tsbzGbxrzw.getZzny() != null) {
+            tsbzGbgzjlNew.setZzny(tsbzGbxrzw.getZzny());
+        }else {
+            tsbzGbgzjlNew.setZzny(null);
+        }
+        tsbzGbgzjlService.insertTsbzGbgzjl(tsbzGbgzjlNew);
+
         return toAjax(tsbzGbxrzwService.insertTsbzGbxrzw(tsbzGbxrzw));
     }
 

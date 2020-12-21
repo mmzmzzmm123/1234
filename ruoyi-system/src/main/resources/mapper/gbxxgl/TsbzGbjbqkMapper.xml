@@ -39,6 +39,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="cjgzny"    column="cjgzny"    />
         <result property="jtzz"    column="jtzz"    />
         <result property="dwdz"    column="dwdz"    />
+        <result property="dyxl"    column="dyxl"    />
         <result property="xl"    column="xl"    />
         <result property="xw"    column="xw"    />
         <result property="byyx"    column="byyx"    />
@@ -58,7 +59,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectTsbzGbjbqkVo">
-        select id, otherid, name, xb, dept_id, dwmc, dwjc, xrxzzw, xrdnzw, xrqtzw, rxzwny, xrxzzj, xzzjqdny, sfhbgb, hbgbqdny, sfzh, updatetime, mz, jg, jg_province, jg_cityname, jg_city, jg_areaname, jg_area, csd, csd_province, csd_cityname, csd_city, csd_areaname, csd_area,  csrq, cjgzny, jtzz, dwdz, xl, xw, byyx, jylx, zc, jzcyqk, nfkc, hyzk, zzmm, rdsj, bgsdh, phone, rjxk, jkzk, create_user, create_time from tsbz_gbjbqk
+        select id, otherid, name, xb, dept_id, dwmc, dwjc, xrxzzw, xrdnzw, xrqtzw, rxzwny, xrxzzj, xzzjqdny, sfhbgb, hbgbqdny, sfzh, updatetime, mz, jg, jg_province, jg_cityname, jg_city, jg_areaname, jg_area, csd, csd_province, csd_cityname, csd_city, csd_areaname, csd_area,  csrq, cjgzny, jtzz, dwdz, dyxl, xl, xw, byyx, jylx, zc, jzcyqk, nfkc, hyzk, zzmm, rdsj, bgsdh, phone, rjxk, jkzk, create_user, create_time from tsbz_gbjbqk
     </sql>
 
     <select id="selectTsbzGbjbqkList" parameterType="TsbzGbjbqk" resultMap="TsbzGbjbqkResult">
@@ -97,6 +98,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="cjgzny != null "> and cjgzny = #{cjgzny}</if>
             <if test="jtzz != null  and jtzz != ''"> and jtzz = #{jtzz}</if>
             <if test="dwdz != null  and dwdz != ''"> and dwdz = #{dwdz}</if>
+            <if test="dyxl != null  and dyxl != ''"> and dyxl = #{dyxl}</if>
             <if test="xl != null  and xl != ''"> and xl = #{xl}</if>
             <if test="xw != null  and xw != ''"> and xw = #{xw}</if>
             <if test="byyx != null  and byyx != ''"> and byyx = #{byyx}</if>
@@ -157,6 +159,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="cjgzny != null">cjgzny,</if>
             <if test="jtzz != null">jtzz,</if>
             <if test="dwdz != null">dwdz,</if>
+            <if test="dyxl != null">dyxl,</if>
             <if test="xl != null">xl,</if>
             <if test="xw != null">xw,</if>
             <if test="byyx != null">byyx,</if>
@@ -208,6 +211,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="cjgzny != null">#{cjgzny},</if>
             <if test="jtzz != null">#{jtzz},</if>
             <if test="dwdz != null">#{dwdz},</if>
+            <if test="dyxl != null">#{dyxl},</if>
             <if test="xl != null">#{xl},</if>
             <if test="xw != null">#{xw},</if>
             <if test="byyx != null">#{byyx},</if>
@@ -262,6 +266,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="cjgzny != null">cjgzny = #{cjgzny},</if>
             <if test="jtzz != null">jtzz = #{jtzz},</if>
             <if test="dwdz != null">dwdz = #{dwdz},</if>
+            <if test="dyxl != null">dyxl = #{dyxl},</if>
             <if test="xl != null">xl = #{xl},</if>
             <if test="xw != null">xw = #{xw},</if>
             <if test="byyx != null">byyx = #{byyx},</if>

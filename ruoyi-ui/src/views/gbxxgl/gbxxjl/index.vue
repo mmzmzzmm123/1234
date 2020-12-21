@@ -163,7 +163,7 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改干部学习经历对话框 -->
+    <!-- 添加或修改干部教育经历对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="归属部门" prop="deptId" >
@@ -289,7 +289,7 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      // 干部学习经历表格数据
+      // 干部教育经历表格数据
       gbxxjlList: [],
       // 弹出层标题
       title: "",
@@ -375,7 +375,7 @@ export default {
     });
   },
   methods: {
-    /** 查询干部学习经历列表 */
+    /** 查询干部教育经历列表 */
     getList() {
       this.loading = true;
       listGbxxjl(this.queryParams).then(response => {
@@ -487,7 +487,7 @@ export default {
       this.getTreeselect();
       this.flag = false;
       this.open = true;
-      this.title = "添加干部学习经历";
+      this.title = "添加干部教育经历";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -498,7 +498,7 @@ export default {
         this.form.deptId = response.data.deptId;
         this.flag = true;
         this.open = true;
-        this.title = "修改干部学习经历";
+        this.title = "修改干部教育经历";
       });
     },
     /** 提交按钮 */
@@ -528,7 +528,7 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$confirm('是否确认删除干部学习经历编号为"' + ids + '"的数据项?', "警告", {
+      this.$confirm('是否确认删除干部教育经历编号为"' + ids + '"的数据项?', "警告", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
@@ -542,7 +542,7 @@ export default {
     /** 导出按钮操作 */
     handleExport() {
       const queryParams = this.queryParams;
-      this.$confirm('是否确认导出所有干部学习经历数据项?', "警告", {
+      this.$confirm('是否确认导出所有干部教育经历数据项?', "警告", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"

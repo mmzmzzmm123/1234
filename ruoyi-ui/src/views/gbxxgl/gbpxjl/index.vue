@@ -11,10 +11,30 @@
           />
         </el-select>
       </el-form-item>
+      <el-form-item label="培训地点" prop="pxdd">
+        <el-select v-model="queryParams.pxdd" placeholder="请选择培训地点" clearable size="small">
+          <el-option
+            v-for="dict in pxddOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item label="培训级别" prop="pxjb">
         <el-select v-model="queryParams.pxjb" placeholder="请选择培训级别" clearable size="small">
           <el-option
             v-for="dict in pxjbOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="培训类别" prop="pxlb">
+        <el-select v-model="queryParams.pxlb" placeholder="请选择培训类别" clearable size="small">
+          <el-option
+            v-for="dict in pxlbOptions"
             :key="dict.dictValue"
             :label="dict.dictLabel"
             :value="dict.dictValue"
@@ -90,8 +110,9 @@
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="姓名" align="center" prop="gbid" :formatter="gbmcFormat"/>
       <el-table-column label="培训班名称" align="center" prop="pxbmc" />
-      <el-table-column label="培训地点" align="center" prop="pxdd" />
+      <el-table-column label="培训地点" align="center" prop="pxdd" :formatter="pxddFormat" />
       <el-table-column label="培训级别" align="center" prop="pxjb" :formatter="pxjbFormat"/>
+      <el-table-column label="培训类别" align="center" prop="pxlb" :formatter="pxlbFormat"/>
       <el-table-column label="职务" align="center" prop="zw" :formatter="zwFormat"/>
       <el-table-column label="起始年月" align="center" prop="qsny">
         <template slot-scope="scope">
@@ -174,6 +195,16 @@
             ></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="培训类别" prop="pxlb">
+          <el-select v-model="form.pxlb" placeholder="请选择培训类别">
+            <el-option
+              v-for="dict in pxlbOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            ></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="起始年月" prop="qsny">
           <el-date-picker clearable size="small" style="width: 200px"
             v-model="form.qsny"
@@ -191,7 +222,14 @@
           </el-date-picker>
         </el-form-item>
         <el-form-item label="培训地点" prop="pxdd">
-          <el-input v-model="form.pxdd" type="textarea" placeholder="请输入内容" />
+          <el-select v-model="form.pxdd" placeholder="请选择培训地点">
+            <el-option
+              v-for="dict in pxddOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="培训班名称" prop="pxbmc">
           <el-input v-model="form.pxbmc" type="textarea" placeholder="请输入内容" />
@@ -246,6 +284,10 @@ export default {
       zwOptions: [],
       // 培训级别字典
       pxjbOptions: [],
+      // 培训类别字典
+      pxlbOptions: [],
+      // 培训地点字典
+      pxddOptions: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -254,6 +296,7 @@ export default {
         pxbmc: null,
         pxdd: null,
         pxjb: null,
+        pxlb: null,
         zw: null,
         qsny: null,
         zzny: null,
@@ -296,6 +339,12 @@ export default {
     });
     this.getDicts("sys_dm_pxjb").then(response => {
       this.pxjbOptions = response.data;
+    });
+    this.getDicts("sys_dm_gbpxlb").then(response => {
+      this.pxlbOptions = response.data;
+    });
+    this.getDicts("sys_dm_pxdd").then(response => {
+      this.pxddOptions = response.data;
     });
   },
   methods: {
@@ -349,9 +398,17 @@ export default {
     zwFormat(row, column) {
       return this.selectDictLabel(this.zwOptions, row.zw);
     },
-    // 职务字典翻译
+    // 培训级别字典翻译
     pxjbFormat(row, column) {
       return this.selectDictLabel(this.pxjbOptions, row.pxjb);
+    },
+    // 培训类别字典翻译
+    pxlbFormat(row, column) {
+      return this.selectDictLabel(this.pxlbOptions, row.pxlb);
+    },
+    // 培训地点字典翻译
+    pxddFormat(row, column) {
+      return this.selectDictLabel(this.pxddOptions, row.pxdd);
     },
     // 取消按钮
     cancel() {
@@ -366,6 +423,7 @@ export default {
         pxbmc: null,
         pxdd: null,
         pxjb: null,
+        pxlb: null,
         zw: null,
         qsny: null,
         zzny: null,

@@ -8,6 +8,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="id"    column="id"    />
         <result property="gbid"    column="gbid"    />
         <result property="rzny"    column="rzny"    />
+        <result property="zzny"    column="zzny"    />
         <result property="xzzw"    column="xzzw"    />
         <result property="xxzwjb"    column="xxzwjb"    />
         <result property="dnzw"    column="dnzw"    />
@@ -18,7 +19,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectTsbzGbxrzwVo">
-        select id, gbid, rzny, xzzw, xxzwjb, dnzw, dnzwsx, qtzw, createuser, createtime from tsbz_gbxrzw
+        select id, gbid, rzny, zzny, xzzw, xxzwjb, dnzw, dnzwsx, qtzw, createuser, createtime from tsbz_gbxrzw
     </sql>
 
     <select id="selectTsbzGbxrzwList" parameterType="TsbzGbxrzw" resultMap="TsbzGbxrzwResult">
@@ -26,6 +27,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <where>  
             <if test="gbid != null "> and gbid = #{gbid}</if>
             <if test="rzny != null "> and rzny = #{rzny}</if>
+            <if test="zzny != null "> and zzny = #{zzny}</if>
             <if test="xzzw != null  and xzzw != ''"> and xzzw = #{xzzw}</if>
             <if test="xxzwjb != null  and xxzwjb != ''"> and xxzwjb = #{xxzwjb}</if>
             <if test="dnzw != null  and dnzw != ''"> and dnzw = #{dnzw}</if>
@@ -37,7 +39,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
     
     <select id="selectTsbzGbxrzwById" parameterType="Long" resultMap="TsbzGbxrzwResult">
-        select a.id, a.gbid, a.rzny, a.xzzw, a.xxzwjb, a.dnzw, a.dnzwsx, a.qtzw, a.createuser, a.createtime, b.dept_id as deptid
+        select a.id, a.gbid, a.rzny, a.zzny, a.xzzw, a.xxzwjb, a.dnzw, a.dnzwsx, a.qtzw, a.createuser, a.createtime, b.dept_id as deptid
         from tsbz_gbxrzw a
         left join tsbz_gbjbqk b
         on a.gbid=b.id
@@ -50,6 +52,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="id != null">id,</if>
             <if test="gbid != null">gbid,</if>
             <if test="rzny != null">rzny,</if>
+            <if test="zzny != null">zzny,</if>
             <if test="xzzw != null">xzzw,</if>
             <if test="xxzwjb != null">xxzwjb,</if>
             <if test="dnzw != null">dnzw,</if>
@@ -62,6 +65,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="id != null">#{id},</if>
             <if test="gbid != null">#{gbid},</if>
             <if test="rzny != null">#{rzny},</if>
+            <if test="zzny != null">#{zzny},</if>
             <if test="xzzw != null">#{xzzw},</if>
             <if test="xxzwjb != null">#{xxzwjb},</if>
             <if test="dnzw != null">#{dnzw},</if>
@@ -77,6 +81,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="SET" suffixOverrides=",">
             <if test="gbid != null">gbid = #{gbid},</if>
             <if test="rzny != null">rzny = #{rzny},</if>
+            <if test="zzny != null">zzny = #{zzny},</if>
             <if test="xzzw != null">xzzw = #{xzzw},</if>
             <if test="xxzwjb != null">xxzwjb = #{xxzwjb},</if>
             <if test="dnzw != null">dnzw = #{dnzw},</if>

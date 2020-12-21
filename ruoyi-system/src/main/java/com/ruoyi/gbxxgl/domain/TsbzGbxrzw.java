@@ -29,6 +29,11 @@ public class TsbzGbxrzw extends BaseEntity
     @Excel(name = "任职年月", width = 30, dateFormat = "yyyy-MM")
     private Date rzny;
 
+    /** 终止年月 */
+    @JsonFormat(pattern = "yyyy-MM")
+    @Excel(name = "任职年月", width = 30, dateFormat = "yyyy-MM")
+    private Date zzny;
+
     /** 行政职务 */
     @Excel(name = "行政职务")
     private String xzzw;
@@ -147,6 +152,7 @@ public class TsbzGbxrzw extends BaseEntity
             .append("id", getId())
             .append("gbid", getGbid())
             .append("rzny", getRzny())
+            .append("zzny", getZzny())
             .append("xzzw", getXzzw())
             .append("xxzwjb", getXxzwjb())
             .append("dnzw", getDnzw())
@@ -172,5 +178,13 @@ public class TsbzGbxrzw extends BaseEntity
 
     public void setDeptId(Long deptId) {
         this.deptId = deptId;
+    }
+
+    public Date getZzny() {
+        return zzny;
+    }
+
+    public void setZzny(Date zzny) {
+        this.zzny = zzny;
     }
 }

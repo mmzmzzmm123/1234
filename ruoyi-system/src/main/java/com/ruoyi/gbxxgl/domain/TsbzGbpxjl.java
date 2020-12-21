@@ -47,6 +47,12 @@ public class TsbzGbpxjl extends BaseEntity {
     private String pxjb;
 
     /**
+     * 培训类别
+     */
+    @Excel(name = "培训类别")
+    private String pxlb;
+
+    /**
      * 职务
      */
     @Excel(name = "职务")
@@ -183,6 +189,15 @@ public class TsbzGbpxjl extends BaseEntity {
                 .append("createUserid", getCreateUserid())
                 .append("createTime", getCreateTime())
                 .append("deptid", getDeptId())
+                .append("pxlb", getPxlb())
                 .toString();
+    }
+
+    public String getPxlb() {
+        return pxlb;
+    }
+
+    public void setPxlb(String pxlb) {
+        this.pxlb = pxlb;
     }
 }

@@ -17,7 +17,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="任职年月" prop="rzny">
+      <el-form-item label="起始年月" prop="rzny">
         <el-date-picker
           clearable
           size="small"
@@ -25,10 +25,23 @@
           v-model="queryParams.rzny"
           type="month"
           value-format="yyyy-MM"
-          placeholder="选择任职年月"
+          placeholder="选择起始年月"
         >
         </el-date-picker>
       </el-form-item>
+      <el-form-item label="终止年月" prop="zzny">
+        <el-date-picker
+          clearable
+          size="small"
+          style="width: 200px"
+          v-model="queryParams.zzny"
+          type="month"
+          value-format="yyyy-MM"
+          placeholder="选择终止年月"
+        >
+        </el-date-picker>
+      </el-form-item>
+
       <el-form-item label="行政职务" prop="xzzw">
         <el-select
           v-model="queryParams.xzzw"
@@ -175,9 +188,14 @@
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="编号" align="center" prop="id" /> -->
       <el-table-column label="姓名" align="center" prop="gbid" :formatter="gbmcFormat" />
-      <el-table-column label="任职年月" align="center" prop="rzny">
+      <el-table-column label="起始年月" align="center" prop="rzny">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.rzny, "{y}-{m}") }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="终止年月" align="center" prop="zzny">
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.zzny, "{y}-{m}") }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -245,7 +263,7 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改干部任职情况-现任职务对话框 -->
+    <!-- 添加或修改干部任免情况-现任职务对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
         <el-form-item label="归属部门" prop="deptId">
@@ -268,7 +286,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="任职年月" prop="rzny">
+        <el-form-item label="起始年月" prop="rzny">
           <el-date-picker
             clearable
             size="small"
@@ -276,7 +294,19 @@
             v-model="form.rzny"
             type="month"
             value-format="yyyy-MM"
-            placeholder="选择任职年月"
+            placeholder="选择起始年月"
+          >
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item label="终止年月" prop="zzny">
+          <el-date-picker
+            clearable
+            size="small"
+            style="width: 200px"
+            v-model="form.zzny"
+            type="month"
+            value-format="yyyy-MM"
+            placeholder="选择终止年月"
           >
           </el-date-picker>
         </el-form-item>
@@ -399,6 +429,7 @@ export default {
         pageSize: 10,
         gbid: null,
         rzny: null,
+        zzny: null,
         xzzw: null,
         xxzwjb: null,
         dnzw: null,
@@ -420,7 +451,22 @@ export default {
           { required: true, message: "干部姓名不能为空", trigger: "blur" },
         ],
         rzny: [
-          { required: true, message: "任职年月不能为空", trigger: "blur" },
+          { required: true, message: "起始年月不能为空", trigger: "blur" },
+        ],
+        xzzw: [
+          { required: true, message: "行政职务不能为空", trigger: "blur" },
+        ],
+        xxzwjb: [
+          { required: true, message: "行政职务级别不能为空", trigger: "blur" },
+        ],
+        dnzw: [
+          { required: true, message: "党内职务不能为空", trigger: "blur" },
+        ],
+        dnzwsx: [
+          { required: true, message: "党内职务属性不能为空", trigger: "blur" },
+        ],
+        qtzw: [
+          { required: true, message: "群团职务不能为空", trigger: "blur" },
         ],
       },
     };
@@ -526,6 +572,7 @@ export default {
         id: null,
         gbid: null,
         rzny: null,
+        zzny: null,
         xzzw: null,
         xxzwjb: null,
         dnzw: null,
@@ -559,7 +606,7 @@ export default {
       this.getTreeselect();
       this.flag = false;
       this.open = true;
-      this.title = "添加干部任职情况-现任职务";
+      this.title = "添加干部任免情况-现任职务";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -572,7 +619,7 @@ export default {
         // console.log(response.data);
         this.flag = true;
         this.open = true;
-        this.title = "修改干部任职情况-现任职务";
+        this.title = "修改干部任免情况-现任职务";
       });
     },
     /** 提交按钮 */
@@ -603,7 +650,7 @@ export default {
     handleDelete(row) {
       const ids = row.id || this.ids;
       this.$confirm(
-        '是否确认删除干部任职情况-现任职务编号为"' + ids + '"的数据项?',
+        '是否确认删除干部任免情况-现任职务编号为"' + ids + '"的数据项?',
         "警告",
         {
           confirmButtonText: "确定",
@@ -623,7 +670,7 @@ export default {
     /** 导出按钮操作 */
     handleExport() {
       const queryParams = this.queryParams;
-      this.$confirm("是否确认导出所有干部任职情况-现任职务数据项?", "警告", {
+      this.$confirm("是否确认导出所有干部任免情况-现任职务数据项?", "警告", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
