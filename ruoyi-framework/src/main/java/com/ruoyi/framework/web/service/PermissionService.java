@@ -164,6 +164,19 @@ public class PermissionService
      */
     private boolean hasPermissions(Set<String> permissions, String permission)
     {
-        return permissions.contains(ALL_PERMISSION) || permissions.contains(StringUtils.trim(permission));
+        if(permissions.contains(ALL_PERMISSION)){
+            //所有页都可访问
+            return true;
+        }else{
+            String[] permissionArr=permission.split("\\$");
+            for (int index=0;index<permissionArr.length;index++){
+                if(permissions.contains(StringUtils.trim(permissionArr[index]))){
+                    //特定页/权限可访问
+                    return true;
+                }
+            }
+        }
+        //没权限
+        return false;
     }
 }
