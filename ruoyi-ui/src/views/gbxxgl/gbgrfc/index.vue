@@ -1,59 +1,21 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="干部ID" prop="gbid">
-        <el-input
+      <el-form-item label="干部姓名" prop="gbid">
+        <el-select
           v-model="queryParams.gbid"
-          placeholder="请输入干部ID"
+          filterable
+          placeholder="请选择或输入姓名"
           clearable
           size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="证件照名称" prop="zjzmc">
-        <el-input
-          v-model="queryParams.zjzmc"
-          placeholder="请输入证件照名称"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="生活照名称" prop="shzmc">
-        <el-input
-          v-model="queryParams.shzmc"
-          placeholder="请输入生活照名称"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="工作照名称" prop="zgzmc">
-        <el-input
-          v-model="queryParams.zgzmc"
-          placeholder="请输入工作照名称"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="是否删除" prop="isdel">
-        <el-input
-          v-model="queryParams.isdel"
-          placeholder="请输入是否删除"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="创建人" prop="createUserid">
-        <el-input
-          v-model="queryParams.createUserid"
-          placeholder="请输入创建人"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+        >
+          <el-option
+            v-for="dict in gbmcOptions"
+            :key="dict.id"
+            :label="dict.name"
+            :value="dict.id"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -97,15 +59,10 @@
     <el-table v-loading="loading" :data="gbgrfcList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="编号" align="center" prop="id" />
-      <el-table-column label="干部ID" align="center" prop="gbid" />
-      <el-table-column label="证件照" align="center" prop="zjzpath" />
+      <el-table-column label="干部ID" align="center" prop="tsbzGbjbqk.name"/>
       <el-table-column label="证件照名称" align="center" prop="zjzmc" />
-      <el-table-column label="生活照" align="center" prop="shzpath" />
       <el-table-column label="生活照名称" align="center" prop="shzmc" />
-      <el-table-column label="工作照" align="center" prop="gzzpath" />
       <el-table-column label="工作照名称" align="center" prop="zgzmc" />
-      <el-table-column label="是否删除" align="center" prop="isdel" />
-      <el-table-column label="创建人" align="center" prop="createUserid" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -136,9 +93,30 @@
 
     <!-- 添加或修改个人风采(干部管理-个人状况)对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="干部ID" prop="gbid">
-          <el-input v-model="form.gbid" placeholder="请输入干部ID" />
+      <el-form ref="form" :model="form" :rules="rules" label-width="100px">
+        <el-form-item label="归属部门" prop="deptId">
+          <treeselect
+            v-model="form.deptId"
+            :options="deptOptions"
+            :disable-branch-nodes="true"
+            :show-count="true"
+            placeholder="请选择归属部门"
+            :disabled="flag"
+          />
+        </el-form-item>
+        <el-form-item label="干部姓名" prop="gbid">
+          <el-select
+            v-model="form.gbid"
+            placeholder="干部姓名"
+            :disabled="flag"
+          >
+            <el-option
+              v-for="dict in gbOptions"
+              :key="dict.id"
+              :label="dict.name"
+              :value="dict.id"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="证件照" prop="zjzpath">
           <el-input v-model="form.zjzpath" type="textarea" placeholder="请输入内容" />
@@ -158,12 +136,6 @@
         <el-form-item label="工作照名称" prop="zgzmc">
           <el-input v-model="form.zgzmc" placeholder="请输入工作照名称" />
         </el-form-item>
-        <el-form-item label="是否删除" prop="isdel">
-          <el-input v-model="form.isdel" placeholder="请输入是否删除" />
-        </el-form-item>
-        <el-form-item label="创建人" prop="createUserid">
-          <el-input v-model="form.createUserid" placeholder="请输入创建人" />
-        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -176,10 +148,17 @@
 <script>
 import { listGbgrfc, getGbgrfc, delGbgrfc, addGbgrfc, updateGbgrfc } from "@/api/gbxxgl/gbgrfc";
 
+import { listGbjbqk, getGbjbqk } from "@/api/gbxxgl/gbjbqk";
+import { treeselect } from "@/api/system/dept";
+import Treeselect from "@riophae/vue-treeselect";
+import "@riophae/vue-treeselect/dist/vue-treeselect.css";
+
 export default {
   name: "Gbgrfc",
+  components: { Treeselect },
   data() {
     return {
+      flag: true,
       // 遮罩层
       loading: true,
       // 选中数组
@@ -196,6 +175,12 @@ export default {
       gbgrfcList: [],
       // 弹出层标题
       title: "",
+      // 部门选项
+      deptOptions: [],
+      // 干部选项
+      gbOptions: [],
+      // 干部名称
+      gbmcOptions: [],
       // 是否显示弹出层
       open: false,
       // 查询参数
@@ -211,16 +196,31 @@ export default {
         zgzmc: null,
         isdel: null,
         createUserid: null,
+        deptId: null,
+      },
+      // 查询参数
+      queryParams_gb: {
+        deptId: null,
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
+        deptId: [{ required: true, message: "部门不能为空", trigger: "blur" }],
+        gbid: [
+          { required: true, message: "干部姓名不能为空", trigger: "blur" },
+        ],
       }
     };
   },
+  watch: {
+    // 监听deptId
+    "form.deptId": "handleBucketClick",
+  },
   created() {
     this.getList();
+    this.getTreeselect();
+    this.getGbjbqkList();
   },
   methods: {
     /** 查询个人风采(干部管理-个人状况)列表 */
@@ -230,6 +230,30 @@ export default {
         this.gbgrfcList = response.rows;
         this.total = response.total;
         this.loading = false;
+      });
+    },
+    // 部门监听
+    handleBucketClick(value) {
+      // console.log(value);
+      this.queryParams_gb.deptId = value;
+      if (this.queryParams_gb.deptId != null) {
+        listGbjbqk(this.queryParams_gb).then((response) => {
+          // console.log(response.rows);
+          this.gbOptions = response.rows;
+        });
+      }
+    },
+    /** 查询干部列表 */
+    getGbjbqkList() {
+      this.loading = true;
+      listGbjbqk(null).then((response) => {
+        this.gbmcOptions = response.rows;
+      });
+    },
+    /** 查询部门下拉树结构 */
+    getTreeselect() {
+      treeselect().then((response) => {
+        this.deptOptions = response.data;
       });
     },
     // 取消按钮
@@ -250,7 +274,8 @@ export default {
         zgzmc: null,
         isdel: null,
         createUserid: null,
-        createTime: null
+        createTime: null,
+        deptId: null,
       };
       this.resetForm("form");
     },
@@ -274,6 +299,7 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
+      this.flag = false;
       this.title = "添加个人风采(干部管理-个人状况)";
     },
     /** 修改按钮操作 */
@@ -282,7 +308,9 @@ export default {
       const id = row.id || this.ids
       getGbgrfc(id).then(response => {
         this.form = response.data;
+        this.form.deptId = response.data.tsbzGbjbqk.deptId;
         this.open = true;
+        this.flag = true;
         this.title = "修改个人风采(干部管理-个人状况)";
       });
     },
