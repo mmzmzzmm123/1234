@@ -629,6 +629,17 @@
         </el-table>
       </el-tab-pane>
       <el-tab-pane label="教育经历" name="fourth"></el-tab-pane>
+      <el-tab-pane label="培训经历" name="pxjl"></el-tab-pane>
+      <el-tab-pane label="挂职经历" name="gzjl"></el-tab-pane>
+      <el-tab-pane label="荣誉奖励" name="ryjl"></el-tab-pane>
+      <el-tab-pane label="科研课题" name="kykt"></el-tab-pane>
+      <el-tab-pane label="出国情况" name="cgqk"></el-tab-pane>
+      <el-tab-pane label="出国证件" name="cgzj"></el-tab-pane>
+      <el-tab-pane label="个人风采" name="grfc"></el-tab-pane>
+      <el-tab-pane label="家庭成员" name="jtcy"></el-tab-pane>
+      <el-tab-pane label="办学成果" name="bxcg"></el-tab-pane>
+      <el-tab-pane label="年度考核" name="ndkh"></el-tab-pane>
+      <el-tab-pane label="业务考核" name="ywkh"></el-tab-pane>
     </el-tabs>
   </div>
 </template>
