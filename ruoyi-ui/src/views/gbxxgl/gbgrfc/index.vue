@@ -119,19 +119,52 @@
           </el-select>
         </el-form-item>
         <el-form-item label="证件照" prop="zjzpath">
-          <el-input v-model="form.zjzpath" type="textarea" placeholder="请输入内容" />
+          <el-upload
+            class="avatar-uploader"
+            :action="uploadImgUrl"
+            :headers="headers"
+            :show-file-list="false"
+            :on-success="handleAvatarSuccess"
+            :before-upload="beforeAvatarUpload"
+            accept=".jpg, .png"
+          >
+            <img v-if="imageUrl" :src="imageUrl" class="avatar" />
+            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+          </el-upload>
         </el-form-item>
         <el-form-item label="证件照名称" prop="zjzmc">
           <el-input v-model="form.zjzmc" placeholder="请输入证件照名称" />
         </el-form-item>
         <el-form-item label="生活照" prop="shzpath">
-          <el-input v-model="form.shzpath" type="textarea" placeholder="请输入内容" />
+          <el-upload
+            class="avatar-uploader"
+            :action="uploadImgUrl"
+            :headers="headers"
+            :show-file-list="false"
+            :on-success="handleAvatarSuccessSh"
+            :before-upload="beforeAvatarUpload"
+            accept=".jpg, .png"
+          >
+            <img v-if="imageUrlSh" :src="imageUrlSh" class="avatar" />
+            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+          </el-upload>
         </el-form-item>
         <el-form-item label="生活照名称" prop="shzmc">
           <el-input v-model="form.shzmc" placeholder="请输入生活照名称" />
         </el-form-item>
         <el-form-item label="工作照" prop="gzzpath">
-          <el-input v-model="form.gzzpath" type="textarea" placeholder="请输入内容" />
+          <el-upload
+            class="avatar-uploader"
+            :action="uploadImgUrl"
+            :headers="headers"
+            :show-file-list="false"
+            :on-success="handleAvatarSuccessGz"
+            :before-upload="beforeAvatarUpload"
+            accept=".jpg, .png"
+          >
+            <img v-if="imageUrlGz" :src="imageUrlGz" class="avatar" />
+            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+          </el-upload>
         </el-form-item>
         <el-form-item label="工作照名称" prop="zgzmc">
           <el-input v-model="form.zgzmc" placeholder="请输入工作照名称" />
@@ -152,12 +185,19 @@ import { listGbjbqk, getGbjbqk } from "@/api/gbxxgl/gbjbqk";
 import { treeselect } from "@/api/system/dept";
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
+import { getToken } from "@/utils/auth";
 
 export default {
   name: "Gbgrfc",
   components: { Treeselect },
   data() {
     return {
+      //显示上传的图片，清空
+      imageUrl: "",
+      //显示上传的图片，清空
+      imageUrlSh: "",
+      //显示上传的图片，清空
+      imageUrlGz: "",
       flag: true,
       // 遮罩层
       loading: true,
@@ -210,7 +250,11 @@ export default {
         gbid: [
           { required: true, message: "干部姓名不能为空", trigger: "blur" },
         ],
-      }
+      },
+      uploadImgUrl: process.env.VUE_APP_BASE_API + "/common/upload", // 上传的图片服务器地址
+      headers: {
+        Authorization: "Bearer " + getToken(),
+      },
     };
   },
   watch: {
@@ -223,6 +267,46 @@ export default {
     this.getGbjbqkList();
   },
   methods: {
+    //图片上传
+    handleAvatarSuccess(res, file) {
+      this.imageUrl = URL.createObjectURL(file.raw);
+      //console.log(res);
+      if (res.code == "200") {
+        this.form.zjzpath = res.fileName;
+      } else {
+        this.msgError(res.msg);
+      }
+    },
+    handleAvatarSuccessSh(res, file) {
+      this.imageUrlSh = URL.createObjectURL(file.raw);
+      //console.log(res);
+      if (res.code == "200") {
+        this.form.shzpath = res.fileName;
+      } else {
+        this.msgError(res.msg);
+      }
+    },
+    handleAvatarSuccessGz(res, file) {
+      this.imageUrlGz = URL.createObjectURL(file.raw);
+      //console.log(res);
+      if (res.code == "200") {
+        this.form.gzzpath = res.fileName;
+      } else {
+        this.msgError(res.msg);
+      }
+    },
+    beforeAvatarUpload(file) {
+      const isJPG = file.type === "image/jpeg" || file.type === "image/png";
+      const isLt2M = file.size / 1024 / 1024 < 2;
+
+      if (!isJPG) {
+        this.$message.error("上传首页图片只能是 JPG或PNG 格式!");
+      }
+      if (!isLt2M) {
+        this.$message.error("上传首页图片大小不能超过 2MB!");
+      }
+      return isJPG && isLt2M;
+    },
     /** 查询个人风采(干部管理-个人状况)列表 */
     getList() {
       this.loading = true;
@@ -297,6 +381,9 @@ export default {
     },
     /** 新增按钮操作 */
     handleAdd() {
+      this.imageUrl = ""; //清空图片
+      this.imageUrlGz = ""; //清空图片
+      this.imageUrlSh = ""; //清空图片
       this.reset();
       this.open = true;
       this.flag = false;
@@ -304,10 +391,22 @@ export default {
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
+      this.imageUrl = ""; //清空图片
+      this.imageUrlGz = ""; //清空图片
+      this.imageUrlSh = ""; //清空图片
       this.reset();
       const id = row.id || this.ids
       getGbgrfc(id).then(response => {
         this.form = response.data;
+        if (response.data.zjzpath) {
+          this.imageUrl = process.env.VUE_APP_BASE_API + response.data.zjzpath;
+        }
+        if (response.data.gzzpath) {
+          this.imageUrlGz = process.env.VUE_APP_BASE_API + response.data.gzzpath;
+        }
+        if (response.data.shzpath) {
+          this.imageUrlSh = process.env.VUE_APP_BASE_API + response.data.shzpath;
+        }
         this.form.deptId = response.data.tsbzGbjbqk.deptId;
         this.open = true;
         this.flag = true;
@@ -355,3 +454,28 @@ export default {
   }
 };
 </script>
+<style>
+.avatar-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+  border-color: #409eff;
+}
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 178px;
+  height: 178px;
+  line-height: 178px;
+  text-align: center;
+}
+.avatar {
+  width: 178px;
+  height: 178px;
+  display: block;
+}
+</style>
