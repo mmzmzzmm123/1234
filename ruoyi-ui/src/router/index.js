@@ -221,6 +221,23 @@ export const constantRoutes = [
     ]
   },
   {
+    path: "/gbxxgl",
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: "xq/data/:id",
+        component: resolve =>
+          require(["@/views/gbxxgl/gbzhcx/data"], resolve),
+        name: "gbzhcxdata",
+        meta: {
+          title: "干部信息详情页",
+          icon: ""
+        }
+      }
+    ]
+  },
+  {
     path: "/job",
     component: Layout,
     hidden: true,
