@@ -479,3 +479,11 @@ export default {
   display: block;
 }
 </style>
+<style lang="scss" scoped>
+.el-select {
+  width: 100%;
+}
+.my-date-picker {
+  width: 100%;
+}
+</style>

@@ -156,7 +156,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="起始日期" prop="qsrq">
-          <el-date-picker clearable size="small" style="width: 200px"
+          <el-date-picker clearable size="small" class="my-date-picker"
             v-model="form.qsrq"
             type="date"
             value-format="yyyy-MM-dd"
@@ -164,7 +164,7 @@
           </el-date-picker>
         </el-form-item>
         <el-form-item label="终止日期" prop="zzrq">
-          <el-date-picker clearable size="small" style="width: 200px"
+          <el-date-picker clearable size="small" class="my-date-picker"
             v-model="form.zzrq"
             type="date"
             value-format="yyyy-MM-dd"
@@ -448,3 +448,11 @@ export default {
   }
 };
 </script>
+<style lang="scss" scoped>
+.el-select {
+  width: 100%;
+}
+.my-date-picker {
+  width: 100%;
+}
+</style>

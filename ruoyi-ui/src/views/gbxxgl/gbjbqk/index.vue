@@ -47,7 +47,12 @@
         </el-select>
       </el-form-item>
       <el-form-item label="第一学历" prop="dyxl">
-        <el-select v-model="queryParams.dyxl" placeholder="请选择第一学历" clearable size="small">
+        <el-select
+          v-model="queryParams.dyxl"
+          placeholder="请选择第一学历"
+          clearable
+          size="small"
+        >
           <el-option
             v-for="dict in dyxlOptions"
             :key="dict.dictValue"
@@ -518,16 +523,16 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="第一学历" prop="dyxl">
-          <el-select v-model="form.dyxl" placeholder="请选择第一学历">
-            <el-option
-              v-for="dict in dyxlOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-          </el-col>  
+              <el-select v-model="form.dyxl" placeholder="请选择第一学历">
+                <el-option
+                  v-for="dict in dyxlOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
           <el-col :span="12">
             <el-form-item label="干部学历" prop="xl">
               <el-select v-model="form.xl" placeholder="请选择学历">
@@ -654,6 +659,7 @@
               <el-date-picker
                 clearable
                 size="small"
+                class="my-date-picker"
                 v-model="form.csrq"
                 type="date"
                 value-format="yyyy-MM-dd"
@@ -692,6 +698,7 @@
                 clearable
                 size="small"
                 v-model="form.rdsj"
+                class="my-date-picker"
                 type="month"
                 value-format="yyyy-MM"
                 placeholder="选择入党时间"
@@ -788,7 +795,7 @@
               <el-date-picker
                 clearable
                 size="small"
-                style="width: 200px"
+                class="my-date-picker"
                 v-model="form.rxzwny"
                 type="month"
                 value-format="yyyy-MM"
@@ -814,7 +821,7 @@
               <el-date-picker
                 clearable
                 size="small"
-                style="width: 200px"
+                class="my-date-picker"
                 v-model="form.xzzjqdny"
                 type="month"
                 value-format="yyyy-MM"
@@ -840,7 +847,7 @@
               <el-date-picker
                 clearable
                 size="small"
-                style="width: 200px"
+                class="my-date-picker"
                 v-model="form.hbgbqdny"
                 type="month"
                 value-format="yyyy-MM"
@@ -854,7 +861,7 @@
               <el-date-picker
                 clearable
                 size="small"
-                style="width: 200px"
+                class="my-date-picker"
                 v-model="form.cjgzny"
                 type="month"
                 value-format="yyyy-MM"
@@ -1021,7 +1028,7 @@
               <el-input v-model="form.csdCity" v-if="false" />
               <el-input v-model="form.csdArea" v-if="false" />
             </el-form-item>
-          </el-col> 
+          </el-col>
           <el-col :span="12">
             <el-form-item label="手机号码" prop="phone">
               <el-input
@@ -1104,12 +1111,12 @@
               />
             </el-form-item>
           </el-col>
-           <el-col :span="12">
+          <el-col :span="12">
             <el-form-item label="出生日期" prop="csrq">
               <el-date-picker
                 clearable
                 size="small"
-                style="width: 200px"
+                class="my-date-picker"
                 v-model="form.csrq"
                 type="date"
                 value-format="yyyy-MM-dd"
@@ -1156,7 +1163,7 @@
               <el-date-picker
                 clearable
                 size="small"
-                style="width: 200px"
+                class="my-date-picker"
                 v-model="form.rdsj"
                 type="month"
                 value-format="yyyy-MM"
@@ -1283,7 +1290,7 @@
               <el-date-picker
                 clearable
                 size="small"
-                style="width: 200px"
+                class="my-date-picker"
                 v-model="form.rxzwny"
                 type="month"
                 value-format="yyyy-MM"
@@ -1314,7 +1321,7 @@
               <el-date-picker
                 clearable
                 size="small"
-                style="width: 200px"
+                class="my-date-picker"
                 v-model="form.xzzjqdny"
                 type="month"
                 value-format="yyyy-MM"
@@ -1345,7 +1352,7 @@
               <el-date-picker
                 clearable
                 size="small"
-                style="width: 200px"
+                class="my-date-picker"
                 v-model="form.hbgbqdny"
                 type="month"
                 value-format="yyyy-MM"
@@ -1360,7 +1367,7 @@
               <el-date-picker
                 clearable
                 size="small"
-                style="width: 200px"
+                class="my-date-picker"
                 v-model="form.cjgzny"
                 type="month"
                 value-format="yyyy-MM"
@@ -1605,7 +1612,7 @@ export default {
     this.getDicts("sys_dm_jkzk").then((response) => {
       this.jkzkOptions = response.data;
     });
-    this.getDicts("sys_dm_dyxl").then(response => {
+    this.getDicts("sys_dm_dyxl").then((response) => {
       this.dyxlOptions = response.data;
     });
   },
@@ -1946,3 +1953,11 @@ export default {
   },
 };
 </script>
+<style lang="scss" scoped>
+.el-select {
+  width: 100%;
+}
+.my-date-picker {
+  width: 100%;
+}
+</style>

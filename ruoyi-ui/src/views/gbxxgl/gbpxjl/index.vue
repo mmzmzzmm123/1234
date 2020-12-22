@@ -206,7 +206,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="起始年月" prop="qsny">
-          <el-date-picker clearable size="small" style="width: 200px"
+          <el-date-picker clearable size="small" class="my-date-picker"
             v-model="form.qsny"
             type="month"
             value-format="yyyy-MM"
@@ -214,7 +214,7 @@
           </el-date-picker>
         </el-form-item>
         <el-form-item label="终止年月" prop="zzny">
-          <el-date-picker clearable size="small" style="width: 200px"
+          <el-date-picker clearable size="small" class="my-date-picker"
             v-model="form.zzny"
             type="month"
             value-format="yyyy-MM"
@@ -523,3 +523,11 @@ export default {
   }
 };
 </script>
+<style lang="scss" scoped>
+.el-select {
+  width: 100%;
+}
+.my-date-picker {
+  width: 100%;
+}
+</style>

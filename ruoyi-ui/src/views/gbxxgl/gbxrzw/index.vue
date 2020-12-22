@@ -287,7 +287,8 @@
         <el-form-item label="起始年月" prop="rzny">
           <el-date-picker
             clearable
-            size="small"    
+            size="small"  
+            class="my-date-picker"  
             v-model="form.rzny"
             type="month"
             value-format="yyyy-MM"
@@ -299,6 +300,7 @@
           <el-date-picker
             clearable
             size="small"
+            class="my-date-picker"
             v-model="form.zzny"
             type="month"
             value-format="yyyy-MM"
@@ -682,3 +684,11 @@ export default {
   },
 };
 </script>
+<style lang="scss" scoped>
+.el-select {
+  width: 100%;
+}
+.my-date-picker {
+  width: 100%;
+}
+</style>

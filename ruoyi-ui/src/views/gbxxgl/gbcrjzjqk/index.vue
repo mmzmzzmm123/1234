@@ -214,7 +214,7 @@
           <el-date-picker
             clearable
             size="small"
-            style="width: 200px"
+            class="my-date-picker"
             v-model="form.yxqqsrq"
             type="date"
             value-format="yyyy-MM-dd"
@@ -226,7 +226,7 @@
           <el-date-picker
             clearable
             size="small"
-            style="width: 200px"
+            class="my-date-picker"
             v-model="form.yxqzzrq"
             type="date"
             value-format="yyyy-MM-dd"
@@ -491,3 +491,11 @@ export default {
   },
 };
 </script>
+<style lang="scss" scoped>
+.el-select {
+  width: 100%;
+}
+.my-date-picker {
+  width: 100%;
+}
+</style>
