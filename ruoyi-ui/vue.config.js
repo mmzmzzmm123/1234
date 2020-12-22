@@ -3,7 +3,7 @@ const path = require('path')
 const defaultSettings = require('./src/settings.js')
 
 function resolve(dir) {
-  return path.join(__dirname, dir)
+  return path.join(__dirname, deir)
 }
 
 const name = defaultSettings.title || '若依管理系统' // 标题
