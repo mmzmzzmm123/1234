@@ -134,7 +134,7 @@
       </el-table-column>
       <el-table-column label="毕业院校" align="center" prop="byyx" />
       <el-table-column label="专业" align="center" prop="zy" :formatter="zyFormat"/>
-      <el-table-column label="职务" align="center" prop="zw" :formatter="zyFormat"/>
+      <el-table-column label="职务" align="center" prop="zw" :formatter="zwFormat"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="180px">
         <template slot-scope="scope">
           <el-button
