@@ -47,28 +47,28 @@
         >新增
         </el-button>
       </el-col>
-<!--      <el-col :span="1.5">-->
-<!--        <el-button-->
-<!--          type="success"-->
-<!--          icon="el-icon-edit"-->
-<!--          size="mini"-->
-<!--          :disabled="single"-->
-<!--          @click="handleUpdate"-->
-<!--          v-hasPermi="['custom:ingredient:edit']"-->
-<!--        >修改-->
-<!--        </el-button>-->
-<!--      </el-col>-->
-<!--      <el-col :span="1.5">-->
-<!--        <el-button-->
-<!--          type="danger"-->
-<!--          icon="el-icon-delete"-->
-<!--          size="mini"-->
-<!--          :disabled="multiple"-->
-<!--          @click="handleDelete"-->
-<!--          v-hasPermi="['custom:ingredient:remove']"-->
-<!--        >删除-->
-<!--        </el-button>-->
-<!--      </el-col>-->
+      <!--      <el-col :span="1.5">-->
+      <!--        <el-button-->
+      <!--          type="success"-->
+      <!--          icon="el-icon-edit"-->
+      <!--          size="mini"-->
+      <!--          :disabled="single"-->
+      <!--          @click="handleUpdate"-->
+      <!--          v-hasPermi="['custom:ingredient:edit']"-->
+      <!--        >修改-->
+      <!--        </el-button>-->
+      <!--      </el-col>-->
+      <!--      <el-col :span="1.5">-->
+      <!--        <el-button-->
+      <!--          type="danger"-->
+      <!--          icon="el-icon-delete"-->
+      <!--          size="mini"-->
+      <!--          :disabled="multiple"-->
+      <!--          @click="handleDelete"-->
+      <!--          v-hasPermi="['custom:ingredient:remove']"-->
+      <!--        >删除-->
+      <!--        </el-button>-->
+      <!--      </el-col>-->
       <el-col :span="1.5">
         <el-button
           type="warning"
@@ -91,8 +91,8 @@
       <el-table-column label="脂肪比例(100g)" align="center" prop="fatRatio"/>
       <el-table-column label="碳水比例(100g)" align="center" prop="carbonRatio"/>
       <el-table-column label="地域" align="center" prop="area" :formatter="areaFormat"/>
-      <el-table-column label="忌口人群" align="center" prop="notRecIds" :formatter="notRecFormat"/>
-      <el-table-column label="推荐人群" align="center" prop="recIds" :formatter="recommendFormat"/>
+      <el-table-column label="忌口人群" align="center" prop="notRec"/>
+      <el-table-column label="推荐人群" align="center" prop="rec"/>
       <el-table-column label="备注" align="center" prop="remark"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
@@ -177,26 +177,26 @@
           </el-col>
           <el-col :span="24">
             <el-form-item label="忌口人群" label-width="90px">
-              <el-checkbox-group v-model="form.notRecIds">
-                <el-checkbox
-                  v-for="dict in notRecOptions"
+              <el-select v-model="form.notRecIds" multiple placeholder="请选择体征">
+                <el-option
+                  v-for="dict in physicalSignsOptions"
                   :key="dict.dictValue"
-                  :label="dict.dictValue">
-                  {{dict.dictLabel}}
-                </el-checkbox>
-              </el-checkbox-group>
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue">
+                </el-option>
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="24">
             <el-form-item label="推荐人群" label-width="90px">
-              <el-checkbox-group v-model="form.recIds">
-                <el-checkbox
-                  v-for="dict in recommendOptions"
+              <el-select v-model="form.recIds" multiple placeholder="请选择体征">
+                <el-option
+                  v-for="dict in physicalSignsOptions"
                   :key="dict.dictValue"
-                  :label="dict.dictValue">
-                  {{dict.dictLabel}}
-                </el-checkbox>
-              </el-checkbox-group>
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue">
+                </el-option>
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="24">
@@ -224,6 +224,8 @@
     updateIngredient
   } from "@/api/custom/ingredient";
 
+  import {listPhysicalSigns} from "@/api/custom/physicalSigns";
+
   export default {
     name: "Ingredient",
     data() {
@@ -250,10 +252,8 @@
         typeOptions: [],
         // 地域字典
         areaOptions: [],
-        // 忌口人群字典
-        notRecOptions: [],
-        // 推荐人群字典
-        recommendOptions: [],
+        //
+        physicalSignsOptions: [],
         // 查询参数
         queryParams: {
           pageNum: 1,
@@ -278,12 +278,12 @@
       this.getDicts("cus_area").then(response => {
         this.areaOptions = response.data;
       });
-      this.getDicts("cus_not_rec_group").then(response => {
-        this.notRecOptions = response.data;
-      });
-      this.getDicts("cus_rec_group").then(response => {
-        this.recommendOptions = response.data;
-      });
+      listPhysicalSigns().then(response => {
+        this.physicalSignsOptions = response.rows.map(obj => ({
+          dictLabel: obj.name,
+          dictValue: obj.id
+        }))
+      })
     },
     methods: {
       /** 查询食材列表 */
@@ -302,14 +302,6 @@
       // 地域字典翻译
       areaFormat(row, column) {
         return this.selectDictLabel(this.areaOptions, row.area);
-      },
-      // 忌口人群字典翻译
-      notRecFormat(row, column) {
-        return this.selectDictLabels(this.notRecOptions, row.notRecIds.join(','));
-      },
-      // 推荐人群字典翻译
-      recommendFormat(row, column) {
-        return this.selectDictLabels(this.recommendOptions, row.recIds.join(','));
       },
       // 取消按钮
       cancel() {
@@ -364,8 +356,8 @@
         const id = row.id || this.ids
         getIngredient(id).then(response => {
           this.form = response.data;
-          // this.form.notRecIds = this.form.notRecIds.split(",");
-          // this.form.recIds = this.form.recIds.split(",");
+          this.form.notRecIds = this.form.rec ? this.form.rec.split(',').map(label => this.physicalSignsOptions.find(pObj => pObj.dictLabel === label).dictValue) : [];
+          this.form.recIds = this.form.notRec ? this.form.notRec.split(',').map(label => this.physicalSignsOptions.find(pObj => pObj.dictLabel === label).dictValue) : [];
           this.open = true;
           this.title = "修改食材";
         });
@@ -374,8 +366,6 @@
       submitForm() {
         this.$refs["form"].validate(valid => {
           if (valid) {
-            // this.form.notRecIds = this.form.notRecIds.join(",");
-            // this.form.recIds = this.form.recIds.join(",");
             if (this.form.id != null) {
               updateIngredient(this.form).then(response => {
                 if (response.code === 200) {

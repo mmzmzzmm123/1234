@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.stdiet.custom.mapper.SysPhysicalSignsMapper">
+
+    <resultMap type="SysPhysicalSigns" id="SysPhysicalSignsResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="typeId"    column="type_id"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectSysPhysicalSignsVo">
+        select id, name, type_id, remark from sys_physical_signs
+    </sql>
+
+    <select id="selectSysPhysicalSignsList" parameterType="SysPhysicalSigns" resultMap="SysPhysicalSignsResult">
+        <include refid="selectSysPhysicalSignsVo"/>
+        <where>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="typeId != null "> and type_id = #{typeId}</if>
+        </where>
+    </select>
+
+    <select id="selectSysPhysicalSignsById" parameterType="Long" resultMap="SysPhysicalSignsResult">
+        <include refid="selectSysPhysicalSignsVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertSysPhysicalSigns" parameterType="SysPhysicalSigns" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_physical_signs
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,</if>
+            <if test="typeId != null">type_id,</if>
+            <if test="remark != null">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="typeId != null">#{typeId},</if>
+            <if test="remark != null">#{remark},</if>
+        </trim>
+    </insert>
+
+    <update id="updateSysPhysicalSigns" parameterType="SysPhysicalSigns">
+        update sys_physical_signs
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="typeId != null">type_id = #{typeId},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysPhysicalSignsById" parameterType="Long">
+        delete from sys_physical_signs where id = #{id}
+    </delete>
+
+    <delete id="deleteSysPhysicalSignsByIds" parameterType="String">
+        delete from sys_physical_signs where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

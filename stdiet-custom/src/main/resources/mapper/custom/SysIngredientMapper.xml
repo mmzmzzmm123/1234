@@ -17,10 +17,27 @@
         <result property="createTime"    column="create_time"    />
         <result property="updateBy"    column="update_by"    />
         <result property="updateTime"    column="update_time"    />
+        <result property="rec"    column="rec"    />
+        <result property="notRec"    column="not_rec"    />
     </resultMap>
 
     <sql id="selectSysIngredientVo">
-        select id, name, type, protein_ratio, fat_ratio, carbon_ratio, area, remark, create_by, create_time, update_by, update_time from sys_ingredient
+--         select id, name, type, protein_ratio, fat_ratio, carbon_ratio, area, remark, create_by, create_time, update_by, update_time from sys_ingredient
+        SELECT * FROM sys_ingredient igd
+            LEFT JOIN (
+            SELECT ingredient_id as id, GROUP_CONCAT(name SEPARATOR ',') not_rec FROM(
+            SELECT physical_signs_id as id, ingredient_id
+            FROM sys_ingredient_not_rec
+            ) notRec JOIN sys_physical_signs phy USING(id)
+            GROUP BY id
+            ) notRecT USING(id)
+            LEFT JOIN (
+            SELECT ingredient_id as id, GROUP_CONCAT(name SEPARATOR ',') rec FROM(
+            SELECT physical_signs_id as id, ingredient_id
+            FROM sys_ingredient_rec
+            ) rec JOIN sys_physical_signs phy USING(id)
+            GROUP BY id) recT
+            USING(id)
     </sql>
 
     <select id="selectSysIngredientList" parameterType="SysIngredient" resultMap="SysIngredientResult">
@@ -68,14 +85,14 @@
     </insert>
 
     <insert id="batchIngredientRec" >
-        insert into sys_ingredient_rec(ingredient_id, rec_id) values
+        insert into sys_ingredient_rec(ingredient_id, physical_signs_id) values
         <foreach collection="list" separator="," item="item" index="index">
             (#{item.ingredientId},#{item.recommandId})
         </foreach>
     </insert>
 
     <insert id="batchIngredientNotRec" >
-        insert into sys_ingredient_not_rec(ingredient_id, not_rec_id) values
+        insert into sys_ingredient_not_rec(ingredient_id, physical_signs_id) values
         <foreach collection="list" separator="," item="item" index="index">
             (#{item.ingredientId},#{item.notRecommandId})
         </foreach>
