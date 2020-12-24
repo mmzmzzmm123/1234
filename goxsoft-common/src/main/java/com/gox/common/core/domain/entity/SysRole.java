@@ -86,7 +86,7 @@ public class SysRole extends BaseEntity
 
     public static boolean isAdmin(Long roleId)
     {
-        return roleId != null && 1L == roleId;
+        return roleId != null && (1L == roleId||100L == roleId||101L == roleId||102L == roleId);
     }
 
     @NotBlank(message = "角色名称不能为空")
