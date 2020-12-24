@@ -16,9 +16,9 @@ import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.enums.BusinessType;
-import com.ruoyi.hotel.domain.HtlRoomPriceType;
+import com.ruoyi.hotel.domain.HtlPriceType;
 import com.ruoyi.hotel.service.IHtlHotelInfoService;
-import com.ruoyi.hotel.service.IHtlRoomPriceTypeService;
+import com.ruoyi.hotel.service.IHtlPriceTypeService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -38,10 +38,10 @@ import com.ruoyi.common.core.page.TableDataInfo;
 @Api(value = "房价类型管理")
 @RestController
 @RequestMapping("/hotel/priceType")
-public class HtlRoomPriceTypeController extends BaseController
+public class HtlPriceTypeController extends BaseController
 {
     @Autowired
-    private IHtlRoomPriceTypeService htlRoomPriceTypeService;
+    private IHtlPriceTypeService htlPriceTypeService;
 
     @Autowired
     private IHtlHotelInfoService htlHotelInfoService;
@@ -51,10 +51,10 @@ public class HtlRoomPriceTypeController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('hotel:priceType:list')")
     @GetMapping("/list")
-    public TableDataInfo list(HtlRoomPriceType htlRoomPriceType)
+    public TableDataInfo list(HtlPriceType htlPriceType)
     {
         startPage();
-        List<HtlRoomPriceType> list = htlRoomPriceTypeService.selectHtlRoomPriceTypeList(htlRoomPriceType);
+        List<HtlPriceType> list = htlPriceTypeService.selectHtlPriceTypeList(htlPriceType);
         return getDataTable(list);
     }
 
@@ -64,10 +64,10 @@ public class HtlRoomPriceTypeController extends BaseController
     @PreAuthorize("@ss.hasPermi('hotel:priceType:export')")
     @Log(title = "房价类型", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
-    public AjaxResult export(HtlRoomPriceType htlRoomPriceType)
+    public AjaxResult export(HtlPriceType htlPriceType)
     {
-        List<HtlRoomPriceType> list = htlRoomPriceTypeService.selectHtlRoomPriceTypeList(htlRoomPriceType);
-        ExcelUtil<HtlRoomPriceType> util = new ExcelUtil<HtlRoomPriceType>(HtlRoomPriceType.class);
+        List<HtlPriceType> list = htlPriceTypeService.selectHtlPriceTypeList(htlPriceType);
+        ExcelUtil<HtlPriceType> util = new ExcelUtil<HtlPriceType>(HtlPriceType.class);
         return util.exportExcel(list, "priceType");
     }
 
@@ -78,7 +78,7 @@ public class HtlRoomPriceTypeController extends BaseController
     @GetMapping(value = "/{hotelId}")
     public AjaxResult getInfo(@PathVariable("hotelId") Long hotelId)
     {
-        return AjaxResult.success(htlRoomPriceTypeService.selectHtlRoomPriceTypeById(hotelId));
+        return AjaxResult.success(htlPriceTypeService.selectHtlPriceTypeById(hotelId));
     }
 
     /**
@@ -93,7 +93,9 @@ public class HtlRoomPriceTypeController extends BaseController
 		if (hotelId < 0) {
 			return AjaxResult.error("请配置酒店信息");
 		}
-		return AjaxResult.success(htlRoomPriceTypeService.selectHtlRoomPriceTypeById(hotelId));
+		HtlPriceType htlPriceType = new HtlPriceType();
+		htlPriceType.setHotelId(hotelId);
+		return AjaxResult.success(htlPriceTypeService.selectHtlPriceTypeList(htlPriceType));
     }
     
     /**
@@ -103,20 +105,20 @@ public class HtlRoomPriceTypeController extends BaseController
     @Log(title = "房价类型", businessType = BusinessType.INSERT)
 	@ApiOperation("新增房价类型")
     @PostMapping("/add")
-	@ApiImplicitParam(name = "typeName", value = "房价类别名称", required = true, dataType = "String")
-	public AjaxResult add(String typeName) {
+	@ApiImplicitParam(name = "priceType", value = "房价类别", required = true, dataType = "String")
+	public AjaxResult add(String priceType) {
 		SysUser sysUser = SecurityUtils.getLoginUser().getUser();
 		long hotelId = htlHotelInfoService.getHotelIdByUserId(sysUser.getUserId());
 		if (hotelId < 0) {
 			return AjaxResult.error("请配置酒店信息");
 		}
-		HtlRoomPriceType htlRoomPriceType = new HtlRoomPriceType();
-		htlRoomPriceType.setHotelId(hotelId);
-		htlRoomPriceType.setTypeName(typeName);
-		htlRoomPriceType.setIsVisible(0);
-		htlRoomPriceType.setCreateBy(sysUser.getUserName());
-		htlRoomPriceTypeService.insertHtlRoomPriceType(htlRoomPriceType);
-		return AjaxResult.success(htlRoomPriceType);
+		HtlPriceType htlPriceType = new HtlPriceType();
+		htlPriceType.setHotelId(hotelId);
+		htlPriceType.setPriceType(priceType);
+		htlPriceType.setIsVisible(0);
+		htlPriceType.setCreateBy(sysUser.getUserName());
+		htlPriceTypeService.insertHtlPriceType(htlPriceType);
+		return AjaxResult.success(htlPriceType);
 	}
 
     /**
@@ -127,58 +129,58 @@ public class HtlRoomPriceTypeController extends BaseController
     @Log(title = "房价类型", businessType = BusinessType.UPDATE)
     @PutMapping("/edit")
 	@ApiImplicitParams({ 
-		@ApiImplicitParam(name = "roomPriceTypeId", value = "房价类别ID", required = true, dataType = "long"),
-		@ApiImplicitParam(name = "typeName", value = "房价类别名称", required = true, dataType = "String") 
+		@ApiImplicitParam(name = "priceTypeId", value = "房价类别ID", required = true, dataType = "long"),
+		@ApiImplicitParam(name = "priceType", value = "房价类别", required = true, dataType = "String") 
 	})
-	public AjaxResult edit(Long roomPriceTypeId, String typeName) {
+	public AjaxResult edit(Long priceTypeId, String priceType) {
 		SysUser sysUser = SecurityUtils.getLoginUser().getUser();
 		long hotelId = htlHotelInfoService.getHotelIdByUserId(sysUser.getUserId());
-		HtlRoomPriceType htlRoomPriceType = htlRoomPriceTypeService.selectHtlRoomPriceTypeById(roomPriceTypeId);
-		if (null == htlRoomPriceType || hotelId != htlRoomPriceType.getHotelId()) {
+		HtlPriceType htlPriceType = htlPriceTypeService.selectHtlPriceTypeById(priceTypeId);
+		if (null == htlPriceType || hotelId != htlPriceType.getHotelId()) {
 			return AjaxResult.error("传递参数不正确");
 		}
-		htlRoomPriceType.setTypeName(typeName);
-		htlRoomPriceType.setUpdateBy(sysUser.getUserName());
-		htlRoomPriceTypeService.updateHtlRoomPriceType(htlRoomPriceType);
-		return AjaxResult.success(htlRoomPriceType);
+		htlPriceType.setPriceType(priceType);
+		htlPriceType.setUpdateBy(sysUser.getUserName());
+		htlPriceTypeService.updateHtlPriceType(htlPriceType);
+		return AjaxResult.success(htlPriceType);
 	}
 
     /**
      * 删除房价类型
      */
     @ApiOperation("删除房价类型")
-    @ApiImplicitParam(name = "roomPriceTypeId", value = "房价类别ID", required = true, dataType = "long")
+    @ApiImplicitParam(name = "priceTypeId", value = "房价类别ID", required = true, dataType = "long")
     @PreAuthorize("@ss.hasPermi('hotel:priceType:remove')")
     @Log(title = "房价类型", businessType = BusinessType.DELETE)
 	@DeleteMapping("/delete")
-    public AjaxResult remove(Long roomPriceTypeId)
+    public AjaxResult remove(Long priceTypeId)
     {
     	SysUser sysUser = SecurityUtils.getLoginUser().getUser();
 		long hotelId = htlHotelInfoService.getHotelIdByUserId(sysUser.getUserId());
-		HtlRoomPriceType htlRoomPriceType = htlRoomPriceTypeService.selectHtlRoomPriceTypeById(roomPriceTypeId);
-		if (null == htlRoomPriceType || hotelId != htlRoomPriceType.getHotelId()) {
+		HtlPriceType htlPriceType = htlPriceTypeService.selectHtlPriceTypeById(priceTypeId);
+		if (null == htlPriceType || hotelId != htlPriceType.getHotelId()) {
 			return AjaxResult.error("传递参数不正确");
 		}
-        return toAjax(htlRoomPriceTypeService.deleteHtlRoomPriceTypeById(roomPriceTypeId));
+        return toAjax(htlPriceTypeService.deleteHtlPriceTypeById(priceTypeId));
     }
     
     @ApiOperation("显示或隐藏房价类型")
     @PostMapping(value = "/switched")
 	@ApiImplicitParams({ 
-		@ApiImplicitParam(name = "roomPriceTypeId", value = "房价类别ID", required = true, dataType = "long"),
+		@ApiImplicitParam(name = "priceTypeId", value = "房价类别ID", required = true, dataType = "long"),
 		@ApiImplicitParam(name = "isVisible", value = "是否展示类别（0：展示；1：隐藏）", required = true, dataType = "int") 
 	})
-	public AjaxResult switched(Long roomPriceTypeId, Integer isVisible) throws IOException
+	public AjaxResult switched(Long priceTypeId, Integer isVisible) throws IOException
     {
     	SysUser sysUser = SecurityUtils.getLoginUser().getUser();
 		long hotelId = htlHotelInfoService.getHotelIdByUserId(sysUser.getUserId());
-		HtlRoomPriceType htlRoomPriceType = htlRoomPriceTypeService.selectHtlRoomPriceTypeById(roomPriceTypeId);
-		if (null == htlRoomPriceType || hotelId != htlRoomPriceType.getHotelId()) {
+		HtlPriceType htlPriceType = htlPriceTypeService.selectHtlPriceTypeById(priceTypeId);
+		if (null == htlPriceType || hotelId != htlPriceType.getHotelId()) {
 			return AjaxResult.error("传递参数不正确");
 		}
-		htlRoomPriceType.setIsVisible(isVisible);
-		htlRoomPriceType.setUpdateBy(sysUser.getUserName());
-		htlRoomPriceTypeService.updateHtlRoomPriceType(htlRoomPriceType);
-		return AjaxResult.success(htlRoomPriceType);
+		htlPriceType.setIsVisible(isVisible);
+		htlPriceType.setUpdateBy(sysUser.getUserName());
+		htlPriceTypeService.updateHtlPriceType(htlPriceType);
+		return AjaxResult.success(htlPriceType);
     }
 }
