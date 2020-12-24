@@ -1,36 +1,34 @@
 package com.ruoyi.hotel.domain;
 
-import java.math.BigDecimal;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
- * 房间价格对象 htl_room_price
+ * 房间类型对象 htl_room_type
  * 
  * @author sucheng
  * @date 2020-12-23
  */
-public class HtlRoomPrice extends BaseEntity
+public class HtlRoomType extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
     /** 房型ID */
-    @Excel(name = "房型ID")
     private Long roomTypeId;
-
-    /** 房价类别ID */
-    @Excel(name = "房价类别ID")
-    private Long roomPriceTypeId;
 
     /** 酒店ID */
     @Excel(name = "酒店ID")
     private Long hotelId;
 
-    /** 房价 */
-    @Excel(name = "房价")
-    private BigDecimal roomPrice;
+    /** 房型名称 */
+    @Excel(name = "房型名称")
+    private String typeName;
+
+    /** 显示顺序 */
+    @Excel(name = "显示顺序")
+    private Integer orderNum;
 
     public void setRoomTypeId(Long roomTypeId) 
     {
@@ -41,15 +39,6 @@ public class HtlRoomPrice extends BaseEntity
     {
         return roomTypeId;
     }
-    public void setRoomPriceTypeId(Long roomPriceTypeId) 
-    {
-        this.roomPriceTypeId = roomPriceTypeId;
-    }
-
-    public Long getRoomPriceTypeId() 
-    {
-        return roomPriceTypeId;
-    }
     public void setHotelId(Long hotelId) 
     {
         this.hotelId = hotelId;
@@ -59,23 +48,32 @@ public class HtlRoomPrice extends BaseEntity
     {
         return hotelId;
     }
-    public void setRoomPrice(BigDecimal roomPrice) 
+    public void setTypeName(String typeName) 
     {
-        this.roomPrice = roomPrice;
+        this.typeName = typeName;
     }
 
-    public BigDecimal getRoomPrice() 
+    public String getTypeName() 
     {
-        return roomPrice;
+        return typeName;
+    }
+    public void setOrderNum(Integer orderNum) 
+    {
+        this.orderNum = orderNum;
+    }
+
+    public Integer getOrderNum() 
+    {
+        return orderNum;
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
             .append("roomTypeId", getRoomTypeId())
-            .append("roomPriceTypeId", getRoomPriceTypeId())
             .append("hotelId", getHotelId())
-            .append("roomPrice", getRoomPrice())
+            .append("typeName", getTypeName())
+            .append("orderNum", getOrderNum())
             .append("createBy", getCreateBy())
             .append("createTime", getCreateTime())
             .append("updateBy", getUpdateBy())

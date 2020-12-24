@@ -12,7 +12,7 @@ import com.ruoyi.hotel.service.IHtlRoomPriceTypeService;
  * 房价类型Service业务层处理
  * 
  * @author sucheng
- * @date 2020-11-22
+ * @date 2020-12-23
  */
 @Service
 public class HtlRoomPriceTypeServiceImpl implements IHtlRoomPriceTypeService 
@@ -23,13 +23,13 @@ public class HtlRoomPriceTypeServiceImpl implements IHtlRoomPriceTypeService
     /**
      * 查询房价类型
      * 
-     * @param hotelId 房价类型ID
+     * @param roomPriceTypeId 房价类型ID
      * @return 房价类型
      */
     @Override
-    public HtlRoomPriceType selectHtlRoomPriceTypeById(Long hotelId)
+    public HtlRoomPriceType selectHtlRoomPriceTypeById(Long roomPriceTypeId)
     {
-        return htlRoomPriceTypeMapper.selectHtlRoomPriceTypeById(hotelId);
+        return htlRoomPriceTypeMapper.selectHtlRoomPriceTypeById(roomPriceTypeId);
     }
 
     /**
@@ -73,24 +73,24 @@ public class HtlRoomPriceTypeServiceImpl implements IHtlRoomPriceTypeService
     /**
      * 批量删除房价类型
      * 
-     * @param hotelIds 需要删除的房价类型ID
+     * @param roomPriceTypeIds 需要删除的房价类型ID
      * @return 结果
      */
     @Override
-    public int deleteHtlRoomPriceTypeByIds(Long[] hotelIds)
+    public int deleteHtlRoomPriceTypeByIds(Long[] roomPriceTypeIds)
     {
-        return htlRoomPriceTypeMapper.deleteHtlRoomPriceTypeByIds(hotelIds);
+        return htlRoomPriceTypeMapper.deleteHtlRoomPriceTypeByIds(roomPriceTypeIds);
     }
 
     /**
      * 删除房价类型信息
      * 
-     * @param hotelId 房价类型ID
+     * @param roomPriceTypeId 房价类型ID
      * @return 结果
      */
     @Override
-    public int deleteHtlRoomPriceTypeById(Long hotelId)
+    public int deleteHtlRoomPriceTypeById(Long roomPriceTypeId)
     {
-        return htlRoomPriceTypeMapper.deleteHtlRoomPriceTypeById(hotelId);
+        return htlRoomPriceTypeMapper.deleteHtlRoomPriceTypeById(roomPriceTypeId);
     }
 }

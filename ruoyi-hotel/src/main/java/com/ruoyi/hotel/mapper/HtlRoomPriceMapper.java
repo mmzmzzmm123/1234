@@ -7,17 +7,17 @@ import com.ruoyi.hotel.domain.HtlRoomPrice;
  * 房间价格Mapper接口
  * 
  * @author sucheng
- * @date 2020-11-22
+ * @date 2020-12-23
  */
 public interface HtlRoomPriceMapper 
 {
     /**
      * 查询房间价格
      * 
-     * @param roomRateId 房间价格ID
+     * @param roomTypeId 房间价格ID
      * @return 房间价格
      */
-    public HtlRoomPrice selectHtlRoomPriceById(Long roomRateId);
+    public HtlRoomPrice selectHtlRoomPriceById(Long roomTypeId);
 
     /**
      * 查询房间价格列表
@@ -46,16 +46,16 @@ public interface HtlRoomPriceMapper
     /**
      * 删除房间价格
      * 
-     * @param roomRateId 房间价格ID
+     * @param roomTypeId 房间价格ID
      * @return 结果
      */
-    public int deleteHtlRoomPriceById(Long roomRateId);
+    public int deleteHtlRoomPriceById(Long roomTypeId);
 
     /**
      * 批量删除房间价格
      * 
-     * @param roomRateIds 需要删除的数据ID
+     * @param roomTypeIds 需要删除的数据ID
      * @return 结果
      */
-    public int deleteHtlRoomPriceByIds(Long[] roomRateIds);
+    public int deleteHtlRoomPriceByIds(Long[] roomTypeIds);
 }

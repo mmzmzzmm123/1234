@@ -2,43 +2,43 @@
 <!DOCTYPE mapper
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ruoyi.hotel.mapper.HtlRoomPriceTypeMapper">
+<mapper namespace="com.ruoyi.hotel.mapper.HtlRoomTypeMapper">
     
-    <resultMap type="HtlRoomPriceType" id="HtlRoomPriceTypeResult">
-        <result property="roomPriceTypeId"    column="room_price_type_id"    />
+    <resultMap type="HtlRoomType" id="HtlRoomTypeResult">
+        <result property="roomTypeId"    column="room_type_id"    />
         <result property="hotelId"    column="hotel_id"    />
         <result property="typeName"    column="type_name"    />
-        <result property="isVisible"    column="is_visible"    />
+        <result property="orderNum"    column="order_num"    />
         <result property="createBy"    column="create_by"    />
         <result property="createTime"    column="create_time"    />
         <result property="updateBy"    column="update_by"    />
         <result property="updateTime"    column="update_time"    />
     </resultMap>
 
-    <sql id="selectHtlRoomPriceTypeVo">
-        select room_price_type_id, hotel_id, type_name, is_visible, create_by, create_time, update_by, update_time from htl_room_price_type
+    <sql id="selectHtlRoomTypeVo">
+        select room_type_id, hotel_id, type_name, order_num, create_by, create_time, update_by, update_time from htl_room_type
     </sql>
 
-    <select id="selectHtlRoomPriceTypeList" parameterType="HtlRoomPriceType" resultMap="HtlRoomPriceTypeResult">
-        <include refid="selectHtlRoomPriceTypeVo"/>
+    <select id="selectHtlRoomTypeList" parameterType="HtlRoomType" resultMap="HtlRoomTypeResult">
+        <include refid="selectHtlRoomTypeVo"/>
         <where>  
             <if test="hotelId != null "> and hotel_id = #{hotelId}</if>
             <if test="typeName != null  and typeName != ''"> and type_name like concat('%', #{typeName}, '%')</if>
-            <if test="isVisible != null "> and is_visible = #{isVisible}</if>
+            <if test="orderNum != null "> and order_num = #{orderNum}</if>
         </where>
     </select>
     
-    <select id="selectHtlRoomPriceTypeById" parameterType="Long" resultMap="HtlRoomPriceTypeResult">
-        <include refid="selectHtlRoomPriceTypeVo"/>
-        where room_price_type_id = #{roomPriceTypeId}
+    <select id="selectHtlRoomTypeById" parameterType="Long" resultMap="HtlRoomTypeResult">
+        <include refid="selectHtlRoomTypeVo"/>
+        where room_type_id = #{roomTypeId}
     </select>
         
-    <insert id="insertHtlRoomPriceType" parameterType="HtlRoomPriceType" useGeneratedKeys="true" keyProperty="roomPriceTypeId">
-        insert into htl_room_price_type
+    <insert id="insertHtlRoomType" parameterType="HtlRoomType" useGeneratedKeys="true" keyProperty="roomTypeId">
+        insert into htl_room_type
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="hotelId != null">hotel_id,</if>
             <if test="typeName != null">type_name,</if>
-            <if test="isVisible != null">is_visible,</if>
+            <if test="orderNum != null">order_num,</if>
             <if test="createBy != null">create_by,</if>
             <if test="createTime != null">create_time,</if>
             <if test="updateBy != null">update_by,</if>
@@ -47,7 +47,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="hotelId != null">#{hotelId},</if>
             <if test="typeName != null">#{typeName},</if>
-            <if test="isVisible != null">#{isVisible},</if>
+            <if test="orderNum != null">#{orderNum},</if>
             <if test="createBy != null">#{createBy},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="updateBy != null">#{updateBy},</if>
@@ -55,28 +55,28 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
     </insert>
 
-    <update id="updateHtlRoomPriceType" parameterType="HtlRoomPriceType">
-        update htl_room_price_type
+    <update id="updateHtlRoomType" parameterType="HtlRoomType">
+        update htl_room_type
         <trim prefix="SET" suffixOverrides=",">
             <if test="hotelId != null">hotel_id = #{hotelId},</if>
             <if test="typeName != null">type_name = #{typeName},</if>
-            <if test="isVisible != null">is_visible = #{isVisible},</if>
+            <if test="orderNum != null">order_num = #{orderNum},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateBy != null">update_by = #{updateBy},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
         </trim>
-        where room_price_type_id = #{roomPriceTypeId}
+        where room_type_id = #{roomTypeId}
     </update>
 
-    <delete id="deleteHtlRoomPriceTypeById" parameterType="Long">
-        delete from htl_room_price_type where room_price_type_id = #{roomPriceTypeId}
+    <delete id="deleteHtlRoomTypeById" parameterType="Long">
+        delete from htl_room_type where room_type_id = #{roomTypeId}
     </delete>
 
-    <delete id="deleteHtlRoomPriceTypeByIds" parameterType="String">
-        delete from htl_room_price_type where room_price_type_id in 
-        <foreach item="roomPriceTypeId" collection="array" open="(" separator="," close=")">
-            #{roomPriceTypeId}
+    <delete id="deleteHtlRoomTypeByIds" parameterType="String">
+        delete from htl_room_type where room_type_id in 
+        <foreach item="roomTypeId" collection="array" open="(" separator="," close=")">
+            #{roomTypeId}
         </foreach>
     </delete>
     
