@@ -32,6 +32,7 @@ import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.bean.BeanUtils;
 import com.ruoyi.common.utils.file.FileUploadUtils;
+import com.ruoyi.common.utils.file.FileUtils;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
 
@@ -179,6 +180,24 @@ public class HtlHotelInfoController extends BaseController
         return AjaxResult.error("上传图片异常，请联系管理员");
     }
 	
+	@ApiOperation("删除酒店LOGO")
+	@Log(title = "酒店LOGO", businessType = BusinessType.UPDATE)
+	@PostMapping("/deleteLogo")
+    public AjaxResult deleteLogo() throws IOException
+    {
+		SysUser sysUser = SecurityUtils.getLoginUser().getUser();
+		HtlHotelInfo htlHotelInfo = htlHotelInfoService.selectHtlHotelInfoByUserId(sysUser.getUserId());
+		if (null != htlHotelInfo) {
+			FileUtils.deleteFile(htlHotelInfo.getLogoPath());
+			htlHotelInfo.setLogoPath("");
+			htlHotelInfo.setUpdateBy(sysUser.getUserName());
+			htlHotelInfo.setUpdateTime(DateUtils.getNowDate());
+			htlHotelInfoService.updateHtlHotelInfo(htlHotelInfo);
+			return AjaxResult.success(htlHotelInfo);
+		}
+		return AjaxResult.error("删除图片异常，请联系管理员");
+    }
+	
 	/**
 	 * 上传二维码
 	 */
@@ -204,6 +223,24 @@ public class HtlHotelInfoController extends BaseController
 			return AjaxResult.success(hotelInfo);
         }
         return AjaxResult.error("上传图片异常，请联系管理员");
+    }
+	
+	@ApiOperation("删除二维码")
+	@Log(title = "二维码", businessType = BusinessType.UPDATE)
+	@PostMapping("/deleteQrCode")
+    public AjaxResult deleteQrCode() throws IOException
+    {
+		SysUser sysUser = SecurityUtils.getLoginUser().getUser();
+		HtlHotelInfo htlHotelInfo = htlHotelInfoService.selectHtlHotelInfoByUserId(sysUser.getUserId());
+		if (null != htlHotelInfo) {
+			FileUtils.deleteFile(htlHotelInfo.getQrCodePath());
+			htlHotelInfo.setQrCodePath("");
+			htlHotelInfo.setUpdateBy(sysUser.getUserName());
+			htlHotelInfo.setUpdateTime(DateUtils.getNowDate());
+			htlHotelInfoService.updateHtlHotelInfo(htlHotelInfo);
+			return AjaxResult.success(htlHotelInfo);
+		}
+		return AjaxResult.error("删除图片异常，请联系管理员");
     }
 }
 

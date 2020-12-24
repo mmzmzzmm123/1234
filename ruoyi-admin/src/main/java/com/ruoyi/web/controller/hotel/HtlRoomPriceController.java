@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -19,6 +20,8 @@ import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.hotel.domain.HtlRoomPrice;
 import com.ruoyi.hotel.service.IHtlHotelInfoService;
 import com.ruoyi.hotel.service.IHtlRoomPriceService;
+import com.ruoyi.hotel.service.IHtlRoomPriceTypeService;
+import com.ruoyi.hotel.service.IHtlRoomTypeService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -38,13 +41,19 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * @author sucheng
  * @date 2020-11-22
  */
-@Api("房间信息管理")
+@Api("房间价格管理")
 @RestController
 @RequestMapping("/hotel/roomPrice")
 public class HtlRoomPriceController extends BaseController
 {
-    @Autowired
-    private IHtlRoomPriceService htlRoomPriceService;
+	@Autowired
+	private IHtlRoomPriceService htlRoomPriceService;
+
+	@Autowired
+	private IHtlRoomTypeService htlRoomTypeService;
+
+	@Autowired
+	private IHtlRoomPriceTypeService htlRoomPriceTypeService;
     
     @Autowired
     private IHtlHotelInfoService htlHotelInfoService;
@@ -124,7 +133,7 @@ public class HtlRoomPriceController extends BaseController
     	SysUser sysUser = SecurityUtils.getLoginUser().getUser();
     	HtlRoomPrice htlRoomPrice = new HtlRoomPrice();
 		BeanUtils.copyBeanProp(htlRoomPrice, roomPriceEntity);
-		htlRoomPrice.setRoomRateId(roomRateId);
+//		htlRoomPrice.setRoomRateId(roomRateId);
 		htlRoomPrice.setUpdateBy(sysUser.getUserName());
 		htlRoomPrice.setUpdateTime(DateUtils.getNowDate());
         htlRoomPriceService.updateHtlRoomPrice(htlRoomPrice);
@@ -152,40 +161,9 @@ public class HtlRoomPriceController extends BaseController
     }
 }
 
-@ApiModel("房价实体")
+@ApiModel("房型房价实体")
 class RoomPriceEntity
 {
-	public BigDecimal getRoomPrice1() {
-		return roomPrice1;
-	}
-
-	public void setRoomPrice1(BigDecimal roomPrice1) {
-		this.roomPrice1 = roomPrice1;
-	}
-
-	public BigDecimal getRoomPrice2() {
-		return roomPrice2;
-	}
-
-	public void setRoomPrice2(BigDecimal roomPrice2) {
-		this.roomPrice2 = roomPrice2;
-	}
-
-	public BigDecimal getRoomPrice3() {
-		return roomPrice3;
-	}
-
-	public void setRoomPrice3(BigDecimal roomPrice3) {
-		this.roomPrice3 = roomPrice3;
-	}
-
-	public BigDecimal getRoomPrice4() {
-		return roomPrice4;
-	}
-
-	public void setRoomPrice4(BigDecimal roomPrice4) {
-		this.roomPrice4 = roomPrice4;
-	}
 
 	public String getRoomType() {
 		return roomType;
@@ -195,33 +173,98 @@ class RoomPriceEntity
 		this.roomType = roomType;
 	}
 
-	public int getOrderNum() {
+	public Long getRoomTypeId() {
+		return roomTypeId;
+	}
+
+	public void setRoomTypeId(Long roomTypeId) {
+		this.roomTypeId = roomTypeId;
+	}
+
+	public Long getHotelId() {
+		return hotelId;
+	}
+
+	public void setHotelId(Long hotelId) {
+		this.hotelId = hotelId;
+	}
+
+	public String getTypeName() {
+		return typeName;
+	}
+
+	public void setTypeName(String typeName) {
+		this.typeName = typeName;
+	}
+
+	public Integer getOrderNum() {
 		return orderNum;
 	}
 
-	public void setOrderNum(int orderNum) {
+	public void setOrderNum(Integer orderNum) {
 		this.orderNum = orderNum;
 	}
 
-	@ApiModelProperty("房价1")
-	private BigDecimal roomPrice1;
+	public List<PriceEntity> getPriceList() {
+		return priceList;
+	}
 
-	@ApiModelProperty("房价2")
-	private BigDecimal roomPrice2;
-
-	@ApiModelProperty("房价3")
-	private BigDecimal roomPrice3;
-	
-	@ApiModelProperty("房价4")
-	private BigDecimal roomPrice4;
+	public void setPriceList(List<PriceEntity> priceList) {
+		this.priceList = priceList;
+	}
 
 	@ApiModelProperty("房间类型")
 	private String roomType;
 	
-	@ApiModelProperty(value = "显示顺序", allowableValues = "range[1,10]")
-	private int orderNum;
 	
+	@ApiModelProperty("房型ID")
+    private Long roomTypeId;
+
+	@ApiModelProperty("酒店ID")
+    private Long hotelId;
+
+    @ApiModelProperty("房型名称")
+    private String typeName;
+
+	@ApiModelProperty(value = "显示顺序", allowableValues = "range[1,10]")
+    private Integer orderNum;
+	
+	@ApiModelProperty("房价")
+	private List<PriceEntity> priceList;
+    
     public RoomPriceEntity()
+    {
+
+    }
+}
+
+@ApiModel("房价实体")
+class PriceEntity
+{
+
+	public Long getRoomPriceTypeId() {
+		return roomPriceTypeId;
+	}
+
+	public void setRoomPriceTypeId(Long roomPriceTypeId) {
+		this.roomPriceTypeId = roomPriceTypeId;
+	}
+
+	public BigDecimal getRoomPrice() {
+		return roomPrice;
+	}
+
+	public void setRoomPrice(BigDecimal roomPrice) {
+		this.roomPrice = roomPrice;
+	}
+
+	@ApiModelProperty("房价类别ID")
+	private Long roomPriceTypeId;
+
+	@ApiModelProperty("房价")
+	private BigDecimal roomPrice;
+	
+    public PriceEntity()
     {
 
     }
