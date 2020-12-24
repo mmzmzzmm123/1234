@@ -12,7 +12,7 @@ import com.ruoyi.hotel.service.IHtlRoomPriceService;
  * 房间价格Service业务层处理
  * 
  * @author sucheng
- * @date 2020-12-23
+ * @date 2020-12-24
  */
 @Service
 public class HtlRoomPriceServiceImpl implements IHtlRoomPriceService 

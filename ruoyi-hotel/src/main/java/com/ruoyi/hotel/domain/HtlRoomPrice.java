@@ -10,7 +10,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * 房间价格对象 htl_room_price
  * 
  * @author sucheng
- * @date 2020-12-23
+ * @date 2020-12-24
  */
 public class HtlRoomPrice extends BaseEntity
 {
@@ -22,7 +22,7 @@ public class HtlRoomPrice extends BaseEntity
 
     /** 房价类别ID */
     @Excel(name = "房价类别ID")
-    private Long roomPriceTypeId;
+    private Long priceTypeId;
 
     /** 酒店ID */
     @Excel(name = "酒店ID")
@@ -41,14 +41,14 @@ public class HtlRoomPrice extends BaseEntity
     {
         return roomTypeId;
     }
-    public void setRoomPriceTypeId(Long roomPriceTypeId) 
+    public void setPriceTypeId(Long priceTypeId) 
     {
-        this.roomPriceTypeId = roomPriceTypeId;
+        this.priceTypeId = priceTypeId;
     }
 
-    public Long getRoomPriceTypeId() 
+    public Long getPriceTypeId() 
     {
-        return roomPriceTypeId;
+        return priceTypeId;
     }
     public void setHotelId(Long hotelId) 
     {
@@ -73,7 +73,7 @@ public class HtlRoomPrice extends BaseEntity
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
             .append("roomTypeId", getRoomTypeId())
-            .append("roomPriceTypeId", getRoomPriceTypeId())
+            .append("priceTypeId", getPriceTypeId())
             .append("hotelId", getHotelId())
             .append("roomPrice", getRoomPrice())
             .append("createBy", getCreateBy())

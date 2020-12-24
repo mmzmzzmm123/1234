@@ -6,38 +6,38 @@ import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
- * 房价类型对象 htl_room_price_type
+ * 房价类型对象 htl_price_type
  * 
  * @author sucheng
- * @date 2020-12-23
+ * @date 2020-12-24
  */
-public class HtlRoomPriceType extends BaseEntity
+public class HtlPriceType extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
     /** 房价类别ID */
-    private Long roomPriceTypeId;
+    private Long priceTypeId;
 
     /** 酒店ID */
     @Excel(name = "酒店ID")
     private Long hotelId;
 
-    /** 房价类别名称 */
-    @Excel(name = "房价类别名称")
-    private String typeName;
+    /** 房价类别 */
+    @Excel(name = "房价类别")
+    private String priceType;
 
-    /** 是否展示类别 */
-    @Excel(name = "是否展示类别")
+    /** 是否展示 */
+    @Excel(name = "是否展示")
     private Integer isVisible;
 
-    public void setRoomPriceTypeId(Long roomPriceTypeId) 
+    public void setPriceTypeId(Long priceTypeId) 
     {
-        this.roomPriceTypeId = roomPriceTypeId;
+        this.priceTypeId = priceTypeId;
     }
 
-    public Long getRoomPriceTypeId() 
+    public Long getPriceTypeId() 
     {
-        return roomPriceTypeId;
+        return priceTypeId;
     }
     public void setHotelId(Long hotelId) 
     {
@@ -48,14 +48,14 @@ public class HtlRoomPriceType extends BaseEntity
     {
         return hotelId;
     }
-    public void setTypeName(String typeName) 
+    public void setPriceType(String priceType) 
     {
-        this.typeName = typeName;
+        this.priceType = priceType;
     }
 
-    public String getTypeName() 
+    public String getPriceType() 
     {
-        return typeName;
+        return priceType;
     }
     public void setIsVisible(Integer isVisible) 
     {
@@ -70,9 +70,9 @@ public class HtlRoomPriceType extends BaseEntity
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("roomPriceTypeId", getRoomPriceTypeId())
+            .append("priceTypeId", getPriceTypeId())
             .append("hotelId", getHotelId())
-            .append("typeName", getTypeName())
+            .append("priceType", getPriceType())
             .append("isVisible", getIsVisible())
             .append("createBy", getCreateBy())
             .append("createTime", getCreateTime())

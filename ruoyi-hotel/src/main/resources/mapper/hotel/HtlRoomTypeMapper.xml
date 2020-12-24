@@ -7,7 +7,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <resultMap type="HtlRoomType" id="HtlRoomTypeResult">
         <result property="roomTypeId"    column="room_type_id"    />
         <result property="hotelId"    column="hotel_id"    />
-        <result property="typeName"    column="type_name"    />
+        <result property="roomType"    column="room_type"    />
         <result property="orderNum"    column="order_num"    />
         <result property="createBy"    column="create_by"    />
         <result property="createTime"    column="create_time"    />
@@ -16,14 +16,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectHtlRoomTypeVo">
-        select room_type_id, hotel_id, type_name, order_num, create_by, create_time, update_by, update_time from htl_room_type
+        select room_type_id, hotel_id, room_type, order_num, create_by, create_time, update_by, update_time from htl_room_type
     </sql>
 
     <select id="selectHtlRoomTypeList" parameterType="HtlRoomType" resultMap="HtlRoomTypeResult">
         <include refid="selectHtlRoomTypeVo"/>
         <where>  
             <if test="hotelId != null "> and hotel_id = #{hotelId}</if>
-            <if test="typeName != null  and typeName != ''"> and type_name like concat('%', #{typeName}, '%')</if>
+            <if test="roomType != null  and roomType != ''"> and room_type = #{roomType}</if>
             <if test="orderNum != null "> and order_num = #{orderNum}</if>
         </where>
     </select>
@@ -37,7 +37,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         insert into htl_room_type
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="hotelId != null">hotel_id,</if>
-            <if test="typeName != null">type_name,</if>
+            <if test="roomType != null">room_type,</if>
             <if test="orderNum != null">order_num,</if>
             <if test="createBy != null">create_by,</if>
             <if test="createTime != null">create_time,</if>
@@ -46,7 +46,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="hotelId != null">#{hotelId},</if>
-            <if test="typeName != null">#{typeName},</if>
+            <if test="roomType != null">#{roomType},</if>
             <if test="orderNum != null">#{orderNum},</if>
             <if test="createBy != null">#{createBy},</if>
             <if test="createTime != null">#{createTime},</if>
@@ -59,7 +59,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         update htl_room_type
         <trim prefix="SET" suffixOverrides=",">
             <if test="hotelId != null">hotel_id = #{hotelId},</if>
-            <if test="typeName != null">type_name = #{typeName},</if>
+            <if test="roomType != null">room_type = #{roomType},</if>
             <if test="orderNum != null">order_num = #{orderNum},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
             <if test="createTime != null">create_time = #{createTime},</if>

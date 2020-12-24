@@ -9,22 +9,22 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * 房间类型对象 htl_room_type
  * 
  * @author sucheng
- * @date 2020-12-23
+ * @date 2020-12-24
  */
 public class HtlRoomType extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
-    /** 房型ID */
+    /** 房间类型ID */
     private Long roomTypeId;
 
     /** 酒店ID */
     @Excel(name = "酒店ID")
     private Long hotelId;
 
-    /** 房型名称 */
-    @Excel(name = "房型名称")
-    private String typeName;
+    /** 房间类型 */
+    @Excel(name = "房间类型")
+    private String roomType;
 
     /** 显示顺序 */
     @Excel(name = "显示顺序")
@@ -48,14 +48,14 @@ public class HtlRoomType extends BaseEntity
     {
         return hotelId;
     }
-    public void setTypeName(String typeName) 
+    public void setRoomType(String roomType) 
     {
-        this.typeName = typeName;
+        this.roomType = roomType;
     }
 
-    public String getTypeName() 
+    public String getRoomType() 
     {
-        return typeName;
+        return roomType;
     }
     public void setOrderNum(Integer orderNum) 
     {
@@ -72,7 +72,7 @@ public class HtlRoomType extends BaseEntity
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
             .append("roomTypeId", getRoomTypeId())
             .append("hotelId", getHotelId())
-            .append("typeName", getTypeName())
+            .append("roomType", getRoomType())
             .append("orderNum", getOrderNum())
             .append("createBy", getCreateBy())
             .append("createTime", getCreateTime())

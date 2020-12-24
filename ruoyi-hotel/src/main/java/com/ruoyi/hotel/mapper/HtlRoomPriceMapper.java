@@ -7,7 +7,7 @@ import com.ruoyi.hotel.domain.HtlRoomPrice;
  * 房间价格Mapper接口
  * 
  * @author sucheng
- * @date 2020-12-23
+ * @date 2020-12-24
  */
 public interface HtlRoomPriceMapper 
 {

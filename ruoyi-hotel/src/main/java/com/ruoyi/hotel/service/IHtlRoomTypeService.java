@@ -7,7 +7,7 @@ import com.ruoyi.hotel.domain.HtlRoomType;
  * 房间类型Service接口
  * 
  * @author sucheng
- * @date 2020-12-23
+ * @date 2020-12-24
  */
 public interface IHtlRoomTypeService 
 {
