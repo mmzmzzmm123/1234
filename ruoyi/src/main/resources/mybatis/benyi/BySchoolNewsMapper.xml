@@ -22,30 +22,32 @@
     </resultMap>
 
     <sql id="selectBySchoolNewsVo">
-        select id, title, imgurl, abstractcontent, type, content, isdel, createuserid, create_time, dept_id, istop, ischeck, checkuserid, check_time from by_school_news
+        select d.id, d.title, d.imgurl, d.abstractcontent, d.type, d.content, d.isdel, d.createuserid, d.create_time, d.dept_id, d.istop, d.ischeck, d.checkuserid, d.check_time from by_school_news d
     </sql>
 
     <select id="selectBySchoolNewsList" parameterType="BySchoolNews" resultMap="BySchoolNewsResult">
         <include refid="selectBySchoolNewsVo"/>
         <where>
-            <if test="title != null  and title != ''">and title = #{title}</if>
-            <if test="imgurl != null  and imgurl != ''">and imgurl = #{imgurl}</if>
-            <if test="abstractcontent != null  and abstractcontent != ''">and abstractcontent = #{abstractcontent}</if>
-            <if test="type != null  and type != ''">and type = #{type}</if>
-            <if test="content != null  and content != ''">and content = #{content}</if>
-            <if test="isdel != null  and isdel != ''">and isdel = #{isdel}</if>
-            <if test="createuserid != null ">and createuserid = #{createuserid}</if>
-            <if test="deptId != null ">and dept_id = #{deptId}</if>
-            <if test="istop != null  and istop != ''">and istop = #{istop}</if>
-            <if test="ischeck != null  and ischeck != ''">and ischeck = #{ischeck}</if>
-            <if test="checkuserid != null ">and checkuserid = #{checkuserid}</if>
-            <if test="checkTime != null ">and check_time = #{checkTime}</if>
+            d.isdel = 'N'
+            <if test="title != null  and title != ''">and d.title = #{title}</if>
+            <if test="imgurl != null  and imgurl != ''">and d.imgurl = #{imgurl}</if>
+            <if test="abstractcontent != null  and abstractcontent != ''">and d.abstractcontent = #{abstractcontent}</if>
+            <if test="type != null  and type != ''">and d.type = #{type}</if>
+            <if test="content != null  and content != ''">and d.content = #{content}</if>
+            <if test="createuserid != null ">and d.createuserid = #{createuserid}</if>
+            <if test="deptId != null ">and d.dept_id = #{deptId}</if>
+            <if test="istop != null  and istop != ''">and d.istop = #{istop}</if>
+            <if test="ischeck != null  and ischeck != ''">and d.ischeck = #{ischeck}</if>
+            <if test="checkuserid != null ">and d.checkuserid = #{checkuserid}</if>
+            <if test="checkTime != null ">and d.check_time = #{checkTime}</if>
         </where>
+        <!-- 数据范围过滤 -->
+        ${dataScope}
     </select>
 
     <select id="selectBySchoolNewsById" parameterType="Long" resultMap="BySchoolNewsResult">
         <include refid="selectBySchoolNewsVo"/>
-        where id = #{id}
+        where d.id = #{id}
     </select>
 
     <insert id="insertBySchoolNews" parameterType="BySchoolNews" useGeneratedKeys="true" keyProperty="id">

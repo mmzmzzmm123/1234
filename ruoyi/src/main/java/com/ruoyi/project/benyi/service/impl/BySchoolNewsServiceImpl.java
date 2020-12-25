@@ -2,7 +2,8 @@ package com.ruoyi.project.benyi.service.impl;
 
 import java.util.List;
                                                                                                                     import com.ruoyi.common.utils.DateUtils;
-            import org.springframework.beans.factory.annotation.Autowired;
+import com.ruoyi.framework.aspectj.lang.annotation.DataScope;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.project.benyi.mapper.BySchoolNewsMapper;
 import com.ruoyi.project.benyi.domain.BySchoolNews;
@@ -39,6 +40,7 @@ public class BySchoolNewsServiceImpl implements IBySchoolNewsService
      * @return 新闻中心
      */
     @Override
+    @DataScope(deptAlias = "d")
     public List<BySchoolNews> selectBySchoolNewsList(BySchoolNews bySchoolNews)
     {
         return bySchoolNewsMapper.selectBySchoolNewsList(bySchoolNews);

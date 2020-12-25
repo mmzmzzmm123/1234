@@ -32,34 +32,30 @@ import com.ruoyi.framework.web.page.TableDataInfo;
  */
 @RestController
 @RequestMapping("/benyi/news")
-public class BySchoolNewsController extends BaseController
-{
+public class BySchoolNewsController extends BaseController {
     @Autowired
     private IBySchoolNewsService bySchoolNewsService;
     @Autowired
     private SchoolCommon schoolCommon;
 
-/**
- * 查询新闻中心列表
- */
-@PreAuthorize("@ss.hasPermi('benyi:news:list')")
-@GetMapping("/list")
-        public TableDataInfo list(BySchoolNews bySchoolNews)
-    {
-        bySchoolNews.setDeptId(SecurityUtils.getLoginUser().getUser().getDeptId());
+    /**
+     * 查询新闻中心列表
+     */
+    @PreAuthorize("@ss.hasPermi('benyi:news:list')")
+    @GetMapping("/list")
+    public TableDataInfo list(BySchoolNews bySchoolNews) {
         startPage();
         List<BySchoolNews> list = bySchoolNewsService.selectBySchoolNewsList(bySchoolNews);
         return getDataTable(list);
     }
-    
+
     /**
      * 导出新闻中心列表
      */
     @PreAuthorize("@ss.hasPermi('benyi:news:export')")
     @Log(title = "新闻中心", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
-    public AjaxResult export(BySchoolNews bySchoolNews)
-    {
+    public AjaxResult export(BySchoolNews bySchoolNews) {
         List<BySchoolNews> list = bySchoolNewsService.selectBySchoolNewsList(bySchoolNews);
         ExcelUtil<BySchoolNews> util = new ExcelUtil<BySchoolNews>(BySchoolNews.class);
         return util.exportExcel(list, "news");
@@ -70,8 +66,7 @@ public class BySchoolNewsController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('benyi:news:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
-    {
+    public AjaxResult getInfo(@PathVariable("id") Long id) {
         return AjaxResult.success(bySchoolNewsService.selectBySchoolNewsById(id));
     }
 
@@ -81,15 +76,12 @@ public class BySchoolNewsController extends BaseController
     @PreAuthorize("@ss.hasPermi('benyi:news:add')")
     @Log(title = "新闻中心", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody BySchoolNews bySchoolNews)
-    {
-            bySchoolNews.setIsdel("N");
-            bySchoolNews.setCreateTime(new Date());
-            bySchoolNews.setCreateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
-            bySchoolNews.setIscheck("N");
-            bySchoolNews.setDeptId(SecurityUtils.getLoginUser().getUser().getDeptId());
-            bySchoolNews.setType("1");
-            return toAjax(bySchoolNewsService.insertBySchoolNews(bySchoolNews));
+    public AjaxResult add(@RequestBody BySchoolNews bySchoolNews) {
+        bySchoolNews.setCreateTime(new Date());
+        bySchoolNews.setCreateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
+        bySchoolNews.setDeptId(SecurityUtils.getLoginUser().getUser().getDeptId());
+        bySchoolNews.setType("1");
+        return toAjax(bySchoolNewsService.insertBySchoolNews(bySchoolNews));
     }
 
     /**
@@ -98,8 +90,7 @@ public class BySchoolNewsController extends BaseController
     @PreAuthorize("@ss.hasPermi('benyi:news:edit')")
     @Log(title = "新闻中心", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody BySchoolNews bySchoolNews)
-    {
+    public AjaxResult edit(@RequestBody BySchoolNews bySchoolNews) {
         return toAjax(bySchoolNewsService.updateBySchoolNews(bySchoolNews));
     }
 
@@ -109,8 +100,7 @@ public class BySchoolNewsController extends BaseController
     @PreAuthorize("@ss.hasPermi('benyi:news:remove')")
     @Log(title = "新闻中心", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
-    {
+    public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(bySchoolNewsService.deleteBySchoolNewsByIds(ids));
     }
 }
