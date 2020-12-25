@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -34,11 +33,8 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
 
-import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.bean.BeanUtils;
-import com.ruoyi.common.utils.poi.ExcelUtil;
-import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
  * 房间价格Controller
@@ -63,43 +59,47 @@ public class HtlRoomPriceController extends BaseController
     @Autowired
     private IHtlHotelInfoService htlHotelInfoService;
 
-    /**
-     * 查询房间价格列表
-     */
-    @ApiOperation("查询房间价格列表")
-    @PreAuthorize("@ss.hasPermi('hotel:roomPrice:list')")
-    @GetMapping("/list")
-    public TableDataInfo list()
-    {
-    	SysUser sysUser = SecurityUtils.getLoginUser().getUser();
-    	long hotelId = htlHotelInfoService.getHotelIdByUserId(sysUser.getUserId());
-		HtlRoomPrice htlRoomPrice = new HtlRoomPrice();
-		htlRoomPrice.setHotelId(hotelId);
-        List<HtlRoomPrice> list = htlRoomPriceService.selectHtlRoomPriceList(htlRoomPrice);
-        return getDataTable(list);
-    }
-
-    /**
-     * 导出房间价格列表
-     */
-    @PreAuthorize("@ss.hasPermi('hotel:roomPrice:export')")
-    @Log(title = "房间价格", businessType = BusinessType.EXPORT)
-    @GetMapping("/export")
-    public AjaxResult export(HtlRoomPrice htlRoomPrice)
-    {
-        List<HtlRoomPrice> list = htlRoomPriceService.selectHtlRoomPriceList(htlRoomPrice);
-        ExcelUtil<HtlRoomPrice> util = new ExcelUtil<HtlRoomPrice>(HtlRoomPrice.class);
-        return util.exportExcel(list, "roomPrice");
-    }
 
     /**
      * 获取房间价格详细信息
      */
+    @ApiOperation("查询房间价格列表")
     @PreAuthorize("@ss.hasPermi('hotel:roomPrice:query')")
     @GetMapping("/query")
-    public AjaxResult query(@PathVariable("roomRateId") Long roomRateId)
+    public AjaxResult query()
     {
-        return AjaxResult.success(htlRoomPriceService.selectHtlRoomPriceById(roomRateId));
+		SysUser sysUser = SecurityUtils.getLoginUser().getUser();
+		long hotelId = htlHotelInfoService.getHotelIdByUserId(sysUser.getUserId());
+		if (hotelId < 0) {
+			return AjaxResult.error("请配置酒店信息");
+		}
+		List<RoomTypeEntity> result = new ArrayList<RoomTypeEntity>();
+
+		HtlRoomType htlRoomType = new HtlRoomType();
+		htlRoomType.setHotelId(hotelId);
+		List<HtlRoomType> roomTypeList = htlRoomTypeService.selectHtlRoomTypeList(htlRoomType);
+		for (HtlRoomType roomType : roomTypeList) {
+			RoomTypeEntity typeEntity = new RoomTypeEntity();
+			BeanUtils.copyBeanProp(typeEntity, roomType);
+
+			HtlRoomPrice htlRoomPrice = new HtlRoomPrice();
+			htlRoomPrice.setRoomTypeId(roomType.getRoomTypeId());
+			htlRoomPrice.setHotelId(hotelId);
+			List<HtlRoomPrice> roomPriceList = htlRoomPriceService.selectHtlRoomPriceList(htlRoomPrice);
+			for (HtlRoomPrice roomPrice : roomPriceList) {
+				RoomPriceEntity priceEntity = new RoomPriceEntity();
+				BeanUtils.copyBeanProp(priceEntity, roomPrice);
+
+				HtlPriceType htlPriceType = htlPriceTypeService.selectHtlPriceTypeById(roomPrice.getPriceTypeId());
+				if (null != htlPriceType) {
+					priceEntity.setPriceType(htlPriceType.getPriceType());
+				}
+
+				typeEntity.addPrice(priceEntity);
+			}
+			result.add(typeEntity);
+		}
+		return AjaxResult.success(result);
     }
 
     /**
@@ -138,9 +138,7 @@ public class HtlRoomPriceController extends BaseController
 			htlRoomPrice.setCreateBy(sysUser.getUserName());
 			htlRoomPriceService.insertHtlRoomPrice(htlRoomPrice);
 			price.setPriceType(htlPriceType.getPriceType());
-			
 		}
-		
 		return AjaxResult.success(roomTypeEntity);
 	}
 
@@ -154,13 +152,38 @@ public class HtlRoomPriceController extends BaseController
     public AjaxResult edit(@RequestBody RoomTypeEntity roomTypeEntity)
     {
     	SysUser sysUser = SecurityUtils.getLoginUser().getUser();
-    	HtlRoomPrice htlRoomPrice = new HtlRoomPrice();
-//		BeanUtils.copyBeanProp(htlRoomPrice, roomPriceEntity);
-//		htlRoomPrice.setRoomRateId(roomRateId);
-		htlRoomPrice.setUpdateBy(sysUser.getUserName());
-		htlRoomPrice.setUpdateTime(DateUtils.getNowDate());
-        htlRoomPriceService.updateHtlRoomPrice(htlRoomPrice);
-        return AjaxResult.success(htlRoomPrice);
+		long hotelId = htlHotelInfoService.getHotelIdByUserId(sysUser.getUserId());
+		HtlRoomType htlRoomType = htlRoomTypeService.selectHtlRoomTypeById(roomTypeEntity.getRoomTypeId());
+		if (null == htlRoomType || hotelId != htlRoomType.getHotelId()) {
+			return AjaxResult.error("传递参数不正确");
+		}
+		htlRoomType.setOrderNum(roomTypeEntity.getOrderNum());
+		htlRoomType.setRoomType(roomTypeEntity.getRoomType());
+		htlRoomType.setUpdateBy(sysUser.getUserName());
+		htlRoomTypeService.updateHtlRoomType(htlRoomType);
+		
+		BeanUtils.copyBeanProp(roomTypeEntity, htlRoomType);
+
+		List<RoomPriceEntity> priceList = roomTypeEntity.getPriceList();
+		for (RoomPriceEntity price : priceList) {
+	    	HtlRoomPrice htlRoomPrice = new HtlRoomPrice();
+	    	htlRoomPrice.setHotelId(hotelId);
+	    	htlRoomPrice.setPriceTypeId(price.getPriceTypeId());
+	    	htlRoomPrice.setRoomTypeId(htlRoomType.getRoomTypeId());
+	    	
+			List<HtlRoomPrice> list = htlRoomPriceService.selectHtlRoomPriceList(htlRoomPrice);
+			if (null == list || list.size() == 0) {
+		    	htlRoomPrice.setRoomPrice(price.getRoomPrice());
+		    	htlRoomPrice.setCreateBy(sysUser.getUserName());
+				htlRoomPriceService.insertHtlRoomPrice(htlRoomPrice);
+			} else {
+				htlRoomPrice.setRoomPrice(price.getRoomPrice());
+				htlRoomPrice.setUpdateBy(sysUser.getUserName());
+		        htlRoomPriceService.updateHtlRoomPrice(htlRoomPrice);
+			}
+		}
+
+        return AjaxResult.success(roomTypeEntity);
     }
 
     /**
@@ -169,18 +192,13 @@ public class HtlRoomPriceController extends BaseController
     @ApiOperation("删除房间价格")
     @PreAuthorize("@ss.hasPermi('hotel:roomPrice:remove')")
     @Log(title = "房间价格", businessType = BusinessType.DELETE)
-    @ApiImplicitParam(name = "roomRateId", value = "房价ID", required = true, dataType = "long")
+    @ApiImplicitParam(name = "roomTypeId", value = "房型ID", required = true, dataType = "long")
 	@DeleteMapping("/delete")
-	public AjaxResult remove(Long roomRateId)
+	public AjaxResult remove(Long roomTypeId)
     {
-    	SysUser sysUser = SecurityUtils.getLoginUser().getUser();
-		long hotelId = htlHotelInfoService.getHotelIdByUserId(sysUser.getUserId());
-		HtlRoomPrice roomPrice = htlRoomPriceService.selectHtlRoomPriceById(roomRateId);
-		if (null != roomPrice && roomPrice.getHotelId() == hotelId) {
-			return toAjax(htlRoomPriceService.deleteHtlRoomPriceById(roomRateId));
-		} else {
-			return AjaxResult.error("禁止删除不属于当前用户的房价信息");
-		}
+		htlRoomTypeService.deleteHtlRoomTypeById(roomTypeId);
+		htlRoomPriceService.deleteHtlRoomPriceById(roomTypeId);
+		return AjaxResult.success();
     }
 }
 
