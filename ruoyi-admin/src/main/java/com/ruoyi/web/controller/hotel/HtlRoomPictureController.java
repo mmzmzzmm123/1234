@@ -32,6 +32,7 @@ import io.swagger.annotations.ApiOperation;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.file.FileUploadUtils;
+import com.ruoyi.common.utils.file.FileUtils;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
 
@@ -145,11 +146,13 @@ public class HtlRoomPictureController extends BaseController
             String pic = FileUploadUtils.upload(RuoYiConfig.getAvatarPath(), file);
             SysUser sysUser = SecurityUtils.getLoginUser().getUser();
             HtlRoomPicture htlRoomPicture =  htlRoomPictureService.selectHtlRoomPictureById(pictureId);
-//    		htlRoomPicture.setPictureName(file.getOriginalFilename());
+	    	FileUtils.deleteFile(htlRoomPicture.getPicturePath());
+
     		htlRoomPicture.setPicturePath(pic);
     		htlRoomPicture.setUpdateBy(sysUser.getUserName());
     		htlRoomPicture.setUpdateTime(DateUtils.getNowDate());
     		htlRoomPictureService.updateHtlRoomPicture(htlRoomPicture);
+    		
 			return AjaxResult.success(htlRoomPicture);
         }
     	 return AjaxResult.error("上传图片异常，请联系管理员");
@@ -237,6 +240,10 @@ public class HtlRoomPictureController extends BaseController
 	@DeleteMapping("/delete")
     public AjaxResult remove(Long pictureId)
     {
+    	HtlRoomPicture htlRoomPicture = htlRoomPictureService.selectHtlRoomPictureById(pictureId);
+		if (null != htlRoomPicture) {
+	    	FileUtils.deleteFile(htlRoomPicture.getPicturePath());
+		}
         return toAjax(htlRoomPictureService.deleteHtlRoomPictureById(pictureId));
     }
 }
