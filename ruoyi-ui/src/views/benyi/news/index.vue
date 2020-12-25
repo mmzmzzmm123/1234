@@ -99,7 +99,6 @@
           <div v-html="scope.row.content"></div>
         </template>
       </el-table-column>
-      <el-table-column label="创建人" align="center" prop="createuserid" :formatter="userFormat" />
       <el-table-column label="所属学校" align="center" prop="deptId" :formatter="deptFormat" />
       <el-table-column
         label="是否审核"
