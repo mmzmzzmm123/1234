@@ -20,7 +20,7 @@ public class HtlThemeConfig extends BaseEntity
 
     /** 主题ID */
     @Excel(name = "主题ID")
-    private String themeId;
+    private Long themeId;
 
     public void setHotelId(Long hotelId) 
     {
@@ -31,12 +31,12 @@ public class HtlThemeConfig extends BaseEntity
     {
         return hotelId;
     }
-    public void setThemeId(String themeId) 
+    public void setThemeId(Long themeId) 
     {
         this.themeId = themeId;
     }
 
-    public String getThemeId() 
+    public Long getThemeId() 
     {
         return themeId;
     }
