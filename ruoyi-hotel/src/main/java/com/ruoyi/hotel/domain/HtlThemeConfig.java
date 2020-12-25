@@ -6,25 +6,21 @@ import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
- * 主题配置对象 htl_display_theme
+ * 主题配置对象 htl_theme_config
  * 
  * @author sucheng
- * @date 2020-11-22
+ * @date 2020-12-25
  */
-public class HtlDisplayTheme extends BaseEntity
+public class HtlThemeConfig extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
     /** 酒店ID */
     private Long hotelId;
 
-    /** 主题名称 */
-    @Excel(name = "主题名称")
-    private String themeName;
-
-    /** 主题背景图路径 */
-    @Excel(name = "主题背景图路径")
-    private String themePicturePath;
+    /** 主题ID */
+    @Excel(name = "主题ID")
+    private String themeId;
 
     public void setHotelId(Long hotelId) 
     {
@@ -35,31 +31,21 @@ public class HtlDisplayTheme extends BaseEntity
     {
         return hotelId;
     }
-    public void setThemeName(String themeName) 
+    public void setThemeId(String themeId) 
     {
-        this.themeName = themeName;
+        this.themeId = themeId;
     }
 
-    public String getThemeName() 
+    public String getThemeId() 
     {
-        return themeName;
-    }
-    public void setThemePicturePath(String themePicturePath) 
-    {
-        this.themePicturePath = themePicturePath;
-    }
-
-    public String getThemePicturePath() 
-    {
-        return themePicturePath;
+        return themeId;
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
             .append("hotelId", getHotelId())
-            .append("themeName", getThemeName())
-            .append("themePicturePath", getThemePicturePath())
+            .append("themeId", getThemeId())
             .append("createBy", getCreateBy())
             .append("createTime", getCreateTime())
             .append("updateBy", getUpdateBy())
