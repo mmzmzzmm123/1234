@@ -35,8 +35,6 @@ import com.ruoyi.framework.web.page.TableDataInfo;
 public class BySchoolNewsController extends BaseController {
     @Autowired
     private IBySchoolNewsService bySchoolNewsService;
-    @Autowired
-    private SchoolCommon schoolCommon;
 
     /**
      * 查询新闻中心列表
@@ -91,7 +89,14 @@ public class BySchoolNewsController extends BaseController {
     @Log(title = "新闻中心", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody BySchoolNews bySchoolNews) {
-        return toAjax(bySchoolNewsService.updateBySchoolNews(bySchoolNews));
+        if (bySchoolNews.getIscheck().equals("0")) {
+            return toAjax(bySchoolNewsService.updateBySchoolNews(bySchoolNews));
+        }else {
+            bySchoolNews.setCheckTime(new Date());
+            return toAjax(bySchoolNewsService.updateBySchoolNews(bySchoolNews));
+        }
+
+
     }
 
     /**

@@ -71,7 +71,6 @@
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="编号" align="center" prop="id" />
       <el-table-column label="标题" align="center" prop="title" />
-      <el-table-column label="摘要" align="center" prop="abstractcontent" />
       <el-table-column
         label="类型"
         align="center"
@@ -89,19 +88,13 @@
         </template>
       </el-table-column>
       <el-table-column
-        label="创建人"
-        align="center"
-        prop="createuserid"
-        :formatter="userFormat"
-      />
-      <el-table-column
         label="所属学校"
         align="center"
         prop="deptId"
         :formatter="deptFormat"
       />
       <el-table-column
-        label="是否审核"
+        label="审核状态"
         align="center"
         prop="ischeck"
         :formatter="ischeckFormat"
@@ -158,41 +151,26 @@
       width="1024px"
       append-to-body
     >
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+      <el-form ref="form" :model="form" :rules="rules" label-width="120px">
         <el-form-item label="标题" prop="title">
           <el-input
             v-model="form.title"
             type="textarea"
             placeholder="请输入内容"
-            :disabled="true"
           />
         </el-form-item>
-        <el-form-item label="摘要" prop="abstractcontent">
-          <el-input
-            v-model="form.abstractcontent"
-            type="textarea"
-            placeholder="请输入内容"
-            :disabled="true"
-          />
-        </el-form-item>
-        <!-- <el-form-item label="类型">
-          <el-select v-model="form.type" placeholder="请选择类型">
-            <el-option
-              v-for="dict in typeOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            ></el-option>
-          </el-select>
-        </el-form-item> -->
         <el-form-item label="内容" prop="content" >
           <Editor v-model="form.content" placeholder="请输入内容"  />
         </el-form-item>
-        <el-form-item label="是否审批通过" prop="ischeck">
-          <el-radio-group v-model="form.ischeck">
-            <el-radio label="Y">是</el-radio>
-            <el-radio label="N">否</el-radio>
-          </el-radio-group>
+        <el-form-item label="审核状态" prop="ischeck">
+          <el-select v-model="form.ischeck" placeholder="请选择审核状态">
+            <el-option
+              v-for="dict in ischeckOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            />
+          </el-select>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -215,7 +193,7 @@ import {
 
 import Editor from "@/components/Editor";
 import { listDept, getDept } from "@/api/system/dept";
-import { listUser, getUser } from "@/api/system/user";
+// import { listUser, getUser } from "@/api/system/user";
 
 export default {
   name: "News",
@@ -265,7 +243,7 @@ export default {
         createuserid: undefined,
         deptId: undefined,
         istop: undefined,
-        ischeck: "N",
+        ischeck: "0",
         checkuserid: undefined,
         checkTime: undefined,
       },
@@ -276,13 +254,18 @@ export default {
         ischeck: [
           { required: true, message: "审批意见不能为空", trigger: "blur" },
         ],
+        title: [
+          { required: true, message: "标题不能为空", trigger: "blur" },
+        ],
+        content: [
+          { required: true, message: "内容不能为空", trigger: "blur" },
+        ],
       },
     };
   },
   created() {
     this.getList();
     this.getDeptList();
-    this.getUserList();
     this.getDicts("sys_dm_newstype").then((response) => {
       this.typeOptions = response.data;
     });
@@ -292,7 +275,7 @@ export default {
     this.getDicts("sys_yes_no").then((response) => {
       this.istopOptions = response.data;
     });
-    this.getDicts("sys_yes_no").then((response) => {
+    this.getDicts("sys_dm_ischeck").then((response) => {
       this.ischeckOptions = response.data;
     });
   },
@@ -313,11 +296,11 @@ export default {
       });
     },
     // 用户列表
-    getUserList() {
-      listUser(null).then((response) => {
-        this.userOptions = response.rows;
-      });
-    },
+    // getUserList() {
+    //   listUser(null).then((response) => {
+    //     this.userOptions = response.rows;
+    //   });
+    // },
     // 字典翻译
     deptFormat(row, column) {
       var actions = [];
@@ -331,18 +314,18 @@ export default {
       return actions.join("");
     },
     // 字典翻译
-    userFormat(row, column) {
-      // return this.selectDictLabel(this.classOptions, row.classid);
-      var actions = [];
-      var datas = this.userOptions;
-      Object.keys(datas).map((key) => {
-        if (datas[key].userId == "" + row.createuserid) {
-          actions.push(datas[key].nickName);
-          return false;
-        }
-      });
-      return actions.join("");
-    },
+    // userFormat(row, column) {
+    //   // return this.selectDictLabel(this.classOptions, row.classid);
+    //   var actions = [];
+    //   var datas = this.userOptions;
+    //   Object.keys(datas).map((key) => {
+    //     if (datas[key].userId == "" + row.createuserid) {
+    //       actions.push(datas[key].nickName);
+    //       return false;
+    //     }
+    //   });
+    //   return actions.join("");
+    // },
     // 类型字典翻译
     typeFormat(row, column) {
       return this.selectDictLabel(this.typeOptions, row.type);
@@ -416,8 +399,6 @@ export default {
       this.$refs["form"].validate((valid) => {
         if (valid) {
           if (this.form.id != undefined) {
-            var now = new Date();
-            this.form.checkTime = now.toLocaleDateString();
             updateNews(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("审批成功");

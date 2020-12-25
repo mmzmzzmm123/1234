@@ -46,7 +46,7 @@
           >新增</el-button
         >
       </el-col>
-      <el-col :span="1.5">
+      <!-- <el-col :span="1.5">
         <el-button
           type="success"
           icon="el-icon-edit"
@@ -56,7 +56,7 @@
           v-hasPermi="['benyi:news:edit']"
           >修改</el-button
         >
-      </el-col>
+      </el-col> -->
       <el-col :span="1.5">
         <el-button
           type="danger"
@@ -88,7 +88,6 @@
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="编号" align="center" prop="id" />
       <el-table-column label="标题" align="center" prop="title" />
-      <el-table-column label="摘要" align="center" prop="abstractcontent" />
       <el-table-column
         label="类型"
         align="center"
@@ -130,6 +129,7 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['benyi:news:edit']"
+            v-show="isShow(scope.row)"
             >修改</el-button
           >
           <el-button
@@ -154,17 +154,10 @@
 
     <!-- 添加或修改新闻中心对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="1024px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+      <el-form ref="form" :model="form" :rules="rules" label-width="120px">
         <el-form-item label="标题" prop="title">
           <el-input
             v-model="form.title"
-            type="textarea"
-            placeholder="请输入内容"
-          />
-        </el-form-item>
-        <el-form-item label="摘要" prop="abstractcontent">
-          <el-input
-            v-model="form.abstractcontent"
             type="textarea"
             placeholder="请输入内容"
           />
@@ -212,6 +205,7 @@ export default {
   },
   data() {
     return {
+      
       // 遮罩层
       loading: true,
       // 选中数组
@@ -260,7 +254,14 @@ export default {
       // 表单参数
       form: {},
       // 表单校验
-      rules: {},
+      rules: {
+        title: [
+          { required: true, message: "标题不能为空", trigger: "blur" },
+        ],
+        content: [
+          { required: true, message: "内容不能为空", trigger: "blur" },
+        ],
+      },
     };
   },
   created() {
@@ -276,11 +277,18 @@ export default {
     this.getDicts("sys_yes_no").then((response) => {
       this.istopOptions = response.data;
     });
-    this.getDicts("sys_yes_no").then((response) => {
+    this.getDicts("sys_dm_ischeck").then((response) => {
       this.ischeckOptions = response.data;
     });
   },
   methods: {
+    isShow(row) {
+      if (row.ischeck == "1") {
+        return false;
+      } else {
+        return true;
+      }
+    },
     /** 查询新闻中心列表 */
     getList() {
       this.loading = true;
