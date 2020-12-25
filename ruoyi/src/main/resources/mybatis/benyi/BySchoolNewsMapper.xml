@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.benyi.mapper.BySchoolNewsMapper">
+
+    <resultMap type="BySchoolNews" id="BySchoolNewsResult">
+        <result property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="imgurl" column="imgurl"/>
+        <result property="abstractcontent" column="abstractcontent"/>
+        <result property="type" column="type"/>
+        <result property="content" column="content"/>
+        <result property="isdel" column="isdel"/>
+        <result property="createuserid" column="createuserid"/>
+        <result property="createTime" column="create_time"/>
+        <result property="deptId" column="dept_id"/>
+        <result property="istop" column="istop"/>
+        <result property="ischeck" column="ischeck"/>
+        <result property="checkuserid" column="checkuserid"/>
+        <result property="checkTime" column="check_time"/>
+    </resultMap>
+
+    <sql id="selectBySchoolNewsVo">
+        select id, title, imgurl, abstractcontent, type, content, isdel, createuserid, create_time, dept_id, istop, ischeck, checkuserid, check_time from by_school_news
+    </sql>
+
+    <select id="selectBySchoolNewsList" parameterType="BySchoolNews" resultMap="BySchoolNewsResult">
+        <include refid="selectBySchoolNewsVo"/>
+        <where>
+            <if test="title != null  and title != ''">and title = #{title}</if>
+            <if test="imgurl != null  and imgurl != ''">and imgurl = #{imgurl}</if>
+            <if test="abstractcontent != null  and abstractcontent != ''">and abstractcontent = #{abstractcontent}</if>
+            <if test="type != null  and type != ''">and type = #{type}</if>
+            <if test="content != null  and content != ''">and content = #{content}</if>
+            <if test="isdel != null  and isdel != ''">and isdel = #{isdel}</if>
+            <if test="createuserid != null ">and createuserid = #{createuserid}</if>
+            <if test="deptId != null ">and dept_id = #{deptId}</if>
+            <if test="istop != null  and istop != ''">and istop = #{istop}</if>
+            <if test="ischeck != null  and ischeck != ''">and ischeck = #{ischeck}</if>
+            <if test="checkuserid != null ">and checkuserid = #{checkuserid}</if>
+            <if test="checkTime != null ">and check_time = #{checkTime}</if>
+        </where>
+    </select>
+
+    <select id="selectBySchoolNewsById" parameterType="Long" resultMap="BySchoolNewsResult">
+        <include refid="selectBySchoolNewsVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertBySchoolNews" parameterType="BySchoolNews" useGeneratedKeys="true" keyProperty="id">
+        insert into by_school_news
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="title != null  and title != ''">title,</if>
+            <if test="imgurl != null  and imgurl != ''">imgurl,</if>
+            <if test="abstractcontent != null  and abstractcontent != ''">abstractcontent,</if>
+            <if test="type != null  and type != ''">type,</if>
+            <if test="content != null  and content != ''">content,</if>
+            <if test="isdel != null  and isdel != ''">isdel,</if>
+            <if test="createuserid != null ">createuserid,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="deptId != null ">dept_id,</if>
+            <if test="istop != null  and istop != ''">istop,</if>
+            <if test="ischeck != null  and ischeck != ''">ischeck,</if>
+            <if test="checkuserid != null ">checkuserid,</if>
+            <if test="checkTime != null ">check_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="title != null  and title != ''">#{title},</if>
+            <if test="imgurl != null  and imgurl != ''">#{imgurl},</if>
+            <if test="abstractcontent != null  and abstractcontent != ''">#{abstractcontent},</if>
+            <if test="type != null  and type != ''">#{type},</if>
+            <if test="content != null  and content != ''">#{content},</if>
+            <if test="isdel != null  and isdel != ''">#{isdel},</if>
+            <if test="createuserid != null ">#{createuserid},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="deptId != null ">#{deptId},</if>
+            <if test="istop != null  and istop != ''">#{istop},</if>
+            <if test="ischeck != null  and ischeck != ''">#{ischeck},</if>
+            <if test="checkuserid != null ">#{checkuserid},</if>
+            <if test="checkTime != null ">#{checkTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateBySchoolNews" parameterType="BySchoolNews">
+        update by_school_news
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null  and title != ''">title = #{title},</if>
+            <if test="imgurl != null  and imgurl != ''">imgurl = #{imgurl},</if>
+            <if test="abstractcontent != null  and abstractcontent != ''">abstractcontent = #{abstractcontent},</if>
+            <if test="type != null  and type != ''">type = #{type},</if>
+            <if test="content != null  and content != ''">content = #{content},</if>
+            <if test="isdel != null  and isdel != ''">isdel = #{isdel},</if>
+            <if test="createuserid != null ">createuserid = #{createuserid},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="deptId != null ">dept_id = #{deptId},</if>
+            <if test="istop != null  and istop != ''">istop = #{istop},</if>
+            <if test="ischeck != null  and ischeck != ''">ischeck = #{ischeck},</if>
+            <if test="checkuserid != null ">checkuserid = #{checkuserid},</if>
+            <if test="checkTime != null ">check_time = #{checkTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBySchoolNewsById" parameterType="Long">
+        delete from by_school_news where id = #{id}
+    </delete>
+
+    <delete id="deleteBySchoolNewsByIds" parameterType="String">
+        delete from by_school_news where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
