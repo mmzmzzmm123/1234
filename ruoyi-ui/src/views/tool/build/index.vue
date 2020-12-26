@@ -240,11 +240,14 @@ export default {
   },
   methods: {
     loadData() {
-      console.log('yes')
-      let id = this.$route.params.id;
+      let id = this.$route.params.id
       if(id){
-        let json = getJson(id)
-        console.log(json)
+        getJson(id).then(res=>{
+          let json = res.data.formData
+          this.dataList = json.fields
+          this.formData = json
+        })
+        
       }
     },
     activeFormItem(element) {

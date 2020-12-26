@@ -6,7 +6,7 @@ Vue.use(Router)
 /* Layout */
 import Layout from '@/layout'
 import ParentView from '@/components/ParentView';
-import build from '@/views/tool/build/index'
+
 
 /**
  * Note: 路由配置项
@@ -108,8 +108,18 @@ export const constantRoutes = [
     ]
   },
   {
-    path: '/tool/build/:id',
-    component:build
+    path: '/tool',
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: 'build/:id',
+        component:(resolve) =>require(['@/views/tool/build/index'],resolve),
+        name: 'build',
+        meta: {title: '表单构建'}
+      }
+    ]
+    
   },
 
   {

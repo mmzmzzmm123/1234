@@ -6,15 +6,15 @@ public class SnowflakesTools {
     //private final long twepoch = 1609430400000L;
     private final long twepoch = 1577808000000L;
     //机器ID所占位置
-    private final long workerIdBits = 5L;
+    private final long workerIdBits = 4L;
     //数据标识所占位数
-    private final long datacenterIdBits = 5L;
+    private final long datacenterIdBits = 4L;
     //支持的最大机器id，结果是31 (这个移位算法可以很快的计算出几位二进制数所能表示的最大十进制数)
     private final long maxWorkerId = -1L ^ (-1L << workerIdBits);
     //支持的最大数据标识id，结果是31
     private final long maxDatacenterId = -1L ^ (-1L << datacenterIdBits);
     //序列在id中占的位数
-    private final long sequenceBits = 12L;
+    private final long sequenceBits = 8L;
     //机器ID向左移12位
     private final long workerIdShift = sequenceBits;
     //数据标识id向左移17位(12+5)
@@ -107,14 +107,4 @@ public class SnowflakesTools {
     protected long timeGen() {
         return System.currentTimeMillis();
     }
-
-    public static void main(String[] args) {
-        SnowflakesTools idWorker = new SnowflakesTools(0, 0);
-        for (int i = 0; i < 1000; i++) {
-            long id = idWorker.nextId();
-            System.out.println(id);
-        }
-    }
-
-
 }

@@ -69,8 +69,10 @@
 
     <el-table v-loading="loading" :data="jsonList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <!-- <el-table-column label="表单json" align="center" prop="id" /> -->
+      <el-table-column label="id" align="center" prop="id" />
       <el-table-column label="表单名字" align="center" prop="formName" />
+       <el-table-column label="创建时间" align="center" prop="createTime" />
+       <el-table-column label="修改时间" align="center" prop="updateTime" />
       <!-- <el-table-column label="表单json" align="center" prop="formData" /> -->
       <el-table-column label="备注" align="center" prop="remark" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -248,13 +250,9 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       //this.reset();
-      const id = row.id || this.ids
+      const id = row.id
+      console.log(row)
       this.$router.push('/tool/build/'+id)
-      // getJson(id).then(response => {
-      //   this.form = response.data;
-      //   this.open = true;
-      //   this.title = "修改表单json";
-      // });
     },
     /** 提交按钮 */
     submitForm() {
