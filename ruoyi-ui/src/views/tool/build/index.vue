@@ -78,6 +78,9 @@
 
     <div class="center-board">
       <div class="action-bar">
+        <el-button icon="el-icon-download" type="text" @click="save">
+          保存
+        </el-button>
         <el-button icon="el-icon-download" type="text" @click="download">
           导出vue文件
         </el-button>
@@ -154,6 +157,7 @@ import {
 import {
   makeUpHtml, vueTemplate, vueScript, cssStyle
 } from '@/utils/generator/html'
+import { addJson,getJson } from '@/api/system/json'
 import { makeUpJs } from '@/utils/generator/js'
 import { makeUpCss } from '@/utils/generator/css'
 import drawingDefalut from '@/utils/generator/drawingDefalut'
@@ -175,6 +179,7 @@ export default {
   },
   data() {
     return {
+      formname:'',
       logo,
       idGlobal: 100,
       formConf,
@@ -230,7 +235,18 @@ export default {
       this.$message.error('代码复制失败')
     })
   },
+  created() {
+    this.loadData()
+  },
   methods: {
+    loadData() {
+      console.log('yes')
+      let id = this.$route.params.id;
+      if(id){
+        let json = getJson(id)
+        console.log(json)
+      }
+    },
     activeFormItem(element) {
       this.activeData = element
       this.activeId = element.formId
@@ -267,6 +283,7 @@ export default {
     AssembleFormData() {
       this.formData = {
         fields: JSON.parse(JSON.stringify(this.drawingList)),
+        formname: this.formname,
         ...this.formConf
       }
     },
@@ -274,6 +291,29 @@ export default {
       const func = this[`exec${titleCase(this.operationType)}`]
       this.generateConf = data
       func && func(data)
+    },
+    save(){
+      this.$prompt('请输入表单名', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          inputPattern: /^((?!\\|\/|:|\*|\?|<|>|\||'|%).){2,15}$/,
+          inputErrorMessage: '不包含特殊字符且2到15字'
+        }).then(({ value }) => {
+          this.formname = value;
+          this.AssembleFormData()
+          let data = JSON.stringify(this.formData);
+          addJson(data).then(res=>{
+            this.$message({message:'保存成功!',type:'success'})
+          }).catch(err=>{
+            this.$message.error('保存失败,系统错误')
+          })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '取消输入'
+          });       
+        });
+      
     },
     execRun(data) {
       this.AssembleFormData()

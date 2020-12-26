@@ -2,6 +2,8 @@ package com.gox.system.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.gox.common.core.redis.RedisCache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +36,8 @@ import com.gox.system.service.ISysUserService;
 public class SysUserServiceImpl implements ISysUserService
 {
     private static final Logger log = LoggerFactory.getLogger(SysUserServiceImpl.class);
-
+    @Autowired
+    private RedisCache redisCache;
     @Autowired
     private SysUserMapper userMapper;
 
@@ -251,6 +254,9 @@ public class SysUserServiceImpl implements ISysUserService
     @Override
     public int updateUserStatus(SysUser user)
     {
+        if ("0".equals(user.getStatus())){
+            redisCache.deleteObject("login_err:"+user.getUserName());
+        }
         return userMapper.updateUser(user);
     }
 

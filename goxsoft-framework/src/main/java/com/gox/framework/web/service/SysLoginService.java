@@ -1,6 +1,10 @@
 package com.gox.framework.web.service;
 
 import javax.annotation.Resource;
+
+import com.gox.common.core.domain.entity.SysUser;
+import com.gox.common.utils.StringUtils;
+import com.gox.system.service.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -18,6 +22,8 @@ import com.gox.common.utils.MessageUtils;
 import com.gox.framework.manager.AsyncManager;
 import com.gox.framework.manager.factory.AsyncFactory;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * 登录校验方法
  * 
@@ -34,6 +40,8 @@ public class SysLoginService
 
     @Autowired
     private RedisCache redisCache;
+    @Autowired
+    private ISysUserService userService;
 
     /**
      * 登录验证
@@ -48,6 +56,14 @@ public class SysLoginService
     {
         String verifyKey = Constants.CAPTCHA_CODE_KEY + uuid;
         String captcha = redisCache.getCacheObject(verifyKey);
+        String loginErrKey = "login_err:"+username;
+        Object err = redisCache.getCacheObject(loginErrKey);
+        int loginErrNum = redisCache.getCacheObject("loginErrNum");
+        int loginLockMinutes = redisCache.getCacheObject("loginLockMinutes");
+        int errs = 0;
+        if (err!=null){
+            errs = (int) err;
+        }
         redisCache.deleteObject(verifyKey);
         if (captcha == null)
         {
@@ -58,6 +74,15 @@ public class SysLoginService
         {
             AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, MessageUtils.message("user.jcaptcha.error")));
             throw new CaptchaException();
+        }
+        if (errs>=4){
+            AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, MessageUtils.message("user.password.retry.limit.exceed"),loginLockMinutes));
+            SysUser user = userService.selectUserByUserName(username);
+            if ("0".equals(user.getStatus())){
+                user.setStatus("1");
+                userService.updateUserStatus(user);
+            }
+            throw new CustomException("密码错误"+loginErrNum+"次,账号锁定"+loginLockMinutes+"分钟");
         }
         // 用户验证
         Authentication authentication = null;
@@ -72,6 +97,7 @@ public class SysLoginService
             if (e instanceof BadCredentialsException)
             {
                 AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, MessageUtils.message("user.password.not.match")));
+                redisCache.increment(loginErrKey,1,30,TimeUnit.MINUTES);
                 throw new UserPasswordNotMatchException();
             }
             else

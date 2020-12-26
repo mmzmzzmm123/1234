@@ -6,6 +6,7 @@ Vue.use(Router)
 /* Layout */
 import Layout from '@/layout'
 import ParentView from '@/components/ParentView';
+import build from '@/views/tool/build/index'
 
 /**
  * Note: 路由配置项
@@ -106,6 +107,11 @@ export const constantRoutes = [
       }
     ]
   },
+  {
+    path: '/tool/build/:id',
+    component:build
+  },
+
   {
     path: '/gen',
     component: Layout,

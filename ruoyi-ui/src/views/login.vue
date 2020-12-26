@@ -48,7 +48,7 @@
     </el-form>
     <!--  底部  -->
     <div class="el-login-footer">
-      <span>Copyright © 2018-2020 ruoyi.vip All Rights Reserved.</span>
+      <span>Copyright © 2020-2021 goxsoft All Rights Reserved.</span>
     </div>
   </div>
 </template>
@@ -76,7 +76,9 @@ export default {
           { required: true, trigger: "blur", message: "用户名不能为空" }
         ],
         password: [
-          { required: true, trigger: "blur", message: "密码不能为空" }
+          { required: true, trigger: "blur", message: "密码不能为空" },
+          //{min: 8, max: 16, message: '长度在 8 到 16 个字符', trigger: 'blur'},
+          //{ pattern: /^(?![^a-zA-Z]+$)(?!\D+$)/, message: '需含有数字和字母' }
         ],
         code: [{ required: true, trigger: "change", message: "验证码不能为空" }]
       },

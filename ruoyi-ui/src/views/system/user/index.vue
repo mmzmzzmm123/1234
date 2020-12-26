@@ -163,6 +163,7 @@
           >
             <template slot-scope="scope">
               <el-button
+                v-if="scope.row.userId !== 1&&scope.row.userId !== 100&&scope.row.userId !== 101&&scope.row.userId !== 102"
                 size="mini"
                 type="text"
                 icon="el-icon-edit"
@@ -170,7 +171,7 @@
                 v-hasPermi="['system:user:edit']"
               >修改</el-button>
               <el-button
-                v-if="scope.row.userId !== 1"
+                v-if="scope.row.userId !== 1&&scope.row.userId !== 100&&scope.row.userId !== 101&&scope.row.userId !== 102"
                 size="mini"
                 type="text"
                 icon="el-icon-delete"
@@ -178,6 +179,7 @@
                 v-hasPermi="['system:user:remove']"
               >删除</el-button>
               <el-button
+                v-if="scope.row.userId !== 1&&scope.row.userId !== 100&&scope.row.userId !== 101&&scope.row.userId !== 102"
                 size="mini"
                 type="text"
                 icon="el-icon-key"

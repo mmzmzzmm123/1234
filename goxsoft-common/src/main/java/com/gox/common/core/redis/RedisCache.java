@@ -35,7 +35,15 @@ public class RedisCache
     {
         redisTemplate.opsForValue().set(key, value);
     }
-
+    /**
+     * 增加数值 刷新过期时间
+     *
+     */
+    public Long increment(final String key,final int i,final Integer timeout,TimeUnit timeUnit){
+        Long res = redisTemplate.opsForValue().increment(key,i);
+        expire(key,timeout,timeUnit );
+        return res;
+    }
     /**
      * 缓存基本的对象，Integer、String、实体类等
      *
