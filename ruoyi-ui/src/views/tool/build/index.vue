@@ -287,6 +287,7 @@ export default {
       this.formData = {
         fields: JSON.parse(JSON.stringify(this.drawingList)),
         formname: this.formname,
+        id: this.id,
         ...this.formConf
       }
     },

@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.gox.common.utils.StringUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -69,18 +70,25 @@ public class FormJsonController extends BaseController
 
     /**
      * 新增表单json
+     * 修改表单
      */
     @PreAuthorize("@ss.hasPermi('system:json:add')")
-    @Log(title = "表单json", businessType = BusinessType.INSERT)
+    @Log(title = "表单管理", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody String jsonStr)
     {
         FormJson formJson = new FormJson();
         JSONObject json = JSON.parseObject(jsonStr);
         String formname = json.getString("formname");
-        json.remove("formname");
+        String id = json.getString("id");
         formJson.setFormName(formname);
         formJson.setFormData(jsonStr);
+        json.remove("formname");
+        if (StringUtils.isNotEmpty(id)){
+            formJson.setId(Long.valueOf(id));
+            json.remove("id");
+            toAjax(formJsonService.updateFormJson(formJson));
+        }
         return toAjax(formJsonService.insertFormJson(formJson));
     }
     /**
