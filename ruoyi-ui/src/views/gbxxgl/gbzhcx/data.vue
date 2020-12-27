@@ -1,6 +1,7 @@
 <template>
   <div class="app-container">
-    <el-form ref="form" :model="form" label-width="130px">
+    <h1 class="title">干部个人信息</h1>
+    <el-form ref="form" :model="form" label-width="130px" v-if="false">
       <el-row :gutter="15">
         <el-col :span="12">
           <el-form-item label="干部姓名" prop="name">
@@ -492,7 +493,229 @@
         </el-col>
       </el-row>
     </el-form>
-
+    <div class="table-con">
+      <table class="table">
+        <tr>
+          <td>
+            <div class="flex cell">
+              <span>干部姓名：</span>
+              <span>{{form.name}}</span>
+            </div>
+          </td>
+          <td>
+            <div class="flex cell">
+              <span>干部性别：</span>
+              <span>{{filter(form.xb, xbOptions)}}</span>
+            </div>
+          </td>
+          <td>
+            <div class="flex cell">
+              <span>干部民族：</span>
+              <span>{{filter(form.mz, mzOptions)}}</span>
+            </div>
+          </td>
+          <td>
+            <div class="flex cell">
+              <span>第一学历：</span>
+              <span>{{filter(form.dyxl, dyxlOptions)}}</span>
+            </div>
+          </td>
+          <td>
+            <div class="flex cell">
+              <span>干部学历：</span>
+              <span>{{filter(form.xl, xlOptions)}}</span>
+            </div>
+          </td>
+          <td>
+            <div class="flex cell">
+              <span>干部学位：</span>
+              <span>{{filter(form.xw, xwOptions)}}</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="flex cell">
+              <span>干部职称：</span>
+              <span>{{filter(form.zc, zcOptions)}}</span>
+            </div>
+          </td>
+          <td colspan="2">
+            <div class="flex cell">
+              <span>干部籍贯：</span>
+              <span>{{diglogForm.province}}{{diglogForm.city}}{{diglogForm.area}}</span>
+            </div>
+          </td>
+          <td colspan="2">
+            <div class="flex cell">
+              <span>干部出生地：</span>
+              <span>{{diglogForm1.province}}{{diglogForm1.city}}{{diglogForm1.area}}</span>
+            </div>
+          </td>
+          <td>
+            <div class="flex cell">
+              <span>手机号码：</span>
+              <span>{{form.phone}}</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="flex cell">
+              <span>单位名称：</span>
+              <span>{{filterDy(form.deptId, deptOptions)}}</span>
+            </div>
+          </td>
+          <td colspan="2">
+            <div class="flex cell">
+              <span>单位地址：</span>
+              <span>{{form.dwdz}}</span>
+            </div>
+          </td>
+          <td colspan="2">
+            <div class="flex cell">
+              <span>家庭住址：</span>
+              <span>{{form.jtzz}}</span>
+            </div>
+          </td>
+          <td>
+            <div class="flex cell">
+              <span>毕业院校：</span>
+              <span>{{form.byyx}}</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="flex cell">
+              <span>教育类型：</span>
+              <span>{{filter(form.jylx, jylxOptions)}}</span>
+            </div>
+          </td>
+          <td colspan="2">
+            <div class="flex cell">
+              <span>身份证号：</span>
+              <span>{{form.sfzh}}</span>
+            </div>
+          </td>
+          <td>
+            <div class="flex cell">
+              <span>出生日期：</span>
+              <span>{{form.csrq}}</span>
+            </div>
+          </td>
+          <td>
+            <div class="flex cell">
+              <span>婚姻状况：</span>
+              <span>{{filter(form.hyzk, hyzkOptions)}}</span>
+            </div>
+          </td>
+          <td>
+            <div class="flex cell">
+              <span>政治面貌：</span>
+              <span>{{filter(form.zzmm, zzmmOptions)}}</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="flex cell">
+              <span>入党时间：</span>
+              <span>{{form.rdsj}}</span>
+            </div>
+          </td>
+          <td>
+            <div class="flex cell">
+              <span>任教学科：</span>
+              <span>{{filter(form.rjxk, rjxkOptions)}}</span>
+            </div>
+          </td>
+          <td>
+            <div class="flex cell">
+              <span>健康状况：</span>
+              <span>{{filter(form.jkzk, jkzkOptions)}}</span>
+            </div>
+          </td>
+          <td>
+            <div class="flex cell">
+              <span>能否开车：</span>
+              <span>{{filter(form.nfkc, nfkcOptions)}}</span>
+            </div>
+          </td>
+          <td>
+            <div class="flex cell">
+              <span>驾照持有情况：</span>
+              <span>{{filter(form.jzcyqk, jzcyqkOptions)}}</span>
+            </div>
+          </td>
+          <td>
+            <div class="flex cell">
+              <span>现任行政职务：</span>
+              <span>{{filter(form.xrxzzw, xrxzzwOptions)}}</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="flex cell">
+              <span>现任党内职务：</span>
+              <span>{{filter(form.xrdnzw, xrdnzwOptions)}}</span>
+            </div>
+          </td>
+          <td>
+            <div class="flex cell">
+              <span>现任群团职务：</span>
+              <span>{{filter(form.xrqtzw, xrqtzwOptions)}}</span>
+            </div>
+          </td>
+          <td>
+            <div class="flex cell">
+              <span>任现职务年月：</span>
+              <span>{{form.rxzwny}}</span>
+            </div>
+          </td>
+          <td>
+            <div class="flex cell">
+              <span>现任校长职级：</span>
+              <span>{{filter(form.xrxzzj, xrxzzjOptions)}}</span>
+            </div>
+          </td>
+          <td>
+            <div class="flex cell">
+              <span>校长职级确定年月：</span>
+              <span>{{form.xzzjqdny}}</span>
+            </div>
+          </td>
+          <td>
+            <div class="flex cell">
+              <span>是否后备干部：</span>
+              <span>{{filter(form.sfhbgb, sfhbgbOptions)}}</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="flex cell">
+              <span>后备干部确定年月：</span>
+              <span>{{form.hbgbqdny}}</span>
+            </div>
+          </td>
+          <td>
+            <div class="flex cell">
+              <span>参加工作年月：</span>
+              <span>{{form.cjgzny}}</span>
+            </div>
+          </td>
+          <td colspan="4">
+            <div class="flex cell">
+              <span>办公室电话：</span>
+              <span>{{form.bgsdh}}</span>
+            </div>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <!-- END -->
     <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
       <el-tab-pane label="任免情况" name="first">
         <el-table v-loading="loading" :data="gbxrzwList">
@@ -933,7 +1156,6 @@
             label="考核学年"
             align="center"
             prop="xn"
-            :formatter="xnFormat"
           />
           <el-table-column
             label="考核结果"
@@ -959,7 +1181,6 @@
             label="考核学年"
             align="center"
             prop="xn"
-            :formatter="xnFormat"
           />
           <el-table-column label="技术职务" align="center" prop="jszw" />
           <el-table-column label="任职时间" align="center" prop="rzsj">
@@ -1164,6 +1385,14 @@ export default {
         gbid: null,
       },
     };
+  },
+  computed: {
+    filter() {
+      return (val, options) => options.find(ele => ele.dictValue === val) ? options.find(ele => ele.dictValue === val).dictLabel : '--'
+    },
+    filterDy() {
+      return (val, options) => options.find(ele => ele.deptId === val) ? options.find(ele => ele.deptId === val).deptName : '--'
+    },
   },
   components: {
     //省市区三级联动全局组件
@@ -1697,10 +1926,40 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.title {
+  text-align: center;
+  font-weight: bold;
+  font-size: 18px;
+  padding: 0 0 10px;
+}
 .el-select {
   width: 100%;
 }
 .my-date-picker {
   width: 100%;
+}
+.table-con {
+  overflow: hidden;
+  overflow-x: auto;
+  margin-bottom: 40px;
+}
+.table {
+  width: 100%;
+  min-width: 1100px;
+  border-collapse:collapse;
+  border:none;
+  tr > td {
+    padding: 8px 0;
+    border:solid #dfe6ec 1px;
+    .cell {
+      word-break: break-all;
+      line-height: 23px;
+      padding: 0 5px;
+      font-size: 14px;
+      span:nth-of-type(2) {
+        color: #666;
+      }
+    }
+  }
 }
 </style>
