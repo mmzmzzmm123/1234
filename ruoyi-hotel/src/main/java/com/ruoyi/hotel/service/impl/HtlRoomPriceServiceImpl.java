@@ -12,7 +12,7 @@ import com.ruoyi.hotel.service.IHtlRoomPriceService;
  * 房间价格Service业务层处理
  * 
  * @author sucheng
- * @date 2020-11-22
+ * @date 2020-12-24
  */
 @Service
 public class HtlRoomPriceServiceImpl implements IHtlRoomPriceService 
@@ -23,13 +23,13 @@ public class HtlRoomPriceServiceImpl implements IHtlRoomPriceService
     /**
      * 查询房间价格
      * 
-     * @param roomRateId 房间价格ID
+     * @param roomTypeId 房间价格ID
      * @return 房间价格
      */
     @Override
-    public HtlRoomPrice selectHtlRoomPriceById(Long roomRateId)
+    public HtlRoomPrice selectHtlRoomPriceById(Long roomTypeId)
     {
-        return htlRoomPriceMapper.selectHtlRoomPriceById(roomRateId);
+        return htlRoomPriceMapper.selectHtlRoomPriceById(roomTypeId);
     }
 
     /**
@@ -73,24 +73,24 @@ public class HtlRoomPriceServiceImpl implements IHtlRoomPriceService
     /**
      * 批量删除房间价格
      * 
-     * @param roomRateIds 需要删除的房间价格ID
+     * @param roomTypeIds 需要删除的房间价格ID
      * @return 结果
      */
     @Override
-    public int deleteHtlRoomPriceByIds(Long[] roomRateIds)
+    public int deleteHtlRoomPriceByIds(Long[] roomTypeIds)
     {
-        return htlRoomPriceMapper.deleteHtlRoomPriceByIds(roomRateIds);
+        return htlRoomPriceMapper.deleteHtlRoomPriceByIds(roomTypeIds);
     }
 
     /**
      * 删除房间价格信息
      * 
-     * @param roomRateId 房间价格ID
+     * @param roomTypeId 房间价格ID
      * @return 结果
      */
     @Override
-    public int deleteHtlRoomPriceById(Long roomRateId)
+    public int deleteHtlRoomPriceById(Long roomTypeId)
     {
-        return htlRoomPriceMapper.deleteHtlRoomPriceById(roomRateId);
+        return htlRoomPriceMapper.deleteHtlRoomPriceById(roomTypeId);
     }
 }

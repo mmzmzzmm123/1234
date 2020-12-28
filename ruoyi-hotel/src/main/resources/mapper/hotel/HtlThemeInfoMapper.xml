@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.hotel.mapper.HtlThemeInfoMapper">
+    
+    <resultMap type="HtlThemeInfo" id="HtlThemeInfoResult">
+        <result property="themeId"    column="theme_id"    />
+        <result property="themeName"    column="theme_name"    />
+        <result property="themeLayout"    column="theme_layout"    />
+        <result property="themePicturePath"    column="theme_picture_path"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectHtlThemeInfoVo">
+        select theme_id, theme_name, theme_layout, theme_picture_path, create_by, create_time, update_by, update_time from htl_theme_info
+    </sql>
+
+    <select id="selectHtlThemeInfoList" parameterType="HtlThemeInfo" resultMap="HtlThemeInfoResult">
+        <include refid="selectHtlThemeInfoVo"/>
+        <where>  
+            <if test="themeName != null  and themeName != ''"> and theme_name like concat('%', #{themeName}, '%')</if>
+            <if test="themeLayout != null "> and theme_layout = #{themeLayout}</if>
+            <if test="themePicturePath != null  and themePicturePath != ''"> and theme_picture_path = #{themePicturePath}</if>
+        </where>
+    </select>
+    
+    <select id="selectHtlThemeInfoById" parameterType="Long" resultMap="HtlThemeInfoResult">
+        <include refid="selectHtlThemeInfoVo"/>
+        where theme_id = #{themeId}
+    </select>
+        
+    <insert id="insertHtlThemeInfo" parameterType="HtlThemeInfo" useGeneratedKeys="true" keyProperty="themeId">
+        insert into htl_theme_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="themeName != null">theme_name,</if>
+            <if test="themeLayout != null">theme_layout,</if>
+            <if test="themePicturePath != null">theme_picture_path,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="themeName != null">#{themeName},</if>
+            <if test="themeLayout != null">#{themeLayout},</if>
+            <if test="themePicturePath != null">#{themePicturePath},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateHtlThemeInfo" parameterType="HtlThemeInfo">
+        update htl_theme_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="themeName != null">theme_name = #{themeName},</if>
+            <if test="themeLayout != null">theme_layout = #{themeLayout},</if>
+            <if test="themePicturePath != null">theme_picture_path = #{themePicturePath},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where theme_id = #{themeId}
+    </update>
+
+    <delete id="deleteHtlThemeInfoById" parameterType="Long">
+        delete from htl_theme_info where theme_id = #{themeId}
+    </delete>
+
+    <delete id="deleteHtlThemeInfoByIds" parameterType="String">
+        delete from htl_theme_info where theme_id in 
+        <foreach item="themeId" collection="array" open="(" separator="," close=")">
+            #{themeId}
+        </foreach>
+    </delete>
+    
+</mapper>

@@ -1,6 +1,7 @@
 package com.ruoyi.web.controller.hotel;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,7 @@ import io.swagger.annotations.ApiOperation;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.file.FileUploadUtils;
+import com.ruoyi.common.utils.file.FileUtils;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
 
@@ -144,11 +146,13 @@ public class HtlRoomPictureController extends BaseController
             String pic = FileUploadUtils.upload(RuoYiConfig.getAvatarPath(), file);
             SysUser sysUser = SecurityUtils.getLoginUser().getUser();
             HtlRoomPicture htlRoomPicture =  htlRoomPictureService.selectHtlRoomPictureById(pictureId);
-//    		htlRoomPicture.setPictureName(file.getOriginalFilename());
+	    	FileUtils.deleteFile(htlRoomPicture.getPicturePath());
+
     		htlRoomPicture.setPicturePath(pic);
     		htlRoomPicture.setUpdateBy(sysUser.getUserName());
     		htlRoomPicture.setUpdateTime(DateUtils.getNowDate());
     		htlRoomPictureService.updateHtlRoomPicture(htlRoomPicture);
+    		
 			return AjaxResult.success(htlRoomPicture);
         }
     	 return AjaxResult.error("上传图片异常，请联系管理员");
@@ -180,32 +184,53 @@ public class HtlRoomPictureController extends BaseController
     }
     
     /**
-     * 编辑图片名称和序号
+     * 重命名图片名称
      */
-    @ApiOperation("编辑图片名称和序号")
+    @ApiOperation("重命名图片名称")
     @PreAuthorize("@ss.hasPermi('hotel:roomPicture:edit')")
     @Log(title = "房间图片", businessType = BusinessType.UPDATE)
-    @PostMapping(value = "/edit")
+    @PostMapping(value = "/rename")
 	@ApiImplicitParams({ 
 		@ApiImplicitParam(name = "pictureId", value = "图片ID", required = true, dataType = "long"),
-		@ApiImplicitParam(name = "pictureName", value = "图片名称", required = true, dataType = "String"),
-		@ApiImplicitParam(name = "orderNum", value = "图片序号", required = true, dataType = "int") 
+		@ApiImplicitParam(name = "pictureName", value = "图片名称", required = true, dataType = "String")
 	})
-	public AjaxResult edit(Long pictureId, String pictureName, Integer orderNum) throws IOException
-    {
+	public AjaxResult rename(Long pictureId, String pictureName) throws IOException {
 		HtlRoomPicture htlRoomPicture = htlRoomPictureService.selectHtlRoomPictureById(pictureId);
 		if (null == htlRoomPicture) {
 			return AjaxResult.error("未找到照片信息，请检查传入参数");
 		}
 		SysUser sysUser = SecurityUtils.getLoginUser().getUser();
 		htlRoomPicture.setPictureName(pictureName);
-		htlRoomPicture.setOrderNum(orderNum);
 		htlRoomPicture.setUpdateBy(sysUser.getUserName());
 		htlRoomPicture.setUpdateTime(DateUtils.getNowDate());
 		htlRoomPictureService.updateHtlRoomPicture(htlRoomPicture);
 		return AjaxResult.success(htlRoomPicture);
-    }
+	}
 
+	/**
+	 * 排列图片顺序
+	 */
+	@ApiOperation("排列图片顺序")
+	@PreAuthorize("@ss.hasPermi('hotel:roomPicture:edit')")
+	@Log(title = "房间图片", businessType = BusinessType.UPDATE)
+	@PostMapping(value = "/order")
+	public AjaxResult order(Long[] pictureIds) throws IOException {
+		List<HtlRoomPicture> result = new ArrayList<HtlRoomPicture>();
+		for (int i = 0; i < pictureIds.length; i++) {
+			HtlRoomPicture htlRoomPicture = htlRoomPictureService.selectHtlRoomPictureById(pictureIds[i]);
+			if (null == htlRoomPicture) {
+				return AjaxResult.error("未找到照片信息，请检查传入参数");
+			}
+			SysUser sysUser = SecurityUtils.getLoginUser().getUser();
+			htlRoomPicture.setOrderNum(i);
+			htlRoomPicture.setUpdateBy(sysUser.getUserName());
+			htlRoomPicture.setUpdateTime(DateUtils.getNowDate());
+			htlRoomPictureService.updateHtlRoomPicture(htlRoomPicture);
+			result.add(htlRoomPicture);
+		}
+		return AjaxResult.success(result);
+	}
+    
     /**
      * 删除房间图片
      */
@@ -215,6 +240,10 @@ public class HtlRoomPictureController extends BaseController
 	@DeleteMapping("/delete")
     public AjaxResult remove(Long pictureId)
     {
+    	HtlRoomPicture htlRoomPicture = htlRoomPictureService.selectHtlRoomPictureById(pictureId);
+		if (null != htlRoomPicture) {
+	    	FileUtils.deleteFile(htlRoomPicture.getPicturePath());
+		}
         return toAjax(htlRoomPictureService.deleteHtlRoomPictureById(pictureId));
     }
 }
