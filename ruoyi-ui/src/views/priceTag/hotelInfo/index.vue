@@ -1,7 +1,7 @@
 <!--
  * @Author: pengyu
  * @Date: 2020-12-07 22:33:08
- * @LastEditTime: 2020-12-24 20:40:00
+ * @LastEditTime: 2020-12-28 22:57:58
  * @LastEditors: Please set LastEditors
  * @Description: 酒店信息
  * @FilePath: \RuoYi-Vue\ruoyi-ui\src\views\priceTag\hotelInfo.vue
@@ -44,10 +44,6 @@
       <el-form-item label="所在城市">
         <el-input v-model="form.name" maxLength="50"></el-input>
         <div class="tips">酒店所在城市</div>
-      </el-form-item>
-      <el-form-item label="所在区域">
-        <el-input v-model="form.name" maxLength="50"></el-input>
-        <div class="tips">酒店所在具体区域或想展示天气预报的景点，为了更精确预报天气</div>
       </el-form-item>
       <el-form-item label="二维码">
         <el-upload

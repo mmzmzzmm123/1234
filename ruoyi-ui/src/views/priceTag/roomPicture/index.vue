@@ -1,7 +1,7 @@
 <!--
  * @Author: pengyu
  * @Date: 2020-12-12 21:00:39
- * @LastEditTime: 2020-12-24 20:46:03
+ * @LastEditTime: 2020-12-28 23:34:54
  * @LastEditors: Please set LastEditors
  * @Description: 房型图片
  * @FilePath: \RuoYi-Vue\ruoyi-ui\src\views\priceTag\roomPicture\index.vue
@@ -38,7 +38,6 @@
         action="789"
         :show-file-list="false"
         accept=".png,.jpg,.jpeg"
-        :on-success="handleUploadSuccess"
         :before-upload="beforeUpload">
           <i class="el-icon-plus avatar-uploader-icon"></i>
       </el-upload>
@@ -148,10 +147,6 @@ name: 'RoomPicture',
         const {data} = res;
         this.fileList.push(data);
       });
-    },
-    //上传成功
-    handleUploadSuccess(response, file, fileList){
-
     },
     //替换图片
     replacePic(index){
@@ -317,7 +312,7 @@ name: 'RoomPicture',
   }
   .pic-alert{
     .btn-form-item{
-      text-align: center;
+      text-align: right;
     }
   }
 }

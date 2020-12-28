@@ -1,13 +1,14 @@
 /*
  * @Author: pengyu
  * @Date: 2020-12-08 23:22:30
- * @LastEditTime: 2020-12-27 16:37:10
+ * @LastEditTime: 2020-12-28 23:39:17
  * @LastEditors: Please set LastEditors
  * @Description: 房价牌管理-接口
  * @FilePath: \RuoYi-Vue\ruoyi-ui\src\api\priceTag\index.js
  */
 import request from '@/utils/request'
 
+/*  酒店信息start   */
 export function downloadFile(params){
   return request({
     url: '/common/download',
@@ -34,11 +35,11 @@ export function saveHotelInfo(params) {
 }
 
 //上传酒店LOGO
-export function uploadLogo(params, headers){
+export function uploadLogo(data, headers){
   return request({
     url: '/hotel/hotelInfo/logo',
     method: 'post',
-    params,
+    data,
     headers
   })
 }
@@ -58,7 +59,9 @@ export function deleteQrCode(){
     method: 'post'
   })
 }
+/*  酒店信息end   */
 
+/*  房价类别start  */
 //查询房价类型
 export function getPriceType() {
   return request({
@@ -102,7 +105,9 @@ export function switchPriceType(params) {
     params
   })
 }
+/*  房价类别end  */
 
+/*  房型价格start  */
 //查询房间价格列表
 export function getRoomPriceList() {
   return request({
@@ -112,20 +117,20 @@ export function getRoomPriceList() {
 }
 
 //新增房间价格
-export function addRoomPrice(params) {
+export function addRoomPrice(data) {
   return request({
     url: '/hotel/roomPrice/add',
     method: 'post',
-    params
+    data
   })
 }
 
 //修改房间价格
-export function editRoomPrice(params) {
+export function editRoomPrice(data) {
   return request({
     url: '/hotel/roomPrice/edit',
     method: 'put',
-    params
+    data
   })
 }
 
@@ -137,7 +142,9 @@ export function deleteRoomPrice(params) {
     params
   })
 }
+/*  房型价格end  */
 
+/*  图片展示start  */
 //获取房间图片信息
 export function getRoomPicture() {
   return request({
@@ -176,7 +183,7 @@ export function enableRoomPicture(params) {
 //修改图片名称序号
 export function editRoomPicture(params) {
   return request({
-    url: '/hotel/roomPicture/edit',
+    url: '/hotel/roomPicture/rename',
     method: 'post',
     params
   })
@@ -190,5 +197,53 @@ export function orderRoomPicture(params) {
     params
   })
 }
+/*  图片展示end  */
+
+/*  主题设置start  */
+//获取酒店所有主题
+export function queryThemeSet() {
+  return request({
+    url: '/hotel/theme/list',
+    method: 'get'
+  })
+}
+
+//获取酒店当前主题
+export function queryCurTheme() {
+  return request({
+    url: '/hotel/theme/query',
+    method: 'get'
+  })
+}
+
+//配置酒店主题
+export function saveThemeSet(params){
+  return request({
+    url: '/hotel/theme/config',
+    method: 'post',
+    params
+  })
+}
+
+//重命名酒店主题
+export function renameThemeSet(params){
+  return request({
+    url: '/hotel/theme/rename',
+    method: 'post',
+    params
+  })
+}
+
+//删除名酒店主题
+export function deleteThemeSet(params){
+  return request({
+    url: '/hotel/theme/delete',
+    method: 'delete',
+    params
+  })
+}
+
+/*  主题设置end  */
+
 
 

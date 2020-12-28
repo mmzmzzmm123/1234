@@ -1,7 +1,7 @@
 <!--
  * @Author: pengyu
  * @Date: 2020-12-09 22:02:59
- * @LastEditTime: 2020-12-27 17:42:25
+ * @LastEditTime: 2020-12-28 22:30:28
  * @LastEditors: Please set LastEditors
  * @Description: 房型价格
  * @FilePath: \RuoYi-Vue\ruoyi-ui\src\views\priceTag\roomPrice\index.vue
@@ -12,7 +12,7 @@
       :data="tableData"
       border
     >
-      <el-table-column prop="orderNum" label="序号" width="80"></el-table-column>
+      <el-table-column type="index" label="序号" width="80"></el-table-column>
       <el-table-column
         v-for="(itm,idx) in columnData"
         :key="idx"
@@ -125,7 +125,7 @@ export default {
       data.forEach(itm=>{
         if(itm.isVisible===0){
           _this.columnData.push({
-            field: itm.priceTypeId,
+            field: `price${itm.priceTypeId}`,
             name: itm.priceType
           });
           _this.$set(_this.roomForm, `price${itm.priceTypeId}`, "");
@@ -136,10 +136,21 @@ export default {
     },
     //查询房型价格
     queryRoomPriceList(){
+      const _this = this;
       getRoomPriceList()
       .then((res)=>{
-        this.tableData = res.rows;
-      })
+        const { data } = res;
+        //处理数据 格式
+        const arr = [];
+        data.forEach((itm) => {
+          const citm = JSON.parse(JSON.stringify(itm));
+          (itm.priceList || []).forEach((inner)=>{
+            citm[`price${inner.priceTypeId}`] = inner.roomPrice || "";
+          });
+          arr.push(citm);
+        });
+        _this.tableData = arr;
+      });
     },
     //提交
     handleSubmit(formName){
@@ -153,7 +164,7 @@ export default {
             priceList: []
           };
           for(let i in _this.roomForm){
-            if(i.includes("price")){
+            if(i.includes("price") && i !== "priceList"){
               const sp = i.split("e");
               params.priceList.push({
                 roomPrice: _this.roomForm[i],
@@ -161,15 +172,15 @@ export default {
               });
             }
           }
-          params.priceList = JSON.stringify(params.priceList);
           if(_this.isEdit){
-            editRoomPrice({roomTypeEntity: params}).then(()=>{
+            params.roomTypeId = _this.roomForm.roomTypeId;
+            editRoomPrice(params).then(()=>{
               _this.msgSuccess("修改成功");
               _this.queryRoomPriceList();
               _this.visible = false;
             });
           }else{
-            addRoomPrice({roomTypeEntity: params}).then(()=>{
+            addRoomPrice(params).then(()=>{
               _this.msgSuccess("添加成功");
               _this.queryRoomPriceList();
               _this.visible = false;
@@ -236,3 +247,4 @@ export default {
   }
 }
 </style>
+0
