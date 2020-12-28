@@ -30,7 +30,7 @@ public class BySchoolcharge extends BaseEntity {
      * 保育费
      */
     @Excel(name = "保育费")
-    private Double byf;
+    private String byf;
 
     /**
      * 伙食费
@@ -48,7 +48,7 @@ public class BySchoolcharge extends BaseEntity {
      * 保育费小班
      */
     @Excel(name = "保育费小班")
-    private Double byfX;
+    private String byfX;
 
     /**
      * 伙食费小班
@@ -60,7 +60,7 @@ public class BySchoolcharge extends BaseEntity {
      * 保育费托班
      */
     @Excel(name = "保育费托班")
-    private Double byfT;
+    private String byfT;
 
     /**
      * 伙食费托班
@@ -72,7 +72,7 @@ public class BySchoolcharge extends BaseEntity {
      * 保育费中班
      */
     @Excel(name = "保育费中班")
-    private Double byfZ;
+    private String byfZ;
 
     /**
      * 伙食费中班
@@ -88,6 +88,7 @@ public class BySchoolcharge extends BaseEntity {
     private String classid;
     private Long days;
     private String bjtype;
+    private Double zj;
 
     public void setId(Long id) {
         this.id = id;
@@ -105,11 +106,11 @@ public class BySchoolcharge extends BaseEntity {
         return deptId;
     }
 
-    public void setByf(Double byf) {
+    public void setByf(String byf) {
         this.byf = byf;
     }
 
-    public Double getByf() {
+    public String getByf() {
         return byf;
     }
 
@@ -129,19 +130,11 @@ public class BySchoolcharge extends BaseEntity {
         return createUserid;
     }
 
-    public SysDept getDept() {
-        return dept;
-    }
-
-    public void setDept(SysDept dept) {
-        this.dept = dept;
-    }
-
-    public void setByfX(Double byfX) {
+    public void setByfX(String byfX) {
         this.byfX = byfX;
     }
 
-    public Double getByfX() {
+    public String getByfX() {
         return byfX;
     }
 
@@ -153,11 +146,11 @@ public class BySchoolcharge extends BaseEntity {
         return hsfX;
     }
 
-    public void setByfT(Double byfT) {
+    public void setByfT(String byfT) {
         this.byfT = byfT;
     }
 
-    public Double getByfT() {
+    public String getByfT() {
         return byfT;
     }
 
@@ -169,11 +162,11 @@ public class BySchoolcharge extends BaseEntity {
         return hsfT;
     }
 
-    public void setByfZ(Double byfZ) {
+    public void setByfZ(String byfZ) {
         this.byfZ = byfZ;
     }
 
-    public Double getByfZ() {
+    public String getByfZ() {
         return byfZ;
     }
 
@@ -183,6 +176,14 @@ public class BySchoolcharge extends BaseEntity {
 
     public Double getHsfZ() {
         return hsfZ;
+    }
+
+    public SysDept getDept() {
+        return dept;
+    }
+
+    public void setDept(SysDept dept) {
+        this.dept = dept;
     }
 
     public String getMonth() {
@@ -225,6 +226,14 @@ public class BySchoolcharge extends BaseEntity {
         this.bjtype = bjtype;
     }
 
+    public void setZj(Double zj) {
+        this.zj = zj;
+    }
+
+    public Double getZj() {
+        return zj;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
@@ -246,6 +255,7 @@ public class BySchoolcharge extends BaseEntity {
                 .append("classid", getClassid())
                 .append("bjtype", getBjtype())
                 .append("days", getDays())
+                .append("zj", getZj())
                 .toString();
     }
 }

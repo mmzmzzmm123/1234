@@ -53,7 +53,65 @@ public class BySchoolchargeController extends BaseController {
     public TableDataInfo childlist(BySchoolcharge bySchoolcharge) {
         startPage();
         List<BySchoolcharge> list = bySchoolchargeService.selectByChildchargeList(bySchoolcharge);
+        if (list != null && list.size() > 0) {
+            for (int i = 0; i < list.size(); i++) {
+                list.get(i).setZj(getZongji(list.get(i)));
+            }
+        }
         return getDataTable(list);
+    }
+
+    //根据每条幼儿统计数计算总费用
+    public double getZongji(BySchoolcharge bySchoolcharge) {
+        double d = 0;
+        //幼儿出勤天数
+        Long days = bySchoolcharge.getDays();
+        //班级类型
+        String classType = bySchoolcharge.getBjtype();
+        if (classType.equals("1")) {
+            //托班
+            //托班收费标准
+            String sfbz = bySchoolcharge.getByfT();
+            d = getTuofei(sfbz, days, bySchoolcharge.getHsfT());
+        } else if (classType.equals("2")) {
+            //小班
+            //小班收费标准
+            String sfbz = bySchoolcharge.getByfX();
+            d = getTuofei(sfbz, days, bySchoolcharge.getHsfX());
+        } else if (classType.equals("3")) {
+            //中班
+            //中班收费标准
+            String sfbz = bySchoolcharge.getByfZ();
+            d = getTuofei(sfbz, days, bySchoolcharge.getHsfZ());
+        } else if (classType.equals("4")) {
+            //大班
+            //大班收费标准
+            String sfbz = bySchoolcharge.getByf();
+            d = getTuofei(sfbz, days, bySchoolcharge.getHsf());
+        } else {
+
+        }
+        return d;
+    }
+
+    //根据班级收费标准、幼儿出勤天数、伙食费收费标准 计算幼儿总费用
+    public double getTuofei(String tfsfbz, Long days, Double hsf) {
+        double d = 0;
+        //1-3:100;4-10:500;11-31:1000
+        //分割各个阶段收费
+        String[] arrList = tfsfbz.split(";");
+        for (int i = 0; i < arrList.length; i++) {
+            //分割阶段收费
+            String[] arr = arrList[i].split(":");
+            Long one = Long.valueOf(arr[0].split("-")[0]);
+            Long two = Long.valueOf(arr[0].split("-")[1]);
+            if (days >= one && days <= two) {
+                d = days * hsf + Double.valueOf(arr[1]);
+                break;
+            }
+        }
+
+        return d;
     }
 
     /**

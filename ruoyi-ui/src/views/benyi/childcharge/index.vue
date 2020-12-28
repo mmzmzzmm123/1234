@@ -50,7 +50,9 @@
       </el-row>
     </el-form>
     <div ref="printMe" class="print-me">
-      <h2 style="text-align: center">{{ this.queryParams.month }}月收费明细</h2>
+      <h2 style="text-align: center">
+        {{ this.className }}收费明细({{ this.queryParams.month }})
+      </h2>
       <el-table v-loading="loading" border :data="childchargeList">
         <!-- <el-table-column type="selection" width="55" align="center" /> -->
         <el-table-column
@@ -74,11 +76,7 @@
           align="center"
           :formatter="mingxiFormat"
         />
-        <el-table-column
-          label="总计"
-          align="center"
-          :formatter="zongjiFormat"
-        />
+        <el-table-column label="总计" align="center" prop="zj" />
         <!-- <el-table-column label="保育费（大班）/月" align="center" prop="byf" />
       <el-table-column label="伙食费（大班）/天" align="center" prop="hsf" />
       <el-table-column label="保育费（中班）/月" align="center" prop="byfZ" />
@@ -108,6 +106,7 @@ export default {
   name: "Schoolcharge",
   data() {
     return {
+      className: "",
       // 遮罩层
       loading: true,
       // 选中数组
@@ -201,24 +200,6 @@ export default {
         return "";
       }
     },
-    //翻译总计
-    zongjiFormat(row, column) {
-      if (row.bjtype == "1") {
-        //托班
-        return row.byfT + row.days * row.hsfT;
-      } else if (row.bjtype == "2") {
-        //小班
-        return row.byfX + row.days * row.hsfX;
-      } else if (row.bjtype == "3") {
-        //中班
-        return row.byfZ + row.days * row.hsfZ;
-      } else if (row.bjtype == "4") {
-        //大班
-        return row.byf + +(row.days * row.hsf);
-      } else {
-        return "";
-      }
-    },
     // 班级类型--字典状态字典翻译
     bjtypeFormat(row, column) {
       return this.selectDictLabel(this.bjtypeOptions, row.bjtype);
@@ -236,10 +217,23 @@ export default {
       });
       return actions.join("");
     },
+    classTitle(classid) {
+      // return this.selectDictLabel(this.classOptions, row.classid);
+      var actions = [];
+      var datas = this.classOptions;
+      Object.keys(datas).map((key) => {
+        if (datas[key].bjbh == "" + classid) {
+          actions.push(datas[key].bjmc);
+          return false;
+        }
+      });
+      return actions.join("");
+    },
     getClassList() {
       listClass(null).then((response) => {
         this.classOptions = response.rows;
         this.queryParams.classid = response.rows[0].bjbh;
+        this.className = response.rows[0].bjmc;
       });
 
       this.getList();
@@ -262,6 +256,7 @@ export default {
     /** 搜索按钮操作 */
     handleQuery() {
       this.queryParams.pageNum = 1;
+      this.className = this.classTitle(this.queryParams.classid);
       this.getList();
     },
     //打印

@@ -52,8 +52,10 @@
     <select id="selectByChildchargeList" parameterType="BySchoolcharge" resultMap="BySchoolchargeResult">
         select a.name,a.classid,
         c.bjtype,
-        (select count(*) from by_child_checkin_detail where childid=a.id and type='01' and date_format(create_time,'%Y-%m')=concat(#{month})) as days ,
-        b.id, b.dept_id, b.byf, b.hsf, b.create_userid, b.create_time,b.byf_x, b.hsf_x, b.byf_t, b.hsf_t, b.byf_z, b.hsf_z
+        (select count(*) from by_child_checkin_detail where childid=a.id and type='01' and
+        date_format(create_time,'%Y-%m')=concat(#{month})) as days ,
+        b.id, b.dept_id, b.byf, b.hsf, b.create_userid, b.create_time,b.byf_x, b.hsf_x, b.byf_t, b.hsf_t, b.byf_z,
+        b.hsf_z
         from by_child a
         left join by_class c on a.classid=c.bjbh
         left join by_schoolcharge b on a.schoolid=b.dept_id
@@ -71,28 +73,28 @@
         insert into by_schoolcharge
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="deptId != null ">dept_id,</if>
-            <if test="byf != null ">byf,</if>
+            <if test="byf != null  and byf != ''">byf,</if>
             <if test="hsf != null ">hsf,</if>
             <if test="createUserid != null ">create_userid,</if>
             <if test="createTime != null ">create_time,</if>
-            <if test="byfX != null ">byf_x,</if>
+            <if test="byfX != null  and byfX != ''">byf_x,</if>
             <if test="hsfX != null ">hsf_x,</if>
-            <if test="byfT != null ">byf_t,</if>
+            <if test="byfT != null  and byfT != ''">byf_t,</if>
             <if test="hsfT != null ">hsf_t,</if>
-            <if test="byfZ != null ">byf_z,</if>
+            <if test="byfZ != null  and byfZ != ''">byf_z,</if>
             <if test="hsfZ != null ">hsf_z,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="deptId != null ">#{deptId},</if>
-            <if test="byf != null ">#{byf},</if>
+            <if test="byf != null  and byf != ''">#{byf},</if>
             <if test="hsf != null ">#{hsf},</if>
             <if test="createUserid != null ">#{createUserid},</if>
             <if test="createTime != null ">#{createTime},</if>
-            <if test="byfX != null ">#{byfX},</if>
+            <if test="byfX != null  and byfX != ''">#{byfX},</if>
             <if test="hsfX != null ">#{hsfX},</if>
-            <if test="byfT != null ">#{byfT},</if>
+            <if test="byfT != null  and byfT != ''">#{byfT},</if>
             <if test="hsfT != null ">#{hsfT},</if>
-            <if test="byfZ != null ">#{byfZ},</if>
+            <if test="byfZ != null  and byfZ != ''">#{byfZ},</if>
             <if test="hsfZ != null ">#{hsfZ},</if>
         </trim>
     </insert>
@@ -101,15 +103,15 @@
         update by_schoolcharge
         <trim prefix="SET" suffixOverrides=",">
             <if test="deptId != null ">dept_id = #{deptId},</if>
-            <if test="byf != null ">byf = #{byf},</if>
+            <if test="byf != null  and byf != ''">byf = #{byf},</if>
             <if test="hsf != null ">hsf = #{hsf},</if>
             <if test="createUserid != null ">create_userid = #{createUserid},</if>
             <if test="createTime != null ">create_time = #{createTime},</if>
-            <if test="byfX != null ">byf_x = #{byfX},</if>
+            <if test="byfX != null  and byfX != ''">byf_x = #{byfX},</if>
             <if test="hsfX != null ">hsf_x = #{hsfX},</if>
-            <if test="byfT != null ">byf_t = #{byfT},</if>
+            <if test="byfT != null  and byfT != ''">byf_t = #{byfT},</if>
             <if test="hsfT != null ">hsf_t = #{hsfT},</if>
-            <if test="byfZ != null ">byf_z = #{byfZ},</if>
+            <if test="byfZ != null  and byfZ != ''">byf_z = #{byfZ},</if>
             <if test="hsfZ != null ">hsf_z = #{hsfZ},</if>
         </trim>
         where id = #{id}

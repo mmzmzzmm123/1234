@@ -86,10 +86,10 @@
     <el-dialog :title="title" :visible.sync="open" class="v-dialog">
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
         <el-form-item label="保育费大班(月)" prop="byf">
-          <el-input-number
+          <el-input
             v-model="form.byf"
             :precision="2"
-            placeholder="请输入保育费"
+            placeholder="请输入保育费(1-10:100;11-20:200;21-31:300)"
           />
         </el-form-item>
         <el-form-item label="伙食费大班(天)" prop="hsf">
@@ -100,10 +100,10 @@
           />
         </el-form-item>
         <el-form-item label="保育费中班(月)" prop="byfZ">
-          <el-input-number
+          <el-input
             v-model="form.byfZ"
             :precision="2"
-            placeholder="请输入保育费"
+            placeholder="请输入保育费(1-10:100;11-20:200;21-31:300)"
           />
         </el-form-item>
         <el-form-item label="伙食费中班(天)" prop="hsfZ">
@@ -114,10 +114,10 @@
           />
         </el-form-item>
         <el-form-item label="保育费小班(月)" prop="byfX">
-          <el-input-number
+          <el-input
             v-model="form.byfX"
             :precision="2"
-            placeholder="请输入保育费"
+            placeholder="请输入保育费(1-10:100;11-20:200;21-31:300)"
           />
         </el-form-item>
         <el-form-item label="伙食费小班(天)" prop="hsfX">
@@ -128,10 +128,10 @@
           />
         </el-form-item>
         <el-form-item label="保育费拖班(月)" prop="byfT">
-          <el-input-number
+          <el-input
             v-model="form.byfT"
             :precision="2"
-            placeholder="请输入保育费"
+            placeholder="请输入保育费(1-10:100;11-20:200;21-31:300)"
           />
         </el-form-item>
         <el-form-item label="伙食费拖班(天)" prop="hsT">
