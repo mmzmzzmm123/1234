@@ -37,8 +37,8 @@ public class SysIngredientController extends BaseController
      * 查询食材列表
      */
     @PreAuthorize("@ss.hasPermi('custom:ingredient:list')")
-    @GetMapping("/list")
-    public TableDataInfo list(SysIngredient sysIngredient)
+    @PostMapping("/list")
+    public TableDataInfo list(@RequestBody SysIngredient sysIngredient)
     {
         startPage();
         List<SysIngredient> list = sysIngredientService.selectSysIngredientList(sysIngredient);
