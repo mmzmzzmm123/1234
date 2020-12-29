@@ -82,7 +82,7 @@ public class SysLoginService
                 user.setStatus("1");
                 userService.updateUserStatus(user);
             }
-            throw new CustomException("密码错误"+loginErrNum+"次,账号锁定"+loginLockMinutes+"分钟");
+            throw new CustomException("密码错误"+loginErrNum+"次,请联系管理员");
         }
         // 用户验证
         Authentication authentication = null;

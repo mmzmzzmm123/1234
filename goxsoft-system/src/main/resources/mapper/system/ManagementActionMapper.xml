@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gox.system.mapper.ManagementActionMapper">
+    
+    <resultMap type="ManagementAction" id="ManagementActionResult">
+        <result property="actionIdentifier"    column="action_identifier"    />
+        <result property="imageId"    column="image_id"    />
+        <result property="managementActivity"    column="management_activity"    />
+        <result property="actionTime"    column="action_time"    />
+        <result property="relatedEntitiesIdentifier"    column="related_entities_identifier"    />
+        <result property="managementActionDescription"    column="management_action_description"    />
+    </resultMap>
+
+    <sql id="selectManagementActionVo">
+        select action_identifier, image_id, management_activity, action_time, related_entities_identifier, management_action_description from management_action
+    </sql>
+
+    <select id="selectManagementActionList" parameterType="ManagementAction" resultMap="ManagementActionResult">
+        <include refid="selectManagementActionVo"/>
+        <where>  
+            <if test="imageId != null "> and image_id = #{imageId}</if>
+            <if test="managementActivity != null  and managementActivity != ''"> and management_activity = #{managementActivity}</if>
+            <if test="actionTime != null  and actionTime != ''"> and action_time = #{actionTime}</if>
+            <if test="relatedEntitiesIdentifier != null "> and related_entities_identifier = #{relatedEntitiesIdentifier}</if>
+            <if test="managementActionDescription != null  and managementActionDescription != ''"> and management_action_description = #{managementActionDescription}</if>
+        </where>
+    </select>
+    
+    <select id="selectManagementActionById" parameterType="Long" resultMap="ManagementActionResult">
+        <include refid="selectManagementActionVo"/>
+        where action_identifier = #{actionIdentifier}
+    </select>
+        
+    <insert id="insertManagementAction" parameterType="ManagementAction">
+        insert into management_action
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="actionIdentifier != null">action_identifier,</if>
+            <if test="imageId != null">image_id,</if>
+            <if test="managementActivity != null and managementActivity != ''">management_activity,</if>
+            <if test="actionTime != null and actionTime != ''">action_time,</if>
+            <if test="relatedEntitiesIdentifier != null">related_entities_identifier,</if>
+            <if test="managementActionDescription != null and managementActionDescription != ''">management_action_description,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="actionIdentifier != null">#{actionIdentifier},</if>
+            <if test="imageId != null">#{imageId},</if>
+            <if test="managementActivity != null and managementActivity != ''">#{managementActivity},</if>
+            <if test="actionTime != null and actionTime != ''">#{actionTime},</if>
+            <if test="relatedEntitiesIdentifier != null">#{relatedEntitiesIdentifier},</if>
+            <if test="managementActionDescription != null and managementActionDescription != ''">#{managementActionDescription},</if>
+         </trim>
+    </insert>
+
+    <update id="updateManagementAction" parameterType="ManagementAction">
+        update management_action
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="imageId != null">image_id = #{imageId},</if>
+            <if test="managementActivity != null and managementActivity != ''">management_activity = #{managementActivity},</if>
+            <if test="actionTime != null and actionTime != ''">action_time = #{actionTime},</if>
+            <if test="relatedEntitiesIdentifier != null">related_entities_identifier = #{relatedEntitiesIdentifier},</if>
+            <if test="managementActionDescription != null and managementActionDescription != ''">management_action_description = #{managementActionDescription},</if>
+        </trim>
+        where action_identifier = #{actionIdentifier}
+    </update>
+
+    <delete id="deleteManagementActionById" parameterType="Long">
+        delete from management_action where action_identifier = #{actionIdentifier}
+    </delete>
+
+    <delete id="deleteManagementActionByIds" parameterType="String">
+        delete from management_action where action_identifier in 
+        <foreach item="actionIdentifier" collection="array" open="(" separator="," close=")">
+            #{actionIdentifier}
+        </foreach>
+    </delete>
+    
+</mapper>

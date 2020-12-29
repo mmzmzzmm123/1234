@@ -5,6 +5,7 @@ import com.gox.common.core.domain.BaseEntity;
 import com.gox.common.utils.uuid.SnowflakesTools;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.apache.ibatis.type.Alias;
 
 
 /**
@@ -12,6 +13,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * @author gox
  * @date 2020-12-25
  */
+@Alias(value = "FormJson")
 public class FormJson extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
@@ -30,11 +32,20 @@ public class FormJson extends BaseEntity
     /** 表单json */
     @Excel(name = "表单json")
     private String formData;
-
+    @Excel(name = "所属节点")
+    private String node;
     /** 删除标志 */
     private String delFlag;
 
-    public void setId(Long id) 
+    public String getNode() {
+        return node;
+    }
+
+    public void setNode(String node) {
+        this.node = node;
+    }
+
+    public void setId(Long id)
     {
         this.id = id;
     }
