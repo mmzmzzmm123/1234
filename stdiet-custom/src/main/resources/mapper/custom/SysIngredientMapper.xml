@@ -22,26 +22,79 @@
     </resultMap>
 
     <sql id="selectSysIngredientVo">
---         select id, name, type, protein_ratio, fat_ratio, carbon_ratio, area, remark, create_by, create_time, update_by, update_time from sys_ingredient
         SELECT * FROM sys_ingredient igd
-            LEFT JOIN (
+        LEFT JOIN (
             SELECT ingredient_id as id, GROUP_CONCAT(name SEPARATOR ',') not_rec FROM(
-            SELECT physical_signs_id as id, ingredient_id
-            FROM sys_ingredient_not_rec
+                SELECT physical_signs_id as id, ingredient_id
+                FROM sys_ingredient_not_rec
             ) notRec JOIN sys_physical_signs phy USING(id)
             GROUP BY id
-            ) notRecT USING(id)
-            LEFT JOIN (
+        ) notRecT USING(id)
+        LEFT JOIN (
             SELECT ingredient_id as id, GROUP_CONCAT(name SEPARATOR ',') rec FROM(
-            SELECT physical_signs_id as id, ingredient_id
-            FROM sys_ingredient_rec
+                SELECT physical_signs_id as id, ingredient_id
+                FROM sys_ingredient_rec
             ) rec JOIN sys_physical_signs phy USING(id)
-            GROUP BY id) recT
-            USING(id)
+            GROUP BY id
+        ) recT USING(id)
+    </sql>
+
+    <sql id="selectSysIngredientByPhyVo">
+        SELECT * FROM sys_ingredient igd
+        RIGHT JOIN(
+            SELECT * FROM(
+                SELECT DISTINCT(ingredient_id) as id FROM sys_ingredient_rec
+                <where>
+                    <if test="recIds != null">
+                        physical_signs_id in
+                        <foreach collection="recIds" item="item" index="index" open="(" separator="," close=")">
+                            #{item}
+                        </foreach>
+                    </if>
+                </where>
+            ) recId
+            LEFT JOIN (
+                    SELECT ingredient_id as id, GROUP_CONCAT(name SEPARATOR ',') rec FROM(
+                            SELECT physical_signs_id as id, ingredient_id
+                            FROM sys_ingredient_rec
+                    ) rec JOIN sys_physical_signs phy USING(id)
+                    GROUP BY id
+            ) recM USING(id)
+            INNER JOIN (
+                SELECT * FROM(
+                    SELECT DISTINCT(ingredient_id) as id FROM sys_ingredient_not_rec
+                    <where>
+                        <if test="notRecIds != null">
+                            physical_signs_id in
+                            <foreach collection="notRecIds" item="item" index="index" open="(" separator="," close=")">
+                                #{item}
+                            </foreach>
+                        </if>
+                    </where>
+                ) notRecId
+                LEFT JOIN (
+                        SELECT ingredient_id as id, GROUP_CONCAT(name SEPARATOR ',') not_rec FROM(
+                                SELECT physical_signs_id as id, ingredient_id
+                                FROM sys_ingredient_not_rec
+                        ) notRec JOIN sys_physical_signs phy USING(id)
+                        GROUP BY id
+                ) notRecM USING(id)
+            ) notRecT USING(id)
+        ) recT USING(id)
     </sql>
 
     <select id="selectSysIngredientList" parameterType="SysIngredient" resultMap="SysIngredientResult">
-        <include refid="selectSysIngredientVo"/>
+        <choose>
+            <when test="recIds == null and notRecIds == null">
+                <include refid="selectSysIngredientVo"/>
+            </when>
+            <otherwise>
+                <include refid="selectSysIngredientByPhyVo">
+                    <property name="recIds" value="#{recIds}"/>
+                    <property name="notRecIds" value="#{notRecIds}"/>
+                </include>
+            </otherwise>
+        </choose>
         <where>
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
             <if test="type != null  and type != ''"> and type = #{type}</if>

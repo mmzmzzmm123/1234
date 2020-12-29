@@ -2,10 +2,15 @@ import request from '@/utils/request'
 
 // 查询食材列表
 export function listIngredient(query) {
+  const {recIds, notRecIds} = query;
   return request({
     url: '/custom/ingredient/list',
-    method: 'get',
-    params: query
+    method: 'post',
+    data: {
+      ...query,
+      recIds: recIds && recIds.length ? recIds : null,
+      notRecIds: notRecIds && notRecIds.length ? notRecIds : null,
+    }
   })
 }
 

@@ -30,6 +30,26 @@
           />
         </el-select>
       </el-form-item>
+      <el-form-item label="忌口人群" prop="notRecIds">
+        <el-select v-model="queryParams.notRecIds" multiple placeholder="请选择体征">
+          <el-option
+            v-for="dict in physicalSignsOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="推荐人群" prop="recIds">
+        <el-select v-model="queryParams.recIds" multiple placeholder="请选择体征">
+          <el-option
+            v-for="dict in physicalSignsOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue">
+          </el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item>
         <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
