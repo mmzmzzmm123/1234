@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.hotel.mapper.ChinaCityListMapper">
+    
+    <resultMap type="ChinaCityList" id="ChinaCityListResult">
+        <result property="locationId"    column="location_id"    />
+        <result property="locationNameEn"    column="location_name_en"    />
+        <result property="locationName"    column="location_name"    />
+        <result property="countryCode"    column="country_code"    />
+        <result property="countryEn"    column="country_en"    />
+        <result property="country"    column="country"    />
+        <result property="adm1En"    column="adm1_en"    />
+        <result property="adm1"    column="adm1"    />
+        <result property="adm2En"    column="adm2_en"    />
+        <result property="adm2"    column="adm2"    />
+        <result property="latitude"    column="latitude"    />
+        <result property="longitude"    column="longitude"    />
+        <result property="adCode"    column="ad_code"    />
+    </resultMap>
+
+    <sql id="selectChinaCityListVo">
+        select location_id, location_name_en, location_name, country_code, country_en, country, adm1_en, adm1, adm2_en, adm2, latitude, longitude, ad_code from china_city_list
+    </sql>
+
+    <select id="selectChinaCityListList" parameterType="ChinaCityList" resultMap="ChinaCityListResult">
+        <include refid="selectChinaCityListVo"/>
+        <where>  
+            <if test="locationNameEn != null  and locationNameEn != ''"> and location_name_en = #{locationNameEn}</if>
+            <if test="locationName != null  and locationName != ''"> and location_name like concat('%', #{locationName}, '%')</if>
+            <if test="countryCode != null  and countryCode != ''"> and country_code = #{countryCode}</if>
+            <if test="countryEn != null  and countryEn != ''"> and country_en = #{countryEn}</if>
+            <if test="country != null  and country != ''"> and country = #{country}</if>
+            <if test="adm1En != null  and adm1En != ''"> and adm1_en = #{adm1En}</if>
+            <if test="adm1 != null  and adm1 != ''"> and adm1 = #{adm1}</if>
+            <if test="adm2En != null  and adm2En != ''"> and adm2_en = #{adm2En}</if>
+            <if test="adm2 != null  and adm2 != ''"> and adm2 = #{adm2}</if>
+            <if test="latitude != null  and latitude != ''"> and latitude = #{latitude}</if>
+            <if test="longitude != null  and longitude != ''"> and longitude = #{longitude}</if>
+            <if test="adCode != null  and adCode != ''"> and ad_code = #{adCode}</if>
+        </where>
+    </select>
+    
+    <select id="selectChinaCityListById" parameterType="Long" resultMap="ChinaCityListResult">
+        <include refid="selectChinaCityListVo"/>
+        where location_id = #{locationId}
+    </select>
+	
+	<select id="selectAdm2ByAdm1" parameterType="String" resultType="String">
+        select adm2 from china_city_list where adm1 = #{adm1} group by adm2
+	</select>
+        
+    <insert id="insertChinaCityList" parameterType="ChinaCityList">
+        insert into china_city_list
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="locationId != null">location_id,</if>
+            <if test="locationNameEn != null">location_name_en,</if>
+            <if test="locationName != null">location_name,</if>
+            <if test="countryCode != null">country_code,</if>
+            <if test="countryEn != null">country_en,</if>
+            <if test="country != null">country,</if>
+            <if test="adm1En != null">adm1_en,</if>
+            <if test="adm1 != null">adm1,</if>
+            <if test="adm2En != null">adm2_en,</if>
+            <if test="adm2 != null">adm2,</if>
+            <if test="latitude != null">latitude,</if>
+            <if test="longitude != null">longitude,</if>
+            <if test="adCode != null">ad_code,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="locationId != null">#{locationId},</if>
+            <if test="locationNameEn != null">#{locationNameEn},</if>
+            <if test="locationName != null">#{locationName},</if>
+            <if test="countryCode != null">#{countryCode},</if>
+            <if test="countryEn != null">#{countryEn},</if>
+            <if test="country != null">#{country},</if>
+            <if test="adm1En != null">#{adm1En},</if>
+            <if test="adm1 != null">#{adm1},</if>
+            <if test="adm2En != null">#{adm2En},</if>
+            <if test="adm2 != null">#{adm2},</if>
+            <if test="latitude != null">#{latitude},</if>
+            <if test="longitude != null">#{longitude},</if>
+            <if test="adCode != null">#{adCode},</if>
+         </trim>
+    </insert>
+
+    <update id="updateChinaCityList" parameterType="ChinaCityList">
+        update china_city_list
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="locationNameEn != null">location_name_en = #{locationNameEn},</if>
+            <if test="locationName != null">location_name = #{locationName},</if>
+            <if test="countryCode != null">country_code = #{countryCode},</if>
+            <if test="countryEn != null">country_en = #{countryEn},</if>
+            <if test="country != null">country = #{country},</if>
+            <if test="adm1En != null">adm1_en = #{adm1En},</if>
+            <if test="adm1 != null">adm1 = #{adm1},</if>
+            <if test="adm2En != null">adm2_en = #{adm2En},</if>
+            <if test="adm2 != null">adm2 = #{adm2},</if>
+            <if test="latitude != null">latitude = #{latitude},</if>
+            <if test="longitude != null">longitude = #{longitude},</if>
+            <if test="adCode != null">ad_code = #{adCode},</if>
+        </trim>
+        where location_id = #{locationId}
+    </update>
+
+    <delete id="deleteChinaCityListById" parameterType="Long">
+        delete from china_city_list where location_id = #{locationId}
+    </delete>
+
+    <delete id="deleteChinaCityListByIds" parameterType="String">
+        delete from china_city_list where location_id in 
+        <foreach item="locationId" collection="array" open="(" separator="," close=")">
+            #{locationId}
+        </foreach>
+    </delete>
+    
+</mapper>
