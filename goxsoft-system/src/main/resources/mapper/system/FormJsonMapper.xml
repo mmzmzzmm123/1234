@@ -23,7 +23,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectFormJsonList" parameterType="com.gox.system.domain.FormJson" resultMap="FormJsonResult">
         <include refid="selectFormJsonVo"/>
-        <where>  
+        <where>
+            del_flag = 0
             <if test="formName != null  and formName != ''"> and form_name like concat('%', #{formName}, '%')</if>
             <if test="formData != null  and formData != ''"> and form_data = #{formData}</if>
             <if test="node != null  and node != ''"> and node = #{node}</if>
@@ -33,7 +34,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
     <select id="selectFormJsonById" parameterType="Long" resultMap="FormJsonResult">
         <include refid="selectFormJsonVo"/>
-        where id = #{id}
+        where id = #{id} and del_flag = 0
     </select>
         
     <insert id="insertFormJson" parameterType="com.gox.system.domain.FormJson">

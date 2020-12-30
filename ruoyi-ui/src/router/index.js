@@ -107,6 +107,20 @@ export const constantRoutes = [
       }
     ]
   },
+  // {
+  //   path: '/tool',
+  //   component: Layout,
+  //   hidden: true,
+  //   children: [
+  //     {
+  //       path: 'build/:id',
+  //       component:(resolve) =>require(['@/views/tool/build/index'],resolve),
+  //       name: 'build',
+  //       meta: {title: '表单构建'}
+  //     }
+  //   ]
+  //
+  // },
   {
     path: '/tool',
     component: Layout,
@@ -114,14 +128,25 @@ export const constantRoutes = [
     children: [
       {
         path: 'build/:id',
-        component:(resolve) =>require(['@/views/tool/build/index'],resolve),
+        component:(resolve) =>require(['@/gene/views/index/Home'],resolve),
         name: 'build',
         meta: {title: '表单构建'}
       }
     ]
-    
   },
-
+  {
+    path: '/tool',
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: 'build',
+        component:(resolve) =>require(['@/gene/views/index/Home'],resolve),
+        name: 'build',
+        meta: {title: '表单构建'}
+      }
+    ]
+  },
   {
     path: '/gen',
     component: Layout,
