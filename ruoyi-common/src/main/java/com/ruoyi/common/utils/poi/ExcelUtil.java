@@ -1090,4 +1090,39 @@ public class ExcelUtil<T>
         }
         return val;
     }
+
+    /**
+     * 对list数据源将其里面的数据导入到excel表单，但不持久化到本地文件
+     * 可以解决普通二阶段下载在集群环境下，如果两次请求负载到不同服务器时，下载找不到文件问题
+     *
+     * @param list      导出数据集合
+     * @param sheetName 工作表的名称
+     * @return 结果
+     */
+    public Workbook exportExcelWithoutPersist(List<T> list, String sheetName) {
+        this.init(list, sheetName, Excel.Type.EXPORT);
+        return exportExcelWithoutPersist();
+    }
+
+    public Workbook exportExcelWithoutPersist() {
+        // 取出一共有多少个sheet.
+        double sheetNo = (double) (list.size() / sheetSize);
+        for (int index = 0; index <= sheetNo; index++) {
+            createSheet(sheetNo, index);
+            // 产生一行
+            Row row = sheet.createRow(0);
+            int column = 0;
+            // 写入各个字段的列头名称
+            for (Object[] os : fields) {
+                Excel excel = (Excel) os[1];
+                this.createCell(excel, row, column++);
+            }
+            if (Excel.Type.EXPORT.equals(type)) {
+                fillExcelData(index, row);
+                addStatisticsRow();
+            }
+        }
+        return wb;
+    }
+
 }

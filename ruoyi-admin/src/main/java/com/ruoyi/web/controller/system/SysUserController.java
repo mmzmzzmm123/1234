@@ -1,7 +1,11 @@
 package com.ruoyi.web.controller.system;
 
+import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -31,6 +35,8 @@ import com.ruoyi.framework.web.service.TokenService;
 import com.ruoyi.system.service.ISysPostService;
 import com.ruoyi.system.service.ISysRoleService;
 import com.ruoyi.system.service.ISysUserService;
+
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 用户信息
@@ -201,5 +207,37 @@ public class SysUserController extends BaseController
         userService.checkUserAllowed(user);
         user.setUpdateBy(SecurityUtils.getUsername());
         return toAjax(userService.updateUserStatus(user));
+    }
+
+    /**
+     * 非二阶段下载方式导出Excel示例
+     * 可以解决二阶段下载集群环境下，两次请求负载到不同服务器时下载找不到文件问题
+     */
+    @Log(title = "用户管理", businessType = BusinessType.EXPORT)
+    @PreAuthorize("@ss.hasPermi('system:user:export')")
+    @GetMapping("/export2")
+    public void export2(SysUser user, HttpServletResponse response)
+    {
+        List<SysUser> list = userService.selectUserList(user);
+        ExcelUtil<SysUser> util = new ExcelUtil<SysUser>(SysUser.class);
+        Workbook workbook = null;
+        try {
+            workbook = util.exportExcelWithoutPersist(list, "用户数据");
+            response.setContentType("application/octet-stream");
+            response.setHeader("Content-disposition", String.format("attachment;filename=%s.xlsx",
+                    URLEncoder.encode("用户数据", "UTF-8")));
+            response.flushBuffer();
+            workbook.write(response.getOutputStream());
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (null != workbook) {
+                try {
+                    workbook.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 }
