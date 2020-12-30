@@ -2,6 +2,7 @@ package com.ruoyi.hotel.mapper;
 
 import java.util.List;
 import com.ruoyi.hotel.domain.HtlHotelInfo;
+import org.apache.ibatis.annotations.Select;
 
 /**
  * 酒店信息Mapper接口
@@ -11,6 +12,9 @@ import com.ruoyi.hotel.domain.HtlHotelInfo;
  */
 public interface HtlHotelInfoMapper 
 {
+    @Select("select t.city_id from htl_hotel_info t group by t.city_id")
+    public List<Long> selectAllLocationList();
+
     /**
      * 查询酒店信息
      * 
