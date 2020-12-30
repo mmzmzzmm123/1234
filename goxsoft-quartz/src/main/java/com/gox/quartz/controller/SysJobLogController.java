@@ -20,7 +20,7 @@ import com.gox.quartz.service.ISysJobLogService;
 /**
  * 调度日志操作处理
  * 
- * @author ruoyi
+ * @author gox
  */
 @RestController
 @RequestMapping("/monitor/jobLog")

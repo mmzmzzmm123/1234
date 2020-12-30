@@ -3,7 +3,7 @@ package com.gox.common.exception.user;
 /**
  * 验证码失效异常类
  * 
- * @author ruoyi
+ * @author gox
  */
 public class CaptchaExpireException extends UserException
 {

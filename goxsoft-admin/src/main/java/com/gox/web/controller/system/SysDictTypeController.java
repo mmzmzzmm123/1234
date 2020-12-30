@@ -26,7 +26,7 @@ import com.gox.system.service.ISysDictTypeService;
 /**
  * 数据字典信息
  * 
- * @author ruoyi
+ * @author gox
  */
 @RestController
 @RequestMapping("/system/dict/type")

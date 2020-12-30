@@ -11,7 +11,7 @@ import com.gox.system.service.ISysRoleService;
 /**
  * 用户权限处理
  * 
- * @author ruoyi
+ * @author gox
  */
 @Component
 public class SysPermissionService

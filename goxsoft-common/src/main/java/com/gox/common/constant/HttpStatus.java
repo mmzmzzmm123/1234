@@ -3,7 +3,7 @@ package com.gox.common.constant;
 /**
  * 返回状态码
  * 
- * @author ruoyi
+ * @author gox
  */
 public class HttpStatus
 {

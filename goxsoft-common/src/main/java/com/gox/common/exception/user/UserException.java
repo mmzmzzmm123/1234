@@ -5,7 +5,7 @@ import com.gox.common.exception.BaseException;
 /**
  * 用户信息异常类
  * 
- * @author ruoyi
+ * @author gox
  */
 public class UserException extends BaseException
 {

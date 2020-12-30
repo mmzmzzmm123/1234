@@ -3,7 +3,7 @@ package com.gox.common.constant;
 /**
  * 任务调度通用常量
  * 
- * @author ruoyi
+ * @author gox
  */
 public class ScheduleConstants
 {

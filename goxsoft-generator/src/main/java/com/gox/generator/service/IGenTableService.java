@@ -7,7 +7,7 @@ import com.gox.generator.domain.GenTable;
 /**
  * 业务 服务层
  * 
- * @author ruoyi
+ * @author gox
  */
 public interface IGenTableService
 {

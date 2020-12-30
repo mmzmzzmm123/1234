@@ -19,7 +19,7 @@ import com.gox.quartz.service.ISysJobLogService;
 /**
  * 抽象quartz调用
  *
- * @author ruoyi
+ * @author gox
  */
 public abstract class AbstractQuartzJob implements Job
 {

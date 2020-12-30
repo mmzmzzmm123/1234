@@ -18,7 +18,7 @@ import com.gox.quartz.domain.SysJob;
 /**
  * 定时任务工具类
  * 
- * @author ruoyi
+ * @author gox
  *
  */
 public class ScheduleUtils

@@ -9,7 +9,7 @@ import com.gox.common.core.domain.BaseEntity;
 /**
  * 操作日志记录表 oper_log
  * 
- * @author ruoyi
+ * @author gox
  */
 public class SysOperLog extends BaseEntity
 {

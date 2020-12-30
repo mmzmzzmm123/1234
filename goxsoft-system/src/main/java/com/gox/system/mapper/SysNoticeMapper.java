@@ -7,7 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 /**
  * 通知公告表 数据层
  * 
- * @author ruoyi
+ * @author gox
  */
 @Mapper
 public interface SysNoticeMapper

@@ -21,7 +21,7 @@ import com.gox.framework.config.ServerConfig;
 /**
  * 通用请求处理
  * 
- * @author ruoyi
+ * @author gox
  */
 @RestController
 public class CommonController

@@ -11,7 +11,7 @@ import com.gox.common.utils.http.HttpUtils;
 /**
  * 获取地址类
  * 
- * @author ruoyi
+ * @author gox
  */
 public class AddressUtils
 {

@@ -10,7 +10,7 @@ import com.gox.common.core.domain.entity.SysMenu;
 /**
  * Treeselect树结构实体类
  * 
- * @author ruoyi
+ * @author gox
  */
 public class TreeSelect implements Serializable
 {

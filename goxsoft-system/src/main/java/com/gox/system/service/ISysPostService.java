@@ -6,7 +6,7 @@ import com.gox.system.domain.SysPost;
 /**
  * 岗位信息 服务层
  * 
- * @author ruoyi
+ * @author gox
  */
 public interface ISysPostService
 {

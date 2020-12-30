@@ -14,7 +14,7 @@ import com.gox.common.utils.http.HttpHelper;
 /**
  * 构建可重复读取inputStream的request
  * 
- * @author ruoyi
+ * @author gox
  */
 public class RepeatedlyRequestWrapper extends HttpServletRequestWrapper
 {

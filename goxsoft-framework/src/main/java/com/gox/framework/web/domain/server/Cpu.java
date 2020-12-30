@@ -5,7 +5,7 @@ import com.gox.common.utils.Arith;
 /**
  * CPU相关信息
  * 
- * @author ruoyi
+ * @author gox
  */
 public class Cpu
 {

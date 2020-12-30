@@ -29,7 +29,7 @@ import com.gox.system.service.ISysMenuService;
 /**
  * 菜单信息
  * 
- * @author ruoyi
+ * @author gox
  */
 @RestController
 @RequestMapping("/system/menu")

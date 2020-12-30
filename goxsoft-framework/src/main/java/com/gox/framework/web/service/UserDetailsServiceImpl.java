@@ -17,7 +17,7 @@ import com.gox.system.service.ISysUserService;
 /**
  * 用户验证处理
  *
- * @author ruoyi
+ * @author gox
  */
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService

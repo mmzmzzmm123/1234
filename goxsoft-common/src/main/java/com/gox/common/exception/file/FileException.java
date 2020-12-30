@@ -5,7 +5,7 @@ import com.gox.common.exception.BaseException;
 /**
  * 文件信息异常类
  * 
- * @author ruoyi
+ * @author gox
  */
 public class FileException extends BaseException
 {

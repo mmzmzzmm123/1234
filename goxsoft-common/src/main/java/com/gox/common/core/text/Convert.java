@@ -11,7 +11,7 @@ import com.gox.common.utils.StringUtils;
 /**
  * 类型转换器
  * 
- * @author ruoyi
+ * @author gox
  */
 public class Convert
 {

@@ -12,7 +12,7 @@ import com.gox.common.core.domain.BaseEntity;
 /**
  * 部门表 sys_dept
  * 
- * @author ruoyi
+ * @author gox
  */
 public class SysDept extends BaseEntity
 {

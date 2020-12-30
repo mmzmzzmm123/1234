@@ -6,7 +6,7 @@ import com.gox.system.domain.FormJson;
 /**
  * 单json存储Service接口
  * 
- * @author ruoyi
+ * @author gox
  * @date 2020-12-25
  */
 public interface IFormJsonService 

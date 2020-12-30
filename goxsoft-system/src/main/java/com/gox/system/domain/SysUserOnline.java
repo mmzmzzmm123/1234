@@ -3,7 +3,7 @@ package com.gox.system.domain;
 /**
  * 当前在线会话
  * 
- * @author ruoyi
+ * @author gox
  */
 public class SysUserOnline
 {

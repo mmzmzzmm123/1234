@@ -3,7 +3,7 @@ package com.gox.common.enums;
 /**
  * 业务操作类型
  * 
- * @author ruoyi
+ * @author gox
  */
 public enum BusinessType
 {

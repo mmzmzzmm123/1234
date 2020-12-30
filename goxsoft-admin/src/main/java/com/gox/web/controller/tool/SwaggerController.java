@@ -9,7 +9,7 @@ import com.gox.common.core.controller.BaseController;
 /**
  * swagger 接口
  * 
- * @author ruoyi
+ * @author gox
  */
 @Controller
 @RequestMapping("/tool/swagger")

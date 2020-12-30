@@ -7,7 +7,7 @@ import com.gox.common.core.domain.entity.SysRole;
 /**
  * 角色业务层
  * 
- * @author ruoyi
+ * @author gox
  */
 public interface ISysRoleService
 {

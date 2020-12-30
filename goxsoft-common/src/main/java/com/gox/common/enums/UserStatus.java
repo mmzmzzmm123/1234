@@ -3,7 +3,7 @@ package com.gox.common.enums;
 /**
  * 用户状态
  * 
- * @author ruoyi
+ * @author gox
  */
 public enum UserStatus
 {

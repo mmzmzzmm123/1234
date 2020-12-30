@@ -9,7 +9,7 @@ import com.gox.common.core.domain.entity.SysMenu;
 /**
  * 菜单表 数据层
  *
- * @author ruoyi
+ * @author gox
  */
 @Mapper
 public interface SysMenuMapper

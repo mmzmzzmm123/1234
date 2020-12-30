@@ -9,7 +9,7 @@ import com.gox.system.domain.vo.RouterVo;
 /**
  * 菜单 业务层
  * 
- * @author ruoyi
+ * @author gox
  */
 public interface ISysMenuService
 {

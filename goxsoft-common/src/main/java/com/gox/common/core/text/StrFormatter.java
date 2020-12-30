@@ -5,7 +5,7 @@ import com.gox.common.utils.StringUtils;
 /**
  * 字符串格式化
  * 
- * @author ruoyi
+ * @author gox
  */
 public class StrFormatter
 {

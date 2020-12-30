@@ -56,7 +56,7 @@ import com.gox.common.utils.reflect.ReflectUtils;
 /**
  * Excel相关处理
  * 
- * @author ruoyi
+ * @author gox
  */
 public class ExcelUtil<T>
 {

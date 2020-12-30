@@ -21,7 +21,7 @@ import com.gox.framework.web.service.TokenService;
 /**
  * 数据过滤处理
  *
- * @author ruoyi
+ * @author gox
  */
 @Aspect
 @Component

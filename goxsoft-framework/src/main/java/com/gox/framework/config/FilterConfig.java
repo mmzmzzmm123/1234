@@ -14,7 +14,7 @@ import com.gox.common.utils.StringUtils;
 /**
  * Filter配置
  *
- * @author ruoyi
+ * @author gox
  */
 @Configuration
 public class FilterConfig

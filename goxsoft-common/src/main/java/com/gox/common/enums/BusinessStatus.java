@@ -3,7 +3,7 @@ package com.gox.common.enums;
 /**
  * 操作状态
  * 
- * @author ruoyi
+ * @author gox
  *
  */
 public enum BusinessStatus

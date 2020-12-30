@@ -6,7 +6,7 @@ import com.gox.quartz.domain.SysJob;
 /**
  * 调度任务信息 数据层
  * 
- * @author ruoyi
+ * @author gox
  */
 public interface SysJobMapper
 {

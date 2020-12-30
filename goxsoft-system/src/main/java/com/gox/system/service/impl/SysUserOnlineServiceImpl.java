@@ -9,7 +9,7 @@ import com.gox.system.service.ISysUserOnlineService;
 /**
  * 在线用户 服务层处理
  * 
- * @author ruoyi
+ * @author gox
  */
 @Service
 public class SysUserOnlineServiceImpl implements ISysUserOnlineService

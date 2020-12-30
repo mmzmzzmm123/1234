@@ -7,7 +7,7 @@ import com.gox.common.constant.Constants;
 /**
  * VelocityEngine工厂
  * 
- * @author RuoYi
+ * @author gox
  */
 public class VelocityInitializer
 {

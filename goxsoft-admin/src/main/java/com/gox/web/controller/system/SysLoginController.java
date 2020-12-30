@@ -22,7 +22,7 @@ import com.gox.system.service.ISysMenuService;
 /**
  * 登录验证
  * 
- * @author ruoyi
+ * @author gox
  */
 @RestController
 public class SysLoginController

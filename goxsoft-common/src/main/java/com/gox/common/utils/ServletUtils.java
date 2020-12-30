@@ -12,7 +12,7 @@ import com.gox.common.core.text.Convert;
 /**
  * 客户端工具类
  * 
- * @author ruoyi
+ * @author gox
  */
 public class ServletUtils
 {

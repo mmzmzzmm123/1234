@@ -5,7 +5,7 @@ import com.gox.common.utils.StringUtils;
 /**
  * 分页数据
  * 
- * @author ruoyi
+ * @author gox
  */
 public class PageDomain
 {

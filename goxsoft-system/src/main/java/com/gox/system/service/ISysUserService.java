@@ -6,7 +6,7 @@ import com.gox.common.core.domain.entity.SysUser;
 /**
  * 用户 业务层
  * 
- * @author ruoyi
+ * @author gox
  */
 public interface ISysUserService
 {

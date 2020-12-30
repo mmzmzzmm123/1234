@@ -18,7 +18,7 @@ import com.gox.framework.datasource.DynamicDataSourceContextHolder;
 /**
  * 多数据源处理
  * 
- * @author ruoyi
+ * @author gox
  */
 @Aspect
 @Order(1)

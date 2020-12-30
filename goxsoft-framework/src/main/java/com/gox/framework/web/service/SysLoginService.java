@@ -27,7 +27,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * 登录校验方法
  * 
- * @author ruoyi
+ * @author gox
  */
 @Component
 public class SysLoginService

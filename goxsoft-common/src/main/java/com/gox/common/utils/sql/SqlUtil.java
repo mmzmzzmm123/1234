@@ -6,7 +6,7 @@ import com.gox.common.utils.StringUtils;
 /**
  * sql操作工具类
  * 
- * @author ruoyi
+ * @author gox
  */
 public class SqlUtil
 {

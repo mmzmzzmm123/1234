@@ -35,7 +35,7 @@ import com.gox.system.service.ISysUserService;
 /**
  * 用户信息
  * 
- * @author ruoyi
+ * @author gox
  */
 @RestController
 @RequestMapping("/system/user")

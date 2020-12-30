@@ -20,7 +20,7 @@ import com.gox.system.service.ISysLogininforService;
 /**
  * 系统访问记录
  * 
- * @author ruoyi
+ * @author gox
  */
 @RestController
 @RequestMapping("/monitor/logininfor")

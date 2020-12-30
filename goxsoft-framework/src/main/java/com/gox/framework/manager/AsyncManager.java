@@ -9,7 +9,7 @@ import com.gox.common.utils.spring.SpringUtils;
 /**
  * 异步任务管理器
  * 
- * @author ruoyi
+ * @author gox
  */
 public class AsyncManager
 {

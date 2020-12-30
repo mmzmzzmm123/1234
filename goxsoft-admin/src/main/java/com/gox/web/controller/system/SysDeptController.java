@@ -26,7 +26,7 @@ import com.gox.system.service.ISysDeptService;
 /**
  * 部门信息
  * 
- * @author ruoyi
+ * @author gox
  */
 @RestController
 @RequestMapping("/system/dept")

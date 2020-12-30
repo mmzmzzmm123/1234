@@ -15,7 +15,7 @@ import com.gox.common.utils.html.EscapeUtil;
 /**
  * XSS过滤处理
  * 
- * @author ruoyi
+ * @author gox
  */
 public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper
 {

@@ -6,7 +6,7 @@ import com.gox.generator.domain.GenTable;
 /**
  * 业务 数据层
  * 
- * @author ruoyi
+ * @author gox
  */
 public interface GenTableMapper
 {

@@ -5,7 +5,7 @@ import com.gox.common.utils.Arith;
 /**
  * 內存相关信息
  * 
- * @author ruoyi
+ * @author gox
  */
 public class Mem
 {

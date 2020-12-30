@@ -3,7 +3,7 @@ package com.gox.common.exception;
 /**
  * 演示模式异常
  * 
- * @author ruoyi
+ * @author gox
  */
 public class DemoModeException extends RuntimeException
 {

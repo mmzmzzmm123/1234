@@ -16,7 +16,7 @@ import com.gox.framework.interceptor.RepeatSubmitInterceptor;
 /**
  * 通用配置
  * 
- * @author ruoyi
+ * @author gox
  */
 @Configuration
 public class ResourcesConfig implements WebMvcConfigurer

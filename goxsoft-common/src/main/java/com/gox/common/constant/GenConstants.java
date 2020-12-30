@@ -3,7 +3,7 @@ package com.gox.common.constant;
 /**
  * 代码生成通用常量
  * 
- * @author ruoyi
+ * @author gox
  */
 public class GenConstants
 {

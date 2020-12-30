@@ -11,7 +11,7 @@ import com.gox.common.core.domain.BaseEntity;
 /**
  * 岗位表 sys_post
  * 
- * @author ruoyi
+ * @author gox
  */
 public class SysPost extends BaseEntity
 {

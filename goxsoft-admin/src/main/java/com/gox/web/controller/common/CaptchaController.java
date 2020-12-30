@@ -21,7 +21,7 @@ import com.gox.common.utils.uuid.IdUtils;
 /**
  * 验证码操作处理
  * 
- * @author ruoyi
+ * @author gox
  */
 @RestController
 public class CaptchaController

@@ -3,7 +3,7 @@ package com.gox.common.constant;
 /**
  * 用户常量信息
  * 
- * @author ruoyi
+ * @author gox
  */
 public class UserConstants
 {

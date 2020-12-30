@@ -20,7 +20,7 @@ import com.gox.system.service.ISysOperLogService;
 /**
  * 操作日志记录
  * 
- * @author ruoyi
+ * @author gox
  */
 @RestController
 @RequestMapping("/monitor/operlog")

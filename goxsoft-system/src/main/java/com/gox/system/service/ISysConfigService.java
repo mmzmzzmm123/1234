@@ -7,7 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 /**
  * 参数配置 服务层
  * 
- * @author ruoyi
+ * @author gox
  */
 @Mapper
 public interface ISysConfigService

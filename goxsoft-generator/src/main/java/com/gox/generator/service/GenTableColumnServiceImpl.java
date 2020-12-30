@@ -10,7 +10,7 @@ import com.gox.generator.mapper.GenTableColumnMapper;
 /**
  * 业务字段 服务层实现
  * 
- * @author ruoyi
+ * @author gox
  */
 @Service
 public class GenTableColumnServiceImpl implements IGenTableColumnService 

@@ -10,7 +10,7 @@ import com.gox.common.exception.CustomException;
 /**
  * 安全服务工具类
  * 
- * @author ruoyi
+ * @author gox
  */
 public class SecurityUtils
 {
