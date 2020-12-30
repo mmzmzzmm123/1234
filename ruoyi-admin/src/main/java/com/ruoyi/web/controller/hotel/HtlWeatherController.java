@@ -1,24 +1,19 @@
 package com.ruoyi.web.controller.hotel;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.utils.bean.BeanUtils;
 import com.ruoyi.hotel.domain.ChinaCityList;
 import com.ruoyi.hotel.service.IChinaCityListService;
+import com.ruoyi.hotel.service.ICurrentWeatherService;
+import io.swagger.annotations.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-import io.swagger.annotations.ApiOperation;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/hotel/weather")
@@ -26,6 +21,9 @@ public class HtlWeatherController extends BaseController {
 
 	@Autowired
 	private IChinaCityListService cityListService;
+
+	@Autowired
+	private ICurrentWeatherService currentWeatherService;
 
 	@ApiOperation("获取所有一级行政区划")
 	@GetMapping(value = "/adm1")
@@ -68,6 +66,13 @@ public class HtlWeatherController extends BaseController {
 		BeanUtils.copyBeanProp(cityEntity, cityInfo);
 
 		return AjaxResult.success(cityEntity);
+	}
+
+	@ApiOperation("获取城市当前天气信息")
+	@ApiImplicitParam(name = "cityId", value = "地区/城市ID", required = true, dataType = "long")
+	@GetMapping(value = "/getWeatherNow")
+	public AjaxResult getWeatherNow(Long cityId) {
+		return AjaxResult.success(currentWeatherService.selectCurrentWeatherById(cityId));
 	}
 }
 
