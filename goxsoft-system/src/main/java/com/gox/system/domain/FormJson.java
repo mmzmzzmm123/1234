@@ -34,8 +34,18 @@ public class FormJson extends BaseEntity
     private String formData;
     @Excel(name = "所属节点")
     private String node;
+    @Excel(name = "父表单")
+    private String parentName;
     /** 删除标志 */
     private String delFlag;
+
+    public String getParentName() {
+        return parentName;
+    }
+
+    public void setParentName(String parentName) {
+        this.parentName = parentName;
+    }
 
     public String getNode() {
         return node;

@@ -28,7 +28,6 @@ import com.gox.common.core.page.TableDataInfo;
 @RequestMapping("/system/json")
 public class FormJsonController extends BaseController
 {
-    static String s;
     @Autowired
     private IFormJsonService formJsonService;
 
