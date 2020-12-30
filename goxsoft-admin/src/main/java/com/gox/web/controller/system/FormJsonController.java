@@ -1,8 +1,6 @@
 package com.gox.web.controller.system;
 
-import java.util.Enumeration;
 import java.util.List;
-import java.util.Map;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -30,6 +28,7 @@ import com.gox.common.core.page.TableDataInfo;
 @RequestMapping("/system/json")
 public class FormJsonController extends BaseController
 {
+    static String s;
     @Autowired
     private IFormJsonService formJsonService;
 
@@ -87,7 +86,7 @@ public class FormJsonController extends BaseController
         if (StringUtils.isNotEmpty(id)){
             formJson.setId(Long.valueOf(id));
             json.remove("id");
-            toAjax(formJsonService.updateFormJson(formJson));
+            return toAjax(formJsonService.updateFormJson(formJson));
         }
         return toAjax(formJsonService.insertFormJson(formJson));
     }

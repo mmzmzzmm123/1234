@@ -6,6 +6,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.ibatis.type.Alias;
 
+import java.util.List;
+
 /**
  * 文书类基本元数据对象 metadata
  * 
@@ -197,7 +199,8 @@ public class Metadata extends BaseEntity
     /** 稿本 */
     @Excel(name = "稿本")
     private String manuscriptType;
-
+    /** 电子文件*/
+    private List<ElectronicAttributes> electronicAttributes;
 //    /** 知识产权说明 */
 //    @Excel(name = "知识产权说明")
 //    private String intellectualPropertyStatement;
@@ -213,10 +216,38 @@ public class Metadata extends BaseEntity
 //    /** 控制标识 */
 //    @Excel(name = "控制标识")
 //    private String controlIdentifier;
+    /** 电子签名 */
+    private List<DigitalSignature> digitalSignatures;
+    /** 权限管理 */
+    private List<RightsManagement> rightsManagements;
 
     /** 附注 */
     @Excel(name = "附注")
     private String annotation;
+
+    public List<ElectronicAttributes> getElectronicAttributes() {
+        return electronicAttributes;
+    }
+
+    public void setElectronicAttributes(List<ElectronicAttributes> electronicAttributes) {
+        this.electronicAttributes = electronicAttributes;
+    }
+
+    public List<DigitalSignature> getDigitalSignatures() {
+        return digitalSignatures;
+    }
+
+    public void setDigitalSignatures(List<DigitalSignature> digitalSignatures) {
+        this.digitalSignatures = digitalSignatures;
+    }
+
+    public List<RightsManagement> getRightsManagements() {
+        return rightsManagements;
+    }
+
+    public void setRightsManagements(List<RightsManagement> rightsManagements) {
+        this.rightsManagements = rightsManagements;
+    }
 
     public Long getDeptId() {
         return deptId;

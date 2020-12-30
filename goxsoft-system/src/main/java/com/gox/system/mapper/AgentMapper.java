@@ -25,7 +25,7 @@ public interface AgentMapper
      * @param agent 机构人员
      * @return 机构人员集合
      */
-    public List<Agent> selectAgentList(Agent agent);
+    List<Agent> selectAgentList(Agent agent);
 
     /**
      * 新增机构人员

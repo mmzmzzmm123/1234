@@ -34,7 +34,7 @@
           @click="handleAdd"
           v-hasPermi="['system:json:add']"
         >新增</el-button>-->
-      </el-col> 
+      </el-col>
       <el-col :span="1.5">
         <el-button
           type="success"
@@ -94,7 +94,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -251,7 +251,6 @@ export default {
     handleUpdate(row) {
       //this.reset();
       const id = row.id
-      console.log(row)
       this.$router.push('/tool/build/'+id)
     },
     /** 提交按钮 */

@@ -18,7 +18,11 @@ public interface IElectronicAttributesService
      * @return 电子文件信息
      */
     public ElectronicAttributes selectElectronicAttributesById(Long id);
-
+    /**
+     * 获取文件base64编码
+     * @param id 电子文件id
+     */
+    String getBase64(String id);
     /**
      * 查询电子文件信息列表
      * 

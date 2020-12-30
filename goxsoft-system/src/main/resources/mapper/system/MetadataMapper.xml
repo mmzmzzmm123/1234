@@ -51,10 +51,65 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="language"    column="language"    />
         <result property="manuscriptType"    column="manuscript_type"    />
         <result property="annotation"    column="annotation"    />
+        <collection property="electronicAttributes" ofType="com.gox.system.domain.ElectronicAttributes" column="metadata_id">
+            <id property="id" column="id" />
+            <result property="formatInformation"    column="format_information"    />
+            <result property="computerFileName"    column="computer_file_name"    />
+            <result property="computerFileSize"    column="computer_file_size"    />
+            <result property="documentCreatingApplication"    column="document_creating_application"    />
+            <result property="informationSystemDescription"    column="information_system_description"    />
+            <result property="physicalRecordCharacteristics"    column="physical_record_characteristics"    />
+            <result property="scanningResolution"    column="scanning_resolution"    />
+            <result property="scanningColorModel"    column="scanning_color_model"    />
+            <result property="imageCompressionScheme"    column="image_compression_scheme"    />
+            <result property="currentLocation"    column="current_location"    />
+            <result property="offlineMediumIdentifier"    column="offline_medium_identifier"    />
+            <result property="offlineMediumStorageLocation"    column="offline_medium_storage_location"    />
+            <result property="microformIdentifier"    column="microform_identifier"    />
+            <result property="metadataId"    column="metadata_id"    />
+        </collection>
+        <collection property="digitalSignatures" ofType="com.gox.system.domain.DigitalSignature" column="metadata_id">
+            <id property="id" column="id" />
+            <result property="id"    column="id"    />
+            <result property="signatureFormatDescription"    column="signature_format_description"    />
+            <result property="signatureDate"    column="signature_date"    />
+            <result property="signer"    column="signer"    />
+            <result property="signature"    column="signature"    />
+            <result property="certificate"    column="certificate"    />
+            <result property="certificateReference"    column="certificate_reference"    />
+            <result property="signatureAlgorithm"    column="signature_algorithm"    />
+            <result property="metadataId"    column="metadata_id"    />
+            <result property="eleId"    column="ele_id"    />
+        </collection>
+        <collection property="rightsManagements" ofType="com.gox.system.domain.RightsManagement" column="metadata_id">
+            <id property="id" column="id" />
+            <result property="metadataId"    column="metadata_id"    />
+            <result property="intellectualPropertyStatement"    column="intellectual_property_statement"    />
+            <result property="authorizedAgent"    column="authorized_agent"    />
+            <result property="permissionAssignment"    column="permission_assignment"    />
+            <result property="controlIdentifier"    column="control_identifier"    />
+        </collection>
     </resultMap>
 
     <sql id="selectMetadataVo">
-        select id, aggregation_level, archives_name, archives_identifier, fonds_name, fonds_constituting_unit_name, electronic_record_code, archival_code, fonds_identifier, catalogue_number, year, retention_period, organizational_structure_or_function, category_code, agency_file_number, archives_file_number, agency_item_number, archives_item_number, document_sequence_number, page_number, content_description, title, parallel_title, alternative_title, other_title_information, descriptor, keyword, personal_name, abstract, class_code, document_number, author, date, document_type, precedence, principal_receiver, other_receivers, security_classification, secrecy_period, formal_characteristics, document_aggregation_type, total_number_of_items, total_number_of_pages, language, manuscript_type, annotation from metadata
+        select id, aggregation_level, archives_name, archives_identifier,
+        fonds_name, fonds_constituting_unit_name, electronic_record_code,
+        archival_code, fonds_identifier, catalogue_number, year, retention_period,
+        organizational_structure_or_function, category_code, agency_file_number,
+        archives_file_number, agency_item_number, archives_item_number,
+        document_sequence_number, page_number, content_description, title,
+        parallel_title, alternative_title, other_title_information,
+        descriptor, keyword, personal_name, abstract, class_code,
+        document_number, author, date, document_type, precedence, principal_receiver,
+        other_receivers, security_classification, secrecy_period, formal_characteristics,
+        document_aggregation_type, total_number_of_items, total_number_of_pages,
+        language, manuscript_type, annotation,
+        ds.id, ds.signature_format_description, ds.signature_date, ds.signer, ds.signature, ds.certificate, ds.certificate_reference, ds.signature_algorithm, ds.metadata_id, ds.ele_id ,
+        ea.id, ea.format_information, ea.computer_file_name, ea.computer_file_size, ea.document_creating_application, ea.information_system_description, ea.physical_record_characteristics, ea.scanning_resolution, ea.scanning_color_model, ea.image_compression_scheme, ea.current_location, ea.offline_medium_identifier, ea.offline_medium_storage_location, ea.microform_identifier, ea.metadata_id,
+        rm.id, rm.metadata_id, rm.intellectual_property_statement, rm.authorized_agent, rm.permission_assignment, rm.control_identifier
+        from metadata md
+        left join electronic_attributes ea on md.id=ea.metadata_id left join digital_signature ds on md.id=ds.metadata_id left join rights_management rm on md.id=rm.metadata_id
+
     </sql>
 
     <select id="selectMetadataList" parameterType="Metadata" resultMap="MetadataResult">

@@ -1,7 +1,13 @@
 package com.gox.system.service.impl;
 
+import java.io.File;
 import java.util.List;
+
+import cn.hutool.core.codec.Base64;
+import cn.hutool.core.io.FileUtil;
+import com.gox.common.utils.file.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import com.gox.system.mapper.ElectronicAttributesMapper;
 import com.gox.system.domain.ElectronicAttributes;
@@ -18,7 +24,8 @@ public class ElectronicAttributesServiceImpl implements IElectronicAttributesSer
 {
     @Autowired
     private ElectronicAttributesMapper electronicAttributesMapper;
-
+    @Value("system.rootpath")
+    String rootpath;
     /**
      * 查询电子文件信息
      * 
@@ -29,6 +36,21 @@ public class ElectronicAttributesServiceImpl implements IElectronicAttributesSer
     public ElectronicAttributes selectElectronicAttributesById(Long id)
     {
         return electronicAttributesMapper.selectElectronicAttributesById(id);
+    }
+
+    /**
+     * 获取文件base64编码
+     *
+     * @param id 电子文件id
+     */
+    @Override
+    public String getBase64(String id) {
+        ElectronicAttributes ea = electronicAttributesMapper.selectElectronicAttributesById(Long.valueOf(id));
+        String path = rootpath+ File.separator+ea.getCurrentLocation();
+        if (FileUtil.exist(path)){
+            return Base64.encode(path);
+        }
+        return "";
     }
 
     /**

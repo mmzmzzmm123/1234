@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container" v-loading="loading">
     <div class="left-board">
       <div class="logo-wrapper">
         <div class="logo">
@@ -179,6 +179,8 @@ export default {
   },
   data() {
     return {
+      loading: false,
+      modify:false,
       formname:'',
       logo,
       idGlobal: 100,
@@ -220,6 +222,8 @@ export default {
     }
   },
   mounted() {
+    this.drawingList=[]
+    this.loadData()
     const clipboard = new ClipboardJS('#copyNode', {
       text: trigger => {
         const codeStr = this.generateCode()
@@ -234,20 +238,25 @@ export default {
     clipboard.on('error', e => {
       this.$message.error('代码复制失败')
     })
+
   },
   created() {
-    this.loadData()
+
   },
   methods: {
     loadData() {
       let id = this.$route.params.id
       if(id){
+        this.modify = true
+        this.loading = true
         getJson(id).then(res=>{
-          let json = res.data.formData
+          let json = JSON.parse(res.data.formData)
           this.dataList = json.fields
           this.formData = json
+          this.drawingList=json.fields
+          this.id=id
         })
-        
+        this.loading=false
       }
     },
     activeFormItem(element) {
@@ -297,7 +306,9 @@ export default {
       func && func(data)
     },
     save(){
-      this.$prompt('请输入表单名', '提示', {
+
+      if (!this.modify){
+        this.$prompt('请输入表单名', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           inputPattern: /^((?!\\|\/|:|\*|\?|<|>|\||'|%).){2,15}$/,
@@ -315,9 +326,18 @@ export default {
           this.$message({
             type: 'info',
             message: '取消输入'
-          });       
+          });
         });
-      
+      }else{
+        this.AssembleFormData()
+        let data = JSON.stringify(this.formData);
+        addJson(data).then(res=>{
+          this.$message({message:'保存成功!',type:'success'})
+        }).catch(err=>{
+          this.$message.error('保存失败,系统错误')
+        })
+      }
+
     },
     execRun(data) {
       this.AssembleFormData()
