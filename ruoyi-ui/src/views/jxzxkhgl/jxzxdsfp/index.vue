@@ -37,6 +37,26 @@
           />
         </el-select>
       </el-form-item>
+      <el-form-item label="任教学段" prop="rjxd">
+        <el-select v-model="queryParams.rjxd" placeholder="请选择任教学段">
+          <el-option
+            v-for="dict in rjxdOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          ></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="任教学科" prop="rjxk">
+        <el-select v-model="queryParams.rjxk" placeholder="请选择任教学段">
+          <el-option
+            v-for="dict in rjxkOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          ></el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item>
         <el-button
           type="cyan"

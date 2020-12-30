@@ -151,10 +151,10 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="录取年份" prop="lqnf">
+      <el-form-item label="入编年份" prop="lqnf">
         <el-select
           v-model="queryParams.lqnf"
-          placeholder="请选择录取年份"
+          placeholder="请选择入编年份"
           clearable
           size="small"
         >
@@ -291,7 +291,7 @@
         :formatter="sfsfsFormat"
       />
       <el-table-column
-        label="录取年份"
+        label="入编年份"
         align="center"
         prop="lqnf"
         :formatter="lqnfFormat"
@@ -518,8 +518,8 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="录取年份" prop="lqnf">
-              <el-select v-model="form.lqnf" placeholder="请选择录取年份">
+            <el-form-item label="入编年份" prop="lqnf">
+              <el-select v-model="form.lqnf" placeholder="请选择入编年份">
                 <el-option
                   v-for="dict in lqnfOptions"
                   :key="dict.dictValue"
@@ -588,7 +588,7 @@ export default {
       xwOptions: [],
       // 是否师范生字典
       sfsfsOptions: [],
-      // 录取年份字典
+      // 入编年份字典
       lqnfOptions: [],
       // 查询参数
       queryParams: {
@@ -715,7 +715,7 @@ export default {
     sfsfsFormat(row, column) {
       return this.selectDictLabel(this.sfsfsOptions, row.sfsfs);
     },
-    // 录取年份字典翻译
+    // 入编年份字典翻译
     lqnfFormat(row, column) {
       return this.selectDictLabel(this.lqnfOptions, row.lqnf);
     },

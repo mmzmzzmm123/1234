@@ -94,7 +94,7 @@ public class TsbzJxjsjbxxController extends BaseController {
     public AjaxResult export(TsbzJxjsjbxx tsbzJxjsjbxx) {
         List<TsbzJxjsjbxx> list = tsbzJxjsjbxxService.selectTsbzJxjsjbxxList(tsbzJxjsjbxx);
         ExcelUtil<TsbzJxjsjbxx> util = new ExcelUtil<TsbzJxjsjbxx>(TsbzJxjsjbxx.class);
-        return util.exportExcel(list, "jxjsjbxx");
+        return util.exportExcel(list, "见习教师信息");
     }
 
     /**

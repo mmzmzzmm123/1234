@@ -43,7 +43,7 @@ public class TsbzJxjsjbxx extends BaseEntity {
     /**
      * 性别
      */
-    @Excel(name = "性别")
+    @Excel(name = "用户性别", readConverterExp = "0=男,1=女,2=未知")
     private String xb;
 
     /**

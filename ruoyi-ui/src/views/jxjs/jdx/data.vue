@@ -166,33 +166,6 @@
           />
         </el-select>
       </el-form-item>
-      <!-- <el-form-item label="聘任单位" prop="prdwid">
-        <el-input
-          v-model="queryParams.prdwid"
-          placeholder="请输入聘任单位"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="基地校" prop="jdxid">
-        <el-input
-          v-model="queryParams.jdxid"
-          placeholder="请输入基地校"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="毕业院校" prop="byyx">
-        <el-input
-          v-model="queryParams.byyx"
-          placeholder="请输入毕业院校"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>-->
       <el-form-item>
         <el-button
           type="cyan"
@@ -207,13 +180,28 @@
       </el-form-item>
     </el-form>
 
+    <el-row :gutter="10" class="mb8">
+      <el-col :span="1.5">
+        <el-button
+          type="warning"
+          icon="el-icon-download"
+          size="mini"
+          @click="handleExport"
+          >导出
+        </el-button>
+      </el-col>
+      <right-toolbar
+        :showSearch.sync="showSearch"
+        @queryTable="getList"
+      ></right-toolbar>
+    </el-row>
+
     <el-table
       v-loading="loading"
       :data="jxjsjbxxList"
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center" />
-      <!-- <el-table-column label="编号" align="center" prop="id" /> -->
       <el-table-column label="姓名" align="center" prop="name" />
       <el-table-column
         label="性别"
@@ -257,18 +245,6 @@
         prop="lqnf"
         :formatter="lqnfFormat"
       />
-      <!-- <el-table-column label="出生日期" align="center" prop="csrq" width="180">
-      <el-table-column label="聘任单位" align="center" prop="prdwid" />
-      <el-table-column label="聘任单位名称" align="center" prop="prdwmc" />
-      <el-table-column label="基地校" align="center" prop="jdxid" />
-      <el-table-column label="任教学段" align="center" prop="rjxd" :formatter="rjxdFormat" />
-      <el-table-column label="任教学科" align="center" prop="rjxk" :formatter="rjxkFormat" />
-      <el-table-column label="任教年级" align="center" prop="rjnj" :formatter="rjnjFormat" />
-      <el-table-column label="毕业院校" align="center" prop="byyx" /> 
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.csrq, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>-->
       <el-table-column
         label="操作"
         align="center"
@@ -298,7 +274,12 @@
 </template>
 
 <script>
-import { listJxjsjbxx, getJxjsjbxx, clearJxjsjdx } from "@/api/jxjs/jxjsjbxx";
+import {
+  listJxjsjbxx,
+  getJxjsjbxx,
+  clearJxjsjdx,
+  exportJxjsjbxx,
+} from "@/api/jxjs/jxjsjbxx";
 
 export default {
   name: "Jxjsjbxx",
@@ -423,6 +404,22 @@ export default {
     });
   },
   methods: {
+    /** 导出按钮操作 */
+    handleExport() {
+      const queryParams = this.queryParams;
+      this.$confirm("是否确认导出所选用户数据项?", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(function () {
+          return exportJxjsjbxx(queryParams);
+        })
+        .then((response) => {
+          this.download(response.msg);
+        })
+        .catch(function () {});
+    },
     /** 查询见习教师基本信息列表 */
     getList() {
       this.loading = true;
@@ -502,7 +499,7 @@ export default {
         type: "warning",
       })
         .then(function () {
-           return clearJxjsjdx(ids);
+          return clearJxjsjdx(ids);
         })
         .then(() => {
           this.getList();
