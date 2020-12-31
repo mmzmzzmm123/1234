@@ -1,17 +1,24 @@
 package com.gox.system.service.impl;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.OutputStream;
+import java.nio.file.Paths;
 import java.util.List;
+import java.util.Map;
 
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.io.FileUtil;
-import com.gox.common.utils.file.FileUtils;
+import cn.hutool.core.io.IoUtil;
+import com.gox.common.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import com.gox.system.mapper.ElectronicAttributesMapper;
 import com.gox.system.domain.ElectronicAttributes;
 import com.gox.system.service.IElectronicAttributesService;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 电子文件信息Service业务层处理
@@ -22,6 +29,7 @@ import com.gox.system.service.IElectronicAttributesService;
 @Service
 public class ElectronicAttributesServiceImpl implements IElectronicAttributesService 
 {
+    static String a;
     @Autowired
     private ElectronicAttributesMapper electronicAttributesMapper;
     @Value("system.rootpath")
@@ -37,7 +45,40 @@ public class ElectronicAttributesServiceImpl implements IElectronicAttributesSer
     {
         return electronicAttributesMapper.selectElectronicAttributesById(id);
     }
+    /**
+     * 文件分块合并存储
+     * @param map
+     */
+    @Override
+    public String mergeChunk(Map<String, Object> map){
+        try{
+            StringBuilder path = new StringBuilder(rootpath);
+            path.append(File.separator).append("temp");
+            MultipartFile file = (MultipartFile) map.get("data");
 
+            //第一个块
+            if ("1".equals(map.get("chunkIndex"))){
+                File f = new File(path.toString());
+                if (!f.exists()){
+                    f.mkdirs();
+                }
+                path.append(File.separator).append(SecurityUtils.getUsername()).append("-").append(map.get("filename"));
+                file.transferTo(Paths.get(path.toString()));
+            }
+            else {
+                path.append(File.separator).append(SecurityUtils.getUsername()).append("-").append(map.get("filename"));
+                OutputStream outputStream = new FileOutputStream(path.toString());
+                IoUtil.write(outputStream,false,file.getBytes());
+                IoUtil.close(outputStream);
+            }
+            System.out.println(map.get("chunkIndex"));
+        }
+        catch (Exception e){
+            return "发生异常"+e.getMessage();
+        }
+        return "";
+
+    }
     /**
      * 获取文件base64编码
      *

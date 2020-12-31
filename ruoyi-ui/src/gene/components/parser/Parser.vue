@@ -1,5 +1,5 @@
 <script>
-import { deepClone } from '@/gene/utils/index'
+import { deepClone } from '@/gene/utils'
 import render from '@/gene/components/render/render.js'
 
 const ruleTrigger = {
@@ -127,7 +127,7 @@ export default {
     }
   },
   data() {
-    const data = {
+    let data = {
       formConfCopy: deepClone(this.formConf),
       [this.formConf.formModel]: {},
       [this.formConf.formRules]: {}

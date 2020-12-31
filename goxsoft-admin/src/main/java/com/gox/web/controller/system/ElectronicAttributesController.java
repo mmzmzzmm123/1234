@@ -1,8 +1,17 @@
 package com.gox.web.controller.system;
 
+import java.io.IOException;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import cn.hutool.core.util.StrUtil;
+import com.gox.common.core.domain.entity.SysDictData;
+import com.gox.common.core.redis.RedisCache;
+import com.gox.common.utils.DictUtils;
+import com.gox.common.utils.SecurityUtils;
 import com.gox.common.utils.StringUtils;
 import org.aspectj.weaver.loadtime.Aj;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,6 +32,10 @@ import com.gox.system.domain.ElectronicAttributes;
 import com.gox.system.service.IElectronicAttributesService;
 import com.gox.common.utils.poi.ExcelUtil;
 import com.gox.common.core.page.TableDataInfo;
+import org.springframework.web.multipart.MultipartFile;
+import sun.net.www.http.HttpClient;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 电子文件信息Controller
@@ -36,7 +49,8 @@ public class ElectronicAttributesController extends BaseController
 {
     @Autowired
     private IElectronicAttributesService electronicAttributesService;
-
+    @Autowired
+    RedisCache redisCache;
     /**
      * 查询电子文件信息列表
      */
@@ -49,9 +63,42 @@ public class ElectronicAttributesController extends BaseController
         return getDataTable(list);
     }
     /**
+     * 完整文件验证
+     */
+    @PreAuthorize("@ss.hasPermi('system:attributes:add')")
+    //@Log(title = "电子文件信息", businessType = BusinessType.INSERT)
+    @PostMapping("/full")
+    public AjaxResult upload(HttpServletRequest req){
+        String filename = req.getParameter("file_name");
+        String md5 = req.getParameter("md5");
+        redisCache.setCacheObject(SecurityUtils.getUsername()+":"+filename,md5);
+        return AjaxResult.success();
+    }
+    /**
+     * 上传文件分块
+     */
+    @PreAuthorize("@ss.hasPermi('system:attributes:add')")
+    //@Log(title = "电子文件信息", businessType = BusinessType.INSERT)
+    @PostMapping("/chunk")
+    public AjaxResult upload2(HttpServletRequest req, MultipartFile data) {
+        if (data==null) {
+            return AjaxResult.error();
+        }Map<String,Object> map = new HashMap<>();
+        map.put("filename",req.getParameter("file_name"));
+        map.put("md5",req.getParameter("md5"));
+        map.put("chunks",req.getParameter("chunks"));
+        map.put("chunkIndex",req.getParameter("chunk_index"));
+        map.put("chunkMd5",req.getParameter("chunk_md5"));
+        map.put("data",data);
+        electronicAttributesService.mergeChunk(map);
+        return AjaxResult.success();
+    }
+    /**
      * 获取base64
      */
     @GetMapping("/base64/{id}")
+    @Log(title = "电子文件信息", businessType = BusinessType.GET)
+    @PreAuthorize("@ss.hasPermi('system:attributes:query')")
     public AjaxResult getBase64(@PathVariable String id){
         String s = electronicAttributesService.getBase64(id);
         if (StrUtil.isNotBlank(s)){

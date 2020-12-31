@@ -82,6 +82,8 @@ public class FormJsonController extends BaseController
         formJson.setFormName(formname);
         formJson.setFormData(jsonStr);
         json.remove("formname");
+        json.remove("id");
+        formJson.setFormData(json.toJSONString());
         if (StringUtils.isNotEmpty(id)){
             formJson.setId(Long.valueOf(id));
             json.remove("id");

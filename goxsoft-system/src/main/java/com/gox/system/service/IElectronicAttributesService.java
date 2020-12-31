@@ -1,6 +1,8 @@
 package com.gox.system.service;
 
 import java.util.List;
+import java.util.Map;
+
 import com.gox.system.domain.ElectronicAttributes;
 
 /**
@@ -18,6 +20,9 @@ public interface IElectronicAttributesService
      * @return 电子文件信息
      */
     public ElectronicAttributes selectElectronicAttributesById(Long id);
+
+    String mergeChunk(Map<String, Object> map);
+
     /**
      * 获取文件base64编码
      * @param id 电子文件id

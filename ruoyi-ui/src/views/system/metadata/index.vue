@@ -748,10 +748,8 @@
 <!--      </div>-->
 <!--    </el-dialog>-->
     <el-dialog :title="title" :visible.sync="open" width="1500px" append-to-body>
-      <InputView node="888" parent-name="999">
-
-      </InputView>
-      <el-button>
+      <InputView v-if="open" :formconf="formConf"/>
+      <el-button @click="cancel">
         取消
       </el-button>
     </el-dialog>
@@ -762,6 +760,7 @@
 import { listMetadata, getMetadata, delMetadata, addMetadata, updateMetadata, exportMetadata } from "@/api/system/metadata";
 import DeptTree from '@/views/components/deptTree'
 import InputView from '@/views/system/metadata/InputView'
+import { listJson } from '@/api/system/json'
 
 export default {
   name: "Metadata",
@@ -771,6 +770,7 @@ export default {
   },
   data() {
     return {
+      formConf:{},
       //默认部门ID
       deptId:100,
       //部门名称
@@ -1110,7 +1110,7 @@ export default {
     // 取消按钮
     cancel() {
       this.open = false;
-      this.reset();
+      //this.reset();
     },
     // 表单重置
     reset() {
@@ -1184,9 +1184,18 @@ export default {
       this.single = selection.length!==1
       this.multiple = !selection.length
     },
+    loadForm(){
+      let query = {id:'',parentName: '999' ,node:'888'}
+      listJson(query).then(res => {
+        this.formConf=JSON.parse(res.rows[0].formData)
+        console.log(this.formConf)
+      }).catch(err=>{
+        console.log(err)
+      })
+    },
     /** 新增按钮操作 */
     handleAdd() {
-      this.reset();
+      this.loadForm();
       this.open = true;
       this.title = "添加文书类基本元数据";
     },
