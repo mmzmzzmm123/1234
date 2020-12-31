@@ -2,6 +2,9 @@ package com.ruoyi.web.controller.jxjs;
 
 import java.util.List;
 
+import com.ruoyi.common.core.domain.model.LoginUser;
+import com.ruoyi.common.utils.ServletUtils;
+import com.ruoyi.framework.web.service.TokenService;
 import com.ruoyi.jxjs.domain.TsbzJxjsjbxx;
 import com.ruoyi.web.controller.common.SchoolCommonController;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,6 +25,7 @@ import com.ruoyi.jxjs.domain.TsbzJxjscj;
 import com.ruoyi.jxjs.service.ITsbzJxjscjService;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 见习教师成绩Controller
@@ -36,6 +40,8 @@ public class TsbzJxjscjController extends BaseController {
     private ITsbzJxjscjService tsbzJxjscjService;
     @Autowired
     private SchoolCommonController schoolCommonController;
+    @Autowired
+    private TokenService tokenService;
 
     /**
      * 查询见习教师成绩列表
@@ -54,6 +60,25 @@ public class TsbzJxjscjController extends BaseController {
         startPage();
         List<TsbzJxjscj> list = tsbzJxjscjService.selectTsbzJxjscjList(tsbzJxjscj);
         return getDataTable(list);
+    }
+
+    @Log(title = "教师成绩数据", businessType = BusinessType.IMPORT)
+    @PreAuthorize("@ss.hasPermi('jxjs:jxjscj:import')")
+    @PostMapping("/importData")
+    public AjaxResult importData(MultipartFile file, boolean updateSupport) throws Exception {
+        ExcelUtil<TsbzJxjscj> util = new ExcelUtil<TsbzJxjscj>(TsbzJxjscj.class);
+        List<TsbzJxjscj> tsbzJxjscjList = util.importExcel(file.getInputStream());
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+        String operName = loginUser.getUsername();
+        String message = tsbzJxjscjService.importTsbzJxjscj(tsbzJxjscjList, updateSupport, operName);
+        return AjaxResult.success(message);
+    }
+
+    @GetMapping("/importTemplate")
+    public AjaxResult importTemplate()
+    {
+        ExcelUtil<TsbzJxjscj> util = new ExcelUtil<TsbzJxjscj>(TsbzJxjscj.class);
+        return util.importTemplateExcel("教师成绩数据");
     }
 
     /**

@@ -20,6 +20,14 @@ public interface ITsbzJxjscjService {
     public TsbzJxjscj selectTsbzJxjscjById(Long id);
 
     /**
+     * 通过用户名查询用户
+     *
+     * @param jsid 用户名
+     * @return 用户对象信息
+     */
+    public TsbzJxjscj selectTsbzJxjscjByJsid(Long jsid);
+
+    /**
      * 查询见习教师成绩列表
      *
      * @param tsbzJxjscj 见习教师成绩
@@ -58,4 +66,14 @@ public interface ITsbzJxjscjService {
      * @return 结果
      */
     public int deleteTsbzJxjscjById(Long id);
+
+    /**
+     * 导入用户数据
+     *
+     * @param tsbzJxjscjList 教师成绩数据列表
+     * @param isUpdateSupport 是否更新支持，如果已存在，则进行更新数据
+     * @param operName 操作用户
+     * @return 结果
+     */
+    public String importTsbzJxjscj(List<TsbzJxjscj> tsbzJxjscjList, Boolean isUpdateSupport, String operName);
 }

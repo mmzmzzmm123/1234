@@ -73,6 +73,11 @@ left join tsbz_jdx c on b.jdxid=c.id
         where a.id = #{id}
     </select>
 
+    <select id="selectTsbzJxjscjByJsid" parameterType="String" resultMap="TsbzJxjscjResult">
+        <include refid="selectTsbzJxjscjVo"/>
+        where a.jsid = #{jsid}
+    </select>
+
     <insert id="insertTsbzJxjscj" parameterType="TsbzJxjscj" useGeneratedKeys="true" keyProperty="id">
         insert into tsbz_jxjscj
         <trim prefix="(" suffix=")" suffixOverrides=",">

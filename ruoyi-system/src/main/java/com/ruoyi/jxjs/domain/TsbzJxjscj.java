@@ -75,6 +75,8 @@ public class TsbzJxjscj extends BaseEntity {
     @Excel(name = "创建人")
     private Long createuserid;
 
+    private String name;
+
     private TsbzJxjsjbxx tsbzJxjsjbxx;
 
     private String jdxmc;
@@ -191,6 +193,15 @@ public class TsbzJxjscj extends BaseEntity {
                 .append("createTime", getCreateTime())
                 .append("jdxmc", getJdxmc())
                 .append("tsbzJxjsjbxx", getTsbzJxjsjbxx())
+                .append("name", getName())
                 .toString();
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

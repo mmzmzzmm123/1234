@@ -528,7 +528,7 @@ export default {
       this.show = true;
       this.reset();
       this.open = true;
-      this.title = "添加基地培训信息发布";
+      this.title = "添加过程性资料";
     },
     /** 查看按钮操作 */
     handleCheck(row) {
@@ -537,7 +537,7 @@ export default {
       getJxzxjdpxxxfb(id).then((response) => {
         this.form = response.data;
         this.open_look = true;
-        this.title_look = "基地培训信息详情";
+        this.title_look = "过程性资料详情";
         if (response.data.fileName == null || response.data.fileName == "") {
         } else {
           this.fileList.push({
@@ -576,7 +576,7 @@ export default {
         this.form = response.data;
         // console.log(response.data);
         this.open = true;
-        this.title = "修改基地培训信息发布";
+        this.title = "修改过程性资料";
         if (response.data.fileName == null || response.data.fileName == "") {
         } else {
           this.fileList.push({
@@ -650,7 +650,7 @@ export default {
     /** 导出按钮操作 */
     handleExport() {
       const queryParams = this.queryParams;
-      this.$confirm("是否确认导出所有基地培训信息发布数据项?", "警告", {
+      this.$confirm("是否确认导出所有过程性资料管理数据项?", "警告", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",

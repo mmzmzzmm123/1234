@@ -58,4 +58,12 @@ public interface TsbzJxjscjMapper {
      * @return 结果
      */
     public int deleteTsbzJxjscjByIds(Long[] ids);
+
+    /**
+     * 通过用户名查询用户
+     *
+     * @param jsid 教师名
+     * @return 用户对象信息
+     */
+    public TsbzJxjscj selectTsbzJxjscjByJsid(Long jsid);
 }
