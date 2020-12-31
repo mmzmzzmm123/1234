@@ -1,7 +1,11 @@
 package com.stdiet.custom.mapper;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.List;
 import com.stdiet.custom.domain.SysDishes;
+import com.stdiet.custom.domain.SysDishesIngredient;
+import com.stdiet.custom.domain.SysIngredient;
 
 /**
  * 菜品Mapper接口
@@ -18,6 +22,8 @@ public interface SysDishesMapper
      * @return 菜品
      */
     public SysDishes selectSysDishesById(Long id);
+
+    public ArrayList<SysDishesIngredient> selectSysIngreditentsById(Long id);
 
     /**
      * 查询菜品列表
@@ -58,4 +64,10 @@ public interface SysDishesMapper
      * @return 结果
      */
     public int deleteSysDishesByIds(Long[] ids);
+
+    public int deleteIngredientById(Long id);
+
+    public int deleteIngredientByIds(Long[] ids);
+
+    public int bashInsertDishesIngredent(List<SysDishesIngredient> sysDishesIngredients);
 }

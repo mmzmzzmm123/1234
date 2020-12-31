@@ -68,4 +68,8 @@ public interface SysIngredientMapper
     public int deleteIngredentRecByIngredientId(Long recId);
 
     public int deleteIngredentNotRecByIngredientId(Long notRecId);
+
+    public int deleteIngredentRecByIngredientIds(Long[] id);
+
+    public int deleteIngredentNotRecByIngredientIds(Long[] id);
 }

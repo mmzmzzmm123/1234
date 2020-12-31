@@ -45,6 +45,14 @@ public class SysIngredientController extends BaseController
         return getDataTable(list);
     }
 
+    @PreAuthorize("@ss.hasPermi('custom:ingredient:list')")
+    @PostMapping("/listAll")
+    public TableDataInfo listAll(@RequestBody SysIngredient sysIngredient)
+    {
+        List<SysIngredient> list = sysIngredientService.selectSysIngredientList(sysIngredient);
+        return getDataTable(list);
+    }
+
     /**
      * 导出食材列表
      */

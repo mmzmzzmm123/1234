@@ -14,6 +14,19 @@ export function listIngredient(query) {
   })
 }
 
+export function listAllIngredient(query) {
+  const {recIds, notRecIds} = query;
+  return request({
+    url: '/custom/ingredient/listAll',
+    method: 'post',
+    data: {
+      ...query,
+      recIds: recIds && recIds.length ? recIds : null,
+      notRecIds: notRecIds && notRecIds.length ? notRecIds : null,
+    }
+  })
+}
+
 // 查询食材详细
 export function getIngredient(id) {
   return request({
