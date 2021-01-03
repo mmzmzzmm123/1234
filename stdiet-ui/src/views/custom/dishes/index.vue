@@ -173,7 +173,15 @@
               prop="weight"
               label="重量(g)">
               <template slot-scope="scope">
-                <el-input v-model="scope.row.weight" size="mini" @change="handleInputChange" type="number" step="50"/>
+                  <el-input-number
+                    class="weight"
+                    v-model="scope.row.weight"
+                    size="mini"
+                    controls-position="right"
+                    @change="handleInputChange"
+                    type="number"
+                    :min="0"
+                    step="50"/>
               </template>
             </el-table-column>
             <el-table-column
@@ -465,9 +473,9 @@
       getSummaries(param) {
         const {columns, data} = param;
         return columns.reduce((arr, cur, idx) => {
-          if (idx) {
+          if (idx > 1) {
             arr[idx] = data.reduce((acc, dAcc) => {
-              if (idx === 1) {
+              if (idx === 2) {
                 return acc + parseFloat(dAcc.weight);
               }
               return acc + dAcc[cur.property] * dAcc.weight / 100;
@@ -519,5 +527,13 @@
   .cus-unit .el-select .el-input__inner {
     padding: 0 4px;
     border: unset;
+  }
+
+  .weight {
+    width: 70px
+  }
+
+  .weight .el-input .el-input__inner {
+    padding: 0 32px 0 4px;
   }
 </style>
