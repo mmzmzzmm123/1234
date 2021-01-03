@@ -34,24 +34,6 @@ public class SysIngredient extends BaseEntity {
     private String type;
 
     /**
-     * 推荐分量估算
-     */
-    @Excel(name = "推荐分量估算")
-    private Long recEstimation;
-
-    /**
-     * 推荐分量估算单位id
-     */
-    @Excel(name = "推荐分量估算单位id")
-    private Long recEstUnit;
-
-    /**
-     * 推荐分量
-     */
-    @Excel(name = "推荐分量")
-    private Long recPortion;
-
-    /**
      * 蛋白质比例
      */
     @Excel(name = "蛋白质比例")
@@ -123,30 +105,6 @@ public class SysIngredient extends BaseEntity {
         this.type = type;
     }
 
-    public Long getRecEstimation() {
-        return recEstimation;
-    }
-
-    public void setRecEstimation(Long recEstimation) {
-        this.recEstimation = recEstimation;
-    }
-
-    public Long getRecEstUnit() {
-        return recEstUnit;
-    }
-
-    public void setRecEstUnit(Long recEstUnit) {
-        this.recEstUnit = recEstUnit;
-    }
-
-    public Long getRecPortion() {
-        return recPortion;
-    }
-
-    public void setRecPortion(Long recPortion) {
-        this.recPortion = recPortion;
-    }
-
     public BigDecimal getProteinRatio() {
         return proteinRatio;
     }
@@ -201,9 +159,6 @@ public class SysIngredient extends BaseEntity {
                 .append("id", getId())
                 .append("name", getName())
                 .append("type", getType())
-                .append("recEstimation", getRecEstimation())
-                .append("recEstUnit", getRecEstUnit())
-                .append("recPortion", getRecPortion())
                 .append("proteinRatio", getProteinRatio())
                 .append("fatRatio", getFatRatio())
                 .append("carbonRatio", getCarbonRatio())

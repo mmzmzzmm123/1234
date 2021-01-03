@@ -5,6 +5,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import com.stdiet.common.annotation.Excel;
 import com.stdiet.common.core.domain.BaseEntity;
 
+import java.util.List;
+
 /**
  * 菜品对象 sys_dishes
  * 
@@ -29,6 +31,8 @@ public class SysDishes extends BaseEntity
     /** 做法 */
     @Excel(name = "做法")
     private String methods;
+
+    private List<SysDishesIngredient> igdList;
 
     public void setId(Long id) 
     {
@@ -65,6 +69,14 @@ public class SysDishes extends BaseEntity
     public String getMethods() 
     {
         return methods;
+    }
+
+    public void setIgdList(List<SysDishesIngredient> ingredientList) {
+        this.igdList = ingredientList;
+    }
+
+    public List<SysDishesIngredient> getIgdList() {
+        return igdList;
     }
 
     @Override

@@ -34,7 +34,8 @@
           size="mini"
           @click="handleAdd"
           v-hasPermi="['custom:dishes:add']"
-        >新增</el-button>
+        >新增
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -43,17 +44,18 @@
           size="mini"
           @click="handleExport"
           v-hasPermi="['custom:dishes:export']"
-        >导出</el-button>
+        >导出
+        </el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="dishesList" @selection-change="handleSelectionChange">
-<!--      <el-table-column type="selection" width="55" align="center" />-->
-<!--      <el-table-column label="id" align="center" prop="id" />-->
-      <el-table-column label="菜品名称" align="center" prop="name" />
-      <el-table-column label="菜品类型" align="center" prop="type" :formatter="typeFormat" />
-      <el-table-column label="做法" align="center" prop="methods" />
+      <!--      <el-table-column type="selection" width="55" align="center" />-->
+      <!--      <el-table-column label="id" align="center" prop="id" />-->
+      <el-table-column label="菜品名称" align="center" prop="name"/>
+      <el-table-column label="菜品类型" align="center" prop="type" :formatter="typeFormat"/>
+      <el-table-column label="做法" align="center" prop="methods"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -62,14 +64,16 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['custom:dishes:edit']"
-          >修改</el-button>
+          >修改
+          </el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['custom:dishes:remove']"
-          >删除</el-button>
+          >删除
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -86,7 +90,7 @@
     <el-dialog :title="title" :visible.sync="open" width="720px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="菜品名称" prop="name">
-          <el-input v-model="form.name" placeholder="请输入菜品名称" />
+          <el-input v-model="form.name" placeholder="请输入菜品名称"/>
         </el-form-item>
         <el-form-item label="菜品类型" prop="type">
           <el-select v-model="form.type" placeholder="请选择菜品类型">
@@ -101,9 +105,9 @@
         <el-form-item label="食材" prop="ingIds">
           <el-transfer
             style="text-align: left; display: inline-block"
-            v-model="form.ingIds"
+            v-model="selIngIds"
+            size="mini"
             filterable
-            :render-content="renderFunc"
             :titles="['备选', '已选']"
             :button-texts="['', '']"
             :format="{
@@ -111,19 +115,59 @@
           hasChecked: '${checked}/${total}',
         }"
             @change="handleChange"
-            :data="data"
+            :data="ingDataList"
           >
-            <el-select class="transfer-footer" slot="left-footer" size="small"
-                       v-model="ingType"
-                       v-for="dict in ingTypeOptions"
-                       :key="dict.dictValue"
-                       :label="dict.dictLabel"
-                       :value="dict.dictValue"/>
-            <div class="transfer-footer" slot="right-footer" size="small" />
+            <el-select
+              class="transfer-footer"
+              slot="left-footer"
+              size="small"
+              filterable
+              v-model="ingType"
+              @change="handleOnTypeChange">
+              <el-option
+                v-for="dict in ingTypeOptions"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="dict.dictValue"/>
+            </el-select>
+            <div class="transfer-footer" slot="right-footer" size="small"/>
           </el-transfer>
         </el-form-item>
+        <el-form-item label="分量" prop="weight">
+          <el-table
+            :data="selTableData"
+            border
+            show-summary
+            size="mini"
+            :summary-method="getSummaries"
+            style="width: 100%">
+            <el-table-column
+              prop="name"
+              label="食材">
+            </el-table-column>
+            <el-table-column
+              prop="weight"
+              label="重量(g)">
+              <template slot-scope="scope">
+                <el-input v-model="scope.row.weight" size="mini" @change="handleInputChange" type="number" step="50"/>
+              </template>
+            </el-table-column>
+            <el-table-column
+              prop="proteinRatio"
+              label="P/100g">
+            </el-table-column>
+            <el-table-column
+              prop="fatRatio"
+              label="F/100g">
+            </el-table-column>
+            <el-table-column
+              prop="carbonRatio"
+              label="C/100g">
+            </el-table-column>
+          </el-table>
+        </el-form-item>
         <el-form-item label="做法" prop="methods">
-          <el-input v-model="form.methods" type="textarea" placeholder="请输入内容" />
+          <el-input v-model="form.methods" type="textarea" placeholder="请输入内容"/>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -135,7 +179,8 @@
 </template>
 
 <script>
-  import { listDishes, getDishes, delDishes, addDishes, updateDishes, exportDishes } from "@/api/custom/dishes";
+  import {addDishes, delDishes, exportDishes, getDishes, listDishes, updateDishes} from "@/api/custom/dishes";
+  import {listAllIngredient} from "@/api/custom/ingredient";
 
   export default {
     name: "Dishes",
@@ -159,9 +204,19 @@
         title: "",
         // 是否显示弹出层
         open: false,
-        ingType: 1,
+        ingType: '1',
         // 食材类别字典
         ingTypeOptions: [],
+        // 远程数据缓存，预防新增的食材找不到
+        oriDataList: [],
+        // 备选食材列表
+        ingDataList: [],
+        // 选中的食材列表
+        selIngList: [],
+        // 选中的食材id
+        selIngIds: [],
+        // 选中的食材分量列表
+        selTableData: [],
         // 菜品类别字典
         typeOptions: [],
         // 查询参数
@@ -174,8 +229,7 @@
         // 表单参数
         form: {},
         // 表单校验
-        rules: {
-        }
+        rules: {}
       };
     },
     created() {
@@ -217,8 +271,13 @@
           createTime: null,
           updateBy: null,
           updateTime: null,
-          ingIds: []
+          igdList: []
         };
+        this.selIngIds = [];
+        this.selIngList = [];
+        this.selTableData = [];
+        this.oriDataList = [];
+        this.ingType = '1';
         this.resetForm("form");
       },
       /** 搜索按钮操作 */
@@ -234,14 +293,21 @@
       // 多选框选中数据
       handleSelectionChange(selection) {
         this.ids = selection.map(item => item.id)
-        this.single = selection.length!==1
+        this.single = selection.length !== 1
         this.multiple = !selection.length
       },
       /** 新增按钮操作 */
       handleAdd() {
         this.reset();
-        this.open = true;
-        this.title = "添加菜品";
+        listAllIngredient({type: this.ingType}).then(response => {
+          this.open = true;
+          this.title = "添加菜品";
+          this.oriDataList = response.rows;
+          this.ingDataList = this.oriDataList.map(obj => ({
+            key: obj.id,
+            label: obj.name
+          }))
+        })
       },
       /** 修改按钮操作 */
       handleUpdate(row) {
@@ -249,14 +315,35 @@
         const id = row.id || this.ids
         getDishes(id).then(response => {
           this.form = response.data;
-          this.open = true;
-          this.title = "修改菜品";
+          this.form.igdList.forEach(obj => {
+            this.selIngIds.push(obj.id);
+            this.selIngList.push({
+              key: obj.id,
+              label: obj.name
+            });
+            this.selTableData.push(obj)
+          })
+          listAllIngredient({type: this.ingType}).then(res => {
+            this.open = true;
+            this.title = "修改菜品";
+            this.oriDataList = res.rows;
+            this.ingDataList = this.oriDataList.reduce((arr, cur) => {
+              if (!arr.some(({key}) => key === cur.id)) {
+                arr.push({
+                  key: cur.id,
+                  label: cur.name
+                });
+              }
+              return arr;
+            }, this.selIngList.slice());
+          })
         });
       },
       /** 提交按钮 */
       submitForm() {
         this.$refs["form"].validate(valid => {
           if (valid) {
+            this.form.igdList = this.selTableData;
             if (this.form.id != null) {
               updateDishes(this.form).then(response => {
                 if (response.code === 200) {
@@ -284,12 +371,13 @@
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
-        }).then(function() {
+        }).then(function () {
           return delDishes(ids);
         }).then(() => {
           this.getList();
           this.msgSuccess("删除成功");
-        }).catch(function() {});
+        }).catch(function () {
+        });
       },
       /** 导出按钮操作 */
       handleExport() {
@@ -298,20 +386,71 @@
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
-        }).then(function() {
+        }).then(function () {
           return exportDishes(queryParams);
         }).then(response => {
           this.download(response.msg);
-        }).catch(function() {});
+        }).catch(function () {
+        });
       },
-      renderFunc(h, option) {
-        if (this.form.ingIds.includes(option.key)) {
-          return <span>
-              {option.key} - {option.label}
-            </span>
-        }
-        return <span>{option.label}</span>;
+      handleChange(value, direction, movedKeys) {
+        // console.log({oriIgdList: this.oriDataList, selIgdList: this.form.igdList});
+        const newTableData = [];
+        this.selIngList = value.map(id => {
+          // 搜索table中的数据
+          let tmpTableObj = this.selTableData.find(obj => obj.id === id);
+          if (tmpTableObj) {
+            newTableData.push(tmpTableObj);
+          } else {
+            // 搜索请求的缓存数据
+            tmpTableObj = this.oriDataList.find(obj => obj.id === id);
+            if (tmpTableObj) {
+              newTableData.push({...tmpTableObj, weight: 100, cusWeight: 1, cusUnit: 1})
+            }
+          }
+          const tarObj = this.ingDataList.find(({key}) => key === id);
+          return tarObj
+        });
+        this.selTableData = newTableData;
       },
+      handleOnTypeChange(value) {
+        listAllIngredient({type: value}).then(res => {
+          this.ingDataList = res.rows.reduce((arr, cur) => {
+            if (!arr.some(({key}) => key === cur.id)) {
+              arr.push({
+                key: cur.id,
+                label: cur.name
+              });
+            }
+            return arr;
+          }, this.selIngList.slice());
+        })
+      },
+      handleInputChange(val) {
+        console.log({val, table: this.selTableData})
+      },
+      getSummaries(param) {
+        console.log(param)
+        console.log(arguments);
+        const {columns, data} = param;
+        return columns.reduce((arr, cur, idx) => {
+          if (idx) {
+            arr[idx] = data.reduce((acc, dAcc) => {
+              if (idx === 1) {
+                return acc + dAcc.weight;
+              }
+              return acc + dAcc[cur.property] * dAcc.weight / 100;
+            }, 0);
+          }
+          return arr;
+        }, ['合计'])
+      }
     }
   };
 </script>
+
+<style>
+  .el-transfer-panel__filter {
+    margin: 2px;
+  }
+</style>

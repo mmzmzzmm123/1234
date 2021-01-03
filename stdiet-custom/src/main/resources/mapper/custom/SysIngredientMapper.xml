@@ -159,6 +159,20 @@
         delete from sys_ingredient_not_rec where ingredient_id=#{ingredientId}
     </delete>
 
+    <delete id="deleteIngredentRecByIngredientIds" parameterType="Long">
+        delete from sys_ingredient_rec where ingredient_id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <delete id="deleteIngredentNotRecByIngredientIds" parameterType="String">
+        delete from sys_ingredient_not_rec where ingredient_id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
     <update id="updateSysIngredient" parameterType="SysIngredient">
         update sys_ingredient
         <trim prefix="SET" suffixOverrides=",">

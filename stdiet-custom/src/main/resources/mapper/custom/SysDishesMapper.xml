@@ -15,6 +15,21 @@
         <result property="updateTime"    column="update_time"    />
     </resultMap>
 
+    <resultMap type="SysDishesIngredient" id="SysDishesIngredientResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="type"    column="type"    />
+        <result property="proteinRatio"    column="protein_ratio"    />
+        <result property="fatRatio"    column="fat_ratio"    />
+        <result property="carbonRatio"    column="carbon_ratio"    />
+        <result property="area"    column="area"    />
+        <result property="rec"    column="rec"    />
+        <result property="notRec"    column="not_rec"    />
+        <result property="cusWeight"    column="cus_weight"    />
+        <result property="cusUnit"    column="cus_unit"    />
+        <result property="weight"    column="weight"    />
+    </resultMap>
+
     <sql id="selectSysDishesVo">
         select id, name, type, methods, create_by, create_time, update_by, update_time from sys_dishes
     </sql>
@@ -25,6 +40,38 @@
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
             <if test="type != null  and type != ''"> and type = #{type}</if>
         </where>
+    </select>
+
+    <sql id="selectSysIngreditentsByIdVo">
+        SELECT * FROM(
+            SELECT ingredient_id AS id, ingredient_weight AS weight, cus_weight, cus_unit
+            FROM sys_dishes_ingredient
+            WHERE dishes_id = #{id}
+        ) dishes
+        LEFT JOIN (
+            SELECT id, name, type, protein_ratio, fat_ratio, carbon_ratio, area, not_rec, rec
+            FROM sys_ingredient igd
+            LEFT JOIN (
+                SELECT ingredient_id as id, GROUP_CONCAT(name SEPARATOR ',') not_rec FROM(
+                    SELECT physical_signs_id as id, ingredient_id
+                    FROM sys_ingredient_not_rec
+                ) notRec JOIN sys_physical_signs phy USING(id)
+                GROUP BY id
+            ) notRecT USING(id)
+            LEFT JOIN (
+                SELECT ingredient_id as id, GROUP_CONCAT(name SEPARATOR ',') rec FROM(
+                    SELECT physical_signs_id as id, ingredient_id
+                    FROM sys_ingredient_rec
+                ) rec JOIN sys_physical_signs phy USING(id)
+                GROUP BY id
+            ) recT USING(id)
+        ) ing USING(id)
+    </sql>
+
+    <select id="selectSysIngreditentsById" parameterType="Long" resultMap="SysDishesIngredientResult">
+        <include refid="selectSysIngreditentsByIdVo" >
+            <property name="id" value="#{id}"/>
+        </include>
     </select>
 
     <select id="selectSysDishesById" parameterType="Long" resultMap="SysDishesResult">
@@ -78,5 +125,23 @@
             #{id}
         </foreach>
     </delete>
+
+    <delete id="deleteIngredientById" parameterType="Long">
+        delete from sys_dishes_ingredient where dishes_id = #{id}
+    </delete>
+
+    <delete id="deleteIngredientByIds" parameterType="String">
+        delete from sys_dishes_ingredient where dishes_id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <insert id="bashInsertDishesIngredent">
+        insert into sys_dishes_ingredient(dishes_id, ingredient_id, ingredient_weight, cus_unit, cus_weight) values
+        <foreach collection="list" separator="," item="item" index="index">
+            (#{item.dishesId}, #{item.ingredientId}, #{item.weight}, #{item.cusUnit}, #{item.cusWeight})
+        </foreach>
+    </insert>
 
 </mapper>

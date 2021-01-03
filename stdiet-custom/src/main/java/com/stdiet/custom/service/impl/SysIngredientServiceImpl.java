@@ -128,6 +128,8 @@ public class SysIngredientServiceImpl implements ISysIngredientService {
      */
     @Override
     public int deleteSysIngredientByIds(Long[] ids) {
+        sysIngredientMapper.deleteIngredentRecByIngredientIds(ids);
+        sysIngredientMapper.deleteIngredentNotRecByIngredientIds(ids);
         return sysIngredientMapper.deleteSysIngredientByIds(ids);
     }
 
