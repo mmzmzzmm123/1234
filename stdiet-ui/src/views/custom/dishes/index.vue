@@ -145,6 +145,30 @@
               prop="name"
               label="食材">
             </el-table-column>
+            <el-table-column label="通俗计量">
+              <template slot-scope="scope">
+                <span class="cus-unit">
+                  <el-input-number
+                    v-model="scope.row.cusWeight"
+                    size="small"
+                    type="number"
+                    controls-position="right"
+                    step="0.5"
+                    :min="0.5"/>
+                  <el-select
+                    size="small"
+                    v-model="scope.row.cusUnit"
+                  >
+                    <el-option
+                      v-for="dict in cusUnitOptions"
+                      :key="dict.dictValue"
+                      :label="dict.dictLabel"
+                      :value="parseInt(dict.dictValue)"
+                    />
+                  </el-select>
+                </span>
+              </template>
+            </el-table-column>
             <el-table-column
               prop="weight"
               label="重量(g)">
@@ -219,6 +243,8 @@
         selTableData: [],
         // 菜品类别字典
         typeOptions: [],
+        // 通俗单位
+        cusUnitOptions: [],
         // 查询参数
         queryParams: {
           pageNum: 1,
@@ -240,6 +266,9 @@
       this.getDicts("cus_ing_type").then(response => {
         this.ingTypeOptions = response.data;
       });
+      this.getDicts("cus_cus_unit").then(response => {
+        this.cusUnitOptions = response.data;
+      });
     },
     methods: {
       /** 查询菜品列表 */
@@ -254,6 +283,9 @@
       // 菜品类型字典翻译
       typeFormat(row, column) {
         return this.selectDictLabel(this.typeOptions, row.type);
+      },
+      cusUnitFormat(row, column) {
+        return this.selectDictLabel(this.cusUnitOptions, row.type);
       },
       // 取消按钮
       cancel() {
@@ -415,7 +447,8 @@
       },
       handleOnTypeChange(value) {
         listAllIngredient({type: value}).then(res => {
-          this.ingDataList = res.rows.reduce((arr, cur) => {
+          this.oriDataList = res.rows;
+          this.ingDataList = this.oriDataList.reduce((arr, cur) => {
             if (!arr.some(({key}) => key === cur.id)) {
               arr.push({
                 key: cur.id,
@@ -430,14 +463,12 @@
         console.log({val, table: this.selTableData})
       },
       getSummaries(param) {
-        console.log(param)
-        console.log(arguments);
         const {columns, data} = param;
         return columns.reduce((arr, cur, idx) => {
           if (idx) {
             arr[idx] = data.reduce((acc, dAcc) => {
               if (idx === 1) {
-                return acc + dAcc.weight;
+                return acc + parseFloat(dAcc.weight);
               }
               return acc + dAcc[cur.property] * dAcc.weight / 100;
             }, 0);
@@ -452,5 +483,41 @@
 <style>
   .el-transfer-panel__filter {
     margin: 2px;
+  }
+
+  .cus-unit {
+    display: inline-flex;
+  }
+
+  .cus-unit .el-input-number--small {
+    width: 38px;
+  }
+
+  .cus-unit .el-input-number .el-input-number__decrease {
+    display: none;
+  }
+
+  .cus-unit .el-input-number .el-input-number__increase {
+    display: none;
+  }
+
+  .cus-unit .el-input-number .el-input {
+    width: 38px;
+  }
+
+  .cus-unit .el-input-number .el-input .el-input__inner {
+    padding: 0;
+    border-radius: 0;
+    border: unset;
+    border-bottom: 1px solid #DCDFE6;
+  }
+
+  .cus-unit .el-select .el-input__suffix {
+    display: none;
+  }
+
+  .cus-unit .el-select .el-input__inner {
+    padding: 0 4px;
+    border: unset;
   }
 </style>
