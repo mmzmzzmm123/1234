@@ -1,7 +1,7 @@
 <!--
  * @Author: pengyu
  * @Date: 2020-12-12 22:29:27
- * @LastEditTime: 2020-12-28 23:56:25
+ * @LastEditTime: 2021-01-04 20:56:21
  * @LastEditors: Please set LastEditors
  * @Description: 主题设置
  * @FilePath: \RuoYi-Vue\ruoyi-ui\src\views\priceTag\themeSet\index.vue
@@ -19,7 +19,7 @@
           >
             <el-image
               :src="getFileUrl(itm.themePicturePath)"
-              fit="fit"
+              fit="contain"
             ></el-image>
             <!-- :preview-src-list="[getFileUrl(itm.themePicturePath)]" -->
             <div class="name">{{itm.themeName}}</div>
@@ -46,8 +46,9 @@
             v-for="(itm,idx) in vFileList"
             :key="idx"
             @click="curId=itm.themeId"
+            :class="['theme-item-v', curId===itm.themeId?'cur':'']"
           >
-            <el-image :src="getFileUrl(itm.themePicturePath)" fit="fit" :preview-src-list="[getFileUrl(itm.themePicturePath)]"></el-image>
+            <el-image :src="getFileUrl(itm.themePicturePath)" fit="contain" :preview-src-list="[getFileUrl(itm.themePicturePath)]"></el-image>
             <div class="name">{{itm.themeName}}</div>
             <el-dropdown v-if="isSuperAdmin" :hide-on-click="true" @command="(cmd)=>handleCommand(cmd,idx,'v')">
               <el-icon class="icon el-icon-s-tools"></el-icon>
@@ -132,7 +133,7 @@ name: 'ThemeSet',
       const rsp = await queryThemeSet();
       const {data} = rsp;
       this.hFileList = data.filter(itm => itm.themeLayout === 0);
-      this.vhFileList = data.filter(itm => itm.themeLayout === 1);
+      this.vFileList = data.filter(itm => itm.themeLayout === 1);
       const curData = await queryCurTheme();
       this.curId = curData.data ? curData.data.themeId : "";
     },
@@ -254,6 +255,9 @@ name: 'ThemeSet',
     padding: 10px;
     margin: 0 20px 20px 0;
     position: relative;
+    .el-image{
+      height: 80%;
+    }
     .name{
       text-align: center;
       line-height: 40px;
@@ -290,6 +294,9 @@ name: 'ThemeSet',
       text-align: center;
       line-height: 35px;
       font-size: 14px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     .el-dropdown{
       position: absolute;
@@ -300,6 +307,12 @@ name: 'ThemeSet',
       color: #1890ff;
       font-size: 14px;
       display: none;
+    }
+    &:hover{
+      border-color: #dda748;
+      .icon{
+        display: block;
+      }
     }
   }
   .theme-item-h.cur,.theme-item-v.cur{

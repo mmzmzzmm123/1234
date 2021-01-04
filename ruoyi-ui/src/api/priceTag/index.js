@@ -1,7 +1,7 @@
 /*
  * @Author: pengyu
  * @Date: 2020-12-08 23:22:30
- * @LastEditTime: 2020-12-28 23:39:17
+ * @LastEditTime: 2021-01-03 14:33:44
  * @LastEditors: Please set LastEditors
  * @Description: 房价牌管理-接口
  * @FilePath: \RuoYi-Vue\ruoyi-ui\src\api\priceTag\index.js
@@ -57,6 +57,45 @@ export function deleteQrCode(){
   return request({
     url: '/hotel/hotelInfo/deleteQrCode',
     method: 'post'
+  })
+}
+
+//获取一级城市
+export function getWeatherCity1(){
+  return request({
+    url: '/hotel/weather/adm1',
+    method: 'get'
+  })
+}
+//获取二级城市
+export function getWeatherCity2(params){
+  return request({
+    url: '/hotel/weather/adm2',
+    method: 'get',
+    params
+  })
+}
+//获取一级城市
+export function getWeatherCity3(params){
+  return request({
+    url: '/hotel/weather/adm3',
+    method: 'get',
+    params
+  })
+}
+//获取城市信息
+export function getCityInfo(params){
+  return request({
+    url: '/hotel/weather/getCityInfo',
+    method: 'get',
+    params
+  })
+}
+//获取一级城市
+export function getWeatherCity(){
+  return request({
+    url: '/hotel/weather/adm1',
+    method: 'get'
   })
 }
 /*  酒店信息end   */

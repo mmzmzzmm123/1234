@@ -1,7 +1,7 @@
 <!--
  * @Author: pengyu
  * @Date: 2020-12-07 22:33:08
- * @LastEditTime: 2020-12-28 22:57:58
+ * @LastEditTime: 2021-01-04 20:42:29
  * @LastEditors: Please set LastEditors
  * @Description: 酒店信息
  * @FilePath: \RuoYi-Vue\ruoyi-ui\src\views\priceTag\hotelInfo.vue
@@ -42,7 +42,14 @@
         <div class="tips">酒店PMS客户标识号，用于标识和同步房态</div>
       </el-form-item> -->
       <el-form-item label="所在城市">
-        <el-input v-model="form.name" maxLength="50"></el-input>
+        <el-cascader
+          v-model="form.cityId"
+          :options="province"
+          :props="cityProps"
+          size="medium"
+          :show-all-levels="false"
+        >
+        </el-cascader>
         <div class="tips">酒店所在城市</div>
       </el-form-item>
       <el-form-item label="二维码">
@@ -95,7 +102,18 @@
 </template>
 <script>
 import serveTag from "../components/serveTag";
-import { getHotelInfo, saveHotelInfo, uploadLogo, downloadFile, deleteLogo, deleteQrCode } from "@/api/priceTag";
+import {
+  getHotelInfo,
+  saveHotelInfo,
+  uploadLogo,
+  downloadFile,
+  deleteLogo,
+  deleteQrCode,
+  getWeatherCity1,
+  getWeatherCity2,
+  getWeatherCity3,
+  getCityInfo
+} from "@/api/priceTag";
 import axios from "axios"
 import { compile } from 'path-to-regexp';
 import { getToken } from '@/utils/auth'
@@ -154,6 +172,11 @@ export default {
       ],
       rules: {
         hotelName: [{required: true, message:"酒店名称不能为空", trigger: "blur"}],
+      },
+      province:[], //省
+      cityProps:{
+        lazy: true,
+        lazyLoad: this.loadStrict,
       }
     };
   },
@@ -164,21 +187,62 @@ export default {
     //查询赋值
     async init(){
       try {
+        const _this = this;
         const rsp = await getHotelInfo();
         const {data} = rsp;
-        const _this = this;
-        Object.keys(this.form).forEach(itm=>{
-          _this.$set(this.form, itm, data[itm]);
+        Object.keys(this.form).forEach(async (itm)=>{
+          if(itm==="cityId" && data[itm]){
+            const cInfo = await getCityInfo({locationId: data[itm]});
+            const city = cInfo.data;
+            _this.loadStrict({level: 1, value: city.adm1}, function(arr){
+              const p = _this.province.find(itm => itm.value===city.adm1);
+              p.children = arr;
+              _this.loadStrict({level: 2, value: city.adm2}, function(arr){
+                const c = p.children.find(itm => itm.value ===city.adm2 );
+                c.children = arr;
+              })
+            });
+            _this.$set(this.form, itm, [city.adm1, city.adm2, city.locationId]);
+          }else{
+            _this.$set(this.form, itm, data[itm]);
+          }
         });
         const services = data.serviceItems ? data.serviceItems.split(",") : [];
         this.tagList.forEach(itm=>{
           itm.selected = services.includes(itm.id);
         });
-
-        // downloadFile({delete: false, fileName: data.logoPath})
       } catch (error) {
         this.msgError(error);
       }
+    },
+    //区域数据请求
+    async loadStrict(node, resolve){
+      const {value, level, adm1} = node;
+      const arr = [];
+      if(level === 0){
+        const proRsp = await getWeatherCity1();
+        const provinceList = proRsp.data || [];
+        //处理省级数据
+        provinceList.forEach(itm => {
+          arr.push({value: itm, label: itm, level: 1, children: []});
+        });
+        this.province = arr;
+      }else if(level===1){
+        //获取市
+        const rsp = await getWeatherCity2({adm1: value});
+        const {data} = rsp;
+        (data || []).forEach(itm => {
+          arr.push({adm1: value, value: itm, label: itm, level: 2, children: []});
+        });
+      }else if(level === 2){
+        //获取区域
+        const rsp = await getWeatherCity3({adm1, adm2: value});
+        const {data} = rsp;
+        (data || []).forEach(itm => {
+          arr.push({ value: itm.locationId, label: itm.locationName, level: 3,leaf: true});
+        });
+      }
+      resolve(arr);
     },
     //logo上传前预处理
     handleLogoBefore(file){
@@ -206,11 +270,6 @@ export default {
         const {data} = res.data;
         _this.$set(_this.form, "logoPath", data.logoPath);
       });
-
-      // uploadLogo(fd, {headers: {"Content-Type": "multipart/form-data"}})
-      // .then((res)=>{
-      //   console.log(res);
-      // });
     },
     //二位阿玛上传前预处理
     handleCodeBefore(file){
@@ -250,6 +309,12 @@ export default {
       const _this = this;
       this.$refs.form.validate((valid)=>{
         if(valid){
+          //所在城市
+          if(_this.form.cityId){
+            _this.form.cityId = _this.form.cityId[2]
+          }
+
+          //服务标记
           const tags = [];
           _this.tagList.forEach(itm=>{
             if(itm.selected){
