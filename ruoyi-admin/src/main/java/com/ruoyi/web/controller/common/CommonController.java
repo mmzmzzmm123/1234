@@ -18,11 +18,17 @@ import com.ruoyi.common.utils.file.FileUploadUtils;
 import com.ruoyi.common.utils.file.FileUtils;
 import com.ruoyi.framework.config.ServerConfig;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
+
 /**
  * 通用请求处理
  * 
  * @author ruoyi
  */
+@Api("通用请求处理")
 @RestController
 public class CommonController
 {
@@ -38,6 +44,10 @@ public class CommonController
      * @param delete 是否删除
      */
     @GetMapping("common/download")
+    @ApiImplicitParams({
+		@ApiImplicitParam(name = "fileName", value = "文件名称", required = true, dataType = "String"),
+		@ApiImplicitParam(name = "delete", value = "是否删除", required = true, dataType = "boolean")
+	})
     public void fileDownload(String fileName, Boolean delete, HttpServletResponse response, HttpServletRequest request)
     {
         try
@@ -90,6 +100,7 @@ public class CommonController
     /**
      * 本地资源通用下载
      */
+    @ApiOperation("本地资源通用下载")
     @GetMapping("/common/download/resource")
     public void resourceDownload(String resource, HttpServletRequest request, HttpServletResponse response)
             throws Exception

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.hotel.mapper.HtlThemeConfigMapper">
+    
+    <resultMap type="HtlThemeConfig" id="HtlThemeConfigResult">
+        <result property="hotelId"    column="hotel_id"    />
+        <result property="themeId"    column="theme_id"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectHtlThemeConfigVo">
+        select hotel_id, theme_id, create_by, create_time, update_by, update_time from htl_theme_config
+    </sql>
+
+    <select id="selectHtlThemeConfigList" parameterType="HtlThemeConfig" resultMap="HtlThemeConfigResult">
+        <include refid="selectHtlThemeConfigVo"/>
+        <where>  
+            <if test="themeId != null  and themeId != ''"> and theme_id = #{themeId}</if>
+        </where>
+    </select>
+    
+    <select id="selectHtlThemeConfigById" parameterType="Long" resultMap="HtlThemeConfigResult">
+        <include refid="selectHtlThemeConfigVo"/>
+        where hotel_id = #{hotelId}
+    </select>
+        
+    <insert id="insertHtlThemeConfig" parameterType="HtlThemeConfig">
+        insert into htl_theme_config
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="hotelId != null">hotel_id,</if>
+            <if test="themeId != null">theme_id,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="hotelId != null">#{hotelId},</if>
+            <if test="themeId != null">#{themeId},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateHtlThemeConfig" parameterType="HtlThemeConfig">
+        update htl_theme_config
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="themeId != null">theme_id = #{themeId},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where hotel_id = #{hotelId}
+    </update>
+
+    <delete id="deleteHtlThemeConfigById" parameterType="Long">
+        delete from htl_theme_config where hotel_id = #{hotelId}
+    </delete>
+
+    <delete id="deleteHtlThemeConfigByIds" parameterType="String">
+        delete from htl_theme_config where hotel_id in 
+        <foreach item="hotelId" collection="array" open="(" separator="," close=")">
+            #{hotelId}
+        </foreach>
+    </delete>
+    
+</mapper>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.hotel.mapper.HtlPriceTypeMapper">
+    
+    <resultMap type="HtlPriceType" id="HtlPriceTypeResult">
+        <result property="priceTypeId"    column="price_type_id"    />
+        <result property="hotelId"    column="hotel_id"    />
+        <result property="priceType"    column="price_type"    />
+        <result property="isVisible"    column="is_visible"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectHtlPriceTypeVo">
+        select price_type_id, hotel_id, price_type, is_visible, create_by, create_time, update_by, update_time from htl_price_type
+    </sql>
+
+    <select id="selectHtlPriceTypeList" parameterType="HtlPriceType" resultMap="HtlPriceTypeResult">
+        <include refid="selectHtlPriceTypeVo"/>
+        <where>  
+            <if test="hotelId != null "> and hotel_id = #{hotelId}</if>
+            <if test="priceType != null  and priceType != ''"> and price_type = #{priceType}</if>
+            <if test="isVisible != null "> and is_visible = #{isVisible}</if>
+        </where>
+    </select>
+    
+    <select id="selectHtlPriceTypeById" parameterType="Long" resultMap="HtlPriceTypeResult">
+        <include refid="selectHtlPriceTypeVo"/>
+        where price_type_id = #{priceTypeId}
+    </select>
+        
+    <insert id="insertHtlPriceType" parameterType="HtlPriceType" useGeneratedKeys="true" keyProperty="priceTypeId">
+        insert into htl_price_type
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="hotelId != null">hotel_id,</if>
+            <if test="priceType != null">price_type,</if>
+            <if test="isVisible != null">is_visible,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="hotelId != null">#{hotelId},</if>
+            <if test="priceType != null">#{priceType},</if>
+            <if test="isVisible != null">#{isVisible},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateHtlPriceType" parameterType="HtlPriceType">
+        update htl_price_type
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="hotelId != null">hotel_id = #{hotelId},</if>
+            <if test="priceType != null">price_type = #{priceType},</if>
+            <if test="isVisible != null">is_visible = #{isVisible},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where price_type_id = #{priceTypeId}
+    </update>
+
+    <delete id="deleteHtlPriceTypeById" parameterType="Long">
+        delete from htl_price_type where price_type_id = #{priceTypeId}
+    </delete>
+
+    <delete id="deleteHtlPriceTypeByIds" parameterType="String">
+        delete from htl_price_type where price_type_id in 
+        <foreach item="priceTypeId" collection="array" open="(" separator="," close=")">
+            #{priceTypeId}
+        </foreach>
+    </delete>
+    
+</mapper>
