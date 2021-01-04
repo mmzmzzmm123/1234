@@ -129,7 +129,13 @@ export const constantRoutes = [
     hidden: true,
     component: (resolve) => require(['@/views/custom/signContract'], resolve),
     meta: { title: '合同' }
-  }
+  },
+{
+    path: '/question',
+    component: (resolve) => require(['@/views/custom/investigate/questionnaire'], resolve),
+    hidden: true,
+    meta: { title: '营养体征调查表'}
+}
 ]
 
 export default new Router({

@@ -100,7 +100,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/custom/contract/sign",
                         "/custom/contract/file/**",
                         "/custom/wxUserInfo/wx/**",
-                        "/custom/wxUserLog/wx/**"
+                        "/custom/wxUserLog/wx/**",
+                        "/investigate/**",
+                        "/investigate/physicalSignsList"
                         ).anonymous()
                 .antMatchers(
                         HttpMethod.GET,
