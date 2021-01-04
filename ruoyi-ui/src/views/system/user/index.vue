@@ -77,7 +77,7 @@
             ></el-date-picker>
           </el-form-item>
           <el-form-item>
-            <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+            <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
             <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
           </el-form-item>
         </el-form>
@@ -86,6 +86,7 @@
           <el-col :span="1.5">
             <el-button
               type="primary"
+              plain
               icon="el-icon-plus"
               size="mini"
               @click="handleAdd"
@@ -95,6 +96,7 @@
           <el-col :span="1.5">
             <el-button
               type="success"
+              plain
               icon="el-icon-edit"
               size="mini"
               :disabled="single"
@@ -105,6 +107,7 @@
           <el-col :span="1.5">
             <el-button
               type="danger"
+              plain
               icon="el-icon-delete"
               size="mini"
               :disabled="multiple"
@@ -115,6 +118,7 @@
           <el-col :span="1.5">
             <el-button
               type="info"
+              plain
               icon="el-icon-upload2"
               size="mini"
               @click="handleImport"
@@ -124,6 +128,7 @@
           <el-col :span="1.5">
             <el-button
               type="warning"
+              plain
               icon="el-icon-download"
               size="mini"
               @click="handleExport"
@@ -421,14 +426,10 @@ export default {
         nickName: [
           { required: true, message: "用户昵称不能为空", trigger: "blur" }
         ],
-        deptId: [
-          { required: true, message: "归属部门不能为空", trigger: "change" }
-        ],
         password: [
           { required: true, message: "用户密码不能为空", trigger: "blur" }
         ],
         email: [
-          { required: true, message: "邮箱地址不能为空", trigger: "blur" },
           {
             type: "email",
             message: "'请输入正确的邮箱地址",
@@ -436,7 +437,6 @@ export default {
           }
         ],
         phonenumber: [
-          { required: true, message: "手机号码不能为空", trigger: "blur" },
           {
             pattern: /^1[3|4|5|6|7|8|9][0-9]\d{8}$/,
             message: "请输入正确的手机号码",
