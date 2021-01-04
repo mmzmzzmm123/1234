@@ -1,8 +1,15 @@
 package com.stdiet.web.controller.custom;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+import com.stdiet.custom.domain.SysPhysicalSigns;
+import org.apache.commons.lang.StringUtils;
+
+import com.stdiet.common.utils.bean.ObjectUtils;
 import com.stdiet.custom.dto.request.CustomerInvestigateRequest;
+import com.stdiet.custom.dto.response.CustomerListResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -51,13 +58,30 @@ public class SysCustomerController extends BaseController
      * 导出客户信息列表
      */
     @PreAuthorize("@ss.hasPermi('custom:customer:export')")
-    @Log(title = "客户信息", businessType = BusinessType.EXPORT)
+    @Log(title = "客户体征", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
-    public AjaxResult export(SysCustomer sysCustomer)
+    public AjaxResult export(SysCustomer sysCustomer) throws Exception
     {
-        List<SysCustomer> list = sysCustomerService.selectSysCustomerList(sysCustomer);
-        ExcelUtil<SysCustomer> util = new ExcelUtil<SysCustomer>(SysCustomer.class);
-        return util.exportExcel(list, "customer");
+        List<SysCustomer> list = sysCustomerService.selectSysCustomerAndSignList(sysCustomer);
+        List<CustomerListResponse> responsesList = new ArrayList<>();
+        CustomerListResponse customerListResponse = null;
+        for (SysCustomer customer : list) {
+            customerListResponse = ObjectUtils.getObjectByObject(customer.getSign(), CustomerListResponse.class);
+            customerListResponse.setName(customer.getName());
+            customerListResponse.setPhone(customer.getPhone());
+            StringBuilder signStr = new StringBuilder();
+            if(customer.getSign().getSignList() != null && customer.getSign().getSignList().size() > 0){
+                int i = 0;
+                for (SysPhysicalSigns s : customer.getSign().getSignList()) {
+                    signStr.append((i != 0 ? "，" : "") + s.getName());
+                    i++;
+                }
+            }
+            customerListResponse.setPhysicalSignsId(signStr.toString());
+            responsesList.add(customerListResponse);
+        }
+        ExcelUtil<CustomerListResponse> util = new ExcelUtil<CustomerListResponse>(CustomerListResponse.class);
+        return util.exportExcel(responsesList, "客户体征数据");
     }
 
     /**
@@ -74,7 +98,7 @@ public class SysCustomerController extends BaseController
      * 新增客户信息
      */
     @PreAuthorize("@ss.hasPermi('custom:customer:add')")
-    @Log(title = "客户信息", businessType = BusinessType.INSERT)
+    @Log(title = "客户体征", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody CustomerInvestigateRequest customerInvestigateRequest) throws Exception
     {
@@ -90,7 +114,7 @@ public class SysCustomerController extends BaseController
      * 修改客户信息
      */
     @PreAuthorize("@ss.hasPermi('custom:customer:edit')")
-    @Log(title = "客户信息", businessType = BusinessType.UPDATE)
+    @Log(title = "客户体征", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody CustomerInvestigateRequest customerInvestigateRequest) throws Exception
     {
@@ -109,7 +133,7 @@ public class SysCustomerController extends BaseController
      * 删除客户信息
      */
     @PreAuthorize("@ss.hasPermi('custom:customer:remove')")
-    @Log(title = "客户信息", businessType = BusinessType.DELETE)
+    @Log(title = "客户体征", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)
     {

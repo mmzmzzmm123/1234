@@ -46,7 +46,7 @@
           v-hasPermi="['custom:customer:edit']"
         >修改</el-button>
       </el-col>-->
-      <!--<el-col :span="1.5">
+      <el-col :span="1.5">
         <el-button
           type="danger"
           icon="el-icon-delete"
@@ -55,8 +55,8 @@
           @click="handleDelete"
           v-hasPermi="['custom:customer:remove']"
         >删除</el-button>
-      </el-col>-->
-      <!--<el-col :span="1.5">
+      </el-col>
+      <el-col :span="1.5">
         <el-button
           type="warning"
           icon="el-icon-download"
@@ -64,7 +64,13 @@
           @click="handleExport"
           v-hasPermi="['custom:customer:export']"
         >导出</el-button>
-      </el-col>-->
+      </el-col>
+      <el-col :span="1.5" title="营养体征调查链接">
+        <el-button
+          type="primary"
+          size="mini"
+        ><a href="http://sign.shengtangdiet.com/question" target='_blank'>营养体征调查</a></a></el-button>
+      </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
@@ -116,6 +122,7 @@
           {{scope.row.sign.makeFoodType == 0 ? `自己做` : '外面吃'}}
         </template>
       </el-table-column>
+      <el-table-column label="饮食备注" align="center" prop="sign.remarks" width="80"></el-table-column>
       <el-table-column label="饮食特点" align="center" prop="sign.makeFoodTaste" width="80">
         <template slot-scope="scope">
           {{scope.row.sign.makeFoodTaste == 0 ? `清淡` : '重口味'}}
@@ -138,7 +145,7 @@
       </el-table-column>
       <el-table-column label="是否浑身乏力" align="center" prop="sign.weakness" width="80">
         <template slot-scope="scope">
-          {{scope.row.sign.weakness == 0 ? `久坐多` : '走动多'}}
+          {{scope.row.sign.weakness == 0 ? `是` : '否'}}
         </template>
       </el-table-column>
       <el-table-column label="是否减脂反弹" align="center" prop="sign.rebound" width="80">
@@ -221,7 +228,7 @@
 
     <!-- 添加或修改客户信息对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+      <el-form ref="form" :model="form" :rules="rules" label-width="120px">
           <!--<p>现在要先为您建立更加详细的档案，以便为您定制专属的减脂计划</p>-->
           <el-form-item label="真实姓名" prop="name">
             <el-input v-model="form.name" placeholder="请输入真实姓名" />
@@ -244,7 +251,7 @@
           <el-form-item label="年龄(岁)" prop="age">
             <el-input v-model="form.age" placeholder="请输入年龄" />
           </el-form-item>
-          <el-form-item label="身高(厘米)" prop="tall">
+          <el-form-item label="身高(厘米)" prop="tall" >
             <el-input v-model="form.tall" placeholder="请输入身高" />
           </el-form-item>
           <el-form-item label="体重(斤)" prop="weight">
@@ -294,6 +301,9 @@
               <el-option label="外面吃" value="1" />
             </el-select>
           </el-form-item>
+        <el-form-item label="饮食备注" prop="remarks">
+          <el-input v-model="form.remarks" placeholder="请输入备注信息" />
+        </el-form-item>
           <el-form-item label="饮食特点" prop="makeFoodTaste">
             <el-select v-model="form.makeFoodTaste" placeholder="请选择">
               <el-option label="清淡" value="0" />
@@ -357,11 +367,12 @@
               <el-checkbox v-for="moistureItem in moistureDataList" :label="moistureItem.dictValue" :key="moistureItem.dictValue">{{moistureItem.dictLabel}}</el-checkbox>
             </el-checkbox-group>
           </el-form-item>
+
           <el-form-item label="减脂经历（重点详细填写）" prop="experience">
-            <el-input v-model="form.experience" placeholder="请输入" />
+            <el-input type="textarea" placeholder="请输入内容" v-model="form.experience" maxlength="200" show-word-limit rows="5"></el-input>
           </el-form-item>
           <el-form-item label="减脂遇到的困难" prop="difficulty">
-            <el-input v-model="form.difficulty" placeholder="请输入" />
+            <el-input type="textarea" placeholder="请输入内容" v-model="form.difficulty" maxlength="200" show-word-limit rows="5"></el-input>
           </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -588,7 +599,7 @@
       handleAdd() {
         this.reset();
         this.open = true;
-        this.title = "添加客户信息";
+        this.title = "添加客户体征";
       },
       /** 修改按钮操作 */
       handleUpdate(row) {
@@ -623,7 +634,7 @@
           cusMessage.night += '';
           this.form = cusMessage;
           this.open = true;
-          this.title = "修改客户信息";
+          this.title = "修改客户体征";
       });
       },
       /** 提交按钮 */
@@ -672,7 +683,7 @@
       /** 导出按钮操作 */
       handleExport() {
         const queryParams = this.queryParams;
-        this.$confirm('是否确认导出所有客户信息数据项?', "警告", {
+        this.$confirm('是否确认导出当前列表中所有客户体征数据?', "警告", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
