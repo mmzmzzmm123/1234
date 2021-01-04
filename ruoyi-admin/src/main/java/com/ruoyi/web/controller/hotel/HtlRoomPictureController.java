@@ -92,7 +92,6 @@ public class HtlRoomPictureController extends BaseController
      * 获取当前用户关联的房间图片详细信息
      */
     @ApiOperation("获取当前用户关联的房间图片详细信息")
-    @PreAuthorize("@ss.hasPermi('hotel:roomPicture:query')")
     @GetMapping(value = "/query")
     public AjaxResult query()
     {
