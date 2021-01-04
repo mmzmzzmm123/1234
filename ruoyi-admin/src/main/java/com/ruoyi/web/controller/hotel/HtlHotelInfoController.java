@@ -105,7 +105,6 @@ public class HtlHotelInfoController extends BaseController {
      * 保存酒店信息
      */
     @ApiOperation("保存酒店信息")
-    @PreAuthorize("@ss.hasPermi('hotel:hotelInfo:save')")
     @Log(title = "酒店信息", businessType = BusinessType.INSERT)
     @PostMapping("/save")
     public AjaxResult save(HotelInfoEntity hotelInfoEntity) {
@@ -148,7 +147,6 @@ public class HtlHotelInfoController extends BaseController {
     /**
      * 删除酒店信息
      */
-    @PreAuthorize("@ss.hasPermi('hotel:hotelInfo:remove')")
     @Log(title = "酒店信息", businessType = BusinessType.DELETE)
     @DeleteMapping("/{hotelIds}")
     public AjaxResult remove(@PathVariable Long[] hotelIds) {

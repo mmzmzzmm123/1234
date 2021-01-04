@@ -101,7 +101,6 @@ public class HtlPriceTypeController extends BaseController
     /**
      * 新增房价类型
      */
-    @PreAuthorize("@ss.hasPermi('hotel:priceType:save')")
     @Log(title = "房价类型", businessType = BusinessType.INSERT)
 	@ApiOperation("新增房价类型")
     @PostMapping("/add")
@@ -125,7 +124,6 @@ public class HtlPriceTypeController extends BaseController
      * 修改房价类型
      */
     @ApiOperation("修改房价类型")
-    @PreAuthorize("@ss.hasPermi('hotel:priceType:edit')")
     @Log(title = "房价类型", businessType = BusinessType.UPDATE)
     @PutMapping("/edit")
 	@ApiImplicitParams({ 
@@ -150,7 +148,6 @@ public class HtlPriceTypeController extends BaseController
      */
     @ApiOperation("删除房价类型")
     @ApiImplicitParam(name = "priceTypeId", value = "房价类别ID", required = true, dataType = "long")
-    @PreAuthorize("@ss.hasPermi('hotel:priceType:remove')")
     @Log(title = "房价类型", businessType = BusinessType.DELETE)
 	@DeleteMapping("/delete")
     public AjaxResult remove(Long priceTypeId)

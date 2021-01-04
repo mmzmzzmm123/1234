@@ -54,7 +54,6 @@ public class HtlThemeInfoController extends BaseController
 	 * 获取所有主题详细信息
 	 */
 	@ApiOperation("获取所有主题详细信息")
-	@PreAuthorize("@ss.hasPermi('hotel:theme:list')")
 	@GetMapping(value = "/list")
 	public AjaxResult list()
     {
@@ -68,7 +67,6 @@ public class HtlThemeInfoController extends BaseController
      */
     @ApiOperation("上传主题图片")
     @ApiImplicitParam(name = "themeLayout", value = "主题版式（0：横板；1：竖版）", required = true, dataType = "int") 
-    @PreAuthorize("@ss.hasPermi('hotel:theme:add')")
     @Log(title = "主题详情", businessType = BusinessType.INSERT)
 	@PostMapping(value = "/upload")
     public AjaxResult upload(@RequestParam("themePicture") MultipartFile file,Integer themeLayout) throws IOException
@@ -93,7 +91,6 @@ public class HtlThemeInfoController extends BaseController
      * 重命名图片名称
      */
     @ApiOperation("重命名图片名称")
-    @PreAuthorize("@ss.hasPermi('hotel:theme:edit')")
     @Log(title = "主题详情", businessType = BusinessType.UPDATE)
     @PostMapping(value = "/rename")
 	@ApiImplicitParams({ 
@@ -116,7 +113,6 @@ public class HtlThemeInfoController extends BaseController
      * 删除主题图片
      */
     @ApiOperation("删除主题图片")
-    @PreAuthorize("@ss.hasPermi('hotel:theme:remove')")
     @Log(title = "主题详情", businessType = BusinessType.DELETE)
 	@DeleteMapping("/delete")
     public AjaxResult remove(Long themeId)
@@ -132,7 +128,6 @@ public class HtlThemeInfoController extends BaseController
      * 配置主题
      */
     @ApiOperation("配置主题")
-    @PreAuthorize("@ss.hasPermi('hotel:theme:config')")
     @Log(title = "主题配置", businessType = BusinessType.INSERT)
 	@PostMapping("/config")
     public AjaxResult config(Long themeId)

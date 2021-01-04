@@ -64,7 +64,6 @@ public class HtlRoomPriceController extends BaseController
      * 获取房间价格详细信息
      */
     @ApiOperation("查询房间价格列表")
-    @PreAuthorize("@ss.hasPermi('hotel:roomPrice:query')")
     @GetMapping("/query")
     public AjaxResult query()
     {
@@ -106,7 +105,6 @@ public class HtlRoomPriceController extends BaseController
      * 新增房间价格
      */
     @ApiOperation("新增房间价格")
-    @PreAuthorize("@ss.hasPermi('hotel:roomPrice:add')")
     @Log(title = "房间价格", businessType = BusinessType.INSERT)
     @PostMapping("/add")
 	public AjaxResult add(@RequestBody RoomTypeEntity roomTypeEntity) {
@@ -146,7 +144,6 @@ public class HtlRoomPriceController extends BaseController
      * 修改房间价格
      */
     @ApiOperation("修改房间价格")
-    @PreAuthorize("@ss.hasPermi('hotel:roomPrice:edit')")
     @Log(title = "房间价格", businessType = BusinessType.UPDATE)
     @PutMapping("/edit")
     public AjaxResult edit(@RequestBody RoomTypeEntity roomTypeEntity)
@@ -190,7 +187,6 @@ public class HtlRoomPriceController extends BaseController
      * 删除房间价格
      */
     @ApiOperation("删除房间价格")
-    @PreAuthorize("@ss.hasPermi('hotel:roomPrice:remove')")
     @Log(title = "房间价格", businessType = BusinessType.DELETE)
     @ApiImplicitParam(name = "roomTypeId", value = "房型ID", required = true, dataType = "long")
 	@DeleteMapping("/delete")
