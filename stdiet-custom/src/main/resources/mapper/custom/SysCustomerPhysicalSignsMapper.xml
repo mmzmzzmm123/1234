@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.stdiet.custom.mapper.SysCustomerPhysicalSignsMapper">
+
+    <resultMap type="SysCustomerPhysicalSigns" id="SysCustomerPhysicalSignsResult">
+        <result property="id"    column="id"    />
+        <result property="customerId"    column="customer_id"    />
+        <result property="sex"    column="sex"    />
+        <result property="age"    column="age"    />
+        <result property="tall"    column="tall"    />
+        <result property="weight"    column="weight"    />
+        <result property="physicalSignsId"    column="physical_signs_id"    />
+        <result property="dishesIngredientId"    column="dishes_ingredient_id"    />
+        <result property="photo"    column="photo"    />
+        <result property="constipation"    column="constipation"    />
+        <result property="staylate"    column="stayLate"    />
+        <result property="motion"    column="motion"    />
+        <result property="makeFoodType"    column="make_food_type"    />
+        <result property="makeFoodTaste"    column="make_food_taste"    />
+        <result property="walk"    column="walk"    />
+        <result property="difficulty"    column="difficulty"    />
+        <result property="weakness"    column="weakness"    />
+        <result property="rebound"    column="rebound"    />
+        <result property="crux"    column="crux"    />
+        <result property="position"    column="position"    />
+        <result property="sleepTime"    column="sleep_time"    />
+        <result property="getupTime"    column="getup_time"    />
+        <result property="connectTime"    column="connect_time"    />
+        <result property="remarks"    column="remarks"    />
+        <result property="bloodData"    column="blood_data"    />
+        <result property="moistureDate"    column="moisture_date"    />
+        <result property="vocation"    column="vocation"    />
+        <result property="night"    column="night"    />
+        <result property="experience"    column="experience"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+    </resultMap>
+
+    <sql id="selectSysCustomerPhysicalSignsVo">
+        select id, customer_id, sex, age, tall, weight, physical_signs_id, dishes_ingredient_id, photo, constipation, stayLate, motion, make_food_type, make_food_taste, walk, difficulty, weakness, rebound, crux, position, sleep_time, getup_time, connect_time, remarks, blood_data, moisture_date, vocation,
+      night, experience, create_time, create_by, update_time, update_by from sys_customer_physical_signs
+    </sql>
+
+    <select id="selectSysCustomerPhysicalSignsList" parameterType="SysCustomerPhysicalSigns" resultMap="SysCustomerPhysicalSignsResult">
+        <include refid="selectSysCustomerPhysicalSignsVo"/>
+        <where>
+            <if test="customerId != null "> and customer_id = #{customerId}</if>
+            <if test="sex != null "> and sex = #{sex}</if>
+            <if test="age != null "> and age = #{age}</if>
+            <if test="tall != null "> and tall = #{tall}</if>
+            <if test="weight != null "> and weight = #{weight}</if>
+            <if test="physicalSignsId != null  and physicalSignsId != ''"> and physical_signs_id = #{physicalSignsId}</if>
+            <if test="dishesIngredientId != null  and dishesIngredientId != ''"> and dishes_ingredient_id = #{dishesIngredientId}</if>
+            <if test="photo != null  and photo != ''"> and photo = #{photo}</if>
+            <if test="constipation != null "> and constipation = #{constipation}</if>
+            <if test="staylate != null "> and stayLate = #{staylate}</if>
+            <if test="motion != null "> and motion = #{motion}</if>
+            <if test="makeFoodType != null "> and make_food_type = #{makeFoodType}</if>
+            <if test="makeFoodTaste != null "> and make_food_taste = #{makeFoodTaste}</if>
+            <if test="walk != null "> and walk = #{walk}</if>
+            <if test="difficulty != null  and difficulty != ''"> and difficulty = #{difficulty}</if>
+            <if test="weakness != null "> and weakness = #{weakness}</if>
+            <if test="rebound != null "> and rebound = #{rebound}</if>
+            <if test="crux != null "> and crux = #{crux}</if>
+            <if test="position != null "> and position = #{position}</if>
+            <if test="sleepTime != null "> and sleep_time = #{sleepTime}</if>
+            <if test="getupTime != null "> and getup_time = #{getupTime}</if>
+            <if test="connectTime != null "> and connect_time = #{connectTime}</if>
+            <if test="remarks != null  and remarks != ''"> and remarks = #{remarks}</if>
+            <if test="bloodData != null  and bloodData != ''"> and blood_data = #{bloodData}</if>
+            <if test="moistureDate != null  and moistureDate != ''"> and moisture_date = #{moistureDate}</if>
+            <if test="vocation != null  and vocation != ''"> and vocation = #{vocation}</if>
+            <if test="night != null "> and  night = #{night}</if>
+            <if test="experience != null  and experience != ''"> and experience = #{experience}</if>
+        </where>
+    </select>
+
+    <select id="selectSysCustomerPhysicalSignsById" parameterType="Long" resultMap="SysCustomerPhysicalSignsResult">
+        <include refid="selectSysCustomerPhysicalSignsVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertSysCustomerPhysicalSigns" parameterType="SysCustomerPhysicalSigns" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_customer_physical_signs
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="customerId != null">customer_id,</if>
+            <if test="sex != null">sex,</if>
+            <if test="age != null">age,</if>
+            <if test="tall != null">tall,</if>
+            <if test="weight != null">weight,</if>
+            <if test="physicalSignsId != null">physical_signs_id,</if>
+            <if test="dishesIngredientId != null">dishes_ingredient_id,</if>
+            <if test="photo != null">photo,</if>
+            <if test="constipation != null">constipation,</if>
+            <if test="staylate != null">stayLate,</if>
+            <if test="motion != null">motion,</if>
+            <if test="makeFoodType != null">make_food_type,</if>
+            <if test="makeFoodTaste != null">make_food_taste,</if>
+            <if test="walk != null">walk,</if>
+            <if test="difficulty != null">difficulty,</if>
+            <if test="weakness != null">weakness,</if>
+            <if test="rebound != null">rebound,</if>
+            <if test="crux != null">crux,</if>
+            <if test="position != null">position,</if>
+            <if test="sleepTime != null">sleep_time,</if>
+            <if test="getupTime != null">getup_time,</if>
+            <if test="connectTime != null">connect_time,</if>
+            <if test="remarks != null">remarks,</if>
+            <if test="bloodData != null">blood_data,</if>
+            <if test="moistureDate != null">moisture_date,</if>
+            <if test="vocation != null">vocation,</if>
+            <if test="
+night != null">
+                night,</if>
+            <if test="experience != null">experience,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="customerId != null">#{customerId},</if>
+            <if test="sex != null">#{sex},</if>
+            <if test="age != null">#{age},</if>
+            <if test="tall != null">#{tall},</if>
+            <if test="weight != null">#{weight},</if>
+            <if test="physicalSignsId != null">#{physicalSignsId},</if>
+            <if test="dishesIngredientId != null">#{dishesIngredientId},</if>
+            <if test="photo != null">#{photo},</if>
+            <if test="constipation != null">#{constipation},</if>
+            <if test="staylate != null">#{staylate},</if>
+            <if test="motion != null">#{motion},</if>
+            <if test="makeFoodType != null">#{makeFoodType},</if>
+            <if test="makeFoodTaste != null">#{makeFoodTaste},</if>
+            <if test="walk != null">#{walk},</if>
+            <if test="difficulty != null">#{difficulty},</if>
+            <if test="weakness != null">#{weakness},</if>
+            <if test="rebound != null">#{rebound},</if>
+            <if test="crux != null">#{crux},</if>
+            <if test="position != null">#{position},</if>
+            <if test="sleepTime != null">#{sleepTime},</if>
+            <if test="getupTime != null">#{getupTime},</if>
+            <if test="connectTime != null">#{connectTime},</if>
+            <if test="remarks != null">#{remarks},</if>
+            <if test="bloodData != null">#{bloodData},</if>
+            <if test="moistureDate != null">#{moistureDate},</if>
+            <if test="vocation != null">#{vocation},</if>
+            <if test="night != null">#{night},</if>
+            <if test="experience != null">#{experience},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+        </trim>
+    </insert>
+
+    <update id="updateSysCustomerPhysicalSigns" parameterType="SysCustomerPhysicalSigns">
+        update sys_customer_physical_signs
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="customerId != null">customer_id = #{customerId},</if>
+            <if test="sex != null">sex = #{sex},</if>
+            <if test="age != null">age = #{age},</if>
+            <if test="tall != null">tall = #{tall},</if>
+            <if test="weight != null">weight = #{weight},</if>
+            <if test="physicalSignsId != null">physical_signs_id = #{physicalSignsId},</if>
+            <if test="dishesIngredientId != null">dishes_ingredient_id = #{dishesIngredientId},</if>
+            <if test="photo != null">photo = #{photo},</if>
+            <if test="constipation != null">constipation = #{constipation},</if>
+            <if test="staylate != null">stayLate = #{staylate},</if>
+            <if test="motion != null">motion = #{motion},</if>
+            <if test="makeFoodType != null">make_food_type = #{makeFoodType},</if>
+            <if test="makeFoodTaste != null">make_food_taste = #{makeFoodTaste},</if>
+            <if test="walk != null">walk = #{walk},</if>
+            <if test="difficulty != null">difficulty = #{difficulty},</if>
+            <if test="weakness != null">weakness = #{weakness},</if>
+            <if test="rebound != null">rebound = #{rebound},</if>
+            <if test="crux != null">crux = #{crux},</if>
+            <if test="position != null">position = #{position},</if>
+            <if test="sleepTime != null">sleep_time = #{sleepTime},</if>
+            <if test="getupTime != null">getup_time = #{getupTime},</if>
+            <if test="connectTime != null">connect_time = #{connectTime},</if>
+            <if test="remarks != null">remarks = #{remarks},</if>
+            <if test="bloodData != null">blood_data = #{bloodData},</if>
+            <if test="moistureDate != null">moisture_date = #{moistureDate},</if>
+            <if test="vocation != null">vocation = #{vocation},</if>
+            <if test="night != null">night = #{night},</if>
+            <if test="experience != null">experience = #{experience},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysCustomerPhysicalSignsById" parameterType="Long">
+        delete from sys_customer_physical_signs where id = #{id}
+    </delete>
+
+    <delete id="deleteSysCustomerPhysicalSignsByIds" parameterType="String">
+        delete from sys_customer_physical_signs where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!-- 根据客户id更新体征信息 -->
+    <update id="updateSysCustomerPhysicalSignsByCustomerId" parameterType="SysCustomerPhysicalSigns">
+        update sys_customer_physical_signs
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="sex != null">sex = #{sex},</if>
+            <if test="age != null">age = #{age},</if>
+            <if test="tall != null">tall = #{tall},</if>
+            <if test="weight != null">weight = #{weight},</if>
+            <if test="physicalSignsId != null">physical_signs_id = #{physicalSignsId},</if>
+            <if test="dishesIngredientId != null">dishes_ingredient_id = #{dishesIngredientId},</if>
+            <if test="photo != null">photo = #{photo},</if>
+            <if test="constipation != null">constipation = #{constipation},</if>
+            <if test="staylate != null">stayLate = #{staylate},</if>
+            <if test="motion != null">motion = #{motion},</if>
+            <if test="makeFoodType != null">make_food_type = #{makeFoodType},</if>
+            <if test="makeFoodTaste != null">make_food_taste = #{makeFoodTaste},</if>
+            <if test="walk != null">walk = #{walk},</if>
+            <if test="difficulty != null">difficulty = #{difficulty},</if>
+            <if test="weakness != null">weakness = #{weakness},</if>
+            <if test="rebound != null">rebound = #{rebound},</if>
+            <if test="crux != null">crux = #{crux},</if>
+            <if test="position != null">position = #{position},</if>
+            <if test="sleepTime != null">sleep_time = #{sleepTime},</if>
+            <if test="getupTime != null">getup_time = #{getupTime},</if>
+            <if test="connectTime != null">connect_time = #{connectTime},</if>
+            <if test="remarks != null">remarks = #{remarks},</if>
+            <if test="bloodData != null">blood_data = #{bloodData},</if>
+            <if test="moistureDate != null">moisture_date = #{moistureDate},</if>
+            <if test="vocation != null">vocation = #{vocation},</if>
+            <if test="night != null">night = #{night},</if>
+            <if test="experience != null">experience = #{experience},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+        </trim>
+        where customer_id = #{customerId}
+    </update>
+
+    <delete id="deleteSysCustomerPhysicalSignsByCustomerIds" parameterType="String">
+        delete from sys_customer_physical_signs where customer_id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

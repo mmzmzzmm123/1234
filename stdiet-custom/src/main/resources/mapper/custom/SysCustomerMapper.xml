@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.stdiet.custom.mapper.SysCustomerMapper">
+
+    <resultMap type="SysCustomer" id="SysCustomerResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="phone"    column="phone"    />
+        <result property="email"    column="email"    />
+        <result property="address"    column="address"    />
+        <result property="payDate"    column="pay_date"    />
+        <result property="startDate"    column="start_date"    />
+        <result property="purchaseNum"    column="purchase_num"    />
+        <result property="payTotal"    column="pay_total"    />
+        <result property="mainDietitian"    column="main_dietitian"    />
+        <result property="assistantDietitian"    column="assistant_dietitian"    />
+        <result property="afterDietitian"    column="after_dietitian"    />
+        <result property="salesman"    column="salesman"    />
+        <result property="chargePerson"    column="charge_person"    />
+        <result property="followStatus"    column="follow_status"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+    </resultMap>
+
+    <resultMap type="SysCustomer" id="SysCustomerSignResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="phone"    column="phone"    />
+        <result property="email"    column="email"    />
+        <result property="address"    column="address"    />
+        <result property="payDate"    column="pay_date"    />
+        <result property="startDate"    column="start_date"    />
+        <result property="purchaseNum"    column="purchase_num"    />
+        <result property="payTotal"    column="pay_total"    />
+        <result property="mainDietitian"    column="main_dietitian"    />
+        <result property="assistantDietitian"    column="assistant_dietitian"    />
+        <result property="afterDietitian"    column="after_dietitian"    />
+        <result property="salesman"    column="salesman"    />
+        <result property="chargePerson"    column="charge_person"    />
+        <result property="followStatus"    column="follow_status"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <association property="sign" javaType="com.stdiet.custom.domain.SysCustomerPhysicalSigns">
+            <result property="id"    column="id"    />
+            <result property="customerId"    column="customer_id"    />
+            <result property="sex"    column="sex"    />
+            <result property="age"    column="age"    />
+            <result property="tall"    column="tall"    />
+            <result property="weight"    column="weight"    />
+            <result property="physicalSignsId"    column="physical_signs_id"    />
+            <result property="dishesIngredientId"    column="dishes_ingredient_id"    />
+            <result property="photo"    column="photo"    />
+            <result property="constipation"    column="constipation"    />
+            <result property="staylate"    column="stayLate"    />
+            <result property="motion"    column="motion"    />
+            <result property="makeFoodType"    column="make_food_type"    />
+            <result property="makeFoodTaste"    column="make_food_taste"    />
+            <result property="walk"    column="walk"    />
+            <result property="difficulty"    column="difficulty"    />
+            <result property="weakness"    column="weakness"    />
+            <result property="rebound"    column="rebound"    />
+            <result property="crux"    column="crux"    />
+            <result property="position"    column="position"    />
+            <result property="sleepTime"    column="sleep_time"    />
+            <result property="getupTime"    column="getup_time"    />
+            <result property="connectTime"    column="connect_time"    />
+            <result property="remarks"    column="remarks"    />
+            <result property="bloodData"    column="blood_data"    />
+            <result property="moistureDate"    column="moisture_date"    />
+            <result property="vocation"    column="vocation"    />
+            <result property="night"    column="night"    />
+            <result property="experience"    column="experience"    />
+            <!-- column是传的参数, select是调用的查询 -->
+            <association property="signList" column="physical_signs_id" select="getSignByIds"/>
+        </association>
+    </resultMap>
+
+    <sql id="selectSysCustomerVo">
+        select id, name, phone, email, address, pay_date, start_date, purchase_num, pay_total, main_dietitian, assistant_dietitian, after_dietitian, salesman, charge_person, follow_status, create_time, create_by, update_time, update_by from sys_customer
+    </sql>
+
+    <select id="selectSysCustomerList" parameterType="SysCustomer" resultMap="SysCustomerResult">
+        <include refid="selectSysCustomerVo"/>
+        <where>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="phone != null  and phone != ''"> and phone like concat('%', #{phone}, '%')</if>
+        </where>
+    </select>
+
+    <select id="selectSysCustomerById" parameterType="Long" resultMap="SysCustomerResult">
+        <include refid="selectSysCustomerVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertSysCustomer" parameterType="SysCustomer" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_customer
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,</if>
+            <if test="phone != null">phone,</if>
+            <if test="email != null">email,</if>
+            <if test="address != null">address,</if>
+            <if test="payDate != null">pay_date,</if>
+            <if test="startDate != null">start_date,</if>
+            <if test="purchaseNum != null">purchase_num,</if>
+            <if test="payTotal != null">pay_total,</if>
+            <if test="mainDietitian != null">main_dietitian,</if>
+            <if test="assistantDietitian != null">assistant_dietitian,</if>
+            <if test="afterDietitian != null">after_dietitian,</if>
+            <if test="salesman != null">salesman,</if>
+            <if test="chargePerson != null">charge_person,</if>
+            <if test="followStatus != null">follow_status,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="email != null">#{email},</if>
+            <if test="address != null">#{address},</if>
+            <if test="payDate != null">#{payDate},</if>
+            <if test="startDate != null">#{startDate},</if>
+            <if test="purchaseNum != null">#{purchaseNum},</if>
+            <if test="payTotal != null">#{payTotal},</if>
+            <if test="mainDietitian != null">#{mainDietitian},</if>
+            <if test="assistantDietitian != null">#{assistantDietitian},</if>
+            <if test="afterDietitian != null">#{afterDietitian},</if>
+            <if test="salesman != null">#{salesman},</if>
+            <if test="chargePerson != null">#{chargePerson},</if>
+            <if test="followStatus != null">#{followStatus},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+        </trim>
+    </insert>
+
+    <update id="updateSysCustomer" parameterType="SysCustomer">
+        update sys_customer
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="email != null">email = #{email},</if>
+            <if test="address != null">address = #{address},</if>
+            <if test="payDate != null">pay_date = #{payDate},</if>
+            <if test="startDate != null">start_date = #{startDate},</if>
+            <if test="purchaseNum != null">purchase_num = #{purchaseNum},</if>
+            <if test="payTotal != null">pay_total = #{payTotal},</if>
+            <if test="mainDietitian != null">main_dietitian = #{mainDietitian},</if>
+            <if test="assistantDietitian != null">assistant_dietitian = #{assistantDietitian},</if>
+            <if test="afterDietitian != null">after_dietitian = #{afterDietitian},</if>
+            <if test="salesman != null">salesman = #{salesman},</if>
+            <if test="chargePerson != null">charge_person = #{chargePerson},</if>
+            <if test="followStatus != null">follow_status = #{followStatus},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysCustomerById" parameterType="Long">
+        delete from sys_customer where id = #{id}
+    </delete>
+
+    <delete id="deleteSysCustomerByIds" parameterType="String">
+        delete from sys_customer where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!-- 根据手机号查询客户 -->
+    <select id="getCustomerByPhone" parameterType="String" resultMap="SysCustomerResult">
+        <include refid="selectSysCustomerVo"/>
+        where phone = #{phone}
+    </select>
+
+    <sql id="selectSysCustomerAndSign">
+        <!--sc.email, sc.address, sc.pay_date, sc.start_date, sc.purchase_num, sc.pay_total, sc.main_dietitian, sc.assistant_dietitian,
+        sc.after_dietitian, sc.salesman, sc.charge_person, sc.follow_status, -->
+        select sc.id, sc.name, sc.phone, sc.create_time, sc.create_by, sc.update_time, sc.update_by,
+        <include refid="selectSysCustomerPhysicalSigns"></include>
+        from sys_customer sc
+        left join sys_customer_physical_signs scps on scps.customer_id = sc.id
+    </sql>
+
+    <sql id="selectSysCustomerPhysicalSigns">
+        scps.sex, scps.age, scps.tall, scps.weight, scps.physical_signs_id, scps.dishes_ingredient_id, scps.photo, scps.constipation,
+        scps.stayLate, scps.motion, scps.make_food_type, scps.make_food_taste, scps.walk, scps.difficulty, scps.weakness, scps.rebound, scps.crux, scps.position,
+        scps.sleep_time, scps.getup_time, scps.connect_time, scps.remarks, scps.blood_data, scps.moisture_date, scps.vocation,
+        scps.night, scps.experience
+    </sql>
+
+    <select id="selectSysCustomerAndSignList" parameterType="SysCustomer" resultMap="SysCustomerSignResult">
+        <include refid="selectSysCustomerAndSign"/>
+        <where>
+            <if test="id != null"> and sc.id = #{id} </if>
+            <if test="name != null  and name != ''"> and sc.name like concat('%', #{name}, '%')</if>
+            <if test="phone != null  and phone != ''"> and sc.phone like concat('%', #{phone}, '%')</if>
+        </where>
+        order by id desc
+    </select>
+
+    <!-- 根据体征id获取体征 -->
+    <select id="getSignByIds" parameterType="String" resultType="SysPhysicalSigns">
+        select * from sys_physical_signs sps where FIND_IN_SET(id, #{physical_signs_id})
+    </select>
+
+</mapper>
