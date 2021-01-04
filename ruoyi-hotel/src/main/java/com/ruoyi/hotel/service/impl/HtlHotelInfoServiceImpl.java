@@ -1,12 +1,13 @@
 package com.ruoyi.hotel.service.impl;
 
-import java.util.List;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.hotel.domain.HtlHotelInfo;
+import com.ruoyi.hotel.mapper.HtlHotelInfoMapper;
+import com.ruoyi.hotel.service.IHtlHotelInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.ruoyi.hotel.mapper.HtlHotelInfoMapper;
-import com.ruoyi.hotel.domain.HtlHotelInfo;
-import com.ruoyi.hotel.service.IHtlHotelInfoService;
+
+import java.util.List;
 
 /**
  * 酒店信息Service业务层处理
@@ -19,6 +20,10 @@ public class HtlHotelInfoServiceImpl implements IHtlHotelInfoService
 {
     @Autowired
     private HtlHotelInfoMapper htlHotelInfoMapper;
+
+    public List<Long> selectAllLocationList() {
+        return htlHotelInfoMapper.selectAllLocationList();
+    }
 
     /**
      * 查询酒店信息

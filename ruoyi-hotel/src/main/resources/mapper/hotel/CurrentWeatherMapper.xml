@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.hotel.mapper.CurrentWeatherMapper">
+    
+    <resultMap type="CurrentWeather" id="CurrentWeatherResult">
+        <result property="locationId"    column="location_id"    />
+        <result property="locationName"    column="location_name"    />
+        <result property="adm1"    column="adm1"    />
+        <result property="adm2"    column="adm2"    />
+        <result property="temp"    column="temp"    />
+        <result property="feelsLike"    column="feels_like"    />
+        <result property="icon"    column="icon"    />
+        <result property="text"    column="text"    />
+        <result property="wind360"    column="wind_360"    />
+        <result property="windDir"    column="wind_dir"    />
+        <result property="windScale"    column="wind_scale"    />
+        <result property="windSpeed"    column="wind_speed"    />
+        <result property="humidity"    column="humidity"    />
+        <result property="precip"    column="precip"    />
+        <result property="pressure"    column="pressure"    />
+        <result property="vis"    column="vis"    />
+        <result property="cloud"    column="cloud"    />
+        <result property="dew"    column="dew"    />
+    </resultMap>
+
+    <sql id="selectCurrentWeatherVo">
+        select location_id, location_name, adm1, adm2, temp, feels_like, icon, text, wind_360, wind_dir, wind_scale, wind_speed, humidity, precip, pressure, vis, cloud, dew from current_weather
+    </sql>
+
+    <select id="selectCurrentWeatherList" parameterType="CurrentWeather" resultMap="CurrentWeatherResult">
+        <include refid="selectCurrentWeatherVo"/>
+        <where>  
+            <if test="locationName != null  and locationName != ''"> and location_name like concat('%', #{locationName}, '%')</if>
+            <if test="adm1 != null  and adm1 != ''"> and adm1 = #{adm1}</if>
+            <if test="adm2 != null  and adm2 != ''"> and adm2 = #{adm2}</if>
+            <if test="temp != null  and temp != ''"> and temp = #{temp}</if>
+            <if test="feelsLike != null  and feelsLike != ''"> and feels_like = #{feelsLike}</if>
+            <if test="icon != null  and icon != ''"> and icon = #{icon}</if>
+            <if test="text != null  and text != ''"> and text = #{text}</if>
+            <if test="wind360 != null  and wind360 != ''"> and wind_360 = #{wind360}</if>
+            <if test="windDir != null  and windDir != ''"> and wind_dir = #{windDir}</if>
+            <if test="windScale != null  and windScale != ''"> and wind_scale = #{windScale}</if>
+            <if test="windSpeed != null  and windSpeed != ''"> and wind_speed = #{windSpeed}</if>
+            <if test="humidity != null  and humidity != ''"> and humidity = #{humidity}</if>
+            <if test="precip != null  and precip != ''"> and precip = #{precip}</if>
+            <if test="pressure != null  and pressure != ''"> and pressure = #{pressure}</if>
+            <if test="vis != null  and vis != ''"> and vis = #{vis}</if>
+            <if test="cloud != null  and cloud != ''"> and cloud = #{cloud}</if>
+            <if test="dew != null  and dew != ''"> and dew = #{dew}</if>
+        </where>
+    </select>
+    
+    <select id="selectCurrentWeatherById" parameterType="Long" resultMap="CurrentWeatherResult">
+        <include refid="selectCurrentWeatherVo"/>
+        where location_id = #{locationId}
+    </select>
+        
+    <insert id="insertCurrentWeather" parameterType="CurrentWeather">
+        insert into current_weather
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="locationId != null">location_id,</if>
+            <if test="locationName != null">location_name,</if>
+            <if test="adm1 != null">adm1,</if>
+            <if test="adm2 != null">adm2,</if>
+            <if test="temp != null">temp,</if>
+            <if test="feelsLike != null">feels_like,</if>
+            <if test="icon != null">icon,</if>
+            <if test="text != null">text,</if>
+            <if test="wind360 != null">wind_360,</if>
+            <if test="windDir != null">wind_dir,</if>
+            <if test="windScale != null">wind_scale,</if>
+            <if test="windSpeed != null">wind_speed,</if>
+            <if test="humidity != null">humidity,</if>
+            <if test="precip != null">precip,</if>
+            <if test="pressure != null">pressure,</if>
+            <if test="vis != null">vis,</if>
+            <if test="cloud != null">cloud,</if>
+            <if test="dew != null">dew,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="locationId != null">#{locationId},</if>
+            <if test="locationName != null">#{locationName},</if>
+            <if test="adm1 != null">#{adm1},</if>
+            <if test="adm2 != null">#{adm2},</if>
+            <if test="temp != null">#{temp},</if>
+            <if test="feelsLike != null">#{feelsLike},</if>
+            <if test="icon != null">#{icon},</if>
+            <if test="text != null">#{text},</if>
+            <if test="wind360 != null">#{wind360},</if>
+            <if test="windDir != null">#{windDir},</if>
+            <if test="windScale != null">#{windScale},</if>
+            <if test="windSpeed != null">#{windSpeed},</if>
+            <if test="humidity != null">#{humidity},</if>
+            <if test="precip != null">#{precip},</if>
+            <if test="pressure != null">#{pressure},</if>
+            <if test="vis != null">#{vis},</if>
+            <if test="cloud != null">#{cloud},</if>
+            <if test="dew != null">#{dew},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCurrentWeather" parameterType="CurrentWeather">
+        update current_weather
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="locationName != null">location_name = #{locationName},</if>
+            <if test="adm1 != null">adm1 = #{adm1},</if>
+            <if test="adm2 != null">adm2 = #{adm2},</if>
+            <if test="temp != null">temp = #{temp},</if>
+            <if test="feelsLike != null">feels_like = #{feelsLike},</if>
+            <if test="icon != null">icon = #{icon},</if>
+            <if test="text != null">text = #{text},</if>
+            <if test="wind360 != null">wind_360 = #{wind360},</if>
+            <if test="windDir != null">wind_dir = #{windDir},</if>
+            <if test="windScale != null">wind_scale = #{windScale},</if>
+            <if test="windSpeed != null">wind_speed = #{windSpeed},</if>
+            <if test="humidity != null">humidity = #{humidity},</if>
+            <if test="precip != null">precip = #{precip},</if>
+            <if test="pressure != null">pressure = #{pressure},</if>
+            <if test="vis != null">vis = #{vis},</if>
+            <if test="cloud != null">cloud = #{cloud},</if>
+            <if test="dew != null">dew = #{dew},</if>
+        </trim>
+        where location_id = #{locationId}
+    </update>
+
+    <delete id="deleteCurrentWeatherById" parameterType="Long">
+        delete from current_weather where location_id = #{locationId}
+    </delete>
+
+    <delete id="deleteCurrentWeatherByIds" parameterType="String">
+        delete from current_weather where location_id in 
+        <foreach item="locationId" collection="array" open="(" separator="," close=")">
+            #{locationId}
+        </foreach>
+    </delete>
+    
+</mapper>

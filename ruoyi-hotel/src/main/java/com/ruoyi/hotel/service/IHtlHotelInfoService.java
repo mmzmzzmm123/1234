@@ -11,6 +11,8 @@ import com.ruoyi.hotel.domain.HtlHotelInfo;
  */
 public interface IHtlHotelInfoService 
 {
+    public List<Long> selectAllLocationList();
+
     /**
      * 查询酒店信息
      * 
