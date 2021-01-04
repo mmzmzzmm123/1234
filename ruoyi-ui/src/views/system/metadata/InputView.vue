@@ -22,7 +22,7 @@ export default {
   },
   data() {
     return{
-      uploadText:'1231231',
+      uploadText:'点击或拖入文件上传',
       uploading:false,
       open:false,
       loading:false,

@@ -71,8 +71,10 @@ public class ElectronicAttributesController extends BaseController
     public AjaxResult upload(HttpServletRequest req){
         String filename = req.getParameter("file_name");
         String md5 = req.getParameter("md5");
-        redisCache.setCacheObject(SecurityUtils.getUsername()+":"+filename,md5);
-        return AjaxResult.success();
+        if (electronicAttributesService.merge(filename,md5)){
+            return AjaxResult.success();
+        }
+        return AjaxResult.error("系统错误,上传失败");
     }
     /**
      * 上传文件分块
@@ -82,16 +84,24 @@ public class ElectronicAttributesController extends BaseController
     @PostMapping("/chunk")
     public AjaxResult upload2(HttpServletRequest req, MultipartFile data) {
         if (data==null) {
-            return AjaxResult.error();
-        }Map<String,Object> map = new HashMap<>();
+            return AjaxResult.error("网络错误,上传失败");
+        }
+        String res=null;
+        Map<String,Object> map = new HashMap<>();
         map.put("filename",req.getParameter("file_name"));
         map.put("md5",req.getParameter("md5"));
         map.put("chunks",req.getParameter("chunks"));
         map.put("chunkIndex",req.getParameter("chunk_index"));
         map.put("chunkMd5",req.getParameter("chunk_md5"));
         map.put("data",data);
-        electronicAttributesService.mergeChunk(map);
-        return AjaxResult.success();
+        res = electronicAttributesService.mergeChunk(map);
+        if (StrUtil.isBlank(res)){
+            return AjaxResult.success();
+        }
+        else {
+            return AjaxResult.error(res);
+        }
+
     }
     /**
      * 获取base64

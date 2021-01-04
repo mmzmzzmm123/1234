@@ -58,8 +58,8 @@ public class SysLoginService
         String captcha = redisCache.getCacheObject(verifyKey);
         String loginErrKey = "login_err:"+username;
         Object err = redisCache.getCacheObject(loginErrKey);
-        int loginErrNum = redisCache.getCacheObject("loginErrNum");
-        int loginLockMinutes = redisCache.getCacheObject("loginLockMinutes");
+        int loginErrNum = Integer.parseInt(redisCache.getCacheObject("sys_config:sys.errnum"));
+        int loginLockMinutes = Integer.parseInt(redisCache.getCacheObject("sys_config:sys.lock.minute"));
         int errs = 0;
         if (err!=null){
             errs = (int) err;
@@ -76,7 +76,7 @@ public class SysLoginService
             throw new CaptchaException();
         }
         if (errs>=4){
-            AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, MessageUtils.message("user.password.retry.limit.exceed"),loginLockMinutes));
+            AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, MessageUtils.message("user.blocked")));
             SysUser user = userService.selectUserByUserName(username);
             if ("0".equals(user.getStatus())){
                 user.setStatus("1");

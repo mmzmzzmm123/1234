@@ -55,7 +55,6 @@ export const uploadByPieces = ({files, chunkUrl, fileUrl, pieceSize, progress, s
       AllChunk = AllChunk + chunkCount // 计算全局chunk数
       // 针对单个文件进行chunk上传
       for (let i = 0; i < chunkCount; i++) {
-        console.log(i)
         const { chunk } = getChunkInfo(currentFile.file, i, chunkSize)
         let chunkFR = new FileReader()
         chunkFR.readAsBinaryString(chunk)
@@ -107,6 +106,7 @@ export const uploadByPieces = ({files, chunkUrl, fileUrl, pieceSize, progress, s
       url: chunkUrl,
       data: fileForm,
       async: false,
+      timeout: 10000
     }).then(res => {
       progressFun()
       if (chunkInfo.currentChunk < chunkInfo.chunkCount - 1) {

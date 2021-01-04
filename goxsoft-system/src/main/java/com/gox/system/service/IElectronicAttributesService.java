@@ -23,6 +23,8 @@ public interface IElectronicAttributesService
 
     String mergeChunk(Map<String, Object> map);
 
+    boolean merge(String filename,String md5);
+
     /**
      * 获取文件base64编码
      * @param id 电子文件id

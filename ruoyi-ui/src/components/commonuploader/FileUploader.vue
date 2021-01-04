@@ -41,7 +41,8 @@ export default {
   methods: {
     // 上传前
     beforeExcelUpload () {
-      console.log('this.fileList', this.fileList)
+      this.fileList = []
+      //console.log('this.fileList', this.fileList)
     },
     // 上传请求
     handleUploadRequest (back) {
