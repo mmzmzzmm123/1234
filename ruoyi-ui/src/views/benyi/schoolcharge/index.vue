@@ -60,7 +60,7 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['benyi:schoolcharge:edit']"
-            >修改</el-button
+            >设置</el-button
           >
           <el-button
             size="mini"
@@ -247,7 +247,7 @@ export default {
         getSchoolcharge(id).then((response) => {
           this.form = response.data;
           this.open = true;
-          this.title = "修改园所收费标准";
+          this.title = "设置园所收费标准";
         });
       }
     },
@@ -258,7 +258,7 @@ export default {
           if (this.form.id != undefined) {
             updateSchoolcharge(this.form).then((response) => {
               if (response.code === 200) {
-                this.msgSuccess("修改成功");
+                this.msgSuccess("设置成功");
                 this.open = false;
                 this.getList();
               }
