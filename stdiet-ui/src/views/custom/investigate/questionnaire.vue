@@ -79,7 +79,8 @@
       </el-select>
     </el-form-item>
     <el-form-item label="饮食备注" prop="remarks">
-      <el-input v-model="form.remarks" placeholder="请输入备注信息" />
+      <el-input type="textarea" placeholder="请输入内容" v-model="form.remarks" maxlength="200" show-word-limit rows="5"></el-input>
+      <!--<el-input v-model="form.remarks" placeholder="请输入备注信息" />-->
     </el-form-item>
     <el-form-item label="饮食特点" prop="makeFoodTaste">
       <el-select v-model="form.makeFoodTaste" placeholder="请选择">

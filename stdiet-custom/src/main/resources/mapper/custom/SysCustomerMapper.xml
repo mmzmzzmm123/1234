@@ -207,7 +207,7 @@
             <if test="name != null  and name != ''"> and sc.name like concat('%', #{name}, '%')</if>
             <if test="phone != null  and phone != ''"> and sc.phone like concat('%', #{phone}, '%')</if>
         </where>
-        order by id desc
+        order by sc.create_time desc
     </select>
 
     <!-- 根据体征id获取体征 -->
