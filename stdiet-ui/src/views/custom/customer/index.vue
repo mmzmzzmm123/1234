@@ -77,120 +77,134 @@
     <el-table v-loading="loading" :data="customerList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <!--<el-table-column label="序号" align="center" prop="id" />-->
-      <el-table-column label="姓名" align="center" prop="name" />
-      <el-table-column label="手机号" align="center" prop="phone" />
-      <el-table-column label="性别" align="center" prop="sign.sex" width="80">
+      <el-table-column label="创建时间" align="center" prop="createTime" width="180">
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="姓名" align="center" prop="name" width="120"/>
+      <el-table-column label="手机号" align="center" prop="phone" width="120"/>
+      <el-table-column label="性别" align="center" prop="sign.sex" width="100">
         <template slot-scope="scope">
           {{scope.row.sign.sex == 0 ? `男` : '女'}}
         </template>
       </el-table-column>
-      <el-table-column label="年龄(岁)" align="center" prop="sign.age" />
-      <el-table-column label="身高(厘米)" align="center" prop="sign.tall" />
-      <el-table-column label="体重(斤)" align="center" prop="sign.weight" />
-      <el-table-column label="北方、南方" align="center" prop="sign.position" width="80">
+      <el-table-column label="年龄(岁)" align="center" prop="sign.age" width="100"/>
+      <el-table-column label="身高(厘米)" align="center" prop="sign.tall" width="100"/>
+      <el-table-column label="体重(斤)" align="center" prop="sign.weight" width="100"/>
+      <el-table-column label="北方、南方" align="center" prop="sign.position" width="100">
         <template slot-scope="scope">
           {{scope.row.sign.position == 0 ? `南方` : '北方'}}
         </template>
       </el-table-column>
-      <el-table-column label="病史" align="center" prop="sign.signList" width="80">
+      <el-table-column label="病史" align="center" prop="sign.signList" width="120">
         <template slot-scope="scope">
-          {{getSignString(scope.row.sign.signList)}}
+          <el-button v-show="getSignString(scope.row.sign.signList).length > 10" type="text" @click="openFormDialog('病史', getSignString(scope.row.sign.signList))">点击查看</el-button>
+          <span v-show="getSignString(scope.row.sign.signList).length <= 10">{{getSignString(scope.row.sign.signList)}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="忌口或过敏源" align="center" prop="sign.dishesIngredientId" width="80">
+      <el-table-column label="忌口或过敏源" align="center" prop="sign.dishesIngredientId" width="120">
         <template slot-scope="scope">
-          {{scope.row.sign.dishesIngredientId}}
+          <el-button v-show="scope.row.sign.dishesIngredientId.length > 10" type="text" @click="openFormDialog('忌口或过敏源', scope.row.sign.dishesIngredientId)">点击查看</el-button>
+          <span v-show="scope.row.sign.dishesIngredientId.length <= 10">{{scope.row.sign.dishesIngredientId}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="是否便秘" align="center" prop="sign.constipation" width="80">
+      <el-table-column label="是否便秘" align="center" prop="sign.constipation" width="100">
         <template slot-scope="scope">
           {{scope.row.sign.constipation == 0 ? `是` : '否'}}
         </template>
       </el-table-column>
-      <el-table-column label="是否熬夜失眠" align="center" prop="sign.staylate" width="80">
+      <el-table-column label="是否熬夜失眠" align="center" prop="sign.staylate" width="100">
         <template slot-scope="scope">
           {{scope.row.sign.staylate == 0 ? `是` : '否'}}
         </template>
       </el-table-column>
-      <el-table-column label="是否经常运动" align="center" prop="sign.motion" width="80">
+      <el-table-column label="是否经常运动" align="center" prop="sign.motion" width="100">
         <template slot-scope="scope">
           {{scope.row.sign.motion == 0 ? `是` : '否'}}
         </template>
       </el-table-column>
-      <el-table-column label="饮食方式" align="center" prop="sign.makeFoodType" width="80">
+      <el-table-column label="饮食方式" align="center" prop="sign.makeFoodType" width="100">
         <template slot-scope="scope">
           {{scope.row.sign.makeFoodType == 0 ? `自己做` : '外面吃'}}
         </template>
       </el-table-column>
-      <el-table-column label="饮食备注" align="center" prop="sign.remarks" width="80"></el-table-column>
-      <el-table-column label="饮食特点" align="center" prop="sign.makeFoodTaste" width="80">
+      <el-table-column label="饮食备注" align="center" prop="sign.remarks" width="100">
+        <template slot-scope="scope">
+          <el-button v-show="scope.row.sign.remarks != null && scope.row.sign.remarks.length > 10" type="text" @click="openFormDialog('饮食备注', scope.row.sign.remarks)">点击查看</el-button>
+          <span v-show="scope.row.sign.remarks != null && scope.row.sign.remarks.length <= 10">{{scope.row.sign.remarks}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="饮食特点" align="center" prop="sign.makeFoodTaste" width="100">
         <template slot-scope="scope">
           {{scope.row.sign.makeFoodTaste == 0 ? `清淡` : '重口味'}}
         </template>
       </el-table-column>
-      <el-table-column label="工作职业" align="center" prop="sign.vocation" width="80">
+      <el-table-column label="工作职业" align="center" prop="sign.vocation" width="100">
         <template slot-scope="scope">
           {{scope.row.sign.vocation}}
         </template>
       </el-table-column>
-      <el-table-column label="是否上夜班" align="center" prop="sign.night" width="80">
+      <el-table-column label="是否上夜班" align="center" prop="sign.night" width="100">
         <template slot-scope="scope">
           {{scope.row.sign.night == 0 ? `是` : '否'}}
         </template>
       </el-table-column>
-      <el-table-column label="久坐多还是运动多" align="center" prop="sign.walk" width="80">
+      <el-table-column label="久坐多还是运动多" align="center" prop="sign.walk" width="100">
         <template slot-scope="scope">
           {{scope.row.sign.walk == 0 ? `久坐多` : '走动多'}}
         </template>
       </el-table-column>
-      <el-table-column label="是否浑身乏力" align="center" prop="sign.weakness" width="80">
+      <el-table-column label="是否浑身乏力" align="center" prop="sign.weakness" width="100">
         <template slot-scope="scope">
           {{scope.row.sign.weakness == 0 ? `是` : '否'}}
         </template>
       </el-table-column>
-      <el-table-column label="是否减脂反弹" align="center" prop="sign.rebound" width="80">
+      <el-table-column label="是否减脂反弹" align="center" prop="sign.rebound" width="100">
         <template slot-scope="scope">
           {{scope.row.sign.rebound == 0 ? `是` : '否'}}
         </template>
       </el-table-column>
-      <el-table-column label="意识到生活习惯是减脂关键" align="center" prop="sign.crux" width="80">
+      <el-table-column label="意识到生活习惯是减脂关键" align="center" prop="sign.crux" width="100">
         <template slot-scope="scope">
           {{scope.row.sign.crux == 0 ? `是` : '否'}}
         </template>
       </el-table-column>
-      <el-table-column label="睡觉时间" align="center" prop="sign.sleepTime" width="80">
+      <el-table-column label="睡觉时间" align="center" prop="sign.sleepTime" width="100">
         <template slot-scope="scope">
           {{scope.row.sign.sleepTime}}点
         </template>
       </el-table-column>
-      <el-table-column label="起床时间" align="center" prop="sign.getupTime" width="80">
+      <el-table-column label="起床时间" align="center" prop="sign.getupTime" width="100">
         <template slot-scope="scope">
           {{scope.row.sign.getupTime}}点
         </template>
       </el-table-column>
-      <el-table-column label="方便沟通时间" align="center" prop="sign.connectTime" width="80">
+      <el-table-column label="方便沟通时间" align="center" prop="sign.connectTime" width="100">
         <template slot-scope="scope">
           {{scope.row.sign.connectTime}}点
         </template>
       </el-table-column>
-      <el-table-column label="湿气数据" align="center" prop="sign.bloodData" width="80">
+      <el-table-column label="湿气数据" align="center" prop="sign.bloodData" width="100">
         <template slot-scope="scope">
           {{scope.row.sign.bloodData}}
         </template>
       </el-table-column>
-      <el-table-column label="气血数据" align="center" prop="sign.moistureDate" width="80">
+      <el-table-column label="气血数据" align="center" prop="sign.moistureDate" width="120">
         <template slot-scope="scope">
           {{scope.row.sign.moistureDate}}
         </template>
       </el-table-column>
-      <el-table-column label="减脂经历" align="center" prop="sign.experience" width="80">
+      <el-table-column label="减脂经历" align="center" prop="sign.experience" width="100">
         <template slot-scope="scope">
-          {{scope.row.sign.experience}}
+          <el-button v-show="scope.row.sign.experience != null && scope.row.sign.experience.length > 10" type="text" @click="openFormDialog('减脂经历', scope.row.sign.experience)">点击查看</el-button>
+          <span v-show="scope.row.sign.experience == null || scope.row.sign.experience.length <= 10">{{scope.row.sign.experience}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="减脂遇到的困难" align="center" prop="sign.difficulty" width="80">
+      <el-table-column label="减脂遇到的困难" align="center" prop="sign.difficulty" width="100">
         <template slot-scope="scope">
-          {{scope.row.sign.difficulty}}
+          <el-button v-show="scope.row.sign.difficulty == null != null && scope.row.sign.difficulty.length > 10" type="text" @click="openFormDialog('减脂遇到的困难', scope.row.sign.difficulty)">点击查看</el-button>
+          <span v-show="scope.row.sign.difficulty == null || scope.row.sign.difficulty.length <= 10">{{scope.row.sign.difficulty}}</span>
         </template>
       </el-table-column>
       <!--<el-table-column label="主营养师" align="center" prop="mainDietitian" />
@@ -198,7 +212,7 @@
       <el-table-column label="售后营养师" align="center" prop="afterDietitian" />
       <el-table-column label="销售人员" align="center" prop="salesman" />
       <el-table-column label="负责人" align="center" prop="chargePerson" />-->
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="120">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -225,6 +239,14 @@
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
     />
+
+    <el-dialog :title="formDialog.title" :visible.sync="formDialog.show" width="30%" append-to-body center>
+      <span>{{formDialog.content}}</span>
+      <span slot="footer" class="dialog-footer">
+      <el-button @click="formDialog.show = false">取 消</el-button>
+      <!--<el-button type="primary" @click="experience_dialog = false">确 定</el-button>-->
+      </span>
+    </el-dialog>
 
     <!-- 添加或修改客户信息对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
@@ -302,7 +324,8 @@
             </el-select>
           </el-form-item>
         <el-form-item label="饮食备注" prop="remarks">
-          <el-input v-model="form.remarks" placeholder="请输入备注信息" />
+          <el-input type="textarea" placeholder="请输入内容" v-model="form.remarks" maxlength="200" show-word-limit rows="5"></el-input>
+          <!--<el-input v-model="form.remarks" placeholder="请输入备注信息" />-->
         </el-form-item>
           <el-form-item label="饮食特点" prop="makeFoodTaste">
             <el-select v-model="form.makeFoodTaste" placeholder="请选择">
@@ -498,6 +521,12 @@
           moistureDate:[
             { required: true, trigger: "blur", message: "请测试湿气" }
           ]*/
+        },
+        //查看表单内容
+        formDialog:{
+          title: "",
+          show: false,
+          content: ""
         }
       };
     },
@@ -709,6 +738,11 @@
           return time > 9 ? (time + ":00") : ("0"+time+":00");
         }
         return null;
+      },
+      openFormDialog(title, content){
+          this.formDialog.title = title;
+          this.formDialog.content = content;
+          this.formDialog.show = true;
       }
     }
   };
