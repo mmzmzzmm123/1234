@@ -2,6 +2,8 @@ package com.stdiet.custom.service;
 
 import java.util.List;
 import com.stdiet.custom.domain.SysDishes;
+import com.stdiet.custom.domain.SysDishesIngredient;
+import com.stdiet.custom.domain.SysIngredient;
 
 /**
  * 菜品Service接口
@@ -18,6 +20,8 @@ public interface ISysDishesService
      * @return 菜品
      */
     public SysDishes selectSysDishesById(Long id);
+
+    public List<SysDishesIngredient> selectSysIngreditentsById(Long id);
 
     /**
      * 查询菜品列表
