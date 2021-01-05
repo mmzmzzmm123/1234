@@ -242,18 +242,20 @@ export default {
   },
   mounted() {
     this.loadForm()
-    // if (Array.isArray(drawingListInDB) && drawingListInDB.length > 0) {
-    //   this.drawingList = drawingListInDB
-    // } else {
-    //   this.drawingList = drawingDefalut
-    // }
-    // this.activeFormItem(this.drawingList[0])
-    // if (formConfInDB) {
-    //   this.formConf = formConfInDB
-    // }
-    // loadBeautifier(btf => {
-    //   beautifier = btf
-    // })
+    if (this.drawingList.length === 0){
+      if (Array.isArray(drawingListInDB) && drawingListInDB.length > 0) {
+        this.drawingList = drawingListInDB
+      } else {
+        this.drawingList = drawingDefalut
+      }
+      this.activeFormItem(this.drawingList[0])
+      if (formConfInDB) {
+        this.formConf = formConfInDB
+      }
+      loadBeautifier(btf => {
+        beautifier = btf
+      })
+    }
     const clipboard = new ClipboardJS('#copyNode', {
       text: trigger => {
         const codeStr = this.generateCode()

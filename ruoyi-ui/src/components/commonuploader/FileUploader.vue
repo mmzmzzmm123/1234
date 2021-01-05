@@ -8,7 +8,7 @@
       drag action=""
       :before-upload="beforeExcelUpload"
       :http-request="handleUploadRequest"
-      :show-file-list='false'
+      :show-file-list='true'
     >
       <div class="el-upload__text">
         {{uploadText}}
@@ -65,6 +65,7 @@ export default {
           this.loadingText = '上传进度' + num + '%'
         },
         success: (data) => {
+          this.fileList=[]
           this.uploading = false
           this.$emit('uploaded', data)
         },

@@ -1,14 +1,18 @@
 <template>
   <div id="InputView" :loading="loading" >
     <transition name="el-fade-in-linear">
-      <parser v-if="open" :form-conf="formconf" class="transition-box" />
+      <parser v-if="open" :form-conf="formconf" class="transition-box" @submit="nextPage" />
     </transition>
-    <FileUpload :upload-text="uploadText">
-    </FileUpload>
+    <transition v-if="desc" name="el-fade-in-linear">
+      <parser v-if="desc" :form-conf="content" class="transition-box" @submit="nextPage" />
+    </transition>
+<!--    <FileUpload :upload-text="uploadText">-->
+<!--    </FileUpload>-->
   </div>
 </template>
 <script>
 import Parser from '@/gene/components/parser/Parser'
+import {listJson} from '@/api/system/json'
 import { uploadByPieces } from '@/utils/utils'
 import FileUpload from '@/components/commonuploader/FileUploader'
 export default {
@@ -22,12 +26,14 @@ export default {
   },
   data() {
     return{
+      desc:false,
       uploadText:'点击或拖入文件上传',
       uploading:false,
       open:false,
       loading:false,
       files:[],
       loadingText:'',
+      content:{},
     }
   },
   mounted() {
@@ -35,6 +41,12 @@ export default {
   },
   created() {
     this.loading=true;
+    let query = {id:'',parentName: '文书',node:'内容描述'}
+    listJson(query).then(res => {
+      this.content=JSON.parse(res.rows[0].formData)
+    }).catch(err=>{
+      console.log(err)
+    })
     // console.log(this.formconf)
   },
   methods:{
@@ -74,6 +86,11 @@ export default {
         })
       })
     },
+    nextPage(){
+
+      this.open=false
+      this.desc=true
+    }
   },
   watch:{
     formconf:function(nv,ov) {

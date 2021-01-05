@@ -106,7 +106,7 @@ export const uploadByPieces = ({files, chunkUrl, fileUrl, pieceSize, progress, s
       url: chunkUrl,
       data: fileForm,
       async: false,
-      timeout: 10000
+      timeout: 150000
     }).then(res => {
       progressFun()
       if (chunkInfo.currentChunk < chunkInfo.chunkCount - 1) {

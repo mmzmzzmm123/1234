@@ -749,9 +749,9 @@
 <!--    </el-dialog>-->
     <el-dialog :title="title" :visible.sync="open" width="1500px" append-to-body>
       <InputView v-if="open" :formconf="formConf"/>
-      <el-button @click="cancel">
-        取消
-      </el-button>
+<!--      <el-button @click="cancel">-->
+<!--        取消-->
+<!--      </el-button>-->
     </el-dialog>
   </div>
 </template>
@@ -1185,7 +1185,7 @@ export default {
       this.multiple = !selection.length
     },
     loadForm(){
-      let query = {id:'',parentName: '999' ,node:'888'}
+      let query = {id:'',parentName: '文书',node:'基本数据'}
       listJson(query).then(res => {
         this.formConf=JSON.parse(res.rows[0].formData)
         console.log(this.formConf)

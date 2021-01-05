@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.crypto.SecureUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -104,6 +103,9 @@ public class ElectronicAttributesServiceImpl implements IElectronicAttributesSer
         } catch (Exception e) {
             LOGGER.error("系统错误",e);
             return false;
+        }
+        finally {
+            FileUtil.del(folder);
         }
     }
     /**
