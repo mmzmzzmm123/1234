@@ -5,7 +5,7 @@
     <img src="@/assets/logo/st_logo.png" style="width:240px;height:80px;"/>
   </div>
 </header> <main class="el-main">
-  <el-form ref="form" :model="form" :rules="rules" label-width="80px" style="margin-top:40px;">
+  <el-form ref="form" :model="form" :rules="rules" label-width="100px" style="margin-top:40px;">
     <!--<p>现在要先为您建立更加详细的档案，以便为您定制专属的减脂计划</p>-->
     <el-form-item label="真实姓名" prop="name">
       <el-input v-model="form.name" placeholder="请输入真实姓名" />
@@ -78,6 +78,9 @@
         <el-option label="外面吃" value="1" />
       </el-select>
     </el-form-item>
+    <el-form-item label="饮食备注" prop="remarks">
+      <el-input v-model="form.remarks" placeholder="请输入备注信息" />
+    </el-form-item>
     <el-form-item label="饮食特点" prop="makeFoodTaste">
       <el-select v-model="form.makeFoodTaste" placeholder="请选择">
         <el-option label="清淡" value="0" />
@@ -127,9 +130,7 @@
     <el-form-item label="方便沟通时间" prop="connectTime">
       <el-time-select v-model="form.connectTime" :picker-options="{start: '00:00',step: '01:00',end: '24:00'}" placeholder="请选择时间" :editable=false />
     </el-form-item>
-    <!--<el-form-item label="备注信息" prop="remarks">
-      <el-input v-model="form.remarks" placeholder="请输入备注信息" />
-    </el-form-item>-->
+
     <!--<p>好的，我现在给您测一下湿气和气血，有以下出现情况的请直接选择</p>-->
     <el-form-item label="湿气(多选)" prop="bloodData">
       <el-checkbox-group v-model="form.bloodData">
@@ -142,10 +143,11 @@
       </el-checkbox-group>
     </el-form-item>
     <el-form-item label="减脂经历（重点详细填写）" prop="experience">
-      <el-input v-model="form.experience" placeholder="请输入" />
+      <el-input type="textarea" placeholder="请输入内容" v-model="form.experience" maxlength="200" show-word-limit rows="5"></el-input>
     </el-form-item>
+
     <el-form-item label="减脂遇到的困难" prop="difficulty">
-      <el-input v-model="form.difficulty" placeholder="请输入" />
+      <el-input type="textarea" placeholder="请输入内容" v-model="form.difficulty" maxlength="200" show-word-limit rows="5"></el-input>
     </el-form-item>
     <el-form-item style="text-align:center;margin:0 auto;">
       <el-button type="primary" @click="addCustomer()" style="margin-right:50px;">已填写完成，提交数据</el-button>

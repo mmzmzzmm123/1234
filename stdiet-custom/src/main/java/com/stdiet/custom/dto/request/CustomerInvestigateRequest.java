@@ -4,7 +4,7 @@ import com.stdiet.common.annotation.Excel;
 import com.stdiet.common.core.domain.BaseEntity;
 
 /**
- * 客户信息建档调查DTO
+ * 客户体征信息请求DTO
  *
  * @author xzj
  * @date 2020-12-31

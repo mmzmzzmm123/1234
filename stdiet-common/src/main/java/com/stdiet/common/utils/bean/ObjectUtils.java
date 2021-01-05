@@ -58,7 +58,7 @@ public class ObjectUtils {
                     //将指定对象变量上此 Field 对象表示的字段设置为指定的新值
                     field.set(t, val);
                 }catch (Exception e){
-                    System.out.println(object.getClass().getName() + "没有该属性: " + field.getName());
+                    //System.out.println(object.getClass().getName() + "没有该属性: " + field.getName());
                 }
             }
         }
