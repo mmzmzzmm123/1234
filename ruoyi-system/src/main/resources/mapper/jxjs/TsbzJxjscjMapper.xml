@@ -120,7 +120,7 @@ left join tsbz_jdx c on b.jdxid=c.id
             <if test="createuserid != null">createuserid = #{createuserid},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
         </trim>
-        where id = #{id}
+        where id = #{id} or jsid = #{jsid}
     </update>
 
     <update id="updateTsbzJxjscjforjsfa" parameterType="TsbzJxjscj">

@@ -87,21 +87,20 @@ public class TsbzJxjscjController extends BaseController {
         for (TsbzJxjscj tsbzJxjscj : tsbzJdcxList) {
 
             TsbzJxjsjbxx tsbzjxjsjbxx = new TsbzJxjsjbxx();
-            System.out.println(tsbzJxjscj.getJsname()+ "1111111111");
             tsbzjxjsjbxx.setName(tsbzJxjscj.getJsname());
+            tsbzjxjsjbxx.setJxbh(tsbzJxjscj.getJsjxbh());
             List<TsbzJxjsjbxx> list = tsbzJxjsjbxxMapper.selectTsbzJxjsjbxxList(tsbzjxjsjbxx);
             if (list.size() == 0 || StringUtils.isNull(list)) {
                 throw new CustomException("导入数据非见习教师");
             }
             tsbzJxjscj.setJsid(list.get(0).getId());
-
-            iCount = iCount + tsbzJxjscjService.insertTsbzJxjscj(tsbzJxjscj);
-            // iCount = iCount + tsbzJxjscjService.updateTsbzJxjscj(tsbzJxjscj);
+            TsbzJxjscj jscjNew = tsbzJxjscjService.selectTsbzJxjscjByJsid(tsbzJxjscj.getJsid());
+            if (jscjNew != null) {
+                iCount = iCount + tsbzJxjscjService.updateTsbzJxjscj(tsbzJxjscj);
+            } else {
+                iCount = iCount + tsbzJxjscjService.insertTsbzJxjscj(tsbzJxjscj);
+            }
         }
-//        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
-//        String operName = loginUser.getUsername();
-//        String message = userService.importUser(userList, updateSupport, operName);
-        //String message = faide;
         return AjaxResult.success(String.valueOf(iCount), null);
     }
 

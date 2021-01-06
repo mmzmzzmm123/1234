@@ -39,6 +39,10 @@ public class TsbzJxjscj extends BaseEntity {
     @Excel(name = "教师姓名")
     private String jsname;
 
+    @Excel(name = "进修编号")
+    private String jsjxbh;
+
+
     /**
      * 基地排序
      */
@@ -225,5 +229,13 @@ public class TsbzJxjscj extends BaseEntity {
 
     public void setJsname(String jsname) {
         this.jsname = jsname;
+    }
+
+    public String getJsjxbh() {
+        return jsjxbh;
+    }
+
+    public void setJsjxbh(String jsjxbh) {
+        this.jsjxbh = jsjxbh;
     }
 }
