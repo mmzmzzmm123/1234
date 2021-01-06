@@ -92,7 +92,6 @@ public class HtlRoomPictureController extends BaseController
      * 获取当前用户关联的房间图片详细信息
      */
     @ApiOperation("获取当前用户关联的房间图片详细信息")
-    @PreAuthorize("@ss.hasPermi('hotel:roomPicture:query')")
     @GetMapping(value = "/query")
     public AjaxResult query()
     {
@@ -108,7 +107,6 @@ public class HtlRoomPictureController extends BaseController
      * @throws IOException 
      */
     @ApiOperation("上传房间图片")
-    @PreAuthorize("@ss.hasPermi('hotel:roomPicture:add')")
     @Log(title = "房间图片", businessType = BusinessType.INSERT)
 	@PostMapping(value = "/upload")
     public AjaxResult upload(@RequestParam("roomPicture") MultipartFile file) throws IOException
@@ -136,7 +134,6 @@ public class HtlRoomPictureController extends BaseController
      * 替换房间图片
      */
     @ApiOperation("替换房间图片")
-    @PreAuthorize("@ss.hasPermi('hotel:roomPicture:edit')")
     @Log(title = "房间图片", businessType = BusinessType.UPDATE)
     @PostMapping(value = "/replace")
 	public AjaxResult replace(Long pictureId, @RequestParam("roomPicture") MultipartFile file) throws IOException
@@ -162,7 +159,6 @@ public class HtlRoomPictureController extends BaseController
      * 切换图片状态
      */
     @ApiOperation("切换图片状态（启用或停用）")
-    @PreAuthorize("@ss.hasPermi('hotel:roomPicture:edit')")
     @Log(title = "房间图片", businessType = BusinessType.UPDATE)
     @PostMapping(value = "/switched")
 	@ApiImplicitParams({ 
@@ -187,7 +183,6 @@ public class HtlRoomPictureController extends BaseController
      * 重命名图片名称
      */
     @ApiOperation("重命名图片名称")
-    @PreAuthorize("@ss.hasPermi('hotel:roomPicture:edit')")
     @Log(title = "房间图片", businessType = BusinessType.UPDATE)
     @PostMapping(value = "/rename")
 	@ApiImplicitParams({ 
@@ -211,7 +206,6 @@ public class HtlRoomPictureController extends BaseController
 	 * 排列图片顺序
 	 */
 	@ApiOperation("排列图片顺序")
-	@PreAuthorize("@ss.hasPermi('hotel:roomPicture:edit')")
 	@Log(title = "房间图片", businessType = BusinessType.UPDATE)
 	@PostMapping(value = "/order")
 	public AjaxResult order(Long[] pictureIds) throws IOException {
@@ -235,7 +229,6 @@ public class HtlRoomPictureController extends BaseController
      * 删除房间图片
      */
     @ApiOperation("删除房间图片")
-    @PreAuthorize("@ss.hasPermi('hotel:roomPicture:remove')")
     @Log(title = "房间图片", businessType = BusinessType.DELETE)
 	@DeleteMapping("/delete")
     public AjaxResult remove(Long pictureId)
