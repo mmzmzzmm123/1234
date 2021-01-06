@@ -68,6 +68,14 @@ public interface ITsbzJxjscjService {
     public int deleteTsbzJxjscjById(Long id);
 
     /**
+     * 成绩导入
+     *
+     * @param tsbzJxjscj 基地区级审核
+     * @return 结果
+     */
+    public int updateTsbzJxjscjforjsfa(TsbzJxjscj tsbzJxjscj);
+
+    /**
      * 导入用户数据
      *
      * @param tsbzJxjscjList 教师成绩数据列表

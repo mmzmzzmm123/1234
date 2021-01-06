@@ -246,6 +246,9 @@
       width="400px"
       append-to-body
     >
+      <el-link type="info" style="font-size: 14px" @click="importTemplate"
+            >下载模板</el-link
+          >
       <el-upload
         ref="upload"
         :limit="1"
@@ -262,14 +265,6 @@
         <div class="el-upload__text">
           将文件拖到此处，或
           <em>点击上传</em>
-        </div>
-        <div class="el-upload__tip" slot="tip">
-          <el-checkbox
-            v-model="upload.updateSupport"
-          />是否更新已经存在的用户数据
-          <el-link type="info" style="font-size: 12px" @click="importTemplate"
-            >下载模板</el-link
-          >
         </div>
         <div class="el-upload__tip" style="color: red" slot="tip">
           提示：仅允许导入“xls”或“xlsx”格式文件！
@@ -355,7 +350,7 @@ export default {
         // 设置上传的请求头部
         headers: { Authorization: "Bearer " + getToken() },
         // 上传的地址
-        url: process.env.VUE_APP_BASE_API + "/system/user/importData",
+        url: process.env.VUE_APP_BASE_API + "/jxjs/jxjscj/importData",
       },
       // 表单校验
       rules: {
@@ -403,6 +398,7 @@ export default {
       this.loading = true;
       listJxjscj(this.queryParams).then((response) => {
         this.jxjscjList = response.rows;
+        console.log(this.jxjscjList);
         this.total = response.total;
         this.loading = false;
       });

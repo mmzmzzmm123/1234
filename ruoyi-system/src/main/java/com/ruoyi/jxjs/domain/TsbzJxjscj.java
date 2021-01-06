@@ -24,14 +24,20 @@ public class TsbzJxjscj extends BaseEntity {
     /**
      * 方案编号
      */
-    @Excel(name = "方案编号")
+//    @Excel(name = "方案编号")
     private Long faid;
+
+    @Excel(name = "方案名称", type = Excel.Type.EXPORT)
+    private String faname;
 
     /**
      * 教师编号
      */
-    @Excel(name = "教师编号")
+    @Excel(name = "教师编号", type = Excel.Type.IMPORT)
     private Long jsid;
+
+    @Excel(name = "教师姓名")
+    private String jsname;
 
     /**
      * 基地排序
@@ -42,37 +48,37 @@ public class TsbzJxjscj extends BaseEntity {
     /**
      * 案例分析得分
      */
-    @Excel(name = "案例分析得分")
+    @Excel(name = "案例分析得分", type = Excel.Type.IMPORT)
     private BigDecimal alfxdf;
 
     /**
      * 教案设计得分
      */
-    @Excel(name = "教案设计得分")
+    @Excel(name = "教案设计得分", type = Excel.Type.IMPORT)
     private BigDecimal jasjdf;
 
     /**
      * 钢笔字得分
      */
-    @Excel(name = "钢笔字得分")
+    @Excel(name = "钢笔字得分", type = Excel.Type.IMPORT)
     private BigDecimal gbzdf;
 
     /**
      * 综合得分
      */
-    @Excel(name = "综合得分")
+    @Excel(name = "综合得分", type = Excel.Type.IMPORT)
     private BigDecimal zhdf;
 
     /**
      * 学年学期
      */
-    @Excel(name = "学年学期")
+    @Excel(name = "学年学期", type = Excel.Type.IMPORT)
     private String xnxq;
 
     /**
      * 创建人
      */
-    @Excel(name = "创建人")
+    // @Excel(name = "创建人")
     private Long createuserid;
 
     private String name;
@@ -203,5 +209,21 @@ public class TsbzJxjscj extends BaseEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getFaname() {
+        return faname;
+    }
+
+    public void setFaname(String faname) {
+        this.faname = faname;
+    }
+
+    public String getJsname() {
+        return jsname;
+    }
+
+    public void setJsname(String jsname) {
+        this.jsname = jsname;
     }
 }

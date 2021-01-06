@@ -3,9 +3,12 @@ package com.ruoyi.web.controller.jxjs;
 import java.util.List;
 
 import com.ruoyi.common.core.domain.model.LoginUser;
+import com.ruoyi.common.exception.CustomException;
 import com.ruoyi.common.utils.ServletUtils;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.framework.web.service.TokenService;
 import com.ruoyi.jxjs.domain.TsbzJxjsjbxx;
+import com.ruoyi.jxjs.mapper.TsbzJxjsjbxxMapper;
 import com.ruoyi.web.controller.common.SchoolCommonController;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +45,8 @@ public class TsbzJxjscjController extends BaseController {
     private SchoolCommonController schoolCommonController;
     @Autowired
     private TokenService tokenService;
+    @Autowired
+    private TsbzJxjsjbxxMapper tsbzJxjsjbxxMapper;
 
     /**
      * 查询见习教师成绩列表
@@ -62,23 +67,42 @@ public class TsbzJxjscjController extends BaseController {
         return getDataTable(list);
     }
 
-    @Log(title = "教师成绩数据", businessType = BusinessType.IMPORT)
-    @PreAuthorize("@ss.hasPermi('jxjs:jxjscj:import')")
-    @PostMapping("/importData")
-    public AjaxResult importData(MultipartFile file, boolean updateSupport) throws Exception {
-        ExcelUtil<TsbzJxjscj> util = new ExcelUtil<TsbzJxjscj>(TsbzJxjscj.class);
-        List<TsbzJxjscj> tsbzJxjscjList = util.importExcel(file.getInputStream());
-        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
-        String operName = loginUser.getUsername();
-        String message = tsbzJxjscjService.importTsbzJxjscj(tsbzJxjscjList, updateSupport, operName);
-        return AjaxResult.success(message);
-    }
+
 
     @GetMapping("/importTemplate")
     public AjaxResult importTemplate()
     {
         ExcelUtil<TsbzJxjscj> util = new ExcelUtil<TsbzJxjscj>(TsbzJxjscj.class);
-        return util.importTemplateExcel("教师成绩数据");
+        return util.importTemplateExcel("教师成绩数据导入");
+    }
+
+    @Log(title = "分数导入", businessType = BusinessType.IMPORT)
+//    @PreAuthorize("@ss.hasPermi('system:user:import')")
+    @PostMapping("/importData")
+    public AjaxResult importData(MultipartFile file) throws Exception {
+        ExcelUtil<TsbzJxjscj> util = new ExcelUtil<TsbzJxjscj>(TsbzJxjscj.class);
+        List<TsbzJxjscj> tsbzJdcxList = util.importExcel(file.getInputStream());
+        int iCount = 0;
+
+        for (TsbzJxjscj tsbzJxjscj : tsbzJdcxList) {
+
+            TsbzJxjsjbxx tsbzjxjsjbxx = new TsbzJxjsjbxx();
+            System.out.println(tsbzJxjscj.getJsname()+ "1111111111");
+            tsbzjxjsjbxx.setName(tsbzJxjscj.getJsname());
+            List<TsbzJxjsjbxx> list = tsbzJxjsjbxxMapper.selectTsbzJxjsjbxxList(tsbzjxjsjbxx);
+            if (list.size() == 0 || StringUtils.isNull(list)) {
+                throw new CustomException("导入数据非见习教师");
+            }
+            tsbzJxjscj.setJsid(list.get(0).getId());
+
+            iCount = iCount + tsbzJxjscjService.insertTsbzJxjscj(tsbzJxjscj);
+            // iCount = iCount + tsbzJxjscjService.updateTsbzJxjscj(tsbzJxjscj);
+        }
+//        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+//        String operName = loginUser.getUsername();
+//        String message = userService.importUser(userList, updateSupport, operName);
+        //String message = faide;
+        return AjaxResult.success(String.valueOf(iCount), null);
     }
 
     /**

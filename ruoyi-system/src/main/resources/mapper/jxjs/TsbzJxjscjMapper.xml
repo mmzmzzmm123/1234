@@ -73,7 +73,7 @@ left join tsbz_jdx c on b.jdxid=c.id
         where a.id = #{id}
     </select>
 
-    <select id="selectTsbzJxjscjByJsid" parameterType="String" resultMap="TsbzJxjscjResult">
+    <select id="selectTsbzJxjscjByJsid" parameterType="Long" resultMap="TsbzJxjscjResult">
         <include refid="selectTsbzJxjscjVo"/>
         where a.jsid = #{jsid}
     </select>
@@ -121,6 +121,23 @@ left join tsbz_jdx c on b.jdxid=c.id
             <if test="createTime != null">create_time = #{createTime},</if>
         </trim>
         where id = #{id}
+    </update>
+
+    <update id="updateTsbzJxjscjforjsfa" parameterType="TsbzJxjscj">
+        update tsbz_jxjscj
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="faid != null">faid = #{faid},</if>
+            <if test="jsid != null">jsid = #{jsid},</if>
+            <if test="jdpx != null">jdpx = #{jdpx},</if>
+            <if test="alfxdf != null">alfxdf = #{alfxdf},</if>
+            <if test="jasjdf != null">jasjdf = #{jasjdf},</if>
+            <if test="gbzdf != null">gbzdf = #{gbzdf},</if>
+            <if test="zhdf != null">zhdf = #{zhdf},</if>
+            <if test="xnxq != null">xnxq = #{xnxq},</if>
+            <if test="createuserid != null">createuserid = #{createuserid},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where jsid = #{jsid}
     </update>
 
     <delete id="deleteTsbzJxjscjById" parameterType="Long">
