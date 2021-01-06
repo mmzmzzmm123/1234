@@ -1,128 +1,132 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.gbxxgl.mapper.TsbzGbjbqkMapper">
-    
+
     <resultMap type="TsbzGbjbqk" id="TsbzGbjbqkResult">
-        <result property="id"    column="id"    />
-        <result property="otherid"    column="otherid"    />
-        <result property="name"    column="name"    />
-        <result property="xb"    column="xb"    />
-        <result property="deptId"    column="dept_id"    />
-        <result property="dwmc"    column="dwmc"    />
-        <result property="dwjc"    column="dwjc"    />
-        <result property="xrxzzw"    column="xrxzzw"    />
-        <result property="xrdnzw"    column="xrdnzw"    />
-        <result property="xrqtzw"    column="xrqtzw"    />
-        <result property="rxzwny"    column="rxzwny"    />
-        <result property="xrxzzj"    column="xrxzzj"    />
-        <result property="xzzjqdny"    column="xzzjqdny"    />
-        <result property="sfhbgb"    column="sfhbgb"    />
-        <result property="hbgbqdny"    column="hbgbqdny"    />
-        <result property="sfzh"    column="sfzh"    />
-        <result property="updatetime"    column="updatetime"    />
-        <result property="mz"    column="mz"    />
-        <result property="jg"    column="jg"    />
-        <result property="jgProvince"    column="jg_province"    />
-        <result property="jgCityname"    column="jg_cityname"    />
-        <result property="jgCity"    column="jg_city"    />
-        <result property="jgAreaname"    column="jg_areaname"    />
-        <result property="jgArea"    column="jg_area"    />
-        <result property="csdProvince"    column="csd_province"    />
-        <result property="csdCityname"    column="csd_cityname"    />
-        <result property="csdCity"    column="csd_city"    />
-        <result property="csdAreaname"    column="csd_areaname"    />
-        <result property="csdArea"    column="csd_area"    />
-        <result property="csd"    column="csd"    />
-        <result property="csrq"    column="csrq"    />
-        <result property="cjgzny"    column="cjgzny"    />
-        <result property="jtzz"    column="jtzz"    />
-        <result property="dwdz"    column="dwdz"    />
-        <result property="dyxl"    column="dyxl"    />
-        <result property="xl"    column="xl"    />
-        <result property="xw"    column="xw"    />
-        <result property="byyx"    column="byyx"    />
-        <result property="jylx"    column="jylx"    />
-        <result property="zc"    column="zc"    />
-        <result property="jzcyqk"    column="jzcyqk"    />
-        <result property="nfkc"    column="nfkc"    />
-        <result property="hyzk"    column="hyzk"    />
-        <result property="zzmm"    column="zzmm"    />
-        <result property="rdsj"    column="rdsj"    />
-        <result property="bgsdh"    column="bgsdh"    />
-        <result property="phone"    column="phone"    />
-        <result property="rjxk"    column="rjxk"    />
-        <result property="jkzk"    column="jkzk"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="createUser"    column="create_user"    />
+        <result property="id" column="id"/>
+        <result property="otherid" column="otherid"/>
+        <result property="name" column="name"/>
+        <result property="xb" column="xb"/>
+        <result property="deptId" column="dept_id"/>
+        <result property="dwmc" column="dwmc"/>
+        <result property="dwjc" column="dwjc"/>
+        <result property="xrxzzw" column="xrxzzw"/>
+        <result property="xrdnzw" column="xrdnzw"/>
+        <result property="xrqtzw" column="xrqtzw"/>
+        <result property="rxzwny" column="rxzwny"/>
+        <result property="xrxzzj" column="xrxzzj"/>
+        <result property="xzzjqdny" column="xzzjqdny"/>
+        <result property="sfhbgb" column="sfhbgb"/>
+        <result property="hbgbqdny" column="hbgbqdny"/>
+        <result property="sfzh" column="sfzh"/>
+        <result property="updatetime" column="updatetime"/>
+        <result property="mz" column="mz"/>
+        <result property="jg" column="jg"/>
+        <result property="jgProvince" column="jg_province"/>
+        <result property="jgCityname" column="jg_cityname"/>
+        <result property="jgCity" column="jg_city"/>
+        <result property="jgAreaname" column="jg_areaname"/>
+        <result property="jgArea" column="jg_area"/>
+        <result property="csdProvince" column="csd_province"/>
+        <result property="csdCityname" column="csd_cityname"/>
+        <result property="csdCity" column="csd_city"/>
+        <result property="csdAreaname" column="csd_areaname"/>
+        <result property="csdArea" column="csd_area"/>
+        <result property="csd" column="csd"/>
+        <result property="csrq" column="csrq"/>
+        <result property="cjgzny" column="cjgzny"/>
+        <result property="jtzz" column="jtzz"/>
+        <result property="dwdz" column="dwdz"/>
+        <result property="dyxl" column="dyxl"/>
+        <result property="xl" column="xl"/>
+        <result property="xw" column="xw"/>
+        <result property="byyx" column="byyx"/>
+        <result property="jylx" column="jylx"/>
+        <result property="zc" column="zc"/>
+        <result property="jzcyqk" column="jzcyqk"/>
+        <result property="nfkc" column="nfkc"/>
+        <result property="hyzk" column="hyzk"/>
+        <result property="zzmm" column="zzmm"/>
+        <result property="rdsj" column="rdsj"/>
+        <result property="bgsdh" column="bgsdh"/>
+        <result property="phone" column="phone"/>
+        <result property="rjxk" column="rjxk"/>
+        <result property="jkzk" column="jkzk"/>
+        <result property="createTime" column="create_time"/>
+        <result property="createUser" column="create_user"/>
+        <result property="dqzt" column="dqzt"/>
+        <result property="txTime" column="tx_time"/>
     </resultMap>
 
     <sql id="selectTsbzGbjbqkVo">
-        select id, otherid, name, xb, dept_id, dwmc, dwjc, xrxzzw, xrdnzw, xrqtzw, rxzwny, xrxzzj, xzzjqdny, sfhbgb, hbgbqdny, sfzh, updatetime, mz, jg, jg_province, jg_cityname, jg_city, jg_areaname, jg_area, csd, csd_province, csd_cityname, csd_city, csd_areaname, csd_area,  csrq, cjgzny, jtzz, dwdz, dyxl, xl, xw, byyx, jylx, zc, jzcyqk, nfkc, hyzk, zzmm, rdsj, bgsdh, phone, rjxk, jkzk, create_user, create_time from tsbz_gbjbqk
+        select id, otherid, name, xb, dept_id, dwmc, dwjc, xrxzzw, xrdnzw, xrqtzw, rxzwny, xrxzzj, xzzjqdny, sfhbgb, hbgbqdny, sfzh, updatetime, mz, jg, jg_province, jg_cityname, jg_city, jg_areaname, jg_area, csd, csd_province, csd_cityname, csd_city, csd_areaname, csd_area,  csrq, cjgzny, jtzz, dwdz, dyxl, xl, xw, byyx, jylx, zc, jzcyqk, nfkc, hyzk, zzmm, rdsj, bgsdh, phone, rjxk, jkzk, create_user, create_time,dqzt,tx_time from tsbz_gbjbqk
     </sql>
 
     <select id="selectTsbzGbjbqkList" parameterType="TsbzGbjbqk" resultMap="TsbzGbjbqkResult">
         <include refid="selectTsbzGbjbqkVo"/>
-        <where>  
-            <if test="otherid != null  and otherid != ''"> and otherid = #{otherid}</if>
-            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
-            <if test="xb != null  and xb != ''"> and xb = #{xb}</if>
-            <if test="deptId != null  and deptId != ''"> and dept_id = #{deptId}</if>
-            <if test="dwmc != null  and dwmc != ''"> and dwmc = #{dwmc}</if>
-            <if test="dwjc != null  and dwjc != ''"> and dwjc = #{dwjc}</if>
-            <if test="xrxzzw != null  and xrxzzw != ''"> and xrxzzw = #{xrxzzw}</if>
-            <if test="xrdnzw != null  and xrdnzw != ''"> and xrdnzw = #{xrdnzw}</if>
-            <if test="xrqtzw != null  and xrqtzw != ''"> and xrqtzw = #{xrqtzw}</if>
-            <if test="rxzwny != null "> and rxzwny = #{rxzwny}</if>
-            <if test="xrxzzj != null  and xrxzzj != ''"> and xrxzzj = #{xrxzzj}</if>
-            <if test="xzzjqdny != null "> and xzzjqdny = #{xzzjqdny}</if>
-            <if test="sfhbgb != null  and sfhbgb != ''"> and sfhbgb = #{sfhbgb}</if>
-            <if test="hbgbqdny != null "> and hbgbqdny = #{hbgbqdny}</if>
-            <if test="sfzh != null  and sfzh != ''"> and sfzh = #{sfzh}</if>
-            <if test="updatetime != null "> and updatetime = #{updatetime}</if>
-            <if test="mz != null  and mz != ''"> and mz = #{mz}</if>
-            <if test="jg != null  and jg != ''"> and jg = #{jg}</if>
-            <if test="jgProvince != null  and jgProvince != ''"> and jg_province = #{jgProvince}</if>
-            <if test="jgCity != null  and jgCity != ''"> and jg_city = #{jgCity}</if>
-            <if test="jgCityname != null  and jgCityname != ''"> and jg_cityname = #{jgCityname}</if>
-            <if test="jgArea != null  and jgArea != ''"> and jg_area = #{jgArea}</if>
-            <if test="jgAreaname != null  and jgAreaname != ''"> and jg_areaname = #{jgAreaname}</if>
-            <if test="csdProvince != null  and csdProvince != ''"> and csd_province = #{csdProvince}</if>
-            <if test="csdCity != null  and csdCity != ''"> and csd_city = #{csdCity}</if>
-            <if test="csdCityname != null  and csdCityname != ''"> and csd_cityname = #{csdCityname}</if>
-            <if test="csdArea != null  and csdArea != ''"> and csd_area = #{csdArea}</if>
-            <if test="csdAreaname != null  and csdAreaname != ''"> and csd_areaname = #{csdAreaname}</if>
-            <if test="csd != null  and csd != ''"> and csd = #{csd}</if>
-            <if test="csrq != null "> and csrq = #{csrq}</if>
-            <if test="cjgzny != null "> and cjgzny = #{cjgzny}</if>
-            <if test="jtzz != null  and jtzz != ''"> and jtzz = #{jtzz}</if>
-            <if test="dwdz != null  and dwdz != ''"> and dwdz = #{dwdz}</if>
-            <if test="dyxl != null  and dyxl != ''"> and dyxl = #{dyxl}</if>
-            <if test="xl != null  and xl != ''"> and xl = #{xl}</if>
-            <if test="xw != null  and xw != ''"> and xw = #{xw}</if>
-            <if test="byyx != null  and byyx != ''"> and byyx = #{byyx}</if>
-            <if test="jylx != null  and jylx != ''"> and jylx = #{jylx}</if>
-            <if test="zc != null  and zc != ''"> and zc = #{zc}</if>
-            <if test="jzcyqk != null  and jzcyqk != ''"> and jzcyqk = #{jzcyqk}</if>
-            <if test="nfkc != null  and nfkc != ''"> and nfkc = #{nfkc}</if>
-            <if test="hyzk != null  and hyzk != ''"> and hyzk = #{hyzk}</if>
-            <if test="zzmm != null  and zzmm != ''"> and zzmm = #{zzmm}</if>
-            <if test="rdsj != null "> and rdsj = #{rdsj}</if>
-            <if test="bgsdh != null  and bgsdh != ''"> and bgsdh = #{bgsdh}</if>
-            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
-            <if test="rjxk != null  and rjxk != ''"> and rjxk = #{rjxk}</if>
-            <if test="jkzk != null  and jkzk != ''"> and jkzk = #{jkzk}</if>
-            <if test="createUser != null  and createUser != ''"> and create_user = #{createUser}</if>
-            <if test="createTime != null  and createTime != ''"> and create_time = #{createTime}</if>
+        <where>
+            <if test="otherid != null  and otherid != ''">and otherid = #{otherid}</if>
+            <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
+            <if test="xb != null  and xb != ''">and xb = #{xb}</if>
+            <if test="deptId != null  and deptId != ''">and dept_id = #{deptId}</if>
+            <if test="dwmc != null  and dwmc != ''">and dwmc = #{dwmc}</if>
+            <if test="dwjc != null  and dwjc != ''">and dwjc = #{dwjc}</if>
+            <if test="xrxzzw != null  and xrxzzw != ''">and xrxzzw = #{xrxzzw}</if>
+            <if test="xrdnzw != null  and xrdnzw != ''">and xrdnzw = #{xrdnzw}</if>
+            <if test="xrqtzw != null  and xrqtzw != ''">and xrqtzw = #{xrqtzw}</if>
+            <if test="rxzwny != null ">and rxzwny = #{rxzwny}</if>
+            <if test="xrxzzj != null  and xrxzzj != ''">and xrxzzj = #{xrxzzj}</if>
+            <if test="xzzjqdny != null ">and xzzjqdny = #{xzzjqdny}</if>
+            <if test="sfhbgb != null  and sfhbgb != ''">and sfhbgb = #{sfhbgb}</if>
+            <if test="hbgbqdny != null ">and hbgbqdny = #{hbgbqdny}</if>
+            <if test="sfzh != null  and sfzh != ''">and sfzh = #{sfzh}</if>
+            <if test="updatetime != null ">and updatetime = #{updatetime}</if>
+            <if test="mz != null  and mz != ''">and mz = #{mz}</if>
+            <if test="jg != null  and jg != ''">and jg = #{jg}</if>
+            <if test="jgProvince != null  and jgProvince != ''">and jg_province = #{jgProvince}</if>
+            <if test="jgCity != null  and jgCity != ''">and jg_city = #{jgCity}</if>
+            <if test="jgCityname != null  and jgCityname != ''">and jg_cityname = #{jgCityname}</if>
+            <if test="jgArea != null  and jgArea != ''">and jg_area = #{jgArea}</if>
+            <if test="jgAreaname != null  and jgAreaname != ''">and jg_areaname = #{jgAreaname}</if>
+            <if test="csdProvince != null  and csdProvince != ''">and csd_province = #{csdProvince}</if>
+            <if test="csdCity != null  and csdCity != ''">and csd_city = #{csdCity}</if>
+            <if test="csdCityname != null  and csdCityname != ''">and csd_cityname = #{csdCityname}</if>
+            <if test="csdArea != null  and csdArea != ''">and csd_area = #{csdArea}</if>
+            <if test="csdAreaname != null  and csdAreaname != ''">and csd_areaname = #{csdAreaname}</if>
+            <if test="csd != null  and csd != ''">and csd = #{csd}</if>
+            <if test="csrq != null ">and csrq = #{csrq}</if>
+            <if test="cjgzny != null ">and cjgzny = #{cjgzny}</if>
+            <if test="jtzz != null  and jtzz != ''">and jtzz = #{jtzz}</if>
+            <if test="dwdz != null  and dwdz != ''">and dwdz = #{dwdz}</if>
+            <if test="dyxl != null  and dyxl != ''">and dyxl = #{dyxl}</if>
+            <if test="xl != null  and xl != ''">and xl = #{xl}</if>
+            <if test="xw != null  and xw != ''">and xw = #{xw}</if>
+            <if test="byyx != null  and byyx != ''">and byyx = #{byyx}</if>
+            <if test="jylx != null  and jylx != ''">and jylx = #{jylx}</if>
+            <if test="zc != null  and zc != ''">and zc = #{zc}</if>
+            <if test="jzcyqk != null  and jzcyqk != ''">and jzcyqk = #{jzcyqk}</if>
+            <if test="nfkc != null  and nfkc != ''">and nfkc = #{nfkc}</if>
+            <if test="hyzk != null  and hyzk != ''">and hyzk = #{hyzk}</if>
+            <if test="zzmm != null  and zzmm != ''">and zzmm = #{zzmm}</if>
+            <if test="rdsj != null ">and rdsj = #{rdsj}</if>
+            <if test="bgsdh != null  and bgsdh != ''">and bgsdh = #{bgsdh}</if>
+            <if test="phone != null  and phone != ''">and phone = #{phone}</if>
+            <if test="rjxk != null  and rjxk != ''">and rjxk = #{rjxk}</if>
+            <if test="jkzk != null  and jkzk != ''">and jkzk = #{jkzk}</if>
+            <if test="createUser != null  and createUser != ''">and create_user = #{createUser}</if>
+            <if test="createTime != null  and createTime != ''">and create_time = #{createTime}</if>
+            <if test="dqzt != null  and dqzt != ''"> and dqzt = #{dqzt}</if>
+            <if test="txTime != null "> and tx_time = #{txTime}</if>
         </where>
     </select>
-    
+
     <select id="selectTsbzGbjbqkById" parameterType="Long" resultMap="TsbzGbjbqkResult">
         <include refid="selectTsbzGbjbqkVo"/>
         where id = #{id}
     </select>
-        
+
     <insert id="insertTsbzGbjbqk" parameterType="TsbzGbjbqk" useGeneratedKeys="true" keyProperty="id">
         insert into tsbz_gbjbqk
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -176,7 +180,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="jkzk != null">jkzk,</if>
             <if test="createUser != null">create_user,</if>
             <if test="createTime != null">create_time,</if>
-         </trim>
+            <if test="dqzt != null">dqzt,</if>
+            <if test="txTime != null">tx_time,</if>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="otherid != null">#{otherid},</if>
             <if test="name != null">#{name},</if>
@@ -228,7 +234,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="jkzk != null">#{jkzk},</if>
             <if test="createUser != null">#{createUser},</if>
             <if test="createTime != null">#{createTime},</if>
-         </trim>
+            <if test="dqzt != null">#{dqzt},</if>
+            <if test="txTime != null">#{txTime},</if>
+        </trim>
     </insert>
 
     <update id="updateTsbzGbjbqk" parameterType="TsbzGbjbqk">
@@ -283,6 +291,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="jkzk != null">jkzk = #{jkzk},</if>
             <if test="createUser != null">create_user = #{createUser},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="dqzt != null">dqzt = #{dqzt},</if>
+            <if test="txTime != null">tx_time = #{txTime},</if>
         </trim>
         where id = #{id}
     </update>
@@ -292,10 +302,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteTsbzGbjbqkByIds" parameterType="String">
-        delete from tsbz_gbjbqk where id in 
+        delete from tsbz_gbjbqk where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>
-    
+
 </mapper>

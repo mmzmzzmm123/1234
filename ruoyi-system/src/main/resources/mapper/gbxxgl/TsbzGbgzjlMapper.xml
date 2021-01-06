@@ -18,35 +18,89 @@
         <result property="gzgw" column="gzgw"/>
         <result property="createUserid" column="create_userid"/>
         <result property="createTime" column="create_time"/>
+        <result property="isdel"    column="isdel"    />
+        <association property="tsbzGbjbqk" column="gbid" javaType="TsbzGbjbqk" resultMap="TsbzGbjbqkResult"/>
+    </resultMap>
+
+    <resultMap type="TsbzGbjbqk" id="TsbzGbjbqkResult">
+        <result property="id" column="id"/>
+        <result property="otherid" column="otherid"/>
+        <result property="name" column="name"/>
+        <result property="xb" column="xb"/>
+        <result property="deptId" column="dept_id"/>
+        <result property="dwmc" column="dwmc"/>
+        <result property="dwjc" column="dwjc"/>
+        <result property="xrxzzw" column="xrxzzw"/>
+        <result property="xrdnzw" column="xrdnzw"/>
+        <result property="xrqtzw" column="xrqtzw"/>
+        <result property="rxzwny" column="rxzwny"/>
+        <result property="xrxzzj" column="xrxzzj"/>
+        <result property="xzzjqdny" column="xzzjqdny"/>
+        <result property="sfhbgb" column="sfhbgb"/>
+        <result property="hbgbqdny" column="hbgbqdny"/>
+        <result property="sfzh" column="sfzh"/>
+        <result property="updatetime" column="updatetime"/>
+        <result property="mz" column="mz"/>
+        <result property="jg" column="jg"/>
+        <result property="jgProvince" column="jg_province"/>
+        <result property="jgCityname" column="jg_cityname"/>
+        <result property="jgCity" column="jg_city"/>
+        <result property="jgAreaname" column="jg_areaname"/>
+        <result property="jgArea" column="jg_area"/>
+        <result property="csdProvince" column="csd_province"/>
+        <result property="csdCityname" column="csd_cityname"/>
+        <result property="csdCity" column="csd_city"/>
+        <result property="csdAreaname" column="csd_areaname"/>
+        <result property="csdArea" column="csd_area"/>
+        <result property="csd" column="csd"/>
+        <result property="csrq" column="csrq"/>
+        <result property="cjgzny" column="cjgzny"/>
+        <result property="jtzz" column="jtzz"/>
+        <result property="dwdz" column="dwdz"/>
+        <result property="xl" column="xl"/>
+        <result property="xw" column="xw"/>
+        <result property="byyx" column="byyx"/>
+        <result property="jylx" column="jylx"/>
+        <result property="zc" column="zc"/>
+        <result property="jzcyqk" column="jzcyqk"/>
+        <result property="nfkc" column="nfkc"/>
+        <result property="hyzk" column="hyzk"/>
+        <result property="zzmm" column="zzmm"/>
+        <result property="rdsj" column="rdsj"/>
+        <result property="bgsdh" column="bgsdh"/>
+        <result property="phone" column="phone"/>
+        <result property="rjxk" column="rjxk"/>
+        <result property="jkzk" column="jkzk"/>
+        <result property="createTime" column="create_time"/>
+        <result property="createUser" column="create_user"/>
+        <result property="dqzt" column="dqzt"/>
+        <result property="txTime" column="tx_time"/>
     </resultMap>
 
     <sql id="selectTsbzGbgzjlVo">
-        select id, gbid, gzdwid, gzdwmc, qsny, zzny, zzzw, dnzw, qtzw, rjxk, gzgw, create_userid, create_time from tsbz_gbgzjl
-    </sql>
+        select a.id, a.gbid, a.gzdwid, a.gzdwmc, a.qsny, a.zzny, a.zzzw, a.dnzw, a.qtzw, a.rjxk, a.gzgw, a.create_userid, a.create_time,b.name,b.dept_id from tsbz_gbgzjl a
+        left join tsbz_gbjbqk b on a.gbid=b.id</sql>
 
     <select id="selectTsbzGbgzjlList" parameterType="TsbzGbgzjl" resultMap="TsbzGbgzjlResult">
         <include refid="selectTsbzGbgzjlVo"/>
         <where>
-            <if test="gbid != null ">and gbid = #{gbid}</if>
-            <if test="gzdwid != null  and gzdwid != ''">and gzdwid = #{gzdwid}</if>
-            <if test="gzdwmc != null  and gzdwmc != ''">and gzdwmc = #{gzdwmc}</if>
-            <if test="qsny != null ">and qsny = #{qsny}</if>
-            <if test="zzny != null ">and zzny = #{zzny}</if>
-            <if test="zzzw != null  and zzzw != ''">and zzzw = #{zzzw}</if>
-            <if test="dnzw != null  and dnzw != ''">and dnzw = #{dnzw}</if>
-            <if test="qtzw != null  and qtzw != ''">and qtzw = #{qtzw}</if>
-            <if test="rjxk != null  and rjxk != ''">and rjxk = #{rjxk}</if>
-            <if test="gzgw != null  and gzgw != ''">and gzgw = #{gzgw}</if>
-            <if test="createUserid != null ">and create_userid = #{createUserid}</if>
+            a.isdel = 0 and b.dqzt='00'
+            <if test="gbid != null ">and a.gbid = #{gbid}</if>
+            <if test="gzdwid != null  and gzdwid != ''">and a.gzdwid = #{gzdwid}</if>
+            <if test="gzdwmc != null  and gzdwmc != ''">and a.gzdwmc = #{gzdwmc}</if>
+            <if test="qsny != null ">and a.qsny = #{qsny}</if>
+            <if test="zzny != null ">and a.zzny = #{zzny}</if>
+            <if test="zzzw != null  and zzzw != ''">and a.zzzw = #{zzzw}</if>
+            <if test="dnzw != null  and dnzw != ''">and a.dnzw = #{dnzw}</if>
+            <if test="qtzw != null  and qtzw != ''">and a.qtzw = #{qtzw}</if>
+            <if test="rjxk != null  and rjxk != ''">and a.rjxk = #{rjxk}</if>
+            <if test="gzgw != null  and gzgw != ''">and a.gzgw = #{gzgw}</if>
+            <if test="createUserid != null ">and a.create_userid = #{createUserid}</if>
         </where>
     </select>
 
     <select id="selectTsbzGbgzjlById" parameterType="Long" resultMap="TsbzGbgzjlResult">
-        select a.id, a.gbid, a.gzdwid, a.gzdwmc, a.qsny, a.zzny, a.zzzw, a.dnzw, a.qtzw, a.rjxk, a.gzgw, a.create_userid, a.create_time,
-        b.dept_id as deptid
-        from tsbz_gbgzjl a
-        left join tsbz_gbjbqk b
-        on a.gbid=b.id
+        <include refid="selectTsbzGbgzjlVo"/>
         where a.id = #{id}
     </select>
 
@@ -97,6 +151,7 @@
             <if test="gzgw != null">gzgw = #{gzgw},</if>
             <if test="createUserid != null">create_userid = #{createUserid},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="isdel != null">isdel = #{isdel},</if>
         </trim>
         where id = #{id}
     </update>

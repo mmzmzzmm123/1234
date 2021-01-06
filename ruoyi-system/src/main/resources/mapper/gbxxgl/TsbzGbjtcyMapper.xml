@@ -70,6 +70,8 @@
         <result property="jkzk" column="jkzk"/>
         <result property="createTime" column="create_time"/>
         <result property="createUser" column="create_user"/>
+        <result property="dqzt" column="dqzt"/>
+        <result property="txTime" column="tx_time"/>
     </resultMap>
 
     <sql id="selectTsbzGbjtcyVo">
@@ -80,7 +82,7 @@
     <select id="selectTsbzGbjtcyList" parameterType="TsbzGbjtcy" resultMap="TsbzGbjtcyResult">
         <include refid="selectTsbzGbjtcyVo"/>
         <where>
-            a.isdel = 0
+            a.isdel = 0 and b.dqzt='00'
             <if test="gbid != null ">and a.gbid = #{gbid}</if>
             <if test="gx != null  and gx != ''">and a.gx = #{gx}</if>
             <if test="xm != null  and xm != ''">and a.xm = #{xm}</if>

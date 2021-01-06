@@ -46,7 +46,9 @@ public class TsbzGbjbqk extends BaseEntity {
     @Excel(name = "单位名称")
     private String dwmc;
 
-    /**部门id*/
+    /**
+     * 部门id
+     */
     @Excel(name = "部门Id")
     private Long deptId;
 
@@ -156,7 +158,6 @@ public class TsbzGbjbqk extends BaseEntity {
     private String jgArea;
 
 
-
     /**
      * 出生地所在省名称
      */
@@ -201,7 +202,6 @@ public class TsbzGbjbqk extends BaseEntity {
     private Date csrq;
 
 
-
     /**
      * 创建时间
      */
@@ -210,7 +210,9 @@ public class TsbzGbjbqk extends BaseEntity {
     private Date createTime;
 
 
-    /** 创建人 */
+    /**
+     * 创建人
+     */
     @Excel(name = "创建人")
     private Long createUser;
 
@@ -233,7 +235,9 @@ public class TsbzGbjbqk extends BaseEntity {
     @Excel(name = "单位地址")
     private String dwdz;
 
-    /** 第一学历 */
+    /**
+     * 第一学历
+     */
     @Excel(name = "第一学历")
     private String dyxl;
 
@@ -328,6 +332,19 @@ public class TsbzGbjbqk extends BaseEntity {
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "更新时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date updatetime;
+
+    /**
+     * 当前状态正常00;退休99;
+     */
+    @Excel(name = "当前状态正常00;退休99;")
+    private String dqzt;
+
+    /**
+     * 退休时间
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "退休时间", width = 30, dateFormat = "yyyy-MM-dd")
+    private Date txTime;
 
     public void setId(Long id) {
         this.id = id;
@@ -731,6 +748,22 @@ public class TsbzGbjbqk extends BaseEntity {
         this.createTime = createTime;
     }
 
+    public void setDqzt(String dqzt) {
+        this.dqzt = dqzt;
+    }
+
+    public String getDqzt() {
+        return dqzt;
+    }
+
+    public void setTxTime(Date txTime) {
+        this.txTime = txTime;
+    }
+
+    public Date getTxTime() {
+        return txTime;
+    }
+
 
     @Override
     public String toString() {
@@ -786,8 +819,8 @@ public class TsbzGbjbqk extends BaseEntity {
                 .append("createTime", getCreateTime())
                 .append("createUser", getCreateUser())
                 .append("dyxl", getDyxl())
-
-
+                .append("dqzt", getDqzt())
+                .append("txTime", getTxTime())
                 .toString();
     }
 

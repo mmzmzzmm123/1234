@@ -83,6 +83,14 @@ public class TsbzGbpxjl extends BaseEntity {
     @Excel(name = "创建时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date createTime;
 
+    /**
+     * 是否删除
+     */
+    @Excel(name = "是否删除")
+    private String isdel;
+
+    private TsbzGbjbqk tsbzGbjbqk;
+
     @Override
     public Date getCreateTime() {
         return createTime;
@@ -92,16 +100,6 @@ public class TsbzGbpxjl extends BaseEntity {
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
-
-    public Long getDeptId() {
-        return deptId;
-    }
-
-    public void setDeptId(Long deptId) {
-        this.deptId = deptId;
-    }
-
-    private Long deptId;
 
     public void setId(Long id) {
         this.id = id;
@@ -175,6 +173,22 @@ public class TsbzGbpxjl extends BaseEntity {
         return createUserid;
     }
 
+    public void setIsdel(String isdel) {
+        this.isdel = isdel;
+    }
+
+    public String getIsdel() {
+        return isdel;
+    }
+
+    public TsbzGbjbqk getTsbzGbjbqk() {
+        return tsbzGbjbqk;
+    }
+
+    public void setTsbzGbjbqk(TsbzGbjbqk tsbzGbjbqk) {
+        this.tsbzGbjbqk = tsbzGbjbqk;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
@@ -188,8 +202,9 @@ public class TsbzGbpxjl extends BaseEntity {
                 .append("zzny", getZzny())
                 .append("createUserid", getCreateUserid())
                 .append("createTime", getCreateTime())
-                .append("deptid", getDeptId())
                 .append("pxlb", getPxlb())
+                .append("isdel", getIsdel())
+                .append("tsbzGbjbqk", getTsbzGbjbqk())
                 .toString();
     }
 

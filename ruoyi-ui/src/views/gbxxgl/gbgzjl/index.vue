@@ -190,12 +190,7 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column
-        label="干部姓名"
-        align="center"
-        prop="gbid"
-        :formatter="gbmcFormat"
-      />
+      <el-table-column label="干部姓名" align="center" prop="tsbzGbjbqk.name" />
       <el-table-column label="工作单位" align="center" prop="gzdwmc" />
       <el-table-column label="起始年月" align="center" prop="qsny">
         <template slot-scope="scope">
@@ -525,19 +520,6 @@ export default {
         this.deptOptions = response.data;
       });
     },
-
-    // 干部字典翻译
-    gbmcFormat(row, column) {
-      var actions = [];
-      var datas = this.gbmcOptions;
-      Object.keys(datas).map((key) => {
-        if (datas[key].id == "" + row.gbid) {
-          actions.push(datas[key].name);
-          return false;
-        }
-      });
-      return actions.join("");
-    },
     // 部门监听
     handleBucketClick(value) {
       // console.log(value);
@@ -624,7 +606,7 @@ export default {
       const id = row.id || this.ids;
       getGbgzjl(id).then((response) => {
         this.form = response.data;
-        this.form.deptId = response.data.deptId;
+        this.form.deptId = response.data.tsbzGbjbqk.deptId;
         this.flag = true;
         this.open = true;
         this.title = "修改干部工作经历";

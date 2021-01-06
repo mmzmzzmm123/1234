@@ -84,7 +84,13 @@ public class TsbzGbxxjl extends BaseEntity {
     @Excel(name = "创建人")
     private Long createUserid;
 
-    private Long deptId;
+    /**
+     * 是否删除
+     */
+    @Excel(name = "是否删除")
+    private String isdel;
+
+    private TsbzGbjbqk tsbzGbjbqk;
 
     public void setId(Long id) {
         this.id = id;
@@ -174,6 +180,22 @@ public class TsbzGbxxjl extends BaseEntity {
         return createUserid;
     }
 
+    public TsbzGbjbqk getTsbzGbjbqk() {
+        return tsbzGbjbqk;
+    }
+
+    public void setTsbzGbjbqk(TsbzGbjbqk tsbzGbjbqk) {
+        this.tsbzGbjbqk = tsbzGbjbqk;
+    }
+
+    public void setIsdel(String isdel) {
+        this.isdel = isdel;
+    }
+
+    public String getIsdel() {
+        return isdel;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
@@ -189,15 +211,9 @@ public class TsbzGbxxjl extends BaseEntity {
                 .append("zw", getZw())
                 .append("createUserid", getCreateUserid())
                 .append("createTime", getCreateTime())
-                .append("deptid", getDeptId())
+                .append("isdel", getIsdel())
+                .append("tsbzGbjbqk", getTsbzGbjbqk())
                 .toString();
     }
 
-    public Long getDeptId() {
-        return deptId;
-    }
-
-    public void setDeptId(Long deptId) {
-        this.deptId = deptId;
-    }
 }

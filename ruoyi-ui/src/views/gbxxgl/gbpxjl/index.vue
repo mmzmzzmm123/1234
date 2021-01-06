@@ -1,8 +1,20 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
+    <el-form
+      :model="queryParams"
+      ref="queryForm"
+      :inline="true"
+      v-show="showSearch"
+      label-width="68px"
+    >
       <el-form-item label="姓名" prop="gbid">
-        <el-select v-model="queryParams.gbid" filterable  placeholder="请选择或输入姓名" clearable size="small">
+        <el-select
+          v-model="queryParams.gbid"
+          filterable
+          placeholder="请选择或输入姓名"
+          clearable
+          size="small"
+        >
           <el-option
             v-for="dict in gbmcOptions"
             :key="dict.id"
@@ -12,7 +24,12 @@
         </el-select>
       </el-form-item>
       <el-form-item label="培训地点" prop="pxdd">
-        <el-select v-model="queryParams.pxdd" placeholder="请选择培训地点" clearable size="small">
+        <el-select
+          v-model="queryParams.pxdd"
+          placeholder="请选择培训地点"
+          clearable
+          size="small"
+        >
           <el-option
             v-for="dict in pxddOptions"
             :key="dict.dictValue"
@@ -22,7 +39,12 @@
         </el-select>
       </el-form-item>
       <el-form-item label="培训级别" prop="pxjb">
-        <el-select v-model="queryParams.pxjb" placeholder="请选择培训级别" clearable size="small">
+        <el-select
+          v-model="queryParams.pxjb"
+          placeholder="请选择培训级别"
+          clearable
+          size="small"
+        >
           <el-option
             v-for="dict in pxjbOptions"
             :key="dict.dictValue"
@@ -32,7 +54,12 @@
         </el-select>
       </el-form-item>
       <el-form-item label="培训类别" prop="pxlb">
-        <el-select v-model="queryParams.pxlb" placeholder="请选择培训类别" clearable size="small">
+        <el-select
+          v-model="queryParams.pxlb"
+          placeholder="请选择培训类别"
+          clearable
+          size="small"
+        >
           <el-option
             v-for="dict in pxlbOptions"
             :key="dict.dictValue"
@@ -42,7 +69,12 @@
         </el-select>
       </el-form-item>
       <el-form-item label="职务" prop="zw">
-        <el-select v-model="queryParams.zw" placeholder="请选择职务" clearable size="small">
+        <el-select
+          v-model="queryParams.zw"
+          placeholder="请选择职务"
+          clearable
+          size="small"
+        >
           <el-option
             v-for="dict in zwOptions"
             :key="dict.dictValue"
@@ -52,24 +84,40 @@
         </el-select>
       </el-form-item>
       <el-form-item label="起始年月" prop="qsny">
-        <el-date-picker clearable size="small" style="width: 200px"
+        <el-date-picker
+          clearable
+          size="small"
+          style="width: 200px"
           v-model="queryParams.qsny"
           type="month"
           value-format="yyyy-MM"
-          placeholder="选择起始年月">
+          placeholder="选择起始年月"
+        >
         </el-date-picker>
       </el-form-item>
       <el-form-item label="终止年月" prop="zzny">
-        <el-date-picker clearable size="small" style="width: 200px"
+        <el-date-picker
+          clearable
+          size="small"
+          style="width: 200px"
           v-model="queryParams.zzny"
           type="month"
           value-format="yyyy-MM"
-          placeholder="选择终止年月">
+          placeholder="选择终止年月"
+        >
         </el-date-picker>
       </el-form-item>
       <el-form-item>
-        <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+        <el-button
+          type="cyan"
+          icon="el-icon-search"
+          size="mini"
+          @click="handleQuery"
+          >搜索</el-button
+        >
+        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+          >重置</el-button
+        >
       </el-form-item>
     </el-form>
 
@@ -81,7 +129,8 @@
           size="mini"
           @click="handleAdd"
           v-hasPermi="['gbxxgl:gbpxjl:add']"
-        >新增</el-button>
+          >新增</el-button
+        >
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -91,7 +140,8 @@
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['gbxxgl:gbpxjl:edit']"
-        >修改</el-button>
+          >修改</el-button
+        >
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -101,30 +151,63 @@
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['gbxxgl:gbpxjl:remove']"
-        >删除</el-button>
+          >删除</el-button
+        >
       </el-col>
-	  <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+      <right-toolbar
+        :showSearch.sync="showSearch"
+        @queryTable="getList"
+      ></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="gbpxjlList" @selection-change="handleSelectionChange">
+    <el-table
+      v-loading="loading"
+      :data="gbpxjlList"
+      @selection-change="handleSelectionChange"
+    >
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="姓名" align="center" prop="gbid" :formatter="gbmcFormat"/>
+      <el-table-column label="姓名" align="center" prop="tsbzGbjbqk.name" />
       <el-table-column label="培训班名称" align="center" prop="pxbmc" />
-      <el-table-column label="培训地点" align="center" prop="pxdd" :formatter="pxddFormat" />
-      <el-table-column label="培训级别" align="center" prop="pxjb" :formatter="pxjbFormat"/>
-      <el-table-column label="培训类别" align="center" prop="pxlb" :formatter="pxlbFormat"/>
-      <el-table-column label="职务" align="center" prop="zw" :formatter="zwFormat"/>
+      <el-table-column
+        label="培训地点"
+        align="center"
+        prop="pxdd"
+        :formatter="pxddFormat"
+      />
+      <el-table-column
+        label="培训级别"
+        align="center"
+        prop="pxjb"
+        :formatter="pxjbFormat"
+      />
+      <el-table-column
+        label="培训类别"
+        align="center"
+        prop="pxlb"
+        :formatter="pxlbFormat"
+      />
+      <el-table-column
+        label="职务"
+        align="center"
+        prop="zw"
+        :formatter="zwFormat"
+      />
       <el-table-column label="起始年月" align="center" prop="qsny">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.qsny, '{y}-{m}') }}</span>
+          <span>{{ parseTime(scope.row.qsny, "{y}-{m}") }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="终止年月" align="center" prop="zzny" >
+      <el-table-column label="终止年月" align="center" prop="zzny">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.zzny, '{y}-{m}') }}</span>
+          <span>{{ parseTime(scope.row.zzny, "{y}-{m}") }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="180px">
+      <el-table-column
+        label="操作"
+        align="center"
+        class-name="small-padding fixed-width"
+        width="180px"
+      >
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -132,20 +215,22 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['gbxxgl:gbpxjl:edit']"
-          >修改</el-button>
+            >修改</el-button
+          >
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['gbxxgl:gbpxjl:remove']"
-          >删除</el-button>
+            >删除</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
 
     <pagination
-      v-show="total>0"
+      v-show="total > 0"
       :total="total"
       :page.sync="queryParams.pageNum"
       :limit.sync="queryParams.pageSize"
@@ -155,7 +240,7 @@
     <!-- 添加或修改干部培训经历对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="100px">
-        <el-form-item label="归属部门" prop="deptId" >
+        <el-form-item label="归属部门" prop="deptId">
           <treeselect
             v-model="form.deptId"
             :options="deptOptions"
@@ -166,7 +251,11 @@
           />
         </el-form-item>
         <el-form-item label="姓名" prop="gbid">
-          <el-select v-model="form.gbid" placeholder="请选择姓名" :disabled="flag">
+          <el-select
+            v-model="form.gbid"
+            placeholder="请选择姓名"
+            :disabled="flag"
+          >
             <el-option
               v-for="dict in gbOptions"
               :key="dict.id"
@@ -206,19 +295,27 @@
           </el-select>
         </el-form-item>
         <el-form-item label="起始年月" prop="qsny">
-          <el-date-picker clearable size="small" class="my-date-picker"
+          <el-date-picker
+            clearable
+            size="small"
+            class="my-date-picker"
             v-model="form.qsny"
             type="month"
             value-format="yyyy-MM"
-            placeholder="选择起始年月">
+            placeholder="选择起始年月"
+          >
           </el-date-picker>
         </el-form-item>
         <el-form-item label="终止年月" prop="zzny">
-          <el-date-picker clearable size="small" class="my-date-picker"
+          <el-date-picker
+            clearable
+            size="small"
+            class="my-date-picker"
             v-model="form.zzny"
             type="month"
             value-format="yyyy-MM"
-            placeholder="选择终止年月">
+            placeholder="选择终止年月"
+          >
           </el-date-picker>
         </el-form-item>
         <el-form-item label="培训地点" prop="pxdd">
@@ -232,7 +329,11 @@
           </el-select>
         </el-form-item>
         <el-form-item label="培训班名称" prop="pxbmc">
-          <el-input v-model="form.pxbmc" type="textarea" placeholder="请输入内容" />
+          <el-input
+            v-model="form.pxbmc"
+            type="textarea"
+            placeholder="请输入内容"
+          />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -244,7 +345,14 @@
 </template>
 
 <script>
-import { listGbpxjl, getGbpxjl, delGbpxjl, addGbpxjl, updateGbpxjl, exportGbpxjl } from "@/api/gbxxgl/gbpxjl";
+import {
+  listGbpxjl,
+  getGbpxjl,
+  delGbpxjl,
+  addGbpxjl,
+  updateGbpxjl,
+  exportGbpxjl,
+} from "@/api/gbxxgl/gbpxjl";
 import { listGbjbqk, getGbjbqk } from "@/api/gbxxgl/gbjbqk";
 import { treeselect } from "@/api/system/dept";
 import Treeselect from "@riophae/vue-treeselect";
@@ -311,9 +419,7 @@ export default {
       form: {},
       // 表单校验
       rules: {
-        deptId: [
-          { required: true, message: "部门不能为空", trigger: "blur" }
-        ],
+        deptId: [{ required: true, message: "部门不能为空", trigger: "blur" }],
         gbid: [
           { required: true, message: "干部姓名不能为空", trigger: "blur" },
         ],
@@ -323,7 +429,7 @@ export default {
         zzny: [
           { required: true, message: "任职终止年月不能为空", trigger: "blur" },
         ],
-      }
+      },
     };
   },
   watch: {
@@ -334,16 +440,16 @@ export default {
     this.getList();
     this.getTreeselect();
     this.getGbjbqkList();
-    this.getDicts("sys_dm_xrxzzw").then(response => {
+    this.getDicts("sys_dm_xrxzzw").then((response) => {
       this.zwOptions = response.data;
     });
-    this.getDicts("sys_dm_pxjb").then(response => {
+    this.getDicts("sys_dm_pxjb").then((response) => {
       this.pxjbOptions = response.data;
     });
-    this.getDicts("sys_dm_gbpxlb").then(response => {
+    this.getDicts("sys_dm_gbpxlb").then((response) => {
       this.pxlbOptions = response.data;
     });
-    this.getDicts("sys_dm_pxdd").then(response => {
+    this.getDicts("sys_dm_pxdd").then((response) => {
       this.pxddOptions = response.data;
     });
   },
@@ -351,7 +457,7 @@ export default {
     /** 查询干部培训经历列表 */
     getList() {
       this.loading = true;
-      listGbpxjl(this.queryParams).then(response => {
+      listGbpxjl(this.queryParams).then((response) => {
         this.gbpxjlList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -369,19 +475,6 @@ export default {
       treeselect().then((response) => {
         this.deptOptions = response.data;
       });
-    },
-
-    // 干部字典翻译
-    gbmcFormat(row, column) {
-      var actions = [];
-      var datas = this.gbmcOptions;
-      Object.keys(datas).map((key) => {
-        if (datas[key].id == "" + row.gbid) {
-          actions.push(datas[key].name);
-          return false;
-        }
-      });
-      return actions.join("");
     },
     // 部门监听
     handleBucketClick(value) {
@@ -429,7 +522,7 @@ export default {
         zzny: null,
         createUserid: null,
         createTime: null,
-        deptId: null
+        deptId: null,
       };
       this.resetForm("form");
     },
@@ -445,9 +538,9 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.id)
-      this.single = selection.length!==1
-      this.multiple = !selection.length
+      this.ids = selection.map((item) => item.id);
+      this.single = selection.length !== 1;
+      this.multiple = !selection.length;
     },
     /** 新增按钮操作 */
     handleAdd() {
@@ -460,10 +553,10 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const id = row.id || this.ids
-      getGbpxjl(id).then(response => {
+      const id = row.id || this.ids;
+      getGbpxjl(id).then((response) => {
         this.form = response.data;
-        this.form.deptId = response.data.deptId;
+        this.form.deptId = response.data.tsbzGbjbqk.deptId;
         this.flag = true;
         this.open = true;
         this.title = "修改干部培训经历";
@@ -471,10 +564,10 @@ export default {
     },
     /** 提交按钮 */
     submitForm() {
-      this.$refs["form"].validate(valid => {
+      this.$refs["form"].validate((valid) => {
         if (valid) {
           if (this.form.id != null) {
-            updateGbpxjl(this.form).then(response => {
+            updateGbpxjl(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("修改成功");
                 this.open = false;
@@ -482,7 +575,7 @@ export default {
               }
             });
           } else {
-            addGbpxjl(this.form).then(response => {
+            addGbpxjl(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("新增成功");
                 this.open = false;
@@ -496,31 +589,41 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$confirm('是否确认删除干部培训经历编号为"' + ids + '"的数据项?', "警告", {
+      this.$confirm(
+        '是否确认删除干部培训经历编号为"' + ids + '"的数据项?',
+        "警告",
+        {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
+          type: "warning",
+        }
+      )
+        .then(function () {
           return delGbpxjl(ids);
-        }).then(() => {
+        })
+        .then(() => {
           this.getList();
           this.msgSuccess("删除成功");
-        }).catch(function() {});
+        })
+        .catch(function () {});
     },
     /** 导出按钮操作 */
     handleExport() {
       const queryParams = this.queryParams;
-      this.$confirm('是否确认导出所有干部培训经历数据项?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
+      this.$confirm("是否确认导出所有干部培训经历数据项?", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(function () {
           return exportGbpxjl(queryParams);
-        }).then(response => {
+        })
+        .then((response) => {
           this.download(response.msg);
-        }).catch(function() {});
-    }
-  }
+        })
+        .catch(function () {});
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>

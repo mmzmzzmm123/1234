@@ -8,7 +8,13 @@
       label-width="102px"
     >
       <el-form-item label="干部姓名" prop="gbid">
-        <el-select v-model="queryParams.gbid" filterable  placeholder="请选择或输入干部姓名" clearable size="small">
+        <el-select
+          v-model="queryParams.gbid"
+          filterable
+          placeholder="请选择或输入干部姓名"
+          clearable
+          size="small"
+        >
           <el-option
             v-for="dict in gbmcOptions"
             :key="dict.id"
@@ -185,7 +191,7 @@
     >
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="编号" align="center" prop="id" /> -->
-      <el-table-column label="干部姓名" align="center" prop="gbid" :formatter="gbmcFormat" />
+      <el-table-column label="干部姓名" align="center" prop="tsbzGbjbqk.name" />
       <el-table-column label="起始年月" align="center" prop="rzny">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.rzny, "{y}-{m}") }}</span>
@@ -275,7 +281,11 @@
           />
         </el-form-item>
         <el-form-item label="干部姓名" prop="gbid">
-          <el-select v-model="form.gbid" placeholder="干部姓名" :disabled="flag">
+          <el-select
+            v-model="form.gbid"
+            placeholder="干部姓名"
+            :disabled="flag"
+          >
             <el-option
               v-for="dict in gbOptions"
               :key="dict.id"
@@ -287,8 +297,8 @@
         <el-form-item label="起始年月" prop="rzny">
           <el-date-picker
             clearable
-            size="small"  
-            class="my-date-picker"  
+            size="small"
+            class="my-date-picker"
             v-model="form.rzny"
             type="month"
             value-format="yyyy-MM"
@@ -516,19 +526,6 @@ export default {
         this.deptOptions = response.data;
       });
     },
-
-    // 干部字典翻译
-    gbmcFormat(row, column) {
-      var actions = [];
-      var datas = this.gbmcOptions;
-      Object.keys(datas).map((key) => {
-        if (datas[key].id == "" + row.gbid) {
-          actions.push(datas[key].name);
-          return false;
-        }
-      });
-      return actions.join("");
-    },
     handleBucketClick(value) {
       // console.log(value);
       this.queryParams_gb.deptId = value;
@@ -612,8 +609,8 @@ export default {
       this.getTreeselect();
       const id = row.id || this.ids;
       getGbxrzw(id).then((response) => {
-        this.form.deptId = response.data.deptId;
         this.form = response.data;
+        this.form.deptId = response.data.tsbzGbjbqk.deptId;
         // console.log(response.data);
         this.flag = true;
         this.open = true;

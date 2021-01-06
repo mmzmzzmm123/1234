@@ -1347,7 +1347,7 @@ export default {
       zjlxOptions: [],
       // 考核结果字典
       khjgOptions: [],
-       // 档次
+      // 档次
       dcOptions: [],
       // 表单参数
       form: {},
@@ -1549,7 +1549,7 @@ export default {
     this.getDicts("sys_khjg").then((response) => {
       this.khjgOptions = response.data;
     });
-     this.getDicts("sys_gbywkhdc").then((response) => {
+    this.getDicts("sys_gbywkhdc").then((response) => {
       this.dcOptions = response.data;
     });
   },

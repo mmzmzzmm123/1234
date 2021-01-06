@@ -38,9 +38,9 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="职务名称" prop="name">
+      <el-form-item label="职务名称" prop="zwmc">
         <el-input
-          v-model="queryParams.name"
+          v-model="queryParams.zwmc"
           placeholder="请输入职务名称"
           clearable
           size="small"
@@ -128,12 +128,7 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column
-        label="干部姓名"
-        align="center"
-        prop="gbid"
-        :formatter="gbmcFormat"
-      />
+      <el-table-column label="干部姓名" align="center" prop="tsbzGbjbqk.name" />
       <el-table-column label="任职起始年月" align="center" prop="rzqsny">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.rzqsny, "{y}-{m}") }}</span>
@@ -156,7 +151,7 @@
         prop="jibie"
         :formatter="jibieFormat"
       />
-      <el-table-column label="职务名称" align="center" prop="name" />
+      <el-table-column label="职务名称" align="center" prop="zwmc" />
       <el-table-column
         label="操作"
         align="center"
@@ -239,8 +234,8 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="职务名称" prop="name">
-          <el-input v-model="form.name" placeholder="请输入职务名称" />
+        <el-form-item label="职务名称" prop="zwmc">
+          <el-input v-model="form.zwmc" placeholder="请输入职务名称" />
         </el-form-item>
         <el-form-item label="任职起始年月" prop="rzqsny">
           <el-date-picker
@@ -332,7 +327,7 @@ export default {
         rzzzny: null,
         jb: null,
         jibie: null,
-        name: null,
+        zwmc: null,
         createuser: null,
         createtime: null,
         deptId: null,
@@ -396,19 +391,6 @@ export default {
         this.deptOptions = response.data;
       });
     },
-
-    // 干部字典翻译
-    gbmcFormat(row, column) {
-      var actions = [];
-      var datas = this.gbmcOptions;
-      Object.keys(datas).map((key) => {
-        if (datas[key].id == "" + row.gbid) {
-          actions.push(datas[key].name);
-          return false;
-        }
-      });
-      return actions.join("");
-    },
     // 部门监听
     handleBucketClick(value) {
       // console.log(value);
@@ -442,7 +424,7 @@ export default {
         rzzzny: null,
         jb: null,
         jibie: null,
-        name: null,
+        zwmc: null,
         createuser: null,
         createtime: null,
         deptId: null,
@@ -480,8 +462,8 @@ export default {
       this.getTreeselect();
       const id = row.id || this.ids;
       getGbshzw(id).then((response) => {
-        this.form.deptId = response.data.deptId;
         this.form = response.data;
+        this.form.deptId = response.data.tsbzGbjbqk.deptId;
         this.flag = true;
         this.open = true;
         this.title = "修改干部任职情况-社会职务";
