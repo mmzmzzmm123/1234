@@ -118,7 +118,8 @@
             <if test="createUser != null  and createUser != ''">and create_user = #{createUser}</if>
             <if test="createTime != null  and createTime != ''">and create_time = #{createTime}</if>
             <if test="dqzt != null  and dqzt != ''"> and dqzt = #{dqzt}</if>
-            <if test="txTime != null "> and tx_time = #{txTime}</if>
+             <!--需求是 获取进5年退休人员数据-->
+            <if test="dqzt != null  and dqzt != ''"> and tx_time>date(date_add(now(),interval-5 year))</if>
         </where>
     </select>
 
