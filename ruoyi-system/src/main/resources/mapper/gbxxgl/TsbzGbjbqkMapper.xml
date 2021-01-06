@@ -80,7 +80,7 @@
             <if test="xrxzzj != null  and xrxzzj != ''">and xrxzzj = #{xrxzzj}</if>
             <if test="xzzjqdny != null ">and xzzjqdny = #{xzzjqdny}</if>
             <if test="sfhbgb != null  and sfhbgb != ''">and sfhbgb = #{sfhbgb}</if>
-            <if test="hbgbqdny != null ">and hbgbqdny = #{hbgbqdny}</if>
+            <if test="hbgbqdny != null ">and DATE_FORMAT(hbgbqdny, '%Y') = DATE_FORMAT(#{hbgbqdny},'%Y')</if>
             <if test="sfzh != null  and sfzh != ''">and sfzh = #{sfzh}</if>
             <if test="updatetime != null ">and updatetime = #{updatetime}</if>
             <if test="mz != null  and mz != ''">and mz = #{mz}</if>

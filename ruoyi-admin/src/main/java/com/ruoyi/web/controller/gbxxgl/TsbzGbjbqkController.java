@@ -43,7 +43,6 @@ public class TsbzGbjbqkController extends BaseController
     @GetMapping("/list")
     public TableDataInfo list(TsbzGbjbqk tsbzGbjbqk)
     {
-        tsbzGbjbqk.setDqzt("00");
         startPage();
         List<TsbzGbjbqk> list = tsbzGbjbqkService.selectTsbzGbjbqkList(tsbzGbjbqk);
         return getDataTable(list);

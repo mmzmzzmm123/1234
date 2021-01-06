@@ -875,6 +875,32 @@
               <el-input v-model="form.bgsdh" placeholder="请输入办公室电话" />
             </el-form-item>
           </el-col>
+          <el-col :span="12" v-show="isshow">
+            <el-form-item label="当前状态" prop="dqzt">
+              <el-select v-model="form.dqzt" placeholder="请选择当前状态">
+                <el-option
+                  v-for="dict in dqztOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12" v-if="txtimeshow">
+            <el-form-item label="退休时间" prop="txTime">
+              <el-date-picker
+                clearable
+                size="small"
+                class="my-date-picker"
+                v-model="form.txTime"
+                type="date"
+                value-format="yyyy-MM-dd"
+                placeholder="选择退休时间"
+              >
+              </el-date-picker>
+            </el-form-item>
+          </el-col>
         </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -1413,6 +1439,8 @@ export default {
   name: "Gbjbqk",
   data() {
     return {
+      isshow: false,
+      txtimeshow: false,
       placeholders: {
         province: "请选择省",
         city: "请选择市",
@@ -1482,6 +1510,8 @@ export default {
       rjxkOptions: [],
       // 健康状况字典
       jkzkOptions: [],
+      //当前状态
+      dqztOptions: [],
       // 部门选项
       deptOptions: [],
       // 详情页title
@@ -1542,6 +1572,7 @@ export default {
         jkzk: null,
         createUser: null,
         createTime: null,
+        dqzt: "00",
       },
       // 表单参数
       form: {},
@@ -1555,8 +1586,18 @@ export default {
         sfhbgb: [
           { required: true, message: "是否储备干部不能为空", trigger: "blur" },
         ],
+        dqzt: [
+          { required: true, message: "当前状态不能为空", trigger: "blur" },
+        ],
+        txTime: [
+          { required: true, message: "退休时间不能为空", trigger: "blur" },
+        ],
       },
     };
+  },
+  watch: {
+    // 监听dqzt
+    "form.dqzt": "handleDqztClick",
   },
   created() {
     this.getList();
@@ -1614,6 +1655,9 @@ export default {
     });
     this.getDicts("sys_dm_dyxl").then((response) => {
       this.dyxlOptions = response.data;
+    });
+    this.getDicts("sys_dm_dqzt").then((response) => {
+      this.dqztOptions = response.data;
     });
   },
   components: {
@@ -1816,6 +1860,8 @@ export default {
         jkzk: null,
         createTime: null,
         createUser: null,
+        dqzt: null,
+        txTime: null,
       };
       this.diglogForm.province = "";
       this.diglogForm.city = "";
@@ -1848,6 +1894,8 @@ export default {
       this.reset();
       this.open = true;
       this.title = "添加干部基本情况";
+      this.isshow = false;
+      this.txtimeshow = false;
     },
     /** 查看按钮操作 */
     handleCheck(row) {
@@ -1855,7 +1903,6 @@ export default {
       const id = row.id || this.ids;
       getGbjbqk(id).then((response) => {
         this.form = response.data;
-        console.log(response.data);
 
         this.diglogForm.province = response.data.jg;
         this.diglogForm.city = response.data.jgCityname;
@@ -1874,8 +1921,11 @@ export default {
       this.reset();
       const id = row.id || this.ids;
       getGbjbqk(id).then((response) => {
+        this.isshow = true;
         this.form = response.data;
-        console.log(response.data);
+        if (this.form.dqzt == "99") {
+          this.txtimeshow = true;
+        }
 
         this.diglogForm.province = response.data.jg;
         this.diglogForm.city = response.data.jgCityname;
@@ -1949,6 +1999,14 @@ export default {
           this.download(response.msg);
         })
         .catch(function () {});
+    },
+    // Dqzt监听
+    handleDqztClick(value) {
+      if (value == "99") {
+        this.txtimeshow = true;
+      } else {
+        this.txtimeshow = false;
+      }
     },
   },
 };
