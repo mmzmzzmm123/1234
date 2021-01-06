@@ -75,7 +75,7 @@
                   ></el-date-picker>
                 </el-form-item>
               </el-col>
-              <el-col :xs="24" :ms="12" :md="4">
+              <el-col :xs="24" :ms="12" :md="5">
                 <el-form-item class="no-margin">
                   <el-button
                     type="primary"
