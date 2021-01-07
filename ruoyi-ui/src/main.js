@@ -28,6 +28,7 @@ import 'video.js/dist/video-js.css';
 import 'vue-video-player/src/custom-theme.css';
 import Print from '@/utils/print'
 import PrintECharts from '@/utils/print_echarts'
+import { preventReClick } from '@/utils/plugins';
 // 全局方法挂载
 Vue.prototype.getDicts = getDicts
 Vue.prototype.getConfigKey = getConfigKey

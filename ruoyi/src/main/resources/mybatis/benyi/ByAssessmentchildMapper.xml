@@ -27,7 +27,7 @@
             <if test="classid != null  and classid != ''">and classid = #{classid}</if>
             <if test="contentid != null ">and contentid = #{contentid}</if>
             <if test="type != null  and type != ''">and type = #{type}</if>
-            <if test="xn != null  and xn != ''">and xn = #{xn}</if>
+<!--            <if test="xn != null  and xn != ''">and xn = #{xn}</if>-->
             <if test="userid != null ">and userid = #{userid}</if>
         </where>
     </select>

@@ -111,8 +111,12 @@ public class ByAssessmentchildController extends BaseController {
                 }
             }
         }
+        if (iCount > 0) {
+            return toAjax(iCount);
+        } else {
+            return AjaxResult.error("选择的评估数据无变化");
+        }
 
-        return toAjax(iCount);
     }
 
     /**
