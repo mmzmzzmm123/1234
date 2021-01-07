@@ -119,7 +119,7 @@
             <if test="createTime != null  and createTime != ''">and create_time = #{createTime}</if>
             <if test="dqzt != null  and dqzt != ''"> and dqzt = #{dqzt}</if>
              <!--需求是 获取进5年退休人员数据-->
-            <if test="dqzt != null  and dqzt != ''"> and tx_time>date(date_add(now(),interval-5 year))</if>
+            <if test="dqzt=='99'"> and tx_time>date(date_add(now(),interval-5 year))</if>
         </where>
     </select>
 
