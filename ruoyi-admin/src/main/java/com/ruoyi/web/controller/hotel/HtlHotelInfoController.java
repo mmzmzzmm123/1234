@@ -43,6 +43,9 @@ public class HtlHotelInfoController extends BaseController {
 
     @Autowired
     private IHtlThemeConfigService htlThemeConfigService;
+    
+    @Autowired
+    private IHtlThemeInfoService htlThemeInfoService;
 
     @Autowired
     private IHtlRoomPictureService htlRoomPictureService;
@@ -248,9 +251,11 @@ public class HtlHotelInfoController extends BaseController {
             ajax.put("hotelInfo", htlHotelInfo);
 
             //主题配置
-            long hotelId = htlHotelInfo.getHotelId();
-            HtlThemeConfig htlThemeConfig = htlThemeConfigService.selectHtlThemeConfigById(hotelId);
-            ajax.put("themeConfig", htlThemeConfig);
+			long hotelId = htlHotelInfo.getHotelId();
+			HtlThemeConfig htlThemeConfig = htlThemeConfigService.selectHtlThemeConfigById(hotelId);
+			if (null != htlThemeConfig) {
+				ajax.put("themeConfig", htlThemeInfoService.selectHtlThemeInfoById(htlThemeConfig.getThemeId()));
+			} 
 
             //房间图片
             HtlRoomPicture htlRoomPicture = new HtlRoomPicture();
