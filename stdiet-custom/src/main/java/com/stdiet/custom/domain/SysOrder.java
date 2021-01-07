@@ -169,6 +169,12 @@ public class SysOrder extends BaseEntity {
     @Excel(name = "服务时长")
     private String serveTime;
 
+    /**
+     * 赠送时长
+     */
+    @Excel(name = "赠送时长", width = 30, suffix = "天")
+    private String giveServeDay;
+
     private Long serveTimeId;
 
     @Excel(name = "审核状态", dictType = "cus_review_status")
@@ -446,6 +452,14 @@ public class SysOrder extends BaseEntity {
 
     public Date getOrderTime() {
         return orderTime;
+    }
+
+    public String getGiveServeDay() {
+        return giveServeDay;
+    }
+
+    public void setGiveServeDay(String giveServeDay) {
+        this.giveServeDay = giveServeDay;
     }
 
     @Override

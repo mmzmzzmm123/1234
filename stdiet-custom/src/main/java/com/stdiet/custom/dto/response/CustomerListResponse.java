@@ -3,6 +3,8 @@ package com.stdiet.custom.dto.response;
 import com.stdiet.common.annotation.Excel;
 import com.stdiet.common.core.domain.BaseEntity;
 
+import java.util.Date;
+
 /**
  * 客户体征信息响应DTO
  *
@@ -16,6 +18,10 @@ public class CustomerListResponse extends BaseEntity
     //基础信息
     /** $column.columnComment */
     private Long id;
+
+    /** 创建时间 */
+    @Excel(name = "创建时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
+    private Date createTime;
 
     /** 名字 */
     @Excel(name = "名字")
@@ -360,5 +366,15 @@ public class CustomerListResponse extends BaseEntity
 
     public void setDifficulty(String difficulty) {
         this.difficulty = difficulty;
+    }
+
+    @Override
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    @Override
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 }

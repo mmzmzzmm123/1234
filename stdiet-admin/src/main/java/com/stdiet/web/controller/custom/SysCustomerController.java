@@ -1,11 +1,9 @@
 package com.stdiet.web.controller.custom;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import com.stdiet.custom.domain.SysPhysicalSigns;
-import org.apache.commons.lang.StringUtils;
 
 import com.stdiet.common.utils.bean.ObjectUtils;
 import com.stdiet.custom.dto.request.CustomerInvestigateRequest;
@@ -67,6 +65,7 @@ public class SysCustomerController extends BaseController
         CustomerListResponse customerListResponse = null;
         for (SysCustomer customer : list) {
             customerListResponse = ObjectUtils.getObjectByObject(customer.getSign(), CustomerListResponse.class);
+            customerListResponse.setCreateTime(customer.getCreateTime());
             customerListResponse.setName(customer.getName());
             customerListResponse.setPhone(customer.getPhone());
             StringBuilder signStr = new StringBuilder();

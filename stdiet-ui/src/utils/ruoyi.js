@@ -218,6 +218,9 @@ export function validatorIDCard(idcode, type) {
         msg: "为了避免javascript数值范围误差，idcode 必须是字符串"
       }
     }
+    if(idcode != null && idcode.indexOf("x") != -1){
+       idcode = idcode.replace("x", "X");
+    }
     const idcard_patter = /^[1-9][0-9]{5}([1][9][0-9]{2}|[2][0][0|1][0-9])([0][1-9]|[1][0|1|2])([0][1-9]|[1|2][0-9]|[3][0|1])[0-9]{3}([0-9]|[X])$/;
     // 判断格式是否正确
     const format = idcard_patter.test(idcode);

@@ -233,6 +233,11 @@
       </el-table-column>
       <el-table-column label="手机号" align="center" prop="phone" width="120"/>
       <el-table-column label="服务时长" align="center" prop="serveTime" width="80"/>
+      <el-table-column label="赠送时长" align="center" prop="giveServeDay" width="80">
+        <template slot-scope="scope">
+          {{scope.row.giveServeDay ? `${scope.row.giveServeDay}天` : '0天'}}
+        </template>
+      </el-table-column>
       <el-table-column label="收款方式" align="center" prop="payType" width="120"/>
       <el-table-column label="售前" align="center" prop="preSale" width="120"/>
       <el-table-column label="售后" align="center" prop="afterSale" width="120"/>
@@ -254,6 +259,14 @@
             @click="handleUpdate(scope.row)"
             v-hasPermi="['custom:order:edit']"
           >修改
+          </el-button>
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-s-data"
+            @click="orderPauseManage(scope.row)"
+            v-hasPermi="['orderPause:pause:query']"
+          >暂停记录管理
           </el-button>
           <el-button
             size="mini"
@@ -332,6 +345,18 @@
               <el-select v-model="form.serveTimeId" placeholder="请选服">
                 <el-option
                   v-for="dict in serveTimeIdOption"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="parseInt(dict.dictValue)"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="赠送时长" prop="serveTime">
+              <el-select v-model="form.giveServeDay" placeholder="请选择">
+                <el-option
+                  v-for="dict in giveTimeIdOption"
                   :key="dict.dictValue"
                   :label="dict.dictLabel"
                   :value="parseInt(dict.dictValue)"
@@ -545,6 +570,8 @@
         accountIdOptions: [],
         // 服务时长
         serveTimeIdOption: [],
+        // 赠送时长
+        giveTimeIdOption: [],
         // 审核状态
         reviewStatusOptions: [],
         // 策划助理字典
@@ -672,6 +699,9 @@
       this.getDicts("cus_serve_time").then(response => {
         this.serveTimeIdOption = response.data;
       });
+      this.getDicts("give_serve_daye_type").then(response => {
+        this.giveTimeIdOption = response.data;
+      });
       this.getDicts("cus_review_status").then(response => {
         this.reviewStatusOptions = response.data;
       })
@@ -736,6 +766,7 @@
       reset() {
         const defaultPayType = this.payTypeIdOptions.find(opt => opt.remark === 'default');
         const defaultServeTime = this.serveTimeIdOption.find(opt => opt.remark === 'default');
+        const defaultGiveServeTime = this.giveTimeIdOption.find(opt => opt.remark === 'default');
         const defaultAccount = this.accountIdOptions.find(opt => opt.remark === 'default');
         const defaultOperator = this.operatorIdOptions.find(opt => opt.remark === 'default');
         const defaultOperatorAssis = this.operatorAssisIdOptions.find(opt => opt.remark === 'default');
@@ -771,7 +802,8 @@
           recommender: null,
           orderTime: dayjs().format("YYYY-MM-DD HH:mm:ss"),
           serveTimeId: defaultServeTime ? parseInt(defaultServeTime.dictValue) : null,
-          reviewStatus: this.review
+          reviewStatus: this.review,
+          giveServeDay: defaultGiveServeTime ? parseInt(defaultGiveServeTime.dictValue) : null
         };
         this.resetForm("form");
       },
@@ -804,6 +836,7 @@
         const orderId = row.orderId || this.ids
         getOrder(orderId).then(response => {
           this.form = response.data;
+          this.form.giveServeDay = this.form.giveServeDay == 0 ? null : parseInt(this.form.giveServeDay+"");
           this.open = true;
           this.title = "修改销售订单";
         });
@@ -868,6 +901,10 @@
       },
       handleStatusClick(data) {
         console.log(data);
+      },
+      orderPauseManage(order) {
+        console.log(order.orderId);
+        this.$router.push({ name: 'orderPause', params: { 'orderId': order.orderId }})
       }
     }
   };
