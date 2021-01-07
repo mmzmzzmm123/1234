@@ -1,5 +1,6 @@
 package com.ruoyi.web.controller.jxjs;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.ruoyi.common.core.domain.model.LoginUser;
@@ -81,27 +82,37 @@ public class TsbzJxjscjController extends BaseController {
     @PostMapping("/importData")
     public AjaxResult importData(MultipartFile file) throws Exception {
         ExcelUtil<TsbzJxjscj> util = new ExcelUtil<TsbzJxjscj>(TsbzJxjscj.class);
-        List<TsbzJxjscj> tsbzJdcxList = util.importExcel(file.getInputStream());
+        List<TsbzJxjscj> tsbzJxjscjList = util.importExcel("教师成绩数据导入",file.getInputStream());
         int iCount = 0;
-
-        for (TsbzJxjscj tsbzJxjscj : tsbzJdcxList) {
-
+        int i = 0;
+        List temp = new ArrayList();
+        // 对excel中每个教师进行遍历
+        for (TsbzJxjscj tsbzJxjscj : tsbzJxjscjList) {
+            // 通过教师姓名和进修编号 在教师基本信息中查询教师是否存在
             TsbzJxjsjbxx tsbzjxjsjbxx = new TsbzJxjsjbxx();
             tsbzjxjsjbxx.setName(tsbzJxjscj.getJsname());
             tsbzjxjsjbxx.setJxbh(tsbzJxjscj.getJsjxbh());
             List<TsbzJxjsjbxx> list = tsbzJxjsjbxxMapper.selectTsbzJxjsjbxxList(tsbzjxjsjbxx);
+            i++;
+            //throw new CustomException("导入数据非见习教师");
             if (list.size() == 0 || StringUtils.isNull(list)) {
-                throw new CustomException("导入数据非见习教师");
+                System.out.println(i + ":" + tsbzJxjscj);
+                temp.add(i);
             }
-            tsbzJxjscj.setJsid(list.get(0).getId());
-            TsbzJxjscj jscjNew = tsbzJxjscjService.selectTsbzJxjscjByJsid(tsbzJxjscj.getJsid());
-            if (jscjNew != null) {
-                iCount = iCount + tsbzJxjscjService.updateTsbzJxjscj(tsbzJxjscj);
-            } else {
-                iCount = iCount + tsbzJxjscjService.insertTsbzJxjscj(tsbzJxjscj);
+            else{
+                // 取出教师id  在当前成绩表中查看是否存在此教师成绩 如存在更新 否则插入数据
+                tsbzJxjscj.setJsid(list.get(0).getId());
+                TsbzJxjscj jscjNew = tsbzJxjscjService.selectTsbzJxjscjByJsid(tsbzJxjscj.getJsid());
+                if (jscjNew != null) {
+                    iCount = iCount + tsbzJxjscjService.updateTsbzJxjscj(tsbzJxjscj);
+                } else {
+                    iCount = iCount + tsbzJxjscjService.insertTsbzJxjscj(tsbzJxjscj);
+                }
             }
         }
-        return AjaxResult.success(String.valueOf(iCount), null);
+        System.out.println(temp+"=====================");
+
+        return AjaxResult.success("Excel表中第" + temp + "行数据非见习教师," + "\n" + "成功更新或插入" + String.valueOf(iCount) + "条教师数据", null);
     }
 
     /**
