@@ -67,8 +67,21 @@ export const constantRoutes = [
         path: 'index',
         component: (resolve) => require(['@/views/custom/order'], resolve),
         name: '订单',
-        meta: { title: '订单', icon: 'build', noCache: true, affix: true }
+        meta: { title: '订单管理', icon: 'build', noCache: true, affix: true }
       }
+    ]
+  },
+  {
+    path: '/order',
+    component: Layout,
+    hidden: true,
+    children: [
+    {
+      path: 'orderPause/:orderId',
+      component: (resolve) => require(['@/views/custom/order/orderPause'], resolve),
+      name: 'orderPause',
+      meta: { title: '订单暂停记录'}
+    }
     ]
   },
   {

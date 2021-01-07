@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.stdiet.custom.mapper.SysOrderPauseMapper">
+
+    <resultMap type="SysOrderPause" id="SysOrderPauseResult">
+        <result property="id"    column="id"    />
+        <result property="orderId"    column="order_id"    />
+        <result property="pauseStartDate"    column="pause_start_date"    />
+        <result property="pauseEndDate"    column="pause_end_date"    />
+        <result property="reason"    column="reason"    />
+        <result property="remarks"    column="remarks"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <sql id="selectSysOrderPauseVo">
+        select id, order_id, pause_start_date, pause_end_date, reason, remarks, create_time, create_by, update_time, update_by, del_flag from sys_order_pause sop
+    </sql>
+
+    <select id="selectSysOrderPauseList" parameterType="SysOrderPause" resultMap="SysOrderPauseResult">
+        <!--select sop.id, sop.order_id, sop.pause_start_date, sop.pause_end_date, sop.reason, sop.remarks, sop.create_time, sop.create_by, sop.update_time, sop.update_by, sop.del_flag,
+        so.customer,so.order_time
+        from sys_order_pause sop
+        left join sys_order so on so.order_id = sop.order_id-->
+        <include refid="selectSysOrderPauseVo"></include>
+        where sop.del_flag = 0
+        <if test="orderId != null "> and sop.order_id = #{orderId}</if>
+        <if test="pauseStartDate != null "> and sop.pause_start_date = #{pauseStartDate}</if>
+        <if test="pauseEndDate != null "> and sop.pause_end_date = #{pauseEndDate}</if>
+        <if test="reason != null  and reason != ''"> and sop.reason = #{reason}</if>
+        <if test="remarks != null  and remarks != ''"> and sop.remarks = #{remarks}</if>
+    </select>
+
+    <select id="selectSysOrderPauseById" parameterType="Long" resultMap="SysOrderPauseResult">
+        <include refid="selectSysOrderPauseVo"/>
+        where id = #{id} and del_flag = 0
+    </select>
+
+    <insert id="insertSysOrderPause" parameterType="SysOrderPause" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_order_pause
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderId != null">order_id,</if>
+            <if test="pauseStartDate != null">pause_start_date,</if>
+            <if test="pauseEndDate != null">pause_end_date,</if>
+            <if test="reason != null">reason,</if>
+            <if test="remarks != null">remarks,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="delFlag != null">del_flag,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="orderId != null">#{orderId},</if>
+            <if test="pauseStartDate != null">#{pauseStartDate},</if>
+            <if test="pauseEndDate != null">#{pauseEndDate},</if>
+            <if test="reason != null">#{reason},</if>
+            <if test="remarks != null">#{remarks},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+        </trim>
+    </insert>
+
+    <update id="updateSysOrderPause" parameterType="SysOrderPause">
+        update sys_order_pause
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="orderId != null">order_id = #{orderId},</if>
+            <if test="pauseStartDate != null">pause_start_date = #{pauseStartDate},</if>
+            <if test="pauseEndDate != null">pause_end_date = #{pauseEndDate},</if>
+            <if test="reason != null">reason = #{reason},</if>
+            <if test="remarks != null">remarks = #{remarks},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="deleteSysOrderPauseById" parameterType="Long">
+        update sys_order_pause set del_flag = 1 where id = #{id}
+    </update>
+
+    <update id="deleteSysOrderPauseByIds" parameterType="String">
+        update sys_order_pause set del_flag = 1 where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+</mapper>
