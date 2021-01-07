@@ -238,6 +238,23 @@ export const constantRoutes = [
     ]
   },
   {
+    path: "/gbxxgl",
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: "txxq/data/:id",
+        component: resolve =>
+          require(["@/views/gbxxgl/txgbcx/data"], resolve),
+        name: "txgbcxdata",
+        meta: {
+          title: "退休干部信息详情页",
+          icon: ""
+        }
+      }
+    ]
+  },
+  {
     path: "/job",
     component: Layout,
     hidden: true,

@@ -428,7 +428,7 @@ export default {
     handleCheck(row) {
       const id = row.id ;
       this.$router.push({
-        path: "/gbxxgl/xq/data/" + id,
+        path: "/gbxxgl/txxq/data/" + id,
       });
     },
   },
