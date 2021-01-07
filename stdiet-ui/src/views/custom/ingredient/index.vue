@@ -50,6 +50,15 @@
           </el-option>
         </el-select>
       </el-form-item>
+      <el-form-item label="审核状态" prop="reviewStatus">
+        <el-select v-model="queryParams.reviewStatus" placeholder="请选择审核状态"
+                   clearable>
+          <el-option v-for="dict in reviewStatusOptions"
+                     :key="dict.dictValue"
+                     :label="dict.dictLabel"
+                     :value="dict.dictValue"/>
+        </el-select>
+      </el-form-item>
       <el-form-item>
         <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -105,11 +114,20 @@
     <el-table v-loading="loading" :data="ingredientList" @selection-change="handleSelectionChange">
       <!--      <el-table-column type="selection" width="55" align="center" />-->
       <!--      <el-table-column label="id" align="center" prop="id" />-->
+      <el-table-column label="审核状态" align="center">
+        <template slot-scope="scope">
+          <el-tag
+            :type="scope.row.reviewStatus === 'yes' ? 'success' : 'danger'"
+            disable-transitions>
+            {{scope.row.reviewStatus === 'yes' ? '已审核':'未审核'}}
+          </el-tag>
+        </template>
+      </el-table-column>
       <el-table-column label="食材名称" align="center" prop="name"/>
       <el-table-column label="食材类别" align="center" prop="type" :formatter="typeFormat"/>
-      <el-table-column label="蛋白质比例(100g)" align="center" prop="proteinRatio"/>
-      <el-table-column label="脂肪比例(100g)" align="center" prop="fatRatio"/>
-      <el-table-column label="碳水比例(100g)" align="center" prop="carbonRatio"/>
+      <el-table-column label="蛋白质比例(100g)" width="124" align="center" prop="proteinRatio"/>
+      <el-table-column label="脂肪比例(100g)" width="120" align="center" prop="fatRatio"/>
+      <el-table-column label="碳水比例(100g)" width="120" align="center" prop="carbonRatio"/>
       <el-table-column label="地域" align="center" prop="area" :formatter="areaFormat"/>
       <el-table-column label="忌口人群" align="center" prop="notRec"/>
       <el-table-column label="推荐人群" align="center" prop="rec"/>
@@ -207,7 +225,7 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="24">
+          <el-col :span="12">
             <el-form-item label="推荐人群" label-width="90px">
               <el-select v-model="form.recIds" multiple placeholder="请选择体征">
                 <el-option
@@ -216,6 +234,17 @@
                   :label="dict.dictLabel"
                   :value="dict.dictValue">
                 </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="审核状态" prop="reviewStatus">
+              <el-select v-model="form.reviewStatus" placeholder="请选择审核状态"
+                         clearable>
+                <el-option v-for="dict in reviewStatusOptions"
+                           :key="dict.dictValue"
+                           :label="dict.dictLabel"
+                           :value="dict.dictValue"/>
               </el-select>
             </el-form-item>
           </el-col>
@@ -264,6 +293,8 @@
         total: 0,
         // 食材表格数据
         ingredientList: [],
+        // 审核状态
+        reviewStatusOptions: [],
         // 弹出层标题
         title: "",
         // 是否显示弹出层
@@ -283,6 +314,7 @@
           area: null,
           notRecIds: null,
           recIds: null,
+          reviewStatus: null
         },
         // 表单参数
         form: {},
@@ -298,6 +330,9 @@
       this.getDicts("cus_area").then(response => {
         this.areaOptions = response.data;
       });
+      this.getDicts("cus_review_status").then(response => {
+        this.reviewStatusOptions = response.data;
+      })
       listPhysicalSigns().then(response => {
         this.physicalSignsOptions = response.rows.map(obj => ({
           dictLabel: obj.name,
@@ -434,7 +469,7 @@
           this.download(response.msg);
         }).catch(function () {
         });
-      }
+      },
     }
   };
 </script>

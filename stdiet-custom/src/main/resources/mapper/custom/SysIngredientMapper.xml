@@ -19,6 +19,7 @@
         <result property="updateTime"    column="update_time"    />
         <result property="rec"    column="rec"    />
         <result property="notRec"    column="not_rec"    />
+        <result property="reviewStatus"    column="review_status"    />
     </resultMap>
 
     <sql id="selectSysIngredientVo">
@@ -99,6 +100,7 @@
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
             <if test="type != null  and type != ''"> and type = #{type}</if>
             <if test="area != null  and area != ''"> and area = #{area}</if>
+            <if test="reviewStatus != null and reviewStatus != ''"> and review_status = #{reviewStatus}</if>
         </where>
     </select>
 
@@ -121,6 +123,7 @@
             <if test="createTime != null">create_time,</if>
             <if test="updateBy != null">update_by,</if>
             <if test="updateTime != null">update_time,</if>
+            <if test="reviewStatus != null">review_status,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="name != null">#{name},</if>
@@ -134,6 +137,7 @@
             <if test="createTime != null">#{createTime},</if>
             <if test="updateBy != null">#{updateBy},</if>
             <if test="updateTime != null">#{updateTime},</if>
+            <if test="reviewStatus != null">#{reviewStatus},</if>
         </trim>
     </insert>
 
@@ -187,6 +191,7 @@
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateBy != null">update_by = #{updateBy},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="reviewStatus != null">review_status = #{reviewStatus},</if>
         </trim>
         where id = #{id}
     </update>

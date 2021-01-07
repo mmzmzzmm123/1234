@@ -16,6 +16,9 @@ import java.math.BigDecimal;
 public class SysIngredient extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
+    private int pageNum;
+    private int pageSize;
+
     /**
      * id
      */
@@ -68,6 +71,19 @@ public class SysIngredient extends BaseEntity {
      */
     @Excel(name = "推荐人群")
     private String rec;
+
+    /**
+     * 审核状态
+     */
+    private String reviewStatus;
+
+    public void setReviewStatus(String reviewStatus) {
+        this.reviewStatus = reviewStatus;
+    }
+
+    public String getReviewStatus() {
+        return reviewStatus;
+    }
 
     private Long[] recIds;
 
@@ -151,6 +167,22 @@ public class SysIngredient extends BaseEntity {
 
     public void setRec(String rec) {
         this.rec = rec;
+    }
+
+    public void setPageNum(int pageNum) {
+        this.pageNum = pageNum;
+    }
+
+    public void setPageSize(int pageSize) {
+        this.pageSize = pageSize;
+    }
+
+    public int getPageNum() {
+        return pageNum;
+    }
+
+    public int getPageSize() {
+        return pageSize;
     }
 
     @Override
