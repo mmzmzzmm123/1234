@@ -250,7 +250,7 @@
       <el-table-column label="运营助理" align="center" prop="operatorAssis" width="120"/>
       <el-table-column label="推荐人" align="center" prop="recommender" width="120"/>
       <el-table-column label="备注" align="center" prop="remark" width="120"/>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="150" fixed="right">
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="300" fixed="right">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -836,7 +836,7 @@
         const orderId = row.orderId || this.ids
         getOrder(orderId).then(response => {
           this.form = response.data;
-          this.form.giveServeDay = this.form.giveServeDay == 0 ? null : parseInt(this.form.giveServeDay+"");
+          this.form.giveServeDay = parseInt(this.form.giveServeDay+"");
           this.open = true;
           this.title = "修改销售订单";
         });

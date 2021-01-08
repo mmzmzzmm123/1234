@@ -145,7 +145,7 @@
         <!--<el-form-item label="订单id" prop="orderId">
           <el-input v-model="form.orderId" placeholder="请输入订单id" />
         </el-form-item>-->
-        <el-form-item label="暂停时间范围" prop="pauseStartDate" label-width="100px">
+        <el-form-item label="暂停日期范围" prop="dateScope" label-width="120px">
           <el-date-picker
             v-model="dateScope"
             type="daterange"
@@ -168,11 +168,11 @@
                           placeholder="选择服务暂停结束时间">
           </el-date-picker>-->
         </el-form-item>
-        <el-form-item label="暂停理由" prop="reason" label-width="100px">
+        <el-form-item label="暂停理由" prop="reason" label-width="120px">
           <el-input type="textarea" placeholder="请输入暂停理由" v-model="form.reason" maxlength="200" show-word-limit rows="5"></el-input>
           <!--<el-input v-model="form.reason" placeholder="请输入暂停理由" />-->
         </el-form-item>
-        <el-form-item label="备注" prop="remarks" label-width="100px">
+        <el-form-item label="备注" prop="remarks" label-width="120px">
           <el-input type="textarea" placeholder="请输入备注" v-model="form.remarks" maxlength="200" show-word-limit rows="5"></el-input>
           <!--<el-input v-model="form.remarks" placeholder="请输入备注" />-->
         </el-form-item>
@@ -195,6 +195,13 @@
   export default {
     name: "Pause",
     data() {
+      const checkcDateScope = (rule, value, callback) => {
+        if (this.dateScope == null || this.dateScope == undefined || this.dateScope.length == 0) {
+          return callback(new Error('日期范围不能为空'))
+        }
+        callback();
+      }
+
       return {
         // 遮罩层
         loading: true,
@@ -232,6 +239,12 @@
         dateScope:[beginTime, endTime],
         // 表单校验
         rules: {
+          dateScope: [
+            {required: true, trigger: "blur", validator: checkcDateScope}
+          ],
+          reason: [
+            {required: true, message: "暂停理由不能为空", trigger: "blur"}
+          ]
         }
       };
     },
@@ -361,6 +374,10 @@
           this.download(response.msg);
       }).catch(function() {});
       }
+    },
+    checkcDateScope(value){
+       console.log(value[0]);
+       return false;
     }
   };
 </script>
