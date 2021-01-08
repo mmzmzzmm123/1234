@@ -194,10 +194,6 @@ export default {
       jkzkOptions: [],
       // 部门选项
       deptOptions: [],
-      // 详情页title
-      title_look: "",
-      // 详情页显示
-      open_look: false,
       // 查询参数
       queryParams: {
         pageNum: 1,

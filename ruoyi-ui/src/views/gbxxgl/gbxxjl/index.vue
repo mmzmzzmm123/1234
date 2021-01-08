@@ -440,10 +440,12 @@ export default {
         zw: null,
         createUserid: null,
         deptId: null,
+        dqzt: "00",
       },
       // 查询参数
       queryParams_gb: {
         deptId: null,
+        dqzt: "00",
       },
       // 表单参数
       form: {},

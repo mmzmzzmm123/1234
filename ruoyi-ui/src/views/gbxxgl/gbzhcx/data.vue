@@ -1383,6 +1383,7 @@ export default {
       gbywkhList: [],
       queryParams_gb: {
         gbid: null,
+        dqzt: "00",
       },
     };
   },

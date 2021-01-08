@@ -62,6 +62,16 @@ public class TsbzGbbxcg extends BaseEntity {
 
     private TsbzGbjbqk tsbzGbjbqk;
 
+    private String dqzt;
+
+    public void setDqzt(String dqzt) {
+        this.dqzt = dqzt;
+    }
+
+    public String getDqzt() {
+        return dqzt;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -138,6 +148,7 @@ public class TsbzGbbxcg extends BaseEntity {
                 .append("createUserid", getCreateUserid())
                 .append("createTime", getCreateTime())
                 .append("tsbzGbjbqk",getTsbzGbjbqk())
+                .append("dqzt", getDqzt())
                 .toString();
     }
 }

@@ -219,10 +219,12 @@ export default {
         zzny: null,
         djds: null,
         createUserid: null,
+        dqzt: "00",
       },
       // 查询参数
       queryParams_gb: {
         deptId: null,
+        dqzt: "00",
       },
       // 表单参数
       form: {},

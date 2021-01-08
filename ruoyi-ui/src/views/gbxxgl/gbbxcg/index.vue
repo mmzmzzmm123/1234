@@ -262,10 +262,12 @@ export default {
         isdel: null,
         createUserid: null,
         deptId: null,
+        dqzt: "00",
       },
       // 查询参数
       queryParams_gb: {
         deptId: null,
+        dqzt: "00",
       },
       // 表单参数
       form: {},
@@ -379,7 +381,7 @@ export default {
       const id = row.id || this.ids;
       getGbbxcg(id).then((response) => {
         this.form = response.data;
-        this.form.deptId=response.data.tsbzGbjbqk.deptId;
+        this.form.deptId = response.data.tsbzGbjbqk.deptId;
         this.open = true;
         this.flag = true;
         this.title = "修改办学成果(干部管理-评价与考核)";

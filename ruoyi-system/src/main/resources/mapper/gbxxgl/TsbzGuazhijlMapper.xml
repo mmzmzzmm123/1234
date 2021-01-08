@@ -14,6 +14,7 @@
         <result property="createUserid" column="create_userid"/>
         <result property="createTime" column="create_time"/>
         <result property="isdel" column="isdel"/>
+        <result property="dqzt" column="dqzt"/>
         <association property="tsbzGbjbqk" column="gbid" javaType="TsbzGbjbqk" resultMap="TsbzGbjbqkResult"/>
     </resultMap>
 
@@ -80,7 +81,8 @@
     <select id="selectTsbzGuazhijlList" parameterType="TsbzGuazhijl" resultMap="TsbzGuazhijlResult">
         <include refid="selectTsbzGuazhijlVo"/>
         <where>
-            a.isdel = 0 and b.dqzt='00'
+            a.isdel = 0
+            <if test="dqzt != null  and dqzt != ''"> and b.dqzt = #{dqzt}</if>
             <if test="gbid != null ">and a.gbid = #{gbid}</if>
             <if test="gzdw != null  and gzdw != ''">and a.gzdw = #{gzdw}</if>
             <if test="qsny != null ">and a.qsny = #{qsny}</if>

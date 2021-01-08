@@ -196,6 +196,16 @@ public class TsbzGbxxjl extends BaseEntity {
         return isdel;
     }
 
+    private String dqzt;
+
+    public void setDqzt(String dqzt) {
+        this.dqzt = dqzt;
+    }
+
+    public String getDqzt() {
+        return dqzt;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
@@ -213,6 +223,7 @@ public class TsbzGbxxjl extends BaseEntity {
                 .append("createTime", getCreateTime())
                 .append("isdel", getIsdel())
                 .append("tsbzGbjbqk", getTsbzGbjbqk())
+                .append("dqzt", getDqzt())
                 .toString();
     }
 

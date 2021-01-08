@@ -17,6 +17,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="createuser"    column="createuser"    />
         <result property="createtime"    column="createtime"    />
         <result property="isdel" column="isdel"/>
+        <result property="dqzt" column="dqzt"/>
         <association property="tsbzGbjbqk" column="gbid" javaType="TsbzGbjbqk" resultMap="TsbzGbjbqkResult"/>
     </resultMap>
 
@@ -83,7 +84,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectTsbzGbxrzwList" parameterType="TsbzGbxrzw" resultMap="TsbzGbxrzwResult">
         <include refid="selectTsbzGbxrzwVo"/>
         <where>
-            a.isdel = 0 and b.dqzt='00'
+            a.isdel = 0
+            <if test="dqzt != null  and dqzt != ''"> and b.dqzt = #{dqzt}</if>
             <if test="gbid != null "> and a.gbid = #{gbid}</if>
             <if test="rzny != null "> and a.rzny = #{rzny}</if>
             <if test="zzny != null "> and a.zzny = #{zzny}</if>
