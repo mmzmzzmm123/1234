@@ -6,19 +6,19 @@
         <tr>
           <td>
             <div class="flex cell">
-              <span>干部姓名：</span>
+              <span>姓名：</span>
               <span>{{ form.name }}</span>
             </div>
           </td>
           <td>
             <div class="flex cell">
-              <span>干部性别：</span>
+              <span>性别：</span>
               <span>{{ filter(form.xb, xbOptions) }}</span>
             </div>
           </td>
           <td>
             <div class="flex cell">
-              <span>干部民族：</span>
+              <span>民族：</span>
               <span>{{ filter(form.mz, mzOptions) }}</span>
             </div>
           </td>
@@ -30,13 +30,13 @@
           </td>
           <td>
             <div class="flex cell">
-              <span>干部学历：</span>
+              <span>学历：</span>
               <span>{{ filter(form.xl, xlOptions) }}</span>
             </div>
           </td>
           <td>
             <div class="flex cell">
-              <span>干部学位：</span>
+              <span>学位：</span>
               <span>{{ filter(form.xw, xwOptions) }}</span>
             </div>
           </td>
@@ -44,13 +44,13 @@
         <tr>
           <td>
             <div class="flex cell">
-              <span>干部职称：</span>
+              <span>职称：</span>
               <span>{{ filter(form.zc, zcOptions) }}</span>
             </div>
           </td>
           <td colspan="2">
             <div class="flex cell">
-              <span>干部籍贯：</span>
+              <span>籍贯：</span>
               <span
                 >{{ diglogForm.province }}{{ diglogForm.city
                 }}{{ diglogForm.area }}</span
@@ -59,7 +59,7 @@
           </td>
           <td colspan="2">
             <div class="flex cell">
-              <span>干部出生地：</span>
+              <span>出生地：</span>
               <span
                 >{{ diglogForm1.province }}{{ diglogForm1.city
                 }}{{ diglogForm1.area }}</span
@@ -234,10 +234,9 @@
       <el-tab-pane label="任免情况" name="first">
         <el-table v-loading="loading" border :data="gbxrzwList">
           <el-table-column
-            label="干部姓名"
+            label="姓名"
             align="center"
-            prop="gbid"
-            :formatter="gbmcFormat"
+            prop="tsbzGbjbqk.name"
           />
           <el-table-column label="起始年月" align="center" prop="rzny">
             <template slot-scope="scope">
@@ -284,10 +283,9 @@
       <el-tab-pane label="社会职务" name="second">
         <el-table v-loading="loading" border :data="gbshzwList">
           <el-table-column
-            label="干部姓名"
+            label="姓名"
             align="center"
-            prop="gbid"
-            :formatter="gbmcFormat"
+            prop="tsbzGbjbqk.name"
           />
           <el-table-column label="任职起始年月" align="center" prop="rzqsny">
             <template slot-scope="scope">
@@ -317,10 +315,9 @@
       <el-tab-pane label="工作经历" name="third">
         <el-table v-loading="loading" border :data="gbgzjlList">
           <el-table-column
-            label="干部姓名"
+            label="姓名"
             align="center"
-            prop="gbid"
-            :formatter="gbmcFormat"
+            prop="tsbzGbjbqk.name"
           />
           <el-table-column label="工作单位" align="center" prop="gzdwmc" />
           <el-table-column label="起始年月" align="center" prop="qsny">
@@ -370,8 +367,7 @@
           <el-table-column
             label="姓名"
             align="center"
-            prop="gbid"
-            :formatter="gbmcFormat"
+            prop="tsbzGbjbqk.name"
           />
           <el-table-column
             label="教育类型"
@@ -421,8 +417,7 @@
           <el-table-column
             label="姓名"
             align="center"
-            prop="gbid"
-            :formatter="gbmcFormat"
+            prop="tsbzGbjbqk.name"
           />
           <el-table-column label="培训班名称" align="center" prop="pxbmc" />
           <el-table-column
@@ -464,10 +459,9 @@
       <el-tab-pane label="挂职经历" name="gzjl">
         <el-table v-loading="loading" border :data="guazhijlList">
           <el-table-column
-            label="干部姓名"
+            label="姓名"
             align="center"
-            prop="gbid"
-            :formatter="gbmcFormat"
+            prop="tsbzGbjbqk.name"
           />
           <el-table-column label="挂职单位名称" align="center" prop="gzdw" />
           <el-table-column label="起始年月" align="center" prop="qsny">
@@ -486,7 +480,7 @@
       <el-tab-pane label="荣誉奖励" name="ryjl">
         <el-table v-loading="loading" border :data="gbryjlList">
           <el-table-column
-            label="干部姓名"
+            label="姓名"
             align="center"
             prop="tsbzGbjbqk.name"
           />
@@ -507,7 +501,7 @@
       <el-tab-pane label="科研课题" name="kykt">
         <el-table v-loading="loading" border :data="gbkyktList">
           <el-table-column
-            label="干部姓名"
+            label="姓名"
             align="center"
             prop="tsbzGbjbqk.name"
           />
@@ -556,10 +550,9 @@
       <el-tab-pane label="出国情况" name="cgqk">
         <el-table v-loading="loading" border :data="gbcrjqkList">
           <el-table-column
-            label="干部姓名"
+            label="姓名"
             align="center"
-            prop="gbid"
-            :formatter="gbmcFormat"
+            prop="tsbzGbjbqk.name"
           />
           <el-table-column label="起始日期" align="center" prop="qsrq">
             <template slot-scope="scope">
@@ -584,7 +577,7 @@
       <el-tab-pane label="出国证件" name="cgzj">
         <el-table v-loading="loading" border :data="gbcrjzjqkList">
           <el-table-column
-            label="干部姓名"
+            label="姓名"
             align="center"
             prop="tsbzGbjbqk.name"
           />
@@ -610,7 +603,7 @@
       <el-tab-pane label="个人风采" name="grfc">
         <el-table v-loading="loading" border :data="gbgrfcList">
           <el-table-column
-            label="干部ID"
+            label="姓名"
             align="center"
             prop="tsbzGbjbqk.name"
           />
@@ -622,12 +615,12 @@
       <el-tab-pane label="家庭成员" name="jtcy">
         <el-table v-loading="loading" border :data="gbjtcyList">
           <el-table-column
-            label="干部ID"
+            label="姓名"
             align="center"
             prop="tsbzGbjbqk.name"
           />
           <el-table-column label="关系" align="center" prop="gx" />
-          <el-table-column label="姓名" align="center" prop="xm" />
+          <el-table-column label="家属姓名" align="center" prop="xm" />
           <el-table-column label="出生年月" align="center" prop="csny">
             <template slot-scope="scope">
               <span>{{ parseTime(scope.row.csny, "{y}-{m}-{d}") }}</span>
@@ -646,7 +639,7 @@
       <el-tab-pane label="办学成果" name="bxcg">
         <el-table v-loading="loading" border :data="gbbxcgList">
           <el-table-column
-            label="干部姓名"
+            label="姓名"
             align="center"
             prop="tsbzGbjbqk.name"
           />
@@ -662,7 +655,7 @@
       <el-tab-pane label="年度考核" name="ndkh">
         <el-table v-loading="loading" border :data="gbndkhList">
           <el-table-column
-            label="干部姓名"
+            label="姓名"
             align="center"
             prop="tsbzGbjbqk.name"
           />
@@ -683,7 +676,7 @@
       <el-tab-pane label="业务考核" name="ywkh">
         <el-table v-loading="loading" border :data="gbywkhList">
           <el-table-column
-            label="干部姓名"
+            label="姓名"
             align="center"
             prop="tsbzGbjbqk.name"
           />
@@ -808,8 +801,6 @@ export default {
       dnzwsxOptions: [],
       // 群团职务字典
       qtzwOptions: [],
-      // 干部名称
-      gbmcOptions: [],
       // 届别字典
       jbOptions: [],
       // 职务级别字典
@@ -903,7 +894,6 @@ export default {
   created() {
     const id = this.$route.params && this.$route.params.id;
     this.getData(id);
-    this.getGbjbqkList();
     this.getDeptList();
     this.queryParams_gb.gbid = id;
     this.getGbXrzwList();
@@ -1243,24 +1233,6 @@ export default {
     jibieFormat(row, column) {
       return this.selectDictLabel(this.jibieOptions, row.jibie);
     },
-    /** 查询干部列表 */
-    getGbjbqkList() {
-      listGbjbqk(null).then((response) => {
-        this.gbmcOptions = response.rows;
-      });
-    },
-    // 干部字典翻译
-    gbmcFormat(row, column) {
-      var actions = [];
-      var datas = this.gbmcOptions;
-      Object.keys(datas).map((key) => {
-        if (datas[key].id == "" + row.gbid) {
-          actions.push(datas[key].name);
-          return false;
-        }
-      });
-      return actions.join("");
-    },
     // 行政职务字典翻译
     xzzwFormat(row, column) {
       return this.selectDictLabel(this.xzzwOptions, row.xzzw);
@@ -1330,7 +1302,7 @@ export default {
       return this.selectDictLabel(this.zzmmOptions, row.zzmm);
     },
     // 任教学科字典翻译
-    zzmmFormat(row, column) {
+    rjxkFormat(row, column) {
       return this.selectDictLabel(this.rjxkOptions, row.rjxk);
     },
   },

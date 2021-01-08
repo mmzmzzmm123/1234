@@ -7,7 +7,17 @@
       v-show="showSearch"
       label-width="70px"
     >
-      <el-form-item label="干部姓名" prop="gbid">
+       <el-form-item label="所属单位" prop="deptId">
+        <treeselect
+          v-model="queryParams.deptId"
+          :options="deptOptions"
+          :disable-branch-nodes="true"
+          :show-count="true"
+          placeholder="请选择所属单位"
+          style="width: 200px"
+        />
+      </el-form-item>
+      <el-form-item label="姓名" prop="gbid">
         <el-select
           v-model="queryParams.gbid"
           filterable
@@ -16,7 +26,7 @@
           size="small"
         >
           <el-option
-            v-for="dict in gbmcOptions"
+            v-for="dict in gbOptions"
             :key="dict.id"
             :label="dict.name"
             :value="dict.id"
@@ -111,8 +121,8 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="编号" align="center" prop="id" />
-      <el-table-column label="干部姓名" align="center" prop="tsbzGbjbqk.name" />
+      <!-- <el-table-column label="编号" align="center" prop="id" /> -->
+      <el-table-column label="姓名" align="center" prop="tsbzGbjbqk.name" />
       <el-table-column label="成果名称" align="center" prop="cgmc" />
       <el-table-column label="成果年度" align="center" prop="cgnd">
         <template slot-scope="scope">
@@ -167,10 +177,10 @@
             :disabled="flag"
           />
         </el-form-item>
-        <el-form-item label="干部姓名" prop="gbid">
+        <el-form-item label="姓名" prop="gbid">
           <el-select
             v-model="form.gbid"
-            placeholder="干部姓名"
+            placeholder="请选择姓名"
             :disabled="flag"
           >
             <el-option
@@ -249,8 +259,6 @@ export default {
       deptOptions: [],
       // 干部选项
       gbOptions: [],
-      // 干部名称
-      gbmcOptions: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -292,11 +300,11 @@ export default {
   watch: {
     // 监听deptId
     "form.deptId": "handleBucketClick",
+    "queryParams.deptId": "handleBucketClick",
   },
   created() {
     this.getList();
     this.getTreeselect();
-    this.getGbjbqkList();
   },
   methods: {
     // 部门监听
@@ -309,13 +317,6 @@ export default {
           this.gbOptions = response.rows;
         });
       }
-    },
-    /** 查询干部列表 */
-    getGbjbqkList() {
-      this.loading = true;
-      listGbjbqk(null).then((response) => {
-        this.gbmcOptions = response.rows;
-      });
     },
     /** 查询部门下拉树结构 */
     getTreeselect() {

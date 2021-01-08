@@ -1,7 +1,23 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="干部姓名" prop="gbid">
+    <el-form
+      :model="queryParams"
+      ref="queryForm"
+      :inline="true"
+      v-show="showSearch"
+      label-width="70px"
+    >
+      <el-form-item label="所属单位" prop="deptId">
+        <treeselect
+          v-model="queryParams.deptId"
+          :options="deptOptions"
+          :disable-branch-nodes="true"
+          :show-count="true"
+          placeholder="请选择所属单位"
+          style="width: 200px"
+        />
+      </el-form-item>
+      <el-form-item label="姓名" prop="gbid">
         <el-select
           v-model="queryParams.gbid"
           filterable
@@ -10,7 +26,7 @@
           size="small"
         >
           <el-option
-            v-for="dict in gbmcOptions"
+            v-for="dict in gbOptions"
             :key="dict.id"
             :label="dict.name"
             :value="dict.id"
@@ -18,8 +34,16 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+        <el-button
+          type="cyan"
+          icon="el-icon-search"
+          size="mini"
+          @click="handleQuery"
+          >搜索</el-button
+        >
+        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+          >重置</el-button
+        >
       </el-form-item>
     </el-form>
 
@@ -31,7 +55,8 @@
           size="mini"
           @click="handleAdd"
           v-hasPermi="['gbxxgl:gbgrfc:add']"
-        >新增</el-button>
+          >新增</el-button
+        >
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -41,7 +66,8 @@
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['gbxxgl:gbgrfc:edit']"
-        >修改</el-button>
+          >修改</el-button
+        >
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -51,19 +77,31 @@
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['gbxxgl:gbgrfc:remove']"
-        >删除</el-button>
+          >删除</el-button
+        >
       </el-col>
-	  <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+      <right-toolbar
+        :showSearch.sync="showSearch"
+        @queryTable="getList"
+      ></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="gbgrfcList" @selection-change="handleSelectionChange">
+    <el-table
+      v-loading="loading"
+      :data="gbgrfcList"
+      @selection-change="handleSelectionChange"
+    >
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="编号" align="center" prop="id" />
-      <el-table-column label="干部ID" align="center" prop="tsbzGbjbqk.name"/>
+      <!-- <el-table-column label="编号" align="center" prop="id" /> -->
+      <el-table-column label="姓名" align="center" prop="tsbzGbjbqk.name" />
       <el-table-column label="证件照名称" align="center" prop="zjzmc" />
       <el-table-column label="生活照名称" align="center" prop="shzmc" />
       <el-table-column label="工作照名称" align="center" prop="zgzmc" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column
+        label="操作"
+        align="center"
+        class-name="small-padding fixed-width"
+      >
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -71,20 +109,22 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['gbxxgl:gbgrfc:edit']"
-          >修改</el-button>
+            >修改</el-button
+          >
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['gbxxgl:gbgrfc:remove']"
-          >删除</el-button>
+            >删除</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
 
     <pagination
-      v-show="total>0"
+      v-show="total > 0"
       :total="total"
       :page.sync="queryParams.pageNum"
       :limit.sync="queryParams.pageSize"
@@ -104,10 +144,10 @@
             :disabled="flag"
           />
         </el-form-item>
-        <el-form-item label="干部姓名" prop="gbid">
+        <el-form-item label="姓名" prop="gbid">
           <el-select
             v-model="form.gbid"
-            placeholder="干部姓名"
+            placeholder="请输入或选择姓名"
             :disabled="flag"
           >
             <el-option
@@ -179,7 +219,13 @@
 </template>
 
 <script>
-import { listGbgrfc, getGbgrfc, delGbgrfc, addGbgrfc, updateGbgrfc } from "@/api/gbxxgl/gbgrfc";
+import {
+  listGbgrfc,
+  getGbgrfc,
+  delGbgrfc,
+  addGbgrfc,
+  updateGbgrfc,
+} from "@/api/gbxxgl/gbgrfc";
 
 import { listGbjbqk, getGbjbqk } from "@/api/gbxxgl/gbjbqk";
 import { treeselect } from "@/api/system/dept";
@@ -219,8 +265,6 @@ export default {
       deptOptions: [],
       // 干部选项
       gbOptions: [],
-      // 干部名称
-      gbmcOptions: [],
       // 是否显示弹出层
       open: false,
       // 查询参数
@@ -262,11 +306,11 @@ export default {
   watch: {
     // 监听deptId
     "form.deptId": "handleBucketClick",
+    "queryParams.deptId": "handleBucketClick",
   },
   created() {
     this.getList();
     this.getTreeselect();
-    this.getGbjbqkList();
   },
   methods: {
     //图片上传
@@ -312,7 +356,7 @@ export default {
     /** 查询个人风采(干部管理-个人状况)列表 */
     getList() {
       this.loading = true;
-      listGbgrfc(this.queryParams).then(response => {
+      listGbgrfc(this.queryParams).then((response) => {
         this.gbgrfcList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -328,13 +372,6 @@ export default {
           this.gbOptions = response.rows;
         });
       }
-    },
-    /** 查询干部列表 */
-    getGbjbqkList() {
-      this.loading = true;
-      listGbjbqk(null).then((response) => {
-        this.gbmcOptions = response.rows;
-      });
     },
     /** 查询部门下拉树结构 */
     getTreeselect() {
@@ -377,9 +414,9 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.id)
-      this.single = selection.length!==1
-      this.multiple = !selection.length
+      this.ids = selection.map((item) => item.id);
+      this.single = selection.length !== 1;
+      this.multiple = !selection.length;
     },
     /** 新增按钮操作 */
     handleAdd() {
@@ -397,17 +434,19 @@ export default {
       this.imageUrlGz = ""; //清空图片
       this.imageUrlSh = ""; //清空图片
       this.reset();
-      const id = row.id || this.ids
-      getGbgrfc(id).then(response => {
+      const id = row.id || this.ids;
+      getGbgrfc(id).then((response) => {
         this.form = response.data;
         if (response.data.zjzpath) {
           this.imageUrl = process.env.VUE_APP_BASE_API + response.data.zjzpath;
         }
         if (response.data.gzzpath) {
-          this.imageUrlGz = process.env.VUE_APP_BASE_API + response.data.gzzpath;
+          this.imageUrlGz =
+            process.env.VUE_APP_BASE_API + response.data.gzzpath;
         }
         if (response.data.shzpath) {
-          this.imageUrlSh = process.env.VUE_APP_BASE_API + response.data.shzpath;
+          this.imageUrlSh =
+            process.env.VUE_APP_BASE_API + response.data.shzpath;
         }
         this.form.deptId = response.data.tsbzGbjbqk.deptId;
         this.open = true;
@@ -417,10 +456,10 @@ export default {
     },
     /** 提交按钮 */
     submitForm() {
-      this.$refs["form"].validate(valid => {
+      this.$refs["form"].validate((valid) => {
         if (valid) {
           if (this.form.id != null) {
-            updateGbgrfc(this.form).then(response => {
+            updateGbgrfc(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("修改成功");
                 this.open = false;
@@ -428,7 +467,7 @@ export default {
               }
             });
           } else {
-            addGbgrfc(this.form).then(response => {
+            addGbgrfc(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("新增成功");
                 this.open = false;
@@ -442,18 +481,25 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$confirm('是否确认删除个人风采(干部管理-个人状况)编号为"' + ids + '"的数据项?', "警告", {
+      this.$confirm(
+        '是否确认删除个人风采(干部管理-个人状况)编号为"' + ids + '"的数据项?',
+        "警告",
+        {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
+          type: "warning",
+        }
+      )
+        .then(function () {
           return delGbgrfc(ids);
-        }).then(() => {
+        })
+        .then(() => {
           this.getList();
           this.msgSuccess("删除成功");
-        }).catch(function() {});
+        })
+        .catch(function () {});
     },
-  }
+  },
 };
 </script>
 <style>

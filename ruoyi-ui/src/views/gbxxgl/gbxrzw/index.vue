@@ -5,25 +5,35 @@
       ref="queryForm"
       :inline="true"
       v-show="showSearch"
-      label-width="102px"
+      label-width="70px"
     >
-      <el-form-item label="干部姓名" prop="gbid">
+      <el-form-item label="所属单位" prop="deptId">
+        <treeselect
+          v-model="queryParams.deptId"
+          :options="deptOptions"
+          :disable-branch-nodes="true"
+          :show-count="true"
+          placeholder="请选择所属单位"
+          style="width: 200px"
+        />
+      </el-form-item>
+      <el-form-item label="姓名" prop="gbid">
         <el-select
           v-model="queryParams.gbid"
           filterable
-          placeholder="请选择或输入干部姓名"
+          placeholder="请选择或输入姓名"
           clearable
           size="small"
         >
           <el-option
-            v-for="dict in gbmcOptions"
+            v-for="dict in gbOptions"
             :key="dict.id"
             :label="dict.name"
             :value="dict.id"
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="起始年月" prop="rzny">
+      <!-- <el-form-item label="起始年月" prop="rzny">
         <el-date-picker
           clearable
           size="small"
@@ -44,7 +54,7 @@
           placeholder="选择终止年月"
         >
         </el-date-picker>
-      </el-form-item>
+      </el-form-item> -->
 
       <el-form-item label="行政职务" prop="xzzw">
         <el-select
@@ -61,7 +71,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="行政职务级别" prop="xxzwjb">
+      <el-form-item label="职务级别" prop="xxzwjb">
         <el-select
           v-model="queryParams.xxzwjb"
           placeholder="请选择行政职务级别"
@@ -91,7 +101,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="党内职务属性" prop="dnzwsx">
+      <el-form-item label="职务属性" prop="dnzwsx">
         <el-select
           v-model="queryParams.dnzwsx"
           placeholder="请选择党内职务属性"
@@ -191,7 +201,7 @@
     >
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="编号" align="center" prop="id" /> -->
-      <el-table-column label="干部姓名" align="center" prop="tsbzGbjbqk.name" />
+      <el-table-column label="姓名" align="center" prop="tsbzGbjbqk.name" />
       <el-table-column label="起始年月" align="center" prop="rzny">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.rzny, "{y}-{m}") }}</span>
@@ -280,10 +290,10 @@
             :disabled="flag"
           />
         </el-form-item>
-        <el-form-item label="干部姓名" prop="gbid">
+        <el-form-item label="姓名" prop="gbid">
           <el-select
             v-model="form.gbid"
-            placeholder="干部姓名"
+            placeholder="姓名"
             :disabled="flag"
           >
             <el-option
@@ -429,8 +439,6 @@ export default {
       deptOptions: [],
       // 干部选项
       gbOptions: [],
-      // 干部名称
-      gbmcOptions: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -484,11 +492,11 @@ export default {
   watch: {
     // 监听deptId
     "form.deptId": "handleBucketClick",
+    "queryParams.deptId": "handleBucketClick",
   },
   created() {
     this.getList();
     this.getTreeselect();
-    this.getGbjbqkList();
     this.getDicts("sys_dm_xrxzzw").then((response) => {
       this.xzzwOptions = response.data;
     });
@@ -513,13 +521,6 @@ export default {
         this.gbxrzwList = response.rows;
         this.total = response.total;
         this.loading = false;
-      });
-    },
-    /** 查询干部列表 */
-    getGbjbqkList() {
-      this.loading = true;
-      listGbjbqk(null).then((response) => {
-        this.gbmcOptions = response.rows;
       });
     },
     /** 查询部门下拉树结构 */

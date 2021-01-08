@@ -5,8 +5,18 @@
       ref="queryForm"
       :inline="true"
       v-show="showSearch"
-      label-width="68px"
+      label-width="70px"
     >
+    <el-form-item label="所属单位" prop="deptId">
+        <treeselect
+          v-model="queryParams.deptId"
+          :options="deptOptions"
+          :disable-branch-nodes="true"
+          :show-count="true"
+          placeholder="请选择所属单位"
+          style="width: 200px"
+        />
+      </el-form-item>
       <el-form-item label="姓名" prop="gbid">
         <el-select
           v-model="queryParams.gbid"
@@ -16,7 +26,7 @@
           size="small"
         >
           <el-option
-            v-for="dict in gbmcOptions"
+            v-for="dict in gbOptions"
             :key="dict.id"
             :label="dict.name"
             :value="dict.id"
@@ -413,8 +423,6 @@ export default {
       deptOptions: [],
       // 干部选项
       gbOptions: [],
-      // 干部名称
-      gbmcOptions: [],
       // 教育类型字典
       jylxOptions: [],
       // 学历字典
@@ -467,11 +475,11 @@ export default {
   watch: {
     // 监听deptId
     "form.deptId": "handleBucketClick",
+    "queryParams.deptId": "handleBucketClick",
   },
   created() {
     this.getList();
     this.getTreeselect();
-    this.getGbjbqkList();
     this.getDicts("sys_dm_jylx").then((response) => {
       this.jylxOptions = response.data;
     });
@@ -496,13 +504,6 @@ export default {
         this.gbxxjlList = response.rows;
         this.total = response.total;
         this.loading = false;
-      });
-    },
-    /** 查询干部列表 */
-    getGbjbqkList() {
-      this.loading = true;
-      listGbjbqk(null).then((response) => {
-        this.gbmcOptions = response.rows;
       });
     },
     /** 查询部门下拉树结构 */
