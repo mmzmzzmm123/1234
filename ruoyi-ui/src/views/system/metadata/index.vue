@@ -748,7 +748,7 @@
 <!--      </div>-->
 <!--    </el-dialog>-->
     <el-dialog :title="title" :visible.sync="open" width="1500px" append-to-body>
-      <InputView v-if="open" :formconf="formConf"/>
+      <InputView v-if="open" :formconf="formConf" />
 <!--      <el-button @click="cancel">-->
 <!--        取消-->
 <!--      </el-button>-->
@@ -761,7 +761,7 @@ import { listMetadata, getMetadata, delMetadata, addMetadata, updateMetadata, ex
 import DeptTree from '@/views/components/deptTree'
 import InputView from '@/views/system/metadata/InputView'
 import { listJson } from '@/api/system/json'
-
+import {listDefinition} from '@/api/system/metadataRule'
 export default {
   name: "Metadata",
   components: {
@@ -770,6 +770,7 @@ export default {
   },
   data() {
     return {
+      definition:[],
       formConf:{},
       //默认部门ID
       deptId:100,

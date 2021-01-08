@@ -1,4 +1,5 @@
 import { deepClone } from '@/gene/utils/index'
+import {listDefinition} from '@/api/system/metadataRule'
 
 const componentChild = {}
 /**
@@ -83,22 +84,40 @@ export default {
     conf: {
       type: Object,
       required: true
+    },
+  },
+  data(){
+    return{
+      tip:''
     }
+  },
+  methods:{
+    loadData(name){
+      listDefinition(name).then(res=>{
+        this.tip=res.data[0].definition;
+      }).catch(err=>{
+        console.log(err.message)
+      })
+
+    }
+  },
+  created(){
+    this.loadData(this.conf.__config__.label)
   },
   render(h) {
     const dataObject = makeDataObject()
     const confClone = deepClone(this.conf)
     const children = this.$slots.default || []
-
     // 如果slots文件夹存在与当前tag同名的文件，则执行文件中的代码
     mountSlotFlies.call(this, h, confClone, children)
-
     // 将字符串类型的事件，发送为消息
     emitEvents.call(this, confClone)
-
     // 将json表单配置转化为vue render可以识别的 “数据对象（dataObject）”
     buildDataObject.call(this, confClone, dataObject)
-
-    return h(this.conf.__config__.tag, dataObject, children)
+    let child = h(this.conf.__config__.tag, dataObject, children);
+    if (!this.tip){
+      return child
+    }
+    return h('el-tooltip',{attrs:{effect:"dark",content:this.tip,placement:"top"}},[child])
   }
 }

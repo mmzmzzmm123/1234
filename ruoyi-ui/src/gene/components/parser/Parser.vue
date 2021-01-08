@@ -25,7 +25,7 @@ const layouts = {
       <el-col span={config.span}>
         <el-form-item label-width={labelWidth} prop={scheme.__vModel__}
           label={config.showLabel ? config.label : ''}>
-          <render conf={scheme} {...{ on: listeners }} />
+          <render definition={this.definition} conf={scheme} {...{ on: listeners }} />
         </el-form-item>
       </el-col>
     )
@@ -124,7 +124,7 @@ export default {
     formConf: {
       type: Object,
       required: true
-    }
+    },
   },
   data() {
     let data = {

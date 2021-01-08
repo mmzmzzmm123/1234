@@ -16,7 +16,11 @@ import {listJson} from '@/api/system/json'
 import { uploadByPieces } from '@/utils/utils'
 import FileUpload from '@/components/commonuploader/FileUploader'
 export default {
-  props:['formconf'],
+  props:{
+    formconf: {
+      type: Object,
+    },
+  },
   name: "InputView",
   components: {
     Parser,
