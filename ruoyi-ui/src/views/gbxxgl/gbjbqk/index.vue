@@ -401,8 +401,7 @@
       <el-table-column
         label="单位名称"
         align="center"
-        prop="deptId"
-        :formatter="deptFormat"
+        prop="dept.deptName"
       />
       <el-table-column label="教师姓名" align="center" prop="name" />
       <el-table-column
@@ -1201,18 +1200,6 @@ export default {
       listDept(null).then((response) => {
         this.deptOptions = response.data;
       });
-    },
-    // 部门字典翻译
-    deptFormat(row, column) {
-      var actions = [];
-      var datas = this.deptOptions;
-      Object.keys(datas).map((key) => {
-        if (datas[key].deptId == "" + row.deptId) {
-          actions.push(datas[key].deptName);
-          return false;
-        }
-      });
-      return actions.join("");
     },
     // 性别字典翻译
     xbFormat(row, column) {

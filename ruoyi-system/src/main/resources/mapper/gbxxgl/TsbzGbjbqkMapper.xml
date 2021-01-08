@@ -58,68 +58,85 @@
         <result property="createUser" column="create_user"/>
         <result property="dqzt" column="dqzt"/>
         <result property="txTime" column="tx_time"/>
+        <association property="dept" column="dept_id" javaType="SysDept" resultMap="deptResult"/>
+    </resultMap>
+
+    <resultMap id="deptResult" type="SysDept">
+        <id property="deptId" column="dept_id"/>
+        <result property="parentId" column="parent_id"/>
+        <result property="deptName" column="dept_name"/>
+        <result property="orderNum" column="order_num"/>
+        <result property="leader" column="leader"/>
+        <result property="status" column="dept_status"/>
     </resultMap>
 
     <sql id="selectTsbzGbjbqkVo">
-        select id, otherid, name, xb, dept_id, dwmc, dwjc, xrxzzw, xrdnzw, xrqtzw, rxzwny, xrxzzj, xzzjqdny, sfhbgb, hbgbqdny, sfzh, updatetime, mz, jg, jg_province, jg_cityname, jg_city, jg_areaname, jg_area, csd, csd_province, csd_cityname, csd_city, csd_areaname, csd_area,  csrq, cjgzny, jtzz, dwdz, dyxl, xl, xw, byyx, jylx, zc, jzcyqk, nfkc, hyzk, zzmm, rdsj, bgsdh, phone, rjxk, jkzk, create_user, create_time,dqzt,tx_time from tsbz_gbjbqk
+        select u.id, u.otherid, u.name, u.xb, u.dept_id, u.dwmc, u.dwjc, u.xrxzzw, u.xrdnzw, u.xrqtzw, u.rxzwny, u.xrxzzj, u.xzzjqdny, u.sfhbgb, u.hbgbqdny, u.sfzh, u.updatetime, u.mz, u.jg, u.jg_province, u.jg_cityname, u.jg_city, u.jg_areaname, u.jg_area, u.csd, u.csd_province, u.csd_cityname, u.csd_city, u.csd_areaname, u.csd_area,  u.csrq, u.cjgzny, u.jtzz, u.dwdz, u.dyxl, u.xl, u.xw, u.byyx, u.jylx, u.zc, u.jzcyqk, u.nfkc, u.hyzk, u.zzmm, u.rdsj, u.bgsdh, u.phone, u.rjxk, u.jkzk, u.create_user, u.create_time,u.dqzt,u.tx_time,d.dept_name from tsbz_gbjbqk u
+        left join sys_dept d on u.dept_id = d.dept_id
     </sql>
 
     <select id="selectTsbzGbjbqkList" parameterType="TsbzGbjbqk" resultMap="TsbzGbjbqkResult">
         <include refid="selectTsbzGbjbqkVo"/>
         <where>
-            <if test="otherid != null  and otherid != ''">and otherid = #{otherid}</if>
-            <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
-            <if test="xb != null  and xb != ''">and xb = #{xb}</if>
-            <if test="deptId != null  and deptId != ''">and dept_id = #{deptId}</if>
-            <if test="dwmc != null  and dwmc != ''">and dwmc = #{dwmc}</if>
-            <if test="dwjc != null  and dwjc != ''">and dwjc = #{dwjc}</if>
-            <if test="xrxzzw != null  and xrxzzw != ''">and xrxzzw = #{xrxzzw}</if>
-            <if test="xrdnzw != null  and xrdnzw != ''">and xrdnzw = #{xrdnzw}</if>
-            <if test="xrqtzw != null  and xrqtzw != ''">and xrqtzw = #{xrqtzw}</if>
-            <if test="rxzwny != null ">and rxzwny = #{rxzwny}</if>
-            <if test="xrxzzj != null  and xrxzzj != ''">and xrxzzj = #{xrxzzj}</if>
-            <if test="xzzjqdny != null ">and xzzjqdny = #{xzzjqdny}</if>
-            <if test="sfhbgb != null  and sfhbgb != ''">and sfhbgb = #{sfhbgb}</if>
-            <if test="hbgbqdny != null ">and DATE_FORMAT(hbgbqdny, '%Y') = DATE_FORMAT(#{hbgbqdny},'%Y')</if>
-            <if test="sfzh != null  and sfzh != ''">and sfzh = #{sfzh}</if>
-            <if test="updatetime != null ">and updatetime = #{updatetime}</if>
-            <if test="mz != null  and mz != ''">and mz = #{mz}</if>
-            <if test="jg != null  and jg != ''">and jg = #{jg}</if>
-            <if test="jgProvince != null  and jgProvince != ''">and jg_province = #{jgProvince}</if>
-            <if test="jgCity != null  and jgCity != ''">and jg_city = #{jgCity}</if>
-            <if test="jgCityname != null  and jgCityname != ''">and jg_cityname = #{jgCityname}</if>
-            <if test="jgArea != null  and jgArea != ''">and jg_area = #{jgArea}</if>
-            <if test="jgAreaname != null  and jgAreaname != ''">and jg_areaname = #{jgAreaname}</if>
-            <if test="csdProvince != null  and csdProvince != ''">and csd_province = #{csdProvince}</if>
-            <if test="csdCity != null  and csdCity != ''">and csd_city = #{csdCity}</if>
-            <if test="csdCityname != null  and csdCityname != ''">and csd_cityname = #{csdCityname}</if>
-            <if test="csdArea != null  and csdArea != ''">and csd_area = #{csdArea}</if>
-            <if test="csdAreaname != null  and csdAreaname != ''">and csd_areaname = #{csdAreaname}</if>
-            <if test="csd != null  and csd != ''">and csd = #{csd}</if>
-            <if test="csrq != null ">and csrq = #{csrq}</if>
-            <if test="cjgzny != null ">and cjgzny = #{cjgzny}</if>
-            <if test="jtzz != null  and jtzz != ''">and jtzz = #{jtzz}</if>
-            <if test="dwdz != null  and dwdz != ''">and dwdz = #{dwdz}</if>
-            <if test="dyxl != null  and dyxl != ''">and dyxl = #{dyxl}</if>
-            <if test="xl != null  and xl != ''">and xl = #{xl}</if>
-            <if test="xw != null  and xw != ''">and xw = #{xw}</if>
-            <if test="byyx != null  and byyx != ''">and byyx = #{byyx}</if>
-            <if test="jylx != null  and jylx != ''">and jylx = #{jylx}</if>
-            <if test="zc != null  and zc != ''">and zc = #{zc}</if>
-            <if test="jzcyqk != null  and jzcyqk != ''">and jzcyqk = #{jzcyqk}</if>
-            <if test="nfkc != null  and nfkc != ''">and nfkc = #{nfkc}</if>
-            <if test="hyzk != null  and hyzk != ''">and hyzk = #{hyzk}</if>
-            <if test="zzmm != null  and zzmm != ''">and zzmm = #{zzmm}</if>
-            <if test="rdsj != null ">and rdsj = #{rdsj}</if>
-            <if test="bgsdh != null  and bgsdh != ''">and bgsdh = #{bgsdh}</if>
-            <if test="phone != null  and phone != ''">and phone = #{phone}</if>
-            <if test="rjxk != null  and rjxk != ''">and rjxk = #{rjxk}</if>
-            <if test="jkzk != null  and jkzk != ''">and jkzk = #{jkzk}</if>
-            <if test="createUser != null  and createUser != ''">and create_user = #{createUser}</if>
-            <if test="createTime != null  and createTime != ''">and create_time = #{createTime}</if>
-            <if test="dqzt != null  and dqzt != ''"> and dqzt = #{dqzt}</if>
+            <if test="otherid != null  and otherid != ''">and u.otherid = #{otherid}</if>
+            <if test="name != null  and name != ''">and u.name like concat('%', #{name}, '%')</if>
+            <if test="xb != null  and xb != ''">and u.xb = #{xb}</if>
+<!--            <if test="deptId != null  and deptId != ''">and dept_id = #{deptId}</if>-->
+            <if test="dwmc != null  and dwmc != ''">and u.dwmc = #{dwmc}</if>
+            <if test="dwjc != null  and dwjc != ''">and u.dwjc = #{dwjc}</if>
+            <if test="xrxzzw != null  and xrxzzw != ''">and u.xrxzzw = #{xrxzzw}</if>
+            <if test="xrdnzw != null  and xrdnzw != ''">and u.xrdnzw = #{xrdnzw}</if>
+            <if test="xrqtzw != null  and xrqtzw != ''">and u.xrqtzw = #{xrqtzw}</if>
+            <if test="rxzwny != null ">and u.rxzwny = #{rxzwny}</if>
+            <if test="xrxzzj != null  and xrxzzj != ''">and u.xrxzzj = #{xrxzzj}</if>
+            <if test="xzzjqdny != null ">and u.xzzjqdny = #{xzzjqdny}</if>
+            <if test="sfhbgb != null  and sfhbgb != ''">and u.sfhbgb = #{sfhbgb}</if>
+            <if test="hbgbqdny != null ">and DATE_FORMAT(u.hbgbqdny, '%Y') = DATE_FORMAT(#{hbgbqdny},'%Y')</if>
+            <if test="sfzh != null  and sfzh != ''">and u.sfzh = #{sfzh}</if>
+            <if test="updatetime != null ">and u.updatetime = #{updatetime}</if>
+            <if test="mz != null  and mz != ''">and u.mz = #{mz}</if>
+            <if test="jg != null  and jg != ''">and u.jg = #{jg}</if>
+            <if test="jgProvince != null  and jgProvince != ''">and u.jg_province = #{jgProvince}</if>
+            <if test="jgCity != null  and jgCity != ''">and u.jg_city = #{jgCity}</if>
+            <if test="jgCityname != null  and jgCityname != ''">and u.jg_cityname = #{jgCityname}</if>
+            <if test="jgArea != null  and jgArea != ''">and u.jg_area = #{jgArea}</if>
+            <if test="jgAreaname != null  and jgAreaname != ''">and u.jg_areaname = #{jgAreaname}</if>
+            <if test="csdProvince != null  and csdProvince != ''">and u.csd_province = #{csdProvince}</if>
+            <if test="csdCity != null  and csdCity != ''">and u.csd_city = #{csdCity}</if>
+            <if test="csdCityname != null  and csdCityname != ''">and u.csd_cityname = #{csdCityname}</if>
+            <if test="csdArea != null  and csdArea != ''">and u.csd_area = #{csdArea}</if>
+            <if test="csdAreaname != null  and csdAreaname != ''">and u.csd_areaname = #{csdAreaname}</if>
+            <if test="csd != null  and csd != ''">and u.csd = #{csd}</if>
+            <if test="csrq != null ">and u.csrq = #{csrq}</if>
+            <if test="cjgzny != null ">and u.cjgzny = #{cjgzny}</if>
+            <if test="jtzz != null  and jtzz != ''">and u.jtzz = #{jtzz}</if>
+            <if test="dwdz != null  and dwdz != ''">and u.dwdz = #{dwdz}</if>
+            <if test="dyxl != null  and dyxl != ''">and u.dyxl = #{dyxl}</if>
+            <if test="xl != null  and xl != ''">and u.xl = #{xl}</if>
+            <if test="xw != null  and xw != ''">and u.xw = #{xw}</if>
+            <if test="byyx != null  and byyx != ''">and u.byyx = #{byyx}</if>
+            <if test="jylx != null  and jylx != ''">and u.jylx = #{jylx}</if>
+            <if test="zc != null  and zc != ''">and u.zc = #{zc}</if>
+            <if test="jzcyqk != null  and jzcyqk != ''">and u.jzcyqk = #{jzcyqk}</if>
+            <if test="nfkc != null  and nfkc != ''">and u.nfkc = #{nfkc}</if>
+            <if test="hyzk != null  and hyzk != ''">and u.hyzk = #{hyzk}</if>
+            <if test="zzmm != null  and zzmm != ''">and u.zzmm = #{zzmm}</if>
+            <if test="rdsj != null ">and u.rdsj = #{rdsj}</if>
+            <if test="bgsdh != null  and bgsdh != ''">and u.bgsdh = #{bgsdh}</if>
+            <if test="phone != null  and phone != ''">and u.phone = #{phone}</if>
+            <if test="rjxk != null  and rjxk != ''">and u.rjxk = #{rjxk}</if>
+            <if test="jkzk != null  and jkzk != ''">and u.jkzk = #{jkzk}</if>
+            <if test="createUser != null  and createUser != ''">and u.create_user = #{createUser}</if>
+            <if test="createTime != null  and createTime != ''">and u.create_time = #{createTime}</if>
+            <if test="dqzt != null  and dqzt != ''"> and u.dqzt = #{dqzt}</if>
              <!--需求是 获取进5年退休人员数据-->
-            <if test="dqzt=='99'"> and tx_time>date(date_add(now(),interval-5 year))</if>
+            <if test="dqzt=='99'"> and u.tx_time>date(date_add(now(),interval-5 year))</if>
+            <if test="deptId != null and deptId != 0">
+                AND (u.dept_id = #{deptId} OR u.dept_id IN ( SELECT t.dept_id FROM sys_dept t WHERE FIND_IN_SET
+                (#{deptId},ancestors) ))
+            </if>
+            <!-- 数据范围过滤 -->
+            ${params.dataScope}
         </where>
     </select>
 

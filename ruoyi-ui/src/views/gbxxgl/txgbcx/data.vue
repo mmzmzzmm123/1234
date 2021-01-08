@@ -1,498 +1,6 @@
 <template>
   <div class="app-container">
     <h1 class="title">退休干部个人信息</h1>
-    <el-form ref="form" :model="form" label-width="130px" v-if="false">
-      <el-row :gutter="15">
-        <el-col :span="12">
-          <el-form-item label="干部姓名" prop="name">
-            <el-input
-              v-model="form.name"
-              placeholder="请输入干部姓名"
-              :disabled="true"
-            />
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="干部性别" prop="xb">
-            <el-select
-              v-model="form.xb"
-              placeholder="请选择性别"
-              :disabled="true"
-            >
-              <el-option
-                v-for="dict in xbOptions"
-                :key="dict.dictValue"
-                :label="dict.dictLabel"
-                :value="dict.dictValue"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="干部民族" prop="mz">
-            <el-select
-              v-model="form.mz"
-              placeholder="请选择民族"
-              :disabled="true"
-            >
-              <el-option
-                v-for="dict in mzOptions"
-                :key="dict.dictValue"
-                :label="dict.dictLabel"
-                :value="dict.dictValue"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="第一学历" prop="dyxl">
-            <el-select
-              v-model="form.dyxl"
-              placeholder="请选择学历"
-              :disabled="true"
-            >
-              <el-option
-                v-for="dict in dyxlOptions"
-                :key="dict.dictValue"
-                :label="dict.dictLabel"
-                :value="dict.dictValue"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="干部学历" prop="xl">
-            <el-select
-              v-model="form.xl"
-              placeholder="请选择学历"
-              :disabled="true"
-            >
-              <el-option
-                v-for="dict in xlOptions"
-                :key="dict.dictValue"
-                :label="dict.dictLabel"
-                :value="dict.dictValue"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="干部学位" prop="xw">
-            <el-select
-              v-model="form.xw"
-              placeholder="请选择学位"
-              :disabled="true"
-            >
-              <el-option
-                v-for="dict in xwOptions"
-                :key="dict.dictValue"
-                :label="dict.dictLabel"
-                :value="dict.dictValue"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="干部职称" prop="zc">
-            <el-select
-              v-model="form.zc"
-              placeholder="请选择职称"
-              :disabled="true"
-            >
-              <el-option
-                v-for="dict in zcOptions"
-                :key="dict.dictValue"
-                :label="dict.dictLabel"
-                :value="dict.dictValue"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :span="24">
-          <el-form-item label="干部籍贯" prop="jg">
-            <v-distpicker
-              v-model="form.jg"
-              :placeholders="placeholders"
-              :province="diglogForm.province"
-              :city="diglogForm.city"
-              :area="diglogForm.area"
-              :disabled="true"
-              class="el-select"
-            ></v-distpicker>
-          </el-form-item>
-        </el-col>
-        <el-col :span="24">
-          <el-form-item label="干部出生地" prop="csd">
-            <v-distpicker
-              v-model="form.csd"
-              :placeholders="placeholders"
-              :province="diglogForm1.province"
-              :city="diglogForm1.city"
-              :area="diglogForm1.area"
-              :disabled="true"
-              class="el-select"
-            ></v-distpicker>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="手机号码" prop="phone">
-            <el-input
-              v-model="form.phone"
-              placeholder="请输入手机号码"
-              :disabled="true"
-            />
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="单位名称" prop="dwmc">
-            <el-select
-              v-model="form.deptId"
-              placeholder="请选择教育类型"
-              :disabled="true"
-            >
-              <el-option
-                v-for="dict in deptOptions"
-                :key="dict.deptId"
-                :label="dict.deptName"
-                :value="dict.deptId"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <!-- <el-col :span="12">
-            <el-form-item label="单位简称" prop="dwjc">
-              <el-input v-model="form.dwjc" placeholder="请输入单位简称" :disabled="true"/>
-            </el-form-item>
-          </el-col> -->
-        <el-col :span="12">
-          <el-form-item label="单位地址" prop="dwdz">
-            <el-input
-              v-model="form.dwdz"
-              placeholder="请输入单位地址"
-              :disabled="true"
-            />
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="家庭住址" prop="jtzz">
-            <el-input
-              v-model="form.jtzz"
-              placeholder="请输入家庭住址"
-              :disabled="true"
-            />
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="毕业院校" prop="byyx">
-            <el-input
-              v-model="form.byyx"
-              placeholder="请输入毕业院校"
-              :disabled="true"
-            />
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="教育类型" prop="jylx">
-            <el-select
-              v-model="form.jylx"
-              placeholder="请选择教育类型"
-              :disabled="true"
-            >
-              <el-option
-                v-for="dict in jylxOptions"
-                :key="dict.dictValue"
-                :label="dict.dictLabel"
-                :value="dict.dictValue"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="身份证号" prop="sfzh">
-            <el-input
-              v-model="form.sfzh"
-              placeholder="请输入身份证号"
-              :disabled="true"
-            />
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="出生日期" prop="csrq">
-            <el-date-picker
-              clearable
-              size="small"
-              class="my-date-picker"
-              v-model="form.csrq"
-              type="date"
-              value-format="yyyy-MM-dd"
-              placeholder="选择出生日期"
-              :disabled="true"
-            >
-            </el-date-picker>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="婚姻状况" prop="hyzk">
-            <el-select
-              v-model="form.hyzk"
-              placeholder="请选择婚姻状况"
-              :disabled="true"
-            >
-              <el-option
-                v-for="dict in hyzkOptions"
-                :key="dict.dictValue"
-                :label="dict.dictLabel"
-                :value="dict.dictValue"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="政治面貌" prop="zzmm">
-            <el-select
-              v-model="form.zzmm"
-              placeholder="请选择政治面貌"
-              :disabled="true"
-            >
-              <el-option
-                v-for="dict in zzmmOptions"
-                :key="dict.dictValue"
-                :label="dict.dictLabel"
-                :value="dict.dictValue"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="入党时间" prop="rdsj">
-            <el-date-picker
-              clearable
-              size="small"
-              class="my-date-picker"
-              v-model="form.rdsj"
-              type="month"
-              value-format="yyyy-MM"
-              placeholder="选择入党时间"
-              :disabled="true"
-            >
-            </el-date-picker>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="任教学科" prop="rjxk">
-            <el-select
-              v-model="form.rjxk"
-              placeholder="请选择任教学科"
-              :disabled="true"
-            >
-              <el-option
-                v-for="dict in rjxkOptions"
-                :key="dict.dictValue"
-                :label="dict.dictLabel"
-                :value="dict.dictValue"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="健康状况" prop="jkzk">
-            <el-select
-              v-model="form.jkzk"
-              placeholder="请选择健康状况"
-              :disabled="true"
-            >
-              <el-option
-                v-for="dict in jkzkOptions"
-                :key="dict.dictValue"
-                :label="dict.dictLabel"
-                :value="dict.dictValue"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="能否开车" prop="nfkc">
-            <el-select
-              v-model="form.nfkc"
-              placeholder="请选择能否开车"
-              :disabled="true"
-            >
-              <el-option
-                v-for="dict in nfkcOptions"
-                :key="dict.dictValue"
-                :label="dict.dictLabel"
-                :value="dict.dictValue"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="驾照持有情况" prop="jzcyqk">
-            <el-select
-              v-model="form.jzcyqk"
-              placeholder="请选择驾照持有情况"
-              :disabled="true"
-            >
-              <el-option
-                v-for="dict in jzcyqkOptions"
-                :key="dict.dictValue"
-                :label="dict.dictLabel"
-                :value="dict.dictValue"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="现任行政职务" prop="xrxzzw">
-            <el-select
-              v-model="form.xrxzzw"
-              placeholder="请选择现任行政职务"
-              :disabled="true"
-            >
-              <el-option
-                v-for="dict in xrxzzwOptions"
-                :key="dict.dictValue"
-                :label="dict.dictLabel"
-                :value="dict.dictValue"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="现任党内职务" prop="xrdnzw">
-            <el-select
-              v-model="form.xrdnzw"
-              placeholder="请选择现任党内职务"
-              :disabled="true"
-            >
-              <el-option
-                v-for="dict in xrdnzwOptions"
-                :key="dict.dictValue"
-                :label="dict.dictLabel"
-                :value="dict.dictValue"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="现任群团职务" prop="xrqtzw">
-            <el-select
-              v-model="form.xrqtzw"
-              placeholder="请选择现任群团职务"
-              :disabled="true"
-            >
-              <el-option
-                v-for="dict in xrqtzwOptions"
-                :key="dict.dictValue"
-                :label="dict.dictLabel"
-                :value="dict.dictValue"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="任现职务年月" prop="rxzwny">
-            <el-date-picker
-              clearable
-              size="small"
-              class="my-date-picker"
-              v-model="form.rxzwny"
-              type="month"
-              value-format="yyyy-MM"
-              placeholder="选择任现职务年月"
-              :disabled="true"
-            >
-            </el-date-picker>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="现任校长职级" prop="xrxzzj">
-            <el-select
-              v-model="form.xrxzzj"
-              placeholder="请选择现任校长职级"
-              :disabled="true"
-            >
-              <el-option
-                v-for="dict in xrxzzjOptions"
-                :key="dict.dictValue"
-                :label="dict.dictLabel"
-                :value="dict.dictValue"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="校长职级确定年月" prop="xzzjqdny">
-            <el-date-picker
-              clearable
-              size="small"
-              class="my-date-picker"
-              v-model="form.xzzjqdny"
-              type="month"
-              value-format="yyyy-MM"
-              placeholder="选择校长职级确定年月"
-              :disabled="true"
-            >
-            </el-date-picker>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="是否后备干部" prop="sfhbgb">
-            <el-select
-              v-model="form.sfhbgb"
-              placeholder="请选择是否后备干部"
-              :disabled="true"
-            >
-              <el-option
-                v-for="dict in sfhbgbOptions"
-                :key="dict.dictValue"
-                :label="dict.dictLabel"
-                :value="dict.dictValue"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="后备干部确定年月" prop="hbgbqdny">
-            <el-date-picker
-              clearable
-              size="small"
-              class="my-date-picker"
-              v-model="form.hbgbqdny"
-              type="month"
-              value-format="yyyy-MM"
-              placeholder="选择后备干部确定年月"
-              :disabled="true"
-            >
-            </el-date-picker>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="参加工作年月" prop="cjgzny">
-            <el-date-picker
-              clearable
-              size="small"
-              class="my-date-picker"
-              v-model="form.cjgzny"
-              type="month"
-              value-format="yyyy-MM"
-              placeholder="选择参加工作年月"
-              :disabled="true"
-            >
-            </el-date-picker>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="办公室电话" prop="bgsdh">
-            <el-input
-              v-model="form.bgsdh"
-              placeholder="请输入办公室电话"
-              :disabled="true"
-            />
-          </el-form-item>
-        </el-col>
-      </el-row>
-    </el-form>
     <div class="table-con">
       <table class="table">
         <tr>
@@ -730,7 +238,7 @@
     <!-- END -->
     <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
       <el-tab-pane label="任免情况" name="first">
-        <el-table v-loading="loading" :data="gbxrzwList">
+        <el-table v-loading="loading" border :data="gbxrzwList">
           <el-table-column
             label="干部姓名"
             align="center"
@@ -780,7 +288,7 @@
         </el-table>
       </el-tab-pane>
       <el-tab-pane label="社会职务" name="second">
-        <el-table v-loading="loading" :data="gbshzwList">
+        <el-table v-loading="loading" border :data="gbshzwList">
           <el-table-column
             label="干部姓名"
             align="center"
@@ -813,7 +321,7 @@
         </el-table>
       </el-tab-pane>
       <el-tab-pane label="工作经历" name="third">
-        <el-table v-loading="loading" :data="gbgzjlList">
+        <el-table v-loading="loading" border :data="gbgzjlList">
           <el-table-column
             label="干部姓名"
             align="center"
@@ -864,7 +372,7 @@
         </el-table>
       </el-tab-pane>
       <el-tab-pane label="教育经历" name="fourth">
-        <el-table v-loading="loading" :data="gbxxjlList">
+        <el-table v-loading="loading" border :data="gbxxjlList">
           <el-table-column
             label="姓名"
             align="center"
@@ -915,7 +423,7 @@
         </el-table>
       </el-tab-pane>
       <el-tab-pane label="培训经历" name="pxjl">
-        <el-table v-loading="loading" :data="gbpxjlList">
+        <el-table v-loading="loading" border :data="gbpxjlList">
           <el-table-column
             label="姓名"
             align="center"
@@ -960,7 +468,7 @@
         </el-table>
       </el-tab-pane>
       <el-tab-pane label="挂职经历" name="gzjl">
-        <el-table v-loading="loading" :data="guazhijlList">
+        <el-table v-loading="loading" border :data="guazhijlList">
           <el-table-column
             label="干部姓名"
             align="center"
@@ -982,7 +490,7 @@
         </el-table>
       </el-tab-pane>
       <el-tab-pane label="荣誉奖励" name="ryjl">
-        <el-table v-loading="loading" :data="gbryjlList">
+        <el-table v-loading="loading" border :data="gbryjlList">
           <el-table-column
             label="干部姓名"
             align="center"
@@ -1003,7 +511,7 @@
         </el-table>
       </el-tab-pane>
       <el-tab-pane label="科研课题" name="kykt">
-        <el-table v-loading="loading" :data="gbkyktList">
+        <el-table v-loading="loading" border :data="gbkyktList">
           <el-table-column
             label="干部姓名"
             align="center"
@@ -1052,7 +560,7 @@
           /> </el-table
       ></el-tab-pane>
       <el-tab-pane label="出国情况" name="cgqk">
-        <el-table v-loading="loading" :data="gbcrjqkList">
+        <el-table v-loading="loading" border :data="gbcrjqkList">
           <el-table-column
             label="干部姓名"
             align="center"
@@ -1080,7 +588,7 @@
         </el-table>
       </el-tab-pane>
       <el-tab-pane label="出国证件" name="cgzj">
-        <el-table v-loading="loading" :data="gbcrjzjqkList">
+        <el-table v-loading="loading" border :data="gbcrjzjqkList">
           <el-table-column
             label="干部姓名"
             align="center"
@@ -1106,7 +614,7 @@
         </el-table></el-tab-pane
       >
       <el-tab-pane label="个人风采" name="grfc">
-        <el-table v-loading="loading" :data="gbgrfcList">
+        <el-table v-loading="loading" border :data="gbgrfcList">
           <el-table-column
             label="干部ID"
             align="center"
@@ -1118,7 +626,7 @@
         </el-table>
       </el-tab-pane>
       <el-tab-pane label="家庭成员" name="jtcy">
-        <el-table v-loading="loading" :data="gbjtcyList">
+        <el-table v-loading="loading" border :data="gbjtcyList">
           <el-table-column
             label="干部ID"
             align="center"
@@ -1142,7 +650,7 @@
         </el-table>
       </el-tab-pane>
       <el-tab-pane label="办学成果" name="bxcg">
-        <el-table v-loading="loading" :data="gbbxcgList">
+        <el-table v-loading="loading" border :data="gbbxcgList">
           <el-table-column
             label="干部姓名"
             align="center"
@@ -1158,7 +666,7 @@
         </el-table>
       </el-tab-pane>
       <el-tab-pane label="年度考核" name="ndkh">
-        <el-table v-loading="loading" :data="gbndkhList">
+        <el-table v-loading="loading" border :data="gbndkhList">
           <el-table-column
             label="干部姓名"
             align="center"
@@ -1179,7 +687,7 @@
         </el-table>
       </el-tab-pane>
       <el-tab-pane label="业务考核" name="ywkh">
-        <el-table v-loading="loading" :data="gbywkhList">
+        <el-table v-loading="loading" border :data="gbywkhList">
           <el-table-column
             label="干部姓名"
             align="center"
@@ -1209,8 +717,6 @@
 <script>
 import { listGbjbqk, getGbjbqk } from "@/api/gbxxgl/gbjbqk";
 import { listDept, getDept } from "@/api/system/dept";
-//导入省市区三级联动库
-import VDistpicker from "v-distpicker";
 import { listGbxrzw } from "@/api/gbxxgl/gbxrzw";
 import { listGbshzw } from "@/api/gbxxgl/gbshzw";
 import { listGbgzjl } from "@/api/gbxxgl/gbgzjl";
@@ -1232,11 +738,6 @@ export default {
   data() {
     return {
       activeName: "first",
-      placeholders: {
-        province: "请选择省",
-        city: "请选择市",
-        area: "请选择区",
-      },
       diglogForm: {
         province: null,
         city: null,
@@ -1405,14 +906,11 @@ export default {
           : "--";
     },
   },
-  components: {
-    //省市区三级联动全局组件
-    VDistpicker,
-  },
   created() {
     const id = this.$route.params && this.$route.params.id;
     this.getData(id);
     this.getGbjbqkList();
+    this.getDeptList();
     this.queryParams_gb.gbid = id;
     this.getGbXrzwList();
     this.getGbShzwList();
@@ -1565,6 +1063,12 @@ export default {
     });
   },
   methods: {
+        // 查询部门
+    getDeptList() {
+      listDept(null).then((response) => {
+        this.deptOptions = response.data;
+      });
+    },
     // 字典翻译
     dcFormat(row, column) {
       return this.selectDictLabel(this.dcOptions, row.dc);
@@ -1800,7 +1304,7 @@ export default {
       });
     },
     handleClick(tab, event) {
-      console.log(tab, event);
+      // console.log(tab, event);
     },
     getData(id) {
       getGbjbqk(id).then((response) => {
@@ -1813,86 +1317,8 @@ export default {
         this.diglogForm1.city = response.data.csdCityname;
         this.diglogForm1.area = response.data.csdAreaname;
 
-        // this.open_look = true;
-        // this.title_look = "查看干部详情";
       });
-    },
-    //所在省市区触发联动方法
-    onSelected_jg(data) {
-      // console.log("onSelected_brith=" + data);
-      if (
-        data.province.code == undefined ||
-        data.city.code == undefined ||
-        data.area.code == undefined
-      ) {
-        this.form.jg = undefined;
-      } else {
-        this.form.jg = data.province.value;
-        this.form.jgProvince = data.province.code;
-        this.form.jgCityname = data.city.value;
-        this.form.jgCity = data.city.code;
-        this.form.jgAreaname = data.area.value;
-        this.form.jgArea = data.area.code;
-      }
-    },
-    //所在省市区触发联动方法
-    onSelected_csd(data) {
-      // console.log("onSelected_brith=" + data);
-      if (
-        data.province.code == undefined ||
-        data.city.code == undefined ||
-        data.area.code == undefined
-      ) {
-        this.form.csd = undefined;
-      } else {
-        this.form.csd = data.province.value;
-        this.form.csdProvince = data.province.code;
-        this.form.csdCityname = data.city.value;
-        this.form.csdCity = data.city.code;
-        this.form.csdAreaname = data.area.value;
-        this.form.csdArea = data.area.code;
-      }
-    },
-    // 部门字典翻译
-    deptFormat(row, column) {
-      var actions = [];
-      var datas = this.deptOptions;
-      Object.keys(datas).map((key) => {
-        if (datas[key].deptId == "" + row.deptId) {
-          actions.push(datas[key].deptName);
-          return false;
-        }
-      });
-      return actions.join("");
-    },
-    // 性别字典翻译
-    xbFormat(row, column) {
-      return this.selectDictLabel(this.xbOptions, row.xb);
-    },
-    // 现任行政职务字典翻译
-    xrxzzwFormat(row, column) {
-      return this.selectDictLabel(this.xrxzzwOptions, row.xrxzzw);
-    },
-    // 现任党内职务字典翻译
-    xrdnzwFormat(row, column) {
-      return this.selectDictLabel(this.xrdnzwOptions, row.xrdnzw);
-    },
-    // 现任群团职务字典翻译
-    xrqtzwFormat(row, column) {
-      return this.selectDictLabel(this.xrqtzwOptions, row.xrqtzw);
-    },
-    // 现任校长职级字典翻译
-    xrxzzjFormat(row, column) {
-      return this.selectDictLabel(this.xrxzzjOptions, row.xrxzzj);
-    },
-    // 是否后备干部字典翻译
-    sfhbgbFormat(row, column) {
-      return this.selectDictLabel(this.sfhbgbOptions, row.sfhbgb);
-    },
-    // 民族字典翻译
-    mzFormat(row, column) {
-      return this.selectDictLabel(this.mzOptions, row.mz);
-    },
+    },   
     // 学历字典翻译
     xlFormat(row, column) {
       return this.selectDictLabel(this.xlOptions, row.xl);
@@ -1905,22 +1331,6 @@ export default {
     jylxFormat(row, column) {
       return this.selectDictLabel(this.jylxOptions, row.jylx);
     },
-    // 职称字典翻译
-    zcFormat(row, column) {
-      return this.selectDictLabel(this.zcOptions, row.zc);
-    },
-    // 驾照持有情况字典翻译
-    jzcyqkFormat(row, column) {
-      return this.selectDictLabel(this.jzcyqkOptions, row.jzcyqk);
-    },
-    // 能否开车字典翻译
-    nfkcFormat(row, column) {
-      return this.selectDictLabel(this.nfkcOptions, row.nfkc);
-    },
-    // 婚姻状况字典翻译
-    hyzkFormat(row, column) {
-      return this.selectDictLabel(this.hyzkOptions, row.hyzk);
-    },
     // 政治面貌字典翻译
     zzmmFormat(row, column) {
       return this.selectDictLabel(this.zzmmOptions, row.zzmm);
@@ -1928,10 +1338,6 @@ export default {
     // 任教学科字典翻译
     rjxkFormat(row, column) {
       return this.selectDictLabel(this.rjxkOptions, row.rjxk);
-    },
-    // 健康状况字典翻译
-    jkzkFormat(row, column) {
-      return this.selectDictLabel(this.jkzkOptions, row.jkzk);
     },
   },
 };

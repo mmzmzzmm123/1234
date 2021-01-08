@@ -3,6 +3,7 @@ package com.ruoyi.gbxxgl.domain;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.ruoyi.common.core.domain.entity.SysDept;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
@@ -345,6 +346,8 @@ public class TsbzGbjbqk extends BaseEntity {
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "退休时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date txTime;
+
+    private SysDept dept;
 
     public void setId(Long id) {
         this.id = id;
@@ -764,6 +767,14 @@ public class TsbzGbjbqk extends BaseEntity {
         return txTime;
     }
 
+    public SysDept getDept() {
+        return dept;
+    }
+
+    public void setDept(SysDept dept) {
+        this.dept = dept;
+    }
+
 
     @Override
     public String toString() {
@@ -821,6 +832,7 @@ public class TsbzGbjbqk extends BaseEntity {
                 .append("dyxl", getDyxl())
                 .append("dqzt", getDqzt())
                 .append("txTime", getTxTime())
+                .append("dept", getDept())
                 .toString();
     }
 
