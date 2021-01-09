@@ -488,9 +488,9 @@
     />
 
     <!-- 添加或修改干部基本情况对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="980px">
+    <el-dialog class="big-dialog" :title="title" :visible.sync="open" width="980px">
       <el-form ref="form" :model="form" :rules="rules" label-width="140px">
-        <el-row :gutter="15">
+        <el-row :gutter="10">
           <el-col :span="12">
             <el-form-item label="干部姓名" prop="name">
               <el-input v-model="form.name" placeholder="请输入干部姓名" />
@@ -568,42 +568,45 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="24">
-            <el-form-item label="干部籍贯" prop="jg">
-              <v-distpicker
-                v-model="form.jg"
-                :placeholders="placeholders"
-                :province="diglogForm.province"
-                :city="diglogForm.city"
-                :area="diglogForm.area"
-                @selected="onSelected_jg"
-              ></v-distpicker>
-              <el-input v-model="form.jgProvince" v-if="false" />
-              <el-input v-model="form.jgCity" v-if="false" />
-              <el-input v-model="form.jgArea" v-if="false" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="24">
-            <el-form-item label="干部出生地" prop="csd">
-              <v-distpicker
-                v-model="form.csd"
-                :placeholders="placeholders"
-                :province="diglogForm1.province"
-                :city="diglogForm1.city"
-                :area="diglogForm1.area"
-                @selected="onSelected_csd"
-              ></v-distpicker>
-              <el-input v-model="form.csdProvince" v-if="false" />
-              <el-input v-model="form.csdCity" v-if="false" />
-              <el-input v-model="form.csdArea" v-if="false" />
-            </el-form-item>
-          </el-col>
-
           <el-col :span="12">
             <el-form-item label="手机号码" prop="phone">
               <el-input v-model="form.phone" placeholder="请输入手机号码" />
             </el-form-item>
           </el-col>
+          <el-row>
+            <el-col :span="24">
+              <el-form-item label="干部籍贯" prop="jg">
+                <v-distpicker
+                  v-model="form.jg"
+                  :placeholders="placeholders"
+                  :province="diglogForm.province"
+                  :city="diglogForm.city"
+                  :area="diglogForm.area"
+                  @selected="onSelected_jg"
+                ></v-distpicker>
+                <el-input v-model="form.jgProvince" v-if="false" />
+                <el-input v-model="form.jgCity" v-if="false" />
+                <el-input v-model="form.jgArea" v-if="false" />
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="24">
+              <el-form-item label="干部出生地" prop="csd">
+                <v-distpicker
+                  v-model="form.csd"
+                  :placeholders="placeholders"
+                  :province="diglogForm1.province"
+                  :city="diglogForm1.city"
+                  :area="diglogForm1.area"
+                  @selected="onSelected_csd"
+                ></v-distpicker>
+                <el-input v-model="form.csdProvince" v-if="false" />
+                <el-input v-model="form.csdCity" v-if="false" />
+                <el-input v-model="form.csdArea" v-if="false" />
+              </el-form-item>
+            </el-col>
+          </el-row>
           <el-col :span="12">
             <el-form-item label="单位名称" prop="deptId">
               <el-select v-model="form.deptId" placeholder="请选择教育类型">
@@ -1468,10 +1471,26 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+::v-deep.distpicker-address-wrapper select {
+  height: 36px;
+  font-size: 14px;
+}
+.big-dialog {
+  ::v-deep {
+    .el-dialog__body {
+      max-height: 70vh;
+      overflow: hidden;
+      overflow-y: auto;
+    }
+  }
+}
 .el-select {
   width: 100%;
 }
 .my-date-picker {
   width: 100%;
+}
+::v-deep.el-form .el-form-item.el-form-item--medium .el-form-item__content {
+  height: 36px;
 }
 </style>
