@@ -13,7 +13,7 @@ import service from './request'
 * error 失败回调
 *
 */
-export const uploadByPieces = ({files, chunkUrl, fileUrl, pieceSize, progress, success, error}) => {
+export const uploadByPieces = ({metadataId,files, chunkUrl, fileUrl, pieceSize, progress, success, error}) => {
   if (!files || !files.length) return
   // 上传过程中用到的变量
   let fileList = [] // 总文件列表
@@ -78,14 +78,15 @@ export const uploadByPieces = ({files, chunkUrl, fileUrl, pieceSize, progress, s
   const uploadFile = (currentFile) => {
     let makeFileForm = new FormData()
     makeFileForm.append('md5', currentFile.md5)
+    makeFileForm.append('metadataId', metadataId)
     makeFileForm.append('file_name', currentFile.name)
     service({ // 合并文件
       method: 'post',
       url: fileUrl,
       data: makeFileForm
     }).then(res => {
-      progressFun()
-      res.file_name = currentFile.name
+      //progressFun()
+      //res.file_name = currentFile.name
       success && success(res)
       successAllCount++
     }).catch(e => {
@@ -108,12 +109,12 @@ export const uploadByPieces = ({files, chunkUrl, fileUrl, pieceSize, progress, s
       async: false,
       timeout: 150000
     }).then(res => {
-      progressFun()
+      //progressFun()
       if (chunkInfo.currentChunk < chunkInfo.chunkCount - 1) {
         successAllCount++
       } else {
         // 当总数大于等于分片个数的时候
-        if (chunkInfo.currentChunk >= chunkInfo.chunkCount - 1) {
+        if (chunkInfo.currentChunk >= chunkInfo.chunkCount-1) {
           uploadFile(currentFile, fileIndex)
         }
       }

@@ -23,7 +23,7 @@ public interface IElectronicAttributesService
 
     String mergeChunk(Map<String, Object> map);
 
-    boolean merge(String filename,String md5);
+    boolean merge(String filename,String md5,Long MetadataId);
 
     /**
      * 获取文件base64编码

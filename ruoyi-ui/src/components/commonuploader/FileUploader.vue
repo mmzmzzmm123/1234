@@ -1,19 +1,17 @@
 <template>
-  <div v-loading='uploading'
-       :element-loading-text='loadingText'
-       element-loading-spinner="el-icon-loading">
-    <el-upload
-      multiple
-      class="upload-block"
-      drag action=""
-      :before-upload="beforeExcelUpload"
-      :http-request="handleUploadRequest"
-      :show-file-list='true'
-    >
-      <div class="el-upload__text">
-        {{uploadText}}
-      </div>
-    </el-upload>
+  <div >
+    <el-form>
+      <el-upload
+          class="upload-demo"
+          multiple
+          action=""
+          :before-upload="beforeExcelUpload"
+          :http-request="handleUploadRequest"
+      >
+        <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+        <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
+      </el-upload>
+    </el-form>
   </div>
 </template>
 
@@ -44,6 +42,9 @@ export default {
       this.fileList = []
       //console.log('this.fileList', this.fileList)
     },
+    submitUpload() {
+      this.$refs.upload.submit();
+    },
     // 上传请求
     handleUploadRequest (back) {
       if (this.fileList.indexOf(back.file)===-1){
@@ -65,7 +66,6 @@ export default {
           this.loadingText = '上传进度' + num + '%'
         },
         success: (data) => {
-          this.fileList=[]
           this.uploading = false
           this.$emit('uploaded', data)
         },

@@ -28,42 +28,6 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="约束性" prop="constraintion">
-        <el-input
-          v-model="queryParams.constraintion"
-          placeholder="请输入约束性"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="条件" prop="conditions">
-        <el-input
-          v-model="queryParams.conditions"
-          placeholder="请输入条件"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="相关正则" prop="regex">
-        <el-input
-          v-model="queryParams.regex"
-          placeholder="请输入相关正则"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="可重复性" prop="repeatability">
-        <el-input
-          v-model="queryParams.repeatability"
-          placeholder="请输入可重复性"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
       <el-form-item label="元素类型" prop="elementType">
         <el-select v-model="queryParams.elementType" placeholder="请选择元素类型" clearable size="small">
           <el-option label="请选择字典生成" value="" />
@@ -73,56 +37,6 @@
         <el-select v-model="queryParams.dataType" placeholder="请选择数据类型" clearable size="small">
           <el-option label="请选择字典生成" value="" />
         </el-select>
-      </el-form-item>
-      <el-form-item label="编码修饰体系" prop="encode">
-        <el-input
-          v-model="queryParams.encode"
-          placeholder="请输入编码修饰体系"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="值域" prop="valueRange">
-        <el-input
-          v-model="queryParams.valueRange"
-          placeholder="请输入值域"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="缺省值" prop="defaultValue">
-        <el-input
-          v-model="queryParams.defaultValue"
-          placeholder="请输入缺省值"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="相关元素" prop="coherentElement">
-        <el-input
-          v-model="queryParams.coherentElement"
-          placeholder="请输入相关元素"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="类型" prop="type">
-        <el-select v-model="queryParams.type" placeholder="请选择类型" clearable size="small">
-          <el-option label="请选择字典生成" value="" />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="长度" prop="len">
-        <el-input
-          v-model="queryParams.len"
-          placeholder="请输入长度"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
       </el-form-item>
       <el-form-item>
         <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -174,26 +88,26 @@
 
     <el-table v-loading="loading" :data="metadataRuleList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="长度" align="center" prop="id" />
-      <el-table-column label="编号" align="center" prop="num" />
+<!--      <el-table-column label="id" align="center" prop="id" />-->
+<!--      <el-table-column label="编号" align="center" prop="num" />-->
       <el-table-column label="中文名称" align="center" prop="nameCn" />
-      <el-table-column label="英文名称" align="center" prop="name" />
+<!--      <el-table-column label="英文名称" align="center" prop="name" />-->
       <el-table-column label="定义" align="center" prop="definition" />
       <el-table-column label="目的" align="center" prop="purpose" />
       <el-table-column label="约束性" align="center" prop="constraintion" />
-      <el-table-column label="条件" align="center" prop="conditions" />
-      <el-table-column label="相关正则" align="center" prop="regex" />
+<!--      <el-table-column label="条件" align="center" prop="conditions" />-->
+<!--      <el-table-column label="相关正则" align="center" prop="regex" />-->
       <el-table-column label="可重复性" align="center" prop="repeatability" />
-      <el-table-column label="元素类型" align="center" prop="elementType" />
+<!--      <el-table-column label="元素类型" align="center" prop="elementType" />-->
       <el-table-column label="数据类型" align="center" prop="dataType" />
-      <el-table-column label="编码修饰体系" align="center" prop="encode" />
+<!--      <el-table-column label="编码修饰体系" align="center" prop="encode" />-->
       <el-table-column label="值域" align="center" prop="valueRange" />
       <el-table-column label="缺省值" align="center" prop="defaultValue" />
-      <el-table-column label="子元素" align="center" prop="subelement" />
+<!--      <el-table-column label="子元素" align="center" prop="subelement" />-->
       <el-table-column label="信息来源" align="center" prop="sourcesOfInformation" />
-      <el-table-column label="相关元素" align="center" prop="coherentElement" />
+<!--      <el-table-column label="相关元素" align="center" prop="coherentElement" />-->
       <el-table-column label="注释" align="center" prop="comments" />
-      <el-table-column label="类型" align="center" prop="type" />
+<!--      <el-table-column label="类型" align="center" prop="type" />-->
       <el-table-column label="长度" align="center" prop="len" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
@@ -214,7 +128,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -223,9 +137,9 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改元数据定义规则对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+    <!-- 添加或修改元数据设置对话框 -->
+    <el-dialog :title="title"  :visible.sync="open" width="1500px"  append-to-body>
+      <el-form ref="form" :inline="true" :model="form" :rules="rules" label-width="100px">
         <el-form-item label="编号" prop="num">
           <el-input v-model="form.num" placeholder="请输入编号" />
         </el-form-item>
@@ -235,62 +149,80 @@
         <el-form-item label="英文名称" prop="name">
           <el-input v-model="form.name" placeholder="请输入英文名称" />
         </el-form-item>
+        <br>
         <el-form-item label="定义" prop="definition">
-          <el-input v-model="form.definition" type="textarea" placeholder="请输入内容" />
+          <el-input v-model="form.definition" autosize style="width:200%"  type="textarea" placeholder="请输入内容" maxlength="200" show-word-limit/>
         </el-form-item>
+        <br>
         <el-form-item label="目的" prop="purpose">
-          <el-input v-model="form.purpose" type="textarea" placeholder="请输入内容" />
+          <el-input v-model="form.purpose" autosize style="width:200%"   type="textarea" placeholder="请输入内容"  maxlength="200" show-word-limit/>
         </el-form-item>
+        <br>
         <el-form-item label="约束性" prop="constraintion">
-          <el-input v-model="form.constraintion" placeholder="请输入约束性" />
-        </el-form-item>
-        <el-form-item label="条件" prop="conditions">
-          <el-input v-model="form.conditions" placeholder="请输入条件" />
-        </el-form-item>
-        <el-form-item label="相关正则" prop="regex">
-          <el-input v-model="form.regex" placeholder="请输入相关正则" />
+          <el-select v-model="form.constraintion" placeholder="请输入约束性">
+            <el-option label="可选" value="可选" />
+            <el-option label="条件选" value="条件选" />
+            <el-option label="必选" value="必选" />
+          </el-select>
         </el-form-item>
         <el-form-item label="可重复性" prop="repeatability">
-          <el-input v-model="form.repeatability" placeholder="请输入可重复性" />
+          <el-select v-model="form.repeatability" placeholder="可重复性">
+            <el-option label="可重复" value="可重复" />
+            <el-option label="不可重复" value="不可重复" />
+            <el-option label="----" value="----" />
+          </el-select>
         </el-form-item>
         <el-form-item label="元素类型" prop="elementType">
           <el-select v-model="form.elementType" placeholder="请选择元素类型">
-            <el-option label="请选择字典生成" value="" />
+            <el-option label="简单型" value="简单型" />
+            <el-option label="复合型" value="复合型" />
+            <el-option label="容器型" value="容器型" />
           </el-select>
         </el-form-item>
         <el-form-item label="数据类型" prop="dataType">
           <el-select v-model="form.dataType" placeholder="请选择数据类型">
-            <el-option label="请选择字典生成" value="" />
+            <el-option label="字符型" value="字符型" />
+            <el-option label="数值型" value="数值型" />
+            <el-option label="----" value="----"/>
           </el-select>
         </el-form-item>
         <el-form-item label="编码修饰体系" prop="encode">
           <el-input v-model="form.encode" placeholder="请输入编码修饰体系" />
         </el-form-item>
         <el-form-item label="值域" prop="valueRange">
-          <el-input v-model="form.valueRange" placeholder="请输入值域" />
+          <el-input v-model="form.valueRange" placeholder="请输入值域 用,隔开" />
         </el-form-item>
         <el-form-item label="缺省值" prop="defaultValue">
           <el-input v-model="form.defaultValue" placeholder="请输入缺省值" />
         </el-form-item>
-        <el-form-item label="子元素" prop="subelement">
-          <el-input v-model="form.subelement" type="textarea" placeholder="请输入内容" />
-        </el-form-item>
+<!--        <el-form-item label="子元素" prop="subelement">-->
+<!--          <el-input v-model="form.subelement" type="textarea" placeholder="请输入内容" />-->
+<!--        </el-form-item>-->
+        <br>
         <el-form-item label="信息来源" prop="sourcesOfInformation">
-          <el-input v-model="form.sourcesOfInformation" type="textarea" placeholder="请输入内容" />
+          <el-input v-model="form.sourcesOfInformation" autosize style="width:200%" type="textarea" placeholder="请输入内容" />
         </el-form-item>
-        <el-form-item label="相关元素" prop="coherentElement">
-          <el-input v-model="form.coherentElement" placeholder="请输入相关元素" />
-        </el-form-item>
+        <br>
+<!--        <el-form-item label="相关元素" prop="coherentElement">-->
+<!--          <el-input v-model="form.coherentElement" placeholder="请输入相关元素" />-->
+<!--        </el-form-item>-->
         <el-form-item label="注释" prop="comments">
-          <el-input v-model="form.comments" type="textarea" placeholder="请输入内容" />
+          <el-input v-model="form.comments" autosize type="textarea" style="width:200%" placeholder="请输入内容" />
         </el-form-item>
-        <el-form-item label="类型" prop="type">
-          <el-select v-model="form.type" placeholder="请选择类型">
-            <el-option label="请选择字典生成" value="" />
-          </el-select>
-        </el-form-item>
+        <br>
+<!--        <el-form-item label="类型" prop="type">-->
+<!--          <el-select v-model="form.type" placeholder="请选择类型">-->
+<!--            <el-option label="请选择字典生成" value="" />-->
+<!--          </el-select>-->
+<!--        </el-form-item>-->
         <el-form-item label="长度" prop="len">
-          <el-input v-model="form.len" placeholder="请输入长度" />
+          <el-input v-model="form.len" maxlength="5" placeholder="请输入长度" />
+        </el-form-item>
+        <el-form-item label="条件" prop="conditions">
+          <el-input v-model="form.conditions" placeholder="请输入条件" />
+        </el-form-item>
+        <el-form-item label="相关正则" prop="regex">
+          <el-input v-model="form.regex" placeholder="请输入相关正则" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -319,10 +251,10 @@ export default {
       // 非多个禁用
       multiple: true,
       // 显示搜索条件
-      showSearch: true,
+      showSearch: false,
       // 总条数
       total: 0,
-      // 元数据定义规则表格数据
+      // 元数据设置表格数据
       metadataRuleList: [],
       // 弹出层标题
       title: "",
@@ -337,29 +269,31 @@ export default {
         name: null,
         definition: null,
         purpose: null,
-        constraintion: null,
-        conditions: null,
-        regex: null,
-        repeatability: null,
         elementType: null,
         dataType: null,
-        encode: null,
-        valueRange: null,
-        defaultValue: null,
-        subelement: null,
-        sourcesOfInformation: null,
-        coherentElement: null,
-        comments: null,
-        type: null,
-        len: null
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
-        num: [
-          { required: true, message: "编号不能为空", trigger: "blur" }
+        nameCn: [
+          { required: true, message: "中文名称不能为空", trigger: "blur" }
         ],
+        name: [
+          { required: true, message: "英文名称不能为空", trigger: "blur" }
+        ],
+        definition: [
+          { required: true, message: "定义不能为空", trigger: "blur" }
+        ],
+        purpose: [
+          { required: true, message: "目的不能为空", trigger: "blur" }
+        ],
+        constraintion: [
+          { required: true, message: "约束性不能为空", trigger: "blur" }
+        ],
+        len:[
+          {type: 'number', message: '年龄必须为数字值'}
+        ]
       }
     };
   },
@@ -367,7 +301,7 @@ export default {
     this.getList();
   },
   methods: {
-    /** 查询元数据定义规则列表 */
+    /** 查询元数据设置列表 */
     getList() {
       this.loading = true;
       listMetadataRule(this.queryParams).then(response => {
@@ -428,7 +362,7 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加元数据定义规则";
+      this.title = "添加元数据设置";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -437,7 +371,7 @@ export default {
       getMetadataRule(id).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改元数据定义规则";
+        this.title = "修改元数据设置";
       });
     },
     /** 提交按钮 */
@@ -463,7 +397,7 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$confirm('是否确认删除元数据定义规则编号为"' + ids + '"的数据项?', "警告", {
+      this.$confirm('是否确认删除元数据设置编号为"' + ids + '"的数据项?', "警告", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
@@ -477,7 +411,7 @@ export default {
     /** 导出按钮操作 */
     handleExport() {
       const queryParams = this.queryParams;
-      this.$confirm('是否确认导出所有元数据定义规则数据项?', "警告", {
+      this.$confirm('是否确认导出所有元数据设置数据项?', "警告", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"

@@ -6,9 +6,15 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.crypto.SecureUtil;
+import com.gox.common.utils.file.MergeRunnable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,13 +84,13 @@ public class ElectronicAttributesServiceImpl implements IElectronicAttributesSer
         return "";
     }
     @Override
-    public boolean merge(String filename, String md5){
+    public boolean merge(String filename, String md5,Long metadataId){
         StringBuilder path1 = new StringBuilder(rootpath);
         String filena = FileUtil.getPrefix(filename);
         path1.append(File.separator).append("temp").append(File.separator).append(filena).append(File.separator);
         String folder = path1.toString();
         String targetFile = rootpath + File.separator + "temp" + File.separator + filename;
-        try (OutputStream out = new FileOutputStream(targetFile)){
+        try {
             File f = new File(folder);
             String [] adds = f.list();
             Comparator<String> comparator = (o1, o2) -> {
@@ -92,21 +98,45 @@ public class ElectronicAttributesServiceImpl implements IElectronicAttributesSer
                 String [] os2 = o2.split("-");
                 return Integer.parseInt(os1[1])-Integer.parseInt(os2[1]);
             };
-            Arrays.sort(adds,comparator);
-            byte[] bytes;
-            for (String add : adds) {
-                bytes = FileUtil.readBytes(folder+add);
-                out.write(bytes);
+            int partFileSize = 5 * 1024 * 1024;
+            if (adds != null) {
+                RandomAccessFile randomAccessFile = new RandomAccessFile(targetFile,
+                        "rw");
+                randomAccessFile.setLength(partFileSize * (adds.length - 1)
+                        + adds[(adds.length - 1)].length());
+                randomAccessFile.close();
+                Arrays.sort(adds,comparator);
+                ThreadPoolExecutor threadPool = new ThreadPoolExecutor(
+                        adds.length, adds.length * 3, 1, TimeUnit.SECONDS,
+                        new ArrayBlockingQueue<>(adds.length * 2));
+                System.out.println(adds.length);
+                for (int i = 0; i < adds.length; i++) {
+                    System.out.println(i);
+                    File partFile = new File(folder+adds[i]);
+                    threadPool.execute(new MergeRunnable(i * partFileSize,
+                            targetFile, partFile));
+                }
+                threadPool.shutdown();
+                while (true){
+                    if (threadPool.isTerminated()){
+                        break;
+                    }
+                }
+                File reFile =new File(targetFile);
+                String md = SecureUtil.md5(reFile);
+                if (md.equals(md5)){
+                    ElectronicAttributes ea = new ElectronicAttributes(reFile,metadataId);
+                    electronicAttributesMapper.insertElectronicAttributes(ea);
+                }
             }
-            String md = SecureUtil.md5(new File(targetFile));
-            return md.equals(md5);
         } catch (Exception e) {
             LOGGER.error("系统错误",e);
             return false;
         }
-        finally {
-            FileUtil.del(folder);
-        }
+//        finally {
+//            FileUtil.del(folder);
+//        }
+        return true;
     }
     /**
      * 获取文件base64编码

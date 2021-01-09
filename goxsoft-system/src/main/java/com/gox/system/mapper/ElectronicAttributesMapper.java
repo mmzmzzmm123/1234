@@ -2,6 +2,7 @@ package com.gox.system.mapper;
 
 import java.util.List;
 import com.gox.system.domain.ElectronicAttributes;
+import org.springframework.stereotype.Repository;
 
 /**
  * 电子文件信息Mapper接口
@@ -9,6 +10,7 @@ import com.gox.system.domain.ElectronicAttributes;
  * @author gox
  * @date 2020-12-29
  */
+@Repository
 public interface ElectronicAttributesMapper 
 {
     /**

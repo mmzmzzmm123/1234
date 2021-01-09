@@ -2,8 +2,12 @@ package com.gox.system.domain;
 
 import com.gox.common.annotation.Excel;
 import com.gox.common.core.domain.BaseEntity;
+import com.gox.common.utils.uuid.SnowflakesTools;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+
+import java.io.File;
+import java.io.IOException;
 
 /**
  * 电子文件信息对象 electronic_attributes
@@ -54,8 +58,8 @@ public class ElectronicAttributes extends BaseEntity
     @Excel(name = "图像压缩方案")
     private String imageCompressionScheme;
 
-    /** 图像压缩方案 */
-    @Excel(name = "图像压缩方案")
+    /** 当前位置 */
+    @Excel(name = "当前位置")
     private String currentLocation;
 
     /** 脱机载体编号 */
@@ -71,10 +75,30 @@ public class ElectronicAttributes extends BaseEntity
     private String microformIdentifier;
 
     /** $column.columnComment */
-    @Excel(name = "缩微号")
+//    @Excel(name = "缩微号")
     private Long metadataId;
+    public ElectronicAttributes(File file,Long metadataId) throws IOException {
+        this.id= SnowflakesTools.WORKER.nextId();
+        this.formatInformation="sajskd";
+        this.computerFileName = file.getName();
+        this.computerFileSize = String.valueOf(file.length());
+        this.documentCreatingApplication ="";
+        this.informationSystemDescription ="11";
+        this.currentLocation = file.getCanonicalPath();
+        this.metadataId = metadataId;
+    }
 
-    public void setId(Long id) 
+    public ElectronicAttributes(Long id, String formatInformation, String computerFileName, String computerFileSize, String documentCreatingApplication, String informationSystemDescription, Long metadataId) {
+        this.id = id;
+        this.formatInformation = formatInformation;
+        this.computerFileName = computerFileName;
+        this.computerFileSize = computerFileSize;
+        this.documentCreatingApplication = documentCreatingApplication;
+        this.informationSystemDescription = informationSystemDescription;
+        this.metadataId = metadataId;
+    }
+
+    public void setId(Long id)
     {
         this.id = id;
     }

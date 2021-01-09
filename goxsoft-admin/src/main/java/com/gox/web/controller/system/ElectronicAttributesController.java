@@ -71,7 +71,8 @@ public class ElectronicAttributesController extends BaseController
     public AjaxResult upload(HttpServletRequest req){
         String filename = req.getParameter("file_name");
         String md5 = req.getParameter("md5");
-        if (electronicAttributesService.merge(filename,md5)){
+        Long metadataId = Long.valueOf(req.getParameter("metadataId"));
+        if (electronicAttributesService.merge(filename,md5,metadataId)){
             return AjaxResult.success();
         }
         return AjaxResult.error("系统错误,上传失败");
