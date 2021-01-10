@@ -952,7 +952,7 @@ export default {
       single: true,
       // 非多个禁用
       multiple: true,
-      // 显示搜索条件
+      // 显示搜索条件1
       showSearch: false,
       // 总条数
       total: 0,
