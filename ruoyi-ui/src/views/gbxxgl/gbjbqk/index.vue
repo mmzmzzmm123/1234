@@ -573,40 +573,36 @@
               <el-input v-model="form.phone" placeholder="请输入手机号码" />
             </el-form-item>
           </el-col>
-          <el-row>
-            <el-col :span="24">
-              <el-form-item label="干部籍贯" prop="jg">
-                <v-distpicker
-                  v-model="form.jg"
-                  :placeholders="placeholders"
-                  :province="diglogForm.province"
-                  :city="diglogForm.city"
-                  :area="diglogForm.area"
-                  @selected="onSelected_jg"
-                ></v-distpicker>
-                <el-input v-model="form.jgProvince" v-if="false" />
-                <el-input v-model="form.jgCity" v-if="false" />
-                <el-input v-model="form.jgArea" v-if="false" />
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="24">
-              <el-form-item label="干部出生地" prop="csd">
-                <v-distpicker
-                  v-model="form.csd"
-                  :placeholders="placeholders"
-                  :province="diglogForm1.province"
-                  :city="diglogForm1.city"
-                  :area="diglogForm1.area"
-                  @selected="onSelected_csd"
-                ></v-distpicker>
-                <el-input v-model="form.csdProvince" v-if="false" />
-                <el-input v-model="form.csdCity" v-if="false" />
-                <el-input v-model="form.csdArea" v-if="false" />
-              </el-form-item>
-            </el-col>
-          </el-row>
+          <el-col>
+            <el-form-item label="干部籍贯" prop="jg">
+              <v-distpicker
+                v-model="form.jg"
+                :placeholders="placeholders"
+                :province="diglogForm.province"
+                :city="diglogForm.city"
+                :area="diglogForm.area"
+                @selected="onSelected_jg"
+              ></v-distpicker>
+              <el-input v-model="form.jgProvince" v-if="false" />
+              <el-input v-model="form.jgCity" v-if="false" />
+              <el-input v-model="form.jgArea" v-if="false" />
+            </el-form-item>
+          </el-col>
+          <el-col>
+            <el-form-item label="干部出生地" prop="csd">
+              <v-distpicker
+                v-model="form.csd"
+                :placeholders="placeholders"
+                :province="diglogForm1.province"
+                :city="diglogForm1.city"
+                :area="diglogForm1.area"
+                @selected="onSelected_csd"
+              ></v-distpicker>
+              <el-input v-model="form.csdProvince" v-if="false" />
+              <el-input v-model="form.csdCity" v-if="false" />
+              <el-input v-model="form.csdArea" v-if="false" />
+            </el-form-item>
+          </el-col>
           <el-col :span="12">
             <el-form-item label="单位名称" prop="deptId">
               <el-select v-model="form.deptId" placeholder="请选择教育类型">
