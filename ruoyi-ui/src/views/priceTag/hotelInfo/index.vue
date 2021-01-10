@@ -1,7 +1,7 @@
 <!--
  * @Author: pengyu
  * @Date: 2020-12-07 22:33:08
- * @LastEditTime: 2021-01-04 20:42:29
+ * @LastEditTime: 2021-01-06 20:38:49
  * @LastEditors: Please set LastEditors
  * @Description: 酒店信息
  * @FilePath: \RuoYi-Vue\ruoyi-ui\src\views\priceTag\hotelInfo.vue
@@ -135,15 +135,15 @@ export default {
       logoFileList: [],
       codeFileList: [],
       tagList: [
-        {icon: "icon-wifi", name: "WIFI", id: "1", selected: true},
-        {icon: "icon-jiesongjifuwu2", name: "接送服务", id: "2", selected: false},
-        {icon: "icon-xinyongqia", name: "信用卡", id: "3", selected: false},
-        {icon: "icon-jianshenfang2", name: "健身房", id: "4", selected: false},
-        {icon: "icon-yule", name: "娱乐设施", id: "5", selected: false},
-        {icon: "icon-hanglijicun", name: "行李寄存", id: "6", selected: false},
-        {icon: "icon-canyin1", name: "餐饮", id: "7", selected: false},
+        {icon: "icon-WIFI", name: "WIFI", id: "1", selected: true},
+        {icon: "icon-jiesongji", name: "接送服务", id: "2", selected: false},
+        {icon: "icon-xinyongqia1", name: "信用卡", id: "3", selected: false},
+        {icon: "icon-jianshen-", name: "健身房", id: "4", selected: false},
+        {icon: "icon-huaban", name: "娱乐设施", id: "5", selected: false},
+        {icon: "icon-hanglixiang", name: "行李寄存", id: "6", selected: false},
+        {icon: "icon-canyin", name: "餐饮", id: "7", selected: false},
         {icon: "icon-Spacentre", name: "SPA", id: "8", selected: false},
-        {icon: "icon-huiyishi1", name: "会议室", id: "9", selected: false},
+        {icon: "icon-huiyishi", name: "会议室", id: "9", selected: false},
         {icon: "icon-tingchechang", name: "停车场", id: "10", selected: false},
         {icon: "icon-24xiaoshiqiantai", name: "24小时前台", id: "11", selected: false},
         {icon: "icon-daoyou", name: "导游", id: "12", selected: false},
@@ -152,19 +152,19 @@ export default {
         {icon: "icon-nuanqi", name: "暖气", id: "15", selected: false},
         {icon: "icon-xishuyongpin", name: "洗漱用品", id: "16", selected: false},
         {icon: "icon-dianshi", name: "电视", id: "17", selected: false},
-        {icon: "icon-chongwu", name: "宠物", id: "18", selected: false},
+        {icon: "icon-chongwu1", name: "宠物", id: "18", selected: false},
         {icon: "icon-touyingyi", name: "投影仪", id: "19", selected: false},
         {icon: "icon-ic_zhen", name: "针线", id: "20", selected: false},
         {icon: "icon-kuaidi", name: "快递", id: "21", selected: false},
         {icon: "icon-fuzhuang-dianyundou", name: "电熨斗", id: "22", selected: false},
-        {icon: "icon-dianyingyuan", name: "电影院", id: "23", selected: false},
+        {icon: "icon-dianyingyuan1", name: "电影院", id: "23", selected: false},
         {icon: "icon-bingxiang-xian", name: "冰箱", id: "24", selected: false},
         {icon: "icon-ganxi", name: "干洗", id: "25", selected: false},
-        {icon: "icon-jiuba", name: "酒吧", id: "26", selected: false},
+        {icon: "icon-jiuba1", name: "酒吧", id: "26", selected: false},
         {icon: "icon-chongdianzhuang", name: "充电桩", id: "27", selected: false},
         {icon: "icon-chuifengji", name: "吹风机", id: "28", selected: false},
-        {icon: "icon-peitaosheshixiaotubiao_yugang", name: "浴缸", id: "29", selected: false},
-        {icon: "icon-peitaosheshixiaotubiao_reshuihu", name: "热水壶", id: "30", selected: false},
+        {icon: "icon-yugang", name: "浴缸", id: "29", selected: false},
+        {icon: "icon-reshuihu1", name: "热水壶", id: "30", selected: false},
         {icon: "icon-airCondition", name: "空调", id: "31", selected: false},
         {icon: "icon-icon_xinyong_xianxing_jijin-140", name: "旅游", id: "32", selected: false},
         {icon: "icon-jiaoxingfuwu", name: "叫醒服务", id: "33", selected: false},
@@ -363,6 +363,9 @@ export default {
     margin: 0 auto;
     .el-form-item{
       margin-bottom: 10px;
+    }
+    .el-cascader{
+      width: 100%;
     }
   }
   .tips{
