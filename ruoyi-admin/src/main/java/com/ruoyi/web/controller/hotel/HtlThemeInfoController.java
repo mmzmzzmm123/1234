@@ -1,7 +1,6 @@
 package com.ruoyi.web.controller.hotel;
 
 import java.io.IOException;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -157,6 +156,10 @@ public class HtlThemeInfoController extends BaseController
 		SysUser sysUser = SecurityUtils.getLoginUser().getUser();
 		long hotelId = htlHotelInfoService.getHotelIdByUserId(sysUser.getUserId());
 		HtlThemeConfig htlThemeConfig = htlThemeConfigService.selectHtlThemeConfigById(hotelId);
-		return AjaxResult.success(htlThemeConfig);
+		if (null != htlThemeConfig) {
+			return AjaxResult.success(htlThemeInfoService.selectHtlThemeInfoById(htlThemeConfig.getThemeId()));
+		} else {
+			return AjaxResult.success(null);
+		}
     }
 }

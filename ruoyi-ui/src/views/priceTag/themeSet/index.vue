@@ -1,7 +1,7 @@
 <!--
  * @Author: pengyu
  * @Date: 2020-12-12 22:29:27
- * @LastEditTime: 2021-01-06 21:12:12
+ * @LastEditTime: 2021-01-10 23:08:36
  * @LastEditors: Please set LastEditors
  * @Description: 主题设置
  * @FilePath: \RuoYi-Vue\ruoyi-ui\src\views\priceTag\themeSet\index.vue
@@ -48,10 +48,7 @@
             @click="curId=itm.themeId"
             :class="['theme-item-v', curId===itm.themeId?'cur':'']"
           >
-            <el-image
-              :src="getFileUrl(itm.themePicturePath)"
-              fit="contain"
-            ></el-image>
+            <el-image :src="getFileUrl(itm.themePicturePath)" fit="contain" :preview-src-list="[getFileUrl(itm.themePicturePath)]"></el-image>
             <div class="name">{{itm.themeName}}</div>
             <el-dropdown v-if="isSuperAdmin" :hide-on-click="true" @command="(cmd)=>handleCommand(cmd,idx,'v')">
               <el-icon class="icon el-icon-s-tools"></el-icon>
@@ -250,7 +247,6 @@ name: 'ThemeSet',
   padding: 20px;
   #pane-horizontal,#pane-vertical{
     display: flex;
-    flex-wrap: wrap;
   }
   .theme-item-h{
     width: 280px;
