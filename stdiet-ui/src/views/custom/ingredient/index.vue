@@ -1,6 +1,12 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
+    <el-form
+      :model="queryParams"
+      ref="queryForm"
+      :inline="true"
+      v-show="showSearch"
+      label-width="68px"
+    >
       <el-form-item label="食材名称" prop="name">
         <el-input
           v-model="queryParams.name"
@@ -11,7 +17,12 @@
         />
       </el-form-item>
       <el-form-item label="食材类别" prop="type">
-        <el-select v-model="queryParams.type" placeholder="请选择食材类别" clearable size="small">
+        <el-select
+          v-model="queryParams.type"
+          placeholder="请选择食材类别"
+          clearable
+          size="small"
+        >
           <el-option
             v-for="dict in typeOptions"
             :key="dict.dictValue"
@@ -21,7 +32,12 @@
         </el-select>
       </el-form-item>
       <el-form-item label="地域" prop="area">
-        <el-select v-model="queryParams.area" placeholder="请选择地域" clearable size="small">
+        <el-select
+          v-model="queryParams.area"
+          placeholder="请选择地域"
+          clearable
+          size="small"
+        >
           <el-option
             v-for="dict in areaOptions"
             :key="dict.dictValue"
@@ -31,37 +47,60 @@
         </el-select>
       </el-form-item>
       <el-form-item label="忌口人群" prop="notRecIds">
-        <el-select v-model="queryParams.notRecIds" multiple placeholder="请选择体征">
+        <el-select
+          v-model="queryParams.notRecIds"
+          multiple
+          placeholder="请选择体征"
+        >
           <el-option
             v-for="dict in physicalSignsOptions"
             :key="dict.dictValue"
             :label="dict.dictLabel"
-            :value="dict.dictValue">
+            :value="dict.dictValue"
+          >
           </el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="推荐人群" prop="recIds">
-        <el-select v-model="queryParams.recIds" multiple placeholder="请选择体征">
+        <el-select
+          v-model="queryParams.recIds"
+          multiple
+          placeholder="请选择体征"
+        >
           <el-option
             v-for="dict in physicalSignsOptions"
             :key="dict.dictValue"
             :label="dict.dictLabel"
-            :value="dict.dictValue">
+            :value="dict.dictValue"
+          >
           </el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="审核状态" prop="reviewStatus">
-        <el-select v-model="queryParams.reviewStatus" placeholder="请选择审核状态"
-                   clearable>
-          <el-option v-for="dict in reviewStatusOptions"
-                     :key="dict.dictValue"
-                     :label="dict.dictLabel"
-                     :value="dict.dictValue"/>
+        <el-select
+          v-model="queryParams.reviewStatus"
+          placeholder="请选择审核状态"
+          clearable
+        >
+          <el-option
+            v-for="dict in reviewStatusOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+        <el-button
+          type="cyan"
+          icon="el-icon-search"
+          size="mini"
+          @click="handleQuery"
+          >搜索</el-button
+        >
+        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+          >重置</el-button
+        >
       </el-form-item>
     </el-form>
 
@@ -73,31 +112,9 @@
           size="mini"
           @click="handleAdd"
           v-hasPermi="['custom:ingredient:add']"
-        >新增
+          >新增
         </el-button>
       </el-col>
-      <!--      <el-col :span="1.5">-->
-      <!--        <el-button-->
-      <!--          type="success"-->
-      <!--          icon="el-icon-edit"-->
-      <!--          size="mini"-->
-      <!--          :disabled="single"-->
-      <!--          @click="handleUpdate"-->
-      <!--          v-hasPermi="['custom:ingredient:edit']"-->
-      <!--        >修改-->
-      <!--        </el-button>-->
-      <!--      </el-col>-->
-      <!--      <el-col :span="1.5">-->
-      <!--        <el-button-->
-      <!--          type="danger"-->
-      <!--          icon="el-icon-delete"-->
-      <!--          size="mini"-->
-      <!--          :disabled="multiple"-->
-      <!--          @click="handleDelete"-->
-      <!--          v-hasPermi="['custom:ingredient:remove']"-->
-      <!--        >删除-->
-      <!--        </el-button>-->
-      <!--      </el-col>-->
       <el-col :span="1.5">
         <el-button
           type="warning"
@@ -105,34 +122,95 @@
           size="mini"
           @click="handleExport"
           v-hasPermi="['custom:ingredient:export']"
-        >导出
+          >导出
         </el-button>
       </el-col>
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+      <right-toolbar
+        :showSearch.sync="showSearch"
+        @queryTable="getList"
+      ></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="ingredientList" @selection-change="handleSelectionChange">
-      <!--      <el-table-column type="selection" width="55" align="center" />-->
-      <!--      <el-table-column label="id" align="center" prop="id" />-->
-      <el-table-column label="审核状态" align="center">
+    <el-table
+      v-loading="loading"
+      :data="ingredientList"
+      @selection-change="handleSelectionChange"
+    >
+      <el-table-column label="审核状态" align="center" fixed="left" width="80">
         <template slot-scope="scope">
           <el-tag
             :type="scope.row.reviewStatus === 'yes' ? 'success' : 'danger'"
-            disable-transitions>
-            {{scope.row.reviewStatus === 'yes' ? '已审核':'未审核'}}
+            disable-transitions
+          >
+            {{ scope.row.reviewStatus === "yes" ? "已审核" : "未审核" }}
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="食材名称" align="center" prop="name"/>
-      <el-table-column label="食材类别" align="center" prop="type" :formatter="typeFormat"/>
-      <el-table-column label="蛋白质比例(100g)" width="124" align="center" prop="proteinRatio"/>
-      <el-table-column label="脂肪比例(100g)" width="120" align="center" prop="fatRatio"/>
-      <el-table-column label="碳水比例(100g)" width="120" align="center" prop="carbonRatio"/>
-      <el-table-column label="地域" align="center" prop="area" :formatter="areaFormat"/>
-      <el-table-column label="忌口人群" align="center" prop="notRec"/>
-      <el-table-column label="推荐人群" align="center" prop="rec"/>
-      <el-table-column label="备注" align="center" prop="remark"/>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column
+        label="食材名称"
+        align="center"
+        prop="name"
+        fixed="left"
+        width="120"
+      />
+      <el-table-column
+        label="食材类别"
+        align="center"
+        prop="type"
+        width="120"
+        :formatter="typeFormat"
+      />
+      <el-table-column
+        label="蛋白质比例(100g)"
+        width="128"
+        align="center"
+        prop="proteinRatio"
+      />
+      <el-table-column
+        label="脂肪比例(100g)"
+        width="120"
+        align="center"
+        prop="fatRatio"
+      />
+      <el-table-column
+        label="碳水比例(100g)"
+        width="120"
+        align="center"
+        prop="carbonRatio"
+      />
+      <el-table-column
+        label="地域"
+        align="center"
+        prop="area"
+        :formatter="areaFormat"
+      />
+      <el-table-column
+        label="忌口人群"
+        align="center"
+        prop="notRec"
+        width="120"
+      >
+        <template slot-scope="scope">
+          <div v-if="scope.row.notRec">
+            <autohideinfo :data="scope.row.notRec.split(',')" />
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column label="推荐人群" align="center" prop="rec" width="120">
+        <template slot-scope="scope">
+          <div v-if="scope.row.rec">
+            <autohideinfo :data="scope.row.rec.split(',')" />
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column label="备注" align="center" prop="remark" />
+      <el-table-column
+        fixed="right"
+        label="操作"
+        width="180"
+        align="center"
+        class-name="small-padding fixed-width"
+      >
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -140,7 +218,7 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['custom:ingredient:edit']"
-          >修改
+            >修改
           </el-button>
           <el-button
             size="mini"
@@ -148,14 +226,14 @@
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['custom:ingredient:remove']"
-          >删除
+            >删除
           </el-button>
         </template>
       </el-table-column>
     </el-table>
 
     <pagination
-      v-show="total>0"
+      v-show="total > 0"
       :total="total"
       :page.sync="queryParams.pageNum"
       :limit.sync="queryParams.pageSize"
@@ -168,24 +246,44 @@
         <el-form ref="form" :model="form" :rules="rules" label-width="80px">
           <el-col :span="12">
             <el-form-item label="食材名称" prop="name" label-width="90px">
-              <el-input v-model="form.name" placeholder="请输入食材名称"/>
+              <el-input v-model="form.name" placeholder="请输入食材名称" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="蛋白质比例" prop="proteinRatio" label-width="90px">
-              <el-input v-model="form.proteinRatio" placeholder="请输入蛋白质比例" style="width: 150px"/>
+            <el-form-item
+              label="蛋白质比例"
+              prop="proteinRatio"
+              label-width="90px"
+            >
+              <el-input
+                v-model="form.proteinRatio"
+                placeholder="请输入蛋白质比例"
+                style="width: 150px"
+              />
               /100g
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="脂肪比例" prop="fatRatio" label-width="90px">
-              <el-input v-model="form.fatRatio" placeholder="请输入脂肪比例" style="width: 150px"/>
+              <el-input
+                v-model="form.fatRatio"
+                placeholder="请输入脂肪比例"
+                style="width: 150px"
+              />
               /100g
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="碳水比例" prop="carbonRatio" label-width="90px">
-              <el-input v-model="form.carbonRatio" placeholder="请输入碳水比例" style="width: 150px"/>
+            <el-form-item
+              label="碳水比例"
+              prop="carbonRatio"
+              label-width="90px"
+            >
+              <el-input
+                v-model="form.carbonRatio"
+                placeholder="请输入碳水比例"
+                style="width: 150px"
+              />
               /100g
             </el-form-item>
           </el-col>
@@ -215,42 +313,61 @@
           </el-col>
           <el-col :span="24">
             <el-form-item label="忌口人群" label-width="90px">
-              <el-select v-model="form.notRecIds" multiple placeholder="请选择体征">
+              <el-select
+                v-model="form.notRecIds"
+                multiple
+                placeholder="请选择体征"
+              >
                 <el-option
                   v-for="dict in physicalSignsOptions"
                   :key="dict.dictValue"
                   :label="dict.dictLabel"
-                  :value="dict.dictValue">
+                  :value="dict.dictValue"
+                >
                 </el-option>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="推荐人群" label-width="90px">
-              <el-select v-model="form.recIds" multiple placeholder="请选择体征">
+              <el-select
+                v-model="form.recIds"
+                multiple
+                placeholder="请选择体征"
+              >
                 <el-option
                   v-for="dict in physicalSignsOptions"
                   :key="dict.dictValue"
                   :label="dict.dictLabel"
-                  :value="dict.dictValue">
+                  :value="dict.dictValue"
+                >
                 </el-option>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="审核状态" prop="reviewStatus">
-              <el-select v-model="form.reviewStatus" placeholder="请选择审核状态"
-                         clearable>
-                <el-option v-for="dict in reviewStatusOptions"
-                           :key="dict.dictValue"
-                           :label="dict.dictLabel"
-                           :value="dict.dictValue"/>
+              <el-select
+                v-model="form.reviewStatus"
+                placeholder="请选择审核状态"
+                clearable
+              >
+                <el-option
+                  v-for="dict in reviewStatusOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                />
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="24">
             <el-form-item label="备注" prop="remark" label-width="90px">
-              <el-input v-model="form.remark" type="textarea" placeholder="请输入内容"/>
+              <el-input
+                v-model="form.remark"
+                type="textarea"
+                placeholder="请输入内容"
+              />
             </el-form-item>
           </el-col>
         </el-form>
@@ -264,212 +381,239 @@
 </template>
 
 <script>
-  import {
-    addIngredient,
-    delIngredient,
-    exportIngredient,
-    getIngredient,
-    listIngredient,
-    updateIngredient
-  } from "@/api/custom/ingredient";
+import {
+  addIngredient,
+  delIngredient,
+  exportIngredient,
+  getIngredient,
+  listIngredient,
+  updateIngredient,
+} from "@/api/custom/ingredient";
 
-  import {listPhysicalSigns} from "@/api/custom/physicalSigns";
+import AutoHideInfo from "@/components/AutoHideInfo";
 
-  export default {
-    name: "Ingredient",
-    data() {
-      return {
-        // 遮罩层
-        loading: true,
-        // 选中数组
-        ids: [],
-        // 非单个禁用
-        single: true,
-        // 非多个禁用
-        multiple: true,
-        // 显示搜索条件
-        showSearch: true,
-        // 总条数
-        total: 0,
-        // 食材表格数据
-        ingredientList: [],
-        // 审核状态
-        reviewStatusOptions: [],
-        // 弹出层标题
-        title: "",
-        // 是否显示弹出层
-        open: false,
-        // 食材类别字典
-        typeOptions: [],
-        // 地域字典
-        areaOptions: [],
-        //
-        physicalSignsOptions: [],
-        // 查询参数
-        queryParams: {
-          pageNum: 1,
-          pageSize: 10,
-          name: null,
-          type: null,
-          area: null,
-          notRecIds: null,
-          recIds: null,
-          reviewStatus: null
-        },
-        // 表单参数
-        form: {},
-        // 表单校验
-        rules: {}
+import { listPhysicalSigns } from "@/api/custom/physicalSigns";
+
+export default {
+  name: "Ingredient",
+  components: {
+    autohideinfo: AutoHideInfo,
+  },
+  data() {
+    return {
+      // 遮罩层
+      loading: true,
+      // 选中数组
+      ids: [],
+      // 非单个禁用
+      single: true,
+      // 非多个禁用
+      multiple: true,
+      // 显示搜索条件
+      showSearch: true,
+      // 总条数
+      total: 0,
+      // 食材表格数据
+      ingredientList: [],
+      // 审核状态
+      reviewStatusOptions: [],
+      // 弹出层标题
+      title: "",
+      // 是否显示弹出层
+      open: false,
+      // 食材类别字典
+      typeOptions: [],
+      // 地域字典
+      areaOptions: [],
+      //
+      physicalSignsOptions: [],
+      // 查询参数
+      queryParams: {
+        pageNum: 1,
+        pageSize: 10,
+        name: null,
+        type: null,
+        area: null,
+        notRecIds: null,
+        recIds: null,
+        reviewStatus: null,
+      },
+      // 表单参数
+      form: {},
+      // 表单校验
+      rules: {},
+    };
+  },
+  created() {
+    this.getList();
+    this.getDicts("cus_ing_type").then((response) => {
+      this.typeOptions = response.data;
+    });
+    this.getDicts("cus_area").then((response) => {
+      this.areaOptions = response.data;
+    });
+    this.getDicts("cus_review_status").then((response) => {
+      this.reviewStatusOptions = response.data;
+    });
+    listPhysicalSigns().then((response) => {
+      this.physicalSignsOptions = response.rows.map((obj) => ({
+        dictLabel: obj.name,
+        dictValue: obj.id,
+      }));
+    });
+  },
+  methods: {
+    /** 查询食材列表 */
+    getList() {
+      this.loading = true;
+      listIngredient(this.queryParams).then((response) => {
+        this.ingredientList = response.rows;
+        this.total = response.total;
+        this.loading = false;
+      });
+    },
+    // 食材类别字典翻译
+    typeFormat(row, column) {
+      return this.selectDictLabel(this.typeOptions, row.type);
+    },
+    // 地域字典翻译
+    areaFormat(row, column) {
+      return this.selectDictLabel(this.areaOptions, row.area);
+    },
+    // 取消按钮
+    cancel() {
+      this.open = false;
+      this.reset();
+    },
+    // 表单重置
+    reset() {
+      this.form = {
+        id: null,
+        name: null,
+        type: null,
+        proteinRatio: null,
+        fatRatio: null,
+        carbonRatio: null,
+        area: null,
+        notRecIds: [],
+        recIds: [],
+        remark: null,
+        createBy: null,
+        createTime: null,
+        updateBy: null,
+        updateTime: null,
       };
+      this.resetForm("form");
     },
-    created() {
+    /** 搜索按钮操作 */
+    handleQuery() {
+      this.queryParams.pageNum = 1;
       this.getList();
-      this.getDicts("cus_ing_type").then(response => {
-        this.typeOptions = response.data;
-      });
-      this.getDicts("cus_area").then(response => {
-        this.areaOptions = response.data;
-      });
-      this.getDicts("cus_review_status").then(response => {
-        this.reviewStatusOptions = response.data;
-      })
-      listPhysicalSigns().then(response => {
-        this.physicalSignsOptions = response.rows.map(obj => ({
-          dictLabel: obj.name,
-          dictValue: obj.id
-        }))
-      })
     },
-    methods: {
-      /** 查询食材列表 */
-      getList() {
-        this.loading = true;
-        listIngredient(this.queryParams).then(response => {
-          this.ingredientList = response.rows;
-          this.total = response.total;
-          this.loading = false;
-        });
-      },
-      // 食材类别字典翻译
-      typeFormat(row, column) {
-        return this.selectDictLabel(this.typeOptions, row.type);
-      },
-      // 地域字典翻译
-      areaFormat(row, column) {
-        return this.selectDictLabel(this.areaOptions, row.area);
-      },
-      // 取消按钮
-      cancel() {
-        this.open = false;
-        this.reset();
-      },
-      // 表单重置
-      reset() {
-        this.form = {
-          id: null,
-          name: null,
-          type: null,
-          proteinRatio: null,
-          fatRatio: null,
-          carbonRatio: null,
-          area: null,
-          notRecIds: [],
-          recIds: [],
-          remark: null,
-          createBy: null,
-          createTime: null,
-          updateBy: null,
-          updateTime: null
-        };
-        this.resetForm("form");
-      },
-      /** 搜索按钮操作 */
-      handleQuery() {
-        this.queryParams.pageNum = 1;
-        this.getList();
-      },
-      /** 重置按钮操作 */
-      resetQuery() {
-        this.resetForm("queryForm");
-        this.handleQuery();
-      },
-      // 多选框选中数据
-      handleSelectionChange(selection) {
-        this.ids = selection.map(item => item.id)
-        this.single = selection.length !== 1
-        this.multiple = !selection.length
-      },
-      /** 新增按钮操作 */
-      handleAdd() {
-        this.reset();
+    /** 重置按钮操作 */
+    resetQuery() {
+      this.resetForm("queryForm");
+      this.handleQuery();
+    },
+    // 多选框选中数据
+    handleSelectionChange(selection) {
+      this.ids = selection.map((item) => item.id);
+      this.single = selection.length !== 1;
+      this.multiple = !selection.length;
+    },
+    /** 新增按钮操作 */
+    handleAdd() {
+      this.reset();
+      this.open = true;
+      this.title = "添加食材";
+    },
+    /** 修改按钮操作 */
+    handleUpdate(row) {
+      this.reset();
+      const id = row.id || this.ids;
+      getIngredient(id).then((response) => {
+        this.form = response.data;
+        this.form.notRecIds = this.form.rec
+          ? this.form.rec
+              .split(",")
+              .map(
+                (label) =>
+                  this.physicalSignsOptions.find(
+                    (pObj) => pObj.dictLabel === label
+                  ).dictValue
+              )
+          : [];
+        this.form.recIds = this.form.notRec
+          ? this.form.notRec
+              .split(",")
+              .map(
+                (label) =>
+                  this.physicalSignsOptions.find(
+                    (pObj) => pObj.dictLabel === label
+                  ).dictValue
+              )
+          : [];
         this.open = true;
-        this.title = "添加食材";
-      },
-      /** 修改按钮操作 */
-      handleUpdate(row) {
-        this.reset();
-        const id = row.id || this.ids
-        getIngredient(id).then(response => {
-          this.form = response.data;
-          this.form.notRecIds = this.form.rec ? this.form.rec.split(',').map(label => this.physicalSignsOptions.find(pObj => pObj.dictLabel === label).dictValue) : [];
-          this.form.recIds = this.form.notRec ? this.form.notRec.split(',').map(label => this.physicalSignsOptions.find(pObj => pObj.dictLabel === label).dictValue) : [];
-          this.open = true;
-          this.title = "修改食材";
-        });
-      },
-      /** 提交按钮 */
-      submitForm() {
-        this.$refs["form"].validate(valid => {
-          if (valid) {
-            if (this.form.id != null) {
-              updateIngredient(this.form).then(response => {
-                if (response.code === 200) {
-                  this.msgSuccess("修改成功");
-                  this.open = false;
-                  this.getList();
-                }
-              });
-            } else {
-              addIngredient(this.form).then(response => {
-                if (response.code === 200) {
-                  this.msgSuccess("新增成功");
-                  this.open = false;
-                  this.getList();
-                }
-              });
-            }
+        this.title = "修改食材";
+      });
+    },
+    /** 提交按钮 */
+    submitForm() {
+      this.$refs["form"].validate((valid) => {
+        if (valid) {
+          if (this.form.id != null) {
+            updateIngredient(this.form).then((response) => {
+              if (response.code === 200) {
+                this.msgSuccess("修改成功");
+                this.open = false;
+                this.getList();
+              }
+            });
+          } else {
+            addIngredient(this.form).then((response) => {
+              if (response.code === 200) {
+                this.msgSuccess("新增成功");
+                this.open = false;
+                this.getList();
+              }
+            });
           }
-        });
-      },
-      /** 删除按钮操作 */
-      handleDelete(row) {
-        const ids = row.id || this.ids;
-        this.$confirm('是否确认删除食材编号为"' + ids + '"的数据项?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(function () {
+        }
+      });
+    },
+    /** 删除按钮操作 */
+    handleDelete(row) {
+      const ids = row.id || this.ids;
+      this.$confirm('是否确认删除食材编号为"' + ids + '"的数据项?', "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(function () {
           return delIngredient(ids);
-        }).then(() => {
+        })
+        .then(() => {
           this.getList();
           this.msgSuccess("删除成功");
-        }).catch(function () {
-        });
-      },
-      /** 导出按钮操作 */
-      handleExport() {
-        const queryParams = this.queryParams;
-        this.$confirm('是否确认导出所有食材数据项?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(function () {
+        })
+        .catch(function () {});
+    },
+    /** 导出按钮操作 */
+    handleExport() {
+      const queryParams = this.queryParams;
+      this.$confirm("是否确认导出所有食材数据项?", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(function () {
           return exportIngredient(queryParams);
-        }).then(response => {
+        })
+        .then((response) => {
           this.download(response.msg);
-        }).catch(function () {
-        });
-      },
-    }
-  };
+        })
+        .catch(function () {});
+    },
+  },
+};
 </script>
