@@ -35,7 +35,7 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="所在地区类别" prop="szdqlbm">
+      <!-- <el-form-item label="所在地区类别" prop="szdqlbm">
         <el-select
           v-model="queryParams.szdqlbm"
           placeholder="请选择所在地区类别"
@@ -47,7 +47,7 @@
             :value="dict.dictValue"
           ></el-option>
         </el-select>
-      </el-form-item>
+      </el-form-item> -->
       <!-- <el-form-item label="组织机构代码" prop="zzjgdm">
         <el-input
           v-model="queryParams.zzjgdm"

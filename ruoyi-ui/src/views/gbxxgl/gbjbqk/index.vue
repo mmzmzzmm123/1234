@@ -492,12 +492,12 @@
       <el-form ref="form" :model="form" :rules="rules" label-width="140px">
         <el-row :gutter="10">
           <el-col :span="12">
-            <el-form-item label="干部姓名" prop="name">
-              <el-input v-model="form.name" placeholder="请输入干部姓名" />
+            <el-form-item label="姓名" prop="name">
+              <el-input v-model="form.name" placeholder="请输入姓名" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="干部性别" prop="xb">
+            <el-form-item label="性别" prop="xb">
               <el-select v-model="form.xb" placeholder="请选择性别">
                 <el-option
                   v-for="dict in xbOptions"
@@ -509,7 +509,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="干部民族" prop="mz">
+            <el-form-item label="民族" prop="mz">
               <el-select v-model="form.mz" placeholder="请选择民族">
                 <el-option
                   v-for="dict in mzOptions"
@@ -533,7 +533,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="干部学历" prop="xl">
+            <el-form-item label="学历" prop="xl">
               <el-select v-model="form.xl" placeholder="请选择学历">
                 <el-option
                   v-for="dict in xlOptions"
@@ -545,7 +545,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="干部学位" prop="xw">
+            <el-form-item label="学位" prop="xw">
               <el-select v-model="form.xw" placeholder="请选择学位">
                 <el-option
                   v-for="dict in xwOptions"
@@ -557,7 +557,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="干部职称" prop="zc">
+            <el-form-item label="职称" prop="zc">
               <el-select v-model="form.zc" placeholder="请选择职称">
                 <el-option
                   v-for="dict in zcOptions"
@@ -574,7 +574,7 @@
             </el-form-item>
           </el-col>
           <el-col>
-            <el-form-item label="干部籍贯" prop="jg">
+            <el-form-item label="籍贯" prop="jg">
               <v-distpicker
                 v-model="form.jg"
                 :placeholders="placeholders"
@@ -589,7 +589,7 @@
             </el-form-item>
           </el-col>
           <el-col>
-            <el-form-item label="干部出生地" prop="csd">
+            <el-form-item label="出生地" prop="csd">
               <v-distpicker
                 v-model="form.csd"
                 :placeholders="placeholders"
