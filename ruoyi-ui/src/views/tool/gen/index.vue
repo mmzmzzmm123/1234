@@ -32,7 +32,7 @@
         ></el-date-picker>
       </el-form-item>
       <el-form-item>
-        <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
@@ -41,6 +41,7 @@
       <el-col :span="1.5">
         <el-button
           type="primary"
+          plain
           icon="el-icon-download"
           size="mini"
           @click="handleGenTable"
@@ -50,6 +51,7 @@
       <el-col :span="1.5">
         <el-button
           type="info"
+          plain
           icon="el-icon-upload"
           size="mini"
           @click="openImportTable"
@@ -59,6 +61,7 @@
       <el-col :span="1.5">
         <el-button
           type="success"
+          plain
           icon="el-icon-edit"
           size="mini"
           :disabled="single"
@@ -69,6 +72,7 @@
       <el-col :span="1.5">
         <el-button
           type="danger"
+          plain
           icon="el-icon-delete"
           size="mini"
           :disabled="multiple"
@@ -91,21 +95,21 @@
         align="center"
         prop="tableName"
         :show-overflow-tooltip="true"
-        width="130"
+        width="120"
       />
       <el-table-column
         label="表描述"
         align="center"
         prop="tableComment"
         :show-overflow-tooltip="true"
-        width="130"
+        width="120"
       />
       <el-table-column
         label="实体"
         align="center"
         prop="className"
         :show-overflow-tooltip="true"
-        width="130"
+        width="120"
       />
       <el-table-column label="创建时间" align="center" prop="createTime" width="160" />
       <el-table-column label="更新时间" align="center" prop="updateTime" width="160" />
@@ -165,7 +169,7 @@
           :name="key.substring(key.lastIndexOf('/')+1,key.indexOf('.vm'))"
           :key="key"
         >
-          <pre>{{ value }}</pre>
+        <highlightjs autodetect :code="value" />
         </el-tab-pane>
       </el-tabs>
     </el-dialog>
@@ -177,6 +181,7 @@
 import { listTable, previewTable, delTable, genCode, synchDb } from "@/api/tool/gen";
 import importTable from "./importTable";
 import { downLoadZip } from "@/utils/zipdownload";
+
 export default {
   name: "Gen",
   components: { importTable },
