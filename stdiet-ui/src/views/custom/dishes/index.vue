@@ -582,7 +582,7 @@
               if (idx === 2) {
                 return acc + parseFloat(dAcc.weight);
               }
-              return acc + dAcc[cur.property] * dAcc.weight / 100;
+              return parseFloat((acc + dAcc[cur.property] * dAcc.weight / 100).toFixed(1));
             }, 0);
           }
           return arr;

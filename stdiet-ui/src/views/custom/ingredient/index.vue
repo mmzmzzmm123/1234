@@ -136,7 +136,7 @@
       :data="ingredientList"
       @selection-change="handleSelectionChange"
     >
-      <el-table-column label="审核状态" align="center" fixed="left" width="80">
+      <el-table-column label="审核状态" align="center" width="80">
         <template slot-scope="scope">
           <el-tag
             :type="scope.row.reviewStatus === 'yes' ? 'success' : 'danger'"
@@ -150,7 +150,6 @@
         label="食材名称"
         align="center"
         prop="name"
-        fixed="left"
         width="120"
       />
       <el-table-column
@@ -162,7 +161,7 @@
       />
       <el-table-column
         label="蛋白质比例(100g)"
-        width="128"
+        width="132"
         align="center"
         prop="proteinRatio"
       />
@@ -205,9 +204,7 @@
       </el-table-column>
       <el-table-column label="备注" align="center" prop="remark" />
       <el-table-column
-        fixed="right"
         label="操作"
-        width="180"
         align="center"
         class-name="small-padding fixed-width"
       >
