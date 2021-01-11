@@ -239,11 +239,8 @@
     <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
       <el-tab-pane label="任免情况" name="first">
         <el-table v-loading="loading" border :data="gbxrzwList">
-          <el-table-column
-            label="姓名"
-            align="center"
-            prop="tsbzGbjbqk.name"
-          />
+          <el-table-column label="姓名" align="center" prop="tsbzGbjbqk.name" />
+          <el-table-column label="任职单位" align="center" prop="dwmc" />
           <el-table-column label="起始年月" align="center" prop="rzny">
             <template slot-scope="scope">
               <span>{{ parseTime(scope.row.rzny, "{y}-{m}") }}</span>
@@ -288,11 +285,7 @@
       </el-tab-pane>
       <el-tab-pane label="社会职务" name="second">
         <el-table v-loading="loading" border :data="gbshzwList">
-          <el-table-column
-            label="姓名"
-            align="center"
-            prop="tsbzGbjbqk.name"
-          />
+          <el-table-column label="姓名" align="center" prop="tsbzGbjbqk.name" />
           <el-table-column label="任职起始年月" align="center" prop="rzqsny">
             <template slot-scope="scope">
               <span>{{ parseTime(scope.row.rzqsny, "{y}-{m}") }}</span>
@@ -320,11 +313,7 @@
       </el-tab-pane>
       <el-tab-pane label="工作经历" name="third">
         <el-table v-loading="loading" border :data="gbgzjlList">
-          <el-table-column
-            label="姓名"
-            align="center"
-            prop="tsbzGbjbqk.name"
-          />
+          <el-table-column label="姓名" align="center" prop="tsbzGbjbqk.name" />
           <el-table-column label="工作单位" align="center" prop="gzdwmc" />
           <el-table-column label="起始年月" align="center" prop="qsny">
             <template slot-scope="scope">
@@ -370,11 +359,7 @@
       </el-tab-pane>
       <el-tab-pane label="教育经历" name="fourth">
         <el-table v-loading="loading" border :data="gbxxjlList">
-          <el-table-column
-            label="姓名"
-            align="center"
-            prop="tsbzGbjbqk.name"
-          />
+          <el-table-column label="姓名" align="center" prop="tsbzGbjbqk.name" />
           <el-table-column
             label="教育类型"
             align="center"
@@ -420,11 +405,7 @@
       </el-tab-pane>
       <el-tab-pane label="培训经历" name="pxjl">
         <el-table v-loading="loading" border :data="gbpxjlList">
-          <el-table-column
-            label="姓名"
-            align="center"
-            prop="tsbzGbjbqk.name"
-          />
+          <el-table-column label="姓名" align="center" prop="tsbzGbjbqk.name" />
           <el-table-column label="培训班名称" align="center" prop="pxbmc" />
           <el-table-column
             label="培训地点"
@@ -464,11 +445,7 @@
       </el-tab-pane>
       <el-tab-pane label="挂职经历" name="gzjl">
         <el-table v-loading="loading" border :data="guazhijlList">
-          <el-table-column
-            label="姓名"
-            align="center"
-            prop="tsbzGbjbqk.name"
-          />
+          <el-table-column label="姓名" align="center" prop="tsbzGbjbqk.name" />
           <el-table-column label="挂职单位名称" align="center" prop="gzdw" />
           <el-table-column label="起始年月" align="center" prop="qsny">
             <template slot-scope="scope">
@@ -485,11 +462,7 @@
       </el-tab-pane>
       <el-tab-pane label="荣誉奖励" name="ryjl">
         <el-table v-loading="loading" border :data="gbryjlList">
-          <el-table-column
-            label="姓名"
-            align="center"
-            prop="tsbzGbjbqk.name"
-          />
+          <el-table-column label="姓名" align="center" prop="tsbzGbjbqk.name" />
           <el-table-column label="获奖日期" align="center" prop="hjrq">
             <template slot-scope="scope">
               <span>{{ parseTime(scope.row.hjrq, "{y}-{m}-{d}") }}</span>
@@ -506,11 +479,7 @@
       </el-tab-pane>
       <el-tab-pane label="科研课题" name="kykt">
         <el-table v-loading="loading" border :data="gbkyktList">
-          <el-table-column
-            label="姓名"
-            align="center"
-            prop="tsbzGbjbqk.name"
-          />
+          <el-table-column label="姓名" align="center" prop="tsbzGbjbqk.name" />
           <el-table-column
             label="研究领域"
             align="center"
@@ -555,11 +524,7 @@
       ></el-tab-pane>
       <el-tab-pane label="出国情况" name="cgqk">
         <el-table v-loading="loading" border :data="gbcrjqkList">
-          <el-table-column
-            label="姓名"
-            align="center"
-            prop="tsbzGbjbqk.name"
-          />
+          <el-table-column label="姓名" align="center" prop="tsbzGbjbqk.name" />
           <el-table-column label="起始日期" align="center" prop="qsrq">
             <template slot-scope="scope">
               <span>{{ parseTime(scope.row.qsrq, "{y}-{m}-{d}") }}</span>
@@ -582,11 +547,7 @@
       </el-tab-pane>
       <el-tab-pane label="出国证件" name="cgzj">
         <el-table v-loading="loading" border :data="gbcrjzjqkList">
-          <el-table-column
-            label="姓名"
-            align="center"
-            prop="tsbzGbjbqk.name"
-          />
+          <el-table-column label="姓名" align="center" prop="tsbzGbjbqk.name" />
           <el-table-column
             label="证件类型"
             align="center"
@@ -608,11 +569,7 @@
       >
       <el-tab-pane label="个人风采" name="grfc">
         <el-table v-loading="loading" border :data="gbgrfcList">
-          <el-table-column
-            label="姓名"
-            align="center"
-            prop="tsbzGbjbqk.name"
-          />
+          <el-table-column label="姓名" align="center" prop="tsbzGbjbqk.name" />
           <el-table-column label="证件照名称" align="center" prop="zjzmc" />
           <el-table-column label="生活照名称" align="center" prop="shzmc" />
           <el-table-column label="工作照名称" align="center" prop="zgzmc" />
@@ -620,11 +577,7 @@
       </el-tab-pane>
       <el-tab-pane label="家庭成员" name="jtcy">
         <el-table v-loading="loading" border :data="gbjtcyList">
-          <el-table-column
-            label="姓名"
-            align="center"
-            prop="tsbzGbjbqk.name"
-          />
+          <el-table-column label="姓名" align="center" prop="tsbzGbjbqk.name" />
           <el-table-column label="关系" align="center" prop="gx" />
           <el-table-column label="家属姓名" align="center" prop="xm" />
           <el-table-column label="出生年月" align="center" prop="csny">
@@ -644,11 +597,7 @@
       </el-tab-pane>
       <el-tab-pane label="办学成果" name="bxcg">
         <el-table v-loading="loading" border :data="gbbxcgList">
-          <el-table-column
-            label="姓名"
-            align="center"
-            prop="tsbzGbjbqk.name"
-          />
+          <el-table-column label="姓名" align="center" prop="tsbzGbjbqk.name" />
           <el-table-column label="成果名称" align="center" prop="cgmc" />
           <el-table-column label="成果年度" align="center" prop="cgnd">
             <template slot-scope="scope">
@@ -660,11 +609,7 @@
       </el-tab-pane>
       <el-tab-pane label="年度考核" name="ndkh">
         <el-table v-loading="loading" border :data="gbndkhList">
-          <el-table-column
-            label="姓名"
-            align="center"
-            prop="tsbzGbjbqk.name"
-          />
+          <el-table-column label="姓名" align="center" prop="tsbzGbjbqk.name" />
           <el-table-column label="考核学年" align="center" prop="xn" />
           <el-table-column
             label="考核结果"
@@ -681,11 +626,7 @@
       </el-tab-pane>
       <el-tab-pane label="业务考核" name="ywkh">
         <el-table v-loading="loading" border :data="gbywkhList">
-          <el-table-column
-            label="姓名"
-            align="center"
-            prop="tsbzGbjbqk.name"
-          />
+          <el-table-column label="姓名" align="center" prop="tsbzGbjbqk.name" />
           <el-table-column label="考核学年" align="center" prop="xn" />
           <el-table-column label="技术职务" align="center" prop="jszw" />
           <el-table-column label="任职时间" align="center" prop="rzsj">
@@ -1053,7 +994,7 @@ export default {
     });
   },
   methods: {
-        // 查询部门
+    // 查询部门
     getDeptList() {
       listDept(null).then((response) => {
         this.deptOptions = response.data;
@@ -1288,9 +1229,8 @@ export default {
         this.diglogForm1.province = response.data.csd;
         this.diglogForm1.city = response.data.csdCityname;
         this.diglogForm1.area = response.data.csdAreaname;
-
       });
-    },   
+    },
     // 学历字典翻译
     xlFormat(row, column) {
       return this.selectDictLabel(this.xlOptions, row.xl);

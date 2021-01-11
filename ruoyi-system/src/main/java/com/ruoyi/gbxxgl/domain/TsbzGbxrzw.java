@@ -90,6 +90,18 @@ public class TsbzGbxrzw extends BaseEntity {
     @Excel(name = "是否删除")
     private String isdel;
 
+    /**
+     * 单位ID
+     */
+    @Excel(name = "单位ID")
+    private Long dwid;
+
+    /**
+     * 单位名称
+     */
+    @Excel(name = "单位名称")
+    private String dwmc;
+
     private TsbzGbjbqk tsbzGbjbqk;
 
     public void setId(Long id) {
@@ -190,6 +202,22 @@ public class TsbzGbxrzw extends BaseEntity {
         return dqzt;
     }
 
+    public void setDwid(Long dwid) {
+        this.dwid = dwid;
+    }
+
+    public Long getDwid() {
+        return dwid;
+    }
+
+    public void setDwmc(String dwmc) {
+        this.dwmc = dwmc;
+    }
+
+    public String getDwmc() {
+        return dwmc;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
@@ -207,6 +235,8 @@ public class TsbzGbxrzw extends BaseEntity {
                 .append("isdel", getIsdel())
                 .append("tsbzGbjbqk", getTsbzGbjbqk())
                 .append("dqzt", getDqzt())
+                .append("dwid", getDwid())
+                .append("dwmc", getDwmc())
                 .toString();
     }
 

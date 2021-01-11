@@ -238,6 +238,7 @@
             align="center"
             prop="tsbzGbjbqk.name"
           />
+          <el-table-column label="任职单位" align="center" prop="dwmc" />
           <el-table-column label="起始年月" align="center" prop="rzny">
             <template slot-scope="scope">
               <span>{{ parseTime(scope.row.rzny, "{y}-{m}") }}</span>

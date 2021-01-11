@@ -18,6 +18,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="createtime"    column="createtime"    />
         <result property="isdel" column="isdel"/>
         <result property="dqzt" column="dqzt"/>
+        <result property="dwid"    column="dwid"    />
+        <result property="dwmc"    column="dwmc"    />
         <association property="tsbzGbjbqk" column="gbid" javaType="TsbzGbjbqk" resultMap="TsbzGbjbqkResult"/>
     </resultMap>
 
@@ -77,7 +79,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectTsbzGbxrzwVo">
-        select a.id, a.gbid, a.rzny, a.zzny, a.xzzw, a.xxzwjb, a.dnzw, a.dnzwsx, a.qtzw, a.createuser, a.createtime,b.name,b.dept_id from tsbz_gbxrzw a
+        select a.id, a.gbid, a.rzny, a.zzny, a.xzzw, a.xxzwjb, a.dnzw, a.dnzwsx, a.qtzw, a.createuser, a.createtime,a.dwid,a.dwmc,b.name,b.dept_id from tsbz_gbxrzw a
         left join tsbz_gbjbqk b on a.gbid=b.id
     </sql>
 
@@ -118,6 +120,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="qtzw != null">qtzw,</if>
             <if test="createuser != null">createuser,</if>
             <if test="createtime != null">createtime,</if>
+            <if test="dwid != null">dwid,</if>
+            <if test="dwmc != null">dwmc,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
@@ -131,6 +135,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="qtzw != null">#{qtzw},</if>
             <if test="createuser != null">#{createuser},</if>
             <if test="createtime != null">#{createtime},</if>
+            <if test="dwid != null">#{dwid},</if>
+            <if test="dwmc != null">#{dwmc},</if>
          </trim>
     </insert>
 
@@ -148,6 +154,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createuser != null">createuser = #{createuser},</if>
             <if test="createtime != null">createtime = #{createtime},</if>
             <if test="isdel != null">isdel = #{isdel},</if>
+            <if test="dwid != null">dwid = #{dwid},</if>
+            <if test="dwmc != null">dwmc = #{dwmc},</if>
         </trim>
         where id = #{id}
     </update>
