@@ -2,6 +2,7 @@ package com.stdiet.custom.domain;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -173,7 +174,7 @@ public class SysOrder extends BaseEntity {
      * 赠送时长
      */
     @Excel(name = "赠送时长", width = 30, suffix = "天")
-    private String giveServeDay;
+    private Integer giveServeDay;
 
     private Long serveTimeId;
 
@@ -186,6 +187,11 @@ public class SysOrder extends BaseEntity {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Excel(name = "成交时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date orderTime;
+
+    /**
+     * 订单暂停记录 非持久化字段
+     * */
+    private List<SysOrderPause> orderPauseList;
 
     @JsonFormat(pattern = "yyyy-MM-dd")
     public Date getStartTime() {
@@ -454,12 +460,20 @@ public class SysOrder extends BaseEntity {
         return orderTime;
     }
 
-    public String getGiveServeDay() {
+    public Integer getGiveServeDay() {
         return giveServeDay;
     }
 
-    public void setGiveServeDay(String giveServeDay) {
+    public void setGiveServeDay(Integer giveServeDay) {
         this.giveServeDay = giveServeDay;
+    }
+
+    public List<SysOrderPause> getOrderPauseList() {
+        return orderPauseList;
+    }
+
+    public void setOrderPauseList(List<SysOrderPause> orderPauseList) {
+        this.orderPauseList = orderPauseList;
     }
 
     @Override

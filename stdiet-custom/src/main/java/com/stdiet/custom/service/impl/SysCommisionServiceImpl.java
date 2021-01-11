@@ -98,4 +98,9 @@ public class SysCommisionServiceImpl implements ISysCommisionService
     public List<SysCommision> selectSysCommisionDetail(SysCommision sysCommision) {
         return sysCommisionMapper.selectSysCommisionDetail(sysCommision);
     }
+
+    @Override
+    public List<SysCommision> selectSysCommisionDayDetail(SysCommision sysCommision){
+        return sysCommisionMapper.selectSysCommisionDayDetail(sysCommision);
+    }
 }

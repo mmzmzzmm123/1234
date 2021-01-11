@@ -3,6 +3,10 @@ package com.stdiet.common.utils;
 import java.lang.management.ManagementFactory;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Date;
 import org.apache.commons.lang3.time.DateFormatUtils;
 
@@ -151,5 +155,35 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils
         // 计算差多少秒//输出结果
         // long sec = diff % nd % nh % nm / ns;
         return day + "天" + hour + "小时" + min + "分钟";
+    }
+
+    /**
+     * Date对象转LocalDateTime
+     * */
+    public static LocalDateTime dateToLocalDateTime(Date date){
+        return LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
+    }
+
+    /**
+     * LocalDateTime对象转Date
+     * */
+    public static Date localDateTimeToDate(LocalDateTime localDateTime){
+        ZonedDateTime zdt = LocalDateTime.now().atZone(ZoneId.systemDefault());
+        return Date.from(zdt.toInstant());
+    }
+
+    /**
+     * Date对象转LocalDate
+     * */
+    public static LocalDate dateToLocalDate(Date date){
+        return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+    }
+
+    /**
+     * LocalDate转Date
+     */
+    public static Date localDateToDate(LocalDate localDate) {
+        ZonedDateTime zonedDateTime = localDate.atStartOfDay(ZoneId.systemDefault());
+        return Date.from(zonedDateTime.toInstant());
     }
 }

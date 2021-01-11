@@ -68,3 +68,12 @@ export function getSalesman() {
     method: 'get',
   })
 }
+
+// 查询按天计算提成明细（营养师、售后）
+export function detailDayCommision(query) {
+  return request({
+    url: '/custom/commision/detailDay',
+    method: 'get',
+    params: query
+  })
+}

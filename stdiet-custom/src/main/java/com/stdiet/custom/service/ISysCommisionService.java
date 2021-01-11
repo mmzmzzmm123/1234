@@ -1,6 +1,8 @@
 package com.stdiet.custom.service;
 
 import java.util.List;
+import java.util.Set;
+
 import com.stdiet.custom.domain.SysCommision;
 
 /**
@@ -60,4 +62,6 @@ public interface ISysCommisionService
     public int deleteSysCommisionById(Long ruleId);
 
     public List<SysCommision> selectSysCommisionDetail(SysCommision sysCommision);
+
+    List<SysCommision> selectSysCommisionDayDetail(SysCommision sysCommision);
 }

@@ -60,4 +60,6 @@ public interface SysCommisionMapper
     public int deleteSysCommisionByIds(Long[] ruleIds);
 
     public List<SysCommision> selectSysCommisionDetail(SysCommision sysCommision);
+
+    List<SysCommision> selectSysCommisionDayDetail(SysCommision sysCommision);
 }
