@@ -3,6 +3,7 @@ package com.stdiet.custom.mapper;
 import java.math.BigDecimal;
 import java.util.List;
 import com.stdiet.custom.domain.SysOrder;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 销售订单Mapper接口
@@ -66,4 +67,10 @@ public interface SysOrderMapper
      * @return
      */
     public BigDecimal selectAllOrderAmount(SysOrder sysOrder);
+
+    /**
+     * 获取订单信息
+     * @return
+     */
+    List<SysOrder> selectSimpleOrderMessage(@Param("userId") Long userId);
 }

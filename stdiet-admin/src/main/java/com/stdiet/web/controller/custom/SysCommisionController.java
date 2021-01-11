@@ -1,8 +1,11 @@
 package com.stdiet.web.controller.custom;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
+import com.stdiet.custom.domain.SysCommissionDayDetail;
+import com.stdiet.custom.service.ISysCommissionDayService;
 import com.stdiet.framework.web.domain.server.Sys;
 import com.stdiet.system.domain.CusSalesman;
 import com.stdiet.system.service.ISysUserService;
@@ -39,6 +42,9 @@ public class SysCommisionController extends BaseController {
 
     @Autowired
     private ISysUserService userService;
+
+    @Autowired
+    private ISysCommissionDayService sysCommissionDayService;
 
     /**
      * 查询业务提成比例列表
@@ -181,4 +187,16 @@ public class SysCommisionController extends BaseController {
         }
         return getDataTable(list);
     }
+
+    /**
+     * 按天计算提成详细列表
+     * */
+    @PreAuthorize("@ss.hasPermi('commisionDay:detail:list')")
+    @GetMapping("/detailDay")
+    public TableDataInfo getDetailDay(SysCommision sysCommision) {
+        startPage();
+        return getDataTable(sysCommissionDayService.calculateCommissionByDay(sysCommision));
+    }
+
+
 }

@@ -36,6 +36,9 @@
         <result property="serveTimeId" column="serve_time_id"/>
         <result property="reviewStatus" column="review_status"/>
         <result property="giveServeDay" column="give_serve_day"/>
+        <!-- 非持久化字段 -->
+        <result property="afterSale" column="afterSale_name"></result><!-- 售后名称  -->
+        <result property="nutritionist" column="nutritionist_name"></result><!-- 营养师名称 -->
     </resultMap>
 
     <sql id="selectSysOrderVo">
@@ -212,5 +215,76 @@
             #{orderId}
         </foreach>
     </delete>
+
+    <resultMap type="SysOrder" id="SysOrderResultExtended">
+        <result property="orderId" column="order_id"/>
+        <result property="customer" column="customer"/>
+        <result property="phone" column="phone"/>
+        <result property="amount" column="amount"/>
+        <result property="weight" column="weight"/>
+        <result property="startTime" column="start_time"/>
+        <result property="pauseTime" column="pause_time"/>
+        <result property="status" column="status"/>
+        <result property="payTypeId" column="pay_type_id"/>
+        <result property="payType" column="pay_type"/>
+        <result property="preSaleId" column="pre_sale_id"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="afterSaleId" column="after_sale_id"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="nutritionistId" column="nutritionist_id"/>
+        <result property="remark" column="remark"/>
+        <result property="nutriAssisId" column="nutri_assis_id"/>
+        <result property="accountId" column="account_id"/>
+        <result property="account" column="account"/>
+        <result property="plannerId" column="planner_id"/>
+        <result property="plannerAssisId" column="planner_assis_id"/>
+        <result property="operatorId" column="operator_id"/>
+        <result property="operatorAssisId" column="operator_assis_id"/>
+        <result property="recommender" column="recommender"/>
+        <result property="orderTime" column="order_time"/>
+        <result property="serveTime" column="serve_time"/>
+        <result property="serveTimeId" column="serve_time_id"/>
+        <result property="reviewStatus" column="review_status"/>
+        <result property="giveServeDay" column="give_serve_day"/>
+        <!-- 非持久化字段 -->
+        <result property="afterSale" column="afterSale_name"></result><!-- 售后名称  -->
+        <result property="nutritionist" column="nutritionist_name"></result><!-- 营养师名称 -->
+        <association property="orderPauseList" column="order_id" select="getOrderPauseByOrderId"/>
+    </resultMap>
+
+    <resultMap type="SysOrderPause" id="SysOrderPauseResult">
+        <result property="id"    column="id"    />
+        <result property="orderId"    column="order_id"    />
+        <result property="pauseStartDate"    column="pause_start_date"    />
+        <result property="pauseEndDate"    column="pause_end_date"    />
+        <result property="reason"    column="reason"    />
+        <result property="remarks"    column="remarks"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <select id="getOrderPauseByOrderId" parameterType="Long" resultMap="SysOrderPauseResult">
+        select id, order_id, pause_start_date, pause_end_date, reason, remarks, create_time, create_by, update_time, update_by, del_flag from sys_order_pause sop
+        where del_flag = 0 and order_id = #{order_id}
+    </select>
+
+    <!-- 查询订单信息（用于计算提成） -->
+    <select id="selectSimpleOrderMessage" resultMap="SysOrderResultExtended">
+      select o.order_id,o.order_time,o.customer,o.review_status,o.amount,o.serve_time_id,o.give_serve_day,o.after_sale_id,su_sale.nick_name as afterSale_name,o.nutritionist_id,su_nutritionist.nick_name as nutritionist_name,sc.create_time as start_time
+      from sys_order o
+      left join sys_user su_sale on su_sale.user_id = o.after_sale_id and su_sale.del_flag = 0
+      left join sys_user su_nutritionist on su_nutritionist.user_id = o.nutritionist_id and su_nutritionist.del_flag = 0
+      left join sys_customer sc on sc.phone = o.phone and sc.del_flag = 0
+      where o.order_time >= '2021-01-01'
+      <if test="userId != null">
+          and (su_sale.user_id = #{userId} or su_nutritionist.user_id = #{userId})
+      </if>
+      order by o.order_time desc
+    </select>
 
 </mapper>
