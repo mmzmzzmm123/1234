@@ -1,41 +1,34 @@
 <template>
-  <div id="InputView" :loading="loading" >
+  <div id="InputView" :loading="loading" style="min-height:75vh;">
     <transition name="el-fade-in-linear">
-      <parser v-if="open" :form-conf="formconf" class="transition-box" @submit="nextPage" />
+      <parser v-if="currentPage===1" :form-conf="formconf" class="transition-box" @submit="nextPage" @cancel="returnLastPage" @close="close"/>
     </transition>
-    <transition v-if="desc" name="el-fade-in-linear">
-      <parser v-if="desc" :form-conf="content" class="transition-box" @submit="nextPage1" />
+    <transition v-if="currentPage===2" name="el-fade-in-linear">
+      <parser v-if="currentPage===2" :form-conf="content" class="transition-box" @submit="nextPage1" @cancel="returnLastPage" @close="close"/>
     </transition>
-    <transition v-if="showUpload" name="el-fade-in-linear">
-      <el-row>
-        <el-col :span="4">
-          <el-upload
-            class="upload-demo"
-            ref="upload"
-            action=""
-            :on-change="handleChange"
-            :http-request="handleUploadRequest"
-            :file-list="fileList"
-            :auto-upload=true
-          >
-            <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-            <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
-            <div slot="tip" class="el-upload__tip">不超过500mb</div>
-          </el-upload>
-        </el-col>
-        <el-col :span="20">
-          <document-view :metadata-id="metadataId"></document-view>
-        </el-col>
-      </el-row>
+    <transition v-if="currentPage===3" name="el-fade-in-linear">
+      <div>
+        <el-button @click="dialogVisible=true">上传文件</el-button>
+        <div style="text-align: center">
+          <el-dialog title="上传文件" :visible.sync="dialogVisible" width="30%" :before-close="beforeClose" style="z-index: 2999">
+            <uploadwindow></uploadwindow>
+          </el-dialog>
+          <document-view :metadata-id="metadataId" ></document-view>
+          <el-button-group>
+            <el-button @click="returnLastPage">返回</el-button>
+            <el-button @click="save">保存</el-button>
+            <el-button @click="close">关闭</el-button>
+          </el-button-group>
+        </div>  
+      </div>
     </transition>
   </div>
 </template>
 <script>
 import Parser from '@/gene/components/parser/Parser'
 import {listJson} from '@/api/system/json'
-import { uploadByPieces } from '@/utils/utils'
-import FileUpload from '@/components/commonuploader/FileUploader'
 import DocumentView from '@/views/components/documentView'
+import Uploadwindow from '@/views/components/uploadwindow'
 export default {
   props:{
     formconf: {
@@ -44,15 +37,17 @@ export default {
   },
   name: "InputView",
   components: {
+    Uploadwindow,
     DocumentView,
     Parser,
-    FileUpload,
   },
   computed: {
   },
   data() {
     return{
-      metadataId:'',
+      currentPage:3,
+      dialogVisible:false,
+      metadataId:1,
       desc:false,
       uploadText:'点击或拖入文件上传',
       uploading:false,
@@ -64,10 +59,13 @@ export default {
       content:{},
       showUpload:true,
       param:{},
+      formData:{
+
+      }
     }
   },
   mounted() {
-    
+
   },
   created() {
     this.loading=true;
@@ -80,41 +78,41 @@ export default {
     // console.log(this.formconf)
   },
   methods:{
-    handleChange(file, fileList) {
-      // this.fileList.push(file)
-
-    },
-    handleUploadRequest(back){
-      console.log(back)
-      this.fileList.push(back.file)
-      this.param = back
-    },
-    submitUpload() {
-      //this.$refs.upload.submit();
-      this.dealUpload(this.param)
-    },
-    // 处理上传文件
-    dealUpload (param) {
-      uploadByPieces({
-        metadataId:this.metadataId,
-        files: this.fileList,
-        pieceSize: 5,
-        chunkUrl: '/system/attributes/chunk',
-        fileUrl: '/system/attributes/full',
-        progress: (num) => {
-          param.file.percent = num
-          param.onProgress(param.file)
-        },
-        success: (data) => {
-          this.uploading = false
-          this.$emit('uploaded', data)
-          //this.fileList = []
-        },
-        error: (e) => {
-          this.uploading = false
-        }
-      })
-    },
+    // handleChange(file, fileList) {
+    //   // this.fileList.push(file)
+    //
+    // },
+    // handleUploadRequest(back){
+    //   console.log(back)
+    //   this.fileList.push(back.file)
+    //   this.param = back
+    // },
+    // submitUpload() {
+    //   //this.$refs.upload.submit();
+    //   this.dealUpload(this.param)
+    // },
+    // // 处理上传文件
+    // dealUpload (param) {
+    //   uploadByPieces({
+    //     metadataId:this.metadataId,
+    //     files: this.fileList,
+    //     pieceSize: 5,
+    //     chunkUrl: '/system/attributes/chunk',
+    //     fileUrl: '/system/attributes/full',
+    //     progress: (num) => {
+    //       param.file.percent = num
+    //       param.onProgress(param.file)
+    //     },
+    //     success: (data) => {
+    //       this.uploading = false
+    //       this.$emit('uploaded', data)
+    //       //this.fileList = []
+    //     },
+    //     error: (e) => {
+    //       this.uploading = false
+    //     }
+    //   })
+    // },
     fillFormData(forms, data) {
       forms.forEach(form=>{
         form.fields.forEach(item => {
@@ -133,7 +131,28 @@ export default {
       this.open=false
       this.desc=false
       this.showUpload=true
-    }
+    },
+    firstCancel(){
+      this.open=false
+      this.desc=false
+    },
+    secondCancel(){
+      this.open=true
+      this.desc=false
+    },
+    beforeClose(done){
+      console.log('1123')
+      done()
+    },
+    returnLastPage(){
+      if (this.currentPage!==1){
+        this.currentPage+=-1
+      }
+    },
+    save(){},
+    close(){
+      this.$emit('close')
+    },
   },
   watch:{
     formconf:function(nv,ov) {

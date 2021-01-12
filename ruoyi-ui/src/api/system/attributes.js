@@ -5,7 +5,8 @@ export function listAttributes(query) {
   return request({
     url: '/system/attributes/list',
     method: 'get',
-    params: query
+    params: query,
+    async: false,
   })
 }
 

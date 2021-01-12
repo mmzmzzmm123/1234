@@ -88,6 +88,9 @@ public class ElectronicAttributes extends BaseEntity
         this.metadataId = metadataId;
     }
 
+    public ElectronicAttributes() {
+    }
+
     public ElectronicAttributes(Long id, String formatInformation, String computerFileName, String computerFileSize, String documentCreatingApplication, String informationSystemDescription, Long metadataId) {
         this.id = id;
         this.formatInformation = formatInformation;

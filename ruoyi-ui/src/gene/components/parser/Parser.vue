@@ -72,8 +72,10 @@ function renderFrom(h) {
 function formBtns(h) {
   return <el-col>
     <el-form-item size="large" style="text-align:center;margin-left:-100px">
+      <el-button onclick={this.cancel}>返回</el-button>
       <el-button type="primary" onClick={this.submitForm}>提交</el-button>
       <el-button onClick={this.resetForm}>重置</el-button>
+      <el-button onClick={this.close}>关闭</el-button>
     </el-form-item>
   </el-col>
 }
@@ -177,6 +179,14 @@ export default {
         this.$emit('submit', this[this.formConf.formModel])
         return true
       })
+    },
+    cancel() {
+      // 触发sumit事件
+      this.$emit('cancel', this[this.formConf.formModel])
+    },
+    close() {
+      // 触发sumit事件
+      this.$emit('close', this[this.formConf.formModel])
     }
   },
   render(h) {

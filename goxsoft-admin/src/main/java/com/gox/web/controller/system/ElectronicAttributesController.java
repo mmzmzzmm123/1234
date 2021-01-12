@@ -104,19 +104,19 @@ public class ElectronicAttributesController extends BaseController
         }
 
     }
-    /**
-     * 获取base64
-     */
-    @GetMapping("/base64/{id}")
-    @Log(title = "电子文件信息", businessType = BusinessType.GET)
-    @PreAuthorize("@ss.hasPermi('system:attributes:query')")
-    public AjaxResult getBase64(@PathVariable String id){
-        String s = electronicAttributesService.getBase64(id);
-        if (StrUtil.isNotBlank(s)){
-            return AjaxResult.success(s);
-        }
-        return AjaxResult.error(500,"文件不存在!");
-    }
+//    /**
+//     * 获取base64
+//     */
+//    @GetMapping("/base64/{id}")
+//    @Log(title = "电子文件信息", businessType = BusinessType.GET)
+//    @PreAuthorize("@ss.hasPermi('system:attributes:query')")
+//    public AjaxResult getBase64(@PathVariable String id){
+//        String s = electronicAttributesService.getBase64(id);
+//        if (StrUtil.isNotBlank(s)){
+//            return AjaxResult.success("成功",s);
+//        }
+//        return AjaxResult.error(500,"文件不存在!");
+//    }
     /**
      * 导出电子文件信息列表
      */

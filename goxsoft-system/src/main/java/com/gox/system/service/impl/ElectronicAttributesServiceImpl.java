@@ -14,6 +14,7 @@ import cn.hutool.core.codec.Base64;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.crypto.SecureUtil;
+import com.gox.common.utils.file.FileUtils;
 import com.gox.common.utils.file.MergeRunnable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -146,9 +147,14 @@ public class ElectronicAttributesServiceImpl implements IElectronicAttributesSer
     @Override
     public String getBase64(String id) {
         ElectronicAttributes ea = electronicAttributesMapper.selectElectronicAttributesById(Long.valueOf(id));
-        String path = rootpath+ File.separator+ea.getCurrentLocation();
+        String path = ea.getCurrentLocation();
         if (FileUtil.exist(path)){
-            return Base64.encode(path);
+            try {
+                return FileUtils.base64(path);
+            } catch (IOException e) {
+                e.printStackTrace();
+                return "";
+            }
         }
         return "";
     }
