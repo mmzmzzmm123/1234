@@ -38,50 +38,49 @@
         <result property="createBy"    column="create_by"    />
         <result property="updateTime"    column="update_time"    />
         <result property="updateBy"    column="update_by"    />
+        <result property="comments" column="comments"/>
     </resultMap>
 
     <sql id="selectSysCustomerPhysicalSignsVo">
         select id, customer_id, sex, age, tall, weight, physical_signs_id, dishes_ingredient_id, photo, constipation, stayLate, motion, make_food_type, make_food_taste, walk, difficulty, weakness, rebound, crux, position, sleep_time, getup_time, connect_time, remarks, blood_data, moisture_date, vocation,
-      night, experience, create_time, create_by, update_time, update_by from sys_customer_physical_signs
+      night, experience, comments, create_time, create_by, update_time, update_by from sys_customer_physical_signs
     </sql>
 
     <select id="selectSysCustomerPhysicalSignsList" parameterType="SysCustomerPhysicalSigns" resultMap="SysCustomerPhysicalSignsResult">
-        <include refid="selectSysCustomerPhysicalSignsVo"/>
-        <where>
-            <if test="customerId != null "> and customer_id = #{customerId}</if>
-            <if test="sex != null "> and sex = #{sex}</if>
-            <if test="age != null "> and age = #{age}</if>
-            <if test="tall != null "> and tall = #{tall}</if>
-            <if test="weight != null "> and weight = #{weight}</if>
-            <if test="physicalSignsId != null  and physicalSignsId != ''"> and physical_signs_id = #{physicalSignsId}</if>
-            <if test="dishesIngredientId != null  and dishesIngredientId != ''"> and dishes_ingredient_id = #{dishesIngredientId}</if>
-            <if test="photo != null  and photo != ''"> and photo = #{photo}</if>
-            <if test="constipation != null "> and constipation = #{constipation}</if>
-            <if test="staylate != null "> and stayLate = #{staylate}</if>
-            <if test="motion != null "> and motion = #{motion}</if>
-            <if test="makeFoodType != null "> and make_food_type = #{makeFoodType}</if>
-            <if test="makeFoodTaste != null "> and make_food_taste = #{makeFoodTaste}</if>
-            <if test="walk != null "> and walk = #{walk}</if>
-            <if test="difficulty != null  and difficulty != ''"> and difficulty = #{difficulty}</if>
-            <if test="weakness != null "> and weakness = #{weakness}</if>
-            <if test="rebound != null "> and rebound = #{rebound}</if>
-            <if test="crux != null "> and crux = #{crux}</if>
-            <if test="position != null "> and position = #{position}</if>
-            <if test="sleepTime != null "> and sleep_time = #{sleepTime}</if>
-            <if test="getupTime != null "> and getup_time = #{getupTime}</if>
-            <if test="connectTime != null "> and connect_time = #{connectTime}</if>
-            <if test="remarks != null  and remarks != ''"> and remarks = #{remarks}</if>
-            <if test="bloodData != null  and bloodData != ''"> and blood_data = #{bloodData}</if>
-            <if test="moistureDate != null  and moistureDate != ''"> and moisture_date = #{moistureDate}</if>
-            <if test="vocation != null  and vocation != ''"> and vocation = #{vocation}</if>
-            <if test="night != null "> and  night = #{night}</if>
-            <if test="experience != null  and experience != ''"> and experience = #{experience}</if>
-        </where>
+        <include refid="selectSysCustomerPhysicalSignsVo"/> where del_flag = 0
+        <if test="customerId != null "> and customer_id = #{customerId}</if>
+        <if test="sex != null "> and sex = #{sex}</if>
+        <if test="age != null "> and age = #{age}</if>
+        <if test="tall != null "> and tall = #{tall}</if>
+        <if test="weight != null "> and weight = #{weight}</if>
+        <if test="physicalSignsId != null  and physicalSignsId != ''"> and physical_signs_id = #{physicalSignsId}</if>
+        <if test="dishesIngredientId != null  and dishesIngredientId != ''"> and dishes_ingredient_id = #{dishesIngredientId}</if>
+        <if test="photo != null  and photo != ''"> and photo = #{photo}</if>
+        <if test="constipation != null "> and constipation = #{constipation}</if>
+        <if test="staylate != null "> and stayLate = #{staylate}</if>
+        <if test="motion != null "> and motion = #{motion}</if>
+        <if test="makeFoodType != null "> and make_food_type = #{makeFoodType}</if>
+        <if test="makeFoodTaste != null "> and make_food_taste = #{makeFoodTaste}</if>
+        <if test="walk != null "> and walk = #{walk}</if>
+        <if test="difficulty != null  and difficulty != ''"> and difficulty = #{difficulty}</if>
+        <if test="weakness != null "> and weakness = #{weakness}</if>
+        <if test="rebound != null "> and rebound = #{rebound}</if>
+        <if test="crux != null "> and crux = #{crux}</if>
+        <if test="position != null "> and position = #{position}</if>
+        <if test="sleepTime != null "> and sleep_time = #{sleepTime}</if>
+        <if test="getupTime != null "> and getup_time = #{getupTime}</if>
+        <if test="connectTime != null "> and connect_time = #{connectTime}</if>
+        <if test="remarks != null  and remarks != ''"> and remarks = #{remarks}</if>
+        <if test="bloodData != null  and bloodData != ''"> and blood_data = #{bloodData}</if>
+        <if test="moistureDate != null  and moistureDate != ''"> and moisture_date = #{moistureDate}</if>
+        <if test="vocation != null  and vocation != ''"> and vocation = #{vocation}</if>
+        <if test="night != null "> and  night = #{night}</if>
+        <if test="experience != null  and experience != ''"> and experience = #{experience}</if>
     </select>
 
     <select id="selectSysCustomerPhysicalSignsById" parameterType="Long" resultMap="SysCustomerPhysicalSignsResult">
         <include refid="selectSysCustomerPhysicalSignsVo"/>
-        where id = #{id}
+        where id = #{id} and del_flag = 0
     </select>
 
     <insert id="insertSysCustomerPhysicalSigns" parameterType="SysCustomerPhysicalSigns" useGeneratedKeys="true" keyProperty="id">
@@ -113,10 +112,9 @@
             <if test="bloodData != null">blood_data,</if>
             <if test="moistureDate != null">moisture_date,</if>
             <if test="vocation != null">vocation,</if>
-            <if test="
-night != null">
-                night,</if>
+            <if test="night != null">night,</if>
             <if test="experience != null">experience,</if>
+            <if test="comments != null">comments,</if>
             <if test="createTime != null">create_time,</if>
             <if test="createBy != null">create_by,</if>
             <if test="updateTime != null">update_time,</if>
@@ -151,6 +149,7 @@ night != null">
             <if test="vocation != null">#{vocation},</if>
             <if test="night != null">#{night},</if>
             <if test="experience != null">#{experience},</if>
+            <if test="comments != null">#{comments},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="createBy != null">#{createBy},</if>
             <if test="updateTime != null">#{updateTime},</if>
@@ -189,6 +188,7 @@ night != null">
             <if test="vocation != null">vocation = #{vocation},</if>
             <if test="night != null">night = #{night},</if>
             <if test="experience != null">experience = #{experience},</if>
+            <if test="comments != null">comments = #{comments},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
@@ -197,16 +197,16 @@ night != null">
         where id = #{id}
     </update>
 
-    <delete id="deleteSysCustomerPhysicalSignsById" parameterType="Long">
-        delete from sys_customer_physical_signs where id = #{id}
-    </delete>
+    <update id="deleteSysCustomerPhysicalSignsById" parameterType="Long">
+        update sys_customer_physical_signs set del_flag = 0 where id = #{id}
+    </update>
 
-    <delete id="deleteSysCustomerPhysicalSignsByIds" parameterType="String">
-        delete from sys_customer_physical_signs where id in
+    <update id="deleteSysCustomerPhysicalSignsByIds" parameterType="String">
+        update sys_customer_physical_signs set del_flag = 0 where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
-    </delete>
+    </update>
 
     <!-- 根据客户id更新体征信息 -->
     <update id="updateSysCustomerPhysicalSignsByCustomerId" parameterType="SysCustomerPhysicalSigns">
@@ -239,6 +239,7 @@ night != null">
             <if test="vocation != null">vocation = #{vocation},</if>
             <if test="night != null">night = #{night},</if>
             <if test="experience != null">experience = #{experience},</if>
+            <if test="comments != null">comments = #{comments},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
@@ -247,11 +248,11 @@ night != null">
         where customer_id = #{customerId}
     </update>
 
-    <delete id="deleteSysCustomerPhysicalSignsByCustomerIds" parameterType="String">
-        delete from sys_customer_physical_signs where customer_id in
+    <update id="deleteSysCustomerPhysicalSignsByCustomerIds" parameterType="String">
+        update sys_customer_physical_signs set del_flag = 0 where customer_id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
-    </delete>
+    </update>
 
 </mapper>

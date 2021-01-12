@@ -76,7 +76,7 @@
 
       </el-table-column>
       <el-table-column label="操作" align="center">
-        <template slot-scope="scope">
+        <template scope="scope">
           <el-button type="text" @click="openFormDialog('查看发放计划', scope.row)">查看发放计划</el-button>
         </template>
       </el-table-column>
@@ -94,10 +94,14 @@
     />
 
 
-    <el-dialog title="提成发放计划" :visible.sync="sendCommissionPlanTable" width="25%" align="center">
-      <el-table :data="sendCommissionPlan">
+    <el-dialog title="提成发放计划" :visible.sync="sendCommissionPlanTable" width="40%" align="center">
+      <el-table :data="sendCommissionPlan.list" show-summary  :summary-method="getSummaries">
         <el-table-column property="nickName" label="姓名" width="150"></el-table-column>
-        <el-table-column property="yearMonth" label="发放年月" width="200"></el-table-column>
+        <el-table-column property="yearMonth" label="提成月份" width="200">
+          <template scope="scope">
+            {{scope.row.yearMonth.substring(0, 4)}}年{{scope.row.yearMonth.substring(4)}}月
+          </template>
+        </el-table-column>
         <el-table-column property="yearMonthCommission" label="提成金额" width="100"></el-table-column>
       </el-table>
     </el-dialog>
@@ -154,7 +158,7 @@
           postId: null,
         },
         sendCommissionPlanTable: false,
-        sendCommissionPlan:[]
+        sendCommissionPlan:{}
       };
     },
     created() {
@@ -249,15 +253,36 @@
         this.queryParams.userId = null;
       },
       openFormDialog(title, row){
-         this.sendCommissionPlan = row.sendDetailList;
+         this.sendCommissionPlan = {};
          var total = 0;
-         this.sendCommissionPlan.forEach(function(e){
-              e.nickName = row.nickName;
-              e.yearMonth = e.yearMonth.substring(0,4) + "年" + e.yearMonth.substring(4)+"月";
-              total += e.yearMonthCommission;
-         });
-        //this.sendCommissionPlan.push({'': })
+         if(row.sendDetailList != null){
+           row.sendDetailList.forEach(function (e) {
+             e.nickName = row.nickName;
+             total += e.yearMonthCommission;
+           });
+         }
+         this.sendCommissionPlan.list = row.sendDetailList;
+         this.sendCommissionPlan.total = row.totalNotSentCommissionAmount;
          this.sendCommissionPlanTable = true;
+      },
+      getSummaries(param) {
+        //param 是固定的对象，里面包含 columns与 data参数的对象 {columns: Array[4], data: Array[5]},包含了表格的所有的列与数据信息
+        const { columns, data } = param;
+        const sums = [];
+        columns.forEach((column, index) => {
+          if (index === 0) {
+            sums[index] = '合计';
+            return;
+          }
+          if(index == 1){
+            sums[index] = data.length +"个月";
+            return
+          }
+          if(index == 2){
+            sums[index] = this.sendCommissionPlan.total;
+          }
+        });
+        return sums;
       }
     }
   };

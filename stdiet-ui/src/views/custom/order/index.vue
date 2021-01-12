@@ -238,6 +238,7 @@
           {{scope.row.giveServeDay ? `${scope.row.giveServeDay}天` : '0天'}}
         </template>
       </el-table-column>
+      <el-table-column label="调理项目" align="center" prop="conditioningProject" width="120"/>
       <el-table-column label="收款方式" align="center" prop="payType" width="120"/>
       <el-table-column label="售前" align="center" prop="preSale" width="120"/>
       <el-table-column label="售后" align="center" prop="afterSale" width="120"/>
@@ -249,6 +250,11 @@
       <el-table-column label="运营" align="center" prop="operator" width="120"/>
       <el-table-column label="运营助理" align="center" prop="operatorAssis" width="120"/>
       <el-table-column label="推荐人" align="center" prop="recommender" width="120"/>
+      <el-table-column label="进粉时间" align="center" prop="becomeFanTime" width="120">
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.becomeFanTime, '{y}-{m}-{d}') }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="备注" align="center" prop="remark" width="120"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="300" fixed="right">
         <template slot-scope="scope">
@@ -357,6 +363,18 @@
               <el-select v-model="form.giveServeDay" placeholder="请选择">
                 <el-option
                   v-for="dict in giveTimeIdOption"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="parseInt(dict.dictValue)"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="调理项目" prop="conditioningProjectId">
+              <el-select v-model="form.conditioningProjectId" placeholder="请选择">
+                <el-option
+                  v-for="dict in conditioningProjectIdOption"
                   :key="dict.dictValue"
                   :label="dict.dictLabel"
                   :value="parseInt(dict.dictValue)"
@@ -478,6 +496,21 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
+            <el-form-item label="进粉时间" prop="becomeFanTime">
+              <el-date-picker
+                style="width: 182.5px"
+                v-model="form.becomeFanTime"
+                type="date"
+                placeholder="选择进粉时间"
+                format="yyyy-MM-dd"
+                value-format="yyyy-MM-dd"
+                :picker-options="fanPickerOptions"
+              >
+              </el-date-picker>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="10">
             <el-form-item label="成交时间" prop="orderTime">
               <el-date-picker
                 style="width: 182.5px"
@@ -572,6 +605,8 @@
         serveTimeIdOption: [],
         // 赠送时长
         giveTimeIdOption: [],
+        //调理项目
+        conditioningProjectIdOption:[],
         // 审核状态
         reviewStatusOptions: [],
         // 策划助理字典
@@ -618,7 +653,12 @@
           ],
           startTime: [
             {required: true, message: "开始时间不能为空", trigger: "blur"}
+          ],
+          becomeFanTime: [
+            {required: true, message: "进粉时间不能为空", trigger: "blur"}
           ]
+
+
           // payTypeId: [
           //   {required: true, message: "收款方式不能为空", trigger: "blur"}
           // ],
@@ -664,6 +704,11 @@
             return time.getTime() > Date.now();
           },
         },
+        fanPickerOptions: {
+          disabledDate(time) {
+            return time.getTime() > Date.now();
+          },
+        },
         startPickerOptions: {
           disabledDate(time) {
             return time.getTime() < Date.now();
@@ -702,6 +747,9 @@
       this.getDicts("give_serve_daye_type").then(response => {
         this.giveTimeIdOption = response.data;
       });
+      this.getDicts("conditioning_project").then(response => {
+        this.conditioningProjectIdOption = response.data;
+    });
       this.getDicts("cus_review_status").then(response => {
         this.reviewStatusOptions = response.data;
       })
@@ -767,6 +815,7 @@
         const defaultPayType = this.payTypeIdOptions.find(opt => opt.remark === 'default');
         const defaultServeTime = this.serveTimeIdOption.find(opt => opt.remark === 'default');
         const defaultGiveServeTime = this.giveTimeIdOption.find(opt => opt.remark === 'default');
+        const defaultConditioningProjectIdOption = this.conditioningProjectIdOption.find(opt => opt.remark === 'default');
         const defaultAccount = this.accountIdOptions.find(opt => opt.remark === 'default');
         const defaultOperator = this.operatorIdOptions.find(opt => opt.remark === 'default');
         const defaultOperatorAssis = this.operatorAssisIdOptions.find(opt => opt.remark === 'default');
@@ -803,7 +852,9 @@
           orderTime: dayjs().format("YYYY-MM-DD HH:mm:ss"),
           serveTimeId: defaultServeTime ? parseInt(defaultServeTime.dictValue) : null,
           reviewStatus: this.review,
-          giveServeDay: defaultGiveServeTime ? parseInt(defaultGiveServeTime.dictValue) : null
+          giveServeDay: defaultGiveServeTime ? parseInt(defaultGiveServeTime.dictValue) : null,
+          conditioningProjectId: defaultConditioningProjectIdOption ? parseInt(defaultConditioningProjectIdOption.dictValue) : null,
+          becomeFanTime: dayjs().format("YYYY-MM-DD")
         };
         this.resetForm("form");
       },
@@ -837,6 +888,9 @@
         getOrder(orderId).then(response => {
           this.form = response.data;
           this.form.giveServeDay = parseInt(this.form.giveServeDay+"");
+          if(this.form.becomeFanTime == null){
+            this.form.becomeFanTime = this.form.orderTime;
+          }
           this.open = true;
           this.title = "修改销售订单";
         });

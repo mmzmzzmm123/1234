@@ -79,6 +79,9 @@ public class SysCustomer extends BaseEntity
     @Excel(name = "跟进状态")
     private Long followStatus;
 
+    /** 删除标识(0 未删除 1已删除) */
+    private Integer delFlag;
+
     /** 体征数据，非持久化字段 */
     private SysCustomerPhysicalSigns sign;
 
@@ -224,6 +227,14 @@ public class SysCustomer extends BaseEntity
 
     public void setSign(SysCustomerPhysicalSigns sign) {
         this.sign = sign;
+    }
+
+    public Integer getDelFlag() {
+        return delFlag;
+    }
+
+    public void setDelFlag(Integer delFlag) {
+        this.delFlag = delFlag;
     }
 
     @Override

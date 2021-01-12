@@ -108,8 +108,8 @@ public class SysCustomerPhysicalSigns extends BaseEntity
     @Excel(name = "联系沟通时间", readConverterExp = "2=4小时制")
     private Integer connectTime;
 
-    /** 备注 */
-    @Excel(name = "备注")
+    /** 饮食备注 */
+    @Excel(name = "饮食备注")
     private String remarks;
 
     /** 湿气数据 */
@@ -131,6 +131,13 @@ public class SysCustomerPhysicalSigns extends BaseEntity
     /** 减脂经历 */
     @Excel(name = "减脂经历")
     private String experience;
+
+    /** 备注 */
+    @Excel(name = "备注")
+    private String comments;
+
+    /** 删除标识(0 未删除 1已删除) */
+    private Integer delFlag;
 
     /** 体征对象集合 **/
     private List<SysPhysicalSigns> signList;
@@ -402,6 +409,22 @@ public class SysCustomerPhysicalSigns extends BaseEntity
         this.signList = signList;
     }
 
+    public String getComments() {
+        return comments;
+    }
+
+    public void setComments(String comments) {
+        this.comments = comments;
+    }
+
+    public Integer getDelFlag() {
+        return delFlag;
+    }
+
+    public void setDelFlag(Integer delFlag) {
+        this.delFlag = delFlag;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
@@ -440,5 +463,4 @@ public class SysCustomerPhysicalSigns extends BaseEntity
                 .append("updateBy", getUpdateBy())
                 .toString();
     }
-
 }

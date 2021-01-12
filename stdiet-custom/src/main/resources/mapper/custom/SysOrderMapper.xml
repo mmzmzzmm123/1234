@@ -36,19 +36,24 @@
         <result property="serveTimeId" column="serve_time_id"/>
         <result property="reviewStatus" column="review_status"/>
         <result property="giveServeDay" column="give_serve_day"/>
+        <result property="conditioningProjectId" column="conditioning_project_id"/>
+        <result property="serverEndTime" column="server_end_time"/>
+        <result property="becomeFanTime" column="become_fan_time"/>
         <!-- 非持久化字段 -->
         <result property="afterSale" column="afterSale_name"></result><!-- 售后名称  -->
         <result property="nutritionist" column="nutritionist_name"></result><!-- 营养师名称 -->
+        <result property="conditioningProject" column="conditioning_project"></result><!-- 调理项目 -->
     </resultMap>
 
     <sql id="selectSysOrderVo">
         select o.order_id, o.review_status, o.customer, o.phone, o.amount, o.start_time, o.pause_time, o.status, o.weight, ser.dict_label as serve_time,
         o.serve_time_id, o.pay_type_id, pay.dict_label as pay_type, o.pre_sale_id, o.create_by, o.create_time, o.after_sale_id, o.update_by, o.update_time,
         o.nutritionist_id, o.remark, o.nutri_assis_id, o.account_id, acc.dict_label as account, o.planner_id, o.planner_assis_id, o.operator_id, o.operator_assis_id,
-        o.recommender, o.order_time,o.give_serve_day from sys_order o
+        o.recommender, o.order_time,o.give_serve_day,o.conditioning_project_id,cp.dict_label as conditioning_project,o.server_end_time,o.become_fan_time from sys_order o
         LEFT JOIN (SELECT dict_label, dict_value FROM sys_dict_data WHERE dict_type = 'cus_pay_type') AS pay ON pay.dict_value = o.pay_type_id
         LEFT JOIN (SELECT dict_label, dict_value FROM sys_dict_data WHERE dict_type = 'cus_account') AS acc ON acc.dict_value = o.account_id
         LEFT JOIN (SELECT dict_label, dict_value FROM sys_dict_data WHERE dict_type = 'cus_serve_time') AS ser ON ser.dict_value = o.serve_time_id
+        LEFT JOIN (SELECT dict_label, dict_value FROM sys_dict_data WHERE dict_type = 'conditioning_project') AS cp ON cp.dict_value = o.conditioning_project_id
     </sql>
 
     <select id="selectAllOrderAmount" parameterType="SysOrder" resultType="BigDecimal">
@@ -138,6 +143,9 @@
             <if test="serveTimeId != null">serve_time_id,</if>
             <if test="reviewStatus != null">review_status,</if>
             <if test="giveServeDay != null">give_serve_day,</if>
+            <if test="conditioningProjectId != null">conditioning_project_id,</if>
+            <if test="serverEndTime != null">server_end_time,</if>
+            <if test="becomeFanTime != null">become_fan_time,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="orderId != null and orderId != ''">#{orderId},</if>
@@ -168,6 +176,9 @@
             <if test="serveTimeId != null">#{serveTimeId},</if>
             <if test="reviewStatus != null">#{reviewStatus},</if>
             <if test="giveServeDay != null">#{giveServeDay},</if>
+            <if test="conditioningProjectId != null">#{conditioningProjectId},</if>
+            <if test="serverEndTime != null">#{serverEndTime},</if>
+            <if test="becomeFanTime != null">#{becomeFanTime},</if>
         </trim>
     </insert>
 
@@ -201,6 +212,9 @@
             <if test="serveTimeId != null">serve_time_id = #{serveTimeId},</if>
             <if test="reviewStatus != null">review_status = #{reviewStatus},</if>
             <if test="giveServeDay != null">give_serve_day = #{giveServeDay},</if>
+            <if test="conditioningProjectId != null">conditioning_project_id = #{conditioningProjectId},</if>
+            <if test="serverEndTime != null">server_end_time = #{serverEndTime},</if>
+            <if test="becomeFanTime != null">become_fan_time = #{becomeFanTime},</if>
         </trim>
         where order_id = #{orderId}
     </update>
@@ -248,6 +262,9 @@
         <result property="serveTimeId" column="serve_time_id"/>
         <result property="reviewStatus" column="review_status"/>
         <result property="giveServeDay" column="give_serve_day"/>
+        <result property="conditioningProjectId" column="conditioning_project_id"/>
+        <result property="serverEndTime" column="server_end_time"/>
+        <result property="becomeFanTime" column="become_fan_time"/>
         <!-- 非持久化字段 -->
         <result property="afterSale" column="afterSale_name"></result><!-- 售后名称  -->
         <result property="nutritionist" column="nutritionist_name"></result><!-- 营养师名称 -->
@@ -275,11 +292,10 @@
 
     <!-- 查询订单信息（用于计算提成） -->
     <select id="selectSimpleOrderMessage" resultMap="SysOrderResultExtended">
-      select o.order_id,o.order_time,o.customer,o.review_status,o.amount,o.serve_time_id,o.give_serve_day,o.after_sale_id,su_sale.nick_name as afterSale_name,o.nutritionist_id,su_nutritionist.nick_name as nutritionist_name,sc.create_time as start_time
+      select o.order_id,o.order_time,o.start_time,o.customer,o.review_status,o.amount,o.serve_time_id,o.give_serve_day,o.after_sale_id,su_sale.nick_name as afterSale_name,o.nutritionist_id,su_nutritionist.nick_name as nutritionist_name
       from sys_order o
       left join sys_user su_sale on su_sale.user_id = o.after_sale_id and su_sale.del_flag = 0
       left join sys_user su_nutritionist on su_nutritionist.user_id = o.nutritionist_id and su_nutritionist.del_flag = 0
-      left join sys_customer sc on sc.phone = o.phone and sc.del_flag = 0
       where o.order_time >= '2021-01-01'
       <if test="userId != null">
           and (su_sale.user_id = #{userId} or su_nutritionist.user_id = #{userId})
