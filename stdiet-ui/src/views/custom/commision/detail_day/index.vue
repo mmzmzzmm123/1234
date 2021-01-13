@@ -36,21 +36,21 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-      <!--<el-col :span="1.5">
+      <el-col :span="1.5">
         <el-button
           type="warning"
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['commision:detail:export']"
+          v-hasPermi="['commisionDay:detail:export']"
         >导出
         </el-button>
-      </el-col>-->
+      </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="commisionList"
-              @selection-change="handleSelectionChange">
+              @selection-change="handleSelectionChange" stripe :row-class-name="tableRowClassName">
       <el-table-column label="业务员" align="center" prop="nickName">
         <template slot-scope="scope">
           <span>{{ scope.row.nickName }}</span>
@@ -108,11 +108,20 @@
   </div>
 </template>
 
+<style>
+  .el-table .warning-row {
+    background: oldlace;
+  }
+
+  .el-table .success-row {
+     /*background: #1890FF;*/
+    color: #1890FF
+  }
+</style>
+
 <script>
   import {
-    detailDayCommision,
-    exportCommision,
-  } from "@/api/custom/commision";
+    detailDayCommision, exportDayCommision} from "@/api/custom/commision";
 
   import {getOptions} from "@/api/custom/order";
 
@@ -232,7 +241,7 @@
           cancelButtonText: "取消",
           type: "warning"
         }).then(function () {
-          return exportCommision(queryParams);
+          return exportDayCommision(queryParams);
         }).then(response => {
           this.download(response.msg);
         }).catch(function () {
@@ -283,6 +292,12 @@
           }
         });
         return sums;
+      },
+      tableRowClassName({row, rowIndex}) {
+        if(this.commisionList.length == rowIndex+1){
+           return "success-row";
+        }
+        return '';
       }
     }
   };

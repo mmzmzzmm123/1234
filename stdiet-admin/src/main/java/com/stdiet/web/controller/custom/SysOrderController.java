@@ -4,6 +4,7 @@ import com.stdiet.common.annotation.Log;
 import com.stdiet.common.core.domain.AjaxResult;
 import com.stdiet.common.core.domain.entity.SysUser;
 import com.stdiet.common.enums.BusinessType;
+import com.stdiet.common.utils.StringUtils;
 import com.stdiet.common.utils.poi.ExcelUtil;
 import com.stdiet.custom.controller.OrderBaseController;
 import com.stdiet.custom.domain.SysOrder;
@@ -77,9 +78,9 @@ public class SysOrderController extends OrderBaseController {
                     order.setOperatorAssis(user.getNickName());
                 }
             }
-            /*if (order.getPhone() != null && !order.getPhone().equals("")) {
-                order.setPhone(order.getPhone().replaceAll("(\\d{3})\\d{4}(\\d{4})", "$1****$2"));
-            }*/
+            if (StringUtils.isNotEmpty(order.getPhone())) {
+                order.setPhone(StringUtils.hiddenPhoneNumber(order.getPhone()));
+            }
         }
         return getOrderDataTable(list, totalAmount);
     }

@@ -32,6 +32,11 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
         List<SysCommissionDayDetail> result = new ArrayList<>();
         //查询用户
         List<SysCommision> list = sysCommisionMapper.selectSysCommisionDayDetail(sysCommision);
+        //合计
+        SysCommissionDayDetail total = new SysCommissionDayDetail();
+        total.setTotalCommissionAmount(new BigDecimal(0));
+        total.setTotalHasSentCommissionAmount(new BigDecimal(0));
+        total.setTotalNotSentCommissionAmount(new BigDecimal(0));
         if(list != null && list.size() > 0){
             Map<Long, List<SysOrderCommisionDayDetail>> orderDetailMap = getOrderByList(sysCommision.getUserId());
             SysCommissionDayDetail sysCommissionDayDetail = null;
@@ -41,14 +46,35 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
                 sysCommissionDayDetail.setNickName(commision.getUserName());
                 sysCommissionDayDetail.setPostId(commision.getPostId());
                 sysCommissionDayDetail.setPostName(commision.getPostName());
-                sysCommissionDayDetail.setOrderTotalAmount(commision.getAmount());
-                //获取查询时间
-                //LocalDate localDate = StringUtils.isEmpty(sysCommision.getBeginTime()) ? LocalDate.now() : LocalDate.parse(sysCommision.getBeginTime(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
                 dealServerOrderCommissionDetail(orderDetailMap.get(sysCommissionDayDetail.getUserId()), sysCommissionDayDetail);
                 result.add(sysCommissionDayDetail);
+                //统计所以用户总提成、已发放提成、未发放提成
+                total.setTotalCommissionAmount(total.getTotalCommissionAmount().add(sysCommissionDayDetail.getTotalCommissionAmount()));
+                total.setTotalHasSentCommissionAmount(total.getTotalHasSentCommissionAmount().add(sysCommissionDayDetail.getTotalHasSentCommissionAmount()));
+                total.setTotalNotSentCommissionAmount(total.getTotalNotSentCommissionAmount().add(sysCommissionDayDetail.getTotalNotSentCommissionAmount()));
             }
         }
+        total.setPostName("胜唐体控");
+        total.setNickName("合计");
+        result.add(total);
         return result;
+    }
+
+    @Override
+    public LocalDate getServerEndDate(Long orderId){
+        SysOrder sysOrder = sysOrderMapper.selectSysOrderById(orderId);
+        if(sysOrder != null){
+            SysOrderPause sysOrderPause = new SysOrderPause();
+            sysOrderPause.setOrderId(orderId);
+            List<SysOrderPause> pausesList = sysOrderPauseMapper.selectSysOrderPauseList(sysOrderPause);
+            //每年每月暂停天数，key为年份加月份，如:2021年1月=20211
+            Map<String, Integer> everyYearMonthPauseDay = getEveryYearMonthPauseDay(pausesList);
+            //该笔订单暂停总天数
+            int pauseTotalDay = getTotalByMap(everyYearMonthPauseDay);
+
+            return getServerEndDate(DateUtils.dateToLocalDate(sysOrder.getStartTime()), sysOrder.getServeTimeId().intValue()/30, sysOrder.getGiveServeDay(), pauseTotalDay);
+        }
+        return null;
     }
 
 
@@ -60,8 +86,6 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
         BigDecimal totalCommissionAmount = new BigDecimal(0);
         //已发放提成
         BigDecimal totalHasSentCommissionAmount = new BigDecimal(0);
-        //未发放提成
-        BigDecimal totalNotSentCommissionAmount = new BigDecimal(0);
         //未发放提成记录
         List<Map<String, Object>> sendDetailList = new ArrayList<>();
         if(orderDetailList != null){
@@ -116,6 +140,7 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
         }
         sysCommissionDayDetail.setTotalCommissionAmount(totalCommissionAmount);
         sysCommissionDayDetail.setTotalHasSentCommissionAmount(totalHasSentCommissionAmount);
+        //未发放提成 = 总提成 - 已发放提成
         sysCommissionDayDetail.setTotalNotSentCommissionAmount(totalCommissionAmount.subtract(totalHasSentCommissionAmount));
         sysCommissionDayDetail.setSendDetailList(sendDetailList);
     }

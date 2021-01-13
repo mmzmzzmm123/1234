@@ -47,8 +47,14 @@ public class SysWxUserLogController extends BaseController {
         List<SysWxUserLog> list = sysWxUserLogService.selectSysWxUserLogList(sysWxUserLog);
 
         for (SysWxUserLog userLog : list) {
+            if(userLog.getCustomerMessage() != null){
+                String[] message = userLog.getCustomerMessage().split(",");
+                userLog.setCustomer(message[0]);
+                userLog.setNutritionist(message.length > 1 ? message[1] : "");
+            }
             if (StringUtils.isNotEmpty(userLog.getPhone())) {
-                userLog.setPhone(userLog.getPhone().replaceAll("(\\d{3})\\d{4}(\\d{4})", "$1****$2"));
+                userLog.setPhone(StringUtils.hiddenPhoneNumber(userLog.getPhone()));
+                //userLog.setPhone(userLog.getPhone().replaceAll("(\\d{3})\\d{4}(\\d{4})", "$1****$2"));
             }
         }
 

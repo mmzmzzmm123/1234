@@ -144,6 +144,10 @@ public class CustomerInvestigateRequest extends BaseEntity
     @Excel(name = "减脂经历")
     private String experience;
 
+    /** 备注 */
+    @Excel(name = "备注")
+    private String comments;
+
     public Long getId() {
         return id;
     }
@@ -398,5 +402,13 @@ public class CustomerInvestigateRequest extends BaseEntity
 
     public void setExperience(String experience) {
         this.experience = experience;
+    }
+
+    public String getComments() {
+        return comments;
+    }
+
+    public void setComments(String comments) {
+        this.comments = comments;
     }
 }
