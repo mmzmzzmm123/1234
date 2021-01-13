@@ -5,6 +5,7 @@ import java.util.List;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.gox.common.utils.StringUtils;
+import com.gox.common.utils.uuid.SnowflakesTools;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -30,7 +31,13 @@ public class FormJsonController extends BaseController
 {
     @Autowired
     private IFormJsonService formJsonService;
-
+    /**
+     * id获取
+     */
+    @PostMapping("/id")
+    public AjaxResult getId(){
+        return AjaxResult.success(SnowflakesTools.WORKER.nextId());
+    }
     /**
      * 查询表单json列表
      */

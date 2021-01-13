@@ -41,7 +41,7 @@
 <!--            <el-button ></el-button>-->
           </el-button-group>
         </div>
-        <div v-else style="border: 1px solid #000000;min-height:75vh;" >
+        <div v-else style="border: 1px solid #000000;min-height:75vh;width:80%" >
           <div style="text-align:center">
             <span style="color:#00afff;font-size:30px">
               暂无文件显示
@@ -69,7 +69,7 @@ export default {
       width:500,
       height:0,
       srcList: [],
-      showPic:true,
+      showPic:false,
       url: '',
       showPDF:false,
       eleName:'',
@@ -160,22 +160,28 @@ export default {
         data.forEach(item=>{
           this.elTree.push({id:item.id,label: item.computerFileName,children:[]})
         })
-        if (this.elTree){
+        if (this.elTree.length>0){
+          this.id = this.elTree[0].id
+          this.url=process.env.VUE_APP_BASE_API+'/ele/'+this.id
           let type = that.getType(this.elTree[0].label);
           if(type){
             if(type==='pdf'||type==='PDF'){
               that.showPDF=true;
               that.thisPic=false;
+              this.createPicBox();
             }
-            else{
+            else if (type==='jpg'||type==='png'||type==='jpeg'||type==='tiff'){
               that.showPDF=false;
               that.thisPic=true;
             }
+            else {
+              that.showPDF=false;
+              that.thisPic=false;
+            }
           }
-          this.id = this.elTree[0].id
-          this.url=process.env.VUE_APP_BASE_API+'/ele/'+this.id
+
           //this.url='https://www.lactame.com/github/image-js/image-js/3073b80c7d626196cb669f9d617f491a8338ca66/test/img/taxi/original.jpeg'
-          this.createPicBox();
+
         }
       })
     },

@@ -523,233 +523,7 @@
         </el-col>
       </el-row>
     </div>
-
-
-    <!-- 添加或修改文书类基本元数据对话框 -->
-<!--    <el-dialog :title="title" :visible.sync="open" width="1500px" append-to-body>-->
-<!--      <el-form ref="form" :model="form" :rules="rules" label-width="80px">-->
-<!--        <el-form-item label="聚合层次" prop="aggregationLevel">-->
-<!--          <el-select v-model="form.aggregationLevel" placeholder="请选择聚合层次">-->
-<!--            <el-option-->
-<!--              v-for="dict in aggregationLevelOptions"-->
-<!--              :key="dict.dictValue"-->
-<!--              :label="dict.dictLabel"-->
-<!--              :value="dict.dictValue"-->
-<!--            ></el-option>-->
-<!--          </el-select>-->
-<!--        </el-form-item>-->
-<!--        <el-form-item label="档案馆名称" prop="archivesName">-->
-<!--          <el-input v-model="form.archivesName" placeholder="请输入档案馆名称" />-->
-<!--        </el-form-item>-->
-<!--        <el-form-item label="档案馆代码" prop="archivesIdentifier">-->
-<!--          <el-input v-model="form.archivesIdentifier" placeholder="请输入档案馆代码" />-->
-<!--        </el-form-item>-->
-<!--        <el-form-item label="全宗名称" prop="fondsName">-->
-<!--          <el-input v-model="form.fondsName" placeholder="请输入全宗名称" />-->
-<!--        </el-form-item>-->
-<!--        <el-form-item label="立档单位名称" prop="fondsConstitutingUnitName">-->
-<!--          <el-input v-model="form.fondsConstitutingUnitName" placeholder="请输入立档单位名称" />-->
-<!--        </el-form-item>-->
-<!--        <el-form-item label="电子文件号" prop="electronicRecordCode">-->
-<!--          <el-input v-model="form.electronicRecordCode" placeholder="请输入电子文件号" />-->
-<!--        </el-form-item>-->
-<!--        <el-form-item label="档号" prop="archivalCode">-->
-<!--          <el-input v-model="form.archivalCode" placeholder="请输入档号" />-->
-<!--        </el-form-item>-->
-<!--        <el-form-item label="全宗号" prop="fondsIdentifier">-->
-<!--          <el-input v-model="form.fondsIdentifier" placeholder="请输入全宗号" />-->
-<!--        </el-form-item>-->
-<!--        <el-form-item label="目录号" prop="catalogueNumber">-->
-<!--          <el-input v-model="form.catalogueNumber" placeholder="请输入目录号" />-->
-<!--        </el-form-item>-->
-<!--        <el-form-item label="年度" prop="year">-->
-<!--          <el-input v-model="form.year" placeholder="请输入年度" />-->
-<!--        </el-form-item>-->
-<!--        <el-form-item label="保管期限" prop="retentionPeriod">-->
-<!--          <el-select v-model="form.retentionPeriod" placeholder="请选择保管期限">-->
-<!--            <el-option-->
-<!--              v-for="dict in retentionPeriodOptions"-->
-<!--              :key="dict.dictValue"-->
-<!--              :label="dict.dictLabel"-->
-<!--              :value="dict.dictValue"-->
-<!--            ></el-option>-->
-<!--          </el-select>-->
-<!--        </el-form-item>-->
-<!--        <el-form-item label="机构或问题" prop="organizationalStructureOrFunction">-->
-<!--          <el-input v-model="form.organizationalStructureOrFunction" placeholder="请输入机构或问题" />-->
-<!--        </el-form-item>-->
-<!--        <el-form-item label="类别号" prop="categoryCode">-->
-<!--          <el-input v-model="form.categoryCode" placeholder="请输入类别号" />-->
-<!--        </el-form-item>-->
-<!--        <el-form-item label="室编案卷号" prop="agencyFileNumber">-->
-<!--          <el-input v-model="form.agencyFileNumber" placeholder="请输入室编案卷号" />-->
-<!--        </el-form-item>-->
-<!--        <el-form-item label="馆编案卷号" prop="archivesFileNumber">-->
-<!--          <el-input v-model="form.archivesFileNumber" placeholder="请输入馆编案卷号" />-->
-<!--        </el-form-item>-->
-<!--        <el-form-item label="室编件号" prop="agencyItemNumber">-->
-<!--          <el-input v-model="form.agencyItemNumber" placeholder="请输入室编件号" />-->
-<!--        </el-form-item>-->
-<!--        <el-form-item label="馆编件号" prop="archivesItemNumber">-->
-<!--          <el-input v-model="form.archivesItemNumber" placeholder="请输入馆编件号" />-->
-<!--        </el-form-item>-->
-<!--        <el-form-item label="文档序号" prop="documentSequenceNumber">-->
-<!--          <el-input v-model="form.documentSequenceNumber" placeholder="请输入文档序号" />-->
-<!--        </el-form-item>-->
-<!--        <el-form-item label="页号" prop="pageNumber">-->
-<!--          <el-input v-model="form.pageNumber" placeholder="请输入页号" />-->
-<!--        </el-form-item>-->
-<!--        <el-form-item label="内容描述" prop="contentDescription">-->
-<!--          <el-input v-model="form.contentDescription" type="textarea" placeholder="请输入内容" />-->
-<!--        </el-form-item>-->
-<!--        <el-form-item label="题名" prop="title">-->
-<!--          <el-input v-model="form.title" type="textarea" placeholder="请输入内容" />-->
-<!--        </el-form-item>-->
-<!--        <el-form-item label="并列题名" prop="parallelTitle">-->
-<!--          <el-input v-model="form.parallelTitle" type="textarea" placeholder="请输入内容" />-->
-<!--        </el-form-item>-->
-<!--        <el-form-item label="副题名" prop="alternativeTitle">-->
-<!--          <el-input v-model="form.alternativeTitle" type="textarea" placeholder="请输入内容" />-->
-<!--        </el-form-item>-->
-<!--        <el-form-item label="说明题名文字" prop="otherTitleInformation">-->
-<!--          <el-input v-model="form.otherTitleInformation" type="textarea" placeholder="请输入内容" />-->
-<!--        </el-form-item>-->
-<!--        <el-form-item label="主题词" prop="descriptor">-->
-<!--          <el-input v-model="form.descriptor" type="textarea" placeholder="请输入内容" />-->
-<!--        </el-form-item>-->
-<!--        <el-form-item label="关键词" prop="keyword">-->
-<!--          <el-input v-model="form.keyword" placeholder="请输入关键词" />-->
-<!--        </el-form-item>-->
-<!--        <el-form-item label="人名" prop="personalName">-->
-<!--          <el-input v-model="form.personalName" placeholder="请输入人名" />-->
-<!--        </el-form-item>-->
-<!--        <el-form-item label="摘要" prop="abstract">-->
-<!--          <el-input v-model="form.abstract" placeholder="请输入摘要" />-->
-<!--        </el-form-item>-->
-<!--        <el-form-item label="分类号" prop="classCode">-->
-<!--          <el-input v-model="form.classCode" placeholder="请输入分类号" />-->
-<!--        </el-form-item>-->
-<!--        <el-form-item label="文件编号" prop="documentNumber">-->
-<!--          <el-input v-model="form.documentNumber" placeholder="请输入文件编号" />-->
-<!--        </el-form-item>-->
-<!--        <el-form-item label="责任者" prop="author">-->
-<!--          <el-input v-model="form.author" placeholder="请输入责任者" />-->
-<!--        </el-form-item>-->
-<!--        <el-form-item label="日期" prop="date">-->
-<!--          <el-date-picker clearable size="small" style="width: 200px"-->
-<!--                          v-model="queryParams.date"-->
-<!--                          type="date"-->
-<!--                          value-format="yyyy-MM-dd"-->
-<!--                          placeholder="选择日期">-->
-<!--          </el-date-picker>-->
-<!--        </el-form-item>-->
-<!--        <el-form-item label="文种" prop="documentType">-->
-<!--          <el-select v-model="form.documentType" placeholder="请选择文种">-->
-<!--            <el-option-->
-<!--              v-for="dict in documentTypeOptions"-->
-<!--              :key="dict.dictValue"-->
-<!--              :label="dict.dictLabel"-->
-<!--              :value="dict.dictValue"-->
-<!--            ></el-option>-->
-<!--          </el-select>-->
-<!--        </el-form-item>-->
-<!--        <el-form-item label="紧急程度" prop="precedence">-->
-<!--          <el-select v-model="form.precedence" placeholder="请选择紧急程度">-->
-<!--            <el-option-->
-<!--              v-for="dict in precedenceOptions"-->
-<!--              :key="dict.dictValue"-->
-<!--              :label="dict.dictLabel"-->
-<!--              :value="dict.dictValue"-->
-<!--            ></el-option>-->
-<!--          </el-select>-->
-<!--        </el-form-item>-->
-<!--        <el-form-item label="主送" prop="principalReceiver">-->
-<!--          <el-input v-model="form.principalReceiver" placeholder="请输入主送" />-->
-<!--        </el-form-item>-->
-<!--        <el-form-item label="抄送" prop="otherReceivers">-->
-<!--          <el-input v-model="form.otherReceivers" placeholder="请输入抄送" />-->
-<!--        </el-form-item>-->
-<!--        <el-form-item label="密级" prop="securityClassification">-->
-<!--          <el-select v-model="form.securityClassification" placeholder="请选择密级">-->
-<!--            <el-option-->
-<!--              v-for="dict in securityClassificationOptions"-->
-<!--              :key="dict.dictValue"-->
-<!--              :label="dict.dictLabel"-->
-<!--              :value="dict.dictValue"-->
-<!--            ></el-option>-->
-<!--          </el-select>-->
-<!--        </el-form-item>-->
-<!--        <el-form-item label="保密期限" prop="secrecyPeriod">-->
-<!--          <el-input v-model="form.secrecyPeriod" placeholder="请输入保密期限" />-->
-<!--        </el-form-item>-->
-<!--        <el-form-item label="形式特征" prop="formalCharacteristics">-->
-<!--          <el-input v-model="form.formalCharacteristics" placeholder="请输入形式特征" />-->
-<!--        </el-form-item>-->
-<!--        <el-form-item label="文件组合类型" prop="documentAggregationType">-->
-<!--          <el-select v-model="form.documentAggregationType" placeholder="请选择文件组合类型">-->
-<!--            <el-option-->
-<!--              v-for="dict in documentAggregationTypeOptions"-->
-<!--              :key="dict.dictValue"-->
-<!--              :label="dict.dictLabel"-->
-<!--              :value="dict.dictValue"-->
-<!--            ></el-option>-->
-<!--          </el-select>-->
-<!--        </el-form-item>-->
-<!--        <el-form-item label="件数" prop="totalNumberOfItems">-->
-<!--          <el-input v-model="form.totalNumberOfItems" placeholder="请输入件数" />-->
-<!--        </el-form-item>-->
-<!--        <el-form-item label="页数" prop="totalNumberOfPages">-->
-<!--          <el-input v-model="form.totalNumberOfPages" placeholder="请输入页数" />-->
-<!--        </el-form-item>-->
-<!--        <el-form-item label="语种" prop="language">-->
-<!--          <el-input v-model="form.language" placeholder="请输入语种" />-->
-<!--        </el-form-item>-->
-<!--        <el-form-item label="稿本" prop="manuscriptType">-->
-<!--          <el-select v-model="form.manuscriptType" placeholder="请选择稿本">-->
-<!--            <el-option-->
-<!--              v-for="dict in manuscriptTypeOptions"-->
-<!--              :key="dict.dictValue"-->
-<!--              :label="dict.dictLabel"-->
-<!--              :value="dict.dictValue"-->
-<!--            ></el-option>-->
-<!--          </el-select>-->
-<!--        </el-form-item>-->
-<!--        <el-form-item label="知识产权说明" prop="intellectualPropertyStatement">-->
-<!--          <el-input v-model="form.intellectualPropertyStatement" placeholder="请输入知识产权说明" />-->
-<!--        </el-form-item>-->
-<!--        <el-form-item label="授权对象" prop="authorizedAgent">-->
-<!--          <el-input v-model="form.authorizedAgent" placeholder="请输入授权对象" />-->
-<!--        </el-form-item>-->
-<!--        <el-form-item label="授权行为" prop="permissionAssignment">-->
-<!--          <el-select v-model="form.permissionAssignment" placeholder="请选择授权行为">-->
-<!--            <el-option-->
-<!--              v-for="dict in permissionAssignmentOptions"-->
-<!--              :key="dict.dictValue"-->
-<!--              :label="dict.dictLabel"-->
-<!--              :value="dict.dictValue"-->
-<!--            ></el-option>-->
-<!--          </el-select>-->
-<!--        </el-form-item>-->
-<!--        <el-form-item label="控制标识" prop="controlIdentifier">-->
-<!--          <el-select v-model="form.controlIdentifier" placeholder="请选择控制标识">-->
-<!--            <el-option-->
-<!--              v-for="dict in controlIdentifierOptions"-->
-<!--              :key="dict.dictValue"-->
-<!--              :label="dict.dictLabel"-->
-<!--              :value="dict.dictValue"-->
-<!--            ></el-option>-->
-<!--          </el-select>-->
-<!--        </el-form-item>-->
-<!--        <el-form-item label="附注" prop="annotation">-->
-<!--          <el-input v-model="form.annotation" type="textarea" placeholder="请输入内容" />-->
-<!--        </el-form-item>-->
-<!--      </el-form>-->
-<!--      <div slot="footer" class="dialog-footer">-->
-<!--        <el-button type="primary" @click="submitForm">确 定</el-button>-->
-<!--        <el-button @click="cancel">取 消</el-button>-->
-<!--      </div>-->
-<!--    </el-dialog>-->
-    <InputView v-if="open" :formconf="formConf" @close="cancel"/>
+    <InputView v-if="open" :metadataid="id" :type="type" :formconf="formConf" @close="cancel"/>
   </div>
 </template>
 
@@ -759,6 +533,7 @@ import DeptTree from '@/views/components/deptTree'
 import InputView from '@/views/system/metadata/InputView'
 import { listJson } from '@/api/system/json'
 import {listDefinition} from '@/api/system/metadataRule'
+import { deepClone } from '@/utils'
 export default {
   name: "Metadata",
   components: {
@@ -767,8 +542,12 @@ export default {
   },
   data() {
     return {
+      id:0,
+      type:'create',
+      data:{},
       definition:[],
       formConf:{},
+      formReserve:{},
       //默认部门ID
       deptId:100,
       //部门名称
@@ -1026,33 +805,34 @@ export default {
   },
   created() {
     this.getList();
-    this.getDicts("ws_al").then(response => {
-      this.aggregationLevelOptions = response.data;
-    });
-    this.getDicts("sys_rp").then(response => {
-      this.retentionPeriodOptions = response.data;
-    });
-    this.getDicts("document_type").then(response => {
-      this.documentTypeOptions = response.data;
-    });
-    this.getDicts("precedence").then(response => {
-      this.precedenceOptions = response.data;
-    });
-    this.getDicts("security_classification").then(response => {
-      this.securityClassificationOptions = response.data;
-    });
-    this.getDicts("document_aggregation_type").then(response => {
-      this.documentAggregationTypeOptions = response.data;
-    });
-    this.getDicts("manuscript_type").then(response => {
-      this.manuscriptTypeOptions = response.data;
-    });
-    this.getDicts("permission_assignment").then(response => {
-      this.permissionAssignmentOptions = response.data;
-    });
-    this.getDicts("control_identifier").then(response => {
-      this.controlIdentifierOptions = response.data;
-    });
+    this.loadForm();
+    // this.getDicts("ws_al").then(response => {
+    //   this.aggregationLevelOptions = response.data;
+    // });
+    // this.getDicts("sys_rp").then(response => {
+    //   this.retentionPeriodOptions = response.data;
+    // });
+    // this.getDicts("document_type").then(response => {
+    //   this.documentTypeOptions = response.data;
+    // });
+    // this.getDicts("precedence").then(response => {
+    //   this.precedenceOptions = response.data;
+    // });
+    // this.getDicts("security_classification").then(response => {
+    //   this.securityClassificationOptions = response.data;
+    // });
+    // this.getDicts("document_aggregation_type").then(response => {
+    //   this.documentAggregationTypeOptions = response.data;
+    // });
+    // this.getDicts("manuscript_type").then(response => {
+    //   this.manuscriptTypeOptions = response.data;
+    // });
+    // this.getDicts("permission_assignment").then(response => {
+    //   this.permissionAssignmentOptions = response.data;
+    // });
+    // this.getDicts("control_identifier").then(response => {
+    //   this.controlIdentifierOptions = response.data;
+    // });
   },
   methods: {
     // 节点单击事件
@@ -1107,65 +887,65 @@ export default {
     },
     // 取消按钮
     cancel() {
-      console.log('父组件22')
       this.open = false;
       //this.reset();
     },
     // 表单重置
     reset() {
-      this.form = {
-        id: null,
-        aggregationLevel: null,
-        archivesName: null,
-        archivesIdentifier: null,
-        fondsName: null,
-        fondsConstitutingUnitName: null,
-        electronicRecordCode: null,
-        archivalCode: null,
-        fondsIdentifier: null,
-        catalogueNumber: null,
-        year: null,
-        retentionPeriod: null,
-        organizationalStructureOrFunction: null,
-        categoryCode: null,
-        agencyFileNumber: null,
-        archivesFileNumber: null,
-        agencyItemNumber: null,
-        archivesItemNumber: null,
-        documentSequenceNumber: null,
-        pageNumber: null,
-        contentDescription: null,
-        title: null,
-        parallelTitle: null,
-        alternativeTitle: null,
-        otherTitleInformation: null,
-        descriptor: null,
-        keyword: null,
-        personalName: null,
-        abstract: null,
-        classCode: null,
-        documentNumber: null,
-        author: null,
-        date: null,
-        documentType: null,
-        precedence: null,
-        principalReceiver: null,
-        otherReceivers: null,
-        securityClassification: null,
-        secrecyPeriod: null,
-        formalCharacteristics: null,
-        documentAggregationType: null,
-        totalNumberOfItems: null,
-        totalNumberOfPages: null,
-        language: null,
-        manuscriptType: null,
-        intellectualPropertyStatement: null,
-        authorizedAgent: null,
-        permissionAssignment: null,
-        controlIdentifier: null,
-        annotation: null
-      };
-      this.resetForm("form");
+      this.formConf=this.formReserve
+      // this.form = {
+      //   id: null,
+      //   aggregationLevel: null,
+      //   archivesName: null,
+      //   archivesIdentifier: null,
+      //   fondsName: null,
+      //   fondsConstitutingUnitName: null,
+      //   electronicRecordCode: null,
+      //   archivalCode: null,
+      //   fondsIdentifier: null,
+      //   catalogueNumber: null,
+      //   year: null,
+      //   retentionPeriod: null,
+      //   organizationalStructureOrFunction: null,
+      //   categoryCode: null,
+      //   agencyFileNumber: null,
+      //   archivesFileNumber: null,
+      //   agencyItemNumber: null,
+      //   archivesItemNumber: null,
+      //   documentSequenceNumber: null,
+      //   pageNumber: null,
+      //   contentDescription: null,
+      //   title: null,
+      //   parallelTitle: null,
+      //   alternativeTitle: null,
+      //   otherTitleInformation: null,
+      //   descriptor: null,
+      //   keyword: null,
+      //   personalName: null,
+      //   abstract: null,
+      //   classCode: null,
+      //   documentNumber: null,
+      //   author: null,
+      //   date: null,
+      //   documentType: null,
+      //   precedence: null,
+      //   principalReceiver: null,
+      //   otherReceivers: null,
+      //   securityClassification: null,
+      //   secrecyPeriod: null,
+      //   formalCharacteristics: null,
+      //   documentAggregationType: null,
+      //   totalNumberOfItems: null,
+      //   totalNumberOfPages: null,
+      //   language: null,
+      //   manuscriptType: null,
+      //   intellectualPropertyStatement: null,
+      //   authorizedAgent: null,
+      //   permissionAssignment: null,
+      //   controlIdentifier: null,
+      //   annotation: null
+      // };
+      // this.resetForm("form");
     },
     /** 搜索按钮操作 */
     handleQuery() {
@@ -1187,6 +967,7 @@ export default {
       let query = {id:'',parentName: '文书',node:'基本数据'}
       listJson(query).then(res => {
         this.formConf=JSON.parse(res.rows[0].formData)
+        this.formReserve=deepClone(this.formConf)
         console.log(this.formConf)
       }).catch(err=>{
         console.log(err)
@@ -1194,19 +975,19 @@ export default {
     },
     /** 新增按钮操作 */
     handleAdd() {
-      this.loadForm();
+      this.type='create'
       this.open = true;
+      this.formConf=this.formReserve
       this.title = "添加文书类基本元数据";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
-      this.reset();
+      // this.reset();
       const id = row.id || this.ids
-      getMetadata(id).then(response => {
-        this.form = response.data;
-        this.open = true;
-        this.title = "修改文书类基本元数据";
-      });
+      this.id = id[0];
+      console.log(this.id)
+      this.type='modify'
+      this.open = true;
     },
     /** 提交按钮 */
     submitForm() {

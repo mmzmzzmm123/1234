@@ -51,6 +51,24 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="language"    column="language"    />
         <result property="manuscriptType"    column="manuscript_type"    />
         <result property="annotation"    column="annotation"    />
+        <association property="metadataReserve" javaType="com.gox.system.domain.MetadataReserve">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="f1" column="f1" jdbcType="VARCHAR"/>
+            <result property="f2" column="f2" jdbcType="VARCHAR"/>
+            <result property="f3" column="f3" jdbcType="VARCHAR"/>
+            <result property="f4" column="f4" jdbcType="VARCHAR"/>
+            <result property="f5" column="f5" jdbcType="VARCHAR"/>
+            <result property="f6" column="f6" jdbcType="VARCHAR"/>
+            <result property="f7" column="f7" jdbcType="VARCHAR"/>
+            <result property="f8" column="f8" jdbcType="VARCHAR"/>
+            <result property="f9" column="f9" jdbcType="VARCHAR"/>
+            <result property="f10" column="f10" jdbcType="VARCHAR"/>
+            <result property="f11" column="f11" jdbcType="VARCHAR"/>
+            <result property="f12" column="f12" jdbcType="VARCHAR"/>
+            <result property="f13" column="f13" jdbcType="VARCHAR"/>
+            <result property="f14" column="f14" jdbcType="VARCHAR"/>
+            <result property="f15" column="f15" jdbcType="VARCHAR"/>
+        </association>
         <collection property="electronicAttributes" ofType="com.gox.system.domain.ElectronicAttributes" column="metadata_id">
             <id property="id" column="id" />
             <result property="formatInformation"    column="format_information"    />
@@ -92,7 +110,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectMetadataVo">
-        select id, aggregation_level, archives_name, archives_identifier,
+        select md.id, aggregation_level, archives_name, archives_identifier,
         fonds_name, fonds_constituting_unit_name, electronic_record_code,
         archival_code, fonds_identifier, catalogue_number, year, retention_period,
         organizational_structure_or_function, category_code, agency_file_number,
@@ -104,12 +122,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         other_receivers, security_classification, secrecy_period, formal_characteristics,
         document_aggregation_type, total_number_of_items, total_number_of_pages,
         language, manuscript_type, annotation,
-        ds.id, ds.signature_format_description, ds.signature_date, ds.signer, ds.signature, ds.certificate, ds.certificate_reference, ds.signature_algorithm, ds.metadata_id, ds.ele_id ,
-        ea.id, ea.format_information, ea.computer_file_name, ea.computer_file_size, ea.document_creating_application, ea.information_system_description, ea.physical_record_characteristics, ea.scanning_resolution, ea.scanning_color_model, ea.image_compression_scheme, ea.current_location, ea.offline_medium_identifier, ea.offline_medium_storage_location, ea.microform_identifier, ea.metadata_id,
-        rm.id, rm.metadata_id, rm.intellectual_property_statement, rm.authorized_agent, rm.permission_assignment, rm.control_identifier
+        ds.signature_format_description, ds.signature_date, ds.signer, ds.signature, ds.certificate, ds.certificate_reference, ds.signature_algorithm, ds.metadata_id, ds.ele_id ,
+        ea.format_information, ea.computer_file_name, ea.computer_file_size, ea.document_creating_application, ea.information_system_description, ea.physical_record_characteristics, ea.scanning_resolution, ea.scanning_color_model, ea.image_compression_scheme, ea.current_location, ea.offline_medium_identifier, ea.offline_medium_storage_location, ea.microform_identifier, ea.metadata_id,
+        rm.metadata_id, rm.intellectual_property_statement, rm.authorized_agent, rm.permission_assignment, rm.control_identifier,
+        mr.f1, mr.f2,mr.f3,mr.f4,mr.f5,mr.f6,mr.f7,mr.f8,mr.f9,mr.f10,mr.f11,mr.f12,mr.f13,mr.f14,mr.f15
         from metadata md
-        left join electronic_attributes ea on md.id=ea.metadata_id left join digital_signature ds on md.id=ds.metadata_id left join rights_management rm on md.id=rm.metadata_id
-
+        left join electronic_attributes ea on md.id=ea.metadata_id left join digital_signature ds on md.id=ds.metadata_id left join rights_management rm on md.id=rm.metadata_id left join metadata_reserve mr on md.id=mr.id
     </sql>
 
     <select id="selectMetadataList" parameterType="Metadata" resultMap="MetadataResult">
@@ -169,7 +187,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
     <select id="selectMetadataById" parameterType="Long" resultMap="MetadataResult">
         <include refid="selectMetadataVo"/>
-        where id = #{id}
+        where md.id = #{id}
     </select>
         
     <insert id="insertMetadata" parameterType="Metadata">

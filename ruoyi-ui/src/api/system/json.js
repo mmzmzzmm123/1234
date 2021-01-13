@@ -8,6 +8,13 @@ export function listJson(query) {
     params: query
   })
 }
+// 获取一个id
+export function getId(){
+  return request({
+    url:'/system/json/id',
+    method:'post'
+  })
+}
 
 // 查询表单json存储详细
 export function getJson(id) {

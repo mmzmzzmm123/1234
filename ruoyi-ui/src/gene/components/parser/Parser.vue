@@ -1,6 +1,8 @@
 <script>
 import { deepClone } from '@/gene/utils'
 import render from '@/gene/components/render/render.js'
+import { getJson } from '@/api/system/json'
+import { getMetadata } from '@/api/system/metadata'
 
 const ruleTrigger = {
   'el-input': 'blur',
@@ -182,11 +184,11 @@ export default {
     },
     cancel() {
       // 触发sumit事件
-      this.$emit('cancel', this[this.formConf.formModel])
+      this.$emit('cancel' )
     },
     close() {
       // 触发sumit事件
-      this.$emit('close', this[this.formConf.formModel])
+      this.$emit('close')
     }
   },
   render(h) {

@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace=".dao.MetadataReserveDao">
+
+    <resultMap type="com.gox.system.domain.MetadataReserve" id="MetadataReserveMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="f1" column="f1" jdbcType="VARCHAR"/>
+        <result property="f2" column="f2" jdbcType="VARCHAR"/>
+        <result property="f3" column="f3" jdbcType="VARCHAR"/>
+        <result property="f4" column="f4" jdbcType="VARCHAR"/>
+        <result property="f5" column="f5" jdbcType="VARCHAR"/>
+        <result property="f6" column="f6" jdbcType="VARCHAR"/>
+        <result property="f7" column="f7" jdbcType="VARCHAR"/>
+        <result property="f8" column="f8" jdbcType="VARCHAR"/>
+        <result property="f9" column="f9" jdbcType="VARCHAR"/>
+        <result property="f10" column="f10" jdbcType="VARCHAR"/>
+        <result property="f11" column="f11" jdbcType="VARCHAR"/>
+        <result property="f12" column="f12" jdbcType="VARCHAR"/>
+        <result property="f13" column="f13" jdbcType="VARCHAR"/>
+        <result property="f14" column="f14" jdbcType="VARCHAR"/>
+        <result property="f15" column="f15" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="MetadataReserveMap">
+        select
+          id, f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11, f12, f13, f14, f15
+        from ry.metadata_reserve
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="MetadataReserveMap">
+        select
+          id, f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11, f12, f13, f14, f15
+        from ry.metadata_reserve
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="MetadataReserveMap">
+        select
+        id, f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11, f12, f13, f14, f15
+        from ry.metadata_reserve
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="f1 != null and f1 != ''">
+                and f1 = #{f1}
+            </if>
+            <if test="f2 != null and f2 != ''">
+                and f2 = #{f2}
+            </if>
+            <if test="f3 != null and f3 != ''">
+                and f3 = #{f3}
+            </if>
+            <if test="f4 != null and f4 != ''">
+                and f4 = #{f4}
+            </if>
+            <if test="f5 != null and f5 != ''">
+                and f5 = #{f5}
+            </if>
+            <if test="f6 != null and f6 != ''">
+                and f6 = #{f6}
+            </if>
+            <if test="f7 != null and f7 != ''">
+                and f7 = #{f7}
+            </if>
+            <if test="f8 != null and f8 != ''">
+                and f8 = #{f8}
+            </if>
+            <if test="f9 != null and f9 != ''">
+                and f9 = #{f9}
+            </if>
+            <if test="f10 != null and f10 != ''">
+                and f10 = #{f10}
+            </if>
+            <if test="f11 != null and f11 != ''">
+                and f11 = #{f11}
+            </if>
+            <if test="f12 != null and f12 != ''">
+                and f12 = #{f12}
+            </if>
+            <if test="f13 != null and f13 != ''">
+                and f13 = #{f13}
+            </if>
+            <if test="f14 != null and f14 != ''">
+                and f14 = #{f14}
+            </if>
+            <if test="f15 != null and f15 != ''">
+                and f15 = #{f15}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into ry.metadata_reserve(f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11, f12, f13, f14, f15)
+        values (#{f1}, #{f2}, #{f3}, #{f4}, #{f5}, #{f6}, #{f7}, #{f8}, #{f9}, #{f10}, #{f11}, #{f12}, #{f13}, #{f14}, #{f15})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into ry.metadata_reserve(f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11, f12, f13, f14, f15)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.f1}, #{entity.f2}, #{entity.f3}, #{entity.f4}, #{entity.f5}, #{entity.f6}, #{entity.f7},
+            #{entity.f8}, #{entity.f9}, #{entity.f10}, #{entity.f11}, #{entity.f12}, #{entity.f13}, #{entity.f14},
+            #{entity.f15})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into ry.metadata_reserve(f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11, f12, f13, f14, f15)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.f1}, #{entity.f2}, #{entity.f3}, #{entity.f4}, #{entity.f5}, #{entity.f6}, #{entity.f7},
+            #{entity.f8}, #{entity.f9}, #{entity.f10}, #{entity.f11}, #{entity.f12}, #{entity.f13}, #{entity.f14},
+            #{entity.f15})
+        </foreach>
+        on duplicate key update
+        f1 = values(f1) , f2 = values(f2) , f3 = values(f3) , f4 = values(f4) , f5 = values(f5) , f6 = values(f6) , f7 =
+        values(f7) , f8 = values(f8) , f9 = values(f9) , f10 = values(f10) , f11 = values(f11) , f12 = values(f12) , f13
+        = values(f13) , f14 = values(f14) , f15 = values(f15)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update ry.metadata_reserve
+        <set>
+            <if test="f1 != null and f1 != ''">
+                f1 = #{f1},
+            </if>
+            <if test="f2 != null and f2 != ''">
+                f2 = #{f2},
+            </if>
+            <if test="f3 != null and f3 != ''">
+                f3 = #{f3},
+            </if>
+            <if test="f4 != null and f4 != ''">
+                f4 = #{f4},
+            </if>
+            <if test="f5 != null and f5 != ''">
+                f5 = #{f5},
+            </if>
+            <if test="f6 != null and f6 != ''">
+                f6 = #{f6},
+            </if>
+            <if test="f7 != null and f7 != ''">
+                f7 = #{f7},
+            </if>
+            <if test="f8 != null and f8 != ''">
+                f8 = #{f8},
+            </if>
+            <if test="f9 != null and f9 != ''">
+                f9 = #{f9},
+            </if>
+            <if test="f10 != null and f10 != ''">
+                f10 = #{f10},
+            </if>
+            <if test="f11 != null and f11 != ''">
+                f11 = #{f11},
+            </if>
+            <if test="f12 != null and f12 != ''">
+                f12 = #{f12},
+            </if>
+            <if test="f13 != null and f13 != ''">
+                f13 = #{f13},
+            </if>
+            <if test="f14 != null and f14 != ''">
+                f14 = #{f14},
+            </if>
+            <if test="f15 != null and f15 != ''">
+                f15 = #{f15},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from ry.metadata_reserve where id = #{id}
+    </delete>
+
+</mapper>

@@ -13,20 +13,21 @@
           <el-dialog title="上传文件" :visible.sync="dialogVisible" width="30%" :before-close="beforeClose" style="z-index: 2999">
             <uploadwindow></uploadwindow>
           </el-dialog>
-          <document-view :metadata-id="metadataId" ></document-view>
+          <document-view :metadata-id="mdId" ></document-view>
           <el-button-group>
             <el-button @click="returnLastPage">返回</el-button>
             <el-button @click="save">保存</el-button>
             <el-button @click="close">关闭</el-button>
           </el-button-group>
-        </div>  
+        </div>
       </div>
     </transition>
   </div>
 </template>
 <script>
 import Parser from '@/gene/components/parser/Parser'
-import {listJson} from '@/api/system/json'
+import {listJson,getId} from '@/api/system/json'
+import { addMetadata, getMetadata } from '@/api/system/metadata'
 import DocumentView from '@/views/components/documentView'
 import Uploadwindow from '@/views/components/uploadwindow'
 export default {
@@ -34,6 +35,12 @@ export default {
     formconf: {
       type: Object,
     },
+    type:{
+      type: String,
+    }
+    ,metadataid:{
+      type:Number
+    }
   },
   name: "InputView",
   components: {
@@ -45,9 +52,10 @@ export default {
   },
   data() {
     return{
-      currentPage:3,
+      mdId:1,
+      currentPage:1,
       dialogVisible:false,
-      metadataId:1,
+      //metadataId:1,
       desc:false,
       uploadText:'点击或拖入文件上传',
       uploading:false,
@@ -59,78 +67,79 @@ export default {
       content:{},
       showUpload:true,
       param:{},
+      formdata1:{},
+      formdata2:{},
       formData:{
 
       }
     }
   },
   mounted() {
-
+    this.init();
   },
   created() {
-    this.loading=true;
-    let query = {id:'',parentName: '文书',node:'内容描述'}
-    listJson(query).then(res => {
-      this.content=JSON.parse(res.rows[0].formData)
-    }).catch(err=>{
-      console.log(err)
-    })
-    // console.log(this.formconf)
+
   },
   methods:{
-    // handleChange(file, fileList) {
-    //   // this.fileList.push(file)
-    //
-    // },
-    // handleUploadRequest(back){
-    //   console.log(back)
-    //   this.fileList.push(back.file)
-    //   this.param = back
-    // },
-    // submitUpload() {
-    //   //this.$refs.upload.submit();
-    //   this.dealUpload(this.param)
-    // },
-    // // 处理上传文件
-    // dealUpload (param) {
-    //   uploadByPieces({
-    //     metadataId:this.metadataId,
-    //     files: this.fileList,
-    //     pieceSize: 5,
-    //     chunkUrl: '/system/attributes/chunk',
-    //     fileUrl: '/system/attributes/full',
-    //     progress: (num) => {
-    //       param.file.percent = num
-    //       param.onProgress(param.file)
-    //     },
-    //     success: (data) => {
-    //       this.uploading = false
-    //       this.$emit('uploaded', data)
-    //       //this.fileList = []
-    //     },
-    //     error: (e) => {
-    //       this.uploading = false
-    //     }
-    //   })
-    // },
-    fillFormData(forms, data) {
-      forms.forEach(form=>{
-        form.fields.forEach(item => {
-          const val = data[item.__vModel__]
-          if (val) {
-            item.__config__.defaultValue = val
-          }
+    init(){
+      this.loading=true;
+      let query = {id:'',parentName: '文书',node:'内容描述'}
+      listJson(query).then(res => {
+        this.content=JSON.parse(res.rows[0].formData)
+      }).catch(err=>{
+        console.log(err)
+      })
+      if(this.type==='create'){
+        getId().then(res=>{
+          this.mdId = res.data
         })
+        this.formData={}
+      }
+      else if(this.type==='modify'){
+        getMetadata(this.metadataid).then(response => {
+          this.formData = response.data;
+          console.log(this.formData)
+          this.fillFormData(this.formconf,response.data)
+        });
+        this.mdId=this.metadataid
+      }
+    },
+    fillFormData(form, data) {
+      form.fields.forEach(item => {
+        const val = data[item.__vModel__]
+        if (val) {
+          item.__config__.defaultValue = val
+        }
       })
     },
-    nextPage(){
-      this.open=false
-      this.desc=true
-    },
-    nextPage1(){
-      this.open=false
-      this.desc=false
-      this.showUpload=true
+    nextPage(data){
+      if (this.currentPage===1){
+        this.formdata1=data
+        this.formData=Object.assign(this.formData,this.formdata1)
+      }
+      if (this.currentPage===2){
+        this.formdata2=data
+        this.formData=Object.assign(this.formData,this.formdata2,{id:this.mdId})
+        let obj=this.formData;
+        for(let key  in obj){
+          if(typeof obj[key]==='object'&& obj[key].constructor===Array){
+            if(obj[key].length===0){
+              obj[key]=''
+            }
+            else if(obj[key].length===1){
+              obj[key]=obj[key][0]
+            }
+            else{
+              //console.log(key,obj[key])
+              obj[key]=obj[key].join(',')
+            }
+          }
+        }
+        addMetadata(obj).then()
+      }
+      if (this.currentPage!==3){
+        this.currentPage+=1
+      }
     },
     firstCancel(){
       this.open=false
@@ -141,7 +150,6 @@ export default {
       this.desc=false
     },
     beforeClose(done){
-      console.log('1123')
       done()
     },
     returnLastPage(){
@@ -160,6 +168,17 @@ export default {
       this.formconf=nv
       this.loading = false
     }
+    ,currentPage:function(nv,ov){
+      if(nv===1){
+        this.fillFormData(this.formconf,this.formData)
+      }
+      else if (nv===2){
+        this.fillFormData(this.content,this.formData)
+      }
+    },
+    metadataid:function(nv,ov){
+      this.metadataid=nv
+    },
   }
 
 }

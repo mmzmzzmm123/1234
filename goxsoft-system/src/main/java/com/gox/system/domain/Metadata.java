@@ -201,6 +201,18 @@ public class Metadata extends BaseEntity
     private String manuscriptType;
     /** 电子文件*/
     private List<ElectronicAttributes> electronicAttributes;
+    /**
+     * 备用字段 1-5 长字段 6-15短字段
+     */
+    private MetadataReserve metadataReserve;
+
+    public MetadataReserve getMetadataReserve() {
+        return metadataReserve;
+    }
+
+    public void setMetadataReserve(MetadataReserve metadataReserve) {
+        this.metadataReserve = metadataReserve;
+    }
 //    /** 知识产权说明 */
 //    @Excel(name = "知识产权说明")
 //    private String intellectualPropertyStatement;
