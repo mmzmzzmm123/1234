@@ -189,6 +189,31 @@ public class SysOrder extends BaseEntity {
     private Date orderTime;
 
     /**
+     * 调理项目id
+     */
+    private Integer conditioningProjectId;
+
+    /**
+     * 调理项目
+     */
+    @Excel(name = "调理项目", width = 30)
+    private String conditioningProject;
+
+    /**
+     * 服务结束时间（根据开始日期、服务月份、暂停记录计算而来）
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "服务结束时间", width = 30, dateFormat = "yyyy-MM-dd")
+    private Date serverEndTime;
+
+    /**
+     * 进粉时间
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "进粉时间", width = 30, dateFormat = "yyyy-MM-dd")
+    private Date becomeFanTime;
+
+    /**
      * 订单暂停记录 非持久化字段
      * */
     private List<SysOrderPause> orderPauseList;
@@ -476,6 +501,30 @@ public class SysOrder extends BaseEntity {
         this.orderPauseList = orderPauseList;
     }
 
+    public Integer getConditioningProjectId() {
+        return conditioningProjectId;
+    }
+
+    public void setConditioningProjectId(Integer conditioningProjectId) {
+        this.conditioningProjectId = conditioningProjectId;
+    }
+
+    public Date getServerEndTime() {
+        return serverEndTime;
+    }
+
+    public void setServerEndTime(Date serverEndTime) {
+        this.serverEndTime = serverEndTime;
+    }
+
+    public Date getBecomeFanTime() {
+        return becomeFanTime;
+    }
+
+    public void setBecomeFanTime(Date becomeFanTime) {
+        this.becomeFanTime = becomeFanTime;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
@@ -518,5 +567,13 @@ public class SysOrder extends BaseEntity {
                 .append("pauseTime", getPauseTime())
                 .append("weight", getWeight())
                 .toString();
+    }
+
+    public String getConditioningProject() {
+        return conditioningProject;
+    }
+
+    public void setConditioningProject(String conditioningProject) {
+        this.conditioningProject = conditioningProject;
     }
 }

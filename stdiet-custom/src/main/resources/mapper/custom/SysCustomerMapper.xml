@@ -87,15 +87,14 @@
 
     <select id="selectSysCustomerList" parameterType="SysCustomer" resultMap="SysCustomerResult">
         <include refid="selectSysCustomerVo"/>
-        <where>
-            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
-            <if test="phone != null  and phone != ''"> and phone like concat('%', #{phone}, '%')</if>
-        </where>
+        where del_flag = 0
+        <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+        <if test="phone != null  and phone != ''"> and phone like concat('%', #{phone}, '%')</if>
     </select>
 
     <select id="selectSysCustomerById" parameterType="Long" resultMap="SysCustomerResult">
         <include refid="selectSysCustomerVo"/>
-        where id = #{id}
+        where id = #{id} and del_flag = 0
     </select>
 
     <insert id="insertSysCustomer" parameterType="SysCustomer" useGeneratedKeys="true" keyProperty="id">
@@ -167,21 +166,21 @@
         where id = #{id}
     </update>
 
-    <delete id="deleteSysCustomerById" parameterType="Long">
-        delete from sys_customer where id = #{id}
-    </delete>
+    <update id="deleteSysCustomerById" parameterType="Long">
+        update sys_customer set del_flag = 1 where id = #{id}
+    </update>
 
-    <delete id="deleteSysCustomerByIds" parameterType="String">
-        delete from sys_customer where id in
+    <update id="deleteSysCustomerByIds" parameterType="String">
+        update sys_customer set del_flag = 1 where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
-    </delete>
+    </update>
 
     <!-- 根据手机号查询客户 -->
     <select id="getCustomerByPhone" parameterType="String" resultMap="SysCustomerResult">
         <include refid="selectSysCustomerVo"/>
-        where phone = #{phone}
+        where phone = #{phone} and del_flag = 0
     </select>
 
     <sql id="selectSysCustomerAndSign">
@@ -190,7 +189,7 @@
         select sc.id, sc.name, sc.phone, sc.create_time, sc.create_by, sc.update_time, sc.update_by,
         <include refid="selectSysCustomerPhysicalSigns"></include>
         from sys_customer sc
-        left join sys_customer_physical_signs scps on scps.customer_id = sc.id
+        left join sys_customer_physical_signs scps on scps.customer_id = sc.id and scps.del_flag = 0
     </sql>
 
     <sql id="selectSysCustomerPhysicalSigns">
@@ -201,12 +200,10 @@
     </sql>
 
     <select id="selectSysCustomerAndSignList" parameterType="SysCustomer" resultMap="SysCustomerSignResult">
-        <include refid="selectSysCustomerAndSign"/>
-        <where>
-            <if test="id != null"> and sc.id = #{id} </if>
-            <if test="name != null  and name != ''"> and sc.name like concat('%', #{name}, '%')</if>
-            <if test="phone != null  and phone != ''"> and sc.phone like concat('%', #{phone}, '%')</if>
-        </where>
+        <include refid="selectSysCustomerAndSign"/> where sc.del_flag = 0
+        <if test="id != null"> and sc.id = #{id} </if>
+        <if test="name != null  and name != ''"> and sc.name like concat('%', #{name}, '%')</if>
+        <if test="phone != null  and phone != ''"> and sc.phone like concat('%', #{phone}, '%')</if>
         order by sc.create_time desc
     </select>
 

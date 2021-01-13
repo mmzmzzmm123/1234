@@ -1,21 +1,16 @@
 package com.stdiet.custom.service.impl;
 
 import com.stdiet.common.utils.DateUtils;
-import com.stdiet.common.utils.StringUtils;
 import com.stdiet.custom.domain.*;
 import com.stdiet.custom.mapper.SysCommisionMapper;
 import com.stdiet.custom.mapper.SysOrderMapper;
 import com.stdiet.custom.mapper.SysOrderPauseMapper;
-import com.stdiet.custom.service.ISysCommisionService;
 import com.stdiet.custom.service.ISysCommissionDayService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.text.DecimalFormat;
 import java.time.*;
-import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
 import java.util.*;
@@ -38,7 +33,7 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
         //查询用户
         List<SysCommision> list = sysCommisionMapper.selectSysCommisionDayDetail(sysCommision);
         if(list != null && list.size() > 0){
-            Map<Long, List<SysOrderCommisionDayDetail>> orderDetailMap = getOrderByList(null);
+            Map<Long, List<SysOrderCommisionDayDetail>> orderDetailMap = getOrderByList(sysCommision.getUserId());
             SysCommissionDayDetail sysCommissionDayDetail = null;
             for(SysCommision commision : list){
                 sysCommissionDayDetail = new SysCommissionDayDetail();
@@ -48,9 +43,8 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
                 sysCommissionDayDetail.setPostName(commision.getPostName());
                 sysCommissionDayDetail.setOrderTotalAmount(commision.getAmount());
                 //获取查询时间
-                LocalDate localDate = StringUtils.isEmpty(sysCommision.getBeginTime()) ? LocalDate.now() : LocalDate.parse(sysCommision.getBeginTime(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-                //dealServerOrderCommissionDetail2(orderDetailMap.get(sysCommissionDayDetail.getUserId()), sysCommissionDayDetail, localDate.getYear()+""+localDate.getMonth().getValue());
-                dealServerOrderCommissionDetail2(orderDetailMap.get(sysCommissionDayDetail.getUserId()), sysCommissionDayDetail);
+                //LocalDate localDate = StringUtils.isEmpty(sysCommision.getBeginTime()) ? LocalDate.now() : LocalDate.parse(sysCommision.getBeginTime(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                dealServerOrderCommissionDetail(orderDetailMap.get(sysCommissionDayDetail.getUserId()), sysCommissionDayDetail);
                 result.add(sysCommissionDayDetail);
             }
         }
@@ -61,103 +55,110 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
     /**
      * 根据用户ID统计出该用户在该月所有订单的服务数量、服务总天数、服务订单总额、暂停总天数
      * **/
-    public void dealServerOrderCommissionDetail2(List<SysOrderCommisionDayDetail> orderDetailList, SysCommissionDayDetail sysCommissionDayDetail){
+    public void dealServerOrderCommissionDetail(List<SysOrderCommisionDayDetail> orderDetailList, SysCommissionDayDetail sysCommissionDayDetail){
         //总提成
-        double totalCommissionAmount = 0.0;
+        BigDecimal totalCommissionAmount = new BigDecimal(0);
         //已发放提成
-        double totalHasSentCommissionAmount = 0.0;
+        BigDecimal totalHasSentCommissionAmount = new BigDecimal(0);
         //未发放提成
-        double totalNotSentCommissionAmount = 0.0;
+        BigDecimal totalNotSentCommissionAmount = new BigDecimal(0);
         //未发放提成记录
         List<Map<String, Object>> sendDetailList = new ArrayList<>();
         if(orderDetailList != null){
             //获取每个月的成交总额度
-            Map<String, Double> orderAmount = new TreeMap<>(new MyComparator());
+            Map<String, BigDecimal> orderAmount = new TreeMap<>(new MyComparator());
             Set<String> commissionMonthSet = new TreeSet<>(new MyComparator());
             for (SysOrderCommisionDayDetail sysOrderCommisionDayDetail : orderDetailList) {
                 String yearMonth = sysOrderCommisionDayDetail.getOrderTime().getYear()+""+sysOrderCommisionDayDetail.getOrderTime().getMonth().getValue();
                 if(orderAmount.containsKey(yearMonth)){
-                    orderAmount.put(yearMonth, orderAmount.get(yearMonth) + sysOrderCommisionDayDetail.getOrderAmount().doubleValue());
+                    orderAmount.put(yearMonth, orderAmount.get(yearMonth).add(sysOrderCommisionDayDetail.getOrderAmount()));
                 }else{
-                    orderAmount.put(yearMonth, sysOrderCommisionDayDetail.getOrderAmount().doubleValue());
+                    orderAmount.put(yearMonth, sysOrderCommisionDayDetail.getOrderAmount());
                 }
                 commissionMonthSet.addAll(sysOrderCommisionDayDetail.getEveryYearMonthServerMoney().keySet());
             }
             //获取提成比例以及计算提成
-            Map<String, Float> rateMap = getRateByAmount2(sysCommissionDayDetail.getUserId(), sysCommissionDayDetail.getPostId(), orderAmount);
+            Map<String, Float> rateMap = getRateByAmount(sysCommissionDayDetail.getUserId(), sysCommissionDayDetail.getPostId(), orderAmount);
 
             int i = 1;
-            double commissionA = 0D;
+            BigDecimal commissionA = new BigDecimal(0);
             for (String ym : commissionMonthSet) {
-                double ym_mession = 0;
+                BigDecimal ym_mession = new BigDecimal(0);
                 if(orderAmount.containsKey(ym)){
-                    totalCommissionAmount += orderAmount.get(ym) * rateMap.get(ym) / 100D;
+                    totalCommissionAmount = totalCommissionAmount.add(getMoney(orderAmount.get(ym).doubleValue() * rateMap.get(ym) / 100D, 1));
                 }
                 for (SysOrderCommisionDayDetail sysOrderCommisionDayDetail : orderDetailList) {
                     Map<String, BigDecimal> everyYearMonthServerMoney = sysOrderCommisionDayDetail.getEveryYearMonthServerMoney();
                     if(everyYearMonthServerMoney.containsKey(ym)){
                         String orderYearMonth = sysOrderCommisionDayDetail.getOrderTime().getYear()+""+sysOrderCommisionDayDetail.getOrderTime().getMonth().getValue();
-                        double m = (everyYearMonthServerMoney.get(ym) == null) ? 0 : everyYearMonthServerMoney.get(ym).doubleValue();
-                        ym_mession += m * rateMap.get(orderYearMonth) / 100D;
+                        BigDecimal m = (everyYearMonthServerMoney.get(ym) == null) ? new BigDecimal(0) : everyYearMonthServerMoney.get(ym);
+                        ym_mession = ym_mession.add(getMoney(m.doubleValue() * rateMap.get(orderYearMonth) / 100D, 1));
                     }
                 }
                 if(isSendCommissionByYearMonth(ym)){
-                    totalHasSentCommissionAmount += ym_mession;
+                    totalHasSentCommissionAmount = totalHasSentCommissionAmount.add(ym_mession);
                 }else{
                     Map<String, Object> map = new HashMap<>();
                     map.put("yearMonth", ym);
-                    if(i++ != commissionMonthSet.size()){
-                        map.put("yearMonthCommission", getMoney(ym_mession, 1));
+                    if(i != commissionMonthSet.size()){
+                        //计算未发放的提成（除最后一个月）
+                        commissionA = commissionA.add(ym_mession);
+                        map.put("yearMonthCommission", ym_mession);
                     }else{
-                        System.out.println("最后："+commissionA);
-                        map.put("yearMonthCommission", getMoney(totalCommissionAmount - commissionA, 1));
+                        //最后一个月除去已发放的月份的提成，再减去前面未发放提成，防止出现误差
+                        map.put("yearMonthCommission", totalCommissionAmount.subtract(totalHasSentCommissionAmount).subtract(commissionA));
                     }
                     sendDetailList.add(map);
                 }
-                commissionA += getMoney(ym_mession, 1).doubleValue();
+                i++;
 
             }
         }
-        sysCommissionDayDetail.setTotalCommissionAmount(getMoney(totalCommissionAmount,1));
-        sysCommissionDayDetail.setTotalHasSentCommissionAmount(getMoney(totalHasSentCommissionAmount,1));
-        sysCommissionDayDetail.setTotalNotSentCommissionAmount(getMoney(totalCommissionAmount - totalHasSentCommissionAmount,1));
+        sysCommissionDayDetail.setTotalCommissionAmount(totalCommissionAmount);
+        sysCommissionDayDetail.setTotalHasSentCommissionAmount(totalHasSentCommissionAmount);
+        sysCommissionDayDetail.setTotalNotSentCommissionAmount(totalCommissionAmount.subtract(totalHasSentCommissionAmount));
         sysCommissionDayDetail.setSendDetailList(sendDetailList);
     }
 
+    /**判断该月提成是否已发放*/
     public boolean isSendCommissionByYearMonth(String yearMonth){
         LocalDate localDate = LocalDate.of(Integer.parseInt(yearMonth.substring(0,4)), Integer.parseInt(yearMonth.substring(4)), 1);
         LocalDate nowDate = LocalDate.now();
-        if(localDate.getMonth().getValue() >= 0){
-            return false;
+        long betweenMonth = ChronoUnit.MONTHS.between(localDate, nowDate);
+        if(betweenMonth > 1){
+            return true;
+        }else if(betweenMonth == 1){
+            //判断目前是否大于15号
+            return nowDate.getDayOfMonth() > 15 ? true : false;
         }
-        return true;
+        return false;
     }
 
     /**
      * 根据用户成交总额获取对应比例，再计算提成
      * */
-    public Map<String, Float> getRateByAmount2(Long userId, Long postId, Map<String, Double> amountMap){
+    public Map<String, Float> getRateByAmount(Long userId, Long postId, Map<String, BigDecimal> amountMap){
         SysCommision tmpQueryCom = new SysCommision();
         tmpQueryCom.setUserId(userId);
         tmpQueryCom.setPostId(postId);
         List<SysCommision> tmpComList = sysCommisionMapper.selectSysCommisionList(tmpQueryCom);
         Map<String, Float> rateMap = new TreeMap<>(new MyComparator());
         for(String yearMonth : amountMap.keySet()){
-            double orderAmount = amountMap.get(yearMonth);
+            BigDecimal orderAmount = amountMap.get(yearMonth);
             rateMap.put(yearMonth, 0F);
             if(tmpComList != null && tmpComList.size() > 0){
                 for (int i = 0; i < tmpComList.size(); i++) {
                     SysCommision com = tmpComList.get(i);
                     double cAmount = com.getAmount().floatValue();
-                    if (orderAmount <= cAmount && i == 0) {
+                    if (orderAmount.floatValue() <= cAmount && i == 0) {
                         // 第一条规则
                         rateMap.put(yearMonth,com.getRate());
                         break;
-                    } else if (i == tmpComList.size() - 1 && orderAmount > cAmount) {
+                    } else if (i == tmpComList.size() - 1 && orderAmount.floatValue() > cAmount) {
                         // 最后一条规则
                         rateMap.put(yearMonth,com.getRate());
                         break;
-                    } else if (cAmount < orderAmount && orderAmount <= tmpComList.get(i + 1).getAmount().floatValue()) {
+                    } else if (cAmount < orderAmount.floatValue() && orderAmount.floatValue() <= tmpComList.get(i + 1).getAmount().floatValue()) {
                         // 中间规则
                         rateMap.put(yearMonth,tmpComList.get(i + 1).getRate());
                         break;
@@ -166,79 +167,6 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
             }
         }
         return rateMap;
-    }
-
-    /**
-     * 根据用户ID统计出该用户在该月所有订单的服务数量、服务总天数、服务订单总额、暂停总天数
-     * **/
-    public void dealServerOrderCommissionDetail(List<SysOrderCommisionDayDetail> orderDetailList, SysCommissionDayDetail sysCommissionDayDetail, String yearMonth){
-        //服务订单数量
-        int serverOrderCount = 0;
-        //服务总天数
-        int serverTotalDay = 0;
-        //服务订单总金额
-        double serverTotalAmount = 0.0;
-        //暂停总天数
-        int pauseTotalDay = 0;
-        if(orderDetailList != null){
-            for (SysOrderCommisionDayDetail sysOrderCommisionDayDetail : orderDetailList) {
-                //Map<String, Integer> dayMap = ((Map<String, Integer>)orderMap.get("everyYearMonthServerDay"));
-                if(sysOrderCommisionDayDetail.getEveryYearMonthServerDay() != null && sysOrderCommisionDayDetail.getEveryYearMonthServerDay().containsKey(yearMonth)){
-                    int day = sysOrderCommisionDayDetail.getEveryYearMonthServerDay().get(yearMonth).intValue();
-                    serverTotalDay += day;
-                    serverOrderCount += day > 0 ? 1 : 0;
-                }
-                if(sysOrderCommisionDayDetail.getEveryYearMonthServerMoney() != null && sysOrderCommisionDayDetail.getEveryYearMonthServerMoney().containsKey(yearMonth)){
-                    serverTotalAmount += sysOrderCommisionDayDetail.getEveryYearMonthServerMoney().get(yearMonth).doubleValue();
-                }
-                //dayMap = ((Map<String, Integer>)orderMap.get("everyYearMonthPauseDay"));
-                if(sysOrderCommisionDayDetail.getEveryYearMonthPauseDay() != null && sysOrderCommisionDayDetail.getEveryYearMonthPauseDay().containsKey(yearMonth)){
-                    pauseTotalDay += sysOrderCommisionDayDetail.getEveryYearMonthPauseDay().get(yearMonth).intValue();
-                }
-            }
-        }
-        sysCommissionDayDetail.setServerOrderTotalCount(serverOrderCount);
-        sysCommissionDayDetail.setServerTotalDay(serverTotalDay);
-        sysCommissionDayDetail.setServerTotalAmount(getMoney(serverTotalAmount, 1));
-        sysCommissionDayDetail.setServerOrderPauseTotalDay(pauseTotalDay);
-        //获取提成比例以及计算提成
-        getRateByAmount(sysCommissionDayDetail);
-
-    }
-
-    /**
-     * 根据用户成交总额获取对应比例，再计算提成
-     * */
-    public void getRateByAmount(SysCommissionDayDetail sysCommissionDayDetail){
-        SysCommision tmpQueryCom = new SysCommision();
-        tmpQueryCom.setUserId(sysCommissionDayDetail.getUserId());
-        tmpQueryCom.setPostId(sysCommissionDayDetail.getPostId());
-        List<SysCommision> tmpComList = sysCommisionMapper.selectSysCommisionList(tmpQueryCom);
-        double orderAmount = sysCommissionDayDetail.getOrderTotalAmount().doubleValue();
-        sysCommissionDayDetail.setRate(0F);
-        sysCommissionDayDetail.setCommissionTotalAmount(getMoney(0.0D, 1));
-        if(tmpComList != null && tmpComList.size() > 0){
-            for (int i = 0; i < tmpComList.size(); i++) {
-                SysCommision com = tmpComList.get(i);
-                double cAmount = com.getAmount().floatValue();
-                if (orderAmount <= cAmount && i == 0) {
-                    // 第一条规则
-                    sysCommissionDayDetail.setRate(com.getRate());
-                    break;
-                } else if (i == tmpComList.size() - 1 && orderAmount > cAmount) {
-                    // 最后一条规则
-                    sysCommissionDayDetail.setRate(com.getRate());
-                    break;
-                } else if (cAmount < orderAmount && orderAmount <= tmpComList.get(i + 1).getAmount().floatValue()) {
-                    // 中间规则
-                    sysCommissionDayDetail.setRate(tmpComList.get(i + 1).getRate());
-                    break;
-                }
-            }
-        }
-        double serverAmount = sysCommissionDayDetail.getServerTotalAmount().doubleValue();
-        serverAmount = serverAmount * sysCommissionDayDetail.getRate() / 100D;
-        sysCommissionDayDetail.setCommissionTotalAmount(getMoney(serverAmount, 1));
     }
 
     /**
@@ -251,15 +179,20 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
         Map<Long, List<SysOrderCommisionDayDetail>> userOrderResultMap = new HashMap<>();
         for (SysOrder sysOrder : orderList) {
             //建档时间为空、售后人员ID为空、营养师ID为空、订单金额为空或小于0，都视为异常订单
-            if(sysOrder.getStartTime() == null || sysOrder.getAfterSaleId() == null || sysOrder.getNutritionistId() == null
+            if(sysOrder.getOrderTime() == null || sysOrder.getStartTime() == null || sysOrder.getServeTimeId() == null
+                    || (sysOrder.getAfterSaleId() == null && sysOrder.getNutritionistId() == null)
                     || sysOrder.getAmount() == null || sysOrder.getAmount().doubleValue() < 0){
-                System.out.println("客户："+ sysOrder.getCustomer() +",营养师："+sysOrder.getNutritionist() + ",售后" + sysOrder.getAfterSale());
+                //System.out.println("客户："+ sysOrder.getCustomer() +",营养师："+sysOrder.getNutritionist() + ",售后" + sysOrder.getAfterSale());
                 continue;
             }
             //对每笔订单进行处理，统计出该比订单在每年每月对应的服务天数、金额、暂停天数等
             SysOrderCommisionDayDetail sysOrderCommisionDayDetail = statisticsOrderMessage(sysOrder);
-            addUserOrderResultMap(sysOrder.getAfterSaleId(), sysOrderCommisionDayDetail, userOrderResultMap);
-            addUserOrderResultMap(sysOrder.getNutritionistId(), sysOrderCommisionDayDetail, userOrderResultMap);
+            if(sysOrder.getAfterSaleId() != null && sysOrder.getAfterSaleId() > 0L){
+                addUserOrderResultMap(sysOrder.getAfterSaleId(), sysOrderCommisionDayDetail, userOrderResultMap);
+            }
+            if(sysOrder.getNutritionistId() != null && sysOrder.getNutritionistId() > 0L){
+                addUserOrderResultMap(sysOrder.getNutritionistId(), sysOrderCommisionDayDetail, userOrderResultMap);
+            }
         }
         return userOrderResultMap;
     }
@@ -433,8 +366,8 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
     /**
      * double转为BigDecimal，保留一位小数，向下舍去
      * */
-    public BigDecimal getMoney(double money, int n){
-        return new BigDecimal(money).setScale(n, RoundingMode.DOWN);
+    public BigDecimal getMoney(Double money, int n){
+        return new BigDecimal(money).setScale(n, BigDecimal.ROUND_HALF_UP);
     }
 
     /**
@@ -449,29 +382,20 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
     }
 
     public static void main(String[] args){
-        DecimalFormat df = new DecimalFormat("#.#");
-        BigDecimal money = new BigDecimal(3300.00/91);
-        System.out.println(Period.between(LocalDate.of(2020,2, 28), LocalDate.of(2020,1, 27)).getDays());
-        System.out.println(ChronoUnit.DAYS.between(LocalDate.of(2021,2, 28), LocalDate.of(2021,3, 1)));
-        System.out.println(LocalDate.of(2020,1, 20).getYear());
-        System.out.println(LocalDate.of(2021,1, 30).plusMonths(1));
+        Double s = 31190.1;
+       /* NumberFormat nf = NumberFormat.getNumberInstance();
+        // 保留小数位数
+        nf.setMaximumFractionDigits(1);
+        // 如果不需要四舍五入，可以使用
+        nf.setRoundingMode(RoundingMode.DOWN);
+        System.out.println(Double.parseDouble(nf.format(s)));
+        System.out.println( new BigDecimal(nf.format(s)).doubleValue());*/
+        System.out.println(new BigDecimal(s).setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue());
 
-        System.out.println("s" + LocalDate.of(2021,1, 30).getMonth().getValue());
-
-        System.out.println("----------------------------");
-        LocalDate server_end_date = LocalDate.now().plusMonths(3);
-        server_end_date = server_end_date.plusDays(7);
-        server_end_date = server_end_date.minusDays(7);
-        System.out.println(server_end_date);
-
-        System.out.println(LocalDate.now().getMonth().getValue());
-
-        Float f = 520.4F;
-        System.out.println(f * 1 / 100F);
-
-        System.out.println(new BigDecimal(f * 1 / 100F).setScale(1, RoundingMode.DOWN));
+        LocalDate localDate = LocalDate.of(2020, 1, 15);
+        System.out.println(ChronoUnit.MONTHS.between(localDate, LocalDate.now()));
+        System.out.println(localDate.getDayOfMonth());
+        System.out.println(localDate.getDayOfWeek());
+        System.out.println(localDate.getDayOfYear());
     }
-
-
-
 }
