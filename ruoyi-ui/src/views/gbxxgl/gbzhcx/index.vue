@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-row :gutter="20">
       <!--部门数据-->
-      <el-col :span="4" :xs="24">
+      <!-- <el-col :span="4" :xs="24">
         <div class="head-container">
           <el-input
             v-model="deptName"
@@ -24,9 +24,9 @@
             @node-click="handleNodeClick"
           />
         </div>
-      </el-col>
+      </el-col> -->
       <!--教师数据-->
-      <el-col :span="20" :xs="24">
+      <el-col :span="24" :xs="24">
         <el-form
           :model="queryParams"
           ref="queryForm"
@@ -34,115 +34,53 @@
           v-show="showSearch"
           label-width="70px"
         >
-          <el-form-item label="干部姓名" prop="name">
-            <el-input
-              v-model="queryParams.name"
-              placeholder="请输入干部姓名"
-              clearable
-              size="small"
-              @keyup.enter.native="handleQuery"
-            />
-          </el-form-item>
-          <el-form-item label="性别" prop="xb">
+          <el-form-item label="学校类别" prop="xxlb">
             <el-select
-              v-model="queryParams.xb"
-              placeholder="请选择性别"
+              v-model="queryParams.xxlb"
+              placeholder="请选择学校类别"
               clearable
               size="small"
             >
               <el-option
-                v-for="dict in xbOptions"
+                v-for="dict in xxlbmOptions"
                 :key="dict.dictValue"
                 :label="dict.dictLabel"
                 :value="dict.dictValue"
-              />
+              ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="民族" prop="mz">
+          <el-form-item label="学校办别" prop="xxbb">
             <el-select
-              v-model="queryParams.mz"
-              placeholder="请选择民族"
+              v-model="queryParams.xxbb"
               clearable
+              placeholder="请选择学校办别"
               size="small"
             >
               <el-option
-                v-for="dict in mzOptions"
+                v-for="dict in xxbbOptions"
                 :key="dict.dictValue"
                 :label="dict.dictLabel"
                 :value="dict.dictValue"
-              />
+              ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="第一学历" prop="dyxl">
+
+          <el-form-item label="学校名称" prop="deptId">
             <el-select
-              v-model="queryParams.dyxl"
-              placeholder="请选择第一学历"
-              clearable
+              v-model="queryParams.deptId"
               size="small"
+              clearable
+              filterable
+              placeholder="请选择学校"
             >
               <el-option
-                v-for="dict in dyxlOptions"
-                :key="dict.dictValue"
-                :label="dict.dictLabel"
-                :value="dict.dictValue"
-              />
+                v-for="dict in deptOptions"
+                :key="dict.deptId"
+                :label="dict.deptName"
+                :value="dict.deptId"
+              ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="学历" prop="xl">
-            <el-select
-              v-model="queryParams.xl"
-              placeholder="请选择学历"
-              clearable
-              size="small"
-            >
-              <el-option
-                v-for="dict in xlOptions"
-                :key="dict.dictValue"
-                :label="dict.dictLabel"
-                :value="dict.dictValue"
-              />
-            </el-select>
-          </el-form-item>
-          <el-form-item label="学位" prop="xw">
-            <el-select
-              v-model="queryParams.xw"
-              placeholder="请选择学位"
-              clearable
-              size="small"
-            >
-              <el-option
-                v-for="dict in xwOptions"
-                :key="dict.dictValue"
-                :label="dict.dictLabel"
-                :value="dict.dictValue"
-              />
-            </el-select>
-          </el-form-item>
-          <el-form-item label="职称" prop="zc">
-            <el-select
-              v-model="queryParams.zc"
-              placeholder="请选择职称"
-              clearable
-              size="small"
-            >
-              <el-option
-                v-for="dict in zcOptions"
-                :key="dict.dictValue"
-                :label="dict.dictLabel"
-                :value="dict.dictValue"
-              />
-            </el-select>
-          </el-form-item>
-          <!-- <el-form-item label="单位名称" prop="deptId">
-        <el-select v-model="form.deptId" placeholder="请选择单位名称">
-                <el-option
-                  v-for="dict in deptOptions"
-                  :key="dict.deptId"
-                  :label="dict.deptName"
-                  :value="dict.deptId"
-                ></el-option>
-              </el-select>
-      </el-form-item> -->
           <el-form-item label="行政职务" prop="xrxzzw">
             <el-select
               v-model="queryParams.xrxzzw"
@@ -203,7 +141,103 @@
               />
             </el-select>
           </el-form-item>
-          <el-form-item label="身份证号" prop="sfzh">
+          <el-form-item label="姓名" prop="name">
+            <el-input
+              v-model="queryParams.name"
+              placeholder="请输入姓名"
+              clearable
+              size="small"
+              @keyup.enter.native="handleQuery"
+            />
+          </el-form-item>
+          <div v-show="showGjSearch">
+            <el-form-item label="性别" prop="xb">
+              <el-select
+                v-model="queryParams.xb"
+                placeholder="请选择性别"
+                clearable
+                size="small"
+              >
+                <el-option
+                  v-for="dict in xbOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                />
+              </el-select>
+            </el-form-item>
+            <el-form-item label="民族" prop="mz">
+              <el-select
+                v-model="queryParams.mz"
+                placeholder="请选择民族"
+                clearable
+                size="small"
+              >
+                <el-option
+                  v-for="dict in mzOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                />
+              </el-select>
+            </el-form-item>
+            <el-form-item label="学历" prop="xl">
+              <el-select
+                v-model="queryParams.xl"
+                placeholder="请选择学历"
+                clearable
+                size="small"
+              >
+                <el-option
+                  v-for="dict in xlOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                />
+              </el-select>
+            </el-form-item>
+            <el-form-item label="学位" prop="xw">
+              <el-select
+                v-model="queryParams.xw"
+                placeholder="请选择学位"
+                clearable
+                size="small"
+              >
+                <el-option
+                  v-for="dict in xwOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                />
+              </el-select>
+            </el-form-item>
+            <el-form-item label="职称" prop="zc">
+              <el-select
+                v-model="queryParams.zc"
+                placeholder="请选择职称"
+                clearable
+                size="small"
+              >
+                <el-option
+                  v-for="dict in zcOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                />
+              </el-select>
+            </el-form-item>
+            <!-- <el-form-item label="单位名称" prop="deptId">
+        <el-select v-model="form.deptId" placeholder="请选择单位名称">
+                <el-option
+                  v-for="dict in deptOptions"
+                  :key="dict.deptId"
+                  :label="dict.deptName"
+                  :value="dict.deptId"
+                ></el-option>
+              </el-select>
+      </el-form-item> -->
+
+            <!-- <el-form-item label="身份证号" prop="sfzh">
             <el-input
               v-model="queryParams.sfzh"
               placeholder="请输入身份证号"
@@ -211,8 +245,8 @@
               size="small"
               @keyup.enter.native="handleQuery"
             />
-          </el-form-item>
-          <!-- <el-form-item label="出生日期" prop="csrq">
+          </el-form-item> -->
+            <!-- <el-form-item label="出生日期" prop="csrq">
         <el-date-picker
           clearable
           size="small"
@@ -224,121 +258,121 @@
         >
         </el-date-picker>
       </el-form-item> -->
-          <el-form-item label="教育类型" prop="jylx">
-            <el-select
-              v-model="queryParams.jylx"
-              placeholder="请选择教育类型"
-              clearable
-              size="small"
-            >
-              <el-option
-                v-for="dict in jylxOptions"
-                :key="dict.dictValue"
-                :label="dict.dictLabel"
-                :value="dict.dictValue"
+            <el-form-item label="教育类型" prop="jylx">
+              <el-select
+                v-model="queryParams.jylx"
+                placeholder="请选择教育类型"
+                clearable
+                size="small"
+              >
+                <el-option
+                  v-for="dict in jylxOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                />
+              </el-select>
+            </el-form-item>
+            <el-form-item label="能否开车" prop="nfkc">
+              <el-select
+                v-model="queryParams.nfkc"
+                placeholder="请选择能否开车"
+                clearable
+                size="small"
+              >
+                <el-option
+                  v-for="dict in nfkcOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                />
+              </el-select>
+            </el-form-item>
+            <el-form-item label="驾照情况" prop="jzcyqk">
+              <el-select
+                v-model="queryParams.jzcyqk"
+                placeholder="请选择驾照持有情况"
+                clearable
+                size="small"
+              >
+                <el-option
+                  v-for="dict in jzcyqkOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                />
+              </el-select>
+            </el-form-item>
+            <el-form-item label="婚姻状况" prop="hyzk">
+              <el-select
+                v-model="queryParams.hyzk"
+                placeholder="请选择婚姻状况"
+                clearable
+                size="small"
+              >
+                <el-option
+                  v-for="dict in hyzkOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                />
+              </el-select>
+            </el-form-item>
+            <el-form-item label="政治面貌" prop="zzmm">
+              <el-select
+                v-model="queryParams.zzmm"
+                placeholder="请选择政治面貌"
+                clearable
+                size="small"
+              >
+                <el-option
+                  v-for="dict in zzmmOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                />
+              </el-select>
+            </el-form-item>
+            <!-- <el-form-item label="手机号码" prop="phone">
+              <el-input
+                v-model="queryParams.phone"
+                placeholder="请输入手机号码"
+                clearable
+                size="small"
+                @keyup.enter.native="handleQuery"
               />
-            </el-select>
-          </el-form-item>
-
-          <el-form-item label="驾照情况" prop="jzcyqk">
-            <el-select
-              v-model="queryParams.jzcyqk"
-              placeholder="请选择驾照持有情况"
-              clearable
-              size="small"
-            >
-              <el-option
-                v-for="dict in jzcyqkOptions"
-                :key="dict.dictValue"
-                :label="dict.dictLabel"
-                :value="dict.dictValue"
-              />
-            </el-select>
-          </el-form-item>
-          <el-form-item label="能否开车" prop="nfkc">
-            <el-select
-              v-model="queryParams.nfkc"
-              placeholder="请选择能否开车"
-              clearable
-              size="small"
-            >
-              <el-option
-                v-for="dict in nfkcOptions"
-                :key="dict.dictValue"
-                :label="dict.dictLabel"
-                :value="dict.dictValue"
-              />
-            </el-select>
-          </el-form-item>
-          <el-form-item label="婚姻状况" prop="hyzk">
-            <el-select
-              v-model="queryParams.hyzk"
-              placeholder="请选择婚姻状况"
-              clearable
-              size="small"
-            >
-              <el-option
-                v-for="dict in hyzkOptions"
-                :key="dict.dictValue"
-                :label="dict.dictLabel"
-                :value="dict.dictValue"
-              />
-            </el-select>
-          </el-form-item>
-          <el-form-item label="政治面貌" prop="zzmm">
-            <el-select
-              v-model="queryParams.zzmm"
-              placeholder="请选择政治面貌"
-              clearable
-              size="small"
-            >
-              <el-option
-                v-for="dict in zzmmOptions"
-                :key="dict.dictValue"
-                :label="dict.dictLabel"
-                :value="dict.dictValue"
-              />
-            </el-select>
-          </el-form-item>
-          <el-form-item label="手机号码" prop="phone">
-            <el-input
-              v-model="queryParams.phone"
-              placeholder="请输入手机号码"
-              clearable
-              size="small"
-              @keyup.enter.native="handleQuery"
-            />
-          </el-form-item>
-          <el-form-item label="任教学科" prop="rjxk">
-            <el-select
-              v-model="queryParams.rjxk"
-              placeholder="请选择任教学科"
-              clearable
-              size="small"
-            >
-              <el-option
-                v-for="dict in rjxkOptions"
-                :key="dict.dictValue"
-                :label="dict.dictLabel"
-                :value="dict.dictValue"
-              />
-            </el-select>
-          </el-form-item>
-          <el-form-item label="健康状况" prop="jkzk">
-            <el-select
-              v-model="queryParams.jkzk"
-              placeholder="请选择健康状况"
-              clearable
-              size="small"
-            >
-              <el-option
-                v-for="dict in jkzkOptions"
-                :key="dict.dictValue"
-                :label="dict.dictLabel"
-                :value="dict.dictValue"
-              />
-            </el-select>
-          </el-form-item>
+            </el-form-item> -->
+            <el-form-item label="任教学科" prop="rjxk">
+              <el-select
+                v-model="queryParams.rjxk"
+                placeholder="请选择任教学科"
+                clearable
+                size="small"
+              >
+                <el-option
+                  v-for="dict in rjxkOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                />
+              </el-select>
+            </el-form-item>
+            <el-form-item label="健康状况" prop="jkzk">
+              <el-select
+                v-model="queryParams.jkzk"
+                placeholder="请选择健康状况"
+                clearable
+                size="small"
+              >
+                <el-option
+                  v-for="dict in jkzkOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                />
+              </el-select>
+            </el-form-item>
+          </div>
           <!-- <el-form-item label="参加工作年月" prop="cjgzny">
         <el-date-picker
           clearable
@@ -377,6 +411,13 @@
             <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
               >重置</el-button
             >
+            <el-button
+              type="success"
+              :icon="gjQueryIcon"
+              size="mini"
+              @click="gjQuery"
+              >{{ gjQueryName }}</el-button
+            >
           </el-form-item>
         </el-form>
 
@@ -394,9 +435,15 @@
             label="单位名称"
             align="center"
             prop="dept.deptName"
-             width="120"
+            width="120"
           />
-          <el-table-column fixed label="教师姓名" align="center" prop="name" width="120" />
+          <el-table-column
+            fixed
+            label="教师姓名"
+            align="center"
+            prop="name"
+            width="120"
+          />
           <el-table-column
             label="性别"
             align="center"
@@ -407,15 +454,25 @@
             label="现任行政职务"
             align="center"
             prop="xrxzzw"
-             width="140"
+            width="140"
             :formatter="xrxzzwFormat"
           />
-          <el-table-column label="出生日期" width="140" align="center" prop="csrq">
+          <el-table-column
+            label="出生日期"
+            width="140"
+            align="center"
+            prop="csrq"
+          >
             <template slot-scope="scope">
               <span>{{ parseTime(scope.row.csrq, "{y}-{m}-{d}") }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="参加工作年月" width="140" align="center" prop="cjgzny">
+          <el-table-column
+            label="参加工作年月"
+            width="140"
+            align="center"
+            prop="cjgzny"
+          >
             <template slot-scope="scope">
               <span>{{ parseTime(scope.row.cjgzny, "{y}-{m}") }}</span>
             </template>
@@ -487,6 +544,9 @@ export default {
       multiple: true,
       // 显示搜索条件
       showSearch: true,
+      showGjSearch: false,
+      gjQueryIcon: "el-icon-zoom-in",
+      gjQueryName: "展开高级查询",
       // 总条数
       total: 0,
       // 干部基本情况表格数据
@@ -507,8 +567,6 @@ export default {
       mzOptions: [],
       // 学历字典
       xlOptions: [],
-      // 第一学历字典
-      dyxlOptions: [],
       // 学位字典
       xwOptions: [],
       // 教育类型字典
@@ -527,10 +585,14 @@ export default {
       rjxkOptions: [],
       // 健康状况字典
       jkzkOptions: [],
+      //学校类别
+      xxlbmOptions: [],
+      // 学校办别选项
+      xxbbOptions: [],
       // 部门选项
       deptOptions: [],
-      deptTreeOptions: [],
-      deptName: null,
+      // deptTreeOptions: [],
+      // deptName: null,
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -586,26 +648,35 @@ export default {
         createUser: null,
         createTime: null,
         dqzt: "00",
+        xxlb: null,
+        xxbb: null,
+      },
+      queryParams_dept: {
+        dwlb: null,
+        dwbb: null,
       },
       // 表单参数
       form: {},
-      defaultProps: {
-        children: "children",
-        label: "label",
-      },
+      // defaultProps: {
+      //   children: "children",
+      //   label: "label",
+      // },
       // 表单校验
       rules: {},
     };
   },
   watch: {
     // 根据名称筛选部门树
-    deptName(val) {
-      this.$refs.tree.filter(val);
-    },
+    // deptName(val) {
+    //   this.$refs.tree.filter(val);
+    // },
+    // 监听xxlb
+    "queryParams.xxlb": "handleDeptLbClick",
+    "queryParams.xxbb": "handleDeptbbClick",
   },
   created() {
     this.getList();
-    this.getTreeselect();
+    // this.getTreeselect();
     this.getDeptList();
     this.getDicts("sys_user_sex").then((response) => {
       this.xbOptions = response.data;
@@ -658,11 +729,32 @@ export default {
     this.getDicts("sys_dm_jkzk").then((response) => {
       this.jkzkOptions = response.data;
     });
-    this.getDicts("sys_dm_dyxl").then((response) => {
-      this.dyxlOptions = response.data;
+    this.getDicts("sys_dm_bxlx").then((response) => {
+      this.xxlbmOptions = response.data;
+    });
+    this.getDicts("sys_dm_xxbb").then((response) => {
+      this.xxbbOptions = response.data;
     });
   },
   methods: {
+    handleDeptLbClick(value) {
+      this.queryParams_dept.dwlb = value;
+      // console.log(this.queryParams_dept.dwlb);
+      // console.log(this.queryParams_dept.dwbb);
+      listDept(this.queryParams_dept).then((response) => {
+        // console.log(response.data);
+        this.deptOptions = response.data;
+      });
+    },
+    handleDeptbbClick(value) {
+      this.queryParams_dept.dwbb = value;
+      // console.log(this.queryParams_dept.dwlb);
+      // console.log(this.queryParams_dept.dwbb);
+      listDept(this.queryParams_dept).then((response) => {
+        // console.log(response.data);
+        this.deptOptions = response.data;
+      });
+    },
     /** 查询干部基本情况列表 */
     getList() {
       this.loading = true;
@@ -672,22 +764,22 @@ export default {
         this.loading = false;
       });
     },
-    /** 查询部门下拉树结构 */
-    getTreeselect() {
-      treeselect().then((response) => {
-        this.deptTreeOptions = response.data;
-      });
-    },
-    // 筛选节点
-    filterNode(value, data) {
-      if (!value) return true;
-      return data.label.indexOf(value) !== -1;
-    },
-    // 节点单击事件
-    handleNodeClick(data) {
-      this.queryParams.deptId = data.id;
-      this.getList();
-    },
+    // /** 查询部门下拉树结构 */
+    // getTreeselect() {
+    //   treeselect().then((response) => {
+    //     this.deptTreeOptions = response.data;
+    //   });
+    // },
+    // // 筛选节点
+    // filterNode(value, data) {
+    //   if (!value) return true;
+    //   return data.label.indexOf(value) !== -1;
+    // },
+    // // 节点单击事件
+    // handleNodeClick(data) {
+    //   this.queryParams.deptId = data.id;
+    //   this.getList();
+    // },
     // 查询部门
     getDeptList() {
       listDept(null).then((response) => {
@@ -723,6 +815,18 @@ export default {
     resetQuery() {
       this.resetForm("queryForm");
       this.handleQuery();
+    },
+    /** 高级查询按钮操作 */
+    gjQuery() {
+      if (this.showGjSearch == false) {
+        this.showGjSearch = true;
+        this.gjQueryName = "折叠高级查询";
+        this.gjQueryIcon = "el-icon-zoom-out";
+      } else {
+        this.showGjSearch = false;
+        this.gjQueryName = "展开高级查询";
+        this.gjQueryIcon = "el-icon-zoom-in";
+      }
     },
     /** 查看按钮操作 */
     handleCheck(row) {

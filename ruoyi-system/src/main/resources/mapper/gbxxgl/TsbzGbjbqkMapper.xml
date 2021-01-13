@@ -58,6 +58,8 @@
         <result property="createUser" column="create_user"/>
         <result property="dqzt" column="dqzt"/>
         <result property="txTime" column="tx_time"/>
+        <result property="xxlb" column="xxlb"/>
+        <result property="xxbb" column="xxbb"/>
         <association property="dept" column="dept_id" javaType="SysDept" resultMap="deptResult"/>
     </resultMap>
 
@@ -134,6 +136,12 @@
             <if test="deptId != null and deptId != 0">
                 AND (u.dept_id = #{deptId} OR u.dept_id IN ( SELECT t.dept_id FROM sys_dept t WHERE FIND_IN_SET
                 (#{deptId},ancestors) ))
+            </if>
+            <if test="xxlb != null and xxlb != ''">
+                AND d.dwlb =#{xxlb}
+            </if>
+            <if test="xxbb != null and xxbb != ''">
+                AND d.dwbb =#{xxbb}
             </if>
             <!-- 数据范围过滤 -->
             ${params.dataScope}

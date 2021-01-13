@@ -349,6 +349,10 @@ public class TsbzGbjbqk extends BaseEntity {
 
     private SysDept dept;
 
+    private String xxlb;
+
+    private String xxbb;
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -775,6 +779,22 @@ public class TsbzGbjbqk extends BaseEntity {
         this.dept = dept;
     }
 
+    public void setXxlb(String xxlb) {
+        this.xxlb = xxlb;
+    }
+
+    public String getXxlb() {
+        return xxlb;
+    }
+
+    public void setXxbb(String xxbb) {
+        this.xxbb = xxbb;
+    }
+
+    public String getXxbb() {
+        return xxbb;
+    }
+
 
     @Override
     public String toString() {
@@ -833,6 +853,8 @@ public class TsbzGbjbqk extends BaseEntity {
                 .append("dqzt", getDqzt())
                 .append("txTime", getTxTime())
                 .append("dept", getDept())
+                .append("xxlb", getXxlb())
+                .append("xxbb", getXxbb())
                 .toString();
     }
 

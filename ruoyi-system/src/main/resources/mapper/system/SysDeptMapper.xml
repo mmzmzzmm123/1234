@@ -21,10 +21,12 @@
         <result property="updateBy" column="update_by"/>
         <result property="updateTime" column="update_time"/>
         <result property="schoolid" column="schoolid"/>
+        <result property="dwlb"    column="dwlb"    />
+        <result property="dwbb"    column="dwbb"    />
     </resultMap>
 
     <sql id="selectDeptVo">
-        select d.dept_id, d.parent_id, d.ancestors, d.dept_name, d.order_num, d.leader, d.phone, d.email, d.status, d.del_flag, d.create_by, d.create_time , schoolid
+        select d.dept_id, d.parent_id, d.ancestors, d.dept_name, d.order_num, d.leader, d.phone, d.email, d.status, d.del_flag, d.create_by, d.create_time , d.schoolid, d.dwlb, d.dwbb
         from sys_dept d
     </sql>
 
@@ -32,17 +34,19 @@
         <include refid="selectDeptVo"/>
         where d.del_flag = '0'
         <if test="parentId != null and parentId != 0">
-            AND parent_id = #{parentId}
+            AND d.parent_id = #{parentId}
         </if>
         <if test="deptName != null and deptName != ''">
-            AND dept_name like concat('%', #{deptName}, '%')
+            AND d.dept_name like concat('%', #{deptName}, '%')
         </if>
         <if test="status != null and status != ''">
-            AND status = #{status}
+            AND d.status = #{status}
         </if>
         <if test="schoolid != null and schoolid != ''">
-            AND schoolid = #{schoolid}
+            AND d.schoolid = #{schoolid}
         </if>
+        <if test="dwlb != null  and dwlb != ''"> and d.dwlb = #{dwlb}</if>
+        <if test="dwbb != null  and dwbb != ''"> and d.dwbb = #{dwbb}</if>
         <!-- 数据范围过滤 -->
         ${params.dataScope}
         order by d.parent_id, d.order_num
@@ -97,6 +101,8 @@
         <if test="status != null">status,</if>
         <if test="createBy != null and createBy != ''">create_by,</if>
         <if test="schoolid != null">schoolid,</if>
+        <if test="dwlb != null">dwlb,</if>
+        <if test="dwbb != null">dwbb,</if>
         create_time
         )values(
         <if test="deptId != null and deptId != 0">#{deptId},</if>
@@ -110,6 +116,8 @@
         <if test="status != null">#{status},</if>
         <if test="createBy != null and createBy != ''">#{createBy},</if>
         <if test="schoolid != null">#{schoolid},</if>
+        <if test="dwlb != null">#{dwlb},</if>
+        <if test="dwbb != null">#{dwbb},</if>
         sysdate()
         )
     </insert>
@@ -127,6 +135,8 @@
             <if test="status != null and status != ''">status = #{status},</if>
             <if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
             <if test="schoolid != null">schoolid = #{schoolid},</if>
+            <if test="dwlb != null">dwlb = #{dwlb},</if>
+            <if test="dwbb != null">dwbb = #{dwbb},</if>
             update_time = sysdate()
         </set>
         where dept_id = #{deptId}

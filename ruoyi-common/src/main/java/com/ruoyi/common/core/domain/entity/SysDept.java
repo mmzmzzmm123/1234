@@ -79,6 +79,16 @@ public class SysDept extends BaseEntity {
     private String schoolid;
 
     /**
+     * 单位类别
+     */
+    private String dwlb;
+
+    /**
+     * 单位办别
+     */
+    private String dwbb;
+
+    /**
      * 子部门
      */
     private List<SysDept> children = new ArrayList<SysDept>();
@@ -193,6 +203,22 @@ public class SysDept extends BaseEntity {
         return schoolid;
     }
 
+    public void setDwlb(String dwlb) {
+        this.dwlb = dwlb;
+    }
+
+    public String getDwlb() {
+        return dwlb;
+    }
+
+    public void setDwbb(String dwbb) {
+        this.dwbb = dwbb;
+    }
+
+    public String getDwbb() {
+        return dwbb;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
@@ -211,6 +237,8 @@ public class SysDept extends BaseEntity {
                 .append("updateBy", getUpdateBy())
                 .append("updateTime", getUpdateTime())
                 .append("schoolid", getSchoolid())
+                .append("dwlb", getDwlb())
+                .append("dwbb", getDwbb())
                 .toString();
     }
 }

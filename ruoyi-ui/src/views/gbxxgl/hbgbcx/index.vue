@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-row :gutter="20">
       <!--部门数据-->
-      <el-col :span="4" :xs="24">
+      <!-- <el-col :span="4" :xs="24">
         <div class="head-container">
           <el-input
             v-model="deptName"
@@ -24,9 +24,9 @@
             @node-click="handleNodeClick"
           />
         </div>
-      </el-col>
+      </el-col> -->
       <!--教师数据-->
-      <el-col :span="20" :xs="24">
+      <el-col :span="24" :xs="24">
         <el-form
           :model="queryParams"
           ref="queryForm"
@@ -34,14 +34,52 @@
           v-show="showSearch"
           label-width="70px"
         >
-          <el-form-item label="教师姓名" prop="name">
-            <el-input
-              v-model="queryParams.name"
-              placeholder="请输入教师姓名"
+          <el-form-item label="学校类别" prop="xxlb">
+            <el-select
+              v-model="queryParams.xxlb"
+              placeholder="请选择学校类别"
               clearable
               size="small"
-              @keyup.enter.native="handleQuery"
-            />
+            >
+              <el-option
+                v-for="dict in xxlbmOptions"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="dict.dictValue"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="学校办别" prop="xxbb">
+            <el-select
+              v-model="queryParams.xxbb"
+              clearable
+              placeholder="请选择学校办别"
+              size="small"
+            >
+              <el-option
+                v-for="dict in xxbbOptions"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="dict.dictValue"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+
+          <el-form-item label="学校名称" prop="deptId">
+            <el-select
+              v-model="queryParams.deptId"
+              size="small"
+              clearable
+              filterable
+              placeholder="请选择学校"
+            >
+              <el-option
+                v-for="dict in deptOptions"
+                :key="dict.deptId"
+                :label="dict.deptName"
+                :value="dict.deptId"
+              ></el-option>
+            </el-select>
           </el-form-item>
           <el-form-item label="教师性别" prop="xb">
             <el-select
@@ -69,6 +107,15 @@
               placeholder="选择后备干部确定年月"
             >
             </el-date-picker>
+          </el-form-item>
+          <el-form-item label="教师姓名" prop="name">
+            <el-input
+              v-model="queryParams.name"
+              placeholder="请输入教师姓名"
+              clearable
+              size="small"
+              @keyup.enter.native="handleQuery"
+            />
           </el-form-item>
           <el-form-item>
             <el-button
@@ -246,10 +293,14 @@ export default {
       rjxkOptions: [],
       // 健康状况字典
       jkzkOptions: [],
+      //学校类别
+      xxlbmOptions: [],
+      // 学校办别选项
+      xxbbOptions: [],
       // 部门选项
       deptOptions: [],
-      deptTreeOptions: [],
-      deptName: null,
+      // deptTreeOptions: [],
+      // deptName: null,
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -305,26 +356,35 @@ export default {
         createUser: null,
         createTime: null,
         dqzt: "00",
+        xxlb: null,
+        xxbb: null,
+      },
+      queryParams_dept: {
+        dwlb: null,
+        dwbb: null,
       },
       // 表单参数
       form: {},
-      defaultProps: {
-        children: "children",
-        label: "label",
-      },
+      // defaultProps: {
+      //   children: "children",
+      //   label: "label",
+      // },
       // 表单校验
       rules: {},
     };
   },
   watch: {
     // 根据名称筛选部门树
-    deptName(val) {
-      this.$refs.tree.filter(val);
-    },
+    // deptName(val) {
+    //   this.$refs.tree.filter(val);
+    // },
+    // 监听xxlb
+    "queryParams.xxlb": "handleDeptLbClick",
+    "queryParams.xxbb": "handleDeptbbClick",
   },
   created() {
     this.getList();
-    this.getTreeselect();
+    // this.getTreeselect();
     this.getDeptList();
     this.getDicts("sys_user_sex").then((response) => {
       this.xbOptions = response.data;
@@ -377,8 +437,32 @@ export default {
     this.getDicts("sys_dm_dyxl").then((response) => {
       this.dyxlOptions = response.data;
     });
+    this.getDicts("sys_dm_bxlx").then((response) => {
+      this.xxlbmOptions = response.data;
+    });
+    this.getDicts("sys_dm_xxbb").then((response) => {
+      this.xxbbOptions = response.data;
+    });
   },
   methods: {
+    handleDeptLbClick(value) {
+      this.queryParams_dept.dwlb = value;
+      // console.log(this.queryParams_dept.dwlb);
+      // console.log(this.queryParams_dept.dwbb);
+      listDept(this.queryParams_dept).then((response) => {
+        // console.log(response.data);
+        this.deptOptions = response.data;
+      });
+    },
+    handleDeptbbClick(value) {
+      this.queryParams_dept.dwbb = value;
+      // console.log(this.queryParams_dept.dwlb);
+      // console.log(this.queryParams_dept.dwbb);
+      listDept(this.queryParams_dept).then((response) => {
+        // console.log(response.data);
+        this.deptOptions = response.data;
+      });
+    },
     /** 查询干部基本情况列表 */
     getList() {
       this.loading = true;
@@ -388,22 +472,22 @@ export default {
         this.loading = false;
       });
     },
-    /** 查询部门下拉树结构 */
-    getTreeselect() {
-      treeselect().then((response) => {
-        this.deptTreeOptions = response.data;
-      });
-    },
-    // 筛选节点
-    filterNode(value, data) {
-      if (!value) return true;
-      return data.label.indexOf(value) !== -1;
-    },
-    // 节点单击事件
-    handleNodeClick(data) {
-      this.queryParams.deptId = data.id;
-      this.getList();
-    },
+    // /** 查询部门下拉树结构 */
+    // getTreeselect() {
+    //   treeselect().then((response) => {
+    //     this.deptTreeOptions = response.data;
+    //   });
+    // },
+    // // 筛选节点
+    // filterNode(value, data) {
+    //   if (!value) return true;
+    //   return data.label.indexOf(value) !== -1;
+    // },
+    // // 节点单击事件
+    // handleNodeClick(data) {
+    //   this.queryParams.deptId = data.id;
+    //   this.getList();
+    // },
     // 查询部门
     getDeptList() {
       listDept(null).then((response) => {
