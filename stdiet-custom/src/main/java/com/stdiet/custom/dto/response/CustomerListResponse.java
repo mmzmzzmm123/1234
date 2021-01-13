@@ -136,6 +136,10 @@ public class CustomerListResponse extends BaseEntity
     @Excel(name = "减脂遇到的困难")
     private String difficulty;
 
+    /** 备注 */
+    @Excel(name = "备注")
+    private String comments;
+
     public Long getId() {
         return id;
     }
@@ -376,5 +380,13 @@ public class CustomerListResponse extends BaseEntity
     @Override
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public String getComments() {
+        return comments;
+    }
+
+    public void setComments(String comments) {
+        this.comments = comments;
     }
 }

@@ -77,3 +77,13 @@ export function detailDayCommision(query) {
     params: query
   })
 }
+
+// 导出按天计算提成明细
+export function exportDayCommision(query) {
+  return request({
+    url: '/custom/commision/exportDetailDay',
+    method: 'get',
+    params: query
+  })
+}
+

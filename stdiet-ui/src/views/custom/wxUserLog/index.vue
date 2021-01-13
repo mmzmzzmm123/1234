@@ -85,8 +85,11 @@
           <span>{{`${scope.row.weight} 斤` }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="微信应用" align="center" prop="appid" :formatter="appidFormat"/>
+      <el-table-column label="微信应用" align="center" prop="appid" width="120" :formatter="appidFormat"/>
+      <el-table-column label="姓名" align="center" prop="customer"/>
+
       <el-table-column label="手机号" align="center" prop="phone" width="180"/>
+      <el-table-column label="营养师" align="center" prop="nutritionist"/>
       <el-table-column label="打卡日期" align="center" prop="logTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.logTime, '{y}-{m}-{d}') }}</span>

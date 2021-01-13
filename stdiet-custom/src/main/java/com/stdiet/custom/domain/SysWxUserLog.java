@@ -68,6 +68,21 @@ public class SysWxUserLog extends BaseEntity
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date logTime;
 
+    /** 非持久字段，客户姓名 + 营养师姓名，使用 , 隔开，用于接收sql查询返回字段 */
+    private String customerMessage;
+
+    /**
+     * 非持久化字段，营养师
+     */
+    @Excel(name = "姓名")
+    private String customer;
+
+    /**
+     * 非持久化字段，营养师
+     */
+    @Excel(name = "营养师")
+    private String nutritionist;
+
     public void setLogTime(Date logTime) {
         this.logTime = logTime;
     }
@@ -183,6 +198,30 @@ public class SysWxUserLog extends BaseEntity
     public Long getWater()
     {
         return water;
+    }
+
+    public String getCustomerMessage() {
+        return customerMessage;
+    }
+
+    public void setCustomerMessage(String customerMessage) {
+        this.customerMessage = customerMessage;
+    }
+
+    public String getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(String customer) {
+        this.customer = customer;
+    }
+
+    public String getNutritionist() {
+        return nutritionist;
+    }
+
+    public void setNutritionist(String nutritionist) {
+        this.nutritionist = nutritionist;
     }
 
     @Override

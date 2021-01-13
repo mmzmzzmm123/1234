@@ -150,6 +150,11 @@
     <el-form-item label="减脂遇到的困难" prop="difficulty">
       <el-input type="textarea" placeholder="请输入内容" v-model="form.difficulty" maxlength="200" show-word-limit rows="5"></el-input>
     </el-form-item>
+
+    <el-form-item label="备注" prop="comments">
+      <el-input type="textarea" placeholder="请输入其他需要反馈的内容" v-model="form.comments" maxlength="200" show-word-limit rows="5"></el-input>
+    </el-form-item>
+
     <el-form-item style="text-align:center;margin:0 auto;">
       <el-button type="primary" @click="addCustomer()" style="margin-right:50px;">已填写完成，提交数据</el-button>
     </el-form-item>
@@ -198,7 +203,8 @@
         moistureDate: [],
           night: "0",
           vocation: null,
-          experience: null
+          experience: null,
+          comments: null
         },
         rules: {
           name: [

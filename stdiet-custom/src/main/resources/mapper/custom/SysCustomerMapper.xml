@@ -76,6 +76,7 @@
             <result property="vocation"    column="vocation"    />
             <result property="night"    column="night"    />
             <result property="experience"    column="experience"    />
+            <result property="comments" column="comments"/>
             <!-- column是传的参数, select是调用的查询 -->
             <association property="signList" column="physical_signs_id" select="getSignByIds"/>
         </association>
@@ -196,7 +197,7 @@
         scps.sex, scps.age, scps.tall, scps.weight, scps.physical_signs_id, scps.dishes_ingredient_id, scps.photo, scps.constipation,
         scps.stayLate, scps.motion, scps.make_food_type, scps.make_food_taste, scps.walk, scps.difficulty, scps.weakness, scps.rebound, scps.crux, scps.position,
         scps.sleep_time, scps.getup_time, scps.connect_time, scps.remarks, scps.blood_data, scps.moisture_date, scps.vocation,
-        scps.night, scps.experience
+        scps.night, scps.experience, scps.comments
     </sql>
 
     <select id="selectSysCustomerAndSignList" parameterType="SysCustomer" resultMap="SysCustomerSignResult">

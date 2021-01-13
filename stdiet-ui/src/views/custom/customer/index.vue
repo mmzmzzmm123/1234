@@ -132,7 +132,7 @@
       <el-table-column label="饮食备注" align="center" prop="sign.remarks" width="100">
         <template slot-scope="scope">
           <el-button v-show="scope.row.sign.remarks != null && scope.row.sign.remarks.length > 10" type="text" @click="openFormDialog('饮食备注', scope.row.sign.remarks)">点击查看</el-button>
-          <span v-show="scope.row.sign.remarks != null && scope.row.sign.remarks.length <= 10">{{scope.row.sign.remarks}}</span>
+          <span v-show="scope.row.sign.remarks == null && scope.row.sign.remarks.length <= 10">{{scope.row.sign.remarks}}</span>
         </template>
       </el-table-column>
       <el-table-column label="饮食特点" align="center" prop="sign.makeFoodTaste" width="100">
@@ -203,8 +203,14 @@
       </el-table-column>
       <el-table-column label="减脂遇到的困难" align="center" prop="sign.difficulty" width="100">
         <template slot-scope="scope">
-          <el-button v-show="scope.row.sign.difficulty == null != null && scope.row.sign.difficulty.length > 10" type="text" @click="openFormDialog('减脂遇到的困难', scope.row.sign.difficulty)">点击查看</el-button>
+          <el-button v-show="scope.row.sign.difficulty != null && scope.row.sign.difficulty.length > 10" type="text" @click="openFormDialog('减脂遇到的困难', scope.row.sign.difficulty)">点击查看</el-button>
           <span v-show="scope.row.sign.difficulty == null || scope.row.sign.difficulty.length <= 10">{{scope.row.sign.difficulty}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="备注" align="center" prop="sign.comments" width="100">
+        <template slot-scope="scope">
+          <el-button v-show="scope.row.sign.comments != null && scope.row.sign.comments.length > 10" type="text" @click="openFormDialog('备注', scope.row.sign.comments)">点击查看</el-button>
+          <span v-show="scope.row.sign.comments == null || scope.row.sign.comments.length <= 10">{{scope.row.sign.comments}}</span>
         </template>
       </el-table-column>
       <!--<el-table-column label="主营养师" align="center" prop="mainDietitian" />
@@ -249,7 +255,7 @@
     </el-dialog>
 
     <!-- 添加或修改客户信息对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+    <el-dialog :title="title" v-if="open" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
           <!--<p>现在要先为您建立更加详细的档案，以便为您定制专属的减脂计划</p>-->
           <el-form-item label="真实姓名" prop="name">
@@ -266,8 +272,8 @@
           </el-form-item>-->
           <el-form-item label="性别" prop="sex">
             <el-select v-model="form.sex" placeholder="请选择性别">
-              <el-option label="男" value="0" />
-              <el-option label="女" value="1" />
+              <el-option label="男" :value="parseInt('0')" />
+              <el-option label="女" :value="parseInt('1')" />
             </el-select>
           </el-form-item>
           <el-form-item label="年龄(岁)" prop="age">
@@ -281,8 +287,8 @@
           </el-form-item>
           <el-form-item label="南方人还是北方人" prop="position">
             <el-select v-model="form.position" placeholder="请选择">
-              <el-option label="南方" value="0" />
-              <el-option label="北方" value="1" />
+              <el-option label="南方" :value="parseInt('0')" />
+              <el-option label="北方" :value="parseInt('1')" />
             </el-select>
           </el-form-item>
           <el-form-item label="病史(多选)" prop="physicalSignsId">
@@ -301,26 +307,26 @@
           </el-form-item>-->
           <el-form-item label="是否便秘" prop="constipation">
             <el-select v-model="form.constipation" placeholder="请选择">
-              <el-option label="是" value="0" />
-              <el-option label="否" value="1" />
+              <el-option label="是" :value="parseInt('0')" />
+              <el-option label="否" :value="parseInt('1')" />
             </el-select>
           </el-form-item>
           <el-form-item label="是否熬夜、失眠" prop="staylate">
             <el-select v-model="form.staylate" placeholder="请选择">
-              <el-option label="是" value="0" />
-              <el-option label="否" value="1" />
+              <el-option label="是" :value="parseInt('0')" />
+              <el-option label="否" :value="parseInt('1')" />
             </el-select>
           </el-form-item>
           <el-form-item label="是否经常运动" prop="motion">
             <el-select v-model="form.motion" placeholder="请选择">
-              <el-option label="是" value="0" />
-              <el-option label="否" value="1" />
+              <el-option label="是" :value="parseInt('0')" />
+              <el-option label="否" :value="parseInt('1')" />
             </el-select>
           </el-form-item>
           <el-form-item label="饮食方式" prop="makeFoodType">
             <el-select v-model="form.makeFoodType" placeholder="请选择">
-              <el-option label="自己做" value="0" />
-              <el-option label="外面吃" value="1" />
+              <el-option label="自己做" :value="parseInt('0')" />
+              <el-option label="外面吃" :value="parseInt('1')" />
             </el-select>
           </el-form-item>
         <el-form-item label="饮食备注" prop="remarks">
@@ -329,8 +335,8 @@
         </el-form-item>
           <el-form-item label="饮食特点" prop="makeFoodTaste">
             <el-select v-model="form.makeFoodTaste" placeholder="请选择">
-              <el-option label="清淡" value="0" />
-              <el-option label="重口味" value="1" />
+              <el-option label="清淡" :value="parseInt('0')" />
+              <el-option label="重口味" :value="parseInt('1')" />
             </el-select>
           </el-form-item>
           <el-form-item label="工作职业" prop="vocation">
@@ -338,33 +344,33 @@
           </el-form-item>
           <el-form-item label="是否上夜班" prop="night">
             <el-select v-model="form.night" placeholder="请选择">
-              <el-option label="是" value="0" />
-              <el-option label="否" value="1" />
+              <el-option label="是" :value="parseInt('0')" />
+              <el-option label="否" :value="parseInt('1')" />
             </el-select>
           </el-form-item>
           <el-form-item label="平时久坐多还是走动多" prop="walk">
             <el-select v-model="form.walk" placeholder="请选择">
-              <el-option label="久坐多" value="0" />
-              <el-option label="走动多" value="1" />
+              <el-option label="久坐多" :value="parseInt('0')" />
+              <el-option label="走动多" :value="parseInt('1')" />
             </el-select>
           </el-form-item>
 
           <el-form-item label="是否浑身乏力" prop="weakness">
             <el-select v-model="form.weakness" placeholder="请选择">
-              <el-option label="是" value="0" />
-              <el-option label="否" value="1" />
+              <el-option label="是" :value="parseInt('0')" />
+              <el-option label="否" :value="parseInt('1')" />
             </el-select>
           </el-form-item>
           <el-form-item label="是否减脂反弹" prop="rebound">
             <el-select v-model="form.rebound" placeholder="请选择">
-              <el-option label="是" value="0" />
-              <el-option label="否" value="1" />
+              <el-option label="是" :value="parseInt('0')" />
+              <el-option label="否" :value="parseInt('1')" />
             </el-select>
           </el-form-item>
           <el-form-item label="是否意识到生活习惯是减脂关键" prop="crux">
             <el-select v-model="form.crux" placeholder="请选择">
-              <el-option label="是" value="0" />
-              <el-option label="否" value="1" />
+              <el-option label="是" :value="parseInt('0')" />
+              <el-option label="否" :value="parseInt('1')" />
             </el-select>
           </el-form-item>
           <el-form-item label="睡觉时间" prop="sleepTime">
@@ -397,6 +403,9 @@
           <el-form-item label="减脂遇到的困难" prop="difficulty">
             <el-input type="textarea" placeholder="请输入内容" v-model="form.difficulty" maxlength="200" show-word-limit rows="5"></el-input>
           </el-form-item>
+          <el-form-item label="备注" prop="comments">
+          <el-input type="textarea" placeholder="请输入其他需要反馈的内容" v-model="form.comments" maxlength="200" show-word-limit rows="5"></el-input>
+          </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -409,7 +418,7 @@
 <script>
   import { listCustomer, getCustomer, delCustomer, addCustomer, updateCustomer, exportCustomer } from "@/api/custom/customer";
   import { listPhysicalSigns } from "@/api/custom/physicalSigns";
-
+  import dayjs from 'dayjs';
   export default {
     name: "Customer",
     data() {
@@ -578,33 +587,34 @@
           name: '',
           phone: '',
           address: "",
-          sex: "1",
+          sex: 1,
           age: null,
           tall: null,
           weight: null,
           physicalSignsId: [],
           dishesIngredientId: null,
           photo: null,
-          constipation: "0",
-          staylate: "0",
-          motion: "1",
-          makeFoodType: "1",
-          makeFoodTaste: "1",
-          walk: "0",
+          constipation: 0,
+          staylate: 0,
+          motion: 1,
+          makeFoodType: 1,
+          makeFoodTaste: 1,
+          walk: 0,
           difficulty: null,
-          weakness: "0",
-          rebound: "0",
-          crux: "0",
-          position: "1",
+          weakness: 0,
+          rebound: 0,
+          crux: 0,
+          position: 1,
           sleepTime: null,
           getupTime: null,
           connectTime: null,
           remarks: null,
           bloodData: [],
           moistureDate: [],
-          night: "0",
+          night: 0,
           vocation: null,
-          experience: null
+          experience: null,
+          comments: null
         };
         this.resetForm("form");
       },
@@ -649,18 +659,6 @@
           cusMessage.connectTime = this.deltime(cusMessage.connectTime);
           cusMessage.name = response.data.name;
           cusMessage.phone = response.data.phone;
-          cusMessage.sex += '';
-          cusMessage.constipation += '';
-          cusMessage.staylate += '';
-          cusMessage.motion += '';
-          cusMessage.makeFoodType += '';
-          cusMessage.makeFoodTaste += '';
-          cusMessage.walk += '';
-          cusMessage.weakness += '';
-          cusMessage.rebound += '';
-          cusMessage.crux += '';
-          cusMessage.position += '';
-          cusMessage.night += '';
           this.form = cusMessage;
           this.open = true;
           this.title = "修改客户体征";

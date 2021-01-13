@@ -77,8 +77,6 @@ public class SysOrderPauseController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody SysOrderPause sysOrderPause)
     {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        System.out.println(simpleDateFormat.format(sysOrderPause.getPauseStartDate()));
         return toAjax(sysOrderPauseService.insertSysOrderPause(sysOrderPause));
     }
 

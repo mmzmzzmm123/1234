@@ -3,6 +3,7 @@ package com.stdiet.web.controller.custom;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.stdiet.common.utils.StringUtils;
 import com.stdiet.custom.domain.SysPhysicalSigns;
 
 import com.stdiet.common.utils.bean.ObjectUtils;
@@ -49,6 +50,13 @@ public class SysCustomerController extends BaseController
     {
         startPage();
         List<SysCustomer> list = sysCustomerService.selectSysCustomerAndSignList(sysCustomer);
+        if(list != null && list.size() > 0){
+            for(SysCustomer sysCus : list){
+                if(StringUtils.isNotEmpty(sysCus.getPhone())){
+                    sysCus.setPhone(StringUtils.hiddenPhoneNumber(sysCus.getPhone()));
+                }
+            }
+        }
         return getDataTable(list);
     }
 

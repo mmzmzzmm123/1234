@@ -24,6 +24,8 @@
         <result property="updateBy" column="update_by"/>
         <result property="updateTime" column="update_time"/>
         <result property="remark" column="remark"/>
+        <!-- 非持久字段 -->
+        <result property="customerMessage" column="customer_message"></result>
     </resultMap>
 
     <resultMap type="com.stdiet.custom.page.WxLogInfo" id="WxLogInfo">
@@ -42,15 +44,23 @@
         select openid, weight, appid, phone, log_time, sleep_time, wakeup_time, sport, avatar_url, diet, insomnia, defecation, water, create_by, create_time, update_by, update_time, remark from sys_wx_user_log
     </sql>
 
+    <sql id="selectBaseField">
+        swul.openid, swul.weight, swul.appid, swul.phone, swul.log_time, swul.sleep_time, swul.wakeup_time, swul.sport, swul.avatar_url, swul.diet, swul.insomnia,
+        swul.defecation, swul.water, swul.create_by, swul.create_time, swul.update_by, swul.update_time, swul.remark
+    </sql>
+
     <select id="checkWxLogInfoCount" parameterType="String" resultType="Integer">
         select count(*) from sys_wx_user_log where to_days(log_time) = to_days(now()) and openid = #{openid}
     </select>
 
     <select id="selectSysWxUserLogList" parameterType="SysWxUserLog" resultMap="SysWxUserLogResult">
-        <include refid="selectSysWxUserLogVo"/>
+        select <include refid="selectBaseField"></include>,
+        (select CONCAT(IFNULL(so.customer,''),',',IFNULL(su.nick_name,'')) from (select * from sys_order s where s.phone = swul.phone order by order_id desc limit 1) as so
+        left join sys_user su on su.user_id = so.nutritionist_id and su.del_flag = 0) as customer_message
+        from sys_wx_user_log swul
         <where>
-            <if test="openid != null  and openid != ''">and openid = #{openid}</if>
-            <if test="phone != null  and phone != ''">or phone = #{phone}</if>
+            <if test="openid != null  and openid != ''">and swul.openid = #{openid}</if>
+            <if test="phone != null  and phone != ''">or swul.phone = #{phone}</if>
         </where>
         order by create_time desc
     </select>

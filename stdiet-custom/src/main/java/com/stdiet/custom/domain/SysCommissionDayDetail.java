@@ -1,5 +1,6 @@
 package com.stdiet.custom.domain;
 
+import com.stdiet.common.annotation.Excel;
 import com.stdiet.common.core.domain.BaseEntity;
 
 import java.math.BigDecimal;
@@ -14,6 +15,7 @@ public class SysCommissionDayDetail extends BaseEntity {
     private Long userId;
 
     //用户姓名
+    @Excel(name = "业务员")
     private String nickName;
 
     //用户账户
@@ -23,37 +25,19 @@ public class SysCommissionDayDetail extends BaseEntity {
     private Long postId;
 
     //岗位名称
+    @Excel(name = "岗位名称")
     private String postName;
 
+    @Excel(name = "总提成")
     private BigDecimal totalCommissionAmount;
 
+    @Excel(name = "已发放提成")
     private BigDecimal totalHasSentCommissionAmount;
 
+    @Excel(name = "未发放提成")
     private BigDecimal totalNotSentCommissionAmount;
 
     private List<Map<String, Object>> sendDetailList;
-
-
-    //提成比例
-    private Float rate;
-
-    //订单成交总额
-    private BigDecimal orderTotalAmount;
-
-    //服务总天数
-    private Integer serverTotalDay;
-
-    //服务总额（每笔订单的服务天数 * 每天金额，相加）
-    private BigDecimal serverTotalAmount;
-
-    //服务订单总数量
-    private Integer serverOrderTotalCount;
-
-    //服务暂停总天数
-    private Integer serverOrderPauseTotalDay;
-
-    //服务提成金额
-    private BigDecimal commissionTotalAmount;
 
     public Long getUserId() {
         return userId;
@@ -71,68 +55,12 @@ public class SysCommissionDayDetail extends BaseEntity {
         this.nickName = nickName;
     }
 
-    public String getPostName() {
-        return postName;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setPostName(String postName) {
-        this.postName = postName;
-    }
-
-    public Float getRate() {
-        return rate;
-    }
-
-    public void setRate(Float rate) {
-        this.rate = rate;
-    }
-
-    public BigDecimal getOrderTotalAmount() {
-        return orderTotalAmount;
-    }
-
-    public void setOrderTotalAmount(BigDecimal orderTotalAmount) {
-        this.orderTotalAmount = orderTotalAmount;
-    }
-
-    public Integer getServerTotalDay() {
-        return serverTotalDay;
-    }
-
-    public void setServerTotalDay(Integer serverTotalDay) {
-        this.serverTotalDay = serverTotalDay;
-    }
-
-    public BigDecimal getServerTotalAmount() {
-        return serverTotalAmount;
-    }
-
-    public void setServerTotalAmount(BigDecimal serverTotalAmount) {
-        this.serverTotalAmount = serverTotalAmount;
-    }
-
-    public Integer getServerOrderTotalCount() {
-        return serverOrderTotalCount;
-    }
-
-    public void setServerOrderTotalCount(Integer serverOrderTotalCount) {
-        this.serverOrderTotalCount = serverOrderTotalCount;
-    }
-
-    public Integer getServerOrderPauseTotalDay() {
-        return serverOrderPauseTotalDay;
-    }
-
-    public void setServerOrderPauseTotalDay(Integer serverOrderPauseTotalDay) {
-        this.serverOrderPauseTotalDay = serverOrderPauseTotalDay;
-    }
-
-    public BigDecimal getCommissionTotalAmount() {
-        return commissionTotalAmount;
-    }
-
-    public void setCommissionTotalAmount(BigDecimal commissionTotalAmount) {
-        this.commissionTotalAmount = commissionTotalAmount;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public Long getPostId() {
@@ -143,12 +71,12 @@ public class SysCommissionDayDetail extends BaseEntity {
         this.postId = postId;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getPostName() {
+        return postName;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setPostName(String postName) {
+        this.postName = postName;
     }
 
     public BigDecimal getTotalCommissionAmount() {

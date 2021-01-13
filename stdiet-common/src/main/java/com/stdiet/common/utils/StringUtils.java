@@ -456,4 +456,11 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils
     {
         return (T) obj;
     }
+
+    /**
+     * 手机号隐式处理
+     * */
+    public static String hiddenPhoneNumber(String phoneNumber){
+        return phoneNumber.replaceAll("(\\d{3})\\d{4}(\\d{4})", "$1****$2");
+    }
 }

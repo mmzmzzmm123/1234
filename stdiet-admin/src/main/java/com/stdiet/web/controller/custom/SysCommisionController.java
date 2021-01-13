@@ -198,5 +198,15 @@ public class SysCommisionController extends BaseController {
         return getDataTable(sysCommissionDayService.calculateCommissionByDay(sysCommision));
     }
 
-
+    /**
+     * 导出按天计算提成详细列表
+     */
+    @PreAuthorize("@ss.hasPermi('commisionDay:detail:export')")
+    @Log(title = "导出按天计算提成详细列表", businessType = BusinessType.EXPORT)
+    @GetMapping("/exportDetailDay")
+    public AjaxResult exportDetailDay(SysCommision sysCommision) {
+        ExcelUtil<SysCommissionDayDetail> util = new ExcelUtil<>(SysCommissionDayDetail.class);
+        List<SysCommissionDayDetail> list = sysCommissionDayService.calculateCommissionByDay(sysCommision);
+        return util.exportExcel(list, "commision");
+    }
 }
