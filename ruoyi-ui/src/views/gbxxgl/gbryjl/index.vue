@@ -124,13 +124,13 @@
     >
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="编号" align="center" prop="id" /> -->
-      <el-table-column label="姓名" align="center" prop="tsbzGbjbqk.name" />
+      <el-table-column label="姓名" align="center" prop="tsbzGbjbqk.name" />  
+      <el-table-column label="荣誉名称" align="center" prop="rymc" />
       <el-table-column label="获奖日期" align="center" prop="hjrq">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.hjrq, "{y}-{m}-{d}") }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="荣誉名称" align="center" prop="rymc" />
       <el-table-column label="荣誉级别" align="center" prop="ryjb" :formatter="ryjbFormat" />
       <el-table-column
         label="操作"
