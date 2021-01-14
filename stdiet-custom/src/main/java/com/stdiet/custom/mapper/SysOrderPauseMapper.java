@@ -2,6 +2,7 @@ package com.stdiet.custom.mapper;
 
 import java.util.List;
 import com.stdiet.custom.domain.SysOrderPause;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 订单服务暂停Mapper接口
@@ -58,4 +59,11 @@ public interface SysOrderPauseMapper
      * @return 结果
      */
     public int deleteSysOrderPauseByIds(Long[] ids);
+
+    /**
+     * 根据订单ID、时间范围查询数量
+     * @param sysOrderPause
+     * @return
+     */
+    int getCountByOrderIdAndPauseDate(SysOrderPause sysOrderPause);
 }

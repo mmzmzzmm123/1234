@@ -1,6 +1,5 @@
 package com.stdiet.web.controller.custom;
 
-import java.text.SimpleDateFormat;
 import java.util.List;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,6 +76,10 @@ public class SysOrderPauseController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody SysOrderPause sysOrderPause)
     {
+        int count = sysOrderPauseService.getCountByOrderIdAndPauseDate(sysOrderPause);
+        if(count > 0){
+            return AjaxResult.error("时间范围重叠，请检查时间");
+        }
         return toAjax(sysOrderPauseService.insertSysOrderPause(sysOrderPause));
     }
 
@@ -88,6 +91,10 @@ public class SysOrderPauseController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody SysOrderPause sysOrderPause)
     {
+        int count = sysOrderPauseService.getCountByOrderIdAndPauseDate(sysOrderPause);
+        if(count > 0){
+            return AjaxResult.error("时间范围重叠，请检查时间");
+        }
         return toAjax(sysOrderPauseService.updateSysOrderPause(sysOrderPause));
     }
 

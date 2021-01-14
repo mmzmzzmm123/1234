@@ -94,18 +94,28 @@
         </template>
       </el-table-column>
       <el-table-column label="客户姓名" align="center" prop="customer" />-->
-      <el-table-column label="暂停开始日期" align="center" prop="pauseStartDate" width="180">
+      <el-table-column label="暂停开始日期" align="center" prop="pauseStartDate" width="120">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.pauseStartDate, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="暂停结束日期" align="center" prop="pauseEndDate" width="180">
+      <el-table-column label="暂停结束日期" align="center" prop="pauseEndDate" width="120">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.pauseEndDate, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="暂停理由" align="center" prop="reason" />
-      <el-table-column label="备注" align="center" prop="remarks" />
+      <el-table-column label="暂停理由" align="center" prop="reason">
+        <template slot-scope="scope">
+          <el-button v-show="scope.row.reason != null && scope.row.reason.length > 10" type="text" @click="openFormDialog('暂停理由', scope.row.reason)">点击查看</el-button>
+          <span v-show="scope.row.reason == null || scope.row.reason.length <= 10">{{scope.row.reason}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="备注" align="center" prop="remarks">
+        <template slot-scope="scope">
+          <el-button v-show="scope.row.remarks != null && scope.row.remarks.length > 10" type="text" @click="openFormDialog('备注', scope.row.remarks)">点击查看</el-button>
+          <span v-show="scope.row.remarks == null || scope.row.remarks.length <= 10">{{scope.row.remarks}}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="创建时间" align="center" prop="createTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
@@ -136,8 +146,17 @@
       :total="total"
       :page.sync="queryParams.pageNum"
       :limit.sync="queryParams.pageSize"
+      :page-sizes="[5,10]"
       @pagination="getList"
     />
+
+    <el-dialog :title="formDialog.title" :visible.sync="formDialog.show" width="30%" append-to-body center>
+      <span>{{formDialog.content}}</span>
+      <span slot="footer" class="dialog-footer">
+      <el-button @click="formDialog.show = false">取 消</el-button>
+        <!--<el-button type="primary" @click="experience_dialog = false">确 定</el-button>-->
+      </span>
+    </el-dialog>
 
     <!-- 添加或修改订单服务暂停对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
@@ -224,7 +243,7 @@
         // 查询参数
         queryParams: {
           pageNum: 1,
-          pageSize: 10,
+          pageSize: 5,
           orderId: null,
           createDate: null,
           pauseEndDate: null
@@ -245,15 +264,27 @@
           reason: [
             {required: true, message: "暂停理由不能为空", trigger: "blur"}
           ]
+        },
+        //查看表单内容
+        formDialog:{
+          title: "",
+          show: false,
+          content: ""
         }
       };
+    },
+    props: {
+      orderPauseId: {
+        type: Number,
+        default: 0
+      },
     },
     created() {
       this.getList();
     },
     mounted() {
-      this.orderId = this.$route.params.orderId;
-      this.queryParams.orderId = this.orderId;
+      this.orderId = this.orderPauseId;
+      this.queryParams.orderId = this.orderPauseId;
     },
     methods: {
       /** 查询订单服务暂停列表 */
@@ -373,11 +404,12 @@
         }).then(response => {
           this.download(response.msg);
       }).catch(function() {});
+      },
+      openFormDialog(title, content){
+        this.formDialog.title = title;
+        this.formDialog.content = content;
+        this.formDialog.show = true;
       }
-    },
-    checkcDateScope(value){
-       console.log(value[0]);
-       return false;
     }
   };
 </script>

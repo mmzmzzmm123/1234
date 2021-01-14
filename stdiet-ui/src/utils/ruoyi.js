@@ -272,11 +272,15 @@ export function validatorIDCard(idcode, type) {
       return {code: 1, msg: '校验通过'};
     }
   }else if(type === 4){
-     if(idcode != null && idcode != undefined && idcode.trim() != ""){
-       //暂时先放开
-       return {code: 1, msg: '校验通过'};
-     }
-     return {code: -1, msg: '护照号格式不正确'};
+    // 护照
+    // 规则： 14/15开头 + 7位数字, G + 8位数字, P + 7位数字, S/D + 7或8位数字,等
+    // 样本： 141234567, G12345678, P1234567
+    var reg = /^([a-zA-z]|[0-9]){5,17}$/;
+    if (reg.test(idcode) === false) {
+      return {code: -1, msg: '护照号不合规'};
+    } else {
+      return {code: 1, msg: '校验通过'};
+    }
   }
   else if (type === 5) {
     // 军官证
@@ -289,5 +293,9 @@ export function validatorIDCard(idcode, type) {
       return {code: 1, msg: '校验通过'};
     }
   }
+}
+
+export function isPassPortCard(card) {
+
 }
 

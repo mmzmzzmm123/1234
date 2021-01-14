@@ -58,4 +58,11 @@ public interface ISysOrderPauseService
      * @return 结果
      */
     public int deleteSysOrderPauseById(Long id);
+
+    /**
+     * 根据订单ID、时间范围查询数量
+     * @param sysOrderPause
+     * @return
+     */
+    int getCountByOrderIdAndPauseDate(SysOrderPause sysOrderPause);
 }

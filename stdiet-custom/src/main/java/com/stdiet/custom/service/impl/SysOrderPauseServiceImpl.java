@@ -1,7 +1,10 @@
 package com.stdiet.custom.service.impl;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import com.stdiet.common.utils.DateUtils;
+import com.stdiet.custom.service.ISysCommissionDayService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.stdiet.custom.mapper.SysOrderPauseMapper;
@@ -19,6 +22,9 @@ public class SysOrderPauseServiceImpl implements ISysOrderPauseService
 {
     @Autowired
     private SysOrderPauseMapper sysOrderPauseMapper;
+
+    @Autowired
+    private ISysCommissionDayService sysCommissionDayService;
 
     /**
      * 查询订单服务暂停
@@ -92,5 +98,14 @@ public class SysOrderPauseServiceImpl implements ISysOrderPauseService
     public int deleteSysOrderPauseById(Long id)
     {
         return sysOrderPauseMapper.deleteSysOrderPauseById(id);
+    }
+
+    /**
+     * 根据订单ID、时间范围查询数量
+     * @param sysOrderPause
+     * @return
+     */
+    public int getCountByOrderIdAndPauseDate(SysOrderPause sysOrderPause){
+        return sysOrderPauseMapper.getCountByOrderIdAndPauseDate(sysOrderPause);
     }
 }
