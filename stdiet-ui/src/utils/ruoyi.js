@@ -266,17 +266,24 @@ export function validatorIDCard(idcode, type) {
     // 规则： 新版8位或18位数字， 旧版10位数字 + 英文字母
     // 样本： 12345678 或 1234567890B
     const reg = /^\d{8}|^[a-zA-Z0-9]{10}|^\d{18}$/;
-    if (reg.test(card) === false) {
+    if (reg.test(idcode) === false) {
       return {code: -1, msg: '台湾居民来往大陆通行证号码不合规'};
     } else {
       return {code: 1, msg: '校验通过'};
     }
-  } else if (type === 4) {
+  }else if(type === 4){
+     if(idcode != null && idcode != undefined && idcode.trim() != ""){
+       //暂时先放开
+       return {code: 1, msg: '校验通过'};
+     }
+     return {code: -1, msg: '护照号格式不正确'};
+  }
+  else if (type === 5) {
     // 军官证
     // 规则： 军/兵/士/文/职/广/（其他中文） + "字第" + 4到8位字母或数字 + "号"
     // 样本： 军字第2001988号, 士字第P011816X号
-    const reg = /^[\u4E00-\u9FA5](字第)([0-9a-zA-Z]{4,8})(号?)$/;
-    if (reg.test(card) === false) {
+    const reg = /^([0-9a-zA-Z]{4,8})(号?)$/;
+    if (reg.test(idcode) === false) {
       return {code: -1, msg: '军官证号不合规'};
     } else {
       return {code: 1, msg: '校验通过'};
