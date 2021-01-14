@@ -18,6 +18,10 @@
         <result property="delFlag"    column="del_flag"    />
     </resultMap>
 
+    <sql id="baseSelectField">
+        id, order_id, pause_start_date, pause_end_date, reason, remarks, create_time, create_by, update_time, update_by, del_flag
+    </sql>
+
     <sql id="selectSysOrderPauseVo">
         select id, order_id, pause_start_date, pause_end_date, reason, remarks, create_time, create_by, update_time, update_by, del_flag from sys_order_pause sop
     </sql>
@@ -96,5 +100,16 @@
             #{id}
         </foreach>
     </update>
+
+    <!-- 根据订单ID、时间范围查询数量 -->
+    <select id="getCountByOrderIdAndPauseDate" parameterType="SysOrderPause" resultType="int">
+        select count(id) from sys_order_pause where del_flag = 0 and order_id = #{orderId}
+        AND (#{pauseStartDate} >= pause_start_date AND pause_end_date >= #{pauseStartDate}
+        OR #{pauseEndDate} >= pause_start_date AND pause_end_date >= #{pauseEndDate})
+        <if test="id != null">
+            and id <![CDATA[ <> ]]> #{id}
+        </if>
+        order by id desc
+    </select>
 
 </mapper>

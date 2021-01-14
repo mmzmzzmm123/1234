@@ -74,16 +74,16 @@
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="customerList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="customerList" stripe @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <!--<el-table-column label="序号" align="center" prop="id" />-->
-      <el-table-column label="创建时间" align="center" prop="createTime" width="180">
+      <el-table-column label="创建时间" align="center" prop="createTime" width="180" fixed="left">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="姓名" align="center" prop="name" width="120"/>
-      <el-table-column label="手机号" align="center" prop="phone" width="120"/>
+      <el-table-column label="姓名" align="center" prop="name" width="120" fixed="left"/>
+      <el-table-column label="手机号" align="center" prop="phone" width="120" fixed="left"/>
       <el-table-column label="性别" align="center" prop="sign.sex" width="100">
         <template slot-scope="scope">
           {{scope.row.sign.sex == 0 ? `男` : '女'}}
@@ -218,7 +218,7 @@
       <el-table-column label="售后营养师" align="center" prop="afterDietitian" />
       <el-table-column label="销售人员" align="center" prop="salesman" />
       <el-table-column label="负责人" align="center" prop="chargePerson" />-->
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="120">
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="120" fixed="right">
         <template slot-scope="scope">
           <el-button
             size="mini"

@@ -255,6 +255,11 @@
           <span>{{ parseTime(scope.row.becomeFanTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="开始时间" align="center" prop="startTime" width="120">
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.startTime, '{y}-{m}-{d}') }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="备注" align="center" prop="remark" width="120"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="300" fixed="right">
         <template slot-scope="scope">
@@ -296,6 +301,15 @@
     >
       <span style="margin-right: 12px;">总计：{{toThousands(this.totalAmount)}} 元</span>
     </pagination>
+
+    <!-- 暂停记录管理 -->
+    <el-dialog :title="pauseTitle" v-if="openPause" :visible.sync="openPause" width="900px" append-to-body>
+        <span style="color:#E6A23C;font-family:PingFang SC">
+          注意事项：
+          <br/>1、日期包含当天，如：2021-01-01到2021-01-07，总共暂停七天，2021-01-08继续服务
+          <br/>2、每条暂停记录的时间范围不能重叠</span>
+        <orderPause v-bind:orderPauseId="orderPauseId"></orderPause>
+    </el-dialog>
 
     <!-- 添加或修改销售订单对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="720px" append-to-body>
@@ -554,6 +568,7 @@
 <script>
   import {addOrder, delOrder, exportOrder, getOptions, getOrder, listOrder, updateOrder} from "@/api/custom/order";
   import dayjs from 'dayjs';
+  import orderPause from "./orderPause";
 
   const beginTime = dayjs().startOf('month').format('YYYY-MM-DD');
   const endTime = dayjs().format('YYYY-MM-DD');
@@ -581,6 +596,10 @@
         title: "",
         // 是否显示弹出层
         open: false,
+        // 是否显示暂停记录弹窗
+        openPause: false,
+        pauseTitle: "暂停记录",
+        orderPauseId: null,
         //
         totalAmount: 0,
         //
@@ -715,6 +734,9 @@
           },
         }
       };
+    },
+    components: {
+      orderPause
     },
     created() {
       this.getList();
@@ -958,7 +980,10 @@
       },
       orderPauseManage(order) {
         console.log(order.orderId);
-        this.$router.push({ name: 'orderPause', params: { 'orderId': order.orderId }})
+        this.pauseTitle = order.customer;
+        this.orderPauseId = order.orderId;
+        this.openPause = true;
+        //this.$router.push({ name: 'orderPause', params: { 'orderId': order.orderId }})
       }
     }
   };
