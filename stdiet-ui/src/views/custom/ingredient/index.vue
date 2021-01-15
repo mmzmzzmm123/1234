@@ -96,10 +96,12 @@
           icon="el-icon-search"
           size="mini"
           @click="handleQuery"
-          >搜索</el-button
+        >搜索
+        </el-button
         >
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
-          >重置</el-button
+        >重置
+        </el-button
         >
       </el-form-item>
     </el-form>
@@ -112,7 +114,7 @@
           size="mini"
           @click="handleAdd"
           v-hasPermi="['custom:ingredient:add']"
-          >新增
+        >新增
         </el-button>
       </el-col>
       <el-col :span="1.5">
@@ -122,7 +124,7 @@
           size="mini"
           @click="handleExport"
           v-hasPermi="['custom:ingredient:export']"
-          >导出
+        >导出
         </el-button>
       </el-col>
       <right-toolbar
@@ -190,19 +192,15 @@
         width="120"
       >
         <template slot-scope="scope">
-          <div v-if="scope.row.notRec">
-            <autohideinfo :data="scope.row.notRec.split(',')" />
-          </div>
+          <autohideinfo :data="string2Arr(scope.row.notRec)"/>
         </template>
       </el-table-column>
       <el-table-column label="推荐人群" align="center" prop="rec" width="120">
         <template slot-scope="scope">
-          <div v-if="scope.row.rec">
-            <autohideinfo :data="scope.row.rec.split(',')" />
-          </div>
+          <autohideinfo :data="string2Arr(scope.row.rec)"/>
         </template>
       </el-table-column>
-      <el-table-column label="备注" align="center" prop="remark" />
+      <el-table-column label="备注" align="center" prop="remark"/>
       <el-table-column
         label="操作"
         align="center"
@@ -215,7 +213,7 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['custom:ingredient:edit']"
-            >修改
+          >修改
           </el-button>
           <el-button
             size="mini"
@@ -223,7 +221,7 @@
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['custom:ingredient:remove']"
-            >删除
+          >删除
           </el-button>
         </template>
       </el-table-column>
@@ -243,7 +241,7 @@
         <el-form ref="form" :model="form" :rules="rules" label-width="80px">
           <el-col :span="12">
             <el-form-item label="食材名称" prop="name" label-width="90px">
-              <el-input v-model="form.name" placeholder="请输入食材名称" />
+              <el-input v-model="form.name" placeholder="请输入食材名称"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -378,239 +376,244 @@
 </template>
 
 <script>
-import {
-  addIngredient,
-  delIngredient,
-  exportIngredient,
-  getIngredient,
-  listIngredient,
-  updateIngredient,
-} from "@/api/custom/ingredient";
+  import {
+    addIngredient,
+    delIngredient,
+    exportIngredient,
+    getIngredient,
+    listIngredient,
+    updateIngredient,
+  } from "@/api/custom/ingredient";
 
-import AutoHideInfo from "@/components/AutoHideInfo";
+  import AutoHideInfo from "@/components/AutoHideInfo";
 
-import { listPhysicalSigns } from "@/api/custom/physicalSigns";
+  import {listPhysicalSigns} from "@/api/custom/physicalSigns";
 
-export default {
-  name: "Ingredient",
-  components: {
-    autohideinfo: AutoHideInfo,
-  },
-  data() {
-    return {
-      // 遮罩层
-      loading: true,
-      // 选中数组
-      ids: [],
-      // 非单个禁用
-      single: true,
-      // 非多个禁用
-      multiple: true,
-      // 显示搜索条件
-      showSearch: true,
-      // 总条数
-      total: 0,
-      // 食材表格数据
-      ingredientList: [],
-      // 审核状态
-      reviewStatusOptions: [],
-      // 弹出层标题
-      title: "",
-      // 是否显示弹出层
-      open: false,
-      // 食材类别字典
-      typeOptions: [],
-      // 地域字典
-      areaOptions: [],
-      //
-      physicalSignsOptions: [],
-      // 查询参数
-      queryParams: {
-        pageNum: 1,
-        pageSize: 10,
-        name: null,
-        type: null,
-        area: null,
-        notRecIds: null,
-        recIds: null,
-        reviewStatus: null,
-      },
-      // 表单参数
-      form: {},
-      // 表单校验
-      rules: {},
-    };
-  },
-  created() {
-    this.getList();
-    this.getDicts("cus_ing_type").then((response) => {
-      this.typeOptions = response.data;
-    });
-    this.getDicts("cus_area").then((response) => {
-      this.areaOptions = response.data;
-    });
-    this.getDicts("cus_review_status").then((response) => {
-      this.reviewStatusOptions = response.data;
-    });
-    listPhysicalSigns().then((response) => {
-      this.physicalSignsOptions = response.rows.map((obj) => ({
-        dictLabel: obj.name,
-        dictValue: obj.id,
-      }));
-    });
-  },
-  methods: {
-    /** 查询食材列表 */
-    getList() {
-      this.loading = true;
-      listIngredient(this.queryParams).then((response) => {
-        this.ingredientList = response.rows;
-        this.total = response.total;
-        this.loading = false;
-      });
+  export default {
+    name: "Ingredient",
+    components: {
+      autohideinfo: AutoHideInfo,
     },
-    // 食材类别字典翻译
-    typeFormat(row, column) {
-      return this.selectDictLabel(this.typeOptions, row.type);
-    },
-    // 地域字典翻译
-    areaFormat(row, column) {
-      return this.selectDictLabel(this.areaOptions, row.area);
-    },
-    // 取消按钮
-    cancel() {
-      this.open = false;
-      this.reset();
-    },
-    // 表单重置
-    reset() {
-      this.form = {
-        id: null,
-        name: null,
-        type: null,
-        proteinRatio: null,
-        fatRatio: null,
-        carbonRatio: null,
-        area: null,
-        notRecIds: [],
-        recIds: [],
-        remark: null,
-        createBy: null,
-        createTime: null,
-        updateBy: null,
-        updateTime: null,
+    data() {
+      return {
+        // 遮罩层
+        loading: true,
+        // 选中数组
+        ids: [],
+        // 非单个禁用
+        single: true,
+        // 非多个禁用
+        multiple: true,
+        // 显示搜索条件
+        showSearch: true,
+        // 总条数
+        total: 0,
+        // 食材表格数据
+        ingredientList: [],
+        // 审核状态
+        reviewStatusOptions: [],
+        // 弹出层标题
+        title: "",
+        // 是否显示弹出层
+        open: false,
+        // 食材类别字典
+        typeOptions: [],
+        // 地域字典
+        areaOptions: [],
+        //
+        physicalSignsOptions: [],
+        // 查询参数
+        queryParams: {
+          pageNum: 1,
+          pageSize: 10,
+          name: null,
+          type: null,
+          area: null,
+          notRecIds: null,
+          recIds: null,
+          reviewStatus: null,
+        },
+        // 表单参数
+        form: {},
+        // 表单校验
+        rules: {},
       };
-      this.resetForm("form");
     },
-    /** 搜索按钮操作 */
-    handleQuery() {
-      this.queryParams.pageNum = 1;
+    created() {
       this.getList();
+      this.getDicts("cus_ing_type").then((response) => {
+        this.typeOptions = response.data;
+      });
+      this.getDicts("cus_area").then((response) => {
+        this.areaOptions = response.data;
+      });
+      this.getDicts("cus_review_status").then((response) => {
+        this.reviewStatusOptions = response.data;
+      });
+      listPhysicalSigns().then((response) => {
+        this.physicalSignsOptions = response.rows.map((obj) => ({
+          dictLabel: obj.name,
+          dictValue: obj.id,
+        }));
+      });
     },
-    /** 重置按钮操作 */
-    resetQuery() {
-      this.resetForm("queryForm");
-      this.handleQuery();
-    },
-    // 多选框选中数据
-    handleSelectionChange(selection) {
-      this.ids = selection.map((item) => item.id);
-      this.single = selection.length !== 1;
-      this.multiple = !selection.length;
-    },
-    /** 新增按钮操作 */
-    handleAdd() {
-      this.reset();
-      this.open = true;
-      this.title = "添加食材";
-    },
-    /** 修改按钮操作 */
-    handleUpdate(row) {
-      this.reset();
-      const id = row.id || this.ids;
-      getIngredient(id).then((response) => {
-        this.form = response.data;
-        this.form.notRecIds = this.form.rec
-          ? this.form.rec
-              .split(",")
-              .map(
-                (label) =>
-                  this.physicalSignsOptions.find(
-                    (pObj) => pObj.dictLabel === label
-                  ).dictValue
-              )
-          : [];
-        this.form.recIds = this.form.notRec
-          ? this.form.notRec
-              .split(",")
-              .map(
-                (label) =>
-                  this.physicalSignsOptions.find(
-                    (pObj) => pObj.dictLabel === label
-                  ).dictValue
-              )
-          : [];
+    methods: {
+      /** 查询食材列表 */
+      getList() {
+        this.loading = true;
+        listIngredient(this.queryParams).then((response) => {
+          this.ingredientList = response.rows;
+          this.total = response.total;
+          this.loading = false;
+        });
+      },
+      // 食材类别字典翻译
+      typeFormat(row, column) {
+        return this.selectDictLabel(this.typeOptions, row.type);
+      },
+      // 地域字典翻译
+      areaFormat(row, column) {
+        return this.selectDictLabel(this.areaOptions, row.area);
+      },
+      // 取消按钮
+      cancel() {
+        this.open = false;
+        this.reset();
+      },
+      // 表单重置
+      reset() {
+        this.form = {
+          id: null,
+          name: null,
+          type: null,
+          proteinRatio: null,
+          fatRatio: null,
+          carbonRatio: null,
+          area: null,
+          notRecIds: [],
+          recIds: [],
+          remark: null,
+          createBy: null,
+          createTime: null,
+          updateBy: null,
+          updateTime: null,
+        };
+        this.resetForm("form");
+      },
+      /** 搜索按钮操作 */
+      handleQuery() {
+        this.queryParams.pageNum = 1;
+        this.getList();
+      },
+      /** 重置按钮操作 */
+      resetQuery() {
+        this.resetForm("queryForm");
+        this.handleQuery();
+      },
+      // 多选框选中数据
+      handleSelectionChange(selection) {
+        this.ids = selection.map((item) => item.id);
+        this.single = selection.length !== 1;
+        this.multiple = !selection.length;
+      },
+      /** 新增按钮操作 */
+      handleAdd() {
+        this.reset();
         this.open = true;
-        this.title = "修改食材";
-      });
-    },
-    /** 提交按钮 */
-    submitForm() {
-      this.$refs["form"].validate((valid) => {
-        if (valid) {
-          if (this.form.id != null) {
-            updateIngredient(this.form).then((response) => {
-              if (response.code === 200) {
-                this.msgSuccess("修改成功");
-                this.open = false;
-                this.getList();
-              }
-            });
-          } else {
-            addIngredient(this.form).then((response) => {
-              if (response.code === 200) {
-                this.msgSuccess("新增成功");
-                this.open = false;
-                this.getList();
-              }
-            });
+        this.title = "添加食材";
+      },
+      /** 修改按钮操作 */
+      handleUpdate(row) {
+        this.reset();
+        const id = row.id || this.ids;
+        getIngredient(id).then((response) => {
+          this.form = response.data;
+          this.form.notRecIds = this.form.rec
+            ? this.form.rec
+              .split(",")
+              .map(
+                (label) =>
+                  this.physicalSignsOptions.find(
+                    (pObj) => pObj.dictLabel === label
+                  ).dictValue
+              )
+            : [];
+          this.form.recIds = this.form.notRec
+            ? this.form.notRec
+              .split(",")
+              .map(
+                (label) =>
+                  this.physicalSignsOptions.find(
+                    (pObj) => pObj.dictLabel === label
+                  ).dictValue
+              )
+            : [];
+          this.open = true;
+          this.title = "修改食材";
+        });
+      },
+      /** 提交按钮 */
+      submitForm() {
+        this.$refs["form"].validate((valid) => {
+          if (valid) {
+            if (this.form.id != null) {
+              updateIngredient(this.form).then((response) => {
+                if (response.code === 200) {
+                  this.msgSuccess("修改成功");
+                  this.open = false;
+                  this.getList();
+                }
+              });
+            } else {
+              addIngredient(this.form).then((response) => {
+                if (response.code === 200) {
+                  this.msgSuccess("新增成功");
+                  this.open = false;
+                  this.getList();
+                }
+              });
+            }
           }
-        }
-      });
+        });
+      },
+      /** 删除按钮操作 */
+      handleDelete(row) {
+        const ids = row.id || this.ids;
+        this.$confirm('是否确认删除食材编号为"' + ids + '"的数据项?', "警告", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+        })
+          .then(function () {
+            return delIngredient(ids);
+          })
+          .then(() => {
+            this.getList();
+            this.msgSuccess("删除成功");
+          })
+          .catch(function () {
+          });
+      },
+      /** 导出按钮操作 */
+      handleExport() {
+        const queryParams = this.queryParams;
+        this.$confirm("是否确认导出所有食材数据项?", "警告", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+        })
+          .then(function () {
+            return exportIngredient(queryParams);
+          })
+          .then((response) => {
+            this.download(response.msg);
+          })
+          .catch(function () {
+          });
+      },
+      string2Arr(str) {
+        return str ? str.split(',') : []
+      }
     },
-    /** 删除按钮操作 */
-    handleDelete(row) {
-      const ids = row.id || this.ids;
-      this.$confirm('是否确认删除食材编号为"' + ids + '"的数据项?', "警告", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-      })
-        .then(function () {
-          return delIngredient(ids);
-        })
-        .then(() => {
-          this.getList();
-          this.msgSuccess("删除成功");
-        })
-        .catch(function () {});
-    },
-    /** 导出按钮操作 */
-    handleExport() {
-      const queryParams = this.queryParams;
-      this.$confirm("是否确认导出所有食材数据项?", "警告", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-      })
-        .then(function () {
-          return exportIngredient(queryParams);
-        })
-        .then((response) => {
-          this.download(response.msg);
-        })
-        .catch(function () {});
-    },
-  },
-};
+  };
 </script>

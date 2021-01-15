@@ -44,7 +44,7 @@
 
     <sql id="selectSysIngreditentsByIdVo">
         SELECT * FROM(
-            SELECT ingredient_id AS id, ingredient_weight AS weight, cus_weight, cus_unit
+            SELECT ingredient_id AS id, ingredient_weight AS weight, cus_weight, cus_unit, remark
             FROM sys_dishes_ingredient
             WHERE dishes_id = #{id}
         ) dishes

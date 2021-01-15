@@ -3,7 +3,7 @@
     <div v-for="item in mData" :key="item">
       {{ item }}
     </div>
-    <div v-if="showMore">
+    <div v-if="data.length > 3">
       <div>...</div>
       <el-popover placement="top-start" width="200" popper-class="autohideinfo_detial" trigger="hover">
         <div v-for="item in data" :key="item">{{ item }}</div>
@@ -14,30 +14,28 @@
 </template>
 
 <script>
-export default {
-  name: "AutoHideInfo",
-  data() {
-    return {
-      mData: [],
-      showMore: false,
-    };
-  },
-  props: {
-    data: {
-      type: Array,
-      default: [],
-      required: true,
+  export default {
+    name: "AutoHideInfo",
+    data() {
+      return {
+      };
     },
-  },
-  watch: {
-    data: function (val, oldVal) {
-      if (val) {
-        this.showMore = val.length > 3;
-        this.mData = val.slice(0, 3);
-      }
+    props: {
+      data: {
+        type: Array,
+        default: '',
+        // required: true,
+      },
     },
-  },
-};
+    computed: {
+      mData: function () {
+        if (this.data instanceof Array) {
+          return this.data.slice(0, 3);
+        }
+        return [];
+      },
+    },
+  };
 </script>
 
 <style>

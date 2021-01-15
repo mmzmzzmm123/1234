@@ -51,8 +51,16 @@
     </el-row>
 
     <el-table v-loading="loading" :data="dishesList" @selection-change="handleSelectionChange">
-      <!--      <el-table-column type="selection" width="55" align="center" />-->
-      <!--      <el-table-column label="id" align="center" prop="id" />-->
+      <el-table-column label="审核状态" align="center" width="80">
+        <template slot-scope="scope">
+          <el-tag
+            :type="scope.row.reviewStatus === 'yes' ? 'success' : 'danger'"
+            disable-transitions
+          >
+            {{ scope.row.reviewStatus === "yes" ? "已审核" : "未审核" }}
+          </el-tag>
+        </template>
+      </el-table-column>
       <el-table-column label="菜品名称" align="center" prop="name"/>
       <el-table-column label="菜品类型" align="center" prop="type" :formatter="typeFormat"/>
       <el-table-column label="包含食材" align="center">
@@ -65,18 +73,12 @@
       </el-table-column>
       <el-table-column label="推荐人群" align="center">
         <template slot-scope="scope">
-          <div v-for="tag in scope.row.recTags"
-            :key="tag">
-            {{tag}}
-          </div>
+          <autohideinfo :data="scope.row.recTags"/>
         </template>
       </el-table-column>
       <el-table-column label="忌口人群" align="center">
         <template slot-scope="scope">
-          <div v-for="tag in scope.row.notRecTags"
-               :key="tag">
-            {{tag}}
-          </div>
+          <autohideinfo :data="scope.row.notRecTags"/>
         </template>
       </el-table-column>
       <el-table-column label="做法" align="center" prop="methods"/>
@@ -219,6 +221,10 @@
                 prop="carbonRatio"
                 label="C/100g">
               </el-table-column>
+              <el-table-column
+                prop="remark"
+                label="备注">
+              </el-table-column>
             </el-table>
           </el-form-item>
           <el-form-item label="推荐人群">
@@ -255,9 +261,13 @@
 <script>
   import {addDishes, delDishes, exportDishes, getDishes, listDishes, updateDishes} from "@/api/custom/dishes";
   import {listAllIngredient} from "@/api/custom/ingredient";
+  import AutoHideInfo from "@/components/AutoHideInfo";
 
   export default {
     name: "Dishes",
+    components: {
+      autohideinfo: AutoHideInfo,
+    },
     data() {
       return {
         // 遮罩层
@@ -578,6 +588,10 @@
         const {columns, data} = param;
         return columns.reduce((arr, cur, idx) => {
           if (idx > 1) {
+            if(idx === 6) {
+              // 备注
+              return arr;
+            }
             arr[idx] = data.reduce((acc, dAcc) => {
               if (idx === 2) {
                 return acc + parseFloat(dAcc.weight);
