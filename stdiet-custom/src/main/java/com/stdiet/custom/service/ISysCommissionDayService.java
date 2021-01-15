@@ -26,10 +26,10 @@ public interface ISysCommissionDayService {
     List<SysCommissionDayDetail> calculateCommissionByDay(SysCommision sysCommision);
 
     /**
-     * 根据订单ID计算该笔订单的服务到期时间
-     * @param orderId
+     * 根据订单计算该笔订单的服务到期时间
+     * @param sysOrder 订单对象
      * @return
      */
-    LocalDate getServerEndDate(Long orderId);
+    LocalDate getServerEndDate(SysOrder sysOrder);
 
 }

@@ -60,18 +60,43 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
         return result;
     }
 
+    /**
+     * 根据订单计算该笔订单的服务到期时间
+     * @param sysOrder 订单对象
+     * @return
+     */
     @Override
-    public LocalDate getServerEndDate(Long orderId){
-        SysOrder sysOrder = sysOrderMapper.selectSysOrderById(orderId);
-        if(sysOrder != null){
-            SysOrderPause sysOrderPause = new SysOrderPause();
-            sysOrderPause.setOrderId(orderId);
-            List<SysOrderPause> pausesList = sysOrderPauseMapper.selectSysOrderPauseList(sysOrderPause);
-            sysOrder.setOrderPauseList(pausesList);
-            SysOrderCommisionDayDetail sysOrderCommisionDayDetail = statisticsOrderMessage(sysOrder);
-            return sysOrderCommisionDayDetail.getServerEndDate();
+    public LocalDate getServerEndDate(SysOrder sysOrder){
+        LocalDate serverEndDate = null;
+        if(sysOrder != null && sysOrder.getStartTime() != null){
+            //服务开始时间(客户建档时间)
+            LocalDate serverStartDate = DateUtils.dateToLocalDate(sysOrder.getStartTime());
+            //订单总服务月数
+            int serverMonth = sysOrder.getServeTimeId() != null ? sysOrder.getServeTimeId().intValue()/30 : 0;
+            //赠送时长
+            int giveDay = sysOrder.getGiveServeDay() != null ? sysOrder.getGiveServeDay().intValue() : 0;
+            //服务到期时间（加赠送时间，不加暂停时间）
+            serverEndDate = serverStartDate.plusMonths(serverMonth).plusDays(giveDay);
+            List<SysOrderPause> pausesList = sysOrder.getOrderPauseList();
+            if(pausesList == null){
+                if(sysOrder.getOrderId() != null){
+                    SysOrderPause sysOrderPause = new SysOrderPause();
+                    sysOrderPause.setOrderId(sysOrder.getOrderId());
+                    pausesList = sysOrderPauseMapper.selectSysOrderPauseList(sysOrderPause);
+                }else{
+                    pausesList = new ArrayList<>();
+                }
+            }
+            //System.out.println("结束时间："+serverEndDate);
+            //每年每月暂停天数，key为年份加月份，如:2021年1月=20211
+            Map<String, Integer> everyYearMonthPauseDay = getEveryYearMonthPauseDay(pausesList, serverStartDate, serverEndDate);
+            //该笔订单暂停总天数
+            int pauseTotalDay = getTotalByMap(everyYearMonthPauseDay);
+            //System.out.println("暂停天数："+pauseTotalDay);
+            //服务到期时间加上暂停时间
+            serverEndDate = serverEndDate.plusDays(pauseTotalDay);
         }
-        return null;
+        return serverEndDate;
     }
 
 
@@ -381,7 +406,7 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
         boolean breakFlag = false;
         //写100防止死循环
         for(int i = 0; i < 100; i++){
-            if(ChronoUnit.DAYS.between(everyMonthLastDate, endDate) >= 0){
+            if(ChronoUnit.DAYS.between(everyMonthLastDate, endDate) > 0){
                 day = Period.between(everyMonthFirstDate, everyMonthLastDate).getDays() + 1;
             }else{
                 day = Period.between(everyMonthFirstDate, endDate).getDays() + 1;

@@ -260,6 +260,11 @@
           <span>{{ parseTime(scope.row.startTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="结束时间" align="center" prop="serverEndTime" width="120">
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.serverEndTime, '{y}-{m}-{d}') }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="备注" align="center" prop="remark" width="120"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="300" fixed="right">
         <template slot-scope="scope">
@@ -634,6 +639,8 @@
         operatorIdOptions: [],
         //
         operatorAssisIdOptions: [],
+        //下拉列表对应关系(用于选择收款账号自动选择策划、策划助理、运营、运营助理)
+        orderDropdownCorrespondingOptions: [],
         // 查询参数
         queryParams: {
           pageNum: 1,
@@ -743,7 +750,7 @@
       getOptions().then(response => {
         const options = response.data.reduce((opts, cur) => {
           if (!opts[cur.postCode]) {
-            opts[cur.postCode] = [{dictValue: 0, dictLabel: ' ', remark: null}];
+            opts[cur.postCode] = [{dictValue: 0, dictLabel: '无', remark: null}];
           }
           opts[cur.postCode].push({dictValue: cur.userId, dictLabel: cur.userName, remark: cur.remark})
           return opts;
@@ -774,7 +781,10 @@
     });
       this.getDicts("cus_review_status").then(response => {
         this.reviewStatusOptions = response.data;
-      })
+      });
+      this.getDicts("order_dropdown_corresponding").then(response => {
+        this.orderDropdownCorrespondingOptions = response.data;
+      });
     },
     methods: {
       /** 查询销售订单列表 */
@@ -865,7 +875,6 @@
           nutritionistId: defaultNutritionist ? parseInt(defaultNutritionist.dictValue) : null,
           remark: null,
           nutriAssisId: defaultNutriAssis ? parseInt(defaultNutriAssis.dictValue) : null,
-          accountId: defaultAccount ? parseInt(defaultAccount.dictValue) : null,
           plannerId: defaultPlanner ? parseInt(defaultPlanner.dictValue) : null,
           plannerAssisId: defaultPlannerAssis ? parseInt(defaultPlannerAssis.dictValue) : null,
           operatorId: defaultOperator ? parseInt(defaultOperator.dictValue) : null,
@@ -876,7 +885,9 @@
           reviewStatus: this.review,
           giveServeDay: defaultGiveServeTime ? parseInt(defaultGiveServeTime.dictValue) : null,
           conditioningProjectId: defaultConditioningProjectIdOption ? parseInt(defaultConditioningProjectIdOption.dictValue) : null,
-          becomeFanTime: dayjs().format("YYYY-MM-DD")
+          becomeFanTime: dayjs().format("YYYY-MM-DD"),
+          //收款账号的初始化放最后，使得可以watch中监听到变化，保证策划、策划助理、运营、运营助理初始化
+          accountId: defaultAccount ? parseInt(defaultAccount.dictValue) : null
         };
         this.resetForm("form");
       },
@@ -984,6 +995,27 @@
         this.orderPauseId = order.orderId;
         this.openPause = true;
         //this.$router.push({ name: 'orderPause', params: { 'orderId': order.orderId }})
+      },
+      //根据收款账号ID初始化策划、策划助理、运营、运营助理
+      initPlanningAndOperation(){
+         if(this.form.accountId != null && this.form.accountId != undefined){
+           let planningAndOperationValue = this.orderDropdownCorrespondingOptions.find(opt => parseInt(opt.dictValue) === this.form.accountId);
+           let array = planningAndOperationValue.dictLabel.split("|");
+           let plannerIdOption = this.plannerIdOptions.find(opt => opt.dictValue == array[0]);
+           this.form.plannerId = plannerIdOption ? parseInt(plannerIdOption.dictValue) : 0;
+           let plannerAssisIdOption = this.plannerAssisIdOptions.find(opt => opt.dictValue == array[1]);
+           this.form.plannerAssisId = plannerAssisIdOption ? parseInt(plannerAssisIdOption.dictValue) : 0;
+           let operatorIdOption = this.operatorIdOptions.find(opt => opt.dictValue == array[2]);
+           this.form.operatorId = operatorIdOption ? parseInt(operatorIdOption.dictValue) : 0;
+           let operatorAssisIdOption = this.operatorAssisIdOptions.find(opt => opt.dictValue == array[3]);
+           this.form.operatorAssisId = operatorAssisIdOption ? parseInt(operatorAssisIdOption.dictValue) : 0;
+         }
+      }
+    },
+    watch:{
+      // 监听收款账号的变化
+      "form.accountId": function(newVal, oldVal){
+        this.initPlanningAndOperation();
       }
     }
   };

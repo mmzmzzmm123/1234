@@ -1,6 +1,7 @@
 package com.stdiet.custom.service;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 import com.stdiet.custom.domain.SysOrder;
 
@@ -66,4 +67,11 @@ public interface ISysOrderService
      * @return
      */
     public BigDecimal selectAllOrderAmount(SysOrder sysOrder);
+
+    /**
+     * 根据订单ID更新该订单的服务到期时间
+     * @param orderId
+     * @return
+     */
+    int updateOrderServerEndDate(Long orderId);
 }
