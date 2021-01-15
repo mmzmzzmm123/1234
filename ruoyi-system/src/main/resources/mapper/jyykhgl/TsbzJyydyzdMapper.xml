@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.jyykhgl.mapper.TsbzJyydyzdMapper">
+
+    <resultMap type="TsbzJyydyzd" id="TsbzJyydyzdResult">
+        <result property="id" column="id"/>
+        <result property="rwid" column="rwid"/>
+        <result property="rwnrlx" column="rwnrlx"/>
+        <result property="dymc" column="dymc"/>
+        <result property="dyzt" column="dyzt"/>
+        <result property="dysj" column="dysj"/>
+        <result property="dyxx" column="dyxx"/>
+        <result property="dydx" column="dydx"/>
+        <result property="deptId" column="dept_id"/>
+        <result property="createUserid" column="create_userid"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <sql id="selectTsbzJyydyzdVo">
+        select id, rwid, rwnrlx, dymc, dyzt, dysj, dyxx, dydx, dept_id, create_userid, create_time from tsbz_jyydyzd
+    </sql>
+
+    <select id="selectTsbzJyydyzdList" parameterType="TsbzJyydyzd" resultMap="TsbzJyydyzdResult">
+        <include refid="selectTsbzJyydyzdVo"/>
+        <where>
+            <if test="rwid != null ">and rwid = #{rwid}</if>
+            <if test="rwnrlx != null  and rwnrlx != ''">and rwnrlx = #{rwnrlx}</if>
+            <if test="dymc != null  and dymc != ''">and dymc = #{dymc}</if>
+            <if test="dyzt != null  and dyzt != ''">and dyzt = #{dyzt}</if>
+            <if test="dysj != null ">and dysj = #{dysj}</if>
+            <if test="dyxx != null  and dyxx != ''">and dyxx = #{dyxx}</if>
+            <if test="dydx != null  and dydx != ''">and dydx = #{dydx}</if>
+            <if test="deptId != null ">and dept_id = #{deptId}</if>
+            <if test="createUserid != null ">and create_userid = #{createUserid}</if>
+        </where>
+    </select>
+
+    <select id="selectTsbzJyydyzdById" parameterType="Long" resultMap="TsbzJyydyzdResult">
+        <include refid="selectTsbzJyydyzdVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertTsbzJyydyzd" parameterType="TsbzJyydyzd" useGeneratedKeys="true" keyProperty="id">
+        insert into tsbz_jyydyzd
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="rwid != null">rwid,</if>
+            <if test="rwnrlx != null">rwnrlx,</if>
+            <if test="dymc != null">dymc,</if>
+            <if test="dyzt != null">dyzt,</if>
+            <if test="dysj != null">dysj,</if>
+            <if test="dyxx != null">dyxx,</if>
+            <if test="dydx != null">dydx,</if>
+            <if test="deptId != null">dept_id,</if>
+            <if test="createUserid != null">create_userid,</if>
+            <if test="createTime != null">create_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="rwid != null">#{rwid},</if>
+            <if test="rwnrlx != null">#{rwnrlx},</if>
+            <if test="dymc != null">#{dymc},</if>
+            <if test="dyzt != null">#{dyzt},</if>
+            <if test="dysj != null">#{dysj},</if>
+            <if test="dyxx != null">#{dyxx},</if>
+            <if test="dydx != null">#{dydx},</if>
+            <if test="deptId != null">#{deptId},</if>
+            <if test="createUserid != null">#{createUserid},</if>
+            <if test="createTime != null">#{createTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateTsbzJyydyzd" parameterType="TsbzJyydyzd">
+        update tsbz_jyydyzd
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="rwid != null">rwid = #{rwid},</if>
+            <if test="rwnrlx != null">rwnrlx = #{rwnrlx},</if>
+            <if test="dymc != null">dymc = #{dymc},</if>
+            <if test="dyzt != null">dyzt = #{dyzt},</if>
+            <if test="dysj != null">dysj = #{dysj},</if>
+            <if test="dyxx != null">dyxx = #{dyxx},</if>
+            <if test="dydx != null">dydx = #{dydx},</if>
+            <if test="deptId != null">dept_id = #{deptId},</if>
+            <if test="createUserid != null">create_userid = #{createUserid},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTsbzJyydyzdById" parameterType="Long">
+        delete from tsbz_jyydyzd where id = #{id}
+    </delete>
+
+    <delete id="deleteTsbzJyydyzdByIds" parameterType="String">
+        delete from tsbz_jyydyzd where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
