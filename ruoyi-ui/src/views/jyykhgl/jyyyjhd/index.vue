@@ -5,80 +5,65 @@
       ref="queryForm"
       :inline="true"
       v-show="showSearch"
-      label-width="70px"
+      label-width="68px"
     >
-      <!-- <el-form-item label="名称" prop="rwmc">
+      <el-form-item label="所属任务" prop="rwid">
         <el-input
-          v-model="queryParams.rwmc"
-          placeholder="请输入名称"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item> -->
-      <el-form-item label="任务类型" prop="rwlx">
-        <el-input
-          v-model="queryParams.rwlx"
-          placeholder="请输入任务类型"
+          v-model="queryParams.rwid"
+          placeholder="请输入所属任务"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="任务内容" prop="rwnr">
+      <el-form-item label="任务内容" prop="rwnrlx">
         <el-input
-          v-model="queryParams.rwnr"
+          v-model="queryParams.rwnrlx"
           placeholder="请输入任务内容"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="考核部门" prop="khbm">
+      <el-form-item label="活动名称" prop="hdmc">
         <el-input
-          v-model="queryParams.khbm"
-          placeholder="请输入考核部门"
+          v-model="queryParams.hdmc"
+          placeholder="请输入活动名称"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="考核周期" prop="khzq">
+      <el-form-item label="活动主题" prop="hdzt">
         <el-input
-          v-model="queryParams.khzq"
-          placeholder="请输入考核周期"
+          v-model="queryParams.hdzt"
+          placeholder="请输入活动主题"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <!--<el-form-item label="数量要求" prop="slyq">
+      <el-form-item label="活动时间" prop="hdsj">
+        <el-date-picker
+          clearable
+          size="small"
+          style="width: 200px"
+          v-model="queryParams.hdsj"
+          type="date"
+          value-format="yyyy-MM-dd"
+          placeholder="选择活动时间"
+        >
+        </el-date-picker>
+      </el-form-item>
+      <el-form-item label="活动地点" prop="hddd">
         <el-input
-          v-model="queryParams.slyq"
-          placeholder="请输入数量要求"
+          v-model="queryParams.hddd"
+          placeholder="请输入活动地点"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="是否必选" prop="fsbx">
-        <el-input
-          v-model="queryParams.fsbx"
-          placeholder="请输入是否必选"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="是否删除" prop="isdel">
-        <el-input
-          v-model="queryParams.isdel"
-          placeholder="请输入是否删除"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item> -->
       <el-form-item>
         <el-button
           type="cyan"
@@ -100,7 +85,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['jyykhgl:jyykhrw:add']"
+          v-hasPermi="['jyykhgl:jyyyjhd:add']"
           >新增</el-button
         >
       </el-col>
@@ -111,7 +96,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['jyykhgl:jyykhrw:edit']"
+          v-hasPermi="['jyykhgl:jyyyjhd:edit']"
           >修改</el-button
         >
       </el-col>
@@ -122,20 +107,10 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['jyykhgl:jyykhrw:remove']"
+          v-hasPermi="['jyykhgl:jyyyjhd:remove']"
           >删除</el-button
         >
       </el-col>
-      <!-- <el-col :span="1.5">
-        <el-button
-          type="warning"
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['jyykhgl:jyykhrw:export']"
-          >导出</el-button
-        >
-      </el-col> -->
       <right-toolbar
         :showSearch.sync="showSearch"
         @queryTable="getList"
@@ -144,20 +119,23 @@
 
     <el-table
       v-loading="loading"
-      :data="jyykhrwList"
+      :data="jyyyjhdList"
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="编号" align="center" prop="id" />
-      <!-- <el-table-column label="名称" align="center" prop="rwmc" /> -->
-      <el-table-column label="任务类型" align="center" prop="rwlx" />
-      <el-table-column label="任务内容" align="center" prop="rwnr" />
-      <el-table-column label="考核部门" align="center" prop="khbm" />
-      <el-table-column label="考核周期" align="center" prop="khzq" />
-      <el-table-column label="数量要求" align="center" prop="slyq" />
-      <el-table-column label="是否必选" align="center" prop="fsbx" />
-      <!-- <el-table-column label="是否删除" align="center" prop="isdel" /> -->
-      <el-table-column label="任务说明" align="center" prop="rwsm" />
+      <!-- <el-table-column label="编号" align="center" prop="id" /> -->
+      <el-table-column label="所属任务" align="center" prop="rwid" />
+      <el-table-column label="任务内容" align="center" prop="rwnrlx" />
+      <el-table-column label="活动名称" align="center" prop="hdmc" />
+      <el-table-column label="活动主题" align="center" prop="hdzt" />
+      <el-table-column label="活动时间" align="center" prop="hdsj" width="180">
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.hdsj, "{y}-{m}-{d}") }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="活动地点" align="center" prop="hddd" />
+      <!-- <el-table-column label="附件" align="center" prop="filepath" /> -->
+      <el-table-column label="附件名称" align="center" prop="filename" />
       <el-table-column
         label="操作"
         align="center"
@@ -169,7 +147,7 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['jyykhgl:jyykhrw:edit']"
+            v-hasPermi="['jyykhgl:jyyyjhd:edit']"
             >修改</el-button
           >
           <el-button
@@ -177,7 +155,7 @@
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['jyykhgl:jyykhrw:remove']"
+            v-hasPermi="['jyykhgl:jyyyjhd:remove']"
             >删除</el-button
           >
         </template>
@@ -192,39 +170,45 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改教研员考核任务对话框 -->
+    <!-- 添加或修改研究活动（教研员）对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <!-- <el-form-item label="名称" prop="rwmc">
-          <el-input v-model="form.rwmc" placeholder="请输入名称" />
-        </el-form-item> -->
-        <el-form-item label="任务类型" prop="rwlx">
-          <el-input v-model="form.rwlx" placeholder="请输入任务类型" />
+        <el-form-item label="所属任务" prop="rwid">
+          <el-input v-model="form.rwid" placeholder="请输入所属任务" />
         </el-form-item>
-        <el-form-item label="任务内容" prop="rwnr">
-          <el-input v-model="form.rwnr" placeholder="请输入任务内容" />
+        <el-form-item label="任务内容" prop="rwnrlx">
+          <el-input v-model="form.rwnrlx" placeholder="请输入任务内容" />
         </el-form-item>
-        <el-form-item label="考核部门" prop="khbm">
-          <el-input v-model="form.khbm" placeholder="请输入考核部门" />
+        <el-form-item label="活动名称" prop="hdmc">
+          <el-input v-model="form.hdmc" placeholder="请输入活动名称" />
         </el-form-item>
-        <el-form-item label="考核周期" prop="khzq">
-          <el-input v-model="form.khzq" placeholder="请输入考核周期" />
+        <el-form-item label="活动主题" prop="hdzt">
+          <el-input v-model="form.hdzt" placeholder="请输入活动主题" />
         </el-form-item>
-        <el-form-item label="数量要求" prop="slyq">
-          <el-input v-model="form.slyq" placeholder="请输入数量要求" />
+        <el-form-item label="活动时间" prop="hdsj">
+          <el-date-picker
+            clearable
+            size="small"
+            style="width: 200px"
+            v-model="form.hdsj"
+            type="date"
+            value-format="yyyy-MM-dd"
+            placeholder="选择活动时间"
+          >
+          </el-date-picker>
         </el-form-item>
-        <el-form-item label="是否必选" prop="fsbx">
-          <el-input v-model="form.fsbx" placeholder="请输入是否必选" />
+        <el-form-item label="活动地点" prop="hddd">
+          <el-input v-model="form.hddd" placeholder="请输入活动地点" />
         </el-form-item>
-        <!-- <el-form-item label="是否删除" prop="isdel">
-          <el-input v-model="form.isdel" placeholder="请输入是否删除" />
-        </el-form-item> -->
-        <el-form-item label="任务说明" prop="rwsm">
+        <el-form-item label="附件" prop="filepath">
           <el-input
-            v-model="form.rwsm"
+            v-model="form.filepath"
             type="textarea"
             placeholder="请输入内容"
           />
+        </el-form-item>
+        <el-form-item label="附件名称" prop="filename">
+          <el-input v-model="form.filename" placeholder="请输入附件名称" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -237,16 +221,15 @@
 
 <script>
 import {
-  listJyykhrw,
-  getJyykhrw,
-  delJyykhrw,
-  addJyykhrw,
-  updateJyykhrw,
-  exportJyykhrw,
-} from "@/api/jyykhgl/jyykhrw";
+  listJyyyjhd,
+  getJyyyjhd,
+  delJyyyjhd,
+  addJyyyjhd,
+  updateJyyyjhd,
+} from "@/api/jyykhgl/jyyyjhd";
 
 export default {
-  name: "Jyykhrw",
+  name: "Jyyyjhd",
   data() {
     return {
       // 遮罩层
@@ -261,8 +244,8 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      // 教研员考核任务表格数据
-      jyykhrwList: [],
+      // 研究活动（教研员）表格数据
+      jyyyjhdList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -271,15 +254,16 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        rwmc: null,
-        rwlx: null,
-        rwnr: null,
-        khbm: null,
-        khzq: null,
-        slyq: null,
-        fsbx: null,
-        isdel: null,
-        rwsm: null,
+        rwid: null,
+        rwnrlx: null,
+        hdmc: null,
+        hdzt: null,
+        hdsj: null,
+        hddd: null,
+        filepath: null,
+        filename: null,
+        deptId: null,
+        createUserid: null,
       },
       // 表单参数
       form: {},
@@ -291,11 +275,11 @@ export default {
     this.getList();
   },
   methods: {
-    /** 查询教研员考核任务列表 */
+    /** 查询研究活动（教研员）列表 */
     getList() {
       this.loading = true;
-      listJyykhrw(this.queryParams).then((response) => {
-        this.jyykhrwList = response.rows;
+      listJyyyjhd(this.queryParams).then((response) => {
+        this.jyyyjhdList = response.rows;
         this.total = response.total;
         this.loading = false;
       });
@@ -309,16 +293,17 @@ export default {
     reset() {
       this.form = {
         id: null,
-        rwmc: null,
-        rwlx: null,
-        rwnr: null,
-        khbm: null,
-        khzq: null,
-        slyq: null,
-        fsbx: null,
-        isdel: null,
+        rwid: null,
+        rwnrlx: null,
+        hdmc: null,
+        hdzt: null,
+        hdsj: null,
+        hddd: null,
+        filepath: null,
+        filename: null,
+        deptId: null,
+        createUserid: null,
         createTime: null,
-        rwsm: null,
       };
       this.resetForm("form");
     },
@@ -342,16 +327,16 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加教研员考核任务";
+      this.title = "添加研究活动（教研员）";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids;
-      getJyykhrw(id).then((response) => {
+      getJyyyjhd(id).then((response) => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改教研员考核任务";
+        this.title = "修改研究活动（教研员）";
       });
     },
     /** 提交按钮 */
@@ -359,7 +344,7 @@ export default {
       this.$refs["form"].validate((valid) => {
         if (valid) {
           if (this.form.id != null) {
-            updateJyykhrw(this.form).then((response) => {
+            updateJyyyjhd(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("修改成功");
                 this.open = false;
@@ -367,7 +352,7 @@ export default {
               }
             });
           } else {
-            addJyykhrw(this.form).then((response) => {
+            addJyyyjhd(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("新增成功");
                 this.open = false;
@@ -382,7 +367,7 @@ export default {
     handleDelete(row) {
       const ids = row.id || this.ids;
       this.$confirm(
-        '是否确认删除教研员考核任务编号为"' + ids + '"的数据项?',
+        '是否确认删除研究活动（教研员）编号为"' + ids + '"的数据项?',
         "警告",
         {
           confirmButtonText: "确定",
@@ -391,7 +376,7 @@ export default {
         }
       )
         .then(function () {
-          return delJyykhrw(ids);
+          return delJyyyjhd(ids);
         })
         .then(() => {
           this.getList();
@@ -399,22 +384,6 @@ export default {
         })
         .catch(function () {});
     },
-    // /** 导出按钮操作 */
-    // handleExport() {
-    //   const queryParams = this.queryParams;
-    //   this.$confirm("是否确认导出所有教研员考核任务数据项?", "警告", {
-    //     confirmButtonText: "确定",
-    //     cancelButtonText: "取消",
-    //     type: "warning",
-    //   })
-    //     .then(function () {
-    //       return exportJyykhrw(queryParams);
-    //     })
-    //     .then((response) => {
-    //       this.download(response.msg);
-    //     })
-    //     .catch(function () {});
-    // },
   },
 };
 </script>

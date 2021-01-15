@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.jyykhgl.mapper.TsbzJyyyjhdMapper">
+
+    <resultMap type="TsbzJyyyjhd" id="TsbzJyyyjhdResult">
+        <result property="id" column="id"/>
+        <result property="rwid" column="rwid"/>
+        <result property="rwnrlx" column="rwnrlx"/>
+        <result property="hdmc" column="hdmc"/>
+        <result property="hdzt" column="hdzt"/>
+        <result property="hdsj" column="hdsj"/>
+        <result property="hddd" column="hddd"/>
+        <result property="filepath" column="filepath"/>
+        <result property="filename" column="filename"/>
+        <result property="deptId" column="dept_id"/>
+        <result property="createUserid" column="create_userid"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <sql id="selectTsbzJyyyjhdVo">
+        select id, rwid, rwnrlx, hdmc, hdzt, hdsj, hddd, filepath, filename, dept_id, create_userid, create_time from tsbz_jyyyjhd
+    </sql>
+
+    <select id="selectTsbzJyyyjhdList" parameterType="TsbzJyyyjhd" resultMap="TsbzJyyyjhdResult">
+        <include refid="selectTsbzJyyyjhdVo"/>
+        <where>
+            <if test="rwid != null ">and rwid = #{rwid}</if>
+            <if test="rwnrlx != null  and rwnrlx != ''">and rwnrlx = #{rwnrlx}</if>
+            <if test="hdmc != null  and hdmc != ''">and hdmc = #{hdmc}</if>
+            <if test="hdzt != null  and hdzt != ''">and hdzt = #{hdzt}</if>
+            <if test="hdsj != null ">and hdsj = #{hdsj}</if>
+            <if test="hddd != null  and hddd != ''">and hddd = #{hddd}</if>
+            <if test="filepath != null  and filepath != ''">and filepath = #{filepath}</if>
+            <if test="filename != null  and filename != ''">and filename like concat('%', #{filename}, '%')</if>
+            <if test="deptId != null ">and dept_id = #{deptId}</if>
+            <if test="createUserid != null ">and create_userid = #{createUserid}</if>
+        </where>
+    </select>
+
+    <select id="selectTsbzJyyyjhdById" parameterType="Long" resultMap="TsbzJyyyjhdResult">
+        <include refid="selectTsbzJyyyjhdVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertTsbzJyyyjhd" parameterType="TsbzJyyyjhd" useGeneratedKeys="true" keyProperty="id">
+        insert into tsbz_jyyyjhd
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="rwid != null">rwid,</if>
+            <if test="rwnrlx != null">rwnrlx,</if>
+            <if test="hdmc != null">hdmc,</if>
+            <if test="hdzt != null">hdzt,</if>
+            <if test="hdsj != null">hdsj,</if>
+            <if test="hddd != null">hddd,</if>
+            <if test="filepath != null">filepath,</if>
+            <if test="filename != null">filename,</if>
+            <if test="deptId != null">dept_id,</if>
+            <if test="createUserid != null">create_userid,</if>
+            <if test="createTime != null">create_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="rwid != null">#{rwid},</if>
+            <if test="rwnrlx != null">#{rwnrlx},</if>
+            <if test="hdmc != null">#{hdmc},</if>
+            <if test="hdzt != null">#{hdzt},</if>
+            <if test="hdsj != null">#{hdsj},</if>
+            <if test="hddd != null">#{hddd},</if>
+            <if test="filepath != null">#{filepath},</if>
+            <if test="filename != null">#{filename},</if>
+            <if test="deptId != null">#{deptId},</if>
+            <if test="createUserid != null">#{createUserid},</if>
+            <if test="createTime != null">#{createTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateTsbzJyyyjhd" parameterType="TsbzJyyyjhd">
+        update tsbz_jyyyjhd
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="rwid != null">rwid = #{rwid},</if>
+            <if test="rwnrlx != null">rwnrlx = #{rwnrlx},</if>
+            <if test="hdmc != null">hdmc = #{hdmc},</if>
+            <if test="hdzt != null">hdzt = #{hdzt},</if>
+            <if test="hdsj != null">hdsj = #{hdsj},</if>
+            <if test="hddd != null">hddd = #{hddd},</if>
+            <if test="filepath != null">filepath = #{filepath},</if>
+            <if test="filename != null">filename = #{filename},</if>
+            <if test="deptId != null">dept_id = #{deptId},</if>
+            <if test="createUserid != null">create_userid = #{createUserid},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTsbzJyyyjhdById" parameterType="Long">
+        delete from tsbz_jyyyjhd where id = #{id}
+    </delete>
+
+    <delete id="deleteTsbzJyyyjhdByIds" parameterType="String">
+        delete from tsbz_jyyyjhd where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
