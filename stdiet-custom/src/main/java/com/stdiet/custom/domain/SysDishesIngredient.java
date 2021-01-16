@@ -23,6 +23,18 @@ public class SysDishesIngredient extends SysIngredient {
 
     private BigDecimal weight;
 
+    private String remark;
+
+    @Override
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
+    @Override
+    public String getRemark() {
+        return remark;
+    }
+
     public Long getIngredientId() {
         return ingredientId;
     }

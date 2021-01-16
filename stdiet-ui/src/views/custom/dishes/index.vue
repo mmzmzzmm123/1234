@@ -20,6 +20,20 @@
           />
         </el-select>
       </el-form-item>
+      <el-form-item label="审核状态" prop="reviewStatus">
+        <el-select
+          v-model="queryParams.reviewStatus"
+          placeholder="请选择审核状态"
+          clearable
+        >
+          <el-option
+            v-for="dict in reviewStatusOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item>
         <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -49,7 +63,6 @@
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
-
     <el-table v-loading="loading" :data="dishesList" @selection-change="handleSelectionChange">
       <el-table-column label="审核状态" align="center" width="80">
         <template slot-scope="scope">
@@ -245,6 +258,20 @@
               {{notRec}}
             </el-tag>
           </el-form-item>
+          <el-form-item label="审核状态" prop="reviewStatus">
+            <el-select
+              v-model="form.reviewStatus"
+              placeholder="请选择审核状态"
+              clearable
+            >
+              <el-option
+                v-for="dict in reviewStatusOptions"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="dict.dictValue"
+              />
+            </el-select>
+          </el-form-item>
           <el-form-item label="做法" prop="methods">
             <el-input v-model="form.methods" type="textarea" placeholder="请输入内容" rows="4"/>
           </el-form-item>
@@ -284,6 +311,8 @@
         total: 0,
         // 菜品表格数据
         dishesList: [],
+        // 审核状态
+        reviewStatusOptions: [],
         // 弹出层标题
         title: "",
         // 是否显示弹出层
@@ -333,6 +362,9 @@
       this.getDicts("cus_cus_unit").then(response => {
         this.cusUnitOptions = response.data;
       });
+      this.getDicts("cus_review_status").then((response) => {
+        this.reviewStatusOptions = response.data;
+      });
     },
     methods: {
       /** 查询菜品列表 */
@@ -374,6 +406,10 @@
       },
       cusUnitFormat(row, column) {
         return this.selectDictLabel(this.cusUnitOptions, row.type);
+      },
+      // 地域字典翻译
+      reviewStatusFormat(row, column) {
+        return this.selectDictLabel(this.reviewStatusOptions, row.area);
       },
       // 取消按钮
       cancel() {

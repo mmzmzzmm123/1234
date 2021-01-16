@@ -32,6 +32,16 @@ public class SysDishes extends BaseEntity
     @Excel(name = "做法")
     private String methods;
 
+    private String reviewStatus;
+
+    public void setReviewStatus(String reviewStatus) {
+        this.reviewStatus = reviewStatus;
+    }
+
+    public String getReviewStatus() {
+        return reviewStatus;
+    }
+
     private List<SysDishesIngredient> igdList;
 
     public void setId(Long id) 

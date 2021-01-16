@@ -9,6 +9,7 @@
         <result property="name"    column="name"    />
         <result property="type"    column="type"    />
         <result property="methods"    column="methods"    />
+        <result property="reviewStatus" column="review_status" />
         <result property="createBy"    column="create_by"    />
         <result property="createTime"    column="create_time"    />
         <result property="updateBy"    column="update_by"    />
@@ -31,7 +32,7 @@
     </resultMap>
 
     <sql id="selectSysDishesVo">
-        select id, name, type, methods, create_by, create_time, update_by, update_time from sys_dishes
+        select id, name, type, methods, create_by, create_time, update_by, update_time, review_status from sys_dishes
     </sql>
 
     <select id="selectSysDishesList" parameterType="SysDishes" resultMap="SysDishesResult">
@@ -39,6 +40,7 @@
         <where>
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
             <if test="type != null  and type != ''"> and type = #{type}</if>
+            <if test="reviewStatus != null  and type != ''"> and review_status = #{reviewStatus}</if>
         </where>
     </select>
 
@@ -86,6 +88,7 @@
             <if test="type != null">type,</if>
             <if test="methods != null">methods,</if>
             <if test="createBy != null">create_by,</if>
+            <if test="reviewStatus != null">review_status</if>
             <if test="createTime != null">create_time,</if>
             <if test="updateBy != null">update_by,</if>
             <if test="updateTime != null">update_time,</if>
@@ -95,6 +98,7 @@
             <if test="type != null">#{type},</if>
             <if test="methods != null">#{methods},</if>
             <if test="createBy != null">#{createBy},</if>
+            <if test="reviewStatus != null">#{reviewStatus}</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="updateBy != null">#{updateBy},</if>
             <if test="updateTime != null">#{updateTime},</if>
@@ -108,6 +112,7 @@
             <if test="type != null">type = #{type},</if>
             <if test="methods != null">methods = #{methods},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="reviewStatus != null">review_status = #{reviewStatus},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateBy != null">update_by = #{updateBy},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
@@ -138,9 +143,9 @@
     </delete>
 
     <insert id="bashInsertDishesIngredent">
-        insert into sys_dishes_ingredient(dishes_id, ingredient_id, ingredient_weight, cus_unit, cus_weight) values
+        insert into sys_dishes_ingredient(dishes_id, ingredient_id, ingredient_weight, cus_unit, cus_weight, remark) values
         <foreach collection="list" separator="," item="item" index="index">
-            (#{item.dishesId}, #{item.ingredientId}, #{item.weight}, #{item.cusUnit}, #{item.cusWeight})
+            (#{item.dishesId}, #{item.ingredientId}, #{item.weight}, #{item.cusUnit}, #{item.cusWeight}, #{item.remark})
         </foreach>
     </insert>
 
