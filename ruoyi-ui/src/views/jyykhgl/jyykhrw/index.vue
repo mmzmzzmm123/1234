@@ -17,31 +17,46 @@
         />
       </el-form-item> -->
       <el-form-item label="任务类型" prop="rwlx">
-        <el-input
+        <el-select
           v-model="queryParams.rwlx"
-          placeholder="请输入任务类型"
-          clearable
           size="small"
-          @keyup.enter.native="handleQuery"
-        />
+          placeholder="请选择任务类型"
+        >
+          <el-option
+            v-for="dict in rwlxOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          ></el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="任务内容" prop="rwnr">
-        <el-input
+        <el-select
           v-model="queryParams.rwnr"
-          placeholder="请输入任务内容"
-          clearable
           size="small"
-          @keyup.enter.native="handleQuery"
-        />
+          placeholder="请选择任务内容"
+        >
+          <el-option
+            v-for="dict in rwnrOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          ></el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="考核部门" prop="khbm">
-        <el-input
+        <el-select
           v-model="queryParams.khbm"
-          placeholder="请输入考核部门"
-          clearable
           size="small"
-          @keyup.enter.native="handleQuery"
-        />
+          placeholder="请选择考核部门"
+        >
+          <el-option
+            v-for="dict in khbmOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          ></el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="考核周期" prop="khzq">
         <el-input
@@ -148,14 +163,29 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="编号" align="center" prop="id" />
+      <!-- <el-table-column label="编号" align="center" prop="id" /> -->
       <!-- <el-table-column label="名称" align="center" prop="rwmc" /> -->
-      <el-table-column label="任务类型" align="center" prop="rwlx" />
-      <el-table-column label="任务内容" align="center" prop="rwnr" />
-      <el-table-column label="考核部门" align="center" prop="khbm" />
+      <el-table-column
+        label="任务类型"
+        align="center"
+        prop="rwlx"
+        :formatter="xrlxFormat"
+      />
+      <el-table-column
+        label="任务内容"
+        align="center"
+        prop="rwnr"
+        :formatter="rwnrFormat"
+      />
+      <el-table-column
+        label="考核部门"
+        align="center"
+        prop="khbm"
+        :formatter="khbmFormat"
+      />
       <el-table-column label="考核周期" align="center" prop="khzq" />
       <el-table-column label="数量要求" align="center" prop="slyq" />
-      <el-table-column label="是否必选" align="center" prop="fsbx" />
+      <el-table-column label="是否必选" align="center" prop="fsbx" :formatter="typeFormat"/>
       <!-- <el-table-column label="是否删除" align="center" prop="isdel" /> -->
       <el-table-column label="任务说明" align="center" prop="rwsm" />
       <el-table-column
@@ -199,13 +229,34 @@
           <el-input v-model="form.rwmc" placeholder="请输入名称" />
         </el-form-item> -->
         <el-form-item label="任务类型" prop="rwlx">
-          <el-input v-model="form.rwlx" placeholder="请输入任务类型" />
+          <el-select v-model="form.rwlx" placeholder="请选择任务类型">
+            <el-option
+              v-for="dict in rwlxOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="任务内容" prop="rwnr">
-          <el-input v-model="form.rwnr" placeholder="请输入任务内容" />
+          <el-select v-model="form.rwnr" placeholder="请选择任务内容">
+            <el-option
+              v-for="dict in rwnrOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="考核部门" prop="khbm">
-          <el-input v-model="form.khbm" placeholder="请输入考核部门" />
+          <el-select v-model="form.khbm" placeholder="请选择考核部门">
+            <el-option
+              v-for="dict in khbmOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="考核周期" prop="khzq">
           <el-input v-model="form.khzq" placeholder="请输入考核周期" />
@@ -214,7 +265,14 @@
           <el-input v-model="form.slyq" placeholder="请输入数量要求" />
         </el-form-item>
         <el-form-item label="是否必选" prop="fsbx">
-          <el-input v-model="form.fsbx" placeholder="请输入是否必选" />
+          <el-radio-group v-model="form.fsbx">
+            <el-radio
+              v-for="dict in typeOptions"
+              :key="dict.dictValue"
+              :label="dict.dictValue"
+              >{{ dict.dictLabel }}</el-radio
+            >
+          </el-radio-group>
         </el-form-item>
         <!-- <el-form-item label="是否删除" prop="isdel">
           <el-input v-model="form.isdel" placeholder="请输入是否删除" />
@@ -267,6 +325,14 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
+      //任务类型
+      rwlxOptions: [],
+      //任务内容
+      rwnrOptions: [],
+      //考核部门
+      khbmOptions: [],
+      //是否必选
+      typeOptions: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -289,8 +355,36 @@ export default {
   },
   created() {
     this.getList();
+    this.getDicts("sys_dm_jyykhrwlx").then((response) => {
+      this.rwlxOptions = response.data;
+    });
+    this.getDicts("sys_dm_jyykhrwnr").then((response) => {
+      this.rwnrOptions = response.data;
+    });
+    this.getDicts("sys_dm_jyykhbm").then((response) => {
+      this.khbmOptions = response.data;
+    });
+    this.getDicts("sys_yes_no").then((response) => {
+      this.typeOptions = response.data;
+    });
   },
   methods: {
+    // 任务类型字典翻译
+    xrlxFormat(row, column) {
+      return this.selectDictLabel(this.rwlxOptions, row.rwlx);
+    },
+    // 任务内容字典翻译
+    rwnrFormat(row, column) {
+      return this.selectDictLabel(this.rwnrOptions, row.rwnr);
+    },
+    // 考核部门字典翻译
+    khbmFormat(row, column) {
+      return this.selectDictLabel(this.khbmOptions, row.khbm);
+    },
+    // 是否字典翻译
+    typeFormat(row, column) {
+      return this.selectDictLabel(this.typeOptions, row.fsbx);
+    },
     /** 查询教研员考核任务列表 */
     getList() {
       this.loading = true;
@@ -418,3 +512,8 @@ export default {
   },
 };
 </script>
+<style lang="scss" scoped>
+.el-select {
+  width: 100%;
+}
+</style>
