@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.jyykhgl.mapper.TsbzJyyzlglMapper">
+
+    <resultMap type="TsbzJyyzlgl" id="TsbzJyyzlglResult">
+        <result property="id" column="id"/>
+        <result property="rwid" column="rwid"/>
+        <result property="rwnrlx" column="rwnrlx"/>
+        <result property="zt" column="zt"/>
+        <result property="xk" column="xk"/>
+        <result property="sj" column="sj"/>
+        <result property="dd" column="dd"/>
+        <result property="deptId" column="dept_id"/>
+        <result property="createUserid" column="create_userid"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <sql id="selectTsbzJyyzlglVo">
+        select id, rwid, rwnrlx, zt, xk, sj, dd, dept_id, create_userid, create_time from tsbz_jyyzlgl
+    </sql>
+
+    <select id="selectTsbzJyyzlglList" parameterType="TsbzJyyzlgl" resultMap="TsbzJyyzlglResult">
+        <include refid="selectTsbzJyyzlglVo"/>
+        <where>
+            <if test="rwid != null ">and rwid = #{rwid}</if>
+            <if test="rwnrlx != null  and rwnrlx != ''">and rwnrlx = #{rwnrlx}</if>
+            <if test="zt != null  and zt != ''">and zt = #{zt}</if>
+            <if test="xk != null  and xk != ''">and xk = #{xk}</if>
+            <if test="sj != null ">and sj = #{sj}</if>
+            <if test="dd != null  and dd != ''">and dd = #{dd}</if>
+            <if test="deptId != null ">and dept_id = #{deptId}</if>
+            <if test="createUserid != null ">and create_userid = #{createUserid}</if>
+        </where>
+    </select>
+
+    <select id="selectTsbzJyyzlglById" parameterType="Long" resultMap="TsbzJyyzlglResult">
+        <include refid="selectTsbzJyyzlglVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertTsbzJyyzlgl" parameterType="TsbzJyyzlgl" useGeneratedKeys="true" keyProperty="id">
+        insert into tsbz_jyyzlgl
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="rwid != null">rwid,</if>
+            <if test="rwnrlx != null">rwnrlx,</if>
+            <if test="zt != null">zt,</if>
+            <if test="xk != null">xk,</if>
+            <if test="sj != null">sj,</if>
+            <if test="dd != null">dd,</if>
+            <if test="deptId != null">dept_id,</if>
+            <if test="createUserid != null">create_userid,</if>
+            <if test="createTime != null">create_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="rwid != null">#{rwid},</if>
+            <if test="rwnrlx != null">#{rwnrlx},</if>
+            <if test="zt != null">#{zt},</if>
+            <if test="xk != null">#{xk},</if>
+            <if test="sj != null">#{sj},</if>
+            <if test="dd != null">#{dd},</if>
+            <if test="deptId != null">#{deptId},</if>
+            <if test="createUserid != null">#{createUserid},</if>
+            <if test="createTime != null">#{createTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateTsbzJyyzlgl" parameterType="TsbzJyyzlgl">
+        update tsbz_jyyzlgl
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="rwid != null">rwid = #{rwid},</if>
+            <if test="rwnrlx != null">rwnrlx = #{rwnrlx},</if>
+            <if test="zt != null">zt = #{zt},</if>
+            <if test="xk != null">xk = #{xk},</if>
+            <if test="sj != null">sj = #{sj},</if>
+            <if test="dd != null">dd = #{dd},</if>
+            <if test="deptId != null">dept_id = #{deptId},</if>
+            <if test="createUserid != null">create_userid = #{createUserid},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTsbzJyyzlglById" parameterType="Long">
+        delete from tsbz_jyyzlgl where id = #{id}
+    </delete>
+
+    <delete id="deleteTsbzJyyzlglByIds" parameterType="String">
+        delete from tsbz_jyyzlgl where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
