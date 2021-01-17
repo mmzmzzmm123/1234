@@ -44,6 +44,27 @@
           ></el-option>
         </el-select>
       </el-form-item>
+      <el-form-item label="任务名称" prop="rwmc">
+        <el-input
+          v-model="queryParams.rwmc"
+          placeholder="请输入名称"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item>
+        <el-button
+          type="cyan"
+          icon="el-icon-search"
+          size="mini"
+          @click="handleQuery"
+          >搜索</el-button
+        >
+        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+          >重置</el-button
+        >
+      </el-form-item>
     </el-form>
 
     <el-row :gutter="10" class="mb8">
@@ -56,7 +77,7 @@
     <el-table v-loading="loading" :data="jyykhrwList">
       <!-- <el-table-column type="selection" width="55" align="center" /> -->
       <!-- <el-table-column label="编号" align="center" prop="id" /> -->
-      <!-- <el-table-column label="名称" align="center" prop="rwmc" /> -->
+      <el-table-column label="任务名称" align="center" prop="rwmc" />
       <el-table-column
         label="任务类型"
         align="center"

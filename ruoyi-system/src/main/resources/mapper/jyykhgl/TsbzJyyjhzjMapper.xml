@@ -15,29 +15,45 @@
         <result property="createUserid" column="create_userid"/>
         <result property="createTime" column="create_time"/>
         <result property="filename"    column="filename"    />
+        <association property="tsbzJyykhrw" column="rwid" javaType="TsbzJyykhrw" resultMap="TsbzJyykhrwResult"/>
+    </resultMap>
+
+    <resultMap type="TsbzJyykhrw" id="TsbzJyykhrwResult">
+        <result property="id" column="id"/>
+        <result property="rwmc" column="rwmc"/>
+        <result property="rwlx" column="rwlx"/>
+        <result property="rwnr" column="rwnr"/>
+        <result property="khbm" column="khbm"/>
+        <result property="khzq" column="khzq"/>
+        <result property="slyq" column="slyq"/>
+        <result property="fsbx" column="fsbx"/>
+        <result property="isdel" column="isdel"/>
+        <result property="createTime" column="create_time"/>
+        <result property="rwsm" column="rwsm"/>
     </resultMap>
 
     <sql id="selectTsbzJyyjhzjVo">
-        select id, rwid, rwnrlx, xn, xq, filepath, dept_id, create_userid, create_time, filename from tsbz_jyyjhzj
+        select a.id, a.rwid, a.rwnrlx, a.xn, a.xq, a.filepath, a.dept_id, a.create_userid, a.create_time, a.filename,b.rwmc,b.rwlx from tsbz_jyyjhzj a
+        left join tsbz_jyykhrw b on a.rwid=b.id
     </sql>
 
     <select id="selectTsbzJyyjhzjList" parameterType="TsbzJyyjhzj" resultMap="TsbzJyyjhzjResult">
         <include refid="selectTsbzJyyjhzjVo"/>
         <where>
-            <if test="rwid != null ">and rwid = #{rwid}</if>
-            <if test="rwnrlx != null  and rwnrlx != ''">and rwnrlx = #{rwnrlx}</if>
-            <if test="xn != null  and xn != ''">and xn = #{xn}</if>
-            <if test="xq != null  and xq != ''">and xq = #{xq}</if>
-            <if test="filepath != null  and filepath != ''">and filepath = #{filepath}</if>
-            <if test="deptId != null ">and dept_id = #{deptId}</if>
-            <if test="createUserid != null ">and create_userid = #{createUserid}</if>
-            <if test="filename != null  and filename != ''"> and filename like concat('%', #{filename}, '%')</if>
+            <if test="rwid != null ">and a.rwid = #{rwid}</if>
+            <if test="rwnrlx != null  and rwnrlx != ''">and a.rwnrlx = #{rwnrlx}</if>
+            <if test="xn != null  and xn != ''">and a.xn = #{xn}</if>
+            <if test="xq != null  and xq != ''">and a.xq = #{xq}</if>
+            <if test="filepath != null  and filepath != ''">and a.filepath = #{filepath}</if>
+            <if test="deptId != null ">and a.dept_id = #{deptId}</if>
+            <if test="createUserid != null ">and a.create_userid = #{createUserid}</if>
+            <if test="filename != null  and filename != ''"> and a.filename like concat('%', #{filename}, '%')</if>
         </where>
     </select>
 
     <select id="selectTsbzJyyjhzjById" parameterType="Long" resultMap="TsbzJyyjhzjResult">
         <include refid="selectTsbzJyyjhzjVo"/>
-        where id = #{id}
+        where a.id = #{id}
     </select>
 
     <insert id="insertTsbzJyyjhzj" parameterType="TsbzJyyjhzj" useGeneratedKeys="true" keyProperty="id">

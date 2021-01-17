@@ -5,25 +5,37 @@
       ref="queryForm"
       :inline="true"
       v-show="showSearch"
-      label-width="68px"
+      label-width="70px"
     >
       <el-form-item label="所属任务" prop="rwid">
-        <el-input
+        <el-select
           v-model="queryParams.rwid"
-          placeholder="请输入所属任务"
-          clearable
           size="small"
-          @keyup.enter.native="handleQuery"
-        />
+          clearable
+          placeholder="请选择所属任务"
+        >
+          <el-option
+            v-for="dict in jyykhrwList"
+            :key="dict.id"
+            :label="dict.rwmc"
+            :value="dict.id"
+          ></el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="任务内容" prop="rwnrlx">
-        <el-input
+        <el-select
           v-model="queryParams.rwnrlx"
-          placeholder="请输入任务内容"
-          clearable
           size="small"
-          @keyup.enter.native="handleQuery"
-        />
+          clearable
+          placeholder="请选择任务内容"
+        >
+          <el-option
+            v-for="dict in rwnrOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          ></el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="活动名称" prop="hdmc">
         <el-input
@@ -124,8 +136,13 @@
     >
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="编号" align="center" prop="id" /> -->
-      <el-table-column label="所属任务" align="center" prop="rwid" />
-      <el-table-column label="任务内容" align="center" prop="rwnrlx" />
+      <el-table-column label="所属任务" align="center" prop="tsbzJyykhrw.rwmc" />
+      <el-table-column
+        label="任务内容"
+        align="center"
+        prop="rwnrlx"
+        :formatter="rwnrFormat"
+      />
       <el-table-column label="活动名称" align="center" prop="hdmc" />
       <el-table-column label="活动主题" align="center" prop="hdzt" />
       <el-table-column label="活动时间" align="center" prop="hdsj" width="180">
@@ -174,10 +191,24 @@
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="所属任务" prop="rwid">
-          <el-input v-model="form.rwid" placeholder="请输入所属任务" />
+          <el-select v-model="form.rwid" placeholder="请选择所属任务">
+            <el-option
+              v-for="dict in jyykhrwList"
+              :key="dict.id"
+              :label="dict.rwmc"
+              :value="dict.id"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="任务内容" prop="rwnrlx">
-          <el-input v-model="form.rwnrlx" placeholder="请输入任务内容" />
+          <el-select v-model="form.rwnrlx" placeholder="请选择任务内容">
+            <el-option
+              v-for="dict in rwnrOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="活动名称" prop="hdmc">
           <el-input v-model="form.hdmc" placeholder="请输入活动名称" />
@@ -188,8 +219,7 @@
         <el-form-item label="活动时间" prop="hdsj">
           <el-date-picker
             clearable
-            size="small"
-            style="width: 200px"
+            class="my-date-picker"
             v-model="form.hdsj"
             type="date"
             value-format="yyyy-MM-dd"
@@ -201,14 +231,21 @@
           <el-input v-model="form.hddd" placeholder="请输入活动地点" />
         </el-form-item>
         <el-form-item label="附件" prop="filepath">
-          <el-input
-            v-model="form.filepath"
-            type="textarea"
-            placeholder="请输入内容"
-          />
-        </el-form-item>
-        <el-form-item label="附件名称" prop="filename">
-          <el-input v-model="form.filename" placeholder="请输入附件名称" />
+          <el-input v-model="form.filepath" v-if="false" />
+          <el-upload
+            class="upload-demo"
+            :action="uploadFileUrl"
+            :headers="headers"
+            :on-preview="handlePreview"
+            :on-remove="handleRemove"
+            :before-remove="beforeRemove"
+            :limit="1"
+            :on-exceed="handleExceed"
+            :file-list="fileList"
+            :on-success="handleAvatarSuccess"
+          >
+            <el-button size="small" type="primary">选择文件</el-button>
+          </el-upload>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -227,6 +264,8 @@ import {
   addJyyyjhd,
   updateJyyyjhd,
 } from "@/api/jyykhgl/jyyyjhd";
+import { listJyykhrw } from "@/api/jyykhgl/jyykhrw";
+import { getToken } from "@/utils/auth";
 
 export default {
   name: "Jyyyjhd",
@@ -250,6 +289,12 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
+      //考核任务
+      jyykhrwList: [],
+      //任务内容
+      rwnrOptions: [],
+      //文件
+      fileList: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -265,16 +310,66 @@ export default {
         deptId: null,
         createUserid: null,
       },
+      // 查询参数
+      queryParams_khrw: {
+        rwlx: "02",
+      },
       // 表单参数
       form: {},
       // 表单校验
       rules: {},
+      uploadFileUrl: process.env.VUE_APP_BASE_API + "/common/upload", // 上传的图片服务器地址
+      headers: {
+        Authorization: "Bearer " + getToken(),
+      },
     };
   },
   created() {
     this.getList();
+    this.getKhrwList();
+    this.getDicts("sys_dm_jyhdnwnr").then((response) => {
+      this.rwnrOptions = response.data;
+    });
   },
   methods: {
+    handleAvatarSuccess(res, file) {
+      console.log(res, file);
+      if (res.code == "200") {
+        this.form.filepath = res.fileName;
+        this.form.filename = file.name;
+      } else {
+        this.msgError(res.msg);
+      }
+    },
+    handleRemove(file, fileList) {
+      //console.log(file, fileList);
+      if (file.response.code == "200") {
+        this.form.fielname = "";
+      }
+    },
+    handlePreview(file) {
+      //console.log(file);
+    },
+    handleExceed(files, fileList) {
+      this.$message.warning(
+        `当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${
+          files.length + fileList.length
+        } 个文件`
+      );
+    },
+    beforeRemove(file, fileList) {
+      return this.$confirm(`确定移除 ${file.name}？`);
+    },
+    // 任务类型字典翻译
+    rwnrFormat(row, column) {
+      return this.selectDictLabel(this.rwnrOptions, row.rwnrlx);
+    },
+    /** 查询教研员考核任务列表 */
+    getKhrwList() {
+      listJyykhrw(this.queryParams_khrw).then((response) => {
+        this.jyykhrwList = response.rows;
+      });
+    },
     /** 查询研究活动（教研员）列表 */
     getList() {
       this.loading = true;
@@ -387,3 +482,11 @@ export default {
   },
 };
 </script>
+<style lang="scss" scoped>
+.el-select {
+  width: 100%;
+}
+.my-date-picker {
+  width: 100%;
+}
+</style>

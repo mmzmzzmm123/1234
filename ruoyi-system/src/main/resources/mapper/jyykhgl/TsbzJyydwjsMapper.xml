@@ -15,29 +15,45 @@
         <result property="deptId" column="dept_id"/>
         <result property="createUserid" column="create_userid"/>
         <result property="createTime" column="create_time"/>
+        <association property="tsbzJyykhrw" column="rwid" javaType="TsbzJyykhrw" resultMap="TsbzJyykhrwResult"/>
+    </resultMap>
+
+    <resultMap type="TsbzJyykhrw" id="TsbzJyykhrwResult">
+        <result property="id" column="id"/>
+        <result property="rwmc" column="rwmc"/>
+        <result property="rwlx" column="rwlx"/>
+        <result property="rwnr" column="rwnr"/>
+        <result property="khbm" column="khbm"/>
+        <result property="khzq" column="khzq"/>
+        <result property="slyq" column="slyq"/>
+        <result property="fsbx" column="fsbx"/>
+        <result property="isdel" column="isdel"/>
+        <result property="createTime" column="create_time"/>
+        <result property="rwsm" column="rwsm"/>
     </resultMap>
 
     <sql id="selectTsbzJyydwjsVo">
-        select id, rwid, rwnrlx, zt, cyry, hddd, hdsj, dept_id, create_userid, create_time from tsbz_jyydwjs
+        select a.id, a.rwid, a.rwnrlx, a.zt, a.cyry, a.hddd, a.hdsj, a.dept_id, a.create_userid, a.create_time,b.rwmc,b.rwlx from tsbz_jyydwjs a
+        left join tsbz_jyykhrw b on a.rwid=b.id
     </sql>
 
     <select id="selectTsbzJyydwjsList" parameterType="TsbzJyydwjs" resultMap="TsbzJyydwjsResult">
         <include refid="selectTsbzJyydwjsVo"/>
         <where>
-            <if test="rwid != null ">and rwid = #{rwid}</if>
-            <if test="rwnrlx != null  and rwnrlx != ''">and rwnrlx = #{rwnrlx}</if>
-            <if test="zt != null  and zt != ''">and zt = #{zt}</if>
-            <if test="cyry != null  and cyry != ''">and cyry = #{cyry}</if>
-            <if test="hddd != null  and hddd != ''">and hddd = #{hddd}</if>
-            <if test="hdsj != null ">and hdsj = #{hdsj}</if>
-            <if test="deptId != null ">and dept_id = #{deptId}</if>
-            <if test="createUserid != null ">and create_userid = #{createUserid}</if>
+            <if test="rwid != null ">and a.rwid = #{rwid}</if>
+            <if test="rwnrlx != null  and rwnrlx != ''">and a.rwnrlx = #{rwnrlx}</if>
+            <if test="zt != null  and zt != ''">and a.zt = #{zt}</if>
+            <if test="cyry != null  and cyry != ''">and a.cyry = #{cyry}</if>
+            <if test="hddd != null  and hddd != ''">and a.hddd = #{hddd}</if>
+            <if test="hdsj != null ">and a.hdsj = #{hdsj}</if>
+            <if test="deptId != null ">and a.dept_id = #{deptId}</if>
+            <if test="createUserid != null ">and a.create_userid = #{createUserid}</if>
         </where>
     </select>
 
     <select id="selectTsbzJyydwjsById" parameterType="Long" resultMap="TsbzJyydwjsResult">
         <include refid="selectTsbzJyydwjsVo"/>
-        where id = #{id}
+        where a.id = #{id}
     </select>
 
     <insert id="insertTsbzJyydwjs" parameterType="TsbzJyydwjs" useGeneratedKeys="true" keyProperty="id">

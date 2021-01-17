@@ -5,25 +5,37 @@
       ref="queryForm"
       :inline="true"
       v-show="showSearch"
-      label-width="68px"
+      label-width="70px"
     >
       <el-form-item label="所属任务" prop="rwid">
-        <el-input
+       <el-select
           v-model="queryParams.rwid"
-          placeholder="请输入所属任务"
-          clearable
           size="small"
-          @keyup.enter.native="handleQuery"
-        />
+          clearable
+          placeholder="请选择所属任务"
+        >
+          <el-option
+            v-for="dict in jyykhrwList"
+            :key="dict.id"
+            :label="dict.rwmc"
+            :value="dict.id"
+          ></el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="任务内容" prop="rwnrlx">
-        <el-input
+       <el-select
           v-model="queryParams.rwnrlx"
-          placeholder="请输入任务内容"
-          clearable
           size="small"
-          @keyup.enter.native="handleQuery"
-        />
+          clearable
+          placeholder="请选择任务内容"
+        >
+          <el-option
+            v-for="dict in rwnrOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          ></el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="主题" prop="zt">
         <el-input
@@ -105,9 +117,9 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="编号" align="center" prop="id" />
-      <el-table-column label="所属任务" align="center" prop="rwid" />
-      <el-table-column label="任务内容" align="center" prop="rwnrlx" />
+      <!-- <el-table-column label="编号" align="center" prop="id" /> -->
+      <el-table-column label="所属任务" align="center" prop="tsbzJyykhrw.rwmc" />
+      <el-table-column label="任务内容" align="center" prop="rwnrlx" :formatter="rwnrFormat"/>
       <el-table-column label="主题" align="center" prop="zt" />
       <el-table-column label="参与人员" align="center" prop="cyry" />
       <el-table-column label="活动地点" align="center" prop="hddd" />
@@ -154,10 +166,24 @@
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="所属任务" prop="rwid">
-          <el-input v-model="form.rwid" placeholder="请输入所属任务" />
+           <el-select v-model="form.rwid" placeholder="请选择所属任务">
+            <el-option
+              v-for="dict in jyykhrwList"
+              :key="dict.id"
+              :label="dict.rwmc"
+              :value="dict.id"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="任务内容" prop="rwnrlx">
-          <el-input v-model="form.rwnrlx" placeholder="请输入任务内容" />
+         <el-select v-model="form.rwnrlx" placeholder="请选择任务内容">
+            <el-option
+              v-for="dict in rwnrOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="主题" prop="zt">
           <el-input v-model="form.zt" placeholder="请输入主题" />
@@ -179,8 +205,7 @@
         <el-form-item label="活动时间" prop="hdsj">
           <el-date-picker
             clearable
-            size="small"
-            style="width: 200px"
+            class="my-date-picker"
             v-model="form.hdsj"
             type="date"
             value-format="yyyy-MM-dd"
@@ -205,6 +230,7 @@ import {
   addJyydwjs,
   updateJyydwjs,
 } from "@/api/jyykhgl/jyydwjs";
+import { listJyykhrw } from "@/api/jyykhgl/jyykhrw";
 
 export default {
   name: "Jyydwjs",
@@ -228,6 +254,10 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
+       //考核任务
+      jyykhrwList: [],
+      //任务内容
+      rwnrOptions: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -241,6 +271,10 @@ export default {
         deptId: null,
         createUserid: null,
       },
+      // 查询参数
+      queryParams_khrw: {
+        rwlx: "03",
+      },
       // 表单参数
       form: {},
       // 表单校验
@@ -249,8 +283,22 @@ export default {
   },
   created() {
     this.getList();
+    this.getKhrwList();
+    this.getDicts("sys_dm_dwjsrwnr").then((response) => {
+      this.rwnrOptions = response.data;
+    });
   },
   methods: {
+     // 任务类型字典翻译
+    rwnrFormat(row, column) {
+      return this.selectDictLabel(this.rwnrOptions, row.rwnrlx);
+    },
+    /** 查询教研员考核任务列表 */
+    getKhrwList() {
+      listJyykhrw(this.queryParams_khrw).then((response) => {
+        this.jyykhrwList = response.rows;
+      });
+    },
     /** 查询队伍建设（教研员）列表 */
     getList() {
       this.loading = true;
@@ -361,3 +409,11 @@ export default {
   },
 };
 </script>
+<style lang="scss" scoped>
+.el-select {
+  width: 100%;
+}
+.my-date-picker {
+  width: 100%;
+}
+</style>

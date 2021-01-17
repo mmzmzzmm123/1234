@@ -83,6 +83,8 @@ public class TsbzJyyyjhd extends BaseEntity {
     @Excel(name = "创建人")
     private Long createUserid;
 
+    private TsbzJyykhrw tsbzJyykhrw;
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -171,6 +173,14 @@ public class TsbzJyyyjhd extends BaseEntity {
         return createUserid;
     }
 
+    public void setTsbzJyykhrw(TsbzJyykhrw tsbzJyykhrw) {
+        this.tsbzJyykhrw = tsbzJyykhrw;
+    }
+
+    public TsbzJyykhrw getTsbzJyykhrw() {
+        return tsbzJyykhrw;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
@@ -186,6 +196,7 @@ public class TsbzJyyyjhd extends BaseEntity {
                 .append("deptId", getDeptId())
                 .append("createUserid", getCreateUserid())
                 .append("createTime", getCreateTime())
+                .append("tsbzJyykhrw", getTsbzJyykhrw())
                 .toString();
     }
 }

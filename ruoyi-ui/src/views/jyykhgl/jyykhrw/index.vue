@@ -7,15 +7,6 @@
       v-show="showSearch"
       label-width="70px"
     >
-      <!-- <el-form-item label="名称" prop="rwmc">
-        <el-input
-          v-model="queryParams.rwmc"
-          placeholder="请输入名称"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item> -->
       <el-form-item label="任务类型" prop="rwlx">
         <el-select
           v-model="queryParams.rwlx"
@@ -62,6 +53,15 @@
         <el-input
           v-model="queryParams.khzq"
           placeholder="请输入考核周期"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="任务名称" prop="rwmc">
+        <el-input
+          v-model="queryParams.rwmc"
+          placeholder="请输入名称"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
@@ -164,7 +164,7 @@
     >
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="编号" align="center" prop="id" /> -->
-      <!-- <el-table-column label="名称" align="center" prop="rwmc" /> -->
+      <el-table-column label="任务名称" align="center" prop="rwmc" />
       <el-table-column
         label="任务类型"
         align="center"
@@ -185,7 +185,12 @@
       />
       <el-table-column label="考核周期" align="center" prop="khzq" />
       <el-table-column label="数量要求" align="center" prop="slyq" />
-      <el-table-column label="是否必选" align="center" prop="fsbx" :formatter="typeFormat"/>
+      <el-table-column
+        label="是否必选"
+        align="center"
+        prop="fsbx"
+        :formatter="typeFormat"
+      />
       <!-- <el-table-column label="是否删除" align="center" prop="isdel" /> -->
       <el-table-column label="任务说明" align="center" prop="rwsm" />
       <el-table-column
@@ -225,9 +230,9 @@
     <!-- 添加或修改教研员考核任务对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <!-- <el-form-item label="名称" prop="rwmc">
+        <el-form-item label="任务名称" prop="rwmc">
           <el-input v-model="form.rwmc" placeholder="请输入名称" />
-        </el-form-item> -->
+        </el-form-item>
         <el-form-item label="任务类型" prop="rwlx">
           <el-select v-model="form.rwlx" placeholder="请选择任务类型">
             <el-option
