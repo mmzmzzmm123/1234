@@ -39,7 +39,7 @@ public class TsbzGbywkhServiceImpl implements ITsbzGbywkhService {
      * @return 业务考核(干部管理 - 评价与考核)
      */
     @Override
-    @DataScope(deptAlias = "d", userAlias = "b")
+    @DataScope(deptAlias = "b", userAlias = "b")
     public List<TsbzGbywkh> selectTsbzGbywkhList(TsbzGbywkh tsbzGbywkh) {
         return tsbzGbywkhMapper.selectTsbzGbywkhList(tsbzGbywkh);
     }

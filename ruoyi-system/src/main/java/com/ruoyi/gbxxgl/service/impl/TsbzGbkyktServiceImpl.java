@@ -39,7 +39,7 @@ public class TsbzGbkyktServiceImpl implements ITsbzGbkyktService {
      * @return 科研课题(干部管理)
      */
     @Override
-    @DataScope(deptAlias = "d", userAlias = "b")
+    @DataScope(deptAlias = "b", userAlias = "b")
     public List<TsbzGbkykt> selectTsbzGbkyktList(TsbzGbkykt tsbzGbkykt) {
         return tsbzGbkyktMapper.selectTsbzGbkyktList(tsbzGbkykt);
     }

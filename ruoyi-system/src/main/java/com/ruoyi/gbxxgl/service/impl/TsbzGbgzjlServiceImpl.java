@@ -39,7 +39,7 @@ public class TsbzGbgzjlServiceImpl implements ITsbzGbgzjlService {
      * @return 干部工作经历
      */
     @Override
-    @DataScope(deptAlias = "d", userAlias = "b")
+    @DataScope(deptAlias = "b", userAlias = "b")
     public List<TsbzGbgzjl> selectTsbzGbgzjlList(TsbzGbgzjl tsbzGbgzjl) {
         return tsbzGbgzjlMapper.selectTsbzGbgzjlList(tsbzGbgzjl);
     }

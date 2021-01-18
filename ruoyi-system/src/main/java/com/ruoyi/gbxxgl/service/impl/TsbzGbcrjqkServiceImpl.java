@@ -41,7 +41,7 @@ public class TsbzGbcrjqkServiceImpl implements ITsbzGbcrjqkService
      * @return 干部出入境情况
      */
     @Override
-    @DataScope(deptAlias = "d", userAlias = "b")
+    @DataScope(deptAlias = "b", userAlias = "b")
     public List<TsbzGbcrjqk> selectTsbzGbcrjqkList(TsbzGbcrjqk tsbzGbcrjqk)
     {
         return tsbzGbcrjqkMapper.selectTsbzGbcrjqkList(tsbzGbcrjqk);

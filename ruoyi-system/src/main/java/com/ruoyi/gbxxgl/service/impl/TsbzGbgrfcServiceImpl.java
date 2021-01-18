@@ -39,7 +39,7 @@ public class TsbzGbgrfcServiceImpl implements ITsbzGbgrfcService {
      * @return 个人风采(干部管理 - 个人状况)
      */
     @Override
-    @DataScope(deptAlias = "d", userAlias = "b")
+    @DataScope(deptAlias = "b", userAlias = "b")
     public List<TsbzGbgrfc> selectTsbzGbgrfcList(TsbzGbgrfc tsbzGbgrfc) {
         return tsbzGbgrfcMapper.selectTsbzGbgrfcList(tsbzGbgrfc);
     }

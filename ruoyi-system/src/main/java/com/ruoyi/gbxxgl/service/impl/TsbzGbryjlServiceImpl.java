@@ -39,7 +39,7 @@ public class TsbzGbryjlServiceImpl implements ITsbzGbryjlService {
      * @return 荣誉奖励(干部管理)
      */
     @Override
-    @DataScope(deptAlias = "d", userAlias = "b")
+    @DataScope(deptAlias = "b", userAlias = "b")
     public List<TsbzGbryjl> selectTsbzGbryjlList(TsbzGbryjl tsbzGbryjl) {
         return tsbzGbryjlMapper.selectTsbzGbryjlList(tsbzGbryjl);
     }

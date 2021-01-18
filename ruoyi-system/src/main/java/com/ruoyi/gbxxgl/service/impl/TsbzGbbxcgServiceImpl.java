@@ -39,7 +39,7 @@ public class TsbzGbbxcgServiceImpl implements ITsbzGbbxcgService {
      * @return 办学成果(干部管理 - 评价与考核)
      */
     @Override
-    @DataScope(deptAlias = "d", userAlias = "b")
+    @DataScope(deptAlias = "b", userAlias = "b")
     public List<TsbzGbbxcg> selectTsbzGbbxcgList(TsbzGbbxcg tsbzGbbxcg) {
         return tsbzGbbxcgMapper.selectTsbzGbbxcgList(tsbzGbbxcg);
     }

@@ -39,7 +39,7 @@ public class TsbzGbjtcyServiceImpl implements ITsbzGbjtcyService {
      * @return 家庭成员(干部管理 - 个人状况)
      */
     @Override
-    @DataScope(deptAlias = "d", userAlias = "b")
+    @DataScope(deptAlias = "b", userAlias = "b")
     public List<TsbzGbjtcy> selectTsbzGbjtcyList(TsbzGbjtcy tsbzGbjtcy) {
         return tsbzGbjtcyMapper.selectTsbzGbjtcyList(tsbzGbjtcy);
     }

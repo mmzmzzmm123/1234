@@ -40,7 +40,7 @@ public class TsbzGbshzwServiceImpl implements ITsbzGbshzwService
      * @return 干部任职情况-社会职务
      */
     @Override
-    @DataScope(deptAlias = "d", userAlias = "b")
+    @DataScope(deptAlias = "b", userAlias = "b")
     public List<TsbzGbshzw> selectTsbzGbshzwList(TsbzGbshzw tsbzGbshzw)
     {
         return tsbzGbshzwMapper.selectTsbzGbshzwList(tsbzGbshzw);
