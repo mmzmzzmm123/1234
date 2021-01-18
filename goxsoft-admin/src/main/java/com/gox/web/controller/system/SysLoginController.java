@@ -2,6 +2,8 @@ package com.gox.web.controller.system;
 
 import java.util.List;
 import java.util.Set;
+
+import com.gox.system.domain.vo.RouterVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -89,6 +91,7 @@ public class SysLoginController
         // 用户信息
         SysUser user = loginUser.getUser();
         List<SysMenu> menus = menuService.selectMenuTreeByUserId(user.getUserId());
-        return AjaxResult.success(menuService.buildMenus(menus));
+        List<RouterVo> res = menuService.buildMenus(menus);
+        return AjaxResult.success(res);
     }
 }

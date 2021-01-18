@@ -1,10 +1,10 @@
 <template>
   <div id="InputView" :loading="loading" style="min-height:75vh;">
     <transition name="el-fade-in-linear">
-      <parser v-if="currentPage===1" :form-conf="formconf" class="transition-box" @submit="nextPage" @cancel="returnLastPage" @close="close"/>
+      <parser v-if="currentPage===1" :form-conf="firstForm" class="transition-box" @submit="nextPage" @cancel="returnLastPage" @close="close"/>
     </transition>
     <transition v-if="currentPage===2" name="el-fade-in-linear">
-      <parser v-if="currentPage===2" :form-conf="content" class="transition-box" @submit="nextPage1" @cancel="returnLastPage" @close="close"/>
+      <parser v-if="currentPage===2" :form-conf="content" class="transition-box" @submit="nextPage" @cancel="returnLastPage" @close="close"/>
     </transition>
     <transition v-if="currentPage===3" name="el-fade-in-linear">
       <div>
@@ -27,9 +27,10 @@
 <script>
 import Parser from '@/gene/components/parser/Parser'
 import {listJson,getId} from '@/api/system/json'
-import { addMetadata, getMetadata } from '@/api/system/metadata'
+import { addMetadata, getMetadata, updateMetadata } from '@/api/system/metadata'
 import DocumentView from '@/views/components/documentView'
 import Uploadwindow from '@/views/components/uploadwindow'
+import md from '@/views/system/metadata/md'
 export default {
   props:{
     formconf: {
@@ -47,11 +48,52 @@ export default {
     Uploadwindow,
     DocumentView,
     Parser,
+    md
   },
   computed: {
+    content:{
+      get:function(){
+        if(this.type==='create'){
+          return this.createContent
+        }
+        else{
+          return this.modifyContent
+        }
+      },
+      set:function(newValue){
+        this.modifyContent=newValue
+      }
+    },
+    firstForm:{
+      get:function(){
+        if(this.type==='create'){
+          console.log(1)
+          console.log(this.newForm)
+          if(JSON.stringify(this.newForm) !== '{}'){
+            console.log(2)
+            return this.newForm
+          }
+          console.log(3)
+          this.newForm=this.formconf
+          return this.formconf
+        }
+        else{
+          if(JSON.stringify(this.modifyForm) !== '{}'){
+            return this.modifyForm
+          }
+          this.modifyForm = this.formconf
+          return this.modifyForm
+        }
+      },
+      set:function(newValue){
+        this.modifyForm=newValue
+      }
+    }
   },
   data() {
     return{
+      newForm:{},
+      modifyForm:{},
       mdId:1,
       currentPage:1,
       dialogVisible:false,
@@ -64,14 +106,13 @@ export default {
       files:[],
       fileList:[],
       loadingText:'',
-      content:{},
+      createContent:{},
+      modifyContent:{},
       showUpload:true,
       param:{},
       formdata1:{},
       formdata2:{},
-      formData:{
-
-      }
+      formData:{}
     }
   },
   mounted() {
@@ -85,7 +126,8 @@ export default {
       this.loading=true;
       let query = {id:'',parentName: '文书',node:'内容描述'}
       listJson(query).then(res => {
-        this.content=JSON.parse(res.rows[0].formData)
+        this.createContent=JSON.parse(res.rows[0].formData)
+        this.modifyContent= JSON.parse(res.rows[0].formData)
       }).catch(err=>{
         console.log(err)
       })
@@ -99,7 +141,7 @@ export default {
         getMetadata(this.metadataid).then(response => {
           this.formData = response.data;
           console.log(this.formData)
-          this.fillFormData(this.formconf,response.data)
+          this.fillFormData(this.modifyForm,response.data)
         });
         this.mdId=this.metadataid
       }
@@ -108,6 +150,9 @@ export default {
       form.fields.forEach(item => {
         const val = data[item.__vModel__]
         if (val) {
+          if(typeof val==='string'&&val.indexOf('——')>-1){
+            return
+          }
           item.__config__.defaultValue = val
         }
       })
@@ -135,7 +180,11 @@ export default {
             }
           }
         }
-        addMetadata(obj).then()
+        if(this.type==='create'){
+          addMetadata(obj).then()
+        }else if(this.type==='modify'){
+          updateMetadata(obj).then()
+        }
       }
       if (this.currentPage!==3){
         this.currentPage+=1
@@ -165,15 +214,16 @@ export default {
   watch:{
     formconf:function(nv,ov) {
       //this.open=true
-      this.formconf=nv
+      this.newForm=nv
+      this.modifyForm=nv
       this.loading = false
     }
     ,currentPage:function(nv,ov){
-      if(nv===1){
-        this.fillFormData(this.formconf,this.formData)
+      if(nv===1&&this.type==='modify'){
+        this.fillFormData(this.modifyForm,this.formData)
       }
-      else if (nv===2){
-        this.fillFormData(this.content,this.formData)
+      else if (nv===2&&this.type==='modify'){
+        this.fillFormData(this.modifyContent,this.formData)
       }
     },
     metadataid:function(nv,ov){

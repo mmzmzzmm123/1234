@@ -175,10 +175,10 @@ export default {
       this.$refs[this.formConf.formRef].resetFields()
     },
     submitForm() {
-      this.$refs[this.formConf.formRef].validate(valid => {
+      this.$refs[this.formConfCopy.formRef].validate(valid => {
         if (!valid) return false
         // 触发sumit事件
-        this.$emit('submit', this[this.formConf.formModel])
+        this.$emit('submit', this[this.formConfCopy.formModel])
         return true
       })
     },

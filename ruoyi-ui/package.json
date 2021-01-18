@@ -36,6 +36,7 @@
     "url": ""
   },
   "dependencies": {
+    "@jsmini/clone": "^0.4.2",
     "@riophae/vue-treeselect": "0.4.0",
     "axios": "^0.21.1",
     "clipboard": "2.0.6",

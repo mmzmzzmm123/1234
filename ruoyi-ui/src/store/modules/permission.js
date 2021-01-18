@@ -2,7 +2,8 @@ import { constantRoutes } from '@/router'
 import { getRouters } from '@/api/menu'
 import Layout from '@/layout/index'
 import ParentView from '@/components/ParentView';
-
+// import { deepClone } from '@/utils'
+import { clone } from '@jsmini/clone';
 const permission = {
   state: {
     routes: [],
@@ -24,8 +25,8 @@ const permission = {
       return new Promise(resolve => {
         // 向后端请求路由数据
         getRouters().then(res => {
-          const sdata = JSON.parse(JSON.stringify(res.data))
-          const rdata = JSON.parse(JSON.stringify(res.data))
+          const sdata = clone(res.data)
+          const rdata = clone(res.data)
           const sidebarRoutes = filterAsyncRouter(sdata)
           const rewriteRoutes = filterAsyncRouter(rdata, true)
           rewriteRoutes.push({ path: '*', redirect: '/404', hidden: true })
