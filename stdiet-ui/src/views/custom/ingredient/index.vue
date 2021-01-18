@@ -306,7 +306,7 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="24">
+          <el-col :span="12">
             <el-form-item label="忌口人群" label-width="90px">
               <el-select
                 v-model="form.notRecIds"
@@ -528,8 +528,8 @@
         const id = row.id || this.ids;
         getIngredient(id).then((response) => {
           this.form = response.data;
-          this.form.notRecIds = this.form.rec
-            ? this.form.rec
+          this.form.notRecIds = this.form.notRec
+            ? this.form.notRec
               .split(",")
               .map(
                 (label) =>
@@ -538,8 +538,8 @@
                   ).dictValue
               )
             : [];
-          this.form.recIds = this.form.notRec
-            ? this.form.notRec
+          this.form.recIds = this.form.rec
+            ? this.form.rec
               .split(",")
               .map(
                 (label) =>
