@@ -44,8 +44,8 @@
       <el-table-column label="伙食费（中班）/天" align="center" prop="hsfZ" />
       <el-table-column label="保育费（小班）/月" align="center" prop="byfX" />
       <el-table-column label="伙食费（小班）/天" align="center" prop="hsfX" />
-      <el-table-column label="保育费（拖班）/月" align="center" prop="byfT" />
-      <el-table-column label="伙食费（拖班）/天" align="center" prop="hsfT" />
+      <el-table-column label="保育费（托班）/月" align="center" prop="byfT" />
+      <el-table-column label="伙食费（托班）/天" align="center" prop="hsfT" />
       <el-table-column
         label="操作"
         align="center"
@@ -127,14 +127,14 @@
             placeholder="请输入伙食费"
           />
         </el-form-item>
-        <el-form-item label="保育费拖班(月)" prop="byfT">
+        <el-form-item label="保育费托班(月)" prop="byfT">
           <el-input
             v-model="form.byfT"
             :precision="2"
             placeholder="请输入保育费(1-10:100;11-20:200;21-31:300)"
           />
         </el-form-item>
-        <el-form-item label="伙食费拖班(天)" prop="hsT">
+        <el-form-item label="伙食费托班(天)" prop="hsT">
           <el-input-number
             v-model="form.hsfT"
             :precision="2"
