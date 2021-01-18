@@ -75,10 +75,11 @@
         <result property="createUser" column="create_user"/>
         <result property="dqzt" column="dqzt"/>
         <result property="txTime" column="tx_time"/>
+        <result property="userId" column="user_id"/>
     </resultMap>
 
     <sql id="selectTsbzGbkyktVo">
-        select a.id, a.gbid, a.yjly, a.lxktmc, a.lxktjb, a.lxktlb, a.lxrq, a.jtrq, a.jdjg, a.cdjs, a.isdel, a.create_userid, a.create_time,b.name,b.dept_id from tsbz_gbkykt  a
+        select a.id, a.gbid, a.yjly, a.lxktmc, a.lxktjb, a.lxktlb, a.lxrq, a.jtrq, a.jdjg, a.cdjs, a.isdel, a.create_userid, a.create_time,b.name,b.dept_id,b.user_id from tsbz_gbkykt  a
         left join tsbz_gbjbqk b on a.gbid=b.id
     </sql>
 
@@ -98,6 +99,8 @@
             <if test="cdjs != null  and cdjs != ''">and a.cdjs = #{cdjs}</if>
             <if test="createUserid != null ">and a.create_userid = #{createUserid}</if>
         </where>
+        <!-- 数据范围过滤 -->
+        ${params.dataScope}
         order by lxrq
     </select>
 

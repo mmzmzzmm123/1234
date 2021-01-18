@@ -76,10 +76,11 @@
         <result property="createUser" column="create_user"/>
         <result property="dqzt" column="dqzt"/>
         <result property="txTime" column="tx_time"/>
+        <result property="userId" column="user_id"/>
     </resultMap>
 
     <sql id="selectTsbzGbgzjlVo">
-        select a.id, a.gbid, a.gzdwid, a.gzdwmc, a.qsny, a.zzny, a.zzzw, a.dnzw, a.qtzw, a.rjxk, a.gzgw, a.create_userid, a.create_time,b.name,b.dept_id from tsbz_gbgzjl a
+        select a.id, a.gbid, a.gzdwid, a.gzdwmc, a.qsny, a.zzny, a.zzzw, a.dnzw, a.qtzw, a.rjxk, a.gzgw, a.create_userid, a.create_time,b.name,b.dept_id,b.user_id from tsbz_gbgzjl a
         left join tsbz_gbjbqk b on a.gbid=b.id</sql>
 
     <select id="selectTsbzGbgzjlList" parameterType="TsbzGbgzjl" resultMap="TsbzGbgzjlResult">
@@ -99,6 +100,8 @@
             <if test="gzgw != null  and gzgw != ''">and a.gzgw = #{gzgw}</if>
             <if test="createUserid != null ">and a.create_userid = #{createUserid}</if>
         </where>
+        <!-- 数据范围过滤 -->
+        ${params.dataScope}
     </select>
 
     <select id="selectTsbzGbgzjlById" parameterType="Long" resultMap="TsbzGbgzjlResult">

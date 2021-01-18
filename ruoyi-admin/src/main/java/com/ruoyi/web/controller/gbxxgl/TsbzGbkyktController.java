@@ -37,7 +37,7 @@ public class TsbzGbkyktController extends BaseController {
     /**
      * 查询科研课题(干部管理)列表
      */
-    @PreAuthorize("@ss.hasPermi('system:gbkykt:list')")
+    @PreAuthorize("@ss.hasPermi('gbxxgl:gbkykt:list')")
     @GetMapping("/list")
     public TableDataInfo list(TsbzGbkykt tsbzGbkykt) {
         startPage();
@@ -48,7 +48,7 @@ public class TsbzGbkyktController extends BaseController {
     /**
      * 导出科研课题(干部管理)列表
      */
-    @PreAuthorize("@ss.hasPermi('system:gbkykt:export')")
+    @PreAuthorize("@ss.hasPermi('gbxxgl:gbkykt:export')")
     @Log(title = "科研课题(干部管理)", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
     public AjaxResult export(TsbzGbkykt tsbzGbkykt) {
@@ -60,7 +60,7 @@ public class TsbzGbkyktController extends BaseController {
     /**
      * 获取科研课题(干部管理)详细信息
      */
-    @PreAuthorize("@ss.hasPermi('system:gbkykt:query')")
+    @PreAuthorize("@ss.hasPermi('gbxxgl:gbkykt:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id) {
         return AjaxResult.success(tsbzGbkyktService.selectTsbzGbkyktById(id));
@@ -69,7 +69,7 @@ public class TsbzGbkyktController extends BaseController {
     /**
      * 新增科研课题(干部管理)
      */
-    @PreAuthorize("@ss.hasPermi('system:gbkykt:add')")
+    @PreAuthorize("@ss.hasPermi('gbxxgl:gbkykt:add')")
     @Log(title = "科研课题(干部管理)", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody TsbzGbkykt tsbzGbkykt) {
@@ -80,7 +80,7 @@ public class TsbzGbkyktController extends BaseController {
     /**
      * 修改科研课题(干部管理)
      */
-    @PreAuthorize("@ss.hasPermi('system:gbkykt:edit')")
+    @PreAuthorize("@ss.hasPermi('gbxxgl:gbkykt:edit')")
     @Log(title = "科研课题(干部管理)", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody TsbzGbkykt tsbzGbkykt) {
@@ -90,7 +90,7 @@ public class TsbzGbkyktController extends BaseController {
     /**
      * 删除科研课题(干部管理)
      */
-    @PreAuthorize("@ss.hasPermi('system:gbkykt:remove')")
+    @PreAuthorize("@ss.hasPermi('gbxxgl:gbkykt:remove')")
     @Log(title = "科研课题(干部管理)", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids) {

@@ -15,6 +15,7 @@
           :show-count="true"
           placeholder="请选择所属单位"
           style="width: 200px"
+          size="small"
         />
       </el-form-item>
       <el-form-item label="姓名" prop="gbid">
@@ -67,7 +68,7 @@
         </el-date-picker>
       </el-form-item>
       <el-form-item label="研究领域" prop="yjly">
-        <el-select v-model="queryParams.yjly" placeholder="请选择研究领域">
+        <el-select v-model="queryParams.yjly" size="small" clearable placeholder="请选择研究领域">
           <el-option
             v-for="dict in yjlyOptions"
             :key="dict.dictValue"
@@ -77,7 +78,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="课题级别" prop="lxktjb">
-        <el-select v-model="queryParams.lxktjb" placeholder="请选择课题级别">
+        <el-select v-model="queryParams.lxktjb" size="small" clearable placeholder="请选择课题级别">
           <el-option
             v-for="dict in lxktjbOptions"
             :key="dict.dictValue"
@@ -87,7 +88,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="课题类别" prop="lxktlb">
-        <el-select v-model="queryParams.lxktlb" placeholder="请选择课题类别">
+        <el-select v-model="queryParams.lxktlb" size="small" clearable placeholder="请选择课题类别">
           <el-option
             v-for="dict in lxktlbOptions"
             :key="dict.dictValue"
@@ -97,7 +98,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="鉴定结果" prop="jdjg">
-        <el-select v-model="queryParams.jdjg" placeholder="请选择鉴定结果">
+        <el-select v-model="queryParams.jdjg" size="small" clearable placeholder="请选择鉴定结果">
           <el-option
             v-for="dict in jdjgOptions"
             :key="dict.dictValue"
@@ -107,7 +108,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="承担角色" prop="cdjs">
-        <el-select v-model="queryParams.cdjs" placeholder="请选择承担角色">
+        <el-select v-model="queryParams.cdjs" size="small" clearable placeholder="请选择承担角色">
           <el-option
             v-for="dict in cdjsOptions"
             :key="dict.dictValue"
@@ -230,7 +231,7 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['system:gbkykt:edit']"
+            v-hasPermi="['gbxxgl:gbkykt:edit']"
             >修改</el-button
           >
           <el-button
@@ -238,7 +239,7 @@
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['system:gbkykt:remove']"
+            v-hasPermi="['gbxxgl:gbkykt:remove']"
             >删除</el-button
           >
         </template>

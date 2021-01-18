@@ -347,6 +347,11 @@ public class TsbzGbjbqk extends BaseEntity {
     @Excel(name = "退休时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date txTime;
 
+    /**
+     * 用户编号
+     */
+    private Long userId;
+
     private SysDept dept;
 
     private String xxlb;
@@ -795,6 +800,16 @@ public class TsbzGbjbqk extends BaseEntity {
         return xxbb;
     }
 
+    public Long getUserId()
+    {
+        return userId;
+    }
+
+    public void setUserId(Long userId)
+    {
+        this.userId = userId;
+    }
+
 
     @Override
     public String toString() {
@@ -855,6 +870,7 @@ public class TsbzGbjbqk extends BaseEntity {
                 .append("dept", getDept())
                 .append("xxlb", getXxlb())
                 .append("xxbb", getXxbb())
+                .append("userId", getUserId())
                 .toString();
     }
 

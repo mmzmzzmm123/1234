@@ -2,6 +2,7 @@ package com.ruoyi.gbxxgl.service.impl;
 
 import java.util.List;
 
+import com.ruoyi.common.annotation.DataScope;
 import com.ruoyi.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,6 +39,7 @@ public class TsbzGbgzjlServiceImpl implements ITsbzGbgzjlService {
      * @return 干部工作经历
      */
     @Override
+    @DataScope(deptAlias = "d", userAlias = "b")
     public List<TsbzGbgzjl> selectTsbzGbgzjlList(TsbzGbgzjl tsbzGbgzjl) {
         return tsbzGbgzjlMapper.selectTsbzGbgzjlList(tsbzGbgzjl);
     }

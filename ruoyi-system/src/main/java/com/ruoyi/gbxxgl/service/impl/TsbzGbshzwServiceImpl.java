@@ -1,6 +1,8 @@
 package com.ruoyi.gbxxgl.service.impl;
 
 import java.util.List;
+
+import com.ruoyi.common.annotation.DataScope;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.gbxxgl.mapper.TsbzGbshzwMapper;
@@ -38,6 +40,7 @@ public class TsbzGbshzwServiceImpl implements ITsbzGbshzwService
      * @return 干部任职情况-社会职务
      */
     @Override
+    @DataScope(deptAlias = "d", userAlias = "b")
     public List<TsbzGbshzw> selectTsbzGbshzwList(TsbzGbshzw tsbzGbshzw)
     {
         return tsbzGbshzwMapper.selectTsbzGbshzwList(tsbzGbshzw);

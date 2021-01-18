@@ -70,10 +70,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="createUser"    column="create_user"    />
         <result property="dqzt" column="dqzt"/>
         <result property="txTime" column="tx_time"/>
+        <result property="userId" column="user_id"/>
     </resultMap>
 
     <sql id="selectTsbzGbbxcgVo">
-        select a.id, a.gbid, a.cgmc, a.cgnd, a.cgrddw, a.isdel, a.create_userid, a.create_time,b.name,b.dept_id from tsbz_gbbxcg a
+        select a.id, a.gbid, a.cgmc, a.cgnd, a.cgrddw, a.isdel, a.create_userid, a.create_time,b.name,b.dept_id,b.user_id from tsbz_gbbxcg a
         left join tsbz_gbjbqk b on a.gbid=b.id
     </sql>
 
@@ -88,6 +89,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="cgrddw != null  and cgrddw != ''"> and a.cgrddw = #{cgrddw}</if>
             <if test="createUserid != null "> and a.create_userid = #{createUserid}</if>
         </where>
+        <!-- 数据范围过滤 -->
+        ${params.dataScope}
     </select>
     
     <select id="selectTsbzGbbxcgById" parameterType="Long" resultMap="TsbzGbbxcgResult">

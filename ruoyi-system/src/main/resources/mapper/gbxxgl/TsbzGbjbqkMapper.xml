@@ -60,6 +60,7 @@
         <result property="txTime" column="tx_time"/>
         <result property="xxlb" column="xxlb"/>
         <result property="xxbb" column="xxbb"/>
+        <result property="userId" column="user_id"/>
         <association property="dept" column="dept_id" javaType="SysDept" resultMap="deptResult"/>
     </resultMap>
 
@@ -73,7 +74,7 @@
     </resultMap>
 
     <sql id="selectTsbzGbjbqkVo">
-        select u.*,d.dept_name from (select u.id, u.otherid, u.name, u.xb, u.dept_id, u.dwmc, u.dwjc, u.xrxzzw, u.xrdnzw, u.xrqtzw, u.rxzwny, u.xrxzzj, u.xzzjqdny, u.sfhbgb, u.hbgbqdny, u.sfzh, u.updatetime, u.mz, u.jg, u.jg_province, u.jg_cityname, u.jg_city, u.jg_areaname, u.jg_area, u.csd, u.csd_province, u.csd_cityname, u.csd_city, u.csd_areaname, u.csd_area,  u.csrq, u.cjgzny, u.jtzz, u.dwdz, u.dyxl, u.xl, u.xw, u.byyx, u.jylx, u.zc, u.jzcyqk, u.nfkc, u.hyzk, u.zzmm, u.rdsj, u.bgsdh, u.phone, u.rjxk, u.jkzk, u.create_user, u.create_time,u.dqzt,
+        select u.*,d.dept_name from (select u.id, u.otherid, u.name, u.xb, u.dept_id, u.dwmc, u.dwjc, u.xrxzzw, u.xrdnzw, u.xrqtzw, u.rxzwny, u.xrxzzj, u.xzzjqdny, u.sfhbgb, u.hbgbqdny, u.sfzh, u.updatetime, u.mz, u.jg, u.jg_province, u.jg_cityname, u.jg_city, u.jg_areaname, u.jg_area, u.csd, u.csd_province, u.csd_cityname, u.csd_city, u.csd_areaname, u.csd_area,  u.csrq, u.cjgzny, u.jtzz, u.dwdz, u.dyxl, u.xl, u.xw, u.byyx, u.jylx, u.zc, u.jzcyqk, u.nfkc, u.hyzk, u.zzmm, u.rdsj, u.bgsdh, u.phone, u.rjxk, u.jkzk, u.create_user, u.create_time,u.dqzt,u.user_id,
         case xb
          when '1' then date(date_add(csrq,interval+60 year))
          when '2' then date(date_add(csrq,interval+55 year))
