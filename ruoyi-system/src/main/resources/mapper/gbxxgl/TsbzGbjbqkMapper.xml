@@ -73,7 +73,16 @@
     </resultMap>
 
     <sql id="selectTsbzGbjbqkVo">
-        select u.id, u.otherid, u.name, u.xb, u.dept_id, u.dwmc, u.dwjc, u.xrxzzw, u.xrdnzw, u.xrqtzw, u.rxzwny, u.xrxzzj, u.xzzjqdny, u.sfhbgb, u.hbgbqdny, u.sfzh, u.updatetime, u.mz, u.jg, u.jg_province, u.jg_cityname, u.jg_city, u.jg_areaname, u.jg_area, u.csd, u.csd_province, u.csd_cityname, u.csd_city, u.csd_areaname, u.csd_area,  u.csrq, u.cjgzny, u.jtzz, u.dwdz, u.dyxl, u.xl, u.xw, u.byyx, u.jylx, u.zc, u.jzcyqk, u.nfkc, u.hyzk, u.zzmm, u.rdsj, u.bgsdh, u.phone, u.rjxk, u.jkzk, u.create_user, u.create_time,u.dqzt,u.tx_time,d.dept_name from tsbz_gbjbqk u
+        select u.*,d.dept_name from (select u.id, u.otherid, u.name, u.xb, u.dept_id, u.dwmc, u.dwjc, u.xrxzzw, u.xrdnzw, u.xrqtzw, u.rxzwny, u.xrxzzj, u.xzzjqdny, u.sfhbgb, u.hbgbqdny, u.sfzh, u.updatetime, u.mz, u.jg, u.jg_province, u.jg_cityname, u.jg_city, u.jg_areaname, u.jg_area, u.csd, u.csd_province, u.csd_cityname, u.csd_city, u.csd_areaname, u.csd_area,  u.csrq, u.cjgzny, u.jtzz, u.dwdz, u.dyxl, u.xl, u.xw, u.byyx, u.jylx, u.zc, u.jzcyqk, u.nfkc, u.hyzk, u.zzmm, u.rdsj, u.bgsdh, u.phone, u.rjxk, u.jkzk, u.create_user, u.create_time,u.dqzt,
+        case xb
+         when '1' then date(date_add(csrq,interval+60 year))
+         when '2' then date(date_add(csrq,interval+55 year))
+        ELSE '' END AS tx_time,
+        case xb
+         when '1' then DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(csrq)), '%Y')+0
+         when '2' then DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(csrq)), '%Y')+5
+        ELSE '' END AS age
+         from tsbz_gbjbqk u) u
         left join sys_dept d on u.dept_id = d.dept_id
     </sql>
 
@@ -130,9 +139,9 @@
             <if test="jkzk != null  and jkzk != ''">and u.jkzk = #{jkzk}</if>
             <if test="createUser != null  and createUser != ''">and u.create_user = #{createUser}</if>
             <if test="createTime != null  and createTime != ''">and u.create_time = #{createTime}</if>
-            <if test="dqzt != null  and dqzt != ''"> and u.dqzt = #{dqzt}</if>
+<!--            <if test="dqzt != null  and dqzt != ''"> and u.dqzt = #{dqzt}</if>-->
              <!--需求是 获取进5年退休人员数据-->
-            <if test="dqzt=='99'"> and u.tx_time>date(date_add(now(),interval-5 year))</if>
+            <if test="dqzt=='99'"> u.age <![CDATA[ >= ]]> 55 and u.age <![CDATA[ < ]]> 60</if>
             <if test="deptId != null and deptId != 0">
                 AND (u.dept_id = #{deptId} OR u.dept_id IN ( SELECT t.dept_id FROM sys_dept t WHERE FIND_IN_SET
                 (#{deptId},ancestors) ))

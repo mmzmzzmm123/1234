@@ -81,7 +81,7 @@
         <include refid="selectTsbzGbndkhVo"/>
         <where>
             a.isdel = 0
-            <if test="dqzt != null  and dqzt != ''"> and b.dqzt = #{dqzt}</if>
+<!--            <if test="dqzt != null  and dqzt != ''"> and b.dqzt = #{dqzt}</if>-->
             <if test="gbid != null ">and a.gbid = #{gbid}</if>
             <if test="xn != null  and xn != ''">and a.xn = #{xn}</if>
             <if test="khjg != null  and khjg != ''">and a.khjg = #{khjg}</if>

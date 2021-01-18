@@ -83,7 +83,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectTsbzGbcrjqkVo"/>
         <where>
             a.isdel = 0
-            <if test="dqzt != null  and dqzt != ''"> and b.dqzt = #{dqzt}</if>
+<!--            <if test="dqzt != null  and dqzt != ''"> and b.dqzt = #{dqzt}</if>-->
             <if test="gbid != null "> and a.gbid = #{gbid}</if>
             <if test="qsrq != null "> and a.qsrq = #{qsrq}</if>
             <if test="zzrq != null "> and a.zzrq = #{zzrq}</if>

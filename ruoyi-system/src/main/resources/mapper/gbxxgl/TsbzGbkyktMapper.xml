@@ -86,7 +86,7 @@
         <include refid="selectTsbzGbkyktVo"/>
         <where>
             a.isdel = 0
-            <if test="dqzt != null  and dqzt != ''"> and b.dqzt = #{dqzt}</if>
+<!--            <if test="dqzt != null  and dqzt != ''"> and b.dqzt = #{dqzt}</if>-->
             <if test="gbid != null ">and a.gbid = #{gbid}</if>
             <if test="yjly != null  and yjly != ''">and a.yjly = #{yjly}</if>
             <if test="lxktmc != null  and lxktmc != ''">and a.lxktmc = #{lxktmc}</if>
@@ -98,6 +98,7 @@
             <if test="cdjs != null  and cdjs != ''">and a.cdjs = #{cdjs}</if>
             <if test="createUserid != null ">and a.create_userid = #{createUserid}</if>
         </where>
+        order by lxrq
     </select>
 
     <select id="selectTsbzGbkyktById" parameterType="Long" resultMap="TsbzGbkyktResult">

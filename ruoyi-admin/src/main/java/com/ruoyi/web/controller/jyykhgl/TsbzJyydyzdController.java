@@ -2,6 +2,7 @@ package com.ruoyi.web.controller.jyykhgl;
 
 import java.util.List;
 
+import com.ruoyi.common.utils.SecurityUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -72,6 +73,8 @@ public class TsbzJyydyzdController extends BaseController {
     @Log(title = "调研指导", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody TsbzJyydyzd tsbzJyydyzd) {
+        tsbzJyydyzd.setCreateUserid(SecurityUtils.getLoginUser().getUser().getUserId());
+        tsbzJyydyzd.setDeptId(SecurityUtils.getLoginUser().getUser().getDeptId());
         return toAjax(tsbzJyydyzdService.insertTsbzJyydyzd(tsbzJyydyzd));
     }
 

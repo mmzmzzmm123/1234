@@ -87,7 +87,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectTsbzGbxrzwVo"/>
         <where>
             a.isdel = 0
-            <if test="dqzt != null  and dqzt != ''"> and b.dqzt = #{dqzt}</if>
+<!--            <if test="dqzt != null  and dqzt != ''"> and b.dqzt = #{dqzt}</if>-->
             <if test="gbid != null "> and a.gbid = #{gbid}</if>
             <if test="rzny != null "> and a.rzny = #{rzny}</if>
             <if test="zzny != null "> and a.zzny = #{zzny}</if>
@@ -99,6 +99,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createuser != null "> and a.createuser = #{createuser}</if>
             <if test="createtime != null "> and a.createtime = #{createtime}</if>
         </where>
+        order by rzny
     </select>
     
     <select id="selectTsbzGbxrzwById" parameterType="Long" resultMap="TsbzGbxrzwResult">

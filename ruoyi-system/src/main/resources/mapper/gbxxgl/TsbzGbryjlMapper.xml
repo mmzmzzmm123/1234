@@ -81,13 +81,14 @@
         <include refid="selectTsbzGbryjlVo"/>
         <where>
             a.isdel = 0
-            <if test="dqzt != null  and dqzt != ''"> and b.dqzt = #{dqzt}</if>
+<!--            <if test="dqzt != null  and dqzt != ''"> and b.dqzt = #{dqzt}</if>-->
             <if test="gbid != null ">and a.gbid = #{gbid}</if>
             <if test="hjrq != null ">and a.hjrq = #{hjrq}</if>
             <if test="rymc != null  and rymc != ''">and a.rymc = #{rymc}</if>
             <if test="ryjb != null  and ryjb != ''">and a.ryjb = #{ryjb}</if>
             <if test="createUserid != null ">and a.create_userid = #{createUserid}</if>
         </where>
+        order by hjrq
     </select>
 
     <select id="selectTsbzGbryjlById" parameterType="Long" resultMap="TsbzGbryjlResult">

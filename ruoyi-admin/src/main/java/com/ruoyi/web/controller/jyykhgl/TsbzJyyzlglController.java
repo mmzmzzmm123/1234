@@ -1,6 +1,8 @@
 package com.ruoyi.web.controller.jyykhgl;
 
 import java.util.List;
+
+import com.ruoyi.common.utils.SecurityUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,14 +24,13 @@ import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
  * 质量管理（教研员）Controller
- * 
+ *
  * @author tsbz
  * @date 2021-01-16
  */
 @RestController
 @RequestMapping("/jyykhgl/jyyzlgl")
-public class TsbzJyyzlglController extends BaseController
-{
+public class TsbzJyyzlglController extends BaseController {
     @Autowired
     private ITsbzJyyzlglService tsbzJyyzlglService;
 
@@ -38,8 +39,7 @@ public class TsbzJyyzlglController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('jyykhgl:jyyzlgl:list')")
     @GetMapping("/list")
-    public TableDataInfo list(TsbzJyyzlgl tsbzJyyzlgl)
-    {
+    public TableDataInfo list(TsbzJyyzlgl tsbzJyyzlgl) {
         startPage();
         List<TsbzJyyzlgl> list = tsbzJyyzlglService.selectTsbzJyyzlglList(tsbzJyyzlgl);
         return getDataTable(list);
@@ -51,8 +51,7 @@ public class TsbzJyyzlglController extends BaseController
     @PreAuthorize("@ss.hasPermi('jyykhgl:jyyzlgl:export')")
     @Log(title = "质量管理（教研员）", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
-    public AjaxResult export(TsbzJyyzlgl tsbzJyyzlgl)
-    {
+    public AjaxResult export(TsbzJyyzlgl tsbzJyyzlgl) {
         List<TsbzJyyzlgl> list = tsbzJyyzlglService.selectTsbzJyyzlglList(tsbzJyyzlgl);
         ExcelUtil<TsbzJyyzlgl> util = new ExcelUtil<TsbzJyyzlgl>(TsbzJyyzlgl.class);
         return util.exportExcel(list, "jyyzlgl");
@@ -63,8 +62,7 @@ public class TsbzJyyzlglController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('jyykhgl:jyyzlgl:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
-    {
+    public AjaxResult getInfo(@PathVariable("id") Long id) {
         return AjaxResult.success(tsbzJyyzlglService.selectTsbzJyyzlglById(id));
     }
 
@@ -74,8 +72,9 @@ public class TsbzJyyzlglController extends BaseController
     @PreAuthorize("@ss.hasPermi('jyykhgl:jyyzlgl:add')")
     @Log(title = "质量管理（教研员）", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody TsbzJyyzlgl tsbzJyyzlgl)
-    {
+    public AjaxResult add(@RequestBody TsbzJyyzlgl tsbzJyyzlgl) {
+        tsbzJyyzlgl.setCreateUserid(SecurityUtils.getLoginUser().getUser().getUserId());
+        tsbzJyyzlgl.setDeptId(SecurityUtils.getLoginUser().getUser().getDeptId());
         return toAjax(tsbzJyyzlglService.insertTsbzJyyzlgl(tsbzJyyzlgl));
     }
 
@@ -85,8 +84,7 @@ public class TsbzJyyzlglController extends BaseController
     @PreAuthorize("@ss.hasPermi('jyykhgl:jyyzlgl:edit')")
     @Log(title = "质量管理（教研员）", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody TsbzJyyzlgl tsbzJyyzlgl)
-    {
+    public AjaxResult edit(@RequestBody TsbzJyyzlgl tsbzJyyzlgl) {
         return toAjax(tsbzJyyzlglService.updateTsbzJyyzlgl(tsbzJyyzlgl));
     }
 
@@ -95,9 +93,8 @@ public class TsbzJyyzlglController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('jyykhgl:jyyzlgl:remove')")
     @Log(title = "质量管理（教研员）", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
-    {
+    @DeleteMapping("/{ids}")
+    public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(tsbzJyyzlglService.deleteTsbzJyyzlglByIds(ids));
     }
 }
