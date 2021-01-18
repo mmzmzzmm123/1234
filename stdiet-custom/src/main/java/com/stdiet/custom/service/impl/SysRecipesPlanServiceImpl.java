@@ -91,6 +91,8 @@ public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService
     public int updateSysRecipesPlan(SysRecipesPlan sysRecipesPlan)
     {
         sysRecipesPlan.setUpdateTime(DateUtils.getNowDate());
+        //目前只能修改发送状态，所以修改时加上发送时间
+        sysRecipesPlan.setSendTime(DateUtils.getNowDate());
         return sysRecipesPlanMapper.updateSysRecipesPlan(sysRecipesPlan);
     }
 
@@ -119,40 +121,50 @@ public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService
     }
 
     /**
-     * 根据订单ID生成对应的食谱计划
+     * 异步方法，根据订单ID生成对应的食谱计划，退款订单不生成食谱计划
      *
      * @param orderId 订单ID
      * @return 结果
      */
     @Override
-    @Async("generateRecipesPlan")
-    public void autoGenerateRecipesPlanByOrderId(Long orderId){
+    @Async
+    public void regenerateRecipesPlan(Long orderId){
         if(orderId == null || orderId <= 0){
             return;
         }
         SysOrder sysOrder = sysOrderService.selectSysOrderById(orderId);
+        //订单为空、金额小于0不进行食谱生成、更新
         if(sysOrder == null){
             return;
         }
         try{
             //获取redis中该订单对应的锁
             if(synchrolockUtil.lock(String.format(generateRecipesPlanLockKey, orderId))){
-                //删除该订单对于食谱
-                sysRecipesPlanMapper.delRecipesPlanByOrderId(orderId);
-                //订单服务开始时间、结束时间不能为空
-                if(sysOrder.getStartTime() != null && sysOrder.getServerEndTime() != null){
-                    SysOrderPause pauseParam = new SysOrderPause();
-                    pauseParam.setOrderId(sysOrder.getOrderId());
-                    //暂停记录列表
-                    List<SysOrderPause> pauseList = sysOrderPauseService.selectSysOrderPauseList(pauseParam);
-                    List<SysRecipesPlan> planList = generatePlan(orderId, DateUtils.dateToLocalDate(sysOrder.getStartTime()), DateUtils.dateToLocalDate(sysOrder.getServerEndTime()), pauseList);
-                    if(planList != null && planList.size() > 0){
-                        sysRecipesPlanMapper.insertBatch(planList);
-                    }
-                    for (SysRecipesPlan sysRecipesPlan : planList) {
-                        getTestDate(sysRecipesPlan.getStartDate(), sysRecipesPlan.getEndDate());
-                    }
+                SysRecipesPlan queryParam = new SysRecipesPlan();
+                queryParam.setOrderId(orderId);
+                List<SysRecipesPlan> oldRecipesPlanList = sysRecipesPlanMapper.selectSysRecipesPlanList(queryParam);
+                //判断是否已存在食谱
+                if(oldRecipesPlanList != null && oldRecipesPlanList.size() > 0){
+                    Long[] orderIdArray = new Long[1];
+                    orderIdArray[0] = orderId;
+                    //删除该订单对于食谱
+                    delRecipesPlanByOrderId(orderIdArray);
                 }
+                //判断订单金额、开始时间、结束时间，为空则直接返回，不重新生成食谱计划
+                if(sysOrder.getAmount().floatValue() <= 0 || sysOrder.getStartTime() == null || sysOrder.getServerEndTime() == null){
+                    return;
+                }
+                SysOrderPause pauseParam = new SysOrderPause();
+                pauseParam.setOrderId(sysOrder.getOrderId());
+                //暂停记录列表
+                List<SysOrderPause> pauseList = sysOrderPauseService.selectSysOrderPauseList(pauseParam);
+                List<SysRecipesPlan> planList = generatePlan(orderId, oldRecipesPlanList, DateUtils.dateToLocalDate(sysOrder.getStartTime()), DateUtils.dateToLocalDate(sysOrder.getServerEndTime()), pauseList);
+                if(planList != null && planList.size() > 0){
+                    sysRecipesPlanMapper.insertBatch(planList);
+                }
+                /*for (SysRecipesPlan sysRecipesPlan : planList) {
+                     getTestDate(sysRecipesPlan.getStartDate(), sysRecipesPlan.getEndDate());
+                 }*/
             }
         }
         catch (Exception e) {
@@ -174,23 +186,21 @@ public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService
     /**
      * 根据订单ID、订单开始服务时间、结束时间、暂停列表生成食谱计划列表
      * @param orderId 订单ID
+     * @param oldRecipesPlanList 旧的食谱计划
      * @param serverStartDate 服务开始时间
      * @param serverEndDate 服务结束时间
      * @param pauseList 暂停列表
      * @return
      */
-    public List<SysRecipesPlan> generatePlan(Long orderId, LocalDate serverStartDate, LocalDate serverEndDate, List<SysOrderPause> pauseList){
+    public List<SysRecipesPlan> generatePlan(Long orderId, List<SysRecipesPlan> oldRecipesPlanList, LocalDate serverStartDate, LocalDate serverEndDate, List<SysOrderPause> pauseList){
         List<SysRecipesPlan> planList = new ArrayList<>();
         boolean breakFlag = false;
         LocalDate planStartDate = serverStartDate;
         LocalDate planEndDate = planStartDate.plusDays(6);
         while (true){
-
             SysRecipesPlan sysRecipesPlan = new SysRecipesPlan();
             //判断是否大于服务到期时间
-            if(ChronoUnit.DAYS.between(planEndDate, serverEndDate) > 0){
-
-            }else{
+            if(ChronoUnit.DAYS.between(planEndDate, serverEndDate) <= 0){
                 planEndDate = serverEndDate;
                 breakFlag = true;
             }
@@ -200,6 +210,17 @@ public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService
             sysRecipesPlan.setStartDate(DateUtils.localDateToDate(planStartDate));
             sysRecipesPlan.setEndDate(DateUtils.localDateToDate(planEndDate));
             sysRecipesPlan.setOrderId(orderId);
+            /*//当开始时间小于等于当前时间，默认为已发送，发送时间为前一天
+            if(ChronoUnit.DAYS.between(planStartDate, LocalDate.now()) >= 0){
+                sysRecipesPlan.setSendFlag(1);
+                sysRecipesPlan.setSendTime(DateUtils.localDateToDate(LocalDate.now().minusDays(1)));
+            }*/
+            //将旧食谱计划中的发送状态、发送时间、食谱复制到新食谱计划中
+            boolean existFlag =oldRecipesPlanList.size() >= planList.size()+1;
+            sysRecipesPlan.setSendFlag(existFlag ? oldRecipesPlanList.get(planList.size()).getSendFlag() : 0);
+            sysRecipesPlan.setSendTime(existFlag ? oldRecipesPlanList.get(planList.size()).getSendTime() : null);
+            sysRecipesPlan.setRecipesId(existFlag ? oldRecipesPlanList.get(planList.size()).getRecipesId() : null);
+
             planList.add(sysRecipesPlan);
 
             planStartDate = planEndDate.plusDays(1);
@@ -239,5 +260,25 @@ public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService
             }
         }
         return pauseDay;
+    }
+
+    /**
+     * 根据订单ID删除所有食谱安排计划
+     * @param orderIds 订单ID
+     * @return
+     */
+    @Override
+    public int delRecipesPlanByOrderId(Long[] orderIds){
+        return sysRecipesPlanMapper.delRecipesPlanByOrderId(orderIds);
+    }
+
+    /**
+     * 多条件查询食谱计划列表
+     * @param sysRecipesPlan
+     * @return
+     */
+    @Override
+    public List<SysRecipesPlan> selectPlanListByCondition(SysRecipesPlan sysRecipesPlan){
+        return sysRecipesPlanMapper.selectPlanListByCondition(sysRecipesPlan);
     }
 }

@@ -7,18 +7,13 @@ import com.stdiet.common.utils.StringUtils;
 import com.stdiet.custom.domain.SysPhysicalSigns;
 
 import com.stdiet.common.utils.bean.ObjectUtils;
+import com.stdiet.custom.domain.SysRecipesPlan;
 import com.stdiet.custom.dto.request.CustomerInvestigateRequest;
 import com.stdiet.custom.dto.response.CustomerListResponse;
+import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.stdiet.common.annotation.Log;
 import com.stdiet.common.core.controller.BaseController;
 import com.stdiet.common.core.domain.AjaxResult;
@@ -145,5 +140,20 @@ public class SysCustomerController extends BaseController
     public AjaxResult remove(@PathVariable Long[] ids)
     {
         return toAjax(sysCustomerService.delCustomerAndSignById(ids));
+    }
+
+
+    /**
+     * 根据手机号查看用户体征
+     */
+    @GetMapping("/getCustomerAndSignByPhone")
+    @PreAuthorize("@ss.hasPermi('custom:customer:query')")
+    public AjaxResult getCustomerAndSignByPhone(@RequestParam("phone")String phone)
+    {
+        SysCustomer sysCustomer = null;
+        if(StringUtils.isNotEmpty(phone)){
+           sysCustomer = sysCustomerService.selectSysCustomerAndSignByPhone(phone);
+        }
+        return AjaxResult.success(sysCustomer);
     }
 }

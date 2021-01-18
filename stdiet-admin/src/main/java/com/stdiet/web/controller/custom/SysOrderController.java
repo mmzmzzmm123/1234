@@ -138,6 +138,45 @@ public class SysOrderController extends OrderBaseController {
     }
 
     /**
+     * 获取销售订单详细信息(列出所有营养师、助理等名称)
+     */
+    @PreAuthorize("@ss.hasPermi('custom:order:query')")
+    @GetMapping(value = "/getInfoDetail")
+    public AjaxResult getInfoDetail(@RequestParam("orderId") Long orderId) {
+        SysOrder order = sysOrderService.selectSysOrderById(orderId);
+        if(order != null){
+            List<SysUser> userList = userService.selectAllUser();
+            for(SysUser user : userList){
+                if (user.getUserId().equals(order.getPreSaleId())) {
+                    order.setPreSale(user.getNickName());
+                }
+                if (user.getUserId().equals(order.getAfterSaleId())) {
+                    order.setAfterSale(user.getNickName());
+                }
+                if (user.getUserId().equals(order.getNutritionistId())) {
+                    order.setNutritionist(user.getNickName());
+                }
+                if (user.getUserId().equals(order.getNutriAssisId())) {
+                    order.setNutriAssis(user.getNickName());
+                }
+                if (user.getUserId().equals(order.getOperatorId())) {
+                    order.setOperator(user.getNickName());
+                }
+                if (user.getUserId().equals(order.getPlannerId())) {
+                    order.setPlanner(user.getNickName());
+                }
+                if (user.getUserId().equals(order.getPlannerAssisId())) {
+                    order.setPlannerAssis(user.getNickName());
+                }
+                if (user.getUserId().equals(order.getOperatorAssisId())) {
+                    order.setOperatorAssis(user.getNickName());
+                }
+            }
+        }
+        return AjaxResult.success(order);
+    }
+
+    /**
      * 新增销售订单
      */
     @PreAuthorize("@ss.hasPermi('custom:order:add')")

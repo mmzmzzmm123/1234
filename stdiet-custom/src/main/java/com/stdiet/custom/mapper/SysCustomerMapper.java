@@ -70,4 +70,11 @@ public interface SysCustomerMapper
 
     //查询客户基础信息以及体征信息
     List<SysCustomer> selectSysCustomerAndSignList(SysCustomer sysCustomer);
+
+    /**
+     * 根据手机号查询客户以及体征
+     * @param phone
+     * @return
+     */
+    SysCustomer selectSysCustomerAndSignByPhone(String phone);
 }

@@ -17,6 +17,15 @@
         <result property="updateTime"    column="update_time"    />
         <result property="updateBy"    column="update_by"    />
         <result property="delFlag"    column="del_flag"    />
+        <!-- 非持久化字段 -->
+        <result property="customer"    column="customer"    />
+        <result property="phone" column="phone"     />
+        <result property="orderStartDate"    column="order_start_date"    />
+        <result property="orderEndDate"    column="order_end_date"    />
+        <result property="nutritionistId"    column="nutritionist_id"    />
+        <result property="nutritionist"    column="nutritionist"    />
+        <result property="nutritionistAssisId"    column="nutritionist_assis_id"    />
+        <result property="nutritionistAssis"    column="nutritionist_assis"    />
     </resultMap>
 
     <sql id="selectSysRecipesPlanVo">
@@ -87,11 +96,11 @@
     </update>
 
     <delete id="deleteSysRecipesPlanById" parameterType="Long">
-        update sys_recipes_plan set del_flag = 0 where id = #{id}
+        update sys_recipes_plan set del_flag = 1 where id = #{id}
     </delete>
 
     <delete id="deleteSysRecipesPlanByIds" parameterType="String">
-        update sys_recipes_plan set del_flag = 0 where id in
+        update sys_recipes_plan set del_flag = 1 where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
@@ -100,16 +109,34 @@
     <!-- 批量插入食谱计划 -->
     <insert id="insertBatch">
         INSERT INTO sys_recipes_plan
-        (order_id, start_date, end_date)
+        (order_id, start_date, end_date, send_flag, send_time, recipes_id)
         VALUES
         <foreach collection ="list" item="plan" separator =",">
-            (#{plan.orderId}, #{plan.startDate}, #{plan.end_date})
+            (#{plan.orderId}, #{plan.startDate}, #{plan.endDate}, #{plan.sendFlag}, #{plan.sendTime}, #{plan.recipesId})
         </foreach >
     </insert>
 
     <!-- 根据订单ID删除对应食谱计划 -->
-    <update id="delRecipesPlanByOrderId" parameterType="Long">
-      update sys_recipes_plan set del_flag = 0 and order_id = #{orderId}
+    <update id="delRecipesPlanByOrderId" parameterType="String">
+      update sys_recipes_plan set del_flag = 1 where order_id in
+      <foreach item="orderId" collection="array" open="(" separator="," close=")">
+            #{orderId}
+      </foreach>
     </update>
 
+    <!-- 食谱计划、订单表联查 -->
+    <select id="selectPlanListByCondition" parameterType="SysRecipesPlan" resultMap="SysRecipesPlanResult">
+      SELECT srp.id,srp.order_id,sr.customer,sr.phone,su_nutritionist.nick_name nutritionist,su_nutritionist_assis.nick_name AS nutritionist_assis,sr.start_time,sr.server_end_time, srp.start_date,srp.end_date,srp.send_flag,srp.send_time
+      FROM sys_recipes_plan srp
+      LEFT JOIN sys_order sr ON sr.order_id = srp.order_id
+      LEFT JOIN sys_user su_nutritionist ON su_nutritionist.user_id = sr.nutritionist_id AND su_nutritionist.del_flag = 0
+      LEFT JOIN sys_user su_nutritionist_assis ON su_nutritionist_assis.user_id = sr.nutri_assis_id AND su_nutritionist_assis.del_flag = 0
+      WHERE srp.del_flag = 0
+      <if test="orderId != null">AND srp.order_id = #{orderId}</if>
+      <if test="customer != null and customer != ''">AND sr.customer like concat('%',#{customer},'%')</if>
+      <if test="nutritionistId != null">AND su_nutritionist.user_id = #{nutritionistId}</if>
+      <if test="nutritionistAssisId != null">AND su_nutritionist_assis.user_id = #{nutritionistAssisId}</if>
+      <if test="startDate != null and endDate != null ">AND srp.start_date BETWEEN date_format(#{startDate},'%y%m%d') AND date_format(#{endDate},'%y%m%d') </if>
+      ORDER BY srp.order_id DESC,srp.id ASC
+    </select>
 </mapper>

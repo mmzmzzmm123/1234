@@ -66,4 +66,11 @@ public interface SysOrderPauseMapper
      * @return
      */
     int getCountByOrderIdAndPauseDate(SysOrderPause sysOrderPause);
+
+    /**
+     * 根据订单ID删除暂停记录
+     * @param orderIds
+     * @return
+     */
+    int deletePauseByOrderId(Long[] orderIds);
 }

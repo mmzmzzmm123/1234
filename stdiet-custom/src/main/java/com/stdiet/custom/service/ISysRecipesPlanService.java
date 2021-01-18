@@ -61,10 +61,23 @@ public interface ISysRecipesPlanService
     public int deleteSysRecipesPlanById(Long id);
 
     /**
-     * 根据订单ID生成对应的食谱计划
-     *
+     * 订单发生更新时(开始时间、服务时长、赠送时长)，重新生成食谱计划
      * @param orderId 订单ID
      * @return 结果
      */
-    public void autoGenerateRecipesPlanByOrderId(Long orderId);
+    public void regenerateRecipesPlan(Long orderId);
+
+    /**
+     * 根据订单ID删除所有食谱安排计划
+     * @param orderIds 订单ID
+     * @return
+     */
+    int delRecipesPlanByOrderId(Long[] orderIds);
+
+    /**
+     * 多条件查询食谱计划列表
+     * @param sysRecipesPlan
+     * @return
+     */
+    List<SysRecipesPlan> selectPlanListByCondition(SysRecipesPlan sysRecipesPlan);
 }

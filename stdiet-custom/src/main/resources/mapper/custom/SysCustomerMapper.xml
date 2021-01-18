@@ -213,4 +213,9 @@
         select * from sys_physical_signs sps where FIND_IN_SET(id, #{physical_signs_id})
     </select>
 
+    <!-- 根据手机号查询体征 -->
+    <select id="selectSysCustomerAndSignByPhone" parameterType="String" resultMap="SysCustomerSignResult">
+        <include refid="selectSysCustomerAndSign"/> where sc.del_flag = 0 and sc.phone = #{phone} limit 1
+    </select>
+
 </mapper>

@@ -3,14 +3,7 @@ package com.stdiet.web.controller.custom;
 import java.util.List;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.stdiet.common.annotation.Log;
 import com.stdiet.common.core.controller.BaseController;
 import com.stdiet.common.core.domain.AjaxResult;
@@ -41,8 +34,29 @@ public class SysRecipesPlanController extends BaseController
     public TableDataInfo list(SysRecipesPlan sysRecipesPlan)
     {
         startPage();
-        List<SysRecipesPlan> list = sysRecipesPlanService.selectSysRecipesPlanList(sysRecipesPlan);
+        List<SysRecipesPlan> list = sysRecipesPlanService.selectPlanListByCondition(sysRecipesPlan);
         return getDataTable(list);
+    }
+
+    /**
+     * 获取食谱计划详细信息
+     */
+    @PreAuthorize("@ss.hasPermi('recipes:recipesPlan:query')")
+    @GetMapping(value = "/{id}")
+    public AjaxResult getInfo(@PathVariable("id") Long id)
+    {
+        return AjaxResult.success(sysRecipesPlanService.selectSysRecipesPlanById(id));
+    }
+
+    /**
+     * 修改食谱计划
+     */
+    @PreAuthorize("@ss.hasPermi('recipes:recipesPlan:edit')")
+    @Log(title = "食谱计划", businessType = BusinessType.UPDATE)
+    @PutMapping
+    public AjaxResult edit(@RequestBody SysRecipesPlan sysRecipesPlan)
+    {
+        return toAjax(sysRecipesPlanService.updateSysRecipesPlan(sysRecipesPlan));
     }
 
     /**
@@ -53,7 +67,7 @@ public class SysRecipesPlanController extends BaseController
     @GetMapping("/export")
     public AjaxResult export(SysRecipesPlan sysRecipesPlan)
     {
-        List<SysRecipesPlan> list = sysRecipesPlanService.selectSysRecipesPlanList(sysRecipesPlan);
+        List<SysRecipesPlan> list = sysRecipesPlanService.selectPlanListByCondition(sysRecipesPlan);
         ExcelUtil<SysRecipesPlan> util = new ExcelUtil<SysRecipesPlan>(SysRecipesPlan.class);
         return util.exportExcel(list, "recipesPlan");
     }
