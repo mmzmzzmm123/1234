@@ -51,3 +51,13 @@ export function exportCustomer(query) {
     params: query
   })
 }
+
+// 查询客户信息详细
+export function getCustomerAndSignByPhone(query) {
+  return request({
+    url: '/custom/customer/getCustomerAndSignByPhone',
+    method: 'get',
+    params: query
+  })
+}
+

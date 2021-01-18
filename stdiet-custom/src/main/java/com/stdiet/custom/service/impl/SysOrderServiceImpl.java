@@ -1,16 +1,14 @@
 package com.stdiet.custom.service.impl;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import com.stdiet.common.utils.DateUtils;
-import com.stdiet.custom.domain.SysOrderCommisionDayDetail;
-import com.stdiet.custom.domain.SysOrderPause;
 import com.stdiet.custom.service.ISysCommissionDayService;
 import com.stdiet.custom.service.ISysOrderPauseService;
+import com.stdiet.custom.service.ISysRecipesPlanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.stdiet.custom.mapper.SysOrderMapper;
@@ -32,6 +30,12 @@ public class SysOrderServiceImpl implements ISysOrderService {
 
     @Autowired
     private ISysCommissionDayService sysCommissionDayService;
+
+    @Autowired
+    private ISysRecipesPlanService sysRecipesPlanService;
+
+    @Autowired
+    private ISysOrderPauseService sysOrderPauseService;
 
     /**
      * 查询销售订单
@@ -65,11 +69,16 @@ public class SysOrderServiceImpl implements ISysOrderService {
     public int insertSysOrder(SysOrder sysOrder) {
         Date orderTime = DateUtils.getNowDate();
         sysOrder.setCreateTime(orderTime);
-//        sysOrder.setOrderTime(orderTime);
+        //sysOrder.setOrderTime(orderTime);
         //计算服务到期时间
         setOrderServerEndDate(sysOrder);
         sysOrder.setOrderId(Long.parseLong(DateUtils.parseDateToStr(DateUtils.YYYYMMDDHHMMSS, orderTime)));
-        return sysOrderMapper.insertSysOrder(sysOrder);
+        int row = sysOrderMapper.insertSysOrder(sysOrder);
+        if(row > 0){
+            //异步生成食谱计划
+            sysRecipesPlanService.regenerateRecipesPlan(sysOrder.getOrderId());
+        }
+        return row;
     }
 
     /**
@@ -80,10 +89,40 @@ public class SysOrderServiceImpl implements ISysOrderService {
      */
     @Override
     public int updateSysOrder(SysOrder sysOrder) {
-        sysOrder.setUpdateTime(DateUtils.getNowDate());
+        //获取旧订单对象
+        SysOrder oldSysOrder = sysOrderMapper.selectSysOrderById(sysOrder.getOrderId());
         //计算服务到期时间
         setOrderServerEndDate(sysOrder);
-        return sysOrderMapper.updateSysOrder(sysOrder);
+        sysOrder.setUpdateTime(DateUtils.getNowDate());
+        //更新订单
+        int row = sysOrderMapper.updateSysOrder(sysOrder);
+        if(row > 0){
+            //异步更新食谱计划
+            if(isNeedRegenerateRecipesPlan(oldSysOrder, sysOrder)){
+                sysRecipesPlanService.regenerateRecipesPlan(sysOrder.getOrderId());
+            }
+        }
+        return row;
+    }
+
+    /**
+     * 判断是否需要重新生成食谱计划
+     * @param oldSysOrder
+     * @param newSysOrder
+     * @return
+     */
+    private boolean isNeedRegenerateRecipesPlan(SysOrder oldSysOrder, SysOrder newSysOrder){
+        if(oldSysOrder.getServeTimeId() != null && newSysOrder.getServeTimeId() != null && oldSysOrder.getServeTimeId().intValue() != newSysOrder.getServeTimeId().intValue()){
+            return true;
+        }
+        if(newSysOrder.getGiveServeDay() != null && oldSysOrder.getGiveServeDay() != null && oldSysOrder.getGiveServeDay().intValue() != newSysOrder.getGiveServeDay().intValue()){
+            return true;
+        }
+        if(oldSysOrder.getStartTime() != null && newSysOrder.getStartTime() != null
+                && ChronoUnit.DAYS.between(DateUtils.dateToLocalDate(oldSysOrder.getStartTime()), DateUtils.dateToLocalDate(newSysOrder.getStartTime())) != 0){
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -94,7 +133,11 @@ public class SysOrderServiceImpl implements ISysOrderService {
      */
     @Override
     public int deleteSysOrderByIds(Long[] orderIds) {
-        return sysOrderMapper.deleteSysOrderByIds(orderIds);
+        int row = sysOrderMapper.deleteSysOrderByIds(orderIds);
+        if(row > 0){
+            deletePauseAndPlan(orderIds);
+        }
+        return row;
     }
 
     /**
@@ -105,7 +148,13 @@ public class SysOrderServiceImpl implements ISysOrderService {
      */
     @Override
     public int deleteSysOrderById(Long orderId) {
-        return sysOrderMapper.deleteSysOrderById(orderId);
+        int row = sysOrderMapper.deleteSysOrderById(orderId);
+        if(row > 0){
+            Long[] orderIdArray = new Long[1];
+            orderIdArray[0] = orderId;
+            deletePauseAndPlan(orderIdArray);
+        }
+        return row;
     }
 
     /**
@@ -119,21 +168,27 @@ public class SysOrderServiceImpl implements ISysOrderService {
     }
 
     /**
-     * 根据订单ID更新该订单的服务到期时间
-     * @param orderId
+     * 根据订单ID更新该订单的服务到期时间，异步更新食谱计划
+     * @param orderId  订单ID
+     * @param updatePlan 是否更新食谱
      * @return
      */
     @Override
-    public int updateOrderServerEndDate(Long orderId){
+    public int updateOrderServerEndDate(Long orderId, boolean updatePlan){
+        int row = 0;
         //更新订单服务到期时间
         SysOrder sysOrder = selectSysOrderById(orderId);
         if(sysOrder != null){
             //设置服务到期时间
             setOrderServerEndDate(sysOrder);
             sysOrder.setUpdateTime(new Date());
-            return updateSysOrder(sysOrder);
+            row = updateSysOrder(sysOrder);
+            if(row > 0){
+                //异步更新食谱计划
+                sysRecipesPlanService.regenerateRecipesPlan(sysOrder.getOrderId());
+            }
         }
-        return 0;
+        return row;
     }
 
     /**
@@ -142,5 +197,16 @@ public class SysOrderServiceImpl implements ISysOrderService {
      */
     private void setOrderServerEndDate(SysOrder sysOrder){
         sysOrder.setServerEndTime(DateUtils.localDateToDate(sysCommissionDayService.getServerEndDate(sysOrder)));
+    }
+
+    /**
+     * 删除订单的同时删除暂停记录、食谱计划安排
+     * @param orderIds 订单ID集合
+     */
+    private void deletePauseAndPlan(Long[] orderIds){
+        //删除暂停记录
+        sysOrderPauseService.deletePauseByOrderId(orderIds);
+        //删除食谱计划
+        sysRecipesPlanService.delRecipesPlanByOrderId(orderIds);
     }
 }

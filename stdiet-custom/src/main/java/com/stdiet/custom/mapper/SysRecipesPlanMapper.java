@@ -68,8 +68,15 @@ public interface SysRecipesPlanMapper
 
     /**
      * 根据订单ID删除对应食谱计划
-     * @param orderId
+     * @param orderIds
      * @return
      */
-    int delRecipesPlanByOrderId(Long orderId);
+    int delRecipesPlanByOrderId(Long[] orderIds);
+
+    /**
+     * 多条件查询食谱计划列表
+     * @param sysRecipesPlan
+     * @return
+     */
+    List<SysRecipesPlan> selectPlanListByCondition(SysRecipesPlan sysRecipesPlan);
 }

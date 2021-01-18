@@ -58,3 +58,12 @@ export function getOptions() {
     method: 'get'
   })
 }
+
+// 查询销售订单详细
+export function getInfoDetail(query) {
+  return request({
+    url: '/custom/order/getInfoDetail',
+    method: 'get',
+    params: query
+  })
+}
