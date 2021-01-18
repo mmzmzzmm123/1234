@@ -4,9 +4,9 @@
       :model="queryParams"
       ref="queryForm"
       :inline="true"
-      label-width="68px"
+      label-width="70px"
     >
-      <el-form-item label="类型" prop="type">
+      <el-form-item label="新闻类型" prop="type">
         <el-select
           v-model="queryParams.type"
           placeholder="请选择类型"
@@ -20,6 +20,13 @@
             :value="dict.dictValue"
           />
         </el-select>
+      </el-form-item>
+      <el-form-item label="新闻标题" prop="title">
+        <el-input
+          v-model="queryParams.title"
+          type="text"
+          placeholder="请输入新闻标题"
+        />
       </el-form-item>
       <el-form-item>
         <el-button
@@ -68,7 +75,7 @@
           >删除</el-button
         >
       </el-col>
-      <el-col :span="1.5">
+      <!-- <el-col :span="1.5">
         <el-button
           type="warning"
           icon="el-icon-download"
@@ -77,7 +84,7 @@
           v-hasPermi="['benyi:news:export']"
           >导出</el-button
         >
-      </el-col>
+      </el-col> -->
     </el-row>
 
     <el-table
@@ -86,20 +93,30 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="编号" align="center" prop="id" />
-      <el-table-column label="标题" align="center" prop="title" />
+      <!-- <el-table-column label="编号" align="center" prop="id" /> -->
+      <el-table-column label="新闻标题" align="center" prop="title" />
       <el-table-column
-        label="类型"
+        label="新闻类型"
         align="center"
         prop="type"
         :formatter="typeFormat"
       />
-      <el-table-column label="内容" align="center" prop="content" :show-overflow-tooltip="true">
+      <!-- <el-table-column
+        label="内容"
+        align="center"
+        prop="content"
+        :show-overflow-tooltip="true"
+      >
         <template slot-scope="scope">
-          <div v-html="scope.row.content"></div>
+          <div class="ql-editor" v-html="scope.row.content"></div>
         </template>
-      </el-table-column>
-      <el-table-column label="所属学校" align="center" prop="deptId" :formatter="deptFormat" />
+      </el-table-column> -->
+      <el-table-column
+        label="所属学校"
+        align="center"
+        prop="deptId"
+        :formatter="deptFormat"
+      />
       <el-table-column
         label="是否审核"
         align="center"
@@ -152,14 +169,15 @@
     />
 
     <!-- 添加或修改新闻中心对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="1024px" append-to-body>
+    <el-dialog
+      :title="title"
+      :visible.sync="open"
+      width="1024px"
+      append-to-body
+    >
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
-        <el-form-item label="标题" prop="title">
-          <el-input
-            v-model="form.title"
-            type="textarea"
-            placeholder="请输入内容"
-          />
+        <el-form-item label="新闻标题" prop="title">
+          <el-input v-model="form.title" type="text" placeholder="请输入新闻标题" />
         </el-form-item>
         <!-- <el-form-item label="类型">
           <el-select v-model="form.type" placeholder="请选择类型">
@@ -171,7 +189,7 @@
             ></el-option>
           </el-select>
         </el-form-item> -->
-        <el-form-item label="内容" prop="content">
+        <el-form-item label="内容" class="ql-snow" prop="content">
           <Editor v-model="form.content" placeholder="请输入内容" />
         </el-form-item>
       </el-form>
@@ -194,17 +212,16 @@ import {
 } from "@/api/benyi/news";
 
 import Editor from "@/components/Editor";
-import { listDept, getDept, } from "@/api/system/dept";
-import { listUser, getUser, } from "@/api/system/user";
+import { listDept, getDept } from "@/api/system/dept";
+import { listUser, getUser } from "@/api/system/user";
 
 export default {
   name: "News",
   components: {
-    Editor
+    Editor,
   },
   data() {
     return {
-      
       // 遮罩层
       loading: true,
       // 选中数组
@@ -254,19 +271,15 @@ export default {
       form: {},
       // 表单校验
       rules: {
-        title: [
-          { required: true, message: "标题不能为空", trigger: "blur" },
-        ],
-        content: [
-          { required: true, message: "内容不能为空", trigger: "blur" },
-        ],
+        title: [{ required: true, message: "标题不能为空", trigger: "blur" }],
+        content: [{ required: true, message: "内容不能为空", trigger: "blur" }],
       },
     };
   },
   created() {
     this.getList();
     this.getDeptList();
-    this.getUserList()
+    this.getUserList();
     this.getDicts("sys_dm_newstype").then((response) => {
       this.typeOptions = response.data;
     });
@@ -435,7 +448,7 @@ export default {
     handleDelete(row) {
       const ids = row.id || this.ids;
       this.$confirm(
-        '是否确认删除新闻中心编号为"' + ids + '"的数据项?',
+        '是否确认删除选中的新闻中心数据项?',
         "警告",
         {
           confirmButtonText: "确定",
@@ -452,22 +465,22 @@ export default {
         })
         .catch(function () {});
     },
-    /** 导出按钮操作 */
-    handleExport() {
-      const queryParams = this.queryParams;
-      this.$confirm("是否确认导出所有新闻中心数据项?", "警告", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-      })
-        .then(function () {
-          return exportNews(queryParams);
-        })
-        .then((response) => {
-          this.download(response.msg);
-        })
-        .catch(function () {});
-    },
+    // /** 导出按钮操作 */
+    // handleExport() {
+    //   const queryParams = this.queryParams;
+    //   this.$confirm("是否确认导出所有新闻中心数据项?", "警告", {
+    //     confirmButtonText: "确定",
+    //     cancelButtonText: "取消",
+    //     type: "warning",
+    //   })
+    //     .then(function () {
+    //       return exportNews(queryParams);
+    //     })
+    //     .then((response) => {
+    //       this.download(response.msg);
+    //     })
+    //     .catch(function () {});
+    // },
   },
 };
 </script>

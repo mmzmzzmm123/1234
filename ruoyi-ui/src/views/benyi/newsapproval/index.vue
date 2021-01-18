@@ -6,7 +6,7 @@
       :inline="true"
       label-width="68px"
     >
-      <el-form-item label="类型" prop="type">
+      <el-form-item label="新闻类型" prop="type">
         <el-select
           v-model="queryParams.type"
           placeholder="请选择类型"
@@ -20,6 +20,13 @@
             :value="dict.dictValue"
           />
         </el-select>
+      </el-form-item>
+       <el-form-item label="新闻标题" prop="title">
+        <el-input
+          v-model="queryParams.title"
+          type="text"
+          placeholder="请输入新闻标题"
+        />
       </el-form-item>
       <el-form-item label="是否审核" prop="ischeck">
         <el-select
@@ -69,15 +76,15 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="编号" align="center" prop="id" />
-      <el-table-column label="标题" align="center" prop="title" />
+      <!-- <el-table-column label="编号" align="center" prop="id" /> -->
+      <el-table-column label="新闻标题" align="center" prop="title" />
       <el-table-column
-        label="类型"
+        label="新闻类型"
         align="center"
         prop="type"
         :formatter="typeFormat"
       />
-      <el-table-column
+      <!-- <el-table-column
         label="内容"
         align="center"
         prop="content"
@@ -86,7 +93,7 @@
         <template slot-scope="scope">
           <div v-html="scope.row.content"></div>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column
         label="所属学校"
         align="center"
@@ -152,10 +159,10 @@
       append-to-body
     >
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
-        <el-form-item label="标题" prop="title">
+        <el-form-item label="新闻标题" prop="title">
           <el-input
             v-model="form.title"
-            type="textarea"
+            type="text"
             placeholder="请输入内容"
           />
         </el-form-item>
@@ -383,7 +390,7 @@ export default {
       this.single = selection.length != 1;
       this.multiple = !selection.length;
     },
-    
+
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
@@ -406,11 +413,11 @@ export default {
                 this.getList();
               }
             });
-          } 
+          }
         }
       });
     },
-    
+
     /** 导出按钮操作 */
     handleExport() {
       const queryParams = this.queryParams;

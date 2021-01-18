@@ -29,7 +29,7 @@
         <include refid="selectBySchoolNewsVo"/>
         <where>
             d.isdel = 'N'
-            <if test="title != null  and title != ''">and d.title = #{title}</if>
+            <if test="title != null  and title != ''">and d.title like concat('%', #{title}, '%')</if>
             <if test="imgurl != null  and imgurl != ''">and d.imgurl = #{imgurl}</if>
             <if test="abstractcontent != null  and abstractcontent != ''">and d.abstractcontent = #{abstractcontent}</if>
             <if test="type != null  and type != ''">and d.type = #{type}</if>
