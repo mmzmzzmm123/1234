@@ -50,9 +50,9 @@ public class ByTrainVideoController extends BaseController {
      * 查询培训列表
      */
     @PreAuthorize("@ss.hasPermi('benyi:video:list')")
+    @Log(title = "培训视频", businessType = BusinessType.QUERY)
     @GetMapping("/list")
     public TableDataInfo list(ByTrainVideo byTrainVideo) {
-
         //判断type是否为空
         if (!schoolCommon.isStringEmpty(byTrainVideo.getType())) {
             byTrainVideo.setType(byTrainVideo.getType() + ",");
@@ -98,6 +98,7 @@ public class ByTrainVideoController extends BaseController {
      * 获取培训详细信息
      */
     @PreAuthorize("@ss.hasPermi('benyi:video:query')")
+    @Log(title = "培训视频", businessType = BusinessType.QUERY)
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id) {
         ByTrainVideo byTrainVideo = byTrainVideoService.selectByTrainVideoById(id);
