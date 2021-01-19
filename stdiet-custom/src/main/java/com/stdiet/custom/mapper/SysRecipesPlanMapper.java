@@ -79,4 +79,11 @@ public interface SysRecipesPlanMapper
      * @return
      */
     List<SysRecipesPlan> selectPlanListByCondition(SysRecipesPlan sysRecipesPlan);
+
+    /**
+     * 根据订单ID查询食谱计划
+     * @param sysRecipesPlan
+     * @return
+     */
+    List<SysRecipesPlan> selectPlanListByOrderId(SysRecipesPlan sysRecipesPlan);
 }

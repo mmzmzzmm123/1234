@@ -96,11 +96,11 @@
     </update>
 
     <delete id="deleteSysRecipesPlanById" parameterType="Long">
-        update sys_recipes_plan set del_flag = 1 where id = #{id}
+        delete from sys_recipes_plan where id = #{id}
     </delete>
 
     <delete id="deleteSysRecipesPlanByIds" parameterType="String">
-        update sys_recipes_plan set del_flag = 1 where id in
+        delete from sys_recipes_plan where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
@@ -118,7 +118,7 @@
 
     <!-- 根据订单ID删除对应食谱计划 -->
     <update id="delRecipesPlanByOrderId" parameterType="String">
-      update sys_recipes_plan set del_flag = 1 where order_id in
+      delete from sys_recipes_plan where order_id in
       <foreach item="orderId" collection="array" open="(" separator="," close=")">
             #{orderId}
       </foreach>
@@ -133,10 +133,38 @@
       LEFT JOIN sys_user su_nutritionist_assis ON su_nutritionist_assis.user_id = sr.nutri_assis_id AND su_nutritionist_assis.del_flag = 0
       WHERE srp.del_flag = 0
       <if test="orderId != null">AND srp.order_id = #{orderId}</if>
-      <if test="customer != null and customer != ''">AND sr.customer like concat('%',#{customer},'%')</if>
+        <if test="sendFlag != null">AND srp.send_flag = #{sendFlag}</if>
+      <if test="customer != null and customer != ''">AND (sr.customer like concat('%',#{customer},'%') OR sr.phone like concat('%',#{customer},'%'))</if>
       <if test="nutritionistId != null">AND su_nutritionist.user_id = #{nutritionistId}</if>
       <if test="nutritionistAssisId != null">AND su_nutritionist_assis.user_id = #{nutritionistAssisId}</if>
       <if test="startDate != null and endDate != null ">AND srp.start_date BETWEEN date_format(#{startDate},'%y%m%d') AND date_format(#{endDate},'%y%m%d') </if>
       ORDER BY srp.order_id DESC,srp.id ASC
+    </select>
+    <!-- 食谱计划、订单表联查 -->
+    <!--<select id="selectPlanListByCondition" parameterType="SysRecipesPlan" resultMap="SysRecipesPlanResult">
+        SELECT sr.order_id,sr.customer,sr.phone,su_nutritionist.nick_name nutritionist,su_nutritionist_assis.nick_name AS nutritionist_assis,sr.start_time,sr.server_end_time
+        FROM sys_order sr
+        LEFT JOIN sys_user su_nutritionist ON su_nutritionist.user_id = sr.nutritionist_id AND su_nutritionist.del_flag = 0
+        LEFT JOIN sys_user su_nutritionist_assis ON su_nutritionist_assis.user_id = sr.nutri_assis_id AND su_nutritionist_assis.del_flag = 0
+        <where>
+            <if test="orderId != null">AND sr.order_id = #{orderId}</if>
+            <if test="customer != null and customer != ''">AND (sr.customer like concat('%',#{customer},'%') OR sr.phone like concat('%',#{customer},'%'))</if>
+            <if test="nutritionistId != null">AND su_nutritionist.user_id = #{nutritionistId}</if>
+            <if test="nutritionistAssisId != null">AND su_nutritionist_assis.user_id = #{nutritionistAssisId}</if>
+            <if test="startDate != null and endDate != null ">
+                AND sr.order_id IN ( SELECT order_id FROM sys_recipes_plan srp WHERE srp.del_flag = 0 AND srp.start_date BETWEEN date_format(#{startDate},'%y%m%d') AND date_format(#{endDate},'%y%m%d'))
+            </if>
+        </where>
+        ORDER BY sr.order_id DESC
+    </select>-->
+
+    <!-- 根据订单ID查询食谱计划 -->
+    <select id="selectPlanListByOrderId" parameterType="SysRecipesPlan" resultMap="SysRecipesPlanResult">
+      SELECT srp.id,srp.order_id,sr.customer,sr.phone, srp.start_date,srp.end_date,srp.send_flag,srp.send_time
+      FROM sys_recipes_plan srp
+      LEFT JOIN sys_order sr ON sr.order_id = srp.order_id
+      WHERE srp.del_flag = 0 AND srp.order_id = #{orderId}
+      <if test="sendFlag != null">AND srp.send_flag = #{sendFlag}</if>
+      ORDER BY srp.id ASC
     </select>
 </mapper>

@@ -29,6 +29,7 @@ public class SysRecipesPlan extends BaseEntity
     private String customer;
 
     //非持久化字段，客户手机号
+    @Excel(name = "客户手机号")
     private String phone;
 
     /** 食谱开始日期 */

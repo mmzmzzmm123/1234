@@ -123,6 +123,7 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
                 }
                 commissionMonthSet.addAll(sysOrderCommisionDayDetail.getEveryYearMonthServerMoney().keySet());
             }
+            //System.out.println("总提成："+sysCommissionDayDetail.getNickName()+"-"+orderAmount.get("20211"));
             //获取提成比例以及计算提成
             Map<String, Float> rateMap = getRateByAmount(sysCommissionDayDetail.getUserId(), sysCommissionDayDetail.getPostId(), orderAmount);
 
@@ -225,10 +226,10 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
         //整理出每个用户对应的订单List
         Map<Long, List<SysOrderCommisionDayDetail>> userOrderResultMap = new HashMap<>();
         for (SysOrder sysOrder : orderList) {
-            //建档时间为空、售后人员ID为空、营养师ID为空、订单金额为空或小于0，都视为异常订单
+            //开始时间为空、售后人员ID为空、营养师ID都为空、订单金额为空，都视为异常订单
             if(sysOrder.getOrderTime() == null || sysOrder.getStartTime() == null || sysOrder.getServeTimeId() == null
                     || (sysOrder.getAfterSaleId() == null && sysOrder.getNutritionistId() == null)
-                    || sysOrder.getAmount() == null || sysOrder.getAmount().doubleValue() < 0){
+                    || sysOrder.getAmount() == null){
                 //System.out.println("客户："+ sysOrder.getCustomer() +",营养师："+sysOrder.getNutritionist() + ",售后" + sysOrder.getAfterSale());
                 continue;
             }
@@ -436,7 +437,7 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
      * double转为BigDecimal，保留一位小数，向下舍去
      * */
     public BigDecimal getMoney(Double money, int n){
-        return new BigDecimal(money).setScale(n, BigDecimal.ROUND_HALF_UP);
+        return new BigDecimal(money.toString()).setScale(n, BigDecimal.ROUND_DOWN);
     }
 
     /**
@@ -459,7 +460,7 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
         nf.setRoundingMode(RoundingMode.DOWN);
         System.out.println(Double.parseDouble(nf.format(s)));
         System.out.println( new BigDecimal(nf.format(s)).doubleValue());*/
-        System.out.println(new BigDecimal(s).setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue());
+        /*System.out.println(new BigDecimal(s).setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue());
 
         LocalDate localDate = LocalDate.of(2020, 1, 15);
         System.out.println(ChronoUnit.MONTHS.between(localDate, LocalDate.now()));
@@ -467,6 +468,14 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
         System.out.println(localDate.getDayOfWeek());
         System.out.println(localDate.getDayOfYear());
 
-        System.out.println(ChronoUnit.DAYS.between(LocalDate.of(2021, 1,14), LocalDate.now()));
+        System.out.println(ChronoUnit.DAYS.between(LocalDate.of(2021, 1,14), LocalDate.now()));*/
+
+        /*System.out.println(ts(109792.8 * 6 / 100D, 1));
+        System.out.println(ts(6587.8,2).doubleValue());*/
+        System.out.println(ts(1.919,1).doubleValue());
+    }
+
+    public static BigDecimal ts(Double money, int n){
+        return new BigDecimal(money.toString()).setScale(n, BigDecimal.ROUND_DOWN);
     }
 }

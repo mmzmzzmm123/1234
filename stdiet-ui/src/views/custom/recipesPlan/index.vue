@@ -1,15 +1,15 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" >
-      <el-form-item label="客户姓名" prop="customer">
+      <el-form-item label="客户信息" prop="customer">
         <el-input
           v-model="queryParams.customer"
-          placeholder="请输入客户姓名"
+          placeholder="请输入客户姓名或手机号"
           clearable
           size="small"
         />
       </el-form-item>
-      <el-form-item label="食谱开始日期范围" prop="planStartDateScope" label-width="150px">
+      <el-form-item label="食谱开始日期范围" prop="planStartDateScope" label-width="130px">
         <el-date-picker
           v-model="planStartDateScope"
           type="daterange"
@@ -17,16 +17,36 @@
           start-placeholder="开始日期"
           end-placeholder="结束日期">
         </el-date-picker>
-
       </el-form-item>
-
+      <el-form-item label="营养师" prop="nutritionistId">
+        <el-select v-model="queryParams.nutritionistId" placeholder="请选择营养师" clearable size="small">
+          <el-option
+            v-for="dict in nutritionistIdOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="营养师助理" prop="nutritionistAssisId">
+        <el-select v-model="queryParams.nutritionistAssisId" placeholder="请选择营养师助理" clearable size="small">
+          <el-option
+            v-for="dict in nutriAssisIdOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item>
         <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
-
-    <el-row :gutter="10" class="mb8">
+    <div><span style="color:#E6A23C;font-family:PingFang SC">
+          注意事项：
+          <br/>1、2021年1月开始的订单才会自动生成食谱计划</span></div>
+    <el-row :gutter="10" class="mb8" style="margin-top:10px;">
       <el-col :span="1.5">
         <el-button
           type="success"
@@ -46,12 +66,14 @@
           v-hasPermi="['recipes:recipesPlan:export']"
         >导出</el-button>
       </el-col>
+      <!--<div><span style="margin-left:10px;font-size:16px;color:#E6A23C;font-family:PingFang SC">备注：2021年1月开始的订单才会自动生成食谱计划</span></div>-->
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="recipesPlanList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="客户姓名" align="center" prop="customer" />
+      <el-table-column label="客户手机号" align="center" prop="phone" />
       <el-table-column label="食谱日期范围" align="center" prop="scopeDate" width="200"/>
       <el-table-column label="营养师" align="center" prop="nutritionist" />
       <el-table-column label="营养师助理" align="center" prop="nutritionistAssis" />
@@ -139,6 +161,19 @@
 
     <!-- 查看完整计划 -->
     <el-dialog title="食谱计划表" v-if="allRecipesPlanOpen" :visible.sync="allRecipesPlanOpen" width="800px" append-to-body>
+      <el-form :model="allRecipesPlanQueryParam" ref="allPlanQueryFrom" :inline="true">
+        <el-form-item label="发送状态" prop="sendFlag">
+          <el-select v-model="allRecipesPlanQueryParam.sendFlag" placeholder="请选择">
+            <el-option label="全部" :value="null" />
+            <el-option label="未发送" :value="parseInt('0')" />
+            <el-option label="已发送" :value="parseInt('1')" />
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="cyan" icon="el-icon-search" size="mini" @click="getAllPlanByOrderId()">搜索</el-button>
+        </el-form-item>
+      </el-form>
+
       <el-table v-loading="loading" :data="allRecipesPlanList" width="700px">
         <el-table-column label="客户姓名" align="center" prop="customer" />
         <!--<el-table-column label="营养师名称" align="center" prop="nutritionist" />
@@ -171,9 +206,9 @@
         :limit.sync="allRecipesPlanQueryParam.pageSize"
         @pagination="getAllPlanByOrderId"
       />
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="allRecipesPlanOpen = false">取 消</el-button>
-      </div>
+      <!--<div slot="footer" class="dialog-footer">
+        <el-button @click="allRecipesPlanOpen = false">关 闭</el-button>
+      </div>-->
     </el-dialog>
 
 
@@ -292,9 +327,9 @@
         <el-table-column label="减脂遇到的困难" align="center" prop="sign.difficulty" ></el-table-column>
         <el-table-column label="备注" align="center" prop="sign.comments"></el-table-column>
       </el-table>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="customerOpen = false">取 消</el-button>
-      </div>
+      <!--<div slot="footer" class="dialog-footer">
+        <el-button @click="customerOpen = false">关 闭</el-button>
+      </div>-->
     </el-dialog>
 
     <!-- 查看订单 -->
@@ -376,9 +411,9 @@
         </el-table-column>
         <el-table-column label="备注" align="center" prop="remark"/>
       </el-table>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="orderDetailOpen = false">取 消</el-button>
-      </div>
+      <!--<div slot="footer" class="dialog-footer">
+        <el-button @click="orderDetailOpen = false">关 闭</el-button>
+      </div>-->
     </el-dialog>
   </div>
 </template>
@@ -386,10 +421,12 @@
 <script>
   import { listRecipesPlan, getRecipesPlan, updateRecipesPlan,exportRecipesPlan } from "@/api/custom/recipesPlan";
   import { getCustomerAndSignByPhone } from "@/api/custom/customer";
-  import {getInfoDetail} from "@/api/custom/order";
+  import {getInfoDetail,getOptions} from "@/api/custom/order";
   import dayjs from 'dayjs';
+  import store from "@/store";
   const nextDate = dayjs().add(1, 'day').format("YYYY-MM-DD");
   const weekDate = dayjs().add(6, 'day').format("YYYY-MM-DD");
+  const userId = store.getters && store.getters.userId;
   export default {
     name: "recipesPlan",
     data() {
@@ -418,7 +455,9 @@
           pageSize: 10,
           customer: null,
           startDate: null,
-          endDate: null
+          endDate: null,
+          nutritionistId: null,
+          nutritionistAssisId: null
         },
         // 表单参数
         form: {},
@@ -439,18 +478,42 @@
         allRecipesPlanQueryParam: {
           pageNum: 1,
           pageSize: 10,
-          orderId: null
+          orderId: null,
+          sendFlag: 0
         },
         //订单弹窗中列表数据的总条数
         allRecipesPlanTotal: 0,
         //订单详情数据
         orderDetailList:[],
         //订单详情弹窗
-        orderDetailOpen:false
+        orderDetailOpen:false,
+        //营养师
+        nutritionistIdOptions:[],
+        //营养师助理
+        nutriAssisIdOptions:[]
       };
     },
     created() {
-      this.getList();
+      getOptions().then(response => {
+        const options = response.data.reduce((opts, cur) => {
+          if (!opts[cur.postCode]) {
+            opts[cur.postCode] = [{dictValue: null, dictLabel: '全部', remark: null}];
+          }
+          opts[cur.postCode].push({dictValue: cur.userId, dictLabel: cur.userName, remark: cur.remark})
+          return opts;
+        }, {})
+        this.nutritionistIdOptions = options['nutri'] || [];
+        this.nutriAssisIdOptions = options['nutri_assis'] || [];
+        const defaultNutritionist = this.nutritionistIdOptions.find(opt => opt.dictValue == userId);
+        const defaultNutriAssisId = this.nutriAssisIdOptions.find(opt => opt.dictValue == userId);
+        if(defaultNutritionist){
+           this.queryParams.nutritionistId = userId;
+        }
+        if(defaultNutriAssisId){
+          this.queryParams.nutritionistAssisId = userId;
+        }
+        this.getList();
+      })
     },
     methods: {
       /** 查询食谱计划列表 */
@@ -490,6 +553,11 @@
         });
       },
       getAllPlanByOrderId(){
+        //console.log(this.allRecipesPlanQueryParam.sendFlag);
+        //console.log(this.allRecipesPlanQueryParam.sendFlag === "");
+        if(this.allRecipesPlanQueryParam.sendFlag === ""){
+          this.allRecipesPlanQueryParam.sendFlag = null;
+        }
         listRecipesPlan(this.allRecipesPlanQueryParam).then(response => {
             this.allRecipesPlanList = response.rows;
             this.allRecipesPlanList.forEach(function(item, index){
