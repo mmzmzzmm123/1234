@@ -10,6 +10,15 @@ import com.ruoyi.project.system.domain.SysUser;
  */
 public interface ISysUserService
 {
+
+    /**
+     * 通过角色ID查询角色使用数量
+     *
+     * @param roleId 角色ID
+     * @return 结果
+     */
+    public int countUserSchoolAdminRoleByDeptId(Long deptId,Long roleId);
+
     /**
      * 根据条件分页查询用户列表
      * 

@@ -184,6 +184,23 @@ public class SysUserController extends BaseController {
         } else if (UserConstants.NOT_UNIQUE.equals(userService.checkEmailUnique(user))) {
             return AjaxResult.error("新增用户'" + user.getUserName() + "'失败，邮箱账号已存在");
         }
+
+        //判断当前学校有多少个幼儿园管理员 需求至多3个幼儿园管理员
+        Long[] roleIds = user.getRoleIds();
+        int iCount = 0;
+        if (roleIds.length > 0) {
+            System.out.println(roleIds.length);
+            for (int i = 0; i < roleIds.length; i++) {
+                if (roleIds[i] == 100) {
+                    iCount = userService.countUserSchoolAdminRoleByDeptId(user.getDeptId(), roleIds[i]);
+                    if (iCount >= 3) {
+                        return AjaxResult.error("新增用户'" + user.getUserName() + "'失败，当前学校管理员角色最多设置3人");
+                    }
+                }
+            }
+        }
+
+
         user.setPhonenumber(user.getUserName());
         user.setEmail(user.getUserName() + "@benyi.com");
         user.setCreateBy(SecurityUtils.getUsername());
@@ -215,6 +232,36 @@ public class SysUserController extends BaseController {
         } else if (UserConstants.NOT_UNIQUE.equals(userService.checkEmailUnique(user))) {
             return AjaxResult.error("修改用户'" + user.getUserName() + "'失败，邮箱账号已存在");
         }
+
+        //先判断前端的roleids是否有变化
+        boolean isPd=true;
+        if (schoolCommon.isSchool() == true) {
+            List<Integer> roleIdsOld = roleService.selectYeyRoleListByUserId(user.getUserId());
+            if(roleIdsOld!=null&&roleIdsOld.size()>0){
+                for (int i=0;i<roleIdsOld.size();i++){
+                    if(roleIdsOld.get(i)==100){
+                        isPd=false;
+                    }
+                }
+            }
+        }
+        if(isPd){
+            //判断当前学校有多少个幼儿园管理员 需求至多3个幼儿园管理员
+            Long[] roleIds = user.getRoleIds();
+            int iCount = 0;
+            if (roleIds.length > 0) {
+                System.out.println(roleIds.length);
+                for (int i = 0; i < roleIds.length; i++) {
+                    if (roleIds[i] == 100) {
+                        iCount = userService.countUserSchoolAdminRoleByDeptId(user.getDeptId(), roleIds[i]);
+                        if (iCount >= 3) {
+                            return AjaxResult.error("用户'" + user.getUserName() + "'修改失败，当前学校管理员角色最多设置3人");
+                        }
+                    }
+                }
+            }
+        }
+
         user.setUpdateBy(SecurityUtils.getUsername());
         return toAjax(userService.updateUser(user));
     }
