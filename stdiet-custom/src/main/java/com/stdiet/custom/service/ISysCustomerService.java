@@ -93,4 +93,11 @@ public interface ISysCustomerService
     SysCustomer getCustomerAndSignById(Long id);
 
     int delCustomerAndSignById(Long[] ids);
+
+    /**
+     * 根据手机号查询客户以及体征
+     * @param phone
+     * @return
+     */
+    SysCustomer selectSysCustomerAndSignByPhone(String phone);
 }

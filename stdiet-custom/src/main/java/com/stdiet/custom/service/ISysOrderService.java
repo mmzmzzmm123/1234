@@ -69,9 +69,10 @@ public interface ISysOrderService
     public BigDecimal selectAllOrderAmount(SysOrder sysOrder);
 
     /**
-     * 根据订单ID更新该订单的服务到期时间
-     * @param orderId
+     * 根据订单ID更新该订单的服务到期时间，异步更新食谱计划
+     * @param orderId  订单ID
+     * @param updatePlan 是否更新食谱
      * @return
      */
-    int updateOrderServerEndDate(Long orderId);
+    int updateOrderServerEndDate(Long orderId, boolean updatePlan);
 }

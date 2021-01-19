@@ -7,6 +7,7 @@ import com.stdiet.common.utils.DateUtils;
 import com.stdiet.custom.domain.SysOrder;
 import com.stdiet.custom.service.ISysCommissionDayService;
 import com.stdiet.custom.service.ISysOrderService;
+import com.stdiet.custom.service.ISysRecipesPlanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.stdiet.custom.mapper.SysOrderPauseMapper;
@@ -26,9 +27,6 @@ public class SysOrderPauseServiceImpl implements ISysOrderPauseService
 {
     @Autowired
     private SysOrderPauseMapper sysOrderPauseMapper;
-
-    @Autowired
-    private ISysCommissionDayService sysCommissionDayService;
 
     @Autowired
     private ISysOrderService sysOrderService;
@@ -69,7 +67,7 @@ public class SysOrderPauseServiceImpl implements ISysOrderPauseService
         sysOrderPause.setCreateTime(DateUtils.getNowDate());
         if(sysOrderPauseMapper.insertSysOrderPause(sysOrderPause) > 0){
             //修改订单服务到期时间
-            return sysOrderService.updateOrderServerEndDate(sysOrderPause.getOrderId());
+            return sysOrderService.updateOrderServerEndDate(sysOrderPause.getOrderId(), true);
         }
         return 0;
     }
@@ -85,7 +83,7 @@ public class SysOrderPauseServiceImpl implements ISysOrderPauseService
     {
         sysOrderPause.setUpdateTime(DateUtils.getNowDate());
         if(sysOrderPauseMapper.updateSysOrderPause(sysOrderPause) > 0){
-            return sysOrderService.updateOrderServerEndDate(sysOrderPause.getOrderId());
+            return sysOrderService.updateOrderServerEndDate(sysOrderPause.getOrderId(), true);
         }
         return 0;
     }
@@ -101,7 +99,7 @@ public class SysOrderPauseServiceImpl implements ISysOrderPauseService
     {
         SysOrderPause sysOrderPause = selectSysOrderPauseById(ids[0]);
         if(sysOrderPause != null && sysOrderPauseMapper.deleteSysOrderPauseByIds(ids) > 0){
-            return sysOrderService.updateOrderServerEndDate(sysOrderPause.getOrderId());
+            return sysOrderService.updateOrderServerEndDate(sysOrderPause.getOrderId(), true);
         }
         return 0;
     }
@@ -117,7 +115,7 @@ public class SysOrderPauseServiceImpl implements ISysOrderPauseService
     {
         SysOrderPause sysOrderPause = selectSysOrderPauseById(id);
         if(sysOrderPause != null && sysOrderPauseMapper.deleteSysOrderPauseById(id) > 0){
-            return sysOrderService.updateOrderServerEndDate(sysOrderPause.getOrderId());
+            return sysOrderService.updateOrderServerEndDate(sysOrderPause.getOrderId(), true);
         }
         return 0;
     }
@@ -127,7 +125,18 @@ public class SysOrderPauseServiceImpl implements ISysOrderPauseService
      * @param sysOrderPause
      * @return
      */
+    @Override
     public int getCountByOrderIdAndPauseDate(SysOrderPause sysOrderPause){
         return sysOrderPauseMapper.getCountByOrderIdAndPauseDate(sysOrderPause);
+    }
+
+    /**
+     * 根据订单ID删除暂停记录
+     * @param orderIds
+     * @return
+     */
+    @Override
+    public int deletePauseByOrderId(Long[] orderIds){
+        return sysOrderPauseMapper.deletePauseByOrderId(orderIds);
     }
 }

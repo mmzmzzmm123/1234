@@ -178,4 +178,14 @@ public class SysCustomerServiceImpl implements ISysCustomerService
         }
         return 0;
     }
+
+    /**
+     * 根据手机号查询客户以及体征
+     * @param phone
+     * @return
+     */
+    @Override
+    public SysCustomer selectSysCustomerAndSignByPhone(String phone){
+        return sysCustomerMapper.selectSysCustomerAndSignByPhone(phone);
+    }
 }

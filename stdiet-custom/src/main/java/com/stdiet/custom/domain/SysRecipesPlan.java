@@ -21,8 +21,15 @@ public class SysRecipesPlan extends BaseEntity
     private Long id;
 
     /** 订单ID */
-    @Excel(name = "订单ID")
+    //@Excel(name = "订单ID")
     private Long orderId;
+
+    //非持久化字段，客户姓名
+    @Excel(name = "客户姓名")
+    private String customer;
+
+    //非持久化字段，客户手机号
+    private String phone;
 
     /** 食谱开始日期 */
     @JsonFormat(pattern = "yyyy-MM-dd")
@@ -34,12 +41,34 @@ public class SysRecipesPlan extends BaseEntity
     @Excel(name = "食谱结束日期", width = 30, dateFormat = "yyyy-MM-dd")
     private Date endDate;
 
+    //非持久化字段，服务开始时间
+    //@Excel(name = "服务开始时间", dateFormat = "yyyy-MM-dd")
+    private Date orderStartDate;
+
+    //非持久化字段，服务结束时间
+    //@Excel(name = "服务结束时间", dateFormat = "yyyy-MM-dd")
+    private Date orderEndDate;
+
+    //非持久化字段，营养师ID
+    private Long nutritionistId;
+
+    //非持久化字段，营养师姓名
+    @Excel(name = "营养师")
+    private String nutritionist;
+
+    //非持久化字段，营养师助理ID
+    private Long nutritionistAssisId;
+
+    //非持久化字段，营养师助理姓名
+    @Excel(name = "营养师助理")
+    private String nutritionistAssis;
+
     /** 食谱ID */
-    @Excel(name = "食谱ID")
+    //@Excel(name = "食谱ID")
     private Long recipesId;
 
     /** 食谱是否发送，0未发送 1已发送 */
-    @Excel(name = "食谱是否发送，0未发送 1已发送")
+    @Excel(name = "食谱是否发送", readConverterExp="0=未发送,1=已发送")
     private Integer sendFlag;
 
     /** 食谱发送时间 */
@@ -121,6 +150,70 @@ public class SysRecipesPlan extends BaseEntity
     public Integer getDelFlag()
     {
         return delFlag;
+    }
+
+    public String getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(String customer) {
+        this.customer = customer;
+    }
+
+    public Long getNutritionistId() {
+        return nutritionistId;
+    }
+
+    public void setNutritionistId(Long nutritionistId) {
+        this.nutritionistId = nutritionistId;
+    }
+
+    public String getNutritionist() {
+        return nutritionist;
+    }
+
+    public void setNutritionist(String nutritionist) {
+        this.nutritionist = nutritionist;
+    }
+
+    public Long getNutritionistAssisId() {
+        return nutritionistAssisId;
+    }
+
+    public void setNutritionistAssisId(Long nutritionistAssisId) {
+        this.nutritionistAssisId = nutritionistAssisId;
+    }
+
+    public String getNutritionistAssis() {
+        return nutritionistAssis;
+    }
+
+    public void setNutritionistAssis(String nutritionistAssis) {
+        this.nutritionistAssis = nutritionistAssis;
+    }
+
+    public Date getOrderStartDate() {
+        return orderStartDate;
+    }
+
+    public void setOrderStartDate(Date orderStartDate) {
+        this.orderStartDate = orderStartDate;
+    }
+
+    public Date getOrderEndDate() {
+        return orderEndDate;
+    }
+
+    public void setOrderEndDate(Date orderEndDate) {
+        this.orderEndDate = orderEndDate;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     @Override
