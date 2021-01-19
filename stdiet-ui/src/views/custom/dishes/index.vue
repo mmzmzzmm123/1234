@@ -477,6 +477,7 @@
         const id = row.id || this.ids
         getDishes(id).then(response => {
           this.form = response.data;
+          this.form.type = this.form.type.split(',');
           this.form.igdList.forEach(obj => {
             this.selIngIds.push(obj.id);
             this.selIngList.push({
