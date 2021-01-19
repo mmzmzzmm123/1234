@@ -11,7 +11,7 @@
         />
       </el-form-item>
       <el-form-item label="菜品类型" prop="type">
-        <el-select v-model="queryParams.type" multiple placeholder="请选择菜品类型" clearable size="small">
+        <el-select v-model="queryParams.type" placeholder="请选择菜品类型" clearable size="small">
           <el-option
             v-for="dict in typeOptions"
             :key="dict.dictValue"
@@ -75,7 +75,11 @@
         </template>
       </el-table-column>
       <el-table-column label="菜品名称" align="center" prop="name"/>
-      <el-table-column label="菜品类型" align="center" prop="type" :formatter="typeFormat"/>
+      <el-table-column label="菜品类型" align="center" prop="type" >
+        <template slot-scope="scope">
+          <autohideinfo :data="typeFormat(scope.row)"/>
+        </template>
+      </el-table-column>
       <el-table-column label="包含食材" align="center">
         <template slot-scope="scope">
           <div v-for="igd in scope.row.igdList"
@@ -133,7 +137,7 @@
             <el-input v-model="form.name" placeholder="请输入菜品名称"/>
           </el-form-item>
           <el-form-item label="菜品类型" prop="type">
-            <el-select v-model="form.type" placeholder="请选择菜品类型">
+            <el-select v-model="form.type" placeholder="请选择菜品类型" multiple>
               <el-option
                 v-for="dict in typeOptions"
                 :key="dict.dictValue"
@@ -402,7 +406,7 @@
       },
       // 菜品类型字典翻译
       typeFormat(row, column) {
-        return this.selectDictLabel(this.typeOptions, row.type);
+        return !row.type ? '' : row.type.split(',').map(type => this.selectDictLabel(this.typeOptions, type));
       },
       cusUnitFormat(row, column) {
         return this.selectDictLabel(this.cusUnitOptions, row.type);
@@ -421,7 +425,7 @@
         this.form = {
           id: null,
           name: null,
-          type: null,
+          type: [],
           methods: null,
           createBy: null,
           createTime: null,
@@ -516,6 +520,7 @@
         this.$refs["form"].validate(valid => {
           if (valid) {
             this.form.igdList = this.selTableData;
+            this.form.type = this.form.type.join(',');
             if (this.form.id != null) {
               updateDishes(this.form).then(response => {
                 if (response.code === 200) {
@@ -624,7 +629,7 @@
         const {columns, data} = param;
         return columns.reduce((arr, cur, idx) => {
           if (idx > 1) {
-            if(idx === 6) {
+            if (idx === 6) {
               // 备注
               return arr;
             }

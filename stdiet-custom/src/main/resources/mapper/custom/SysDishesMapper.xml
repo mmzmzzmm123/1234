@@ -39,7 +39,7 @@
         <include refid="selectSysDishesVo"/>
         <where>
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
-            <if test="type != null  and type != ''"> and type = #{type}</if>
+            <if test="type != null  and type != ''"> and FIND_IN_SET(#{type}, type)</if>
             <if test="reviewStatus != null  and type != ''"> and review_status = #{reviewStatus}</if>
         </where>
     </select>
