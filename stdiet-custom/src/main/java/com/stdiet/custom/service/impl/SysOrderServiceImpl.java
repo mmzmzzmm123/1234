@@ -1,6 +1,7 @@
 package com.stdiet.custom.service.impl;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
@@ -196,7 +197,8 @@ public class SysOrderServiceImpl implements ISysOrderService {
      * @param sysOrder
      */
     private void setOrderServerEndDate(SysOrder sysOrder){
-        sysOrder.setServerEndTime(DateUtils.localDateToDate(sysCommissionDayService.getServerEndDate(sysOrder)));
+        LocalDate serverEndDate = sysCommissionDayService.getServerEndDate(sysOrder);
+        sysOrder.setServerEndTime(serverEndDate != null ? DateUtils.localDateToDate(serverEndDate) : null);
     }
 
     /**

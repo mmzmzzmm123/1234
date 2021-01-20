@@ -34,8 +34,10 @@
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
-
-    <el-row :gutter="10" class="mb8">
+    <div><span style="color:#E6A23C;font-family:PingFang SC">
+          注意事项：
+          <br/>1、2021年1月开始的订单才开始按天计算提成</span></div>
+    <el-row :gutter="10" class="mb8" style="margin-top:10px;">
       <el-col :span="1.5">
         <el-button
           type="warning"

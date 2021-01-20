@@ -133,10 +133,11 @@ public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService
             return;
         }
         SysOrder sysOrder = sysOrderService.selectSysOrderById(orderId);
-        //订单为空、金额小于0不进行食谱生成、更新
-        if(sysOrder == null){
+        //订单为空、金额小于0不进行食谱生成、更新，只对2021年开始的订单进行食谱计划生成
+        if(sysOrder == null && DateUtils.dateToLocalDate(sysOrder.getOrderTime()).getYear() > 2020){
             return;
         }
+        System.out.println(DateUtils.dateToLocalDate(sysOrder.getOrderTime()).getYear());
         try{
             //获取redis中该订单对应的锁
             if(synchrolockUtil.lock(String.format(generateRecipesPlanLockKey, orderId))){
@@ -280,5 +281,15 @@ public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService
     @Override
     public List<SysRecipesPlan> selectPlanListByCondition(SysRecipesPlan sysRecipesPlan){
         return sysRecipesPlanMapper.selectPlanListByCondition(sysRecipesPlan);
+    }
+
+    /**
+     * 根据订单ID查询食谱计划
+     * @param sysRecipesPlan
+     * @return
+     */
+    @Override
+    public List<SysRecipesPlan> selectPlanListByOrderId(SysRecipesPlan sysRecipesPlan){
+        return sysRecipesPlanMapper.selectPlanListByOrderId(sysRecipesPlan);
     }
 }

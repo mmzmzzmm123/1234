@@ -39,6 +39,18 @@ public class SysRecipesPlanController extends BaseController
     }
 
     /**
+     * 根据订单查询完整食谱计划列表
+     */
+    @PreAuthorize("@ss.hasPermi('recipes:recipesPlan:list')")
+    @GetMapping("/getAllPlanByOrderId")
+    public TableDataInfo getAllPlanByOrderId(SysRecipesPlan sysRecipesPlan)
+    {
+        startPage();
+        List<SysRecipesPlan> list = sysRecipesPlanService.selectPlanListByOrderId(sysRecipesPlan);
+        return getDataTable(list);
+    }
+
+    /**
      * 获取食谱计划详细信息
      */
     @PreAuthorize("@ss.hasPermi('recipes:recipesPlan:query')")
