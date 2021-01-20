@@ -147,7 +147,7 @@ export const constantRoutes = [
     path: '/question',
     component: (resolve) => require(['@/views/custom/investigate/questionnaire'], resolve),
     hidden: true,
-    meta: { title: '营养体征调查表'}
+    meta: { title: '营养体征调查问卷'}
 }
 ]
 
