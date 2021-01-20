@@ -37,6 +37,9 @@ public class SysCommissionDayDetail extends BaseEntity {
     @Excel(name = "未发放提成")
     private BigDecimal totalNotSentCommissionAmount;
 
+    @Excel(name = "下月应发提成")
+    private BigDecimal nextMonthCommission;
+
     private List<Map<String, Object>> sendDetailList;
 
     public Long getUserId() {
@@ -109,5 +112,13 @@ public class SysCommissionDayDetail extends BaseEntity {
 
     public void setSendDetailList(List<Map<String, Object>> sendDetailList) {
         this.sendDetailList = sendDetailList;
+    }
+
+    public BigDecimal getNextMonthCommission() {
+        return nextMonthCommission;
+    }
+
+    public void setNextMonthCommission(BigDecimal nextMonthCommission) {
+        this.nextMonthCommission = nextMonthCommission;
     }
 }

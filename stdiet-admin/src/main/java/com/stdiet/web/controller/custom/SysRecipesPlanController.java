@@ -1,6 +1,8 @@
 package com.stdiet.web.controller.custom;
 
 import java.util.List;
+
+import com.stdiet.common.utils.StringUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -35,6 +37,11 @@ public class SysRecipesPlanController extends BaseController
     {
         startPage();
         List<SysRecipesPlan> list = sysRecipesPlanService.selectPlanListByCondition(sysRecipesPlan);
+        for(SysRecipesPlan plan : list){
+            if(StringUtils.isNotEmpty(plan.getPhone())){
+                plan.setHidePhone(StringUtils.hiddenPhoneNumber(plan.getPhone()));
+            }
+        }
         return getDataTable(list);
     }
 
@@ -80,6 +87,11 @@ public class SysRecipesPlanController extends BaseController
     public AjaxResult export(SysRecipesPlan sysRecipesPlan)
     {
         List<SysRecipesPlan> list = sysRecipesPlanService.selectPlanListByCondition(sysRecipesPlan);
+        for(SysRecipesPlan plan : list){
+            if(StringUtils.isNotEmpty(plan.getPhone())){
+                plan.setHidePhone(StringUtils.hiddenPhoneNumber(plan.getPhone()));
+            }
+        }
         ExcelUtil<SysRecipesPlan> util = new ExcelUtil<SysRecipesPlan>(SysRecipesPlan.class);
         return util.exportExcel(list, "recipesPlan");
     }
