@@ -73,11 +73,11 @@
     <el-table v-loading="loading" :data="recipesPlanList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="客户姓名" align="center" prop="customer" />
-      <el-table-column label="客户手机号" align="center" prop="phone" />
+      <el-table-column label="客户手机号" align="center" prop="hidePhone" width="180"/>
       <el-table-column label="食谱日期范围" align="center" prop="scopeDate" width="200"/>
       <el-table-column label="营养师" align="center" prop="nutritionist" />
-      <el-table-column label="营养师助理" align="center" prop="nutritionistAssis" />
-      <el-table-column label="食谱是否发送" align="center" prop="sendFlag">
+      <el-table-column label="营养师助理" align="center" prop="nutritionistAssis" width="180"/>
+      <el-table-column label="是否发送" align="center" prop="sendFlag">
         <!--<template slot-scope="scope">
           <span>{{ scope.row.sendFlag == 1 ? "已发送" : "未发送"}}</span>
         </template>(.sendFlag == 1) ? 'success' : 'warning'-->
@@ -179,7 +179,7 @@
         <!--<el-table-column label="营养师名称" align="center" prop="nutritionist" />
         <el-table-column label="营养师助理名称" align="center" prop="nutritionistAssis" />-->
 
-        <el-table-column label="食谱时间范围" align="center" prop="scopeDate" width="200"/>
+        <el-table-column label="食谱时间范围" align="center" prop="scopeDate" width="250"/>
         <el-table-column label="食谱是否发送" align="center" prop="sendFlag">
           <!--<template slot-scope="scope">
             <span>{{ scope.row.sendFlag == 1 ? "已发送" : "未发送"}}</span>
@@ -214,206 +214,57 @@
 
     <!-- 查看体征 -->
     <el-dialog title="客户体征" v-if="customerOpen" :visible.sync="customerOpen" width="1000px" append-to-body>
-      <el-table v-loading="loading" :data="customerSign" width="900px">
-        <el-table-column label="姓名" align="center" prop="name" />
-        <!--<el-table-column label="手机号" align="center" prop="phone" width="120" fixed="left"/>-->
-        <el-table-column label="性别" align="center" prop="sign.sex" >
+      <el-table :show-header="false" :data="customerSignList" border :cell-style="columnStyle" style="width: 100%;">
+        <el-table-column width="140" prop="attr_name_one">
+        </el-table-column>
+        <el-table-column prop="value_one">
           <template slot-scope="scope">
-            {{scope.row.sign.sex == 0 ? `男` : '女'}}
+            <AutoHideMessage :data="scope.row.value_one == null ? '' : (scope.row.value_one+'')" :maxLength="20"/>
           </template>
         </el-table-column>
-        <el-table-column label="年龄(岁)" align="center" prop="sign.age" />
-        <el-table-column label="身高(厘米)" align="center" prop="sign.tall" />
-        <el-table-column label="体重(斤)" align="center" prop="sign.weight"/>
-        <el-table-column label="北方、南方" align="center" prop="sign.position">
+        <el-table-column width="140" prop="attr_name_two"></el-table-column>
+        <el-table-column prop="value_two">
           <template slot-scope="scope">
-            {{scope.row.sign.position == 0 ? `南方` : '北方'}}
+            <AutoHideMessage :data="scope.row.value_two == null ? '' : (scope.row.value_two+'')" :maxLength="20"/>
           </template>
         </el-table-column>
-        <el-table-column label="病史" align="center" prop="sign.signList">
+        <el-table-column width="140" prop="attr_name_three"></el-table-column>
+        <el-table-column prop="value_three">
           <template slot-scope="scope">
-            <span>{{getSignString(scope.row.sign.signList)}}</span>
-          </template>
-        </el-table-column>
-      </el-table>
-      <el-table v-loading="loading" :data="customerSign" width="900px">
-        <el-table-column label="忌口或过敏源" align="center" prop="sign.dishesIngredientId" width="120"></el-table-column>
-        <el-table-column label="是否便秘" align="center" prop="sign.constipation">
-          <template slot-scope="scope">
-            {{scope.row.sign.constipation == 0 ? `是` : '否'}}
-          </template>
-        </el-table-column>
-        <el-table-column label="是否熬夜失眠" align="center" prop="sign.staylate">
-          <template slot-scope="scope">
-            {{scope.row.sign.staylate == 0 ? `是` : '否'}}
-          </template>
-        </el-table-column>
-        <el-table-column label="是否经常运动" align="center" prop="sign.motion">
-          <template slot-scope="scope">
-            {{scope.row.sign.motion == 0 ? `是` : '否'}}
-          </template>
-        </el-table-column>
-        <el-table-column label="饮食方式" align="center" prop="sign.makeFoodType" >
-          <template slot-scope="scope">
-            {{scope.row.sign.makeFoodType == 0 ? `自己做` : '外面吃'}}
-          </template>
-        </el-table-column>
-        <el-table-column label="饮食备注" align="center" prop="sign.remarks"></el-table-column>
-        <el-table-column label="饮食特点" align="center" prop="sign.makeFoodTaste">
-          <template slot-scope="scope">
-            {{scope.row.sign.makeFoodTaste == 0 ? `清淡` : '重口味'}}
-          </template>
-        </el-table-column>
-       </el-table>
-      <el-table v-loading="loading" :data="customerSign" width="900px">
-        <el-table-column label="工作职业" align="center" prop="sign.vocation">
-          <template slot-scope="scope">
-            {{scope.row.sign.vocation}}
-          </template>
-        </el-table-column>
-        <el-table-column label="是否上夜班" align="center" prop="sign.night">
-          <template slot-scope="scope">
-            {{scope.row.sign.night == 0 ? `是` : '否'}}
-          </template>
-        </el-table-column>
-        <el-table-column label="久坐多还是运动多" align="center" prop="sign.walk">
-          <template slot-scope="scope">
-            {{scope.row.sign.walk == 0 ? `久坐多` : '走动多'}}
-          </template>
-        </el-table-column>
-        <el-table-column label="是否浑身乏力" align="center" prop="sign.weakness">
-          <template slot-scope="scope">
-            {{scope.row.sign.weakness == 0 ? `是` : '否'}}
-          </template>
-        </el-table-column>
-        <el-table-column label="是否减脂反弹" align="center" prop="sign.rebound">
-          <template slot-scope="scope">
-            {{scope.row.sign.rebound == 0 ? `是` : '否'}}
-          </template>
-        </el-table-column>
-        <el-table-column label="意识到生活习惯是减脂关键" align="center" prop="sign.crux">
-          <template slot-scope="scope">
-            {{scope.row.sign.crux == 0 ? `是` : '否'}}
-          </template>
-        </el-table-column>
-        <el-table-column label="睡觉时间" align="center" prop="sign.sleepTime">
-          <template slot-scope="scope">
-            {{scope.row.sign.sleepTime}}点
+            <AutoHideMessage :data="scope.row.value_three == null ? '' : (scope.row.value_three+'')" :maxLength="20"/>
           </template>
         </el-table-column>
       </el-table>
-      <el-table v-loading="loading" :data="customerSign" width="900px">
-        <el-table-column label="起床时间" align="center" prop="sign.getupTime" >
-          <template slot-scope="scope">
-            {{scope.row.sign.getupTime}}点
-          </template>
-        </el-table-column>
-        <el-table-column label="方便沟通时间" align="center" prop="sign.connectTime">
-          <template slot-scope="scope">
-            {{scope.row.sign.connectTime}}点
-          </template>
-        </el-table-column>
-        <el-table-column label="湿气数据" align="center" prop="sign.bloodData">
-          <template slot-scope="scope">
-            {{scope.row.sign.bloodData}}
-          </template>
-        </el-table-column>
-        <el-table-column label="气血数据" align="center" prop="sign.moistureDate" >
-          <template slot-scope="scope">
-            {{scope.row.sign.moistureDate}}
-          </template>
-        </el-table-column>
-        <el-table-column label="减脂经历" align="center" prop="sign.experience" ></el-table-column>
-        <el-table-column label="减脂遇到的困难" align="center" prop="sign.difficulty" ></el-table-column>
-        <el-table-column label="备注" align="center" prop="sign.comments"></el-table-column>
-      </el-table>
-      <!--<div slot="footer" class="dialog-footer">
-        <el-button @click="customerOpen = false">关 闭</el-button>
-      </div>-->
     </el-dialog>
-
     <!-- 查看订单 -->
     <el-dialog title="订单详情" v-if="orderDetailOpen" :visible.sync="orderDetailOpen" width="1000px" append-to-body>
-      <el-table v-loading="loading" :data="orderDetailList" >
-        <el-table-column label="订单状态" align="center" prop="orderId">
-          <template slot-scope="scope">
-            <el-tag
-              :type="scope.row.reviewStatus === '2' ? 'success' : scope.row.status ==='0'? '': 'danger'"
-              disable-transitions>
-              {{scope.row.reviewStatus === '2' ? '已完成': scope.row.status ==='0'? '进行中': '已暂停'}}
+      <el-table :show-header="false" :data="orderDetailList" border :cell-style="columnStyle" style="width: 100%;">
+        <el-table-column width="120" prop="attr_name_one">
+        </el-table-column>
+        <el-table-column prop="value_one">
+          <template slot-scope="scope" >
+            <el-tag v-if="scope.row.attr_name_one === '订单状态'" :type="scope.row.value_two === '2' ? 'success' : scope.row.value_one === '0'? '': 'danger'" disable-transitions>
+              {{scope.row.value_two === '2' ? '已完成': scope.row.value_one ==='0'? '进行中': '已暂停'}}
             </el-tag>
+            <AutoHideMessage v-else :data="scope.row.value_one == null ? '' : (scope.row.value_one+'')" :maxLength="20"/>
           </template>
         </el-table-column>
-        <el-table-column label="审核状态" align="center" prop="reviewStatus">
-          <template slot-scope="scope">
-            <el-tag
-              :type="scope.row.reviewStatus === 'yes' ? 'success' : 'danger'"
-              disable-transitions>
-              {{scope.row.reviewStatus === 'yes' ? '已审核':'未审核'}}
+        <el-table-column width="120" prop="attr_name_two"></el-table-column>
+        <el-table-column prop="value_two">
+          <template slot-scope="scope" >
+            <el-tag v-if="scope.row.attr_name_two === '审核状态'" :type="scope.row.value_two === 'yes' ? 'success' : 'danger'">
+              {{scope.row.value_two === 'yes' ? '已审核' : '未审核'}}
             </el-tag>
+            <AutoHideMessage v-else :data="scope.row.value_two == null ? '' : (scope.row.value_two+'')" :maxLength="20"/>
           </template>
         </el-table-column>
-        <el-table-column label="成交时间" align="center" prop="orderTime">
-          <template slot-scope="scope">
-            <span>{{ parseTime(scope.row.orderTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="客户姓名" align="center" prop="customer"/>
-        <el-table-column label="金额" align="center" prop="amount">
-          <template slot-scope="scope">
-            {{toThousands(scope.row.amount)}}
-          </template>
-        </el-table-column>
-        <el-table-column label="体重" align="center" prop="weight">
-          <template slot-scope="scope">
-            {{scope.row.weight ? `${scope.row.weight}斤` : ''}}
+        <el-table-column width="120" prop="attr_name_three"></el-table-column>
+        <el-table-column prop="value_three">
+          <template slot-scope="scope" >
+            <AutoHideMessage :data="scope.row.value_three == null ? '' : (scope.row.value_three+'')" :maxLength="20"/>
           </template>
         </el-table-column>
       </el-table>
-      <el-table v-loading="loading" :data="orderDetailList" >
-        <el-table-column label="手机号" align="center" prop="phone"/>
-        <el-table-column label="服务时长" align="center" prop="serveTime"/>
-        <el-table-column label="赠送时长" align="center" prop="giveServeDay">
-          <template slot-scope="scope">
-            {{scope.row.giveServeDay ? `${scope.row.giveServeDay}天` : '0天'}}
-          </template>
-        </el-table-column>
-        <el-table-column label="调理项目" align="center" prop="conditioningProject"/>
-        <el-table-column label="收款方式" align="center" prop="payType"/>
-        <el-table-column label="售前" align="center" prop="preSale"/>
-      </el-table>
-      <el-table v-loading="loading" :data="orderDetailList" >
-        <el-table-column label="售后" align="center" prop="afterSale"/>
-        <el-table-column label="主营养师" align="center" prop="nutritionist"/>
-        <el-table-column label="助理营养师" align="center" prop="nutriAssis" />
-        <el-table-column label="账号" align="center" prop="account"/>
-        <el-table-column label="策划" align="center" prop="planner"/>
-        <el-table-column label="策划助理" align="center" prop="plannerAssis"/>
-      </el-table>
-      <el-table v-loading="loading" :data="orderDetailList" >
-        <el-table-column label="运营" align="center" prop="operator"/>
-        <el-table-column label="运营助理" align="center" prop="operatorAssis"/>
-        <!--<el-table-column label="推荐人" align="center" prop="recommender"/>-->
-        <el-table-column label="进粉时间" align="center" prop="becomeFanTime">
-          <template slot-scope="scope">
-            <span>{{ parseTime(scope.row.becomeFanTime, '{y}-{m}-{d}') }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="开始时间" align="center" prop="startTime">
-          <template slot-scope="scope">
-            <span>{{ parseTime(scope.row.startTime, '{y}-{m}-{d}') }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="结束时间" align="center" prop="serverEndTime">
-          <template slot-scope="scope">
-            <span>{{ parseTime(scope.row.serverEndTime, '{y}-{m}-{d}') }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="备注" align="center" prop="remark"/>
-      </el-table>
-      <!--<div slot="footer" class="dialog-footer">
-        <el-button @click="orderDetailOpen = false">关 闭</el-button>
-      </div>-->
     </el-dialog>
   </div>
 </template>
@@ -422,6 +273,7 @@
   import { listRecipesPlan, getRecipesPlan, updateRecipesPlan,exportRecipesPlan } from "@/api/custom/recipesPlan";
   import { getCustomerAndSignByPhone } from "@/api/custom/customer";
   import {getInfoDetail,getOptions} from "@/api/custom/order";
+  import AutoHideMessage from "@/components/AutoHideMessage";
   import dayjs from 'dayjs';
   import store from "@/store";
   const nextDate = dayjs().add(1, 'day').format("YYYY-MM-DD");
@@ -490,8 +342,23 @@
         //营养师
         nutritionistIdOptions:[],
         //营养师助理
-        nutriAssisIdOptions:[]
+        nutriAssisIdOptions:[],
+        //订单详情的标题，按竖显示
+        orderTitleData:[["订单状态","审核状态","成交时间"],["姓名","金额","体重"],["手机号","服务时长","赠送时长"],["调理项目","收款方式","售前"],
+          ["售后","营养师","助理营养师"],["账号","策划","策划助理"],["运营","运营助理","进粉时间"],["开始时间","结束时间","备注"]],
+        //订单详情的属性名称，与标题对应，按竖显示
+        orderValueData:[["status","reviewStatus","orderTime"],["customer","amount","weight"],["phone","serveTime","giveServeDay"],["conditioningProject","payType","preSale"],
+          ["afterSale","nutritionist","nutriAssis"],["account","planner","plannerAssis"],["operator","operatorAssis","becomeFanTime"],["startTime","serverEndTime","serverEndTime"]],
+        signTitleData:[["姓名","手机号","性别"],["年龄(岁)","身高(厘米)","体重(斤)"],["南、北方","病史","忌口或过敏源"],["是否便秘","是否熬夜失眠","是否经常运动"],
+          ["饮食方式","饮食备注","饮食特点"],["工作职业","是否上夜班","久坐多还是运动多"],["是否浑身乏力","是否减脂反弹","意识到生活习惯是减脂的关键"],
+          ["睡觉时间","起床时间","方便沟通时间"],["湿气数据","气血数据","减脂经历"],["减脂遇到的困难","备注","创建时间"]],
+        signValueData:[["name","phone","sex"],["age","tall","weight"],["position","signString","dishesIngredientId"],["constipation","staylate","motion"],
+          ["makeFoodType","remarks","makeFoodTaste"],["vocation","night","walk"],["weakness","rebound","crux"],["sleepTime","getupTime","connectTime"],["bloodData","moistureDate","experience"],["difficulty","comments","createTime"]]
       };
+
+    },
+    components: {
+      AutoHideMessage
     },
     created() {
       getOptions().then(response => {
@@ -537,24 +404,44 @@
       },
       /** 查询客户体征 */
       getCustomerSign(row) {
-        this.customerSign = [];
+        this.customerSignList = [];
         let message = "未找到该客户，请检查订单手机号与客户体征手机号是否一致";
         if(row.phone == null || row.phone == ""){
           this.alert(message);
           return;
         }
         getCustomerAndSignByPhone({"phone": row.phone}).then(response => {
-          this.customerSign[0] = response.data;
-          if(this.customerSign[0] == null){
+          if(response.data == null){
             this.alert(message);
-          }else{
-            this.customerOpen = true;
+            return;
           }
+          let sign = response.data.sign;
+          sign.name = response.data.name;
+          sign.phone = response.data.phone;
+          sign.createTime = response.data.createTime;
+          sign.sex = sign.sex == 0 ? `男` : '女';
+          sign.position = sign.position == 0 ? `南方` : '北方';
+          sign.signString = this.getSignString(sign.signList);
+          sign.constipation = sign.constipation == 0 ? "是" : "否";
+          sign.staylate = sign.staylate == 0 ? "是" : "否";
+          sign.motion = sign.motion == 0 ? "是" : "否";
+          sign.makeFoodType = sign.makeFoodType == 0 ? `自己做` : '外面吃';
+          sign.makeFoodTaste = sign.makeFoodTaste == 0 ? "清淡" : '重口味';
+          sign.night = sign.night == 0 ? `是` : '否';
+          sign.walk = sign.walk == 0 ? `久坐多` : '走动多';
+          sign.weakness = sign.weakness == 0 ? `是` : '否';
+          sign.rebound = sign.rebound == 0 ? `是` : '否';
+          sign.crux = sign.crux == 0 ? `是` : '否';
+          sign.sleepTime = sign.sleepTime+"点";
+          sign.getupTime = sign.getupTime + "点";
+          sign.connectTime = sign.connectTime +"点";
+          for(let i = 0; i < this.signTitleData.length; i++){
+            this.customerSignList.push({"attr_name_one": this.signTitleData[i][0],"value_one": sign[this.signValueData[i][0]],"attr_name_two": this.signTitleData[i][1],"value_two": sign[this.signValueData[i][1]],"attr_name_three": this.signTitleData[i][2],"value_three": sign[this.signValueData[i][2]]});
+          }
+          this.customerOpen = true;
         });
       },
       getAllPlanByOrderId(){
-        //console.log(this.allRecipesPlanQueryParam.sendFlag);
-        //console.log(this.allRecipesPlanQueryParam.sendFlag === "");
         if(this.allRecipesPlanQueryParam.sendFlag === ""){
           this.allRecipesPlanQueryParam.sendFlag = null;
         }
@@ -570,12 +457,16 @@
       getOrderDetail(row){
         this.orderDetailList = [];
         getInfoDetail({'orderId': row.orderId}).then(response => {
-          this.orderDetailList[0] = response.data;
+          response.data.weight = response.data.weight != null ? (response.data.weight +"斤") : "";
+          response.data.giveServeDay = response.data.giveServeDay != null ? (response.data.giveServeDay +"天") : "";
+          for(let i = 0; i < this.orderTitleData.length; i++){
+             this.orderDetailList.push({"attr_name_one": this.orderTitleData[i][0],"value_one": response.data[this.orderValueData[i][0]],"attr_name_two": this.orderTitleData[i][1],"value_two": response.data[this.orderValueData[i][1]],"attr_name_three": this.orderTitleData[i][2],"value_three": response.data[this.orderValueData[i][2]]});
+          }
           this.orderDetailOpen = true;
         });
       },
       alert(value){
-        this.$alert(value, '提示', {confirmButtonText: '确定'});
+        this.$alert(value, '提示', {confirmButtonText: '关闭'});
       },
       getSignString(signList){
         if(signList == null){
@@ -671,10 +562,36 @@
          if(row.sendFlag == 1) {
            return "success";
          }
-         if(dayjs(row.startDate+"").diff(dayjs(),'day') <= 1){
+         return "danger";
+        /* if(dayjs(row.startDate+"").diff(dayjs(),'day') <= 1){
               return "danger";
          }
-         return '';
+         return '';*/
+      },
+      // 自定义列背景色
+      columnStyle({ row, column, rowIndex, columnIndex }) {
+        if (columnIndex == 0 || columnIndex == 2 || columnIndex == 4 || columnIndex == 6) {
+          //第三第四列的背景色就改变了2和3都是列数的下标
+          return "background:#f3f6fc;font-weight:bold";
+        }else{
+          return "background:#ffffff;";
+        }
+      },
+      // 和并列
+      objectSpanMethod({ row, column, rowIndex, columnIndex }) {
+        if (columnIndex === 0) {
+          if (rowIndex % 4 === 0) {
+            return {
+              rowspan: 4,
+              colspan: 1
+            };
+          } else {
+            return {
+              rowspan: 0,
+              colspan: 0
+            };
+          }
+        }
       }
     }
   };

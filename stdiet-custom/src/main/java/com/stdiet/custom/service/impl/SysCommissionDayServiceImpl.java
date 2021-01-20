@@ -37,6 +37,7 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
         total.setTotalCommissionAmount(new BigDecimal(0));
         total.setTotalHasSentCommissionAmount(new BigDecimal(0));
         total.setTotalNotSentCommissionAmount(new BigDecimal(0));
+        total.setNextMonthCommission(new BigDecimal(0));
         if(list != null && list.size() > 0){
             Map<Long, List<SysOrderCommisionDayDetail>> orderDetailMap = getOrderByList(sysCommision.getUserId());
             SysCommissionDayDetail sysCommissionDayDetail = null;
@@ -52,6 +53,7 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
                 total.setTotalCommissionAmount(total.getTotalCommissionAmount().add(sysCommissionDayDetail.getTotalCommissionAmount()));
                 total.setTotalHasSentCommissionAmount(total.getTotalHasSentCommissionAmount().add(sysCommissionDayDetail.getTotalHasSentCommissionAmount()));
                 total.setTotalNotSentCommissionAmount(total.getTotalNotSentCommissionAmount().add(sysCommissionDayDetail.getTotalNotSentCommissionAmount()));
+                total.setNextMonthCommission(total.getNextMonthCommission().add(sysCommissionDayDetail.getNextMonthCommission()));
             }
         }
         total.setPostName("胜唐体控");
@@ -166,6 +168,7 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
         //未发放提成 = 总提成 - 已发放提成
         sysCommissionDayDetail.setTotalNotSentCommissionAmount(totalCommissionAmount.subtract(totalHasSentCommissionAmount));
         sysCommissionDayDetail.setSendDetailList(sendDetailList);
+        sysCommissionDayDetail.setNextMonthCommission(sendDetailList.size() > 0 ? (BigDecimal)sendDetailList.get(0).get("yearMonthCommission") : new BigDecimal(0));
     }
 
     /**判断该月提成是否已发放*/
