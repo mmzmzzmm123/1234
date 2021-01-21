@@ -13,6 +13,16 @@ public class CustomException extends RuntimeException
 
     private String message;
 
+    public String getObj() {
+        return obj;
+    }
+
+    public void setObj(String obj) {
+        this.obj = obj;
+    }
+
+    private String obj;
+
     public CustomException(String message)
     {
         this.message = message;

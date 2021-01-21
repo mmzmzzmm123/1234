@@ -1,6 +1,10 @@
 package com.ruoyi.framework.security.service;
 
 import javax.annotation.Resource;
+
+import com.ruoyi.common.constant.HttpStatus;
+import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.project.monitor.domain.SysUserOnline;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -17,6 +21,10 @@ import com.ruoyi.framework.manager.AsyncManager;
 import com.ruoyi.framework.manager.factory.AsyncFactory;
 import com.ruoyi.framework.redis.RedisCache;
 import com.ruoyi.framework.security.LoginUser;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * 登录校验方法
@@ -80,6 +88,23 @@ public class SysLoginService
                 throw new CustomException(e.getMessage());
             }
         }
+
+        Collection<String> keys = redisCache.keys(Constants.LOGIN_TOKEN_KEY + "*");
+        List<SysUserOnline> userOnlineList = new ArrayList<SysUserOnline>();
+        for (String key : keys) {
+            LoginUser user = redisCache.getCacheObject(key);
+            if (StringUtils.isNotEmpty(username) && StringUtils.isNotNull(user.getUser()))
+            {
+                if (StringUtils.equals(username, user.getUsername()))
+                {
+                    //存在已经登录用户，抛出异常
+                    CustomException alreadyLoginExcep = new CustomException("该账号已在别处登陆", HttpStatus.ALREADY_LOGIN);
+                    alreadyLoginExcep.setObj(username);
+                    throw alreadyLoginExcep;
+                }
+            }
+        }
+
         AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_SUCCESS, MessageUtils.message("user.login.success")));
         LoginUser loginUser = (LoginUser) authentication.getPrincipal();
         // 生成token

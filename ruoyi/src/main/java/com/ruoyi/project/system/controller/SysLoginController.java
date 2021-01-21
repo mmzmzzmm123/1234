@@ -2,6 +2,8 @@ package com.ruoyi.project.system.controller;
 
 import java.util.List;
 import java.util.Set;
+
+import com.ruoyi.framework.redis.RedisCache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,6 +41,9 @@ public class SysLoginController
     @Autowired
     private TokenService tokenService;
 
+//    @Autowired
+//    private RedisCache redisCache;
+
     /**
      * 登录方法
      * 
@@ -58,6 +63,20 @@ public class SysLoginController
         ajax.put(Constants.TOKEN, token);
         return ajax;
     }
+
+//    /**
+//     * 将在其他地方登陆的账号强退
+//     *
+//     * @param user 登录信息
+//     * @return 结果
+//     */
+//    @PostMapping("/forceLogout")
+//    public AjaxResult forcelogin(@RequestBody LoginUser user)
+//    {
+//        redisCache.deleteObject(Constants.LOGIN_TOKEN_KEY + user.getToken());
+//
+//        return AjaxResult.success();
+//    }
 
     /**
      * 获取用户信息

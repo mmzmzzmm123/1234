@@ -86,4 +86,9 @@ public interface HttpStatus
      * 接口未实现
      */
     public static final int NOT_IMPLEMENTED = 501;
+
+    /**
+     * 已登陆
+     */
+    public static final int ALREADY_LOGIN = 502;
 }

@@ -145,4 +145,17 @@ public class AjaxResult extends HashMap<String, Object>
     {
         return new AjaxResult(code, msg, null);
     }
+
+
+    /**
+     * 返回错误消息
+     *
+     * @param code 状态码
+     * @param msg 返回内容
+     * @return 警告消息
+     */
+    public static AjaxResult error(int code, String msg, Object data)
+    {
+        return new AjaxResult(code, msg, data);
+    }
 }

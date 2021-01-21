@@ -46,6 +46,9 @@ public class GlobalExceptionHandler
         {
             return AjaxResult.error(e.getMessage());
         }
+        if (e.getObj()!=null){
+            return AjaxResult.error(e.getCode(),e.getMessage(),e.getObj());
+        }
         return AjaxResult.error(e.getCode(), e.getMessage());
     }
 
