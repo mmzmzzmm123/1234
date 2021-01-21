@@ -126,5 +126,6 @@ file:
     key: 3leP0wEJvWdIck7x4QyzA3lS_Ua8eiFOUEDUro30
   secret:
     key: auEPimrlHeCBJFc8fcT3s8bOBULKwH_zK95xpQzV
-  domain: https://files.benyiedu.com/
+#  domain: https://files.benyiedu.com/
+  domain: http://video.benyiedu.com/
   bucket: bywebfile

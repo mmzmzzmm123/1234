@@ -124,7 +124,7 @@ export default {
         this.information = response.data.information;
         //console.log(response.data);
         this.playerOptions = {
-          autoplay: true,
+          autoplay: false,
           muted: true,
           language: "zh-CN",
           playbackRates: [0.7, 1.0, 1.5, 2.0],
