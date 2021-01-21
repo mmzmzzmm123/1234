@@ -143,7 +143,7 @@ public class CommonController {
     public String privateDownloadUrl(String URL) {
 
         Auth auth = Auth.create(constantQiniu.getAccessKey(), constantQiniu.getSecretKey());
-        String downloadURL = auth.privateDownloadUrl(constantQiniu.getDomain() + URL, 60);
+        String downloadURL = auth.privateDownloadUrl(constantQiniu.getDomain() + URL, 3600);
         //System.out.println("test=" + downloadURL);
 
         return downloadURL;
