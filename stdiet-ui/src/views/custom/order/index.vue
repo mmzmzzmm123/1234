@@ -143,6 +143,18 @@
             </el-select>
           </el-form-item>
         </el-col>
+        <el-col :span="6">
+        <el-form-item label="服务时长" prop="serveTimeId">
+          <el-select v-model="queryParams.serveTimeId" placeholder="请选服务时长">
+            <el-option
+              v-for="dict in serveTimeIdOption"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="parseInt(dict.dictValue)"
+            />
+          </el-select>
+        </el-form-item>
+        </el-col>
         <el-col :span="12">
           <el-form-item label="成交日期" prop="orderTime">
             <el-date-picker
@@ -159,6 +171,7 @@
             </el-date-picker>
           </el-form-item>
         </el-col>
+
         <el-col>
           <el-form-item>
             <el-button type="cyan" icon="el-icon-search" size="mini"
@@ -263,6 +276,11 @@
       <el-table-column label="结束时间" align="center" prop="serverEndTime" width="120">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.serverEndTime, '{y}-{m}-{d}') }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="服务天数" align="center" prop="serverDay" width="80">
+        <template slot-scope="scope">
+          {{scope.row.serverDay ? `${scope.row.serverDay}天` : '0天'}}
         </template>
       </el-table-column>
       <el-table-column label="备注" align="center" prop="remark" width="120"/>
@@ -582,6 +600,30 @@
   export default {
     name: "Order",
     data() {
+      const checkStartTime = (rule, value, callback) => {
+        if (!value) {
+          return callback(new Error('开始时间不能为空'))
+        }
+        if (!this.form.orderTime) {
+          return callback(new Error('请先选择成交时间'))
+        }
+        if(dayjs(this.form.startTime).diff(dayjs(this.form.orderTime),'day') < 0){
+          return callback(new Error('开始时间不能小于成交时间'))
+        }
+        callback();
+      };
+      const checkOrderTime = (rule, value, callback) => {
+        if (!value) {
+          return callback(new Error('成交时间不能为空'))
+        }
+        if (!this.form.becomeFanTime) {
+          return callback(new Error('请先填写进粉时间'))
+        }
+        if(dayjs(this.form.orderTime).diff(dayjs(this.form.becomeFanTime),'day') < 0){
+          return callback(new Error('成交时间不能小于进粉时间'))
+        }
+        callback();
+      }
       return {
         // 遮罩层
         loading: true,
@@ -660,6 +702,7 @@
           operatorAssisId: null,
           recommender: null,
           reviewStatus: null,
+          serveTimeId: null
         },
         // 表单参数
         form: {},
@@ -677,8 +720,13 @@
           phone: [
             {required: true, message: "手机号不能为空", trigger: "blur"}
           ],
+          orderTime: [
+            {required: true, message: "成交时间不能为空", trigger: "blur"},
+            {required: true, trigger: "blur", validator: checkOrderTime}
+          ],
           startTime: [
-            {required: true, message: "开始时间不能为空", trigger: "blur"}
+            {required: true, message: "开始时间不能为空", trigger: "blur"},
+            {required: true, trigger: "blur", validator: checkStartTime}
           ],
           becomeFanTime: [
             {required: true, message: "进粉时间不能为空", trigger: "blur"}
@@ -863,7 +911,7 @@
           phone: null,
           amount: null,
           weight: null,
-          startTime: dayjs().format("YYYY-MM-DD"),
+          startTime: dayjs().add(3, 'day').format("YYYY-MM-DD"),
           pauseTime: null,
           payTypeId: defaultPayType ? parseInt(defaultPayType.dictValue) : null,
           preSaleId: defaultPresale ? parseInt(defaultPresale.dictValue) : null,

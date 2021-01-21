@@ -1,5 +1,6 @@
 package com.stdiet.custom.service.impl;
 
+import com.alibaba.fastjson.JSONArray;
 import com.stdiet.common.utils.DateUtils;
 import com.stdiet.custom.domain.*;
 import com.stdiet.custom.mapper.SysCommisionMapper;
@@ -106,6 +107,14 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
      * 根据用户ID统计出该用户在该月所有订单的服务数量、服务总天数、服务订单总额、暂停总天数
      * **/
     public void dealServerOrderCommissionDetail(List<SysOrderCommisionDayDetail> orderDetailList, SysCommissionDayDetail sysCommissionDayDetail){
+        /*System.out.println("------------------开始--------------");
+        if(orderDetailList != null){
+            for(SysOrderCommisionDayDetail sysOrderCommisionDayDetail : orderDetailList){
+                System.out.println("姓名："+sysOrderCommisionDayDetail.getName() + "  总天数："+sysOrderCommisionDayDetail.getServerDay()
+                        +" 每天金额："+sysOrderCommisionDayDetail.getDayMoney() + " 一月服务天数："+sysOrderCommisionDayDetail.getEveryYearMonthServerDay().get("20211")
+                        +" 一月对应金额："+ sysOrderCommisionDayDetail.getEveryYearMonthServerMoney().get("20211"));
+            }
+        }*/
         //总提成
         BigDecimal totalCommissionAmount = new BigDecimal(0);
         //已发放提成
@@ -440,7 +449,7 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
      * double转为BigDecimal，保留一位小数，向下舍去
      * */
     public BigDecimal getMoney(Double money, int n){
-        return new BigDecimal(money.toString()).setScale(n, BigDecimal.ROUND_DOWN);
+        return new BigDecimal(money.toString()).setScale(3, BigDecimal.ROUND_HALF_UP);
     }
 
     /**
@@ -475,10 +484,6 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
 
         /*System.out.println(ts(109792.8 * 6 / 100D, 1));
         System.out.println(ts(6587.8,2).doubleValue());*/
-        System.out.println(ts(1.919,1).doubleValue());
-    }
 
-    public static BigDecimal ts(Double money, int n){
-        return new BigDecimal(money.toString()).setScale(n, BigDecimal.ROUND_DOWN);
     }
 }

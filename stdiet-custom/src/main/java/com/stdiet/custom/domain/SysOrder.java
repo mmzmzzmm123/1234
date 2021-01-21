@@ -214,6 +214,12 @@ public class SysOrder extends BaseEntity {
     private Date becomeFanTime;
 
     /**
+     * 服务天数
+     */
+    @Excel(name = "服务结束时间", width = 30)
+    private Integer serverDay;
+
+    /**
      * 订单暂停记录 非持久化字段
      * */
     private List<SysOrderPause> orderPauseList;
@@ -523,6 +529,14 @@ public class SysOrder extends BaseEntity {
 
     public void setBecomeFanTime(Date becomeFanTime) {
         this.becomeFanTime = becomeFanTime;
+    }
+
+    public Integer getServerDay() {
+        return serverDay;
+    }
+
+    public void setServerDay(Integer serverDay) {
+        this.serverDay = serverDay;
     }
 
     @Override

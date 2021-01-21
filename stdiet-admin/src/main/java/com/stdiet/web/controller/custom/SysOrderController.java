@@ -4,6 +4,7 @@ import com.stdiet.common.annotation.Log;
 import com.stdiet.common.core.domain.AjaxResult;
 import com.stdiet.common.core.domain.entity.SysUser;
 import com.stdiet.common.enums.BusinessType;
+import com.stdiet.common.utils.DateUtils;
 import com.stdiet.common.utils.StringUtils;
 import com.stdiet.common.utils.poi.ExcelUtil;
 import com.stdiet.custom.controller.OrderBaseController;
@@ -17,6 +18,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 /**
@@ -81,6 +83,12 @@ public class SysOrderController extends OrderBaseController {
             if (StringUtils.isNotEmpty(order.getPhone())) {
                 order.setPhone(StringUtils.hiddenPhoneNumber(order.getPhone()));
             }
+            //根据服务时长、赠送天数计算服务天数
+            int month = order.getServeTimeId() != null ? order.getServeTimeId().intValue()/30 : 0;
+            if(order.getStartTime() != null && order.getServerEndTime() != null && order.getServeTimeId() != null && month > 0){
+                long serverDay = ChronoUnit.DAYS.between(DateUtils.dateToLocalDate(order.getStartTime()), DateUtils.dateToLocalDate(order.getStartTime()).plusMonths(month).plusDays(order.getGiveServeDay() == null ? 0 : order.getGiveServeDay())) + 1;
+                order.setServerDay(Integer.parseInt(serverDay + ""));
+            }
         }
         return getOrderDataTable(list, totalAmount);
     }
@@ -122,6 +130,9 @@ public class SysOrderController extends OrderBaseController {
                 if (user.getUserId().equals(order.getOperatorAssisId())) {
                     order.setOperatorAssis(user.getNickName());
                 }
+            }
+            if (StringUtils.isNotEmpty(order.getPhone())) {
+                order.setPhone(StringUtils.hiddenPhoneNumber(order.getPhone()));
             }
         }
         ExcelUtil<SysOrder> util = new ExcelUtil<SysOrder>(SysOrder.class);
