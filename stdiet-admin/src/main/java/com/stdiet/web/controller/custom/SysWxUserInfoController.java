@@ -46,7 +46,7 @@ public class SysWxUserInfoController extends BaseController {
 
         for (SysWxUserInfo userInfo : list) {
             if (StringUtils.isNotEmpty(userInfo.getPhone())) {
-                userInfo.setPhone(userInfo.getPhone().replaceAll("(\\d{3})\\d{4}(\\d{4})", "$1****$2"));
+                userInfo.setPhone(StringUtils.hiddenPhoneNumber(userInfo.getPhone()));
             }
         }
 
@@ -61,6 +61,11 @@ public class SysWxUserInfoController extends BaseController {
     @GetMapping("/export")
     public AjaxResult export(SysWxUserInfo sysWxUserInfo) {
         List<SysWxUserInfo> list = sysWxUserInfoService.selectSysWxUserInfoList(sysWxUserInfo);
+        for (SysWxUserInfo userInfo : list) {
+            if (StringUtils.isNotEmpty(userInfo.getPhone())) {
+                userInfo.setPhone(StringUtils.hiddenPhoneNumber(userInfo.getPhone()));
+            }
+        }
         ExcelUtil<SysWxUserInfo> util = new ExcelUtil<SysWxUserInfo>(SysWxUserInfo.class);
         return util.exportExcel(list, "wxUserInfo");
     }

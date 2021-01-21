@@ -78,6 +78,7 @@
             <if test="endTime != null and endTime != ''">and date_format(order_time,'%y%m%d') &lt;= date_format(#{endTime},'%y%m%d')</if>
             <if test="serveTimeId != null ">and serve_time_id = #{serveTimeId}</if>
             <if test="reviewStatus != null ">and review_status = #{reviewStatus}</if>
+            <if test="serveTimeId != null ">and serve_time_id = #{serveTimeId}</if>
         </where>
     </select>
 

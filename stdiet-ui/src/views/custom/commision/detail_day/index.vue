@@ -65,23 +65,23 @@
       <el-table-column label="岗位" align="center" prop="postName"/>
       <el-table-column label="总提成" align="center" prop="totalCommissionAmount">
         <template scope="scope">
-          {{scope.row.totalCommissionAmount}}
+          {{scope.row.totalCommissionAmount.toFixed(3)}}
         </template>
       </el-table-column>
       <el-table-column label="已发放提成" align="center" prop="totalHasSentCommissionAmount">
         <template scope="scope">
-          {{scope.row.totalHasSentCommissionAmount}}
+          {{scope.row.totalHasSentCommissionAmount.toFixed(3)}}
         </template>
       </el-table-column>
       <el-table-column label="未发放提成" align="center" prop="totalNotSentCommissionAmount">
         <template scope="scope">
-          {{scope.row.totalNotSentCommissionAmount}}
+          {{scope.row.totalNotSentCommissionAmount.toFixed(3)}}
         </template>
 
       </el-table-column>
       <el-table-column label="下月应发提成" align="center" prop="nextMonthCommission">
         <template scope="scope">
-          {{scope.row.nextMonthCommission}}
+          {{scope.row.nextMonthCommission.toFixed(3)}}
         </template>
 
       </el-table-column>
@@ -112,7 +112,11 @@
             {{scope.row.yearMonth.substring(0, 4)}}年{{scope.row.yearMonth.substring(4)}}月
           </template>
         </el-table-column>
-        <el-table-column property="yearMonthCommission" label="提成金额" width="100"></el-table-column>
+        <el-table-column property="yearMonthCommission" label="提成金额" width="100">
+          <template scope="scope">
+            {{scope.row.yearMonthCommission.toFixed(3)}}
+          </template>
+        </el-table-column>
       </el-table>
     </el-dialog>
   </div>

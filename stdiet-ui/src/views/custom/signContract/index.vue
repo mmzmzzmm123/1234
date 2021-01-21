@@ -166,7 +166,8 @@
 
       const checkcusId = (rule, value, callback) => {
         if (!value) {
-          return callback(new Error('证件号码不能为空'))
+          callback();
+          //return callback(new Error('证件号码不能为空'))
         }
         setTimeout(() => {
           const {code, msg} = validatorIDCard(value, this.idType);
@@ -214,7 +215,7 @@
             {required: true, trigger: "blur", validator: checkPhone}
           ],
           cusId: [
-            {required: true, trigger: "blur", validator: checkcusId}
+            {required: false, trigger: "blur", validator: checkcusId}
           ]
         }
       }
@@ -243,8 +244,10 @@
         })
       },
       submitForm() {
+        console.log("chdkscjksdc1");
         this.$refs["form"].validate(valid => {
           if (valid) {
+            console.log("chdkscjksdc2");
             signContract(this.form).then(result => {
               if (result.code === 200) {
                 window.location.href = window.location.origin + result.url;
