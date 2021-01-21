@@ -5,7 +5,7 @@
  * @LastEditors: huangdeliang
  */
 module.exports = {
-  title: '管理系统',
+  title: '胜唐管理系统',
 
   /**
    * 是否系统布局配置
