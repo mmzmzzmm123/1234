@@ -182,6 +182,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <!--            <if test="permissionAssignment != null  and permissionAssignment != ''"> and permission_assignment = #{permissionAssignment}</if>-->
 <!--            <if test="controlIdentifier != null  and controlIdentifier != ''"> and control_identifier = #{controlIdentifier}</if>-->
             <if test="annotation != null  and annotation != ''"> and annotation = #{annotation}</if>
+            <if test="deptId != null  and deptId != ''"> and dept_id = #{deptId}</if>
         </where>
     </select>
     
@@ -243,6 +244,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <!--            <if test="permissionAssignment != null and permissionAssignment != ''">permission_assignment,</if>-->
 <!--            <if test="controlIdentifier != null and controlIdentifier != ''">control_identifier,</if>-->
             <if test="annotation != null and annotation != ''">annotation,</if>
+            <if test="deptId != null and deptId != ''">dept_id,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
@@ -295,6 +297,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <!--            <if test="permissionAssignment != null and permissionAssignment != ''">#{permissionAssignment},</if>-->
 <!--            <if test="controlIdentifier != null and controlIdentifier != ''">#{controlIdentifier},</if>-->
             <if test="annotation != null and annotation != ''">#{annotation},</if>
+            <if test="deptId != null and deptId != ''">#{deptId},</if>
          </trim>
     </insert>
 
@@ -350,6 +353,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <!--            <if test="permissionAssignment != null and permissionAssignment != ''">permission_assignment = #{permissionAssignment},</if>-->
 <!--            <if test="controlIdentifier != null and controlIdentifier != ''">control_identifier = #{controlIdentifier},</if>-->
             <if test="annotation != null and annotation != ''">annotation = #{annotation},</if>
+            <if test="deptId != null and deptId != ''">dept_id = #{deptId},</if>
         </trim>
         where id = #{id}
     </update>

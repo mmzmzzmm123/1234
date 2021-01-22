@@ -194,5 +194,16 @@ export default {
   render(h) {
     return renderFrom.call(this, h)
   }
+  ,
+  watch:{
+    formConf:{
+      handler(nv,ov){
+        this.formConfCopy = deepClone(nv)
+        this.initFormData(this.formConfCopy.fields, this.formData)
+        this.buildRules(this.formConfCopy.fields, this.rules)
+      },deep:true,
+      immediate:true
+    }
+  }
 }
 </script>

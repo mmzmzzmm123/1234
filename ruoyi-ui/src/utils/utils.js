@@ -87,8 +87,12 @@ export const uploadByPieces = ({metadataId,files, chunkUrl, fileUrl, pieceSize, 
     }).then(res => {
       //progressFun()
       //res.file_name = currentFile.name
-      success && success(res)
+
       successAllCount++
+      if (successAllCount===fileList.length){
+        console.log('全部完成')
+        success && success(res)
+      }
     }).catch(e => {
       error && error(e)
     })

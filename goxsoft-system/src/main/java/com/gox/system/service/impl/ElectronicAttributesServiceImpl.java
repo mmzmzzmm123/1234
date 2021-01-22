@@ -110,9 +110,7 @@ public class ElectronicAttributesServiceImpl implements IElectronicAttributesSer
                 ThreadPoolExecutor threadPool = new ThreadPoolExecutor(
                         adds.length, adds.length * 3, 1, TimeUnit.SECONDS,
                         new ArrayBlockingQueue<>(adds.length * 2));
-                System.out.println(adds.length);
                 for (int i = 0; i < adds.length; i++) {
-                    System.out.println(i);
                     File partFile = new File(folder+adds[i]);
                     threadPool.execute(new MergeRunnable(i * partFileSize,
                             targetFile, partFile));
@@ -127,16 +125,17 @@ public class ElectronicAttributesServiceImpl implements IElectronicAttributesSer
                 String md = SecureUtil.md5(reFile);
                 if (md.equals(md5)){
                     ElectronicAttributes ea = new ElectronicAttributes(reFile,metadataId);
-                    electronicAttributesMapper.insertElectronicAttributes(ea);
+                    int res= electronicAttributesMapper.insertElectronicAttributes(ea);
+                    if (res==0){
+                        //删除文件
+                        reFile.delete();
+                    }
                 }
             }
         } catch (Exception e) {
             LOGGER.error("系统错误",e);
             return false;
         }
-//        finally {
-//            FileUtil.del(folder);
-//        }
         return true;
     }
     /**

@@ -70,7 +70,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="microformIdentifier != null and microformIdentifier != ''">microform_identifier,</if>
             <if test="metadataId != null">metadata_id,</if>
          </trim>
-        <trim prefix="values (" suffix=")" suffixOverrides=",">
+        select
+        <trim suffixOverrides=",">
             <if test="id != null">#{id},</if>
             <if test="formatInformation != null and formatInformation != ''">#{formatInformation},</if>
             <if test="computerFileName != null and computerFileName != ''">#{computerFileName},</if>
@@ -87,6 +88,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="microformIdentifier != null and microformIdentifier != ''">#{microformIdentifier},</if>
             <if test="metadataId != null">#{metadataId},</if>
          </trim>
+        where not exists(select metadata_id from electronic_attributes where metadata_id=#{metadataId} and computer_file_name=#{computerFileName})
     </insert>
 
     <update id="updateElectronicAttributes" parameterType="ElectronicAttributes">

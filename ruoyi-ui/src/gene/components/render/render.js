@@ -93,11 +93,20 @@ export default {
   },
   methods:{
     loadData(name){
-      listDefinition(name).then(res=>{
-        this.tip=res.data[0].definition;
-      }).catch(err=>{
-        console.log(err.message)
+      let d = JSON.parse(unescape(window.sessionStorage.getItem('WS')))
+      let definitions = d.filter(i=>{
+        return i.nameCn===name
       })
+      if (definitions.length===0){
+        listDefinition(name).then(res=>{
+          this.tip=res.data[0].definition;
+        }).catch(err=>{
+          console.log(err.message)
+        })
+      }
+      else {
+        this.tip=definitions[0].definition;
+      }
 
     }
   },

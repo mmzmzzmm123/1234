@@ -4,7 +4,8 @@
       <el-row :gutter="20">
         <el-col :span="4">
           <dept-tree @selectedDept="handleNodeClick"
-          ></dept-tree>
+          >
+          </dept-tree>
         </el-col>
         <el-col :span="20">
           <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="100px">
@@ -523,7 +524,7 @@
         </el-col>
       </el-row>
     </div>
-    <InputView v-if="open" :metadataid="id" :type="type" :formconf="formConf" @close="cancel"/>
+    <InputView v-if="open" :deptid="deptId" :metadata="metadata" :metadataid="id" :type="type" :formconf="formConf" @close="cancel"/>
   </div>
 </template>
 
@@ -532,7 +533,7 @@ import { listMetadata, getMetadata, delMetadata, addMetadata, updateMetadata, ex
 import DeptTree from '@/views/components/deptTree'
 import InputView from '@/views/system/metadata/InputView'
 import { listJson } from '@/api/system/json'
-import {listDefinition} from '@/api/system/metadataRule'
+import { listDefinition, listMetadataRule } from '@/api/system/metadataRule'
 import { deepClone } from '@/utils'
 export default {
   name: "Metadata",
@@ -542,6 +543,7 @@ export default {
   },
   data() {
     return {
+      metadata:{},
       id:0,
       type:'create',
       data:{},
@@ -804,7 +806,7 @@ export default {
     };
   },
   created() {
-    this.getList();
+    //this.getList();
     this.loadForm();
     // this.getDicts("ws_al").then(response => {
     //   this.aggregationLevelOptions = response.data;
@@ -838,6 +840,7 @@ export default {
     // 节点单击事件
     handleNodeClick(data) {
       this.queryParams.deptId = data;
+      this.deptId=data
       this.getList();
     },
     /** 查询文书类基本元数据列表 */
@@ -888,7 +891,7 @@ export default {
     // 取消按钮
     cancel() {
       this.open = false;
-      this.single=false;
+      this.single=true;
       //this.reset();
     },
     // 表单重置
@@ -969,9 +972,11 @@ export default {
       listJson(query).then(res => {
         this.formConf=JSON.parse(res.rows[0].formData)
         this.formReserve=deepClone(this.formConf)
-        console.log(this.formConf)
       }).catch(err=>{
         console.log(err)
+      })
+      listMetadataRule().then(res=>{
+        window.sessionStorage.setItem('WS',escape(JSON.stringify(res.rows)))
       })
     },
     /** 新增按钮操作 */
@@ -986,7 +991,10 @@ export default {
       // this.reset();
       const id = row.id || this.ids
       this.id = id[0];
-      console.log(this.id)
+      let data = this.metadataList.filter(item =>{
+        return item.id===this.id
+      })
+      this.metadata=data[0]
       this.type='modify'
       this.open = true;
     },
@@ -1036,6 +1044,11 @@ export default {
         }).then(response => {
           this.download(response.msg);
         })
+    }
+  },
+  watch: {
+    formconf:function(nv,ov) {
+      console.log(nv,ov)
     }
   }
 };

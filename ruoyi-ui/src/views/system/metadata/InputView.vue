@@ -8,12 +8,16 @@
     </transition>
     <transition v-if="currentPage===3" name="el-fade-in-linear">
       <div>
-        <el-button @click="dialogVisible=true">上传文件</el-button>
+        <el-button-group>
+          <el-button @click="dialogVisible=true">上传文件</el-button>
+          <el-button @click="deleteEle">删除</el-button>
+          <el-button @click="print">打印</el-button>
+        </el-button-group>
         <div style="text-align: center">
           <el-dialog title="上传文件" :visible.sync="dialogVisible" width="30%" :before-close="beforeClose" style="z-index: 2999">
-            <uploadwindow></uploadwindow>
+            <uploadwindow :metadata-id="mdId" @addFile="addFile"></uploadwindow>
           </el-dialog>
-          <document-view :metadata-id="mdId" ></document-view>
+          <document-view :metadata-id="mdId" ref="dv"></document-view>
           <el-button-group>
             <el-button @click="returnLastPage">返回</el-button>
             <el-button @click="save">保存</el-button>
@@ -41,6 +45,12 @@ export default {
     }
     ,metadataid:{
       type:Number
+    },
+    metadata:{
+      type:Object,
+    },
+    deptid:{
+      type:Number,
     }
   },
   name: "InputView",
@@ -57,6 +67,12 @@ export default {
           return this.createContent
         }
         else{
+          if(JSON.stringify(this.modifyContent) !== '{}'){
+            setTimeout(() => {
+              return this.modifyContent
+            },1000)
+            return this.createContent
+          }
           return this.modifyContent
         }
       },
@@ -67,13 +83,9 @@ export default {
     firstForm:{
       get:function(){
         if(this.type==='create'){
-          console.log(1)
-          console.log(this.newForm)
           if(JSON.stringify(this.newForm) !== '{}'){
-            console.log(2)
             return this.newForm
           }
-          console.log(3)
           this.newForm=this.formconf
           return this.formconf
         }
@@ -112,7 +124,8 @@ export default {
       param:{},
       formdata1:{},
       formdata2:{},
-      formData:{}
+      formData:{},
+      formdataC:{},
     }
   },
   mounted() {
@@ -127,7 +140,7 @@ export default {
       let query = {id:'',parentName: '文书',node:'内容描述'}
       listJson(query).then(res => {
         this.createContent=JSON.parse(res.rows[0].formData)
-        this.modifyContent= JSON.parse(res.rows[0].formData)
+        this.modifyContent= this.createContent
       }).catch(err=>{
         console.log(err)
       })
@@ -136,13 +149,16 @@ export default {
           this.mdId = res.data
         })
         this.formData={}
+        this.formDataC={}
       }
       else if(this.type==='modify'){
-        getMetadata(this.metadataid).then(response => {
-          this.formData = response.data;
-          console.log(this.formData)
-          this.fillFormData(this.modifyForm,response.data)
-        });
+        // getMetadata(this.metadataid).then(response => {
+        //   this.formData = response.data;
+        //   this.fillFormData(this.modifyForm,response.data)
+        // });
+        this.formData=this.metadata
+        this.formDataC=this.formData
+        this.fillFormData(this.modifyForm,this.metadata)
         this.mdId=this.metadataid
       }
     },
@@ -164,26 +180,31 @@ export default {
       }
       if (this.currentPage===2){
         this.formdata2=data
-        this.formData=Object.assign(this.formData,this.formdata2,{id:this.mdId})
+        this.formData=Object.assign(this.formData,this.formdata2,{id:this.mdId},{deptId:this.deptid})
         let obj=this.formData;
-        for(let key  in obj){
-          if(typeof obj[key]==='object'&& obj[key].constructor===Array){
-            if(obj[key].length===0){
-              obj[key]=''
-            }
-            else if(obj[key].length===1){
-              obj[key]=obj[key][0]
-            }
-            else{
-              //console.log(key,obj[key])
-              obj[key]=obj[key].join(',')
+        if (obj!==this.formDataC){
+          for(let key  in obj){
+            if(typeof obj[key]==='object'&&obj[key]!==null&& obj[key].constructor===Array){
+              if(obj[key].length===0){
+                obj[key]=''
+              }
+              else if(obj[key].length===1){
+                obj[key]=obj[key][0]
+              }
+              else{
+                obj[key]=obj[key].join(',')
+              }
             }
           }
-        }
-        if(this.type==='create'){
-          addMetadata(obj).then()
-        }else if(this.type==='modify'){
-          updateMetadata(obj).then()
+          if(this.type==='create'){
+            addMetadata(obj).then(()=>{
+              console.log("创建 文书档案")
+            })
+          }else if(this.type==='modify'){
+            updateMetadata(obj).then(()=>{
+              console.log("修改文书档案")
+            })
+          }
         }
       }
       if (this.currentPage!==3){
@@ -207,9 +228,17 @@ export default {
       }
     },
     save(){},
+    //上传成功 添加文件到文件树
+    addFile(file){
+      this.$refs.dv.addFile(file)
+    },
     close(){
       this.$emit('close')
     },
+    deleteEle(){
+      this.$refs.dv.remove()
+    },
+    print(){},
   },
   watch:{
     formconf:function(nv,ov) {
@@ -219,11 +248,11 @@ export default {
       this.loading = false
     }
     ,currentPage:function(nv,ov){
-      if(nv===1&&this.type==='modify'){
-        this.fillFormData(this.modifyForm,this.formData)
+      if(nv===1){
+        this.fillFormData(this.firstForm,this.formData)
       }
-      else if (nv===2&&this.type==='modify'){
-        this.fillFormData(this.modifyContent,this.formData)
+      else if (nv===2){
+        this.fillFormData(this.content,this.formData)
       }
     },
     metadataid:function(nv,ov){

@@ -2,27 +2,30 @@
   <div id = "document">
     <el-row :gutter="20">
       <el-col :span="4">
-        <div class="head-container">
-          <el-input
-            v-model="eleName"
-            placeholder="请输入电子文件名"
-            clearable
-            size="small"
-            prefix-icon="el-icon-search"
-            style="margin-bottom: 20px"
-          />
-        </div>
-        <div class="head-container">
-          <el-tree
-            :data="elTree"
-            :props="defaultProps"
-            :expand-on-click-node="false"
-            :filter-node-method="filterNode"
-            ref="tree"
-            show-checkbox
-            default-expand-all
-            @node-click="handleNodeClick"
-          />
+        <div>
+          <div class="head-container">
+            <el-input
+              v-model="eleName"
+              placeholder="请输入电子文件名"
+              clearable
+              size="small"
+              prefix-icon="el-icon-search"
+              style="margin-bottom: 20px"
+            />
+          </div>
+          <div>
+            <el-tree
+              :data="elTree"
+              :props="defaultProps"
+              :expand-on-click-node="false"
+              :filter-node-method="filterNode"
+              ref="tree"
+              node-key="id"
+              show-checkbox
+              default-expand-all
+              @node-click="handleNodeClick"
+            />
+          </div>
         </div>
       </el-col>
       <el-col :span="20">
@@ -32,7 +35,7 @@
         <div  v-else-if="showPic" style="border: 1px solid #000;vertical-align:middle;background-color: #5a5e66;text-align:center;min-height:700px;overflow:auto;">
           <img id = "result" alt="图片" style="object-fit:scale-down;vertical-align:middle;margin-top: 45px">
           <br>
-          <el-button-group style="position:absolute; bottom:20px;margin-left:-115px">
+          <el-button-group style="position:absolute; bottom:20px;margin-left:-160px">
             <el-button @click="rotate(90)"> 左旋</el-button>
             <el-button @click="rotate(-90)">右旋</el-button>
             <el-button @click="recover">恢复</el-button>
@@ -54,7 +57,7 @@
 </template>
 
 <script>
-import {listAttributes} from '@/api/system/attributes'
+import {listAttributes,delAttributes} from '@/api/system/attributes'
 const { Image } = require('image-js');
 export default {
   name: "documentView",
@@ -62,6 +65,8 @@ export default {
     metadataId: {
       type: Number,
     },
+  },
+  components:{
   },
   data() {
     return{
@@ -96,6 +101,21 @@ export default {
     this.getEleTree()
   },
   methods:{
+    remove(){
+      let node = this.$refs.tree.getCheckedNodes()
+      if(node.length<1){
+        this.$message.warning('请选择节点')
+        return
+      }
+      let arr = this.elTree[0].children
+      let delId=[];
+      for (let i = 0; i < node.length; i++) {
+        let n = arr.indexOf(node[i]);
+        this.elTree[0].children.splice(n, 1)
+        delId.push(node[i].id)
+      }
+      delAttributes(delId).then()
+    },
     recover(){
       let url = this.a;
       async function process(){
@@ -157,31 +177,17 @@ export default {
       let that = this;
       listAttributes(this.query).then(res=>{
         let data= res.rows;
+        if (this.elTree.length===0){
+          this.elTree.push({label:'电子文件',children:[]})
+        }
         data.forEach(item=>{
-          this.elTree.push({id:item.id,label: item.computerFileName,children:[]})
+          this.elTree[0].children.push({id:item.id,label: item.computerFileName,children:[]})
         })
-        if (this.elTree.length>0){
-          this.id = this.elTree[0].id
+        if (this.elTree[0].children.length>0){
+          this.id = this.elTree[0].children[0].id;
           this.url=process.env.VUE_APP_BASE_API+'/ele/'+this.id
-          let type = that.getType(this.elTree[0].label);
-          if(type){
-            if(type==='pdf'||type==='PDF'){
-              that.showPDF=true;
-              that.thisPic=false;
-              this.createPicBox();
-            }
-            else if (type==='jpg'||type==='png'||type==='jpeg'||type==='tiff'){
-              that.showPDF=false;
-              that.thisPic=true;
-            }
-            else {
-              that.showPDF=false;
-              that.thisPic=false;
-            }
-          }
-
-          //this.url='https://www.lactame.com/github/image-js/image-js/3073b80c7d626196cb669f9d617f491a8338ca66/test/img/taxi/original.jpeg'
-
+          let type = that.getType(this.elTree[0].children[0].label);
+          this.type(type)
         }
       })
     },
@@ -199,12 +205,40 @@ export default {
     handleNodeClick(data) {
       this.id= data.id
       this.url=process.env.VUE_APP_BASE_API+'/ele/'+this.id
-      this.createPicBox();
+      let type = this.getType(data.label)
+      this.type(type)
     },
+    type(type){
+      if(type){
+        if(type==='pdf'||type==='PDF'){
+          this.showPDF=true;
+          this.showPic=false;
+        }
+        else if (type==='jpg'||type==='png'||type==='jpeg'||type==='tiff'){
+          this.showPDF=false;
+          this.showPic=true;
+          this.createPicBox();
+        }
+        else {
+          this.showPDF=false;
+          this.showPic=false;
+        }
+      }
+    },
+    addFile(files){
+      this.getEleTree()
+    }
   }
 }
 </script>
 
 <style scoped>
-
+  .custom-tree-node {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 14px;
+    padding-right: 8px;
+  }
 </style>
