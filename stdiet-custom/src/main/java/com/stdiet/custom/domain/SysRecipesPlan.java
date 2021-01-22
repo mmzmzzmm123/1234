@@ -29,8 +29,11 @@ public class SysRecipesPlan extends BaseEntity
     private String customer;
 
     //非持久化字段，客户手机号
-    @Excel(name = "客户手机号")
     private String phone;
+
+    @Excel(name = "客户手机号")
+    //处理过的客户手机号
+    private String hidePhone;
 
     /** 食谱开始日期 */
     @JsonFormat(pattern = "yyyy-MM-dd")
@@ -215,6 +218,14 @@ public class SysRecipesPlan extends BaseEntity
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getHidePhone() {
+        return hidePhone;
+    }
+
+    public void setHidePhone(String hidePhone) {
+        this.hidePhone = hidePhone;
     }
 
     @Override

@@ -70,7 +70,9 @@ public class SysCustomerController extends BaseController
             customerListResponse = ObjectUtils.getObjectByObject(customer.getSign(), CustomerListResponse.class);
             customerListResponse.setCreateTime(customer.getCreateTime());
             customerListResponse.setName(customer.getName());
-            customerListResponse.setPhone(customer.getPhone());
+            if(StringUtils.isNotEmpty(customer.getPhone())){
+                customerListResponse.setPhone(StringUtils.hiddenPhoneNumber(customer.getPhone()));
+            }
             StringBuilder signStr = new StringBuilder();
             if(customer.getSign().getSignList() != null && customer.getSign().getSignList().size() > 0){
                 int i = 0;

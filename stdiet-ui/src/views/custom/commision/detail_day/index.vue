@@ -36,7 +36,9 @@
     </el-form>
     <div><span style="color:#E6A23C;font-family:PingFang SC">
           注意事项：
-          <br/>1、2021年1月开始的订单才开始按天计算提成</span></div>
+          <br/>1、2021年1月开始的订单才开始按天计算提成
+          <br/>2、发工资日期定为每月15号，若当前日期大于15号，则认定上个月的工资已发放
+    </span></div>
     <el-row :gutter="10" class="mb8" style="margin-top:10px;">
       <el-col :span="1.5">
         <el-button
@@ -63,17 +65,23 @@
       <el-table-column label="岗位" align="center" prop="postName"/>
       <el-table-column label="总提成" align="center" prop="totalCommissionAmount">
         <template scope="scope">
-          {{scope.row.totalCommissionAmount}}
+          {{scope.row.totalCommissionAmount.toFixed(3)}}
         </template>
       </el-table-column>
       <el-table-column label="已发放提成" align="center" prop="totalHasSentCommissionAmount">
         <template scope="scope">
-          {{scope.row.totalHasSentCommissionAmount}}
+          {{scope.row.totalHasSentCommissionAmount.toFixed(3)}}
         </template>
       </el-table-column>
       <el-table-column label="未发放提成" align="center" prop="totalNotSentCommissionAmount">
         <template scope="scope">
-          {{scope.row.totalNotSentCommissionAmount}}
+          {{scope.row.totalNotSentCommissionAmount.toFixed(3)}}
+        </template>
+
+      </el-table-column>
+      <el-table-column label="下月应发提成" align="center" prop="nextMonthCommission">
+        <template scope="scope">
+          {{scope.row.nextMonthCommission.toFixed(3)}}
         </template>
 
       </el-table-column>
@@ -104,7 +112,11 @@
             {{scope.row.yearMonth.substring(0, 4)}}年{{scope.row.yearMonth.substring(4)}}月
           </template>
         </el-table-column>
-        <el-table-column property="yearMonthCommission" label="提成金额" width="100"></el-table-column>
+        <el-table-column property="yearMonthCommission" label="提成金额" width="100">
+          <template scope="scope">
+            {{scope.row.yearMonthCommission.toFixed(3)}}
+          </template>
+        </el-table-column>
       </el-table>
     </el-dialog>
   </div>
