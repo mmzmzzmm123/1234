@@ -75,7 +75,7 @@
         </template>
       </el-table-column>
       <el-table-column label="菜品名称" align="center" prop="name"/>
-      <el-table-column label="菜品类型" align="center" prop="type" >
+      <el-table-column label="菜品类型" align="center" prop="type">
         <template slot-scope="scope">
           <autohideinfo :data="typeFormat(scope.row)"/>
         </template>
@@ -477,7 +477,7 @@
         const id = row.id || this.ids
         getDishes(id).then(response => {
           this.form = response.data;
-          this.form.type = this.form.type.split(',');
+          this.form.type = this.form.type ? this.form.type.split(',') : null;
           this.form.igdList.forEach(obj => {
             this.selIngIds.push(obj.id);
             this.selIngList.push({
