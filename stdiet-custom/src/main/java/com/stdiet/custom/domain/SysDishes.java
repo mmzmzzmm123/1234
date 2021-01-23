@@ -32,7 +32,17 @@ public class SysDishes extends BaseEntity
     @Excel(name = "做法")
     private String methods;
 
+    private Integer isMain;
+
     private String reviewStatus;
+
+    public Integer getIsMain() {
+        return isMain;
+    }
+
+    public void setIsMain(Integer isMain) {
+        this.isMain = isMain;
+    }
 
     public void setReviewStatus(String reviewStatus) {
         this.reviewStatus = reviewStatus;

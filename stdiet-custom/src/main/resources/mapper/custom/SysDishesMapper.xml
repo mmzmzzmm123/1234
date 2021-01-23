@@ -8,6 +8,7 @@
         <result property="id"    column="id"    />
         <result property="name"    column="name"    />
         <result property="type"    column="type"    />
+        <result property="isMain"    column="is_main"    />
         <result property="methods"    column="methods"    />
         <result property="reviewStatus" column="review_status" />
         <result property="createBy"    column="create_by"    />
@@ -32,7 +33,7 @@
     </resultMap>
 
     <sql id="selectSysDishesVo">
-        select id, name, type, methods, create_by, create_time, update_by, update_time, review_status from sys_dishes
+        select id, name, type, is_main, methods, create_by, create_time, update_by, update_time, review_status from sys_dishes
     </sql>
 
     <select id="selectSysDishesList" parameterType="SysDishes" resultMap="SysDishesResult">
@@ -41,6 +42,7 @@
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
             <if test="type != null  and type != ''"> and FIND_IN_SET(#{type}, type)</if>
             <if test="reviewStatus != null  and type != ''"> and review_status = #{reviewStatus}</if>
+            <if test="isMain != null  and type != ''"> and is_main = #{isMain}</if>
         </where>
     </select>
 
@@ -86,6 +88,7 @@
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="name != null">name,</if>
             <if test="type != null">type,</if>
+            <if test="isMain != null">is_main,</if>
             <if test="methods != null">methods,</if>
             <if test="createBy != null">create_by,</if>
             <if test="reviewStatus != null">review_status</if>
@@ -96,6 +99,7 @@
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="name != null">#{name},</if>
             <if test="type != null">#{type},</if>
+            <if test="isMain != null">#{isMain},</if>
             <if test="methods != null">#{methods},</if>
             <if test="createBy != null">#{createBy},</if>
             <if test="reviewStatus != null">#{reviewStatus}</if>
@@ -110,6 +114,7 @@
         <trim prefix="SET" suffixOverrides=",">
             <if test="name != null">name = #{name},</if>
             <if test="type != null">type = #{type},</if>
+            <if test="isMain != null">is_main = #{isMain},</if>
             <if test="methods != null">methods = #{methods},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
             <if test="reviewStatus != null">review_status = #{reviewStatus},</if>
