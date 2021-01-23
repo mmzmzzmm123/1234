@@ -148,6 +148,12 @@ export const constantRoutes = [
     component: (resolve) => require(['@/views/custom/investigate/questionnaire'], resolve),
     hidden: true,
     meta: { title: '营养体征调查问卷'}
+},
+{
+  path: '/subhealthyInvestigation',
+  component: (resolve) => require(['@/views/custom/subhealthy/investigation'], resolve),
+  hidden: true,
+  meta: { title: '胜唐体控健康评估表'}
 }
 ]
 
