@@ -1,0 +1,415 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.stdiet.custom.mapper.SysCustomerHealthyMapper">
+
+    <resultMap type="SysCustomerHealthy" id="SysCustomerHealthyResult">
+        <result property="id"    column="id"    />
+        <result property="customerId"    column="customer_id"    />
+        <result property="conditioningProjectId"    column="conditioning_project_id"    />
+        <result property="sex"    column="sex"    />
+        <result property="age"    column="age"    />
+        <result property="condiment"    column="condiment"    />
+        <result property="otherCondiment"    column="other_condiment"    />
+        <result property="cookingStyle"    column="cooking_style"    />
+        <result property="cookingStyleRate"    column="cooking_style_rate"    />
+        <result property="washVegetablesStyle"    column="wash_vegetables_style"    />
+        <result property="otherWashVegetablesStyle"    column="other_wash_vegetables_style"    />
+        <result property="breakfastType"    column="breakfast_type"    />
+        <result property="breakfastFood"    column="breakfast_food"    />
+        <result property="lunchType"    column="lunch_type"    />
+        <result property="dinner"    column="dinner"    />
+        <result property="vegetableRate"    column="vegetable_rate"    />
+        <result property="commonMeat"    column="common_meat"    />
+        <result property="dinnerTime"    column="dinner_time"    />
+        <result property="supperNum"    column="supper_num"    />
+        <result property="supperFood"    column="supper_food"    />
+        <result property="dietHotAndCold"    column="diet_hot_and_cold"    />
+        <result property="dietFlavor"    column="diet_flavor"    />
+        <result property="vegetablesNum"    column="vegetables_num"    />
+        <result property="vegetablesRateType"    column="vegetables_rate_type"    />
+        <result property="fruitsNum"    column="fruits_num"    />
+        <result property="fruitsTime"    column="fruits_time"    />
+        <result property="fruitsRate"    column="fruits_rate"    />
+        <result property="riceNum"    column="rice_num"    />
+        <result property="riceFull"    column="rice_full"    />
+        <result property="eatingSpeed"    column="eating_speed"    />
+        <result property="snacks"    column="snacks"    />
+        <result property="otherSnacks"    column="other_snacks"    />
+        <result property="healthProductsFlag"    column="health_products_flag"    />
+        <result property="healthProductsBrand"    column="health_products_brand"    />
+        <result property="healthProductsName"    column="health_products_name"    />
+        <result property="healthProductsWeekRate"    column="health_products_week_rate"    />
+        <result property="healthProductsDayRate"    column="health_products_day_rate"    />
+        <result property="waterNum"    column="water_num"    />
+        <result property="waterType"    column="water_type"    />
+        <result property="waterHabit"    column="water_habit"    />
+        <result property="drinksNum"    column="drinks_num"    />
+        <result property="drinkWineFlag"    column="drink_wine_flag"    />
+        <result property="drinkWineClassify"    column="drink_wine_classify"    />
+        <result property="otherWineClassify"    column="other_wine_classify"    />
+        <result property="drinkWineAmount"    column="drink_wine_amount"    />
+        <result property="smokeFlag"    column="smoke_flag"    />
+        <result property="smokeRate"    column="smoke_rate"    />
+        <result property="secondSmoke"    column="second_smoke"    />
+        <result property="workIndustry"    column="work_industry"    />
+        <result property="workType"    column="work_type"    />
+        <result property="defecationNum"    column="defecation_num"    />
+        <result property="otherDefecationNum"    column="other_defecation_num"    />
+        <result property="defecationTime"    column="defecation_time"    />
+        <result property="defecationShape"    column="defecation_shape"    />
+        <result property="defecationSmell"    column="defecation_smell"    />
+        <result property="defecationSpeed"    column="defecation_speed"    />
+        <result property="defecationColor"    column="defecation_color"    />
+        <result property="motionNum"    column="motion_num"    />
+        <result property="motionDuration"    column="motion_duration"    />
+        <result property="motionTime"    column="motion_time"    />
+        <result property="aerobicMotionClassify"    column="aerobic_motion_classify"    />
+        <result property="anaerobicMotionClassify"    column="anaerobic_motion_classify"    />
+        <result property="anaerobicAerobicMotionClassify"    column="anaerobic_aerobic_motion_classify"    />
+        <result property="otherMotionClassify"    column="other_motion_classify"    />
+        <result property="motionField"    column="motion_field"    />
+        <result property="otherMotionField"    column="other_motion_field"    />
+        <result property="sleepTime"    column="sleep_time"    />
+        <result property="sleepQuality"    column="sleep_quality"    />
+        <result property="sleepDrugFlag"    column="sleep_drug_flag"    />
+        <result property="sleepDrug"    column="sleep_drug"    />
+        <result property="stayupLateFlag"    column="stayup_late_flag"    />
+        <result property="stayupLateWeekNum"    column="stayup_late_week_num"    />
+        <result property="familyIllnessHistory"    column="family_illness_history"    />
+        <result property="otherFamilyIllnessHistory"    column="other_family_illness_history"    />
+        <result property="operationHistory"    column="operation_history"    />
+        <result property="otherOperationHistory"    column="other_operation_history"    />
+        <result property="nearOperationFlag"    column="near_operation_flag"    />
+        <result property="recoveryeSituation"    column="recoverye_situation"    />
+        <result property="longEatDrugFlag"    column="long_eat_drug_flag"    />
+        <result property="longEatDrugClassify"    column="long_eat_drug_classify"    />
+        <result property="otherLongEatDrugClassify"    column="other_long_eat_drug_classify"    />
+        <result property="allergyFlag"    column="allergy_flag"    />
+        <result property="allergySituation"    column="allergy_situation"    />
+        <result property="allergen"    column="allergen"    />
+        <result property="otherAllergen"    column="other_allergen"    />
+        <result property="medicalReport"    column="medical_report"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <sql id="selectSysCustomerHealthyVo">
+        select id, customer_id, conditioning_project_id, sex, age, condiment, other_condiment, cooking_style, cooking_style_rate, wash_vegetables_style, other_wash_vegetables_style, breakfast_type, breakfast_food, lunch_type, dinner, vegetable_rate, common_meat, dinner_time, supper_num, supper_food, diet_hot_and_cold, diet_flavor, vegetables_num, vegetables_rate_type, fruits_num, fruits_time, fruits_rate, rice_num, rice_full, eating_speed, snacks, other_snacks, health_products_flag, health_products_brand, health_products_name, health_products_week_rate, health_products_day_rate, water_num, water_type, water_habit, drinks_num, drink_wine_flag, drink_wine_classify, other_wine_classify, drink_wine_amount, smoke_flag, smoke_rate, second_smoke, work_industry, work_type, defecation_num, other_defecation_num, defecation_time, defecation_shape, defecation_smell, defecation_speed, defecation_color, motion_num, motion_duration, motion_time, aerobic_motion_classify, anaerobic_motion_classify, anaerobic_aerobic_motion_classify, other_motion_classify, motion_field, other_motion_field, sleep_time, sleep_quality, sleep_drug_flag, sleep_drug, stayup_late_flag, stayup_late_week_num, family_illness_history, other_family_illness_history, operation_history, other_operation_history, near_operation_flag, recoverye_situation, long_eat_drug_flag, long_eat_drug_classify, other_long_eat_drug_classify, allergy_flag, allergy_situation, allergen, other_allergen, medical_report, create_time, create_by, update_time, update_by, del_flag from sys_customer_healthy
+    </sql>
+
+    <select id="selectSysCustomerHealthyList" parameterType="SysCustomerHealthy" resultMap="SysCustomerHealthyResult">
+        <include refid="selectSysCustomerHealthyVo"/>
+        <where>
+            <if test="conditioningProjectId != null "> and conditioning_project_id = #{conditioningProjectId}</if>
+        </where>
+    </select>
+
+    <select id="selectSysCustomerHealthyById" parameterType="Long" resultMap="SysCustomerHealthyResult">
+        <include refid="selectSysCustomerHealthyVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertSysCustomerHealthy" parameterType="SysCustomerHealthy">
+        insert into sys_customer_healthy
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="customerId != null">customer_id,</if>
+            <if test="conditioningProjectId != null">conditioning_project_id,</if>
+            <if test="sex != null">sex,</if>
+            <if test="age != null">age,</if>
+            <if test="condiment != null">condiment,</if>
+            <if test="otherCondiment != null">other_condiment,</if>
+            <if test="cookingStyle != null">cooking_style,</if>
+            <if test="cookingStyleRate != null">cooking_style_rate,</if>
+            <if test="washVegetablesStyle != null">wash_vegetables_style,</if>
+            <if test="otherWashVegetablesStyle != null">other_wash_vegetables_style,</if>
+            <if test="breakfastType != null">breakfast_type,</if>
+            <if test="breakfastFood != null">breakfast_food,</if>
+            <if test="lunchType != null">lunch_type,</if>
+            <if test="dinner != null">dinner,</if>
+            <if test="vegetableRate != null">vegetable_rate,</if>
+            <if test="commonMeat != null">common_meat,</if>
+            <if test="dinnerTime != null">dinner_time,</if>
+            <if test="supperNum != null">supper_num,</if>
+            <if test="supperFood != null">supper_food,</if>
+            <if test="dietHotAndCold != null">diet_hot_and_cold,</if>
+            <if test="dietFlavor != null">diet_flavor,</if>
+            <if test="vegetablesNum != null">vegetables_num,</if>
+            <if test="vegetablesRateType != null">vegetables_rate_type,</if>
+            <if test="fruitsNum != null">fruits_num,</if>
+            <if test="fruitsTime != null">fruits_time,</if>
+            <if test="fruitsRate != null">fruits_rate,</if>
+            <if test="riceNum != null">rice_num,</if>
+            <if test="riceFull != null">rice_full,</if>
+            <if test="eatingSpeed != null">eating_speed,</if>
+            <if test="snacks != null">snacks,</if>
+            <if test="otherSnacks != null">other_snacks,</if>
+            <if test="healthProductsFlag != null">health_products_flag,</if>
+            <if test="healthProductsBrand != null">health_products_brand,</if>
+            <if test="healthProductsName != null">health_products_name,</if>
+            <if test="healthProductsWeekRate != null">health_products_week_rate,</if>
+            <if test="healthProductsDayRate != null">health_products_day_rate,</if>
+            <if test="waterNum != null">water_num,</if>
+            <if test="waterType != null">water_type,</if>
+            <if test="waterHabit != null">water_habit,</if>
+            <if test="drinksNum != null">drinks_num,</if>
+            <if test="drinkWineFlag != null">drink_wine_flag,</if>
+            <if test="drinkWineClassify != null">drink_wine_classify,</if>
+            <if test="otherWineClassify != null">other_wine_classify,</if>
+            <if test="drinkWineAmount != null">drink_wine_amount,</if>
+            <if test="smokeFlag != null">smoke_flag,</if>
+            <if test="smokeRate != null">smoke_rate,</if>
+            <if test="secondSmoke != null">second_smoke,</if>
+            <if test="workIndustry != null">work_industry,</if>
+            <if test="workType != null">work_type,</if>
+            <if test="defecationNum != null">defecation_num,</if>
+            <if test="otherDefecationNum != null">other_defecation_num,</if>
+            <if test="defecationTime != null">defecation_time,</if>
+            <if test="defecationShape != null">defecation_shape,</if>
+            <if test="defecationSmell != null">defecation_smell,</if>
+            <if test="defecationSpeed != null">defecation_speed,</if>
+            <if test="defecationColor != null">defecation_color,</if>
+            <if test="motionNum != null">motion_num,</if>
+            <if test="motionDuration != null">motion_duration,</if>
+            <if test="motionTime != null">motion_time,</if>
+            <if test="aerobicMotionClassify != null">aerobic_motion_classify,</if>
+            <if test="anaerobicMotionClassify != null">anaerobic_motion_classify,</if>
+            <if test="anaerobicAerobicMotionClassify != null">anaerobic_aerobic_motion_classify,</if>
+            <if test="otherMotionClassify != null">other_motion_classify,</if>
+            <if test="motionField != null">motion_field,</if>
+            <if test="otherMotionField != null">other_motion_field,</if>
+            <if test="sleepTime != null">sleep_time,</if>
+            <if test="sleepQuality != null">sleep_quality,</if>
+            <if test="sleepDrugFlag != null">sleep_drug_flag,</if>
+            <if test="sleepDrug != null">sleep_drug,</if>
+            <if test="stayupLateFlag != null">stayup_late_flag,</if>
+            <if test="stayupLateWeekNum != null">stayup_late_week_num,</if>
+            <if test="familyIllnessHistory != null">family_illness_history,</if>
+            <if test="otherFamilyIllnessHistory != null">other_family_illness_history,</if>
+            <if test="operationHistory != null">operation_history,</if>
+            <if test="otherOperationHistory != null">other_operation_history,</if>
+            <if test="nearOperationFlag != null">near_operation_flag,</if>
+            <if test="recoveryeSituation != null">recoverye_situation,</if>
+            <if test="longEatDrugFlag != null">long_eat_drug_flag,</if>
+            <if test="longEatDrugClassify != null">long_eat_drug_classify,</if>
+            <if test="otherLongEatDrugClassify != null">other_long_eat_drug_classify,</if>
+            <if test="allergyFlag != null">allergy_flag,</if>
+            <if test="allergySituation != null">allergy_situation,</if>
+            <if test="allergen != null">allergen,</if>
+            <if test="otherAllergen != null">other_allergen,</if>
+            <if test="medicalReport != null">medical_report,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="delFlag != null">del_flag,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="customerId != null">#{customerId},</if>
+            <if test="conditioningProjectId != null">#{conditioningProjectId},</if>
+            <if test="sex != null">#{sex},</if>
+            <if test="age != null">#{age},</if>
+            <if test="condiment != null">#{condiment},</if>
+            <if test="otherCondiment != null">#{otherCondiment},</if>
+            <if test="cookingStyle != null">#{cookingStyle},</if>
+            <if test="cookingStyleRate != null">#{cookingStyleRate},</if>
+            <if test="washVegetablesStyle != null">#{washVegetablesStyle},</if>
+            <if test="otherWashVegetablesStyle != null">#{otherWashVegetablesStyle},</if>
+            <if test="breakfastType != null">#{breakfastType},</if>
+            <if test="breakfastFood != null">#{breakfastFood},</if>
+            <if test="lunchType != null">#{lunchType},</if>
+            <if test="dinner != null">#{dinner},</if>
+            <if test="vegetableRate != null">#{vegetableRate},</if>
+            <if test="commonMeat != null">#{commonMeat},</if>
+            <if test="dinnerTime != null">#{dinnerTime},</if>
+            <if test="supperNum != null">#{supperNum},</if>
+            <if test="supperFood != null">#{supperFood},</if>
+            <if test="dietHotAndCold != null">#{dietHotAndCold},</if>
+            <if test="dietFlavor != null">#{dietFlavor},</if>
+            <if test="vegetablesNum != null">#{vegetablesNum},</if>
+            <if test="vegetablesRateType != null">#{vegetablesRateType},</if>
+            <if test="fruitsNum != null">#{fruitsNum},</if>
+            <if test="fruitsTime != null">#{fruitsTime},</if>
+            <if test="fruitsRate != null">#{fruitsRate},</if>
+            <if test="riceNum != null">#{riceNum},</if>
+            <if test="riceFull != null">#{riceFull},</if>
+            <if test="eatingSpeed != null">#{eatingSpeed},</if>
+            <if test="snacks != null">#{snacks},</if>
+            <if test="otherSnacks != null">#{otherSnacks},</if>
+            <if test="healthProductsFlag != null">#{healthProductsFlag},</if>
+            <if test="healthProductsBrand != null">#{healthProductsBrand},</if>
+            <if test="healthProductsName != null">#{healthProductsName},</if>
+            <if test="healthProductsWeekRate != null">#{healthProductsWeekRate},</if>
+            <if test="healthProductsDayRate != null">#{healthProductsDayRate},</if>
+            <if test="waterNum != null">#{waterNum},</if>
+            <if test="waterType != null">#{waterType},</if>
+            <if test="waterHabit != null">#{waterHabit},</if>
+            <if test="drinksNum != null">#{drinksNum},</if>
+            <if test="drinkWineFlag != null">#{drinkWineFlag},</if>
+            <if test="drinkWineClassify != null">#{drinkWineClassify},</if>
+            <if test="otherWineClassify != null">#{otherWineClassify},</if>
+            <if test="drinkWineAmount != null">#{drinkWineAmount},</if>
+            <if test="smokeFlag != null">#{smokeFlag},</if>
+            <if test="smokeRate != null">#{smokeRate},</if>
+            <if test="secondSmoke != null">#{secondSmoke},</if>
+            <if test="workIndustry != null">#{workIndustry},</if>
+            <if test="workType != null">#{workType},</if>
+            <if test="defecationNum != null">#{defecationNum},</if>
+            <if test="otherDefecationNum != null">#{otherDefecationNum},</if>
+            <if test="defecationTime != null">#{defecationTime},</if>
+            <if test="defecationShape != null">#{defecationShape},</if>
+            <if test="defecationSmell != null">#{defecationSmell},</if>
+            <if test="defecationSpeed != null">#{defecationSpeed},</if>
+            <if test="defecationColor != null">#{defecationColor},</if>
+            <if test="motionNum != null">#{motionNum},</if>
+            <if test="motionDuration != null">#{motionDuration},</if>
+            <if test="motionTime != null">#{motionTime},</if>
+            <if test="aerobicMotionClassify != null">#{aerobicMotionClassify},</if>
+            <if test="anaerobicMotionClassify != null">#{anaerobicMotionClassify},</if>
+            <if test="anaerobicAerobicMotionClassify != null">#{anaerobicAerobicMotionClassify},</if>
+            <if test="otherMotionClassify != null">#{otherMotionClassify},</if>
+            <if test="motionField != null">#{motionField},</if>
+            <if test="otherMotionField != null">#{otherMotionField},</if>
+            <if test="sleepTime != null">#{sleepTime},</if>
+            <if test="sleepQuality != null">#{sleepQuality},</if>
+            <if test="sleepDrugFlag != null">#{sleepDrugFlag},</if>
+            <if test="sleepDrug != null">#{sleepDrug},</if>
+            <if test="stayupLateFlag != null">#{stayupLateFlag},</if>
+            <if test="stayupLateWeekNum != null">#{stayupLateWeekNum},</if>
+            <if test="familyIllnessHistory != null">#{familyIllnessHistory},</if>
+            <if test="otherFamilyIllnessHistory != null">#{otherFamilyIllnessHistory},</if>
+            <if test="operationHistory != null">#{operationHistory},</if>
+            <if test="otherOperationHistory != null">#{otherOperationHistory},</if>
+            <if test="nearOperationFlag != null">#{nearOperationFlag},</if>
+            <if test="recoveryeSituation != null">#{recoveryeSituation},</if>
+            <if test="longEatDrugFlag != null">#{longEatDrugFlag},</if>
+            <if test="longEatDrugClassify != null">#{longEatDrugClassify},</if>
+            <if test="otherLongEatDrugClassify != null">#{otherLongEatDrugClassify},</if>
+            <if test="allergyFlag != null">#{allergyFlag},</if>
+            <if test="allergySituation != null">#{allergySituation},</if>
+            <if test="allergen != null">#{allergen},</if>
+            <if test="otherAllergen != null">#{otherAllergen},</if>
+            <if test="medicalReport != null">#{medicalReport},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+        </trim>
+    </insert>
+
+    <update id="updateSysCustomerHealthy" parameterType="SysCustomerHealthy">
+        update sys_customer_healthy
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="customerId != null">customer_id = #{customerId},</if>
+            <if test="conditioningProjectId != null">conditioning_project_id = #{conditioningProjectId},</if>
+            <if test="sex != null">sex = #{sex},</if>
+            <if test="age != null">age = #{age},</if>
+            <if test="condiment != null">condiment = #{condiment},</if>
+            <if test="otherCondiment != null">other_condiment = #{otherCondiment},</if>
+            <if test="cookingStyle != null">cooking_style = #{cookingStyle},</if>
+            <if test="cookingStyleRate != null">cooking_style_rate = #{cookingStyleRate},</if>
+            <if test="washVegetablesStyle != null">wash_vegetables_style = #{washVegetablesStyle},</if>
+            <if test="otherWashVegetablesStyle != null">other_wash_vegetables_style = #{otherWashVegetablesStyle},</if>
+            <if test="breakfastType != null">breakfast_type = #{breakfastType},</if>
+            <if test="breakfastFood != null">breakfast_food = #{breakfastFood},</if>
+            <if test="lunchType != null">lunch_type = #{lunchType},</if>
+            <if test="dinner != null">dinner = #{dinner},</if>
+            <if test="vegetableRate != null">vegetable_rate = #{vegetableRate},</if>
+            <if test="commonMeat != null">common_meat = #{commonMeat},</if>
+            <if test="dinnerTime != null">dinner_time = #{dinnerTime},</if>
+            <if test="supperNum != null">supper_num = #{supperNum},</if>
+            <if test="supperFood != null">supper_food = #{supperFood},</if>
+            <if test="dietHotAndCold != null">diet_hot_and_cold = #{dietHotAndCold},</if>
+            <if test="dietFlavor != null">diet_flavor = #{dietFlavor},</if>
+            <if test="vegetablesNum != null">vegetables_num = #{vegetablesNum},</if>
+            <if test="vegetablesRateType != null">vegetables_rate_type = #{vegetablesRateType},</if>
+            <if test="fruitsNum != null">fruits_num = #{fruitsNum},</if>
+            <if test="fruitsTime != null">fruits_time = #{fruitsTime},</if>
+            <if test="fruitsRate != null">fruits_rate = #{fruitsRate},</if>
+            <if test="riceNum != null">rice_num = #{riceNum},</if>
+            <if test="riceFull != null">rice_full = #{riceFull},</if>
+            <if test="eatingSpeed != null">eating_speed = #{eatingSpeed},</if>
+            <if test="snacks != null">snacks = #{snacks},</if>
+            <if test="otherSnacks != null">other_snacks = #{otherSnacks},</if>
+            <if test="healthProductsFlag != null">health_products_flag = #{healthProductsFlag},</if>
+            <if test="healthProductsBrand != null">health_products_brand = #{healthProductsBrand},</if>
+            <if test="healthProductsName != null">health_products_name = #{healthProductsName},</if>
+            <if test="healthProductsWeekRate != null">health_products_week_rate = #{healthProductsWeekRate},</if>
+            <if test="healthProductsDayRate != null">health_products_day_rate = #{healthProductsDayRate},</if>
+            <if test="waterNum != null">water_num = #{waterNum},</if>
+            <if test="waterType != null">water_type = #{waterType},</if>
+            <if test="waterHabit != null">water_habit = #{waterHabit},</if>
+            <if test="drinksNum != null">drinks_num = #{drinksNum},</if>
+            <if test="drinkWineFlag != null">drink_wine_flag = #{drinkWineFlag},</if>
+            <if test="drinkWineClassify != null">drink_wine_classify = #{drinkWineClassify},</if>
+            <if test="otherWineClassify != null">other_wine_classify = #{otherWineClassify},</if>
+            <if test="drinkWineAmount != null">drink_wine_amount = #{drinkWineAmount},</if>
+            <if test="smokeFlag != null">smoke_flag = #{smokeFlag},</if>
+            <if test="smokeRate != null">smoke_rate = #{smokeRate},</if>
+            <if test="secondSmoke != null">second_smoke = #{secondSmoke},</if>
+            <if test="workIndustry != null">work_industry = #{workIndustry},</if>
+            <if test="workType != null">work_type = #{workType},</if>
+            <if test="defecationNum != null">defecation_num = #{defecationNum},</if>
+            <if test="otherDefecationNum != null">other_defecation_num = #{otherDefecationNum},</if>
+            <if test="defecationTime != null">defecation_time = #{defecationTime},</if>
+            <if test="defecationShape != null">defecation_shape = #{defecationShape},</if>
+            <if test="defecationSmell != null">defecation_smell = #{defecationSmell},</if>
+            <if test="defecationSpeed != null">defecation_speed = #{defecationSpeed},</if>
+            <if test="defecationColor != null">defecation_color = #{defecationColor},</if>
+            <if test="motionNum != null">motion_num = #{motionNum},</if>
+            <if test="motionDuration != null">motion_duration = #{motionDuration},</if>
+            <if test="motionTime != null">motion_time = #{motionTime},</if>
+            <if test="aerobicMotionClassify != null">aerobic_motion_classify = #{aerobicMotionClassify},</if>
+            <if test="anaerobicMotionClassify != null">anaerobic_motion_classify = #{anaerobicMotionClassify},</if>
+            <if test="anaerobicAerobicMotionClassify != null">anaerobic_aerobic_motion_classify = #{anaerobicAerobicMotionClassify},</if>
+            <if test="otherMotionClassify != null">other_motion_classify = #{otherMotionClassify},</if>
+            <if test="motionField != null">motion_field = #{motionField},</if>
+            <if test="otherMotionField != null">other_motion_field = #{otherMotionField},</if>
+            <if test="sleepTime != null">sleep_time = #{sleepTime},</if>
+            <if test="sleepQuality != null">sleep_quality = #{sleepQuality},</if>
+            <if test="sleepDrugFlag != null">sleep_drug_flag = #{sleepDrugFlag},</if>
+            <if test="sleepDrug != null">sleep_drug = #{sleepDrug},</if>
+            <if test="stayupLateFlag != null">stayup_late_flag = #{stayupLateFlag},</if>
+            <if test="stayupLateWeekNum != null">stayup_late_week_num = #{stayupLateWeekNum},</if>
+            <if test="familyIllnessHistory != null">family_illness_history = #{familyIllnessHistory},</if>
+            <if test="otherFamilyIllnessHistory != null">other_family_illness_history = #{otherFamilyIllnessHistory},</if>
+            <if test="operationHistory != null">operation_history = #{operationHistory},</if>
+            <if test="otherOperationHistory != null">other_operation_history = #{otherOperationHistory},</if>
+            <if test="nearOperationFlag != null">near_operation_flag = #{nearOperationFlag},</if>
+            <if test="recoveryeSituation != null">recoverye_situation = #{recoveryeSituation},</if>
+            <if test="longEatDrugFlag != null">long_eat_drug_flag = #{longEatDrugFlag},</if>
+            <if test="longEatDrugClassify != null">long_eat_drug_classify = #{longEatDrugClassify},</if>
+            <if test="otherLongEatDrugClassify != null">other_long_eat_drug_classify = #{otherLongEatDrugClassify},</if>
+            <if test="allergyFlag != null">allergy_flag = #{allergyFlag},</if>
+            <if test="allergySituation != null">allergy_situation = #{allergySituation},</if>
+            <if test="allergen != null">allergen = #{allergen},</if>
+            <if test="otherAllergen != null">other_allergen = #{otherAllergen},</if>
+            <if test="medicalReport != null">medical_report = #{medicalReport},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysCustomerHealthyById" parameterType="Long">
+        delete from sys_customer_healthy where id = #{id}
+    </delete>
+
+    <delete id="deleteSysCustomerHealthyByIds" parameterType="String">
+        delete from sys_customer_healthy where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
