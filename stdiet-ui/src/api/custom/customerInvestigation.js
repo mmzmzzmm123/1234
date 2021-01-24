@@ -25,3 +25,12 @@ export function getDictData(dictType) {
     method: 'get'
   })
 }
+
+// 新增客户健康
+export function addCustomerHealthy(data) {
+  return request({
+    url: '/investigate/addCustomerHealthy',
+    method: 'post',
+    data: data
+  })
+}
