@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SysUserFollowMapper">
+
+    <resultMap type="SysUserFollow" id="SysUserFollowResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="followUserId"    column="follow_user_id"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectSysUserFollowVo">
+        select id, user_id, follow_user_id, create_time from sys_user_follow
+    </sql>
+
+    <select id="selectSysUserFollowList" parameterType="SysUserFollow" resultMap="SysUserFollowResult">
+        <include refid="selectSysUserFollowVo"/>
+        <where>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="followUserId != null "> and follow_user_id = #{followUserId}</if>
+        </where>
+    </select>
+
+
+    <select id="selectSysUserFollowById" parameterType="Long" resultMap="SysUserFollowResult">
+        <include refid="selectSysUserFollowVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="listFollwUser" parameterType="Long" resultType="String">
+        select follow_user_id from sys_user_follow where user_id = #{userId}
+    </select>
+
+    <select id="listFollwUserByUid" parameterType="Long" resultType="java.util.Map">
+        select f.follow_user_id as userId,u.user_name as userName,u.avatar from sys_user_follow as f,sys_user as u where u.user_id = f.follow_user_id and f.user_id = #{userId}
+    </select>
+    <select id="listFansUserByUid" parameterType="Long" resultType="java.util.Map">
+        select f.user_id as userId,u.user_name as userName,u.avatar from sys_user_follow as f,sys_user as u where u.user_id = f.user_id and f.follow_user_id = #{userId}
+    </select>
+
+    <insert id="insertSysUserFollow" parameterType="SysUserFollow" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_user_follow
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="followUserId != null">follow_user_id,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="followUserId != null">#{followUserId},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysUserFollow" parameterType="SysUserFollow">
+        update sys_user_follow
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="followUserId != null">follow_user_id = #{followUserId},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysUserFollowById" parameterType="Long">
+        delete from sys_user_follow where id = #{id}
+    </delete>
+
+    <delete id="deleteSysUserFollowByIds" parameterType="String">
+        delete from sys_user_follow where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

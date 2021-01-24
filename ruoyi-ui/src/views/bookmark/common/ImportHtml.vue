@@ -1,6 +1,6 @@
 <template>
-  <div>
-
+  <div >
+    <div style="width:360px;height:260px;margin: 0 auto;margin-top: 40px">
     <!-- 用户导入对话框 -->
 <!--    <el-dialog :title="upload.title" :visible.sync="upload.open" width="400px" append-to-body>-->
       <el-upload
@@ -26,13 +26,15 @@
 <!--          <el-checkbox v-model="upload.updateSupport" />是否更新已经存在的用户数据-->
 <!--          <el-link type="info" style="font-size:12px" @click="importTemplate">下载模板</el-link>-->
 <!--        </div>-->
-        <div class="el-upload__tip" style="color:red" slot="tip">提示：仅允许导入".html"格式文件！</div>
+        <div class="el-upload__tip title"   slot="tip">提示：仅允许导入".html"格式文件！</div>
       </el-upload>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" class="  mdui-text-center  mdui-btn mdui-btn-raised mdui-text-color-blue-900  mdui-color-light-blue-100" @click="submitFileForm">确 定</el-button>
 <!--        <el-button @click="upload.open = false">取 消</el-button>-->
-        <button class="mdui-btn mdui-btn-raised mdui-btn-dense  mdui-color-light-blue-100  mdui-ripple">Button</button>
+        <button @click="submitUpload"  class="isbutton mdui-btn mdui-btn-block mdui-btn-raised mdui-btn-dense  mdui-color-blue-100  mdui-ripple">导 入 书 签</button>
       </div>
+
+    </div>
 <!--    </el-dialog>-->
 
 <!--    <el-button-->
@@ -150,10 +152,11 @@
 
 <style scoped>
   .text{
-    border: #6f7180 1px solid;
+    border: #cecece 1px solid;
     border-radius: 10px;
-    margin-top: 10px;
-    background-color: #e9e9e9;
+    margin: 20px;
+    background-color: #fafcff;
+    margin-top:  30px;
   }
 
   .structure {
@@ -172,5 +175,21 @@
   }
    li{
     list-style:none;
+  }
+  .main{
+
+  }
+  .upload-demo{
+  }
+  .title {
+    color: red;
+    width: 360px;
+    height: 10px;
+    text-align: center;
+    margin-top: 7px;
+  }
+  .isbutton{
+  margin-top: 10px;
+
   }
 </style>

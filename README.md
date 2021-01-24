@@ -53,3 +53,8 @@ Destroyed（销毁之后）
 activate（keep-alive组件激活时调用） 
 deactivated（keep-alive组件停用时调用） 
 errorCaptured（这个组件的作用是接受子孙组件报错是调用，三个参数 错误对象、错误的组件、错误信息）
+
+
+redis 分页
+    //  pageNum=5&pageSize=15  第几页 每页 15条
+       //pageNum 起 &pageSize 结束

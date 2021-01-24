@@ -343,7 +343,7 @@
         sousuo: '',
         drawer: false,
         // 遮罩层
-        loading: true,
+        // loading: true,
         // 弹出层标题
         title: "",
         // 是否显示弹出层
@@ -454,10 +454,10 @@
         return format(time, 'zh_CN'); //转换成类似于几天前的格式
       },
     },
-    mounted() {
-
-      // document.querySelector("#datalist").addEventListener('scroll', this.handleScroll)
-    },
+    // mounted() {
+    //
+    //   // document.querySelector("#datalist").addEventListener('scroll', this.handleScroll)
+    // },
     computed: {
       /**list加载完毕就禁止滚动**/
 
@@ -1411,7 +1411,7 @@
   .sousou-input i {
     font-size: 15px;
   }
- 
+
 
   .header-list {
     display: flex;
@@ -1485,7 +1485,7 @@
   }
 
   .mianUrl-botoom{
-    height: 900px;
+  padding-bottom: 20px;
 
   }
   .openurl{

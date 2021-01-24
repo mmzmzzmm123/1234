@@ -1,17 +1,23 @@
 <template>
-  <div class="home" >
+  <div class="home" v-loading="loading" >
 
     <div class="nqtitle">
       <div class="mdui-textfield mdui-textfield-floating-label inputtop">
         <input class="mdui-textfield-input edittitle" v-model="queryParamsAndMg.title" type="text" required/>
       </div>
       <div class="common">
-        <el-tag type="info" size="small" >{{queryParamsAndMg.updateTime==null?'0000:00:00':queryParamsAndMg.updateTime}}</el-tag>
+        <el-tag type="info" size="small" >{{queryParamsAndMg.updateTime==null?'2020-12-13 21:24:35':queryParamsAndMg.updateTime}}</el-tag>
         <el-link type="info" icon="el-icon-edit" class="editNote" @click="updateEdit">{{updateOpn}}</el-link>
-        <el-link type="info"  icon="el-icon-delete" class="editNote">删除</el-link>
+        <el-link type="info"  icon="el-icon-delete" class="editNote delete">删除</el-link>
+        <el-link type="info"  icon="el-icon-refresh-right" class="editNote">刷新</el-link>
+        <el-link type="info"  icon="el-icon-connection" class="editNote">分享</el-link>
+        <el-link type="info"  class="editNote">|</el-link>
+        <el-link type="info"  icon="el-icon-lock" class="editNote">加密</el-link>
+<!--        <el-link type="info"  icon="el-icon-unlock" class="editNote">未加密</el-link>-->
+        <el-link type="info"  icon="el-icon-key" class="editNote">改密</el-link>
       </div>
     </div>
-        <div v-loading="loading"  v-if="!showEditor" class="mian" v-html="queryParamsAndMg.ueditorContent">
+        <div  v-if="!showEditor" class="mian" v-html="queryParamsAndMg.ueditorContent">
 
 
         </div>
@@ -65,9 +71,8 @@
       updateEditor:null
     },
     mounted() {
-
       this.showEditor=this.updateEditor;
-      this.getNoteById();
+
     },
     updated() {
 
@@ -98,12 +103,13 @@
           ueditorContent: undefined,
         },
         showEditor:false,
-        loading:false,
-        updateOpn:'编辑'
+        loading:true,
+        updateOpn:'编辑',
       }
     },
     created() {
 
+      this.getNoteById();
     },
     methods: {
       /** 实时更新文章的信息 */
@@ -121,7 +127,7 @@
       /** 查询便签管理列表 */
       getNoteById() {
         var that = this;
-        that.loading=true;
+
         var blueditor = that.ueditor != null && that.ueditor != '' && that.ueditor != undefined;
         var blnoteId = that.noteid != null && that.noteid != '' && that.noteid != undefined;
         if (blueditor) {
@@ -133,9 +139,10 @@
         if (blueditor && blnoteId) {
           userGetNoteInfo(this.queryParamsAndMg.noteId).then(response => {
             that.queryParamsAndMg = response.data;
+            that.loading=false;
           });
         }
-        that.loading=false;
+
       },
       //鼠标单击的事件
       onClick(e, editor) {
@@ -179,12 +186,11 @@
   }
 
   .mian {
-    height: 100%;
+    height: auto;
     overflow-y: auto;
-    width: 1000px;
+    width:auto;
     /*text-indent: 10px;*/
     padding: 10px;
-    margin-bottom: 10px;
     opacity: 0.9;
     margin: 15px;
     border: 1px solid #D4D4D4;
@@ -210,6 +216,7 @@
   .nqtitle{
     margin-left: 13px;
     margin-bottom: 10px;
+    margin-right: 17px;
   }
   .inputtop{
     padding-top: 6px;
@@ -218,6 +225,9 @@
     display: flex;
     align-items: center;
     height: 22px;
+  }
+  .delete{
+    color: #ff3b2f;
   }
 
 </style>

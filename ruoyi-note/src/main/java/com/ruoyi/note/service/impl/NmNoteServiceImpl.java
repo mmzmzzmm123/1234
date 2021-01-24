@@ -80,11 +80,14 @@ public class NmNoteServiceImpl implements INmNoteService {
      */
     @Override
     public int insertNmNote(NmNote nmNote) {
+        Long uuid = defaultUidGenerator.getUID();
         nmNote.setCreateTime(DateUtils.getNowDate());
         nmNote.setTitle(DateUtil.now());
-        nmNote.setTiymceUeditor(defaultUidGenerator.getUID());
+        nmNote.setTiymceUeditor(uuid);
+        //文章内容
+        nmNoteContentService.insertNmNoteContent(new NmNoteContent(uuid,null,"请开始你的记录~"));
         //创建文章>>mongodb
-        redisCache.setCacheObject(Constants.NM_NOTE_CONTENT+nmNote.getTiymceUeditor(),"请开始你的创作!");
+       // redisCache.setCacheObject(Constants.NM_NOTE_CONTENT+nmNote.getTiymceUeditor(),"请开始你的创作!");
         return nmNoteMapper.insertSelective(nmNote);
     }
 
@@ -133,18 +136,11 @@ public class NmNoteServiceImpl implements INmNoteService {
         NmNote nmNote = new NmNote();
         nmNote.setNoteId(noteId);
         nmNote.setUserId(userID);
-        NmNote isnmNote1 = nmNoteMapper.selectOne(nmNote);
-        //查询对应的文章数据
-        //1.查redis缓存
-        String noteContent = redisCache.getCacheObject(Constants.NM_NOTE_CONTENT + isnmNote1.getTiymceUeditor());
-        if (noteContent != null && !"".equals(noteContent)) {
-            isnmNote1.setUeditorContent(noteContent);
-        } else {
-        // 2不存在就走mogodb
-            List<NoteContentMgDb> NoteContentMgDb = noteRepositoryService.findById(isnmNote1.getTiymceUeditor() + "");
-            isnmNote1.setUeditorContent(NoteContentMgDb.get(0).getNoteContent());
-        }
-        return isnmNote1;
+        NmNote nmNoteS =  nmNoteMapper.selectOne(nmNote);
+        //获取文章
+        NmNoteContent nmNoteContent =  nmNoteContentService.selectNmNoteContentById(nmNoteS.getTiymceUeditor());
+        nmNoteS.setUeditorContent(nmNoteContent.getUeditorContent());
+        return nmNoteS;
     }
 
     /**
@@ -156,8 +152,10 @@ public class NmNoteServiceImpl implements INmNoteService {
     @Override
     public int userUpdateNote(NmNote nmNote) {
         //储存到redis中  只缓存频繁操作的文章内容
-        redisCache.setCacheObject(Constants.NM_NOTE_CONTENT+nmNote.getTiymceUeditor(),nmNote.getUeditorContent());
-        // 更新标题信息
+       // redisCache.setCacheObject(Constants.NM_NOTE_CONTENT+nmNote.getTiymceUeditor(),nmNote.getUeditorContent());
+        // 更新文章信息
+        nmNoteContentService.updateNmNoteContent(new NmNoteContent(nmNote.getTiymceUeditor(),nmNote.getUeditorContent(),null));
+
         return  nmNoteMapper.updateNmNote(nmNote);
     }
 
