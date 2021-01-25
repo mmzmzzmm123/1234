@@ -13,7 +13,7 @@
     <description>档案系统</description>
     
     <properties>
-        <ruoyi.version>3.3.0</ruoyi.version>
+        <gox.version>3.3.0</gox.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
@@ -162,34 +162,34 @@
             <dependency>
                 <groupId>com.gox</groupId>
                 <artifactId>goxsoft-quartz</artifactId>
-                <version>${ruoyi.version}</version>
+                <version>${gox.version}</version>
             </dependency>
 	
             <!-- 代码生成-->
             <dependency>
                 <groupId>com.gox</groupId>
                 <artifactId>goxsoft-generator</artifactId>
-                <version>${ruoyi.version}</version>
+                <version>${gox.version}</version>
             </dependency>
 			
             <!-- 核心模块-->
             <dependency>
                 <groupId>com.gox</groupId>
                 <artifactId>goxsoft-framework</artifactId>
-                <version>${ruoyi.version}</version>
+                <version>${gox.version}</version>
             </dependency>
 			
             <!-- 系统模块-->
             <dependency>
                 <groupId>com.gox</groupId>
                 <artifactId>goxsoft-system</artifactId>
-                <version>${ruoyi.version}</version>
+                <version>${gox.version}</version>
             </dependency>
             <!-- 通用工具-->
             <dependency>
                 <groupId>com.gox</groupId>
                 <artifactId>goxsoft-common</artifactId>
-                <version>${ruoyi.version}</version>
+                <version>${gox.version}</version>
             </dependency>
 
         </dependencies>

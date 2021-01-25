@@ -3,7 +3,7 @@ package com.gox.common.utils.ip;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.alibaba.fastjson.JSONObject;
-import com.gox.common.config.RuoYiConfig;
+import com.gox.common.config.GoxConfig;
 import com.gox.common.constant.Constants;
 import com.gox.common.utils.StringUtils;
 import com.gox.common.utils.http.HttpUtils;
@@ -31,7 +31,7 @@ public class AddressUtils
         {
             return "内网IP";
         }
-        if (RuoYiConfig.isAddressEnabled())
+        if (GoxConfig.isAddressEnabled())
         {
             try
             {

@@ -5,7 +5,7 @@ import java.util.List;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.ZipUtil;
-import com.gox.common.config.RuoYiConfig;
+import com.gox.common.config.GoxConfig;
 import com.gox.common.core.domain.AjaxResult;
 import com.gox.common.utils.poi.ExcelUtil;
 import com.gox.system.domain.ElectronicAttributes;
@@ -32,7 +32,7 @@ public class MetadataServiceImpl implements IMetadataService
     private ElectronicAttributesMapper electronicAttributesMapper;
     @Value("${system.rootpath}")
     private String rootPath;
-    @Value("${ruoyi.profile}")
+    @Value("${gox.profile}")
     private String profile;
     /**
      * 查询文书类基本元数据

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import com.gox.common.annotation.Log;
-import com.gox.common.config.RuoYiConfig;
+import com.gox.common.config.GoxConfig;
 import com.gox.common.core.controller.BaseController;
 import com.gox.common.core.domain.AjaxResult;
 import com.gox.common.core.domain.entity.SysUser;
@@ -111,7 +111,7 @@ public class SysProfileController extends BaseController
         if (!file.isEmpty())
         {
             LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
-            String avatar = FileUploadUtils.upload(RuoYiConfig.getAvatarPath(), file);
+            String avatar = FileUploadUtils.upload(GoxConfig.getAvatarPath(), file);
             if (userService.updateUserAvatar(loginUser.getUsername(), avatar))
             {
                 AjaxResult ajax = AjaxResult.success();

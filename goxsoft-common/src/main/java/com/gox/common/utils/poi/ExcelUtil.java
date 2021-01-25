@@ -44,7 +44,7 @@ import com.gox.common.annotation.Excel;
 import com.gox.common.annotation.Excel.ColumnType;
 import com.gox.common.annotation.Excel.Type;
 import com.gox.common.annotation.Excels;
-import com.gox.common.config.RuoYiConfig;
+import com.gox.common.config.GoxConfig;
 import com.gox.common.core.domain.AjaxResult;
 import com.gox.common.core.text.Convert;
 import com.gox.common.exception.CustomException;
@@ -827,7 +827,7 @@ public class ExcelUtil<T>
      */
     public String getAbsoluteFile(String filename)
     {
-        String downloadPath = RuoYiConfig.getDownloadPath() + filename;
+        String downloadPath = GoxConfig.getDownloadPath() + filename;
         File desc = new File(downloadPath);
         if (!desc.getParentFile().exists())
         {
