@@ -21,6 +21,7 @@
 <script>
 import { uploadByPieces } from '@/utils/utils'
 
+
 export default {
   name: "uploadwindow",
   props:['metadataId'],

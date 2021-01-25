@@ -58,4 +58,8 @@ public interface IMetadataService
      * @return 结果
      */
     public int deleteMetadataById(Long id);
+    /**
+     * 生成档号
+     */
+    String generateArchivalCode(String[] fields,Object [] values);
 }

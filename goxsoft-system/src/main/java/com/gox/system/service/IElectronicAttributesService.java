@@ -1,9 +1,16 @@
 package com.gox.system.service;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.RandomAccessFile;
 import java.util.List;
 import java.util.Map;
 
+import com.gox.system.domain.Chunk;
 import com.gox.system.domain.ElectronicAttributes;
+
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 电子文件信息Service接口
@@ -23,7 +30,11 @@ public interface IElectronicAttributesService
 
     String mergeChunk(Map<String, Object> map);
 
-    boolean merge(String filename,String md5,Long MetadataId);
+    String fileUploadPost(Chunk chunk, HttpServletResponse response, Long metadataId) throws IOException;
+
+    void fileUploadGet(Chunk chunk, HttpServletResponse response);
+
+    boolean merge(String filename, String md5, Long MetadataId);
 
     /**
      * 获取文件base64编码

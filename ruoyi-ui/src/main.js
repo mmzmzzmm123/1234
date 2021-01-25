@@ -18,6 +18,9 @@ import { getDicts } from "@/api/system/dict/data";
 import { getConfigKey } from "@/api/system/config";
 import { parseTime, resetForm, addDateRange, selectDictLabel, selectDictLabels, download, handleTree } from "@/utils/ruoyi";
 import Pagination from "@/components/Pagination";
+//上传组件
+import uploader from 'vue-simple-uploader'
+Vue.use(uploader)
 // 自定义表格工具扩展
 import RightToolbar from "@/components/RightToolbar"
 // 代码高亮插件

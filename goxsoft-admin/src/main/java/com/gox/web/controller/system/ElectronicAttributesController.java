@@ -13,17 +13,11 @@ import com.gox.common.core.redis.RedisCache;
 import com.gox.common.utils.DictUtils;
 import com.gox.common.utils.SecurityUtils;
 import com.gox.common.utils.StringUtils;
+import com.gox.system.domain.Chunk;
 import org.aspectj.weaver.loadtime.Aj;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.gox.common.annotation.Log;
 import com.gox.common.core.controller.BaseController;
 import com.gox.common.core.domain.AjaxResult;
@@ -36,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 import sun.net.www.http.HttpClient;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 电子文件信息Controller
@@ -66,7 +61,7 @@ public class ElectronicAttributesController extends BaseController
      * 完整文件验证
      */
     @PreAuthorize("@ss.hasPermi('system:attributes:add')")
-    //@Log(title = "电子文件信息", businessType = BusinessType.INSERT)
+    @Log(title = "电子文件信息", businessType = BusinessType.INSERT)
     @PostMapping("/full")
     public AjaxResult upload(HttpServletRequest req){
         String filename = req.getParameter("file_name");
@@ -171,5 +166,31 @@ public class ElectronicAttributesController extends BaseController
     public AjaxResult remove(@PathVariable Long[] ids)
     {
         return toAjax(electronicAttributesService.deleteElectronicAttributesByIds(ids));
+    }
+    /**
+     * 处理文件上传POST请求
+     * 将上传的文件存放到服务器内
+     * @param chunk 文件块
+     * @param response 响应
+     * @return 上传响应状态
+     */
+    @PreAuthorize("@ss.hasPermi('system:attributes:add')")
+    @Log(title = "电子文件信息", businessType = BusinessType.INSERT)
+    @PostMapping("/fileUpload")
+    public String uploadPost(@ModelAttribute Chunk chunk, HttpServletResponse response,Long metadataId) throws IOException {
+        return electronicAttributesService.fileUploadPost(chunk,response,metadataId);
+    }
+
+    /**
+     * 处理文件上传GET请求
+     * 验证上传的文件块，是否允许浏览器再次发送POST请求（携带二进制文件的请求流，FormData）
+     * @param chunk 文件块
+     * @param response 响应
+     * @return 文件块
+     */
+    @GetMapping("/fileUpload")
+    public void uploadGet(@ModelAttribute Chunk chunk,HttpServletResponse response){
+        logger.info(chunk.toString());
+        electronicAttributesService.fileUploadGet(chunk,response);
     }
 }

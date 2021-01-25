@@ -87,13 +87,14 @@ export const uploadByPieces = ({metadataId,files, chunkUrl, fileUrl, pieceSize, 
     }).then(res => {
       //progressFun()
       //res.file_name = currentFile.name
-
       successAllCount++
+      console.log(successAllCount,fileList.length)
       if (successAllCount===fileList.length){
         console.log('全部完成')
         success && success(res)
       }
     }).catch(e => {
+      console.log(e)
       error && error(e)
     })
   }
@@ -111,7 +112,7 @@ export const uploadByPieces = ({metadataId,files, chunkUrl, fileUrl, pieceSize, 
       url: chunkUrl,
       data: fileForm,
       async: false,
-      timeout: 150000
+      timeout: 15000000
     }).then(res => {
       //progressFun()
       if (chunkInfo.currentChunk < chunkInfo.chunkCount - 1) {

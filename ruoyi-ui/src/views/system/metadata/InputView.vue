@@ -14,8 +14,9 @@
           <el-button @click="print">打印</el-button>
         </el-button-group>
         <div style="text-align: center">
-          <el-dialog title="上传文件" :visible.sync="dialogVisible" width="30%" :before-close="beforeClose" style="z-index: 2999">
-            <uploadwindow :metadata-id="mdId" @addFile="addFile"></uploadwindow>
+          <el-dialog title="上传文件" v-if="dialogVisible" :visible.sync="dialogVisible" width="30%" :before-close="beforeClose" style="z-index: 2999">
+<!--            <uploadwindow :metadata-id="mdId" @addFile="addFile"></uploadwindow>-->
+            <uploads :metadata-id="metadataid"></uploads>
           </el-dialog>
           <document-view :metadata-id="mdId" ref="dv"></document-view>
           <el-button-group>
@@ -29,12 +30,13 @@
   </div>
 </template>
 <script>
+
 import Parser from '@/gene/components/parser/Parser'
 import {listJson,getId} from '@/api/system/json'
 import { addMetadata, getMetadata, updateMetadata } from '@/api/system/metadata'
 import DocumentView from '@/views/components/documentView'
-import Uploadwindow from '@/views/components/uploadwindow'
 import md from '@/views/system/metadata/md'
+import Uploads from '@/views/components/Uploads'
 export default {
   props:{
     formconf: {
@@ -55,9 +57,9 @@ export default {
   },
   name: "InputView",
   components: {
-    Uploadwindow,
     DocumentView,
     Parser,
+    Uploads,
     md
   },
   computed: {
@@ -220,6 +222,7 @@ export default {
       this.desc=false
     },
     beforeClose(done){
+      this.$refs.dv.getEleTree()
       done()
     },
     returnLastPage(){
@@ -238,7 +241,9 @@ export default {
     deleteEle(){
       this.$refs.dv.remove()
     },
-    print(){},
+    print(){
+      this.$refs.dv.printEle()
+    },
   },
   watch:{
     formconf:function(nv,ov) {

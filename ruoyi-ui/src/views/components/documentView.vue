@@ -44,6 +44,9 @@
 <!--            <el-button ></el-button>-->
           </el-button-group>
         </div>
+        <div id="showTiff" v-else-if="showTiff" style="border: 1px solid #000;">
+
+        </div>
         <div v-else style="border: 1px solid #000000;min-height:75vh;width:80%" >
           <div style="text-align:center">
             <span style="color:#00afff;font-size:30px">
@@ -57,6 +60,9 @@
 </template>
 
 <script>
+import print from 'print-js'
+import Tiff from 'tiff.js'
+import {arrayContainObj} from '@/utils/equal'
 import {listAttributes,delAttributes} from '@/api/system/attributes'
 const { Image } = require('image-js');
 export default {
@@ -70,6 +76,7 @@ export default {
   },
   data() {
     return{
+      showTiff: false,
       a:'',
       width:500,
       height:0,
@@ -97,14 +104,14 @@ export default {
   watch:{
 
   },
-  created() {
+  mounted() {
     this.getEleTree()
   },
   methods:{
     remove(){
       let node = this.$refs.tree.getCheckedNodes()
       if(node.length<1){
-        this.$message.warning('请选择节点')
+        this.$message.warning('请选择电子文件')
         return
       }
       let arr = this.elTree[0].children
@@ -115,6 +122,16 @@ export default {
         delId.push(node[i].id)
       }
       delAttributes(delId).then()
+    },
+    printEle(){
+      let node = this.$refs.tree.getCheckedNodes()
+      if(node.length!==1){
+        this.$message.warning('请选择1个电子文件')
+        return
+      }
+      let id=node[0].id;
+      let label=node[0].label
+      print({type:this.printType(this.getType(label)),printable:process.env.VUE_APP_BASE_API+'/ele/'+id,showModal:true})
     },
     recover(){
       let url = this.a;
@@ -177,11 +194,10 @@ export default {
       let that = this;
       listAttributes(this.query).then(res=>{
         let data= res.rows;
-        if (this.elTree.length===0){
-          this.elTree.push({label:'电子文件',children:[]})
-        }
-        data.forEach(item=>{
-          this.elTree[0].children.push({id:item.id,label: item.computerFileName,children:[]})
+        this.elTree=[]
+        this.elTree.push({label:'电子文件',children:[]})
+        data.forEach(i=>{
+          this.elTree[0].children.push({id:i.id,label:i.computerFileName,children:[]})
         })
         if (this.elTree[0].children.length>0){
           this.id = this.elTree[0].children[0].id;
@@ -204,25 +220,55 @@ export default {
     // 节点单击事件
     handleNodeClick(data) {
       this.id= data.id
-      this.url=process.env.VUE_APP_BASE_API+'/ele/'+this.id
-      let type = this.getType(data.label)
-      this.type(type)
+      if (this.id){
+        this.url=process.env.VUE_APP_BASE_API+'/ele/'+this.id
+        let type = this.getType(data.label)
+        this.type(type)
+      }
     },
     type(type){
       if(type){
         if(type==='pdf'||type==='PDF'){
           this.showPDF=true;
           this.showPic=false;
+          this.showTiff=false;
         }
-        else if (type==='jpg'||type==='png'||type==='jpeg'||type==='tiff'){
+        else if (type==='jpg'||type==='png'||type==='jpeg'||type==='tiff'||type==='tif'){
           this.showPDF=false;
           this.showPic=true;
+          this.showTiff=false;
           this.createPicBox();
+        }
+        else if(type==='tif'||type==='tiff'){
+          this.showPDF=false;
+          this.showPic=false;
+          this.showTiff=true;
         }
         else {
           this.showPDF=false;
           this.showPic=false;
+          this.showTiff=false;
         }
+      }
+    },
+    printType(type){
+      //pdf, html, image, json and raw-html.
+      if(type){
+        if(type==='pdf'||type==='PDF'){
+          return 'pdf'
+        }
+        else if (type==='jpg'||type==='png'||type==='jpeg'||type==='tiff'){
+          return 'image'
+        }
+        else if(type==='json') {
+          return 'json'
+        }
+        else{
+          return 'pdf'
+        }
+      }
+      else{
+        return 'pdf'
       }
     },
     addFile(files){

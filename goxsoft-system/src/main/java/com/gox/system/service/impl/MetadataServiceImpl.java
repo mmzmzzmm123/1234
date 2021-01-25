@@ -14,7 +14,7 @@ import com.gox.system.service.IMetadataService;
  * @date 2020-12-28
  */
 @Service
-public class MetadataServiceImpl implements IMetadataService 
+public class MetadataServiceImpl implements IMetadataService
 {
     @Autowired
     private MetadataMapper metadataMapper;
@@ -89,5 +89,18 @@ public class MetadataServiceImpl implements IMetadataService
     public int deleteMetadataById(Long id)
     {
         return metadataMapper.deleteMetadataById(id);
+    }
+
+    /**
+     * 生成档号
+     * 1.将字段取出 用’-‘连接
+     * 2.在mysql 和 redis中更新
+     * @param fields
+     * @param values
+     */
+    @Override
+    public String generateArchivalCode(String[] fields, Object[] values) {
+
+        return null;
     }
 }
