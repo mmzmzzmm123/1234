@@ -97,7 +97,7 @@
         </el-checkbox-group>
       </el-form-item>
       <el-form-item :label="'(4) 正餐荤素中素菜占比几成'" prop="eatSituation" class="margin-left">
-        <el-input-number v-model="form.vegetableRate" :step="1" :min="0"></el-input-number>
+        <el-input-number v-model="form.vegetableRate" :step="1" :min="0" :max="10"></el-input-number>
       </el-form-item>
       <el-form-item :label="'(4) 最常吃的肉类'" prop="eatSituation" class="margin-left">
         <el-input v-model="form.commonMeat" placeholder="请输入肉类名称"></el-input>
@@ -253,9 +253,9 @@
         <div class="margin-top-10">
           <span>红酒</span><el-input-number class="width-50-left-8-right-5" type="number" v-model="form.drinkWineAmount[2]" :step="100" :min="0"></el-input-number><span>&nbsp;毫升</span>
         </div>
-        <div class="margin-top-10">
+        <!--<div class="margin-top-10">
           <span>其他</span><el-input-number class="width-50-left-8-right-5" type="number" v-model="form.drinkWineAmount[3]" :step="100" :min="0"></el-input-number><span>&nbsp;毫升</span>
-        </div>
+        </div>-->
       </el-form-item>
       <p class="p_title_2">4、您的吸烟习惯</p>
       <el-form-item label="(1) 是否吸烟" prop="smokeFlag" class="margin-left">
@@ -292,12 +292,12 @@
       </el-form-item>
       <p class="p_title_2">4、您的排便状况</p>
       <el-form-item label="(1) 排便次数" prop="defecationNum" style="padding-top: 10px;">
-        <el-radio-group v-model="form.defecationNum">
+        <!--<el-radio-group v-model="form.defecationNum">
           <el-radio :label="1" key="1">1次/天</el-radio>
           <el-radio :label="2" key="2">2次/天</el-radio>
           <el-radio :label="3" key="3">3次/天</el-radio>
-        </el-radio-group>
-        <div class="margin-top-10"><span>其他次数 </span><el-input-number style="width:35%;margin-right: 10px;" type="number" v-model="form.otherDefecationNum" :step="1" :min="0"></el-input-number><span>次/天</span></div>
+        </el-radio-group>-->
+        <div class="margin-top-10"><span>排便次数 </span><el-input-number style="width:35%;margin-right: 10px;" type="number" v-model="form.defecationNum" :step="1" :min="0"></el-input-number><span>次/天</span></div>
       </el-form-item>
 
       <el-form-item label="(2) 排便时间" prop="defecationTime" style="padding-top: 10px;">
@@ -638,7 +638,7 @@ export default {
       drinkWineClassifyArray:[
         {"name":"白酒","value": "1"},{"name":"红酒","value": "2"},{"name":"啤酒","value": "3"}
       ],
-      drinkWineAmountArray:["白酒","啤酒","红酒","其他"],
+      drinkWineAmountArray:["白酒","啤酒","红酒"],
       smokeRateArray:["每天抽烟","烟龄","已戒烟"],
       workTypeArray:[
         {"name":"工作时间长","value": "1"},{"name":"久坐","value": "2"},{"name":"久站","value": "3"},
@@ -712,7 +712,7 @@ export default {
         dinner:["2"],
         vegetableRate: 5,
         commonMeat: null,
-        dinnerTime: "07:00",
+        dinnerTime: "19:00",
         supperNum:1,
         supperFood:null,
         dietHotAndCold: "3",
@@ -740,7 +740,7 @@ export default {
         drinkWineFlag: "3",
         drinkWineClassify:["3"],
         otherWineClassify: null,
-        drinkWineAmount:[0,0,0,0],
+        drinkWineAmount:[0,0,0],
         smokeFlag: 0,
         smokeRate:[0,0,0],
         secondSmoke: 0,
@@ -785,7 +785,7 @@ export default {
         allergySituation: null,
         allergen:[],
         otherAllergen:null,
-        fileNameList:[]
+        medicalReport:[]
       },
       upload: {
           // 是否禁用上传
@@ -842,7 +842,7 @@ export default {
            "condiment","cookingStyle","cookingStyleRate", "washVegetablesStyle","lunchType","dinner","dietFlavor",
            "snacks","waterType","waterHabit","drinksNum","drinkWineClassify","drinkWineAmount","smokeRate",
            "workType","defecationTime","aerobicMotionClassify","anaerobicMotionClassify","anaerobicAerobicMotionClassify",
-           "motionField","sleepQuality", "familyIllnessHistory", "operationHistory", "longEatDrugClassify", "allergen", "fileNameList"
+           "motionField","sleepQuality", "familyIllnessHistory", "operationHistory", "longEatDrugClassify", "allergen", "medicalReport"
       ]
 
     };
@@ -859,7 +859,7 @@ export default {
       this.$refs.form.validate((valid) => {
         if (valid) {
             this.submitFlag = true;
-            this.form.fileNameList = [];
+            this.form.medicalReport = [];
             if(this.upload.fileList.length > 0){
                 this.$refs.upload.submit();
             }else{
@@ -955,8 +955,8 @@ export default {
       // 文件上传成功处理
       handleFileSuccess(response, file, fileList) {
           if(response != null && response.code === 200){
-              this.form.fileNameList.push(response.fileName);
-              if(this.form.fileNameList.length === this.upload.fileList.length){
+              this.form.medicalReport.push(response.fileName);
+              if(this.form.medicalReport.length === this.upload.fileList.length){
                   //文件全部上传成功，则调用添加客户信息方法
                   this.addCustomerHealthy();
               }

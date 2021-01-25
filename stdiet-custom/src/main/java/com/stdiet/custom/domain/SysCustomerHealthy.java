@@ -31,8 +31,12 @@ public class SysCustomerHealthy extends BaseEntity
     private String phone;
 
     /** 调理项目id */
-    @Excel(name = "调理项目id")
+    //@Excel(name = "调理项目id")
     private Long conditioningProjectId;
+
+    /** 调理项目名称 ,非持久化字段*/
+    @Excel(name = "调理项目")
+    private String conditioningProject;
 
     /** 0男 1女 2未知，默认2 */
     @Excel(name = "0男 1女 2未知，默认2")
@@ -1167,6 +1171,14 @@ public class SysCustomerHealthy extends BaseEntity
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getConditioningProject() {
+        return conditioningProject;
+    }
+
+    public void setConditioningProject(String conditioningProject) {
+        this.conditioningProject = conditioningProject;
     }
 
     @Override

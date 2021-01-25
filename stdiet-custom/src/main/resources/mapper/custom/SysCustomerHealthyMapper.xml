@@ -7,11 +7,13 @@
     <resultMap type="SysCustomerHealthy" id="SysCustomerHealthyResult">
         <result property="id"    column="id"    />
         <result property="customerId"    column="customer_id"    />
-        <!-- 非持久化字段 -->
+        <!-- 非持久化字段，客户姓名 -->
         <result property="name" column="name"></result>
-        <!-- 非持久化字段 -->
+        <!-- 非持久化字段，客户手机号 -->
         <result property="phone" column="phone"></result>
         <result property="conditioningProjectId"    column="conditioning_project_id"    />
+        <!-- 非持久化字段，调理项目名称 -->
+        <result property="conditioningProject"    column="conditioning_project"    />
         <result property="sex"    column="sex"    />
         <result property="age"    column="age"    />
         <result property="condiment"    column="condiment"    />
@@ -107,17 +109,19 @@
     </sql>
 
     <select id="selectSysCustomerHealthyList" parameterType="SysCustomerHealthy" resultMap="SysCustomerHealthyResult">
-        <include refid="selectSysCustomerHealthyVo"/>,sc.name,sc.phone
+        <include refid="selectSysCustomerHealthyVo"/>,sc.name,sc.phone,cp.dict_label as conditioning_project
         from sys_customer_healthy as sch
-        left join sys_customer sc on sc.id = sch.customer_id
+        LEFT JOIN sys_customer sc on sc.id = sch.customer_id
+        LEFT JOIN (SELECT dict_label, dict_value FROM sys_dict_data WHERE dict_type = 'conditioning_project') AS cp ON cp.dict_value = sch.conditioning_project_id
         where sch.del_flag = 0 and sc.del_flag = 0
         <if test="conditioningProjectId != null "> and sch.conditioning_project_id = #{conditioningProjectId}</if>
     </select>
 
     <select id="selectSysCustomerHealthyById" parameterType="Long" resultMap="SysCustomerHealthyResult">
-        <include refid="selectSysCustomerHealthyVo"/>,sc.name,sc.phone
+        <include refid="selectSysCustomerHealthyVo"/>,sc.name,sc.phone,cp.dict_label as conditioning_project
         from sys_customer_healthy as sch
         left join sys_customer sc on sc.id = sch.customer_id
+        LEFT JOIN (SELECT dict_label, dict_value FROM sys_dict_data WHERE dict_type = 'conditioning_project') AS cp ON cp.dict_value = sch.conditioning_project_id
         where sch.del_flag = 0 and sc.del_flag = 0 and sch.id = #{id}
     </select>
 

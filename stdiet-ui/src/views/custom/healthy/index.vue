@@ -1,10 +1,10 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="调理项目id" prop="conditioningProjectId">
+      <!--<el-form-item label="调理项目" prop="conditioningProjectId">
         <el-input
           v-model="queryParams.conditioningProjectId"
-          placeholder="请输入调理项目id"
+          placeholder="请输入调理项目"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
@@ -13,11 +13,11 @@
       <el-form-item>
         <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-      </el-form-item>
+      </el-form-item>-->
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
+      <!--<el-col :span="1.5">
         <el-button
           type="primary"
           icon="el-icon-plus"
@@ -25,8 +25,8 @@
           @click="handleAdd"
           v-hasPermi="['custom:healthy:add']"
         >新增</el-button>
-      </el-col>
-      <el-col :span="1.5">
+      </el-col>-->
+      <!--<el-col :span="1.5">
         <el-button
           type="success"
           icon="el-icon-edit"
@@ -35,8 +35,8 @@
           @click="handleUpdate"
           v-hasPermi="['custom:healthy:edit']"
         >修改</el-button>
-      </el-col>
-      <el-col :span="1.5">
+      </el-col>-->
+      <!--<el-col :span="1.5">
         <el-button
           type="danger"
           icon="el-icon-delete"
@@ -54,18 +54,34 @@
           @click="handleExport"
           v-hasPermi="['custom:healthy:export']"
         >导出</el-button>
+      </el-col>-->
+      <el-col :span="1.5" title="客户健康评估表链接">
+        <el-button
+          type="primary"
+          size="mini"
+        ><a href="http://sign.shengtangdiet.com/subhealthyInvestigation" target='_blank'>客户健康评估表</a></el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="healthyList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="调理项目id" align="center" prop="id" />
-      <el-table-column label="客户ID" align="center" prop="customerId" />
-      <el-table-column label="调理项目id" align="center" prop="conditioningProjectId" />
-      <el-table-column label="0男 1女 2未知，默认2" align="center" prop="sex" />
+      <el-table-column label="创建时间" align="center" prop="createTime"fixed="left">
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="调理项目" align="center" prop="conditioningProject" fixed="left"/>
+      <el-table-column label="姓名" align="center" prop="name"  fixed="left"/>
+      <el-table-column label="手机号" align="center" prop="phone" fixed="left"/>
+      <el-table-column label="性别" align="center" prop="sex" >
+        <template slot-scope="scope">
+          {{scope.row.sex == 0 ? `男` : '女'}}
+        </template>
+      </el-table-column>
+
       <el-table-column label="年龄" align="center" prop="age" />
-      <el-table-column label="调味品种类，使用 , 隔开" align="center" prop="condiment" />
+      <!--<el-table-column label="调味品种类，使用 , 隔开" align="center" prop="condiment" />
       <el-table-column label="其他调味品种类" align="center" prop="otherCondiment" />
       <el-table-column label="喜好的烹调方式，使用 , 隔开" align="center" prop="cookingStyle" />
       <el-table-column label="烹调方式对应频次，每周几次，使用 , 隔开" align="center" prop="cookingStyleRate" />
@@ -145,23 +161,30 @@
       <el-table-column label="过敏症状" align="center" prop="allergySituation" />
       <el-table-column label="过敏源，使用，隔开" align="center" prop="allergen" />
       <el-table-column label="其他过敏源" align="center" prop="otherAllergen" />
-      <el-table-column label="体检报告" align="center" prop="medicalReport" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="体检报告" align="center" prop="medicalReport" />-->
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="120" fixed="right" >
         <template slot-scope="scope">
-          <el-button
+          <!--<el-button
             size="mini"
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['custom:healthy:edit']"
-          >修改</el-button>
+          >修改</el-button>-->
           <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-c-scale-to-original"
+            @click="handleLookDetail(scope.row)"
+            v-hasPermi="['custom:healthy:query']"
+          >查看详情</el-button>
+          <!--<el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['custom:healthy:remove']"
-          >删除</el-button>
+          >删除</el-button>-->
         </template>
       </el-table-column>
     </el-table>
@@ -173,7 +196,6 @@
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
     />
-
     <!-- 添加或修改客户健康对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
@@ -225,7 +247,7 @@
         <el-form-item label="晚餐习惯，使用 , 隔开" prop="dinner">
           <el-input v-model="form.dinner" placeholder="请输入晚餐习惯，使用 , 隔开" />
         </el-form-item>
-        <el-form-item label="早餐当中素菜占比" prop="vegetableRate">
+        <el-form-item label="正餐中素菜占比" prop="vegetableRate">
           <el-input v-model="form.vegetableRate" placeholder="请输入早餐当中素菜占比" />
         </el-form-item>
         <el-form-item label="最常吃的肉类" prop="commonMeat">
@@ -450,11 +472,38 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+
+    <!-- 查看详情 -->
+    <el-dialog title="客户健康评估表" v-if="healthyDetailOpen" :visible.sync="healthyDetailOpen" width="1000px" style="overflow: auto;" append-to-body>
+      <el-table :show-header="false" v-for="(item,index) in healthyDetailList"  :data="item" border :cell-style="columnStyle" style="width: 100%;margin-top:20px;">
+        <el-table-column width="140" prop="attr_name_one">
+        </el-table-column>
+        <el-table-column prop="value_one">
+          <template slot-scope="scope">
+            <AutoHideMessage :data="scope.row.value_one == null ? '' : (scope.row.value_one+'')" :maxLength="20"/>
+          </template>
+        </el-table-column>
+        <el-table-column width="140" prop="attr_name_two"></el-table-column>
+        <el-table-column prop="value_two">
+          <template slot-scope="scope">
+            <AutoHideMessage :data="scope.row.value_two == null ? '' : (scope.row.value_two+'')" :maxLength="20"/>
+          </template>
+        </el-table-column>
+        <el-table-column width="140" prop="attr_name_three"></el-table-column>
+        <el-table-column prop="value_three">
+          <template slot-scope="scope">
+            <AutoHideMessage :data="scope.row.value_three == null ? '' : (scope.row.value_three+'')" :maxLength="20"/>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-dialog>
   </div>
 </template>
 
 <script>
   import { listHealthy, getHealthy, delHealthy, addHealthy, updateHealthy, exportHealthy } from "@/api/custom/healthy";
+  import AutoHideMessage from "@/components/AutoHideMessage";
+  import * as healthyData from "@/utils/healthyData";
 
   export default {
     name: "Healthy",
@@ -491,11 +540,57 @@
           vegetableRate: [
             { required: true, message: "早餐当中素菜占比不能为空", trigger: "blur" }
           ],
-        }
+        },
+        healthyDetailOpen:false,
+        healthyDetailList:[[]],
+        healthyTitleData:[
+          [["创建时间","客户姓名","手机号"],["调理项目","性别","年龄"]],
+          [["调味品种","烹调方式","烹调频次"],["洗菜方式","",""]],
+          [
+            ["早餐习惯","早餐吃的食物","午餐习惯"],["晚餐习惯","正餐中素菜占比","最常吃的肉类"],
+            ["晚餐时间","每周吃夜宵次数","夜宵通常吃的食物"],["食物的冷热偏好","食物的口味偏好","平均每周吃生菜几次"],
+            ["每周吃生菜的频次类型","平均每天吃水果次数","吃水果的时间段"],["平时吃水果的频次","一餐吃几碗饭","吃几成饱"],
+            ["吃饭速度","常吃的零食","有无服用营养保健品"],["营养保健品品牌名","营养保健品产品名","服用营养保健品频次"]
+          ],
+          [
+            ["每天的饮水量","喜欢喝什么水","喝水习惯"],["常喝的饮品的每周频次","是否喝酒","喝酒种类"],["对应酒的量","是否抽烟","抽烟频次和烟龄"],
+            ["是否经常抽二手烟","工作行业","工作性质"],["排便次数","排便时间段","排便的形状"],["排便的气味","排便的速度","排便的颜色"]
+          ],
+          [
+            ["每周运动次数","每次运动的时长","每天运动的时间"],["运动","运动场地","睡觉时间"],["睡眠质量","是否有辅助入睡药物","辅助睡眠类药物名称"],
+            ["是否经常熬夜","熬夜频次","家族疾病史"],["手术史","近期是否做过手术","手术恢复情况"],
+            ["是否长期服用药物","长期服用的药物","是否出现过过敏症状"],["过敏症状","过敏源",""]
+          ]
+        ],
+        //健康详情的属性名称，与标题对应，按竖显示
+        healthyValueData:[
+          [["createTime","name","phone"],["conditioningProject","sex","age"]],
+          [["condiment","cookingStyle","cookingStyleRate"],["washVegetablesStyle","",""]],
+          [
+            ["breakfastType","breakfastFood","lunchType"],["dinner","vegetableRate","commonMeat"],
+            ["dinnerTime","supperNum","supperFood"],["dietHotAndCold","dietFlavor","vegetablesNum"],
+            ["vegetablesRateType","fruitsNum","fruitsTime"],["fruitsRate","riceNum","riceNum"],["eatingSpeed","snacks","healthProductsFlag"],
+            ["healthProductsBrand","healthProductsName","healthProductsWeekRate"]
+          ],
+          [
+            ["waterNum","waterType","waterHabit"],["drinksNum","drinkWineFlag","drinkWineClassify"],["drinkWineAmount","smokeFlag","smokeRate"],
+            ["secondSmoke","workIndustry","workType"],["defecationNum","defecationTime","defecationShape"],["defecationSmell","defecationSpeed","defecationColor"]
+          ],
+          [
+            ["motionNum","motionDuration","motionTime"],["motion","motionField","sleepTime"],["sleepQuality","sleepDrugFlag","sleepDrug"],
+            ["stayupLateFlag","stayupLateWeekNum","familyIllnessHistory"],["operationHistory","nearOperationFlag","recoveryeSituation"],
+            ["longEatDrugFlag","longEatDrugClassify","allergyFlag"],["allergySituation","allergen",""]
+          ]
+        ]
+
+
       };
     },
     created() {
       this.getList();
+    },
+    components: {
+      AutoHideMessage
     },
     methods: {
       /** 查询客户健康列表 */
@@ -503,9 +598,127 @@
         this.loading = true;
         listHealthy(this.queryParams).then(response => {
           this.healthyList = response.rows;
-        this.total = response.total;
-        this.loading = false;
+          this.total = response.total;
+          this.loading = false;
       });
+      },
+      /** 查看按钮操作 */
+      handleLookDetail(row) {
+        const id = row.id || this.ids
+        getHealthy(id).then(response => {
+          let detailHealthy = this.dealHealthy(response.data);
+          //性别
+          detailHealthy.sex = detailHealthy.sex == 0 ?  "男" : (detailHealthy.sex == 1 ? "女" : "未知");
+          //调味品
+          detailHealthy.condiment += detailHealthy.otherCondiment ? ("，"+detailHealthy.otherCondiment) : "";
+          //烹饪频次
+          let cookingStyleRate = "";
+          console.log(detailHealthy.cookingStyleRate);
+          if(detailHealthy.cookingStyleRate != null){
+            detailHealthy.cookingStyleRate.split(",").forEach(function(item, index){
+              cookingStyleRate += (cookingStyleRate != "" ? "，" : "") + (healthyData["cookingStyleRateArray"][index])+item +"次";
+            });
+          }
+          detailHealthy.cookingStyleRate = cookingStyleRate;
+          //洗菜方式
+          detailHealthy.washVegetablesStyle += detailHealthy.otherWashVegetablesStyle ? ("，"+detailHealthy.otherWashVegetablesStyle) : "";
+          //素菜占比
+          detailHealthy.vegetableRate += "成";
+          //零食
+          detailHealthy.snacks += detailHealthy.otherSnacks ? ("，" + detailHealthy.otherSnacks) : "";
+          detailHealthy.healthProductsFlag = detailHealthy.healthProductsFlag == 1 ? "有" : "无";
+          detailHealthy.healthProductsWeekRate = detailHealthy.healthProductsDayRate+"次/天，"+detailHealthy.healthProductsWeekRate+"次/周";
+          detailHealthy.waterNum += "毫升";
+          //饮品
+          let drinksNumString = "";
+          if(detailHealthy.drinksNum != null){
+            detailHealthy.drinksNum.split(",").forEach(function(item, index){
+              drinksNumString += (drinksNumString != "" ? "，" : "") + (healthyData["drinksNumArray"][index])+item +"次";
+            });
+           }
+          detailHealthy.drinksNum = drinksNumString;
+          detailHealthy.drinkWineClassify += detailHealthy.otherWineClassify ? ("，"+detailHealthy.otherWineClassify) : "";
+          let drinkWineAmountString = "";
+          if(detailHealthy.drinkWineAmount != null){
+            detailHealthy.drinkWineAmount.split(",").forEach(function(item, index){
+              drinkWineAmountString += (drinkWineAmountString != "" ? "，" : "") + (healthyData["drinkWineAmountArray"][index])+item + healthyData["drinkWineAmountUnitArray"][index];
+            });
+          }
+          detailHealthy.drinkWineAmount = drinkWineAmountString;
+          detailHealthy.smokeFlag = detailHealthy.smokeFlag == 1 ? "是" : "否";
+          detailHealthy.secondSmoke = detailHealthy.secondSmoke == 1 ? "是" : "否";
+
+          let smokeRateString = "";
+          if(detailHealthy.smokeRate != null){
+            detailHealthy.smokeRate.split(",").forEach(function(item, index){
+              smokeRateString += (smokeRateString != "" ? "，" : "") + (healthyData["smokeRateArray"][index])+item + healthyData["smokeRateUnitArray"][index];
+            });
+          }
+          detailHealthy.smokeRate = smokeRateString;
+          detailHealthy.defecationNum = detailHealthy.defecationNum + "次/天";
+          detailHealthy.motionDuration = detailHealthy.motionDuration +"分钟";
+
+          let motionStr = "";
+          if(detailHealthy.aerobicMotionClassify != null){
+            detailHealthy.aerobicMotionClassify.split(",").forEach(function(item, index){
+              motionStr += item ? ((motionStr != "" ? "，" : "") + item) : "";
+            });
+          }
+          if(detailHealthy.anaerobicMotionClassify != null){
+            detailHealthy.anaerobicMotionClassify.split(",").forEach(function(item, index){
+              motionStr += item ? ((motionStr != "" ? "，" : "") + item) : "";
+            });
+          }
+         if(detailHealthy.anaerobicAerobicMotionClassify != null){
+          detailHealthy.anaerobicAerobicMotionClassify.split(",").forEach(function(item, index){
+             motionStr += item ? ((motionStr != "" ? "，" : "") + item) : "";
+            });
+         }
+          detailHealthy.motion =  motionStr + (detailHealthy.otherMotionClassify ? ( "，"+ detailHealthy.otherMotionClassify) : "");
+          detailHealthy.motionField += detailHealthy.otherMotionField ? ("，"+detailHealthy.otherMotionField) : "";
+
+          detailHealthy.sleepDrugFlag = detailHealthy.sleepDrugFlag == 1 ? "有" : "无";
+          detailHealthy.stayupLateFlag = detailHealthy.stayupLateFlag == 1 ? "有" : "无";
+          detailHealthy.stayupLateWeekNum += "次/周";
+          detailHealthy.familyIllnessHistory += detailHealthy.otherFamilyIllnessHistory ? ("，" + detailHealthy.otherFamilyIllnessHistory) : "";
+          detailHealthy.operationHistory += detailHealthy.otherOperationHistory ? ("，" + detailHealthy.otherOperationHistory) : "";
+          detailHealthy.nearOperationFlag = detailHealthy.nearOperationFlag == 1 ? "有" : "无";
+
+          detailHealthy.longEatDrugFlag = detailHealthy.longEatDrugFlag == 1 ? "有" : "无";
+          detailHealthy.longEatDrugClassify += detailHealthy.otherLongEatDrugClassify ? ("，" + detailHealthy.otherLongEatDrugClassify) : "";
+
+          detailHealthy.allergyFlag = detailHealthy.allergyFlag == 1 ? "有" : "无";
+          detailHealthy.allergen += detailHealthy.otherAllergen ? ("，" +detailHealthy.otherAllergen) : "";
+
+          for(let i = 0; i < this.healthyTitleData.length; i++){
+            let stepArray = [];
+            for(let j= 0; j < this.healthyTitleData[i].length; j++){
+              stepArray[j] = ({"attr_name_one": this.healthyTitleData[i][j][0],"value_one": detailHealthy[this.healthyValueData[i][j][0]],"attr_name_two": this.healthyTitleData[i][j][1],"value_two": detailHealthy[this.healthyValueData[i][j][1]],"attr_name_three": this.healthyTitleData[i][j][2],"value_three": detailHealthy[this.healthyValueData[i][j][2]]});
+            }
+            this.healthyDetailList[i] = stepArray;
+          }
+          this.healthyDetailOpen = true;
+        });
+      },
+      //健康信息处理
+      dealHealthy(customerHealthy){
+        let array = healthyData["needAttrName"];
+        for(let i = 0; i < array.length; i++){
+          customerHealthy[array[i]] = this.getHealthyStringByArray(array[i]+"Array", customerHealthy[array[i]]);
+        }
+        return customerHealthy;
+      },
+      getHealthyStringByArray(key, valueArray){
+          var str = "";
+          if(valueArray != null && valueArray.split(",").length > 0){
+            valueArray.split(",").forEach(function (item, index) {
+               let data = healthyData[key].find(opt => opt.value == item);
+               if(data != null){
+                 str += (str != "" ? "，" : "") + data.name;
+               }
+            })
+          }
+          return str;
       },
       // 取消按钮
       cancel() {
@@ -691,7 +904,16 @@
         }).then(response => {
           this.download(response.msg);
       }).catch(function() {});
-      }
+      },
+      // 自定义列背景色
+      columnStyle({ row, column, rowIndex, columnIndex }) {
+        if (columnIndex == 0 || columnIndex == 2 || columnIndex == 4 || columnIndex == 6) {
+          //第三第四列的背景色就改变了2和3都是列数的下标
+          return "background:#f3f6fc;font-weight:bold";
+        }else{
+          return "background:#ffffff;";
+        }
+      },
     }
   };
 </script>

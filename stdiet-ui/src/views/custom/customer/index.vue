@@ -69,7 +69,7 @@
         <el-button
           type="primary"
           size="mini"
-        ><a href="http://sign.shengtangdiet.com/question" target='_blank'>营养体征调查</a></a></el-button>
+        ><a href="http://sign.shengtangdiet.com/question" target='_blank'>营养体征调查</a></el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
