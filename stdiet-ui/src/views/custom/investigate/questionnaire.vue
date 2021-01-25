@@ -376,10 +376,15 @@ export default {
     },
     addCustomer() {
       if (this.submitFlag) {
-        return;
+          this.$message({
+              message: "请勿重复提交",
+              type: "warning",
+          });
+          return;
       }
       this.$refs.form.validate((valid) => {
         if (valid) {
+            this.submitFlag = true;
           let cusMessage = Object.assign({}, this.form);
           cusMessage.bloodData =
             cusMessage.bloodData != null
@@ -404,7 +409,8 @@ export default {
                 message: "",
                 type: "success",
               });
-              this.submitFlag = true;
+            }else{
+                this.submitFlag = false;
             }
           });
         } else {

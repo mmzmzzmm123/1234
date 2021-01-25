@@ -26,6 +26,17 @@
         <el-form-item label="手机号" prop="phone" maxlength="20">
           <el-input type="number" v-model="form.phone" placeholder="请输入手机号" />
         </el-form-item>
+
+          <el-form-item label="调理项目" prop="conditioningProjectId">
+            <el-select v-model="form.conditioningProjectId" placeholder="请选择">
+              <el-option
+                v-for="dict in conditioningProjectIdOption"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="parseInt(dict.dictValue)"
+              />
+            </el-select>
+          </el-form-item>
       </div>
 
       <div v-show="stepArray[1]">
@@ -493,17 +504,28 @@
       </div>
 
       <div v-show="stepArray[7]">
-        <p class="p_title_1">八、调理项目和提交报告</p>
-        <p class="p_title_2">1、调理项目</p>
-        <el-form-item label="(1) 请选择调理项目" prop="conditioningProjectId">
-          <el-select v-model="form.conditioningProjectId" placeholder="请选择">
-            <el-option
-              v-for="dict in conditioningProjectIdOption"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="parseInt(dict.dictValue)"
-            />
-          </el-select>
+        <p class="p_title_1">八、体检报告</p>
+        <p class="p_title_2">1、体检报告</p>
+        <el-form-item label="(1) 请上传相应的体检报告" prop="fileList" class="margin-left">
+          <el-upload style="margin-left: 20px;"
+            class="upload-demo"
+            ref="upload"
+            :action="upload.url"
+            :limit="upload.limit"
+            :disabled="upload.isUploading"
+            :file-list="upload.fileList"
+            :multiple="upload.multiple"
+            :on-change="handleFileChange"
+            :on-exceed="handleFileexceed"
+            :on-progress="handleFileUploadProgress"
+            :on-success="handleFileSuccess"
+            :on-error="handleFileFail"
+            :data="upload.data"
+            :auto-upload="false">
+            <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+          <el-button style="margin-left: 10px;" size="small" @click="upload.fileList = []">重置</el-button>
+          <div slot="tip" class="el-upload__tip">提示：最多可上传三份，且每份文件不超过5M</div>
+        </el-upload>
         </el-form-item>
       </div>
       <el-form-item style="text-align: center; margin: 30px auto" >
@@ -522,7 +544,7 @@
         >
         <el-button
           type="primary"
-          @click="addCustomer()"
+          @click="submit()"
           style="width: 40%"
           v-show="stepActive == stepArray.length-1"
         >提交数据</el-button
@@ -533,11 +555,17 @@
   </section>
 </template>
 <script>
-import { getDictData } from "@/api/custom/customerInvestigation";
+import { getDictData,addCustomerHealthy } from "@/api/custom/customerInvestigation";
 const logo = require("@/assets/logo/st_logo.png");
 export default {
   name: "index",
   data() {
+      const checkReportFile = (rule, value, callback) => {
+          if (this.upload.fileList == null || this.upload.fileList.length === 0) {
+              return callback(new Error('请选择需要上传的体检报告'))
+          }
+          callback();
+      };
     return {
       logo,
       submitFlag: false,
@@ -664,14 +692,14 @@ export default {
         {"name":"洗洁剂","value": "10"},{"name":"化妆品","value": "11"}
       ],
       conditioningProjectIdOption:[],
-      stepArray: [true,false,false,false,false,false,false,false],
-      stepActive: 0,
+      stepArray: [false,false,false,false,false,false,false,true],
+      stepActive: 7,
       form: {
-        name: null,
-        phone: null,
+        name: "jun",
+        phone: "152708980",
         conditioningProjectId: 0,
         sex: 1,
-        age: null,
+        age: 18,
         condiment:["1","5","9","6","1","3"],
         otherCondiment:null,
         cookingStyle: ["8","9","4","11"],
@@ -756,7 +784,26 @@ export default {
         allergyFlag: 0,
         allergySituation: null,
         allergen:[],
-        otherAllergen:null
+        otherAllergen:null,
+        fileNameList:[]
+      },
+      upload: {
+          // 是否禁用上传
+          isUploading: false,
+          // 上传的地址
+          url: process.env.VUE_APP_BASE_API + "/common/customerUploadFile",
+          // 设置上传的请求头部
+          headers: {},
+          // 其他需要携带的数据
+          data:{},
+          //文件列表
+          fileList:[],
+          //同时上传文件上限
+          limit: 3,
+          //每个文件大小
+          fileSize: 1024 * 1024 * 5,
+          //是否支持同时选择多张
+          multiple: true
       },
       rules: {
         name: [
@@ -783,33 +830,41 @@ export default {
             message: "手机号格式不正确",
           },
         ],
-        conditioningProjectId:[
-          { required: true, trigger: "blur", message: "请选择调理项目" }
-        ]
+          conditioningProjectId:[
+              { required: true, trigger: "blur", message: "请选择调理项目" }
+          ],
+          /*fileList:[
+              {required: true, trigger: "blur", validator: checkReportFile}
+          ]*/
       },
-      physicalSignsList: [],
-      bloodDataList: [],
-      moistureDataList: [],
+        //需要将数组转成字符串的属性名称
+      arrayName:[
+           "condiment","cookingStyle","cookingStyleRate", "washVegetablesStyle","lunchType","dinner","dietFlavor",
+           "snacks","waterType","waterHabit","drinksNum","drinkWineClassify","drinkWineAmount","smokeRate",
+           "workType","defecationTime","aerobicMotionClassify","anaerobicMotionClassify","anaerobicAerobicMotionClassify",
+           "motionField","sleepQuality", "familyIllnessHistory", "operationHistory", "longEatDrugClassify", "allergen", "fileNameList"
+      ]
 
     };
   },
   methods: {
-    addCustomer(){
+    submit(){
+        if (this.submitFlag) {
+            this.$message({
+                message: "请勿重复提交",
+                type: "warning",
+            });
+            return;
+        }
       this.$refs.form.validate((valid) => {
         if (valid) {
-          if(stepActive == stepArray.length-1){
-            /*addCustomer(cusMessage).then((response) => {
-              if (response.code === 200) {
-                console.log("成功");
-                this.$notify({
-                  title: "提交成功",
-                  message: "",
-                  type: "success",
-                });
-                this.submitFlag = true;
-              }
-            });*/
-          }
+            this.submitFlag = true;
+            this.form.fileNameList = [];
+            if(this.upload.fileList.length > 0){
+                this.$refs.upload.submit();
+            }else{
+                this.addCustomerHealthy();
+            }
         } else {
           this.$message({
           message: "数据未填写完整",
@@ -818,6 +873,27 @@ export default {
       }
     });
 
+    },
+    addCustomerHealthy(){
+        //数据处理
+        let cusMessage = Object.assign({}, this.form);
+        this.arrayName.forEach(function (item, index) {
+            cusMessage[item] = cusMessage[item] != null ? cusMessage[item].join(",") : null;
+        })
+        addCustomerHealthy(cusMessage).then((response) => {
+            if (response.code === 200) {
+                this.$notify({
+                    title: "提交成功",
+                    message: "",
+                    type: "success",
+                });
+            }else{
+                this.submitFlag = false;
+                this.upload.isUploading = false;
+            }
+        });
+        console.log(cusMessage.cookingStyleRate);
+        console.log(cusMessage.washVegetablesStyle);
     },
     nextStep(step){
       this.$refs.form.validate((valid) => {
@@ -841,7 +917,61 @@ export default {
       getDictData(type).then(response => {
          this.conditioningProjectIdOption = response.data;
       });
-    }
+    },
+      //监控上传文件列表
+      handleFileChange(file, fileList) {
+          /*console.log("------------")
+          let existFile = fileList.slice(0, fileList.length - 1).find(f => f.name === file.name);
+          if (existFile) {
+              this.$message({
+                  message: "当前文件已经存在",
+                  type: "warning",
+              });
+              fileList.pop();
+          }*/
+          let sizeFlag = file.size > this.upload.fileSize;
+          if (sizeFlag) {
+              this.$message({
+                  message: "当前文件过大",
+                  type: "warning",
+              });
+              fileList.pop();
+          }
+          this.upload.fileList = fileList;
+
+      },
+      // 文件数量超过限度
+      handleFileexceed(file, fileList){
+          //console.log(this.upload.fileList.length);
+          this.$message({
+              message: "最多可上传"+ this.upload.limit +"份文件",
+              type: "warning",
+          });
+      },
+      // 文件上传中处理
+      handleFileUploadProgress(event, file, fileList) {
+          this.upload.isUploading = true;
+      },
+      // 文件上传成功处理
+      handleFileSuccess(response, file, fileList) {
+          if(response != null && response.code === 200){
+              this.form.fileNameList.push(response.fileName);
+              if(this.form.fileNameList.length === this.upload.fileList.length){
+                  //文件全部上传成功，则调用添加客户信息方法
+                  this.addCustomerHealthy();
+              }
+          }else{
+              this.upload.isUploading = false;
+              this.submitFlag = false;
+              this.$message.error('文件上传失败');
+          }
+      },
+      // 文件上传失败处理
+      handleFileFail(err, file, fileList){
+          this.$message.error('文件上传失败');
+          this.upload.isUploading = false;
+          this.submitFlag = false;
+      }
   },
   created() {
     this.getDict("conditioning_project");
