@@ -1,6 +1,8 @@
 package com.stdiet.custom.mapper;
 
 import java.util.List;
+
+import com.stdiet.custom.domain.SysCustomer;
 import com.stdiet.custom.domain.SysCustomerPhysicalSigns;
 import org.apache.ibatis.annotations.Param;
 
@@ -19,14 +21,6 @@ public interface SysCustomerPhysicalSignsMapper
      * @return 客户体征信息
      */
     public SysCustomerPhysicalSigns selectSysCustomerPhysicalSignsById(Long id);
-
-    /**
-     * 查询客户体征信息列表
-     *
-     * @param sysCustomerPhysicalSigns 客户体征信息
-     * @return 客户体征信息集合
-     */
-    public List<SysCustomerPhysicalSigns> selectSysCustomerPhysicalSignsList(SysCustomerPhysicalSigns sysCustomerPhysicalSigns);
 
     /**
      * 新增客户体征信息
@@ -60,13 +54,14 @@ public interface SysCustomerPhysicalSignsMapper
      */
     public int deleteSysCustomerPhysicalSignsByIds(Long[] ids);
 
-    /**
-     * 根据客户id修改客户体征信息
-     *
-     * @param sysCustomerPhysicalSigns 客户体征信息
-     * @return 结果
-     */
-    int updateSysCustomerPhysicalSignsByCustomerId(SysCustomerPhysicalSigns sysCustomerPhysicalSigns);
 
-    int deleteSysCustomerPhysicalSignsByCustomerIds(Long[] ids);
+    //查询客户体征信息
+    List<SysCustomerPhysicalSigns> selectSysCustomerAndSignList(SysCustomerPhysicalSigns sysCustomerPhysicalSigns);
+
+    /**
+     * 根据手机号查询客户以及体征
+     * @param phone
+     * @return
+     */
+    SysCustomerPhysicalSigns selectSysCustomerAndSignByPhone(String phone);
 }

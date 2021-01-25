@@ -1,7 +1,11 @@
 package com.stdiet.custom.service;
 
 import java.util.List;
+
+import com.stdiet.common.core.domain.AjaxResult;
+import com.stdiet.custom.domain.SysCustomer;
 import com.stdiet.custom.domain.SysCustomerPhysicalSigns;
+import com.stdiet.custom.dto.request.CustomerInvestigateRequest;
 
 /**
  * 客户体征信息Service接口
@@ -17,14 +21,6 @@ public interface ISysCustomerPhysicalSignsService {
      * @return 客户体征信息
      */
     public SysCustomerPhysicalSigns selectSysCustomerPhysicalSignsById(Long id);
-
-    /**
-     * 查询客户体征信息列表
-     *
-     * @param sysCustomerPhysicalSigns 客户体征信息
-     * @return 客户体征信息集合
-     */
-    public List<SysCustomerPhysicalSigns> selectSysCustomerPhysicalSignsList(SysCustomerPhysicalSigns sysCustomerPhysicalSigns);
 
     /**
      * 新增客户体征信息
@@ -57,4 +53,28 @@ public interface ISysCustomerPhysicalSignsService {
      * @return 结果
      */
     public int deleteSysCustomerPhysicalSignsById(Long id);
+
+    /**
+     * 客户体征资料填写
+     *
+     * @param customerInvestigateRequest 客户建档相关资料
+     * @return 结果
+     */
+    AjaxResult addOrupdateCustomerAndSign(CustomerInvestigateRequest customerInvestigateRequest) throws Exception;
+
+    /**
+     *  查询客户基础信息以及体征信息列表
+     *
+     * @param sysCustomerPhysicalSigns 查询条件
+     * @return 结果
+     */
+    List<SysCustomerPhysicalSigns> selectSysCustomerAndSignList(SysCustomerPhysicalSigns sysCustomerPhysicalSigns);
+
+    /**
+     * 根据手机号查询客户以及体征
+     * @param phone
+     * @return
+     */
+    SysCustomerPhysicalSigns  selectSysCustomerAndSignByPhone(String phone);
+
 }

@@ -280,7 +280,6 @@ export default {
         ],
         phone: [
           { required: true, trigger: "blur", message: "请填写手机号" },
-          { required: true, trigger: "blur", message: "请填写正确的手机号" },
           {
             required: true,
             trigger: "blur",

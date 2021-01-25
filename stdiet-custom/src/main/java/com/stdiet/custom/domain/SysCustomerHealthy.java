@@ -19,8 +19,16 @@ public class SysCustomerHealthy extends BaseEntity
     private Long id;
 
     /** 客户ID */
-    @Excel(name = "客户ID")
+    //@Excel(name = "客户ID")
     private Long customerId;
+
+    /** 客户姓名,非持久化字段 */
+    @Excel(name = "客户姓名")
+    private String name;
+
+    /** 客户手机号,非持久化字段 */
+    @Excel(name = "客户手机号")
+    private String phone;
 
     /** 调理项目id */
     @Excel(name = "调理项目id")
@@ -1143,6 +1151,22 @@ public class SysCustomerHealthy extends BaseEntity
     public Long getDelFlag()
     {
         return delFlag;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     @Override

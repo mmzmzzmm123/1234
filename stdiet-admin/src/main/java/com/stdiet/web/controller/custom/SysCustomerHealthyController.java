@@ -27,7 +27,7 @@ import com.stdiet.common.core.page.TableDataInfo;
  * @date 2021-01-23
  */
 @RestController
-@RequestMapping("/customer/healthy")
+@RequestMapping("/custom/healthy")
 public class SysCustomerHealthyController extends BaseController
 {
     @Autowired
@@ -36,7 +36,7 @@ public class SysCustomerHealthyController extends BaseController
     /**
      * 查询客户健康列表
      */
-    @PreAuthorize("@ss.hasPermi('customer:healthy:list')")
+    @PreAuthorize("@ss.hasPermi('custom:healthy:list')")
     @GetMapping("/list")
     public TableDataInfo list(SysCustomerHealthy sysCustomerHealthy)
     {
@@ -48,7 +48,7 @@ public class SysCustomerHealthyController extends BaseController
     /**
      * 导出客户健康列表
      */
-    @PreAuthorize("@ss.hasPermi('customer:healthy:export')")
+    @PreAuthorize("@ss.hasPermi('custom:healthy:export')")
     @Log(title = "客户健康", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
     public AjaxResult export(SysCustomerHealthy sysCustomerHealthy)
@@ -61,7 +61,7 @@ public class SysCustomerHealthyController extends BaseController
     /**
      * 获取客户健康详细信息
      */
-    @PreAuthorize("@ss.hasPermi('customer:healthy:query')")
+    @PreAuthorize("@ss.hasPermi('custom:healthy:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
@@ -76,24 +76,24 @@ public class SysCustomerHealthyController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody SysCustomerHealthy sysCustomerHealthy)
     {
-        return toAjax(sysCustomerHealthyService.insertSysCustomerHealthy(sysCustomerHealthy));
+        return sysCustomerHealthyService.insertOrUpdateSysCustomerHealthy(sysCustomerHealthy);
     }
 
     /**
      * 修改客户健康
      */
-    @PreAuthorize("@ss.hasPermi('customer:healthy:edit')")
+    @PreAuthorize("@ss.hasPermi('custom:healthy:edit')")
     @Log(title = "客户健康", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody SysCustomerHealthy sysCustomerHealthy)
     {
-        return toAjax(sysCustomerHealthyService.updateSysCustomerHealthy(sysCustomerHealthy));
+        return sysCustomerHealthyService.insertOrUpdateSysCustomerHealthy(sysCustomerHealthy);
     }
 
     /**
      * 删除客户健康
      */
-    @PreAuthorize("@ss.hasPermi('customer:healthy:remove')")
+    @PreAuthorize("@ss.hasPermi('custom:healthy:remove')")
     @Log(title = "客户健康", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)

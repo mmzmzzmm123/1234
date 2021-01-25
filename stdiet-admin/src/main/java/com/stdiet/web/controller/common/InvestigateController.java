@@ -8,6 +8,7 @@ import com.stdiet.custom.domain.SysCustomerHealthy;
 import com.stdiet.custom.domain.SysPhysicalSigns;
 import com.stdiet.custom.dto.request.CustomerInvestigateRequest;
 import com.stdiet.custom.service.ISysCustomerHealthyService;
+import com.stdiet.custom.service.ISysCustomerPhysicalSignsService;
 import com.stdiet.custom.service.ISysCustomerService;
 import com.stdiet.custom.service.ISysPhysicalSignsService;
 import com.stdiet.system.service.ISysDictTypeService;
@@ -28,7 +29,7 @@ import java.util.List;
 public class InvestigateController extends BaseController {
 
     @Autowired
-    private ISysCustomerService iSysCustomerService;
+    private ISysCustomerPhysicalSignsService sysCustomerPhysicalSignsService;
 
     @Autowired
     private ISysPhysicalSignsService iSysPhysicalSignsService;
@@ -45,13 +46,8 @@ public class InvestigateController extends BaseController {
     @PostMapping("/customerInvestigate")
     public AjaxResult customerInvestigate(@RequestBody CustomerInvestigateRequest customerInvestigateRequest) throws Exception
     {
-        //验证是否已存在该手机号
-        SysCustomer phoneCustomer = iSysCustomerService.getCustomerByPhone(customerInvestigateRequest.getPhone());
-        if(phoneCustomer != null){
-            return AjaxResult.error("该手机号已存在");
-        }
         customerInvestigateRequest.setId(null); //只能添加，无法修改
-        return AjaxResult.success(iSysCustomerService.addOrupdateCustomerAndSign(customerInvestigateRequest));
+        return sysCustomerPhysicalSignsService.addOrupdateCustomerAndSign(customerInvestigateRequest);
     }
 
     /**
@@ -80,8 +76,7 @@ public class InvestigateController extends BaseController {
     @PostMapping("/addCustomerHealthy")
     public AjaxResult addCustomerHealthy(@RequestBody SysCustomerHealthy sysCustomerHealthy)
     {
-        System.out.println(sysCustomerHealthy.getSex());
-        return toAjax(1);
+        return sysCustomerHealthyService.insertOrUpdateSysCustomerHealthy(sysCustomerHealthy);
     }
 
 }

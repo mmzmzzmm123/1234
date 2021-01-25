@@ -1,7 +1,10 @@
 package com.stdiet.custom.service;
 
 import java.util.List;
+
+import com.stdiet.common.core.domain.AjaxResult;
 import com.stdiet.custom.domain.SysCustomerHealthy;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 客户健康Service接口
@@ -28,20 +31,12 @@ public interface ISysCustomerHealthyService
     public List<SysCustomerHealthy> selectSysCustomerHealthyList(SysCustomerHealthy sysCustomerHealthy);
 
     /**
-     * 新增客户健康
+     * 新增或修改客户健康
      *
      * @param sysCustomerHealthy 客户健康
      * @return 结果
      */
-    public int insertSysCustomerHealthy(SysCustomerHealthy sysCustomerHealthy);
-
-    /**
-     * 修改客户健康
-     *
-     * @param sysCustomerHealthy 客户健康
-     * @return 结果
-     */
-    public int updateSysCustomerHealthy(SysCustomerHealthy sysCustomerHealthy);
+    public AjaxResult insertOrUpdateSysCustomerHealthy(SysCustomerHealthy sysCustomerHealthy);
 
     /**
      * 批量删除客户健康
@@ -58,4 +53,10 @@ public interface ISysCustomerHealthyService
      * @return 结果
      */
     public int deleteSysCustomerHealthyById(Long id);
+
+    /**
+     * 根据手机号查询客户健康评估信息
+     * @param phone
+     */
+    SysCustomerHealthy selectSysCustomerHealthyByPhone(String phone);
 }

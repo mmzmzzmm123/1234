@@ -1,7 +1,10 @@
 package com.stdiet.custom.mapper;
 
 import java.util.List;
+
+import com.stdiet.custom.domain.SysCustomer;
 import com.stdiet.custom.domain.SysCustomerHealthy;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 客户健康Mapper接口
@@ -58,4 +61,10 @@ public interface SysCustomerHealthyMapper
      * @return 结果
      */
     public int deleteSysCustomerHealthyByIds(Long[] ids);
+
+    /**
+     * 根据手机号查询客户健康评估信息
+     * @param phone
+     */
+    SysCustomerHealthy selectSysCustomerHealthyByPhone(@Param("phone") String phone);
 }

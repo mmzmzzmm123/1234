@@ -17,12 +17,20 @@ public class SysCustomerPhysicalSigns extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
-    /** $column.columnComment */
+    /** 体征ID */
     private Long id;
 
     /** 客户id */
-    @Excel(name = "客户id")
+    //@Excel(name = "客户id")
     private Long customerId;
+
+    /** 客户姓名,非持久化字段 */
+    @Excel(name = "客户姓名")
+    private String name;
+
+    /** 客户手机号,非持久化字段 */
+    @Excel(name = "客户手机号")
+    private String phone;
 
     /** 客户性别  0男 1女 */
     @Excel(name = "客户性别  0男 1女")
@@ -423,6 +431,22 @@ public class SysCustomerPhysicalSigns extends BaseEntity
 
     public void setDelFlag(Integer delFlag) {
         this.delFlag = delFlag;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     @Override

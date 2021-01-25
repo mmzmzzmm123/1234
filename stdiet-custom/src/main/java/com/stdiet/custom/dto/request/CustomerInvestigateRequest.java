@@ -15,8 +15,11 @@ public class CustomerInvestigateRequest extends BaseEntity
 
     //基础信息
 
-    /** $column.columnComment */
+    /** 体征信息ID */
     private Long id;
+
+    /** 客户ID */
+    private Long customerId;
 
     /** 名字 */
     @Excel(name = "名字")
@@ -26,16 +29,7 @@ public class CustomerInvestigateRequest extends BaseEntity
     @Excel(name = "手机号")
     private String phone;
 
-    /** 邮箱 */
-    @Excel(name = "邮箱")
-    private String email;
-
-    /** 地址 */
-    @Excel(name = "地址")
-    private String address;
-
     //体征信息
-
     /** 客户性别  0男 1女 */
     @Excel(name = "客户性别  0男 1女")
     private Integer sex;
@@ -152,40 +146,32 @@ public class CustomerInvestigateRequest extends BaseEntity
         return id;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(Long customerId) {
+        this.customerId = customerId;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public void setName(String name) {
         this.name = name;
     }
 
+    public String getPhone() {
+        return phone;
+    }
+
     public void setPhone(String phone) {
         this.phone = phone;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
     }
 
     public Integer getSex() {
