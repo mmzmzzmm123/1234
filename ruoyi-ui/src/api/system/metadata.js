@@ -51,3 +51,25 @@ export function exportMetadata(query) {
     params: query
   })
 }
+// 导出文书类基本元数据 id
+export function exportMetadataItem(ids) {
+  return request({
+    url: '/system/metadata/export/'+ids,
+    method: 'get',
+  })
+}
+// 导出文书类基本元数据电子文件 id
+export function exportMetadataItemAndEle(ids) {
+  return request({
+    url: '/system/metadata/export/ele/'+ids,
+    method: 'get',
+  })
+}
+// 导出文书类基本元数据 字段
+export function exportMetadataField() {
+  return request({
+    url: '/system/metadata/export/field',
+    method: 'get',
+  })
+}
+

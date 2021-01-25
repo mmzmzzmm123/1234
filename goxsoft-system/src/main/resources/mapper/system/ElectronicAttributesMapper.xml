@@ -50,7 +50,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectElectronicAttributesVo"/>
         where id = #{id}
     </select>
-        
+    <select id="selectEleByMdId" resultMap="ElectronicAttributesResult">
+        <include refid="selectElectronicAttributesVo">
+        </include>
+        where metadata_id = #{id}
+    </select>
+
     <insert id="insertElectronicAttributes" parameterType="ElectronicAttributes">
         insert into electronic_attributes
         <trim prefix="(" suffix=")" suffixOverrides=",">

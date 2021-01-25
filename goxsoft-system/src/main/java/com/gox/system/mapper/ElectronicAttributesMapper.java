@@ -23,7 +23,6 @@ public interface ElectronicAttributesMapper
 
     /**
      * 查询电子文件信息列表
-     * 
      * @param electronicAttributes 电子文件信息
      * @return 电子文件信息集合
      */
@@ -60,4 +59,10 @@ public interface ElectronicAttributesMapper
      * @return 结果
      */
     public int deleteElectronicAttributesByIds(Long[] ids);
+    /**
+     * 根据元数据id查询
+     * @param id
+     * @return 电子文件列表
+     */
+    List<ElectronicAttributes> selectEleByMdId(Long id);
 }

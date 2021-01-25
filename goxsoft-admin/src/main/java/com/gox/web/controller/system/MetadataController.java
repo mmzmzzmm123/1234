@@ -1,5 +1,6 @@
 package com.gox.web.controller.system;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,7 +58,37 @@ public class MetadataController extends BaseController
         ExcelUtil<Metadata> util = new ExcelUtil<Metadata>(Metadata.class);
         return util.exportExcel(list, "metadata");
     }
-
+    /**
+     * 导出文书类基本元数据列表
+     */
+    @PreAuthorize("@ss.hasPermi('system:metadata:export')")
+    @Log(title = "文书类基本元数据", businessType = BusinessType.EXPORT)
+    @GetMapping("/export/{ids}")
+    public AjaxResult exportItemByIds(@PathVariable Long[] ids)
+    {
+        return metadataService.exportExcelByIds(ids);
+    }
+    /**
+     * 导出文书类基本元数据列表
+     */
+    @PreAuthorize("@ss.hasPermi('system:metadata:export')")
+    @Log(title = "文书类基本元数据和电子原文", businessType = BusinessType.EXPORT)
+    @GetMapping("/export/ele/{ids}")
+    public AjaxResult exportItemAndEleByIds(@PathVariable Long[] ids)
+    {
+        return metadataService.exportExcelAndEleByIds(ids);
+    }
+    /**
+     * 导出 字段模板
+     */
+    @PreAuthorize("@ss.hasPermi('system:metadata:export')")
+    @Log(title = "文书类基本元数据字段模板", businessType = BusinessType.EXPORT)
+    @GetMapping("/export/field")
+    public AjaxResult exportFieldExcel()
+    {
+        ExcelUtil<Metadata> util = new ExcelUtil<Metadata>(Metadata.class);
+        return util.exportExcel(new ArrayList<>(), "metadata");
+    }
     /**
      * 获取文书类基本元数据详细信息
      */

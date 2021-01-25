@@ -431,22 +431,70 @@
                 v-hasPermi="['system:metadata:remove']"
               >删除</el-button>
             </el-col>
+<!--            <el-col :span="1.5">-->
+<!--              <el-button-->
+<!--                type="warning"-->
+<!--                icon="el-icon-download"-->
+<!--                size="mini"-->
+<!--                @click="handleExport"-->
+<!--                v-hasPermi="['system:metadata:export']"-->
+<!--              >导出</el-button>-->
+<!--            </el-col>-->
+<!--            <el-col :span="1.5">-->
+<!--              <el-button-->
+<!--                type="primary"-->
+<!--                icon="el-icon-edit"-->
+<!--                size="mini"-->
+<!--                @click="viewDetail">-->
+<!--                查看-->
+<!--              </el-button>-->
+<!--            </el-col>-->
             <el-col :span="1.5">
-              <el-button
-                type="warning"
-                icon="el-icon-download"
-                size="mini"
-                @click="handleExport"
-                v-hasPermi="['system:metadata:export']"
-              >导出</el-button>
+              <el-dropdown >
+                <el-button type="primary" size="mini" @click="handleExport">
+                  导入导出
+                </el-button>
+                <el-dropdown-menu slot="dropdown">
+                  <el-dropdown-item @click.native="handleExportItem">
+                    导出Excel
+                  </el-dropdown-item>
+                  <el-dropdown-item @click.native="handleExportAndEle">
+                    导出Excel和原文
+                  </el-dropdown-item>
+                  <el-dropdown-item @click.native="handleImport">
+                    数据导入
+                  </el-dropdown-item>
+                  <el-dropdown-item @click.native="handleExportField">
+                    导出字段模板
+                  </el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
             </el-col>
+<!--            <el-col :span="1.5">-->
+<!--              <el-button-->
+<!--                type="primary"-->
+<!--                icon="el-icon-edit"-->
+<!--                size="mini"-->
+<!--                @click="viewDetail">-->
+<!--                查看-->
+<!--              </el-button>-->
+<!--            </el-col>-->
+<!--            <el-col :span="1.5">-->
+<!--              <el-button-->
+<!--                type="primary"-->
+<!--                icon="el-icon-edit"-->
+<!--                size="mini"-->
+<!--                @click="viewDetail">-->
+<!--                查看-->
+<!--              </el-button>-->
+<!--            </el-col>-->
             <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
           </el-row>
 
           <el-table v-loading="loading" :data="metadataList" @selection-change="handleSelectionChange">
             <el-table-column type="selection" width="55" align="center" />
             <el-table-column label="id" align="center" prop="id" />
-            <el-table-column label="聚合层次" align="center" prop="aggregationLevel" :formatter="aggregationLevelFormat" />
+            <el-table-column label="聚合层次" align="center" prop="aggregationLevel" />
             <el-table-column label="档案馆名称" align="center" prop="archivesName" />
             <el-table-column label="档案馆代码" align="center" prop="archivesIdentifier" />
             <el-table-column label="全宗名称" align="center" prop="fondsName" />
@@ -477,18 +525,18 @@
             <el-table-column label="文件编号" align="center" prop="documentNumber" />
             <el-table-column label="责任者" align="center" prop="author" />
             <el-table-column label="日期" align="center" prop="date" />
-            <el-table-column label="文种" align="center" prop="documentType" :formatter="documentTypeFormat" />
-            <el-table-column label="紧急程度" align="center" prop="precedence" :formatter="precedenceFormat" />
+            <el-table-column label="文种" align="center" prop="documentType"  />
+            <el-table-column label="紧急程度" align="center" prop="precedence"  />
             <el-table-column label="主送" align="center" prop="principalReceiver" />
             <el-table-column label="抄送" align="center" prop="otherReceivers" />
-            <el-table-column label="密级" align="center" prop="securityClassification" :formatter="securityClassificationFormat" />
+            <el-table-column label="密级" align="center" prop="securityClassification"  />
             <el-table-column label="保密期限" align="center" prop="secrecyPeriod" />
             <el-table-column label="形式特征" align="center" prop="formalCharacteristics" />
-            <el-table-column label="文件组合类型" align="center" prop="documentAggregationType" :formatter="documentAggregationTypeFormat" />
+            <el-table-column label="文件组合类型" align="center" prop="documentAggregationType"  />
             <el-table-column label="件数" align="center" prop="totalNumberOfItems" />
             <el-table-column label="页数" align="center" prop="totalNumberOfPages" />
             <el-table-column label="语种" align="center" prop="language" />
-            <el-table-column label="稿本" align="center" prop="manuscriptType" :formatter="manuscriptTypeFormat" />
+            <el-table-column label="稿本" align="center" prop="manuscriptType"  />
             <!--          <el-table-column label="知识产权说明" align="center" prop="intellectualPropertyStatement" />-->
             <!--          <el-table-column label="授权对象" align="center" prop="authorizedAgent" />-->
             <!--          <el-table-column label="授权行为" align="center" prop="permissionAssignment" :formatter="permissionAssignmentFormat" />-->
@@ -529,7 +577,15 @@
 </template>
 
 <script>
-import { listMetadata, getMetadata, delMetadata, addMetadata, updateMetadata, exportMetadata } from "@/api/system/metadata";
+import {
+  listMetadata,
+  getMetadata,
+  delMetadata,
+  addMetadata,
+  updateMetadata,
+  exportMetadata,
+  exportMetadataItem, exportMetadataItemAndEle, exportMetadataField
+} from '@/api/system/metadata'
 import DeptTree from '@/views/components/deptTree'
 import InputView from '@/views/system/metadata/InputView'
 import { listJson } from '@/api/system/json'
@@ -580,22 +636,6 @@ export default {
       open: false,
       // 聚合层次字典
       aggregationLevelOptions: [],
-      // 保管期限字典
-      retentionPeriodOptions: [],
-      // 文种字典
-      documentTypeOptions: [],
-      // 紧急程度字典
-      precedenceOptions: [],
-      // 密级字典
-      securityClassificationOptions: [],
-      // 文件组合类型字典
-      documentAggregationTypeOptions: [],
-      // 稿本字典
-      manuscriptTypeOptions: [],
-      // 授权行为字典
-      permissionAssignmentOptions: [],
-      // 控制标识字典
-      controlIdentifierOptions: [],
       // 查询参数
       queryParams: {
         deptId:null,
@@ -653,190 +693,49 @@ export default {
       },
       // 表单参数
       form: {},
-      // 表单校验
-      rules: {
-        aggregationLevel: [
-          { required: true, message: "聚合层次不能为空", trigger: "change" }
-        ],
-        archivesName: [
-          { required: true, message: "档案馆名称不能为空", trigger: "blur" }
-        ],
-        archivesIdentifier: [
-          { required: true, message: "档案馆代码不能为空", trigger: "blur" }
-        ],
-        fondsName: [
-          { required: true, message: "全宗名称不能为空", trigger: "blur" }
-        ],
-        fondsConstitutingUnitName: [
-          { required: true, message: "立档单位名称不能为空", trigger: "blur" }
-        ],
-        electronicRecordCode: [
-          { required: true, message: "电子文件号不能为空", trigger: "blur" }
-        ],
-        archivalCode: [
-          { required: true, message: "档号不能为空", trigger: "blur" }
-        ],
-        fondsIdentifier: [
-          { required: true, message: "全宗号不能为空", trigger: "blur" }
-        ],
-        catalogueNumber: [
-          { required: true, message: "目录号不能为空", trigger: "blur" }
-        ],
-        year: [
-          { required: true, message: "年度不能为空", trigger: "blur" }
-        ],
-        retentionPeriod: [
-          { required: true, message: "保管期限不能为空", trigger: "change" }
-        ],
-        organizationalStructureOrFunction: [
-          { required: true, message: "机构或问题不能为空", trigger: "blur" }
-        ],
-        categoryCode: [
-          { required: true, message: "类别号不能为空", trigger: "blur" }
-        ],
-        agencyFileNumber: [
-          { required: true, message: "室编案卷号不能为空", trigger: "blur" }
-        ],
-        archivesFileNumber: [
-          { required: true, message: "馆编案卷号不能为空", trigger: "blur" }
-        ],
-        agencyItemNumber: [
-          { required: true, message: "室编件号不能为空", trigger: "blur" }
-        ],
-        archivesItemNumber: [
-          { required: true, message: "馆编件号不能为空", trigger: "blur" }
-        ],
-        documentSequenceNumber: [
-          { required: true, message: "文档序号不能为空", trigger: "blur" }
-        ],
-        pageNumber: [
-          { required: true, message: "页号不能为空", trigger: "blur" }
-        ],
-        contentDescription: [
-          { required: true, message: "内容描述不能为空", trigger: "blur" }
-        ],
-        title: [
-          { required: true, message: "题名不能为空", trigger: "blur" }
-        ],
-        parallelTitle: [
-          { required: true, message: "并列题名不能为空", trigger: "blur" }
-        ],
-        alternativeTitle: [
-          { required: true, message: "副题名不能为空", trigger: "blur" }
-        ],
-        otherTitleInformation: [
-          { required: true, message: "说明题名文字不能为空", trigger: "blur" }
-        ],
-        descriptor: [
-          { required: true, message: "主题词不能为空", trigger: "blur" }
-        ],
-        keyword: [
-          { required: true, message: "关键词不能为空", trigger: "blur" }
-        ],
-        personalName: [
-          { required: true, message: "人名不能为空", trigger: "blur" }
-        ],
-        abstract: [
-          { required: true, message: "摘要不能为空", trigger: "blur" }
-        ],
-        classCode: [
-          { required: true, message: "分类号不能为空", trigger: "blur" }
-        ],
-        documentNumber: [
-          { required: true, message: "文件编号不能为空", trigger: "blur" }
-        ],
-        author: [
-          { required: true, message: "责任者不能为空", trigger: "blur" }
-        ],
-        date: [
-          { required: false, message: "日期不能为空", trigger: "blur" }
-        ],
-        documentType: [
-          { required: true, message: "文种不能为空", trigger: "change" }
-        ],
-        precedence: [
-          { required: true, message: "紧急程度不能为空", trigger: "change" }
-        ],
-        principalReceiver: [
-          { required: true, message: "主送不能为空", trigger: "blur" }
-        ],
-        otherReceivers: [
-          { required: true, message: "抄送不能为空", trigger: "blur" }
-        ],
-        securityClassification: [
-          { required: true, message: "密级不能为空", trigger: "change" }
-        ],
-        secrecyPeriod: [
-          { required: true, message: "保密期限不能为空", trigger: "blur" }
-        ],
-        formalCharacteristics: [
-          { required: true, message: "形式特征不能为空", trigger: "blur" }
-        ],
-        documentAggregationType: [
-          { required: true, message: "文件组合类型不能为空", trigger: "change" }
-        ],
-        totalNumberOfItems: [
-          { required: true, message: "件数不能为空", trigger: "blur" }
-        ],
-        totalNumberOfPages: [
-          { required: true, message: "页数不能为空", trigger: "blur" }
-        ],
-        language: [
-          { required: true, message: "语种不能为空", trigger: "blur" }
-        ],
-        manuscriptType: [
-          { required: true, message: "稿本不能为空", trigger: "change" }
-        ],
-        // intellectualPropertyStatement: [
-        //   { required: true, message: "知识产权说明不能为空", trigger: "blur" }
-        // ],
-        // authorizedAgent: [
-        //   { required: true, message: "授权对象不能为空", trigger: "blur" }
-        // ],
-        // permissionAssignment: [
-        //   { required: true, message: "授权行为不能为空", trigger: "change" }
-        // ],
-        // controlIdentifier: [
-        //   { required: true, message: "控制标识不能为空", trigger: "change" }
-        // ],
-        annotation: [
-          { required: true, message: "附注不能为空", trigger: "blur" }
-        ]
-      }
     };
   },
   created() {
     //this.getList();
     this.loadForm();
-    // this.getDicts("ws_al").then(response => {
-    //   this.aggregationLevelOptions = response.data;
-    // });
-    // this.getDicts("sys_rp").then(response => {
-    //   this.retentionPeriodOptions = response.data;
-    // });
-    // this.getDicts("document_type").then(response => {
-    //   this.documentTypeOptions = response.data;
-    // });
-    // this.getDicts("precedence").then(response => {
-    //   this.precedenceOptions = response.data;
-    // });
-    // this.getDicts("security_classification").then(response => {
-    //   this.securityClassificationOptions = response.data;
-    // });
-    // this.getDicts("document_aggregation_type").then(response => {
-    //   this.documentAggregationTypeOptions = response.data;
-    // });
-    // this.getDicts("manuscript_type").then(response => {
-    //   this.manuscriptTypeOptions = response.data;
-    // });
-    // this.getDicts("permission_assignment").then(response => {
-    //   this.permissionAssignmentOptions = response.data;
-    // });
-    // this.getDicts("control_identifier").then(response => {
-    //   this.controlIdentifierOptions = response.data;
-    // });
+    this.getDicts("ws_al").then(response => {
+      this.aggregationLevelOptions = response.data;
+    });
   },
   methods: {
+    handleExportItem(){
+      if(this.ids.length!==0){
+        exportMetadataItem(this.ids).then(res=>{
+          this.download(res.msg);
+        })
+      }
+      else{
+        this.$message.error('请选择至少一条数据')
+      }
+    },
+    handleExportAndEle(){
+      if(this.ids.length!==0){
+        exportMetadataItemAndEle(this.ids).then(res=>{
+          this.download(res.msg);
+        })
+      }
+      else{
+        this.$message.error('请选择至少一条数据')
+      }
+    },
+    handleImport(){
+      if(this.ids.length!==0){
+
+      }
+      else{
+        this.$message.error('请选择至少一条数据')
+      }
+    },
+    handleExportField(){
+      exportMetadataField().then(res=>{
+        this.download(res.msg)
+      })
+    },
     // 节点单击事件
     handleNodeClick(data) {
       this.queryParams.deptId = data;
@@ -856,38 +755,38 @@ export default {
     aggregationLevelFormat(row, column) {
       return this.selectDictLabel(this.aggregationLevelOptions, row.aggregationLevel);
     },
-    // 保管期限字典翻译
-    retentionPeriodFormat(row, column) {
-      return this.selectDictLabel(this.retentionPeriodOptions, row.retentionPeriod);
-    },
-    // 文种字典翻译
-    documentTypeFormat(row, column) {
-      return this.selectDictLabel(this.documentTypeOptions, row.documentType);
-    },
-    // 紧急程度字典翻译
-    precedenceFormat(row, column) {
-      return this.selectDictLabel(this.precedenceOptions, row.precedence);
-    },
-    // 密级字典翻译
-    securityClassificationFormat(row, column) {
-      return this.selectDictLabel(this.securityClassificationOptions, row.securityClassification);
-    },
-    // 文件组合类型字典翻译
-    documentAggregationTypeFormat(row, column) {
-      return this.selectDictLabel(this.documentAggregationTypeOptions, row.documentAggregationType);
-    },
-    // 稿本字典翻译
-    manuscriptTypeFormat(row, column) {
-      return this.selectDictLabel(this.manuscriptTypeOptions, row.manuscriptType);
-    },
-    // 授权行为字典翻译
-    permissionAssignmentFormat(row, column) {
-      return this.selectDictLabel(this.permissionAssignmentOptions, row.permissionAssignment);
-    },
-    // 控制标识字典翻译
-    controlIdentifierFormat(row, column) {
-      return this.selectDictLabel(this.controlIdentifierOptions, row.controlIdentifier);
-    },
+    // // 保管期限字典翻译
+    // retentionPeriodFormat(row, column) {
+    //   return this.selectDictLabel(this.retentionPeriodOptions, row.retentionPeriod);
+    // },
+    // // 文种字典翻译
+    // documentTypeFormat(row, column) {
+    //   return this.selectDictLabel(this.documentTypeOptions, row.documentType);
+    // },
+    // // 紧急程度字典翻译
+    // precedenceFormat(row, column) {
+    //   return this.selectDictLabel(this.precedenceOptions, row.precedence);
+    // },
+    // // 密级字典翻译
+    // securityClassificationFormat(row, column) {
+    //   return this.selectDictLabel(this.securityClassificationOptions, row.securityClassification);
+    // },
+    // // 文件组合类型字典翻译
+    // documentAggregationTypeFormat(row, column) {
+    //   return this.selectDictLabel(this.documentAggregationTypeOptions, row.documentAggregationType);
+    // },
+    // // 稿本字典翻译
+    // manuscriptTypeFormat(row, column) {
+    //   return this.selectDictLabel(this.manuscriptTypeOptions, row.manuscriptType);
+    // },
+    // // 授权行为字典翻译
+    // permissionAssignmentFormat(row, column) {
+    //   return this.selectDictLabel(this.permissionAssignmentOptions, row.permissionAssignment);
+    // },
+    // // 控制标识字典翻译
+    // controlIdentifierFormat(row, column) {
+    //   return this.selectDictLabel(this.controlIdentifierOptions, row.controlIdentifier);
+    // },
     // 取消按钮
     cancel() {
       this.open = false;
@@ -897,59 +796,6 @@ export default {
     // 表单重置
     reset() {
       this.formConf=this.formReserve
-      // this.form = {
-      //   id: null,
-      //   aggregationLevel: null,
-      //   archivesName: null,
-      //   archivesIdentifier: null,
-      //   fondsName: null,
-      //   fondsConstitutingUnitName: null,
-      //   electronicRecordCode: null,
-      //   archivalCode: null,
-      //   fondsIdentifier: null,
-      //   catalogueNumber: null,
-      //   year: null,
-      //   retentionPeriod: null,
-      //   organizationalStructureOrFunction: null,
-      //   categoryCode: null,
-      //   agencyFileNumber: null,
-      //   archivesFileNumber: null,
-      //   agencyItemNumber: null,
-      //   archivesItemNumber: null,
-      //   documentSequenceNumber: null,
-      //   pageNumber: null,
-      //   contentDescription: null,
-      //   title: null,
-      //   parallelTitle: null,
-      //   alternativeTitle: null,
-      //   otherTitleInformation: null,
-      //   descriptor: null,
-      //   keyword: null,
-      //   personalName: null,
-      //   abstract: null,
-      //   classCode: null,
-      //   documentNumber: null,
-      //   author: null,
-      //   date: null,
-      //   documentType: null,
-      //   precedence: null,
-      //   principalReceiver: null,
-      //   otherReceivers: null,
-      //   securityClassification: null,
-      //   secrecyPeriod: null,
-      //   formalCharacteristics: null,
-      //   documentAggregationType: null,
-      //   totalNumberOfItems: null,
-      //   totalNumberOfPages: null,
-      //   language: null,
-      //   manuscriptType: null,
-      //   intellectualPropertyStatement: null,
-      //   authorizedAgent: null,
-      //   permissionAssignment: null,
-      //   controlIdentifier: null,
-      //   annotation: null
-      // };
-      // this.resetForm("form");
     },
     /** 搜索按钮操作 */
     handleQuery() {

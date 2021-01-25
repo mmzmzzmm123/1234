@@ -60,4 +60,10 @@ public interface MetadataMapper
      * @return 结果
      */
     public int deleteMetadataByIds(Long[] ids);
+    /**
+     * id数组查询
+     * @param ids 需要删除的数据ID
+     * @return 结果
+     */
+    List<Metadata> selectMetadataByIds(Long[] ids);
 }

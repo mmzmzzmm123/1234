@@ -1,6 +1,8 @@
 package com.gox.system.service;
 
 import java.util.List;
+
+import com.gox.common.core.domain.AjaxResult;
 import com.gox.system.domain.Metadata;
 
 /**
@@ -62,4 +64,19 @@ public interface IMetadataService
      * 生成档号
      */
     String generateArchivalCode(String[] fields,Object [] values);
+
+    /**
+     * 根据id导出 excel
+     * @param ids 文书类基本元数据ID
+     * @return 结果
+     */
+    AjaxResult exportExcelByIds(Long []ids);
+    /**
+     * 根据id导出 excel 电子原文
+     * @param ids 文书类基本元数据ID
+     * @return 结果
+     */
+    AjaxResult exportExcelAndEleByIds(Long []ids);
+
+
 }
