@@ -18,7 +18,7 @@ public interface DigitalSignatureMapper
      * @return 数字签名
      */
     public DigitalSignature selectDigitalSignatureById(Long id);
-
+    List<DigitalSignature> selectDsByMdid(Long id);
     /**
      * 查询数字签名列表
      * 

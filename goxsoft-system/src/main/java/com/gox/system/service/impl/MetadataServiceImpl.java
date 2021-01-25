@@ -142,18 +142,20 @@ public class MetadataServiceImpl implements IMetadataService
         List<Metadata> mds = metadataMapper.selectMetadataByIds(ids);
         ExcelUtil<Metadata> util = new ExcelUtil<Metadata>(Metadata.class);
         String excel = util.exportExcel(mds,"metadata").get("msg").toString();
-        excel = profile+File.separator+excel;
+        String download =profile+File.separator+"download";
+        excel = download+File.separator+excel;
         List<ElectronicAttributes> eas;
         String location;
         String dir;
-        String ds = rootPath + File.separator + System.currentTimeMillis();
+        long t = System.currentTimeMillis();
+        String ds = download + File.separator + t;
         File file ;
         for (Metadata md : mds) {
             eas = md.getElectronicAttributes();
             dir = ds+File.separator+md.getArchivalCode();
-            file = new File(dir);
-            file.mkdirs();
             if (eas!=null&&!eas.isEmpty()){
+                file = new File(dir);
+                file.mkdirs();
                 for (ElectronicAttributes ea : eas) {
                     location = ea.getCurrentLocation();
                     FileUtil.copy(location,dir,true);
@@ -161,8 +163,10 @@ public class MetadataServiceImpl implements IMetadataService
             }
         }
         FileUtil.copy(excel,ds,true);
-        String res = ds+".zip";
+        String res = download+File.separator+t+".zip";
         ZipUtil.zip(ds,res);
-        return AjaxResult.success(res);
+        FileUtil.del(excel);
+        FileUtil.del(ds);
+        return AjaxResult.success(t+".zip");
     }
 }

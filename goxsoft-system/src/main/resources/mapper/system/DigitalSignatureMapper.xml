@@ -20,7 +20,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <sql id="selectDigitalSignatureVo">
         select id, signature_format_description, signature_date, signer, signature, certificate, certificate_reference, signature_algorithm, metadata_id, ele_id from digital_signature
     </sql>
-
     <select id="selectDigitalSignatureList" parameterType="DigitalSignature" resultMap="DigitalSignatureResult">
         <include refid="selectDigitalSignatureVo"/>
         <where>  
@@ -40,7 +39,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectDigitalSignatureVo"/>
         where id = #{id}
     </select>
-        
+    <select id="selectDsByMdid" resultType="com.gox.system.domain.DigitalSignature">
+        <include refid="selectDigitalSignatureVo"></include>
+        where metadata_id=#{id}
+    </select>
+
     <insert id="insertDigitalSignature" parameterType="DigitalSignature">
         insert into digital_signature
         <trim prefix="(" suffix=")" suffixOverrides=",">

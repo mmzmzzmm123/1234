@@ -51,25 +51,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="language"    column="language"    />
         <result property="manuscriptType"    column="manuscript_type"    />
         <result property="annotation"    column="annotation"    />
-        <collection property="metadataReserve" javaType="com.gox.system.domain.MetadataReserve" select="selectMrByMdid" column="id"/>
-        <collection property="electronicAttributes" ofType="com.gox.system.domain.ElectronicAttributes" select="selectEaByMdid" column="metadataId"/>
-        <collection property="digitalSignatures" ofType="com.gox.system.domain.DigitalSignature" column="metadataId" select="selectDsByMdId" />
-        <collection property="rightsManagements" javaType="ArrayList" ofType="com.gox.system.domain.RightsManagement" column="metadataId" select="selectRmByMdid"/>
-    </resultMap>
-    <select id="selectDsByMdId" resultType="com.gox.system.domain.DigitalSignature">
-        select id, signature_format_description, signature_date, signer, signature, certificate, certificate_reference, signature_algorithm, metadata_id, ele_id from digital_signature where metadata_id=#{metadataId}
+        <result property="deptId"    column="dept_id"    />
 
-    </select>
-    <select id="selectRmByMdid" resultType="com.gox.system.domain.RightsManagement">
-        select rm.intellectual_property_statement, rm.authorized_agent, rm.permission_assignment, rm.control_identifier from rights_management where metadata_id=#{metadataId}
-    </select>
-    <select id="selectEaByMdid" resultType="com.gox.system.domain.ElectronicAttributes">
-        select id, format_information, computer_file_name, computer_file_size, document_creating_application, information_system_description, physical_record_characteristics, scanning_resolution, scanning_color_model, image_compression_scheme, current_location, offline_medium_identifier, offline_medium_storage_location, microform_identifier, metadata_id
-        from electronic_attributes where metadata_id=#{metadataId}
-    </select>
-    <select id="selectMrByMdid" resultType="com.gox.system.domain.MetadataReserve">
-        select id, f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11, f12, f13, f14, f15 from metadata_reserve where id=#{id}
-    </select>
+        <collection property="electronicAttributes" ofType="com.gox.system.domain.ElectronicAttributes" select="com.gox.system.mapper.ElectronicAttributesMapper.selectEleByMdId" column="id"/>
+        <collection property="metadataReserve" javaType="com.gox.system.domain.MetadataReserve" select="com.gox.system.mapper.MetadataReserveMapper.selectMetadataReserveById" column="id"/>
+        <collection property="digitalSignatures" ofType="com.gox.system.domain.DigitalSignature" column="id" select="com.gox.system.mapper.DigitalSignatureMapper.selectDsByMdid" />
+        <collection property="rightsManagements" javaType="ArrayList" ofType="com.gox.system.domain.RightsManagement" column="id" select="com.gox.system.mapper.RightsManagementMapper.selectRmByMdId"/>
+    </resultMap>
     <sql id="selectMetadataVo">
         select md.id, aggregation_level, archives_name, archives_identifier,
         fonds_name, fonds_constituting_unit_name, electronic_record_code,
@@ -82,7 +70,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         document_number, author, date, document_type, precedence, principal_receiver,
         other_receivers, security_classification, secrecy_period, formal_characteristics,
         document_aggregation_type, total_number_of_items, total_number_of_pages,
-        language, manuscript_type, annotation
+        language, manuscript_type, annotation,dept_id
         from metadata md
     </sql>
 

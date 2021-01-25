@@ -18,7 +18,7 @@ public interface RightsManagementMapper
      * @return 权限管理
      */
     public RightsManagement selectRightsManagementById(Long id);
-
+    List<RightsManagement> selectRmByMdId(Long id);
     /**
      * 查询权限管理列表
      * 

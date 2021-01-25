@@ -32,7 +32,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectRightsManagementVo"/>
         where id = #{id}
     </select>
-        
+    <select id="selectRmByMdId" resultType="com.gox.system.domain.RightsManagement">
+        <include refid="selectRightsManagementVo"></include>
+        where metadata_id=#{id}
+    </select>
+
     <insert id="insertRightsManagement" parameterType="RightsManagement">
         insert into rights_management
         <trim prefix="(" suffix=")" suffixOverrides=",">
