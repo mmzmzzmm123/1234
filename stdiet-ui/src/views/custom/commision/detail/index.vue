@@ -65,10 +65,14 @@
       </el-table-column>
       <el-table-column label="提成" align="center" prop="commision">
         <template scope="scope">
-          {{scope.row.commision.toFixed(3)}}
+          {{scope.row.commision.toFixed(2)}}
         </template>
       </el-table-column>
-
+      <el-table-column label="下月应发提成" align="center" prop="commision">
+        <template scope="scope">
+          {{scope.row.commision.toFixed(2)}}
+        </template>
+      </el-table-column>
     </el-table>
 
     <pagination

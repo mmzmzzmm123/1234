@@ -1,3 +1,15 @@
+export const  titleArray = [
+  "一、基础信息",
+  "二、减脂经历评估",
+  "三、食品安全评估",
+  "四、饮食结构评估",
+  "五、生活习惯评估",
+  "六、运动习惯评估",
+  "七、睡眠质量评估",
+  "八、既往病史/用药史评估",
+  "九、体检报告"
+]
+
 export const condimentArray = [
   {"name":"鸡精", "value":"1"},
   {"name":"耗油", "value":"2"},
@@ -156,6 +168,11 @@ export const longEatDrugClassifyArray = [
   {"name":"头孢类","value": "4"},{"name":"鸡蛋","value": "5"},{"name":"牛奶","value": "6"},
   {"name":"海鲜","value": "7"},{"name":"花粉或尘螨","value": "8"},{"name":"粉尘","value": "9"},
   {"name":"洗洁剂","value": "10"},{"name":"化妆品","value": "11"}
+]
+
+export const makeFoodTypeArray = [
+  {"name":"居家做饭","value": "1"},{"name":"外卖食堂","value": "2"},{"name":"居家和外食","value": "3"},{"name":"国外饮食","value": "4"},
+  {"name":"运动饮食","value": "5"}
 ]
 
 //需要将数组转成字符串的属性名称，包含对象数组、字符串数组
