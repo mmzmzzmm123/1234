@@ -56,6 +56,10 @@ export default {
           title: "家长参与",
         },
         {
+          color: "#36cfc9",
+          title: "教师参与",
+        },
+        {
           color: "#135200",
           title: "大型活动",
         },
