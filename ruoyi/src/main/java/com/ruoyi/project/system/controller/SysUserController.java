@@ -193,8 +193,8 @@ public class SysUserController extends BaseController {
             for (int i = 0; i < roleIds.length; i++) {
                 if (roleIds[i] == 100) {
                     iCount = userService.countUserSchoolAdminRoleByDeptId(user.getDeptId(), roleIds[i]);
-                    if (iCount >= 3) {
-                        return AjaxResult.error("新增用户'" + user.getUserName() + "'失败，当前学校管理员角色最多设置3人");
+                    if (iCount >= 2) {
+                        return AjaxResult.error("新增用户'" + user.getUserName() + "'失败，当前学校管理员角色最多设置2人");
                     }
                 }
             }
@@ -254,8 +254,8 @@ public class SysUserController extends BaseController {
                 for (int i = 0; i < roleIds.length; i++) {
                     if (roleIds[i] == 100) {
                         iCount = userService.countUserSchoolAdminRoleByDeptId(user.getDeptId(), roleIds[i]);
-                        if (iCount >= 3) {
-                            return AjaxResult.error("用户'" + user.getUserName() + "'修改失败，当前学校管理员角色最多设置3人");
+                        if (iCount >= 2) {
+                            return AjaxResult.error("用户'" + user.getUserName() + "'修改失败，当前学校管理员角色最多设置2人");
                         }
                     }
                 }
