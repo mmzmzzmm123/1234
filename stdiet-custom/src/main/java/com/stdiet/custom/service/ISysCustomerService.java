@@ -67,37 +67,4 @@ public interface ISysCustomerService
      * @return 结果
      */
     SysCustomer getCustomerByPhone(String phone);
-
-    /**
-     * 客户建档资料填写
-     *
-     * @param customerInvestigateRequest 客户建档相关资料
-     * @return 结果
-     */
-    int addOrupdateCustomerAndSign( CustomerInvestigateRequest customerInvestigateRequest) throws Exception;
-
-    /**
-     *  查询客户基础信息以及体征信息列表
-     *
-     * @param sysCustomer 查询条件
-     * @return 结果
-     */
-    List<SysCustomer> selectSysCustomerAndSignList(SysCustomer sysCustomer);
-
-    /**
-     *  根据id查询客户信息（基础信息以及体征信息）
-     *
-     * @param id 客户id
-     * @return 结果
-     */
-    SysCustomer getCustomerAndSignById(Long id);
-
-    int delCustomerAndSignById(Long[] ids);
-
-    /**
-     * 根据手机号查询客户以及体征
-     * @param phone
-     * @return
-     */
-    SysCustomer selectSysCustomerAndSignByPhone(String phone);
 }

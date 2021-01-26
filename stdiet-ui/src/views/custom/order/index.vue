@@ -718,7 +718,13 @@
             {required: true, message: "金额不能为空", trigger: "blur"}
           ],
           phone: [
-            {required: true, message: "手机号不能为空", trigger: "blur"}
+            {required: true, message: "手机号不能为空", trigger: "blur"},
+            {
+              required: true,
+              trigger: "blur",
+              pattern: /^[0-9]{5,11}$/,
+              message: "手机号格式不正确",
+            }
           ],
           orderTime: [
             {required: true, message: "成交时间不能为空", trigger: "blur"},

@@ -4,18 +4,22 @@ import com.stdiet.common.core.controller.BaseController;
 import com.stdiet.common.core.domain.AjaxResult;
 import com.stdiet.common.core.page.TableDataInfo;
 import com.stdiet.custom.domain.SysCustomer;
+import com.stdiet.custom.domain.SysCustomerHealthy;
 import com.stdiet.custom.domain.SysPhysicalSigns;
 import com.stdiet.custom.dto.request.CustomerInvestigateRequest;
+import com.stdiet.custom.service.ISysCustomerHealthyService;
+import com.stdiet.custom.service.ISysCustomerPhysicalSignsService;
 import com.stdiet.custom.service.ISysCustomerService;
 import com.stdiet.custom.service.ISysPhysicalSignsService;
 import com.stdiet.system.service.ISysDictTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 /**
- * 客户信息调查Controller
+ * 客户相关信息调查Controller
  *
  * @author xzj
  * @date 2020-12-31
@@ -25,7 +29,7 @@ import java.util.List;
 public class InvestigateController extends BaseController {
 
     @Autowired
-    private ISysCustomerService iSysCustomerService;
+    private ISysCustomerPhysicalSignsService sysCustomerPhysicalSignsService;
 
     @Autowired
     private ISysPhysicalSignsService iSysPhysicalSignsService;
@@ -33,19 +37,17 @@ public class InvestigateController extends BaseController {
     @Autowired
     private ISysDictTypeService dictTypeService;
 
+    @Autowired
+    private ISysCustomerHealthyService sysCustomerHealthyService;
+
     /**
      * 建立客户信息档案
      */
     @PostMapping("/customerInvestigate")
     public AjaxResult customerInvestigate(@RequestBody CustomerInvestigateRequest customerInvestigateRequest) throws Exception
     {
-        //验证是否已存在该手机号
-        SysCustomer phoneCustomer = iSysCustomerService.getCustomerByPhone(customerInvestigateRequest.getPhone());
-        if(phoneCustomer != null){
-            return AjaxResult.error("该手机号已存在");
-        }
         customerInvestigateRequest.setId(null); //只能添加，无法修改
-        return AjaxResult.success(iSysCustomerService.addOrupdateCustomerAndSign(customerInvestigateRequest));
+        return sysCustomerPhysicalSignsService.addOrupdateCustomerAndSign(customerInvestigateRequest);
     }
 
     /**
@@ -68,6 +70,13 @@ public class InvestigateController extends BaseController {
         return AjaxResult.success(dictTypeService.selectDictDataByType(dictType));
     }
 
-
+    /**
+     * 新增客户健康
+     */
+    @PostMapping("/addCustomerHealthy")
+    public AjaxResult addCustomerHealthy(@RequestBody SysCustomerHealthy sysCustomerHealthy)
+    {
+        return sysCustomerHealthyService.insertOrUpdateSysCustomerHealthy(sysCustomerHealthy);
+    }
 
 }

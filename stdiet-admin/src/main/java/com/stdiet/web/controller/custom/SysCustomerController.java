@@ -4,12 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.stdiet.common.utils.StringUtils;
+import com.stdiet.custom.domain.SysCustomerPhysicalSigns;
 import com.stdiet.custom.domain.SysPhysicalSigns;
 
 import com.stdiet.common.utils.bean.ObjectUtils;
 import com.stdiet.custom.domain.SysRecipesPlan;
 import com.stdiet.custom.dto.request.CustomerInvestigateRequest;
 import com.stdiet.custom.dto.response.CustomerListResponse;
+import com.stdiet.custom.service.ISysCustomerPhysicalSignsService;
 import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,17 +38,20 @@ public class SysCustomerController extends BaseController
     @Autowired
     private ISysCustomerService sysCustomerService;
 
+    @Autowired
+    private ISysCustomerPhysicalSignsService sysCustomerPhysicalSignsService;
+
     /**
      * 查询客户信息列表
      */
     @PreAuthorize("@ss.hasPermi('custom:customer:list')")
     @GetMapping("/list")
-    public TableDataInfo list(SysCustomer sysCustomer)
+    public TableDataInfo list(SysCustomerPhysicalSigns sysCustomerPhysicalSigns)
     {
         startPage();
-        List<SysCustomer> list = sysCustomerService.selectSysCustomerAndSignList(sysCustomer);
+        List<SysCustomerPhysicalSigns> list = sysCustomerPhysicalSignsService.selectSysCustomerAndSignList(sysCustomerPhysicalSigns);
         if(list != null && list.size() > 0){
-            for(SysCustomer sysCus : list){
+            for(SysCustomerPhysicalSigns sysCus : list){
                 if(StringUtils.isNotEmpty(sysCus.getPhone())){
                     sysCus.setPhone(StringUtils.hiddenPhoneNumber(sysCus.getPhone()));
                 }
@@ -61,22 +66,21 @@ public class SysCustomerController extends BaseController
     @PreAuthorize("@ss.hasPermi('custom:customer:export')")
     @Log(title = "客户体征", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
-    public AjaxResult export(SysCustomer sysCustomer) throws Exception
+    public AjaxResult export(SysCustomerPhysicalSigns sysCustomerPhysicalSigns) throws Exception
     {
-        List<SysCustomer> list = sysCustomerService.selectSysCustomerAndSignList(sysCustomer);
+        List<SysCustomerPhysicalSigns> list = sysCustomerPhysicalSignsService.selectSysCustomerAndSignList(sysCustomerPhysicalSigns);
         List<CustomerListResponse> responsesList = new ArrayList<>();
         CustomerListResponse customerListResponse = null;
-        for (SysCustomer customer : list) {
-            customerListResponse = ObjectUtils.getObjectByObject(customer.getSign(), CustomerListResponse.class);
-            customerListResponse.setCreateTime(customer.getCreateTime());
-            customerListResponse.setName(customer.getName());
-            if(StringUtils.isNotEmpty(customer.getPhone())){
-                customerListResponse.setPhone(StringUtils.hiddenPhoneNumber(customer.getPhone()));
+        for(SysCustomerPhysicalSigns sysCus : list){
+            customerListResponse = ObjectUtils.getObjectByObject(sysCus, CustomerListResponse.class);
+            customerListResponse.setCreateTime(sysCus.getCreateTime());
+            if(StringUtils.isNotEmpty(sysCus.getPhone())){
+                customerListResponse.setPhone(StringUtils.hiddenPhoneNumber(sysCus.getPhone()));
             }
             StringBuilder signStr = new StringBuilder();
-            if(customer.getSign().getSignList() != null && customer.getSign().getSignList().size() > 0){
+            if(sysCus.getSignList() != null && sysCus.getSignList().size() > 0){
                 int i = 0;
-                for (SysPhysicalSigns s : customer.getSign().getSignList()) {
+                for (SysPhysicalSigns s : sysCus.getSignList()) {
                     signStr.append((i != 0 ? "，" : "") + s.getName());
                     i++;
                 }
@@ -95,7 +99,7 @@ public class SysCustomerController extends BaseController
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
-        return AjaxResult.success(sysCustomerService.getCustomerAndSignById(id));
+        return AjaxResult.success(sysCustomerPhysicalSignsService.selectSysCustomerPhysicalSignsById(id));
     }
 
     /**
@@ -106,12 +110,7 @@ public class SysCustomerController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody CustomerInvestigateRequest customerInvestigateRequest) throws Exception
     {
-        //验证是否已存在该手机号
-        SysCustomer phoneCustomer = sysCustomerService.getCustomerByPhone(customerInvestigateRequest.getPhone());
-        if(phoneCustomer != null){
-            return AjaxResult.error("该手机号已存在");
-        }
-        return toAjax(sysCustomerService.addOrupdateCustomerAndSign(customerInvestigateRequest));
+        return sysCustomerPhysicalSignsService.addOrupdateCustomerAndSign(customerInvestigateRequest);
     }
 
     /**
@@ -122,15 +121,7 @@ public class SysCustomerController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody CustomerInvestigateRequest customerInvestigateRequest) throws Exception
     {
-        SysCustomer oldCustomer = sysCustomerService.selectSysCustomerById(customerInvestigateRequest.getId());
-        if(oldCustomer != null && !oldCustomer.getPhone().equals(customerInvestigateRequest.getPhone())){
-            //验证是否已存在该手机号
-            SysCustomer phoneCustomer = sysCustomerService.getCustomerByPhone(customerInvestigateRequest.getPhone());
-            if(phoneCustomer != null){
-                return AjaxResult.error("该手机号已存在");
-            }
-        }
-        return toAjax(sysCustomerService.addOrupdateCustomerAndSign(customerInvestigateRequest));
+        return sysCustomerPhysicalSignsService.addOrupdateCustomerAndSign(customerInvestigateRequest);
     }
 
     /**
@@ -141,9 +132,8 @@ public class SysCustomerController extends BaseController
     @DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)
     {
-        return toAjax(sysCustomerService.delCustomerAndSignById(ids));
+        return toAjax(sysCustomerPhysicalSignsService.deleteSysCustomerPhysicalSignsByIds(ids));
     }
-
 
     /**
      * 根据手机号查看用户体征
@@ -152,9 +142,9 @@ public class SysCustomerController extends BaseController
     @PreAuthorize("@ss.hasPermi('custom:customer:query')")
     public AjaxResult getCustomerAndSignByPhone(@RequestParam("phone")String phone)
     {
-        SysCustomer sysCustomer = null;
+        SysCustomerPhysicalSigns  sysCustomer = null;
         if(StringUtils.isNotEmpty(phone)){
-           sysCustomer = sysCustomerService.selectSysCustomerAndSignByPhone(phone);
+           sysCustomer = sysCustomerPhysicalSignsService.selectSysCustomerAndSignByPhone(phone);
         }
         return AjaxResult.success(sysCustomer);
     }

@@ -79,6 +79,26 @@ public class CommonController {
     }
 
     /**
+     * 通用上传请求(无需登录认证)
+     */
+    @PostMapping("/common/customerUploadFile")
+    public AjaxResult customerUploadFile(MultipartFile file) throws Exception {
+        try {
+            // 上传文件路径
+            String filePath = RuoYiConfig.getUploadPath();
+            // 上传并返回新文件名称
+            String fileName = FileUploadUtils.upload(filePath, file);
+            String url = serverConfig.getUrl() + fileName;
+            AjaxResult ajax = AjaxResult.success();
+            ajax.put("fileName", fileName);
+            ajax.put("url", url);
+            return ajax;
+        } catch (Exception e) {
+            return AjaxResult.error(e.getMessage());
+        }
+    }
+
+    /**
      * 本地资源通用下载
      */
     @GetMapping("/common/download/resource")
