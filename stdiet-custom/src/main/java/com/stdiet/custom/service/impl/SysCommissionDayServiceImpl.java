@@ -449,7 +449,7 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
      * double转为BigDecimal，保留一位小数，向下舍去
      * */
     public BigDecimal getMoney(Double money, int n){
-        return new BigDecimal(money.toString()).setScale(3, BigDecimal.ROUND_HALF_UP);
+        return new BigDecimal(money.toString()).setScale(2, BigDecimal.ROUND_HALF_UP);
     }
 
     /**

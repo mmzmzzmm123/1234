@@ -16,6 +16,8 @@
         <result property="conditioningProject"    column="conditioning_project"    />
         <result property="sex"    column="sex"    />
         <result property="age"    column="age"    />
+        <result property="weight"    column="weight"    />
+        <result property="tall"    column="tall"    />
         <result property="condiment"    column="condiment"    />
         <result property="otherCondiment"    column="other_condiment"    />
         <result property="cookingStyle"    column="cooking_style"    />
@@ -97,6 +99,14 @@
         <result property="allergen"    column="allergen"    />
         <result property="otherAllergen"    column="other_allergen"    />
         <result property="medicalReport"    column="medical_report"    />
+        <result property="medicalReportName"    column="medical_report_name"    />
+        <result property="position"    column="position"    />
+        <result property="experience"    column="experience"    />
+        <result property="rebound"    column="rebound"    />
+        <result property="difficulty"    column="difficulty"    />
+        <result property="crux"    column="crux"    />
+        <result property="dishesIngredient"    column="dishes_ingredient"    />
+        <result property="makeFoodType"    column="make_food_type"    />
         <result property="createTime"    column="create_time"    />
         <result property="createBy"    column="create_by"    />
         <result property="updateTime"    column="update_time"    />
@@ -105,7 +115,8 @@
     </resultMap>
 
     <sql id="selectSysCustomerHealthyVo">
-        select sch.id, customer_id, conditioning_project_id, sex, age, condiment, other_condiment, cooking_style, cooking_style_rate, wash_vegetables_style, other_wash_vegetables_style, breakfast_type, breakfast_food, lunch_type, dinner, vegetable_rate, common_meat, dinner_time, supper_num, supper_food, diet_hot_and_cold, diet_flavor, vegetables_num, vegetables_rate_type, fruits_num, fruits_time, fruits_rate, rice_num, rice_full, eating_speed, snacks, other_snacks, health_products_flag, health_products_brand, health_products_name, health_products_week_rate, health_products_day_rate, water_num, water_type, water_habit, drinks_num, drink_wine_flag, drink_wine_classify, other_wine_classify, drink_wine_amount, smoke_flag, smoke_rate, second_smoke, work_industry, work_type, defecation_num, other_defecation_num, defecation_time, defecation_shape, defecation_smell, defecation_speed, defecation_color, motion_num, motion_duration, motion_time, aerobic_motion_classify, anaerobic_motion_classify, anaerobic_aerobic_motion_classify, other_motion_classify, motion_field, other_motion_field, sleep_time, sleep_quality, sleep_drug_flag, sleep_drug, stayup_late_flag, stayup_late_week_num, family_illness_history, other_family_illness_history, operation_history, other_operation_history, near_operation_flag, recoverye_situation, long_eat_drug_flag, long_eat_drug_classify, other_long_eat_drug_classify, allergy_flag, allergy_situation, allergen, other_allergen, medical_report, sch.create_time, sch.create_by,sch. update_time, sch.update_by, sch.del_flag
+        select sch.id, customer_id, conditioning_project_id, sex, age, weight, tall, condiment, other_condiment, cooking_style, cooking_style_rate, wash_vegetables_style, other_wash_vegetables_style, breakfast_type, breakfast_food, lunch_type, dinner, vegetable_rate, common_meat, dinner_time, supper_num, supper_food, diet_hot_and_cold, diet_flavor, vegetables_num, vegetables_rate_type, fruits_num, fruits_time, fruits_rate, rice_num, rice_full, eating_speed, snacks, other_snacks, health_products_flag, health_products_brand, health_products_name, health_products_week_rate, health_products_day_rate, water_num, water_type, water_habit, drinks_num, drink_wine_flag, drink_wine_classify, other_wine_classify, drink_wine_amount, smoke_flag, smoke_rate, second_smoke, work_industry, work_type, defecation_num, other_defecation_num, defecation_time, defecation_shape, defecation_smell, defecation_speed, defecation_color, motion_num, motion_duration, motion_time, aerobic_motion_classify, anaerobic_motion_classify, anaerobic_aerobic_motion_classify, other_motion_classify, motion_field, other_motion_field, sleep_time, sleep_quality, sleep_drug_flag, sleep_drug, stayup_late_flag, stayup_late_week_num, family_illness_history, other_family_illness_history, operation_history, other_operation_history, near_operation_flag, recoverye_situation, long_eat_drug_flag, long_eat_drug_classify, other_long_eat_drug_classify, allergy_flag, allergy_situation, allergen, other_allergen, medical_report, medical_report_name,
+        position,experience,rebound,difficulty,crux,dishes_ingredient,make_food_type,sch.create_time, sch.create_by,sch. update_time, sch.update_by, sch.del_flag
     </sql>
 
     <select id="selectSysCustomerHealthyList" parameterType="SysCustomerHealthy" resultMap="SysCustomerHealthyResult">
@@ -115,6 +126,10 @@
         LEFT JOIN (SELECT dict_label, dict_value FROM sys_dict_data WHERE dict_type = 'conditioning_project') AS cp ON cp.dict_value = sch.conditioning_project_id
         where sch.del_flag = 0 and sc.del_flag = 0
         <if test="conditioningProjectId != null "> and sch.conditioning_project_id = #{conditioningProjectId}</if>
+        <if test="name != null and name != ''">
+            and (sc.name like concat('%',#{name},'%') or sc.phone like concat('%',#{name},'%'))
+        </if>
+        order by sch.create_time desc
     </select>
 
     <select id="selectSysCustomerHealthyById" parameterType="Long" resultMap="SysCustomerHealthyResult">
@@ -133,6 +148,8 @@
             <if test="conditioningProjectId != null">conditioning_project_id,</if>
             <if test="sex != null">sex,</if>
             <if test="age != null">age,</if>
+            <if test="tall != null">tall,</if>
+            <if test="weight != null">weight,</if>
             <if test="condiment != null">condiment,</if>
             <if test="otherCondiment != null">other_condiment,</if>
             <if test="cookingStyle != null">cooking_style,</if>
@@ -214,6 +231,14 @@
             <if test="allergen != null">allergen,</if>
             <if test="otherAllergen != null">other_allergen,</if>
             <if test="medicalReport != null">medical_report,</if>
+            <if test="medicalReportName != null">medical_report_name,</if>
+            <if test="position != null">position,</if>
+            <if test="experience != null">experience,</if>
+            <if test="rebound != null">rebound,</if>
+            <if test="difficulty != null">difficulty,</if>
+            <if test="crux != null">crux,</if>
+            <if test="dishesIngredient != null">dishes_ingredient,</if>
+            <if test="makeFoodType != null">make_food_type,</if>
             <if test="createTime != null">create_time,</if>
             <if test="createBy != null">create_by,</if>
             <if test="updateTime != null">update_time,</if>
@@ -226,6 +251,8 @@
             <if test="conditioningProjectId != null">#{conditioningProjectId},</if>
             <if test="sex != null">#{sex},</if>
             <if test="age != null">#{age},</if>
+            <if test="tall != null">#{tall},</if>
+            <if test="weight != null">#{weight},</if>
             <if test="condiment != null">#{condiment},</if>
             <if test="otherCondiment != null">#{otherCondiment},</if>
             <if test="cookingStyle != null">#{cookingStyle},</if>
@@ -307,6 +334,14 @@
             <if test="allergen != null">#{allergen},</if>
             <if test="otherAllergen != null">#{otherAllergen},</if>
             <if test="medicalReport != null">#{medicalReport},</if>
+            <if test="medicalReportName != null">#{medicalReportName},</if>
+            <if test="position != null">#{position},</if>
+            <if test="experience != null">#{experience},</if>
+            <if test="rebound != null">#{rebound},</if>
+            <if test="difficulty != null">#{difficulty},</if>
+            <if test="crux != null">#{crux},</if>
+            <if test="dishesIngredient != null">#{dishesIngredient},</if>
+            <if test="makeFoodType != null">#{makeFoodType},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="createBy != null">#{createBy},</if>
             <if test="updateTime != null">#{updateTime},</if>
@@ -322,6 +357,8 @@
             <if test="conditioningProjectId != null">conditioning_project_id = #{conditioningProjectId},</if>
             <if test="sex != null">sex = #{sex},</if>
             <if test="age != null">age = #{age},</if>
+            <if test="tall != null">tall = #{tall},</if>
+            <if test="weight != null">weight = #{weight},</if>
             <if test="condiment != null">condiment = #{condiment},</if>
             <if test="otherCondiment != null">other_condiment = #{otherCondiment},</if>
             <if test="cookingStyle != null">cooking_style = #{cookingStyle},</if>
@@ -403,6 +440,14 @@
             <if test="allergen != null">allergen = #{allergen},</if>
             <if test="otherAllergen != null">other_allergen = #{otherAllergen},</if>
             <if test="medicalReport != null">medical_report = #{medicalReport},</if>
+            <if test="medicalReportName != null">medical_report_name = #{medicalReportName},</if>
+            <if test="position != null">position = #{position},</if>
+            <if test="experience != null">experience = #{experience},</if>
+            <if test="rebound != null">rebound = #{rebound},</if>
+            <if test="difficulty != null">difficulty = #{difficulty},</if>
+            <if test="crux != null">crux = #{crux},</if>
+            <if test="dishesIngredient != null">dishes_ingredient = #{dishesIngredient},</if>
+            <if test="makeFoodType != null">make_food_type = #{makeFoodType},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>

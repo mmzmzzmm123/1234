@@ -97,9 +97,14 @@ export function selectDictLabels(datas, value, separator) {
   return actions.join('').substring(0, actions.join('').length - 1);
 }
 
-// 通用下载方法
+// 通用下载方法（导出Excel,下载之后删除）
 export function download(fileName) {
   window.location.href = baseURL + "/common/download?fileName=" + encodeURI(fileName) + "&delete=" + true;
+}
+
+// 通用下载本地资源方法
+export function downloadResource(fileName) {
+  window.location.href = baseURL + "/common/download/resource?name=" + encodeURI(fileName);
 }
 
 // 字符串格式化(%s )

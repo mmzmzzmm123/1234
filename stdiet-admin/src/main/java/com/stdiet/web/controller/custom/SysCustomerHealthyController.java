@@ -1,6 +1,8 @@
 package com.stdiet.custom.controller;
 
 import java.util.List;
+
+import com.stdiet.common.utils.StringUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,6 +44,11 @@ public class SysCustomerHealthyController extends BaseController
     {
         startPage();
         List<SysCustomerHealthy> list = sysCustomerHealthyService.selectSysCustomerHealthyList(sysCustomerHealthy);
+        for(SysCustomerHealthy customerHealthy : list){
+            if(StringUtils.isNotEmpty(customerHealthy.getPhone())){
+                customerHealthy.setPhone(StringUtils.hiddenPhoneNumber(customerHealthy.getPhone()));
+            }
+        }
         return getDataTable(list);
     }
 
@@ -54,6 +61,11 @@ public class SysCustomerHealthyController extends BaseController
     public AjaxResult export(SysCustomerHealthy sysCustomerHealthy)
     {
         List<SysCustomerHealthy> list = sysCustomerHealthyService.selectSysCustomerHealthyList(sysCustomerHealthy);
+        for(SysCustomerHealthy customerHealthy : list){
+            if(StringUtils.isNotEmpty(customerHealthy.getPhone())){
+                customerHealthy.setPhone(StringUtils.hiddenPhoneNumber(customerHealthy.getPhone()));
+            }
+        }
         ExcelUtil<SysCustomerHealthy> util = new ExcelUtil<SysCustomerHealthy>(SysCustomerHealthy.class);
         return util.exportExcel(list, "healthy");
     }

@@ -10,7 +10,7 @@
     </div>
     <el-form ref="form" label-position="top" :model="form" :rules="rules" label-width="100px" style="padding: 16px">
         <div v-show="stepArray[0]">
-        <p class="p_title_1" style="margin-top: 5px;">一、基础信息</p>
+        <p class="p_title_1" style="margin-top: 5px;">{{healthyData['titleArray'][0]}}</p>
         <el-form-item label="真实姓名" prop="name" style="padding-top: 10px;">
           <el-input v-model="form.name" placeholder="请输入真实姓名" maxlength="20"/>
         </el-form-item>
@@ -20,13 +20,19 @@
             <el-radio :label="parseInt('1')" border>女</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="年龄" prop="age">
-          <el-input type="number" v-model="form.age" placeholder="请输入年龄" autocomplete="off" maxlength="3"></el-input>
+        <el-form-item label="年龄" prop="age" >
+          <el-input type="number" v-model="form.age" placeholder="请输入年龄" autocomplete="off" ></el-input>
         </el-form-item>
-        <el-form-item label="手机号" prop="phone" maxlength="20">
+          <el-form-item label="身高（厘米）" prop="tall" >
+            <el-input type="number" v-model="form.tall" placeholder="请输入身高" autocomplete="off" ></el-input>
+          </el-form-item>
+          <el-form-item label="体重（斤）" prop="weight" >
+            <el-input type="number" v-model="form.weight" placeholder="请输入体重" autocomplete="off" ></el-input>
+          </el-form-item>
+
+        <el-form-item label="手机号" prop="phone" >
           <el-input type="number" v-model="form.phone" placeholder="请输入手机号" />
         </el-form-item>
-
           <el-form-item label="调理项目" prop="conditioningProjectId">
             <el-select v-model="form.conditioningProjectId" placeholder="请选择">
               <el-option
@@ -37,63 +43,104 @@
               />
             </el-select>
           </el-form-item>
+          <el-form-item label="南方人还是北方人" prop="position">
+            <el-radio-group v-model="form.position" style="margin-left: 10px;">
+              <el-radio :label="0" key="1">南方</el-radio>
+              <el-radio :label="1" key="2">北方</el-radio>
+            </el-radio-group>
+          </el-form-item>
       </div>
-
       <div v-show="stepArray[1]">
-      <p class="p_title_1">二、食品安全评估</p>
+        <p class="p_title_1">{{healthyData['titleArray'][1]}}</p>
+        <p class="p_title_2">1、减脂经历</p>
+        <el-form-item label="(1) 用过哪些减脂方法（重点）" prop="experience" class="margin-left">
+          <el-input
+            type="textarea"
+            placeholder="请描述减脂方法"
+            v-model="form.experience"
+            maxlength="200"
+            show-word-limit
+            rows="3"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="(2) 减脂中遇到的困难（重点）" prop="difficulty" class="margin-left">
+          <el-input
+            type="textarea"
+            placeholder="请描述减脂中遇到的困难"
+            v-model="form.difficulty"
+            maxlength="200"
+            show-word-limit
+            rows="3"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="(3) 减脂过程中是否反弹" prop="rebound" class="margin-left">
+          <el-radio-group v-model="form.rebound" style="margin-left: 10px;">
+            <el-radio :label="0" key="1">否</el-radio>
+            <el-radio :label="1" key="2">是</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="(4) 是否意识到生活习惯是减脂关键" prop="crux" class="margin-left">
+          <el-radio-group v-model="form.crux" style="margin-left: 10px;">
+            <el-radio :label="0" key="1">否</el-radio>
+            <el-radio :label="1" key="2">是</el-radio>
+          </el-radio-group>
+        </el-form-item>
+      </div>
+      <div v-show="stepArray[2]">
+      <p class="p_title_1">{{healthyData['titleArray'][2]}}</p>
       <p class="p_title_2">1、家庭调味品</p>
       <el-form-item :label="'(1) 调味品种类'" prop="condiment" class="margin-left">
         <el-checkbox-group v-model="form.condiment">
-          <el-checkbox v-for="(item, index) in condimentArray" :label="item.value" :key="index">{{item.name}}</el-checkbox>
+          <el-checkbox v-for="(item, index) in healthyData['condimentArray']" :label="item.value" :key="index">{{item.name}}</el-checkbox>
         </el-checkbox-group>
         <div><span>其他调味品 </span><el-input style="margin-top: 10px;width:70%" v-model="form.otherCondiment" placeholder="请输入其他调味品名称" /></div>
       </el-form-item>
       <p class="p_title_2">2、喜好的烹调方式和周频次</p>
       <el-form-item :label="'(1) 喜好的烹调方式'" prop="cookingStyle" class="margin-left">
         <el-checkbox-group v-model="form.cookingStyle">
-            <el-checkbox v-for="(item,index) in cookingStyleArray" :label="item.value" :key="index">{{item.name}}</el-checkbox>
+            <el-checkbox v-for="(item,index) in healthyData['cookingStyleArray']" :label="item.value" :key="index">{{item.name}}</el-checkbox>
         </el-checkbox-group>
       </el-form-item>
       <el-form-item :label="'(2) 烹调方式的频次（每周）'" prop="cookingStyleRate" class="margin-left">
         <div>
-          <span>煎&nbsp;</span><el-input-number  style="width:35%" v-model="form.cookingStyleRate[0]" :step="1" :min="0"></el-input-number><span>&nbsp;次</span>
-          <span style="margin-left: 20px;">炸&nbsp;</span><el-input-number  style="width:35%" v-model="form.cookingStyleRate[1]" :step="1" :min="0" ></el-input-number><span>&nbsp;次</span>
+          <span>{{healthyData['cookingStyleRateArray'][0]}}&nbsp;</span><el-input-number  style="width:35%" v-model="form.cookingStyleRate[0]" :step="1" :min="0"></el-input-number><span>&nbsp;次</span>
+          <span style="margin-left: 20px;">{{healthyData['cookingStyleRateArray'][1]}}&nbsp;</span><el-input-number  style="width:35%" v-model="form.cookingStyleRate[1]" :step="1" :min="0" ></el-input-number><span>&nbsp;次</span>
         </div>
         <div style="margin-top: 5px;">
-          <span>卤&nbsp;</span><el-input-number style="width:35%" v-model="form.cookingStyleRate[2]" :step="1" :min="0" ></el-input-number><span>&nbsp;次</span>
-          <span style="margin-left: 20px;">腌&nbsp;</span><el-input-number   style="width:35%" v-model="form.cookingStyleRate[3]" :step="1" :min="0" ></el-input-number><span>&nbsp;次</span>
+          <span>{{healthyData['cookingStyleRateArray'][2]}}&nbsp;</span><el-input-number style="width:35%" v-model="form.cookingStyleRate[2]" :step="1" :min="0" ></el-input-number><span>&nbsp;次</span>
+          <span style="margin-left: 20px;">{{healthyData['cookingStyleRateArray'][3]}}&nbsp;</span><el-input-number   style="width:35%" v-model="form.cookingStyleRate[3]" :step="1" :min="0" ></el-input-number><span>&nbsp;次</span>
         </div>
         <div style="margin-top: 5px;">
-          <span>腊&nbsp;</span><el-input-number style="width:35%"  v-model="form.cookingStyleRate[4]" :step="1" :min="0" ></el-input-number><span>&nbsp;次</span>
-          <span style="margin-left: 20px;">煲&nbsp;</span><el-input-number  style="width:35%;" v-model="form.cookingStyleRate[5]" :step="1" :min="0" ></el-input-number><span>&nbsp;次</span>
+          <span>{{healthyData['cookingStyleRateArray'][4]}}&nbsp;</span><el-input-number style="width:35%"  v-model="form.cookingStyleRate[4]" :step="1" :min="0" ></el-input-number><span>&nbsp;次</span>
+          <span style="margin-left: 20px;">{{healthyData['cookingStyleRateArray'][5]}}&nbsp;</span><el-input-number  style="width:35%;" v-model="form.cookingStyleRate[5]" :step="1" :min="0" ></el-input-number><span>&nbsp;次</span>
         </div>
       </el-form-item>
       <p class="p_title_2">3、洗菜方式</p>
       <el-form-item :label="'(1) 洗菜方式'" prop="washVegetablesStyle" class="margin-left">
         <el-checkbox-group v-model="form.washVegetablesStyle">
-          <el-checkbox v-for="(item,index) in washVegetablesStyleArray" :label="item.value" :key="index">{{item.name}}</el-checkbox>
+          <el-checkbox v-for="(item,index) in healthyData['washVegetablesStyleArray']" :label="item.value" :key="index">{{item.name}}</el-checkbox>
         </el-checkbox-group>
         <div><span>其他洗菜方式 </span><el-input style="margin-top: 10px;width:70%" v-model="form.otherWashVegetablesStyle" placeholder="请输入其他洗菜方式" /></div>
       </el-form-item>
       </div>
 
-      <div v-show="stepArray[2]">
-      <p class="p_title_1">三、饮食结构评估</p>
+      <div v-show="stepArray[3]">
+      <p class="p_title_1">{{healthyData['titleArray'][3]}}</p>
       <p class="p_title_2">1、您三餐的习惯</p>
       <el-form-item :label="'(1) 早餐习惯'" prop="breakfast" class="margin-left">
         <el-radio-group v-model="form.breakfastType">
-          <el-radio v-for="(item,index) in breakfastTypeArray" :label="item.value" :key="index">{{item.name}}</el-radio>
+          <el-radio v-for="(item,index) in healthyData['breakfastTypeArray']" :label="item.value" :key="index">{{item.name}}</el-radio>
         </el-radio-group>
         <div style="margin-top:8px;"><span>早餐通常吃&nbsp;</span><el-input  v-model="form.breakfastFood" style="width:70%" placeholder="请输入早餐名称" /></div>
       </el-form-item>
       <el-form-item :label="'(2) 午餐习惯'" prop="lunchType" class="margin-left">
         <el-checkbox-group v-model="form.lunchType">
-          <el-checkbox v-for="(item,index) in lunchTypeArray" :label="item.value" :key="index">{{item.name}}</el-checkbox>
+          <el-checkbox v-for="(item,index) in healthyData['lunchTypeArray']" :label="item.value" :key="index">{{item.name}}</el-checkbox>
         </el-checkbox-group>
       </el-form-item>
       <el-form-item :label="'(3) 晚餐习惯'" prop="dinner" class="margin-left">
         <el-checkbox-group v-model="form.dinner">
-          <el-checkbox v-for="(item,index) in dinnerArray" :label="item.value" :key="index">{{item.name}}</el-checkbox>
+          <el-checkbox v-for="(item,index) in healthyData['dinnerArray']" :label="item.value" :key="index">{{item.name}}</el-checkbox>
         </el-checkbox-group>
       </el-form-item>
       <el-form-item :label="'(4) 正餐荤素中素菜占比几成'" prop="eatSituation" class="margin-left">
@@ -115,12 +162,12 @@
       <p class="p_title_2">3、您的饮食偏好</p>
       <el-form-item :label="'(1) 冷热偏好'" prop="dietHotAndCold" class="margin-left">
         <el-radio-group v-model="form.dietHotAndCold">
-          <el-radio v-for="(item,index) in dietHotAndColdArray" :label="item.value" :key="index">{{item.name}}</el-radio>
+          <el-radio v-for="(item,index) in healthyData['dietHotAndColdArray']" :label="item.value" :key="index">{{item.name}}</el-radio>
         </el-radio-group>
       </el-form-item>
       <el-form-item :label="'(2) 口味偏好'" prop="dietFlavor" class="margin-left">
         <el-checkbox-group v-model="form.dietFlavor">
-          <el-checkbox v-for="(item,index) in dietFlavorArray" :label="item.value" :key="index">{{item.name}}</el-checkbox>
+          <el-checkbox v-for="(item,index) in healthyData['dietFlavorArray']" :label="item.value" :key="index">{{item.name}}</el-checkbox>
         </el-checkbox-group>
       </el-form-item>
       <p class="p_title_2">4、生食果蔬状况</p>
@@ -129,28 +176,18 @@
       </el-form-item>
       <el-form-item :label="'(2) 每周吃生/拌菜的频次'" prop="vegetablesRateType" class="margin-left">
         <el-radio-group v-model="form.vegetablesRateType">
-          <el-radio v-for="(item,index) in vegetablesRateTypeArray" :label="item.value" :key="index">{{item.name}}</el-radio>
-          <!-- <div><el-radio label="每天吃" key="1">每天吃</el-radio>
-           <el-radio label="经常吃" key="2">经常吃</el-radio>
-           <el-radio label="偶尔吃" key="3">偶尔吃</el-radio></div>
-           <div style="margin-top: 10px;"><el-radio label="从不吃" key="4">从不吃</el-radio></div>-->
+          <el-radio v-for="(item,index) in healthyData['vegetablesRateTypeArray']" :label="item.value" :key="index">{{item.name}}</el-radio>
         </el-radio-group>
       </el-form-item>
       <el-form-item :label="'(3) 平均每天吃水果几次以及时间'" prop="fruitsNum" class="margin-left">
         <el-input-number v-model="form.fruitsNum" :step="1" :min="0"></el-input-number>
         <el-radio-group v-model="form.fruitsTime" style="margin-top: 15px;">
-          <el-radio v-for="(item,index) in fruitsTimeArray" :label="item.value" :key="index">{{item.name}}</el-radio>
+          <el-radio v-for="(item,index) in healthyData['fruitsTimeArray']" :label="item.value" :key="index">{{item.name}}</el-radio>
         </el-radio-group>
       </el-form-item>
       <el-form-item label="(4) 平时吃水果的频次" prop="fruitsRate" class="margin-left">
         <el-radio-group v-model="form.fruitsRate">
-          <el-radio v-for="(item,index) in fruitsRateArray" :label="item.value" :key="index">{{item.name}}</el-radio>
-          <!--<div>
-          <el-radio label="每天吃" key="1">每天吃</el-radio>
-          <el-radio label="经常吃" key="2">经常吃</el-radio>
-          <el-radio label="偶尔吃" key="3">偶尔吃</el-radio>
-        </div>
-          <div style="margin-top: 10px;"><el-radio label="从不吃" key="4">从不吃</el-radio></div>-->
+          <el-radio v-for="(item,index) in healthyData['fruitsRateArray']" :label="item.value" :key="index">{{item.name}}</el-radio>
         </el-radio-group>
       </el-form-item>
       <p class="p_title_2">5、饮食习惯</p>
@@ -162,13 +199,24 @@
       </el-form-item>
       <el-form-item label="(2) 吃饭速度" prop="eatingSpeed" class="margin-left">
         <el-radio-group v-model="form.eatingSpeed">
-          <el-radio v-for="(item,index) in eatingSpeedArray" :label="item.value" :key="index">{{item.name}}</el-radio>
+          <el-radio v-for="(item,index) in healthyData['eatingSpeedArray']" :label="item.value" :key="index">{{item.name}}</el-radio>
           </el-radio-group>
       </el-form-item>
+        <el-form-item label="(3) 饮食特点" prop="makeFoodType" class="margin-left">
+          <el-select v-model="form.makeFoodType" placeholder="请选择">
+            <el-option
+              v-for="item in healthyData['makeFoodTypeArray']"
+              :key="item.value"
+              :label="item.name"
+              :value="parseInt(item.value)"
+            />
+          </el-select>
+        </el-form-item>
+
       <p class="p_title_2">6、您常吃的零食</p>
       <el-form-item label="(1) 常吃的零食" prop="snacks" class="margin-left">
         <el-checkbox-group v-model="form.snacks">
-          <el-checkbox v-for="(item,index) in snacksArray" :label="item.value" :key="index">{{item.name}}</el-checkbox>
+          <el-checkbox v-for="(item,index) in healthyData['snacksArray']" :label="item.value" :key="index">{{item.name}}</el-checkbox>
         </el-checkbox-group>
         <div><span>其他零食 </span><el-input style="margin-top: 10px;width:70%" v-model="form.otherSnacks" placeholder="请输入其他零食名称" /></div>
       </el-form-item>
@@ -187,71 +235,83 @@
           <el-input-number style="width:35%;margin-left: 20px;" v-model="form.healthProductsDayRate" :step="1" ::min="0" ></el-input-number><span>&nbsp;次/天</span>
         </div>
       </el-form-item>
+        <p class="p_title_2">8、忌口或过敏食物</p>
+        <el-form-item label="(1) 忌口或过敏、不爱吃的食物（重点）" prop="dishesIngredient" class="margin-left">
+          <el-input
+            type="textarea"
+            placeholder="请描述忌口或过敏、不爱吃的食物"
+            v-model="form.dishesIngredient"
+            maxlength="200"
+            show-word-limit
+            rows="3"
+          ></el-input>
+        </el-form-item>
       </div>
-      <div v-show="stepArray[3]">
-      <p class="p_title_1">四、生活习惯评估</p>
+
+      <div v-show="stepArray[4]">
+      <p class="p_title_1">{{healthyData['titleArray'][4]}}</p>
       <p class="p_title_2">1、您每天的饮水习惯</p>
       <el-form-item label="(1) 每天饮水量（毫升）" prop="waterNum" class="margin-left">
         <el-input-number v-model="form.waterNum" :step="50" :min="0"></el-input-number>
       </el-form-item>
       <el-form-item label="(2) 喜欢喝什么水" prop="waterType" class="margin-left">
         <el-checkbox-group v-model="form.waterType">
-          <el-checkbox v-for="(item,index) in waterTypeArray" :label="item.value" :key="index">{{item.name}}</el-checkbox>
+          <el-checkbox v-for="(item,index) in healthyData['waterTypeArray']" :label="item.value" :key="index">{{item.name}}</el-checkbox>
         </el-checkbox-group>
       </el-form-item>
       <el-form-item label="(3) 喝水习惯" prop="waterHabit" class="margin-left">
         <el-checkbox-group v-model="form.waterHabit">
-          <el-checkbox v-for="(item,index) in waterHabitArray" :label="item.value" :key="index">{{item.name}}</el-checkbox>
+          <el-checkbox v-for="(item,index) in healthyData['waterHabitArray']" :label="item.value" :key="index">{{item.name}}</el-checkbox>
         </el-checkbox-group>
       </el-form-item>
       <p class="p_title_2">2、您常喝的饮品和每周频次</p>
       <el-form-item label="(1) 每周常喝的饮品次数" prop="drinksNum" class="margin-left">
         <div>
-          <span>老火汤&nbsp;</span><el-input-number type="number" style="width:35%;margin-left: 13px;" v-model="form.drinksNum[0]" :step="1" :min="0"></el-input-number><span>&nbsp;次</span>
+          <span>{{healthyData['drinksNumArray'][0]}}&nbsp;</span><el-input-number type="number" style="width:35%;margin-left: 13px;" v-model="form.drinksNum[0]" :step="1" :min="0"></el-input-number><span>&nbsp;次</span>
         </div>
         <div class="margin-top-10">
-          <span>咖啡&nbsp;</span><el-input-number style="width:35%;margin-left: 25px;" v-model="form.drinksNum[1]" :step="1" :min="0"></el-input-number><span>&nbsp;次</span>
+          <span>{{healthyData['drinksNumArray'][1]}}&nbsp;</span><el-input-number style="width:35%;margin-left: 25px;" v-model="form.drinksNum[1]" :step="1" :min="0"></el-input-number><span>&nbsp;次</span>
         </div>
         <div class="margin-top-10">
-          <span>浓茶&nbsp;</span><el-input-number type="number" style="width:35%;margin-left: 25px;" v-model="form.drinksNum[2]" :step="1" :min="0"></el-input-number><span>&nbsp;次</span>
+          <span>{{healthyData['drinksNumArray'][2]}}&nbsp;</span><el-input-number type="number" style="width:35%;margin-left: 25px;" v-model="form.drinksNum[2]" :step="1" :min="0"></el-input-number><span>&nbsp;次</span>
         </div>
         <div class="margin-top-10">
-          <span>奶茶&nbsp;</span><el-input-number  type="number" style="width:35%;margin-left: 25px;" v-model="form.drinksNum[3]" :step="1" :min="0"></el-input-number><span>&nbsp;次</span>
+          <span>{{healthyData['drinksNumArray'][3]}}&nbsp;</span><el-input-number  type="number" style="width:35%;margin-left: 25px;" v-model="form.drinksNum[3]" :step="1" :min="0"></el-input-number><span>&nbsp;次</span>
         </div>
         <div class="margin-top-10">
-          <span>冷饮&nbsp;</span><el-input-number type="number" style="width:35%;margin-left: 25px;" v-model="form.drinksNum[4]" :step="1" :min="0"></el-input-number><span>&nbsp;次</span>
+          <span>{{healthyData['drinksNumArray'][4]}}&nbsp;</span><el-input-number type="number" style="width:35%;margin-left: 25px;" v-model="form.drinksNum[4]" :step="1" :min="0"></el-input-number><span>&nbsp;次</span>
         </div>
         <div class="margin-top-10">
-          <span>碳酸饮料&nbsp;</span><el-input-number type="number" style="width:35%;" v-model="form.drinksNum[5]" :step="1" :min="0"></el-input-number><span>&nbsp;次</span>
+          <span>{{healthyData['drinksNumArray'][5]}}&nbsp;</span><el-input-number type="number" style="width:35%;" v-model="form.drinksNum[5]" :step="1" :min="0"></el-input-number><span>&nbsp;次</span>
         </div>
         <div class="margin-top-10">
-          <span>甜饮料&nbsp;</span><el-input-number type="number" style="width:35%;margin-left: 13px;" v-model="form.drinksNum[6]" :step="1" :min="0"></el-input-number><span>&nbsp;次</span>
+          <span>{{healthyData['drinksNumArray'][6]}}&nbsp;</span><el-input-number type="number" style="width:35%;margin-left: 13px;" v-model="form.drinksNum[6]" :step="1" :min="0"></el-input-number><span>&nbsp;次</span>
         </div>
         <div class="margin-top-10">
-          <span>鲜榨果汁&nbsp;</span><el-input-number type="number" style="width:35%;" v-model="form.drinksNum[7]" :step="1" :min="0"></el-input-number><span>&nbsp;次</span>
+          <span>{{healthyData['drinksNumArray'][7]}}&nbsp;</span><el-input-number type="number" style="width:35%;" v-model="form.drinksNum[7]" :step="1" :min="0"></el-input-number><span>&nbsp;次</span>
         </div>
       </el-form-item>
       <p class="p_title_2">3、您的饮酒习惯</p>
       <el-form-item label="(1) 是否喝酒" prop="drinkWineFlag" class="margin-left">
         <el-radio-group v-model="form.drinkWineFlag">
-          <el-radio v-for="(item,index) in drinkWineFlagArray" :label="item.value" :key="index">{{item.name}}</el-radio>
+          <el-radio v-for="(item,index) in healthyData['drinkWineFlagArray']" :label="item.value" :key="index">{{item.name}}</el-radio>
         </el-radio-group>
       </el-form-item>
       <el-form-item label="(2) 通常喝什么酒" prop="drinkWineClassify" class="margin-left">
         <el-checkbox-group v-model="form.drinkWineClassify">
-          <el-checkbox v-for="(item,index) in drinkWineClassifyArray" :label="item.value" :key="index">{{item.name}}</el-checkbox>
+          <el-checkbox v-for="(item,index) in healthyData['drinkWineClassifyArray']" :label="item.value" :key="index">{{item.name}}</el-checkbox>
         </el-checkbox-group>
         <div><span>其他酒 </span><el-input style="margin-top: 10px;width:70%" v-model="form.otherWineClassify" placeholder="请输入其他酒名称" /></div>
       </el-form-item>
       <el-form-item label="(3) 通常喝多少" prop="drinkWineAmount" class="margin-left">
         <div>
-          <span>白酒</span><el-input-number class="width-50-left-8-right-5" type="number" v-model="form.drinkWineAmount[0]" :step="1" :min="0"></el-input-number><span>&nbsp;两</span>
+          <span>{{healthyData['drinkWineAmountArray'][0]}}</span><el-input-number class="width-50-left-8-right-5" type="number" v-model="form.drinkWineAmount[0]" :step="1" :min="0"></el-input-number><span>&nbsp;两</span>
         </div>
         <div class="margin-top-10">
-          <span>啤酒</span><el-input-number class="width-50-left-8-right-5" type="number" v-model="form.drinkWineAmount[1]" :step="1" :min="0"></el-input-number><span>&nbsp;瓶</span>
+          <span>{{healthyData['drinkWineAmountArray'][1]}}</span><el-input-number class="width-50-left-8-right-5" type="number" v-model="form.drinkWineAmount[1]" :step="1" :min="0"></el-input-number><span>&nbsp;瓶</span>
         </div>
         <div class="margin-top-10">
-          <span>红酒</span><el-input-number class="width-50-left-8-right-5" type="number" v-model="form.drinkWineAmount[2]" :step="100" :min="0"></el-input-number><span>&nbsp;毫升</span>
+          <span>{{healthyData['drinkWineAmountArray'][2]}}</span><el-input-number class="width-50-left-8-right-5" type="number" v-model="form.drinkWineAmount[2]" :step="100" :min="0"></el-input-number><span>&nbsp;毫升</span>
         </div>
         <!--<div class="margin-top-10">
           <span>其他</span><el-input-number class="width-50-left-8-right-5" type="number" v-model="form.drinkWineAmount[3]" :step="100" :min="0"></el-input-number><span>&nbsp;毫升</span>
@@ -266,13 +326,13 @@
       </el-form-item>
       <el-form-item label="(2) 吸烟频次以及烟龄" prop="smokeRate" class="margin-left">
         <div>
-          <span>每天抽烟</span><el-input-number type="number" class="width-50-left-8-right-5" v-model="form.smokeRate[0]" :step="1" :min="0"></el-input-number><span>次</span>
+          <span>{{healthyData['smokeRateArray'][0]}}</span><el-input-number type="number" class="width-50-left-8-right-5" v-model="form.smokeRate[0]" :step="1" :min="0"></el-input-number><span>次</span>
         </div>
         <div class="margin-top-10">
-          <span>烟龄</span><el-input-number type="number" class="width-50-left-8-right-5" v-model="form.smokeRate[1]" :step="1" :min="0"></el-input-number><span>年</span>
+          <span>{{healthyData['smokeRateArray'][1]}}</span><el-input-number type="number" class="width-50-left-8-right-5" v-model="form.smokeRate[1]" :step="1" :min="0"></el-input-number><span>年</span>
         </div>
         <div class="margin-top-10">
-          <span>已戒烟</span><el-input-number type="number" class="width-50-left-8-right-5" v-model="form.smokeRate[2]" :step="1" :min="0"></el-input-number><span>年</span>
+          <span>{{healthyData['smokeRateArray'][2]}}</span><el-input-number type="number" class="width-50-left-8-right-5" v-model="form.smokeRate[2]" :step="1" :min="0"></el-input-number><span>年</span>
         </div>
       </el-form-item>
       <el-form-item label="(3) 是否常吸二手烟" prop="secondSmoke" class="margin-left">
@@ -287,7 +347,7 @@
       </el-form-item>
       <el-form-item label="(2) 工作性质" prop="workType" style="padding-top: 10px;">
         <el-checkbox-group v-model="form.workType">
-          <el-checkbox v-for="(item,index) in workTypeArray" :label="item.value" :key="index">{{item.name}}</el-checkbox>
+          <el-checkbox v-for="(item,index) in healthyData['workTypeArray']" :label="item.value" :key="index">{{item.name}}</el-checkbox>
         </el-checkbox-group>
       </el-form-item>
       <p class="p_title_2">4、您的排便状况</p>
@@ -302,7 +362,7 @@
 
       <el-form-item label="(2) 排便时间" prop="defecationTime" style="padding-top: 10px;">
         <el-checkbox-group v-model="form.defecationTime">
-          <el-checkbox v-for="(item,index) in defecationTimeArray" :label="item.value" :key="index">{{item.name}}</el-checkbox>
+          <el-checkbox v-for="(item,index) in healthyData['defecationTimeArray']" :label="item.value" :key="index">{{item.name}}</el-checkbox>
         </el-checkbox-group>
       </el-form-item>
       <el-form-item label="(2) 排便情况" prop="defecationSituation" style="padding-top: 10px;">
@@ -320,8 +380,9 @@
         </div>
       </el-form-item>
       </div>
-      <div v-show="stepArray[4]">
-      <p class="p_title_1">五、运动习惯评估</p>
+
+      <div v-show="stepArray[5]">
+      <p class="p_title_1">{{healthyData['titleArray'][5]}}</p>
       <p class="p_title_2">1、运动频率</p>
       <el-form-item label="(1) 每周运动情况" prop="motionSituation" class="margin-left">
         <div>
@@ -345,37 +406,38 @@
       <el-form-item label="(1) 运动方式、项目" prop="motionProject" class="margin-left">
         <div><span>有氧运动</span>
           <el-checkbox-group v-model="form.aerobicMotionClassify">
-            <el-checkbox v-for="(item,index) in aerobicMotionClassifyArray" :label="item.value" :key="index">{{item.name}}</el-checkbox>
+            <el-checkbox v-for="(item,index) in healthyData['aerobicMotionClassifyArray']" :label="item.value" :key="index">{{item.name}}</el-checkbox>
           </el-checkbox-group>
         </div>
         <div><span>有氧运动</span>
           <el-checkbox-group v-model="form.anaerobicMotionClassify">
-            <el-checkbox v-for="(item,index) in anaerobicMotionClassifyArray" :label="item.value" :key="index">{{item.name}}</el-checkbox>
+            <el-checkbox v-for="(item,index) in healthyData['anaerobicMotionClassifyArray']" :label="item.value" :key="index">{{item.name}}</el-checkbox>
           </el-checkbox-group>
         </div>
         <div><span>有氧无氧结合运动</span>
           <el-checkbox-group v-model="form.anaerobicAerobicMotionClassify">
-            <el-checkbox v-for="(item,index) in anaerobicAerobicMotionClassifyArray" :label="item.value" :key="index">{{item.name}}</el-checkbox>
+            <el-checkbox v-for="(item,index) in healthyData['anaerobicAerobicMotionClassifyArray']" :label="item.value" :key="index">{{item.name}}</el-checkbox>
           </el-checkbox-group>
         </div>
         <div><span>其他项目 </span><el-input style="margin-top: 10px;width:70%" v-model="form.otherMotionClassify" placeholder="请输入其他运动项目名称" /></div>
       </el-form-item>
       <el-form-item label="(2) 运动场地" prop="motionField" class="margin-left">
         <el-checkbox-group v-model="form.motionField">
-          <el-checkbox v-for="(item,index) in motionFieldArray" :label="item.value" :key="index">{{item.name}}</el-checkbox>
+          <el-checkbox v-for="(item,index) in healthyData['motionFieldArray']" :label="item.value" :key="index">{{item.name}}</el-checkbox>
         </el-checkbox-group>
         <div><span>其他场地 </span><el-input style="margin-top: 10px;width:70%" v-model="form.otherMotionField" placeholder="请输入其他运动场地名称" /></div>
       </el-form-item>
       </div>
-      <div v-show="stepArray[5]">
-      <p class="p_title_1">六、睡眠质量评估</p>
+
+      <div v-show="stepArray[6]">
+      <p class="p_title_1">{{healthyData['titleArray'][6]}}</p>
       <p class="p_title_2">1、您的睡眠状况</p>
       <el-form-item label="(1) 一般晚上几点睡" prop="sleepTime" class="margin-left">
         <el-time-select v-model="form.sleepTime" :picker-options="{ start: '00:00', step: '01:00', end: '24:00' }" placeholder="请选择时间" :editable="false"/>
       </el-form-item>
       <el-form-item label="(2) 睡眠质量" prop="sleepQuality" class="margin-left">
         <el-checkbox-group v-model="form.sleepQuality">
-          <el-checkbox v-for="(item,index) in sleepQualityArray" :label="item.value" :key="index">{{item.name}}</el-checkbox>
+          <el-checkbox v-for="(item,index) in healthyData['sleepQualityArray']" :label="item.value" :key="index">{{item.name}}</el-checkbox>
         </el-checkbox-group>
       </el-form-item>
       <p class="p_title_2">2、辅助入睡药物情况</p>
@@ -397,12 +459,12 @@
         </div>
       </el-form-item>
       </div>
-      <div v-show="stepArray[6]">
-      <p class="p_title_1">七、既往病史/用药史评估</p>
+      <div v-show="stepArray[7]">
+      <p class="p_title_1">{{healthyData['titleArray'][7]}}</p>
       <p class="p_title_2">1、家族疾病史情况</p>
       <el-form-item label="（1）家族疾病史（直系亲属例如爸爸妈妈、爷爷奶奶、外公外婆有相关疾病）（可多选）" prop="familyIllnessHistory" class="margin-left">
         <el-checkbox-group v-model="form.familyIllnessHistory">
-          <el-checkbox v-for="(item, index) in familyIllnessHistoryArray" :key="index" :label="item.value" >{{item.name}}</el-checkbox>
+          <el-checkbox v-for="(item, index) in healthyData['familyIllnessHistoryArray']" :key="index" :label="item.value" >{{item.name}}</el-checkbox>
         </el-checkbox-group>
         <div><span>其他家族病史</span>
           <el-input
@@ -418,7 +480,7 @@
       <p class="p_title_2">2、手术情况</p>
       <el-form-item label="(1) 手术史，因病进行过手术治疗，手术的部分（可多选）" prop="familyIllnessHistory" class="margin-left">
         <el-checkbox-group v-model="form.operationHistory">
-          <el-checkbox v-for="(item, index) in operationHistoryArray" :key="index" :label="item.value" >{{item.name}}</el-checkbox>
+          <el-checkbox v-for="(item, index) in healthyData['operationHistoryArray']" :key="index" :label="item.value" >{{item.name}}</el-checkbox>
         </el-checkbox-group>
         <div><span>其他手术史</span>
           <el-input
@@ -455,7 +517,7 @@
       </el-form-item>
       <el-form-item label="(2) 长期服用药物有（可多选）" prop="longEatDrugClassify" class="margin-left">
         <el-checkbox-group v-model="form.longEatDrugClassify">
-          <el-checkbox v-for="(item, index) in longEatDrugClassifyArray" :key="index" :label="item.value">{{item.name}}</el-checkbox>
+          <el-checkbox v-for="(item, index) in healthyData['longEatDrugClassifyArray']" :key="index" :label="item.value">{{item.name}}</el-checkbox>
         </el-checkbox-group>
         <div><span>其他长期服用的药物</span>
           <el-input
@@ -488,7 +550,7 @@
 
       <el-form-item label="(2) 引起过敏源(可多选)" prop="allergen" class="margin-left">
         <el-checkbox-group v-model="form.allergen">
-          <el-checkbox v-for="(item, index) in allergenArray" :key="index" :label="item.value">{{item.name}}</el-checkbox>
+          <el-checkbox v-for="(item, index) in healthyData['allergenArray']" :key="index" :label="item.value">{{item.name}}</el-checkbox>
         </el-checkbox-group>
         <div><span>其他过敏源</span>
           <el-input
@@ -503,8 +565,8 @@
       </el-form-item>
       </div>
 
-      <div v-show="stepArray[7]">
-        <p class="p_title_1">八、体检报告</p>
+      <div v-show="stepArray[8]">
+        <p class="p_title_1">{{healthyData['titleArray'][8]}}</p>
         <p class="p_title_2">1、体检报告</p>
         <el-form-item label="(1) 请上传相应的体检报告" prop="fileList" class="margin-left">
           <el-upload style="margin-left: 20px;"
@@ -556,6 +618,7 @@
 </template>
 <script>
 import { getDictData,addCustomerHealthy } from "@/api/custom/customerInvestigation";
+import * as healthyData from "@/utils/healthyData";
 const logo = require("@/assets/logo/st_logo.png");
 export default {
   name: "index",
@@ -567,132 +630,11 @@ export default {
           callback();
       };
     return {
+      healthyData:healthyData,
       logo,
       submitFlag: false,
-      //调味品种类
-      condimentArray:[
-        {"name":"鸡精", "value":"1"},
-        {"name":"耗油", "value":"2"},
-        {"name":"生抽", "value":"3"},
-        {"name":"老抽", "value":"4"},
-        {"name":"香油", "value":"5"},
-        {"name":"浓汤宝", "value":"6"},
-        {"name":"鸡粉", "value":"7"},
-        {"name":"花椒", "value":"8"},
-        {"name":"辣椒油", "value":"9"}
-      ],
-      cookingStyleArray:[
-        {"name":"煎","value":"1"},{"name":"烤","value":"2"},{"name":"炸","value":"3"},{"name":"卤","value":"4"},
-        {"name":"腌","value":"5"},{"name":"腊","value":"6"},{"name":"煲","value":"7"},{"name":"炒","value":"8"},
-        {"name":"蒸","value":"9"},{"name":"刺身","value":"10"},{"name":"水煮","value":"11"}
-      ],
-      cookingStyleRateArray:["煎","炸","卤","腌","腊","煲"],
-      washVegetablesStyleArray:[
-        {"name":"先切后洗","value": "1"},{"name":"先洗后切","value": "2"},{"name":"切后浸泡","value": "3"}
-      ],
-      breakfastTypeArray:[
-        {"name":"不吃","value": "1"},{"name":"偶尔吃","value": "2"},{"name":"每天吃","value": "3"}
-      ],
-      lunchTypeArray:[
-        {"name":"外卖","value":"1"},{"name":"自带餐","value":"2"},{"name":"快餐","value":"3"},{"name":"餐厅","value":"4"}
-      ],
-      dinnerArray:[
-        {"name":"餐馆吃","value":"1"},{"name":"在家吃","value":"2"},{"name":"丰盛","value":"3"},{"name":"清淡","value":"4"}
-      ],
-      dietHotAndColdArray:[
-        {"name":"偏冷食","value":"1"},{"name":"偏冷食","value":"2"},{"name":"正常","value":"3"}
-      ],
-      dietFlavorArray:[
-        {"name":"偏油","value":"1"},{"name":"偏咸","value":"2"},{"name":"偏辣","value":"3"},
-        {"name":"偏甜","value":"4"},{"name":"偏酸","value":"5"},{"name":"清淡","value":"6"}
-      ],
-      vegetablesRateTypeArray:[
-        {"name":"每天吃","value":"1"},{"name":"经常吃","value":"2"},{"name":"偶尔吃","value":"3"},{"name":"从不吃","value":"4"}
-      ],
-      fruitsTimeArray:[
-        {"name":"餐前","value":"1"},{"name":"餐后","value":"2"},{"name":"餐间","value":"3"}
-      ],
-      fruitsRateArray:[
-        {"name":"每天吃","value":"1"},{"name":"经常吃","value":"2"},{"name":"偶尔吃","value":"3"},{"name":"从不吃","value":"4"}
-      ],
-      eatingSpeedArray:[
-        {"name":"很快","value":"1"},{"name":"偏快","value":"2"},{"name":"正常","value":"3"},{"name":"偏慢","value":"4"}
-        ,{"name":"很慢","value":"5"}
-      ],
-      snacksArray:[
-        {"name":"面包","value":"1"},{"name":"蛋糕","value":"2"},{"name":"饼干","value":"3"},{"name":"冰淇淋","value":"4"}
-        ,{"name":"糖果","value":"5"},{"name":"巧克力","value":"6"},{"name":"方便面","value":"7"},{"name":"薯条","value":"8"},{"name":"肉干","value":"9"},
-        {"name":"坚果","value":"10"},{"name":"饮料","value":"11"},{"name":"果脯","value":"12"},{"name":"牛奶","value":"13"}
-      ],
-      waterTypeArray:[
-        {"name":"冰水","value":"1"},{"name":"温水","value":"2"},{"name":"常温水","value":"3"}
-      ],
-      waterHabitArray:[
-        {"name":"均匀地喝","value":"1"},{"name":"餐前多喝","value":"2"},{"name":"餐后多喝","value":"3"},{"name":"餐间多喝","value":"4"},
-        {"name":"随时喝","value":"5"}
-      ],
-      drinksNumArray:["老火汤","咖啡","浓茶","奶茶","冷饮","碳酸饮料","甜饮料","鲜榨果汁"],
-      drinkWineFlagArray:[
-        {"name":"经常饮酒","value": "1"},{"name":"不饮酒","value": "2"},{"name":"偶尔","value": "3"}
-      ],
-      drinkWineClassifyArray:[
-        {"name":"白酒","value": "1"},{"name":"红酒","value": "2"},{"name":"啤酒","value": "3"}
-      ],
-      drinkWineAmountArray:["白酒","啤酒","红酒"],
-      smokeRateArray:["每天抽烟","烟龄","已戒烟"],
-      workTypeArray:[
-        {"name":"工作时间长","value": "1"},{"name":"久坐","value": "2"},{"name":"久站","value": "3"},
-        {"name":"走动多","value": "4"},{"name":"强度大","value": "5"},{"name":"用电脑多","value": "6"},{"name":"体力工作多","value": "7"}
-      ],
-      defecationTimeArray:[
-        {"name":"上午","value": "1"},{"name":"中午","value": "2"},{"name":"晚上","value": "3"}
-      ],
-      aerobicMotionClassifyArray:[
-        {"name":"跳绳","value": "1"},{"name":"跑步","value": "2"},{"name":"游泳","value": "3"}
-      ],
-      anaerobicMotionClassifyArray:[
-        {"name":"撸铁","value": "1"},{"name":"俯卧撑","value": "2"}
-      ],
-      anaerobicAerobicMotionClassifyArray:[
-        {"name":"拳击","value": "1"},{"name":"瑜伽","value": "2"}
-      ],
-      motionFieldArray:[
-        {"name":"居家","value": "1"},{"name":"健身房","value": "2"},{"name":"户外","value": "3"}, {"name":"健身房","value": "4"}
-      ],
-      sleepQualityArray:[
-        {"name":"好","value": "1"},{"name":"一般","value": "2"},{"name":"入睡难","value": "3"},
-        {"name":"失眠","value": "4"},{"name":"易醒","value": "5"},{"name":"多梦","value": "6"}
-      ],
-      familyIllnessHistoryArray:[
-        {"name":"高血压病","value": "1"},{"name":"脑卒中","value": "2"},{"name":"冠心病","value": "3"},
-        {"name":"外周血管病","value": "4"},{"name":"心力衰竭","value": "5"},{"name":"冠心病","value": "6"},
-        {"name":"肥胖症","value": "7"},{"name":"慢性肾脏疾病","value": "8"},{"name":"骨质疏松","value": "9"},
-        {"name":"痛风","value": "10"},{"name":"精神疾病","value": "11"},{"name":"恶性肿瘤","value": "12"},
-        {"name":"慢性阻塞性肺病","value": "13"},{"name":"风湿性免疫性疾病","value": "14"},
-      ],
-      operationHistoryArray:[
-        {"name":"头颅（含脑）","value": "1"},{"name":"眼","value": "2"},{"name":"耳鼻咽喉","value": "3"},
-        {"name":"颌面部及口腔","value": "4"},{"name":"颈部或甲状腺","value": "5"},{"name":"胸部（含肺部）","value": "6"},
-        {"name":"心脏（含心脏介入）","value": "7"},{"name":"外周血管","value": "8"},{"name":"胃肠","value": "9"},
-        {"name":"肝胆","value": "10"},{"name":"肾脏","value": "11"},{"name":"脊柱","value": "12"},
-        {"name":"四肢及关节","value": "13"},{"name":"前列腺","value": "14"},{"name":"妇科","value": "15"},{"name":"乳腺","value": "16"}
-        ,{"name":"膀胱","value": "17"}
-      ],
-      longEatDrugClassifyArray:[
-        {"name":"降压药","value": "1"},{"name":"降糖药","value": "2"},{"name":"降尿酸药","value": "3"},
-        {"name":"抗心律失常药","value": "4"},{"name":"缓解哮喘药物","value": "5"},{"name":"抗压郁药物","value": "6"},
-        {"name":"雌激素类药物","value": "7"},{"name":"利尿剂","value": "8"},{"name":"中草药","value": "9"},
-        {"name":"避孕药","value": "10"},{"name":"强的松类药物","value": "11"},{"name":"镇静剂或安眠药","value": "12"},
-        {"name":"调值药（降脂药）","value": "13"},{"name":"解热镇痛药（如布洛芬等）","value": "14"}
-      ],
-      allergenArray:[
-        {"name":"青霉素","value": "1"},{"name":"磺胺类","value": "2"},{"name":"链霉素","value": "3"},
-        {"name":"头孢类","value": "4"},{"name":"鸡蛋","value": "5"},{"name":"牛奶","value": "6"},
-        {"name":"海鲜","value": "7"},{"name":"花粉或尘螨","value": "8"},{"name":"粉尘","value": "9"},
-        {"name":"洗洁剂","value": "10"},{"name":"化妆品","value": "11"}
-      ],
       conditioningProjectIdOption:[],
-      stepArray: [true,false,false,false,false,false,false,false],
+      stepArray: [true,false,false,false,false,false,false,false,false],
       stepActive: 0,
       form: {
         name: null,
@@ -700,13 +642,15 @@ export default {
         conditioningProjectId: 0,
         sex: 1,
         age: null,
-        condiment:["1","5","9","6","1","3"],
+        tall: null,
+        weight: null,
+        condiment:["1","2","3"],
         otherCondiment:null,
         cookingStyle: ["8","9","4","11"],
         cookingStyleRate:[1,1,1,1,1,1],
         washVegetablesStyle:["2"],
         otherWashVegetablesStyle: null,
-        breakfastType:"1",
+        breakfastType:"2",
         breakfastFood: null,
         lunchType:["3"],
         dinner:["2"],
@@ -725,7 +669,7 @@ export default {
         riceNum: 1,
         riceFull: 8,
         eatingSpeed: "3",
-        snacks: ["10","11","13","12","3","1"],
+        snacks: ["1"],
         otherSnacks:null,
         healthProductsFlag: 0,
         healthProductsBrand:null,
@@ -734,7 +678,7 @@ export default {
         healthProductsDayRate:0,
 
         waterNum: 1500,
-        waterType: ["2"],
+        waterType: ["3"],
         waterHabit: ["5"],
         drinksNum:[0,0,0,0,0,0,0,0],
         drinkWineFlag: "3",
@@ -785,7 +729,15 @@ export default {
         allergySituation: null,
         allergen:[],
         otherAllergen:null,
-        medicalReport:[]
+        medicalReport:[],
+        medicalReportName:"",
+        position:0,
+        experience: null,
+        rebound: 0,
+        difficulty:null,
+        crux:0,
+        dishesIngredient:null,
+        makeFoodType:3
       },
       upload: {
           // 是否禁用上传
@@ -820,6 +772,24 @@ export default {
             message: "年龄格式不正确",
           },
         ],
+        tall: [
+          { required: true, trigger: "blur", message: "请填写身高" },
+          {
+            required: true,
+            trigger: "blur",
+            pattern: /^[1-9]\d*$/,
+            message: "身高格式不正确",
+          },
+        ],
+        weight: [
+          { required: true, trigger: "blur", message: "请填写体重" },
+          {
+            required: true,
+            trigger: "blur",
+            pattern: /^[1-9]\d*$/,
+            message: "体重格式不正确",
+          },
+        ],
         phone: [
           { required: true, trigger: "blur", message: "请填写手机号" },
           { required: true, trigger: "blur", message: "请填写正确的手机号" },
@@ -833,6 +803,19 @@ export default {
           conditioningProjectId:[
               { required: true, trigger: "blur", message: "请选择调理项目" }
           ],
+        position:[
+          { required: true, trigger: "blur", message: "请选择地理位置" }
+        ],
+        /*experience:[
+          { required: true, trigger: "blur", message: "请描述您的减脂经历" }
+        ],
+        difficulty:[
+          { required: true, trigger: "blur", message: "请描述您减脂中遇到的困难" }
+        ],
+          dishesIngredient:[
+            { required: true, trigger: "blur", message: "请描述您忌口、过敏食物" }
+          ]*/
+
           /*fileList:[
               {required: true, trigger: "blur", validator: checkReportFile}
           ]*/

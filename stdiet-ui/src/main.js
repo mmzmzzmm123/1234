@@ -20,6 +20,7 @@ import {getConfigKey} from "@/api/system/config";
 import {
   addDateRange,
   download,
+  downloadResource,
   handleTree,
   parseTime,
   resetForm,
@@ -42,6 +43,7 @@ Vue.prototype.addDateRange = addDateRange
 Vue.prototype.selectDictLabel = selectDictLabel
 Vue.prototype.selectDictLabels = selectDictLabels
 Vue.prototype.download = download
+Vue.prototype.downloadResource = downloadResource
 Vue.prototype.handleTree = handleTree
 Vue.prototype.toThousands = toThousands
 Vue.prototype.digitUppercase = digitUppercase

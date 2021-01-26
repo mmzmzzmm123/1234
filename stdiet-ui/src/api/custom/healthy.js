@@ -51,3 +51,14 @@ export function exportHealthy(query) {
     params: query
   })
 }
+
+// 下载文件
+export function download(fileName) {
+  return request({
+    url: '/common/download',
+    method: 'get',
+    params: {"fileName": fileName}
+  })
+}
+
+

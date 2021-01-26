@@ -46,6 +46,14 @@ public class SysCustomerHealthy extends BaseEntity
     @Excel(name = "年龄")
     private Long age;
 
+    /** 身高 */
+    @Excel(name = "身高")
+    private Integer tall;
+
+    /** 体重 */
+    @Excel(name = "体重")
+    private Long weight;
+
     /** 调味品种类，使用 , 隔开 */
     @Excel(name = "调味品种类，使用 , 隔开")
     private String condiment;
@@ -367,8 +375,40 @@ public class SysCustomerHealthy extends BaseEntity
     private String otherAllergen;
 
     /** 体检报告 */
-    @Excel(name = "体检报告")
+    //@Excel(name = "体检报告")
     private String medicalReport;
+
+    /** 体检报告名称 */
+    //@Excel(name = "体检报告名称")
+    private String medicalReportName;
+
+    /** 南方人北方人，0南方 1北方 */
+    @Excel(name = "南方人北方人，0南方 1北方")
+    private Integer position;
+
+    /** 减脂经历方法 */
+    @Excel(name = "减脂经历方法")
+    private String experience;
+
+    /** 是否减脂反弹，0否 1是 */
+    @Excel(name = "是否减脂反弹，0否 1是")
+    private Integer rebound;
+
+    /** 减脂遇到的困难 */
+    @Excel(name = "减脂遇到的困难")
+    private String difficulty;
+
+    /** 是否意识到生活习惯是减脂关键 0否 1是 */
+    @Excel(name = "是否意识到生活习惯是减脂关键 0否 1是")
+    private Integer crux;
+
+    /** 忌口或饮食食物 */
+    @Excel(name = "忌口或饮食食物")
+    private String dishesIngredient;
+
+    /** 饮食习惯 */
+    @Excel(name = "饮食习惯")
+    private Long makeFoodType;
 
     /** 删除标识 0未删除 1已删除。默认0 */
     private Long delFlag;
@@ -1179,6 +1219,86 @@ public class SysCustomerHealthy extends BaseEntity
 
     public void setConditioningProject(String conditioningProject) {
         this.conditioningProject = conditioningProject;
+    }
+
+    public Long getWeight() {
+        return weight;
+    }
+
+    public void setWeight(Long weight) {
+        this.weight = weight;
+    }
+
+    public String getMedicalReportName() {
+        return medicalReportName;
+    }
+
+    public void setMedicalReportName(String medicalReportName) {
+        this.medicalReportName = medicalReportName;
+    }
+
+    public Integer getPosition() {
+        return position;
+    }
+
+    public void setPosition(Integer position) {
+        this.position = position;
+    }
+
+    public String getExperience() {
+        return experience;
+    }
+
+    public void setExperience(String experience) {
+        this.experience = experience;
+    }
+
+    public Integer getRebound() {
+        return rebound;
+    }
+
+    public void setRebound(Integer rebound) {
+        this.rebound = rebound;
+    }
+
+    public String getDifficulty() {
+        return difficulty;
+    }
+
+    public void setDifficulty(String difficulty) {
+        this.difficulty = difficulty;
+    }
+
+    public Integer getCrux() {
+        return crux;
+    }
+
+    public void setCrux(Integer crux) {
+        this.crux = crux;
+    }
+
+    public String getDishesIngredient() {
+        return dishesIngredient;
+    }
+
+    public void setDishesIngredient(String dishesIngredient) {
+        this.dishesIngredient = dishesIngredient;
+    }
+
+    public Long getMakeFoodType() {
+        return makeFoodType;
+    }
+
+    public void setMakeFoodType(Long makeFoodType) {
+        this.makeFoodType = makeFoodType;
+    }
+
+    public Integer getTall() {
+        return tall;
+    }
+
+    public void setTall(Integer tall) {
+        this.tall = tall;
     }
 
     @Override

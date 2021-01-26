@@ -65,23 +65,23 @@
       <el-table-column label="岗位" align="center" prop="postName"/>
       <el-table-column label="总提成" align="center" prop="totalCommissionAmount">
         <template scope="scope">
-          {{scope.row.totalCommissionAmount.toFixed(3)}}
+          {{scope.row.totalCommissionAmount.toFixed(fixLength)}}
         </template>
       </el-table-column>
       <el-table-column label="已发放提成" align="center" prop="totalHasSentCommissionAmount">
         <template scope="scope">
-          {{scope.row.totalHasSentCommissionAmount.toFixed(3)}}
+          {{scope.row.totalHasSentCommissionAmount.toFixed(fixLength)}}
         </template>
       </el-table-column>
       <el-table-column label="未发放提成" align="center" prop="totalNotSentCommissionAmount">
         <template scope="scope">
-          {{scope.row.totalNotSentCommissionAmount.toFixed(3)}}
+          {{scope.row.totalNotSentCommissionAmount.toFixed(fixLength)}}
         </template>
 
       </el-table-column>
       <el-table-column label="下月应发提成" align="center" prop="nextMonthCommission">
         <template scope="scope">
-          {{scope.row.nextMonthCommission.toFixed(3)}}
+          {{scope.row.nextMonthCommission.toFixed(fixLength)}}
         </template>
 
       </el-table-column>
@@ -114,7 +114,7 @@
         </el-table-column>
         <el-table-column property="yearMonthCommission" label="提成金额" width="100">
           <template scope="scope">
-            {{scope.row.yearMonthCommission.toFixed(3)}}
+            {{scope.row.yearMonthCommission.toFixed(fixLength)}}
           </template>
         </el-table-column>
       </el-table>
@@ -181,7 +181,8 @@
           postId: null,
         },
         sendCommissionPlanTable: false,
-        sendCommissionPlan:{}
+        sendCommissionPlan:{},
+        fixLength: 2
       };
     },
     created() {
