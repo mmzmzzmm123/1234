@@ -291,6 +291,10 @@ export default {
         createuserid: undefined,
         createTime: undefined,
       },
+      // 查询参数
+      queryParams_child: {
+        status: '0',
+      },
       // 表单参数
       form: {},
       // 表单校验
@@ -402,7 +406,7 @@ export default {
       this.isable = false;
       this.open = true;
       this.title = "幼儿考勤";
-      listByCheck(null).then((response) => {
+      listByCheck(this.queryParams_child).then((response) => {
         this.childs = response.rows;
       });
     },
@@ -413,7 +417,7 @@ export default {
       const id = row.id || this.ids;
       getDetail(id).then((response) => {
         this.form = response.data;
-        listChild(null).then((response) => {
+        listChild(this.queryParams_child).then((response) => {
           this.childs = response.rows;
         });
         this.checkedChilds.push(response.data.childid);
