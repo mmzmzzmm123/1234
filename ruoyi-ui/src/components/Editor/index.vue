@@ -82,7 +82,7 @@ export default {
           toolbar: {
             container: toolbarOptions,
             handlers: {
-              image: (value) =>{
+              image: (value) => {
                 if (value) {
                   // 触发input框选择图片文件
                   // document.querySelector(".quill-img input").click();
@@ -165,11 +165,7 @@ export default {
         // 获取光标所在位置
         let length = quill.selection.savedRange.index;
         // 插入图片  res.url为服务器返回的图片地址
-        quill.insertEmbed(
-          length,
-          "image",
-          res.url
-        );
+        quill.insertEmbed(length, "image", res.url);
         // 调整光标到最后
         quill.setSelection(length + 1);
       } else {

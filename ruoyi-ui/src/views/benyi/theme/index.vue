@@ -144,10 +144,10 @@
           <el-input v-model="form.name" placeholder="请输入主题名称" />
         </el-form-item>
         <el-form-item label="主题内容" prop="content">
-          <Editor v-model="form.content" :quillIndex="2" toref="Editorb" />
+          <Editor v-model="form.content" :quillIndex="0" toref="Editora" />
         </el-form-item>
         <el-form-item label="家园沟通" prop="communicate">
-          <Editor v-model="form.communicate" :quillIndex="3" toref="Editorc" />
+          <Editor v-model="form.communicate" :quillIndex="1" toref="Editora" />
         </el-form-item>
         <el-form-item label="适用班级" prop="classid">
           <el-select v-model="form.classid" placeholder="请选择适用班级">
