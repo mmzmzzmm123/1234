@@ -2,6 +2,7 @@
   <div>
     <!-- 图片上传组件辅助 -->
     <el-upload
+      :key="randomString(3)"
       class="avatar-uploader quill-img"
       :action="uploadImgUrl"
       name="file"
@@ -15,9 +16,10 @@
 
     <!-- 富文本组件 -->
     <quill-editor
+      :id="randomString(3)"
       class="ql-editor"
       v-model="content"
-      ref="quillEditor"
+      :ref="toref"
       :options="editorOption"
       @blur="onEditorBlur($event)"
       @focus="onEditorFocus($event)"
@@ -59,6 +61,14 @@ export default {
       type: Number,
       default: 4000, //kb
     },
+    quillIndex: {
+      type: Number,
+      default: 0,
+    },
+    toref: {
+      type: String,
+      default: "quillEditor",
+    },
   },
   components: { quillEditor },
   data() {
@@ -66,17 +76,18 @@ export default {
       content: this.value,
       uploadImgUrl: "",
       editorOption: {
-        placeholder: "",
         theme: "snow", // or 'bubble'
         placeholder: "请输入内容",
         modules: {
           toolbar: {
             container: toolbarOptions,
             handlers: {
-              image: function (value) {
+              image: (value) =>{
                 if (value) {
                   // 触发input框选择图片文件
-                  document.querySelector(".quill-img input").click();
+                  // document.querySelector(".quill-img input").click();
+                  const index = this.quillIndex;
+                  document.querySelectorAll(".quill-img input")[index].click();
                 } else {
                   this.quill.format("image", false);
                 }
@@ -107,7 +118,17 @@ export default {
       //内容改变事件
       this.$emit("input", this.content);
     },
-
+    //
+    randomString(len) {
+      //默认去掉了容易混淆的字符oOLl,9gq,Vv,Uu,I1
+      var chars = "ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678";
+      var tempLen = chars.length,
+        tempStr = "";
+      for (var i = 0; i < len; ++i) {
+        tempStr += chars.charAt(Math.floor(Math.random() * tempLen));
+      }
+      return tempStr;
+    },
     // 富文本图片上传前
     quillImgBefore(file) {
       let fileType = file.type;
@@ -120,15 +141,35 @@ export default {
     },
 
     quillImgSuccess(res, file) {
+      // // res为图片服务器返回的数据
+      // // 获取富文本组件实例
+      // let quill = this.$refs.quillEditor.quill;
+      // // 如果上传成功
+      // if (res.code == 200) {
+      //   // 获取光标所在位置
+      //   let length = quill.getSelection().index;
+      //   // 插入图片  res.url为服务器返回的图片地址
+      //   quill.insertEmbed(length, "image", res.url);
+      //   // 调整光标到最后
+      //   quill.setSelection(length + 1);
+      // } else {
+      //   this.$message.error("图片插入失败");
+      // }
+
       // res为图片服务器返回的数据
       // 获取富文本组件实例
-      let quill = this.$refs.quillEditor.quill;
+      let toeval = "this.$refs." + this.toref + ".quill";
+      let quill = eval(toeval);
       // 如果上传成功
       if (res.code == 200) {
         // 获取光标所在位置
-        let length = quill.getSelection().index;
+        let length = quill.selection.savedRange.index;
         // 插入图片  res.url为服务器返回的图片地址
-        quill.insertEmbed(length, "image", res.url);
+        quill.insertEmbed(
+          length,
+          "image",
+          risun.util.nginxServerUrl() + res.fileName
+        );
         // 调整光标到最后
         quill.setSelection(length + 1);
       } else {

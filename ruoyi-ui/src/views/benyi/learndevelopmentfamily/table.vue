@@ -80,7 +80,7 @@ export default {
   },
   data() {
     return {
-      title: "幼儿学习与发展档案(教师)",
+      title: "幼儿学习与发展档案(家长)",
       classname: "",
       childid: "",
       xnxq:"",
@@ -109,7 +109,7 @@ export default {
       //学年学期
       xnxqOptions: [],
       // 弹出层标题
-      title: "",
+      // title: "",
       // 是否显示弹出层
       open: false,
       // 查询参数
