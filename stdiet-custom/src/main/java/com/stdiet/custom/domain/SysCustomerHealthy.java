@@ -5,6 +5,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import com.stdiet.common.annotation.Excel;
 import com.stdiet.common.core.domain.BaseEntity;
 
+import java.util.List;
+
 /**
  * 客户健康对象 sys_customer_healthy
  *
@@ -409,6 +411,24 @@ public class SysCustomerHealthy extends BaseEntity
     /** 饮食习惯 */
     @Excel(name = "饮食习惯")
     private Long makeFoodType;
+
+    /** 客户病史体征id，使用，隔开 */
+    //@Excel(name = "客户病史体征id，使用，隔开")
+    private String physicalSignsId;
+
+    /** 体征对象集合 **/
+    private List<SysPhysicalSigns> signList;
+
+    /** 其他病史体征 **/
+    private String otherPhysicalSigns;
+
+    /** 气血数据 */
+    @Excel(name = "气血数据")
+    private String bloodData;
+
+    /** 湿气数据 */
+    @Excel(name = "湿气数据")
+    private String moistureDate;
 
     /** 删除标识 0未删除 1已删除。默认0 */
     private Long delFlag;
@@ -1299,6 +1319,46 @@ public class SysCustomerHealthy extends BaseEntity
 
     public void setTall(Integer tall) {
         this.tall = tall;
+    }
+
+    public String getPhysicalSignsId() {
+        return physicalSignsId;
+    }
+
+    public void setPhysicalSignsId(String physicalSignsId) {
+        this.physicalSignsId = physicalSignsId;
+    }
+
+    public List<SysPhysicalSigns> getSignList() {
+        return signList;
+    }
+
+    public void setSignList(List<SysPhysicalSigns> signList) {
+        this.signList = signList;
+    }
+
+    public String getOtherPhysicalSigns() {
+        return otherPhysicalSigns;
+    }
+
+    public void setOtherPhysicalSigns(String otherPhysicalSigns) {
+        this.otherPhysicalSigns = otherPhysicalSigns;
+    }
+
+    public String getBloodData() {
+        return bloodData;
+    }
+
+    public void setBloodData(String bloodData) {
+        this.bloodData = bloodData;
+    }
+
+    public String getMoistureDate() {
+        return moistureDate;
+    }
+
+    public void setMoistureDate(String moistureDate) {
+        this.moistureDate = moistureDate;
     }
 
     @Override

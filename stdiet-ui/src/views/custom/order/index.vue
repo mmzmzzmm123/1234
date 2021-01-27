@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-row>
       <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="70px">
-        <el-col :span="6">
+        <!--<el-col :span="6">
           <el-form-item label="手机号" prop="phone">
             <el-input
               v-model="queryParams.phone"
@@ -12,12 +12,12 @@
               @keyup.enter.native="handleQuery"
             />
           </el-form-item>
-        </el-col>
+        </el-col>-->
         <el-col :span="6">
-          <el-form-item label="客户姓名" prop="customer">
+          <el-form-item label="客户信息" prop="customer">
             <el-input
               v-model="queryParams.customer"
-              placeholder="请输入客户姓名"
+              placeholder="请输入客户姓名或手机号"
               clearable
               size="small"
               @keyup.enter.native="handleQuery"
@@ -154,6 +154,15 @@
             />
           </el-select>
         </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="订单金额" prop="amountFlag">
+            <el-select v-model="queryParams.amountFlag" placeholder="请选金额状态">
+              <el-option :key="0" label="全部订单" :value="null"/>
+              <el-option :key="1" label="正常订单" :value="0"/>
+              <el-option :key="2" label="退款订单" :value="1"/>
+            </el-select>
+          </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="成交日期" prop="orderTime">
@@ -702,8 +711,10 @@
           operatorAssisId: null,
           recommender: null,
           reviewStatus: null,
-          serveTimeId: null
+          serveTimeId: null,
+          amountFlag: null
         },
+        initPlanningAndOperationFlag: false, //是否需要根据账号初始化运营、运营助理、策划、策划助理
         // 表单参数
         form: {},
         // 表单校验
@@ -822,6 +833,7 @@
         this.payTypeIdOptions = response.data;
       });
       this.getDicts("cus_account").then(response => {
+        response.data.splice(0,0,{dictValue: 0, dictLabel: '无', remark: null})
         this.accountIdOptions = response.data;
       });
       this.getDicts("cus_serve_time").then(response => {
@@ -920,6 +932,7 @@
           startTime: dayjs().add(3, 'day').format("YYYY-MM-DD"),
           pauseTime: null,
           payTypeId: defaultPayType ? parseInt(defaultPayType.dictValue) : null,
+          accountId: defaultAccount ? parseInt(defaultAccount.dictValue) : null,
           preSaleId: defaultPresale ? parseInt(defaultPresale.dictValue) : null,
           createBy: null,
           createTime: null,
@@ -939,9 +952,7 @@
           reviewStatus: this.review,
           giveServeDay: defaultGiveServeTime ? parseInt(defaultGiveServeTime.dictValue) : null,
           conditioningProjectId: defaultConditioningProjectIdOption ? parseInt(defaultConditioningProjectIdOption.dictValue) : null,
-          becomeFanTime: dayjs().format("YYYY-MM-DD"),
-          //收款账号的初始化放最后，使得可以watch中监听到变化，保证策划、策划助理、运营、运营助理初始化
-          accountId: defaultAccount ? parseInt(defaultAccount.dictValue) : null
+          becomeFanTime: dayjs().format("YYYY-MM-DD")
         };
         this.resetForm("form");
       },
@@ -971,7 +982,8 @@
       /** 修改按钮操作 */
       handleUpdate(row) {
         this.reset();
-        const orderId = row.orderId || this.ids
+        const orderId = row.orderId || this.ids;
+        this.form.accountId = "no";
         getOrder(orderId).then(response => {
           this.form = response.data;
           this.form.giveServeDay = parseInt(this.form.giveServeDay+"");
@@ -1054,22 +1066,31 @@
       initPlanningAndOperation(){
          if(this.form.accountId != null && this.form.accountId != undefined){
            let planningAndOperationValue = this.orderDropdownCorrespondingOptions.find(opt => parseInt(opt.dictValue) === this.form.accountId);
-           let array = planningAndOperationValue.dictLabel.split("|");
-           let plannerIdOption = this.plannerIdOptions.find(opt => opt.dictValue == array[0]);
-           this.form.plannerId = plannerIdOption ? parseInt(plannerIdOption.dictValue) : 0;
-           let plannerAssisIdOption = this.plannerAssisIdOptions.find(opt => opt.dictValue == array[1]);
-           this.form.plannerAssisId = plannerAssisIdOption ? parseInt(plannerAssisIdOption.dictValue) : 0;
-           let operatorIdOption = this.operatorIdOptions.find(opt => opt.dictValue == array[2]);
-           this.form.operatorId = operatorIdOption ? parseInt(operatorIdOption.dictValue) : 0;
-           let operatorAssisIdOption = this.operatorAssisIdOptions.find(opt => opt.dictValue == array[3]);
-           this.form.operatorAssisId = operatorAssisIdOption ? parseInt(operatorAssisIdOption.dictValue) : 0;
+           if(planningAndOperationValue){
+             let array = planningAndOperationValue.dictLabel.split("|");
+             let plannerIdOption = this.plannerIdOptions.find(opt => opt.dictValue == array[0]);
+             this.form.plannerId = plannerIdOption ? parseInt(plannerIdOption.dictValue) : 0;
+             let plannerAssisIdOption = this.plannerAssisIdOptions.find(opt => opt.dictValue == array[1]);
+             this.form.plannerAssisId = plannerAssisIdOption ? parseInt(plannerAssisIdOption.dictValue) : 0;
+             let operatorIdOption = this.operatorIdOptions.find(opt => opt.dictValue == array[2]);
+             this.form.operatorId = operatorIdOption ? parseInt(operatorIdOption.dictValue) : 0;
+             let operatorAssisIdOption = this.operatorAssisIdOptions.find(opt => opt.dictValue == array[3]);
+             this.form.operatorAssisId = operatorAssisIdOption ? parseInt(operatorAssisIdOption.dictValue) : 0;
+           }else{
+             this.form.plannerId = 0;
+             this.form.plannerAssisId = 0;
+             this.form.operatorId = 0;
+             this.form.operatorAssisId = 0;
+           }
          }
       }
     },
     watch:{
       // 监听收款账号的变化
       "form.accountId": function(newVal, oldVal){
-        this.initPlanningAndOperation();
+        if(oldVal != "no" && newVal != "no"){
+           this.initPlanningAndOperation();
+        }
       }
     }
   };

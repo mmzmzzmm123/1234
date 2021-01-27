@@ -409,7 +409,7 @@
             <el-checkbox v-for="(item,index) in healthyData['aerobicMotionClassifyArray']" :label="item.value" :key="index">{{item.name}}</el-checkbox>
           </el-checkbox-group>
         </div>
-        <div><span>有氧运动</span>
+        <div><span>无氧运动</span>
           <el-checkbox-group v-model="form.anaerobicMotionClassify">
             <el-checkbox v-for="(item,index) in healthyData['anaerobicMotionClassifyArray']" :label="item.value" :key="index">{{item.name}}</el-checkbox>
           </el-checkbox-group>
@@ -461,7 +461,40 @@
       </div>
       <div v-show="stepArray[7]">
       <p class="p_title_1">{{healthyData['titleArray'][7]}}</p>
-      <p class="p_title_2">1、家族疾病史情况</p>
+        <p class="p_title_2">1、本人病史情况</p>
+        <el-form-item label="(1) 病史体征(可多选)" prop="physicalSignsId" class="margin-left">
+          <el-select v-model="form.physicalSignsId" multiple placeholder="请选择">
+            <el-option
+              v-for="physicalSign in physicalSignsList"
+              :key="physicalSign.id"
+              :label="physicalSign.name"
+              :value="physicalSign.id"
+            >
+            </el-option>
+          </el-select>
+          <div><span>其他病史体征</span>
+            <el-input type="textarea"
+              placeholder="请输入病史体征"
+              v-model="form.otherPhysicalSigns"
+              maxlength="200"
+              show-word-limit
+              rows="2"
+            ></el-input>
+          </div>
+        </el-form-item>
+        <p class="p_title_2">2、湿气、气血测试</p>
+        <el-form-item label="(1) 湿气测试（可多选）" prop="moistureDate" class="margin-left">
+        <el-checkbox-group v-model="form.moistureDate">
+          <el-checkbox v-for="moistureItem in moistureDataList" :label="moistureItem.dictValue" :key="moistureItem.dictValue">{{ moistureItem.dictLabel }}</el-checkbox>
+        </el-checkbox-group>
+      </el-form-item>
+        <el-form-item label="(2) 气血测试（可多选）" prop="bloodData" class="margin-left">
+          <el-checkbox-group v-model="form.bloodData">
+            <el-checkbox v-for="moistureItem in bloodDataList" :label="moistureItem.dictValue" :key="moistureItem.dictValue">{{ moistureItem.dictLabel }}</el-checkbox>
+          </el-checkbox-group>
+        </el-form-item>
+
+      <p class="p_title_2">3、家族疾病史情况</p>
       <el-form-item label="（1）家族疾病史（直系亲属例如爸爸妈妈、爷爷奶奶、外公外婆有相关疾病）（可多选）" prop="familyIllnessHistory" class="margin-left">
         <el-checkbox-group v-model="form.familyIllnessHistory">
           <el-checkbox v-for="(item, index) in healthyData['familyIllnessHistoryArray']" :key="index" :label="item.value" >{{item.name}}</el-checkbox>
@@ -477,7 +510,7 @@
           ></el-input>
           </div>
       </el-form-item>
-      <p class="p_title_2">2、手术情况</p>
+      <p class="p_title_2">4、手术情况</p>
       <el-form-item label="(1) 手术史，因病进行过手术治疗，手术的部分（可多选）" prop="familyIllnessHistory" class="margin-left">
         <el-checkbox-group v-model="form.operationHistory">
           <el-checkbox v-for="(item, index) in healthyData['operationHistoryArray']" :key="index" :label="item.value" >{{item.name}}</el-checkbox>
@@ -508,7 +541,7 @@
           ></el-input>
         </div>
       </el-form-item>
-      <p class="p_title_2">3、药物情况</p>
+      <p class="p_title_2">5、药物情况</p>
       <el-form-item label="(1) 是否长期服用药物（连续服用6个月以上，平均每日服用一次）" prop="longEatDrugFlag" class="margin-left">
         <el-radio-group v-model="form.longEatDrugFlag">
           <el-radio :label="0" key="1">否</el-radio>
@@ -530,7 +563,7 @@
           ></el-input>
           </div>
       </el-form-item>
-      <p class="p_title_2">4、过敏史</p>
+      <p class="p_title_2">6、过敏史</p>
       <el-form-item label="(1) 曾经是否出现过过敏" prop="allergyFlag" class="margin-left">
         <el-radio-group v-model="form.allergyFlag">
           <el-radio :label="0" key="1">无</el-radio>
@@ -585,8 +618,8 @@
             :data="upload.data"
             :auto-upload="false">
             <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-          <el-button style="margin-left: 10px;" size="small" @click="upload.fileList = []">重置</el-button>
-          <div slot="tip" class="el-upload__tip">提示：最多可上传三份，且每份文件不超过5M</div>
+          <el-button style="margin-left: 10px;" size="small" ref="removeFile" @click="upload.fileList = []">移除文件</el-button>
+          <div slot="tip" class="el-upload__tip">提示：最多可上传三份，且每份文件不超过20M</div>
         </el-upload>
         </el-form-item>
       </div>
@@ -617,7 +650,7 @@
   </section>
 </template>
 <script>
-import { getDictData,addCustomerHealthy } from "@/api/custom/customerInvestigation";
+import { getDictData,addCustomerHealthy,physicalSignsList } from "@/api/custom/customerInvestigation";
 import * as healthyData from "@/utils/healthyData";
 const logo = require("@/assets/logo/st_logo.png");
 export default {
@@ -634,6 +667,9 @@ export default {
       logo,
       submitFlag: false,
       conditioningProjectIdOption:[],
+      physicalSignsList: [],
+      moistureDataList:[],
+      bloodDataList:[],
       stepArray: [true,false,false,false,false,false,false,false,false],
       stepActive: 0,
       form: {
@@ -716,6 +752,10 @@ export default {
         stayupLateFlag: 0,
         stayupLateWeekNum: 0,
 
+        physicalSignsId:[],
+        otherPhysicalSigns: null,
+        bloodData:[],
+        moistureDate:[],
         familyIllnessHistory:[],
         otherFamilyIllnessHistory:null,
         operationHistory:[],
@@ -730,7 +770,7 @@ export default {
         allergen:[],
         otherAllergen:null,
         medicalReport:[],
-        medicalReportName:"",
+        medicalReportName:[],
         position:0,
         experience: null,
         rebound: 0,
@@ -753,7 +793,7 @@ export default {
           //同时上传文件上限
           limit: 3,
           //每个文件大小
-          fileSize: 1024 * 1024 * 5,
+          fileSize: 1024 * 1024 * 20,
           //是否支持同时选择多张
           multiple: true
       },
@@ -805,29 +845,8 @@ export default {
           ],
         position:[
           { required: true, trigger: "blur", message: "请选择地理位置" }
-        ],
-        /*experience:[
-          { required: true, trigger: "blur", message: "请描述您的减脂经历" }
-        ],
-        difficulty:[
-          { required: true, trigger: "blur", message: "请描述您减脂中遇到的困难" }
-        ],
-          dishesIngredient:[
-            { required: true, trigger: "blur", message: "请描述您忌口、过敏食物" }
-          ]*/
-
-          /*fileList:[
-              {required: true, trigger: "blur", validator: checkReportFile}
-          ]*/
-      },
-        //需要将数组转成字符串的属性名称
-      arrayName:[
-           "condiment","cookingStyle","cookingStyleRate", "washVegetablesStyle","lunchType","dinner","dietFlavor",
-           "snacks","waterType","waterHabit","drinksNum","drinkWineClassify","drinkWineAmount","smokeRate",
-           "workType","defecationTime","aerobicMotionClassify","anaerobicMotionClassify","anaerobicAerobicMotionClassify",
-           "motionField","sleepQuality", "familyIllnessHistory", "operationHistory", "longEatDrugClassify", "allergen", "medicalReport"
-      ]
-
+        ]
+      }
     };
   },
   methods: {
@@ -844,7 +863,7 @@ export default {
             this.submitFlag = true;
             this.form.medicalReport = [];
             if(this.upload.fileList.length > 0){
-                this.$refs.upload.submit();
+                this.$refs.upload.submit();removeFile
             }else{
                 this.addCustomerHealthy();
             }
@@ -860,9 +879,9 @@ export default {
     addCustomerHealthy(){
         //数据处理
         let cusMessage = Object.assign({}, this.form);
-        this.arrayName.forEach(function (item, index) {
+        this.healthyData['arrayName'].forEach(function (item, index) {
             cusMessage[item] = cusMessage[item] != null ? cusMessage[item].join(",") : null;
-        })
+        });
         addCustomerHealthy(cusMessage).then((response) => {
             if (response.code === 200) {
                 this.$notify({
@@ -875,8 +894,6 @@ export default {
                 this.upload.isUploading = false;
             }
         });
-        console.log(cusMessage.cookingStyleRate);
-        console.log(cusMessage.washVegetablesStyle);
     },
     nextStep(step){
       this.$refs.form.validate((valid) => {
@@ -937,8 +954,10 @@ export default {
       },
       // 文件上传成功处理
       handleFileSuccess(response, file, fileList) {
+         console.log(file.name);
           if(response != null && response.code === 200){
               this.form.medicalReport.push(response.fileName);
+              this.form.medicalReportName.push(file.name);
               if(this.form.medicalReport.length === this.upload.fileList.length){
                   //文件全部上传成功，则调用添加客户信息方法
                   this.addCustomerHealthy();
@@ -946,18 +965,39 @@ export default {
           }else{
               this.upload.isUploading = false;
               this.submitFlag = false;
-              this.$message.error('文件上传失败');
+              this.$message.error('文件上传失败，请检查文件格式');
           }
       },
       // 文件上传失败处理
       handleFileFail(err, file, fileList){
-          this.$message.error('文件上传失败');
+          this.$message.error('文件上传失败，请检查文件格式');
           this.upload.isUploading = false;
           this.submitFlag = false;
-      }
+      },
+      //获取湿气
+      getMoistureDictData() {
+        getDictData("sys_blood_data").then((response) => {
+          this.moistureDataList = response.data;
+        });
+      },
+      //获取气血
+      getBloodDictData() {
+        getDictData("sys_moisture_data").then((response) => {
+          this.bloodDataList = response.data;
+        });
+      },
+      /** 查询体征列表 */
+      getPhysicalSignsList() {
+        physicalSignsList().then((response) => {
+          this.physicalSignsList = response.rows;
+        });
+    },
   },
   created() {
     this.getDict("conditioning_project");
+    this.getPhysicalSignsList();
+    this.getMoistureDictData();
+    this.getBloodDictData();
   },
   beforeCreate() {
     document.title = this.$route.meta.title;
