@@ -168,7 +168,7 @@ export default {
         quill.insertEmbed(
           length,
           "image",
-          risun.util.nginxServerUrl() + res.fileName
+          res.url
         );
         // 调整光标到最后
         quill.setSelection(length + 1);

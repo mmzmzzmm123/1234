@@ -1,6 +1,11 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
+    <el-form
+      :model="queryParams"
+      ref="queryForm"
+      :inline="true"
+      label-width="68px"
+    >
       <el-form-item label="主题名称" prop="name">
         <el-input
           v-model="queryParams.name"
@@ -21,8 +26,16 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+        <el-button
+          type="primary"
+          icon="el-icon-search"
+          size="mini"
+          @click="handleQuery"
+          >搜索</el-button
+        >
+        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+          >重置</el-button
+        >
       </el-form-item>
     </el-form>
 
@@ -34,7 +47,8 @@
           size="mini"
           @click="handleAdd"
           v-hasPermi="['benyi:theme:add']"
-        >新增</el-button>
+          >新增</el-button
+        >
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -44,7 +58,8 @@
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['benyi:theme:edit']"
-        >修改</el-button>
+          >修改</el-button
+        >
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -54,14 +69,19 @@
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['benyi:theme:remove']"
-        >删除</el-button>
+          >删除</el-button
+        >
       </el-col>
     </el-row>
 
-    <el-table v-loading="loading" :data="themeList" @selection-change="handleSelectionChange">
+    <el-table
+      v-loading="loading"
+      :data="themeList"
+      @selection-change="handleSelectionChange"
+    >
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="编号" align="center" prop="id" />
-      <el-table-column label="主题名称" align="center" prop="name" >
+      <el-table-column label="主题名称" align="center" prop="name">
         <template slot-scope="scope">
           <router-link
             :to="'/benyi_course/theme/activity/' + scope.row.id"
@@ -71,9 +91,18 @@
           </router-link>
         </template>
       </el-table-column>
-      <el-table-column label="适用班级" align="center" prop="classid" :formatter="bjtypeFormat" />
+      <el-table-column
+        label="适用班级"
+        align="center"
+        prop="classid"
+        :formatter="bjtypeFormat"
+      />
       <el-table-column label="序号" align="center" prop="sort" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column
+        label="操作"
+        align="center"
+        class-name="small-padding fixed-width"
+      >
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -81,20 +110,22 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['benyi:theme:edit']"
-          >修改</el-button>
+            >修改</el-button
+          >
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['benyi:theme:remove']"
-          >删除</el-button>
+            >删除</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
 
     <pagination
-      v-show="total>0"
+      v-show="total > 0"
       :total="total"
       :page.sync="queryParams.pageNum"
       :limit.sync="queryParams.pageSize"
@@ -102,16 +133,21 @@
     />
 
     <!-- 添加或修改主题整合对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="1024px" append-to-body>
+    <el-dialog
+      :title="title"
+      :visible.sync="open"
+      width="1024px"
+      append-to-body
+    >
       <el-form ref="form" :model="form" :rules="rules" label-width="100px">
         <el-form-item label="主题名称" prop="name">
           <el-input v-model="form.name" placeholder="请输入主题名称" />
         </el-form-item>
         <el-form-item label="主题内容" prop="content">
-          <Editor v-model="form.content" />
+          <Editor v-model="form.content" :quillIndex="2" toref="Editorb" />
         </el-form-item>
         <el-form-item label="家园沟通" prop="communicate">
-          <Editor v-model="form.communicate" />
+          <Editor v-model="form.communicate" :quillIndex="3" toref="Editorc" />
         </el-form-item>
         <el-form-item label="适用班级" prop="classid">
           <el-select v-model="form.classid" placeholder="请选择适用班级">
@@ -124,7 +160,11 @@
           </el-select>
         </el-form-item>
         <el-form-item label="序号" prop="sort">
-          <el-input-number v-model="form.sort" controls-position="right" :min="0" />
+          <el-input-number
+            v-model="form.sort"
+            controls-position="right"
+            :min="0"
+          />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -141,14 +181,14 @@ import {
   getTheme,
   delTheme,
   addTheme,
-  updateTheme
+  updateTheme,
 } from "@/api/benyi/theme";
 import Editor from "@/components/Editor";
 
 export default {
   name: "Theme",
   components: {
-    Editor
+    Editor,
   },
   data() {
     return {
@@ -178,7 +218,7 @@ export default {
         content: undefined,
         communicate: undefined,
         classid: undefined,
-        sort: undefined
+        sort: undefined,
       },
       // 表单参数
       form: {},
@@ -187,18 +227,18 @@ export default {
         name: [{ required: true, message: "名称不能为空", trigger: "blur" }],
         content: [{ required: true, message: "内容不能为空", trigger: "blur" }],
         communicate: [
-          { required: true, message: "家园沟通不能为空", trigger: "blur" }
+          { required: true, message: "家园沟通不能为空", trigger: "blur" },
         ],
         classid: [
-          { required: true, message: "适用班级不能为空", trigger: "blur" }
+          { required: true, message: "适用班级不能为空", trigger: "blur" },
         ],
-        sort: [{ required: true, message: "排序序号", trigger: "blur" }]
-      }
+        sort: [{ required: true, message: "排序序号", trigger: "blur" }],
+      },
     };
   },
   created() {
     this.getList();
-    this.getDicts("sys_yebjlx").then(response => {
+    this.getDicts("sys_yebjlx").then((response) => {
       this.bjtypeOptions = response.data;
     });
   },
@@ -210,7 +250,7 @@ export default {
     /** 查询主题整合列表 */
     getList() {
       this.loading = true;
-      listTheme(this.queryParams).then(response => {
+      listTheme(this.queryParams).then((response) => {
         this.themeList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -230,7 +270,7 @@ export default {
         communicate: undefined,
         classid: undefined,
         sort: 0,
-        createTime: undefined
+        createTime: undefined,
       };
       this.resetForm("form");
     },
@@ -246,7 +286,7 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.id);
+      this.ids = selection.map((item) => item.id);
       this.single = selection.length != 1;
       this.multiple = !selection.length;
     },
@@ -260,7 +300,7 @@ export default {
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids;
-      getTheme(id).then(response => {
+      getTheme(id).then((response) => {
         this.form = response.data;
         //console.log(this.form);
         this.open = true;
@@ -268,11 +308,11 @@ export default {
       });
     },
     /** 提交按钮 */
-    submitForm: function() {
-      this.$refs["form"].validate(valid => {
+    submitForm: function () {
+      this.$refs["form"].validate((valid) => {
         if (valid) {
           if (this.form.id != undefined) {
-            updateTheme(this.form).then(response => {
+            updateTheme(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("修改成功");
                 this.open = false;
@@ -280,7 +320,7 @@ export default {
               }
             });
           } else {
-            addTheme(this.form).then(response => {
+            addTheme(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("新增成功");
                 this.open = false;
@@ -300,18 +340,18 @@ export default {
         {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
-          type: "warning"
+          type: "warning",
         }
       )
-        .then(function() {
+        .then(function () {
           return delTheme(ids);
         })
         .then(() => {
           this.getList();
           this.msgSuccess("删除成功");
         })
-        .catch(function() {});
-    }
-  }
+        .catch(function () {});
+    },
+  },
 };
 </script>
