@@ -254,19 +254,19 @@
           <el-input v-model="form.themeofweek" placeholder="请输入本周主题" />
         </el-form-item>
         <el-form-item label="教学目标(社会)" prop="jxmbSh">
-          <Editor v-model="form.jxmbSh" placeholder="请输入教学目标(社会)" />
+          <Editor v-model="form.jxmbSh" placeholder="请输入教学目标(社会)" :quillIndex="0" toref="Editora"/>
         </el-form-item>
         <el-form-item label="教学目标(语言)" prop="jxmbYy">
-          <Editor v-model="form.jxmbYy" placeholder="请输入教学目标(语言)" />
+          <Editor v-model="form.jxmbYy" placeholder="请输入教学目标(语言)" :quillIndex="1" toref="Editora"/>
         </el-form-item>
         <el-form-item label="教学目标(健康)" prop="jxmbJk">
-          <Editor v-model="form.jxmbJk" placeholder="请输入教学目标(健康)" />
+          <Editor v-model="form.jxmbJk" placeholder="请输入教学目标(健康)" :quillIndex="2" toref="Editora"/>
         </el-form-item>
         <el-form-item label="教学目标(科学)" prop="jxmbKx">
-          <Editor v-model="form.jxmbKx" placeholder="请输入教学目标(科学)" />
+          <Editor v-model="form.jxmbKx" placeholder="请输入教学目标(科学)" :quillIndex="3" toref="Editora"/>
         </el-form-item>
         <el-form-item label="教学目标(艺术)" prop="jxmbYs">
-          <Editor v-model="form.jxmbYs" placeholder="请输入教学目标(艺术)" />
+          <Editor v-model="form.jxmbYs" placeholder="请输入教学目标(艺术)" :quillIndex="4" toref="Editora"/>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">

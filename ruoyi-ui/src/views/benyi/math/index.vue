@@ -119,13 +119,13 @@
           <el-input v-model="form.name" placeholder="请输入名称" />
         </el-form-item>
         <el-form-item label="学习目标" prop="target">
-          <Editor v-model="form.target" placeholder="请输入学习目标" />
+          <Editor v-model="form.target" placeholder="请输入学习目标" :quillIndex="0" toref="Editora"/>
         </el-form-item>
         <el-form-item label="年龄段表现特征" prop="feature">
-          <Editor v-model="form.feature" placeholder="请输入年龄段表现特征" />
+          <Editor v-model="form.feature" placeholder="请输入年龄段表现特征" :quillIndex="1" toref="Editora"/>
         </el-form-item>
         <el-form-item label="教学建议" prop="suggest">
-          <Editor v-model="form.suggest" placeholder="请输入教学建议" />
+          <Editor v-model="form.suggest" placeholder="请输入教学建议" :quillIndex="2" toref="Editora"/>
         </el-form-item>
         <el-form-item label="适用班级" prop="classtypeId">
           <el-select v-model="form.classtypeId" placeholder="请选择适用班级">

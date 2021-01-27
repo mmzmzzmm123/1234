@@ -181,7 +181,7 @@
           </el-col>
           <el-col :span="24">
             <el-form-item label="作品照片" prop="zpimgs">
-              <Editor v-model="form.zpimgs" placeholder="请输入" />
+              <Editor v-model="form.zpimgs" placeholder="请输入" :quillIndex="0" toref="Editora"/>
             </el-form-item>
           </el-col>
           <el-col :span="24">
@@ -195,7 +195,7 @@
           </el-col>
           <el-col :span="24">
             <el-form-item label="生活照片" prop="shimgs">
-              <Editor v-model="form.shimgs" placeholder="请输入" />
+              <Editor v-model="form.shimgs" placeholder="请输入" :quillIndex="1" toref="Editora"/>
             </el-form-item>
           </el-col>
           <el-col :span="24">
@@ -209,7 +209,7 @@
           </el-col>
           <el-col :span="24">
             <el-form-item label="有趣事件" prop="yqsj">
-              <Editor v-model="form.yqsj" placeholder="请输入" />
+              <Editor v-model="form.yqsj" placeholder="请输入" :quillIndex="2" toref="Editora"/>
             </el-form-item>
           </el-col>
           <el-col :span="24">
@@ -223,7 +223,7 @@
           </el-col>
           <el-col :span="24">
             <el-form-item label="教师评语" prop="jspy">
-              <Editor v-model="form.jspy" placeholder="请输入" />
+              <Editor v-model="form.jspy" placeholder="请输入" :quillIndex="3" toref="Editora"/>
             </el-form-item>
           </el-col>
           <el-col :span="24">

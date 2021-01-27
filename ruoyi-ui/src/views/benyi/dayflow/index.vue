@@ -127,11 +127,11 @@
           </el-select>
         </el-form-item>
         <el-form-item label="导言" prop="content">          
-           <Editor v-model="form.content" />
+           <Editor v-model="form.content" :quillIndex="0" toref="Editora"/>
         </el-form-item>
 
         <el-form-item label="目的" prop="note">
-          <Editor v-model="form.note" />
+          <Editor v-model="form.note" :quillIndex="1" toref="Editora"/>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">

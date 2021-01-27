@@ -207,19 +207,19 @@
           </el-select>
         </el-form-item>
         <el-form-item label="游戏目标" prop="target">
-          <Editor v-model="form.target" placeholder="请输入游戏目标" />
+          <Editor v-model="form.target" placeholder="请输入游戏目标" :quillIndex="0" toref="Editora"/>
         </el-form-item>
         <el-form-item label="游戏准备" prop="prepare">
-          <Editor v-model="form.prepare" placeholder="请输入游戏准备" />
+          <Editor v-model="form.prepare" placeholder="请输入游戏准备" :quillIndex="1" toref="Editora"/>
         </el-form-item>
         <el-form-item label="游戏过程" prop="process">
-          <Editor v-model="form.process" placeholder="请输入游戏过程" />
+          <Editor v-model="form.process" placeholder="请输入游戏过程" :quillIndex="2" toref="Editora"/>
         </el-form-item>
         <el-form-item label="本周其它目标" prop="otherTarget">
-          <Editor v-model="form.otherTarget" placeholder="请输入本周其它目标" />
+          <Editor v-model="form.otherTarget" placeholder="请输入本周其它目标" :quillIndex="3" toref="Editora"/>
         </el-form-item>
         <el-form-item label="建议" prop="suggest">
-          <Editor v-model="form.suggest" placeholder="请输入建议" />
+          <Editor v-model="form.suggest" placeholder="请输入建议" :quillIndex="4" toref="Editora"/>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">

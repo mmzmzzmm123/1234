@@ -181,7 +181,7 @@
           </el-col>
           <el-col :span="24">
             <el-form-item label="观察记录" prop="gcjl">
-              <Editor v-model="form.gcjl" placeholder="请输入观察记录" />
+              <Editor v-model="form.gcjl" placeholder="请输入观察记录" :quillIndex="0" toref="Editora"/>
             </el-form-item>
           </el-col>
           <el-col :span="24">
@@ -195,7 +195,7 @@
           </el-col>
           <el-col :span="24">
             <el-form-item label="问题与方案" prop="wtyfa">
-              <Editor v-model="form.wtyfa" placeholder="请输入问题与方案" />
+              <Editor v-model="form.wtyfa" placeholder="请输入问题与方案" :quillIndex="1" toref="Editora"/>
             </el-form-item>
           </el-col>
           <el-col :span="24">
@@ -209,7 +209,7 @@
           </el-col>
           <el-col :span="24">
             <el-form-item label="评估结果" prop="pgjg">
-              <Editor v-model="form.pgjg" placeholder="请输入评估结果" />
+              <Editor v-model="form.pgjg" placeholder="请输入评估结果" :quillIndex="2" toref="Editora"/>
             </el-form-item>
           </el-col>
           <el-col :span="24">
@@ -223,7 +223,7 @@
           </el-col>
           <el-col :span="24">
             <el-form-item label="教育计划" prop="jyjh">
-              <Editor v-model="form.jyjh" placeholder="请输入教育计划" />
+              <Editor v-model="form.jyjh" placeholder="请输入教育计划" :quillIndex="3" toref="Editora"/>
             </el-form-item>
           </el-col>
           <el-col :span="24">
