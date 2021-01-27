@@ -113,6 +113,14 @@
           <el-button
             size="mini"
             type="text"
+            icon="el-icon-view"
+            @click="handleView(scope.row)"
+            v-hasPermi="['benyi:learndevelopmentfamily:query']"
+            >预览</el-button
+          >
+          <el-button
+            size="mini"
+            type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['benyi:learndevelopmentfamily:edit']"
@@ -372,6 +380,13 @@ export default {
     handleQuery() {
       this.queryParams.pageNum = 1;
       this.getList();
+    },
+    /** 预览按钮操作 */
+    handleView(row) {
+      const id = row.id;
+      this.$router.push({
+        path: "/benyi_course/learndevelopmentfamilyprint/table/" + id,
+      });
     },
     /** 重置按钮操作 */
     resetQuery() {

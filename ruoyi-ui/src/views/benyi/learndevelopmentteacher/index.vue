@@ -113,6 +113,14 @@
           <el-button
             size="mini"
             type="text"
+            icon="el-icon-view"
+            @click="handleView(scope.row)"
+            v-hasPermi="['benyi:learndevelopmentteacher:query']"
+            >预览</el-button
+          >
+          <el-button
+            size="mini"
+            type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['benyi:learndevelopmentteacher:edit']"
@@ -389,6 +397,13 @@ export default {
       this.reset();
       this.open = true;
       this.title = "添加儿童学习与发展档案（教师）";
+    },
+    /** 预览按钮操作 */
+    handleView(row) {
+      const id = row.id;
+      this.$router.push({
+        path: "/benyi_course/learndevelopmentteacherprint/table/" + id,
+      });
     },
     /** 修改按钮操作 */
     handleUpdate(row) {

@@ -410,6 +410,36 @@ export const constantRoutes = [{
         }]
     },
     {
+        path: '/benyi_course/learndevelopmentteacherprint',
+        component: Layout,
+        hidden: true,
+        children: [{
+            path: 'table/:id',
+            component: () =>
+                import ('@/views/benyi/learndevelopmentteacher/table'),
+            name: 'learndevelopmentteacher2',
+            meta: {
+                title: '幼儿学习和发展档案(教师)(表格)',
+                icon: ''
+            }
+        }]
+    },
+    {
+        path: '/benyi_course/learndevelopmentfamilyprint',
+        component: Layout,
+        hidden: true,
+        children: [{
+            path: 'table/:id',
+            component: () =>
+                import ('@/views/benyi/learndevelopmentfamily/table'),
+            name: 'learndevelopmentfamily2',
+            meta: {
+                title: '幼儿学习和发展档案(家长)(表格)',
+                icon: ''
+            }
+        }]
+    },
+    {
         path: '/benyi_course/math',
         component: Layout,
         hidden: true,
