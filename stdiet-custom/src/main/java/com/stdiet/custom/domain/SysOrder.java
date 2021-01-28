@@ -225,6 +225,7 @@ public class SysOrder extends BaseEntity {
      * 订单暂停记录 非持久化字段
      * */
     private List<SysOrderPause> orderPauseList;
+    private Integer amountFlag;
 
     public Long getCusId() {
         return cusId;
