@@ -113,7 +113,17 @@
         prop="createTime"
         width="160"
       />
-      <el-table-column label="名字" align="center" prop="name" />
+      <el-table-column
+        label="进粉时间"
+        align="center"
+        prop="fansTime"
+        width="120"
+      >
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.fansTime, "{y}-{m}-{d}") }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="客户姓名" align="center" prop="name" />
       <el-table-column label="手机号" align="center" prop="phone" />
       <el-table-column
         label="主营养师"
@@ -155,16 +165,6 @@
             size="mini"
             type="text"
             @click="handleOnContractClick(scope.row)"
-            >详情
-          </el-button>
-        </template>
-      </el-table-column>
-      <el-table-column label="体征" align="center">
-        <template slot-scope="scope">
-          <el-button
-            size="mini"
-            type="text"
-            @click="handleOnBodySignClick(scope.row)"
             >详情
           </el-button>
         </template>
@@ -226,15 +226,39 @@
     <!-- 添加或修改客户档案对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="520px" append-to-body>
       <el-row :gutter="15">
-        <el-form ref="form" :model="form" :rules="rules" label-width="90px">
+        <el-form ref="form" :model="form" :rules="rules" label-width="100px">
           <el-col :span="12">
-            <el-form-item label="名字" prop="name">
+            <el-form-item label="客户名字" prop="customer">
               <el-input v-model="form.name" placeholder="请输入名字" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="手机号" prop="phone">
               <el-input v-model="form.phone" placeholder="请输入手机号" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="售前" prop="salesman">
+              <el-select v-model="form.salesman" placeholder="请选择">
+                <el-option
+                  v-for="dict in preSaleIdOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="parseInt(dict.dictValue)"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="售后" prop="afterDietitian">
+              <el-select v-model="form.afterDietitian" placeholder="请选择">
+                <el-option
+                  v-for="dict in afterSaleIdOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="parseInt(dict.dictValue)"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -262,27 +286,16 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="售后" prop="afterDietitian">
-              <el-select v-model="form.afterDietitian" placeholder="请选择">
-                <el-option
-                  v-for="dict in afterSaleIdOptions"
-                  :key="dict.dictValue"
-                  :label="dict.dictLabel"
-                  :value="parseInt(dict.dictValue)"
-                />
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="售前" prop="salesman">
-              <el-select v-model="form.salesman" placeholder="请选择">
-                <el-option
-                  v-for="dict in preSaleIdOptions"
-                  :key="dict.dictValue"
-                  :label="dict.dictLabel"
-                  :value="parseInt(dict.dictValue)"
-                />
-              </el-select>
+            <el-form-item label="进粉时间" prop="fansTime">
+              <el-date-picker
+                v-model="form.fansTime"
+                type="date"
+                placeholder="选择进粉时间"
+                format="yyyy-MM-dd"
+                value-format="yyyy-MM-dd"
+                :picker-options="fanPickerOptions"
+              >
+              </el-date-picker>
             </el-form-item>
           </el-col>
         </el-form>
@@ -293,7 +306,11 @@
       </div>
     </el-dialog>
 
+    <!-- 订单抽屉 -->
     <order-drawer ref="cusOrderDrawerRef" />
+    <!-- 合同抽屉 -->
+    <!-- 健康评估弹窗 -->
+    <!-- 食谱计划抽屉 -->
   </div>
 </template>
 
@@ -306,10 +323,11 @@ import {
   listCustomer,
   updateCustomer,
 } from "@/api/custom/customer";
+import store from "@/store";
 
 import { getOptions } from "@/api/custom/order";
 
-import OrderDrawer from "./orderDrawer";
+import OrderDrawer from "@/components/OrderDrawer";
 
 export default {
   name: "Customer",
@@ -317,7 +335,9 @@ export default {
     "order-drawer": OrderDrawer,
   },
   data() {
+    const userId = store.getters && store.getters.userId;
     return {
+      userId,
       // 遮罩层
       loading: true,
       // 选中数组
@@ -358,7 +378,40 @@ export default {
       // 表单参数
       form: {},
       // 表单校验
-      rules: {},
+      rules: {
+        customer: [
+          { required: true, message: "客户姓名不能为空", trigger: "blur" },
+        ],
+        phone: [
+          { required: true, message: "手机号不能为空", trigger: "blur" },
+          {
+            required: true,
+            trigger: "blur",
+            pattern: /^[0-9]{5,11}$/,
+            message: "手机号格式不正确",
+          },
+        ],
+        salesman: [
+          { required: true, message: "售前不能为空", trigger: "blur" },
+        ],
+        afterDietitian: [
+          { required: true, message: "售后不能为空", trigger: "blur" },
+        ],
+        mainDietitian: [
+          { required: true, message: "主营养师不能为空", trigger: "blur" },
+        ],
+        assistantDietitian: [
+          { required: true, message: "营养师助理不能为空", trigger: "blur" },
+        ],
+        fansTime: [
+          { required: true, message: "进粉时间不能为空", trigger: "blur" },
+        ],
+      },
+      fanPickerOptions: {
+        disabledDate(time) {
+          return time.getTime() > Date.now();
+        },
+      },
     };
   },
   created() {
@@ -482,6 +535,12 @@ export default {
       this.reset();
       this.open = true;
       this.title = "添加客户档案";
+
+      // 选择默认销售
+      const tarSale = this.preSaleIdOptions.find(
+        (obj) => parseInt(obj.dictValue) === this.userId
+      );
+      this.form.salesman = tarSale ? tarSale.dictValue : null;
     },
     /** 修改按钮操作 */
     handleUpdate(row) {

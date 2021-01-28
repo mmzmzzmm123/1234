@@ -29,6 +29,11 @@ public class SysCustomer extends BaseEntity
     @Excel(name = "手机号")
     private String phone;
 
+    /** 进粉日期 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "进粉日期", width = 30, dateFormat = "yyyy-MM-dd")
+    private Date fansTime;
+
     /** 邮箱 */
     @Excel(name = "邮箱")
     private String email;
@@ -235,6 +240,14 @@ public class SysCustomer extends BaseEntity
 
     public void setDelFlag(Integer delFlag) {
         this.delFlag = delFlag;
+    }
+
+    public Date getFansTime() {
+        return fansTime;
+    }
+
+    public void setFansTime(Date fansTime) {
+        this.fansTime = fansTime;
     }
 
     @Override

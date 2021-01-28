@@ -65,8 +65,22 @@
                 v-if="scope.row.orderType === 'main'"
                 size="mini"
                 type="text"
-                @click="handleOnMenuClick(scope.row)"
+                @click="handleOnDetailClick(scope.row)"
                 >详情</el-button
+              >
+              <el-button
+                v-if="scope.row.orderType === 'main'"
+                size="mini"
+                type="text"
+                @click="handleOnEditClick(scope.row)"
+                >修改</el-button
+              >
+              <el-button
+                v-if="scope.row.orderType === 'main'"
+                size="mini"
+                type="text"
+                @click="handleOnDeleteClick(scope.row)"
+                >删除</el-button
               >
             </template>
           </el-table-column>
@@ -75,16 +89,20 @@
     </el-drawer>
 
     <create-order-dialog ref="cusCreateOrderDialogRef" />
+
+    <order-detail ref="orderDetailRef" />
   </div>
 </template>
 <script>
-import { listOrder } from "@/api/custom/order";
-import CreateOrderDialog from "./createOrderDialog";
+import { listOrder, delOrder } from "@/api/custom/order";
+import OrderEdit from "@/components/OrderEdit";
+import OrderDetail from "@/components/OrderDetail";
 
 export default {
   name: "CustomerOrderDrawer",
   components: {
-    "create-order-dialog": CreateOrderDialog,
+    "create-order-dialog": OrderEdit,
+    "order-detail": OrderDetail,
   },
   data() {
     return {
@@ -144,6 +162,34 @@ export default {
     },
     handleOnClosed() {
       this.data = undefined;
+    },
+    handleOnDetailClick(data) {
+      this.$refs.orderDetailRef.showDialog(data.orderId);
+    },
+    handleOnEditClick(data) {
+      this.$refs.cusCreateOrderDialogRef.showDialog(data, () => {
+        this.fetchOrderList(this.data.id);
+      });
+    },
+    handleOnDeleteClick(data) {
+      const orderIds = data.orderId || this.ids;
+      this.$confirm(
+        '是否确认删除销售订单编号为"' + orderIds + '"的数据项?',
+        "警告",
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+        }
+      )
+        .then(function () {
+          return delOrder(orderIds);
+        })
+        .then(() => {
+          this.fetchOrderList(this.data.id);
+          this.msgSuccess("删除成功");
+        })
+        .catch(function () {});
     },
   },
 };

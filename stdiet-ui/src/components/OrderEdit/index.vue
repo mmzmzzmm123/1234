@@ -239,7 +239,7 @@ import { addOrder, getOptions, updateOrder } from "@/api/custom/order";
 import dayjs from "dayjs";
 
 export default {
-  name: "OrderDialog",
+  name: "OrderEdit",
   props: {
     id: {
       type: String,
@@ -437,11 +437,13 @@ export default {
   },
   methods: {
     showDialog(data, callback) {
-      this.data = data;
+      // this.data = data;
       this.callback = callback;
       this.reset(data);
 
-      this.title = `创建「${data.customer}」客户订单`;
+      this.title = `${data.orderId ? "修改" : "创建"}「${
+        data.customer
+      }」客户订单`;
       this.visible = true;
     },
     /** 提交按钮 */
@@ -457,7 +459,6 @@ export default {
               }
             });
           } else {
-            this.form.status = "0";
             addOrder(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("新增成功");

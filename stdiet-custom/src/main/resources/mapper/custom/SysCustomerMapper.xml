@@ -12,6 +12,7 @@
         <result property="address"    column="address"    />
         <result property="payDate"    column="pay_date"    />
         <result property="startDate"    column="start_date"    />
+        <result property="fansTime" column="fans_time" />
         <result property="purchaseNum"    column="purchase_num"    />
         <result property="payTotal"    column="pay_total"    />
         <result property="mainDietitian"    column="main_dietitian"    />
@@ -27,7 +28,7 @@
     </resultMap>
 
     <sql id="selectSysCustomerVo">
-        select id, name, phone, email, address, pay_date, start_date, purchase_num, pay_total, main_dietitian, assistant_dietitian, after_dietitian, salesman, charge_person, follow_status, create_time, create_by, update_time, update_by from sys_customer
+        select id, name, phone, email, fans_time, address, pay_date, start_date, purchase_num, pay_total, main_dietitian, assistant_dietitian, after_dietitian, salesman, charge_person, follow_status, create_time, create_by, update_time, update_by from sys_customer
     </sql>
 
     <select id="selectSysCustomerList" parameterType="SysCustomer" resultMap="SysCustomerResult">
@@ -48,6 +49,7 @@
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="name != null">name,</if>
             <if test="phone != null">phone,</if>
+            <if test="fansTime != null">fans_time,</if>
             <if test="email != null">email,</if>
             <if test="address != null">address,</if>
             <if test="payDate != null">pay_date,</if>
@@ -68,6 +70,7 @@
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="name != null">#{name},</if>
             <if test="phone != null">#{phone},</if>
+            <if test="fansTime != null">#{fansTime},</if>
             <if test="email != null">#{email},</if>
             <if test="address != null">#{address},</if>
             <if test="payDate != null">#{payDate},</if>
@@ -92,6 +95,7 @@
         <trim prefix="SET" suffixOverrides=",">
             <if test="name != null">name = #{name},</if>
             <if test="phone != null">phone = #{phone},</if>
+            <if test="fansTime != null">fans_time = #{fansTime},</if>
             <if test="email != null">email = #{email},</if>
             <if test="address != null">address = #{address},</if>
             <if test="payDate != null">pay_date = #{payDate},</if>

@@ -227,8 +227,8 @@
 <script>
   import {exportRecipesPlan, getRecipesPlan, listRecipesPlan, updateRecipesPlan} from "@/api/custom/recipesPlan";
   import {getOptions} from "@/api/custom/order";
-  import OrderDialog from './orderDialog';
-  import BodySignDialog from './bodySignDialog';
+  import OrderDetail from '@/components/OrderDetail';
+  import BodySignDetail from '@/components/BodySignDetail';
   import dayjs from 'dayjs';
   import store from "@/store";
 
@@ -295,8 +295,8 @@
 
     },
     components: {
-      "order-dialog": OrderDialog,
-      "body_sign_dialog": BodySignDialog
+      "order-dialog": OrderDetail,
+      "body_sign_dialog": BodySignDetail
     },
     created() {
       getOptions().then(response => {
