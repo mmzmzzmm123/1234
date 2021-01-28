@@ -3,6 +3,7 @@ package com.stdiet.custom.service.impl;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.pdf.*;
+import com.stdiet.common.constant.ContractContants;
 import com.stdiet.common.utils.DateUtils;
 import com.stdiet.common.utils.StringUtils;
 import com.stdiet.custom.domain.SysContract;
@@ -16,6 +17,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 
@@ -123,21 +126,39 @@ public class SysContractServiceImpl implements ISysContractService {
             AcroFields form = stamper.getAcroFields();
 
             form.addSubstitutionFont(BaseFont.createFont("STSong-Light", "UniGB-UCS2-H", BaseFont.NOT_EMBEDDED));
-            form.setField("name", sysContract.getSignName(), true);
-            form.setField("serveTime", sysContract.getServeTimeStr(), true);
-//            form.setField("tutor", sysContract.getTutor(), true);
-            form.setField("moneyUpper", sysContract.getAmountUpper(), true);
-            form.setField("money", sysContract.getAmount().intValue() + "", true);
-            form.setField("phone", sysContract.getPhone(), true);
-            form.setField("promise", sysContract.getServePromise(), true);
-            form.setField("date", DateUtils.getDate(), true);
-//            form.setField("date", sysContract.getSignDate());
-            form.setField("cusId", sysContract.getCusId(), true);
-            if (StringUtils.isNotEmpty(sysContract.getRemark())) {
-                form.setField("remark", "（备注：" + sysContract.getRemark() + ")", true);
+            if(sysContract.getProjectId().intValue() == 0){
+                form.setField("name", sysContract.getSignName(), true);
+                form.setField("serveTime", sysContract.getServeTimeStr(), true);
+                //form.setField("tutor", sysContract.getTutor(), true);
+                form.setField("moneyUpper", sysContract.getAmountUpper(), true);
+                form.setField("money", sysContract.getAmount().intValue() + "", true);
+                form.setField("phone", sysContract.getPhone(), true);
+                form.setField("promise", sysContract.getServePromise(), true);
+                form.setField("date", DateUtils.getDate(), true);
+                //form.setField("date", sysContract.getSignDate());
+                form.setField("cusId", sysContract.getCusId(), true);
+                if (StringUtils.isNotEmpty(sysContract.getRemark())) {
+                    form.setField("remark", "（备注：" + sysContract.getRemark() + ")", true);
+                }
+            }else{
+                form.setField("companyName", ContractContants.companyName, true);
+                form.setField("companyLegalPerson", ContractContants.companyLegalPerson, true);
+                form.setField("name", sysContract.getSignName(), true);
+                form.setField("cusId", sysContract.getCusId(), true);
+                form.setField("phone", sysContract.getPhone(), true);
+                DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                form.setField("expireTime", LocalDate.now().plusMonths(sysContract.getServeTime()/30).format(fmt), true);
+                form.setField("amount", sysContract.getAmount().intValue()+"", true);
+                form.setField("amountCapital", sysContract.getAmountUpper(), true);
+                form.setField("serveTime", sysContract.getServeTime()/30+"", true);
+                form.setField("bankName", ContractContants.bankName, true);
+                form.setField("bankAccount", ContractContants.bankAccount, true);
+                form.setField("hourDay", ContractContants.hourDay, true);
+                form.setField("dayWeek", ContractContants.dayWeek, true);
+                form.setField("replyIntervalTime", ContractContants.replyIntervalTime, true);
+                form.setField("tutor", sysContract.getTutor(), true);
+                form.setField("signTime", DateUtils.getDate(), true);
             }
-
-
             stamper.setFormFlattening(true);// 如果为false那么生成的PDF文件还能编辑，一定要设为true
             stamper.close();
 

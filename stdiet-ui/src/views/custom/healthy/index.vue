@@ -10,7 +10,7 @@
         />
       </el-form-item>
       <el-form-item label="调理项目" prop="conditioningProjectId">
-        <el-select v-model="queryParams.conditioningProjectId" placeholder="请选择">
+        <el-select v-model="queryParams.conditioningProjectId" filterable clearable placeholder="请选择">
           <el-option
             v-for="dict in conditioningProjectIdOption"
             :key="dict.dictValue"
@@ -485,39 +485,49 @@
     </el-dialog>
 
     <!-- 查看详情 -->
-    <el-dialog title="客户健康评估表" v-if="healthyDetailOpen" :visible.sync="healthyDetailOpen" width="1000px" style="overflow: auto;" append-to-body>
-      <div v-for="(item,index) in healthyDetailList" :class="index != 0 ? 'margin-top-20' : ''"  v-show="titleShowArray[index]" style="margin-bottom: 50px;">
+    <el-dialog title="客户健康评估表" v-if="healthyDetailOpen" :visible.sync="healthyDetailOpen" width="1000px" append-to-body>
+      <!-- 基础信息 -->
+      <div v-for="(item,index) in healthyDetailList.slice(0,1)" style="margin-bottom: 50px;">
         <div>
           <p class="p_title_1" style="margin-top: 5px;">{{titleArray[index]}}</p>
-          <TableDetailMessage :data="item" v-if="index != healthyDetailList.length-1"></TableDetailMessage>
-          <el-table :show-header="false" v-if="index == healthyDetailList.length-1" :data="item" border :cell-style="columnStyle" style="width: 100%;">
-            <el-table-column width="140" prop="attr_name_one">
-            </el-table-column>
-            <el-table-column prop="value_one">
-              <template slot-scope="scope">
-                <AutoHideMessage :data="scope.row.value_one == null ? '' : (scope.row.value_one+'')" :maxLength="20"/>
-                <el-button type="primary" v-show="scope.row.value_one" @click="downloadFile(medicalReportPathArray[0])">下载</el-button>
-              </template>
-            </el-table-column>
-            <el-table-column width="140" prop="attr_name_two"></el-table-column>
-            <el-table-column prop="value_two">
-              <template slot-scope="scope">
-                <AutoHideMessage :data="scope.row.value_two == null ? '' : (scope.row.value_two+'')" :maxLength="20"/>
-                <el-button type="primary" v-show="scope.row.value_two" @click="downloadFile(medicalReportPathArray[1])">下载</el-button>
-              </template>
-            </el-table-column>
-            <el-table-column width="140" prop="attr_name_three"></el-table-column>
-            <el-table-column prop="value_three">
-              <template slot-scope="scope">
-                <AutoHideMessage :data="scope.row.value_three == null ? '' : (scope.row.value_three+'')" :maxLength="20"/>
-                <el-button type="primary" v-show="scope.row.value_three" @click="downloadFile(medicalReportPathArray[2])">下载</el-button>
-              </template>
-            </el-table-column>
-          </el-table>
+          <TableDetailMessage :data="item" ></TableDetailMessage>
         </div>
-        <div style="float:right;margin-top:25px;" v-if="index == (groupShowArray[avtiveStep - 1][groupShowArray[avtiveStep - 1].length-1] - 1)">
-          <el-button @click="nextStep(avtiveStep - 1)" v-show="avtiveStep != 1">上一页</el-button>
-          <el-button type="primary" @click="nextStep(avtiveStep + 1)" v-show="avtiveStep != groupShowArray.length">下一页</el-button>
+      </div>
+      <!-- 剩余其他信息 -->
+      <div style="height:400px;overflow: auto">
+        <div v-for="(item,index) in healthyDetailList.slice(1,10)" v-show="titleShowArray[index]" style="margin-bottom: 50px;">
+          <div>
+            <p class="p_title_1" style="margin-top: 5px;">{{titleArray[index+1]}}</p>
+            <TableDetailMessage :data="item" v-if="index != healthyDetailList.length-2"></TableDetailMessage>
+            <el-table :show-header="false" v-if="index == healthyDetailList.length-2" :data="item" border :cell-style="columnStyle" style="width: 100%;">
+              <el-table-column width="140" prop="attr_name_one">
+              </el-table-column>
+              <el-table-column prop="value_one">
+                <template slot-scope="scope">
+                  <AutoHideMessage :data="scope.row.value_one == null ? '' : (scope.row.value_one+'')" :maxLength="20"/>
+                  <el-button type="primary" v-show="scope.row.value_one" @click="downloadFile(medicalReportPathArray[0])">下载</el-button>
+                </template>
+              </el-table-column>
+              <el-table-column width="140" prop="attr_name_two"></el-table-column>
+              <el-table-column prop="value_two">
+                <template slot-scope="scope">
+                  <AutoHideMessage :data="scope.row.value_two == null ? '' : (scope.row.value_two+'')" :maxLength="20"/>
+                  <el-button type="primary" v-show="scope.row.value_two" @click="downloadFile(medicalReportPathArray[1])">下载</el-button>
+                </template>
+              </el-table-column>
+              <el-table-column width="140" prop="attr_name_three"></el-table-column>
+              <el-table-column prop="value_three">
+                <template slot-scope="scope">
+                  <AutoHideMessage :data="scope.row.value_three == null ? '' : (scope.row.value_three+'')" :maxLength="20"/>
+                  <el-button type="primary" v-show="scope.row.value_three" @click="downloadFile(medicalReportPathArray[2])">下载</el-button>
+                </template>
+              </el-table-column>
+            </el-table>
+          </div>
+          <!--<div style="float:right;margin-top:25px;" v-if="index == (groupShowArray[avtiveStep - 1][groupShowArray[avtiveStep - 1].length-1] - 1)">
+            <el-button @click="nextStep(avtiveStep - 1)" v-show="avtiveStep != 1">上一页</el-button>
+            <el-button type="primary" @click="nextStep(avtiveStep + 1)" v-show="avtiveStep != groupShowArray.length">下一页</el-button>
+          </div>-->
         </div>
       </div>
     </el-dialog>
@@ -537,7 +547,7 @@
         //title
         titleArray: healthyData['titleArray'],
         //每个模块显示
-        titleShowArray:[true,true,false,false,false,false,false,false,false],
+        titleShowArray:[true,true,true,true,true,true,true,true,true],
         //分组
         groupShowArray:[[1],[2,3],[4],[5,6],[7,8],[9]],
         //当前页码
@@ -680,7 +690,7 @@
       handleLookDetail(row) {
         const id = row.id || this.ids
         getHealthy(id).then(response => {
-          this.nextStep(1);
+          //this.nextStep(1);
           let detailHealthy = this.dealHealthy(response.data);
           //性别
           detailHealthy.sex = detailHealthy.sex == 0 ?  "男" : (detailHealthy.sex == 1 ? "女" : "未知");
@@ -769,10 +779,10 @@
           let physicalSigns = "";
           if(detailHealthy.signList != null && detailHealthy.signList.length > 0){
             detailHealthy.signList.forEach(function (sign, index) {
-              physicalSigns += "," + sign.name;
+              physicalSigns += "，" + sign.name;
             })
           }
-          physicalSigns += "," + (detailHealthy.otherPhysicalSigns ? detailHealthy.otherPhysicalSigns : "");
+          physicalSigns += "，" + (detailHealthy.otherPhysicalSigns ? detailHealthy.otherPhysicalSigns : "");
           detailHealthy.physicalSigns = this.trimComma(physicalSigns);
 
           detailHealthy.familyIllnessHistory += detailHealthy.otherFamilyIllnessHistory ? ("，" + detailHealthy.otherFamilyIllnessHistory) : "";
@@ -784,6 +794,7 @@
 
           detailHealthy.allergyFlag = detailHealthy.allergyFlag == 1 ? "有" : "无";
           detailHealthy.allergen += detailHealthy.otherAllergen ? ("，" +detailHealthy.otherAllergen) : "";
+          detailHealthy.allergen = this.trimComma(detailHealthy.allergen);
 
           let medicalReportPathArray = detailHealthy.medicalReport ? detailHealthy.medicalReport.split(",") : [];
           let medicalReportNameArray = detailHealthy.medicalReportName ? detailHealthy.medicalReportName.split(",") : [];
