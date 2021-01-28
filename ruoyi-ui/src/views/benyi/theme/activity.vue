@@ -150,22 +150,22 @@
           </el-select>
         </el-form-item>
         <el-form-item label="活动目标" prop="target">
-          <Editor v-model="form.target" />
+          <Editor v-model="form.target" :quillIndex="0" toref="Editora"/>
         </el-form-item>
         <el-form-item label="活动材料" prop="data">
-          <Editor v-model="form.data" />
+          <Editor v-model="form.data" :quillIndex="1" toref="Editora"/>
         </el-form-item>
         <el-form-item label="活动过程" prop="process">
-          <Editor v-model="form.process" />
+          <Editor v-model="form.process" :quillIndex="2" toref="Editora"/>
         </el-form-item>
         <el-form-item label="活动建议" prop="proposal">
-          <Editor v-model="form.proposal" />
+          <Editor v-model="form.proposal" :quillIndex="3" toref="Editora"/>
         </el-form-item>
         <el-form-item label="活动反思" prop="reflect">
-          <Editor v-model="form.reflect" />
+          <Editor v-model="form.reflect" :quillIndex="4" toref="Editora"/>
         </el-form-item>
         <el-form-item label="活动附录" prop="appendix">
-          <Editor v-model="form.appendix" />
+          <Editor v-model="form.appendix" :quillIndex="5" toref="Editora"/>
         </el-form-item>
         <el-form-item label="序号" prop="sort">
           <el-input-number v-model="form.sort" controls-position="right" :min="0" />
