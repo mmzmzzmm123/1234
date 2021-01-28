@@ -224,6 +224,11 @@ public class SysOrder extends BaseEntity {
      * */
     private List<SysOrderPause> orderPauseList;
 
+    /**
+     * 订单金额状态 0订单金额大于等于0  1订单金额小于0
+     */
+    private Integer amountFlag;
+
     @JsonFormat(pattern = "yyyy-MM-dd")
     public Date getStartTime() {
         return startTime;
@@ -589,5 +594,13 @@ public class SysOrder extends BaseEntity {
 
     public void setConditioningProject(String conditioningProject) {
         this.conditioningProject = conditioningProject;
+    }
+
+    public Integer getAmountFlag() {
+        return amountFlag;
+    }
+
+    public void setAmountFlag(Integer amountFlag) {
+        this.amountFlag = amountFlag;
     }
 }
