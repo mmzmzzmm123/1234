@@ -1,29 +1,21 @@
 package com.stdiet.web.controller.custom;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.stdiet.common.utils.StringUtils;
-import com.stdiet.custom.domain.SysCustomerPhysicalSigns;
-import com.stdiet.custom.domain.SysPhysicalSigns;
-
-import com.stdiet.common.utils.bean.ObjectUtils;
-import com.stdiet.custom.domain.SysRecipesPlan;
-import com.stdiet.custom.dto.request.CustomerInvestigateRequest;
-import com.stdiet.custom.dto.response.CustomerListResponse;
-import com.stdiet.custom.service.ISysCustomerPhysicalSignsService;
-import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
 import com.stdiet.common.annotation.Log;
 import com.stdiet.common.core.controller.BaseController;
 import com.stdiet.common.core.domain.AjaxResult;
-import com.stdiet.common.enums.BusinessType;
-import com.stdiet.custom.domain.SysCustomer;
-import com.stdiet.custom.service.ISysCustomerService;
-import com.stdiet.common.utils.poi.ExcelUtil;
 import com.stdiet.common.core.page.TableDataInfo;
+import com.stdiet.common.enums.BusinessType;
+import com.stdiet.common.utils.StringUtils;
+import com.stdiet.common.utils.poi.ExcelUtil;
+import com.stdiet.custom.domain.SysCustomer;
+import com.stdiet.custom.domain.SysCustomerPhysicalSigns;
+import com.stdiet.custom.service.ISysCustomerPhysicalSignsService;
+import com.stdiet.custom.service.ISysCustomerService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * 客户体征信息Controller
@@ -33,8 +25,7 @@ import com.stdiet.common.core.page.TableDataInfo;
  */
 @RestController
 @RequestMapping("/custom/customer")
-public class SysCustomerController extends BaseController
-{
+public class SysCustomerController extends BaseController {
     @Autowired
     private ISysCustomerService sysCustomerService;
 
@@ -46,13 +37,12 @@ public class SysCustomerController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('custom:customer:list')")
     @GetMapping("/list")
-    public TableDataInfo list(SysCustomerPhysicalSigns sysCustomerPhysicalSigns)
-    {
+    public TableDataInfo list(SysCustomer sysCustomer) {
         startPage();
-        List<SysCustomerPhysicalSigns> list = sysCustomerPhysicalSignsService.selectSysCustomerAndSignList(sysCustomerPhysicalSigns);
-        if(list != null && list.size() > 0){
-            for(SysCustomerPhysicalSigns sysCus : list){
-                if(StringUtils.isNotEmpty(sysCus.getPhone())){
+        List<SysCustomer> list = sysCustomerService.selectSysCustomerList(sysCustomer);
+        if (list != null && list.size() > 0) {
+            for (SysCustomer sysCus : list) {
+                if (StringUtils.isNotEmpty(sysCus.getPhone())) {
                     sysCus.setPhone(StringUtils.hiddenPhoneNumber(sysCus.getPhone()));
                 }
             }
@@ -64,32 +54,12 @@ public class SysCustomerController extends BaseController
      * 导出客户信息列表
      */
     @PreAuthorize("@ss.hasPermi('custom:customer:export')")
-    @Log(title = "客户体征", businessType = BusinessType.EXPORT)
+    @Log(title = "客户档案", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
-    public AjaxResult export(SysCustomerPhysicalSigns sysCustomerPhysicalSigns) throws Exception
-    {
-        List<SysCustomerPhysicalSigns> list = sysCustomerPhysicalSignsService.selectSysCustomerAndSignList(sysCustomerPhysicalSigns);
-        List<CustomerListResponse> responsesList = new ArrayList<>();
-        CustomerListResponse customerListResponse = null;
-        for(SysCustomerPhysicalSigns sysCus : list){
-            customerListResponse = ObjectUtils.getObjectByObject(sysCus, CustomerListResponse.class);
-            customerListResponse.setCreateTime(sysCus.getCreateTime());
-            if(StringUtils.isNotEmpty(sysCus.getPhone())){
-                customerListResponse.setPhone(StringUtils.hiddenPhoneNumber(sysCus.getPhone()));
-            }
-            StringBuilder signStr = new StringBuilder();
-            if(sysCus.getSignList() != null && sysCus.getSignList().size() > 0){
-                int i = 0;
-                for (SysPhysicalSigns s : sysCus.getSignList()) {
-                    signStr.append((i != 0 ? "，" : "") + s.getName());
-                    i++;
-                }
-            }
-            customerListResponse.setPhysicalSignsId(signStr.toString());
-            responsesList.add(customerListResponse);
-        }
-        ExcelUtil<CustomerListResponse> util = new ExcelUtil<CustomerListResponse>(CustomerListResponse.class);
-        return util.exportExcel(responsesList, "客户体征数据");
+    public AjaxResult export(SysCustomer sysCustomer) throws Exception {
+        List<SysCustomer> list = sysCustomerService.selectSysCustomerList(sysCustomer);
+        ExcelUtil<SysCustomer> util = new ExcelUtil<SysCustomer>(SysCustomer.class);
+        return util.exportExcel(list, "customerCenter");
     }
 
     /**
@@ -97,42 +67,38 @@ public class SysCustomerController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('custom:customer:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
-    {
-        return AjaxResult.success(sysCustomerPhysicalSignsService.selectSysCustomerPhysicalSignsById(id));
+    public AjaxResult getInfo(@PathVariable("id") Long id) {
+        return AjaxResult.success(sysCustomerService.selectSysCustomerById(id));
     }
 
     /**
      * 新增客户信息
      */
     @PreAuthorize("@ss.hasPermi('custom:customer:add')")
-    @Log(title = "客户体征", businessType = BusinessType.INSERT)
+    @Log(title = "客户档案", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody CustomerInvestigateRequest customerInvestigateRequest) throws Exception
-    {
-        return sysCustomerPhysicalSignsService.addOrupdateCustomerAndSign(customerInvestigateRequest);
+    public AjaxResult add(@RequestBody SysCustomer sysCustomer) throws Exception {
+        return toAjax(sysCustomerService.insertSysCustomer(sysCustomer));
     }
 
     /**
      * 修改客户信息
      */
     @PreAuthorize("@ss.hasPermi('custom:customer:edit')")
-    @Log(title = "客户体征", businessType = BusinessType.UPDATE)
+    @Log(title = "客户档案", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody CustomerInvestigateRequest customerInvestigateRequest) throws Exception
-    {
-        return sysCustomerPhysicalSignsService.addOrupdateCustomerAndSign(customerInvestigateRequest);
+    public AjaxResult edit(@RequestBody SysCustomer sysCustomer) throws Exception {
+        return toAjax(sysCustomerService.updateSysCustomer(sysCustomer));
     }
 
     /**
      * 删除客户信息
      */
     @PreAuthorize("@ss.hasPermi('custom:customer:remove')")
-    @Log(title = "客户体征", businessType = BusinessType.DELETE)
+    @Log(title = "客户档案", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
-    {
-        return toAjax(sysCustomerPhysicalSignsService.deleteSysCustomerPhysicalSignsByIds(ids));
+    public AjaxResult remove(@PathVariable Long[] ids) {
+        return toAjax(sysCustomerService.deleteSysCustomerByIds(ids));
     }
 
     /**
@@ -142,7 +108,7 @@ public class SysCustomerController extends BaseController
     @PreAuthorize("@ss.hasPermi('custom:customer:query')")
     public AjaxResult getCustomerAndSignByPhone(@RequestParam("phone")String phone)
     {
-        SysCustomerPhysicalSigns  sysCustomer = null;
+        SysCustomerPhysicalSigns sysCustomer = null;
         if(StringUtils.isNotEmpty(phone)){
            sysCustomer = sysCustomerPhysicalSignsService.selectSysCustomerAndSignByPhone(phone);
         }

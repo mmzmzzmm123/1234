@@ -25,6 +25,8 @@ public class SysOrder extends BaseEntity {
     @Excel(name = "编号")
     private Long orderId;
 
+    private Long cusId;
+
     /**
      * 客户姓名
      */
@@ -223,6 +225,14 @@ public class SysOrder extends BaseEntity {
      * 订单暂停记录 非持久化字段
      * */
     private List<SysOrderPause> orderPauseList;
+
+    public Long getCusId() {
+        return cusId;
+    }
+
+    public void setCusId(Long cusId) {
+        this.cusId = cusId;
+    }
 
     @JsonFormat(pattern = "yyyy-MM-dd")
     public Date getStartTime() {

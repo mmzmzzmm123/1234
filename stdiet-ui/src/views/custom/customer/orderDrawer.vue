@@ -1,0 +1,155 @@
+<template>
+  <div>
+    <el-drawer
+      :title="title"
+      :close-on-press-escape="false"
+      :visible.sync="visible"
+      @closed="handleOnClosed"
+      size="40%"
+    >
+      <div class="app-container">
+        <el-row :gutter="10" class="mb8">
+          <el-col :span="1.5">
+            <el-button
+              type="primary"
+              icon="el-icon-plus"
+              size="mini"
+              @click="handleAdd"
+              >创建订单
+            </el-button>
+          </el-col>
+        </el-row>
+
+        <el-table
+          :data="orderList"
+          row-key="orderId"
+          default-expand-all
+          :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
+        >
+          <el-table-column
+            label="审核状态"
+            prop="reviewStatus"
+            align="center"
+            width="120"
+          >
+            <template slot-scope="scope">
+              <el-tag
+                v-if="scope.row.orderType === 'main'"
+                :type="scope.row.reviewStatus === 'yes' ? 'success' : 'danger'"
+                disable-transitions
+              >
+                {{ scope.row.reviewStatus === "yes" ? "已审核" : "未审核" }}
+              </el-tag>
+              <el-tag
+                v-if="scope.row.orderType === 'virtual'"
+                disable-transitions
+              >
+                分单
+              </el-tag>
+            </template>
+          </el-table-column>
+          <el-table-column
+            label="成交时间"
+            prop="orderTime"
+            align="center"
+          ></el-table-column>
+          <el-table-column
+            label="成交金额"
+            prop="amount"
+            align="center"
+          ></el-table-column>
+          <el-table-column label="服务时长" prop="serveTime" align="center" />
+          <el-table-column label="操作" align="center" width="120px">
+            <template slot-scope="scope">
+              <el-button
+                v-if="scope.row.orderType === 'main'"
+                size="mini"
+                type="text"
+                @click="handleOnMenuClick(scope.row)"
+                >详情</el-button
+              >
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
+    </el-drawer>
+
+    <create-order-dialog ref="cusCreateOrderDialogRef" />
+  </div>
+</template>
+<script>
+import { listOrder } from "@/api/custom/order";
+import CreateOrderDialog from "./createOrderDialog";
+
+export default {
+  name: "CustomerOrderDrawer",
+  components: {
+    "create-order-dialog": CreateOrderDialog,
+  },
+  data() {
+    return {
+      visible: false,
+      title: "",
+      data: undefined,
+      orderList: [],
+    };
+  },
+  methods: {
+    showDrawer(data) {
+      // console.log(data);
+      this.data = data;
+      if (!this.data) {
+        return;
+      }
+      this.title = `「${this.data.name}」订单列表`;
+      this.fetchOrderList(data.id);
+    },
+    fetchOrderList(cusId) {
+      listOrder({ cusId }).then((res) => {
+        this.orderList = res.rows.reduce((arr, cur) => {
+          const tarOrder = arr.find((ord) => ord.startTime === cur.startTime);
+          if (tarOrder) {
+            const firstObj = JSON.parse(JSON.stringify(tarOrder));
+            tarOrder.children = [
+              { ...firstObj, orderType: "main" },
+              { ...cur, orderType: "main" },
+            ];
+            tarOrder.amount += cur.amount;
+            tarOrder.orderId += cur.orderId;
+            tarOrder.orderType = "virtual";
+          } else {
+            cur.orderType = "main";
+            arr.push(cur);
+          }
+          return arr;
+        }, []);
+
+        this.visible = true;
+      });
+    },
+    handleAdd() {
+      this.$refs.cusCreateOrderDialogRef.showDialog(
+        {
+          customer: this.data.name,
+          cusId: this.data.id,
+          preSaleId: this.data.salesman,
+          afterSaleId: this.data.afterDietitian,
+          nutritionistId: this.data.mainDietitian,
+          nutriAssisId: this.data.assistantDietitian,
+        },
+        () => {
+          this.fetchOrderList(this.data.id);
+        }
+      );
+    },
+    handleOnClosed() {
+      this.data = undefined;
+    },
+  },
+};
+</script>
+<style  lang="scss" scoped>
+/deep/ :focus {
+  outline: 0;
+}
+</style>

@@ -35,6 +35,7 @@
         where del_flag = 0
         <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
         <if test="phone != null  and phone != ''"> and phone like concat('%', #{phone}, '%')</if>
+        order by create_time desc
     </select>
 
     <select id="selectSysCustomerById" parameterType="Long" resultMap="SysCustomerResult">

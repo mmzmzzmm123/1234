@@ -51,11 +51,11 @@
           icon="el-icon-search"
           size="mini"
           @click="handleQuery"
-          >搜索</el-button
-        >
+          >搜索
+        </el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
-          >重置</el-button
-        >
+          >重置
+        </el-button>
       </el-form-item>
     </el-form>
 
@@ -159,7 +159,13 @@
     />
 
     <!-- 添加或修改菜品对话框 -->
-    <el-drawer :title="title" :visible.sync="open" size="50%">
+    <el-drawer
+      :title="title"
+      :visible.sync="open"
+      size="50%"
+      :close-on-press-escape="false"
+      :close-on-click-modal="false"
+    >
       <div class="drawer_content">
         <el-row class="content_detail">
           <el-form ref="form" :model="form" :rules="rules" label-width="80px">
@@ -241,7 +247,7 @@
                   :summary-method="getSummaries"
                   style="width: 100%"
                 >
-                  <el-table-column prop="name" label="食材"> </el-table-column>
+                  <el-table-column prop="name" label="食材"></el-table-column>
                   <el-table-column label="通俗计量">
                     <template slot-scope="scope">
                       <span class="cus-unit">
@@ -503,7 +509,7 @@ export default {
         updateBy: null,
         updateTime: null,
         igdList: [],
-        isMain: 0
+        isMain: 0,
       };
       this.selIngIds = [];
       this.selIngList = [];
@@ -734,7 +740,11 @@ export default {
 };
 </script>
 
-<style>
+<style  lang="scss" scoped>
+/deep/ :focus {
+  outline: 0;
+}
+
 .el-transfer-panel__filter {
   margin: 2px;
 }

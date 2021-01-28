@@ -7,6 +7,7 @@
     <resultMap type="SysOrder" id="SysOrderResult">
         <result property="orderId" column="order_id"/>
         <result property="customer" column="customer"/>
+        <result property="cusId" column="cus_id"/>
         <result property="phone" column="phone"/>
         <result property="amount" column="amount"/>
         <result property="weight" column="weight"/>
@@ -46,7 +47,7 @@
     </resultMap>
 
     <sql id="selectSysOrderVo">
-        select o.order_id, o.review_status, o.customer, o.phone, o.amount, o.start_time, o.pause_time, o.status, o.weight, ser.dict_label as serve_time,
+        select o.order_id, o.review_status, o.cus_id, o.customer, o.phone, o.amount, o.start_time, o.pause_time, o.status, o.weight, ser.dict_label as serve_time,
         o.serve_time_id, o.pay_type_id, pay.dict_label as pay_type, o.pre_sale_id, o.create_by, o.create_time, o.after_sale_id, o.update_by, o.update_time,
         o.nutritionist_id, o.remark, o.nutri_assis_id, o.account_id, acc.dict_label as account, o.planner_id, o.planner_assis_id, o.operator_id, o.operator_assis_id,
         o.recommender, o.order_time,o.give_serve_day,o.conditioning_project_id,cp.dict_label as conditioning_project,o.server_end_time,o.become_fan_time from sys_order o
@@ -61,6 +62,7 @@
         <where>
             <if test="orderId != null  and orderId != ''">and order_id = #{orderId}</if>
             <if test="customer != null  and customer != ''">and customer = #{customer}</if>
+            <if test="cusId != null  and cusId != ''">and cus_id = #{cusId}</if>
             <if test="phone != null  and phone != ''">and phone = #{phone}</if>
             <if test="status != null ">and status = #{status}</if>
             <if test="payTypeId != null ">and pay_type_id = #{payTypeId}</if>
@@ -87,6 +89,7 @@
         <where>
             <if test="orderId != null  and orderId != ''">and order_id = #{orderId}</if>
             <if test="customer != null  and customer != ''">and customer = #{customer}</if>
+            <if test="cusId != null  and cusId != ''">and cus_id = #{cusId}</if>
             <if test="phone != null  and phone != ''">and phone = #{phone}</if>
             <if test="status != null ">and status = #{status}</if>
             <if test="payTypeId != null ">and pay_type_id = #{payTypeId}</if>
@@ -118,6 +121,7 @@
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="orderId != null and orderId != ''">order_id,</if>
             <if test="customer != null and customer != ''">customer,</if>
+            <if test="cusId != null">cus_id,</if>
             <if test="phone != null">phone,</if>
             <if test="amount != null">amount,</if>
             <if test="status != null">status,</if>
@@ -151,6 +155,7 @@
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="orderId != null and orderId != ''">#{orderId},</if>
             <if test="customer != null and customer != ''">#{customer},</if>
+            <if test="cusId != null">#{cusId},</if>
             <if test="phone != null">#{phone},</if>
             <if test="amount != null">#{amount},</if>
             <if test="status != null">#{status},</if>
@@ -187,6 +192,7 @@
         update sys_order
         <trim prefix="SET" suffixOverrides=",">
             <if test="customer != null and customer != ''">customer = #{customer},</if>
+            <if test="cusId != null">cus_id = #{cusId},</if>
             <if test="phone != null">phone = #{phone},</if>
             <if test="amount != null">amount = #{amount},</if>
             <if test="weight != null">weight = #{weight},</if>
@@ -234,6 +240,7 @@
     <resultMap type="SysOrder" id="SysOrderResultExtended">
         <result property="orderId" column="order_id"/>
         <result property="customer" column="customer"/>
+        <result property="cusId" column="cus_id"/>
         <result property="phone" column="phone"/>
         <result property="amount" column="amount"/>
         <result property="weight" column="weight"/>
