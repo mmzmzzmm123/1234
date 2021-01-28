@@ -107,16 +107,23 @@
         <result property="crux"    column="crux"    />
         <result property="dishesIngredient"    column="dishes_ingredient"    />
         <result property="makeFoodType"    column="make_food_type"    />
+        <result property="physicalSignsId"    column="physical_signs_id"    />
+        <result property="otherPhysicalSigns"    column="other_physical_signs"    />
+        <result property="bloodData"    column="blood_data"    />
+        <result property="moistureDate"    column="moisture_date"    />
         <result property="createTime"    column="create_time"    />
         <result property="createBy"    column="create_by"    />
         <result property="updateTime"    column="update_time"    />
         <result property="updateBy"    column="update_by"    />
         <result property="delFlag"    column="del_flag"    />
+        <!-- column是传的参数, select是调用的查询 -->
+        <association property="signList" column="physical_signs_id" select="getSignByIds"/>
     </resultMap>
 
     <sql id="selectSysCustomerHealthyVo">
         select sch.id, customer_id, conditioning_project_id, sex, age, weight, tall, condiment, other_condiment, cooking_style, cooking_style_rate, wash_vegetables_style, other_wash_vegetables_style, breakfast_type, breakfast_food, lunch_type, dinner, vegetable_rate, common_meat, dinner_time, supper_num, supper_food, diet_hot_and_cold, diet_flavor, vegetables_num, vegetables_rate_type, fruits_num, fruits_time, fruits_rate, rice_num, rice_full, eating_speed, snacks, other_snacks, health_products_flag, health_products_brand, health_products_name, health_products_week_rate, health_products_day_rate, water_num, water_type, water_habit, drinks_num, drink_wine_flag, drink_wine_classify, other_wine_classify, drink_wine_amount, smoke_flag, smoke_rate, second_smoke, work_industry, work_type, defecation_num, other_defecation_num, defecation_time, defecation_shape, defecation_smell, defecation_speed, defecation_color, motion_num, motion_duration, motion_time, aerobic_motion_classify, anaerobic_motion_classify, anaerobic_aerobic_motion_classify, other_motion_classify, motion_field, other_motion_field, sleep_time, sleep_quality, sleep_drug_flag, sleep_drug, stayup_late_flag, stayup_late_week_num, family_illness_history, other_family_illness_history, operation_history, other_operation_history, near_operation_flag, recoverye_situation, long_eat_drug_flag, long_eat_drug_classify, other_long_eat_drug_classify, allergy_flag, allergy_situation, allergen, other_allergen, medical_report, medical_report_name,
-        position,experience,rebound,difficulty,crux,dishes_ingredient,make_food_type,sch.create_time, sch.create_by,sch. update_time, sch.update_by, sch.del_flag
+        position,experience,rebound,difficulty,crux,dishes_ingredient,make_food_type,physical_signs_id,other_physical_signs,blood_data,moisture_date,
+        sch.create_time, sch.create_by,sch. update_time, sch.update_by, sch.del_flag
     </sql>
 
     <select id="selectSysCustomerHealthyList" parameterType="SysCustomerHealthy" resultMap="SysCustomerHealthyResult">
@@ -137,6 +144,7 @@
         from sys_customer_healthy as sch
         left join sys_customer sc on sc.id = sch.customer_id
         LEFT JOIN (SELECT dict_label, dict_value FROM sys_dict_data WHERE dict_type = 'conditioning_project') AS cp ON cp.dict_value = sch.conditioning_project_id
+
         where sch.del_flag = 0 and sc.del_flag = 0 and sch.id = #{id}
     </select>
 
@@ -239,6 +247,10 @@
             <if test="crux != null">crux,</if>
             <if test="dishesIngredient != null">dishes_ingredient,</if>
             <if test="makeFoodType != null">make_food_type,</if>
+            <if test="physicalSignsId != null">physical_signs_id,</if>
+            <if test="otherPhysicalSigns != null">other_physical_signs,</if>
+            <if test="bloodData != null">blood_data,</if>
+            <if test="moistureDate != null">moisture_date,</if>
             <if test="createTime != null">create_time,</if>
             <if test="createBy != null">create_by,</if>
             <if test="updateTime != null">update_time,</if>
@@ -342,6 +354,10 @@
             <if test="crux != null">#{crux},</if>
             <if test="dishesIngredient != null">#{dishesIngredient},</if>
             <if test="makeFoodType != null">#{makeFoodType},</if>
+            <if test="physicalSignsId != null">#{physicalSignsId},</if>
+            <if test="otherPhysicalSigns != null">#{otherPhysicalSigns},</if>
+            <if test="bloodData != null">#{bloodData},</if>
+            <if test="moistureDate != null">#{moistureDate},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="createBy != null">#{createBy},</if>
             <if test="updateTime != null">#{updateTime},</if>
@@ -448,6 +464,10 @@
             <if test="crux != null">crux = #{crux},</if>
             <if test="dishesIngredient != null">dishes_ingredient = #{dishesIngredient},</if>
             <if test="makeFoodType != null">make_food_type = #{makeFoodType},</if>
+            <if test="physicalSignsId != null">physical_signs_id = #{physicalSignsId},</if>
+            <if test="otherPhysicalSigns != null">other_physical_signs = #{otherPhysicalSigns},</if>
+            <if test="bloodData != null">blood_data = #{bloodData},</if>
+            <if test="moistureDate != null">moisture_date = #{moistureDate},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
@@ -467,6 +487,11 @@
             #{id}
         </foreach>
     </update>
+
+    <!-- 根据体征id获取体征 -->
+    <select id="getSignByIds" parameterType="String" resultType="SysPhysicalSigns">
+        select * from sys_physical_signs sps where FIND_IN_SET(id, #{physical_signs_id})
+    </select>
 
     <!-- 根据手机号查询客户健康评估信息 -->
     <select id="selectSysCustomerHealthyByPhone" parameterType="String" resultMap="SysCustomerHealthyResult">

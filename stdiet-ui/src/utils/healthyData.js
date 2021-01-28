@@ -47,7 +47,7 @@ export const dinnerArray = [
 ]
 
 export const dietHotAndColdArray = [
-  {"name":"偏冷食","value":"1"},{"name":"偏冷食","value":"2"},{"name":"正常","value":"3"}
+  {"name":"偏冷食","value":"1"},{"name":"偏热食","value":"2"},{"name":"正常","value":"3"}
 ]
 
 export const dietFlavorArray = [
@@ -130,7 +130,7 @@ export const anaerobicAerobicMotionClassifyArray = [
 ]
 
 export const  motionFieldArray = [
-  {"name":"居家","value": "1"},{"name":"健身房","value": "2"},{"name":"户外","value": "3"}, {"name":"健身房","value": "4"}
+  {"name":"居家","value": "1"},{"name":"健身房","value": "2"},{"name":"户外","value": "3"}, {"name":"瑜伽馆","value": "4"}
 ]
 
 export const sleepQualityArray = [
@@ -180,7 +180,8 @@ export const arrayName = [
   "condiment","cookingStyle","cookingStyleRate", "washVegetablesStyle","lunchType","dinner","dietFlavor",
   "snacks","waterType","waterHabit","drinksNum","drinkWineClassify","drinkWineAmount","smokeRate",
   "workType","defecationTime","aerobicMotionClassify","anaerobicMotionClassify","anaerobicAerobicMotionClassify",
-  "motionField","sleepQuality", "familyIllnessHistory", "operationHistory", "longEatDrugClassify", "allergen", "medicalReport"
+  "motionField","sleepQuality", "physicalSignsId","moistureDate","bloodData","familyIllnessHistory", "operationHistory", "longEatDrugClassify", "allergen",
+  "medicalReport","medicalReportName"
 ]
 
 //需要将数字下标转成中文含义的属性名

@@ -607,6 +607,7 @@
             ["辅助睡眠类药物名称","是否经常熬夜","熬夜频次"]
           ],
           [
+            ["病史体征","湿气数据","气血数据"],
             ["家族疾病史","手术史","近期是否做过手术"],
             ["手术恢复情况","是否长期服用药物","长期服用的药物"],
             ["是否出现过过敏症状","过敏症状","过敏源"]
@@ -642,6 +643,7 @@
             ["sleepDrug","stayupLateFlag","stayupLateWeekNum"]
           ],
           [
+            ["physicalSigns","moistureDate","bloodData"],
             ["familyIllnessHistory","operationHistory","nearOperationFlag"],
             ["recoveryeSituation","longEatDrugFlag","longEatDrugClassify"],
             ["allergyFlag","allergySituation","allergen"]
@@ -757,12 +759,22 @@
              motionStr += item ? ((motionStr != "" ? "，" : "") + item) : "";
             });
          }
-          detailHealthy.motion =  motionStr + (detailHealthy.otherMotionClassify ? ( "，"+ detailHealthy.otherMotionClassify) : "");
+          detailHealthy.motion =  this.trimComma(motionStr + (detailHealthy.otherMotionClassify ? ( "，"+ detailHealthy.otherMotionClassify) : ""));
           detailHealthy.motionField += detailHealthy.otherMotionField ? ("，"+detailHealthy.otherMotionField) : "";
 
           detailHealthy.sleepDrugFlag = detailHealthy.sleepDrugFlag == 1 ? "有" : "无";
           detailHealthy.stayupLateFlag = detailHealthy.stayupLateFlag == 1 ? "有" : "无";
           detailHealthy.stayupLateWeekNum += "次/周";
+
+          let physicalSigns = "";
+          if(detailHealthy.signList != null && detailHealthy.signList.length > 0){
+            detailHealthy.signList.forEach(function (sign, index) {
+              physicalSigns += "," + sign.name;
+            })
+          }
+          physicalSigns += "," + (detailHealthy.otherPhysicalSigns ? detailHealthy.otherPhysicalSigns : "");
+          detailHealthy.physicalSigns = this.trimComma(physicalSigns);
+
           detailHealthy.familyIllnessHistory += detailHealthy.otherFamilyIllnessHistory ? ("，" + detailHealthy.otherFamilyIllnessHistory) : "";
           detailHealthy.operationHistory += detailHealthy.otherOperationHistory ? ("，" + detailHealthy.otherOperationHistory) : "";
           detailHealthy.nearOperationFlag = detailHealthy.nearOperationFlag == 1 ? "有" : "无";
@@ -774,10 +786,11 @@
           detailHealthy.allergen += detailHealthy.otherAllergen ? ("，" +detailHealthy.otherAllergen) : "";
 
           let medicalReportPathArray = detailHealthy.medicalReport ? detailHealthy.medicalReport.split(",") : [];
+          let medicalReportNameArray = detailHealthy.medicalReportName ? detailHealthy.medicalReportName.split(",") : [];
           this.medicalReportPathArray = medicalReportPathArray;
-          detailHealthy.medicalReport_one = medicalReportPathArray.length > 0 ? "体检报告(1)" : "";
-          detailHealthy.medicalReport_two =  medicalReportPathArray.length > 1 ? "体检报告(2)" : "";
-          detailHealthy.medicalReport_three = medicalReportPathArray.length > 2 ? "体检报告(3)" : "";
+          detailHealthy.medicalReport_one = medicalReportPathArray.length > 0 ? (medicalReportNameArray.length > 0 ? medicalReportNameArray[0] : "体检报告（1）") : "";
+          detailHealthy.medicalReport_two =  medicalReportPathArray.length > 1 ? (medicalReportNameArray.length > 1 ? medicalReportNameArray[1] : "体检报告（2）") : "";
+          detailHealthy.medicalReport_three = medicalReportPathArray.length > 2 ? (medicalReportNameArray.length > 2 ? medicalReportNameArray[2] : "体检报告（3）") : "";
 
           for(let i = 0; i < this.healthyTitleData.length; i++){
             let stepArray = [];
@@ -1017,6 +1030,15 @@
       },
       downloadFile(fileName){
          this.downloadResource(fileName);
+      },
+      trimComma(str){
+         if(str.startsWith("，") || str.startsWith(",")){
+          str = str.substring(1,str.length);
+         }
+         if(str.endsWith("，") || str.endsWith(",")){
+           str = str.substring(0,str.length-1);
+         }
+         return str;
       }
     }
   };

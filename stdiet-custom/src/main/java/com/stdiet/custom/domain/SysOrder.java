@@ -600,4 +600,12 @@ public class SysOrder extends BaseEntity {
     public void setConditioningProject(String conditioningProject) {
         this.conditioningProject = conditioningProject;
     }
+
+    public Integer getAmountFlag() {
+        return amountFlag;
+    }
+
+    public void setAmountFlag(Integer amountFlag) {
+        this.amountFlag = amountFlag;
+    }
 }
