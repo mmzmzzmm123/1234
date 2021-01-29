@@ -9,5 +9,5 @@ public interface ISysWxService {
      * @param nonce
      * @return
      */
-    public boolean wxCheckAuth(String signature, String timestamp, String nonce);
+    public String wxCheckAuth(String signature, String timestamp, String nonce, String echostr);
 }

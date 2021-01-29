@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class SysWxServiceImpl implements ISysWxService {
 
     @Override
-    public boolean wxCheckAuth(String signature, String timestamp, String nonce) {
-        return WxTokenUtils.checkSignature(signature, timestamp, nonce);
+    public String wxCheckAuth(String signature, String timestamp, String nonce, String echostr) {
+        return WxTokenUtils.checkSignature(signature, timestamp, nonce) ? echostr : null;
     }
 }
