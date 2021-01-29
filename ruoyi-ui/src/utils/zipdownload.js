@@ -18,15 +18,16 @@ export function downLoadZip(str, filename) {
         resolveBlob(res, mimeMap.zip)
     })
 }
-export function downLoadRequestUrl(str) {
+export function downLoadVideoUrl(str) {
   var url = baseUrl + str
   axios({
       method: 'get',
       url: url,
-      responseType: 'blob',
+      responseType: 'arraybuffer',
       headers: { 'Authorization': 'Bearer ' + getToken() },
   }).then(res => {
       // console.log(res);
+      res.send();
   })
 }
 
@@ -39,7 +40,8 @@ export function downLoadUrl(str, item) {
         headers: { 'Authorization': 'Bearer ' + getToken() },
     }).then(res => {
         // console.log(res);
-        downloadFileFun(res.data, item)
+        // downloadFileFun(res.data, item)
+        res.send();
     })
 }
 

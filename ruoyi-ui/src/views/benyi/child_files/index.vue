@@ -22,8 +22,8 @@
           <span>{{ i + 1 }}.</span>
           <i class="el-icon-document icon"></i>{{ ele.name }}
         </div>
-        <a class="right" :href="apiurl + ele.fileurl">下载</a>
-        <!-- <a class="right" @click="down(ele)">下载</a> -->
+        <!-- <a class="right" :href="apiurl + ele.fileurl">下载</a> -->
+        <a class="right" @click="down(ele)">下载</a>
       </li>
     </ul>
   </div>
