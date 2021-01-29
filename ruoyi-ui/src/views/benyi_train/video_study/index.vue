@@ -176,7 +176,6 @@ export default {
       listVideo(this.queryParams).then((response) => {
         this.videoList = response.rows;
         this.playerOptions = response.rows.map((ele) => {
-          console.log(ele.videourl);
           return {
             autoplay: false,
             muted: true,
@@ -187,8 +186,8 @@ export default {
               {
                 type: ele.filetype,
                 // mp4
-                // src: ele.videourl
-                src: downLoadVideoUrl(ele.videourl),
+                src: ele.videourl
+                // src: downLoadVideoUrl(ele.videourl),
               },
             ],
             notSupportedMessage: "此视频暂无法播放，请稍后再试",

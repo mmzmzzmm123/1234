@@ -62,8 +62,8 @@ public class ByTrainVideoController extends BaseController {
 
         if (list != null && list.size() > 0) {
             for (int i = 0; i < list.size(); i++) {
-//                list.get(i).setVideourl(commonController.privateDownloadUrl(list.get(i).getVideourl()));
-                list.get(i).setVideourl("profile/video/"+list.get(i).getVideourl()+".mp4");
+                list.get(i).setVideourl(commonController.privateDownloadUrl(list.get(i).getVideourl()));
+//                list.get(i).setVideourl("/profile/video/"+list.get(i).getVideourl()+".mp4");
             }
         }
 
@@ -104,6 +104,7 @@ public class ByTrainVideoController extends BaseController {
     public AjaxResult getInfo(@PathVariable("id") Long id) {
         ByTrainVideo byTrainVideo = byTrainVideoService.selectByTrainVideoById(id);
         byTrainVideo.setVideourl(commonController.privateDownloadUrl(byTrainVideo.getVideourl()));
+        //                 byTrainVideo.setVideourl("/profile/video/"+list.get(i).getVideourl()+".mp4");
 //        System.out.println("url:"+byTrainVideo.getVideourl());
         byTrainVideo.setType(byTrainVideo.getType().substring(0, byTrainVideo.getType().length() - 1));//去掉后缀的,号
         return AjaxResult.success(byTrainVideo);
