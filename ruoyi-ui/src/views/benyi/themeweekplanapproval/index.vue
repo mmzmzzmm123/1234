@@ -90,7 +90,7 @@
     </el-form>
 
     <div class="mb8 btn-list">
-      <el-button
+      <!-- <el-button
         type="success"
         icon="el-icon-edit"
         size="mini"
@@ -98,7 +98,7 @@
         @click="handleUpdate"
         v-hasPermi="['benyi:themeweekplan:edit']"
         >审批</el-button
-      >
+      > -->
     </div>
 
     <el-table
@@ -168,6 +168,7 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['benyi:themeweekplan:edit']" 
+            v-show="isShow(scope.row)"
             >审批</el-button
           >
           <el-button
@@ -334,6 +335,14 @@ export default {
     });
   },
   methods: {
+    // 未提交不显示审批按钮
+    isShow(row) {
+      if (row.status == "0") {
+        return false;
+      } else {
+        return true;
+      }
+    },
     //班级列表
     getClassList() {
       listClass(null).then((response) => {
