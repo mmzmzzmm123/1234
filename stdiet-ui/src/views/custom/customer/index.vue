@@ -82,7 +82,6 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['custom:customerCenter:add']"
           >新增
         </el-button>
       </el-col>
@@ -92,7 +91,6 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['custom:customerCenter:export']"
           >导出
         </el-button>
       </el-col>
@@ -380,7 +378,7 @@ export default {
       // 表单校验
       rules: {
         customer: [
-          { required: true, message: "客户姓名不能为空", trigger: "blur" },
+          // { required: true, message: "客户姓名不能为空", trigger: "blur" },
         ],
         phone: [
           { required: true, message: "手机号不能为空", trigger: "blur" },

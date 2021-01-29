@@ -300,7 +300,11 @@
       ></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="orderList">
+    <el-table
+      v-loading="loading"
+      :data="orderList"
+      :row-class-name="tableRowClassName"
+    >
       <el-table-column label="审核状态" align="center" prop="reviewStatus">
         <template slot-scope="scope">
           <el-tag
@@ -330,7 +334,12 @@
           {{ toThousands(scope.row.amount) }}
         </template>
       </el-table-column>
-      <el-table-column label="收款账号" align="center" prop="account" width="90" />
+      <el-table-column
+        label="收款账号"
+        align="center"
+        prop="account"
+        width="90"
+      />
       <el-table-column label="服务时长" align="center" prop="serveTime" />
       <el-table-column label="销售" align="center" prop="preSale" />
       <el-table-column label="售后" align="center" prop="afterSale" />
@@ -698,6 +707,12 @@ export default {
       this.openPause = true;
       //this.$router.push({ name: 'orderPause', params: { 'orderId': order.orderId }})
     },
+    tableRowClassName({ row, rowIndex }) {
+      if (rowIndex % 2) {
+        return "warning-row";
+      }
+      return "success-row";
+    },
   },
   watch: {},
 };
@@ -719,5 +734,13 @@ export default {
   color: #1c84c6;
   font-size: 22px;
   cursor: pointer;
+}
+
+.warning-row {
+  background: oldlace !important;
+}
+
+.success-row {
+  background: #f0f9eb !important;
 }
 </style>
