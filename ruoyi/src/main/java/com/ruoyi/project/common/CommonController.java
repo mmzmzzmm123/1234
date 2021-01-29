@@ -140,6 +140,10 @@ public class CommonController {
         return ajax;
     }
 
+    /**
+     *获取七牛资源地址
+     *@param URL 上传的资源名称
+     */
     public String privateDownloadUrl(String URL) {
 
         Auth auth = Auth.create(constantQiniu.getAccessKey(), constantQiniu.getSecretKey());
@@ -156,8 +160,10 @@ public class CommonController {
     public void resourceDownload(String name, HttpServletRequest request, HttpServletResponse response) throws Exception {
         // 本地资源路径
         String localPath = RuoYiConfig.getProfile();
+//        System.out.println("localPath:"+localPath);
         // 数据库资源地址
         String downloadPath = localPath + StringUtils.substringAfter(name, Constants.RESOURCE_PREFIX);
+//        System.out.println("downloadPath:"+downloadPath);
         // 下载名称
         String downloadName = StringUtils.substringAfterLast(downloadPath, "/");
         response.setCharacterEncoding("utf-8");

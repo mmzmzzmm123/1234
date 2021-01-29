@@ -12,13 +12,18 @@
         </el-card>
       </el-col>
     </el-row> -->
-    <ul class="infinite-list" v-infinite-scroll="load" style="overflow:auto">
-      <li v-for="(ele, i) in filesList" :key="i" class="flex align-center justify-between infinite-list-item">
+    <ul class="infinite-list" v-infinite-scroll="load" style="overflow: auto">
+      <li
+        v-for="(ele, i) in filesList"
+        :key="i"
+        class="flex align-center justify-between infinite-list-item"
+      >
         <div class="left">
-          <span>{{i + 1}}.</span>
-          <i class="el-icon-document icon"></i>{{ele.name}}
+          <span>{{ i + 1 }}.</span>
+          <i class="el-icon-document icon"></i>{{ ele.name }}
         </div>
-        <a class="right" :href="apiurl + ele.fileurl">下载</a>
+        <!-- <a class="right" :href="apiurl + ele.fileurl">下载</a> -->
+        <a class="right" @click="down(ele)">下载</a>
       </li>
     </ul>
   </div>
@@ -26,6 +31,7 @@
 
 <script>
 import { listFiles, getFiles } from "@/api/benyi/files";
+import { downLoadUrl } from "@/utils/zipdownload";
 
 export default {
   name: "childFiles",
@@ -43,8 +49,8 @@ export default {
         filetype: undefined,
         type: "1", //代表幼儿入园系列文件
         fileurl: undefined,
-        createuserid: undefined
-      }
+        createuserid: undefined,
+      },
     };
   },
   created() {
@@ -54,15 +60,16 @@ export default {
     /** 查询文件管理列表 */
     getList() {
       this.loading = true;
-      listFiles(this.queryParams).then(response => {
+      listFiles(this.queryParams).then((response) => {
         this.filesList = response.rows;
         this.loading = false;
       });
     },
-    load() {
-
-    }
-  }
+    load() {},
+    down(row) {
+      downLoadUrl('/common/download/resource',row);
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>

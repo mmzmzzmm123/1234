@@ -18,6 +18,33 @@ export function downLoadZip(str, filename) {
     resolveBlob(res, mimeMap.zip)
   })
 }
+export function downLoadUrl(str, item) {
+  var url = baseUrl + str
+  axios({
+    method: 'get',
+    url: url,
+    params: { name: item.fileurl },
+    responseType: 'blob',
+    headers: { 'Authorization': 'Bearer ' + getToken() },
+  }).then(res => {
+    console.log(res);
+    downloadFileFun(res, item)
+  })
+}
+
+export function downloadFileFun(data, item) {
+  if (!data) {
+    return
+  }
+  let url = window.URL.createObjectURL(new Blob([data]))
+  let link = document.createElement('a')
+  link.style.display = 'none'
+  link.href = url
+  link.setAttribute('download', item.name)
+  document.body.appendChild(link)
+  link.click()
+}
+
 /**
  * 解析blob响应内容并下载
  * @param {*} res blob响应内容
