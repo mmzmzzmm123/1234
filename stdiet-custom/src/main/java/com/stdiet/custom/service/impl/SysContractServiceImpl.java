@@ -107,12 +107,10 @@ public class SysContractServiceImpl implements ISysContractService {
     @Override
     public PdfProcessInfo signContract(SysContract sysContract) {
         String pathSuffix = (sysContract.getProjectId() != null && sysContract.getProjectId().intValue() != 0) ? ("_"+sysContract.getProjectId()) : "" ;
-
-        String templatePath = "D:\\contract\\contract"+pathSuffix+".pdf";
-        String filePath = "D:\\contract" + sysContract.getPath();
-
-        /*String templatePath = "/home/workspace/ShengTangManage/running/pdf/contract"+pathSuffix+".pdf";
-        String filePath = "/home/web/manage.shengtangdiet.com" + sysContract.getPath();*/
+        //String templatePath = "D:\\contract\\contract"+pathSuffix+".pdf";
+        //String filePath = "D:\\contract" + sysContract.getPath();
+        String templatePath = "/home/workspace/ShengTangManage/running/pdf/contract"+pathSuffix+".pdf";
+        String filePath = "/home/web/manage.shengtangdiet.com" + sysContract.getPath();
 
         PdfReader reader;
         FileOutputStream out;
