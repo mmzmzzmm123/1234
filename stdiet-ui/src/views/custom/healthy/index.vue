@@ -487,7 +487,7 @@
     <!-- 查看详情 -->
     <el-dialog title="客户健康评估表" v-if="healthyDetailOpen" :visible.sync="healthyDetailOpen" width="1000px" append-to-body>
       <!-- 基础信息 -->
-      <div v-for="(item,index) in healthyDetailList.slice(0,1)" style="margin-bottom: 50px;">
+      <div v-for="(item,index) in healthyDetailList.slice(0,1)" style="margin-bottom: 50px;" :key="index">
         <div>
           <p class="p_title_1" style="margin-top: 5px;">{{titleArray[index]}}</p>
           <TableDetailMessage :data="item" ></TableDetailMessage>
@@ -495,7 +495,7 @@
       </div>
       <!-- 剩余其他信息 -->
       <div style="height:400px;overflow: auto">
-        <div v-for="(item,index) in healthyDetailList.slice(1,10)" v-show="titleShowArray[index]" style="margin-bottom: 50px;">
+        <div v-for="(item,index) in healthyDetailList.slice(1,10)" v-show="titleShowArray[index]" style="margin-bottom: 50px;" :key="index">
           <div>
             <p class="p_title_1" style="margin-top: 5px;">{{titleArray[index+1]}}</p>
             <TableDetailMessage :data="item" v-if="index != healthyDetailList.length-2"></TableDetailMessage>

@@ -736,11 +736,11 @@ export default {
   cursor: pointer;
 }
 
-.warning-row {
-  background: oldlace !important;
-}
+// .warning-row {
+//   background: oldlace !important;
+// }
 
-.success-row {
-  background: #f0f9eb !important;
-}
+// .success-row {
+//   background: #f0f9eb !important;
+// }
 </style>

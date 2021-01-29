@@ -228,7 +228,7 @@
       <el-row :gutter="15">
         <el-form ref="form" :model="form" :rules="rules" label-width="100px">
           <el-col :span="12">
-            <el-form-item label="客户名字" prop="customer">
+            <el-form-item label="客户名字" prop="name">
               <el-input v-model="form.name" placeholder="请输入名字" />
             </el-form-item>
           </el-col>
@@ -383,7 +383,7 @@ export default {
       form: {},
       // 表单校验
       rules: {
-        customer: [
+        name: [
           { required: true, message: "客户姓名不能为空", trigger: "blur" },
         ],
         phone: [
