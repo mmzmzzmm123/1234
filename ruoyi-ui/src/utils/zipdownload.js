@@ -18,6 +18,18 @@ export function downLoadZip(str, filename) {
         resolveBlob(res, mimeMap.zip)
     })
 }
+export function downLoadRequestUrl(str) {
+  var url = baseUrl + str
+  axios({
+      method: 'get',
+      url: url,
+      responseType: 'blob',
+      headers: { 'Authorization': 'Bearer ' + getToken() },
+  }).then(res => {
+      // console.log(res);
+  })
+}
+
 export function downLoadUrl(str, item) {
     var url = baseUrl + str
     axios({
