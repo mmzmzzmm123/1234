@@ -34,7 +34,7 @@
           <el-input type="number" v-model="form.phone" placeholder="请输入手机号" />
         </el-form-item>
           <el-form-item label="调理项目" prop="conditioningProjectId">
-            <el-select v-model="form.conditioningProjectId" placeholder="请选择">
+            <el-select v-model="form.conditioningProjectId" filterable clearable placeholder="请选择">
               <el-option
                 v-for="dict in conditioningProjectIdOption"
                 :key="dict.dictValue"
@@ -618,8 +618,10 @@
             :data="upload.data"
             :auto-upload="false">
             <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-          <el-button style="margin-left: 10px;" size="small" ref="removeFile" @click="upload.fileList = []">移除文件</el-button>
-          <div slot="tip" class="el-upload__tip">提示：最多可上传三份，且每份文件不超过20M</div>
+          <el-button style="margin-left: 10px;" size="small" @click="upload.fileList = []">移除文件</el-button>
+          <div slot="tip" class="el-upload__tip">1、最多可上传三份，且每份文件不超过20M
+            <br>2、仅支持bmp，gif, jpg, jpeg, png, doc, docx, xls, xlsx, ppt, pptx, html, htm, txt, rar, zip, gz, bz2, pdf格式文件
+          </div>
         </el-upload>
         </el-form-item>
       </div>
@@ -797,6 +799,7 @@ export default {
           //是否支持同时选择多张
           multiple: true
       },
+      timer: null,
       rules: {
         name: [
           { required: true, trigger: "blur", message: "请填写姓名" },
@@ -853,7 +856,7 @@ export default {
     submit(){
         if (this.submitFlag) {
             this.$message({
-                message: "请勿重复提交",
+                message: "请勿重复提交，1分钟后重试",
                 type: "warning",
             });
             return;
@@ -863,7 +866,7 @@ export default {
             this.submitFlag = true;
             this.form.medicalReport = [];
             if(this.upload.fileList.length > 0){
-                this.$refs.upload.submit();removeFile
+                this.$refs.upload.submit();
             }else{
                 this.addCustomerHealthy();
             }
@@ -882,6 +885,7 @@ export default {
         this.healthyData['arrayName'].forEach(function (item, index) {
             cusMessage[item] = cusMessage[item] != null ? cusMessage[item].join(",") : null;
         });
+        this.timer = setTimeout(this.fail,1000*60);
         addCustomerHealthy(cusMessage).then((response) => {
             if (response.code === 200) {
                 this.$notify({
@@ -889,11 +893,15 @@ export default {
                     message: "",
                     type: "success",
                 });
-            }else{
-                this.submitFlag = false;
-                this.upload.isUploading = false;
             }
+        }).catch(function() {
+            console.log("error");
         });
+    },
+    fail(){
+      console.log("fail");
+      this.submitFlag = false;
+      this.upload.isUploading = false;
     },
     nextStep(step){
       this.$refs.form.validate((valid) => {
@@ -954,7 +962,7 @@ export default {
       },
       // 文件上传成功处理
       handleFileSuccess(response, file, fileList) {
-         console.log(file.name);
+          //console.log(file.name);
           if(response != null && response.code === 200){
               this.form.medicalReport.push(response.fileName);
               this.form.medicalReportName.push(file.name);
@@ -963,16 +971,14 @@ export default {
                   this.addCustomerHealthy();
               }
           }else{
-              this.upload.isUploading = false;
-              this.submitFlag = false;
+              this.fail();
               this.$message.error('文件上传失败，请检查文件格式');
           }
       },
       // 文件上传失败处理
       handleFileFail(err, file, fileList){
           this.$message.error('文件上传失败，请检查文件格式');
-          this.upload.isUploading = false;
-          this.submitFlag = false;
+          this.fail();
       },
       //获取湿气
       getMoistureDictData() {
