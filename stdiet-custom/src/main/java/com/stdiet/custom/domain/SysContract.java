@@ -6,6 +6,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 合同对象 sys_contract
@@ -21,6 +23,16 @@ public class SysContract extends BaseEntity {
      */
     @Excel(name = "合同编号")
     private Long id;
+
+    /**
+     * 调理项目ID
+     */
+    private Long projectId;
+
+    /**
+     * 调理项目名称
+     */
+    private String projectName;
 
     /**
      * 客户姓名
@@ -195,6 +207,22 @@ public class SysContract extends BaseEntity {
 
     public void setServeTimeStr(String serveTimeStr) {
         this.serveTimeStr = serveTimeStr;
+    }
+
+    public Long getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(Long projectId) {
+        this.projectId = projectId;
+    }
+
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
     }
 
     @Override

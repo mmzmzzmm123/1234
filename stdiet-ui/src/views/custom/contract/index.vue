@@ -117,6 +117,7 @@
         </template>
       </el-table-column>
       <el-table-column label="金额" align="center" prop="amount" width="100"/>
+      <el-table-column label="调理项目" align="center" prop="projectName" width="100"/>
       <el-table-column label="签订时间" align="center" prop="updateTime" width="180"/>
       <el-table-column label="合同地址" align="center" prop="path" width="80">
         <template slot-scope="scope">
@@ -159,13 +160,21 @@
     <!-- 添加或修改合同对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="550px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="100px">
+        <el-form-item label="调理项目" prop="projectId">
+          <el-select v-model="form.projectId" placeholder="请选择调理项目" filterable clearable size="small">
+            <el-option v-for="dict in conditioningProjectIdOption"
+                       :key="dict.dictValue"
+                       :label="dict.dictLabel"
+                       :value="parseInt(dict.dictValue)"/>
+          </el-select>
+        </el-form-item>
         <el-form-item label="客户姓名" prop="name">
           <el-input v-model="form.name" placeholder="请输入客户姓名"/>
         </el-form-item>
         <el-form-item label="金额" prop="amount">
           <el-input v-model="form.amount" placeholder="请输入金额"/>
         </el-form-item>
-        <el-form-item label="服务承诺" prop="servePromise">
+        <el-form-item label="服务承诺" prop="servePromise" v-show="form.projectId == 0">
           <el-input style="width: 193px; margin-right: 12px" v-model="form.servePromise" placeholder="请输入服务承诺"/>
           斤
         </el-form-item>
@@ -209,6 +218,12 @@
   export default {
     name: "Contract",
     data() {
+      const checkServePromise = (rule, value, callback) => {
+        if (this.form.projectId == 0 && !value) {
+          return callback(new Error('请输入服务承诺'))
+        }
+        callback();
+      };
       return {
         // 遮罩层
         loading: true,
@@ -234,6 +249,8 @@
         serveTimeOptions: [],
         // 签约状态字典
         signStatusOptions: [],
+        //调理项目字典
+        conditioningProjectIdOption:[],
         //
         copyValue: '',
         // 查询参数
@@ -249,14 +266,23 @@
         form: {},
         // 表单校验
         rules: {
+          projectId:[
+            {required: true, message: "请选择调理项目", trigger: "blur"}
+          ],
           name: [
             {required: true, message: "请输入客户姓名", trigger: "blur"}
           ],
           amount: [
-            {required: true, message: "请输入签订金额", trigger: "blur"}
+            {required: true, message: "请输入签订金额", trigger: "blur"},
+            {
+              required: true,
+              trigger: "blur",
+              pattern: /^[1-9]\d*$/,
+              message: "签订金额格式不正确",
+            },
           ],
           servePromise: [
-            {required: true, message: "请输入承诺效果", trigger: "blur"}
+            {required: true, trigger: "blur", validator: checkServePromise}
           ],
           serveTime: [
             {required: true, message: "请选择服务时间", trigger: "blur"}
@@ -285,6 +311,9 @@
       this.getDicts("cus_sign_status").then(response => {
         this.signStatusOptions = response.data;
       });
+      this.getDicts("conditioning_project").then(response => {
+        this.conditioningProjectIdOption = response.data;
+      });
     },
     methods: {
       /** 查询合同列表 */
@@ -311,9 +340,11 @@
       // 表单重置
       reset() {
         const defaultNutritionist = this.nutritionistIdOptions.find(opt => opt.remark === 'default');
+        const defaultProjectIdOption = this.conditioningProjectIdOption.find(opt => opt.remark === 'default');
 
         this.form = {
           id: null,
+          projectId: defaultProjectIdOption ? parseInt(defaultProjectIdOption.dictValue) : null,
           name: null,
           phone: null,
           serveTime: null,
@@ -378,6 +409,9 @@
             //   });
             // } else {
             this.form.tutor = this.selectDictLabel(this.nutritionistIdOptions, this.form.nutritionistId)
+            if(this.form.projectId != 0 && this.form.projectId != 3){
+               return;
+            }
             addContract(this.form).then(response => {
               if (response.code === 200) {
                 this.msgSuccess("新增成功");

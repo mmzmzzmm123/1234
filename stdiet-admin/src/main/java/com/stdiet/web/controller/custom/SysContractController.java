@@ -1,6 +1,7 @@
 package com.stdiet.web.controller.custom;
 
 import com.stdiet.common.annotation.Log;
+import com.stdiet.common.constant.ContractContants;
 import com.stdiet.common.core.controller.BaseController;
 import com.stdiet.common.core.domain.AjaxResult;
 import com.stdiet.common.core.page.TableDataInfo;
@@ -109,11 +110,22 @@ public class SysContractController extends BaseController {
         } else {
             Map<String, String> data = new HashMap<>();
             data.put("id", contract.getId().toString());
+            data.put("projectId", contract.getProjectId().toString());
+            data.put("projectName", contract.getProjectName());
             data.put("amount", contract.getAmount().toString());
             data.put("serveTime", contract.getServeTime() + "");
             data.put("tutor", contract.getTutor());
             data.put("servePromise", contract.getServePromise());
             data.put("remark", contract.getRemark());
+            data.put("companyName", ContractContants.companyName);
+            data.put("companyLegalPerson", ContractContants.companyLegalPerson);
+            data.put("companyAddress", ContractContants.companyAddress);
+            data.put("companyPhone", ContractContants.companyPhone);
+            data.put("bankName", ContractContants.bankName);
+            data.put("bankAccount", ContractContants.bankAccount);
+            data.put("hourDay", ContractContants.hourDay);
+            data.put("dayWeek", ContractContants.dayWeek);
+            data.put("replyIntervalTime", ContractContants.replyIntervalTime);
             ajax.put("data", data);
         }
         return ajax;
