@@ -18,17 +18,16 @@ export function downLoadZip(str, filename) {
     resolveBlob(res, mimeMap.zip)
   })
 }
-export function downLoadUrl(str, item) {
+export function downLoadUrl(str) {
   var url = baseUrl + str
   axios({
     method: 'get',
     url: url,
-    params: { name: item.fileurl },
     responseType: 'blob',
     headers: { 'Authorization': 'Bearer ' + getToken() },
   }).then(res => {
     console.log(res);
-    downloadFileFun(res, item)
+    // downloadFileFun(res, item)
   })
 }
 

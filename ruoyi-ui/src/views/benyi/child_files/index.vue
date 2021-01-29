@@ -67,7 +67,7 @@ export default {
     },
     load() {},
     down(row) {
-      downLoadUrl('/common/download/resource',row);
+      downLoadUrl(row.fileurl);
     },
   },
 };
