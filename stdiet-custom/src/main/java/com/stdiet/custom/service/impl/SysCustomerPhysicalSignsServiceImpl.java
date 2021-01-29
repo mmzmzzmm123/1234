@@ -41,6 +41,11 @@ public class SysCustomerPhysicalSignsServiceImpl implements ISysCustomerPhysical
         return sysCustomerPhysicalSignsMapper.selectSysCustomerPhysicalSignsById(id);
     }
 
+    @Override
+    public SysCustomerPhysicalSigns selectSysCustomerPhysicalSignsByCusId(Long cusId) {
+        return sysCustomerPhysicalSignsMapper.selectSysCustomerPhysicalSignsByCusId(cusId);
+    }
+
     /**
      * 新增客户体征信息
      *

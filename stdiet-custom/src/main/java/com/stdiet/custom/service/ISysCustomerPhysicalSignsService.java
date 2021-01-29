@@ -22,6 +22,8 @@ public interface ISysCustomerPhysicalSignsService {
      */
     public SysCustomerPhysicalSigns selectSysCustomerPhysicalSignsById(Long id);
 
+    public SysCustomerPhysicalSigns selectSysCustomerPhysicalSignsByCusId(Long id);
+
     /**
      * 新增客户体征信息
      *

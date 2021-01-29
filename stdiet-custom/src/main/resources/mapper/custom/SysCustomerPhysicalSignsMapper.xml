@@ -67,6 +67,10 @@
         <include refid="selectSysCustomerPhysicalSigns"/> where scps.del_flag = 0 and sc.del_flag = 0 and scps.id = #{id}
     </select>
 
+    <select id="selectSysCustomerPhysicalSignsByCusId" parameterType="Long" resultMap="SysCustomerSignResult">
+        <include refid="selectSysCustomerPhysicalSigns"/> where scps.del_flag = 0 and sc.del_flag = 0 and scps.customer_id = #{id}
+    </select>
+
     <insert id="insertSysCustomerPhysicalSigns" parameterType="SysCustomerPhysicalSigns" useGeneratedKeys="true" keyProperty="id">
         insert into sys_customer_physical_signs
         <trim prefix="(" suffix=")" suffixOverrides=",">

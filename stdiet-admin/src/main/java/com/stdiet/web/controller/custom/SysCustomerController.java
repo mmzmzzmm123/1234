@@ -114,4 +114,9 @@ public class SysCustomerController extends BaseController {
         }
         return AjaxResult.success(sysCustomer);
     }
+
+    @GetMapping("/physicalSigns/{id}")
+    public AjaxResult getPhysicalSignsById(@PathVariable("id") Long id) {
+        return AjaxResult.success(sysCustomerPhysicalSignsService.selectSysCustomerPhysicalSignsByCusId(id));
+    }
 }

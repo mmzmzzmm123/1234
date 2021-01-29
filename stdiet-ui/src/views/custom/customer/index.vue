@@ -82,6 +82,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
+          v-hasPermi="['custom:customer:add']"
           >新增
         </el-button>
       </el-col>
@@ -91,6 +92,7 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
+          v-hasPermi="['custom:customer:export']"
           >导出
         </el-button>
       </el-col>
@@ -198,7 +200,7 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['custom:customerCenter:edit']"
+            v-hasPermi="['custom:customer:edit']"
             >修改
           </el-button>
           <el-button
@@ -206,7 +208,7 @@
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['custom:customerCenter:remove']"
+            v-hasPermi="['custom:customer:remove']"
             >删除
           </el-button>
         </template>
@@ -308,6 +310,7 @@
     <order-drawer ref="cusOrderDrawerRef" />
     <!-- 合同抽屉 -->
     <!-- 健康评估弹窗 -->
+    <physical-signs-dialog ref="physicalSignsDialogRef" />
     <!-- 食谱计划抽屉 -->
   </div>
 </template>
@@ -321,16 +324,19 @@ import {
   listCustomer,
   updateCustomer,
 } from "@/api/custom/customer";
+
 import store from "@/store";
 
 import { getOptions } from "@/api/custom/order";
 
 import OrderDrawer from "@/components/OrderDrawer";
+import PhysicalSignsDialog from "@/components/PhysicalSignsDialog";
 
 export default {
   name: "Customer",
   components: {
     "order-drawer": OrderDrawer,
+    "physical-signs-dialog": PhysicalSignsDialog,
   },
   data() {
     const userId = store.getters && store.getters.userId;
@@ -378,7 +384,7 @@ export default {
       // 表单校验
       rules: {
         customer: [
-          // { required: true, message: "客户姓名不能为空", trigger: "blur" },
+          { required: true, message: "客户姓名不能为空", trigger: "blur" },
         ],
         phone: [
           { required: true, message: "手机号不能为空", trigger: "blur" },
@@ -476,7 +482,7 @@ export default {
       console.log(row);
     },
     handleOnHealthSignClick(row) {
-      console.log(row);
+      this.$refs["physicalSignsDialogRef"].showDialog(row);
     },
     handleOnMenuClick(row) {
       console.log(row);
