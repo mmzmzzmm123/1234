@@ -106,10 +106,13 @@ public class SysContractServiceImpl implements ISysContractService {
 
     @Override
     public PdfProcessInfo signContract(SysContract sysContract) {
-//        String templatePath = "/Users/wonder/Documents/Workspaces/java/ShengTangManage/running/pdf/contract.pdf";
-//        String filePath = "/Users/wonder/Documents/Workspaces/java/ShengTangManage/running" + sysContract.getPath();
-        String templatePath = "/home/workspace/ShengTangManage/running/pdf/contract.pdf";
-        String filePath = "/home/web/manage.shengtangdiet.com" + sysContract.getPath();
+        String pathSuffix = (sysContract.getProjectId() != null && sysContract.getProjectId().intValue() != 0) ? ("_"+sysContract.getProjectId()) : "" ;
+
+        String templatePath = "D:\\contract\\contract"+pathSuffix+".pdf";
+        String filePath = "D:\\contract" + sysContract.getPath();
+
+        /*String templatePath = "/home/workspace/ShengTangManage/running/pdf/contract"+pathSuffix+".pdf";
+        String filePath = "/home/web/manage.shengtangdiet.com" + sysContract.getPath();*/
 
         PdfReader reader;
         FileOutputStream out;
@@ -141,6 +144,7 @@ public class SysContractServiceImpl implements ISysContractService {
                     form.setField("remark", "（备注：" + sysContract.getRemark() + ")", true);
                 }
             }else{
+                form.setField("id", sysContract.getId()+"", true);
                 form.setField("companyName", ContractContants.companyName, true);
                 form.setField("companyLegalPerson", ContractContants.companyLegalPerson, true);
                 form.setField("name", sysContract.getSignName(), true);

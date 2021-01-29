@@ -409,8 +409,8 @@
             //   });
             // } else {
             this.form.tutor = this.selectDictLabel(this.nutritionistIdOptions, this.form.nutritionistId)
-            if(this.form.projectId != 0 && this.form.projectId != 3){
-               return;
+            if(this.form.projectId != 0){
+               this.form.servePromise = null;
             }
             addContract(this.form).then(response => {
               if (response.code === 200) {
