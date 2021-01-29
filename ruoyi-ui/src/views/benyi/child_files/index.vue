@@ -67,7 +67,7 @@ export default {
     },
     load() {},
     down(row) {
-      downLoadUrl(row.fileurl);
+      downLoadUrl(row.fileurl,row);
     },
   },
 };
