@@ -1,5 +1,11 @@
 package com.stdiet.custom.utils;
 
+import com.stdiet.custom.domain.WxXmlData;
+import com.thoughtworks.xstream.XStream;
+import org.apache.commons.io.IOUtils;
+
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -80,5 +86,22 @@ public class WxTokenUtils {
                 }
             }
         }
+    }
+
+    public static WxXmlData resolveXmlData(InputStream in) {
+        WxXmlData wxXmlData = null;
+        try {
+            String xmlData = IOUtils.toString(in, StandardCharsets.UTF_8.name());
+            XStream xstream = new XStream();
+            //这个必须要加 不然无法转换成WxXmlData对象
+            xstream.setClassLoader(WxXmlData.class.getClassLoader());
+            xstream.processAnnotations(WxXmlData.class);
+            xstream.alias("xml", WxXmlData.class);
+            wxXmlData = (WxXmlData) xstream.fromXML(xmlData);
+//            log.info("【wxXmlData: {}】 ", wxXmlData);
+        } catch (Exception e) {
+//            log.error("【error】{}", e.getMessage());
+        }
+        return wxXmlData;
     }
 }
