@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/wx")
 public class CusWxController extends BaseController {
 
-//    @GetMapping("/push")
-//    public String msgPushTest(@PathVariable("echostr") String echostr) {
-//        return echostr;
-//    }
+    @GetMapping("/")
+    public boolean wxCheckAuth() {
+        return true;
+    }
 //
 //    @PostMapping("/push")
 //    public void msgPush(@RequestBody WxPush pushMsg) {
