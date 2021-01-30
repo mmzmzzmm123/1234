@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Set;
 
 import com.ruoyi.framework.redis.RedisCache;
+import com.ruoyi.project.system.domain.BySchool;
+import com.ruoyi.project.system.service.IBySchoolService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -92,6 +94,7 @@ public class SysLoginController
         Set<String> roles = permissionService.getRolePermission(user);
         // 权限集合
         Set<String> permissions = permissionService.getMenuPermission(user);
+
         AjaxResult ajax = AjaxResult.success();
         ajax.put("user", user);
         ajax.put("roles", roles);
