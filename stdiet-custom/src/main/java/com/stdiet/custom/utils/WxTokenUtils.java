@@ -23,8 +23,8 @@ public class WxTokenUtils {
     private static String token = "shengtangdiet";
 //    private static String appId = "wx4a9c1fc9dba53202";
 //    private static String appSecret = "fff029ade5d3575df755f4cf9e52f8da";
-private static String appId = "wx11c6f62133e58d57";
-        private static String appSecret = "239eff8a38be32f2feafa924410b3c11";
+private static String appId = "wxaf10fe560ea043a0";
+        private static String appSecret = "afb47e477337df23b7562c3c1f965826";
     private static String tokenUrl = "https://api.weixin.qq.com/cgi-bin/token";
 
     public static WxAccessToken fetchAccessToken() {
