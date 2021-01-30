@@ -1,6 +1,7 @@
 package com.stdiet.custom.utils;
 
 import com.alibaba.fastjson.JSONObject;
+import com.stdiet.common.annotation.Log;
 import com.stdiet.common.utils.StringUtils;
 import com.stdiet.common.utils.http.HttpUtils;
 import com.stdiet.custom.domain.WxXmlData;
@@ -12,6 +13,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.logging.Logger;
 
 public class WxTokenUtils {
 
@@ -28,7 +30,9 @@ public class WxTokenUtils {
                 return null;
             }
             JSONObject obj = JSONObject.parseObject(resStr);
+
             WxAccessToken token = JSONObject.toJavaObject(obj, WxAccessToken.class);
+            System.out.println(token.toString());
             return token;
         } catch (Exception e) {
             return null;
