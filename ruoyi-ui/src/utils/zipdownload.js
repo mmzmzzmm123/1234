@@ -20,11 +20,14 @@ export function downLoadZip(str, filename) {
 }
 export function downLoadVideoUrl(str) {
     var url = baseUrl + str
-    return axios({
+    axios({
         method: 'get',
         url: url,
-        responseType: 'blob',
+        responseType: 'arraybuffer',
         headers: { 'Authorization': 'Bearer ' + getToken() },
+    }).then(res => {
+        // console.log(res);
+        return res.data
     })
 }
 
@@ -37,8 +40,7 @@ export function downLoadUrl(str, item) {
         headers: { 'Authorization': 'Bearer ' + getToken() },
     }).then(res => {
         // console.log(res);
-        // downloadFileFun(res.data, item)
-        res.send();
+        downloadFileFun(res.data, item)
     })
 }
 

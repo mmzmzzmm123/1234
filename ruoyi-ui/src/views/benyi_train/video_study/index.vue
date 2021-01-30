@@ -171,17 +171,11 @@ export default {
       return data;
     },
     /** 查询培训列表 */
-   async getList() {
+    getList() {
       this.loading = true;
-        let videobuffer="";
-        await downLoadVideoUrl("/profile/video/lg4y3idmDCEme_eu6FzAAoOdcyS2.mp4").then((res)=>{
-          videobuffer=res;
-          console.log(videobuffer);
-        })
       listVideo(this.queryParams).then((response) => {
         this.videoList = response.rows;
         this.playerOptions = response.rows.map((ele) => {
-          console.log(ele.videourl);
           return {
             autoplay: false,
             muted: true,
@@ -192,8 +186,8 @@ export default {
               {
                 type: ele.filetype,
                 // mp4
-                // src: ele.videourl
-                src: videobuffer.request.response,
+                src: ele.videourl
+                // src: downLoadVideoUrl(ele.videourl),
               },
             ],
             notSupportedMessage: "此视频暂无法播放，请稍后再试",
