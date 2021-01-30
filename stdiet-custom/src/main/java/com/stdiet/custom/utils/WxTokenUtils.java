@@ -2,10 +2,12 @@ package com.stdiet.custom.utils;
 
 import com.alibaba.fastjson.JSONObject;
 import com.stdiet.common.annotation.Log;
+import com.stdiet.common.core.redis.RedisCache;
 import com.stdiet.common.utils.StringUtils;
 import com.stdiet.common.utils.http.HttpUtils;
 import com.stdiet.custom.domain.WxXmlData;
 import com.stdiet.custom.domain.wechat.WxAccessToken;
+import com.stdiet.custom.domain.wechat.WxFileUploadResult;
 import com.thoughtworks.xstream.XStream;
 import org.apache.commons.io.IOUtils;
 
@@ -19,8 +21,10 @@ public class WxTokenUtils {
 
     // 与接口配置信息中的Token要一致
     private static String token = "shengtangdiet";
-    private static String appId = "wx4a9c1fc9dba53202";
-    private static String appSecret = "fff029ade5d3575df755f4cf9e52f8da";
+//    private static String appId = "wx4a9c1fc9dba53202";
+//    private static String appSecret = "fff029ade5d3575df755f4cf9e52f8da";
+private static String appId = "wx11c6f62133e58d57";
+        private static String appSecret = "239eff8a38be32f2feafa924410b3c11";
     private static String tokenUrl = "https://api.weixin.qq.com/cgi-bin/token";
 
     public static WxAccessToken fetchAccessToken() {
@@ -37,6 +41,10 @@ public class WxTokenUtils {
             return null;
         }
     }
+
+//    public static WxFileUploadResult uploadImage() {
+//
+//    }
 
     /**
      * 验证签名
