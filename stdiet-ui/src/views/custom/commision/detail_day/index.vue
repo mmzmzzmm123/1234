@@ -36,7 +36,7 @@
     </el-form>
     <div><span style="color:#E6A23C;font-family:PingFang SC">
           注意事项：
-          <br/>1、2021年1月开始的订单才开始按天计算提成
+          <br/>1、2021年1月开始的订单才开始按天计算提成，只计算已审核的订单
           <br/>2、发工资日期定为每月15号，若当前日期大于15号，则认定上个月的工资已发放
     </span></div>
     <el-row :gutter="10" class="mb8" style="margin-top:10px;">

@@ -67,4 +67,9 @@ public interface SysCustomerHealthyMapper
      * @param phone
      */
     SysCustomerHealthy selectSysCustomerHealthyByPhone(@Param("phone") String phone);
+
+    /**
+     * 根据客户ID查询健康评估表信息
+     */
+    SysCustomerHealthy selectSysCustomerHealthyByCustomerId(@Param("customerId")Long customerId);
 }

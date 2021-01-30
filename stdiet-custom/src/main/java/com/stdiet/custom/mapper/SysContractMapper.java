@@ -2,6 +2,7 @@ package com.stdiet.custom.mapper;
 
 import java.util.List;
 import com.stdiet.custom.domain.SysContract;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 合同Mapper接口
