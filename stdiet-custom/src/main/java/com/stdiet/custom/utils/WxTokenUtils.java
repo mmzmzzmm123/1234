@@ -25,14 +25,13 @@ public class WxTokenUtils {
 
     public static WxAccessToken fetchAccessToken() {
         try {
-            String resStr = HttpUtils.sendGet(tokenUrl, "grant_type=client_credential&appid=" + appId + "secret=" + appSecret);
+            String resStr = HttpUtils.sendGet(tokenUrl, "grant_type=client_credential&appid=" + appId + "&secret=" + appSecret);
             if (StringUtils.isEmpty(resStr)) {
                 return null;
             }
             JSONObject obj = JSONObject.parseObject(resStr);
 
             WxAccessToken token = JSONObject.toJavaObject(obj, WxAccessToken.class);
-            System.out.println(token.toString());
             return token;
         } catch (Exception e) {
             return null;
