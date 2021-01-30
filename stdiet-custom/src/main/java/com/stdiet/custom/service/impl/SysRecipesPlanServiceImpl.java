@@ -26,7 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author xzj
  * @date 2021-01-15
  */
-@Service
+@Service("sysRecipesPlanService")
 @Transactional
 public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService
 {
@@ -134,7 +134,7 @@ public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService
         }
         SysOrder sysOrder = sysOrderService.selectSysOrderById(orderId);
         //订单为空、金额小于0不进行食谱生成、更新，只对2021年开始的订单进行食谱计划生成
-        if(sysOrder == null && DateUtils.dateToLocalDate(sysOrder.getOrderTime()).getYear() > 2020){
+        if(sysOrder == null && DateUtils.dateToLocalDate(sysOrder.getOrderTime()).getYear() < 2021){
             return;
         }
         System.out.println(DateUtils.dateToLocalDate(sysOrder.getOrderTime()).getYear());
