@@ -1,5 +1,6 @@
 package com.stdiet.custom.service;
 
+import com.stdiet.common.core.domain.AjaxResult;
 import com.stdiet.custom.domain.WxXmlData;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,4 +17,6 @@ public interface ISysWxService {
     public String wxCheckAuth(String signature, String timestamp, String nonce, String echostr);
 
     public String autoResponse(HttpServletRequest request);
+
+    public AjaxResult getAccessToken();
 }

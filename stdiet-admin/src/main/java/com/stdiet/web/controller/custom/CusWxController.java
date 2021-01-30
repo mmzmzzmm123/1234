@@ -2,14 +2,11 @@ package com.stdiet.web.controller.custom;
 
 import com.stdiet.common.core.controller.BaseController;
 import com.stdiet.common.core.domain.AjaxResult;
-import com.stdiet.custom.domain.WxXmlData;
 import com.stdiet.custom.service.ISysWxService;
-import com.thoughtworks.xstream.XStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.xml.bind.annotation.XmlMimeType;
 
 @RestController
 @RequestMapping("/wx")
@@ -24,8 +21,13 @@ public class CusWxController extends BaseController {
     }
 
     @PostMapping("/checkSign")
-    public String autoResonse(HttpServletRequest request){
+    public String autoResponse(HttpServletRequest request) {
         return sysWxService.autoResponse(request);
+    }
+
+    @GetMapping("/accessToken")
+    public AjaxResult getAccessToken() {
+        return sysWxService.getAccessToken();
     }
 
 }

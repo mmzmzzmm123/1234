@@ -1,6 +1,10 @@
 package com.stdiet.custom.utils;
 
+import com.alibaba.fastjson.JSONObject;
+import com.stdiet.common.utils.StringUtils;
+import com.stdiet.common.utils.http.HttpUtils;
 import com.stdiet.custom.domain.WxXmlData;
+import com.stdiet.custom.domain.wechat.WxAccessToken;
 import com.thoughtworks.xstream.XStream;
 import org.apache.commons.io.IOUtils;
 
@@ -13,6 +17,23 @@ public class WxTokenUtils {
 
     // 与接口配置信息中的Token要一致
     private static String token = "shengtangdiet";
+    private static String appId = "wx4a9c1fc9dba53202";
+    private static String appSecret = "fff029ade5d3575df755f4cf9e52f8da";
+    private static String tokenUrl = "https://api.weixin.qq.com/cgi-bin/token";
+
+    public static WxAccessToken fetchAccessToken() {
+        try {
+            String resStr = HttpUtils.sendGet(tokenUrl, "grant_type=client_credential&appid=" + appId + "secret=" + appSecret);
+            if (StringUtils.isEmpty(resStr)) {
+                return null;
+            }
+            JSONObject obj = JSONObject.parseObject(resStr);
+            WxAccessToken token = JSONObject.toJavaObject(obj, WxAccessToken.class);
+            return token;
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
     /**
      * 验证签名
