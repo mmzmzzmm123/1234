@@ -151,4 +151,11 @@ public class SysCustomerHealthyServiceImpl implements ISysCustomerHealthyService
     public SysCustomerHealthy selectSysCustomerHealthyByPhone(String phone){
         return sysCustomerHealthyMapper.selectSysCustomerHealthyByPhone(phone);
     }
+
+    /**
+     * 根据客户ID查询健康评估表信息
+     */
+    public SysCustomerHealthy selectSysCustomerHealthyByCustomerId(Long customerId){
+        return sysCustomerHealthyMapper.selectSysCustomerHealthyByCustomerId(customerId);
+    }
 }

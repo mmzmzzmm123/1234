@@ -144,8 +144,16 @@
         from sys_customer_healthy as sch
         left join sys_customer sc on sc.id = sch.customer_id
         LEFT JOIN (SELECT dict_label, dict_value FROM sys_dict_data WHERE dict_type = 'conditioning_project') AS cp ON cp.dict_value = sch.conditioning_project_id
-
         where sch.del_flag = 0 and sc.del_flag = 0 and sch.id = #{id}
+    </select>
+
+    <!-- 根据客户ID查询客户健康评估 -->
+    <select id="selectSysCustomerHealthyByCustomerId" parameterType="Long" resultMap="SysCustomerHealthyResult">
+        <include refid="selectSysCustomerHealthyVo"/>,sc.name,sc.phone,cp.dict_label as conditioning_project
+        from sys_customer_healthy as sch
+        left join sys_customer sc on sc.id = sch.customer_id
+        LEFT JOIN (SELECT dict_label, dict_value FROM sys_dict_data WHERE dict_type = 'conditioning_project') AS cp ON cp.dict_value = sch.conditioning_project_id
+        where sch.del_flag = 0 and sc.del_flag = 0 and sch.customer_id = #{customerId}
     </select>
 
     <insert id="insertSysCustomerHealthy" parameterType="SysCustomerHealthy">

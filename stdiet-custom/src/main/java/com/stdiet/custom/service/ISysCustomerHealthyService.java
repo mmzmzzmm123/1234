@@ -59,4 +59,9 @@ public interface ISysCustomerHealthyService
      * @param phone
      */
     SysCustomerHealthy selectSysCustomerHealthyByPhone(String phone);
+
+    /**
+     * 根据客户ID查询健康评估表信息
+     */
+    SysCustomerHealthy selectSysCustomerHealthyByCustomerId(Long customerId);
 }

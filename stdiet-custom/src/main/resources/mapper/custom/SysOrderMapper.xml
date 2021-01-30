@@ -317,13 +317,13 @@
         where del_flag = 0 and order_id = #{order_id}
     </select>
 
-    <!-- 查询订单信息（用于计算提成） -->
+    <!-- 查询2021年开始的已审核的订单信息（用于计算提成） -->
     <select id="selectSimpleOrderMessage" resultMap="SysOrderResultExtended">
       select o.order_id,o.order_time,o.start_time,o.customer,o.review_status,o.amount,o.serve_time_id,o.give_serve_day,o.after_sale_id,su_sale.nick_name as afterSale_name,o.nutritionist_id,su_nutritionist.nick_name as nutritionist_name
       from sys_order o
       left join sys_user su_sale on su_sale.user_id = o.after_sale_id and su_sale.del_flag = 0
       left join sys_user su_nutritionist on su_nutritionist.user_id = o.nutritionist_id and su_nutritionist.del_flag = 0
-      where o.order_time >= '2021-01-01'
+      where review_status = 'yes' and o.order_time >= '2021-01-01'
       <if test="userId != null">
           and (su_sale.user_id = #{userId} or su_nutritionist.user_id = #{userId})
       </if>

@@ -309,6 +309,7 @@
     <!-- 订单抽屉 -->
     <order-drawer ref="cusOrderDrawerRef" />
     <!-- 合同抽屉 -->
+    <contract-drawer ref="cusContractDrawerRef"></contract-drawer>
     <!-- 健康评估弹窗 -->
     <physical-signs-dialog ref="physicalSignsDialogRef" />
     <!-- 食谱计划抽屉 -->
@@ -331,12 +332,14 @@ import { getOptions } from "@/api/custom/order";
 
 import OrderDrawer from "@/components/OrderDrawer";
 import PhysicalSignsDialog from "@/components/PhysicalSignsDialog";
+import ContractDrawer from "@/components/ContractDrawer";
 
 export default {
   name: "Customer",
   components: {
     "order-drawer": OrderDrawer,
     "physical-signs-dialog": PhysicalSignsDialog,
+    "contract-drawer": ContractDrawer
   },
   data() {
     const userId = store.getters && store.getters.userId;
@@ -476,7 +479,7 @@ export default {
       this.$refs["cusOrderDrawerRef"].showDrawer(row);
     },
     handleOnContractClick(row) {
-      console.log(row);
+      this.$refs["cusContractDrawerRef"].showDrawer(row);
     },
     handleOnBodySignClick(row) {
       console.log(row);

@@ -6,8 +6,10 @@ import com.stdiet.common.core.controller.BaseController;
 import com.stdiet.common.core.domain.AjaxResult;
 import com.stdiet.common.core.page.TableDataInfo;
 import com.stdiet.common.enums.BusinessType;
+import com.stdiet.common.utils.StringUtils;
 import com.stdiet.common.utils.poi.ExcelUtil;
 import com.stdiet.custom.domain.SysContract;
+import com.stdiet.custom.domain.SysCustomer;
 import com.stdiet.custom.page.PdfProcessInfo;
 import com.stdiet.custom.service.ISysContractService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,7 +69,13 @@ public class SysContractController extends BaseController {
     @PreAuthorize("@ss.hasPermi('custom:contract:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id) {
-        return AjaxResult.success(sysContractService.selectSysContractById(id));
+        SysContract contract = sysContractService.selectSysContractById(id);
+        if(contract != null){
+            if (contract.getSignName() != null && !contract.getSignName().equals("") && !contract.getName().trim().equals(contract.getSignName())) {
+                contract.setName(contract.getName() + "（" + contract.getSignName() + "）");
+            }
+        }
+        return AjaxResult.success(contract);
     }
 
     /**
