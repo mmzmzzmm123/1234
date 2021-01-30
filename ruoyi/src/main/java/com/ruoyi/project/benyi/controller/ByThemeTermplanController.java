@@ -10,6 +10,7 @@ import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.project.benyi.domain.ByThemeTermplanitem;
 import com.ruoyi.project.benyi.service.IByThemeTermplanitemService;
 import com.ruoyi.project.common.SchoolCommon;
+import com.ruoyi.project.system.domain.ByClass;
 import com.ruoyi.project.system.service.IByClassService;
 import com.ruoyi.project.system.service.ISysUserService;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -106,51 +107,56 @@ public class ByThemeTermplanController extends BaseController {
         String classId = schoolCommon.getClassId();
         //首先判断当前账户是否为幼儿园账号
         if (schoolCommon.isSchool() && !schoolCommon.isStringEmpty(classId)) {
-
-            ByThemeTermplan mybyThemeTermplan = new ByThemeTermplan();
-            String xnxqNew = null;
-            List<ByThemeTermplan> list = null;
-            xnxqNew = byThemeTermplan.getXnxq();
-            mybyThemeTermplan.setXnxq(xnxqNew);
-            mybyThemeTermplan.setClassid(classId);
-            mybyThemeTermplan.setStartmonth(null);
-            mybyThemeTermplan.setEndmonth(null);
-            list = byThemeTermplanService.selectByThemeTermplanList(mybyThemeTermplan);
-            System.out.println(list + "学期列表");
-            // 判断是否存在当前学期计划
-            if (list != null && list.size() > 0) {
-                return AjaxResult.error("当前学年学期计划已经存在，无法创建学期计划");
+            // 判断当前班级是否为托班
+            String bjtypeNew = byClassService.selectByClassById(classId).getBjtype();
+            if (bjtypeNew.equals("1")) {
+                return AjaxResult.error("当前班级为托班，无法创建计划");
             }else {
-                int iCount = schoolCommon.getDifMonth(byThemeTermplan.getStartmonth(), byThemeTermplan.getEndmonth());
-                System.out.println("月份差=" + iCount);
-                String uuid = schoolCommon.getUuid();
-                byThemeTermplan.setId(uuid);
-                byThemeTermplan.setSchoolid(SecurityUtils.getLoginUser().getUser().getDept().getDeptId());
-                byThemeTermplan.setCreateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
-                byThemeTermplan.setClassid(classId);
-                byThemeTermplan.setName(byClassService.selectByClassById(classId).getBjmc() + "-主题整合学期计划");
+                ByThemeTermplan mybyThemeTermplan = new ByThemeTermplan();
+                String xnxqNew = null;
+                List<ByThemeTermplan> list = null;
+                xnxqNew = byThemeTermplan.getXnxq();
+                mybyThemeTermplan.setXnxq(xnxqNew);
+                mybyThemeTermplan.setClassid(classId);
+                mybyThemeTermplan.setStartmonth(null);
+                mybyThemeTermplan.setEndmonth(null);
+                list = byThemeTermplanService.selectByThemeTermplanList(mybyThemeTermplan);
+                System.out.println(list + "学期列表");
+                // 判断是否存在当前学期计划
+                if (list != null && list.size() > 0) {
+                    return AjaxResult.error("当前学年学期计划已经存在，无法创建学期计划");
+                }else {
+                    int iCount = schoolCommon.getDifMonth(byThemeTermplan.getStartmonth(), byThemeTermplan.getEndmonth());
+                    System.out.println("月份差=" + iCount);
+                    String uuid = schoolCommon.getUuid();
+                    byThemeTermplan.setId(uuid);
+                    byThemeTermplan.setSchoolid(SecurityUtils.getLoginUser().getUser().getDept().getDeptId());
+                    byThemeTermplan.setCreateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
+                    byThemeTermplan.setClassid(classId);
+                    byThemeTermplan.setName(byClassService.selectByClassById(classId).getBjmc() + "-主题整合学期计划");
 
 
-                ByThemeTermplanitem byThemeTermplanitem = null;
-                for (int i = 0; i <= iCount; i++) {
-                    byThemeTermplanitem = new ByThemeTermplanitem();
-                    byThemeTermplanitem.setTpid(uuid);
-                    byThemeTermplanitem.setCreateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
+                    ByThemeTermplanitem byThemeTermplanitem = null;
+                    for (int i = 0; i <= iCount; i++) {
+                        byThemeTermplanitem = new ByThemeTermplanitem();
+                        byThemeTermplanitem.setTpid(uuid);
+                        byThemeTermplanitem.setCreateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
 //                //月份加1
 //                Calendar calendar = Calendar.getInstance();
 //                calendar.setTime(byThemeTermplan.getStartmonth());
 //                calendar.add(Calendar.MONTH, i);
 
-                    byThemeTermplanitem.setMonth(schoolCommon.DateAddMonths(i, byThemeTermplan.getStartmonth()));
+                        byThemeTermplanitem.setMonth(schoolCommon.DateAddMonths(i, byThemeTermplan.getStartmonth()));
 
-                    //创建时间
-                    byThemeTermplanitem.setCreateTime(new Date());
+                        //创建时间
+                        byThemeTermplanitem.setCreateTime(new Date());
 
-                    //新增每月计划
-                    byThemeTermplanitemService.insertByThemeTermplanitem(byThemeTermplanitem);
+                        //新增每月计划
+                        byThemeTermplanitemService.insertByThemeTermplanitem(byThemeTermplanitem);
+                    }
+
+                    return toAjax(byThemeTermplanService.insertByThemeTermplan(byThemeTermplan));
                 }
-
-                return toAjax(byThemeTermplanService.insertByThemeTermplan(byThemeTermplan));
             }
         } else {
             return AjaxResult.error("当前用户非幼儿园教师，无法创建计划");

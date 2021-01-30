@@ -110,48 +110,53 @@ public class ByThemeMonthplanController extends BaseController {
         String classId = schoolCommon.getClassId();
         //首先判断当前账户是否为幼儿园账号
         if (schoolCommon.isSchool() && !schoolCommon.isStringEmpty(classId)) {
-
-            //根据当前月份 查找学期计划的主题
-            ByThemeTermplan byThemeTermplan = new ByThemeTermplan();
-            byThemeTermplan.setSchoolid(SecurityUtils.getLoginUser().getUser().getDept().getDeptId());
-            byThemeTermplan.setClassid(classId);
-            byThemeTermplan.setStatus("2");
-            byThemeTermplan.setXnxq(byThemeMonthplan.getXnxq());
-            List<ByThemeTermplan> list = byThemeTermplanService.selectByThemeTermplanList(byThemeTermplan);
-            String strThemeIds = "";
-            if (list != null && list.size() > 0) {
-                for (int i = 0; i < list.size(); i++) {
-                    String themeId = list.get(i).getId();
-                    ByThemeTermplanitem byThemeTermplanitem = new ByThemeTermplanitem();
-                    byThemeTermplanitem.setTpid(themeId);
-                    byThemeTermplanitem.setMonth(byThemeMonthplan.getMonth());
-                    List<ByThemeTermplanitem> listItem = byThemeTermplanitemService.selectByThemeTermplanitemList(byThemeTermplanitem);
-                    if (listItem != null && listItem.size() > 0) {
-                        for (int j = 0; j < listItem.size(); j++) {
-                            String themeIds = listItem.get(j).getThemeconent();
-                            if (!schoolCommon.isStringEmpty(themeIds)) {
-                                strThemeIds = strThemeIds + themeIds;
+            // 判断当前班级是否为托班
+            String bjtypeNew = byClassService.selectByClassById(classId).getBjtype();
+            if (bjtypeNew.equals("1")) {
+                return AjaxResult.error("当前班级为托班，无法创建计划");
+            }else {
+                //根据当前月份 查找学期计划的主题
+                ByThemeTermplan byThemeTermplan = new ByThemeTermplan();
+                byThemeTermplan.setSchoolid(SecurityUtils.getLoginUser().getUser().getDept().getDeptId());
+                byThemeTermplan.setClassid(classId);
+                byThemeTermplan.setStatus("2");
+                byThemeTermplan.setXnxq(byThemeMonthplan.getXnxq());
+                List<ByThemeTermplan> list = byThemeTermplanService.selectByThemeTermplanList(byThemeTermplan);
+                String strThemeIds = "";
+                if (list != null && list.size() > 0) {
+                    for (int i = 0; i < list.size(); i++) {
+                        String themeId = list.get(i).getId();
+                        ByThemeTermplanitem byThemeTermplanitem = new ByThemeTermplanitem();
+                        byThemeTermplanitem.setTpid(themeId);
+                        byThemeTermplanitem.setMonth(byThemeMonthplan.getMonth());
+                        List<ByThemeTermplanitem> listItem = byThemeTermplanitemService.selectByThemeTermplanitemList(byThemeTermplanitem);
+                        if (listItem != null && listItem.size() > 0) {
+                            for (int j = 0; j < listItem.size(); j++) {
+                                String themeIds = listItem.get(j).getThemeconent();
+                                if (!schoolCommon.isStringEmpty(themeIds)) {
+                                    strThemeIds = strThemeIds + themeIds;
+                                }
                             }
                         }
                     }
+                } else {
+                    return AjaxResult.error("当前班级未制定学期计划或学期计划未审批，无法创建月计划");
                 }
-            } else {
-                return AjaxResult.error("当前班级未制定学期计划或学期计划未审批，无法创建月计划");
-            }
 
-            if (schoolCommon.isStringEmpty(strThemeIds)) {
-                return AjaxResult.error("当前班级制定的学期计划未设置月份主题，无法创建月计划");
-            }
+                if (schoolCommon.isStringEmpty(strThemeIds)) {
+                    return AjaxResult.error("当前班级制定的学期计划未设置月份主题，无法创建月计划");
+                }
 
-            String uuid = schoolCommon.getUuid();
-            byThemeMonthplan.setId(uuid);
-            byThemeMonthplan.setSchoolid(SecurityUtils.getLoginUser().getUser().getDept().getDeptId());
-            byThemeMonthplan.setClassid(classId);
-            byThemeMonthplan.setThemes(strThemeIds);//主题id
-            byThemeMonthplan.setCreateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
-            byThemeMonthplan.setName(byClassService.selectByClassById(classId).getBjmc() + "-主题整合月计划" + "(" + sdf.format(byThemeMonthplan.getMonth()) + ")");
-            return toAjax(byThemeMonthplanService.insertByThemeMonthplan(byThemeMonthplan));
+                String uuid = schoolCommon.getUuid();
+                byThemeMonthplan.setId(uuid);
+                byThemeMonthplan.setSchoolid(SecurityUtils.getLoginUser().getUser().getDept().getDeptId());
+                byThemeMonthplan.setClassid(classId);
+                byThemeMonthplan.setThemes(strThemeIds);//主题id
+                byThemeMonthplan.setCreateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
+                byThemeMonthplan.setName(byClassService.selectByClassById(classId).getBjmc() + "-主题整合月计划" + "(" + sdf.format(byThemeMonthplan.getMonth()) + ")");
+                return toAjax(byThemeMonthplanService.insertByThemeMonthplan(byThemeMonthplan));
+            }
         } else {
             return AjaxResult.error("当前用户非幼儿园教师，无法创建月计划");
         }

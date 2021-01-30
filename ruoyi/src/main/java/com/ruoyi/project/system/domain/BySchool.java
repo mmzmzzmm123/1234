@@ -1,5 +1,6 @@
 package com.ruoyi.project.system.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.framework.aspectj.lang.annotation.Excel;
@@ -130,6 +131,7 @@ public class BySchool extends BaseEntity
 
     /** 开通截至日期 */
     @Excel(name = "开通截至日期", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date openDeadline;
 
     /** 当前学年 */

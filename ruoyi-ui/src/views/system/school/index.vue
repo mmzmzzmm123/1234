@@ -116,6 +116,7 @@
       <el-table-column label="状态" align="center" prop="status" :formatter="statusFormat" />
       <!--<el-table-column label="创建人" align="center" prop="createUser" />-->
       <el-table-column label="创建时间" align="center" prop="createTime" />
+      <el-table-column label="开通截至时间" align="center" prop="openDeadline" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button

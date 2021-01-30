@@ -115,74 +115,78 @@ public class ByThemeWeekplanController extends BaseController {
         String classId = schoolCommon.getClassId();
         //首先判断当前账户是否为幼儿园账号
         if (schoolCommon.isSchool() && !schoolCommon.isStringEmpty(classId)) {
+            // 判断当前班级是否为托班
+            String bjtypeNew = byClassService.selectByClassById(classId).getBjtype();
+            if (bjtypeNew.equals("1")) {
+                return AjaxResult.error("当前班级为托班，无法创建计划");
+            }else {
+                //判断当前班级是否创建月计划
+                ByThemeMonthplan byThemeMonthplan = new ByThemeMonthplan();
+                byThemeMonthplan.setSchoolid(SecurityUtils.getLoginUser().getUser().getDept().getDeptId());
+                byThemeMonthplan.setClassid(classId);
+                byThemeMonthplan.setXnxq(byThemeWeekplan.getXnxq());
+                byThemeMonthplan.setMonth(byThemeWeekplan.getMonth());
+                byThemeMonthplan.setStatus("2");
+                List<ByThemeMonthplan> list = byThemeMonthplanService.selectByThemeMonthplanList(byThemeMonthplan);
+                int iCount = 0;
+                if (list != null && list.size() > 0) {
+                    //循环月计划，查找周详情
+                    for (int i = 0; i < list.size(); i++) {
+                        String mpid = list.get(i).getId();
+                        ByThemeMonthplanitem byThemeMonthplanitem = new ByThemeMonthplanitem();
+                        byThemeMonthplanitem.setMpid(mpid);
+                        byThemeMonthplanitem.setZc(byThemeWeekplan.getZc());
 
-            //判断当前班级是否创建月计划
-            ByThemeMonthplan byThemeMonthplan = new ByThemeMonthplan();
-            byThemeMonthplan.setSchoolid(SecurityUtils.getLoginUser().getUser().getDept().getDeptId());
-            byThemeMonthplan.setClassid(classId);
-            byThemeMonthplan.setXnxq(byThemeWeekplan.getXnxq());
-            byThemeMonthplan.setMonth(byThemeWeekplan.getMonth());
-            byThemeMonthplan.setStatus("2");
-            List<ByThemeMonthplan> list = byThemeMonthplanService.selectByThemeMonthplanList(byThemeMonthplan);
-            int iCount = 0;
-            if (list != null && list.size() > 0) {
-                //循环月计划，查找周详情
-                for (int i = 0; i < list.size(); i++) {
-                    String mpid = list.get(i).getId();
-                    ByThemeMonthplanitem byThemeMonthplanitem = new ByThemeMonthplanitem();
-                    byThemeMonthplanitem.setMpid(mpid);
-                    byThemeMonthplanitem.setZc(byThemeWeekplan.getZc());
-
-                    List<ByThemeMonthplanitem> listItem = byThemeonthplanitemService.selectByThemeMonthplanitemList(byThemeMonthplanitem);
-                    for (int j = 0; j < listItem.size(); j++) {
-                        iCount = iCount + (j + 1);
-                    }
-                }
-            } else {
-                return AjaxResult.error("当前班级未制定月计划或月计划未审批，无法创建周计划");
-            }
-
-            if (iCount <= 0) {
-                return AjaxResult.error("当前班级未设置月份明细计划，无法创建周计划");
-            }
-
-            String uuid = schoolCommon.getUuid();
-            byThemeWeekplan.setId(uuid);
-            byThemeWeekplan.setName(byClassService.selectByClassById(classId).getBjmc() + "-主题整合周计划" + "(第" + byThemeWeekplan.getZc() + "周)");
-            byThemeWeekplan.setSchoolid(SecurityUtils.getLoginUser().getUser().getDept().getDeptId());
-            byThemeWeekplan.setClassid(classId);
-            byThemeWeekplan.setCreateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
-
-            if (list != null && list.size() > 0) {
-                //循环月计划，查找周详情
-                for (int i = 0; i < list.size(); i++) {
-                    String mpid = list.get(i).getId();
-                    ByThemeMonthplanitem byThemeMonthplanitem = new ByThemeMonthplanitem();
-                    byThemeMonthplanitem.setMpid(mpid);
-                    byThemeMonthplanitem.setZc(byThemeWeekplan.getZc());
-
-                    List<ByThemeMonthplanitem> listItem = byThemeonthplanitemService.selectByThemeMonthplanitemList(byThemeMonthplanitem);
-                    for (int j = 0; j < listItem.size(); j++) {
-                        SimpleDateFormat format = new java.text.SimpleDateFormat("yyyy-MM-dd");
-                        Date dtStart = listItem.get(j).getStarttime();
-                        Date dtEnd = listItem.get(j).getEndtime();
-                        long day = (dtEnd.getTime() - dtStart.getTime()) / (24 * 60 * 60 * 1000) + 1;
-                        System.out.println("day=" + day);
-                        ByThemeWeekplanitem byThemeWeekplanitem = null;
-                        for (int g = 0; g < day; g++) {
-                            byThemeWeekplanitem = new ByThemeWeekplanitem();
-                            byThemeWeekplanitem.setDaytime(schoolCommon.DateAddDays(g, listItem.get(j).getStarttime()));
-                            byThemeWeekplanitem.setZhou(Long.valueOf(schoolCommon.dateToWeek(byThemeWeekplanitem.getDaytime())));
-                            byThemeWeekplanitem.setCreateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
-                            byThemeWeekplanitem.setWpid(uuid);
-                            byThemeWeekplanitemService.insertByThemeWeekplanitem(byThemeWeekplanitem);
+                        List<ByThemeMonthplanitem> listItem = byThemeonthplanitemService.selectByThemeMonthplanitemList(byThemeMonthplanitem);
+                        for (int j = 0; j < listItem.size(); j++) {
+                            iCount = iCount + (j + 1);
                         }
+                    }
+                } else {
+                    return AjaxResult.error("当前班级未制定月计划或月计划未审批，无法创建周计划");
+                }
 
+                if (iCount <= 0) {
+                    return AjaxResult.error("当前班级未设置月份明细计划，无法创建周计划");
+                }
+
+                String uuid = schoolCommon.getUuid();
+                byThemeWeekplan.setId(uuid);
+                byThemeWeekplan.setName(byClassService.selectByClassById(classId).getBjmc() + "-主题整合周计划" + "(第" + byThemeWeekplan.getZc() + "周)");
+                byThemeWeekplan.setSchoolid(SecurityUtils.getLoginUser().getUser().getDept().getDeptId());
+                byThemeWeekplan.setClassid(classId);
+                byThemeWeekplan.setCreateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
+
+                if (list != null && list.size() > 0) {
+                    //循环月计划，查找周详情
+                    for (int i = 0; i < list.size(); i++) {
+                        String mpid = list.get(i).getId();
+                        ByThemeMonthplanitem byThemeMonthplanitem = new ByThemeMonthplanitem();
+                        byThemeMonthplanitem.setMpid(mpid);
+                        byThemeMonthplanitem.setZc(byThemeWeekplan.getZc());
+
+                        List<ByThemeMonthplanitem> listItem = byThemeonthplanitemService.selectByThemeMonthplanitemList(byThemeMonthplanitem);
+                        for (int j = 0; j < listItem.size(); j++) {
+                            SimpleDateFormat format = new java.text.SimpleDateFormat("yyyy-MM-dd");
+                            Date dtStart = listItem.get(j).getStarttime();
+                            Date dtEnd = listItem.get(j).getEndtime();
+                            long day = (dtEnd.getTime() - dtStart.getTime()) / (24 * 60 * 60 * 1000) + 1;
+                            System.out.println("day=" + day);
+                            ByThemeWeekplanitem byThemeWeekplanitem = null;
+                            for (int g = 0; g < day; g++) {
+                                byThemeWeekplanitem = new ByThemeWeekplanitem();
+                                byThemeWeekplanitem.setDaytime(schoolCommon.DateAddDays(g, listItem.get(j).getStarttime()));
+                                byThemeWeekplanitem.setZhou(Long.valueOf(schoolCommon.dateToWeek(byThemeWeekplanitem.getDaytime())));
+                                byThemeWeekplanitem.setCreateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
+                                byThemeWeekplanitem.setWpid(uuid);
+                                byThemeWeekplanitemService.insertByThemeWeekplanitem(byThemeWeekplanitem);
+                            }
+
+                        }
                     }
                 }
+                return toAjax(byThemeWeekplanService.insertByThemeWeekplan(byThemeWeekplan));
             }
-
-            return toAjax(byThemeWeekplanService.insertByThemeWeekplan(byThemeWeekplan));
         } else {
             return AjaxResult.error("当前用户非幼儿园教师，无法创建周计划");
         }

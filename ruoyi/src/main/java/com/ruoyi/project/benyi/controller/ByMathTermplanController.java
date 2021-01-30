@@ -102,28 +102,34 @@ public class ByMathTermplanController extends BaseController {
         String classId = schoolCommon.getClassId();
 
         if (schoolCommon.isSchool() && !schoolCommon.isStringEmpty(classId)) {
-            int iCount = schoolCommon.getDifMonth(byMathTermplan.getStartmonth(), byMathTermplan.getEndmonth());
-            System.out.println("月份差=" + iCount);
-            String uuid = schoolCommon.getUuid();
-            byMathTermplan.setId(uuid);
-            byMathTermplan.setSchoolid(SecurityUtils.getLoginUser().getUser().getDept().getDeptId());
-            byMathTermplan.setCreateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
-            byMathTermplan.setClassid(classId);
-            byMathTermplan.setName(byClassService.selectByClassById(classId).getBjmc() + "-游戏数学学期计划");
+            // 判断当前班级是否为托班
+            String bjtypeNew = byClassService.selectByClassById(classId).getBjtype();
+            if (bjtypeNew.equals("1")) {
+                return AjaxResult.error("当前班级为托班，无法创建计划");
+            }else {
+                int iCount = schoolCommon.getDifMonth(byMathTermplan.getStartmonth(), byMathTermplan.getEndmonth());
+                System.out.println("月份差=" + iCount);
+                String uuid = schoolCommon.getUuid();
+                byMathTermplan.setId(uuid);
+                byMathTermplan.setSchoolid(SecurityUtils.getLoginUser().getUser().getDept().getDeptId());
+                byMathTermplan.setCreateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
+                byMathTermplan.setClassid(classId);
+                byMathTermplan.setName(byClassService.selectByClassById(classId).getBjmc() + "-游戏数学学期计划");
 
-            // 自动创建游戏数学学期计划明细
-            ByMathTermplanitem byMathTermplanitem = null;
-            for (int i = 0; i <= iCount; i++) {
-                byMathTermplanitem = new ByMathTermplanitem();
-                byMathTermplanitem.setTpid(uuid);
-                byMathTermplanitem.setCreateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
-                byMathTermplanitem.setMonth(schoolCommon.DateAddMonths(i, byMathTermplan.getStartmonth()));
-                //创建时间
-                byMathTermplanitem.setCreateTime(new Date());
-                //新增每月计划
-                byMathTermplanitemService.insertByMathTermplanitem(byMathTermplanitem);
+                // 自动创建游戏数学学期计划明细
+                ByMathTermplanitem byMathTermplanitem = null;
+                for (int i = 0; i <= iCount; i++) {
+                    byMathTermplanitem = new ByMathTermplanitem();
+                    byMathTermplanitem.setTpid(uuid);
+                    byMathTermplanitem.setCreateuserid(SecurityUtils.getLoginUser().getUser().getUserId());
+                    byMathTermplanitem.setMonth(schoolCommon.DateAddMonths(i, byMathTermplan.getStartmonth()));
+                    //创建时间
+                    byMathTermplanitem.setCreateTime(new Date());
+                    //新增每月计划
+                    byMathTermplanitemService.insertByMathTermplanitem(byMathTermplanitem);
+                }
+                return toAjax(byMathTermplanService.insertByMathTermplan(byMathTermplan));
             }
-            return toAjax(byMathTermplanService.insertByMathTermplan(byMathTermplan));
         } else {
             return AjaxResult.error("当前用户非幼儿园教师，无法创建计划");
         }
