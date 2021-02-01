@@ -22,10 +22,12 @@ public class WxTokenUtils {
 
     // 与接口配置信息中的Token要一致
     private static String token = "shengtangdiet";
-    //    private static String appId = "wx4a9c1fc9dba53202";
-//    private static String appSecret = "fff029ade5d3575df755f4cf9e52f8da";
-    private static String appId = "wxaf10fe560ea043a0";
-    private static String appSecret = "afb47e477337df23b7562c3c1f965826";
+    // 胜唐体控
+    private static String appId = "wx4a9c1fc9dba53202";
+    private static String appSecret = "fff029ade5d3575df755f4cf9e52f8da";
+    // 胜唐体控李晓
+//    private static String appId = "wxaf10fe560ea043a0";
+//    private static String appSecret = "afb47e477337df23b7562c3c1f965826";
     private static String tokenUrl = "https://api.weixin.qq.com/cgi-bin/token";
     private static String uploadMaterialUrl = "https://api.weixin.qq.com/cgi-bin/material/add_material";
 
