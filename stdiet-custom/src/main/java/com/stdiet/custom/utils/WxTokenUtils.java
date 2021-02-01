@@ -55,6 +55,7 @@ public class WxTokenUtils {
         JSONObject obj = JSONObject.parseObject(resultStr);
         WxFileUploadResult result = JSONObject.toJavaObject(obj, WxFileUploadResult.class);
         result.setMediaId(resultStr);
+        result.setUrl(url);
         return result;
     }
 
