@@ -139,7 +139,7 @@ public class SysWxSaleAccountController extends BaseController {
 
             AjaxResult ajax = AjaxResult.success();
             ajax.put("fileName", fileName);
-            ajax.put("mediaId", result.getMediaId());
+            ajax.put("wxInfo", result);
             ajax.put("url", url);
             return ajax;
         } catch (Exception e) {
