@@ -45,10 +45,10 @@ public class WxTokenUtils {
         }
     }
 
-    public static WxFileUploadResult uploadImage(String filePath, String fileName, String accessToken) throws Exception {
+    public static WxFileUploadResult uploadImage(File file, String fileName, String accessToken) throws Exception {
         String url = uploadMaterialUrl + "?access_token=" + accessToken + "&type=image";
         HttpPostUtil post = new HttpPostUtil(url);
-        post.addParameter("media", new File(filePath));
+        post.addParameter("media", file);
         String resultStr = post.send();
         JSONObject obj = JSONObject.parseObject(resultStr);
         WxFileUploadResult result = JSONObject.toJavaObject(obj, WxFileUploadResult.class);

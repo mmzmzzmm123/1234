@@ -21,6 +21,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -135,11 +136,15 @@ public class SysWxSaleAccountController extends BaseController {
                 redisCache.setCacheObject(WxTokenUtils.KEY_ACCESS_TOKEN, wxAccessToken.getAccessToken(), wxAccessToken.getExpiresIn(), TimeUnit.SECONDS);
             }
 
-            WxFileUploadResult result = WxTokenUtils.uploadImage(oriFilePath, oriFileName, accessToken);
+            File uploadFile = new File(oriFilePath);
+
+            WxFileUploadResult result = WxTokenUtils.uploadImage(uploadFile, oriFileName, accessToken);
 
             AjaxResult ajax = AjaxResult.success();
             ajax.put("fileName", fileName);
             ajax.put("wxInfo", result);
+            ajax.put("file", uploadFile);
+            ajax.put("accessToken", accessToken);
             ajax.put("url", url);
             return ajax;
         } catch (Exception e) {
