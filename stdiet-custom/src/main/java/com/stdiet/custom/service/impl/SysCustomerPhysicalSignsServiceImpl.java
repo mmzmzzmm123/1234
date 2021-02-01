@@ -182,4 +182,14 @@ public class SysCustomerPhysicalSignsServiceImpl implements ISysCustomerPhysical
     public SysCustomerPhysicalSigns  selectSysCustomerAndSignByPhone(String phone){
         return sysCustomerPhysicalSignsMapper.selectSysCustomerAndSignByPhone(phone);
     }
+
+    /**
+     * 根据客户ID删除对应体征信息
+     * @param customerId
+     * @return
+     */
+    @Override
+    public int delCustomerSignByCustomerId(Long customerId){
+        return sysCustomerPhysicalSignsMapper.delCustomerSignByCustomerId(customerId);
+    }
 }

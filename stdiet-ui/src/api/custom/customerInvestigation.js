@@ -34,3 +34,12 @@ export function addCustomerHealthy(data) {
     data: data
   })
 }
+
+// 根据加密客户ID获取对应客户信息
+export function getCustomerBaseMessage(id) {
+  return request({
+    url: '/investigate/getCustomerBaseMessage/' + id,
+    method: 'get'
+  })
+}
+

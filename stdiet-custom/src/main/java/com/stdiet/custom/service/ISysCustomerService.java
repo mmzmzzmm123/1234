@@ -67,4 +67,11 @@ public interface ISysCustomerService
      * @return 结果
      */
     SysCustomer getCustomerByPhone(String phone);
+
+    /**
+     * 判断客户手机号是否已存在
+     * @param sysCustomer
+     * @return
+     */
+    boolean isCustomerExistByPhone(SysCustomer sysCustomer);
 }

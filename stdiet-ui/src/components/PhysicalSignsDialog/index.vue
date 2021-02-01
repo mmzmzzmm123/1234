@@ -1,5 +1,9 @@
 <template>
   <el-dialog :visible.sync="visible" :title="title" append-to-body @closed="onClosed">
+    <div style="float:right;margin-top:-10px;margin-bottom: 10px;" v-show="dataList.length > 0">
+      <!--<el-button v-hasPermi="['custom:healthy:edit']" @click=""  plain>修改信息</el-button>-->
+      <el-button type="danger" v-hasPermi="['custom:healthy:remove']" @click="handleDelete()" plain>删除信息</el-button>
+    </div>
     <!-- 客户健康评估 -->
     <div v-if="dataList.length > 0 && dataType == 0">
       <!-- 基础信息 -->
@@ -46,15 +50,18 @@
     <!-- 客户体征 -->
     <div v-else>
       <table-detail-message v-show="dataList.length > 0" :data="dataList" ></table-detail-message>
-      <p v-show="dataList.length == 0" style="font-size: 20px;text-align:center">暂无数据！</p>
+      <p v-show="dataList.length == 0" style="font-size: 20px;text-align:center;">暂无数据！
+        <el-button icon="el-icon-share" size="small" title="点击复制链接" class="copyBtn" type="primary" :data-clipboard-text="copyValue" @click="handleCopy()">健康评估表链接</el-button>
+      </p>
     </div>
   </el-dialog>
 </template>
 <script>
-import { getCustomerPhysicalSignsByCusId } from "@/api/custom/customer";
+import { getCustomerPhysicalSignsByCusId,delCustomerHealthy } from "@/api/custom/customer";
 import TableDetailMessage from "@/components/TableDetailMessage";
 import AutoHideMessage from "@/components/AutoHideMessage";
 import * as healthyData from "@/utils/healthyData";
+import Clipboard from 'clipboard';
 
 export default {
   name: "PhysicalSignsDialog",
@@ -66,6 +73,7 @@ export default {
     return {
       visible: false,
       title: "",
+      data: null,
       dataList: [],
       dataType: 0,
       // 体征标题
@@ -171,8 +179,9 @@ export default {
         [
           ["medicalReport_one","medicalReport_two","medicalReport_three"]
         ]
-      ]
-
+      ],
+      copyValue: "",
+      enc_id: ""
     };
   },
   methods: {
@@ -186,6 +195,7 @@ export default {
       }
     },
     showDialog(data) {
+      this.data = data;
       this.title = `「${data.name}」`;
       getCustomerPhysicalSignsByCusId(data.id).then((res) => {
         if (res.data.customerHealthy) {
@@ -198,11 +208,15 @@ export default {
           }
         }
         this.title += (this.dataType == 0 ? "客户健康评估信息" : "客户体征信息");
+        this.enc_id = res.data.enc_id;
         this.visible = true;
       });
     },
     onClosed() {
       this.dataList = [];
+      this.data = null;
+      this.enc_id = "";
+      this.copyValue = "";
     },
     //对体征信息进行处理
     getDataListBySignMessage(sign){
@@ -383,8 +397,34 @@ export default {
         str = str.substring(0,str.length-1);
       }
       return str;
-    }
-  },
+    },
+    handleCopy() {
+      this.copyValue = window.location.origin.replace('manage', 'sign') + "/subhealthyInvestigation/"+this.enc_id;
+      const btnCopy = new Clipboard('.copyBtn');
+      this.$message({
+        message: '拷贝成功',
+        type: 'success'
+      });
+    },
+    /** 删除健康信息操作 */
+    handleDelete() {
+      const ids = this.data.id;
+      this.$confirm(
+        '是否确认删除客户姓名为为"' + this.data.name + '"的体征信息?',
+        "警告",
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+        }
+      ).then(function () {
+          return delCustomerHealthy(ids);
+      }).then(() => {
+          this.dataList = [];
+          this.msgSuccess("删除成功");
+      }).catch(function () {});
+    },
+  }
 };
 </script>
 

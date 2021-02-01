@@ -68,3 +68,12 @@ export function getCustomerPhysicalSignsByCusId(id) {
     method: "get"
   });
 }
+
+// 删除客户健康评估信息或体征信息
+export function delCustomerHealthy(id) {
+  return request({
+    url: "/custom/customer/delCustomerHealthy/" + id,
+    method: "get"
+  });
+}
+

@@ -12,7 +12,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="业务员" prop="userId">
-        <el-select v-model="queryParams.userId" placeholder="请选择业务员" clearable size="small">
+        <el-select v-model="queryParams.userId" filterable placeholder="请选择业务员" clearable size="small">
           <el-option
             v-for="dict in searchUserIdOptions"
             :key="dict.dictValue"
@@ -21,14 +21,14 @@
           />
         </el-select>
       </el-form-item>
-      <!--<el-form-item label="月份" prop="month">
+      <el-form-item label="月份" prop="month">
         <el-date-picker
           v-model="month"
           @change="monthRangeChange"
           type="month"
-          placeholder="选择月">
+          placeholder="选择月份">
         </el-date-picker>
-      </el-form-item>-->
+      </el-form-item>
       <el-form-item>
         <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -239,7 +239,7 @@
       /** 重置按钮操作 */
       resetQuery() {
         this.resetForm("queryForm");
-        this.handleQuery();
+        //this.handleQuery();
         this.searchUserIdOptions = this.totalUserIdOptions.slice();
       },
       // 多选框选中数据

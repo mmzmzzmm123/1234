@@ -76,6 +76,7 @@
               v-model="queryParams.preSaleId"
               placeholder="请选择售前"
               clearable
+              filterable
               size="small"
             >
               <el-option
@@ -93,6 +94,7 @@
               v-model="queryParams.afterSaleId"
               placeholder="请选择售后"
               clearable
+              filterable
               size="small"
             >
               <el-option
@@ -110,6 +112,7 @@
               v-model="queryParams.nutritionistId"
               placeholder="请选择主营养师"
               clearable
+              filterable
               size="small"
             >
               <el-option
@@ -131,6 +134,7 @@
               v-model="queryParams.nutriAssisId"
               placeholder="请选择营养师助理"
               clearable
+              filterable
               style="width: 170px"
               size="small"
             >
@@ -149,6 +153,7 @@
               v-model="queryParams.plannerId"
               placeholder="请选择策划"
               clearable
+              filterable
               size="small"
             >
               <el-option
@@ -166,6 +171,7 @@
               v-model="queryParams.plannerAssisId"
               placeholder="请选择策划助理"
               clearable
+              filterable
               size="small"
             >
               <el-option
@@ -183,6 +189,7 @@
               v-model="queryParams.operatorId"
               placeholder="请选择运营"
               clearable
+              filterable
               size="small"
             >
               <el-option
@@ -200,6 +207,7 @@
               v-model="queryParams.operatorAssisId"
               placeholder="请选择运营助理"
               clearable
+              filterable
               size="small"
             >
               <el-option
@@ -250,7 +258,6 @@
               start-placeholder="开始日期"
               end-placeholder="结束日期"
               value-format="yyyy-MM-dd"
-              :picker-options="pickerOptions"
             >
             </el-date-picker>
           </el-form-item>
@@ -379,14 +386,14 @@
             v-hasPermi="['custom:order:edit']"
             >修改
           </el-button>
-          <!-- <el-button
+           <el-button
             size="mini"
             type="text"
             icon="el-icon-s-data"
             @click="orderPauseManage(scope.row)"
             v-hasPermi="['orderPause:pause:query']"
             >暂停记录管理
-          </el-button> -->
+          </el-button>
           <el-button
             size="mini"
             type="text"

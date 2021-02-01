@@ -10,10 +10,14 @@
     </div>
     <el-form ref="form" label-position="top" :model="form" :rules="rules" label-width="100px" style="padding: 16px">
         <div v-show="stepArray[0]">
-        <p class="p_title_1" style="margin-top: 5px;">{{healthyData['titleArray'][0]}}</p>
-        <el-form-item label="真实姓名" prop="name" style="padding-top: 10px;">
-          <el-input v-model="form.name" placeholder="请输入真实姓名" maxlength="20"/>
+        <p class="p_title_1" style="margin-top: 10px;">{{healthyData['titleArray'][0]}}</p>
+        <p style="font-size: 15px; margin-bottom: 12px;margin-top: 10px;">请您确认下方姓名、手机号是否正确</p>
+        <el-form-item label="真实姓名" prop="name">
+          <el-input v-model="form.name" :readonly="true" placeholder="请输入真实姓名" maxlength="20"/>
         </el-form-item>
+          <el-form-item label="手机号" prop="phone" >
+            <el-input type="number" :readonly="true" v-model="form.phone" placeholder="请输入手机号" />
+          </el-form-item>
         <el-form-item label="性别" prop="sex">
           <el-radio-group v-model="form.sex" size="small" >
             <el-radio :label="parseInt('0')"  border>男</el-radio>
@@ -29,10 +33,6 @@
           <el-form-item label="体重（斤）" prop="weight" >
             <el-input type="number" v-model="form.weight" placeholder="请输入体重" autocomplete="off" ></el-input>
           </el-form-item>
-
-        <el-form-item label="手机号" prop="phone" >
-          <el-input type="number" v-model="form.phone" placeholder="请输入手机号" />
-        </el-form-item>
           <el-form-item label="调理项目" prop="conditioningProjectId">
             <el-select v-model="form.conditioningProjectId" filterable clearable placeholder="请选择">
               <el-option
@@ -652,7 +652,7 @@
   </section>
 </template>
 <script>
-import { getDictData,addCustomerHealthy,physicalSignsList } from "@/api/custom/customerInvestigation";
+import { getDictData,addCustomerHealthy,physicalSignsList,getCustomerBaseMessage } from "@/api/custom/customerInvestigation";
 import * as healthyData from "@/utils/healthyData";
 const logo = require("@/assets/logo/st_logo.png");
 export default {
@@ -665,6 +665,8 @@ export default {
           callback();
       };
     return {
+      //客户是否存在标识
+      customerExistFlag:false,
       healthyData:healthyData,
       logo,
       submitFlag: false,
@@ -675,6 +677,7 @@ export default {
       stepArray: [true,false,false,false,false,false,false,false,false],
       stepActive: 0,
       form: {
+        customerEncId: null,
         name: null,
         phone: null,
         conditioningProjectId: 0,
@@ -801,10 +804,10 @@ export default {
       },
       timer: null,
       rules: {
-        name: [
+        /*name: [
           { required: true, trigger: "blur", message: "请填写姓名" },
           { min: 1, max: 20, trigger: "blur", message: "姓名过长" },
-        ],
+        ],*/
         sex: [{ required: true, trigger: "blur", message: "请选择性别" }],
         age: [
           { required: true, trigger: "blur", message: "请填写年龄" },
@@ -833,7 +836,7 @@ export default {
             message: "体重格式不正确",
           },
         ],
-        phone: [
+        /*phone: [
           { required: true, trigger: "blur", message: "请填写手机号" },
           { required: true, trigger: "blur", message: "请填写正确的手机号" },
           {
@@ -842,7 +845,7 @@ export default {
             pattern: /^[0-9]{5,11}$/,
             message: "手机号格式不正确",
           },
-        ],
+        ],*/
           conditioningProjectId:[
               { required: true, trigger: "blur", message: "请选择调理项目" }
           ],
@@ -853,6 +856,24 @@ export default {
     };
   },
   methods: {
+    //根据用户ID获取用户基本信息（手机号、姓名）
+    getCustomerBase(id){
+       if(id == null || id == undefined){
+          return;
+       }
+       getCustomerBaseMessage(id).then((response) => {
+          if (response.code === 200) {
+              if(response.data){
+                  console.log(response.data);
+                  this.customerExistFlag = true;
+                  this.form.name = response.data.name;
+                  this.form.phone = response.data.phone;
+              }
+          }
+       }).catch(function() {
+          console.log("error");
+       });
+    },
     submit(){
         if (this.submitFlag) {
             this.$message({
@@ -885,7 +906,7 @@ export default {
         this.healthyData['arrayName'].forEach(function (item, index) {
             cusMessage[item] = cusMessage[item] != null ? cusMessage[item].join(",") : null;
         });
-        this.timer = setTimeout(this.fail,1000*60);
+        //this.timer = setTimeout(this.fail,1000*60);
         addCustomerHealthy(cusMessage).then((response) => {
             if (response.code === 200) {
                 this.$notify({
@@ -899,11 +920,14 @@ export default {
         });
     },
     fail(){
-      console.log("fail");
       this.submitFlag = false;
       this.upload.isUploading = false;
     },
     nextStep(step){
+      if(!this.customerExistFlag){
+        this.$message.error('客户不存在');
+        return;
+      }
       this.$refs.form.validate((valid) => {
         if(valid || step < 0){
           this.stepArray[this.stepActive] = false;
@@ -928,15 +952,6 @@ export default {
     },
       //监控上传文件列表
       handleFileChange(file, fileList) {
-          /*console.log("------------")
-          let existFile = fileList.slice(0, fileList.length - 1).find(f => f.name === file.name);
-          if (existFile) {
-              this.$message({
-                  message: "当前文件已经存在",
-                  type: "warning",
-              });
-              fileList.pop();
-          }*/
           let sizeFlag = file.size > this.upload.fileSize;
           if (sizeFlag) {
               this.$message({
@@ -1000,6 +1015,8 @@ export default {
     },
   },
   created() {
+    this.form.customerEncId = this.$route.params.id;
+    this.getCustomerBase(this.form.customerEncId);
     this.getDict("conditioning_project");
     this.getPhysicalSignsList();
     this.getMoistureDictData();

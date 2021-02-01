@@ -7,6 +7,7 @@ import com.stdiet.common.core.page.TableDataInfo;
 import com.stdiet.common.enums.BusinessType;
 import com.stdiet.common.utils.StringUtils;
 import com.stdiet.common.utils.poi.ExcelUtil;
+import com.stdiet.common.utils.sign.AesUtils;
 import com.stdiet.custom.domain.SysCustomer;
 import com.stdiet.custom.domain.SysCustomerHealthy;
 import com.stdiet.custom.domain.SysCustomerPhysicalSigns;
@@ -86,7 +87,10 @@ public class SysCustomerController extends BaseController {
     @Log(title = "客户档案", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody SysCustomer sysCustomer) throws Exception {
-        return toAjax(sysCustomerService.insertSysCustomer(sysCustomer));
+        if(!sysCustomerService.isCustomerExistByPhone(sysCustomer)){
+            return toAjax(sysCustomerService.insertSysCustomer(sysCustomer));
+        }
+        return AjaxResult.error("该手机号客户已存在");
     }
 
     /**
@@ -96,7 +100,10 @@ public class SysCustomerController extends BaseController {
     @Log(title = "客户档案", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody SysCustomer sysCustomer) throws Exception {
-        return toAjax(sysCustomerService.updateSysCustomer(sysCustomer));
+        if(!sysCustomerService.isCustomerExistByPhone(sysCustomer)){
+            return toAjax(sysCustomerService.updateSysCustomer(sysCustomer));
+        }
+        return AjaxResult.error("该手机号客户已存在");
     }
 
     /**
@@ -131,6 +138,7 @@ public class SysCustomerController extends BaseController {
     @GetMapping("/physicalSigns/{id}")
     public AjaxResult getPhysicalSignsById(@PathVariable("id") Long id) {
         Map<String, Object> result = new HashMap<>();
+        String key = "customerHealthy";
         result.put("type", 0);
         //查询健康评估信息
         SysCustomerHealthy sysCustomerHealthy = sysCustomerHealthyService.selectSysCustomerHealthyByCustomerId(id);
@@ -138,7 +146,7 @@ public class SysCustomerController extends BaseController {
             if (StringUtils.isNotEmpty(sysCustomerHealthy.getPhone())) {
                 sysCustomerHealthy.setPhone(StringUtils.hiddenPhoneNumber(sysCustomerHealthy.getPhone()));
             }
-            result.put("customerHealthy", sysCustomerHealthy);
+            result.put(key, sysCustomerHealthy);
         }else{
             //查询体征信息
             SysCustomerPhysicalSigns sysCustomerPhysicalSigns = sysCustomerPhysicalSignsService.selectSysCustomerPhysicalSignsByCusId(id);
@@ -148,8 +156,22 @@ public class SysCustomerController extends BaseController {
                 }
                 result.put("type", 1);
             }
-            result.put("customerHealthy", sysCustomerPhysicalSigns);
+            result.put(key, sysCustomerPhysicalSigns);
         }
+        //对ID进行加密
+        result.put("enc_id", id != null ? AesUtils.encrypt(id+"", null) : "");
         return AjaxResult.success(result);
+    }
+
+    /**
+     * 根据客户ID删除对应体征信息或健康评估信息
+     * @param id 客户ID
+     * @return
+     */
+    @GetMapping("/delCustomerHealthy/{id}")
+    public AjaxResult delCustomerHealthy(@PathVariable("id") Long customerId) {
+        int signRow = sysCustomerPhysicalSignsService.delCustomerSignByCustomerId(customerId);
+        int healthyRow = sysCustomerHealthyService.deleteCustomerHealthyByCustomerId(customerId);
+        return toAjax(signRow + healthyRow);
     }
 }

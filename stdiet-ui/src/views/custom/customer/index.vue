@@ -25,7 +25,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="主营养师" prop="mainDietitian">
+      <!--<el-form-item label="主营养师" prop="mainDietitian">
         <el-input
           v-model="queryParams.mainDietitian"
           placeholder="请输入主营养师"
@@ -60,7 +60,7 @@
           size="small"
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
+      </el-form-item>-->
       <el-form-item>
         <el-button
           type="cyan"
@@ -149,7 +149,7 @@
         prop="salesman"
         :formatter="preSaleIdFormat"
       />
-      <el-table-column label="订单" align="center">
+      <el-table-column label="订单" align="center" v-hasPermi="['custom:order:list']">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -159,7 +159,7 @@
           </el-button>
         </template>
       </el-table-column>
-      <el-table-column label="合同" align="center">
+      <el-table-column label="合同" align="center" v-hasPermi="['custom:contract:list']">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -169,7 +169,7 @@
           </el-button>
         </template>
       </el-table-column>
-      <el-table-column label="健康评估" align="center">
+      <el-table-column label="健康评估" align="center" v-hasPermi="['custom:healthy:list']">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -179,7 +179,7 @@
           </el-button>
         </template>
       </el-table-column>
-      <el-table-column label="食谱计划" align="center">
+      <el-table-column label="食谱计划" align="center" v-hasPermi="['recipes:recipesPlan:list']">
         <template slot-scope="scope">
           <el-button
             size="mini"

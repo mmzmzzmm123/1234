@@ -207,4 +207,9 @@
         <include refid="selectSysCustomerPhysicalSigns"/> where scps.del_flag = 0 and sc.del_flag = 0 and sc.phone = #{phone} limit 1
     </select>
 
+    <!-- 根据客户ID删除对应体征信息 -->
+    <update id="delCustomerSignByCustomerId" parameterType="Long">
+        update sys_customer_physical_signs set del_flag = 1 where customer_id = #{customerId}
+    </update>
+
 </mapper>

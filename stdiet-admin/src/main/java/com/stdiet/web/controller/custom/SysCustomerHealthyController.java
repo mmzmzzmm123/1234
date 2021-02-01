@@ -85,7 +85,7 @@ public class SysCustomerHealthyController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody SysCustomerHealthy sysCustomerHealthy)
     {
-        return sysCustomerHealthyService.insertOrUpdateSysCustomerHealthy(sysCustomerHealthy);
+        return AjaxResult.success();
     }
 
     /**
@@ -96,7 +96,7 @@ public class SysCustomerHealthyController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody SysCustomerHealthy sysCustomerHealthy)
     {
-        return sysCustomerHealthyService.insertOrUpdateSysCustomerHealthy(sysCustomerHealthy);
+        return AjaxResult.success();
     }
 
     /**

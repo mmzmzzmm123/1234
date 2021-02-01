@@ -66,4 +66,11 @@ public interface SysCustomerPhysicalSignsMapper
      * @return
      */
     SysCustomerPhysicalSigns selectSysCustomerAndSignByPhone(String phone);
+
+    /**
+     * 根据客户ID删除对应体征信息
+     * @param customerId
+     * @return
+     */
+    int delCustomerSignByCustomerId(@Param("customerId")Long customerId);
 }

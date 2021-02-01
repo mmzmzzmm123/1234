@@ -14,6 +14,7 @@
               type="primary"
               icon="el-icon-plus"
               size="mini"
+              v-hasPermi="['custom:order:add']"
               @click="handleAdd"
               >创建订单
             </el-button>
@@ -73,12 +74,14 @@
                 size="mini"
                 type="text"
                 @click="handleOnEditClick(scope.row)"
+                v-hasPermi="['custom:order:edit']"
                 >修改</el-button
               >
               <el-button
                 v-if="scope.row.orderType === 'main'"
                 size="mini"
                 type="text"
+                v-hasPermi="['custom:order:remove']"
                 @click="handleOnDeleteClick(scope.row)"
                 >删除</el-button
               >
