@@ -21,7 +21,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -126,26 +125,23 @@ public class SysWxSaleAccountController extends BaseController {
             String oriFileName = file.getOriginalFilename();
             // 上传并返回新文件名称
             String fileName = FileUploadUtils.upload(filePath, file);
-            String url = serverConfig.getUrl() + fileName;
+//            String url = serverConfig.getUrl() + fileName;
 
             String oriFilePath = filePath + fileName.substring(fileName.indexOf("upload") + 6);
 
-//                        String accessToken = "ddd";
             String accessToken = redisCache.getCacheObject(WxTokenUtils.KEY_ACCESS_TOKEN);
             if (StringUtils.isEmpty(accessToken)) {
                 WxAccessToken wxAccessToken = WxTokenUtils.fetchAccessToken();
-                redisCache.setCacheObject(WxTokenUtils.KEY_ACCESS_TOKEN, wxAccessToken.getAccessToken(), wxAccessToken.getExpiresIn(), TimeUnit.SECONDS);
                 accessToken = wxAccessToken.getAccessToken();
+                redisCache.setCacheObject(WxTokenUtils.KEY_ACCESS_TOKEN, accessToken, wxAccessToken.getExpiresIn(), TimeUnit.SECONDS);
             }
 
             WxFileUploadResult result = WxTokenUtils.uploadImage(oriFilePath, oriFileName, accessToken);
 
             AjaxResult ajax = AjaxResult.success();
             ajax.put("fileName", fileName);
-            ajax.put("wxInfo", result);
-            ajax.put("file", oriFilePath);
-            ajax.put("accessToken", accessToken);
-            ajax.put("url", url);
+            ajax.put("mediaId", result.getMediaId());
+            ajax.put("mediaUrl", result.getUrl());
             return ajax;
         } catch (Exception e) {
             return AjaxResult.error(e.getMessage());

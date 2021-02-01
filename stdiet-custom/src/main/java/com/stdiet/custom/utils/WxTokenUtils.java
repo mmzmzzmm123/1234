@@ -68,12 +68,8 @@ public class WxTokenUtils {
             builder.append(line);
             builder.append(System.getProperty("line.separator"));
         }
-        String resultStr = builder.toString();
-        JSONObject obj = JSONObject.parseObject(resultStr);
-        WxFileUploadResult result = JSONObject.toJavaObject(obj, WxFileUploadResult.class);
-        result.setMediaId(filePath);
-        result.setUrl(resultStr);
-        return result;
+        JSONObject obj = JSONObject.parseObject(builder.toString());
+        return JSONObject.toJavaObject(obj, WxFileUploadResult.class);
 
     }
 
