@@ -107,38 +107,7 @@ public class CommonController {
         }
     }
 
-    /**
-     * 通用上传请求(无需登录认证)
-     */
-    @PostMapping("/common/wxAccountUpload")
-    public AjaxResult wxAccountUpload(MultipartFile file) throws Exception {
-        try {
-            // 上传文件路径
-            String filePath = RuoYiConfig.getUploadPath();
-            // 上传并返回新文件名称
-            String fileName = FileUploadUtils.upload(filePath, file);
-            String url = serverConfig.getUrl() + fileName;
 
-            String accessToken = redisCache.getCacheObject(WxTokenUtils.KEY_ACCESS_TOKEN);
-            if (StringUtils.isEmpty(accessToken)) {
-                WxAccessToken wxAccessToken = WxTokenUtils.fetchAccessToken();
-                redisCache.setCacheObject(WxTokenUtils.KEY_ACCESS_TOKEN, wxAccessToken.getAccessToken(), wxAccessToken.getExpiresIn(), TimeUnit.SECONDS);
-            }
-
-            WxFileUploadResult result = WxTokenUtils.uploadImage(filePath, accessToken);
-            if(result == null) {
-                return AjaxResult.error("上传微信失败");
-            }
-
-            AjaxResult ajax = AjaxResult.success();
-            ajax.put("fileName", fileName);
-            ajax.put("mediaId", result.getMediaId());
-            ajax.put("url", url);
-            return ajax;
-        } catch (Exception e) {
-            return AjaxResult.error(e.getMessage());
-        }
-    }
 
     /**
      * 本地资源通用下载

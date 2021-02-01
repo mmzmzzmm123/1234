@@ -253,12 +253,12 @@
                       <span class="cus-unit">
                         <el-input-number
                           v-model="scope.row.cusWeight"
-                          size="small"
+                          size="mini"
                           controls-position="right"
                           step="0.5"
                           :min="0.5"
                         />
-                        <el-select size="small" v-model="scope.row.cusUnit">
+                        <el-select size="mini" v-model="scope.row.cusUnit">
                           <el-option
                             v-for="dict in cusUnitOptions"
                             :key="dict.dictValue"
@@ -740,10 +740,12 @@ export default {
 };
 </script>
 
-<style  lang="scss" scoped>
+  <style   >
+/**
 /deep/ :focus {
-  outline: 0;
-}
+   outline: 0;
+ }
+ */
 
 .el-transfer-panel__filter {
   margin: 2px;
@@ -753,7 +755,7 @@ export default {
   display: inline-flex;
 }
 
-.cus-unit .el-input-number--small {
+.cus-unit .el-input-number--mini {
   width: 38px;
 }
 
