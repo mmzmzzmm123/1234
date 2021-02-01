@@ -57,7 +57,7 @@ public class WxTokenUtils {
      */
     public static WxFileUploadResult uploadImage(String filePath, String fileName, String accessToken) throws Exception {
         String[] cmds = {"curl", uploadMaterialUrl.replaceAll("ACCESS_TOKEN", accessToken), "-F"
-                , "media=@" + filePath + "filename=" + fileName};//必须分开写，不能有空格
+                , "media=@" + filePath + ";filename=" + fileName};//必须分开写，不能有空格
 
         ProcessBuilder process = new ProcessBuilder(cmds);
         Process p = process.start();
