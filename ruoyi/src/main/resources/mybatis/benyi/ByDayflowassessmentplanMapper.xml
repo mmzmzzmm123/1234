@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.benyi.mapper.ByDayflowassessmentplanMapper">
+
+    <resultMap type="ByDayflowassessmentplan" id="ByDayflowassessmentplanResult">
+        <result property="id" column="id"/>
+        <result property="deptId" column="dept_id"/>
+        <result property="month" column="month"/>
+        <result property="xnxq" column="xnxq"/>
+        <result property="classid" column="classid"/>
+        <result property="connent" column="connent"/>
+        <result property="starttime" column="starttime"/>
+        <result property="createUserid" column="create_userid"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <sql id="selectByDayflowassessmentplanVo">
+        select id, dept_id, month, xnxq, classid, connent, starttime, create_userid, create_time from by_dayflowassessmentplan
+    </sql>
+
+    <select id="selectByDayflowassessmentplanList" parameterType="ByDayflowassessmentplan"
+            resultMap="ByDayflowassessmentplanResult">
+        <include refid="selectByDayflowassessmentplanVo"/>
+        <where>
+            <if test="deptId != null ">and dept_id = #{deptId}</if>
+            <if test="month != null ">and month = #{month}</if>
+            <if test="xnxq != null  and xnxq != ''">and xnxq = #{xnxq}</if>
+            <if test="classid != null  and classid != ''">and classid = #{classid}</if>
+            <if test="connent != null  and connent != ''">and connent = #{connent}</if>
+            <if test="starttime != null ">and starttime = #{starttime}</if>
+            <if test="createUserid != null ">and create_userid = #{createUserid}</if>
+        </where>
+    </select>
+
+    <select id="selectByDayflowassessmentplanById" parameterType="Long" resultMap="ByDayflowassessmentplanResult">
+        <include refid="selectByDayflowassessmentplanVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertByDayflowassessmentplan" parameterType="ByDayflowassessmentplan" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into by_dayflowassessmentplan
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="deptId != null ">dept_id,</if>
+            <if test="month != null ">month,</if>
+            <if test="xnxq != null  and xnxq != ''">xnxq,</if>
+            <if test="classid != null  and classid != ''">classid,</if>
+            <if test="connent != null  and connent != ''">connent,</if>
+            <if test="starttime != null ">starttime,</if>
+            <if test="createUserid != null ">create_userid,</if>
+            <if test="createTime != null ">create_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="deptId != null ">#{deptId},</if>
+            <if test="month != null ">#{month},</if>
+            <if test="xnxq != null  and xnxq != ''">#{xnxq},</if>
+            <if test="classid != null  and classid != ''">#{classid},</if>
+            <if test="connent != null  and connent != ''">#{connent},</if>
+            <if test="starttime != null ">#{starttime},</if>
+            <if test="createUserid != null ">#{createUserid},</if>
+            <if test="createTime != null ">#{createTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateByDayflowassessmentplan" parameterType="ByDayflowassessmentplan">
+        update by_dayflowassessmentplan
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="deptId != null ">dept_id = #{deptId},</if>
+            <if test="month != null ">month = #{month},</if>
+            <if test="xnxq != null  and xnxq != ''">xnxq = #{xnxq},</if>
+            <if test="classid != null  and classid != ''">classid = #{classid},</if>
+            <if test="connent != null  and connent != ''">connent = #{connent},</if>
+            <if test="starttime != null ">starttime = #{starttime},</if>
+            <if test="createUserid != null ">create_userid = #{createUserid},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteByDayflowassessmentplanById" parameterType="Long">
+        delete from by_dayflowassessmentplan where id = #{id}
+    </delete>
+
+    <delete id="deleteByDayflowassessmentplanByIds" parameterType="String">
+        delete from by_dayflowassessmentplan where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
