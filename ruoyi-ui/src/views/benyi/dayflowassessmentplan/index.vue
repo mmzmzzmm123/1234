@@ -6,6 +6,15 @@
       :inline="true"
       label-width="70px"
     >
+      <el-form-item label="学年学期" prop="xnxq">
+        <el-input
+          v-model="queryParams.xnxq"
+          placeholder="请输入评估学年学期"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
       <el-form-item label="评估月份" prop="month">
         <el-date-picker
           clearable
@@ -17,15 +26,6 @@
           placeholder="选择评估月份"
         >
         </el-date-picker>
-      </el-form-item>
-      <el-form-item label="学年学期" prop="xnxq">
-        <el-input
-          v-model="queryParams.xnxq"
-          placeholder="请输入评估学年学期"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
       </el-form-item>
       <el-form-item label="评估班级" prop="classid">
         <el-input
@@ -149,8 +149,8 @@
     <!-- 添加或修改幼儿园一日流程评估计划对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="评估学校" prop="deptId">
-          <el-input v-model="form.deptId" placeholder="请输入评估学校" />
+        <el-form-item label="学年学期" prop="xnxq">
+          <el-input v-model="form.xnxq" placeholder="请输入评估学年学期" />
         </el-form-item>
         <el-form-item label="评估月份" prop="month">
           <el-date-picker
@@ -163,9 +163,6 @@
             placeholder="选择评估月份"
           >
           </el-date-picker>
-        </el-form-item>
-        <el-form-item label="学年学期" prop="xnxq">
-          <el-input v-model="form.xnxq" placeholder="请输入评估学年学期" />
         </el-form-item>
         <el-form-item label="评估班级" prop="classid">
           <el-input v-model="form.classid" placeholder="请输入评估班级" />
