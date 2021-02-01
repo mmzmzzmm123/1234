@@ -122,6 +122,7 @@ public class SysWxSaleAccountController extends BaseController {
         try {
             // 上传文件路径
             String filePath = RuoYiConfig.getUploadPath();
+            String oriFileName = file.getOriginalFilename();
             // 上传并返回新文件名称
             String fileName = FileUploadUtils.upload(filePath, file);
             String url = serverConfig.getUrl() + fileName;
@@ -132,7 +133,7 @@ public class SysWxSaleAccountController extends BaseController {
                 redisCache.setCacheObject(WxTokenUtils.KEY_ACCESS_TOKEN, wxAccessToken.getAccessToken(), wxAccessToken.getExpiresIn(), TimeUnit.SECONDS);
             }
 
-            WxFileUploadResult result = WxTokenUtils.uploadImage(filePath, accessToken);
+            WxFileUploadResult result = WxTokenUtils.uploadImage(filePath, oriFileName, accessToken);
             if (result == null) {
                 return AjaxResult.error("上传微信失败");
             }
