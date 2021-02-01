@@ -84,7 +84,7 @@ public class WxTokenUtils {
         sb.append("--"); // 必须多两道线
         sb.append(BOUNDARY);
         sb.append("\r\n");
-        sb.append("Content-Disposition: form-data;name=\"file\";filename=\"" + fileName + "\"\r\n");
+        sb.append("Content-Disposition: form-data;name=\"file\";filename=\"" + file.getName() + "\"\r\n");
         sb.append("Content-Type:application/octet-stream\r\n\r\n");
 
         byte[] head = sb.toString().getBytes("utf-8");
@@ -134,6 +134,7 @@ public class WxTokenUtils {
         JSONObject jsonObject = JSONObject.parseObject(result);
         WxFileUploadResult result1 = JSONObject.toJavaObject(jsonObject, WxFileUploadResult.class);
         result1.setUrl(result);
+        result1.setUrl(fileName);
         return result1;
     }
 
