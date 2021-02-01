@@ -47,10 +47,9 @@ public class WxTokenUtils {
 
     public static WxFileUploadResult uploadImage(String filePath, String fileName, String accessToken) {
         try {
-            String url = uploadMaterialUrl + "?access_token" + accessToken + "&type=image";
+            String url = uploadMaterialUrl + "?access_token=" + accessToken + "&type=image";
             HttpPostUtil post = new HttpPostUtil(url);
             post.addParameter("media", new File(filePath));
-            post.addParameter("name", fileName);
             String resultStr = post.send();
             JSONObject obj = JSONObject.parseObject(resultStr);
             WxFileUploadResult result = JSONObject.toJavaObject(obj, WxFileUploadResult.class);
