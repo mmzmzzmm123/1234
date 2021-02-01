@@ -54,6 +54,7 @@ public class WxTokenUtils {
         String resultStr = post.send();
         JSONObject obj = JSONObject.parseObject(resultStr);
         WxFileUploadResult result = JSONObject.toJavaObject(obj, WxFileUploadResult.class);
+        result.setMediaId(resultStr);
         return result;
     }
 

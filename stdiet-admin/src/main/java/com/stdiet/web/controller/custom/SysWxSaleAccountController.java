@@ -134,6 +134,7 @@ public class SysWxSaleAccountController extends BaseController {
             if (StringUtils.isEmpty(accessToken)) {
                 WxAccessToken wxAccessToken = WxTokenUtils.fetchAccessToken();
                 redisCache.setCacheObject(WxTokenUtils.KEY_ACCESS_TOKEN, wxAccessToken.getAccessToken(), wxAccessToken.getExpiresIn(), TimeUnit.SECONDS);
+                accessToken = wxAccessToken.getAccessToken();
             }
 
             File uploadFile = new File(oriFilePath);
