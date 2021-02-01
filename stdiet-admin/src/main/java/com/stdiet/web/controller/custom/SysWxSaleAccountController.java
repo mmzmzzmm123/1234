@@ -104,8 +104,18 @@ public class SysWxSaleAccountController extends BaseController {
         return toAjax(sysWxSaleAccountService.deleteSysWxSaleAccountByIds(ids));
     }
 
+    @GetMapping("/redisTest")
+    public AjaxResult redisTest() {
+        String accessToken = redisCache.getCacheObject(WxTokenUtils.KEY_ACCESS_TOKEN);
+        if (StringUtils.isEmpty(accessToken)) {
+            WxAccessToken wxAccessToken = WxTokenUtils.fetchAccessToken();
+            redisCache.setCacheObject(WxTokenUtils.KEY_ACCESS_TOKEN, wxAccessToken.getAccessToken(), wxAccessToken.getExpiresIn(), TimeUnit.SECONDS);
+        }
+        return AjaxResult.success(accessToken);
+    }
+
     /**
-     * 通用上传请求(无需登录认证)
+     * 上传图片
      */
     @PostMapping("/upload")
     public AjaxResult wxAccountUpload(MultipartFile file) throws Exception {
