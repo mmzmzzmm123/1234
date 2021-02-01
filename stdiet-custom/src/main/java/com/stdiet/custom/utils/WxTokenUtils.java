@@ -133,7 +133,7 @@ public class WxTokenUtils {
         }
         JSONObject jsonObject = JSONObject.parseObject(result);
         WxFileUploadResult result1 = JSONObject.toJavaObject(jsonObject, WxFileUploadResult.class);
-        result1.setUrl(result);
+        result1.setMediaId(result);
         result1.setUrl(fileName);
         return result1;
     }
