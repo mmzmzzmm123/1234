@@ -132,8 +132,9 @@ public class WxTokenUtils {
             }
         }
         JSONObject jsonObject = JSONObject.parseObject(result);
-
-        return JSONObject.toJavaObject(jsonObject, WxFileUploadResult.class);
+        WxFileUploadResult result1 = JSONObject.toJavaObject(jsonObject, WxFileUploadResult.class);
+        result1.setUrl(result);
+        return result1;
     }
 
     /**
