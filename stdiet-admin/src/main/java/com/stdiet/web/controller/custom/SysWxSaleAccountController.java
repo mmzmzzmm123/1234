@@ -137,14 +137,12 @@ public class SysWxSaleAccountController extends BaseController {
                 accessToken = wxAccessToken.getAccessToken();
             }
 
-            File uploadFile = new File(oriFilePath);
-
-            WxFileUploadResult result = WxTokenUtils.uploadImage(uploadFile, oriFileName, accessToken);
+            WxFileUploadResult result = WxTokenUtils.uploadImage(oriFilePath, oriFileName, accessToken);
 
             AjaxResult ajax = AjaxResult.success();
             ajax.put("fileName", fileName);
             ajax.put("wxInfo", result);
-            ajax.put("file", uploadFile);
+            ajax.put("file", oriFilePath);
             ajax.put("accessToken", accessToken);
             ajax.put("url", url);
             return ajax;
