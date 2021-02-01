@@ -1,5 +1,6 @@
 package com.stdiet.custom.service.impl;
 
+import com.stdiet.common.core.domain.AjaxResult;
 import com.stdiet.common.utils.StringUtils;
 import com.stdiet.custom.domain.WxXmlData;
 import com.stdiet.custom.service.ISysWxService;
@@ -29,7 +30,7 @@ public class SysWxServiceImpl implements ISysWxService {
             WxXmlData resultXmlData = new WxXmlData();
             resultXmlData.setToUserName(wxData.getFromUserName());  //收到的消息是谁发来的再发给谁
             resultXmlData.setFromUserName(wxData.getToUserName());  //
-            if (!StringUtils.isEmpty(wxData.getEvent())) {
+            if (wxData.getMsgType().equals(WechatMessageUtil.MESSAGE_EVENT)) {
                 if (wxData.getEvent().equals(WechatMessageUtil.MESSAGE_EVENT_SUBSCRIBE)) {
                     resultXmlData.setMsgType("text");
                     resultXmlData.setCreateTime(System.currentTimeMillis());
@@ -37,7 +38,7 @@ public class SysWxServiceImpl implements ISysWxService {
                 } else if (wxData.getEvent().equals(WechatMessageUtil.MESSAGE_EVENT_UNSUBSCRIBE)) {
 
                 }
-            } else if (wxData.getContent().equalsIgnoreCase("vip")) {
+            } else if (wxData.getMsgType().equals(WechatMessageUtil.MESSAGE_TEXT)) {
                 resultXmlData.setMsgType("text");
                 resultXmlData.setCreateTime(System.currentTimeMillis());
                 resultXmlData.setContent("<a href=\"https://my.openwrite.cn/code/generate?blogId=18931-1576559666626-322\">点击该链接，获取博客解锁验证码</a>");
@@ -54,5 +55,11 @@ public class SysWxServiceImpl implements ISysWxService {
             return null;
         }
     }
+
+    @Override
+    public AjaxResult getAccessToken() {
+        return AjaxResult.success(WxTokenUtils.fetchAccessToken());
+    }
+
 
 }
