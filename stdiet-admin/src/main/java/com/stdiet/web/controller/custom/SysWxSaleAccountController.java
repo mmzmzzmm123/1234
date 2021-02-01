@@ -130,13 +130,13 @@ public class SysWxSaleAccountController extends BaseController {
 
             String oriFilePath = filePath + fileName.substring(fileName.indexOf("upload") + 6);
 
-                        String accessToken = "ddd";
-//            String accessToken = redisCache.getCacheObject(WxTokenUtils.KEY_ACCESS_TOKEN);
-//            if (StringUtils.isEmpty(accessToken)) {
-//                WxAccessToken wxAccessToken = WxTokenUtils.fetchAccessToken();
-//                redisCache.setCacheObject(WxTokenUtils.KEY_ACCESS_TOKEN, wxAccessToken.getAccessToken(), wxAccessToken.getExpiresIn(), TimeUnit.SECONDS);
-//                accessToken = wxAccessToken.getAccessToken();
-//            }
+//                        String accessToken = "ddd";
+            String accessToken = redisCache.getCacheObject(WxTokenUtils.KEY_ACCESS_TOKEN);
+            if (StringUtils.isEmpty(accessToken)) {
+                WxAccessToken wxAccessToken = WxTokenUtils.fetchAccessToken();
+                redisCache.setCacheObject(WxTokenUtils.KEY_ACCESS_TOKEN, wxAccessToken.getAccessToken(), wxAccessToken.getExpiresIn(), TimeUnit.SECONDS);
+                accessToken = wxAccessToken.getAccessToken();
+            }
 
             WxFileUploadResult result = WxTokenUtils.uploadImage(oriFilePath, oriFileName, accessToken);
 
