@@ -224,9 +224,11 @@
           // 是否禁用上传
           isUploading: false,
           // 上传的地址
-          url: process.env.VUE_APP_BASE_API + "/common/wxAccountUpload",
+          url: process.env.VUE_APP_BASE_API + "/custom/WxAccount/upload",
           // 设置上传的请求头部
-          headers: {},
+          headers: {
+
+          },
           // 其他需要携带的数据
           data: {},
           //文件列表

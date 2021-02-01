@@ -15,6 +15,7 @@ import com.stdiet.custom.domain.wechat.WxAccessToken;
 import com.stdiet.custom.domain.wechat.WxFileUploadResult;
 import com.stdiet.custom.service.ISysWxSaleAccountService;
 import com.stdiet.custom.utils.WxTokenUtils;
+import com.stdiet.framework.config.ServerConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -37,6 +38,9 @@ public class SysWxSaleAccountController extends BaseController {
 
     @Autowired
     private RedisCache redisCache;
+
+    @Autowired
+    private ServerConfig serverConfig;
 
     /**
      * 查询微信销售账号列表
@@ -100,15 +104,17 @@ public class SysWxSaleAccountController extends BaseController {
         return toAjax(sysWxSaleAccountService.deleteSysWxSaleAccountByIds(ids));
     }
 
+    /**
+     * 通用上传请求(无需登录认证)
+     */
     @PostMapping("/upload")
-    public AjaxResult uploadFile(@RequestParam("file") MultipartFile file, SysWxSaleAccount sysWxSaleAccount) throws Exception {
+    public AjaxResult wxAccountUpload(MultipartFile file) throws Exception {
         try {
             // 上传文件路径
             String filePath = RuoYiConfig.getUploadPath();
             // 上传并返回新文件名称
             String fileName = FileUploadUtils.upload(filePath, file);
-
-            sysWxSaleAccount.setImgUrl(fileName);
+            String url = serverConfig.getUrl() + fileName;
 
             String accessToken = redisCache.getCacheObject(WxTokenUtils.KEY_ACCESS_TOKEN);
             if (StringUtils.isEmpty(accessToken)) {
@@ -116,18 +122,19 @@ public class SysWxSaleAccountController extends BaseController {
                 redisCache.setCacheObject(WxTokenUtils.KEY_ACCESS_TOKEN, wxAccessToken.getAccessToken(), wxAccessToken.getExpiresIn(), TimeUnit.SECONDS);
             }
 
-            WxFileUploadResult result = WxTokenUtils.uploadImage(fileName, accessToken);
-            if (StringUtils.isNotNull(result)) {
-
-                sysWxSaleAccount.setMediaId(result.getMediaId());
-
-                return toAjax(sysWxSaleAccountService.insertSysWxSaleAccount(sysWxSaleAccount));
-
+            WxFileUploadResult result = WxTokenUtils.uploadImage(filePath, accessToken);
+            if (result == null) {
+                return AjaxResult.error("上传微信失败");
             }
-            return AjaxResult.error("empty");
 
+            AjaxResult ajax = AjaxResult.success();
+            ajax.put("fileName", fileName);
+            ajax.put("mediaId", result.getMediaId());
+            ajax.put("url", url);
+            return ajax;
         } catch (Exception e) {
             return AjaxResult.error(e.getMessage());
         }
     }
+
 }
