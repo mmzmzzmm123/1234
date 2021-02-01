@@ -134,8 +134,8 @@ public class SysWxSaleAccountController extends BaseController {
             }
 
             WxFileUploadResult result = WxTokenUtils.uploadImage(filePath, oriFileName, accessToken);
-            if (result == null) {
-                return AjaxResult.error("上传微信失败");
+            if (StringUtils.isEmpty(result.getUrl())) {
+                return AjaxResult.error(result.getMediaId());
             }
 
             AjaxResult ajax = AjaxResult.success();
