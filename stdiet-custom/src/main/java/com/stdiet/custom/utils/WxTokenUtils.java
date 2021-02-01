@@ -1,13 +1,17 @@
 package com.stdiet.custom.utils;
 
 import com.alibaba.fastjson.JSONObject;
+import com.stdiet.common.core.redis.RedisCache;
 import com.stdiet.common.utils.StringUtils;
 import com.stdiet.common.utils.http.HttpUtils;
 import com.stdiet.custom.domain.WxXmlData;
 import com.stdiet.custom.domain.wechat.WxAccessToken;
+import com.stdiet.custom.domain.wechat.WxFileUploadResult;
 import com.thoughtworks.xstream.XStream;
 import org.apache.commons.io.IOUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import java.io.File;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -15,21 +19,44 @@ import java.security.NoSuchAlgorithmException;
 
 public class WxTokenUtils {
 
+    public static final String KEY_ACCESS_TOKEN="wx:access_token";
+    public static final String KEY_ACCESS_TOKEN_WATHER="wx:access_token_watcher";
+
     // 与接口配置信息中的Token要一致
     private static String token = "shengtangdiet";
-    private static String appId = "wx4a9c1fc9dba53202";
-    private static String appSecret = "fff029ade5d3575df755f4cf9e52f8da";
+    //    private static String appId = "wx4a9c1fc9dba53202";
+//    private static String appSecret = "fff029ade5d3575df755f4cf9e52f8da";
+    private static String appId = "wxaf10fe560ea043a0";
+    private static String appSecret = "afb47e477337df23b7562c3c1f965826";
     private static String tokenUrl = "https://api.weixin.qq.com/cgi-bin/token";
+    private static String uploadMaterialUrl = "https://api.weixin.qq.com/cgi-bin/material/add_material";
+
+
 
     public static WxAccessToken fetchAccessToken() {
         try {
-            String resStr = HttpUtils.sendGet(tokenUrl, "grant_type=client_credential&appid=" + appId + "secret=" + appSecret);
+            String resStr = HttpUtils.sendGet(tokenUrl, "grant_type=client_credential&appid=" + appId + "&secret=" + appSecret);
             if (StringUtils.isEmpty(resStr)) {
                 return null;
             }
             JSONObject obj = JSONObject.parseObject(resStr);
+
             WxAccessToken token = JSONObject.toJavaObject(obj, WxAccessToken.class);
             return token;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public static WxFileUploadResult uploadImage(String filePath, String accessToken) {
+        try {
+            String url = uploadMaterialUrl + "?access_token" + accessToken + "&type=image";
+            HttpPostUtil post = new HttpPostUtil(url);
+            post.addParameter("media", new File(filePath));
+            String resultStr = post.send();
+            JSONObject obj = JSONObject.parseObject(resultStr);
+            WxFileUploadResult result = JSONObject.toJavaObject(obj, WxFileUploadResult.class);
+            return result;
         } catch (Exception e) {
             return null;
         }
