@@ -3,10 +3,15 @@ package com.stdiet.web.controller.common;
 import com.stdiet.common.config.RuoYiConfig;
 import com.stdiet.common.constant.Constants;
 import com.stdiet.common.core.domain.AjaxResult;
+import com.stdiet.common.core.redis.RedisCache;
 import com.stdiet.common.utils.StringUtils;
 import com.stdiet.common.utils.file.FileUploadUtils;
 import com.stdiet.common.utils.file.FileUtils;
+import com.stdiet.custom.domain.wechat.WxAccessToken;
+import com.stdiet.custom.domain.wechat.WxFileUploadResult;
+import com.stdiet.custom.utils.WxTokenUtils;
 import com.stdiet.framework.config.ServerConfig;
+import org.aspectj.weaver.loadtime.Aj;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 通用请求处理
@@ -29,6 +35,9 @@ public class CommonController {
 
     @Autowired
     private ServerConfig serverConfig;
+
+    @Autowired
+    private RedisCache redisCache;
 
     /**
      * 通用下载请求
@@ -91,6 +100,39 @@ public class CommonController {
             String url = serverConfig.getUrl() + fileName;
             AjaxResult ajax = AjaxResult.success();
             ajax.put("fileName", fileName);
+            ajax.put("url", url);
+            return ajax;
+        } catch (Exception e) {
+            return AjaxResult.error(e.getMessage());
+        }
+    }
+
+    /**
+     * 通用上传请求(无需登录认证)
+     */
+    @PostMapping("/common/wxAccountUpload")
+    public AjaxResult wxAccountUpload(MultipartFile file) throws Exception {
+        try {
+            // 上传文件路径
+            String filePath = RuoYiConfig.getUploadPath();
+            // 上传并返回新文件名称
+            String fileName = FileUploadUtils.upload(filePath, file);
+            String url = serverConfig.getUrl() + fileName;
+
+            String accessToken = redisCache.getCacheObject(WxTokenUtils.KEY_ACCESS_TOKEN);
+            if (StringUtils.isEmpty(accessToken)) {
+                WxAccessToken wxAccessToken = WxTokenUtils.fetchAccessToken();
+                redisCache.setCacheObject(WxTokenUtils.KEY_ACCESS_TOKEN, wxAccessToken.getAccessToken(), wxAccessToken.getExpiresIn(), TimeUnit.SECONDS);
+            }
+
+            WxFileUploadResult result = WxTokenUtils.uploadImage(filePath, accessToken);
+            if(result == null) {
+                return AjaxResult.error("上传微信失败");
+            }
+
+            AjaxResult ajax = AjaxResult.success();
+            ajax.put("fileName", fileName);
+            ajax.put("mediaId", result.getMediaId());
             ajax.put("url", url);
             return ajax;
         } catch (Exception e) {
