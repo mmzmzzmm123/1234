@@ -508,5 +508,9 @@
         where sch.del_flag = 0 and sc.del_flag = 0 and sc.phone = #{phone} limit 1
     </select>
 
+    <!-- 根据客户ID删除健康评估信息 -->
+    <update id="deleteCustomerHealthyByCustomerId" parameterType="Long">
+        update sys_customer_healthy set del_flag = 1 where customer_id = #{customerId}
+    </update>
 
 </mapper>

@@ -40,7 +40,7 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
         total.setTotalNotSentCommissionAmount(new BigDecimal(0));
         total.setNextMonthCommission(new BigDecimal(0));
         if(list != null && list.size() > 0){
-            Map<Long, List<SysOrderCommisionDayDetail>> orderDetailMap = getOrderByList(sysCommision.getUserId());
+            Map<Long, List<SysOrderCommisionDayDetail>> orderDetailMap = getOrderByList(sysCommision);
             SysCommissionDayDetail sysCommissionDayDetail = null;
             for(SysCommision commision : list){
                 sysCommissionDayDetail = new SysCommissionDayDetail();
@@ -232,9 +232,9 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
     /**
      * 查询2021年1月份之后所有订单，对订单进行处理，得出每笔订单的相关信息
      * */
-    public Map<Long, List<SysOrderCommisionDayDetail>> getOrderByList(Long userId){
+    public Map<Long, List<SysOrderCommisionDayDetail>> getOrderByList(SysCommision sysCommision){
         //查询2021年1月份之后所有订单
-        List<SysOrder> orderList = sysOrderMapper.selectSimpleOrderMessage(userId);
+        List<SysOrder> orderList = sysOrderMapper.selectSimpleOrderMessage(sysCommision);
         //整理出每个用户对应的订单List
         Map<Long, List<SysOrderCommisionDayDetail>> userOrderResultMap = new HashMap<>();
         for (SysOrder sysOrder : orderList) {

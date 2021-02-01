@@ -3,6 +3,8 @@ package com.stdiet.web.controller.common;
 import com.stdiet.common.core.controller.BaseController;
 import com.stdiet.common.core.domain.AjaxResult;
 import com.stdiet.common.core.page.TableDataInfo;
+import com.stdiet.common.utils.StringUtils;
+import com.stdiet.common.utils.sign.AesUtils;
 import com.stdiet.custom.domain.SysCustomer;
 import com.stdiet.custom.domain.SysCustomerHealthy;
 import com.stdiet.custom.domain.SysPhysicalSigns;
@@ -16,7 +18,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 客户相关信息调查Controller
@@ -40,14 +44,18 @@ public class InvestigateController extends BaseController {
     @Autowired
     private ISysCustomerHealthyService sysCustomerHealthyService;
 
+    @Autowired
+    private ISysCustomerService sysCustomerService;
+
     /**
      * 建立客户信息档案
      */
     @PostMapping("/customerInvestigate")
     public AjaxResult customerInvestigate(@RequestBody CustomerInvestigateRequest customerInvestigateRequest) throws Exception
     {
-        customerInvestigateRequest.setId(null); //只能添加，无法修改
-        return sysCustomerPhysicalSignsService.addOrupdateCustomerAndSign(customerInvestigateRequest);
+        return AjaxResult.error("请填写新版健康评估表");
+        //customerInvestigateRequest.setId(null); //只能添加，无法修改
+        //return sysCustomerPhysicalSignsService.addOrupdateCustomerAndSign(customerInvestigateRequest);
     }
 
     /**
@@ -71,12 +79,32 @@ public class InvestigateController extends BaseController {
     }
 
     /**
+     * 根据加密ID获取客户基本信息
+     * @param enc_id
+     * @return
+     */
+    @GetMapping("/getCustomerBaseMessage/{id}")
+    public AjaxResult getCustomerBaseMessage(@PathVariable(value = "id") String enc_id){
+        String id = StringUtils.isEmpty(enc_id) ? "" : AesUtils.decrypt(enc_id, null);
+        if(StringUtils.isNotEmpty(id)){
+            SysCustomer sysCustomer = sysCustomerService.selectSysCustomerById(Long.parseLong(id));
+            if(sysCustomer != null){
+                Map<String, Object> result = new HashMap<>();
+                result.put("name", sysCustomer.getName());
+                result.put("phone", sysCustomer.getPhone());
+                return AjaxResult.success(result);
+            }
+        }
+        return AjaxResult.success();
+    }
+
+    /**
      * 新增客户健康
      */
     @PostMapping("/addCustomerHealthy")
     public AjaxResult addCustomerHealthy(@RequestBody SysCustomerHealthy sysCustomerHealthy)
     {
-        return sysCustomerHealthyService.insertOrUpdateSysCustomerHealthy(sysCustomerHealthy);
+        return sysCustomerHealthyService.insertSysCustomerHealthy(sysCustomerHealthy);
     }
 
 }

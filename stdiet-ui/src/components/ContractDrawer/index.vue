@@ -8,17 +8,18 @@
       size="40%"
     >
       <div class="app-container">
-        <!--<el-row :gutter="10" class="mb8">
+        <el-row :gutter="10" class="mb8">
           <el-col :span="1.5">
             <el-button
               type="primary"
               icon="el-icon-plus"
               size="mini"
+              v-hasPermi="['custom:contract:add']"
               @click="handleAdd"
               >创建合同
             </el-button>
           </el-col>
-        </el-row>-->
+        </el-row>
 
         <el-table :data="contractList">
           <el-table-column label="合同编号" align="center" prop="id"  width="150"/>
@@ -71,7 +72,7 @@
       </div>
     </el-drawer>
 
-    <!--<create-order-dialog ref="cusCreateOrderDialogRef" />-->
+    <add-contract ref="cusAddContractDialogRef" />
 
     <contract-detail ref="contractDetailRef" />
   </div>
@@ -80,11 +81,13 @@
   import {delContract, listContract} from "@/api/custom/contract";
   import ContractDetail from "@/components/ContractDetail";
   import Clipboard from 'clipboard';
+  import ContractAdd from "@/components/ContractAdd";
 
 export default {
   name: "CustomerContractDrawer",
   components: {
-    'contract-detail': ContractDetail
+    'contract-detail': ContractDetail,
+    'add-contract':ContractAdd
   },
   data() {
     return {
@@ -111,17 +114,14 @@ export default {
       });
     },
     handleAdd() {
-      this.$refs.cusCreateOrderDialogRef.showDialog(
+      this.$refs.cusAddContractDialogRef.showDialog(
         {
           customer: this.data.name,
-          cusId: this.data.id,
-          preSaleId: this.data.salesman,
-          afterSaleId: this.data.afterDietitian,
-          nutritionistId: this.data.mainDietitian,
-          nutriAssisId: this.data.assistantDietitian,
+          customerId: this.data.id,
+          nutritionistId: this.data.mainDietitian
         },
         () => {
-          this.fetchOrderList(this.data.id);
+          this.fetchContractList(this.data.id);
         }
       );
     },

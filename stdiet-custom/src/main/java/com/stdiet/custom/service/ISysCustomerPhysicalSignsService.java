@@ -6,6 +6,7 @@ import com.stdiet.common.core.domain.AjaxResult;
 import com.stdiet.custom.domain.SysCustomer;
 import com.stdiet.custom.domain.SysCustomerPhysicalSigns;
 import com.stdiet.custom.dto.request.CustomerInvestigateRequest;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 客户体征信息Service接口
@@ -83,5 +84,12 @@ public interface ISysCustomerPhysicalSignsService {
      * @return
      */
     SysCustomerPhysicalSigns  selectSysCustomerAndSignByPhone(String phone);
+
+    /**
+     * 根据客户ID删除对应体征信息
+     * @param customerId
+     * @return
+     */
+    int delCustomerSignByCustomerId(Long customerId);
 
 }

@@ -72,4 +72,11 @@ public interface SysCustomerHealthyMapper
      * 根据客户ID查询健康评估表信息
      */
     SysCustomerHealthy selectSysCustomerHealthyByCustomerId(@Param("customerId")Long customerId);
+
+    /**
+     * 根据客户ID删除客户健康评估信息
+     * @param customerId
+     * @return
+     */
+    int deleteCustomerHealthyByCustomerId(@Param("customerId")Long customerId);
 }

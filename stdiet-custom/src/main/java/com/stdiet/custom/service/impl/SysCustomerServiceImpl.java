@@ -5,6 +5,7 @@ import java.util.List;
 import com.stdiet.common.core.domain.model.LoginUser;
 import com.stdiet.common.utils.DateUtils;
 import com.stdiet.common.utils.SecurityUtils;
+import com.stdiet.common.utils.StringUtils;
 import com.stdiet.common.utils.bean.ObjectUtils;
 import com.stdiet.custom.domain.SysCustomerPhysicalSigns;
 import com.stdiet.custom.dto.request.CustomerInvestigateRequest;
@@ -114,5 +115,24 @@ public class SysCustomerServiceImpl implements ISysCustomerService
      */
     public SysCustomer getCustomerByPhone(String phone){
         return sysCustomerMapper.getCustomerByPhone(phone);
+    }
+
+    /**
+     * 判断客户手机号是否已存在
+     * @param sysCustomer
+     * @return
+     */
+    public boolean isCustomerExistByPhone(SysCustomer sysCustomer){
+        if(sysCustomer.getId() != null){
+            if(StringUtils.isNotEmpty(sysCustomer.getPhone())){
+                SysCustomer phoneCustomer = getCustomerByPhone(sysCustomer.getPhone());
+                return phoneCustomer != null && phoneCustomer.getId().intValue() != sysCustomer.getId().intValue();
+            }
+        }else{
+            if(StringUtils.isNotEmpty(sysCustomer.getPhone())){
+                return getCustomerByPhone(sysCustomer.getPhone()) != null;
+            }
+        }
+        return false;
     }
 }

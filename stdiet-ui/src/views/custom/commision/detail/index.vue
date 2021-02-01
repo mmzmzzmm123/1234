@@ -12,7 +12,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="业务员" prop="userId">
-        <el-select v-model="queryParams.userId" placeholder="请选择业务员" clearable size="small">
+        <el-select v-model="queryParams.userId" filterable placeholder="请选择业务员" clearable size="small">
           <el-option
             v-for="dict in searchUserIdOptions"
             :key="dict.dictValue"
