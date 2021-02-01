@@ -136,9 +136,6 @@ public class SysWxSaleAccountController extends BaseController {
             }
 
             WxFileUploadResult result = WxTokenUtils.uploadImage(oriFilePath, oriFileName, accessToken);
-            if (StringUtils.isEmpty(result.getUrl())) {
-                return AjaxResult.error(result.getMediaId());
-            }
 
             AjaxResult ajax = AjaxResult.success();
             ajax.put("fileName", fileName);
