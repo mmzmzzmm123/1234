@@ -54,72 +54,6 @@ public class SysCustomerHealthyServiceImpl implements ISysCustomerHealthyService
         return sysCustomerHealthyMapper.selectSysCustomerHealthyList(sysCustomerHealthy);
     }
 
-    /**
-     * 新增客户健康(已弃用)
-     *
-     * @param sysCustomerHealthy 客户健康
-     * @return 结果
-     */
-    @Override
-    public AjaxResult insertOrUpdateSysCustomerHealthy(SysCustomerHealthy sysCustomerHealthy)
-    {
-        //当前登录用户
-        //LoginUser loginUser = SecurityUtils.getLoginUser();
-        Long cutomerId = 0L;
-        //新增
-        if(sysCustomerHealthy.getId() == null){
-            //根据手机号查询客户健康信息，判断是否已存在
-            SysCustomerHealthy customerHealthy = selectSysCustomerHealthyByPhone(sysCustomerHealthy.getPhone());
-            if(customerHealthy != null){
-                return AjaxResult.error("该手机号已存在");
-            }
-            //根据手机号查询客户基础信息，判断是否已存在
-            SysCustomer phoneCustomer = sysCustomerService.getCustomerByPhone(sysCustomerHealthy.getPhone());
-            if(phoneCustomer != null){
-                if(!sysCustomerHealthy.getName().equals(phoneCustomer.getName())){
-                    return AjaxResult.error("该手机号与姓名不符");
-                }
-                cutomerId = phoneCustomer.getId();
-            }else{
-                SysCustomer newSysCustomer  = new SysCustomer();
-                newSysCustomer.setName(sysCustomerHealthy.getName());
-                newSysCustomer.setPhone(sysCustomerHealthy.getPhone());
-                if(sysCustomerService.insertSysCustomer(newSysCustomer) > 0){
-                    cutomerId = newSysCustomer.getId();
-                }
-            }
-        }
-        //更新
-        else{
-            SysCustomer oldCustomer = sysCustomerService.selectSysCustomerById(sysCustomerHealthy.getCustomerId());
-            //如果修改了手机号，则需要判断手机号是否已经存在
-            if(oldCustomer != null && !oldCustomer.getPhone().equals(sysCustomerHealthy.getPhone())) {
-                //验证该手机号是否已存在客户健康信息
-                SysCustomerHealthy customerHealthy = selectSysCustomerHealthyByPhone(sysCustomerHealthy.getPhone());
-                if (customerHealthy != null) {
-                    return AjaxResult.error("该手机号已存在");
-                }
-                //根据手机号查询客户基础信息，判断是否已存在
-                SysCustomer phoneCustomer = sysCustomerService.getCustomerByPhone(sysCustomerHealthy.getPhone());
-                if(phoneCustomer != null) {
-                    return AjaxResult.error("该手机号已存在");
-                }
-            }
-            SysCustomer newSysCustomer  = new SysCustomer();
-            newSysCustomer.setId(sysCustomerHealthy.getCustomerId());
-            newSysCustomer.setName(sysCustomerHealthy.getName());
-            newSysCustomer.setPhone(sysCustomerHealthy.getPhone());
-            if(sysCustomerService.updateSysCustomer(newSysCustomer) > 0){
-                cutomerId = newSysCustomer.getId();
-            }
-        }
-        int rows = 0;
-        if(cutomerId != null && cutomerId > 0){
-            sysCustomerHealthy.setCustomerId(cutomerId);
-            rows = sysCustomerHealthy.getId() == null ? sysCustomerHealthyMapper.insertSysCustomerHealthy(sysCustomerHealthy) : sysCustomerHealthyMapper.updateSysCustomerHealthy(sysCustomerHealthy);
-        }
-        return rows > 0 ? AjaxResult.success() : AjaxResult.error();
-    }
 
     /**
      * 新增客户健康
@@ -130,7 +64,7 @@ public class SysCustomerHealthyServiceImpl implements ISysCustomerHealthyService
     public AjaxResult insertSysCustomerHealthy(SysCustomerHealthy sysCustomerHealthy){
         //客户ID解密
         String customerId = StringUtils.isNotEmpty(sysCustomerHealthy.getCustomerEncId()) ? AesUtils.decrypt(sysCustomerHealthy.getCustomerEncId(), null) : "";
-        if(StringUtils.isEmpty(customerId)){
+        if(sysCustomerHealthy.getCustomerId() == null && StringUtils.isEmpty(customerId)){
             return AjaxResult.error("客户不存在");
         }
         //判断客户是否存在
@@ -147,6 +81,16 @@ public class SysCustomerHealthyServiceImpl implements ISysCustomerHealthyService
         sysCustomerHealthy.setCustomerId(Long.parseLong(customerId));
         int rows = sysCustomerHealthyMapper.insertSysCustomerHealthy(sysCustomerHealthy);
         return rows > 0 ? AjaxResult.success() : AjaxResult.error();
+    }
+
+    /**
+     * 编辑客户健康
+     * @param sysCustomerHealthy
+     * @return
+     */
+    @Override
+    public int updateSysCustomerHealthy(SysCustomerHealthy sysCustomerHealthy){
+        return sysCustomerHealthyMapper.updateSysCustomerHealthy(sysCustomerHealthy);
     }
 
     /**

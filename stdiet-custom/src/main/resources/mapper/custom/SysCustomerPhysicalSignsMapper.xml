@@ -69,7 +69,9 @@
 
     <!-- 根据客户ID查询用户体征 -->
     <select id="selectSysCustomerPhysicalSignsByCusId" parameterType="Long" resultMap="SysCustomerSignResult">
-        <include refid="selectSysCustomerPhysicalSigns"/> where scps.del_flag = 0 and sc.del_flag = 0 and scps.customer_id = #{id}
+        <include refid="selectSysCustomerPhysicalSigns"/>
+        where scps.del_flag = 0 and sc.del_flag = 0 and scps.customer_id = #{id}
+        order by scps.id desc limit 1
     </select>
 
     <insert id="insertSysCustomerPhysicalSigns" parameterType="SysCustomerPhysicalSigns" useGeneratedKeys="true" keyProperty="id">

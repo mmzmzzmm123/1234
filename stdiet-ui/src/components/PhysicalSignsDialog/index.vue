@@ -1,7 +1,9 @@
 <template>
   <el-dialog :visible.sync="visible" :title="title" append-to-body @closed="onClosed">
+    <div v-if="showFlag">
     <div style="float:right;margin-top:-10px;margin-bottom: 10px;" v-show="dataList.length > 0">
-      <!--<el-button v-hasPermi="['custom:healthy:edit']" @click=""  plain>修改信息</el-button>-->
+      <!-- 只有新版健康评估信息才可修改，旧的体征数据不支持修改 -->
+      <el-button v-hasPermi="['custom:healthy:edit']" type="primary" v-show="dataType == 0" @click="handleEditHealthyClick()"  plain>修改信息</el-button>
       <el-button type="danger" v-hasPermi="['custom:healthy:remove']" @click="handleDelete()" plain>删除信息</el-button>
     </div>
     <!-- 客户健康评估 -->
@@ -54,6 +56,10 @@
         <el-button icon="el-icon-share" size="small" title="点击复制链接" class="copyBtn" type="primary" :data-clipboard-text="copyValue" @click="handleCopy()">健康评估表链接</el-button>
       </p>
     </div>
+    </div>
+    <!-- 编辑 -->
+    <physicalSigns-edit ref="physicalSignsEditDialog" @refreshHealthyData="getCustomerHealthyByCusId()"></physicalSigns-edit>
+
   </el-dialog>
 </template>
 <script>
@@ -62,20 +68,24 @@ import TableDetailMessage from "@/components/TableDetailMessage";
 import AutoHideMessage from "@/components/AutoHideMessage";
 import * as healthyData from "@/utils/healthyData";
 import Clipboard from 'clipboard';
+import PhysicalSignsEdit from "@/components/PhysicalSignsEdit";
 
 export default {
   name: "PhysicalSignsDialog",
   components: {
     "auto-hide-message": AutoHideMessage,
-    "table-detail-message": TableDetailMessage
+    "table-detail-message": TableDetailMessage,
+    "physicalSigns-edit":PhysicalSignsEdit
   },
   data() {
     return {
       visible: false,
+      showFlag: false,
       title: "",
       data: null,
       dataList: [],
       dataType: 0,
+      healthyData: null,
       // 体征标题
       signTitleData: [
         ["创建时间", "姓名", "年龄"],
@@ -196,19 +206,25 @@ export default {
     },
     showDialog(data) {
       this.data = data;
-      this.title = `「${data.name}」`;
-      getCustomerPhysicalSignsByCusId(data.id).then((res) => {
+      this.title = `「${data.name}」客户健康评估信息`;
+      this.getCustomerHealthyByCusId();
+    },
+    getCustomerHealthyByCusId(){
+
+      getCustomerPhysicalSignsByCusId(this.data.id).then((res) => {
+        this.showFlag = false;
         if (res.data.customerHealthy) {
           //判断是体征还是健康评估
           this.dataType = res.data.type;
           if(this.dataType == 0){
-            this.getDataListByHealthyMessage(res.data.customerHealthy);
+             this.healthyData = Object.assign({}, res.data.customerHealthy);
+             this.getDataListByHealthyMessage(res.data.customerHealthy);
           }else{
             this.getDataListBySignMessage(res.data.customerHealthy)
           }
         }
-        this.title += (this.dataType == 0 ? "客户健康评估信息" : "客户体征信息");
         this.enc_id = res.data.enc_id;
+        this.showFlag = true;
         this.visible = true;
       });
     },
@@ -410,7 +426,7 @@ export default {
     handleDelete() {
       const ids = this.data.id;
       this.$confirm(
-        '是否确认删除客户姓名为为"' + this.data.name + '"的体征信息?',
+        '是否确认删除客户姓名为"' + this.data.name + '"的健康评估信息?',
         "警告",
         {
           confirmButtonText: "确定",
@@ -424,6 +440,10 @@ export default {
           this.msgSuccess("删除成功");
       }).catch(function () {});
     },
+    handleEditHealthyClick() {
+      //console.log(JSON.stringify(this.healthyData));
+      this.$refs["physicalSignsEditDialog"].showDialog(this.data, this.healthyData);
+    }
   }
 };
 </script>
