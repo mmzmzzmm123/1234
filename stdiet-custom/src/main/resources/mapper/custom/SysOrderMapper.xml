@@ -327,9 +327,9 @@
       <if test="userId != null">
           and (su_sale.user_id = #{userId} or su_nutritionist.user_id = #{userId})
       </if>
-      <if test="beginTime != null and beginTime != ''">
+      <!--<if test="beginTime != null and beginTime != ''">
           AND o.order_time &gt;= #{beginTime}
-      </if>
+      </if>-->
       <if test="endTime != null and endTime != ''">
           AND DATE_FORMAT(o.order_time,'%Y-%m-%d') &lt;= #{endTime}
       </if>

@@ -21,7 +21,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="月份" prop="month">
+      <el-form-item label="截止月份" prop="month">
         <el-date-picker
           v-model="month"
           @change="monthRangeChange"

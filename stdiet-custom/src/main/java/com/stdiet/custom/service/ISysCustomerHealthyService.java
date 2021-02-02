@@ -31,20 +31,19 @@ public interface ISysCustomerHealthyService
     public List<SysCustomerHealthy> selectSysCustomerHealthyList(SysCustomerHealthy sysCustomerHealthy);
 
     /**
-     * 新增或修改客户健康（已弃用）
-     *
-     * @param sysCustomerHealthy 客户健康
-     * @return 结果
-     */
-    public AjaxResult insertOrUpdateSysCustomerHealthy(SysCustomerHealthy sysCustomerHealthy);
-
-    /**
      * 新增客户健康
      *
      * @param sysCustomerHealthy 客户健康
      * @return 结果
      */
     public AjaxResult insertSysCustomerHealthy(SysCustomerHealthy sysCustomerHealthy);
+
+    /**
+     * 编辑客户健康
+     * @param sysCustomerHealthy
+     * @return
+     */
+    public int updateSysCustomerHealthy(SysCustomerHealthy sysCustomerHealthy);
 
     /**
      * 批量删除客户健康
