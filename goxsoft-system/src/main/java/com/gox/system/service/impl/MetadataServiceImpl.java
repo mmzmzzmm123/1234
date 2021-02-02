@@ -4,18 +4,27 @@ import java.io.File;
 import java.util.List;
 
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.ZipUtil;
+import cn.hutool.poi.excel.ExcelReader;
 import com.gox.common.config.GoxConfig;
 import com.gox.common.core.domain.AjaxResult;
+import com.gox.common.utils.SecurityUtils;
+import com.gox.common.utils.file.Chunk;
+import com.gox.common.utils.file.UploadUtil;
 import com.gox.common.utils.poi.ExcelUtil;
 import com.gox.system.domain.ElectronicAttributes;
 import com.gox.system.mapper.ElectronicAttributesMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import com.gox.system.mapper.MetadataMapper;
 import com.gox.system.domain.Metadata;
 import com.gox.system.service.IMetadataService;
+
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 文书类基本元数据Service业务层处理
@@ -26,12 +35,11 @@ import com.gox.system.service.IMetadataService;
 @Service
 public class MetadataServiceImpl implements IMetadataService
 {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MetadataServiceImpl.class);
     @Autowired
     private MetadataMapper metadataMapper;
     @Autowired
     private ElectronicAttributesMapper electronicAttributesMapper;
-    @Value("${system.rootpath}")
-    private String rootPath;
     @Value("${gox.profile}")
     private String profile;
     /**
@@ -169,4 +177,32 @@ public class MetadataServiceImpl implements IMetadataService
         FileUtil.del(ds);
         return AjaxResult.success(t+".zip");
     }
+
+    /**
+     * 上传处理
+     *
+     * @param chunk
+     * @param response
+     * @return result
+     */
+    @Override
+    public String uploadHandle(Chunk chunk, HttpServletResponse response) {
+        String username = SecurityUtils.getUsername();
+        String parent = profile+File.separator+"temp"+username;
+        String ex= UploadUtil.mergeChunk(parent,chunk,response );
+        if (StrUtil.isBlank(ex)){
+            //判断文件是excel还是zip
+
+            return "";
+        }else {
+            return ex;
+        }
+    }
+    private void ExcelImport(String filepath){
+        //excel 导入 字段配置
+        ExcelReader reader = cn.hutool.poi.excel.ExcelUtil.getReader(filepath);
+        List<List<Object>> res = reader.read(0, 1);
+        
+    }
+
 }

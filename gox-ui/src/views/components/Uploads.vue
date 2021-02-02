@@ -16,15 +16,16 @@ import {getToken} from '@/utils/auth'
 export default {
   name: 'Uploads',
   props:{
-    metadataId:{
-      type:Number,
-      required:true,
-    }
+    url:{
+      type:String
+    },
+
   },
   data () {
     return {
       options: {
-        target: process.env.VUE_APP_BASE_API +'/system/attributes/fileUpload?metadataId='+this.metadataId,
+        //target: process.env.VUE_APP_BASE_API +'/system/attributes/fileUpload?metadataId='+this.metadataId,
+        target:this.url,
         chunkSize: 5 * 1024 * 1024,
         headers: {
           // 在header中添加的验证，请根据实际业务来

@@ -3,7 +3,10 @@ package com.gox.system.service;
 import java.util.List;
 
 import com.gox.common.core.domain.AjaxResult;
+import com.gox.common.utils.file.Chunk;
 import com.gox.system.domain.Metadata;
+
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 文书类基本元数据Service接口
@@ -78,5 +81,9 @@ public interface IMetadataService
      */
     AjaxResult exportExcelAndEleByIds(Long []ids);
 
-
+    /**
+     * 上传处理
+     * @return result
+     */
+    String uploadHandle(Chunk chunk, HttpServletResponse response);
 }

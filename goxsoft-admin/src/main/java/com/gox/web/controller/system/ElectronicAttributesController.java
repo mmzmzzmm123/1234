@@ -1,20 +1,14 @@
 package com.gox.web.controller.system;
 
 import java.io.IOException;
-import java.nio.file.Paths;
-import java.util.Arrays;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import cn.hutool.core.util.StrUtil;
-import com.gox.common.core.domain.entity.SysDictData;
 import com.gox.common.core.redis.RedisCache;
-import com.gox.common.utils.DictUtils;
-import com.gox.common.utils.SecurityUtils;
-import com.gox.common.utils.StringUtils;
-import com.gox.system.domain.Chunk;
-import org.aspectj.weaver.loadtime.Aj;
+import com.gox.common.utils.file.Chunk;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +21,6 @@ import com.gox.system.service.IElectronicAttributesService;
 import com.gox.common.utils.poi.ExcelUtil;
 import com.gox.common.core.page.TableDataInfo;
 import org.springframework.web.multipart.MultipartFile;
-import sun.net.www.http.HttpClient;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -56,48 +49,6 @@ public class ElectronicAttributesController extends BaseController
         startPage();
         List<ElectronicAttributes> list = electronicAttributesService.selectElectronicAttributesList(electronicAttributes);
         return getDataTable(list);
-    }
-    /**
-     * 完整文件验证
-     */
-    @PreAuthorize("@ss.hasPermi('system:attributes:add')")
-    @Log(title = "电子文件信息", businessType = BusinessType.INSERT)
-    @PostMapping("/full")
-    public AjaxResult upload(HttpServletRequest req){
-        String filename = req.getParameter("file_name");
-        String md5 = req.getParameter("md5");
-        Long metadataId = Long.valueOf(req.getParameter("metadataId"));
-        if (electronicAttributesService.merge(filename,md5,metadataId)){
-            return AjaxResult.success();
-        }
-        return AjaxResult.error("系统错误,上传失败");
-    }
-    /**
-     * 上传文件分块
-     */
-    @PreAuthorize("@ss.hasPermi('system:attributes:add')")
-    //@Log(title = "电子文件信息", businessType = BusinessType.INSERT)
-    @PostMapping("/chunk")
-    public AjaxResult upload2(HttpServletRequest req, MultipartFile data) {
-        if (data==null) {
-            return AjaxResult.error("网络错误,上传失败");
-        }
-        String res=null;
-        Map<String,Object> map = new HashMap<>();
-        map.put("filename",req.getParameter("file_name"));
-        map.put("md5",req.getParameter("md5"));
-        map.put("chunks",req.getParameter("chunks"));
-        map.put("chunkIndex",req.getParameter("chunk_index"));
-        map.put("chunkMd5",req.getParameter("chunk_md5"));
-        map.put("data",data);
-        res = electronicAttributesService.mergeChunk(map);
-        if (StrUtil.isBlank(res)){
-            return AjaxResult.success();
-        }
-        else {
-            return AjaxResult.error(res);
-        }
-
     }
 //    /**
 //     * 获取base64
@@ -177,7 +128,7 @@ public class ElectronicAttributesController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:attributes:add')")
     @Log(title = "电子文件信息", businessType = BusinessType.INSERT)
     @PostMapping("/fileUpload")
-    public String uploadPost(@ModelAttribute Chunk chunk, HttpServletResponse response,Long metadataId) throws IOException {
+    public String uploadPost(@ModelAttribute Chunk chunk, HttpServletResponse response, Long metadataId) throws IOException {
         return electronicAttributesService.fileUploadPost(chunk,response,metadataId);
     }
 
@@ -190,7 +141,6 @@ public class ElectronicAttributesController extends BaseController
      */
     @GetMapping("/fileUpload")
     public void uploadGet(@ModelAttribute Chunk chunk,HttpServletResponse response){
-        logger.info(chunk.toString());
         electronicAttributesService.fileUploadGet(chunk,response);
     }
 }

@@ -1,13 +1,11 @@
 package com.gox.system.service;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.RandomAccessFile;
-import java.util.List;
-import java.util.Map;
 
-import com.gox.system.domain.Chunk;
+import java.io.IOException;
+
+import java.util.List;
+
+import com.gox.common.utils.file.Chunk;
 import com.gox.system.domain.ElectronicAttributes;
 
 import javax.servlet.http.HttpServletResponse;
@@ -28,13 +26,13 @@ public interface IElectronicAttributesService
      */
     public ElectronicAttributes selectElectronicAttributesById(Long id);
 
-    String mergeChunk(Map<String, Object> map);
+
 
     String fileUploadPost(Chunk chunk, HttpServletResponse response, Long metadataId) throws IOException;
 
     void fileUploadGet(Chunk chunk, HttpServletResponse response);
 
-    boolean merge(String filename, String md5, Long MetadataId);
+
 
     /**
      * 获取文件base64编码

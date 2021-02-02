@@ -572,6 +572,11 @@
         </el-col>
       </el-row>
     </div>
+    <el-dialog :visible.sync="upload" v-if="upload" title="数据导入" width="30%">
+      <span style="color:red">请选择zip或excel</span>
+      <uploads :url="uploadUrl">
+      </uploads>
+    </el-dialog>
     <InputView v-if="open" :deptid="deptId" :metadata="metadata" :metadataid="id" :type="type" :formconf="formConf" @close="cancel"/>
   </div>
 </template>
@@ -591,14 +596,18 @@ import InputView from '@/views/system/metadata/InputView'
 import { listJson } from '@/api/system/json'
 import { listDefinition, listMetadataRule } from '@/api/system/metadataRule'
 import { deepClone } from '@/utils'
+import Uploads from '@/views/components/Uploads'
 export default {
   name: "Metadata",
   components: {
     DeptTree,
-    InputView
+    InputView,
+    Uploads
   },
   data() {
     return {
+      upload:false,
+      uploadUrl: process.env.VUE_APP_BASE_API +'/system/metadata/fileUpload',
       metadata:{},
       id:0,
       type:'create',
@@ -724,12 +733,7 @@ export default {
       }
     },
     handleImport(){
-      if(this.ids.length!==0){
-
-      }
-      else{
-        this.$message.error('请选择至少一条数据')
-      }
+      this.upload=true;
     },
     handleExportField(){
       exportMetadataField().then(res=>{

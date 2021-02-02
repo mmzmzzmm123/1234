@@ -1,4 +1,4 @@
-package com.gox.system.domain;
+package com.gox.common.utils.file;
 
 import org.springframework.web.multipart.MultipartFile;
 

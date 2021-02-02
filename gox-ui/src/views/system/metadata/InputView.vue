@@ -16,9 +16,9 @@
         <div style="text-align: center">
           <el-dialog title="上传文件" v-if="dialogVisible" :visible.sync="dialogVisible" width="30%" :before-close="beforeClose" style="z-index: 2999">
 <!--            <uploadwindow :metadata-id="mdId" @addFile="addFile"></uploadwindow>-->
-            <uploads :metadata-id="metadataid"></uploads>
+            <uploads :url="url"></uploads>
           </el-dialog>
-          <document-view :metadata-id="mdId" ref="dv"></document-view>
+          <document-view  :metadata-id="mdId" ref="dv"></document-view>
           <el-button-group>
             <el-button @click="returnLastPage">返回</el-button>
             <el-button @click="save">保存</el-button>
@@ -109,6 +109,7 @@ export default {
       newForm:{},
       modifyForm:{},
       mdId:1,
+      url:process.env.VUE_APP_BASE_API +'/system/attributes/fileUpload?metadataId='+this.metadataId,
       currentPage:1,
       dialogVisible:false,
       //metadataId:1,
