@@ -193,6 +193,14 @@
           <el-button
             size="mini"
             type="text"
+            icon="el-icon-setting"
+            @click="handleSetting(scope.row)"
+            v-hasPermi="['benyi:thememonthplan:edit']"
+            >设置</el-button
+          >
+          <el-button
+            size="mini"
+            type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['benyi:thememonthplan:edit']"
@@ -375,6 +383,14 @@ export default {
     });
   },
   methods: {
+    /** 设置按钮操作 */
+    handleSetting(row) {
+      const id = row.id;
+      this.$router.push({
+        path: "/benyi_course/thememonthplan/data/" + id,
+      });
+    },
+    // 是否显示
     isShow(row) {
       if (row.status == "0") {
         return true;

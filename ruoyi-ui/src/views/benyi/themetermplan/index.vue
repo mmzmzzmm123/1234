@@ -170,6 +170,14 @@
           <el-button
             size="mini"
             type="text"
+            icon="el-icon-setting"
+            @click="handleSetting(scope.row)"
+            v-hasPermi="['benyi:themetermplan:edit']"
+            >设置</el-button
+          >
+          <el-button
+            size="mini"
+            type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['benyi:themetermplan:edit']"
@@ -504,6 +512,13 @@ export default {
       const id = row.id;
       this.$router.push({
         path: "/benyi_course/themetermplanprint/table/" + id,
+      });
+    },
+    /** 设置按钮操作 */
+    handleSetting(row) {
+      const id = row.id;
+      this.$router.push({
+        path: "/benyi_course/themetermplan/data/" + id,
       });
     },
   },
