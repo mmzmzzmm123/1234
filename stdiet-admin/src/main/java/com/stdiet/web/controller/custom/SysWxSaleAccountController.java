@@ -104,33 +104,44 @@ public class SysWxSaleAccountController extends BaseController {
         return toAjax(sysWxSaleAccountService.deleteSysWxSaleAccountByIds(ids));
     }
 
+    @GetMapping("/redisTest")
+    public AjaxResult redisTest() {
+        String accessToken = redisCache.getCacheObject(WxTokenUtils.KEY_ACCESS_TOKEN);
+        if (StringUtils.isEmpty(accessToken)) {
+            WxAccessToken wxAccessToken = WxTokenUtils.fetchAccessToken();
+            redisCache.setCacheObject(WxTokenUtils.KEY_ACCESS_TOKEN, wxAccessToken.getAccessToken(), wxAccessToken.getExpiresIn(), TimeUnit.SECONDS);
+        }
+        return AjaxResult.success(accessToken);
+    }
+
     /**
-     * 通用上传请求(无需登录认证)
+     * 上传图片
      */
     @PostMapping("/upload")
     public AjaxResult wxAccountUpload(MultipartFile file) throws Exception {
         try {
             // 上传文件路径
             String filePath = RuoYiConfig.getUploadPath();
+            String oriFileName = file.getOriginalFilename();
             // 上传并返回新文件名称
             String fileName = FileUploadUtils.upload(filePath, file);
-            String url = serverConfig.getUrl() + fileName;
+//            String url = serverConfig.getUrl() + fileName;
+
+            String oriFilePath = filePath + fileName.substring(fileName.indexOf("upload") + 6);
 
             String accessToken = redisCache.getCacheObject(WxTokenUtils.KEY_ACCESS_TOKEN);
             if (StringUtils.isEmpty(accessToken)) {
                 WxAccessToken wxAccessToken = WxTokenUtils.fetchAccessToken();
-                redisCache.setCacheObject(WxTokenUtils.KEY_ACCESS_TOKEN, wxAccessToken.getAccessToken(), wxAccessToken.getExpiresIn(), TimeUnit.SECONDS);
+                accessToken = wxAccessToken.getAccessToken();
+                redisCache.setCacheObject(WxTokenUtils.KEY_ACCESS_TOKEN, accessToken, wxAccessToken.getExpiresIn(), TimeUnit.SECONDS);
             }
 
-            WxFileUploadResult result = WxTokenUtils.uploadImage(filePath, accessToken);
-            if (result == null) {
-                return AjaxResult.error("上传微信失败");
-            }
+            WxFileUploadResult result = WxTokenUtils.uploadImage(oriFilePath, oriFileName, accessToken);
 
             AjaxResult ajax = AjaxResult.success();
             ajax.put("fileName", fileName);
             ajax.put("mediaId", result.getMediaId());
-            ajax.put("url", url);
+            ajax.put("mediaUrl", result.getUrl());
             return ajax;
         } catch (Exception e) {
             return AjaxResult.error(e.getMessage());
