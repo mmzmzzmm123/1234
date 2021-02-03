@@ -35,6 +35,8 @@ public interface IRegListItemService
      */
     public int insertRegListItem(RegListItem regListItem);
 
+    int insertRegListItems(Iterable<RegListItem> regListItems, Long configId);
+
     /**
      * 修改【请填写功能名称】
      * 

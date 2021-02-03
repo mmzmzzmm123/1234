@@ -11,7 +11,7 @@ public class OptionsItem{
 	@JSONField(serialize = false)
 	private Long itemId;
 	@JSONField(serialize = false)
-	private Long optId;
+	private Long slotId;
 	@JSONField(name = "label")
 	private String label;
 
@@ -34,12 +34,12 @@ public class OptionsItem{
 		this.id = id;
 	}
 
-	public Long getOptId() {
-		return optId;
+	public Long getSlotId() {
+		return slotId;
 	}
 
-	public void setOptId(Long optId) {
-		this.optId = optId;
+	public void setSlotId(Long slotId) {
+		this.slotId = slotId;
 	}
 
 	public void setLabel(String label) {

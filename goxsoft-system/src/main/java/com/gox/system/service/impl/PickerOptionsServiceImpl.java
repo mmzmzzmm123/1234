@@ -54,7 +54,15 @@ public class PickerOptionsServiceImpl implements IPickerOptionsService
     {
         return pickerOptionsMapper.insertPickerOptions(pickerOptions);
     }
-
+    @Override
+    public int insertPickerOptions(Iterable<PickerOptions> pickerOptions,Long itemId){
+        int c=0;
+        for (PickerOptions pickerOption : pickerOptions) {
+            pickerOption.setItemId(itemId);
+            c+=insertPickerOptions(pickerOption);
+        }
+        return c;
+    }
     /**
      * 修改【请填写功能名称】
      * 

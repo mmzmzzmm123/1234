@@ -1,6 +1,10 @@
 package com.gox.system.service.impl;
 
 import java.util.List;
+
+import com.gox.common.utils.uuid.SnowflakesTools;
+import com.gox.system.domain.form.OptionsItem;
+import com.gox.system.service.IOptionsItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.gox.system.mapper.SlotMapper;
@@ -18,7 +22,8 @@ public class SlotServiceImpl implements ISlotService
 {
     @Autowired
     private SlotMapper slotMapper;
-
+    @Autowired
+    private IOptionsItemService optionsItemService;
     /**
      * 查询【请填写功能名称】
      * 
@@ -52,6 +57,13 @@ public class SlotServiceImpl implements ISlotService
     @Override
     public int insertSlot(Slot slot)
     {
+        Long slotId = SnowflakesTools.WORKER.nextId();
+        List<OptionsItem> ops = slot.getOptions();
+        if (ops!=null&&!ops.isEmpty()){
+            slot.setItemId(slotId);
+            optionsItemService.insertOptionsItemsSlot(ops,slotId);
+        }
+
         return slotMapper.insertSlot(slot);
     }
 

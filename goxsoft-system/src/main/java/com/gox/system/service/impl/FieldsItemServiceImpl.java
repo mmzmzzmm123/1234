@@ -4,12 +4,13 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.gox.common.utils.uuid.SnowflakesTools;
-import com.gox.system.domain.form.Config;
+import com.gox.system.domain.form.*;
+import com.gox.system.mapper.ConfigMapper;
+import com.gox.system.mapper.StyleMapper;
+import com.gox.system.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.gox.system.mapper.FieldsItemMapper;
-import com.gox.system.domain.form.FieldsItem;
-import com.gox.system.service.IFieldsItemService;
 
 /**
  * 【请填写功能名称】Service业务层处理
@@ -22,7 +23,20 @@ public class FieldsItemServiceImpl implements IFieldsItemService
 {
     @Autowired
     private FieldsItemMapper fieldsItemMapper;
-
+    @Autowired
+    private IConfigService configService;
+    @Autowired
+    private IStyleService styleService;
+    @Autowired
+    private ISlotService slotService;
+    @Autowired
+    private IPickerOptionsService pickerOptionsService;
+    @Autowired
+    private IOptionsItemService optionsItemService;
+    @Autowired
+    private IPropsService propsService;
+    @Autowired
+    private IAutosizeService autosizeService;
     /**
      * 查询【请填写功能名称】
      * 
@@ -70,11 +84,41 @@ public class FieldsItemServiceImpl implements IFieldsItemService
         for (FieldsItem fi : fieldsItems) {
             Long itemId = SnowflakesTools.WORKER.nextId();
             fi.setFormId(formId);
-            fi.setId(itemId);
             Config config = fi.getConfig();
-            config.setItemId(itemId);
+            if (config!=null){
+                config.setItemId(itemId);
+                configService.insertConfig(config);
+            }
+            Slot slot = fi.getSlot();
+            if (slot!=null){
+                slot.setItemId(itemId);
+                slotService.insertSlot(slot);
+            }
+            Style style = fi.getStyle();
+            if (style!=null){
+                style.setItemId(itemId);
+                styleService.insertStyle(style);
+            }
+            PickerOptions pickerOptions = fi.getPickerOptions();
+            if (pickerOptions!=null){
+                pickerOptions.setItemId(itemId);
+                pickerOptionsService.insertPickerOptions(pickerOptions);
+            }
+            List<OptionsItem> optionsItems = fi.getOptions();
+            if (optionsItems!=null&&!optionsItems.isEmpty()){
+                optionsItemService.insertOptionsItems(optionsItems,itemId);
+            }
+            Props props = fi.getProps();
+            if (props!=null){
+                props.setItemId(itemId);
+                propsService.insertProps(props);
+            }
+            Autosize autosize = fi.getAutosize();
+            if (autosize!=null){
+                autosize.setItemId(itemId);
+                autosizeService.insertAutosize(autosize);
+            }
             c += insertFieldsItem(fi);
-
         }
         return c;
     }

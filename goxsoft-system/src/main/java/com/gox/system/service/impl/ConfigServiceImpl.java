@@ -1,6 +1,10 @@
 package com.gox.system.service.impl;
 
 import java.util.List;
+
+import com.gox.common.utils.uuid.SnowflakesTools;
+import com.gox.system.domain.form.RegListItem;
+import com.gox.system.service.IRegListItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.gox.system.mapper.ConfigMapper;
@@ -18,7 +22,8 @@ public class ConfigServiceImpl implements IConfigService
 {
     @Autowired
     private ConfigMapper configMapper;
-
+    @Autowired
+    private IRegListItemService regListItemService;
     /**
      * 查询【请填写功能名称】
      * 
@@ -52,9 +57,11 @@ public class ConfigServiceImpl implements IConfigService
     @Override
     public int insertConfig(Config config)
     {
+        Long id = SnowflakesTools.WORKER.nextId();
+        List<RegListItem> reg = config.getRegList();
+        regListItemService.insertRegListItems(reg,id);
         return configMapper.insertConfig(config);
     }
-
     /**
      * 修改【请填写功能名称】
      * 

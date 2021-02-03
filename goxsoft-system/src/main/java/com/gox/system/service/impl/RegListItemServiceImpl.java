@@ -54,7 +54,15 @@ public class RegListItemServiceImpl implements IRegListItemService
     {
         return regListItemMapper.insertRegListItem(regListItem);
     }
-
+    @Override
+    public int insertRegListItems(Iterable<RegListItem> regListItems,Long configId){
+        int c=0;
+        for (RegListItem regListItem : regListItems) {
+            regListItem.setConfigId(configId);
+            c+=insertRegListItem(regListItem);
+        }
+        return c;
+    }
     /**
      * 修改【请填写功能名称】
      * 

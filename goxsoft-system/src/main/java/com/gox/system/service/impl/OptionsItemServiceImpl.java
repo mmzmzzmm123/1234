@@ -54,7 +54,24 @@ public class OptionsItemServiceImpl implements IOptionsItemService
     {
         return optionsItemMapper.insertOptionsItem(optionsItem);
     }
-
+    @Override
+    public int insertOptionsItems(Iterable<OptionsItem> optionsItems, Long itemId){
+        int c=0;
+        for (OptionsItem optionsItem : optionsItems) {
+            optionsItem.setItemId(itemId);
+            c+=insertOptionsItem(optionsItem);
+        }
+        return c;
+    }
+    @Override
+    public int insertOptionsItemsSlot(Iterable<OptionsItem> optionsItems,Long slotId){
+        int c=0;
+        for (OptionsItem optionsItem : optionsItems) {
+            optionsItem.setSlotId(slotId);
+            c+=insertOptionsItem(optionsItem);
+        }
+        return c;
+    }
     /**
      * 修改【请填写功能名称】
      * 

@@ -35,6 +35,8 @@ public interface IPickerOptionsService
      */
     public int insertPickerOptions(PickerOptions pickerOptions);
 
+    int insertPickerOptions(Iterable<PickerOptions> pickerOptions, Long itemId);
+
     /**
      * 修改【请填写功能名称】
      * 

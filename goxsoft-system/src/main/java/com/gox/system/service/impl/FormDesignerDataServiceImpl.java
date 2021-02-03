@@ -57,9 +57,9 @@ public class FormDesignerDataServiceImpl implements IFormDesignerDataService
     @Override
     public int insertFormDesignerData(FormDesignerData formDesignerData)
     {
-        //Long formId = SnowflakesTools.WORKER.nextId();
-        //List<FieldsItem> fields = formDesignerData.getFields();
-        //fieldsItemService.insertFieldsItems(fields,formId);
+        Long formId = SnowflakesTools.WORKER.nextId();
+        List<FieldsItem> fields = formDesignerData.getFields();
+        fieldsItemService.insertFieldsItems(fields,formId);
         return formDesignerDataMapper.insertFormDesignerData(formDesignerData);
     }
 

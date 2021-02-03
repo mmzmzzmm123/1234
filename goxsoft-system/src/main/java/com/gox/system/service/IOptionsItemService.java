@@ -35,6 +35,10 @@ public interface IOptionsItemService
      */
     public int insertOptionsItem(OptionsItem optionsItem);
 
+    int insertOptionsItems(Iterable<OptionsItem> optionsItems, Long itemId);
+
+    int insertOptionsItemsSlot(Iterable<OptionsItem> optionsItems, Long slotId);
+
     /**
      * 修改【请填写功能名称】
      * 

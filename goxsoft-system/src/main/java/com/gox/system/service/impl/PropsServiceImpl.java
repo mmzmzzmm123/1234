@@ -1,6 +1,8 @@
 package com.gox.system.service.impl;
 
 import java.util.List;
+
+import com.gox.common.utils.uuid.SnowflakesTools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.gox.system.mapper.PropsMapper;
@@ -52,6 +54,13 @@ public class PropsServiceImpl implements IPropsService
     @Override
     public int insertProps(Props props)
     {
+        Long proId= SnowflakesTools.WORKER.nextId();
+        props.setId(proId);
+        Props props1 =props.getProps();
+        if (props1!=null){
+            props1.setProId(proId);
+            insertProps(props1);
+        }
         return propsMapper.insertProps(props);
     }
 
