@@ -130,14 +130,14 @@ export default {
         this.orderList = res.rows.reduce((arr, cur) => {
           const tarOrder = arr.find((ord) => ord.startTime === cur.startTime);
           if (tarOrder) {
-            const firstObj = JSON.parse(JSON.stringify(tarOrder));
-            tarOrder.children = [
-              { ...firstObj, orderType: "main" },
-              { ...cur, orderType: "main" },
-            ];
+            if (!tarOrder.children) {
+              const firstObj = JSON.parse(JSON.stringify(tarOrder));
+              tarOrder.children = [{ ...firstObj, orderType: "main" }];
+            }
             tarOrder.amount += cur.amount;
             tarOrder.orderId += cur.orderId;
             tarOrder.orderType = "virtual";
+            tarOrder.children.push({ ...cur, orderType: "main" });
           } else {
             cur.orderType = "main";
             arr.push(cur);
