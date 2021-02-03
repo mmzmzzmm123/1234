@@ -251,13 +251,21 @@
                   <el-table-column label="通俗计量">
                     <template slot-scope="scope">
                       <span class="cus-unit">
-                        <el-input-number
+                        <!-- <el-input-number
                           v-model="scope.row.cusWeight"
                           size="mini"
                           controls-position="right"
                           step="0.5"
                           :min="0.5"
-                        />
+                        /> -->
+                        <el-select size="mini" v-model="scope.row.cusWei">
+                           <el-option
+                            v-for="dict in cusWeightOptions"
+                            :key="dict.dictValue"
+                            :label="dict.dictLabel"
+                            :value="parseInt(dict.dictValue)"
+                          />
+                        </el-select>
                         <el-select size="mini" v-model="scope.row.cusUnit">
                           <el-option
                             v-for="dict in cusUnitOptions"
@@ -414,6 +422,8 @@ export default {
       typeOptions: [],
       // 通俗单位
       cusUnitOptions: [],
+      //
+      cusWeightOptions: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -437,6 +447,9 @@ export default {
     });
     this.getDicts("cus_cus_unit").then((response) => {
       this.cusUnitOptions = response.data;
+    });
+     this.getDicts("cus_cus_weight").then((response) => {
+      this.cusWeightOptions = response.data;
     });
     this.getDicts("cus_review_status").then((response) => {
       this.reviewStatusOptions = response.data;
@@ -487,6 +500,9 @@ export default {
     },
     cusUnitFormat(row, column) {
       return this.selectDictLabel(this.cusUnitOptions, row.type);
+    },
+    cusWeightFormat(row, column) {
+      return this.selectDictLabel(this.cusWeightOptions, row.cusWei);
     },
     // 地域字典翻译
     reviewStatusFormat(row, column) {
@@ -670,7 +686,7 @@ export default {
             newTableData.push({
               ...tmpTableObj,
               weight: 100,
-              cusWeight: 1,
+              cusWei: 1,
               cusUnit: 1,
             });
           }
@@ -784,7 +800,8 @@ export default {
 
 .cus-unit .el-select .el-input__inner {
   padding: 0 4px;
-  border: unset;
+  /* border: unset; */
+  text-align: center;
 }
 
 .weight {
