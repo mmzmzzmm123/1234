@@ -1,172 +1,174 @@
 package com.gox.system.domain.form;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.gox.common.plugin.AutoId;
 
 import java.util.List;
 
 public class FieldsItem{
-	@JsonIgnore
+	@AutoId
+	@JSONField(serialize = false)
 	private Long id;
-	@JsonIgnore
+	@JSONField(serialize = false)
 	private Long formId;
-	@JsonProperty("list-type")
+	@JSONField(name = "listType")
 	private String listType;
 
-	@JsonProperty("__config__")
+	@JSONField(name = "__config__")
 	private Config config;
 
-	@JsonProperty("auto-upload")
+	@JSONField(name = "autoUpload")
 	private boolean autoUpload;
 
-	@JsonProperty("name")
+	@JSONField(name = "name")
 	private String name;
 
-	@JsonProperty("multiple")
+	@JSONField(name = "multiple")
 	private boolean multiple;
 
-	@JsonProperty("__vModel__")
+	@JSONField(name = "__vModel__")
 	private String vModel;
 
-	@JsonProperty("action")
+	@JSONField(name = "action")
 	private String action;
 
-	@JsonProperty("disabled")
+	@JSONField(name = "disabled")
 	private boolean disabled;
 
-	@JsonProperty("__slot__")
+	@JSONField(name = "__slot__")
 	private Slot slot;
 
-	@JsonProperty("accept")
+	@JSONField(name = "accept")
 	private String accept;
 
-	@JsonProperty("color-format")
+	@JSONField(name = "colorFormat")
 	private String colorFormat;
 
-	@JsonProperty("size")
+	@JSONField(name = "size")
 	private String size;
 
-	@JsonProperty("show-alpha")
+	@JSONField(name = "showAlpha")
 	private boolean showAlpha;
 
-	@JsonProperty("show-text")
+	@JSONField(name = "showText")
 	private boolean showText;
 
-	@JsonProperty("show-score")
+	@JSONField(name = "showScore")
 	private boolean showScore;
 
-	@JsonProperty("max")
+	@JSONField(name = "max")
 	private int max;
 
-	@JsonProperty("allow-half")
+	@JSONField(name = "allowHalf")
 	private boolean allowHalf;
 
-	@JsonProperty("style")
+	@JSONField(name = "style")
 	private Style style;
 
-	@JsonProperty("clearable")
+	@JSONField(name = "clearable")
 	private boolean clearable;
 
-	@JsonProperty("range-separator")
+	@JSONField(name = "rangeSeparator")
 	private String rangeSeparator;
 
-	@JsonProperty("readonly")
+	@JSONField(name = "readonly")
 	private boolean readonly;
 
-	@JsonProperty("start-placeholder")
+	@JSONField(name = "startPlaceholder")
 	private String startPlaceholder;
 
-	@JsonProperty("format")
+	@JSONField(name = "format")
 	private String format;
 
-	@JsonProperty("value-format")
+	@JSONField(name = "valueFormat")
 	private String valueFormat;
 
-	@JsonProperty("type")
+	@JSONField(name = "type")
 	private String type;
 
-	@JsonProperty("end-placeholder")
+	@JSONField(name = "endPlaceholder")
 	private String endPlaceholder;
 
-	@JsonProperty("placeholder")
+	@JSONField(name = "placeholder")
 	private String placeholder;
 
-	@JsonProperty("is-range")
+	@JSONField(name = "isRange")
 	private boolean isRange;
 
-	@JsonProperty("picker-options")
+	@JSONField(name = "pickerOptions")
 	private PickerOptions pickerOptions;
 
-	@JsonProperty("min")
+	@JSONField(name = "min")
 	private int min;
 
-	@JsonProperty("show-stops")
+	@JSONField(name = "showStops")
 	private boolean showStops;
 
-	@JsonProperty("range")
+	@JSONField(name = "range")
 	private boolean range;
 
-	@JsonProperty("step")
+	@JSONField(name = "step")
 	private int step;
 
-	@JsonProperty("active-text")
+	@JSONField(name = "activeText")
 	private String activeText;
 
-	@JsonProperty("active-color")
+	@JSONField(name = "activeColor")
 	private String activeColor;
 
-	@JsonProperty("inactive-text")
+	@JSONField(name = "inactiveText")
 	private String inactiveText;
 
-	@JsonProperty("active-value")
+	@JSONField(name = "activeValue")
 	private boolean activeValue;
 
-	@JsonProperty("inactive-value")
+	@JSONField(name = "inactiveValue")
 	private boolean inactiveValue;
 
-	@JsonProperty("inactive-color")
+	@JSONField(name = "inactiveColor")
 	private String inactiveColor;
 
-	@JsonProperty("filterable")
+	@JSONField(name = "filterable")
 	private boolean filterable;
 
-	@JsonProperty("show-all-levels")
+	@JSONField(name = "showAllLevels")
 	private boolean showAllLevels;
 
-	@JsonProperty("options")
+	@JSONField(name = "options")
 	private List<OptionsItem> options;
 
-	@JsonProperty("separator")
+	@JSONField(name = "separator")
 	private String separator;
 
-	@JsonProperty("props")
+	@JSONField(name = "props")
 	private Props props;
 
-	@JsonProperty("step-strictly")
+	@JSONField(name = "stepStrictly")
 	private boolean stepStrictly;
 
-	@JsonProperty("precision")
+	@JSONField(name = "precision")
 	private int precision;
 
-	@JsonProperty("controls-position")
+	@JSONField(name = "controlsPosition")
 	private String controlsPosition;
 
-	@JsonProperty("show-word-limit")
+	@JSONField(name = "showWordLimit")
 	private boolean showWordLimit;
 
-	@JsonProperty("prefix-icon")
+	@JSONField(name = "prefixIcon")
 	private String prefixIcon;
 
-	@JsonProperty("suffix-icon")
+	@JSONField(name = "suffixIcon")
 	private String suffixIcon;
 
-	@JsonProperty("show-password")
+	@JSONField(name = "showPassword")
 	private boolean showPassword;
 
-	@JsonProperty("autosize")
+	@JSONField(name = "autosize")
 	private Autosize autosize;
 
-	@JsonProperty("maxlength")
+	@JSONField(name = "maxlength")
 	private String maxlength;
 
 	public Long getId() {

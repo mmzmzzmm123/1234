@@ -1,14 +1,19 @@
 package com.gox.system.domain.form;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.alibaba.fastjson.annotation.JSONField;
+import com.gox.common.plugin.AutoId;
 
 public class Style{
-	@JsonIgnore
+	@AutoId
+	@JSONField(serialize = false)
 	private Long id;
-	@JsonIgnore
+	@JSONField(serialize = false)
 	private Long itemId;
 
+
+
+	@JSONField(name = "width")
+	private String width;
 	public Long getId() {
 		return id;
 	}
@@ -28,10 +33,6 @@ public class Style{
 	public void setWidth(String width) {
 		this.width = width;
 	}
-
-	@JsonProperty("width")
-	private String width;
-
 	public String getWidth(){
 		return width;
 	}

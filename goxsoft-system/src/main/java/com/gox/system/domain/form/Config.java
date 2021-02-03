@@ -2,84 +2,86 @@ package com.gox.system.domain.form;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.alibaba.fastjson.annotation.JSONField;
+import com.gox.common.plugin.AutoId;
+
 
 public class Config{
-	@JsonIgnore
+	@AutoId
+	@JSONField(serialize = false)
 	private Long id;
-	@JsonIgnore
+	@JSONField(serialize = false)
 	private Long itemId;
-	@JsonProperty("formId")
+	@JSONField(name = "formId")
 	private int formId;
 
-	@JsonProperty("buttonText")
+	@JSONField(name = "buttonText")
 	private String buttonText;
 
-	@JsonProperty("showTip")
+	@JSONField(name = "showTip")
 	private boolean showTip;
 
-	@JsonProperty("document")
+	@JSONField(name = "document")
 	private String document;
 
-	@JsonProperty("label")
+	@JSONField(name = "label")
 	private String label;
 
-	@JsonProperty("showLabel")
+	@JSONField(name = "showLabel")
 	private boolean showLabel;
 
-	@JsonProperty("required")
+	@JSONField(name = "required")
 	private boolean required;
 
-	@JsonProperty("renderKey")
+	@JSONField(name = "renderKey")
 	private String renderKey;
 
-	@JsonProperty("layout")
+	@JSONField(name = "layout")
 	private String layout;
 
-	@JsonProperty("tagIcon")
+	@JSONField(name = "tagIcon")
 	private String tagIcon;
 
-	@JsonProperty("fileSize")
+	@JSONField(name = "fileSize")
 	private int fileSize;
 
-	@JsonProperty("changeTag")
+	@JSONField(name = "changeTag")
 	private boolean changeTag;
 
-	@JsonProperty("sizeUnit")
+	@JSONField(name = "sizeUnit")
 	private String sizeUnit;
 
-	@JsonProperty("tag")
+	@JSONField(name = "tag")
 	private String tag;
 
-	@JsonProperty("regList")
+	@JSONField(name = "regList")
 	private List<RegListItem> regList;
 
-	@JsonProperty("span")
+	@JSONField(name = "span")
 	private int span;
 
-	@JsonProperty("defaultValue")
+	@JSONField(name = "defaultValue")
 	private String defaultValue;
 
-	@JsonProperty("border")
+	@JSONField(name = "border")
 	private boolean border;
 
-	@JsonProperty("optionType")
+	@JSONField(name = "optionType")
 	private String optionType;
 
-	@JsonProperty("method")
+	@JSONField(name = "method")
 	private String method;
 
-	@JsonProperty("dataType")
+	@JSONField(name = "dataType")
 	private String dataType;
 
-	@JsonProperty("url")
+	@JSONField(name = "url")
 	private String url;
 
-	@JsonProperty("dataKey")
+	@JSONField(name = "dataKey")
 	private String dataKey;
 
-	@JsonProperty("labelWidth")
+	@JSONField(name = "labelWidth")
 	private int labelWidth;
 
 	public Long getId() {

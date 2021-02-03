@@ -1,14 +1,16 @@
 package com.gox.system.domain.form;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.gox.common.plugin.AutoId;
 
 public class PickerOptions{
-	@JsonIgnore
+	@AutoId
+	@JSONField(serialize = false)
 	private Long id;
-	@JsonIgnore
+	@JSONField(serialize = false)
 	private Long itemId;
-	@JsonProperty("selectableRange")
+	@JSONField(name = "selectableRange")
 	private String selectableRange;
 
 	public Long getId() {

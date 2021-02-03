@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gox.system.mapper.RegListItemMapper">
+    
+    <resultMap type="RegListItem" id="RegListItemResult">
+        <result property="id"    column="id"    />
+        <result property="configId"    column="config_id"    />
+        <result property="pattern"    column="pattern"    />
+        <result property="message"    column="message"    />
+    </resultMap>
+
+    <sql id="selectRegListItemVo">
+        select id, config_id, pattern, message from reg_list_item
+    </sql>
+
+    <select id="selectRegListItemList" parameterType="RegListItem" resultMap="RegListItemResult">
+        <include refid="selectRegListItemVo"/>
+        <where>  
+            <if test="configId != null "> and config_id = #{configId}</if>
+            <if test="pattern != null  and pattern != ''"> and pattern = #{pattern}</if>
+            <if test="message != null  and message != ''"> and message = #{message}</if>
+        </where>
+    </select>
+    
+    <select id="selectRegListItemById" parameterType="Long" resultMap="RegListItemResult">
+        <include refid="selectRegListItemVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertRegListItem" parameterType="RegListItem">
+        insert into reg_list_item
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="configId != null">config_id,</if>
+            <if test="pattern != null">pattern,</if>
+            <if test="message != null">message,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="configId != null">#{configId},</if>
+            <if test="pattern != null">#{pattern},</if>
+            <if test="message != null">#{message},</if>
+         </trim>
+    </insert>
+
+    <update id="updateRegListItem" parameterType="RegListItem">
+        update reg_list_item
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="configId != null">config_id = #{configId},</if>
+            <if test="pattern != null">pattern = #{pattern},</if>
+            <if test="message != null">message = #{message},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteRegListItemById" parameterType="Long">
+        delete from reg_list_item where id = #{id}
+    </delete>
+
+    <delete id="deleteRegListItemByIds" parameterType="String">
+        delete from reg_list_item where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

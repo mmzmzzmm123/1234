@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gox.system.mapper.OptionsItemMapper">
+    
+    <resultMap type="OptionsItem" id="OptionsItemResult">
+        <result property="id"    column="id"    />
+        <result property="itemId"    column="item_id"    />
+        <result property="optId"    column="opt_id"    />
+        <result property="label"    column="label"    />
+        <result property="value"    column="value"    />
+    </resultMap>
+
+    <sql id="selectOptionsItemVo">
+        select id, item_id, opt_id, label, value from options_item
+    </sql>
+
+    <select id="selectOptionsItemList" parameterType="OptionsItem" resultMap="OptionsItemResult">
+        <include refid="selectOptionsItemVo"/>
+        <where>  
+            <if test="itemId != null "> and item_id = #{itemId}</if>
+            <if test="optId != null "> and opt_id = #{optId}</if>
+            <if test="label != null  and label != ''"> and label = #{label}</if>
+            <if test="value != null "> and value = #{value}</if>
+        </where>
+    </select>
+    
+    <select id="selectOptionsItemById" parameterType="Long" resultMap="OptionsItemResult">
+        <include refid="selectOptionsItemVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertOptionsItem" parameterType="OptionsItem">
+        insert into options_item
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="itemId != null">item_id,</if>
+            <if test="optId != null">opt_id,</if>
+            <if test="label != null">label,</if>
+            <if test="value != null">value,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="itemId != null">#{itemId},</if>
+            <if test="optId != null">#{optId},</if>
+            <if test="label != null">#{label},</if>
+            <if test="value != null">#{value},</if>
+         </trim>
+    </insert>
+
+    <update id="updateOptionsItem" parameterType="OptionsItem">
+        update options_item
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="itemId != null">item_id = #{itemId},</if>
+            <if test="optId != null">opt_id = #{optId},</if>
+            <if test="label != null">label = #{label},</if>
+            <if test="value != null">value = #{value},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteOptionsItemById" parameterType="Long">
+        delete from options_item where id = #{id}
+    </delete>
+
+    <delete id="deleteOptionsItemByIds" parameterType="String">
+        delete from options_item where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

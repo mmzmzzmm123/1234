@@ -4,8 +4,11 @@ import java.util.List;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.gox.common.plugin.AutoId;
 import com.gox.common.utils.StringUtils;
 import com.gox.common.utils.uuid.SnowflakesTools;
+import com.gox.system.domain.form.FormDesignerData;
+import com.gox.system.service.IFormDesignerDataService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +34,8 @@ public class FormJsonController extends BaseController
 {
     @Autowired
     private IFormJsonService formJsonService;
+    @Autowired
+    private IFormDesignerDataService formDesignerDataService;
     /**
      * id获取
      */
@@ -90,6 +95,8 @@ public class FormJsonController extends BaseController
         formJson.setFormData(jsonStr);
         json.remove("formname");
         json.remove("id");
+        FormDesignerData fd = json.toJavaObject(FormDesignerData.class);
+        formDesignerDataService.insertFormDesignerData(fd);
         formJson.setFormData(json.toJSONString());
         if (StringUtils.isNotEmpty(id)){
             formJson.setId(Long.valueOf(id));

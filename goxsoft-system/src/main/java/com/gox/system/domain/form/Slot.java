@@ -1,26 +1,60 @@
 package com.gox.system.domain.form;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.gox.common.plugin.AutoId;
 
 import java.util.List;
 
 public class Slot{
-	@JsonIgnore
+	@AutoId
+	@JSONField(serialize = false)
 	private Long id;
-	@JsonIgnore
+	@JSONField(serialize = false)
 	private Long itemId;
-	@JsonProperty("list-type")
+	@JSONField(name = "listType")
 	private boolean listType;
 
-	@JsonProperty("options")
+	@JSONField(name = "options")
 	private List<OptionsItem> options;
 
-	@JsonProperty("prepend")
+	@JSONField(name = "prepend")
 	private String prepend;
 
-	@JsonProperty("append")
+	@JSONField(name = "append")
 	private String append;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Long getItemId() {
+		return itemId;
+	}
+
+	public void setItemId(Long itemId) {
+		this.itemId = itemId;
+	}
+
+	public void setListType(boolean listType) {
+		this.listType = listType;
+	}
+
+	public void setOptions(List<OptionsItem> options) {
+		this.options = options;
+	}
+
+	public void setPrepend(String prepend) {
+		this.prepend = prepend;
+	}
+
+	public void setAppend(String append) {
+		this.append = append;
+	}
 
 	public boolean isListType(){
 		return listType;

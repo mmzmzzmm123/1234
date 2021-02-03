@@ -1,16 +1,17 @@
 package com.gox.system.domain.form;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.alibaba.fastjson.annotation.JSONField;
+import com.gox.common.plugin.AutoId;
 
 public class ChildrenItem{
-
-	@JsonProperty("id")
+	@AutoId
+	@JSONField(name = "id")
 	private int id;
 
-	@JsonProperty("label")
+	@JSONField(name = "label")
 	private String label;
 
-	@JsonProperty("value")
+	@JSONField(name = "value")
 	private int value;
 
 	public int getId(){

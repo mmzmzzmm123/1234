@@ -1,17 +1,19 @@
 package com.gox.system.domain.form;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.gox.common.plugin.AutoId;
 
 public class RegListItem{
-	@JsonIgnore
+	@AutoId
+	@JSONField(serialize = false)
 	private Long id;
-	@JsonIgnore
+	@JSONField(serialize = false)
 	private Long configId;
-	@JsonProperty("pattern")
+	@JSONField(name = "pattern")
 	private String pattern;
 
-	@JsonProperty("message")
+	@JSONField(name = "message")
 	private String message;
 
 	public String getPattern(){

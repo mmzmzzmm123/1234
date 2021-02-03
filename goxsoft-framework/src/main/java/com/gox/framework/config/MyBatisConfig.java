@@ -6,7 +6,10 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import javax.sql.DataSource;
+
+import com.gox.common.plugin.AutoIdInterceptor;
 import org.apache.ibatis.io.VFS;
+import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.boot.autoconfigure.SpringBootVFS;
@@ -112,6 +115,13 @@ public class MyBatisConfig
         }
         return resources.toArray(new Resource[resources.size()]);
     }
+    /**
+     * 插件实体
+     */
+    @Bean
+    AutoIdInterceptor autoIdInterceptor() {
+        return new AutoIdInterceptor();
+    }
 
     @Bean
     public SqlSessionFactory sqlSessionFactory(DataSource dataSource) throws Exception
@@ -127,6 +137,12 @@ public class MyBatisConfig
         sessionFactory.setTypeAliasesPackage(typeAliasesPackage);
         sessionFactory.setMapperLocations(resolveMapperLocations(StringUtils.split(mapperLocations, ",")));
         sessionFactory.setConfigLocation(new DefaultResourceLoader().getResource(configLocation));
+        /**
+         * 添加插件信息(因为插件采用责任链模式所有可以有多个，所以采用数组
+         */
+        Interceptor[] interceptors = new Interceptor[1];
+        interceptors[0] = autoIdInterceptor();
+        sessionFactory.setPlugins(interceptors);
         return sessionFactory.getObject();
     }
 }

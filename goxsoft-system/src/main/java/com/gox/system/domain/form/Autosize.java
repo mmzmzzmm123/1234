@@ -1,17 +1,20 @@
 package com.gox.system.domain.form;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.gox.common.plugin.AutoId;
+
 
 public class Autosize{
-	@JsonIgnore
+	@AutoId
+	@JSONField(serialize = false)
 	private Long id;
-	@JsonIgnore
+	@JSONField(serialize = false)
 	private Long itemId;
-	@JsonProperty("minRows")
+	@JSONField(name = "minRows")
 	private int minRows;
 
-	@JsonProperty("maxRows")
+	@JSONField(name = "maxRows")
 	private int maxRows;
 
 	public Long getId() {

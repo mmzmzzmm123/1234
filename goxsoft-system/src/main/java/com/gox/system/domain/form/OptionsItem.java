@@ -1,19 +1,21 @@
 package com.gox.system.domain.form;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.gox.common.plugin.AutoId;
 
 public class OptionsItem{
-	@JsonIgnore
+	@AutoId
+	@JSONField(serialize = false)
 	private Long id;
-	@JsonIgnore
+	@JSONField(serialize = false)
 	private Long itemId;
-	@JsonIgnore
+	@JSONField(serialize = false)
 	private Long optId;
-	@JsonProperty("label")
+	@JSONField(name = "label")
 	private String label;
 
-	@JsonProperty("value")
+	@JSONField(name = "value")
 	private int value;
 
 	public Long getItemId() {

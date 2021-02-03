@@ -2,43 +2,43 @@ package com.gox.system.domain.form;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.alibaba.fastjson.annotation.JSONField;
+import com.gox.common.plugin.AutoId;
 
 public class FormDesignerData{
-	@JsonIgnore
+	@AutoId
+	@JSONField(serialize = false)
 	private Long id;
-	@JsonProperty("formRef")
+	@JSONField(name = "formRef")
 	private String formRef;
-
-	@JsonProperty("gutter")
+	@JSONField(name = "gutter")
 	private int gutter;
 
-	@JsonProperty("size")
+	@JSONField(name = "size")
 	private String size;
 
-	@JsonProperty("formRules")
+	@JSONField(name = "formRules")
 	private String formRules;
 
-	@JsonProperty("labelPosition")
+	@JSONField(name = "labelPosition")
 	private String labelPosition;
 
-	@JsonProperty("formBtns")
+	@JSONField(name = "formBtns")
 	private boolean formBtns;
 
-	@JsonProperty("labelWidth")
+	@JSONField(name = "labelWidth")
 	private int labelWidth;
 
-	@JsonProperty("disabled")
+	@JSONField(name = "disabled")
 	private boolean disabled;
 
-	@JsonProperty("formModel")
+	@JSONField(name = "formModel")
 	private String formModel;
 
-	@JsonProperty("fields")
+	@JSONField(name = "fields")
 	private List<FieldsItem> fields;
 
-	@JsonProperty("span")
+	@JSONField(name = "span")
 	private int span;
 
 	public Long getId() {
@@ -136,4 +136,5 @@ public class FormDesignerData{
 	public int getSpan(){
 		return span;
 	}
+
 }
