@@ -111,7 +111,7 @@
         label="创建时间"
         align="center"
         prop="createTime"
-        width="160"
+        width="166"
       />
       <el-table-column
         label="进粉时间"
