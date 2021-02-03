@@ -18,7 +18,7 @@ public interface StyleMapper
      * @return 【请填写功能名称】
      */
     public Style selectStyleById(Long id);
-
+    public Style selectStyleByItemId(Long itemId);
     /**
      * 查询【请填写功能名称】列表
      * 

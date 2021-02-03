@@ -53,6 +53,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="suffixIcon"    column="suffix_icon"    />
         <result property="showPassword"    column="show_password"    />
         <result property="maxlength"    column="maxlength"    />
+        <association property="config" select="com.gox.system.mapper.ConfigMapper.selectConfigByItemId" column="id"/>
+        <association property="slot" select="com.gox.system.mapper.SlotMapper.selectSlotByItemId" column="id"/>
+        <association property="style" select="com.gox.system.mapper.StyleMapper.selectStyleByItemId" column="id"/>
+        <association property="pickerOptions" select="com.gox.system.mapper.PickerOptionsMapper.selectPickerOptionsByItemId" column="id" />
+        <association property="props" column="id" select="com.gox.system.mapper.PropsMapper.selectPropsByItemId" />
+        <association property="autosize" column="id" select="com.gox.system.mapper.AutosizeMapper.selectAutosizeByItemId" />
+        <collection property="options" column="id" select="com.gox.system.mapper.OptionsItemMapper.selectOptionsItemByItemId" />
     </resultMap>
 
     <sql id="selectFieldsItemVo">
@@ -116,7 +123,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectFieldsItemVo"/>
         where id = #{id}
     </select>
-        
+    <select id="selectFieldsItemListByFormId" resultMap="FieldsItemResult">
+        <include refid="selectFieldsItemVo"/>
+        where form_id=#{formId}
+    </select>
+
     <insert id="insertFieldsItem" parameterType="FieldsItem">
         insert into fields_item
         <trim prefix="(" suffix=")" suffixOverrides=",">

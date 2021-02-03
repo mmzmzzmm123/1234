@@ -1,7 +1,6 @@
 package com.gox.system.domain.form;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.gox.common.plugin.AutoId;
 
 public class Props{

@@ -26,7 +26,7 @@ public interface FieldsItemMapper
      * @return 【请填写功能名称】集合
      */
     public List<FieldsItem> selectFieldsItemList(FieldsItem fieldsItem);
-
+    public List<FieldsItem> selectFieldsItemListByFormId(Long formId);
     /**
      * 新增【请填写功能名称】
      * 

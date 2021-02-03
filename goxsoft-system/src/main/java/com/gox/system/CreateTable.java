@@ -1,10 +1,14 @@
 package com.gox.system;
+import cn.hutool.json.JSON;
+import cn.hutool.json.JSONUtil;
 import com.gox.system.domain.form.*;
 
 import java.io.File;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,8 +37,11 @@ public class CreateTable {
      * @throws IOException
      */
     public static void main(String[] args) throws IOException {
-        String sql = createTable(Autosize.class, null);
+//        String sql = createTable(Autosize.class, null);
         //System.out.println(sql);
+        FormDesignerData jso = JSONUtil.readJSON(new File("G:\\hhh\\sql\\aa.json"), StandardCharsets.UTF_8).toBean(FormDesignerData.class);
+        FormDesignerData jsn = JSONUtil.readJSON(new File("G:\\hhh\\sql\\bb.json"), StandardCharsets.UTF_8).toBean(FormDesignerData.class);
+        System.out.println(jso.equals(jsn));
 // createTable(Book.class, null);
     }
     public static String camelToUnderline(String param) {

@@ -28,7 +28,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectRegListItemVo"/>
         where id = #{id}
     </select>
-        
+    <select id="selectRegListItemByConfigId" resultMap="RegListItemResult">
+        <include refid="selectRegListItemVo"/>
+        where config_id = #{configId}
+    </select>
+
     <insert id="insertRegListItem" parameterType="RegListItem">
         insert into reg_list_item
         <trim prefix="(" suffix=")" suffixOverrides=",">

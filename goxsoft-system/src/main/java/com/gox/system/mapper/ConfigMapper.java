@@ -18,7 +18,7 @@ public interface ConfigMapper
      * @return 【请填写功能名称】
      */
     public Config selectConfigById(Long id);
-
+    public Config selectConfigByItemId(Long itemId);
     /**
      * 查询【请填写功能名称】列表
      * 

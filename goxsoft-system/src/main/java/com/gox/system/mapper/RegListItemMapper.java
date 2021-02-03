@@ -18,7 +18,7 @@ public interface RegListItemMapper
      * @return 【请填写功能名称】
      */
     public RegListItem selectRegListItemById(Long id);
-
+    public RegListItem selectRegListItemByConfigId(Long configId);
     /**
      * 查询【请填写功能名称】列表
      * 

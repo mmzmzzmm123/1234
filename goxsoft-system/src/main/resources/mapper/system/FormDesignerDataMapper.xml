@@ -16,6 +16,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="disabled"    column="disabled"    />
         <result property="formModel"    column="form_model"    />
         <result property="span"    column="span"    />
+        <collection property="fields" select="com.gox.system.mapper.FieldsItemMapper.selectFieldsItemListByFormId" column="id"/>
     </resultMap>
 
     <sql id="selectFormDesignerDataVo">

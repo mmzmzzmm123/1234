@@ -28,7 +28,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectAutosizeVo"/>
         where id = #{id}
     </select>
-        
+    <select id="selectAutosizeByItemId" resultMap="AutosizeResult">
+        <include refid="selectAutosizeVo"/>
+        where item_id = #{itemId}
+    </select>
+
     <insert id="insertAutosize" parameterType="Autosize">
         insert into autosize
         <trim prefix="(" suffix=")" suffixOverrides=",">

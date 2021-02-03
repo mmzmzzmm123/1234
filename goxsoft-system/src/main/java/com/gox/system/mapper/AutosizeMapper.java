@@ -18,7 +18,7 @@ public interface AutosizeMapper
      * @return 【请填写功能名称】
      */
     public Autosize selectAutosizeById(Long id);
-
+    public Autosize selectAutosizeByItemId(Long itemId);
     /**
      * 查询【请填写功能名称】列表
      * 

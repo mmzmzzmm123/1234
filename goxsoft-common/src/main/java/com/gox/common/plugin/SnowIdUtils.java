@@ -25,11 +25,11 @@ public class SnowIdUtils {
         /**
          * 序列号占用位数
          */
-        private final long SEQUENCE_BIT = 4;
+        private final long SEQUENCE_BIT = 5;
         /**
          * 机器标识占用位数
          */
-        private final long MACHINE_BIT = 4;
+        private final long MACHINE_BIT = 5;
 
         /**
          * 时间戳位移位数

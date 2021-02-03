@@ -10,6 +10,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="listType"    column="list_type"    />
         <result property="prepend"    column="prepend"    />
         <result property="append"    column="append"    />
+        <collection property="options" column="id" select="com.gox.system.mapper.OptionsItemMapper.selectOptionsItemBySlotId"/>
     </resultMap>
 
     <sql id="selectSlotVo">
@@ -30,7 +31,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectSlotVo"/>
         where id = #{id}
     </select>
-        
+    <select id="selectSlotByItemId" resultType="com.gox.system.domain.form.Slot">
+        <include refid="selectSlotVo"/>
+        where item_id = #{itmeId}
+    </select>
+
     <insert id="insertSlot" parameterType="Slot">
         insert into slot
         <trim prefix="(" suffix=")" suffixOverrides=",">

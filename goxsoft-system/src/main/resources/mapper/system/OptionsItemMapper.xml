@@ -30,7 +30,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectOptionsItemVo"/>
         where id = #{id}
     </select>
-        
+    <select id="selectOptionsItemBySlotId" resultMap="OptionsItemResult">
+        <include refid="selectOptionsItemVo"/>
+        where slot_id = #{slotId}
+    </select>
+    <select id="selectOptionsItemByItemId" resultMap="OptionsItemResult">
+        <include refid="selectOptionsItemVo"/>
+        where item_id = #{itemId}
+    </select>
+
     <insert id="insertOptionsItem" parameterType="OptionsItem">
         insert into options_item
         <trim prefix="(" suffix=")" suffixOverrides=",">

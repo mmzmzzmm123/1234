@@ -129,8 +129,9 @@ public class AutoIdInterceptor implements Interceptor {
             if (!field.isAccessible()) {
                 field.setAccessible(true);
             }
+            Object obj = field.get(object);
             //如果该注解对应的属性已经被赋值，那么就不用通过雪花生成的ID
-            return field.get(object) == null;
+            return obj == null||obj.equals(1L);
         }
 
         public void accept(Object o) throws Throwable {

@@ -1,0 +1,127 @@
+{
+  "formBtns": true,
+  "labelWidth": 100,
+  "formRef": "elForm",
+  "gutter": 15,
+  "size": "medium",
+  "formRules": "rules",
+  "labelPosition": "right",
+  "disabled": false,
+  "formModel": "formData",
+  "fields": [
+    {
+      "__config__": {
+        "formId": 105,
+        "document": "https://element.eleme.cn/#/zh-CN/component/input",
+        "label": "多行文本",
+        "showLabel": true,
+        "required": true,
+        "renderKey": "1051612336933255",
+        "layout": "colFormItem",
+        "tagIcon": "textarea",
+        "changeTag": true,
+        "tag": "el-input",
+        "regList": [],
+        "span": 24
+      },
+      "readonly": false,
+      "__vModel__": "field105",
+      "style": {
+        "width": "100%"
+      },
+      "disabled": false,
+      "placeholder": "请输入多行文本",
+      "show-word-limit": false,
+      "type": "textarea",
+      "autosize": {
+        "minRows": 4,
+        "maxRows": 4
+      }
+    },
+    {
+      "clearable": true,
+      "__config__": {
+        "formId": 101,
+        "document": "https://element.eleme.cn/#/zh-CN/component/input",
+        "label": "单行文本",
+        "showLabel": true,
+        "required": true,
+        "renderKey": "1011612336920462",
+        "layout": "colFormItem",
+        "tagIcon": "input",
+        "changeTag": true,
+        "tag": "el-input",
+        "regList": [],
+        "span": 24
+      },
+      "readonly": false,
+      "__vModel__": "field101",
+      "style": {
+        "width": "100%"
+      },
+      "disabled": false,
+      "placeholder": "请输入单行文本",
+      "show-word-limit": false,
+      "__slot__": {
+        "prepend": "",
+        "append": ""
+      },
+      "prefix-icon": "",
+      "suffix-icon": ""
+    },
+    {
+      "clearable": true,
+      "__config__": {
+        "formId": 104,
+        "document": "https://element.eleme.cn/#/zh-CN/component/input",
+        "label": "单行文本",
+        "showLabel": true,
+        "required": true,
+        "renderKey": "1041612336931415",
+        "layout": "colFormItem",
+        "tagIcon": "input",
+        "changeTag": true,
+        "tag": "el-input",
+        "regList": [],
+        "span": 24
+      },
+      "readonly": false,
+      "__vModel__": "field104",
+      "style": {
+        "width": "100%"
+      },
+      "disabled": false,
+      "placeholder": "请输入单行文本",
+      "show-word-limit": false,
+      "__slot__": {
+        "prepend": "",
+        "append": ""
+      },
+      "prefix-icon": "",
+      "suffix-icon": ""
+    },
+    {
+      "step-strictly": false,
+      "__config__": {
+        "formId": 103,
+        "document": "https://element.eleme.cn/#/zh-CN/component/input-number",
+        "label": "计数器",
+        "showLabel": true,
+        "required": true,
+        "renderKey": "1031612336925067",
+        "layout": "colFormItem",
+        "tagIcon": "number",
+        "changeTag": true,
+        "tag": "el-input-number",
+        "regList": [],
+        "span": 24
+      },
+      "__vModel__": "field103",
+      "step": 1,
+      "controls-position": "",
+      "disabled": false,
+      "placeholder": "计数器"
+    }
+  ],
+  "span": 24
+}

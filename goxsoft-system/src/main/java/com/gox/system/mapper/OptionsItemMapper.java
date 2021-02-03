@@ -18,7 +18,8 @@ public interface OptionsItemMapper
      * @return 【请填写功能名称】
      */
     public OptionsItem selectOptionsItemById(Long id);
-
+    public OptionsItem selectOptionsItemBySlotId(Long slotId);
+    public OptionsItem selectOptionsItemByItemId(Long itemId);
     /**
      * 查询【请填写功能名称】列表
      * 

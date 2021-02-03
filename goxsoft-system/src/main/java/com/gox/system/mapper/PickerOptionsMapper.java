@@ -18,7 +18,7 @@ public interface PickerOptionsMapper
      * @return 【请填写功能名称】
      */
     public PickerOptions selectPickerOptionsById(Long id);
-
+    public PickerOptions selectPickerOptionsByItemId(Long itemId);
     /**
      * 查询【请填写功能名称】列表
      * 

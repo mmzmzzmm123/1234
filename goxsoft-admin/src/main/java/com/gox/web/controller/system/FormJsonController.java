@@ -75,7 +75,13 @@ public class FormJsonController extends BaseController
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
-        return AjaxResult.success(formJsonService.selectFormJsonById(id));
+        FormDesignerData data = formDesignerDataService.selectFormDesignerDataById(2262888633466880L);
+        FormJson formJson = new FormJson();
+        formJson.setId(id);
+        formJson.setFormData(JSONObject.toJSONString(data));
+        System.out.println(formJson.getFormData());
+        return AjaxResult.success(formJson);
+        //return AjaxResult.success(formJsonService.selectFormJsonById(id));
     }
 
     /**

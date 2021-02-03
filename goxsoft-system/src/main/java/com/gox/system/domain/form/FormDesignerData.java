@@ -3,6 +3,7 @@ package com.gox.system.domain.form;
 import java.util.List;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.google.common.base.Objects;
 import com.gox.common.plugin.AutoId;
 
 public class FormDesignerData{
@@ -137,4 +138,27 @@ public class FormDesignerData{
 		return span;
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof FormDesignerData)) return false;
+		FormDesignerData that = (FormDesignerData) o;
+		return getGutter() == that.getGutter() &&
+				isFormBtns() == that.isFormBtns() &&
+				getLabelWidth() == that.getLabelWidth() &&
+				isDisabled() == that.isDisabled() &&
+				getSpan() == that.getSpan() &&
+				Objects.equal(getId(), that.getId()) &&
+				Objects.equal(getFormRef(), that.getFormRef()) &&
+				Objects.equal(getSize(), that.getSize()) &&
+				Objects.equal(getFormRules(), that.getFormRules()) &&
+				Objects.equal(getLabelPosition(), that.getLabelPosition()) &&
+				Objects.equal(getFormModel(), that.getFormModel()) &&
+				Objects.equal(getFields(), that.getFields());
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(getId(), getFormRef(), getGutter(), getSize(), getFormRules(), getLabelPosition(), isFormBtns(), getLabelWidth(), isDisabled(), getFormModel(), getFields(), getSpan());
+	}
 }

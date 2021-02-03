@@ -30,6 +30,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="url"    column="url"    />
         <result property="dataKey"    column="data_key"    />
         <result property="labelWidth"    column="label_width"    />
+        <collection property="regList" column="id" select="com.gox.system.mapper.RegListItemMapper.selectRegListItemByConfigId" />
     </resultMap>
 
     <sql id="selectConfigVo">
@@ -70,7 +71,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectConfigVo"/>
         where id = #{id}
     </select>
-        
+    <select id="selectConfigByItemId" resultMap="ConfigResult">
+        <include refid="selectConfigVo"></include>
+        where item_id=#{itemId}
+    </select>
+
     <insert id="insertConfig" parameterType="Config">
         insert into config
         <trim prefix="(" suffix=")" suffixOverrides=",">

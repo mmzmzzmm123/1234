@@ -26,7 +26,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectStyleVo"/>
         where id = #{id}
     </select>
-        
+    <select id="selectStyleByItemId" resultType="com.gox.system.domain.form.Style">
+        <include refid="selectStyleVo"/>
+        where item_id = #{itemId}
+    </select>
+
     <insert id="insertStyle" parameterType="Style">
         insert into style
         <trim prefix="(" suffix=")" suffixOverrides=",">

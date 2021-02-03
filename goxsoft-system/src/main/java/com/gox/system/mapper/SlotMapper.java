@@ -18,7 +18,7 @@ public interface SlotMapper
      * @return 【请填写功能名称】
      */
     public Slot selectSlotById(Long id);
-
+    public Slot selectSlotByItemId(Long itmeId);
     /**
      * 查询【请填写功能名称】列表
      * 

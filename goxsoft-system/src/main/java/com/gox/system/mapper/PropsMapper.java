@@ -18,7 +18,14 @@ public interface PropsMapper
      * @return 【请填写功能名称】
      */
     public Props selectPropsById(Long id);
+    public Props selectPropsByItemId(Long itemId);
 
+    /**
+     *
+     * @param id
+     * @return
+     */
+    public Props selectPropsByProId(Long id);
     /**
      * 查询【请填写功能名称】列表
      * 

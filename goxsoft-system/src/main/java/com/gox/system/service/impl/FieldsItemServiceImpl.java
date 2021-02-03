@@ -83,6 +83,7 @@ public class FieldsItemServiceImpl implements IFieldsItemService
         int c = 0;
         for (FieldsItem fi : fieldsItems) {
             Long itemId = SnowflakesTools.WORKER.nextId();
+            fi.setId(itemId);
             fi.setFormId(formId);
             Config config = fi.getConfig();
             if (config!=null){

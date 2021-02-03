@@ -12,6 +12,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="multiple"    column="multiple"    />
         <result property="label"    column="label"    />
         <result property="value"    column="value"    />
+        <association property="props" column="id" select="selectPropsByProId" />
     </resultMap>
 
     <sql id="selectPropsVo">
@@ -34,7 +35,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectPropsVo"/>
         where id = #{id}
     </select>
-        
+    <select id="selectPropsByProId" parameterType="Long" resultMap="PropsResult">
+        <include refid="selectPropsVo"/>
+        where pro_id = #{id}
+    </select>
+    <select id="selectPropsByItemId" resultMap="PropsResult">
+        <include refid="selectPropsVo"/>
+        where item_id = #{itemId}
+    </select>
+
     <insert id="insertProps" parameterType="Props">
         insert into props
         <trim prefix="(" suffix=")" suffixOverrides=",">

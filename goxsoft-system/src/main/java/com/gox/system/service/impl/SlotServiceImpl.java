@@ -59,11 +59,11 @@ public class SlotServiceImpl implements ISlotService
     {
         Long slotId = SnowflakesTools.WORKER.nextId();
         List<OptionsItem> ops = slot.getOptions();
+        slot.setId(slotId);
         if (ops!=null&&!ops.isEmpty()){
-            slot.setItemId(slotId);
+            //slot.setItemId(slotId);
             optionsItemService.insertOptionsItemsSlot(ops,slotId);
         }
-
         return slotMapper.insertSlot(slot);
     }
 

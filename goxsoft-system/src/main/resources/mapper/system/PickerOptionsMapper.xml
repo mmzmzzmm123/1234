@@ -26,7 +26,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectPickerOptionsVo"/>
         where id = #{id}
     </select>
-        
+    <select id="selectPickerOptionsByItemId" resultType="com.gox.system.domain.form.PickerOptions">
+        <include refid="selectPickerOptionsVo"/>
+        where item_id = #{itemId}
+    </select>
+
     <insert id="insertPickerOptions" parameterType="PickerOptions">
         insert into picker_options
         <trim prefix="(" suffix=")" suffixOverrides=",">
