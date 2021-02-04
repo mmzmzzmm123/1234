@@ -173,6 +173,7 @@
             icon="el-icon-setting"
             @click="handleSetting(scope.row)"
             v-hasPermi="['benyi:themetermplan:edit']"
+            v-show="isShow(scope.row)"
             >设置</el-button
           >
           <el-button

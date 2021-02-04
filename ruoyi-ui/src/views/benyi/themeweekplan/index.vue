@@ -119,7 +119,7 @@
     </div>
 
     <el-table
-    border
+      border
       v-loading="loading"
       :data="weekplanList"
       @selection-change="handleSelectionChange"
@@ -132,7 +132,7 @@
       />
       <!-- <el-table-column label="编号" align="center" prop="id" /> -->
       <el-table-column
-      fixed
+        fixed
         label="计划名称"
         align="center"
         prop="name"
@@ -173,7 +173,7 @@
         :formatter="statusFormat"
       />
       <el-table-column
-      fixed="right"
+        fixed="right"
         label="操作"
         align="center"
         class-name="small-padding fixed-width edit-btns"
@@ -186,6 +186,7 @@
             icon="el-icon-setting"
             @click="handleSetting(scope.row)"
             v-hasPermi="['benyi:themeweekplan:edit']"
+            v-show="isShow(scope.row)"
             >设置</el-button
           >
           <el-button
@@ -236,7 +237,12 @@
     />
 
     <!-- 添加或修改主题整合周计划（根据月计划明细）对话框 -->
-    <el-dialog :title="title" :visible.sync="open" class="v-dialog" append-to-body>
+    <el-dialog
+      :title="title"
+      :visible.sync="open"
+      class="v-dialog"
+      append-to-body
+    >
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="学年学期" prop="xnxq">
           <el-select

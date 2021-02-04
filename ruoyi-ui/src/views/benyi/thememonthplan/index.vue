@@ -196,6 +196,7 @@
             icon="el-icon-setting"
             @click="handleSetting(scope.row)"
             v-hasPermi="['benyi:thememonthplan:edit']"
+            v-show="isShow(scope.row)"
             >设置</el-button
           >
           <el-button
@@ -246,7 +247,12 @@
     />
 
     <!-- 添加或修改主题整合月计划对话框 -->
-    <el-dialog :title="title" :visible.sync="open" class="v-dialog" append-to-body>
+    <el-dialog
+      :title="title"
+      :visible.sync="open"
+      class="v-dialog"
+      append-to-body
+    >
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="计划月份" prop="month">
           <el-date-picker

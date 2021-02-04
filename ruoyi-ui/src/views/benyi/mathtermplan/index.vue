@@ -95,7 +95,7 @@
     </div>
 
     <el-table
-    border
+      border
       v-loading="loading"
       :data="mathtermplanList"
       @selection-change="handleSelectionChange"
@@ -107,7 +107,7 @@
         :selectable="isShow"
       />
       <el-table-column
-      fixed
+        fixed
         label="计划名称"
         align="center"
         prop="name"
@@ -128,20 +128,12 @@
         prop="classid"
         :formatter="classFormat"
       />
-      <el-table-column
-        label="开始月份"
-        align="center"
-        prop="startmonth"
-      >
+      <el-table-column label="开始月份" align="center" prop="startmonth">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.startmonth, "{y}-{m}") }}</span>
         </template>
       </el-table-column>
-      <el-table-column
-        label="结束月份"
-        align="center"
-        prop="endmonth"
-      >
+      <el-table-column label="结束月份" align="center" prop="endmonth">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.endmonth, "{y}-{m}") }}</span>
         </template>
@@ -173,6 +165,7 @@
             icon="el-icon-setting"
             @click="handleSetting(scope.row)"
             v-hasPermi="['benyi:mathtermplan:edit']"
+            v-show="isShow(scope.row)"
             >设置</el-button
           >
           <el-button
@@ -223,7 +216,12 @@
     />
 
     <!-- 添加或修改游戏数学学期计划对话框 -->
-    <el-dialog :title="title" :visible.sync="open" class="v-dialog" append-to-body>
+    <el-dialog
+      :title="title"
+      :visible.sync="open"
+      class="v-dialog"
+      append-to-body
+    >
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="月份" prop="startmonth">
           <el-date-picker

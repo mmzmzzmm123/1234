@@ -109,7 +109,6 @@ export default {
     },
     async logout() {
       this.$confirm("确定注销并退出系统吗？", "提示", {
-        cancelButtonClass: "btn-custom-cancel",
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
@@ -122,13 +121,6 @@ export default {
   },
 };
 </script>
-
-<style lang="scss">
-.btn-custom-cancel {
-  float: right;
-  margin-left: 20px;
-}
-</style>
 
 <style lang="scss" scoped>
 .navbar {
