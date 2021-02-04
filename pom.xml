@@ -11,6 +11,7 @@
     <name>ruoyi</name>
     <url>http://www.ruoyi.vip</url>
     <description>若依管理系统</description>
+    123
     
     <properties>
         <ruoyi.version>3.3.0</ruoyi.version>
