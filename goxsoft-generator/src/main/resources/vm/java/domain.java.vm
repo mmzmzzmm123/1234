@@ -4,6 +4,7 @@ package ${packageName}.domain;
 import ${import};
 #end
 import com.gox.common.annotation.Excel;
+import org.apache.ibatis.type.Alias;
 #if($table.crud)
 #elseif($table.tree)
 #end
@@ -19,6 +20,7 @@ import com.gox.common.annotation.Excel;
 #elseif($table.tree)
 #set($Entity="TreeEntity")
 #end
+@Alias(${ClassName})
 public class ${ClassName} extends ${Entity}
 {
     private static final long serialVersionUID = 1L;

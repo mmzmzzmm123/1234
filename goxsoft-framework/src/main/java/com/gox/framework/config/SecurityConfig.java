@@ -104,7 +104,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
                         "/**/*.html",
                         "/**/*.css",
                         "/**/*.js"
-                ).permitAll().antMatchers("/ele/**").anonymous()
+                ).permitAll()
+                .antMatchers("/system/test/**").permitAll()
+                .antMatchers("/ele/**").anonymous()
                 .antMatchers("/profile/**").anonymous()
                 .antMatchers("/common/download**").anonymous()
                 .antMatchers("/common/download/resource**").anonymous()

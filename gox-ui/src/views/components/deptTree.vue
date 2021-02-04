@@ -75,7 +75,6 @@ export default {
     },
     // 节点单击事件
     handleNodeClick(data) {
-      console.log(1)
       this.$emit('selectedDept',data.id)
       // this.queryParams.deptId = data.id;
       // this.getList();

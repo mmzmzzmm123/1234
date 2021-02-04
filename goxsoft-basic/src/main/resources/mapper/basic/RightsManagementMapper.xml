@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gox.basic.mapper.RightsManagementMapper">
+    
+    <resultMap type="RightsManagement" id="RightsManagementResult">
+        <result property="id"    column="id"    />
+        <result property="metadataId"    column="metadata_id"    />
+        <result property="intellectualPropertyStatement"    column="intellectual_property_statement"    />
+        <result property="authorizedAgent"    column="authorized_agent"    />
+        <result property="permissionAssignment"    column="permission_assignment"    />
+        <result property="controlIdentifier"    column="control_identifier"    />
+    </resultMap>
+
+    <sql id="selectRightsManagementVo">
+        select id, metadata_id, intellectual_property_statement, authorized_agent, permission_assignment, control_identifier from rights_management
+    </sql>
+
+    <select id="selectRightsManagementList" parameterType="RightsManagement" resultMap="RightsManagementResult">
+        <include refid="selectRightsManagementVo"/>
+        <where>  
+            <if test="metadataId != null "> and metadata_id = #{metadataId}</if>
+            <if test="intellectualPropertyStatement != null  and intellectualPropertyStatement != ''"> and intellectual_property_statement = #{intellectualPropertyStatement}</if>
+            <if test="authorizedAgent != null  and authorizedAgent != ''"> and authorized_agent = #{authorizedAgent}</if>
+            <if test="permissionAssignment != null  and permissionAssignment != ''"> and permission_assignment = #{permissionAssignment}</if>
+            <if test="controlIdentifier != null  and controlIdentifier != ''"> and control_identifier = #{controlIdentifier}</if>
+        </where>
+    </select>
+    
+    <select id="selectRightsManagementById" parameterType="Long" resultMap="RightsManagementResult">
+        <include refid="selectRightsManagementVo"/>
+        where id = #{id}
+    </select>
+    <select id="selectRmByMdId" resultType="com.gox.basic.domain.RightsManagement">
+        <include refid="selectRightsManagementVo"></include>
+        where metadata_id=#{id}
+    </select>
+
+    <insert id="insertRightsManagement" parameterType="RightsManagement">
+        insert into rights_management
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="metadataId != null">metadata_id,</if>
+            <if test="intellectualPropertyStatement != null">intellectual_property_statement,</if>
+            <if test="authorizedAgent != null">authorized_agent,</if>
+            <if test="permissionAssignment != null">permission_assignment,</if>
+            <if test="controlIdentifier != null">control_identifier,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="metadataId != null">#{metadataId},</if>
+            <if test="intellectualPropertyStatement != null">#{intellectualPropertyStatement},</if>
+            <if test="authorizedAgent != null">#{authorizedAgent},</if>
+            <if test="permissionAssignment != null">#{permissionAssignment},</if>
+            <if test="controlIdentifier != null">#{controlIdentifier},</if>
+         </trim>
+    </insert>
+
+    <update id="updateRightsManagement" parameterType="RightsManagement">
+        update rights_management
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="metadataId != null">metadata_id = #{metadataId},</if>
+            <if test="intellectualPropertyStatement != null">intellectual_property_statement = #{intellectualPropertyStatement},</if>
+            <if test="authorizedAgent != null">authorized_agent = #{authorizedAgent},</if>
+            <if test="permissionAssignment != null">permission_assignment = #{permissionAssignment},</if>
+            <if test="controlIdentifier != null">control_identifier = #{controlIdentifier},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteRightsManagementById" parameterType="Long">
+        delete from rights_management where id = #{id}
+    </delete>
+
+    <delete id="deleteRightsManagementByIds" parameterType="String">
+        delete from rights_management where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

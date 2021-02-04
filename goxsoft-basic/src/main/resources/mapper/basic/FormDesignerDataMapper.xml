@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gox.basic.mapper.FormDesignerDataMapper">
+    
+    <resultMap type="FormDesignerData" id="FormDesignerDataResult">
+        <result property="id"    column="id"    />
+        <result property="formRef"    column="form_ref"    />
+        <result property="gutter"    column="gutter"    />
+        <result property="size"    column="size"    />
+        <result property="formRules"    column="form_rules"    />
+        <result property="labelPosition"    column="label_position"    />
+        <result property="formBtns"    column="form_btns"    />
+        <result property="labelWidth"    column="label_width"    />
+        <result property="disabled"    column="disabled"    />
+        <result property="formModel"    column="form_model"    />
+        <result property="span"    column="span"    />
+        <collection property="fields" select="com.gox.basic.mapper.FieldsItemMapper.selectFieldsItemListByFormId" column="id"/>
+    </resultMap>
+
+    <sql id="selectFormDesignerDataVo">
+        select id, form_ref, gutter, size, form_rules, label_position, form_btns, label_width, disabled, form_model, span from form_designer_data
+    </sql>
+
+    <select id="selectFormDesignerDataList" parameterType="FormDesignerData" resultMap="FormDesignerDataResult">
+        <include refid="selectFormDesignerDataVo"/>
+        <where>  
+            <if test="formRef != null  and formRef != ''"> and form_ref = #{formRef}</if>
+            <if test="gutter != null "> and gutter = #{gutter}</if>
+            <if test="size != null  and size != ''"> and size = #{size}</if>
+            <if test="formRules != null  and formRules != ''"> and form_rules = #{formRules}</if>
+            <if test="labelPosition != null  and labelPosition != ''"> and label_position = #{labelPosition}</if>
+            <if test="formBtns != null "> and form_btns = #{formBtns}</if>
+            <if test="labelWidth != null "> and label_width = #{labelWidth}</if>
+            <if test="disabled != null "> and disabled = #{disabled}</if>
+            <if test="formModel != null  and formModel != ''"> and form_model = #{formModel}</if>
+            <if test="span != null "> and span = #{span}</if>
+        </where>
+    </select>
+    
+    <select id="selectFormDesignerDataById" parameterType="Long" resultMap="FormDesignerDataResult">
+        <include refid="selectFormDesignerDataVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertFormDesignerData" parameterType="FormDesignerData">
+        insert into form_designer_data
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="formRef != null">form_ref,</if>
+            <if test="gutter != null">gutter,</if>
+            <if test="size != null">size,</if>
+            <if test="formRules != null">form_rules,</if>
+            <if test="labelPosition != null">label_position,</if>
+            <if test="formBtns != null">form_btns,</if>
+            <if test="labelWidth != null">label_width,</if>
+            <if test="disabled != null">disabled,</if>
+            <if test="formModel != null">form_model,</if>
+            <if test="span != null">span,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="formRef != null">#{formRef},</if>
+            <if test="gutter != null">#{gutter},</if>
+            <if test="size != null">#{size},</if>
+            <if test="formRules != null">#{formRules},</if>
+            <if test="labelPosition != null">#{labelPosition},</if>
+            <if test="formBtns != null">#{formBtns},</if>
+            <if test="labelWidth != null">#{labelWidth},</if>
+            <if test="disabled != null">#{disabled},</if>
+            <if test="formModel != null">#{formModel},</if>
+            <if test="span != null">#{span},</if>
+         </trim>
+    </insert>
+
+    <update id="updateFormDesignerData" parameterType="FormDesignerData">
+        update form_designer_data
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="formRef != null">form_ref = #{formRef},</if>
+            <if test="gutter != null">gutter = #{gutter},</if>
+            <if test="size != null">size = #{size},</if>
+            <if test="formRules != null">form_rules = #{formRules},</if>
+            <if test="labelPosition != null">label_position = #{labelPosition},</if>
+            <if test="formBtns != null">form_btns = #{formBtns},</if>
+            <if test="labelWidth != null">label_width = #{labelWidth},</if>
+            <if test="disabled != null">disabled = #{disabled},</if>
+            <if test="formModel != null">form_model = #{formModel},</if>
+            <if test="span != null">span = #{span},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteFormDesignerDataById" parameterType="Long">
+        delete from form_designer_data where id = #{id}
+    </delete>
+
+    <delete id="deleteFormDesignerDataByIds" parameterType="String">
+        delete from form_designer_data where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

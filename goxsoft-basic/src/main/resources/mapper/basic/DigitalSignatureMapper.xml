@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gox.basic.mapper.DigitalSignatureMapper">
+    
+    <resultMap type="DigitalSignature" id="DigitalSignatureResult">
+        <result property="id"    column="id"    />
+        <result property="signatureFormatDescription"    column="signature_format_description"    />
+        <result property="signatureDate"    column="signature_date"    />
+        <result property="signer"    column="signer"    />
+        <result property="signature"    column="signature"    />
+        <result property="certificate"    column="certificate"    />
+        <result property="certificateReference"    column="certificate_reference"    />
+        <result property="signatureAlgorithm"    column="signature_algorithm"    />
+        <result property="metadataId"    column="metadata_id"    />
+        <result property="eleId"    column="ele_id"    />
+    </resultMap>
+
+    <sql id="selectDigitalSignatureVo">
+        select id, signature_format_description, signature_date, signer, signature, certificate, certificate_reference, signature_algorithm, metadata_id, ele_id from digital_signature
+    </sql>
+    <select id="selectDigitalSignatureList" parameterType="DigitalSignature" resultMap="DigitalSignatureResult">
+        <include refid="selectDigitalSignatureVo"/>
+        <where>  
+            <if test="signatureFormatDescription != null  and signatureFormatDescription != ''"> and signature_format_description = #{signatureFormatDescription}</if>
+            <if test="signatureDate != null  and signatureDate != ''"> and signature_date = #{signatureDate}</if>
+            <if test="signer != null  and signer != ''"> and signer = #{signer}</if>
+            <if test="signature != null  and signature != ''"> and signature = #{signature}</if>
+            <if test="certificate != null  and certificate != ''"> and certificate = #{certificate}</if>
+            <if test="certificateReference != null  and certificateReference != ''"> and certificate_reference = #{certificateReference}</if>
+            <if test="signatureAlgorithm != null  and signatureAlgorithm != ''"> and signature_algorithm = #{signatureAlgorithm}</if>
+            <if test="metadataId != null "> and metadata_id = #{metadataId}</if>
+            <if test="eleId != null "> and ele_id = #{eleId}</if>
+        </where>
+    </select>
+    
+    <select id="selectDigitalSignatureById" parameterType="Long" resultMap="DigitalSignatureResult">
+        <include refid="selectDigitalSignatureVo"/>
+        where id = #{id}
+    </select>
+    <select id="selectDsByMdid" resultType="com.gox.basic.domain.DigitalSignature">
+        <include refid="selectDigitalSignatureVo"></include>
+        where metadata_id=#{id}
+    </select>
+
+    <insert id="insertDigitalSignature" parameterType="DigitalSignature">
+        insert into digital_signature
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="signatureFormatDescription != null">signature_format_description,</if>
+            <if test="signatureDate != null">signature_date,</if>
+            <if test="signer != null">signer,</if>
+            <if test="signature != null">signature,</if>
+            <if test="certificate != null">certificate,</if>
+            <if test="certificateReference != null">certificate_reference,</if>
+            <if test="signatureAlgorithm != null">signature_algorithm,</if>
+            <if test="metadataId != null">metadata_id,</if>
+            <if test="eleId != null">ele_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="signatureFormatDescription != null">#{signatureFormatDescription},</if>
+            <if test="signatureDate != null">#{signatureDate},</if>
+            <if test="signer != null">#{signer},</if>
+            <if test="signature != null">#{signature},</if>
+            <if test="certificate != null">#{certificate},</if>
+            <if test="certificateReference != null">#{certificateReference},</if>
+            <if test="signatureAlgorithm != null">#{signatureAlgorithm},</if>
+            <if test="metadataId != null">#{metadataId},</if>
+            <if test="eleId != null">#{eleId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDigitalSignature" parameterType="DigitalSignature">
+        update digital_signature
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="signatureFormatDescription != null">signature_format_description = #{signatureFormatDescription},</if>
+            <if test="signatureDate != null">signature_date = #{signatureDate},</if>
+            <if test="signer != null">signer = #{signer},</if>
+            <if test="signature != null">signature = #{signature},</if>
+            <if test="certificate != null">certificate = #{certificate},</if>
+            <if test="certificateReference != null">certificate_reference = #{certificateReference},</if>
+            <if test="signatureAlgorithm != null">signature_algorithm = #{signatureAlgorithm},</if>
+            <if test="metadataId != null">metadata_id = #{metadataId},</if>
+            <if test="eleId != null">ele_id = #{eleId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteDigitalSignatureById" parameterType="Long">
+        delete from digital_signature where id = #{id}
+    </delete>
+
+    <delete id="deleteDigitalSignatureByIds" parameterType="String">
+        delete from digital_signature where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

@@ -191,7 +191,11 @@
                 <artifactId>goxsoft-common</artifactId>
                 <version>${gox.version}</version>
             </dependency>
-
+            <dependency>
+                <groupId>com.gox</groupId>
+                <artifactId>goxsoft-basic</artifactId>
+                <version>${gox.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -202,6 +206,7 @@
         <module>goxsoft-quartz</module>
         <module>goxsoft-generator</module>
         <module>goxsoft-common</module>
+        <module>goxsoft-basic</module>
     </modules>
     <packaging>pom</packaging>
 

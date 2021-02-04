@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gox.basic.mapper.ElectronicAttributesMapper">
+    
+    <resultMap type="ElectronicAttributes" id="ElectronicAttributesResult">
+        <result property="id"    column="id"    />
+        <result property="formatInformation"    column="format_information"    />
+        <result property="computerFileName"    column="computer_file_name"    />
+        <result property="computerFileSize"    column="computer_file_size"    />
+        <result property="documentCreatingApplication"    column="document_creating_application"    />
+        <result property="informationSystemDescription"    column="information_system_description"    />
+        <result property="physicalRecordCharacteristics"    column="physical_record_characteristics"    />
+        <result property="scanningResolution"    column="scanning_resolution"    />
+        <result property="scanningColorModel"    column="scanning_color_model"    />
+        <result property="imageCompressionScheme"    column="image_compression_scheme"    />
+        <result property="currentLocation"    column="current_location"    />
+        <result property="offlineMediumIdentifier"    column="offline_medium_identifier"    />
+        <result property="offlineMediumStorageLocation"    column="offline_medium_storage_location"    />
+        <result property="microformIdentifier"    column="microform_identifier"    />
+        <result property="metadataId"    column="metadata_id"    />
+    </resultMap>
+
+    <sql id="selectElectronicAttributesVo">
+        select id, format_information, computer_file_name, computer_file_size, document_creating_application, information_system_description, physical_record_characteristics, scanning_resolution, scanning_color_model, image_compression_scheme, current_location, offline_medium_identifier, offline_medium_storage_location, microform_identifier, metadata_id from electronic_attributes
+    </sql>
+
+    <select id="selectElectronicAttributesList" parameterType="ElectronicAttributes" resultMap="ElectronicAttributesResult">
+        <include refid="selectElectronicAttributesVo"/>
+        <where>  
+            <if test="formatInformation != null  and formatInformation != ''"> and format_information = #{formatInformation}</if>
+            <if test="computerFileName != null  and computerFileName != ''"> and computer_file_name like concat('%', #{computerFileName}, '%')</if>
+            <if test="computerFileSize != null  and computerFileSize != ''"> and computer_file_size = #{computerFileSize}</if>
+            <if test="documentCreatingApplication != null  and documentCreatingApplication != ''"> and document_creating_application = #{documentCreatingApplication}</if>
+            <if test="informationSystemDescription != null  and informationSystemDescription != ''"> and information_system_description = #{informationSystemDescription}</if>
+            <if test="physicalRecordCharacteristics != null  and physicalRecordCharacteristics != ''"> and physical_record_characteristics = #{physicalRecordCharacteristics}</if>
+            <if test="scanningResolution != null  and scanningResolution != ''"> and scanning_resolution = #{scanningResolution}</if>
+            <if test="scanningColorModel != null  and scanningColorModel != ''"> and scanning_color_model = #{scanningColorModel}</if>
+            <if test="imageCompressionScheme != null  and imageCompressionScheme != ''"> and image_compression_scheme = #{imageCompressionScheme}</if>
+            <if test="currentLocation != null  and currentLocation != ''"> and current_location = #{currentLocation}</if>
+            <if test="offlineMediumIdentifier != null  and offlineMediumIdentifier != ''"> and offline_medium_identifier = #{offlineMediumIdentifier}</if>
+            <if test="offlineMediumStorageLocation != null  and offlineMediumStorageLocation != ''"> and offline_medium_storage_location = #{offlineMediumStorageLocation}</if>
+            <if test="microformIdentifier != null  and microformIdentifier != ''"> and microform_identifier = #{microformIdentifier}</if>
+            <if test="metadataId != null "> and metadata_id = #{metadataId}</if>
+        </where>
+    </select>
+    
+    <select id="selectElectronicAttributesById" parameterType="Long" resultMap="ElectronicAttributesResult">
+        <include refid="selectElectronicAttributesVo"/>
+        where id = #{id}
+    </select>
+    <select id="selectEleByMdId" resultMap="ElectronicAttributesResult">
+        <include refid="selectElectronicAttributesVo">
+        </include>
+        where metadata_id = #{id}
+    </select>
+
+    <insert id="insertElectronicAttributes" parameterType="ElectronicAttributes">
+        insert into electronic_attributes
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="formatInformation != null and formatInformation != ''">format_information,</if>
+            <if test="computerFileName != null and computerFileName != ''">computer_file_name,</if>
+            <if test="computerFileSize != null and computerFileSize != ''">computer_file_size,</if>
+            <if test="documentCreatingApplication != null and documentCreatingApplication != ''">document_creating_application,</if>
+            <if test="informationSystemDescription != null and informationSystemDescription != ''">information_system_description,</if>
+            <if test="physicalRecordCharacteristics != null and physicalRecordCharacteristics != ''">physical_record_characteristics,</if>
+            <if test="scanningResolution != null and scanningResolution != ''">scanning_resolution,</if>
+            <if test="scanningColorModel != null and scanningColorModel != ''">scanning_color_model,</if>
+            <if test="imageCompressionScheme != null and imageCompressionScheme != ''">image_compression_scheme,</if>
+            <if test="currentLocation != null and currentLocation != ''">current_location,</if>
+            <if test="offlineMediumIdentifier != null and offlineMediumIdentifier != ''">offline_medium_identifier,</if>
+            <if test="offlineMediumStorageLocation != null and offlineMediumStorageLocation != ''">offline_medium_storage_location,</if>
+            <if test="microformIdentifier != null and microformIdentifier != ''">microform_identifier,</if>
+            <if test="metadataId != null">metadata_id,</if>
+         </trim>
+        select
+        <trim suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="formatInformation != null and formatInformation != ''">#{formatInformation},</if>
+            <if test="computerFileName != null and computerFileName != ''">#{computerFileName},</if>
+            <if test="computerFileSize != null and computerFileSize != ''">#{computerFileSize},</if>
+            <if test="documentCreatingApplication != null and documentCreatingApplication != ''">#{documentCreatingApplication},</if>
+            <if test="informationSystemDescription != null and informationSystemDescription != ''">#{informationSystemDescription},</if>
+            <if test="physicalRecordCharacteristics != null and physicalRecordCharacteristics != ''">#{physicalRecordCharacteristics},</if>
+            <if test="scanningResolution != null and scanningResolution != ''">#{scanningResolution},</if>
+            <if test="scanningColorModel != null and scanningColorModel != ''">#{scanningColorModel},</if>
+            <if test="imageCompressionScheme != null and imageCompressionScheme != ''">#{imageCompressionScheme},</if>
+            <if test="currentLocation != null and currentLocation != ''">#{currentLocation},</if>
+            <if test="offlineMediumIdentifier != null and offlineMediumIdentifier != ''">#{offlineMediumIdentifier},</if>
+            <if test="offlineMediumStorageLocation != null and offlineMediumStorageLocation != ''">#{offlineMediumStorageLocation},</if>
+            <if test="microformIdentifier != null and microformIdentifier != ''">#{microformIdentifier},</if>
+            <if test="metadataId != null">#{metadataId},</if>
+         </trim>
+        where not exists(select metadata_id from electronic_attributes where metadata_id=#{metadataId} and computer_file_name=#{computerFileName})
+    </insert>
+
+    <update id="updateElectronicAttributes" parameterType="ElectronicAttributes">
+        update electronic_attributes
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="formatInformation != null and formatInformation != ''">format_information = #{formatInformation},</if>
+            <if test="computerFileName != null and computerFileName != ''">computer_file_name = #{computerFileName},</if>
+            <if test="computerFileSize != null and computerFileSize != ''">computer_file_size = #{computerFileSize},</if>
+            <if test="documentCreatingApplication != null and documentCreatingApplication != ''">document_creating_application = #{documentCreatingApplication},</if>
+            <if test="informationSystemDescription != null and informationSystemDescription != ''">information_system_description = #{informationSystemDescription},</if>
+            <if test="physicalRecordCharacteristics != null and physicalRecordCharacteristics != ''">physical_record_characteristics = #{physicalRecordCharacteristics},</if>
+            <if test="scanningResolution != null and scanningResolution != ''">scanning_resolution = #{scanningResolution},</if>
+            <if test="scanningColorModel != null and scanningColorModel != ''">scanning_color_model = #{scanningColorModel},</if>
+            <if test="imageCompressionScheme != null and imageCompressionScheme != ''">image_compression_scheme = #{imageCompressionScheme},</if>
+            <if test="currentLocation != null and currentLocation != ''">current_location = #{currentLocation},</if>
+            <if test="offlineMediumIdentifier != null and offlineMediumIdentifier != ''">offline_medium_identifier = #{offlineMediumIdentifier},</if>
+            <if test="offlineMediumStorageLocation != null and offlineMediumStorageLocation != ''">offline_medium_storage_location = #{offlineMediumStorageLocation},</if>
+            <if test="microformIdentifier != null and microformIdentifier != ''">microform_identifier = #{microformIdentifier},</if>
+            <if test="metadataId != null">metadata_id = #{metadataId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteElectronicAttributesById" parameterType="Long">
+        delete from electronic_attributes where id = #{id}
+    </delete>
+
+    <delete id="deleteElectronicAttributesByIds" parameterType="String">
+        delete from electronic_attributes where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

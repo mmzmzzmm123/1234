@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gox.basic.mapper.MetadataRuleMapper">
+    
+    <resultMap type="com.gox.basic.domain.MetadataRule" id="MetadataRuleResult">
+        <result property="id"    column="id"    />
+        <result property="num"    column="num"    />
+        <result property="nameCn"    column="name_CN"    />
+        <result property="name"    column="name"    />
+        <result property="definition"    column="definition"    />
+        <result property="purpose"    column="purpose"    />
+        <result property="constraintion"    column="constraintion"    />
+        <result property="conditions"    column="conditions"    />
+        <result property="regex"    column="regex"    />
+        <result property="repeatability"    column="repeatability"    />
+        <result property="elementType"    column="element_type"    />
+        <result property="dataType"    column="data_type"    />
+        <result property="encode"    column="encode"    />
+        <result property="valueRange"    column="value_range"    />
+        <result property="defaultValue"    column="default_value"    />
+        <result property="subelement"    column="subelement"    />
+        <result property="sourcesOfInformation"    column="sources_of_information"    />
+        <result property="coherentElement"    column="coherent_element"    />
+        <result property="comments"    column="comments"    />
+        <result property="type"    column="type"    />
+        <result property="len"    column="len"    />
+    </resultMap>
+    <resultMap id="definition" type="com.gox.basic.domain.vo.WSDefinition">
+        <result property="nameCn"    column="name_CN"    />
+        <result property="name"    column="name"    />
+        <result property="definition"    column="definition"    />
+    </resultMap>
+    <sql id="selectMetadataRuleVo">
+        select id, num, name_CN, name, definition, purpose, constraintion, conditions, regex, repeatability, element_type, data_type, encode, value_range, default_value, subelement, sources_of_information, coherent_element, comments, type, len from metadata_rule
+    </sql>
+
+    <select id="selectMetadataRuleList" parameterType="com.gox.basic.domain.MetadataRule" resultMap="MetadataRuleResult">
+        <include refid="selectMetadataRuleVo"/>
+        <where>  
+            <if test="num != null  and num != ''"> and num = #{num}</if>
+            <if test="nameCn != null  and nameCn != ''"> and name_CN = #{nameCn}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="definition != null  and definition != ''"> and definition = #{definition}</if>
+            <if test="purpose != null  and purpose != ''"> and purpose = #{purpose}</if>
+            <if test="constraintion != null  and constraintion != ''"> and constraintion = #{constraintion}</if>
+            <if test="conditions != null  and conditions != ''"> and conditions = #{conditions}</if>
+            <if test="regex != null  and regex != ''"> and regex = #{regex}</if>
+            <if test="repeatability != null  and repeatability != ''"> and repeatability = #{repeatability}</if>
+            <if test="elementType != null  and elementType != ''"> and element_type = #{elementType}</if>
+            <if test="dataType != null  and dataType != ''"> and data_type = #{dataType}</if>
+            <if test="encode != null  and encode != ''"> and encode = #{encode}</if>
+            <if test="valueRange != null  and valueRange != ''"> and value_range = #{valueRange}</if>
+            <if test="defaultValue != null  and defaultValue != ''"> and default_value = #{defaultValue}</if>
+            <if test="subelement != null  and subelement != ''"> and subelement = #{subelement}</if>
+            <if test="sourcesOfInformation != null  and sourcesOfInformation != ''"> and sources_of_information = #{sourcesOfInformation}</if>
+            <if test="coherentElement != null  and coherentElement != ''"> and coherent_element = #{coherentElement}</if>
+            <if test="comments != null  and comments != ''"> and comments = #{comments}</if>
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+            <if test="len != null "> and len = #{len}</if>
+        </where>
+    </select>
+    
+    <select id="selectMetadataRuleById" parameterType="Long" resultMap="MetadataRuleResult">
+        <include refid="selectMetadataRuleVo"/>
+        where id = #{id}
+    </select>
+    <select id="selectMetadata" resultMap="definition" parameterType="String">
+        select name_CN ,name, definition from metadata_rule where name_CN=#{nameCn}
+    </select>
+
+    <insert id="insertMetadataRule" parameterType="com.gox.basic.domain.MetadataRule" useGeneratedKeys="true" keyProperty="id">
+        insert into metadata_rule
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="num != null and num != ''">num,</if>
+            <if test="nameCn != null">name_CN,</if>
+            <if test="name != null">name,</if>
+            <if test="definition != null">definition,</if>
+            <if test="purpose != null">purpose,</if>
+            <if test="constraintion != null">constraintion,</if>
+            <if test="conditions != null">conditions,</if>
+            <if test="regex != null">regex,</if>
+            <if test="repeatability != null">repeatability,</if>
+            <if test="elementType != null">element_type,</if>
+            <if test="dataType != null">data_type,</if>
+            <if test="encode != null">encode,</if>
+            <if test="valueRange != null">value_range,</if>
+            <if test="defaultValue != null">default_value,</if>
+            <if test="subelement != null">subelement,</if>
+            <if test="sourcesOfInformation != null">sources_of_information,</if>
+            <if test="coherentElement != null">coherent_element,</if>
+            <if test="comments != null">comments,</if>
+            <if test="type != null">type,</if>
+            <if test="len != null">len,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="num != null and num != ''">#{num},</if>
+            <if test="nameCn != null">#{nameCn},</if>
+            <if test="name != null">#{name},</if>
+            <if test="definition != null">#{definition},</if>
+            <if test="purpose != null">#{purpose},</if>
+            <if test="constraintion != null">#{constraintion},</if>
+            <if test="conditions != null">#{conditions},</if>
+            <if test="regex != null">#{regex},</if>
+            <if test="repeatability != null">#{repeatability},</if>
+            <if test="elementType != null">#{elementType},</if>
+            <if test="dataType != null">#{dataType},</if>
+            <if test="encode != null">#{encode},</if>
+            <if test="valueRange != null">#{valueRange},</if>
+            <if test="defaultValue != null">#{defaultValue},</if>
+            <if test="subelement != null">#{subelement},</if>
+            <if test="sourcesOfInformation != null">#{sourcesOfInformation},</if>
+            <if test="coherentElement != null">#{coherentElement},</if>
+            <if test="comments != null">#{comments},</if>
+            <if test="type != null">#{type},</if>
+            <if test="len != null">#{len},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMetadataRule" parameterType="com.gox.basic.domain.MetadataRule">
+        update metadata_rule
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="num != null and num != ''">num = #{num},</if>
+            <if test="nameCn != null">name_CN = #{nameCn},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="definition != null">definition = #{definition},</if>
+            <if test="purpose != null">purpose = #{purpose},</if>
+            <if test="constraintion != null">constraintion = #{constraintion},</if>
+            <if test="conditions != null">conditions = #{conditions},</if>
+            <if test="regex != null">regex = #{regex},</if>
+            <if test="repeatability != null">repeatability = #{repeatability},</if>
+            <if test="elementType != null">element_type = #{elementType},</if>
+            <if test="dataType != null">data_type = #{dataType},</if>
+            <if test="encode != null">encode = #{encode},</if>
+            <if test="valueRange != null">value_range = #{valueRange},</if>
+            <if test="defaultValue != null">default_value = #{defaultValue},</if>
+            <if test="subelement != null">subelement = #{subelement},</if>
+            <if test="sourcesOfInformation != null">sources_of_information = #{sourcesOfInformation},</if>
+            <if test="coherentElement != null">coherent_element = #{coherentElement},</if>
+            <if test="comments != null">comments = #{comments},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="len != null">len = #{len},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteMetadataRuleById" parameterType="Long">
+        delete from metadata_rule where id = #{id}
+    </delete>
+
+    <delete id="deleteMetadataRuleByIds" parameterType="String">
+        delete from metadata_rule where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

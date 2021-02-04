@@ -58,7 +58,11 @@
             <groupId>com.gox</groupId>
             <artifactId>goxsoft-system</artifactId>
         </dependency>
-
+        <!-- 系统模块-->
+        <dependency>
+            <groupId>com.gox</groupId>
+            <artifactId>goxsoft-basic</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

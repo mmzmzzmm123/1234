@@ -1,124 +1,121 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="表单名字" prop="formName">
-        <el-input
-          v-model="queryParams.formName"
-          placeholder="请输入表单名字"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="表单json" prop="formData">
-        <el-input
-          v-model="queryParams.formData"
-          placeholder="请输入表单json"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item>
-        <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-      </el-form-item>
-    </el-form>
+    <el-row :gutter="20">
+      <el-col :span="4">
+        <dept-tree @selectedDept="selectedDept">
+        </dept-tree>
+      </el-col>
+      <el-col :span="20">
+        <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
+          <el-form-item label="表单名字" prop="formName">
+            <el-input
+              v-model="queryParams.formName"
+              placeholder="请输入表单名字"
+              clearable
+              size="small"
+              @keyup.enter.native="handleQuery"
+            />
+          </el-form-item>
+          <el-form-item>
+            <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+            <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+          </el-form-item>
+        </el-form>
 
-    <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <!-- <el-button
-          type="primary"
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['system:json:add']"
-        >新增</el-button>-->
+        <el-row :gutter="10" class="mb8">
+          <el-col :span="1.5">
+            <el-button
+              type="primary"
+              icon="el-icon-edit"
+              size="mini"
+              @click="handleAdd"
+              v-hasPermi="['system:json:edit']"
+            >新增</el-button>
+          </el-col>
+          <el-col :span="1.5">
+            <el-button
+              type="success"
+              icon="el-icon-edit"
+              size="mini"
+              :disabled="single"
+              @click="handleUpdate"
+              v-hasPermi="['system:json:edit']"
+            >修改</el-button>
+          </el-col>
+          <el-col :span="1.5">
+            <el-button
+              type="danger"
+              icon="el-icon-delete"
+              size="mini"
+              :disabled="multiple"
+              @click="handleDelete"
+              v-hasPermi="['system:json:remove']"
+            >删除</el-button>
+          </el-col>
+          <el-col :span="1.5">
+            <el-button type="warning" icon="el-icon-download" size="mini" @click="handTableField">
+              表格编辑
+            </el-button>
+            <!--        <el-button-->
+            <!--          type="warning"-->
+            <!--          icon="el-icon-download"-->
+            <!--          size="mini"-->
+            <!--          @click="handleExport"-->
+            <!--          v-hasPermi="['system:json:export']"-->
+            <!--        >导出</el-button>-->
+          </el-col>
+          <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+        </el-row>
+
+        <el-table v-loading="loading" :data="jsonList" @selection-change="handleSelectionChange">
+          <el-table-column type="selection" width="55" align="center" />
+          <el-table-column label="id" align="center" prop="id" />
+          <el-table-column label="表单名字" align="center" prop="formName" />
+          <el-table-column label="创建时间" align="center" prop="createTime" />
+          <el-table-column label="修改时间" align="center" prop="updateTime" />
+          <!-- <el-table-column label="表单json" align="center" prop="formData" /> -->
+          <el-table-column label="备注" align="center" prop="remark" />
+          <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+            <template slot-scope="scope">
+              <el-button
+                size="mini"
+                type="text"
+                icon="el-icon-edit"
+                @click="handleUpdate(scope.row)"
+                v-hasPermi="['system:json:edit']"
+              >修改</el-button>
+              <el-button
+                size="mini"
+                type="text"
+                icon="el-icon-delete"
+                @click="handleDelete(scope.row)"
+                v-hasPermi="['system:json:remove']"
+              >删除</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+
+        <pagination
+          v-show="total>0"
+          :total="total"
+          :page.sync="queryParams.pageNum"
+          :limit.sync="queryParams.pageSize"
+          @pagination="getList"
+        />
       </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['system:json:edit']"
-        >修改</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="danger"
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['system:json:remove']"
-        >删除</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['system:json:export']"
-        >导出</el-button>
-      </el-col>
-	  <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
-
-    <el-table v-loading="loading" :data="jsonList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="id" align="center" prop="id" />
-      <el-table-column label="表单名字" align="center" prop="formName" />
-       <el-table-column label="创建时间" align="center" prop="createTime" />
-       <el-table-column label="修改时间" align="center" prop="updateTime" />
-      <!-- <el-table-column label="表单json" align="center" prop="formData" /> -->
-      <el-table-column label="备注" align="center" prop="remark" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
-        <template slot-scope="scope">
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
-            v-hasPermi="['system:json:edit']"
-          >修改</el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['system:json:remove']"
-          >删除</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-
-    <pagination
-      v-show="total>0"
-      :total="total"
-      :page.sync="queryParams.pageNum"
-      :limit.sync="queryParams.pageSize"
-      @pagination="getList"
-    />
 
     <!-- 添加或修改单json存储对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="备注" prop="remark">
-          <el-input v-model="form.remark" placeholder="请输入备注" />
-        </el-form-item>
-        <el-form-item label="表单名字" prop="formName">
-          <el-input v-model="form.formName" placeholder="请输入表单名字" />
-        </el-form-item>
-        <!-- <el-form-item label="表单json" prop="formData">
-          <el-input v-model="form.formData" placeholder="请输入表单json" />
-        </el-form-item> -->
-        <el-form-item label="删除标志" prop="delFlag">
-          <el-input v-model="form.delFlag" placeholder="请输入删除标志" />
-        </el-form-item>
-      </el-form>
+      <div>
+        <el-transfer
+          filterable
+          :filter-method="filterMethod"
+          filter-placeholder="请输入字段名"
+          v-model="value"
+          :data="data">
+        </el-transfer>
+      </div>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
@@ -129,13 +126,17 @@
 
 <script>
 import { listJson, getJson, delJson, addJson, updateJson, exportJson } from "@/api/system/json";
+import deptTree from '@/views/components/deptTree'
 
 export default {
   name: "Json",
   components: {
+    deptTree
   },
   data() {
     return {
+      //deptId
+      deptId:0,
       // 遮罩层
       loading: true,
       // 选中数组
@@ -145,7 +146,7 @@ export default {
       // 非多个禁用
       multiple: true,
       // 显示搜索条件
-      showSearch: true,
+      showSearch: false,
       // 总条数
       total: 0,
       // 单json存储表格数据
@@ -160,6 +161,8 @@ export default {
         pageSize: 10,
         formName: null,
         formData: null,
+        parentName:null,
+        node:null,
       },
       // 表单参数
       form: {},
@@ -196,6 +199,18 @@ export default {
     this.getList();
   },
   methods: {
+    selectedDept(data){
+      this.deptId=data
+      this.queryParams.node=data
+      console.log(data)
+    },
+    /** 选择一个节点 */
+    handTableField(){
+
+    },
+    filterMethod(query, item) {
+      return item.name.indexOf(query) > -1;
+    },
     /** 查询单json存储列表 */
     getList() {
       this.loading = true;
