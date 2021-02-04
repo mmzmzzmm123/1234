@@ -6,82 +6,99 @@
 
     <resultMap type="SysWxSaleAccount" id="SysWxSaleAccountResult">
         <result property="id"    column="id"    />
-        <result property="nickName"    column="nick_name"    />
-        <result property="accountId"    column="account_id"    />
-        <result property="wxId"    column="wx_id"    />
-        <result property="phone"    column="phone"    />
+        <result property="wxNickName"    column="wx_nick_name"    />
+        <result property="wxAccount"    column="wx_account"    />
+        <result property="wxPhone"    column="wx_phone"    />
+        <result property="wxCodeUrl"    column="wx_code_url"    />
         <result property="remark"    column="remark"    />
-        <result property="imgUrl"    column="img_url"    />
-        <result property="count"    column="count"    />
-        <result property="mediaId"    column="media_id"    />
+        <result property="wxType"    column="wx_type"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="delFlag"    column="del_flag"    />
     </resultMap>
 
     <sql id="selectSysWxSaleAccountVo">
-        select id, nick_name, account_id, wx_id, phone, remark, img_url, count, media_id from sys_wx_sale_account
+        select id, wx_nick_name, wx_account, wx_phone, wx_code_url, remark, wx_type, create_time, create_by, update_time, update_by, del_flag from sys_wx_sale_account
     </sql>
 
     <select id="selectSysWxSaleAccountList" parameterType="SysWxSaleAccount" resultMap="SysWxSaleAccountResult">
-        <include refid="selectSysWxSaleAccountVo"/>
-        <where>
-            <if test="nickName != null  and nickName != ''"> and nick_name like concat('%', #{nickName}, '%')</if>
-            <if test="accountId != null "> and account_id = #{accountId}</if>
-            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
-        </where>
+        <include refid="selectSysWxSaleAccountVo"/> where del_flag = 0
+        <if test="wxNickName != null  and wxNickName != ''"> and wx_nick_name like concat('%', #{wxNickName}, '%')</if>
+        <if test="wxAccount != null  and wxAccount != ''"> and wx_account like concat('%', #{wxAccount}, '%')</if>
+        <if test="wxPhone != null  and wxPhone != ''"> and wx_phone like concat('%', #{wxPhone}, '%')</if>
     </select>
 
     <select id="selectSysWxSaleAccountById" parameterType="Long" resultMap="SysWxSaleAccountResult">
         <include refid="selectSysWxSaleAccountVo"/>
-        where id = #{id}
+        where id = #{id} and del_flag = 0
     </select>
 
     <insert id="insertSysWxSaleAccount" parameterType="SysWxSaleAccount" useGeneratedKeys="true" keyProperty="id">
         insert into sys_wx_sale_account
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="nickName != null">nick_name,</if>
-            <if test="accountId != null">account_id,</if>
-            <if test="wxId != null">wx_id,</if>
-            <if test="phone != null">phone,</if>
+            <if test="wxNickName != null">wx_nick_name,</if>
+            <if test="wxAccount != null">wx_account,</if>
+            <if test="wxPhone != null">wx_phone,</if>
+            <if test="wxCodeUrl != null">wx_code_url,</if>
             <if test="remark != null">remark,</if>
-            <if test="imgUrl != null">img_url,</if>
-            <if test="count != null">count,</if>
-            <if test="mediaId != null">media_id,</if>
+            <if test="wxType != null">wx_type,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="delFlag != null">del_flag,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="nickName != null">#{nickName},</if>
-            <if test="accountId != null">#{accountId},</if>
-            <if test="wxId != null">#{wxId},</if>
-            <if test="phone != null">#{phone},</if>
+            <if test="wxNickName != null">#{wxNickName},</if>
+            <if test="wxAccount != null">#{wxAccount},</if>
+            <if test="wxPhone != null">#{wxPhone},</if>
+            <if test="wxCodeUrl != null">#{wxCodeUrl},</if>
             <if test="remark != null">#{remark},</if>
-            <if test="imgUrl != null">#{imgUrl},</if>
-            <if test="count != null">#{count},</if>
-            <if test="mediaId != null">#{mediaId},</if>
+            <if test="wxType != null">#{wxType},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="delFlag != null">#{delFlag},</if>
         </trim>
     </insert>
 
     <update id="updateSysWxSaleAccount" parameterType="SysWxSaleAccount">
         update sys_wx_sale_account
         <trim prefix="SET" suffixOverrides=",">
-            <if test="nickName != null">nick_name = #{nickName},</if>
-            <if test="accountId != null">account_id = #{accountId},</if>
-            <if test="wxId != null">wx_id = #{wxId},</if>
-            <if test="phone != null">phone = #{phone},</if>
+            <if test="wxNickName != null">wx_nick_name = #{wxNickName},</if>
+            <if test="wxAccount != null">wx_account = #{wxAccount},</if>
+            <if test="wxPhone != null">wx_phone = #{wxPhone},</if>
+            <if test="wxCodeUrl != null">wx_code_url = #{wxCodeUrl},</if>
             <if test="remark != null">remark = #{remark},</if>
-            <if test="imgUrl != null">img_url = #{imgUrl},</if>
-            <if test="count != null">count = #{count},</if>
-            <if test="mediaId != null">media_id = #{mediaId},</if>
+            <if test="wxType != null">wx_type = #{wxType},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
         </trim>
         where id = #{id}
     </update>
 
-    <delete id="deleteSysWxSaleAccountById" parameterType="Long">
-        delete from sys_wx_sale_account where id = #{id}
-    </delete>
+    <update id="deleteSysWxSaleAccountById" parameterType="Long">
+        update sys_wx_sale_account set del_flag = 1 where id = #{id}
+    </update>
 
-    <delete id="deleteSysWxSaleAccountByIds" parameterType="String">
-        delete from sys_wx_sale_account where id in
+    <update id="deleteSysWxSaleAccountByIds" parameterType="String">
+        update sys_wx_sale_account set del_flag = 1 where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
-    </delete>
+    </update>
+
+    <select id="selectWxAccountByAccountOrPhone" parameterType="SysWxSaleAccount" resultMap="SysWxSaleAccountResult">
+        <include refid="selectSysWxSaleAccountVo"/> where del_flag = 0
+        <if test="wxAccount != null  and wxAccount != ''"> and wx_account = #{wxAccount}</if>
+        <if test="wxPhone != null  and wxPhone != ''"> and wx_phone = #{wxPhone} </if>
+        limit 1
+    </select>
 
 </mapper>

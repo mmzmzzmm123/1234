@@ -1,140 +1,127 @@
 package com.stdiet.web.controller.custom;
 
+import java.util.List;
+
+import com.stdiet.common.utils.StringUtils;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import com.stdiet.common.annotation.Log;
-import com.stdiet.common.config.RuoYiConfig;
 import com.stdiet.common.core.controller.BaseController;
 import com.stdiet.common.core.domain.AjaxResult;
-import com.stdiet.common.core.page.TableDataInfo;
-import com.stdiet.common.core.redis.RedisCache;
 import com.stdiet.common.enums.BusinessType;
-import com.stdiet.common.utils.StringUtils;
-import com.stdiet.common.utils.file.FileUploadUtils;
-import com.stdiet.common.utils.poi.ExcelUtil;
 import com.stdiet.custom.domain.SysWxSaleAccount;
-import com.stdiet.custom.domain.wechat.WxAccessToken;
-import com.stdiet.custom.domain.wechat.WxFileUploadResult;
 import com.stdiet.custom.service.ISysWxSaleAccountService;
-import com.stdiet.custom.utils.WxTokenUtils;
-import com.stdiet.framework.config.ServerConfig;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
-import java.util.concurrent.TimeUnit;
+import com.stdiet.common.utils.poi.ExcelUtil;
+import com.stdiet.common.core.page.TableDataInfo;
 
 /**
- * 微信销售账号Controller
+ * 微信账号Controller
  *
- * @author wonder
- * @date 2021-01-29
+ * @author xiezhijun
+ * @date 2021-02-03
  */
 @RestController
-@RequestMapping("/custom/WxAccount")
-public class SysWxSaleAccountController extends BaseController {
+@RequestMapping("/custom/wxAccount")
+public class SysWxSaleAccountController extends BaseController
+{
     @Autowired
     private ISysWxSaleAccountService sysWxSaleAccountService;
 
-    @Autowired
-    private RedisCache redisCache;
-
-    @Autowired
-    private ServerConfig serverConfig;
-
     /**
-     * 查询微信销售账号列表
+     * 查询微信账号列表
      */
-    @PreAuthorize("@ss.hasPermi('custom:WxAccount:list')")
+    @PreAuthorize("@ss.hasPermi('custom:wxAccount:list')")
     @GetMapping("/list")
-    public TableDataInfo list(SysWxSaleAccount sysWxSaleAccount) {
+    public TableDataInfo list(SysWxSaleAccount sysWxSaleAccount)
+    {
         startPage();
         List<SysWxSaleAccount> list = sysWxSaleAccountService.selectSysWxSaleAccountList(sysWxSaleAccount);
         return getDataTable(list);
     }
 
     /**
-     * 导出微信销售账号列表
+     * 导出微信账号列表
      */
-    @PreAuthorize("@ss.hasPermi('custom:WxAccount:export')")
-    @Log(title = "微信销售账号", businessType = BusinessType.EXPORT)
+    @PreAuthorize("@ss.hasPermi('custom:wxAccount:export')")
+    @Log(title = "微信账号", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
-    public AjaxResult export(SysWxSaleAccount sysWxSaleAccount) {
+    public AjaxResult export(SysWxSaleAccount sysWxSaleAccount)
+    {
         List<SysWxSaleAccount> list = sysWxSaleAccountService.selectSysWxSaleAccountList(sysWxSaleAccount);
         ExcelUtil<SysWxSaleAccount> util = new ExcelUtil<SysWxSaleAccount>(SysWxSaleAccount.class);
-        return util.exportExcel(list, "WxAccount");
+        return util.exportExcel(list, "wxAccount");
     }
 
     /**
-     * 获取微信销售账号详细信息
+     * 获取微信账号详细信息
      */
-    @PreAuthorize("@ss.hasPermi('custom:WxAccount:query')")
+    @PreAuthorize("@ss.hasPermi('custom:wxAccount:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id) {
+    public AjaxResult getInfo(@PathVariable("id") Long id)
+    {
         return AjaxResult.success(sysWxSaleAccountService.selectSysWxSaleAccountById(id));
     }
 
     /**
-     * 新增微信销售账号
+     * 新增微信账号
      */
-    @PreAuthorize("@ss.hasPermi('custom:WxAccount:add')")
-    @Log(title = "微信销售账号", businessType = BusinessType.INSERT)
+    @PreAuthorize("@ss.hasPermi('custom:wxAccount:add')")
+    @Log(title = "微信账号", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody SysWxSaleAccount sysWxSaleAccount) {
+    public AjaxResult add(@RequestBody SysWxSaleAccount sysWxSaleAccount)
+    {
+        if(StringUtils.isNotEmpty(sysWxSaleAccount.getWxAccount())){
+            if(sysWxSaleAccountService.selectWxAccountByAccountOrPhone(sysWxSaleAccount.getWxAccount(), 0) != null){
+                return AjaxResult.error("微信号已存在，无法重复添加");
+            }
+        }
+        if(StringUtils.isNotEmpty(sysWxSaleAccount.getWxPhone())){
+            if(sysWxSaleAccountService.selectWxAccountByAccountOrPhone(sysWxSaleAccount.getWxPhone(), 1) != null){
+                return AjaxResult.error("手机号已存在，无法重复添加");
+            }
+        }
         return toAjax(sysWxSaleAccountService.insertSysWxSaleAccount(sysWxSaleAccount));
     }
 
     /**
-     * 修改微信销售账号
+     * 修改微信账号
      */
-    @PreAuthorize("@ss.hasPermi('custom:WxAccount:edit')")
-    @Log(title = "微信销售账号", businessType = BusinessType.UPDATE)
+    @PreAuthorize("@ss.hasPermi('custom:wxAccount:edit')")
+    @Log(title = "微信账号", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody SysWxSaleAccount sysWxSaleAccount) {
+    public AjaxResult edit(@RequestBody SysWxSaleAccount sysWxSaleAccount)
+    {
+        if(StringUtils.isNotEmpty(sysWxSaleAccount.getWxAccount())){
+            SysWxSaleAccount accountWx = sysWxSaleAccountService.selectWxAccountByAccountOrPhone(sysWxSaleAccount.getWxAccount(), 0);
+            if(accountWx != null && accountWx.getId().intValue() != sysWxSaleAccount.getId().intValue()){
+                return AjaxResult.error("微信号已存在，无法修改");
+            }
+        }
+        if(StringUtils.isNotEmpty(sysWxSaleAccount.getWxPhone())){
+            SysWxSaleAccount accountWx = sysWxSaleAccountService.selectWxAccountByAccountOrPhone(sysWxSaleAccount.getWxPhone(), 1);
+            if(accountWx != null && accountWx.getId().intValue() != sysWxSaleAccount.getId().intValue()){
+                return AjaxResult.error("手机号已存在，无法修改");
+            }
+        }
         return toAjax(sysWxSaleAccountService.updateSysWxSaleAccount(sysWxSaleAccount));
     }
 
     /**
-     * 删除微信销售账号
+     * 删除微信账号
      */
-    @PreAuthorize("@ss.hasPermi('custom:WxAccount:remove')")
-    @Log(title = "微信销售账号", businessType = BusinessType.DELETE)
+    @PreAuthorize("@ss.hasPermi('custom:wxAccount:remove')")
+    @Log(title = "微信账号", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids) {
+    public AjaxResult remove(@PathVariable Long[] ids)
+    {
         return toAjax(sysWxSaleAccountService.deleteSysWxSaleAccountByIds(ids));
     }
-
-    /**
-     * 通用上传请求(无需登录认证)
-     */
-    @PostMapping("/upload")
-    public AjaxResult wxAccountUpload(MultipartFile file) throws Exception {
-        try {
-            // 上传文件路径
-            String filePath = RuoYiConfig.getUploadPath();
-            // 上传并返回新文件名称
-            String fileName = FileUploadUtils.upload(filePath, file);
-            String url = serverConfig.getUrl() + fileName;
-
-            String accessToken = redisCache.getCacheObject(WxTokenUtils.KEY_ACCESS_TOKEN);
-            if (StringUtils.isEmpty(accessToken)) {
-                WxAccessToken wxAccessToken = WxTokenUtils.fetchAccessToken();
-                redisCache.setCacheObject(WxTokenUtils.KEY_ACCESS_TOKEN, wxAccessToken.getAccessToken(), wxAccessToken.getExpiresIn(), TimeUnit.SECONDS);
-            }
-
-            WxFileUploadResult result = WxTokenUtils.uploadImage(filePath, accessToken);
-            if (result == null) {
-                return AjaxResult.error("上传微信失败");
-            }
-
-            AjaxResult ajax = AjaxResult.success();
-            ajax.put("fileName", fileName);
-            ajax.put("mediaId", result.getMediaId());
-            ajax.put("url", url);
-            return ajax;
-        } catch (Exception e) {
-            return AjaxResult.error(e.getMessage());
-        }
-    }
-
 }

@@ -20,7 +20,7 @@
         <healthy-form7 v-show="stepArray[6]" :form.sync="form"></healthy-form7>
         <healthy-form8 v-show="stepArray[7]" :flag="1" :form.sync="form"></healthy-form8>
         <edit-file v-show="stepArray[8]" ref="editFile" :form.sync="form"></edit-file>
-        <el-form-item style="text-align: center; margin: 30px auto" >
+        <el-form-item style="text-align: center; margin: 30px auto" v-show="submitShow">
           <el-button type="primary" @click="submit()" style="width: 40%" >提交</el-button>
           <el-button @click="onClosed()" style="width: 40%" >取消</el-button>
         </el-form-item>
@@ -61,6 +61,7 @@ export default {
       healthyData:healthyData,
       showModuleArray:[0],
       stepArray: [true,false,false,false,false,false,false,false,false],
+      submitShow: true,
       visible: false,
       title: "",
       data: undefined,
@@ -90,7 +91,7 @@ export default {
           {
             required: true,
             trigger: "blur",
-            pattern: /^[1-9]\d*$/,
+            pattern: /^(\d+)(\.\d{1})?$/,
             message: "体重格式不正确",
           },
         ],
@@ -162,12 +163,14 @@ export default {
       });
     },
     changeShowModule(){
-        console.log("---------------");
+        let allShow = false;
         for(var i = 0; i < this.stepArray.length; i++){
           let flag = this.showModuleArray.find((opt) => opt === i);
-          console.log(flag != null && flag != undefined);
-          this.$set(this.stepArray, i, (flag != null && flag != undefined));
+          let showFlag = flag != null && flag != undefined
+          this.$set(this.stepArray, i, showFlag);
+          allShow = showFlag ? showFlag : allShow;
         }
+        this.submitShow = allShow;
     }
   }
 };

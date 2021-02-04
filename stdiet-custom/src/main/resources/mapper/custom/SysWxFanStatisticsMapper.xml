@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.stdiet.custom.mapper.SysWxFanStatisticsMapper">
+
+    <resultMap type="SysWxFanStatistics" id="SysWxFanStatisticsResult">
+        <result property="id"    column="id"    />
+        <result property="wxId"    column="wx_id"    />
+        <result property="fanTime"    column="fan_time"    />
+        <result property="fanNum"    column="fan_num"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="delFlag"    column="del_flag"    />
+        <!-- 非持久化字段 -->
+        <result property="saleGroupId" column="sale_group_id"></result>
+        <result property="userId" column="user_id"></result>
+        <result property="userName" column="user_name"></result>
+        <result property="account" column="account"></result>
+        <result property="saleGroup" column="sale_group"></result>
+        <result property="wxNickName" column="wx_nick_name"></result>
+        <result property="wxAccount" column="wx_account"></result>
+    </resultMap>
+
+    <sql id="selectSysWxFanStatisticsVo">
+        select id, wx_id, fan_time, fan_num, create_time, create_by, update_time, update_by, del_flag from sys_wx_fan_statistics
+    </sql>
+
+    <sql id="selectSysWxFanStatisticsVoExtended">
+         select
+         swfs.id, swfs.wx_id, swfs.fan_time, swfs.fan_num, swfs.create_time, swfs.create_by, swfs.update_time, swfs.update_by, swfs.del_flag,
+         su.nick_name as user_name,acc.dict_label as account,asg.dict_label as sale_group,swsa.wx_nick_name,swsa.wx_account,swd.sale_group_id
+         from sys_wx_fan_statistics swfs
+         left join sys_wx_sale_account swsa on swsa.id = swfs.wx_id and swsa.del_flag = 0
+         left join sys_wx_distribution swd on swd.wechat_account = swfs.wx_id and swd.del_flag = 0
+         left join sys_user su on su.user_id = swd.user_id and su.del_flag = 0
+         LEFT JOIN (SELECT dict_label, dict_value FROM sys_dict_data WHERE dict_type = 'fan_channel') AS acc ON acc.dict_value = swd.account_id
+         LEFT JOIN (SELECT dict_label, dict_value FROM sys_dict_data WHERE dict_type = 'sale_group') AS asg ON asg.dict_value = swd.sale_group_id
+    </sql>
+
+    <select id="selectSysWxFanStatisticsList" parameterType="SysWxFanStatistics" resultMap="SysWxFanStatisticsResult">
+        <include refid="selectSysWxFanStatisticsVoExtended"/> where swfs.del_flag = 0
+        <if test="fanTime != null ">and swfs.fan_time = #{fanTime}</if>
+        <if test="userId != null">and su.user_id = #{userId}</if>
+        <if test="sortFlag == null or sortFlag == 0">
+            order by swfs.id desc
+        </if>
+        <if test="sortFlag != null and sortFlag == 1">
+           order by swd.sale_group_id asc,swd.user_id asc
+        </if>
+
+    </select>
+
+    <!-- 查询总进粉数量 -->
+    <select id="selectFanNumCount" parameterType="SysWxFanStatistics" resultType="int">
+        select ifnull(sum(swfs.fan_num),0) from sys_wx_fan_statistics swfs
+        left join sys_wx_distribution swd on swd.wechat_account = swfs.wx_id and swd.del_flag = 0
+        left join sys_user su on su.user_id = swd.user_id and su.del_flag = 0
+        where swfs.del_flag = 0
+        <if test="fanTime != null ">and swfs.fan_time = #{fanTime}</if>
+        <if test="userId != null">and su.user_id = #{userId}</if>
+    </select>
+
+
+
+    <select id="selectSysWxFanStatisticsById" parameterType="Long" resultMap="SysWxFanStatisticsResult">
+        <include refid="selectSysWxFanStatisticsVo"/>
+        where id = #{id} and del_flag = 0
+    </select>
+
+    <insert id="insertSysWxFanStatistics" parameterType="SysWxFanStatistics" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_wx_fan_statistics
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="wxId != null">wx_id,</if>
+            <if test="fanTime != null">fan_time,</if>
+            <if test="fanNum != null">fan_num,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="delFlag != null">del_flag,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="wxId != null">#{wxId},</if>
+            <if test="fanTime != null">#{fanTime},</if>
+            <if test="fanNum != null">#{fanNum},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+        </trim>
+    </insert>
+
+    <update id="updateSysWxFanStatistics" parameterType="SysWxFanStatistics">
+        update sys_wx_fan_statistics
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="wxId != null">wx_id = #{wxId},</if>
+            <if test="fanTime != null">fan_time = #{fanTime},</if>
+            <if test="fanNum != null">fan_num = #{fanNum},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="deleteSysWxFanStatisticsById" parameterType="Long">
+        update sys_wx_fan_statistics set del_flag = 1 where id = #{id}
+    </update>
+
+    <update id="deleteSysWxFanStatisticsByIds" parameterType="String">
+        update sys_wx_fan_statistics set del_flag = 1 where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <select id="getWxFanStatisticsByUserIdAndFanTime" parameterType="SysWxFanStatistics" resultMap="SysWxFanStatisticsResult">
+       select swfs.id, swfs.wx_id, swfs.fan_time, swfs.fan_num, swfs.create_time, swfs.create_by, swfs.update_time, swfs.update_by, swfs.del_flag
+       from sys_wx_fan_statistics swfs
+        left join sys_wx_distribution swd on swd.wechat_account = swfs.wx_id and swd.del_flag = 0
+        where swfs.del_flag = 0
+        <if test="userId != null">and swd.user_id = #{userId}  </if>
+        <if test="fanTime != null"> and swfs.fan_time = #{fanTime}</if>
+        <if test="wxId != null">and swfs.wx_id = #{wxId}</if>
+    </select>
+
+</mapper>
