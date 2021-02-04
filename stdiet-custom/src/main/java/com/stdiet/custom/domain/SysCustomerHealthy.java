@@ -4,6 +4,7 @@ import lombok.Data;
 import com.stdiet.common.annotation.Excel;
 import com.stdiet.common.core.domain.BaseEntity;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -57,7 +58,7 @@ public class SysCustomerHealthy extends BaseEntity
 
     /** 体重 */
     @Excel(name = "体重")
-    private Long weight;
+    private BigDecimal weight;
 
     /** 调味品种类，使用 , 隔开 */
     @Excel(name = "调味品种类，使用 , 隔开")
@@ -428,6 +429,9 @@ public class SysCustomerHealthy extends BaseEntity
     /** 气血数据 */
     @Excel(name = "气血数据")
     private String bloodData;
+
+    //备注
+    private String remark;
 
     /** 湿气数据 */
     @Excel(name = "湿气数据")

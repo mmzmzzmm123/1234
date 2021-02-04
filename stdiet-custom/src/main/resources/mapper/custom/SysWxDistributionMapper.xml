@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.stdiet.custom.mapper.SysWxDistributionMapper">
+
+    <resultMap type="SysWxDistribution" id="SysWxDistributionResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="saleGroupId"    column="sale_group_id"    />
+        <result property="accountId"    column="account_id"    />
+        <result property="wechatAccount"    column="wechat_account"    />
+        <result property="wechatAccountType"    column="wechat_account_type"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="delFlag"    column="del_flag"    />
+        <!-- 非持久化字段 -->
+        <result property="userName" column="user_name"></result>
+        <result property="account" column="account"></result>
+        <result property="wxNickName" column="wx_nick_name"></result>
+        <result property="wxAccount" column="wx_account"></result>
+        <result property="saleGroup" column="sale_group"></result>
+    </resultMap>
+
+    <sql id="selectSysWxDistributionVo">
+        select id, user_id, sale_group_id, account_id, wechat_account, wechat_account_type, create_time, create_by, update_time, update_by, del_flag from sys_wx_distribution
+    </sql>
+
+    <sql id="selectSysWxDistributionVoExtended">
+      SELECT swd.id, swd.user_id, swd.sale_group_id, swd.account_id, swd.wechat_account,swd.create_time,
+      su.nick_name as user_name,acc.dict_label as account,asg.dict_label as sale_group,
+      swsa.wx_nick_name,swsa.wx_account
+      FROM sys_wx_distribution AS swd
+      lEFT JOIN sys_wx_sale_account swsa ON swsa.id = swd.wechat_account and swsa.del_flag = 0
+      LEFT JOIN sys_user su ON su.user_id = swd.user_id AND su.del_flag = 0
+      LEFT JOIN (SELECT dict_label, dict_value FROM sys_dict_data WHERE dict_type = 'fan_channel') AS acc ON acc.dict_value = swd.account_id
+      LEFT JOIN (SELECT dict_label, dict_value FROM sys_dict_data WHERE dict_type = 'sale_group') AS asg ON asg.dict_value = swd.sale_group_id
+      where swd.del_flag = 0
+    </sql>
+
+    <select id="selectSysWxDistributionList" parameterType="SysWxDistribution" resultMap="SysWxDistributionResult">
+        <include refid="selectSysWxDistributionVoExtended"/>
+        <if test="userId != null"> and swd.user_id = #{userId}</if>
+        <if test="saleGroupId != null"> and swd.sale_group_id = #{saleGroupId}</if>
+        <if test="accountId != null"> and swd.account_id = #{accountId}</if>
+        ORDER BY swd.id DESC
+    </select>
+
+    <select id="selectSysWxDistributionById" parameterType="Long" resultMap="SysWxDistributionResult">
+        <include refid="selectSysWxDistributionVo"/>
+        where id = #{id} and del_flag = 0
+    </select>
+
+    <insert id="insertSysWxDistribution" parameterType="SysWxDistribution" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_wx_distribution
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="saleGroupId != null">sale_group_id,</if>
+            <if test="accountId != null">account_id,</if>
+            <if test="wechatAccount != null">wechat_account,</if>
+            <if test="wechatAccountType != null">wechat_account_type,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="delFlag != null">del_flag,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="saleGroupId != null">#{saleGroupId},</if>
+            <if test="accountId != null">#{accountId},</if>
+            <if test="wechatAccount != null">#{wechatAccount},</if>
+            <if test="wechatAccountType != null">#{wechatAccountType},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+        </trim>
+    </insert>
+
+    <update id="updateSysWxDistribution" parameterType="SysWxDistribution">
+        update sys_wx_distribution
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="saleGroupId != null">sale_group_id = #{saleGroupId},</if>
+            <if test="accountId != null">account_id = #{accountId},</if>
+            <if test="wechatAccount != null">wechat_account = #{wechatAccount},</if>
+            <if test="wechatAccountType != null">wechat_account_type = #{wechatAccountType},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="deleteSysWxDistributionById" parameterType="Long">
+        update sys_wx_distribution set del_flag = 1 where id = #{id}
+    </update>
+
+    <update id="deleteSysWxDistributionByIds" parameterType="String">
+        update sys_wx_distribution set del_flag = 1 where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <!-- 根据微信号ID查询分配记录 -->
+    <select id="selectWxDistributionByWxId" parameterType="Long" resultMap="SysWxDistributionResult">
+        <include refid="selectSysWxDistributionVo"/>
+        where wechat_account = #{wxId} and del_flag = 0 limit 1
+    </select>
+
+    <!-- 根据用户ID查询被分配的微信号 -->
+    <select id="selectDistributionWxByUserId" parameterType="Long" resultMap="SysWxDistributionResult">
+        SELECT swd.id, swd.user_id, swd.sale_group_id, swd.account_id, swd.wechat_account,swd.create_time,
+        swsa.wx_nick_name,swsa.wx_account
+        FROM sys_wx_distribution AS swd
+        lEFT JOIN sys_wx_sale_account swsa ON swsa.id = swd.wechat_account and swsa.del_flag = 0
+        where swd.del_flag = 0 and swd.user_id = #{userId} order by swd.id asc
+    </select>
+</mapper>

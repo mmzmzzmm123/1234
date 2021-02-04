@@ -46,10 +46,10 @@
       </el-checkbox-group>
     </el-form-item>
     <p class="p_title_2">4、生食果蔬状况</p>
-    <el-form-item :label="'(1) 平均每周吃生/拌菜几次'" prop="vegetablesNum" class="margin-left">
+    <el-form-item :label="'(1) 平均每周吃生蔬菜几次'" prop="vegetablesNum" class="margin-left">
       <el-input-number v-model="form.vegetablesNum" :step="1" :min="0"></el-input-number>
     </el-form-item>
-    <el-form-item :label="'(2) 每周吃生/拌菜的频次'" prop="vegetablesRateType" class="margin-left">
+    <el-form-item :label="'(2) 每周吃生蔬菜的频次'" prop="vegetablesRateType" class="margin-left">
       <el-radio-group v-model="form.vegetablesRateType">
         <el-radio v-for="(item,index) in healthyData['vegetablesRateTypeArray']" :label="item.value" :key="index">{{item.name}}</el-radio>
       </el-radio-group>
