@@ -103,8 +103,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/custom/wxUserLog/wx/**",
                         "/wx/**",
                         "/investigate/**",
-                        "/common/customerUploadFile",
-                        "/custom/WxAccount/upload"
+                        "/common/customerUploadFile"
                         ).anonymous()
                 .antMatchers(
                         HttpMethod.GET,

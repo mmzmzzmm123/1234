@@ -28,6 +28,7 @@
         <result property="rec"    column="rec"    />
         <result property="notRec"    column="not_rec"    />
         <result property="cusWeight"    column="cus_weight"    />
+        <result property="cusWei"    column="cus_wei"    />
         <result property="cusUnit"    column="cus_unit"    />
         <result property="weight"    column="weight"    />
     </resultMap>
@@ -48,7 +49,7 @@
 
     <sql id="selectSysIngreditentsByIdVo">
         SELECT * FROM(
-            SELECT ingredient_id AS id, ingredient_weight AS weight, cus_weight, cus_unit, remark
+            SELECT ingredient_id AS id, ingredient_weight AS weight, cus_weight, cus_wei, cus_unit, remark
             FROM sys_dishes_ingredient
             WHERE dishes_id = #{id}
         ) dishes
@@ -148,9 +149,9 @@
     </delete>
 
     <insert id="bashInsertDishesIngredent">
-        insert into sys_dishes_ingredient(dishes_id, ingredient_id, ingredient_weight, cus_unit, cus_weight, remark) values
+        insert into sys_dishes_ingredient(dishes_id, ingredient_id, ingredient_weight, cus_unit, cus_wei, remark) values
         <foreach collection="list" separator="," item="item" index="index">
-            (#{item.dishesId}, #{item.ingredientId}, #{item.weight}, #{item.cusUnit}, #{item.cusWeight}, #{item.remark})
+            (#{item.dishesId}, #{item.ingredientId}, #{item.weight}, #{item.cusUnit}, #{item.cusWei}, #{item.remark})
         </foreach>
     </insert>
 
