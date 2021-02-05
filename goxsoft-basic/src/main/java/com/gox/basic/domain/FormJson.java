@@ -34,9 +34,9 @@ public class FormJson extends BaseEntity
     @Excel(name = "表单json")
     private String formData;
     @Excel(name = "所属节点")
-    private String node;
-    @Excel(name = "父表单")
-    private String parentName;
+    private Long nodeId;
+    @Excel(name = "部门id")
+    private Long deptId;
     /** 删除标志 */
     private String delFlag;
     private transient FormDesignerData formDesignerData;
@@ -49,20 +49,22 @@ public class FormJson extends BaseEntity
         this.formDesignerData = formDesignerData;
     }
 
-    public String getParentName() {
-        return parentName;
+
+
+    public Long getNodeId() {
+        return nodeId;
     }
 
-    public void setParentName(String parentName) {
-        this.parentName = parentName;
+    public void setNodeId(Long nodeId) {
+        this.nodeId = nodeId;
     }
 
-    public String getNode() {
-        return node;
+    public Long getDeptId() {
+        return deptId;
     }
 
-    public void setNode(String node) {
-        this.node = node;
+    public void setDeptId(Long deptId) {
+        this.deptId = deptId;
     }
 
     public void setId(Long id)

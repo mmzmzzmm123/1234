@@ -161,8 +161,8 @@ export default {
         pageSize: 10,
         formName: null,
         formData: null,
-        parentName:null,
-        node:null,
+        nodeId:null,
+        deptId:null,
       },
       // 表单参数
       form: {},
@@ -196,13 +196,13 @@ export default {
     };
   },
   created() {
-    this.getList();
+
   },
   methods: {
     selectedDept(data){
       this.deptId=data
-      this.queryParams.node=data
-      console.log(data)
+      this.queryParams.deptId=data
+      this.getList();
     },
     /** 选择一个节点 */
     handTableField(){
@@ -214,6 +214,8 @@ export default {
     /** 查询单json存储列表 */
     getList() {
       this.loading = true;
+      this.nodeId=this.$route.params.id
+      this.queryParams.nodeId=this.$route.params.id
       listJson(this.queryParams).then(response => {
         this.jsonList = response.rows;
         this.total = response.total;
