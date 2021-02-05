@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.benyi.mapper.ByDayflowassessmentMapper">
+
+    <resultMap type="ByDayflowassessment" id="ByDayflowassessmentResult">
+        <result property="id" column="id"/>
+        <result property="planid" column="planid"/>
+        <result property="deptId" column="dept_id"/>
+        <result property="classid" column="classid"/>
+        <result property="bzbh" column="bzbh"/>
+        <result property="bzxm" column="bzxm"/>
+        <result property="pbbh" column="pbbh"/>
+        <result property="pbxm" column="pbxm"/>
+        <result property="zlbh" column="zlbh"/>
+        <result property="zlxm" column="zlxm"/>
+        <result property="xnxq" column="xnxq"/>
+        <result property="bzid" column="bzid"/>
+        <result property="kfz" column="kfz"/>
+        <result property="kfcs" column="kfcs"/>
+        <result property="pgdx" column="pgdx"/>
+        <result property="createUserid" column="create_userid"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <sql id="selectByDayflowassessmentVo">
+        select id, planid, dept_id, classid, bzbh, bzxm, pbbh, pbxm, zlbh, zlxm, xnxq, bzid, kfz, kfcs, pgdx, create_userid, create_time from by_dayflowassessment
+    </sql>
+
+    <select id="selectByDayflowassessmentList" parameterType="ByDayflowassessment"
+            resultMap="ByDayflowassessmentResult">
+        <include refid="selectByDayflowassessmentVo"/>
+        <where>
+            <if test="planid != null ">and planid = #{planid}</if>
+            <if test="deptId != null ">and dept_id = #{deptId}</if>
+            <if test="classid != null  and classid != ''">and classid = #{classid}</if>
+            <if test="bzbh != null ">and bzbh = #{bzbh}</if>
+            <if test="bzxm != null  and bzxm != ''">and bzxm = #{bzxm}</if>
+            <if test="pbbh != null ">and pbbh = #{pbbh}</if>
+            <if test="pbxm != null  and pbxm != ''">and pbxm = #{pbxm}</if>
+            <if test="zlbh != null ">and zlbh = #{zlbh}</if>
+            <if test="zlxm != null  and zlxm != ''">and zlxm = #{zlxm}</if>
+            <if test="xnxq != null  and xnxq != ''">and xnxq = #{xnxq}</if>
+            <if test="bzid != null ">and bzid = #{bzid}</if>
+            <if test="kfz != null ">and kfz = #{kfz}</if>
+            <if test="kfcs != null ">and kfcs = #{kfcs}</if>
+            <if test="pgdx != null ">and pgdx = #{pgdx}</if>
+            <if test="createUserid != null ">and create_userid = #{createUserid}</if>
+        </where>
+    </select>
+
+    <select id="selectByDayflowassessmentById" parameterType="Long" resultMap="ByDayflowassessmentResult">
+        <include refid="selectByDayflowassessmentVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertByDayflowassessment" parameterType="ByDayflowassessment" useGeneratedKeys="true" keyProperty="id">
+        insert into by_dayflowassessment
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="planid != null ">planid,</if>
+            <if test="deptId != null ">dept_id,</if>
+            <if test="classid != null  and classid != ''">classid,</if>
+            <if test="bzbh != null ">bzbh,</if>
+            <if test="bzxm != null  and bzxm != ''">bzxm,</if>
+            <if test="pbbh != null ">pbbh,</if>
+            <if test="pbxm != null  and pbxm != ''">pbxm,</if>
+            <if test="zlbh != null ">zlbh,</if>
+            <if test="zlxm != null  and zlxm != ''">zlxm,</if>
+            <if test="xnxq != null  and xnxq != ''">xnxq,</if>
+            <if test="bzid != null ">bzid,</if>
+            <if test="kfz != null ">kfz,</if>
+            <if test="kfcs != null ">kfcs,</if>
+            <if test="pgdx != null ">pgdx,</if>
+            <if test="createUserid != null ">create_userid,</if>
+            <if test="createTime != null ">create_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="planid != null ">#{planid},</if>
+            <if test="deptId != null ">#{deptId},</if>
+            <if test="classid != null  and classid != ''">#{classid},</if>
+            <if test="bzbh != null ">#{bzbh},</if>
+            <if test="bzxm != null  and bzxm != ''">#{bzxm},</if>
+            <if test="pbbh != null ">#{pbbh},</if>
+            <if test="pbxm != null  and pbxm != ''">#{pbxm},</if>
+            <if test="zlbh != null ">#{zlbh},</if>
+            <if test="zlxm != null  and zlxm != ''">#{zlxm},</if>
+            <if test="xnxq != null  and xnxq != ''">#{xnxq},</if>
+            <if test="bzid != null ">#{bzid},</if>
+            <if test="kfz != null ">#{kfz},</if>
+            <if test="kfcs != null ">#{kfcs},</if>
+            <if test="pgdx != null ">#{pgdx},</if>
+            <if test="createUserid != null ">#{createUserid},</if>
+            <if test="createTime != null ">#{createTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateByDayflowassessment" parameterType="ByDayflowassessment">
+        update by_dayflowassessment
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="planid != null ">planid = #{planid},</if>
+            <if test="deptId != null ">dept_id = #{deptId},</if>
+            <if test="classid != null  and classid != ''">classid = #{classid},</if>
+            <if test="bzbh != null ">bzbh = #{bzbh},</if>
+            <if test="bzxm != null  and bzxm != ''">bzxm = #{bzxm},</if>
+            <if test="pbbh != null ">pbbh = #{pbbh},</if>
+            <if test="pbxm != null  and pbxm != ''">pbxm = #{pbxm},</if>
+            <if test="zlbh != null ">zlbh = #{zlbh},</if>
+            <if test="zlxm != null  and zlxm != ''">zlxm = #{zlxm},</if>
+            <if test="xnxq != null  and xnxq != ''">xnxq = #{xnxq},</if>
+            <if test="bzid != null ">bzid = #{bzid},</if>
+            <if test="kfz != null ">kfz = #{kfz},</if>
+            <if test="kfcs != null ">kfcs = #{kfcs},</if>
+            <if test="pgdx != null ">pgdx = #{pgdx},</if>
+            <if test="createUserid != null ">create_userid = #{createUserid},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteByDayflowassessmentById" parameterType="Long">
+        delete from by_dayflowassessment where id = #{id}
+    </delete>
+
+    <delete id="deleteByDayflowassessmentByIds" parameterType="String">
+        delete from by_dayflowassessment where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
