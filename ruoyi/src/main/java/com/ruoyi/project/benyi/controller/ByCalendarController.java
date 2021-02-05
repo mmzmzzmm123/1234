@@ -67,6 +67,10 @@ public class ByCalendarController extends BaseController {
     private IByClassService byClassService;
     @Autowired
     private IByChildCheckinDetailService byChildCheckinDetailService;
+    @Autowired
+    private IByDayflowassessmentplanService byDayflowassessmentplanService;
+    @Autowired
+    private IByDayFlowDetailService byDayFlowDetailService;
 
     /**
      * 查询园历管理(本一)列表
@@ -188,7 +192,10 @@ public class ByCalendarController extends BaseController {
         }
 
         //幼儿出勤人数
-        listvi.addAll(getbychildcheckdata(classId,formatter));
+        listvi.addAll(getbychildcheckdata(classId, formatter));
+
+        //幼儿一日流程评估计划
+        listvi.addAll(getdayflowdata(classId,formatter));
 
         AjaxResult ajax = AjaxResult.success();
         ajax.put("calendarData", listvi);
@@ -418,11 +425,37 @@ public class ByCalendarController extends BaseController {
                 by = new ByCalendarShow();
                 ByChildCheckinDetail byNewChildCheckinDetail = list.get(i);
 
-                by.setTitle("幼儿出勤人数："+byNewChildCheckinDetail.getCount());
+                by.setTitle("幼儿出勤人数：" + byNewChildCheckinDetail.getCount());
                 String timefor = formatter.format(byNewChildCheckinDetail.getCreateTime());
                 by.setStart(timefor);
                 by.setEnd(timefor);
                 by.setColor("#85a5ff");
+                listvi.add(by);
+            }
+        }
+        return listvi;
+    }
+
+    //获取学校或班级一日流程评估
+    private List<ByCalendarShow> getdayflowdata(String classId, SimpleDateFormat formatter) {
+        List<ByCalendarShow> listvi = new ArrayList<>();
+
+        Long deptId = SecurityUtils.getLoginUser().getUser().getDept().getDeptId();
+        ByDayflowassessmentplan byDayflowassessmentplan = new ByDayflowassessmentplan();
+        byDayflowassessmentplan.setDeptId(deptId);
+        byDayflowassessmentplan.setClassid(classId);
+        List<ByDayflowassessmentplan> list = byDayflowassessmentplanService.selectByDayflowassessmentplanList(byDayflowassessmentplan);
+        if (list != null && list.size() > 0) {
+            ByCalendarShow by = null;
+            for (int i = 0; i < list.size(); i++) {
+                by = new ByCalendarShow();
+                ByDayflowassessmentplan byNewDayflowassessmentplan = list.get(i);
+                SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");//设置日期格式
+                by.setTitle(sdf.format(byNewDayflowassessmentplan.getStarttime()) +"评估"+ byClassService.selectByClassById(byNewDayflowassessmentplan.getClassid()).getBjmc() + byDayFlowDetailService.selectByDayFlowDetailById(Long.valueOf(byNewDayflowassessmentplan.getConnent())).getName());
+                String timefor = formatter.format(byNewDayflowassessmentplan.getStarttime());
+                by.setStart(timefor);
+                by.setEnd(timefor);
+                by.setColor("#1890ff");
                 listvi.add(by);
             }
         }
