@@ -25,7 +25,7 @@
         <include refid="selectByDayflowassessmentplanVo"/>
         <where>
             <if test="deptId != null ">and dept_id = #{deptId}</if>
-            <if test="month != null ">and month = #{month}</if>
+            <if test="month != null ">and date_format(starttime,'%Y-%m') = date_format(#{month},'%Y-%m')</if>
             <if test="xnxq != null  and xnxq != ''">and xnxq = #{xnxq}</if>
             <if test="classid != null  and classid != ''">and classid = #{classid}</if>
             <if test="connent != null  and connent != ''">and connent = #{connent}</if>

@@ -110,18 +110,20 @@
           <span>{{ parseTime(scope.row.month, "{y}-{m}-{d}") }}</span>
         </template>
       </el-table-column> -->
-      <el-table-column label="评估学年学期" align="center" prop="xnxq" />
-      <el-table-column label="评估班级" align="center" prop="classid" />
-      <el-table-column label="评估内容" align="center" prop="connent" />
       <el-table-column
-        label="评估时间"
+        label="评估学年学期"
         align="center"
-        prop="starttime"
-      >
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.starttime, "{y}-{m}-{d}") }}</span>
-        </template>
-      </el-table-column>
+        prop="xnxq"
+        :formatter="xnxqFormat"
+      />
+      <el-table-column
+        label="评估班级"
+        align="center"
+        prop="classid"
+        :formatter="classFormat"
+      />
+      <el-table-column label="评估内容" align="center" prop="connent" :formatter="dayFlowFormat"/>
+      <el-table-column label="评估时间" align="center" prop="starttime" />
       <!-- <el-table-column label="创建人" align="center" prop="createUserid" /> -->
       <el-table-column
         label="操作"
@@ -193,7 +195,14 @@
           </el-select>
         </el-form-item>
         <el-form-item label="评估内容" prop="connent">
-          <el-input v-model="form.connent" placeholder="请输入评估内容" />
+          <el-select v-model="form.connent" placeholder="请选择评估内容">
+            <el-option
+              v-for="dict in detailOptions"
+              :key="dict.id"
+              :label="dict.name"
+              :value="dict.id"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="评估时间" prop="starttime">
           <el-date-picker
@@ -201,8 +210,8 @@
             size="small"
             class="my-date-picker"
             v-model="form.starttime"
-            type="date"
-            value-format="yyyy-MM-dd"
+            type="datetime"
+            value-format="yyyy-MM-dd HH:mm:ss"
             placeholder="选择评估时间"
           >
           </el-date-picker>
@@ -225,6 +234,7 @@ import {
   updateDayflowassessmentplan,
 } from "@/api/benyi/dayflowassessmentplan";
 import { listClass } from "@/api/system/class";
+import { listDetail, getDetail } from "@/api/benyi/dayflow/dayflowmanger";
 
 export default {
   name: "Dayflowassessmentplan",
@@ -250,6 +260,8 @@ export default {
       xnxqOptions: [],
       // 班级
       classOptions: [],
+      // 一日流程表格数据
+      detailOptions: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -266,21 +278,47 @@ export default {
       form: {},
       // 表单校验
       rules: {
-          xnxq: [{ required: true, message: "学年学期不能为空", trigger: "blur" }],
-          classid: [{ required: true, message: "班级不能为空", trigger: "blur" }],
-          connent: [{ required: true, message: "评估内容不能为空", trigger: "blur" }],
-          starttime: [{ required: true, message: "评估时间不能为空", trigger: "blur" }],
+        xnxq: [
+          { required: true, message: "学年学期不能为空", trigger: "blur" },
+        ],
+        classid: [{ required: true, message: "班级不能为空", trigger: "blur" }],
+        connent: [
+          { required: true, message: "评估内容不能为空", trigger: "blur" },
+        ],
+        starttime: [
+          { required: true, message: "评估时间不能为空", trigger: "blur" },
+        ],
       },
     };
   },
   created() {
     this.getList();
     this.getClassList();
+    this.getDayFlowList();
     this.getDicts("sys_xnxq").then((response) => {
       this.xnxqOptions = response.data;
     });
   },
   methods: {
+    // 字典翻译
+    dayFlowFormat(row, column) {
+      // return this.selectDictLabel(this.classOptions, row.classid);
+      var actions = [];
+      var datas = this.detailOptions;
+      Object.keys(datas).map((key) => {
+        if (datas[key].id + "" == "" + row.connent) {
+          actions.push(datas[key].name);
+          return false;
+        }
+      });
+      return actions.join("");
+    },
+    /** 查询一日流程列表 */
+    getDayFlowList() {
+      listDetail(null).then((response) => {
+        this.detailOptions = response.rows;
+      });
+    },
     // 字典翻译
     classFormat(row, column) {
       // return this.selectDictLabel(this.classOptions, row.classid);
@@ -362,6 +400,7 @@ export default {
       const id = row.id || this.ids;
       getDayflowassessmentplan(id).then((response) => {
         this.form = response.data;
+        this.form.connent = parseInt(response.data.connent);
         this.open = true;
         this.title = "修改幼儿园一日流程评估计划";
       });

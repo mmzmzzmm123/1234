@@ -56,8 +56,8 @@ public class ByDayflowassessmentplan extends BaseEntity {
     /**
      * 评估时间
      */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "评估时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "评估时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date starttime;
 
     /**
