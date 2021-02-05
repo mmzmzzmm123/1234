@@ -154,7 +154,7 @@ export const constantRoutes = [
     children: [
       {
         path: 'menu/:id',
-        component:(resolve) =>require(['@/views/system/json/index'],resolve),
+        component:(resolve) =>require(['@/views/system/menu/index'],resolve),
         name: 'templates',
         meta: {title: '模板管理'}
       }

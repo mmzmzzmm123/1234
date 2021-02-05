@@ -1,6 +1,8 @@
 package com.gox.web.controller.system;
 
 import java.util.List;
+
+import com.gox.common.core.page.TableDataInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -54,6 +56,15 @@ public class SysMenuController extends BaseController
         return AjaxResult.success(menus);
     }
 
+    @GetMapping("/data-node")
+    public AjaxResult listDataNode(){
+        SysMenu menu = new SysMenu();
+        menu.setParentId(2063L);
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+        Long userId = loginUser.getUser().getUserId();
+        List<SysMenu> menus = menuService.selectMenuList(menu, userId);
+        return AjaxResult.success(menus);
+    }
     /**
      * 根据菜单编号获取详细信息
      */
