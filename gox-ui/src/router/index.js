@@ -147,6 +147,19 @@ export const constantRoutes = [
       }
     ]
   },
+  {
+    path: '/system',
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: 'menu/:id',
+        component:(resolve) =>require(['@/views/system/json/index'],resolve),
+        name: 'templates',
+        meta: {title: '模板管理'}
+      }
+    ]
+  },
   // {
   //   path: '/tool',
   //   component: Layout,

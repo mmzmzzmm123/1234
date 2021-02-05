@@ -1,6 +1,7 @@
 package com.gox.basic.service.impl;
 
 import com.gox.basic.domain.form.*;
+import com.gox.basic.domain.vo.TableFieldVo;
 import com.gox.basic.service.*;
 import com.gox.common.utils.uuid.SnowflakesTools;
 import com.gox.basic.mapper.FieldsItemMapper;
@@ -44,6 +45,12 @@ public class FieldsItemServiceImpl implements IFieldsItemService
     public FieldsItem selectFieldsItemById(Long id)
     {
         return fieldsItemMapper.selectFieldsItemById(id);
+    }
+
+    @Override
+    public List<TableFieldVo> selectTableFieldByNodeIdAndDeptId(Long nodeId, Long deptId) {
+
+        return fieldsItemMapper.selectTableFields(nodeId,deptId);
     }
 
     /**

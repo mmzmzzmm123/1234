@@ -126,6 +126,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectFieldsItemVo"/>
         where form_id=#{formId}
     </select>
+    <select id="selectTableFields" resultType="com.gox.basic.domain.vo.TableFieldVo">
+            SELECT id, is_table_field,table_field_sort from fields_item where form_id in (select id from form_json where node_id=#{nodeId} and dept_id=#{deptId})
+    </select>
 
     <insert id="insertFieldsItem" parameterType="FieldsItem">
         insert into fields_item

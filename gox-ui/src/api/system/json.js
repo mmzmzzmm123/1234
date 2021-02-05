@@ -15,7 +15,13 @@ export function getId(){
     method:'post'
   })
 }
-
+//查询表单字段
+export function getTableField(nodeId,deptId){
+  return request({
+    url: '/system/json/table-field/'+nodeId+'/'+deptId,
+    method:'get',
+  })
+}
 // 查询表单json存储详细
 export function getJson(id) {
   return request({
@@ -37,6 +43,14 @@ export function addJson(data) {
 export function updateJson(data) {
   return request({
     url: '/system/json',
+    method: 'put',
+    data: data
+  })
+}
+// 修改单json存储
+export function updateTableField(data) {
+  return request({
+    url: '/system/json/table-field',
     method: 'put',
     data: data
   })

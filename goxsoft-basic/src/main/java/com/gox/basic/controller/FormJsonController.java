@@ -2,6 +2,8 @@ package com.gox.basic.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.gox.basic.domain.vo.TableFieldVo;
+import com.gox.basic.service.IFieldsItemService;
 import com.gox.common.annotation.Log;
 import com.gox.common.core.controller.BaseController;
 import com.gox.common.core.domain.AjaxResult;
@@ -19,6 +21,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 
 /**
@@ -35,6 +39,8 @@ public class FormJsonController extends BaseController
     private IFormJsonService formJsonService;
     @Autowired
     private IFormDesignerDataService formDesignerDataService;
+    @Autowired
+    private IFieldsItemService fieldsItemService;
     /**
      * id获取
      */
@@ -53,7 +59,15 @@ public class FormJsonController extends BaseController
         List<FormJson> list = formJsonService.selectFormJsonList(formJson);
         return getDataTable(list);
     }
-
+    @PreAuthorize("@ss.hasPermi('basic:json:list')")
+    @GetMapping("/table-field/{nodeId}/{deptId}")
+    public AjaxResult getTableFields(@PathVariable Long nodeId,@PathVariable Long deptId){
+        return AjaxResult.success(fieldsItemService.selectTableFieldByNodeIdAndDeptId(nodeId,deptId));
+    }
+    @PutMapping("/table-field")
+    public AjaxResult updateTableFields(List<TableFieldVo> fieldVos){
+        return AjaxResult.success();
+    }
     /**
      * 导出表单json列表
      */

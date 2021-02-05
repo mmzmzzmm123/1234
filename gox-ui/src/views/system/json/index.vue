@@ -106,7 +106,7 @@
     </el-row>
 
     <!-- 添加或修改单json存储对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="640px" append-to-body>
       <div>
         <el-transfer
           filterable
@@ -135,6 +135,8 @@ export default {
   },
   data() {
     return {
+      value:null,
+      data:null,
       //deptId
       deptId:0,
       // 遮罩层
@@ -206,7 +208,8 @@ export default {
     },
     /** 选择一个节点 */
     handTableField(){
-
+      this.title='修改表格头'
+      this.open=true
     },
     filterMethod(query, item) {
       return item.name.indexOf(query) > -1;
@@ -260,9 +263,9 @@ export default {
     },
     /** 新增按钮操作 */
     handleAdd() {
-      this.reset();
-      this.open = true;
-      this.title = "添加表单json";
+      // this.reset();
+      // this.open = true;
+      // this.title = "添加表单json";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {

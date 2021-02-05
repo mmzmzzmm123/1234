@@ -1,6 +1,7 @@
 package com.gox.basic.service;
 
 import com.gox.basic.domain.form.FieldsItem;
+import com.gox.basic.domain.vo.TableFieldVo;
 
 import java.util.List;
 
@@ -19,7 +20,7 @@ public interface IFieldsItemService
      * @return 【请填写功能名称】
      */
     public FieldsItem selectFieldsItemById(Long id);
-
+    public List<TableFieldVo> selectTableFieldByNodeIdAndDeptId(Long nodeId,Long deptId);
     /**
      * 查询【请填写功能名称】列表
      * 

@@ -1,6 +1,7 @@
 package com.gox.basic.mapper;
 
 import com.gox.basic.domain.form.FieldsItem;
+import com.gox.basic.domain.vo.TableFieldVo;
 
 import java.util.List;
 
@@ -28,6 +29,8 @@ public interface FieldsItemMapper
      */
     public List<FieldsItem> selectFieldsItemList(FieldsItem fieldsItem);
     public List<FieldsItem> selectFieldsItemListByFormId(Long formId);
+
+    public List<TableFieldVo> selectTableFields(Long nodeId,Long deptId);
     /**
      * 新增【请填写功能名称】
      * 

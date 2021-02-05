@@ -27,7 +27,6 @@ const permission = {
         getRouters().then(res => {
           const sdata = JSON.parse(JSON.stringify(res.data))
           const rdata = JSON.parse(JSON.stringify(res.data))
-          console.log(sdata,rdata)
           const sidebarRoutes = filterAsyncRouter(sdata)
           const rewriteRoutes = filterAsyncRouter(rdata, true)
           rewriteRoutes.push({ path: '*', redirect: '/404', hidden: true })
@@ -44,7 +43,7 @@ const permission = {
 function filterAsyncRouter(asyncRouterMap, isRewrite = false) {
   return asyncRouterMap.filter(route => {
     if (route.component) {
-// Layout ParentView 组件特殊处理
+      // Layout ParentView 组件特殊处理
       if (route.component === 'Layout') {
         route.component = Layout
       } else if (route.component === 'ParentView') {
@@ -64,7 +63,7 @@ function filterAsyncRouter(asyncRouterMap, isRewrite = false) {
 }
 
 function filterChildren(childrenMap) {
-  var children = []
+  let children = []
   childrenMap.forEach((el, index) => {
     if (el.children && el.children.length) {
       if (el.component === 'ParentView') {
