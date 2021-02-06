@@ -3,7 +3,8 @@
     <div v-if="showFlag">
     <div style="float:right;margin-top:-10px;margin-bottom: 10px;" v-show="dataList.length > 0">
       <!-- 只有新版健康评估信息才可修改，旧的体征数据不支持修改 -->
-      <el-button v-hasPermi="['custom:healthy:edit']" type="primary" v-show="dataType == 0" @click="handleEditHealthyClick()"  plain>修改信息</el-button>
+      <el-button v-hasPermi="['custom:healthy:edit']" type="info" v-show="dataType == 0" @click="handleEditRemarkClick()"  plain>修改备注</el-button>
+      <el-button v-hasPermi="['custom:healthy:edit']" type="warning" v-show="dataType == 0" @click="handleEditHealthyClick()"  plain>修改信息</el-button>
       <el-button type="danger" v-hasPermi="['custom:healthy:remove']" @click="handleDelete()" plain>删除信息</el-button>
     </div>
     <!-- 客户健康评估 -->
@@ -14,6 +15,15 @@
           <p class="p_title_1" style="margin-top: 5px;">{{titleArray[index]}}</p>
           <table-detail-message :data="item" ></table-detail-message>
         </div>
+        <!-- 备注 -->
+        <el-table :data="remarkList" :show-header="false" border :cell-style="remarkColumnStyle" style="width: 100%;">
+          <el-table-column width="140" prop="remarkTitle">
+          </el-table-column>
+          <el-table-column prop="remarkValue">
+            <template slot-scope="scope">
+              <auto-hide-message :data="scope.row.remarkValue" :maxLength="100"/></template>
+          </el-table-column>
+        </el-table>
       </div>
       <!-- 其他信息 -->
       <div style="height:400px;overflow: auto">
@@ -59,7 +69,8 @@
     </div>
     <!-- 编辑 -->
     <physicalSigns-edit ref="physicalSignsEditDialog" @refreshHealthyData="getCustomerHealthyByCusId()"></physicalSigns-edit>
-
+    <!-- 编辑备注 -->
+    <physicalSigns-remark ref="physicalSignsRemarkDialog" @refreshHealthyData="getCustomerHealthyByCusId()"></physicalSigns-remark>
   </el-dialog>
 </template>
 <script>
@@ -69,13 +80,14 @@ import AutoHideMessage from "@/components/AutoHideMessage";
 import * as healthyData from "@/utils/healthyData";
 import Clipboard from 'clipboard';
 import PhysicalSignsEdit from "@/components/PhysicalSignsEdit";
-
+import PhysicalSignsRemark from "@/components/PhysicalSignsRemark";
 export default {
   name: "PhysicalSignsDialog",
   components: {
     "auto-hide-message": AutoHideMessage,
     "table-detail-message": TableDetailMessage,
-    "physicalSigns-edit":PhysicalSignsEdit
+    "physicalSigns-edit":PhysicalSignsEdit,
+    "physicalSigns-remark":PhysicalSignsRemark
   },
   data() {
     return {
@@ -86,6 +98,7 @@ export default {
       dataList: [],
       dataType: 0,
       healthyData: null,
+      remarkList:[{"remarkTitle": "备注信息", "remarkValue": ""}],
       // 体征标题
       signTitleData: [
         ["创建时间", "姓名", "年龄"],
@@ -204,13 +217,21 @@ export default {
         return "background:#ffffff;";
       }
     },
+    // 自定义备注列背景色
+    remarkColumnStyle({ row, column, rowIndex, columnIndex }) {
+      if (columnIndex % 2 === 0) {
+        //第三第四列的背景色就改变了2和3都是列数的下标
+        return "background:#f3f6fc;font-weight:bold";
+      } else {
+        return "background:#ffffff;";
+      }
+    },
     showDialog(data) {
       this.data = data;
       this.title = `「${data.name}」客户健康评估信息`;
       this.getCustomerHealthyByCusId();
     },
     getCustomerHealthyByCusId(){
-
       getCustomerPhysicalSignsByCusId(this.data.id).then((res) => {
         this.showFlag = false;
         if (res.data.customerHealthy) {
@@ -218,6 +239,7 @@ export default {
           this.dataType = res.data.type;
           if(this.dataType == 0){
              this.healthyData = Object.assign({}, res.data.customerHealthy);
+             this.remarkList[0].remarkValue = this.healthyData.remark;
              this.getDataListByHealthyMessage(res.data.customerHealthy);
           }else{
             this.getDataListBySignMessage(res.data.customerHealthy)
@@ -443,6 +465,9 @@ export default {
     handleEditHealthyClick() {
       //console.log(JSON.stringify(this.healthyData));
       this.$refs["physicalSignsEditDialog"].showDialog(this.data, this.healthyData);
+    },
+    handleEditRemarkClick(){
+      this.$refs["physicalSignsRemarkDialog"].showDialog(this.data, this.healthyData);
     }
   }
 };
