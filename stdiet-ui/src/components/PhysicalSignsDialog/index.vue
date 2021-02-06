@@ -117,7 +117,7 @@ export default {
       // 健康评估标题
       healthyTitleData:[
         [
-          ["创建时间","客户姓名","手机号"],["调理项目","性别","年龄"],["身高(厘米)","体重(斤)","位置"]
+          ["创建时间","客户姓名","手机号"],["调理项目","性别","年龄"],["身高(厘米)","体重(斤)","地域"]
         ],
         [
           ["减脂经历","减脂遇到的困难","减脂是否反弹"],["是否意识到生活习惯是减脂关键","",""]
@@ -164,7 +164,7 @@ export default {
         [
           ["breakfastType","breakfastFood","lunchType"],["dinner","vegetableRate","commonMeat"],
           ["dinnerTime","supperNum","supperFood"],["dietHotAndCold","dietFlavor","vegetablesNum"],
-          ["vegetablesRateType","fruitsNum","fruitsTime"],["fruitsRate","riceNum","riceNum"],
+          ["vegetablesRateType","fruitsNum","fruitsTime"],["fruitsRate","riceNum","riceFull"],
           ["eatingSpeed","makeFoodType","snacks"],
           ["healthProductsFlag","healthProductsBrand","healthProductsName"],
           ["healthProductsWeekRate","dishesIngredient",""]

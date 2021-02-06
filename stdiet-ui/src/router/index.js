@@ -147,7 +147,7 @@ export const constantRoutes = [
       {
         path: "build/:cusId/:id(\\d+)",
         component: resolve =>
-          require(["@/views/custom/recipesPlan/build"], resolve),
+          require(["@/views/custom/recipesBuild"], resolve),
         name: "RecipiesBuild",
         props: true,
         meta: { title: "食谱制作" }
