@@ -756,9 +756,11 @@
             this.bookmarkList = response.rows;
             this.total = response.total;
             this.loading = false;
+            this.listloading = false
           } else {
             this.showbookmark = false;
             this.showimg = true;
+            this.listloading = false
           }
         });
       },
@@ -770,9 +772,11 @@
             this.bookmarkList = response.rows;
             this.total = response.total;
             this.loading = false;
+            this.listloading = false
           } else {
             this.showbookmark = false;
             this.showimg = true;
+            this.listloading = false
           }
         });
       },
@@ -839,6 +843,16 @@
       getListConcat(){
         var that=this;
         this.loading = true;
+        if(this.queryParams.menuId=='BOOKMARK'){
+          //全部书签
+           this.getBookmarkList();
+          return;
+        }else if (routedata == 'RECYCLE') {
+          //回收站
+          this.getrecycleList();
+
+        }else{
+
         selectBymenuIdUserID(this.queryParams).then(response => {
           if (response.code == 200) {
             this.bookmarkList = this.bookmarkList.concat(response.rows);
@@ -853,6 +867,10 @@
             this.loading = false;
           }
         });
+        }
+
+
+
       },
 
       /** 查询便签管理列表 */
