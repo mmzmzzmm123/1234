@@ -36,6 +36,9 @@
         <result property="area" column="area"/>
         <result property="rec" column="rec"/>
         <result property="notRec" column="not_rec"/>
+        <result property="cusWeight"    column="cus_weight"    />
+        <result property="cusUnit"    column="cus_unit"    />
+        <result property="weight"    column="weight"    />
     </resultMap>
 
     <select id="selectSysRecipesByRecipesId" parameterType="Long" resultMap="SysRecipesResult">

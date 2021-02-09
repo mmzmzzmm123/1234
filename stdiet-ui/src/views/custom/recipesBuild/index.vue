@@ -1,7 +1,9 @@
 <template>
   <div class="app-container">
     <div class="content">
-      <div class="left">left</div>
+      <div class="left">
+        <RecipesView :data="recipesData" />
+      </div>
       <div class="right">
         <HealthyView :data="healthyData" v-if="healthyDataType === 0" />
         <BodySignView :data="healthyData" v-else />
@@ -18,6 +20,7 @@ const { mapActions, mapState, mapMutations } = createNamespacedHelpers(
 
 import HealthyView from "./HealthyView";
 import BodySignView from "./BodySignView";
+import RecipesView from "./RecipesView";
 
 export default {
   name: "BuildRecipies",
@@ -26,11 +29,11 @@ export default {
   },
   mounted() {
     //
-    console.log({
-      cusId: this.cusId,
-      recipesId: this.recipesId,
-    });
-    this.init({ cusId: this.cusId }).catch((err) => {
+    // console.log({
+    //   cusId: this.cusId,
+    //   recipesId: this.recipesId,
+    // });
+    this.init({ cusId: this.cusId, recipesId: this.recipesId }).catch((err) => {
       this.$message.error(err.message);
     });
   },
@@ -41,12 +44,14 @@ export default {
   components: {
     HealthyView,
     BodySignView,
+    RecipesView,
   },
   props: ["planId", "cusId", "recipesId"],
   computed: {
     ...mapState({
       healthyData: (state) => state.healthyData,
       healthyDataType: (state) => state.healthyDataType,
+      recipesData: (state) => state.recipesData,
     }),
   },
   methods: {

@@ -413,7 +413,7 @@ export default {
     });
     this.getDicts("cus_account").then((response) => {
       this.accountIdOptions = response.data;
-      console.log(response.data);
+      // console.log(response.data);
       this.accountIdOptions.splice(0, 0, {
         dictLabel: "无",
         dictValue: "0",
@@ -559,7 +559,7 @@ export default {
         accountId,
         ...obj,
       };
-      console.log(this.form);
+      // console.log(this.form);
       this.resetForm("form");
     },
     handleOnClosed() {
@@ -600,7 +600,7 @@ export default {
   watch: {
     // 监听收款账号的变化
     "form.accountId": function (newVal, oldVal) {
-      console.log("updte");
+      // console.log("updte");
       this.initPlanningAndOperation();
     },
   },

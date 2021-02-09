@@ -21,8 +21,6 @@ public class SysDishesIngredient extends SysIngredient {
 
     private Long cusUnit;
 
-//    private BigDecimal cusWeight;
-
     private Integer cusWeight;
 
     private BigDecimal weight;

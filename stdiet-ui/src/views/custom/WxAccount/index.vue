@@ -463,7 +463,7 @@ export default {
     handleFileSuccess(response, file, fileList) {
       if (response != null && response.code === 200) {
         this.form.imgUrl = response.fileName;
-        console.log(response);
+        // console.log(response);
       } else {
         this.fail();
         this.$message.error(response.msg);

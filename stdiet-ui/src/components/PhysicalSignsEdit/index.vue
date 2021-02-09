@@ -162,10 +162,10 @@ export default {
       });
     },
     changeShowModule(){
-        console.log("---------------");
+        // console.log("---------------");
         for(var i = 0; i < this.stepArray.length; i++){
           let flag = this.showModuleArray.find((opt) => opt === i);
-          console.log(flag != null && flag != undefined);
+          // console.log(flag != null && flag != undefined);
           this.$set(this.stepArray, i, (flag != null && flag != undefined));
         }
     }

@@ -550,7 +550,9 @@ export function dealHealthy(customerHealthy) {
     customerHealthy.getupTime += "点";
   }
   if (customerHealthy.hasOwnProperty("signList")) {
-    customerHealthy.signStr = customerHealthy.signList.join("，");
+    customerHealthy.signStr = customerHealthy.signList
+      .map(obj => obj.name)
+      .join("，");
   }
 
   return customerHealthy;

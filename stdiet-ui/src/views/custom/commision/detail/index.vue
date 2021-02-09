@@ -166,7 +166,7 @@
       getList() {
         this.loading = true;
         const dateRange = [dayjs(this.month).startOf('month').format('YYYY-MM-DD'), dayjs(this.month).endOf('month').format('YYYY-MM-DD')];
-        console.log(dateRange)
+        // console.log(dateRange)
         detailCommision(this.addDateRange(this.queryParams, dateRange)).then(response => {
           this.commisionList = response.rows;
           this.total = response.total;
