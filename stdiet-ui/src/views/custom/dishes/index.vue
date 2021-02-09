@@ -597,7 +597,7 @@ export default {
         listAllIngredient({ type: this.ingType }).then((res) => {
           this.open = true;
           this.title = "修改菜品";
-          this.oriDataList = res.rows;
+          this.oriDataList = res.rows.concat(this.form.igdList);
           this.ingDataList = this.oriDataList.reduce((arr, cur) => {
             if (!arr.some(({ key }) => key === cur.id)) {
               arr.push({
@@ -606,7 +606,7 @@ export default {
               });
             }
             return arr;
-          }, this.selIngList.slice());
+          }, []);
         });
       });
     },
@@ -675,7 +675,13 @@ export default {
         .catch(function () {});
     },
     handleChange(value, direction, movedKeys) {
-      // console.log({oriIgdList: this.oriDataList, selIgdList: this.form.igdList});
+      console.log({
+        oriIgdList: this.oriDataList,
+        selIgdList: this.form.igdList,
+        ingDataList: this.ingDataList,
+        value,
+        ingType: this.ingType,
+      });
       const newTableData = [];
       this.selRec = [];
       this.selNotRec = [];
@@ -719,7 +725,7 @@ export default {
     },
     handleOnTypeChange(value) {
       listAllIngredient({ type: value }).then((res) => {
-        this.oriDataList = res.rows;
+        this.oriDataList = res.rows.concat(this.form.igdList);
         this.ingDataList = this.oriDataList.reduce((arr, cur) => {
           if (!arr.some(({ key }) => key === cur.id)) {
             arr.push({
@@ -728,7 +734,7 @@ export default {
             });
           }
           return arr;
-        }, this.selIngList.slice());
+        }, []);
       });
     },
     handleInputChange(val) {
@@ -769,6 +775,10 @@ export default {
 
 .el-transfer-panel__filter {
   margin: 2px;
+}
+
+.el-transfer-panel__list.is-filterable {
+  padding-bottom: 28px;
 }
 
 .cus-unit {
