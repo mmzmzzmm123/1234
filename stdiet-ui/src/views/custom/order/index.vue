@@ -705,10 +705,10 @@ export default {
         .catch(function () {});
     },
     handleStatusClick(data) {
-      console.log(data);
+      // console.log(data);
     },
     orderPauseManage(order) {
-      console.log(order.orderId);
+      // console.log(order.orderId);
       this.pauseTitle = order.customer;
       this.orderPauseId = order.orderId;
       this.openPause = true;

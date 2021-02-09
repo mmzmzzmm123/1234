@@ -64,10 +64,8 @@ export default {
         [{ title: "减脂反弹", value: "rebound" }],
         [{ title: "意识到生活习惯是减脂关键", value: "crux" }],
         [{ title: "减脂遇到的困难", value: "difficulty" }],
-        [
-          { title: "湿气数据", value: "moistureDate" },
-          { title: "气血数据", value: "bloodData" },
-        ],
+        [{ title: "湿气数据", value: "moistureDate" }],
+        [{ title: "气血数据", value: "bloodData" }],
         [{ title: "病史", value: "signStr" }],
         [{ title: "忌口或过敏源", value: "dishesIngredientId" }],
         [{ title: "方便沟通时间", value: "connectTime" }],

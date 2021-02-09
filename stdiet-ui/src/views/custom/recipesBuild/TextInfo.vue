@@ -46,7 +46,7 @@ export default {
 
   .value {
     /* color: #696969; */
-    flex: 1;
+    flex: 1 1 0;
   }
 }
 </style>

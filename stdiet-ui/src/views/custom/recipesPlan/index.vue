@@ -612,7 +612,7 @@ export default {
       }
       // test
       // params.recipesId = "61";
-       path += '/61';
+       path += '/73';
       // this.$router.push({
       //   name: "build",
       //   params,

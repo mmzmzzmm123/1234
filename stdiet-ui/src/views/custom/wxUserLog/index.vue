@@ -452,7 +452,7 @@
       submitForm() {
         this.$refs["form"].validate(valid => {
           if (valid) {
-            console.log(this.form)
+            // console.log(this.form)
             if (this.form.id != null) {
               updateWxUserLog(this.form).then(response => {
                 if (response.code === 200) {

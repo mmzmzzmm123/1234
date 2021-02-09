@@ -266,7 +266,7 @@ export default {
         });
     },
     fail(){
-      console.log("定时--------");
+      // console.log("定时--------");
       this.submitFlag = false;
     },
     nextStep(step){
