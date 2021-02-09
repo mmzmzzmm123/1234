@@ -4,58 +4,65 @@ import java.util.List;
 import com.stdiet.custom.domain.SysWxSaleAccount;
 
 /**
- * 微信销售账号Mapper接口
- * 
- * @author wonder
- * @date 2021-01-29
+ * 微信账号Mapper接口
+ *
+ * @author xiezhijun
+ * @date 2021-02-03
  */
-public interface SysWxSaleAccountMapper 
+public interface SysWxSaleAccountMapper
 {
     /**
-     * 查询微信销售账号
-     * 
-     * @param id 微信销售账号ID
-     * @return 微信销售账号
+     * 查询微信账号
+     *
+     * @param id 微信账号ID
+     * @return 微信账号
      */
     public SysWxSaleAccount selectSysWxSaleAccountById(Long id);
 
     /**
-     * 查询微信销售账号列表
-     * 
-     * @param sysWxSaleAccount 微信销售账号
-     * @return 微信销售账号集合
+     * 查询微信账号列表
+     *
+     * @param sysWxSaleAccount 微信账号
+     * @return 微信账号集合
      */
     public List<SysWxSaleAccount> selectSysWxSaleAccountList(SysWxSaleAccount sysWxSaleAccount);
 
     /**
-     * 新增微信销售账号
-     * 
-     * @param sysWxSaleAccount 微信销售账号
+     * 新增微信账号
+     *
+     * @param sysWxSaleAccount 微信账号
      * @return 结果
      */
     public int insertSysWxSaleAccount(SysWxSaleAccount sysWxSaleAccount);
 
     /**
-     * 修改微信销售账号
-     * 
-     * @param sysWxSaleAccount 微信销售账号
+     * 修改微信账号
+     *
+     * @param sysWxSaleAccount 微信账号
      * @return 结果
      */
     public int updateSysWxSaleAccount(SysWxSaleAccount sysWxSaleAccount);
 
     /**
-     * 删除微信销售账号
-     * 
-     * @param id 微信销售账号ID
+     * 删除微信账号
+     *
+     * @param id 微信账号ID
      * @return 结果
      */
     public int deleteSysWxSaleAccountById(Long id);
 
     /**
-     * 批量删除微信销售账号
-     * 
+     * 批量删除微信账号
+     *
      * @param ids 需要删除的数据ID
      * @return 结果
      */
     public int deleteSysWxSaleAccountByIds(Long[] ids);
+
+    /**
+     * 根据微信号或手机号查询是否已存在
+     * @param sysWxSaleAccount
+     * @return
+     */
+    SysWxSaleAccount selectWxAccountByAccountOrPhone(SysWxSaleAccount sysWxSaleAccount);
 }

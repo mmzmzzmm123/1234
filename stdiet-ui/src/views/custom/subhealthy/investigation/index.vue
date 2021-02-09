@@ -1,9 +1,9 @@
 <template>
   <section>
-    <div style="padding: 16px; text-align: center">
-      <img :src="logo" style="width: 258px; height: 80px" alt="logo" />
+    <div style="padding: 5px; text-align: center">
+      <img :src="logo" style="width: 150px; height: 35px" alt="logo" />
     </div>
-    <div style="margin: 20px 15px 20px 15px;" >
+    <div style="margin: 10px 15px 10px 15px;" >
       <el-steps :active="stepActive" finish-status="success">
         <el-step v-for="(item,index) in stepArray" title=""></el-step>
       </el-steps>
@@ -184,7 +184,7 @@ export default {
           {
             required: true,
             trigger: "blur",
-            pattern: /^[1-9]\d*$/,
+            pattern: /^(\d+)(\.\d{1})?$/,
             message: "体重格式不正确",
           },
         ],
