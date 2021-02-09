@@ -198,7 +198,7 @@
             type="text"
             icon="el-icon-edit"
             @click="handleBuild(scope.row)"
-            >制作食谱</el-button
+            >{{ `${scope.row.recipes_id ? "编辑" : "制作"}食谱` }}</el-button
           >
         </template>
       </el-table-column>
@@ -604,10 +604,20 @@ export default {
       }
     },
     handleBuild(data) {
-      this.$router.push({
-        name: "RecipiesBuild",
-        params: { id: data.id, cusId: data.orderId },
-      });
+      // const params = { id: data.id, cusId: data.orderId };
+      let path = `/recipes/build/${data.orderId}/${data.id}`;
+      if (data.recipes_id) {
+        // params.recipesId = data.recipes_id;
+        path += `/${data.recipes_id}`;
+      }
+      // test
+      // params.recipesId = "61";
+       path += '/61';
+      // this.$router.push({
+      //   name: "build",
+      //   params,
+      // });
+      this.$router.push(path);
     },
   },
 };

@@ -181,12 +181,13 @@ export default {
   },
 };
 </script>
-<style scoped>
+<style rel="stylesheet/scss" lang="scss">
 .msg-info {
   display: flex;
   margin-bottom: 8px;
-}
-.text-info-extra {
-  margin-bottom: 2px;
+
+  .text-info-extra {
+    margin-bottom: 2px;
+  }
 }
 </style>

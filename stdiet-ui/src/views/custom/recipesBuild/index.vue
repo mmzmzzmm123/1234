@@ -10,10 +10,11 @@
   </div>
 </template>
 <script>
-import { getRecipesPlan } from "@/api/custom/recipesPlan";
-import { getOrder } from "@/api/custom/order";
-import { getCustomerPhysicalSignsByCusId } from "@/api/custom/customer";
-import { dealHealthy } from "@/utils/healthyData";
+import { createNamespacedHelpers } from "vuex";
+
+const { mapActions, mapState, mapMutations } = createNamespacedHelpers(
+  "recipes"
+);
 
 import HealthyView from "./HealthyView";
 import BodySignView from "./BodySignView";
@@ -21,47 +22,54 @@ import BodySignView from "./BodySignView";
 export default {
   name: "BuildRecipies",
   data() {
-    return {
-      healthyData: {},
-      healthyDataType: 0,
-    };
+    return {};
   },
-  created() {
-    getOrder(this.cusId).then((res) => {
-      if (!res.data.cusId) {
-        this.$message.error("未找到用户id");
-        return;
-      }
-      getCustomerPhysicalSignsByCusId(res.data.cusId).then((iRes) => {
-        this.healthyDataType = iRes.data.type;
-        this.healthyData = dealHealthy(iRes.data.customerHealthy);
-        // console.log(this.healthyData);
-      });
+  mounted() {
+    //
+    console.log({
+      cusId: this.cusId,
+      recipesId: this.recipesId,
+    });
+    this.init({ cusId: this.cusId }).catch((err) => {
+      this.$message.error(err.message);
     });
   },
+  destroyed() {
+    this.clean();
+  },
+  created() {},
   components: {
     HealthyView,
     BodySignView,
   },
-  props: ["id", "cusId"],
-  methods: {},
+  props: ["planId", "cusId", "recipesId"],
+  computed: {
+    ...mapState({
+      healthyData: (state) => state.healthyData,
+      healthyDataType: (state) => state.healthyDataType,
+    }),
+  },
+  methods: {
+    ...mapActions(["init"]),
+    ...mapMutations(["clean"]),
+  },
 };
 </script>
-<style>
+<style rel="stylesheet/scss" lang="scss">
 .content {
   display: flex;
   height: calc(100vh - 124px);
-}
-.content .left {
-  flex: 4;
-  border-right: 1px solid rgb(0 21 41 / 8%);
-  height: 100%;
-  overflow: auto;
-}
-.content .right {
-  flex: 1;
-  height: 100%;
-  padding-left: 20px;
-  overflow: auto;
+  .left {
+    flex: 4;
+    border-right: 1px solid #e6ebf5;
+    height: 100%;
+    overflow: auto;
+  }
+  .right {
+    flex: 1;
+    height: 100%;
+    padding-left: 20px;
+    overflow: auto;
+  }
 }
 </style>

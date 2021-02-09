@@ -4,7 +4,7 @@ import request from '@/utils/request'
 export function listIngredient(query) {
   const {recIds, notRecIds} = query;
   return request({
-    url: '/custom/ingredient/list',
+    url: `/custom/ingredient/list?pageSize=${query.pageSize}&pageNum=${query.pageNum}`,
     method: 'post',
     data: {
       ...query,

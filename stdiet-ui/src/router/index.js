@@ -145,7 +145,7 @@ export const constantRoutes = [
     hidden: true,
     children: [
       {
-        path: "build/:cusId/:id(\\d+)",
+        path: "build/:cusId/:planId/:recipesId",
         component: resolve =>
           require(["@/views/custom/recipesBuild"], resolve),
         name: "RecipiesBuild",

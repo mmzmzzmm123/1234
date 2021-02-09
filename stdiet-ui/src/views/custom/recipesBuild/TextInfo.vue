@@ -32,21 +32,21 @@ export default {
   props: ["title", "value", "extraclass"],
 };
 </script>
-<style scoped>
+<style rel="stylesheet/scss" lang="scss">
 .text_info_wrapper {
   display: flex;
   margin-right: 24px;
   min-width: 120px;
   font-size: 14px;
-}
 
-.text_info_wrapper .title {
-  color: #8c8c8c;
-  width: auto;
-}
+  .title {
+    color: #8c8c8c;
+    width: auto;
+  }
 
-.text_info_wrapper .value {
-  /* color: #696969; */
-  flex: 1;
+  .value {
+    /* color: #696969; */
+    flex: 1;
+  }
 }
 </style>

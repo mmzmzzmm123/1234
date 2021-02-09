@@ -258,7 +258,7 @@
                           step="0.5"
                           :min="0.5"
                         /> -->
-                        <el-select size="mini" v-model="scope.row.cusWei">
+                        <el-select size="mini" v-model="scope.row.cusWeight">
                            <el-option
                             v-for="dict in cusWeightOptions"
                             :key="dict.dictValue"
@@ -502,7 +502,7 @@ export default {
       return this.selectDictLabel(this.cusUnitOptions, row.type);
     },
     cusWeightFormat(row, column) {
-      return this.selectDictLabel(this.cusWeightOptions, row.cusWei);
+      return this.selectDictLabel(this.cusWeightOptions, row.cusWeight);
     },
     // 地域字典翻译
     reviewStatusFormat(row, column) {
@@ -686,7 +686,7 @@ export default {
             newTableData.push({
               ...tmpTableObj,
               weight: 100,
-              cusWei: 1,
+              cusWeight: 1,
               cusUnit: 1,
             });
           }
