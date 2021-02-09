@@ -1,16 +1,11 @@
 package com.stdiet.web.controller.custom;
 
 import java.util.List;
+
+import com.github.pagehelper.PageHelper;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.stdiet.common.annotation.Log;
 import com.stdiet.common.core.controller.BaseController;
 import com.stdiet.common.core.domain.AjaxResult;
@@ -38,7 +33,7 @@ public class SysIngredientController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('custom:ingredient:list')")
     @PostMapping("/list")
-    public TableDataInfo list(@RequestBody SysIngredient sysIngredient)
+    public TableDataInfo list(@RequestParam Integer pageSize, @RequestParam Integer pageNum, @RequestBody SysIngredient sysIngredient)
     {
         startPage();
         List<SysIngredient> list = sysIngredientService.selectSysIngredientList(sysIngredient);

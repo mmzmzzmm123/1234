@@ -1,10 +1,10 @@
-import Vue from 'vue'
-import Router from 'vue-router'
+import Vue from "vue";
+import Router from "vue-router";
 
-Vue.use(Router)
+Vue.use(Router);
 
 /* Layout */
-import Layout from '@/layout'
+import Layout from "@/layout";
 
 /**
  * Note: 路由配置项
@@ -27,35 +27,35 @@ import Layout from '@/layout'
 // 公共路由
 export const constantRoutes = [
   {
-    path: '/redirect',
+    path: "/redirect",
     component: Layout,
     hidden: true,
     children: [
       {
-        path: '/redirect/:path(.*)',
-        component: (resolve) => require(['@/views/redirect'], resolve)
+        path: "/redirect/:path(.*)",
+        component: resolve => require(["@/views/redirect"], resolve)
       }
     ]
   },
   {
-    path: '/login',
-    component: (resolve) => require(['@/views/login'], resolve),
+    path: "/login",
+    component: resolve => require(["@/views/login"], resolve),
     hidden: true
   },
   {
-    path: '/404',
-    component: (resolve) => require(['@/views/error/404'], resolve),
+    path: "/404",
+    component: resolve => require(["@/views/error/404"], resolve),
     hidden: true
   },
   {
-    path: '/401',
-    component: (resolve) => require(['@/views/error/401'], resolve),
+    path: "/401",
+    component: resolve => require(["@/views/error/401"], resolve),
     hidden: true
   },
   {
-    path: '',
+    path: "",
     component: Layout,
-    redirect: 'index',
+    redirect: "index",
     children: [
       // {
       //   path: 'index',
@@ -64,101 +64,120 @@ export const constantRoutes = [
       //   meta: { title: '首页', icon: 'dashboard', noCache: true, affix: true }
       // }
       {
-        path: 'index',
-        component: (resolve) => require(['@/views/custom/order'], resolve),
-        name: '订单',
-        meta: { title: '订单管理', icon: 'build', noCache: true, affix: true }
+        path: "index",
+        component: resolve => require(["@/views/custom/order"], resolve),
+        name: "订单",
+        meta: { title: "订单管理", icon: "build", noCache: true, affix: true }
       }
     ]
   },
   {
-    path: '/order',
-    component: Layout,
-    hidden: true,
-    children: [
-    {
-      path: 'orderPause/:orderId',
-      component: (resolve) => require(['@/views/custom/order/orderPause'], resolve),
-      name: 'orderPause',
-      meta: { title: '订单暂停记录'}
-    }
-    ]
-  },
-  {
-    path: '/user',
-    component: Layout,
-    hidden: true,
-    redirect: 'noredirect',
-    children: [
-      {
-        path: 'profile',
-        component: (resolve) => require(['@/views/system/user/profile/index'], resolve),
-        name: 'Profile',
-        meta: { title: '个人中心', icon: 'user' }
-      }
-    ]
-  },
-  {
-    path: '/dict',
+    path: "/order",
     component: Layout,
     hidden: true,
     children: [
       {
-        path: 'type/data/:dictId(\\d+)',
-        component: (resolve) => require(['@/views/system/dict/data'], resolve),
-        name: 'Data',
-        meta: { title: '字典数据', icon: '' }
+        path: "orderPause/:orderId",
+        component: resolve =>
+          require(["@/views/custom/order/orderPause"], resolve),
+        name: "orderPause",
+        meta: { title: "订单暂停记录" }
       }
     ]
   },
   {
-    path: '/job',
+    path: "/user",
+    component: Layout,
+    hidden: true,
+    redirect: "noredirect",
+    children: [
+      {
+        path: "profile",
+        component: resolve =>
+          require(["@/views/system/user/profile/index"], resolve),
+        name: "Profile",
+        meta: { title: "个人中心", icon: "user" }
+      }
+    ]
+  },
+  {
+    path: "/dict",
     component: Layout,
     hidden: true,
     children: [
       {
-        path: 'log',
-        component: (resolve) => require(['@/views/monitor/job/log'], resolve),
-        name: 'JobLog',
-        meta: { title: '调度日志' }
+        path: "type/data/:dictId(\\d+)",
+        component: resolve => require(["@/views/system/dict/data"], resolve),
+        name: "Data",
+        meta: { title: "字典数据", icon: "" }
       }
     ]
   },
   {
-    path: '/gen',
+    path: "/job",
     component: Layout,
     hidden: true,
     children: [
       {
-        path: 'edit/:tableId(\\d+)',
-        component: (resolve) => require(['@/views/tool/gen/editTable'], resolve),
-        name: 'GenEdit',
-        meta: { title: '修改生成配置' }
+        path: "log",
+        component: resolve => require(["@/views/monitor/job/log"], resolve),
+        name: "JobLog",
+        meta: { title: "调度日志" }
       }
     ]
   },
   {
-    path: '/f/contract/:id(\\d+)',
+    path: "/gen",
+    component: Layout,
     hidden: true,
-    component: (resolve) => require(['@/views/custom/signContract'], resolve),
-    meta: { title: '合同' }
+    children: [
+      {
+        path: "edit/:tableId(\\d+)",
+        component: resolve => require(["@/views/tool/gen/editTable"], resolve),
+        name: "GenEdit",
+        meta: { title: "修改生成配置" }
+      }
+    ]
   },
-{
-    path: '/question',
-    component: (resolve) => require(['@/views/custom/investigate/questionnaire'], resolve),
+  {
+    path: "/recipes",
+    component: Layout,
     hidden: true,
-    meta: { title: '营养体征调查问卷'}
-},
-{
-  path: '/subhealthyInvestigation/:id',
-  component: (resolve) => require(['@/views/custom/subhealthy/investigation'], resolve),
-  hidden: true,
-  meta: { title: '胜唐体控健康评估表'}
-}
-]
+    children: [
+      {
+        path: "build/:cusId/:planId/:recipesId",
+        component: resolve =>
+          require(["@/views/custom/recipesBuild"], resolve),
+        name: "RecipiesBuild",
+        props: true,
+        meta: { title: "食谱制作" }
+      }
+    ]
+  },
+  {
+    path: "/f/contract/:id(\\d+)",
+    hidden: true,
+    component: resolve => require(["@/views/custom/signContract"], resolve),
+    meta: { title: "合同" }
+  },
+  {
+    path: "/question",
+    component: resolve =>
+      require(["@/views/custom/investigate/questionnaire"], resolve),
+    hidden: true,
+    meta: { title: "营养体征调查问卷" }
+  },
+  {
+    path: "/subhealthyInvestigation/:id",
+    component: resolve =>
+      require(["@/views/custom/subhealthy/investigation"], resolve),
+    hidden: true,
+    meta: { title: "胜唐体控健康评估表" }
+  }
+];
 
 export default new Router({
-  mode: 'history', // 去掉url中的#
+  mode: "history", // 去掉url中的#
   scrollBehavior: () => ({ y: 0 }),
   routes: constantRoutes
-})
+});

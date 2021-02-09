@@ -1,11 +1,11 @@
 package com.stdiet.custom.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.stdiet.common.annotation.Excel;
-import com.stdiet.common.core.domain.BaseEntity;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
+import lombok.Data;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * 食材对象 sys_ingredient
@@ -13,11 +13,9 @@ import java.math.BigDecimal;
  * @author wonder
  * @date 2020-12-15
  */
-public class SysIngredient extends BaseEntity {
+@Data
+public class SysIngredient {
     private static final long serialVersionUID = 1L;
-
-    private int pageNum;
-    private int pageSize;
 
     /**
      * id
@@ -77,131 +75,36 @@ public class SysIngredient extends BaseEntity {
      */
     private String reviewStatus;
 
-    public void setReviewStatus(String reviewStatus) {
-        this.reviewStatus = reviewStatus;
-    }
+    /**
+     * 创建者
+     */
+    private String createBy;
 
-    public String getReviewStatus() {
-        return reviewStatus;
-    }
+    /**
+     * 创建时间
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date createTime;
+
+    /**
+     * 更新者
+     */
+    private String updateBy;
+
+    /**
+     * 更新时间
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date updateTime;
+
+    /**
+     * 备注
+     */
+    private String remark;
+
 
     private Long[] recIds;
 
     private Long[] notRecIds;
 
-    public Long[] getRecIds() {
-        return recIds;
-    }
-
-    public Long[] getNotRecIds() {
-        return notRecIds;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public BigDecimal getProteinRatio() {
-        return proteinRatio;
-    }
-
-    public void setProteinRatio(BigDecimal proteinRatio) {
-        this.proteinRatio = proteinRatio;
-    }
-
-    public BigDecimal getFatRatio() {
-        return fatRatio;
-    }
-
-    public void setFatRatio(BigDecimal fatRatio) {
-        this.fatRatio = fatRatio;
-    }
-
-    public BigDecimal getCarbonRatio() {
-        return carbonRatio;
-    }
-
-    public void setCarbonRatio(BigDecimal carbonRatio) {
-        this.carbonRatio = carbonRatio;
-    }
-
-    public String getArea() {
-        return area;
-    }
-
-    public void setArea(String area) {
-        this.area = area;
-    }
-
-    public String getNotRec() {
-        return notRec;
-    }
-
-    public void setNotRec(String notRec) {
-        this.notRec = notRec;
-    }
-
-    public String getRec() {
-        return rec;
-    }
-
-    public void setRec(String rec) {
-        this.rec = rec;
-    }
-
-    public void setPageNum(int pageNum) {
-        this.pageNum = pageNum;
-    }
-
-    public void setPageSize(int pageSize) {
-        this.pageSize = pageSize;
-    }
-
-    public int getPageNum() {
-        return pageNum;
-    }
-
-    public int getPageSize() {
-        return pageSize;
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
-                .append("id", getId())
-                .append("name", getName())
-                .append("type", getType())
-                .append("proteinRatio", getProteinRatio())
-                .append("fatRatio", getFatRatio())
-                .append("carbonRatio", getCarbonRatio())
-                .append("remark", getRemark())
-                .append("area", getArea())
-                .append("notRec", getNotRec())
-                .append("recommend", getRec())
-                .append("createBy", getCreateBy())
-                .append("createTime", getCreateTime())
-                .append("updateBy", getUpdateBy())
-                .append("updateTime", getUpdateTime())
-                .toString();
-    }
 }
