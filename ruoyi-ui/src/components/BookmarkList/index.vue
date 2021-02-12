@@ -1,20 +1,26 @@
 <template>
   <div>
 
-
-    <div v-for="bm in bookmarkList" class="bookmark"   @click="winurl(bm.noteId,bm.tiymceUeditor,bm.bookmarkId,bm.url)">
+<!--    STYLE="position: relative"-->
+    <div v-for="bm in bookmarkList"  class="bookmark"   @click="winurl(bm.noteId,bm.tiymceUeditor,bm.bookmarkId,bm.url)">
       <div class="bookmark-item">
          <span class="bookmark-title" v-if="highlighted" v-html="highLight(bm.title,sousuo)"/>
 
         <span class="bookmark-title" v-if="!highlighted">{{bm.title}}</span>
         <div class="bookmark-time" v-if="noteTime">{{bm.createTime|changeTime}}</div>
       </div>
-      <div class="bookmark-description" v-if="isdescription">
+
+
+
+      <div class="bookmark-description" v-if="isdescription" >
 
         <span v-if="highlighted" v-html="highLight(bm.description,sousuo)"></span>
 
         <span v-if="!highlighted">{{bm.description}}</span>
       </div>
+
+
+
       <div class="info-wrap" v-if="isBookmarkIcon">
         <div class="info">
           <div class="bookmark-icon">
@@ -33,8 +39,9 @@
           </div>
         </div>
       </div>
-
-
+<!--      <div style="width: 300px;height: inherit;background-color: red;position: absolute;right: 0px;top: 10px;bottom: 10px">-->
+<!--        2222222222222222222222-->
+<!--      </div>-->
     </div>
 
   </div>
@@ -238,5 +245,6 @@
     width: 15px;
     height: 15px;
   }
+
 
 </style>

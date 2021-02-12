@@ -261,10 +261,7 @@ public class SqBookmarkServiceImpl implements ISqBookmarkService
      */
     @Override
     public List<SqBookmark> selectByUseridList(Long userId) {
-        SqBookmark sqBookmark= new SqBookmark();
-        sqBookmark.setUserid(userId);
-        sqBookmark.setIdelete(0); //未删除的书签
-        return sqBookmarkMapper.select(sqBookmark);
+        return sqBookmarkMapper.selectByUseridList(userId);
     }
 
     /**

@@ -121,6 +121,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </foreach>
     </delete>
 
+    <select id="selectByUseridList" parameterType="Long" resultMap="SqBookmarkResult">
+    <include refid="selectSqBookmarkVo"/>
+    where userid = #{userId} and idelete = 0  order by  create_time desc
+    </select>
+
+
+
     <select id="selectBymenuIdUserID" parameterType="SqBookmark"  resultMap="SqBookmarkResult">
         <include refid="selectSqBookmarkVo"/>
         where   userid=#{userID}

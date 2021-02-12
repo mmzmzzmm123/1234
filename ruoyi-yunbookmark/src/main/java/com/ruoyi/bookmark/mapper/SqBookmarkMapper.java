@@ -79,5 +79,10 @@ public interface SqBookmarkMapper extends MyMapper<SqBookmark>
      * @return 结果
      */
     public void updateSqBookmarkBymenuId(Long menuId);
-
+    /**
+     * 查询用户全部书签不包含删除的书签
+     *  @param
+     * @return 结果
+     */
+    public List<SqBookmark> selectByUseridList(Long userId);
 }

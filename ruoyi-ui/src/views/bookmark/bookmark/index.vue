@@ -280,7 +280,7 @@
         </el-aside>
 
         <el-main class="isBookmarkMain" v-if="isMain">
-                  <el-header class="mianUrl-top" style="height: 50px">
+                  <el-header class="mianUrl-top" >
                     <div class="mianUrl-top-left">
                       <i class="el-icon-folder-delete" @click="closeIsMain"></i>
                       <i class="el-icon-rank" ></i>
@@ -563,7 +563,7 @@
                 this.getListConcat();
                 break;
               case 1:
-                this.getNoteListConcat();
+                this.getListNoteConcat();
                 break;
               default:
             }
@@ -578,12 +578,11 @@
         //缓存状态
         that.$store.state.property=e;
         this.showimg=false;
-        // console.log("缓存property:"+that.$store.state.property)
-        // console.log("缓存property:"+store.state.property)
         //初始化
         this.queryParams.pageNum=1;
         this.noteParams.pageNum=1;
         this.bookmarkList=[];
+
         this.getBypropertyList(e);
 
       },
@@ -752,15 +751,17 @@
       getrecycleList() {
         this.loading = true;
         selectBydelete(this.queryParams).then(response => {
-          if (response.total != 0 && response.code == 200) {
-            this.bookmarkList = response.rows;
+          if (response.total != 0 &&response.code == 200) {
+            this.bookmarkList = this.bookmarkList.concat(response.rows);
             this.total = response.total;
+            this.listloading = false
             this.loading = false;
-            this.listloading = false
+            console.log("请求完毕" + that.queryParams.pageNum)
           } else {
-            this.showbookmark = false;
-            this.showimg = true;
+            //出错了加载完毕了 禁止滚动
+            this.noMore = true;
             this.listloading = false
+            this.loading = false;
           }
         });
       },
@@ -768,26 +769,28 @@
       getBookmarkList() {
         this.loading = true;
         selectByUseridList(this.queryParams).then(response => {
-          if (response.total != 0 && response.code == 200) {
-            this.bookmarkList = response.rows;
-            this.total = response.total;
-            this.loading = false;
-            this.listloading = false
-          } else {
-            this.showbookmark = false;
-            this.showimg = true;
-            this.listloading = false
-          }
+            if (response.total != 0 &&response.code == 200) {
+              this.bookmarkList = this.bookmarkList.concat(response.rows);
+              this.total = response.total;
+              this.listloading = false
+              this.loading = false;
+              console.log("请求完毕" + that.queryParams.pageNum)
+            } else {
+              //出错了加载完毕了 禁止滚动
+              this.noMore = true;
+              this.listloading = false
+              this.loading = false;
+            }
         });
       },
       /**根据条件查询*/
       getBypropertyList(e){
         switch(e) {
           case 0:
-            this.getList();
+            this.getListConcat();
             break;
           case 1:
-            this.getNoteList();
+            this.getListNoteConcat();
             break;
           default:
             this.loading = true;
@@ -818,8 +821,6 @@
             this.getNoteList();
           }
         });
-
-
       },
 
       /** 查询书签管理列表 */
@@ -845,16 +846,36 @@
         this.loading = true;
         if(this.queryParams.menuId=='BOOKMARK'){
           //全部书签
-           this.getBookmarkList();
-          return;
-        }else if (routedata == 'RECYCLE') {
-          //回收站
+          this.getBookmarkList();
+        }else if (this.queryParams.menuId == 'RECYCLE') {
+          //回收站书签
           this.getrecycleList();
-
         }else{
-
+          //查看目录下的书签
+          this.getlistByMenuId();
+        }
+      },
+      /**查询便签 滚动加载分页拼接*/
+      getListNoteConcat(){
+        var that=this;
+        this.loading = true;
+        if(this.queryParams.menuId=='BOOKMARK'){
+          //全部便签
+          this.loading = false;
+          this.showimg = true;
+        }else if (this.queryParams.menuId == 'RECYCLE') {
+          //回收站便签
+          this.loading = false;
+          this.showimg = true;
+        }else{
+          //查看目录下的便签
+          this.getNoteListConcat();
+        }
+      },
+      //查看目录下的书签
+      getlistByMenuId(){
         selectBymenuIdUserID(this.queryParams).then(response => {
-          if (response.code == 200) {
+          if (response.total != 0 &&response.code == 200) {
             this.bookmarkList = this.bookmarkList.concat(response.rows);
             this.total = response.total;
             this.listloading = false
@@ -867,11 +888,8 @@
             this.loading = false;
           }
         });
-        }
-
-
-
       },
+
 
       /** 查询便签管理列表 */
       getNoteList() {
@@ -889,12 +907,11 @@
       getNoteListConcat(){
         this.loading = true;
         selectBymenuNote(this.noteParams).then(response => {
-          if (response.code == 200) {
+          if (response.total != 0 && response.code == 200) {
             this.bookmarkList = this.bookmarkList.concat(response.rows);
             this.total = response.total;
             this.loading = false;
             this.listloading = false
-
           }else {
             //出错了加载完毕了 禁止滚动
             this.noMore = true;
@@ -1208,6 +1225,7 @@
     font-weight: 600;
     padding: 0;
     margin: 0;
+    padding-bottom: 50px;
   }
 
   .bookmark-title:hover {
@@ -1471,6 +1489,7 @@
   .mianUrl-top{
     display: flex;
     padding: 0px!important;
+    height: 50px;
   }
   .mianUrl-top div{
     width: 50%;
