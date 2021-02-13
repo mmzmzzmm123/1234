@@ -10,12 +10,15 @@ import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * @Auther: Wang
@@ -25,6 +28,7 @@ import java.util.regex.Pattern;
 public class ImportHtml {
 
     public static Logger logger =  LoggerFactory.getLogger(ImportHtml.class);
+    static int id = 1;
     /**
      * @param url
      * @return
@@ -359,4 +363,88 @@ public class ImportHtml {
         String host = url.getHost();// 获取主机名
         return host;
     }
+
+
+    /**
+     *获取导入书签的所有数据
+     */
+    public static List<HtmlName> addMenuAndBookmark(InputStream inputStream) {
+        Document doc = null;
+        List<HtmlName> list =null;
+        try {
+            doc = Jsoup.parse(inputStream, "UTF-8", "");
+            Element metasdt = doc.selectFirst("dl");
+            Elements metasdts = new Elements();
+            metasdts.add(metasdt);
+            list = Htmlurl(metasdts, new ArrayList<HtmlName>(), "0");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+
+
+
+    /**
+     *
+     * @param dt1s
+     * @param list
+     * @param parentId
+     * @return
+     */
+    public static List<HtmlName> Htmlurl(Elements dt1s, List<HtmlName> list, String parentId) {
+        for (Element dt1 : dt1s) {
+            if ("h3".equalsIgnoreCase(dt1.nodeName())) {
+                int a = id++;
+                list.add(new HtmlName(a + "", parentId, dt1.text(), dt1.text(), "0",""));
+                parentId = a + "";
+            } else if ("dl".equalsIgnoreCase(dt1.nodeName())) {
+                Elements dts = dt1.children();
+                for (Element dt11 : dts) {
+                    if ("dt".equals(dt11.nodeName())) {
+                        if ("a".equals(dt11.child(0).nodeName())) {
+                            String url = dt11.child(0).attr("href");
+                            if (url.startsWith("http")) {
+                                list.add(new HtmlName((id++) + "", parentId,
+                                        dt11.child(0) == null ? "" : dt11.child(0).text(),
+                                        dt11.child(0) == null ? "" : dt11.child(0).text(), "1",url));
+                            }
+                        }
+                        if ("h3".equalsIgnoreCase(dt11.child(0).nodeName())) {
+                            Htmlurl(dt11.children(), list, parentId);
+                        }
+                    }
+                }
+            }
+        }
+        return list;
+    }
+
+
+    /**
+     */
+    static Element htmlReplace(Element metasdt, String str) {
+        String metasdtStr = metasdt.toString();
+        while (metasdtStr.indexOf(str) != -1) {
+            metasdtStr = metasdtStr.replace(str, "");
+        }
+        return metasdt.after(metasdtStr);
+    }
+
+    /**
+     * 批量修改父级id
+     * @return
+     */
+   public static List<HtmlName> listFilter(List<HtmlName> list,Long parentId,String htmlid){
+        for (HtmlName h : list) {
+            if (h.getParentId().equals(htmlid)) {
+                h.setParentId(parentId.toString());
+                if (!h.getState().equals("0"))
+                    h.setState(Const.BOOKMARK_STATE_FLAG);//标识符
+            }
+        }
+        return list;
+    }
+
 }

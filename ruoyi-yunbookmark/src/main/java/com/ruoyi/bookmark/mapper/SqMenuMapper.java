@@ -91,4 +91,13 @@ public interface SqMenuMapper extends MyMapper<SqMenu>
     public int updateCountAdd(@Param("menuIds")Long[] menuIds,@Param("icount")int icount);
 
 
+    /**
+     *添加书签目录
+     *
+     * @param  userID
+     * @param  title
+     * @param  parentId
+     * @return
+     */
+    public void addMenu(@Param("userId")Long userID, @Param("title")String title, @Param("parentId")Long parentId);
 }

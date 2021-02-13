@@ -158,6 +158,12 @@ public class SqMenuServiceImpl implements ISqMenuService
         return sqMenuMapper.deleteSqMenuById(menuId,userId);
     }
 
+    @Override
+    public void addMenu(Long userID, String title, Long parentId) {
+             sqMenuMapper.addMenu(userID,title,parentId);
+    }
+
+
     /**
      * 批量减少目录下书签数量
      *

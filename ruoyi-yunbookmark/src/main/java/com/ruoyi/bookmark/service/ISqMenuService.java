@@ -104,4 +104,13 @@ public interface ISqMenuService
      * @return 结果
      */
     public int deleteSqMenuById(Long menuId,Long userId);
+
+
+   /**
+    * 添加书签目录
+    *
+    * @param
+    * @return
+    */
+   public void addMenu(Long userID, String title, Long valueOf);
 }

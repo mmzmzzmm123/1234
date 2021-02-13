@@ -40,7 +40,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where menu_id = #{menuId}
     </select>
 
-    <insert id="insertSqMenu" parameterType="SqMenu" useGeneratedKeys="true" keyProperty="menuId">
+    <insert id="insertSqMenu" parameterType="SqMenu" useGeneratedKeys="true" keyProperty="menuId" >
         insert into sq_menu
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="userId != null">user_id,</if>
@@ -103,6 +103,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             update sq_menu set bookmark_count = bookmark_count + #{icount} where menu_id = #{menuId}
         </foreach>
     </update>
+
 
 
 </mapper>

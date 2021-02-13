@@ -171,4 +171,14 @@ public class SqMenu
             .append("updateTime", getUpdateTime())
             .toString();
     }
+    public SqMenu(){
+        super();
+    }
+
+    public SqMenu( Long userId, String menuName, Long parentId,String menuIcon) {
+        this.userId = userId;
+        this.menuName = menuName;
+        this.parentId = parentId;
+        this.menuIcon = menuIcon;
+    }
 }
