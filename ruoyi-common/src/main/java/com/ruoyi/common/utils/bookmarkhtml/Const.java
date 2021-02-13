@@ -32,6 +32,8 @@ public class Const {
     public static String MenuIocURL= "https://up.raindrop.io/collection/templates/social-media-logos-6/47social.png";
     //已修改父级id的书签
     public static String BOOKMARK_STATE_FLAG= "666";
+    //导入书签html功能
+    public static String IMPORTHTML= "IMPORT_HTML";
 
 
 

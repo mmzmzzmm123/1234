@@ -1,8 +1,6 @@
 <template>
   <div >
     <div style="width:360px;height:260px;margin: 0 auto;margin-top: 40px">
-    <!-- 用户导入对话框 -->
-<!--    <el-dialog :title="upload.title" :visible.sync="upload.open" width="400px" append-to-body>-->
       <el-upload
         ref="upload"
         :limit="1"
@@ -22,55 +20,21 @@
           将文件拖到此处，或
           <em>点击上传</em>
         </div>
-<!--        <div class="el-upload__tip" slot="tip">-->
-<!--          <el-checkbox v-model="upload.updateSupport" />是否更新已经存在的用户数据-->
-<!--          <el-link type="info" style="font-size:12px" @click="importTemplate">下载模板</el-link>-->
-<!--        </div>-->
+
         <div class="el-upload__tip title"   slot="tip">提示：仅允许导入".html"格式文件！</div>
       </el-upload>
       <div slot="footer" class="dialog-footer">
-<!--        <el-button type="primary" class="  mdui-text-center  mdui-btn mdui-btn-raised mdui-text-color-blue-900  mdui-color-light-blue-100" @click="submitFileForm">确 定</el-button>-->
-<!--        <el-button @click="upload.open = false">取 消</el-button>-->
         <button @click="submitFileForm"  class="isbutton mdui-btn mdui-btn-block mdui-btn-raised mdui-btn-dense  mdui-color-blue-100  mdui-ripple">导 入 书 签</button>
       </div>
 
     </div>
-<!--    </el-dialog>-->
 
-<!--    <el-button-->
-<!--      type="info"-->
-<!--      icon="el-icon-upload2"-->
-<!--      size="mini"-->
-<!--      @click="handleImport"-->
-<!--      v-hasPermi="['system:user:import']"-->
-<!--    >导入</el-button>-->
-
-<!--    <el-upload-->
-<!--      ref="upload"-->
-<!--      :limit="1"-->
-<!--      accept=".html"-->
-<!--      class="upload-demo"-->
-<!--      :headers="upload.headers"-->
-<!--      :action="upload.url + '?updateSupport=' + 22"-->
-<!--      name="htmlFile"-->
-<!--      :on-progress="handleFileUploadProgress"-->
-<!--      :on-success="handleFileSuccess"-->
-<!--      :auto-upload="false"-->
-
-<!--      drag-->
-<!--    >-->
-<!--&lt;!&ndash;      v-hasPermi="['bookmark:bookmark:export']"&ndash;&gt;-->
-<!--      <i class="el-icon-upload"></i>-->
-<!--      <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>-->
-<!--      <div class="el-upload__tip" slot="tip">只能上传浏览器导出的.html后缀文件</div>-->
-<!--    </el-upload>-->
-
-<!--    <div class="structure">-->
-<!--      <el-radio v-model="structure" label="0">按原目录导入</el-radio>-->
-<!--      <el-radio v-model="structure" label="1" disabled>全部导入到一个新目录</el-radio>-->
-<!--    </div>-->
-    <!--<el-button type="primary" size="small" @click="submitUpload" plain><i-->
-    <!--class="el-icon-upload el-icon&#45;&#45;right">开始导入书签</i></el-button>-->
+    <div class="structure">
+      <el-radio v-model="structure" label="0">按原目录导入</el-radio>
+      <el-radio v-model="structure" label="1" disabled>全部导入到一个新目录</el-radio>
+    </div>
+    <el-button type="primary" size="small" @click="submitUpload" plain><i
+    class="el-icon-upload el-icon--right">开始导入书签</i></el-button>
 
 
 
@@ -78,7 +42,6 @@
     <div class="text">
       <ul>
         <li>注意事项</li>
-        <li style="color: #ff2a34">导入300书签需要大约8分钟,请勿短时间重复操作</li>
         <li>
           1、导入的方法是将浏览器里面收藏的网站导出<span style="color: red">HTML文件后缀</span>。然后将导出的HTML文件点击上面的<span style="color: red">开始导入书签</span>。
 

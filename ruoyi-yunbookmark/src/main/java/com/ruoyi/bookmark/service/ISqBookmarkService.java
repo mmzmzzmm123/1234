@@ -2,6 +2,7 @@ package com.ruoyi.bookmark.service;
 
 import java.util.List;
 import com.ruoyi.bookmark.domain.SqBookmark;
+import com.ruoyi.common.utils.bookmarkhtml.HtmlName;
 
 /**
  * 书签管理Service接口
@@ -111,4 +112,12 @@ public interface ISqBookmarkService
      * @return
      */
     List<SqBookmark> selectByUrlUserID(String url, Long userId);
+
+    /**
+     * 批量添加html导入的数据
+     *
+     * @param
+     * @return
+     */
+    void addALLBookMarkByHtml(List<HtmlName> list,Long userID);
 }

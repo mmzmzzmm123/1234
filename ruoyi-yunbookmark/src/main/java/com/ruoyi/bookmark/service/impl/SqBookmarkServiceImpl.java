@@ -1,7 +1,11 @@
 package com.ruoyi.bookmark.service.impl;
 
 
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URL;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import cn.hutool.core.date.DateUtil;
 import com.github.pagehelper.PageHelper;
@@ -14,6 +18,10 @@ import com.ruoyi.bookmark.mapper.SqTagMapper;
 
 import com.ruoyi.bookmark.service.ISqTagService;
 
+import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.common.utils.bookmarkhtml.Const;
+import com.ruoyi.common.utils.bookmarkhtml.HtmlName;
+import com.ruoyi.common.utils.bookmarkhtml.ImportHtml;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -301,6 +309,52 @@ public class SqBookmarkServiceImpl implements ISqBookmarkService
                 .andEqualTo("url", url)
                 .andEqualTo("userid",userId);
         return sqBookmarkMapper.selectByExample(example);
+    }
+
+    @Override
+    public void addALLBookMarkByHtml(List<HtmlName> list,Long userID) {
+        //获取所有的 *目录*文件夹
+        List<HtmlName> listMenu= list.stream().filter(m-> m.getState().equals("0")).collect(Collectors.toList());
+        //id排序 防止已添加的父id漏修改 id升序
+        listMenu.sort(Comparator.comparing(HtmlName::getId));
+        //1.添加目录
+        for (HtmlName h : listMenu) {
+            String id=h.getId();
+            //添加 返回id
+            SqMenu sqMenu = new SqMenu(userID,h.getTitle(),Long.valueOf(h.getParentId()), Const.MenuIocURL);
+            int countId =  sqMenuMapper.insertSqMenu(sqMenu);
+            if(countId!=0){
+                Long k=Long.valueOf(sqMenu.getMenuId().toString());
+                //批量修改对应的父目录id
+                listMenu = ImportHtml.listFilter(listMenu,k,id);
+                //批量修改对应的书签id
+                list = ImportHtml.listFilter(list,k,id);
+            }
+        }
+        //2.添加书签
+        for (HtmlName h : list) {
+            if (!h.getState().equals("0")&&h.getState().equals(Const.BOOKMARK_STATE_FLAG)) {
+                SqBookmark sqBookmark =new SqBookmark();
+                sqBookmark.setUserid(userID);
+                sqBookmark.setTitle(h.getTitle());
+                sqBookmark.setUrl(h.getUrl());
+                try {
+                    sqBookmark.setUrls(ImportHtml.Urlutils(new URL(h.getUrl())));
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                    logger.info("导入书签,获取host出错!");
+                }
+                if(StringUtils.isBlank(h.getDescription())){
+                    sqBookmark.setDescription(h.getTitle());
+                }else{
+                    sqBookmark.setDescription(h.getDescription());
+                }
+                sqBookmark.setMenuId(Long.valueOf(h.getParentId()));
+                sqBookmark.setCreateTime(new Date());
+                sqBookmarkMapper.insertSqBookmark(sqBookmark);
+            }
+        }
+
     }
 
 

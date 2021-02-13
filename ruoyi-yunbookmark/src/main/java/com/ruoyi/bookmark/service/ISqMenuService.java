@@ -2,6 +2,7 @@ package com.ruoyi.bookmark.service;
 
 import java.util.List;
 import com.ruoyi.bookmark.domain.SqMenu;
+import org.omg.CORBA.INTERNAL;
 
 /**
  * 书签菜单Service接口
@@ -113,4 +114,15 @@ public interface ISqMenuService
     * @return
     */
    public void addMenu(Long userID, String title, Long valueOf);
+
+
+   /**
+    *防止重复点击上传文件
+    *
+    * @param  state 表示某个功能
+    * @param  userID 用户ID
+    * @param  time key过期时间(秒)
+    * @return
+    */
+   public Long noRepetition(String state, Long userID, Long time);
 }

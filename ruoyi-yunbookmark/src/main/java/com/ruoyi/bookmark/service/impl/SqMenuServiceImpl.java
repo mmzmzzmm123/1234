@@ -2,6 +2,9 @@ package com.ruoyi.bookmark.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import com.ruoyi.common.core.redis.RedisUtil;
 import com.ruoyi.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,6 +23,8 @@ public class SqMenuServiceImpl implements ISqMenuService
 {
     @Autowired
     private SqMenuMapper sqMenuMapper;
+    @Autowired
+    private RedisUtil redisUtil;
 
     /**
      * 查询 目录菜单的 所有父级ID
@@ -161,6 +166,26 @@ public class SqMenuServiceImpl implements ISqMenuService
     @Override
     public void addMenu(Long userID, String title, Long parentId) {
              sqMenuMapper.addMenu(userID,title,parentId);
+    }
+
+    /**
+     *防止重复点击上传文件
+     *
+     * @param  state 表示某个功能
+     * @param  userID 用户ID
+     * @param  time key过期时间 (秒)
+     * @return
+     */
+    @Override
+    public Long noRepetition(String state, Long userID, Long time) {
+      String key = "BookMark:"+state+":"+userID.toString();
+      String str = redisUtil.get(key);
+      if (str==null){
+          redisUtil.setEx(key,"0",time,TimeUnit.SECONDS);
+          return 0L;
+      }else{
+          return  redisUtil.getExpire(key);
+      }
     }
 
 
