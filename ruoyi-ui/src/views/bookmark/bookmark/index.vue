@@ -769,7 +769,7 @@
       getBookmarkList() {
         this.loading = true;
         selectByUseridList(this.queryParams).then(response => {
-            if (response.total != 0 &&response.code == 200) {
+            if (response.code == 200) {
               this.bookmarkList = this.bookmarkList.concat(response.rows);
               this.total = response.total;
               this.listloading = false
@@ -827,19 +827,18 @@
       getList() {
         this.loading = true;
         selectBymenuIdUserID(this.queryParams).then(response => {
-          if (response.total != 0 &&response.code == 200) {
+          if (response.code == 200) {
             this.bookmarkList = response.rows;
             this.total = response.total;
             this.loading = false;
-            if (this.bookmarkList==null||this.bookmarkList.length==0) {
-              this.showimg=true;
-            }
+            this.showimg=response.rows==0?true:false;
             this.listloading = false
           } else {
-            this.showbookmark = false;
             this.showimg = true;
             this.loading = false;
             this.listloading = false
+            //出错了加载完毕了 禁止滚动
+            this.noMore = true;
           }
         });
       },
@@ -878,12 +877,12 @@
       //查看目录下的书签
       getlistByMenuId(){
         selectBymenuIdUserID(this.queryParams).then(response => {
-          if (response.total != 0 &&response.code == 200) {
+          if (response.code == 200) {
             this.bookmarkList = this.bookmarkList.concat(response.rows);
             this.total = response.total;
             this.listloading = false
             this.loading = false;
-            console.log("请求完毕" + this.queryParams.pageNum)
+            this.showimg=response.rows==0?true:false;
           } else {
             //出错了加载完毕了 禁止滚动
             this.noMore = true;
@@ -901,20 +900,21 @@
             this.bookmarkList = response.rows;
             this.total = response.total;
             this.loading = false;
-            if (this.bookmarkList==null||this.bookmarkList.length==0) {
-              this.showimg=true;
-            }
+            this.showimg=response.rows==0?true:false;
         });
       },
       /**查询便签 滚动加载分页拼接*/
       getNoteListConcat(){
         this.loading = true;
         selectBymenuNote(this.noteParams).then(response => {
-          if (response.total != 0 && response.code == 200) {
+          if ( response.code == 200) {
             this.bookmarkList = this.bookmarkList.concat(response.rows);
             this.total = response.total;
             this.loading = false;
             this.listloading = false
+            if (response.total==0||this.bookmarkList.length==0) {
+              this.showimg=true;
+            }
           }else {
             //出错了加载完毕了 禁止滚动
             this.noMore = true;
