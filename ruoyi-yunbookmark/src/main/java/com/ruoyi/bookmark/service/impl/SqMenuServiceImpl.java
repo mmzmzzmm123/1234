@@ -1,11 +1,16 @@
 package com.ruoyi.bookmark.service.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+
 
 import com.ruoyi.common.core.redis.RedisUtil;
 import com.ruoyi.common.utils.DateUtils;
+import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
+import org.apache.commons.beanutils.ConvertUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.bookmark.mapper.SqMenuMapper;
@@ -122,8 +127,20 @@ public class SqMenuServiceImpl implements ISqMenuService
     @Override
     public int insertSqMenu(SqMenu sqMenu)
     {
-        sqMenu.setCreateTime(DateUtils.getNowDate());
-        return sqMenuMapper.insertSqMenu(sqMenu);
+       sqMenu.setCreateTime(DateUtils.getNowDate());
+       String parentId=sqMenu.getParentId().toString();
+       int i = sqMenuMapper.insertSqMenu(sqMenu);
+        //更新新的目录串
+        if (i!=0){
+            String menuUplinkSeries ="";
+            if("0".equals(parentId)){
+                 menuUplinkSeries = ","+sqMenu.getMenuId()+",";
+            }else{
+                 menuUplinkSeries = addMenuUplinkSeries(sqMenu.getMenuId());
+            }
+            sqMenuMapper.updateSqMenu(new SqMenu(sqMenu.getMenuId(),menuUplinkSeries));
+        }
+        return i;
     }
 
     /**
@@ -188,6 +205,34 @@ public class SqMenuServiceImpl implements ISqMenuService
       }
     }
 
+    /**
+     *根据目录 生成向上目录串
+     *
+     * @param  menuId
+     * @return java.lang.String
+     */
+    @Override
+    public String addMenuUplinkSeries(Long menuId) {
+        StringBuilder menuus=new StringBuilder();
+        SqMenu sqMenu = sqMenuMapper.selectSqMenuById(menuId);
+        Long parentId = sqMenu.getParentId();
+        //所有的上级目录ID
+        List<Long> list= new ArrayList<>();
+        list.add(menuId);
+        while (parentId.intValue()!=0){
+            sqMenu = sqMenuMapper.selectSqMenuById(parentId);
+            list.add(sqMenu.getMenuId());
+            parentId=sqMenu.getParentId();
+        }
+        //倒序
+        for (int i=list.size();i>0;i--){
+            menuus.append(",").append(list.get(i-1));
+        }
+        menuus.append(",");
+        return menuus.toString();
+    }
+
+
 
     /**
      * 批量减少目录下书签数量
@@ -212,4 +257,42 @@ public class SqMenuServiceImpl implements ISqMenuService
     public int updateCountAdd(Long[] menuIds,int icount){
         return sqMenuMapper.updateCountAdd(menuIds,icount);
     }
+
+
+    @Override
+    public List<SqMenu> listByMenuUplinkSeriesAndMenu(String menuUplinkSeries, Long menuId) {
+        return sqMenuMapper.listByMenuUplinkSeriesAndMenu(menuUplinkSeries,menuId);
+    }
+
+    @Override
+    public int countByMenuUplinkSeriesAndMenu(String menuUplinkSeries, Long menuId) {
+        return sqMenuMapper.countByMenuUplinkSeriesAndMenu(menuUplinkSeries,menuId);
+    }
+
+
+    @Override
+    public void addMenuByCountAndMenuUplinkSeries(Long menuId) {
+        //修改 需要查最新目录串
+        SqMenu sqMenu = sqMenuMapper.selectSqMenuById(menuId);
+        if (!sqMenu.getParentId().toString().equals("0")){
+        //所有的上级ID
+        String[] arrayMenuID = sqMenu.getMenuUplinkSeries().replace(menuId+",","").split(",");
+        Long[] strArrNum = (Long[]) ConvertUtils.convert(arrayMenuID,Long.class);
+        //所有上级 添加书签数量
+        sqMenuMapper.updateCountAdd(strArrNum,sqMenu.getBookmarkCount());
+        }
+    }
+
+    @Override
+    public void reduceMenuByCountAndMenuUplinkSeries(SqMenu sqMenu) {
+        if (!sqMenu.getParentId().toString().equals("0")){
+            //所有的上级ID
+            String[] arrayMenuID = sqMenu.getMenuUplinkSeries().replace(sqMenu.getMenuId()+",","").split(",");
+            //转换
+            Long[] strArrNum = (Long[]) ConvertUtils.convert(arrayMenuID,Long.class);
+            //所有上级 减少书签数量
+            sqMenuMapper.updateCountReduce(strArrNum,sqMenu.getBookmarkCount());
+        }
+    }
+
 }

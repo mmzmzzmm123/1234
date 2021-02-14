@@ -15,10 +15,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="bookmarkCount"    column="bookmark_count"    />
         <result property="createTime"    column="create_time"    />
         <result property="updateTime"    column="update_time"    />
+        <result property="menuUplinkSeries"    column="menu_uplink_series"    />
     </resultMap>
 
     <sql id="selectSqMenuVo">
-        select menu_id, user_id, menu_name, menu_url, menu_icon, parent_id, menu_order,bookmark_count,create_time,update_time from sq_menu
+        select menu_id, user_id, menu_name, menu_url, menu_icon, parent_id, menu_order,bookmark_count,create_time,update_time,menu_uplink_series from sq_menu
     </sql>
 
     <select id="selectSqMenuList" parameterType="SqMenu" resultMap="SqMenuResult">
@@ -33,6 +34,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="menuOrder != null "> and menu_order = #{menuOrder}</if>
              order BY menu_order ASC
         </where>
+    </select>
+    <select id="selectbymenuUplinkSeries"  resultMap="SqMenuResult">
+             select menu_id,user_id from sq_menu where menu_uplink_series is null
+    </select>
+    <select id="listByMenuUplinkSeriesAndMenu"  resultMap="SqMenuResult">
+             select menu_id from sq_menu where menu_uplink_series like '#{menuUplinkSeries}%'
+        <if test="menuId != null "> and menu_id != #{menuId}</if>
+    </select>
+    <select id="countByMenuUplinkSeriesAndMenu"  parameterType="java.lang.Integer">
+        select sum(bookmark_count) from sq_menu where menu_uplink_series like '#{menuUplinkSeries}%'
+        <if test="menuId != null "> and menu_id != #{menuId}</if>
     </select>
 
     <select id="selectSqMenuById" parameterType="Long" resultMap="SqMenuResult">
@@ -75,6 +87,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="menuOrder != null">menu_order = #{menuOrder},</if>
             <if test="bookmarkCount != null">bookmark_count = #{bookmarkCount},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="menuUplinkSeries != null">menu_uplink_series = #{menuUplinkSeries},</if>
         </trim>
         where menu_id = #{menuId}
     </update>

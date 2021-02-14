@@ -100,4 +100,30 @@ public interface SqMenuMapper extends MyMapper<SqMenu>
      * @return
      */
     public void addMenu(@Param("userId")Long userID, @Param("title")String title, @Param("parentId")Long parentId);
+
+    /**
+     * 查询空目录串的目录
+     *
+     * @param
+     * @return
+     */
+    public List<SqMenu> selectbymenuUplinkSeries();
+
+    /**
+     * 根据目录串查询下级的所有menuid
+     *
+     * @param menuUplinkSeries 目录串
+     * @param menuId 为null表示不包含menuid
+     * @return
+     */
+    public List<SqMenu> listByMenuUplinkSeriesAndMenu(@Param("menuUplinkSeries")String menuUplinkSeries, @Param("menuId")Long menuId);
+
+    /**
+     * 根据目录串查询下级的所有书签数量
+     *
+     * @param menuUplinkSeries 目录串
+     * @param menuId 为null表示不包含menuid
+     * @return
+     */
+    public int countByMenuUplinkSeriesAndMenu(@Param("menuUplinkSeries")String menuUplinkSeries, @Param("menuId")Long menuId);
 }

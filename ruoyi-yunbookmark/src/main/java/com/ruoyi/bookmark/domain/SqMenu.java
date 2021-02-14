@@ -40,6 +40,11 @@ public class SqMenu
     @Column(name = "menu_url")
     private String menuUrl;
 
+    /** 目录串 */
+    @Excel(name = "目录串")
+    @Column(name = "menu_uplink_series")
+    private String menuUplinkSeries;
+
     /** 菜单图标 */
     @Excel(name = "菜单图标")
     @Column(name = "menu_order")
@@ -68,6 +73,14 @@ public class SqMenu
     @Column(name = "update_time")
     private Date updateTime;
 
+
+    public String getMenuUplinkSeries() {
+        return menuUplinkSeries;
+    }
+
+    public void setMenuUplinkSeries(String menuUplinkSeries) {
+        this.menuUplinkSeries = menuUplinkSeries;
+    }
 
     public Integer getBookmarkCount() {
         return bookmarkCount;
@@ -169,6 +182,7 @@ public class SqMenu
             .append("bookmarkCount", getBookmarkCount())
             .append("createTime", getCreateTime())
             .append("updateTime", getUpdateTime())
+            .append("menuUplinkSeries", getMenuUplinkSeries())
             .toString();
     }
     public SqMenu(){
@@ -180,5 +194,10 @@ public class SqMenu
         this.menuName = menuName;
         this.parentId = parentId;
         this.menuIcon = menuIcon;
+    }
+
+    public SqMenu( Long menuId,String menuUplinkSeries) {
+        this.menuId = menuId;
+        this.menuUplinkSeries = menuUplinkSeries;
     }
 }

@@ -32,7 +32,7 @@
             <div class="aside-title" @click="gorecycle"><i class="el-icon-delete-solid" style="color: red"></i><span>垃圾桶</span></div>
             <div class="aside-title" @click="importHtml"><i class="el-icon-s-platform"></i><span>导入书签</span></div>
             <div class="aside-title"><i class="el-icon-s-comment"></i><span>意见反馈</span></div>
-<!--            <div class="aside-title" @click="ceshi"><i class="el-icon-s-comment"></i><span>测试页面</span></div>-->
+            <div class="aside-title" @click="ceshi"><i class="el-icon-s-comment"></i><span>测试页面</span></div>
 <!--            <div class="aside-title" @click="NqEdit"><i class="el-icon-s-comment"></i><span>NqQuillEdit编辑器</span></div>-->
             <div class="aside-title " style="margin-bottom: 100px"><i class="el-icon-s-grid"></i><span>工具箱</span></div>
 
@@ -120,26 +120,23 @@
           <div class="labelname">菜单名称</div>
           <el-input class="custom-input" v-model="form.menuName" placeholder="请输入菜单名称"/>
         </el-form-item>
+
         <el-form-item prop="menuIcon">
           <div class="labelname">菜单图标</div>
-          <el-input class="custom-input" v-model="form.menuIcon" placeholder="请输入菜单图标"/>
+          <br/>
+           <el-avatar :src="form.menuIcon" style="float: left"></el-avatar>
+          <el-input  class="custom-input"  style="float: left;margin-left:5px;width: 90%" v-model="form.menuIcon" placeholder="请输入远程图片地址(建议高:120宽:120)"/>
         </el-form-item>
         <el-form-item prop="parentId">
           <div class="labelname">上级菜单</div>
           <treeselect class="menutreeselect" v-model="form.parentId" :options="menuOptions" :normalizer="normalizer"/>
         </el-form-item>
 
-
-        <!--      <el-form-item  prop="menuOrder">-->
-        <!--        <div class="labelname">排序</div>-->
-        <!--        <el-input class="custom-input" v-model="form.menuOrder" placeholder="请输入菜单排序" />-->
-        <!--      </el-form-item>-->
-
-        <el-form-item prop="menuOrder">
-          <div class="labelname">排序(小到大)</div>
-          <br/>
-          <el-input-number v-model="form.menuOrder" placeholder="计数器"></el-input-number>
-        </el-form-item>
+<!--        <el-form-item prop="menuOrder">-->
+<!--          <div class="labelname">排序(小到大)</div>-->
+<!--          <br/>-->
+<!--          <el-input-number v-model="form.menuOrder" placeholder="计数器"></el-input-number>-->
+<!--        </el-form-item>-->
 
 
       </el-form>
@@ -391,6 +388,10 @@
     },
 
     methods: {
+      /**图片失败显示**/
+      errorHandler() {
+        return true
+      },
       /**粒子球背景特效**/
       backgroundparticle: function () {
         !function () {
@@ -1037,7 +1038,11 @@
                 this.msgError("不能将上级菜单设置为本身");
                 return;
               }
-
+              console.log("this.form.parentId"+this.form.parentId)
+              if (this.form.parentId!=0&&(this.form.parentId == null||this.form.parentId == ''||'undefined'==this.form.parentId)) {
+                this.msgError("请选择上级菜单");
+                return;
+              }
 
               updateMenu(this.form).then(response => {
                 if (response.code === 200) {

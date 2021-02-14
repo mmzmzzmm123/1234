@@ -125,4 +125,44 @@ public interface ISqMenuService
     * @return
     */
    public Long noRepetition(String state, Long userID, Long time);
+
+
+   /**
+    * 根据menuId 生成向上目录串
+    *
+    * @param
+    * @return
+    */
+   public String addMenuUplinkSeries(Long menuId);
+
+    /**
+     * 根据目录串查询下级的所有menuid
+     *
+     * @param
+     * @return
+     */
+    public List<SqMenu> listByMenuUplinkSeriesAndMenu(String menuUplinkSeries,Long menuId);
+    /**
+     * 根据目录串查询下级的所有书签数量
+     *
+     * @param
+     * @return
+     */
+    public int countByMenuUplinkSeriesAndMenu(String menuUplinkSeries, Long menuId);
+
+    /**
+     * 批量添加上级 目录的书签数量
+     *
+     * @param  menuId
+     * @return
+     */
+    void addMenuByCountAndMenuUplinkSeries(Long menuId);
+
+    /**
+     * 批量减少上级 目录的书签数量
+     *
+     * @param  sqMenu
+     * @return
+     */
+    void reduceMenuByCountAndMenuUplinkSeries(SqMenu sqMenu);
 }

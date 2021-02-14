@@ -9,6 +9,11 @@
     </div>
     <div class="mid">
       <!--右侧div内容-->
+      <svg-icon icon-class="eye-open" />
+      <br/>
+      <svg-icon icon-class="notebook_1" />
+      <br/>
+      <svg-icon icon-class="notebook_2" />
     </div>
 
 

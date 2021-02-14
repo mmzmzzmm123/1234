@@ -110,6 +110,8 @@ public class SqMenuController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody SqMenu sqMenu)
     {
+        SysUser sysUser=getAuthUser();
+        sqMenu.setUserId(sysUser.getUserId());
         return toAjax(sqMenuService.insertSqMenu(sqMenu));
     }
 
@@ -121,33 +123,22 @@ public class SqMenuController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody SqMenu sqMenu)
     {
-        //查询当前目录的 所有下级目录ID
-        Long[] downMenuid = sqMenuService.selectBymenuidsubordinateid(sqMenu.getMenuId());
-
-        //自身menuId >> 所有下级目录的书签数量
-        int bookmarkCount =sqBookmarkService.selectByMenuIdCount(sqMenu.getMenuId());
-        for (Long menuId:downMenuid){
-          SqMenu menu=new SqMenu();
-          menu.setMenuId(menuId);
-          List<SqMenu> menulist= sqMenuService.selectSqMenuList(menu);
-          bookmarkCount +=menulist.get(0).getBookmarkCount();
-        }
-
-        // ================修改前,减少上级所有目录的书签统计数量===================
-        //查询书签修改前的所有上级
-        Long[] parentMenuidlist = sqMenuService.selectBymenuidParentid(sqMenu.getMenuId());
-        if (parentMenuidlist!=null&&parentMenuidlist.length>0){
-            sqMenuService.updateCountReduce(parentMenuidlist,bookmarkCount);
-        }
-
-        //修改
-        sqMenuService.updateSqMenu(sqMenu);
-        // ================修改后,增加上级所有目录的书签统计数量===================
-        //查询书签的所有上级
-        Long[] parentMenuid = sqMenuService.selectBymenuidParentid(sqMenu.getMenuId());
-        if (parentMenuid!=null&&parentMenuid.length>0){
-        sqMenuService.updateCountAdd(parentMenuid,bookmarkCount);
-        }
+      SysUser sysUser=getAuthUser();
+      sqMenu.setUserId(sysUser.getUserId());
+      SqMenu menu = sqMenuService.selectSqMenuById(sqMenu.getMenuId());
+      //移动目录 更新新的目录串
+      Boolean parentFlag =false;
+      if (!menu.getParentId().toString().equals(menu.getParentId())){
+          parentFlag=true;
+      }
+      sqMenuService.updateSqMenu(sqMenu);
+      // ================修改后===================
+      if (parentFlag){
+        String menuus = sqMenuService.addMenuUplinkSeries(menu.getMenuId());
+        sqMenuService.updateSqMenu(new SqMenu(sqMenu.getMenuId(),menuus));
+      }
+        //添加所有上级目录的书签数量
+        sqMenuService.addMenuByCountAndMenuUplinkSeries(menu.getMenuId());
         return AjaxResult.success();
     }
 
@@ -175,11 +166,15 @@ public class SqMenuController extends BaseController
         SqMenu sqMenu=new SqMenu();
         sqMenu.setParentId(menuId);
         List<SqMenu> sqMenuList=sqMenuService.selectSqMenuList(sqMenu);
+        sqMenu = sqMenuService.selectSqMenuById(menuId);
         if (sqMenuList==null||sqMenuList.isEmpty()){
-        sqMenuService.deleteSqMenuById(menuId,sysUser.getUserId());
+            //删除
+            sqMenuService.deleteSqMenuById(menuId,sysUser.getUserId());
+            //批量减少上级所有目录的书签数量
+            sqMenu.setMenuId(menuId);
+            sqMenuService.reduceMenuByCountAndMenuUplinkSeries(sqMenu);
             //修改目录下的所有书签状态为 删除状态
             sqBookmarkService.updateSqBookmarkBymenuId(menuId);
-
             return toAjax(1);
         }else{
             return AjaxResult.error("删除失败,该目录下级还有目录菜单");
@@ -190,23 +185,23 @@ public class SqMenuController extends BaseController
      * 批量更新书签的数量
      */
 
-    @RequestMapping("/bookmarkcount/{menuId}")
-    public AjaxResult bookmarkcount(@PathVariable Long menuId)
-    {
-
-//        Long[] menuIds={1L,2L,3L};
-        //所有的父级目录
-//        Long[] menuIds=  sqMenuService.selectBymenuidParentid(4L);
-//        sqMenuService.updateCountAdd(menuIds,5);
-
-        Long[] menuIds=  sqMenuService.selectBymenuidsubordinateid(menuId);
-        for (int i=0;i<menuIds.length;i++){
-            System.out.println("id:"+menuIds[i].toString());
-        }
-        logger.info("执行完毕");
-      return   AjaxResult.success(menuIds);
-
-    }
+//    @RequestMapping("/bookmarkcount/{menuId}")
+//    public AjaxResult bookmarkcount(@PathVariable Long menuId)
+//    {
+//
+////        Long[] menuIds={1L,2L,3L};
+//        //所有的父级目录
+////        Long[] menuIds=  sqMenuService.selectBymenuidParentid(4L);
+////        sqMenuService.updateCountAdd(menuIds,5);
+//
+//        Long[] menuIds=  sqMenuService.selectBymenuidsubordinateid(menuId);
+//        for (int i=0;i<menuIds.length;i++){
+//            System.out.println("id:"+menuIds[i].toString());
+//        }
+//        logger.info("执行完毕");
+//      return   AjaxResult.success(menuIds);
+//
+//    }
 
 
 }
