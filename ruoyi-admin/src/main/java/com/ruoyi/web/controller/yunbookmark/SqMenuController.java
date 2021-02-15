@@ -134,11 +134,11 @@ public class SqMenuController extends BaseController
       sqMenuService.updateSqMenu(sqMenu);
       // ================修改后===================
       if (parentFlag){
-        String menuus = sqMenuService.addMenuUplinkSeries(menu.getMenuId());
-        sqMenuService.updateSqMenu(new SqMenu(sqMenu.getMenuId(),menuus));
+        String  menuUplinkSeries = sqMenuService.addMenuUplinkSeries(sqMenu.getMenuId());
+        sqMenuService.updateSqMenu(new SqMenu(sqMenu.getMenuId(),menuUplinkSeries));
       }
         //添加所有上级目录的书签数量
-        sqMenuService.addMenuByCountAndMenuUplinkSeries(menu.getMenuId());
+//        sqMenuService.addMenuByCountAndMenuUplinkSeries(menu.getMenuId());
         return AjaxResult.success();
     }
 
@@ -171,8 +171,8 @@ public class SqMenuController extends BaseController
             //删除
             sqMenuService.deleteSqMenuById(menuId,sysUser.getUserId());
             //批量减少上级所有目录的书签数量
-            sqMenu.setMenuId(menuId);
-            sqMenuService.reduceMenuByCountAndMenuUplinkSeries(sqMenu);
+//            sqMenu.setMenuId(menuId);
+//            sqMenuService.reduceMenuByCountAndMenuUplinkSeries(sqMenu);
             //修改目录下的所有书签状态为 删除状态
             sqBookmarkService.updateSqBookmarkBymenuId(menuId);
             return toAjax(1);

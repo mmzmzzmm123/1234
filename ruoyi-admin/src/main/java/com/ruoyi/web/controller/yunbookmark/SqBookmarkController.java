@@ -155,12 +155,7 @@ public class SqBookmarkController extends BaseController
     {
         SysUser sysUser=getAuthUser();
         sqBookmark.setUserid(sysUser.getUserId());
-        try {
-            sqBookmark.setUrls(ImportHtml.Urlutils(new URL(sqBookmark.getUrl())));
-        } catch (MalformedURLException e) {
-            logger.info(sysUser.getUserId()+"新增书签 获取网址的 主机信息 报错"+new Date());
-            e.printStackTrace();
-        }
+
         return toAjax(sqBookmarkService.insertSqBookmark(sqBookmark));
     }
 

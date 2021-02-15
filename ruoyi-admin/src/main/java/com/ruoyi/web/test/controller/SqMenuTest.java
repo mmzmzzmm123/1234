@@ -1,5 +1,8 @@
 package com.ruoyi.web.test.controller;
 
+import com.ruoyi.bookmark.domain.SqBookmark;
+import com.ruoyi.bookmark.domain.SqMenu;
+import com.ruoyi.bookmark.mapper.SqBookmarkMapper;
 import com.ruoyi.bookmark.mapper.SqMenuMapper;
 import org.apache.velocity.runtime.directive.Foreach;
 import org.junit.Test;
@@ -14,10 +17,12 @@ import java.util.List;
  * @Date: 2021/02/14 20:41
  * 功能描述:
  */
-public class SqMenu extends BaseSpringBootTest{
+public class SqMenuTest extends BaseSpringBootTest{
 
     @Autowired
     SqMenuMapper sqMenuMapper;
+    @Autowired
+    SqBookmarkMapper sqBookmarkMapper;
     @Test
     public void addMenuUplinkSeries() {
 
@@ -46,4 +51,28 @@ public class SqMenu extends BaseSpringBootTest{
           }
           }
     }
+
+    /**
+     * 批量计算新的目录下书签数量
+     *
+     * @param
+     * @return
+     */
+    @Test
+    public void test2() {
+        SqMenu sqMenu2 = new SqMenu();
+        sqMenu2.setUserId(1L);
+        List<SqMenu> sqs = sqMenuMapper.select(sqMenu2);
+        for (SqMenu s : sqs) {
+            int count = sqBookmarkMapper.countBookMakeByMenuId(s.getMenuId());
+            SqMenu sqMenu = new SqMenu();
+            sqMenu.setMenuId(s.getMenuId());
+            sqMenu.setBookmarkCount(count);
+            sqMenuMapper.updateSqMenu(sqMenu);
+        }
+
+    }
+
+
+
 }

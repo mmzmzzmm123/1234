@@ -126,7 +126,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     where userid = #{userId} and idelete = 0  order by  create_time desc
     </select>
 
-
+    <select id="countBookMakeByMenuId" parameterType="Long" resultType="java.lang.Integer">
+        select count(*) FROM sq_bookmark where menu_id =#{menuId}
+    </select>
 
     <select id="selectBymenuIdUserID" parameterType="SqBookmark"  resultMap="SqBookmarkResult">
         <include refid="selectSqBookmarkVo"/>

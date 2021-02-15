@@ -88,8 +88,19 @@ public class SqBookmark
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
+    @Transient
+    private Long parentId;
+
+
     private List<Map<String,Object>> sqTags;
 
+    public Long getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
+    }
 
     public List<Map<String, Object>> getSqTags() {
         return sqTags;

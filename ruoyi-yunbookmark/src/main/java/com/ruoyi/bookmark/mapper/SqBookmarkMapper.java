@@ -85,4 +85,12 @@ public interface SqBookmarkMapper extends MyMapper<SqBookmark>
      * @return 结果
      */
     public List<SqBookmark> selectByUseridList(Long userId);
+
+    /**
+     * 根据MenuId查询当前目录下 有多少书签数量
+     *
+     * @param  menuId
+     * @return 结果
+     */
+    public int countBookMakeByMenuId(Long menuId);
 }

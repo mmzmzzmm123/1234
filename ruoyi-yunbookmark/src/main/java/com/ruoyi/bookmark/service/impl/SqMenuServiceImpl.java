@@ -132,12 +132,7 @@ public class SqMenuServiceImpl implements ISqMenuService
        int i = sqMenuMapper.insertSqMenu(sqMenu);
         //更新新的目录串
         if (i!=0){
-            String menuUplinkSeries ="";
-            if("0".equals(parentId)){
-                 menuUplinkSeries = ","+sqMenu.getMenuId()+",";
-            }else{
-                 menuUplinkSeries = addMenuUplinkSeries(sqMenu.getMenuId());
-            }
+            String  menuUplinkSeries = addMenuUplinkSeries(sqMenu.getMenuId());
             sqMenuMapper.updateSqMenu(new SqMenu(sqMenu.getMenuId(),menuUplinkSeries));
         }
         return i;
@@ -216,6 +211,10 @@ public class SqMenuServiceImpl implements ISqMenuService
         StringBuilder menuus=new StringBuilder();
         SqMenu sqMenu = sqMenuMapper.selectSqMenuById(menuId);
         Long parentId = sqMenu.getParentId();
+        //顶级目录
+        if("0".equals(parentId.toString())){
+            return ","+sqMenu.getMenuId()+",";
+        }
         //所有的上级目录ID
         List<Long> list= new ArrayList<>();
         list.add(menuId);

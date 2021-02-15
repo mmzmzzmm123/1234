@@ -42,7 +42,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
              select menu_id from sq_menu where menu_uplink_series like '#{menuUplinkSeries}%'
         <if test="menuId != null "> and menu_id != #{menuId}</if>
     </select>
-    <select id="countByMenuUplinkSeriesAndMenu"  parameterType="java.lang.Integer">
+    <select id="countByMenuUplinkSeriesAndMenu"  resultType="java.lang.Integer">
         select sum(bookmark_count) from sq_menu where menu_uplink_series like '#{menuUplinkSeries}%'
         <if test="menuId != null "> and menu_id != #{menuId}</if>
     </select>

@@ -111,11 +111,23 @@ public class SqBookmarkServiceImpl implements ISqBookmarkService
     @Override
     public int insertSqBookmark(SqBookmark sqBookmark)
     {
+        //获取官网urls
+        try {
+            sqBookmark.setUrls(ImportHtml.Urlutils(new URL(sqBookmark.getUrl())));
+        } catch (MalformedURLException e) {
+            logger.info("用户ID:"+sqBookmark.getUserid()+",新增书签"+sqBookmark.getUrl()+"获取网址的 主机信息 报错 -"+new Date());
+        }
         if(null==sqBookmark.getDescription()||"".equals(sqBookmark.getDescription())){
             sqBookmark.setDescription(sqBookmark.getTitle());
         }
+        //转换传入的父级ID
+        sqBookmark.setMenuId(sqBookmark.getParentId());
+        int i= sqBookmarkMapper.insertSqBookmark(sqBookmark);
 
-      int i= sqBookmarkMapper.insertSqBookmark(sqBookmark);
+        //给对应目录 +1
+        sqMenuMapper.updateCountAdd(new Long[]{sqBookmark.getMenuId()},1);
+
+
         //传入的标签
         List<Map<String, Object>> listmap = sqBookmark.getSqTags();
         if (listmap==null||listmap.isEmpty()||listmap.size()==0){
@@ -151,11 +163,6 @@ public class SqBookmarkServiceImpl implements ISqBookmarkService
             bookamrktag.setTagId(tag.getKey());
             sqBookmarkTagMapper.insertSqBookmarkTag(bookamrktag);
         }
-
-        //给对应目录 +1
-        Long[] menuIds= new Long[1];
-        menuIds[0]=sqBookmark.getMenuId();
-        sqMenuMapper.updateCountAdd(menuIds,1);
         return i;
     }
 
@@ -171,11 +178,21 @@ public class SqBookmarkServiceImpl implements ISqBookmarkService
 //        String deletetag = "";
 //        //新增的书签ID
 //        String addtag = "";
+        //未修改前的信息
+        SqBookmark sqbm=sqBookmarkMapper.selectSqBookmarkById(sqBookmark.getBookmarkId());
         //传入的标签
         int i =sqBookmarkMapper.updateSqBookmark(sqBookmark);
         List<Map<String, Object>> listmap = sqBookmark.getSqTags();
         if (listmap==null||listmap.isEmpty()||listmap.size()==0){
             return i;
+        }
+
+        //是否移动目录
+        if (!sqbm.getMenuId().toString().equals(sqBookmark.getMenuId().toString())){
+            //给原目录 -1
+            sqMenuMapper.updateCountReduce(new Long[]{sqBookmark.getMenuId()},1);
+            //新目录 +1
+            sqMenuMapper.updateCountAdd(new Long[]{sqBookmark.getMenuId()},1);
         }
 
 
@@ -281,14 +298,8 @@ public class SqBookmarkServiceImpl implements ISqBookmarkService
     @Override
     public int selectByMenuIdCount(Long menuId)
     {
-        SqBookmark sqBookmark=new SqBookmark();
-        sqBookmark.setMenuId(menuId);
-       List<SqBookmark> sqBookmarks=sqBookmarkMapper.select(sqBookmark);
-       if (sqBookmarks!=null&&!sqBookmarks.isEmpty()){
-           return sqBookmarks.size();
-       }else {
-           return 0;
-       }
+        return sqBookmarkMapper.countBookMakeByMenuId(menuId);
+
     }
 
     /**
