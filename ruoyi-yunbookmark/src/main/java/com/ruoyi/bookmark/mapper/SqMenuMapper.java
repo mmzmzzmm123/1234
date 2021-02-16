@@ -126,4 +126,6 @@ public interface SqMenuMapper extends MyMapper<SqMenu>
      * @return
      */
     public int countByMenuUplinkSeriesAndMenu(@Param("menuUplinkSeries")String menuUplinkSeries, @Param("menuId")Long menuId);
+
+
 }

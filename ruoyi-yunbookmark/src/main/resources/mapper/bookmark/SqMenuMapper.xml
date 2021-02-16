@@ -15,11 +15,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="bookmarkCount"    column="bookmark_count"    />
         <result property="createTime"    column="create_time"    />
         <result property="updateTime"    column="update_time"    />
+        <result property="subordinate"    column="subordinate"    />
         <result property="menuUplinkSeries"    column="menu_uplink_series"    />
     </resultMap>
 
     <sql id="selectSqMenuVo">
-        select menu_id, user_id, menu_name, menu_url, menu_icon, parent_id, menu_order,bookmark_count,create_time,update_time,menu_uplink_series from sq_menu
+        select menu_id, user_id, menu_name, menu_url, menu_icon, parent_id, menu_order,bookmark_count,subordinate,create_time,update_time,menu_uplink_series from sq_menu
     </sql>
 
     <select id="selectSqMenuList" parameterType="SqMenu" resultMap="SqMenuResult">
@@ -47,6 +48,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <if test="menuId != null "> and menu_id != #{menuId}</if>
     </select>
 
+
+
     <select id="selectSqMenuById" parameterType="Long" resultMap="SqMenuResult">
         <include refid="selectSqMenuVo"/>
         where menu_id = #{menuId}
@@ -62,6 +65,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="parentId != null">parent_id,</if>
             <if test="menuOrder != null">menu_order,</if>
             <if test="bookmarkCount != null">bookmark_count,</if>
+            <if test="subordinate != null">subordinate,</if>
                 create_time,update_time
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -72,6 +76,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="parentId != null">#{parentId},</if>
             <if test="menuOrder != null">#{menuOrder},</if>
             <if test="bookmarkCount != null">#{bookmarkCount},</if>
+            <if test="subordinate != null">#{subordinate},</if>
             now(),now()
          </trim>
     </insert>
@@ -86,6 +91,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="parentId != null">parent_id = #{parentId},</if>
             <if test="menuOrder != null">menu_order = #{menuOrder},</if>
             <if test="bookmarkCount != null">bookmark_count = #{bookmarkCount},</if>
+            <if test="subordinate != null">subordinate = #{subordinate},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="menuUplinkSeries != null">menu_uplink_series = #{menuUplinkSeries},</if>
         </trim>

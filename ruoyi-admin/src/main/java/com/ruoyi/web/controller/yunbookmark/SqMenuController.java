@@ -50,6 +50,30 @@ public class SqMenuController extends BaseController
         List<SqMenu> list = sqMenuService.selecByUserID(user.getUser().getUserId());
         return AjaxResult.success(list);
     }
+    /**
+     * 功能描述:根据MenuId 查询子目录
+     */
+    @GetMapping("/listByMenuId/{menuId}")
+    public AjaxResult listByMenuId(@PathVariable("menuId") Long menuId)
+    {
+        List<SqMenu> list = sqMenuService.listByMenuId(getAuthUser().getUserId(),menuId);
+        return AjaxResult.success(list);
+    }
+    /**
+     * 功能描述:根据MenuId 查询子目录
+     */
+    @PostMapping("/listByMenuIdP")
+    public AjaxResult listByMenuIdP(@RequestParam("menuId") Long menuId)
+    {
+//        try {
+//            Thread.sleep(50000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+
+        List<SqMenu> list = sqMenuService.listByMenuId(getAuthUser().getUserId(),menuId);
+        return AjaxResult.success(list);
+    }
 
     /**
      * 查询MenuID单个书签信息
@@ -135,7 +159,11 @@ public class SqMenuController extends BaseController
       // ================修改后===================
       if (parentFlag){
         String  menuUplinkSeries = sqMenuService.addMenuUplinkSeries(sqMenu.getMenuId());
+        //新的目录串
         sqMenuService.updateSqMenu(new SqMenu(sqMenu.getMenuId(),menuUplinkSeries));
+        // 上级设置为目录
+        if (!sqMenu.getParentId().toString().equals("0"))
+        sqMenuService.updateSqMenu(new SqMenu(sqMenu.getParentId(),1));
       }
         //添加所有上级目录的书签数量
 //        sqMenuService.addMenuByCountAndMenuUplinkSeries(menu.getMenuId());

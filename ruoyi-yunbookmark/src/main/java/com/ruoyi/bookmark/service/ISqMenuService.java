@@ -165,4 +165,12 @@ public interface ISqMenuService
      * @return
      */
     void reduceMenuByCountAndMenuUplinkSeries(SqMenu sqMenu);
+
+    /**
+     * 查下级目录
+     *
+     * @param
+     * @return
+     */
+    List<SqMenu> listByMenuId(Long userId, Long menuId);
 }

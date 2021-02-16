@@ -124,7 +124,7 @@ public class SqBookmarkServiceImpl implements ISqBookmarkService
         sqBookmark.setMenuId(sqBookmark.getParentId());
         int i= sqBookmarkMapper.insertSqBookmark(sqBookmark);
 
-        //给对应目录 +1
+        //给对应目录 +1 并且设置为目录
         sqMenuMapper.updateCountAdd(new Long[]{sqBookmark.getMenuId()},1);
 
 

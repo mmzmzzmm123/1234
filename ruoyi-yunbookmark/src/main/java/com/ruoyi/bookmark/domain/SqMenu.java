@@ -63,6 +63,10 @@ public class SqMenu
     @Column(name = "bookmark_count")
     private Integer bookmarkCount;
 
+    /** 是否有下级 0无 1有*/
+    @Column(name = "subordinate")
+    private Integer subordinate;
+
     /** 创建时间 */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "create_time")
@@ -88,6 +92,14 @@ public class SqMenu
 
     public void setBookmarkCount(Integer bookmarkCount) {
         this.bookmarkCount = bookmarkCount;
+    }
+
+    public Integer getSubordinate() {
+        return subordinate;
+    }
+
+    public void setSubordinate(Integer subordinate) {
+        this.subordinate = subordinate;
     }
 
     public Date getUpdateTime() {
@@ -180,6 +192,7 @@ public class SqMenu
             .append("parentId", getParentId())
             .append("menuOrder", getMenuOrder())
             .append("bookmarkCount", getBookmarkCount())
+            .append("subordinate", getSubordinate())
             .append("createTime", getCreateTime())
             .append("updateTime", getUpdateTime())
             .append("menuUplinkSeries", getMenuUplinkSeries())
@@ -199,5 +212,13 @@ public class SqMenu
     public SqMenu( Long menuId,String menuUplinkSeries) {
         this.menuId = menuId;
         this.menuUplinkSeries = menuUplinkSeries;
+    }
+    public SqMenu( Long parentId,Long userId) {
+        this.parentId = parentId;
+        this.userId = userId;
+    }
+    public SqMenu( Long menuId,Integer subordinate) {
+        this.menuId = menuId;
+        this.subordinate = subordinate;
     }
 }

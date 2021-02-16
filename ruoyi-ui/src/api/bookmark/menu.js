@@ -10,6 +10,13 @@ export function listMenuByUserId() {
     method: 'get'
   })
 }
+// 查询某个目录下的 书签菜单
+export function listByMenuId(menuId) {
+  return request({
+    url: '/bookmark/menu/listByMenuId/'+ menuId,
+    method: 'get'
+  })
+}
 
 // 查询书签菜单列表
 export function listMenu(query) {

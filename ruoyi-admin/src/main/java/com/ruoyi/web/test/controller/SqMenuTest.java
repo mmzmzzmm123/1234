@@ -74,5 +74,38 @@ public class SqMenuTest extends BaseSpringBootTest{
     }
 
 
+    /**
+     * 初始化是否有下级目录 subordinate 0无下级 1有下级
+     *
+     * @param
+     * @return
+     */
+
+    @Test
+    public void test3() {
+        SqMenu sqMenu2 = new SqMenu();
+        sqMenu2.setUserId(1L);
+        List<SqMenu> sqs = sqMenuMapper.select(sqMenu2);
+        for (SqMenu s : sqs) {
+            SqMenu sq = new SqMenu();
+            sq.setParentId(s.getMenuId());
+            List<SqMenu> list = sqMenuMapper.select(sq);
+            if (list!=null&&!list.isEmpty())
+            {
+                SqMenu sqMenu = new SqMenu();
+                sqMenu.setMenuId(s.getMenuId());
+                sqMenu.setSubordinate(1);
+                sqMenuMapper.updateSqMenu(sqMenu);
+            }else{
+                SqMenu sqMenu = new SqMenu();
+                sqMenu.setMenuId(s.getMenuId());
+                sqMenu.setSubordinate(0);
+                sqMenuMapper.updateSqMenu(sqMenu);
+            }
+
+        }
+
+    }
+
 
 }

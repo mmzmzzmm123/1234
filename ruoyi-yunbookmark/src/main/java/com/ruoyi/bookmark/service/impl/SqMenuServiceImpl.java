@@ -294,4 +294,9 @@ public class SqMenuServiceImpl implements ISqMenuService
         }
     }
 
+    @Override
+    public List<SqMenu> listByMenuId(Long userId, Long parentId) {
+        return sqMenuMapper.selectSqMenuList(new SqMenu(parentId,userId));
+    }
+
 }
