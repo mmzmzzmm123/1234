@@ -1,26 +1,30 @@
 <template>
-  <div class="app-container">
-    <div class="content">
-      <div class="left">
-        <RecipesView :data="recipesData" />
-      </div>
-      <div class="right">
-        <HealthyView :data="healthyData" v-if="healthyDataType === 0" />
-        <BodySignView :data="healthyData" v-else />
-      </div>
+  <div class="recipes_build_wrapper">
+    <div class="left">
+      <RecipesView
+        :data="recipesData"
+        :name="healthyData.name"
+        :analyseData="analyseData"
+      />
+    </div>
+    <div class="right">
+      <HealthyView :data="healthyData" v-if="healthyDataType === 0" />
+      <BodySignView :data="healthyData" v-else />
     </div>
   </div>
 </template>
 <script>
 import { createNamespacedHelpers } from "vuex";
-
-const { mapActions, mapState, mapMutations } = createNamespacedHelpers(
-  "recipes"
-);
+const {
+  mapActions,
+  mapState,
+  mapMutations,
+  mapGetters,
+} = createNamespacedHelpers("recipes");
 
 import HealthyView from "./HealthyView";
 import BodySignView from "./BodySignView";
-import RecipesView from "./RecipesView";
+import RecipesView from "./RecipesView/index";
 
 export default {
   name: "BuildRecipies",
@@ -48,11 +52,8 @@ export default {
   },
   props: ["planId", "cusId", "recipesId"],
   computed: {
-    ...mapState({
-      healthyData: (state) => state.healthyData,
-      healthyDataType: (state) => state.healthyDataType,
-      recipesData: (state) => state.recipesData,
-    }),
+    ...mapState(["healthyData", "healthyDataType", "recipesData"]),
+    ...mapGetters(["analyseData"]),
   },
   methods: {
     ...mapActions(["init"]),
@@ -60,15 +61,17 @@ export default {
   },
 };
 </script>
-<style rel="stylesheet/scss" lang="scss">
-.content {
+<style lang="scss" scoped>
+.recipes_build_wrapper {
+  padding: 16px;
   display: flex;
-  height: calc(100vh - 124px);
+  height: calc(100vh - 86px);
   .left {
     flex: 4;
     border-right: 1px solid #e6ebf5;
     height: 100%;
-    overflow: auto;
+    overflow: hidden;
+    padding-right: 20px;
   }
   .right {
     flex: 1;

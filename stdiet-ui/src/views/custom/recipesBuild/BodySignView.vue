@@ -15,7 +15,7 @@
   </div>
 </template>
 <script>
-import TextInfo from "./TextInfo.vue";
+import TextInfo from "@/components/TextInfo";
 
 export default {
   name: "BodySignView",

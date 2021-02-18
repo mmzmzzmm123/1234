@@ -31,7 +31,7 @@
   </div>
 </template>
 <script>
-import TextInfo from "./TextInfo.vue";
+import TextInfo from "@/components/TextInfo";
 
 export default {
   name: "HealthyView",
@@ -166,6 +166,7 @@ export default {
             { title: "是否出现过过敏症状", value: "allergyFlag" },
             { title: "过敏症状", value: "allergySituation" },
             { title: "过敏源", value: "allergen" },
+            { title: "忌口过敏食物", value: "dishesIngredient" },
           ],
         },
         {
