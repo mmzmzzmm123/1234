@@ -22,7 +22,7 @@
 <!--            <div class="aside-title"><i class="el-icon-help"></i><span>发现</span></div>-->
 <!--            <div class="aside-title"><i class="el-icon-s-platform"></i><span>任意门</span></div>-->
             <div class="aside-title"><i class="el-icon-message-solid"></i><span>收件箱</span></div>
-            <div class="reminder">我的收藏</div>
+            <div class="reminder">我的收藏 <svg-icon icon-class="sx" style="margin-left:5px" @click="refreshNode"/></div>
             <div class="areaTree">
               <ul id="treeDemo" class="ztree"></ul>
             </div>
@@ -141,9 +141,9 @@
 
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="danger" round @click="deleteMmenu(form.menuId)">删除</el-button>
-        <el-button type="primary" round @click="submitForm">确定</el-button>
-        <el-button round @click="cancel">取消</el-button>
+        <el-button type="danger" style="background-color: #ff6c70"  @click="deleteMmenu(form.menuId)">删除</el-button>
+        <el-button type="primary" style="background-color: #09b1b9"  @click="submitForm">确定</el-button>
+        <el-button  @click="cancel">取消</el-button>
 
       </div>
 
@@ -336,7 +336,7 @@
             }
           },
           callback: {
-            beforeClick: this.BeforeClick,
+            // beforeClick: this.BeforeClick,
             onClick: this.OnClickzTree,
             // onCheck: this.zTreeOnCheck,
             //补获展开和折叠
@@ -392,6 +392,9 @@
       window['editBookmark'] = (e) => {
         this.editBookmark(e)
       },
+        window['removeHoverDoms'] = (e) => {
+          this.removeHoverDoms(e)
+        },
         //div拖动
         this.dragControllerDivs();
       /**背景彩带**/
@@ -416,7 +419,19 @@
       errorHandler() {
         return true
       },
+      removeHoverDoms:function(e){
+        if (e.getAttribute("data-treetId") != null ) {
+          var tid = e.getAttribute("data-treetId");
+          var bookmarkCount = e.getAttribute("data-bookmarkCount");
+          console.log("tid："+tid+" bookmarkCount:"+bookmarkCount)
+           $("." + tid + "_count").unbind().remove();
+           $("." + tid + "_sz").unbind().remove();
+           var switchObjspan = $("#" + tid + "_span");
+           var editStr = "<span class=" + tid + "_count  style='color: #9e9e9e;float:right;display: inline-block;margin-right: 15px;font-size:0.8rem' onfocus='this.blur();'>" + bookmarkCount + "</span>";
+           switchObjspan.after(editStr);
+        }
 
+      },
 
 
       /**div拖拽宽度**/
@@ -632,6 +647,8 @@
                   this.open = false;
                   // this.getList();
                   //https://www.cnblogs.com/remember-forget/p/8461212.html
+                  //刷新
+                  // this.refreshParentNode();
                 }
               });
             } else {
@@ -645,6 +662,33 @@
             }
           }
         });
+      },
+      //刷新子节点
+      refreshNode(){
+        /*根据 treeId 获取 zTree 对象*/
+        var zTree = $.fn.zTree.getZTreeObj("treeDemo"),
+          type = "refresh",
+          silent = false,
+          /*获取 zTree 当前被选中的节点数据集合*/
+          nodes = zTree.getSelectedNodes();
+          if (nodes!=null&&nodes.length!=0){
+        /*强行异步加载父节点的子节点。[setting.async.enable = true 时有效]*/
+        zTree.reAsyncChildNodes(nodes[0], type, silent);
+          }else{
+            this.msgSuccess("请选择需要刷新的目录");
+          }
+      },
+      //刷新父节点
+      refreshParentNode() {
+        var zTree = $.fn.zTree.getZTreeObj("treeDemo"),
+          type = "refresh",
+          silent = false,
+          nodes = zTree.getSelectedNodes();
+        /*根据 zTree 的唯一标识 tId 快速获取节点 JSON 数据对象*/
+        var parentNode = zTree.getNodeByTId(nodes[0].parentTId);
+        /*选中指定节点*/
+        zTree.selectNode(parentNode);
+        zTree.reAsyncChildNodes(parentNode, type, silent);
       },
       /** 新增按钮操作 */
       handleAdd() {
@@ -745,18 +789,12 @@
         $("." + treeNode.tId + "_count").unbind().remove();
         //if (treeNode.parentNode && treeNode.parentNode.id!=1) return;
         var switchObjspan = $("#" + treeNode.tId + "_span");
-        var editStr = "<span class=" + treeNode.tId + "_sz data-parentId=" + treeNode.parentId + " data-menuId=" + treeNode.menuId + "  onclick='editBookmark(this)' style='color: #9e9e9e;float:right;display: inline-block;margin-right: 15px;font-size:0.8rem' onfocus='this.blur();'><i class='el-icon-edit'></i></span>";
+        // onmouseout='removeHoverDoms(this)' //选中删除切换
+        var editStr = "<span  class=" + treeNode.tId + "_sz data-parentId=" + treeNode.parentId + " data-menuId=" + treeNode.menuId + " data-treetId="+ treeNode.tId +" data-bookmarkCount="+treeNode.bookmarkCount+" onclick='editBookmark(this)' style='color: #9e9e9e;float:right;display: inline-block;margin-right: 15px;font-size:0.8rem' onfocus='this.blur();'><i class='el-icon-edit'></i></span>";
         switchObjspan.after(editStr);
-
-        //绑定编辑
-        // document.getElementsByClassName(treeNode.tId + "_sz").onclick=function(){alert(this.value)};
-        //document.getElementsByClassName(treeNode.tId + "_sz").addEventListener('click', editBookmark);
-        // $("." + treeNode.tId + "_sz").addEventListener('click', editBookmark);
       },
 
       removeHoverDom: function (treeId, treeNode) {
-        //console.log("进入removeHoverDom:"+"." + treeNode.tId + "_sz")
-        //if (treeNode.parentTId && treeNode.getParentNode().id!=1) return;
         $("." + treeNode.tId + "_count").unbind().remove();
         $("." + treeNode.tId + "_sz").unbind().remove();
         var switchObjspan = $("#" + treeNode.tId + "_span");
@@ -831,7 +869,7 @@
 
         $("." + treeNode.tId + "_sz").unbind().remove();
         var switchObjspan = $("#" + treeNode.tId + "_span");
-        var editStr = "<span class=" + treeNode.tId + "_count onclick='alert(1111111);return false;' style='color: #9e9e9e;float:right;display: inline-block;margin-right: 15px;font-size:0.8rem' onfocus='this.blur();'>" + treeNode.bookmarkCount + "</span>";
+        var editStr = "<span class=" + treeNode.tId + "_count  style='color: #9e9e9e;float:right;display: inline-block;margin-right: 15px;font-size:0.8rem' onfocus='this.blur();'>" + treeNode.bookmarkCount + "</span>";
         switchObjspan.after(editStr);
       },
       //显示隐藏 ztree菜单
@@ -901,7 +939,7 @@
             });
 
             this.open = false;
-            this.getList();
+            // this.refreshParentNode();
           });
         }).catch(() => {
           this.$message({
