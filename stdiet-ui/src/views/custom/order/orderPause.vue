@@ -316,7 +316,7 @@
       /** 搜索按钮操作 */
       handleQuery() {
         this.queryParams.pageNum = 1;
-        console.log(this.queryParams.pauseStartDate);
+        // console.log(this.queryParams.pauseStartDate);
         //this.getList();
       },
       /** 重置按钮操作 */
@@ -356,7 +356,7 @@
           if (valid) {
             this.form.pauseStartDate = dayjs(this.dateScope[0]).format("YYYY-MM-DD");
             this.form.pauseEndDate =  dayjs(this.dateScope[1]).format("YYYY-MM-DD");
-            console.log(this.form.pauseStartDate + "-" + this.form.pauseEndDate);
+            // console.log(this.form.pauseStartDate + "-" + this.form.pauseEndDate);
             if (this.form.id != null) {
               updatePause(this.form).then(response => {
                 if (response.code === 200) {

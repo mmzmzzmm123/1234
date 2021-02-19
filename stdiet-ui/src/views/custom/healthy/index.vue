@@ -703,7 +703,7 @@
           detailHealthy.condiment += detailHealthy.otherCondiment ? ("，"+detailHealthy.otherCondiment) : "";
           //烹饪
           let cookingStyleRate = "";
-          console.log(detailHealthy.cookingStyleRate);
+          // console.log(detailHealthy.cookingStyleRate);
           if(detailHealthy.cookingStyleRate != null){
             detailHealthy.cookingStyleRate.split(",").forEach(function(item, index){
               cookingStyleRate += (cookingStyleRate != "" ? "，" : "") + (healthyData["cookingStyleRateArray"][index])+item +"次";

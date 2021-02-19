@@ -482,13 +482,13 @@ export default {
       this.$refs["cusContractDrawerRef"].showDrawer(row);
     },
     handleOnBodySignClick(row) {
-      console.log(row);
+      // console.log(row);
     },
     handleOnHealthSignClick(row) {
       this.$refs["physicalSignsDialogRef"].showDialog(row);
     },
     handleOnMenuClick(row) {
-      console.log(row);
+      // console.log(row);
     },
     // 取消按钮
     cancel() {

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.stdiet.custom.mapper.SysRecipesMapper">
+
+    <resultMap type="SysRecipes" id="SysRecipesResult">
+        <result property="id" column="id"/>
+        <result property="numDay" column="num_day"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="reviewStatus" column="review_status"/>
+        <association property="dishes" column="id" select="selectDishesByMenuId"/>
+    </resultMap>
+
+    <resultMap id="SysDishesResult" type="SysDishes">
+        <result property="id" column="dishes_id"/>
+        <result property="name" column="name"/>
+        <result property="type" column="type"/>
+        <result property="methods" column="methods"/>
+        <result property="isMain" column="is_main"/>
+        <result property="detail" column="detail" typeHandler="com.stdiet.custom.typehandler.ArrayJsonHandler"
+                javaType="com.stdiet.custom.domain.SysDishesIngredientInfo"/>
+        <association property="igdList" column="dishes_id" select="selectIngredientsByDishesId"/>
+    </resultMap>
+
+    <resultMap id="SysIgdsResult" type="SysDishesIngredient">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="type" column="type"/>
+        <result property="proteinRatio" column="protein_ratio"/>
+        <result property="fatRatio" column="fat_ratio"/>
+        <result property="carbonRatio" column="carbon_ratio"/>
+        <result property="area" column="area"/>
+        <result property="rec" column="rec"/>
+        <result property="notRec" column="not_rec"/>
+        <result property="cusWeight"    column="cus_weight"    />
+        <result property="cusUnit"    column="cus_unit"    />
+        <result property="weight"    column="weight"    />
+    </resultMap>
+
+    <select id="selectSysRecipesByRecipesId" parameterType="Long" resultMap="SysRecipesResult">
+        SELECT * FROM sys_customer_daily_menu WHERE recipes_id = #{id}
+    </select>
+
+    <select id="selectDishesByMenuId" parameterType="Long" resultMap="SysDishesResult">
+        SELECT * FROM (SELECT * FROM sys_customer_menu_dishes WHERE menu_id = #{id}) AS menu
+        LEFT JOIN sys_dishes ON menu.dishes_id = sys_dishes.id
+    </select>
+
+    <select id="selectIngredientsByDishesId" parameterType="Long" resultMap="SysIgdsResult">
+       SELECT * FROM(
+            SELECT ingredient_id AS id, ingredient_weight AS weight, cus_weight, cus_unit, remark
+            FROM sys_dishes_ingredient
+            WHERE dishes_id = #{id}
+        ) dishes
+        LEFT JOIN (
+            SELECT id, name, type, protein_ratio, fat_ratio, carbon_ratio, area, not_rec, rec
+            FROM sys_ingredient igd
+            LEFT JOIN (
+                SELECT ingredient_id as id, GROUP_CONCAT(name SEPARATOR ',') not_rec FROM(
+                    SELECT physical_signs_id as id, ingredient_id
+                    FROM sys_ingredient_not_rec
+                ) notRec JOIN sys_physical_signs phy USING(id)
+                GROUP BY id
+            ) notRecT USING(id)
+            LEFT JOIN (
+                SELECT ingredient_id as id, GROUP_CONCAT(name SEPARATOR ',') rec FROM(
+                    SELECT physical_signs_id as id, ingredient_id
+                    FROM sys_ingredient_rec
+                ) rec JOIN sys_physical_signs phy USING(id)
+                GROUP BY id
+            ) recT USING(id)
+        ) ing USING(id)
+    </select>
+
+</mapper>

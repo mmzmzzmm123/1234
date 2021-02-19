@@ -169,12 +169,12 @@
       <div class="drawer_content">
         <el-row class="content_detail">
           <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-            <el-col span="24">
+            <el-col :span="24">
               <el-form-item label="菜品名称" prop="name">
                 <el-input v-model="form.name" placeholder="请输入菜品名称" />
               </el-form-item>
             </el-col>
-            <el-col span="12">
+            <el-col :span="12">
               <el-form-item label="菜品类型" prop="type">
                 <el-select
                   v-model="form.type"
@@ -190,7 +190,7 @@
                 </el-select>
               </el-form-item>
             </el-col>
-            <el-col span="12">
+            <el-col :span="12">
               <el-form-item label="是否主食" prop="type">
                 <el-radio-group v-model="form.isMain">
                   <el-radio :label="0">是</el-radio>
@@ -198,7 +198,7 @@
                 </el-radio-group>
               </el-form-item>
             </el-col>
-            <el-col span="24">
+            <el-col :span="24">
               <el-form-item label="食材" prop="ingIds">
                 <el-transfer
                   style="text-align: left; display: inline-block"
@@ -237,7 +237,7 @@
                 </el-transfer>
               </el-form-item>
             </el-col>
-            <el-col span="24">
+            <el-col :span="24">
               <el-form-item label="分量" prop="weight">
                 <el-table
                   :data="selTableData"
@@ -258,8 +258,8 @@
                           step="0.5"
                           :min="0.5"
                         /> -->
-                        <el-select size="mini" v-model="scope.row.cusWei">
-                           <el-option
+                        <el-select size="mini" v-model="scope.row.cusWeight">
+                          <el-option
                             v-for="dict in cusWeightOptions"
                             :key="dict.dictValue"
                             :label="dict.dictLabel"
@@ -286,7 +286,7 @@
                         controls-position="right"
                         @change="handleInputChange"
                         :min="0"
-                        step="50"
+                        :step="50"
                       />
                     </template>
                   </el-table-column>
@@ -301,7 +301,7 @@
                 </el-table>
               </el-form-item>
             </el-col>
-            <el-col span="24">
+            <el-col :span="24">
               <el-form-item label="推荐人群">
                 <el-tag
                   style="margin-right: 4px"
@@ -313,7 +313,7 @@
                 </el-tag>
               </el-form-item>
             </el-col>
-            <el-col span="24">
+            <el-col :span="24">
               <el-form-item label="忌口人群">
                 <el-tag
                   style="margin-right: 4px"
@@ -325,7 +325,7 @@
                 </el-tag>
               </el-form-item>
             </el-col>
-            <el-col span="24">
+            <el-col :span="24">
               <el-form-item label="审核状态" prop="reviewStatus">
                 <el-select
                   v-model="form.reviewStatus"
@@ -341,7 +341,7 @@
                 </el-select>
               </el-form-item>
             </el-col>
-            <el-col span="24">
+            <el-col :span="24">
               <el-form-item label="做法" prop="methods">
                 <el-input
                   v-model="form.methods"
@@ -448,7 +448,7 @@ export default {
     this.getDicts("cus_cus_unit").then((response) => {
       this.cusUnitOptions = response.data;
     });
-     this.getDicts("cus_cus_weight").then((response) => {
+    this.getDicts("cus_cus_weight").then((response) => {
       this.cusWeightOptions = response.data;
     });
     this.getDicts("cus_review_status").then((response) => {
@@ -485,7 +485,7 @@ export default {
             notRecTags,
           };
         });
-        console.log(this.dishesList);
+        // console.log(this.dishesList);
         this.total = response.total;
         this.loading = false;
       });
@@ -502,7 +502,7 @@ export default {
       return this.selectDictLabel(this.cusUnitOptions, row.type);
     },
     cusWeightFormat(row, column) {
-      return this.selectDictLabel(this.cusWeightOptions, row.cusWei);
+      return this.selectDictLabel(this.cusWeightOptions, row.cusWeight);
     },
     // 地域字典翻译
     reviewStatusFormat(row, column) {
@@ -597,7 +597,7 @@ export default {
         listAllIngredient({ type: this.ingType }).then((res) => {
           this.open = true;
           this.title = "修改菜品";
-          this.oriDataList = res.rows;
+          this.oriDataList = res.rows.concat(this.form.igdList);
           this.ingDataList = this.oriDataList.reduce((arr, cur) => {
             if (!arr.some(({ key }) => key === cur.id)) {
               arr.push({
@@ -606,7 +606,7 @@ export default {
               });
             }
             return arr;
-          }, this.selIngList.slice());
+          }, []);
         });
       });
     },
@@ -614,10 +614,15 @@ export default {
     submitForm() {
       this.$refs["form"].validate((valid) => {
         if (valid) {
-          this.form.igdList = this.selTableData;
-          this.form.type = this.form.type.join(",");
-          if (this.form.id != null) {
-            updateDishes(this.form).then((response) => {
+          if (!this.selTableData.length) {
+            this.$message.error("食材不能为空");
+            return;
+          }
+          const data = JSON.parse(JSON.stringify(this.form));
+          data.igdList = this.selTableData;
+          data.type = data.type.join(",");
+          if (data.id != null) {
+            updateDishes(data).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("修改成功");
                 this.open = false;
@@ -625,7 +630,7 @@ export default {
               }
             });
           } else {
-            addDishes(this.form).then((response) => {
+            addDishes(data).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("新增成功");
                 this.open = false;
@@ -670,7 +675,13 @@ export default {
         .catch(function () {});
     },
     handleChange(value, direction, movedKeys) {
-      // console.log({oriIgdList: this.oriDataList, selIgdList: this.form.igdList});
+      console.log({
+        oriIgdList: this.oriDataList,
+        selIgdList: this.form.igdList,
+        ingDataList: this.ingDataList,
+        value,
+        ingType: this.ingType,
+      });
       const newTableData = [];
       this.selRec = [];
       this.selNotRec = [];
@@ -686,7 +697,7 @@ export default {
             newTableData.push({
               ...tmpTableObj,
               weight: 100,
-              cusWei: 1,
+              cusWeight: 1,
               cusUnit: 1,
             });
           }
@@ -714,7 +725,7 @@ export default {
     },
     handleOnTypeChange(value) {
       listAllIngredient({ type: value }).then((res) => {
-        this.oriDataList = res.rows;
+        this.oriDataList = res.rows.concat(this.form.igdList);
         this.ingDataList = this.oriDataList.reduce((arr, cur) => {
           if (!arr.some(({ key }) => key === cur.id)) {
             arr.push({
@@ -723,11 +734,11 @@ export default {
             });
           }
           return arr;
-        }, this.selIngList.slice());
+        }, []);
       });
     },
     handleInputChange(val) {
-      console.log({ val, table: this.selTableData });
+      // console.log({ val, table: this.selTableData });
     },
     getSummaries(param) {
       const { columns, data } = param;
@@ -755,80 +766,85 @@ export default {
   },
 };
 </script>
-
-  <style   >
-/**
-/deep/ :focus {
-   outline: 0;
- }
- */
+<style rel="stylesheet/scss" lang="scss">
+#el-drawer__title {
+  & > span:focus {
+    outline: 0;
+  }
+}
 
 .el-transfer-panel__filter {
   margin: 2px;
 }
 
+.el-transfer-panel__list.is-filterable {
+  padding-bottom: 28px;
+}
+
 .cus-unit {
   display: inline-flex;
-}
+  .el-input-number--mini {
+    width: 38px;
+  }
 
-.cus-unit .el-input-number--mini {
-  width: 38px;
-}
+  .el-input-number {
+    .el-input-number__decrease {
+      display: none;
+    }
+    .el-input-number__increase {
+      display: none;
+    }
 
-.cus-unit .el-input-number .el-input-number__decrease {
-  display: none;
-}
+    .el-input {
+      width: 38px;
+    }
 
-.cus-unit .el-input-number .el-input-number__increase {
-  display: none;
-}
+    .el-input .el-input__inner {
+      padding: 0;
+      border-radius: 0;
+      border: unset;
+      border-bottom: 1px solid #dcdfe6;
+    }
+  }
 
-.cus-unit .el-input-number .el-input {
-  width: 38px;
-}
+  .el-select {
+    .el-input__suffix {
+      display: none;
+    }
 
-.cus-unit .el-input-number .el-input .el-input__inner {
-  padding: 0;
-  border-radius: 0;
-  border: unset;
-  border-bottom: 1px solid #dcdfe6;
-}
-
-.cus-unit .el-select .el-input__suffix {
-  display: none;
-}
-
-.cus-unit .el-select .el-input__inner {
-  padding: 0 4px;
-  /* border: unset; */
-  text-align: center;
+    .el-input__inner {
+      padding: 0 4px;
+      /* border: unset; */
+      text-align: center;
+    }
+  }
 }
 
 .weight {
   width: 70px;
-}
 
-.weight .el-input .el-input__inner {
-  padding: 0 32px 0 4px;
+  .el-input .el-input__inner {
+    padding: 0 32px 0 4px;
+  }
 }
 
 .drawer_content {
   height: 100%;
   display: flex;
   flex-direction: column;
-}
 
-.drawer_content .content_detail {
-  flex: 1 1 0;
-  padding: 12px;
-  overflow: auto;
-}
+  .content_detail {
+    flex: 1 1 0;
+    padding: 12px;
+    overflow: auto;
+  }
 
-.drawer_content .dialog-footer {
-  flex: 0 0 45px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: flex-end;
-  padding: 0 12px;
+  .dialog-footer {
+    flex: 0 0 45px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 0 12px;
+  }
 }
 </style>

@@ -365,7 +365,7 @@ export default {
   },
   methods: {
     onSubmit() {
-      console.log("submit!");
+      // console.log("submit!");
     },
     /** 查询体征列表 */
     getPhysicalSignsList() {
@@ -402,7 +402,7 @@ export default {
           cusMessage.connectTime = cusMessage.connectTime.substring(0, 2);
           addCustomer(cusMessage).then((response) => {
             if (response.code === 200) {
-              console.log("成功");
+              // console.log("成功");
               this.$notify({
                 title: "提交成功",
                 message: "",
@@ -439,7 +439,7 @@ export default {
   },
   beforeCreate() {
     document.title = this.$route.meta.title;
-    console.log(this.$route.meta.title);
+    // console.log(this.$route.meta.title);
   },
 };
 </script>
