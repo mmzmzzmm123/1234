@@ -2,6 +2,7 @@ package com.stdiet.custom.domain;
 
 import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.stdiet.common.annotation.Excel;
@@ -13,6 +14,7 @@ import com.stdiet.common.core.domain.BaseEntity;
  * @author xzj
  * @date 2021-01-15
  */
+@Data
 public class SysRecipesPlan extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
@@ -23,6 +25,9 @@ public class SysRecipesPlan extends BaseEntity
     /** 订单ID */
     //@Excel(name = "订单ID")
     private Long orderId;
+
+    //客户ID
+    private Long customerId;
 
     //非持久化字段，客户姓名
     @Excel(name = "客户姓名")
@@ -82,167 +87,4 @@ public class SysRecipesPlan extends BaseEntity
 
     /** 删除标识 0未删除 1已删除 默认0 */
     private Integer delFlag;
-
-    public void setId(Long id)
-    {
-        this.id = id;
-    }
-
-    public Long getId()
-    {
-        return id;
-    }
-    public void setOrderId(Long orderId)
-    {
-        this.orderId = orderId;
-    }
-
-    public Long getOrderId()
-    {
-        return orderId;
-    }
-    public void setStartDate(Date startDate)
-    {
-        this.startDate = startDate;
-    }
-
-    public Date getStartDate()
-    {
-        return startDate;
-    }
-    public void setEndDate(Date endDate)
-    {
-        this.endDate = endDate;
-    }
-
-    public Date getEndDate()
-    {
-        return endDate;
-    }
-    public void setRecipesId(Long recipesId)
-    {
-        this.recipesId = recipesId;
-    }
-
-    public Long getRecipesId()
-    {
-        return recipesId;
-    }
-    public void setSendFlag(Integer sendFlag)
-    {
-        this.sendFlag = sendFlag;
-    }
-
-    public Integer getSendFlag()
-    {
-        return sendFlag;
-    }
-    public void setSendTime(Date sendTime)
-    {
-        this.sendTime = sendTime;
-    }
-
-    public Date getSendTime()
-    {
-        return sendTime;
-    }
-    public void setDelFlag(Integer delFlag)
-    {
-        this.delFlag = delFlag;
-    }
-
-    public Integer getDelFlag()
-    {
-        return delFlag;
-    }
-
-    public String getCustomer() {
-        return customer;
-    }
-
-    public void setCustomer(String customer) {
-        this.customer = customer;
-    }
-
-    public Long getNutritionistId() {
-        return nutritionistId;
-    }
-
-    public void setNutritionistId(Long nutritionistId) {
-        this.nutritionistId = nutritionistId;
-    }
-
-    public String getNutritionist() {
-        return nutritionist;
-    }
-
-    public void setNutritionist(String nutritionist) {
-        this.nutritionist = nutritionist;
-    }
-
-    public Long getNutritionistAssisId() {
-        return nutritionistAssisId;
-    }
-
-    public void setNutritionistAssisId(Long nutritionistAssisId) {
-        this.nutritionistAssisId = nutritionistAssisId;
-    }
-
-    public String getNutritionistAssis() {
-        return nutritionistAssis;
-    }
-
-    public void setNutritionistAssis(String nutritionistAssis) {
-        this.nutritionistAssis = nutritionistAssis;
-    }
-
-    public Date getOrderStartDate() {
-        return orderStartDate;
-    }
-
-    public void setOrderStartDate(Date orderStartDate) {
-        this.orderStartDate = orderStartDate;
-    }
-
-    public Date getOrderEndDate() {
-        return orderEndDate;
-    }
-
-    public void setOrderEndDate(Date orderEndDate) {
-        this.orderEndDate = orderEndDate;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getHidePhone() {
-        return hidePhone;
-    }
-
-    public void setHidePhone(String hidePhone) {
-        this.hidePhone = hidePhone;
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-                .append("id", getId())
-                .append("orderId", getOrderId())
-                .append("startDate", getStartDate())
-                .append("endDate", getEndDate())
-                .append("recipesId", getRecipesId())
-                .append("sendFlag", getSendFlag())
-                .append("sendTime", getSendTime())
-                .append("createTime", getCreateTime())
-                .append("createBy", getCreateBy())
-                .append("updateTime", getUpdateTime())
-                .append("updateBy", getUpdateBy())
-                .append("delFlag", getDelFlag())
-                .toString();
-    }
 }

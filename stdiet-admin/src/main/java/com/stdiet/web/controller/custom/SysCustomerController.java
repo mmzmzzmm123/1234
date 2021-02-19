@@ -53,6 +53,7 @@ public class SysCustomerController extends BaseController {
             for (SysCustomer sysCus : list) {
                 if (StringUtils.isNotEmpty(sysCus.getPhone())) {
                     sysCus.setPhone(StringUtils.hiddenPhoneNumber(sysCus.getPhone()));
+                    sysCus.setEncId(sysCus.getId() != null ? AesUtils.encrypt(sysCus.getId()+"", null) : "");
                 }
             }
         }
@@ -143,17 +144,17 @@ public class SysCustomerController extends BaseController {
         //查询健康评估信息
         SysCustomerHealthy sysCustomerHealthy = sysCustomerHealthyService.selectSysCustomerHealthyByCustomerId(id);
         if(sysCustomerHealthy != null){
-            if (StringUtils.isNotEmpty(sysCustomerHealthy.getPhone())) {
+           /* if (StringUtils.isNotEmpty(sysCustomerHealthy.getPhone())) {
                 sysCustomerHealthy.setPhone(StringUtils.hiddenPhoneNumber(sysCustomerHealthy.getPhone()));
-            }
+            }*/
             result.put(key, sysCustomerHealthy);
         }else{
             //查询体征信息
             SysCustomerPhysicalSigns sysCustomerPhysicalSigns = sysCustomerPhysicalSignsService.selectSysCustomerPhysicalSignsByCusId(id);
             if(sysCustomerPhysicalSigns != null){
-                if (StringUtils.isNotEmpty(sysCustomerPhysicalSigns.getPhone())) {
+               /* if (StringUtils.isNotEmpty(sysCustomerPhysicalSigns.getPhone())) {
                     sysCustomerPhysicalSigns.setPhone(StringUtils.hiddenPhoneNumber(sysCustomerPhysicalSigns.getPhone()));
-                }
+                }*/
                 result.put("type", 1);
             }
             result.put(key, sysCustomerPhysicalSigns);

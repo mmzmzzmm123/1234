@@ -1,0 +1,72 @@
+export const orderMoneyTypeArray = [
+  {
+    value: 0,
+    label: "全款单"
+  },{
+    value: 1,
+    label: "定金单"
+  },
+  {
+    value: 2,
+    label: "尾款单"
+  }
+]
+
+//订单次数类型
+export const orderCountTypeArray = [
+  {
+    value: 0,
+    label: "一开单",
+    children: orderMoneyTypeArray
+  },{
+    value: 1,
+    label: "二开单",
+    children: orderMoneyTypeArray
+  }
+]
+
+//订单类型
+export const orderTypeArray = [
+  {
+    value: 0,
+    label: "普通单",
+    children: orderCountTypeArray
+  },{
+    value: 1,
+    label: "比例拆分单",
+    children: orderCountTypeArray
+  }
+]
+
+//订单拆分比例类型
+export const orderRateArray = [
+  {
+    dictValue: "0,10",
+    dictLabel: "不拆分",
+    remark: ""
+  },
+  {
+    dictValue: "1,9",
+    dictLabel: "1-9开",
+    remark: ""
+  },{
+    dictValue: "2,8",
+    dictLabel: "2-8开",
+    remark: "default"
+  },
+  {
+    dictValue: "3,7",
+    dictLabel: "3-7开",
+    remark: ""
+  },
+  {
+    dictValue: "4,6",
+    dictLabel: "4-6开",
+    remark: ""
+  },
+  {
+    dictValue: "5,5",
+    dictLabel: "5-5开",
+    remark: ""
+  }
+]

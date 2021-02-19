@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.stdiet.custom.mapper.SysFoodHeatStatisticsMapper">
+
+    <resultMap type="SysFoodHeatStatistics" id="SysFoodHeatStatisticsResult">
+        <result property="id"    column="id"    />
+        <result property="customerId"    column="customer_id"    />
+        <result property="ingredient"    column="ingredient"    />
+        <result property="unit"    column="unit"    />
+        <result property="number"    column="number"    />
+        <result property="quantity"    column="quantity"    />
+        <result property="edibleDate"    column="edible_date"    />
+        <result property="edibleType"    column="edible_type"    />
+        <result property="heatValue"    column="heat_value"    />
+        <result property="heatGap"    column="heat_gap"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="delFlag"    column="del_flag"    />
+
+        <result property="unitName" column="unitName"></result>
+    </resultMap>
+
+    <sql id="selectSysFoodHeatStatisticsVo">
+        select id, customer_id, ingredient, unit, number, quantity, edible_date, edible_type, heat_value, heat_gap, create_time, create_by, update_time, update_by, del_flag from sys_food_heat_statistics
+    </sql>
+
+    <select id="selectSysFoodHeatStatisticsList" parameterType="SysFoodHeatStatistics" resultMap="SysFoodHeatStatisticsResult">
+        select sfhs.id, sfhs.customer_id, sfhs.ingredient, sfhs.unit, sfhs.number, sfhs.quantity, sfhs.edible_date, sfhs.edible_type, sfhs.heat_value, sfhs.heat_gap,cusUnit.dict_label as unitName
+        from sys_food_heat_statistics as  sfhs
+        LEFT JOIN (SELECT dict_label, dict_value FROM sys_dict_data WHERE dict_type = 'cus_cus_unit') AS cusUnit ON cusUnit.dict_value = sfhs.unit
+        where sfhs.del_flag = 0
+        <if test="customerId != null "> and sfhs.customer_id = #{customerId}</if>
+    </select>
+
+    <select id="selectSysFoodHeatStatisticsById" parameterType="Long" resultMap="SysFoodHeatStatisticsResult">
+        <include refid="selectSysFoodHeatStatisticsVo"/>
+        where id = #{id} and del_flag = 0
+    </select>
+
+    <insert id="insertSysFoodHeatStatistics" parameterType="SysFoodHeatStatistics" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_food_heat_statistics
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="customerId != null">customer_id,</if>
+            <if test="ingredient != null">ingredient,</if>
+            <if test="unit != null">unit,</if>
+            <if test="number != null">number,</if>
+            <if test="quantity != null">quantity,</if>
+            <if test="edibleDate != null">edible_date,</if>
+            <if test="edibleType != null">edible_type,</if>
+            <if test="heatValue != null">heat_value,</if>
+            <if test="heatGap != null">heat_gap,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="delFlag != null">del_flag,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="customerId != null">#{customerId},</if>
+            <if test="ingredient != null">#{ingredient},</if>
+            <if test="unit != null">#{unit},</if>
+            <if test="number != null">#{number},</if>
+            <if test="quantity != null">#{quantity},</if>
+            <if test="edibleDate != null">#{edibleDate},</if>
+            <if test="edibleType != null">#{edibleType},</if>
+            <if test="heatValue != null">#{heatValue},</if>
+            <if test="heatGap != null">#{heatGap},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+        </trim>
+    </insert>
+
+    <update id="updateSysFoodHeatStatistics" parameterType="SysFoodHeatStatistics">
+        update sys_food_heat_statistics
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="customerId != null">customer_id = #{customerId},</if>
+            <if test="ingredient != null">ingredient = #{ingredient},</if>
+            <if test="unit != null">unit = #{unit},</if>
+            <if test="number != null">number = #{number},</if>
+            <if test="quantity != null">quantity = #{quantity},</if>
+            <if test="edibleDate != null">edible_date = #{edibleDate},</if>
+            <if test="edibleType != null">edible_type = #{edibleType},</if>
+            <if test="heatValue != null">heat_value = #{heatValue},</if>
+            <if test="heatGap != null">heat_gap = #{heatGap},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="deleteSysFoodHeatStatisticsById" parameterType="Long">
+        update sys_food_heat_statistics set del_flag = 1 where id = #{id}
+    </update>
+
+    <update id="deleteSysFoodHeatStatisticsByIds" parameterType="String">
+        update sys_food_heat_statistics set del_flag = 1 where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <insert id="insertFoodHeatBatch"  parameterType="java.util.List">
+        insert into sys_food_heat_statistics(customer_id,ingredient,unit,number,quantity) values
+        <foreach collection ="list" item="food" index= "index" separator =",">
+              (#{food.customerId}, #{food.ingredient},#{food.unit},#{food.number},#{food.quantity})
+        </foreach >
+    </insert>
+
+</mapper>

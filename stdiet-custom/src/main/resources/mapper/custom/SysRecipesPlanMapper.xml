@@ -18,7 +18,8 @@
         <result property="updateBy"    column="update_by"    />
         <result property="delFlag"    column="del_flag"    />
         <!-- 非持久化字段 -->
-        <result property="customer"    column="customer"    />
+        <result property="customerId" column="cus_id"></result><!-- 客户ID -->
+        <result property="customer"    column="customer"    /><!-- 客户姓名 -->
         <result property="phone" column="phone"     />
         <result property="orderStartDate"    column="order_start_date"    />
         <result property="orderEndDate"    column="order_end_date"    />
@@ -126,7 +127,7 @@
 
     <!-- 食谱计划、订单表联查 -->
     <select id="selectPlanListByCondition" parameterType="SysRecipesPlan" resultMap="SysRecipesPlanResult">
-      SELECT srp.id,srp.order_id,sr.customer,sr.phone,su_nutritionist.nick_name nutritionist,su_nutritionist_assis.nick_name AS nutritionist_assis,sr.start_time,sr.server_end_time, srp.start_date,srp.end_date,srp.send_flag,srp.send_time
+      SELECT srp.id,srp.order_id,sr.customer,sr.cus_id,sr.phone,su_nutritionist.nick_name nutritionist,su_nutritionist_assis.nick_name AS nutritionist_assis,sr.start_time,sr.server_end_time, srp.start_date,srp.end_date,srp.send_flag,srp.send_time
       FROM sys_recipes_plan srp
       LEFT JOIN sys_order sr ON sr.order_id = srp.order_id
       LEFT JOIN sys_user su_nutritionist ON su_nutritionist.user_id = sr.nutritionist_id AND su_nutritionist.del_flag = 0

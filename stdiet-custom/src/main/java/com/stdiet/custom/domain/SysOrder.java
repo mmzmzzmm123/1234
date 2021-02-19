@@ -93,6 +93,9 @@ public class SysOrder extends BaseEntity {
      */
     private Long nutritionistId;
 
+    //营养师数组，比例拆分单时需要两个营养师，非持久化字段
+    private Long[] nutritionistIdList;
+
     /**
      * 营养师
      */
@@ -227,11 +230,37 @@ public class SysOrder extends BaseEntity {
      * 订单暂停记录 非持久化字段
      * */
     private List<SysOrderPause> orderPauseList;
+
+    //查询参数
     private Integer amountFlag;
 
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    public Date getStartTime() {
-        return startTime;
-    }
+    /**
+     * 订单类型 0普通单 1比例拆分单 2售后二开提成单
+     */
+    private String orderType;
+
+    /**
+     * 订单次数类型 0一开单  1二开单
+     */
+    private String orderCountType;
+
+    /**
+     * 订单金额类型 0全款单  1定金单  2尾款单
+     */
+    private String orderMoneyType;
+
+    /**
+     * 拆分订单中的主订单id，非拆分订单时，该id都为0
+     */
+    private Long mainOrderId;
+
+    //订单类型数组，用于接收订单类型、订单次数类型、订单金额类型，非持久化字段
+    private Long[] orderTypeList;
+
+    //是否自动创建售后二开提成单，非持久化字段
+    private Integer secondAfterSaleFlag;
+
+    //拆分比例，如：1,9就是按照比例10%、90%拆分，非持久化字段
+    private Integer[] nutritionistRate;
 
 }
