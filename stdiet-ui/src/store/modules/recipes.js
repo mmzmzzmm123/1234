@@ -12,6 +12,7 @@ const oriState = {
   recipesData: [],
   cusUnitOptions: [],
   cusWeightOptions: [],
+  dishesTypeOptions: [],
   typeOptions: [],
   currentDay: -1
 };
@@ -23,36 +24,29 @@ const mutations = {
   },
   setRecipesData(state, payload) {
     state.recipesData = payload.recipesData;
-    console.log(payload.recipesData);
+    // console.log(payload.recipesData);
   },
-  updateRecipesDishesWeight(state, payload) {
+  updateRecipesDishesDetail(state, payload) {
     const tarDishes = state.recipesData[payload.num].dishes.find(
       obj => obj.id === payload.dishesId
     );
     if (tarDishes) {
       const tarIgd = tarDishes.igdList.find(obj => obj.id === payload.igdId);
       if (tarIgd) {
-        tarIgd.weight = payload.weight;
+        payload.weight && (tarIgd.weight = payload.weight);
+        payload.cusWeight && (tarIgd.cusWeight = payload.cusWeight);
+        payload.cusUnit && (tarIgd.cusUnit = payload.cusUnit);
       }
     }
   },
-  updateRecipesDishesCustomWeight(state, payload) {
-    const tarDishes = state.recipesData[payload.num].dishes.find(
-      obj => obj.id === payload.dishesId
-    );
-    if (tarDishes) {
-      const tarIgd = tarDishes.igdList.find(obj => obj.id === payload.igdId);
-      if (tarIgd) {
-        tarIgd.cusWeight = payload.cusWeight;
-        tarIgd.cusUnit = payload.cusUnit;
-      }
-    }
+  addRecipesDishes(state, payload) {
+
+    state.recipesData[payload.num].dishes.push(payload.data);
   },
   updateOptions(state, payload) {
-    payload.cusUnitOptions && (state.cusUnitOptions = payload.cusUnitOptions);
-    payload.cusWeightOptions &&
-      (state.cusWeightOptions = payload.cusWeightOptions);
-    payload.typeOptions && (state.typeOptions = payload.typeOptions);
+    Object.keys(payload).forEach(key => {
+      state[key] = payload[key];
+    });
   },
   setCurrentDay(state, payload) {
     state.currentDay =
@@ -87,6 +81,9 @@ const actions = {
     });
     getDicts("cus_dishes_type").then(response => {
       commit("updateOptions", { typeOptions: response.data });
+    });
+    getDicts("cus_dishes_type").then(response => {
+      commit("updateOptions", { dishesTypeOptions: response.data });
     });
 
     // 健康数据

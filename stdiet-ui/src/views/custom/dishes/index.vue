@@ -162,9 +162,9 @@
     <el-drawer
       :title="title"
       :visible.sync="open"
+      :wrapperClosable="false"
       size="50%"
       :close-on-press-escape="false"
-      :close-on-click-modal="false"
     >
       <div class="drawer_content">
         <el-row class="content_detail">

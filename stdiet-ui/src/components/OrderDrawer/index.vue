@@ -4,6 +4,7 @@
       :title="title"
       :close-on-press-escape="false"
       :visible.sync="visible"
+      :wrapperClosable="false"
       @closed="handleOnClosed"
       size="40%"
     >

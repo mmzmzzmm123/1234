@@ -11,31 +11,26 @@
         currentDay + 1 === num ? '1px solid #d96969' : 'none'
       }`"
     >
-      <el-table-column
-        prop="type"
-        :formatter="typeFormatter"
-        :width="100"
-        align="center"
-      >
+      <el-table-column prop="type" :width="100" align="center">
         <template slot="header">
           <span class="num_day" @click="handleOnOneDayAnalysis">{{
             `${name}第${num}天`
           }}</span>
         </template>
+        <template slot-scope="scope">
+          <span style="font-weight: bold; font-size: 14px">{{ typeFormatter(scope.row) }}</span>
+        </template>
       </el-table-column>
       <el-table-column label="菜品" prop="name" align="center">
         <template slot="header">
-          <el-popover placement="top" trigger="hover">
-            <el-button
-              type="primary"
-              size="mini"
-              icon="el-icon-edit"
-              class="fun_button"
-              @click="handleOnAdd"
-              >添加</el-button
-            >
-            <span class="num_day" slot="reference">菜品</span>
-          </el-popover>
+          <el-tooltip
+            class="item"
+            effect="dark"
+            content="点击添加菜品"
+            placement="top"
+          >
+            <span class="num_day" @click="handleOnAdd">菜品</span>
+          </el-tooltip>
         </template>
         <template slot-scope="scope">
           <el-popover placement="right" trigger="hover">
@@ -63,7 +58,7 @@
           />
         </template>
       </el-table-column>
-      <el-table-column label="质量(g)" prop="weight" :width="80" align="center">
+      <el-table-column label="重量(g)" prop="weight" :width="80" align="center">
         <template slot-scope="scope">
           <EditableText
             :value="scope.row.weight"
@@ -112,6 +107,7 @@
       />
       <el-table-column label="做法" prop="methods" />
     </el-table>
+    <AddDishesDrawer ref="drawerRef" @onConfirm="handleOnDishesConfirm" />
   </div>
 </template>
 <script>
@@ -125,6 +121,7 @@ const {
 
 import EditableText from "./EditableText";
 import EditableUnit from "./EditableUnit";
+import AddDishesDrawer from "./AddDishesDrawer";
 
 export default {
   name: "RecipesCom",
@@ -146,6 +143,7 @@ export default {
   components: {
     EditableText,
     EditableUnit,
+    AddDishesDrawer,
   },
   mounted() {
     // console.log(this.data);
@@ -267,10 +265,8 @@ export default {
       this.setCurrentDay({ currentDay: this.num - 1 });
     },
     handleOnAdd() {
-      console.log(this.num);
-    },
-    handleOnEdit(data) {
-      console.log(data);
+      // console.log(this.num);
+      this.$refs.drawerRef.showDrawer();
     },
     handleOnDelete(data) {
       // console.log(data);
@@ -278,7 +274,7 @@ export default {
     },
     handleOnWeightChange(data, weight) {
       // console.log({ data, weight });
-      this.updateRecipesDishesWeight({
+      this.updateRecipesDishesDetail({
         num: this.num - 1,
         dishesId: data.id,
         igdId: data.igdId,
@@ -286,7 +282,7 @@ export default {
       });
     },
     handleOnCustomUnitChange(data, { cusWeight, cusUnit }) {
-      this.updateRecipesDishesCustomWeight({
+      this.updateRecipesDishesDetail({
         num: this.num - 1,
         dishesId: data.id,
         igdId: data.igdId,
@@ -294,11 +290,17 @@ export default {
         cusUnit,
       });
     },
+    handleOnDishesConfirm(data) {
+      this.addRecipesDishes({
+        num: this.num - 1,
+        data,
+      });
+    },
     ...mapMutations([
       "setCurrentDay",
       "deleteSomeDayDishes",
-      "updateRecipesDishesWeight",
-      "updateRecipesDishesCustomWeight",
+      "updateRecipesDishesDetail",
+      "addRecipesDishes",
     ]),
   },
 };
@@ -310,6 +312,7 @@ export default {
 
   .num_day {
     cursor: pointer;
+    outline: none;
   }
 }
 </style>
