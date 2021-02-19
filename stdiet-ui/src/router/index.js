@@ -173,7 +173,15 @@ export const constantRoutes = [
       require(["@/views/custom/subhealthy/investigation"], resolve),
     hidden: true,
     meta: { title: "胜唐体控健康评估表" }
-  }
+  },
+{
+    path: "/foodHeatCalculator/:id",
+    component: resolve =>
+    require(["@/views/custom/foodHeatStatistics/investigate"], resolve),
+    hidden: true,
+    meta: { title: "外食计算器" }
+},
+
 ];
 
 export default new Router({

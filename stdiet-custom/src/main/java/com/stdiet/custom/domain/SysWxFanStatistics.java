@@ -29,6 +29,8 @@ public class SysWxFanStatistics extends BaseEntity
     @Excel(name = "进粉账号")
     private String account;
 
+    private Long accountId;
+
     //销售组别
     private String saleGroup;
 

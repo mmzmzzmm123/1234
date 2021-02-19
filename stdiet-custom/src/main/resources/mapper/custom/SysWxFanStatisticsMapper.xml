@@ -44,6 +44,7 @@
         <include refid="selectSysWxFanStatisticsVoExtended"/> where swfs.del_flag = 0
         <if test="fanTime != null ">and swfs.fan_time = #{fanTime}</if>
         <if test="userId != null">and su.user_id = #{userId}</if>
+        <if test="accountId != null">and swd.account_id = #{accountId}</if>
         <if test="sortFlag == null or sortFlag == 0">
             order by swfs.id desc
         </if>

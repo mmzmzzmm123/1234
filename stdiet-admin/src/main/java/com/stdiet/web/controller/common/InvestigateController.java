@@ -9,14 +9,11 @@ import com.stdiet.custom.domain.SysCustomer;
 import com.stdiet.custom.domain.SysCustomerHealthy;
 import com.stdiet.custom.domain.SysPhysicalSigns;
 import com.stdiet.custom.dto.request.CustomerInvestigateRequest;
-import com.stdiet.custom.service.ISysCustomerHealthyService;
-import com.stdiet.custom.service.ISysCustomerPhysicalSignsService;
-import com.stdiet.custom.service.ISysCustomerService;
-import com.stdiet.custom.service.ISysPhysicalSignsService;
+import com.stdiet.custom.dto.request.FoodHeatCalculatorRequest;
+import com.stdiet.custom.service.*;
 import com.stdiet.system.service.ISysDictTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.List;
@@ -46,6 +43,9 @@ public class InvestigateController extends BaseController {
 
     @Autowired
     private ISysCustomerService sysCustomerService;
+
+    @Autowired
+    private ISysFoodHeatStatisticsService sysFoodHeatStatisticsService;
 
     /**
      * 建立客户信息档案
@@ -105,6 +105,15 @@ public class InvestigateController extends BaseController {
     public AjaxResult addCustomerHealthy(@RequestBody SysCustomerHealthy sysCustomerHealthy)
     {
         return sysCustomerHealthyService.insertSysCustomerHealthy(sysCustomerHealthy);
+    }
+
+    /**
+     * 新增客户外食计算统计
+     */
+    @PostMapping("/addFoodHeatStatistics")
+    public AjaxResult addFoodHeatStatistics(@RequestBody FoodHeatCalculatorRequest foodHeatCalculatorRequest)
+    {
+        return toAjax(sysFoodHeatStatisticsService.addMuchFoodHeat(foodHeatCalculatorRequest));
     }
 
 }

@@ -92,7 +92,7 @@
     </el-drawer>
 
     <!-- 新增订单 -->
-    <create-order-dialog ref="cusCreateOrderDialogRef" />
+    <!--<create-order-dialog ref="cusCreateOrderDialogRef" />-->
     <!-- 订单编辑 -->
     <edit-order-dialog ref="cusEditOrderDialogRef" />
 
@@ -110,7 +110,7 @@ export default {
   components: {
     "edit-order-dialog": OrderEdit,
     "order-detail": OrderDetail,
-    "create-order-dialog": OrderAdd
+    //"create-order-dialog": OrderAdd
   },
   data() {
     return {
@@ -154,13 +154,13 @@ export default {
       });
     },
     handleAdd() {
-      this.$refs.cusCreateOrderDialogRef.showDialog(
+      this.$refs.cusEditOrderDialogRef.showDialog(
         {
           customer: this.data.name,
           cusId: this.data.id,
           preSaleId: this.data.salesman,
           afterSaleId: this.data.afterDietitian,
-          nutritionistId: [this.data.mainDietitian],
+          nutritionistId: this.data.mainDietitian,
           nutriAssisId: this.data.assistantDietitian,
         },
         () => {

@@ -43,3 +43,12 @@ export function getCustomerBaseMessage(id) {
   })
 }
 
+// 新增客户外食热量计算统计
+export function addFoodHeatStatistics(data) {
+  return request({
+    url: '/investigate/addFoodHeatStatistics',
+    method: 'post',
+    data: data
+  })
+}
+
