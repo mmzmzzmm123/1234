@@ -370,6 +370,7 @@
                 if (response.code === 200) {
                   this.msgSuccess("新增成功");
                   this.open = false;
+                  this.reset();
                   this.getList();
                 }
               });

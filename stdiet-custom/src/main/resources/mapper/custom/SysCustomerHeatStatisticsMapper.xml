@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.stdiet.custom.mapper.SysCustomerHeatStatisticsMapper">
+
+    <resultMap type="SysCustomerHeatStatistics" id="SysCustomerHeatStatisticsResult">
+        <result property="id"    column="id"    />
+        <result property="customerId"    column="customer_id"    />
+        <result property="edibleDate"    column="edible_date"    />
+        <result property="maxHeatValue"    column="max_heat_value"    />
+        <result property="heatValue"    column="heat_value"    />
+        <result property="heatGap"    column="heat_gap"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <resultMap type="SysCustomerHeatStatistics" id="SysCustomerHeatStatisticsResultExtended">
+        <result property="id"    column="id"    />
+        <result property="customerId"    column="customer_id"    />
+        <result property="edibleDate"    column="edible_date"    />
+        <result property="maxHeatValue"    column="max_heat_value"    />
+        <result property="heatValue"    column="heat_value"    />
+        <result property="heatGap"    column="heat_gap"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="delFlag"    column="del_flag"    />
+
+        <!-- column是传的参数, select是调用的查询 -->
+        <association property="foodHeatStatisticsList" column="id" select="selectSysFoodHeatStatisticsList"/>
+    </resultMap>
+
+    <sql id="selectSysCustomerHeatStatisticsVo">
+        select id, customer_id, edible_date, max_heat_value, heat_value, heat_gap, create_time, create_by, update_time, update_by, del_flag from sys_customer_heat_statistics
+    </sql>
+
+    <select id="selectSysCustomerHeatStatisticsList" parameterType="SysCustomerHeatStatistics" resultMap="SysCustomerHeatStatisticsResult">
+        <include refid="selectSysCustomerHeatStatisticsVo"/>
+        <where>
+            <if test="customerId != null "> and customer_id = #{customerId}</if>
+        </where>
+        order by id desc
+    </select>
+
+    <select id="selectSysCustomerHeatStatisticsById" parameterType="Long" resultMap="SysCustomerHeatStatisticsResultExtended">
+        <include refid="selectSysCustomerHeatStatisticsVo"/>
+        where id = #{id} and del_flag = 0
+    </select>
+
+    <insert id="insertSysCustomerHeatStatistics" parameterType="SysCustomerHeatStatistics" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_customer_heat_statistics
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="customerId != null">customer_id,</if>
+            <if test="edibleDate != null">edible_date,</if>
+            <if test="maxHeatValue != null">max_heat_value,</if>
+            <if test="heatValue != null">heat_value,</if>
+            <if test="heatGap != null">heat_gap,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="delFlag != null">del_flag,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="customerId != null">#{customerId},</if>
+            <if test="edibleDate != null">#{edibleDate},</if>
+            <if test="maxHeatValue != null">#{maxHeatValue},</if>
+            <if test="heatValue != null">#{heatValue},</if>
+            <if test="heatGap != null">#{heatGap},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+        </trim>
+    </insert>
+
+    <update id="updateSysCustomerHeatStatistics" parameterType="SysCustomerHeatStatistics">
+        update sys_customer_heat_statistics
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="customerId != null">customer_id = #{customerId},</if>
+            <if test="edibleDate != null">edible_date = #{edibleDate},</if>
+            <if test="maxHeatValue != null">max_heat_value = #{maxHeatValue},</if>
+            <if test="heatValue != null">heat_value = #{heatValue},</if>
+            <if test="heatGap != null">heat_gap = #{heatGap},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="deleteSysCustomerHeatStatisticsById" parameterType="Long">
+        update sys_customer_heat_statistics set del_flag = 1 where id = #{id}
+    </update>
+
+    <update id="deleteSysCustomerHeatStatisticsByIds" parameterType="String">
+        update sys_customer_heat_statistics set del_flag = 1 where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <!-- 根据日期、客户ID查询是否存在热量统计 -->
+    <select id="getCustomerHeatStatisticsByDate" parameterType="SysCustomerHeatStatistics"  resultMap="SysCustomerHeatStatisticsResult">
+        select id from sys_customer_heat_statistics where del_flag = 0 and customer_id = #{customerId}
+        <if test="edibleDate != null">and date_format(edible_date,'%y%m%d') = date_format(#{edibleDate},'%y%m%d')</if>
+        limit 1
+    </select>
+
+
+    <resultMap type="SysFoodHeatStatistics" id="SysFoodHeatStatisticsResult">
+        <result property="id"    column="id"    />
+        <result property="customerHeatId"    column="customer_heat_id"    />
+        <result property="ingredient"    column="ingredient"    />
+        <result property="unit"    column="unit"    />
+        <result property="number"    column="number"    />
+        <result property="quantity"    column="quantity"    />
+        <result property="edibleType"    column="edible_type"    />
+        <result property="heatValue"    column="heat_value"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="delFlag"    column="del_flag"    />
+
+        <result property="unitName" column="unitName"></result>
+    </resultMap>
+
+    <select id="selectSysFoodHeatStatisticsList" parameterType="Long" resultMap="SysFoodHeatStatisticsResult">
+        select sfhs.id, sfhs.customer_heat_id, sfhs.ingredient, sfhs.unit, sfhs.number, sfhs.quantity, sfhs.edible_type, sfhs.heat_value,cusUnit.dict_label as unitName
+        from sys_food_heat_statistics as  sfhs
+        LEFT JOIN (SELECT dict_label, dict_value FROM sys_dict_data WHERE dict_type = 'cus_cus_unit') AS cusUnit ON cusUnit.dict_value = sfhs.unit
+        where sfhs.del_flag = 0 and customer_heat_id = #{id}
+    </select>
+
+</mapper>

@@ -1,6 +1,9 @@
 package com.stdiet.web.controller.custom;
 
 import java.util.List;
+
+import com.stdiet.custom.domain.SysCustomerHeatStatistics;
+import com.stdiet.custom.service.ISysCustomerHeatStatisticsService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,8 +18,6 @@ import com.stdiet.common.annotation.Log;
 import com.stdiet.common.core.controller.BaseController;
 import com.stdiet.common.core.domain.AjaxResult;
 import com.stdiet.common.enums.BusinessType;
-import com.stdiet.custom.domain.SysFoodHeatStatistics;
-import com.stdiet.custom.service.ISysFoodHeatStatisticsService;
 import com.stdiet.common.utils.poi.ExcelUtil;
 import com.stdiet.common.core.page.TableDataInfo;
 
@@ -31,17 +32,17 @@ import com.stdiet.common.core.page.TableDataInfo;
 public class SysFoodHeatStatisticsController extends BaseController
 {
     @Autowired
-    private ISysFoodHeatStatisticsService sysFoodHeatStatisticsService;
+    private ISysCustomerHeatStatisticsService sysCustomerHeatStatisticsService;
 
     /**
      * 查询外食热量统计列表
      */
     @PreAuthorize("@ss.hasPermi('custom:foodHeatStatistics:list')")
     @GetMapping("/list")
-    public TableDataInfo list(SysFoodHeatStatistics sysFoodHeatStatistics)
+    public TableDataInfo list(SysCustomerHeatStatistics sysCustomerHeatStatistics)
     {
         startPage();
-        List<SysFoodHeatStatistics> list = sysFoodHeatStatisticsService.selectSysFoodHeatStatisticsList(sysFoodHeatStatistics);
+        List<SysCustomerHeatStatistics> list = sysCustomerHeatStatisticsService.selectSysCustomerHeatStatisticsList(sysCustomerHeatStatistics);
         return getDataTable(list);
     }
 
@@ -51,11 +52,11 @@ public class SysFoodHeatStatisticsController extends BaseController
     @PreAuthorize("@ss.hasPermi('custom:foodHeatStatistics:export')")
     @Log(title = "外食热量统计", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
-    public AjaxResult export(SysFoodHeatStatistics sysFoodHeatStatistics)
+    public AjaxResult export(SysCustomerHeatStatistics sysCustomerHeatStatistics)
     {
-        List<SysFoodHeatStatistics> list = sysFoodHeatStatisticsService.selectSysFoodHeatStatisticsList(sysFoodHeatStatistics);
-        ExcelUtil<SysFoodHeatStatistics> util = new ExcelUtil<SysFoodHeatStatistics>(SysFoodHeatStatistics.class);
-        return util.exportExcel(list, "foodHeatStatistics");
+        List<SysCustomerHeatStatistics> list = sysCustomerHeatStatisticsService.selectSysCustomerHeatStatisticsList(sysCustomerHeatStatistics);
+        ExcelUtil<SysCustomerHeatStatistics> util = new ExcelUtil<SysCustomerHeatStatistics>(SysCustomerHeatStatistics.class);
+        return util.exportExcel(list, "customerHeatstatistics");
     }
 
     /**
@@ -65,7 +66,7 @@ public class SysFoodHeatStatisticsController extends BaseController
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
-        return AjaxResult.success(sysFoodHeatStatisticsService.selectSysFoodHeatStatisticsById(id));
+        return AjaxResult.success(sysCustomerHeatStatisticsService.selectSysCustomerHeatStatisticsById(id));
     }
 
     /**
@@ -74,9 +75,9 @@ public class SysFoodHeatStatisticsController extends BaseController
     @PreAuthorize("@ss.hasPermi('custom:foodHeatStatistics:add')")
     @Log(title = "外食热量统计", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody SysFoodHeatStatistics sysFoodHeatStatistics)
+    public AjaxResult add(@RequestBody SysCustomerHeatStatistics sysCustomerHeatStatistics)
     {
-        return toAjax(sysFoodHeatStatisticsService.insertSysFoodHeatStatistics(sysFoodHeatStatistics));
+        return toAjax(sysCustomerHeatStatisticsService.insertSysCustomerHeatStatistics(sysCustomerHeatStatistics));
     }
 
     /**
@@ -85,9 +86,9 @@ public class SysFoodHeatStatisticsController extends BaseController
     @PreAuthorize("@ss.hasPermi('custom:foodHeatStatistics:edit')")
     @Log(title = "外食热量统计", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody SysFoodHeatStatistics sysFoodHeatStatistics)
+    public AjaxResult edit(@RequestBody SysCustomerHeatStatistics sysCustomerHeatStatistics)
     {
-        return toAjax(sysFoodHeatStatisticsService.updateSysFoodHeatStatistics(sysFoodHeatStatistics));
+        return toAjax(sysCustomerHeatStatisticsService.updateSysCustomerHeatStatistics(sysCustomerHeatStatistics));
     }
 
     /**
@@ -98,6 +99,16 @@ public class SysFoodHeatStatisticsController extends BaseController
     @DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)
     {
-        return toAjax(sysFoodHeatStatisticsService.deleteSysFoodHeatStatisticsByIds(ids));
+        return toAjax(sysCustomerHeatStatisticsService.deleteSysCustomerHeatStatisticsByIds(ids));
+    }
+
+    /**
+     * 修改食材热量并计算
+     */
+    @Log(title = "修改食材热量并计算", businessType = BusinessType.UPDATE)
+    @RequestMapping("/addFoodHeatData")
+    public AjaxResult addFoodHeatData(@RequestBody SysCustomerHeatStatistics sysCustomerHeatStatistics)
+    {
+        return toAjax(sysCustomerHeatStatisticsService.calculateCustomerHeat(sysCustomerHeatStatistics));
     }
 }

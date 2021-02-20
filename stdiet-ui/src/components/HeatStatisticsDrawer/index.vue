@@ -19,16 +19,16 @@
               <span>{{ parseTime(scope.row.edibleDate, '{y}-{m}-{d}') }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="食材" align="center" prop="ingredient" />
-          <el-table-column label="通俗质量" align="center" prop="unitName">
+         <!-- <el-table-column label="食材" align="center" prop="ingredient" />
+          <el-table-column label="通俗计量" align="center" prop="unitName">
             <template slot-scope="scope">
-              {{ scope.row.number + "" + scope.row.unitName }}
+              {{ scope.row.number ? (scope.row.number + "" + (scope.row.unitName != null ? scope.row.unitName : "")) : "" }}
             </template>
           </el-table-column>
-          <el-table-column label="质量(克)" align="center" prop="quantity" />
+          <el-table-column label="质量(克)" align="center" prop="quantity" />-->
 
-          <!--<el-table-column label="类型，0早 1中 2晚" align="center" prop="edibleType" />-->
-          <el-table-column label="热量数值" align="center" prop="heatValue" />
+          <el-table-column label="最大摄入量" align="center" prop="maxHeatValue" />
+          <el-table-column label="食材热量" align="center" prop="heatValue" />
           <el-table-column label="热量缺口" align="center" prop="heatGap" />
           <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
             <template slot-scope="scope">
@@ -39,6 +39,12 @@
                 @click="handleUpdate(scope.row)"
                 v-hasPermi="['custom:foodHeatStatistics:edit']"
               >修改</el-button>-->
+              <el-button
+                size="mini"
+                type="text"
+                icon="el-icon-edit"
+                @click="handleCalculate(scope.row)"
+              >计算</el-button>
               <el-button
                 size="mini"
                 type="text"
@@ -58,6 +64,8 @@
           @pagination="fetchHeatList"
         />
 
+        <heatStatisticsCalculate ref="heatStatisticsCalculateRef"></heatStatisticsCalculate>
+
       </div>
     </el-drawer>
   </div>
@@ -65,9 +73,11 @@
 <script>
   import { listFoodHeatStatistics, getFoodHeatStatistics, delFoodHeatStatistics, addFoodHeatStatistics, updateFoodHeatStatistics, exportFoodHeatStatistics } from "@/api/custom/foodHeatStatistics";
   import Clipboard from 'clipboard';
+  import HeatStatisticsCalculate from "@/components/HeatStatisticsCalculate";
 export default {
   name: "HeatStatisticsDrawer",
   components: {
+    'heatStatisticsCalculate':HeatStatisticsCalculate
   },
   data() {
     return {
@@ -136,6 +146,11 @@ export default {
       this.$message({
         message: '拷贝成功',
         type: 'success'
+      });
+    },
+    handleCalculate(data){
+      this.$refs.heatStatisticsCalculateRef.showDialog(data,() => {
+        this.fetchHeatList();
       });
     }
   },

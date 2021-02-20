@@ -51,3 +51,13 @@ export function exportFoodHeatStatistics(query) {
     params: query
   })
 }
+
+// 新增外食热量统计
+export function addFoodHeatData(data) {
+  return request({
+    url: '/custom/foodHeatStatistics/addFoodHeatData',
+    method: 'post',
+    data: data
+  })
+}
+
