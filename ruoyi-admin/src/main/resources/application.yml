@@ -59,9 +59,9 @@ spring:
   # redis 配置
   redis:
     # 地址
-    host: localhost
+    host: 172.20.22.91
     # 端口，默认为6379
-    port: 6379
+    port: 31004
     # 数据库索引
     database: 0
     # 密码
@@ -119,3 +119,10 @@ xss:
   excludes: /system/notice/*
   # 匹配链接
   urlPatterns: /system/*,/monitor/*,/tool/*
+
+business:
+  config:
+    ding-talk:
+      agent-id: 1087968860
+      app-key: dinggixrz61x0ltunt3z
+      app-secret: 5xci7MaEx1sUmohotNcVSbAqUpOaM4bMCPvynAvxlEyXwvIDKy95-0mQqKShvAUZ
