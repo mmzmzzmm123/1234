@@ -17,12 +17,13 @@
 
     <resultMap id="SysDishesResult" type="SysDishes">
         <result property="id" column="dishes_id"/>
+        <result property="cId" column="id" />
         <result property="name" column="name"/>
         <result property="type" column="type"/>
         <result property="methods" column="methods"/>
         <result property="isMain" column="is_main"/>
         <result property="detail" column="detail" typeHandler="com.stdiet.custom.typehandler.ArrayJsonHandler"
-                javaType="com.stdiet.custom.domain.SysDishesIngredientInfo"/>
+                javaType="com.stdiet.custom.domain.SysDishesIngredient"/>
         <association property="igdList" column="dishes_id" select="selectIngredientsByDishesId"/>
     </resultMap>
 
@@ -75,5 +76,36 @@
             ) recT USING(id)
         ) ing USING(id)
     </select>
+
+    <!-- 更新菜品-->
+    <update id="updateDishesDetail" parameterType="SysDishes">
+        update sys_customer_menu_dishes
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="detail != null">detail = #{detail, jdbcType=OTHER, typeHandler=com.stdiet.custom.typehandler.ArrayJsonHandler},</if>
+        </trim>
+        where id = #{cId}
+    </update>
+
+    <!-- 插入菜品-->
+    <insert id="insertDishes" parameterType="SysDishes" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_customer_menu_dishes
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="menuId != null">menu_id,</if>
+            <if test="id != null">dishes_id,</if>
+            <if test="type != null">type,</if>
+            <if test="detail != null">detail,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="menuId != null">#{menuId},</if>
+            <if test="id != null">#{id},</if>
+            <if test="type != null">#{type},</if>
+            <if test="detail != null">#{detail, jdbcType=OTHER, typeHandler=com.stdiet.custom.typehandler.ArrayJsonHandler},</if>
+        </trim>
+    </insert>
+
+    <!-- 删除菜品-->
+    <delete id="deleteDishes" parameterType="Long">
+        delete from sys_customer_menu_dishes where id = #{cId}
+    </delete>
 
 </mapper>

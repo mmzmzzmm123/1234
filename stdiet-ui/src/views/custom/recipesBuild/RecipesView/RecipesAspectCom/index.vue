@@ -4,6 +4,9 @@
     :style="`height: ${collapse ? 30 : 200}px`"
   >
     <div class="header">
+      <el-button size="mini" type="primary" @click="handleOnSave"
+        >保存</el-button
+      >
       <el-button size="mini" type="text" @click="handleCollapseClick">{{
         `${collapse ? "展开分析" : "收起分析"}`
       }}</el-button>
@@ -25,6 +28,8 @@
 <script>
 import BarChart from "./BarChart";
 import PieChart from "./PieChart";
+import { createNamespacedHelpers } from "vuex";
+const { mapActions } = createNamespacedHelpers("recipes");
 export default {
   name: "RecipesAspectCom",
   components: {
@@ -43,6 +48,10 @@ export default {
     handleCollapseClick() {
       this.$emit("update:collapse", !this.collapse);
     },
+    handleOnSave() {
+      this.saveRecipes();
+    },
+    ...mapActions(["saveRecipes"]),
   },
 };
 </script>

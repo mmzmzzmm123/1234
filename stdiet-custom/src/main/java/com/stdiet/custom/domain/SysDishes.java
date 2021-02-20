@@ -1,5 +1,6 @@
 package com.stdiet.custom.domain;
 
+import com.alibaba.fastjson.JSONArray;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.stdiet.common.annotation.Excel;
 import lombok.Data;
@@ -21,6 +22,10 @@ public class SysDishes {
      * id
      */
     private Long id;
+
+    private Long cId;
+
+    private Long menuId;
 
     /**
      * 菜品名称
@@ -74,6 +79,6 @@ public class SysDishes {
 
     private List<SysDishesIngredient> igdList;
 
-    private List<SysDishesIngredient> detail;
+    private JSONArray detail;
 
 }

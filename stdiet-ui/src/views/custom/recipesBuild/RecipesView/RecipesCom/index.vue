@@ -18,7 +18,9 @@
           }}</span>
         </template>
         <template slot-scope="scope">
-          <span style="font-weight: bold; font-size: 14px">{{ typeFormatter(scope.row) }}</span>
+          <span style="font-weight: bold; font-size: 14px">{{
+            typeFormatter(scope.row)
+          }}</span>
         </template>
       </el-table-column>
       <el-table-column label="菜品" prop="name" align="center">
@@ -270,11 +272,11 @@ export default {
     },
     handleOnDelete(data) {
       // console.log(data);
-      this.deleteSomeDayDishes({ num: this.num - 1, dishesId: data.id });
+      this.deleteDishes({ num: this.num - 1, dishesId: data.id });
     },
     handleOnWeightChange(data, weight) {
       // console.log({ data, weight });
-      this.updateRecipesDishesDetail({
+      this.updateDishes({
         num: this.num - 1,
         dishesId: data.id,
         igdId: data.igdId,
@@ -282,7 +284,7 @@ export default {
       });
     },
     handleOnCustomUnitChange(data, { cusWeight, cusUnit }) {
-      this.updateRecipesDishesDetail({
+      this.updateDishes({
         num: this.num - 1,
         dishesId: data.id,
         igdId: data.igdId,
@@ -291,17 +293,13 @@ export default {
       });
     },
     handleOnDishesConfirm(data) {
-      this.addRecipesDishes({
+      this.addDishes({
         num: this.num - 1,
         data,
       });
     },
-    ...mapMutations([
-      "setCurrentDay",
-      "deleteSomeDayDishes",
-      "updateRecipesDishesDetail",
-      "addRecipesDishes",
-    ]),
+    ...mapActions(["updateDishes", "addDishes", "deleteDishes"]),
+    ...mapMutations(["setCurrentDay",]),
   },
 };
 </script>

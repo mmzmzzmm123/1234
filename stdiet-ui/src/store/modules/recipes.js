@@ -2,11 +2,18 @@ import { getOrder } from "@/api/custom/order";
 import { getCustomerPhysicalSignsByCusId } from "@/api/custom/customer";
 import { dealHealthy } from "@/utils/healthyData";
 import { getRecipesPlan } from "@/api/custom/recipesPlan";
-import { getRecipes } from "@/api/custom/recipes";
+import {
+  getRecipesApi,
+  updateDishesDetailApi,
+  addDishesApi,
+  deleteDishesApi
+} from "@/api/custom/recipes";
 import { getDicts } from "@/api/system/dict/data";
 import produce from "immer";
+import { updateDishes } from "@/api/custom/dishes";
 
 const oriState = {
+  recipesId: undefined,
   healthyData: {},
   healthyDataType: 0,
   recipesData: [],
@@ -18,6 +25,9 @@ const oriState = {
 };
 
 const mutations = {
+  setRecipiesId(state, payload) {
+    state.recipesId = payload.recipesId;
+  },
   setHealtyData(state, payload) {
     state.healthyDataType = payload.healthyDataType;
     state.healthyData = payload.healthyData;
@@ -40,7 +50,6 @@ const mutations = {
     }
   },
   addRecipesDishes(state, payload) {
-
     state.recipesData[payload.num].dishes.push(payload.data);
   },
   updateOptions(state, payload) {
@@ -104,7 +113,7 @@ const actions = {
 
     // 食谱数据
     if (payload.recipesId) {
-      const recipesDataResult = await getRecipes(payload.recipesId);
+      const recipesDataResult = await getRecipesApi(payload.recipesId);
       if (recipesDataResult.code === 200) {
         commit("setRecipesData", {
           recipesData: recipesDataResult.data.map(dayData => {
@@ -120,6 +129,7 @@ const actions = {
                 ) {
                   arr.push({
                     id: cur.id,
+                    cid: cur.cid,
                     name: cur.name,
                     methods: cur.methods,
                     type: cur.type,
@@ -162,7 +172,89 @@ const actions = {
         throw new Error(recipesDataResult.msg);
       }
     }
-  }
+  },
+  async saveRecipes({ commit, state }, payload) {
+    const { recipesData } = state;
+    const params = recipesData.map(menu => {
+      return menu.dishes.map(dObj => {
+        return {
+          dishesId: dObj.id,
+          type: dObj.type,
+          detail: dObj.igdList.map(igd => ({
+            id: igd.id,
+            weight: igd.weight,
+            cus_unit: igd.cusUnit,
+            cus_weight: igd.cusWeight
+          }))
+        };
+      });
+    });
+    console.log(params);
+  },
+  async addDishes({ commit, state }, payload) {
+    const tarRecipesObj = state.recipesData[payload.num];
+    if (tarRecipesObj && payload.data) {
+      const { id, type, igdList } = payload.data;
+      const params = {
+        menuId: tarRecipesObj.id,
+        id: id,
+        type: type,
+        detail: igdList.map(igd => ({
+          id: igd.id,
+          weight: igd.weight,
+          cus_unit: igd.cusUnit,
+          cus_weight: igd.cusWeight
+        }))
+      };
+      const result = await addDishesApi(params);
+      if (result.code === 200) {
+        payload.data.cid = result.data;
+        commit("addRecipesDishes", payload);
+      }
+      console.log(result);
+    }
+  },
+  async updateDishes({ commit, state }, payload) {
+    const tarDishes = state.recipesData[payload.num].dishes.find(
+      obj => obj.id === payload.dishesId
+    );
+    if (tarDishes) {
+      const mTarDishes = JSON.parse(JSON.stringify(tarDishes));
+      const tarIgd = mTarDishes.igdList.find(obj => obj.id === payload.igdId);
+      if (tarIgd) {
+        payload.weight && (tarIgd.weight = payload.weight);
+        payload.cusWeight && (tarIgd.cusWeight = payload.cusWeight);
+        payload.cusUnit && (tarIgd.cusUnit = payload.cusUnit);
+
+        const params = {
+          cid: mTarDishes.cid,
+          detail: mTarDishes.igdList.map(igd => ({
+            id: igd.id,
+            weight: igd.weight,
+            cus_unit: igd.cusUnit,
+            cus_weight: igd.cusWeight
+          }))
+        };
+        const result = await updateDishesDetailApi(params);
+        if (result.code === 200) {
+          commit("updateRecipesDishesDetail", payload);
+        }
+      }
+    }
+  },
+  async deleteDishes({ commit, state }, payload) {
+    const tarDishes = state.recipesData[payload.num].dishes.find(
+      obj => obj.id === payload.dishesId
+    );
+    if (tarDishes) {
+      const result = await deleteDishesApi(tarDishes.cid);
+      if (result.code === 200) {
+        commit("deleteSomeDayDishes", payload);
+      }
+      // console.log(params);
+    }
+  },
+  async deleteMenu({ commit }, payload) {}
 };
 
 const getters = {
