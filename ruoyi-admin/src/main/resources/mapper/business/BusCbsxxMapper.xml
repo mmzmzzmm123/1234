@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.business.mapper.BusCbsxxMapper">
+    
+    <resultMap type="BusCbsxx" id="BusCbsxxResult">
+        <result property="id"    column="id"    />
+        <result property="cbsName"    column="cbs_name"    />
+        <result property="fzr"    column="fzr"    />
+        <result property="lxfs"    column="lxfs"    />
+        <result property="scgz"    column="scgz"    />
+        <result property="xrsj"    column="xrsj"    />
+        <result property="xrrId"    column="xrr_id"    />
+        <result property="xgsj"    column="xgsj"    />
+        <result property="xgrId"    column="xgr_id"    />
+    </resultMap>
+
+    <sql id="selectBusCbsxxVo">
+        select id, cbs_name, fzr, lxfs, scgz, xrsj, xrr_id, xgsj, xgr_id from bus_cbsxx
+    </sql>
+
+    <select id="selectBusCbsxxList" parameterType="BusCbsxx" resultMap="BusCbsxxResult">
+        <include refid="selectBusCbsxxVo"/>
+        <where>  
+            <if test="cbsName != null  and cbsName != ''"> and cbs_name like concat('%', #{cbsName}, '%')</if>
+            <if test="fzr != null  and fzr != ''"> and fzr = #{fzr}</if>
+            <if test="lxfs != null  and lxfs != ''"> and lxfs = #{lxfs}</if>
+            <if test="scgz != null  and scgz != ''"> and scgz = #{scgz}</if>
+            <if test="xrsj != null "> and xrsj = #{xrsj}</if>
+            <if test="xrrId != null "> and xrr_id = #{xrrId}</if>
+            <if test="xgsj != null "> and xgsj = #{xgsj}</if>
+            <if test="xgrId != null "> and xgr_id = #{xgrId}</if>
+        </where>
+    </select>
+    
+    <select id="selectBusCbsxxById" parameterType="Long" resultMap="BusCbsxxResult">
+        <include refid="selectBusCbsxxVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertBusCbsxx" parameterType="BusCbsxx">
+        insert into bus_cbsxx
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="cbsName != null and cbsName != ''">cbs_name,</if>
+            <if test="fzr != null">fzr,</if>
+            <if test="lxfs != null">lxfs,</if>
+            <if test="scgz != null">scgz,</if>
+            <if test="xrsj != null">xrsj,</if>
+            <if test="xrrId != null">xrr_id,</if>
+            <if test="xgsj != null">xgsj,</if>
+            <if test="xgrId != null">xgr_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="cbsName != null and cbsName != ''">#{cbsName},</if>
+            <if test="fzr != null">#{fzr},</if>
+            <if test="lxfs != null">#{lxfs},</if>
+            <if test="scgz != null">#{scgz},</if>
+            <if test="xrsj != null">#{xrsj},</if>
+            <if test="xrrId != null">#{xrrId},</if>
+            <if test="xgsj != null">#{xgsj},</if>
+            <if test="xgrId != null">#{xgrId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBusCbsxx" parameterType="BusCbsxx">
+        update bus_cbsxx
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="cbsName != null and cbsName != ''">cbs_name = #{cbsName},</if>
+            <if test="fzr != null">fzr = #{fzr},</if>
+            <if test="lxfs != null">lxfs = #{lxfs},</if>
+            <if test="scgz != null">scgz = #{scgz},</if>
+            <if test="xrsj != null">xrsj = #{xrsj},</if>
+            <if test="xrrId != null">xrr_id = #{xrrId},</if>
+            <if test="xgsj != null">xgsj = #{xgsj},</if>
+            <if test="xgrId != null">xgr_id = #{xgrId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBusCbsxxById" parameterType="Long">
+        delete from bus_cbsxx where id = #{id}
+    </delete>
+
+    <delete id="deleteBusCbsxxByIds" parameterType="String">
+        delete from bus_cbsxx where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+    <select id="checkNameUnique" parameterType="String" resultMap="BusCbsxxResult">
+		select * from bus_cbsxx where cbs_name=#{cbsName} limit 1
+	</select>
+
+    <select id="checkPhoneNumberUnique" parameterType="String" resultMap="BusCbsxxResult">
+		select * from bus_cbsxx where lxfs=#{phoneNumber} limit 1
+	</select>	
+</mapper>

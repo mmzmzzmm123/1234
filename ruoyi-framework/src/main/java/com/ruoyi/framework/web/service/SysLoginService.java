@@ -99,10 +99,13 @@ public class SysLoginService {
 	 * @return 结果
 	 */
 	public String loginByDingTalk(String username) {
-		// 用户验证
-		LoginUser loginUser = null;
 		try {
-			userDetailsService.loadUserByUsername(username);
+			// 用户验证
+			LoginUser loginUser = (LoginUser) userDetailsService.loadUserByUsername(username);
+			AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_SUCCESS,
+					MessageUtils.message("user.login.success")));
+			// 生成token
+			return tokenService.createToken(loginUser);
 		} catch (Exception e) {
 			if (e instanceof BadCredentialsException) {
 				AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL,
@@ -114,9 +117,6 @@ public class SysLoginService {
 				throw new CustomException(e.getMessage());
 			}
 		}
-		AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_SUCCESS,
-				MessageUtils.message("user.login.success")));
-		// 生成token
-		return tokenService.createToken(loginUser);
+		
 	}
 }
