@@ -123,8 +123,12 @@
 		<include refid="selectMenuVo"/>
 		where menu_name=#{menuName} and parent_id = #{parentId} limit 1
 	</select>
-	
-	<update id="updateMenu" parameterType="SysMenu">
+    <select id="selectMenuParent" resultMap="SysMenuResult">
+		<include refid="selectMenuVo"/>
+		where  menu_id = #{menuId}
+	</select>
+
+    <update id="updateMenu" parameterType="SysMenu">
 		update sys_menu
 		<set>
 			<if test="menuName != null and menuName != ''">menu_name = #{menuName},</if>

@@ -155,24 +155,24 @@ export const constantRoutes = [
       {
         path: 'menu/:id',
         component:(resolve) =>require(['@/views/system/menu/index'],resolve),
-        name: 'templates',
-        meta: {title: '模板管理'}
+        name: 'menuid',
+        meta: {title: '菜单管理'}
       }
     ]
   },
-  // {
-  //   path: '/tool',
-  //   component: Layout,
-  //   hidden: true,
-  //   children: [
-  //     {
-  //       path: 'build',
-  //       component:(resolve) =>require(['@/gene/views/index/Home'],resolve),
-  //       name: 'build',
-  //       meta: {title: '表单修改'}
-  //     }
-  //   ]
-  // },
+  {
+    path: '/tool',
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: 'build/:deptId/:nodeId',
+        component:(resolve) =>require(['@/gene/views/index/Home'],resolve),
+        name: 'builddnId',
+        meta: {title: '表单修改'}
+      }
+    ]
+  },
   {
     path: '/gen',
     component: Layout,

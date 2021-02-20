@@ -8,6 +8,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import cn.hutool.core.util.StrUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.gox.common.constant.UserConstants;
@@ -23,6 +25,7 @@ import com.gox.system.mapper.SysMenuMapper;
 import com.gox.system.mapper.SysRoleMapper;
 import com.gox.system.mapper.SysRoleMenuMapper;
 import com.gox.system.service.ISysMenuService;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 菜单 业务层处理
@@ -30,6 +33,7 @@ import com.gox.system.service.ISysMenuService;
  * @author gox
  */
 @Service
+@Transactional(rollbackFor=RuntimeException.class)
 public class SysMenuServiceImpl implements ISysMenuService
 {
     public static final String PREMISSION_STRING = "perms[\"{0}\"]";
@@ -269,6 +273,61 @@ public class SysMenuServiceImpl implements ISysMenuService
         return menuMapper.insertMenu(menu);
     }
 
+    /**
+     * 新增保存模板信息
+     *
+     * @param menu 单个目录信息
+     * @return 结果
+     */
+    @Override
+    public int insertTemplates(SysMenu menu) throws CloneNotSupportedException {
+        //模板管理 目录id
+        Long parentId = 2063L;
+        if (menu.getMenuType().equals("M")){
+            menu.setComponent(null);
+            menu.setPath("#");
+        }
+        menuMapper.insertMenu(menu);
+        Long pid = menu.getParentId();
+        SysMenu menuCopy = (SysMenu) menu.clone();
+        //若父id==0 是最顶级目录 即与数据采集同级
+        if (pid!=0){
+            List<SysMenu> all = menuMapper.selectMenuList(new SysMenu());
+            String menuName = all.stream().filter(m->m.getMenuId().equals(pid)).findFirst().orElse(new SysMenu()).getMenuName();
+            //查询出模板管理下的子菜单
+            List<SysMenu> menus = new ArrayList<>();
+            getAllChild(all,menus,parentId);
+            Long nid = menus.stream().filter(m->m.getMenuName().equals(menuName)).findFirst().orElse(new SysMenu()).getMenuId();
+            if (nid!=null){
+                menuCopy.setParentId(nid);
+            }
+            String c = menuCopy.getMenuType();
+            if (c.equals("C")){
+                String path = menuCopy.getPath();
+                String id = path.substring(path.lastIndexOf("/")+1);
+                menuCopy.setComponent("system/json/index");
+                menuCopy.setPath("/templates/"+id);
+            }
+            menuMapper.insertMenu(menuCopy);
+            return 1;
+        }
+        menuCopy.setParentId(parentId);
+        menuMapper.insertMenu(menuCopy);
+        return 1;
+    }
+    /**
+     * 根据提供id 获取所有子菜单
+     * @param menus 总菜单
+     * @param res 结果
+     * @param id 提供菜单id
+     */
+    private void getAllChild(List<SysMenu> menus, List<SysMenu> res, Long id){
+        List<SysMenu> mm = menus.stream().filter(menu -> menu.getParentId().equals(id)).collect(Collectors.toList());
+        if (!mm.isEmpty()){
+            res.addAll(mm);
+            mm.forEach(m-> getAllChild(menus,res,m.getMenuId()));
+        }
+    }
     /**
      * 修改保存菜单信息
      *

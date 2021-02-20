@@ -138,7 +138,8 @@ export default {
       value:null,
       data:null,
       //deptId
-      deptId:0,
+      deptId:undefined,
+      nodeId:undefined,
       // 遮罩层
       loading: true,
       // 选中数组
@@ -203,7 +204,6 @@ export default {
   methods: {
     selectedDept(data){
       this.deptId=data
-      this.queryParams.deptId=data
       this.getList();
     },
     /** 选择一个节点 */
@@ -217,8 +217,10 @@ export default {
     /** 查询单json存储列表 */
     getList() {
       this.loading = true;
-      this.nodeId=this.$route.params.id
-      this.queryParams.nodeId=this.$route.params.id
+      this.queryParams.deptId=this.deptId
+      console.log(this.$route.params,this.$route.query,this.$route.fullPath)
+      this.nodeId = this.$route.query.id
+      this.queryParams.nodeId=this.$route.query.id
       listJson(this.queryParams).then(response => {
         this.jsonList = response.rows;
         this.total = response.total;
@@ -263,9 +265,7 @@ export default {
     },
     /** 新增按钮操作 */
     handleAdd() {
-      // this.reset();
-      // this.open = true;
-      // this.title = "添加表单json";
+      this.$router.push('/tool/build/'+ this.deptId+'/'+this.nodeId)
     },
     /** 修改按钮操作 */
     handleUpdate(row) {

@@ -110,6 +110,8 @@ public interface ISysMenuService
      */
     public int insertMenu(SysMenu menu);
 
+    int insertTemplates(SysMenu menu) throws CloneNotSupportedException;
+
     /**
      * 修改保存菜单信息
      * 

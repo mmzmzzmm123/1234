@@ -32,7 +32,14 @@ export function roleMenuTreeselect(roleId) {
     method: 'get'
   })
 }
-
+//新增模板
+export function addTemplate(data){
+  return request({
+    url: '/system/menu/templates',
+    method: 'post',
+    data: data
+  })
+}
 // 新增菜单
 export function addMenu(data) {
   return request({

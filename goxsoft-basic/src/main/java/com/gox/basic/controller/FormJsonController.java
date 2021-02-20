@@ -102,14 +102,14 @@ public class FormJsonController extends BaseController
     @PreAuthorize("@ss.hasPermi('basic:json:add')")
     @Log(title = "表单管理", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody String jsonStr)
+    public AjaxResult add(@RequestBody FormJson formJson)
     {
-        FormJson formJson = new FormJson();
-        JSONObject json = JSON.parseObject(jsonStr);
-        String formname = json.getString("formname");
+        //FormJson formJson = new FormJson();
+        JSONObject json = JSON.parseObject(formJson.getFormData());
+        //String formname = json.getString("formname");
         String id = json.getString("id");
-        formJson.setFormName(formname);
-        formJson.setFormData(jsonStr);
+//        formJson.setFormName(formname);
+//        formJson.setFormData(jsonStr);
         json.remove("formname");
         json.remove("id");
         FormDesignerData fd = json.toJavaObject(FormDesignerData.class);

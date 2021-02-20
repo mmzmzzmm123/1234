@@ -22,6 +22,7 @@ public interface SysMenuMapper
      */
     public List<SysMenu> selectMenuList(SysMenu menu);
 
+    public List<SysMenu> selectMenuParent(Long menuId);
     /**
      * 根据用户所有权限
      *

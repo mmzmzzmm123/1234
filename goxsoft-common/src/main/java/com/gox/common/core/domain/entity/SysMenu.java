@@ -13,7 +13,7 @@ import com.gox.common.core.domain.BaseEntity;
  * 
  * @author gox
  */
-public class SysMenu extends BaseEntity
+public class SysMenu extends BaseEntity implements Cloneable
 {
     private static final long serialVersionUID = 1L;
 
@@ -241,5 +241,9 @@ public class SysMenu extends BaseEntity
             .append("updateTime", getUpdateTime())
             .append("remark", getRemark())
             .toString();
+    }
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 }

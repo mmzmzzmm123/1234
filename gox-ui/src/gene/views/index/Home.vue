@@ -128,24 +128,16 @@ import render from '@/gene/components/render/render'
 import FormDrawer from './FormDrawer'
 import JsonDrawer from './JsonDrawer'
 import RightPanel from './RightPanel'
-import {
-  inputComponents, selectComponents, layoutComponents, formConf
-} from '@/gene/components/generator/config'
-import {
-  exportDefault, beautifierConf, isNumberStr, titleCase, deepClone
-} from '@/gene/utils/index'
-import {
-  makeUpHtml, vueTemplate, vueScript, cssStyle
-} from '@/gene/components/generator/html'
+import { formConf, inputComponents, layoutComponents, selectComponents } from '@/gene/components/generator/config'
+import { beautifierConf, deepClone, titleCase } from '@/gene/utils/index'
+import { cssStyle, makeUpHtml, vueScript, vueTemplate } from '@/gene/components/generator/html'
 import { makeUpJs } from '@/gene/components/generator/js'
 import { makeUpCss } from '@/gene/components/generator/css'
 import drawingDefalut from '@/gene/components/generator/drawingDefalut'
 import logo from '@/gene/assets/logo.png'
 import CodeTypeDialog from './CodeTypeDialog'
 import DraggableItem from './DraggableItem'
-import {
-  getDrawingList, saveDrawingList, getIdGlobal, saveIdGlobal, getFormConf
-} from '@/gene/utils/db'
+import { getDrawingList, getFormConf, getIdGlobal, saveDrawingList, saveIdGlobal } from '@/gene/utils/db'
 import loadBeautifier from '@/gene/utils/loadBeautifier'
 import { addJson, getJson } from '@/api/system/json'
 
@@ -169,6 +161,8 @@ export default {
   },
   data() {
     return {
+      deptId:undefined,
+      nodeId:undefined,
       logo,
       idGlobal,
       formConf,
@@ -285,6 +279,10 @@ export default {
           this.id=id
         })
       }
+      else{
+        this.nodeId = this.$route.params.nodeId
+        this.deptId = this.$route.params.deptId;
+      }
     },
     save() {
       if (!this.modify){
@@ -296,8 +294,13 @@ export default {
         }).then(({ value }) => {
           this.formname = value;
           this.AssembleFormData()
+          let formjson ={}
           let data = JSON.stringify(this.formData);
-          addJson(data).then(res=>{
+          formjson.formName=value
+          formjson.formData=data
+          formjson.nodeId = this.nodeId
+          formjson.deptId = this.deptId
+          addJson(formjson).then(res=>{
             this.$message({message:'保存成功!',type:'success'})
           }).catch(err=>{
             this.$message.error('保存失败,系统错误')
@@ -310,8 +313,14 @@ export default {
         });
       }else{
         this.AssembleFormData()
-        let data = JSON.stringify(this.formData);
-        addJson(data).then(res=>{
+        //let data = JSON.stringify(this.formData);
+        let formjson ={}
+        //formjson.formName=value
+        formjson.formData=JSON.stringify(this.formData)
+        formjson.id = this.id
+        // formjson.nodeId = this.nodeId
+        // formjson.deptId = this.deptId
+        addJson(formjson).then(res=>{
           this.$message({message:'保存成功!',type:'success'})
         }).catch(err=>{
           this.$message.error('保存失败,系统错误')
