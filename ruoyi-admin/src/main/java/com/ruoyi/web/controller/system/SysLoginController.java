@@ -19,6 +19,7 @@ import com.ruoyi.common.core.domain.entity.SysMenu;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.core.domain.model.LoginBody;
 import com.ruoyi.common.core.domain.model.LoginUser;
+import com.ruoyi.common.exception.CustomException;
 import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.dingtalk.DingTalkUserService;
 import com.ruoyi.framework.web.service.SysLoginService;
@@ -27,6 +28,8 @@ import com.ruoyi.framework.web.service.TokenService;
 import com.ruoyi.system.service.ISysMenuService;
 import com.ruoyi.web.core.config.DingTalkConfig;
 import com.taobao.api.ApiException;
+
+import io.swagger.annotations.ApiOperation;
 
 /**
  * 登录验证
@@ -51,6 +54,7 @@ public class SysLoginController {
 	@Autowired
 	private DingTalkUserService dingtalkUserService;
 
+	@Autowired
 	private DingTalkConfig dingTalkConfig;
 
 	/**
@@ -70,6 +74,7 @@ public class SysLoginController {
 		return ajax;
 	}
 
+	@ApiOperation("钉钉用户认证")
 	@PostMapping("/dingTalkAuth")
 	public AjaxResult dingTalkLogin(String authCode) {
 		DefaultDingTalkClient client = new DefaultDingTalkClient("https://oapi.dingtalk.com/gettoken");
@@ -82,6 +87,9 @@ public class SysLoginController {
 			String accessToken = response.getAccessToken();
 			OapiUserGetResponse userInfo = dingtalkUserService.getUserInfo(authCode, accessToken);
 			String mobile = userInfo.getMobile();
+			if(mobile == null) {
+				throw new CustomException("钉钉认证失败！");
+			}
 			AjaxResult ajax = AjaxResult.success();
 			// 生成令牌
 			String token = loginService.loginByDingTalk(mobile);
@@ -97,6 +105,7 @@ public class SysLoginController {
 	 * 
 	 * @return 用户信息
 	 */
+	@ApiOperation("根据token获取用户信息")
 	@GetMapping("getInfo")
 	public AjaxResult getInfo() {
 		LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
