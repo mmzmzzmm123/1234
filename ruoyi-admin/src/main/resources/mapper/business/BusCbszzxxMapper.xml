@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.business.mapper.BusCbszzxxMapper">
+    
+    <resultMap type="BusCbszzxx" id="BusCbszzxxResult">
+        <result property="id"    column="id"    />
+        <result property="cbsId"    column="cbs_id"    />
+        <result property="zzmc"    column="zzmc"    />
+        <result property="yxq"    column="yxq"    />
+        <result property="zztp"    column="zztp"    />
+        <result property="xrsj"    column="xrsj"    />
+        <result property="xrrId"    column="xrr_id"    />
+        <result property="xgsj"    column="xgsj"    />
+        <result property="xgrId"    column="xgr_id"    />
+    </resultMap>
+
+    <sql id="selectBusCbszzxxVo">
+        select id, cbs_id, zzmc, yxq, zztp, xrsj, xrr_id, xgsj, xgr_id from bus_cbszzxx
+    </sql>
+
+    <select id="selectBusCbszzxxList" parameterType="BusCbszzxx" resultMap="BusCbszzxxResult">
+        <include refid="selectBusCbszzxxVo"/>
+        <where>  
+            <if test="cbsId != null  and cbsId != ''"> and cbs_id = #{cbsId}</if>
+            <if test="zzmc != null  and zzmc != ''"> and zzmc = #{zzmc}</if>
+            <if test="yxq != null  and yxq != ''"> and yxq = #{yxq}</if>
+            <if test="zztp != null  and zztp != ''"> and zztp = #{zztp}</if>
+            <if test="xrsj != null "> and xrsj = #{xrsj}</if>
+            <if test="xrrId != null "> and xrr_id = #{xrrId}</if>
+            <if test="xgsj != null "> and xgsj = #{xgsj}</if>
+            <if test="xgrId != null "> and xgr_id = #{xgrId}</if>
+        </where>
+    </select>
+    
+    <select id="selectBusCbszzxxById" parameterType="Long" resultMap="BusCbszzxxResult">
+        <include refid="selectBusCbszzxxVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertBusCbszzxx" parameterType="BusCbszzxx">
+        insert into bus_cbszzxx
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="cbsId != null">cbs_id,</if>
+            <if test="zzmc != null">zzmc,</if>
+            <if test="yxq != null">yxq,</if>
+            <if test="zztp != null">zztp,</if>
+            <if test="xrsj != null">xrsj,</if>
+            <if test="xrrId != null">xrr_id,</if>
+            <if test="xgsj != null">xgsj,</if>
+            <if test="xgrId != null">xgr_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="cbsId != null">#{cbsId},</if>
+            <if test="zzmc != null">#{zzmc},</if>
+            <if test="yxq != null">#{yxq},</if>
+            <if test="zztp != null">#{zztp},</if>
+            <if test="xrsj != null">#{xrsj},</if>
+            <if test="xrrId != null">#{xrrId},</if>
+            <if test="xgsj != null">#{xgsj},</if>
+            <if test="xgrId != null">#{xgrId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBusCbszzxx" parameterType="BusCbszzxx">
+        update bus_cbszzxx
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="cbsId != null">cbs_id = #{cbsId},</if>
+            <if test="zzmc != null">zzmc = #{zzmc},</if>
+            <if test="yxq != null">yxq = #{yxq},</if>
+            <if test="zztp != null">zztp = #{zztp},</if>
+            <if test="xrsj != null">xrsj = #{xrsj},</if>
+            <if test="xrrId != null">xrr_id = #{xrrId},</if>
+            <if test="xgsj != null">xgsj = #{xgsj},</if>
+            <if test="xgrId != null">xgr_id = #{xgrId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBusCbszzxxById" parameterType="Long">
+        delete from bus_cbszzxx where id = #{id}
+    </delete>
+
+    <delete id="deleteBusCbszzxxByIds" parameterType="String">
+        delete from bus_cbszzxx where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+    <select id="selectByCbsId" parameterType="BusCbszzxx" resultMap="BusCbszzxxResult">
+        <include refid="selectBusCbszzxxVo"/>
+        where cbs_id = #{cbsId}
+    </select>
+</mapper>

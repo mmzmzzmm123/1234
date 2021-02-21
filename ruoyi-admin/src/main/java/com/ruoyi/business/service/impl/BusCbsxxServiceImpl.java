@@ -1,5 +1,6 @@
 package com.ruoyi.business.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,8 +8,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ruoyi.business.domain.BusCbsxx;
+import com.ruoyi.business.domain.BusCbszzxx;
+import com.ruoyi.business.domain.vo.BusCbsxxVO;
 import com.ruoyi.business.mapper.BusCbsxxMapper;
 import com.ruoyi.business.service.IBusCbsxxService;
+import com.ruoyi.business.service.IBusCbszzxxService;
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.exception.CustomException;
@@ -24,12 +28,15 @@ import com.ruoyi.system.service.ISysUserService;
  */
 @Service
 public class BusCbsxxServiceImpl implements IBusCbsxxService {
-	
+
 	@Autowired
 	private ISysUserService userService;
-	 
+
 	@Autowired
 	private BusCbsxxMapper busCbsxxMapper;
+
+	@Autowired
+	private IBusCbszzxxService busCbszzxxService;
 
 	/**
 	 * 查询承包商信息
@@ -39,8 +46,9 @@ public class BusCbsxxServiceImpl implements IBusCbsxxService {
 	 * @return 承包商信息
 	 */
 	@Override
-	public BusCbsxx selectBusCbsxxById(Long id) {
-		return busCbsxxMapper.selectBusCbsxxById(id);
+	public BusCbsxxVO selectBusCbsxxById(Long id) {
+		BusCbsxx busCbsxx = busCbsxxMapper.selectBusCbsxxById(id);
+		return selectByCbsxx(busCbsxx);
 	}
 
 	/**
@@ -51,20 +59,19 @@ public class BusCbsxxServiceImpl implements IBusCbsxxService {
 	 * @return 承包商信息
 	 */
 	@Override
-	public List<BusCbsxx> selectBusCbsxxList(BusCbsxx busCbsxx) {
-		return busCbsxxMapper.selectBusCbsxxList(busCbsxx);
+	public List<BusCbsxxVO> selectBusCbsxxList(BusCbsxx busCbsxx) {
+		List<BusCbsxx> busCbsxxList = busCbsxxMapper.selectBusCbsxxList(busCbsxx);
+		List<BusCbsxxVO> busCbsxxListVOList = new ArrayList<>();
+		for (BusCbsxx cbsxx : busCbsxxList) {
+			BusCbsxxVO cbsxxVO = selectByCbsxx(cbsxx);
+			busCbsxxListVOList.add(cbsxxVO);
+		}
+		return busCbsxxListVOList;
 	}
 
-	/**
-	 * 新增承包商信息
-	 * 
-	 * @param busCbsxx
-	 *            承包商信息
-	 * @return 结果
-	 */
 	@Transactional
 	@Override
-	public int insertBusCbsxx(BusCbsxx busCbsxx) {
+	public int insertBusCbsxx(BusCbsxx busCbsxx, List<String> zzxxFilePaths) {
 		String cbsName = busCbsxx.getCbsName();
 		BusCbsxx cbsxx = busCbsxxMapper.checkNameUnique(cbsName);
 		if (cbsxx != null) {
@@ -76,6 +83,8 @@ public class BusCbsxxServiceImpl implements IBusCbsxxService {
 			throw new CustomException("承包商负责人联系方式已存在！");
 		}
 
+		String createBy = SecurityUtils.getUsername();
+
 		// 注册添加用户
 		SysUser user = new SysUser();
 		user.setNickName(busCbsxx.getFzr());
@@ -86,27 +95,34 @@ public class BusCbsxxServiceImpl implements IBusCbsxxService {
 		user.setStatus("0");
 		user.setSex("0");
 		user.setRoleIds(new Long[] { 3L });
-		
-		if (UserConstants.NOT_UNIQUE.equals(userService.checkUserNameUnique(user.getUserName())))
-        {
-			throw new CustomException("新增用户'" + user.getUserName() + "'失败，登录账号已存在");
-        }
-        else if (StringUtils.isNotEmpty(user.getPhonenumber())
-                && UserConstants.NOT_UNIQUE.equals(userService.checkPhoneUnique(user)))
-        {
-        	throw new CustomException("新增用户'" + user.getUserName() + "'失败，手机号码已存在");
-        }
-        else if (StringUtils.isNotEmpty(user.getEmail())
-                && UserConstants.NOT_UNIQUE.equals(userService.checkEmailUnique(user)))
-        {
-        	throw new CustomException("新增用户'" + user.getUserName() + "'失败，邮箱账号已存在");
-        }
-        user.setCreateBy(SecurityUtils.getUsername());
-        user.setPassword(SecurityUtils.encryptPassword(user.getPassword()));
-        userService.insertUser(user);
-        
-        // 注册承包商
-		return busCbsxxMapper.insertBusCbsxx(busCbsxx);
+		user.setDeptId(102L);
+
+		if (UserConstants.NOT_UNIQUE.equals(userService.checkUserNameUnique(user.getUserName()))) {
+			throw new CustomException("新增承包商'" + user.getUserName() + "'失败，登录账号已存在");
+		} else if (StringUtils.isNotEmpty(user.getPhonenumber())
+				&& UserConstants.NOT_UNIQUE.equals(userService.checkPhoneUnique(user))) {
+			throw new CustomException("新增承包商'" + user.getUserName() + "'失败，手机号码已存在");
+		}
+
+		user.setCreateBy(createBy);
+		user.setPassword(SecurityUtils.encryptPassword(user.getPassword()));
+		userService.insertUser(user);
+
+		// 设置用户ID为承包商ID
+		Long userId = user.getUserId();
+		busCbsxx.setId(userId);
+
+		int insertBusCbsxx = busCbsxxMapper.insertBusCbsxx(busCbsxx);
+
+		// 保存自增信息
+		if (zzxxFilePaths != null && !zzxxFilePaths.isEmpty()) {
+			BusCbszzxx busCbszzxx = new BusCbszzxx();
+			busCbszzxx.setCbsId(userId);
+			busCbszzxx.setZztp(StringUtils.join(zzxxFilePaths, ","));
+			busCbszzxxService.insertBusCbszzxx(busCbszzxx);
+		}
+
+		return insertBusCbsxx;
 	}
 
 	/**
@@ -145,4 +161,12 @@ public class BusCbsxxServiceImpl implements IBusCbsxxService {
 		return busCbsxxMapper.deleteBusCbsxxById(id);
 	}
 
+	private BusCbsxxVO selectByCbsxx(BusCbsxx busCbsxx) {
+		Long cbsId = busCbsxx.getId();
+		List<BusCbszzxx> cbszzxxList = busCbszzxxService.selectByCbsId(cbsId);
+		BusCbsxxVO busCbsxxVO = new BusCbsxxVO();
+		busCbsxxVO.setCbsxx(busCbsxx);
+		busCbsxxVO.setZzxxList(cbszzxxList);
+		return busCbsxxVO;
+	}
 }
