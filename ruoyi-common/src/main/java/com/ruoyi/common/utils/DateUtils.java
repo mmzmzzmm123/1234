@@ -1,10 +1,11 @@
 package com.ruoyi.common.utils;
 
+import org.apache.commons.lang3.time.DateFormatUtils;
+
 import java.lang.management.ManagementFactory;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import org.apache.commons.lang3.time.DateFormatUtils;
 
 /**
  * 时间工具类
@@ -151,5 +152,38 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils
         // 计算差多少秒//输出结果
         // long sec = diff % nd % nh % nm / ns;
         return day + "天" + hour + "小时" + min + "分钟";
+    }
+
+    /**
+     * 计算两个时间差
+     */
+    public static String getDatePoorDiff(Long endTime, Long beginTime) {
+        long nd = 1000 * 24 * 60 * 60;
+        long nh = 1000 * 60 * 60;
+        long nm = 1000 * 60;
+        long ns = 1000;
+        // 获得两个时间的毫秒时间差异
+        long diff = endTime - beginTime;
+        // 计算差多少分钟
+//        long min = diff % nd % nh / nm;
+        // 计算差多少秒
+        long sec = diff % nd % nh % nm / ns;
+        // 计算差多少毫秒
+        long millis = diff % nd % nh % nm % ns;
+        return sec + "秒" + millis + "毫秒";
+    }
+
+    public static void main(String[] args) {
+        // 1、开始时间
+        Long beginTime = System.currentTimeMillis();
+        try {
+            // 休眠3秒
+            Thread.sleep(1000 * 60);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        // 2、结束时间
+        Long endTime = System.currentTimeMillis();
+        System.err.println(getDatePoorDiff(endTime, beginTime));
     }
 }

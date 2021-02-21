@@ -17,7 +17,8 @@ import java.io.IOException;
 /**
  * 解决跨域问题
  *
- * @author ruoyi
+ * @author wuchunhao
+ * @date 2019-06-01
  */
 @Component
 @WebFilter(urlPatterns = "/*")
