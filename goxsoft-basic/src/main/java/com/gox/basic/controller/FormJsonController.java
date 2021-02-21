@@ -92,7 +92,7 @@ public class FormJsonController extends BaseController
         FormDesignerData data = formDesignerDataService.selectFormDesignerDataById(id);
         formJson.setFormData(JSONObject.toJSONString(data));
         return AjaxResult.success(formJson);
-        //return AjaxResult.success(formJsonService.selectFormJsonById(id));
+
     }
 
     /**

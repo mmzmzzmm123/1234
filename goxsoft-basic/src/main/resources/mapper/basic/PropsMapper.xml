@@ -3,7 +3,6 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.gox.basic.mapper.PropsMapper">
-    
     <resultMap type="Props" id="PropsResult">
         <result property="id"    column="id"    />
         <result property="itemId"    column="item_id"    />
@@ -16,7 +15,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectPropsVo">
-        select id, item_id, pro_id, children, multiple, label, value from props
+        select id, item_id, pro_id, children, multiple, label, `value` from props
     </sql>
 
     <select id="selectPropsList" parameterType="Props" resultMap="PropsResult">

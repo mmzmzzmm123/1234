@@ -818,7 +818,8 @@ export default {
       this.multiple = !selection.length
     },
     loadForm(){
-      let query = {id:'',parentName: '文书',node:'基本数据'}
+      let id = this.$route.params.id
+      let query = {nodeId:id,deptId:this.deptId}
       listJson(query).then(res => {
         this.formConf=JSON.parse(res.rows[0].formData)
         this.formReserve=deepClone(this.formConf)

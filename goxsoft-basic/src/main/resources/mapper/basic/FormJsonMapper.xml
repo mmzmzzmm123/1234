@@ -60,8 +60,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="remark != null and remark != ''">#{remark},</if>
             <if test="formName != null and formName != ''">#{formName},</if>
             <if test="formData != null and formData != ''">#{formData},</if>
-            <if test="nodeId != null and nodeId != ''">#{node_id},</if>
-            <if test="deptId != null and deptId != ''">#{dept_id},</if>
+            <if test="nodeId != null and nodeId != ''">#{nodeId},</if>
+            <if test="deptId != null and deptId != ''">#{deptId},</if>
          </trim>
     </insert>
 
@@ -75,8 +75,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="remark != null and remark != ''">remark = #{remark},</if>
             <if test="formName != null and formName != ''">form_name = #{formName},</if>
             <if test="formData != null and formData != ''">form_data = #{formData},</if>
-            <if test="nodeId != null and nodeId != ''">nodeId = #{node_id},</if>
-            <if test="deptId != null and deptId != ''">dept_id = #{dept_id},</if>
+            <if test="nodeId != null and nodeId != ''">node_id = #{nodeId},</if>
+            <if test="deptId != null and deptId != ''">dept_id = #{nodeId},</if>
         </trim>
         where id = #{id}
     </update>

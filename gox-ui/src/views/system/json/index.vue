@@ -218,9 +218,9 @@ export default {
     getList() {
       this.loading = true;
       this.queryParams.deptId=this.deptId
-      console.log(this.$route.params,this.$route.query,this.$route.fullPath)
-      this.nodeId = this.$route.query.id
-      this.queryParams.nodeId=this.$route.query.id
+      let i = this.$route.fullPath.lastIndexOf("/")
+      this.nodeId = Number(this.$route.fullPath.substring(i+1))
+      this.queryParams.nodeId=this.nodeId
       listJson(this.queryParams).then(response => {
         this.jsonList = response.rows;
         this.total = response.total;
@@ -270,8 +270,9 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       //this.reset();
+      console.log(row)
       const id = row.id
-      this.$router.push('/tool/build/'+id)
+      //this.$router.push('/tool/build/'+id)
     },
     /** 提交按钮 */
     submitForm() {
