@@ -2,6 +2,7 @@ package com.ruoyi.business.service;
 
 import java.util.List;
 import com.ruoyi.business.domain.BusCbsxx;
+import com.ruoyi.business.domain.vo.BusCbsxxSaveVO;
 import com.ruoyi.business.domain.vo.BusCbsxxVO;
 
 /**
@@ -32,22 +33,20 @@ public interface IBusCbsxxService {
 	/**
 	 * 新增承包商信息
 	 * 
-	 * @param busCbsxx
+	 * @param busCbsxxSaveVO
 	 *            承包商信息
-	 * @param zzxxFilePaths
-	 *            资质信息附件
 	 * @return 结果
 	 */
-	public int insertBusCbsxx(BusCbsxx busCbsxx, List<String> zzxxFilePaths);
+	public int insertBusCbsxx(BusCbsxxSaveVO busCbsxxSaveVO);
 
 	/**
 	 * 修改承包商信息
 	 * 
-	 * @param busCbsxx
+	 * @param busCbsxxSaveVO
 	 *            承包商信息
 	 * @return 结果
 	 */
-	public int updateBusCbsxx(BusCbsxx busCbsxx);
+	public int updateBusCbsxx(BusCbsxxSaveVO busCbsxxSaveVO);
 
 	/**
 	 * 批量删除承包商信息

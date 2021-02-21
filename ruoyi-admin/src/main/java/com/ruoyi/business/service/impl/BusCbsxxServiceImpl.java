@@ -3,12 +3,14 @@ package com.ruoyi.business.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ruoyi.business.domain.BusCbsxx;
 import com.ruoyi.business.domain.BusCbszzxx;
+import com.ruoyi.business.domain.vo.BusCbsxxSaveVO;
 import com.ruoyi.business.domain.vo.BusCbsxxVO;
 import com.ruoyi.business.mapper.BusCbsxxMapper;
 import com.ruoyi.business.service.IBusCbsxxService;
@@ -71,7 +73,9 @@ public class BusCbsxxServiceImpl implements IBusCbsxxService {
 
 	@Transactional
 	@Override
-	public int insertBusCbsxx(BusCbsxx busCbsxx, List<String> zzxxFilePaths) {
+	public int insertBusCbsxx(BusCbsxxSaveVO busCbsxxSaveVO) {
+		BusCbsxx busCbsxx = new BusCbsxx();
+		BeanUtils.copyProperties(busCbsxxSaveVO, busCbsxx);
 		String cbsName = busCbsxx.getCbsName();
 		BusCbsxx cbsxx = busCbsxxMapper.checkNameUnique(cbsName);
 		if (cbsxx != null) {
@@ -115,10 +119,14 @@ public class BusCbsxxServiceImpl implements IBusCbsxxService {
 		int insertBusCbsxx = busCbsxxMapper.insertBusCbsxx(busCbsxx);
 
 		// 保存自增信息
-		if (zzxxFilePaths != null && !zzxxFilePaths.isEmpty()) {
+		List<String> zzxxFileUrls = busCbsxxSaveVO.getZzxxFileUrls();
+		if (zzxxFileUrls != null && !zzxxFileUrls.isEmpty()) {
+			// 删除所有资质
+			busCbszzxxService.deleteByCbsId(userId);
+			// 保存新的资质
 			BusCbszzxx busCbszzxx = new BusCbszzxx();
 			busCbszzxx.setCbsId(userId);
-			busCbszzxx.setZztp(StringUtils.join(zzxxFilePaths, ","));
+			busCbszzxx.setZztp(StringUtils.join(zzxxFileUrls, ","));
 			busCbszzxxService.insertBusCbszzxx(busCbszzxx);
 		}
 
@@ -132,9 +140,21 @@ public class BusCbsxxServiceImpl implements IBusCbsxxService {
 	 *            承包商信息
 	 * @return 结果
 	 */
+	@Transactional
 	@Override
-	public int updateBusCbsxx(BusCbsxx busCbsxx) {
-		return busCbsxxMapper.updateBusCbsxx(busCbsxx);
+	public int updateBusCbsxx(BusCbsxxSaveVO busCbsxxSaveVO) {
+		Long id = busCbsxxSaveVO.getId();
+		BusCbsxx cbsxx = busCbsxxMapper.selectBusCbsxxById(id);
+		BeanUtils.copyProperties(busCbsxxSaveVO, cbsxx);
+		// 保存自增信息
+		List<String> zzxxFileUrls = busCbsxxSaveVO.getZzxxFileUrls();
+		if (zzxxFileUrls != null && !zzxxFileUrls.isEmpty()) {
+			BusCbszzxx busCbszzxx = new BusCbszzxx();
+			busCbszzxx.setCbsId(id);
+			busCbszzxx.setZztp(StringUtils.join(zzxxFileUrls, ","));
+			busCbszzxxService.insertBusCbszzxx(busCbszzxx);
+		}
+		return busCbsxxMapper.updateBusCbsxx(cbsxx);
 	}
 
 	/**

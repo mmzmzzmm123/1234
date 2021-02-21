@@ -60,4 +60,6 @@ public interface IBusCbszzxxService
     public int deleteBusCbszzxxById(Long id);
 
 	List<BusCbszzxx> selectByCbsId(Long cbsId);
+
+	int deleteByCbsId(Long cbsId);
 }

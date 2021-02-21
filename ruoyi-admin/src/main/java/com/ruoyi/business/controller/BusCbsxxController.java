@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.ruoyi.business.domain.BusCbsxx;
+import com.ruoyi.business.domain.vo.BusCbsxxSaveVO;
 import com.ruoyi.business.domain.vo.BusCbsxxVO;
 import com.ruoyi.business.service.IBusCbsxxService;
 import com.ruoyi.common.annotation.Log;
@@ -22,7 +22,6 @@ import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
-import com.ruoyi.common.utils.file.FileUploadUtils;
 
 import io.swagger.annotations.ApiOperation;
 
@@ -66,10 +65,9 @@ public class BusCbsxxController extends BaseController
     @ApiOperation("新增承包商")
     @Log(title = "承包商信息", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(BusCbsxx busCbsxx, MultipartFile[] zzxxFiles) throws IOException
+    public AjaxResult add(@RequestBody BusCbsxxSaveVO busCbsxxSaveVO) throws IOException
     {
-    	List<String> uploadFilePaths = FileUploadUtils.upload(zzxxFiles);
-        return toAjax(busCbsxxService.insertBusCbsxx(busCbsxx, uploadFilePaths));
+        return toAjax(busCbsxxService.insertBusCbsxx(busCbsxxSaveVO));
     }
 
     /**
@@ -77,9 +75,9 @@ public class BusCbsxxController extends BaseController
      */
     @Log(title = "承包商信息", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody BusCbsxx busCbsxx)
+    public AjaxResult edit(@RequestBody BusCbsxxSaveVO busCbsxxSaveVO)
     {
-        return toAjax(busCbsxxService.updateBusCbsxx(busCbsxx));
+        return toAjax(busCbsxxService.updateBusCbsxx(busCbsxxSaveVO));
     }
 
     /**
