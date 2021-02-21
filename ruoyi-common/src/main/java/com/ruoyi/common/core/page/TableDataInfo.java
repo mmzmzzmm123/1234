@@ -14,6 +14,9 @@ public class TableDataInfo implements Serializable
 
     /** 总记录数 */
     private long total;
+    
+    /** 总页数 */
+    private long totalPages;
 
     /** 列表数据 */
     private List<?> rows;
@@ -82,4 +85,14 @@ public class TableDataInfo implements Serializable
     {
         this.msg = msg;
     }
+
+	public long getTotalPages() {
+		return totalPages;
+	}
+
+	public void setTotalPages(long totalPages) {
+		this.totalPages = totalPages;
+	}
+    
+    
 }

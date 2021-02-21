@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -61,21 +60,15 @@ public class BusCbsxxController extends BaseController {
 	 * 
 	 * @throws IOException
 	 */
-	@ApiOperation("新增承包商")
-	@Log(title = "承包商信息", businessType = BusinessType.INSERT)
+	@ApiOperation("新增/修改承包商")
+	@Log(title = "承包商信息", businessType = BusinessType.UPDATE)
 	@PostMapping
 	public AjaxResult add(@RequestBody BusCbsxxSaveVO busCbsxxSaveVO) throws IOException {
-		return toAjax(busCbsxxService.insertBusCbsxx(busCbsxxSaveVO));
-	}
-
-	/**
-	 * 修改承包商信息
-	 */
-	@ApiOperation("修改承包商")
-	@Log(title = "承包商信息", businessType = BusinessType.UPDATE)
-	@PutMapping
-	public AjaxResult edit(@RequestBody BusCbsxxSaveVO busCbsxxSaveVO) {
-		return toAjax(busCbsxxService.updateBusCbsxx(busCbsxxSaveVO));
+		if (busCbsxxSaveVO.getId() == null) {
+			return toAjax(busCbsxxService.insertBusCbsxx(busCbsxxSaveVO));
+		} else {
+			return toAjax(busCbsxxService.updateBusCbsxx(busCbsxxSaveVO));
+		}
 	}
 
 	/**

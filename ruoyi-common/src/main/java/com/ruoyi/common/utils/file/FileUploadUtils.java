@@ -9,7 +9,6 @@ import org.apache.commons.io.FilenameUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.ruoyi.common.config.RuoYiConfig;
-import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.exception.file.FileNameLengthLimitExceededException;
 import com.ruoyi.common.exception.file.FileSizeLimitExceededException;
 import com.ruoyi.common.exception.file.InvalidExtensionException;
@@ -163,7 +162,7 @@ public class FileUploadUtils {
 	private static final String getPathFileName(String uploadDir, String fileName) throws IOException {
 		int dirLastIndex = RuoYiConfig.getProfile().length() + 1;
 		String currentDir = StringUtils.substring(uploadDir, dirLastIndex);
-		String pathFileName = Constants.RESOURCE_PREFIX + "/" + currentDir + "/" + fileName;
+		String pathFileName = currentDir + "/" + fileName;
 		return pathFileName;
 	}
 

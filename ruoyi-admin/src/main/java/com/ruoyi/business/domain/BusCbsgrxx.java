@@ -1,11 +1,13 @@
 package com.ruoyi.business.domain;
 
+import java.io.Serializable;
 import java.util.Date;
-import com.fasterxml.jackson.annotation.JsonFormat;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ruoyi.common.annotation.Excel;
-import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
  * 承包商工人信息对象 bus_cbsgrxx
@@ -13,7 +15,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * @author yaowei
  * @date 2021-02-21
  */
-public class BusCbsgrxx extends BaseEntity
+public class BusCbsgrxx implements Serializable
 {
     private static final long serialVersionUID = 1L;
 
