@@ -34,15 +34,15 @@ public class SysConfigServiceImpl implements ISysConfigService
     /**
      * 项目启动时，初始化参数到缓存
      */
-    @PostConstruct
-    public void init()
-    {
-        List<SysConfig> configsList = configMapper.selectConfigList(new SysConfig());
-        for (SysConfig config : configsList)
-        {
-            redisCache.setCacheObject(getCacheKey(config.getConfigKey()), config.getConfigValue());
-        }
-    }
+//    @PostConstruct
+//    public void init()
+//    {
+//        List<SysConfig> configsList = configMapper.selectConfigList(new SysConfig());
+//        for (SysConfig config : configsList)
+//        {
+//            redisCache.setCacheObject(getCacheKey(config.getConfigKey()), config.getConfigValue());
+//        }
+//    }
 
     /**
      * 查询参数配置信息
