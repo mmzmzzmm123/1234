@@ -11,7 +11,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="multiple"    column="multiple"    />
         <result property="label"    column="label"    />
         <result property="value"    column="value"    />
-        <association property="props" column="id" select="selectPropsByProId" />
+        <association property="props" column="id" select="selectPropsByProId" fetchType="lazy"/>
     </resultMap>
 
     <sql id="selectPropsVo">
