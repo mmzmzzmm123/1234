@@ -33,60 +33,57 @@ import io.swagger.annotations.ApiOperation;
  */
 @RestController
 @RequestMapping("/business/cbsxx")
-public class BusCbsxxController extends BaseController
-{
-    @Autowired
-    private IBusCbsxxService busCbsxxService;
+public class BusCbsxxController extends BaseController {
+	@Autowired
+	private IBusCbsxxService busCbsxxService;
 
-    /**
-     * 查询承包商信息列表
-     */
-    @GetMapping("/list")
-    public TableDataInfo list(BusCbsxx busCbsxx)
-    {
-        startPage();
-        List<BusCbsxxVO> list = busCbsxxService.selectBusCbsxxList(busCbsxx);
-        return getDataTable(list);
-    }
+	/**
+	 * 查询承包商信息列表
+	 */
+	@ApiOperation("承包商列表信息")
+	@GetMapping("/list")
+	public TableDataInfo list(BusCbsxx busCbsxx) {
+		startPage();
+		List<BusCbsxxVO> list = busCbsxxService.selectBusCbsxxList(busCbsxx);
+		return getDataTable(list);
+	}
 
-    /**
-     * 获取承包商信息详细信息
-     */
-    @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
-    {
-        return AjaxResult.success(busCbsxxService.selectBusCbsxxById(id));
-    }
+	/**
+	 * 获取承包商信息详细信息
+	 */
+	@GetMapping(value = "/{id}")
+	public AjaxResult getInfo(@PathVariable("id") Long id) {
+		return AjaxResult.success(busCbsxxService.selectBusCbsxxById(id));
+	}
 
-    /**
-     * 新增承包商信息
-     * @throws IOException 
-     */
-    @ApiOperation("新增承包商")
-    @Log(title = "承包商信息", businessType = BusinessType.INSERT)
-    @PostMapping
-    public AjaxResult add(@RequestBody BusCbsxxSaveVO busCbsxxSaveVO) throws IOException
-    {
-        return toAjax(busCbsxxService.insertBusCbsxx(busCbsxxSaveVO));
-    }
+	/**
+	 * 新增承包商信息
+	 * 
+	 * @throws IOException
+	 */
+	@ApiOperation("新增承包商")
+	@Log(title = "承包商信息", businessType = BusinessType.INSERT)
+	@PostMapping
+	public AjaxResult add(@RequestBody BusCbsxxSaveVO busCbsxxSaveVO) throws IOException {
+		return toAjax(busCbsxxService.insertBusCbsxx(busCbsxxSaveVO));
+	}
 
-    /**
-     * 修改承包商信息
-     */
-    @Log(title = "承包商信息", businessType = BusinessType.UPDATE)
-    @PutMapping
-    public AjaxResult edit(@RequestBody BusCbsxxSaveVO busCbsxxSaveVO)
-    {
-        return toAjax(busCbsxxService.updateBusCbsxx(busCbsxxSaveVO));
-    }
+	/**
+	 * 修改承包商信息
+	 */
+	@ApiOperation("修改承包商")
+	@Log(title = "承包商信息", businessType = BusinessType.UPDATE)
+	@PutMapping
+	public AjaxResult edit(@RequestBody BusCbsxxSaveVO busCbsxxSaveVO) {
+		return toAjax(busCbsxxService.updateBusCbsxx(busCbsxxSaveVO));
+	}
 
-    /**
-     * 删除承包商信息
-     */
-    @Log(title = "承包商信息", businessType = BusinessType.DELETE)
+	/**
+	 * 删除承包商信息
+	 */
+	@Log(title = "承包商信息", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
-    {
-        return toAjax(busCbsxxService.deleteBusCbsxxByIds(ids));
-    }
+	public AjaxResult remove(@PathVariable Long[] ids) {
+		return toAjax(busCbsxxService.deleteBusCbsxxByIds(ids));
+	}
 }

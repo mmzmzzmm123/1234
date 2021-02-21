@@ -2,6 +2,7 @@ package com.ruoyi.business.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -146,7 +147,8 @@ public class BusCbsxxServiceImpl implements IBusCbsxxService {
 		Long id = busCbsxxSaveVO.getId();
 		BusCbsxx cbsxx = busCbsxxMapper.selectBusCbsxxById(id);
 		BeanUtils.copyProperties(busCbsxxSaveVO, cbsxx);
-		// 保存自增信息
+		// 保存资质信息 先删除再新增
+		busCbszzxxService.deleteByCbsId(id);
 		List<String> zzxxFileUrls = busCbsxxSaveVO.getZzxxFileUrls();
 		if (zzxxFileUrls != null && !zzxxFileUrls.isEmpty()) {
 			BusCbszzxx busCbszzxx = new BusCbszzxx();
@@ -184,9 +186,10 @@ public class BusCbsxxServiceImpl implements IBusCbsxxService {
 	private BusCbsxxVO selectByCbsxx(BusCbsxx busCbsxx) {
 		Long cbsId = busCbsxx.getId();
 		List<BusCbszzxx> cbszzxxList = busCbszzxxService.selectByCbsId(cbsId);
+		List<String> zzxxList = cbszzxxList.stream().map(BusCbszzxx::getZztp).collect(Collectors.toList());
 		BusCbsxxVO busCbsxxVO = new BusCbsxxVO();
 		busCbsxxVO.setCbsxx(busCbsxx);
-		busCbsxxVO.setZzxxList(cbszzxxList);
+		busCbsxxVO.setZzxxList(zzxxList);
 		return busCbsxxVO;
 	}
 }

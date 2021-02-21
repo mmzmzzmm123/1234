@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.List;
 
 import com.ruoyi.business.domain.BusCbsxx;
-import com.ruoyi.business.domain.BusCbszzxx;
 
 /**
  * 承包商信息列表
@@ -13,13 +12,14 @@ import com.ruoyi.business.domain.BusCbszzxx;
  * @date 2021-02-21
  */
 public class BusCbsxxVO implements Serializable {
+	
 	private static final long serialVersionUID = 1L;
 
 	private BusCbsxx cbsxx;
 
-	private List<BusCbszzxx> zzxxList;
+	private List<String> zzxxList;
 
-	private List<String> ryxxList;
+	private List<BusCbsgrxxVO> ryxxList;
 
 	public BusCbsxx getCbsxx() {
 		return cbsxx;
@@ -29,21 +29,20 @@ public class BusCbsxxVO implements Serializable {
 		this.cbsxx = cbsxx;
 	}
 
-	public List<BusCbszzxx> getZzxxList() {
+	public List<String> getZzxxList() {
 		return zzxxList;
 	}
 
-	public void setZzxxList(List<BusCbszzxx> zzxxList) {
+	public void setZzxxList(List<String> zzxxList) {
 		this.zzxxList = zzxxList;
 	}
 
-	public List<String> getRyxxList() {
+	public List<BusCbsgrxxVO> getRyxxList() {
 		return ryxxList;
 	}
 
-	public void setRyxxList(List<String> ryxxList) {
+	public void setRyxxList(List<BusCbsgrxxVO> ryxxList) {
 		this.ryxxList = ryxxList;
 	}
 
-	
 }

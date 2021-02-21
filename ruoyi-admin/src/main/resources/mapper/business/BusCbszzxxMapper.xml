@@ -91,7 +91,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </foreach>
     </delete>
     
-    <select id="selectByCbsId" parameterType="BusCbszzxx" resultMap="BusCbszzxxResult">
+    <select id="selectByCbsId" resultMap="BusCbszzxxResult">
         <include refid="selectBusCbszzxxVo"/>
         where cbs_id = #{cbsId}
     </select>

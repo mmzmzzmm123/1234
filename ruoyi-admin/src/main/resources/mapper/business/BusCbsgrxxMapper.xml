@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.business.mapper.BusCbsgrxxMapper">
+    
+    <resultMap type="BusCbsgrxx" id="BusCbsgrxxResult">
+        <result property="id"    column="id"    />
+        <result property="cbsId"    column="cbs_id"    />
+        <result property="xm"    column="xm"    />
+        <result property="sfzhm"    column="sfzhm"    />
+        <result property="gw"    column="gw"    />
+        <result property="dx"    column="dx"    />
+        <result property="gzdd"    column="gzdd"    />
+        <result property="rzjs"    column="rzjs"    />
+        <result property="lzsj"    column="lzsj"    />
+    </resultMap>
+
+    <sql id="selectBusCbsgrxxVo">
+        select id, cbs_id, xm, sfzhm, gw, dx, gzdd, rzjs, lzsj from bus_cbsgrxx
+    </sql>
+
+    <select id="selectBusCbsgrxxList" parameterType="BusCbsgrxx" resultMap="BusCbsgrxxResult">
+        <include refid="selectBusCbsgrxxVo"/>
+        <where>  
+            <if test="cbsId != null "> and cbs_id = #{cbsId}</if>
+            <if test="xm != null  and xm != ''"> and xm = #{xm}</if>
+            <if test="sfzhm != null  and sfzhm != ''"> and sfzhm = #{sfzhm}</if>
+            <if test="gw != null  and gw != ''"> and gw = #{gw}</if>
+            <if test="dx != null  and dx != ''"> and dx = #{dx}</if>
+            <if test="gzdd != null  and gzdd != ''"> and gzdd = #{gzdd}</if>
+            <if test="rzjs != null "> and rzjs = #{rzjs}</if>
+            <if test="lzsj != null "> and lzsj = #{lzsj}</if>
+        </where>
+    </select>
+    
+    <select id="selectBusCbsgrxxById" parameterType="Long" resultMap="BusCbsgrxxResult">
+        <include refid="selectBusCbsgrxxVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertBusCbsgrxx" parameterType="BusCbsgrxx" useGeneratedKeys="true" keyProperty="id">
+        insert into bus_cbsgrxx
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="cbsId != null">cbs_id,</if>
+            <if test="xm != null">xm,</if>
+            <if test="sfzhm != null">sfzhm,</if>
+            <if test="gw != null">gw,</if>
+            <if test="dx != null">dx,</if>
+            <if test="gzdd != null">gzdd,</if>
+            <if test="rzjs != null">rzjs,</if>
+            <if test="lzsj != null">lzsj,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="cbsId != null">#{cbsId},</if>
+            <if test="xm != null">#{xm},</if>
+            <if test="sfzhm != null">#{sfzhm},</if>
+            <if test="gw != null">#{gw},</if>
+            <if test="dx != null">#{dx},</if>
+            <if test="gzdd != null">#{gzdd},</if>
+            <if test="rzjs != null">#{rzjs},</if>
+            <if test="lzsj != null">#{lzsj},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBusCbsgrxx" parameterType="BusCbsgrxx">
+        update bus_cbsgrxx
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="cbsId != null">cbs_id = #{cbsId},</if>
+            <if test="xm != null">xm = #{xm},</if>
+            <if test="sfzhm != null">sfzhm = #{sfzhm},</if>
+            <if test="gw != null">gw = #{gw},</if>
+            <if test="dx != null">dx = #{dx},</if>
+            <if test="gzdd != null">gzdd = #{gzdd},</if>
+            <if test="rzjs != null">rzjs = #{rzjs},</if>
+            <if test="lzsj != null">lzsj = #{lzsj},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBusCbsgrxxById" parameterType="Long">
+        delete from bus_cbsgrxx where id = #{id}
+    </delete>
+
+    <delete id="deleteBusCbsgrxxByIds" parameterType="String">
+        delete from bus_cbsgrxx where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+    <select id="selectByCbsId" parameterType="Long" resultMap="BusCbsgrxxResult">
+        <include refid="selectBusCbsgrxxVo"/>
+         where cbs_id = #{cbsId}
+    </select>
+    
+</mapper>
