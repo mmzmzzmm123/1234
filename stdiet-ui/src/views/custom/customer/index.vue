@@ -179,6 +179,16 @@
           </el-button>
         </template>
       </el-table-column>
+      <el-table-column label="外食热量统计" align="center" v-hasPermi="['custom:foodHeatStatistics:list']">
+        <template slot-scope="scope">
+          <el-button
+            size="mini"
+            type="text"
+            @click="handleClickHeatStatistics(scope.row)"
+          >详情
+          </el-button>
+        </template>
+      </el-table-column>
       <el-table-column label="食谱计划" align="center" v-hasPermi="['recipes:recipesPlan:list']">
         <template slot-scope="scope">
           <el-button
@@ -312,6 +322,8 @@
     <contract-drawer ref="cusContractDrawerRef"></contract-drawer>
     <!-- 健康评估弹窗 -->
     <physical-signs-dialog ref="physicalSignsDialogRef" />
+    <!-- 外食热量统计 -->
+    <heatStatisticsDrawer ref="heatStatisticsRef"></heatStatisticsDrawer>
     <!-- 食谱计划抽屉 -->
   </div>
 </template>
@@ -333,13 +345,15 @@ import { getOptions } from "@/api/custom/order";
 import OrderDrawer from "@/components/OrderDrawer";
 import PhysicalSignsDialog from "@/components/PhysicalSignsDialog";
 import ContractDrawer from "@/components/ContractDrawer";
+import HeatStatisticsDrawer from "@/components/HeatStatisticsDrawer";
 
 export default {
   name: "Customer",
   components: {
     "order-drawer": OrderDrawer,
     "physical-signs-dialog": PhysicalSignsDialog,
-    "contract-drawer": ContractDrawer
+    "contract-drawer": ContractDrawer,
+    "heatStatisticsDrawer": HeatStatisticsDrawer
   },
   data() {
     const userId = store.getters && store.getters.userId;
@@ -489,6 +503,9 @@ export default {
     },
     handleOnMenuClick(row) {
       // console.log(row);
+    },
+    handleClickHeatStatistics(row){
+      this.$refs["heatStatisticsRef"].showDrawer(row);
     },
     // 取消按钮
     cancel() {

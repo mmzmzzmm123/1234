@@ -203,8 +203,7 @@ export default {
           ["medicalReport_one","medicalReport_two","medicalReport_three"]
         ]
       ],
-      copyValue: "",
-      enc_id: ""
+      copyValue: ""
     };
   },
   methods: {
@@ -245,7 +244,7 @@ export default {
             this.getDataListBySignMessage(res.data.customerHealthy)
           }
         }
-        this.enc_id = res.data.enc_id;
+        //this.enc_id = res.data.enc_id;
         this.showFlag = true;
         this.visible = true;
       });
@@ -253,7 +252,7 @@ export default {
     onClosed() {
       this.dataList = [];
       this.data = null;
-      this.enc_id = "";
+      //this.enc_id = "";
       this.copyValue = "";
     },
     //对体征信息进行处理
@@ -437,7 +436,7 @@ export default {
       return str;
     },
     handleCopy() {
-      this.copyValue = window.location.origin.replace('manage', 'sign') + "/subhealthyInvestigation/"+this.enc_id;
+      this.copyValue = window.location.origin.replace('manage', 'sign') + "/subhealthyInvestigation/"+this.data.encId;
       const btnCopy = new Clipboard('.copyBtn');
       this.$message({
         message: '拷贝成功',

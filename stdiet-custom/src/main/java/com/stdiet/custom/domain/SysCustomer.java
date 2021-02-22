@@ -3,6 +3,7 @@ package com.stdiet.custom.domain;
 import java.math.BigDecimal;
 import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.stdiet.common.annotation.Excel;
@@ -14,12 +15,16 @@ import com.stdiet.common.core.domain.BaseEntity;
  * @author xzj
  * @date 2020-12-31
  */
+@Data
 public class SysCustomer extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
     /** $column.columnComment */
     private Long id;
+
+    //加密ID
+    private String encId;
 
     /** 名字 */
     @Excel(name = "名字")
@@ -90,188 +95,4 @@ public class SysCustomer extends BaseEntity
     /** 体征数据，非持久化字段 */
     private SysCustomerPhysicalSigns sign;
 
-    public void setId(Long id)
-    {
-        this.id = id;
-    }
-
-    public Long getId()
-    {
-        return id;
-    }
-    public void setName(String name)
-    {
-        this.name = name;
-    }
-
-    public String getName()
-    {
-        return name;
-    }
-    public void setPhone(String phone)
-    {
-        this.phone = phone;
-    }
-
-    public String getPhone()
-    {
-        return phone;
-    }
-    public void setEmail(String email)
-    {
-        this.email = email;
-    }
-
-    public String getEmail()
-    {
-        return email;
-    }
-    public void setAddress(String address)
-    {
-        this.address = address;
-    }
-
-    public String getAddress()
-    {
-        return address;
-    }
-    public void setPayDate(Date payDate)
-    {
-        this.payDate = payDate;
-    }
-
-    public Date getPayDate()
-    {
-        return payDate;
-    }
-    public void setStartDate(Date startDate)
-    {
-        this.startDate = startDate;
-    }
-
-    public Date getStartDate()
-    {
-        return startDate;
-    }
-    public void setPurchaseNum(Long purchaseNum)
-    {
-        this.purchaseNum = purchaseNum;
-    }
-
-    public Long getPurchaseNum()
-    {
-        return purchaseNum;
-    }
-    public void setPayTotal(BigDecimal payTotal)
-    {
-        this.payTotal = payTotal;
-    }
-
-    public BigDecimal getPayTotal()
-    {
-        return payTotal;
-    }
-    public void setMainDietitian(Long mainDietitian)
-    {
-        this.mainDietitian = mainDietitian;
-    }
-
-    public Long getMainDietitian()
-    {
-        return mainDietitian;
-    }
-    public void setAssistantDietitian(Long assistantDietitian)
-    {
-        this.assistantDietitian = assistantDietitian;
-    }
-
-    public Long getAssistantDietitian()
-    {
-        return assistantDietitian;
-    }
-    public void setAfterDietitian(Long afterDietitian)
-    {
-        this.afterDietitian = afterDietitian;
-    }
-
-    public Long getAfterDietitian()
-    {
-        return afterDietitian;
-    }
-    public void setSalesman(Long salesman)
-    {
-        this.salesman = salesman;
-    }
-
-    public Long getSalesman()
-    {
-        return salesman;
-    }
-    public void setChargePerson(Long chargePerson)
-    {
-        this.chargePerson = chargePerson;
-    }
-
-    public Long getChargePerson()
-    {
-        return chargePerson;
-    }
-    public void setFollowStatus(Long followStatus)
-    {
-        this.followStatus = followStatus;
-    }
-
-    public Long getFollowStatus()
-    {
-        return followStatus;
-    }
-
-    public SysCustomerPhysicalSigns getSign() {
-        return sign;
-    }
-
-    public void setSign(SysCustomerPhysicalSigns sign) {
-        this.sign = sign;
-    }
-
-    public Integer getDelFlag() {
-        return delFlag;
-    }
-
-    public void setDelFlag(Integer delFlag) {
-        this.delFlag = delFlag;
-    }
-
-    public Date getFansTime() {
-        return fansTime;
-    }
-
-    public void setFansTime(Date fansTime) {
-        this.fansTime = fansTime;
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-                .append("id", getId())
-                .append("name", getName())
-                .append("phone", getPhone())
-                .append("email", getEmail())
-                .append("address", getAddress())
-                .append("payDate", getPayDate())
-                .append("startDate", getStartDate())
-                .append("purchaseNum", getPurchaseNum())
-                .append("payTotal", getPayTotal())
-                .append("mainDietitian", getMainDietitian())
-                .append("assistantDietitian", getAssistantDietitian())
-                .append("afterDietitian", getAfterDietitian())
-                .append("salesman", getSalesman())
-                .append("chargePerson", getChargePerson())
-                .append("followStatus", getFollowStatus())
-                .append("createTime", getCreateTime())
-                .append("createBy", getCreateBy())
-                .append("updateTime", getUpdateTime())
-                .append("updateBy", getUpdateBy())
-                .toString();
-    }
 }

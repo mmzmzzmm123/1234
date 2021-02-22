@@ -92,7 +92,10 @@
       </div>
     </el-drawer>
 
-    <create-order-dialog ref="cusCreateOrderDialogRef" />
+    <!-- 新增订单 -->
+    <!--<create-order-dialog ref="cusCreateOrderDialogRef" />-->
+    <!-- 订单编辑 -->
+    <edit-order-dialog ref="cusEditOrderDialogRef" />
 
     <order-detail ref="orderDetailRef" />
   </div>
@@ -100,13 +103,15 @@
 <script>
 import { listOrder, delOrder } from "@/api/custom/order";
 import OrderEdit from "@/components/OrderEdit";
+import OrderAdd from "@/components/OrderAdd";
 import OrderDetail from "@/components/OrderDetail";
 
 export default {
   name: "CustomerOrderDrawer",
   components: {
-    "create-order-dialog": OrderEdit,
+    "edit-order-dialog": OrderEdit,
     "order-detail": OrderDetail,
+    //"create-order-dialog": OrderAdd
   },
   data() {
     return {
@@ -150,7 +155,7 @@ export default {
       });
     },
     handleAdd() {
-      this.$refs.cusCreateOrderDialogRef.showDialog(
+      this.$refs.cusEditOrderDialogRef.showDialog(
         {
           customer: this.data.name,
           cusId: this.data.id,
@@ -171,7 +176,7 @@ export default {
       this.$refs.orderDetailRef.showDialog(data.orderId);
     },
     handleOnEditClick(data) {
-      this.$refs.cusCreateOrderDialogRef.showDialog(data, () => {
+      this.$refs.cusEditOrderDialogRef.showDialog(data, () => {
         this.fetchOrderList(this.data.id);
       });
     },

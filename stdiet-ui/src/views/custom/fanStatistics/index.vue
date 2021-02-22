@@ -9,7 +9,7 @@
                         placeholder="选择日期">
         </el-date-picker>
       </el-form-item>
-      <el-form-item label="销售" prop="userId">
+      <el-form-item label="销售" prop="userId" label-width="68px">
         <el-select v-model="queryParams.userId" placeholder="请选择销售" filterable clearable>
           <el-option
             v-for="dict in preSaleIdOptions"
@@ -19,7 +19,17 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item>
+      <el-form-item label="进粉渠道" prop="accountId" label-width="88px">
+        <el-select v-model="queryParams.accountId" filterable placeholder="请选择渠道" clearable>
+          <el-option
+            v-for="dict in accountIdOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="parseInt(dict.dictValue)"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item style="margin-left: 20px">
         <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
@@ -128,7 +138,7 @@
           </el-date-picker>
         </el-form-item>
         <el-form-item label="销售" prop="userId">
-          <el-select v-model="form.userId" placeholder="请选择销售" filterable clearable size="small" @change="getWxByUserId">
+          <el-select v-model="form.userId" placeholder="请选择销售" filterable clearable size="small">
             <el-option
               v-for="dict in preSaleIdOptions"
               :key="dict.dictValue"
@@ -218,7 +228,8 @@
           pageNum: 1,
           pageSize: 10,
           fanTime: nowDate,
-          userId: null
+          userId: null,
+          accountId: null
         },
         // 表单参数
         form: {},
@@ -232,6 +243,8 @@
         wxList:[],
         //销售列表
         preSaleIdOptions:[],
+        //进粉渠道列表
+        accountIdOptions:[],
         editOpen: false,
         editForm:{},
         // 表单校验
@@ -244,6 +257,9 @@
     created() {
       this.getList();
       this.getSaleUserList();
+      this.getDicts("fan_channel").then((response) => {
+        this.accountIdOptions = response.data;
+      });
     },
     methods: {
       /** 查询进粉统计列表 */
@@ -354,6 +370,7 @@
                 if (response.code === 200) {
                   this.msgSuccess("新增成功");
                   this.open = false;
+                  this.reset();
                   this.getList();
                 }
               });
@@ -443,6 +460,12 @@
             }
           }
         });
+      },
+    },
+    watch: {
+      // 监听用户ID变化
+      "form.userId": function (newVal, oldVal) {
+        this.getWxByUserId(newVal);
       },
     }
   };
