@@ -242,7 +242,7 @@ export default {
           }
           return arr;
         }, []);
-      // console.log(mData);
+      console.log(mData);
       return mData;
     },
     ...mapGetters(["typeDict"]),

@@ -138,7 +138,9 @@ export default {
   watch: {
     data(newVal, oldVal) {
       if (newVal) {
-        this.updateChart(newVal);
+        this.$nextTick(() => {
+          this.updateChart(newVal);
+        });
       }
     },
   },

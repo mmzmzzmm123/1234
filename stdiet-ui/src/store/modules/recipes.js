@@ -86,16 +86,16 @@ const actions = {
     });
     //
     getDicts("cus_cus_unit").then(response => {
-      commit("healthDataLoading", { cusUnitOptions: response.data });
+      commit("updateStateData", { cusUnitOptions: response.data });
     });
     getDicts("cus_cus_weight").then(response => {
-      commit("healthDataLoading", { cusWeightOptions: response.data });
+      commit("updateStateData", { cusWeightOptions: response.data });
     });
     getDicts("cus_dishes_type").then(response => {
-      commit("healthDataLoading", { typeOptions: response.data });
+      commit("updateStateData", { typeOptions: response.data });
     });
     getDicts("cus_dishes_type").then(response => {
-      commit("healthDataLoading", { dishesTypeOptions: response.data });
+      commit("updateStateData", { dishesTypeOptions: response.data });
     });
 
     //
