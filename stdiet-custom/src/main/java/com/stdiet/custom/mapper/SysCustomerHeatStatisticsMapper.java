@@ -1,7 +1,10 @@
 package com.stdiet.custom.mapper;
 
 import java.util.List;
+
+import com.stdiet.custom.domain.SysCustomer;
 import com.stdiet.custom.domain.SysCustomerHeatStatistics;
+import com.stdiet.custom.dto.response.NutritionalCalories;
 
 /**
  * 外食热量统计Mapper接口

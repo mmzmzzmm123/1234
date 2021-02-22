@@ -1,23 +1,27 @@
 package com.stdiet.custom.service.impl;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 import com.alibaba.fastjson.JSON;
 import com.stdiet.common.utils.DateUtils;
+import com.stdiet.common.utils.HealthyUtils;
 import com.stdiet.common.utils.StringUtils;
 import com.stdiet.common.utils.sign.AesUtils;
+import com.stdiet.custom.domain.SysCustomerHealthy;
 import com.stdiet.custom.domain.SysCustomerHeatStatistics;
+import com.stdiet.custom.domain.SysCustomerPhysicalSigns;
 import com.stdiet.custom.dto.request.FoodHeatCalculatorRequest;
-import com.stdiet.custom.mapper.SysCustomerHeatStatisticsMapper;
+import com.stdiet.custom.service.ISysCustomerHealthyService;
+import com.stdiet.custom.service.ISysCustomerHeatStatisticsService;
+import com.stdiet.custom.service.ISysCustomerPhysicalSignsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.stdiet.custom.mapper.SysFoodHeatStatisticsMapper;
 import com.stdiet.custom.domain.SysFoodHeatStatistics;
 import com.stdiet.custom.service.ISysFoodHeatStatisticsService;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.xml.crypto.Data;
 
 /**
  * 外食热量统计Service业务层处理
@@ -33,7 +37,13 @@ public class SysFoodHeatStatisticsServiceImpl implements ISysFoodHeatStatisticsS
     private SysFoodHeatStatisticsMapper sysFoodHeatStatisticsMapper;
 
     @Autowired
-    private SysCustomerHeatStatisticsMapper sysCustomerHeatStatisticsMapper;
+    private ISysCustomerHeatStatisticsService sysCustomerHeatStatisticsService;
+
+    @Autowired
+    private ISysCustomerPhysicalSignsService sysCustomerPhysicalSignsService;
+
+    @Autowired
+    private ISysCustomerHealthyService sysCustomerHealthyService;
 
     /**
      * 查询外食热量统计
@@ -118,29 +128,67 @@ public class SysFoodHeatStatisticsServiceImpl implements ISysFoodHeatStatisticsS
     public int addMuchFoodHeat(FoodHeatCalculatorRequest foodHeatCalculatorRequest){
         //客户ID解密
         String customerId = StringUtils.isNotEmpty(foodHeatCalculatorRequest.getCustomerEncId()) ? AesUtils.decrypt(foodHeatCalculatorRequest.getCustomerEncId(), null) : "";
-        if(StringUtils.isEmpty(customerId)){
+        if(StringUtils.isEmpty(customerId) || StringUtils.isEmpty(foodHeatCalculatorRequest.getIngredientArray())){
             return 0;
         }
-        //先判断该日期下是否已存在
-        SysCustomerHeatStatistics sysCustomerHeatStatistics = new SysCustomerHeatStatistics();
-        sysCustomerHeatStatistics.setCustomerId(Long.parseLong(customerId));
-        sysCustomerHeatStatistics.setEdibleDate(new Date());
-        SysCustomerHeatStatistics customerHeatResult = sysCustomerHeatStatisticsMapper.getCustomerHeatStatisticsByDate(sysCustomerHeatStatistics);
-        if(customerHeatResult == null){
-            sysCustomerHeatStatisticsMapper.insertSysCustomerHeatStatistics(sysCustomerHeatStatistics);
-        }else{
-            sysCustomerHeatStatistics.setId(customerHeatResult.getId());
+        List<HashMap> foodHeatList = JSON.parseArray(foodHeatCalculatorRequest.getIngredientArray(), HashMap.class);
+        if(foodHeatList == null || foodHeatList.size() == 0){
+            return 0;
         }
-        if(sysCustomerHeatStatistics.getId() != null){
-            List<SysFoodHeatStatistics> list = new ArrayList<>();
-            if(StringUtils.isNotEmpty(foodHeatCalculatorRequest.getIngredientArray())){
-                List<HashMap> foodHeatList = JSON.parseArray(foodHeatCalculatorRequest.getIngredientArray(), HashMap.class);
-                for(HashMap map : foodHeatList){
-                    map.put("customerHeatId", sysCustomerHeatStatistics.getId());
-                }
-                return sysFoodHeatStatisticsMapper.insertFoodHeatBatch(foodHeatList);
+        Map<String, List<HashMap>> dateFoodMap = new HashMap<>();
+        //根据日期分类
+        for(HashMap map : foodHeatList){
+            String edibleDate = map.get("edibleDate").toString();
+            if(dateFoodMap.containsKey(edibleDate)){
+                dateFoodMap.get(edibleDate).add(map);
+            }else{
+                List<HashMap> list = new ArrayList<>();
+                list.add(map);
+                dateFoodMap.put(edibleDate, list);
             }
         }
-        return 0;
+        int row = 0;
+        int maxHeatValue = getMaxHeatValue(Long.parseLong(customerId)).intValue();
+        for (String dateKey : dateFoodMap.keySet()) {
+            //先判断该日期下是否已存在
+            SysCustomerHeatStatistics sysCustomerHeatStatistics = new SysCustomerHeatStatistics();
+            sysCustomerHeatStatistics.setCustomerId(Long.parseLong(customerId));
+            sysCustomerHeatStatistics.setEdibleDate(DateUtils.parseDate(dateKey));
+            SysCustomerHeatStatistics customerHeatResult = sysCustomerHeatStatisticsService.getCustomerHeatStatisticsByDate(sysCustomerHeatStatistics);
+            if(customerHeatResult == null){
+                sysCustomerHeatStatistics.setMaxHeatValue(maxHeatValue);
+                sysCustomerHeatStatisticsService.insertSysCustomerHeatStatistics(sysCustomerHeatStatistics);
+            }else{
+                sysCustomerHeatStatistics.setId(customerHeatResult.getId());
+            }
+            if(sysCustomerHeatStatistics.getId() != null){
+                for(HashMap map : dateFoodMap.get(dateKey)){
+                    map.put("customerHeatId", sysCustomerHeatStatistics.getId());
+                    map.put("number", map.get("number") != null && "".equals(map.get("number").toString().trim()) ? null : map.get("number"));
+                    map.put("unit", map.get("unit") != null && "".equals(map.get("unit").toString().trim()) ? null : map.get("unit"));
+                    map.put("quantity", map.get("quantity") != null && "".equals(map.get("quantity").toString().trim()) ? null : map.get("quantity"));
+                }
+                row = sysFoodHeatStatisticsMapper.insertFoodHeatBatch(dateFoodMap.get(dateKey));
+            }
+        }
+        return row;
+    }
+
+    /**
+     * 根据用户ID查询该用户每天最大摄入量
+     * @param customerId
+     * @return
+     */
+    private Long getMaxHeatValue(Long customerId){
+        SysCustomerHealthy sysCustomerHealthy = sysCustomerHealthyService.selectSysCustomerHealthyByCustomerId(customerId);
+        if(sysCustomerHealthy != null){
+            return HealthyUtils.calculateMaxHeatEveryDay(sysCustomerHealthy.getAge().intValue(),sysCustomerHealthy.getTall(),sysCustomerHealthy.getWeight().doubleValue());
+        }
+        //查询体征信息
+        SysCustomerPhysicalSigns sysCustomerPhysicalSigns = sysCustomerPhysicalSignsService.selectSysCustomerPhysicalSignsByCusId(customerId);
+        if(sysCustomerPhysicalSigns != null){
+            return HealthyUtils.calculateMaxHeatEveryDay(sysCustomerPhysicalSigns.getAge().intValue(),sysCustomerPhysicalSigns.getTall(),sysCustomerPhysicalSigns.getWeight().doubleValue());
+        }
+        return 0L;
     }
 }

@@ -124,7 +124,10 @@
         <result property="number"    column="number"    />
         <result property="quantity"    column="quantity"    />
         <result property="edibleType"    column="edible_type"    />
+        <result property="proteinQuality"    column="protein_quality"    />
         <result property="heatValue"    column="heat_value"    />
+        <result property="fatQuality"    column="fat_quality"    />
+        <result property="carbonWaterQuality"    column="carbon_water_quality"    />
         <result property="createTime"    column="create_time"    />
         <result property="createBy"    column="create_by"    />
         <result property="updateTime"    column="update_time"    />
@@ -135,7 +138,7 @@
     </resultMap>
 
     <select id="selectSysFoodHeatStatisticsList" parameterType="Long" resultMap="SysFoodHeatStatisticsResult">
-        select sfhs.id, sfhs.customer_heat_id, sfhs.ingredient, sfhs.unit, sfhs.number, sfhs.quantity, sfhs.edible_type, sfhs.heat_value,cusUnit.dict_label as unitName
+        select sfhs.id, sfhs.customer_heat_id, sfhs.ingredient, sfhs.unit, sfhs.number, sfhs.quantity, sfhs.edible_type, sfhs.protein_quality, sfhs.fat_quality, sfhs.carbon_water_quality,sfhs.heat_value,cusUnit.dict_label as unitName
         from sys_food_heat_statistics as  sfhs
         LEFT JOIN (SELECT dict_label, dict_value FROM sys_dict_data WHERE dict_type = 'cus_cus_unit') AS cusUnit ON cusUnit.dict_value = sfhs.unit
         where sfhs.del_flag = 0 and customer_heat_id = #{id}

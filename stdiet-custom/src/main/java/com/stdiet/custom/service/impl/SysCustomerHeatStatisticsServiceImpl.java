@@ -1,14 +1,16 @@
 package com.stdiet.custom.service.impl;
 
+import java.math.BigDecimal;
 import java.util.List;
 import com.stdiet.common.utils.DateUtils;
 import com.stdiet.common.utils.HealthyUtils;
 import com.stdiet.custom.domain.SysCustomerHealthy;
 import com.stdiet.custom.domain.SysCustomerPhysicalSigns;
 import com.stdiet.custom.domain.SysFoodHeatStatistics;
-import com.stdiet.custom.mapper.SysFoodHeatStatisticsMapper;
+import com.stdiet.custom.dto.response.NutritionalCalories;
 import com.stdiet.custom.service.ISysCustomerHealthyService;
 import com.stdiet.custom.service.ISysCustomerPhysicalSignsService;
+import com.stdiet.custom.service.ISysFoodHeatStatisticsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.stdiet.custom.mapper.SysCustomerHeatStatisticsMapper;
@@ -30,7 +32,7 @@ public class SysCustomerHeatStatisticsServiceImpl implements ISysCustomerHeatSta
     private SysCustomerHeatStatisticsMapper sysCustomerHeatStatisticsMapper;
 
     @Autowired
-    private SysFoodHeatStatisticsMapper sysFoodHeatStatisticsMapper;
+    private ISysFoodHeatStatisticsService sysFoodHeatStatisticsService;
 
     @Autowired
     private ISysCustomerPhysicalSignsService sysCustomerPhysicalSignsService;
@@ -113,6 +115,15 @@ public class SysCustomerHeatStatisticsServiceImpl implements ISysCustomerHeatSta
     }
 
     /**
+     * 根据日期查询是否客户热量统计
+     * @param sysCustomerHeatStatistics
+     * @return
+     */
+    public SysCustomerHeatStatistics getCustomerHeatStatisticsByDate(SysCustomerHeatStatistics sysCustomerHeatStatistics){
+        return sysCustomerHeatStatisticsMapper.getCustomerHeatStatisticsByDate(sysCustomerHeatStatistics);
+    }
+
+    /**
      * 更新食材热量并计算当天总热量
      * @param sysCustomerHeatStatistics
      * @return
@@ -121,34 +132,81 @@ public class SysCustomerHeatStatisticsServiceImpl implements ISysCustomerHeatSta
     public int calculateCustomerHeat(SysCustomerHeatStatistics sysCustomerHeatStatistics){
         Long[] foodHeatId = sysCustomerHeatStatistics.getFoodHeatIdList();
         Integer[] foodHeat = sysCustomerHeatStatistics.getFoodHeatList();
-        if(foodHeatId != null && foodHeatId.length > 0 && foodHeat != null && foodHeat.length == foodHeatId.length){
+        if(foodHeatId != null && foodHeatId.length > 0){
             SysFoodHeatStatistics sysFoodHeatStatistics = new SysFoodHeatStatistics();
             int totalHeatCalue = 0;
             for (int i = 0; i < foodHeatId.length; i++) {
                 sysFoodHeatStatistics.setId(foodHeatId[i]);
-                sysFoodHeatStatistics.setHeatValue(foodHeat[i]);
-                sysFoodHeatStatisticsMapper.updateSysFoodHeatStatistics(sysFoodHeatStatistics);
-                totalHeatCalue += foodHeat[i];
+                sysFoodHeatStatistics.setProteinQuality(sysCustomerHeatStatistics.getProteinQualityList()[i]);
+                sysFoodHeatStatistics.setFatQuality(sysCustomerHeatStatistics.getFatQualityList()[i]);
+                sysFoodHeatStatistics.setCarbonWaterQuality(sysCustomerHeatStatistics.getCarbonWaterQualityList()[i]);
+                //根据蛋白质、脂肪、碳水计算热量
+                sysFoodHeatStatistics.setHeatValue(HealthyUtils.calculateTotalHeatByProteinFatCarbonWater(sysCustomerHeatStatistics.getProteinQualityList()[i],
+                        sysCustomerHeatStatistics.getFatQualityList()[i], sysCustomerHeatStatistics.getCarbonWaterQualityList()[i]));
+                sysFoodHeatStatisticsService.updateSysFoodHeatStatistics(sysFoodHeatStatistics);
+                totalHeatCalue += sysFoodHeatStatistics.getHeatValue();
             }
             sysCustomerHeatStatistics.setHeatValue(totalHeatCalue);
-            Long maxHeatValue = getMaxHeatValue(sysCustomerHeatStatistics.getCustomerId());
-            sysCustomerHeatStatistics.setMaxHeatValue(maxHeatValue.intValue());
-            sysCustomerHeatStatistics.setHeatGap(maxHeatValue.intValue() - totalHeatCalue);
+            sysCustomerHeatStatistics.setHeatGap(sysCustomerHeatStatistics.getMaxHeatValue() - totalHeatCalue);
             return sysCustomerHeatStatisticsMapper.updateSysCustomerHeatStatistics(sysCustomerHeatStatistics);
         }
         return 0;
     }
 
-    public long getMaxHeatValue(Long customerId){
+    /**
+     * 根据客户热量食材统计ID查询详情
+     * @param id
+     * @return
+     */
+    public NutritionalCalories getNutritionalCaloriesByCustomer(Long id){
+        NutritionalCalories nutritionalCalories = new NutritionalCalories();
+        SysCustomerHeatStatistics sysCustomerHeatStatistics = sysCustomerHeatStatisticsMapper.selectSysCustomerHeatStatisticsById(id);
+        if(sysCustomerHeatStatistics != null){
+            SysCustomerHealthy sysCustomerHealthy = getSysCustomerHealthy(sysCustomerHeatStatistics.getCustomerId());
+            if(sysCustomerHealthy != null){
+                nutritionalCalories.setName(sysCustomerHealthy.getName());
+                nutritionalCalories.setAge(sysCustomerHealthy.getAge().intValue());
+                nutritionalCalories.setTall(sysCustomerHealthy.getTall());
+                nutritionalCalories.setWeight(sysCustomerHealthy.getWeight().doubleValue());
+                nutritionalCalories.setStandardWeight(HealthyUtils.calculateStandardWeight(nutritionalCalories.getTall()));
+                double overHeight = nutritionalCalories.getWeight() - nutritionalCalories.getStandardWeight();
+                overHeight = overHeight > 0 ? overHeight : 0;
+                nutritionalCalories.setOverWeight(overHeight);
+                nutritionalCalories.setMetabolizeHeat(HealthyUtils.calculateMetabolizeHeat(nutritionalCalories.getAge(), nutritionalCalories.getTall(), nutritionalCalories.getWeight()).intValue());
+                nutritionalCalories.setMaxIntakeHeat(sysCustomerHeatStatistics.getMaxHeatValue());
+                nutritionalCalories.setEveryWeightHeat(HealthyUtils.calculateHeatRateByWeight(nutritionalCalories.getMetabolizeHeat(), nutritionalCalories.getWeight()));
+                nutritionalCalories.setTargetEveryWeightHeat(HealthyUtils.calculateHeatTargetRate(nutritionalCalories.getEveryWeightHeat()));
+                //nutritionalCalories.setStandardEveryWeightHeat(HealthyUtils.calculateHeatTargetRate() );
+                nutritionalCalories.setNutritionalRate(HealthyUtils.nutritionRate);
+                Integer[][] nutritionalHeatAndQuality = HealthyUtils.calculateNutritionHeatAndQuality(nutritionalCalories.getMetabolizeHeat());
+                nutritionalCalories.setNutritionalHeat(nutritionalHeatAndQuality[0]);
+                nutritionalCalories.setNutritionalQuality(nutritionalHeatAndQuality[1]);
+            }
+        }
+        return nutritionalCalories;
+    }
+
+    /**
+     * 根据用户ID查询该用户每天最大摄入量
+     * @param customerId
+     * @return
+     */
+    private SysCustomerHealthy getSysCustomerHealthy(Long customerId){
         SysCustomerHealthy sysCustomerHealthy = sysCustomerHealthyService.selectSysCustomerHealthyByCustomerId(customerId);
         if(sysCustomerHealthy != null){
-            return HealthyUtils.calculateMaxHeatEveryDay(sysCustomerHealthy.getAge().intValue(),sysCustomerHealthy.getTall(),sysCustomerHealthy.getWeight().doubleValue());
+            return sysCustomerHealthy;
         }
         //查询体征信息
         SysCustomerPhysicalSigns sysCustomerPhysicalSigns = sysCustomerPhysicalSignsService.selectSysCustomerPhysicalSignsByCusId(customerId);
         if(sysCustomerPhysicalSigns != null){
-            return HealthyUtils.calculateMaxHeatEveryDay(sysCustomerPhysicalSigns.getAge().intValue(),sysCustomerPhysicalSigns.getTall(),sysCustomerPhysicalSigns.getWeight().doubleValue());
+            sysCustomerHealthy = new SysCustomerHealthy();
+            sysCustomerHealthy.setName(sysCustomerPhysicalSigns.getName());
+            sysCustomerHealthy.setTall(sysCustomerPhysicalSigns.getTall());
+            sysCustomerHealthy.setAge(sysCustomerPhysicalSigns.getAge().longValue());
+            sysCustomerHealthy.setWeight(BigDecimal.valueOf(sysCustomerPhysicalSigns.getWeight()));
         }
-        return 0;
+        return sysCustomerHealthy;
     }
+
+
 }

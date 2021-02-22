@@ -1,13 +1,18 @@
 <template>
   <!-- 计算食材热量对话框 -->
-  <el-dialog :title="title" :visible.sync="open" width="750px" append-to-body>
+  <el-dialog :title="title" :visible.sync="open" width="1000px" append-to-body>
     <el-form ref="form" :model="form" label-position="top" :rules="rules" label-width="100px">
 
       <el-form-item v-for="(item,index) in foodHeatList" label="" class="margin-left">
         <div>
-          <span>食材名称：</span><el-input style="width:30%" placeholder="" :readonly="true" :value="item.ingredient"/>
-          <span style="margin-left: 10px">份量：</span><el-input style="width:25%" placeholder="" :readonly="true"  :value="getNumberString(item)"/>
-          <span style="margin-left: 10px">热量：</span><el-input style="width:15%" type="number" placeholder="" v-model="item.heatValue"/><span>千卡</span>
+          <span>食材名称：</span><el-input style="width:20%" placeholder="" :readonly="true" :value="item.ingredient"/>
+          <span style="margin-left: 10px">份量：</span><el-input style="width:20%" placeholder="" :readonly="true"  :value="getNumberString(item)"/>
+          <!--<span style="margin-left: 10px">热量：</span><el-input style="width:15%" type="number" placeholder="" v-model="item.heatValue"/><span>千卡</span>-->
+          <span style="margin-left: 10px">蛋白质/脂肪/碳水：</span>
+          <el-input style="width:10%" placeholder="" v-model="item.proteinQuality"/>
+          <el-input style="width:10%;margin-left: 5px" placeholder="" v-model="item.fatQuality"/>
+          <el-input style="width:10%;margin-left: 5px" placeholder="" v-model="item.carbonWaterQuality"/>
+          <span style="margin-left: 5px">克</span>
         </div>
       </el-form-item>
     </el-form>
@@ -29,6 +34,7 @@
     },
     props: {},
     data() {
+
       return {
         // 弹出层标题
         title: "",
@@ -62,7 +68,7 @@
         getFoodHeatStatistics(id).then((response) => {
            //let contractDetail = response.data;
             this.heatData = response.data;
-           this.foodHeatList = response.data.foodHeatStatisticsList != null ? response.data.foodHeatStatisticsList : [];
+            this.foodHeatList = response.data.foodHeatStatisticsList != null ? response.data.foodHeatStatisticsList : [];
         });
       },
       getNumberString(foodData){
@@ -87,23 +93,34 @@
       },
       /** 提交按钮 */
       submitForm() {
+        var reg = /^([1-9]\d*|[0]{1,1})$/;
         if(this.foodHeatList.length == 0){
            return;
         }
         let obj = {};
-        obj.foodHeatIdList = [];
-        obj.foodHeatList = [];
         obj.id = this.heatData.id;
         obj.customerId = this.heatData.customerId;
+        obj.maxHeatValue = this.heatData.maxHeatValue;
+        obj.foodHeatIdList = [];
+        obj.proteinQualityList = [];
+        obj.fatQualityList = [];
+        obj.carbonWaterQualityList = [];
+        let verifyFlag = true;
         this.foodHeatList.forEach((item,index) => {
           obj.foodHeatIdList.push(item.id);
-          if(!/^[1-9]\d*$/.test(item.heatValue)){
-            obj.foodHeatList.push(0);
+          if(!reg.test(item.proteinQuality) || !reg.test(item.fatQuality) || !reg.test(item.carbonWaterQuality)){
+              verifyFlag = false;
           }else{
-            obj.foodHeatList.push(item.heatValue);
+            obj.proteinQualityList.push(item.proteinQuality);
+            obj.fatQualityList.push(item.fatQuality);
+            obj.carbonWaterQualityList.push(item.carbonWaterQuality);
           }
         });
-        console.log(obj.foodHeatIdList.length);
+        if(!verifyFlag){
+          this.$message({message: "填写的数值格式错误", type: "warning"});
+          return;
+        }
+        //console.log(obj.foodHeatIdList.length);
         addFoodHeatData(obj).then(response => {
           if (response.code === 200) {
             this.msgSuccess("提交成功");

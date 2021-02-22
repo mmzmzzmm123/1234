@@ -52,6 +52,15 @@ public class SysCustomerHeatStatistics extends BaseEntity
     //食材热量
     private Integer[] foodHeatList;
 
+    //食材蛋白质质量
+    private Integer[] proteinQualityList;
+
+    //食材脂肪质量
+    private Integer[] fatQualityList;
+
+    //食材碳水质量
+    private Integer[] carbonWaterQualityList;
+
     //具体食材集合
     private List<SysFoodHeatStatistics> foodHeatStatisticsList;
 }
