@@ -3,6 +3,10 @@ package com.ruoyi.project.benyi.controller;
 import java.util.List;
 
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.project.benyi.service.IByDayFlowDetailService;
+import com.ruoyi.project.common.SchoolCommon;
+import com.ruoyi.project.system.service.IByClassService;
+import com.ruoyi.project.system.service.ISysDictDataService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,6 +37,14 @@ import com.ruoyi.framework.web.page.TableDataInfo;
 public class ByDayflowassessmentplanController extends BaseController {
     @Autowired
     private IByDayflowassessmentplanService byDayflowassessmentplanService;
+    @Autowired
+    private IByClassService byClassService;
+    @Autowired
+    private ISysDictDataService sysDictDataService;
+    @Autowired
+    private IByDayFlowDetailService byDayFlowDetailService;
+    @Autowired
+    private SchoolCommon schoolCommon;
 
     /**
      * 查询幼儿园一日流程评估计划列表
@@ -73,8 +85,16 @@ public class ByDayflowassessmentplanController extends BaseController {
     @Log(title = "幼儿园一日流程评估计划", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody ByDayflowassessmentplan byDayflowassessmentplan) {
+        // 通过班级id 查询班级名称
+        String classId = byDayflowassessmentplan.getClassid();
+        // 通过内容id查询一日流程内容
+        Long connentId = Long.parseLong(byDayflowassessmentplan.getConnent());
+        // 通过学年学期查询学期名称
+        String dict_type = "sys_xnxq";
+        String dict_value = byDayflowassessmentplan.getXnxq();
         byDayflowassessmentplan.setDeptId(SecurityUtils.getLoginUser().getUser().getDeptId());
         byDayflowassessmentplan.setCreateUserid(SecurityUtils.getLoginUser().getUser().getUserId());
+        byDayflowassessmentplan.setName(byClassService.selectByClassById(classId).getBjmc() + "-" + sysDictDataService.selectDictLabel(dict_type, dict_value) + "-" + byDayFlowDetailService.selectByDayFlowDetailById(connentId).getName() + "-" + "评估计划" );
         return toAjax(byDayflowassessmentplanService.insertByDayflowassessmentplan(byDayflowassessmentplan));
     }
 
@@ -85,6 +105,16 @@ public class ByDayflowassessmentplanController extends BaseController {
     @Log(title = "幼儿园一日流程评估计划", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody ByDayflowassessmentplan byDayflowassessmentplan) {
+        // 通过班级id 查询班级名称
+        String classId = byDayflowassessmentplan.getClassid();
+        // 通过内容id查询一日流程内容
+        Long connentId = Long.parseLong(byDayflowassessmentplan.getConnent());
+        // 通过学年学期查询学期名称
+        String dict_type = "sys_xnxq";
+        String dict_value = byDayflowassessmentplan.getXnxq();
+        byDayflowassessmentplan.setDeptId(SecurityUtils.getLoginUser().getUser().getDeptId());
+        byDayflowassessmentplan.setCreateUserid(SecurityUtils.getLoginUser().getUser().getUserId());
+        byDayflowassessmentplan.setName(byClassService.selectByClassById(classId).getBjmc() + "-" + sysDictDataService.selectDictLabel(dict_type, dict_value) + "-" + byDayFlowDetailService.selectByDayFlowDetailById(connentId).getName() + "-" + "评估计划" );
         return toAjax(byDayflowassessmentplanService.updateByDayflowassessmentplan(byDayflowassessmentplan));
     }
 

@@ -23,6 +23,11 @@ public class ByDayflowassessmentplan extends BaseEntity {
     private Long id;
 
     /**
+     * 计划名称
+     */
+    private String name;
+
+    /**
      * 评估学校
      */
     @Excel(name = "评估学校")
@@ -134,6 +139,7 @@ public class ByDayflowassessmentplan extends BaseEntity {
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
                 .append("id", getId())
+                .append("name", getName())
                 .append("deptId", getDeptId())
                 .append("month", getMonth())
                 .append("xnxq", getXnxq())
@@ -143,5 +149,13 @@ public class ByDayflowassessmentplan extends BaseEntity {
                 .append("createUserid", getCreateUserid())
                 .append("createTime", getCreateTime())
                 .toString();
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

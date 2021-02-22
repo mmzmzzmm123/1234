@@ -2,6 +2,7 @@ package com.ruoyi.project.benyi.controller;
 
 import java.util.List;
 
+import com.ruoyi.common.utils.SecurityUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -72,6 +73,7 @@ public class ByDayflowassessmentController extends BaseController {
     @Log(title = "幼儿园一日流程评估", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody ByDayflowassessment byDayflowassessment) {
+        byDayflowassessment.setDeptId(SecurityUtils.getLoginUser().getUser().getDeptId());
         return toAjax(byDayflowassessmentService.insertByDayflowassessment(byDayflowassessment));
     }
 

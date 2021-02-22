@@ -110,6 +110,7 @@
           <span>{{ parseTime(scope.row.month, "{y}-{m}-{d}") }}</span>
         </template>
       </el-table-column> -->
+      <el-table-column label="计划名称" align="center" prop="name" />
       <el-table-column
         label="评估学年学期"
         align="center"
@@ -266,6 +267,7 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
+        name: undefined,
         deptId: undefined,
         month: undefined,
         xnxq: undefined,
@@ -321,7 +323,6 @@ export default {
     },
     // 字典翻译
     classFormat(row, column) {
-      // return this.selectDictLabel(this.classOptions, row.classid);
       var actions = [];
       var datas = this.classOptions;
       Object.keys(datas).map((key) => {
@@ -361,6 +362,7 @@ export default {
     reset() {
       this.form = {
         id: undefined,
+        name: undefined,
         deptId: undefined,
         month: undefined,
         xnxq: undefined,
