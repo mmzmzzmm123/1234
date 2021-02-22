@@ -2,6 +2,7 @@ package com.ruoyi.business.service.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,6 +20,7 @@ import com.ruoyi.business.mapper.BusCbsxxMapper;
 import com.ruoyi.business.service.IBusCbsgrxxService;
 import com.ruoyi.business.service.IBusCbsxxService;
 import com.ruoyi.business.service.IBusCbszzxxService;
+import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
 
 /**
@@ -76,6 +78,11 @@ public class BusCbsxxServiceImpl implements IBusCbsxxService {
 		BusCbsxx busCbsxx = new BusCbsxx();
 		BeanUtils.copyProperties(busCbsxxSaveVO, busCbsxx);
 		Long cbsId = busCbsxxSaveVO.getId();
+		Long createUserId = SecurityUtils.getUserId();
+		busCbsxx.setXrrId(createUserId);
+		busCbsxx.setXrsj(new Date());
+		busCbsxx.setXgrId(createUserId);
+		busCbsxx.setXgsj(new Date());
 		int insertBusCbsxx = busCbsxxMapper.insertBusCbsxx(busCbsxx);
 		// 保存自增信息
 		List<String> zzxxFileUrls = busCbsxxSaveVO.getZzxxFileUrls();
@@ -102,6 +109,9 @@ public class BusCbsxxServiceImpl implements IBusCbsxxService {
 		Long id = busCbsxxSaveVO.getId();
 		BusCbsxx cbsxx = busCbsxxMapper.selectBusCbsxxById(id);
 		BeanUtils.copyProperties(busCbsxxSaveVO, cbsxx);
+		Long createUserId = SecurityUtils.getUserId();
+		cbsxx.setXgrId(createUserId);
+		cbsxx.setXgsj(new Date());
 		// 保存资质信息 先删除再新增
 		busCbszzxxService.deleteByCbsId(id);
 		List<String> zzxxFileUrls = busCbsxxSaveVO.getZzxxFileUrls();
