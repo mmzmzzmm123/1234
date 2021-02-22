@@ -4,6 +4,7 @@
       :title="title"
       :close-on-press-escape="false"
       :visible.sync="visible"
+      :wrapperClosable="false"
       @closed="handleOnClosed"
       size="40%"
     >
@@ -22,22 +23,48 @@
         </el-row>
 
         <el-table :data="contractList">
-          <el-table-column label="合同编号" align="center" prop="id"  width="150"/>
-          <el-table-column label="合同状态" align="center" prop="status" width="80" >
+          <el-table-column
+            label="合同编号"
+            align="center"
+            prop="id"
+            width="150"
+          />
+          <el-table-column
+            label="合同状态"
+            align="center"
+            prop="status"
+            width="80"
+          >
             <template slot-scope="scope">
               <el-tag
                 :type="scope.row.status === 'yes' ? 'success' : 'danger'"
-                disable-transitions>
-                {{scope.row.status === 'yes' ? '已签订':'未签订'}}
+                disable-transitions
+              >
+                {{ scope.row.status === "yes" ? "已签订" : "未签订" }}
               </el-tag>
             </template>
           </el-table-column>
-          <el-table-column label="客户姓名" align="center" prop="name" width="200"/>
+          <el-table-column
+            label="客户姓名"
+            align="center"
+            prop="name"
+            width="200"
+          />
 
-          <el-table-column label="合同地址" align="center" prop="path" width="80">
+          <el-table-column
+            label="合同地址"
+            align="center"
+            prop="path"
+            width="80"
+          >
             <template slot-scope="scope">
-              <el-button type="text" icon="el-icon-copy-document" @click="handleCopy(scope.row.path)" class="copyBtn"
-                         :data-clipboard-text="copyValue">复制
+              <el-button
+                type="text"
+                icon="el-icon-copy-document"
+                @click="handleCopy(scope.row.path)"
+                class="copyBtn"
+                :data-clipboard-text="copyValue"
+                >复制
               </el-button>
             </template>
           </el-table-column>
@@ -48,15 +75,15 @@
                 type="text"
                 icon="el-icon-view"
                 @click="handleOnDetailClick(scope.row)"
-              >详情
+                >详情
               </el-button>
               <el-button
-                v-if="scope.row.status==='yes'"
+                v-if="scope.row.status === 'yes'"
                 size="mini"
                 type="text"
                 icon="el-icon-view"
                 @click="handleLook(scope.row.path)"
-              >查看
+                >查看
               </el-button>
               <el-button
                 size="mini"
@@ -64,7 +91,7 @@
                 icon="el-icon-delete"
                 @click="handleOnDeleteClick(scope.row)"
                 v-hasPermi="['custom:contract:remove']"
-              >删除
+                >删除
               </el-button>
             </template>
           </el-table-column>
@@ -78,23 +105,23 @@
   </div>
 </template>
 <script>
-  import {delContract, listContract} from "@/api/custom/contract";
-  import ContractDetail from "@/components/ContractDetail";
-  import Clipboard from 'clipboard';
-  import ContractAdd from "@/components/ContractAdd";
+import { delContract, listContract } from "@/api/custom/contract";
+import ContractDetail from "@/components/ContractDetail";
+import Clipboard from "clipboard";
+import ContractAdd from "@/components/ContractAdd";
 
 export default {
   name: "CustomerContractDrawer",
   components: {
-    'contract-detail': ContractDetail,
-    'add-contract':ContractAdd
+    "contract-detail": ContractDetail,
+    "add-contract": ContractAdd,
   },
   data() {
     return {
       visible: false,
       title: "",
       data: undefined,
-      copyValue:"",
+      copyValue: "",
       contractList: [],
     };
   },
@@ -108,7 +135,7 @@ export default {
       this.fetchContractList(data.id);
     },
     fetchContractList(cusId) {
-      listContract({"customerId": cusId }).then((res) => {
+      listContract({ customerId: cusId }).then((res) => {
         this.contractList = res.rows;
         this.visible = true;
       });
@@ -118,7 +145,7 @@ export default {
         {
           customer: this.data.name,
           customerId: this.data.id,
-          nutritionistId: this.data.mainDietitian
+          nutritionistId: this.data.mainDietitian,
         },
         () => {
           this.fetchContractList(this.data.id);
@@ -131,9 +158,7 @@ export default {
     handleOnDetailClick(data) {
       this.$refs.contractDetailRef.showDialog(data.id);
     },
-    handleOnEditClick(data) {
-
-    },
+    handleOnEditClick(data) {},
     handleOnDeleteClick(data) {
       const contractIds = data.id;
       this.$confirm(
@@ -155,18 +180,18 @@ export default {
         .catch(function () {});
     },
     handleCopy(path) {
-      this.copyValue = window.location.origin.replace('manage', 'sign') + path;
-      const btnCopy = new Clipboard('.copyBtn');
+      this.copyValue = window.location.origin.replace("manage", "sign") + path;
+      const btnCopy = new Clipboard(".copyBtn");
       this.$message({
-        message: '拷贝成功',
-        type: 'success'
+        message: "拷贝成功",
+        type: "success",
       });
     },
     handleLook(path) {
-      const url = window.location.origin.replace('manage', 'sign') + path;
+      const url = window.location.origin.replace("manage", "sign") + path;
       // const url = "http://stsign.busyinn.com" + path;
-      window.open(url, '_blank');
-    }
+      window.open(url, "_blank");
+    },
   },
 };
 </script>

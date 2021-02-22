@@ -1,26 +1,33 @@
 <template>
-  <div class="app-container">
-    <div class="content">
-      <div class="left">
-        <RecipesView :data="recipesData" />
-      </div>
-      <div class="right">
-        <HealthyView :data="healthyData" v-if="healthyDataType === 0" />
-        <BodySignView :data="healthyData" v-else />
-      </div>
+  <div class="recipes_build_wrapper">
+    <div class="left" v-loading="recipesDataLoading">
+      <RecipesView
+        v-if="!!recipesData.length"
+        :data="recipesData"
+        :name="healthyData.name"
+        :analyseData="analyseData"
+      />
+      <RecommondView v-else />
+    </div>
+    <div class="right" v-loading="healthDataLoading">
+      <HealthyView :data="healthyData" v-if="healthyDataType === 0" />
+      <BodySignView :data="healthyData" v-else />
     </div>
   </div>
 </template>
 <script>
 import { createNamespacedHelpers } from "vuex";
-
-const { mapActions, mapState, mapMutations } = createNamespacedHelpers(
-  "recipes"
-);
+const {
+  mapActions,
+  mapState,
+  mapMutations,
+  mapGetters,
+} = createNamespacedHelpers("recipes");
 
 import HealthyView from "./HealthyView";
 import BodySignView from "./BodySignView";
-import RecipesView from "./RecipesView";
+import RecipesView from "./RecipesView/index";
+import RecommondView from "./RecommondView";
 
 export default {
   name: "BuildRecipies",
@@ -28,12 +35,15 @@ export default {
     return {};
   },
   mounted() {
-    //
-    // console.log({
-    //   cusId: this.cusId,
-    //   recipesId: this.recipesId,
-    // });
-    this.init({ cusId: this.cusId, recipesId: this.recipesId }).catch((err) => {
+    const { cusId, planId, startDate, endDate, recipesId } = this.$route.query;
+
+    this.init({
+      cusId,
+      planId,
+      startDate,
+      endDate,
+      recipesId,
+    }).catch((err) => {
       this.$message.error(err.message);
     });
   },
@@ -45,14 +55,18 @@ export default {
     HealthyView,
     BodySignView,
     RecipesView,
+    RecommondView,
   },
-  props: ["planId", "cusId", "recipesId"],
+  // props: ["cusId", "planId", "recipesId", "startDate", "endDate"],
   computed: {
-    ...mapState({
-      healthyData: (state) => state.healthyData,
-      healthyDataType: (state) => state.healthyDataType,
-      recipesData: (state) => state.recipesData,
-    }),
+    ...mapState([
+      "healthyData",
+      "healthyDataType",
+      "recipesData",
+      "recipesDataLoading",
+      "healthDataLoading",
+    ]),
+    ...mapGetters(["analyseData"]),
   },
   methods: {
     ...mapActions(["init"]),
@@ -60,15 +74,17 @@ export default {
   },
 };
 </script>
-<style rel="stylesheet/scss" lang="scss">
-.content {
+<style lang="scss" scoped>
+.recipes_build_wrapper {
+  padding: 16px;
   display: flex;
-  height: calc(100vh - 124px);
+  height: calc(100vh - 86px);
   .left {
     flex: 4;
     border-right: 1px solid #e6ebf5;
     height: 100%;
-    overflow: auto;
+    overflow: hidden;
+    padding-right: 20px;
   }
   .right {
     flex: 1;

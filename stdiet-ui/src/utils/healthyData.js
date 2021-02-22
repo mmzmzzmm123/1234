@@ -384,7 +384,8 @@ export const yesNoName = [
   "longEatDrugFlag",
   "allergyFlag",
   "smokeFlag",
-  "secondSmoke"
+  "secondSmoke",
+  "sleepDrugFlag"
 ];
 
 export const dictName = [
@@ -550,7 +551,7 @@ export function dealHealthy(customerHealthy) {
     customerHealthy.getupTime += "点";
   }
   if (customerHealthy.hasOwnProperty("signList")) {
-    customerHealthy.signStr = customerHealthy.signList
+    customerHealthy.signStr = (customerHealthy.signList || [])
       .map(obj => obj.name)
       .join("，");
   }

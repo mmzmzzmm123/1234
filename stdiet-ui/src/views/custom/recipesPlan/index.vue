@@ -170,14 +170,14 @@
           <el-button
             size="mini"
             type="text"
-            icon="el-icon-edit"
+            icon="el-icon-view"
             @click="
               allRecipesPlanQueryParam.orderId = scope.row.orderId;
               getAllPlanByOrderId();
             "
             >查看完整计划
           </el-button>
-          <el-button
+          <!-- <el-button
             size="mini"
             type="text"
             icon="el-icon-edit"
@@ -192,13 +192,15 @@
             @click="getCustomerSign(scope.row)"
             v-hasPermi="['custom:customer:query']"
             >查看体征
-          </el-button>
+          </el-button> -->
           <el-button
             size="mini"
             type="text"
-            icon="el-icon-edit"
+            :icon="`${
+              scope.row.recipesId ? 'el-icon-edit' : 'el-icon-edit-outline'
+            }`"
             @click="handleBuild(scope.row)"
-            >{{ `${scope.row.recipes_id ? "编辑" : "制作"}食谱` }}</el-button
+            >{{ `${scope.row.recipesId ? "编辑" : "制作"}食谱` }}</el-button
           >
         </template>
       </el-table-column>
@@ -604,20 +606,26 @@ export default {
       }
     },
     handleBuild(data) {
+      // console.log(data);
+      const { startDate, endDate, id, orderId, recipesId } = data;
+
       // const params = { id: data.id, cusId: data.orderId };
-      let path = `/recipes/build/${data.orderId}/${data.id}`;
-      if (data.recipes_id) {
-        // params.recipesId = data.recipes_id;
-        path += `/${data.recipes_id}`;
-      }
-      // test
-      // params.recipesId = "61";
-       path += '/73';
+      // const path = `/recipes/build/${orderId}/${id}/${recipesId || 0}`;
       // this.$router.push({
       //   name: "build",
       //   params,
       // });
-      this.$router.push(path);
+      const queryParam = {
+        planId: id,
+        cusId: orderId,
+      };
+      if (!recipesId) {
+        queryParam.startDate = startDate;
+        queryParam.endDate = endDate;
+      } else {
+        queryParam.recipesId = recipesId;
+      }
+      this.$router.push({ path: "/recipes/build", query: queryParam });
     },
   },
 };

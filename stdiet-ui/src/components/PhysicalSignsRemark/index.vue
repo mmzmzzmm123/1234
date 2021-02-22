@@ -76,7 +76,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
   .margin-top-20{
     margin-top:20px;
   }
