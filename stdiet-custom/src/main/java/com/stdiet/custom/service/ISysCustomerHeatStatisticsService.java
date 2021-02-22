@@ -2,6 +2,7 @@ package com.stdiet.custom.service;
 
 import java.util.List;
 import com.stdiet.custom.domain.SysCustomerHeatStatistics;
+import com.stdiet.custom.dto.response.NutritionalCalories;
 
 /**
  * 外食热量统计Service接口
@@ -65,4 +66,18 @@ public interface ISysCustomerHeatStatisticsService
      * @return
      */
     public int calculateCustomerHeat(SysCustomerHeatStatistics sysCustomerHeatStatistics);
+
+    /**
+     * 根据日期查询是否客户热量统计
+     * @param sysCustomerHeatStatistics
+     * @return
+     */
+    SysCustomerHeatStatistics getCustomerHeatStatisticsByDate(SysCustomerHeatStatistics sysCustomerHeatStatistics);
+
+    /**
+     * 根据客户热量食材统计ID查询详情
+     * @param id
+     * @return
+     */
+    public NutritionalCalories getNutritionalCaloriesByCustomer(Long id);
 }

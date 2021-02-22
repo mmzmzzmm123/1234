@@ -35,6 +35,16 @@
           </el-tag>
         </el-form-item>
         <div>
+          <el-form-item label="日期" prop="edibleDate">
+          <el-date-picker
+            v-model="form.edibleDate"
+            type="date"
+            format="yyyy-MM-dd"
+            value-format="yyyy-MM-dd"
+            :picker-options="pickerOptions"
+            placeholder="选择日期">
+          </el-date-picker>
+          </el-form-item>
           <el-form-item label="食材名称" prop="ingredient">
             <el-input v-model="form.ingredient"  placeholder="请输入食材名称" maxlength="20"/>
           </el-form-item>
@@ -64,6 +74,8 @@
 </template>
 <script>
   import { getDictData,getCustomerBaseMessage,addFoodHeatStatistics } from "@/api/custom/customerInvestigation";
+  import dayjs from "dayjs";
+  const nowDate = dayjs().format("YYYY-MM-DD");
   const logo = require("@/assets/logo/st_logo.png");
   export default {
     name: "index",
@@ -93,6 +105,7 @@
            phone: null
         },
         form: {
+          edibleDate: nowDate,
           ingredient: null,
           number: null,
           unit: null,
@@ -100,9 +113,7 @@
         },
         rules: {
           ingredient: [{ required: true, trigger: "blur", message: "请输入食材名称" }],
-          /*numberUnit: [
-            { required: false, trigger: "blur", validator: checkNumberUnit }
-          ],*/
+          edibleDate: [{ required: true, trigger: "blur", message: "请选择日期" }]
         },
         ingredientTagArray:[
 
@@ -111,7 +122,12 @@
 
         ],
         //通俗计量单位
-        cusUnitOptions:[]
+        cusUnitOptions:[],
+        pickerOptions: {
+          disabledDate(time) {
+            return time.getTime() > Date.now();
+          },
+        },
       };
     },
     components: {
@@ -158,8 +174,9 @@
         });
       },
       verify(){
+        var reg = /^([1-9]\d*|[0]{1,1})$/;
         if(this.form.number != null && this.form.number != ""){
-           if(!/^[1-9]\d*$/.test(this.form.number+"")){
+           if(!reg.test(this.form.number+"")){
              this.$message({message: "通俗计量的数量格式错误", type: "warning"});
              return false;
            }
@@ -168,7 +185,7 @@
              return false;
            }
         }
-        if(this.form.quantity != null && this.form.quantity != "" && !/^[1-9]\d*$/.test(this.form.quantity)){
+        if(this.form.quantity != null && this.form.quantity != "" && !reg.test(this.form.quantity)){
           this.$message({message: "重量格式错误", type: "warning"});
           return false;
         }
@@ -180,6 +197,7 @@
       },
       reset(){
          this.form = {
+           edibleDate: nowDate,
            ingredient: null,
            number: null,
            unit: null,
@@ -192,13 +210,15 @@
       submit(){
         if (this.submitFlag) {
           this.$message({
-            message: "请勿频繁提交，1分钟后重试",
+            message: "请勿频繁提交，一分钟后重试",
             type: "warning",
           });
           return;
         }
-        this.timer = setTimeout(this.againSumbit,1000*60);
-        if(this.form.ingredient && this.verify() && this.ingredientTagArray.indexOf(this.form.ingredient.trim()) == -1){
+        if(this.form.ingredient && this.ingredientTagArray.indexOf(this.form.ingredient.trim()) == -1){
+          if(!this.verify()){
+            return;
+          }
           this.ingredientArray.push(this.form);
           this.ingredientTagArray.push(this.form.ingredient);
           this.reset();
@@ -207,6 +227,7 @@
           this.$message({message: "还未添加食材数据，无法提交", type: "warning"});
           return;
         }
+        this.timer = setTimeout(this.againSumbit,1000*60);
         let submitObject = {};
         submitObject.ingredientArray = JSON.stringify(this.ingredientArray);
         submitObject.customerEncId = this.customer.customerEncId;

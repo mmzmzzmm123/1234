@@ -44,6 +44,18 @@ public class SysFoodHeatStatistics extends BaseEntity
     @Excel(name = "类型，0早 1中 2晚")
     private Integer edibleType;
 
+    /** 蛋白质质量，克 */
+    @Excel(name = "蛋白质质量，克")
+    private Integer proteinQuality;
+
+    /** 脂肪质量，克 */
+    @Excel(name = "脂肪质量，克")
+    private Integer fatQuality;
+
+    /** 碳水质量，克 */
+    @Excel(name = "碳水质量，克")
+    private Integer carbonWaterQuality;
+
     /** 热量数值 */
     @Excel(name = "热量数值")
     private Integer heatValue;

@@ -27,7 +27,7 @@
           </el-table-column>
           <el-table-column label="质量(克)" align="center" prop="quantity" />-->
 
-          <el-table-column label="最大摄入量" align="center" prop="maxHeatValue" />
+          <el-table-column label="可摄入量" align="center" prop="maxHeatValue" />
           <el-table-column label="食材热量" align="center" prop="heatValue" />
           <el-table-column label="热量缺口" align="center" prop="heatGap" />
           <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
