@@ -21,6 +21,8 @@ import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 
+import io.swagger.annotations.ApiOperation;
+
 /**
  * 人员定额信息Controller
  * 
@@ -37,6 +39,7 @@ public class BusRydexxController extends BaseController
     /**
      * 查询人员定额信息列表
      */
+    @ApiOperation("人员定额信息")
     @GetMapping("/list")
     public TableDataInfo list(BusRydexx busRydexx)
     {
