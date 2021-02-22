@@ -1,21 +1,23 @@
 package com.stdiet.custom.service.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.stdiet.common.utils.DateUtils;
 import com.stdiet.common.utils.StringUtils;
 import com.stdiet.common.utils.sign.AesUtils;
+import com.stdiet.custom.domain.SysCustomerHeatStatistics;
 import com.stdiet.custom.dto.request.FoodHeatCalculatorRequest;
+import com.stdiet.custom.mapper.SysCustomerHeatStatisticsMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.stdiet.custom.mapper.SysFoodHeatStatisticsMapper;
 import com.stdiet.custom.domain.SysFoodHeatStatistics;
 import com.stdiet.custom.service.ISysFoodHeatStatisticsService;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 外食热量统计Service业务层处理
@@ -24,10 +26,14 @@ import com.stdiet.custom.service.ISysFoodHeatStatisticsService;
  * @date 2021-02-19
  */
 @Service
+@Transactional
 public class SysFoodHeatStatisticsServiceImpl implements ISysFoodHeatStatisticsService
 {
     @Autowired
     private SysFoodHeatStatisticsMapper sysFoodHeatStatisticsMapper;
+
+    @Autowired
+    private SysCustomerHeatStatisticsMapper sysCustomerHeatStatisticsMapper;
 
     /**
      * 查询外食热量统计
@@ -115,13 +121,25 @@ public class SysFoodHeatStatisticsServiceImpl implements ISysFoodHeatStatisticsS
         if(StringUtils.isEmpty(customerId)){
             return 0;
         }
-        List<SysFoodHeatStatistics> list = new ArrayList<>();
-        if(StringUtils.isNotEmpty(foodHeatCalculatorRequest.getIngredientArray())){
-            List<HashMap> foodHeatList = JSON.parseArray(foodHeatCalculatorRequest.getIngredientArray(), HashMap.class);
-            for(HashMap map : foodHeatList){
-                map.put("customerId", customerId);
+        //先判断该日期下是否已存在
+        SysCustomerHeatStatistics sysCustomerHeatStatistics = new SysCustomerHeatStatistics();
+        sysCustomerHeatStatistics.setCustomerId(Long.parseLong(customerId));
+        sysCustomerHeatStatistics.setEdibleDate(new Date());
+        SysCustomerHeatStatistics customerHeatResult = sysCustomerHeatStatisticsMapper.getCustomerHeatStatisticsByDate(sysCustomerHeatStatistics);
+        if(customerHeatResult == null){
+            sysCustomerHeatStatisticsMapper.insertSysCustomerHeatStatistics(sysCustomerHeatStatistics);
+        }else{
+            sysCustomerHeatStatistics.setId(customerHeatResult.getId());
+        }
+        if(sysCustomerHeatStatistics.getId() != null){
+            List<SysFoodHeatStatistics> list = new ArrayList<>();
+            if(StringUtils.isNotEmpty(foodHeatCalculatorRequest.getIngredientArray())){
+                List<HashMap> foodHeatList = JSON.parseArray(foodHeatCalculatorRequest.getIngredientArray(), HashMap.class);
+                for(HashMap map : foodHeatList){
+                    map.put("customerHeatId", sysCustomerHeatStatistics.getId());
+                }
+                return sysFoodHeatStatisticsMapper.insertFoodHeatBatch(foodHeatList);
             }
-            return sysFoodHeatStatisticsMapper.insertFoodHeatBatch(foodHeatList);
         }
         return 0;
     }

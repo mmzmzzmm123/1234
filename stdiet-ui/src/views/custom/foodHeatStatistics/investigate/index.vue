@@ -13,51 +13,52 @@
         <h3>个人信息</h3>
         <!--<div><span>{{form.name}}</span></div>-->
       </div>
-      <el-form-item label="真实姓名" prop="name">
-        <el-input v-model="customer.name" :readonly="true" placeholder="请输入真实姓名" maxlength="20"/>
+      <el-form-item :label="'姓名：'+customer.name" prop="name">
+        <!--<el-input v-model="customer.name" :readonly="true" placeholder="请输入真实姓名" maxlength="20"/>-->
+      </el-form-item>
+      <el-form-item :label="'手机号：'+customer.phone" prop="phone" style="margin-top: -15px">
+        <!--<el-input v-model="customer.name" :readonly="true" placeholder="请输入真实姓名" maxlength="20"/>-->
       </el-form-item>
       <div>
-        <h3>食材记录</h3>
-        <!--<div><span>{{form.name}}</span></div>-->
+        <h3>外食计算</h3>
       </div>
-      <el-form-item label="已添加的食材" prop="name">
-        <el-tag style="margin-left: 5px"
-          v-for="tag in ingredientTagArray"
-          :key="tag"
-          closable
-          :disable-transitions="false"
-          @close="handleClose(tag)"
-          >
-          {{tag}}
-        </el-tag>
-        <!--<el-tag class="el-icon-plus" style="margin-left: 5px">
-          添加
-        </el-tag>-->
-      </el-form-item>
-      <div>
-        <el-form-item label="食材名称" prop="ingredient">
-          <el-input v-model="form.ingredient"  placeholder="请输入食材名称" maxlength="50"/>
+      <el-row>
+        <el-button v-for="(item,index) in  modular" type="primary" plain @click="modularChange(index)">{{item}}</el-button>
+      </el-row>
+      <div style="margin-top: 40px">
+        <h3>{{currentTitle}}</h3>
+      </div>
+      <div v-show="currentShow == 0">
+        <el-form-item label="已添加的食材" prop="name">
+          <el-tag style="margin-left: 5px" v-for="tag in ingredientTagArray" :key="tag" closable :disable-transitions="false" @close="handleClose(tag)">
+            {{tag}}
+          </el-tag>
         </el-form-item>
-        <el-form-item label="通俗计量" prop="numberUnit">
-          <el-input-number v-model="form.number" controls-position="right" :controls="false" style="width: 48%" placeholder="请输入食材数量"  :step="1" :max="100"></el-input-number>
-          <el-select v-model="form.unit" placeholder="请选择单位"  style="margin-left:5px;width: 50%"  filterable clearable>
-            <el-option
-              v-for="dict in cusUnitOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="parseInt(dict.dictValue)"
-            />
-          </el-select>
+        <div>
+          <el-form-item label="食材名称" prop="ingredient">
+            <el-input v-model="form.ingredient"  placeholder="请输入食材名称" maxlength="20"/>
+          </el-form-item>
+          <el-form-item label="通俗计量" prop="numberUnit">
+            <el-input  v-model="form.number" style="width: 48%" placeholder="请输入食材数量" maxlength="10"/>
+            <el-select v-model="form.unit" placeholder="请选择单位"  style="margin-left:5px;width: 50%"  filterable clearable>
+              <el-option
+                v-for="dict in cusUnitOptions"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="parseInt(dict.dictValue)"
+              />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="重量(克)" prop="quantity">
+            <el-input v-model="form.quantity"  placeholder="请输入食材重量（整数）" maxlength="10"/>
+          </el-form-item>
+        </div>
+        <el-form-item style="text-align: center; margin: 40px auto" >
+          <el-button type="primary" @click="continueAdd()" >继续添加</el-button>
+          <el-button type="success" @click="submit()" >提交数据</el-button>
         </el-form-item>
-        <el-form-item label="重量(克)" prop="quantity">
-          <el-input type="number" v-model="form.quantity"  placeholder="请输入食材重量（整数）" maxlength="10"/>
-        </el-form-item>
+      </div>
 
-      </div>
-      <el-form-item style="text-align: center; margin: 40px auto" >
-        <el-button type="primary" @click="continueAdd()" >继续添加</el-button>
-        <el-button type="success" @click="submit()" >提交数据</el-button>
-      </el-form-item>
     </el-form>
   </section>
 </template>
@@ -67,7 +68,21 @@
   export default {
     name: "index",
     data() {
+      const checkNumberUnit = (rule, value, callback) => {
+        if (this.form.number) {
+          if(!/^[1-9]\d*$/.test(value)){
+            return callback(new Error("通俗计量的数量格式错误"));
+          }
+          if(!this.form.unit){
+            return callback(new Error("请选择通俗计量单位"));
+          }
+        }
+        callback();
+      };
       return {
+        modular:["食材提交"],
+        currentShow: -1,
+        currentTitle: "",
         logo,
         timer: null,
         customerExistFlag: false,
@@ -79,12 +94,15 @@
         },
         form: {
           ingredient: null,
-          number: 0,
+          number: null,
           unit: null,
           quantity: null,
         },
         rules: {
-          ingredient: [{ required: true, trigger: "blur", message: "请输入食材名称" }]
+          ingredient: [{ required: true, trigger: "blur", message: "请输入食材名称" }],
+          /*numberUnit: [
+            { required: false, trigger: "blur", validator: checkNumberUnit }
+          ],*/
         },
         ingredientTagArray:[
 
@@ -100,6 +118,15 @@
 
     },
     methods: {
+      modularChange(index){
+          if(index != this.currentShow){
+            this.currentShow = index;
+            this.currentTitle = this.modular[index];
+          }else{
+            this.currentShow = -1;
+            this.currentTitle = "";
+          }
+      },
       //根据用户ID获取用户基本信息（手机号、姓名）
       getCustomerBase(id){
         if(id == null || id == undefined){
@@ -120,7 +147,7 @@
       continueAdd(){
         this.$refs.form.validate((valid) => {
           if (valid) {
-            if(this.ingredientTagArray.indexOf(this.form.ingredient.trim()) == -1){
+            if(this.verify() && this.ingredientTagArray.indexOf(this.form.ingredient.trim()) == -1){
               this.ingredientArray.push(this.form);
               this.ingredientTagArray.push(this.form.ingredient);
               this.reset();
@@ -130,26 +157,48 @@
           }
         });
       },
+      verify(){
+        if(this.form.number != null && this.form.number != ""){
+           if(!/^[1-9]\d*$/.test(this.form.number+"")){
+             this.$message({message: "通俗计量的数量格式错误", type: "warning"});
+             return false;
+           }
+           if(this.form.unit == null || this.form.unit == ""){
+             this.$message({message: "请选择通俗计量单位", type: "warning"});
+             return false;
+           }
+        }
+        if(this.form.quantity != null && this.form.quantity != "" && !/^[1-9]\d*$/.test(this.form.quantity)){
+          this.$message({message: "重量格式错误", type: "warning"});
+          return false;
+        }
+        if((this.form.number == null || this.form.number == "") && (this.form.quantity == null || this.form.quantity == "")){
+          this.$message({message: "通俗计量和重量不能都为空", type: "warning"});
+          return false;
+        }
+        return true;
+      },
       reset(){
          this.form = {
            ingredient: null,
-           number: 0,
+           number: null,
            unit: null,
            quantity: null
          }
       },
+      againSumbit(){
+        this.submitFlag = false;
+      },
       submit(){
         if (this.submitFlag) {
           this.$message({
-            message: "请勿重复提交，1分钟后重试",
+            message: "请勿频繁提交，1分钟后重试",
             type: "warning",
           });
           return;
         }
-        this.timer = setTimeout(function(){
-          this.submitFlag = false;
-        },1000*60);
-        if(this.form.ingredient &&  this.ingredientTagArray.indexOf(this.form.ingredient.trim()) == -1){
+        this.timer = setTimeout(this.againSumbit,1000*60);
+        if(this.form.ingredient && this.verify() && this.ingredientTagArray.indexOf(this.form.ingredient.trim()) == -1){
           this.ingredientArray.push(this.form);
           this.ingredientTagArray.push(this.form.ingredient);
           this.reset();
