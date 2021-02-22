@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.business.mapper.ViewBusZdxxMapper">
+    
+    <resultMap type="ViewBusZdxx" id="ViewBusZdxxResult">
+        <result property="id"    column="id"    />
+        <result property="zdmc"    column="zdmc"    />
+        <result property="zddeid"    column="zddeid"    />
+        <result property="fwxm"    column="fwxm"    />
+        <result property="djhf"    column="djhf"    />
+        <result property="jjdw"    column="jjdw"    />
+        <result property="de"    column="de"    />
+    </resultMap>
+
+    <sql id="selectViewBusZdxxVo">
+        select id, zdmc, zddeid, fwxm, djhf, jjdw, de from view_bus_zdxx
+    </sql>
+
+    <select id="selectViewBusZdxxList" parameterType="ViewBusZdxx" resultMap="ViewBusZdxxResult">
+        <include refid="selectViewBusZdxxVo"/>
+        <where>  
+            <if test="zdmc != null  and zdmc != ''"> and zdmc = #{zdmc}</if>
+            <if test="zddeid != null "> and zddeid = #{zddeid}</if>
+            <if test="fwxm != null  and fwxm != ''"> and fwxm = #{fwxm}</if>
+            <if test="djhf != null  and djhf != ''"> and djhf = #{djhf}</if>
+            <if test="jjdw != null  and jjdw != ''"> and jjdw = #{jjdw}</if>
+            <if test="de != null "> and de = #{de}</if>
+        </where>
+    </select>
+    
+    <select id="selectViewBusZdxxById" parameterType="Long" resultMap="ViewBusZdxxResult">
+        <include refid="selectViewBusZdxxVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertViewBusZdxx" parameterType="ViewBusZdxx">
+        insert into view_bus_zdxx
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="zdmc != null and zdmc != ''">zdmc,</if>
+            <if test="zddeid != null">zddeid,</if>
+            <if test="fwxm != null and fwxm != ''">fwxm,</if>
+            <if test="djhf != null and djhf != ''">djhf,</if>
+            <if test="jjdw != null and jjdw != ''">jjdw,</if>
+            <if test="de != null">de,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="zdmc != null and zdmc != ''">#{zdmc},</if>
+            <if test="zddeid != null">#{zddeid},</if>
+            <if test="fwxm != null and fwxm != ''">#{fwxm},</if>
+            <if test="djhf != null and djhf != ''">#{djhf},</if>
+            <if test="jjdw != null and jjdw != ''">#{jjdw},</if>
+            <if test="de != null">#{de},</if>
+         </trim>
+    </insert>
+
+    <update id="updateViewBusZdxx" parameterType="ViewBusZdxx">
+        update view_bus_zdxx
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="zdmc != null and zdmc != ''">zdmc = #{zdmc},</if>
+            <if test="zddeid != null">zddeid = #{zddeid},</if>
+            <if test="fwxm != null and fwxm != ''">fwxm = #{fwxm},</if>
+            <if test="djhf != null and djhf != ''">djhf = #{djhf},</if>
+            <if test="jjdw != null and jjdw != ''">jjdw = #{jjdw},</if>
+            <if test="de != null">de = #{de},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteViewBusZdxxById" parameterType="Long">
+        delete from view_bus_zdxx where id = #{id}
+    </delete>
+
+    <delete id="deleteViewBusZdxxByIds" parameterType="String">
+        delete from view_bus_zdxx where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

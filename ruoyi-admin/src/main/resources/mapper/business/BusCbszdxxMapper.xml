@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.business.mapper.BusCbszdxxMapper">
+    
+    <resultMap type="BusCbszdxx" id="BusCbszdxxResult">
+        <result property="id"    column="id"    />
+        <result property="cbsId"    column="cbs_id"    />
+        <result property="zdId"    column="zd_id"    />
+        <result property="kssj"    column="kssj"    />
+        <result property="jssj"    column="jssj"    />
+    </resultMap>
+
+    <sql id="selectBusCbszdxxVo">
+        select id, cbs_id, zd_id, kssj, jssj from bus_cbszdxx
+    </sql>
+
+    <select id="selectBusCbszdxxList" parameterType="BusCbszdxx" resultMap="BusCbszdxxResult">
+        <include refid="selectBusCbszdxxVo"/>
+        <where>  
+            <if test="cbsId != null "> and cbs_id = #{cbsId}</if>
+            <if test="zdId != null "> and zd_id = #{zdId}</if>
+            <if test="kssj != null "> and kssj = #{kssj}</if>
+            <if test="jssj != null "> and jssj = #{jssj}</if>
+        </where>
+    </select>
+    
+    <select id="selectBusCbszdxxById" parameterType="Long" resultMap="BusCbszdxxResult">
+        <include refid="selectBusCbszdxxVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertBusCbszdxx" parameterType="BusCbszdxx">
+        insert into bus_cbszdxx
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="cbsId != null">cbs_id,</if>
+            <if test="zdId != null">zd_id,</if>
+            <if test="kssj != null">kssj,</if>
+            <if test="jssj != null">jssj,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="cbsId != null">#{cbsId},</if>
+            <if test="zdId != null">#{zdId},</if>
+            <if test="kssj != null">#{kssj},</if>
+            <if test="jssj != null">#{jssj},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBusCbszdxx" parameterType="BusCbszdxx">
+        update bus_cbszdxx
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="cbsId != null">cbs_id = #{cbsId},</if>
+            <if test="zdId != null">zd_id = #{zdId},</if>
+            <if test="kssj != null">kssj = #{kssj},</if>
+            <if test="jssj != null">jssj = #{jssj},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBusCbszdxxById" parameterType="Long">
+        delete from bus_cbszdxx where id = #{id}
+    </delete>
+
+    <delete id="deleteBusCbszdxxByIds" parameterType="String">
+        delete from bus_cbszdxx where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
