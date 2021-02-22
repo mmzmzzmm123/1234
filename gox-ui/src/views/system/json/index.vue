@@ -67,7 +67,7 @@
           <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
         </el-row>
 
-        <el-table v-loading="loading" :data="jsonList" @selection-change="handleSelectionChange">
+        <el-table v-loading="loading" row-key="id" :data="jsonList" @selection-change="handleSelectionChange">
           <el-table-column type="selection" width="55" align="center" />
           <el-table-column label="id" align="center" prop="id" />
           <el-table-column label="表单名字" align="center" prop="formName" />
@@ -75,6 +75,7 @@
           <el-table-column label="修改时间" align="center" prop="updateTime" />
           <!-- <el-table-column label="表单json" align="center" prop="formData" /> -->
           <el-table-column label="备注" align="center" prop="remark" />
+          <el-table-column label="排序" align="center" prop="order" />
           <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
             <template slot-scope="scope">
               <el-button
@@ -105,28 +106,14 @@
       </el-col>
     </el-row>
 
-    <!-- 添加或修改单json存储对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="640px" append-to-body>
-      <div>
-        <el-transfer
-          filterable
-          :filter-method="filterMethod"
-          filter-placeholder="请输入字段名"
-          v-model="value"
-          :data="data">
-        </el-transfer>
-      </div>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
-        <el-button @click="cancel">取 消</el-button>
-      </div>
-    </el-dialog>
+<!--    -->
   </div>
 </template>
 
 <script>
-import { listJson, getJson, delJson, addJson, updateJson, exportJson } from "@/api/system/json";
+import { listJson, order, delJson, addJson, updateJson, exportJson, getTableField } from '@/api/system/json'
 import deptTree from '@/views/components/deptTree'
+import Sortable from 'sortablejs'
 
 export default {
   name: "Json",
@@ -198,10 +185,33 @@ export default {
       }
     };
   },
+  mounted () {
+    this.rowDrop()
+  },
   created() {
 
   },
   methods: {
+    // 行拖拽
+    rowDrop () {
+      // 此时找到的元素是要拖拽元素的父容器
+      const tbody = document.querySelector('.el-table__body-wrapper tbody');
+      const _this = this;
+      Sortable.create(tbody, {
+        //  指定父元素下可被拖拽的子元素
+        draggable: ".el-table__row",
+        onEnd ({ newIndex, oldIndex }) {
+          const currRow = _this.jsonList.splice(oldIndex, 1)[0];
+          _this.jsonList.splice(newIndex, 0, currRow);
+          for (let i =0;i<_this.jsonList.length;i++){
+            _this.jsonList[i].order=i+1
+          }
+          order(_this.jsonList).then(res=>{
+            _this.$message.success(res.msg)
+          })
+        }
+      });
+    },
     selectedDept(data){
       this.deptId=data
       this.getList();
@@ -210,6 +220,9 @@ export default {
     handTableField(){
       this.title='修改表格头'
       this.open=true
+      getTableField(this.nodeId,this.deptId).then(res=>{
+        console.log(res.data)
+      })
     },
     filterMethod(query, item) {
       return item.name.indexOf(query) > -1;
@@ -272,7 +285,7 @@ export default {
       //this.reset();
       console.log(row)
       const id = row.id
-      //this.$router.push('/tool/build/'+id)
+      this.$router.push('/tool/build/'+id)
     },
     /** 提交按钮 */
     submitForm() {

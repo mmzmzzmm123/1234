@@ -5,8 +5,11 @@ import com.gox.basic.domain.form.FormDesignerData;
 import com.gox.basic.mapper.FormDesignerDataMapper;
 import com.gox.basic.service.IFieldsItemService;
 import com.gox.basic.service.IFormDesignerDataService;
+import com.gox.common.core.redis.RedisCache;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -17,12 +20,16 @@ import java.util.List;
  * @date 2021-02-02
  */
 @Service
+@Transactional(rollbackFor=RuntimeException.class)
+@CacheConfig(cacheNames = "formDesignerData")
 public class FormDesignerDataServiceImpl implements IFormDesignerDataService 
 {
     @Autowired
     private FormDesignerDataMapper formDesignerDataMapper;
     @Autowired
     private IFieldsItemService fieldsItemService;
+    @Autowired
+    private RedisCache redisCache;
     /**
      * 查询【请填写功能名称】
      * 
@@ -32,20 +39,24 @@ public class FormDesignerDataServiceImpl implements IFormDesignerDataService
     @Override
     public FormDesignerData selectFormDesignerDataById(Long id)
     {
-        return formDesignerDataMapper.selectFormDesignerDataById(id);
+        Object f = redisCache.getCacheMapValue("form", id + "");
+        if (f==null){
+            return formDesignerDataMapper.selectFormDesignerDataById(id);
+        }
+        return (FormDesignerData) f;
     }
 
-    /**
-     * 查询【请填写功能名称】列表
-     * 
-     * @param formDesignerData 【请填写功能名称】
-     * @return 【请填写功能名称】
-     */
-    @Override
-    public List<FormDesignerData> selectFormDesignerDataList(FormDesignerData formDesignerData)
-    {
-        return formDesignerDataMapper.selectFormDesignerDataList(formDesignerData);
-    }
+//    /**
+//     * 查询【请填写功能名称】列表
+//     *
+//     * @param formDesignerData 【请填写功能名称】
+//     * @return 【请填写功能名称】
+//     */
+//    @Override
+//    public List<FormDesignerData> selectFormDesignerDataList(FormDesignerData formDesignerData)
+//    {
+//        return formDesignerDataMapper.selectFormDesignerDataList(formDesignerData);
+//    }
 
     /**
      * 新增【请填写功能名称】
@@ -59,8 +70,11 @@ public class FormDesignerDataServiceImpl implements IFormDesignerDataService
         //Long formId = SnowflakesTools.WORKER.nextId();
         List<FieldsItem> fields = formDesignerData.getFields();
         fieldsItemService.insertFieldsItems(fields,formDesignerData.getId());
-        //formDesignerData.setId(formId);
-        return formDesignerDataMapper.insertFormDesignerData(formDesignerData);
+        if (formDesignerDataMapper.insertFormDesignerData(formDesignerData)==1){
+            redisCache.setCacheMapValue("form",formDesignerData.getId()+"",formDesignerData);
+            return 1;
+        }
+        return 0;
     }
 
     /**
@@ -72,8 +86,11 @@ public class FormDesignerDataServiceImpl implements IFormDesignerDataService
     @Override
     public int updateFormDesignerData(FormDesignerData formDesignerData)
     {
-
-        return formDesignerDataMapper.updateFormDesignerData(formDesignerData);
+        if (formDesignerDataMapper.updateFormDesignerData(formDesignerData)==1){
+            redisCache.setCacheMapValue("form",formDesignerData.getId()+"",formDesignerData);
+            return 1;
+        }
+        return 0;
     }
 
     /**
@@ -85,7 +102,11 @@ public class FormDesignerDataServiceImpl implements IFormDesignerDataService
     @Override
     public int deleteFormDesignerDataByIds(Long[] ids)
     {
-        return formDesignerDataMapper.deleteFormDesignerDataByIds(ids);
+        formDesignerDataMapper.deleteFormDesignerDataByIds(ids);
+        for (Long id : ids) {
+            redisCache.deleteHashObject("form",id+"");
+        }
+        return ids.length;
     }
 
     /**
@@ -98,6 +119,10 @@ public class FormDesignerDataServiceImpl implements IFormDesignerDataService
     public int deleteFormDesignerDataById(Long id)
     {
         fieldsItemService.deleteFieldsByFormId(id);
-        return formDesignerDataMapper.deleteFormDesignerDataById(id);
+        if (formDesignerDataMapper.deleteFormDesignerDataById(id)==1){
+            redisCache.deleteHashObject("form",id+"");
+            return 1;
+        }
+        return 0;
     }
 }

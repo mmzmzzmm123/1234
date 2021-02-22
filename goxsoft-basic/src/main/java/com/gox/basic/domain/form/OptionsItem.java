@@ -3,7 +3,9 @@ package com.gox.basic.domain.form;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.gox.common.plugin.AutoId;
 
-public class OptionsItem{
+import java.io.Serializable;
+
+public class OptionsItem implements Serializable {
 	@AutoId
 	@JSONField(serialize = false)
 	private Long id;
@@ -15,7 +17,7 @@ public class OptionsItem{
 	private String label;
 
 	@JSONField(name = "value")
-	private int value;
+	private String value;
 
 	public Long getItemId() {
 		return itemId;
@@ -45,15 +47,16 @@ public class OptionsItem{
 		this.label = label;
 	}
 
-	public void setValue(int value) {
-		this.value = value;
-	}
 
 	public String getLabel(){
 		return label;
 	}
 
-	public int getValue(){
+	public String getValue() {
 		return value;
+	}
+
+	public void setValue(String value) {
+		this.value = value;
 	}
 }

@@ -3,9 +3,10 @@ package com.gox.basic.domain.form;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.gox.common.plugin.AutoId;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Slot{
+public class Slot implements Serializable {
 	@AutoId
 	@JSONField(serialize = false)
 	private Long id;

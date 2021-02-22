@@ -3,7 +3,9 @@ package com.gox.basic.domain.form;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.gox.common.plugin.AutoId;
 
-public class ChildrenItem{
+import java.io.Serializable;
+
+public class ChildrenItem implements Serializable {
 	@AutoId
 	@JSONField(name = "id")
 	private int id;

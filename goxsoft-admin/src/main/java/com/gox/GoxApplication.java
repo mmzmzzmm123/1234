@@ -10,6 +10,7 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
  * @author gox
  */
 @SpringBootApplication(exclude = { DataSourceAutoConfiguration.class })
+//@EnableCaching
 public class GoxApplication
 {
     public static void main(String[] args)

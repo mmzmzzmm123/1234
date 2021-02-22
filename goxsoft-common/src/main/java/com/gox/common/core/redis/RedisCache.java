@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+
+import org.apache.ibatis.cache.Cache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.BoundSetOperations;
 import org.springframework.data.redis.core.HashOperations;
@@ -103,7 +105,9 @@ public class RedisCache
     {
         return redisTemplate.delete(key);
     }
-
+    public boolean deleteHashObject(final String key,final String hKey){
+        return redisTemplate.opsForHash().delete(key,hKey)==1;
+    }
     /**
      * 删除集合对象
      *

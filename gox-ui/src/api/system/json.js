@@ -22,6 +22,14 @@ export function getTableField(nodeId,deptId){
     method:'get',
   })
 }
+//排序
+export function order(forms){
+  return request({
+    url: '/system/json/order',
+    method: 'put',
+    data: forms
+  })
+}
 // 查询表单json存储详细
 export function getJson(id) {
   return request({

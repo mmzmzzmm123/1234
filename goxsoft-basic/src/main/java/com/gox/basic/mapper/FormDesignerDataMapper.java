@@ -19,7 +19,7 @@ public interface FormDesignerDataMapper
      * @return 【请填写功能名称】
      */
     public FormDesignerData selectFormDesignerDataById(Long id);
-
+    public List<FormDesignerData> selectAll();
     /**
      * 查询【请填写功能名称】列表
      * 

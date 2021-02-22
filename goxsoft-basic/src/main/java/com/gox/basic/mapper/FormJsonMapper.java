@@ -3,6 +3,7 @@ package com.gox.basic.mapper;
 import com.gox.basic.domain.FormJson;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -21,7 +22,8 @@ public interface FormJsonMapper
      * @return 单json存储
      */
     public FormJson selectFormJsonById(Long id);
-
+    public int updateFormOrderBatch(Iterable<FormJson> list);
+    Integer countFormByNodeIdAndDeptId(Long nodeId,Long deptId);
     /**
      * 查询单json存储列表
      * 

@@ -3,7 +3,6 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.gox.basic.mapper.FormJsonMapper">
-    
     <resultMap type="com.gox.basic.domain.FormJson" id="FormJsonResult">
         <result property="id"    column="id"    />
         <result property="createTime"    column="create_time"    />
@@ -15,10 +14,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="formData"    column="form_data"    />
         <result property="nodeId"    column="node_id"    />
         <result property="deptId"    column="dept_id"    />
+        <result property="order" column="order" />
+<!--        <association property="formDesignerData" column="id" select="com.gox.basic.mapper.FormDesignerDataMapper.selectFormDesignerDataById"/>-->
     </resultMap>
 
     <sql id="selectFormJsonVo">
-        select id, create_time, update_time, create_by, update_by, remark, form_name, form_data, node_id,dept_id from form_json
+        select id, create_time, update_time, create_by, update_by, remark, form_name, form_data, node_id,dept_id ,`order` from form_json
     </sql>
 
     <select id="selectFormJsonList" parameterType="com.gox.basic.domain.FormJson" resultMap="FormJsonResult">
@@ -26,17 +27,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <where>
             del_flag = 0
             <if test="formName != null  and formName != ''"> and form_name like concat('%', #{formName}, '%')</if>
-            <if test="formData != null  and formData != ''"> and form_data = #{formData}</if>
+<!--            <if test="formData != null  and formData != ''"> and form_data = #{formData}</if>-->
             <if test="nodeId != null  and nodeId != ''"> and node_id = #{nodeId}</if>
             <if test="deptId != null  and deptId != ''"> and dept_id = #{deptId}</if>
         </where>
+        order by `order`
     </select>
     
     <select id="selectFormJsonById" parameterType="Long" resultMap="FormJsonResult">
         <include refid="selectFormJsonVo"/>
         where id = #{id} and del_flag = 0
     </select>
-        
+    <select id="countFormByNodeIdAndDeptId" resultType="java.lang.Integer">
+        select count(*) from form_json where node_id=#{param1} and dept_id = #{param2}
+    </select>
+
     <insert id="insertFormJson" parameterType="com.gox.basic.domain.FormJson">
         insert into form_json
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -50,6 +55,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="formData != null and formData != ''">form_data,</if>
             <if test="nodeId != null and nodeId != ''">node_id,</if>
             <if test="deptId != null and deptId != ''">dept_id,</if>
+            <if test="order != null and order != ''">`order`,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
@@ -62,6 +68,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="formData != null and formData != ''">#{formData},</if>
             <if test="nodeId != null and nodeId != ''">#{nodeId},</if>
             <if test="deptId != null and deptId != ''">#{deptId},</if>
+            <if test="order != null and order != ''">#{order},</if>
          </trim>
     </insert>
 
@@ -77,12 +84,26 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="formData != null and formData != ''">form_data = #{formData},</if>
             <if test="nodeId != null and nodeId != ''">node_id = #{nodeId},</if>
             <if test="deptId != null and deptId != ''">dept_id = #{nodeId},</if>
+            <if test="order != null and order != ''">`order` = #{order},</if>
         </trim>
         where id = #{id}
     </update>
 
     <update id="deleteFormJsonById" parameterType="Long">
         update form_json set del_flag=1 where id = #{id}
+    </update>
+    <update id="updateFormOrderBatch">
+        UPDATE
+        form_json
+        SET `order` = CASE
+        <foreach collection="list" item="item" index="index">
+            WHEN id = #{item.id} THEN #{item.order}
+        </foreach>
+        END
+        WHERE id IN
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item.id}
+        </foreach>
     </update>
 
     <delete id="deleteFormJsonByIds" parameterType="String">

@@ -36,6 +36,8 @@ public interface IFormJsonService
      */
     public int insertFormJson(FormJson formJson);
 
+    int updateFormOrderBatch(Iterable<FormJson> formJsons);
+
     /**
      * 修改单json存储
      * 

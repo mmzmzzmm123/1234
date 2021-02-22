@@ -29,7 +29,6 @@ public class FormJson extends BaseEntity
     /** 表单名字 */
     @Excel(name = "表单名字")
     private String formName;
-
     /** 表单json */
     @Excel(name = "表单json")
     private String formData;
@@ -37,9 +36,19 @@ public class FormJson extends BaseEntity
     private Long nodeId;
     @Excel(name = "部门id")
     private Long deptId;
+    @Excel(name = "排序")
+    private Integer order;
     /** 删除标志 */
     private String delFlag;
     private transient FormDesignerData formDesignerData;
+
+    public Integer getOrder() {
+        return order;
+    }
+
+    public void setOrder(Integer order) {
+        this.order = order;
+    }
 
     public FormDesignerData getFormDesignerData() {
         return formDesignerData;

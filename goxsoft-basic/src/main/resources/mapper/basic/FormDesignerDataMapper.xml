@@ -43,7 +43,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectFormDesignerDataVo"/>
         where id = #{id}
     </select>
-        
+    <select id="selectAll" resultMap="FormDesignerDataResult">
+        <include refid="selectFormDesignerDataVo"/>
+    </select>
+
     <insert id="insertFormDesignerData" parameterType="FormDesignerData">
         insert into form_designer_data
         <trim prefix="(" suffix=")" suffixOverrides=",">

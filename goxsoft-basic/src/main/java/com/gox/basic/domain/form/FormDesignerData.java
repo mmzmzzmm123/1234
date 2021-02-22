@@ -4,9 +4,10 @@ import com.alibaba.fastjson.annotation.JSONField;
 import com.google.common.base.Objects;
 import com.gox.common.plugin.AutoId;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class FormDesignerData{
+public class FormDesignerData implements Serializable {
 	@AutoId
 	@JSONField(serialize = false)
 	private Long id;

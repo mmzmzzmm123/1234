@@ -89,8 +89,8 @@ public class FormJsonController extends BaseController
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
         FormJson formJson = formJsonService.selectFormJsonById(id);
-        FormDesignerData data = formDesignerDataService.selectFormDesignerDataById(id);
-        formJson.setFormData(JSONObject.toJSONString(data));
+//        FormDesignerData data = formDesignerDataService.selectFormDesignerDataById(id);
+//        formJson.setFormData(JSONObject.toJSONString(data));
         return AjaxResult.success(formJson);
 
     }
@@ -121,6 +121,12 @@ public class FormJsonController extends BaseController
             return toAjax(formJsonService.updateFormJson(formJson));
         }
         return toAjax(formJsonService.insertFormJson(formJson));
+    }
+    @PreAuthorize("@ss.hasPermi('basic:json:edit')")
+    @Log(title = "表单json排序", businessType = BusinessType.UPDATE)
+    @PutMapping("/order")
+    public AjaxResult editOrder(@RequestBody List<FormJson> formJsons){
+        return toAjax(formJsonService.updateFormOrderBatch(formJsons));
     }
 //    /**
 //     * 修改表单json

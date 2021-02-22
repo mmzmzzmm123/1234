@@ -20,13 +20,13 @@ public interface IFormDesignerDataService
      */
     public FormDesignerData selectFormDesignerDataById(Long id);
 
-    /**
-     * 查询【请填写功能名称】列表
-     * 
-     * @param formDesignerData 【请填写功能名称】
-     * @return 【请填写功能名称】集合
-     */
-    public List<FormDesignerData> selectFormDesignerDataList(FormDesignerData formDesignerData);
+//    /**
+//     * 查询【请填写功能名称】列表
+//     *
+//     * @param formDesignerData 【请填写功能名称】
+//     * @return 【请填写功能名称】集合
+//     */
+//    public List<FormDesignerData> selectFormDesignerDataList(FormDesignerData formDesignerData);
 
     /**
      * 新增【请填写功能名称】

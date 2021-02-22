@@ -1,5 +1,6 @@
 package com.gox.basic.service.impl;
 
+import com.gox.common.core.redis.RedisCache;
 import com.gox.common.utils.DateUtils;
 import com.gox.basic.domain.FormJson;
 import com.gox.basic.domain.form.FormDesignerData;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
 
 /**
@@ -26,6 +28,15 @@ public class FormJsonServiceImpl implements IFormJsonService
     private FormJsonMapper formJsonMapper;
     @Autowired
     private IFormDesignerDataService formDesignerDataService;
+    @Autowired
+    private RedisCache redisCache;
+    @PostConstruct
+    public void init(){
+        List<FormJson> list = formJsonMapper.selectFormJsonList(new FormJson());
+        for (FormJson formJson : list) {
+            redisCache.setCacheMapValue("form",formJson.getId()+"",formJson);
+        }
+    }
     /**
      * 查询单json存储
      * 
@@ -35,7 +46,11 @@ public class FormJsonServiceImpl implements IFormJsonService
     @Override
     public FormJson selectFormJsonById(Long id)
     {
-        return formJsonMapper.selectFormJsonById(id);
+        FormJson f = redisCache.getCacheMapValue("form",id+"");
+        if (f==null){
+            return formJsonMapper.selectFormJsonById(id);
+        }
+        return f;
     }
 
     /**
@@ -60,12 +75,24 @@ public class FormJsonServiceImpl implements IFormJsonService
     public int insertFormJson(FormJson formJson)
     {
         FormDesignerData form = formJson.getFormDesignerData();
-        form.setId(formJson.getId());
-        formDesignerDataService.insertFormDesignerData(form);
+        if (form!=null){
+            form.setId(formJson.getId());
+            formDesignerDataService.insertFormDesignerData(form);
+        }
         formJson.setCreateTime(DateUtils.getNowDate());
-        return formJsonMapper.insertFormJson(formJson);
+        formJson.setOrder(formJsonMapper.countFormByNodeIdAndDeptId(formJson.getNodeId(),formJson.getDeptId())+1);
+        if(formJsonMapper.insertFormJson(formJson)==1) {
+            redisCache.setCacheMapValue("form",formJson.getId()+"",formJson);
+        }
+        return 1;
     }
-
+    @Override
+    public int updateFormOrderBatch(Iterable<FormJson> formJsons){
+        for (FormJson formJson : formJsons) {
+            redisCache.setCacheMapValue("form",formJson.getId()+"",formJson);
+        }
+        return formJsonMapper.updateFormOrderBatch(formJsons);
+    }
     /**
      * 修改单json存储
      * 
@@ -80,7 +107,11 @@ public class FormJsonServiceImpl implements IFormJsonService
         formDesignerDataService.deleteFormDesignerDataById(formJson.getId());
         formDesignerDataService.insertFormDesignerData(form);
         formJson.setUpdateTime(DateUtils.getNowDate());
-        return formJsonMapper.updateFormJson(formJson);
+        if (formJsonMapper.updateFormJson(formJson)==1){
+            redisCache.setCacheMapValue("form",formJson.getId()+"",formJson);
+            return 1;
+        }
+        return 0;
     }
 
     /**
@@ -92,7 +123,13 @@ public class FormJsonServiceImpl implements IFormJsonService
     @Override
     public int deleteFormJsonByIds(Long[] ids)
     {
-        return formJsonMapper.deleteFormJsonByIds(ids);
+
+        if(formJsonMapper.deleteFormJsonByIds(ids)==ids.length){
+            for (Long id : ids) {
+                redisCache.deleteHashObject("form",id+"");
+            }
+        }
+        return ids.length;
     }
 
     /**
@@ -104,6 +141,10 @@ public class FormJsonServiceImpl implements IFormJsonService
     @Override
     public int deleteFormJsonById(Long id)
     {
-        return formJsonMapper.deleteFormJsonById(id);
+        if (formJsonMapper.deleteFormJsonById(id)==1){
+            redisCache.deleteHashObject("form",id+"");
+            return 1;
+        }
+        return 0;
     }
 }
