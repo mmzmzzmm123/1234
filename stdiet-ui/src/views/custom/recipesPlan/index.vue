@@ -607,7 +607,7 @@ export default {
     },
     handleBuild(data) {
       // console.log(data);
-      const { startDate, endDate, id, orderId, recipesId } = data;
+      const { startDate, endDate, id, cusId, recipesId } = data;
 
       // const params = { id: data.id, cusId: data.orderId };
       // const path = `/recipes/build/${orderId}/${id}/${recipesId || 0}`;
@@ -617,7 +617,7 @@ export default {
       // });
       const queryParam = {
         planId: id,
-        cusId: orderId,
+        cusId,
       };
       if (!recipesId) {
         queryParam.startDate = startDate;

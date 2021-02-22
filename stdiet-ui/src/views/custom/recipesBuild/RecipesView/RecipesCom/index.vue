@@ -242,7 +242,7 @@ export default {
           }
           return arr;
         }, []);
-      console.log(mData);
+      // console.log(mData);
       return mData;
     },
     ...mapGetters(["typeDict"]),
@@ -277,7 +277,7 @@ export default {
       this.deleteDishes({ num: this.num - 1, id: data.id });
     },
     handleOnWeightChange(data, weight) {
-      console.log({ data, weight });
+      // console.log({ data, weight });
       this.updateDishes({
         num: this.num - 1,
         dishesId: data.dishesId,
@@ -286,7 +286,7 @@ export default {
       });
     },
     handleOnCustomUnitChange(data, { cusWeight, cusUnit }) {
-      console.log({ data, cusWeight, cusUnit });
+      // console.log({ data, cusWeight, cusUnit });
       this.updateDishes({
         num: this.num - 1,
         dishesId: data.dishesId,

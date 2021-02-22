@@ -17,6 +17,7 @@
         <result property="updateTime"    column="update_time"    />
         <result property="updateBy"    column="update_by"    />
         <result property="delFlag"    column="del_flag"    />
+        <result property="cusId"    column="cus_id"    />
         <!-- 非持久化字段 -->
         <result property="customerId" column="cus_id"></result><!-- 客户ID -->
         <result property="customer"    column="customer"    /><!-- 客户姓名 -->
