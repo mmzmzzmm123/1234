@@ -14,10 +14,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="gzdd"    column="gzdd"    />
         <result property="rzjs"    column="rzjs"    />
         <result property="lzsj"    column="lzsj"    />
+        <result property="lxfs"    column="lxfs"    />
     </resultMap>
 
     <sql id="selectBusCbsgrxxVo">
-        select id, cbs_id, xm, sfzhm, gw, dx, gzdd, rzjs, lzsj from bus_cbsgrxx
+        select id, cbs_id, xm, sfzhm, gw, dx, gzdd, rzjs, lzsj,lxfs from bus_cbsgrxx
     </sql>
 
     <select id="selectBusCbsgrxxList" parameterType="BusCbsgrxx" resultMap="BusCbsgrxxResult">
@@ -31,6 +32,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="gzdd != null  and gzdd != ''"> and gzdd = #{gzdd}</if>
             <if test="rzjs != null "> and rzjs = #{rzjs}</if>
             <if test="lzsj != null "> and lzsj = #{lzsj}</if>
+            <if test="lxfs != null "> and lxfs = #{lxfs}</if>
         </where>
     </select>
     
@@ -50,6 +52,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="gzdd != null">gzdd,</if>
             <if test="rzjs != null">rzjs,</if>
             <if test="lzsj != null">lzsj,</if>
+            <if test="lxfs != null">lxfs,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="cbsId != null">#{cbsId},</if>
@@ -60,6 +63,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="gzdd != null">#{gzdd},</if>
             <if test="rzjs != null">#{rzjs},</if>
             <if test="lzsj != null">#{lzsj},</if>
+            <if test="lxfs != null">#{lxfs},</if>
          </trim>
     </insert>
 
@@ -74,6 +78,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="gzdd != null">gzdd = #{gzdd},</if>
             <if test="rzjs != null">rzjs = #{rzjs},</if>
             <if test="lzsj != null">lzsj = #{lzsj},</if>
+            <if test="lxfs != null">lxfs = #{lxfs},</if>
         </trim>
         where id = #{id}
     </update>

@@ -117,6 +117,9 @@ public class BusCbszzxxServiceImpl implements IBusCbszzxxService {
 	@Override
 	public int deleteByCbsId(Long cbsId) {
 		List<BusCbszzxx> busCbszzxxList = selectByCbsId(cbsId);
+		if(busCbszzxxList.isEmpty()) {
+			return 0;
+		}
 		List<Long> ids = busCbszzxxList.stream().map(BusCbszzxx::getId).collect(Collectors.toList());
 		return deleteBusCbszzxxByIds(ids.toArray(new Long[ids.size()]));
 	}

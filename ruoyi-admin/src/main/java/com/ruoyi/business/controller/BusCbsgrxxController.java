@@ -60,6 +60,7 @@ public class BusCbsgrxxController extends BaseController {
 	/**
 	 * 获取承包商工人信息详细信息
 	 */
+	@ApiOperation("根据工人ID获取工人详情")
 	@GetMapping(value = "/{id}")
 	public AjaxResult getInfo(@PathVariable("id") Long id) {
 		return AjaxResult.success(busCbsgrxxService.selectBusCbsgrxxById(id));

@@ -2,6 +2,7 @@ package com.ruoyi.framework.web.service;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -98,25 +99,19 @@ public class SysLoginService {
 	 *            用户名
 	 * @return 结果
 	 */
-	public String loginByDingTalk(String username) {
+	public Pair<String, LoginUser> loginByDingTalk(String username) {
 		try {
 			// 用户验证
 			LoginUser loginUser = (LoginUser) userDetailsService.loadUserByUsername(username);
 			AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_SUCCESS,
 					MessageUtils.message("user.login.success")));
 			// 生成token
-			return tokenService.createToken(loginUser);
+			String token = tokenService.createToken(loginUser);
+			return Pair.of(token, loginUser);
 		} catch (Exception e) {
-			if (e instanceof BadCredentialsException) {
-				AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL,
-						MessageUtils.message("user.password.not.match")));
-				throw new UserPasswordNotMatchException();
-			} else {
-				AsyncManager.me()
-						.execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, e.getMessage()));
-				throw new CustomException(e.getMessage());
-			}
+			AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, e.getMessage()));
+			throw new CustomException("用户认证失败，请与管理员联系！", e);
 		}
-		
+
 	}
 }

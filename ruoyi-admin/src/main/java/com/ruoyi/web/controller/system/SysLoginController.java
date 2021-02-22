@@ -3,6 +3,7 @@ package com.ruoyi.web.controller.system;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -87,13 +88,16 @@ public class SysLoginController {
 			String accessToken = response.getAccessToken();
 			OapiUserGetResponse userInfo = dingtalkUserService.getUserInfo(authCode, accessToken);
 			String mobile = userInfo.getMobile();
-			if(mobile == null) {
+			if (mobile == null) {
 				throw new CustomException("钉钉认证失败！");
 			}
 			AjaxResult ajax = AjaxResult.success();
 			// 生成令牌
-			String token = loginService.loginByDingTalk(mobile);
-			ajax.put(Constants.TOKEN, token);
+			Pair<String, LoginUser> userPair = loginService.loginByDingTalk(mobile);
+			ajax.put(Constants.TOKEN, userPair.getLeft());
+			LoginUser loginUser = userPair.getRight();
+			ajax.put("user", loginUser.getUser());
+			ajax.put("userType", loginUser.getUserType());
 			return ajax;
 		} catch (ApiException e) {
 			return AjaxResult.error(e.getMessage());

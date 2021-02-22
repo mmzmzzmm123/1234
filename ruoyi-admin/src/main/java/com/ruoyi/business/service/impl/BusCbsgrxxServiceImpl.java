@@ -1,6 +1,7 @@
 package com.ruoyi.business.service.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,8 +42,9 @@ public class BusCbsgrxxServiceImpl implements IBusCbsgrxxService {
 	 * @return 承包商工人信息
 	 */
 	@Override
-	public BusCbsgrxx selectBusCbsgrxxById(Long id) {
-		return busCbsgrxxMapper.selectBusCbsgrxxById(id);
+	public BusCbsgrxxVO selectBusCbsgrxxById(Long id) {
+		BusCbsgrxx busCbsgrxx = busCbsgrxxMapper.selectBusCbsgrxxById(id);
+		return selectByCbsgrxx(busCbsgrxx);
 	}
 
 	/**
@@ -146,12 +148,7 @@ public class BusCbsgrxxServiceImpl implements IBusCbsgrxxService {
 		List<BusCbsgrxx> busCbsgrxxList = busCbsgrxxMapper.selectByCbsId(cbsId);
 		List<BusCbsgrxxVO> busCbsgrxxVOList = new ArrayList<>(busCbsgrxxList.size());
 		for (BusCbsgrxx busCbsgrxx : busCbsgrxxList) {
-			Long grId = busCbsgrxx.getId();
-			List<BusGrzfxx> busGrzfxxList = busGrzfxxService.selectByCbsIdAndGrId(cbsId, grId);
-			List<String> zzxxFileUrls = busGrzfxxList.stream().map(BusGrzfxx::getZztp).collect(Collectors.toList());
-			BusCbsgrxxVO busCbsgrxxVO = new BusCbsgrxxVO();
-			BeanUtils.copyProperties(busCbsgrxx, busCbsgrxxVO);
-			busCbsgrxxVO.setZzxxFileUrls(zzxxFileUrls);
+			BusCbsgrxxVO busCbsgrxxVO = selectByCbsgrxx(busCbsgrxx);
 			busCbsgrxxVOList.add(busCbsgrxxVO);
 		}
 		return busCbsgrxxVOList;
@@ -168,7 +165,22 @@ public class BusCbsgrxxServiceImpl implements IBusCbsgrxxService {
 	@Override
 	public int deleteByCbsId(Long cbsId) {
 		List<BusCbsgrxxVO> busCbszzxxList = selectByCbsId(cbsId);
+		if (busCbszzxxList.isEmpty()) {
+			return 0;
+		}
 		List<Long> ids = busCbszzxxList.stream().map(BusCbsgrxxVO::getId).collect(Collectors.toList());
 		return deleteBusCbsgrxxByIds(ids.toArray(new Long[ids.size()]));
+	}
+
+	private BusCbsgrxxVO selectByCbsgrxx(BusCbsgrxx busCbsgrxx) {
+		Long grId = busCbsgrxx.getId();
+		Long cbsId = busCbsgrxx.getCbsId();
+		List<BusGrzfxx> busGrzfxxList = busGrzfxxService.selectByCbsIdAndGrId(cbsId, grId);
+		List<String> zzxxFileUrls = busGrzfxxList.stream().filter(e -> e.getZztp() != null)
+				.map(e -> e.getZztp().split(",")).flatMap(Arrays::stream).collect(Collectors.toList());
+		BusCbsgrxxVO busCbsgrxxVO = new BusCbsgrxxVO();
+		BeanUtils.copyProperties(busCbsgrxx, busCbsgrxxVO);
+		busCbsgrxxVO.setZzxxFileUrls(zzxxFileUrls);
+		return busCbsgrxxVO;
 	}
 }

@@ -20,7 +20,7 @@ public interface IBusCbsgrxxService {
 	 *            承包商工人信息ID
 	 * @return 承包商工人信息
 	 */
-	public BusCbsgrxx selectBusCbsgrxxById(Long id);
+	public BusCbsgrxxVO selectBusCbsgrxxById(Long id);
 
 	/**
 	 * 查询承包商工人信息列表

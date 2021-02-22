@@ -3,6 +3,10 @@ package com.ruoyi.business.domain.vo;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.validation.constraints.NotNull;
+
+import org.springframework.validation.annotation.Validated;
+
 import com.ruoyi.common.annotation.Excel;
 
 /**
@@ -11,6 +15,7 @@ import com.ruoyi.common.annotation.Excel;
  * @author yaowei
  * @date 2021-02-21
  */
+@Validated
 public class BusCbsxxSaveVO implements Serializable {
 
 	/**
@@ -18,9 +23,11 @@ public class BusCbsxxSaveVO implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	/** $column.columnComment */
 	private Long id;
 
+	@NotNull(message="承包商ID不能为空")
+	private Long cbsId;
+	
 	/** 承包商名称 */
 	@Excel(name = "承包商名称")
 	private String cbsName;
@@ -35,7 +42,7 @@ public class BusCbsxxSaveVO implements Serializable {
 
 	/** 擅长工作 */
 	@Excel(name = "擅长工作")
-	private String scgz;
+	private String zcdz;
 
 	private List<String> zzxxFileUrls;
 
@@ -45,6 +52,14 @@ public class BusCbsxxSaveVO implements Serializable {
 
 	public Long getId() {
 		return id;
+	}
+	
+	public Long getCbsId() {
+		return cbsId;
+	}
+
+	public void setCbsId(Long cbsId) {
+		this.cbsId = cbsId;
 	}
 
 	public void setCbsName(String cbsName) {
@@ -71,12 +86,12 @@ public class BusCbsxxSaveVO implements Serializable {
 		return lxfs;
 	}
 
-	public void setScgz(String scgz) {
-		this.scgz = scgz;
+	public String getZcdz() {
+		return zcdz;
 	}
 
-	public String getScgz() {
-		return scgz;
+	public void setZcdz(String zcdz) {
+		this.zcdz = zcdz;
 	}
 
 	public List<String> getZzxxFileUrls() {
