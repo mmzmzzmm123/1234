@@ -1,61 +1,50 @@
 import { getOrder } from "@/api/custom/order";
 import { getCustomerPhysicalSignsByCusId } from "@/api/custom/customer";
 import { dealHealthy } from "@/utils/healthyData";
-import { getRecipesPlan } from "@/api/custom/recipesPlan";
 import {
   getRecipesApi,
   updateDishesDetailApi,
   addDishesApi,
-  deleteDishesApi
+  deleteDishesApi,
+  addRecipesApi
 } from "@/api/custom/recipes";
 import { getDicts } from "@/api/system/dict/data";
-import produce from "immer";
-import { updateDishes } from "@/api/custom/dishes";
+import dayjs from "dayjs";
 
 const oriState = {
+  cusId: undefined,
+  planId: undefined,
   recipesId: undefined,
   healthyData: {},
+  healthDataLoading: false,
   healthyDataType: 0,
   recipesData: [],
+  recipesDataLoading: false,
   cusUnitOptions: [],
   cusWeightOptions: [],
   dishesTypeOptions: [],
   typeOptions: [],
-  currentDay: -1
+  currentDay: -1,
+  startDate: "",
+  endDate: ""
 };
 
 const mutations = {
-  setRecipiesId(state, payload) {
-    state.recipesId = payload.recipesId;
-  },
-  setHealtyData(state, payload) {
-    state.healthyDataType = payload.healthyDataType;
-    state.healthyData = payload.healthyData;
-  },
-  setRecipesData(state, payload) {
-    state.recipesData = payload.recipesData;
-    // console.log(payload.recipesData);
-  },
   updateRecipesDishesDetail(state, payload) {
     const tarDishes = state.recipesData[payload.num].dishes.find(
-      obj => obj.id === payload.dishesId
+      obj => obj.dishesId === payload.dishesId
     );
     if (tarDishes) {
       const tarIgd = tarDishes.igdList.find(obj => obj.id === payload.igdId);
       if (tarIgd) {
-        payload.weight && (tarIgd.weight = payload.weight);
-        payload.cusWeight && (tarIgd.cusWeight = payload.cusWeight);
-        payload.cusUnit && (tarIgd.cusUnit = payload.cusUnit);
+        Object.keys(payload).forEach(key => {
+          tarIgd[key] = payload[key];
+        });
       }
     }
   },
   addRecipesDishes(state, payload) {
     state.recipesData[payload.num].dishes.push(payload.data);
-  },
-  updateOptions(state, payload) {
-    Object.keys(payload).forEach(key => {
-      state[key] = payload[key];
-    });
   },
   setCurrentDay(state, payload) {
     state.currentDay =
@@ -67,6 +56,15 @@ const mutations = {
       payload.num
     ].dishes.filter(obj => obj.id !== payload.dishesId);
   },
+  updateStateData(state, payload) {
+    Object.keys(payload).forEach(key => {
+      state[key] = payload[key];
+    });
+  },
+  setDate(state, payload) {
+    state.startDate = payload.startDate;
+    state.endDate = payload.endDate;
+  },
   clean(state) {
     // console.log("clean");
     Object.keys(oriState).forEach(key => {
@@ -76,109 +74,137 @@ const mutations = {
 };
 
 const actions = {
-  async init({ commit }, payload) {
+  async init({ commit, dispatch }, payload) {
     const orderResult = await getOrder(payload.cusId);
     if (!orderResult.data.cusId) {
       throw new Error("未找到用户id");
     }
+
+    commit("updateStateData", {
+      ...payload,
+      cusId: orderResult.data.cusId
+    });
     //
     getDicts("cus_cus_unit").then(response => {
-      commit("updateOptions", { cusUnitOptions: response.data });
+      commit("healthDataLoading", { cusUnitOptions: response.data });
     });
     getDicts("cus_cus_weight").then(response => {
-      commit("updateOptions", { cusWeightOptions: response.data });
+      commit("healthDataLoading", { cusWeightOptions: response.data });
     });
     getDicts("cus_dishes_type").then(response => {
-      commit("updateOptions", { typeOptions: response.data });
+      commit("healthDataLoading", { typeOptions: response.data });
     });
     getDicts("cus_dishes_type").then(response => {
-      commit("updateOptions", { dishesTypeOptions: response.data });
+      commit("healthDataLoading", { dishesTypeOptions: response.data });
     });
 
-    // 健康数据
-    const healthyDataResult = await getCustomerPhysicalSignsByCusId(
-      orderResult.data.cusId
-    );
-    if (healthyDataResult.code === 200) {
-      if (!healthyDataResult.data.customerHealthy) {
-        throw new Error("客户还没填写健康评估表");
-      }
-      commit("setHealtyData", {
-        healthyDataType: healthyDataResult.data.type,
-        healthyData: dealHealthy(healthyDataResult.data.customerHealthy)
-      });
-    } else {
-      throw new Error(healthyDataResult.msg);
+    //
+    if (orderResult.data.cusId) {
+      dispatch("getHealthyData", { cusId: orderResult.data.cusId });
     }
 
     // 食谱数据
     if (payload.recipesId) {
-      const recipesDataResult = await getRecipesApi(payload.recipesId);
-      if (recipesDataResult.code === 200) {
-        commit("setRecipesData", {
-          recipesData: recipesDataResult.data.map(dayData => {
-            return {
-              id: dayData.id,
-              numDay: dayData.numDay,
-              dishes: dayData.dishes.reduce((arr, cur) => {
-                if (
-                  cur.id > -1 &&
-                  cur.name &&
-                  cur.igdList.length > 0 &&
-                  cur.type !== "0"
-                ) {
-                  arr.push({
-                    id: cur.id,
-                    cid: cur.cid,
-                    name: cur.name,
-                    methods: cur.methods,
-                    type: cur.type,
-                    isMain: cur.isMain,
-                    igdList: cur.igdList.reduce((igdArr, igdData) => {
-                      if (igdData.id > 0) {
-                        const tarDetail = cur.detail.find(
-                          obj => obj.id === igdData.id
-                        );
-                        igdArr.push({
-                          id: igdData.id,
-                          name: igdData.name,
-                          carbonRatio: igdData.carbonRatio,
-                          fatRatio: igdData.fatRatio,
-                          proteinRatio: igdData.proteinRatio,
-                          cusUnit: tarDetail
-                            ? tarDetail.cus_unit
-                            : igdData.cusUnit,
-                          cusWeight: tarDetail
-                            ? parseFloat(tarDetail.cus_weight)
-                            : igdData.cusWeight,
-                          weight: tarDetail
-                            ? parseFloat(tarDetail.weight)
-                            : igdData.weight,
-                          notRec: igdData.notRec,
-                          rec: igdData.rec,
-                          type: igdData.type
-                        });
-                      }
-                      return igdArr;
-                    }, [])
-                  });
-                }
-                return arr;
-              }, [])
-            };
-          })
-        });
-      } else {
-        throw new Error(recipesDataResult.msg);
-      }
+      dispatch("getRecipesInfo", payload);
     }
   },
-  async saveRecipes({ commit, state }, payload) {
-    const { recipesData } = state;
-    const params = recipesData.map(menu => {
-      return menu.dishes.map(dObj => {
+  async getHealthyData({ commit }, payload) {
+    commit("updateStateData", { healthDataLoading: true });
+    // 健康数据
+    const healthyDataResult = await getCustomerPhysicalSignsByCusId(
+      payload.cusId
+    );
+    let healthyData = undefined,
+      healthyDataType = 0;
+    if (healthyDataResult.code === 200) {
+      if (!healthyDataResult.data.customerHealthy) {
+        throw new Error("客户还没填写健康评估表");
+      }
+      healthyDataType = healthyDataResult.data.type;
+      healthyData = dealHealthy(healthyDataResult.data.customerHealthy);
+    } else {
+      throw new Error(healthyDataResult.msg);
+    }
+    commit("updateStateData", {
+      healthDataLoading: false,
+      healthyDataType,
+      healthyData
+    });
+  },
+  async getRecipesInfo({ commit }, payload) {
+    commit("updateStateData", {
+      recipesDataLoading: true
+    });
+    const recipesDataResult = await getRecipesApi(payload.recipesId);
+    let recipesData = undefined;
+    if (recipesDataResult.code === 200) {
+      recipesData = recipesDataResult.data.map(dayData => {
         return {
-          dishesId: dObj.id,
+          id: dayData.id,
+          numDay: dayData.numDay,
+          dishes: dayData.dishes.reduce((arr, cur) => {
+            if (
+              cur.dishesId > -1 &&
+              cur.name &&
+              cur.igdList.length > 0 &&
+              cur.type !== "0"
+            ) {
+              arr.push({
+                id: cur.id,
+                dishesId: cur.dishesId,
+                name: cur.name,
+                menuId: cur.menuId,
+                methods: cur.methods,
+                type: cur.type,
+                isMain: cur.isMain,
+                igdList: cur.igdList.reduce((igdArr, igdData) => {
+                  if (igdData.id > 0) {
+                    const tarDetail = cur.detail.find(
+                      obj => obj.id === igdData.id
+                    );
+                    igdArr.push({
+                      id: igdData.id,
+                      name: igdData.name,
+                      carbonRatio: igdData.carbonRatio,
+                      fatRatio: igdData.fatRatio,
+                      proteinRatio: igdData.proteinRatio,
+                      cusUnit: tarDetail ? tarDetail.cus_unit : igdData.cusUnit,
+                      cusWeight: tarDetail
+                        ? parseFloat(tarDetail.cus_weight)
+                        : igdData.cusWeight,
+                      weight: tarDetail
+                        ? parseFloat(tarDetail.weight)
+                        : igdData.weight,
+                      notRec: igdData.notRec,
+                      rec: igdData.rec,
+                      type: igdData.type
+                    });
+                  }
+                  return igdArr;
+                }, [])
+              });
+            }
+            return arr;
+          }, [])
+        };
+      });
+    } else {
+      throw new Error(recipesDataResult.msg);
+    }
+    commit("updateStateData", { recipesDataLoading: false, recipesData });
+  },
+  async saveRecipes({ commit, dispatch, state }, payload) {
+    const { recipesData, cusId, planId } = state;
+    const params = {
+      cusId,
+      planId,
+      menus: recipesData.map((menu, idx) => ({
+        date: dayjs(state.startDate)
+          .add(idx, "day")
+          .format("YYYY-MM-DD"),
+        cusId,
+        dishes: menu.dishes.map(dObj => ({
+          dishesId: dObj.dishesId,
           type: dObj.type,
           detail: dObj.igdList.map(igd => ({
             id: igd.id,
@@ -186,72 +212,90 @@ const actions = {
             cus_unit: igd.cusUnit,
             cus_weight: igd.cusWeight
           }))
-        };
-      });
-    });
-    console.log(params);
+        }))
+      }))
+    };
+    const result = await addRecipesApi(params);
+    if (result.code === 200) {
+      dispatch("getRecipesInfo", { recipesId: result.data });
+    }
+    // console.log(params);
   },
   async addDishes({ commit, state }, payload) {
-    const tarRecipesObj = state.recipesData[payload.num];
-    if (tarRecipesObj && payload.data) {
-      const { id, type, igdList } = payload.data;
-      const params = {
-        menuId: tarRecipesObj.id,
-        id: id,
-        type: type,
-        detail: igdList.map(igd => ({
-          id: igd.id,
-          weight: igd.weight,
-          cus_unit: igd.cusUnit,
-          cus_weight: igd.cusWeight
-        }))
-      };
-      const result = await addDishesApi(params);
-      if (result.code === 200) {
-        payload.data.cid = result.data;
-        commit("addRecipesDishes", payload);
-      }
-      console.log(result);
-    }
-  },
-  async updateDishes({ commit, state }, payload) {
-    const tarDishes = state.recipesData[payload.num].dishes.find(
-      obj => obj.id === payload.dishesId
-    );
-    if (tarDishes) {
-      const mTarDishes = JSON.parse(JSON.stringify(tarDishes));
-      const tarIgd = mTarDishes.igdList.find(obj => obj.id === payload.igdId);
-      if (tarIgd) {
-        payload.weight && (tarIgd.weight = payload.weight);
-        payload.cusWeight && (tarIgd.cusWeight = payload.cusWeight);
-        payload.cusUnit && (tarIgd.cusUnit = payload.cusUnit);
-
+    if (state.recipesId) {
+      const tarRecipesObj = state.recipesData[payload.num];
+      if (tarRecipesObj && payload.data) {
+        const { dishesId, type, igdList } = payload.data;
         const params = {
-          cid: mTarDishes.cid,
-          detail: mTarDishes.igdList.map(igd => ({
+          type,
+          dishesId,
+          menuId: tarRecipesObj.id,
+          detail: igdList.map(igd => ({
             id: igd.id,
             weight: igd.weight,
             cus_unit: igd.cusUnit,
             cus_weight: igd.cusWeight
           }))
         };
-        const result = await updateDishesDetailApi(params);
+        const result = await addDishesApi(params);
         if (result.code === 200) {
-          commit("updateRecipesDishesDetail", payload);
+          payload.menuId = tarRecipesObj.id;
+          // 更新id
+          payload.data.id = result.data;
+          commit("addRecipesDishes", payload);
         }
+      } else {
+        commit("addRecipesDishes", payload);
+      }
+      // console.log(result);
+    }
+  },
+  async updateDishes({ commit, state }, payload) {
+    if (state.recipesId) {
+      const tarDishes = state.recipesData[payload.num].dishes.find(
+        obj => obj.dishesId === payload.dishesId
+      );
+      if (tarDishes) {
+        const mTarDishes = JSON.parse(JSON.stringify(tarDishes));
+        const tarIgd = mTarDishes.igdList.find(obj => obj.id === payload.igdId);
+        if (tarIgd) {
+          payload.weight && (tarIgd.weight = payload.weight);
+          payload.cusWeight && (tarIgd.cusWeight = payload.cusWeight);
+          payload.cusUnit && (tarIgd.cusUnit = payload.cusUnit);
+
+          const params = {
+            id: mTarDishes.id,
+            detail: mTarDishes.igdList.map(igd => ({
+              id: igd.id,
+              weight: igd.weight,
+              cus_unit: igd.cusUnit,
+              cus_weight: igd.cusWeight
+            }))
+          };
+          const result = await updateDishesDetailApi(params);
+          if (result.code === 200) {
+            commit("updateRecipesDishesDetail", payload);
+          }
+        }
+      } else {
+        commit("updateRecipesDishesDetail", payload);
       }
     }
   },
   async deleteDishes({ commit, state }, payload) {
-    const tarDishes = state.recipesData[payload.num].dishes.find(
-      obj => obj.id === payload.dishesId
-    );
-    if (tarDishes) {
-      const result = await deleteDishesApi(tarDishes.cid);
-      if (result.code === 200) {
-        commit("deleteSomeDayDishes", payload);
+    if (state.recipesId) {
+      const tarDishes = state.recipesData[payload.num].dishes.find(
+        obj => obj.id === payload.id
+      );
+      if (tarDishes) {
+        const result = await deleteDishesApi(tarDishes.id);
+        if (result.code === 200) {
+          commit("deleteSomeDayDishes", payload);
+        }
+        // console.log(params);
       }
-      // console.log(params);
+    } else {
+      commit("deleteSomeDayDishes", payload);
     }
   },
   async deleteMenu({ commit }, payload) {}
@@ -259,6 +303,9 @@ const actions = {
 
 const getters = {
   analyseData: state => {
+    if (!state.recipesData.length) {
+      return [];
+    }
     const datas =
       state.currentDay > -1
         ? [state.recipesData[state.currentDay]]

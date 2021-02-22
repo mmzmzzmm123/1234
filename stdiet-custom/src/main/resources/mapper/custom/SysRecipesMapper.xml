@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.stdiet.custom.mapper.SysRecipesMapper">
 
-    <resultMap type="SysRecipes" id="SysRecipesResult">
+    <resultMap type="SysRecipesDaily" id="SysRecipesResult">
         <result property="id" column="id"/>
         <result property="numDay" column="num_day"/>
         <result property="updateBy" column="update_by"/>
@@ -15,9 +15,10 @@
         <association property="dishes" column="id" select="selectDishesByMenuId"/>
     </resultMap>
 
-    <resultMap id="SysDishesResult" type="SysDishes">
-        <result property="id" column="dishes_id"/>
-        <result property="cId" column="id" />
+    <resultMap id="SysDishesResult" type="SysRecipesDailyDishes">
+        <result property="dishesId" column="dishes_id"/>
+        <result property="menuId" column="menu_id"/>
+        <result property="id" column="id" />
         <result property="name" column="name"/>
         <result property="type" column="type"/>
         <result property="methods" column="methods"/>
@@ -78,26 +79,26 @@
     </select>
 
     <!-- 更新菜品-->
-    <update id="updateDishesDetail" parameterType="SysDishes">
+    <update id="updateDishesDetail" parameterType="SysRecipesDailyDishes">
         update sys_customer_menu_dishes
         <trim prefix="SET" suffixOverrides=",">
             <if test="detail != null">detail = #{detail, jdbcType=OTHER, typeHandler=com.stdiet.custom.typehandler.ArrayJsonHandler},</if>
         </trim>
-        where id = #{cId}
+        where id = #{id}
     </update>
 
     <!-- 插入菜品-->
-    <insert id="insertDishes" parameterType="SysDishes" useGeneratedKeys="true" keyProperty="id">
+    <insert id="addDishes" parameterType="SysRecipesDailyDishes" useGeneratedKeys="true" keyProperty="id">
         insert into sys_customer_menu_dishes
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="menuId != null">menu_id,</if>
-            <if test="id != null">dishes_id,</if>
+            <if test="dishesId != null">dishes_id,</if>
             <if test="type != null">type,</if>
             <if test="detail != null">detail,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="menuId != null">#{menuId},</if>
-            <if test="id != null">#{id},</if>
+            <if test="dishesId != null">#{dishesId},</if>
             <if test="type != null">#{type},</if>
             <if test="detail != null">#{detail, jdbcType=OTHER, typeHandler=com.stdiet.custom.typehandler.ArrayJsonHandler},</if>
         </trim>
@@ -105,7 +106,39 @@
 
     <!-- 删除菜品-->
     <delete id="deleteDishes" parameterType="Long">
-        delete from sys_customer_menu_dishes where id = #{cId}
+        delete from sys_customer_menu_dishes where id = #{id}
     </delete>
+
+    <!--    查询已有食谱天数-->
+    <select id="getNumDayByCusId" parameterType="Long" resultType="Integer">
+        select count(*) from sys_customer_daily_menu where cus_id = #{id}
+    </select>
+    
+    <!--  新增食谱  -->
+    <insert id="addRecipes" parameterType="SysRecipes" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_customer_menu
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="cusId != null">cus_id,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="cusId != null">#{cusId},</if>
+        </trim>
+    </insert>
+
+    <!--  新增每菜单 -->
+    <insert id="bashAddMenus">
+        insert into sys_customer_daily_menu (id, num_day, date, recipes_id, cus_id) values
+        <foreach collection="list" separator="," item="item" index="index">
+            (#{item.id}, #{item.numDay}, #{item.date}, #{item.recipesId}, #{item.cusId})
+        </foreach>
+    </insert>
+
+    <!--    新增菜单对应菜品-->
+    <insert id="bashAddDishes" >
+        insert into sys_customer_menu_dishes (menu_id, type, dishes_id, detail) values
+        <foreach collection="list" separator="," item="item" index="index">
+            (#{item.menuId}, #{item.type}, #{item.dishesId}, #{item.detail, jdbcType=OTHER, typeHandler=com.stdiet.custom.typehandler.ArrayJsonHandler})
+        </foreach>
+    </insert>
 
 </mapper>

@@ -161,7 +161,7 @@ export default {
       const mData = this.data.dishes
         .sort((a, b) => a.type - b.type)
         .reduce((arr, cur, idx) => {
-          if (cur.id > 0 && cur.type !== "0") {
+          if (cur.dishesId > 0 && cur.type !== "0") {
             cur.igdList.forEach((igd) => {
               let lastTypeHit = false,
                 lastNameHit = false;
@@ -194,6 +194,8 @@ export default {
 
               arr.push({
                 id: cur.id,
+                dishesId: cur.dishesId,
+                menuId: cur.menuId,
                 name: cur.name,
                 type: cur.type,
                 isMain: cur.isMain,
@@ -272,21 +274,22 @@ export default {
     },
     handleOnDelete(data) {
       // console.log(data);
-      this.deleteDishes({ num: this.num - 1, dishesId: data.id });
+      this.deleteDishes({ num: this.num - 1, id: data.id });
     },
     handleOnWeightChange(data, weight) {
-      // console.log({ data, weight });
+      console.log({ data, weight });
       this.updateDishes({
         num: this.num - 1,
-        dishesId: data.id,
+        dishesId: data.dishesId,
         igdId: data.igdId,
         weight,
       });
     },
     handleOnCustomUnitChange(data, { cusWeight, cusUnit }) {
+      console.log({ data, cusWeight, cusUnit });
       this.updateDishes({
         num: this.num - 1,
-        dishesId: data.id,
+        dishesId: data.dishesId,
         igdId: data.igdId,
         cusWeight,
         cusUnit,

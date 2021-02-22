@@ -23,10 +23,6 @@ public class SysDishes {
      */
     private Long id;
 
-    private Long cId;
-
-    private Long menuId;
-
     /**
      * 菜品名称
      */
@@ -78,7 +74,5 @@ public class SysDishes {
 
 
     private List<SysDishesIngredient> igdList;
-
-    private JSONArray detail;
 
 }

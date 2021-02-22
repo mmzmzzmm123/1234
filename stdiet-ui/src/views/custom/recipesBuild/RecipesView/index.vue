@@ -24,6 +24,11 @@ export default {
     RecipesCom,
     RecipesAspectCom,
   },
+  computed: {
+    mCollapse() {
+      return analyseData.length ? this.collapse : false;
+    },
+  },
   data() {
     return {
       collapse: false,

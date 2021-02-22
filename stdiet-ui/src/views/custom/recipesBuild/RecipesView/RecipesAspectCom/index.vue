@@ -4,8 +4,12 @@
     :style="`height: ${collapse ? 30 : 200}px`"
   >
     <div class="header">
-      <el-button size="mini" type="primary" @click="handleOnSave"
-        >保存</el-button
+      <el-button
+        v-if="!recipesId"
+        size="mini"
+        type="primary"
+        @click="handleOnSave"
+        >生成食谱</el-button
       >
       <el-button size="mini" type="text" @click="handleCollapseClick">{{
         `${collapse ? "展开分析" : "收起分析"}`
@@ -21,7 +25,12 @@
         height="170px"
         width="500px"
       />
-      <PieChart v-else :data="data" height="170px" width="500px" />
+      <PieChart
+        v-if="data.length === 1"
+        :data="data"
+        height="170px"
+        width="500px"
+      />
     </div>
   </div>
 </template>
@@ -29,7 +38,7 @@
 import BarChart from "./BarChart";
 import PieChart from "./PieChart";
 import { createNamespacedHelpers } from "vuex";
-const { mapActions } = createNamespacedHelpers("recipes");
+const { mapActions, mapState } = createNamespacedHelpers("recipes");
 export default {
   name: "RecipesAspectCom",
   components: {
@@ -43,7 +52,9 @@ export default {
     // console.log(this.data);
   },
   props: ["collapse", "data"],
-  computed: {},
+  computed: {
+    ...mapState(["recipesId"]),
+  },
   methods: {
     handleCollapseClick() {
       this.$emit("update:collapse", !this.collapse);

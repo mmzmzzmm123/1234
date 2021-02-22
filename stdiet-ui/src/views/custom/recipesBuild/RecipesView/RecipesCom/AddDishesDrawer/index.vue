@@ -70,8 +70,8 @@ export default {
         name: "",
         type: "",
         igdList: [],
-        recTags:[],
-        notRecTags: []
+        recTags: [],
+        notRecTags: [],
       },
     };
   },
@@ -123,8 +123,27 @@ export default {
     handleOnConfirmClick() {
       this.visible = false;
       this.active = 0;
-      this.$emit("onConfirm", this.selDishes);
-      // console.log(this.selDishes);
+
+      const {
+        id,
+        methods,
+        name,
+        notRecTags,
+        recTags,
+        type,
+        igdList,
+      } = this.selDishes;
+      this.$emit("onConfirm", {
+        id: -1,
+        dishesId: id,
+        methods,
+        name,
+        notRecTags,
+        recTags,
+        type,
+        igdList,
+      });
+      console.log(this.selDishes);
     },
   },
 };

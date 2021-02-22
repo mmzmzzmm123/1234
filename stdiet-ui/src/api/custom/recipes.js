@@ -1,5 +1,13 @@
 import request from "@/utils/request";
 
+export function addRecipesApi(data) {
+  return request({
+    url: "/custom/recipes/",
+    method: "post",
+    data
+  });
+}
+
 export function getRecipesApi(id) {
   return request({
     url: "/custom/recipes/" + id,
@@ -9,7 +17,7 @@ export function getRecipesApi(id) {
 
 export function updateDishesDetailApi(data) {
   return request({
-    url: "/custom/recipes",
+    url: "/custom/recipes/dishes",
     method: "put",
     data
   });
@@ -17,15 +25,15 @@ export function updateDishesDetailApi(data) {
 
 export function addDishesApi(data) {
   return request({
-    url: "/custom/recipes",
+    url: "/custom/recipes/dishes",
     method: "post",
     data
   });
 }
 
-export function deleteDishesApi(cid) {
+export function deleteDishesApi(id) {
   return request({
-    url: "/custom/recipes/dishes/" + cid,
+    url: "/custom/recipes/dishes/" + id,
     method: "delete"
   });
 }

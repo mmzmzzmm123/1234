@@ -1,13 +1,15 @@
 <template>
   <div class="recipes_build_wrapper">
-    <div class="left">
+    <div class="left" v-loading="recipesDataLoading">
       <RecipesView
+        v-if="!!recipesData.length"
         :data="recipesData"
         :name="healthyData.name"
         :analyseData="analyseData"
       />
+      <RecommondView v-else />
     </div>
-    <div class="right">
+    <div class="right" v-loading="healthDataLoading">
       <HealthyView :data="healthyData" v-if="healthyDataType === 0" />
       <BodySignView :data="healthyData" v-else />
     </div>
@@ -25,6 +27,7 @@ const {
 import HealthyView from "./HealthyView";
 import BodySignView from "./BodySignView";
 import RecipesView from "./RecipesView/index";
+import RecommondView from "./RecommondView";
 
 export default {
   name: "BuildRecipies",
@@ -32,12 +35,15 @@ export default {
     return {};
   },
   mounted() {
-    //
-    // console.log({
-    //   cusId: this.cusId,
-    //   recipesId: this.recipesId,
-    // });
-    this.init({ cusId: this.cusId, recipesId: this.recipesId }).catch((err) => {
+    const { cusId, planId, startDate, endDate, recipesId } = this.$route.query;
+
+    this.init({
+      cusId,
+      planId,
+      startDate,
+      endDate,
+      recipesId,
+    }).catch((err) => {
       this.$message.error(err.message);
     });
   },
@@ -49,10 +55,17 @@ export default {
     HealthyView,
     BodySignView,
     RecipesView,
+    RecommondView,
   },
-  props: ["planId", "cusId", "recipesId"],
+  // props: ["cusId", "planId", "recipesId", "startDate", "endDate"],
   computed: {
-    ...mapState(["healthyData", "healthyDataType", "recipesData"]),
+    ...mapState([
+      "healthyData",
+      "healthyDataType",
+      "recipesData",
+      "recipesDataLoading",
+      "healthDataLoading",
+    ]),
     ...mapGetters(["analyseData"]),
   },
   methods: {
