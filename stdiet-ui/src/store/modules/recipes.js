@@ -75,15 +75,9 @@ const mutations = {
 
 const actions = {
   async init({ commit, dispatch }, payload) {
-    const orderResult = await getOrder(payload.cusId);
-    if (!orderResult.data.cusId) {
-      throw new Error("未找到用户id");
-    }
-
-    commit("updateStateData", {
-      ...payload,
-      cusId: orderResult.data.cusId
-    });
+    // console.log(payload);
+    //
+    commit("updateStateData", payload);
     //
     getDicts("cus_cus_unit").then(response => {
       commit("updateStateData", { cusUnitOptions: response.data });
@@ -99,8 +93,8 @@ const actions = {
     });
 
     //
-    if (orderResult.data.cusId) {
-      dispatch("getHealthyData", { cusId: orderResult.data.cusId });
+    if (payload.cusId) {
+      dispatch("getHealthyData", payload);
     }
 
     // 食谱数据
