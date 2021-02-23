@@ -26,7 +26,29 @@ service.interceptors.request.use(config => {
       const value = config.params[propName];
       var part = encodeURIComponent(propName) + "=";
       if (value !== null && typeof(value) !== "undefined") {
-        if (typeof value === 'object') {
+        /**
+         * 参数格式化类型
+         *  ==1:对象参数格式化方案
+         *  ==0(else):主键数组/字符串/数字 参数格式化方案
+         */
+
+        let paramFormatType=0;
+        // console.log(part,value.constructor)
+        if (value.constructor === Array) {
+          paramFormatType=0;
+          for (const key of Object.keys(value)) {
+            if (key.constructor === Object||key.constructor === Array) {
+                //数组里元素如果为对象或数组,则使用对象参数格式化方案
+              paramFormatType=1;
+            }
+            continue;
+          }
+        }else if (value.constructor === Object) {
+          paramFormatType=1;
+        }else{
+          paramFormatType=0;
+        }
+        if (paramFormatType === 1) {
           for (const key of Object.keys(value)) {
             let params = propName + '[' + key + ']';
             var subPart = encodeURIComponent(params) + "=";
