@@ -61,3 +61,14 @@ export function addFoodHeatData(data) {
   })
 }
 
+// 获取热量比例分析详情
+export function getNutritionalCalories(id) {
+  return request({
+    url: '/custom/foodHeatStatistics/getNutritionalCalories',
+    method: 'get',
+    params: {"id": id}
+  })
+}
+
+
+

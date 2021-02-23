@@ -13,43 +13,43 @@ public class NutritionalCalories implements Serializable {
     public String name;
 
     //实际体重（斤）
-    public double weight;
+    public Double weight;
 
     //实际身高(厘米)
-    public int tall;
+    public Integer tall;
 
     //年龄
-    public int age;
+    public Integer age;
 
     //标准体重（斤）
-    public double standardWeight;
+    public Double standardWeight;
 
     //超重（斤）
-    public double overWeight;
+    public Double overWeight;
 
     //活动因子
-    public double activityFactor;
+    public Double activityFactor;
 
     //基础代谢BMR(千卡）
-    public int metabolizeHeat;
+    public Integer metabolizeHeat;
 
     //减脂最大摄入量(千卡）
-    public int maxIntakeHeat;
+    public Long maxIntakeHeat;
 
     //不运动总热量(千卡）
-    public int withoutExerciseHeat;
+    public Integer withoutExerciseHeat;
 
     //运动总热量(千卡）
-    public int exerciseHeat;
+    public Integer exerciseHeat;
 
     //每公斤体重占比(千卡/公斤）
-    public double everyWeightHeat;
+    public Long everyWeightHeat;
 
     //目标范围（千卡/公斤）
-    public double[] targetEveryWeightHeat;
+    public Long[] targetEveryWeightHeat;
 
     //减脂热量标准范围（千卡/公斤）
-    public double[] standardEveryWeightHeat;
+    public Long[] standardEveryWeightHeat;
 
     //蛋白质、脂肪、碳水比例
     public Integer[] nutritionalRate;
@@ -61,7 +61,7 @@ public class NutritionalCalories implements Serializable {
     public Integer[] nutritionalQuality;
 
     //每公斤体重对应蛋白质、脂肪、碳水占比(克/公斤)
-    public double[] weightNutritionalRate;
+    public Double[] weightNutritionalRate;
 
     //蛋白质、脂肪、碳水已摄入热量（千卡）
     public Integer[] ingestedNutritionalHeat;

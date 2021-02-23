@@ -6,14 +6,7 @@ import com.stdiet.custom.domain.SysCustomerHeatStatistics;
 import com.stdiet.custom.service.ISysCustomerHeatStatisticsService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.stdiet.common.annotation.Log;
 import com.stdiet.common.core.controller.BaseController;
 import com.stdiet.common.core.domain.AjaxResult;
@@ -110,5 +103,15 @@ public class SysFoodHeatStatisticsController extends BaseController
     public AjaxResult addFoodHeatData(@RequestBody SysCustomerHeatStatistics sysCustomerHeatStatistics)
     {
         return toAjax(sysCustomerHeatStatisticsService.calculateCustomerHeat(sysCustomerHeatStatistics));
+    }
+
+    /**
+     * 查看外食热量统计详细信息
+     */
+    @PreAuthorize("@ss.hasPermi('custom:foodHeatStatistics:query')")
+    @GetMapping(value = "/getNutritionalCalories")
+    public AjaxResult getNutritionalCalories(@RequestParam("id") Long id)
+    {
+        return AjaxResult.success(sysCustomerHeatStatisticsService.getNutritionalCaloriesByCustomerHeatId(id));
     }
 }

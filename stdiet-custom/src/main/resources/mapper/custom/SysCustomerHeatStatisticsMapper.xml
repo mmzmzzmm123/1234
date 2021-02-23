@@ -10,6 +10,9 @@
         <result property="edibleDate"    column="edible_date"    />
         <result property="maxHeatValue"    column="max_heat_value"    />
         <result property="heatValue"    column="heat_value"    />
+        <result property="proteinHeat"    column="protein_heat"    />
+        <result property="fatHeat"    column="fat_heat"    />
+        <result property="carbonWaterHeat"    column="carbon_water_heat"    />
         <result property="heatGap"    column="heat_gap"    />
         <result property="createTime"    column="create_time"    />
         <result property="createBy"    column="create_by"    />
@@ -24,6 +27,9 @@
         <result property="edibleDate"    column="edible_date"    />
         <result property="maxHeatValue"    column="max_heat_value"    />
         <result property="heatValue"    column="heat_value"    />
+        <result property="proteinHeat"    column="protein_heat"    />
+        <result property="fatHeat"    column="fat_heat"    />
+        <result property="carbonWaterHeat"    column="carbon_water_heat"    />
         <result property="heatGap"    column="heat_gap"    />
         <result property="createTime"    column="create_time"    />
         <result property="createBy"    column="create_by"    />
@@ -36,15 +42,13 @@
     </resultMap>
 
     <sql id="selectSysCustomerHeatStatisticsVo">
-        select id, customer_id, edible_date, max_heat_value, heat_value, heat_gap, create_time, create_by, update_time, update_by, del_flag from sys_customer_heat_statistics
+        select id, customer_id, edible_date, max_heat_value, heat_value, protein_heat,fat_heat,carbon_water_heat,heat_gap, create_time, create_by, update_time, update_by, del_flag from sys_customer_heat_statistics
     </sql>
 
     <select id="selectSysCustomerHeatStatisticsList" parameterType="SysCustomerHeatStatistics" resultMap="SysCustomerHeatStatisticsResult">
-        <include refid="selectSysCustomerHeatStatisticsVo"/>
-        <where>
-            <if test="customerId != null "> and customer_id = #{customerId}</if>
-        </where>
-        order by id desc
+        <include refid="selectSysCustomerHeatStatisticsVo"/> where del_flag = 0
+        <if test="customerId != null "> and customer_id = #{customerId}</if>
+        order by edible_date desc
     </select>
 
     <select id="selectSysCustomerHeatStatisticsById" parameterType="Long" resultMap="SysCustomerHeatStatisticsResultExtended">
@@ -60,8 +64,11 @@
             <if test="maxHeatValue != null">max_heat_value,</if>
             <if test="heatValue != null">heat_value,</if>
             <if test="heatGap != null">heat_gap,</if>
+            <if test="proteinHeat != null">protein_heat,</if>
             <if test="createTime != null">create_time,</if>
+            <if test="fatHeat != null">fat_heat,</if>
             <if test="createBy != null">create_by,</if>
+            <if test="carbonWaterHeat != null">carbon_water_heat,</if>
             <if test="updateTime != null">update_time,</if>
             <if test="updateBy != null">update_by,</if>
             <if test="delFlag != null">del_flag,</if>
@@ -72,8 +79,11 @@
             <if test="maxHeatValue != null">#{maxHeatValue},</if>
             <if test="heatValue != null">#{heatValue},</if>
             <if test="heatGap != null">#{heatGap},</if>
+            <if test="proteinHeat != null">#{proteinHeat},</if>
             <if test="createTime != null">#{createTime},</if>
+            <if test="fatHeat != null">#{fatHeat},</if>
             <if test="createBy != null">#{createBy},</if>
+            <if test="carbonWaterHeat != null">#{carbonWaterHeat},</if>
             <if test="updateTime != null">#{updateTime},</if>
             <if test="updateBy != null">#{updateBy},</if>
             <if test="delFlag != null">#{delFlag},</if>
@@ -88,8 +98,11 @@
             <if test="maxHeatValue != null">max_heat_value = #{maxHeatValue},</if>
             <if test="heatValue != null">heat_value = #{heatValue},</if>
             <if test="heatGap != null">heat_gap = #{heatGap},</if>
+            <if test="proteinHeat != null">protein_heat = #{proteinHeat},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="fatHeat != null">fat_heat = #{fatHeat},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="carbonWaterHeat != null">carbon_water_heat = #{carbonWaterHeat},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
             <if test="updateBy != null">update_by = #{updateBy},</if>
             <if test="delFlag != null">del_flag = #{delFlag},</if>

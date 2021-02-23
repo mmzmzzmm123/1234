@@ -23,7 +23,7 @@ public class HealthyUtils {
      * @param weight 体重
      * @return
      */
-    public static long calculateMaxHeatEveryDay(Integer age, Integer tall, Double weight){
+    public static Long calculateMaxHeatEveryDay(Integer age, Integer tall, Double weight){
         age = age == null ? 0 : age;
         tall = tall == null ? 0 : tall;
         weight = weight == null ? 0.0 : weight;
@@ -47,8 +47,8 @@ public class HealthyUtils {
      * @param weight 体重（斤）
      * @return
      */
-    public static double calculateHeatRateByWeight(long metabolizeHeat, double weight){
-        return NumberUtils.getNumberByRoundHalfUp(metabolizeHeat/weight*2, 2).doubleValue();
+    public static Long calculateHeatRateByWeight(Integer metabolizeHeat, Double weight){
+        return Math.round(metabolizeHeat/weight*2);
     }
 
     /**
@@ -56,8 +56,8 @@ public class HealthyUtils {
      * @param heatRateByWeight 每公斤体重占比（千卡/公斤）
      * @return
      */
-    public static double[] calculateHeatTargetRate(double heatRateByWeight){
-        double[] heatArray = new double[2];
+    public static Long[] calculateHeatTargetRate(Long heatRateByWeight){
+        Long[] heatArray = new Long[2];
         heatArray[0] = heatRateByWeight - 10;
         heatArray[1] = heatRateByWeight - 5;
         return heatArray;
@@ -66,13 +66,13 @@ public class HealthyUtils {
     /**
      * 计算减脂热量控制范围(千卡）
      * @param heatTargetRateArray 每公斤体重占比目标范围
-     * @param fatRateWeight 每公斤体重脂肪占比(克/公斤)
+     * @param weight 体重
      * @return
      */
-    public static long[] calculateStandardHeatScopeRate(double[] heatTargetRateArray, double fatRateWeight){
-        long[] heatArray = new long[2];
-        heatArray[0] = Math.round(heatTargetRateArray[0] * fatRateWeight / 2);
-        heatArray[1] = Math.round(heatTargetRateArray[1] * fatRateWeight / 2);
+    public static Long[] calculateStandardHeatScopeRate(Long[] heatTargetRateArray, Double weight){
+        Long[] heatArray = new Long[2];
+        heatArray[0] = Math.round(heatTargetRateArray[0] * weight / 2);
+        heatArray[1] = Math.round(heatTargetRateArray[1] * weight / 2);
         return heatArray;
     }
 
@@ -121,25 +121,40 @@ public class HealthyUtils {
      * @return
      */
     public static double calculateStandardWeight(int tall){
-        return (tall-107.5)*2;
+        return NumberUtils.getNumberByRoundHalfUp((tall-107.5)*2, 1).doubleValue();
     }
 
     /**
      * 返回蛋白质、脂肪、碳水对应热量、质量
-     * @param metabolizeHeat
+     * @param metabolizeHeat 摄入热量
      * @return
      */
     public static Integer[][] calculateNutritionHeatAndQuality(int metabolizeHeat){
         Integer[] heatArray = new Integer[3];
         Integer[] qualityArray = new Integer[3];
-       heatArray[0] = Math.round(nutritionRate[0] * metabolizeHeat /100);
-       heatArray[1] = Math.round(nutritionRate[1] * metabolizeHeat /100);
-       heatArray[2] = Math.round(nutritionRate[2] * metabolizeHeat /100);
-       qualityArray[0] = (int)Math.round(Double.parseDouble(heatArray[0]+"")/proteinHeat);
-       qualityArray[1] = (int)Math.round(Double.parseDouble(heatArray[1]+"")/fatHeat);
-       qualityArray[2] = (int)Math.round(Double.parseDouble(heatArray[2]+"")/carbonWaterHeat);
-       Integer[][] result = {heatArray, qualityArray};
-       return result;
+        heatArray[0] = Math.round(nutritionRate[0] * metabolizeHeat /100);
+        heatArray[1] = Math.round(nutritionRate[1] * metabolizeHeat /100);
+        heatArray[2] = Math.round(metabolizeHeat - heatArray[0] - heatArray[1]);
+        qualityArray[0] = (int)Math.round(Double.parseDouble(heatArray[0]+"")/proteinHeat);
+        qualityArray[1] = (int)Math.round(Double.parseDouble(heatArray[1]+"")/fatHeat);
+        qualityArray[2] = (int)Math.round(Double.parseDouble(heatArray[2]+"")/carbonWaterHeat);
+        Integer[][] result = {heatArray, qualityArray};
+        return result;
     }
+
+    /**
+     * 计算每公斤体重占比(克/公斤)
+     * @param nutritionQuality 蛋白质、脂肪、碳水对应质量
+     * @param weight 体重
+     * @return
+     */
+    public static final Double[] calculateNutritionEveryWeight(Integer[] nutritionQuality, double weight){
+        Double[] nutritionEveryWeight = new Double[3];
+        nutritionEveryWeight[0] = NumberUtils.getNumberByRoundHalfUp(nutritionQuality[0]/weight*2,2).doubleValue();
+        nutritionEveryWeight[1] = NumberUtils.getNumberByRoundHalfUp(nutritionQuality[1]/weight*2,2).doubleValue();
+        nutritionEveryWeight[2] = NumberUtils.getNumberByRoundHalfUp(nutritionQuality[2]/weight*2, 2).doubleValue();
+        return nutritionEveryWeight;
+    }
+
 
 }
