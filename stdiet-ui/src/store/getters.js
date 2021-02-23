@@ -11,6 +11,15 @@ const getters = {
   roles: state => state.user.roles,
   permissions: state => state.user.permissions,
   userId: state => state.user.userId,
-  permission_routes: state => state.permission.routes
-}
-export default getters
+  permission_routes: state => state.permission.routes,
+  //
+  nutritionistIdOptions: state => state.global.nutritionistIdOptions,
+  nutriAssisIdOptions: state => state.global.nutriAssisIdOptions,
+  preSaleIdOptions: state => state.global.preSaleIdOptions,
+  afterSaleIdOptions: state => state.global.afterSaleIdOptions,
+  plannerIdOptions: state => state.global.plannerIdOptions,
+  plannerAssisIdOptions: state => state.global.plannerAssisIdOptions,
+  operatorIdOptions: state => state.global.operatorIdOptions,
+  operatorAssisIdOptions: state => state.global.operatorAssisIdOptions
+};
+export default getters;

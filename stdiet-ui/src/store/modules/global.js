@@ -1,4 +1,4 @@
-import { getOptions } from "@/api/custom/order";
+import { getOptions } from "@/api/custom/global";
 
 const oriState = {
   nutritionistIdOptions: [],
@@ -8,7 +8,7 @@ const oriState = {
   plannerIdOptions: [],
   plannerAssisIdOptions: [],
   operatorIdOptions: [],
-  operatorAssisIdOptions: [],
+  operatorAssisIdOptions: []
 };
 
 const mutations = {
@@ -28,9 +28,7 @@ const actions = {
     const { data: optionsData } = await getOptions();
     const options = optionsData.reduce((opts, cur) => {
       if (!opts[cur.postCode]) {
-        opts[cur.postCode] = [
-          // { dictValue: null, dictLabel: "全部", remark: null }
-        ];
+        opts[cur.postCode] = [{ dictValue: 0, dictLabel: "无", remark: null }];
       }
       opts[cur.postCode].push({
         dictValue: cur.userId,

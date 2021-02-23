@@ -149,7 +149,11 @@
         prop="salesman"
         :formatter="preSaleIdFormat"
       />
-      <el-table-column label="订单" align="center" v-hasPermi="['custom:order:list']">
+      <el-table-column
+        label="订单"
+        align="center"
+        v-hasPermi="['custom:order:list']"
+      >
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -159,7 +163,11 @@
           </el-button>
         </template>
       </el-table-column>
-      <el-table-column label="合同" align="center" v-hasPermi="['custom:contract:list']">
+      <el-table-column
+        label="合同"
+        align="center"
+        v-hasPermi="['custom:contract:list']"
+      >
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -169,7 +177,11 @@
           </el-button>
         </template>
       </el-table-column>
-      <el-table-column label="健康评估" align="center" v-hasPermi="['custom:healthy:list']">
+      <el-table-column
+        label="健康评估"
+        align="center"
+        v-hasPermi="['custom:healthy:list']"
+      >
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -179,17 +191,25 @@
           </el-button>
         </template>
       </el-table-column>
-      <el-table-column label="外食热量统计" align="center" v-hasPermi="['custom:foodHeatStatistics:list']">
+      <el-table-column
+        label="外食热量统计"
+        align="center"
+        v-hasPermi="['custom:foodHeatStatistics:list']"
+      >
         <template slot-scope="scope">
           <el-button
             size="mini"
             type="text"
             @click="handleClickHeatStatistics(scope.row)"
-          >详情
+            >详情
           </el-button>
         </template>
       </el-table-column>
-      <el-table-column label="食谱计划" align="center" v-hasPermi="['recipes:recipesPlan:list']">
+      <el-table-column
+        label="食谱计划"
+        align="center"
+        v-hasPermi="['recipes:recipesPlan:list']"
+      >
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -339,13 +359,11 @@ import {
 } from "@/api/custom/customer";
 
 import store from "@/store";
-
-import { getOptions } from "@/api/custom/order";
-
 import OrderDrawer from "@/components/OrderDrawer";
 import PhysicalSignsDialog from "@/components/PhysicalSignsDialog";
 import ContractDrawer from "@/components/ContractDrawer";
 import HeatStatisticsDrawer from "@/components/HeatStatisticsDrawer";
+import { mapGetters } from "vuex";
 
 export default {
   name: "Customer",
@@ -353,7 +371,7 @@ export default {
     "order-drawer": OrderDrawer,
     "physical-signs-dialog": PhysicalSignsDialog,
     "contract-drawer": ContractDrawer,
-    "heatStatisticsDrawer": HeatStatisticsDrawer
+    heatStatisticsDrawer: HeatStatisticsDrawer,
   },
   data() {
     const userId = store.getters && store.getters.userId;
@@ -374,13 +392,13 @@ export default {
       // 客户档案表格数据
       customerCenterList: [],
       // 售前字典
-      preSaleIdOptions: [],
+      // preSaleIdOptions: [],
       // 售后字典
-      afterSaleIdOptions: [],
+      // afterSaleIdOptions: [],
       // 主营养师字典
-      nutritionistIdOptions: [],
+      // nutritionistIdOptions: [],
       // 助理营养师字典
-      nutriAssisIdOptions: [],
+      // nutriAssisIdOptions: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -437,25 +455,14 @@ export default {
   },
   created() {
     this.getList();
-    getOptions().then((response) => {
-      const options = response.data.reduce((opts, cur) => {
-        if (!opts[cur.postCode]) {
-          opts[cur.postCode] = [
-            { dictValue: 0, dictLabel: "无", remark: null },
-          ];
-        }
-        opts[cur.postCode].push({
-          dictValue: cur.userId,
-          dictLabel: cur.userName,
-          remark: cur.remark,
-        });
-        return opts;
-      }, {});
-      this.preSaleIdOptions = options["pre_sale"] || [];
-      this.afterSaleIdOptions = options["after_sale"] || [];
-      this.nutritionistIdOptions = options["nutri"] || [];
-      this.nutriAssisIdOptions = options["nutri_assis"] || [];
-    });
+  },
+  computed: {
+    ...mapGetters([
+      "preSaleIdOptions",
+      "afterSaleIdOptions",
+      "nutritionistIdOptions",
+      "nutriAssisIdOptions",
+    ]),
   },
   methods: {
     /** 查询客户档案列表 */
@@ -504,7 +511,7 @@ export default {
     handleOnMenuClick(row) {
       // console.log(row);
     },
-    handleClickHeatStatistics(row){
+    handleClickHeatStatistics(row) {
       this.$refs["heatStatisticsRef"].showDrawer(row);
     },
     // 取消按钮

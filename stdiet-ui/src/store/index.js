@@ -9,6 +9,7 @@ import recipes from "./modules/recipes";
 import global from "./modules/global";
 
 import getters from "./getters";
+import actions from "./actions";
 
 Vue.use(Vuex);
 
@@ -22,7 +23,8 @@ const store = new Vuex.Store({
     recipes,
     global
   },
-  getters
+  getters,
+  actions
 });
 
 export default store;

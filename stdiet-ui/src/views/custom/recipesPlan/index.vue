@@ -330,6 +330,7 @@ import { getOptions } from "@/api/custom/order";
 // import BodySignDetail from "@/components/BodySignDetail";
 import dayjs from "dayjs";
 import store from "@/store";
+import { mapState } from "vuex";
 
 const nextDate = dayjs().add(1, "day").format("YYYY-MM-DD");
 const weekDate = dayjs().add(6, "day").format("YYYY-MM-DD");
@@ -377,7 +378,7 @@ export default {
       allRecipesPlanList: [],
       //订单弹窗状态
       allRecipesPlanOpen: false,
-      allRecipesPlanTitle: '',
+      allRecipesPlanTitle: "",
       //订单弹窗中查询参数
       allRecipesPlanQueryParam: {
         pageNum: 1,
@@ -387,47 +388,41 @@ export default {
       },
       //订单弹窗中列表数据的总条数
       allRecipesPlanTotal: 0,
-      //营养师
-      nutritionistIdOptions: [],
-      //营养师助理
-      nutriAssisIdOptions: [],
     };
   },
   components: {
     // "order-dialog": OrderDetail,
     // body_sign_dialog: BodySignDetail,
   },
-  created() {
-    getOptions().then((response) => {
-      const options = response.data.reduce((opts, cur) => {
-        if (!opts[cur.postCode]) {
-          opts[cur.postCode] = [
-            { dictValue: null, dictLabel: "全部", remark: null },
-          ];
+  computed: {
+    ...mapState({
+      //营养师
+      nutritionistIdOptions: (state) =>
+        state.global.nutritionistIdOptions.slice(1),
+      //营养师助理
+      nutriAssisIdOptions: (state) => state.global.nutriAssisIdOptions.slice(1),
+    }),
+  },
+  watch: {
+    nutritionistIdOptions: function (val, oldVal) {
+      if (val.length && !oldVal.length) {
+        const tarObj = val.find((opt) => opt.dictValue == userId);
+        if (tarObj) {
+          this.queryParams.nutritionistId = userId;
         }
-        opts[cur.postCode].push({
-          dictValue: cur.userId,
-          dictLabel: cur.userName,
-          remark: cur.remark,
-        });
-        return opts;
-      }, {});
-      this.nutritionistIdOptions = options["nutri"] || [];
-      this.nutriAssisIdOptions = options["nutri_assis"] || [];
-      const defaultNutritionist = this.nutritionistIdOptions.find(
-        (opt) => opt.dictValue == userId
-      );
-      const defaultNutriAssisId = this.nutriAssisIdOptions.find(
-        (opt) => opt.dictValue == userId
-      );
-      if (defaultNutritionist) {
-        this.queryParams.nutritionistId = userId;
       }
-      if (defaultNutriAssisId) {
-        this.queryParams.nutritionistAssisId = userId;
+    },
+    nutriAssisIdOptions: function (val, oldVal) {
+      if (val.length && !oldVal.length) {
+        const tarObj = val.find((opt) => opt.dictValue == userId);
+        if (tarObj) {
+          this.queryParams.nutritionistAssisId = userId;
+        }
       }
-      this.getList();
-    });
+    },
+  },
+  created() {
+    this.getList();
   },
   methods: {
     /** 查询食谱计划列表 */
@@ -476,7 +471,7 @@ export default {
             dayjs(item.endDate).format("YYYY-MM-DD");
         });
         this.allRecipesPlanOpen = true;
-        this.allRecipesPlanTitle = `「${this.allRecipesPlanList[0].customer}」食谱计划表`
+        this.allRecipesPlanTitle = `「${this.allRecipesPlanList[0].customer}」食谱计划表`;
         this.allRecipesPlanTotal = response.total;
       });
     },
