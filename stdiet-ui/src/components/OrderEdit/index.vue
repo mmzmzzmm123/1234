@@ -235,8 +235,9 @@
   </el-dialog>
 </template>
 <script>
-import { addOrder, getOptions, updateOrder } from "@/api/custom/order";
+import { addOrder, updateOrder } from "@/api/custom/order";
 import dayjs from "dayjs";
+import { mapGetters } from "vuex";
 
 export default {
   name: "OrderEdit",
@@ -354,16 +355,6 @@ export default {
       },
       // 收款方式字典
       payTypeIdOptions: [],
-      // 售前字典
-      preSaleIdOptions: [],
-      // 售后字典
-      afterSaleIdOptions: [],
-      // 主营养师字典
-      nutritionistIdOptions: [],
-      // 助理营养师字典
-      nutriAssisIdOptions: [],
-      // 策划字典
-      plannerIdOptions: [],
       // 账号
       accountIdOptions: [],
       // 服务时长
@@ -372,42 +363,13 @@ export default {
       giveTimeIdOption: [],
       //调理项目
       conditioningProjectIdOption: [],
-      // 策划助理字典
-      plannerAssisIdOptions: [],
-      // 运营字典
-      operatorIdOptions: [],
       // 审核状态
       reviewStatusOptions: [],
-      //
-      operatorAssisIdOptions: [],
       //下拉列表对应关系(用于选择收款账号自动选择策划、策划助理、运营、运营助理)
       orderDropdownCorrespondingOptions: [],
     };
   },
   created() {
-    getOptions().then((res) => {
-      const options = res.data.reduce((opts, cur) => {
-        if (!opts[cur.postCode]) {
-          opts[cur.postCode] = [
-            { dictValue: 0, dictLabel: "无", remark: null },
-          ];
-        }
-        opts[cur.postCode].push({
-          dictValue: cur.userId,
-          dictLabel: cur.userName,
-          remark: cur.remark,
-        });
-        return opts;
-      }, {});
-      this.preSaleIdOptions = options["pre_sale"] || [];
-      this.afterSaleIdOptions = options["after_sale"] || [];
-      this.nutritionistIdOptions = options["nutri"] || [];
-      this.nutriAssisIdOptions = options["nutri_assis"] || [];
-      this.plannerIdOptions = options["planner"] || [];
-      this.plannerAssisIdOptions = options["planner_assis"] || [];
-      this.operatorIdOptions = options["operator"] || [];
-      this.operatorAssisIdOptions = options["operator_assis"] || [];
-    });
     this.getDicts("cus_pay_type").then((response) => {
       this.payTypeIdOptions = response.data;
     });
@@ -434,6 +396,26 @@ export default {
     this.getDicts("order_dropdown_corresponding").then((response) => {
       this.orderDropdownCorrespondingOptions = response.data;
     });
+  },
+  computed: {
+    ...mapGetters([
+      // 售前字典
+      "preSaleIdOptions",
+      // 售后字典
+      "afterSaleIdOptions",
+      // 主营养师字典
+      "nutritionistIdOptions",
+      // 助理营养师字典
+      "nutriAssisIdOptions",
+      // 策划字典
+      "plannerIdOptions",
+      // 策划助理字典
+      "plannerAssisIdOptions",
+      // 运营字典
+      "operatorIdOptions",
+      // 运营助理字典
+      "operatorAssisIdOptions",
+    ]),
   },
   methods: {
     showDialog(data, callback) {
