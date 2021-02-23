@@ -5,7 +5,15 @@
 </template>
 
 <script>
-export default  {
-  name:  'App'
-}
+import { createNamespacedHelpers } from "vuex";
+const { mapActions } = createNamespacedHelpers("global");
+export default {
+  name: "App",
+  created() {
+    this.init();
+  },
+  methods: {
+    ...mapActions(["init"]),
+  },
+};
 </script>

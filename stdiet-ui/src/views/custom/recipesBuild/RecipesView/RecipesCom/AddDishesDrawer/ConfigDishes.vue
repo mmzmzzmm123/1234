@@ -43,11 +43,11 @@
         </el-table-column>
         <el-table-column
           prop="proteinRatio"
-          label="蛋白质/100g"
+          label="P/100g"
           align="center"
         />
-        <el-table-column prop="fatRatio" label="脂肪/100g" align="center" />
-        <el-table-column prop="carbonRatio" label="碳水/100g" align="center" />
+        <el-table-column prop="fatRatio" label="F/100g" align="center" />
+        <el-table-column prop="carbonRatio" label="C/100g" align="center" />
       </el-table>
     </el-form-item>
     <el-form-item label="推荐人群">

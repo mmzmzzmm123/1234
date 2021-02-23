@@ -92,7 +92,7 @@ export default {
       if (!data) {
         return;
       }
-      console.log(data);
+      // console.log(data);
       this.selDishes = data;
       this.active = 1;
       this.typeOptions = data.type.split(",").reduce((arr, cur, idx) => {
@@ -143,7 +143,7 @@ export default {
         type,
         igdList,
       });
-      console.log(this.selDishes);
+      // console.log(this.selDishes);
     },
   },
 };
