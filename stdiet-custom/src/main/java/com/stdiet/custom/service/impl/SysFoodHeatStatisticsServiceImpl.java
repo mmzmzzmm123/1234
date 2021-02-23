@@ -7,18 +7,14 @@ import com.stdiet.common.utils.DateUtils;
 import com.stdiet.common.utils.HealthyUtils;
 import com.stdiet.common.utils.StringUtils;
 import com.stdiet.common.utils.sign.AesUtils;
-import com.stdiet.custom.domain.SysCustomerHealthy;
-import com.stdiet.custom.domain.SysCustomerHeatStatistics;
-import com.stdiet.custom.domain.SysCustomerPhysicalSigns;
+import com.stdiet.custom.domain.*;
 import com.stdiet.custom.dto.request.FoodHeatCalculatorRequest;
-import com.stdiet.custom.service.ISysCustomerHealthyService;
-import com.stdiet.custom.service.ISysCustomerHeatStatisticsService;
-import com.stdiet.custom.service.ISysCustomerPhysicalSignsService;
+import com.stdiet.custom.mapper.SysCustomerHeatStatisticsMapper;
+import com.stdiet.custom.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import com.stdiet.custom.mapper.SysFoodHeatStatisticsMapper;
-import com.stdiet.custom.domain.SysFoodHeatStatistics;
-import com.stdiet.custom.service.ISysFoodHeatStatisticsService;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.xml.crypto.Data;
@@ -37,13 +33,16 @@ public class SysFoodHeatStatisticsServiceImpl implements ISysFoodHeatStatisticsS
     private SysFoodHeatStatisticsMapper sysFoodHeatStatisticsMapper;
 
     @Autowired
-    private ISysCustomerHeatStatisticsService sysCustomerHeatStatisticsService;
+    private SysCustomerHeatStatisticsMapper sysCustomerHeatStatisticsMapper;
 
     @Autowired
     private ISysCustomerPhysicalSignsService sysCustomerPhysicalSignsService;
 
     @Autowired
     private ISysCustomerHealthyService sysCustomerHealthyService;
+
+    @Autowired
+    private AsyncCommonService asyncCommonService;
 
     /**
      * 查询外食热量统计
@@ -154,10 +153,10 @@ public class SysFoodHeatStatisticsServiceImpl implements ISysFoodHeatStatisticsS
             SysCustomerHeatStatistics sysCustomerHeatStatistics = new SysCustomerHeatStatistics();
             sysCustomerHeatStatistics.setCustomerId(Long.parseLong(customerId));
             sysCustomerHeatStatistics.setEdibleDate(DateUtils.parseDate(dateKey));
-            SysCustomerHeatStatistics customerHeatResult = sysCustomerHeatStatisticsService.getCustomerHeatStatisticsByDate(sysCustomerHeatStatistics);
+            SysCustomerHeatStatistics customerHeatResult = sysCustomerHeatStatisticsMapper.getCustomerHeatStatisticsByDate(sysCustomerHeatStatistics);
             if(customerHeatResult == null){
                 sysCustomerHeatStatistics.setMaxHeatValue(maxHeatValue);
-                sysCustomerHeatStatisticsService.insertSysCustomerHeatStatistics(sysCustomerHeatStatistics);
+                sysCustomerHeatStatisticsMapper.insertSysCustomerHeatStatistics(sysCustomerHeatStatistics);
             }else{
                 sysCustomerHeatStatistics.setId(customerHeatResult.getId());
             }
@@ -169,6 +168,8 @@ public class SysFoodHeatStatisticsServiceImpl implements ISysFoodHeatStatisticsS
                     map.put("quantity", map.get("quantity") != null && "".equals(map.get("quantity").toString().trim()) ? null : map.get("quantity"));
                 }
                 row = sysFoodHeatStatisticsMapper.insertFoodHeatBatch(dateFoodMap.get(dateKey));
+                //异步查询食材对应蛋白质、脂肪、碳水热量、质量，并更新热量缺口
+                asyncCommonService.updateFoodNutritionalQualityAndHeat(sysCustomerHeatStatistics.getId());
             }
         }
         return row;

@@ -4,6 +4,7 @@ import java.util.List;
 import com.stdiet.custom.domain.SysIngredient;
 import com.stdiet.custom.domain.SysIngredientNotRec;
 import com.stdiet.custom.domain.SysIngredientRec;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 食材Mapper接口
@@ -72,4 +73,11 @@ public interface SysIngredientMapper
     public int deleteIngredentRecByIngredientIds(Long[] id);
 
     public int deleteIngredentNotRecByIngredientIds(Long[] id);
+
+    /**
+     * 根据食材名称查询食材信息
+     * @param name
+     * @return
+     */
+    public SysIngredient selectSysIngredientByName(@Param("name") String name);
 }
