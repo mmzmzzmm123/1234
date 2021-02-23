@@ -11,7 +11,7 @@ import com.ruoyi.common.annotation.Excel;
  * @date 2021-02-22
  */
 public class BusCbszdxx implements Serializable {
-	
+
 	private static final long serialVersionUID = 1L;
 
 	/** 主键ID */
@@ -24,6 +24,10 @@ public class BusCbszdxx implements Serializable {
 	/** 站点ID */
 	@Excel(name = "站点ID")
 	private Long zdId;
+
+	/** 服务项目 */
+	@Excel(name = "服务项目")
+	private String fwxm;
 
 	/** 承包年份 */
 	@Excel(name = "承包年份")
@@ -61,4 +65,12 @@ public class BusCbszdxx implements Serializable {
 		this.year = year;
 	}
 
+	public String getFwxm() {
+		return fwxm;
+	}
+
+	public void setFwxm(String fwxm) {
+		this.fwxm = fwxm;
+	}
+	
 }

@@ -3,6 +3,7 @@ package com.ruoyi.business.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ruoyi.business.domain.BusCbszdxx;
+import com.ruoyi.business.domain.vo.BusCbszdxxSaveVO;
 import com.ruoyi.business.service.IBusCbszdxxService;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
@@ -58,9 +60,9 @@ public class BusCbszdxxController extends BaseController
      */
     @Log(title = "承包商站点信息", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody BusCbszdxx busCbszdxx)
+    public AjaxResult add(@RequestBody @Validated BusCbszdxxSaveVO busCbszdxxSaveVO)
     {
-        return toAjax(busCbszdxxService.insertBusCbszdxx(busCbszdxx));
+        return toAjax(busCbszdxxService.insertBusCbszdxx(busCbszdxxSaveVO));
     }
 
     /**

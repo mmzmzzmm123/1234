@@ -20,6 +20,7 @@ import com.ruoyi.business.mapper.BusCbsxxMapper;
 import com.ruoyi.business.service.IBusCbsgrxxService;
 import com.ruoyi.business.service.IBusCbsxxService;
 import com.ruoyi.business.service.IBusCbszzxxService;
+import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
 
@@ -52,7 +53,7 @@ public class BusCbsxxServiceImpl implements IBusCbsxxService {
 	public BusCbsxx selectById(Long id) {
 		return busCbsxxMapper.selectBusCbsxxById(id);
 	}
-	
+
 	/**
 	 * 查询承包商信息
 	 * 
@@ -61,9 +62,9 @@ public class BusCbsxxServiceImpl implements IBusCbsxxService {
 	 * @return 承包商信息
 	 */
 	@Override
-	public BusCbsxxVO selectBusCbsxxById(Long id) {
+	public BusCbsxxVO selectBusCbsxxById(Long id, String year) {
 		BusCbsxx busCbsxx = busCbsxxMapper.selectBusCbsxxById(id);
-		return selectByCbsxx(busCbsxx);
+		return selectByCbsxx(busCbsxx, year);
 	}
 
 	/**
@@ -74,11 +75,11 @@ public class BusCbsxxServiceImpl implements IBusCbsxxService {
 	 * @return 承包商信息
 	 */
 	@Override
-	public List<BusCbsxxVO> selectBusCbsxxList(BusCbsxx busCbsxx) {
+	public List<BusCbsxxVO> selectBusCbsxxList(BusCbsxx busCbsxx, String year) {
 		List<BusCbsxx> busCbsxxList = busCbsxxMapper.selectBusCbsxxList(busCbsxx);
 		List<BusCbsxxVO> busCbsxxListVOList = new ArrayList<>();
 		for (BusCbsxx cbsxx : busCbsxxList) {
-			BusCbsxxVO cbsxxVO = selectByCbsxx(cbsxx);
+			BusCbsxxVO cbsxxVO = selectByCbsxx(cbsxx, year);
 			busCbsxxListVOList.add(cbsxxVO);
 		}
 		return busCbsxxListVOList;
@@ -160,7 +161,7 @@ public class BusCbsxxServiceImpl implements IBusCbsxxService {
 		return busCbsxxMapper.deleteBusCbsxxById(id);
 	}
 
-	private BusCbsxxVO selectByCbsxx(BusCbsxx busCbsxx) {
+	private BusCbsxxVO selectByCbsxx(BusCbsxx busCbsxx, String year) {
 		Long cbsId = busCbsxx.getId();
 		List<BusCbsgrxxVO> ryxxList = busCbsgrxxService.selectByCbsId(cbsId);
 		List<BusCbszzxx> cbszzxxList = busCbszzxxService.selectByCbsId(cbsId);
@@ -170,6 +171,16 @@ public class BusCbsxxServiceImpl implements IBusCbsxxService {
 		busCbsxxVO.setCbsxx(busCbsxx);
 		busCbsxxVO.setZzxxList(zzxxList);
 		busCbsxxVO.setRyxxList(ryxxList);
+
+		/**
+		 * 设置已承包的站点信息
+		 */
+		if (year == null || year.isEmpty()) {
+			year = DateUtils.dateTimeNow("yyyy");
+		}
+
 		return busCbsxxVO;
 	}
+
+	
 }

@@ -17,18 +17,22 @@ public interface IBusCbsxxService {
 	 * 
 	 * @param id
 	 *            承包商信息ID
+	 * @param year
+	 *            承包商年份
 	 * @return 承包商信息
 	 */
-	public BusCbsxxVO selectBusCbsxxById(Long id);
+	public BusCbsxxVO selectBusCbsxxById(Long id, String year);
 
 	/**
 	 * 查询承包商信息列表
 	 * 
 	 * @param busCbsxx
 	 *            承包商信息
+	 * @param year
+	 *            承包年份
 	 * @return 承包商信息集合
 	 */
-	public List<BusCbsxxVO> selectBusCbsxxList(BusCbsxx busCbsxx);
+	public List<BusCbsxxVO> selectBusCbsxxList(BusCbsxx busCbsxx, String year);
 
 	/**
 	 * 新增承包商信息

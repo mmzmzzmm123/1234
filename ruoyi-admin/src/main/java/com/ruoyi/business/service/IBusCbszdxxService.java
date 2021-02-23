@@ -2,6 +2,7 @@ package com.ruoyi.business.service;
 
 import java.util.List;
 import com.ruoyi.business.domain.BusCbszdxx;
+import com.ruoyi.business.domain.vo.BusCbszdxxSaveVO;
 
 /**
  * 承包商站点信息Service接口
@@ -30,10 +31,10 @@ public interface IBusCbszdxxService
     /**
      * 新增承包商站点信息
      * 
-     * @param busCbszdxx 承包商站点信息
+     * @param busCbszdxxSaveVO 承包商站点信息
      * @return 结果
      */
-    public int insertBusCbszdxx(BusCbszdxx busCbszdxx);
+    public int insertBusCbszdxx(BusCbszdxxSaveVO busCbszdxxSaveVO);
 
     /**
      * 修改承包商站点信息

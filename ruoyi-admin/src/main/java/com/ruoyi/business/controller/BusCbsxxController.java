@@ -38,22 +38,34 @@ public class BusCbsxxController extends BaseController {
 
 	/**
 	 * 查询承包商信息列表
+	 * 
+	 * @param busCbsxx
+	 *            查询条件
+	 * @param year
+	 *            承包年份
+	 * @return
 	 */
 	@ApiOperation("承包商列表信息")
 	@GetMapping("/list")
-	public TableDataInfo list(BusCbsxx busCbsxx) {
+	public TableDataInfo list(BusCbsxx busCbsxx, String year) {
 		startPage();
-		List<BusCbsxxVO> list = busCbsxxService.selectBusCbsxxList(busCbsxx);
+		List<BusCbsxxVO> list = busCbsxxService.selectBusCbsxxList(busCbsxx, year);
 		return getDataTable(list);
 	}
 
 	/**
-	 * 获取承包商信息详细信息
+	 * 根据承包商ID获取承包商详情
+	 * 
+	 * @param id
+	 *            承包商ID
+	 * @param year
+	 *            承包年份
+	 * @return
 	 */
 	@ApiOperation("根据承包商ID获取承包商详情")
 	@GetMapping(value = "/{id}")
-	public AjaxResult getInfo(@PathVariable("id") Long id) {
-		return AjaxResult.success(busCbsxxService.selectBusCbsxxById(id));
+	public AjaxResult getInfo(@PathVariable("id") Long id, String year) {
+		return AjaxResult.success(busCbsxxService.selectBusCbsxxById(id, year));
 	}
 
 	/**
