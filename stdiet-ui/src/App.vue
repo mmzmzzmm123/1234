@@ -10,7 +10,7 @@ const { mapActions } = createNamespacedHelpers("global");
 export default {
   name: "App",
   created() {
-    this.init();
+    // this.init();
   },
   methods: {
     ...mapActions(["init"]),
