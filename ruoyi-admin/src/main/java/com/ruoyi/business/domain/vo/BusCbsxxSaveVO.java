@@ -23,10 +23,8 @@ public class BusCbsxxSaveVO implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
+	@NotNull(message="ID不能为空")
 	private Long id;
-
-	@NotNull(message="承包商ID不能为空")
-	private Long cbsId;
 	
 	/** 承包商名称 */
 	@Excel(name = "承包商名称")
@@ -54,14 +52,6 @@ public class BusCbsxxSaveVO implements Serializable {
 		return id;
 	}
 	
-	public Long getCbsId() {
-		return cbsId;
-	}
-
-	public void setCbsId(Long cbsId) {
-		this.cbsId = cbsId;
-	}
-
 	public void setCbsName(String cbsName) {
 		this.cbsName = cbsName;
 	}

@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -65,9 +64,10 @@ public class BusCbsxxController extends BaseController {
 	@ApiOperation("新增/修改承包商")
 	@Log(title = "承包商信息", businessType = BusinessType.UPDATE)
 	@PostMapping
-	public AjaxResult add(@RequestBody @Validated BusCbsxxSaveVO busCbsxxSaveVO) throws IOException {
-		if (busCbsxxSaveVO.getId() == null) {
-			busCbsxxSaveVO.setId(busCbsxxSaveVO.getCbsId());
+	public AjaxResult add(@RequestBody BusCbsxxSaveVO busCbsxxSaveVO) throws IOException {
+		Long id = busCbsxxSaveVO.getId();
+		BusCbsxx busCbsxx = busCbsxxService.selectById(id);
+		if (busCbsxx == null) {
 			return toAjax(busCbsxxService.insertBusCbsxx(busCbsxxSaveVO));
 		} else {
 			return toAjax(busCbsxxService.updateBusCbsxx(busCbsxxSaveVO));

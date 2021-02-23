@@ -65,4 +65,6 @@ public interface IBusCbsxxService {
 	 * @return 结果
 	 */
 	public int deleteBusCbsxxById(Long id);
+
+	BusCbsxx selectById(Long id);
 }

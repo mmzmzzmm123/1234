@@ -49,6 +49,18 @@ public class BusCbsxxServiceImpl implements IBusCbsxxService {
 	 * @return 承包商信息
 	 */
 	@Override
+	public BusCbsxx selectById(Long id) {
+		return busCbsxxMapper.selectBusCbsxxById(id);
+	}
+	
+	/**
+	 * 查询承包商信息
+	 * 
+	 * @param id
+	 *            承包商信息ID
+	 * @return 承包商信息
+	 */
+	@Override
 	public BusCbsxxVO selectBusCbsxxById(Long id) {
 		BusCbsxx busCbsxx = busCbsxxMapper.selectBusCbsxxById(id);
 		return selectByCbsxx(busCbsxx);

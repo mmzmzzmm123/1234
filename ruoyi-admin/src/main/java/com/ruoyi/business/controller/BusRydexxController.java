@@ -17,7 +17,6 @@ import com.ruoyi.business.service.IBusRydexxService;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
-import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 
@@ -31,71 +30,62 @@ import io.swagger.annotations.ApiOperation;
  */
 @RestController
 @RequestMapping("/business/rydexx")
-public class BusRydexxController extends BaseController
-{
-    @Autowired
-    private IBusRydexxService busRydexxService;
+public class BusRydexxController extends BaseController {
+	@Autowired
+	private IBusRydexxService busRydexxService;
 
-    /**
-     * 查询人员定额信息列表
-     */
-    @ApiOperation("人员定额信息")
-    @GetMapping("/list")
-    public TableDataInfo list(BusRydexx busRydexx)
-    {
-        startPage();
-        List<BusRydexx> list = busRydexxService.selectBusRydexxList(busRydexx);
-        return getDataTable(list);
-    }
+	/**
+	 * 查询人员定额信息列表
+	 */
+	@ApiOperation("人员定额信息")
+	@GetMapping("/list")
+	public List<BusRydexx> list(BusRydexx busRydexx) {
+		return busRydexxService.selectBusRydexxList(busRydexx);
+	}
 
-    /**
-     * 导出人员定额信息列表
-     */
-    @Log(title = "人员定额信息", businessType = BusinessType.EXPORT)
-    @GetMapping("/export")
-    public AjaxResult export(BusRydexx busRydexx)
-    {
-        List<BusRydexx> list = busRydexxService.selectBusRydexxList(busRydexx);
-        ExcelUtil<BusRydexx> util = new ExcelUtil<BusRydexx>(BusRydexx.class);
-        return util.exportExcel(list, "rydexx");
-    }
+	/**
+	 * 导出人员定额信息列表
+	 */
+	@Log(title = "人员定额信息", businessType = BusinessType.EXPORT)
+	@GetMapping("/export")
+	public AjaxResult export(BusRydexx busRydexx) {
+		List<BusRydexx> list = busRydexxService.selectBusRydexxList(busRydexx);
+		ExcelUtil<BusRydexx> util = new ExcelUtil<BusRydexx>(BusRydexx.class);
+		return util.exportExcel(list, "rydexx");
+	}
 
-    /**
-     * 获取人员定额信息详细信息
-     */
-    @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
-    {
-        return AjaxResult.success(busRydexxService.selectBusRydexxById(id));
-    }
+	/**
+	 * 获取人员定额信息详细信息
+	 */
+	@GetMapping(value = "/{id}")
+	public AjaxResult getInfo(@PathVariable("id") Long id) {
+		return AjaxResult.success(busRydexxService.selectBusRydexxById(id));
+	}
 
-    /**
-     * 新增人员定额信息
-     */
-    @Log(title = "人员定额信息", businessType = BusinessType.INSERT)
-    @PostMapping
-    public AjaxResult add(@RequestBody BusRydexx busRydexx)
-    {
-        return toAjax(busRydexxService.insertBusRydexx(busRydexx));
-    }
+	/**
+	 * 新增人员定额信息
+	 */
+	@Log(title = "人员定额信息", businessType = BusinessType.INSERT)
+	@PostMapping
+	public AjaxResult add(@RequestBody BusRydexx busRydexx) {
+		return toAjax(busRydexxService.insertBusRydexx(busRydexx));
+	}
 
-    /**
-     * 修改人员定额信息
-     */
-    @Log(title = "人员定额信息", businessType = BusinessType.UPDATE)
-    @PutMapping
-    public AjaxResult edit(@RequestBody BusRydexx busRydexx)
-    {
-        return toAjax(busRydexxService.updateBusRydexx(busRydexx));
-    }
+	/**
+	 * 修改人员定额信息
+	 */
+	@Log(title = "人员定额信息", businessType = BusinessType.UPDATE)
+	@PutMapping
+	public AjaxResult edit(@RequestBody BusRydexx busRydexx) {
+		return toAjax(busRydexxService.updateBusRydexx(busRydexx));
+	}
 
-    /**
-     * 删除人员定额信息
-     */
-    @Log(title = "人员定额信息", businessType = BusinessType.DELETE)
+	/**
+	 * 删除人员定额信息
+	 */
+	@Log(title = "人员定额信息", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
-    {
-        return toAjax(busRydexxService.deleteBusRydexxByIds(ids));
-    }
+	public AjaxResult remove(@PathVariable Long[] ids) {
+		return toAjax(busRydexxService.deleteBusRydexxByIds(ids));
+	}
 }

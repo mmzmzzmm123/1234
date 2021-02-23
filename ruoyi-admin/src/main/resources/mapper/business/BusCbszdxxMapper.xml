@@ -8,12 +8,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="id"    column="id"    />
         <result property="cbsId"    column="cbs_id"    />
         <result property="zdId"    column="zd_id"    />
-        <result property="kssj"    column="kssj"    />
-        <result property="jssj"    column="jssj"    />
+        <result property="year"    column="year"    />
     </resultMap>
 
     <sql id="selectBusCbszdxxVo">
-        select id, cbs_id, zd_id, kssj, jssj from bus_cbszdxx
+        select id, cbs_id, zd_id, year from bus_cbszdxx
     </sql>
 
     <select id="selectBusCbszdxxList" parameterType="BusCbszdxx" resultMap="BusCbszdxxResult">
@@ -21,8 +20,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <where>  
             <if test="cbsId != null "> and cbs_id = #{cbsId}</if>
             <if test="zdId != null "> and zd_id = #{zdId}</if>
-            <if test="kssj != null "> and kssj = #{kssj}</if>
-            <if test="jssj != null "> and jssj = #{jssj}</if>
+            <if test="year != null "> and year = #{year}</if>
         </where>
     </select>
     
@@ -37,15 +35,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="id != null">id,</if>
             <if test="cbsId != null">cbs_id,</if>
             <if test="zdId != null">zd_id,</if>
-            <if test="kssj != null">kssj,</if>
-            <if test="jssj != null">jssj,</if>
+            <if test="year != null">year</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
             <if test="cbsId != null">#{cbsId},</if>
             <if test="zdId != null">#{zdId},</if>
-            <if test="kssj != null">#{kssj},</if>
-            <if test="jssj != null">#{jssj},</if>
+            <if test="year != null">#{year},</if>
          </trim>
     </insert>
 
@@ -54,8 +50,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="SET" suffixOverrides=",">
             <if test="cbsId != null">cbs_id = #{cbsId},</if>
             <if test="zdId != null">zd_id = #{zdId},</if>
-            <if test="kssj != null">kssj = #{kssj},</if>
-            <if test="jssj != null">jssj = #{jssj},</if>
+            <if test="year != null">year = #{year},</if>
         </trim>
         where id = #{id}
     </update>
