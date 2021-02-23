@@ -335,7 +335,7 @@
         </template>
       </el-table-column>
       <el-table-column label="客户姓名" align="center" prop="customer" />
-      <el-table-column label="手机号" align="center" prop="phone" width="100" />
+      <!-- <el-table-column label="手机号" align="center" prop="phone" width="100" /> -->
       <el-table-column label="成交金额" align="center" prop="amount">
         <template slot-scope="scope">
           {{ toThousands(scope.row.amount) }}
@@ -386,7 +386,7 @@
             v-hasPermi="['custom:order:edit']"
             >修改
           </el-button>
-           <el-button
+          <el-button
             size="mini"
             type="text"
             icon="el-icon-s-data"
@@ -455,6 +455,7 @@ import orderPause from "./orderPause";
 import OrderDetail from "@/components/OrderDetail";
 import OrderEdit from "@/components/OrderEdit";
 import AutoHideMessage from "@/components/AutoHideMessage";
+import { mapGetters } from "vuex";
 
 const beginTime = dayjs().startOf("month").format("YYYY-MM-DD");
 const endTime = dayjs().format("YYYY-MM-DD");
@@ -492,16 +493,6 @@ export default {
       daterange: [beginTime, endTime],
       // 收款方式字典
       payTypeIdOptions: [],
-      // 售前字典
-      preSaleIdOptions: [],
-      // 售后字典
-      afterSaleIdOptions: [],
-      // 主营养师字典
-      nutritionistIdOptions: [],
-      // 助理营养师字典
-      nutriAssisIdOptions: [],
-      // 策划字典
-      plannerIdOptions: [],
       // 账号
       accountIdOptions: [],
       // 服务时长
@@ -510,12 +501,6 @@ export default {
       conditioningProjectIdOption: [],
       // 审核状态
       reviewStatusOptions: [],
-      // 策划助理字典
-      plannerAssisIdOptions: [],
-      // 运营字典
-      operatorIdOptions: [],
-      //
-      operatorAssisIdOptions: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -539,32 +524,28 @@ export default {
       },
     };
   },
-
+  computed: {
+    ...mapGetters([
+      // 售前字典
+      "preSaleIdOptions",
+      // 售后字典
+      "afterSaleIdOptions",
+      // 主营养师字典
+      "nutritionistIdOptions",
+      // 助理营养师字典
+      "nutriAssisIdOptions",
+      // 策划字典
+      "plannerIdOptions",
+      // 策划助理字典
+      "plannerAssisIdOptions",
+      // 运营字典
+      "operatorIdOptions",
+      // 运营助理字典
+      "operatorAssisIdOptions",
+    ]),
+  },
   created() {
     this.getList();
-    getOptions().then((response) => {
-      const options = response.data.reduce((opts, cur) => {
-        if (!opts[cur.postCode]) {
-          opts[cur.postCode] = [
-            // { dictValue: 0, dictLabel: "无", remark: null },
-          ];
-        }
-        opts[cur.postCode].push({
-          dictValue: cur.userId,
-          dictLabel: cur.userName,
-          remark: cur.remark,
-        });
-        return opts;
-      }, {});
-      this.preSaleIdOptions = options["pre_sale"] || [];
-      this.afterSaleIdOptions = options["after_sale"] || [];
-      this.nutritionistIdOptions = options["nutri"] || [];
-      this.nutriAssisIdOptions = options["nutri_assis"] || [];
-      this.plannerIdOptions = options["planner"] || [];
-      this.plannerAssisIdOptions = options["planner_assis"] || [];
-      this.operatorIdOptions = options["operator"] || [];
-      this.operatorAssisIdOptions = options["operator_assis"] || [];
-    });
     this.getDicts("cus_pay_type").then((response) => {
       this.payTypeIdOptions = response.data;
     });

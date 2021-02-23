@@ -1,8 +1,6 @@
 package com.stdiet.custom.domain;
 
 import lombok.Data;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.math.BigDecimal;
 
@@ -26,5 +24,12 @@ public class SysDishesIngredient extends SysIngredient {
     private BigDecimal weight;
 
     private String remark;
+
+    private Long id;
+
+    private String cus_unit;
+
+    private String cus_weight;
+
 
 }

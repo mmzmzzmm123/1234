@@ -111,14 +111,14 @@
       :data="recipesPlanList"
       @selection-change="handleSelectionChange"
     >
-      <el-table-column type="selection" width="55" align="center" />
+      <!-- <el-table-column type="selection" width="55" align="center" /> -->
       <el-table-column label="客户姓名" align="center" prop="customer" />
-      <el-table-column
+      <!-- <el-table-column
         label="客户手机号"
         align="center"
         prop="hidePhone"
         width="180"
-      />
+      /> -->
       <el-table-column
         label="食谱日期范围"
         align="center"
@@ -170,14 +170,14 @@
           <el-button
             size="mini"
             type="text"
-            icon="el-icon-edit"
+            icon="el-icon-view"
             @click="
               allRecipesPlanQueryParam.orderId = scope.row.orderId;
               getAllPlanByOrderId();
             "
             >查看完整计划
           </el-button>
-          <el-button
+          <!-- <el-button
             size="mini"
             type="text"
             icon="el-icon-edit"
@@ -192,13 +192,15 @@
             @click="getCustomerSign(scope.row)"
             v-hasPermi="['custom:customer:query']"
             >查看体征
-          </el-button>
+          </el-button> -->
           <el-button
             size="mini"
             type="text"
-            icon="el-icon-edit"
+            :icon="`${
+              scope.row.recipesId ? 'el-icon-edit' : 'el-icon-edit-outline'
+            }`"
             @click="handleBuild(scope.row)"
-            >{{ `${scope.row.recipes_id ? "编辑" : "制作"}食谱` }}</el-button
+            >{{ `${scope.row.recipesId ? "编辑" : "制作"}食谱` }}</el-button
           >
         </template>
       </el-table-column>
@@ -234,8 +236,7 @@
 
     <!-- 查看完整计划 -->
     <el-dialog
-      title="食谱计划表"
-      v-if="allRecipesPlanOpen"
+      :title="allRecipesPlanTitle"
       :visible.sync="allRecipesPlanOpen"
       width="800px"
       append-to-body
@@ -267,7 +268,7 @@
       </el-form>
 
       <el-table v-loading="loading" :data="allRecipesPlanList" width="700px">
-        <el-table-column label="客户姓名" align="center" prop="customer" />
+        <!-- <el-table-column label="客户姓名" align="center" prop="customer" /> -->
         <!--<el-table-column label="营养师名称" align="center" prop="nutritionist" />
         <el-table-column label="营养师助理名称" align="center" prop="nutritionistAssis" />-->
 
@@ -311,9 +312,9 @@
     </el-dialog>
 
     <!-- 查看订单 -->
-    <order-dialog ref="orderDialog" />
+    <!-- <order-dialog ref="orderDialog" /> -->
     <!-- 查看体征 -->
-    <body_sign_dialog ref="bodySignDialog" />
+    <!-- <body_sign_dialog ref="bodySignDialog" /> -->
   </div>
 </template>
 
@@ -325,10 +326,11 @@ import {
   updateRecipesPlan,
 } from "@/api/custom/recipesPlan";
 import { getOptions } from "@/api/custom/order";
-import OrderDetail from "@/components/OrderDetail";
-import BodySignDetail from "@/components/BodySignDetail";
+// import OrderDetail from "@/components/OrderDetail";
+// import BodySignDetail from "@/components/BodySignDetail";
 import dayjs from "dayjs";
 import store from "@/store";
+import { mapState } from "vuex";
 
 const nextDate = dayjs().add(1, "day").format("YYYY-MM-DD");
 const weekDate = dayjs().add(6, "day").format("YYYY-MM-DD");
@@ -376,6 +378,7 @@ export default {
       allRecipesPlanList: [],
       //订单弹窗状态
       allRecipesPlanOpen: false,
+      allRecipesPlanTitle: "",
       //订单弹窗中查询参数
       allRecipesPlanQueryParam: {
         pageNum: 1,
@@ -385,47 +388,41 @@ export default {
       },
       //订单弹窗中列表数据的总条数
       allRecipesPlanTotal: 0,
-      //营养师
-      nutritionistIdOptions: [],
-      //营养师助理
-      nutriAssisIdOptions: [],
     };
   },
   components: {
-    "order-dialog": OrderDetail,
-    body_sign_dialog: BodySignDetail,
+    // "order-dialog": OrderDetail,
+    // body_sign_dialog: BodySignDetail,
+  },
+  computed: {
+    ...mapState({
+      //营养师
+      nutritionistIdOptions: (state) =>
+        state.global.nutritionistIdOptions.slice(1),
+      //营养师助理
+      nutriAssisIdOptions: (state) => state.global.nutriAssisIdOptions.slice(1),
+    }),
+  },
+  watch: {
+    nutritionistIdOptions: function (val, oldVal) {
+      if (val.length && !oldVal.length) {
+        const tarObj = val.find((opt) => opt.dictValue == userId);
+        if (tarObj) {
+          this.queryParams.nutritionistId = userId;
+        }
+      }
+    },
+    nutriAssisIdOptions: function (val, oldVal) {
+      if (val.length && !oldVal.length) {
+        const tarObj = val.find((opt) => opt.dictValue == userId);
+        if (tarObj) {
+          this.queryParams.nutritionistAssisId = userId;
+        }
+      }
+    },
   },
   created() {
-    getOptions().then((response) => {
-      const options = response.data.reduce((opts, cur) => {
-        if (!opts[cur.postCode]) {
-          opts[cur.postCode] = [
-            { dictValue: null, dictLabel: "全部", remark: null },
-          ];
-        }
-        opts[cur.postCode].push({
-          dictValue: cur.userId,
-          dictLabel: cur.userName,
-          remark: cur.remark,
-        });
-        return opts;
-      }, {});
-      this.nutritionistIdOptions = options["nutri"] || [];
-      this.nutriAssisIdOptions = options["nutri_assis"] || [];
-      const defaultNutritionist = this.nutritionistIdOptions.find(
-        (opt) => opt.dictValue == userId
-      );
-      const defaultNutriAssisId = this.nutriAssisIdOptions.find(
-        (opt) => opt.dictValue == userId
-      );
-      if (defaultNutritionist) {
-        this.queryParams.nutritionistId = userId;
-      }
-      if (defaultNutriAssisId) {
-        this.queryParams.nutritionistAssisId = userId;
-      }
-      this.getList();
-    });
+    this.getList();
   },
   methods: {
     /** 查询食谱计划列表 */
@@ -474,6 +471,7 @@ export default {
             dayjs(item.endDate).format("YYYY-MM-DD");
         });
         this.allRecipesPlanOpen = true;
+        this.allRecipesPlanTitle = `「${this.allRecipesPlanList[0].customer}」食谱计划表`;
         this.allRecipesPlanTotal = response.total;
       });
     },
@@ -604,20 +602,26 @@ export default {
       }
     },
     handleBuild(data) {
+      // console.log(data);
+      const { startDate, endDate, id, cusId, recipesId } = data;
+
       // const params = { id: data.id, cusId: data.orderId };
-      let path = `/recipes/build/${data.orderId}/${data.id}`;
-      if (data.recipes_id) {
-        // params.recipesId = data.recipes_id;
-        path += `/${data.recipes_id}`;
-      }
-      // test
-      // params.recipesId = "61";
-       path += '/73';
+      // const path = `/recipes/build/${orderId}/${id}/${recipesId || 0}`;
       // this.$router.push({
       //   name: "build",
       //   params,
       // });
-      this.$router.push(path);
+      const queryParam = {
+        planId: id,
+        cusId,
+      };
+      if (!recipesId) {
+        queryParam.startDate = startDate;
+        queryParam.endDate = endDate;
+      } else {
+        queryParam.recipesId = recipesId;
+      }
+      this.$router.push({ path: "/recipes/build", query: queryParam });
     },
   },
 };

@@ -26,6 +26,8 @@ public class SysRecipesPlan extends BaseEntity
     //@Excel(name = "订单ID")
     private Long orderId;
 
+    private Long cusId;
+
     //客户ID
     private Long customerId;
 

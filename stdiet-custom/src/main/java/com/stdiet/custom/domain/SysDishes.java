@@ -1,5 +1,6 @@
 package com.stdiet.custom.domain;
 
+import com.alibaba.fastjson.JSONArray;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.stdiet.common.annotation.Excel;
 import lombok.Data;
@@ -73,7 +74,5 @@ public class SysDishes {
 
 
     private List<SysDishesIngredient> igdList;
-
-    private List<SysDishesIngredient> detail;
 
 }

@@ -1,10 +1,10 @@
 <template>
   <div :class="classname">
-    <span class="title">{{ title }}：</span>
+    <span class="info_title">{{ title }}：</span>
     <span v-if="newLine">
       <div v-for="value in mValue" :key="value">{{ value }}</div>
     </span>
-    <span v-else class="value">{{ mValue }}</span>
+    <span v-else class="info_value">{{ mValue }}</span>
   </div>
 </template>
 <script>
@@ -32,19 +32,19 @@ export default {
   props: ["title", "value", "extraclass"],
 };
 </script>
-<style rel="stylesheet/scss" lang="scss">
+<style  lang="scss" >
 .text_info_wrapper {
   display: flex;
   margin-right: 24px;
   min-width: 120px;
   font-size: 14px;
 
-  .title {
+  .info_title {
     color: #8c8c8c;
     width: auto;
   }
 
-  .value {
+  .info_value {
     /* color: #696969; */
     flex: 1 1 0;
   }
