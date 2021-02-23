@@ -62,7 +62,8 @@ public class FormJsonController extends BaseController
     @PreAuthorize("@ss.hasPermi('basic:json:list')")
     @GetMapping("/table-field/{nodeId}/{deptId}")
     public AjaxResult getTableFields(@PathVariable Long nodeId,@PathVariable Long deptId){
-        return AjaxResult.success(fieldsItemService.selectTableFieldByNodeIdAndDeptId(nodeId,deptId));
+        List<TableFieldVo> f = fieldsItemService.selectTableFieldByNodeIdAndDeptId(nodeId, deptId);
+        return AjaxResult.success(f);
     }
     @PutMapping("/table-field")
     public AjaxResult updateTableFields(List<TableFieldVo> fieldVos){
