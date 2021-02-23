@@ -12,13 +12,14 @@
         <result property="xnxq" column="xnxq"/>
         <result property="classid" column="classid"/>
         <result property="connent" column="connent"/>
+        <result property="score" column="score"/>
         <result property="starttime" column="starttime"/>
         <result property="createUserid" column="create_userid"/>
         <result property="createTime" column="create_time"/>
     </resultMap>
 
     <sql id="selectByDayflowassessmentplanVo">
-        select id, name, dept_id, month, xnxq, classid, connent, starttime, create_userid, create_time from by_dayflowassessmentplan
+        select id, name, dept_id, month, xnxq, classid, connent, score, starttime, create_userid, create_time from by_dayflowassessmentplan
     </sql>
 
     <select id="selectByDayflowassessmentplanList" parameterType="ByDayflowassessmentplan"
@@ -31,6 +32,7 @@
             <if test="xnxq != null  and xnxq != ''">and xnxq = #{xnxq}</if>
             <if test="classid != null  and classid != ''">and classid = #{classid}</if>
             <if test="connent != null  and connent != ''">and connent = #{connent}</if>
+            <if test="score != null  and score != ''">and score = #{score}</if>
             <if test="starttime != null ">and starttime = #{starttime}</if>
             <if test="createUserid != null ">and create_userid = #{createUserid}</if>
         </where>
@@ -45,23 +47,27 @@
             keyProperty="id">
         insert into by_dayflowassessmentplan
         <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
             <if test="name != null  and name != ''">name,</if>
             <if test="deptId != null ">dept_id,</if>
             <if test="month != null ">month,</if>
             <if test="xnxq != null  and xnxq != ''">xnxq,</if>
             <if test="classid != null  and classid != ''">classid,</if>
             <if test="connent != null  and connent != ''">connent,</if>
+            <if test="score != null  and score != ''">score,</if>
             <if test="starttime != null ">starttime,</if>
             <if test="createUserid != null ">create_userid,</if>
             <if test="createTime != null ">create_time,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
             <if test="name != null  and name != ''">#{name},</if>
             <if test="deptId != null ">#{deptId},</if>
             <if test="month != null ">#{month},</if>
             <if test="xnxq != null  and xnxq != ''">#{xnxq},</if>
             <if test="classid != null  and classid != ''">#{classid},</if>
             <if test="connent != null  and connent != ''">#{connent},</if>
+            <if test="score != null  and score != ''">#{score},</if>
             <if test="starttime != null ">#{starttime},</if>
             <if test="createUserid != null ">#{createUserid},</if>
             <if test="createTime != null ">#{createTime},</if>
@@ -77,6 +83,7 @@
             <if test="xnxq != null  and xnxq != ''">xnxq = #{xnxq},</if>
             <if test="classid != null  and classid != ''">classid = #{classid},</if>
             <if test="connent != null  and connent != ''">connent = #{connent},</if>
+            <if test="score != null  and score != ''">score = #{score},</if>
             <if test="starttime != null ">starttime = #{starttime},</if>
             <if test="createUserid != null ">create_userid = #{createUserid},</if>
             <if test="createTime != null ">create_time = #{createTime},</if>

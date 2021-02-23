@@ -7,7 +7,7 @@
       label-width="70px"
     >
       <el-form-item label="所属计划" prop="planid">
-        <el-select v-model="form.planid" placeholder="请选择评估计划">
+        <el-select v-model="queryParams.planid" placeholder="请选择评估计划">
           <el-option
             v-for="dict in dayflowassessmentplanOptions"
             :key="dict.id"
@@ -32,13 +32,14 @@
         </el-select>
       </el-form-item>
       <el-form-item label="学年学期" prop="xnxq">
-        <el-input
-          v-model="queryParams.xnxq"
-          placeholder="请输入评估学年学期"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+        <el-select v-model="queryParams.xnxq" placeholder="请选择学年学期">
+            <el-option
+              v-for="dict in xnxqOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            />
+          </el-select>
       </el-form-item>
       <el-form-item>
         <el-button
@@ -95,21 +96,21 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="所属计划" align="center" prop="planid" />
+      <el-table-column label="所属计划" align="center" prop="planid" :formatter="planFormat"/>
       <el-table-column
-        label="班级编号"
+        label="班级名称"
         align="center"
         prop="classid"
         :formatter="classFormat"
       />
-      <el-table-column label="班长姓名" align="center" prop="bzxm" />
-      <el-table-column label="配班教师姓名" align="center" prop="pbxm" />
-      <el-table-column label="助理教师姓名" align="center" prop="zlxm" />
-      <el-table-column label="学年学期" align="center" prop="xnxq" />
+      <el-table-column label="班长姓名" align="center" prop="bzbh" :formatter="bzbhFormat" />
+      <el-table-column label="配班教师姓名" align="center" prop="pbbh" :formatter="pbbhFormat"/>
+      <el-table-column label="助理教师姓名" align="center" prop="zlbh" :formatter="zlbhFormat"/>
+      <el-table-column label="学年学期" align="center" prop="xnxq" :formatter="xnxqFormat"/>
       <el-table-column label="评估标准编号" align="center" prop="bzid" />
       <el-table-column label="扣分值" align="center" prop="kfz" />
       <el-table-column label="扣分次数" align="center" prop="kfcs" />
-      <el-table-column label="评估对象" align="center" prop="pgdx" />
+      <el-table-column label="评估对象" align="center" prop="pgdx" :formatter="pgdxFormat"/>
       <el-table-column
         label="操作"
         align="center"
@@ -146,7 +147,7 @@
 
     <!-- 添加或修改幼儿园一日流程评估对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+      <el-form ref="form" :model="form" :rules="rules" label-width="120px">
         <el-form-item label="所属计划" prop="planid">
           <el-select
             v-model="form.planid"
@@ -163,8 +164,7 @@
         </el-form-item>
         <el-form-item label="班级编号" prop="classid">
           <el-select
-            v-model="queryParams.classid"
-            clearable
+            v-model="form.classid"
             filterable
             size="small"
             placeholder="请选择班级"
@@ -177,9 +177,9 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="班长编号" prop="bzbh">
+        <el-form-item label="主班教师" prop="bzbh">
           <el-select
-            v-model="queryParams.bzbh"
+            v-model="form.bzbh"
             filterable
             placeholder="请选择主班教师"
           >
@@ -194,7 +194,7 @@
         </el-form-item>
         <el-form-item label="配班教师" prop="pbbh">
           <el-select
-            v-model="queryParams.pbbh"
+            v-model="form.pbbh"
             filterable
             placeholder="请选择配班教师"
           >
@@ -209,7 +209,7 @@
         </el-form-item>
         <el-form-item label="助理教师" prop="zlbh">
           <el-select
-            v-model="queryParams.zlbh"
+            v-model="form.zlbh"
             filterable
             placeholder="请选择助理教师"
           >
@@ -223,7 +223,14 @@
           </el-select>
         </el-form-item>
         <el-form-item label="评估学年学期" prop="xnxq">
-          <el-input v-model="form.xnxq" placeholder="请输入评估学年学期" />
+          <el-select v-model="form.xnxq" placeholder="请选择学年学期">
+            <el-option
+              v-for="dict in xnxqOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            />
+          </el-select>
         </el-form-item>
         <el-form-item label="评估标准编号" prop="bzid">
           <el-input v-model="form.bzid" placeholder="请输入评估标准编号" />
@@ -235,7 +242,20 @@
           <el-input v-model="form.kfcs" placeholder="请输入扣分次数" />
         </el-form-item>
         <el-form-item label="评估对象" prop="pgdx">
-          <el-input v-model="form.pgdx" placeholder="请输入评估对象" />
+          <el-select
+            v-model="form.pgdx"
+            filterable
+            clearable
+            placeholder="请选择当时教师"
+          >
+            <el-option
+              v-for="item in userOptions"
+              :key="item.userId"
+              :label="item.nickName"
+              :value="item.userId"
+              :disabled="item.status == 1"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="执行人" prop="createUserid">
           <el-input v-model="form.createUserid" placeholder="请输入执行人" />
@@ -257,12 +277,10 @@ import {
   addDayflowassessment,
   updateDayflowassessment,
 } from "@/api/benyi/dayflowassessment";
-import {
-  listDayflowassessmentplan,
-  getDayflowassessmentplan,
-} from "@/api/benyi/dayflowassessmentplan";
+import { listDayflowassessmentplan, getDayflowassessmentplan, } from "@/api/benyi/dayflowassessmentplan";
 import { listClass } from "@/api/system/class";
 import { getUsersByRoleId } from "@/api/system/user";
+import { listUser } from "@/api/system/user";
 
 export default {
   name: "Dayflowassessment",
@@ -290,6 +308,10 @@ export default {
       pbjsOptions: [],
       //助理教师角色用户
       zljsOptions: [],
+      // 学年学期
+      xnxqOptions: [],
+      // 所有教师
+      userOptions: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -323,12 +345,17 @@ export default {
   created() {
     this.getList();
     this.getClassList();
+    this.getUserList();
     this.getDayflowassessmentplan();
     //获取主班教师角色用户列表
     getUsersByRoleId().then((response) => {
       this.zbjsOptions = response.zbjs;
       this.pbjsOptions = response.pbjs;
       this.zljsOptions = response.zljs;
+    });
+    // 获取学年学期
+    this.getDicts("sys_xnxq").then((response) => {
+      this.xnxqOptions = response.data;
     });
   },
   methods: {
@@ -345,7 +372,6 @@ export default {
     getDayflowassessmentplan() {
       listDayflowassessmentplan(null).then((response) => {
         this.dayflowassessmentplanOptions = response.rows;
-        console.log(this.dayflowassessmentplanOptions);
       });
     },
     // 获取班级列表
@@ -365,6 +391,83 @@ export default {
         }
       });
       return actions.join("");
+    },
+    // 学年学期类型--字典状态字典翻译
+    xnxqFormat(row, column) {
+      return this.selectDictLabel(this.xnxqOptions, row.xnxq);
+    },
+    /** 查询用户列表 */
+    getUserList() {
+      listUser(null).then(
+        (response) => {
+          this.userOptions = response.rows;
+        }
+      );
+    },
+    // 教师字典翻译
+    bzbhFormat(row, column) {
+      var actions = [];
+      var datas = this.zbjsOptions;
+      Object.keys(datas).map((key) => {
+        if (datas[key].userId == "" + row.bzbh) {
+          actions.push(datas[key].nickName);
+          return false;
+        }
+      });
+      return actions.join("");
+    },
+    // 教师字典翻译
+    pbbhFormat(row, column) {
+      var actions = [];
+      var datas = this.pbjsOptions;
+      Object.keys(datas).map((key) => {
+        if (datas[key].userId == "" + row.pbbh) {
+          actions.push(datas[key].nickName);
+          return false;
+        }
+      });
+      return actions.join("");
+    },
+    // 教师字典翻译
+    zlbhFormat(row, column) {
+      var actions = [];
+      var datas = this.zljsOptions;
+      Object.keys(datas).map((key) => {
+        if (datas[key].userId == "" + row.zlbh) {
+          actions.push(datas[key].nickName);
+          return false;
+        }
+      });
+      return actions.join("");
+    },
+    // 教师字典翻译
+    pgdxFormat(row, column) {
+      var actions = [];
+      var datas = this.userOptions;
+      Object.keys(datas).map((key) => {
+        if (datas[key].userId == "" + row.pgdx) {
+          actions.push(datas[key].nickName);
+          return false;
+        }
+      });
+      return actions.join("");
+    },
+    // 计划字典翻译
+    planFormat(row, column) {
+      var actions = [];
+      var datas = this.dayflowassessmentplanOptions;
+      console.log(this.dayflowassessmentplanOptions);
+      Object.keys(datas).map((key) => {
+        if (datas[key].id == "" + row.planid) {
+          actions.push(datas[key].name);
+          return false;
+        }
+      });
+      return actions.join("");
+    },
+    // 学年学期类型--字典状态字典翻译
+    xnxqFormat(row, column) {
+      return this.selectDictLabel(this.xnxqOptions, row.xnxq);
     },
     // 取消按钮
     cancel() {
@@ -415,6 +518,12 @@ export default {
       this.reset();
       this.open = true;
       this.title = "添加幼儿园一日流程评估";
+      //获取主班教师角色用户列表
+      getUsersByRoleId().then((response) => {
+        this.zbjsOptions = response.zbjs;
+        this.pbjsOptions = response.pbjs;
+        this.zljsOptions = response.zljs;
+      });
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -424,6 +533,12 @@ export default {
         this.form = response.data;
         this.open = true;
         this.title = "修改幼儿园一日流程评估";
+        //获取主班教师角色用户列表
+        getUsersByRoleId().then((response) => {
+          this.zbjsOptions = response.zbjs;
+          this.pbjsOptions = response.pbjs;
+          this.zljsOptions = response.zljs;
+        });
       });
     },
     /** 提交按钮 */

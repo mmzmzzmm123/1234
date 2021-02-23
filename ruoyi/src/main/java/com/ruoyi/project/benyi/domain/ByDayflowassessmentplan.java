@@ -59,6 +59,12 @@ public class ByDayflowassessmentplan extends BaseEntity {
     private String connent;
 
     /**
+     * 内容分数
+     */
+    @Excel(name = "内容分数")
+    private float score;
+
+    /**
      * 评估时间
      */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -145,6 +151,7 @@ public class ByDayflowassessmentplan extends BaseEntity {
                 .append("xnxq", getXnxq())
                 .append("classid", getClassid())
                 .append("connent", getConnent())
+                .append("score", getScore())
                 .append("starttime", getStarttime())
                 .append("createUserid", getCreateUserid())
                 .append("createTime", getCreateTime())
@@ -157,5 +164,13 @@ public class ByDayflowassessmentplan extends BaseEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public float getScore() {
+        return score;
+    }
+
+    public void setScore(float score) {
+        this.score = score;
     }
 }

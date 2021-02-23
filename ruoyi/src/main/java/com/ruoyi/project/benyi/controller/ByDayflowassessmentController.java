@@ -74,6 +74,7 @@ public class ByDayflowassessmentController extends BaseController {
     @PostMapping
     public AjaxResult add(@RequestBody ByDayflowassessment byDayflowassessment) {
         byDayflowassessment.setDeptId(SecurityUtils.getLoginUser().getUser().getDeptId());
+        byDayflowassessment.setCreateUserid(SecurityUtils.getLoginUser().getUser().getUserId());
         return toAjax(byDayflowassessmentService.insertByDayflowassessment(byDayflowassessment));
     }
 

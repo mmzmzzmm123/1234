@@ -3,7 +3,9 @@ package com.ruoyi.project.benyi.controller;
 import java.util.List;
 
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.project.benyi.domain.ByDayflowassessment;
 import com.ruoyi.project.benyi.service.IByDayFlowDetailService;
+import com.ruoyi.project.benyi.service.IByDayflowassessmentService;
 import com.ruoyi.project.common.SchoolCommon;
 import com.ruoyi.project.system.service.IByClassService;
 import com.ruoyi.project.system.service.ISysDictDataService;
@@ -37,6 +39,8 @@ import com.ruoyi.framework.web.page.TableDataInfo;
 public class ByDayflowassessmentplanController extends BaseController {
     @Autowired
     private IByDayflowassessmentplanService byDayflowassessmentplanService;
+    @Autowired
+    private IByDayflowassessmentService byDayflowassessmentService;
     @Autowired
     private IByClassService byClassService;
     @Autowired
@@ -95,7 +99,53 @@ public class ByDayflowassessmentplanController extends BaseController {
         byDayflowassessmentplan.setDeptId(SecurityUtils.getLoginUser().getUser().getDeptId());
         byDayflowassessmentplan.setCreateUserid(SecurityUtils.getLoginUser().getUser().getUserId());
         byDayflowassessmentplan.setName(byClassService.selectByClassById(classId).getBjmc() + "-" + sysDictDataService.selectDictLabel(dict_type, dict_value) + "-" + byDayFlowDetailService.selectByDayFlowDetailById(connentId).getName() + "-" + "评估计划" );
-        return toAjax(byDayflowassessmentplanService.insertByDayflowassessmentplan(byDayflowassessmentplan));
+        if
+        (   byClassService.selectByClassById(classId).getZbjs() == null &&
+            byClassService.selectByClassById(classId).getPbjs() == null &&
+            byClassService.selectByClassById(classId).getZljs() == null
+        )
+        {
+            return AjaxResult.error("当前班级下没有教师，无法创建评估计划");
+        }
+        int iCount = byDayflowassessmentplanService.insertByDayflowassessmentplan(byDayflowassessmentplan);
+        if (iCount > 0) {
+            // 判断班级下是否有老师
+            int sum = 0;
+            Long zbjsNew = byClassService.selectByClassById(classId).getZbjs();
+            Long pbjsNew = byClassService.selectByClassById(classId).getPbjs();
+            Long zljsNew = byClassService.selectByClassById(classId).getZljs();
+            ByDayflowassessment byDayflowassessment = null;
+            if (zbjsNew != null) {
+                System.out.println("这是主班教师111");
+
+                byDayflowassessment = new ByDayflowassessment();
+                byDayflowassessment.setPlanid(byDayflowassessmentplan.getId());
+                byDayflowassessment.setCreateUserid(SecurityUtils.getLoginUser().getUser().getUserId());
+                byDayflowassessment.setDeptId(byDayflowassessmentplan.getDeptId());
+                byDayflowassessment.setBzbh(zbjsNew);
+                byDayflowassessment.setPgdx(zbjsNew);
+                byDayflowassessment.setClassid(classId);
+                byDayflowassessment.setXnxq(byDayflowassessmentplan.getXnxq());
+                byDayflowassessment.setBzid(Long.parseLong(byDayflowassessmentplan.getConnent()));
+                if (pbjsNew != null) {
+                    byDayflowassessment.setPbbh(pbjsNew);
+                }
+                if (zljsNew != null) {
+                    byDayflowassessment.setZlbh(zljsNew);
+                }
+                byDayflowassessmentService.insertByDayflowassessment(byDayflowassessment);
+                sum += 1;
+            }
+            if (pbjsNew != null) {
+                System.out.println("这是配班教师222");
+                sum += 1;
+            }
+            if (zljsNew != null) {
+                System.out.println("这是助理教师333");
+                sum += 1;
+            }
+        }
+        return toAjax(iCount);
     }
 
     /**
@@ -128,3 +178,48 @@ public class ByDayflowassessmentplanController extends BaseController {
         return toAjax(byDayflowassessmentplanService.deleteByDayflowassessmentplanByIds(ids));
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

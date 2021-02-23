@@ -103,13 +103,6 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center" />
-      <!-- <el-table-column label="编号" align="center" prop="id" /> -->
-      <!-- <el-table-column label="评估学校" align="center" prop="deptId" /> -->
-      <!-- <el-table-column label="评估月份" align="center" prop="month" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.month, "{y}-{m}-{d}") }}</span>
-        </template>
-      </el-table-column> -->
       <el-table-column label="计划名称" align="center" prop="name" />
       <el-table-column
         label="评估学年学期"
@@ -124,6 +117,7 @@
         :formatter="classFormat"
       />
       <el-table-column label="评估内容" align="center" prop="connent" :formatter="dayFlowFormat"/>
+      <el-table-column label="内容分数" align="center" prop="score" />
       <el-table-column label="评估时间" align="center" prop="starttime" />
       <!-- <el-table-column label="创建人" align="center" prop="createUserid" /> -->
       <el-table-column
@@ -173,18 +167,6 @@
             />
           </el-select>
         </el-form-item>
-        <!-- <el-form-item label="评估月份" prop="month">
-          <el-date-picker
-            clearable
-            size="small"
-            style="width: 200px"
-            v-model="form.month"
-            type="month"
-            value-format="yyyy-MM-dd"
-            placeholder="选择评估月份"
-          >
-          </el-date-picker>
-        </el-form-item> -->
         <el-form-item label="评估班级" prop="classid">
           <el-select v-model="form.classid" placeholder="请选择班级">
             <el-option
@@ -196,7 +178,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="评估内容" prop="connent">
-          <el-select v-model="form.connent" placeholder="请选择评估内容">
+          <el-select v-model="form.connent" placeholder="请选择评估内容" @change="handleChange">
             <el-option
               v-for="dict in detailOptions"
               :key="dict.id"
@@ -273,6 +255,7 @@ export default {
         xnxq: undefined,
         classid: undefined,
         connent: undefined,
+        score: undefined,
         starttime: undefined,
         createUserid: undefined,
       },
@@ -353,6 +336,40 @@ export default {
         this.loading = false;
       });
     },
+    // 选择评估内容时改变分数
+    handleChange(value) {
+      if (value === 1) {
+        this.form.score = 11.0;
+      } else if (value === 2) {
+        this.form.score = 6.5;
+      } else if (value === 3) {
+        this.form.score = 7.5;
+      } else if (value === 4) {
+        this.form.score = 3.0;
+      } else if (value === 5) {
+        this.form.score = 3.0;
+      } else if (value === 6) {
+        this.form.score = 2.0;
+      } else if (value === 7) {
+        this.form.score = 5.0;
+      } else if (value === 8) {
+        this.form.score = 5.5;
+      } else if (value === 9) {
+        this.form.score = 3.5;
+      } else if (value === 10) {
+        this.form.score = 5.0;
+      } else if (value === 11) {
+        this.form.score = 12.0;
+      } else if (value === 12) {
+        this.form.score = 3.0;
+      } else if (value === 13) {
+        this.form.score = 28.5;
+      } else if (value === 14) {
+        this.form.score = 1.5;
+      } else if (value === 15) {
+        this.form.score = 3.0;
+      }
+    },
     // 取消按钮
     cancel() {
       this.open = false;
@@ -368,6 +385,7 @@ export default {
         xnxq: undefined,
         classid: undefined,
         connent: undefined,
+        score: undefined,
         starttime: undefined,
         createUserid: undefined,
         createTime: undefined,
