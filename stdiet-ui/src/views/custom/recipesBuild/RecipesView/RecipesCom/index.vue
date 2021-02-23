@@ -296,13 +296,14 @@ export default {
       });
     },
     handleOnDishesConfirm(data) {
+      // console.log(data);
       this.addDishes({
         num: this.num - 1,
         data,
       });
     },
     ...mapActions(["updateDishes", "addDishes", "deleteDishes"]),
-    ...mapMutations(["setCurrentDay",]),
+    ...mapMutations(["setCurrentDay"]),
   },
 };
 </script>

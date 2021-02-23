@@ -1,4 +1,3 @@
-import { getOrder } from "@/api/custom/order";
 import { getCustomerPhysicalSignsByCusId } from "@/api/custom/customer";
 import { dealHealthy } from "@/utils/healthyData";
 import {
@@ -54,7 +53,7 @@ const mutations = {
     // console.log(payload);
     state.recipesData[payload.num].dishes = state.recipesData[
       payload.num
-    ].dishes.filter(obj => obj.id !== payload.dishesId);
+    ].dishes.filter(obj => obj.id !== payload.id);
   },
   updateStateData(state, payload) {
     Object.keys(payload).forEach(key => {
@@ -92,7 +91,7 @@ const actions = {
       commit("updateStateData", { dishesTypeOptions: response.data });
     });
 
-    //
+    // 健康数据
     if (payload.cusId) {
       dispatch("getHealthyData", payload);
     }
@@ -104,7 +103,6 @@ const actions = {
   },
   async getHealthyData({ commit }, payload) {
     commit("updateStateData", { healthDataLoading: true });
-    // 健康数据
     const healthyDataResult = await getCustomerPhysicalSignsByCusId(
       payload.cusId
     );
@@ -211,7 +209,9 @@ const actions = {
     };
     const result = await addRecipesApi(params);
     if (result.code === 200) {
-      dispatch("getRecipesInfo", { recipesId: result.data });
+      const recipesId = result.data;
+      commit("updateStateData", { recipesId });
+      dispatch("getRecipesInfo", { recipesId });
     }
     // console.log(params);
   },
@@ -238,10 +238,10 @@ const actions = {
           payload.data.id = result.data;
           commit("addRecipesDishes", payload);
         }
-      } else {
-        commit("addRecipesDishes", payload);
       }
       // console.log(result);
+    } else {
+      commit("addRecipesDishes", payload);
     }
   },
   async updateDishes({ commit, state }, payload) {

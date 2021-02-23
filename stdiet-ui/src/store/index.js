@@ -6,6 +6,7 @@ import tagsView from "./modules/tagsView";
 import permission from "./modules/permission";
 import settings from "./modules/settings";
 import recipes from "./modules/recipes";
+import global from "./modules/global";
 
 import getters from "./getters";
 
@@ -18,7 +19,8 @@ const store = new Vuex.Store({
     tagsView,
     permission,
     settings,
-    recipes
+    recipes,
+    global
   },
   getters
 });

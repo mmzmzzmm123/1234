@@ -111,14 +111,14 @@
       :data="recipesPlanList"
       @selection-change="handleSelectionChange"
     >
-      <el-table-column type="selection" width="55" align="center" />
+      <!-- <el-table-column type="selection" width="55" align="center" /> -->
       <el-table-column label="客户姓名" align="center" prop="customer" />
-      <el-table-column
+      <!-- <el-table-column
         label="客户手机号"
         align="center"
         prop="hidePhone"
         width="180"
-      />
+      /> -->
       <el-table-column
         label="食谱日期范围"
         align="center"
@@ -236,8 +236,7 @@
 
     <!-- 查看完整计划 -->
     <el-dialog
-      title="食谱计划表"
-      v-if="allRecipesPlanOpen"
+      :title="allRecipesPlanTitle"
       :visible.sync="allRecipesPlanOpen"
       width="800px"
       append-to-body
@@ -269,7 +268,7 @@
       </el-form>
 
       <el-table v-loading="loading" :data="allRecipesPlanList" width="700px">
-        <el-table-column label="客户姓名" align="center" prop="customer" />
+        <!-- <el-table-column label="客户姓名" align="center" prop="customer" /> -->
         <!--<el-table-column label="营养师名称" align="center" prop="nutritionist" />
         <el-table-column label="营养师助理名称" align="center" prop="nutritionistAssis" />-->
 
@@ -313,9 +312,9 @@
     </el-dialog>
 
     <!-- 查看订单 -->
-    <order-dialog ref="orderDialog" />
+    <!-- <order-dialog ref="orderDialog" /> -->
     <!-- 查看体征 -->
-    <body_sign_dialog ref="bodySignDialog" />
+    <!-- <body_sign_dialog ref="bodySignDialog" /> -->
   </div>
 </template>
 
@@ -327,8 +326,8 @@ import {
   updateRecipesPlan,
 } from "@/api/custom/recipesPlan";
 import { getOptions } from "@/api/custom/order";
-import OrderDetail from "@/components/OrderDetail";
-import BodySignDetail from "@/components/BodySignDetail";
+// import OrderDetail from "@/components/OrderDetail";
+// import BodySignDetail from "@/components/BodySignDetail";
 import dayjs from "dayjs";
 import store from "@/store";
 
@@ -378,6 +377,7 @@ export default {
       allRecipesPlanList: [],
       //订单弹窗状态
       allRecipesPlanOpen: false,
+      allRecipesPlanTitle: '',
       //订单弹窗中查询参数
       allRecipesPlanQueryParam: {
         pageNum: 1,
@@ -394,8 +394,8 @@ export default {
     };
   },
   components: {
-    "order-dialog": OrderDetail,
-    body_sign_dialog: BodySignDetail,
+    // "order-dialog": OrderDetail,
+    // body_sign_dialog: BodySignDetail,
   },
   created() {
     getOptions().then((response) => {
@@ -476,6 +476,7 @@ export default {
             dayjs(item.endDate).format("YYYY-MM-DD");
         });
         this.allRecipesPlanOpen = true;
+        this.allRecipesPlanTitle = `「${this.allRecipesPlanList[0].customer}」食谱计划表`
         this.allRecipesPlanTotal = response.total;
       });
     },
