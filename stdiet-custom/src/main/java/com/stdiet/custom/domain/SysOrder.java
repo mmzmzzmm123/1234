@@ -6,8 +6,6 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import com.stdiet.common.annotation.Excel;
 import com.stdiet.common.core.domain.BaseEntity;
 
@@ -51,6 +49,7 @@ public class SysOrder extends BaseEntity {
 
     private String status;
 
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date startTime;
 
     private Date pauseTime;
@@ -77,6 +76,10 @@ public class SysOrder extends BaseEntity {
     @Excel(name = "售前")
     private String preSale;
 
+    /** 售中ID */
+    @Excel(name = "售中ID")
+    private Long onSaleId;
+
     /**
      * 售后
      */
@@ -92,9 +95,6 @@ public class SysOrder extends BaseEntity {
      * 营养师
      */
     private Long nutritionistId;
-
-    //营养师数组，比例拆分单时需要两个营养师，非持久化字段
-    private Long[] nutritionistIdList;
 
     /**
      * 营养师
@@ -223,7 +223,7 @@ public class SysOrder extends BaseEntity {
     /**
      * 服务天数
      */
-    @Excel(name = "服务结束时间", width = 30)
+    @Excel(name = "服务天数", width = 30)
     private Integer serverDay;
 
     /**
@@ -234,33 +234,41 @@ public class SysOrder extends BaseEntity {
     //查询参数
     private Integer amountFlag;
 
-    /**
-     * 订单类型 0普通单 1比例拆分单 2售后二开提成单
-     */
+    /** 订单类型 0普通单 1比例拆分单 2体验单 */
+    @Excel(name = "订单类型 0普通单 1比例拆分单 2体验单")
     private String orderType;
 
-    /**
-     * 订单次数类型 0一开单  1二开单
-     */
+    /** 订单次数类型 0一开单  1二开单 */
+    @Excel(name = "订单次数类型 0一开单  1二开单")
     private String orderCountType;
 
-    /**
-     * 订单金额类型 0全款单  1定金单  2尾款单
-     */
+    /** 订单金额类型 0全款单  1定金单  2尾款单 */
+    @Excel(name = "订单金额类型 0全款单  1定金单  2尾款单")
     private String orderMoneyType;
 
-    /**
-     * 拆分订单中的主订单id，非拆分订单时，该id都为0
-     */
+    /** 拆分订单中的主订单id，非拆分订单时，该id都为0 */
+    @Excel(name = "拆分订单中的主订单id，非拆分订单时，该id都为0")
     private Long mainOrderId;
 
-    //订单类型数组，用于接收订单类型、订单次数类型、订单金额类型，非持久化字段
-    private Long[] orderTypeList;
+    /** 售后二开提成单, 0非提成单 1提成单 */
+    @Excel(name = "售后二开提成单, 0非提成单 1提成单")
+    private Integer afterSaleCommissOrder;
 
-    //是否自动创建售后二开提成单，非持久化字段
+    /** 删除标记 */
+    private Integer delFlag;
+
+    //订单类型数组，用于接收订单类型、订单次数类型、订单金额类型，非持久化字段
+    private Integer[] orderTypeList;
+
+    //是否自动创建售后二开提成单，0否 1是，非持久化字段
     private Integer secondAfterSaleFlag;
 
+    //营养师数组，比例拆分单时需要两个营养师，非持久化字段
+    private Long[] nutritionistIdList;
+
     //拆分比例，如：1,9就是按照比例10%、90%拆分，非持久化字段
-    private Integer[] nutritionistRate;
+    private String nutritionistRate;
+
+
 
 }
