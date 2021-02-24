@@ -213,6 +213,7 @@
         <div v-if="showWxFlag">
           <div
             v-for="(item, index) in wxList"
+            :key="item.wxAccount"
             style="margin: 10px auto auto 40px"
           >
             <span>{{ item.wxAccount }}</span
