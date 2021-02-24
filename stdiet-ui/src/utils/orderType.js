@@ -35,6 +35,18 @@ export const orderTypeArray = [
     value: 1,
     label: "比例拆分单",
     children: orderCountTypeArray
+  },
+  {
+    value: 2,
+    label: "体验单",
+    children:[{
+      value: 0,
+      label: "一开单",
+      children: [{
+        value: 0,
+        label: "全款单"
+      }]
+    }]
   }
 ]
 
@@ -43,7 +55,7 @@ export const orderRateArray = [
   {
     dictValue: "0,10",
     dictLabel: "不拆分",
-    remark: ""
+    remark: "default"
   },
   {
     dictValue: "1,9",
@@ -52,7 +64,7 @@ export const orderRateArray = [
   },{
     dictValue: "2,8",
     dictLabel: "2-8开",
-    remark: "default"
+    remark: ""
   },
   {
     dictValue: "3,7",
