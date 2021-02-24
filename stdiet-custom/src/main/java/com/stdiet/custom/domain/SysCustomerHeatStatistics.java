@@ -39,6 +39,18 @@ public class SysCustomerHeatStatistics extends BaseEntity
     @Excel(name = "当天食材总热量")
     private Integer heatValue;
 
+    /** 当天摄入蛋白质热量 */
+    @Excel(name = "当天摄入蛋白质热量")
+    private Integer proteinHeat;
+
+    /** 当天摄入脂肪热量 */
+    @Excel(name = "当天摄入脂肪热量")
+    private Integer fatHeat;
+
+    /** 当天摄入碳水热量 */
+    @Excel(name = "当天摄入碳水热量")
+    private Integer carbonWaterHeat;
+
     /** 当天热量缺口 */
     @Excel(name = "当天热量缺口")
     private Integer heatGap;

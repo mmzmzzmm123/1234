@@ -197,7 +197,7 @@
       },
       reset(){
          this.form = {
-           edibleDate: nowDate,
+           edibleDate: this.form.edibleDate,
            ingredient: null,
            number: null,
            unit: null,

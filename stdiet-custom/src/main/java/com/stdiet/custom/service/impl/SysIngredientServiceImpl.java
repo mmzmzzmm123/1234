@@ -145,4 +145,14 @@ public class SysIngredientServiceImpl implements ISysIngredientService {
         sysIngredientMapper.deleteIngredentNotRecByIngredientId(id);
         return sysIngredientMapper.deleteSysIngredientById(id);
     }
+
+    /**
+     * 根据食材名称查询食材信息
+     * @param name
+     * @return
+     */
+    @Override
+    public SysIngredient selectSysIngredientByName(String name){
+        return sysIngredientMapper.selectSysIngredientByName(name);
+    }
 }

@@ -56,6 +56,12 @@ public class SysFoodHeatStatistics extends BaseEntity
     @Excel(name = "碳水质量，克")
     private Integer carbonWaterQuality;
 
+    private Integer proteinHeat;
+
+    private Integer fatHeat;
+
+    private Integer carbonWaterHeat;
+
     /** 热量数值 */
     @Excel(name = "热量数值")
     private Integer heatValue;

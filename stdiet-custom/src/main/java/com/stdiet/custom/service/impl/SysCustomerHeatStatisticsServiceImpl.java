@@ -11,6 +11,7 @@ import com.stdiet.custom.dto.response.NutritionalCalories;
 import com.stdiet.custom.service.ISysCustomerHealthyService;
 import com.stdiet.custom.service.ISysCustomerPhysicalSignsService;
 import com.stdiet.custom.service.ISysFoodHeatStatisticsService;
+import com.stdiet.custom.utils.NutritionalUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.stdiet.custom.mapper.SysCustomerHeatStatisticsMapper;
@@ -134,20 +135,29 @@ public class SysCustomerHeatStatisticsServiceImpl implements ISysCustomerHeatSta
         Integer[] foodHeat = sysCustomerHeatStatistics.getFoodHeatList();
         if(foodHeatId != null && foodHeatId.length > 0){
             SysFoodHeatStatistics sysFoodHeatStatistics = new SysFoodHeatStatistics();
-            int totalHeatCalue = 0;
+            int totalProteinHeat = 0;
+            int totalFatHeat = 0;
+            int totalCarbonWaterHeat = 0;
             for (int i = 0; i < foodHeatId.length; i++) {
                 sysFoodHeatStatistics.setId(foodHeatId[i]);
                 sysFoodHeatStatistics.setProteinQuality(sysCustomerHeatStatistics.getProteinQualityList()[i]);
                 sysFoodHeatStatistics.setFatQuality(sysCustomerHeatStatistics.getFatQualityList()[i]);
                 sysFoodHeatStatistics.setCarbonWaterQuality(sysCustomerHeatStatistics.getCarbonWaterQualityList()[i]);
                 //根据蛋白质、脂肪、碳水计算热量
-                sysFoodHeatStatistics.setHeatValue(HealthyUtils.calculateTotalHeatByProteinFatCarbonWater(sysCustomerHeatStatistics.getProteinQualityList()[i],
-                        sysCustomerHeatStatistics.getFatQualityList()[i], sysCustomerHeatStatistics.getCarbonWaterQualityList()[i]));
+                sysFoodHeatStatistics.setProteinHeat(HealthyUtils.calculateHeatByProteinQuality(sysCustomerHeatStatistics.getProteinQualityList()[i]));
+                sysFoodHeatStatistics.setFatHeat(HealthyUtils.calculateHeatByFatQuality(sysCustomerHeatStatistics.getFatQualityList()[i]));
+                sysFoodHeatStatistics.setCarbonWaterHeat(HealthyUtils.calculateHeatByCarbonWaterQuality(sysCustomerHeatStatistics.getCarbonWaterQualityList()[i]));
+                sysFoodHeatStatistics.setHeatValue(sysFoodHeatStatistics.getProteinHeat()+sysFoodHeatStatistics.getFatHeat()+sysFoodHeatStatistics.getCarbonWaterHeat());
                 sysFoodHeatStatisticsService.updateSysFoodHeatStatistics(sysFoodHeatStatistics);
-                totalHeatCalue += sysFoodHeatStatistics.getHeatValue();
+                totalProteinHeat += sysFoodHeatStatistics.getProteinHeat();
+                totalFatHeat += sysFoodHeatStatistics.getFatHeat();
+                totalCarbonWaterHeat += sysFoodHeatStatistics.getCarbonWaterHeat();
             }
-            sysCustomerHeatStatistics.setHeatValue(totalHeatCalue);
-            sysCustomerHeatStatistics.setHeatGap(sysCustomerHeatStatistics.getMaxHeatValue() - totalHeatCalue);
+            sysCustomerHeatStatistics.setHeatValue(totalProteinHeat + totalFatHeat + totalCarbonWaterHeat);
+            sysCustomerHeatStatistics.setProteinHeat(totalProteinHeat);
+            sysCustomerHeatStatistics.setFatHeat(totalFatHeat);
+            sysCustomerHeatStatistics.setCarbonWaterHeat(totalCarbonWaterHeat);
+            sysCustomerHeatStatistics.setHeatGap(sysCustomerHeatStatistics.getMaxHeatValue() - sysCustomerHeatStatistics.getHeatValue());
             return sysCustomerHeatStatisticsMapper.updateSysCustomerHeatStatistics(sysCustomerHeatStatistics);
         }
         return 0;
@@ -158,29 +168,24 @@ public class SysCustomerHeatStatisticsServiceImpl implements ISysCustomerHeatSta
      * @param id
      * @return
      */
-    public NutritionalCalories getNutritionalCaloriesByCustomer(Long id){
-        NutritionalCalories nutritionalCalories = new NutritionalCalories();
+    @Override
+    public NutritionalCalories getNutritionalCaloriesByCustomerHeatId(Long id){
+        NutritionalCalories nutritionalCalories = null;
         SysCustomerHeatStatistics sysCustomerHeatStatistics = sysCustomerHeatStatisticsMapper.selectSysCustomerHeatStatisticsById(id);
         if(sysCustomerHeatStatistics != null){
             SysCustomerHealthy sysCustomerHealthy = getSysCustomerHealthy(sysCustomerHeatStatistics.getCustomerId());
             if(sysCustomerHealthy != null){
-                nutritionalCalories.setName(sysCustomerHealthy.getName());
-                nutritionalCalories.setAge(sysCustomerHealthy.getAge().intValue());
-                nutritionalCalories.setTall(sysCustomerHealthy.getTall());
-                nutritionalCalories.setWeight(sysCustomerHealthy.getWeight().doubleValue());
-                nutritionalCalories.setStandardWeight(HealthyUtils.calculateStandardWeight(nutritionalCalories.getTall()));
-                double overHeight = nutritionalCalories.getWeight() - nutritionalCalories.getStandardWeight();
-                overHeight = overHeight > 0 ? overHeight : 0;
-                nutritionalCalories.setOverWeight(overHeight);
-                nutritionalCalories.setMetabolizeHeat(HealthyUtils.calculateMetabolizeHeat(nutritionalCalories.getAge(), nutritionalCalories.getTall(), nutritionalCalories.getWeight()).intValue());
-                nutritionalCalories.setMaxIntakeHeat(sysCustomerHeatStatistics.getMaxHeatValue());
-                nutritionalCalories.setEveryWeightHeat(HealthyUtils.calculateHeatRateByWeight(nutritionalCalories.getMetabolizeHeat(), nutritionalCalories.getWeight()));
-                nutritionalCalories.setTargetEveryWeightHeat(HealthyUtils.calculateHeatTargetRate(nutritionalCalories.getEveryWeightHeat()));
-                //nutritionalCalories.setStandardEveryWeightHeat(HealthyUtils.calculateHeatTargetRate() );
-                nutritionalCalories.setNutritionalRate(HealthyUtils.nutritionRate);
-                Integer[][] nutritionalHeatAndQuality = HealthyUtils.calculateNutritionHeatAndQuality(nutritionalCalories.getMetabolizeHeat());
-                nutritionalCalories.setNutritionalHeat(nutritionalHeatAndQuality[0]);
-                nutritionalCalories.setNutritionalQuality(nutritionalHeatAndQuality[1]);
+                nutritionalCalories = NutritionalUtils.getNutritionalCaloriesData(sysCustomerHealthy);
+                Integer[] ingestedNutritionalHeat = new Integer[3];
+                ingestedNutritionalHeat[0] = sysCustomerHeatStatistics.getProteinHeat();
+                ingestedNutritionalHeat[1] = sysCustomerHeatStatistics.getFatHeat();
+                ingestedNutritionalHeat[2] = sysCustomerHeatStatistics.getCarbonWaterHeat();
+                nutritionalCalories.setIngestedNutritionalHeat(ingestedNutritionalHeat);
+                Integer[] surplusNutritionalHeat = new Integer[3];
+                surplusNutritionalHeat[0] = nutritionalCalories.getNutritionalHeat()[0] - ingestedNutritionalHeat[0];
+                surplusNutritionalHeat[1] = nutritionalCalories.getNutritionalHeat()[1] - ingestedNutritionalHeat[1];
+                surplusNutritionalHeat[2] = nutritionalCalories.getNutritionalHeat()[2] - ingestedNutritionalHeat[2];
+                nutritionalCalories.setSurplusNutritionalHeat(surplusNutritionalHeat);
             }
         }
         return nutritionalCalories;
@@ -207,6 +212,4 @@ public class SysCustomerHeatStatisticsServiceImpl implements ISysCustomerHeatSta
         }
         return sysCustomerHealthy;
     }
-
-
 }

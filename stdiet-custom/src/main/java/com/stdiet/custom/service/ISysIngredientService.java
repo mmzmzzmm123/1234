@@ -58,4 +58,10 @@ public interface ISysIngredientService
      * @return 结果
      */
     public int deleteSysIngredientById(Long id);
-}
+
+    /**
+     * 根据食材名称查询食材信息
+     * @param name
+     * @return
+     */
+    public SysIngredient selectSysIngredientByName(String name);}

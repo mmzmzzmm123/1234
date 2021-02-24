@@ -79,5 +79,5 @@ public interface ISysCustomerHeatStatisticsService
      * @param id
      * @return
      */
-    public NutritionalCalories getNutritionalCaloriesByCustomer(Long id);
+    public NutritionalCalories getNutritionalCaloriesByCustomerHeatId(Long id);
 }
