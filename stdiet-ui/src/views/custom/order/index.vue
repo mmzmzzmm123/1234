@@ -379,27 +379,37 @@
             >详情</el-button
           >
           <el-button
+            v-if="
+              checkPermi(['custom:order:review']) ||
+              (checkPermi(['custom:order:edit']) &&
+                userId === scope.row.preSaleId &&
+                scope.row.reviewStatus === 'no')
+            "
             size="mini"
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['custom:order:edit']"
             >修改
           </el-button>
-          <el-button
+          <!-- <el-button
             size="mini"
             type="text"
             icon="el-icon-s-data"
             @click="orderPauseManage(scope.row)"
             v-hasPermi="['orderPause:pause:query']"
             >暂停记录管理
-          </el-button>
+          </el-button> -->
           <el-button
             size="mini"
+            v-if="
+              checkPermi(['custom:order:review']) ||
+              (checkPermi(['custom:order:remove']) &&
+                userId === scope.row.preSaleId &&
+                scope.row.reviewStatus === 'no')
+            "
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['custom:order:remove']"
             >删除
           </el-button>
         </template>
@@ -443,12 +453,7 @@
 </template>
 
 <script>
-import {
-  delOrder,
-  exportOrder,
-  getOptions,
-  listOrder,
-} from "@/api/custom/order";
+import { delOrder, exportOrder, listOrder } from "@/api/custom/order";
 import dayjs from "dayjs";
 import orderPause from "./orderPause";
 
@@ -456,6 +461,7 @@ import OrderDetail from "@/components/OrderDetail";
 import OrderEdit from "@/components/OrderEdit";
 import AutoHideMessage from "@/components/AutoHideMessage";
 import { mapGetters } from "vuex";
+import { checkPermi } from "@/utils/permission";
 
 const beginTime = dayjs().startOf("month").format("YYYY-MM-DD");
 const endTime = dayjs().format("YYYY-MM-DD");
@@ -542,6 +548,8 @@ export default {
       "operatorIdOptions",
       // 运营助理字典
       "operatorAssisIdOptions",
+      //
+      "userId",
     ]),
   },
   created() {
@@ -563,6 +571,7 @@ export default {
     });
   },
   methods: {
+    checkPermi,
     /** 查询销售订单列表 */
     getList() {
       this.loading = true;
@@ -650,7 +659,6 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const orderIds = row.orderId || this.ids;
       this.$confirm(
         '是否确认删除销售订单编号为"' + orderIds + '"的数据项?',
         "警告",
@@ -661,7 +669,7 @@ export default {
         }
       )
         .then(function () {
-          return delOrder(orderIds);
+          return delOrder(row.orderId);
         })
         .then(() => {
           this.getList();

@@ -222,6 +222,7 @@
       <el-table-column
         label="操作"
         align="center"
+        fixed="right"
         class-name="small-padding fixed-width"
       >
         <template slot-scope="scope">

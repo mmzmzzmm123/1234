@@ -84,8 +84,8 @@ public class SysOrderController extends OrderBaseController {
                 order.setPhone(StringUtils.hiddenPhoneNumber(order.getPhone()));
             }
             //根据服务时长、赠送天数计算服务天数
-            int month = order.getServeTimeId() != null ? order.getServeTimeId().intValue()/30 : 0;
-            if(order.getStartTime() != null && order.getServerEndTime() != null && order.getServeTimeId() != null && month > 0){
+            int month = order.getServeTimeId() != null ? order.getServeTimeId().intValue() / 30 : 0;
+            if (order.getStartTime() != null && order.getServerEndTime() != null && order.getServeTimeId() != null && month > 0) {
                 long serverDay = ChronoUnit.DAYS.between(DateUtils.dateToLocalDate(order.getStartTime()), DateUtils.dateToLocalDate(order.getStartTime()).plusMonths(month).plusDays(order.getGiveServeDay() == null ? 0 : order.getGiveServeDay())) + 1;
                 order.setServerDay(Integer.parseInt(serverDay + ""));
             }
@@ -155,9 +155,9 @@ public class SysOrderController extends OrderBaseController {
     @GetMapping(value = "/getInfoDetail")
     public AjaxResult getInfoDetail(@RequestParam("orderId") Long orderId) {
         SysOrder order = sysOrderService.selectSysOrderById(orderId);
-        if(order != null){
+        if (order != null) {
             List<SysUser> userList = userService.selectAllUser();
-            for(SysUser user : userList){
+            for (SysUser user : userList) {
                 if (user.getUserId().equals(order.getPreSaleId())) {
                     order.setPreSale(user.getNickName());
                 }
@@ -212,9 +212,9 @@ public class SysOrderController extends OrderBaseController {
      */
     @PreAuthorize("@ss.hasPermi('custom:order:remove')")
     @Log(title = "销售订单", businessType = BusinessType.DELETE)
-    @DeleteMapping("/{orderIds}")
-    public AjaxResult remove(@PathVariable Long[] orderIds) {
-        return toAjax(sysOrderService.deleteSysOrderByIds(orderIds));
+    @DeleteMapping("/{orderId}")
+    public AjaxResult remove(@PathVariable Long orderId) {
+        return toAjax(sysOrderService.deleteSysOrderById(orderId));
     }
 
 

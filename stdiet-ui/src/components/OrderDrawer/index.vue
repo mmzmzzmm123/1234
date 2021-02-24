@@ -71,18 +71,28 @@
                 >详情</el-button
               >
               <el-button
-                v-if="scope.row.orderType === 'main'"
+                v-if="
+                  scope.row.orderType === 'main' &&
+                  (checkPermi(['custom:order:review']) ||
+                    (checkPermi(['custom:order:edit']) &&
+                      userId === scope.row.preSaleId &&
+                      scope.row.reviewStatus === 'no'))
+                "
                 size="mini"
                 type="text"
                 @click="handleOnEditClick(scope.row)"
-                v-hasPermi="['custom:order:edit']"
                 >修改</el-button
               >
               <el-button
-                v-if="scope.row.orderType === 'main'"
                 size="mini"
                 type="text"
-                v-hasPermi="['custom:order:remove']"
+                v-if="
+                  scope.row.orderType === 'main' &&
+                  (checkPermi(['custom:order:review']) ||
+                    (checkPermi(['custom:order:remove']) &&
+                      userId === scope.row.preSaleId &&
+                      scope.row.reviewStatus === 'no'))
+                "
                 @click="handleOnDeleteClick(scope.row)"
                 >删除</el-button
               >
@@ -103,8 +113,10 @@
 <script>
 import { listOrder, delOrder } from "@/api/custom/order";
 import OrderEdit from "@/components/OrderEdit";
-import OrderAdd from "@/components/OrderAdd";
+// import OrderAdd from "@/components/OrderAdd";
 import OrderDetail from "@/components/OrderDetail";
+import { mapGetters } from "vuex";
+import { checkPermi } from "@/utils/permission";
 
 export default {
   name: "CustomerOrderDrawer",
@@ -121,7 +133,11 @@ export default {
       orderList: [],
     };
   },
+  computed: {
+    ...mapGetters(["userId"]),
+  },
   methods: {
+    checkPermi,
     showDrawer(data) {
       // console.log(data);
       this.data = data;
@@ -150,6 +166,7 @@ export default {
           }
           return arr;
         }, []);
+        console.log(this.orderList);
 
         this.visible = true;
       });

@@ -74,32 +74,34 @@ const mutations = {
 
 const actions = {
   async init({ commit, dispatch }, payload) {
-    // console.log(payload);
-    //
-    commit("updateStateData", payload);
-    //
-    getDicts("cus_cus_unit").then(response => {
-      commit("updateStateData", { cusUnitOptions: response.data });
-    });
-    getDicts("cus_cus_weight").then(response => {
-      commit("updateStateData", { cusWeightOptions: response.data });
-    });
-    getDicts("cus_dishes_type").then(response => {
-      commit("updateStateData", { typeOptions: response.data });
-    });
-    getDicts("cus_dishes_type").then(response => {
-      commit("updateStateData", { dishesTypeOptions: response.data });
-    });
+    return new Promise((res, rej) => {
+      // console.log(payload);
+      //
+      commit("updateStateData", payload);
+      //
+      getDicts("cus_cus_unit").then(response => {
+        commit("updateStateData", { cusUnitOptions: response.data });
+      });
+      getDicts("cus_cus_weight").then(response => {
+        commit("updateStateData", { cusWeightOptions: response.data });
+      });
+      getDicts("cus_dishes_type").then(response => {
+        commit("updateStateData", { typeOptions: response.data });
+      });
+      getDicts("cus_dishes_type").then(response => {
+        commit("updateStateData", { dishesTypeOptions: response.data });
+      });
 
-    // 健康数据
-    if (payload.cusId) {
-      dispatch("getHealthyData", payload);
-    }
+      // 健康数据
+      if (payload.cusId) {
+        dispatch("getHealthyData", payload).catch(err => rej(err));
+      }
 
-    // 食谱数据
-    if (payload.recipesId) {
-      dispatch("getRecipesInfo", payload);
-    }
+      // 食谱数据
+      if (payload.recipesId) {
+        dispatch("getRecipesInfo", payload).catch(err => rej(err));
+      }
+    });
   },
   async getHealthyData({ commit }, payload) {
     commit("updateStateData", { healthDataLoading: true });

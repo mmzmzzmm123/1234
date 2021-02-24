@@ -1,6 +1,8 @@
 package com.stdiet.custom.service;
 
 import java.util.List;
+
+import com.stdiet.custom.domain.SysOrder;
 import com.stdiet.custom.domain.SysRecipesPlan;
 import org.springframework.core.annotation.Order;
 
@@ -87,4 +89,6 @@ public interface ISysRecipesPlanService
      * @return
      */
     List<SysRecipesPlan> selectPlanListByOrderId(SysRecipesPlan sysRecipesPlan);
+
+    public void myGenerateRecipesPlan(SysOrder sysOrder);
 }

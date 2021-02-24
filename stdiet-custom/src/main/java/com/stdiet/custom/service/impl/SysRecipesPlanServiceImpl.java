@@ -109,6 +109,8 @@ public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService {
         return sysRecipesPlanMapper.deleteSysRecipesPlanById(id);
     }
 
+
+
     /**
      * 异步方法，根据订单ID生成对应的食谱计划，退款订单不生成食谱计划
      *
@@ -122,8 +124,9 @@ public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService {
             return;
         }
         SysOrder sysOrder = sysOrderService.selectSysOrderById(orderId);
-        //订单为空、金额小于0不进行食谱生成、更新，只对2021年开始的订单进行食谱计划生成
-        if (sysOrder == null && DateUtils.dateToLocalDate(sysOrder.getOrderTime()).getYear() < 2021) {
+        //订单为空、金额小于0不进行食谱生成、更新，只对2021年开始的订单进行食谱计划生成，判断订单金额、开始时间、结束时间，为空则直接返回，不重新生成食谱计划
+        if (sysOrder == null && DateUtils.dateToLocalDate(sysOrder.getOrderTime()).getYear() < 2021
+                || sysOrder.getAmount().floatValue() <= 0 || sysOrder.getStartTime() == null || sysOrder.getServerEndTime() == null) {
             return;
         }
 //        System.out.println(DateUtils.dateToLocalDate(sysOrder.getOrderTime()).getYear());
@@ -140,10 +143,10 @@ public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService {
                     //删除该订单对于食谱
                     delRecipesPlanByOrderId(orderIdArray);
                 }
-                //判断订单金额、开始时间、结束时间，为空则直接返回，不重新生成食谱计划
-                if (sysOrder.getAmount().floatValue() <= 0 || sysOrder.getStartTime() == null || sysOrder.getServerEndTime() == null) {
-                    return;
-                }
+//                //判断订单金额、开始时间、结束时间，为空则直接返回，不重新生成食谱计划
+//                if (sysOrder.getAmount().floatValue() <= 0 || sysOrder.getStartTime() == null || sysOrder.getServerEndTime() == null) {
+//                    return;
+//                }
                 SysOrderPause pauseParam = new SysOrderPause();
                 pauseParam.setOrderId(sysOrder.getOrderId());
                 //暂停记录列表
@@ -287,5 +290,10 @@ public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService {
     @Override
     public List<SysRecipesPlan> selectPlanListByOrderId(SysRecipesPlan sysRecipesPlan) {
         return sysRecipesPlanMapper.selectPlanListByOrderId(sysRecipesPlan);
+    }
+
+    @Override
+    public void myGenerateRecipesPlan(SysOrder sysOrder) {
+
     }
 }
