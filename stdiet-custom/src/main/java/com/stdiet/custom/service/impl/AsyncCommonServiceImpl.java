@@ -27,6 +27,7 @@ public class AsyncCommonServiceImpl implements AsyncCommonService {
     @Autowired
     private SysFoodHeatStatisticsMapper sysFoodHeatStatisticsMapper;
 
+    public static final long sleepTime = 5000;  //异步线程睡眠时间，毫秒
 
     /**
      * 异步更新每个食材对应的蛋白质、脂肪、碳水的质量
@@ -34,6 +35,11 @@ public class AsyncCommonServiceImpl implements AsyncCommonService {
     @Override
     @Async
     public void updateFoodNutritionalQualityAndHeat(Long customerHeatId){
+        try {
+            Thread.sleep(sleepTime);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         SysCustomerHeatStatistics sysCustomerHeatStatistics = sysCustomerHeatStatisticsMapper.selectSysCustomerHeatStatisticsById(customerHeatId);
         if(sysCustomerHeatStatistics != null && sysCustomerHeatStatistics.getFoodHeatStatisticsList() != null
                 && sysCustomerHeatStatistics.getFoodHeatStatisticsList().size() > 0){
