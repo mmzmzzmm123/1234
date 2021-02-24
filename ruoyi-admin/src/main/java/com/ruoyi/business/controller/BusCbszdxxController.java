@@ -22,6 +22,8 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
 
+import io.swagger.annotations.ApiOperation;
+
 /**
  * 承包商站点信息Controller
  * 
@@ -58,6 +60,7 @@ public class BusCbszdxxController extends BaseController
     /**
      * 新增承包商站点信息
      */
+    @ApiOperation("新增承包商站点")
     @Log(title = "承包商站点信息", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody @Validated BusCbszdxxSaveVO busCbszdxxSaveVO)

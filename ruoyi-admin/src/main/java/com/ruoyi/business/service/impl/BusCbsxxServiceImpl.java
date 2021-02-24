@@ -227,8 +227,8 @@ public class BusCbsxxServiceImpl implements IBusCbsxxService {
 		List<SelectedBusCbszdxxVO> list003 = busCbszdxxVOList.stream().filter(e -> "003".equals(e.getFwxm()))
 				.collect(Collectors.toList());
 		busCbsxxVO.setCbzd001List(list001);
-		busCbsxxVO.setCbzd001List(list002);
-		busCbsxxVO.setCbzd001List(list003);
+		busCbsxxVO.setCbzd002List(list002);
+		busCbsxxVO.setCbzd003List(list003);
 	}
 
 }

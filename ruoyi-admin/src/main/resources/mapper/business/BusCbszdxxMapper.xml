@@ -13,7 +13,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</resultMap>
 
 	<sql id="selectBusCbszdxxVo">
-		select id, cbs_id, zd_id, year from bus_cbszdxx
+		select id, cbs_id, zd_id,fwxm, year from bus_cbszdxx
 	</sql>
 
 	<select id="selectBusCbszdxxList" parameterType="BusCbszdxx"
