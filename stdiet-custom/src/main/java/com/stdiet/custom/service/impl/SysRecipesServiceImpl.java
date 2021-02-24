@@ -30,7 +30,6 @@ public class SysRecipesServiceImpl implements ISysRecipesService {
     public int addRecipes(SysRecipes sysRecipes) {
         int rows = sysRecipesMapper.addRecipes(sysRecipes);
         if (rows > 0) {
-            int count = sysRecipesMapper.getNumDayByCusId(sysRecipes.getCusId());
             List<SysRecipesDaily> menus = sysRecipes.getMenus();
             List<SysRecipesDailyDishes> dishes = new ArrayList<>();
             int size = menus.size();
@@ -41,8 +40,6 @@ public class SysRecipesServiceImpl implements ISysRecipesService {
                 tarMenu.setId(dailyId);
                 // 插入recipiesId
                 tarMenu.setRecipesId(sysRecipes.getId());
-                // 插入numDay
-                tarMenu.setNumDay(count + i + 1);
                 for (SysRecipesDailyDishes tmpDishes : tarMenu.getDishes()) {
                     // 让菜品插入menuId
                     tmpDishes.setMenuId(dailyId);

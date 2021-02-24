@@ -113,16 +113,22 @@
     >
       <!-- <el-table-column type="selection" width="55" align="center" /> -->
       <el-table-column label="客户姓名" align="center" prop="customer" />
-      <!-- <el-table-column
+      <el-table-column
         label="客户手机号"
         align="center"
         prop="hidePhone"
         width="180"
-      /> -->
+      />
       <el-table-column
         label="食谱日期范围"
         align="center"
         prop="scopeDate"
+        width="200"
+      />
+      <el-table-column
+        label="食谱天数范围"
+        align="center"
+        prop="scopeDay"
         width="200"
       />
       <el-table-column label="营养师" align="center" prop="nutritionist" />
@@ -447,8 +453,9 @@ export default {
         this.recipesPlanList.forEach(function (item, index) {
           item.scopeDate =
             dayjs(item.startDate).format("YYYY-MM-DD") +
-            " 到 " +
+            " 至 " +
             dayjs(item.endDate).format("YYYY-MM-DD");
+          item.scopeDay = `第${item.startNumDay} 至 ${item.endNumDay}天`;
         });
         this.total = response.total;
         this.loading = false;
@@ -603,25 +610,25 @@ export default {
     },
     handleBuild(data) {
       // console.log(data);
-      const { startDate, endDate, id, cusId, recipesId } = data;
+      const { id, cusId, recipesId, customer, startNumDay, endNumDay } = data;
 
-      // const params = { id: data.id, cusId: data.orderId };
-      // const path = `/recipes/build/${orderId}/${id}/${recipesId || 0}`;
-      // this.$router.push({
-      //   name: "build",
-      //   params,
-      // });
       const queryParam = {
         planId: id,
         cusId,
+        name: customer,
       };
-      if (!recipesId) {
-        queryParam.startDate = startDate;
-        queryParam.endDate = endDate;
-      } else {
+      if (recipesId) {
         queryParam.recipesId = recipesId;
+      } else {
+        queryParam.startNum = startNumDay;
+        queryParam.endNum = endNumDay;
       }
-      this.$router.push({ path: "/recipes/build", query: queryParam });
+      const routeUrl = this.$router.resolve({
+        path: "/recipes/build",
+        query: queryParam,
+      });
+      window.open(routeUrl.href, "_blank");
+      // this.$router.push({ path: "/recipes/build", query: queryParam });
     },
   },
 };

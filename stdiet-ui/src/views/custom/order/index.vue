@@ -335,7 +335,7 @@
         </template>
       </el-table-column>
       <el-table-column label="客户姓名" align="center" prop="customer" />
-      <!-- <el-table-column label="手机号" align="center" prop="phone" width="100" /> -->
+      <el-table-column label="手机号" align="center" prop="phone" width="100" />
       <el-table-column label="成交金额" align="center" prop="amount">
         <template slot-scope="scope">
           {{ toThousands(scope.row.amount) }}
@@ -391,14 +391,14 @@
             @click="handleUpdate(scope.row)"
             >修改
           </el-button>
-          <!-- <el-button
+          <el-button
             size="mini"
             type="text"
             icon="el-icon-s-data"
             @click="orderPauseManage(scope.row)"
             v-hasPermi="['orderPause:pause:query']"
             >暂停记录管理
-          </el-button> -->
+          </el-button>
           <el-button
             size="mini"
             v-if="
@@ -660,7 +660,7 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       this.$confirm(
-        '是否确认删除销售订单编号为"' + orderIds + '"的数据项?',
+        '是否确认删除销售订单编号为"' + row.orderId + '"的数据项?',
         "警告",
         {
           confirmButtonText: "确定",

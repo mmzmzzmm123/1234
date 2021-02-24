@@ -127,9 +127,9 @@
 
     <!--  新增每菜单 -->
     <insert id="bashAddMenus">
-        insert into sys_customer_daily_menu (id, num_day, date, recipes_id, cus_id) values
+        insert into sys_customer_daily_menu (id, num_day, recipes_id, cus_id) values
         <foreach collection="list" separator="," item="item" index="index">
-            (#{item.id}, #{item.numDay}, #{item.date}, #{item.recipesId}, #{item.cusId})
+            (#{item.id}, #{item.numDay}, #{item.recipesId}, #{item.cusId})
         </foreach>
     </insert>
 

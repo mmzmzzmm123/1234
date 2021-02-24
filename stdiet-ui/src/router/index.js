@@ -140,19 +140,11 @@ export const constantRoutes = [
     ]
   },
   {
-    path: "/recipes",
-    component: Layout,
-    hidden: true,
-    children: [
-      {
-        path: "build",
-        component: resolve =>
-          require(["@/views/custom/recipesBuild"], resolve),
-        name: "RecipiesBuild",
-        props: true,
-        meta: { title: "食谱制作" }
-      }
-    ]
+    path: "/recipes/build",
+    component: resolve => require(["@/views/custom/recipesBuild"], resolve),
+    name: "RecipiesBuild",
+    meta: { title: "食谱制作" },
+    hidden: true
   },
   {
     path: "/f/contract/:id(\\d+)",
@@ -174,14 +166,13 @@ export const constantRoutes = [
     hidden: true,
     meta: { title: "胜唐体控健康评估表" }
   },
-{
+  {
     path: "/foodHeatCalculator/:id",
     component: resolve =>
-    require(["@/views/custom/foodHeatStatistics/investigate"], resolve),
+      require(["@/views/custom/foodHeatStatistics/investigate"], resolve),
     hidden: true,
     meta: { title: "外食计算器" }
-},
-
+  }
 ];
 
 export default new Router({

@@ -76,10 +76,12 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
             LocalDate serverStartDate = DateUtils.dateToLocalDate(sysOrder.getStartTime());
             //订单总服务月数
             int serverMonth = sysOrder.getServeTimeId() != null ? sysOrder.getServeTimeId().intValue()/30 : 0;
+            //服务天数(不满一个月的零头)
+            int serverSmallDay = sysOrder.getServeTimeId().intValue()%30 - (serverMonth > 0 ? 0 : 1);
             //赠送时长
             int giveDay = sysOrder.getGiveServeDay() != null ? sysOrder.getGiveServeDay().intValue() : 0;
             //服务到期时间（加赠送时间，不加暂停时间）
-            serverEndDate = serverStartDate.plusMonths(serverMonth).plusDays(giveDay);
+            serverEndDate = serverStartDate.plusMonths(serverMonth).plusDays(giveDay+serverSmallDay);
             List<SysOrderPause> pausesList = sysOrder.getOrderPauseList();
             if(pausesList == null){
                 if(sysOrder.getOrderId() != null){
@@ -90,12 +92,10 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
                     pausesList = new ArrayList<>();
                 }
             }
-            //System.out.println("结束时间："+serverEndDate);
             //每年每月暂停天数，key为年份加月份，如:2021年1月=20211
             Map<String, Integer> everyYearMonthPauseDay = getEveryYearMonthPauseDay(pausesList, serverStartDate, serverEndDate);
             //该笔订单暂停总天数
             int pauseTotalDay = getTotalByMap(everyYearMonthPauseDay);
-            //System.out.println("暂停天数："+pauseTotalDay);
             //服务到期时间加上暂停时间
             serverEndDate = serverEndDate.plusDays(pauseTotalDay);
         }
@@ -278,10 +278,12 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
         LocalDate serverStartDate = DateUtils.dateToLocalDate(sysOrder.getStartTime());
         //订单总服务月数
         int serverMonth = sysOrder.getServeTimeId().intValue()/30;
+        //服务天数(不满一个月的零头)
+        int serverSmallDay = sysOrder.getServeTimeId().intValue()%30 - (serverMonth > 0 ? 0 : 1);
         //赠送时长
         int giveDay = sysOrder.getGiveServeDay().intValue();
         //服务到期时间（加赠送时间，不加暂停时间）
-        LocalDate serverEndDate = serverStartDate.plusMonths(serverMonth).plusDays(giveDay);
+        LocalDate serverEndDate = serverStartDate.plusMonths(serverMonth).plusDays(giveDay+serverSmallDay);
         //订单金额
         BigDecimal orderAmount = sysOrder.getAmount();
         //每年每月暂停天数，key为年份加月份，如:2021年1月=20211
@@ -355,9 +357,6 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
             //服务到期时间刷新
             serverEndDate = serverEndDate.plusDays(totalDay);
         }
-        /*for(String key : pauseMap.keySet()){
-            System.out.println(key+":"+pauseMap.get(key).intValue());
-        }*/
         return pauseMap;
     }
 

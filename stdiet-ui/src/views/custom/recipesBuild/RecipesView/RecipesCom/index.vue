@@ -7,15 +7,14 @@
       :cell-style="{ padding: '2px 0' }"
       :header-cell-style="{ padding: '4px 0', height: 'unset' }"
       size="mini"
-      :style="`outline: ${
-        currentDay + 1 === num ? '1px solid #d96969' : 'none'
-      }`"
+      :style="`outline: ${currentDay === num ? '1px solid #d96969' : 'none'}`"
     >
       <el-table-column prop="type" :width="100" align="center">
         <template slot="header">
-          <span class="num_day" @click="handleOnOneDayAnalysis">{{
-            `${name}第${num}天`
-          }}</span>
+          <div class="num_day" @click="handleOnOneDayAnalysis">
+            <div>{{ name }}</div>
+            <div>{{ `第${numDay}天` }}</div>
+          </div>
         </template>
         <template slot-scope="scope">
           <span style="font-weight: bold; font-size: 14px">{{
@@ -23,7 +22,7 @@
           }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="菜品" prop="name" align="center">
+      <el-table-column label="菜品" prop="name" align="center" :width="180">
         <template slot="header">
           <el-tooltip
             class="item"
@@ -50,7 +49,12 @@
           </el-popover>
         </template>
       </el-table-column>
-      <el-table-column label="食材" prop="igdName" align="center" />
+      <el-table-column
+        label="食材"
+        prop="igdName"
+        align="center"
+        :width="180"
+      />
       <el-table-column label="分量估算" :width="80" align="center">
         <template slot-scope="scope">
           <EditableUnit
@@ -71,42 +75,84 @@
       <el-table-column
         label="蛋白质/100g"
         prop="proteinRatio"
-        :width="100"
+        :width="60"
         align="center"
-      />
+      >
+        <template slot="header">
+          <div class="num_day" @click="handleOnOneDayAnalysis">
+            <div>蛋白质</div>
+            <div>/100g</div>
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column
         label="脂肪/100g"
         prop="fatRatio"
-        :width="90"
+        :width="60"
         align="center"
-      />
+      >
+        <template slot="header">
+          <div class="num_day" @click="handleOnOneDayAnalysis">
+            <div>脂肪</div>
+            <div>/100g</div>
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column
         label="碳水/100g"
         prop="carbonRatio"
-        :width="90"
+        :width="60"
         align="center"
-      />
+      >
+        <template slot="header">
+          <div class="num_day" @click="handleOnOneDayAnalysis">
+            <div>碳水</div>
+            <div>/100g</div>
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column
         label="蛋白质含量"
         prop="proteinRatio"
-        :width="90"
+        :width="60"
         align="center"
         :formatter="nutriFormatter"
-      />
+      >
+        <template slot="header">
+          <div class="num_day" @click="handleOnOneDayAnalysis">
+            <div>蛋白质</div>
+            <div>含量</div>
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column
         label="脂肪含量"
         prop="fatRatio"
-        :width="90"
+        :width="60"
         align="center"
         :formatter="nutriFormatter"
-      />
+      >
+        <template slot="header">
+          <div class="num_day" @click="handleOnOneDayAnalysis">
+            <div>脂肪</div>
+            <div>含量</div>
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column
         label="碳水含量"
         prop="carbonRatio"
-        :width="90"
+        :width="60"
         align="center"
         :formatter="nutriFormatter"
-      />
+      >
+        <template slot="header">
+          <div class="num_day" @click="handleOnOneDayAnalysis">
+            <div>碳水</div>
+            <div>含量</div>
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column label="做法" prop="methods" />
     </el-table>
     <AddDishesDrawer ref="drawerRef" @onConfirm="handleOnDishesConfirm" />
@@ -138,6 +184,10 @@ export default {
       default: "",
     },
     num: {
+      type: Number,
+      default: 0,
+    },
+    numDay: {
       type: Number,
       default: 0,
     },
@@ -266,7 +316,7 @@ export default {
     },
     handleOnOneDayAnalysis(e) {
       // 校验某天
-      this.setCurrentDay({ currentDay: this.num - 1 });
+      this.setCurrentDay({ currentDay: this.num });
     },
     handleOnAdd() {
       // console.log(this.num);
@@ -274,12 +324,12 @@ export default {
     },
     handleOnDelete(data) {
       // console.log(data);
-      this.deleteDishes({ num: this.num - 1, id: data.id });
+      this.deleteDishes({ num: this.num, id: data.id });
     },
     handleOnWeightChange(data, weight) {
-      // console.log({ data, weight });
+      console.log({ data, weight });
       this.updateDishes({
-        num: this.num - 1,
+        num: this.num,
         dishesId: data.dishesId,
         igdId: data.igdId,
         weight,
@@ -288,7 +338,7 @@ export default {
     handleOnCustomUnitChange(data, { cusWeight, cusUnit }) {
       // console.log({ data, cusWeight, cusUnit });
       this.updateDishes({
-        num: this.num - 1,
+        num: this.num,
         dishesId: data.dishesId,
         igdId: data.igdId,
         cusWeight,
@@ -298,7 +348,7 @@ export default {
     handleOnDishesConfirm(data) {
       // console.log(data);
       this.addDishes({
-        num: this.num - 1,
+        num: this.num,
         data,
       });
     },

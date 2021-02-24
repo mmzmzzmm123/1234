@@ -4,7 +4,6 @@
       :title="title"
       :close-on-press-escape="false"
       :visible.sync="visible"
-      :wrapperClosable="false"
       @closed="handleOnClosed"
       size="40%"
     >
@@ -103,7 +102,7 @@
     </el-drawer>
 
     <!-- 新增订单 -->
-    <!--<create-order-dialog ref="cusCreateOrderDialogRef" />-->
+    <create-order-dialog ref="cusCreateOrderDialogRef" />
     <!-- 订单编辑 -->
     <edit-order-dialog ref="cusEditOrderDialogRef" />
 
@@ -113,7 +112,7 @@
 <script>
 import { listOrder, delOrder } from "@/api/custom/order";
 import OrderEdit from "@/components/OrderEdit";
-// import OrderAdd from "@/components/OrderAdd";
+import OrderAdd from "@/components/OrderAdd";
 import OrderDetail from "@/components/OrderDetail";
 import { mapGetters } from "vuex";
 import { checkPermi } from "@/utils/permission";
@@ -123,7 +122,7 @@ export default {
   components: {
     "edit-order-dialog": OrderEdit,
     "order-detail": OrderDetail,
-    //"create-order-dialog": OrderAdd
+    "create-order-dialog": OrderAdd
   },
   data() {
     return {
@@ -172,13 +171,13 @@ export default {
       });
     },
     handleAdd() {
-      this.$refs.cusEditOrderDialogRef.showDialog(
+      this.$refs.cusCreateOrderDialogRef.showDialog(
         {
           customer: this.data.name,
           cusId: this.data.id,
           preSaleId: this.data.salesman,
           afterSaleId: this.data.afterDietitian,
-          nutritionistId: this.data.mainDietitian,
+          nutritionistIdList: [this.data.mainDietitian],
           nutriAssisId: this.data.assistantDietitian,
         },
         () => {

@@ -4,9 +4,11 @@
 
 <script>
 import echarts from "echarts";
+import VueScrollTo from "vue-scrollto";
 require("@/utils/echarts/myShine");
 import resize from "@/views/dashboard/mixins/resize";
-
+import { createNamespacedHelpers } from "vuex";
+const { mapMutations } = createNamespacedHelpers("recipes");
 const animationDuration = 6000;
 
 export default {
@@ -55,8 +57,10 @@ export default {
     // console.log("updated");
   },
   methods: {
+    ...mapMutations(["setCurrentDay"]),
     initChart() {
       this.chart = echarts.init(this.$el, "myShine");
+      this.chart.on("click", this.handleOnClick);
       this.updateChart(this.data.length > 0 ? this.data : {});
     },
     updateChart(source) {
@@ -132,6 +136,14 @@ export default {
             borderColor: "#fff",
           },
         })),
+      });
+    },
+    handleOnClick(params) {
+      // console.log(params);
+      const { dataIndex } = params;
+      this.setCurrentDay({ currentDay: dataIndex });
+      VueScrollTo.scrollTo(`#recipes${dataIndex}`, 500, {
+        container: "#recipes_content",
       });
     },
   },

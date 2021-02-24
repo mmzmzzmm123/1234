@@ -9,6 +9,8 @@
         <result property="orderId"    column="order_id"    />
         <result property="startDate"    column="start_date"    />
         <result property="endDate"    column="end_date"    />
+        <result property="startNumDay"    column="start_num_day"    />
+        <result property="endNumDay"    column="end_num_day"    />
         <result property="recipesId"    column="recipes_id"    />
         <result property="sendFlag"    column="send_flag"    />
         <result property="sendTime"    column="send_time"    />
@@ -19,7 +21,7 @@
         <result property="delFlag"    column="del_flag"    />
         <result property="cusId"    column="cus_id"    />
         <!-- 非持久化字段 -->
-        <result property="customerId" column="cus_id"></result><!-- 客户ID -->
+<!--        <result property="customerId" column="cus_id"></result>&lt;!&ndash; 客户ID &ndash;&gt;-->
         <result property="customer"    column="customer"    /><!-- 客户姓名 -->
         <result property="phone" column="phone"     />
         <result property="orderStartDate"    column="order_start_date"    />
@@ -31,7 +33,7 @@
     </resultMap>
 
     <sql id="selectSysRecipesPlanVo">
-        select id, order_id, cus_id, start_date, end_date, recipes_id, send_flag, send_time, create_time, create_by, update_time, update_by, del_flag from sys_recipes_plan
+        select id, order_id, cus_id, start_date, end_date, start_num_day, end_num_day, recipes_id, send_flag, send_time, create_time, create_by, update_time, update_by, del_flag from sys_recipes_plan
     </sql>
 
     <select id="selectSysRecipesPlanList" parameterType="SysRecipesPlan" resultMap="SysRecipesPlanResult">
@@ -40,6 +42,8 @@
         <if test="cusId != null "> and cus_id = #{cusId}</if>
         <if test="startDate != null "> and start_date = #{startDate}</if>
         <if test="endDate != null "> and end_date = #{endDate}</if>
+        <if test="startNumDay != null "> and start_num_day = #{startNumDay}</if>
+        <if test="endNumDay != null "> and end_num_day = #{endNumDay}</if>
         <if test="recipesId != null "> and recipes_id = #{recipesId}</if>
         <if test="sendFlag != null "> and send_flag = #{sendFlag}</if>
         <if test="sendTime != null "> and send_time = #{sendTime}</if>
@@ -57,6 +61,8 @@
             <if test="cusId != null">cus_id,</if>
             <if test="startDate != null">start_date,</if>
             <if test="endDate != null">end_date,</if>
+            <if test="startNumDay != null">start_num_day,</if>
+            <if test="endNumDay != null">end_num_day,</if>
             <if test="recipesId != null">recipes_id,</if>
             <if test="sendFlag != null">send_flag,</if>
             <if test="sendTime != null">send_time,</if>
@@ -71,6 +77,8 @@
             <if test="cusId != null">#{cusId},</if>
             <if test="startDate != null">#{startDate},</if>
             <if test="endDate != null">#{endDate},</if>
+            <if test="startNumDay != null">#{startNumDay},</if>
+            <if test="endNumDay != null">#{endNumDay},</if>
             <if test="recipesId != null">#{recipesId},</if>
             <if test="sendFlag != null">#{sendFlag},</if>
             <if test="sendTime != null">#{sendTime},</if>
@@ -89,6 +97,8 @@
             <if test="cusId != null">cus_id = #{cusId},</if>
             <if test="startDate != null">start_date = #{startDate},</if>
             <if test="endDate != null">end_date = #{endDate},</if>
+            <if test="startNumDay != null">start_num_day = #{startNumDay},</if>
+            <if test="endNumDay != null">end_num_day = #{endNumDay},</if>
             <if test="recipesId != null">recipes_id = #{recipesId},</if>
             <if test="sendFlag != null">send_flag = #{sendFlag},</if>
             <if test="sendTime != null">send_time = #{sendTime},</if>
@@ -115,10 +125,10 @@
     <!-- 批量插入食谱计划 -->
     <insert id="insertBatch">
         INSERT INTO sys_recipes_plan
-        (order_id, cus_id, start_date, end_date, send_flag, send_time, recipes_id)
+        (order_id, cus_id, start_date, end_date, start_num_day, end_num_day, send_flag, send_time, recipes_id)
         VALUES
         <foreach collection ="list" item="plan" separator =",">
-            (#{plan.orderId}, #{plan.cusId}, #{plan.startDate}, #{plan.endDate}, #{plan.sendFlag}, #{plan.sendTime}, #{plan.recipesId})
+            (#{plan.orderId}, #{plan.cusId}, #{plan.startDate}, #{plan.endDate}, #{plan.startNumDay}, #{plan.endNumDay}, #{plan.sendFlag}, #{plan.sendTime}, #{plan.recipesId})
         </foreach >
     </insert>
 
@@ -132,15 +142,18 @@
 
     <!-- 食谱计划、订单表联查 -->
     <select id="selectPlanListByCondition" parameterType="SysRecipesPlan" resultMap="SysRecipesPlanResult">
-      SELECT srp.id,srp.order_id,srp.recipes_id,sr.customer,sr.cus_id,sr.phone,su_nutritionist.nick_name nutritionist,su_nutritionist_assis.nick_name AS nutritionist_assis,sr.start_time,sr.server_end_time, srp.start_date,srp.end_date,srp.send_flag,srp.send_time
+      SELECT srp.id,srp.order_id,srp.recipes_id,srp.start_num_day,srp.end_num_day,srp.cus_id,sc.phone,
+        su_nutritionist.nick_name nutritionist,su_nutritionist_assis.nick_name AS nutritionist_assis,
+        srp.start_date,srp.end_date,srp.send_flag,srp.send_time, sc.name as customer
       FROM sys_recipes_plan srp
       LEFT JOIN sys_order sr ON sr.order_id = srp.order_id
+      LEFT JOIN sys_customer sc ON sc.id = srp.cus_id
       LEFT JOIN sys_user su_nutritionist ON su_nutritionist.user_id = sr.nutritionist_id AND su_nutritionist.del_flag = 0
       LEFT JOIN sys_user su_nutritionist_assis ON su_nutritionist_assis.user_id = sr.nutri_assis_id AND su_nutritionist_assis.del_flag = 0
-      WHERE srp.del_flag = 0
+      WHERE srp.del_flag = 0 and sr.del_flag = 0
       <if test="orderId != null">AND srp.order_id = #{orderId}</if>
         <if test="sendFlag != null">AND srp.send_flag = #{sendFlag}</if>
-      <if test="customer != null and customer != ''">AND (sr.customer like concat('%',#{customer},'%') OR sr.phone like concat('%',#{customer},'%'))</if>
+      <if test="customer != null and customer != ''">AND (sc.name like concat('%',#{customer},'%') OR sc.phone like concat('%',#{customer},'%'))</if>
       <if test="nutritionistId != null">AND su_nutritionist.user_id = #{nutritionistId}</if>
       <if test="nutritionistAssisId != null">AND su_nutritionist_assis.user_id = #{nutritionistAssisId}</if>
       <if test="startDate != null and endDate != null ">AND srp.start_date BETWEEN date_format(#{startDate},'%y%m%d') AND date_format(#{endDate},'%y%m%d') </if>
@@ -169,7 +182,7 @@
       SELECT srp.id,srp.order_id,sr.customer,sr.phone, srp.start_date,srp.end_date,srp.send_flag,srp.send_time
       FROM sys_recipes_plan srp
       LEFT JOIN sys_order sr ON sr.order_id = srp.order_id
-      WHERE srp.del_flag = 0 AND srp.order_id = #{orderId}
+      WHERE srp.del_flag = 0 AND sr.del_flag = 0 AND srp.order_id = #{orderId}
       <if test="sendFlag != null">AND srp.send_flag = #{sendFlag}</if>
       ORDER BY srp.id ASC
     </select>

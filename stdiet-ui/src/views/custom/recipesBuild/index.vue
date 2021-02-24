@@ -1,5 +1,5 @@
 <template>
-  <div class="recipes_build_wrapper">
+  <div class="recipes_build_wrapper" v-title :data-title="$route.query.name">
     <div class="left" v-loading="recipesDataLoading">
       <RecipesView
         v-if="!!recipesData.length"
@@ -35,13 +35,13 @@ export default {
     return {};
   },
   mounted() {
-    const { cusId, planId, startDate, endDate, recipesId } = this.$route.query;
+    const { cusId, planId, startNum, endNum, recipesId } = this.$route.query;
 
     this.init({
       cusId,
       planId,
-      startDate,
-      endDate,
+      startNum: parseInt(startNum),
+      endNum: parseInt(endNum),
       recipesId,
     }).catch((err) => {
       this.$message.error(err.message);
@@ -78,7 +78,7 @@ export default {
 .recipes_build_wrapper {
   padding: 16px;
   display: flex;
-  height: calc(100vh - 86px);
+  height: 100vh;
   .left {
     flex: 4;
     border-right: 1px solid #e6ebf5;

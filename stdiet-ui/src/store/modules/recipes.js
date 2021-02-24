@@ -8,7 +8,6 @@ import {
   addRecipesApi
 } from "@/api/custom/recipes";
 import { getDicts } from "@/api/system/dict/data";
-import dayjs from "dayjs";
 
 const oriState = {
   cusId: undefined,
@@ -24,8 +23,8 @@ const oriState = {
   dishesTypeOptions: [],
   typeOptions: [],
   currentDay: -1,
-  startDate: "",
-  endDate: ""
+  startNum: 0,
+  endNum: 0
 };
 
 const mutations = {
@@ -36,9 +35,9 @@ const mutations = {
     if (tarDishes) {
       const tarIgd = tarDishes.igdList.find(obj => obj.id === payload.igdId);
       if (tarIgd) {
-        Object.keys(payload).forEach(key => {
-          tarIgd[key] = payload[key];
-        });
+        payload.weight && (tarIgd.weight = payload.weight);
+        payload.cusWeight && (tarIgd.cusWeight = payload.cusWeight);
+        payload.cusUnit && (tarIgd.cusUnit = payload.cusUnit);
       }
     }
   },
@@ -125,63 +124,73 @@ const actions = {
       healthyData
     });
   },
-  async getRecipesInfo({ commit }, payload) {
+  async getRecipesInfo({ commit, state }, payload) {
     commit("updateStateData", {
       recipesDataLoading: true
     });
     const recipesDataResult = await getRecipesApi(payload.recipesId);
-    let recipesData = undefined;
+    let recipesData = [];
     if (recipesDataResult.code === 200) {
-      recipesData = recipesDataResult.data.map(dayData => {
-        return {
-          id: dayData.id,
-          numDay: dayData.numDay,
-          dishes: dayData.dishes.reduce((arr, cur) => {
-            if (
-              cur.dishesId > -1 &&
-              cur.name &&
-              cur.igdList.length > 0 &&
-              cur.type !== "0"
-            ) {
-              arr.push({
-                id: cur.id,
-                dishesId: cur.dishesId,
-                name: cur.name,
-                menuId: cur.menuId,
-                methods: cur.methods,
-                type: cur.type,
-                isMain: cur.isMain,
-                igdList: cur.igdList.reduce((igdArr, igdData) => {
-                  if (igdData.id > 0) {
-                    const tarDetail = cur.detail.find(
-                      obj => obj.id === igdData.id
-                    );
-                    igdArr.push({
-                      id: igdData.id,
-                      name: igdData.name,
-                      carbonRatio: igdData.carbonRatio,
-                      fatRatio: igdData.fatRatio,
-                      proteinRatio: igdData.proteinRatio,
-                      cusUnit: tarDetail ? tarDetail.cus_unit : igdData.cusUnit,
-                      cusWeight: tarDetail
-                        ? parseFloat(tarDetail.cus_weight)
-                        : igdData.cusWeight,
-                      weight: tarDetail
-                        ? parseFloat(tarDetail.weight)
-                        : igdData.weight,
-                      notRec: igdData.notRec,
-                      rec: igdData.rec,
-                      type: igdData.type
-                    });
-                  }
-                  return igdArr;
-                }, [])
-              });
-            }
-            return arr;
-          }, [])
-        };
-      });
+      const { endNum, startNum } = state;
+      let length = null;
+      if (endNum && startNum) {
+        length = endNum - startNum;
+      }
+      recipesData = recipesDataResult.data.reduce((outArr, dayData, idx) => {
+        if (!length || (length && length >= idx)) {
+          outArr.push({
+            id: dayData.id,
+            numDay: startNum ? startNum + idx : dayData.numDay,
+            dishes: dayData.dishes.reduce((arr, cur) => {
+              if (
+                cur.dishesId > -1 &&
+                cur.name &&
+                cur.igdList.length > 0 &&
+                cur.type !== "0"
+              ) {
+                arr.push({
+                  id: cur.id,
+                  dishesId: cur.dishesId,
+                  name: cur.name,
+                  menuId: cur.menuId,
+                  methods: cur.methods,
+                  type: cur.type,
+                  isMain: cur.isMain,
+                  igdList: cur.igdList.reduce((igdArr, igdData) => {
+                    if (igdData.id > 0) {
+                      const tarDetail = cur.detail.find(
+                        obj => obj.id === igdData.id
+                      );
+                      igdArr.push({
+                        id: igdData.id,
+                        name: igdData.name,
+                        carbonRatio: igdData.carbonRatio,
+                        fatRatio: igdData.fatRatio,
+                        proteinRatio: igdData.proteinRatio,
+                        cusUnit: tarDetail
+                          ? tarDetail.cus_unit
+                          : igdData.cusUnit,
+                        cusWeight: tarDetail
+                          ? parseFloat(tarDetail.cus_weight)
+                          : igdData.cusWeight,
+                        weight: tarDetail
+                          ? parseFloat(tarDetail.weight)
+                          : igdData.weight,
+                        notRec: igdData.notRec,
+                        rec: igdData.rec,
+                        type: igdData.type
+                      });
+                    }
+                    return igdArr;
+                  }, [])
+                });
+              }
+              return arr;
+            }, [])
+          });
+        }
+        return outArr;
+      }, []);
     } else {
       throw new Error(recipesDataResult.msg);
     }
@@ -193,9 +202,7 @@ const actions = {
       cusId,
       planId,
       menus: recipesData.map((menu, idx) => ({
-        date: dayjs(state.startDate)
-          .add(idx, "day")
-          .format("YYYY-MM-DD"),
+        numDay: menu.numDay,
         cusId,
         dishes: menu.dishes.map(dObj => ({
           dishesId: dObj.dishesId,
@@ -209,11 +216,19 @@ const actions = {
         }))
       }))
     };
+
     const result = await addRecipesApi(params);
     if (result.code === 200) {
       const recipesId = result.data;
       commit("updateStateData", { recipesId });
       dispatch("getRecipesInfo", { recipesId });
+      payload.callback &&
+        payload.callback({
+          recipesId: result.data,
+          name: state.healthyData.name,
+          cusId: state.cusId,
+          planId: state.planId
+        });
     }
     // console.log(params);
   },
@@ -247,6 +262,7 @@ const actions = {
     }
   },
   async updateDishes({ commit, state }, payload) {
+    // console.log(payload);
     if (state.recipesId) {
       const tarDishes = state.recipesData[payload.num].dishes.find(
         obj => obj.dishesId === payload.dishesId
@@ -273,9 +289,9 @@ const actions = {
             commit("updateRecipesDishesDetail", payload);
           }
         }
-      } else {
-        commit("updateRecipesDishesDetail", payload);
       }
+    } else {
+      commit("updateRecipesDishesDetail", payload);
     }
   },
   async deleteDishes({ commit, state }, payload) {

@@ -6,7 +6,7 @@
       }}</span>
     </el-form-item>
     <el-form-item label="菜品类型">
-      <el-radio-group v-model="type" @change="handleOnTypeChange">
+      <el-radio-group v-model="mType" @change="handleOnTypeChange">
         <el-radio
           v-for="item in typeOptions"
           :key="item.dictValue"
@@ -41,11 +41,7 @@
             />
           </template>
         </el-table-column>
-        <el-table-column
-          prop="proteinRatio"
-          label="P/100g"
-          align="center"
-        />
+        <el-table-column prop="proteinRatio" label="P/100g" align="center" />
         <el-table-column prop="fatRatio" label="F/100g" align="center" />
         <el-table-column prop="carbonRatio" label="C/100g" align="center" />
       </el-table>
@@ -80,7 +76,7 @@ export default {
   name: "ConfigDishes",
   data() {
     return {
-      nType: this.type,
+      mType: this.type,
     };
   },
   props: {
@@ -113,14 +109,19 @@ export default {
     EditableText,
     EditableUnit,
   },
+  watch: {
+    type(val) {
+      this.mType = val;
+    },
+  },
   computed: {},
   methods: {
     handleOnTypeChange(type) {
-      this.$emit("onChane", { type });
+      this.$emit("onChange", { type });
     },
     handleOnWeightChange(data, val) {
       // console.log({ data, val });
-      this.$emit("onChane", {
+      this.$emit("onChange", {
         igdList: produce(this.igdList, (draftState) => {
           const tarIgd = draftState.find((obj) => obj.id === data.id);
           if (tarIgd) {
@@ -131,7 +132,7 @@ export default {
     },
     handleOnCustomUnitChange(data, val) {
       // console.log({ data, val });
-      this.$emit("onChane", {
+      this.$emit("onChange", {
         igdList: produce(this.igdList, (draftState) => {
           const tarIgd = draftState.find((obj) => obj.id === data.id);
           if (tarIgd) {

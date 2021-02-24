@@ -10,16 +10,16 @@
     <el-row :gutter="15">
       <el-form ref="form" :model="form" :rules="rules" label-width="100px">
         <el-col :span="12">
-          <el-form-item label="订单类型" prop="orderType">
+          <el-form-item label="订单类型" prop="orderTypeList">
             <el-cascader
-              v-model="form.orderType"
+              v-model="form.orderTypeList"
               :options="orderTypeOptions"
               style="width: 100%"
             >
             </el-cascader>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="8" v-show="secondAfterSaleFlagShow">
           <el-form-item
             label="自动创建售后提成订单"
             prop="secondAfterSaleFlag"
@@ -27,7 +27,6 @@
           >
             <el-select
               v-model="form.secondAfterSaleFlag"
-              :disabled="secondAfterSaleFlagShow"
               style="width: 100px"
               placeholder="请选择"
             >
@@ -116,7 +115,18 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="8" v-show="!afterNutiShow">
+          <el-form-item label="售中" prop="onSaleId">
+            <el-select v-model="form.onSaleId" placeholder="请选择">
+              <el-option
+                :key="177"
+                :label="'时瑞瑞'"
+                :value="parseInt('177')"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="8" v-show="afterNutiShow">
           <el-form-item label="售后" prop="afterSaleId">
             <el-select v-model="form.afterSaleId" placeholder="请选择">
               <el-option
@@ -128,7 +138,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="8" v-show="afterNutiShow">
           <el-form-item label="主营养师" prop="nutritionistIdList">
             <el-select
               v-model="form.nutritionistIdList"
@@ -144,11 +154,10 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="8" v-show="orderRateOptionsShow">
           <el-form-item label="拆分比例" prop="nutritionistRate">
             <el-select
               v-model="form.nutritionistRate"
-              :disabled="orderRateOptionsShow"
               placeholder="请选择"
             >
               <el-option
@@ -160,7 +169,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="8" v-show="afterNutiShow">
           <el-form-item label="助理营养师" prop="nutriAssisId">
             <el-select v-model="form.nutriAssisId" placeholder="请选择">
               <el-option
@@ -252,7 +261,8 @@
             </el-date-picker>
           </el-form-item>
         </el-col>
-        <el-col :span="10" v-hasPermi="['custom:order:review']">
+        <!-- 添加时默认未审核，不能改 -->
+        <el-col :span="10" v-hasPermi="['custom:order:review']" v-show="false">
           <el-form-item label="审核状态" prop="reviewStatus">
             <el-select v-model="form.reviewStatus" placeholder="请选择审核状态">
               <el-option
@@ -417,10 +427,12 @@ export default {
       orderDropdownCorrespondingOptions: [],
       //订单类型
       orderTypeOptions: orderTypeData["orderTypeArray"],
-      secondAfterSaleFlagShow: true,
+      secondAfterSaleFlagShow: false,
       //分成比例
       orderRateOptions: orderTypeData["orderRateArray"],
-      orderRateOptionsShow: true,
+      orderRateOptionsShow: false,
+      //售后、营养师、营养师助理是否显示
+      afterNutiShow: true,
     };
   },
   created() {
@@ -571,7 +583,8 @@ export default {
         : [0, 0, 0, 0];
       this.form = {
         orderId: null,
-        orderType: [0, 0, 0],
+        orderType: null,
+        orderTypeList: [0, 0, 0],
         secondAfterSaleFlag: 0,
         customer: null,
         phone: null,
@@ -587,6 +600,7 @@ export default {
         preSaleId: defaultPresale ? parseInt(defaultPresale.dictValue) : null,
         createBy: null,
         createTime: null,
+        onSaleId: null,
         afterSaleId: defaultAftersale
           ? parseInt(defaultAftersale.dictValue)
           : null,
@@ -653,7 +667,7 @@ export default {
       }
     },
     handleOrderTypeChange() {
-      console.log(this.form.orderType);
+      console.log(this.form.orderTypeList);
     },
   },
   watch: {
@@ -661,22 +675,36 @@ export default {
     "form.accountId": function (newVal, oldVal) {
       this.initPlanningAndOperation();
     },
-    "form.orderType": function (newVal, oldVal) {
+    "form.orderTypeList": function (newVal, oldVal) {
       //判断订单类型是否选择了二开
       if (newVal[1] == 1) {
         this.form.secondAfterSaleFlag = 1;
-        this.secondAfterSaleFlagShow = false;
+        this.secondAfterSaleFlagShow = true;
       } else {
         this.form.secondAfterSaleFlag = 0;
-        this.secondAfterSaleFlagShow = true;
+        this.secondAfterSaleFlagShow = false;
       }
       //判断是否选择了比例拆分单
       if (newVal[0] == 1) {
-        this.orderRateOptionsShow = false;
+        this.orderRateOptionsShow = true;
         this.form.nutritionistRate = "2,8";
       } else {
-        this.orderRateOptionsShow = true;
+        this.orderRateOptionsShow = false;
         this.form.nutritionistRate = "0,10";
+      }
+      //判断是否选择了体验单
+      if (newVal[0] == 2) {
+         /*this.form.nutritionistId = null;
+         this.form.nutritionistIdList = null;
+         this.form.afterSaleId = null;
+         this.form.nutriAssisId = null;*/
+         this.afterNutiShow = false;
+         this.form.onSaleId = 177;
+         this.form.serveTimeId = 7;
+      }else{
+        this.form.onSaleId = null;
+        this.form.serveTimeId = 90;
+        this.afterNutiShow = true;
       }
     },
   },
