@@ -26,4 +26,34 @@ public class SelectedBusCbszdxxVO implements Serializable {
 	@Excel(name = "服务项目")
 	private String fwxm;
 
+	public SelectedBusCbszdxxVO(Long zdId, String fwxm) {
+		super();
+		this.zdId = zdId;
+		this.fwxm = fwxm;
+	}
+
+	public Long getZdId() {
+		return zdId;
+	}
+
+	public void setZdId(Long zdId) {
+		this.zdId = zdId;
+	}
+
+	public String getZdmc() {
+		return zdmc;
+	}
+
+	public void setZdmc(String zdmc) {
+		this.zdmc = zdmc;
+	}
+
+	public String getFwxm() {
+		return fwxm;
+	}
+
+	public void setFwxm(String fwxm) {
+		this.fwxm = fwxm;
+	}
+
 }

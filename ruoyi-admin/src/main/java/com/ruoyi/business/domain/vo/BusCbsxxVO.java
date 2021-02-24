@@ -33,15 +33,15 @@ public class BusCbsxxVO implements Serializable {
 	/**
 	 * 承包站点年份对应的站库
 	 */
-	private List<SelectedBusCbszdxxVO> cbzd001;
+	private List<SelectedBusCbszdxxVO> cbzd001List;
 	/**
 	 * 承包站点年份对应的单井巡线
 	 */
-	private List<SelectedBusCbszdxxVO> cbzd002;
+	private List<SelectedBusCbszdxxVO> cbzd002List;
 	/**
 	 * 承包站点年份对应的单井流程值守
 	 */
-	private List<SelectedBusCbszdxxVO> cbzd003;
+	private List<SelectedBusCbszdxxVO> cbzd003List;
 
 	public BusCbsxx getCbsxx() {
 		return cbsxx;
@@ -75,28 +75,28 @@ public class BusCbsxxVO implements Serializable {
 		this.year = year;
 	}
 
-	public List<SelectedBusCbszdxxVO> getCbzd001() {
-		return cbzd001;
+	public List<SelectedBusCbszdxxVO> getCbzd001List() {
+		return cbzd001List;
 	}
 
-	public void setCbzd001(List<SelectedBusCbszdxxVO> cbzd001) {
-		this.cbzd001 = cbzd001;
+	public void setCbzd001List(List<SelectedBusCbszdxxVO> cbzd001List) {
+		this.cbzd001List = cbzd001List;
 	}
 
-	public List<SelectedBusCbszdxxVO> getCbzd002() {
-		return cbzd002;
+	public List<SelectedBusCbszdxxVO> getCbzd002List() {
+		return cbzd002List;
 	}
 
-	public void setCbzd002(List<SelectedBusCbszdxxVO> cbzd002) {
-		this.cbzd002 = cbzd002;
+	public void setCbzd002List(List<SelectedBusCbszdxxVO> cbzd002List) {
+		this.cbzd002List = cbzd002List;
 	}
 
-	public List<SelectedBusCbszdxxVO> getCbzd003() {
-		return cbzd003;
+	public List<SelectedBusCbszdxxVO> getCbzd003List() {
+		return cbzd003List;
 	}
 
-	public void setCbzd003(List<SelectedBusCbszdxxVO> cbzd003) {
-		this.cbzd003 = cbzd003;
+	public void setCbzd003List(List<SelectedBusCbszdxxVO> cbzd003List) {
+		this.cbzd003List = cbzd003List;
 	}
 
 }

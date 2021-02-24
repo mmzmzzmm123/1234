@@ -59,7 +59,7 @@ public class ViewBusZdxxController extends BaseController {
 		if (StringUtils.isEmpty(year)) {
 			cbYear = DateUtils.dateTimeNow("yyyy");
 		}
-		List<BusCbszdxx> busCbszdxxList = findBusCbsZdxxList(cbsId, cbYear);
+		List<BusCbszdxx> busCbszdxxList = busCbszdxxService.findBusCbsZdxxList(cbsId, cbYear);
 
 		// 查询所有站点信息，如果有承包商承包的站点，标记为selected状态
 		List<ViewBusZdxx> list = viewBusZdxxService.selectViewBusZdxxList(viewBusZdxx);
@@ -72,13 +72,6 @@ public class ViewBusZdxxController extends BaseController {
 			viewBusZdxxVOList.add(viewBusZdxxVO);
 		}
 		return viewBusZdxxVOList;
-	}
-
-	private List<BusCbszdxx> findBusCbsZdxxList(Long cbsId, String cbYear) {
-		BusCbszdxx busCbszdxx = new BusCbszdxx();
-		busCbszdxx.setCbsId(cbsId);
-		busCbszdxx.setYear(cbYear);
-		return busCbszdxxService.selectBusCbszdxxList(busCbszdxx);
 	}
 
 	/**

@@ -107,4 +107,12 @@ public class BusCbszdxxServiceImpl implements IBusCbszdxxService {
 	public int deleteBusCbszdxxById(Long id) {
 		return busCbszdxxMapper.deleteBusCbszdxxById(id);
 	}
+	
+	@Override
+	public List<BusCbszdxx> findBusCbsZdxxList(Long cbsId, String cbYear) {
+		BusCbszdxx busCbszdxx = new BusCbszdxx();
+		busCbszdxx.setCbsId(cbsId);
+		busCbszdxx.setYear(cbYear);
+		return selectBusCbszdxxList(busCbszdxx);
+	}
 }

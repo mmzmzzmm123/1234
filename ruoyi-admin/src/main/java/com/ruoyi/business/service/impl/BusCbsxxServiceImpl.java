@@ -12,14 +12,19 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ruoyi.business.domain.BusCbsxx;
+import com.ruoyi.business.domain.BusCbszdxx;
 import com.ruoyi.business.domain.BusCbszzxx;
+import com.ruoyi.business.domain.ViewBusZdxx;
 import com.ruoyi.business.domain.vo.BusCbsgrxxVO;
 import com.ruoyi.business.domain.vo.BusCbsxxSaveVO;
 import com.ruoyi.business.domain.vo.BusCbsxxVO;
+import com.ruoyi.business.domain.vo.SelectedBusCbszdxxVO;
 import com.ruoyi.business.mapper.BusCbsxxMapper;
 import com.ruoyi.business.service.IBusCbsgrxxService;
 import com.ruoyi.business.service.IBusCbsxxService;
+import com.ruoyi.business.service.IBusCbszdxxService;
 import com.ruoyi.business.service.IBusCbszzxxService;
+import com.ruoyi.business.service.IViewBusZdxxService;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
@@ -41,6 +46,12 @@ public class BusCbsxxServiceImpl implements IBusCbsxxService {
 
 	@Autowired
 	private IBusCbsgrxxService busCbsgrxxService;
+
+	@Autowired
+	private IBusCbszdxxService busCbszdxxService;
+
+	@Autowired
+	private IViewBusZdxxService viewBusZdxxService;
 
 	/**
 	 * 查询承包商信息
@@ -161,6 +172,15 @@ public class BusCbsxxServiceImpl implements IBusCbsxxService {
 		return busCbsxxMapper.deleteBusCbsxxById(id);
 	}
 
+	/**
+	 * 承包商详细信息
+	 * 
+	 * @param busCbsxx
+	 *            承包商信息
+	 * @param year
+	 *            承包年份
+	 * @return
+	 */
 	private BusCbsxxVO selectByCbsxx(BusCbsxx busCbsxx, String year) {
 		Long cbsId = busCbsxx.getId();
 		List<BusCbsgrxxVO> ryxxList = busCbsgrxxService.selectByCbsId(cbsId);
@@ -171,16 +191,44 @@ public class BusCbsxxServiceImpl implements IBusCbsxxService {
 		busCbsxxVO.setCbsxx(busCbsxx);
 		busCbsxxVO.setZzxxList(zzxxList);
 		busCbsxxVO.setRyxxList(ryxxList);
-
 		/**
 		 * 设置已承包的站点信息
 		 */
 		if (year == null || year.isEmpty()) {
 			year = DateUtils.dateTimeNow("yyyy");
 		}
+		this.setCbszdInfo(busCbsxxVO, cbsId, year);
 
 		return busCbsxxVO;
 	}
 
-	
+	/**
+	 * 设置承包商站点信息
+	 * 
+	 * @param busCbsxxVO
+	 *            承包商信息
+	 * @param year
+	 *            承包年份
+	 */
+	private void setCbszdInfo(BusCbsxxVO busCbsxxVO, Long cbsId, String year) {
+		List<BusCbszdxx> cbsZdxxList = busCbszdxxService.findBusCbsZdxxList(cbsId, year);
+		List<SelectedBusCbszdxxVO> busCbszdxxVOList = cbsZdxxList.stream()
+				.map(e -> new SelectedBusCbszdxxVO(e.getZdId(), e.getFwxm())).collect(Collectors.toList());
+		busCbszdxxVOList.forEach(e -> {
+			ViewBusZdxx viewBusZdxx = viewBusZdxxService.selectViewBusZdxxById(e.getZdId());
+			if (viewBusZdxx != null) {
+				e.setZdmc(viewBusZdxx.getZdmc());
+			}
+		});
+		List<SelectedBusCbszdxxVO> list001 = busCbszdxxVOList.stream().filter(e -> "001".equals(e.getFwxm()))
+				.collect(Collectors.toList());
+		List<SelectedBusCbszdxxVO> list002 = busCbszdxxVOList.stream().filter(e -> "002".equals(e.getFwxm()))
+				.collect(Collectors.toList());
+		List<SelectedBusCbszdxxVO> list003 = busCbszdxxVOList.stream().filter(e -> "003".equals(e.getFwxm()))
+				.collect(Collectors.toList());
+		busCbsxxVO.setCbzd001List(list001);
+		busCbsxxVO.setCbzd001List(list002);
+		busCbsxxVO.setCbzd001List(list003);
+	}
+
 }
