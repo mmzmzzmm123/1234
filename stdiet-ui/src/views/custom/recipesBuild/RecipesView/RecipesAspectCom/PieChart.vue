@@ -124,6 +124,7 @@ export default {
           text: `${data.name}营养统计`,
         },
         tooltip: {
+          position: 'right',
           trigger: "item",
           appendToBody: true,
           formatter: (params) => {

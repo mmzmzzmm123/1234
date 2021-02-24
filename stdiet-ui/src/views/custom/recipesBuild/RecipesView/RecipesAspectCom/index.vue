@@ -60,7 +60,12 @@ export default {
       this.$emit("update:collapse", !this.collapse);
     },
     handleOnSave() {
-      this.saveRecipes();
+      this.saveRecipes({
+        callback: (query) => {
+          console.log(query);
+          this.$router.replace({ path: "/recipes/build", query });
+        },
+      });
     },
     ...mapActions(["saveRecipes"]),
   },

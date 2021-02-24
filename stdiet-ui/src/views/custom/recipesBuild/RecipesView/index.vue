@@ -2,15 +2,18 @@
   <div class="recipes_view_wrapper">
     <RecipesAspectCom :collapse.sync="collapse" :data="analyseData" />
     <div
+      id="recipes_content"
       class="recipes_content"
-      :style="`height: calc(100vh - ${collapse ? 142 : 312}px)`"
+      :style="`height: calc(100vh - ${collapse ? 62 : 232}px)`"
     >
       <RecipesCom
         v-for="(item, index) in data"
+        :id="`recipes${index}`"
         :key="item.id"
         :data="item"
         :name="name"
-        :num="index + 1"
+        :num="index"
+        :numDay="item.numDay"
       />
     </div>
   </div>

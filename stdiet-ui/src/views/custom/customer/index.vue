@@ -346,6 +346,7 @@
     <!-- 外食热量统计 -->
     <heatStatisticsDrawer ref="heatStatisticsRef"></heatStatisticsDrawer>
     <!-- 食谱计划抽屉 -->
+    <RecipesPlanDrawer ref="recipesPlanDrawerRef"/>
   </div>
 </template>
 
@@ -364,6 +365,7 @@ import OrderDrawer from "@/components/OrderDrawer";
 import PhysicalSignsDialog from "@/components/PhysicalSignsDialog";
 import ContractDrawer from "@/components/ContractDrawer";
 import HeatStatisticsDrawer from "@/components/HeatStatisticsDrawer";
+import RecipesPlanDrawer from '@/components/RecipesPlanDrawer'
 import { mapGetters } from "vuex";
 
 export default {
@@ -373,6 +375,7 @@ export default {
     "physical-signs-dialog": PhysicalSignsDialog,
     "contract-drawer": ContractDrawer,
     heatStatisticsDrawer: HeatStatisticsDrawer,
+    RecipesPlanDrawer
   },
   data() {
     const userId = store.getters && store.getters.userId;
@@ -392,14 +395,6 @@ export default {
       total: 0,
       // 客户档案表格数据
       customerCenterList: [],
-      // 售前字典
-      // preSaleIdOptions: [],
-      // 售后字典
-      // afterSaleIdOptions: [],
-      // 主营养师字典
-      // nutritionistIdOptions: [],
-      // 助理营养师字典
-      // nutriAssisIdOptions: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -459,9 +454,13 @@ export default {
   },
   computed: {
     ...mapGetters([
+      // 售前字典
       "preSaleIdOptions",
+      // 售后字典
       "afterSaleIdOptions",
+      // 主营养师字典
       "nutritionistIdOptions",
+      // 助理营养师字典
       "nutriAssisIdOptions",
     ]),
   },
@@ -511,6 +510,7 @@ export default {
     },
     handleOnMenuClick(row) {
       // console.log(row);
+      this.$refs['recipesPlanDrawerRef'].showDrawer(row);
     },
     handleClickHeatStatistics(row) {
       this.$refs["heatStatisticsRef"].showDrawer(row);

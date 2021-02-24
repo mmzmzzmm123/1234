@@ -1,6 +1,7 @@
 package com.stdiet.custom.service.impl;
 
 import com.stdiet.common.utils.DateUtils;
+import com.stdiet.common.utils.SecurityUtils;
 import com.stdiet.custom.domain.SysOrder;
 import com.stdiet.custom.mapper.SysOrderMapper;
 import com.stdiet.custom.service.ISysCommissionDayService;
@@ -70,6 +71,7 @@ public class SysOrderServiceImpl implements ISysOrderService {
     public int insertSysOrder(SysOrder sysOrder) {
         Date orderTime = DateUtils.getNowDate();
         sysOrder.setCreateTime(orderTime);
+        sysOrder.setCreateBy(SecurityUtils.getUsername());
         //sysOrder.setOrderTime(orderTime);
         //计算服务到期时间
         setOrderServerEndDate(sysOrder);
@@ -94,6 +96,7 @@ public class SysOrderServiceImpl implements ISysOrderService {
         SysOrder oldSysOrder = sysOrderMapper.selectSysOrderById(sysOrder.getOrderId());
         //计算服务到期时间
         setOrderServerEndDate(sysOrder);
+        sysOrder.setUpdateBy(SecurityUtils.getUsername());
         sysOrder.setUpdateTime(DateUtils.getNowDate());
         //更新订单
         int row = sysOrderMapper.updateSysOrder(sysOrder);

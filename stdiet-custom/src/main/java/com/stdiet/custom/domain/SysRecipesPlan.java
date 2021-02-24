@@ -29,7 +29,11 @@ public class SysRecipesPlan extends BaseEntity
     private Long cusId;
 
     //客户ID
-    private Long customerId;
+//    private Long customerId;
+
+    private Integer startNumDay;
+
+    private Integer endNumDay;
 
     //非持久化字段，客户姓名
     @Excel(name = "客户姓名")

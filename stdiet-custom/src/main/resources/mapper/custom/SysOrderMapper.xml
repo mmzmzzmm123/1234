@@ -47,10 +47,12 @@
     </resultMap>
 
     <sql id="selectSysOrderVo">
-        select o.order_id, o.review_status, o.cus_id, o.customer, o.phone, o.amount, o.start_time, o.pause_time, o.status, o.weight, ser.dict_label as serve_time,
+        select o.order_id, o.review_status, o.cus_id, sc.name as customer, sc.phone, o.amount, o.start_time, o.pause_time, o.status, o.weight, ser.dict_label as serve_time,
         o.serve_time_id, o.pay_type_id, pay.dict_label as pay_type, o.pre_sale_id, o.create_by, o.create_time, o.after_sale_id, o.update_by, o.update_time,
         o.nutritionist_id, o.remark, o.nutri_assis_id, o.account_id, acc.dict_label as account, o.planner_id, o.planner_assis_id, o.operator_id, o.operator_assis_id,
-        o.recommender, o.order_time,o.give_serve_day,o.conditioning_project_id,cp.dict_label as conditioning_project,o.server_end_time,o.become_fan_time from sys_order o
+        o.recommender, o.order_time,o.give_serve_day,o.conditioning_project_id,cp.dict_label as conditioning_project,o.server_end_time,o.become_fan_time
+        from sys_order o
+        LEFT JOIN sys_customer sc ON sc.id = o.cus_id
         LEFT JOIN (SELECT dict_label, dict_value FROM sys_dict_data WHERE dict_type = 'cus_pay_type') AS pay ON pay.dict_value = o.pay_type_id
         LEFT JOIN (SELECT dict_label, dict_value FROM sys_dict_data WHERE dict_type = 'cus_account') AS acc ON acc.dict_value = o.account_id
         LEFT JOIN (SELECT dict_label, dict_value FROM sys_dict_data WHERE dict_type = 'cus_serve_time') AS ser ON ser.dict_value = o.serve_time_id
@@ -99,7 +101,7 @@
         <where>
             <if test="orderId != null  and orderId != ''">and order_id = #{orderId}</if>
             <if test="customer != null  and customer != ''">
-                and (customer like concat('%',#{customer},'%') or phone like concat('%',#{customer},'%'))
+                and (sc.name like concat('%',#{customer},'%') or sc.phone like concat('%',#{customer},'%'))
             </if>
              <if test="cusId != null  and cusId != ''">and cus_id = #{cusId}</if>
             <!--<if test="phone != null  and phone != ''">and phone = #{phone}</if>-->
@@ -127,7 +129,7 @@
                     and 0 > amount
                 </if>
             </if>
-            <if test="true">and del_flag = 0</if>
+            <if test="true">and o.del_flag = 0</if>
         </where>
         order by order_time desc
     </select>
@@ -325,7 +327,7 @@
       from sys_order o
       left join sys_user su_sale on su_sale.user_id = o.after_sale_id and su_sale.del_flag = 0
       left join sys_user su_nutritionist on su_nutritionist.user_id = o.nutritionist_id and su_nutritionist.del_flag = 0
-      where review_status = 'yes' and o.order_time >= '2021-01-01' and del_flag = 0
+      where review_status = 'yes' and o.order_time >= '2021-01-01' and o.del_flag = 0
       <if test="userId != null">
           and (su_sale.user_id = #{userId} or su_nutritionist.user_id = #{userId})
       </if>
