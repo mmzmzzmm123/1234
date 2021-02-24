@@ -64,7 +64,10 @@ public class FieldsItemServiceImpl implements IFieldsItemService
     {
         return fieldsItemMapper.selectFieldsItemList(fieldsItem);
     }
-
+    @Override
+    public int updateTableFieldsBatch(Iterable<TableFieldVo> fieldVos){
+        return fieldsItemMapper.updateTableFieldsBatch(fieldVos);
+    }
     /**
      * 新增
      * 
@@ -167,5 +170,10 @@ public class FieldsItemServiceImpl implements IFieldsItemService
     @Override
     public int deleteFieldsByFormId(Long id){
         return fieldsItemMapper.deleteFieldsItemByFormId(id);
+    }
+
+    @Override
+    public List<TableFieldVo> selectTableTitle(Long nodeId, Long deptId) {
+        return fieldsItemMapper.selectTableTitle(nodeId,deptId);
     }
 }

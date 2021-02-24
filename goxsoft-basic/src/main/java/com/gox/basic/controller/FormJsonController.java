@@ -21,6 +21,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -66,8 +67,13 @@ public class FormJsonController extends BaseController
         return AjaxResult.success(f);
     }
     @PutMapping("/table-field")
-    public AjaxResult updateTableFields(List<TableFieldVo> fieldVos){
-        return AjaxResult.success();
+    @Log(title = "表格表头", businessType = BusinessType.UPDATE)
+    public AjaxResult updateTableFields(@RequestBody List<TableFieldVo> fieldVos){
+        return AjaxResult.success(fieldsItemService.updateTableFieldsBatch(fieldVos));
+    }
+    @GetMapping("/table-title/{nodeId}/{deptId}")
+    public AjaxResult getTableTile(@PathVariable Long nodeId,@PathVariable Long deptId){
+        return AjaxResult.success(fieldsItemService.selectTableTitle(nodeId,deptId));
     }
     /**
      * 导出表单json列表

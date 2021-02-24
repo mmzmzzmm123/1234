@@ -131,32 +131,33 @@
 
             </el-col>
             <el-col :span="18">
-              <el-form v-model="form" style="margin-left: 20px;">
+              <el-form :model="form" ref="form" :rules="rules" style="margin-left: 20px;"  class="demo-ruleForm">
                 <el-form-item
                   label="是否为表格字段"
                 >
                   <el-switch
-                    v-model="form.isTableField"
+                    v-model="form.flag"
                     active-color="#13ce66"
                     inactive-color="#ff4949">
                   </el-switch>
                 </el-form-item>
-                <el-form-item label="排序">
-                  <el-input-number v-model="form.tableFieldSort"  :min="1" :max="data.length" label=""></el-input-number>
+                <el-form-item label="排序" prop="tableFieldSort">
+                  <el-input-number v-model="form.tableFieldSort"  :min="1" :max="200" label=""></el-input-number>
                 </el-form-item>
-                <el-form-item label="占位">
+                <el-form-item label="占位" prop="tableTitleWidth">
                   <el-input
                     placeholder="请输入内容"
-                    v-model="form.width"
+                    v-model="form.tableTitleWidth"
                     style="width:60%"
+                    maxlength="3"
                     clearable>
                   </el-input>
                 </el-form-item>
-                <el-form-item >
-                  <el-button type="primary" @click="">
+                <el-form-item style="margin-top:20px" >
+                  <el-button type="primary" @click="saveForm">
                     确定
                   </el-button>
-                  <el-button type="warning" @click="">
+                  <el-button type="warning" @click="cancelEdit">
                     取消
                   </el-button>
                 </el-form-item>
@@ -173,7 +174,7 @@
 </template>
 
 <script>
-import { listJson, order, delJson, addJson, updateJson, exportJson, getTableField } from '@/api/system/json'
+import { listJson, order, delJson, addJson, updateJson, exportJson, getTableField , updateTableField } from '@/api/system/json'
 import deptTree from '@/views/components/deptTree'
 import Sortable from 'sortablejs'
 
@@ -184,6 +185,7 @@ export default {
   },
   data() {
     return {
+      forms: new Map(),
       filterText: '',
       defaultProps: {
         children: 'children',
@@ -231,8 +233,14 @@ export default {
         formName: [
           { required: true, message: '表单名字不能为空', trigger: 'blur' }
         ],
-        formData: [
-          { required: true, message: '表单json不能为空', trigger: 'blur' }
+        tableTitleWidth: [
+          { required: true,message:'请输入占位',trigger: 'blur'},
+          { type: 'number', message: '年龄必须为数字值'},
+        ],
+        tableFieldSort:[
+          {
+            required: true,message:'请输入排序',trigger: 'blur'
+          }
         ]
         // delFlag: [
         //   { required: true, message: "删除标志不能为空", trigger: "blur" }
@@ -264,14 +272,51 @@ export default {
   },
 
   methods: {
+    saveForm() {
+      this.$refs.form.validate((valid) => {
+        if (valid) {
+          this.forms.set(this.form.id,this.form)
+        } else {
+          console.log('error submit!!');
+          return false;
+        }
+      })
+      let data = []
+      this.forms.forEach(item=>{
+        data.push(item)
+      })
+      //提交
+      updateTableField(data).then(res=>{
+        this.$message.success(res.msg)
+      })
+    },
+    cancelEdit(){
+      this.open=false
+    },
     handleClick(data){
+      let f = false
+      //如果不是空的 则为上一个表单 保存进修改map中
+      if(JSON.stringify(this.form)!=="{}"){
+        this.$refs.form.validate((valid) => {
+          if (valid) {
+            this.forms.set(this.form.id,this.form)
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        })
+        f =true
+      }
       this.form={}
-
       let formData = this.tableFields.filter(item=>{
         return item.id===data.id
       })
-
-      this.form={id:formData[0].id,isTableField:formData[0].isTableField,tableFieldSort:formData[0].tableFieldSort,width:formData[0].tableTitleWidth}
+      this.form={
+        id:formData[0].id,
+        flag:formData[0].flag,
+        tableFieldSort:formData[0].tableFieldSort,
+        tableTitleWidth:formData[0].tableTitleWidth
+      }
     },
     filterNode(value, data) {
       if (!value) return true
@@ -303,7 +348,6 @@ export default {
       this.deptId = data
       this.getList()
     },
-    /** 选择一个节点 */
     handTableField() {
       this.title = '修改表格头'
       this.open = true
@@ -331,7 +375,7 @@ export default {
         let fields = res.data
         this.tableFields=fields
         fields.sort((a, b) => {
-          return a.tableFieldSort - b.tableFieldSort
+          return b.tableFieldSort - a.tableFieldSort
         })
         this.data = []
         fields.forEach((item, index) => {

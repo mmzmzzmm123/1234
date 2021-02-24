@@ -47,6 +47,7 @@ public interface FieldsItemMapper
      */
     public int updateFieldsItem(FieldsItem fieldsItem);
     public int insertFieldsItemBatch(Iterable<FieldsItem> fieldsItems);
+    public int updateTableFieldsBatch(Iterable<TableFieldVo> fieldsItems);
     /**
      * 删除【请填写功能名称】
      * 
@@ -62,4 +63,6 @@ public interface FieldsItemMapper
      */
     public int deleteFieldsItemByIds(Long[] ids);
     public int deleteFieldsItemByFormId(Long id);
+
+    List<TableFieldVo> selectTableTitle(Long nodeId, Long deptId);
 }

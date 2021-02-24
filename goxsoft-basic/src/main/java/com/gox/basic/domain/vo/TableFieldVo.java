@@ -1,10 +1,11 @@
 package com.gox.basic.domain.vo;
 
+
 import java.io.Serializable;
 
 public class TableFieldVo implements Serializable {
     private Long id;
-    private boolean isTableFiled;
+    private Boolean flag;
     private Integer tableFieldSort;
     private String tableFieldName;
     private Integer tableTitleWidth;
@@ -34,12 +35,12 @@ public class TableFieldVo implements Serializable {
         this.id = id;
     }
 
-    public boolean isTableFiled() {
-        return isTableFiled;
+    public Boolean getFlag() {
+        return flag;
     }
 
-    public void setTableFiled(boolean tableFiled) {
-        isTableFiled = tableFiled;
+    public void setFlag(Boolean flag) {
+        this.flag = flag;
     }
 
     public Integer getTableFieldSort() {

@@ -29,6 +29,8 @@ public interface IFieldsItemService
      */
     public List<FieldsItem> selectFieldsItemList(FieldsItem fieldsItem);
 
+    int updateTableFieldsBatch(Iterable<TableFieldVo> fieldVos);
+
     /**
      * 新增【请填写功能名称】
      * 
@@ -66,4 +68,6 @@ public interface IFieldsItemService
     public int deleteFieldsItemById(Long id);
 
     int deleteFieldsByFormId(Long id);
+
+    List<TableFieldVo> selectTableTitle(Long nodeId, Long deptId);
 }

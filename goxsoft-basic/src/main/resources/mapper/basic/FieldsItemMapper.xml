@@ -5,7 +5,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="com.gox.basic.mapper.FieldsItemMapper">
     <resultMap id="FieldsVo" type="com.gox.basic.domain.vo.TableFieldVo">
         <id property="id" column="id" />
-        <result property="isTableFiled" column="is_table_field" />
+        <result property="flag" column="is_table_field" />
         <result property="tableFieldSort" column="table_field_sort" />
         <result property="tableFieldName" column="label"/>
         <result property="tableTitleWidth" column="table_title_width" />
@@ -134,6 +134,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
     <select id="selectTableFields" resultMap="FieldsVo">
         select fi.id,fi.is_table_field,fi.table_field_sort,fi.table_title_width,c.label from fields_item fi left join config c on fi.id = c.item_id where fi.form_id in (select id from form_json where node_id=#{param1} and dept_id=#{param2})
+    </select>
+    <select id="selectTableTitle" resultMap="FieldsVo">
+        select fi.id,fi.is_table_field,fi.table_field_sort,fi.table_title_width,c.label from fields_item fi left join config c on fi.id = c.item_id where fi.form_id in (select id from form_json where node_id=#{param1} and dept_id=#{param2}) and is_table_field = 1
     </select>
 
     <insert id="insertFieldsItem" parameterType="FieldsItem">
@@ -301,7 +304,36 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </trim>
         where id = #{id}
     </update>
-
+    <update id="updateTableFieldsBatch" parameterType="arraylist">
+        update fields_item
+        <trim prefix="set " suffixOverrides=",">
+            <trim prefix="is_table_field = case " suffix="end,">
+                <foreach collection="list" item="item" index="index">
+                    <if test="item.flag!=null">
+                        when id=#{item.id} then #{item.flag}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="table_field_sort = case " suffix="end,">
+                <foreach collection="list" item="item" index="index">
+                    <if test="item.tableFieldSort!=null">
+                        when id=#{item.id} then #{item.tableFieldSort}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="table_title_width = case " suffix="end,">
+                <foreach collection="list" item="item" index="index">
+                    <if test="item.tableTitleWidth!=null">
+                        when id=#{item.id} then #{item.tableTitleWidth}
+                    </if>
+                </foreach>
+            </trim>
+        </trim>
+        where
+        <foreach collection="list" separator="or" item="i" index="index" >
+            id=#{i.id}
+        </foreach>
+    </update>
     <delete id="deleteFieldsItemById" parameterType="Long">
         delete from fields_item where id = #{id}
     </delete>

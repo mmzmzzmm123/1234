@@ -431,24 +431,6 @@
                 v-hasPermi="['system:metadata:remove']"
               >删除</el-button>
             </el-col>
-<!--            <el-col :span="1.5">-->
-<!--              <el-button-->
-<!--                type="warning"-->
-<!--                icon="el-icon-download"-->
-<!--                size="mini"-->
-<!--                @click="handleExport"-->
-<!--                v-hasPermi="['system:metadata:export']"-->
-<!--              >导出</el-button>-->
-<!--            </el-col>-->
-<!--            <el-col :span="1.5">-->
-<!--              <el-button-->
-<!--                type="primary"-->
-<!--                icon="el-icon-edit"-->
-<!--                size="mini"-->
-<!--                @click="viewDetail">-->
-<!--                查看-->
-<!--              </el-button>-->
-<!--            </el-col>-->
             <el-col :span="1.5">
               <el-dropdown >
                 <el-button type="primary" size="mini" @click="handleExport">
@@ -470,78 +452,45 @@
                 </el-dropdown-menu>
               </el-dropdown>
             </el-col>
-<!--            <el-col :span="1.5">-->
-<!--              <el-button-->
-<!--                type="primary"-->
-<!--                icon="el-icon-edit"-->
-<!--                size="mini"-->
-<!--                @click="viewDetail">-->
-<!--                查看-->
-<!--              </el-button>-->
-<!--            </el-col>-->
-<!--            <el-col :span="1.5">-->
-<!--              <el-button-->
-<!--                type="primary"-->
-<!--                icon="el-icon-edit"-->
-<!--                size="mini"-->
-<!--                @click="viewDetail">-->
-<!--                查看-->
-<!--              </el-button>-->
-<!--            </el-col>-->
             <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
           </el-row>
 
-          <el-table v-loading="loading" :data="metadataList" @selection-change="handleSelectionChange">
+          <el-table v-loading="loading" :data="metadataList" @selection-change="handleSelectionChange" >
             <el-table-column type="selection" width="55" align="center" />
-            <el-table-column label="id" align="center" prop="id" />
-            <el-table-column label="聚合层次" align="center" prop="aggregationLevel" />
-            <el-table-column label="档案馆名称" align="center" prop="archivesName" />
-            <el-table-column label="档案馆代码" align="center" prop="archivesIdentifier" />
-            <el-table-column label="全宗名称" align="center" prop="fondsName" />
-            <el-table-column label="立档单位名称" align="center" prop="fondsConstitutingUnitName" />
-            <el-table-column label="电子文件号" align="center" prop="electronicRecordCode" />
-            <el-table-column label="档号" align="center" prop="archivalCode" />
-            <!--          <el-table-column label="全宗号" align="center" prop="fondsIdentifier" />-->
-            <!--          <el-table-column label="目录号" align="center" prop="catalogueNumber" />-->
-            <!--          <el-table-column label="年度" align="center" prop="year" />-->
-            <!--          <el-table-column label="保管期限" align="center" prop="retentionPeriod" :formatter="retentionPeriodFormat" />-->
-            <!--          <el-table-column label="机构或问题" align="center" prop="organizationalStructureOrFunction" />-->
-            <!--          <el-table-column label="类别号" align="center" prop="categoryCode" />-->
-            <!--          <el-table-column label="室编案卷号" align="center" prop="agencyFileNumber" />-->
-            <!--          <el-table-column label="馆编案卷号" align="center" prop="archivesFileNumber" />-->
-            <!--          <el-table-column label="室编件号" align="center" prop="agencyItemNumber" />-->
-            <!--          <el-table-column label="馆编件号" align="center" prop="archivesItemNumber" />-->
-            <!--          <el-table-column label="文档序号" align="center" prop="documentSequenceNumber" />-->
-            <!--          <el-table-column label="页号" align="center" prop="pageNumber" />-->
-            <el-table-column label="题名" align="center" prop="title" />
-            <el-table-column label="并列题名" align="center" prop="parallelTitle" />
-            <el-table-column label="副题名" align="center" prop="alternativeTitle" />
-            <el-table-column label="说明题名文字" align="center" prop="otherTitleInformation" />
-            <el-table-column label="主题词" align="center" prop="descriptor" />
-            <el-table-column label="关键词" align="center" prop="keyword" />
-            <el-table-column label="人名" align="center" prop="personalName" />
-            <el-table-column label="摘要" align="center" prop="abstract" />
-            <el-table-column label="分类号" align="center" prop="classCode" />
-            <el-table-column label="文件编号" align="center" prop="documentNumber" />
-            <el-table-column label="责任者" align="center" prop="author" />
-            <el-table-column label="日期" align="center" prop="date" />
-            <el-table-column label="文种" align="center" prop="documentType"  />
-            <el-table-column label="紧急程度" align="center" prop="precedence"  />
-            <el-table-column label="主送" align="center" prop="principalReceiver" />
-            <el-table-column label="抄送" align="center" prop="otherReceivers" />
-            <el-table-column label="密级" align="center" prop="securityClassification"  />
-            <el-table-column label="保密期限" align="center" prop="secrecyPeriod" />
-            <el-table-column label="形式特征" align="center" prop="formalCharacteristics" />
-            <el-table-column label="文件组合类型" align="center" prop="documentAggregationType"  />
-            <el-table-column label="件数" align="center" prop="totalNumberOfItems" />
-            <el-table-column label="页数" align="center" prop="totalNumberOfPages" />
-            <el-table-column label="语种" align="center" prop="language" />
-            <el-table-column label="稿本" align="center" prop="manuscriptType"  />
-            <!--          <el-table-column label="知识产权说明" align="center" prop="intellectualPropertyStatement" />-->
-            <!--          <el-table-column label="授权对象" align="center" prop="authorizedAgent" />-->
-            <!--          <el-table-column label="授权行为" align="center" prop="permissionAssignment" :formatter="permissionAssignmentFormat" />-->
-            <!--          <el-table-column label="控制标识" align="center" prop="controlIdentifier" :formatter="controlIdentifierFormat" />-->
-            <!--          <el-table-column label="附注" align="center" prop="annotation" />-->
+<!--            <el-table-column  :label="item.tableFieldName" :width="tableTitleWidth" ></el-table-column>-->
+<!--            <el-table-column label="id" align="center" prop="id" />-->
+<!--            <el-table-column label="聚合层次" align="center" prop="aggregationLevel" />-->
+<!--            <el-table-column label="档案馆名称" align="center" prop="archivesName" />-->
+<!--            <el-table-column label="档案馆代码" align="center" prop="archivesIdentifier" />-->
+<!--            <el-table-column label="全宗名称" align="center" prop="fondsName" />-->
+<!--            <el-table-column label="立档单位名称" align="center" prop="fondsConstitutingUnitName" />-->
+<!--            <el-table-column label="电子文件号" align="center" prop="electronicRecordCode" />-->
+<!--            <el-table-column label="档号" align="center" prop="archivalCode" />-->
+<!--            <el-table-column label="题名" align="center" prop="title" />-->
+<!--            <el-table-column label="并列题名" align="center" prop="parallelTitle" />-->
+<!--            <el-table-column label="副题名" align="center" prop="alternativeTitle" />-->
+<!--            <el-table-column label="说明题名文字" align="center" prop="otherTitleInformation" />-->
+<!--            <el-table-column label="主题词" align="center" prop="descriptor" />-->
+<!--            <el-table-column label="关键词" align="center" prop="keyword" />-->
+<!--            <el-table-column label="人名" align="center" prop="personalName" />-->
+<!--            <el-table-column label="摘要" align="center" prop="abstract" />-->
+<!--            <el-table-column label="分类号" align="center" prop="classCode" />-->
+<!--            <el-table-column label="文件编号" align="center" prop="documentNumber" />-->
+<!--            <el-table-column label="责任者" align="center" prop="author" />-->
+<!--            <el-table-column label="日期" align="center" prop="date" />-->
+<!--            <el-table-column label="文种" align="center" prop="documentType"  />-->
+<!--            <el-table-column label="紧急程度" align="center" prop="precedence"  />-->
+<!--            <el-table-column label="主送" align="center" prop="principalReceiver" />-->
+<!--            <el-table-column label="抄送" align="center" prop="otherReceivers" />-->
+<!--            <el-table-column label="密级" align="center" prop="securityClassification"  />-->
+<!--            <el-table-column label="保密期限" align="center" prop="secrecyPeriod" />-->
+<!--            <el-table-column label="形式特征" align="center" prop="formalCharacteristics" />-->
+<!--            <el-table-column label="文件组合类型" align="center" prop="documentAggregationType"  />-->
+<!--            <el-table-column label="件数" align="center" prop="totalNumberOfItems" />-->
+<!--            <el-table-column label="页数" align="center" prop="totalNumberOfPages" />-->
+<!--            <el-table-column label="语种" align="center" prop="language" />-->
+<!--            <el-table-column label="稿本" align="center" prop="manuscriptType"  />-->
+
             <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
               <template slot-scope="scope">
                 <el-button
@@ -593,7 +542,7 @@ import {
 } from '@/api/system/metadata'
 import DeptTree from '@/views/components/deptTree'
 import InputView from '@/views/system/metadata/InputView'
-import { listJson } from '@/api/system/json'
+import { listJson , getTableTitle } from '@/api/system/json'
 import { listDefinition, listMetadataRule } from '@/api/system/metadataRule'
 import { deepClone } from '@/utils'
 import Uploads from '@/views/components/Uploads'
@@ -606,6 +555,7 @@ export default {
   },
   data() {
     return {
+      tableTitle:[],
       upload:false,
       uploadUrl: process.env.VUE_APP_BASE_API +'/system/metadata/fileUpload',
       metadata:{},
@@ -706,11 +656,12 @@ export default {
   },
   created() {
     //this.getList();
-    this.loadForm();
+    //this.loadForm();
     this.getDicts("ws_al").then(response => {
       this.aggregationLevelOptions = response.data;
     });
   },
+
   methods: {
     handleExportItem(){
       if(this.ids.length!==0){
@@ -745,6 +696,7 @@ export default {
       this.queryParams.deptId = data;
       this.deptId=data
       this.getList();
+      this.loadForm()
     },
     /** 查询文书类基本元数据列表 */
     getList() {
@@ -759,39 +711,6 @@ export default {
     aggregationLevelFormat(row, column) {
       return this.selectDictLabel(this.aggregationLevelOptions, row.aggregationLevel);
     },
-    // // 保管期限字典翻译
-    // retentionPeriodFormat(row, column) {
-    //   return this.selectDictLabel(this.retentionPeriodOptions, row.retentionPeriod);
-    // },
-    // // 文种字典翻译
-    // documentTypeFormat(row, column) {
-    //   return this.selectDictLabel(this.documentTypeOptions, row.documentType);
-    // },
-    // // 紧急程度字典翻译
-    // precedenceFormat(row, column) {
-    //   return this.selectDictLabel(this.precedenceOptions, row.precedence);
-    // },
-    // // 密级字典翻译
-    // securityClassificationFormat(row, column) {
-    //   return this.selectDictLabel(this.securityClassificationOptions, row.securityClassification);
-    // },
-    // // 文件组合类型字典翻译
-    // documentAggregationTypeFormat(row, column) {
-    //   return this.selectDictLabel(this.documentAggregationTypeOptions, row.documentAggregationType);
-    // },
-    // // 稿本字典翻译
-    // manuscriptTypeFormat(row, column) {
-    //   return this.selectDictLabel(this.manuscriptTypeOptions, row.manuscriptType);
-    // },
-    // // 授权行为字典翻译
-    // permissionAssignmentFormat(row, column) {
-    //   return this.selectDictLabel(this.permissionAssignmentOptions, row.permissionAssignment);
-    // },
-    // // 控制标识字典翻译
-    // controlIdentifierFormat(row, column) {
-    //   return this.selectDictLabel(this.controlIdentifierOptions, row.controlIdentifier);
-    // },
-    // 取消按钮
     cancel() {
       this.open = false;
       this.single=true;
@@ -818,8 +737,12 @@ export default {
       this.multiple = !selection.length
     },
     loadForm(){
-      let id = this.$route.params.id
+      let fullPath = this.$route.fullPath
+      let id = fullPath.substring(fullPath.lastIndexOf('/')+1)
       let query = {nodeId:id,deptId:this.deptId}
+      getTableTitle(id,this.deptId).then(res=>{
+        this.tableTitle=res.data
+      })
       listJson(query).then(res => {
         this.formConf=JSON.parse(res.rows[0].formData)
         this.formReserve=deepClone(this.formConf)
