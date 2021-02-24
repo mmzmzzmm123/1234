@@ -207,4 +207,10 @@
         </foreach>
     </delete>
 
+    <!-- 根据食材名称查询食材 -->
+    <select id="selectSysIngredientByName" parameterType="String" resultMap="SysIngredientResult">
+        select id,name,protein_ratio,fat_ratio,carbon_ratio  from sys_ingredient
+        where name = #{name} limit 1
+    </select>
+
 </mapper>

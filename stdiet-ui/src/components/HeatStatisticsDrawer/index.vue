@@ -32,13 +32,12 @@
           <el-table-column label="热量缺口" align="center" prop="heatGap" />
           <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
             <template slot-scope="scope">
-              <!--<el-button
+              <el-button
                 size="mini"
                 type="text"
-                icon="el-icon-edit"
-                @click="handleUpdate(scope.row)"
-                v-hasPermi="['custom:foodHeatStatistics:edit']"
-              >修改</el-button>-->
+                @click="handleDetail(scope.row)"
+                v-hasPermi="['custom:foodHeatStatistics:query']"
+              >详情</el-button>
               <el-button
                 size="mini"
                 type="text"
@@ -65,6 +64,7 @@
         />
 
         <heatStatisticsCalculate ref="heatStatisticsCalculateRef"></heatStatisticsCalculate>
+        <heatStatisticsDetail ref="heatStatisticsDetailRef"></heatStatisticsDetail>
 
       </div>
     </el-drawer>
@@ -74,10 +74,12 @@
   import { listFoodHeatStatistics, getFoodHeatStatistics, delFoodHeatStatistics, addFoodHeatStatistics, updateFoodHeatStatistics, exportFoodHeatStatistics } from "@/api/custom/foodHeatStatistics";
   import Clipboard from 'clipboard';
   import HeatStatisticsCalculate from "@/components/HeatStatisticsCalculate";
+  import HeatStatisticsDetail from "@/components/HeatStatisticsDetail";
 export default {
   name: "HeatStatisticsDrawer",
   components: {
-    'heatStatisticsCalculate':HeatStatisticsCalculate
+    'heatStatisticsCalculate':HeatStatisticsCalculate,
+    'heatStatisticsDetail': HeatStatisticsDetail
   },
   data() {
     return {
@@ -152,6 +154,9 @@ export default {
       this.$refs.heatStatisticsCalculateRef.showDialog(data,() => {
         this.fetchHeatList();
       });
+    },
+    handleDetail(data){
+        this.$refs.heatStatisticsDetailRef.showDialog(data, this.data.name);
     }
   },
 };
