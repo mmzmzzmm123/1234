@@ -1,9 +1,11 @@
 package com.ruoyi.business.domain;
 
+import java.io.Serializable;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+
 import com.ruoyi.common.annotation.Excel;
-import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
  * 重大节日值班人员对象 bus_zdjrzbry
@@ -11,7 +13,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * @author yaowei
  * @date 2021-02-24
  */
-public class BusZdjrzbry extends BaseEntity
+public class BusZdjrzbry implements Serializable
 {
     private static final long serialVersionUID = 1L;
 
