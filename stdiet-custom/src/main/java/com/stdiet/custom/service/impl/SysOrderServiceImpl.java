@@ -188,10 +188,21 @@ public class SysOrderServiceImpl implements ISysOrderService {
         sysOrder.setUpdateBy(SecurityUtils.getUsername());
         sysOrder.setUpdateTime(DateUtils.getNowDate());
         //体验单
-        /*if("2".equals(sysOrder.getOrderType())){
-
-        }*/
-
+        if("2".equals(sysOrder.getOrderType())){
+            sysOrder.setAfterSaleId(null);
+            sysOrder.setNutritionistId(null);
+            sysOrder.setNutriAssisId(null);
+        }
+        //提成单
+        if(sysOrder.getAfterSaleCommissOrder().intValue() == 1){
+            sysOrder.setAfterSaleId(null);
+            sysOrder.setNutritionistId(null);
+            sysOrder.setNutriAssisId(null);
+            sysOrder.setPlannerId(null);
+            sysOrder.setPlannerAssisId(null);
+            sysOrder.setOperatorId(null);
+            sysOrder.setOperatorAssisId(null);
+        }
         //更新订单
         int row = sysOrderMapper.updateSysOrder(sysOrder);
         // 审核后的订单才生成食谱

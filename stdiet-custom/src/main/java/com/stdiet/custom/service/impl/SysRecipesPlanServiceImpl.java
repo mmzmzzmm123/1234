@@ -120,6 +120,11 @@ public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService {
     @Override
     @Async
     public void regenerateRecipesPlan(Long orderId) {
+        try{
+            Thread.sleep(5000);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         if (orderId == null || orderId <= 0) {
             return;
         }
@@ -129,7 +134,11 @@ public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService {
                 || sysOrder.getAmount().floatValue() <= 0 || sysOrder.getStartTime() == null || sysOrder.getServerEndTime() == null) {
             return;
         }
-//        System.out.println(DateUtils.dateToLocalDate(sysOrder.getOrderTime()).getYear());
+        //判断是否提成单，拆分单中的副单，体验单
+        if(sysOrder.getAfterSaleCommissOrder().intValue() == 1 || ("1".equals(sysOrder.getOrderType()) && sysOrder.getMainOrderId().intValue() == 1) ||
+            "2".equals(sysOrder.getOrderType())){
+            return;
+        }
         try {
             //获取redis中该订单对应的锁
             if (synchrolockUtil.lock(String.format(generateRecipesPlanLockKey, orderId))) {
@@ -137,16 +146,12 @@ public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService {
                 queryParam.setOrderId(orderId);
                 List<SysRecipesPlan> oldRecipesPlanList = sysRecipesPlanMapper.selectSysRecipesPlanList(queryParam);
                 //判断是否已存在食谱
-                if (oldRecipesPlanList != null && oldRecipesPlanList.size() > 0) {
+                /*if (oldRecipesPlanList != null && oldRecipesPlanList.size() > 0) {
                     Long[] orderIdArray = new Long[1];
                     orderIdArray[0] = orderId;
                     //删除该订单对于食谱
-                    delRecipesPlanByOrderId(orderIdArray);
-                }
-//                //判断订单金额、开始时间、结束时间，为空则直接返回，不重新生成食谱计划
-//                if (sysOrder.getAmount().floatValue() <= 0 || sysOrder.getStartTime() == null || sysOrder.getServerEndTime() == null) {
-//                    return;
-//                }
+                    //delRecipesPlanByOrderId(orderIdArray);
+                }*/
                 SysOrderPause pauseParam = new SysOrderPause();
                 pauseParam.setOrderId(sysOrder.getOrderId());
                 //暂停记录列表
@@ -156,9 +161,6 @@ public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService {
                 if (planList != null && planList.size() > 0) {
                     sysRecipesPlanMapper.insertBatch(planList);
                 }
-                /*for (SysRecipesPlan sysRecipesPlan : planList) {
-                     getTestDate(sysRecipesPlan.getStartDate(), sysRecipesPlan.getEndDate());
-                 }*/
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -166,14 +168,6 @@ public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService {
             // 一定要释放锁
             synchrolockUtil.unlock(String.format(generateRecipesPlanLockKey, orderId));
         }
-    }
-
-    public void getTestDate(Date date, Date date2) {
-        LocalDate d = DateUtils.dateToLocalDate(date);
-        LocalDate d2 = DateUtils.dateToLocalDate(date2);
-        String s1 = d.getYear() + "-" + d.getMonthValue() + "-" + d.getDayOfMonth();
-        String s2 = d2.getYear() + "-" + d2.getMonthValue() + "-" + d2.getDayOfMonth();
-        System.out.println(s1 + "   " + s2);
     }
 
     /**
