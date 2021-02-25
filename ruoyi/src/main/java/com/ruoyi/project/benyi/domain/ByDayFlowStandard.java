@@ -38,6 +38,10 @@ public class ByDayFlowStandard extends BaseEntity {
     @Excel(name = "标准排序")
     private Long standardSort;
 
+
+    // 标准的分数
+    private Double score;
+
     /**
      * 标准数量
      */
@@ -154,7 +158,15 @@ public class ByDayFlowStandard extends BaseEntity {
                 .append("createtime", getCreatetime())
                 .append("updateuser", getUpdateuser())
                 .append("updatetime", getUpdatetime())
+                .append("score", getScore())
                 .toString();
     }
 
+    public Double getScore() {
+        return score;
+    }
+
+    public void setScore(Double score) {
+        this.score = score;
+    }
 }

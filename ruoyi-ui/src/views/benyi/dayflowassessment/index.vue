@@ -55,41 +55,6 @@
       </el-form-item>
     </el-form>
 
-    <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          type="primary"
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['benyi:dayflowassessment:add']"
-          >新增</el-button
-        >
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['benyi:dayflowassessment:edit']"
-          >修改</el-button
-        >
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="danger"
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['benyi:dayflowassessment:remove']"
-          >删除</el-button
-        >
-      </el-col>
-    </el-row>
-
     <el-table
       v-loading="loading"
       :data="dayflowassessmentList"
@@ -103,13 +68,15 @@
         prop="classid"
         :formatter="classFormat"
       />
-      <el-table-column label="班长姓名" align="center" prop="bzbh" :formatter="bzbhFormat" />
-      <el-table-column label="配班教师姓名" align="center" prop="pbbh" :formatter="pbbhFormat"/>
-      <el-table-column label="助理教师姓名" align="center" prop="zlbh" :formatter="zlbhFormat"/>
+      <el-table-column label="主班教师" align="center" prop="bzbh" :formatter="bzbhFormat" />
+      <el-table-column label="配班教师" align="center" prop="pbbh" :formatter="pbbhFormat"/>
+      <el-table-column label="助理教师" align="center" prop="zlbh" :formatter="zlbhFormat"/>
       <el-table-column label="学年学期" align="center" prop="xnxq" :formatter="xnxqFormat"/>
-      <el-table-column label="评估标准编号" align="center" prop="bzid" />
+      <el-table-column label="评估标准" align="center" prop="bzid" :formatter="dayFlowFormat"/>
+      <el-table-column label="标准满分" align="center" prop="bzmf" />
       <el-table-column label="扣分值" align="center" prop="kfz" />
-      <el-table-column label="扣分次数" align="center" prop="kfcs" />
+      <!-- <el-table-column label="扣分次数" align="center" prop="kfcs" /> -->
+      <el-table-column label="最终得分" align="center" prop="zzdf" />
       <el-table-column label="评估对象" align="center" prop="pgdx" :formatter="pgdxFormat"/>
       <el-table-column
         label="操作"
@@ -121,18 +88,18 @@
             size="mini"
             type="text"
             icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
+            @click="handleAssessment(scope.row)"
             v-hasPermi="['benyi:dayflowassessment:edit']"
-            >修改</el-button
+            >评估</el-button
           >
-          <el-button
+          <!-- <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['benyi:dayflowassessment:remove']"
             >删除</el-button
-          >
+          > -->
         </template>
       </el-table-column>
     </el-table>
@@ -238,9 +205,9 @@
         <el-form-item label="扣分值" prop="kfz">
           <el-input v-model="form.kfz" placeholder="请输入扣分值" />
         </el-form-item>
-        <el-form-item label="扣分次数" prop="kfcs">
+        <!-- <el-form-item label="扣分次数" prop="kfcs">
           <el-input v-model="form.kfcs" placeholder="请输入扣分次数" />
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="评估对象" prop="pgdx">
           <el-select
             v-model="form.pgdx"
@@ -281,6 +248,7 @@ import { listDayflowassessmentplan, getDayflowassessmentplan, } from "@/api/beny
 import { listClass } from "@/api/system/class";
 import { getUsersByRoleId } from "@/api/system/user";
 import { listUser } from "@/api/system/user";
+import { listDetail, getDetail } from "@/api/benyi/dayflow/dayflowmanger";
 
 export default {
   name: "Dayflowassessment",
@@ -312,6 +280,8 @@ export default {
       xnxqOptions: [],
       // 所有教师
       userOptions: [],
+      // 一日流程表格数据
+      detailOptions: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -332,6 +302,8 @@ export default {
         xnxq: undefined,
         bzid: undefined,
         kfz: undefined,
+        bzmf: undefined,
+        zzdf: undefined,
         kfcs: undefined,
         pgdx: undefined,
         createUserid: undefined,
@@ -346,6 +318,7 @@ export default {
     this.getList();
     this.getClassList();
     this.getUserList();
+    this.getDayFlowList();
     this.getDayflowassessmentplan();
     //获取主班教师角色用户列表
     getUsersByRoleId().then((response) => {
@@ -456,9 +429,27 @@ export default {
     planFormat(row, column) {
       var actions = [];
       var datas = this.dayflowassessmentplanOptions;
-      console.log(this.dayflowassessmentplanOptions);
       Object.keys(datas).map((key) => {
         if (datas[key].id == "" + row.planid) {
+          actions.push(datas[key].name);
+          return false;
+        }
+      });
+      return actions.join("");
+    },
+    /** 查询一日流程列表 */
+    getDayFlowList() {
+      listDetail(null).then((response) => {
+        this.detailOptions = response.rows;
+      });
+    },
+    // 一日流程内容字典翻译
+    dayFlowFormat(row, column) {
+      // return this.selectDictLabel(this.classOptions, row.classid);
+      var actions = [];
+      var datas = this.detailOptions;
+      Object.keys(datas).map((key) => {
+        if (datas[key].id + "" == "" + row.bzid) {
           actions.push(datas[key].name);
           return false;
         }
@@ -490,6 +481,8 @@ export default {
         xnxq: undefined,
         bzid: undefined,
         kfz: undefined,
+        bzmf: undefined,
+        zzdf: undefined,
         kfcs: undefined,
         pgdx: undefined,
         createUserid: undefined,
@@ -524,6 +517,10 @@ export default {
         this.pbjsOptions = response.pbjs;
         this.zljsOptions = response.zljs;
       });
+    },
+    handleAssessment(row) {
+      const id = row.id;
+      this.$router.push({ path: "/benyi/dayflowassessment/teacher/" + id });
     },
     /** 修改按钮操作 */
     handleUpdate(row) {

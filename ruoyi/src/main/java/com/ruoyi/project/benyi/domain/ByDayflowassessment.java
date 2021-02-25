@@ -5,6 +5,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.framework.aspectj.lang.annotation.Excel;
 import com.ruoyi.framework.web.domain.BaseEntity;
 
+import java.util.List;
+
 /**
  * 幼儿园一日流程评估对象 by_dayflowassessment
  *
@@ -24,6 +26,8 @@ public class ByDayflowassessment extends BaseEntity {
      */
     @Excel(name = "所属计划")
     private Long planid;
+
+    private String items;
 
     /**
      * 学校编号
@@ -86,6 +90,12 @@ public class ByDayflowassessment extends BaseEntity {
     private Long bzid;
 
     /**
+     * 评估标准满分
+     */
+    @Excel(name = "评估标准满分")
+    private Double bzmf;
+
+    /**
      * 扣分值
      */
     @Excel(name = "扣分值")
@@ -96,6 +106,12 @@ public class ByDayflowassessment extends BaseEntity {
      */
     @Excel(name = "扣分次数")
     private Long kfcs;
+
+    /**
+     * 最终得分
+     */
+    @Excel(name = "评估标准满分")
+    private Double zzdf;
 
     /**
      * 评估对象
@@ -254,9 +270,37 @@ public class ByDayflowassessment extends BaseEntity {
                 .append("bzid", getBzid())
                 .append("kfz", getKfz())
                 .append("kfcs", getKfcs())
+                .append("bzmf", getBzmf())
+                .append("zzdf", getZzdf())
                 .append("pgdx", getPgdx())
+                .append("items", getItems())
                 .append("createUserid", getCreateUserid())
                 .append("createTime", getCreateTime())
                 .toString();
+    }
+
+    public Double getBzmf() {
+        return bzmf;
+    }
+
+    public void setBzmf(Double bzmf) {
+        this.bzmf = bzmf;
+    }
+
+    public Double getZzdf() {
+        return zzdf;
+    }
+
+    public void setZzdf(Double zzdf) {
+        this.zzdf = zzdf;
+    }
+
+
+    public String getItems() {
+        return items;
+    }
+
+    public void setItems(String items) {
+        this.items = items;
     }
 }

@@ -98,32 +98,27 @@ public class ByDayflowassessmentplanController extends BaseController {
         String dict_value = byDayflowassessmentplan.getXnxq();
         byDayflowassessmentplan.setDeptId(SecurityUtils.getLoginUser().getUser().getDeptId());
         byDayflowassessmentplan.setCreateUserid(SecurityUtils.getLoginUser().getUser().getUserId());
-        byDayflowassessmentplan.setName(byClassService.selectByClassById(classId).getBjmc() + "-" + sysDictDataService.selectDictLabel(dict_type, dict_value) + "-" + byDayFlowDetailService.selectByDayFlowDetailById(connentId).getName() + "-" + "评估计划" );
-        if
-        (   byClassService.selectByClassById(classId).getZbjs() == null &&
-            byClassService.selectByClassById(classId).getPbjs() == null &&
-            byClassService.selectByClassById(classId).getZljs() == null
-        )
-        {
+        byDayflowassessmentplan.setName(byClassService.selectByClassById(classId).getBjmc() + "-" + sysDictDataService.selectDictLabel(dict_type, dict_value) + "-" + byDayFlowDetailService.selectByDayFlowDetailById(connentId).getName() + "-" + "评估计划");
+        if (byClassService.selectByClassById(classId).getZbjs() == null &&
+                byClassService.selectByClassById(classId).getPbjs() == null &&
+                byClassService.selectByClassById(classId).getZljs() == null) {
             return AjaxResult.error("当前班级下没有教师，无法创建评估计划");
         }
         int iCount = byDayflowassessmentplanService.insertByDayflowassessmentplan(byDayflowassessmentplan);
         if (iCount > 0) {
             // 判断班级下是否有老师
-            int sum = 0;
             Long zbjsNew = byClassService.selectByClassById(classId).getZbjs();
             Long pbjsNew = byClassService.selectByClassById(classId).getPbjs();
             Long zljsNew = byClassService.selectByClassById(classId).getZljs();
             ByDayflowassessment byDayflowassessment = null;
             if (zbjsNew != null) {
-                System.out.println("这是主班教师111");
-
                 byDayflowassessment = new ByDayflowassessment();
                 byDayflowassessment.setPlanid(byDayflowassessmentplan.getId());
                 byDayflowassessment.setCreateUserid(SecurityUtils.getLoginUser().getUser().getUserId());
                 byDayflowassessment.setDeptId(byDayflowassessmentplan.getDeptId());
                 byDayflowassessment.setBzbh(zbjsNew);
                 byDayflowassessment.setPgdx(zbjsNew);
+                byDayflowassessment.setBzmf(byDayflowassessmentplan.getScore());
                 byDayflowassessment.setClassid(classId);
                 byDayflowassessment.setXnxq(byDayflowassessmentplan.getXnxq());
                 byDayflowassessment.setBzid(Long.parseLong(byDayflowassessmentplan.getConnent()));
@@ -134,15 +129,44 @@ public class ByDayflowassessmentplanController extends BaseController {
                     byDayflowassessment.setZlbh(zljsNew);
                 }
                 byDayflowassessmentService.insertByDayflowassessment(byDayflowassessment);
-                sum += 1;
             }
             if (pbjsNew != null) {
-                System.out.println("这是配班教师222");
-                sum += 1;
+                byDayflowassessment = new ByDayflowassessment();
+                byDayflowassessment.setPlanid(byDayflowassessmentplan.getId());
+                byDayflowassessment.setCreateUserid(SecurityUtils.getLoginUser().getUser().getUserId());
+                byDayflowassessment.setDeptId(byDayflowassessmentplan.getDeptId());
+                byDayflowassessment.setPbbh(pbjsNew);
+                byDayflowassessment.setPgdx(pbjsNew);
+                byDayflowassessment.setBzmf(byDayflowassessmentplan.getScore());
+                byDayflowassessment.setClassid(classId);
+                byDayflowassessment.setXnxq(byDayflowassessmentplan.getXnxq());
+                byDayflowassessment.setBzid(Long.parseLong(byDayflowassessmentplan.getConnent()));
+                if (zbjsNew != null) {
+                    byDayflowassessment.setBzbh(zbjsNew);
+                }
+                if (zljsNew != null) {
+                    byDayflowassessment.setZlbh(zljsNew);
+                }
+                byDayflowassessmentService.insertByDayflowassessment(byDayflowassessment);
             }
             if (zljsNew != null) {
-                System.out.println("这是助理教师333");
-                sum += 1;
+                byDayflowassessment = new ByDayflowassessment();
+                byDayflowassessment.setPlanid(byDayflowassessmentplan.getId());
+                byDayflowassessment.setCreateUserid(SecurityUtils.getLoginUser().getUser().getUserId());
+                byDayflowassessment.setDeptId(byDayflowassessmentplan.getDeptId());
+                byDayflowassessment.setZlbh(zljsNew);
+                byDayflowassessment.setPgdx(zljsNew);
+                byDayflowassessment.setBzmf(byDayflowassessmentplan.getScore());
+                byDayflowassessment.setClassid(classId);
+                byDayflowassessment.setXnxq(byDayflowassessmentplan.getXnxq());
+                byDayflowassessment.setBzid(Long.parseLong(byDayflowassessmentplan.getConnent()));
+                if (pbjsNew != null) {
+                    byDayflowassessment.setPbbh(pbjsNew);
+                }
+                if (zbjsNew != null) {
+                    byDayflowassessment.setBzbh(zbjsNew);
+                }
+                byDayflowassessmentService.insertByDayflowassessment(byDayflowassessment);
             }
         }
         return toAjax(iCount);
@@ -164,7 +188,7 @@ public class ByDayflowassessmentplanController extends BaseController {
         String dict_value = byDayflowassessmentplan.getXnxq();
         byDayflowassessmentplan.setDeptId(SecurityUtils.getLoginUser().getUser().getDeptId());
         byDayflowassessmentplan.setCreateUserid(SecurityUtils.getLoginUser().getUser().getUserId());
-        byDayflowassessmentplan.setName(byClassService.selectByClassById(classId).getBjmc() + "-" + sysDictDataService.selectDictLabel(dict_type, dict_value) + "-" + byDayFlowDetailService.selectByDayFlowDetailById(connentId).getName() + "-" + "评估计划" );
+        byDayflowassessmentplan.setName(byClassService.selectByClassById(classId).getBjmc() + "-" + sysDictDataService.selectDictLabel(dict_type, dict_value) + "-" + byDayFlowDetailService.selectByDayFlowDetailById(connentId).getName() + "-" + "评估计划");
         return toAjax(byDayflowassessmentplanService.updateByDayflowassessmentplan(byDayflowassessmentplan));
     }
 

@@ -11,13 +11,14 @@
         <result property="standardSort" column="standard_sort"/>
         <result property="unscrambleCount" column="unscramble_count"/>
         <result property="createuser" column="createuser"/>
+        <result property="score" column="score"/>
         <result property="createtime" column="createtime"/>
         <result property="updateuser" column="updateuser"/>
         <result property="updatetime" column="updatetime"/>
     </resultMap>
 
     <sql id="selectByDayFlowStandardVo">
-        select id, task_code, standard_title, standard_sort,(select count(*) from by_day_flow_unscramble where standard_id=by_day_flow_standard.id) unscramble_count, createuser, createtime, updateuser, updatetime from by_day_flow_standard
+        select id, task_code, standard_title, score, standard_sort,(select count(*) from by_day_flow_unscramble where standard_id=by_day_flow_standard.id) unscramble_count, createuser, createtime, updateuser, updatetime from by_day_flow_standard
     </sql>
 
     <select id="selectByDayFlowStandardList" parameterType="ByDayFlowStandard" resultMap="ByDayFlowStandardResult">
@@ -29,6 +30,7 @@
             </if>
             <if test="standardSort != null ">and standard_sort = #{standardSort}</if>
             <if test="createuser != null ">and createuser = #{createuser}</if>
+            <if test="score != null ">and score = #{score}</if>
             <if test="createtime != null ">and createtime = #{createtime}</if>
             <if test="updateuser != null ">and updateuser = #{updateuser}</if>
             <if test="updatetime != null ">and updatetime = #{updatetime}</if>
@@ -47,6 +49,7 @@
             <if test="standardTitle != null  and standardTitle != ''">standard_title,</if>
             <if test="standardSort != null ">standard_sort,</if>
             <if test="createuser != null ">createuser,</if>
+            <if test="score != null ">score,</if>
             <if test="createtime != null ">createtime,</if>
             <if test="updateuser != null ">updateuser,</if>
             <if test="updatetime != null ">updatetime,</if>
@@ -56,6 +59,7 @@
             <if test="standardTitle != null  and standardTitle != ''">#{standardTitle},</if>
             <if test="standardSort != null ">#{standardSort},</if>
             <if test="createuser != null ">#{createuser},</if>
+            <if test="score != null ">#{score},</if>
             <if test="createtime != null ">#{createtime},</if>
             <if test="updateuser != null ">#{updateuser},</if>
             <if test="updatetime != null ">#{updatetime},</if>
@@ -69,6 +73,7 @@
             <if test="standardTitle != null  and standardTitle != ''">standard_title = #{standardTitle},</if>
             <if test="standardSort != null ">standard_sort = #{standardSort},</if>
             <if test="createuser != null ">createuser = #{createuser},</if>
+            <if test="score != null ">score = #{score},</if>
             <if test="createtime != null ">createtime = #{createtime},</if>
             <if test="updateuser != null ">updateuser = #{updateuser},</if>
             <if test="updatetime != null ">updatetime = #{updatetime},</if>

@@ -62,7 +62,7 @@ public class ByDayflowassessmentplan extends BaseEntity {
      * 内容分数
      */
     @Excel(name = "内容分数")
-    private float score;
+    private Double score;
 
     /**
      * 评估时间
@@ -166,11 +166,11 @@ public class ByDayflowassessmentplan extends BaseEntity {
         this.name = name;
     }
 
-    public float getScore() {
+    public Double getScore() {
         return score;
     }
 
-    public void setScore(float score) {
+    public void setScore(double score) {
         this.score = score;
     }
 }

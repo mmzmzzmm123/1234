@@ -3,6 +3,7 @@ package com.ruoyi.project.benyi.controller;
 import java.util.List;
 
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.project.benyi.service.IByDayFlowStandardService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,6 +34,8 @@ import com.ruoyi.framework.web.page.TableDataInfo;
 public class ByDayflowassessmentController extends BaseController {
     @Autowired
     private IByDayflowassessmentService byDayflowassessmentService;
+    @Autowired
+    private IByDayFlowStandardService byDayFlowStandardService;
 
     /**
      * 查询幼儿园一日流程评估列表
@@ -85,7 +88,21 @@ public class ByDayflowassessmentController extends BaseController {
     @Log(title = "幼儿园一日流程评估", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody ByDayflowassessment byDayflowassessment) {
-        return toAjax(byDayflowassessmentService.updateByDayflowassessment(byDayflowassessment));
+        if (byDayflowassessment.getItems() != null) {
+            // 取出标准id并根据id查询此标准的分数
+            String[] arr = byDayflowassessment.getItems().split(",");
+            // 勾选的总分数sum
+            Double sum = 0.0;
+            for (int i=0; i<arr.length; i++) {
+                sum += byDayFlowStandardService.selectByDayFlowStandardById(Long.parseLong(arr[i])).getScore();
+            }
+            byDayflowassessment.setZzdf(sum);
+            byDayflowassessment.setKfz(byDayflowassessment.getBzmf()-sum);
+
+            return toAjax(byDayflowassessmentService.updateByDayflowassessment(byDayflowassessment));
+        }else {
+            return AjaxResult.error("未勾选评估选项");
+        }
     }
 
     /**

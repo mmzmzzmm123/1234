@@ -17,6 +17,8 @@
         <result property="zlxm" column="zlxm"/>
         <result property="xnxq" column="xnxq"/>
         <result property="bzid" column="bzid"/>
+        <result property="bzmf" column="bzmf"/>
+        <result property="zzdf" column="zzdf"/>
         <result property="kfz" column="kfz"/>
         <result property="kfcs" column="kfcs"/>
         <result property="pgdx" column="pgdx"/>
@@ -25,7 +27,7 @@
     </resultMap>
 
     <sql id="selectByDayflowassessmentVo">
-        select id, planid, dept_id, classid, bzbh, bzxm, pbbh, pbxm, zlbh, zlxm, xnxq, bzid, kfz, kfcs, pgdx, create_userid, create_time from by_dayflowassessment
+        select id, planid, dept_id, classid, bzbh, bzxm, pbbh, pbxm, zlbh, zlxm, bzmf, zzdf, xnxq, bzid, kfz, kfcs, pgdx, create_userid, create_time from by_dayflowassessment
     </sql>
 
     <select id="selectByDayflowassessmentList" parameterType="ByDayflowassessment"
@@ -44,6 +46,8 @@
             <if test="xnxq != null  and xnxq != ''">and xnxq = #{xnxq}</if>
             <if test="bzid != null ">and bzid = #{bzid}</if>
             <if test="kfz != null ">and kfz = #{kfz}</if>
+            <if test="bzmf != null ">and bzmf = #{bzmf}</if>
+            <if test="zzdf != null ">and zzdf = #{zzdf}</if>
             <if test="kfcs != null ">and kfcs = #{kfcs}</if>
             <if test="pgdx != null ">and pgdx = #{pgdx}</if>
             <if test="createUserid != null ">and create_userid = #{createUserid}</if>
@@ -70,6 +74,8 @@
             <if test="xnxq != null  and xnxq != ''">xnxq,</if>
             <if test="bzid != null ">bzid,</if>
             <if test="kfz != null ">kfz,</if>
+            <if test="bzmf != null ">bzmf,</if>
+            <if test="zzdf != null ">zzdf,</if>
             <if test="kfcs != null ">kfcs,</if>
             <if test="pgdx != null ">pgdx,</if>
             <if test="createUserid != null ">create_userid,</if>
@@ -88,6 +94,8 @@
             <if test="xnxq != null  and xnxq != ''">#{xnxq},</if>
             <if test="bzid != null ">#{bzid},</if>
             <if test="kfz != null ">#{kfz},</if>
+            <if test="bzmf != null ">#{bzmf},</if>
+            <if test="zzdf != null ">#{zzdf},</if>
             <if test="kfcs != null ">#{kfcs},</if>
             <if test="pgdx != null ">#{pgdx},</if>
             <if test="createUserid != null ">#{createUserid},</if>
@@ -110,6 +118,8 @@
             <if test="xnxq != null  and xnxq != ''">xnxq = #{xnxq},</if>
             <if test="bzid != null ">bzid = #{bzid},</if>
             <if test="kfz != null ">kfz = #{kfz},</if>
+            <if test="bzmf != null ">bzmf = #{bzmf},</if>
+            <if test="zzdf != null ">zzdf = #{zzdf},</if>
             <if test="kfcs != null ">kfcs = #{kfcs},</if>
             <if test="pgdx != null ">pgdx = #{pgdx},</if>
             <if test="createUserid != null ">create_userid = #{createUserid},</if>
