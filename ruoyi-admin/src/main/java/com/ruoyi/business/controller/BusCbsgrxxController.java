@@ -3,7 +3,6 @@ package com.ruoyi.business.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -69,11 +68,15 @@ public class BusCbsgrxxController extends BaseController {
 	/**
 	 * 新增承包商工人信息
 	 */
-	@ApiOperation("新增承包商工人信息")
+	@ApiOperation("新增修改/承包商工人信息")
 	@Log(title = "承包商工人信息", businessType = BusinessType.INSERT)
 	@PostMapping
 	public AjaxResult add(@RequestBody BusCbsgrxxSaveVO busCbsgrxxSaveVO) {
-		return toAjax(busCbsgrxxService.insertBusCbsgrxx(busCbsgrxxSaveVO));
+		if (busCbsgrxxSaveVO.getId() == null) {
+			return toAjax(busCbsgrxxService.insertBusCbsgrxx(busCbsgrxxSaveVO));
+		} else {
+			return toAjax(busCbsgrxxService.updateBusCbsgrxx(busCbsgrxxSaveVO));
+		}
 	}
 
 	/**
@@ -89,8 +92,9 @@ public class BusCbsgrxxController extends BaseController {
 	/**
 	 * 删除承包商工人信息
 	 */
+	@ApiOperation("删除承包商工人")
 	@Log(title = "承包商工人信息", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ids}")
+	@PostMapping("/{ids}")
 	public AjaxResult remove(@PathVariable Long[] ids) {
 		return toAjax(busCbsgrxxService.deleteBusCbsgrxxByIds(ids));
 	}
