@@ -59,7 +59,8 @@
         select o.order_id, o.review_status, o.cus_id, sc.name as customer, sc.phone, o.amount, o.start_time, o.pause_time, o.status, o.weight, ser.dict_label as serve_time,
         o.serve_time_id, o.pay_type_id, pay.dict_label as pay_type, o.pre_sale_id, o.create_by, o.create_time, o.after_sale_id, o.update_by, o.update_time,
         o.nutritionist_id, o.remark, o.nutri_assis_id, o.account_id, acc.dict_label as account, o.planner_id, o.planner_assis_id, o.operator_id, o.operator_assis_id,
-        o.recommender, o.order_time,o.give_serve_day,o.conditioning_project_id,cp.dict_label as conditioning_project,o.server_end_time,o.become_fan_time
+        o.recommender, o.order_time,o.give_serve_day,o.conditioning_project_id,cp.dict_label as conditioning_project,o.server_end_time,o.become_fan_time,
+        o.on_sale_id,o.order_type,o.order_count_type,o.order_money_type,o.main_order_id,o.after_sale_commiss_order
         from sys_order o
         LEFT JOIN sys_customer sc ON sc.id = o.cus_id
         LEFT JOIN (SELECT dict_label, dict_value FROM sys_dict_data WHERE dict_type = 'cus_pay_type') AS pay ON pay.dict_value = o.pay_type_id
@@ -368,9 +369,6 @@
       <if test="userId != null">
           and (su_sale.user_id = #{userId} or su_nutritionist.user_id = #{userId})
       </if>
-      <!--<if test="beginTime != null and beginTime != ''">
-          AND o.order_time &gt;= #{beginTime}
-      </if>-->
       <if test="endTime != null and endTime != ''">
           AND DATE_FORMAT(o.order_time,'%Y-%m-%d') &lt;= #{endTime}
       </if>

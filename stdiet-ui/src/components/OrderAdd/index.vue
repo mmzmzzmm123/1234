@@ -119,9 +119,10 @@
           <el-form-item label="售中" prop="onSaleId">
             <el-select v-model="form.onSaleId" placeholder="请选择">
               <el-option
-                :key="177"
-                :label="'时瑞瑞'"
-                :value="parseInt('177')"
+                v-for="dict in onSaleIdOptions"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="parseInt(dict.dictValue)"
               />
             </el-select>
           </el-form-item>
@@ -481,6 +482,8 @@ export default {
     ...mapGetters([
       // 售前字典
       "preSaleIdOptions",
+      // 售中字典
+      "onSaleIdOptions",
       // 售后字典
       "afterSaleIdOptions",
       // 主营养师字典
@@ -694,17 +697,15 @@ export default {
       }
       //判断是否选择了体验单
       if (newVal[0] == 2) {
-         /*this.form.nutritionistId = null;
-         this.form.nutritionistIdList = null;
-         this.form.afterSaleId = null;
-         this.form.nutriAssisId = null;*/
          this.afterNutiShow = false;
-         this.form.onSaleId = 177;
+         this.form.onSaleId = parseInt(this.onSaleIdOptions[1].dictValue);
          this.form.serveTimeId = 7;
+         this.form.conditioningProjectId = 12;
       }else{
         this.form.onSaleId = null;
         this.form.serveTimeId = 90;
         this.afterNutiShow = true;
+        this.form.conditioningProjectId = 0;
       }
     },
   },

@@ -187,6 +187,11 @@ public class SysOrderServiceImpl implements ISysOrderService {
         setOrderServerEndDate(sysOrder);
         sysOrder.setUpdateBy(SecurityUtils.getUsername());
         sysOrder.setUpdateTime(DateUtils.getNowDate());
+        //体验单
+        /*if("2".equals(sysOrder.getOrderType())){
+
+        }*/
+
         //更新订单
         int row = sysOrderMapper.updateSysOrder(sysOrder);
         // 审核后的订单才生成食谱

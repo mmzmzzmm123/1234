@@ -2,13 +2,18 @@
   <el-dialog
     :title="title"
     :visible.sync="visible"
-    width="720px"
+    width="820px"
     append-to-body
     :close-on-click-modal="false"
     @closed="handleOnClosed"
   >
     <el-row :gutter="15">
       <el-form ref="form" :model="form" :rules="rules" label-width="90px">
+        <el-col :span="16">
+          <el-form-item label="订单类型" prop="orderTypeName">
+            <el-input v-model="form.orderTypeName" placeholder="" :disabled="true"/>
+          </el-form-item>
+        </el-col>
         <el-col :span="8">
           <el-form-item label="成交金额" prop="amount">
             <el-input v-model="form.amount" placeholder="请输入金额" />
@@ -89,7 +94,19 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="8" v-show="onSaleShow">
+          <el-form-item label="售中" prop="onSaleId">
+            <el-select v-model="form.onSaleId" placeholder="请选择">
+              <el-option
+                v-for="dict in onSaleIdOptions"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="parseInt(dict.dictValue)"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="8" v-show="afterSaleNutriAssShow">
           <el-form-item label="售后" prop="afterSaleId">
             <el-select v-model="form.afterSaleId" placeholder="请选择">
               <el-option
@@ -101,7 +118,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="8" v-show="afterSaleNutriAssShow">
           <el-form-item label="主营养师" prop="nutritionistId">
             <el-select v-model="form.nutritionistId" placeholder="请选择">
               <el-option
@@ -113,7 +130,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="8" v-show="afterSaleNutriAssShow">
           <el-form-item label="助理营养师" prop="nutriAssisId">
             <el-select v-model="form.nutriAssisId" placeholder="请选择">
               <el-option
@@ -125,7 +142,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="8" v-show="planOperatorShow">
           <el-form-item label="策划" prop="plannerId">
             <el-select v-model="form.plannerId" placeholder="请选择">
               <el-option
@@ -137,7 +154,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="8" v-show="planOperatorShow">
           <el-form-item label="策划助理" prop="plannerAssisId">
             <el-select v-model="form.plannerAssisId" placeholder="请选择">
               <el-option
@@ -149,7 +166,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="8" v-show="planOperatorShow">
           <el-form-item label="运营" prop="operatorId">
             <el-select v-model="form.operatorId" placeholder="请选择">
               <el-option
@@ -161,7 +178,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="8" v-show="planOperatorShow">
           <el-form-item label="运营助理" prop="operatorAssisId">
             <el-select v-model="form.operatorAssisId" placeholder="请选择">
               <el-option
@@ -367,6 +384,12 @@ export default {
       reviewStatusOptions: [],
       //下拉列表对应关系(用于选择收款账号自动选择策划、策划助理、运营、运营助理)
       orderDropdownCorrespondingOptions: [],
+      //是否显示售中
+      onSaleShow: false,
+      //是否显示售后、营养师、营养师助理
+      afterSaleNutriAssShow: true,
+      //是否显示策划、策划助理、运营、运营助理
+      planOperatorShow: true
     };
   },
   created() {
@@ -401,6 +424,8 @@ export default {
     ...mapGetters([
       // 售前字典
       "preSaleIdOptions",
+      // 售中字典
+      "onSaleIdOptions",
       // 售后字典
       "afterSaleIdOptions",
       // 主营养师字典
@@ -512,6 +537,7 @@ export default {
         pauseTime: null,
         payTypeId: defaultPayType ? parseInt(defaultPayType.dictValue) : null,
         preSaleId: defaultPresale ? parseInt(defaultPresale.dictValue) : null,
+        onSaleId: null,
         createBy: null,
         createTime: null,
         afterSaleId: defaultAftersale
@@ -543,6 +569,11 @@ export default {
       };
       // console.log(this.form);
       this.resetForm("form");
+      console.log("--"+obj.orderType);
+      this.onSaleShow = this.form.orderType == "2";
+      this.afterSaleNutriAssShow = this.form.orderType != "2" && this.form.afterSaleCommissOrder == 0;
+      this.planOperatorShow = this.form.afterSaleCommissOrder == 0;
+
     },
     handleOnClosed() {
       this.reset();

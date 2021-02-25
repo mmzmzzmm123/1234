@@ -16,14 +16,7 @@
       <el-table-column width="120" prop="attr_name_one"> </el-table-column>
       <el-table-column prop="value_one">
         <template slot-scope="scope">
-          <el-tag
-            v-if="scope.row.attr_name_one === '审核状态'"
-            :type="scope.row.value_one === 'yes' ? 'success' : 'danger'"
-          >
-            {{ scope.row.value_one === "yes" ? "已审核" : "未审核" }}
-          </el-tag>
           <auto-hide-message
-            v-else
             :data="scope.row.value_one == null ? '' : scope.row.value_one + ''"
             :maxLength="20"
           />
@@ -32,7 +25,14 @@
       <el-table-column width="120" prop="attr_name_two"></el-table-column>
       <el-table-column prop="value_two">
         <template slot-scope="scope">
+          <el-tag
+            v-if="scope.row.attr_name_two === '审核状态'"
+            :type="scope.row.value_two === 'yes' ? 'success' : 'danger'"
+          >
+            {{ scope.row.value_two === "yes" ? "已审核" : "未审核" }}
+          </el-tag>
           <auto-hide-message
+            v-else
             :data="scope.row.value_two == null ? '' : scope.row.value_two + ''"
             :maxLength="20"
           />
@@ -68,23 +68,25 @@ export default {
       visible: false,
       //订单详情的标题，按竖显示
       orderTitleData: [
-        ["审核状态", "成交时间", "调理项目"],
-        ["姓名", "手机号", "金额"],
-        ["收款方式", "收款账号", "服务时长"],
-        ["赠送时长", "售前", "售后"],
-        ["营养师", "助理营养师", "策划"],
-        ["策划助理", "运营", "运营助理"],
-        ["开始时间", "结束时间", "备注"],
+        ["订单类型","审核状态", "成交时间"],
+        ["调理项目","姓名", "手机号"],
+        ["金额","收款方式", "收款账号"],
+        ["服务时长","赠送时长", "售前"],
+        ["售中","售后","营养师"],
+        ["助理营养师","策划","策划助理"],
+        ["运营","运营助理","开始时间"],
+        ["结束时间","备注",""]
       ],
       //订单详情的属性名称，与标题对应，按竖显示
       orderValueData: [
-        ["reviewStatus", "orderTime", "conditioningProject"],
-        ["customer", "phone", "amount"],
-        ["payType", "account", "serveTime"],
-        ["giveServeDay", "preSale", "afterSale"],
-        ["nutritionist", "nutriAssis", "planner"],
-        ["plannerAssis", "operator", "operatorAssis"],
-        ["startTime", "serverEndTime", "remark"],
+        ["orderTypeName","reviewStatus", "orderTime"],
+        ["conditioningProject","customer", "phone"],
+        ["amount","payType", "account"],
+        ["serveTime","giveServeDay", "preSale"],
+        ["onSale","afterSale","nutritionist"],
+        ["nutriAssis","planner","plannerAssis"],
+        ["operator","operatorAssis","startTime"],
+        ["serverEndTime","remark",""]
       ],
     };
   },
@@ -106,12 +108,8 @@ export default {
     },
     showDialog(orderId) {
       getInfoDetail({ orderId }).then((response) => {
-        response.data.weight =
-          response.data.weight != null ? response.data.weight + "斤" : "";
-        response.data.giveServeDay =
-          response.data.giveServeDay != null
-            ? response.data.giveServeDay + "天"
-            : "";
+        response.data.weight = response.data.weight != null ? response.data.weight + "斤" : "";
+        response.data.giveServeDay = response.data.giveServeDay != null ? response.data.giveServeDay + "天" : "";
         for (let i = 0; i < this.orderTitleData.length; i++) {
           this.orderDetailList.push({
             attr_name_one: this.orderTitleData[i][0],

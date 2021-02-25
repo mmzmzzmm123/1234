@@ -35,20 +35,26 @@
           >
             <template slot-scope="scope">
               <el-tag
-                v-if="scope.row.orderType === 'main'"
+                v-if="scope.row.type === 'main'"
                 :type="scope.row.reviewStatus === 'yes' ? 'success' : 'danger'"
                 disable-transitions
               >
                 {{ scope.row.reviewStatus === "yes" ? "已审核" : "未审核" }}
               </el-tag>
               <el-tag
-                v-if="scope.row.orderType === 'virtual'"
+                v-if="scope.row.type === 'virtual'"
                 disable-transitions
               >
                 分单
               </el-tag>
             </template>
           </el-table-column>
+          <el-table-column
+            label="订单类型"
+            prop="orderTypeName"
+            align="center"
+            width="160"
+          ></el-table-column>
           <el-table-column
             label="成交时间"
             prop="orderTime"
@@ -63,7 +69,7 @@
           <el-table-column label="操作" align="center" width="120px">
             <template slot-scope="scope">
               <el-button
-                v-if="scope.row.orderType === 'main'"
+                v-if="scope.row.type === 'main'"
                 size="mini"
                 type="text"
                 @click="handleOnDetailClick(scope.row)"
@@ -71,7 +77,7 @@
               >
               <el-button
                 v-if="
-                  scope.row.orderType === 'main' &&
+                  scope.row.type === 'main' &&
                   (checkPermi(['custom:order:review']) ||
                     (checkPermi(['custom:order:edit']) &&
                       userId === scope.row.preSaleId &&
@@ -86,7 +92,7 @@
                 size="mini"
                 type="text"
                 v-if="
-                  scope.row.orderType === 'main' &&
+                  scope.row.type === 'main' &&
                   (checkPermi(['custom:order:review']) ||
                     (checkPermi(['custom:order:remove']) &&
                       userId === scope.row.preSaleId &&
@@ -153,14 +159,14 @@ export default {
           if (tarOrder) {
             if (!tarOrder.children) {
               const firstObj = JSON.parse(JSON.stringify(tarOrder));
-              tarOrder.children = [{ ...firstObj, orderType: "main" }];
+              tarOrder.children = [{ ...firstObj, type: "main" }];
             }
-            tarOrder.amount += cur.amount;
+            tarOrder.amount += cur.afterSaleCommissOrder == 0 ? cur.amount : 0;
             tarOrder.orderId += cur.orderId;
-            tarOrder.orderType = "virtual";
-            tarOrder.children.push({ ...cur, orderType: "main" });
+            tarOrder.type = "virtual";
+            tarOrder.children.push({ ...cur, type: "main" });
           } else {
-            cur.orderType = "main";
+            cur.type = "main";
             arr.push(cur);
           }
           return arr;
