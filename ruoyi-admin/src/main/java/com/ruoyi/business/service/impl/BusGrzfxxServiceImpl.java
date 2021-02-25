@@ -118,6 +118,9 @@ public class BusGrzfxxServiceImpl implements IBusGrzfxxService
 	@Override
 	public int deleteByCbsIdAndGrId(Long cbsId, Long grId) {
 		List<BusGrzfxx> busCbszzxxList = selectByCbsIdAndGrId(cbsId, grId);
+		if(busCbszzxxList.isEmpty()) {
+			return 0;
+		}
 		List<Long> ids = busCbszzxxList.stream().map(BusGrzfxx::getId).collect(Collectors.toList());
 		return deleteBusGrzfxxByIds(ids.toArray(new Long[ids.size()]));
 	}
