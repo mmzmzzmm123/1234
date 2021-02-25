@@ -11,6 +11,7 @@ import com.stdiet.custom.controller.OrderBaseController;
 import com.stdiet.custom.domain.SysOrder;
 import com.stdiet.custom.page.OrderTableDataInfo;
 import com.stdiet.custom.service.ISysOrderService;
+import com.stdiet.custom.utils.OrderUtils;
 import com.stdiet.system.service.ISysDictDataService;
 import com.stdiet.system.service.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,34 +53,8 @@ public class SysOrderController extends OrderBaseController {
         if (totalAmount == null) {
             totalAmount = new BigDecimal(0);
         }
-
         for (SysOrder order : list) {
-            for (SysUser user : userList) {
-                if (user.getUserId().equals(order.getPreSaleId())) {
-                    order.setPreSale(user.getNickName());
-                }
-                if (user.getUserId().equals(order.getAfterSaleId())) {
-                    order.setAfterSale(user.getNickName());
-                }
-                if (user.getUserId().equals(order.getNutritionistId())) {
-                    order.setNutritionist(user.getNickName());
-                }
-                if (user.getUserId().equals(order.getNutriAssisId())) {
-                    order.setNutriAssis(user.getNickName());
-                }
-                if (user.getUserId().equals(order.getOperatorId())) {
-                    order.setOperator(user.getNickName());
-                }
-                if (user.getUserId().equals(order.getPlannerId())) {
-                    order.setPlanner(user.getNickName());
-                }
-                if (user.getUserId().equals(order.getPlannerAssisId())) {
-                    order.setPlannerAssis(user.getNickName());
-                }
-                if (user.getUserId().equals(order.getOperatorAssisId())) {
-                    order.setOperatorAssis(user.getNickName());
-                }
-            }
+            initUserNickNameAndOrderType(userList,order);
             if (StringUtils.isNotEmpty(order.getPhone())) {
                 order.setPhone(StringUtils.hiddenPhoneNumber(order.getPhone()));
             }
@@ -103,37 +78,8 @@ public class SysOrderController extends OrderBaseController {
     public AjaxResult export(SysOrder sysOrder) {
         List<SysOrder> list = sysOrderService.selectSysOrderList(sysOrder);
         List<SysUser> userList = userService.selectAllUser();
-
         for (SysOrder order : list) {
-            for (SysUser user : userList) {
-                if (user.getUserId().equals(order.getPreSaleId())) {
-                    order.setPreSale(user.getNickName());
-                }
-                if (user.getUserId().equals(order.getAfterSaleId())) {
-                    order.setAfterSale(user.getNickName());
-                }
-                if (user.getUserId().equals(order.getNutritionistId())) {
-                    order.setNutritionist(user.getNickName());
-                }
-                if (user.getUserId().equals(order.getNutriAssisId())) {
-                    order.setNutriAssis(user.getNickName());
-                }
-                if (user.getUserId().equals(order.getOperatorId())) {
-                    order.setOperator(user.getNickName());
-                }
-                if (user.getUserId().equals(order.getPlannerId())) {
-                    order.setPlanner(user.getNickName());
-                }
-                if (user.getUserId().equals(order.getPlannerAssisId())) {
-                    order.setPlannerAssis(user.getNickName());
-                }
-                if (user.getUserId().equals(order.getOperatorAssisId())) {
-                    order.setOperatorAssis(user.getNickName());
-                }
-            }
-            if (StringUtils.isNotEmpty(order.getPhone())) {
-                order.setPhone(StringUtils.hiddenPhoneNumber(order.getPhone()));
-            }
+            initUserNickNameAndOrderType(userList,order);
         }
         ExcelUtil<SysOrder> util = new ExcelUtil<SysOrder>(SysOrder.class);
         return util.exportExcel(list, "order");
@@ -157,34 +103,42 @@ public class SysOrderController extends OrderBaseController {
         SysOrder order = sysOrderService.selectSysOrderById(orderId);
         if (order != null) {
             List<SysUser> userList = userService.selectAllUser();
-            for (SysUser user : userList) {
-                if (user.getUserId().equals(order.getPreSaleId())) {
-                    order.setPreSale(user.getNickName());
-                }
-                if (user.getUserId().equals(order.getAfterSaleId())) {
-                    order.setAfterSale(user.getNickName());
-                }
-                if (user.getUserId().equals(order.getNutritionistId())) {
-                    order.setNutritionist(user.getNickName());
-                }
-                if (user.getUserId().equals(order.getNutriAssisId())) {
-                    order.setNutriAssis(user.getNickName());
-                }
-                if (user.getUserId().equals(order.getOperatorId())) {
-                    order.setOperator(user.getNickName());
-                }
-                if (user.getUserId().equals(order.getPlannerId())) {
-                    order.setPlanner(user.getNickName());
-                }
-                if (user.getUserId().equals(order.getPlannerAssisId())) {
-                    order.setPlannerAssis(user.getNickName());
-                }
-                if (user.getUserId().equals(order.getOperatorAssisId())) {
-                    order.setOperatorAssis(user.getNickName());
-                }
-            }
+            initUserNickNameAndOrderType(userList,order);
         }
         return AjaxResult.success(order);
+    }
+
+    private void initUserNickNameAndOrderType(List<SysUser> userList, SysOrder order){
+        for (SysUser user : userList) {
+            if (user.getUserId().equals(order.getPreSaleId())) {
+                order.setPreSale(user.getNickName());
+            }
+            if (user.getUserId().equals(order.getOnSaleId())) {
+                order.setOnSale(user.getNickName());
+            }
+            if (user.getUserId().equals(order.getAfterSaleId())) {
+                order.setAfterSale(user.getNickName());
+            }
+            if (user.getUserId().equals(order.getNutritionistId())) {
+                order.setNutritionist(user.getNickName());
+            }
+            if (user.getUserId().equals(order.getNutriAssisId())) {
+                order.setNutriAssis(user.getNickName());
+            }
+            if (user.getUserId().equals(order.getOperatorId())) {
+                order.setOperator(user.getNickName());
+            }
+            if (user.getUserId().equals(order.getPlannerId())) {
+                order.setPlanner(user.getNickName());
+            }
+            if (user.getUserId().equals(order.getPlannerAssisId())) {
+                order.setPlannerAssis(user.getNickName());
+            }
+            if (user.getUserId().equals(order.getOperatorAssisId())) {
+                order.setOperatorAssis(user.getNickName());
+            }
+        }
+        order.setOrderTypeName(OrderUtils.getOrderTypeName(order));
     }
 
     /**

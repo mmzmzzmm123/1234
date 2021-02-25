@@ -223,6 +223,7 @@
           <el-form-item label="服务时长" prop="serveTimeId">
             <el-select
               v-model="queryParams.serveTimeId"
+              clearable
               placeholder="请选服务时长"
             >
               <el-option
@@ -238,6 +239,7 @@
           <el-form-item label="订单金额" prop="amountFlag">
             <el-select
               v-model="queryParams.amountFlag"
+              clearable
               placeholder="请选金额状态"
             >
               <el-option :key="0" label="全部订单" :value="null" />
@@ -334,8 +336,9 @@
           }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="订单类型" align="center" prop="orderTypeName" width="160"/>
       <el-table-column label="客户姓名" align="center" prop="customer" />
-      <el-table-column label="手机号" align="center" prop="phone" width="100" />
+      <!--<el-table-column label="手机号" align="center" prop="phone" width="100" />-->
       <el-table-column label="成交金额" align="center" prop="amount">
         <template slot-scope="scope">
           {{ toThousands(scope.row.amount) }}

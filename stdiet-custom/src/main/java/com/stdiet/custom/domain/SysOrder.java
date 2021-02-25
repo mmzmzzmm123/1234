@@ -77,8 +77,10 @@ public class SysOrder extends BaseEntity {
     private String preSale;
 
     /** 售中ID */
-    @Excel(name = "售中ID")
     private Long onSaleId;
+
+    @Excel(name = "售中")
+    private String onSale;
 
     /**
      * 售后
@@ -235,23 +237,21 @@ public class SysOrder extends BaseEntity {
     private Integer amountFlag;
 
     /** 订单类型 0普通单 1比例拆分单 2体验单 */
-    @Excel(name = "订单类型 0普通单 1比例拆分单 2体验单")
     private String orderType;
 
+    @Excel(name = "订单类型")
+    private String orderTypeName;
+
     /** 订单次数类型 0一开单  1二开单 */
-    @Excel(name = "订单次数类型 0一开单  1二开单")
     private String orderCountType;
 
     /** 订单金额类型 0全款单  1定金单  2尾款单 */
-    @Excel(name = "订单金额类型 0全款单  1定金单  2尾款单")
     private String orderMoneyType;
 
     /** 拆分订单中的主订单id，非拆分订单时，该id都为0 */
-    @Excel(name = "拆分订单中的主订单id，非拆分订单时，该id都为0")
     private Long mainOrderId;
 
     /** 售后二开提成单, 0非提成单 1提成单 */
-    @Excel(name = "售后二开提成单, 0非提成单 1提成单")
     private Integer afterSaleCommissOrder;
 
     /** 删除标记 */

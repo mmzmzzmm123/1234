@@ -16,6 +16,7 @@ const getters = {
   nutritionistIdOptions: state => state.global.nutritionistIdOptions,
   nutriAssisIdOptions: state => state.global.nutriAssisIdOptions,
   preSaleIdOptions: state => state.global.preSaleIdOptions,
+  onSaleIdOptions: state => state.global.onSaleIdOptions,
   afterSaleIdOptions: state => state.global.afterSaleIdOptions,
   plannerIdOptions: state => state.global.plannerIdOptions,
   plannerAssisIdOptions: state => state.global.plannerAssisIdOptions,
