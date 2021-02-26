@@ -123,7 +123,7 @@ export default {
         if (response.code === 200) {
           this.loading = false;
           this.menuData = getProcessMenuData(response.data);
-          console.log(this.menuData);
+          // console.log(this.menuData);
         }
       });
     },
