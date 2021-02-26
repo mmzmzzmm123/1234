@@ -121,13 +121,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="totalNumberOfPages != null "> and total_number_of_pages = #{totalNumberOfPages}</if>
             <if test="language != null  and language != ''"> and language = #{language}</if>
             <if test="manuscriptType != null  and manuscriptType != ''"> and manuscript_type = #{manuscriptType}</if>
-<!--            <if test="intellectualPropertyStatement != null  and intellectualPropertyStatement != ''"> and intellectual_property_statement = #{intellectualPropertyStatement}</if>-->
-<!--            <if test="authorizedAgent != null  and authorizedAgent != ''"> and authorized_agent = #{authorizedAgent}</if>-->
-<!--            <if test="permissionAssignment != null  and permissionAssignment != ''"> and permission_assignment = #{permissionAssignment}</if>-->
-<!--            <if test="controlIdentifier != null  and controlIdentifier != ''"> and control_identifier = #{controlIdentifier}</if>-->
             <if test="annotation != null  and annotation != ''"> and annotation = #{annotation}</if>
             <if test="deptId != null  and deptId != ''"> and dept_id = #{deptId}</if>
+            <if test="nodeId != null  and nodeId != ''"> and node_id = #{nodeId}</if>
         </where>
+        <if test="sortField!=null and sortField!=''">
+            order by ${sortField} ${orderBy}
+        </if>
     </select>
     
     <select id="selectMetadataById" parameterType="Long" resultMap="MetadataResult">
@@ -197,6 +197,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <!--            <if test="controlIdentifier != null and controlIdentifier != ''">control_identifier,</if>-->
             <if test="annotation != null and annotation != ''">annotation,</if>
             <if test="deptId != null and deptId != ''">dept_id,</if>
+            <if test="nodeId != null and nodeId != ''">node_id,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
@@ -306,6 +307,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <!--            <if test="controlIdentifier != null and controlIdentifier != ''">control_identifier = #{controlIdentifier},</if>-->
             <if test="annotation != null and annotation != ''">annotation = #{annotation},</if>
             <if test="deptId != null and deptId != ''">dept_id = #{deptId},</if>
+            <if test="nodeId != null and nodeId != ''">node_id = #{nodeId},</if>
         </trim>
         where id = #{id}
     </update>

@@ -75,7 +75,7 @@
             <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
           </el-row>
 
-          <el-table v-loading="loading" :data="metadataList"  @row-click="rowClick" @selection-change="handleSelectionChange" @sort-change="handleSort" >
+          <el-table v-loading="loading" :data="metadataList" @selection-change="handleSelectionChange" @sort-change="handleSort" >
             <el-table-column type="selection" width="55" align="center" />
             <div v-for="(item,index) in tableTitle" :key="index">
               <el-table-column
@@ -111,50 +111,8 @@
             :total="total"
             :page.sync="queryParams.pageNum"
             :limit.sync="queryParams.pageSize"
-            :page-sizes="[5, 10, 20, 50,100,200]"
             @pagination="getList"
           />
-          <br>
-          <div v-show="archiveInnerShow">
-            <el-table v-loading="loadingInner" ref="mainTable" :data="metadataInnerList" @row-click="rowClick" @selection-change="handleSelectionChangeInner" @sort-change="handleSortInner" >
-              <el-table-column type="selection" width="55" align="center" />
-              <div v-for="(item,index) in tableTitle" :key="index">
-                <el-table-column
-                  :label="item.tableFieldName"
-                  :width="item.tableTitleWidth"
-                  sortable="custom"
-                  :prop="item.vModel">
-                </el-table-column>
-              </div>
-
-              <el-table-column label="操作" align="center" width="150" fixed="right" class-name="small-padding fixed-width">
-                <template slot-scope="scope">
-                  <el-button
-                    size="mini"
-                    type="text"
-                    icon="el-icon-edit"
-                    @click="handleUpdate(scope.row)"
-                    v-hasPermi="['system:metadata:edit']"
-                  >修改</el-button>
-                  <el-button
-                    size="mini"
-                    type="text"
-                    icon="el-icon-delete"
-                    @click="handleDelete(scope.row)"
-                    v-hasPermi="['system:metadata:remove']"
-                  >删除</el-button>
-                </template>
-              </el-table-column>
-            </el-table>
-            <pagination
-              v-show="totalInner>0"
-              :total="totalInner"
-              :page.sync="queryParamsInner.pageNum"
-              :limit.sync="queryParamsInner.pageSize"
-              :page-sizes="[5, 10, 20, 50,100,200]"
-              @pagination="getListInner"
-            />
-          </div>
         </el-col>
       </el-row>
     </div>
@@ -229,7 +187,6 @@ export default {
       total: 0,
       // 文书类基本元数据表格数据
       metadataList: [],
-      metadataInnerList:[],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -240,8 +197,8 @@ export default {
       queryParams: {
         deptId:null,
         pageNum: 1,
-        pageSize: 5,
-        aggregationLevel: null,
+        pageSize: 10,
+        aggregationLevel: '案卷',
         archivesName: null,
         archivesIdentifier: null,
         fondsName: null,
@@ -285,21 +242,10 @@ export default {
         totalNumberOfPages: null,
         language: null,
         manuscriptType: null,
-        // intellectualPropertyStatement: null,
-        // authorizedAgent: null,
-        // permissionAssignment: null,
-        // controlIdentifier: null,
         annotation: null
       },
       // 表单参数
       form: {},
-      queryParamsInner:{
-        pageNum: 1,
-        pageSize: 5,
-      },
-      totalInner:0,
-      archiveInnerShow:false,
-      loadingInner:false,
     };
   },
   created() {
@@ -346,17 +292,6 @@ export default {
       this.getList();
       this.loadForm()
     },
-    /** 卷内 **/
-    getListInner(){
-      this.queryParamsInner.deptId =this.deptId;
-      this.queryParamsInner.nodeId=this.nodeId;
-      this.loadingInner = true
-      listMetadata(this.queryParamsInner).then(response => {
-        this.metadataListInner = response.rows;
-        this.totalInner = response.total;
-        this.loadingInner = false;
-      });
-    },
     /** 查询文书类基本元数据列表 */
     getList() {
       let fullPath = this.$route.fullPath
@@ -392,29 +327,11 @@ export default {
       this.resetForm("queryForm");
       this.handleQuery();
     },
-    handleSortInner(data){
-
-    },
     handleSort(data){
       this.queryParams.sortField=data.prop
       this.queryParams.orderBy = data.order
       this.getList();
     },
-    //卷内多选框选中数据
-    handleSelectionChangeInner(selection){
-
-    },
-    rowClick(row, column, event){
-      console.log(row)
-      let data= {};
-      for (let i =0;i<this.tableTitle.length;i++){
-        let k = this.tableTitle[i].vModel
-        data[k]=row[k]
-      }
-      console.log(data,JSON.parse(JSON.stringify(data)))
-      this.$refs.mainTable.toggleRowSelection(data);
-    },
-
     // 多选框选中数据
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.id)
@@ -481,28 +398,28 @@ export default {
     handleDelete(row) {
       const ids = row.id || this.ids;
       this.$confirm('是否确认删除文书类基本元数据编号为"' + ids + '"的数据项?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
-          return delMetadata(ids);
-        }).then(() => {
-          this.getList();
-          this.msgSuccess("删除成功");
-        })
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(function() {
+        return delMetadata(ids);
+      }).then(() => {
+        this.getList();
+        this.msgSuccess("删除成功");
+      })
     },
     /** 导出按钮操作 */
     handleExport() {
       const queryParams = this.queryParams;
       this.$confirm('是否确认导出所有文书类基本元数据数据项?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
-          return exportMetadata(queryParams);
-        }).then(response => {
-          this.download(response.msg);
-        })
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(function() {
+        return exportMetadata(queryParams);
+      }).then(response => {
+        this.download(response.msg);
+      })
     }
   },
   watch: {

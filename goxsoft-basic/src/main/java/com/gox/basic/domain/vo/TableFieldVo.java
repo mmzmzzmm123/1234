@@ -9,6 +9,15 @@ public class TableFieldVo implements Serializable {
     private Integer tableFieldSort;
     private String tableFieldName;
     private Integer tableTitleWidth;
+    private String vModel;
+
+    public String getvModel() {
+        return vModel;
+    }
+
+    public void setvModel(String vModel) {
+        this.vModel = vModel;
+    }
 
     public Integer getTableTitleWidth() {
         return tableTitleWidth;

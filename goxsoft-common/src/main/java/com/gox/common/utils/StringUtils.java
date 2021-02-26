@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import com.gox.common.core.text.StrFormatter;
+import org.apache.commons.lang3.CharUtils;
 
 /**
  * 字符串工具类
@@ -450,7 +451,26 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils
         }
         return sb.toString();
     }
-
+    /**
+     * 对象属性转换为字段  例如：userName to user_name
+     * @param property 字段名
+     * @return
+     */
+    public static String propertyToField(String property) {
+        if (null == property) {
+            return "";
+        }
+        char[] chars = property.toCharArray();
+        StringBuilder sb = new StringBuilder();
+        for (char c : chars) {
+            if (CharUtils.isAsciiAlphaUpper(c)) {
+                sb.append("_").append(StringUtils.lowerCase(CharUtils.toString(c)));
+            } else {
+                sb.append(c);
+            }
+        }
+        return sb.toString();
+    }
     @SuppressWarnings("unchecked")
     public static <T> T cast(Object obj)
     {

@@ -1,10 +1,12 @@
 package com.gox.basic.controller;
 
+import cn.hutool.core.util.StrUtil;
 import com.gox.common.annotation.Log;
 import com.gox.common.core.controller.BaseController;
 import com.gox.common.core.domain.AjaxResult;
 import com.gox.common.core.page.TableDataInfo;
 import com.gox.common.enums.BusinessType;
+import com.gox.common.utils.StringUtils;
 import com.gox.common.utils.file.Chunk;
 import com.gox.common.utils.poi.ExcelUtil;
 import com.gox.basic.domain.Metadata;
@@ -39,6 +41,19 @@ public class MetadataController extends BaseController
     public TableDataInfo list(Metadata metadata)
     {
         startPage();
+        String sortField = metadata.getSortField();
+        String orderBy = metadata.getOrderBy();
+        if (StrUtil.isNotBlank(sortField)){
+            metadata.setSortField(StringUtils.propertyToField(sortField));
+        }
+        if (StrUtil.isNotBlank(orderBy)){
+            if (orderBy.indexOf("asc")==0){
+                metadata.setOrderBy("asc");
+            }
+            else {
+                metadata.setOrderBy("desc");
+            }
+        }
         List<Metadata> list = metadataService.selectMetadataList(metadata);
         return getDataTable(list);
     }

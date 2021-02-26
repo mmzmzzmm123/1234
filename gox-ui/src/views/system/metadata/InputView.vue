@@ -53,6 +53,9 @@ export default {
     },
     deptid:{
       type:Number,
+    },
+    nodeId:{
+      type:Number
     }
   },
   name: "InputView",
@@ -183,7 +186,7 @@ export default {
       }
       if (this.currentPage===2){
         this.formdata2=data
-        this.formData=Object.assign(this.formData,this.formdata2,{id:this.mdId},{deptId:this.deptid})
+        this.formData=Object.assign(this.formData,this.formdata2,{id:this.mdId},{deptId:this.deptid},{nodeId:this.nodeId})
         let obj=this.formData;
         if (obj!==this.formDataC){
           for(let key  in obj){

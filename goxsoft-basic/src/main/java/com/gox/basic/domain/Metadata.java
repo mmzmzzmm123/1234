@@ -199,17 +199,56 @@ public class Metadata extends BaseEntity
     /** 稿本 */
     @Excel(name = "稿本")
     private String manuscriptType;
+    /** 排序 **/
+    private String sortField;
+    /** 排序策略 **/
+    private String orderBy;
     /** 电子文件*/
     private List<ElectronicAttributes> electronicAttributes;
     /**
      * 备用字段 1-5 长字段 6-15短字段
+     * regex   ^f[1-9][0-9]*$
      */
     private MetadataReserve metadataReserve;
+    /** 案卷用 父id **/
+    private Long parentId;
+
+    private Long nodeId;
+
+    public Long getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
+    }
+
+    public Long getNodeId() {
+        return nodeId;
+    }
+
+    public void setNodeId(Long nodeId) {
+        this.nodeId = nodeId;
+    }
 
     public MetadataReserve getMetadataReserve() {
         return metadataReserve;
     }
+    public String getOrderBy() {
+        return orderBy;
+    }
 
+    public void setOrderBy(String orderBy) {
+        this.orderBy = orderBy;
+    }
+
+    public String getSortField() {
+        return sortField;
+    }
+
+    public void setSortField(String sortField) {
+        this.sortField = sortField;
+    }
     public void setMetadataReserve(MetadataReserve metadataReserve) {
         this.metadataReserve = metadataReserve;
     }
