@@ -30,6 +30,7 @@
 <script>
 import NutriComputeCom from "./NutriComputeCom";
 import DishesDetailDialog from "./DishesDetailDialog";
+import { getDicts } from "@/api/custom/recipesShow";
 export default {
   name: "menuDetail",
   props: ["value", "date"],
@@ -38,19 +39,19 @@ export default {
     DishesDetailDialog,
   },
   created() {
-    this.getDicts("cus_cus_unit").then((response) => {
+    getDicts("cus_cus_unit").then((response) => {
       this.curUnitDict = response.data.reduce((obj, cur) => {
         obj[cur.dictValue] = cur.dictLabel;
         return obj;
       }, {});
     });
-    this.getDicts("cus_cus_weight").then((response) => {
+    getDicts("cus_cus_weight").then((response) => {
       this.cusWeightDict = response.data.reduce((obj, cur) => {
         obj[cur.dictValue] = cur.dictLabel;
         return obj;
       }, {});
     });
-    this.getDicts("cus_dishes_type").then((response) => {
+    getDicts("cus_dishes_type").then((response) => {
       this.menuTypeDict = response.data.reduce((obj, cur) => {
         obj[cur.dictValue] = cur.dictLabel;
         return obj;
@@ -91,7 +92,7 @@ export default {
         typeName: this.menuTypeDict[type],
         values: mData[type],
       }));
-      console.log(mMenus);
+      // console.log(mMenus);
       return mMenus;
     },
   },

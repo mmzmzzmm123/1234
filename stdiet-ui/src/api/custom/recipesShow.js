@@ -29,3 +29,13 @@ export function getRecipesMenuInfoApi(id) {
     }
   });
 }
+
+export function getDicts(id) {
+  return request({
+    url: "/wap/dict/" + id,
+    method: "get",
+    headers: {
+      isToken: false
+    }
+  });
+}

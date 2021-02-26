@@ -21,10 +21,7 @@ export function getData(dictCode) {
 export function getDicts(dictType) {
   return request({
     url: "/system/dict/data/type/" + dictType,
-    method: "get",
-    headers: {
-      isToken: false
-    }
+    method: "get"
   });
 }
 

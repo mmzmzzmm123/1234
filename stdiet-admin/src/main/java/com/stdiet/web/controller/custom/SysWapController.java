@@ -2,9 +2,9 @@ package com.stdiet.web.controller.custom;
 
 import com.stdiet.common.core.controller.BaseController;
 import com.stdiet.common.core.domain.AjaxResult;
-import com.stdiet.custom.service.ISysRecipesPlanService;
 import com.stdiet.custom.service.ISysRecipesService;
 import com.stdiet.custom.service.ISysWapServices;
+import com.stdiet.system.service.ISysDictTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,8 +20,12 @@ public class SysWapController extends BaseController {
     @Autowired
     ISysRecipesService iSysRecipesService;
 
+    @Autowired
+    ISysDictTypeService iSysDictTypeService;
+
     /**
      * 客户食谱详情
+     *
      * @param outId
      * @return
      */
@@ -38,5 +42,10 @@ public class SysWapController extends BaseController {
     @GetMapping(value = "/recipes/menu/{id}")
     public AjaxResult dayilyMenu(@PathVariable Long id) {
         return AjaxResult.success(iSysRecipesService.selectDishesByMenuId(id));
+    }
+
+    @GetMapping(value = "/dict/{dictType}")
+    public AjaxResult sysDict(@PathVariable String dictType) {
+        return AjaxResult.success(iSysDictTypeService.selectDictDataByType(dictType));
     }
 }
