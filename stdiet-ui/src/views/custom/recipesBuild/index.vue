@@ -24,8 +24,8 @@ const {
   mapGetters,
 } = createNamespacedHelpers("recipes");
 
-import HealthyView from "./HealthyView";
-import BodySignView from "./BodySignView";
+import HealthyView from "@/components/HealthyView";
+import BodySignView from "@/components/BodySignView";
 import RecipesView from "./RecipesView/index";
 import RecommondView from "./RecommondView";
 

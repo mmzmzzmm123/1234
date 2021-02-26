@@ -147,6 +147,13 @@ export const constantRoutes = [
     hidden: true
   },
   {
+    path: "/recipes/detail/:id",
+    component: resolve => require(["@/views/custom/recipesShow"], resolve),
+    props: true,
+    meta: { title: "健康食谱" },
+    hidden: true
+  },
+  {
     path: "/f/contract/:id(\\d+)",
     hidden: true,
     component: resolve => require(["@/views/custom/signContract"], resolve),

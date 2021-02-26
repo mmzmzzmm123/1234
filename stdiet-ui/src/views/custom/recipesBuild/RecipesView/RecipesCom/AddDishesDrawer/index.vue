@@ -24,7 +24,7 @@
         <ConfigDishes
           v-show="active === 1"
           v-bind="selDishes"
-          :typeOptions="typeOptions"
+          :typeOptions="dishesTypeOptions"
           @onChange="handleOnConfigChange"
         />
       </div>
@@ -65,7 +65,7 @@ export default {
     return {
       visible: false,
       active: 0,
-      typeOptions: [],
+      dishesTypeOptions: [],
       selDishes: {
         name: "",
         type: "",
@@ -76,7 +76,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["dishesTypeOptions"]),
+    ...mapState(["typeOptions"]),
   },
   methods: {
     showDrawer() {
@@ -95,11 +95,11 @@ export default {
       // console.log(data);
       this.selDishes = data;
       this.active = 1;
-      this.typeOptions = data.type.split(",").reduce((arr, cur, idx) => {
+      this.dishesTypeOptions = data.type.split(",").reduce((arr, cur, idx) => {
         if (idx === 0) {
           this.selDishes.type = cur;
         }
-        const tarOpt = this.dishesTypeOptions.find(
+        const tarOpt = this.typeOptions.find(
           (obj) => obj.dictValue === cur
         );
         if (tarOpt) {

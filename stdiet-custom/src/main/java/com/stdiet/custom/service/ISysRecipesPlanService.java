@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.stdiet.custom.domain.SysOrder;
 import com.stdiet.custom.domain.SysRecipesPlan;
+import com.stdiet.custom.domain.SysRecipesPlanListInfo;
 import org.springframework.core.annotation.Order;
 
 /**
@@ -90,5 +91,10 @@ public interface ISysRecipesPlanService
      */
     List<SysRecipesPlan> selectPlanListByOrderId(SysRecipesPlan sysRecipesPlan);
 
-    public void myGenerateRecipesPlan(SysOrder sysOrder);
+    List<SysRecipesPlan> selectPlanListByOutId(String outId);
+
+    Long getCusIdByOutId(String outId);
+
+    List<SysRecipesPlanListInfo> selectRecipesPlanListInfo(String outId);
+
 }

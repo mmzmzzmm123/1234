@@ -9,19 +9,15 @@ import com.stdiet.common.utils.StringUtils;
 import com.stdiet.common.utils.poi.ExcelUtil;
 import com.stdiet.common.utils.sign.AesUtils;
 import com.stdiet.custom.domain.SysCustomer;
-import com.stdiet.custom.domain.SysCustomerHealthy;
 import com.stdiet.custom.domain.SysCustomerPhysicalSigns;
 import com.stdiet.custom.service.ISysCustomerHealthyService;
 import com.stdiet.custom.service.ISysCustomerPhysicalSignsService;
 import com.stdiet.custom.service.ISysCustomerService;
-import com.stdiet.framework.web.domain.server.Sys;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 客户体征信息Controller
@@ -53,7 +49,7 @@ public class SysCustomerController extends BaseController {
             for (SysCustomer sysCus : list) {
                 if (StringUtils.isNotEmpty(sysCus.getPhone())) {
                     sysCus.setPhone(StringUtils.hiddenPhoneNumber(sysCus.getPhone()));
-                    sysCus.setEncId(sysCus.getId() != null ? AesUtils.encrypt(sysCus.getId()+"", null) : "");
+                    sysCus.setEncId(sysCus.getId() != null ? AesUtils.encrypt(sysCus.getId() + "", null) : "");
                 }
             }
         }
@@ -88,7 +84,7 @@ public class SysCustomerController extends BaseController {
     @Log(title = "客户档案", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody SysCustomer sysCustomer) throws Exception {
-        if(!sysCustomerService.isCustomerExistByPhone(sysCustomer)){
+        if (!sysCustomerService.isCustomerExistByPhone(sysCustomer)) {
             return toAjax(sysCustomerService.insertSysCustomer(sysCustomer));
         }
         return AjaxResult.error("该手机号客户已存在");
@@ -101,7 +97,7 @@ public class SysCustomerController extends BaseController {
     @Log(title = "客户档案", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody SysCustomer sysCustomer) throws Exception {
-        if(!sysCustomerService.isCustomerExistByPhone(sysCustomer)){
+        if (!sysCustomerService.isCustomerExistByPhone(sysCustomer)) {
             return toAjax(sysCustomerService.updateSysCustomer(sysCustomer));
         }
         return AjaxResult.error("该手机号客户已存在");
@@ -122,51 +118,29 @@ public class SysCustomerController extends BaseController {
      */
     @GetMapping("/getCustomerAndSignByPhone")
     @PreAuthorize("@ss.hasPermi('custom:customer:query')")
-    public AjaxResult getCustomerAndSignByPhone(@RequestParam("phone")String phone)
-    {
+    public AjaxResult getCustomerAndSignByPhone(@RequestParam("phone") String phone) {
         SysCustomerPhysicalSigns sysCustomer = null;
-        if(StringUtils.isNotEmpty(phone)){
-           sysCustomer = sysCustomerPhysicalSignsService.selectSysCustomerAndSignByPhone(phone);
+        if (StringUtils.isNotEmpty(phone)) {
+            sysCustomer = sysCustomerPhysicalSignsService.selectSysCustomerAndSignByPhone(phone);
         }
         return AjaxResult.success(sysCustomer);
     }
 
     /**
      * 根据客户ID获取体征或健康评估信息，优先健康评估信息
+     *
      * @param id 客户ID
      * @return
      */
     @GetMapping("/physicalSigns/{id}")
     public AjaxResult getPhysicalSignsById(@PathVariable("id") Long id) {
-        Map<String, Object> result = new HashMap<>();
-        String key = "customerHealthy";
-        result.put("type", 0);
-        //查询健康评估信息
-        SysCustomerHealthy sysCustomerHealthy = sysCustomerHealthyService.selectSysCustomerHealthyByCustomerId(id);
-        if(sysCustomerHealthy != null){
-           /* if (StringUtils.isNotEmpty(sysCustomerHealthy.getPhone())) {
-                sysCustomerHealthy.setPhone(StringUtils.hiddenPhoneNumber(sysCustomerHealthy.getPhone()));
-            }*/
-            result.put(key, sysCustomerHealthy);
-        }else{
-            //查询体征信息
-            SysCustomerPhysicalSigns sysCustomerPhysicalSigns = sysCustomerPhysicalSignsService.selectSysCustomerPhysicalSignsByCusId(id);
-            if(sysCustomerPhysicalSigns != null){
-               /* if (StringUtils.isNotEmpty(sysCustomerPhysicalSigns.getPhone())) {
-                    sysCustomerPhysicalSigns.setPhone(StringUtils.hiddenPhoneNumber(sysCustomerPhysicalSigns.getPhone()));
-                }*/
-                result.put("type", 1);
-            }
-            result.put(key, sysCustomerPhysicalSigns);
-        }
-        //对ID进行加密
-        result.put("enc_id", id != null ? AesUtils.encrypt(id+"", null) : "");
-        return AjaxResult.success(result);
+        return AjaxResult.success(sysCustomerService.getPhysicalSignsById(id));
     }
 
     /**
      * 根据客户ID删除对应体征信息或健康评估信息
-     * @param id 客户ID
+     *
+     * @param customerId 客户ID
      * @return
      */
     @GetMapping("/delCustomerHealthy/{id}")

@@ -66,6 +66,11 @@ public class SysRecipesServiceImpl implements ISysRecipesService {
     }
 
     @Override
+    public List<SysRecipesDailyDishes> selectDishesByMenuId(Long id) {
+        return sysRecipesMapper.selectDishesByMenuId(id);
+    }
+
+    @Override
     public int updateDishesDetail(SysRecipesDailyDishes sysRecipesDailyDishes) {
         return sysRecipesMapper.updateDishesDetail(sysRecipesDailyDishes);
     }

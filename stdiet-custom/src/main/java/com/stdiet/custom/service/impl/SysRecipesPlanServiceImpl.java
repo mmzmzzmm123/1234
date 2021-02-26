@@ -5,6 +5,7 @@ import com.stdiet.common.utils.SynchrolockUtil;
 import com.stdiet.custom.domain.SysOrder;
 import com.stdiet.custom.domain.SysOrderPause;
 import com.stdiet.custom.domain.SysRecipesPlan;
+import com.stdiet.custom.domain.SysRecipesPlanListInfo;
 import com.stdiet.custom.mapper.SysRecipesPlanMapper;
 import com.stdiet.custom.service.ISysOrderPauseService;
 import com.stdiet.custom.service.ISysOrderService;
@@ -293,7 +294,18 @@ public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService {
     }
 
     @Override
-    public void myGenerateRecipesPlan(SysOrder sysOrder) {
-
+    public List<SysRecipesPlan> selectPlanListByOutId(String outId) {
+        return sysRecipesPlanMapper.selectPlanListByOutId(outId);
     }
+
+    @Override
+    public Long getCusIdByOutId(String outId) {
+        return sysRecipesPlanMapper.getCusIdByOutId(outId);
+    }
+
+    @Override
+    public List<SysRecipesPlanListInfo> selectRecipesPlanListInfo(String outId) {
+        return sysRecipesPlanMapper.selectRecipesPlanListInfo(outId);
+    }
+
 }

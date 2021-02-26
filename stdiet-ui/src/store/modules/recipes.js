@@ -20,7 +20,6 @@ const oriState = {
   recipesDataLoading: false,
   cusUnitOptions: [],
   cusWeightOptions: [],
-  dishesTypeOptions: [],
   typeOptions: [],
   currentDay: -1,
   startNum: 0,
@@ -86,9 +85,6 @@ const actions = {
       });
       getDicts("cus_dishes_type").then(response => {
         commit("updateStateData", { typeOptions: response.data });
-      });
-      getDicts("cus_dishes_type").then(response => {
-        commit("updateStateData", { dishesTypeOptions: response.data });
       });
 
       // 健康数据
