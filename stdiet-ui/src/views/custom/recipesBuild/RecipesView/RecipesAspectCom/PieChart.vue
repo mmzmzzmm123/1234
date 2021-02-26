@@ -14,25 +14,14 @@
         class="small_table"
       >
         <el-table-column label="营养" prop="type" align="center" width="60" />
-        <el-table-column
-          label="重量(g)"
-          prop="weight"
-          align="center"
-          width="80"
-        />
-        <el-table-column
-          label="热量(Kcal)"
-          prop="heat"
-          align="center"
-          width="90"
-        />
-        <el-table-column
-          label="热量占比"
-          prop="heatRate"
-          align="center"
-          width="80"
-        />
+        <el-table-column label="蛋白质" prop="p" align="center" width="80" />
+        <el-table-column label="脂肪" prop="f" align="center" width="80" />
+        <el-table-column label="碳水" prop="c" align="center" width="80" />
       </el-table>
+      <div class="summary">
+        <div style="font-size: 12px; color: #606266;">总热量约等于</div>
+        <div style="color: #515a6e; font-weight: bold">{{ totalHeat.toFixed(1) }}千卡</div>
+      </div>
     </div>
   </div>
 </template>
@@ -69,35 +58,37 @@ export default {
   data() {
     return {
       chart: null,
+      totalHeat: 0,
       nameDict: {
         p: "蛋白质",
         f: "脂肪",
         c: "碳水",
+      },
+      typeDict: {
+        Weight: "摄入量",
+        Rate: "供能比",
       },
     };
   },
   computed: {
     mData() {
       const [data] = this.data;
-      let totalHeat = 0;
-      return data
-        ? ["p", "f", "c"].map((type) => {
-            if (totalHeat === 0) {
-              totalHeat = ["p", "f", "c"].reduce((heat, cur) => {
-                heat += data[`${cur}Heat`];
-                return heat;
-              }, 0);
-            }
-            return {
-              type: this.nameDict[type],
-              weight: data[`${type}Weight`].toFixed(1),
-              heat: data[`${type}Heat`].toFixed(1),
-              heatRate: `${((data[`${type}Heat`] / totalHeat) * 100).toFixed(
-                2
-              )}%`,
-            };
-          })
-        : [];
+      if (!data) {
+        this.totalHeat = 0;
+        return [];
+      }
+      this.totalHeat = data.cHeat + data.fHeat + data.pHeat;
+      const mData = ["Weight", "Rate"].map((t, idx) => ({
+        type: this.typeDict[t],
+        ...["p", "f", "c"].reduce((obj, cur) => {
+          obj[cur] = idx
+            ? `${((data[`${cur}Heat`] / this.totalHeat) * 100).toFixed(2)}%`
+            : `${data[`${cur}Weight`].toFixed(1)}克`;
+          return obj;
+        }, {}),
+      }));
+      console.log(mData);
+      return mData;
     },
   },
   mounted() {
@@ -121,10 +112,10 @@ export default {
       this.chart.clear();
       this.chart.setOption({
         title: {
-          text: `${data.name}营养统计`,
+          text: `${data.name}营养分析`,
         },
         tooltip: {
-          position: 'right',
+          position: "right",
           trigger: "item",
           appendToBody: true,
           formatter: (params) => {
@@ -136,9 +127,9 @@ export default {
             } = params;
             return [
               `${marker} ${name}`,
-              `含量：${oriData[`${dim}Weight`].toFixed(1)}克`,
-              `热量：${value.toFixed(1)}千卡`,
-              `热量占比：${percent}%`,
+              `摄入量：${oriData[`${dim}Weight`].toFixed(1)}克`,
+              `摄入热量：${value.toFixed(1)}千卡`,
+              `供能比：${percent}%`,
             ].join("</br>");
           },
         },
@@ -199,5 +190,17 @@ export default {
     }
   }
   // }
+
+  .summary {
+    padding: 2px;
+    border-bottom: 1px solid #dfe6ec;
+    border-left: 1px solid #dfe6ec;
+    border-right: 1px solid #dfe6ec;
+
+    & > div {
+      padding: 3px;
+      text-align: center;
+    }
+  }
 }
 </style>

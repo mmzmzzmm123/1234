@@ -87,7 +87,7 @@ export default {
                   `${seriesName.substring(0, 1)}Weight`
                 ].toFixed(1);
                 arr.push(
-                  `${cur.marker} ${nutriName}：${heatVal}千卡（${weightVal}克）`
+                  `${cur.marker} ${nutriName}：${weightVal}克（${heatVal}千卡）`
                 );
                 return arr;
               },
@@ -110,7 +110,7 @@ export default {
           source,
         },
         grid: {
-          top: 40,
+          top: 55,
           left: 20,
           right: 20,
           bottom: 10,
@@ -121,6 +121,10 @@ export default {
         },
         yAxis: {
           type: "value",
+          name: "热量（千卡）",
+          nameTextStyle: {
+            color: "#262626",
+          },
         },
         series: ["pHeat", "fHeat", "cHeat"].map((dim, idx) => ({
           name: dim,

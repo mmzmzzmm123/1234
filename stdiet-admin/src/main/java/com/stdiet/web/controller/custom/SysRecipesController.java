@@ -79,4 +79,5 @@ public class SysRecipesController extends BaseController {
     public AjaxResult delete(@PathVariable Long id) {
         return toAjax(sysRecipesService.deleteDishes(id));
     }
+
 }

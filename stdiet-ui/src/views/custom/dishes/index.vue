@@ -290,14 +290,14 @@
                       />
                     </template>
                   </el-table-column>
-                  <el-table-column prop="proteinRatio" label="P/100g">
+                  <el-table-column prop="proteinRatio" label="蛋白质/100g">
                   </el-table-column>
-                  <el-table-column prop="fatRatio" label="F/100g">
+                  <el-table-column prop="fatRatio" label="脂肪/100g">
                   </el-table-column>
-                  <el-table-column prop="carbonRatio" label="C/100g">
+                  <el-table-column prop="carbonRatio" label="碳水/100g">
                   </el-table-column>
-                  <el-table-column prop="remark" label="备注">
-                  </el-table-column>
+                  <!-- <el-table-column prop="remark" label="备注">
+                  </el-table-column> -->
                 </el-table>
               </el-form-item>
             </el-col>
