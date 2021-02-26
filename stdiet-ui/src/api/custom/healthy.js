@@ -61,4 +61,14 @@ export function download(fileName) {
   })
 }
 
+// 生成健康体征报告
+export function generateHealthyReport(healthyDetail) {
+  return request({
+    url: '/custom/healthy/generateHealthyReport',
+    method: 'post',
+    data: healthyDetail
+  })
+}
+
+
 

@@ -1,14 +1,22 @@
 package com.stdiet.custom.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import com.stdiet.common.config.RuoYiConfig;
 import com.stdiet.common.core.domain.AjaxResult;
 import com.stdiet.common.utils.StringUtils;
 import com.stdiet.common.utils.bean.ObjectUtils;
+import com.stdiet.common.utils.reflect.ReflectUtils;
 import com.stdiet.common.utils.sign.AesUtils;
 import com.stdiet.custom.domain.SysCustomer;
 import com.stdiet.custom.domain.SysCustomerPhysicalSigns;
+import com.stdiet.custom.dto.request.HealthyDetailRequest;
+import com.stdiet.custom.dto.response.NutritionalCalories;
 import com.stdiet.custom.service.ISysCustomerService;
+import com.stdiet.custom.utils.NutritionalUtils;
+import com.stdiet.custom.utils.PdfUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.stdiet.custom.mapper.SysCustomerHealthyMapper;
@@ -140,5 +148,73 @@ public class SysCustomerHealthyServiceImpl implements ISysCustomerHealthyService
      */
     public int deleteCustomerHealthyByCustomerId(Long customerId){
         return sysCustomerHealthyMapper.deleteCustomerHealthyByCustomerId(customerId);
+    }
+
+    /**
+     * 生成健康评估报告
+     * @return
+     */
+    @Override
+    public AjaxResult generateHealthyReport(HealthyDetailRequest healthyDetailRequest){
+        AjaxResult ajaxResult = AjaxResult.error();
+        String templatePath = "/home/workspace/ShengTangManage/running/pdf/healthyReport.pdf";
+        //String templatePath = "D:\\contract\\healthyReport.pdf";
+        String fileName = "healthyReport" + healthyDetailRequest.getCustomerId() + System.currentTimeMillis() + ".pdf";
+        String filePath = RuoYiConfig.getDownloadPath() + fileName;
+        //查询客户健康信息
+        SysCustomerHealthy sysCustomerHealthy = selectSysCustomerHealthyById(healthyDetailRequest.getId());
+        if(sysCustomerHealthy != null){
+
+            ajaxResult = PdfUtils.generatePdfFile(templatePath, filePath, getReportData(sysCustomerHealthy, healthyDetailRequest));
+            ajaxResult.put("path", fileName);
+        }
+        return ajaxResult;
+    }
+
+    public static final String[] healthyAttrNameAray = {"createTime","name","phone","conditioningProject","sex","age","tall","weight","position",
+            "experience","difficulty","rebound","crux","condiment","cookingStyle","cookingStyleRate","washVegetablesStyle",
+            "breakfastType","breakfastFood","lunchType","dinner","vegetableRate","commonMeat","dinnerTime","supperNum","supperFood",
+            "dietHotAndCold","dietFlavor","vegetablesNum","vegetablesRateType","fruitsNum","fruitsTime","fruitsRate","riceNum","riceFull",
+            "eatingSpeed","makeFoodType","snacks","healthProductsFlag","healthProductsBrand","healthProductsName",
+            "healthProductsWeekRate","dishesIngredient","waterNum","waterType","waterHabit",
+            "drinksNum","drinkWineFlag","drinkWineClassify","drinkWineAmount","smokeFlag","smokeRate",
+            "secondSmoke","workIndustry","workType","defecationNum","defecationTime","defecationShape",
+            "defecationSmell","defecationSpeed","defecationColor","motionNum","motionDuration","motionTime",
+            "motion","motionField","sleepTime","sleepQuality","sleepDrugFlag","sleepDrug","stayupLateFlag","stayupLateWeekNum",
+            "physicalSigns","moistureDate","bloodData","familyIllnessHistory","operationHistory","nearOperationFlag",
+            "recoveryeSituation","longEatDrugFlag","longEatDrugClassify","allergyFlag","allergySituation","allergen"
+    };
+
+    public static final String[] nutriAttrNameArray = {"standardWeight","overWeight","metabolizeHeat","activityFactor","withoutExerciseHeat",
+            "exerciseHeat","targetEveryWeightHeat","standardEveryWeightHeat","nutritionalHeat_one","nutritionalHeat_two","nutritionalHeat_three",
+            "nutritionalQuality_one","nutritionalQuality_two","nutritionalQuality_three",
+            "weightNutritionalRate_one","weightNutritionalRate_two","weightNutritionalRate_three"
+    };
+
+    private Map<String,String> getReportData(SysCustomerHealthy sysCustomerHealthy, HealthyDetailRequest healthyDetailRequest){
+        Map<String,String> data = new HashMap<>();
+        for (String key : healthyAttrNameAray) {
+            data.put(key, ReflectUtils.getFieldValueByFieldName(key, healthyDetailRequest));
+        }
+        NutritionalCalories nutritionalCalories = NutritionalUtils.getNutritionalCaloriesData(sysCustomerHealthy);
+        nutritionalCalories.setNutritionalHeat_one(nutritionalCalories.getNutritionalHeat()[0].toString());
+        nutritionalCalories.setNutritionalHeat_two(nutritionalCalories.getNutritionalHeat()[1].toString());
+        nutritionalCalories.setNutritionalHeat_three(nutritionalCalories.getNutritionalHeat()[2].toString());
+        nutritionalCalories.setNutritionalQuality_one(nutritionalCalories.getNutritionalQuality()[0].toString());
+        nutritionalCalories.setNutritionalQuality_two(nutritionalCalories.getNutritionalQuality()[1].toString());
+        nutritionalCalories.setNutritionalQuality_three(nutritionalCalories.getNutritionalQuality()[2].toString());
+        nutritionalCalories.setWeightNutritionalRate_one(nutritionalCalories.getWeightNutritionalRate()[0].toString());
+        nutritionalCalories.setWeightNutritionalRate_two(nutritionalCalories.getWeightNutritionalRate()[1].toString());
+        nutritionalCalories.setWeightNutritionalRate_three(nutritionalCalories.getWeightNutritionalRate()[2].toString());
+        for (String key : nutriAttrNameArray) {
+            if("targetEveryWeightHeat".equals(key)){
+                data.put(key, nutritionalCalories.getTargetEveryWeightHeat()[0].toString()+"-"+nutritionalCalories.getTargetEveryWeightHeat()[1].toString());
+            }
+            if("standardEveryWeightHeat".equals(key)){
+                data.put(key, nutritionalCalories.getStandardEveryWeightHeat()[0].toString()+"-"+nutritionalCalories.getStandardEveryWeightHeat()[1].toString());
+            }
+            data.put(key, ReflectUtils.getFieldValueByFieldName(key, nutritionalCalories));
+        }
+        return data;
     }
 }

@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.stdiet.common.core.domain.AjaxResult;
 import com.stdiet.custom.domain.SysCustomerHealthy;
+import com.stdiet.custom.dto.request.HealthyDetailRequest;
 import org.apache.ibatis.annotations.Param;
 
 /**
@@ -78,4 +79,10 @@ public interface ISysCustomerHealthyService
      * @return
      */
     int deleteCustomerHealthyByCustomerId(Long customerId);
+
+    /**
+     * 生成健康评估报告
+     * @return
+     */
+    AjaxResult generateHealthyReport(HealthyDetailRequest healthyDetailRequest);
 }

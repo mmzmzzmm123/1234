@@ -3,6 +3,7 @@
     <div v-if="showFlag">
     <div style="float:right;margin-top:-10px;margin-bottom: 10px;" v-show="dataList.length > 0">
       <!-- 只有新版健康评估信息才可修改，旧的体征数据不支持修改 -->
+      <el-button type="info" v-show="dataType == 0" @click="generateReport()"  plain>生成报告</el-button>
       <el-button v-hasPermi="['custom:healthy:edit']" type="info" v-show="dataType == 0" @click="handleEditRemarkClick()"  plain>修改备注</el-button>
       <el-button v-hasPermi="['custom:healthy:edit']" type="warning" v-show="dataType == 0" @click="handleEditHealthyClick()"  plain>修改信息</el-button>
       <el-button type="danger" v-hasPermi="['custom:healthy:remove']" @click="handleDelete()" plain>删除信息</el-button>
@@ -75,6 +76,7 @@
 </template>
 <script>
 import { getCustomerPhysicalSignsByCusId,delCustomerHealthy } from "@/api/custom/customer";
+import { generateHealthyReport } from "@/api/custom/healthy";
 import TableDetailMessage from "@/components/TableDetailMessage";
 import AutoHideMessage from "@/components/AutoHideMessage";
 import * as healthyData from "@/utils/healthyData";
@@ -203,7 +205,8 @@ export default {
           ["medicalReport_one","medicalReport_two","medicalReport_three"]
         ]
       ],
-      copyValue: ""
+      copyValue: "",
+      detailHealthy: null,
     };
   },
   methods: {
@@ -252,6 +255,7 @@ export default {
     onClosed() {
       this.dataList = [];
       this.data = null;
+      this.detailHealthy = null;
       //this.enc_id = "";
       this.copyValue = "";
     },
@@ -384,6 +388,7 @@ export default {
       detailHealthy.medicalReport_one = medicalReportPathArray.length > 0 ? (medicalReportNameArray.length > 0 ? medicalReportNameArray[0] : "体检报告（1）") : "";
       detailHealthy.medicalReport_two =  medicalReportPathArray.length > 1 ? (medicalReportNameArray.length > 1 ? medicalReportNameArray[1] : "体检报告（2）") : "";
       detailHealthy.medicalReport_three = medicalReportPathArray.length > 2 ? (medicalReportNameArray.length > 2 ? medicalReportNameArray[2] : "体检报告（3）") : "";
+      this.detailHealthy = detailHealthy;
       for(let i = 0; i < this.healthyTitleData.length; i++){
         let stepArray = [];
         for(let j= 0; j < this.healthyTitleData[i].length; j++){
@@ -425,6 +430,14 @@ export default {
     },
     downloadFile(fileName){
       this.downloadResource(fileName);
+    },
+    generateReport(){
+      //this.detailHealthy.customerId = this.data.id;
+      generateHealthyReport(this.detailHealthy).then((res) => {
+         if(res.code == 200 && res.path != null){
+            this.download(res.path);
+         }
+      });
     },
     trimComma(str){
       if(str.startsWith("，") || str.startsWith(",")){
