@@ -1,17 +1,23 @@
 package com.ruoyi.business.domain.vo;
 
 import java.io.Serializable;
+import java.util.List;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
+import org.springframework.validation.annotation.Validated;
 
 import com.ruoyi.common.annotation.Excel;
 
 /**
- * 重大节日值班人员对象 bus_zdjrzbry
+ * 承包商重大节假日值班人员 bus_zdjrzbry
  * 
  * @author yaowei
  * @date 2021-02-24
  */
+@Validated
 public class BusZdjrzbrySaveVO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -19,7 +25,7 @@ public class BusZdjrzbrySaveVO implements Serializable {
 	private String id;
 
 	/** 重大节日主键 */
-	@NotEmpty(message = "节假日ID不能为空")
+	@NotNull(message = "节假日ID不能为空")
 	@Excel(name = "重大节日主键")
 	private Long zdjrId;
 
@@ -32,19 +38,9 @@ public class BusZdjrzbrySaveVO implements Serializable {
 	@Excel(name = "承包商名称")
 	private String cbsmc;
 
-	/** 工人ID */
-	@NotEmpty(message = "工人ID不能为空")
-	@Excel(name = "工人ID")
-	private Long grId;
-
-	/** 工人姓名 */
-	@NotEmpty(message = "承包商ID不能为空")
-	@Excel(name = "工人姓名")
-	private String grmc;
-
-	/** 工人联系方式 */
-	@Excel(name = "工人联系方式")
-	private String grlxfs;
+	@Valid
+	@NotEmpty(message = "值班人员不能为空")
+	private List<SelectedBusZbgrVO> zbryList;
 
 	public String getId() {
 		return id;
@@ -78,28 +74,12 @@ public class BusZdjrzbrySaveVO implements Serializable {
 		this.cbsmc = cbsmc;
 	}
 
-	public Long getGrId() {
-		return grId;
+	public List<SelectedBusZbgrVO> getZbryList() {
+		return zbryList;
 	}
 
-	public void setGrId(Long grId) {
-		this.grId = grId;
-	}
-
-	public String getGrmc() {
-		return grmc;
-	}
-
-	public void setGrmc(String grmc) {
-		this.grmc = grmc;
-	}
-
-	public String getGrlxfs() {
-		return grlxfs;
-	}
-
-	public void setGrlxfs(String grlxfs) {
-		this.grlxfs = grlxfs;
+	public void setZbryList(List<SelectedBusZbgrVO> zbryList) {
+		this.zbryList = zbryList;
 	}
 
 }

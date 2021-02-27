@@ -9,10 +9,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ruoyi.business.domain.BusCbsgrxx;
 import com.ruoyi.business.domain.vo.BusCbsgrxxSaveVO;
+import com.ruoyi.business.domain.vo.BusCbsgrxxVO;
 import com.ruoyi.business.service.IBusCbsgrxxService;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
@@ -43,6 +45,16 @@ public class BusCbsgrxxController extends BaseController {
 		startPage();
 		List<BusCbsgrxx> list = busCbsgrxxService.selectBusCbsgrxxList(busCbsgrxx);
 		return getDataTable(list);
+	}
+
+	/**
+	 * 查询承包商工人信息列表
+	 */
+	@ApiOperation("查询可以值班的工人")
+	@GetMapping("/zbryList")
+	public AjaxResult zbryList(@RequestParam Long zdjrId, @RequestParam Long cbsId) {
+		List<BusCbsgrxxVO> zbryList = busCbsgrxxService.zbryList(zdjrId, cbsId);
+		return AjaxResult.success(zbryList);
 	}
 
 	/**

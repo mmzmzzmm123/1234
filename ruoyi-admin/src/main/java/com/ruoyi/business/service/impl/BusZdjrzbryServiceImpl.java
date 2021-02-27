@@ -1,10 +1,16 @@
 package com.ruoyi.business.service.impl;
 
 import java.util.List;
+
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.ruoyi.business.mapper.BusZdjrzbryMapper;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.ruoyi.business.domain.BusZdjrzbry;
+import com.ruoyi.business.domain.vo.SelectedBusZbgrVO;
+import com.ruoyi.business.domain.vo.BusZdjrzbrySaveVO;
+import com.ruoyi.business.mapper.BusZdjrzbryMapper;
 import com.ruoyi.business.service.IBusZdjrzbryService;
 
 /**
@@ -49,9 +55,19 @@ public class BusZdjrzbryServiceImpl implements IBusZdjrzbryService {
 	 *            重大节日值班人员
 	 * @return 结果
 	 */
+	@Transactional
 	@Override
-	public int insertBusZdjrzbry(BusZdjrzbry busZdjrzbry) {
-		return busZdjrzbryMapper.insertBusZdjrzbry(busZdjrzbry);
+	public int insertBusZdjrzbry(BusZdjrzbrySaveVO busZdjrzbryVO) {
+		Long cbsId = busZdjrzbryVO.getCbsId();
+		busZdjrzbryMapper.deleteBusZdjrzbryByCbsId(cbsId);
+		List<SelectedBusZbgrVO> zbryList = busZdjrzbryVO.getZbryList();
+		for (SelectedBusZbgrVO busZbgrVO : zbryList) {
+			BusZdjrzbry busZdjrzbry = new BusZdjrzbry();
+			BeanUtils.copyProperties(busZdjrzbryVO, busZdjrzbry);
+			BeanUtils.copyProperties(busZbgrVO, busZdjrzbry);
+			busZdjrzbryMapper.insertBusZdjrzbry(busZdjrzbry);
+		}
+		return zbryList.size();
 	}
 
 	/**

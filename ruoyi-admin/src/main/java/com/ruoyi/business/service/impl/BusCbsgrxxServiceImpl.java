@@ -10,11 +10,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.google.common.base.Objects;
 import com.ruoyi.business.domain.BusCbsgrxx;
 import com.ruoyi.business.domain.BusGrzfxx;
+import com.ruoyi.business.domain.BusZdjrzbry;
 import com.ruoyi.business.domain.vo.BusCbsgrxxSaveVO;
 import com.ruoyi.business.domain.vo.BusCbsgrxxVO;
 import com.ruoyi.business.mapper.BusCbsgrxxMapper;
+import com.ruoyi.business.mapper.BusZdjrzbryMapper;
 import com.ruoyi.business.service.IBusCbsgrxxService;
 import com.ruoyi.business.service.IBusGrzfxxService;
 import com.ruoyi.common.utils.StringUtils;
@@ -33,6 +36,9 @@ public class BusCbsgrxxServiceImpl implements IBusCbsgrxxService {
 
 	@Autowired
 	private BusCbsgrxxMapper busCbsgrxxMapper;
+
+	@Autowired
+	private BusZdjrzbryMapper busZdjrzbryMapper;
 
 	/**
 	 * 查询承包商工人信息
@@ -182,5 +188,18 @@ public class BusCbsgrxxServiceImpl implements IBusCbsgrxxService {
 		BeanUtils.copyProperties(busCbsgrxx, busCbsgrxxVO);
 		busCbsgrxxVO.setZzxxFileUrls(zzxxFileUrls);
 		return busCbsgrxxVO;
+	}
+
+	@Override
+	public List<BusCbsgrxxVO> zbryList(Long zdjrId, Long cbsId) {
+		List<BusCbsgrxx> busCbsgrxxList = busCbsgrxxMapper.selectByCbsId(cbsId);
+		List<BusZdjrzbry> zbryList = busZdjrzbryMapper.selectBusZdjrzbryByZdjrIdAndCbsId(zdjrId, cbsId);
+		return busCbsgrxxList.stream().map(e -> {
+			BusCbsgrxxVO busCbsgrxxVO = new BusCbsgrxxVO();
+			BeanUtils.copyProperties(e, busCbsgrxxVO);
+			boolean selected = zbryList.stream().anyMatch(zbry -> Objects.equal(zbry.getGrId(), e.getId()));
+			busCbsgrxxVO.setSelected(selected);
+			return busCbsgrxxVO;
+		}).collect(Collectors.toList());
 	}
 }

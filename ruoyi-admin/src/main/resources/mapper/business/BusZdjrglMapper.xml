@@ -25,7 +25,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		</where>
 	</select>
 
-	<select id="selectBusZdjrglById" parameterType="String"
+	<select id="selectBusZdjrglById" parameterType="Long"
 		resultMap="BusZdjrglResult">
 		<include refid="selectBusZdjrglVo" />
 		where id = #{id}
@@ -57,11 +57,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		where id = #{id}
 	</update>
 
-	<delete id="deleteBusZdjrglById" parameterType="String">
+	<delete id="deleteBusZdjrglById" parameterType="Long">
 		delete from bus_zdjrgl where id = #{id}
 	</delete>
 
-	<delete id="deleteBusZdjrglByIds" parameterType="String">
+	<delete id="deleteBusZdjrglByIds" parameterType="Long">
 		delete from bus_zdjrgl where id in
 		<foreach item="id" collection="array" open="(" separator=","
 			close=")">

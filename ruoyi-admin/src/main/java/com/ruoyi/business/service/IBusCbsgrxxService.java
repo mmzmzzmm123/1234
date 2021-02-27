@@ -67,7 +67,32 @@ public interface IBusCbsgrxxService {
 	 */
 	public int deleteBusCbsgrxxById(Long id);
 
+	/**
+	 * 根据承包商删除工人信息
+	 * 
+	 * @param cbsId
+	 *            承包商ID
+	 * @return
+	 */
 	int deleteByCbsId(Long cbsId);
 
+	/**
+	 * 根据承包商ID查询工人信息
+	 * 
+	 * @param cbsId
+	 *            承包商Id
+	 * @return
+	 */
 	List<BusCbsgrxxVO> selectByCbsId(Long cbsId);
+
+	/**
+	 * 获取承包商可以选择值班的工人
+	 * 
+	 * @param zdjrId
+	 *            假日ID
+	 * @param cbsId
+	 *            承包商ID
+	 * @return
+	 */
+	public List<BusCbsgrxxVO> zbryList(Long zdjrId, Long cbsId);
 }

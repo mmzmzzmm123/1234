@@ -57,7 +57,14 @@ public class BusCbsgrxxVO implements Serializable {
 	@Excel(name = "联系方式")
 	private String lxfs;
 
+	/**
+	 * 工人资质信息
+	 */
 	private List<String> zzxxFileUrls;
+
+	/** 是否已经被当前承包商选择 */
+	@Excel(name = "是否是值班人员")
+	private boolean selected;
 
 	public Long getId() {
 		return id;
@@ -145,6 +152,14 @@ public class BusCbsgrxxVO implements Serializable {
 
 	public void setZzxxFileUrls(List<String> zzxxFileUrls) {
 		this.zzxxFileUrls = zzxxFileUrls;
+	}
+
+	public boolean isSelected() {
+		return selected;
+	}
+
+	public void setSelected(boolean selected) {
+		this.selected = selected;
 	}
 
 }

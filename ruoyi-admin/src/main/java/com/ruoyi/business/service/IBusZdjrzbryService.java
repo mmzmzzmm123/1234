@@ -1,7 +1,9 @@
 package com.ruoyi.business.service;
 
 import java.util.List;
+
 import com.ruoyi.business.domain.BusZdjrzbry;
+import com.ruoyi.business.domain.vo.BusZdjrzbrySaveVO;
 
 /**
  * 重大节日值班人员Service接口
@@ -33,7 +35,7 @@ public interface IBusZdjrzbryService
      * @param busZdjrzbry 重大节日值班人员
      * @return 结果
      */
-    public int insertBusZdjrzbry(BusZdjrzbry busZdjrzbry);
+    public int insertBusZdjrzbry(BusZdjrzbrySaveVO busZdjrzbry);
 
     /**
      * 修改重大节日值班人员
