@@ -3,66 +3,75 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.business.mapper.BusZdjrglMapper">
-    
-    <resultMap type="BusZdjrgl" id="BusZdjrglResult">
-        <result property="id"    column="id"    />
-        <result property="jrrq"    column="jrrq"    />
-        <result property="jrmc"    column="jrmc"    />
-        <result property="jrys"    column="jrys"    />
-    </resultMap>
 
-    <sql id="selectBusZdjrglVo">
-        select id, jrrq, jrmc, jrys from bus_zdjrgl
-    </sql>
+	<resultMap type="BusZdjrgl" id="BusZdjrglResult">
+		<result property="id" column="id" />
+		<result property="jrrq" column="jrrq" />
+		<result property="jrmc" column="jrmc" />
+		<result property="jrys" column="jrys" />
+	</resultMap>
 
-    <select id="selectBusZdjrglList" parameterType="BusZdjrgl" resultMap="BusZdjrglResult">
-        <include refid="selectBusZdjrglVo"/>
-        <where>  
-            <if test="jrrq != null "> and jrrq = #{jrrq}</if>
-            <if test="jrmc != null  and jrmc != ''"> and jrmc = #{jrmc}</if>
-            <if test="jrys != null  and jrys != ''"> and jrys = #{jrys}</if>
-        </where>
-    </select>
-    
-    <select id="selectBusZdjrglById" parameterType="String" resultMap="BusZdjrglResult">
-        <include refid="selectBusZdjrglVo"/>
-        where id = #{id}
-    </select>
-        
-    <insert id="insertBusZdjrgl" parameterType="BusZdjrgl">
-        insert into bus_zdjrgl
-        <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="id != null">id,</if>
-            <if test="jrrq != null">jrrq,</if>
-            <if test="jrmc != null">jrmc,</if>
-            <if test="jrys != null">jrys,</if>
-         </trim>
-        <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="id != null">#{id},</if>
-            <if test="jrrq != null">#{jrrq},</if>
-            <if test="jrmc != null">#{jrmc},</if>
-            <if test="jrys != null">#{jrys},</if>
-         </trim>
-    </insert>
+	<sql id="selectBusZdjrglVo">
+		select id, jrrq, jrmc, jrys from bus_zdjrgl
+	</sql>
 
-    <update id="updateBusZdjrgl" parameterType="BusZdjrgl">
-        update bus_zdjrgl
-        <trim prefix="SET" suffixOverrides=",">
-            <if test="jrrq != null">jrrq = #{jrrq},</if>
-            <if test="jrmc != null">jrmc = #{jrmc},</if>
-            <if test="jrys != null">jrys = #{jrys},</if>
-        </trim>
-        where id = #{id}
-    </update>
+	<select id="selectBusZdjrglList" parameterType="BusZdjrgl"
+		resultMap="BusZdjrglResult">
+		<include refid="selectBusZdjrglVo" />
+		<where>
+			<if test="jrrq != null "> and jrrq = #{jrrq}</if>
+			<if test="jrmc != null  and jrmc != ''"> and jrmc = #{jrmc}</if>
+			<if test="jrys != null  and jrys != ''"> and jrys = #{jrys}</if>
+		</where>
+	</select>
 
-    <delete id="deleteBusZdjrglById" parameterType="String">
-        delete from bus_zdjrgl where id = #{id}
-    </delete>
+	<select id="selectBusZdjrglById" parameterType="String"
+		resultMap="BusZdjrglResult">
+		<include refid="selectBusZdjrglVo" />
+		where id = #{id}
+	</select>
 
-    <delete id="deleteBusZdjrglByIds" parameterType="String">
-        delete from bus_zdjrgl where id in 
-        <foreach item="id" collection="array" open="(" separator="," close=")">
-            #{id}
-        </foreach>
-    </delete>
+	<insert id="insertBusZdjrgl" parameterType="BusZdjrgl">
+		insert into bus_zdjrgl
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">id,</if>
+			<if test="jrrq != null">jrrq,</if>
+			<if test="jrmc != null">jrmc,</if>
+			<if test="jrys != null">jrys,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">#{id},</if>
+			<if test="jrrq != null">#{jrrq},</if>
+			<if test="jrmc != null">#{jrmc},</if>
+			<if test="jrys != null">#{jrys},</if>
+		</trim>
+	</insert>
+
+	<update id="updateBusZdjrgl" parameterType="BusZdjrgl">
+		update bus_zdjrgl
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="jrrq != null">jrrq = #{jrrq},</if>
+			<if test="jrmc != null">jrmc = #{jrmc},</if>
+			<if test="jrys != null">jrys = #{jrys},</if>
+		</trim>
+		where id = #{id}
+	</update>
+
+	<delete id="deleteBusZdjrglById" parameterType="String">
+		delete from bus_zdjrgl where id = #{id}
+	</delete>
+
+	<delete id="deleteBusZdjrglByIds" parameterType="String">
+		delete from bus_zdjrgl where id in
+		<foreach item="id" collection="array" open="(" separator=","
+			close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+	<select id="selectBusZdjrglByJrrq" resultMap="BusZdjrglResult">
+		<include refid="selectBusZdjrglVo" />
+		where jrrq>=#{ksrq} and jrrq &lt;= #{jsrq}
+	</select>
+	
 </mapper>
