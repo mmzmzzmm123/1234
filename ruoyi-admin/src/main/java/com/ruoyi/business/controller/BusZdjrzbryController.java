@@ -61,6 +61,7 @@ public class BusZdjrzbryController extends BaseController {
 	/**
 	 * 获取重大节日值班人员详细信息
 	 */
+	
 	@GetMapping(value = "/{id}")
 	public AjaxResult getInfo(@PathVariable("id") Long id) {
 		return AjaxResult.success(busZdjrzbryService.selectBusZdjrzbryById(id));

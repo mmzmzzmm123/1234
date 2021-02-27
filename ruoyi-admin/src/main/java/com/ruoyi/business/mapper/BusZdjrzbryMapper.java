@@ -1,6 +1,9 @@
 package com.ruoyi.business.mapper;
 
 import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
 import com.ruoyi.business.domain.BusZdjrzbry;
 
 /**
@@ -67,11 +70,13 @@ public interface BusZdjrzbryMapper {
 	/**
 	 * 根据承包商ID删除值班信息
 	 * 
+	 * @param zdjrId
+	 *            节假日ID
 	 * @param cbsId
-	 *            需要删除的数据承包商ID
-	 * @return 结果
+	 *            承包商ID
+	 * @return
 	 */
-	public int deleteBusZdjrzbryByCbsId(Long cbsId);
+	public int deleteBusZdjrzbryByZdjrIdAndCbsId(@Param("zdjrId") Long zdjrId, @Param("cbsId") Long cbsId);
 
 	/**
 	 * 根据 节假日ID和承包商查询值班人员
@@ -82,6 +87,7 @@ public interface BusZdjrzbryMapper {
 	 *            承包商ID
 	 * @return
 	 */
-	public List<BusZdjrzbry> selectBusZdjrzbryByZdjrIdAndCbsId(Long zdjrId, Long cbsId);
+	public List<BusZdjrzbry> selectBusZdjrzbryByZdjrIdAndCbsId(@Param("zdjrId") Long zdjrId,
+			@Param("cbsId") Long cbsId);
 
 }

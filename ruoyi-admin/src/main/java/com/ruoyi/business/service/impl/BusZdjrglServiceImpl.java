@@ -56,17 +56,17 @@ public class BusZdjrglServiceImpl implements IBusZdjrglService {
 		}
 		// 设置承包商设置的值班人员
 		List<BusZdjrzbry> busZdjrzbryList = selectZdjrzbryByZdjrId(id);
-		List<BusZdjrCbszbVO> zdjrCbszbVOs = new ArrayList<>();
-		busCbsxxList.forEach(e -> {
+		List<BusZdjrCbszbVO> zdjrCbszbVOs = new ArrayList<>(busZdjrzbryList.size());
+		for (BusCbsxx e : busCbsxxList) {
 			BusZdjrCbszbVO busZdjrCbszbVO = new BusZdjrCbszbVO();
-			BeanUtils.copyProperties(e, busZdjrglVO);
+			BeanUtils.copyProperties(e, busZdjrCbszbVO);
 			// 设置值班人员
 			List<BusZdjrzbry> zbryList = busZdjrzbryList.stream()
 					.filter(zbry -> Objects.equal(busZdjrCbszbVO.getId(), zbry.getCbsId()))
 					.collect(Collectors.toList());
 			busZdjrCbszbVO.setZbryList(zbryList);
 			zdjrCbszbVOs.add(busZdjrCbszbVO);
-		});
+		}
 		busZdjrglVO.setCbszbList(zdjrCbszbVOs);
 		return busZdjrglVO;
 	}

@@ -85,7 +85,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</delete>
 
 	<delete id="deleteBusZdjrzbryByCbsId" parameterType="Long">
-		delete from bus_zdjrzbry where cbs_id = #{id}
+		delete from bus_zdjrzbry where zdjr_id = #{zdjrId} and cbs_id = #{cbsId}
 	</delete>
 	
 	<select id="selectBusZdjrzbryByZdjrIdAndCbsId" resultMap="BusZdjrzbryResult">

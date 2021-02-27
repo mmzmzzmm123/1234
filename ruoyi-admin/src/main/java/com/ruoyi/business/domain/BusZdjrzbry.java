@@ -2,7 +2,7 @@ package com.ruoyi.business.domain;
 
 import java.io.Serializable;
 
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 import com.ruoyi.common.annotation.Excel;
 
@@ -16,10 +16,10 @@ public class BusZdjrzbry implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/** 主键 */
-	private String id;
+	private Long id;
 
-	@NotEmpty(message = "")
 	/** 重大节日主键 */
+	@NotNull(message = "重点节假日ID不能为空")
 	@Excel(name = "重大节日主键")
 	private Long zdjrId;
 
@@ -43,11 +43,11 @@ public class BusZdjrzbry implements Serializable {
 	@Excel(name = "工人联系方式")
 	private String grlxfs;
 
-	public String getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

@@ -58,8 +58,9 @@ public class BusZdjrzbryServiceImpl implements IBusZdjrzbryService {
 	@Transactional
 	@Override
 	public int insertBusZdjrzbry(BusZdjrzbrySaveVO busZdjrzbryVO) {
+		Long zdjrId = busZdjrzbryVO.getZdjrId();
 		Long cbsId = busZdjrzbryVO.getCbsId();
-		busZdjrzbryMapper.deleteBusZdjrzbryByCbsId(cbsId);
+		busZdjrzbryMapper.deleteBusZdjrzbryByZdjrIdAndCbsId(zdjrId, cbsId);
 		List<SelectedBusZbgrVO> zbryList = busZdjrzbryVO.getZbryList();
 		for (SelectedBusZbgrVO busZbgrVO : zbryList) {
 			BusZdjrzbry busZdjrzbry = new BusZdjrzbry();

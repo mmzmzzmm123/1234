@@ -30,7 +30,7 @@ public class BusZdjrzbrySaveVO implements Serializable {
 	private Long zdjrId;
 
 	/** 承包商ID */
-	@NotEmpty(message = "承包商ID不能为空")
+	@NotNull(message = "承包商ID不能为空")
 	@Excel(name = "承包商ID")
 	private Long cbsId;
 
