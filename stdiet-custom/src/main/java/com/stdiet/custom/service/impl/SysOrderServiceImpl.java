@@ -206,11 +206,9 @@ public class SysOrderServiceImpl implements ISysOrderService {
         //更新订单
         int row = sysOrderMapper.updateSysOrder(sysOrder);
         // 审核后的订单才生成食谱
-        if (row > 0 && oldSysOrder.getReviewStatus().equals("no") && sysOrder.getReviewStatus().equals("yes")) {
+        if (row > 0 && isNeedRegenerateRecipesPlan(oldSysOrder, sysOrder)) {
             //异步更新食谱计划
-            if (isNeedRegenerateRecipesPlan(oldSysOrder, sysOrder)) {
-                sysRecipesPlanService.regenerateRecipesPlan(sysOrder.getOrderId());
-            }
+            sysRecipesPlanService.regenerateRecipesPlan(sysOrder.getOrderId());
         }
         return row;
     }
@@ -223,6 +221,9 @@ public class SysOrderServiceImpl implements ISysOrderService {
      * @return
      */
     private boolean isNeedRegenerateRecipesPlan(SysOrder oldSysOrder, SysOrder newSysOrder) {
+        if(oldSysOrder.getReviewStatus().equals("no") && newSysOrder.getReviewStatus().equals("yes")){
+            return true;
+        }
         if (oldSysOrder.getServeTimeId() != null && newSysOrder.getServeTimeId() != null && oldSysOrder.getServeTimeId().intValue() != newSysOrder.getServeTimeId().intValue()) {
             return true;
         }

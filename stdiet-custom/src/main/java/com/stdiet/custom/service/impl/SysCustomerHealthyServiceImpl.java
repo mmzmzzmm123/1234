@@ -157,8 +157,8 @@ public class SysCustomerHealthyServiceImpl implements ISysCustomerHealthyService
     @Override
     public AjaxResult generateHealthyReport(HealthyDetailRequest healthyDetailRequest){
         AjaxResult ajaxResult = AjaxResult.error();
-        //String templatePath = "/home/workspace/ShengTangManage/running/pdf/healthyReport.pdf";
-        String templatePath = "D:\\contract\\healthyReport.pdf";
+        String templatePath = "/home/workspace/ShengTangManage/running/pdf/healthyReport.pdf";
+        //String templatePath = "D:\\contract\\healthyReport.pdf";
         String fileName = "healthyReport" + healthyDetailRequest.getCustomerId() + System.currentTimeMillis() + ".pdf";
         String filePath = RuoYiConfig.getDownloadPath() + fileName;
         //查询客户健康信息
