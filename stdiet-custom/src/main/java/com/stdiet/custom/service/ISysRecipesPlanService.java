@@ -91,10 +91,26 @@ public interface ISysRecipesPlanService
      */
     List<SysRecipesPlan> selectPlanListByOrderId(SysRecipesPlan sysRecipesPlan);
 
-    List<SysRecipesPlan> selectPlanListByOutId(String outId);
 
+    /**
+     * 通过outId查询cusId
+     * @param outId
+     * @return
+     */
     Long getCusIdByOutId(String outId);
 
+    /**
+     * 通过outId查询食谱计划简要
+     * @param outId
+     * @return
+     */
     List<SysRecipesPlanListInfo> selectRecipesPlanListInfo(String outId);
+
+    /**
+     * 通过客户id查询食谱计划
+     * @param cusId
+     * @return
+     */
+    List<SysRecipesPlan> selectPlanListByCusId(Long cusId);
 
 }

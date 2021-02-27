@@ -4,6 +4,31 @@
     :style="`height: ${collapse ? 30 : 200}px`"
   >
     <div class="header">
+      <el-popover
+        placement="bottom"
+        trigger="click"
+        title="修改审核状态"
+        style="margin-right: 12px"
+        v-hasPermi="['recipes:recipesPlan:review']"
+      >
+        <div>
+          <el-button size="mini" type="success" @click="hanldeOnReveiwChange(2)"
+            >审核通过</el-button
+          >
+          <el-button size="mini" type="danger" @click="hanldeOnReveiwChange(1)"
+            >未审核通过</el-button
+          >
+        </div>
+        <el-button
+          slot="reference"
+          size="mini"
+          v-if="reviewStatus"
+          @click="handleReview"
+          :type="reviewStatus === 1 ? 'danger' : 'success'"
+        >
+          {{ reviewStatus === 1 ? "未审核" : "已审核" }}
+        </el-button>
+      </el-popover>
       <el-button
         v-if="!recipesId"
         size="mini"
@@ -11,9 +36,15 @@
         @click="handleOnSave"
         >生成食谱</el-button
       >
-      <el-button size="mini" type="text" @click="handleCollapseClick">{{
-        `${collapse ? "展开分析" : "收起分析"}`
-      }}</el-button>
+      <el-button size="mini" type="text" @click="handleCollapseClick">
+        {{ `${collapse ? "展开" : "收起"}` }}
+        <em
+          class="el-icon-arrow-down arrow_icon"
+          :style="
+            collapse ? 'transform: rotate(-180deg);' : 'transform: unset;'
+          "
+        />
+      </el-button>
     </div>
     <div
       class="content"
@@ -53,7 +84,7 @@ export default {
   },
   props: ["collapse", "data"],
   computed: {
-    ...mapState(["recipesId"]),
+    ...mapState(["recipesId", "reviewStatus"]),
   },
   methods: {
     handleCollapseClick() {
@@ -67,7 +98,10 @@ export default {
         },
       });
     },
-    ...mapActions(["saveRecipes"]),
+    hanldeOnReveiwChange(reviewStatus) {
+      this.updateReviewStatus({ reviewStatus });
+    },
+    ...mapActions(["saveRecipes", "updateReviewStatus"]),
   },
 };
 </script>
@@ -79,6 +113,11 @@ export default {
   .header {
     text-align: right;
     height: 30px;
+
+    .arrow_icon {
+      transition: all 0.3s;
+      transform-origin: center center;
+    }
   }
 
   .content {

@@ -28,6 +28,11 @@ public class SysRecipesPlan {
 
     private Long cusId;
 
+    /**
+     * 对外的用户id
+     */
+    private String outId;
+
     //客户ID
 //    private Long customerId;
 
