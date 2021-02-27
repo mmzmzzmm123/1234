@@ -18,7 +18,7 @@ public interface IBusZdjrglService {
 	 *            重大节日管理ID
 	 * @return 重大节日管理
 	 */
-	public BusZdjrglVO selectBusZdjrglById(String id);
+	public BusZdjrglVO selectBusZdjrglById(Long id);
 
 	/**
 	 * 查询重大节日管理列表
@@ -54,7 +54,7 @@ public interface IBusZdjrglService {
 	 *            需要删除的重大节日管理ID
 	 * @return 结果
 	 */
-	public int deleteBusZdjrglByIds(String[] ids);
+	public int deleteBusZdjrglByIds(Long[] ids);
 
 	/**
 	 * 删除重大节日管理信息
@@ -63,7 +63,7 @@ public interface IBusZdjrglService {
 	 *            重大节日管理ID
 	 * @return 结果
 	 */
-	public int deleteBusZdjrglById(String id);
+	public int deleteBusZdjrglById(Long id);
 
 	/**
 	 * 获取某月的节假日

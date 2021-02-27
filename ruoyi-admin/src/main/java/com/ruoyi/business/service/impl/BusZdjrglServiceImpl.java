@@ -46,7 +46,7 @@ public class BusZdjrglServiceImpl implements IBusZdjrglService {
 	 * @return 重大节日管理
 	 */
 	@Override
-	public BusZdjrglVO selectBusZdjrglById(String id) {
+	public BusZdjrglVO selectBusZdjrglById(Long id) {
 		BusZdjrgl busZdjrgl = busZdjrglMapper.selectBusZdjrglById(id);
 		BusZdjrglVO busZdjrglVO = new BusZdjrglVO();
 		BeanUtils.copyProperties(busZdjrgl, busZdjrglVO);
@@ -78,7 +78,7 @@ public class BusZdjrglServiceImpl implements IBusZdjrglService {
 	 *            节假日ID
 	 * @return
 	 */
-	private List<BusZdjrzbry> selectZdjrzbryByZdjrId(String id) {
+	private List<BusZdjrzbry> selectZdjrzbryByZdjrId(Long id) {
 		BusZdjrzbry busZdjrzbry = new BusZdjrzbry();
 		busZdjrzbry.setZdjrId(id);
 		return busZdjrzbryMapper.selectBusZdjrzbryList(busZdjrzbry);
@@ -144,7 +144,7 @@ public class BusZdjrglServiceImpl implements IBusZdjrglService {
 	 * @return 结果
 	 */
 	@Override
-	public int deleteBusZdjrglByIds(String[] ids) {
+	public int deleteBusZdjrglByIds(Long[] ids) {
 		return busZdjrglMapper.deleteBusZdjrglByIds(ids);
 	}
 
@@ -156,7 +156,7 @@ public class BusZdjrglServiceImpl implements IBusZdjrglService {
 	 * @return 结果
 	 */
 	@Override
-	public int deleteBusZdjrglById(String id) {
+	public int deleteBusZdjrglById(Long id) {
 		return busZdjrglMapper.deleteBusZdjrglById(id);
 	}
 }

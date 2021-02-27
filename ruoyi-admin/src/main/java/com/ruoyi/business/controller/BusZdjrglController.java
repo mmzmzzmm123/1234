@@ -45,7 +45,7 @@ public class BusZdjrglController extends BaseController {
 	 */
 	@ApiOperation("获取节假日详情(包括承包商和值班人员)")
 	@GetMapping(value = "/{id}")
-	public AjaxResult getInfo(@PathVariable("id") String id) {
+	public AjaxResult getInfo(@PathVariable("id") Long id) {
 		return AjaxResult.success(busZdjrglService.selectBusZdjrglById(id));
 	}
 
@@ -78,7 +78,7 @@ public class BusZdjrglController extends BaseController {
 	@ApiOperation("根据ID删除节假日")
 	@Log(title = "重大节日管理", businessType = BusinessType.DELETE)
 	@PostMapping("/{ids}")
-	public AjaxResult remove(@PathVariable String[] ids) {
+	public AjaxResult remove(@PathVariable Long[] ids) {
 		return toAjax(busZdjrglService.deleteBusZdjrglByIds(ids));
 	}
 }
