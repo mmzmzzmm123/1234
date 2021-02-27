@@ -24,6 +24,7 @@
 <!--        <result property="customerId" column="cus_id"></result>&lt;!&ndash; 客户ID &ndash;&gt;-->
         <result property="customer"    column="customer"    /><!-- 客户姓名 -->
         <result property="phone" column="phone"     />
+        <result property="reviewStatus" column="review_status"     />
         <result property="orderStartDate"    column="order_start_date"    />
         <result property="orderEndDate"    column="order_end_date"    />
         <result property="nutritionistId"    column="nutritionist_id"    />
@@ -32,8 +33,10 @@
         <result property="nutritionistAssis"    column="nutritionist_assis"    />
     </resultMap>
 
+
+
     <sql id="selectSysRecipesPlanVo">
-        select id, order_id, cus_id, start_date, end_date, start_num_day, end_num_day, recipes_id, send_flag, send_time, create_time, create_by, update_time, update_by, del_flag from sys_recipes_plan
+        select id, order_id, cus_id, start_date, end_date, start_num_day, end_num_day, recipes_id, send_flag, send_time, create_time, create_by, update_time, update_by, del_flag, review_status from sys_recipes_plan
     </sql>
 
     <select id="selectSysRecipesPlanList" parameterType="SysRecipesPlan" resultMap="SysRecipesPlanResult">
@@ -47,6 +50,7 @@
         <if test="recipesId != null "> and recipes_id = #{recipesId}</if>
         <if test="sendFlag != null "> and send_flag = #{sendFlag}</if>
         <if test="sendTime != null "> and send_time = #{sendTime}</if>
+        <if test="reviewStatus != null "> and review_status = #{reviewStatus}</if>
     </select>
 
     <select id="selectSysRecipesPlanById" parameterType="Long" resultMap="SysRecipesPlanResult">
@@ -71,6 +75,7 @@
             <if test="updateTime != null">update_time,</if>
             <if test="updateBy != null">update_by,</if>
             <if test="delFlag != null">del_flag,</if>
+            <if test="reviewStatus != null">review_status,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="orderId != null">#{orderId},</if>
@@ -87,6 +92,7 @@
             <if test="updateTime != null">#{updateTime},</if>
             <if test="updateBy != null">#{updateBy},</if>
             <if test="delFlag != null">#{delFlag},</if>
+            <if test="reviewStatus != null">#{reviewStatus},</if>
         </trim>
     </insert>
 
@@ -107,6 +113,7 @@
             <if test="updateTime != null">update_time = #{updateTime},</if>
             <if test="updateBy != null">update_by = #{updateBy},</if>
             <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="reviewStatus != null">review_status = #{reviewStatus},</if>
         </trim>
         where id = #{id} and del_flag = 0
     </update>
@@ -185,5 +192,36 @@
       WHERE srp.del_flag = 0 AND sr.del_flag = 0 AND srp.order_id = #{orderId}
       <if test="sendFlag != null">AND srp.send_flag = #{sendFlag}</if>
       ORDER BY srp.id ASC
+    </select>
+
+    <!--  根据outId查询食谱计划-->
+    <select id="selectPlanListByOutId" parameterType="String" resultMap="SysRecipesPlanResult">
+        select cus_id, recipes_id, start_num_day, end_num_day from sys_recipes_plan where out_id=#{outId} order by create_time desc
+    </select>
+
+    <select id="getCusIdByOutId" parameterType="String" resultType="Long">
+        select cus_id from sys_recipes_plan where out_id=#{outId} limit 1
+    </select>
+
+    <resultMap id="SysRecipesPlanListInfoResult" type="SysRecipesPlanListInfo">
+        <result property="id"    column="id"    />
+        <result property="startDate"    column="start_date"    />
+        <result property="endDate"    column="end_date"    />
+        <result property="startNumDay"    column="start_num_day"    />
+        <result property="endNumDay"    column="end_num_day"    />
+        <association property="menus" column="recipes_id" select="selectMenuIds"/>
+    </resultMap>
+
+    <select id="selectRecipesPlanListInfo" resultMap="SysRecipesPlanListInfoResult">
+        select id, start_date, end_date, start_num_day, end_num_day, recipes_id from sys_recipes_plan where out_id=#{outId}
+    </select>
+
+    <resultMap type="SysRecipesDaily" id="SysRecipesResult">
+        <result property="id" column="id"/>
+        <result property="numDay" column="num_day"/>
+    </resultMap>
+
+    <select id="selectMenuIds" parameterType="Long" resultMap="SysRecipesResult">
+        select id, num_day from sys_customer_daily_menu where recipes_id=#{recipes_id} order by num_day asc
     </select>
 </mapper>

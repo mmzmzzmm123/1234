@@ -2,6 +2,7 @@ package com.stdiet.custom.mapper;
 
 import java.util.List;
 import com.stdiet.custom.domain.SysRecipesPlan;
+import com.stdiet.custom.domain.SysRecipesPlanListInfo;
 
 /**
  * 食谱计划Mapper接口
@@ -86,4 +87,10 @@ public interface SysRecipesPlanMapper
      * @return
      */
     List<SysRecipesPlan> selectPlanListByOrderId(SysRecipesPlan sysRecipesPlan);
+
+    List<SysRecipesPlan> selectPlanListByOutId(String outId);
+
+    Long getCusIdByOutId(String outId);
+
+    List<SysRecipesPlanListInfo> selectRecipesPlanListInfo(String outId);
 }

@@ -323,7 +323,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="角色" prop="roleIds">
+            <el-form-item label="角色" prop="roleId">
               <el-select v-model="form.roleId" placeholder="请选择">
                 <el-option
                   v-for="item in roleOptions"
@@ -500,7 +500,7 @@ export default {
         postIds: [
           { required: true, message: "用户岗位不能为空", trigger: "blur" },
         ],
-        roleIds: [
+        roleId: [
           { required: true, message: "用户角色不能为空", trigger: "blur" },
         ],
         email: [

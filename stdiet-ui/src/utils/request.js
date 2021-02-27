@@ -29,9 +29,11 @@ service.interceptors.request.use(config => {
 service.interceptors.response.use(res => {
     // 未设置状态码则默认成功状态
     const code = res.data.code || 200;
+    console.log(res)
     // 获取错误信息
     const msg = errorCode[code] || res.data.msg || errorCode['default']
     if (code === 401) {
+      console.log(code)
       MessageBox.confirm('登录状态已过期，您可以继续留在该页面，或者重新登录', '系统提示', {
           confirmButtonText: '重新登录',
           cancelButtonText: '取消',
