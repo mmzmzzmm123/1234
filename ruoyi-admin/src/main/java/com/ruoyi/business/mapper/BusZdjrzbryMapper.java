@@ -17,7 +17,7 @@ public interface BusZdjrzbryMapper
      * @param id 重大节日值班人员ID
      * @return 重大节日值班人员
      */
-    public BusZdjrzbry selectBusZdjrzbryById(String id);
+    public BusZdjrzbry selectBusZdjrzbryById(Long id);
 
     /**
      * 查询重大节日值班人员列表
@@ -49,7 +49,7 @@ public interface BusZdjrzbryMapper
      * @param id 重大节日值班人员ID
      * @return 结果
      */
-    public int deleteBusZdjrzbryById(String id);
+    public int deleteBusZdjrzbryById(Long id);
 
     /**
      * 批量删除重大节日值班人员
@@ -57,5 +57,5 @@ public interface BusZdjrzbryMapper
      * @param ids 需要删除的数据ID
      * @return 结果
      */
-    public int deleteBusZdjrzbryByIds(String[] ids);
+    public int deleteBusZdjrzbryByIds(Long[] ids);
 }

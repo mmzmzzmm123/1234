@@ -21,6 +21,8 @@ import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 
+import io.swagger.annotations.ApiOperation;
+
 /**
  * 重大节日值班人员Controller
  * 
@@ -58,13 +60,14 @@ public class BusZdjrzbryController extends BaseController {
 	 * 获取重大节日值班人员详细信息
 	 */
 	@GetMapping(value = "/{id}")
-	public AjaxResult getInfo(@PathVariable("id") String id) {
+	public AjaxResult getInfo(@PathVariable("id") Long id) {
 		return AjaxResult.success(busZdjrzbryService.selectBusZdjrzbryById(id));
 	}
 
 	/**
 	 * 新增重大节日值班人员
 	 */
+	@ApiOperation("新增值班人员")
 	@Log(title = "重大节日值班人员", businessType = BusinessType.INSERT)
 	@PostMapping
 	public AjaxResult add(@RequestBody BusZdjrzbry busZdjrzbry) {
@@ -85,7 +88,7 @@ public class BusZdjrzbryController extends BaseController {
 	 */
 	@Log(title = "重大节日值班人员", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
-	public AjaxResult remove(@PathVariable String[] ids) {
+	public AjaxResult remove(@PathVariable Long[] ids) {
 		return toAjax(busZdjrzbryService.deleteBusZdjrzbryByIds(ids));
 	}
 }
