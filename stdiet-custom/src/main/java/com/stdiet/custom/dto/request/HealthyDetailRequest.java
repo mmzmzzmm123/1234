@@ -281,6 +281,8 @@ public class HealthyDetailRequest implements Serializable {
     /** 其他运动项目，使用，隔开 */
     private String otherMotionClassify;
 
+    private String motion;
+
     /** 运动场地，使用，隔开 */
     private String motionField;
 
@@ -372,8 +374,8 @@ public class HealthyDetailRequest implements Serializable {
     /** 饮食习惯 */
     private String makeFoodType;
 
-    /** 客户病史体征id，使用，隔开 */
-    private String physicalSignsId;
+    /** 客户病史体征，使用，隔开 */
+    private String physicalSigns;
 
     /** 其他病史体征 **/
     private String otherPhysicalSigns;
@@ -386,5 +388,9 @@ public class HealthyDetailRequest implements Serializable {
 
     /** 湿气数据 */
     private String moistureDate;
+
+
+    /** 减脂指导 **/
+    private String guidance;
 
 }

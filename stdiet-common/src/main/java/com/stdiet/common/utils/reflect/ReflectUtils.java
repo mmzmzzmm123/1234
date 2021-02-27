@@ -416,7 +416,7 @@ public class ReflectUtils
             Field field = object.getClass().getDeclaredField(fieldName);
             //设置对象的访问权限，保证对private的属性的访问
             field.setAccessible(true);
-            return field.get(object).toString();
+            return field.get(object) == null ? "" : field.get(object).toString();
         } catch (Exception e) {
             return "";
         }

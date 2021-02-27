@@ -1,11 +1,11 @@
 package com.stdiet.custom.service.impl;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.stdiet.common.config.RuoYiConfig;
 import com.stdiet.common.core.domain.AjaxResult;
+import com.stdiet.common.core.domain.entity.SysDictData;
+import com.stdiet.common.utils.DateUtils;
 import com.stdiet.common.utils.StringUtils;
 import com.stdiet.common.utils.bean.ObjectUtils;
 import com.stdiet.common.utils.reflect.ReflectUtils;
@@ -157,14 +157,13 @@ public class SysCustomerHealthyServiceImpl implements ISysCustomerHealthyService
     @Override
     public AjaxResult generateHealthyReport(HealthyDetailRequest healthyDetailRequest){
         AjaxResult ajaxResult = AjaxResult.error();
-        String templatePath = "/home/workspace/ShengTangManage/running/pdf/healthyReport.pdf";
-        //String templatePath = "D:\\contract\\healthyReport.pdf";
+        //String templatePath = "/home/workspace/ShengTangManage/running/pdf/healthyReport.pdf";
+        String templatePath = "D:\\contract\\healthyReport.pdf";
         String fileName = "healthyReport" + healthyDetailRequest.getCustomerId() + System.currentTimeMillis() + ".pdf";
         String filePath = RuoYiConfig.getDownloadPath() + fileName;
         //查询客户健康信息
         SysCustomerHealthy sysCustomerHealthy = selectSysCustomerHealthyById(healthyDetailRequest.getId());
         if(sysCustomerHealthy != null){
-
             ajaxResult = PdfUtils.generatePdfFile(templatePath, filePath, getReportData(sysCustomerHealthy, healthyDetailRequest));
             ajaxResult.put("path", fileName);
         }
@@ -192,10 +191,35 @@ public class SysCustomerHealthyServiceImpl implements ISysCustomerHealthyService
     };
 
     private Map<String,String> getReportData(SysCustomerHealthy sysCustomerHealthy, HealthyDetailRequest healthyDetailRequest){
+        if(StringUtils.isNotEmpty(sysCustomerHealthy.getBloodData())){
+            SysDictData param = new SysDictData();
+            param.setDictType("sys_moisture_data");
+            param.setDictValueList(Arrays.asList(sysCustomerHealthy.getBloodData().split(",")));
+            List<SysDictData> bloodData = selectDictDataByTypeAndValue(param);
+            String bloodString = "";
+            for (SysDictData blood : bloodData) {
+                bloodString += blood.getDictValue() + "、" +blood.getDictLabel() + "\n";
+            }
+            healthyDetailRequest.setBloodData(bloodString);
+        }
+        if(StringUtils.isNotEmpty(sysCustomerHealthy.getMoistureDate())){
+            SysDictData param = new SysDictData();
+            param.setDictType("sys_blood_data");
+            param.setDictValueList(Arrays.asList(sysCustomerHealthy.getBloodData().split(",")));
+            List<SysDictData> moistureData = selectDictDataByTypeAndValue(param);
+            String moistureString = "";
+            for (SysDictData moisture : moistureData) {
+                moistureString += moisture.getDictValue() + "、" + moisture.getDictLabel() + "\n";
+            }
+            healthyDetailRequest.setMoistureDate(moistureString);
+        }
         Map<String,String> data = new HashMap<>();
         for (String key : healthyAttrNameAray) {
             data.put(key, ReflectUtils.getFieldValueByFieldName(key, healthyDetailRequest));
         }
+        //减脂指导
+        data.put("guidance", sysCustomerHealthy.getGuidance());
+        //营养热量分析数据
         NutritionalCalories nutritionalCalories = NutritionalUtils.getNutritionalCaloriesData(sysCustomerHealthy);
         nutritionalCalories.setNutritionalHeat_one(nutritionalCalories.getNutritionalHeat()[0].toString());
         nutritionalCalories.setNutritionalHeat_two(nutritionalCalories.getNutritionalHeat()[1].toString());
@@ -208,13 +232,28 @@ public class SysCustomerHealthyServiceImpl implements ISysCustomerHealthyService
         nutritionalCalories.setWeightNutritionalRate_three(nutritionalCalories.getWeightNutritionalRate()[2].toString());
         for (String key : nutriAttrNameArray) {
             if("targetEveryWeightHeat".equals(key)){
-                data.put(key, nutritionalCalories.getTargetEveryWeightHeat()[0].toString()+"-"+nutritionalCalories.getTargetEveryWeightHeat()[1].toString());
+                data.put(key, nutritionalCalories.getTargetEveryWeightHeat()[0].intValue()+"-"+nutritionalCalories.getTargetEveryWeightHeat()[1].intValue());
+                continue;
             }
             if("standardEveryWeightHeat".equals(key)){
-                data.put(key, nutritionalCalories.getStandardEveryWeightHeat()[0].toString()+"-"+nutritionalCalories.getStandardEveryWeightHeat()[1].toString());
+                data.put(key, nutritionalCalories.getStandardEveryWeightHeat()[0].intValue()+"-"+nutritionalCalories.getStandardEveryWeightHeat()[1].intValue());
+                continue;
             }
             data.put(key, ReflectUtils.getFieldValueByFieldName(key, nutritionalCalories));
         }
+        data.put("company","深圳胜唐体控有限公司");
+        data.put("date", DateUtils.getDate());
         return data;
+    }
+
+
+    /**
+     * 根据类型、键值集合查询字典类型
+     * @param sysDictData
+     * @return
+     */
+    @Override
+    public List<SysDictData> selectDictDataByTypeAndValue(SysDictData sysDictData){
+        return sysCustomerHealthyMapper.selectDictDataByTypeAndValue(sysDictData);
     }
 }

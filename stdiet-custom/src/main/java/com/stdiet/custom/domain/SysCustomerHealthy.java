@@ -433,6 +433,9 @@ public class SysCustomerHealthy extends BaseEntity
     //备注
     private String remark;
 
+    /** 减脂指导 */
+    private String guidance;
+
     /** 湿气数据 */
     @Excel(name = "湿气数据")
     private String moistureDate;

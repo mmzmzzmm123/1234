@@ -3,6 +3,7 @@ package com.stdiet.custom.service;
 import java.util.List;
 
 import com.stdiet.common.core.domain.AjaxResult;
+import com.stdiet.common.core.domain.entity.SysDictData;
 import com.stdiet.custom.domain.SysCustomerHealthy;
 import com.stdiet.custom.dto.request.HealthyDetailRequest;
 import org.apache.ibatis.annotations.Param;
@@ -85,4 +86,12 @@ public interface ISysCustomerHealthyService
      * @return
      */
     AjaxResult generateHealthyReport(HealthyDetailRequest healthyDetailRequest);
+
+
+    /**
+     * 根据类型、键值集合查询字典类型
+     * @param sysDictData
+     * @return
+     */
+    public  List<SysDictData> selectDictDataByTypeAndValue(SysDictData sysDictData);
 }
