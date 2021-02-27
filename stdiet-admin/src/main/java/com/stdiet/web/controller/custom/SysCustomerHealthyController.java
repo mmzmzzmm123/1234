@@ -3,6 +3,7 @@ package com.stdiet.custom.controller;
 import java.util.List;
 
 import com.stdiet.common.utils.StringUtils;
+import com.stdiet.custom.dto.request.HealthyDetailRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -108,5 +109,15 @@ public class SysCustomerHealthyController extends BaseController
     public AjaxResult remove(@PathVariable Long[] ids)
     {
         return toAjax(sysCustomerHealthyService.deleteSysCustomerHealthyByIds(ids));
+    }
+
+    /**
+     * 生成健康体征报告
+     */
+    @Log(title = "健康体征报告", businessType = BusinessType.INSERT)
+    @PostMapping("/generateHealthyReport")
+    public AjaxResult generateHealthyReport(@RequestBody  HealthyDetailRequest healthyDetailRequest)
+    {
+        return sysCustomerHealthyService.generateHealthyReport(healthyDetailRequest);
     }
 }

@@ -57,6 +57,12 @@ public class SysRecipesPlanController extends BaseController
         return getDataTable(list);
     }
 
+    @PreAuthorize("@ss.hasPermi('recipes:recipesPlan:list')")
+    @GetMapping(value = "/list/{cusId}")
+    public AjaxResult getAllPlanByCusId(@PathVariable Long cusId) {
+        return AjaxResult.success(sysRecipesPlanService.selectPlanListByCusId(cusId));
+    }
+
     /**
      * 获取食谱计划详细信息
      */

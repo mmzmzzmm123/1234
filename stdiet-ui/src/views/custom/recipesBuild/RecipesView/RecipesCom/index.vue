@@ -12,7 +12,7 @@
       <el-table-column prop="type" :width="100" align="center">
         <template slot="header">
           <div class="num_day" @click="handleOnOneDayAnalysis">
-            <div>{{ name }}</div>
+            <!-- <div>{{ name }}</div> -->
             <div>{{ `第${numDay}天` }}</div>
           </div>
         </template>

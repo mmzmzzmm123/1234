@@ -6,24 +6,6 @@
       :inline="true"
       v-show="showSearch"
     >
-      <el-form-item label="客户信息" prop="customer">
-        <el-input
-          v-model="queryParams.customer"
-          placeholder="请输入客户姓名或手机号"
-          clearable
-          size="small"
-        />
-      </el-form-item>
-      <el-form-item label="日期" prop="planStartDateScope">
-        <el-date-picker
-          v-model="planStartDateScope"
-          type="daterange"
-          range-separator="至"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-        >
-        </el-date-picker>
-      </el-form-item>
       <el-form-item label="营养师" prop="nutritionistId">
         <el-select
           v-model="queryParams.nutritionistId"
@@ -82,23 +64,7 @@
         >
       </el-form-item>
     </el-form>
-    <div>
-      <span style="color: #e6a23c; font-family: PingFang SC">
-        注意事项：
-        <br />1、2021年1月开始的订单才会自动生成食谱计划</span
-      >
-    </div>
     <el-row :gutter="10" class="mb8" style="margin-top: 10px">
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['recipes:recipesPlan:export']"
-          >导出
-        </el-button>
-      </el-col>
       <right-toolbar
         :showSearch.sync="showSearch"
         @queryTable="getList"
@@ -128,32 +94,25 @@
           >
         </template>
       </el-table-column>
-      <el-table-column label="客户姓名" align="center" prop="customer" />
       <el-table-column
-        label="客户手机号"
+        label="营养师"
         align="center"
-        prop="hidePhone"
-        width="180"
+        prop="nutritionist"
+        width="100"
       />
-      <el-table-column
-        label="计划"
-        align="center"
-        prop="scopeDay"
-        width="200"
-      />
-      <el-table-column
-        label="日期"
-        align="center"
-        prop="scopeDate"
-        width="200"
-      />
-      <el-table-column label="营养师" align="center" prop="nutritionist" />
       <el-table-column
         label="营养师助理"
         align="center"
+        width="100"
         prop="nutritionistAssis"
-        width="180"
       />
+      <el-table-column
+        label="创建时间"
+        align="center"
+        width="100"
+        prop="create_time"
+      />
+      <el-table-column label="备注" prop="remark" align="center" />
       <el-table-column
         label="操作"
         align="center"
@@ -186,13 +145,16 @@
 </template>
 
 <script>
-import { exportRecipesPlan, listRecipesPlan } from "@/api/custom/recipesPlan";
+import {
+  listRecipesModel,
+  addRecipesModel,
+  updateRecipesModel,
+  deleteRecipesModel,
+} from "@/api/custom/recipesPlanModel";
 import dayjs from "dayjs";
 import store from "@/store";
 import { mapState } from "vuex";
 
-const nextDate = dayjs().add(1, "day").format("YYYY-MM-DD");
-const weekDate = dayjs().add(6, "day").format("YYYY-MM-DD");
 const userId = store.getters && store.getters.userId;
 export default {
   name: "recipesPlan",
@@ -200,12 +162,6 @@ export default {
     return {
       // 遮罩层
       loading: true,
-      // 选中数组
-      ids: [],
-      // 非单个禁用
-      single: true,
-      // 非多个禁用
-      multiple: true,
       // 显示搜索条件
       showSearch: true,
       // 总条数
@@ -222,9 +178,6 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        customer: null,
-        startDate: null,
-        endDate: null,
         nutritionistId: null,
         nutritionistAssisId: null,
         reviewStatus: null,

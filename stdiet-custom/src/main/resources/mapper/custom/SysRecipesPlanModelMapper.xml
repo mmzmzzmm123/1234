@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.stdiet.custom.mapper.SysRecipesPlanModelMapper">
+
+    <resultMap type="SysRecipesPlanModel" id="SysRecipesModelResult">
+        <result property="id" column="id"/>
+        <result property="planId" column="plan_id"/>
+        <result property="nutritionistId" column="nutritionist_id"/>
+        <result property="nutriAssisId" column="nutri_assis_id"/>
+        <result property="remark" column="remark"/>
+        <result property="createTime" column="create_time"/>
+        <result property="createBy" column="create_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="recipesId" column="recipes_id"/>
+    </resultMap>
+
+    <select id="selectRecipesModelListByCondition" parameterType="SysRecipesPlanModel" resultMap="SysRecipesModelResult">
+        select srpm.id, srpm.nutritionist_id, srpm.nutri_assis_id, srpm.remark, srpm.update_time,
+            srpm.create_time, srpm.update_by, srpm.create_by, srpm.plan_id, srp.recipes_id, srp.review_status
+        from sys_recipes_plan_model srpm
+        left join sys_recipes_plan srp on srp.id = srpm.plan_id
+        where del_flag = 0
+        <if test="nutriAssisId != null ">and nutri_assis_id = #{nutriAssisId}</if>
+        <if test="nutritionistId != null ">and nutritionist_id = #{nutritionistId}</if>
+        <if test="reviewStatus != null ">and review_status = #{reviewStatus}</if>
+        order by srpm.create_time desc
+    </select>
+
+    <insert id="insertRecipsesModel" parameterType="SysRecipesPlanModel" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_recipes_plan_model
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="nutriAssisId != null">nutri_assis_id,</if>
+            <if test="nutritionistId != null">nutritionist_id,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="remark != null">remark,</if>
+            <if test="reviewStatus != null">review_status,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="nutriAssisId != null">#{nutriAssisId},</if>
+            <if test="nutritionistId != null">#{nutritionistId},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="reviewStatus != null">#{reviewStatus},</if>
+        </trim>
+    </insert>
+
+    <update id="updateRecipesModel" parameterType="SysRecipesPlanModel">
+        update sys_recipes_plan_model
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="nutriAssisId != null">nutri_assis_id = #{nutriAssisId},</if>
+            <if test="nutritionistId != null">nutritionist_id = #{nutritionistId},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="reviewStatus != null">review_status = #{reviewStatus},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="removeRecipesModel" parameterType="Long">
+        update sys_recipes_plan_model set del_flag=1 where id = #{id}
+    </delete>
+
+</mapper>
