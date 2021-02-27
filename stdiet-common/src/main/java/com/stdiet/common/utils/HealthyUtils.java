@@ -16,6 +16,9 @@ public class HealthyUtils {
     //营养成分比例
     public static final Integer[] nutritionRate = {30, 20, 50};
 
+    //默认活动因子
+    public static final double activityFactor = 0.3;
+
     /**
      * 计算减脂每天最大摄入量（千卡）
      * @param age 年龄
@@ -148,12 +151,26 @@ public class HealthyUtils {
      * @param weight 体重
      * @return
      */
-    public static final Double[] calculateNutritionEveryWeight(Integer[] nutritionQuality, double weight){
+    public static Double[] calculateNutritionEveryWeight(Integer[] nutritionQuality, double weight){
         Double[] nutritionEveryWeight = new Double[3];
         nutritionEveryWeight[0] = NumberUtils.getNumberByRoundHalfUp(nutritionQuality[0]/weight*2,2).doubleValue();
         nutritionEveryWeight[1] = NumberUtils.getNumberByRoundHalfUp(nutritionQuality[1]/weight*2,2).doubleValue();
         nutritionEveryWeight[2] = NumberUtils.getNumberByRoundHalfUp(nutritionQuality[2]/weight*2, 2).doubleValue();
         return nutritionEveryWeight;
+    }
+
+    /**
+     * 计算不运动热量、运动热量
+     * @param metabolizeHeat
+     * @return
+     */
+    public static Long[] calculateWithoutExerciseHeat(Integer metabolizeHeat){
+        Long[] array = new Long[2];
+        //不运动热量
+        array[0] = Math.round(metabolizeHeat * (1 + activityFactor));
+        //运动热量
+        array[1] = Math.round(metabolizeHeat * (1 + 0.8));
+        return array;
     }
 
 

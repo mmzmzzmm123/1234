@@ -32,6 +32,13 @@ public class NutritionalUtils {
             nutritionalCalories.setNutritionalHeat(nutritionalHeatAndQuality[0]);
             nutritionalCalories.setNutritionalQuality(nutritionalHeatAndQuality[1]);
             nutritionalCalories.setWeightNutritionalRate(HealthyUtils.calculateNutritionEveryWeight(nutritionalHeatAndQuality[1], nutritionalCalories.getWeight()));
+            //活动因子
+            nutritionalCalories.setActivityFactor(HealthyUtils.activityFactor);
+            Long[] heatArray = HealthyUtils.calculateWithoutExerciseHeat(nutritionalCalories.getMetabolizeHeat());
+            //不运动热量
+            nutritionalCalories.setWithoutExerciseHeat(heatArray[0].intValue());
+            //运动热量
+            nutritionalCalories.setExerciseHeat(heatArray[1].intValue());
         }
         return nutritionalCalories;
     }

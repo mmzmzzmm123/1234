@@ -69,4 +69,23 @@ public class NutritionalCalories implements Serializable {
     //蛋白质、脂肪、碳水剩余可摄入热量
     public Integer[] surplusNutritionalHeat;
 
+
+    private String nutritionalHeat_one;
+
+    private String nutritionalHeat_two;
+
+    private String nutritionalHeat_three;
+
+    private String nutritionalQuality_one;
+
+    private String nutritionalQuality_two;
+
+    private String nutritionalQuality_three;
+
+    private String weightNutritionalRate_one;
+
+    private String weightNutritionalRate_two;
+
+    private String weightNutritionalRate_three;
+
 }

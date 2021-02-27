@@ -3,6 +3,8 @@
     <div v-if="showFlag">
     <div style="float:right;margin-top:-10px;margin-bottom: 10px;" v-show="dataList.length > 0">
       <!-- 只有新版健康评估信息才可修改，旧的体征数据不支持修改 -->
+      <el-button type="info" v-show="dataType == 0" @click="generateReport()"  plain>下载报告</el-button>
+      <el-button type="info" v-show="dataType == 0" @click="handleEditGuidanceClick()"  plain>减脂指导</el-button>
       <el-button v-hasPermi="['custom:healthy:edit']" type="info" v-show="dataType == 0" @click="handleEditRemarkClick()"  plain>修改备注</el-button>
       <el-button v-hasPermi="['custom:healthy:edit']" type="warning" v-show="dataType == 0" @click="handleEditHealthyClick()"  plain>修改信息</el-button>
       <el-button type="danger" v-hasPermi="['custom:healthy:remove']" @click="handleDelete()" plain>删除信息</el-button>
@@ -22,6 +24,15 @@
           <el-table-column prop="remarkValue">
             <template slot-scope="scope">
               <auto-hide-message :data="scope.row.remarkValue" :maxLength="100"/></template>
+          </el-table-column>
+        </el-table>
+        <!-- 指导 -->
+        <el-table :data="guidanceList" :show-header="false" border :cell-style="remarkColumnStyle" style="width: 100%;">
+          <el-table-column width="140" prop="guidanceTitle">
+          </el-table-column>
+          <el-table-column prop="guidanceValue">
+            <template slot-scope="scope">
+              <auto-hide-message :data="scope.row.guidanceValue" :maxLength="100"/></template>
           </el-table-column>
         </el-table>
       </div>
@@ -71,23 +82,28 @@
     <physicalSigns-edit ref="physicalSignsEditDialog" @refreshHealthyData="getCustomerHealthyByCusId()"></physicalSigns-edit>
     <!-- 编辑备注 -->
     <physicalSigns-remark ref="physicalSignsRemarkDialog" @refreshHealthyData="getCustomerHealthyByCusId()"></physicalSigns-remark>
+    <!-- 编辑减脂指导 -->
+    <physicalSigns-guidance ref="physicalSignsGuidanceDialog" @refreshHealthyData="getCustomerHealthyByCusId()"></physicalSigns-guidance>
   </el-dialog>
 </template>
 <script>
 import { getCustomerPhysicalSignsByCusId,delCustomerHealthy } from "@/api/custom/customer";
+import { generateHealthyReport } from "@/api/custom/healthy";
 import TableDetailMessage from "@/components/TableDetailMessage";
 import AutoHideMessage from "@/components/AutoHideMessage";
 import * as healthyData from "@/utils/healthyData";
 import Clipboard from 'clipboard';
 import PhysicalSignsEdit from "@/components/PhysicalSignsEdit";
 import PhysicalSignsRemark from "@/components/PhysicalSignsRemark";
+import PhysicalSignsGuidance from "@/components/PhysicalSignsGuidance";
 export default {
   name: "PhysicalSignsDialog",
   components: {
     "auto-hide-message": AutoHideMessage,
     "table-detail-message": TableDetailMessage,
     "physicalSigns-edit":PhysicalSignsEdit,
-    "physicalSigns-remark":PhysicalSignsRemark
+    "physicalSigns-remark":PhysicalSignsRemark,
+    "physicalSigns-guidance":PhysicalSignsGuidance
   },
   data() {
     return {
@@ -99,6 +115,7 @@ export default {
       dataType: 0,
       healthyData: null,
       remarkList:[{"remarkTitle": "备注信息", "remarkValue": ""}],
+      guidanceList:[{"guidanceTitle": "减脂指导", "guidanceValue": ""}],
       // 体征标题
       signTitleData: [
         ["创建时间", "姓名", "年龄"],
@@ -203,7 +220,8 @@ export default {
           ["medicalReport_one","medicalReport_two","medicalReport_three"]
         ]
       ],
-      copyValue: ""
+      copyValue: "",
+      detailHealthy: null,
     };
   },
   methods: {
@@ -239,6 +257,7 @@ export default {
           if(this.dataType == 0){
              this.healthyData = Object.assign({}, res.data.customerHealthy);
              this.remarkList[0].remarkValue = this.healthyData.remark;
+             this.guidanceList[0].guidanceValue = this.healthyData.guidance;
              this.getDataListByHealthyMessage(res.data.customerHealthy);
           }else{
             this.getDataListBySignMessage(res.data.customerHealthy)
@@ -252,6 +271,7 @@ export default {
     onClosed() {
       this.dataList = [];
       this.data = null;
+      this.detailHealthy = null;
       //this.enc_id = "";
       this.copyValue = "";
     },
@@ -358,7 +378,7 @@ export default {
         });
       }
       detailHealthy.motion =  this.trimComma(motionStr + (detailHealthy.otherMotionClassify ? ( "，"+ detailHealthy.otherMotionClassify) : ""));
-      detailHealthy.motionField += this.trimComma(detailHealthy.otherMotionField ? ("，"+detailHealthy.otherMotionField) : "");
+      detailHealthy.motionField = this.trimComma(detailHealthy.motionField + (detailHealthy.otherMotionField ? ("，"+detailHealthy.otherMotionField) : ""));
       detailHealthy.sleepDrugFlag = detailHealthy.sleepDrugFlag == 1 ? "有" : "无";
       detailHealthy.stayupLateFlag = detailHealthy.stayupLateFlag == 1 ? "有" : "无";
       detailHealthy.stayupLateWeekNum += "次/周";
@@ -370,20 +390,20 @@ export default {
       }*/
       physicalSigns += "，" + (detailHealthy.otherPhysicalSigns ? detailHealthy.otherPhysicalSigns : "");
       detailHealthy.physicalSigns = this.trimComma(physicalSigns);
-      detailHealthy.familyIllnessHistory += this.trimComma(detailHealthy.otherFamilyIllnessHistory ? ("，" + detailHealthy.otherFamilyIllnessHistory) : "");
-      detailHealthy.operationHistory += this.trimComma(detailHealthy.otherOperationHistory ? ("，" + detailHealthy.otherOperationHistory) : "");
+      detailHealthy.familyIllnessHistory = this.trimComma(detailHealthy.familyIllnessHistory + "，"+ (detailHealthy.otherFamilyIllnessHistory ? detailHealthy.otherFamilyIllnessHistory : ""));
+      detailHealthy.operationHistory = this.trimComma(detailHealthy.operationHistory + "，"+ (detailHealthy.otherOperationHistory ? detailHealthy.otherOperationHistory : ""));
       detailHealthy.nearOperationFlag = detailHealthy.nearOperationFlag == 1 ? "有" : "无";
       detailHealthy.longEatDrugFlag = detailHealthy.longEatDrugFlag == 1 ? "有" : "无";
-      detailHealthy.longEatDrugClassify += detailHealthy.otherLongEatDrugClassify ? ("，" + detailHealthy.otherLongEatDrugClassify) : "";
+      detailHealthy.longEatDrugClassify = this.trimComma(detailHealthy.longEatDrugClassify + "，" + (detailHealthy.otherLongEatDrugClassify ? detailHealthy.otherLongEatDrugClassify : ""));
       detailHealthy.allergyFlag = detailHealthy.allergyFlag == 1 ? "有" : "无";
-      detailHealthy.allergen += detailHealthy.otherAllergen ? ("，" +detailHealthy.otherAllergen) : "";
-      detailHealthy.allergen = this.trimComma(detailHealthy.allergen);
+      detailHealthy.allergen = this.trimComma(detailHealthy.allergen + "，" + (detailHealthy.otherAllergen ? detailHealthy.otherAllergen : ""));
       let medicalReportPathArray = detailHealthy.medicalReport ? detailHealthy.medicalReport.split(",") : [];
       let medicalReportNameArray = detailHealthy.medicalReportName ? detailHealthy.medicalReportName.split(",") : [];
       this.medicalReportPathArray = medicalReportPathArray;
       detailHealthy.medicalReport_one = medicalReportPathArray.length > 0 ? (medicalReportNameArray.length > 0 ? medicalReportNameArray[0] : "体检报告（1）") : "";
       detailHealthy.medicalReport_two =  medicalReportPathArray.length > 1 ? (medicalReportNameArray.length > 1 ? medicalReportNameArray[1] : "体检报告（2）") : "";
       detailHealthy.medicalReport_three = medicalReportPathArray.length > 2 ? (medicalReportNameArray.length > 2 ? medicalReportNameArray[2] : "体检报告（3）") : "";
+      this.detailHealthy = detailHealthy;
       for(let i = 0; i < this.healthyTitleData.length; i++){
         let stepArray = [];
         for(let j= 0; j < this.healthyTitleData[i].length; j++){
@@ -426,6 +446,28 @@ export default {
     downloadFile(fileName){
       this.downloadResource(fileName);
     },
+    generateReport(){
+       let data = this.detailHealthy;
+       if(!this.guidanceList[0].guidanceValue || this.guidanceList[0].guidanceValue.length == 0){
+         this.$confirm("该客户还未添加减脂指导，是否确认下载报告?", "警告", {
+           confirmButtonText: "确定", cancelButtonText: "取消", type: "warning"
+         })
+           .then(function(){
+           return generateHealthyReport(data);
+         })
+         .then((response) => {
+             if(response.code == 200 && response.path != null){
+                  this.download(response.path);
+             }
+          }).catch(function () {});
+       }else{
+         generateHealthyReport(data).then((res) => {
+            if(res.code == 200 && res.path != null){
+              this.download(res.path);
+            }
+         });
+       }
+    },
     trimComma(str){
       if(str.startsWith("，") || str.startsWith(",")){
         str = str.substring(1,str.length);
@@ -467,7 +509,11 @@ export default {
     },
     handleEditRemarkClick(){
       this.$refs["physicalSignsRemarkDialog"].showDialog(this.data, this.healthyData);
+    },
+    handleEditGuidanceClick(){
+      this.$refs["physicalSignsGuidanceDialog"].showDialog(this.data, this.healthyData);
     }
+
   }
 };
 </script>

@@ -100,6 +100,13 @@ public interface ISysRecipesPlanService
     Long getCusIdByOutId(String outId);
 
     /**
+     * 根据客户ID查询最后一天食谱计划
+     * @param customerId
+     * @return
+     */
+    SysRecipesPlan getLastDayRecipesPlan(Long customerId);
+
+    /**
      * 通过outId查询食谱计划简要
      * @param outId
      * @return

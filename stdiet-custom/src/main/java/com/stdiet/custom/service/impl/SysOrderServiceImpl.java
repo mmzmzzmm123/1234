@@ -188,18 +188,27 @@ public class SysOrderServiceImpl implements ISysOrderService {
         sysOrder.setUpdateBy(SecurityUtils.getUsername());
         sysOrder.setUpdateTime(DateUtils.getNowDate());
         //体验单
-        /*if("2".equals(sysOrder.getOrderType())){
-
-        }*/
-
+        if("2".equals(sysOrder.getOrderType())){
+            sysOrder.setAfterSaleId(null);
+            sysOrder.setNutritionistId(null);
+            sysOrder.setNutriAssisId(null);
+        }
+        //提成单
+        if(sysOrder.getAfterSaleCommissOrder().intValue() == 1){
+            sysOrder.setAfterSaleId(null);
+            sysOrder.setNutritionistId(null);
+            sysOrder.setNutriAssisId(null);
+            sysOrder.setPlannerId(null);
+            sysOrder.setPlannerAssisId(null);
+            sysOrder.setOperatorId(null);
+            sysOrder.setOperatorAssisId(null);
+        }
         //更新订单
         int row = sysOrderMapper.updateSysOrder(sysOrder);
         // 审核后的订单才生成食谱
-        if (row > 0 && oldSysOrder.getReviewStatus().equals("no") && sysOrder.getReviewStatus().equals("yes")) {
+        if (row > 0 && isNeedRegenerateRecipesPlan(oldSysOrder, sysOrder)) {
             //异步更新食谱计划
-            if (isNeedRegenerateRecipesPlan(oldSysOrder, sysOrder)) {
-                sysRecipesPlanService.regenerateRecipesPlan(sysOrder.getOrderId());
-            }
+            sysRecipesPlanService.regenerateRecipesPlan(sysOrder.getOrderId());
         }
         return row;
     }
@@ -212,6 +221,9 @@ public class SysOrderServiceImpl implements ISysOrderService {
      * @return
      */
     private boolean isNeedRegenerateRecipesPlan(SysOrder oldSysOrder, SysOrder newSysOrder) {
+        if(oldSysOrder.getReviewStatus().equals("no") && newSysOrder.getReviewStatus().equals("yes")){
+            return true;
+        }
         if (oldSysOrder.getServeTimeId() != null && newSysOrder.getServeTimeId() != null && oldSysOrder.getServeTimeId().intValue() != newSysOrder.getServeTimeId().intValue()) {
             return true;
         }

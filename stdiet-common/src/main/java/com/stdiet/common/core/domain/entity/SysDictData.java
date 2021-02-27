@@ -9,6 +9,8 @@ import com.stdiet.common.annotation.Excel.ColumnType;
 import com.stdiet.common.constant.UserConstants;
 import com.stdiet.common.core.domain.BaseEntity;
 
+import java.util.List;
+
 /**
  * 字典数据表 sys_dict_data
  * 
@@ -34,8 +36,10 @@ public class SysDictData extends BaseEntity
     @Excel(name = "字典键值")
     private String dictValue;
 
-    /** 字典类型 */
-    @Excel(name = "字典类型")
+    private List<String> dictValueList;
+
+        /** 字典类型 */
+        @Excel(name = "字典类型")
     private String dictType;
 
     /** 样式属性（其他样式扩展） */
@@ -153,7 +157,15 @@ public class SysDictData extends BaseEntity
     {
         this.status = status;
     }
-    
+
+    public List<String> getDictValueList() {
+        return dictValueList;
+    }
+
+    public void setDictValueList(List<String> dictValueList) {
+        this.dictValueList = dictValueList;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)

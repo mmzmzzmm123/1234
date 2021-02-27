@@ -112,6 +112,7 @@
         <result property="bloodData"    column="blood_data"    />
         <result property="moistureDate"    column="moisture_date"    />
         <result property="remark" column="remark"></result>
+        <result property="guidance"    column="guidance"    />
         <result property="createTime"    column="create_time"    />
         <result property="createBy"    column="create_by"    />
         <result property="updateTime"    column="update_time"    />
@@ -123,7 +124,7 @@
 
     <sql id="selectSysCustomerHealthyVo">
         select sch.id, customer_id, conditioning_project_id, sex, age, weight, tall, condiment, other_condiment, cooking_style, cooking_style_rate, wash_vegetables_style, other_wash_vegetables_style, breakfast_type, breakfast_food, lunch_type, dinner, vegetable_rate, common_meat, dinner_time, supper_num, supper_food, diet_hot_and_cold, diet_flavor, vegetables_num, vegetables_rate_type, fruits_num, fruits_time, fruits_rate, rice_num, rice_full, eating_speed, snacks, other_snacks, health_products_flag, health_products_brand, health_products_name, health_products_week_rate, health_products_day_rate, water_num, water_type, water_habit, drinks_num, drink_wine_flag, drink_wine_classify, other_wine_classify, drink_wine_amount, smoke_flag, smoke_rate, second_smoke, work_industry, work_type, defecation_num, other_defecation_num, defecation_time, defecation_shape, defecation_smell, defecation_speed, defecation_color, motion_num, motion_duration, motion_time, aerobic_motion_classify, anaerobic_motion_classify, anaerobic_aerobic_motion_classify, other_motion_classify, motion_field, other_motion_field, sleep_time, sleep_quality, sleep_drug_flag, sleep_drug, stayup_late_flag, stayup_late_week_num, family_illness_history, other_family_illness_history, operation_history, other_operation_history, near_operation_flag, recoverye_situation, long_eat_drug_flag, long_eat_drug_classify, other_long_eat_drug_classify, allergy_flag, allergy_situation, allergen, other_allergen, medical_report, medical_report_name,
-        position,experience,rebound,difficulty,crux,dishes_ingredient,make_food_type,physical_signs_id,other_physical_signs,blood_data,moisture_date,sch.remark,
+        position,experience,rebound,difficulty,crux,dishes_ingredient,make_food_type,physical_signs_id,other_physical_signs,blood_data,moisture_date,sch.remark,sch.guidance,
         sch.create_time, sch.create_by,sch. update_time, sch.update_by, sch.del_flag
     </sql>
 
@@ -261,6 +262,7 @@
             <if test="bloodData != null">blood_data,</if>
             <if test="moistureDate != null">moisture_date,</if>
             <if test="remark != null">remark,</if>
+            <if test="guidance != null">guidance,</if>
             <if test="createTime != null">create_time,</if>
             <if test="createBy != null">create_by,</if>
             <if test="updateTime != null">update_time,</if>
@@ -369,6 +371,7 @@
             <if test="bloodData != null">#{bloodData},</if>
             <if test="moistureDate != null">#{moistureDate},</if>
             <if test="remark != null">#{remark},</if>
+            <if test="guidance != null">#{guidance},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="createBy != null">#{createBy},</if>
             <if test="updateTime != null">#{updateTime},</if>
@@ -480,6 +483,7 @@
             <if test="bloodData != null">blood_data = #{bloodData},</if>
             <if test="moistureDate != null">moisture_date = #{moistureDate},</if>
             <if test="remark != null">remark = #{remark},</if>
+            <if test="guidance != null">guidance = #{guidance},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
@@ -516,5 +520,21 @@
     <update id="deleteCustomerHealthyByCustomerId" parameterType="Long">
         update sys_customer_healthy set del_flag = 1 where customer_id = #{customerId}
     </update>
+
+    <resultMap type="SysDictData" id="SysDictDataResult">
+        <id     property="dictCode"   column="dict_code"   />
+        <result property="dictSort"   column="dict_sort"   />
+        <result property="dictLabel"  column="dict_label"  />
+        <result property="dictValue"  column="dict_value"  />
+        <result property="dictType"   column="dict_type"   />
+    </resultMap>
+
+    <select id="selectDictDataByTypeAndValue" parameterType="SysDictData" resultMap="SysDictDataResult">
+        select dict_code, dict_sort, dict_label, dict_value, dict_type from sys_dict_data
+        where status = '0' and dict_type = #{dictType}
+        and dict_value in <foreach collection="dictValueList" item="item" index="index"
+                                   open="(" separator="," close=")">#{item}</foreach>
+        order by dict_sort asc
+    </select>
 
 </mapper>
