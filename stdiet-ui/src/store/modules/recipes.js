@@ -7,6 +7,7 @@ import {
   deleteDishesApi,
   addRecipesApi
 } from "@/api/custom/recipes";
+import { getRecipesPlan, updateRecipesPlan } from "@/api/custom/recipesPlan";
 import { getDicts } from "@/api/system/dict/data";
 
 const oriState = {
@@ -23,7 +24,8 @@ const oriState = {
   typeOptions: [],
   currentDay: -1,
   startNum: 0,
-  endNum: 0
+  endNum: 0,
+  reviewStatus: 0
 };
 
 const mutations = {
@@ -72,31 +74,54 @@ const mutations = {
 
 const actions = {
   async init({ commit, dispatch }, payload) {
-    return new Promise((res, rej) => {
-      // console.log(payload);
-      //
-      commit("updateStateData", payload);
-      //
-      getDicts("cus_cus_unit").then(response => {
-        commit("updateStateData", { cusUnitOptions: response.data });
-      });
-      getDicts("cus_cus_weight").then(response => {
-        commit("updateStateData", { cusWeightOptions: response.data });
-      });
-      getDicts("cus_dishes_type").then(response => {
-        commit("updateStateData", { typeOptions: response.data });
-      });
+    // console.log(payload);
+    const planResponse = await getRecipesPlan(payload.planId);
+    const {
+      startNumDay,
+      endNumDay,
+      recipesId,
+      cusId,
+      reviewStatus
+    } = planResponse.data;
+    commit("updateStateData", {
+      cusId,
+      recipesId,
+      reviewStatus,
+      planId: payload.planId,
+      startNum: startNumDay,
+      endNum: endNumDay
+    });
 
+    getDicts("cus_cus_unit").then(response => {
+      commit("updateStateData", { cusUnitOptions: response.data });
+    });
+    getDicts("cus_cus_weight").then(response => {
+      commit("updateStateData", { cusWeightOptions: response.data });
+    });
+    getDicts("cus_dishes_type").then(response => {
+      commit("updateStateData", { typeOptions: response.data });
+    });
+
+    return new Promise((res, rej) => {
       // 健康数据
-      if (payload.cusId) {
-        dispatch("getHealthyData", payload).catch(err => rej(err));
+      if (cusId) {
+        dispatch("getHealthyData", { cusId }).catch(err => rej(err));
       }
 
       // 食谱数据
-      if (payload.recipesId) {
-        dispatch("getRecipesInfo", payload).catch(err => rej(err));
+      if (recipesId) {
+        dispatch("getRecipesInfo", { recipesId }).catch(err => rej(err));
       }
     });
+  },
+  async updateReviewStatus({ commit, state }, payload) {
+    const response = await updateRecipesPlan({
+      id: state.planId,
+      reviewStatus: payload.reviewStatus
+    });
+    if (response.code === 200) {
+      commit("updateStateData", payload);
+    }
   },
   async getHealthyData({ commit }, payload) {
     commit("updateStateData", { healthDataLoading: true });
@@ -127,16 +152,14 @@ const actions = {
     const recipesDataResult = await getRecipesApi(payload.recipesId);
     let recipesData = [];
     if (recipesDataResult.code === 200) {
-      const { endNum, startNum } = state;
-      let length = null;
-      if (endNum && startNum) {
-        length = endNum - startNum;
-      }
+      const { endNum, startNum, recipesId } = state;
+      // 计算
+      let length = endNum - startNum;
       recipesData = recipesDataResult.data.reduce((outArr, dayData, idx) => {
-        if (!length || (length && length >= idx)) {
+        if (!recipesId || length >= idx) {
           outArr.push({
             id: dayData.id,
-            numDay: startNum ? startNum + idx : dayData.numDay,
+            numDay: !recipesId ? startNum + idx : dayData.numDay,
             dishes: dayData.dishes.reduce((arr, cur) => {
               if (
                 cur.dishesId > -1 &&

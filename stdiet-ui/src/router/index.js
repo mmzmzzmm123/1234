@@ -140,9 +140,10 @@ export const constantRoutes = [
     ]
   },
   {
-    path: "/recipes/build",
+    path: "/recipes/build/:name/:planId",
     component: resolve => require(["@/views/custom/recipesBuild"], resolve),
     name: "RecipiesBuild",
+    props: true,
     meta: { title: "食谱制作" },
     hidden: true
   },
