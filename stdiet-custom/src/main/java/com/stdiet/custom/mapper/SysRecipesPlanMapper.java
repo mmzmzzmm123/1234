@@ -93,4 +93,6 @@ public interface SysRecipesPlanMapper
     List<SysRecipesPlanListInfo> selectRecipesPlanListInfo(String outId);
 
     List<SysRecipesPlan> selectPlanListByCusId(Long cusId);
+
+    List<SysRecipesPlan> selectRecipesModelList(SysRecipesPlan sysRecipesPlan);
 }

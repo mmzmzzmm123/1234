@@ -137,4 +137,7 @@ public class SysRecipesPlan {
      */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
+
+    //    0-普通 1-模板
+    private Integer type;
 }

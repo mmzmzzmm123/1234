@@ -308,4 +308,8 @@ public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService {
         return sysRecipesPlanMapper.selectPlanListByCusId(cusId);
     }
 
+    public List<SysRecipesPlan> selectRecipesModelList(SysRecipesPlan sysRecipesPlan) {
+        return sysRecipesPlanMapper.selectRecipesModelList(sysRecipesPlan);
+    }
+
 }
