@@ -102,6 +102,12 @@ public class ByDayflowassessment extends BaseEntity {
     private Double kfz;
 
     /**
+     * 班级得分
+     */
+    @Excel(name = "班级得分")
+    private Double classdf;
+
+    /**
      * 扣分次数
      */
     @Excel(name = "扣分次数")
@@ -269,6 +275,7 @@ public class ByDayflowassessment extends BaseEntity {
                 .append("xnxq", getXnxq())
                 .append("bzid", getBzid())
                 .append("kfz", getKfz())
+                .append("classdf", getClassdf())
                 .append("kfcs", getKfcs())
                 .append("bzmf", getBzmf())
                 .append("zzdf", getZzdf())
@@ -302,5 +309,13 @@ public class ByDayflowassessment extends BaseEntity {
 
     public void setItems(String items) {
         this.items = items;
+    }
+
+    public Double getClassdf() {
+        return classdf;
+    }
+
+    public void setClassdf(Double classdf) {
+        this.classdf = classdf;
     }
 }

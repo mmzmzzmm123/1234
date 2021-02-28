@@ -68,6 +68,7 @@
         prop="classid"
         :formatter="classFormat"
       />
+      <el-table-column label="班级平均分" align="center" prop="classdf" />
       <el-table-column label="主班教师" align="center" prop="bzbh" :formatter="bzbhFormat" />
       <el-table-column label="配班教师" align="center" prop="pbbh" :formatter="pbbhFormat"/>
       <el-table-column label="助理教师" align="center" prop="zlbh" :formatter="zlbhFormat"/>
@@ -306,6 +307,7 @@ export default {
         zzdf: undefined,
         kfcs: undefined,
         pgdx: undefined,
+        classdf: undefined,
         createUserid: undefined,
       },
       // 表单参数
@@ -485,6 +487,7 @@ export default {
         zzdf: undefined,
         kfcs: undefined,
         pgdx: undefined,
+        classdf: undefined,
         createUserid: undefined,
         createTime: undefined,
       };
