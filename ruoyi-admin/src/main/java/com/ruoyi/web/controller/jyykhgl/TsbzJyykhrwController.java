@@ -72,6 +72,7 @@ public class TsbzJyykhrwController extends BaseController {
     @Log(title = "教研员考核任务", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody TsbzJyykhrw tsbzJyykhrw) {
+        tsbzJyykhrw.setDeptId(Long.valueOf(tsbzJyykhrw.getKhbm()));
         return toAjax(tsbzJyykhrwService.insertTsbzJyykhrw(tsbzJyykhrw));
     }
 

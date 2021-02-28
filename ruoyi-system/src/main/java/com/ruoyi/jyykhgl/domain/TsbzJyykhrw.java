@@ -54,6 +54,10 @@ public class TsbzJyykhrw extends BaseEntity
     @Excel(name = "任务说明")
     private String rwsm;
 
+    /** 所属部门 */
+    @Excel(name = "所属部门")
+    private Long deptId;
+
     public void setId(Long id) 
     {
         this.id = id;
@@ -145,6 +149,16 @@ public class TsbzJyykhrw extends BaseEntity
         return rwsm;
     }
 
+    public void setDeptId(Long deptId)
+    {
+        this.deptId = deptId;
+    }
+
+    public Long getDeptId()
+    {
+        return deptId;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
@@ -159,6 +173,7 @@ public class TsbzJyykhrw extends BaseEntity
             .append("isdel", getIsdel())
             .append("createTime", getCreateTime())
             .append("rwsm", getRwsm())
+                .append("deptId", getDeptId())
             .toString();
     }
 }

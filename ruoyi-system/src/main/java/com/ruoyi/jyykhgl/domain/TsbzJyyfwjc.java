@@ -3,6 +3,7 @@ package com.ruoyi.jyykhgl.domain;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.ruoyi.common.core.domain.entity.SysDept;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
@@ -44,7 +45,7 @@ public class TsbzJyyfwjc extends BaseEntity {
      * 服务学校
      */
     @Excel(name = "服务学校")
-    private String fwxx;
+    private Long fwxx;
 
     /**
      * 服务时间
@@ -72,6 +73,8 @@ public class TsbzJyyfwjc extends BaseEntity {
     private Long deptId;
 
     private TsbzJyykhrw tsbzJyykhrw;
+
+    private SysDept sysDept;
 
     public void setId(Long id) {
         this.id = id;
@@ -105,11 +108,11 @@ public class TsbzJyyfwjc extends BaseEntity {
         return zt;
     }
 
-    public void setFwxx(String fwxx) {
+    public void setFwxx(Long fwxx) {
         this.fwxx = fwxx;
     }
 
-    public String getFwxx() {
+    public Long getFwxx() {
         return fwxx;
     }
 
@@ -153,6 +156,14 @@ public class TsbzJyyfwjc extends BaseEntity {
         return tsbzJyykhrw;
     }
 
+    public void setSysDept(SysDept sysDept) {
+        this.sysDept = sysDept;
+    }
+
+    public SysDept getSysDept() {
+        return sysDept;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
@@ -167,6 +178,7 @@ public class TsbzJyyfwjc extends BaseEntity {
                 .append("deptId", getDeptId())
                 .append("createTime", getCreateTime())
                 .append("tsbzJyykhrw", getTsbzJyykhrw())
+                .append("sysDept",getSysDept())
                 .toString();
     }
 }

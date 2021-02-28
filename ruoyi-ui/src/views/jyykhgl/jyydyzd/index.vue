@@ -118,7 +118,7 @@
           <span>{{ parseTime(scope.row.dysj, "{y}-{m}-{d}") }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="调研学校" align="center" prop="dyxx" />
+      <el-table-column label="调研学校" align="center" prop="sysDept.deptName" />
       <el-table-column label="调研对象" align="center" prop="dydx" />
       <el-table-column
         label="操作"
@@ -203,11 +203,14 @@
           </el-date-picker>
         </el-form-item>
         <el-form-item label="调研学校" prop="dyxx">
-          <el-input
-            v-model="form.dyxx"
-            type="textarea"
-            placeholder="请输入内容"
-          />
+          <el-select v-model="form.dyxx" filterable placeholder="请选择调研学校">
+                <el-option
+                  v-for="dict in deptOptions"
+                  :key="dict.deptId"
+                  :label="dict.deptName"
+                  :value="dict.deptId"
+                ></el-option>
+              </el-select>
         </el-form-item>
         <el-form-item label="调研对象" prop="dydx">
           <el-input
@@ -234,6 +237,7 @@ import {
   updateJyydyzd,
 } from "@/api/jyykhgl/jyydyzd";
 import { listJyykhrw } from "@/api/jyykhgl/jyykhrw";
+import { listDept, getDept } from "@/api/system/dept";
 
 export default {
   name: "Jyydyzd",
@@ -261,6 +265,8 @@ export default {
       jyykhrwList: [],
       //任务内容
       rwnrOptions: [],
+            // 部门选项
+      deptOptions: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -275,6 +281,9 @@ export default {
         deptId: null,
         createUserid: null,
       },
+      dept_queryParams: {
+        parentId: 300,
+      },
       // 查询参数
       queryParams_khrw: {
         rwlx: "04",
@@ -282,17 +291,34 @@ export default {
       // 表单参数
       form: {},
       // 表单校验
-      rules: {},
+      rules: {
+        rwid: [
+          { required: true, message: "考核任务不能为空", trigger: "blur" },
+        ],
+        rwnrlx: [
+          { required: true, message: "任务内容不能为空", trigger: "blur" },
+        ],
+        dyxx: [
+          { required: true, message: "调研学校不能为空", trigger: "blur" },
+        ],
+      },
     };
   },
   created() {
     this.getList();
+    this.getDeptList();
     this.getKhrwList();
     this.getDicts("sys_dm_dyzdrwnr").then((response) => {
       this.rwnrOptions = response.data;
     });
   },
   methods: {
+        // 查询部门
+    getDeptList() {
+      listDept(this.dept_queryParams).then((response) => {
+        this.deptOptions = response.data;
+      });
+    },
     // 任务类型字典翻译
     rwnrFormat(row, column) {
       return this.selectDictLabel(this.rwnrOptions, row.rwnrlx);

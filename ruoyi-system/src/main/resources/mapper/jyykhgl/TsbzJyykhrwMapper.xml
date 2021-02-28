@@ -16,25 +16,28 @@
         <result property="isdel" column="isdel"/>
         <result property="createTime" column="create_time"/>
         <result property="rwsm" column="rwsm"/>
+        <result property="deptId"    column="dept_id"    />
     </resultMap>
 
     <sql id="selectTsbzJyykhrwVo">
-        select id, rwmc, rwlx, rwnr, khbm, khzq, slyq, fsbx, isdel, create_time, rwsm from tsbz_jyykhrw
+        select u.id, u.rwmc, u.rwlx, u.rwnr, u.khbm, u.khzq, u.slyq, u.fsbx, u.isdel, u.create_time, u.rwsm, u.dept_id from tsbz_jyykhrw u
+        left join sys_dept d on u.dept_id = d.dept_id
     </sql>
 
     <select id="selectTsbzJyykhrwList" parameterType="TsbzJyykhrw" resultMap="TsbzJyykhrwResult">
         <include refid="selectTsbzJyykhrwVo"/>
-        <where>
-            <if test="rwmc != null  and rwmc != ''">and rwmc = #{rwmc}</if>
-            <if test="rwlx != null  and rwlx != ''">and rwlx = #{rwlx}</if>
-            <if test="rwnr != null  and rwnr != ''">and rwnr = #{rwnr}</if>
-            <if test="khbm != null  and khbm != ''">and khbm = #{khbm}</if>
-            <if test="khzq != null  and khzq != ''">and khzq = #{khzq}</if>
-            <if test="slyq != null  and slyq != ''">and slyq = #{slyq}</if>
-            <if test="fsbx != null  and fsbx != ''">and fsbx = #{fsbx}</if>
-            <if test="isdel != null  and isdel != ''">and isdel = #{isdel}</if>
-            <if test="rwsm != null  and rwsm != ''">and rwsm = #{rwsm}</if>
-        </where>
+        where u.isdel ='N'
+            <if test="rwmc != null  and rwmc != ''">and u.rwmc = #{rwmc}</if>
+            <if test="rwlx != null  and rwlx != ''">and u.rwlx = #{rwlx}</if>
+            <if test="rwnr != null  and rwnr != ''">and u.rwnr = #{rwnr}</if>
+            <if test="khbm != null  and khbm != ''">and u.khbm = #{khbm}</if>
+            <if test="khzq != null  and khzq != ''">and u.khzq = #{khzq}</if>
+            <if test="slyq != null  and slyq != ''">and u.slyq = #{slyq}</if>
+            <if test="fsbx != null  and fsbx != ''">and u.fsbx = #{fsbx}</if>
+            <if test="rwsm != null  and rwsm != ''">and u.rwsm = #{rwsm}</if>
+
+            <!-- 数据范围过滤 -->
+            ${params.dataScope}
     </select>
 
     <select id="selectTsbzJyykhrwById" parameterType="Long" resultMap="TsbzJyykhrwResult">
@@ -55,6 +58,7 @@
             <if test="isdel != null">isdel,</if>
             <if test="createTime != null">create_time,</if>
             <if test="rwsm != null">rwsm,</if>
+            <if test="deptId != null">dept_id,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="rwmc != null">#{rwmc},</if>
@@ -67,6 +71,7 @@
             <if test="isdel != null">#{isdel},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="rwsm != null">#{rwsm},</if>
+            <if test="deptId != null">#{deptId},</if>
         </trim>
     </insert>
 
@@ -83,6 +88,7 @@
             <if test="isdel != null">isdel = #{isdel},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="rwsm != null">rwsm = #{rwsm},</if>
+            <if test="deptId != null">dept_id = #{deptId},</if>
         </trim>
         where id = #{id}
     </update>

@@ -605,7 +605,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="单位名称" prop="deptId">
-              <el-select v-model="form.deptId" placeholder="请选择教育类型">
+              <el-select v-model="form.deptId" placeholder="请选择单位名称">
                 <el-option
                   v-for="dict in deptOptions"
                   :key="dict.deptId"

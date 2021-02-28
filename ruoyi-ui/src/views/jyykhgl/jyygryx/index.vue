@@ -278,7 +278,14 @@ export default {
       // 表单参数
       form: {},
       // 表单校验
-      rules: {},
+      rules: {
+        rwid: [
+          { required: true, message: "考核任务不能为空", trigger: "blur" },
+        ],
+        rwnrlx: [
+          { required: true, message: "任务内容不能为空", trigger: "blur" },
+        ],
+      },
     };
   },
   created() {

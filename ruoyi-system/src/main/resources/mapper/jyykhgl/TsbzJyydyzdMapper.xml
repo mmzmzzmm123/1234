@@ -17,6 +17,7 @@
         <result property="createUserid" column="create_userid"/>
         <result property="createTime" column="create_time"/>
         <association property="tsbzJyykhrw" column="rwid" javaType="TsbzJyykhrw" resultMap="TsbzJyykhrwResult"/>
+        <association property="sysDept" column="dyxx" javaType="SysDept" resultMap="deptResult"/>
     </resultMap>
 
     <resultMap type="TsbzJyykhrw" id="TsbzJyykhrwResult">
@@ -33,9 +34,19 @@
         <result property="rwsm" column="rwsm"/>
     </resultMap>
 
+    <resultMap id="deptResult" type="SysDept">
+        <id property="deptId" column="dept_id"/>
+        <result property="parentId" column="parent_id"/>
+        <result property="deptName" column="dept_name"/>
+        <result property="orderNum" column="order_num"/>
+        <result property="leader" column="leader"/>
+        <result property="status" column="dept_status"/>
+    </resultMap>
+
     <sql id="selectTsbzJyydyzdVo">
-        select a.id, a.rwid, a.rwnrlx, a.dymc, a.dyzt, a.dysj, a.dyxx, a.dydx, a.dept_id, a.create_userid, a.create_time,b.rwmc,b.rwlx from tsbz_jyydyzd a
+        select a.id, a.rwid, a.rwnrlx, a.dymc, a.dyzt, a.dysj, a.dyxx, a.dydx, a.dept_id, a.create_userid, a.create_time,b.rwmc,b.rwlx,c.dept_name from tsbz_jyydyzd a
         left join tsbz_jyykhrw b on a.rwid=b.id
+		left join sys_dept c on a.dyxx=c.dept_id
     </sql>
 
     <select id="selectTsbzJyydyzdList" parameterType="TsbzJyydyzd" resultMap="TsbzJyydyzdResult">
