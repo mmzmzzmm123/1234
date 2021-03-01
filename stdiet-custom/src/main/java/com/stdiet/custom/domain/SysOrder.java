@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
+import com.alibaba.fastjson.JSONArray;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import com.stdiet.common.annotation.Excel;
@@ -268,6 +269,9 @@ public class SysOrder extends BaseEntity {
 
     //拆分比例，如：1,9就是按照比例10%、90%拆分，非持久化字段
     private String nutritionistRate;
+
+    //订单查询时的订单类型二维数组
+    private JSONArray searchOrderTypeArray;
 
 
 

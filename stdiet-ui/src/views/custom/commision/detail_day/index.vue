@@ -48,6 +48,21 @@
         >
         </el-date-picker>
       </el-form-item>
+      <el-form-item label="订单状态" prop="reviewStatus">
+        <el-select
+          v-model="queryParams.reviewStatus"
+          placeholder="请选择审核状态"
+          clearable
+          size="small"
+        >
+          <el-option
+            v-for="dict in reviewStatusOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item>
         <el-button
           type="cyan"
@@ -242,6 +257,8 @@ export default {
       //
       searchUserIdOptions: [],
       //
+      // 审核状态
+      reviewStatusOptions: [],
       options: {},
       // 查询参数
       queryParams: {
@@ -249,6 +266,7 @@ export default {
         pageSize: 20,
         userId: null,
         postId: null,
+        reviewStatus: "yes",
       },
       sendCommissionPlanTable: false,
       sendCommissionPlan: {},
@@ -290,6 +308,9 @@ export default {
         (a, b) => a.dictValue - b.dictValue
       );
       this.searchUserIdOptions = this.totalUserIdOptions.slice();
+    });
+    this.getDicts("cus_review_status").then((response) => {
+      this.reviewStatusOptions = response.data;
     });
   },
   methods: {

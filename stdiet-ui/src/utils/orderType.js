@@ -25,7 +25,7 @@ export const orderCountTypeArray = [
   }
 ]
 
-//订单类型
+//订单类型（订单新增）
 export const orderTypeArray = [
   {
     value: 0,

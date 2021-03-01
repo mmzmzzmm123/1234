@@ -37,7 +37,7 @@
         </el-col>
         <el-col :span="8">
           <el-form-item label="成交金额" prop="amount">
-            <el-input v-model="form.amount" placeholder="请输入金额" />
+            <el-input v-model.trim="form.amount" placeholder="请输入金额" />
           </el-form-item>
         </el-col>
         <el-col :span="8">
