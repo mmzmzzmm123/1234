@@ -39,7 +39,7 @@ public class SysDeptController extends BaseController
     /**
      * 获取部门列表
      */
-    @PreAuthorize("@ss.hasPermi('system:dept:list')" + "||@ss.hasPermi('gbxxgl:gbxrzw:list')")
+    @PreAuthorize("@ss.hasPermi('system:dept:list')" + "||@ss.hasPermi('gbxxgl:gbxrzw:list')"+ "||@ss.hasPermi('jyykhgl:jyyfwjc:list')"+ "||@ss.hasPermi('jyykhgl:jyydyzd:list')")
     @GetMapping("/list")
     public AjaxResult list(SysDept dept)
     {

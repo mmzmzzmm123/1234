@@ -96,7 +96,6 @@ public class TsbzJxjscjController extends BaseController {
             i++;
             //throw new CustomException("导入数据非见习教师");
             if (list.size() == 0 || StringUtils.isNull(list)) {
-                System.out.println(i + ":" + tsbzJxjscj);
                 temp.add(i);
             }
             else{
@@ -110,8 +109,6 @@ public class TsbzJxjscjController extends BaseController {
                 }
             }
         }
-        System.out.println(temp+"=====================");
-
         return AjaxResult.success("Excel表中第" + temp + "行数据非见习教师," + "\n" + "成功更新或插入" + String.valueOf(iCount) + "条教师数据", null);
     }
 
