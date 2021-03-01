@@ -63,13 +63,11 @@ public class TsbzJyyfwjc extends BaseEntity {
     /**
      * 创建人
      */
-    @Excel(name = "创建人")
     private Long createUserid;
 
     /**
      * 部门编号
      */
-    @Excel(name = "部门编号")
     private Long deptId;
 
     private TsbzJyykhrw tsbzJyykhrw;

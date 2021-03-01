@@ -253,7 +253,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="考核部门" prop="khbm">
+        <!-- <el-form-item label="考核部门" prop="khbm">
           <el-select v-model="form.khbm" placeholder="请选择考核部门">
             <el-option
               v-for="dict in khbmOptions"
@@ -262,7 +262,7 @@
               :value="dict.dictValue"
             ></el-option>
           </el-select>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="考核周期" prop="khzq">
           <el-input v-model="form.khzq" placeholder="请输入考核周期" />
         </el-form-item>

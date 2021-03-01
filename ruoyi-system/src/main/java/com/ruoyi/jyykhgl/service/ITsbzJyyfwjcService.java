@@ -2,6 +2,7 @@ package com.ruoyi.jyykhgl.service;
 
 import java.util.List;
 
+import com.ruoyi.jxzxkhgl.domain.TsbzDsjbxx;
 import com.ruoyi.jyykhgl.domain.TsbzJyyfwjc;
 
 /**
@@ -58,4 +59,13 @@ public interface ITsbzJyyfwjcService {
      * @return 结果
      */
     public int deleteTsbzJyyfwjcById(Long id);
+
+    /**
+     * 导入数据
+     *
+     * @param tsbzJyyfwjcList 用户数据列表
+     * @param userId
+     * @return 结果
+     */
+    public String importJyyFwjc(List<TsbzJyyfwjc> tsbzJyyfwjcList,Long userId);
 }

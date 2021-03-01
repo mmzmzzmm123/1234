@@ -58,4 +58,13 @@ public interface TsbzJyyfwjcMapper {
      * @return 结果
      */
     public int deleteTsbzJyyfwjcByIds(Long[] ids);
+
+    /**
+     * 导入数据
+     *
+     * @param tsbzJyyfwjcList 用户数据列表
+     * @param userId
+     * @return 结果
+     */
+    public String importJyyFwjc(List<TsbzJyyfwjc> tsbzJyyfwjcList,Long userId);
 }

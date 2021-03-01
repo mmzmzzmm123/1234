@@ -51,3 +51,11 @@ export function exportJyyfwjc(query) {
     params: query
   })
 }
+
+// 下载用户导入模板
+export function importTemplate() {
+  return request({
+      url: '/jyykhgl/jyyfwjc/importTemplate',
+      method: 'get'
+  })
+}

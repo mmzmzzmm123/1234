@@ -2,7 +2,11 @@ package com.ruoyi.web.controller.jyykhgl;
 
 import java.util.List;
 
+import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.common.utils.ServletUtils;
+import com.ruoyi.framework.web.service.TokenService;
+import com.ruoyi.jxzxkhgl.domain.TsbzDsjbxx;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +25,7 @@ import com.ruoyi.jyykhgl.domain.TsbzJyyfwjc;
 import com.ruoyi.jyykhgl.service.ITsbzJyyfwjcService;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 服务基层（教研员）Controller
@@ -33,6 +38,8 @@ import com.ruoyi.common.core.page.TableDataInfo;
 public class TsbzJyyfwjcController extends BaseController {
     @Autowired
     private ITsbzJyyfwjcService tsbzJyyfwjcService;
+    @Autowired
+    private TokenService tokenService;
 
     /**
      * 查询服务基层（教研员）列表
@@ -96,5 +103,27 @@ public class TsbzJyyfwjcController extends BaseController {
     @DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(tsbzJyyfwjcService.deleteTsbzJyyfwjcByIds(ids));
+    }
+
+    @GetMapping("/importTemplate")
+    public AjaxResult importTemplate()
+    {
+        ExcelUtil<TsbzJyyfwjc> util = new ExcelUtil<TsbzJyyfwjc>(TsbzJyyfwjc.class);
+        return util.importTemplateExcel("基层服务数据");
+    }
+
+    /**
+     * 导入导师基本信息列表
+     */
+    @Log(title = "服务基层管理", businessType = BusinessType.IMPORT)
+    @PreAuthorize("@ss.hasPermi('jyykhgl:jyyfwjc:import')")
+    @PostMapping("/importData")
+    public AjaxResult importData(MultipartFile file) throws Exception
+    {
+        ExcelUtil<TsbzJyyfwjc> util = new ExcelUtil<TsbzJyyfwjc>(TsbzJyyfwjc.class);
+        List<TsbzJyyfwjc> tsbzJyyfwjcsList = util.importExcel(file.getInputStream());
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+        String message = tsbzJyyfwjcService.importJyyFwjc(tsbzJyyfwjcsList,loginUser.getUser().getUserId());
+        return AjaxResult.success(message);
     }
 }

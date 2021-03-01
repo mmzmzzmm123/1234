@@ -2,7 +2,10 @@ package com.ruoyi.jyykhgl.service.impl;
 
 import java.util.List;
 
+import com.ruoyi.common.exception.CustomException;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.jxzxkhgl.domain.TsbzDsjbxx;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.jyykhgl.mapper.TsbzJyyfwjcMapper;
@@ -85,5 +88,29 @@ public class TsbzJyyfwjcServiceImpl implements ITsbzJyyfwjcService {
     @Override
     public int deleteTsbzJyyfwjcById(Long id) {
         return tsbzJyyfwjcMapper.deleteTsbzJyyfwjcById(id);
+    }
+
+    /**
+     * 导入数据
+     *
+     * @param tsbzJyyfwjcList 用户数据列表
+     * @param userId
+     * @return 结果
+     */
+    @Override
+    public String importJyyFwjc(List<TsbzJyyfwjc> tsbzJyyfwjcList, Long userId) {
+        if (StringUtils.isNull(tsbzJyyfwjcList) || tsbzJyyfwjcList.size() == 0) {
+            throw new CustomException("导入数据不能为空！");
+        }
+        int successNum = 0;
+        StringBuilder successMsg = new StringBuilder();
+        for (TsbzJyyfwjc tsbzJyyfwjc : tsbzJyyfwjcList) {
+            tsbzJyyfwjc.setCreateUserid(userId);
+            this.insertTsbzJyyfwjc(tsbzJyyfwjc);
+            successNum++;
+            successMsg.append("<br/>" + successNum + "、名称 " + tsbzJyyfwjc.getRwid() + " 导入成功");
+        }
+        successMsg.insert(0, "恭喜您，数据已全部导入成功！共 " + successNum + " 条，数据如下：");
+        return successMsg.toString();
     }
 }
