@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.benyi.mapper.ByCustomerMapper">
+
+    <resultMap type="ByCustomer" id="ByCustomerResult">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="sflx" column="sflx"/>
+        <result property="lxdh" column="lxdh"/>
+        <result property="wx" column="wx"/>
+        <result property="dy" column="dy"/>
+        <result property="qt" column="qt"/>
+        <result property="schoolname" column="schoolname"/>
+        <result property="rs" column="rs"/>
+        <result property="sheng" column="sheng"/>
+        <result property="shengid" column="shengid"/>
+        <result property="shi" column="shi"/>
+        <result property="shiid" column="shiid"/>
+        <result property="khly" column="khly"/>
+        <result property="createUserid" column="create_userid"/>
+        <result property="bz" column="bz"/>
+        <result property="zhgj" column="zhgj"/>
+        <result property="state" column="state"/>
+        <result property="xfxm" column="xfxm"/>
+        <result property="xfjz" column="xfjz"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <sql id="selectByCustomerVo">
+        select id, name, sflx, lxdh, wx, dy, qt, schoolname, rs, sheng, shengid, shi, shiid, khly, create_userid, bz, zhgj, state, xfxm, xfjz, create_time from by_customer
+    </sql>
+
+    <select id="selectByCustomerList" parameterType="ByCustomer" resultMap="ByCustomerResult">
+        <include refid="selectByCustomerVo"/>
+        <where>
+            <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
+            <if test="sflx != null  and sflx != ''">and sflx = #{sflx}</if>
+            <if test="lxdh != null  and lxdh != ''">and lxdh = #{lxdh}</if>
+            <if test="wx != null  and wx != ''">and wx = #{wx}</if>
+            <if test="dy != null  and dy != ''">and dy = #{dy}</if>
+            <if test="qt != null  and qt != ''">and qt = #{qt}</if>
+            <if test="schoolname != null  and schoolname != ''">and schoolname like concat('%', #{schoolname}, '%')</if>
+            <if test="rs != null ">and rs = #{rs}</if>
+            <if test="sheng != null  and sheng != ''">and sheng = #{sheng}</if>
+            <if test="shengid != null  and shengid != ''">and shengid = #{shengid}</if>
+            <if test="shi != null  and shi != ''">and shi = #{shi}</if>
+            <if test="shiid != null  and shiid != ''">and shiid = #{shiid}</if>
+            <if test="khly != null  and khly != ''">and khly = #{khly}</if>
+            <if test="createUserid != null ">and create_userid = #{createUserid}</if>
+            <if test="bz != null  and bz != ''">and bz = #{bz}</if>
+            <if test="zhgj != null  and zhgj != ''">and zhgj = #{zhgj}</if>
+            <if test="state != null  and state != ''">and state = #{state}</if>
+            <if test="xfxm != null  and xfxm != ''">and xfxm = #{xfxm}</if>
+            <if test="xfjz != null  and xfjz != ''">and xfjz = #{xfjz}</if>
+        </where>
+    </select>
+
+    <select id="selectByCustomerById" parameterType="Long" resultMap="ByCustomerResult">
+        <include refid="selectByCustomerVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertByCustomer" parameterType="ByCustomer">
+        insert into by_customer
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null ">id,</if>
+            <if test="name != null  and name != ''">name,</if>
+            <if test="sflx != null  and sflx != ''">sflx,</if>
+            <if test="lxdh != null  and lxdh != ''">lxdh,</if>
+            <if test="wx != null  and wx != ''">wx,</if>
+            <if test="dy != null  and dy != ''">dy,</if>
+            <if test="qt != null  and qt != ''">qt,</if>
+            <if test="schoolname != null  and schoolname != ''">schoolname,</if>
+            <if test="rs != null ">rs,</if>
+            <if test="sheng != null  and sheng != ''">sheng,</if>
+            <if test="shengid != null  and shengid != ''">shengid,</if>
+            <if test="shi != null  and shi != ''">shi,</if>
+            <if test="shiid != null  and shiid != ''">shiid,</if>
+            <if test="khly != null  and khly != ''">khly,</if>
+            <if test="createUserid != null ">create_userid,</if>
+            <if test="bz != null  and bz != ''">bz,</if>
+            <if test="zhgj != null  and zhgj != ''">zhgj,</if>
+            <if test="state != null  and state != ''">state,</if>
+            <if test="xfxm != null  and xfxm != ''">xfxm,</if>
+            <if test="xfjz != null  and xfjz != ''">xfjz,</if>
+            <if test="createTime != null ">create_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null ">#{id},</if>
+            <if test="name != null  and name != ''">#{name},</if>
+            <if test="sflx != null  and sflx != ''">#{sflx},</if>
+            <if test="lxdh != null  and lxdh != ''">#{lxdh},</if>
+            <if test="wx != null  and wx != ''">#{wx},</if>
+            <if test="dy != null  and dy != ''">#{dy},</if>
+            <if test="qt != null  and qt != ''">#{qt},</if>
+            <if test="schoolname != null  and schoolname != ''">#{schoolname},</if>
+            <if test="rs != null ">#{rs},</if>
+            <if test="sheng != null  and sheng != ''">#{sheng},</if>
+            <if test="shengid != null  and shengid != ''">#{shengid},</if>
+            <if test="shi != null  and shi != ''">#{shi},</if>
+            <if test="shiid != null  and shiid != ''">#{shiid},</if>
+            <if test="khly != null  and khly != ''">#{khly},</if>
+            <if test="createUserid != null ">#{createUserid},</if>
+            <if test="bz != null  and bz != ''">#{bz},</if>
+            <if test="zhgj != null  and zhgj != ''">#{zhgj},</if>
+            <if test="state != null  and state != ''">#{state},</if>
+            <if test="xfxm != null  and xfxm != ''">#{xfxm},</if>
+            <if test="xfjz != null  and xfjz != ''">#{xfjz},</if>
+            <if test="createTime != null ">#{createTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateByCustomer" parameterType="ByCustomer">
+        update by_customer
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null  and name != ''">name = #{name},</if>
+            <if test="sflx != null  and sflx != ''">sflx = #{sflx},</if>
+            <if test="lxdh != null  and lxdh != ''">lxdh = #{lxdh},</if>
+            <if test="wx != null  and wx != ''">wx = #{wx},</if>
+            <if test="dy != null  and dy != ''">dy = #{dy},</if>
+            <if test="qt != null  and qt != ''">qt = #{qt},</if>
+            <if test="schoolname != null  and schoolname != ''">schoolname = #{schoolname},</if>
+            <if test="rs != null ">rs = #{rs},</if>
+            <if test="sheng != null  and sheng != ''">sheng = #{sheng},</if>
+            <if test="shengid != null  and shengid != ''">shengid = #{shengid},</if>
+            <if test="shi != null  and shi != ''">shi = #{shi},</if>
+            <if test="shiid != null  and shiid != ''">shiid = #{shiid},</if>
+            <if test="khly != null  and khly != ''">khly = #{khly},</if>
+            <if test="createUserid != null ">create_userid = #{createUserid},</if>
+            <if test="bz != null  and bz != ''">bz = #{bz},</if>
+            <if test="zhgj != null  and zhgj != ''">zhgj = #{zhgj},</if>
+            <if test="state != null  and state != ''">state = #{state},</if>
+            <if test="xfxm != null  and xfxm != ''">xfxm = #{xfxm},</if>
+            <if test="xfjz != null  and xfjz != ''">xfjz = #{xfjz},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteByCustomerById" parameterType="Long">
+        delete from by_customer where id = #{id}
+    </delete>
+
+    <delete id="deleteByCustomerByIds" parameterType="String">
+        delete from by_customer where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
