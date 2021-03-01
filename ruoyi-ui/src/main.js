@@ -17,7 +17,7 @@ import permission from './directive/permission'
 
 import './assets/icons' // icon
 import './permission' // permission control
-import { getDicts } from "@/api/system/dict/data";
+import { getDicts, getDictsLikeDeptids } from "@/api/system/dict/data";
 import { getConfigKey } from "@/api/system/config";
 import { parseTime, resetForm, addDateRange, selectDictLabel, selectDictLabels, download, handleTree } from "@/utils/ruoyi";
 import Pagination from "@/components/Pagination";
@@ -26,6 +26,7 @@ import RightToolbar from "@/components/RightToolbar"
 
 // 全局方法挂载
 Vue.prototype.getDicts = getDicts
+Vue.prototype.getDictsLikeDeptids = getDictsLikeDeptids
 Vue.prototype.getConfigKey = getConfigKey
 Vue.prototype.parseTime = parseTime
 Vue.prototype.resetForm = resetForm

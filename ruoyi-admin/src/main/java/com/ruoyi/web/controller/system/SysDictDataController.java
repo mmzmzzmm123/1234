@@ -77,6 +77,16 @@ public class SysDictDataController extends BaseController
     }
 
     /**
+     * 根据字典类型查询字典数据信息
+     */
+    @GetMapping(value = "/type/likedeptids/{dictType}")
+    public AjaxResult dictTypeLikeDeptids(@PathVariable String dictType)
+    {
+        String deptId=SecurityUtils.getLoginUser().getUser().getDeptId().toString()+";";
+        return AjaxResult.success(dictTypeService.selectDictDataByTypeAndDept(dictType,deptId));
+    }
+
+    /**
      * 新增字典类型
      */
     @PreAuthorize("@ss.hasPermi('system:dict:add')")

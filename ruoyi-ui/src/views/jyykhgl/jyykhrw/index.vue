@@ -363,7 +363,7 @@ export default {
     this.getDicts("sys_dm_jyykhrwlx").then((response) => {
       this.rwlxOptions = response.data;
     });
-    this.getDicts("sys_dm_jyykhrwnr").then((response) => {
+    this.getDictsLikeDeptids("sys_dm_jyykhrwnr").then((response) => {
       this.rwnrOptions = response.data;
     });
     this.getDicts("sys_dm_jyykhbm").then((response) => {

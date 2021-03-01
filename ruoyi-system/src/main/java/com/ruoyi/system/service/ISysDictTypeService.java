@@ -35,6 +35,15 @@ public interface ISysDictTypeService
     public List<SysDictData> selectDictDataByType(String dictType);
 
     /**
+     * 根据字典类型查询字典数据
+     *
+     * @param dictType 字典类型
+     * @param deptIds 部门编号
+     * @return 字典数据集合信息
+     */
+    public List<SysDictData> selectDictDataByTypeAndDept(String dictType,String deptIds);
+
+    /**
      * 根据字典类型ID查询信息
      * 
      * @param dictId 字典类型ID

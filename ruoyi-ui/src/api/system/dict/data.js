@@ -25,6 +25,14 @@ export function getDicts(dictType) {
   })
 }
 
+// 根据字典类型查询字典数据信息
+export function getDictsLikeDeptids(dictType) {
+  return request({
+    url: '/system/dict/data/type/likedeptids/' + dictType,
+    method: 'get'
+  })
+}
+
 // 新增字典数据
 export function addData(data) {
   return request({
