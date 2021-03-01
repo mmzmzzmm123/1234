@@ -3,6 +3,7 @@ package com.stdiet.custom.service.impl;
 import com.alibaba.fastjson.JSONArray;
 import com.stdiet.common.utils.DateUtils;
 import com.stdiet.custom.domain.*;
+import com.stdiet.custom.dto.request.SysOrderCommision;
 import com.stdiet.custom.mapper.SysCommisionMapper;
 import com.stdiet.custom.mapper.SysOrderMapper;
 import com.stdiet.custom.mapper.SysOrderPauseMapper;
@@ -32,7 +33,7 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
     public List<SysCommissionDayDetail> calculateCommissionByDay(SysCommision sysCommision){
         List<SysCommissionDayDetail> result = new ArrayList<>();
         //查询用户
-        List<SysCommision> list = sysCommisionMapper.selectSysCommisionDayDetail(sysCommision);
+        List<SysCommision> list = sysCommisionMapper.getAfterSaleAndNutri(sysCommision);
         //合计
         SysCommissionDayDetail total = new SysCommissionDayDetail();
         total.setTotalCommissionAmount(new BigDecimal(0));

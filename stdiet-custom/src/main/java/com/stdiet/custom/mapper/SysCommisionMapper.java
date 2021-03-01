@@ -2,6 +2,7 @@ package com.stdiet.custom.mapper;
 
 import java.util.List;
 import com.stdiet.custom.domain.SysCommision;
+import com.stdiet.custom.dto.request.SysOrderCommision;
 
 /**
  * 业务提成比例Mapper接口
@@ -61,5 +62,10 @@ public interface SysCommisionMapper
 
     public List<SysCommision> selectSysCommisionDetail(SysCommision sysCommision);
 
-    List<SysCommision> selectSysCommisionDayDetail(SysCommision sysCommision);
+    /**
+     * 查询售后、营养师用户信息
+     * @param sysCommision
+     * @return
+     */
+    List<SysCommision> getAfterSaleAndNutri(SysCommision sysCommision);
 }

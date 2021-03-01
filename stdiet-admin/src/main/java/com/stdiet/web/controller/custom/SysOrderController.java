@@ -1,5 +1,6 @@
 package com.stdiet.web.controller.custom;
 
+import com.alibaba.fastjson.JSONArray;
 import com.stdiet.common.annotation.Log;
 import com.stdiet.common.core.domain.AjaxResult;
 import com.stdiet.common.core.domain.entity.SysUser;
@@ -19,6 +20,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.net.URLDecoder;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
@@ -47,6 +49,7 @@ public class SysOrderController extends OrderBaseController {
     @GetMapping("/list")
     public OrderTableDataInfo list(SysOrder sysOrder) {
         startPage();
+        dealOrderType(sysOrder);
         List<SysOrder> list = sysOrderService.selectSysOrderList(sysOrder);
         List<SysUser> userList = userService.selectAllUser();
         BigDecimal totalAmount = sysOrderService.selectAllOrderAmount(sysOrder);
@@ -68,6 +71,20 @@ public class SysOrderController extends OrderBaseController {
         return getOrderDataTable(list, totalAmount);
     }
 
+    /**
+     * 处理订单类型
+     * @param sysOrder
+     */
+    private void dealOrderType(SysOrder sysOrder) {
+        if(StringUtils.isNotEmpty(sysOrder.getOrderType())){
+            try {
+                JSONArray array = JSONArray.parseArray(URLDecoder.decode(sysOrder.getOrderType(),"UTF-8"));
+                sysOrder.setSearchOrderTypeArray(array.size() > 0 ? array : null);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+    }
 
     /**
      * 导出销售订单列表

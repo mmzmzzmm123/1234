@@ -6,6 +6,7 @@ import java.util.List;
 import com.stdiet.custom.domain.SysCommision;
 import com.stdiet.custom.domain.SysCommissionDayDetail;
 import com.stdiet.custom.domain.SysOrder;
+import com.stdiet.custom.dto.request.SysOrderCommision;
 import org.apache.ibatis.annotations.Param;
 
 /**
@@ -72,7 +73,7 @@ public interface SysOrderMapper
     public BigDecimal selectAllOrderAmount(SysOrder sysOrder);
 
     /**
-     * 获取订单信息
+     * 获取订单信息（按天提成计算）
      * @return
      */
     List<SysOrder> selectSimpleOrderMessage(SysCommision sysCommision);

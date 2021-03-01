@@ -10,6 +10,8 @@ public class OrderUtils {
 
     private static final String[] orderMoneyTypeArray = {"全款单","定金单","尾款单"};
 
+    private static final String[] orderMainTypeArray = {"主单","副单"};
+
     /**
      * 根据订单对象获取订单类型名称
      * @param sysOrder
@@ -18,8 +20,16 @@ public class OrderUtils {
     public static final String getOrderTypeName(SysOrder sysOrder){
         String orderTypeName = "";
         orderTypeName += orderTypeArray[Integer.parseInt(sysOrder.getOrderType())];
+        //比例拆分单需要确认出主单副单
+        /*if("1".equals(sysOrder.getOrderType())){
+            orderTypeName += "("+(sysOrder.getMainOrderId().intValue() == 0 ? orderMainTypeArray[0] : orderMainTypeArray[1])+")";
+        }*/
         orderTypeName += "/"+orderCountTypeArray[Integer.parseInt(sysOrder.getOrderCountType())];
         orderTypeName += "/"+orderMoneyTypeArray[Integer.parseInt(sysOrder.getOrderMoneyType())];
+        //判断是不是二开提成单
+        if("1".equals(sysOrder.getOrderCountType()) && sysOrder.getAfterSaleCommissOrder().intValue() == 1){
+            orderTypeName += "/提成单";
+        }
         return orderTypeName;
     }
 
