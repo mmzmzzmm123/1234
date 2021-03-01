@@ -11,7 +11,7 @@
         <el-col :span="6">
           <el-form-item label="客户信息" prop="customer">
             <el-input
-              v-model="queryParams.customer"
+              v-model.trim="queryParams.customer"
               placeholder="请输入客户姓名或手机号"
               clearable
               size="small"
@@ -249,6 +249,19 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
+          <el-form-item label="订单类型" prop="searchOrderTypeArray" >
+            <el-cascader
+              placeholder="请选择订单类型"
+              v-model="searchOrderTypeArray"
+              :options="orderTypeOptions"
+              :props="orderTypeProps"
+              collapse-tags
+              clearable
+              style="width: 300px"
+              ></el-cascader>
+          </el-form-item><!--   -->
+        </el-col>
+        <el-col :span="12">
           <el-form-item label="成交日期" prop="orderTime">
             <el-date-picker
               v-model="daterange"
@@ -428,7 +441,7 @@
       @pagination="getList"
     >
       <span style="margin-right: 12px"
-        >总计：{{ toThousands(this.totalAmount) }} 元</span
+        >总计收款（已除去二开售后提成金额）：{{ toThousands(this.totalAmount) }} 元</span
       >
     </pagination>
 
@@ -459,7 +472,7 @@
 import { delOrder, exportOrder, listOrder } from "@/api/custom/order";
 import dayjs from "dayjs";
 import orderPause from "./orderPause";
-
+import * as orderTypeData from "@/utils/orderType";
 import OrderDetail from "@/components/OrderDetail";
 import OrderEdit from "@/components/OrderEdit";
 import AutoHideMessage from "@/components/AutoHideMessage";
@@ -510,6 +523,9 @@ export default {
       conditioningProjectIdOption: [],
       // 审核状态
       reviewStatusOptions: [],
+      //订单类型
+      orderTypeOptions: orderTypeData["orderTypeArray"],
+      orderTypeProps: { multiple: true,expandTrigger: 'click' },//,checkStrictly:true
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -531,6 +547,8 @@ export default {
         reviewStatus: null,
         serveTimeId: null,
       },
+      //查询时选择的订单类型数组
+      searchOrderTypeArray: null
     };
   },
   computed: {
@@ -578,6 +596,9 @@ export default {
     /** 查询销售订单列表 */
     getList() {
       this.loading = true;
+      this.queryParams.orderType = this.searchOrderTypeArray != null ? encodeURIComponent(JSON.stringify(this.searchOrderTypeArray)) : null;
+      console.log(this.queryParams.searchOrderTypeArray);
+      //this.dealOrderTypeArray();
       listOrder(this.addDateRange(this.queryParams, this.daterange)).then(
         (response) => {
           this.orderList = response.rows;
@@ -586,7 +607,27 @@ export default {
           this.totalAmount = response.totalAmount;
         }
       );
-    }, // 收款方式字典翻译
+    },
+    /*dealOrderTypeArray(){
+      this.queryParams.orderType = "";
+      this.queryParams.orderCountType = "";
+      this.queryParams.orderMoneyType = "";
+      if(this.searchOrderTypeArray == null){
+        return;
+      }
+      this.searchOrderTypeArray.forEach((item,index) => {
+          if(this.queryParams.orderType.indexOf(item[0]+"") == -1){
+              this.queryParams.orderType += this.queryParams.orderType != "" ? (","+item[0]) : item[0];
+          }
+          if(this.queryParams.orderCountType.indexOf(item[1]+"") == -1){
+            this.queryParams.orderCountType += this.queryParams.orderCountType != "" ? (","+item[1]) : item[1];
+          }
+          if(this.queryParams.orderMoneyType.indexOf(item[2]+"") == -1){
+            this.queryParams.orderMoneyType += this.queryParams.orderMoneyType != "" ? (","+item[2]) : item[2];
+          }
+      });
+    },*/
+    // 收款方式字典翻译
     payTypeIdFormat(row, column) {
       return this.selectDictLabel(this.payTypeIdOptions, row.payTypeId);
     },
@@ -711,7 +752,7 @@ export default {
         return "warning-row";
       }
       return "success-row";
-    },
+    }
   },
   watch: {},
 };

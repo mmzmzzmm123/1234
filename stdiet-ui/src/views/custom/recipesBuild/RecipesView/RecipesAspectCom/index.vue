@@ -4,6 +4,9 @@
     :style="`height: ${collapse ? 30 : 200}px`"
   >
     <div class="header">
+      <el-button size="mini" v-if="!recipesId" @click="handleOnBack"
+        >返回</el-button
+      >
       <el-popover
         placement="bottom"
         trigger="click"
@@ -100,6 +103,9 @@ export default {
     },
     hanldeOnReveiwChange(reviewStatus) {
       this.updateReviewStatus({ reviewStatus });
+    },
+    handleOnBack() {
+      this.updateReviewStatus({ recipesData: [] });
     },
     ...mapActions(["saveRecipes", "updateReviewStatus"]),
   },

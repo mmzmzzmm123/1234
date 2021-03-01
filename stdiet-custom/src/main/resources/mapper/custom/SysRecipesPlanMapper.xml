@@ -86,6 +86,7 @@
             <if test="updateBy != null">update_by,</if>
             <if test="delFlag != null">del_flag,</if>
             <if test="reviewStatus != null">review_status,</if>
+            <if test="type != null">type,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="orderId != null">#{orderId},</if>
@@ -104,6 +105,7 @@
             <if test="updateBy != null">#{updateBy},</if>
             <if test="delFlag != null">#{delFlag},</if>
             <if test="reviewStatus != null">#{reviewStatus},</if>
+            <if test="type != null">#{type},</if>
         </trim>
     </insert>
 
@@ -163,7 +165,7 @@
     <!-- 食谱计划、订单表联查 -->
     <select id="selectPlanListByCondition" parameterType="SysRecipesPlan" resultMap="SysRecipesPlanResult">
         SELECT srp.id,srp.order_id,srp.recipes_id,srp.start_num_day,srp.end_num_day,srp.cus_id,sc.phone,
-        su_nutritionist.nick_name nutritionist,su_nutritionist_assis.nick_name AS nutritionist_assis,
+        su_nutritionist.nick_name AS nutritionist,su_nutritionist_assis.nick_name AS nutritionist_assis,
         srp.start_date,srp.end_date,srp.send_flag,srp.send_time, sc.name as customer, srp.review_status
         FROM sys_recipes_plan srp
         LEFT JOIN sys_order sr ON sr.order_id = srp.order_id
@@ -215,7 +217,7 @@
     <!--  根据cusId查询食谱计划-->
     <select id="selectPlanListByCusId" parameterType="Long" resultMap="SysRecipesPlanResult">
         select id, out_id, start_date, end_date, start_num_day, end_num_day, recipes_id, review_status from sys_recipes_plan
-        where cus_id=#{cusId} order by create_time desc
+        where cus_id=#{cusId} order by id desc
     </select>
 
     <select id="getCusIdByOutId" parameterType="String" resultType="Long">
