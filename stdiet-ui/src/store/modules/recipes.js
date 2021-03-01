@@ -7,12 +7,14 @@ import {
   deleteDishesApi,
   addRecipesApi
 } from "@/api/custom/recipes";
+import { getRecipesTemplateDetail } from "@/api/custom/recipesTemplate";
 import { getRecipesPlan, updateRecipesPlan } from "@/api/custom/recipesPlan";
 import { getDicts } from "@/api/system/dict/data";
 
 const oriState = {
   cusId: undefined,
   planId: undefined,
+  temId: undefined,
   recipesId: undefined,
   healthyData: {},
   healthDataLoading: false,
@@ -25,7 +27,8 @@ const oriState = {
   currentDay: -1,
   startNum: 0,
   endNum: 0,
-  reviewStatus: 0
+  reviewStatus: 0,
+  templateInfo: undefined
 };
 
 const mutations = {
@@ -87,6 +90,7 @@ const actions = {
       cusId,
       recipesId,
       reviewStatus,
+      temId: payload.temId,
       planId: payload.planId,
       startNum: startNumDay,
       endNum: endNumDay
@@ -108,11 +112,24 @@ const actions = {
         dispatch("getHealthyData", { cusId }).catch(err => rej(err));
       }
 
+      // 模板信息
+      if (payload.temId) {
+        dispatch("getRecipesTemplate", payload).catch(err => rej(err));
+      }
+
       // 食谱数据
       if (recipesId) {
         dispatch("getRecipesInfo", { recipesId }).catch(err => rej(err));
       }
     });
+  },
+  async getRecipesTemplate({ commit, state }, { temId }) {
+    const response = await getRecipesTemplateDetail(temId);
+    if (response.code === 200) {
+      commit("updateStateData", {
+        templateInfo: response.data
+      });
+    }
   },
   async updateReviewStatus({ commit, state }, payload) {
     const response = await updateRecipesPlan({
