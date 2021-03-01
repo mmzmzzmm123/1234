@@ -60,57 +60,60 @@
   </div>
 </template>
 <script>
-import { deepClone } from '@/gene/utils/index'
+  import {deepClone} from '@/gene/utils/index'
 
-export default {
-  components: {},
-  inheritAttrs: false,
-  props: ['originResource'],
-  data() {
-    return {
-      resources: null
-    }
-  },
-  computed: {},
-  watch: {},
-  created() {},
-  mounted() {},
-  methods: {
-    onOpen() {
-      this.resources = this.originResource.length ? deepClone(this.originResource) : ['']
-    },
-    onClose() {
-    },
-    close() {
-      this.$emit('update:visible', false)
-    },
-    handelConfirm() {
-      const results = this.resources.filter(item => !!item) || []
-      this.$emit('save', results)
-      this.close()
-      if (results.length) {
-        this.resources = results
+  export default {
+    components: {},
+    inheritAttrs: false,
+    props: ['originResource'],
+    data() {
+      return {
+        resources: null
       }
     },
-    deleteOne(index) {
-      this.resources.splice(index, 1)
+    computed: {},
+    watch: {},
+    created() {
     },
-    addOne(url) {
-      if (this.resources.indexOf(url) > -1) {
-        this.$message('资源已存在')
-      } else {
-        this.resources.push(url)
+    mounted() {
+    },
+    methods: {
+      onOpen() {
+        this.resources = this.originResource.length ? deepClone(this.originResource) : ['']
+      },
+      onClose() {
+      },
+      close() {
+        this.$emit('update:visible', false)
+      },
+      handelConfirm() {
+        const results = this.resources.filter(item => !!item) || []
+        this.$emit('save', results)
+        this.close()
+        if (results.length) {
+          this.resources = results
+        }
+      },
+      deleteOne(index) {
+        this.resources.splice(index, 1)
+      },
+      addOne(url) {
+        if (this.resources.indexOf(url) > -1) {
+          this.$message('资源已存在')
+        } else {
+          this.resources.push(url)
+        }
       }
     }
   }
-}
 
 </script>
 <style lang="scss" scoped>
-.add-item{
-  margin-top: 8px;
-}
-.url-item{
-  margin-bottom: 12px;
-}
+  .add-item {
+    margin-top: 8px;
+  }
+
+  .url-item {
+    margin-bottom: 12px;
+  }
 </style>

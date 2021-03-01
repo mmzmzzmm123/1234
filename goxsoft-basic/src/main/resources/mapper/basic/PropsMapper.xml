@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.gox.basic.mapper.PropsMapper">
     <resultMap type="Props" id="PropsResult">
-        <result property="id"    column="id"    />
-        <result property="itemId"    column="item_id"    />
-        <result property="proId"    column="pro_id"    />
-        <result property="children"    column="children"    />
-        <result property="multiple"    column="multiple"    />
-        <result property="label"    column="label"    />
-        <result property="value"    column="value"    />
+        <result property="id" column="id"/>
+        <result property="itemId" column="item_id"/>
+        <result property="proId" column="pro_id"/>
+        <result property="children" column="children"/>
+        <result property="multiple" column="multiple"/>
+        <result property="label" column="label"/>
+        <result property="value" column="value"/>
         <association property="props" column="id" select="selectPropsByProId" fetchType="lazy"/>
     </resultMap>
 
@@ -20,16 +20,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectPropsList" parameterType="Props" resultMap="PropsResult">
         <include refid="selectPropsVo"/>
-        <where>  
-            <if test="itemId != null "> and item_id = #{itemId}</if>
-            <if test="proId != null "> and pro_id = #{proId}</if>
-            <if test="children != null  and children != ''"> and children = #{children}</if>
-            <if test="multiple != null "> and multiple = #{multiple}</if>
-            <if test="label != null  and label != ''"> and label = #{label}</if>
-            <if test="value != null  and value != ''"> and value = #{value}</if>
+        <where>
+            <if test="itemId != null ">and item_id = #{itemId}</if>
+            <if test="proId != null ">and pro_id = #{proId}</if>
+            <if test="children != null  and children != ''">and children = #{children}</if>
+            <if test="multiple != null ">and multiple = #{multiple}</if>
+            <if test="label != null  and label != ''">and label = #{label}</if>
+            <if test="value != null  and value != ''">and value = #{value}</if>
         </where>
     </select>
-    
+
     <select id="selectPropsById" parameterType="Long" resultMap="PropsResult">
         <include refid="selectPropsVo"/>
         where id = #{id}
@@ -53,7 +53,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="multiple != null">multiple,</if>
             <if test="label != null">label,</if>
             <if test="value != null">value,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
             <if test="itemId != null">#{itemId},</if>
@@ -62,7 +62,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="multiple != null">#{multiple},</if>
             <if test="label != null">#{label},</if>
             <if test="value != null">#{value},</if>
-         </trim>
+        </trim>
     </insert>
 
     <update id="updateProps" parameterType="Props">
@@ -83,10 +83,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deletePropsByIds" parameterType="String">
-        delete from props where id in 
+        delete from props where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>
-    
+
 </mapper>

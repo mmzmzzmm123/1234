@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.gox.basic.mapper.MetadataReserveMapper">
-    
+
     <resultMap type="com.gox.basic.domain.MetadataReserve" id="MetadataReserveResult">
-        <result property="id"    column="id"    />
-        <result property="f1"    column="f1"    />
-        <result property="f2"    column="f2"    />
-        <result property="f3"    column="f3"    />
-        <result property="f4"    column="f4"    />
-        <result property="f5"    column="f5"    />
-        <result property="f6"    column="f6"    />
-        <result property="f7"    column="f7"    />
-        <result property="f8"    column="f8"    />
-        <result property="f9"    column="f9"    />
-        <result property="f10"    column="f10"    />
-        <result property="f11"    column="f11"    />
-        <result property="f12"    column="f12"    />
-        <result property="f13"    column="f13"    />
-        <result property="f14"    column="f14"    />
-        <result property="f15"    column="f15"    />
+        <result property="id" column="id"/>
+        <result property="f1" column="f1"/>
+        <result property="f2" column="f2"/>
+        <result property="f3" column="f3"/>
+        <result property="f4" column="f4"/>
+        <result property="f5" column="f5"/>
+        <result property="f6" column="f6"/>
+        <result property="f7" column="f7"/>
+        <result property="f8" column="f8"/>
+        <result property="f9" column="f9"/>
+        <result property="f10" column="f10"/>
+        <result property="f11" column="f11"/>
+        <result property="f12" column="f12"/>
+        <result property="f13" column="f13"/>
+        <result property="f14" column="f14"/>
+        <result property="f15" column="f15"/>
     </resultMap>
 
     <sql id="selectMetadataReserveVo">
@@ -29,30 +29,30 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectMetadataReserveList" parameterType="MetadataReserve" resultMap="MetadataReserveResult">
         <include refid="selectMetadataReserveVo"/>
-        <where>  
-            <if test="f1 != null  and f1 != ''"> and f1 = #{f1}</if>
-            <if test="f2 != null  and f2 != ''"> and f2 = #{f2}</if>
-            <if test="f3 != null  and f3 != ''"> and f3 = #{f3}</if>
-            <if test="f4 != null  and f4 != ''"> and f4 = #{f4}</if>
-            <if test="f5 != null  and f5 != ''"> and f5 = #{f5}</if>
-            <if test="f6 != null  and f6 != ''"> and f6 = #{f6}</if>
-            <if test="f7 != null  and f7 != ''"> and f7 = #{f7}</if>
-            <if test="f8 != null  and f8 != ''"> and f8 = #{f8}</if>
-            <if test="f9 != null  and f9 != ''"> and f9 = #{f9}</if>
-            <if test="f10 != null  and f10 != ''"> and f10 = #{f10}</if>
-            <if test="f11 != null  and f11 != ''"> and f11 = #{f11}</if>
-            <if test="f12 != null  and f12 != ''"> and f12 = #{f12}</if>
-            <if test="f13 != null  and f13 != ''"> and f13 = #{f13}</if>
-            <if test="f14 != null  and f14 != ''"> and f14 = #{f14}</if>
-            <if test="f15 != null  and f15 != ''"> and f15 = #{f15}</if>
+        <where>
+            <if test="f1 != null  and f1 != ''">and f1 = #{f1}</if>
+            <if test="f2 != null  and f2 != ''">and f2 = #{f2}</if>
+            <if test="f3 != null  and f3 != ''">and f3 = #{f3}</if>
+            <if test="f4 != null  and f4 != ''">and f4 = #{f4}</if>
+            <if test="f5 != null  and f5 != ''">and f5 = #{f5}</if>
+            <if test="f6 != null  and f6 != ''">and f6 = #{f6}</if>
+            <if test="f7 != null  and f7 != ''">and f7 = #{f7}</if>
+            <if test="f8 != null  and f8 != ''">and f8 = #{f8}</if>
+            <if test="f9 != null  and f9 != ''">and f9 = #{f9}</if>
+            <if test="f10 != null  and f10 != ''">and f10 = #{f10}</if>
+            <if test="f11 != null  and f11 != ''">and f11 = #{f11}</if>
+            <if test="f12 != null  and f12 != ''">and f12 = #{f12}</if>
+            <if test="f13 != null  and f13 != ''">and f13 = #{f13}</if>
+            <if test="f14 != null  and f14 != ''">and f14 = #{f14}</if>
+            <if test="f15 != null  and f15 != ''">and f15 = #{f15}</if>
         </where>
     </select>
-    
+
     <select id="selectMetadataReserveById" parameterType="Long" resultMap="MetadataReserveResult">
         <include refid="selectMetadataReserveVo"/>
         where id = #{id}
     </select>
-        
+
     <insert id="insertMetadataReserve" parameterType="MetadataReserve">
         insert into metadata_reserve
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -72,7 +72,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="f13 != null">f13,</if>
             <if test="f14 != null">f14,</if>
             <if test="f15 != null">f15,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
             <if test="f1 != null">#{f1},</if>
@@ -90,7 +90,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="f13 != null">#{f13},</if>
             <if test="f14 != null">#{f14},</if>
             <if test="f15 != null">#{f15},</if>
-         </trim>
+        </trim>
     </insert>
 
     <update id="updateMetadataReserve" parameterType="MetadataReserve">
@@ -120,10 +120,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteMetadataReserveByIds" parameterType="String">
-        delete from metadata_reserve where id in 
+        delete from metadata_reserve where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>
-    
+
 </mapper>

@@ -1,4 +1,4 @@
-import { loadScriptQueue } from './loadScript'
+import {loadScriptQueue} from './loadScript'
 import ELEMENT from 'element-ui'
 
 // monaco-editor单例

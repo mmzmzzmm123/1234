@@ -25,8 +25,9 @@ public class AppTest {
     private IFormJsonService formJsonService;
     @Autowired
     private IFormDesignerDataService formDesignerDataService;
+
     @Test
-    public void test(){
+    public void test() {
         List<FormJson> list = formJsonService.selectFormJsonList(new FormJson());
         for (FormJson formJson : list) {
             String j = formJson.getFormData();

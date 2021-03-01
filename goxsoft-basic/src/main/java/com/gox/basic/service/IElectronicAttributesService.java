@@ -10,20 +10,18 @@ import java.util.List;
 
 /**
  * 电子文件信息Service接口
- * 
+ *
  * @author gox
  * @date 2020-12-29
  */
-public interface IElectronicAttributesService 
-{
+public interface IElectronicAttributesService {
     /**
      * 查询电子文件信息
-     * 
+     *
      * @param id 电子文件信息ID
      * @return 电子文件信息
      */
     public ElectronicAttributes selectElectronicAttributesById(Long id);
-
 
 
     String fileUploadPost(Chunk chunk, HttpServletResponse response, Long metadataId) throws IOException;
@@ -31,15 +29,16 @@ public interface IElectronicAttributesService
     void fileUploadGet(Chunk chunk, HttpServletResponse response);
 
 
-
     /**
      * 获取文件base64编码
+     *
      * @param id 电子文件id
      */
     String getBase64(String id);
+
     /**
      * 查询电子文件信息列表
-     * 
+     *
      * @param electronicAttributes 电子文件信息
      * @return 电子文件信息集合
      */
@@ -47,7 +46,7 @@ public interface IElectronicAttributesService
 
     /**
      * 新增电子文件信息
-     * 
+     *
      * @param electronicAttributes 电子文件信息
      * @return 结果
      */
@@ -55,7 +54,7 @@ public interface IElectronicAttributesService
 
     /**
      * 修改电子文件信息
-     * 
+     *
      * @param electronicAttributes 电子文件信息
      * @return 结果
      */
@@ -63,7 +62,7 @@ public interface IElectronicAttributesService
 
     /**
      * 批量删除电子文件信息
-     * 
+     *
      * @param ids 需要删除的电子文件信息ID
      * @return 结果
      */
@@ -71,7 +70,7 @@ public interface IElectronicAttributesService
 
     /**
      * 删除电子文件信息信息
-     * 
+     *
      * @param id 电子文件信息ID
      * @return 结果
      */

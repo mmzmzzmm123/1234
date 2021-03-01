@@ -63,7 +63,7 @@ export const constantRoutes = [
         path: 'index',
         component: (resolve) => require(['@/views/index'], resolve),
         name: '首页',
-        meta: { title: '首页', icon: 'dashboard', noCache: true, affix: true }
+        meta: {title: '首页', icon: 'dashboard', noCache: true, affix: true}
       }
     ]
   },
@@ -77,7 +77,7 @@ export const constantRoutes = [
         path: 'profile',
         component: (resolve) => require(['@/views/system/user/profile/index'], resolve),
         name: 'Profile',
-        meta: { title: '个人中心', icon: 'user' }
+        meta: {title: '个人中心', icon: 'user'}
       }
     ]
   },
@@ -90,7 +90,7 @@ export const constantRoutes = [
         path: 'type/data/:dictId(\\d+)',
         component: (resolve) => require(['@/views/system/dict/data'], resolve),
         name: 'Data',
-        meta: { title: '字典数据', icon: '' }
+        meta: {title: '字典数据', icon: ''}
       }
     ]
   },
@@ -103,7 +103,7 @@ export const constantRoutes = [
         path: 'log',
         component: (resolve) => require(['@/views/monitor/job/log'], resolve),
         name: 'JobLog',
-        meta: { title: '调度日志' }
+        meta: {title: '调度日志'}
       }
     ]
   },
@@ -128,7 +128,7 @@ export const constantRoutes = [
     children: [
       {
         path: 'build/:id',
-        component:(resolve) =>require(['@/gene/views/index/Home'],resolve),
+        component: (resolve) => require(['@/gene/views/index/Home'], resolve),
         name: 'buildid',
         meta: {title: '表单构建'}
       }
@@ -141,7 +141,7 @@ export const constantRoutes = [
     children: [
       {
         path: 'templates/:id',
-        component:(resolve) =>require(['@/views/system/json/index'],resolve),
+        component: (resolve) => require(['@/views/system/json/index'], resolve),
         name: 'templates',
         meta: {title: '模板管理'}
       }
@@ -154,9 +154,22 @@ export const constantRoutes = [
     children: [
       {
         path: 'menu/:id',
-        component:(resolve) =>require(['@/views/system/menu/index'],resolve),
+        component: (resolve) => require(['@/views/system/menu/index'], resolve),
         name: 'menuid',
         meta: {title: '菜单管理'}
+      }
+    ]
+  },
+  {
+    path: '/mm',
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: 'mm',
+        component: (resolve) => require(['@/views/test'], resolve),
+        name: 'test',
+        meta: {title: '测试'}
       }
     ]
   },
@@ -167,7 +180,7 @@ export const constantRoutes = [
     children: [
       {
         path: 'build/:deptId/:nodeId',
-        component:(resolve) =>require(['@/gene/views/index/Home'],resolve),
+        component: (resolve) => require(['@/gene/views/index/Home'], resolve),
         name: 'builddnId',
         meta: {title: '表单修改'}
       }
@@ -182,7 +195,7 @@ export const constantRoutes = [
         path: 'edit/:tableId(\\d+)',
         component: (resolve) => require(['@/views/tool/gen/editTable'], resolve),
         name: 'GenEdit',
-        meta: { title: '修改生成配置' }
+        meta: {title: '修改生成配置'}
       }
     ]
   }
@@ -190,6 +203,6 @@ export const constantRoutes = [
 
 export default new Router({
   mode: 'history', // 去掉url中的#
-  scrollBehavior: () => ({ y: 0 }),
+  scrollBehavior: () => ({y: 0}),
   routes: constantRoutes
 })

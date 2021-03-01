@@ -5,17 +5,17 @@
 </template>
 
 <script>
-export default {
-  name: 'goxDoc',
-  data() {
-    return {
-      url: 'http://doc.gox.vip/gox-vue'
-    }
-  },
-  methods: {
-    goto() {
-      window.open(this.url)
+  export default {
+    name: 'goxDoc',
+    data() {
+      return {
+        url: 'http://doc.gox.vip/gox-vue'
+      }
+    },
+    methods: {
+      goto() {
+        window.open(this.url)
+      }
     }
   }
-}
 </script>

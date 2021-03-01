@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { loadScriptQueue } from '@/gene/utils/loadScript'
+import {loadScriptQueue} from '@/gene/utils/loadScript'
 import axios from 'axios'
 import Tinymce from '@/gene/components/tinymce/index.vue'
 

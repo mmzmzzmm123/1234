@@ -20,18 +20,21 @@ var FontInspector = (function FontInspectorClosure() {
   var fonts;
   var active = false;
   var fontAttribute = "data-font-name";
+
   function removeSelection() {
     const divs = document.querySelectorAll(`span[${fontAttribute}]`);
     for (const div of divs) {
       div.className = "";
     }
   }
+
   function resetSelection() {
     const divs = document.querySelectorAll(`span[${fontAttribute}]`);
     for (const div of divs) {
       div.className = "debuggerHideText";
     }
   }
+
   function selectFont(fontName, show) {
     const divs = document.querySelectorAll(
       `span[${fontAttribute}=${fontName}]`
@@ -40,6 +43,7 @@ var FontInspector = (function FontInspectorClosure() {
       div.className = show ? "debuggerShowText" : "debuggerHideText";
     }
   }
+
   function textLayerClick(e) {
     if (
       !e.target.dataset.fontName ||
@@ -59,6 +63,7 @@ var FontInspector = (function FontInspectorClosure() {
       select.scrollIntoView();
     }
   }
+
   return {
     // Properties/functions needed by PDFBug.
     id: "FontInspector",
@@ -108,6 +113,7 @@ var FontInspector = (function FontInspectorClosure() {
         }
         return moreInfo;
       }
+
       var moreInfo = properties(fontObj, ["name", "type"]);
       const fontName = fontObj.loadedName;
       var font = document.createElement("div");
@@ -119,7 +125,7 @@ var FontInspector = (function FontInspectorClosure() {
         download.href = url[1];
       } else if (fontObj.data) {
         download.href = URL.createObjectURL(
-          new Blob([fontObj.data], { type: fontObj.mimeType })
+          new Blob([fontObj.data], {type: fontObj.mimeType})
         );
       }
       download.textContent = "Download";
@@ -295,6 +301,7 @@ var Stepper = (function StepperClosure() {
     this.currentIdx = -1;
     this.operatorListIdx = 0;
   }
+
   Stepper.prototype = {
     init: function init(operatorList) {
       var panel = this.panel;
@@ -443,11 +450,13 @@ var Stepper = (function StepperClosure() {
 
 var Stats = (function Stats() {
   var stats = [];
+
   function clear(node) {
     while (node.hasChildNodes()) {
       node.removeChild(node.lastChild);
     }
   }
+
   function getStatIndex(pageNumber) {
     for (var i = 0, ii = stats.length; i < ii; ++i) {
       if (stats[i].pageNumber === pageNumber) {
@@ -456,13 +465,15 @@ var Stats = (function Stats() {
     }
     return false;
   }
+
   return {
     // Properties/functions needed by PDFBug.
     id: "Stats",
     name: "Stats",
     panel: null,
     manager: null,
-    init(pdfjsLib) {},
+    init(pdfjsLib) {
+    },
     enabled: false,
     active: false,
     // Stats specific functions.
@@ -485,7 +496,7 @@ var Stats = (function Stats() {
       statsDiv.textContent = stat.toString();
       wrapper.appendChild(title);
       wrapper.appendChild(statsDiv);
-      stats.push({ pageNumber, div: wrapper });
+      stats.push({pageNumber, div: wrapper});
       stats.sort(function (a, b) {
         return a.pageNumber - b.pageNumber;
       });

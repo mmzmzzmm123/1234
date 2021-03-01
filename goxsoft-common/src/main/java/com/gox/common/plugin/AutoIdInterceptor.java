@@ -24,7 +24,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class AutoIdInterceptor implements Interceptor {
 
     /**
-     *  key值为class对象 value可以理解成是该类带有AutoId注解的属性，只不过对属性封装了一层。
+     * key值为class对象 value可以理解成是该类带有AutoId注解的属性，只不过对属性封装了一层。
      * 它是非常能够提高性能的处理器 它的作用就是不用每一次一个对象经来都要看下它的哪些属性带有AutoId注解
      * 毕竟类的反射在性能上并不友好。只要key包含该对象那就不需要检查它哪些属性带AutoId注解。
      */
@@ -123,6 +123,7 @@ public class AutoIdInterceptor implements Interceptor {
         Handler(Field field) {
             this.field = field;
         }
+
         abstract void handle(Field field, Object object) throws Throwable;
 
         private boolean checkField(Object object, Field field) throws IllegalAccessException {
@@ -131,7 +132,7 @@ public class AutoIdInterceptor implements Interceptor {
             }
             Object obj = field.get(object);
             //如果该注解对应的属性已经被赋值，那么就不用通过雪花生成的ID
-            return obj == null||obj.equals(1L);
+            return obj == null || obj.equals(1L);
         }
 
         public void accept(Object o) throws Throwable {
@@ -145,6 +146,7 @@ public class AutoIdInterceptor implements Interceptor {
         UUIDHandler(Field field) {
             super(field);
         }
+
         /**
          * 1、插入UUID主键
          */
@@ -158,6 +160,7 @@ public class AutoIdInterceptor implements Interceptor {
         UniqueLongHandler(Field field) {
             super(field);
         }
+
         /**
          * 2、插入Long类型雪花ID
          */
@@ -171,6 +174,7 @@ public class AutoIdInterceptor implements Interceptor {
         UniqueLongHexHandler(Field field) {
             super(field);
         }
+
         /**
          * 3、插入String类型雪花ID
          */

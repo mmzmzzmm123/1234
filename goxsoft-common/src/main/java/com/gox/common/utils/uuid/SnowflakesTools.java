@@ -1,7 +1,7 @@
 package com.gox.common.utils.uuid;
 
 public class SnowflakesTools {
-    public static final SnowflakesTools WORKER= new SnowflakesTools(0, 0);
+    public static final SnowflakesTools WORKER = new SnowflakesTools(0, 0);
     //开始时间截 (2021-01-01)
     //private final long twepoch = 1609430400000L;
     private final long twepoch = 1577808000000L;
@@ -53,6 +53,7 @@ public class SnowflakesTools {
 
     /**
      * 获得下一个ID (该方法是线程安全的)
+     *
      * @return
      */
     public synchronized long nextId() {
@@ -89,6 +90,7 @@ public class SnowflakesTools {
 
     /**
      * 阻塞到下一个毫秒，直到获得新的时间戳
+     *
      * @param lastTimestamp
      * @return
      */
@@ -102,6 +104,7 @@ public class SnowflakesTools {
 
     /**
      * 返回以毫秒为单位的当前时间
+     *
      * @return
      */
     protected long timeGen() {

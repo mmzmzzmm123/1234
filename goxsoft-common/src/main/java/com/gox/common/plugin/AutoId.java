@@ -3,12 +3,11 @@ package com.gox.common.plugin;
 import java.lang.annotation.*;
 
 /**
-  * @Description: 主键注解
-  * 支持两种主键：雪花ID 和 UUID
-  *
-  * @author xub
-  * @date 2019/8/18 下午9:51
-  */
+ * @author xub
+ * @Description: 主键注解
+ * 支持两种主键：雪花ID 和 UUID
+ * @date 2019/8/18 下午9:51
+ */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)

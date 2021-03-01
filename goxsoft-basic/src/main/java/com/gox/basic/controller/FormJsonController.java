@@ -28,61 +28,64 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * 表单jsonController
- * 
+ *
  * @author gox
  * @date 2020-12-25
  */
 @RestController
 @RequestMapping("/system/json")
-public class FormJsonController extends BaseController
-{
+public class FormJsonController extends BaseController {
     @Autowired
     private IFormJsonService formJsonService;
     @Autowired
     private IFormDesignerDataService formDesignerDataService;
     @Autowired
     private IFieldsItemService fieldsItemService;
+
     /**
      * id获取
      */
     @PostMapping("/id")
-    public AjaxResult getId(){
+    public AjaxResult getId() {
         return AjaxResult.success(SnowflakesTools.WORKER.nextId());
     }
+
     /**
      * 查询表单json列表
      */
     @PreAuthorize("@ss.hasPermi('basic:json:list')")
     @GetMapping("/list")
-    public TableDataInfo list(FormJson formJson)
-    {
+    public TableDataInfo list(FormJson formJson) {
         startPage();
         List<FormJson> list = formJsonService.selectFormJsonList(formJson);
         return getDataTable(list);
     }
+
     @PreAuthorize("@ss.hasPermi('basic:json:list')")
     @GetMapping("/table-field/{nodeId}/{deptId}")
-    public AjaxResult getTableFields(@PathVariable Long nodeId,@PathVariable Long deptId){
+    public AjaxResult getTableFields(@PathVariable Long nodeId, @PathVariable Long deptId) {
         List<TableFieldVo> f = fieldsItemService.selectTableFieldByNodeIdAndDeptId(nodeId, deptId);
         return AjaxResult.success(f);
     }
+
     @PutMapping("/table-field")
     @Log(title = "表格表头", businessType = BusinessType.UPDATE)
-    public AjaxResult updateTableFields(@RequestBody List<TableFieldVo> fieldVos){
+    public AjaxResult updateTableFields(@RequestBody List<TableFieldVo> fieldVos) {
         return AjaxResult.success(fieldsItemService.updateTableFieldsBatch(fieldVos));
     }
+
     @GetMapping("/table-title/{nodeId}/{deptId}")
-    public AjaxResult getTableTile(@PathVariable Long nodeId,@PathVariable Long deptId){
-        return AjaxResult.success(fieldsItemService.selectTableTitle(nodeId,deptId));
+    public AjaxResult getTableTile(@PathVariable Long nodeId, @PathVariable Long deptId) {
+        return AjaxResult.success(fieldsItemService.selectTableTitle(nodeId, deptId));
     }
+
     /**
      * 导出表单json列表
      */
     @PreAuthorize("@ss.hasPermi('basic:json:export')")
     @Log(title = "表单json", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
-    public AjaxResult export(FormJson formJson)
-    {
+    public AjaxResult export(FormJson formJson) {
         List<FormJson> list = formJsonService.selectFormJsonList(formJson);
         ExcelUtil<FormJson> util = new ExcelUtil<FormJson>(FormJson.class);
         return util.exportExcel(list, "json");
@@ -93,8 +96,7 @@ public class FormJsonController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('basic:json:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
-    {
+    public AjaxResult getInfo(@PathVariable("id") Long id) {
         FormJson formJson = formJsonService.selectFormJsonById(id);
 //        FormDesignerData data = formDesignerDataService.selectFormDesignerDataById(id);
 //        formJson.setFormData(JSONObject.toJSONString(data));
@@ -109,8 +111,7 @@ public class FormJsonController extends BaseController
     @PreAuthorize("@ss.hasPermi('basic:json:add')")
     @Log(title = "表单管理", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody FormJson formJson)
-    {
+    public AjaxResult add(@RequestBody FormJson formJson) {
         //FormJson formJson = new FormJson();
         JSONObject json = JSON.parseObject(formJson.getFormData());
         //String formname = json.getString("formname");
@@ -122,17 +123,18 @@ public class FormJsonController extends BaseController
         FormDesignerData fd = json.toJavaObject(FormDesignerData.class);
         formJson.setFormDesignerData(fd);
         //formJson.setFormData(json.toJSONString());
-        if (StringUtils.isNotEmpty(id)){
+        if (StringUtils.isNotEmpty(id)) {
             formJson.setId(Long.valueOf(id));
 //            json.remove("id");
             return toAjax(formJsonService.updateFormJson(formJson));
         }
         return toAjax(formJsonService.insertFormJson(formJson));
     }
+
     @PreAuthorize("@ss.hasPermi('basic:json:edit')")
     @Log(title = "表单json排序", businessType = BusinessType.UPDATE)
     @PutMapping("/order")
-    public AjaxResult editOrder(@RequestBody List<FormJson> formJsons){
+    public AjaxResult editOrder(@RequestBody List<FormJson> formJsons) {
         return toAjax(formJsonService.updateFormOrderBatch(formJsons));
     }
 //    /**
@@ -151,9 +153,8 @@ public class FormJsonController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('basic:json:remove')")
     @Log(title = "表单json", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
-    {
+    @DeleteMapping("/{ids}")
+    public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(formJsonService.deleteFormJsonByIds(ids));
     }
 }

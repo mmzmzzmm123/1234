@@ -27,60 +27,60 @@
 </template>
 
 <script>
-import { treeselect } from '@/api/system/dept'
-export default {
-  name: 'deptTree',
-  data () {
-    return{
-      cuid: '',
-      deptName:undefined,
-      deptOptions:undefined,
-      defaultProps: {
-        children: "children",
-        label: "label",
-      },
-      loading:false,
-    }
-  },
-  created () {
-    this.getTreeselect()
-  },
-  methods:{
-    /** 查询部门下拉树结构 */
-    getTreeselect() {
-      treeselect().then(response => {
-        this.deptOptions = response.data;
-        this.cuid = this.selectMinChild(response.data[0])
-        this.$nextTick(()=>{
-          this.$refs.tree.setCurrentKey(this.cuid)
-        })
-      });
-    },
-    //选中第一节点的最小节点
-    selectMinChild(data){
-      while(true){
-        if(data.children&&data.children.length>0){
-          data = data.children[0]
-        }
-        else {
-          this.$emit('selectedDept', data.id)
-          return data.label;
-        }
+  import {treeselect} from '@/api/system/dept'
+
+  export default {
+    name: 'deptTree',
+    data() {
+      return {
+        cuid: '',
+        deptName: undefined,
+        deptOptions: undefined,
+        defaultProps: {
+          children: "children",
+          label: "label",
+        },
+        loading: false,
       }
     },
-    // 筛选节点
-    filterNode(value, data) {
-      if (!value) return true;
-      return data.label.indexOf(value) !== -1;
+    created() {
+      this.getTreeselect()
     },
-    // 节点单击事件
-    handleNodeClick(data) {
-      this.$emit('selectedDept',data.id)
-      // this.queryParams.deptId = data.id;
-      // this.getList();
-    },
+    methods: {
+      /** 查询部门下拉树结构 */
+      getTreeselect() {
+        treeselect().then(response => {
+          this.deptOptions = response.data;
+          this.cuid = this.selectMinChild(response.data[0])
+          this.$nextTick(() => {
+            this.$refs.tree.setCurrentKey(this.cuid)
+          })
+        });
+      },
+      //选中第一节点的最小节点
+      selectMinChild(data) {
+        while (true) {
+          if (data.children && data.children.length > 0) {
+            data = data.children[0]
+          } else {
+            this.$emit('selectedDept', data.id)
+            return data.label;
+          }
+        }
+      },
+      // 筛选节点
+      filterNode(value, data) {
+        if (!value) return true;
+        return data.label.indexOf(value) !== -1;
+      },
+      // 节点单击事件
+      handleNodeClick(data) {
+        this.$emit('selectedDept', data.id)
+        // this.queryParams.deptId = data.id;
+        // this.getList();
+      },
+    }
   }
-}
 </script>
 
 <style scoped>

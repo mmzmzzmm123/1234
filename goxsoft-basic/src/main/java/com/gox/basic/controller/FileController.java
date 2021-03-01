@@ -15,10 +15,11 @@ import java.io.IOException;
 public class FileController {
     @Autowired
     private IElectronicAttributesService service;
+
     @RequestMapping("/ele/{id}")
     public void getFile(@PathVariable String id, HttpServletResponse resp) throws IOException {
         ElectronicAttributes ea = service.selectElectronicAttributesById(Long.valueOf(id));
-        String p=ea.getCurrentLocation();
-        FileTypeUtils.preview(p,resp);
+        String p = ea.getCurrentLocation();
+        FileTypeUtils.preview(p, resp);
     }
 }

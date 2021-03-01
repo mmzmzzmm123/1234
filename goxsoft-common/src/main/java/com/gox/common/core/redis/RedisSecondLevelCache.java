@@ -18,16 +18,19 @@ public class RedisSecondLevelCache implements Cache {
     private final String id; // cache instance id
     private RedisTemplate redisTemplate;
     private static final long EXPIRE_TIME_IN_MINUTES = 30; // redis过期时间
+
     public RedisSecondLevelCache(String id) {
         if (id == null) {
             throw new IllegalArgumentException("Cache instances require an ID");
         }
         this.id = id;
     }
+
     @Override
     public String getId() {
         return id;
     }
+
     /**
      * Put query result to redis
      *
@@ -42,6 +45,7 @@ public class RedisSecondLevelCache implements Cache {
         opsForValue.set(key, value, EXPIRE_TIME_IN_MINUTES, TimeUnit.MINUTES);
         logger.debug("Put query result to redis");
     }
+
     /**
      * Get cached query result from redis
      *
@@ -55,6 +59,7 @@ public class RedisSecondLevelCache implements Cache {
         logger.debug("Get cached query result from redis");
         return opsForValue.get(key);
     }
+
     /**
      * Remove cached query result from redis
      *
@@ -69,6 +74,7 @@ public class RedisSecondLevelCache implements Cache {
         logger.debug("Remove cached query result from redis");
         return null;
     }
+
     /**
      * Clears this cache instance
      */
@@ -81,17 +87,20 @@ public class RedisSecondLevelCache implements Cache {
         });
         logger.debug("Clear all the cached query result from redis");
     }
+
     @Override
     public int getSize() {
         return 0;
     }
+
     @Override
     public ReadWriteLock getReadWriteLock() {
         return readWriteLock;
     }
+
     private RedisTemplate getRedisTemplate() {
         if (redisTemplate == null) {
-            redisTemplate = ApplicationContextHelper.popBean("redisTemplate",RedisTemplate.class);
+            redisTemplate = ApplicationContextHelper.popBean("redisTemplate", RedisTemplate.class);
         }
         return redisTemplate;
     }

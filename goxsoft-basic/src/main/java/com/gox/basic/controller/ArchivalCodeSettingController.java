@@ -17,14 +17,13 @@ import java.util.List;
 
 /**
  * 档号设置Controller
- * 
+ *
  * @author gox
  * @date 2021-01-23
  */
 @RestController
 @RequestMapping("/system/setting")
-public class ArchivalCodeSettingController extends BaseController
-{
+public class ArchivalCodeSettingController extends BaseController {
     @Autowired
     private IArchivalCodeSettingService archivalCodeSettingService;
 
@@ -33,8 +32,7 @@ public class ArchivalCodeSettingController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('basic:setting:list')")
     @GetMapping("/list")
-    public TableDataInfo list(ArchivalCodeSetting archivalCodeSetting)
-    {
+    public TableDataInfo list(ArchivalCodeSetting archivalCodeSetting) {
         startPage();
         List<ArchivalCodeSetting> list = archivalCodeSettingService.selectArchivalCodeSettingList(archivalCodeSetting);
         return getDataTable(list);
@@ -46,8 +44,7 @@ public class ArchivalCodeSettingController extends BaseController
     @PreAuthorize("@ss.hasPermi('basic:setting:export')")
     @Log(title = "档号设置", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
-    public AjaxResult export(ArchivalCodeSetting archivalCodeSetting)
-    {
+    public AjaxResult export(ArchivalCodeSetting archivalCodeSetting) {
         List<ArchivalCodeSetting> list = archivalCodeSettingService.selectArchivalCodeSettingList(archivalCodeSetting);
         ExcelUtil<ArchivalCodeSetting> util = new ExcelUtil<ArchivalCodeSetting>(ArchivalCodeSetting.class);
         return util.exportExcel(list, "setting");
@@ -58,8 +55,7 @@ public class ArchivalCodeSettingController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('basic:setting:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
-    {
+    public AjaxResult getInfo(@PathVariable("id") Long id) {
         return AjaxResult.success(archivalCodeSettingService.selectArchivalCodeSettingById(id));
     }
 
@@ -69,8 +65,7 @@ public class ArchivalCodeSettingController extends BaseController
     @PreAuthorize("@ss.hasPermi('basic:setting:add')")
     @Log(title = "档号设置", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody ArchivalCodeSetting archivalCodeSetting)
-    {
+    public AjaxResult add(@RequestBody ArchivalCodeSetting archivalCodeSetting) {
         archivalCodeSetting.setId(SnowflakesTools.WORKER.nextId());
         return toAjax(archivalCodeSettingService.insertArchivalCodeSetting(archivalCodeSetting));
     }
@@ -81,8 +76,7 @@ public class ArchivalCodeSettingController extends BaseController
     @PreAuthorize("@ss.hasPermi('basic:setting:edit')")
     @Log(title = "档号设置", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody ArchivalCodeSetting archivalCodeSetting)
-    {
+    public AjaxResult edit(@RequestBody ArchivalCodeSetting archivalCodeSetting) {
         return toAjax(archivalCodeSettingService.updateArchivalCodeSetting(archivalCodeSetting));
     }
 
@@ -91,9 +85,8 @@ public class ArchivalCodeSettingController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('basic:setting:remove')")
     @Log(title = "档号设置", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
-    {
+    @DeleteMapping("/{ids}")
+    public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(archivalCodeSettingService.deleteArchivalCodeSettingByIds(ids));
     }
 }

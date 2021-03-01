@@ -131,7 +131,7 @@
 
             </el-col>
             <el-col :span="18">
-              <el-form :model="form" ref="form" :rules="rules" style="margin-left: 20px;"  class="demo-ruleForm">
+              <el-form :model="form" ref="form" :rules="rules" style="margin-left: 20px;" class="demo-ruleForm">
                 <el-form-item
                   label="是否为表格字段"
                 >
@@ -142,7 +142,7 @@
                   </el-switch>
                 </el-form-item>
                 <el-form-item label="排序" prop="tableFieldSort">
-                  <el-input-number v-model="form.tableFieldSort"  :min="1" :max="200" label=""></el-input-number>
+                  <el-input-number v-model="form.tableFieldSort" :min="1" :max="200" label=""></el-input-number>
                 </el-form-item>
                 <el-form-item label="占位" prop="tableTitleWidth">
                   <el-input
@@ -153,7 +153,7 @@
                     clearable>
                   </el-input>
                 </el-form-item>
-                <el-form-item style="margin-top:20px" >
+                <el-form-item style="margin-top:20px">
                   <el-button type="primary" @click="saveForm">
                     确定
                   </el-button>
@@ -174,313 +174,322 @@
 </template>
 
 <script>
-import { listJson, order, delJson, addJson, updateJson, exportJson, getTableField , updateTableField } from '@/api/system/json'
-import deptTree from '@/views/components/deptTree'
-import Sortable from 'sortablejs'
+  import {
+    listJson,
+    order,
+    delJson,
+    addJson,
+    updateJson,
+    exportJson,
+    getTableField,
+    updateTableField
+  } from '@/api/system/json'
+  import deptTree from '@/views/components/deptTree'
+  import Sortable from 'sortablejs'
 
-export default {
-  name: 'Json',
-  components: {
-    deptTree
-  },
-  data() {
-    return {
-      forms: new Map(),
-      filterText: '',
-      defaultProps: {
-        children: 'children',
-        label: 'label'
-      },
-      data: [],
-      tableFields:[],
-      //deptId
-      deptId: undefined,
-      nodeId: undefined,
-      // 遮罩层
-      loading: true,
-      // 选中数组
-      ids: [],
-      // 非单个禁用
-      single: true,
-      // 非多个禁用
-      multiple: true,
-      // 显示搜索条件
-      showSearch: false,
-      // 总条数
-      total: 0,
-      // 单json存储表格数据
-      jsonList: [],
-      // 弹出层标题
-      title: '',
-      // 是否显示弹出层
-      open: false,
-      // 查询参数
-      queryParams: {
-        pageNum: 1,
-        pageSize: 10,
-        formName: null,
-        formData: null,
-        nodeId: null,
-        deptId: null
-      },
-      // 表单参数
-      form: {},
-      // 表单校验
-      rules: {
-        remark: [
-          { required: true, message: '备注不能为空', trigger: 'blur' }
-        ],
-        formName: [
-          { required: true, message: '表单名字不能为空', trigger: 'blur' }
-        ],
-        tableTitleWidth: [
-          { required: true,message:'请输入占位',trigger: 'blur'},
-          { type: 'number', message: '年龄必须为数字值'},
-        ],
-        tableFieldSort:[
-          {
-            required: true,message:'请输入排序',trigger: 'blur'
-          }
-        ]
-        // delFlag: [
-        //   { required: true, message: "删除标志不能为空", trigger: "blur" }
-        // ]
-      }
-    }
-  },
-  mounted() {
-    this.rowDrop()
-
-  },
-  created() {
-
-  },
-  watch: {
-    filterText(val) {
-      this.$refs.tree.filter(val)
-      let a = this.data.filter((item)=>{
-        if (!val) return true
-        return item.label.indexOf(val) !== -1
-      })
-      if (a){
-        this.$nextTick(()=>{
-          this.$refs.tree.setCurrentKey(a[0])
-        })
-        this.handleClick(a[0])
-      }
-    }
-  },
-
-  methods: {
-    saveForm() {
-      this.$refs.form.validate((valid) => {
-        if (valid) {
-          this.forms.set(this.form.id,this.form)
-        } else {
-          console.log('error submit!!');
-          return false;
+  export default {
+    name: 'Json',
+    components: {
+      deptTree
+    },
+    data() {
+      return {
+        forms: new Map(),
+        filterText: '',
+        defaultProps: {
+          children: 'children',
+          label: 'label'
+        },
+        data: [],
+        tableFields: [],
+        //deptId
+        deptId: undefined,
+        nodeId: undefined,
+        // 遮罩层
+        loading: true,
+        // 选中数组
+        ids: [],
+        // 非单个禁用
+        single: true,
+        // 非多个禁用
+        multiple: true,
+        // 显示搜索条件
+        showSearch: false,
+        // 总条数
+        total: 0,
+        // 单json存储表格数据
+        jsonList: [],
+        // 弹出层标题
+        title: '',
+        // 是否显示弹出层
+        open: false,
+        // 查询参数
+        queryParams: {
+          pageNum: 1,
+          pageSize: 10,
+          formName: null,
+          formData: null,
+          nodeId: null,
+          deptId: null
+        },
+        // 表单参数
+        form: {},
+        // 表单校验
+        rules: {
+          remark: [
+            {required: true, message: '备注不能为空', trigger: 'blur'}
+          ],
+          formName: [
+            {required: true, message: '表单名字不能为空', trigger: 'blur'}
+          ],
+          tableTitleWidth: [
+            {required: true, message: '请输入占位', trigger: 'blur'},
+            {type: 'number', message: '年龄必须为数字值'},
+          ],
+          tableFieldSort: [
+            {
+              required: true, message: '请输入排序', trigger: 'blur'
+            }
+          ]
+          // delFlag: [
+          //   { required: true, message: "删除标志不能为空", trigger: "blur" }
+          // ]
         }
-      })
-      let data = []
-      this.forms.forEach(item=>{
-        data.push(item)
-      })
-      //提交
-      updateTableField(data).then(res=>{
-        this.$message.success(res.msg)
-      })
+      }
     },
-    cancelEdit(){
-      this.open=false
+    mounted() {
+      this.rowDrop()
+
     },
-    handleClick(data){
-      let f = false
-      //如果不是空的 则为上一个表单 保存进修改map中
-      if(JSON.stringify(this.form)!=="{}"){
+    created() {
+
+    },
+    watch: {
+      filterText(val) {
+        this.$refs.tree.filter(val)
+        let a = this.data.filter((item) => {
+          if (!val) return true
+          return item.label.indexOf(val) !== -1
+        })
+        if (a) {
+          this.$nextTick(() => {
+            this.$refs.tree.setCurrentKey(a[0])
+          })
+          this.handleClick(a[0])
+        }
+      }
+    },
+
+    methods: {
+      saveForm() {
         this.$refs.form.validate((valid) => {
           if (valid) {
-            this.forms.set(this.form.id,this.form)
+            this.forms.set(this.form.id, this.form)
           } else {
             console.log('error submit!!');
             return false;
           }
         })
-        f =true
-      }
-      this.form={}
-      let formData = this.tableFields.filter(item=>{
-        return item.id===data.id
-      })
-      this.form={
-        id:formData[0].id,
-        flag:formData[0].flag,
-        tableFieldSort:formData[0].tableFieldSort,
-        tableTitleWidth:formData[0].tableTitleWidth
-      }
-    },
-    filterNode(value, data) {
-      if (!value) return true
-      if(data.label.indexOf(value) !== -1){
-        return true
-      }
-    },
-    // 行拖拽
-    rowDrop() {
-      // 此时找到的元素是要拖拽元素的父容器
-      const tbody = document.querySelector('.el-table__body-wrapper tbody')
-      const _this = this
-      Sortable.create(tbody, {
-        //  指定父元素下可被拖拽的子元素
-        draggable: '.el-table__row',
-        onEnd({ newIndex, oldIndex }) {
-          const currRow = _this.jsonList.splice(oldIndex, 1)[0]
-          _this.jsonList.splice(newIndex, 0, currRow)
-          for (let i = 0; i < _this.jsonList.length; i++) {
-            _this.jsonList[i].order = i + 1
-          }
-          order(_this.jsonList).then(res => {
-            _this.$message.success(res.msg)
+        let data = []
+        this.forms.forEach(item => {
+          data.push(item)
+        })
+        //提交
+        updateTableField(data).then(res => {
+          this.$message.success(res.msg)
+        })
+      },
+      cancelEdit() {
+        this.open = false
+      },
+      handleClick(data) {
+        let f = false
+        //如果不是空的 则为上一个表单 保存进修改map中
+        if (JSON.stringify(this.form) !== "{}") {
+          this.$refs.form.validate((valid) => {
+            if (valid) {
+              this.forms.set(this.form.id, this.form)
+            } else {
+              console.log('error submit!!');
+              return false;
+            }
           })
+          f = true
         }
-      })
-    },
-    selectedDept(data) {
-      this.deptId = data
-      this.getList()
-    },
-    handTableField() {
-      this.title = '修改表格头'
-      this.open = true
-      this.$nextTick(() =>{
-        this.$refs.tree.setCurrentKey(this.data[0].id)
-      })
-      this.handleClick(this.tableFields[0])
-    },
-    // filterMethod(query, item) {
-    //   return item.name.indexOf(query) > -1;
-    // },
-    /** 查询单json存储列表 */
-    getList() {
-      this.loading = true
-      this.queryParams.deptId = this.deptId
-      let i = this.$route.fullPath.lastIndexOf('/')
-      this.nodeId = Number(this.$route.fullPath.substring(i + 1))
-      this.queryParams.nodeId = this.nodeId
-      listJson(this.queryParams).then(response => {
-        this.jsonList = response.rows
-        this.total = response.total
-        this.loading = false
-      })
-      getTableField(this.nodeId, this.deptId).then(res => {
-        let fields = res.data
-        this.tableFields=fields
-        fields.sort((a, b) => {
-          return b.tableFieldSort - a.tableFieldSort
+        this.form = {}
+        let formData = this.tableFields.filter(item => {
+          return item.id === data.id
         })
-        this.data = []
-        fields.forEach((item, index) => {
-          this.data.push({
-            label: item.tableFieldName,
-            id: item.id
-          })
-        })
-      })
-    },
-    // 取消按钮
-    cancel() {
-      this.open = false
-      this.reset()
-    },
-    // 表单重置
-    reset() {
-      this.form = {
-        id: null,
-        createTime: null,
-        updateTime: null,
-        createBy: null,
-        updateBy: null,
-        remark: null,
-        formName: null,
-        formData: null,
-        delFlag: null
-      }
-      this.resetForm('form')
-    },
-    /** 搜索按钮操作 */
-    handleQuery() {
-      this.queryParams.pageNum = 1
-      this.getList()
-    },
-    /** 重置按钮操作 */
-    resetQuery() {
-      this.resetForm('queryForm')
-      this.handleQuery()
-    },
-    // 多选框选中数据
-    handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.id)
-      this.single = selection.length !== 1
-      this.multiple = !selection.length
-    },
-    /** 新增按钮操作 */
-    handleAdd() {
-      this.$router.push('/tool/build/' + this.deptId + '/' + this.nodeId)
-    },
-    /** 修改按钮操作 */
-    handleUpdate(row) {
-      //this.reset();
-      console.log(row)
-      const id = row.id
-      this.$router.push('/tool/build/' + id)
-    },
-    /** 提交按钮 */
-    submitForm() {
-      this.$refs['form'].validate(valid => {
-        if (valid) {
-          if (this.form.id != null) {
-            updateJson(this.form).then(response => {
-              this.msgSuccess('修改成功')
-              this.open = false
-              this.getList()
-            })
-          } else {
-            addJson(this.form).then(response => {
-              this.msgSuccess('新增成功')
-              this.open = false
-              this.getList()
+        this.form = {
+          id: formData[0].id,
+          flag: formData[0].flag,
+          tableFieldSort: formData[0].tableFieldSort,
+          tableTitleWidth: formData[0].tableTitleWidth
+        }
+      },
+      filterNode(value, data) {
+        if (!value) return true
+        if (data.label.indexOf(value) !== -1) {
+          return true
+        }
+      },
+      // 行拖拽
+      rowDrop() {
+        // 此时找到的元素是要拖拽元素的父容器
+        const tbody = document.querySelector('.el-table__body-wrapper tbody')
+        const _this = this
+        Sortable.create(tbody, {
+          //  指定父元素下可被拖拽的子元素
+          draggable: '.el-table__row',
+          onEnd({newIndex, oldIndex}) {
+            const currRow = _this.jsonList.splice(oldIndex, 1)[0]
+            _this.jsonList.splice(newIndex, 0, currRow)
+            for (let i = 0; i < _this.jsonList.length; i++) {
+              _this.jsonList[i].order = i + 1
+            }
+            order(_this.jsonList).then(res => {
+              _this.$message.success(res.msg)
             })
           }
-        }
-      })
-    },
-    /** 删除按钮操作 */
-    handleDelete(row) {
-      const ids = row.id || this.ids
-      this.$confirm('是否确认删除表单单json编号为"' + ids + '"的数据项?', '警告', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(function() {
-        return delJson(ids)
-      }).then(() => {
+        })
+      },
+      selectedDept(data) {
+        this.deptId = data
         this.getList()
-        this.msgSuccess('删除成功')
-      })
-    },
-    /** 导出按钮操作 */
-    handleExport() {
-      const queryParams = this.queryParams
-      this.$confirm('是否确认导出所有表单json数据项?', '警告', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(function() {
-        return exportJson(queryParams)
-      }).then(response => {
-        this.download(response.msg)
-      })
+      },
+      handTableField() {
+        this.title = '修改表格头'
+        this.open = true
+        this.$nextTick(() => {
+          this.$refs.tree.setCurrentKey(this.data[0].id)
+        })
+        this.handleClick(this.tableFields[0])
+      },
+      // filterMethod(query, item) {
+      //   return item.name.indexOf(query) > -1;
+      // },
+      /** 查询单json存储列表 */
+      getList() {
+        this.loading = true
+        this.queryParams.deptId = this.deptId
+        let i = this.$route.fullPath.lastIndexOf('/')
+        this.nodeId = Number(this.$route.fullPath.substring(i + 1))
+        this.queryParams.nodeId = this.nodeId
+        listJson(this.queryParams).then(response => {
+          this.jsonList = response.rows
+          this.total = response.total
+          this.loading = false
+        })
+        getTableField(this.nodeId, this.deptId).then(res => {
+          let fields = res.data
+          this.tableFields = fields
+          fields.sort((a, b) => {
+            return b.tableFieldSort - a.tableFieldSort
+          })
+          this.data = []
+          fields.forEach((item, index) => {
+            this.data.push({
+              label: item.tableFieldName,
+              id: item.id
+            })
+          })
+        })
+      },
+      // 取消按钮
+      cancel() {
+        this.open = false
+        this.reset()
+      },
+      // 表单重置
+      reset() {
+        this.form = {
+          id: null,
+          createTime: null,
+          updateTime: null,
+          createBy: null,
+          updateBy: null,
+          remark: null,
+          formName: null,
+          formData: null,
+          delFlag: null
+        }
+        this.resetForm('form')
+      },
+      /** 搜索按钮操作 */
+      handleQuery() {
+        this.queryParams.pageNum = 1
+        this.getList()
+      },
+      /** 重置按钮操作 */
+      resetQuery() {
+        this.resetForm('queryForm')
+        this.handleQuery()
+      },
+      // 多选框选中数据
+      handleSelectionChange(selection) {
+        this.ids = selection.map(item => item.id)
+        this.single = selection.length !== 1
+        this.multiple = !selection.length
+      },
+      /** 新增按钮操作 */
+      handleAdd() {
+        this.$router.push('/tool/build/' + this.deptId + '/' + this.nodeId)
+      },
+      /** 修改按钮操作 */
+      handleUpdate(row) {
+        //this.reset();
+        console.log(row)
+        const id = row.id
+        this.$router.push('/tool/build/' + id)
+      },
+      /** 提交按钮 */
+      submitForm() {
+        this.$refs['form'].validate(valid => {
+          if (valid) {
+            if (this.form.id != null) {
+              updateJson(this.form).then(response => {
+                this.msgSuccess('修改成功')
+                this.open = false
+                this.getList()
+              })
+            } else {
+              addJson(this.form).then(response => {
+                this.msgSuccess('新增成功')
+                this.open = false
+                this.getList()
+              })
+            }
+          }
+        })
+      },
+      /** 删除按钮操作 */
+      handleDelete(row) {
+        const ids = row.id || this.ids
+        this.$confirm('是否确认删除表单单json编号为"' + ids + '"的数据项?', '警告', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(function () {
+          return delJson(ids)
+        }).then(() => {
+          this.getList()
+          this.msgSuccess('删除成功')
+        })
+      },
+      /** 导出按钮操作 */
+      handleExport() {
+        const queryParams = this.queryParams
+        this.$confirm('是否确认导出所有表单json数据项?', '警告', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(function () {
+          return exportJson(queryParams)
+        }).then(response => {
+          this.download(response.msg)
+        })
+      }
     }
   }
-}
 </script>
 

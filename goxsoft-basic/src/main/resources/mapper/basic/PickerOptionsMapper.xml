@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.gox.basic.mapper.PickerOptionsMapper">
-    
+
     <resultMap type="PickerOptions" id="PickerOptionsResult">
-        <result property="id"    column="id"    />
-        <result property="itemId"    column="item_id"    />
-        <result property="selectableRange"    column="selectable_range"    />
+        <result property="id" column="id"/>
+        <result property="itemId" column="item_id"/>
+        <result property="selectableRange" column="selectable_range"/>
     </resultMap>
 
     <sql id="selectPickerOptionsVo">
@@ -16,12 +16,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectPickerOptionsList" parameterType="PickerOptions" resultMap="PickerOptionsResult">
         <include refid="selectPickerOptionsVo"/>
-        <where>  
-            <if test="itemId != null "> and item_id = #{itemId}</if>
-            <if test="selectableRange != null  and selectableRange != ''"> and selectable_range = #{selectableRange}</if>
+        <where>
+            <if test="itemId != null ">and item_id = #{itemId}</if>
+            <if test="selectableRange != null  and selectableRange != ''">and selectable_range = #{selectableRange}</if>
         </where>
     </select>
-    
+
     <select id="selectPickerOptionsById" parameterType="Long" resultMap="PickerOptionsResult">
         <include refid="selectPickerOptionsVo"/>
         where id = #{id}
@@ -37,12 +37,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="id != null">id,</if>
             <if test="itemId != null">item_id,</if>
             <if test="selectableRange != null">selectable_range,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
             <if test="itemId != null">#{itemId},</if>
             <if test="selectableRange != null">#{selectableRange},</if>
-         </trim>
+        </trim>
     </insert>
 
     <update id="updatePickerOptions" parameterType="PickerOptions">
@@ -59,10 +59,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deletePickerOptionsByIds" parameterType="String">
-        delete from picker_options where id in 
+        delete from picker_options where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>
-    
+
 </mapper>

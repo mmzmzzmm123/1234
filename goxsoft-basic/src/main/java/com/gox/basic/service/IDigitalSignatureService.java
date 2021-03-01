@@ -6,15 +6,14 @@ import java.util.List;
 
 /**
  * 数字签名Service接口
- * 
+ *
  * @author gox
  * @date 2020-12-29
  */
-public interface IDigitalSignatureService 
-{
+public interface IDigitalSignatureService {
     /**
      * 查询数字签名
-     * 
+     *
      * @param id 数字签名ID
      * @return 数字签名
      */
@@ -22,7 +21,7 @@ public interface IDigitalSignatureService
 
     /**
      * 查询数字签名列表
-     * 
+     *
      * @param digitalSignature 数字签名
      * @return 数字签名集合
      */
@@ -30,7 +29,7 @@ public interface IDigitalSignatureService
 
     /**
      * 新增数字签名
-     * 
+     *
      * @param digitalSignature 数字签名
      * @return 结果
      */
@@ -38,7 +37,7 @@ public interface IDigitalSignatureService
 
     /**
      * 修改数字签名
-     * 
+     *
      * @param digitalSignature 数字签名
      * @return 结果
      */
@@ -46,7 +45,7 @@ public interface IDigitalSignatureService
 
     /**
      * 批量删除数字签名
-     * 
+     *
      * @param ids 需要删除的数字签名ID
      * @return 结果
      */
@@ -54,7 +53,7 @@ public interface IDigitalSignatureService
 
     /**
      * 删除数字签名信息
-     * 
+     *
      * @param id 数字签名ID
      * @return 结果
      */

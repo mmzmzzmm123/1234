@@ -20,25 +20,24 @@ import java.util.List;
 
 /**
  * 电子文件信息Controller
- * 
+ *
  * @author gox
  * @date 2020-12-29
  */
 @RestController
 @RequestMapping("/system/attributes")
-public class ElectronicAttributesController extends BaseController
-{
+public class ElectronicAttributesController extends BaseController {
     @Autowired
     private IElectronicAttributesService electronicAttributesService;
     @Autowired
     RedisCache redisCache;
+
     /**
      * 查询电子文件信息列表
      */
     @PreAuthorize("@ss.hasPermi('basic:attributes:list')")
     @GetMapping("/list")
-    public TableDataInfo list(ElectronicAttributes electronicAttributes)
-    {
+    public TableDataInfo list(ElectronicAttributes electronicAttributes) {
         startPage();
         List<ElectronicAttributes> list = electronicAttributesService.selectElectronicAttributesList(electronicAttributes);
         return getDataTable(list);
@@ -56,14 +55,14 @@ public class ElectronicAttributesController extends BaseController
 //        }
 //        return AjaxResult.error(500,"文件不存在!");
 //    }
+
     /**
      * 导出电子文件信息列表
      */
     @PreAuthorize("@ss.hasPermi('basic:attributes:export')")
     @Log(title = "电子文件信息", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
-    public AjaxResult export(ElectronicAttributes electronicAttributes)
-    {
+    public AjaxResult export(ElectronicAttributes electronicAttributes) {
         List<ElectronicAttributes> list = electronicAttributesService.selectElectronicAttributesList(electronicAttributes);
         ExcelUtil<ElectronicAttributes> util = new ExcelUtil<ElectronicAttributes>(ElectronicAttributes.class);
         return util.exportExcel(list, "attributes");
@@ -74,8 +73,7 @@ public class ElectronicAttributesController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('basic:attributes:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
-    {
+    public AjaxResult getInfo(@PathVariable("id") Long id) {
         return AjaxResult.success(electronicAttributesService.selectElectronicAttributesById(id));
     }
 
@@ -85,8 +83,7 @@ public class ElectronicAttributesController extends BaseController
     @PreAuthorize("@ss.hasPermi('basic:attributes:add')")
     @Log(title = "电子文件信息", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody ElectronicAttributes electronicAttributes)
-    {
+    public AjaxResult add(@RequestBody ElectronicAttributes electronicAttributes) {
         return toAjax(electronicAttributesService.insertElectronicAttributes(electronicAttributes));
     }
 
@@ -96,8 +93,7 @@ public class ElectronicAttributesController extends BaseController
     @PreAuthorize("@ss.hasPermi('basic:attributes:edit')")
     @Log(title = "电子文件信息", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody ElectronicAttributes electronicAttributes)
-    {
+    public AjaxResult edit(@RequestBody ElectronicAttributes electronicAttributes) {
         return toAjax(electronicAttributesService.updateElectronicAttributes(electronicAttributes));
     }
 
@@ -106,15 +102,16 @@ public class ElectronicAttributesController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('basic:attributes:remove')")
     @Log(title = "电子文件信息", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
-    {
+    @DeleteMapping("/{ids}")
+    public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(electronicAttributesService.deleteElectronicAttributesByIds(ids));
     }
+
     /**
      * 处理文件上传POST请求
      * 将上传的文件存放到服务器内
-     * @param chunk 文件块
+     *
+     * @param chunk    文件块
      * @param response 响应
      * @return 上传响应状态
      */
@@ -122,18 +119,19 @@ public class ElectronicAttributesController extends BaseController
     @Log(title = "电子文件信息", businessType = BusinessType.INSERT)
     @PostMapping("/fileUpload")
     public String uploadPost(@ModelAttribute Chunk chunk, HttpServletResponse response, Long metadataId) throws IOException {
-        return electronicAttributesService.fileUploadPost(chunk,response,metadataId);
+        return electronicAttributesService.fileUploadPost(chunk, response, metadataId);
     }
 
     /**
      * 处理文件上传GET请求
      * 验证上传的文件块，是否允许浏览器再次发送POST请求（携带二进制文件的请求流，FormData）
-     * @param chunk 文件块
+     *
+     * @param chunk    文件块
      * @param response 响应
      * @return 文件块
      */
     @GetMapping("/fileUpload")
-    public void uploadGet(@ModelAttribute Chunk chunk,HttpServletResponse response){
-        electronicAttributesService.fileUploadGet(chunk,response);
+    public void uploadGet(@ModelAttribute Chunk chunk, HttpServletResponse response) {
+        electronicAttributesService.fileUploadGet(chunk, response);
     }
 }

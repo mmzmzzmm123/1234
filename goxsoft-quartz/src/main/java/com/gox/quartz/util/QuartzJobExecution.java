@@ -5,15 +5,12 @@ import com.gox.quartz.domain.SysJob;
 
 /**
  * 定时任务处理（允许并发执行）
- * 
- * @author gox
  *
+ * @author gox
  */
-public class QuartzJobExecution extends AbstractQuartzJob
-{
+public class QuartzJobExecution extends AbstractQuartzJob {
     @Override
-    protected void doExecute(JobExecutionContext context, SysJob sysJob) throws Exception
-    {
+    protected void doExecute(JobExecutionContext context, SysJob sysJob) throws Exception {
         JobInvokeUtil.invokeMethod(sysJob);
     }
 }

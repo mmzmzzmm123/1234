@@ -5,17 +5,17 @@
 </template>
 
 <script>
-export default {
-  name: 'goxGit',
-  data() {
-    return {
-      url: 'https://gitee.com/y_project/gox-Vue'
-    }
-  },
-  methods: {
-    goto() {
-      window.open(this.url)
+  export default {
+    name: 'goxGit',
+    data() {
+      return {
+        url: 'https://gitee.com/y_project/gox-Vue'
+      }
+    },
+    methods: {
+      goto() {
+        window.open(this.url)
+      }
     }
   }
-}
 </script>

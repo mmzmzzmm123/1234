@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.gox.basic.mapper.AgentMapper">
-    
+
     <resultMap type="Agent" id="AgentResult">
-        <result property="agentIdentifier"    column="agent_identifier"    />
-        <result property="mdId"    column="md_id"    />
-        <result property="agentName"    column="agent_name"    />
-        <result property="agentType"    column="agent_type"    />
-        <result property="agentBelongsTo"    column="agent_belongs_to"    />
+        <result property="agentIdentifier" column="agent_identifier"/>
+        <result property="mdId" column="md_id"/>
+        <result property="agentName" column="agent_name"/>
+        <result property="agentType" column="agent_type"/>
+        <result property="agentBelongsTo" column="agent_belongs_to"/>
     </resultMap>
 
     <sql id="selectAgentVo">
@@ -18,19 +18,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectAgentList" parameterType="Agent" resultMap="AgentResult">
         <include refid="selectAgentVo"/>
-        <where>  
-            <if test="mdId != null "> and md_id = #{mdId}</if>
-            <if test="agentName != null  and agentName != ''"> and agent_name like concat('%', #{agentName}, '%')</if>
-            <if test="agentType != null  and agentType != ''"> and agent_type = #{agentType}</if>
-            <if test="agentBelongsTo != null  and agentBelongsTo != ''"> and agent_belongs_to = #{agentBelongsTo}</if>
+        <where>
+            <if test="mdId != null ">and md_id = #{mdId}</if>
+            <if test="agentName != null  and agentName != ''">and agent_name like concat('%', #{agentName}, '%')</if>
+            <if test="agentType != null  and agentType != ''">and agent_type = #{agentType}</if>
+            <if test="agentBelongsTo != null  and agentBelongsTo != ''">and agent_belongs_to = #{agentBelongsTo}</if>
         </where>
     </select>
-    
+
     <select id="selectAgentById" parameterType="Long" resultMap="AgentResult">
         <include refid="selectAgentVo"/>
         where agent_identifier = #{agentIdentifier}
     </select>
-        
+
     <insert id="insertAgent" parameterType="Agent">
         insert into agent
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -39,14 +39,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="agentName != null">agent_name,</if>
             <if test="agentType != null">agent_type,</if>
             <if test="agentBelongsTo != null">agent_belongs_to,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="agentIdentifier != null">#{agentIdentifier},</if>
             <if test="mdId != null">#{mdId},</if>
             <if test="agentName != null">#{agentName},</if>
             <if test="agentType != null">#{agentType},</if>
             <if test="agentBelongsTo != null">#{agentBelongsTo},</if>
-         </trim>
+        </trim>
     </insert>
 
     <update id="updateAgent" parameterType="Agent">
@@ -65,10 +65,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteAgentByIds" parameterType="String">
-        delete from agent where agent_identifier in 
+        delete from agent where agent_identifier in
         <foreach item="agentIdentifier" collection="array" open="(" separator="," close=")">
             #{agentIdentifier}
         </foreach>
     </delete>
-    
+
 </mapper>

@@ -8,10 +8,11 @@ export function listMetadataRule(query) {
     params: query
   })
 }
+
 // 查询元数据定义规则列表
 export function listDefinition(nameCn) {
   return request({
-    url: '/system/metadataRule/definition/'+nameCn,
+    url: '/system/metadataRule/definition/' + nameCn,
     method: 'get',
   })
 }

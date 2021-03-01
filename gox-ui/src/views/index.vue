@@ -5,84 +5,86 @@
 </template>
 
 <script>
-export default {
-  name: "index",
-  data() {
-    return {
-      // 版本号
-      //version: "3.3.0",
-      title: '高鑫全档数字档案综合系统',
-    };
-  },
-  methods: {
-    goTarget(href) {
-      window.open(href, "_blank");
+  export default {
+    name: "index",
+    data() {
+      return {
+        // 版本号
+        //version: "3.3.0",
+        title: '高鑫全档数字档案综合系统',
+      };
     },
-  },
-};
+    methods: {
+      goTarget(href) {
+        window.open(href, "_blank");
+      },
+    },
+  };
 </script>
 
 <style scoped lang="scss">
-.home {
-  blockquote {
-    padding: 10px 20px;
-    margin: 0 0 20px;
-    font-size: 17.5px;
-    border-left: 5px solid #eee;
-  }
-  hr {
-    margin-top: 20px;
-    margin-bottom: 20px;
-    border: 0;
-    border-top: 1px solid #eee;
-  }
-  .col-item {
-    margin-bottom: 20px;
-  }
+  .home {
+    blockquote {
+      padding: 10px 20px;
+      margin: 0 0 20px;
+      font-size: 17.5px;
+      border-left: 5px solid #eee;
+    }
 
-  ul {
-    padding: 0;
-    margin: 0;
-  }
+    hr {
+      margin-top: 20px;
+      margin-bottom: 20px;
+      border: 0;
+      border-top: 1px solid #eee;
+    }
 
-  font-family: "open sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 13px;
-  color: #676a6c;
-  overflow-x: hidden;
+    .col-item {
+      margin-bottom: 20px;
+    }
 
-  ul {
-    list-style-type: none;
-  }
+    ul {
+      padding: 0;
+      margin: 0;
+    }
 
-  h4 {
-    margin-top: 0px;
-  }
+    font-family: "open sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 13px;
+    color: #676a6c;
+    overflow-x: hidden;
 
-  h2 {
-    margin-top: 10px;
-    font-size: 26px;
-    font-weight: 100;
-  }
+    ul {
+      list-style-type: none;
+    }
 
-  p {
-    margin-top: 10px;
+    h4 {
+      margin-top: 0px;
+    }
 
-    b {
-      font-weight: 700;
+    h2 {
+      margin-top: 10px;
+      font-size: 26px;
+      font-weight: 100;
+    }
+
+    p {
+      margin-top: 10px;
+
+      b {
+        font-weight: 700;
+      }
+    }
+
+    .update-log {
+      ol {
+        display: block;
+        list-style-type: decimal;
+        margin-block-start: 1em;
+        margin-block-end: 1em;
+        margin-inline-start: 0;
+        margin-inline-end: 0;
+        padding-inline-start: 40px;
+      }
     }
   }
-
-  .update-log {
-    ol {
-      display: block;
-      list-style-type: decimal;
-      margin-block-start: 1em;
-      margin-block-end: 1em;
-      margin-inline-start: 0;
-      margin-inline-end: 0;
-      padding-inline-start: 40px;
-    }
-  }
-}
 </style>
 

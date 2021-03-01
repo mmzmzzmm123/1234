@@ -1,40 +1,41 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.gox.basic.mapper.ArchivalCodeSettingMapper">
-    
+
     <resultMap type="com.gox.basic.domain.ArchivalCodeSetting" id="ArchivalCodeSettingResult">
-        <result property="id"    column="id"    />
-        <result property="deptId"    column="dept_id"    />
-        <result property="field1"    column="field1"    />
-        <result property="field2"    column="field2"    />
-        <result property="field3"    column="field3"    />
-        <result property="field4"    column="field4"    />
-        <result property="field5"    column="field5"    />
+        <result property="id" column="id"/>
+        <result property="deptId" column="dept_id"/>
+        <result property="field1" column="field1"/>
+        <result property="field2" column="field2"/>
+        <result property="field3" column="field3"/>
+        <result property="field4" column="field4"/>
+        <result property="field5" column="field5"/>
     </resultMap>
 
     <sql id="selectArchivalCodeSettingVo">
         select id, dept_id, field1, field2, field3, field4, field5 from archival_code_setting
     </sql>
 
-    <select id="selectArchivalCodeSettingList" parameterType="com.gox.basic.domain.ArchivalCodeSetting" resultMap="ArchivalCodeSettingResult">
+    <select id="selectArchivalCodeSettingList" parameterType="com.gox.basic.domain.ArchivalCodeSetting"
+            resultMap="ArchivalCodeSettingResult">
         <include refid="selectArchivalCodeSettingVo"/>
-        <where>  
-            <if test="deptId != null "> and dept_id = #{deptId}</if>
-            <if test="field1 != null  and field1 != ''"> and field1 = #{field1}</if>
-            <if test="field2 != null  and field2 != ''"> and field2 = #{field2}</if>
-            <if test="field3 != null  and field3 != ''"> and field3 = #{field3}</if>
-            <if test="field4 != null  and field4 != ''"> and field4 = #{field4}</if>
-            <if test="field5 != null  and field5 != ''"> and field5 = #{field5}</if>
+        <where>
+            <if test="deptId != null ">and dept_id = #{deptId}</if>
+            <if test="field1 != null  and field1 != ''">and field1 = #{field1}</if>
+            <if test="field2 != null  and field2 != ''">and field2 = #{field2}</if>
+            <if test="field3 != null  and field3 != ''">and field3 = #{field3}</if>
+            <if test="field4 != null  and field4 != ''">and field4 = #{field4}</if>
+            <if test="field5 != null  and field5 != ''">and field5 = #{field5}</if>
         </where>
     </select>
-    
+
     <select id="selectArchivalCodeSettingById" parameterType="Long" resultMap="ArchivalCodeSettingResult">
         <include refid="selectArchivalCodeSettingVo"/>
         where id = #{id}
     </select>
-        
+
     <insert id="insertArchivalCodeSetting" parameterType="com.gox.basic.domain.ArchivalCodeSetting">
         insert into archival_code_setting
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -45,7 +46,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="field3 != null">field3,</if>
             <if test="field4 != null">field4,</if>
             <if test="field5 != null">field5,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
             <if test="deptId != null">#{deptId},</if>
@@ -54,7 +55,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="field3 != null">#{field3},</if>
             <if test="field4 != null">#{field4},</if>
             <if test="field5 != null">#{field5},</if>
-         </trim>
+        </trim>
     </insert>
 
     <update id="updateArchivalCodeSetting" parameterType="com.gox.basic.domain.ArchivalCodeSetting">
@@ -75,10 +76,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteArchivalCodeSettingByIds" parameterType="String">
-        delete from archival_code_setting where id in 
+        delete from archival_code_setting where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>
-    
+
 </mapper>

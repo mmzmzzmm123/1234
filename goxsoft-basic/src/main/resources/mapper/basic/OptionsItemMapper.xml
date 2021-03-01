@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.gox.basic.mapper.OptionsItemMapper">
-    
+
     <resultMap type="OptionsItem" id="OptionsItemResult">
-        <result property="id"    column="id"    />
-        <result property="itemId"    column="item_id"    />
-        <result property="slotId"    column="slot_id"    />
-        <result property="label"    column="label"    />
-        <result property="value"    column="value"    />
+        <result property="id" column="id"/>
+        <result property="itemId" column="item_id"/>
+        <result property="slotId" column="slot_id"/>
+        <result property="label" column="label"/>
+        <result property="value" column="value"/>
     </resultMap>
 
     <sql id="selectOptionsItemVo">
@@ -18,14 +18,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectOptionsItemList" parameterType="OptionsItem" resultMap="OptionsItemResult">
         <include refid="selectOptionsItemVo"/>
-        <where>  
-            <if test="itemId != null "> and item_id = #{itemId}</if>
-            <if test="slotId != null "> and slot_id = #{slotId}</if>
-            <if test="label != null  and label != ''"> and label = #{label}</if>
-            <if test="value != null "> and value = #{value}</if>
+        <where>
+            <if test="itemId != null ">and item_id = #{itemId}</if>
+            <if test="slotId != null ">and slot_id = #{slotId}</if>
+            <if test="label != null  and label != ''">and label = #{label}</if>
+            <if test="value != null ">and value = #{value}</if>
         </where>
     </select>
-    
+
     <select id="selectOptionsItemById" parameterType="Long" resultMap="OptionsItemResult">
         <include refid="selectOptionsItemVo"/>
         where id = #{id}
@@ -47,14 +47,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="slotId != null">slot_id,</if>
             <if test="label != null">label,</if>
             <if test="value != null">value,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
             <if test="itemId != null">#{itemId},</if>
             <if test="slotId != null">#{slotId},</if>
             <if test="label != null">#{label},</if>
             <if test="value != null">#{value},</if>
-         </trim>
+        </trim>
     </insert>
 
     <update id="updateOptionsItem" parameterType="OptionsItem">
@@ -73,10 +73,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteOptionsItemByIds" parameterType="String">
-        delete from options_item where id in 
+        delete from options_item where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>
-    
+
 </mapper>

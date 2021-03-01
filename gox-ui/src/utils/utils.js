@@ -1,4 +1,4 @@
-import SparkMD5  from 'spark-md5'
+import SparkMD5 from 'spark-md5'
 import service from './request'
 // 分片上传
 /*
@@ -13,7 +13,7 @@ import service from './request'
 * error 失败回调
 *
 */
-export const uploadByPieces = ({metadataId,files, chunkUrl, fileUrl, pieceSize, progress, success, error}) => {
+export const uploadByPieces = ({metadataId, files, chunkUrl, fileUrl, pieceSize, progress, success, error}) => {
   if (!files || !files.length) return
   // 上传过程中用到的变量
   let fileList = [] // 总文件列表
@@ -45,7 +45,7 @@ export const uploadByPieces = ({metadataId,files, chunkUrl, fileUrl, pieceSize, 
     let start = currentChunk * chunkSize
     let end = Math.min(file.size, start + chunkSize)
     let chunk = file.slice(start, end)
-    return { start, end, chunk }
+    return {start, end, chunk}
   }
   // 针对每个文件进行chunk处理
   const readChunkMD5 = (fileList) => {
@@ -55,7 +55,7 @@ export const uploadByPieces = ({metadataId,files, chunkUrl, fileUrl, pieceSize, 
       AllChunk = AllChunk + chunkCount // 计算全局chunk数
       // 针对单个文件进行chunk上传
       for (let i = 0; i < chunkCount; i++) {
-        const { chunk } = getChunkInfo(currentFile.file, i, chunkSize)
+        const {chunk} = getChunkInfo(currentFile.file, i, chunkSize)
         let chunkFR = new FileReader()
         chunkFR.readAsBinaryString(chunk)
         chunkFR.addEventListener('load', e => {
@@ -63,7 +63,7 @@ export const uploadByPieces = ({metadataId,files, chunkUrl, fileUrl, pieceSize, 
           let spark = new SparkMD5()
           spark.appendBinary(chunkBlob)
           let chunkMD5 = spark.end()
-          uploadChunk(currentFile, {chunkMD5, chunk, currentChunk:i, chunkCount}, fileIndex)
+          uploadChunk(currentFile, {chunkMD5, chunk, currentChunk: i, chunkCount}, fileIndex)
         }, false)
       }
     })
@@ -88,8 +88,8 @@ export const uploadByPieces = ({metadataId,files, chunkUrl, fileUrl, pieceSize, 
       //progressFun()
       //res.file_name = currentFile.name
       successAllCount++
-      console.log(successAllCount,fileList.length)
-      if (successAllCount===fileList.length){
+      console.log(successAllCount, fileList.length)
+      if (successAllCount === fileList.length) {
         console.log('全部完成')
         success && success(res)
       }
@@ -119,7 +119,7 @@ export const uploadByPieces = ({metadataId,files, chunkUrl, fileUrl, pieceSize, 
         successAllCount++
       } else {
         // 当总数大于等于分片个数的时候
-        if (chunkInfo.currentChunk >= chunkInfo.chunkCount-1) {
+        if (chunkInfo.currentChunk >= chunkInfo.chunkCount - 1) {
           uploadFile(currentFile, fileIndex)
         }
       }

@@ -16,24 +16,22 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author gox
  */
-public class FileTypeUtils
-{
+public class FileTypeUtils {
     /**
      * 获取文件类型
      * <p>
      * 例如: gox.txt, 返回: txt
-     * 
+     *
      * @param file 文件名
      * @return 后缀（不含".")
      */
-    public static String getFileType(File file)
-    {
-        if (null == file)
-        {
+    public static String getFileType(File file) {
+        if (null == file) {
             return StringUtils.EMPTY;
         }
         return getFileType(file.getName());
     }
+
     /**
      * 文件下载 utils
      */
@@ -65,10 +63,11 @@ public class FileTypeUtils
             ex.printStackTrace();
         }
     }
+
     /**
      * 预览文件
      */
-    public static void preview(String path,HttpServletResponse resp) throws IOException {
+    public static void preview(String path, HttpServletResponse resp) throws IOException {
         File file = new File(path);
         String filename = file.getName();
         // 以流的形式下载文件。
@@ -81,13 +80,14 @@ public class FileTypeUtils
         // 设置response的Header
         String type = Files.probeContentType(Paths.get(path));
         resp.setContentType(type);
-        resp.addHeader("Content-Disposition", "inline;filename=" + new String(filename.getBytes())+";filename*=utf-8''"+new String(filename.getBytes()));
+        resp.addHeader("Content-Disposition", "inline;filename=" + new String(filename.getBytes()) + ";filename*=utf-8''" + new String(filename.getBytes()));
         resp.addHeader("Content-Length", "" + file.length());
         OutputStream toClient = new BufferedOutputStream(resp.getOutputStream());
         toClient.write(buffer);
         toClient.flush();
         toClient.close();
     }
+
     /**
      * 获取文件类型
      * <p>
@@ -96,11 +96,9 @@ public class FileTypeUtils
      * @param fileName 文件名
      * @return 后缀（不含".")
      */
-    public static String getFileType(String fileName)
-    {
+    public static String getFileType(String fileName) {
         int separatorIndex = fileName.lastIndexOf(".");
-        if (separatorIndex < 0)
-        {
+        if (separatorIndex < 0) {
             return "";
         }
         return fileName.substring(separatorIndex + 1).toLowerCase();

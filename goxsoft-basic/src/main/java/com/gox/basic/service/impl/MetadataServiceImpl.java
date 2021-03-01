@@ -26,13 +26,12 @@ import java.util.List;
 
 /**
  * 文书类基本元数据Service业务层处理
- * 
+ *
  * @author gox
  * @date 2020-12-28
  */
 @Service
-public class MetadataServiceImpl implements IMetadataService
-{
+public class MetadataServiceImpl implements IMetadataService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MetadataServiceImpl.class);
     @Autowired
     private MetadataMapper metadataMapper;
@@ -40,75 +39,70 @@ public class MetadataServiceImpl implements IMetadataService
     private ElectronicAttributesMapper electronicAttributesMapper;
     @Value("${gox.profile}")
     private String profile;
+
     /**
      * 查询文书类基本元数据
-     * 
+     *
      * @param id 文书类基本元数据ID
      * @return 文书类基本元数据
      */
     @Override
-    public Metadata selectMetadataById(Long id)
-    {
+    public Metadata selectMetadataById(Long id) {
         return metadataMapper.selectMetadataById(id);
     }
 
     /**
      * 查询文书类基本元数据列表
-     * 
+     *
      * @param metadata 文书类基本元数据
      * @return 文书类基本元数据
      */
     @Override
-    public List<Metadata> selectMetadataList(Metadata metadata)
-    {
+    public List<Metadata> selectMetadataList(Metadata metadata) {
         return metadataMapper.selectMetadataList(metadata);
     }
 
     /**
      * 新增文书类基本元数据
-     * 
+     *
      * @param metadata 文书类基本元数据
      * @return 结果
      */
     @Override
-    public int insertMetadata(Metadata metadata)
-    {
+    public int insertMetadata(Metadata metadata) {
         return metadataMapper.insertMetadata(metadata);
     }
 
     /**
      * 修改文书类基本元数据
-     * 
+     *
      * @param metadata 文书类基本元数据
      * @return 结果
      */
     @Override
-    public int updateMetadata(Metadata metadata)
-    {
+    public int updateMetadata(Metadata metadata) {
         return metadataMapper.updateMetadata(metadata);
     }
 
     /**
      * 批量删除文书类基本元数据
-     * 
+     *
      * @param ids 需要删除的文书类基本元数据ID
      * @return 结果
      */
     @Override
-    public int deleteMetadataByIds(Long[] ids)
-    {
+    public int deleteMetadataByIds(Long[] ids) {
         return metadataMapper.deleteMetadataByIds(ids);
     }
 
     /**
      * 删除文书类基本元数据信息
-     * 
+     *
      * @param id 文书类基本元数据ID
      * @return 结果
      */
     @Override
-    public int deleteMetadataById(Long id)
-    {
+    public int deleteMetadataById(Long id) {
         return metadataMapper.deleteMetadataById(id);
     }
 
@@ -116,6 +110,7 @@ public class MetadataServiceImpl implements IMetadataService
      * 生成档号
      * 1.将字段取出 用’-‘连接
      * 2.在mysql 和 redis中更新
+     *
      * @param fields
      * @param values
      */
@@ -140,6 +135,7 @@ public class MetadataServiceImpl implements IMetadataService
 
     /**
      * 根据id导出 excel 电子原文
+     *
      * @param ids 文书类基本元数据ID
      * @return 结果
      */
@@ -147,33 +143,33 @@ public class MetadataServiceImpl implements IMetadataService
     public AjaxResult exportExcelAndEleByIds(Long[] ids) {
         List<Metadata> mds = metadataMapper.selectMetadataByIds(ids);
         ExcelUtil<Metadata> util = new ExcelUtil<Metadata>(Metadata.class);
-        String excel = util.exportExcel(mds,"metadata").get("msg").toString();
-        String download =profile+File.separator+"download";
-        excel = download+File.separator+excel;
+        String excel = util.exportExcel(mds, "metadata").get("msg").toString();
+        String download = profile + File.separator + "download";
+        excel = download + File.separator + excel;
         List<ElectronicAttributes> eas;
         String location;
         String dir;
         long t = System.currentTimeMillis();
         String ds = download + File.separator + t;
-        File file ;
+        File file;
         for (Metadata md : mds) {
             eas = md.getElectronicAttributes();
-            dir = ds+File.separator+md.getArchivalCode();
-            if (eas!=null&&!eas.isEmpty()){
+            dir = ds + File.separator + md.getArchivalCode();
+            if (eas != null && !eas.isEmpty()) {
                 file = new File(dir);
                 file.mkdirs();
                 for (ElectronicAttributes ea : eas) {
                     location = ea.getCurrentLocation();
-                    FileUtil.copy(location,dir,true);
+                    FileUtil.copy(location, dir, true);
                 }
             }
         }
-        FileUtil.copy(excel,ds,true);
-        String res = download+File.separator+t+".zip";
-        ZipUtil.zip(ds,res);
+        FileUtil.copy(excel, ds, true);
+        String res = download + File.separator + t + ".zip";
+        ZipUtil.zip(ds, res);
         FileUtil.del(excel);
         FileUtil.del(ds);
-        return AjaxResult.success(t+".zip");
+        return AjaxResult.success(t + ".zip");
     }
 
     /**
@@ -186,21 +182,22 @@ public class MetadataServiceImpl implements IMetadataService
     @Override
     public String uploadHandle(Chunk chunk, HttpServletResponse response) {
         String username = SecurityUtils.getUsername();
-        String parent = profile+File.separator+"temp"+username;
-        String ex= UploadUtil.mergeChunk(parent,chunk,response );
-        if (StrUtil.isBlank(ex)){
+        String parent = profile + File.separator + "temp" + username;
+        String ex = UploadUtil.mergeChunk(parent, chunk, response);
+        if (StrUtil.isBlank(ex)) {
             //判断文件是excel还是zip
 
             return "";
-        }else {
+        } else {
             return ex;
         }
     }
-    private void ExcelImport(String filepath){
+
+    private void ExcelImport(String filepath) {
         //excel 导入 字段配置
         ExcelReader reader = cn.hutool.poi.excel.ExcelUtil.getReader(filepath);
         List<List<Object>> res = reader.read(0, 1);
-        
+
     }
 
 }

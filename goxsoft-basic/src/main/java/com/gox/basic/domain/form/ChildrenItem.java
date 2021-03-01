@@ -6,25 +6,25 @@ import com.gox.common.plugin.AutoId;
 import java.io.Serializable;
 
 public class ChildrenItem implements Serializable {
-	@AutoId
-	@JSONField(name = "id")
-	private int id;
+    @AutoId
+    @JSONField(name = "id")
+    private int id;
 
-	@JSONField(name = "label")
-	private String label;
+    @JSONField(name = "label")
+    private String label;
 
-	@JSONField(name = "value")
-	private int value;
+    @JSONField(name = "value")
+    private int value;
 
-	public int getId(){
-		return id;
-	}
+    public int getId() {
+        return id;
+    }
 
-	public String getLabel(){
-		return label;
-	}
+    public String getLabel() {
+        return label;
+    }
 
-	public int getValue(){
-		return value;
-	}
+    public int getValue() {
+        return value;
+    }
 }

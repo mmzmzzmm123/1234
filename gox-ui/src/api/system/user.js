@@ -1,5 +1,5 @@
 import request from '@/utils/request'
-import { praseStrEmpty } from "@/utils/gox";
+import {praseStrEmpty} from "@/utils/gox";
 
 // 查询用户列表
 export function listUser(query) {

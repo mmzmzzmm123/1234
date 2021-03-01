@@ -6,15 +6,14 @@ import java.util.List;
 
 /**
  * 职能业务Service接口
- * 
+ *
  * @author gox
  * @date 2020-12-29
  */
-public interface IFunctionBusinessService 
-{
+public interface IFunctionBusinessService {
     /**
      * 查询职能业务
-     * 
+     *
      * @param id 职能业务ID
      * @return 职能业务
      */
@@ -22,7 +21,7 @@ public interface IFunctionBusinessService
 
     /**
      * 查询职能业务列表
-     * 
+     *
      * @param functionBusiness 职能业务
      * @return 职能业务集合
      */
@@ -30,7 +29,7 @@ public interface IFunctionBusinessService
 
     /**
      * 新增职能业务
-     * 
+     *
      * @param functionBusiness 职能业务
      * @return 结果
      */
@@ -38,7 +37,7 @@ public interface IFunctionBusinessService
 
     /**
      * 修改职能业务
-     * 
+     *
      * @param functionBusiness 职能业务
      * @return 结果
      */
@@ -46,7 +45,7 @@ public interface IFunctionBusinessService
 
     /**
      * 批量删除职能业务
-     * 
+     *
      * @param ids 需要删除的职能业务ID
      * @return 结果
      */
@@ -54,7 +53,7 @@ public interface IFunctionBusinessService
 
     /**
      * 删除职能业务信息
-     * 
+     *
      * @param id 职能业务ID
      * @return 结果
      */

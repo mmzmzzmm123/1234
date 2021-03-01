@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.gox.basic.mapper.SlotMapper">
-    
+
     <resultMap type="Slot" id="SlotResult">
-        <result property="id"    column="id"    />
-        <result property="itemId"    column="item_id"    />
-        <result property="listType"    column="list_type"    />
-        <result property="prepend"    column="prepend"    />
-        <result property="append"    column="append"    />
-        <collection property="options" column="id" select="com.gox.basic.mapper.OptionsItemMapper.selectOptionsItemBySlotId"/>
+        <result property="id" column="id"/>
+        <result property="itemId" column="item_id"/>
+        <result property="listType" column="list_type"/>
+        <result property="prepend" column="prepend"/>
+        <result property="append" column="append"/>
+        <collection property="options" column="id"
+                    select="com.gox.basic.mapper.OptionsItemMapper.selectOptionsItemBySlotId"/>
     </resultMap>
 
     <sql id="selectSlotVo">
@@ -19,14 +20,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectSlotList" parameterType="Slot" resultMap="SlotResult">
         <include refid="selectSlotVo"/>
-        <where>  
-            <if test="itemId != null "> and item_id = #{itemId}</if>
-            <if test="listType != null "> and list_type = #{listType}</if>
-            <if test="prepend != null  and prepend != ''"> and prepend = #{prepend}</if>
-            <if test="append != null  and append != ''"> and append = #{append}</if>
+        <where>
+            <if test="itemId != null ">and item_id = #{itemId}</if>
+            <if test="listType != null ">and list_type = #{listType}</if>
+            <if test="prepend != null  and prepend != ''">and prepend = #{prepend}</if>
+            <if test="append != null  and append != ''">and append = #{append}</if>
         </where>
     </select>
-    
+
     <select id="selectSlotById" parameterType="Long" resultMap="SlotResult">
         <include refid="selectSlotVo"/>
         where id = #{id}
@@ -44,14 +45,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="listType != null">list_type,</if>
             <if test="prepend != null">prepend,</if>
             <if test="append != null">append,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
             <if test="itemId != null">#{itemId},</if>
             <if test="listType != null">#{listType},</if>
             <if test="prepend != null">#{prepend},</if>
             <if test="append != null">#{append},</if>
-         </trim>
+        </trim>
     </insert>
 
     <update id="updateSlot" parameterType="Slot">
@@ -70,10 +71,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteSlotByIds" parameterType="String">
-        delete from slot where id in 
+        delete from slot where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>
-    
+
 </mapper>

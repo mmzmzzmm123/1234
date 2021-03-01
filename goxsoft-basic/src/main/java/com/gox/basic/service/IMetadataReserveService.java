@@ -6,15 +6,14 @@ import java.util.List;
 
 /**
  * 备用元数据Service接口
- * 
+ *
  * @author gox
  * @date 2021-01-13
  */
-public interface IMetadataReserveService 
-{
+public interface IMetadataReserveService {
     /**
      * 查询备用元数据
-     * 
+     *
      * @param id 备用元数据ID
      * @return 备用元数据
      */
@@ -22,7 +21,7 @@ public interface IMetadataReserveService
 
     /**
      * 查询备用元数据列表
-     * 
+     *
      * @param metadataReserve 备用元数据
      * @return 备用元数据集合
      */
@@ -30,7 +29,7 @@ public interface IMetadataReserveService
 
     /**
      * 新增备用元数据
-     * 
+     *
      * @param metadataReserve 备用元数据
      * @return 结果
      */
@@ -38,7 +37,7 @@ public interface IMetadataReserveService
 
     /**
      * 修改备用元数据
-     * 
+     *
      * @param metadataReserve 备用元数据
      * @return 结果
      */
@@ -46,7 +45,7 @@ public interface IMetadataReserveService
 
     /**
      * 批量删除备用元数据
-     * 
+     *
      * @param ids 需要删除的备用元数据ID
      * @return 结果
      */
@@ -54,7 +53,7 @@ public interface IMetadataReserveService
 
     /**
      * 删除备用元数据信息
-     * 
+     *
      * @param id 备用元数据ID
      * @return 结果
      */

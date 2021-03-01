@@ -1,72 +1,75 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.gox.basic.mapper.ConfigMapper">
-    
+
     <resultMap type="Config" id="ConfigResult">
-        <result property="id"    column="id"    />
-        <result property="itemId"    column="item_id"    />
-        <result property="formId"    column="form_id"    />
-        <result property="buttonText"    column="button_text"    />
-        <result property="showTip"    column="show_tip"    />
-        <result property="document"    column="document"    />
-        <result property="label"    column="label"    />
-        <result property="showLabel"    column="show_label"    />
-        <result property="required"    column="required"    />
-        <result property="renderKey"    column="render_key"    />
-        <result property="layout"    column="layout"    />
-        <result property="tagIcon"    column="tag_icon"    />
-        <result property="fileSize"    column="file_size"    />
-        <result property="changeTag"    column="change_tag"    />
-        <result property="sizeUnit"    column="size_unit"    />
-        <result property="tag"    column="tag"    />
-        <result property="span"    column="span"    />
-        <result property="defaultValue"    column="default_value"    />
-        <result property="border"    column="border"    />
-        <result property="optionType"    column="option_type"    />
-        <result property="method"    column="method"    />
-        <result property="dataType"    column="data_type"    />
-        <result property="url"    column="url"    />
-        <result property="dataKey"    column="data_key"    />
-        <result property="labelWidth"    column="label_width"    />
-        <collection property="regList" column="id" select="com.gox.basic.mapper.RegListItemMapper.selectRegListItemByConfigId" />
+        <result property="id" column="id"/>
+        <result property="itemId" column="item_id"/>
+        <result property="formId" column="form_id"/>
+        <result property="buttonText" column="button_text"/>
+        <result property="showTip" column="show_tip"/>
+        <result property="document" column="document"/>
+        <result property="label" column="label"/>
+        <result property="showLabel" column="show_label"/>
+        <result property="required" column="required"/>
+        <result property="renderKey" column="render_key"/>
+        <result property="layout" column="layout"/>
+        <result property="tagIcon" column="tag_icon"/>
+        <result property="fileSize" column="file_size"/>
+        <result property="changeTag" column="change_tag"/>
+        <result property="sizeUnit" column="size_unit"/>
+        <result property="tag" column="tag"/>
+        <result property="span" column="span"/>
+        <result property="defaultValue" column="default_value"/>
+        <result property="border" column="border"/>
+        <result property="optionType" column="option_type"/>
+        <result property="method" column="method"/>
+        <result property="dataType" column="data_type"/>
+        <result property="url" column="url"/>
+        <result property="dataKey" column="data_key"/>
+        <result property="labelWidth" column="label_width"/>
+        <collection property="regList" column="id"
+                    select="com.gox.basic.mapper.RegListItemMapper.selectRegListItemByConfigId"/>
     </resultMap>
 
     <sql id="selectConfigVo">
-        select id, item_id, form_id, button_text, show_tip, document, label, show_label, required, render_key, layout, tag_icon, file_size, change_tag, size_unit, tag, span, default_value, border, option_type, method, data_type, url, data_key, label_width from config
+        select id, item_id, form_id, button_text, show_tip, document, label, show_label, required, render_key, layout,
+        tag_icon, file_size, change_tag, size_unit, tag, span, default_value, border, option_type, method, data_type,
+        url, data_key, label_width from config
     </sql>
 
     <select id="selectConfigList" parameterType="Config" resultMap="ConfigResult">
         <include refid="selectConfigVo"/>
-        <where>  
-            <if test="itemId != null "> and item_id = #{itemId}</if>
-            <if test="formId != null "> and form_id = #{formId}</if>
-            <if test="buttonText != null  and buttonText != ''"> and button_text = #{buttonText}</if>
-            <if test="showTip != null "> and show_tip = #{showTip}</if>
-            <if test="document != null  and document != ''"> and document = #{document}</if>
-            <if test="label != null  and label != ''"> and label = #{label}</if>
-            <if test="showLabel != null "> and show_label = #{showLabel}</if>
-            <if test="required != null "> and required = #{required}</if>
-            <if test="renderKey != null  and renderKey != ''"> and render_key = #{renderKey}</if>
-            <if test="layout != null  and layout != ''"> and layout = #{layout}</if>
-            <if test="tagIcon != null  and tagIcon != ''"> and tag_icon = #{tagIcon}</if>
-            <if test="fileSize != null "> and file_size = #{fileSize}</if>
-            <if test="changeTag != null "> and change_tag = #{changeTag}</if>
-            <if test="sizeUnit != null  and sizeUnit != ''"> and size_unit = #{sizeUnit}</if>
-            <if test="tag != null  and tag != ''"> and tag = #{tag}</if>
-            <if test="span != null "> and span = #{span}</if>
-            <if test="defaultValue != null  and defaultValue != ''"> and default_value = #{defaultValue}</if>
-            <if test="border != null "> and border = #{border}</if>
-            <if test="optionType != null  and optionType != ''"> and option_type = #{optionType}</if>
-            <if test="method != null  and method != ''"> and method = #{method}</if>
-            <if test="dataType != null  and dataType != ''"> and data_type = #{dataType}</if>
-            <if test="url != null  and url != ''"> and url = #{url}</if>
-            <if test="dataKey != null  and dataKey != ''"> and data_key = #{dataKey}</if>
-            <if test="labelWidth != null "> and label_width = #{labelWidth}</if>
+        <where>
+            <if test="itemId != null ">and item_id = #{itemId}</if>
+            <if test="formId != null ">and form_id = #{formId}</if>
+            <if test="buttonText != null  and buttonText != ''">and button_text = #{buttonText}</if>
+            <if test="showTip != null ">and show_tip = #{showTip}</if>
+            <if test="document != null  and document != ''">and document = #{document}</if>
+            <if test="label != null  and label != ''">and label = #{label}</if>
+            <if test="showLabel != null ">and show_label = #{showLabel}</if>
+            <if test="required != null ">and required = #{required}</if>
+            <if test="renderKey != null  and renderKey != ''">and render_key = #{renderKey}</if>
+            <if test="layout != null  and layout != ''">and layout = #{layout}</if>
+            <if test="tagIcon != null  and tagIcon != ''">and tag_icon = #{tagIcon}</if>
+            <if test="fileSize != null ">and file_size = #{fileSize}</if>
+            <if test="changeTag != null ">and change_tag = #{changeTag}</if>
+            <if test="sizeUnit != null  and sizeUnit != ''">and size_unit = #{sizeUnit}</if>
+            <if test="tag != null  and tag != ''">and tag = #{tag}</if>
+            <if test="span != null ">and span = #{span}</if>
+            <if test="defaultValue != null  and defaultValue != ''">and default_value = #{defaultValue}</if>
+            <if test="border != null ">and border = #{border}</if>
+            <if test="optionType != null  and optionType != ''">and option_type = #{optionType}</if>
+            <if test="method != null  and method != ''">and method = #{method}</if>
+            <if test="dataType != null  and dataType != ''">and data_type = #{dataType}</if>
+            <if test="url != null  and url != ''">and url = #{url}</if>
+            <if test="dataKey != null  and dataKey != ''">and data_key = #{dataKey}</if>
+            <if test="labelWidth != null ">and label_width = #{labelWidth}</if>
         </where>
     </select>
-    
+
     <select id="selectConfigById" parameterType="Long" resultMap="ConfigResult">
         <include refid="selectConfigVo"/>
         where id = #{id}
@@ -104,7 +107,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="url != null">url,</if>
             <if test="dataKey != null">data_key,</if>
             <if test="labelWidth != null">label_width,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
             <if test="itemId != null">#{itemId},</if>
@@ -131,7 +134,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="url != null">#{url},</if>
             <if test="dataKey != null">#{dataKey},</if>
             <if test="labelWidth != null">#{labelWidth},</if>
-         </trim>
+        </trim>
     </insert>
 
     <update id="updateConfig" parameterType="Config">
@@ -170,10 +173,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteConfigByIds" parameterType="String">
-        delete from config where id in 
+        delete from config where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>
-    
+
 </mapper>

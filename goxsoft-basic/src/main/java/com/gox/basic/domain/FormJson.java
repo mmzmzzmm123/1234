@@ -11,25 +11,31 @@ import org.apache.ibatis.type.Alias;
 
 /**
  * 单json存储对象 form_json
+ *
  * @author gox
  * @date 2020-12-25
  */
 @Alias(value = "FormJson")
-public class FormJson extends BaseEntity
-{
+public class FormJson extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
     public FormJson() {
         setId(SnowflakesTools.WORKER.nextId());
     }
 
-    /** id */
+    /**
+     * id
+     */
     private Long id;
 
-    /** 表单名字 */
+    /**
+     * 表单名字
+     */
     @Excel(name = "表单名字")
     private String formName;
-    /** 表单json */
+    /**
+     * 表单json
+     */
     @Excel(name = "表单json")
     private String formData;
     @Excel(name = "所属节点")
@@ -38,7 +44,9 @@ public class FormJson extends BaseEntity
     private Long deptId;
     @Excel(name = "排序")
     private Integer order;
-    /** 删除标志 */
+    /**
+     * 删除标志
+     */
     private String delFlag;
     private transient FormDesignerData formDesignerData;
 
@@ -59,7 +67,6 @@ public class FormJson extends BaseEntity
     }
 
 
-
     public Long getNodeId() {
         return nodeId;
     }
@@ -76,55 +83,50 @@ public class FormJson extends BaseEntity
         this.deptId = deptId;
     }
 
-    public void setId(Long id)
-    {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public Long getId() 
-    {
+    public Long getId() {
         return id;
     }
-    public void setFormName(String formName) 
-    {
+
+    public void setFormName(String formName) {
         this.formName = formName;
     }
 
-    public String getFormName() 
-    {
+    public String getFormName() {
         return formName;
     }
-    public void setFormData(String formData) 
-    {
+
+    public void setFormData(String formData) {
         this.formData = formData;
     }
 
-    public String getFormData() 
-    {
+    public String getFormData() {
         return formData;
     }
-    public void setDelFlag(String delFlag) 
-    {
+
+    public void setDelFlag(String delFlag) {
         this.delFlag = delFlag;
     }
 
-    public String getDelFlag() 
-    {
+    public String getDelFlag() {
         return delFlag;
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
-            .append("id", getId())
-            .append("createTime", getCreateTime())
-            .append("updateTime", getUpdateTime())
-            .append("createBy", getCreateBy())
-            .append("updateBy", getUpdateBy())
-            .append("remark", getRemark())
-            .append("formName", getFormName())
-            .append("formData", getFormData())
-            .append("delFlag", getDelFlag())
-            .toString();
+                .append("id", getId())
+                .append("createTime", getCreateTime())
+                .append("updateTime", getUpdateTime())
+                .append("createBy", getCreateBy())
+                .append("updateBy", getUpdateBy())
+                .append("remark", getRemark())
+                .append("formName", getFormName())
+                .append("formData", getFormData())
+                .append("delFlag", getDelFlag())
+                .toString();
     }
 }

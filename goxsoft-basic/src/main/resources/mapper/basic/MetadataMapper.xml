@@ -1,62 +1,64 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.gox.basic.mapper.MetadataMapper">
-    
-    <resultMap type="metadata" id="MetadataResult">
-        <result property="id"    column="id"    />
-        <result property="aggregationLevel"    column="aggregation_level"    />
-        <result property="archivesName"    column="archives_name"    />
-        <result property="archivesIdentifier"    column="archives_identifier"    />
-        <result property="fondsName"    column="fonds_name"    />
-        <result property="fondsConstitutingUnitName"    column="fonds_constituting_unit_name"    />
-        <result property="electronicRecordCode"    column="electronic_record_code"    />
-        <result property="archivalCode"    column="archival_code"    />
-        <result property="fondsIdentifier"    column="fonds_identifier"    />
-        <result property="catalogueNumber"    column="catalogue_number"    />
-        <result property="year"    column="year"    />
-        <result property="retentionPeriod"    column="retention_period"    />
-        <result property="organizationalStructureOrFunction"    column="organizational_structure_or_function"    />
-        <result property="categoryCode"    column="category_code"    />
-        <result property="agencyFileNumber"    column="agency_file_number"    />
-        <result property="archivesFileNumber"    column="archives_file_number"    />
-        <result property="agencyItemNumber"    column="agency_item_number"    />
-        <result property="archivesItemNumber"    column="archives_item_number"    />
-        <result property="documentSequenceNumber"    column="document_sequence_number"    />
-        <result property="pageNumber"    column="page_number"    />
-        <result property="contentDescription"    column="content_description"    />
-        <result property="title"    column="title"    />
-        <result property="parallelTitle"    column="parallel_title"    />
-        <result property="alternativeTitle"    column="alternative_title"    />
-        <result property="otherTitleInformation"    column="other_title_information"    />
-        <result property="descriptor"    column="descriptor"    />
-        <result property="keyword"    column="keyword"    />
-        <result property="personalName"    column="personal_name"    />
-        <result property="abstracts"    column="abstract"    />
-        <result property="classCode"    column="class_code"    />
-        <result property="documentNumber"    column="document_number"    />
-        <result property="author"    column="author"    />
-        <result property="date"    column="date"    />
-        <result property="documentType"    column="document_type"    />
-        <result property="precedence"    column="precedence"    />
-        <result property="principalReceiver"    column="principal_receiver"    />
-        <result property="otherReceivers"    column="other_receivers"    />
-        <result property="securityClassification"    column="security_classification"    />
-        <result property="secrecyPeriod"    column="secrecy_period"    />
-        <result property="formalCharacteristics"    column="formal_characteristics"    />
-        <result property="documentAggregationType"    column="document_aggregation_type"    />
-        <result property="totalNumberOfItems"    column="total_number_of_items"    />
-        <result property="totalNumberOfPages"    column="total_number_of_pages"    />
-        <result property="language"    column="language"    />
-        <result property="manuscriptType"    column="manuscript_type"    />
-        <result property="annotation"    column="annotation"    />
-        <result property="deptId"    column="dept_id"    />
 
-        <collection property="electronicAttributes" ofType="com.gox.basic.domain.ElectronicAttributes" select="com.gox.basic.mapper.ElectronicAttributesMapper.selectEleByMdId" column="id"/>
-        <collection property="metadataReserve" javaType="com.gox.basic.domain.MetadataReserve" select="com.gox.basic.mapper.MetadataReserveMapper.selectMetadataReserveById" column="id"/>
-        <collection property="digitalSignatures" ofType="com.gox.basic.domain.DigitalSignature" column="id" select="com.gox.basic.mapper.DigitalSignatureMapper.selectDsByMdid" />
-        <collection property="rightsManagements" javaType="ArrayList" ofType="com.gox.basic.domain.RightsManagement" column="id" select="com.gox.basic.mapper.RightsManagementMapper.selectRmByMdId"/>
+    <resultMap type="metadata" id="MetadataResult">
+        <result property="id" column="id"/>
+        <result property="aggregationLevel" column="aggregation_level"/>
+        <result property="archivesName" column="archives_name"/>
+        <result property="archivesIdentifier" column="archives_identifier"/>
+        <result property="fondsName" column="fonds_name"/>
+        <result property="fondsConstitutingUnitName" column="fonds_constituting_unit_name"/>
+        <result property="electronicRecordCode" column="electronic_record_code"/>
+        <result property="archivalCode" column="archival_code"/>
+        <result property="fondsIdentifier" column="fonds_identifier"/>
+        <result property="catalogueNumber" column="catalogue_number"/>
+        <result property="year" column="year"/>
+        <result property="retentionPeriod" column="retention_period"/>
+        <result property="organizationalStructureOrFunction" column="organizational_structure_or_function"/>
+        <result property="categoryCode" column="category_code"/>
+        <result property="agencyFileNumber" column="agency_file_number"/>
+        <result property="archivesFileNumber" column="archives_file_number"/>
+        <result property="agencyItemNumber" column="agency_item_number"/>
+        <result property="archivesItemNumber" column="archives_item_number"/>
+        <result property="documentSequenceNumber" column="document_sequence_number"/>
+        <result property="pageNumber" column="page_number"/>
+        <result property="contentDescription" column="content_description"/>
+        <result property="title" column="title"/>
+        <result property="parallelTitle" column="parallel_title"/>
+        <result property="alternativeTitle" column="alternative_title"/>
+        <result property="otherTitleInformation" column="other_title_information"/>
+        <result property="descriptor" column="descriptor"/>
+        <result property="keyword" column="keyword"/>
+        <result property="personalName" column="personal_name"/>
+        <result property="abstracts" column="abstract"/>
+        <result property="classCode" column="class_code"/>
+        <result property="documentNumber" column="document_number"/>
+        <result property="author" column="author"/>
+        <result property="date" column="date"/>
+        <result property="documentType" column="document_type"/>
+        <result property="precedence" column="precedence"/>
+        <result property="principalReceiver" column="principal_receiver"/>
+        <result property="otherReceivers" column="other_receivers"/>
+        <result property="securityClassification" column="security_classification"/>
+        <result property="secrecyPeriod" column="secrecy_period"/>
+        <result property="formalCharacteristics" column="formal_characteristics"/>
+        <result property="documentAggregationType" column="document_aggregation_type"/>
+        <result property="totalNumberOfItems" column="total_number_of_items"/>
+        <result property="totalNumberOfPages" column="total_number_of_pages"/>
+        <result property="language" column="language"/>
+        <result property="manuscriptType" column="manuscript_type"/>
+        <result property="annotation" column="annotation"/>
+        <result property="deptId" column="dept_id"/>
+        <result property="nodeId" column="node_id"/>
+        <result property="parentId" column="parent_id"/>
+        <!--        <collection property="electronicAttributes" ofType="com.gox.basic.domain.ElectronicAttributes" select="com.gox.basic.mapper.ElectronicAttributesMapper.selectEleByMdId" column="id"/>-->
+        <collection property="metadataReserve" javaType="com.gox.basic.domain.MetadataReserve"
+                    select="com.gox.basic.mapper.MetadataReserveMapper.selectMetadataReserveById" column="id"/>
+        <!--        <collection property="digitalSignatures" ofType="com.gox.basic.domain.DigitalSignature" column="id" select="com.gox.basic.mapper.DigitalSignatureMapper.selectDsByMdid" />-->
+        <!--        <collection property="rightsManagements" javaType="ArrayList" ofType="com.gox.basic.domain.RightsManagement" column="id" select="com.gox.basic.mapper.RightsManagementMapper.selectRmByMdId"/>-->
     </resultMap>
     <sql id="selectMetadataVo">
         select md.id, aggregation_level, archives_name, archives_identifier,
@@ -70,66 +72,102 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         document_number, author, date, document_type, precedence, principal_receiver,
         other_receivers, security_classification, secrecy_period, formal_characteristics,
         document_aggregation_type, total_number_of_items, total_number_of_pages,
-        language, manuscript_type, annotation,dept_id
+        language, manuscript_type, annotation,dept_id,node_id,parent_id
         from metadata md
     </sql>
 
     <select id="selectMetadataList" parameterType="Metadata" resultMap="MetadataResult">
         <include refid="selectMetadataVo"/>
-        <where>  
-            <if test="aggregationLevel != null  and aggregationLevel != ''"> and aggregation_level = #{aggregationLevel}</if>
-            <if test="archivesName != null  and archivesName != ''"> and archives_name like concat('%', #{archivesName}, '%')</if>
-            <if test="archivesIdentifier != null  and archivesIdentifier != ''"> and archives_identifier = #{archivesIdentifier}</if>
-            <if test="fondsName != null  and fondsName != ''"> and fonds_name like concat('%', #{fondsName}, '%')</if>
-            <if test="fondsConstitutingUnitName != null  and fondsConstitutingUnitName != ''"> and fonds_constituting_unit_name like concat('%', #{fondsConstitutingUnitName}, '%')</if>
-            <if test="electronicRecordCode != null  and electronicRecordCode != ''"> and electronic_record_code = #{electronicRecordCode}</if>
-            <if test="archivalCode != null  and archivalCode != ''"> and archival_code = #{archivalCode}</if>
-            <if test="fondsIdentifier != null  and fondsIdentifier != ''"> and fonds_identifier = #{fondsIdentifier}</if>
-            <if test="catalogueNumber != null  and catalogueNumber != ''"> and catalogue_number = #{catalogueNumber}</if>
-            <if test="year != null "> and year = #{year}</if>
-            <if test="retentionPeriod != null  and retentionPeriod != ''"> and retention_period = #{retentionPeriod}</if>
-            <if test="organizationalStructureOrFunction != null  and organizationalStructureOrFunction != ''"> and organizational_structure_or_function = #{organizationalStructureOrFunction}</if>
-            <if test="categoryCode != null  and categoryCode != ''"> and category_code = #{categoryCode}</if>
-            <if test="agencyFileNumber != null  and agencyFileNumber != ''"> and agency_file_number = #{agencyFileNumber}</if>
-            <if test="archivesFileNumber != null  and archivesFileNumber != ''"> and archives_file_number = #{archivesFileNumber}</if>
-            <if test="agencyItemNumber != null "> and agency_item_number = #{agencyItemNumber}</if>
-            <if test="archivesItemNumber != null "> and archives_item_number = #{archivesItemNumber}</if>
-            <if test="documentSequenceNumber != null  and documentSequenceNumber != ''"> and document_sequence_number = #{documentSequenceNumber}</if>
-            <if test="pageNumber != null  and pageNumber != ''"> and page_number = #{pageNumber}</if>
-            <if test="contentDescription != null  and contentDescription != ''"> and content_description = #{contentDescription}</if>
-            <if test="title != null  and title != ''"> and title = #{title}</if>
-            <if test="parallelTitle != null  and parallelTitle != ''"> and parallel_title = #{parallelTitle}</if>
-            <if test="alternativeTitle != null  and alternativeTitle != ''"> and alternative_title = #{alternativeTitle}</if>
-            <if test="otherTitleInformation != null  and otherTitleInformation != ''"> and other_title_information = #{otherTitleInformation}</if>
-            <if test="descriptor != null  and descriptor != ''"> and descriptor = #{descriptor}</if>
-            <if test="keyword != null  and keyword != ''"> and keyword = #{keyword}</if>
-            <if test="personalName != null  and personalName != ''"> and personal_name like concat('%', #{personalName}, '%')</if>
-            <if test="abstract != null  and abstract != ''"> and abstract = #{abstract}</if>
-            <if test="classCode != null  and classCode != ''"> and class_code = #{classCode}</if>
-            <if test="documentNumber != null  and documentNumber != ''"> and document_number = #{documentNumber}</if>
-            <if test="author != null  and author != ''"> and author = #{author}</if>
-            <if test="date != null  and date != ''"> and date = #{date}</if>
-            <if test="documentType != null  and documentType != ''"> and document_type = #{documentType}</if>
-            <if test="precedence != null  and precedence != ''"> and precedence = #{precedence}</if>
-            <if test="principalReceiver != null  and principalReceiver != ''"> and principal_receiver = #{principalReceiver}</if>
-            <if test="otherReceivers != null  and otherReceivers != ''"> and other_receivers = #{otherReceivers}</if>
-            <if test="securityClassification != null  and securityClassification != ''"> and security_classification = #{securityClassification}</if>
-            <if test="secrecyPeriod != null  and secrecyPeriod != ''"> and secrecy_period = #{secrecyPeriod}</if>
-            <if test="formalCharacteristics != null  and formalCharacteristics != ''"> and formal_characteristics = #{formalCharacteristics}</if>
-            <if test="documentAggregationType != null  and documentAggregationType != ''"> and document_aggregation_type = #{documentAggregationType}</if>
-            <if test="totalNumberOfItems != null "> and total_number_of_items = #{totalNumberOfItems}</if>
-            <if test="totalNumberOfPages != null "> and total_number_of_pages = #{totalNumberOfPages}</if>
-            <if test="language != null  and language != ''"> and language = #{language}</if>
-            <if test="manuscriptType != null  and manuscriptType != ''"> and manuscript_type = #{manuscriptType}</if>
-            <if test="annotation != null  and annotation != ''"> and annotation = #{annotation}</if>
-            <if test="deptId != null  and deptId != ''"> and dept_id = #{deptId}</if>
-            <if test="nodeId != null  and nodeId != ''"> and node_id = #{nodeId}</if>
+        <where>
+            <if test="aggregationLevel != null  and aggregationLevel != ''">and aggregation_level =
+                #{aggregationLevel}
+            </if>
+            <if test="archivesName != null  and archivesName != ''">and archives_name like concat('%', #{archivesName},
+                '%')
+            </if>
+            <if test="archivesIdentifier != null  and archivesIdentifier != ''">and archives_identifier =
+                #{archivesIdentifier}
+            </if>
+            <if test="fondsName != null  and fondsName != ''">and fonds_name like concat('%', #{fondsName}, '%')</if>
+            <if test="fondsConstitutingUnitName != null  and fondsConstitutingUnitName != ''">and
+                fonds_constituting_unit_name like concat('%', #{fondsConstitutingUnitName}, '%')
+            </if>
+            <if test="electronicRecordCode != null  and electronicRecordCode != ''">and electronic_record_code =
+                #{electronicRecordCode}
+            </if>
+            <if test="archivalCode != null  and archivalCode != ''">and archival_code = #{archivalCode}</if>
+            <if test="fondsIdentifier != null  and fondsIdentifier != ''">and fonds_identifier = #{fondsIdentifier}</if>
+            <if test="catalogueNumber != null  and catalogueNumber != ''">and catalogue_number = #{catalogueNumber}</if>
+            <if test="year != null ">and year = #{year}</if>
+            <if test="retentionPeriod != null  and retentionPeriod != ''">and retention_period = #{retentionPeriod}</if>
+            <if test="organizationalStructureOrFunction != null  and organizationalStructureOrFunction != ''">and
+                organizational_structure_or_function = #{organizationalStructureOrFunction}
+            </if>
+            <if test="categoryCode != null  and categoryCode != ''">and category_code = #{categoryCode}</if>
+            <if test="agencyFileNumber != null  and agencyFileNumber != ''">and agency_file_number =
+                #{agencyFileNumber}
+            </if>
+            <if test="archivesFileNumber != null  and archivesFileNumber != ''">and archives_file_number =
+                #{archivesFileNumber}
+            </if>
+            <if test="agencyItemNumber != null ">and agency_item_number = #{agencyItemNumber}</if>
+            <if test="archivesItemNumber != null ">and archives_item_number = #{archivesItemNumber}</if>
+            <if test="documentSequenceNumber != null  and documentSequenceNumber != ''">and document_sequence_number =
+                #{documentSequenceNumber}
+            </if>
+            <if test="pageNumber != null  and pageNumber != ''">and page_number = #{pageNumber}</if>
+            <if test="contentDescription != null  and contentDescription != ''">and content_description =
+                #{contentDescription}
+            </if>
+            <if test="title != null  and title != ''">and title = #{title}</if>
+            <if test="parallelTitle != null  and parallelTitle != ''">and parallel_title = #{parallelTitle}</if>
+            <if test="alternativeTitle != null  and alternativeTitle != ''">and alternative_title =
+                #{alternativeTitle}
+            </if>
+            <if test="otherTitleInformation != null  and otherTitleInformation != ''">and other_title_information =
+                #{otherTitleInformation}
+            </if>
+            <if test="descriptor != null  and descriptor != ''">and descriptor = #{descriptor}</if>
+            <if test="keyword != null  and keyword != ''">and keyword = #{keyword}</if>
+            <if test="personalName != null  and personalName != ''">and personal_name like concat('%', #{personalName},
+                '%')
+            </if>
+            <if test="abstract != null  and abstract != ''">and abstract = #{abstract}</if>
+            <if test="classCode != null  and classCode != ''">and class_code = #{classCode}</if>
+            <if test="documentNumber != null  and documentNumber != ''">and document_number = #{documentNumber}</if>
+            <if test="author != null  and author != ''">and author = #{author}</if>
+            <if test="date != null  and date != ''">and date = #{date}</if>
+            <if test="documentType != null  and documentType != ''">and document_type = #{documentType}</if>
+            <if test="precedence != null  and precedence != ''">and precedence = #{precedence}</if>
+            <if test="principalReceiver != null  and principalReceiver != ''">and principal_receiver =
+                #{principalReceiver}
+            </if>
+            <if test="otherReceivers != null  and otherReceivers != ''">and other_receivers = #{otherReceivers}</if>
+            <if test="securityClassification != null  and securityClassification != ''">and security_classification =
+                #{securityClassification}
+            </if>
+            <if test="secrecyPeriod != null  and secrecyPeriod != ''">and secrecy_period = #{secrecyPeriod}</if>
+            <if test="formalCharacteristics != null  and formalCharacteristics != ''">and formal_characteristics =
+                #{formalCharacteristics}
+            </if>
+            <if test="documentAggregationType != null  and documentAggregationType != ''">and document_aggregation_type
+                = #{documentAggregationType}
+            </if>
+            <if test="totalNumberOfItems != null ">and total_number_of_items = #{totalNumberOfItems}</if>
+            <if test="totalNumberOfPages != null ">and total_number_of_pages = #{totalNumberOfPages}</if>
+            <if test="language != null  and language != ''">and language = #{language}</if>
+            <if test="manuscriptType != null  and manuscriptType != ''">and manuscript_type = #{manuscriptType}</if>
+            <if test="annotation != null  and annotation != ''">and annotation = #{annotation}</if>
+            <if test="deptId != null  and deptId != ''">and dept_id = #{deptId}</if>
+            <if test="nodeId != null  and nodeId != ''">and node_id = #{nodeId}</if>
+            <!--            <if test="parentId != null  and parentId != ''"> and parent_id = #{parentId}</if>-->
+            and parent_id=#{parentId}
         </where>
         <if test="sortField!=null and sortField!=''">
             order by ${sortField} ${orderBy}
         </if>
     </select>
-    
+
     <select id="selectMetadataById" parameterType="Long" resultMap="MetadataResult">
         <include refid="selectMetadataVo"/>
         where md.id = #{id}
@@ -137,7 +175,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectMetadataByIds" parameterType="String" resultMap="MetadataResult">
         <include refid="selectMetadataVo">
         </include>
-        where  md.id in
+        where md.id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
@@ -151,14 +189,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="archivesName != null and archivesName != ''">archives_name,</if>
             <if test="archivesIdentifier != null and archivesIdentifier != ''">archives_identifier,</if>
             <if test="fondsName != null and fondsName != ''">fonds_name,</if>
-            <if test="fondsConstitutingUnitName != null and fondsConstitutingUnitName != ''">fonds_constituting_unit_name,</if>
+            <if test="fondsConstitutingUnitName != null and fondsConstitutingUnitName != ''">
+                fonds_constituting_unit_name,
+            </if>
             <if test="electronicRecordCode != null and electronicRecordCode != ''">electronic_record_code,</if>
             <if test="archivalCode != null and archivalCode != ''">archival_code,</if>
             <if test="fondsIdentifier != null and fondsIdentifier != ''">fonds_identifier,</if>
             <if test="catalogueNumber != null and catalogueNumber != ''">catalogue_number,</if>
             <if test="year != null">year,</if>
             <if test="retentionPeriod != null and retentionPeriod != ''">retention_period,</if>
-            <if test="organizationalStructureOrFunction != null and organizationalStructureOrFunction != ''">organizational_structure_or_function,</if>
+            <if test="organizationalStructureOrFunction != null and organizationalStructureOrFunction != ''">
+                organizational_structure_or_function,
+            </if>
             <if test="categoryCode != null and categoryCode != ''">category_code,</if>
             <if test="agencyFileNumber != null and agencyFileNumber != ''">agency_file_number,</if>
             <if test="archivesFileNumber != null and archivesFileNumber != ''">archives_file_number,</if>
@@ -191,28 +233,33 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="totalNumberOfPages != null">total_number_of_pages,</if>
             <if test="language != null and language != ''">language,</if>
             <if test="manuscriptType != null and manuscriptType != ''">manuscript_type,</if>
-<!--            <if test="intellectualPropertyStatement != null and intellectualPropertyStatement != ''">intellectual_property_statement,</if>-->
-<!--            <if test="authorizedAgent != null and authorizedAgent != ''">authorized_agent,</if>-->
-<!--            <if test="permissionAssignment != null and permissionAssignment != ''">permission_assignment,</if>-->
-<!--            <if test="controlIdentifier != null and controlIdentifier != ''">control_identifier,</if>-->
+            <!--            <if test="intellectualPropertyStatement != null and intellectualPropertyStatement != ''">intellectual_property_statement,</if>-->
+            <!--            <if test="authorizedAgent != null and authorizedAgent != ''">authorized_agent,</if>-->
+            <!--            <if test="permissionAssignment != null and permissionAssignment != ''">permission_assignment,</if>-->
+            <!--            <if test="controlIdentifier != null and controlIdentifier != ''">control_identifier,</if>-->
             <if test="annotation != null and annotation != ''">annotation,</if>
             <if test="deptId != null and deptId != ''">dept_id,</if>
             <if test="nodeId != null and nodeId != ''">node_id,</if>
-         </trim>
+            <if test="parentId != null and parentId != ''">parentId,</if>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
             <if test="aggregationLevel != null and aggregationLevel != ''">#{aggregationLevel},</if>
             <if test="archivesName != null and archivesName != ''">#{archivesName},</if>
             <if test="archivesIdentifier != null and archivesIdentifier != ''">#{archivesIdentifier},</if>
             <if test="fondsName != null and fondsName != ''">#{fondsName},</if>
-            <if test="fondsConstitutingUnitName != null and fondsConstitutingUnitName != ''">#{fondsConstitutingUnitName},</if>
+            <if test="fondsConstitutingUnitName != null and fondsConstitutingUnitName != ''">
+                #{fondsConstitutingUnitName},
+            </if>
             <if test="electronicRecordCode != null and electronicRecordCode != ''">#{electronicRecordCode},</if>
             <if test="archivalCode != null and archivalCode != ''">#{archivalCode},</if>
             <if test="fondsIdentifier != null and fondsIdentifier != ''">#{fondsIdentifier},</if>
             <if test="catalogueNumber != null and catalogueNumber != ''">#{catalogueNumber},</if>
             <if test="year != null">#{year},</if>
             <if test="retentionPeriod != null and retentionPeriod != ''">#{retentionPeriod},</if>
-            <if test="organizationalStructureOrFunction != null and organizationalStructureOrFunction != ''">#{organizationalStructureOrFunction},</if>
+            <if test="organizationalStructureOrFunction != null and organizationalStructureOrFunction != ''">
+                #{organizationalStructureOrFunction},
+            </if>
             <if test="categoryCode != null and categoryCode != ''">#{categoryCode},</if>
             <if test="agencyFileNumber != null and agencyFileNumber != ''">#{agencyFileNumber},</if>
             <if test="archivesFileNumber != null and archivesFileNumber != ''">#{archivesFileNumber},</if>
@@ -240,18 +287,20 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="securityClassification != null and securityClassification != ''">#{securityClassification},</if>
             <if test="secrecyPeriod != null and secrecyPeriod != ''">#{secrecyPeriod},</if>
             <if test="formalCharacteristics != null and formalCharacteristics != ''">#{formalCharacteristics},</if>
-            <if test="documentAggregationType != null and documentAggregationType != ''">#{documentAggregationType},</if>
+            <if test="documentAggregationType != null and documentAggregationType != ''">#{documentAggregationType},
+            </if>
             <if test="totalNumberOfItems != null">#{totalNumberOfItems},</if>
             <if test="totalNumberOfPages != null">#{totalNumberOfPages},</if>
             <if test="language != null and language != ''">#{language},</if>
             <if test="manuscriptType != null and manuscriptType != ''">#{manuscriptType},</if>
-<!--            <if test="intellectualPropertyStatement != null and intellectualPropertyStatement != ''">#{intellectualPropertyStatement},</if>-->
-<!--            <if test="authorizedAgent != null and authorizedAgent != ''">#{authorizedAgent},</if>-->
-<!--            <if test="permissionAssignment != null and permissionAssignment != ''">#{permissionAssignment},</if>-->
-<!--            <if test="controlIdentifier != null and controlIdentifier != ''">#{controlIdentifier},</if>-->
+            <!--            <if test="intellectualPropertyStatement != null and intellectualPropertyStatement != ''">#{intellectualPropertyStatement},</if>-->
+            <!--            <if test="authorizedAgent != null and authorizedAgent != ''">#{authorizedAgent},</if>-->
+            <!--            <if test="permissionAssignment != null and permissionAssignment != ''">#{permissionAssignment},</if>-->
+            <!--            <if test="controlIdentifier != null and controlIdentifier != ''">#{controlIdentifier},</if>-->
             <if test="annotation != null and annotation != ''">#{annotation},</if>
             <if test="deptId != null and deptId != ''">#{deptId},</if>
-         </trim>
+            <if test="parentId != null and parentId != ''">#{parentId},</if>
+        </trim>
     </insert>
 
     <update id="updateMetadata" parameterType="Metadata">
@@ -259,28 +308,45 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="SET" suffixOverrides=",">
             <if test="aggregationLevel != null and aggregationLevel != ''">aggregation_level = #{aggregationLevel},</if>
             <if test="archivesName != null and archivesName != ''">archives_name = #{archivesName},</if>
-            <if test="archivesIdentifier != null and archivesIdentifier != ''">archives_identifier = #{archivesIdentifier},</if>
+            <if test="archivesIdentifier != null and archivesIdentifier != ''">archives_identifier =
+                #{archivesIdentifier},
+            </if>
             <if test="fondsName != null and fondsName != ''">fonds_name = #{fondsName},</if>
-            <if test="fondsConstitutingUnitName != null and fondsConstitutingUnitName != ''">fonds_constituting_unit_name = #{fondsConstitutingUnitName},</if>
-            <if test="electronicRecordCode != null and electronicRecordCode != ''">electronic_record_code = #{electronicRecordCode},</if>
+            <if test="fondsConstitutingUnitName != null and fondsConstitutingUnitName != ''">
+                fonds_constituting_unit_name = #{fondsConstitutingUnitName},
+            </if>
+            <if test="electronicRecordCode != null and electronicRecordCode != ''">electronic_record_code =
+                #{electronicRecordCode},
+            </if>
             <if test="archivalCode != null and archivalCode != ''">archival_code = #{archivalCode},</if>
             <if test="fondsIdentifier != null and fondsIdentifier != ''">fonds_identifier = #{fondsIdentifier},</if>
             <if test="catalogueNumber != null and catalogueNumber != ''">catalogue_number = #{catalogueNumber},</if>
             <if test="year != null">year = #{year},</if>
             <if test="retentionPeriod != null and retentionPeriod != ''">retention_period = #{retentionPeriod},</if>
-            <if test="organizationalStructureOrFunction != null and organizationalStructureOrFunction != ''">organizational_structure_or_function = #{organizationalStructureOrFunction},</if>
+            <if test="organizationalStructureOrFunction != null and organizationalStructureOrFunction != ''">
+                organizational_structure_or_function = #{organizationalStructureOrFunction},
+            </if>
             <if test="categoryCode != null and categoryCode != ''">category_code = #{categoryCode},</if>
-            <if test="agencyFileNumber != null and agencyFileNumber != ''">agency_file_number = #{agencyFileNumber},</if>
-            <if test="archivesFileNumber != null and archivesFileNumber != ''">archives_file_number = #{archivesFileNumber},</if>
+            <if test="agencyFileNumber != null and agencyFileNumber != ''">agency_file_number = #{agencyFileNumber},
+            </if>
+            <if test="archivesFileNumber != null and archivesFileNumber != ''">archives_file_number =
+                #{archivesFileNumber},
+            </if>
             <if test="agencyItemNumber != null">agency_item_number = #{agencyItemNumber},</if>
             <if test="archivesItemNumber != null">archives_item_number = #{archivesItemNumber},</if>
-            <if test="documentSequenceNumber != null and documentSequenceNumber != ''">document_sequence_number = #{documentSequenceNumber},</if>
+            <if test="documentSequenceNumber != null and documentSequenceNumber != ''">document_sequence_number =
+                #{documentSequenceNumber},
+            </if>
             <if test="pageNumber != null and pageNumber != ''">page_number = #{pageNumber},</if>
-            <if test="contentDescription != null and contentDescription != ''">content_description = #{contentDescription},</if>
+            <if test="contentDescription != null and contentDescription != ''">content_description =
+                #{contentDescription},
+            </if>
             <if test="title != null and title != ''">title = #{title},</if>
             <if test="parallelTitle != null and parallelTitle != ''">parallel_title = #{parallelTitle},</if>
             <if test="alternativeTitle != null and alternativeTitle != ''">alternative_title = #{alternativeTitle},</if>
-            <if test="otherTitleInformation != null and otherTitleInformation != ''">other_title_information = #{otherTitleInformation},</if>
+            <if test="otherTitleInformation != null and otherTitleInformation != ''">other_title_information =
+                #{otherTitleInformation},
+            </if>
             <if test="descriptor != null and descriptor != ''">descriptor = #{descriptor},</if>
             <if test="keyword != null and keyword != ''">keyword = #{keyword},</if>
             <if test="personalName != null and personalName != ''">personal_name = #{personalName},</if>
@@ -291,36 +357,50 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="date != null and date != ''">date = #{date},</if>
             <if test="documentType != null and documentType != ''">document_type = #{documentType},</if>
             <if test="precedence != null and precedence != ''">precedence = #{precedence},</if>
-            <if test="principalReceiver != null and principalReceiver != ''">principal_receiver = #{principalReceiver},</if>
+            <if test="principalReceiver != null and principalReceiver != ''">principal_receiver =
+                #{principalReceiver},
+            </if>
             <if test="otherReceivers != null and otherReceivers != ''">other_receivers = #{otherReceivers},</if>
-            <if test="securityClassification != null and securityClassification != ''">security_classification = #{securityClassification},</if>
+            <if test="securityClassification != null and securityClassification != ''">security_classification =
+                #{securityClassification},
+            </if>
             <if test="secrecyPeriod != null and secrecyPeriod != ''">secrecy_period = #{secrecyPeriod},</if>
-            <if test="formalCharacteristics != null and formalCharacteristics != ''">formal_characteristics = #{formalCharacteristics},</if>
-            <if test="documentAggregationType != null and documentAggregationType != ''">document_aggregation_type = #{documentAggregationType},</if>
+            <if test="formalCharacteristics != null and formalCharacteristics != ''">formal_characteristics =
+                #{formalCharacteristics},
+            </if>
+            <if test="documentAggregationType != null and documentAggregationType != ''">document_aggregation_type =
+                #{documentAggregationType},
+            </if>
             <if test="totalNumberOfItems != null">total_number_of_items = #{totalNumberOfItems},</if>
             <if test="totalNumberOfPages != null">total_number_of_pages = #{totalNumberOfPages},</if>
             <if test="language != null and language != ''">language = #{language},</if>
             <if test="manuscriptType != null and manuscriptType != ''">manuscript_type = #{manuscriptType},</if>
-<!--            <if test="intellectualPropertyStatement != null and intellectualPropertyStatement != ''">intellectual_property_statement = #{intellectualPropertyStatement},</if>-->
-<!--            <if test="authorizedAgent != null and authorizedAgent != ''">authorized_agent = #{authorizedAgent},</if>-->
-<!--            <if test="permissionAssignment != null and permissionAssignment != ''">permission_assignment = #{permissionAssignment},</if>-->
-<!--            <if test="controlIdentifier != null and controlIdentifier != ''">control_identifier = #{controlIdentifier},</if>-->
+            <!--            <if test="intellectualPropertyStatement != null and intellectualPropertyStatement != ''">intellectual_property_statement = #{intellectualPropertyStatement},</if>-->
+            <!--            <if test="authorizedAgent != null and authorizedAgent != ''">authorized_agent = #{authorizedAgent},</if>-->
+            <!--            <if test="permissionAssignment != null and permissionAssignment != ''">permission_assignment = #{permissionAssignment},</if>-->
+            <!--            <if test="controlIdentifier != null and controlIdentifier != ''">control_identifier = #{controlIdentifier},</if>-->
             <if test="annotation != null and annotation != ''">annotation = #{annotation},</if>
             <if test="deptId != null and deptId != ''">dept_id = #{deptId},</if>
             <if test="nodeId != null and nodeId != ''">node_id = #{nodeId},</if>
+            <if test="parentId != null and parentId != ''">parent_id = #{parentId},</if>
         </trim>
         where id = #{id}
     </update>
 
     <delete id="deleteMetadataById" parameterType="Long">
-        delete from metadata where id = #{id}
+        delete from metadata where id = #{id} or parent_id =#{id}
     </delete>
 
     <delete id="deleteMetadataByIds" parameterType="String">
-        delete from metadata where id in 
+        delete from metadata where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        or
+        parent_id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>
-    
+
 </mapper>

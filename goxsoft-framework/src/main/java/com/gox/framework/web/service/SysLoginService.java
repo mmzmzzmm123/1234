@@ -26,12 +26,11 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * 登录校验方法
- * 
+ *
  * @author gox
  */
 @Component
-public class SysLoginService
-{
+public class SysLoginService {
     @Autowired
     private TokenService tokenService;
 
@@ -45,63 +44,54 @@ public class SysLoginService
 
     /**
      * 登录验证
-     * 
+     *
      * @param username 用户名
      * @param password 密码
-     * @param code 验证码
-     * @param uuid 唯一标识
+     * @param code     验证码
+     * @param uuid     唯一标识
      * @return 结果
      */
-    public String login(String username, String password, String code, String uuid)
-    {
+    public String login(String username, String password, String code, String uuid) {
         String verifyKey = Constants.CAPTCHA_CODE_KEY + uuid;
         String captcha = redisCache.getCacheObject(verifyKey);
-        String loginErrKey = "login_err:"+username;
+        String loginErrKey = "login_err:" + username;
         Object err = redisCache.getCacheObject(loginErrKey);
         int loginErrNum = Integer.parseInt(redisCache.getCacheObject("sys_config:sys.errnum"));
         int loginLockMinutes = Integer.parseInt(redisCache.getCacheObject("sys_config:sys.lock.minute"));
         int errs = 0;
-        if (err!=null){
+        if (err != null) {
             errs = (int) err;
         }
         redisCache.deleteObject(verifyKey);
-        if (captcha == null)
-        {
+        if (captcha == null) {
             AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, MessageUtils.message("user.jcaptcha.expire")));
             throw new CaptchaExpireException();
         }
-        if (!code.equalsIgnoreCase(captcha))
-        {
+        if (!code.equalsIgnoreCase(captcha)) {
             AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, MessageUtils.message("user.jcaptcha.error")));
             throw new CaptchaException();
         }
-        if (errs>=4){
+        if (errs >= 4) {
             AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, MessageUtils.message("user.blocked")));
             SysUser user = userService.selectUserByUserName(username);
-            if ("0".equals(user.getStatus())){
+            if ("0".equals(user.getStatus())) {
                 user.setStatus("1");
                 userService.updateUserStatus(user);
             }
-            throw new CustomException("密码错误"+loginErrNum+"次,请联系管理员");
+            throw new CustomException("密码错误" + loginErrNum + "次,请联系管理员");
         }
         // 用户验证
         Authentication authentication = null;
-        try
-        {
+        try {
             // 该方法会去调用UserDetailsServiceImpl.loadUserByUsername
             authentication = authenticationManager
                     .authenticate(new UsernamePasswordAuthenticationToken(username, password));
-        }
-        catch (Exception e)
-        {
-            if (e instanceof BadCredentialsException)
-            {
+        } catch (Exception e) {
+            if (e instanceof BadCredentialsException) {
                 AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, MessageUtils.message("user.password.not.match")));
-                redisCache.increment(loginErrKey,1,30,TimeUnit.MINUTES);
+                redisCache.increment(loginErrKey, 1, 30, TimeUnit.MINUTES);
                 throw new UserPasswordNotMatchException();
-            }
-            else
-            {
+            } else {
                 AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, e.getMessage()));
                 throw new CustomException(e.getMessage());
             }

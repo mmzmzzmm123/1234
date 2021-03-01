@@ -2,12 +2,10 @@ package com.gox.common.enums;
 
 /**
  * 操作状态
- * 
- * @author gox
  *
+ * @author gox
  */
-public enum BusinessStatus
-{
+public enum BusinessStatus {
     /**
      * 成功
      */

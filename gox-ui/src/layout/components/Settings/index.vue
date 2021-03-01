@@ -8,7 +8,8 @@
         <div class="setting-drawer-block-checbox">
           <div class="setting-drawer-block-checbox-item" @click="handleTheme('theme-dark')">
             <img src="@/assets/images/dark.svg" alt="dark">
-            <div v-if="sideTheme === 'theme-dark'" class="setting-drawer-block-checbox-selectIcon" style="display: block;">
+            <div v-if="sideTheme === 'theme-dark'" class="setting-drawer-block-checbox-selectIcon"
+                 style="display: block;">
               <i aria-label="图标: check" class="anticon anticon-check">
                 <svg viewBox="64 64 896 896" data-icon="check" width="1em" height="1em" :fill="theme" aria-hidden="true"
                      focusable="false" class="">
@@ -20,7 +21,8 @@
           </div>
           <div class="setting-drawer-block-checbox-item" @click="handleTheme('theme-light')">
             <img src="@/assets/images/light.svg" alt="light">
-            <div v-if="sideTheme === 'theme-light'" class="setting-drawer-block-checbox-selectIcon" style="display: block;">
+            <div v-if="sideTheme === 'theme-light'" class="setting-drawer-block-checbox-selectIcon"
+                 style="display: block;">
               <i aria-label="图标: check" class="anticon anticon-check">
                 <svg viewBox="64 64 896 896" data-icon="check" width="1em" height="1em" :fill="theme" aria-hidden="true"
                      focusable="false" class="">
@@ -34,7 +36,7 @@
 
         <div class="drawer-item">
           <span>主题颜色</span>
-          <theme-picker style="float: right;height: 26px;margin: -3px 8px 0 0;" @change="themeChange" />
+          <theme-picker style="float: right;height: 26px;margin: -3px 8px 0 0;" @change="themeChange"/>
         </div>
       </div>
 
@@ -44,17 +46,17 @@
 
       <div class="drawer-item">
         <span>开启 Tags-Views</span>
-        <el-switch v-model="tagsView" class="drawer-switch" />
+        <el-switch v-model="tagsView" class="drawer-switch"/>
       </div>
 
       <div class="drawer-item">
         <span>固定 Header</span>
-        <el-switch v-model="fixedHeader" class="drawer-switch" />
+        <el-switch v-model="fixedHeader" class="drawer-switch"/>
       </div>
 
       <div class="drawer-item">
         <span>显示 Logo</span>
-        <el-switch v-model="sidebarLogo" class="drawer-switch" />
+        <el-switch v-model="sidebarLogo" class="drawer-switch"/>
       </div>
 
     </div>
@@ -62,69 +64,69 @@
 </template>
 
 <script>
-import ThemePicker from '@/components/ThemePicker'
+  import ThemePicker from '@/components/ThemePicker'
 
-export default {
-  components: { ThemePicker },
-  data() {
-    return {}
-  },
-  computed: {
-    theme() {
-      return this.$store.state.settings.theme
+  export default {
+    components: {ThemePicker},
+    data() {
+      return {}
     },
-    sideTheme() {
-      return this.$store.state.settings.sideTheme
-    },
-    fixedHeader: {
-      get() {
-        return this.$store.state.settings.fixedHeader
+    computed: {
+      theme() {
+        return this.$store.state.settings.theme
       },
-      set(val) {
+      sideTheme() {
+        return this.$store.state.settings.sideTheme
+      },
+      fixedHeader: {
+        get() {
+          return this.$store.state.settings.fixedHeader
+        },
+        set(val) {
+          this.$store.dispatch('settings/changeSetting', {
+            key: 'fixedHeader',
+            value: val
+          })
+        }
+      },
+      tagsView: {
+        get() {
+          return this.$store.state.settings.tagsView
+        },
+        set(val) {
+          this.$store.dispatch('settings/changeSetting', {
+            key: 'tagsView',
+            value: val
+          })
+        }
+      },
+      sidebarLogo: {
+        get() {
+          return this.$store.state.settings.sidebarLogo
+        },
+        set(val) {
+          this.$store.dispatch('settings/changeSetting', {
+            key: 'sidebarLogo',
+            value: val
+          })
+        }
+      },
+    },
+    methods: {
+      themeChange(val) {
         this.$store.dispatch('settings/changeSetting', {
-          key: 'fixedHeader',
+          key: 'theme',
+          value: val
+        })
+      },
+      handleTheme(val) {
+        this.$store.dispatch('settings/changeSetting', {
+          key: 'sideTheme',
           value: val
         })
       }
-    },
-    tagsView: {
-      get() {
-        return this.$store.state.settings.tagsView
-      },
-      set(val) {
-        this.$store.dispatch('settings/changeSetting', {
-          key: 'tagsView',
-          value: val
-        })
-      }
-    },
-    sidebarLogo: {
-      get() {
-        return this.$store.state.settings.sidebarLogo
-      },
-      set(val) {
-        this.$store.dispatch('settings/changeSetting', {
-          key: 'sidebarLogo',
-          value: val
-        })
-      }
-    },
-  },
-  methods: {
-    themeChange(val) {
-      this.$store.dispatch('settings/changeSetting', {
-        key: 'theme',
-        value: val
-      })
-    },
-    handleTheme(val) {
-      this.$store.dispatch('settings/changeSetting', {
-        key: 'sideTheme',
-        value: val
-      })
     }
   }
-}
 </script>
 
 <style lang="scss" scoped>

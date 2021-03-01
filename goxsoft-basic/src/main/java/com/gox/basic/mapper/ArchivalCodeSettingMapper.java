@@ -6,15 +6,14 @@ import java.util.List;
 
 /**
  * 档号设置Mapper接口
- * 
+ *
  * @author gox
  * @date 2021-01-23
  */
-public interface ArchivalCodeSettingMapper 
-{
+public interface ArchivalCodeSettingMapper {
     /**
      * 查询档号设置
-     * 
+     *
      * @param id 档号设置ID
      * @return 档号设置
      */
@@ -22,7 +21,7 @@ public interface ArchivalCodeSettingMapper
 
     /**
      * 查询档号设置列表
-     * 
+     *
      * @param archivalCodeSetting 档号设置
      * @return 档号设置集合
      */
@@ -30,7 +29,7 @@ public interface ArchivalCodeSettingMapper
 
     /**
      * 新增档号设置
-     * 
+     *
      * @param archivalCodeSetting 档号设置
      * @return 结果
      */
@@ -38,7 +37,7 @@ public interface ArchivalCodeSettingMapper
 
     /**
      * 修改档号设置
-     * 
+     *
      * @param archivalCodeSetting 档号设置
      * @return 结果
      */
@@ -46,7 +45,7 @@ public interface ArchivalCodeSettingMapper
 
     /**
      * 删除档号设置
-     * 
+     *
      * @param id 档号设置ID
      * @return 结果
      */
@@ -54,7 +53,7 @@ public interface ArchivalCodeSettingMapper
 
     /**
      * 批量删除档号设置
-     * 
+     *
      * @param ids 需要删除的数据ID
      * @return 结果
      */

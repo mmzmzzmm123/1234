@@ -8,25 +8,27 @@ import java.util.List;
 
 /**
  * 单json存储Mapper接口
- * 
+ *
  * @author gox
  * @date 2020-12-25
  */
 @Mapper
-public interface FormJsonMapper 
-{
+public interface FormJsonMapper {
     /**
      * 查询单json存储
-     * 
+     *
      * @param id 单json存储ID
      * @return 单json存储
      */
     public FormJson selectFormJsonById(Long id);
+
     public int updateFormOrderBatch(Iterable<FormJson> list);
-    Integer countFormByNodeIdAndDeptId(Long nodeId,Long deptId);
+
+    Integer countFormByNodeIdAndDeptId(Long nodeId, Long deptId);
+
     /**
      * 查询单json存储列表
-     * 
+     *
      * @param formJson 单json存储
      * @return 单json存储集合
      */
@@ -34,7 +36,7 @@ public interface FormJsonMapper
 
     /**
      * 新增单json存储
-     * 
+     *
      * @param formJson 单json存储
      * @return 结果
      */
@@ -42,7 +44,7 @@ public interface FormJsonMapper
 
     /**
      * 修改单json存储
-     * 
+     *
      * @param formJson 单json存储
      * @return 结果
      */
@@ -50,7 +52,7 @@ public interface FormJsonMapper
 
     /**
      * 删除单json存储
-     * 
+     *
      * @param id 单json存储ID
      * @return 结果
      */
@@ -58,7 +60,7 @@ public interface FormJsonMapper
 
     /**
      * 批量删除单json存储
-     * 
+     *
      * @param ids 需要删除的数据ID
      * @return 结果
      */

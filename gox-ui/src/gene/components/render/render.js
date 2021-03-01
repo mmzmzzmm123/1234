@@ -1,4 +1,4 @@
-import { deepClone } from '@/gene/utils/index'
+import {deepClone} from '@/gene/utils/index'
 import {listDefinition} from '@/api/system/metadataRule'
 
 const componentChild = {}
@@ -53,7 +53,7 @@ function buildDataObject(confClone, dataObject) {
     if (key === '__vModel__') {
       vModel.call(this, dataObject, confClone.__config__.defaultValue)
     } else if (dataObject[key]) {
-      dataObject[key] = { ...dataObject[key], ...val }
+      dataObject[key] = {...dataObject[key], ...val}
     } else {
       dataObject.attrs[key] = val
     }
@@ -86,32 +86,31 @@ export default {
       required: true
     },
   },
-  data(){
-    return{
-      tip:''
+  data() {
+    return {
+      tip: ''
     }
   },
-  methods:{
-    loadData(name){
+  methods: {
+    loadData(name) {
       let d = JSON.parse(unescape(window.sessionStorage.getItem('WS')))
-      if(d){
-        let definitions = d.filter(i=>{
-          return i.nameCn===name
+      if (d) {
+        let definitions = d.filter(i => {
+          return i.nameCn === name
         })
-        if (definitions.length===0){
-          listDefinition(name).then(res=>{
-            this.tip=res.data[0].definition;
-          }).catch(err=>{
+        if (definitions.length === 0) {
+          listDefinition(name).then(res => {
+            this.tip = res.data[0].definition;
+          }).catch(err => {
             console.log(err.message)
           })
-        }
-        else {
-          this.tip=definitions[0].definition;
+        } else {
+          this.tip = definitions[0].definition;
         }
       }
     }
   },
-  created(){
+  created() {
     this.loadData(this.conf.__config__.label)
   },
   render(h) {
@@ -125,9 +124,9 @@ export default {
     // 将json表单配置转化为vue render可以识别的 “数据对象（dataObject）”
     buildDataObject.call(this, confClone, dataObject)
     let child = h(this.conf.__config__.tag, dataObject, children);
-    if (!this.tip){
+    if (!this.tip) {
       return child
     }
-    return h('el-tooltip',{attrs:{effect:"dark",content:this.tip,placement:"top"}},[child])
+    return h('el-tooltip', {attrs: {effect: "dark", content: this.tip, placement: "top"}}, [child])
   }
 }

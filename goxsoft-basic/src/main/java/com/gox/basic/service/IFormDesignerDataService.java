@@ -6,15 +6,14 @@ import java.util.List;
 
 /**
  * 【请填写功能名称】Service接口
- * 
+ *
  * @author gox
  * @date 2021-02-02
  */
-public interface IFormDesignerDataService 
-{
+public interface IFormDesignerDataService {
     /**
      * 查询【请填写功能名称】
-     * 
+     *
      * @param id 【请填写功能名称】ID
      * @return 【请填写功能名称】
      */
@@ -30,7 +29,7 @@ public interface IFormDesignerDataService
 
     /**
      * 新增【请填写功能名称】
-     * 
+     *
      * @param formDesignerData 【请填写功能名称】
      * @return 结果
      */
@@ -38,7 +37,7 @@ public interface IFormDesignerDataService
 
     /**
      * 修改【请填写功能名称】
-     * 
+     *
      * @param formDesignerData 【请填写功能名称】
      * @return 结果
      */
@@ -46,7 +45,7 @@ public interface IFormDesignerDataService
 
     /**
      * 批量删除【请填写功能名称】
-     * 
+     *
      * @param ids 需要删除的【请填写功能名称】ID
      * @return 结果
      */
@@ -54,7 +53,7 @@ public interface IFormDesignerDataService
 
     /**
      * 删除【请填写功能名称】信息
-     * 
+     *
      * @param id 【请填写功能名称】ID
      * @return 结果
      */

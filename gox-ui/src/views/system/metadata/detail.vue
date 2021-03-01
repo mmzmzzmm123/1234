@@ -16,26 +16,46 @@
           <table cellspacing="0" style="width: 100%;">
             <thead>
             <tr>
-              <th class="is-leaf"><div class="cell">属性</div></th>
-              <th class="is-leaf"><div class="cell">值</div></th>
+              <th class="is-leaf">
+                <div class="cell">属性</div>
+              </th>
+              <th class="is-leaf">
+                <div class="cell">值</div>
+              </th>
             </tr>
             </thead>
             <tbody>
             <tr>
-              <td><div class="cell">核心数</div></td>
-              <td><div class="cell" v-if="server.cpu">{{ server.cpu.cpuNum }}</div></td>
+              <td>
+                <div class="cell">核心数</div>
+              </td>
+              <td>
+                <div class="cell" v-if="server.cpu">{{ server.cpu.cpuNum }}</div>
+              </td>
             </tr>
             <tr>
-              <td><div class="cell">用户使用率</div></td>
-              <td><div class="cell" v-if="server.cpu">{{ server.cpu.used }}%</div></td>
+              <td>
+                <div class="cell">用户使用率</div>
+              </td>
+              <td>
+                <div class="cell" v-if="server.cpu">{{ server.cpu.used }}%</div>
+              </td>
             </tr>
             <tr>
-              <td><div class="cell">系统使用率</div></td>
-              <td><div class="cell" v-if="server.cpu">{{ server.cpu.sys }}%</div></td>
+              <td>
+                <div class="cell">系统使用率</div>
+              </td>
+              <td>
+                <div class="cell" v-if="server.cpu">{{ server.cpu.sys }}%</div>
+              </td>
             </tr>
             <tr>
-              <td><div class="cell">当前空闲率</div></td>
-              <td><div class="cell" v-if="server.cpu">{{ server.cpu.free }}%</div></td>
+              <td>
+                <div class="cell">当前空闲率</div>
+              </td>
+              <td>
+                <div class="cell" v-if="server.cpu">{{ server.cpu.free }}%</div>
+              </td>
             </tr>
             </tbody>
           </table>
@@ -47,12 +67,12 @@
 </template>
 
 <script>
-export default {
-  name: "detail",
-  props:{
-    detail:Object,
+  export default {
+    name: "detail",
+    props: {
+      detail: Object,
+    }
   }
-}
 </script>
 
 <style scoped>

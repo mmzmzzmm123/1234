@@ -1,5 +1,6 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable no-restricted-syntax */
+
 /* eslint-disable guard-for-in */
 /**
  * num 小于0，左缩进num*2个空格； 大于0，右缩进num*2个空格。
@@ -9,7 +10,10 @@
  */
 export function indent(str, num, len = 2) {
   if (num === 0) return str
-  const isLeft = num < 0; const result = []; let reg; let
+  const isLeft = num < 0;
+  const result = [];
+  let reg;
+  let
     spaces = ''
   if (isLeft) {
     num *= -1
@@ -126,9 +130,15 @@ export function deepClone(obj) {
   // RegExp
   if (_toString.call(obj) === '[object RegExp]') {
     const flags = []
-    if (obj.global) { flags.push('g') }
-    if (obj.multiline) { flags.push('m') }
-    if (obj.ignoreCase) { flags.push('i') }
+    if (obj.global) {
+      flags.push('g')
+    }
+    if (obj.multiline) {
+      flags.push('m')
+    }
+    if (obj.ignoreCase) {
+      flags.push('i')
+    }
 
     return new RegExp(obj.source, flags.join(''))
   }

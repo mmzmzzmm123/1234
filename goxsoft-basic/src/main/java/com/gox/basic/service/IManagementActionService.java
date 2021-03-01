@@ -6,15 +6,14 @@ import java.util.List;
 
 /**
  * 管理活动Service接口
- * 
+ *
  * @author gox
  * @date 2020-12-29
  */
-public interface IManagementActionService 
-{
+public interface IManagementActionService {
     /**
      * 查询管理活动
-     * 
+     *
      * @param actionIdentifier 管理活动ID
      * @return 管理活动
      */
@@ -22,7 +21,7 @@ public interface IManagementActionService
 
     /**
      * 查询管理活动列表
-     * 
+     *
      * @param managementAction 管理活动
      * @return 管理活动集合
      */
@@ -30,7 +29,7 @@ public interface IManagementActionService
 
     /**
      * 新增管理活动
-     * 
+     *
      * @param managementAction 管理活动
      * @return 结果
      */
@@ -38,7 +37,7 @@ public interface IManagementActionService
 
     /**
      * 修改管理活动
-     * 
+     *
      * @param managementAction 管理活动
      * @return 结果
      */
@@ -46,7 +45,7 @@ public interface IManagementActionService
 
     /**
      * 批量删除管理活动
-     * 
+     *
      * @param actionIdentifiers 需要删除的管理活动ID
      * @return 结果
      */
@@ -54,7 +53,7 @@ public interface IManagementActionService
 
     /**
      * 删除管理活动信息
-     * 
+     *
      * @param actionIdentifier 管理活动ID
      * @return 结果
      */

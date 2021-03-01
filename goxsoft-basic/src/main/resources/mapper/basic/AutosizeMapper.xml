@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.gox.basic.mapper.AutosizeMapper">
-    
+
     <resultMap type="Autosize" id="AutosizeResult">
-        <result property="id"    column="id"    />
-        <result property="itemId"    column="item_id"    />
-        <result property="minRows"    column="min_rows"    />
-        <result property="maxRows"    column="max_rows"    />
+        <result property="id" column="id"/>
+        <result property="itemId" column="item_id"/>
+        <result property="minRows" column="min_rows"/>
+        <result property="maxRows" column="max_rows"/>
     </resultMap>
 
     <sql id="selectAutosizeVo">
@@ -17,13 +17,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectAutosizeList" parameterType="Autosize" resultMap="AutosizeResult">
         <include refid="selectAutosizeVo"/>
-        <where>  
-            <if test="itemId != null "> and item_id = #{itemId}</if>
-            <if test="minRows != null "> and min_rows = #{minRows}</if>
-            <if test="maxRows != null "> and max_rows = #{maxRows}</if>
+        <where>
+            <if test="itemId != null ">and item_id = #{itemId}</if>
+            <if test="minRows != null ">and min_rows = #{minRows}</if>
+            <if test="maxRows != null ">and max_rows = #{maxRows}</if>
         </where>
     </select>
-    
+
     <select id="selectAutosizeById" parameterType="Long" resultMap="AutosizeResult">
         <include refid="selectAutosizeVo"/>
         where id = #{id}
@@ -40,13 +40,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="itemId != null">item_id,</if>
             <if test="minRows != null">min_rows,</if>
             <if test="maxRows != null">max_rows,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
             <if test="itemId != null">#{itemId},</if>
             <if test="minRows != null">#{minRows},</if>
             <if test="maxRows != null">#{maxRows},</if>
-         </trim>
+        </trim>
     </insert>
 
     <update id="updateAutosize" parameterType="Autosize">
@@ -64,10 +64,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteAutosizeByIds" parameterType="String">
-        delete from autosize where id in 
+        delete from autosize where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>
-    
+
 </mapper>

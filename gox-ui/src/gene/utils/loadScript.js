@@ -7,7 +7,8 @@ const callbacks = {}
  */
 function loadScript(src, callback) {
   const existingScript = document.getElementById(src)
-  const cb = callback || (() => {})
+  const cb = callback || (() => {
+  })
   if (!existingScript) {
     callbacks[src] = []
     const $script = document.createElement('script')

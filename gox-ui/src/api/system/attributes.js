@@ -17,6 +17,7 @@ export function getAttributes(id) {
     method: 'get'
   })
 }
+
 // 获取电子文件信息base64
 export function getAttributesBase64(id) {
   return request({

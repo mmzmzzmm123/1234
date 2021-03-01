@@ -5,15 +5,17 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 
-public class MergeRunnable implements Runnable{
+public class MergeRunnable implements Runnable {
     long startPos;
     String mergeFileName;
     File partFile;
+
     public MergeRunnable(long startPos, String mergeFileName, File partFile) {
         this.startPos = startPos;
         this.mergeFileName = mergeFileName;
         this.partFile = partFile;
     }
+
     @Override
     public void run() {
         RandomAccessFile rFile;

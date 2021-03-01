@@ -6,23 +6,24 @@ import java.util.List;
 
 /**
  * 数字签名Mapper接口
- * 
+ *
  * @author gox
  * @date 2020-12-29
  */
-public interface DigitalSignatureMapper 
-{
+public interface DigitalSignatureMapper {
     /**
      * 查询数字签名
-     * 
+     *
      * @param id 数字签名ID
      * @return 数字签名
      */
     public DigitalSignature selectDigitalSignatureById(Long id);
+
     List<DigitalSignature> selectDsByMdid(Long id);
+
     /**
      * 查询数字签名列表
-     * 
+     *
      * @param digitalSignature 数字签名
      * @return 数字签名集合
      */
@@ -30,7 +31,7 @@ public interface DigitalSignatureMapper
 
     /**
      * 新增数字签名
-     * 
+     *
      * @param digitalSignature 数字签名
      * @return 结果
      */
@@ -38,7 +39,7 @@ public interface DigitalSignatureMapper
 
     /**
      * 修改数字签名
-     * 
+     *
      * @param digitalSignature 数字签名
      * @return 结果
      */
@@ -46,7 +47,7 @@ public interface DigitalSignatureMapper
 
     /**
      * 删除数字签名
-     * 
+     *
      * @param id 数字签名ID
      * @return 结果
      */
@@ -54,7 +55,7 @@ public interface DigitalSignatureMapper
 
     /**
      * 批量删除数字签名
-     * 
+     *
      * @param ids 需要删除的数据ID
      * @return 结果
      */

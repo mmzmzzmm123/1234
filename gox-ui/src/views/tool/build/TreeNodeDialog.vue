@@ -71,79 +71,82 @@
   </div>
 </template>
 <script>
-import { isNumberStr } from '@/utils/index'
+  import {isNumberStr} from '@/utils/index'
 
-export default {
-  components: {},
-  inheritAttrs: false,
-  props: [],
-  data() {
-    return {
-      id: 100,
-      formData: {
-        label: undefined,
-        value: undefined
-      },
-      rules: {
-        label: [
+  export default {
+    components: {},
+    inheritAttrs: false,
+    props: [],
+    data() {
+      return {
+        id: 100,
+        formData: {
+          label: undefined,
+          value: undefined
+        },
+        rules: {
+          label: [
+            {
+              required: true,
+              message: '请输入选项名',
+              trigger: 'blur'
+            }
+          ],
+          value: [
+            {
+              required: true,
+              message: '请输入选项值',
+              trigger: 'blur'
+            }
+          ]
+        },
+        dataType: 'string',
+        dataTypeOptions: [
           {
-            required: true,
-            message: '请输入选项名',
-            trigger: 'blur'
-          }
-        ],
-        value: [
+            label: '字符串',
+            value: 'string'
+          },
           {
-            required: true,
-            message: '请输入选项值',
-            trigger: 'blur'
+            label: '数字',
+            value: 'number'
           }
         ]
-      },
-      dataType: 'string',
-      dataTypeOptions: [
-        {
-          label: '字符串',
-          value: 'string'
-        },
-        {
-          label: '数字',
-          value: 'number'
-        }
-      ]
-    }
-  },
-  computed: {},
-  watch: {
-    // eslint-disable-next-line func-names
-    'formData.value': function (val) {
-      this.dataType = isNumberStr(val) ? 'number' : 'string'
-    }
-  },
-  created() {},
-  mounted() {},
-  methods: {
-    onOpen() {
-      this.formData = {
-        label: undefined,
-        value: undefined
       }
     },
-    onClose() {},
-    close() {
-      this.$emit('update:visible', false)
+    computed: {},
+    watch: {
+      // eslint-disable-next-line func-names
+      'formData.value': function (val) {
+        this.dataType = isNumberStr(val) ? 'number' : 'string'
+      }
     },
-    handelConfirm() {
-      this.$refs.elForm.validate(valid => {
-        if (!valid) return
-        if (this.dataType === 'number') {
-          this.formData.value = parseFloat(this.formData.value)
+    created() {
+    },
+    mounted() {
+    },
+    methods: {
+      onOpen() {
+        this.formData = {
+          label: undefined,
+          value: undefined
         }
-        this.formData.id = this.id++
-        this.$emit('commit', this.formData)
-        this.close()
-      })
+      },
+      onClose() {
+      },
+      close() {
+        this.$emit('update:visible', false)
+      },
+      handelConfirm() {
+        this.$refs.elForm.validate(valid => {
+          if (!valid) return
+          if (this.dataType === 'number') {
+            this.formData.value = parseFloat(this.formData.value)
+          }
+          this.formData.id = this.id++
+          this.$emit('commit', this.formData)
+          this.close()
+        })
+      }
     }
   }
-}
 </script>

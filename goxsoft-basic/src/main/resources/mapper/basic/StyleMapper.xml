@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.gox.basic.mapper.StyleMapper">
-    
+
     <resultMap type="Style" id="StyleResult">
-        <result property="id"    column="id"    />
-        <result property="itemId"    column="item_id"    />
-        <result property="width"    column="width"    />
+        <result property="id" column="id"/>
+        <result property="itemId" column="item_id"/>
+        <result property="width" column="width"/>
     </resultMap>
 
     <sql id="selectStyleVo">
@@ -16,12 +16,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectStyleList" parameterType="Style" resultMap="StyleResult">
         <include refid="selectStyleVo"/>
-        <where>  
-            <if test="itemId != null "> and item_id = #{itemId}</if>
-            <if test="width != null  and width != ''"> and width = #{width}</if>
+        <where>
+            <if test="itemId != null ">and item_id = #{itemId}</if>
+            <if test="width != null  and width != ''">and width = #{width}</if>
         </where>
     </select>
-    
+
     <select id="selectStyleById" parameterType="Long" resultMap="StyleResult">
         <include refid="selectStyleVo"/>
         where id = #{id}
@@ -37,12 +37,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="id != null">id,</if>
             <if test="itemId != null">item_id,</if>
             <if test="width != null">width,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
             <if test="itemId != null">#{itemId},</if>
             <if test="width != null">#{width},</if>
-         </trim>
+        </trim>
     </insert>
 
     <update id="updateStyle" parameterType="Style">
@@ -59,10 +59,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteStyleByIds" parameterType="String">
-        delete from style where id in 
+        delete from style where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>
-    
+
 </mapper>

@@ -16,38 +16,38 @@ import java.util.List;
 
 /**
  * 单json存储Service业务层处理
- * 
+ *
  * @author gox
  * @date 2020-12-25
  */
 @Service
 @Transactional
-public class FormJsonServiceImpl implements IFormJsonService 
-{
+public class FormJsonServiceImpl implements IFormJsonService {
     @Autowired
     private FormJsonMapper formJsonMapper;
     @Autowired
     private IFormDesignerDataService formDesignerDataService;
     @Autowired
     private RedisCache redisCache;
+
     @PostConstruct
-    public void init(){
+    public void init() {
         List<FormJson> list = formJsonMapper.selectFormJsonList(new FormJson());
         for (FormJson formJson : list) {
-            redisCache.setCacheMapValue("form",formJson.getId()+"",formJson);
+            redisCache.setCacheMapValue("form", formJson.getId() + "", formJson);
         }
     }
+
     /**
      * 查询单json存储
-     * 
+     *
      * @param id 单json存储ID
      * @return 单json存储
      */
     @Override
-    public FormJson selectFormJsonById(Long id)
-    {
-        FormJson f = redisCache.getCacheMapValue("form",id+"");
-        if (f==null){
+    public FormJson selectFormJsonById(Long id) {
+        FormJson f = redisCache.getCacheMapValue("form", id + "");
+        if (f == null) {
             return formJsonMapper.selectFormJsonById(id);
         }
         return f;
@@ -55,60 +55,59 @@ public class FormJsonServiceImpl implements IFormJsonService
 
     /**
      * 查询单json存储列表
-     * 
+     *
      * @param formJson 单json存储
      * @return 单json存储
      */
     @Override
-    public List<FormJson> selectFormJsonList(FormJson formJson)
-    {
+    public List<FormJson> selectFormJsonList(FormJson formJson) {
         return formJsonMapper.selectFormJsonList(formJson);
     }
 
     /**
      * 新增单json存储
-     * 
+     *
      * @param formJson 单json存储
      * @return 结果
      */
     @Override
-    public int insertFormJson(FormJson formJson)
-    {
+    public int insertFormJson(FormJson formJson) {
         FormDesignerData form = formJson.getFormDesignerData();
-        if (form!=null){
+        if (form != null) {
             form.setId(formJson.getId());
             formDesignerDataService.insertFormDesignerData(form);
         }
         formJson.setCreateTime(DateUtils.getNowDate());
-        formJson.setOrder(formJsonMapper.countFormByNodeIdAndDeptId(formJson.getNodeId(),formJson.getDeptId())+1);
-        if(formJsonMapper.insertFormJson(formJson)==1) {
-            redisCache.setCacheMapValue("form",formJson.getId()+"",formJson);
+        formJson.setOrder(formJsonMapper.countFormByNodeIdAndDeptId(formJson.getNodeId(), formJson.getDeptId()) + 1);
+        if (formJsonMapper.insertFormJson(formJson) == 1) {
+            redisCache.setCacheMapValue("form", formJson.getId() + "", formJson);
         }
         return 1;
     }
+
     @Override
-    public int updateFormOrderBatch(Iterable<FormJson> formJsons){
+    public int updateFormOrderBatch(Iterable<FormJson> formJsons) {
         for (FormJson formJson : formJsons) {
-            redisCache.setCacheMapValue("form",formJson.getId()+"",formJson);
+            redisCache.setCacheMapValue("form", formJson.getId() + "", formJson);
         }
         return formJsonMapper.updateFormOrderBatch(formJsons);
     }
+
     /**
      * 修改单json存储
-     * 
+     *
      * @param formJson 单json存储
      * @return 结果
      */
     @Override
-    public int updateFormJson(FormJson formJson)
-    {
+    public int updateFormJson(FormJson formJson) {
         FormDesignerData form = formJson.getFormDesignerData();
         form.setId(formJson.getId());
         formDesignerDataService.deleteFormDesignerDataById(formJson.getId());
         formDesignerDataService.insertFormDesignerData(form);
         formJson.setUpdateTime(DateUtils.getNowDate());
-        if (formJsonMapper.updateFormJson(formJson)==1){
-            redisCache.setCacheMapValue("form",formJson.getId()+"",formJson);
+        if (formJsonMapper.updateFormJson(formJson) == 1) {
+            redisCache.setCacheMapValue("form", formJson.getId() + "", formJson);
             return 1;
         }
         return 0;
@@ -116,17 +115,16 @@ public class FormJsonServiceImpl implements IFormJsonService
 
     /**
      * 批量删除单json存储
-     * 
+     *
      * @param ids 需要删除的单json存储ID
      * @return 结果
      */
     @Override
-    public int deleteFormJsonByIds(Long[] ids)
-    {
+    public int deleteFormJsonByIds(Long[] ids) {
 
-        if(formJsonMapper.deleteFormJsonByIds(ids)==ids.length){
+        if (formJsonMapper.deleteFormJsonByIds(ids) == ids.length) {
             for (Long id : ids) {
-                redisCache.deleteHashObject("form",id+"");
+                redisCache.deleteHashObject("form", id + "");
             }
         }
         return ids.length;
@@ -134,15 +132,14 @@ public class FormJsonServiceImpl implements IFormJsonService
 
     /**
      * 删除单json存储信息
-     * 
+     *
      * @param id 单json存储ID
      * @return 结果
      */
     @Override
-    public int deleteFormJsonById(Long id)
-    {
-        if (formJsonMapper.deleteFormJsonById(id)==1){
-            redisCache.deleteHashObject("form",id+"");
+    public int deleteFormJsonById(Long id) {
+        if (formJsonMapper.deleteFormJsonById(id) == 1) {
+            redisCache.deleteHashObject("form", id + "");
             return 1;
         }
         return 0;

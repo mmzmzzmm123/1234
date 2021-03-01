@@ -6,15 +6,14 @@ import java.util.List;
 
 /**
  * 单json存储Service接口
- * 
+ *
  * @author gox
  * @date 2020-12-25
  */
-public interface IFormJsonService 
-{
+public interface IFormJsonService {
     /**
      * 查询单json存储
-     * 
+     *
      * @param id 单json存储ID
      * @return 单json存储
      */
@@ -22,7 +21,7 @@ public interface IFormJsonService
 
     /**
      * 查询单json存储列表
-     * 
+     *
      * @param formJson 单json存储
      * @return 单json存储集合
      */
@@ -30,7 +29,7 @@ public interface IFormJsonService
 
     /**
      * 新增单json存储
-     * 
+     *
      * @param formJson 单json存储
      * @return 结果
      */
@@ -40,7 +39,7 @@ public interface IFormJsonService
 
     /**
      * 修改单json存储
-     * 
+     *
      * @param formJson 单json存储
      * @return 结果
      */
@@ -48,7 +47,7 @@ public interface IFormJsonService
 
     /**
      * 批量删除单json存储
-     * 
+     *
      * @param ids 需要删除的单json存储ID
      * @return 结果
      */
@@ -56,7 +55,7 @@ public interface IFormJsonService
 
     /**
      * 删除单json存储信息
-     * 
+     *
      * @param id 单json存储ID
      * @return 结果
      */

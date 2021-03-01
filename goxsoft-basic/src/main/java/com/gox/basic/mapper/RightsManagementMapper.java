@@ -6,23 +6,24 @@ import java.util.List;
 
 /**
  * 权限管理Mapper接口
- * 
+ *
  * @author gox
  * @date 2020-12-29
  */
-public interface RightsManagementMapper 
-{
+public interface RightsManagementMapper {
     /**
      * 查询权限管理
-     * 
+     *
      * @param id 权限管理ID
      * @return 权限管理
      */
     public RightsManagement selectRightsManagementById(Long id);
+
     List<RightsManagement> selectRmByMdId(Long id);
+
     /**
      * 查询权限管理列表
-     * 
+     *
      * @param rightsManagement 权限管理
      * @return 权限管理集合
      */
@@ -30,7 +31,7 @@ public interface RightsManagementMapper
 
     /**
      * 新增权限管理
-     * 
+     *
      * @param rightsManagement 权限管理
      * @return 结果
      */
@@ -38,7 +39,7 @@ public interface RightsManagementMapper
 
     /**
      * 修改权限管理
-     * 
+     *
      * @param rightsManagement 权限管理
      * @return 结果
      */
@@ -46,7 +47,7 @@ public interface RightsManagementMapper
 
     /**
      * 删除权限管理
-     * 
+     *
      * @param id 权限管理ID
      * @return 结果
      */
@@ -54,7 +55,7 @@ public interface RightsManagementMapper
 
     /**
      * 批量删除权限管理
-     * 
+     *
      * @param ids 需要删除的数据ID
      * @return 结果
      */

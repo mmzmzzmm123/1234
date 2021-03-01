@@ -12,7 +12,7 @@
               {{ generateIconCode(item) }}
             </div>
             <div class="icon-item">
-              <svg-icon :icon-class="item" class-name="disabled" />
+              <svg-icon :icon-class="item" class-name="disabled"/>
               <span>{{ item }}</span>
             </div>
           </el-tooltip>
@@ -25,7 +25,7 @@
               {{ generateElementIconCode(item) }}
             </div>
             <div class="icon-item">
-              <i :class="'el-icon-' + item" />
+              <i :class="'el-icon-' + item"/>
               <span>{{ item }}</span>
             </div>
           </el-tooltip>
@@ -36,52 +36,52 @@
 </template>
 
 <script>
-import svgIcons from './svg-icons'
-import elementIcons from './element-icons'
+  import svgIcons from './svg-icons'
+  import elementIcons from './element-icons'
 
-export default {
-  name: 'Icons',
-  data() {
-    return {
-      svgIcons,
-      elementIcons
-    }
-  },
-  methods: {
-    generateIconCode(symbol) {
-      return `<svg-icon icon-class="${symbol}" />`
+  export default {
+    name: 'Icons',
+    data() {
+      return {
+        svgIcons,
+        elementIcons
+      }
     },
-    generateElementIconCode(symbol) {
-      return `<i class="el-icon-${symbol}" />`
+    methods: {
+      generateIconCode(symbol) {
+        return `<svg-icon icon-class="${symbol}" />`
+      },
+      generateElementIconCode(symbol) {
+        return `<i class="el-icon-${symbol}" />`
+      }
     }
   }
-}
 </script>
 
 <style lang="scss" scoped>
-.icons-container {
-  margin: 10px 20px 0;
-  overflow: hidden;
+  .icons-container {
+    margin: 10px 20px 0;
+    overflow: hidden;
 
-  .icon-item {
-    margin: 20px;
-    height: 85px;
-    text-align: center;
-    width: 100px;
-    float: left;
-    font-size: 30px;
-    color: #24292e;
-    cursor: pointer;
-  }
+    .icon-item {
+      margin: 20px;
+      height: 85px;
+      text-align: center;
+      width: 100px;
+      float: left;
+      font-size: 30px;
+      color: #24292e;
+      cursor: pointer;
+    }
 
-  span {
-    display: block;
-    font-size: 16px;
-    margin-top: 10px;
-  }
+    span {
+      display: block;
+      font-size: 16px;
+      margin-top: 10px;
+    }
 
-  .disabled {
-    pointer-events: none;
+    .disabled {
+      pointer-events: none;
+    }
   }
-}
 </style>
