@@ -171,7 +171,9 @@ export default {
       });
       /** 查询菜单下拉列表 */
       getMenuTreeselect().then(response => {
-        this.menus = this.handleTree(response.data, "menuId");
+        const menu = { menuId: 0, menuName: '主类目', children: [] };
+        menu.children = this.handleTree(response.data, "menuId");
+        this.menus.push(menu);
       });
     }
   },
