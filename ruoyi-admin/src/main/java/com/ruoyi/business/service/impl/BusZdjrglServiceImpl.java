@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.base.Objects;
 import com.ruoyi.business.domain.BusCbsxx;
@@ -119,9 +120,12 @@ public class BusZdjrglServiceImpl implements IBusZdjrglService {
 	 *            重大节日管理
 	 * @return 结果
 	 */
+	@Transactional
 	@Override
-	public int insertBusZdjrgl(BusZdjrgl busZdjrgl) {
-		return busZdjrglMapper.insertBusZdjrgl(busZdjrgl);
+	public BusZdjrgl insertBusZdjrgl(BusZdjrgl busZdjrgl) {
+		busZdjrglMapper.deleteByJrrq(busZdjrgl.getJrrq());
+		busZdjrglMapper.insertBusZdjrgl(busZdjrgl);
+		return busZdjrgl;
 	}
 
 	/**

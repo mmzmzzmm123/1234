@@ -36,7 +36,7 @@ public interface IBusZdjrglService {
 	 *            重大节日管理
 	 * @return 结果
 	 */
-	public int insertBusZdjrgl(BusZdjrgl busZdjrgl);
+	public BusZdjrgl insertBusZdjrgl(BusZdjrgl busZdjrgl);
 
 	/**
 	 * 修改重大节日管理

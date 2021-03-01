@@ -148,6 +148,10 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
 		ca.set(Calendar.MONTH, month - 1);
 		// 设置最后一天
 		ca.set(Calendar.DAY_OF_MONTH, ca.getActualMaximum(Calendar.DAY_OF_MONTH));
+		ca.set(Calendar.HOUR_OF_DAY, 23);
+		ca.set(Calendar.MINUTE, 59);
+		ca.set(Calendar.SECOND, 59);
+		ca.set(Calendar.MILLISECOND, 999);
 		// 最后一天格式化
 		return ca.getTime();
 	}
@@ -168,6 +172,10 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
 		ca.set(Calendar.MONTH, month - 1);
 		// 设置最后一天
 		ca.set(Calendar.DAY_OF_MONTH, ca.getActualMinimum(Calendar.DAY_OF_MONTH));
+		ca.set(Calendar.HOUR_OF_DAY, 0);
+		ca.set(Calendar.MINUTE, 0);
+		ca.set(Calendar.SECOND, 0);
+		ca.set(Calendar.MILLISECOND, 0);
 		// 最后一天格式化
 		return ca.getTime();
 	}

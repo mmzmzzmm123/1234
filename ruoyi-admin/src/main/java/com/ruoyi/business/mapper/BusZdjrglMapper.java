@@ -78,4 +78,14 @@ public interface BusZdjrglMapper {
 	 * @return 结果
 	 */
 	public int deleteBusZdjrglByIds(Long[] ids);
+
+	/**
+	 * 根据假日日期删除节假日设置信息
+	 * 
+	 * @param jrrq
+	 *            假日日期
+	 * @return 结果
+	 */
+	public int deleteByJrrq(@Param("jrrq") Date jrrq);
+
 }

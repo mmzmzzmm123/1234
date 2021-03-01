@@ -56,11 +56,8 @@ public class BusZdjrglController extends BaseController {
 	@Log(title = "重大节日管理", businessType = BusinessType.INSERT)
 	@PostMapping
 	public AjaxResult add(@RequestBody BusZdjrgl busZdjrgl) {
-		if (busZdjrgl.getId() == null) {
-			return toAjax(busZdjrglService.insertBusZdjrgl(busZdjrgl));
-		} else {
-			return toAjax(busZdjrglService.updateBusZdjrgl(busZdjrgl));
-		}
+		BusZdjrgl pBusZdjrgl = busZdjrglService.insertBusZdjrgl(busZdjrgl);
+		return AjaxResult.success(pBusZdjrgl);
 	}
 
 	/**

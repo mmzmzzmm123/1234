@@ -71,7 +71,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 	<select id="selectBusZdjrglByJrrq" resultMap="BusZdjrglResult">
 		<include refid="selectBusZdjrglVo" />
-		where jrrq>=#{ksrq} and jrrq &lt;= #{jsrq}
+		where jrrq>=#{ksrq} and jrrq &lt;= #{jsrq} order by jrrq
 	</select>
-	
+
+	<delete id="deleteByJrrq">
+		delete from bus_zdjrgl where jrrq=#{jrrq}
+	</delete>
+
 </mapper>
