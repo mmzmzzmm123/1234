@@ -65,6 +65,12 @@ public class ByDayflowassessmentplan extends BaseEntity {
     private Double score;
 
     /**
+     * 班级平均分
+     */
+    @Excel(name = "班级平均分数")
+    private Double classavg;
+
+    /**
      * 评估时间
      */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -152,6 +158,7 @@ public class ByDayflowassessmentplan extends BaseEntity {
                 .append("classid", getClassid())
                 .append("connent", getConnent())
                 .append("score", getScore())
+                .append("classavg", getClassavg())
                 .append("starttime", getStarttime())
                 .append("createUserid", getCreateUserid())
                 .append("createTime", getCreateTime())
@@ -172,5 +179,13 @@ public class ByDayflowassessmentplan extends BaseEntity {
 
     public void setScore(double score) {
         this.score = score;
+    }
+
+    public Double getClassavg() {
+        return classavg;
+    }
+
+    public void setClassavg(Double classavg) {
+        this.classavg = classavg;
     }
 }

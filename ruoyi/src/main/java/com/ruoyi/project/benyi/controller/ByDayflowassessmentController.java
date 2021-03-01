@@ -3,7 +3,9 @@ package com.ruoyi.project.benyi.controller;
 import java.util.List;
 
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.project.benyi.domain.ByDayflowassessmentplan;
 import com.ruoyi.project.benyi.service.IByDayFlowStandardService;
+import com.ruoyi.project.benyi.service.IByDayflowassessmentplanService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,6 +38,8 @@ public class ByDayflowassessmentController extends BaseController {
     private IByDayflowassessmentService byDayflowassessmentService;
     @Autowired
     private IByDayFlowStandardService byDayFlowStandardService;
+    @Autowired
+    private IByDayflowassessmentplanService byDayflowassessmentplanService;
 
     /**
      * 查询幼儿园一日流程评估列表
@@ -102,7 +106,7 @@ public class ByDayflowassessmentController extends BaseController {
             // 总扣分值
             Double sumKfz = 0.0;
             sumKfz = bzmfAll - sum;
-
+            ByDayflowassessmentplan byDayflowassessmentplan = new ByDayflowassessmentplan();
             // 如果评估对象是主班教师 直接更新主板分数
             if (byDayflowassessment.getPgdx().equals(byDayflowassessment.getBzbh())) {
                 // 主班教师扣分值
@@ -133,6 +137,10 @@ public class ByDayflowassessmentController extends BaseController {
                         byDayflowassessment2.setClassdf(avg);
                         byDayflowassessmentService.updateByDayflowassessment(byDayflowassessment2);
                     }
+                    // 将计划中的平均分同步更新
+                    byDayflowassessmentplan.setId(byDayflowassessment.getPlanid());
+                    byDayflowassessmentplan.setClassavg(avg);
+                    byDayflowassessmentplanService.updateByDayflowassessmentplan(byDayflowassessmentplan);
                 }
                 return ajax;
             } else {
@@ -176,6 +184,10 @@ public class ByDayflowassessmentController extends BaseController {
                             byDayflowassessment3.setClassdf(avg2);
                             byDayflowassessmentService.updateByDayflowassessment(byDayflowassessment3);
                         }
+                        // 将计划中的平均分同步更新
+                        byDayflowassessmentplan.setId(byDayflowassessment.getPlanid());
+                        byDayflowassessmentplan.setClassavg(avg2);
+                        byDayflowassessmentplanService.updateByDayflowassessmentplan(byDayflowassessmentplan);
                     }
                 }
                 return ajax;
