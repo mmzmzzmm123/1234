@@ -84,7 +84,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		</foreach>
 	</delete>
 
-	<delete id="deleteBusZdjrzbryByCbsId" parameterType="Long">
+	<delete id="deleteBusZdjrzbryByZdjrIdAndCbsId">
 		delete from bus_zdjrzbry where zdjr_id = #{zdjrId} and cbs_id = #{cbsId}
 	</delete>
 	
