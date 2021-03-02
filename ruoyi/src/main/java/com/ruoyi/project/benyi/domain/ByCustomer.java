@@ -1,9 +1,12 @@
 package com.ruoyi.project.benyi.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.framework.aspectj.lang.annotation.Excel;
 import com.ruoyi.framework.web.domain.BaseEntity;
+
+import java.util.Date;
 
 /**
  * 本一-客户关系管理对象 by_customer
@@ -126,6 +129,13 @@ public class ByCustomer extends BaseEntity {
      */
     @Excel(name = "消费项目")
     private String xfxm;
+
+    /**
+     * 创建时间
+     */
+    @Excel(name = "开通截至日期", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date createTime;
 
     /**
      * 消费价值
@@ -318,5 +328,14 @@ public class ByCustomer extends BaseEntity {
                 .append("xfjz", getXfjz())
                 .append("createTime", getCreateTime())
                 .toString();
+    }
+
+    @Override
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 }

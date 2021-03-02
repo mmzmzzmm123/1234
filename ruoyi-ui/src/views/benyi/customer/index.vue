@@ -107,20 +107,21 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center" />
-      <!-- <el-table-column label="编号" align="center" prop="id" /> -->
       <el-table-column label="客户姓名" align="center" prop="name" />
       <el-table-column label="幼儿园名称" align="center" prop="schoolname" />
       <el-table-column label="幼儿园人数" align="center" prop="rs" />
       <el-table-column label="身份" align="center" prop="sflx" :formatter="gxFormat"/>
+      <el-table-column label="客户来源" align="center" prop="khly" :formatter="lyFormat"/>
       <el-table-column label="联系电话" align="center" prop="lxdh" />
-      <el-table-column label="微信" align="center" prop="wx" />
-      <el-table-column label="抖音" align="center" prop="dy" />
-      <el-table-column label="其他" align="center" prop="qt" />
+      <el-table-column label="微信号" align="center" prop="wx" />
+      <el-table-column label="抖音号" align="center" prop="dy" />
+      <el-table-column label="其他联系方式" align="center" prop="qt" />
       <el-table-column label="所在省" align="center" prop="sheng" />
       <el-table-column label="所在市" align="center" prop="shi" />
-      <el-table-column label="客户来源" align="center" prop="khly" :formatter="lyFormat"/>
       <el-table-column label="消费项目" align="center" prop="xfxm" />
       <el-table-column label="消费价值" align="center" prop="xfjz" />
+      <el-table-column label="录入人" align="center" prop="createUserid" :formatter="userFormat" />
+      <el-table-column label="录入时间" align="center" prop="createTime" />
       <el-table-column
         label="操作"
         align="center"
@@ -198,13 +199,13 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="微信" prop="wx">
-              <el-input v-model="form.wx" placeholder="请输入微信" />
+            <el-form-item label="微信号" prop="wx">
+              <el-input v-model="form.wx" placeholder="请输入微信号" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="抖音" prop="dy">
-              <el-input v-model="form.dy" placeholder="请输入抖音" />
+            <el-form-item label="抖音号" prop="dy">
+              <el-input v-model="form.dy" placeholder="请输入抖音号" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -212,14 +213,18 @@
               <el-input v-model="form.qt" placeholder="请输入其他联系方式" />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="24">
             <el-form-item label="所在省" prop="sheng">
-              <el-input v-model="form.sheng" placeholder="请输入所在省" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="所在市" prop="shi">
-              <el-input v-model="form.shi" placeholder="请输入所在市" />
+              <v-distpicker
+                v-model="form.sheng"
+                :placeholders="placeholders"
+                :province="diglogForm.province"
+                :city="diglogForm.city"
+                :area="diglogForm.area"
+                @selected="onSelected"
+              ></v-distpicker>
+              <el-input v-model="form.shengid" v-if="false" />
+              <el-input v-model="form.shiid" v-if="false" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -277,11 +282,23 @@ import {
   updateCustomer,
   exportCustomer,
 } from "@/api/benyi/customer";
+import VDistpicker from "v-distpicker";
+import { listUser } from "@/api/system/user";
 
 export default {
   name: "Customer",
   data() {
     return {
+      placeholders: {
+        province: "请选择省",
+        city: "请选择市",
+        area: "请选择区"
+      },
+      diglogForm: {
+        province: null,
+        city: null,
+        area: null
+      },
       // 遮罩层
       loading: true,
       // 选中数组
@@ -300,6 +317,8 @@ export default {
       open: false,
       gxOptions: [],
       lyOptions: [],
+      // 用户选项
+      userOptions: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -315,9 +334,10 @@ export default {
         sheng: undefined,
         shengid: undefined,
         shi: undefined,
-        shiid: undefined,
+        // shiid: undefined,
         khly: undefined,
         createUserid: undefined,
+        createTime: undefined,
         bz: undefined,
         zhgj: undefined,
         state: undefined,
@@ -337,6 +357,13 @@ export default {
         lxdh: [
           { required: true, message: "幼儿园名称不能为空", trigger: "blur" },
         ],
+        sheng: [
+          {
+            required: true,
+            message: "省市区不能为空",
+            trigger: "blur"
+          }
+        ],
       },
     };
   },
@@ -348,13 +375,38 @@ export default {
     this.getDicts("sys_dm_khgxly").then((response) => {
       this.lyOptions = response.data;
     });
+    this.getUserList();
+  },
+  components: {
+    //省市区三级联动全局组件
+    VDistpicker,
   },
   methods: {
-          // 字典翻译
+    /** 查询用户列表 */
+    getUserList() {
+      listUser(null).then(
+        (response) => {
+          this.userOptions = response.rows;
+        }
+      );
+    },
+    // 教师字典翻译
+    userFormat(row, column) {
+      var actions = [];
+      var datas = this.userOptions;
+      Object.keys(datas).map((key) => {
+        if (datas[key].userId == "" + row.createUserid) {
+          actions.push(datas[key].nickName);
+          return false;
+        }
+      });
+      return actions.join("");
+    },
+    // 字典翻译
     gxFormat(row, column) {
       return this.selectDictLabel(this.gxOptions, row.sflx);
     },
-        // 字典翻译
+    // 字典翻译
     lyFormat(row, column) {
       return this.selectDictLabel(this.lyOptions, row.khly);
     },
@@ -366,6 +418,20 @@ export default {
         this.total = response.total;
         this.loading = false;
       });
+    },
+    //所在省市区触发联动方法
+    onSelected(data) {
+      if (
+        data.province.code == undefined ||
+        data.city.code == undefined 
+      ) {
+        this.form.sheng = undefined;
+      } else {
+        this.form.sheng = data.province.value;
+        this.form.shengid = data.province.code;
+        this.form.shi = data.city.value;
+        this.form.shiid = data.city.code;
+      }
     },
     // 取消按钮
     cancel() {
@@ -396,7 +462,11 @@ export default {
         xfxm: undefined,
         xfjz: undefined,
         createTime: undefined,
+        createTime: undefined,
       };
+      this.diglogForm.province = "";
+      this.diglogForm.city = "";
+      this.diglogForm.area = "";
       this.resetForm("form");
     },
     /** 搜索按钮操作 */
@@ -427,6 +497,8 @@ export default {
       const id = row.id || this.ids;
       getCustomer(id).then((response) => {
         this.form = response.data;
+        this.diglogForm.province = response.data.sheng;
+        this.diglogForm.city = response.data.shi;
         this.open = true;
         this.title = "修改本一-客户关系管理";
       });

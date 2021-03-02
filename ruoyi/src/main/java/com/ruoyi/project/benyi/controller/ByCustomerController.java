@@ -1,5 +1,6 @@
 package com.ruoyi.project.benyi.controller;
 
+import java.util.Date;
 import java.util.List;
 
 import com.ruoyi.common.utils.SecurityUtils;
@@ -74,6 +75,7 @@ public class ByCustomerController extends BaseController {
     @PostMapping
     public AjaxResult add(@RequestBody ByCustomer byCustomer) {
         byCustomer.setCreateUserid(SecurityUtils.getLoginUser().getUser().getUserId());
+        byCustomer.setCreateTime(new Date());
         return toAjax(byCustomerService.insertByCustomer(byCustomer));
     }
 
