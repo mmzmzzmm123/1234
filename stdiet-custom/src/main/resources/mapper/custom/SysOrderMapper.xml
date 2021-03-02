@@ -69,6 +69,28 @@
         LEFT JOIN (SELECT dict_label, dict_value FROM sys_dict_data WHERE dict_type = 'conditioning_project') AS cp ON cp.dict_value = o.conditioning_project_id
     </sql>
 
+    <sql id="searchOrderType">
+        <if test="searchOrderTypeArray != null">
+            <trim prefix="AND (" suffix=")" suffixOverrides="or">
+                <foreach collection="searchOrderTypeArray"  separator="or" item="typeArray" index="i">
+                    (
+                    <foreach collection="typeArray" separator="and" item="type" index="j">
+                        <if test="j == 0">
+                            order_type = #{type}
+                        </if>
+                        <if test="j == 1">
+                            order_count_type = #{type}
+                        </if>
+                        <if test="j == 2">
+                            order_money_type = #{type}
+                        </if>
+                    </foreach>
+                    )
+                </foreach>
+            </trim>
+        </if>
+    </sql>
+
     <select id="selectAllOrderAmount" parameterType="SysOrder" resultType="BigDecimal">
         SELECT SUM(amount) FROM sys_order
         <where>
@@ -102,6 +124,9 @@
                     and 0 > amount
                 </if>
             </if>
+            <include refid="searchOrderType">
+                <property name="reviewStatus" value="#{searchOrderTypeArray}"/>
+            </include>
             <if test="true">and del_flag = 0</if>
             <!-- 计算总额时需要除去二开售后提成单 -->
             AND after_sale_commiss_order = 0
@@ -141,26 +166,9 @@
                     and 0 > amount
                 </if>
             </if>
-            <if test="searchOrderTypeArray != null">
-                <trim prefix="AND (" suffix=")" suffixOverrides="or">
-                <foreach collection="searchOrderTypeArray"  separator="or" item="typeArray" index="i">
-                    (
-                    <foreach collection="typeArray" separator="and" item="type" index="j">
-                        <if test="j == 0">
-                            order_type = #{type}
-                        </if>
-                        <if test="j == 1">
-                            order_count_type = #{type}
-                        </if>
-                        <if test="j == 2">
-                            order_money_type = #{type}
-                        </if>
-                    </foreach>
-                    )
-                    <!--(order_type = #{typeArray[0]} and order_count_type = #{typeArray[1]} and order_money_type =#{typeArray[2]})-->
-                </foreach>
-                </trim>
-            </if>
+            <include refid="searchOrderType">
+                <property name="reviewStatus" value="#{searchOrderTypeArray}"/>
+            </include>
             <if test="true">and o.del_flag = 0</if>
         </where>
         order by order_time desc

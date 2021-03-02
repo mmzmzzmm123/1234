@@ -1,6 +1,7 @@
 package com.stdiet.custom.utils;
 
 import com.stdiet.common.utils.HealthyUtils;
+import com.stdiet.common.utils.NumberUtils;
 import com.stdiet.custom.domain.SysCustomerHealthy;
 import com.stdiet.custom.dto.response.NutritionalCalories;
 
@@ -19,7 +20,7 @@ public class NutritionalUtils {
             nutritionalCalories.setTall(sysCustomerHealthy.getTall());
             nutritionalCalories.setWeight(sysCustomerHealthy.getWeight().doubleValue());
             nutritionalCalories.setStandardWeight(HealthyUtils.calculateStandardWeight(nutritionalCalories.getTall()));
-            double overHeight = nutritionalCalories.getWeight() - nutritionalCalories.getStandardWeight();
+            double overHeight = NumberUtils.getNumberByRoundHalfUp(nutritionalCalories.getWeight() - nutritionalCalories.getStandardWeight(),1).doubleValue();
             overHeight = overHeight > 0 ? overHeight : 0;
             nutritionalCalories.setOverWeight(overHeight);
             nutritionalCalories.setMetabolizeHeat(HealthyUtils.calculateMetabolizeHeat(nutritionalCalories.getAge(), nutritionalCalories.getTall(), nutritionalCalories.getWeight()).intValue());
