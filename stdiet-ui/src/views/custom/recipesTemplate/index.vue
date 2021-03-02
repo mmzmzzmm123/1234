@@ -152,7 +152,7 @@
           <el-button
             size="mini"
             type="text"
-            v-hasPermi="['recipes:recipesTemplate:edit']"
+            v-hasPermi="['recipes:template:edit']"
             :icon="`${
               scope.row.recipesId ? 'el-icon-edit' : 'el-icon-edit-outline'
             }`"

@@ -4,7 +4,7 @@
     :close-on-press-escape="false"
     :visible.sync="visible"
     @closed="handleOnClosed"
-    size="40%"
+    size="45%"
   >
     <div class="app-container recipes_plan_drawer_wrapper">
       <el-row :gutter="10" class="mb8">
@@ -26,7 +26,7 @@
         </el-col>
       </el-row>
 
-      <el-table :data="planList" v-loading="planLoading" height="90%">
+      <el-table :data="planList" v-loading="planLoading" height="80%">
         <el-table-column label="审核状态" align="center" width="80">
           <template slot-scope="scope">
             <el-tag :type="scope.row.reviewStatus ? 'success' : 'danger'">{{
@@ -60,41 +60,23 @@
       </el-table>
 
       <!-- 暂停记录抽屉 -->
-      <el-drawer
-        :title="innerTitle"
-        :append-to-body="true"
-        :close-on-press-escape="false"
-        :visible.sync="innerVisible"
-        @closed="handleOnInnerClosed"
-      >
-        <div class="app-container">
-          <el-row :gutter="10" class="mb8">
-            <el-col :span="1.5">
-              <el-button
-                type="primary"
-                icon="el-icon-plus"
-                size="mini"
-                @click="handleInnerOpen"
-                >增加暂停记录
-              </el-button>
-            </el-col>
-          </el-row>
-        </div>
-      </el-drawer>
+      <PlanPauseDrawer ref="planPauseRef" />
     </div>
   </el-drawer>
 </template>
 <script>
 import Clipboard from "clipboard";
 import { listRecipesPlanByCusId } from "@/api/custom/recipesPlan";
+import PlanPauseDrawer from "./PlanPauseDrawer";
 export default {
   name: "RecipesPlanDrawer",
+  components: {
+    PlanPauseDrawer,
+  },
   data() {
     return {
       visible: false,
-      innerVisible: false,
       title: "",
-      innerTitle: "",
       cusOutId: "",
       copyValue: "",
       planLoading: false,
@@ -119,7 +101,7 @@ export default {
           }
           return str;
         }, "");
-        console.log(this.planList);
+        // console.log(this.planList);
         this.planLoading = false;
       });
     },
@@ -128,6 +110,7 @@ export default {
       this.cusOutId = "";
     },
     handleInnerOpen() {
+      this.$refs["planPauseRef"].showDrawer(this.data);
       this.innerVisible = true;
       this.innerTitle = `「${this.data.name}」暂停记录`;
     },
@@ -142,7 +125,6 @@ export default {
         type: "success",
       });
     },
-    handleOnInnerClosed() {},
     handleOnRecipesEditClick(data) {
       // console.log(data);
       const { id, name } = this.data;

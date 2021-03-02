@@ -72,20 +72,6 @@ export const constantRoutes = [
     ]
   },
   {
-    path: "/order",
-    component: Layout,
-    hidden: true,
-    children: [
-      {
-        path: "orderPause/:orderId",
-        component: resolve =>
-          require(["@/views/custom/order/orderPause"], resolve),
-        name: "orderPause",
-        meta: { title: "订单暂停记录" }
-      }
-    ]
-  },
-  {
     path: "/user",
     component: Layout,
     hidden: true,

@@ -407,14 +407,14 @@
             @click="handleUpdate(scope.row)"
             >修改
           </el-button>
-          <el-button
+          <!-- <el-button
             size="mini"
             type="text"
             icon="el-icon-s-data"
             @click="orderPauseManage(scope.row)"
             v-hasPermi="['orderPause:pause:query']"
             >暂停记录管理
-          </el-button>
+          </el-button> -->
           <el-button
             size="mini"
             v-if="
@@ -445,22 +445,6 @@
       >
     </pagination>
 
-    <!-- 暂停记录管理 -->
-    <el-dialog
-      :title="pauseTitle"
-      v-if="openPause"
-      :visible.sync="openPause"
-      width="900px"
-      append-to-body
-    >
-      <span style="color: #e6a23c; font-family: PingFang SC">
-        注意事项：
-        <br />1、日期包含当天，如：2021-01-01到2021-01-07，总共暂停七天，2021-01-08继续服务
-        <br />2、每条暂停记录的时间范围不能重叠</span
-      >
-      <orderPause v-bind:orderPauseId="orderPauseId"></orderPause>
-    </el-dialog>
-
     <!-- 订单详情 -->
     <order-detail ref="orderDetailRef" />
     <!-- 订单修改 -->
@@ -471,7 +455,6 @@
 <script>
 import { delOrder, exportOrder, listOrder } from "@/api/custom/order";
 import dayjs from "dayjs";
-import orderPause from "./orderPause";
 import * as orderTypeData from "@/utils/orderType";
 import OrderDetail from "@/components/OrderDetail";
 import OrderEdit from "@/components/OrderEdit";
@@ -486,7 +469,6 @@ const endTime = dayjs().format("YYYY-MM-DD");
 export default {
   name: "Order",
   components: {
-    orderPause,
     "auto-hide-message": AutoHideMessage,
     "order-detail": OrderDetail,
     "order-edit": OrderEdit,
