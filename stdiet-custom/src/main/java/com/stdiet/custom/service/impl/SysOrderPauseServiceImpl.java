@@ -139,4 +139,9 @@ public class SysOrderPauseServiceImpl implements ISysOrderPauseService
     public int deletePauseByOrderId(Long[] orderIds){
         return sysOrderPauseMapper.deletePauseByOrderId(orderIds);
     }
+
+    @Override
+    public long selectNearMainOrderIdByCusId(Long cusId) {
+        return sysOrderPauseMapper.selectNearMainOrderIdByCusId(cusId);
+    }
 }
