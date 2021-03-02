@@ -99,9 +99,7 @@ export default {
         if (idx === 0) {
           this.selDishes.type = cur;
         }
-        const tarOpt = this.typeOptions.find(
-          (obj) => obj.dictValue === cur
-        );
+        const tarOpt = this.typeOptions.find((obj) => obj.dictValue === cur);
         if (tarOpt) {
           arr.push(tarOpt);
         }
@@ -134,7 +132,7 @@ export default {
         igdList,
       } = this.selDishes;
       this.$emit("onConfirm", {
-        id: -1,
+        id: new Date().getTime(),
         dishesId: id,
         methods,
         name,
