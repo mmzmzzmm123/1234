@@ -5,39 +5,41 @@
 <mapper namespace="com.stdiet.custom.mapper.SysOrderPauseMapper">
 
     <resultMap type="SysOrderPause" id="SysOrderPauseResult">
-        <result property="id"    column="id"    />
-        <result property="orderId"    column="order_id"    />
-        <result property="pauseStartDate"    column="pause_start_date"    />
-        <result property="pauseEndDate"    column="pause_end_date"    />
-        <result property="reason"    column="reason"    />
-        <result property="remarks"    column="remarks"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="createBy"    column="create_by"    />
-        <result property="updateTime"    column="update_time"    />
-        <result property="updateBy"    column="update_by"    />
-        <result property="delFlag"    column="del_flag"    />
+        <result property="id" column="id"/>
+        <result property="orderId" column="order_id"/>
+        <result property="cusId" column="cus_id"/>
+        <result property="pauseStartDate" column="pause_start_date"/>
+        <result property="pauseEndDate" column="pause_end_date"/>
+        <result property="reason" column="reason"/>
+        <result property="remarks" column="remarks"/>
+        <result property="createTime" column="create_time"/>
+        <result property="createBy" column="create_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="delFlag" column="del_flag"/>
     </resultMap>
 
     <sql id="baseSelectField">
-        id, order_id, pause_start_date, pause_end_date, reason, remarks, create_time, create_by, update_time, update_by, del_flag
+        id, order_id, cus_id, pause_start_date, pause_end_date, reason, remarks, create_time, create_by, update_time, update_by, del_flag
     </sql>
 
     <sql id="selectSysOrderPauseVo">
-        select id, order_id, pause_start_date, pause_end_date, reason, remarks, create_time, create_by, update_time, update_by, del_flag from sys_order_pause sop
+        select id, order_id, cus_id, pause_start_date, pause_end_date, reason, remarks, create_time, create_by, update_time, update_by, del_flag from sys_recipes_pause sop
     </sql>
 
     <select id="selectSysOrderPauseList" parameterType="SysOrderPause" resultMap="SysOrderPauseResult">
         <!--select sop.id, sop.order_id, sop.pause_start_date, sop.pause_end_date, sop.reason, sop.remarks, sop.create_time, sop.create_by, sop.update_time, sop.update_by, sop.del_flag,
         so.customer,so.order_time
-        from sys_order_pause sop
+        from sys_recipes_pause sop
         left join sys_order so on so.order_id = sop.order_id-->
         <include refid="selectSysOrderPauseVo"></include>
         where sop.del_flag = 0
-        <if test="orderId != null "> and sop.order_id = #{orderId}</if>
-        <if test="pauseStartDate != null "> and sop.pause_start_date = #{pauseStartDate}</if>
-        <if test="pauseEndDate != null "> and sop.pause_end_date = #{pauseEndDate}</if>
-        <if test="reason != null  and reason != ''"> and sop.reason = #{reason}</if>
-        <if test="remarks != null  and remarks != ''"> and sop.remarks = #{remarks}</if>
+        <if test="orderId != null ">and sop.order_id = #{orderId}</if>
+        <if test="cusId != null ">and sop.cus_id = #{cusId}</if>
+        <if test="pauseStartDate != null ">and sop.pause_start_date = #{pauseStartDate}</if>
+        <if test="pauseEndDate != null ">and sop.pause_end_date = #{pauseEndDate}</if>
+        <if test="reason != null  and reason != ''">and sop.reason = #{reason}</if>
+        <if test="remarks != null  and remarks != ''">and sop.remarks = #{remarks}</if>
     </select>
 
     <select id="selectSysOrderPauseById" parameterType="Long" resultMap="SysOrderPauseResult">
@@ -46,9 +48,10 @@
     </select>
 
     <insert id="insertSysOrderPause" parameterType="SysOrderPause" useGeneratedKeys="true" keyProperty="id">
-        insert into sys_order_pause
+        insert into sys_recipes_pause
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="orderId != null">order_id,</if>
+            <if test="cusId != null">cus_id,</if>
             <if test="pauseStartDate != null">pause_start_date,</if>
             <if test="pauseEndDate != null">pause_end_date,</if>
             <if test="reason != null">reason,</if>
@@ -61,6 +64,7 @@
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="orderId != null">#{orderId},</if>
+            <if test="cusId != null">#{cusId},</if>
             <if test="pauseStartDate != null">#{pauseStartDate},</if>
             <if test="pauseEndDate != null">#{pauseEndDate},</if>
             <if test="reason != null">#{reason},</if>
@@ -74,9 +78,10 @@
     </insert>
 
     <update id="updateSysOrderPause" parameterType="SysOrderPause">
-        update sys_order_pause
+        update sys_recipes_pause
         <trim prefix="SET" suffixOverrides=",">
             <if test="orderId != null">order_id = #{orderId},</if>
+            <if test="cusId != null">cus_id = #{cusId},</if>
             <if test="pauseStartDate != null">pause_start_date = #{pauseStartDate},</if>
             <if test="pauseEndDate != null">pause_end_date = #{pauseEndDate},</if>
             <if test="reason != null">reason = #{reason},</if>
@@ -91,11 +96,11 @@
     </update>
 
     <update id="deleteSysOrderPauseById" parameterType="Long">
-        update sys_order_pause set del_flag = 1 where id = #{id}
+        update sys_recipes_pause set del_flag = 1 where id = #{id}
     </update>
 
     <update id="deleteSysOrderPauseByIds" parameterType="String">
-        update sys_order_pause set del_flag = 1 where id in
+        update sys_recipes_pause set del_flag = 1 where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
@@ -103,7 +108,7 @@
 
     <!-- 根据订单ID、时间范围查询数量 -->
     <select id="getCountByOrderIdAndPauseDate" parameterType="SysOrderPause" resultType="int">
-        select count(id) from sys_order_pause where del_flag = 0 and order_id = #{orderId}
+        select count(id) from sys_recipes_pause where del_flag = 0 and order_id = #{orderId}
         AND (#{pauseStartDate} >= pause_start_date AND pause_end_date >= #{pauseStartDate}
         OR #{pauseEndDate} >= pause_start_date AND pause_end_date >= #{pauseEndDate})
         <if test="id != null">
@@ -114,10 +119,18 @@
 
     <!-- 根据订单ID删除暂停记录 -->
     <update id="deletePauseByOrderId" parameterType="String">
-        update sys_order_pause set del_flag = 1 where order_id in
+        update sys_recipes_pause set del_flag = 1 where order_id in
         <foreach item="orderId" collection="array" open="(" separator="," close=")">
             #{orderId}
         </foreach>
     </update>
+
+    <select id="selectNearMainOrderIdByCusId" parameterType="Long" resultType="Long">
+        SELECT order_id
+        FROM sys_order
+        WHERE cus_id=#{cusId} AND del_flag = 0 AND order_type IN(0, 1) AND after_sale_commiss_order = 0
+            AND order_money_type IN(0, 2) AND main_order_id=0 AND server_end_time > NOW()
+        ORDER BY server_end_time ASC LIMIT 1
+    </select>
 
 </mapper>
