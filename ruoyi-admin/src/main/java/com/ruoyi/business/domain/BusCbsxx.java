@@ -34,6 +34,13 @@ public class BusCbsxx implements Serializable {
 	@Excel(name = "注册地址")
 	private String zcdz;
 
+	/** 区块代码 */
+	@Excel(name = "区块代码")
+	private String qkdm;
+	/** 区块名称 */
+	@Excel(name = "区块名称")
+	private String qkmc;
+
 	/** 写入时间 */
 	@JsonFormat(pattern = "yyyy-MM-dd")
 	@Excel(name = "写入时间", width = 30, dateFormat = "yyyy-MM-dd")
@@ -90,6 +97,22 @@ public class BusCbsxx implements Serializable {
 
 	public void setZcdz(String zcdz) {
 		this.zcdz = zcdz;
+	}
+
+	public String getQkdm() {
+		return qkdm;
+	}
+
+	public void setQkdm(String qkdm) {
+		this.qkdm = qkdm;
+	}
+
+	public String getQkmc() {
+		return qkmc;
+	}
+
+	public void setQkmc(String qkmc) {
+		this.qkmc = qkmc;
 	}
 
 	public Date getXrsj() {

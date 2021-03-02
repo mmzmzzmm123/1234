@@ -23,9 +23,9 @@ public class BusCbsxxSaveVO implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	@NotNull(message="ID不能为空")
+	@NotNull(message = "ID不能为空")
 	private Long id;
-	
+
 	/** 承包商名称 */
 	@Excel(name = "承包商名称")
 	private String cbsName;
@@ -38,9 +38,14 @@ public class BusCbsxxSaveVO implements Serializable {
 	@Excel(name = "联系方式")
 	private String lxfs;
 
-	/** 擅长工作 */
-	@Excel(name = "擅长工作")
+	/** 注册地址 */
+	@Excel(name = "注册地址")
 	private String zcdz;
+
+	/** 区块代码 */
+	private String qkdm;
+	/** 区块名称 */
+	private String qkmc;
 
 	private List<String> zzxxFileUrls;
 
@@ -51,7 +56,7 @@ public class BusCbsxxSaveVO implements Serializable {
 	public Long getId() {
 		return id;
 	}
-	
+
 	public void setCbsName(String cbsName) {
 		this.cbsName = cbsName;
 	}
@@ -90,6 +95,22 @@ public class BusCbsxxSaveVO implements Serializable {
 
 	public void setZzxxFileUrls(List<String> zzxxFileUrls) {
 		this.zzxxFileUrls = zzxxFileUrls;
+	}
+
+	public String getQkdm() {
+		return qkdm;
+	}
+
+	public void setQkdm(String qkdm) {
+		this.qkdm = qkdm;
+	}
+
+	public String getQkmc() {
+		return qkmc;
+	}
+
+	public void setQkmc(String qkmc) {
+		this.qkmc = qkmc;
 	}
 
 }

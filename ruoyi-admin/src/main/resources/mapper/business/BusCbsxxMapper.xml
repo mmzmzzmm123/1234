@@ -10,6 +10,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="fzr"    column="fzr"    />
         <result property="lxfs"    column="lxfs"    />
         <result property="zcdz"    column="zcdz"    />
+        <result property="qkdm"    column="qkdm"    />
+        <result property="qkmc"    column="qkmc"    />
         <result property="xrsj"    column="xrsj"    />
         <result property="xrrId"    column="xrr_id"    />
         <result property="xgsj"    column="xgsj"    />
@@ -17,7 +19,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectBusCbsxxVo">
-        select id, cbs_name, fzr, lxfs, zcdz, xrsj, xrr_id, xgsj, xgr_id from bus_cbsxx
+        select id, cbs_name, fzr, lxfs, zcdz, qkdm, qkmc, xrsj, xrr_id, xgsj, xgr_id from bus_cbsxx
     </sql>
 
     <select id="selectBusCbsxxList" parameterType="BusCbsxx" resultMap="BusCbsxxResult">
@@ -27,6 +29,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="fzr != null  and fzr != ''"> and fzr = #{fzr}</if>
             <if test="lxfs != null  and lxfs != ''"> and lxfs = #{lxfs}</if>
             <if test="zcdz != null  and zcdz != ''"> and zcdz = #{zcdz}</if>
+            <if test="qkdm != null  and qkdm != ''"> and qkdm = #{qkdm}</if>
+            <if test="qkmc != null  and qkmc != ''"> and qkmc = #{qkmc}</if>
             <if test="xrsj != null "> and xrsj = #{xrsj}</if>
             <if test="xrrId != null "> and xrr_id = #{xrrId}</if>
             <if test="xgsj != null "> and xgsj = #{xgsj}</if>
@@ -47,6 +51,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="fzr != null">fzr,</if>
             <if test="lxfs != null">lxfs,</if>
             <if test="zcdz != null">zcdz,</if>
+            <if test="qkdm != null">qkdm,</if>
+            <if test="qkmc != null">qkmc,</if>
             <if test="xrsj != null">xrsj,</if>
             <if test="xrrId != null">xrr_id,</if>
             <if test="xgsj != null">xgsj,</if>
@@ -58,6 +64,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="fzr != null">#{fzr},</if>
             <if test="lxfs != null">#{lxfs},</if>
             <if test="zcdz != null">#{zcdz},</if>
+            <if test="qkdm != null">#{qkdm},</if>
+            <if test="qkmc != null">#{qkmc},</if>
             <if test="xrsj != null">#{xrsj},</if>
             <if test="xrrId != null">#{xrrId},</if>
             <if test="xgsj != null">#{xgsj},</if>
@@ -72,6 +80,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="fzr != null">fzr = #{fzr},</if>
             <if test="lxfs != null">lxfs = #{lxfs},</if>
             <if test="zcdz != null">zcdz = #{zcdz},</if>
+            <if test="qkdm != null">qkdm = #{qkdm},</if>
+            <if test="qkmc != null">qkmc = #{qkmc},</if>
             <if test="xrsj != null">xrsj = #{xrsj},</if>
             <if test="xrrId != null">xrr_id = #{xrrId},</if>
             <if test="xgsj != null">xgsj = #{xgsj},</if>
