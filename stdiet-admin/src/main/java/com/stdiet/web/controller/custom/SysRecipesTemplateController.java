@@ -26,7 +26,7 @@ public class SysRecipesTemplateController extends BaseController {
     /**
      * 查询
      */
-    @PreAuthorize("@ss.hasPermi('recipes:recipesTemplate:list')")
+    @PreAuthorize("@ss.hasPermi('recipes:template:list')")
     @GetMapping("/list")
     public TableDataInfo list(SysRecipesTemplate sysRecipesTemplate) {
         startPage();
@@ -34,7 +34,7 @@ public class SysRecipesTemplateController extends BaseController {
         return getDataTable(list);
     }
 
-    @PreAuthorize("@ss.hasPermi('recipes:recipesTemplate:list')")
+    @PreAuthorize("@ss.hasPermi('recipes:template:list')")
     @GetMapping(value = "/{id}")
     public AjaxResult detail(@PathVariable Long id) {
         return AjaxResult.success(iSysRecipesTemplateService.getRecipesTemplateById(id));
@@ -43,7 +43,7 @@ public class SysRecipesTemplateController extends BaseController {
     /**
      * 添加
      */
-    @PreAuthorize("@ss.hasPermi('recipes:recipesTemplate:edit')")
+    @PreAuthorize("@ss.hasPermi('recipes:template:edit')")
     @PostMapping("/add")
     public AjaxResult add(@RequestBody SysRecipesTemplate sysRecipesTemplate) {
         return toAjax(iSysRecipesTemplateService.insertRecipsesTemplate(sysRecipesTemplate));
@@ -52,7 +52,7 @@ public class SysRecipesTemplateController extends BaseController {
     /**
      * 更新
      */
-    @PreAuthorize("@ss.hasPermi('recipes:recipesTemplate:list')")
+    @PreAuthorize("@ss.hasPermi('recipes:template:list')")
     @PutMapping(value = "/update")
     public AjaxResult update(@RequestBody SysRecipesTemplate sysRecipesTemplate) {
         return toAjax(iSysRecipesTemplateService.updateRecipesTemplate(sysRecipesTemplate));
@@ -61,7 +61,7 @@ public class SysRecipesTemplateController extends BaseController {
     /**
      * 删除
      */
-    @PreAuthorize("@ss.hasPermi('recipes:recipesTemplate:query')")
+    @PreAuthorize("@ss.hasPermi('recipes:template:query')")
     @DeleteMapping(value = "/delete/{id}")
     public AjaxResult delete(@PathVariable("id") Long id) {
         return AjaxResult.success(iSysRecipesTemplateService.removeRecipesTemplate(id));

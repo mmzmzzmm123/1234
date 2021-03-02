@@ -12,7 +12,7 @@
         trigger="click"
         title="修改审核状态"
         style="margin-right: 12px"
-        v-hasPermi="['recipes:recipesPlan:review']"
+        v-hasPermi="['recipes:plan:review']"
       >
         <div>
           <el-button size="mini" type="success" @click="hanldeOnReveiwChange(2)"

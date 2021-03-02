@@ -191,7 +191,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item label="是否主食" prop="type">
+              <el-form-item label="是否主食" prop="isMain">
                 <el-radio-group v-model="form.isMain">
                   <el-radio :label="0">是</el-radio>
                   <el-radio :label="1">否</el-radio>
@@ -296,8 +296,6 @@
                   </el-table-column>
                   <el-table-column prop="carbonRatio" label="碳水/100g">
                   </el-table-column>
-                  <!-- <el-table-column prop="remark" label="备注">
-                  </el-table-column> -->
                 </el-table>
               </el-form-item>
             </el-col>
@@ -525,7 +523,7 @@ export default {
         updateBy: null,
         updateTime: null,
         igdList: [],
-        isMain: 0,
+        isMain: 1,
       };
       this.selIngIds = [];
       this.selIngList = [];
