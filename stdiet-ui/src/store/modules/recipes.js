@@ -95,7 +95,6 @@ const actions = {
       startNum: startNumDay,
       endNum: endNumDay
     });
-
     getDicts("cus_cus_unit").then(response => {
       commit("updateStateData", { cusUnitOptions: response.data });
     });
@@ -269,6 +268,13 @@ const actions = {
     // console.log(params);
   },
   async addDishes({ commit, state }, payload) {
+    const tarDishesList = state.recipesData[payload.num].dishes.filter(
+      obj => obj.type === payload.type
+    );
+    if (tarDishesList.some(obj => obj.dishesId === payload.dishesId)) {
+      console.log("目标餐类已有相同的菜品");
+      throw new Error("目标餐类已有相同的菜品");
+    }
     if (state.recipesId) {
       const tarRecipesObj = state.recipesData[payload.num];
       if (tarRecipesObj && payload.data) {

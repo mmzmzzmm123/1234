@@ -73,4 +73,6 @@ public interface SysOrderPauseMapper
      * @return
      */
     int deletePauseByOrderId(Long[] orderIds);
+
+    long selectNearMainOrderIdByCusId(Long cusId);
 }

@@ -350,6 +350,8 @@ export default {
       this.addDishes({
         num: this.num,
         data,
+      }).catch((err) => {
+        this.$message.error(err.message);
       });
     },
     ...mapActions(["updateDishes", "addDishes", "deleteDishes"]),
