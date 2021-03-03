@@ -185,6 +185,7 @@ public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService {
                     || plan.getEndDate().compareTo(newRecipesPlanList.get(index).getEndDate()) != 0){
                     plan.setStartDate(newRecipesPlanList.get(index).getStartDate());
                     plan.setEndDate(newRecipesPlanList.get(index).getEndDate());
+                    plan.setPauseDate(newRecipesPlanList.get(index).getPauseDate());
                     updateList.add(plan);
                 }
             }else{
@@ -260,6 +261,8 @@ public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService {
             sysRecipesPlan.setStartNumDay(oldStartNumDay);
             oldStartNumDay += 6;
             sysRecipesPlan.setEndNumDay(oldStartNumDay);
+            //暂停日期
+            sysRecipesPlan.setPauseDate(pauseResult[3]);
             //添加暂停范围内的日期
             planList.add(sysRecipesPlan);
         }while (breakFlag);

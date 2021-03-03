@@ -14,6 +14,7 @@
         <result property="recipesId" column="recipes_id"/>
         <result property="sendFlag" column="send_flag"/>
         <result property="sendTime" column="send_time"/>
+        <result property="pauseDate"    column="pause_date"/>
         <result property="createTime" column="create_time"/>
         <result property="createBy" column="create_by"/>
         <result property="updateTime" column="update_time"/>
@@ -36,7 +37,7 @@
 
 
     <sql id="selectSysRecipesPlanVo">
-        select id, order_id, cus_id, start_date, end_date, start_num_day, end_num_day, recipes_id, send_flag, send_time, create_time, create_by, update_time, update_by, del_flag, review_status from sys_recipes_plan
+        select id, order_id, cus_id, start_date, end_date, start_num_day, end_num_day, recipes_id, send_flag, send_time, pause_date, create_time, create_by, update_time, update_by, del_flag, review_status from sys_recipes_plan
     </sql>
 
     <select id="selectSysRecipesPlanList" parameterType="SysRecipesPlan" resultMap="SysRecipesPlanResult">
@@ -80,6 +81,7 @@
             <if test="recipesId != null">recipes_id,</if>
             <if test="sendFlag != null">send_flag,</if>
             <if test="sendTime != null">send_time,</if>
+            <if test="pauseDate != null">pause_date,</if>
             <if test="createTime != null">create_time,</if>
             <if test="createBy != null">create_by,</if>
             <if test="updateTime != null">update_time,</if>
@@ -99,6 +101,7 @@
             <if test="recipesId != null">#{recipesId},</if>
             <if test="sendFlag != null">#{sendFlag},</if>
             <if test="sendTime != null">#{sendTime},</if>
+            <if test="pauseDate != null">#{pauseDate},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="createBy != null">#{createBy},</if>
             <if test="updateTime != null">#{updateTime},</if>
@@ -122,6 +125,7 @@
             <if test="recipesId != null">recipes_id = #{recipesId},</if>
             <if test="sendFlag != null">send_flag = #{sendFlag},</if>
             <if test="sendTime != null">send_time = #{sendTime},</if>
+            <if test="pauseDate != null">pause_date = #{pauseDate},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
@@ -146,11 +150,11 @@
     <!-- 批量插入食谱计划 -->
     <insert id="insertBatch">
         INSERT INTO sys_recipes_plan
-        (order_id, cus_id, out_id, start_date, end_date, start_num_day, end_num_day, send_flag, send_time, recipes_id)
+        (order_id, cus_id, out_id, start_date, end_date, start_num_day, end_num_day, send_flag, send_time, pause_date, recipes_id)
         VALUES
         <foreach collection="list" item="plan" separator=",">
             (#{plan.orderId}, #{plan.cusId}, #{plan.outId}, #{plan.startDate}, #{plan.endDate}, #{plan.startNumDay}, #{plan.endNumDay},
-            #{plan.sendFlag}, #{plan.sendTime}, #{plan.recipesId})
+            #{plan.sendFlag}, #{plan.sendTime}, #{plan.pauseDate}, #{plan.recipesId})
         </foreach>
     </insert>
 
@@ -252,6 +256,6 @@
         <!--<foreach collection="list" item="item" separator=";" open="" close="">
 
         </foreach>-->
-        update sys_recipes_plan set start_date = #{startDate},end_date = #{endDate} where id = #{id}
+        update sys_recipes_plan set start_date = #{startDate},end_date = #{endDate},pause_date=#{pauseDate} where id = #{id}
     </update>
 </mapper>
