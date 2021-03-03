@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import org.apache.commons.lang3.time.DateFormatUtils;
 
@@ -185,5 +186,15 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils
     public static Date localDateToDate(LocalDate localDate) {
         ZonedDateTime zonedDateTime = localDate.atStartOfDay(ZoneId.systemDefault());
         return Date.from(zonedDateTime.toInstant());
+    }
+
+    public static String localDateToString(LocalDate date, String pattern){
+        DateTimeFormatter fmt = DateTimeFormatter.ofPattern(pattern);
+        return date.format(fmt);
+    }
+
+    public static LocalDate stringToLocalDate(String date, String pattern){
+        DateTimeFormatter fmt = DateTimeFormatter.ofPattern(pattern);
+        return LocalDate.parse(date, fmt);
     }
 }

@@ -73,4 +73,11 @@ public interface SysOrderPauseMapper
      * @return
      */
     int deletePauseByOrderId(Long[] orderIds);
+
+    /**
+     * 根据订单ID获取暂停计划
+     * @param orderId
+     * @return
+     */
+    List<SysOrderPause> getPauseListByOrderId(@Param("orderId")Long orderId);
 }
