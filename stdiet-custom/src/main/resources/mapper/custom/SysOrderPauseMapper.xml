@@ -133,4 +133,10 @@
         ORDER BY server_end_time ASC LIMIT 1
     </select>
 
+    <!-- 根据订单ID获取暂停记录，根据暂停开始时间排序，用于生成食谱计划，不能随意修改排序方式 -->
+    <select id="getPauseListByOrderId" parameterType="Long" resultMap="SysOrderPauseResult">
+        <include refid="selectSysOrderPauseVo"></include>
+        where sop.del_flag = 0 and sop.order_id = #{orderId} order by sop.pause_start_date asc
+    </select>
+
 </mapper>

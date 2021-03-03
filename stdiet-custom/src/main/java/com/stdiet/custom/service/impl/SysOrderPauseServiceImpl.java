@@ -140,6 +140,16 @@ public class SysOrderPauseServiceImpl implements ISysOrderPauseService
         return sysOrderPauseMapper.deletePauseByOrderId(orderIds);
     }
 
+    /**
+     * 根据订单ID获取暂停计划
+     * @param orderId
+     * @return
+     */
+    @Override
+    public List<SysOrderPause> getPauseListByOrderId(Long orderId){
+        return sysOrderPauseMapper.getPauseListByOrderId(orderId);
+    }
+
     @Override
     public long selectNearMainOrderIdByCusId(Long cusId) {
         return sysOrderPauseMapper.selectNearMainOrderIdByCusId(cusId);

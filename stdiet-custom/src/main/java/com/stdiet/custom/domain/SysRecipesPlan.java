@@ -116,6 +116,10 @@ public class SysRecipesPlan {
      */
     private Integer reviewStatus;
 
+    /** 该食谱计划中暂停日期，使用 | 隔开 */
+    //@Excel(name = "该食谱计划中暂停日期，使用 | 隔开")
+    private String pauseDate;
+
     /**
      * 创建者
      */
