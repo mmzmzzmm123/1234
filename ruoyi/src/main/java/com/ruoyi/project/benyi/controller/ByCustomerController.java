@@ -76,7 +76,14 @@ public class ByCustomerController extends BaseController {
     public AjaxResult add(@RequestBody ByCustomer byCustomer) {
         byCustomer.setCreateUserid(SecurityUtils.getLoginUser().getUser().getUserId());
         byCustomer.setCreateTime(new Date());
-        return toAjax(byCustomerService.insertByCustomer(byCustomer));
+        // 判断电话号码是否存在
+        ByCustomer byCustomer1 = new ByCustomer();
+        byCustomer1.setLxdh(byCustomer.getLxdh());
+        if (byCustomerService.selectByCustomerList(byCustomer1).size()>0) {
+            return AjaxResult.error("新增用户失败,此手机号码已经存在");
+        }else {
+            return toAjax(byCustomerService.insertByCustomer(byCustomer));
+        }
     }
 
     /**

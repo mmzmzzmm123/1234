@@ -4,7 +4,7 @@
       :model="queryParams"
       ref="queryForm"
       :inline="true"
-      label-width="90px"
+      label-width="88px"
     >
       <el-form-item label="客户姓名" prop="name">
         <el-input
@@ -105,13 +105,29 @@
       v-loading="loading"
       :data="customerList"
       @selection-change="handleSelectionChange"
+      @sort-change="sortChange"
     >
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="客户姓名" align="center" prop="name" />
       <el-table-column label="幼儿园名称" align="center" prop="schoolname" />
-      <el-table-column label="幼儿园人数" align="center" prop="rs" />
-      <el-table-column label="身份" align="center" prop="sflx" :formatter="gxFormat"/>
-      <el-table-column label="客户来源" align="center" prop="khly" :formatter="lyFormat"/>
+      <el-table-column
+        label="幼儿园人数"
+        align="center"
+        prop="rs"
+        sortable="rs"
+      />
+      <el-table-column
+        label="身份"
+        align="center"
+        prop="sflx"
+        :formatter="gxFormat"
+      />
+      <el-table-column
+        label="客户来源"
+        align="center"
+        prop="khly"
+        :formatter="lyFormat"
+      />
       <el-table-column label="联系电话" align="center" prop="lxdh" />
       <el-table-column label="微信号" align="center" prop="wx" />
       <el-table-column label="抖音号" align="center" prop="dy" />
@@ -119,8 +135,13 @@
       <el-table-column label="所在省" align="center" prop="sheng" />
       <el-table-column label="所在市" align="center" prop="shi" />
       <el-table-column label="消费项目" align="center" prop="xfxm" />
-      <el-table-column label="消费价值" align="center" prop="xfjz" />
-      <el-table-column label="录入人" align="center" prop="createUserid" :formatter="userFormat" />
+      <el-table-column label="消费价值" align="center" prop="xfjz" sortable="xfjz" />
+      <el-table-column
+        label="录入人"
+        align="center"
+        prop="createUserid"
+        :formatter="userFormat"
+      />
       <el-table-column label="录入时间" align="center" prop="createTime" />
       <el-table-column
         label="操作"
@@ -246,7 +267,10 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="消费价值" prop="xfjz">
-              <el-input v-model="form.xfjz" placeholder="请输入消费价值" />
+              <el-input-number
+                v-model="form.xfjz"
+                placeholder="请输入消费价值"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -292,12 +316,12 @@ export default {
       placeholders: {
         province: "请选择省",
         city: "请选择市",
-        area: "请选择区"
+        area: "请选择区",
       },
       diglogForm: {
         province: null,
         city: null,
-        area: null
+        area: null,
       },
       // 遮罩层
       loading: true,
@@ -319,10 +343,23 @@ export default {
       lyOptions: [],
       // 用户选项
       userOptions: [],
+
+      // 查询参数
+      queryParams: {
+        // 当前页
+        pageNum: 1,
+        // 每页大小
+        pageSize: 10,
+      },
+
       // 查询参数
       queryParams: {
         pageNum: 1,
         pageSize: 10,
+        // desc、asc排序规则
+        isAsc: undefined,
+        // 需要排序的字段
+        orderByColumn: undefined,
         name: undefined,
         sflx: undefined,
         lxdh: undefined,
@@ -361,8 +398,8 @@ export default {
           {
             required: true,
             message: "省市区不能为空",
-            trigger: "blur"
-          }
+            trigger: "blur",
+          },
         ],
       },
     };
@@ -382,13 +419,25 @@ export default {
     VDistpicker,
   },
   methods: {
+    //排序
+    sortChange(column, prop, order) {
+      // 可以打印一下该函数的参数就明白了
+      // 下面的if判断根据自己的需要些我后台设置的只能识别desc与asc
+      if (column.order != null) {
+        this.queryParams.isAsc = "desc";
+      } else {
+        this.queryParams.isAsc = "asc";
+      }
+      // 排序的字段传给后台
+      this.queryParams.orderByColumn = column.prop;
+      // 传入查询参数，重新查询一次
+      this.getList();
+    },
     /** 查询用户列表 */
     getUserList() {
-      listUser(null).then(
-        (response) => {
-          this.userOptions = response.rows;
-        }
-      );
+      listUser(null).then((response) => {
+        this.userOptions = response.rows;
+      });
     },
     // 教师字典翻译
     userFormat(row, column) {
@@ -421,10 +470,7 @@ export default {
     },
     //所在省市区触发联动方法
     onSelected(data) {
-      if (
-        data.province.code == undefined ||
-        data.city.code == undefined 
-      ) {
+      if (data.province.code == undefined || data.city.code == undefined) {
         this.form.sheng = undefined;
       } else {
         this.form.sheng = data.province.value;

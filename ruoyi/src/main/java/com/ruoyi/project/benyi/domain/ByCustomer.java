@@ -141,7 +141,7 @@ public class ByCustomer extends BaseEntity {
      * 消费价值
      */
     @Excel(name = "消费价值")
-    private String xfjz;
+    private Long xfjz;
 
     public void setId(Long id) {
         this.id = id;
@@ -295,11 +295,11 @@ public class ByCustomer extends BaseEntity {
         return xfxm;
     }
 
-    public void setXfjz(String xfjz) {
+    public void setXfjz(Long xfjz) {
         this.xfjz = xfjz;
     }
 
-    public String getXfjz() {
+    public Long getXfjz() {
         return xfjz;
     }
 
