@@ -259,9 +259,7 @@ const actions = {
       dispatch("getRecipesInfo", { recipesId });
       payload.callback &&
         payload.callback({
-          recipesId: result.data,
           name: state.healthyData.name,
-          cusId: state.cusId,
           planId: state.planId
         });
     }

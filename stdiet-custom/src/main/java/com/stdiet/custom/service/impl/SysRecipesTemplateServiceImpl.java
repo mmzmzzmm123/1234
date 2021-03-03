@@ -41,6 +41,7 @@ public class SysRecipesTemplateServiceImpl implements ISysRecipesTemplateService
         sysRecipesPlan.setStartNumDay(1);
         sysRecipesPlan.setEndNumDay(7);
         sysRecipesPlan.setType(1);
+        sysRecipesPlan.setCusId(0L);
         sysRecipesPlanMapper.insertSysRecipesPlan(sysRecipesPlan);
         if (!StringUtils.isNull(sysRecipesPlan.getId())) {
             sysRecipesTemplate.setCreateBy(SecurityUtils.getUsername());
@@ -60,7 +61,15 @@ public class SysRecipesTemplateServiceImpl implements ISysRecipesTemplateService
 
     @Override
     public int removeRecipesTemplate(Long id) {
-        return sysRecipesTemplateMapper.removeRecipesTemplate(id);
+        SysRecipesTemplate sysRecipesTemplate= sysRecipesTemplateMapper.getRecipesTemplateById(id);
+        if(StringUtils.isNull(sysRecipesTemplate)) {
+            return 0;
+        }
+        int rows = sysRecipesTemplateMapper.removeRecipesTemplate(sysRecipesTemplate.getId());
+        if(rows > 0) {
+            return sysRecipesPlanMapper.deleteSysRecipesPlanById(sysRecipesTemplate.getPlanId());
+        }
+        return 0;
     }
 
     @Override
