@@ -72,7 +72,9 @@
 import BarChart from "./BarChart";
 import PieChart from "./PieChart";
 import { createNamespacedHelpers } from "vuex";
-const { mapActions, mapState } = createNamespacedHelpers("recipes");
+const { mapActions, mapState, mapMutations } = createNamespacedHelpers(
+  "recipes"
+);
 export default {
   name: "RecipesAspectCom",
   components: {
@@ -96,8 +98,10 @@ export default {
     handleOnSave() {
       this.saveRecipes({
         callback: (query) => {
-          console.log(query);
-          this.$router.replace({ path: "/recipes/build", query });
+          // console.log(query);
+          this.$router.replace({
+            path: "/recipes/build/" + query.name + "/" + query.planId,
+          });
         },
       });
     },
@@ -105,9 +109,10 @@ export default {
       this.updateReviewStatus({ reviewStatus });
     },
     handleOnBack() {
-      this.updateReviewStatus({ recipesData: [] });
+      this.updateStateData({ recipesData: [] });
     },
     ...mapActions(["saveRecipes", "updateReviewStatus"]),
+    ...mapMutations(["updateStateData"]),
   },
 };
 </script>

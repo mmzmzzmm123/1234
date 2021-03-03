@@ -430,6 +430,7 @@ export default {
     submitForm() {
       this.$refs["form"].validate((valid) => {
         if (valid) {
+          this.form.cusId = 0;
           if (this.form.id != null) {
             updateRecipesTemplate(this.form).then((response) => {
               if (response.code === 200) {

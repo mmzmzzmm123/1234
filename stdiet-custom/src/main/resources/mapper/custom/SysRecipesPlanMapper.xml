@@ -132,9 +132,9 @@
         where id = #{id} and del_flag = 0
     </update>
 
-    <delete id="deleteSysRecipesPlanById" parameterType="Long">
-        delete from sys_recipes_plan where id = #{id}
-    </delete>
+    <update id="deleteSysRecipesPlanById" parameterType="Long">
+        update sys_recipes_plan set del_flag = 1 where id = #{id}
+    </update>
 
     <delete id="deleteSysRecipesPlanByIds" parameterType="String">
         delete from sys_recipes_plan where id in
