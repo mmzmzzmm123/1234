@@ -327,9 +327,10 @@ export default {
       this.deleteDishes({ num: this.num, id: data.id });
     },
     handleOnWeightChange(data, weight) {
-      console.log({ data, weight });
+      // console.log({ data, weight });
       this.updateDishes({
         num: this.num,
+        id: data.id,
         dishesId: data.dishesId,
         igdId: data.igdId,
         weight,
@@ -339,6 +340,7 @@ export default {
       // console.log({ data, cusWeight, cusUnit });
       this.updateDishes({
         num: this.num,
+        id: data.id,
         dishesId: data.dishesId,
         igdId: data.igdId,
         cusWeight,
@@ -350,6 +352,8 @@ export default {
       this.addDishes({
         num: this.num,
         data,
+      }).catch((err) => {
+        this.$message.error(err.message);
       });
     },
     ...mapActions(["updateDishes", "addDishes", "deleteDishes"]),

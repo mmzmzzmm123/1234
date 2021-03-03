@@ -34,7 +34,7 @@ const oriState = {
 const mutations = {
   updateRecipesDishesDetail(state, payload) {
     const tarDishes = state.recipesData[payload.num].dishes.find(
-      obj => obj.dishesId === payload.dishesId
+      obj => obj.id === payload.id
     );
     if (tarDishes) {
       const tarIgd = tarDishes.igdList.find(obj => obj.id === payload.igdId);
@@ -95,7 +95,6 @@ const actions = {
       startNum: startNumDay,
       endNum: endNumDay
     });
-
     getDicts("cus_cus_unit").then(response => {
       commit("updateStateData", { cusUnitOptions: response.data });
     });
@@ -260,15 +259,20 @@ const actions = {
       dispatch("getRecipesInfo", { recipesId });
       payload.callback &&
         payload.callback({
-          recipesId: result.data,
           name: state.healthyData.name,
-          cusId: state.cusId,
           planId: state.planId
         });
     }
     // console.log(params);
   },
   async addDishes({ commit, state }, payload) {
+    const tarDishesList = state.recipesData[payload.num].dishes.filter(
+      obj => obj.type === payload.type
+    );
+    if (tarDishesList.some(obj => obj.dishesId === payload.dishesId)) {
+      console.log("目标餐类已有相同的菜品");
+      throw new Error("目标餐类已有相同的菜品");
+    }
     if (state.recipesId) {
       const tarRecipesObj = state.recipesData[payload.num];
       if (tarRecipesObj && payload.data) {
@@ -301,7 +305,7 @@ const actions = {
     // console.log(payload);
     if (state.recipesId) {
       const tarDishes = state.recipesData[payload.num].dishes.find(
-        obj => obj.dishesId === payload.dishesId
+        obj => obj.id === payload.id
       );
       if (tarDishes) {
         const mTarDishes = JSON.parse(JSON.stringify(tarDishes));

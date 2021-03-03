@@ -31,7 +31,7 @@ public class SysRecipesPlanController extends BaseController
     /**
      * 查询食谱计划列表
      */
-    @PreAuthorize("@ss.hasPermi('recipes:recipesPlan:list')")
+    @PreAuthorize("@ss.hasPermi('recipes:plan:list')")
     @GetMapping("/list")
     public TableDataInfo list(SysRecipesPlan sysRecipesPlan)
     {
@@ -48,7 +48,7 @@ public class SysRecipesPlanController extends BaseController
     /**
      * 根据订单查询完整食谱计划列表
      */
-    @PreAuthorize("@ss.hasPermi('recipes:recipesPlan:list')")
+    @PreAuthorize("@ss.hasPermi('recipes:plan:list')")
     @GetMapping("/getAllPlanByOrderId")
     public TableDataInfo getAllPlanByOrderId(SysRecipesPlan sysRecipesPlan)
     {
@@ -57,7 +57,7 @@ public class SysRecipesPlanController extends BaseController
         return getDataTable(list);
     }
 
-    @PreAuthorize("@ss.hasPermi('recipes:recipesPlan:list')")
+    @PreAuthorize("@ss.hasPermi('recipes:plan:list')")
     @GetMapping(value = "/list/{cusId}")
     public AjaxResult getAllPlanByCusId(@PathVariable Long cusId) {
         return AjaxResult.success(sysRecipesPlanService.selectPlanListByCusId(cusId));
@@ -66,7 +66,7 @@ public class SysRecipesPlanController extends BaseController
     /**
      * 获取食谱计划详细信息
      */
-    @PreAuthorize("@ss.hasPermi('recipes:recipesPlan:query')")
+    @PreAuthorize("@ss.hasPermi('recipes:plan:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
@@ -76,7 +76,7 @@ public class SysRecipesPlanController extends BaseController
     /**
      * 修改食谱计划
      */
-    @PreAuthorize("@ss.hasPermi('recipes:recipesPlan:edit')")
+    @PreAuthorize("@ss.hasPermi('recipes:plan:edit')")
     @Log(title = "食谱计划", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody SysRecipesPlan sysRecipesPlan)
@@ -87,7 +87,7 @@ public class SysRecipesPlanController extends BaseController
     /**
      * 导出食谱计划列表
      */
-    @PreAuthorize("@ss.hasPermi('recipes:recipesPlan:export')")
+    @PreAuthorize("@ss.hasPermi('recipes:plan:export')")
     @Log(title = "食谱计划", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
     public AjaxResult export(SysRecipesPlan sysRecipesPlan)

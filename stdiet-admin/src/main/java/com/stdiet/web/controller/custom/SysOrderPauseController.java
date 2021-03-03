@@ -27,7 +27,7 @@ import com.stdiet.common.core.page.TableDataInfo;
  * @date 2021-01-07
  */
 @RestController
-@RequestMapping("/orderPause/pause")
+@RequestMapping("/recipes/pause")
 public class SysOrderPauseController extends BaseController
 {
     @Autowired
@@ -36,7 +36,7 @@ public class SysOrderPauseController extends BaseController
     /**
      * 查询订单服务暂停列表
      */
-    @PreAuthorize("@ss.hasPermi('orderPause:pause:query')")
+    @PreAuthorize("@ss.hasPermi('recipes:pause:query')")
     @GetMapping("/list")
     public TableDataInfo list(SysOrderPause sysOrderPause)
     {
@@ -48,7 +48,7 @@ public class SysOrderPauseController extends BaseController
     /**
      * 导出订单服务暂停列表
      */
-    @PreAuthorize("@ss.hasPermi('orderPause:pause:export')")
+    @PreAuthorize("@ss.hasPermi('recipes:pause:export')")
     @Log(title = "订单服务暂停", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
     public AjaxResult export(SysOrderPause sysOrderPause)
@@ -61,7 +61,7 @@ public class SysOrderPauseController extends BaseController
     /**
      * 获取订单服务暂停详细信息
      */
-    @PreAuthorize("@ss.hasPermi('orderPause:pause:query')")
+    @PreAuthorize("@ss.hasPermi('recipes:pause:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
@@ -71,7 +71,7 @@ public class SysOrderPauseController extends BaseController
     /**
      * 新增订单服务暂停
      */
-    @PreAuthorize("@ss.hasPermi('orderPause:pause:add')")
+    @PreAuthorize("@ss.hasPermi('recipes:pause:add')")
     @Log(title = "订单服务暂停", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody SysOrderPause sysOrderPause)
@@ -80,13 +80,18 @@ public class SysOrderPauseController extends BaseController
         if(count > 0){
             return AjaxResult.error("时间范围重叠，请检查时间");
         }
+        long orderId = sysOrderPauseService.selectNearMainOrderIdByCusId(sysOrderPause.getCusId());
+        if(orderId < 0) {
+            return AjaxResult.error("找不到对应的订单信息");
+        }
+        sysOrderPause.setOrderId(orderId);
         return toAjax(sysOrderPauseService.insertSysOrderPause(sysOrderPause));
     }
 
     /**
      * 修改订单服务暂停
      */
-    @PreAuthorize("@ss.hasPermi('orderPause:pause:edit')")
+    @PreAuthorize("@ss.hasPermi('recipes:pause:edit')")
     @Log(title = "订单服务暂停", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody SysOrderPause sysOrderPause)
@@ -101,7 +106,7 @@ public class SysOrderPauseController extends BaseController
     /**
      * 删除订单服务暂停
      */
-    @PreAuthorize("@ss.hasPermi('orderPause:pause:remove')")
+    @PreAuthorize("@ss.hasPermi('recipes:pause:remove')")
     @Log(title = "订单服务暂停", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)

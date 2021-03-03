@@ -2,7 +2,7 @@ import request from "@/utils/request";
 
 export function addRecipesApi(data) {
   return request({
-    url: "/custom/recipes/",
+    url: "/custom/recipes",
     method: "post",
     data
   });

@@ -217,7 +217,7 @@
     <!--  根据cusId查询食谱计划-->
     <select id="selectPlanListByCusId" parameterType="Long" resultMap="SysRecipesPlanResult">
         select id, out_id, start_date, end_date, start_num_day, end_num_day, recipes_id, review_status from sys_recipes_plan
-        where cus_id=#{cusId} and del_flag = 0 order by id desc
+        where cus_id=#{cusId} and del_flag = 0 order by id asc
     </select>
 
     <select id="getCusIdByOutId" parameterType="String" resultType="Long">

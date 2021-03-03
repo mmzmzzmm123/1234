@@ -95,7 +95,7 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['recipes:recipesPlan:export']"
+          v-hasPermi="['recipes:plan:export']"
           >导出
         </el-button>
       </el-col>
@@ -164,7 +164,7 @@
           <el-button
             size="mini"
             type="text"
-            v-hasPermi="['recipes:recipesPlan:edit']"
+            v-hasPermi="['recipes:plan:edit']"
             :icon="`${
               scope.row.recipesId ? 'el-icon-edit' : 'el-icon-edit-outline'
             }`"

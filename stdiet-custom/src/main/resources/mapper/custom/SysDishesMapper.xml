@@ -44,6 +44,7 @@
             <if test="reviewStatus != null  and type != ''"> and review_status = #{reviewStatus}</if>
             <if test="isMain != null  and type != ''"> and is_main = #{isMain}</if>
         </where>
+        order by id desc
     </select>
 
     <sql id="selectSysIngreditentsByIdVo">

@@ -152,7 +152,7 @@
           <el-button
             size="mini"
             type="text"
-            v-hasPermi="['recipes:recipesTemplate:edit']"
+            v-hasPermi="['recipes:template:edit']"
             :icon="`${
               scope.row.recipesId ? 'el-icon-edit' : 'el-icon-edit-outline'
             }`"
@@ -430,6 +430,7 @@ export default {
     submitForm() {
       this.$refs["form"].validate((valid) => {
         if (valid) {
+          this.form.cusId = 0;
           if (this.form.id != null) {
             updateRecipesTemplate(this.form).then((response) => {
               if (response.code === 200) {

@@ -208,7 +208,7 @@
       <el-table-column
         label="食谱计划"
         align="center"
-        v-hasPermi="['recipes:recipesPlan:list']"
+        v-hasPermi="['recipes:plan:list']"
       >
         <template slot-scope="scope">
           <el-button

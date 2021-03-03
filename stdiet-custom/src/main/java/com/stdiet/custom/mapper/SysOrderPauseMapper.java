@@ -74,6 +74,8 @@ public interface SysOrderPauseMapper
      */
     int deletePauseByOrderId(Long[] orderIds);
 
+    long selectNearMainOrderIdByCusId(Long cusId);
+
     /**
      * 根据订单ID获取暂停计划
      * @param orderId

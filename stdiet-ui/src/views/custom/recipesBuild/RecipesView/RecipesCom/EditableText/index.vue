@@ -9,6 +9,7 @@
       :step="5"
       :value="value"
       @blur="handleOnBlur"
+      @keyup.enter="handleEnterClick"
     />
   </div>
 </template>
@@ -34,13 +35,16 @@ export default {
       const { value } = e.target;
       if (value > 0) {
         this.editing = false;
-        const mValue = parseFloat(value)
+        const mValue = parseFloat(value);
         if (mValue !== parseFloat(this.value)) {
           this.$emit("onChange", mValue);
         }
       } else {
         this.$message.error("数字必须大于0");
       }
+    },
+    handleEnterClick(e) {
+      e.target.blur();
     },
   },
 };
