@@ -58,6 +58,16 @@
         :data="data"
         height="170px"
         width="500px"
+        :max="
+          healthyData.basicBMR
+            ? parseFloat(
+                healthyData.basicBMR.substring(
+                  0,
+                  healthyData.basicBMR.indexOf('千卡')
+                )
+              )
+            : 0
+        "
       />
       <PieChart
         v-if="data.length === 1"
@@ -89,7 +99,7 @@ export default {
   },
   props: ["collapse", "data"],
   computed: {
-    ...mapState(["recipesId", "reviewStatus"]),
+    ...mapState(["recipesId", "reviewStatus", "healthyData"]),
   },
   methods: {
     handleCollapseClick() {

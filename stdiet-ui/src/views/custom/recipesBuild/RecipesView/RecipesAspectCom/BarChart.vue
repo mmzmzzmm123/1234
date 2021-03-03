@@ -30,6 +30,10 @@ export default {
       type: Array,
       default: [],
     },
+    max: {
+      type: Number,
+      default: 0,
+    },
   },
   data() {
     return {
@@ -64,6 +68,7 @@ export default {
       this.updateChart(this.data.length > 0 ? this.data : {});
     },
     updateChart(source) {
+      console.log(this.max);
       this.chart.clear();
       this.chart.setOption({
         title: {
@@ -112,7 +117,7 @@ export default {
         grid: {
           top: 55,
           left: 20,
-          right: 20,
+          right: 50,
           bottom: 10,
           containLabel: true,
         },
@@ -134,6 +139,13 @@ export default {
           encode: {
             y: dim,
             x: 0,
+          },
+          markLine: {
+            data: [{ name: "BMR", yAxis: this.max - 400 }],
+            symbol: "none",
+            lineStyle: {
+              color: "red",
+            },
           },
           itemStyle: {
             borderWidth: 2,

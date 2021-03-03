@@ -11,8 +11,8 @@
     </div>
     <div class="right" v-loading="healthDataLoading">
       <TemplateInfoView v-if="!!temId" :data="templateInfo" />
-      <HealthyView :data="healthyData" v-else-if="healthyDataType === 0" />
-      <BodySignView :data="healthyData" v-else />
+      <HealthyView :data="healthyData" v-else-if="healthyDataType === 0" dev />
+      <BodySignView :data="healthyData" v-else dev />
     </div>
   </div>
 </template>

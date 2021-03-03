@@ -471,6 +471,16 @@ const moduleObj = {
 
 //健康信息处理，将数组转为字符串
 export function dealHealthy(customerHealthy) {
+  customerHealthy.basicBMR = (
+    (10 * customerHealthy.weight) / 2 +
+    6.25 * customerHealthy.tall -
+    5 * customerHealthy.age -
+    customerHealthy.sex * 161
+  ).toFixed(1);
+  customerHealthy.notSportHeat = (customerHealthy.basicBMR * 1.3).toFixed(1);
+  customerHealthy.basicBMR += "千卡";
+  customerHealthy.notSportHeat += "千卡";
+
   needAttrName.forEach(name => {
     if (customerHealthy.hasOwnProperty(name)) {
       customerHealthy[name] = (String(customerHealthy[name]) || "")
