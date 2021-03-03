@@ -279,7 +279,7 @@
                         controls-position="right"
                         @change="handleInputChange"
                         :min="0"
-                        :step="50"
+                        :step="5"
                       />
                     </template>
                   </el-table-column>
@@ -298,13 +298,14 @@
                     label="碳水/100g"
                     align="center"
                   />
-                  <el-table-column label="热量/100g" align="center">
+                  <el-table-column label="热量" align="center">
                     <template slot-scope="scope">
                       {{
                         `${(
-                          scope.row.proteinRatio * 4 +
-                          scope.row.fatRatio * 9 +
-                          scope.row.carbonRatio * 4
+                          ((scope.row.proteinRatio * scope.row.weight) / 100) *
+                            4 +
+                          ((scope.row.fatRatio * scope.row.weight) / 100) * 9 +
+                          ((scope.row.carbonRatio * scope.row.weight) / 100) * 4
                         ).toFixed(1)} kcal`
                       }}
                     </template>
@@ -753,21 +754,25 @@ export default {
     },
     getSummaries(param) {
       const { columns, data } = param;
+      console.log(data);
       return columns.reduce(
         (arr, cur, idx) => {
           if (idx > 1) {
             if (idx === 6) {
-              // 备注
-              return arr;
+              arr[6] = arr[3] * 4 + arr[4] * 9 + arr[5] * 4 + ' kcal';
+            } else {
+              arr[idx] = data.reduce((acc, dAcc) => {
+                if (idx === 2) {
+                  return acc + parseFloat(dAcc.weight);
+                }
+                return parseFloat(
+                  (
+                    acc +
+                    (dAcc[cur.property] * parseFloat(dAcc.weight)) / 100
+                  ).toFixed(1)
+                );
+              }, 0);
             }
-            arr[idx] = data.reduce((acc, dAcc) => {
-              if (idx === 2) {
-                return acc + parseFloat(dAcc.weight);
-              }
-              return parseFloat(
-                (acc + (dAcc[cur.property] * dAcc.weight) / 100).toFixed(1)
-              );
-            }, 0);
           }
           return arr;
         },
