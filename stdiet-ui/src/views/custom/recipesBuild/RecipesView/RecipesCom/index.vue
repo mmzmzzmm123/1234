@@ -339,6 +339,7 @@ export default {
       // console.log({ data, cusWeight, cusUnit });
       this.updateDishes({
         num: this.num,
+        id: data.id,
         dishesId: data.dishesId,
         igdId: data.igdId,
         cusWeight,
