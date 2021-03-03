@@ -34,7 +34,7 @@ const oriState = {
 const mutations = {
   updateRecipesDishesDetail(state, payload) {
     const tarDishes = state.recipesData[payload.num].dishes.find(
-      obj => obj.dishesId === payload.dishesId
+      obj => obj.id === payload.id
     );
     if (tarDishes) {
       const tarIgd = tarDishes.igdList.find(obj => obj.id === payload.igdId);
@@ -305,7 +305,7 @@ const actions = {
     // console.log(payload);
     if (state.recipesId) {
       const tarDishes = state.recipesData[payload.num].dishes.find(
-        obj => obj.dishesId === payload.dishesId
+        obj => obj.id === payload.id
       );
       if (tarDishes) {
         const mTarDishes = JSON.parse(JSON.stringify(tarDishes));
