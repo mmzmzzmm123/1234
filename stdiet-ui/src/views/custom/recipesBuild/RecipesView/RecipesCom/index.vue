@@ -327,9 +327,10 @@ export default {
       this.deleteDishes({ num: this.num, id: data.id });
     },
     handleOnWeightChange(data, weight) {
-      console.log({ data, weight });
+      // console.log({ data, weight });
       this.updateDishes({
         num: this.num,
+        id: data.id,
         dishesId: data.dishesId,
         igdId: data.igdId,
         weight,
