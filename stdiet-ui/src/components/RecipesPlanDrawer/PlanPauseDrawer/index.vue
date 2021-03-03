@@ -14,7 +14,7 @@
             icon="el-icon-plus"
             size="mini"
             @click="handleAdd"
-            v-hasPermi="['orderPause:pause:add']"
+            v-hasPermi="['recipes:pause:add']"
             >新增</el-button
           >
         </el-col>
@@ -24,7 +24,7 @@
             icon="el-icon-download"
             size="mini"
             @click="handleExport"
-            v-hasPermi="['orderPause:pause:export']"
+            v-hasPermi="['recipes:pause:export']"
             >导出</el-button
           >
         </el-col>
@@ -96,7 +96,7 @@
               type="text"
               icon="el-icon-edit"
               @click="handleUpdate(scope.row)"
-              v-hasPermi="['orderPause:pause:edit']"
+              v-hasPermi="['recipes:pause:edit']"
               >修改</el-button
             >
             <el-button
@@ -104,7 +104,7 @@
               type="text"
               icon="el-icon-delete"
               @click="handleDelete(scope.row)"
-              v-hasPermi="['orderPause:pause:remove']"
+              v-hasPermi="['recipes:pause:remove']"
               >删除</el-button
             >
           </template>
