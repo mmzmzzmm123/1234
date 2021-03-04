@@ -17,6 +17,7 @@
       </el-form-item>
       <el-form-item label="菜品类型" prop="type">
         <el-select
+          :disabled="lockType"
           v-model="queryParams.type"
           placeholder="请选择菜品类型"
           clearable
@@ -98,6 +99,7 @@ export default {
   data() {
     return {
       loading: false,
+      lockType: false,
       total: 0,
       dishesList: [],
       queryParams: {
@@ -116,8 +118,12 @@ export default {
     ...mapState(["typeOptions"]),
   },
   methods: {
-    getList() {
+    getList({ type }) {
       // console.log('getList')
+      if (type) {
+        this.lockType = true;
+        this.queryParams.type = type;
+      }
       this.loading = true;
       listDishes(this.queryParams).then((result) => {
         this.dishesList = result.rows.map((d) => {
@@ -149,12 +155,21 @@ export default {
         this.loading = false;
       });
     },
+    clean() {
+      this.queryParams = {
+        pageNum: 1,
+        pageSize: 10,
+        name: null,
+        type: null,
+        reviewStatus: "yes",
+      };
+    },
     handleCurrentChange(data) {
       this.$emit("onChange", data);
     },
     handleQuery() {
       this.queryParams.pageNum = 1;
-      this.getList();
+      this.getList({});
     },
     resetQuery() {
       this.resetForm("queryForm");

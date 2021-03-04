@@ -1,5 +1,5 @@
 <template>
-  <div class="recipes_com_wrapper">
+  <div class="recipes_com_wrapper" @click="handleParentClick">
     <el-table
       :data="mData"
       border
@@ -11,15 +11,23 @@
     >
       <el-table-column prop="type" :width="100" align="center">
         <template slot="header">
-          <div class="num_day" @click="handleOnOneDayAnalysis">
-            <!-- <div>{{ name }}</div> -->
+          <div class="num_day" @click="handleOnResetCurrentDay">
             <div>{{ `第${numDay}天` }}</div>
           </div>
         </template>
         <template slot-scope="scope">
-          <span style="font-weight: bold; font-size: 14px">{{
-            typeFormatter(scope.row)
-          }}</span>
+          <el-tooltip
+            class="item"
+            effect="dark"
+            :content="`点击添加${typeFormatter(scope.row)}`"
+            placement="top"
+          >
+            <span
+              style="font-weight: bold; font-size: 14px; cursor: pointer"
+              @click="handleOnMenuTypeClick(scope.row)"
+              >{{ typeFormatter(scope.row) }}</span
+            >
+          </el-tooltip>
         </template>
       </el-table-column>
       <el-table-column label="菜品" prop="name" align="center" :width="180">
@@ -34,8 +42,17 @@
           </el-tooltip>
         </template>
         <template slot-scope="scope">
-          <el-popover placement="right" trigger="hover">
+          <el-popover placement="right" trigger="hover" :title="scope.row.name">
             <div>
+              <el-button
+                type="primary"
+                size="mini"
+                icon="el-icon-refresh"
+                class="fun_button"
+                @click="handleOnReplace(scope.row)"
+              >
+                替换
+              </el-button>
               <el-button
                 type="danger"
                 size="mini"
@@ -79,7 +96,7 @@
         align="center"
       >
         <template slot="header">
-          <div class="num_day" @click="handleOnOneDayAnalysis">
+          <div class="num_day">
             <div>蛋白质</div>
             <div>/100g</div>
           </div>
@@ -92,7 +109,7 @@
         align="center"
       >
         <template slot="header">
-          <div class="num_day" @click="handleOnOneDayAnalysis">
+          <div class="num_day">
             <div>脂肪</div>
             <div>/100g</div>
           </div>
@@ -105,7 +122,7 @@
         align="center"
       >
         <template slot="header">
-          <div class="num_day" @click="handleOnOneDayAnalysis">
+          <div class="num_day">
             <div>碳水</div>
             <div>/100g</div>
           </div>
@@ -119,7 +136,7 @@
         :formatter="nutriFormatter"
       >
         <template slot="header">
-          <div class="num_day" @click="handleOnOneDayAnalysis">
+          <div class="num_day">
             <div>蛋白质</div>
             <div>含量</div>
           </div>
@@ -133,7 +150,7 @@
         :formatter="nutriFormatter"
       >
         <template slot="header">
-          <div class="num_day" @click="handleOnOneDayAnalysis">
+          <div class="num_day">
             <div>脂肪</div>
             <div>含量</div>
           </div>
@@ -147,7 +164,7 @@
         :formatter="nutriFormatter"
       >
         <template slot="header">
-          <div class="num_day" @click="handleOnOneDayAnalysis">
+          <div class="num_day">
             <div>碳水</div>
             <div>含量</div>
           </div>
@@ -299,6 +316,10 @@ export default {
     ...mapState(["currentDay"]),
   },
   methods: {
+    handleParentClick(e) {
+      // 校验某天
+      this.setCurrentDay({ currentDay: this.num });
+    },
     spanMethod({ row, column, rowIndex, columnIndex }) {
       if (columnIndex === 0) {
         return row.typeSpan;
@@ -314,13 +335,17 @@ export default {
     nutriFormatter(row, col) {
       return ((row.weight / 100) * row[col.property]).toFixed(1);
     },
-    handleOnOneDayAnalysis(e) {
-      // 校验某天
-      this.setCurrentDay({ currentDay: this.num });
+    handleOnResetCurrentDay(e) {
+      e.stopPropagation();
+      // 取消高亮
+      this.resetCurrentDay({ currentDay: this.num });
     },
     handleOnAdd() {
       // console.log(this.num);
-      this.$refs.drawerRef.showDrawer();
+      this.$refs.drawerRef.showDrawer({});
+    },
+    handleOnReplace(data) {
+      this.$refs.drawerRef.showDrawer({ data, numDay: this.numDay });
     },
     handleOnDelete(data) {
       // console.log(data);
@@ -347,17 +372,34 @@ export default {
         cusUnit,
       });
     },
-    handleOnDishesConfirm(data) {
+    handleOnDishesConfirm({ type, data }) {
       // console.log(data);
-      this.addDishes({
-        num: this.num,
-        data,
-      }).catch((err) => {
-        this.$message.error(err.message);
-      });
+      if (type === "add") {
+        this.addDishes({
+          num: this.num,
+          data,
+        }).catch((err) => {
+          this.$message.error(err);
+        });
+      } else if (type === "replace") {
+        this.replaceDishes({
+          num: this.num,
+          data,
+        }).catch((err) => {
+          this.$message.error(err);
+        });
+      }
     },
-    ...mapActions(["updateDishes", "addDishes", "deleteDishes"]),
-    ...mapMutations(["setCurrentDay"]),
+    handleOnMenuTypeClick(data) {
+      this.$refs.drawerRef.showDrawer({ type: data.type, numDay: this.numDay });
+    },
+    ...mapActions([
+      "updateDishes",
+      "addDishes",
+      "deleteDishes",
+      "replaceDishes",
+    ]),
+    ...mapMutations(["setCurrentDay", "resetCurrentDay"]),
   },
 };
 </script>

@@ -277,7 +277,6 @@
                         v-model="scope.row.weight"
                         size="mini"
                         controls-position="right"
-                        @change="handleInputChange"
                         :min="0"
                         :step="5"
                       />
@@ -749,12 +748,9 @@ export default {
         }, []);
       });
     },
-    handleInputChange(val) {
-      // console.log({ val, table: this.selTableData });
-    },
     getSummaries(param) {
       const { columns, data } = param;
-      console.log(data);
+      // console.log(data);
       return columns.reduce(
         (arr, cur, idx) => {
           if (idx > 1) {

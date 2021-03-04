@@ -87,7 +87,7 @@ export default {
           return obj;
         }, {}),
       }));
-      console.log(mData);
+      // console.log(mData);
       return mData;
     },
   },
