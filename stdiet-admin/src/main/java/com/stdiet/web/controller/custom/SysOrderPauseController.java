@@ -76,7 +76,7 @@ public class SysOrderPauseController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody SysOrderPause sysOrderPause)
     {
-        int count = sysOrderPauseService.getCountByOrderIdAndPauseDate(sysOrderPause);
+        int count = sysOrderPauseService.getCountByCusIdAndPauseDate(sysOrderPause);
         if(count > 0){
             return AjaxResult.error("时间范围重叠，请检查时间");
         }
@@ -96,7 +96,7 @@ public class SysOrderPauseController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody SysOrderPause sysOrderPause)
     {
-        int count = sysOrderPauseService.getCountByOrderIdAndPauseDate(sysOrderPause);
+        int count = sysOrderPauseService.getCountByCusIdAndPauseDate(sysOrderPause);
         if(count > 0){
             return AjaxResult.error("时间范围重叠，请检查时间");
         }

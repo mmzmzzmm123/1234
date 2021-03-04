@@ -64,7 +64,7 @@ public interface ISysOrderPauseService
      * @param sysOrderPause
      * @return
      */
-    int getCountByOrderIdAndPauseDate(SysOrderPause sysOrderPause);
+    int getCountByCusIdAndPauseDate(SysOrderPause sysOrderPause);
 
     /**
      * 根据订单ID删除暂停记录

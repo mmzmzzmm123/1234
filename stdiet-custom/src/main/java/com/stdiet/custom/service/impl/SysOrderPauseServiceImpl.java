@@ -126,8 +126,8 @@ public class SysOrderPauseServiceImpl implements ISysOrderPauseService
      * @return
      */
     @Override
-    public int getCountByOrderIdAndPauseDate(SysOrderPause sysOrderPause){
-        return sysOrderPauseMapper.getCountByOrderIdAndPauseDate(sysOrderPause);
+    public int getCountByCusIdAndPauseDate(SysOrderPause sysOrderPause){
+        return sysOrderPauseMapper.getCountByCusIdAndPauseDate(sysOrderPause);
     }
 
     /**
