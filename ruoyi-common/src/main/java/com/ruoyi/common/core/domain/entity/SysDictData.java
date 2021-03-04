@@ -72,6 +72,8 @@ public class SysDictData extends BaseEntity {
 
     private String deptIds;
 
+    private String parentId;
+
     public Long getDictCode() {
         return dictCode;
     }
@@ -163,6 +165,14 @@ public class SysDictData extends BaseEntity {
         this.deptIds = deptIds;
     }
 
+    public String getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(String parentId) {
+        this.parentId = parentId;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
@@ -181,6 +191,7 @@ public class SysDictData extends BaseEntity {
                 .append("updateTime", getUpdateTime())
                 .append("remark", getRemark())
                 .append("deptIds", getDeptIds())
+                .append("parentId",getParentId())
                 .toString();
     }
 }

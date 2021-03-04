@@ -358,6 +358,10 @@ export default {
       rules: {},
     };
   },
+  watch: {
+    // 监听
+    "form.rwlx": "handleBucketClick",
+  },
   created() {
     this.getList();
     this.getDicts("sys_dm_jyykhrwlx").then((response) => {
@@ -374,6 +378,21 @@ export default {
     });
   },
   methods: {
+    // 监听
+    handleBucketClick(value) {
+      //console.log(value);
+      this.getDictsLikeDeptids("sys_dm_jyykhrwnr").then((response) => {
+        //console.log(response.data);
+        var item = [];
+        response.data.forEach((res) => {
+          //console.log(res.parentId);
+          if (res.parentId == "sys_dm_jyykhrwlx" + value) {
+            item.push(res);
+          }
+        });
+        this.rwnrOptions = item;
+      });
+    },
     // 任务类型字典翻译
     xrlxFormat(row, column) {
       return this.selectDictLabel(this.rwlxOptions, row.rwlx);
