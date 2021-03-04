@@ -163,6 +163,8 @@ export default {
         type: null,
         reviewStatus: "yes",
       };
+      this.dishesList = [];
+      this.lockType = false;
     },
     handleCurrentChange(data) {
       this.$emit("onChange", data);
