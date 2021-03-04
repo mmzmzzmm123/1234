@@ -1,6 +1,6 @@
 <template>
   <el-drawer
-    title="添加菜品"
+    :title="title"
     :visible.sync="visible"
     :close-on-press-escape="false"
     :before-close="handleOnClosed"
@@ -50,7 +50,7 @@
 </template>
 <script>
 import { createNamespacedHelpers } from "vuex";
-const { mapState } = createNamespacedHelpers("recipes");
+const { mapState, mapGetters } = createNamespacedHelpers("recipes");
 
 import SelectDishes from "./SelectDishes";
 import ConfigDishes from "./ConfigDishes";
@@ -63,7 +63,10 @@ export default {
   },
   data() {
     return {
+      id: "",
+      type: "",
       visible: false,
+      title: "",
       active: 0,
       dishesTypeOptions: [],
       selDishes: {
@@ -76,16 +79,30 @@ export default {
     };
   },
   computed: {
-    ...mapState(["typeOptions"]),
+    ...mapState(["typeOptions", "currentDay"]),
+    ...mapGetters(["typeDict"]),
   },
   methods: {
-    showDrawer() {
+    showDrawer({ data, type, numDay }) {
+      this.title = "添加菜品";
+      this.id = "";
+      this.type = "";
+      if (data) {
+        this.title = `替换第${numDay}天${this.typeDict[data.type]}的「${
+          data.name
+        }」`;
+        this.id = data.id;
+      } else if (type) {
+        this.title = `添加第${numDay}天${this.typeDict[type]}菜品`;
+        this.type = type;
+      }
       this.visible = true;
       this.$nextTick(() => {
-        this.$refs.dishesRef.getList();
+        this.$refs.dishesRef.getList({ type });
       });
     },
     handleOnClosed(done) {
+      this.$refs.dishesRef.clean();
       done();
     },
     handleCurrentChange(data) {
@@ -95,16 +112,18 @@ export default {
       // console.log(data);
       this.selDishes = data;
       this.active = 1;
-      this.dishesTypeOptions = data.type.split(",").reduce((arr, cur, idx) => {
-        if (idx === 0) {
-          this.selDishes.type = cur;
-        }
-        const tarOpt = this.typeOptions.find((obj) => obj.dictValue === cur);
-        if (tarOpt) {
-          arr.push(tarOpt);
-        }
-        return arr;
-      }, []);
+      this.dishesTypeOptions = (this.type || data.type)
+        .split(",")
+        .reduce((arr, cur, idx) => {
+          if (idx === 0) {
+            this.selDishes.type = cur;
+          }
+          const tarOpt = this.typeOptions.find((obj) => obj.dictValue === cur);
+          if (tarOpt) {
+            arr.push(tarOpt);
+          }
+          return arr;
+        }, []);
     },
     handleOnConfigChange(val) {
       Object.keys(val).forEach((key) => {
@@ -114,6 +133,7 @@ export default {
     handleOnCancelClick() {
       this.visible = false;
       this.active = 0;
+      this.$refs.dishesRef.clean();
     },
     handleOnLastStepClick() {
       this.active = 0;
@@ -132,14 +152,17 @@ export default {
         igdList,
       } = this.selDishes;
       this.$emit("onConfirm", {
-        id: new Date().getTime(),
-        dishesId: id,
-        methods,
-        name,
-        notRecTags,
-        recTags,
-        type,
-        igdList,
+        type: this.id ? "replace" : "add",
+        data: {
+          id: this.id || new Date().getTime(),
+          dishesId: id,
+          methods,
+          name,
+          notRecTags,
+          recTags,
+          type,
+          igdList,
+        },
       });
       // console.log(this.selDishes);
     },

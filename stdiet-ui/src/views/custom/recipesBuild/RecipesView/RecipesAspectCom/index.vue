@@ -26,7 +26,6 @@
           slot="reference"
           size="mini"
           v-if="reviewStatus"
-          @click="handleReview"
           :type="reviewStatus === 1 ? 'danger' : 'success'"
         >
           {{ reviewStatus === 1 ? "未审核" : "已审核" }}

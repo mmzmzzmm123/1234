@@ -68,7 +68,7 @@ export default {
       this.updateChart(this.data.length > 0 ? this.data : {});
     },
     updateChart(source) {
-      console.log(this.max);
+      // console.log(this.max);
       this.chart.clear();
       this.chart.setOption({
         title: {
@@ -141,10 +141,10 @@ export default {
             x: 0,
           },
           markLine: {
-            data: [{ name: "BMR", yAxis: this.max - 400 }],
+            data: [{ name: "BMR", yAxis: this.max ? this.max - 400 : 0 }],
             symbol: "none",
             lineStyle: {
-              color: "red",
+              color: "#d96969",
             },
           },
           itemStyle: {

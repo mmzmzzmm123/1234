@@ -37,11 +37,21 @@ const mutations = {
       obj => obj.id === payload.id
     );
     if (tarDishes) {
-      const tarIgd = tarDishes.igdList.find(obj => obj.id === payload.igdId);
-      if (tarIgd) {
-        payload.weight && (tarIgd.weight = payload.weight);
-        payload.cusWeight && (tarIgd.cusWeight = payload.cusWeight);
-        payload.cusUnit && (tarIgd.cusUnit = payload.cusUnit);
+      if (tarDishes.dishesId !== payload.dishesId) {
+        // 替换菜品
+        Object.keys(payload).forEach(key => {
+          if (key === "num") {
+            return;
+          }
+          tarDishes[key] = payload[key];
+        });
+      } else {
+        const tarIgd = tarDishes.igdList.find(obj => obj.id === payload.igdId);
+        if (tarIgd) {
+          payload.weight && (tarIgd.weight = payload.weight);
+          payload.cusWeight && (tarIgd.cusWeight = payload.cusWeight);
+          payload.cusUnit && (tarIgd.cusUnit = payload.cusUnit);
+        }
       }
     }
   },
@@ -49,6 +59,12 @@ const mutations = {
     state.recipesData[payload.num].dishes.push(payload.data);
   },
   setCurrentDay(state, payload) {
+    if (state.currentDay !== payload.currentDay) {
+      state.currentDay = payload.currentDay;
+    }
+  },
+  resetCurrentDay(state, payload) {
+    // console.log(payload);
     state.currentDay =
       payload.currentDay === state.currentDay ? -1 : payload.currentDay;
   },
@@ -267,11 +283,12 @@ const actions = {
   },
   async addDishes({ commit, state }, payload) {
     const tarDishesList = state.recipesData[payload.num].dishes.filter(
-      obj => obj.type === payload.type
+      obj => obj.type === payload.data.type
     );
-    if (tarDishesList.some(obj => obj.dishesId === payload.dishesId)) {
-      console.log("目标餐类已有相同的菜品");
-      throw new Error("目标餐类已有相同的菜品");
+    if (tarDishesList.some(obj => obj.dishesId === payload.data.dishesId)) {
+      return new Promise((res, rej) =>
+        rej(`目标餐类已有相同的菜品「${payload.data.name}」`)
+      );
     }
     if (state.recipesId) {
       const tarRecipesObj = state.recipesData[payload.num];
@@ -299,6 +316,47 @@ const actions = {
       // console.log(result);
     } else {
       commit("addRecipesDishes", payload);
+    }
+  },
+  async replaceDishes({ commit, state }, payload) {
+    // console.log(payload);
+    const tarDishesList = state.recipesData[payload.num].dishes.filter(
+      obj => obj.type === payload.data.type
+    );
+    if (tarDishesList.some(obj => obj.dishesId === payload.data.dishesId)) {
+      return new Promise((res, rej) =>
+        rej(`目标餐类已有相同的菜品「${payload.data.name}」`)
+      );
+    }
+    if (state.recipesId) {
+      const tarDishes = state.recipesData[payload.num].dishes.find(
+        obj => obj.id === payload.data.id
+      );
+      if (tarDishes) {
+        const params = {
+          id: tarDishes.id,
+          dishesId: payload.data.dishesId,
+          detail: payload.data.igdList.map(igd => ({
+            id: igd.id,
+            weight: igd.weight,
+            cus_unit: igd.cusUnit,
+            cus_weight: igd.cusWeight
+          }))
+        };
+        // console.log(params);
+        const result = await updateDishesDetailApi(params);
+        if (result.code === 200) {
+          commit("updateRecipesDishesDetail", {
+            num: payload.num,
+            ...payload.data
+          });
+        }
+      }
+    } else {
+      commit("updateRecipesDishesDetail", {
+        num: payload.num,
+        ...payload.data
+      });
     }
   },
   async updateDishes({ commit, state }, payload) {
