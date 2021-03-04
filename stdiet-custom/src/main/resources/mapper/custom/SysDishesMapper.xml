@@ -92,7 +92,7 @@
             <if test="isMain != null">is_main,</if>
             <if test="methods != null">methods,</if>
             <if test="createBy != null">create_by,</if>
-            <if test="reviewStatus != null">review_status</if>
+            <if test="reviewStatus != null">review_status,</if>
             <if test="createTime != null">create_time,</if>
             <if test="updateBy != null">update_by,</if>
             <if test="updateTime != null">update_time,</if>
@@ -103,7 +103,7 @@
             <if test="isMain != null">#{isMain},</if>
             <if test="methods != null">#{methods},</if>
             <if test="createBy != null">#{createBy},</if>
-            <if test="reviewStatus != null">#{reviewStatus}</if>
+            <if test="reviewStatus != null">#{reviewStatus},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="updateBy != null">#{updateBy},</if>
             <if test="updateTime != null">#{updateTime},</if>
