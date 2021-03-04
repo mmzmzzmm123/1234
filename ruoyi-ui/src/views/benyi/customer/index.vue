@@ -143,6 +143,8 @@
         :formatter="userFormat"
       />
       <el-table-column label="录入时间" align="center" prop="createTime" />
+      <el-table-column label="过保时间" align="center" prop="gbtime" />
+      <el-table-column label="转换跟进" align="center" prop="zhgj" />
       <el-table-column
         label="操作"
         align="center"
@@ -380,6 +382,7 @@ export default {
         state: undefined,
         xfxm: undefined,
         xfjz: undefined,
+        gbtime: undefined,
       },
       // 表单参数
       form: {},
@@ -509,6 +512,7 @@ export default {
         xfjz: undefined,
         createTime: undefined,
         createTime: undefined,
+        gbtime: undefined,
       };
       this.diglogForm.province = "";
       this.diglogForm.city = "";

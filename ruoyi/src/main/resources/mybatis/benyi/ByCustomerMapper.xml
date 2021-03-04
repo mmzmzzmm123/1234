@@ -26,10 +26,11 @@
         <result property="xfxm" column="xfxm"/>
         <result property="xfjz" column="xfjz"/>
         <result property="createTime" column="create_time"/>
+        <result property="gbtime" column="gbtime"/>
     </resultMap>
 
     <sql id="selectByCustomerVo">
-        select id, name, sflx, lxdh, wx, dy, qt, schoolname, rs, sheng, shengid, shi, shiid, khly, create_userid, bz, zhgj, state, xfxm, xfjz, create_time from by_customer
+        select id, name, sflx, lxdh, wx, dy, qt, schoolname, rs, sheng, shengid, shi, shiid, khly, create_userid, bz, zhgj, state, xfxm, xfjz, gbtime, create_time from by_customer
     </sql>
 
     <select id="selectByCustomerList" parameterType="ByCustomer" resultMap="ByCustomerResult">
@@ -54,6 +55,8 @@
             <if test="state != null  and state != ''">and state = #{state}</if>
             <if test="xfxm != null  and xfxm != ''">and xfxm = #{xfxm}</if>
             <if test="xfjz != null  and xfjz != ''">and xfjz = #{xfjz}</if>
+            <if test="gbtime != null  and gbtime != ''">and gbtime = #{gbtime}</if>
+            <if test="createTime != null ">and create_time = #{createTime}</if>
         </where>
     </select>
 
@@ -86,6 +89,7 @@
             <if test="xfxm != null  and xfxm != ''">xfxm,</if>
             <if test="xfjz != null  and xfjz != ''">xfjz,</if>
             <if test="createTime != null ">create_time,</if>
+            <if test="gbtime != null ">gbtime,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null ">#{id},</if>
@@ -109,6 +113,7 @@
             <if test="xfxm != null  and xfxm != ''">#{xfxm},</if>
             <if test="xfjz != null  and xfjz != ''">#{xfjz},</if>
             <if test="createTime != null ">#{createTime},</if>
+            <if test="gbtime != null ">#{gbtime},</if>
         </trim>
     </insert>
 
@@ -135,6 +140,7 @@
             <if test="xfxm != null  and xfxm != ''">xfxm = #{xfxm},</if>
             <if test="xfjz != null  and xfjz != ''">xfjz = #{xfjz},</if>
             <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="gbtime != null ">gbtime = #{gbtime},</if>
         </trim>
         where id = #{id}
     </update>

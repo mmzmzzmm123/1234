@@ -131,11 +131,18 @@ public class ByCustomer extends BaseEntity {
     private String xfxm;
 
     /**
-     * 创建时间
+     * 创建时间gbtime
      */
     @Excel(name = "开通截至日期", width = 30, dateFormat = "yyyy-MM-dd")
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date createTime;
+
+    /**
+     * 过保时间
+     */
+    @Excel(name = "开通截至日期", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date gbtime;
 
     /**
      * 消费价值
@@ -327,6 +334,7 @@ public class ByCustomer extends BaseEntity {
                 .append("xfxm", getXfxm())
                 .append("xfjz", getXfjz())
                 .append("createTime", getCreateTime())
+                .append("gbtime", getGbtime())
                 .toString();
     }
 
@@ -337,5 +345,13 @@ public class ByCustomer extends BaseEntity {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public Date getGbtime() {
+        return gbtime;
+    }
+
+    public void setGbtime(Date gbtime) {
+        this.gbtime = gbtime;
     }
 }

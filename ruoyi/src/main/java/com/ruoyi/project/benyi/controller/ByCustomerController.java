@@ -1,5 +1,7 @@
 package com.ruoyi.project.benyi.controller;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -74,8 +76,18 @@ public class ByCustomerController extends BaseController {
     @Log(title = "本一-客户关系管理", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody ByCustomer byCustomer) {
+
+        // 这里没写完  须将SimpleDateFormat转换为Date类型
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.DATE, 15);
+        df.format(calendar.getTime());
+
         byCustomer.setCreateUserid(SecurityUtils.getLoginUser().getUser().getUserId());
-        byCustomer.setCreateTime(new Date());
+        byCustomer.setCreateTime(date);
+        byCustomer.setGbtime(date);
         // 判断电话号码是否存在
         ByCustomer byCustomer1 = new ByCustomer();
         byCustomer1.setLxdh(byCustomer.getLxdh());
