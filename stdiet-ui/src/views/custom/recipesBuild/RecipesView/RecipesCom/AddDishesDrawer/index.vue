@@ -102,8 +102,8 @@ export default {
       });
     },
     handleOnClosed(done) {
-      this.$refs.dishesRef.clean();
       done();
+      this.handleOnCancelClick();
     },
     handleCurrentChange(data) {
       if (!data) {
