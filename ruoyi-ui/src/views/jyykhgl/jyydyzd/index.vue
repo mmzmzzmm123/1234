@@ -308,9 +308,20 @@ export default {
     this.getList();
     this.getDeptList();
     this.getKhrwList();
-    this.getDicts("sys_dm_dyzdrwnr").then((response) => {
-      this.rwnrOptions = response.data;
-    });
+    // this.getDicts("sys_dm_dyzdrwnr").then((response) => {
+    //   this.rwnrOptions = response.data;
+    // });
+    this.getDictsLikeDeptids("sys_dm_jyykhrwnr").then((response) => {
+        //console.log(response.data);
+        var item = [];
+        response.data.forEach((res) => {
+          //console.log(res.parentId);
+          if (res.parentId == "sys_dm_jyykhrwlx04") {
+            item.push(res);
+          }
+        });
+        this.rwnrOptions = item;
+      });
   },
   methods: {
         // 查询部门

@@ -127,7 +127,11 @@
     >
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="编号" align="center" prop="id" /> -->
-      <el-table-column label="所属任务" align="center" prop="tsbzJyykhrw.rwmc" />
+      <el-table-column
+        label="所属任务"
+        align="center"
+        prop="tsbzJyykhrw.rwmc"
+      />
       <el-table-column
         label="任务内容"
         align="center"
@@ -332,8 +336,19 @@ export default {
   created() {
     this.getList();
     this.getKhrwList();
-    this.getDicts("sys_dm_gzjhrwnr").then((response) => {
-      this.rwnrOptions = response.data;
+    // this.getDicts("sys_dm_gzjhrwnr").then((response) => {
+    //   this.rwnrOptions = response.data;
+    // });
+    this.getDictsLikeDeptids("sys_dm_jyykhrwnr").then((response) => {
+      //console.log(response.data);
+      var item = [];
+      response.data.forEach((res) => {
+        //console.log(res.parentId);
+        if (res.parentId == "sys_dm_jyykhrwlx01") {
+          item.push(res);
+        }
+      });
+      this.rwnrOptions = item;
     });
     this.getDicts("sys_gbxn").then((response) => {
       this.xnOptions = response.data;

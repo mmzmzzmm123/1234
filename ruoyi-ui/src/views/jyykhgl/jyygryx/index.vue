@@ -291,9 +291,20 @@ export default {
   created() {
     this.getList();
     this.getKhrwList();
-    this.getDicts("sys_dm_gryxrwnr").then((response) => {
-      this.rwnrOptions = response.data;
-    });
+    // this.getDicts("sys_dm_gryxrwnr").then((response) => {
+    //   this.rwnrOptions = response.data;
+    // });
+    this.getDictsLikeDeptids("sys_dm_jyykhrwnr").then((response) => {
+        //console.log(response.data);
+        var item = [];
+        response.data.forEach((res) => {
+          //console.log(res.parentId);
+          if (res.parentId == "sys_dm_jyykhrwlx07") {
+            item.push(res);
+          }
+        });
+        this.rwnrOptions = item;
+      });
   },
   methods: {
     // 任务类型字典翻译

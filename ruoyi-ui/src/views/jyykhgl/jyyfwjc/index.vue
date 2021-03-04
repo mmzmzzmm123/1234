@@ -119,7 +119,11 @@
     >
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="编号" align="center" prop="id" /> -->
-      <el-table-column label="所属任务" align="center" prop="tsbzJyykhrw.rwmc" />
+      <el-table-column
+        label="所属任务"
+        align="center"
+        prop="tsbzJyykhrw.rwmc"
+      />
       <el-table-column
         label="任务内容"
         align="center"
@@ -127,7 +131,11 @@
         :formatter="rwnrFormat"
       />
       <el-table-column label="主题" align="center" prop="zt" />
-      <el-table-column label="服务学校" align="center" prop="sysDept.deptName" />
+      <el-table-column
+        label="服务学校"
+        align="center"
+        prop="sysDept.deptName"
+      />
       <el-table-column label="服务时间" align="center" prop="fwsj" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.fwsj, "{y}-{m}-{d}") }}</span>
@@ -199,14 +207,18 @@
           />
         </el-form-item>
         <el-form-item label="服务学校" prop="fwxx">
-           <el-select v-model="form.fwxx" filterable placeholder="请选择服务学校">
-                <el-option
-                  v-for="dict in deptOptions"
-                  :key="dict.deptId"
-                  :label="dict.deptName"
-                  :value="dict.deptId"
-                ></el-option>
-              </el-select>
+          <el-select
+            v-model="form.fwxx"
+            filterable
+            placeholder="请选择服务学校"
+          >
+            <el-option
+              v-for="dict in deptOptions"
+              :key="dict.deptId"
+              :label="dict.deptName"
+              :value="dict.deptId"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="服务时间" prop="fwsj">
           <el-date-picker
@@ -233,7 +245,7 @@
       </div>
     </el-dialog>
 
-     <!-- 导师导入对话框 -->
+    <!-- 导师导入对话框 -->
     <el-dialog
       :title="upload.title"
       :visible.sync="upload.open"
@@ -313,7 +325,7 @@ export default {
       jyykhrwList: [],
       //任务内容
       rwnrOptions: [],
-                  // 部门选项
+      // 部门选项
       deptOptions: [],
       // 查询参数
       queryParams: {
@@ -329,7 +341,7 @@ export default {
         deptId: null,
         createTime: null,
       },
-            dept_queryParams: {
+      dept_queryParams: {
         parentId: 300,
       },
       // 查询参数
@@ -346,11 +358,11 @@ export default {
         rwnrlx: [
           { required: true, message: "任务内容不能为空", trigger: "blur" },
         ],
-                fwxx: [
+        fwxx: [
           { required: true, message: "调研学校不能为空", trigger: "blur" },
         ],
       },
-       // 导师导入参数
+      // 导师导入参数
       upload: {
         // 是否显示弹出层（服务基层导入）
         open: false,
@@ -369,14 +381,25 @@ export default {
   },
   created() {
     this.getList();
-        this.getDeptList();
+    this.getDeptList();
     this.getKhrwList();
-    this.getDicts("sys_dm_fwjcrwnr").then((response) => {
-      this.rwnrOptions = response.data;
+    // this.getDicts("sys_dm_fwjcrwnr").then((response) => {
+    //   this.rwnrOptions = response.data;
+    // });
+    this.getDictsLikeDeptids("sys_dm_jyykhrwnr").then((response) => {
+      //console.log(response.data);
+      var item = [];
+      response.data.forEach((res) => {
+        //console.log(res.parentId);
+        if (res.parentId == "sys_dm_jyykhrwlx06") {
+          item.push(res);
+        }
+      });
+      this.rwnrOptions = item;
     });
   },
   methods: {
-            // 查询部门
+    // 查询部门
     getDeptList() {
       listDept(this.dept_queryParams).then((response) => {
         this.deptOptions = response.data;
@@ -504,7 +527,7 @@ export default {
       this.upload.title = "服务基层导入";
       this.upload.open = true;
     },
-     /** 下载模板操作 */
+    /** 下载模板操作 */
     importTemplate() {
       importTemplate().then((response) => {
         this.download(response.msg);
