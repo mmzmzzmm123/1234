@@ -10,9 +10,9 @@ export function listSetting(query) {
 }
 
 // 查询档号设置详细
-export function getSetting(id) {
+export function getSetting(nodeId,deptId) {
   return request({
-    url: '/system/setting/' + id,
+    url: '/system/setting/' + nodeId+'/'+deptId,
     method: 'get'
   })
 }

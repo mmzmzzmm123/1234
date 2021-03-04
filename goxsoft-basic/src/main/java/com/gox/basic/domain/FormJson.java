@@ -17,7 +17,6 @@ import org.apache.ibatis.type.Alias;
  */
 @Alias(value = "FormJson")
 public class FormJson extends BaseEntity {
-    private static final long serialVersionUID = 1L;
 
     public FormJson() {
         setId(SnowflakesTools.WORKER.nextId());

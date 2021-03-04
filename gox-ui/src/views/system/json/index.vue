@@ -59,13 +59,11 @@
             <el-button type="warning" icon="el-icon-download" size="mini" @click="handTableField">
               表格编辑
             </el-button>
-            <!--        <el-button-->
-            <!--          type="warning"-->
-            <!--          icon="el-icon-download"-->
-            <!--          size="mini"-->
-            <!--          @click="handleExport"-->
-            <!--          v-hasPermi="['system:json:export']"-->
-            <!--        >导出</el-button>-->
+          </el-col>
+          <el-col :span="1.5">
+            <el-button type="warning" icon="el-icon-download" size="mini" @click="handArchivalCode">
+              档号设置
+            </el-button>
           </el-col>
           <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
         </el-row>
@@ -166,6 +164,68 @@
           </el-row>
 
         </el-dialog>
+        <!-- 添加或修改档号设置对话框 -->
+        <el-dialog :title="titleAc" :visible.sync="openAc" width="500px" append-to-body>
+          <el-form ref="form" :model="settingForm" :rules="settingRules" label-width="80px">
+            <!--        <el-form-item label="部门id" prop="deptId">-->
+            <!--          <el-input v-model="form.deptId" placeholder="请输入部门id" />-->
+            <!--        </el-form-item>-->
+            <el-form-item label="字段1" prop="field1">
+              <el-select v-model="settingForm.field1" placeholder="请选择字段1">
+                <el-option
+                  v-for="dict in fieldOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="字段2" prop="field2">
+              <el-select v-model="settingForm.field2" placeholder="请选择字段2">
+                <el-option
+                  v-for="dict in fieldOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="字段3" prop="field3">
+              <el-select v-model="settingForm.field3" placeholder="请选择字段3">
+                <el-option
+                  v-for="dict in fieldOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="字段4" prop="field4">
+              <el-select v-model="settingForm.field4" placeholder="请选择字段4">
+                <el-option
+                  v-for="dict in fieldOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="字段5" prop="field5">
+              <el-select v-model="settingForm.field5" placeholder="请选择字段5">
+                <el-option
+                  v-for="dict in fieldOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-form>
+          <div slot="footer" class="dialog-footer">
+            <el-button type="primary" @click="submitSettingForm">确 定</el-button>
+            <el-button @click="cancelSetting">取 消</el-button>
+          </div>
+        </el-dialog>
       </el-col>
     </el-row>
 
@@ -186,6 +246,7 @@
   } from '@/api/system/json'
   import deptTree from '@/views/components/deptTree'
   import Sortable from 'sortablejs'
+  import { addSetting, getSetting, updateSetting } from '@/api/system/setting'
 
   export default {
     name: 'Json',
@@ -194,6 +255,8 @@
     },
     data() {
       return {
+        titleAc:'',
+        openAc:false,
         forms: new Map(),
         filterText: '',
         defaultProps: {
@@ -223,6 +286,19 @@
         title: '',
         // 是否显示弹出层
         open: false,
+        fieldOptions:{},
+        settingForm:{},
+        settingRules: {
+          field1: [
+            {required: true, message: "必须要有3个以上字段", trigger: "blur"}
+          ],
+          field2: [
+            {required: true, message: "必须要有3个以上字段", trigger: "blur"}
+          ],
+          field3: [
+            {required: true, message: "必须要有3个以上字段", trigger: "blur"}
+          ],
+        },
         // 查询参数
         queryParams: {
           pageNum: 1,
@@ -259,7 +335,9 @@
     },
     mounted() {
       this.rowDrop()
-
+      this.getDicts("sys_archival_code_setting").then(response => {
+        this.fieldOptions = response.data;
+      });
     },
     created() {
 
@@ -357,6 +435,26 @@
         this.deptId = data
         this.getList()
       },
+      handArchivalCode(){
+        this.openAc = true
+        this.titleAc = '档号设置'
+      },
+      submitSettingForm(){
+        this.settingForm['nodeId']=this.nodeId
+        this.settingForm['deptId'] = this.deptId
+        if (this.settingForm.id){
+          updateSetting(this.settingForm).then(res=>{
+              this.$message.success(res.msg)
+            })
+        }else{
+          addSetting(this.settingForm).then(res=>{
+            this.$message.success(res.msg)
+          })
+        }
+      },
+      cancelSetting(){
+        this.openAc = false
+      },
       handTableField() {
         this.title = '修改表格头'
         this.open = true
@@ -393,6 +491,11 @@
               id: item.id
             })
           })
+        })
+        getSetting(this.nodeId,this.deptId).then(res=>{
+          if(res.data){
+            this.settingForm = res.data
+          }
         })
       },
       // 取消按钮

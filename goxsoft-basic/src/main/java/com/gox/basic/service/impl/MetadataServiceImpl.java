@@ -4,7 +4,11 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.ZipUtil;
 import cn.hutool.poi.excel.ExcelReader;
+import com.gox.basic.domain.ArchivalCodeNum;
+import com.gox.basic.domain.ArchivalCodeSetting;
+import com.gox.basic.service.IArchivalCodeSettingService;
 import com.gox.common.core.domain.AjaxResult;
+import com.gox.common.core.redis.RedisCache;
 import com.gox.common.utils.SecurityUtils;
 import com.gox.common.utils.file.Chunk;
 import com.gox.common.utils.file.UploadUtil;
@@ -22,6 +26,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.lang.reflect.Field;
 import java.util.List;
 
 /**
@@ -37,6 +42,10 @@ public class MetadataServiceImpl implements IMetadataService {
     private MetadataMapper metadataMapper;
     @Autowired
     private ElectronicAttributesMapper electronicAttributesMapper;
+    @Autowired
+    private IArchivalCodeSettingService archivalCodeSettingService;
+    @Autowired
+    private RedisCache redisCache;
     @Value("${gox.profile}")
     private String profile;
 
@@ -109,15 +118,42 @@ public class MetadataServiceImpl implements IMetadataService {
     /**
      * 生成档号
      * 1.将字段取出 用’-‘连接
-     * 2.在mysql 和 redis中更新
      *
-     * @param fields
-     * @param values
+     * 2.在mysql 和 redis中更新
      */
     @Override
-    public String generateArchivalCode(String[] fields, Object[] values) {
-
-        return null;
+    public String generateArchivalCode(Metadata metadata) throws Exception {
+        StringBuilder archivalCode = new StringBuilder();
+        Long nodeId = metadata.getNodeId();
+        Long deptId = metadata.getDeptId();
+        ArchivalCodeSetting setting = archivalCodeSettingService.selectArchivalCsByNodeIdAndDeptId(nodeId, deptId);
+        String [] fieldNames = setting.getFields();
+        for (int i = 0; i < fieldNames.length; i++) {
+            Field field = Metadata.class.getDeclaredField(fieldNames[i]);
+            field.setAccessible(true);
+            Object obj = field.get(metadata);
+            if (obj!=null){
+                archivalCode.append(obj).append("-");
+            }
+            //最后一位需要生成
+            else if (i==fieldNames.length-1){
+                String f = redisCache.getCacheMapValue("archivalCode",archivalCode.toString());
+                if (StrUtil.isNotBlank(f)){
+                    archivalCodeSettingService.updateArchivalCodeNum(archivalCode.toString(),1);
+                    archivalCode.append(Integer.parseInt(f)+1);
+                }
+                else {
+                    redisCache.setCacheMapValue("archivalCode",archivalCode.toString(),1);
+                    archivalCodeSettingService.insertArchivalCodeNum(new ArchivalCodeNum(1,archivalCode.toString()));
+                    archivalCode.append(1);
+                }
+                return archivalCode.toString();
+            }
+            else {
+                return "不正确的输入";
+            }
+        }
+        return archivalCode.toString();
     }
 
     /**
@@ -197,7 +233,6 @@ public class MetadataServiceImpl implements IMetadataService {
         //excel 导入 字段配置
         ExcelReader reader = cn.hutool.poi.excel.ExcelUtil.getReader(filepath);
         List<List<Object>> res = reader.read(0, 1);
-
     }
 
 }

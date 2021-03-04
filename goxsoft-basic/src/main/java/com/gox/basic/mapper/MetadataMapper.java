@@ -2,6 +2,7 @@ package com.gox.basic.mapper;
 
 import com.gox.basic.domain.Metadata;
 import org.apache.ibatis.annotations.Mapper;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
@@ -12,6 +13,7 @@ import java.util.List;
  * @date 2020-12-28
  */
 @Mapper
+@Repository
 public interface MetadataMapper {
     /**
      * 查询文书类基本元数据

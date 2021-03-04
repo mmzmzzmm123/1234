@@ -54,9 +54,9 @@ public class ArchivalCodeSettingController extends BaseController {
      * 获取档号设置详细信息
      */
     @PreAuthorize("@ss.hasPermi('basic:setting:query')")
-    @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id) {
-        return AjaxResult.success(archivalCodeSettingService.selectArchivalCodeSettingById(id));
+    @GetMapping(value = "/{nodeId}/{deptId}")
+    public AjaxResult getInfo(@PathVariable("nodeId") Long nodeId,@PathVariable("deptId") Long deptId) {
+        return AjaxResult.success(archivalCodeSettingService.selectArchivalCsByNodeIdAndDeptId(nodeId,deptId));
     }
 
     /**
@@ -66,7 +66,6 @@ public class ArchivalCodeSettingController extends BaseController {
     @Log(title = "档号设置", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody ArchivalCodeSetting archivalCodeSetting) {
-        archivalCodeSetting.setId(SnowflakesTools.WORKER.nextId());
         return toAjax(archivalCodeSettingService.insertArchivalCodeSetting(archivalCodeSetting));
     }
 

@@ -1,5 +1,6 @@
 package com.gox.basic.service;
 
+import com.gox.basic.domain.ArchivalCodeNum;
 import com.gox.basic.domain.ArchivalCodeSetting;
 
 import java.util.List;
@@ -19,6 +20,11 @@ public interface IArchivalCodeSettingService {
      */
     public ArchivalCodeSetting selectArchivalCodeSettingById(Long id);
 
+    int updateArchivalCodeNum(String archival, int num);
+
+    int insertArchivalCodeNum(ArchivalCodeNum archivalCodeNum);
+
+    public ArchivalCodeSetting selectArchivalCsByNodeIdAndDeptId(Long nodeId, Long deptId);
     /**
      * 查询档号设置列表
      *

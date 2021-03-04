@@ -146,7 +146,7 @@
         where form_id=#{formId}
     </select>
     <select id="selectTableFields" resultMap="FieldsVo">
-        select fi.id,fi.is_table_field,fi.table_field_sort,fi.table_title_width,c.label from fields_item fi left join
+        select fi.id,fi.is_table_field,fi.table_field_sort,fi.table_title_width,c.label,fi.v_model from fields_item fi left join
         config c on fi.id = c.item_id where fi.form_id in (select id from form_json where node_id=#{param1} and
         dept_id=#{param2})
     </select>

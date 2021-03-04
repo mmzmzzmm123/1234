@@ -6,6 +6,7 @@
 
     <resultMap type="com.gox.basic.domain.ArchivalCodeSetting" id="ArchivalCodeSettingResult">
         <result property="id" column="id"/>
+        <result property="nodeId" column="node_id"/>
         <result property="deptId" column="dept_id"/>
         <result property="field1" column="field1"/>
         <result property="field2" column="field2"/>
@@ -15,7 +16,7 @@
     </resultMap>
 
     <sql id="selectArchivalCodeSettingVo">
-        select id, dept_id, field1, field2, field3, field4, field5 from archival_code_setting
+        select id,node_id, dept_id, field1, field2, field3, field4, field5 from archival_code_setting
     </sql>
 
     <select id="selectArchivalCodeSettingList" parameterType="com.gox.basic.domain.ArchivalCodeSetting"
@@ -23,6 +24,7 @@
         <include refid="selectArchivalCodeSettingVo"/>
         <where>
             <if test="deptId != null ">and dept_id = #{deptId}</if>
+            <if test="nodeId != null ">and node_id = #{nodeId}</if>
             <if test="field1 != null  and field1 != ''">and field1 = #{field1}</if>
             <if test="field2 != null  and field2 != ''">and field2 = #{field2}</if>
             <if test="field3 != null  and field3 != ''">and field3 = #{field3}</if>
@@ -35,12 +37,20 @@
         <include refid="selectArchivalCodeSettingVo"/>
         where id = #{id}
     </select>
+    <select id="selectArchivalCsByNodeIdAndDeptId" resultMap="ArchivalCodeSettingResult">
+        <include refid="selectArchivalCodeSettingVo"/>
+        where node_id = #{param1} and dept_id = #{param2}
+    </select>
+    <select id="selectAllNum" resultType="com.gox.basic.domain.ArchivalCodeNum">
+        select id,num,archival,comment from archival_code_num
+    </select>
 
     <insert id="insertArchivalCodeSetting" parameterType="com.gox.basic.domain.ArchivalCodeSetting">
         insert into archival_code_setting
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
             <if test="deptId != null">dept_id,</if>
+            <if test="nodeId != null">node_id,</if>
             <if test="field1 != null">field1,</if>
             <if test="field2 != null">field2,</if>
             <if test="field3 != null">field3,</if>
@@ -50,6 +60,7 @@
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
             <if test="deptId != null">#{deptId},</if>
+            <if test="nodeId != null">#{nodeId},</if>
             <if test="field1 != null">#{field1},</if>
             <if test="field2 != null">#{field2},</if>
             <if test="field3 != null">#{field3},</if>
@@ -57,11 +68,27 @@
             <if test="field5 != null">#{field5},</if>
         </trim>
     </insert>
+    <insert id="insertArchivalNum">
+        insert into archival_code_num
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="archival != null">archival,</if>
+            <if test="num != null">num,</if>
+            <if test="comment != null">comment,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="archival != null">#{archival},</if>
+            <if test="num != null">#{num},</if>
+            <if test="comment != null">#{comment},</if>
+        </trim>
+    </insert>
 
     <update id="updateArchivalCodeSetting" parameterType="com.gox.basic.domain.ArchivalCodeSetting">
         update archival_code_setting
         <trim prefix="SET" suffixOverrides=",">
             <if test="deptId != null">dept_id = #{deptId},</if>
+            <if test="nodeId != null">node_id = #{nodeId},</if>
             <if test="field1 != null">field1 = #{field1},</if>
             <if test="field2 != null">field2 = #{field2},</if>
             <if test="field3 != null">field3 = #{field3},</if>
@@ -69,6 +96,10 @@
             <if test="field5 != null">field5 = #{field5},</if>
         </trim>
         where id = #{id}
+    </update>
+    <update id="updateArchivalNum">
+        update archival_code_num
+        set num = num+ #{param2} where archival = #{param1}
     </update>
 
     <delete id="deleteArchivalCodeSettingById" parameterType="Long">
@@ -81,5 +112,4 @@
             #{id}
         </foreach>
     </delete>
-
 </mapper>

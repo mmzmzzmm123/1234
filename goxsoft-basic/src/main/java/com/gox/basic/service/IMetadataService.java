@@ -65,7 +65,7 @@ public interface IMetadataService {
     /**
      * 生成档号
      */
-    String generateArchivalCode(String[] fields, Object[] values);
+    String generateArchivalCode(Metadata metadata) throws NoSuchFieldException, Exception;
 
     /**
      * 根据id导出 excel

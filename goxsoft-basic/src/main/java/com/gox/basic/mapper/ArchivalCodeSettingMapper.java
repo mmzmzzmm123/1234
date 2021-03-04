@@ -1,6 +1,8 @@
 package com.gox.basic.mapper;
 
+import com.gox.basic.domain.ArchivalCodeNum;
 import com.gox.basic.domain.ArchivalCodeSetting;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
@@ -10,6 +12,7 @@ import java.util.List;
  * @author gox
  * @date 2021-01-23
  */
+@Repository
 public interface ArchivalCodeSettingMapper {
     /**
      * 查询档号设置
@@ -18,7 +21,9 @@ public interface ArchivalCodeSettingMapper {
      * @return 档号设置
      */
     public ArchivalCodeSetting selectArchivalCodeSettingById(Long id);
-
+    public List<ArchivalCodeNum> selectAllNum();
+    public int updateArchivalNum(String archival,int num);
+    public int insertArchivalNum(ArchivalCodeNum archivalCodeNum);
     /**
      * 查询档号设置列表
      *
@@ -58,4 +63,6 @@ public interface ArchivalCodeSettingMapper {
      * @return 结果
      */
     public int deleteArchivalCodeSettingByIds(Long[] ids);
+
+    ArchivalCodeSetting selectArchivalCsByNodeIdAndDeptId(Long nodeId, Long deptId);
 }

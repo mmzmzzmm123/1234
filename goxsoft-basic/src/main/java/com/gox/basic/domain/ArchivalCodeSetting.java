@@ -2,8 +2,11 @@ package com.gox.basic.domain;
 
 import com.gox.common.annotation.Excel;
 import com.gox.common.core.domain.BaseEntity;
+import com.gox.common.plugin.AutoId;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 档号设置对象 archival_code_setting
@@ -12,17 +15,24 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * @date 2021-01-23
  */
 public class ArchivalCodeSetting extends BaseEntity {
-    private static final long serialVersionUID = 1L;
 
     /**
      * id
      */
+    @AutoId
     private Long id;
+    /**
+     * 节点id
+     */
+    @Excel(name = "节点id")
+    @NotNull
+    private Long nodeId;
 
     /**
      * 部门id
      */
     @Excel(name = "部门id")
+    @NotNull
     private Long deptId;
 
     /**
@@ -54,6 +64,14 @@ public class ArchivalCodeSetting extends BaseEntity {
      */
     @Excel(name = "字段5")
     private String field5;
+
+    public Long getNodeId() {
+        return nodeId;
+    }
+
+    public void setNodeId(Long nodeId) {
+        this.nodeId = nodeId;
+    }
 
     public void setId(Long id) {
         this.id = id;
@@ -110,7 +128,12 @@ public class ArchivalCodeSetting extends BaseEntity {
     public String getField5() {
         return field5;
     }
-
+    public String[] getFields(){
+        if ("——".equals(field5)){
+            return new String[]{field1,field2,field3,field4};
+        }
+        return new String[]{field1,field2,field3,field4,field5};
+    }
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
