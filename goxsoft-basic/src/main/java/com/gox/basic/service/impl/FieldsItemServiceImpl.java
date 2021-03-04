@@ -3,15 +3,17 @@ package com.gox.basic.service.impl;
 import com.gox.basic.domain.form.*;
 import com.gox.basic.domain.vo.TableFieldVo;
 import com.gox.basic.service.*;
+import com.gox.common.core.redis.RedisCache;
 import com.gox.common.utils.uuid.SnowflakesTools;
 import com.gox.basic.mapper.FieldsItemMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
 
 /**
- * 【请填写功能名称】Service业务层处理
+ * Service业务层处理
  *
  * @author gox
  * @date 2021-02-02
@@ -34,7 +36,8 @@ public class FieldsItemServiceImpl implements IFieldsItemService {
     private IPropsService propsService;
     @Autowired
     private IAutosizeService autosizeService;
-
+    @Autowired
+    private RedisCache redisCache;
     /**
      * 查询【请填写功能名称】
      *
@@ -48,13 +51,11 @@ public class FieldsItemServiceImpl implements IFieldsItemService {
 
     @Override
     public List<TableFieldVo> selectTableFieldByNodeIdAndDeptId(Long nodeId, Long deptId) {
-
         return fieldsItemMapper.selectTableFields(nodeId, deptId);
     }
 
     /**
      * 查询【请填写功能名称】列表
-     *
      * @param fieldsItem 【请填写功能名称】
      * @return 【请填写功能名称】
      */

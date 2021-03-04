@@ -2,6 +2,7 @@ package com.gox.basic.mapper;
 
 import com.gox.basic.domain.form.FieldsItem;
 import com.gox.basic.domain.vo.TableFieldVo;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
@@ -11,6 +12,7 @@ import java.util.List;
  * @author gox
  * @date 2021-02-02
  */
+@Repository
 public interface FieldsItemMapper {
     /**
      * 查询【请填写功能名称】

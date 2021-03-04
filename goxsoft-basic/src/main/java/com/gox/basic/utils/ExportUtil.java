@@ -16,7 +16,6 @@ import org.dom4j.io.XMLWriter;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
@@ -65,12 +64,18 @@ public class ExportUtil {
             for (TableFieldVo fieldVo : fieldVos) {
                 String n = map.get(fieldVo.getTableFieldName());
                 if (n!=null){
-                    m.addElement(fieldVo.getTableFieldName());
-                    m.setText(n);
+                    Element child = m.addElement(fieldVo.getTableFieldName());
+                    child.setText(n);
                 }
             }
         }
         OutputFormat format = OutputFormat.createPrettyPrint();
+        format.setIndentSize(2);  // 行缩进
+        format.setNewlines(true); // 一个结点为一行
+        format.setTrimText(true); // 去重空格
+        format.setPadText(true);
+        format.setEncoding("UTF-8");
+        format.setNewLineAfterDeclaration(false);
         XMLWriter writer = new XMLWriter(new FileOutputStream(PropertiesUtils.profile+File.separator+fileName), format);
         writer.write(doc);
         writer.close();
