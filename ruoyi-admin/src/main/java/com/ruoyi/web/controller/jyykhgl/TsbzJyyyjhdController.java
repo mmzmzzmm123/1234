@@ -40,6 +40,7 @@ public class TsbzJyyyjhdController extends BaseController {
     @PreAuthorize("@ss.hasPermi('jyykhgl:jyyyjhd:list')")
     @GetMapping("/list")
     public TableDataInfo list(TsbzJyyyjhd tsbzJyyyjhd) {
+        tsbzJyyyjhd.setCreateUserid(SecurityUtils.getLoginUser().getUser().getUserId());
         startPage();
         List<TsbzJyyyjhd> list = tsbzJyyyjhdService.selectTsbzJyyyjhdList(tsbzJyyyjhd);
         return getDataTable(list);
