@@ -77,17 +77,24 @@ public class ByCustomerController extends BaseController {
     @PostMapping
     public AjaxResult add(@RequestBody ByCustomer byCustomer) {
 
-        // 这里没写完  须将SimpleDateFormat转换为Date类型
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-        Date date = new Date();
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        calendar.add(Calendar.DATE, 15);
-        df.format(calendar.getTime());
 
-        byCustomer.setCreateUserid(SecurityUtils.getLoginUser().getUser().getUserId());
-        byCustomer.setCreateTime(date);
-        byCustomer.setGbtime(date);
+        try {
+            // 获取当天日期并增加15天为过保日期
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = new Date();
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            calendar.add(Calendar.DATE, 15);
+            String dateStr = df.format(calendar.getTime());
+            Date dataGuobao = df.parse(dateStr);
+
+            byCustomer.setCreateUserid(SecurityUtils.getLoginUser().getUser().getUserId());
+            byCustomer.setCreateTime(date);
+            byCustomer.setGbtime(dataGuobao);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
         // 判断电话号码是否存在
         ByCustomer byCustomer1 = new ByCustomer();
         byCustomer1.setLxdh(byCustomer.getLxdh());
