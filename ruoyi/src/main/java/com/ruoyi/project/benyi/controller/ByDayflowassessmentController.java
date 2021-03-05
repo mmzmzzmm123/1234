@@ -47,6 +47,7 @@ public class ByDayflowassessmentController extends BaseController {
     @PreAuthorize("@ss.hasPermi('benyi:dayflowassessment:list')")
     @GetMapping("/list")
     public TableDataInfo list(ByDayflowassessment byDayflowassessment) {
+        byDayflowassessment.setCreateUserid(SecurityUtils.getLoginUser().getUser().getUserId());
         startPage();
         List<ByDayflowassessment> list = byDayflowassessmentService.selectByDayflowassessmentList(byDayflowassessment);
         return getDataTable(list);
