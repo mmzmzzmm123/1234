@@ -3,17 +3,28 @@ package com.stdiet.common.utils.oss;
 import com.aliyun.oss.model.GetObjectRequest;
 import com.aliyun.oss.model.OSSObject;
 import com.stdiet.common.config.AliyunOSSConfig;
+import com.stdiet.common.utils.file.FileUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.aliyun.oss.OSS;
 import com.aliyun.oss.OSSClientBuilder;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
-public class AliyunOSSUtils { ;
+public class AliyunOSSUtils {
+
+    //下载链接默认有效期
+    private static final Long expire = 3600L * 1000 * 24;
 
     public static OSS getOssClient() {
         return new OSSClientBuilder().build(AliyunOSSConfig.EndPoint, AliyunOSSConfig.AccessKeyID, AliyunOSSConfig.AccessKeySecret);
@@ -63,10 +74,10 @@ public class AliyunOSSUtils { ;
             //去尾
             String tail = oranName.substring(cutPoint);
             //返回正确的带路径的图片名称
-            return prefix + head + uuid + tail;
+            return prefix + head + uuid + "_" + tail;
         }
         //不存在 直接返回
-        return prefix + uuid + oranName;
+        return prefix + uuid + "_" + oranName;
     }
 
     /**
@@ -86,8 +97,8 @@ public class AliyunOSSUtils { ;
             String prefix = originalFilename.substring(0,cutPoint);
             //获取后缀名
             String suffix = originalFilename.substring(cutPoint + 1);
-            //创建临时文件
-            file = File.createTempFile(prefix, suffix);
+            //创建临时文件,prefix最少三位
+            file = File.createTempFile((prefix != null && prefix.length() >= 3 ? prefix : prefix+"ab"), suffix);
             //multipartFile2file
             multipartFile.transferTo(file);
             //删除临时文件
@@ -194,7 +205,7 @@ public class AliyunOSSUtils { ;
      *
      * @param fileURL       文件的url
      */
-    public static InputStream downloadFile(String fileURL) throws IOException {
+    public static void downloadFile(String fileURL, String fileName, HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         //将url解析成objectName
         String objectName = getObjectName(fileURL);
@@ -207,10 +218,57 @@ public class AliyunOSSUtils { ;
         //获取流
         InputStream streamData = ossObject.getObjectContent();
 
+        response.setCharacterEncoding("utf-8");
+        response.setContentType("multipart/form-data");
+        response.setHeader("Content-Disposition",
+                "attachment;fileName=" + FileUtils.setFileDownloadHeader(request, fileName));
+        FileUtils.writeBytes(streamData , response.getOutputStream());
+
+        // 关闭OSSClient。
+        ossClient.shutdown();
+    }
+
+    /**
+     *
+     * @param fileUrl
+     * @return
+     */
+    public static String generatePresignedUrl(String fileUrl){
+        // 创建OSSClient实例。
+        OSS ossClient = getOssClient();
+
+        Date expiration = new Date(System.currentTimeMillis() + expire);
+
+        String url = ossClient.generatePresignedUrl(AliyunOSSConfig.Buckets, getObjectName(fileUrl), expiration).toString();
+
         // 关闭OSSClient。
         ossClient.shutdown();
 
-        return streamData;
+        return url;
+    }
+
+    /**
+     *
+     * @param fileUrl
+     * @return
+     */
+    public static List<String> generatePresignedUrl(List<String> fileUrlList){
+        List<String> downUrlList = new ArrayList<>();
+
+        // 创建OSSClient实例。
+        OSS ossClient = getOssClient();
+
+        Date expiration = new Date(System.currentTimeMillis() + expire);
+
+        for (String fileUrl : fileUrlList) {
+            String url = ossClient.generatePresignedUrl(AliyunOSSConfig.Buckets, getObjectName(fileUrl), expiration).toString();
+            downUrlList.add(url);
+        }
+
+        // 关闭OSSClient。
+        ossClient.shutdown();
+
+        return downUrlList;
     }
 
     /**

@@ -217,7 +217,8 @@
           keywordArray: [
             { required: true, message: "案例关键词不能为空", trigger: "blur" },
           ],
-        }
+        },
+        submitFlag: false
       };
     },
     components: {
@@ -303,17 +304,26 @@
       submitForm() {
         this.$refs["form"].validate(valid => {
           if (valid) {
-            this.form.keyword = this.form.keywordArray.join(",");
-            if (this.form.id != null) {
-              updateCustomerCase(this.form).then(response => {
-                if (response.code === 200) {
-                this.msgSuccess("修改成功");
-                this.open = false;
-                this.getList();
+              if(this.submitFlag){
+                  this.$message({
+                      message: "正在上传提交中，请勿重复提交",
+                      type: "warning",
+                  });
+                  return;
               }
-            });
+              this.submitFlag = true;
+              this.form.keyword = this.form.keywordArray.join(",");
+              if (this.form.id != null) {
+                updateCustomerCase(this.form).then(response => {
+                  if (response.code === 200) {
+                  this.msgSuccess("修改成功");
+                  this.open = false;
+                  this.getList();
+                }
+                 this.submitFlag = false;
+              });
             } else {
-              this.$refs["uploadCaseFile"].uploadFile();
+               this.$refs["uploadCaseFile"].uploadFile();
             }
           }
         });
@@ -323,6 +333,7 @@
         this.form.caseFileUrl = fileResult.fileUrl;
         if(this.form.caseFileUrl.length == 0){
           this.$message.error('请至少选择一个文件上传');
+          this.submitFlag = false;
           return;
         }
         addCustomerCase(this.form).then(response => {
@@ -332,6 +343,7 @@
             this.$refs["uploadCaseFile"].uploadReset();
             this.getList();
           }
+          this.submitFlag = false;
         });
       },
       selectCustomer(){

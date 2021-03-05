@@ -17,7 +17,7 @@
              :auto-upload="false">
     <i class="el-icon-upload"></i>
     <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-    <div class="el-upload__tip" slot="tip">每个案例最多上传5个文件，且每个文件不超过50M</div>
+    <div class="el-upload__tip" slot="tip">每个案例最多上传5个文件，且每个文件不超过10M</div>
   </el-upload>
 </template>
 <script>
@@ -43,7 +43,7 @@ export default {
         //同时上传文件上限
         limit: 5,
         //每个文件大小
-        fileSize: 1024 * 1024 * 50,
+        fileSize: 1024 * 1024 * 10,
         //是否支持同时选择多张
         multiple: true
       },

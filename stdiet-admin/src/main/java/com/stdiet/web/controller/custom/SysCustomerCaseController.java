@@ -1,13 +1,16 @@
 package com.stdiet.web.controller.custom;
 
 import java.io.InputStream;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.stdiet.common.config.AliyunOSSConfig;
 import com.stdiet.common.config.RuoYiConfig;
 import com.stdiet.common.constant.Constants;
 import com.stdiet.common.exception.file.FileNameLengthLimitExceededException;
+import com.stdiet.common.utils.DateUtils;
 import com.stdiet.common.utils.StringUtils;
 import com.stdiet.common.utils.file.FileUploadUtils;
 import com.stdiet.common.utils.file.FileUtils;
@@ -15,15 +18,9 @@ import com.stdiet.common.utils.file.MimeTypeUtils;
 import com.stdiet.common.utils.oss.AliyunOSSUtils;
 import com.stdiet.custom.domain.SysCustomerCaseFile;
 import com.stdiet.custom.dto.request.FileRequest;
-import com.sun.deploy.net.HttpResponse;
-import io.swagger.models.auth.In;
-import org.aspectj.weaver.loadtime.Aj;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.StreamingHttpOutputMessage;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.unit.DataUnit;
 import org.springframework.web.bind.annotation.*;
 import com.stdiet.common.annotation.Log;
 import com.stdiet.common.core.controller.BaseController;
@@ -37,6 +34,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.crypto.Data;
 
 /**
  * 客户案例管理Controller
@@ -127,6 +125,17 @@ public class SysCustomerCaseController extends BaseController
     public TableDataInfo getFileListByCaseId(@RequestParam("caseId")Long caseId)
     {
         List<SysCustomerCaseFile> list = sysCustomerCaseService.getFileListByCaseId(caseId);
+        List<String> fileUrl = new ArrayList<>();
+        for (SysCustomerCaseFile caseFile : list) {
+            fileUrl.add(caseFile.getFileUrl());
+        }
+        List<String> downUrlList = AliyunOSSUtils.generatePresignedUrl(fileUrl);
+        if(downUrlList != null && downUrlList.size() > 0){
+            int index = 0;
+            for (String downUrl : downUrlList) {
+                list.get(index).setDownUrl(downUrl);
+            }
+        }
         return getDataTable(list);
     }
 
@@ -147,7 +156,7 @@ public class SysCustomerCaseController extends BaseController
             }
             FileUploadUtils.assertAllowed(file, MimeTypeUtils.DEFAULT_ALLOWED_EXTENSION);
 
-            String fileUrl = AliyunOSSUtils.uploadFileInputSteam(AliyunOSSConfig.casePrefix, file.getOriginalFilename(), file);
+            String fileUrl = AliyunOSSUtils.uploadFileInputSteam(AliyunOSSConfig.casePrefix, DateUtils.getDate()+"/"+file.getOriginalFilename(), file);
 
             AjaxResult ajax = null;
             if(StringUtils.isNotEmpty(fileUrl)){
@@ -160,38 +169,6 @@ public class SysCustomerCaseController extends BaseController
             return ajax;
         } catch (Exception e) {
             return AjaxResult.error("文件上传失败");
-        }
-    }
-
-    /**
-     * 下载案例文件
-     * @param
-     * @return
-     */
-    @PostMapping("/downCaseFile")
-    @PreAuthorize("@ss.hasPermi('custom:customerCase:list')")
-    public void downCaseFile(@RequestBody FileRequest fileRequest, HttpServletRequest request, HttpServletResponse response) {
-        /*try{
-            InputStream fileStream = AliyunOSSUtils.downloadFile(fileRequest.getFileUrl());
-            byte[] body  = new byte[fileStream.available()];
-            fileStream.read(body);
-            HttpHeaders headers = new HttpHeaders();
-            headers.add("Content-Disposition", "attchement;filename=" + fileRequest.getFileName());
-            HttpStatus statusCode = HttpStatus.OK;
-            ResponseEntity<byte[]> entity = new ResponseEntity<byte[]>(body, headers, statusCode);
-            return entity;
-        }catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;*/
-        try {
-            response.setCharacterEncoding("utf-8");
-            response.setContentType("multipart/form-data");
-            response.setHeader("Content-Disposition",
-                    "attachment;fileName=" + FileUtils.setFileDownloadHeader(request, fileRequest.getFileName()));
-            FileUtils.writeBytes(AliyunOSSUtils.downloadFile(fileRequest.getFileUrl()), response.getOutputStream());
-        }catch (Exception e){
-            e.printStackTrace();
         }
     }
 }

@@ -12,7 +12,7 @@
             size="mini"
             type="text"
             icon="el-icon-download"
-            @click=""
+            @click="downloadFile(scope.row)"
           >下载</el-button>
         </template>
       </el-table-column>
@@ -66,7 +66,7 @@ export default {
       this.fileList = [];
     },
     downloadFile(file){
-      downCaseFile(file);
+      downCaseFile(file.downUrl);
     }
   },
 };

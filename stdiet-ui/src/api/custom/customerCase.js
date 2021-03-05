@@ -71,12 +71,8 @@ export function uploadCseFile(data) {
 }
 
 // 下载案例文件
-export function downCaseFile(data) {
-  return request({
-    url: '/custom/customerCase/downCaseFile',
-    method: 'post',
-    data: data
-  })
+export function downCaseFile(downUrl) {
+  window.location.href = downUrl;
 }
 
 
