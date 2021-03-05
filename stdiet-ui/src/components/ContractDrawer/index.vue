@@ -50,21 +50,27 @@
             width="200"
           />
 
-          <el-table-column
-            label="合同地址"
-            align="center"
-            prop="path"
-            width="80"
-          >
+          <el-table-column label="合同地址" align="center" prop="path">
             <template slot-scope="scope">
               <el-button
                 type="text"
+                style="margin-right: 8px"
                 icon="el-icon-copy-document"
                 @click="handleCopy(scope.row.path)"
                 class="copyBtn"
                 :data-clipboard-text="copyValue"
                 >复制
               </el-button>
+              <el-popover placement="top" trigger="click">
+                <VueQr :text="copyValue" :logoSrc="logo" />
+                <el-button
+                  slot="reference"
+                  icon="el-icon-picture-outline"
+                  type="text"
+                  @click="handleCopy(scope.row.path)"
+                  >二维码</el-button
+                >
+              </el-popover>
             </template>
           </el-table-column>
           <el-table-column label="操作" align="center" width="180">
@@ -108,15 +114,18 @@ import { delContract, listContract } from "@/api/custom/contract";
 import ContractDetail from "@/components/ContractDetail";
 import Clipboard from "clipboard";
 import ContractAdd from "@/components/ContractAdd";
-
+import VueQr from "vue-qr";
+const logo = require("@/assets/logo/logo_b.png");
 export default {
   name: "CustomerContractDrawer",
   components: {
     "contract-detail": ContractDetail,
     "add-contract": ContractAdd,
+    VueQr,
   },
   data() {
     return {
+      logo,
       visible: false,
       title: "",
       data: undefined,

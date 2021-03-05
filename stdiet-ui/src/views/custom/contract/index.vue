@@ -187,7 +187,7 @@
         prop="updateTime"
         width="180"
       />
-      <el-table-column label="合同地址" align="center" prop="path" width="80">
+      <el-table-column label="合同地址" align="center" prop="path">
         <template slot-scope="scope">
           <el-button
             type="text"
@@ -197,6 +197,16 @@
             :data-clipboard-text="copyValue"
             >复制
           </el-button>
+          <el-popover placement="top" trigger="click">
+            <VueQr :text="copyValue" :logoSrc="logo" />
+            <el-button
+              slot="reference"
+              icon="el-icon-picture-outline"
+              type="text"
+              @click="handleCopy(scope.row.path)"
+              >二维码</el-button
+            >
+          </el-popover>
         </template>
       </el-table-column>
       <el-table-column label="备注" align="center" prop="remark" width="120" />
@@ -320,9 +330,14 @@ import { addContract, delContract, listContract } from "@/api/custom/contract";
 import Clipboard from "clipboard";
 
 import { mapGetters } from "vuex";
+import VueQr from "vue-qr";
+const logo = require("@/assets/logo/logo_b.png");
 
 export default {
   name: "Contract",
+  components: {
+    VueQr,
+  },
   data() {
     const checkServePromise = (rule, value, callback) => {
       if (this.form.projectId == 0 && !value) {
@@ -331,6 +346,7 @@ export default {
       callback();
     };
     return {
+      logo,
       // 遮罩层
       loading: true,
       // 选中数组
