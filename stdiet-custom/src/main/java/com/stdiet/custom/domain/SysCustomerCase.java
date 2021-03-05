@@ -23,13 +23,21 @@ public class SysCustomerCase extends BaseEntity
     private String name;
 
     /** 案例关键词 */
-    @Excel(name = "案例关键词")
+    @Excel(name = "关键词")
     private String keyword;
 
     /** 案例所属客户ID */
-    @Excel(name = "案例所属客户ID")
     private Long customerId;
+
+    @Excel(name = "所属客户")
+    private String customerName;
 
     /** 删除标识 0未删除 1已删除，默认0 */
     private Long delFlag;
+
+    //案例文件名称数组
+    private String[] caseFileName;
+
+    //案例文件URL数组
+    private String[] caseFileUrl;
 }

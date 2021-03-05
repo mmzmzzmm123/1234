@@ -2,6 +2,7 @@ package com.stdiet.custom.service;
 
 import java.util.List;
 import com.stdiet.custom.domain.SysCustomerCase;
+import com.stdiet.custom.domain.SysCustomerCaseFile;
 
 /**
  * 客户案例管理Service接口
@@ -57,5 +58,12 @@ public interface ISysCustomerCaseService {
      * @return 结果
      */
     public int deleteSysCustomerCaseById(Long id);
+
+    /**
+     * 根据案例ID获取对应文件列表
+     * @param caseId
+     * @return
+     */
+    List<SysCustomerCaseFile> getFileListByCaseId(Long caseId);
 
 }

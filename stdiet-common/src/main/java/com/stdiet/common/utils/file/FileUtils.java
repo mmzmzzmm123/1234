@@ -1,11 +1,6 @@
 package com.stdiet.common.utils.file;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.URLEncoder;
 import javax.servlet.http.HttpServletRequest;
 
@@ -65,6 +60,55 @@ public class FileUtils extends org.apache.commons.io.FileUtils
                 try
                 {
                     fis.close();
+                }
+                catch (IOException e1)
+                {
+                    e1.printStackTrace();
+                }
+            }
+        }
+    }
+
+    /**
+     * 输出指定文件的byte数组
+     *
+     * @param inputStream 输入流
+     * @param os 输出流
+     * @return
+     */
+    public static void writeBytes(InputStream inputStream, OutputStream os) throws IOException
+    {
+        try
+        {
+            byte[] b = new byte[1024];
+            int length;
+            while ((length = inputStream.read(b)) > 0)
+            {
+                os.write(b, 0, length);
+            }
+        }
+        catch (IOException e)
+        {
+            throw e;
+        }
+        finally
+        {
+            if (os != null)
+            {
+                try
+                {
+                    os.close();
+                }
+                catch (IOException e1)
+                {
+                    e1.printStackTrace();
+                }
+            }
+            if (inputStream != null)
+            {
+                try
+                {
+                    inputStream.close();
                 }
                 catch (IOException e1)
                 {

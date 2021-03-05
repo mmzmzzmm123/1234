@@ -13,20 +13,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.UUID;
 
-public class AliyunOSSUtils {
-
-    // 创建OSSClient实例
-    private static OSS ossClient = null;
+public class AliyunOSSUtils { ;
 
     public static OSS getOssClient() {
-        if (ossClient == null) {
-            synchronized (OSS.class) {
-                if (ossClient == null) {
-                    ossClient = new OSSClientBuilder().build(AliyunOSSConfig.EndPoint, AliyunOSSConfig.AccessKeyID, AliyunOSSConfig.AccessKeySecret);
-                }
-            }
-        }
-        return ossClient;
+        return new OSSClientBuilder().build(AliyunOSSConfig.EndPoint, AliyunOSSConfig.AccessKeyID, AliyunOSSConfig.AccessKeySecret);
     }
 
     /**
@@ -204,7 +194,7 @@ public class AliyunOSSUtils {
      *
      * @param fileURL       文件的url
      */
-    public InputStream downloadFile(String fileURL) throws IOException {
+    public static InputStream downloadFile(String fileURL) throws IOException {
 
         //将url解析成objectName
         String objectName = getObjectName(fileURL);

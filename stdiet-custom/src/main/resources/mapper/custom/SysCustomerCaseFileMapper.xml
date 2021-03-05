@@ -21,14 +21,17 @@
     </sql>
 
     <select id="selectSysCustomerCaseFileList" parameterType="SysCustomerCaseFile" resultMap="SysCustomerCaseFileResult">
-        <include refid="selectSysCustomerCaseFileVo"/>
-        <where>
-        </where>
+        <include refid="selectSysCustomerCaseFileVo"/> where del_flag = 0
+    </select>
+
+    <!-- 根据案例ID查询文件列表 -->
+    <select id="selectSysCustomerCaseFileListByCaseId" parameterType="Long" resultMap="SysCustomerCaseFileResult">
+        <include refid="selectSysCustomerCaseFileVo"/> where del_flag = 0 and case_id = #{caseId}
     </select>
 
     <select id="selectSysCustomerCaseFileById" parameterType="Long" resultMap="SysCustomerCaseFileResult">
         <include refid="selectSysCustomerCaseFileVo"/>
-        where id = #{id}
+        where id = #{id} and del_flag = 0
     </select>
 
     <insert id="insertSysCustomerCaseFile" parameterType="SysCustomerCaseFile" useGeneratedKeys="true" keyProperty="id">
@@ -70,15 +73,39 @@
         where id = #{id}
     </update>
 
-    <delete id="deleteSysCustomerCaseFileById" parameterType="Long">
-        delete from sys_customer_case_file where id = #{id}
-    </delete>
+    <update id="deleteSysCustomerCaseFileById" parameterType="Long">
+        update sys_customer_case_file set del_flag = 1 where id = #{id}
+    </update>
 
-    <delete id="deleteSysCustomerCaseFileByIds" parameterType="String">
-        delete from sys_customer_case_file where id in
+    <update id="deleteSysCustomerCaseFileByIds" parameterType="String">
+        update sys_customer_case_file set del_flag = 1 where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
-    </delete>
+    </update>
+
+    <!-- 根据案例ID删除该案例对应的所有文件记录 -->
+    <update id="deleteSysCustomerCaseFileByCaseId" parameterType="Long">
+        update sys_customer_case_file set del_flag = 1 where case_id = #{caseId}
+    </update>
+
+    <!-- 根据案例ID批量删除该案例对应的所有文件记录 -->
+    <update id="deleteSysCustomerCaseFileByCaseIds" parameterType="String">
+        update sys_customer_case_file set del_flag = 1 where case_id in
+        <foreach item="caseId" collection="array" open="(" separator="," close=")">
+            #{caseId}
+        </foreach>
+    </update>
+
+    <!-- 批量插入案例文件记录 -->
+    <insert id="insertBatch">
+        INSERT INTO sys_customer_case_file
+        (case_id, file_url, file_name)
+        VALUES
+        <foreach collection="list" item="caseFile" separator=",">
+            (#{caseFile.caseId}, #{caseFile.fileUrl}, #{caseFile.fileName})
+        </foreach>
+    </insert>
+
 
 </mapper>
