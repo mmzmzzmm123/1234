@@ -115,6 +115,7 @@ export default {
       this.active = 1;
       this.dishesTypeOptions = (this.type || data.type)
         .split(",")
+        .sort((a, b) => a - b)
         .reduce((arr, cur, idx) => {
           if (idx === 0) {
             this.selDishes.type = cur;
