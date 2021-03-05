@@ -11,8 +11,22 @@
     >
       <el-table-column prop="type" :width="100" align="center">
         <template slot="header">
-          <div class="num_day" @click="handleOnResetCurrentDay">
-            <div>{{ `第${numDay}天` }}</div>
+          <el-popover placement="top" trigger="hover" v-if="!!copyData">
+            <div>
+              <el-button size="mini" type="primary" @click="handleOnPaste"
+                >粘贴</el-button
+              >
+            </div>
+            <div
+              slot="reference"
+              class="num_day"
+              @click="handleOnResetCurrentDay"
+            >
+              {{ `第${numDay}天` }}
+            </div>
+          </el-popover>
+          <div v-else>
+            {{ `第${numDay}天` }}
           </div>
         </template>
         <template slot-scope="scope">
@@ -44,23 +58,42 @@
         <template slot-scope="scope">
           <el-popover placement="right" trigger="hover" :title="scope.row.name">
             <div>
-              <el-button
-                type="primary"
-                size="mini"
-                icon="el-icon-refresh"
-                class="fun_button"
-                @click="handleOnReplace(scope.row)"
-              >
-                替换
-              </el-button>
-              <el-button
-                type="danger"
-                size="mini"
-                icon="el-icon-delete"
-                class="fun_button"
-                @click="handleOnDelete(scope.row)"
-                >删除</el-button
-              >
+              <div style="margin-bottom: 8px">
+                <el-button
+                  type="primary"
+                  size="mini"
+                  icon="el-icon-refresh"
+                  class="fun_button"
+                  @click="handleOnReplace(scope.row)"
+                >
+                  替换
+                </el-button>
+                <el-button
+                  type="danger"
+                  size="mini"
+                  icon="el-icon-delete"
+                  class="fun_button"
+                  @click="handleOnDelete(scope.row)"
+                  >删除</el-button
+                >
+              </div>
+              <div>
+                <el-button
+                  type="primary"
+                  size="mini"
+                  icon="el-icon-document-copy"
+                  class="fun_button"
+                  @click="handleOnCopy(scope.row)"
+                  >复制</el-button
+                >
+                <el-button
+                  size="mini"
+                  icon="el-icon-document-copy"
+                  class="fun_button"
+                  @click="handleOnSetting(scope.row)"
+                  >修改餐类</el-button
+                >
+              </div>
             </div>
             <span class="num_day" slot="reference">{{ scope.row.name }}</span>
           </el-popover>
@@ -172,7 +205,13 @@
       </el-table-column>
       <el-table-column label="做法" prop="methods" />
     </el-table>
+    <!-- 添加菜品抽屉 -->
     <AddDishesDrawer ref="drawerRef" @onConfirm="handleOnDishesConfirm" />
+    <!-- 菜品复用菜单 -->
+    <DishesSettingDialog
+      ref="settingDialogRef"
+      @onConfirm="handleOnSettingConfirm"
+    />
   </div>
 </template>
 <script>
@@ -187,6 +226,8 @@ const {
 import EditableText from "./EditableText";
 import EditableUnit from "./EditableUnit";
 import AddDishesDrawer from "./AddDishesDrawer";
+import DishesSettingDialog from "./DishesSettingDialog";
+import VueScrollTo from "vue-scrollto";
 
 export default {
   name: "RecipesCom",
@@ -213,6 +254,7 @@ export default {
     EditableText,
     EditableUnit,
     AddDishesDrawer,
+    DishesSettingDialog,
   },
   mounted() {
     // console.log(this.data);
@@ -313,12 +355,15 @@ export default {
       return mData;
     },
     ...mapGetters(["typeDict"]),
-    ...mapState(["currentDay"]),
+    ...mapState(["currentDay", "copyData"]),
   },
   methods: {
     handleParentClick(e) {
       // 校验某天
       this.setCurrentDay({ currentDay: this.num });
+      VueScrollTo.scrollTo(`#recipes${this.num}`, 500, {
+        container: "#recipes_content",
+      });
     },
     spanMethod({ row, column, rowIndex, columnIndex }) {
       if (columnIndex === 0) {
@@ -350,6 +395,27 @@ export default {
     handleOnDelete(data) {
       // console.log(data);
       this.deleteDishes({ num: this.num, id: data.id });
+    },
+    handleOnCopy(data) {
+      // console.log(data);
+      this.setCopyData({ num: this.num, id: data.id })
+        .then((msg) => {
+          this.$message.success(msg);
+        })
+        .catch((err) => {
+          this.$message.error(err);
+        });
+    },
+    handleOnPaste() {
+      // console.log(this.copyData);
+      if (this.copyData) {
+        this.addDishes({
+          num: this.num,
+          data: this.copyData,
+        }).catch((err) => {
+          this.$message.error(err);
+        });
+      }
     },
     handleOnWeightChange(data, weight) {
       // console.log({ data, weight });
@@ -390,6 +456,16 @@ export default {
         });
       }
     },
+    handleOnSetting(data) {
+      this.$refs.settingDialogRef.showDialog({ numDay: this.numDay, data });
+    },
+    handleOnSettingConfirm({ type, id }) {
+      this.updateDishes({
+        num: this.num,
+        id,
+        type,
+      });
+    },
     handleOnMenuTypeClick(data) {
       this.$refs.drawerRef.showDrawer({ type: data.type, numDay: this.numDay });
     },
@@ -398,6 +474,7 @@ export default {
       "addDishes",
       "deleteDishes",
       "replaceDishes",
+      "setCopyData",
     ]),
     ...mapMutations(["setCurrentDay", "resetCurrentDay"]),
   },

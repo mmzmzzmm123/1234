@@ -92,13 +92,14 @@ export default {
           data.name
         }」`;
         this.id = data.id;
+        this.type = data.type;
       } else if (type) {
         this.title = `添加第${numDay}天${this.typeDict[type]}菜品`;
         this.type = type;
       }
       this.visible = true;
       this.$nextTick(() => {
-        this.$refs.dishesRef.getList({ type });
+        this.$refs.dishesRef.getList({ type: this.type });
       });
     },
     handleOnClosed(done) {

@@ -28,7 +28,8 @@ const oriState = {
   startNum: 0,
   endNum: 0,
   reviewStatus: 0,
-  templateInfo: undefined
+  templateInfo: undefined,
+  copyData: undefined
 };
 
 const mutations = {
@@ -37,7 +38,7 @@ const mutations = {
       obj => obj.id === payload.id
     );
     if (tarDishes) {
-      if (tarDishes.dishesId !== payload.dishesId) {
+      if (payload.dishesId || payload.type !== undefined) {
         // 替换菜品
         Object.keys(payload).forEach(key => {
           if (key === "num") {
@@ -282,6 +283,7 @@ const actions = {
     // console.log(params);
   },
   async addDishes({ commit, state }, payload) {
+    console.log(payload);
     const tarDishesList = state.recipesData[payload.num].dishes.filter(
       obj => obj.type === payload.data.type
     );
@@ -367,25 +369,33 @@ const actions = {
       );
       if (tarDishes) {
         const mTarDishes = JSON.parse(JSON.stringify(tarDishes));
-        const tarIgd = mTarDishes.igdList.find(obj => obj.id === payload.igdId);
-        if (tarIgd) {
-          payload.weight && (tarIgd.weight = payload.weight);
-          payload.cusWeight && (tarIgd.cusWeight = payload.cusWeight);
-          payload.cusUnit && (tarIgd.cusUnit = payload.cusUnit);
+        let params = {
+          id: mTarDishes.id
+        };
+        if (payload.type !== undefined) {
+          // 修改餐类
+          params.type = payload.type;
+        } else {
+          // 修改食材
+          const tarIgd = mTarDishes.igdList.find(
+            obj => obj.id === payload.igdId
+          );
+          if (tarIgd) {
+            payload.weight && (tarIgd.weight = payload.weight);
+            payload.cusWeight && (tarIgd.cusWeight = payload.cusWeight);
+            payload.cusUnit && (tarIgd.cusUnit = payload.cusUnit);
 
-          const params = {
-            id: mTarDishes.id,
-            detail: mTarDishes.igdList.map(igd => ({
+            params.detail = mTarDishes.igdList.map(igd => ({
               id: igd.id,
               weight: igd.weight,
               cus_unit: igd.cusUnit,
               cus_weight: igd.cusWeight
-            }))
-          };
-          const result = await updateDishesDetailApi(params);
-          if (result.code === 200) {
-            commit("updateRecipesDishesDetail", payload);
+            }));
           }
+        }
+        const result = await updateDishesDetailApi(params);
+        if (result.code === 200) {
+          commit("updateRecipesDishesDetail", payload);
         }
       }
     } else {
@@ -408,7 +418,21 @@ const actions = {
       commit("deleteSomeDayDishes", payload);
     }
   },
-  async deleteMenu({ commit }, payload) {}
+  async deleteMenu({ commit }, payload) {},
+  async setCopyData({ commit, state }, payload) {
+    return new Promise((res, rej) => {
+      const tarDishes = state.recipesData[payload.num].dishes.find(
+        obj => obj.id === payload.id
+      );
+      if (tarDishes) {
+        commit("updateStateData", { copyData: tarDishes });
+
+        res("复制成功");
+      } else {
+        rej("复制失败");
+      }
+    });
+  }
 };
 
 const getters = {
