@@ -172,3 +172,13 @@ xss:
   excludes: /system/notice/*
   # 匹配链接
   urlPatterns: /system/*,/monitor/*,/tool/*
+
+#阿里云OSS配置
+aliyun:
+  oss:
+    AccessKeyID: LTAI4GEGbBEiqv1Z512K4qWn
+    AccessKeySecret: fT7eIhejMwMy5tFooCF0puLkurH64j
+    Buckets: stdiet
+    EndPoint: https://oss-cn-shenzhen.aliyuncs.com
+    #案例文件夹路径
+    casePrefix: case/

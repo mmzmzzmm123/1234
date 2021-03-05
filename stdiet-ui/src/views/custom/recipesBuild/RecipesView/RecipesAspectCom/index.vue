@@ -4,6 +4,22 @@
     :style="`height: ${collapse ? 30 : 200}px`"
   >
     <div class="header">
+      <span class="font_size_style">
+        字体大小：
+        <el-select
+          v-model="mFontSize"
+          size="mini"
+          style="width: 80px"
+          @change="handleOnSizeChange"
+        >
+          <el-option
+            v-for="size in fontSizeOpts"
+            :key="size.value"
+            :label="size.label"
+            :value="size.value"
+          />
+        </el-select>
+      </span>
       <el-button size="mini" v-if="!recipesId" @click="handleOnBack"
         >返回</el-button
       >
@@ -91,16 +107,32 @@ export default {
     PieChart,
   },
   data() {
-    return {};
+    return {
+      mFontSize: 12,
+      fontSizeOpts: [
+        { value: 12, label: "12" },
+        { value: 14, label: "14" },
+        { value: 16, label: "16" },
+        { value: 18, label: "18" },
+      ],
+    };
   },
   updated() {
     // console.log(this.data);
   },
   props: ["collapse", "data"],
   computed: {
-    ...mapState(["recipesId", "reviewStatus", "healthyData"]),
+    ...mapState(["recipesId", "reviewStatus", "healthyData", "fontSize"]),
+  },
+  watch: {
+    fontSize(val) {
+      this.mFontSize = val;
+    },
   },
   methods: {
+    handleOnSizeChange(fontSize) {
+      this.updateFontSize({ fontSize });
+    },
     handleCollapseClick() {
       this.$emit("update:collapse", !this.collapse);
     },
@@ -121,7 +153,7 @@ export default {
       this.updateStateData({ recipesData: [] });
     },
     ...mapActions(["saveRecipes", "updateReviewStatus"]),
-    ...mapMutations(["updateStateData"]),
+    ...mapMutations(["updateStateData", "updateFontSize"]),
   },
 };
 </script>
@@ -137,6 +169,13 @@ export default {
     .arrow_icon {
       transition: all 0.3s;
       transform-origin: center center;
+    }
+
+    .font_size_style {
+      display: inline-flex;
+      align-items: center;
+      font-size: 12px;
+      margin-right: 12px;
     }
   }
 

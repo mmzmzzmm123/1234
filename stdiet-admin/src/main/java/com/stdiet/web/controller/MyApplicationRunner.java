@@ -21,7 +21,7 @@ public class MyApplicationRunner implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
         System.out.println("项目启动调用方法");
-        String path = AliyunOSSUtils.uploadFileInputSteam(AliyunOSSConfig.casePrefix,"ceshi.png",new File("D:\\ceshi.png"));
-        System.out.println(path);
+//        String path = AliyunOSSUtils.uploadFileInputSteam(AliyunOSSConfig.casePrefix,"ceshi.png",new File("D:\\ceshi.png"));
+//        System.out.println(path);
     }
 }
