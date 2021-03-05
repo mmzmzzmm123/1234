@@ -187,7 +187,7 @@
         prop="updateTime"
         width="180"
       />
-      <el-table-column label="合同地址" align="center" prop="path" >
+      <el-table-column label="合同地址" align="center" prop="path">
         <template slot-scope="scope">
           <el-button
             type="text"

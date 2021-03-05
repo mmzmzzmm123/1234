@@ -9,7 +9,7 @@
       size="mini"
       header-row-class-name="recipes_header"
       :cell-class-name="cellClassName"
-      :style="`outline: ${currentDay === num ? '1px solid #d96969' : 'none'}`"
+      :style="`outline: ${currentDay === num ? '1px solid #d53950' : 'none'}`"
     >
       <el-table-column prop="type" :width="100" align="center">
         <template slot="header">
@@ -365,7 +365,7 @@ export default {
       if (!columnIndex) {
         return "recipes_first_col";
       } else {
-        return `recipes_cell_${this.fontSize}`;
+        return `recipes_cell recipes_cell_${this.fontSize}`;
       }
     },
     handleParentClick(e) {
@@ -509,14 +509,21 @@ export default {
 
 .recipes_header {
   & > th {
-    background: #d96969 !important;
+    background: #d53950 !important;
     color: white !important;
+    font-weight: bold;
   }
 }
 
 .recipes_first_col {
-  background: #d96969 !important;
+  background: #d53950 !important;
   color: white !important;
+  font-weight: bold;
+}
+
+.recipes_cell {
+  font-weight: bold;
+  color: #595959;
 }
 
 .recipes_cell_12 {
