@@ -3,7 +3,7 @@ import request from '@/utils/request'
 // 查询订单服务暂停列表
 export function listPause(query) {
   return request({
-    url: '/orderPause/pause/list',
+    url: '/recipes/pause/list',
     method: 'get',
     params: query
   })
@@ -12,7 +12,7 @@ export function listPause(query) {
 // 查询订单服务暂停详细
 export function getPause(id) {
   return request({
-    url: '/orderPause/pause/' + id,
+    url: '/recipes/pause/' + id,
     method: 'get'
   })
 }
@@ -20,7 +20,7 @@ export function getPause(id) {
 // 新增订单服务暂停
 export function addPause(data) {
   return request({
-    url: '/orderPause/pause',
+    url: '/recipes/pause',
     method: 'post',
     data: data
   })
@@ -29,7 +29,7 @@ export function addPause(data) {
 // 修改订单服务暂停
 export function updatePause(data) {
   return request({
-    url: '/orderPause/pause',
+    url: '/recipes/pause',
     method: 'put',
     data: data
   })
@@ -38,7 +38,7 @@ export function updatePause(data) {
 // 删除订单服务暂停
 export function delPause(id) {
   return request({
-    url: '/orderPause/pause/' + id,
+    url: '/recipes/pause/' + id,
     method: 'delete'
   })
 }
@@ -46,7 +46,7 @@ export function delPause(id) {
 // 导出订单服务暂停
 export function exportPause(query) {
   return request({
-    url: '/orderPause/pause/export',
+    url: '/recipes/pause/export',
     method: 'get',
     params: query
   })

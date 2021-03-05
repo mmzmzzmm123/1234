@@ -30,6 +30,10 @@ export default {
       type: Array,
       default: [],
     },
+    max: {
+      type: Number,
+      default: 0,
+    },
   },
   data() {
     return {
@@ -64,6 +68,7 @@ export default {
       this.updateChart(this.data.length > 0 ? this.data : {});
     },
     updateChart(source) {
+      // console.log(this.max);
       this.chart.clear();
       this.chart.setOption({
         title: {
@@ -87,7 +92,7 @@ export default {
                   `${seriesName.substring(0, 1)}Weight`
                 ].toFixed(1);
                 arr.push(
-                  `${cur.marker} ${nutriName}：${heatVal}千卡（${weightVal}克）`
+                  `${cur.marker} ${nutriName}：${weightVal}克（${heatVal}千卡）`
                 );
                 return arr;
               },
@@ -110,9 +115,9 @@ export default {
           source,
         },
         grid: {
-          top: 40,
+          top: 55,
           left: 20,
-          right: 20,
+          right: 50,
           bottom: 10,
           containLabel: true,
         },
@@ -121,6 +126,10 @@ export default {
         },
         yAxis: {
           type: "value",
+          name: "热量（千卡）",
+          nameTextStyle: {
+            color: "#262626",
+          },
         },
         series: ["pHeat", "fHeat", "cHeat"].map((dim, idx) => ({
           name: dim,
@@ -130,6 +139,13 @@ export default {
           encode: {
             y: dim,
             x: 0,
+          },
+          markLine: {
+            data: [{ name: "BMR", yAxis: this.max ? this.max - 400 : 0 }],
+            symbol: "none",
+            lineStyle: {
+              color: "#d96969",
+            },
           },
           itemStyle: {
             borderWidth: 2,

@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.stdiet.custom.domain.SysOrder;
 import com.stdiet.custom.domain.SysRecipesPlan;
+import com.stdiet.custom.domain.SysRecipesPlanListInfo;
 import org.springframework.core.annotation.Order;
 
 /**
@@ -90,5 +91,33 @@ public interface ISysRecipesPlanService
      */
     List<SysRecipesPlan> selectPlanListByOrderId(SysRecipesPlan sysRecipesPlan);
 
-    public void myGenerateRecipesPlan(SysOrder sysOrder);
+
+    /**
+     * 通过outId查询cusId
+     * @param outId
+     * @return
+     */
+    Long getCusIdByOutId(String outId);
+
+    /**
+     * 根据客户ID查询最后一天食谱计划
+     * @param customerId
+     * @return
+     */
+    SysRecipesPlan getLastDayRecipesPlan(Long customerId);
+
+    /**
+     * 通过outId查询食谱计划简要
+     * @param outId
+     * @return
+     */
+    List<SysRecipesPlanListInfo> selectRecipesPlanListInfo(String outId);
+
+    /**
+     * 通过客户id查询食谱计划
+     * @param cusId
+     * @return
+     */
+    List<SysRecipesPlan> selectPlanListByCusId(Long cusId);
+
 }

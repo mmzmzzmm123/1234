@@ -1,5 +1,5 @@
 <template>
-  <div class="recipes_com_wrapper">
+  <div class="recipes_com_wrapper" @click="handleParentClick">
     <el-table
       :data="mData"
       border
@@ -7,19 +7,43 @@
       :cell-style="{ padding: '2px 0' }"
       :header-cell-style="{ padding: '4px 0', height: 'unset' }"
       size="mini"
-      :style="`outline: ${currentDay === num ? '1px solid #d96969' : 'none'}`"
+      header-row-class-name="recipes_header"
+      :cell-class-name="cellClassName"
+      :style="`outline: ${currentDay === num ? '1px solid #d53950' : 'none'}`"
     >
       <el-table-column prop="type" :width="100" align="center">
         <template slot="header">
-          <div class="num_day" @click="handleOnOneDayAnalysis">
-            <div>{{ name }}</div>
-            <div>{{ `第${numDay}天` }}</div>
+          <el-popover placement="top" trigger="hover" v-if="!!copyData">
+            <div>
+              <el-button size="mini" type="primary" @click="handleOnPaste"
+                >粘贴</el-button
+              >
+            </div>
+            <div
+              slot="reference"
+              class="num_day"
+              @click="handleOnResetCurrentDay"
+            >
+              {{ `第${numDay}天` }}
+            </div>
+          </el-popover>
+          <div v-else>
+            {{ `第${numDay}天` }}
           </div>
         </template>
         <template slot-scope="scope">
-          <span style="font-weight: bold; font-size: 14px">{{
-            typeFormatter(scope.row)
-          }}</span>
+          <el-tooltip
+            class="item"
+            effect="dark"
+            :content="`点击添加${typeFormatter(scope.row)}`"
+            placement="top"
+          >
+            <span
+              style="font-weight: bold; font-size: 14px; cursor: pointer"
+              @click="handleOnMenuTypeClick(scope.row)"
+              >{{ typeFormatter(scope.row) }}</span
+            >
+          </el-tooltip>
         </template>
       </el-table-column>
       <el-table-column label="菜品" prop="name" align="center" :width="180">
@@ -34,16 +58,44 @@
           </el-tooltip>
         </template>
         <template slot-scope="scope">
-          <el-popover placement="right" trigger="hover">
+          <el-popover placement="right" trigger="hover" :title="scope.row.name">
             <div>
-              <el-button
-                type="danger"
-                size="mini"
-                icon="el-icon-delete"
-                class="fun_button"
-                @click="handleOnDelete(scope.row)"
-                >删除</el-button
-              >
+              <div style="margin-bottom: 8px">
+                <el-button
+                  type="primary"
+                  size="mini"
+                  icon="el-icon-refresh"
+                  class="fun_button"
+                  @click="handleOnReplace(scope.row)"
+                >
+                  替换
+                </el-button>
+                <el-button
+                  type="danger"
+                  size="mini"
+                  icon="el-icon-delete"
+                  class="fun_button"
+                  @click="handleOnDelete(scope.row)"
+                  >删除</el-button
+                >
+              </div>
+              <div>
+                <el-button
+                  type="primary"
+                  size="mini"
+                  icon="el-icon-document-copy"
+                  class="fun_button"
+                  @click="handleOnCopy(scope.row)"
+                  >复制</el-button
+                >
+                <el-button
+                  size="mini"
+                  icon="el-icon-document-copy"
+                  class="fun_button"
+                  @click="handleOnSetting(scope.row)"
+                  >修改餐类</el-button
+                >
+              </div>
             </div>
             <span class="num_day" slot="reference">{{ scope.row.name }}</span>
           </el-popover>
@@ -79,7 +131,7 @@
         align="center"
       >
         <template slot="header">
-          <div class="num_day" @click="handleOnOneDayAnalysis">
+          <div class="num_day">
             <div>蛋白质</div>
             <div>/100g</div>
           </div>
@@ -92,7 +144,7 @@
         align="center"
       >
         <template slot="header">
-          <div class="num_day" @click="handleOnOneDayAnalysis">
+          <div class="num_day">
             <div>脂肪</div>
             <div>/100g</div>
           </div>
@@ -105,7 +157,7 @@
         align="center"
       >
         <template slot="header">
-          <div class="num_day" @click="handleOnOneDayAnalysis">
+          <div class="num_day">
             <div>碳水</div>
             <div>/100g</div>
           </div>
@@ -119,7 +171,7 @@
         :formatter="nutriFormatter"
       >
         <template slot="header">
-          <div class="num_day" @click="handleOnOneDayAnalysis">
+          <div class="num_day">
             <div>蛋白质</div>
             <div>含量</div>
           </div>
@@ -133,7 +185,7 @@
         :formatter="nutriFormatter"
       >
         <template slot="header">
-          <div class="num_day" @click="handleOnOneDayAnalysis">
+          <div class="num_day">
             <div>脂肪</div>
             <div>含量</div>
           </div>
@@ -147,7 +199,7 @@
         :formatter="nutriFormatter"
       >
         <template slot="header">
-          <div class="num_day" @click="handleOnOneDayAnalysis">
+          <div class="num_day">
             <div>碳水</div>
             <div>含量</div>
           </div>
@@ -155,7 +207,13 @@
       </el-table-column>
       <el-table-column label="做法" prop="methods" />
     </el-table>
+    <!-- 添加菜品抽屉 -->
     <AddDishesDrawer ref="drawerRef" @onConfirm="handleOnDishesConfirm" />
+    <!-- 菜品复用菜单 -->
+    <DishesSettingDialog
+      ref="settingDialogRef"
+      @onConfirm="handleOnSettingConfirm"
+    />
   </div>
 </template>
 <script>
@@ -170,6 +228,8 @@ const {
 import EditableText from "./EditableText";
 import EditableUnit from "./EditableUnit";
 import AddDishesDrawer from "./AddDishesDrawer";
+import DishesSettingDialog from "./DishesSettingDialog";
+import VueScrollTo from "vue-scrollto";
 
 export default {
   name: "RecipesCom",
@@ -196,6 +256,7 @@ export default {
     EditableText,
     EditableUnit,
     AddDishesDrawer,
+    DishesSettingDialog,
   },
   mounted() {
     // console.log(this.data);
@@ -296,9 +357,24 @@ export default {
       return mData;
     },
     ...mapGetters(["typeDict"]),
-    ...mapState(["currentDay"]),
+    ...mapState(["currentDay", "copyData", "fontSize"]),
   },
   methods: {
+    cellClassName({ row, column, rowIndex, columnIndex }) {
+      // console.log({ row, column, rowIndex, columnIndex });
+      if (!columnIndex) {
+        return "recipes_first_col";
+      } else {
+        return `recipes_cell recipes_cell_${this.fontSize}`;
+      }
+    },
+    handleParentClick(e) {
+      // 校验某天
+      this.setCurrentDay({ currentDay: this.num });
+      VueScrollTo.scrollTo(`#recipes${this.num}`, 500, {
+        container: "#recipes_content",
+      });
+    },
     spanMethod({ row, column, rowIndex, columnIndex }) {
       if (columnIndex === 0) {
         return row.typeSpan;
@@ -314,22 +390,48 @@ export default {
     nutriFormatter(row, col) {
       return ((row.weight / 100) * row[col.property]).toFixed(1);
     },
-    handleOnOneDayAnalysis(e) {
-      // 校验某天
-      this.setCurrentDay({ currentDay: this.num });
+    handleOnResetCurrentDay(e) {
+      e.stopPropagation();
+      // 取消高亮
+      this.resetCurrentDay({ currentDay: this.num });
     },
     handleOnAdd() {
       // console.log(this.num);
-      this.$refs.drawerRef.showDrawer();
+      this.$refs.drawerRef.showDrawer({});
+    },
+    handleOnReplace(data) {
+      this.$refs.drawerRef.showDrawer({ data, numDay: this.numDay });
     },
     handleOnDelete(data) {
       // console.log(data);
       this.deleteDishes({ num: this.num, id: data.id });
     },
+    handleOnCopy(data) {
+      // console.log(data);
+      this.setCopyData({ num: this.num, id: data.id })
+        .then((msg) => {
+          this.$message.success(msg);
+        })
+        .catch((err) => {
+          this.$message.error(err);
+        });
+    },
+    handleOnPaste() {
+      // console.log(this.copyData);
+      if (this.copyData) {
+        this.addDishes({
+          num: this.num,
+          data: this.copyData,
+        }).catch((err) => {
+          this.$message.error(err);
+        });
+      }
+    },
     handleOnWeightChange(data, weight) {
-      console.log({ data, weight });
+      // console.log({ data, weight });
       this.updateDishes({
         num: this.num,
+        id: data.id,
         dishesId: data.dishesId,
         igdId: data.igdId,
         weight,
@@ -339,21 +441,52 @@ export default {
       // console.log({ data, cusWeight, cusUnit });
       this.updateDishes({
         num: this.num,
+        id: data.id,
         dishesId: data.dishesId,
         igdId: data.igdId,
         cusWeight,
         cusUnit,
       });
     },
-    handleOnDishesConfirm(data) {
+    handleOnDishesConfirm({ type, data }) {
       // console.log(data);
-      this.addDishes({
+      if (type === "add") {
+        this.addDishes({
+          num: this.num,
+          data,
+        }).catch((err) => {
+          this.$message.error(err);
+        });
+      } else if (type === "replace") {
+        this.replaceDishes({
+          num: this.num,
+          data,
+        }).catch((err) => {
+          this.$message.error(err);
+        });
+      }
+    },
+    handleOnSetting(data) {
+      this.$refs.settingDialogRef.showDialog({ numDay: this.numDay, data });
+    },
+    handleOnSettingConfirm({ type, id }) {
+      this.updateDishes({
         num: this.num,
-        data,
+        id,
+        type,
       });
     },
-    ...mapActions(["updateDishes", "addDishes", "deleteDishes"]),
-    ...mapMutations(["setCurrentDay"]),
+    handleOnMenuTypeClick(data) {
+      this.$refs.drawerRef.showDrawer({ type: data.type, numDay: this.numDay });
+    },
+    ...mapActions([
+      "updateDishes",
+      "addDishes",
+      "deleteDishes",
+      "replaceDishes",
+      "setCopyData",
+    ]),
+    ...mapMutations(["setCurrentDay", "resetCurrentDay"]),
   },
 };
 </script>
@@ -372,5 +505,37 @@ export default {
 .fun_button {
   font-size: 12px;
   padding: 4px 8px;
+}
+
+.recipes_header {
+  & > th {
+    background: #d53950 !important;
+    color: white !important;
+    font-weight: bold;
+  }
+}
+
+.recipes_first_col {
+  background: #d53950 !important;
+  color: white !important;
+  font-weight: bold;
+}
+
+.recipes_cell {
+  font-weight: bold;
+  color: #595959;
+}
+
+.recipes_cell_12 {
+  font-size: 12px;
+}
+.recipes_cell_14 {
+  font-size: 14px;
+}
+.recipes_cell_16 {
+  font-size: 16px;
+}
+.recipes_cell_18 {
+  font-size: 18px;
 }
 </style>

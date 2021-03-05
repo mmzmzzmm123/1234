@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.stdiet.custom.mapper.SysCustomerCaseMapper">
+
+    <resultMap type="SysCustomerCase" id="SysCustomerCaseResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="keyword"    column="keyword"    />
+        <result property="remark"    column="remark"    />
+        <result property="customerId"    column="customer_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="delFlag"    column="del_flag"    />
+
+        <result property="customerName" column="customer_name"></result>
+    </resultMap>
+
+    <sql id="selectSysCustomerCaseVo">
+        select id, name, keyword, remark, customer_id, create_time from sys_customer_case
+    </sql>
+
+    <select id="selectSysCustomerCaseList" parameterType="SysCustomerCase" resultMap="SysCustomerCaseResult">
+        select scc.id, scc.name, scc.keyword, scc.remark, scc.customer_id, scc.create_time,sc.name as customer_name from sys_customer_case scc
+        left join sys_customer sc on sc.id = scc.customer_id and sc.del_flag = 0
+        where scc.del_flag = 0
+        <if test="name != null  and name != ''">
+            and (scc.name like concat('%', #{name}, '%') OR scc.keyword like concat('%', #{name}, '%') OR scc.remark like concat('%', #{name}, '%'))
+        </if>
+        <if test="customerName != null and customerName != ''">
+            and sc.name like concat('%', #{customerName}, '%')
+        </if>
+        order by id desc
+    </select>
+
+    <select id="selectSysCustomerCaseById" parameterType="Long" resultMap="SysCustomerCaseResult">
+        select scc.id, scc.name, scc.keyword, scc.remark, scc.customer_id, scc.create_time,sc.name as customer_name from sys_customer_case scc
+        left join sys_customer sc on sc.id = scc.customer_id and sc.del_flag = 0
+        where scc.id = #{id} and scc.del_flag = 0
+    </select>
+
+    <insert id="insertSysCustomerCase" parameterType="SysCustomerCase" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_customer_case
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,</if>
+            <if test="keyword != null">keyword,</if>
+            <if test="remark != null">remark,</if>
+            <if test="customerId != null">customer_id,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="delFlag != null">del_flag,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="keyword != null">#{keyword},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="customerId != null">#{customerId},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+        </trim>
+    </insert>
+
+    <update id="updateSysCustomerCase" parameterType="SysCustomerCase">
+        update sys_customer_case
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="keyword != null">keyword = #{keyword},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="customerId != null">customer_id = #{customerId},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="deleteSysCustomerCaseById" parameterType="Long">
+        update sys_customer_case set del_flag = 1 where id = #{id}
+    </update>
+
+    <update id="deleteSysCustomerCaseByIds" parameterType="String">
+        update sys_customer_case set del_flag = 1 where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+</mapper>

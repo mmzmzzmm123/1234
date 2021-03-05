@@ -1,7 +1,15 @@
 <template>
-  <div>
+  <div class="health_view_wrapper">
     <div>
       <h2>{{ this.data.name }}</h2>
+      <el-button
+        v-if="dev"
+        size="mini"
+        type="primary"
+        class="remark_btn"
+        @click="handleOnRemark"
+        >修改备注</el-button
+      >
       <div class="msg-info" v-for="(info, idx) in basicInfo" :key="idx">
         <text-info
           v-for="con in info"
@@ -28,35 +36,70 @@
         </div>
       </el-collapse-item>
     </el-collapse>
+
+    <!-- 备注弹窗 -->
+    <el-dialog title="修改备注" :visible.sync="open" width="480px">
+      <el-input
+        type="textarea"
+        v-model="data.remark"
+        rows="6"
+        placeholder="请输入备注信息"
+        maxlength="300"
+        show-word-limit
+      />
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submit">确 定</el-button>
+        <el-button @click="onClosed">取 消</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 <script>
 import TextInfo from "@/components/TextInfo";
+import { updateHealthy } from "@/api/custom/healthy";
 
 export default {
   name: "HealthyView",
-  props: ["data"],
+  props: {
+    data: {
+      type: Object,
+      default: {},
+    },
+    dev: {
+      type: Boolean,
+      default: false,
+    },
+  },
   components: {
     "text-info": TextInfo,
   },
   data() {
-    return {
-      basicInfo: [
-        [
-          { title: "调理项目", value: "conditioningProject" },
-          { title: "电话", value: "phone" },
-        ],
-        [
-          { title: "性别", value: "sex" },
-          { title: "年龄", value: "age" },
-        ],
-        [
-          { title: "身高", value: "tall" },
-          { title: "体重", value: "weight" },
-        ],
-        [{ title: "地域", value: "position" }],
-        [{ title: "备注", value: "remark" }],
+    const basicInfo = [
+      [
+        { title: "调理项目", value: "conditioningProject" },
+        { title: "电话", value: "phone" },
       ],
+      [
+        { title: "性别", value: "sex" },
+        { title: "年龄", value: "age" },
+      ],
+      [
+        { title: "身高", value: "tall" },
+        { title: "体重", value: "weight" },
+      ],
+      [{ title: "地域", value: "position" }],
+    ];
+    if (this.dev) {
+      basicInfo.splice(3, 0, [{ title: "基础代谢BMR", value: "basicBMR" }]);
+      basicInfo.splice(4, 0, [
+        { title: "不运动总热量", value: "notSportHeat" },
+      ]);
+      basicInfo.splice(6, 0, [{ title: "备注", value: "remark" }]);
+    }
+
+    return {
+      open: false,
+      basicInfo,
       healthyInvestigate: [
         {
           title: "减脂经历评估",
@@ -180,15 +223,40 @@ export default {
       ],
     };
   },
+  methods: {
+    handleOnRemark() {
+      this.open = true;
+    },
+    onClosed() {
+      this.open = false;
+    },
+    submit() {
+      const { id, remark } = this.data;
+      updateHealthy({ id, remark }).then((res) => {
+        if (res.code === 200) {
+          this.$message.success("修改成功");
+          this.open = false;
+        }
+      });
+    },
+  },
 };
 </script>
-<style rel="stylesheet/scss" lang="scss">
-.msg-info {
-  display: flex;
-  margin-bottom: 8px;
+<style lang="scss" scoped>
+.health_view_wrapper {
+  .remark_btn {
+    position: absolute;
+    top: 36px;
+    right: 16px;
+  }
 
-  .text-info-extra {
-    margin-bottom: 2px;
+  .msg-info {
+    display: flex;
+    margin-bottom: 8px;
+
+    .text-info-extra {
+      margin-bottom: 2px;
+    }
   }
 }
 </style>

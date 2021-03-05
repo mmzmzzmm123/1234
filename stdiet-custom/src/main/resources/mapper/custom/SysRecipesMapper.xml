@@ -82,6 +82,9 @@
     <update id="updateDishesDetail" parameterType="SysRecipesDailyDishes">
         update sys_customer_menu_dishes
         <trim prefix="SET" suffixOverrides=",">
+            <if test="menuId != null">menu_id = #{menuId},</if>
+            <if test="dishesId != null">dishes_id = #{dishesId},</if>
+            <if test="type != null">type = #{type},</if>
             <if test="detail != null">detail = #{detail, jdbcType=OTHER, typeHandler=com.stdiet.custom.typehandler.ArrayJsonHandler},</if>
         </trim>
         where id = #{id}

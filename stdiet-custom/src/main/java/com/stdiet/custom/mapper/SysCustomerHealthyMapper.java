@@ -2,6 +2,7 @@ package com.stdiet.custom.mapper;
 
 import java.util.List;
 
+import com.stdiet.common.core.domain.entity.SysDictData;
 import com.stdiet.custom.domain.SysCustomer;
 import com.stdiet.custom.domain.SysCustomerHealthy;
 import org.apache.ibatis.annotations.Param;
@@ -79,4 +80,12 @@ public interface SysCustomerHealthyMapper
      * @return
      */
     int deleteCustomerHealthyByCustomerId(@Param("customerId")Long customerId);
+
+
+    /**
+     * 根据类型、键值集合查询字典类型
+     * @param sysDictData
+     * @return
+     */
+    public  List<SysDictData> selectDictDataByTypeAndValue(SysDictData sysDictData);
 }

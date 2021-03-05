@@ -10,6 +10,7 @@ stdiet:
   demoEnabled: true
   # 文件路径 示例（ Windows配置D:/ruoyi/uploadPath，Linux配置 /home/ruoyi/uploadPath）
   profile: /Users/wonder/Documents/Workspaces/java/ShengtangManage/running/uploadPath
+#  profile: D:/ruoyi/uploadPath
   # 获取ip地址开关
   addressEnabled: false
   # 验证码类型 math 数组计算 char 字符验证
@@ -172,3 +173,14 @@ xss:
   excludes: /system/notice/*
   # 匹配链接
   urlPatterns: /system/*,/monitor/*,/tool/*
+
+#阿里云OSS配置
+aliyun:
+  oss:
+    AccessKeyID: LTAI4GEGbBEiqv1Z512K4qWn
+    AccessKeySecret: fT7eIhejMwMy5tFooCF0puLkurH64j
+    Buckets: stdiet
+    EndPoint: https://oss-cn-shenzhen.aliyuncs.com
+    #案例文件夹路径
+    casePrefix: case/
+

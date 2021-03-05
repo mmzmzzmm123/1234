@@ -5,48 +5,56 @@
 <mapper namespace="com.stdiet.custom.mapper.SysRecipesPlanMapper">
 
     <resultMap type="SysRecipesPlan" id="SysRecipesPlanResult">
-        <result property="id"    column="id"    />
-        <result property="orderId"    column="order_id"    />
-        <result property="startDate"    column="start_date"    />
-        <result property="endDate"    column="end_date"    />
-        <result property="startNumDay"    column="start_num_day"    />
-        <result property="endNumDay"    column="end_num_day"    />
-        <result property="recipesId"    column="recipes_id"    />
-        <result property="sendFlag"    column="send_flag"    />
-        <result property="sendTime"    column="send_time"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="createBy"    column="create_by"    />
-        <result property="updateTime"    column="update_time"    />
-        <result property="updateBy"    column="update_by"    />
-        <result property="delFlag"    column="del_flag"    />
-        <result property="cusId"    column="cus_id"    />
+        <result property="id" column="id"/>
+        <result property="orderId" column="order_id"/>
+        <result property="startDate" column="start_date"/>
+        <result property="endDate" column="end_date"/>
+        <result property="startNumDay" column="start_num_day"/>
+        <result property="endNumDay" column="end_num_day"/>
+        <result property="recipesId" column="recipes_id"/>
+        <result property="sendFlag" column="send_flag"/>
+        <result property="sendTime" column="send_time"/>
+        <result property="pauseDate"    column="pause_date"/>
+        <result property="createTime" column="create_time"/>
+        <result property="createBy" column="create_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="cusId" column="cus_id"/>
+        <result property="outId" column="out_id"/>
         <!-- 非持久化字段 -->
-<!--        <result property="customerId" column="cus_id"></result>&lt;!&ndash; 客户ID &ndash;&gt;-->
-        <result property="customer"    column="customer"    /><!-- 客户姓名 -->
-        <result property="phone" column="phone"     />
-        <result property="orderStartDate"    column="order_start_date"    />
-        <result property="orderEndDate"    column="order_end_date"    />
-        <result property="nutritionistId"    column="nutritionist_id"    />
-        <result property="nutritionist"    column="nutritionist"    />
-        <result property="nutritionistAssisId"    column="nutritionist_assis_id"    />
-        <result property="nutritionistAssis"    column="nutritionist_assis"    />
+        <!--        <result property="customerId" column="cus_id"></result>&lt;!&ndash; 客户ID &ndash;&gt;-->
+        <result property="customer" column="customer"/><!-- 客户姓名 -->
+        <result property="phone" column="phone"/>
+        <result property="reviewStatus" column="review_status"/>
+        <result property="orderStartDate" column="order_start_date"/>
+        <result property="orderEndDate" column="order_end_date"/>
+        <result property="nutritionistId" column="nutritionist_id"/>
+        <result property="nutritionist" column="nutritionist"/>
+        <result property="nutritionistAssisId" column="nutritionist_assis_id"/>
+        <result property="nutritionistAssis" column="nutritionist_assis"/>
     </resultMap>
 
+
     <sql id="selectSysRecipesPlanVo">
-        select id, order_id, cus_id, start_date, end_date, start_num_day, end_num_day, recipes_id, send_flag, send_time, create_time, create_by, update_time, update_by, del_flag from sys_recipes_plan
+        select id, order_id, cus_id, start_date, end_date, start_num_day, end_num_day, recipes_id, send_flag, send_time, pause_date, create_time, create_by, update_time, update_by, del_flag, review_status from sys_recipes_plan
     </sql>
 
     <select id="selectSysRecipesPlanList" parameterType="SysRecipesPlan" resultMap="SysRecipesPlanResult">
-        <include refid="selectSysRecipesPlanVo"/> where del_flag = 0
-        <if test="orderId != null "> and order_id = #{orderId}</if>
-        <if test="cusId != null "> and cus_id = #{cusId}</if>
-        <if test="startDate != null "> and start_date = #{startDate}</if>
-        <if test="endDate != null "> and end_date = #{endDate}</if>
-        <if test="startNumDay != null "> and start_num_day = #{startNumDay}</if>
-        <if test="endNumDay != null "> and end_num_day = #{endNumDay}</if>
-        <if test="recipesId != null "> and recipes_id = #{recipesId}</if>
-        <if test="sendFlag != null "> and send_flag = #{sendFlag}</if>
-        <if test="sendTime != null "> and send_time = #{sendTime}</if>
+        <include refid="selectSysRecipesPlanVo"/>
+        where del_flag = 0
+        <if test="orderId != null ">and order_id = #{orderId}</if>
+        <if test="cusId != null ">and cus_id = #{cusId}</if>
+        <if test="startDate != null ">and start_date = #{startDate}</if>
+        <if test="endDate != null ">and end_date = #{endDate}</if>
+        <if test="startNumDay != null ">and start_num_day = #{startNumDay}</if>
+        <if test="endNumDay != null ">and end_num_day = #{endNumDay}</if>
+        <if test="recipesId != null ">and recipes_id = #{recipesId}</if>
+        <if test="sendFlag != null ">and send_flag = #{sendFlag}</if>
+        <if test="sendTime != null ">and send_time = #{sendTime}</if>
+        <if test="reviewStatus != null ">and review_status = #{reviewStatus}</if>
+        <!-- 请勿轻易修改排序方式，会影响食谱生成等逻辑 -->
+        order by id ASC
     </select>
 
     <select id="selectSysRecipesPlanById" parameterType="Long" resultMap="SysRecipesPlanResult">
@@ -54,11 +62,18 @@
         where id = #{id} and del_flag = 0
     </select>
 
+    <!-- 根据用户ID查询是否存在该用户最后一天食谱 -->
+    <select id="getLastDayRecipesPlan"  resultMap="SysRecipesPlanResult" parameterType="Long">
+        <include refid="selectSysRecipesPlanVo"/>
+        where cus_id = #{customerId} and del_flag = 0 order by end_num_day DESC limit 1
+    </select>
+
     <insert id="insertSysRecipesPlan" parameterType="SysRecipesPlan" useGeneratedKeys="true" keyProperty="id">
         insert into sys_recipes_plan
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="orderId != null">order_id,</if>
             <if test="cusId != null">cus_id,</if>
+            <if test="outId != null">out_id,</if>
             <if test="startDate != null">start_date,</if>
             <if test="endDate != null">end_date,</if>
             <if test="startNumDay != null">start_num_day,</if>
@@ -66,15 +81,19 @@
             <if test="recipesId != null">recipes_id,</if>
             <if test="sendFlag != null">send_flag,</if>
             <if test="sendTime != null">send_time,</if>
+            <if test="pauseDate != null">pause_date,</if>
             <if test="createTime != null">create_time,</if>
             <if test="createBy != null">create_by,</if>
             <if test="updateTime != null">update_time,</if>
             <if test="updateBy != null">update_by,</if>
             <if test="delFlag != null">del_flag,</if>
+            <if test="reviewStatus != null">review_status,</if>
+            <if test="type != null">type,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="orderId != null">#{orderId},</if>
             <if test="cusId != null">#{cusId},</if>
+            <if test="outId != null">#{outId},</if>
             <if test="startDate != null">#{startDate},</if>
             <if test="endDate != null">#{endDate},</if>
             <if test="startNumDay != null">#{startNumDay},</if>
@@ -82,11 +101,14 @@
             <if test="recipesId != null">#{recipesId},</if>
             <if test="sendFlag != null">#{sendFlag},</if>
             <if test="sendTime != null">#{sendTime},</if>
+            <if test="pauseDate != null">#{pauseDate},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="createBy != null">#{createBy},</if>
             <if test="updateTime != null">#{updateTime},</if>
             <if test="updateBy != null">#{updateBy},</if>
             <if test="delFlag != null">#{delFlag},</if>
+            <if test="reviewStatus != null">#{reviewStatus},</if>
+            <if test="type != null">#{type},</if>
         </trim>
     </insert>
 
@@ -95,6 +117,7 @@
         <trim prefix="SET" suffixOverrides=",">
             <if test="orderId != null">order_id = #{orderId},</if>
             <if test="cusId != null">cus_id = #{cusId},</if>
+            <if test="outId != null">out_id = #{outId},</if>
             <if test="startDate != null">start_date = #{startDate},</if>
             <if test="endDate != null">end_date = #{endDate},</if>
             <if test="startNumDay != null">start_num_day = #{startNumDay},</if>
@@ -102,62 +125,70 @@
             <if test="recipesId != null">recipes_id = #{recipesId},</if>
             <if test="sendFlag != null">send_flag = #{sendFlag},</if>
             <if test="sendTime != null">send_time = #{sendTime},</if>
+            <if test="pauseDate != null">pause_date = #{pauseDate},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
             <if test="updateBy != null">update_by = #{updateBy},</if>
             <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="reviewStatus != null">review_status = #{reviewStatus},</if>
         </trim>
         where id = #{id} and del_flag = 0
     </update>
 
-    <delete id="deleteSysRecipesPlanById" parameterType="Long">
-        delete from sys_recipes_plan where id = #{id}
-    </delete>
+    <update id="deleteSysRecipesPlanById" parameterType="Long">
+        update sys_recipes_plan set del_flag = 1 where id = #{id}
+    </update>
 
-    <delete id="deleteSysRecipesPlanByIds" parameterType="String">
-        delete from sys_recipes_plan where id in
+    <update id="deleteSysRecipesPlanByIds" parameterType="String">
+        update sys_recipes_plan set del_flag = 1 where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
-    </delete>
+    </update>
 
     <!-- 批量插入食谱计划 -->
     <insert id="insertBatch">
         INSERT INTO sys_recipes_plan
-        (order_id, cus_id, start_date, end_date, start_num_day, end_num_day, send_flag, send_time, recipes_id)
+        (order_id, cus_id, out_id, start_date, end_date, start_num_day, end_num_day, send_flag, send_time, pause_date, recipes_id)
         VALUES
-        <foreach collection ="list" item="plan" separator =",">
-            (#{plan.orderId}, #{plan.cusId}, #{plan.startDate}, #{plan.endDate}, #{plan.startNumDay}, #{plan.endNumDay}, #{plan.sendFlag}, #{plan.sendTime}, #{plan.recipesId})
-        </foreach >
+        <foreach collection="list" item="plan" separator=",">
+            (#{plan.orderId}, #{plan.cusId}, #{plan.outId}, #{plan.startDate}, #{plan.endDate}, #{plan.startNumDay}, #{plan.endNumDay},
+            #{plan.sendFlag}, #{plan.sendTime}, #{plan.pauseDate}, #{plan.recipesId})
+        </foreach>
     </insert>
 
     <!-- 根据订单ID删除对应食谱计划 -->
     <update id="delRecipesPlanByOrderId" parameterType="String">
-      delete from sys_recipes_plan where order_id in
-      <foreach item="orderId" collection="array" open="(" separator="," close=")">
+        update sys_recipes_plan set del_flag = 1 where order_id in
+        <foreach item="orderId" collection="array" open="(" separator="," close=")">
             #{orderId}
-      </foreach>
+        </foreach>
     </update>
 
     <!-- 食谱计划、订单表联查 -->
     <select id="selectPlanListByCondition" parameterType="SysRecipesPlan" resultMap="SysRecipesPlanResult">
-      SELECT srp.id,srp.order_id,srp.recipes_id,srp.start_num_day,srp.end_num_day,srp.cus_id,sc.phone,
-        su_nutritionist.nick_name nutritionist,su_nutritionist_assis.nick_name AS nutritionist_assis,
-        srp.start_date,srp.end_date,srp.send_flag,srp.send_time, sc.name as customer
-      FROM sys_recipes_plan srp
-      LEFT JOIN sys_order sr ON sr.order_id = srp.order_id
-      LEFT JOIN sys_customer sc ON sc.id = srp.cus_id
-      LEFT JOIN sys_user su_nutritionist ON su_nutritionist.user_id = sr.nutritionist_id AND su_nutritionist.del_flag = 0
-      LEFT JOIN sys_user su_nutritionist_assis ON su_nutritionist_assis.user_id = sr.nutri_assis_id AND su_nutritionist_assis.del_flag = 0
-      WHERE srp.del_flag = 0 and sr.del_flag = 0
-      <if test="orderId != null">AND srp.order_id = #{orderId}</if>
+        SELECT srp.id,srp.order_id,srp.recipes_id,srp.start_num_day,srp.end_num_day,srp.cus_id,sc.phone,
+        su_nutritionist.nick_name AS nutritionist,su_nutritionist_assis.nick_name AS nutritionist_assis,
+        srp.start_date,srp.end_date,srp.send_flag,srp.send_time, sc.name as customer, srp.review_status
+        FROM sys_recipes_plan srp
+        LEFT JOIN sys_order sr ON sr.order_id = srp.order_id
+        LEFT JOIN sys_customer sc ON sc.id = srp.cus_id
+        LEFT JOIN sys_user su_nutritionist ON su_nutritionist.user_id = sr.nutritionist_id AND su_nutritionist.del_flag = 0
+        LEFT JOIN sys_user su_nutritionist_assis ON su_nutritionist_assis.user_id = sr.nutri_assis_id AND su_nutritionist_assis.del_flag = 0
+        WHERE srp.del_flag = 0 AND sr.del_flag = 0 AND srp.type = 0
+        <if test="orderId != null">AND srp.order_id = #{orderId}</if>
         <if test="sendFlag != null">AND srp.send_flag = #{sendFlag}</if>
-      <if test="customer != null and customer != ''">AND (sc.name like concat('%',#{customer},'%') OR sc.phone like concat('%',#{customer},'%'))</if>
-      <if test="nutritionistId != null">AND su_nutritionist.user_id = #{nutritionistId}</if>
-      <if test="nutritionistAssisId != null">AND su_nutritionist_assis.user_id = #{nutritionistAssisId}</if>
-      <if test="startDate != null and endDate != null ">AND srp.start_date BETWEEN date_format(#{startDate},'%y%m%d') AND date_format(#{endDate},'%y%m%d') </if>
-      ORDER BY srp.order_id DESC,srp.id ASC
+        <if test="customer != null and customer != ''">AND (sc.name like concat('%',#{customer},'%') OR sc.phone like
+            concat('%',#{customer},'%'))
+        </if>
+        <if test="nutritionistId != null">AND su_nutritionist.user_id = #{nutritionistId}</if>
+        <if test="nutritionistAssisId != null">AND su_nutritionist_assis.user_id = #{nutritionistAssisId}</if>
+        <if test="reviewStatus != null">AND srp.review_status = #{reviewStatus}</if>
+        <if test="startDate != null and endDate != null ">AND srp.start_date BETWEEN date_format(#{startDate},'%y%m%d')
+            AND date_format(#{endDate},'%y%m%d')
+        </if>
+        ORDER BY srp.order_id DESC,srp.id ASC
     </select>
     <!-- 食谱计划、订单表联查 -->
     <!--<select id="selectPlanListByCondition" parameterType="SysRecipesPlan" resultMap="SysRecipesPlanResult">
@@ -179,11 +210,52 @@
 
     <!-- 根据订单ID查询食谱计划 -->
     <select id="selectPlanListByOrderId" parameterType="SysRecipesPlan" resultMap="SysRecipesPlanResult">
-      SELECT srp.id,srp.order_id,sr.customer,sr.phone, srp.start_date,srp.end_date,srp.send_flag,srp.send_time
-      FROM sys_recipes_plan srp
-      LEFT JOIN sys_order sr ON sr.order_id = srp.order_id
-      WHERE srp.del_flag = 0 AND sr.del_flag = 0 AND srp.order_id = #{orderId}
-      <if test="sendFlag != null">AND srp.send_flag = #{sendFlag}</if>
-      ORDER BY srp.id ASC
+        SELECT srp.id,srp.order_id,sr.customer,sr.phone, srp.start_date,srp.end_date,srp.send_flag,srp.send_time
+        FROM sys_recipes_plan srp
+        LEFT JOIN sys_order sr ON sr.order_id = srp.order_id
+        WHERE srp.del_flag = 0 AND sr.del_flag = 0 AND srp.order_id = #{orderId}
+        <if test="sendFlag != null">AND srp.send_flag = #{sendFlag}</if>
+        ORDER BY srp.id ASC
     </select>
+
+    <!--  根据cusId查询食谱计划-->
+    <select id="selectPlanListByCusId" parameterType="Long" resultMap="SysRecipesPlanResult">
+        select id, out_id, start_date, end_date, start_num_day, end_num_day, recipes_id, review_status from sys_recipes_plan
+        where cus_id=#{cusId} and del_flag = 0 order by id asc
+    </select>
+
+    <select id="getCusIdByOutId" parameterType="String" resultType="Long">
+        select cus_id from sys_recipes_plan where out_id=#{outId} limit 1
+    </select>
+
+    <resultMap id="SysRecipesPlanListInfoResult" type="SysRecipesPlanListInfo">
+        <result property="id" column="id"/>
+        <result property="startDate" column="start_date"/>
+        <result property="endDate" column="end_date"/>
+        <result property="startNumDay" column="start_num_day"/>
+        <result property="endNumDay" column="end_num_day"/>
+        <association property="menus" column="recipes_id" select="selectMenuIds"/>
+    </resultMap>
+
+    <!--  通过outId查询食谱计划简要-->
+    <select id="selectRecipesPlanListInfo" resultMap="SysRecipesPlanListInfoResult">
+        select id, start_date, end_date, start_num_day, end_num_day, recipes_id from sys_recipes_plan where out_id=#{outId} and del_flag = 0
+    </select>
+
+    <resultMap type="SysRecipesDaily" id="SysRecipesResult">
+        <result property="id" column="id"/>
+        <result property="numDay" column="num_day"/>
+    </resultMap>
+
+    <select id="selectMenuIds" parameterType="Long" resultMap="SysRecipesResult">
+        select id, num_day from sys_customer_daily_menu where recipes_id=#{recipes_id} and del_flag = 0 order by num_day asc
+    </select>
+
+    <!-- 批量修改食谱计划 -->
+    <update id="updateMuchRecipesPlanDate" parameterType="SysRecipesPlan"> 
+        <!--<foreach collection="list" item="item" separator=";" open="" close="">
+
+        </foreach>-->
+        update sys_recipes_plan set start_date = #{startDate},end_date = #{endDate},pause_date=#{pauseDate} where id = #{id}
+    </update>
 </mapper>

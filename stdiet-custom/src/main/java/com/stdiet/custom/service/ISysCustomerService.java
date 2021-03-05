@@ -1,6 +1,8 @@
 package com.stdiet.custom.service;
 
 import java.util.List;
+import java.util.Map;
+
 import com.stdiet.custom.domain.SysCustomer;
 import com.stdiet.custom.dto.request.CustomerInvestigateRequest;
 
@@ -74,4 +76,9 @@ public interface ISysCustomerService
      * @return
      */
     boolean isCustomerExistByPhone(SysCustomer sysCustomer);
+
+    Map<String,Object> getPhysicalSignsById(Long id);
+
+    Map<String,Object> getPhysicalSignsByOutId(String id);
+
 }

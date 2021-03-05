@@ -65,7 +65,7 @@ public interface SysOrderPauseMapper
      * @param sysOrderPause
      * @return
      */
-    int getCountByOrderIdAndPauseDate(SysOrderPause sysOrderPause);
+    int getCountByCusIdAndPauseDate(SysOrderPause sysOrderPause);
 
     /**
      * 根据订单ID删除暂停记录
@@ -73,4 +73,13 @@ public interface SysOrderPauseMapper
      * @return
      */
     int deletePauseByOrderId(Long[] orderIds);
+
+    long selectNearMainOrderIdByCusId(Long cusId);
+
+    /**
+     * 根据订单ID获取暂停计划
+     * @param orderId
+     * @return
+     */
+    List<SysOrderPause> getPauseListByOrderId(@Param("orderId")Long orderId);
 }

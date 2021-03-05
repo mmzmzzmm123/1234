@@ -191,7 +191,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item label="是否主食" prop="type">
+              <el-form-item label="是否主食" prop="isMain">
                 <el-radio-group v-model="form.isMain">
                   <el-radio :label="0">是</el-radio>
                   <el-radio :label="1">否</el-radio>
@@ -247,17 +247,10 @@
                   :summary-method="getSummaries"
                   style="width: 100%"
                 >
-                  <el-table-column prop="name" label="食材"></el-table-column>
-                  <el-table-column label="通俗计量">
+                  <el-table-column prop="name" label="食材" align="center" />
+                  <el-table-column label="通俗计量" align="center">
                     <template slot-scope="scope">
                       <span class="cus-unit">
-                        <!-- <el-input-number
-                          v-model="scope.row.cusWeight"
-                          size="mini"
-                          controls-position="right"
-                          step="0.5"
-                          :min="0.5"
-                        /> -->
                         <el-select size="mini" v-model="scope.row.cusWeight">
                           <el-option
                             v-for="dict in cusWeightOptions"
@@ -277,26 +270,44 @@
                       </span>
                     </template>
                   </el-table-column>
-                  <el-table-column prop="weight" label="重量(g)">
+                  <el-table-column prop="weight" label="重量(g)" align="center">
                     <template slot-scope="scope">
                       <el-input-number
                         class="weight"
                         v-model="scope.row.weight"
                         size="mini"
                         controls-position="right"
-                        @change="handleInputChange"
                         :min="0"
-                        :step="50"
+                        :step="5"
                       />
                     </template>
                   </el-table-column>
-                  <el-table-column prop="proteinRatio" label="P/100g">
-                  </el-table-column>
-                  <el-table-column prop="fatRatio" label="F/100g">
-                  </el-table-column>
-                  <el-table-column prop="carbonRatio" label="C/100g">
-                  </el-table-column>
-                  <el-table-column prop="remark" label="备注">
+                  <el-table-column
+                    prop="proteinRatio"
+                    label="蛋白质/100g"
+                    align="center"
+                  />
+                  <el-table-column
+                    prop="fatRatio"
+                    label="脂肪/100g"
+                    align="center"
+                  />
+                  <el-table-column
+                    prop="carbonRatio"
+                    label="碳水/100g"
+                    align="center"
+                  />
+                  <el-table-column label="热量" align="center">
+                    <template slot-scope="scope">
+                      {{
+                        `${(
+                          ((scope.row.proteinRatio * scope.row.weight) / 100) *
+                            4 +
+                          ((scope.row.fatRatio * scope.row.weight) / 100) * 9 +
+                          ((scope.row.carbonRatio * scope.row.weight) / 100) * 4
+                        ).toFixed(1)} kcal`
+                      }}
+                    </template>
                   </el-table-column>
                 </el-table>
               </el-form-item>
@@ -525,7 +536,7 @@ export default {
         updateBy: null,
         updateTime: null,
         igdList: [],
-        isMain: 0,
+        isMain: 1,
       };
       this.selIngIds = [];
       this.selIngList = [];
@@ -737,26 +748,27 @@ export default {
         }, []);
       });
     },
-    handleInputChange(val) {
-      // console.log({ val, table: this.selTableData });
-    },
     getSummaries(param) {
       const { columns, data } = param;
+      // console.log(data);
       return columns.reduce(
         (arr, cur, idx) => {
           if (idx > 1) {
             if (idx === 6) {
-              // 备注
-              return arr;
+              arr[6] = arr[3] * 4 + arr[4] * 9 + arr[5] * 4 + ' kcal';
+            } else {
+              arr[idx] = data.reduce((acc, dAcc) => {
+                if (idx === 2) {
+                  return acc + parseFloat(dAcc.weight);
+                }
+                return parseFloat(
+                  (
+                    acc +
+                    (dAcc[cur.property] * parseFloat(dAcc.weight)) / 100
+                  ).toFixed(1)
+                );
+              }, 0);
             }
-            arr[idx] = data.reduce((acc, dAcc) => {
-              if (idx === 2) {
-                return acc + parseFloat(dAcc.weight);
-              }
-              return parseFloat(
-                (acc + (dAcc[cur.property] * dAcc.weight) / 100).toFixed(1)
-              );
-            }, 0);
           }
           return arr;
         },

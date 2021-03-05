@@ -9,7 +9,7 @@
     >
       <el-form-item label="名字" prop="name">
         <el-input
-          v-model="queryParams.name"
+          v-model.trim="queryParams.name"
           placeholder="请输入名字"
           clearable
           size="small"
@@ -18,7 +18,7 @@
       </el-form-item>
       <el-form-item label="手机号" prop="phone">
         <el-input
-          v-model="queryParams.phone"
+          v-model.trim="queryParams.phone"
           placeholder="请输入手机号"
           clearable
           size="small"
@@ -208,7 +208,7 @@
       <el-table-column
         label="食谱计划"
         align="center"
-        v-hasPermi="['recipes:recipesPlan:list']"
+        v-hasPermi="['recipes:plan:list']"
       >
         <template slot-scope="scope">
           <el-button
@@ -260,12 +260,12 @@
         <el-form ref="form" :model="form" :rules="rules" label-width="100px">
           <el-col :span="12">
             <el-form-item label="客户名字" prop="name">
-              <el-input v-model="form.name" placeholder="请输入名字" />
+              <el-input v-model.trim="form.name" placeholder="请输入名字" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="手机号" prop="phone">
-              <el-input v-model="form.phone" placeholder="请输入手机号" />
+              <el-input v-model.trim="form.phone" placeholder="请输入手机号" />
             </el-form-item>
           </el-col>
           <el-col :span="12">

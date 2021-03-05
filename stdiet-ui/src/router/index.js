@@ -72,20 +72,6 @@ export const constantRoutes = [
     ]
   },
   {
-    path: "/order",
-    component: Layout,
-    hidden: true,
-    children: [
-      {
-        path: "orderPause/:orderId",
-        component: resolve =>
-          require(["@/views/custom/order/orderPause"], resolve),
-        name: "orderPause",
-        meta: { title: "订单暂停记录" }
-      }
-    ]
-  },
-  {
     path: "/user",
     component: Layout,
     hidden: true,
@@ -140,10 +126,18 @@ export const constantRoutes = [
     ]
   },
   {
-    path: "/recipes/build",
+    path: "/recipes/build/:name/:planId",
     component: resolve => require(["@/views/custom/recipesBuild"], resolve),
     name: "RecipiesBuild",
+    props: true,
     meta: { title: "食谱制作" },
+    hidden: true
+  },
+  {
+    path: "/recipes/detail/:id",
+    component: resolve => require(["@/views/custom/recipesShow"], resolve),
+    props: true,
+    meta: { title: "健康食谱" },
     hidden: true
   },
   {

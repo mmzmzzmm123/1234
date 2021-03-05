@@ -54,6 +54,7 @@ public class SysRecipesServiceImpl implements ISysRecipesService {
             SysRecipesPlan sysRecipesPlan = new SysRecipesPlan();
             sysRecipesPlan.setId(sysRecipes.getPlanId());
             sysRecipesPlan.setRecipesId(sysRecipes.getId());
+            sysRecipesPlan.setReviewStatus(1);
             sysRecipesPlanMapper.updateSysRecipesPlan(sysRecipesPlan);
         }
 
@@ -63,6 +64,11 @@ public class SysRecipesServiceImpl implements ISysRecipesService {
     @Override
     public List<SysRecipes> selectSysRecipesByRecipesId(Long id) {
         return sysRecipesMapper.selectSysRecipesByRecipesId(id);
+    }
+
+    @Override
+    public List<SysRecipesDailyDishes> selectDishesByMenuId(Long id) {
+        return sysRecipesMapper.selectDishesByMenuId(id);
     }
 
     @Override

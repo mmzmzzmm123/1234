@@ -4,7 +4,7 @@
       <el-form-item label="" prop="remark" >
         <el-input
           type="textarea"
-          :rows="5"
+          :rows="6"
           maxlength="300"
           show-word-limit
           placeholder="请输入备注"

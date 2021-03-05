@@ -32,7 +32,9 @@
         SELECT ${column} AS user_id, ${postId} AS post_id, SUM(amount) AS amount
         FROM sys_order
         WHERE ${column} IS NOT NULL AND ${column} &lt;&gt; 0 AND del_flag = 0
-        AND review_status = 'yes'
+        <if test="reviewStatus != null and reviewStatus != ''">
+            AND review_status = #{reviewStatus}
+        </if>
         <if test="beginTime != null and beginTime != ''">AND date_format(order_time,'%y%m%d') &gt;=
             date_format(${beginTime},'%y%m%d')
         </if>
@@ -47,6 +49,7 @@
         JOIN (
         <include refid="groupAmountVo">
             <property name="column" value="pre_sale_id"/>
+            <property name="reviewStatus" value="#{reviewStatus}"/>
             <property name="beginTime" value="#{beginTime}"/>
             <property name="endTime" value="#{endTime}"/>
             <property name="postId" value="5"/>
@@ -54,6 +57,7 @@
         UNION
         <include refid="groupAmountVo">
             <property name="column" value="after_sale_id"/>
+            <property name="reviewStatus" value="#{reviewStatus}"/>
             <property name="beginTime" value="#{beginTime}"/>
             <property name="endTime" value="#{endTime}"/>
             <property name="postId" value="6"/>
@@ -61,6 +65,7 @@
         UNION
         <include refid="groupAmountVo">
             <property name="column" value="nutritionist_id"/>
+            <property name="reviewStatus" value="#{reviewStatus}"/>
             <property name="beginTime" value="#{beginTime}"/>
             <property name="endTime" value="#{endTime}"/>
             <property name="postId" value="9"/>
@@ -68,6 +73,7 @@
         UNION
         <include refid="groupAmountVo">
             <property name="column" value="nutri_assis_id"/>
+            <property name="reviewStatus" value="#{reviewStatus}"/>
             <property name="beginTime" value="#{beginTime}"/>
             <property name="endTime" value="#{endTime}"/>
             <property name="postId" value="10"/>
@@ -75,6 +81,7 @@
         UNION
         <include refid="groupAmountVo">
             <property name="column" value="operator_id"/>
+            <property name="reviewStatus" value="#{reviewStatus}"/>
             <property name="beginTime" value="#{beginTime}"/>
             <property name="endTime" value="#{endTime}"/>
             <property name="postId" value="11"/>
@@ -82,6 +89,7 @@
         UNION
         <include refid="groupAmountVo">
             <property name="column" value="operator_assis_id"/>
+            <property name="reviewStatus" value="#{reviewStatus}"/>
             <property name="beginTime" value="#{beginTime}"/>
             <property name="endTime" value="#{endTime}"/>
             <property name="postId" value="13"/>
@@ -89,6 +97,7 @@
         UNION
         <include refid="groupAmountVo">
             <property name="column" value="planner_id"/>
+            <property name="reviewStatus" value="#{reviewStatus}"/>
             <property name="beginTime" value="#{beginTime}"/>
             <property name="endTime" value="#{endTime}"/>
             <property name="postId" value="7"/>
@@ -96,6 +105,7 @@
         UNION
         <include refid="groupAmountVo">
             <property name="column" value="planner_assis_id"/>
+            <property name="reviewStatus" value="#{reviewStatus}"/>
             <property name="beginTime" value="#{beginTime}"/>
             <property name="endTime" value="#{endTime}"/>
             <property name="postId" value="8"/>
@@ -188,7 +198,8 @@
         </foreach>
     </delete>
 
-    <select id="selectSysCommisionDayDetail" parameterType="SysCommision" resultMap="SysCommisionResult">
+    <!-- 查询售后和营养师 -->
+    <select id="getAfterSaleAndNutri" parameterType="SysCommision" resultMap="SysCommisionResult">
         SELECT su.user_id,su.nick_name as user_name,sp.post_id, sp.post_code,sp.post_name FROM sys_user su
         LEFT JOIN sys_user_post sup ON sup.user_id = su.user_id
         LEFT JOIN sys_post sp ON sp.post_id = sup.post_id

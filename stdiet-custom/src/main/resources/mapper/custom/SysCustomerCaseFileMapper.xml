@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.stdiet.custom.mapper.SysCustomerCaseFileMapper">
+
+    <resultMap type="SysCustomerCaseFile" id="SysCustomerCaseFileResult">
+        <result property="id"    column="id"    />
+        <result property="caseId"    column="case_id"    />
+        <result property="fileUrl"    column="file_url"    />
+        <result property="fileName"    column="file_name"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <sql id="selectSysCustomerCaseFileVo">
+        select id, case_id, file_url, file_name, create_time, create_by, update_time, update_by, del_flag from sys_customer_case_file
+    </sql>
+
+    <select id="selectSysCustomerCaseFileList" parameterType="SysCustomerCaseFile" resultMap="SysCustomerCaseFileResult">
+        <include refid="selectSysCustomerCaseFileVo"/> where del_flag = 0
+    </select>
+
+    <!-- 根据案例ID查询文件列表 -->
+    <select id="selectSysCustomerCaseFileListByCaseId" parameterType="Long" resultMap="SysCustomerCaseFileResult">
+        <include refid="selectSysCustomerCaseFileVo"/> where del_flag = 0 and case_id = #{caseId}
+    </select>
+
+    <select id="selectSysCustomerCaseFileById" parameterType="Long" resultMap="SysCustomerCaseFileResult">
+        <include refid="selectSysCustomerCaseFileVo"/>
+        where id = #{id} and del_flag = 0
+    </select>
+
+    <insert id="insertSysCustomerCaseFile" parameterType="SysCustomerCaseFile" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_customer_case_file
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="caseId != null">case_id,</if>
+            <if test="fileUrl != null">file_url,</if>
+            <if test="fileName != null">file_name,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="delFlag != null">del_flag,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="caseId != null">#{caseId},</if>
+            <if test="fileUrl != null">#{fileUrl},</if>
+            <if test="fileName != null">#{fileName},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+        </trim>
+    </insert>
+
+    <update id="updateSysCustomerCaseFile" parameterType="SysCustomerCaseFile">
+        update sys_customer_case_file
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="caseId != null">case_id = #{caseId},</if>
+            <if test="fileUrl != null">file_url = #{fileUrl},</if>
+            <if test="fileName != null">file_name = #{fileName},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="deleteSysCustomerCaseFileById" parameterType="Long">
+        update sys_customer_case_file set del_flag = 1 where id = #{id}
+    </update>
+
+    <update id="deleteSysCustomerCaseFileByIds" parameterType="String">
+        update sys_customer_case_file set del_flag = 1 where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <!-- 根据案例ID删除该案例对应的所有文件记录 -->
+    <update id="deleteSysCustomerCaseFileByCaseId" parameterType="Long">
+        update sys_customer_case_file set del_flag = 1 where case_id = #{caseId}
+    </update>
+
+    <!-- 根据案例ID批量删除该案例对应的所有文件记录 -->
+    <update id="deleteSysCustomerCaseFileByCaseIds" parameterType="String">
+        update sys_customer_case_file set del_flag = 1 where case_id in
+        <foreach item="caseId" collection="array" open="(" separator="," close=")">
+            #{caseId}
+        </foreach>
+    </update>
+
+    <!-- 批量插入案例文件记录 -->
+    <insert id="insertBatch">
+        INSERT INTO sys_customer_case_file
+        (case_id, file_url, file_name)
+        VALUES
+        <foreach collection="list" item="caseFile" separator=",">
+            (#{caseFile.caseId}, #{caseFile.fileUrl}, #{caseFile.fileName})
+        </foreach>
+    </insert>
+
+
+</mapper>

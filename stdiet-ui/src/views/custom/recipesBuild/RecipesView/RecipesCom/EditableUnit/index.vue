@@ -95,6 +95,14 @@ export default {
       this.mUnit = value;
     },
   },
+  watch: {
+    weight(val) {
+      this.mWeight = val;
+    },
+    unit(val) {
+      this.mUnit = val;
+    },
+  },
   computed: {
     unitWeight() {
       return (

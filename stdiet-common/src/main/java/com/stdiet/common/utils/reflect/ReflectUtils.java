@@ -403,4 +403,22 @@ public class ReflectUtils
         }
         return new RuntimeException(msg, e);
     }
+
+    /**
+     * 根据属性名获取属性值
+     *
+     * @param fieldName
+     * @param object
+     * @return
+     */
+    public static String getFieldValueByFieldName(String fieldName, Object object) {
+        try {
+            Field field = object.getClass().getDeclaredField(fieldName);
+            //设置对象的访问权限，保证对private的属性的访问
+            field.setAccessible(true);
+            return field.get(object) == null ? "" : field.get(object).toString();
+        } catch (Exception e) {
+            return "";
+        }
+    }
 }

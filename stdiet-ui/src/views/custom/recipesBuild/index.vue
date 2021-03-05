@@ -1,5 +1,5 @@
 <template>
-  <div class="recipes_build_wrapper" v-title :data-title="$route.query.name">
+  <div class="recipes_build_wrapper" v-title :data-title="name">
     <div class="left" v-loading="recipesDataLoading">
       <RecipesView
         v-if="!!recipesData.length"
@@ -7,11 +7,12 @@
         :name="healthyData.name"
         :analyseData="analyseData"
       />
-      <RecommondView v-else />
+      <RecommendView v-else />
     </div>
     <div class="right" v-loading="healthDataLoading">
-      <HealthyView :data="healthyData" v-if="healthyDataType === 0" />
-      <BodySignView :data="healthyData" v-else />
+      <TemplateInfoView v-if="!!temId" :data="templateInfo" />
+      <HealthyView :data="healthyData" v-else-if="healthyDataType === 0" dev />
+      <BodySignView :data="healthyData" v-else dev />
     </div>
   </div>
 </template>
@@ -24,25 +25,24 @@ const {
   mapGetters,
 } = createNamespacedHelpers("recipes");
 
-import HealthyView from "./HealthyView";
-import BodySignView from "./BodySignView";
+import HealthyView from "@/components/HealthyView";
+import BodySignView from "@/components/BodySignView";
 import RecipesView from "./RecipesView/index";
-import RecommondView from "./RecommondView";
+import RecommendView from "./RecommendView";
+import TemplateInfoView from "./TemplateInfoView";
 
 export default {
   name: "BuildRecipies",
   data() {
-    return {};
+    const { temId } = this.$route.query;
+    return {
+      temId,
+    };
   },
   mounted() {
-    const { cusId, planId, startNum, endNum, recipesId } = this.$route.query;
-
     this.init({
-      cusId,
-      planId,
-      startNum: parseInt(startNum),
-      endNum: parseInt(endNum),
-      recipesId,
+      planId: this.planId,
+      temId: this.temId,
     }).catch((err) => {
       this.$message.error(err.message);
     });
@@ -55,13 +55,15 @@ export default {
     HealthyView,
     BodySignView,
     RecipesView,
-    RecommondView,
+    RecommendView,
+    TemplateInfoView,
   },
-  // props: ["cusId", "planId", "recipesId", "startDate", "endDate"],
+  props: ["name", "planId"],
   computed: {
     ...mapState([
       "healthyData",
       "healthyDataType",
+      "templateInfo",
       "recipesData",
       "recipesDataLoading",
       "healthDataLoading",

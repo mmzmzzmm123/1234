@@ -1,6 +1,6 @@
 <template>
   <el-drawer
-    title="添加菜品"
+    :title="title"
     :visible.sync="visible"
     :close-on-press-escape="false"
     :before-close="handleOnClosed"
@@ -24,7 +24,7 @@
         <ConfigDishes
           v-show="active === 1"
           v-bind="selDishes"
-          :typeOptions="typeOptions"
+          :typeOptions="dishesTypeOptions"
           @onChange="handleOnConfigChange"
         />
       </div>
@@ -50,7 +50,7 @@
 </template>
 <script>
 import { createNamespacedHelpers } from "vuex";
-const { mapState } = createNamespacedHelpers("recipes");
+const { mapState, mapGetters } = createNamespacedHelpers("recipes");
 
 import SelectDishes from "./SelectDishes";
 import ConfigDishes from "./ConfigDishes";
@@ -63,9 +63,12 @@ export default {
   },
   data() {
     return {
+      id: "",
+      type: "",
       visible: false,
+      title: "",
       active: 0,
-      typeOptions: [],
+      dishesTypeOptions: [],
       selDishes: {
         name: "",
         type: "",
@@ -76,17 +79,32 @@ export default {
     };
   },
   computed: {
-    ...mapState(["dishesTypeOptions"]),
+    ...mapState(["typeOptions", "currentDay"]),
+    ...mapGetters(["typeDict"]),
   },
   methods: {
-    showDrawer() {
+    showDrawer({ data, type, numDay }) {
+      this.title = "添加菜品";
+      this.id = "";
+      this.type = "";
+      if (data) {
+        this.title = `替换第${numDay}天${this.typeDict[data.type]}的「${
+          data.name
+        }」`;
+        this.id = data.id;
+        this.type = data.type;
+      } else if (type) {
+        this.title = `添加第${numDay}天${this.typeDict[type]}菜品`;
+        this.type = type;
+      }
       this.visible = true;
       this.$nextTick(() => {
-        this.$refs.dishesRef.getList();
+        this.$refs.dishesRef.getList({ type: this.type });
       });
     },
     handleOnClosed(done) {
       done();
+      this.handleOnCancelClick();
     },
     handleCurrentChange(data) {
       if (!data) {
@@ -95,18 +113,19 @@ export default {
       // console.log(data);
       this.selDishes = data;
       this.active = 1;
-      this.typeOptions = data.type.split(",").reduce((arr, cur, idx) => {
-        if (idx === 0) {
-          this.selDishes.type = cur;
-        }
-        const tarOpt = this.dishesTypeOptions.find(
-          (obj) => obj.dictValue === cur
-        );
-        if (tarOpt) {
-          arr.push(tarOpt);
-        }
-        return arr;
-      }, []);
+      this.dishesTypeOptions = (this.type || data.type)
+        .split(",")
+        .sort((a, b) => a - b)
+        .reduce((arr, cur, idx) => {
+          if (idx === 0) {
+            this.selDishes.type = cur;
+          }
+          const tarOpt = this.typeOptions.find((obj) => obj.dictValue === cur);
+          if (tarOpt) {
+            arr.push(tarOpt);
+          }
+          return arr;
+        }, []);
     },
     handleOnConfigChange(val) {
       Object.keys(val).forEach((key) => {
@@ -116,6 +135,7 @@ export default {
     handleOnCancelClick() {
       this.visible = false;
       this.active = 0;
+      this.$refs.dishesRef.clean();
     },
     handleOnLastStepClick() {
       this.active = 0;
@@ -134,14 +154,17 @@ export default {
         igdList,
       } = this.selDishes;
       this.$emit("onConfirm", {
-        id: -1,
-        dishesId: id,
-        methods,
-        name,
-        notRecTags,
-        recTags,
-        type,
-        igdList,
+        type: this.id ? "replace" : "add",
+        data: {
+          id: this.id || new Date().getTime(),
+          dishesId: id,
+          methods,
+          name,
+          notRecTags,
+          recTags,
+          type,
+          igdList,
+        },
       });
       // console.log(this.selDishes);
     },
