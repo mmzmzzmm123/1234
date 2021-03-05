@@ -39,7 +39,10 @@ const mutations = {
       obj => obj.id === payload.id
     );
     if (tarDishes) {
-      if (payload.dishesId || payload.type !== undefined) {
+      if (
+        payload.dishesId !== tarDishes.dishesId ||
+        payload.type !== undefined
+      ) {
         // 替换菜品
         Object.keys(payload).forEach(key => {
           if (key === "num") {
