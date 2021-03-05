@@ -29,7 +29,8 @@ const oriState = {
   endNum: 0,
   reviewStatus: 0,
   templateInfo: undefined,
-  copyData: undefined
+  copyData: undefined,
+  fontSize: 12
 };
 
 const mutations = {
@@ -55,6 +56,9 @@ const mutations = {
         }
       }
     }
+  },
+  updateFontSize(state, payload) {
+    state.fontSize = payload.fontSize;
   },
   addRecipesDishes(state, payload) {
     state.recipesData[payload.num].dishes.push(payload.data);

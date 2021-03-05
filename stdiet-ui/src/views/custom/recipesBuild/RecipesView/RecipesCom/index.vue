@@ -7,6 +7,8 @@
       :cell-style="{ padding: '2px 0' }"
       :header-cell-style="{ padding: '4px 0', height: 'unset' }"
       size="mini"
+      header-row-class-name="recipes_header"
+      :cell-class-name="cellClassName"
       :style="`outline: ${currentDay === num ? '1px solid #d96969' : 'none'}`"
     >
       <el-table-column prop="type" :width="100" align="center">
@@ -355,9 +357,17 @@ export default {
       return mData;
     },
     ...mapGetters(["typeDict"]),
-    ...mapState(["currentDay", "copyData"]),
+    ...mapState(["currentDay", "copyData", "fontSize"]),
   },
   methods: {
+    cellClassName({ row, column, rowIndex, columnIndex }) {
+      // console.log({ row, column, rowIndex, columnIndex });
+      if (!columnIndex) {
+        return "recipes_first_col";
+      } else {
+        return `recipes_cell_${this.fontSize}`;
+      }
+    },
     handleParentClick(e) {
       // 校验某天
       this.setCurrentDay({ currentDay: this.num });
@@ -495,5 +505,30 @@ export default {
 .fun_button {
   font-size: 12px;
   padding: 4px 8px;
+}
+
+.recipes_header {
+  & > th {
+    background: #d96969 !important;
+    color: white !important;
+  }
+}
+
+.recipes_first_col {
+  background: #d96969 !important;
+  color: white !important;
+}
+
+.recipes_cell_12 {
+  font-size: 12px;
+}
+.recipes_cell_14 {
+  font-size: 14px;
+}
+.recipes_cell_16 {
+  font-size: 16px;
+}
+.recipes_cell_18 {
+  font-size: 18px;
 }
 </style>
