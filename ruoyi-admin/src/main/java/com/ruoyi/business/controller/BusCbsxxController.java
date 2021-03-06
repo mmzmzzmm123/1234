@@ -12,11 +12,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.github.pagehelper.PageInfo;
 import com.ruoyi.business.domain.BusCbsxx;
 import com.ruoyi.business.domain.vo.BusCbsxxSaveVO;
 import com.ruoyi.business.domain.vo.BusCbsxxVO;
+import com.ruoyi.business.domain.vo.CbsxxTableDataInfo;
 import com.ruoyi.business.service.IBusCbsxxService;
 import com.ruoyi.common.annotation.Log;
+import com.ruoyi.common.constant.HttpStatus;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
@@ -50,7 +53,7 @@ public class BusCbsxxController extends BaseController {
 	public TableDataInfo list(BusCbsxx busCbsxx, String year) {
 		startPage();
 		List<BusCbsxxVO> list = busCbsxxService.selectBusCbsxxList(busCbsxx, year);
-		return getDataTable(list);
+		return getCbsDataTable(list);
 	}
 
 	/**
@@ -93,5 +96,36 @@ public class BusCbsxxController extends BaseController {
 	@DeleteMapping("/{ids}")
 	public AjaxResult remove(@PathVariable Long[] ids) {
 		return toAjax(busCbsxxService.deleteBusCbsxxByIds(ids));
+	}
+
+	/**
+	 * 响应请求分页数据
+	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	protected TableDataInfo getCbsDataTable(List<BusCbsxxVO> list) {
+		CbsxxTableDataInfo rspData = new CbsxxTableDataInfo();
+		rspData.setCode(HttpStatus.SUCCESS);
+		rspData.setMsg("查询成功");
+		rspData.setRows(list);
+		PageInfo pageInfo = new PageInfo(list);
+		rspData.setTotal(pageInfo.getTotal());
+		rspData.setTotalPages(pageInfo.getNavigateLastPage());
+
+		// 总数统计
+		rspData.setCbsTotalCount(pageInfo.getTotal());
+		list.forEach(e -> {
+			// 站库总数
+			int cbzd001TotalCount = rspData.getCbzd001TotalCount() + e.getCbzd001List().size();
+			// 巡线总数
+			int cbzd002TotalCount = rspData.getCbzd002TotalCount() + e.getCbzd002List().size();
+			// 工人总数
+			long grCount = e.getGrTotalCount();
+			long grTotalCount = rspData.getGrTotalCount() + grCount;
+			rspData.setCbzd001TotalCount(cbzd001TotalCount);
+			rspData.setCbzd002TotalCount(cbzd002TotalCount);
+			rspData.setGrTotalCount(grTotalCount);
+		});
+
+		return rspData;
 	}
 }

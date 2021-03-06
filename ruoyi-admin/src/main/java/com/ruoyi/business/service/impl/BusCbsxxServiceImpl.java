@@ -2,8 +2,10 @@ package com.ruoyi.business.service.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
@@ -18,6 +20,7 @@ import com.ruoyi.business.domain.ViewBusZdxx;
 import com.ruoyi.business.domain.vo.BusCbsgrxxVO;
 import com.ruoyi.business.domain.vo.BusCbsxxSaveVO;
 import com.ruoyi.business.domain.vo.BusCbsxxVO;
+import com.ruoyi.business.domain.vo.GrgwStatistics;
 import com.ruoyi.business.domain.vo.SelectedBusCbszdxxVO;
 import com.ruoyi.business.mapper.BusCbsxxMapper;
 import com.ruoyi.business.service.IBusCbsgrxxService;
@@ -199,6 +202,8 @@ public class BusCbsxxServiceImpl implements IBusCbsxxService {
 		}
 		this.setCbszdInfo(busCbsxxVO, cbsId, year);
 
+		// 设置工人和工种统计信息
+		setGrgwStatisticsInfos(ryxxList, busCbsxxVO);
 		return busCbsxxVO;
 	}
 
@@ -231,4 +236,37 @@ public class BusCbsxxServiceImpl implements IBusCbsxxService {
 		busCbsxxVO.setCbzd003List(list003);
 	}
 
+	/**
+	 * 设置工人和工种统计信息
+	 * 
+	 * @param ryxxList
+	 *            工人列表
+	 * @param busCbsxxVO
+	 *            承包商信息
+	 */
+	private void setGrgwStatisticsInfos(List<BusCbsgrxxVO> ryxxList, BusCbsxxVO busCbsxxVO) {
+		List<BusCbsgrxxVO> zzryList = ryxxList.stream()
+				.filter(ry -> ry.getLzsj() == null || ry.getLzsj().before(new Date())).collect(Collectors.toList());
+		busCbsxxVO.setGrTotalCount(zzryList.size());
+		Map<String, List<BusCbsgrxxVO>> gwGroupResult = zzryList.stream()
+				.collect(Collectors.groupingBy(BusCbsgrxxVO::getGw));
+		List<GrgwStatistics> grgwGroupByList = gwGroupResult.entrySet().stream()
+				.map(entry -> new GrgwStatistics(entry.getKey(), entry.getValue().size()))
+				.sorted(Comparator.comparing(GrgwStatistics::getGrTotalCount)).collect(Collectors.toList());
+		// 只统计前八个岗位
+		if (grgwGroupByList.size() <= 8) {
+			busCbsxxVO.setGrgwStatistics(grgwGroupByList);
+		} else {
+			List<GrgwStatistics> newGrgwGroupByList = new ArrayList<>();
+			for (int i = 0; i < 7; i++) {
+				newGrgwGroupByList.add(grgwGroupByList.get(i));
+			}
+			GrgwStatistics otherGrgwStatistics = new GrgwStatistics("其他", 0);
+			for (int i = 7; i < grgwGroupByList.size(); i++) {
+				GrgwStatistics grgwStatistics = grgwGroupByList.get(i);
+				int grTotalCount = otherGrgwStatistics.getGrTotalCount() + grgwStatistics.getGrTotalCount();
+				otherGrgwStatistics.setGrTotalCount(grTotalCount);
+			}
+		}
+	}
 }

@@ -26,6 +26,16 @@ public class BusCbsxxVO implements Serializable {
 	 * 人员信息
 	 */
 	private List<BusCbsgrxxVO> ryxxList;
+
+	/**
+	 * 工人总数
+	 */
+	private int grTotalCount;
+
+	/**
+	 * 工人岗位统计
+	 */
+	private List<GrgwStatistics> grgwStatistics;
 	/**
 	 * 承包站点年份
 	 */
@@ -97,6 +107,22 @@ public class BusCbsxxVO implements Serializable {
 
 	public void setCbzd003List(List<SelectedBusCbszdxxVO> cbzd003List) {
 		this.cbzd003List = cbzd003List;
+	}
+
+	public int getGrTotalCount() {
+		return grTotalCount;
+	}
+
+	public void setGrTotalCount(int grTotalCount) {
+		this.grTotalCount = grTotalCount;
+	}
+
+	public List<GrgwStatistics> getGrgwStatistics() {
+		return grgwStatistics;
+	}
+
+	public void setGrgwStatistics(List<GrgwStatistics> grgwStatistics) {
+		this.grgwStatistics = grgwStatistics;
 	}
 
 }
