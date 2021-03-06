@@ -4,6 +4,7 @@ import com.gox.basic.domain.Metadata;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -38,7 +39,7 @@ public interface MetadataMapper {
      * @return 结果
      */
     public int insertMetadata(Metadata metadata);
-
+    public int insertMetadataBatch(Collection<Metadata> metadatas);
     /**
      * 修改文书类基本元数据
      *

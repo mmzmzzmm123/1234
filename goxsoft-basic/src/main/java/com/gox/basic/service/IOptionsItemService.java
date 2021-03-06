@@ -5,32 +5,32 @@ import com.gox.basic.domain.form.OptionsItem;
 import java.util.List;
 
 /**
- * 【请填写功能名称】Service接口
+ *   Service接口
  *
  * @author gox
  * @date 2021-02-02
  */
 public interface IOptionsItemService {
     /**
-     * 查询【请填写功能名称】
+     * 查询
      *
-     * @param id 【请填写功能名称】ID
-     * @return 【请填写功能名称】
+     * @param id   ID
+     * @return
      */
     public OptionsItem selectOptionsItemById(Long id);
 
     /**
-     * 查询【请填写功能名称】列表
+     * 查询  列表
      *
-     * @param optionsItem 【请填写功能名称】
-     * @return 【请填写功能名称】集合
+     * @param optionsItem
+     * @return   集合
      */
     public List<OptionsItem> selectOptionsItemList(OptionsItem optionsItem);
 
     /**
-     * 新增【请填写功能名称】
+     * 新增
      *
-     * @param optionsItem 【请填写功能名称】
+     * @param optionsItem
      * @return 结果
      */
     public int insertOptionsItem(OptionsItem optionsItem);
@@ -40,25 +40,25 @@ public interface IOptionsItemService {
     int insertOptionsItemsSlot(Iterable<OptionsItem> optionsItems, Long slotId);
 
     /**
-     * 修改【请填写功能名称】
+     * 修改
      *
-     * @param optionsItem 【请填写功能名称】
+     * @param optionsItem
      * @return 结果
      */
     public int updateOptionsItem(OptionsItem optionsItem);
 
     /**
-     * 批量删除【请填写功能名称】
+     * 批量删除
      *
-     * @param ids 需要删除的【请填写功能名称】ID
+     * @param ids 需要删除的  ID
      * @return 结果
      */
     public int deleteOptionsItemByIds(Long[] ids);
 
     /**
-     * 删除【请填写功能名称】信息
+     * 删除  信息
      *
-     * @param id 【请填写功能名称】ID
+     * @param id   ID
      * @return 结果
      */
     public int deleteOptionsItemById(Long id);

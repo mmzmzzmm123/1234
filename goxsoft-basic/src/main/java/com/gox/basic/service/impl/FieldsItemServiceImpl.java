@@ -36,13 +36,11 @@ public class FieldsItemServiceImpl implements IFieldsItemService {
     private IPropsService propsService;
     @Autowired
     private IAutosizeService autosizeService;
-    @Autowired
-    private RedisCache redisCache;
     /**
-     * 查询【请填写功能名称】
+     * 查询 
      *
-     * @param id 【请填写功能名称】ID
-     * @return 【请填写功能名称】
+     * @param id  ID
+     * @return  
      */
     @Override
     public FieldsItem selectFieldsItemById(Long id) {
@@ -54,10 +52,15 @@ public class FieldsItemServiceImpl implements IFieldsItemService {
         return fieldsItemMapper.selectTableFields(nodeId, deptId);
     }
 
+    @Override
+    public List<FieldsItem> selectFieldsItemByFormId(Long formId) {
+        return fieldsItemMapper.selectFieldsItemByFormId(formId);
+    }
+
     /**
-     * 查询【请填写功能名称】列表
-     * @param fieldsItem 【请填写功能名称】
-     * @return 【请填写功能名称】
+     * 查询 列表
+     * @param fieldsItem  
+     * @return  
      */
     @Override
     public List<FieldsItem> selectFieldsItemList(FieldsItem fieldsItem) {
@@ -72,7 +75,7 @@ public class FieldsItemServiceImpl implements IFieldsItemService {
     /**
      * 新增
      *
-     * @param fieldsItem 【请填写功能名称】
+     * @param fieldsItem  
      * @return 结果
      */
     @Override
@@ -133,9 +136,9 @@ public class FieldsItemServiceImpl implements IFieldsItemService {
 
 
     /**
-     * 修改【请填写功能名称】
+     * 修改 
      *
-     * @param fieldsItem 【请填写功能名称】
+     * @param fieldsItem  
      * @return 结果
      */
     @Override
@@ -144,9 +147,9 @@ public class FieldsItemServiceImpl implements IFieldsItemService {
     }
 
     /**
-     * 批量删除【请填写功能名称】
+     * 批量删除 
      *
-     * @param ids 需要删除的【请填写功能名称】ID
+     * @param ids 需要删除的 ID
      * @return 结果
      */
     @Override
@@ -155,9 +158,9 @@ public class FieldsItemServiceImpl implements IFieldsItemService {
     }
 
     /**
-     * 删除【请填写功能名称】信息
+     * 删除信息
      *
-     * @param id 【请填写功能名称】ID
+     * @param id ID
      * @return 结果
      */
     @Override

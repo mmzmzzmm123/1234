@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * 【请填写功能名称】Service业务层处理
+ *   Service业务层处理
  *
  * @author gox
  * @date 2021-02-02
@@ -25,10 +25,10 @@ public class SlotServiceImpl implements ISlotService {
     private IOptionsItemService optionsItemService;
 
     /**
-     * 查询【请填写功能名称】
+     * 查询
      *
-     * @param id 【请填写功能名称】ID
-     * @return 【请填写功能名称】
+     * @param id   ID
+     * @return
      */
     @Override
     public Slot selectSlotById(Long id) {
@@ -36,10 +36,10 @@ public class SlotServiceImpl implements ISlotService {
     }
 
     /**
-     * 查询【请填写功能名称】列表
+     * 查询  列表
      *
-     * @param slot 【请填写功能名称】
-     * @return 【请填写功能名称】
+     * @param slot
+     * @return
      */
     @Override
     public List<Slot> selectSlotList(Slot slot) {
@@ -47,9 +47,9 @@ public class SlotServiceImpl implements ISlotService {
     }
 
     /**
-     * 新增【请填写功能名称】
+     * 新增
      *
-     * @param slot 【请填写功能名称】
+     * @param slot
      * @return 结果
      */
     @Override
@@ -65,9 +65,9 @@ public class SlotServiceImpl implements ISlotService {
     }
 
     /**
-     * 修改【请填写功能名称】
+     * 修改
      *
-     * @param slot 【请填写功能名称】
+     * @param slot
      * @return 结果
      */
     @Override
@@ -76,9 +76,9 @@ public class SlotServiceImpl implements ISlotService {
     }
 
     /**
-     * 批量删除【请填写功能名称】
+     * 批量删除
      *
-     * @param ids 需要删除的【请填写功能名称】ID
+     * @param ids 需要删除的  ID
      * @return 结果
      */
     @Override
@@ -87,9 +87,9 @@ public class SlotServiceImpl implements ISlotService {
     }
 
     /**
-     * 删除【请填写功能名称】信息
+     * 删除  信息
      *
-     * @param id 【请填写功能名称】ID
+     * @param id   ID
      * @return 结果
      */
     @Override

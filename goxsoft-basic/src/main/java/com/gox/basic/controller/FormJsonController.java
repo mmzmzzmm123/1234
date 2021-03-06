@@ -98,8 +98,6 @@ public class FormJsonController extends BaseController {
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id) {
         FormJson formJson = formJsonService.selectFormJsonById(id);
-//        FormDesignerData data = formDesignerDataService.selectFormDesignerDataById(id);
-//        formJson.setFormData(JSONObject.toJSONString(data));
         return AjaxResult.success(formJson);
 
     }
@@ -112,20 +110,14 @@ public class FormJsonController extends BaseController {
     @Log(title = "表单管理", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody FormJson formJson) {
-        //FormJson formJson = new FormJson();
         JSONObject json = JSON.parseObject(formJson.getFormData());
-        //String formname = json.getString("formname");
         String id = json.getString("id");
-//        formJson.setFormName(formname);
-//        formJson.setFormData(jsonStr);
         json.remove("formname");
         json.remove("id");
         FormDesignerData fd = json.toJavaObject(FormDesignerData.class);
         formJson.setFormDesignerData(fd);
-        //formJson.setFormData(json.toJSONString());
         if (StringUtils.isNotEmpty(id)) {
             formJson.setId(Long.valueOf(id));
-//            json.remove("id");
             return toAjax(formJsonService.updateFormJson(formJson));
         }
         return toAjax(formJsonService.insertFormJson(formJson));
@@ -137,16 +129,6 @@ public class FormJsonController extends BaseController {
     public AjaxResult editOrder(@RequestBody List<FormJson> formJsons) {
         return toAjax(formJsonService.updateFormOrderBatch(formJsons));
     }
-//    /**
-//     * 修改表单json
-//     */
-//    @PreAuthorize("@ss.hasPermi('basic:json:edit')")
-//    @Log(title = "表单json", businessType = BusinessType.UPDATE)
-//    @PutMapping
-//    public AjaxResult edit(@RequestBody FormJson formJson)
-//    {
-//        return toAjax(formJsonService.updateFormJson(formJson));
-//    }
 
     /**
      * 删除表单json

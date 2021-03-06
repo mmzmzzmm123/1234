@@ -4,6 +4,7 @@ import com.gox.GoxApplication;
 import com.gox.basic.domain.ArchivalCodeNum;
 import com.gox.basic.domain.FormJson;
 import com.gox.basic.domain.Metadata;
+import com.gox.basic.domain.MetadataReserve;
 import com.gox.basic.domain.form.FormDesignerData;
 import com.gox.basic.domain.form.Props;
 import com.gox.basic.domain.vo.TableFieldVo;
@@ -66,17 +67,6 @@ public class AppTest {
     }
     @Test
     public void te1() throws Throwable {
-        Metadata metadata = new Metadata();
-        metadata.setNodeId(2359089195122688L);
-        metadata.setDeptId(103L);
-        metadata.setParentId(0L);
-        List<Metadata> list = metadataService.selectMetadataList(metadata);
-        List<Metadata> bigList = new ArrayList<>();
-        for (int i = 0; i < 10000; i++) {
-            bigList.addAll(list);
-        }
-        List<TableFieldVo> l2 = fieldsItemService.selectTableFieldByNodeIdAndDeptId(2359089195122688L, 103L);
-        ExportUtil.exportExcel(bigList,l2,"aaaaa.xlsx");
 
     }
     @Test

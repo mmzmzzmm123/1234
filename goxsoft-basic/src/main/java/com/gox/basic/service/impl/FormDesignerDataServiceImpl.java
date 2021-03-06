@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 /**
- * 【请填写功能名称】Service业务层处理
+ *   Service业务层处理
  *
  * @author gox
  * @date 2021-02-02
@@ -31,10 +31,10 @@ public class FormDesignerDataServiceImpl implements IFormDesignerDataService {
     private RedisCache redisCache;
 
     /**
-     * 查询【请填写功能名称】
+     * 查询
      *
-     * @param id 【请填写功能名称】ID
-     * @return 【请填写功能名称】
+     * @param id   ID
+     * @return
      */
     @Override
     public FormDesignerData selectFormDesignerDataById(Long id) {
@@ -45,22 +45,11 @@ public class FormDesignerDataServiceImpl implements IFormDesignerDataService {
         return (FormDesignerData) f;
     }
 
-//    /**
-//     * 查询【请填写功能名称】列表
-//     *
-//     * @param formDesignerData 【请填写功能名称】
-//     * @return 【请填写功能名称】
-//     */
-//    @Override
-//    public List<FormDesignerData> selectFormDesignerDataList(FormDesignerData formDesignerData)
-//    {
-//        return formDesignerDataMapper.selectFormDesignerDataList(formDesignerData);
-//    }
 
     /**
-     * 新增【请填写功能名称】
+     * 新增
      *
-     * @param formDesignerData 【请填写功能名称】
+     * @param formDesignerData
      * @return 结果
      */
     @Override
@@ -76,9 +65,9 @@ public class FormDesignerDataServiceImpl implements IFormDesignerDataService {
     }
 
     /**
-     * 修改【请填写功能名称】
+     * 修改
      *
-     * @param formDesignerData 【请填写功能名称】
+     * @param formDesignerData
      * @return 结果
      */
     @Override
@@ -91,9 +80,9 @@ public class FormDesignerDataServiceImpl implements IFormDesignerDataService {
     }
 
     /**
-     * 批量删除【请填写功能名称】
+     * 批量删除
      *
-     * @param ids 需要删除的【请填写功能名称】ID
+     * @param ids 需要删除的  ID
      * @return 结果
      */
     @Override
@@ -106,9 +95,9 @@ public class FormDesignerDataServiceImpl implements IFormDesignerDataService {
     }
 
     /**
-     * 删除【请填写功能名称】信息
+     * 删除  信息
      *
-     * @param id 【请填写功能名称】ID
+     * @param id   ID
      * @return 结果
      */
     @Override

@@ -28,8 +28,9 @@ public class ExportUtil {
         List<Map<String,String>> list = new ArrayList<>();
         Map<String,String> map ;
         while (it.hasNext()){
-            map = new HashMap<>();
+            map = new LinkedHashMap<>();
             m = it.next();
+            map.put("id",getValue("id",m));
             for (TableFieldVo fieldVo : fieldVos) {
                 map.put(fieldVo.getTableFieldName(),getValue(fieldVo.getvModel(),m));
             }
@@ -49,7 +50,7 @@ public class ExportUtil {
     }
     public static void exportExcel(Collection<Metadata> collection,List<TableFieldVo> fieldVos,String fileName) throws Throwable {
         List<Map<String, String>> list = extract(collection, fieldVos);
-        BigExcelWriter writer = ExcelUtil.getBigWriter(PropertiesUtils.profile+File.separator+fileName);
+        BigExcelWriter writer = ExcelUtil.getBigWriter(PropertiesUtils.profile+File.separator+"download"+File.separator+fileName);
         // 一次性写出内容，使用默认样式
         writer.write(list);
         // 关闭writer，释放内存
@@ -76,7 +77,7 @@ public class ExportUtil {
         format.setPadText(true);
         format.setEncoding("UTF-8");
         format.setNewLineAfterDeclaration(false);
-        XMLWriter writer = new XMLWriter(new FileOutputStream(PropertiesUtils.profile+File.separator+fileName), format);
+        XMLWriter writer = new XMLWriter(new FileOutputStream(PropertiesUtils.profile+File.separator+"download"+File.separator+fileName), format);
         writer.write(doc);
         writer.close();
     }

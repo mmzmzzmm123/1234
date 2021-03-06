@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * 【请填写功能名称】Service业务层处理
+ *   Service业务层处理
  *
  * @author gox
  * @date 2021-02-02
@@ -20,10 +20,10 @@ public class AutosizeServiceImpl implements IAutosizeService {
     private AutosizeMapper autosizeMapper;
 
     /**
-     * 查询【请填写功能名称】
+     * 查询
      *
-     * @param id 【请填写功能名称】ID
-     * @return 【请填写功能名称】
+     * @param id   ID
+     * @return
      */
     @Override
     public Autosize selectAutosizeById(Long id) {
@@ -31,10 +31,10 @@ public class AutosizeServiceImpl implements IAutosizeService {
     }
 
     /**
-     * 查询【请填写功能名称】列表
+     * 查询  列表
      *
-     * @param autosize 【请填写功能名称】
-     * @return 【请填写功能名称】
+     * @param autosize
+     * @return
      */
     @Override
     public List<Autosize> selectAutosizeList(Autosize autosize) {
@@ -42,9 +42,9 @@ public class AutosizeServiceImpl implements IAutosizeService {
     }
 
     /**
-     * 新增【请填写功能名称】
+     * 新增
      *
-     * @param autosize 【请填写功能名称】
+     * @param autosize
      * @return 结果
      */
     @Override
@@ -53,9 +53,9 @@ public class AutosizeServiceImpl implements IAutosizeService {
     }
 
     /**
-     * 修改【请填写功能名称】
+     * 修改
      *
-     * @param autosize 【请填写功能名称】
+     * @param autosize
      * @return 结果
      */
     @Override
@@ -64,9 +64,9 @@ public class AutosizeServiceImpl implements IAutosizeService {
     }
 
     /**
-     * 批量删除【请填写功能名称】
+     * 批量删除
      *
-     * @param ids 需要删除的【请填写功能名称】ID
+     * @param ids 需要删除的  ID
      * @return 结果
      */
     @Override
@@ -75,9 +75,9 @@ public class AutosizeServiceImpl implements IAutosizeService {
     }
 
     /**
-     * 删除【请填写功能名称】信息
+     * 删除  信息
      *
-     * @param id 【请填写功能名称】ID
+     * @param id   ID
      * @return 结果
      */
     @Override

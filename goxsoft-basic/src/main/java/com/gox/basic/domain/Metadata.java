@@ -1,5 +1,6 @@
 package com.gox.basic.domain;
 
+import cn.hutool.core.util.StrUtil;
 import com.gox.common.annotation.Excel;
 import com.gox.common.core.domain.BaseEntity;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -875,5 +876,32 @@ public class Metadata extends BaseEntity {
 //            .append("controlIdentifier", getControlIdentifier())
                 .append("annotation", getAnnotation())
                 .toString();
+    }
+
+    public static void main(String[] args) {
+        String a = "id, aggregation_level, archives_name, archives_identifier,\n" +
+                "        fonds_name, fonds_constituting_unit_name, electronic_record_code,\n" +
+                "        archival_code, fonds_identifier, catalogue_number, `year`, retention_period,\n" +
+                "        organizational_structure_or_function, category_code, agency_file_number,\n" +
+                "        archives_file_number, agency_item_number, archives_item_number,\n" +
+                "        document_sequence_number, page_number, content_description, title,\n" +
+                "        parallel_title, alternative_title, other_title_information,\n" +
+                "        `descriptor`, keyword, personal_name, abstract, class_code,\n" +
+                "        document_number, author, `date`, document_type, precedence, principal_receiver,\n" +
+                "        other_receivers, security_classification, secrecy_period, formal_characteristics,\n" +
+                "        document_aggregation_type, total_number_of_items, total_number_of_pages,\n" +
+                "        `language`, manuscript_type, annotation,dept_id,node_id,parent_id";
+        String b = "#{item.id},#{item.aggregationLevel},#{item.archivesName},#{item.archivesIdentifier},#{item.fondsName},\n" +
+                "            #{item.fondsConstitutingUnitName},#{item.electronicRecordCode},#{item.archivalCode},#{item.fondsIdentifier},\n" +
+                "            #{item.catalogueNumber},#{item.year},#{item.retentionPeriod},#{item.organizationalStructureOrFunction},#{item.categoryCode},\n" +
+                "            #{item.agencyFileNumber},#{item.archivesFileNumber},#{item.agencyItemNumber},#{item.archivesItemNumber},#{item.documentSequenceNumber},\n" +
+                "            #{item.pageNumber},#{item.contentDescription},#{item.title},#{item.parallelTitle},#{item.alternativeTitle},#{item.otherTitleInformation},\n" +
+                "            #{item.descriptor},#{item.keyword},#{item.personalName},#{item.abstract},#{item.classCode},#{item.documentNumber},#{item.author},\n" +
+                "            #{item.date},#{item.documentType},#{item.precedence},#{item.principalReceiver},#{item.otherReceivers},#{item.securityClassification},\n" +
+                "            #{item.secrecyPeriod},#{item.formalCharacteristics},#{item.documentAggregationType},#{item.totalNumberOfItems},#{item.totalNumberOfPages},\n" +
+                "            #{item.language},\n" +
+                "            #{item.manuscriptType},#{item.annotation},#{item.deptId},#{item.nodeId},#{item.parentId}";
+        System.out.println(StrUtil.toCamelCase(a).replaceAll(" ","").replaceAll("\n","").split(",").length);
+        System.out.println(StrUtil.toCamelCase(b).replaceAll(" ","").replaceAll("\n","").split(",").length);
     }
 }

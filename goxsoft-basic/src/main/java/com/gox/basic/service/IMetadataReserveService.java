@@ -2,6 +2,7 @@ package com.gox.basic.service;
 
 import com.gox.basic.domain.MetadataReserve;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -34,6 +35,8 @@ public interface IMetadataReserveService {
      * @return 结果
      */
     public int insertMetadataReserve(MetadataReserve metadataReserve);
+
+    int insertMetadataReserve(Collection<MetadataReserve> metadataReserves);
 
     /**
      * 修改备用元数据

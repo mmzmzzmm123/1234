@@ -92,6 +92,14 @@
             <if test="f15 != null">#{f15},</if>
         </trim>
     </insert>
+    <insert id="insertMetadataReserveBatch">
+        insert into metadata_reserve(id, f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11, f12, f13, f14, f15)
+        values
+        <foreach open="" close="" collection="list" item="item" separator=",">
+            (#{item.id},#{item.f1},#{item.f2},#{item.f3},#{item.f4},#{item.f5},#{item. f6},#{item.f7},#{item.f8},
+            #{item.f9},#{item.f10},#{item.f11},#{item.f12},#{item.f13},#{item.f14},#{item.f15})
+        </foreach>
+    </insert>
 
     <update id="updateMetadataReserve" parameterType="MetadataReserve">
         update metadata_reserve

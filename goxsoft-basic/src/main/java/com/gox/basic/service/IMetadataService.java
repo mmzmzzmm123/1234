@@ -1,10 +1,13 @@
 package com.gox.basic.service;
 
+import com.gox.basic.domain.vo.ImportFieldMap;
 import com.gox.common.core.domain.AjaxResult;
 import com.gox.common.utils.file.Chunk;
 import com.gox.basic.domain.Metadata;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -46,6 +49,8 @@ public interface IMetadataService {
      */
     public int updateMetadata(Metadata metadata);
 
+    int insertMetadataBatch(Collection<Metadata> metadata);
+
     /**
      * 批量删除文书类基本元数据
      *
@@ -73,7 +78,11 @@ public interface IMetadataService {
      * @param ids 文书类基本元数据ID
      * @return 结果
      */
-    AjaxResult exportExcelByIds(Long[] ids);
+    AjaxResult exportExcelByIds(Long[] ids) throws Throwable;
+
+    AjaxResult exportXmlByIds(Long[] ids) throws Throwable;
+
+    AjaxResult exportXmlAndEleByIds(Long[] ids) throws Throwable;
 
     /**
      * 根据id导出 excel 电子原文
@@ -81,12 +90,23 @@ public interface IMetadataService {
      * @param ids 文书类基本元数据ID
      * @return 结果
      */
-    AjaxResult exportExcelAndEleByIds(Long[] ids);
+    AjaxResult exportExcelAndEleByIds(Long[] ids) throws Throwable;
 
     /**
      * 上传处理
      *
      * @return result
      */
-    String uploadHandle(Chunk chunk, HttpServletResponse response);
+    String uploadHandle(Chunk chunk, HttpServletResponse response,Long nodeId,Long deptId);
+
+    /**
+     * 上传文件处理 返回结果
+     * @param nodeId
+     * @param deptId
+     * @return
+     */
+    AjaxResult handUpload(Long nodeId, Long deptId,String filename) throws  Throwable;
+
+    AjaxResult importHandle(Long nodeId, Long deptId,Long parentId, String filename, List<ImportFieldMap> maps)
+            throws Throwable;
 }

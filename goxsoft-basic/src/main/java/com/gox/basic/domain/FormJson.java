@@ -1,5 +1,9 @@
 package com.gox.basic.domain;
 
+import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.gox.basic.domain.form.FieldsItem;
 import com.gox.common.annotation.Excel;
 import com.gox.common.core.domain.BaseEntity;
 import com.gox.common.utils.uuid.SnowflakesTools;
@@ -7,6 +11,10 @@ import com.gox.basic.domain.form.FormDesignerData;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.ibatis.type.Alias;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 
 /**
@@ -127,5 +135,10 @@ public class FormJson extends BaseEntity {
                 .append("formData", getFormData())
                 .append("delFlag", getDelFlag())
                 .toString();
+    }
+
+    public static void main(String[] args) {
+        String a ="#{item.id},#{item.node_id},#{item.dept_id},#{item.table_field_name},#{item.v_model},#{item.table_field_flag},#{item.sort},#{item.table_search_flag},#{item.search_sort},#{item.width}";
+        System.out.println(StrUtil.toCamelCase(a));
     }
 }

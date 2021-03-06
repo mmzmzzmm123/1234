@@ -1,11 +1,13 @@
 package com.gox.basic.service.impl;
 
+import cn.hutool.core.util.StrUtil;
 import com.gox.basic.domain.MetadataReserve;
 import com.gox.basic.mapper.MetadataReserveMapper;
 import com.gox.basic.service.IMetadataReserveService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -51,7 +53,10 @@ public class MetadataReserveServiceImpl implements IMetadataReserveService {
     public int insertMetadataReserve(MetadataReserve metadataReserve) {
         return metadataReserveMapper.insertMetadataReserve(metadataReserve);
     }
-
+    @Override
+    public int insertMetadataReserve(Collection<MetadataReserve> metadataReserves){
+        return metadataReserveMapper.insertMetadataReserveBatch(metadataReserves);
+    }
     /**
      * 修改备用元数据
      *

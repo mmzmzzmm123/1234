@@ -1,7 +1,9 @@
 package com.gox.basic.mapper;
 
 import com.gox.basic.domain.MetadataReserve;
+import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -10,6 +12,7 @@ import java.util.List;
  * @author gox
  * @date 2021-01-13
  */
+@Repository
 public interface MetadataReserveMapper {
     /**
      * 查询备用元数据
@@ -34,7 +37,7 @@ public interface MetadataReserveMapper {
      * @return 结果
      */
     public int insertMetadataReserve(MetadataReserve metadataReserve);
-
+    public int insertMetadataReserveBatch(Collection<MetadataReserve> metadataReserves);
     /**
      * 修改备用元数据
      *

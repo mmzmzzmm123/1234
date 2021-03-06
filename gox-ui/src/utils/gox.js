@@ -2,7 +2,7 @@
  * 通用js方法封装处理
  * Copyright (c) 2019 gox
  */
-
+import MessageBox from 'element-ui/packages/message-box/src/main'
 const baseURL = process.env.VUE_APP_BASE_API
 
 // 日期格式化
@@ -100,7 +100,9 @@ export function selectDictLabels(datas, value, separator) {
 
 // 通用下载方法
 export function download(fileName) {
-  window.location.href = baseURL + "/common/download?fileName=" + encodeURI(fileName) + "&delete=" + true;
+  if (fileName!=='操作失败'){
+    window.location.href = baseURL + "/common/download?fileName=" + encodeURI(fileName) + "&delete=" + true;
+  }
 }
 
 // 字符串格式化(%s )

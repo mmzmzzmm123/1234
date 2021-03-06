@@ -75,7 +75,6 @@
         language, manuscript_type, annotation,dept_id,node_id,parent_id
         from metadata md
     </sql>
-
     <select id="selectMetadataList" parameterType="Metadata" resultMap="MetadataResult">
         <include refid="selectMetadataVo"/>
         <where>
@@ -301,6 +300,33 @@
             <if test="deptId != null and deptId != ''">#{deptId},</if>
             <if test="parentId != null and parentId != ''">#{parentId},</if>
         </trim>
+    </insert>
+    <insert id="insertMetadataBatch">
+        insert into metadata(id, aggregation_level, archives_name, archives_identifier,
+        fonds_name, fonds_constituting_unit_name, electronic_record_code,
+        archival_code, fonds_identifier, catalogue_number, `year`, retention_period,
+        organizational_structure_or_function, category_code, agency_file_number,
+        archives_file_number, agency_item_number, archives_item_number,
+        document_sequence_number, page_number, content_description, title,
+        parallel_title, alternative_title, other_title_information,
+        `descriptor`, keyword, personal_name, abstract, class_code,
+        document_number, author, `date`, document_type, precedence, principal_receiver,
+        other_receivers, security_classification, secrecy_period, formal_characteristics,
+        document_aggregation_type, total_number_of_items, total_number_of_pages,
+        `language`, manuscript_type, annotation,dept_id,node_id,parent_id)
+        values
+        <foreach open="" collection="list" item="item" close="" index="index" separator="," >
+            (#{item.id},#{item.aggregationLevel},#{item.archivesName},#{item.archivesIdentifier},#{item.fondsName},
+            #{item.fondsConstitutingUnitName},#{item.electronicRecordCode},#{item.archivalCode},#{item.fondsIdentifier},
+            #{item.catalogueNumber},#{item.year},#{item.retentionPeriod},#{item.organizationalStructureOrFunction},#{item.categoryCode},
+            #{item.agencyFileNumber},#{item.archivesFileNumber},#{item.agencyItemNumber},#{item.archivesItemNumber},#{item.documentSequenceNumber},
+            #{item.pageNumber},#{item.contentDescription},#{item.title},#{item.parallelTitle},#{item.alternativeTitle},#{item.otherTitleInformation},
+            #{item.descriptor},#{item.keyword},#{item.personalName},#{item.abstract},#{item.classCode},#{item.documentNumber},#{item.author},
+            #{item.date},#{item.documentType},#{item.precedence},#{item.principalReceiver},#{item.otherReceivers},#{item.securityClassification},
+            #{item.secrecyPeriod},#{item.formalCharacteristics},#{item.documentAggregationType},#{item.totalNumberOfItems},#{item.totalNumberOfPages},
+            #{item.language},
+            #{item.manuscriptType},#{item.annotation},#{item.deptId},#{item.nodeId},#{item.parentId})
+        </foreach>
     </insert>
 
     <update id="updateMetadata" parameterType="Metadata">

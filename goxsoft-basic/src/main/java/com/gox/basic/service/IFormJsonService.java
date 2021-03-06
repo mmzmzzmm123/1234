@@ -1,6 +1,7 @@
 package com.gox.basic.service;
 
 import com.gox.basic.domain.FormJson;
+import com.gox.basic.domain.TemplatesPreserve;
 
 import java.util.List;
 
@@ -34,6 +35,10 @@ public interface IFormJsonService {
      * @return 结果
      */
     public int insertFormJson(FormJson formJson);
+
+    List<TemplatesPreserve> createTemplates(FormJson formJson);
+
+    List<TemplatesPreserve> getTemplates(FormJson formJson);
 
     int updateFormOrderBatch(Iterable<FormJson> formJsons);
 

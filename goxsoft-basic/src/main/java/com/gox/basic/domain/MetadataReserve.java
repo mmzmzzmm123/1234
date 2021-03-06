@@ -108,6 +108,13 @@ public class MetadataReserve extends BaseEntity {
      */
     @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
     private String f15;
+    public MetadataReserve(){
+
+    }
+
+    public MetadataReserve(Long id) {
+        this.id = id;
+    }
 
     public void setId(Long id) {
         this.id = id;

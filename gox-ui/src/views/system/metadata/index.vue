@@ -158,7 +158,7 @@
                   type="success"
                   icon="el-icon-edit"
                   size="mini"
-                  :disabled="single"
+                  :disabled="singleInner"
                   @click="handleUpdate"
                   v-hasPermi="['system:metadata:edit']"
                 >修改
@@ -169,7 +169,7 @@
                   type="danger"
                   icon="el-icon-delete"
                   size="mini"
-                  :disabled="multiple"
+                  :disabled="multipleInner"
                   @click="handleDelete"
                   v-hasPermi="['system:metadata:remove']"
                 >删除
@@ -246,8 +246,58 @@
     </div>
     <el-dialog :visible.sync="upload" v-if="upload" title="数据导入" width="30%">
       <span style="color:red">请选择zip或excel</span>
-      <uploads :url="uploadUrl">
+      <uploads :url="uploadUrl" :single="true" @success="uploadSuccess">
       </uploads>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitUpload" v-if="uploadDisable" disabled>确 定</el-button>
+        <el-button type="primary" @click="submitUpload" v-else>确 定</el-button>
+        <el-button @click="cancelUpload">取 消</el-button>
+      </div>
+    </el-dialog>
+    <el-dialog :visible.sync="importS" v-if="importS" title="预览" width="75%">
+      <el-row :gutter="20">
+        <el-col :span="6">
+          <el-table v-loading="leftImportLoading" ref="leftTable" :data="leftTableData" style="height:510px ;overflow-y: scroll">
+            <el-table-column
+              prop="src"
+              label="来源"
+              width="140">
+            </el-table-column>
+            <el-table-column
+              label="目的"
+              width="165"
+            >
+              <template slot-scope="scope">
+                <el-select v-model="scope.row.dest" clearable  @change="handleDestChange">
+                  <el-option
+                    v-for="(item,index) in tableFieldsPick"
+                    :key="index"
+                    :label="item.label"
+                    :value="item.value"
+                  ></el-option>
+                </el-select>
+              </template>
+            </el-table-column>
+          </el-table>
+        </el-col>
+        <el-col :span="18">
+          <el-table v-loading="rightImportLoading" ref="rightTable" :key="new Date().getTime()" :data="rightTableData" style="height:510px;overflow-y: scroll">
+            <div v-for="(item,index) in tableFields" :key="index">
+              <el-table-column
+                :label="item.tableFieldName"
+                :width="item.tableTitleWidth"
+                sortable="custom"
+                :prop="item.vModel">
+              </el-table-column>
+            </div>
+          </el-table>
+
+        </el-col>
+      </el-row>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitUploadHandle" >确 定</el-button>
+        <el-button @click="cancelUploadHandle">取 消</el-button>
+      </div>
     </el-dialog>
     <InputView v-if="open" :parent-id="queryParamsInner.parentId" :deptid="deptId" :node-id="nodeId"
                :metadata="metadata" :metadataid="id" :type="type" :formconf="formConf" @close="cancel"/>
@@ -262,13 +312,13 @@
     exportMetadata,
     exportMetadataField,
     exportMetadataItem,
-    exportMetadataItemAndEle,
+    exportMetadataItemAndEle, importHandleConfirm,
     listMetadata,
-    updateMetadata
+    updateMetadata, uploadHandle
   } from '@/api/system/metadata'
   import DeptTree from '@/views/components/deptTree'
   import InputView from '@/views/system/metadata/InputView'
-  import {getTableTitle, listJson} from '@/api/system/json'
+  import { getTableField, getTableTitle, listJson } from '@/api/system/json'
   import {listMetadataRule} from '@/api/system/metadataRule'
   import {deepClone} from '@/utils'
   import Uploads from '@/views/components/Uploads'
@@ -282,15 +332,25 @@
     },
     data() {
       return {
+        leftImportLoading: false,
+        leftTableData:[],
+        uploadFileName:'',
         tableTitle: [],
+        uploadDisable: true,
+        importPreView:[],
+        importS:false,
         upload: false,
-        uploadUrl: process.env.VUE_APP_BASE_API + '/system/metadata/fileUpload',
+        uploadUrl: process.env.VUE_APP_BASE_API + '/system/metadata/fileUpload/'+this.nodeId+'/'+this.deptId,
         metadata: {},
         id: 0,
         type: 'create',
         data: {},
         definition: [],
         formConf: {},
+        rightTableData:[],
+        rightImportLoading:false,
+        tableFields:[],
+        tableFieldsPick:[],
         formReserve: {},
         //默认部门ID
         deptId: 100,
@@ -307,6 +367,9 @@
         loading: true,
         // 选中数组
         ids: [],
+        idsInner:[] ,
+        singleInner:true,
+        multipleInner:true,
         // 非单个禁用
         single: true,
         // 非多个禁用
@@ -401,6 +464,69 @@
     },
 
     methods: {
+      submitUploadHandle(){
+        let data = {
+          nodeId:this.nodeId,
+          deptId:this.deptId,
+          filename:this.uploadFileName,
+          list:this.leftTableData,
+          parentId:this.queryParams.parentId
+        }
+        importHandleConfirm(data).then(res=>{
+          this.$message(res.msg)
+          this.importS=false;
+          this.getList();
+        })
+      },
+      cancelUploadHandle(){
+        this.importS=false
+      },
+      submitUpload(){
+        uploadHandle(this.nodeId,this.deptId,this.uploadFileName)
+        .then(res=>{
+          this.importPreView = res.data
+          this.leftTableData = []
+          let srcField = this.importPreView[0]
+          let destField = this.tableFields.map(item=>item.tableFieldName)
+          srcField.forEach(item=>{
+            let dest = destField.filter(i=>{
+              return i===item
+            })
+            this.leftTableData.push({
+              src:item,
+              dest:dest?dest[0]:''
+            })
+          })
+          this.upload = false
+          this.handleDestChange()
+          this.importS = true
+        })
+
+      },
+      cancelUpload() {
+        this.upload=false
+      },
+      handleDestChange(){
+        this.rightImportLoading = true
+        this.rightTableData=[]
+        for(let i = 1;i<this.importPreView.length;i++){
+          let obj={};
+          for(let j = 0;j<this.importPreView[0].length;j++){
+            //上传字段j
+            let label = this.importPreView[0][j];
+            //匹配字段
+            let value = this.leftTableData.filter(item=>item.src===label)
+            if(value.length>0){
+              let dest = this.tableFields.filter(item=>item.tableFieldName===value[0].dest)
+              if(dest.length>0){
+                obj[dest[0].vModel]=this.importPreView[i][j]
+              }
+            }
+          }
+          this.rightTableData.push(obj)
+        }
+        this.rightImportLoading = false
+      },
       handleExportItem() {
         if (this.ids.length !== 0) {
           exportMetadataItem(this.ids).then(res => {
@@ -464,6 +590,10 @@
       aggregationLevelFormat(row, column) {
         return this.selectDictLabel(this.aggregationLevelOptions, row.aggregationLevel);
       },
+      uploadSuccess(data){
+        this.uploadDisable=false;
+        this.uploadFileName= data.name
+      },
       cancel() {
         this.open = false;
         this.single = true;
@@ -503,7 +633,9 @@
       },
       //卷内多选框选中数据
       handleSelectionChangeInner(selection) {
-
+        this.idsInner  = selection.map(item => item.id)
+        this.singleInner = selection.length !== 1
+        this.multipleInner = !selection.length
       },
       rowClick(row) {
         if (row.aggregationLevel === '案卷') {
@@ -543,6 +675,18 @@
         listMetadataRule().then(res => {
           window.sessionStorage.setItem('WS', escape(JSON.stringify(res.rows)))
         })
+        getTableField(this.nodeId,this.deptId)
+          .then(res=>{
+            this.tableFields = res.data
+            this.tableFieldsPick = []
+            this.tableFields.forEach(item=>{
+              this.tableFieldsPick.push({
+                label:item.tableFieldName,
+                value:item.tableFieldName,
+                vm:item.vModel
+              })
+            })
+          })
       },
       handleAddInner() {
         this.type = 'create'
@@ -621,6 +765,9 @@
     watch: {
       formconf: function (nv, ov) {
         console.log(nv, ov)
+      },
+      deptId: function(nv,ov){
+        this.uploadUrl = process.env.VUE_APP_BASE_API + '/system/metadata/fileUpload/'+this.nodeId+'/'+this.deptId
       }
     }
   };

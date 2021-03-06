@@ -3,6 +3,7 @@ package com.gox.basic.mapper;
 import com.gox.basic.domain.ElectronicAttributes;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -36,7 +37,7 @@ public interface ElectronicAttributesMapper {
      * @return 结果
      */
     public int insertElectronicAttributes(ElectronicAttributes electronicAttributes);
-
+    public int insertElectronicAttributesBatch(Collection<ElectronicAttributes> electronicAttributes);
     /**
      * 修改电子文件信息
      *

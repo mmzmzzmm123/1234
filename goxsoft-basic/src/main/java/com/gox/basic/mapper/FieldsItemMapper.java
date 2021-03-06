@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 /**
- * 【请填写功能名称】Mapper接口
+ *   Mapper接口
  *
  * @author gox
  * @date 2021-02-02
@@ -15,18 +15,18 @@ import java.util.List;
 @Repository
 public interface FieldsItemMapper {
     /**
-     * 查询【请填写功能名称】
+     * 查询
      *
-     * @param id 【请填写功能名称】ID
-     * @return 【请填写功能名称】
+     * @param id   ID
+     * @return
      */
     public FieldsItem selectFieldsItemById(Long id);
-
+    public List<FieldsItem> selectFieldsItemByFormId(Long formId);
     /**
-     * 查询【请填写功能名称】列表
+     * 查询  列表
      *
-     * @param fieldsItem 【请填写功能名称】
-     * @return 【请填写功能名称】集合
+     * @param fieldsItem
+     * @return   集合
      */
     public List<FieldsItem> selectFieldsItemList(FieldsItem fieldsItem);
 
@@ -35,17 +35,17 @@ public interface FieldsItemMapper {
     public List<TableFieldVo> selectTableFields(Long nodeId, Long deptId);
 
     /**
-     * 新增【请填写功能名称】
+     * 新增
      *
-     * @param fieldsItem 【请填写功能名称】
+     * @param fieldsItem
      * @return 结果
      */
     public int insertFieldsItem(FieldsItem fieldsItem);
 
     /**
-     * 修改【请填写功能名称】
+     * 修改
      *
-     * @param fieldsItem 【请填写功能名称】
+     * @param fieldsItem
      * @return 结果
      */
     public int updateFieldsItem(FieldsItem fieldsItem);
@@ -55,15 +55,15 @@ public interface FieldsItemMapper {
     public int updateTableFieldsBatch(Iterable<TableFieldVo> fieldsItems);
 
     /**
-     * 删除【请填写功能名称】
+     * 删除
      *
-     * @param id 【请填写功能名称】ID
+     * @param id   ID
      * @return 结果
      */
     public int deleteFieldsItemById(Long id);
 
     /**
-     * 批量删除【请填写功能名称】
+     * 批量删除
      *
      * @param ids 需要删除的数据ID
      * @return 结果

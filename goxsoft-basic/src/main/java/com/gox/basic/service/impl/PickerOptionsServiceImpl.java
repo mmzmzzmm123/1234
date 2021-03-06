@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * 【请填写功能名称】Service业务层处理
+ *   Service业务层处理
  *
  * @author gox
  * @date 2021-02-02
@@ -20,10 +20,10 @@ public class PickerOptionsServiceImpl implements IPickerOptionsService {
     private PickerOptionsMapper pickerOptionsMapper;
 
     /**
-     * 查询【请填写功能名称】
+     * 查询
      *
-     * @param id 【请填写功能名称】ID
-     * @return 【请填写功能名称】
+     * @param id   ID
+     * @return
      */
     @Override
     public PickerOptions selectPickerOptionsById(Long id) {
@@ -31,10 +31,10 @@ public class PickerOptionsServiceImpl implements IPickerOptionsService {
     }
 
     /**
-     * 查询【请填写功能名称】列表
+     * 查询  列表
      *
-     * @param pickerOptions 【请填写功能名称】
-     * @return 【请填写功能名称】
+     * @param pickerOptions
+     * @return
      */
     @Override
     public List<PickerOptions> selectPickerOptionsList(PickerOptions pickerOptions) {
@@ -42,9 +42,9 @@ public class PickerOptionsServiceImpl implements IPickerOptionsService {
     }
 
     /**
-     * 新增【请填写功能名称】
+     * 新增
      *
-     * @param pickerOptions 【请填写功能名称】
+     * @param pickerOptions
      * @return 结果
      */
     @Override
@@ -63,9 +63,9 @@ public class PickerOptionsServiceImpl implements IPickerOptionsService {
     }
 
     /**
-     * 修改【请填写功能名称】
+     * 修改
      *
-     * @param pickerOptions 【请填写功能名称】
+     * @param pickerOptions
      * @return 结果
      */
     @Override
@@ -74,9 +74,9 @@ public class PickerOptionsServiceImpl implements IPickerOptionsService {
     }
 
     /**
-     * 批量删除【请填写功能名称】
+     * 批量删除
      *
-     * @param ids 需要删除的【请填写功能名称】ID
+     * @param ids 需要删除的  ID
      * @return 结果
      */
     @Override
@@ -85,9 +85,9 @@ public class PickerOptionsServiceImpl implements IPickerOptionsService {
     }
 
     /**
-     * 删除【请填写功能名称】信息
+     * 删除  信息
      *
-     * @param id 【请填写功能名称】ID
+     * @param id   ID
      * @return 结果
      */
     @Override

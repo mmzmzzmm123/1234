@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gox.basic.mapper.TemplatesPreserveMapper">
+    
+    <resultMap type="TemplatesPreserve" id="TemplatesPreserveResult">
+        <result property="id"    column="id"    />
+        <result property="nodeId"    column="node_id"    />
+        <result property="deptId"    column="dept_id"    />
+        <result property="tableFieldName"    column="table_field_name"    />
+        <result property="vModel"    column="v_model"    />
+        <result property="tableFieldFlag"    column="table_field_flag"    />
+        <result property="sort"    column="sort"    />
+        <result property="tableSearchFlag"    column="table_search_flag"    />
+        <result property="searchSort"    column="search_sort"    />
+        <result property="width"    column="width"    />
+    </resultMap>
+
+    <sql id="selectTemplatesPreserveVo">
+        select id, node_id, dept_id, table_field_name, v_model, table_field_flag, sort, table_search_flag, search_sort, width from templates_preserve
+    </sql>
+
+    <select id="selectTemplatesPreserveList" parameterType="TemplatesPreserve" resultMap="TemplatesPreserveResult">
+        <include refid="selectTemplatesPreserveVo"/>
+        <where>  
+            <if test="nodeId != null "> and node_id = #{nodeId}</if>
+            <if test="deptId != null "> and dept_id = #{deptId}</if>
+            <if test="tableFieldName != null  and tableFieldName != ''"> and table_field_name like concat('%', #{tableFieldName}, '%')</if>
+            <if test="vModel != null  and vModel != ''"> and v_model = #{vModel}</if>
+            <if test="tableFieldFlag != null "> and table_field_flag = #{tableFieldFlag}</if>
+            <if test="sort != null "> and sort = #{sort}</if>
+            <if test="tableSearchFlag != null "> and table_search_flag = #{tableSearchFlag}</if>
+            <if test="searchSort != null "> and search_sort = #{searchSort}</if>
+            <if test="width != null "> and width = #{width}</if>
+        </where>
+    </select>
+    
+    <select id="selectTemplatesPreserveById" parameterType="Long" resultMap="TemplatesPreserveResult">
+        <include refid="selectTemplatesPreserveVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTemplatesPreserve" parameterType="TemplatesPreserve">
+        insert into templates_preserve
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="nodeId != null">node_id,</if>
+            <if test="deptId != null">dept_id,</if>
+            <if test="tableFieldName != null">table_field_name,</if>
+            <if test="vModel != null">v_model,</if>
+            <if test="tableFieldFlag != null">table_field_flag,</if>
+            <if test="sort != null">sort,</if>
+            <if test="tableSearchFlag != null">table_search_flag,</if>
+            <if test="searchSort != null">search_sort,</if>
+            <if test="width != null">width,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="nodeId != null">#{nodeId},</if>
+            <if test="deptId != null">#{deptId},</if>
+            <if test="tableFieldName != null">#{tableFieldName},</if>
+            <if test="vModel != null">#{vModel},</if>
+            <if test="tableFieldFlag != null">#{tableFieldFlag},</if>
+            <if test="sort != null">#{sort},</if>
+            <if test="tableSearchFlag != null">#{tableSearchFlag},</if>
+            <if test="searchSort != null">#{searchSort},</if>
+            <if test="width != null">#{width},</if>
+         </trim>
+    </insert>
+    <insert id="insertTemplatesPreserveBatch">
+        insert  into templates_preserve(id, node_id, dept_id, table_field_name, v_model, table_field_flag, sort, table_search_flag, search_sort, width)
+        values
+        <foreach collection="list" item="item" open="" close="" separator=",">
+            (#{item.id},#{item.nodeId},#{item.deptId},#{item.tableFieldName},#{item.vModel},#{item.tableFieldFlag}
+            ,#{item.sort},#{item.tableSearchFlag},#{item.searchSort},#{item.width})
+        </foreach>
+    </insert>
+
+    <update id="updateTemplatesPreserve" parameterType="TemplatesPreserve">
+        update templates_preserve
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="nodeId != null">node_id = #{nodeId},</if>
+            <if test="deptId != null">dept_id = #{deptId},</if>
+            <if test="tableFieldName != null">table_field_name = #{tableFieldName},</if>
+            <if test="vModel != null">v_model = #{vModel},</if>
+            <if test="tableFieldFlag != null">table_field_flag = #{tableFieldFlag},</if>
+            <if test="sort != null">sort = #{sort},</if>
+            <if test="tableSearchFlag != null">table_search_flag = #{tableSearchFlag},</if>
+            <if test="searchSort != null">search_sort = #{searchSort},</if>
+            <if test="width != null">width = #{width},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTemplatesPreserveById" parameterType="Long">
+        delete from templates_preserve where id = #{id}
+    </delete>
+
+    <delete id="deleteTemplatesPreserveByIds" parameterType="String">
+        delete from templates_preserve where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

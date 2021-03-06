@@ -141,6 +141,20 @@
         where not exists(select metadata_id from electronic_attributes where metadata_id=#{metadataId} and
         computer_file_name=#{computerFileName})
     </insert>
+    <insert id="insertElectronicAttributesBatch">
+        insert into electronic_attributes
+        (id, format_information, computer_file_name, computer_file_size, document_creating_application,
+        information_system_description, physical_record_characteristics, scanning_resolution, scanning_color_model,
+        image_compression_scheme, current_location, offline_medium_identifier, offline_medium_storage_location,
+        microform_identifier, metadata_id)
+        values
+        <foreach close="" open="" collection="list" separator="," item="item">
+            (#{item.id},#{item.formatInformation},#{item.computerFileName},#{item.computerFileSize},#{item.documentCreatingApplication,
+            informationSystemDescription},#{item.physicalRecordCharacteristics},#{item.scanningResolution},#{item.scanningColorModel,
+            imageCompressionScheme},#{item.currentLocation},#{item.offlineMediumIdentifier},#{item.offlineMediumStorageLocation,
+            microformIdentifier},#{item.metadataId})
+        </foreach>
+    </insert>
 
     <update id="updateElectronicAttributes" parameterType="ElectronicAttributes">
         update electronic_attributes

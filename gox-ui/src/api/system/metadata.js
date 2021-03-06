@@ -55,24 +55,38 @@ export function exportMetadata(query) {
 // 导出文书类基本元数据 id
 export function exportMetadataItem(ids) {
   return request({
-    url: '/system/metadata/export/' + ids,
-    method: 'get',
+    url: '/system/metadata/export',
+    method: 'post',
+    data:ids.join(',')
   })
 }
 
 // 导出文书类基本元数据电子文件 id
 export function exportMetadataItemAndEle(ids) {
   return request({
-    url: '/system/metadata/export/ele/' + ids,
+    url: '/system/metadata/export/ele',
+    method: 'post',
+    data:ids.join(',')
+  })
+}
+export function uploadHandle(nodeId,deptId,filename) {
+  return request({
+    url: '/system/metadata/import/'+nodeId+'/'+deptId+'/'+filename,
     method: 'get',
   })
 }
-
 // 导出文书类基本元数据 字段
 export function exportMetadataField() {
   return request({
     url: '/system/metadata/export/field',
     method: 'get',
+  })
+}
+export function importHandleConfirm(data){
+  return request({
+    url: '/system/metadata/import',
+    method: 'post',
+    data:data,
   })
 }
 

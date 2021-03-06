@@ -1,6 +1,11 @@
 package com.gox.basic.controller;
 
 import cn.hutool.core.util.StrUtil;
+import com.gox.basic.domain.vo.ImportFieldMap;
+import com.gox.basic.domain.vo.ImportParams;
+import com.gox.basic.domain.vo.TableFieldVo;
+import com.gox.basic.service.IFieldsItemService;
+import com.gox.basic.utils.ExportUtil;
 import com.gox.common.annotation.Log;
 import com.gox.common.core.controller.BaseController;
 import com.gox.common.core.domain.AjaxResult;
@@ -11,6 +16,7 @@ import com.gox.common.utils.file.Chunk;
 import com.gox.common.utils.poi.ExcelUtil;
 import com.gox.basic.domain.Metadata;
 import com.gox.basic.service.IMetadataService;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -31,7 +38,8 @@ import java.util.List;
 public class MetadataController extends BaseController {
     @Autowired
     private IMetadataService metadataService;
-
+    @Autowired
+    private IFieldsItemService iFieldsItemService;
     /**
      * 查询文书类基本元数据列表
      */
@@ -61,10 +69,12 @@ public class MetadataController extends BaseController {
     @PreAuthorize("@ss.hasPermi('basic:metadata:export')")
     @Log(title = "文书类基本元数据", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
-    public AjaxResult export(Metadata metadata) {
+    public AjaxResult export(Metadata metadata) throws Throwable {
         List<Metadata> list = metadataService.selectMetadataList(metadata);
-        ExcelUtil<Metadata> util = new ExcelUtil<Metadata>(Metadata.class);
-        return util.exportExcel(list, "metadata");
+        List<TableFieldVo> fieldVos = iFieldsItemService.selectTableFieldByNodeIdAndDeptId(metadata.getNodeId(),metadata.getDeptId());
+        String defaultN = System.currentTimeMillis()+".xlsx";
+        ExportUtil.exportExcel(list,fieldVos,defaultN);
+        return AjaxResult.success(defaultN);
     }
 
     /**
@@ -72,9 +82,14 @@ public class MetadataController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('basic:metadata:export')")
     @Log(title = "文书类基本元数据", businessType = BusinessType.EXPORT)
-    @GetMapping("/export/{ids}")
-    public AjaxResult exportItemByIds(@PathVariable Long[] ids) {
-        return metadataService.exportExcelByIds(ids);
+    @PostMapping("/export")
+    public AjaxResult exportItemByIds(@RequestBody String ids) throws Throwable {
+        String [] idArr = ids.split(",");
+        Long[] id = new Long[idArr.length];
+        for (int i = 0; i < idArr.length; i++) {
+            id[i] = Long.parseLong(idArr[i]);
+        }
+        return metadataService.exportExcelByIds(id);
     }
 
     /**
@@ -82,9 +97,14 @@ public class MetadataController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('basic:metadata:export')")
     @Log(title = "文书类基本元数据和电子原文", businessType = BusinessType.EXPORT)
-    @GetMapping("/export/ele/{ids}")
-    public AjaxResult exportItemAndEleByIds(@PathVariable Long[] ids) {
-        return metadataService.exportExcelAndEleByIds(ids);
+    @PostMapping("/export/ele")
+    public AjaxResult exportItemAndEleByIds(@RequestBody String ids) throws Throwable {
+        String [] idArr = ids.split(",");
+        Long[] id = new Long[idArr.length];
+        for (int i = 0; i < idArr.length; i++) {
+            id[i] = Long.parseLong(idArr[i]);
+        }
+        return metadataService.exportExcelAndEleByIds(id);
     }
 
     /**
@@ -92,10 +112,12 @@ public class MetadataController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('basic:metadata:export')")
     @Log(title = "文书类基本元数据字段模板", businessType = BusinessType.EXPORT)
-    @GetMapping("/export/field")
-    public AjaxResult exportFieldExcel() {
-        ExcelUtil<Metadata> util = new ExcelUtil<Metadata>(Metadata.class);
-        return util.exportExcel(new ArrayList<>(), "metadata");
+    @GetMapping("/export/field/{nodeId}/{deptId}")
+    public AjaxResult exportFieldExcel(@PathVariable Long nodeId,@PathVariable Long deptId) throws Throwable {
+        List<TableFieldVo> fieldVos = iFieldsItemService.selectTableFieldByNodeIdAndDeptId(nodeId, deptId);
+        String defaultN = System.currentTimeMillis()+".xlsx";
+        ExportUtil.exportExcel(new ArrayList<>(),fieldVos,defaultN);
+        return AjaxResult.success(defaultN);
     }
 
     /**
@@ -146,10 +168,9 @@ public class MetadataController extends BaseController {
      * @return 上传响应状态
      */
     @PreAuthorize("@ss.hasPermi('basic:attributes:add')")
-    @Log(title = "电子文件信息", businessType = BusinessType.INSERT)
-    @PostMapping("/fileUpload")
-    public String uploadPost(@ModelAttribute Chunk chunk, HttpServletResponse response) throws IOException {
-        return metadataService.uploadHandle(chunk, response);
+    @PostMapping("/fileUpload/{nodeId}/{deptId}")
+    public String uploadPost(@ModelAttribute Chunk chunk, HttpServletResponse response,@PathVariable Long nodeId,@PathVariable Long deptId) throws IOException {
+        return metadataService.uploadHandle(chunk, response,nodeId,deptId);
     }
 
     /**
@@ -160,8 +181,22 @@ public class MetadataController extends BaseController {
      * @param response 响应
      * @return 文件块
      */
-    @GetMapping("/fileUpload")
-    public void uploadGet(@ModelAttribute Chunk chunk, HttpServletResponse response) {
+    @GetMapping("/fileUpload/{nodeId}/{deptId}")
+    public void uploadGet(@ModelAttribute Chunk chunk, HttpServletResponse response, @PathVariable String nodeId, @PathVariable String deptId) {
         response.setStatus(304);
+    }
+    @ApiOperation(value = "导入处理返回获取的数据头",httpMethod = "GET")
+    @PreAuthorize("@ss.hasPermi('basic:attributes:add')")
+    @GetMapping("/import/{nodeId}/{deptId}/{filename}")
+    public AjaxResult uploadHandler(@PathVariable Long nodeId,@PathVariable Long deptId,@PathVariable String filename) throws Throwable {
+        return metadataService.handUpload(nodeId,deptId,filename);
+    }
+    @ApiOperation(value = "确认导入接口",httpMethod = "POST")
+    @PreAuthorize("@ss.hasPermi('basic:attributes:add')")
+    @Log(title = "文书类基本元数据", businessType = BusinessType.IMPORT)
+    @PostMapping("/import")
+    public AjaxResult importHandler(@RequestBody ImportParams importParams) throws Throwable{
+        return metadataService.importHandle(importParams.getNodeId(),importParams.getDeptId(),
+                importParams.getParentId(),importParams.getFilename(),importParams.getList());
     }
 }

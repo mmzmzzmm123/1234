@@ -6,6 +6,7 @@ import com.gox.basic.domain.ElectronicAttributes;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -51,6 +52,8 @@ public interface IElectronicAttributesService {
      * @return 结果
      */
     public int insertElectronicAttributes(ElectronicAttributes electronicAttributes);
+
+    int insertElectronicAttributesBatch(Collection<ElectronicAttributes> electronicAttributes);
 
     /**
      * 修改电子文件信息

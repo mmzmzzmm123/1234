@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -136,6 +137,10 @@ public class ElectronicAttributesServiceImpl implements IElectronicAttributesSer
     @Override
     public int insertElectronicAttributes(ElectronicAttributes electronicAttributes) {
         return electronicAttributesMapper.insertElectronicAttributes(electronicAttributes);
+    }
+    @Override
+    public int insertElectronicAttributesBatch(Collection<ElectronicAttributes> electronicAttributes) {
+        return electronicAttributesMapper.insertElectronicAttributesBatch(electronicAttributes);
     }
 
     /**

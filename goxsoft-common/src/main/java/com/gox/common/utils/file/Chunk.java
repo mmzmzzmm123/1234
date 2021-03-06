@@ -4,9 +4,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.Serializable;
 
-/**
- * @author He Changjie on 2018/12/3
- */
 public class Chunk implements Serializable {
     /**
      * 当前文件块，从1开始

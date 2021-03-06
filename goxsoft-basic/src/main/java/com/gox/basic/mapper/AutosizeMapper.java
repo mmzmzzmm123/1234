@@ -5,56 +5,56 @@ import com.gox.basic.domain.form.Autosize;
 import java.util.List;
 
 /**
- * 【请填写功能名称】Mapper接口
+ *   Mapper接口
  *
  * @author gox
  * @date 2021-02-02
  */
 public interface AutosizeMapper {
     /**
-     * 查询【请填写功能名称】
+     * 查询
      *
-     * @param id 【请填写功能名称】ID
-     * @return 【请填写功能名称】
+     * @param id   ID
+     * @return
      */
     public Autosize selectAutosizeById(Long id);
 
     public Autosize selectAutosizeByItemId(Long itemId);
 
     /**
-     * 查询【请填写功能名称】列表
+     * 查询  列表
      *
-     * @param autosize 【请填写功能名称】
-     * @return 【请填写功能名称】集合
+     * @param autosize
+     * @return   集合
      */
     public List<Autosize> selectAutosizeList(Autosize autosize);
 
     /**
-     * 新增【请填写功能名称】
+     * 新增
      *
-     * @param autosize 【请填写功能名称】
+     * @param autosize
      * @return 结果
      */
     public int insertAutosize(Autosize autosize);
 
     /**
-     * 修改【请填写功能名称】
+     * 修改
      *
-     * @param autosize 【请填写功能名称】
+     * @param autosize
      * @return 结果
      */
     public int updateAutosize(Autosize autosize);
 
     /**
-     * 删除【请填写功能名称】
+     * 删除
      *
-     * @param id 【请填写功能名称】ID
+     * @param id   ID
      * @return 结果
      */
     public int deleteAutosizeById(Long id);
 
     /**
-     * 批量删除【请填写功能名称】
+     * 批量删除
      *
      * @param ids 需要删除的数据ID
      * @return 结果

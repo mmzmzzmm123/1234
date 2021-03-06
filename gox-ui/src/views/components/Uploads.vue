@@ -1,10 +1,11 @@
 <template>
   <div class="fileupload">
-    <uploader :options="options" ref="uploader" @com :file-status-text="statusText" class="uploader-example">
+    <uploader :options="options" ref="uploader"  @file-success="fileSuccess" :file-status-text="statusText" class="uploader-example">
       <uploader-unsupport></uploader-unsupport>
       <uploader-drop>
         <p>拖拽文件至此或点击按钮</p>
-        <uploader-btn>选择文件</uploader-btn>
+        <uploader-btn v-if="single" single>选择文件</uploader-btn>
+        <uploader-btn v-else >选择文件</uploader-btn>
       </uploader-drop>
       <uploader-list></uploader-list>
     </uploader>
@@ -20,6 +21,9 @@
       url: {
         type: String
       },
+      single:{
+        type:Boolean,
+      }
 
     },
     data() {
@@ -43,6 +47,11 @@
           paused: '暂停中',
           waiting: '等待中'
         }
+      }
+    },
+    methods:{
+      fileSuccess(rootFile, file, message, chunk){
+        this.$emit('success',rootFile)
       }
     }
   }

@@ -155,6 +155,10 @@
         left join config c on fi.id = c.item_id where fi.form_id in (select id from form_json where node_id=#{param1}
         and dept_id=#{param2}) and is_table_field = 1 order by table_field_sort
     </select>
+    <select id="selectFieldsItemByFormId" resultMap="FieldsItemResult">
+        <include refid="selectFieldsItemVo"></include>
+        where form_id=#{formId}
+    </select>
 
     <insert id="insertFieldsItem" parameterType="FieldsItem">
         insert into fields_item
