@@ -201,7 +201,7 @@
           v-show="dataList.length == 0"
           style="font-size: 20px; text-align: center"
         >
-          <VueQr :text="copyValue" :logoSrc="logo" />
+          <VueQr :text="copyValue" :logoSrc="logo" size="256"/>
           <div style="text-align: center; margin-top: 20px">
             <el-button
               icon="el-icon-share"

@@ -20,7 +20,7 @@
             >客户食谱链接
           </el-button>
           <el-popover placement="top" trigger="click" v-if="cusOutId" style="margin: 0 12px">
-            <VueQr :text="copyValue" :logoSrc="logo" />
+            <VueQr :text="copyValue" :logoSrc="logo" size="256" />
             <el-button
               slot="reference"
               size="mini"

@@ -319,7 +319,6 @@
       v-loading="loading"
       :data="orderList"
       :row-class-name="tableRowClassName"
-      height="85%"
     >
       <el-table-column label="审核状态" align="center" prop="reviewStatus">
         <template slot-scope="scope">
@@ -801,7 +800,6 @@ export default {
 <style lang="scss" scoped>
 .order_view_wrapper {
   padding: 20px;
-  height: calc(100vh - 80px);
   .s_success {
     color: #1ab394;
     font-size: 22px;
