@@ -15,8 +15,10 @@
         @click="handleUserInfoClick"
       />
     </div>
-    <div class="content" v-loading="loading">
-      <MenuDetail :value="menuData" :date="curDate" />
+    <div v-loading="loading">
+      <div class="content">
+        <MenuDetail :value="menuData" :date="curDate" />
+      </div>
     </div>
 
     <!-- 食谱计划 -->
@@ -71,24 +73,29 @@ export default {
       if (response.code === 200) {
         let curPlanId, curMenuId, curDate;
         const toDay = dayjs().format("YYYY-MM-DD");
-        this.planList = response.data.map((plan) => ({
-          menus: plan.menus.map((menu, idx) => {
-            const date = dayjs(plan.startDate)
-              .add(idx, "day")
-              .format("YYYY-MM-DD");
-            if (toDay === date) {
-              curPlanId = plan.id;
-              curMenuId = menu.id;
-              curDate = date;
-            }
-            return {
-              date,
-              id: menu.id,
-            };
-          }),
-          label: `第${plan.startNumDay} 至 ${plan.endNumDay}天`,
-          id: plan.id,
-        }));
+        this.planList = response.data.reduce((arr, plan) => {
+          if (plan.menus) {
+            arr.push({
+              menus: plan.menus.map((menu, idx) => {
+                const date = dayjs(plan.startDate)
+                  .add(idx, "day")
+                  .format("YYYY-MM-DD");
+                if (toDay === date) {
+                  curPlanId = plan.id;
+                  curMenuId = menu.id;
+                  curDate = date;
+                }
+                return {
+                  date,
+                  id: menu.id,
+                };
+              }),
+              label: `第${plan.startNumDay} 至 ${plan.endNumDay}天`,
+              id: plan.id,
+            });
+          }
+          return arr;
+        }, []);
         if (!curMenuId) {
           curMenuId = this.planList[0].menus[0].id;
           curPlanId = this.planList[0].id;
@@ -97,6 +104,10 @@ export default {
         this.curMenuId = curMenuId;
         this.curPlanId = curPlanId;
         this.curDate = curDate;
+
+        // console.log({
+        //   planList: this.planList,
+        // });
 
         this.fetchRecipesInfo(this.curMenuId);
       }

@@ -239,7 +239,7 @@
 
     <!--  通过outId查询食谱计划简要-->
     <select id="selectRecipesPlanListInfo" resultMap="SysRecipesPlanListInfoResult">
-        select id, start_date, end_date, start_num_day, end_num_day, recipes_id from sys_recipes_plan where out_id=#{outId} and del_flag = 0
+        select id, start_date, end_date, start_num_day, end_num_day, recipes_id from sys_recipes_plan where out_id=#{outId} and del_flag = 0 and review_status = 2
     </select>
 
     <resultMap type="SysRecipesDaily" id="SysRecipesResult">
@@ -248,8 +248,9 @@
     </resultMap>
 
     <select id="selectMenuIds" parameterType="Long" resultMap="SysRecipesResult">
-        select id, num_day from sys_customer_daily_menu where recipes_id=#{recipes_id} and del_flag = 0 order by num_day asc
+        select id, num_day from sys_customer_daily_menu where recipes_id=#{recipes_id} order by num_day asc
     </select>
+
 
     <!-- 批量修改食谱计划 -->
     <update id="updateMuchRecipesPlanDate" parameterType="SysRecipesPlan"> 

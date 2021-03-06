@@ -5,7 +5,10 @@
     <!-- 食谱详细 -->
     <el-card v-for="obj in menus" :key="obj.type" style="margin-top: 12px">
       <div slot="header">
-        <span>{{ obj.typeName }}</span>
+        <div class="header_style">
+          <span>{{ obj.typeName }}</span>
+          <span class="time">{{ menuTypeTimeDict[obj.type] }}</span>
+        </div>
       </div>
       <div v-for="mObj in obj.values" :key="mObj.id">
         <div class="dishes_item">
@@ -60,6 +63,10 @@ export default {
   },
   data() {
     return {
+      menuTypeTimeDict: {
+        2: "10:00 - 10:30",
+        4: "15:00 - 15:30",
+      },
       menuTypeDict: {},
       curUnitDict: {},
       cusWeightDict: {},
@@ -106,6 +113,15 @@ export default {
 <style lang="scss" scoped>
 .menu_detail_wrapper {
   padding: 0 12px 12px 12px;
+
+  .header_style {
+    display: flex;
+    justify-content: space-between;
+
+    .time {
+      color: #8c8c8c;
+    }
+  }
 
   .dishes_item {
     height: 38px;
