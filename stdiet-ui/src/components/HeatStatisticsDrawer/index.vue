@@ -22,7 +22,7 @@
             >
           </el-col>
           <el-popover :placement="bottom" trigger="click">
-            <VueQr :text="copyValue" :logoSrc="logo" />
+            <VueQr :text="copyValue" :logoSrc="logo" size="256"/>
             <el-button slot="reference">二维码</el-button>
           </el-popover>
         </el-row>

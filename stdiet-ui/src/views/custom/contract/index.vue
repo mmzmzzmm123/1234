@@ -198,7 +198,7 @@
             >复制
           </el-button>
           <el-popover placement="top" trigger="click">
-            <VueQr :text="copyValue" :logoSrc="logo" />
+            <VueQr :text="copyValue" :logoSrc="logo" size="256"/>
             <el-button
               slot="reference"
               icon="el-icon-picture-outline"
