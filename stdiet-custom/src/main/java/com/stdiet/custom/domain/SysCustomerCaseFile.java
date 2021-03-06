@@ -26,6 +26,8 @@ public class SysCustomerCaseFile extends BaseEntity
     @Excel(name = "文件路径")
     private String fileUrl;
 
+    private String downUrl;
+
     /** 文件名字 */
     @Excel(name = "文件名字")
     private String fileName;

@@ -2,6 +2,7 @@ package com.stdiet.custom.mapper;
 
 import java.util.List;
 import com.stdiet.custom.domain.SysCustomerCaseFile;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 客户案例对应文件管理Mapper接口
@@ -58,4 +59,29 @@ public interface SysCustomerCaseFileMapper
      * @return 结果
      */
     public int deleteSysCustomerCaseFileByIds(Long[] ids);
+
+    /**
+     * 根据案例ID删除该案例下的所有文件记录
+     * @param caseId
+     */
+    int deleteSysCustomerCaseFileByCaseId(@Param("caseId")Long caseId);
+
+    /**
+     * 根据案例ID批量删除该案例下的所有文件记录
+     * @param caseIds
+     */
+    int deleteSysCustomerCaseFileByCaseIds(Long[] caseIds);
+
+    /**
+     * 批量插入案例文件记录
+     * @param list
+     */
+    int insertBatch(List<SysCustomerCaseFile> list);
+
+    /**
+     * 根据案例Id查询案例文件列表
+     * @param caseId
+     * @return
+     */
+    List<SysCustomerCaseFile> selectSysCustomerCaseFileListByCaseId(@Param("caseId") Long caseId);
 }
