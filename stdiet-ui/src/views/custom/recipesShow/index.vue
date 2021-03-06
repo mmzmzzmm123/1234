@@ -1,5 +1,5 @@
 <template>
-  <div class="recipes_show_wrapper">
+  <div class="recipes_show_wrapper" v-title data-title="健康食谱">
     <div class="header">
       <el-button
         icon="el-icon-date"
