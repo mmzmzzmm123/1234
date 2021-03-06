@@ -56,6 +56,7 @@ export default {
   },
   watch: {
     value(val) {
+      console.log({ val });
       if (!val || !val.length) {
         return;
       }

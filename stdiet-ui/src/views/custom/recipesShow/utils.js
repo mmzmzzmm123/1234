@@ -17,21 +17,21 @@ export function getProcessMenuData(menuData) {
         igdList: cur.igdList.reduce((igdArr, igdData) => {
           if (igdData.id > 0) {
             const tarDetail = cur.detail.find(obj => obj.id === igdData.id);
-            igdArr.push({
-              id: igdData.id,
-              name: igdData.name,
-              carbonRatio: igdData.carbonRatio,
-              fatRatio: igdData.fatRatio,
-              proteinRatio: igdData.proteinRatio,
-              cusUnit: tarDetail ? tarDetail.cus_unit : igdData.cusUnit,
-              cusWeight: tarDetail
-                ? parseFloat(tarDetail.cus_weight)
-                : igdData.cusWeight,
-              weight: tarDetail ? parseFloat(tarDetail.weight) : igdData.weight,
-              notRec: igdData.notRec,
-              rec: igdData.rec,
-              type: igdData.type
-            });
+            if (tarDetail) {
+              igdArr.push({
+                id: igdData.id,
+                name: igdData.name,
+                carbonRatio: igdData.carbonRatio,
+                fatRatio: igdData.fatRatio,
+                proteinRatio: igdData.proteinRatio,
+                cusUnit: tarDetail.cus_unit,
+                cusWeight: tarDetail.cus_weight,
+                weight: parseFloat(tarDetail.weight),
+                notRec: igdData.notRec,
+                rec: igdData.rec,
+                type: igdData.type
+              });
+            }
           }
           return igdArr;
         }, [])

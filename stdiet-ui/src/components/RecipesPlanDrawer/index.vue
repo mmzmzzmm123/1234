@@ -19,7 +19,17 @@
             @click="handleOnRecipesLinkClick"
             >客户食谱链接
           </el-button>
-
+          <el-popover placement="top" trigger="click" v-if="cusOutId" style="margin: 0 12px">
+            <VueQr :text="copyValue" :logoSrc="logo" />
+            <el-button
+              slot="reference"
+              size="mini"
+              icon="el-icon-picture-outline"
+              type="primary"
+              @click="handleCopy(scope.row.path)"
+              >二维码</el-button
+            >
+          </el-popover>
           <el-button icon="el-icon-view" size="mini" @click="handleInnerOpen"
             >查看暂停记录
           </el-button>
@@ -68,13 +78,17 @@
 import Clipboard from "clipboard";
 import { listRecipesPlanByCusId } from "@/api/custom/recipesPlan";
 import PlanPauseDrawer from "./PlanPauseDrawer";
+import VueQr from "vue-qr";
+const logo = require("@/assets/logo/logo_b.png");
 export default {
   name: "RecipesPlanDrawer",
   components: {
     PlanPauseDrawer,
+    VueQr,
   },
   data() {
     return {
+      logo,
       visible: false,
       title: "",
       cusOutId: "",
@@ -90,6 +104,7 @@ export default {
       if (!this.data) {
         return;
       }
+
       this.visible = true;
       this.title = `「${this.data.name}」食谱计划`;
       this.planLoading = true;
@@ -101,6 +116,10 @@ export default {
           }
           return str;
         }, "");
+        this.copyValue =
+          window.location.origin.replace("manage", "sign") +
+          "/recipes/detail/" +
+          this.cusOutId;
         // console.log(this.planList);
         this.planLoading = false;
       });
@@ -115,10 +134,6 @@ export default {
       this.innerTitle = `「${this.data.name}」暂停记录`;
     },
     handleOnRecipesLinkClick() {
-      this.copyValue =
-        window.location.origin.replace("manage", "sign") +
-        "/recipes/detail/" +
-        this.cusOutId;
       new Clipboard(".copyBtn");
       this.$message({
         message: "拷贝成功",
