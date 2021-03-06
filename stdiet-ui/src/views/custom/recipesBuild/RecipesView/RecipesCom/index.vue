@@ -33,7 +33,7 @@
               <el-button
                 size="mini"
                 type="primary"
-                @click="handleOnPaste"
+                @click="handleOnPaste(scope.row.type)"
                 v-if="canCopyMenuTypes.includes(scope.row.type)"
                 >粘贴</el-button
               >
@@ -337,7 +337,9 @@ export default {
                   }
                   arr[typePos].typeSpan.rowspan += 1;
                 }
-                lastNameHit = arr[arr.length - 1].name === cur.name;
+                lastNameHit =
+                  arr[arr.length - 1].name === cur.name &&
+                  arr[arr.length - 1].type === cur.type;
                 if (lastNameHit) {
                   let namePos = arr.length - 1;
                   for (let i = namePos; i >= 0; i--) {
@@ -460,12 +462,12 @@ export default {
           this.$message.error(err);
         });
     },
-    handleOnPaste() {
+    handleOnPaste(type) {
       // console.log(this.copyData);
       if (this.copyData) {
         this.addDishes({
           num: this.num,
-          data: this.copyData,
+          data: { ...this.copyData, type },
         }).catch((err) => {
           this.$message.error(err);
         });
