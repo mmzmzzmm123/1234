@@ -15,7 +15,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -74,10 +73,10 @@ public class AliyunOSSUtils {
             //去尾
             String tail = oranName.substring(cutPoint);
             //返回正确的带路径的图片名称
-            return prefix + head + uuid + "_" + tail;
+            return prefix + head + tail + "_" + uuid;
         }
         //不存在 直接返回
-        return prefix + uuid + "_" + oranName;
+        return prefix + oranName + "_" + uuid;
     }
 
     /**

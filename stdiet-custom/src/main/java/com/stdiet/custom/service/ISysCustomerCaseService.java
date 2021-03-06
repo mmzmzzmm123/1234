@@ -17,7 +17,7 @@ public interface ISysCustomerCaseService {
      * @param id 客户案例管理ID
      * @return 客户案例管理
      */
-    public SysCustomerCase selectSysCustomerCaseById(Long id);
+    public SysCustomerCase selectSysCustomerCaseById(Long id, boolean fileListFlag);
 
     /**
      * 查询客户案例管理列表

@@ -28,6 +28,7 @@
         <if test="wxNickName != null  and wxNickName != ''"> and wx_nick_name like concat('%', #{wxNickName}, '%')</if>
         <if test="wxAccount != null  and wxAccount != ''"> and wx_account like concat('%', #{wxAccount}, '%')</if>
         <if test="wxPhone != null  and wxPhone != ''"> and wx_phone like concat('%', #{wxPhone}, '%')</if>
+        order by id desc
     </select>
 
     <select id="selectSysWxSaleAccountById" parameterType="Long" resultMap="SysWxSaleAccountResult">

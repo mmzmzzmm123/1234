@@ -66,8 +66,8 @@ export default {
   },
   methods: {
     removeOldFile(index){
-      this.form.medicalReport = this.form.medicalReport.splice(index,index);
-      this.form.medicalReportName = this.form.medicalReportName.splice(index,index);
+      this.form.medicalReport.splice(index,1);
+      this.form.medicalReportName.splice(index,1);
       this.upload.limit = 3 - this.form.medicalReport.length;
     },
     getReportName(index){
