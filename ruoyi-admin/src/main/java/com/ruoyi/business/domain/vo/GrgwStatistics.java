@@ -15,6 +15,10 @@ public class GrgwStatistics {
 	 * 岗位工人总数
 	 */
 	private int grTotalCount;
+	/**
+	 * 前端需要-固定值
+	 */
+	private String type = "gw";
 
 	public GrgwStatistics(String gw, int grTotalCount) {
 		super();
@@ -36,6 +40,14 @@ public class GrgwStatistics {
 
 	public void setGrTotalCount(int grTotalCount) {
 		this.grTotalCount = grTotalCount;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 
 }
