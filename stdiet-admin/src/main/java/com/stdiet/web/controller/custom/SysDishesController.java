@@ -1,5 +1,6 @@
 package com.stdiet.web.controller.custom;
 
+import com.alibaba.fastjson.JSONObject;
 import com.stdiet.common.annotation.Log;
 import com.stdiet.common.core.controller.BaseController;
 import com.stdiet.common.core.domain.AjaxResult;
@@ -9,13 +10,11 @@ import com.stdiet.common.utils.StringUtils;
 import com.stdiet.common.utils.poi.ExcelUtil;
 import com.stdiet.custom.domain.SysDishes;
 import com.stdiet.custom.domain.SysDishesIngredient;
-import com.stdiet.custom.domain.SysIngredient;
 import com.stdiet.custom.service.ISysDishesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,6 +68,19 @@ public class SysDishesController extends BaseController {
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id) {
         return AjaxResult.success(sysDishesService.selectSysDishesById(id));
+    }
+
+    /**
+     * 查看菜品可选餐类
+     *
+     * @param id
+     * @return
+     */
+    @GetMapping(value = "/menuTypes/{id}")
+    public AjaxResult getMenuTypes(@PathVariable("id") Long id) {
+        JSONObject object = new JSONObject();
+        object.put("type", sysDishesService.getDishesMenuTypeById(id));
+        return AjaxResult.success(object);
     }
 
     /**

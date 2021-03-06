@@ -62,4 +62,6 @@ public interface ISysDishesService
      * @return 结果
      */
     public int deleteSysDishesById(Long id);
+
+    public String getDishesMenuTypeById(Long id);
 }

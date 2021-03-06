@@ -25,4 +25,6 @@ public class SysRecipesDailyDishes {
     private String type;
 
     private Integer isMain;
+
+    private String remark;
 }

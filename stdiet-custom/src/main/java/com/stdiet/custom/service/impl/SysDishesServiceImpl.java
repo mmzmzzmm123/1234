@@ -124,4 +124,9 @@ public class SysDishesServiceImpl implements ISysDishesService {
         sysDishesMapper.deleteIngredientById(id);
         return sysDishesMapper.deleteSysDishesById(id);
     }
+
+    @Override
+    public String getDishesMenuTypeById(Long id) {
+        return sysDishesMapper.getDishesMenuTypeById(id);
+    }
 }

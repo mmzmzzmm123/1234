@@ -17,6 +17,13 @@ export function getDishes(id) {
   })
 }
 
+export function getDishesMenuTypes(id) {
+  return request({
+    url: '/custom/dishes/menuTypes/' + id,
+    method: 'get'
+  })
+}
+
 // 新增菜品
 export function addDishes(data) {
   return request({
