@@ -301,6 +301,7 @@ export default {
         saleGroupId: null,
         accountId: null,
         wechatAccount: null,
+        pageFlag: false
       },
       // 表单参数
       form: {},

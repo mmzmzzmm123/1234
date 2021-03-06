@@ -35,9 +35,13 @@ public class SysCustomerCaseServiceImpl implements ISysCustomerCaseService
      * @return 客户案例管理
      */
     @Override
-    public SysCustomerCase selectSysCustomerCaseById(Long id)
+    public SysCustomerCase selectSysCustomerCaseById(Long id, boolean fileListFlag)
     {
-        return sysCustomerCaseMapper.selectSysCustomerCaseById(id);
+        SysCustomerCase customerCase = sysCustomerCaseMapper.selectSysCustomerCaseById(id);
+        if(customerCase != null && fileListFlag){
+            customerCase.setCaseFileList(sysCustomerCaseFileMapper.selectSysCustomerCaseFileListByCaseId(customerCase.getId()));
+        }
+        return customerCase;
     }
 
     /**
@@ -64,19 +68,7 @@ public class SysCustomerCaseServiceImpl implements ISysCustomerCaseService
         sysCustomerCase.setCreateTime(DateUtils.getNowDate());
         int rows = sysCustomerCaseMapper.insertSysCustomerCase(sysCustomerCase);
         if(rows > 0){
-            //批量添加文件对应列表
-            SysCustomerCaseFile caseFile = null;
-            if(sysCustomerCase.getCaseFileUrl() != null && sysCustomerCase.getCaseFileUrl().length > 0){
-                List<SysCustomerCaseFile> caseFileList = new ArrayList<>();
-                for (String url : sysCustomerCase.getCaseFileUrl()) {
-                    caseFile = new SysCustomerCaseFile();
-                    caseFile.setCaseId(sysCustomerCase.getId());
-                    caseFile.setFileName(sysCustomerCase.getCaseFileName()[caseFileList.size()]);
-                    caseFile.setFileUrl(url);
-                    caseFileList.add(caseFile);
-                }
-                rows = sysCustomerCaseFileMapper.insertBatch(caseFileList);
-            }
+            rows = addCaseFile(sysCustomerCase);
         }
         return rows;
     }
@@ -91,7 +83,38 @@ public class SysCustomerCaseServiceImpl implements ISysCustomerCaseService
     public int updateSysCustomerCase(SysCustomerCase sysCustomerCase)
     {
         sysCustomerCase.setUpdateTime(DateUtils.getNowDate());
-        return sysCustomerCaseMapper.updateSysCustomerCase(sysCustomerCase);
+        int rows = sysCustomerCaseMapper.updateSysCustomerCase(sysCustomerCase);
+        if(rows > 0){
+            rows = addCaseFile(sysCustomerCase);
+        }
+        return rows;
+    }
+
+    /**
+     *  批量添加文件对应列表
+     * @param sysCustomerCase
+     * @return
+     */
+    private int addCaseFile(SysCustomerCase sysCustomerCase){
+        int rows = 0;
+        //批量添加文件对应列表
+        SysCustomerCaseFile caseFile = null;
+        if(sysCustomerCase.getCaseFileUrl() != null && sysCustomerCase.getCaseFileUrl().length > 0){
+            List<SysCustomerCaseFile> caseFileList = new ArrayList<>();
+            for (String url : sysCustomerCase.getCaseFileUrl()) {
+                caseFile = new SysCustomerCaseFile();
+                caseFile.setCaseId(sysCustomerCase.getId());
+                caseFile.setFileName(sysCustomerCase.getCaseFileName()[caseFileList.size()]);
+                caseFile.setFileUrl(url);
+                caseFileList.add(caseFile);
+            }
+            //如果是修改操作直接先删除全部，再添加
+            if(sysCustomerCase.getId() != null){
+                sysCustomerCaseFileMapper.deleteSysCustomerCaseFileByCaseId(sysCustomerCase.getId());
+            }
+            rows = sysCustomerCaseFileMapper.insertBatch(caseFileList);
+        }
+        return rows;
     }
 
     /**

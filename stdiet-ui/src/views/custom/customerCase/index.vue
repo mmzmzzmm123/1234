@@ -67,9 +67,22 @@
 
     <el-table v-loading="loading" :data="customerCaseList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="案例名称" align="center" prop="name" />
-      <el-table-column label="关键词" align="center" prop="keyword" />
-      <el-table-column label="备注" align="center" prop="remark" />
+      <el-table-column label="案例名称" align="center" prop="name" >
+        <template slot-scope="scope">
+          <AutoHideMessage :data="scope.row.name" :maxLength="10"></AutoHideMessage>
+        </template>
+      </el-table-column>
+      <el-table-column label="关键词" align="center" prop="keyword" >
+        <template slot-scope="scope">
+          <AutoHideMessage :data="scope.row.keyword" :maxLength="10"></AutoHideMessage>
+          <!--<AutoHideInfo :data="scope.row.keyword.split(',')" :line="1"></AutoHideInfo>-->
+        </template>
+      </el-table-column>
+      <el-table-column label="备注" align="center" prop="remark" >
+        <template slot-scope="scope">
+          <AutoHideMessage :data="scope.row.remark" :maxLength="10"></AutoHideMessage>
+        </template>
+      </el-table-column>
       <el-table-column label="所属客户" align="center" prop="customerName" />
       <el-table-column
         label="文件"
@@ -125,7 +138,8 @@
     />
 
     <!-- 添加或修改客户案例管理对话框 -->
-    <el-dialog :title="title" :visible.sync="open" @closed="cancel" width="500px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" @closed="cancel" width="520px" append-to-body>
+      <div style="height: 600px; overflow: auto; padding-right: 20px">
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="案例名称" prop="name">
           <el-input v-model.trim="form.name" type="textarea" maxlength="50" rows = "1" show-word-limit  placeholder="请输入案例名称" />
@@ -155,11 +169,12 @@
           <el-input v-model="form.customerName" placeholder="" style="width: 60%" :readonly="true" />
           <span style="margin-left: 10px"> <el-button type="primary" @click="selectCustomer">选择所属客户</el-button></span>
         </el-form-item>
-        <el-form-item label="案例文件" prop="file" v-show="form.id == null || form.id <= 0">
-          <DragUpload @callbackMethod="addCustomerCase" ref="uploadCaseFile"></DragUpload>
+        <el-form-item label="案例文件" prop="file" >
+          <DragUpload v-if="form.id == null || form.id <= 0" @callbackMethod="addOrEditCustomerCase" ref="uploadCaseFile"></DragUpload>
+          <DragUploadEdit v-else @callbackMethod="addOrEditCustomerCase" :caseFileList="form.caseFileList" ref="editUploadCaseFile"></DragUploadEdit>
         </el-form-item>
-
       </el-form>
+      </div>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
@@ -174,8 +189,12 @@
 <script>
   import { listCustomerCase, getCustomerCase, delCustomerCase, addCustomerCase, updateCustomerCase, exportCustomerCase,getFileListByCaseId,downCaseFile } from "@/api/custom/customerCase";
   import DragUpload from "@/components/FileUpload/DragUpload";
+  import DragUploadEdit from "@/components/FileUpload/DragUploadEdit";
   import SelectCustomer from "@/components/Customer/SelectCustomer";
   import MuchFileDown from "@/components/FileDownload/MuchFileDown";
+  import AutoHideMessage from "@/components/AutoHideMessage";
+  import AutoHideInfo from "@/components/AutoHideInfo";
+
   export default {
     name: "CustomerCase",
     data() {
@@ -224,7 +243,10 @@
     components: {
       "DragUpload": DragUpload,
       "SelectCustomer":SelectCustomer,
-      "MuchFileDown": MuchFileDown
+      "MuchFileDown": MuchFileDown,
+      "AutoHideMessage": AutoHideMessage,
+      "AutoHideInfo":AutoHideInfo,
+      "DragUploadEdit":DragUploadEdit
     },
     created() {
       this.getList();
@@ -242,7 +264,8 @@
       // 取消按钮
       cancel() {
         this.open = false;
-        this.$refs["uploadCaseFile"].uploadReset();
+        //this.$refs["uploadCaseFile"].uploadReset();
+        //this.$refs["editUploadCaseFile"].uploadReset();
         this.reset();
       },
       // 表单重置
@@ -250,10 +273,11 @@
         this.form = {
           id: null,
           name: null,
-          keywordArray: null,
+          keywordArray: [],
           remark: null,
           customerId: null,
           customerName: null,
+          caseFileList:[],
           caseFileUrl: [],
           caseFileName: []
         };
@@ -293,6 +317,7 @@
             remark: response.data.remark,
             customerId: response.data.customerId,
             customerName: response.data.customerName,
+            caseFileList: response.data.caseFileList,
             caseFileUrl: [],
             caseFileName: []
           };
@@ -311,24 +336,22 @@
                   });
                   return;
               }
+              //判断案例关键词
+              if(this.form.keywordArray.length > 20){
+                this.$message({message: "案例关键词最多20个", type: "warning"});
+                return;
+              }
               this.submitFlag = true;
               this.form.keyword = this.form.keywordArray.join(",");
               if (this.form.id != null) {
-                updateCustomerCase(this.form).then(response => {
-                  if (response.code === 200) {
-                  this.msgSuccess("修改成功");
-                  this.open = false;
-                  this.getList();
-                }
-                 this.submitFlag = false;
-              });
-            } else {
-               this.$refs["uploadCaseFile"].uploadFile();
-            }
+                this.$refs["editUploadCaseFile"].uploadFile();
+              } else {
+                this.$refs["uploadCaseFile"].uploadFile();
+              }
           }
         });
       },
-      addCustomerCase(fileResult){
+      addOrEditCustomerCase(fileResult){
         this.form.caseFileName = fileResult.fileName;
         this.form.caseFileUrl = fileResult.fileUrl;
         if(this.form.caseFileUrl.length == 0){
@@ -336,21 +359,31 @@
           this.submitFlag = false;
           return;
         }
-        addCustomerCase(this.form).then(response => {
-          if (response.code === 200) {
-            this.msgSuccess("新增成功");
-            this.open = false;
-            this.$refs["uploadCaseFile"].uploadReset();
-            this.getList();
-          }
-          this.submitFlag = false;
-        });
+        if(this.form.id != null){
+          console.log(this.form.caseFileName.length);
+          updateCustomerCase(this.form).then(response => {
+            if (response.code === 200) {
+              this.msgSuccess("修改成功");
+              this.open = false;
+              this.getList();
+            }
+            this.submitFlag = false;
+          });
+        }else{
+          addCustomerCase(this.form).then(response => {
+            if (response.code === 200) {
+              this.msgSuccess("新增成功");
+              this.open = false;
+              this.getList();
+            }
+            this.submitFlag = false;
+          });
+        }
       },
       selectCustomer(){
         this.$refs['selectCustomerRef'].showDialog("选择案例所属客户");
       },
       dealCustomerId(customerId, customerName){
-         //console.log(customerId);
          this.form.customerId = customerId;
          this.form.customerName = customerName;
       },

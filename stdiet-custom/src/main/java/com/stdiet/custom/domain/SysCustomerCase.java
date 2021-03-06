@@ -4,6 +4,8 @@ import com.stdiet.common.annotation.Excel;
 import com.stdiet.common.core.domain.BaseEntity;
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * 客户案例管理对象 sys_customer_case
  *
@@ -34,6 +36,11 @@ public class SysCustomerCase extends BaseEntity
 
     /** 删除标识 0未删除 1已删除，默认0 */
     private Long delFlag;
+
+    /**
+     * 文件列表
+     */
+    private List<SysCustomerCaseFile> caseFileList;
 
     //案例文件名称数组
     private String[] caseFileName;

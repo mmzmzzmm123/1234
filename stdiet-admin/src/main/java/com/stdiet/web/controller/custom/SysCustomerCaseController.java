@@ -81,7 +81,7 @@ public class SysCustomerCaseController extends BaseController
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
-        return AjaxResult.success(sysCustomerCaseService.selectSysCustomerCaseById(id));
+        return AjaxResult.success(sysCustomerCaseService.selectSysCustomerCaseById(id, true));
     }
 
     /**
@@ -134,6 +134,7 @@ public class SysCustomerCaseController extends BaseController
             int index = 0;
             for (String downUrl : downUrlList) {
                 list.get(index).setDownUrl(downUrl);
+                index++;
             }
         }
         return getDataTable(list);
