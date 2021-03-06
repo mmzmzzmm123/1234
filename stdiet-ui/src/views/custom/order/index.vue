@@ -1,5 +1,5 @@
 <template>
-  <div class="app-container">
+  <div class="order_view_wrapper">
     <el-row>
       <el-form
         :model="queryParams"
@@ -249,7 +249,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="订单类型" prop="searchOrderTypeArray" >
+          <el-form-item label="订单类型" prop="searchOrderTypeArray">
             <el-cascader
               placeholder="请选择订单类型"
               v-model="searchOrderTypeArray"
@@ -258,8 +258,8 @@
               collapse-tags
               clearable
               style="width: 300px"
-              ></el-cascader>
-          </el-form-item><!--   -->
+            ></el-cascader> </el-form-item
+          ><!--   -->
         </el-col>
         <el-col :span="12">
           <el-form-item label="成交日期" prop="orderTime">
@@ -296,17 +296,7 @@
     </el-row>
 
     <el-row :gutter="10" class="mb8">
-      <!-- <el-col :span="1.5">
-        <el-button
-          type="primary"
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['custom:order:add']"
-          >新增
-        </el-button>
-      </el-col> -->
-      <el-col :span="1.5">
+      <el-col :span="1.5" v-if="!isMobile">
         <el-button
           type="warning"
           icon="el-icon-download"
@@ -316,6 +306,9 @@
           >导出
         </el-button>
       </el-col>
+      <el-co :span="1.5" v-if="isMobile">
+        <span>实收款：{{ toThousands(this.totalAmount) }}元</span>
+      </el-co>
       <right-toolbar
         :showSearch.sync="showSearch"
         @queryTable="getList"
@@ -326,6 +319,7 @@
       v-loading="loading"
       :data="orderList"
       :row-class-name="tableRowClassName"
+      height="85%"
     >
       <el-table-column label="审核状态" align="center" prop="reviewStatus">
         <template slot-scope="scope">
@@ -341,15 +335,20 @@
         label="成交时间"
         align="center"
         prop="orderTime"
-        width="160"
+        width="100"
       >
         <template slot-scope="scope">
-          <span>{{
-            parseTime(scope.row.orderTime, "{y}-{m}-{d} {h}:{i}:{s}")
-          }}</span>
+          <div v-for="time in scope.row.orderTime.split(' ')" :key="time">
+            {{ time }}
+          </div>
         </template>
       </el-table-column>
-      <el-table-column label="订单类型" align="center" prop="orderTypeName" width="160"/>
+      <el-table-column
+        label="订单类型"
+        align="center"
+        prop="orderTypeName"
+        width="160"
+      />
       <el-table-column label="客户姓名" align="center" prop="customer" />
       <!--<el-table-column label="手机号" align="center" prop="phone" width="100" />-->
       <el-table-column label="成交金额" align="center" prop="amount">
@@ -365,13 +364,48 @@
       />
       <el-table-column label="服务时长" align="center" prop="serveTime" />
       <el-table-column label="销售" align="center" prop="preSale" />
-      <el-table-column label="售后" align="center" prop="afterSale" />
-      <el-table-column label="主营养师" align="center" prop="nutritionist" />
-      <el-table-column label="营养师助理" align="center" prop="nutriAssis" />
-      <el-table-column label="策划" align="center" prop="planner" />
-      <el-table-column label="策划助理" align="center" prop="plannerAssis" />
-      <el-table-column label="运营" align="center" prop="operator" />
-      <el-table-column label="运营助理" align="center" prop="operatorAssis" />
+      <el-table-column
+        v-if="!isMobile"
+        label="售后"
+        align="center"
+        prop="afterSale"
+      />
+      <el-table-column
+        v-if="!isMobile"
+        label="主营养师"
+        align="center"
+        prop="nutritionist"
+      />
+      <el-table-column
+        v-if="!isMobile"
+        label="营养师助理"
+        align="center"
+        prop="nutriAssis"
+      />
+      <el-table-column
+        v-if="!isMobile"
+        label="策划"
+        align="center"
+        prop="planner"
+      />
+      <el-table-column
+        v-if="!isMobile"
+        label="策划助理"
+        align="center"
+        prop="plannerAssis"
+      />
+      <el-table-column
+        v-if="!isMobile"
+        label="运营"
+        align="center"
+        prop="operator"
+      />
+      <el-table-column
+        v-if="!isMobile"
+        label="运营助理"
+        align="center"
+        prop="operatorAssis"
+      />
       <el-table-column label="备注" align="center" prop="remark">
         <template slot-scope="scope">
           <auto-hide-message
@@ -381,6 +415,7 @@
         </template>
       </el-table-column>
       <el-table-column
+        v-if="!isMobile"
         label="操作"
         align="center"
         class-name="small-padding fixed-width"
@@ -435,13 +470,21 @@
     <pagination
       v-show="total > 0"
       :total="total"
+      size="mini"
       :page.sync="queryParams.pageNum"
       :limit.sync="queryParams.pageSize"
-      layout="total, slot, sizes, prev, pager, next, jumper"
+      :layout="`${
+        isMobile
+          ? 'total, slot,  prev,  next'
+          : 'total, slot, sizes, prev, pager, next, jumper'
+      }`"
       @pagination="getList"
     >
-      <span style="margin-right: 12px"
-        >总计收款（已除去二开售后提成金额）：{{ toThousands(this.totalAmount) }} 元</span
+      <span style="margin-right: 12px" v-if="!isMobile"
+        >总计收款（已除去二开售后提成金额）：{{
+          toThousands(this.totalAmount)
+        }}
+        元</span
       >
     </pagination>
 
@@ -475,6 +518,8 @@ export default {
   },
   data() {
     return {
+      // 是否手机端
+      // isMobile: false,
       // 遮罩层
       loading: true,
       // 选中数组
@@ -507,7 +552,7 @@ export default {
       reviewStatusOptions: [],
       //订单类型
       orderTypeOptions: orderTypeData["orderTypeArray"],
-      orderTypeProps: { multiple: true,expandTrigger: 'click' },//,checkStrictly:true
+      orderTypeProps: { multiple: true, expandTrigger: "click" }, //,checkStrictly:true
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -530,10 +575,18 @@ export default {
         serveTimeId: null,
       },
       //查询时选择的订单类型数组
-      searchOrderTypeArray: null
+      searchOrderTypeArray: null,
     };
   },
+  watch: {
+    device(val) {
+      this.isMobile = val === "mobile";
+    },
+  },
   computed: {
+    isMobile() {
+      return this.device === "mobile";
+    },
     ...mapGetters([
       // 售前字典
       "preSaleIdOptions",
@@ -553,6 +606,8 @@ export default {
       "operatorAssisIdOptions",
       //
       "userId",
+      //
+      "device",
     ]),
   },
   created() {
@@ -578,7 +633,10 @@ export default {
     /** 查询销售订单列表 */
     getList() {
       this.loading = true;
-      this.queryParams.orderType = this.searchOrderTypeArray != null ? encodeURIComponent(JSON.stringify(this.searchOrderTypeArray)) : null;
+      this.queryParams.orderType =
+        this.searchOrderTypeArray != null
+          ? encodeURIComponent(JSON.stringify(this.searchOrderTypeArray))
+          : null;
       console.log(this.queryParams.searchOrderTypeArray);
       //this.dealOrderTypeArray();
       listOrder(this.addDateRange(this.queryParams, this.daterange)).then(
@@ -734,28 +792,32 @@ export default {
         return "warning-row";
       }
       return "success-row";
-    }
+    },
   },
   watch: {},
 };
 </script>
 
 <style lang="scss" scoped>
-.s_success {
-  color: #1ab394;
-  font-size: 22px;
-}
+.order_view_wrapper {
+  padding: 20px;
+  height: calc(100vh - 80px);
+  .s_success {
+    color: #1ab394;
+    font-size: 22px;
+  }
 
-.s_pause {
-  color: #f56c6c;
-  font-size: 22px;
-  cursor: pointer;
-}
+  .s_pause {
+    color: #f56c6c;
+    font-size: 22px;
+    cursor: pointer;
+  }
 
-.s_play {
-  color: #1c84c6;
-  font-size: 22px;
-  cursor: pointer;
+  .s_play {
+    color: #1c84c6;
+    font-size: 22px;
+    cursor: pointer;
+  }
 }
 
 // .warning-row {
