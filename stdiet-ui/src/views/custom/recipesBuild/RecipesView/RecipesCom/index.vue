@@ -13,37 +13,38 @@
     >
       <el-table-column prop="type" :width="100" align="center">
         <template slot="header">
-          <el-popover placement="top" trigger="hover" v-if="!!copyData">
+          <div class="pointer_style" @click="handleOnResetCurrentDay">
+            {{ `第${numDay}天` }}
+          </div>
+        </template>
+        <template slot-scope="scope">
+          <el-popover
+            placement="top"
+            trigger="hover"
+            :title="typeFormatter(scope.row)"
+          >
             <div>
-              <el-button size="mini" type="primary" @click="handleOnPaste"
+              <el-button
+                size="mini"
+                type="primary"
+                @click="handleOnMenuTypeClick(scope.row)"
+                >添加
+              </el-button>
+              <el-button
+                size="mini"
+                type="primary"
+                @click="handleOnPaste"
+                v-if="canCopyMenuTypes.includes(scope.row.type)"
                 >粘贴</el-button
               >
             </div>
             <div
               slot="reference"
-              class="num_day"
-              @click="handleOnResetCurrentDay"
+              style="font-weight: bold; font-size: 14px; cursor: pointer"
             >
-              {{ `第${numDay}天` }}
+              {{ typeFormatter(scope.row) }}
             </div>
           </el-popover>
-          <div v-else>
-            {{ `第${numDay}天` }}
-          </div>
-        </template>
-        <template slot-scope="scope">
-          <el-tooltip
-            class="item"
-            effect="dark"
-            :content="`点击添加${typeFormatter(scope.row)}`"
-            placement="top"
-          >
-            <span
-              style="font-weight: bold; font-size: 14px; cursor: pointer"
-              @click="handleOnMenuTypeClick(scope.row)"
-              >{{ typeFormatter(scope.row) }}</span
-            >
-          </el-tooltip>
         </template>
       </el-table-column>
       <el-table-column label="菜品" prop="name" align="center" :width="180">
@@ -54,7 +55,7 @@
             content="点击添加菜品"
             placement="top"
           >
-            <span class="num_day" @click="handleOnAdd">菜品</span>
+            <div class="pointer_style" @click="handleOnAdd">菜品</div>
           </el-tooltip>
         </template>
         <template slot-scope="scope">
@@ -97,16 +98,42 @@
                 >
               </div>
             </div>
-            <span class="num_day" slot="reference">{{ scope.row.name }}</span>
+            <div class="pointer_style" slot="reference">
+              {{ scope.row.name }}
+            </div>
           </el-popover>
         </template>
       </el-table-column>
-      <el-table-column
-        label="食材"
-        prop="igdName"
-        align="center"
-        :width="180"
-      />
+      <el-table-column label="食材" prop="igdName" align="center" :width="180">
+        <template slot-scope="scope">
+          <span
+            v-if="
+              scope.row.nameSpan.colspan === 1 &&
+              scope.row.nameSpan.rowspan === 1
+            "
+          >
+            {{ scope.row.igdName }}
+          </span>
+          <el-popover
+            v-else
+            placement="right"
+            trigger="hover"
+            :title="scope.row.igdName"
+          >
+            <el-button
+              type="danger"
+              size="mini"
+              icon="el-icon-delete"
+              class="fun_button"
+              @click="handleOnIgdDelete(scope.row)"
+              >删除</el-button
+            >
+            <div class="pointer_style" slot="reference">
+              {{ scope.row.igdName }}
+            </div>
+          </el-popover>
+        </template>
+      </el-table-column>
       <el-table-column label="分量估算" :width="80" align="center">
         <template slot-scope="scope">
           <EditableUnit
@@ -131,7 +158,7 @@
         align="center"
       >
         <template slot="header">
-          <div class="num_day">
+          <div class="pointer_style">
             <div>蛋白质</div>
             <div>/100g</div>
           </div>
@@ -144,7 +171,7 @@
         align="center"
       >
         <template slot="header">
-          <div class="num_day">
+          <div class="pointer_style">
             <div>脂肪</div>
             <div>/100g</div>
           </div>
@@ -157,7 +184,7 @@
         align="center"
       >
         <template slot="header">
-          <div class="num_day">
+          <div class="pointer_style">
             <div>碳水</div>
             <div>/100g</div>
           </div>
@@ -171,7 +198,7 @@
         :formatter="nutriFormatter"
       >
         <template slot="header">
-          <div class="num_day">
+          <div class="pointer_style">
             <div>蛋白质</div>
             <div>含量</div>
           </div>
@@ -185,7 +212,7 @@
         :formatter="nutriFormatter"
       >
         <template slot="header">
-          <div class="num_day">
+          <div class="pointer_style">
             <div>脂肪</div>
             <div>含量</div>
           </div>
@@ -199,13 +226,30 @@
         :formatter="nutriFormatter"
       >
         <template slot="header">
-          <div class="num_day">
+          <div class="pointer_style">
             <div>碳水</div>
             <div>含量</div>
           </div>
         </template>
       </el-table-column>
       <el-table-column label="做法" prop="methods" />
+      <el-table-column label="备注" prop="remark">
+        <template slot-scope="scope">
+          <div
+            v-if="!scope.row.remark"
+            class="empty_remark"
+            @click="handleOnEditRemark(scope.row)"
+          >
+            <em class="el-icon-plus" />
+          </div>
+          <span
+            class="pointer_style"
+            @click="handleOnEditRemark(scope.row)"
+            v-else
+            >{{ scope.row.remark }}</span
+          >
+        </template>
+      </el-table-column>
     </el-table>
     <!-- 添加菜品抽屉 -->
     <AddDishesDrawer ref="drawerRef" @onConfirm="handleOnDishesConfirm" />
@@ -214,6 +258,8 @@
       ref="settingDialogRef"
       @onConfirm="handleOnSettingConfirm"
     />
+    <!-- 备注弹窗 -->
+    <RemarkDialog ref="remarkDialogRef" @onConfirm="handleOnRemarkConfirm" />
   </div>
 </template>
 <script>
@@ -230,6 +276,7 @@ import EditableUnit from "./EditableUnit";
 import AddDishesDrawer from "./AddDishesDrawer";
 import DishesSettingDialog from "./DishesSettingDialog";
 import VueScrollTo from "vue-scrollto";
+import RemarkDialog from "./RemarkDialog";
 
 export default {
   name: "RecipesCom",
@@ -257,6 +304,7 @@ export default {
     EditableUnit,
     AddDishesDrawer,
     DishesSettingDialog,
+    RemarkDialog,
   },
   mounted() {
     // console.log(this.data);
@@ -299,9 +347,10 @@ export default {
                     namePos = i;
                   }
                   arr[namePos].nameSpan.rowspan += 1;
-                  arr[namePos].methodsSpan.rowspan += 1;
                 }
               }
+
+              // console.log(cur);
 
               arr.push({
                 id: cur.id,
@@ -311,6 +360,7 @@ export default {
                 type: cur.type,
                 isMain: cur.isMain,
                 methods: cur.methods,
+                remark: cur.remark,
                 igdId: igd.id,
                 igdName: igd.name,
                 proteinRatio: igd.proteinRatio,
@@ -339,25 +389,17 @@ export default {
                       rowspan: 1,
                       colspan: 1,
                     },
-                methodsSpan: lastNameHit
-                  ? {
-                      rowspan: 0,
-                      colspan: 0,
-                    }
-                  : {
-                      rowspan: 1,
-                      colspan: 1,
-                    },
               });
             });
           }
           return arr;
         }, []);
       // console.log(mData);
+
       return mData;
     },
     ...mapGetters(["typeDict"]),
-    ...mapState(["currentDay", "copyData", "fontSize"]),
+    ...mapState(["currentDay", "copyData", "fontSize", "canCopyMenuTypes"]),
   },
   methods: {
     cellClassName({ row, column, rowIndex, columnIndex }) {
@@ -378,10 +420,12 @@ export default {
     spanMethod({ row, column, rowIndex, columnIndex }) {
       if (columnIndex === 0) {
         return row.typeSpan;
-      } else if (columnIndex === 1) {
+      } else if (
+        columnIndex === 1 ||
+        columnIndex === 11 ||
+        columnIndex === 12
+      ) {
         return row.nameSpan;
-      } else if (columnIndex === 11) {
-        return row.methodsSpan;
       }
     },
     typeFormatter(row) {
@@ -435,17 +479,20 @@ export default {
         dishesId: data.dishesId,
         igdId: data.igdId,
         weight,
+        actionType: "weight",
       });
     },
     handleOnCustomUnitChange(data, { cusWeight, cusUnit }) {
       // console.log({ data, cusWeight, cusUnit });
+      const { id, dishesId, igdId } = data;
       this.updateDishes({
         num: this.num,
-        id: data.id,
-        dishesId: data.dishesId,
-        igdId: data.igdId,
+        id,
+        dishesId,
+        igdId,
         cusWeight,
         cusUnit,
+        actionType: "unit",
       });
     },
     handleOnDishesConfirm({ type, data }) {
@@ -458,9 +505,10 @@ export default {
           this.$message.error(err);
         });
       } else if (type === "replace") {
-        this.replaceDishes({
+        this.updateDishes({
           num: this.num,
           data,
+          actionType: type,
         }).catch((err) => {
           this.$message.error(err);
         });
@@ -474,10 +522,34 @@ export default {
         num: this.num,
         id,
         type,
+        actionType: "menuType",
       });
     },
     handleOnMenuTypeClick(data) {
       this.$refs.drawerRef.showDrawer({ type: data.type, numDay: this.numDay });
+    },
+    handleOnIgdDelete(data) {
+      // console.log(data);
+      const { id, igdId } = data;
+      this.updateDishes({
+        num: this.num,
+        id,
+        igdId,
+        actionType: "delIgd",
+      });
+    },
+    handleOnEditRemark(data) {
+      this.$refs.remarkDialogRef.showDialog(data);
+    },
+    handleOnRemarkConfirm(data) {
+      console.log(data);
+      const { id, remark } = data;
+      this.updateDishes({
+        num: this.num,
+        id,
+        remark,
+        actionType: "remark",
+      });
     },
     ...mapActions([
       "updateDishes",
@@ -495,7 +567,7 @@ export default {
   margin-bottom: 24px;
   padding: 1px;
 
-  .num_day {
+  .pointer_style {
     cursor: pointer;
     outline: none;
   }
@@ -505,6 +577,25 @@ export default {
 .fun_button {
   font-size: 12px;
   padding: 4px 8px;
+}
+
+.empty_remark {
+  cursor: pointer;
+  text-align: center;
+  em {
+    visibility: hidden;
+    font-size: 14px;
+    font-weight: bold;
+    &:hover {
+      color: #1890ff;
+    }
+  }
+
+  &:hover {
+    em {
+      visibility: visible;
+    }
+  }
 }
 
 .recipes_header {

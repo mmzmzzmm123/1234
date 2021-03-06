@@ -7,6 +7,7 @@ import {
   deleteDishesApi,
   addRecipesApi
 } from "@/api/custom/recipes";
+import { getDishesMenuTypes } from "@/api/custom/dishes";
 import { getRecipesTemplateDetail } from "@/api/custom/recipesTemplate";
 import { getRecipesPlan, updateRecipesPlan } from "@/api/custom/recipesPlan";
 import { getDicts } from "@/api/system/dict/data";
@@ -30,33 +31,38 @@ const oriState = {
   reviewStatus: 0,
   templateInfo: undefined,
   copyData: undefined,
+  canCopyMenuTypes: [],
   fontSize: 12
 };
 
 const mutations = {
   updateRecipesDishesDetail(state, payload) {
-    const tarDishes = state.recipesData[payload.num].dishes.find(
-      obj => obj.id === payload.id
+    const { num, actionType } = payload;
+    const tarDishes = state.recipesData[num].dishes.find(
+      obj =>
+        obj.id === (actionType === "replace" ? payload.data.id : payload.id)
     );
     if (tarDishes) {
-      if (
-        payload.dishesId !== tarDishes.dishesId ||
-        payload.type !== undefined
-      ) {
-        // 替换菜品
-        Object.keys(payload).forEach(key => {
-          if (key === "num") {
-            return;
-          }
-          tarDishes[key] = payload[key];
+      if (actionType === "replace") {
+        // 替换菜品,修改类型
+        Object.keys(payload.data).forEach(key => {
+          tarDishes[key] = payload.data[key];
         });
-      } else {
+      } else if (actionType === "remark") {
+        tarDishes.remark = payload.remark;
+      } else if (actionType === "menuType") {
+        tarDishes.type = payload.type;
+      } else if (actionType === "weight" || actionType === "unit") {
         const tarIgd = tarDishes.igdList.find(obj => obj.id === payload.igdId);
         if (tarIgd) {
           payload.weight && (tarIgd.weight = payload.weight);
           payload.cusWeight && (tarIgd.cusWeight = payload.cusWeight);
           payload.cusUnit && (tarIgd.cusUnit = payload.cusUnit);
         }
+      } else if (actionType === "delIgd") {
+        tarDishes.igdList = tarDishes.igdList.filter(
+          igd => igd.id !== payload.igdId
+        );
       }
     }
   },
@@ -213,6 +219,7 @@ const actions = {
                   name: cur.name,
                   menuId: cur.menuId,
                   methods: cur.methods,
+                  remark: cur.remark,
                   type: cur.type,
                   isMain: cur.isMain,
                   igdList: cur.igdList.reduce((igdArr, igdData) => {
@@ -323,78 +330,70 @@ const actions = {
       commit("addRecipesDishes", payload);
     }
   },
-  async replaceDishes({ commit, state }, payload) {
-    // console.log(payload);
-    const tarDishesList = state.recipesData[payload.num].dishes.filter(
-      obj => obj.type === payload.data.type
-    );
-    if (tarDishesList.some(obj => obj.dishesId === payload.data.dishesId)) {
-      return new Promise((res, rej) =>
-        rej(`目标餐类已有相同的菜品「${payload.data.name}」`)
+  async updateDishes({ commit, state }, payload) {
+    const { num, actionType } = payload;
+    if (actionType === "replace") {
+      const tarDishesList = state.recipesData[payload.num].dishes.filter(
+        obj => obj.type === payload.data.type
       );
+      if (tarDishesList.some(obj => obj.dishesId === payload.data.dishesId)) {
+        return new Promise((res, rej) =>
+          rej(`目标餐类已有相同的菜品「${payload.data.name}」`)
+        );
+      }
     }
+    // console.log(payload);
     if (state.recipesId) {
-      const tarDishes = state.recipesData[payload.num].dishes.find(
-        obj => obj.id === payload.data.id
+      const tarDishes = state.recipesData[num].dishes.find(
+        obj =>
+          obj.id === (actionType === "replace" ? payload.data.id : payload.id)
       );
       if (tarDishes) {
+        const mTarDishes = JSON.parse(JSON.stringify(tarDishes));
         const params = {
-          id: tarDishes.id,
-          dishesId: payload.data.dishesId,
-          detail: payload.data.igdList.map(igd => ({
+          id: mTarDishes.id
+        };
+        if (actionType === "menuType") {
+          // 修改餐类
+          params.type = payload.type;
+        } else if (actionType === "remark") {
+          params.remark = payload.remark;
+        } else if (actionType === "replace") {
+          params.dishesId = payload.data.dishesId;
+          params.detail = payload.data.igdList.map(igd => ({
             id: igd.id,
             weight: igd.weight,
             cus_unit: igd.cusUnit,
             cus_weight: igd.cusWeight
-          }))
-        };
-        // console.log(params);
-        const result = await updateDishesDetailApi(params);
-        if (result.code === 200) {
-          commit("updateRecipesDishesDetail", {
-            num: payload.num,
-            ...payload.data
-          });
-        }
-      }
-    } else {
-      commit("updateRecipesDishesDetail", {
-        num: payload.num,
-        ...payload.data
-      });
-    }
-  },
-  async updateDishes({ commit, state }, payload) {
-    // console.log(payload);
-    if (state.recipesId) {
-      const tarDishes = state.recipesData[payload.num].dishes.find(
-        obj => obj.id === payload.id
-      );
-      if (tarDishes) {
-        const mTarDishes = JSON.parse(JSON.stringify(tarDishes));
-        let params = {
-          id: mTarDishes.id
-        };
-        if (payload.type !== undefined) {
-          // 修改餐类
-          params.type = payload.type;
-        } else {
+          }));
+        } else if (actionType === "delIgd") {
+          // 删除某食材
+          params.detail = mTarDishes.igdList.reduce((arr, igd) => {
+            if (igd.id !== payload.igdId) {
+              arr.push({
+                id: igd.id,
+                weight: igd.weight,
+                cus_unit: igd.cusUnit,
+                cus_weight: igd.cusWeight
+              });
+            }
+            return arr;
+          }, []);
+        } else if (actionType === "unit" || actionType === "weight") {
           // 修改食材
-          const tarIgd = mTarDishes.igdList.find(
-            obj => obj.id === payload.igdId
-          );
-          if (tarIgd) {
-            payload.weight && (tarIgd.weight = payload.weight);
-            payload.cusWeight && (tarIgd.cusWeight = payload.cusWeight);
-            payload.cusUnit && (tarIgd.cusUnit = payload.cusUnit);
-
-            params.detail = mTarDishes.igdList.map(igd => ({
+          params.detail = mTarDishes.igdList.map(igd => {
+            const isTarIgd = igd.id === payload.igdId;
+            return {
               id: igd.id,
-              weight: igd.weight,
-              cus_unit: igd.cusUnit,
-              cus_weight: igd.cusWeight
-            }));
-          }
+              weight: isTarIgd && payload.weight ? payload.weight : igd.weight,
+              cus_unit:
+                isTarIgd && payload.cusUnit ? payload.cusUnit : igd.cusUnit,
+              cus_weight:
+                isTarIgd && payload.cusWeight
+                  ? payload.cusWeight
+                  : igd.cusWeight
+            };
+          });
         }
         const result = await updateDishesDetailApi(params);
         if (result.code === 200) {
@@ -423,14 +422,21 @@ const actions = {
   },
   async deleteMenu({ commit }, payload) {},
   async setCopyData({ commit, state }, payload) {
-    return new Promise((res, rej) => {
+    return new Promise(async (res, rej) => {
       const tarDishes = state.recipesData[payload.num].dishes.find(
         obj => obj.id === payload.id
       );
       if (tarDishes) {
-        commit("updateStateData", { copyData: tarDishes });
-
-        res("复制成功");
+        const response = await getDishesMenuTypes(tarDishes.dishesId);
+        if (response.code === 200) {
+          commit("updateStateData", {
+            copyData: tarDishes,
+            canCopyMenuTypes: response.data.type.split(",")
+          });
+          res("复制成功");
+        } else {
+          rej("复制失败");
+        }
       } else {
         rej("复制失败");
       }

@@ -22,6 +22,7 @@
         <result property="name" column="name"/>
         <result property="type" column="type"/>
         <result property="methods" column="methods"/>
+        <result property="remark" column="remark"/>
         <result property="isMain" column="is_main"/>
         <result property="detail" column="detail" typeHandler="com.stdiet.custom.typehandler.ArrayJsonHandler"
                 javaType="com.stdiet.custom.domain.SysDishesIngredient"/>
@@ -86,6 +87,7 @@
             <if test="dishesId != null">dishes_id = #{dishesId},</if>
             <if test="type != null">type = #{type},</if>
             <if test="detail != null">detail = #{detail, jdbcType=OTHER, typeHandler=com.stdiet.custom.typehandler.ArrayJsonHandler},</if>
+            <if test="remark != null">remark = #{remark},</if>
         </trim>
         where id = #{id}
     </update>
@@ -98,12 +100,14 @@
             <if test="dishesId != null">dishes_id,</if>
             <if test="type != null">type,</if>
             <if test="detail != null">detail,</if>
+            <if test="remark != null">remark,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="menuId != null">#{menuId},</if>
             <if test="dishesId != null">#{dishesId},</if>
             <if test="type != null">#{type},</if>
             <if test="detail != null">#{detail, jdbcType=OTHER, typeHandler=com.stdiet.custom.typehandler.ArrayJsonHandler},</if>
+            <if test="remark != null">#{remark},</if>
         </trim>
     </insert>
 
@@ -138,9 +142,9 @@
 
     <!--    新增菜单对应菜品-->
     <insert id="bashAddDishes" >
-        insert into sys_customer_menu_dishes (menu_id, type, dishes_id, detail) values
+        insert into sys_customer_menu_dishes (menu_id, type, dishes_id, remark, detail) values
         <foreach collection="list" separator="," item="item" index="index">
-            (#{item.menuId}, #{item.type}, #{item.dishesId}, #{item.detail, jdbcType=OTHER, typeHandler=com.stdiet.custom.typehandler.ArrayJsonHandler})
+            (#{item.menuId}, #{item.type}, #{item.dishesId}, #{remark}, #{item.detail, jdbcType=OTHER, typeHandler=com.stdiet.custom.typehandler.ArrayJsonHandler})
         </foreach>
     </insert>
 

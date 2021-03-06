@@ -70,4 +70,6 @@ public interface SysDishesMapper
     public int deleteIngredientByIds(Long[] ids);
 
     public int bashInsertDishesIngredent(List<SysDishesIngredient> sysDishesIngredients);
+
+    String getDishesMenuTypeById(Long id);
 }
