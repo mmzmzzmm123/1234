@@ -200,6 +200,7 @@ public class BusCbsxxServiceImpl implements IBusCbsxxService {
 		if (year == null || year.isEmpty()) {
 			year = DateUtils.dateTimeNow("yyyy");
 		}
+		busCbsxxVO.setYear(year);
 		this.setCbszdInfo(busCbsxxVO, cbsId, year);
 
 		// 设置工人和工种统计信息
