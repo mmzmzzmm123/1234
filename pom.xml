@@ -130,6 +130,13 @@
                 <artifactId>poi-ooxml</artifactId>
                 <version>${poi.version}</version>
             </dependency>
+            
+			<!-- beans工具 -->
+			<dependency>
+			    <groupId>commons-beanutils</groupId>
+			    <artifactId>commons-beanutils</artifactId>
+			    <version>1.9.4</version>
+			</dependency>
 			
             <!--velocity代码生成使用模板 -->
             <dependency>

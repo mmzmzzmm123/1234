@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -905,44 +906,11 @@ public class ExcelUtil<T>
      */
     private Object getTargetValue(T vo, Field field, Excel excel) throws Exception
     {
-        Object o = field.get(vo);
         if (StringUtils.isNotEmpty(excel.targetAttr()))
         {
-            String target = excel.targetAttr();
-            if (target.indexOf(".") > -1)
-            {
-                String[] targets = target.split("[.]");
-                for (String name : targets)
-                {
-                    o = getValue(o, name);
-                }
-            }
-            else
-            {
-                o = getValue(o, target);
-            }
+            return PropertyUtils.getProperty(vo, excel.targetAttr());
         }
-        return o;
-    }
-
-    /**
-     * 以类的属性的get方法方法形式获取值
-     * 
-     * @param o
-     * @param name
-     * @return value
-     * @throws Exception
-     */
-    private Object getValue(Object o, String name) throws Exception
-    {
-        if (StringUtils.isNotNull(o) && StringUtils.isNotEmpty(name))
-        {
-            Class<?> clazz = o.getClass();
-            Field field = clazz.getDeclaredField(name);
-            field.setAccessible(true);
-            o = field.get(o);
-        }
-        return o;
+        return PropertyUtils.getProperty(vo, field.getName());
     }
 
     /**
