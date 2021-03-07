@@ -11,13 +11,13 @@
       :headers="headers"
       style="display: inline-block; vertical-align: top"
     >
-      <el-image v-if="!value" :src="value">
+      <el-image v-if="!value" :src="`${baseUrl}${value}`">
         <div slot="error" class="image-slot">
           <i class="el-icon-plus" />
         </div>
       </el-image>
       <div v-else class="image">
-        <el-image :src="value" :style="`width:150px;height:150px;`" fit="fill"/>
+        <el-image :src="`${baseUrl}${value}`" :style="`width:150px;height:150px;`" fit="fill"/>
         <div class="mask">
           <div class="actions">
             <span title="预览" @click.stop="dialogVisible = true">
@@ -31,7 +31,7 @@
       </div>
     </el-upload>
     <el-dialog :visible.sync="dialogVisible" title="预览" width="800" append-to-body>
-      <img :src="value" style="display: block; max-width: 100%; margin: 0 auto;">
+      <img :src="`${baseUrl}${value}`" style="display: block; max-width: 100%; margin: 0 auto;">
     </el-dialog>
   </div>
 </template>
@@ -42,6 +42,7 @@ import { getToken } from "@/utils/auth";
 export default {
   data() {
     return {
+      baseUrl: process.env.VUE_APP_BASE_API,
       dialogVisible: false,
       uploadImgUrl: process.env.VUE_APP_BASE_API + "/common/upload", // 上传的图片服务器地址
       headers: {
@@ -60,7 +61,7 @@ export default {
       this.$emit("input", "");
     },
     handleUploadSuccess(res) {
-      this.$emit("input", res.url);
+      this.$emit("input", res.fileName);
       this.loading.close();
     },
     handleBeforeUpload() {
