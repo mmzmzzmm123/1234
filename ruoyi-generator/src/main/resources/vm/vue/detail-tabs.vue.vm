@@ -1,0 +1,70 @@
+<template>
+    <el-tabs type="border-card" v-model="tabs.activeName">
+        <el-tab-pane name="first" label="基本信息">
+            <${BusinessName}DetailBase :detailDialog.sync="detailDialog" @doRefresh="getList"> </${BusinessName}DetailBase>
+
+            <pocesStart v-if="detailDialog.hasPoces" :detailDialog.sync="detailDialog" @doRefresh="getList"></pocesStart>
+
+        </el-tab-pane>
+        <el-tab-pane v-if="detailDialog.id" name="second" label="明细信息">
+            <!-- <kriItem :detailDialog.sync="detailDialog"></kriItem> -->
+        </el-tab-pane>
+    </el-tabs>
+</template>
+
+<script>
+    import pocesStart from "@/views/activiti/pocess/pocesStart.vue";
+    import ${BusinessName}DetailBase from "./${BusinessName}DetailBase.vue";
+    /*import  kriItem from "../item/index.vue";*/
+    export default {
+        name: "${BusinessName}DetailTabs",
+        props: {
+            detailDialog: {
+                type: Object,
+                default: function() {
+                    return {
+                        // id
+                        id: null,
+                        open: null,
+                        // 是否详情页
+                        isDisabled: null,
+                    }
+                },
+            },
+        },
+
+        components: {
+            pocesStart,
+            ${BusinessName}DetailBase ,
+            /*kriItem,*/
+
+
+        },
+
+        data() {
+            return {
+                tabs: {
+                    activeName: "first",
+                }
+
+            }
+        },
+
+        watch: {
+            /* 监听打开状态 */
+            "detailDialog.open": function(newOpen, oldOpen) {
+                this.tabs.activeName = "first"
+            },
+        },
+        methods: {
+            getList() {
+
+                this.$emit("doRefresh");
+            },
+
+        },
+    }
+</script>
+
+<style>
+</style>

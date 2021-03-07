@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="${packageName}.mapper.${ClassName}Mapper">
+
+
+    <resultMap type="${ClassName}" id="${ClassName}Result">
+        #foreach ($column in $columns)
+            <result property="${column.javaField}"    column="${column.columnName}"    />
+        #end
+    </resultMap>
+
+    <sql id="select${ClassName}Vo">
+        select#foreach($column in $columns) $column.columnName#if($velocityCount != $columns.size()),#end#end from ${tableName}
+    </sql>
+
+
+    <insert id="batch${ClassName}">
+        insert into ${tableName}
+        (
+            #foreach($column in $columns)
+                #if( $velocityCount ==$columns.size() )
+                    $column.columnName
+                #else
+                    $column.columnName,
+                #end
+            #end
+        )
+        values
+        <trim prefix=" (" suffix=")" suffixOverrides=",">
+            (
+            #foreach($column in $columns)
+                #if( $velocityCount ==$columns.size() )
+                    #{ $column.javaField }
+                #else
+                    #{ $column.javaField  },
+                #end
+            #end
+            )
+        </trim>
+
+    </insert>
+
+
+
+    <select id="select${ClassName}By${pkColumn.javaField}" resultMap="${ClassName}Result" >
+        <include refid="select${ClassName}Vo"/>
+         where  ${pkColumn.columnName}= #{${pkColumn.javaField}}
+    </select>
+
+
+    <delete id="deleteAreaIdBy${pkColumn.javaField}">
+        delete from ${tableName} WHERE  ${pkColumn.columnName}= #{${pkColumn.javaField}}
+    </delete>
+
+
+    
+</mapper>

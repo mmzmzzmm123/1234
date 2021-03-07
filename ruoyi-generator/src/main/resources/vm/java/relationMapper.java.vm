@@ -1,0 +1,81 @@
+package ${packageName}.mapper;
+
+import java.util.List;
+import ${packageName}.domain.${ClassName};
+
+/**
+ * ${functionName}Mapper接口
+ * 
+ * @author ${author}
+ * @date ${datetime}
+ */
+public interface ${ClassName}Mapper 
+{
+
+
+    /**
+
+     BaseEntity 添加
+     private Long[] deptIds;
+     private String[] deptIds;
+
+     // ServiceImpl 添加
+     @Autowired
+     private ${ClassName}Mapper ${className}Mapper;
+
+     //新增
+     private void do${ClassName}Insert(Long ${pkColumn.javaField}, Long[] relationIds) {
+            if (StringUtils.isNotNull(relationIds))
+            {
+                List<${ClassName}> list = new ArrayList<${ClassName}>();
+                for (Long relationId : relationIds)
+                {
+                    #set($pkAttrName=$pkColumn.javaField.substring(0,1).toUpperCase() + ${pkColumn.javaField.substring(1)})
+                    #set($othAttrName=$columns[1].javaField.substring(0,1).toUpperCase() + ${columns[1].javaField.substring(1)})
+                    ${ClassName} relation = new ${ClassName}();
+                     relation.set$pkAttrName(${pkColumn.javaField});
+                     relation.set$othAttrName(relationId);
+                     list.add(relation);
+                }
+                if (list.size() > 0)
+                {
+                    ${className}Mapper.batch${ClassName}(list);
+                }
+            }
+        }
+        //删除
+         ${className}Mapper.deleteAreaIdBy${pkColumn.javaField}(${pkColumn.javaField});
+
+        //查询
+        List<${ClassName}> ${className}List =  ${className}Mapper.select${ClassName}By${pkColumn.javaField}(${pkColumn.javaField});
+
+
+
+          Long[] ${className}Ids = ArrayUtil.toArray(${className}Mapper.select${ClassName}By${pkColumn.javaField}(${pkColumn.javaField}).stream()
+         .map(${className} -> ${className}.get$othAttrName()).collect(Collectors.toList()), Long.class);
+
+
+      * **/
+
+    /**
+    * 批量新增
+    * @param list
+    * @return
+    */
+    public int batch${ClassName}(List<${ClassName}> list);
+
+    /**
+     * 查询关联
+     * @param ${pkColumn.javaField}
+     * @return
+     */
+    public List<${ClassName}> select${ClassName}By${pkColumn.javaField}(Long ${pkColumn.javaField});
+
+    /**
+     * 删除
+     * @param ${pkColumn.javaField}
+     * @return
+     */
+    public int deleteAreaIdBy${pkColumn.javaField}(Long ${pkColumn.javaField});
+
+}
