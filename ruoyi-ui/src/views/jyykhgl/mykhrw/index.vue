@@ -107,6 +107,12 @@
       <!-- <el-table-column label="是否删除" align="center" prop="isdel" /> -->
       <el-table-column label="任务说明" align="center" prop="rwsm" />
       <el-table-column
+        label="完成数量"
+        align="center"
+        prop="wcsl"
+        :formatter="wcslFormat"
+      />
+      <el-table-column
         label="操作"
         align="center"
         class-name="small-padding fixed-width"
@@ -232,6 +238,14 @@ import {
   updateJyykhrw,
   exportJyykhrw,
 } from "@/api/jyykhgl/jyykhrw";
+import { listJyyjhzj } from "@/api/jyykhgl/jyyjhzj";
+import { listJyyyjhd } from "@/api/jyykhgl/jyyyjhd";
+import { listJyydwjs } from "@/api/jyykhgl/jyydwjs";
+import { listJyydyzd } from "@/api/jyykhgl/jyydyzd";
+import { listJyyzlgl } from "@/api/jyykhgl/jyyzlgl";
+import { listJyyfwjc } from "@/api/jyykhgl/jyyfwjc";
+import { listJyygryx } from "@/api/jyykhgl/jyygryx";
+import { listJyyqtkh } from "@/api/jyykhgl/jyyqtkh";
 
 export default {
   name: "Jyykhrw",
@@ -249,6 +263,8 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
+      //完成情况
+      wcqltotal: 0,
       // 教研员考核任务表格数据
       jyykhrwList: [],
       // 弹出层标题
@@ -276,6 +292,9 @@ export default {
         fsbx: null,
         isdel: null,
         rwsm: null,
+      },
+      queryParams_fid: {
+        rwid: null,
       },
       // 表单参数
       form: {},
@@ -314,6 +333,86 @@ export default {
     // 是否字典翻译
     typeFormat(row, column) {
       return this.selectDictLabel(this.typeOptions, row.fsbx);
+    },
+    //完成数量
+    wcslFormat(row, colum) {
+      //console.log(row);
+      this.queryParams_fid.rwid = row.id;
+      switch (row.rwlx) {
+        case "01":
+          this.getJhzjList();
+          break;
+        case "02":
+          this.getYjhdList();
+          break;
+        case "03":
+          this.getDwjsList();
+          break;
+        case "04":
+          this.getDyzdList();
+          break;
+        case "05":
+          this.getZlglList();
+          break;
+        case "06":
+          this.getWfjcList();
+          break;
+        case "07":
+          this.getGryxList();
+          break;
+        case "08":
+          this.getQtkhList();
+          break;
+      }
+      return this.wcqltotal;
+    },
+    /** 查询计划总结（教研员）列表 */
+    getJhzjList() {
+      listJyyjhzj(this.queryParams_fid).then((response) => {
+        this.wcqltotal = response.total;
+      });
+    },
+    /** 查询研究活动（教研员）列表 */
+    getYjhdList() {
+      listJyyyjhd(this.queryParams_fid).then((response) => {
+        this.wcqltotal = response.total;
+      });
+    },
+    /** 查询队伍建设（教研员）列表 */
+    getDwjsList() {
+      listJyydwjs(this.queryParams_fid).then((response) => {
+        this.wcqltotal = response.total;
+      });
+    },
+    /** 查询调研指导列表 */
+    getDyzdList() {
+      listJyydyzd(this.queryParams_fid).then((response) => {
+        this.wcqltotal = response.total;
+      });
+    },
+    /** 查询质量管理（教研员）列表 */
+    getZlglList() {
+      listJyyzlgl(this.queryParams_fid).then((response) => {
+        this.wcqltotal = response.total;
+      });
+    },
+    /** 查询服务基层（教研员）列表 */
+    getWfjcList() {
+      listJyyfwjc(this.queryParams_fid).then((response) => {
+        this.wcqltotal = response.total;
+      });
+    },
+    /** 查询个人研修（教研员）列表 */
+    getGryxList() {
+      listJyygryx(this.queryParams_fid).then((response) => {
+        this.wcqltotal = response.total;
+      });
+    },
+    /** 查询其他考核（教研员）列表 */
+    getQtkhList() {
+      listJyyqtkh(this.queryParams_fid).then((response) => {
+        this.wcqltotal = response.total;
+      });
     },
     /** 查询教研员考核任务列表 */
     getList() {
