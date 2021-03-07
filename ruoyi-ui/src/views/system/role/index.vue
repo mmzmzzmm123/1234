@@ -412,6 +412,8 @@ export default {
           return changeRoleStatus(row.roleId, row.status);
         }).then(() => {
           this.msgSuccess(text + "成功");
+          // 动态修改权限,实时更新左侧菜单栏
+          this.$store.dispatch('changeRoles')
         }).catch(function() {
           row.status = row.status === "0" ? "1" : "0";
         });
@@ -555,6 +557,8 @@ export default {
               this.msgSuccess("修改成功");
               this.open = false;
               this.getList();
+              // 动态修改权限,实时更新左侧菜单栏
+              this.$store.dispatch('changeRoles')
             });
           } else {
             this.form.menuIds = this.getMenuAllCheckedKeys();
@@ -562,6 +566,8 @@ export default {
               this.msgSuccess("新增成功");
               this.open = false;
               this.getList();
+              // 动态修改权限,实时更新左侧菜单栏
+              this.$store.dispatch('changeRoles')
             });
           }
         }
@@ -575,6 +581,8 @@ export default {
           this.msgSuccess("修改成功");
           this.openDataScope = false;
           this.getList();
+          // 动态修改权限,实时更新左侧菜单栏
+          this.$store.dispatch('changeRoles')
         });
       }
     },
@@ -590,6 +598,8 @@ export default {
         }).then(() => {
           this.getList();
           this.msgSuccess("删除成功");
+          // 动态修改权限,实时更新左侧菜单栏
+          this.$store.dispatch('changeRoles')
         })
     },
     /** 导出按钮操作 */

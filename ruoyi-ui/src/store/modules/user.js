@@ -1,3 +1,4 @@
+import router, { resetRouter } from '@/router'
 import { login, logout, getInfo } from '@/api/login'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 
@@ -87,6 +88,29 @@ const user = {
       return new Promise(resolve => {
         commit('SET_TOKEN', '')
         removeToken()
+        resolve()
+      })
+    },
+
+    // 动态修改权限(菜单跟按钮权限更新)
+    changeRoles({ commit, dispatch }, role) {
+      return new Promise(async resolve => {
+        const token = getToken()
+        commit('SET_TOKEN', token)
+  
+        // 获取最新的用户信息
+        const { roles } = await dispatch('GetInfo')
+        
+        resetRouter()
+        // 基于角色生成可访问的路由映射
+        const accessRoutes = await dispatch('GenerateRoutes', roles, { root: true })
+
+        // 动态添加可访问的路由
+        router.addRoutes(accessRoutes)
+
+        // reset visited views and cached views
+        dispatch('tagsView/delAllViews', null, { root: true })
+
         resolve()
       })
     }

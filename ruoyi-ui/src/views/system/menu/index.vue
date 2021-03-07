@@ -371,12 +371,16 @@ export default {
               this.msgSuccess("修改成功");
               this.open = false;
               this.getList();
+              // 动态修改权限,实时更新左侧菜单栏
+              this.$store.dispatch('changeRoles')
             });
           } else {
             addMenu(this.form).then(response => {
               this.msgSuccess("新增成功");
               this.open = false;
               this.getList();
+              // 动态修改权限,实时更新左侧菜单栏
+              this.$store.dispatch('changeRoles')
             });
           }
         }
@@ -393,6 +397,8 @@ export default {
         }).then(() => {
           this.getList();
           this.msgSuccess("删除成功");
+          // 动态修改权限,实时更新左侧菜单栏
+          this.$store.dispatch('changeRoles')
         })
     }
   }
