@@ -29,6 +29,7 @@ import 'vue-video-player/src/custom-theme.css';
 import Print from '@/utils/print'
 import PrintECharts from '@/utils/print_echarts'
 import { preventReClick } from '@/utils/plugins';
+import watermark from '@/utils/watermark';  //路径不要写错
 // 全局方法挂载
 Vue.prototype.getDicts = getDicts
 Vue.prototype.getConfigKey = getConfigKey
@@ -44,7 +45,7 @@ Vue.prototype.$video = Video
 Vue.use(VideoPlayer);
 Vue.use(Print);
 Vue.use(PrintECharts);
-
+Vue.prototype.$watermark = watermark
 
 import LunarFullCalendar from "vue-lunar-full-calendar";
 Vue.use(LunarFullCalendar);

@@ -68,7 +68,7 @@
             ref="videoPlayer"
           ></video-player>
           <div class="to-detail">
-            <el-tooltip effect="dark" :content="o.title" placement="bottom" > 
+            <el-tooltip effect="dark" :content="o.title" placement="bottom">
               <div>
                 <router-link
                   :to="'/video_study/study/detail/' + o.id"
@@ -150,6 +150,9 @@ export default {
       this.optionTypes = this.getTreeData(this.optionTypes);
     });
   },
+  // mounted() {
+  //   this.$watermark.set("测试专用");
+  // },
   methods: {
     exampleChange(e) {
       // console.log(e);
@@ -186,7 +189,7 @@ export default {
               {
                 type: ele.filetype,
                 // mp4
-                src: ele.videourl
+                src: ele.videourl,
                 // src: downLoadVideoUrl(ele.videourl),
               },
             ],
