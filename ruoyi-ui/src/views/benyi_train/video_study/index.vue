@@ -1,5 +1,5 @@
 <template>
-  <div class="app-container">
+  <div class="app-container" @contextmenu.prevent="">
     <el-form :model="queryParams" ref="queryForm" label-width="70px">
       <el-row :gutter="10">
         <el-col :xs="24" :ms="12" :md="5">
@@ -68,7 +68,7 @@
             ref="videoPlayer"
           ></video-player>
           <div class="to-detail">
-            <el-tooltip effect="dark" :content="o.title" placement="bottom">
+            <el-tooltip effect="dark" :content="o.title" placement="bottom" > 
               <div>
                 <router-link
                   :to="'/video_study/study/detail/' + o.id"

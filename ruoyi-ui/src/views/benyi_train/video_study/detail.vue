@@ -1,5 +1,5 @@
 <template>
-  <div class="app-container">
+  <div class="app-container" @contextmenu.prevent="">
     <el-row :gutter="10">
       <el-col :xs="24" :sm="12">
         <el-card>
