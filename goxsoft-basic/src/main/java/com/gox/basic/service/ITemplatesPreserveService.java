@@ -43,7 +43,7 @@ public interface ITemplatesPreserveService
      * @return 结果
      */
     public int updateTemplatesPreserve(TemplatesPreserve templatesPreserve);
-
+    public int updateTemplatesBatch(List<TemplatesPreserve> templates);
     /**
      * 批量删除模板维护
      * 

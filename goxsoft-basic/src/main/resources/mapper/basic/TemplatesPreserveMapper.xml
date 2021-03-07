@@ -8,6 +8,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="id"    column="id"    />
         <result property="nodeId"    column="node_id"    />
         <result property="deptId"    column="dept_id"    />
+        <result property="formId" column="form_id" />
         <result property="tableFieldName"    column="table_field_name"    />
         <result property="vModel"    column="v_model"    />
         <result property="tableFieldFlag"    column="table_field_flag"    />
@@ -18,7 +19,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectTemplatesPreserveVo">
-        select id, node_id, dept_id, table_field_name, v_model, table_field_flag, sort, table_search_flag, search_sort, width from templates_preserve
+        select id, node_id, dept_id, form_id, table_field_name, v_model, table_field_flag, sort, table_search_flag, search_sort, width from templates_preserve
     </sql>
 
     <select id="selectTemplatesPreserveList" parameterType="TemplatesPreserve" resultMap="TemplatesPreserveResult">
@@ -26,6 +27,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <where>  
             <if test="nodeId != null "> and node_id = #{nodeId}</if>
             <if test="deptId != null "> and dept_id = #{deptId}</if>
+            <if test="formId != null "> and form_id = #{formId}</if>
             <if test="tableFieldName != null  and tableFieldName != ''"> and table_field_name like concat('%', #{tableFieldName}, '%')</if>
             <if test="vModel != null  and vModel != ''"> and v_model = #{vModel}</if>
             <if test="tableFieldFlag != null "> and table_field_flag = #{tableFieldFlag}</if>
@@ -34,6 +36,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="searchSort != null "> and search_sort = #{searchSort}</if>
             <if test="width != null "> and width = #{width}</if>
         </where>
+        order by sort
     </select>
     
     <select id="selectTemplatesPreserveById" parameterType="Long" resultMap="TemplatesPreserveResult">
@@ -47,6 +50,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="id != null">id,</if>
             <if test="nodeId != null">node_id,</if>
             <if test="deptId != null">dept_id,</if>
+            <if test="formId != null">form_id,</if>
             <if test="tableFieldName != null">table_field_name,</if>
             <if test="vModel != null">v_model,</if>
             <if test="tableFieldFlag != null">table_field_flag,</if>
@@ -59,6 +63,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="id != null">#{id},</if>
             <if test="nodeId != null">#{nodeId},</if>
             <if test="deptId != null">#{deptId},</if>
+            <if test="formId != null">#{formId},</if>
             <if test="tableFieldName != null">#{tableFieldName},</if>
             <if test="vModel != null">#{vModel},</if>
             <if test="tableFieldFlag != null">#{tableFieldFlag},</if>
@@ -69,10 +74,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
     </insert>
     <insert id="insertTemplatesPreserveBatch">
-        insert  into templates_preserve(id, node_id, dept_id, table_field_name, v_model, table_field_flag, sort, table_search_flag, search_sort, width)
+        insert  into templates_preserve(id, node_id, dept_id, form_id, table_field_name, v_model, table_field_flag, sort, table_search_flag, search_sort, width)
         values
         <foreach collection="list" item="item" open="" close="" separator=",">
-            (#{item.id},#{item.nodeId},#{item.deptId},#{item.tableFieldName},#{item.vModel},#{item.tableFieldFlag}
+            (#{item.id},#{item.nodeId},#{item.deptId},#{item.formId},#{item.tableFieldName},#{item.vModel},#{item.tableFieldFlag}
             ,#{item.sort},#{item.tableSearchFlag},#{item.searchSort},#{item.width})
         </foreach>
     </insert>
@@ -82,6 +87,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="SET" suffixOverrides=",">
             <if test="nodeId != null">node_id = #{nodeId},</if>
             <if test="deptId != null">dept_id = #{deptId},</if>
+            <if test="formId != null">form_id = #{formId},</if>
             <if test="tableFieldName != null">table_field_name = #{tableFieldName},</if>
             <if test="vModel != null">v_model = #{vModel},</if>
             <if test="tableFieldFlag != null">table_field_flag = #{tableFieldFlag},</if>
@@ -91,6 +97,50 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="width != null">width = #{width},</if>
         </trim>
         where id = #{id}
+    </update>
+    <update id="updateTemplatesBatch">
+        update templates_preserve
+        <trim prefix="set " suffixOverrides=",">
+            <trim prefix="table_field_flag = case " suffix="end,">
+                <foreach collection="list" item="item" index="index">
+                    <if test="item.tableFieldFlag!=null">
+                        when id=#{item.id} then #{item.tableFieldFlag}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="table_search_flag = case " suffix="end,">
+                <foreach collection="list" item="item" index="index">
+                    <if test="item.tableSearchFlag!=null">
+                        when id=#{item.id} then #{item.tableSearchFlag}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="sort = case " suffix="end,">
+                <foreach collection="list" item="item" index="index">
+                    <if test="item.sort!=null">
+                        when id=#{item.id} then #{item.sort}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="search_sort = case " suffix="end,">
+                <foreach collection="list" item="item" index="index">
+                    <if test="item.searchSort!=null">
+                        when id=#{item.id} then #{item.searchSort}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="width = case " suffix="end,">
+                <foreach collection="list" item="item" index="index">
+                    <if test="item.width!=null">
+                        when id=#{item.id} then #{item.width}
+                    </if>
+                </foreach>
+            </trim>
+        </trim>
+        where
+        <foreach collection="list" separator="or" item="i" index="index">
+            id=#{i.id}
+        </foreach>
     </update>
 
     <delete id="deleteTemplatesPreserveById" parameterType="Long">

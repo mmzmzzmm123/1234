@@ -6,6 +6,7 @@ import com.gox.basic.domain.TemplatesPreserve;
 import com.gox.basic.domain.form.FieldsItem;
 import com.gox.basic.service.ITemplatesPreserveService;
 import com.gox.common.core.redis.RedisCache;
+import com.gox.common.plugin.SnowIdUtils;
 import com.gox.common.utils.DateUtils;
 import com.gox.basic.domain.FormJson;
 import com.gox.basic.domain.form.FormDesignerData;
@@ -83,6 +84,7 @@ public class FormJsonServiceImpl implements IFormJsonService {
      */
     @Override
     public int insertFormJson(FormJson formJson) {
+        formJson.setId(SnowIdUtils.uniqueLong());
         List<TemplatesPreserve> templates = createTemplates(formJson);
         formJson.setCreateTime(DateUtils.getNowDate());
         formJson.setOrder(formJsonMapper.countFormByNodeIdAndDeptId(formJson.getNodeId(), formJson.getDeptId()) + 1);
@@ -103,13 +105,11 @@ public class FormJsonServiceImpl implements IFormJsonService {
         List<TemplatesPreserve> res = new ArrayList<>();
         TemplatesPreserve t ;
         Random r = new Random(10);
+        long i=1;
         for (FieldsItem field : fields) {
-            t = new TemplatesPreserve();
-            t.setDeptId(formJson.getDeptId());
-            t.setNodeId(formJson.getNodeId());
-            t.setTableFieldName(field.getConfig().getLabel());
-            t.setvModel(field.getVModel());
-            t.setWidth(120L);
+            t = getTemplatesPreserve(formJson, field);
+            t.setSort(i);
+            i++;
             t.setTableFieldFlag(r.nextInt(2)%2==0);
             t.setTableSearchFlag(r.nextInt(2)%2==0);
             res.add(t);
@@ -127,22 +127,31 @@ public class FormJsonServiceImpl implements IFormJsonService {
         List<TemplatesPreserve> res = new ArrayList<>();
         TemplatesPreserve t ;
         for (FieldsItem field : fields) {
-            t = new TemplatesPreserve();
-            t.setDeptId(formJson.getDeptId());
-            t.setNodeId(formJson.getNodeId());
-            t.setTableFieldName(field.getConfig().getLabel());
-            t.setvModel(field.getVModel());
-            t.setWidth(120L);
+            t = getTemplatesPreserve(formJson, field);
             res.add(t);
         }
         return res;
     }
+
+    private TemplatesPreserve getTemplatesPreserve(FormJson formJson, FieldsItem field) {
+        TemplatesPreserve t;
+        t = new TemplatesPreserve();
+        t.setFormId(formJson.getId());
+        t.setDeptId(formJson.getDeptId());
+        t.setNodeId(formJson.getNodeId());
+        t.setTableFieldName(field.getConfig().getLabel());
+        t.setvModel(field.getVModel());
+        t.setWidth(120L);
+        return t;
+    }
+
     @Override
     public int updateFormOrderBatch(Iterable<FormJson> formJsons) {
+        formJsonMapper.updateFormOrderBatch(formJsons);
         for (FormJson formJson : formJsons) {
-            redisCache.setCacheMapValue("form", formJson.getId() + "", formJson);
+            redisCache.setCacheMapValue("form", formJson.getId() + "", selectFormJsonById(formJson.getId()));
         }
-        return formJsonMapper.updateFormOrderBatch(formJsons);
+        return 1;
     }
 
     /**
@@ -153,15 +162,18 @@ public class FormJsonServiceImpl implements IFormJsonService {
      */
     @Override
     public int updateFormJson(FormJson formJson) {
-        List<TemplatesPreserve> list = getTemplates(formJson);
+        FormJson f = selectFormJsonById(formJson.getId());
+        Long nodeId = f.getNodeId();
+        Long deptId = f.getDeptId();
         formJson.setUpdateTime(DateUtils.getNowDate());
         if (formJsonMapper.updateFormJson(formJson) == 1) {
-            redisCache.setCacheMapValue("form", formJson.getId() + "", formJson);
-            Long nodeId = formJson.getNodeId();
-            Long deptId = formJson.getDeptId();
-            TemplatesPreserve t = new TemplatesPreserve(nodeId,deptId);
+            formJson.setNodeId(nodeId);
+            formJson.setDeptId(deptId);
+            List<TemplatesPreserve> list = getTemplates(formJson);
+            TemplatesPreserve t = new TemplatesPreserve(nodeId,deptId,f.getId());
             List<TemplatesPreserve> databaseList = templatesPreserveService.selectTemplatesPreserveList(t);
             templatesPreserveService.updateTemplatesPreserveBatch(list,databaseList);
+            redisCache.setCacheMapValue("form", formJson.getId() + "", formJsonMapper.selectFormJsonById(f.getId()));
             return 1;
         }
         return 0;

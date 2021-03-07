@@ -70,6 +70,11 @@ public class TemplatesPreserveServiceImpl implements ITemplatesPreserveService
         return templatesPreserveMapper.updateTemplatesPreserve(templatesPreserve);
     }
 
+    @Override
+    public int updateTemplatesBatch(List<TemplatesPreserve> templates) {
+        return templatesPreserveMapper.updateTemplatesBatch(templates);
+    }
+
     /**
      * 批量删除模板维护
      * 

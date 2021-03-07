@@ -134,18 +134,30 @@
                   label="是否为表格字段"
                 >
                   <el-switch
-                    v-model="form.flag"
+                    v-model="form.tableFieldFlag"
                     active-color="#13ce66"
                     inactive-color="#ff4949">
                   </el-switch>
                 </el-form-item>
-                <el-form-item label="排序" prop="tableFieldSort">
-                  <el-input-number v-model="form.tableFieldSort" :min="1" :max="200" label=""></el-input-number>
+                <el-form-item
+                  label="是否为检索字段"
+                >
+                  <el-switch
+                    v-model="form.tableSearchFlag"
+                    active-color="#13ce66"
+                    inactive-color="#ff4949">
+                  </el-switch>
                 </el-form-item>
-                <el-form-item label="占位" prop="tableTitleWidth">
+                <el-form-item label="排序" prop="sort">
+                  <el-input-number v-model="form.sort" :min="1" :max="200" label=""></el-input-number>
+                </el-form-item>
+                <el-form-item label="检索排序" prop="serachSort">
+                  <el-input-number v-model="form.serachSort" :min="1" :max="200" label=""></el-input-number>
+                </el-form-item>
+                <el-form-item label="占位" prop="width">
                   <el-input
                     placeholder="请输入内容"
-                    v-model="form.tableTitleWidth"
+                    v-model="form.width"
                     style="width:60%"
                     maxlength="3"
                     clearable>
@@ -247,6 +259,7 @@
   import deptTree from '@/views/components/deptTree'
   import Sortable from 'sortablejs'
   import { addSetting, getSetting, updateSetting } from '@/api/system/setting'
+  import { listTemplates, updateTemplates, updateTemplatesBatch } from '@/api/basic/templates'
 
   export default {
     name: 'Json',
@@ -318,11 +331,16 @@
           formName: [
             {required: true, message: '表单名字不能为空', trigger: 'blur'}
           ],
-          tableTitleWidth: [
+          width: [
             {required: true, message: '请输入占位', trigger: 'blur'},
             {type: 'number', message: '年龄必须为数字值'},
           ],
-          tableFieldSort: [
+          sort: [
+            {
+              required: true, message: '请输入排序', trigger: 'blur'
+            }
+          ],
+          searchSort: [
             {
               required: true, message: '请输入排序', trigger: 'blur'
             }
@@ -373,7 +391,8 @@
           data.push(item)
         })
         //提交
-        updateTableField(data).then(res => {
+        updateTemplatesBatch(data).then(res => {
+          this.forms=new Map()
           this.$message.success(res.msg)
         })
       },
@@ -400,9 +419,11 @@
         })
         this.form = {
           id: formData[0].id,
-          flag: formData[0].flag,
-          tableFieldSort: formData[0].tableFieldSort,
-          tableTitleWidth: formData[0].tableTitleWidth
+          tableFieldFlag: formData[0].tableFieldFlag,
+          tableSearchFlag:formData[0].tableSearchFlag,
+          sort:formData[0].sort,
+          searchSort:formData[0].searchSort,
+          width: formData[0].width
         }
       },
       filterNode(value, data) {
@@ -478,18 +499,12 @@
           this.total = response.total
           this.loading = false
         })
-        getTableField(this.nodeId, this.deptId).then(res => {
-          let fields = res.data
+        listTemplates({nodeId:this.nodeId,deptId:this.deptId}).then(res=>{
+          let fields = res.rows
           this.tableFields = fields
-          fields.sort((a, b) => {
-            return b.tableFieldSort - a.tableFieldSort
-          })
-          this.data = []
-          fields.forEach((item, index) => {
-            this.data.push({
-              label: item.tableFieldName,
-              id: item.id
-            })
+          this.data=[]
+          fields.forEach((item,index)=>{
+            this.data.push({ label: item.tableFieldName,id:item.id })
           })
         })
         getSetting(this.nodeId,this.deptId).then(res=>{

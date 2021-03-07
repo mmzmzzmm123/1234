@@ -316,8 +316,6 @@
           //formjson.formName=value
           formjson.formData = JSON.stringify(this.formData)
           formjson.id = this.id
-          // formjson.nodeId = this.nodeId
-          // formjson.deptId = this.deptId
           addJson(formjson).then(res => {
             this.$message({message: '保存成功!', type: 'success'})
           }).catch(err => {

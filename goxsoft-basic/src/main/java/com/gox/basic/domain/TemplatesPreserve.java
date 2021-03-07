@@ -28,7 +28,7 @@ public class TemplatesPreserve extends BaseEntity
     /** $column.columnComment */
     @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
     private Long deptId;
-
+    private Long formId;
     /** 字段名字 */
     @Excel(name = "字段名字")
     private String tableFieldName;
@@ -60,9 +60,10 @@ public class TemplatesPreserve extends BaseEntity
     public TemplatesPreserve() {
     }
 
-    public TemplatesPreserve(Long nodeId, Long deptId) {
+    public TemplatesPreserve(Long nodeId, Long deptId,Long formId) {
         this.nodeId = nodeId;
         this.deptId = deptId;
+        this.formId = formId;
     }
 
     public void setId(Long id)
@@ -92,7 +93,16 @@ public class TemplatesPreserve extends BaseEntity
     {
         return deptId;
     }
-    public void setTableFieldName(String tableFieldName) 
+
+    public Long getFormId() {
+        return formId;
+    }
+
+    public void setFormId(Long formId) {
+        this.formId = formId;
+    }
+
+    public void setTableFieldName(String tableFieldName)
     {
         this.tableFieldName = tableFieldName;
     }

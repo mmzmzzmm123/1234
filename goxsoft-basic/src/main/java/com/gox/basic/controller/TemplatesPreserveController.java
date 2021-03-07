@@ -89,6 +89,17 @@ public class TemplatesPreserveController extends BaseController
     {
         return toAjax(templatesPreserveService.updateTemplatesPreserve(templatesPreserve));
     }
+    /**
+     * 修改模板维护
+     */
+    @PreAuthorize("@ss.hasPermi('basic:templates:edit')")
+    @Log(title = "模板维护", businessType = BusinessType.UPDATE)
+    @PutMapping("/batch")
+    public AjaxResult editBatch(@RequestBody List<TemplatesPreserve> templatesPreserve)
+    {
+        return toAjax(templatesPreserveService.updateTemplatesBatch(templatesPreserve));
+    }
+    
 
     /**
      * 删除模板维护

@@ -62,4 +62,6 @@ public interface TemplatesPreserveMapper
     public int deleteTemplatesPreserveByIds(Long[] ids);
 
     int insertTemplatesPreserveBatch(List<TemplatesPreserve> templates);
+
+    int updateTemplatesBatch(List<TemplatesPreserve> templates);
 }

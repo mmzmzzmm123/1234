@@ -88,7 +88,7 @@
             <div v-for="(item,index) in tableTitle" :key="index">
               <el-table-column
                 :label="item.tableFieldName"
-                :width="item.tableTitleWidth"
+                :width="item.width"
                 sortable="custom"
                 :prop="item.vModel">
               </el-table-column>
@@ -204,7 +204,7 @@
               <div v-for="(item,index) in tableTitle" :key="index">
                 <el-table-column
                   :label="item.tableFieldName"
-                  :width="item.tableTitleWidth"
+                  :width="item.width"
                   sortable="custom"
                   :prop="item.vModel">
                 </el-table-column>
@@ -285,7 +285,7 @@
             <div v-for="(item,index) in tableFields" :key="index">
               <el-table-column
                 :label="item.tableFieldName"
-                :width="item.tableTitleWidth"
+                :width="item.width"
                 sortable="custom"
                 :prop="item.vModel">
               </el-table-column>
@@ -305,6 +305,8 @@
 </template>
 
 <script>
+  import { listTemplates } from '@/api/basic/templates'
+
   var _ = require('lodash')
   import {
     addMetadata,
@@ -318,7 +320,7 @@
   } from '@/api/system/metadata'
   import DeptTree from '@/views/components/deptTree'
   import InputView from '@/views/system/metadata/InputView'
-  import { getTableField, getTableTitle, listJson } from '@/api/system/json'
+  import { listJson } from '@/api/system/json'
   import {listMetadataRule} from '@/api/system/metadataRule'
   import {deepClone} from '@/utils'
   import Uploads from '@/views/components/Uploads'
@@ -663,9 +665,9 @@
         let fullPath = this.$route.fullPath
         let id = fullPath.substring(fullPath.lastIndexOf('/') + 1)
         let query = {nodeId: id, deptId: this.deptId}
-        getTableTitle(id, this.deptId).then(res => {
-          this.tableTitle = res.data
-        })
+        // getTableTitle(id, this.deptId).then(res => {
+        //   this.tableTitle = res.data
+        // })
         listJson(query).then(res => {
           this.formConf = JSON.parse(res.rows[0].formData)
           this.formReserve = deepClone(this.formConf)
@@ -675,9 +677,18 @@
         listMetadataRule().then(res => {
           window.sessionStorage.setItem('WS', escape(JSON.stringify(res.rows)))
         })
-        getTableField(this.nodeId,this.deptId)
+        listTemplates({nodeId:this.nodeId,deptId:this.deptId})
           .then(res=>{
-            this.tableFields = res.data
+            this.tableFields = res.rows
+            this.tableTitle = this.tableFields.filter(item=>{
+              return item.tableFieldFlag
+            })
+            this.searchField = this.tableFields.filter(item=>{
+              return item.tableSearchFlag
+            })
+            this.searchField =this.searchField.sort((a,b)=>{
+              return a.searchSort-b.searchSort
+            })
             this.tableFieldsPick = []
             this.tableFields.forEach(item=>{
               this.tableFieldsPick.push({
