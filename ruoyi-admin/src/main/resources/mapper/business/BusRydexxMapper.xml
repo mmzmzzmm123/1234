@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.business.mapper.BusRydexxMapper">
+    
+    <resultMap type="BusRydexx" id="BusRydexxResult">
+        <result property="id"    column="id"    />
+        <result property="fwxm"    column="fwxm"    />
+        <result property="fwlb"    column="fwlb"    />
+        <result property="jjdw"    column="jjdw"    />
+        <result property="de"    column="de"    />
+    </resultMap>
+
+    <sql id="selectBusRydexxVo">
+        select id, fwxm, fwlb, jjdw, de from bus_rydexx
+    </sql>
+
+    <select id="selectBusRydexxList" parameterType="BusRydexx" resultMap="BusRydexxResult">
+        <include refid="selectBusRydexxVo"/>
+        <where>  
+            <if test="fwxm != null  and fwxm != ''"> and fwxm = #{fwxm}</if>
+            <if test="fwlb != null  and fwlb != ''"> and fwlb = #{fwlb}</if>
+            <if test="jjdw != null  and jjdw != ''"> and jjdw = #{jjdw}</if>
+            <if test="de != null "> and de = #{de}</if>
+        </where>
+    </select>
+    
+    <select id="selectBusRydexxById" parameterType="Long" resultMap="BusRydexxResult">
+        <include refid="selectBusRydexxVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertBusRydexx" parameterType="BusRydexx">
+        insert into bus_rydexx
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="fwxm != null and fwxm != ''">fwxm,</if>
+            <if test="fwlb != null and fwlb != ''">fwlb,</if>
+            <if test="jjdw != null and jjdw != ''">jjdw,</if>
+            <if test="de != null">de,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="fwxm != null and fwxm != ''">#{fwxm},</if>
+            <if test="fwlb != null and fwlb != ''">#{fwlb},</if>
+            <if test="jjdw != null and jjdw != ''">#{jjdw},</if>
+            <if test="de != null">#{de},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBusRydexx" parameterType="BusRydexx">
+        update bus_rydexx
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="fwxm != null and fwxm != ''">fwxm = #{fwxm},</if>
+            <if test="fwlb != null and fwlb != ''">fwlb = #{fwlb},</if>
+            <if test="jjdw != null and jjdw != ''">jjdw = #{jjdw},</if>
+            <if test="de != null">de = #{de},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBusRydexxById" parameterType="Long">
+        delete from bus_rydexx where id = #{id}
+    </delete>
+
+    <delete id="deleteBusRydexxByIds" parameterType="String">
+        delete from bus_rydexx where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

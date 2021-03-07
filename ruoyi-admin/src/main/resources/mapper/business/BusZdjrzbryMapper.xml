@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.business.mapper.BusZdjrzbryMapper">
+
+	<resultMap type="BusZdjrzbry" id="BusZdjrzbryResult">
+		<result property="id" column="id" />
+		<result property="zdjrId" column="zdjr_id" />
+		<result property="cbsId" column="cbs_id" />
+		<result property="cbsmc" column="cbsmc" />
+		<result property="grId" column="gr_id" />
+		<result property="grmc" column="grmc" />
+		<result property="grlxfs" column="grlxfs" />
+	</resultMap>
+
+	<sql id="selectBusZdjrzbryVo">
+		select id, zdjr_id, cbs_id, cbsmc, gr_id, grmc, grlxfs from bus_zdjrzbry
+	</sql>
+
+	<select id="selectBusZdjrzbryList" parameterType="BusZdjrzbry"
+		resultMap="BusZdjrzbryResult">
+		<include refid="selectBusZdjrzbryVo" />
+		<where>
+			<if test="zdjrId != null  and zdjrId != ''"> and zdjr_id = #{zdjrId}</if>
+			<if test="cbsId != null  and cbsId != ''"> and cbs_id = #{cbsId}</if>
+			<if test="cbsmc != null  and cbsmc != ''"> and cbsmc = #{cbsmc}</if>
+			<if test="grId != null  and grId != ''"> and gr_id = #{grId}</if>
+			<if test="grmc != null  and grmc != ''"> and grmc = #{grmc}</if>
+			<if test="grlxfs != null  and grlxfs != ''"> and grlxfs = #{grlxfs}</if>
+		</where>
+	</select>
+
+	<select id="selectBusZdjrzbryById" parameterType="Long"
+		resultMap="BusZdjrzbryResult">
+		<include refid="selectBusZdjrzbryVo" />
+		where id = #{id}
+	</select>
+
+	<insert id="insertBusZdjrzbry" parameterType="BusZdjrzbry">
+		insert into bus_zdjrzbry
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">id,</if>
+			<if test="zdjrId != null">zdjr_id,</if>
+			<if test="cbsId != null">cbs_id,</if>
+			<if test="cbsmc != null">cbsmc,</if>
+			<if test="grId != null">gr_id,</if>
+			<if test="grmc != null">grmc,</if>
+			<if test="grlxfs != null">grlxfs,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">#{id},</if>
+			<if test="zdjrId != null">#{zdjrId},</if>
+			<if test="cbsId != null">#{cbsId},</if>
+			<if test="cbsmc != null">#{cbsmc},</if>
+			<if test="grId != null">#{grId},</if>
+			<if test="grmc != null">#{grmc},</if>
+			<if test="grlxfs != null">#{grlxfs},</if>
+		</trim>
+	</insert>
+
+	<update id="updateBusZdjrzbry" parameterType="BusZdjrzbry">
+		update bus_zdjrzbry
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="zdjrId != null">zdjr_id = #{zdjrId},</if>
+			<if test="cbsId != null">cbs_id = #{cbsId},</if>
+			<if test="cbsmc != null">cbsmc = #{cbsmc},</if>
+			<if test="grId != null">gr_id = #{grId},</if>
+			<if test="grmc != null">grmc = #{grmc},</if>
+			<if test="grlxfs != null">grlxfs = #{grlxfs},</if>
+		</trim>
+		where id = #{id}
+	</update>
+
+	<delete id="deleteBusZdjrzbryById" parameterType="Long">
+		delete from bus_zdjrzbry where id = #{id}
+	</delete>
+
+	<delete id="deleteBusZdjrzbryByIds" parameterType="Long">
+		delete from bus_zdjrzbry where id in
+		<foreach item="id" collection="array" open="(" separator=","
+			close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+	<delete id="deleteBusZdjrzbryByZdjrIdAndCbsId">
+		delete from bus_zdjrzbry where zdjr_id = #{zdjrId} and cbs_id = #{cbsId}
+	</delete>
+	
+	<select id="selectBusZdjrzbryByZdjrIdAndCbsId" resultMap="BusZdjrzbryResult">
+		<include refid="selectBusZdjrzbryVo" />
+		where zdjr_id = #{zdjrId} and cbs_id = #{cbsId}
+	</select>
+	
+</mapper>

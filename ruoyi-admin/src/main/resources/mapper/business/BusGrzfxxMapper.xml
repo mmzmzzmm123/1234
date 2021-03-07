@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.business.mapper.BusGrzfxxMapper">
+    
+    <resultMap type="BusGrzfxx" id="BusGrzfxxResult">
+        <result property="id"    column="id"    />
+        <result property="cbsId"    column="cbs_id"    />
+        <result property="zzmc"    column="zzmc"    />
+        <result property="yxq"    column="yxq"    />
+        <result property="zztp"    column="zztp"    />
+        <result property="grId"    column="gr_id"    />
+    </resultMap>
+
+    <sql id="selectBusGrzfxxVo">
+        select id, cbs_id, zzmc, yxq, zztp, gr_id from bus_grzfxx
+    </sql>
+
+    <select id="selectBusGrzfxxList" parameterType="BusGrzfxx" resultMap="BusGrzfxxResult">
+        <include refid="selectBusGrzfxxVo"/>
+        <where>  
+            <if test="cbsId != null "> and cbs_id = #{cbsId}</if>
+            <if test="zzmc != null  and zzmc != ''"> and zzmc = #{zzmc}</if>
+            <if test="yxq != null  and yxq != ''"> and yxq = #{yxq}</if>
+            <if test="zztp != null  and zztp != ''"> and zztp = #{zztp}</if>
+            <if test="grId != null "> and gr_id = #{grId}</if>
+        </where>
+    </select>
+    
+    <select id="selectBusGrzfxxById" parameterType="Long" resultMap="BusGrzfxxResult">
+        <include refid="selectBusGrzfxxVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertBusGrzfxx" parameterType="BusGrzfxx" useGeneratedKeys="true" keyProperty="id">
+        insert into bus_grzfxx
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="cbsId != null">cbs_id,</if>
+            <if test="zzmc != null">zzmc,</if>
+            <if test="yxq != null">yxq,</if>
+            <if test="zztp != null">zztp,</if>
+            <if test="grId != null">gr_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="cbsId != null">#{cbsId},</if>
+            <if test="zzmc != null">#{zzmc},</if>
+            <if test="yxq != null">#{yxq},</if>
+            <if test="zztp != null">#{zztp},</if>
+            <if test="grId != null">#{grId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBusGrzfxx" parameterType="BusGrzfxx">
+        update bus_grzfxx
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="cbsId != null">cbs_id = #{cbsId},</if>
+            <if test="zzmc != null">zzmc = #{zzmc},</if>
+            <if test="yxq != null">yxq = #{yxq},</if>
+            <if test="zztp != null">zztp = #{zztp},</if>
+            <if test="grId != null">gr_id = #{grId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBusGrzfxxById" parameterType="Long">
+        delete from bus_grzfxx where id = #{id}
+    </delete>
+
+    <delete id="deleteBusGrzfxxByIds" parameterType="String">
+        delete from bus_grzfxx where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+    <select id="selectByCbsIdAndGrId" parameterType="BusGrzfxx" resultMap="BusGrzfxxResult">
+        <include refid="selectBusGrzfxxVo"/>
+        where cbs_id = #{cbsId} and gr_id = #{grId}
+    </select>
+    
+</mapper>
