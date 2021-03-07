@@ -11,11 +11,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.base.Objects;
+import com.ruoyi.business.domain.BusCbsgrxx;
 import com.ruoyi.business.domain.BusCbsxx;
 import com.ruoyi.business.domain.BusZdjrCbszbVO;
 import com.ruoyi.business.domain.BusZdjrgl;
 import com.ruoyi.business.domain.BusZdjrglVO;
 import com.ruoyi.business.domain.BusZdjrzbry;
+import com.ruoyi.business.mapper.BusCbsgrxxMapper;
 import com.ruoyi.business.mapper.BusCbsxxMapper;
 import com.ruoyi.business.mapper.BusZdjrglMapper;
 import com.ruoyi.business.mapper.BusZdjrzbryMapper;
@@ -38,6 +40,9 @@ public class BusZdjrglServiceImpl implements IBusZdjrglService {
 
 	@Autowired
 	private BusZdjrzbryMapper busZdjrzbryMapper;
+
+	@Autowired
+	private BusCbsgrxxMapper busCbsgrxxMapper;
 
 	/**
 	 * 查询重大节日管理
@@ -63,8 +68,12 @@ public class BusZdjrglServiceImpl implements IBusZdjrglService {
 			BeanUtils.copyProperties(e, busZdjrCbszbVO);
 			// 设置值班人员
 			List<BusZdjrzbry> zbryList = busZdjrzbryList.stream()
-					.filter(zbry -> Objects.equal(busZdjrCbszbVO.getId(), zbry.getCbsId()))
-					.collect(Collectors.toList());
+					.filter(zbry -> Objects.equal(busZdjrCbszbVO.getId(), zbry.getCbsId())).peek(zbry -> {
+						BusCbsgrxx busCbsgrxx = busCbsgrxxMapper.selectBusCbsgrxxById(zbry.getGrId());
+						if (busCbsgrxx != null) {
+							BeanUtils.copyProperties(busCbsgrxx, zbry);
+						}
+					}).collect(Collectors.toList());
 			busZdjrCbszbVO.setZbryList(zbryList);
 			zdjrCbszbVOs.add(busZdjrCbszbVO);
 		}

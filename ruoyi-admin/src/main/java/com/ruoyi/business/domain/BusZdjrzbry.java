@@ -43,6 +43,10 @@ public class BusZdjrzbry implements Serializable {
 	@Excel(name = "工人联系方式")
 	private String grlxfs;
 
+	/** 岗位 */
+	@Excel(name = "岗位")
+	private String gw;
+
 	public Long getId() {
 		return id;
 	}
@@ -97,6 +101,14 @@ public class BusZdjrzbry implements Serializable {
 
 	public void setGrlxfs(String grlxfs) {
 		this.grlxfs = grlxfs;
+	}
+
+	public String getGw() {
+		return gw;
+	}
+
+	public void setGw(String gw) {
+		this.gw = gw;
 	}
 
 }
