@@ -20,7 +20,20 @@ public class MessageUtils
      */
     public static String message(String code, Object... args)
     {
+        return message(code,"",args);
+    }
+
+    /**
+     * 根据消息键和参数 获取消息 委托给spring messageSource 取不到默认空值返回
+     *
+     * @param code 消息键
+     * @param defaultMessage 默认值
+     * @param args 参数
+     * @return 获取国际化翻译值
+     */
+    public static String message(String code,String defaultMessage, Object... args)
+    {
         MessageSource messageSource = SpringUtils.getBean(MessageSource.class);
-        return messageSource.getMessage(code, args, LocaleContextHolder.getLocale());
+        return messageSource.getMessage(code, args,defaultMessage, LocaleContextHolder.getLocale());
     }
 }
