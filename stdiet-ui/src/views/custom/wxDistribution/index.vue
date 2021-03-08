@@ -268,7 +268,6 @@ import {
   updateWxDistribution,
   exportWxDistribution,
 } from "@/api/custom/wxDistribution";
-import { getOptions } from "@/api/custom/order";
 import { listWxAccount } from "@/api/custom/wxAccount";
 import { mapState } from "vuex";
 export default {

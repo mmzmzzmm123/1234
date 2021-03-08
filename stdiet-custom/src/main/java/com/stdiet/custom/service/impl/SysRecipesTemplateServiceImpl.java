@@ -12,7 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 食谱计划Service业务层处理
@@ -36,7 +38,7 @@ public class SysRecipesTemplateServiceImpl implements ISysRecipesTemplateService
     }
 
     @Override
-    public int insertRecipsesTemplate(SysRecipesTemplate sysRecipesTemplate) {
+    public Map<String, Long> insertRecipsesTemplate(SysRecipesTemplate sysRecipesTemplate) {
         SysRecipesPlan sysRecipesPlan = new SysRecipesPlan();
         sysRecipesPlan.setStartNumDay(1);
         sysRecipesPlan.setEndNumDay(7);
@@ -47,9 +49,17 @@ public class SysRecipesTemplateServiceImpl implements ISysRecipesTemplateService
             sysRecipesTemplate.setCreateBy(SecurityUtils.getUsername());
             sysRecipesTemplate.setCreateTime(DateUtils.getNowDate());
             sysRecipesTemplate.setPlanId(sysRecipesPlan.getId());
-            return sysRecipesTemplateMapper.insertRecipsesTemplate(sysRecipesTemplate);
+            int rows = sysRecipesTemplateMapper.insertRecipsesTemplate(sysRecipesTemplate);
+            if(rows > 0) {
+                Map<String, Long> result =  new HashMap<>();
+                result.put("id", sysRecipesTemplate.getId());
+                result.put("planId", sysRecipesPlan.getId());
+                return result;
+            } else {
+                return null;
+            }
         }
-        return 0;
+        return null;
     }
 
     @Override
