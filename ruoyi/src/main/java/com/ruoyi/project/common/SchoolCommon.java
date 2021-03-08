@@ -67,6 +67,17 @@ public class SchoolCommon {
         return sysDept;
     }
 
+    public SysDept getDept(String schoolId) {
+        SysDept sysDept = new SysDept();
+        sysDept.setSchoolId(schoolId);
+        List<SysDept> list = deptService.selectDeptListAll(sysDept);
+        if (list != null && list.size() > 0) {
+            sysDept = list.get(0);
+        }
+
+        return sysDept;
+    }
+
     //获取用户信息
     public SysUser getUser() {
         LoginUser loginUser = SecurityUtils.getLoginUser();
@@ -95,7 +106,6 @@ public class SchoolCommon {
         }
         return false;
     }
-
 
 
     /**

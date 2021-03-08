@@ -28,6 +28,14 @@ public interface ISysUserService
     public List<SysUser> selectUserList(SysUser user);
 
     /**
+     * 根据条件分页查询用户列表
+     *
+     * @param user 用户信息
+     * @return 用户信息集合信息
+     */
+    public List<SysUser> selectUserListAll(SysUser user);
+
+    /**
      * 通过用户名查询用户
      * 
      * @param userName 用户名

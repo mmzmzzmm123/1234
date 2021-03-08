@@ -20,6 +20,14 @@ public interface ISysDeptService
     public List<SysDept> selectDeptList(SysDept dept);
 
     /**
+     * 查询部门管理数据
+     *
+     * @param dept 部门信息
+     * @return 部门信息集合
+     */
+    public List<SysDept> selectDeptListAll(SysDept dept);
+
+    /**
      * 根据用户ID获取岗位选择框列表
      *
      * @param userId 用户ID

@@ -40,6 +40,18 @@ public class SysDeptServiceImpl implements ISysDeptService
     }
 
     /**
+     * 查询部门管理数据
+     *
+     * @param dept 部门信息
+     * @return 部门信息集合
+     */
+    @Override
+    public List<SysDept> selectDeptListAll(SysDept dept)
+    {
+        return deptMapper.selectDeptListAll(dept);
+    }
+
+    /**
      * 根据用户ID获取岗位选择框列表
      *
      * @param userId 用户ID
