@@ -42,6 +42,7 @@ export default {
   mounted() {
     this.init({
       planId: this.planId,
+      name: this.name,
       temId: this.temId,
     }).catch((err) => {
       this.$message.error(err.message);
