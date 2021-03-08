@@ -84,4 +84,9 @@ export default {
 .el-dialog__body {
   padding: 12px 18px;
 }
+.dishes_detail_dialog_wrapper {
+  .el-dialog:not(.is-fullscreen) {
+    margin-top: 20vh !important;
+  }
+}
 </style>

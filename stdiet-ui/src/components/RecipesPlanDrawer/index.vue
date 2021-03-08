@@ -19,7 +19,12 @@
             @click="handleOnRecipesLinkClick"
             >食谱链接
           </el-button>
-          <el-popover placement="top" trigger="click" v-if="cusOutId" style="margin: 0 12px">
+          <el-popover
+            placement="top"
+            trigger="click"
+            v-if="cusOutId"
+            style="margin: 0 12px"
+          >
             <VueQr :text="copyValue" :logoSrc="logo" size="256" />
             <el-button
               slot="reference"
@@ -142,8 +147,8 @@ export default {
     },
     handleOnRecipesEditClick(data) {
       // console.log(data);
-      const { id, name } = this.data;
-      window.open("/recipes/build/" + name + "/" + id, "_blank");
+      // const { id, name } = this.data;
+      window.open("/recipes/build/" + this.data.name + "/" + data.id, "_blank");
     },
   },
 };
