@@ -12,10 +12,10 @@
       >
       <div class="msg-info" v-for="(info, idx) in basicInfo" :key="idx">
         <text-info
-          v-for="con in info"
-          :title="con.title"
-          :key="con.title"
-          :value="data[con.value]"
+          v-for="i in info"
+          :title="i.title"
+          :key="i.title"
+          :value="data[i.value]"
           extraclass="text-info-extra"
         />
       </div>

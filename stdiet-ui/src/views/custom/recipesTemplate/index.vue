@@ -180,49 +180,7 @@
     />
 
     <!-- 添加或修改食材对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="520px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="模板名称" prop="name" label-width="100px">
-          <el-input v-model="form.name" placeholder="请输入模板名称" />
-        </el-form-item>
-        <el-form-item label="营养师" prop="nutritionistId" label-width="100px">
-          <el-select v-model="form.nutritionistId" placeholder="请选择营养师">
-            <el-option
-              v-for="dict in nutritionistIdOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item
-          label="营养师助理"
-          prop="nutriAssisId"
-          label-width="100px"
-        >
-          <el-select v-model="form.nutriAssisId" placeholder="请选择营养师助理">
-            <el-option
-              v-for="dict in nutriAssisIdOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="备注" prop="remark" label-width="100px">
-          <el-input
-            v-model="form.remark"
-            :rows="4"
-            type="textarea"
-            placeholder="请输入内容"
-          />
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
-        <el-button @click="cancel">取 消</el-button>
-      </div>
-    </el-dialog>
+    <TemplateDialog ref="templateDialogRef" @onConfirm="handleOnConfirm" />
   </div>
 </template>
 
@@ -233,10 +191,9 @@ import {
   updateRecipesTemplate,
   deleteRecipesTemplate,
 } from "@/api/custom/recipesTemplate";
-import store from "@/store";
-import { mapState } from "vuex";
+import TemplateDialog from "@/components/TemplateDialog";
+import { mapGetters, mapState } from "vuex";
 
-const userId = store.getters && store.getters.userId;
 export default {
   name: "recipesTemplate",
   data() {
@@ -266,18 +223,6 @@ export default {
       },
       open: false,
       title: "",
-      // 表单参数
-      form: {},
-      // 表单校验
-      rules: {
-        name: [{ required: true, message: "请输入模板名称", trigger: "blur" }],
-        nutritionistId: [
-          { required: true, message: "请选择营养师", trigger: "blur" },
-        ],
-        nutriAssisId: [
-          { required: true, message: "请选择营养师助理", trigger: "blur" },
-        ],
-      },
       //订单对于所有计划安排数据
       allRecipesPlanList: [],
       //订单弹窗状态
@@ -295,10 +240,12 @@ export default {
     };
   },
   components: {
+    TemplateDialog,
     // "order-dialog": OrderDetail,
     // body_sign_dialog: BodySignDetail,
   },
   computed: {
+    // ...mapGetters(["userId"]),
     ...mapState({
       //营养师
       nutritionistIdOptions: (state) =>
@@ -340,9 +287,7 @@ export default {
     },
     /** 新增按钮操作 */
     handleAdd() {
-      this.reset();
-      this.open = true;
-      this.title = "添加模板";
+      this.$refs.templateDialogRef.showDialog();
     },
     /** 搜索按钮操作 */
     handleQuery() {
@@ -353,22 +298,6 @@ export default {
     resetQuery() {
       this.resetForm("queryForm");
       this.handleQuery();
-    },
-    // 取消按钮
-    cancel() {
-      this.open = false;
-      this.reset();
-    },
-    // 表单重置
-    reset() {
-      this.form = {
-        id: null,
-        name: null,
-        remark: null,
-        nutritionistId: null,
-        nutriAssisId: null,
-      };
-      this.resetForm("form");
     },
     /** 导出按钮操作 */
     handleExport() {
@@ -402,10 +331,7 @@ export default {
         .catch(() => {});
     },
     handleOnTemplateEdit(data) {
-      this.open = true;
-      this.title = "修改模板";
-      this.reset();
-      this.form = data;
+      this.$refs.templateDialogRef.showDialog(data);
     },
     handleOnRecipesEdit(data) {
       // console.log(data);
@@ -427,29 +353,24 @@ export default {
       return this.selectDictLabel(this.nutriAssisIdOptions, row.nutriAssisId);
     },
     /** 提交按钮 */
-    submitForm() {
-      this.$refs["form"].validate((valid) => {
-        if (valid) {
-          this.form.cusId = 0;
-          if (this.form.id != null) {
-            updateRecipesTemplate(this.form).then((response) => {
-              if (response.code === 200) {
-                this.msgSuccess("修改成功");
-                this.open = false;
-                this.getList();
-              }
-            });
-          } else {
-            addRecipesTemplate(this.form).then((response) => {
-              if (response.code === 200) {
-                this.msgSuccess("新增成功");
-                this.open = false;
-                this.getList();
-              }
-            });
+    handleOnConfirm(form) {
+      if (form.id != null) {
+        updateRecipesTemplate(form).then((response) => {
+          if (response.code === 200) {
+            this.msgSuccess("修改成功");
+            this.open = false;
+            this.getList();
           }
-        }
-      });
+        });
+      } else {
+        addRecipesTemplate(form).then((response) => {
+          if (response.code === 200) {
+            this.msgSuccess("新增成功");
+            this.open = false;
+            this.getList();
+          }
+        });
+      }
     },
   },
 };
