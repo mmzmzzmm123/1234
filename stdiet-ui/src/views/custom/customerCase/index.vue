@@ -390,7 +390,7 @@
       getFileListByCaseId(customerCase){
         getFileListByCaseId(customerCase.id).then(response => {
           if (response.code === 200) {
-              this.$refs["muchFileDownRef"].showDialog(null, response.rows);
+              this.$refs["muchFileDownRef"].showDialog(customerCase.name, response.rows);
           }
         });
       },

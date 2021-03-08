@@ -65,13 +65,13 @@ export default {
     };
   },
   methods: {
-    uploadFile(){
+    async uploadFile(){
       if(this.upload.fileList.length > 0 && this.uploadResult.fileUrl.length < this.upload.fileList.length){
         this.$refs.upload.submit();
       }else{
         //合并旧文件
         if(this.oldCaseFileList != null && this.oldCaseFileList.length > 0){
-          this.oldCaseFileList.forEach((item, index) => {
+          await this.oldCaseFileList.forEach((item, index) => {
             this.uploadResult.fileUrl.unshift(item.fileUrl);
             this.uploadResult.fileName.unshift(item.fileName);
           });
@@ -117,14 +117,14 @@ export default {
       //this.upload.isUploading = true;
     },
     // 文件上传成功处理
-    handleFileSuccess(response, file, fileList) {
+    async handleFileSuccess(response, file, fileList) {
       if(response != null && response.code === 200){
         this.uploadResult.fileUrl.push(response.fileUrl);
         this.uploadResult.fileName.push(response.fileName);
         if(this.uploadResult.fileUrl.length === this.upload.fileList.length){
           //文件全部上传成功，则调用回调方法
           if(this.oldCaseFileList != null && this.oldCaseFileList.length > 0){
-            this.oldCaseFileList.forEach((item, index) => {
+            await this.oldCaseFileList.forEach((item, index) => {
               this.uploadResult.fileUrl.unshift(item.fileUrl);
               this.uploadResult.fileName.unshift(item.fileName);
             });

@@ -5,6 +5,7 @@
   <div class="app-container" style="height: 400px; overflow: auto">
     <div style="margin: -20px auto 15px auto">
       <el-button type="primary" @click="lazyShow = true" plain>滚动下拉预览</el-button>
+      <el-button type="primary" @click="downZipFile()" plain>打包下载</el-button>
     </div>
     <el-table v-loading="loading" :data="fileList">
       <el-table-column label="文件预览" align="center" prop="fileUrl">
@@ -61,6 +62,7 @@
 <script>
 import { downCaseFile } from "@/api/custom/customerCase";
 import AutoHideMessage from "@/components/AutoHideMessage";
+import { downSigleFile,downFileByZip } from "@/utils/downFileByZip";
 export default {
   name: "MuchFileDown",
   components: {
@@ -77,13 +79,18 @@ export default {
       //案例id
       caseId: null,
       //支持预览的文件类型
-      imgArr: ['jpg', 'jpeg', 'png', 'gif'],
+      imgArr: ['jpg', 'jpeg', 'png'],
       //文件列表
       fileList: [],
       //图片文件列表
       imageList:[],
+      //全部文件列表
+      fileUrlList:[],
+      //全部文件名称列表
+      fileNameList:[],
       //懒加载
-      lazyShow: false
+      lazyShow: false,
+      titlePrefix: "",
     };
   },
   created() {
@@ -92,14 +99,16 @@ export default {
   computed: {
   },
   methods: {
-    showDialog(title, fileList) {
-      this.title = title ? title : "文件列表";
+    showDialog(titlePrefix, fileList) {
+      this.title = titlePrefix ? ("「"+titlePrefix+"」文件") : "文件列表";
+      this.titlePrefix = titlePrefix ? titlePrefix : "文件列表";
       fileList.forEach((item, index) => {
         item["imageFlag"] = this.isImage(item.fileName);
         if(item["imageFlag"]){
-           //this.$set(this.imageList, this.imageList.length, item.downUrl)
            this.imageList.push(item.downUrl);
         }
+        this.fileUrlList.push(item.downUrl);
+        this.fileNameList.push(item.fileName);
       });
       this.fileList = fileList;
       this.loading = false;
@@ -111,13 +120,16 @@ export default {
       this.caseId = null;
       this.fileList = [];
       this.imageList = [];
+      this.fileUrlList = [];
+      this.fileNameList = [];
+      this.titlePrefix = "";
     },
     downloadFile(file){
       if(file == undefined || file == null || file.downUrl == null || file.downUrl == ""){
         this.$message({message: "文件不存在", type: "warning",});
         return;
       }
-      downCaseFile(file.downUrl);
+      downSigleFile(file.downUrl, file.fileName);
     },
     isImage(name){
       var idx = name.indexOf('.');
@@ -126,6 +138,18 @@ export default {
       }
       var type = name.substr(idx + 1);
       return this.imgArr.indexOf(type) !== -1 ? true : false;
+    },
+    downZipFile(){
+      downFileByZip(this.fileUrlList, this.fileNameList, this.titlePrefix);
+    },
+    //判断是否为Trident内核浏览器(IE等)函数
+    browserIsIe: function () {
+      if (!!window.ActiveXObject || "ActiveXObject" in window) {
+        return true;
+      }
+      else {
+        return false;
+      }
     }
   },
 };

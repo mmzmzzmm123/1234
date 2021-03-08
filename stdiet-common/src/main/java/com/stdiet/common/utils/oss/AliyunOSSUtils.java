@@ -73,10 +73,10 @@ public class AliyunOSSUtils {
             //去尾
             String tail = oranName.substring(cutPoint);
             //返回正确的带路径的图片名称
-            return prefix + head + tail + "_" + uuid;
+            return prefix + head + uuid + "_" + tail;
         }
         //不存在 直接返回
-        return prefix + oranName + "_" + uuid;
+        return prefix + uuid + "_" + oranName;
     }
 
     /**
