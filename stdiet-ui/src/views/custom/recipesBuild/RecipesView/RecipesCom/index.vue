@@ -415,9 +415,6 @@ export default {
     handleParentClick(e) {
       // 校验某天
       this.setCurrentDay({ currentDay: this.num });
-      VueScrollTo.scrollTo(`#recipes${this.num}`, 500, {
-        container: "#recipes_content",
-      });
     },
     spanMethod({ row, column, rowIndex, columnIndex }) {
       if (columnIndex === 0) {
@@ -440,6 +437,9 @@ export default {
       e.stopPropagation();
       // 取消高亮
       this.resetCurrentDay({ currentDay: this.num });
+      VueScrollTo.scrollTo(`#recipes${this.num}`, 500, {
+        container: "#recipes_content",
+      });
     },
     handleOnAdd() {
       // console.log(this.num);

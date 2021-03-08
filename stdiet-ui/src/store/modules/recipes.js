@@ -14,6 +14,7 @@ import { getDicts } from "@/api/system/dict/data";
 
 const oriState = {
   cusId: undefined,
+  name: undefined,
   planId: undefined,
   temId: undefined,
   recipesId: undefined,
@@ -269,6 +270,7 @@ const actions = {
         dishes: menu.dishes.map(dObj => ({
           dishesId: dObj.dishesId,
           type: dObj.type,
+          remark: dObj.remark,
           detail: dObj.igdList.map(igd => ({
             id: igd.id,
             weight: igd.weight,
@@ -286,7 +288,7 @@ const actions = {
       dispatch("getRecipesInfo", { recipesId });
       payload.callback &&
         payload.callback({
-          name: state.healthyData.name,
+          name: state.name,
           planId: state.planId
         });
     }
