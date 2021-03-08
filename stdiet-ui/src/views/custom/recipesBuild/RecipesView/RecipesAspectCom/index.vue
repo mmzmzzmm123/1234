@@ -198,10 +198,10 @@ export default {
             callback: () => {
               this.$message.success(`另存为模板「${form.name}」成功`);
               this.loading = false;
-              window.open(
-                "/recipes/build/" + form.name + "/" + planId + "?temId=" + id,
-                "_blank"
-              );
+              // window.open(
+              //   "/recipes/build/" + form.name + "/" + planId + "?temId=" + id,
+              //   "_blank"
+              // );
             },
           });
         }
