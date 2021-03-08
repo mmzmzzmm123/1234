@@ -18,6 +18,7 @@ import "./permission"; // permission control
 import { getDicts } from "@/api/system/dict/data";
 import { getConfigKey } from "@/api/system/config";
 import VueScrollTo from "vue-scrollto";
+import VueResource from "vue-resource"
 
 import {
   addDateRange,
@@ -103,6 +104,8 @@ Vue.use(VueScrollTo, {
   x: false,
   y: true
 });
+
+Vue.use(VueResource)
 
 new Vue({
   el: "#app",
