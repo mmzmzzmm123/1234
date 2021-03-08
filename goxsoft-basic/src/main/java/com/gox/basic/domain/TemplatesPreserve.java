@@ -59,7 +59,10 @@ public class TemplatesPreserve extends BaseEntity
 
     public TemplatesPreserve() {
     }
-
+    public TemplatesPreserve(Long nodeId, Long deptId) {
+        this.nodeId = nodeId;
+        this.deptId = deptId;
+    }
     public TemplatesPreserve(Long nodeId, Long deptId,Long formId) {
         this.nodeId = nodeId;
         this.deptId = deptId;

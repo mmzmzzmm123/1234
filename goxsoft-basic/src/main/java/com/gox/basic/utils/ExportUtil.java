@@ -5,6 +5,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.poi.excel.BigExcelWriter;
 import cn.hutool.poi.excel.ExcelUtil;
 import com.gox.basic.domain.Metadata;
+import com.gox.basic.domain.TemplatesPreserve;
 import com.gox.basic.domain.vo.TableFieldVo;
 import com.gox.common.utils.spring.PropertiesUtils;
 import org.dom4j.Document;
@@ -22,7 +23,7 @@ import java.util.*;
 
 public class ExportUtil {
     private ExportUtil(){}
-    private static List<Map<String, String>> extract(Collection<Metadata> collection, List<TableFieldVo> fieldVos) throws Throwable{
+    private static List<Map<String, String>> extract(Collection<Metadata> collection, List<TemplatesPreserve> fieldVos) throws Throwable{
         Iterator<Metadata> it = collection.iterator();
         Metadata m;
         List<Map<String,String>> list = new ArrayList<>();
@@ -31,7 +32,7 @@ public class ExportUtil {
             map = new LinkedHashMap<>();
             m = it.next();
             map.put("id",getValue("id",m));
-            for (TableFieldVo fieldVo : fieldVos) {
+            for (TemplatesPreserve fieldVo : fieldVos) {
                 map.put(fieldVo.getTableFieldName(),getValue(fieldVo.getvModel(),m));
             }
             list.add(map);
@@ -48,7 +49,7 @@ public class ExportUtil {
             return String.valueOf(o);
         }
     }
-    public static void exportExcel(Collection<Metadata> collection,List<TableFieldVo> fieldVos,String fileName) throws Throwable {
+    public static void exportExcel(Collection<Metadata> collection, List<TemplatesPreserve> fieldVos, String fileName) throws Throwable {
         List<Map<String, String>> list = extract(collection, fieldVos);
         BigExcelWriter writer = ExcelUtil.getBigWriter(PropertiesUtils.profile+File.separator+"download"+File.separator+fileName);
         // 一次性写出内容，使用默认样式
@@ -56,13 +57,13 @@ public class ExportUtil {
         // 关闭writer，释放内存
         writer.close();
     }
-    public static void exportXml(Collection<Metadata> collection,List<TableFieldVo> fieldVos,String fileName) throws Throwable {
+    public static void exportXml(Collection<Metadata> collection,List<TemplatesPreserve> fieldVos,String fileName) throws Throwable {
         List<Map<String, String>> list = extract(collection, fieldVos);
         Document doc = DocumentHelper.createDocument();
         Element root = doc.addElement("root");
         for (Map<String, String> map : list) {
             Element m = root.addElement("元数据");
-            for (TableFieldVo fieldVo : fieldVos) {
+            for (TemplatesPreserve fieldVo : fieldVos) {
                 String n = map.get(fieldVo.getTableFieldName());
                 if (n!=null){
                     Element child = m.addElement(fieldVo.getTableFieldName());

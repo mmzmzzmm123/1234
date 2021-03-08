@@ -3,7 +3,6 @@ package com.gox.basic.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.gox.basic.domain.vo.TableFieldVo;
-import com.gox.basic.service.IFieldsItemService;
 import com.gox.common.annotation.Log;
 import com.gox.common.core.controller.BaseController;
 import com.gox.common.core.domain.AjaxResult;
@@ -14,16 +13,12 @@ import com.gox.common.utils.poi.ExcelUtil;
 import com.gox.common.utils.uuid.SnowflakesTools;
 import com.gox.basic.domain.FormJson;
 import com.gox.basic.domain.form.FormDesignerData;
-import com.gox.basic.service.IFormDesignerDataService;
 import com.gox.basic.service.IFormJsonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 
 /**
@@ -37,10 +32,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class FormJsonController extends BaseController {
     @Autowired
     private IFormJsonService formJsonService;
-    @Autowired
-    private IFormDesignerDataService formDesignerDataService;
-    @Autowired
-    private IFieldsItemService fieldsItemService;
 
     /**
      * id获取
@@ -61,23 +52,6 @@ public class FormJsonController extends BaseController {
         return getDataTable(list);
     }
 
-    @PreAuthorize("@ss.hasPermi('basic:json:list')")
-    @GetMapping("/table-field/{nodeId}/{deptId}")
-    public AjaxResult getTableFields(@PathVariable Long nodeId, @PathVariable Long deptId) {
-        List<TableFieldVo> f = fieldsItemService.selectTableFieldByNodeIdAndDeptId(nodeId, deptId);
-        return AjaxResult.success(f);
-    }
-
-    @PutMapping("/table-field")
-    @Log(title = "表格表头", businessType = BusinessType.UPDATE)
-    public AjaxResult updateTableFields(@RequestBody List<TableFieldVo> fieldVos) {
-        return AjaxResult.success(fieldsItemService.updateTableFieldsBatch(fieldVos));
-    }
-
-    @GetMapping("/table-title/{nodeId}/{deptId}")
-    public AjaxResult getTableTile(@PathVariable Long nodeId, @PathVariable Long deptId) {
-        return AjaxResult.success(fieldsItemService.selectTableTitle(nodeId, deptId));
-    }
 
     /**
      * 导出表单json列表

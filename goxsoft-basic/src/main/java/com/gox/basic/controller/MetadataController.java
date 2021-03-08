@@ -1,10 +1,10 @@
 package com.gox.basic.controller;
 
 import cn.hutool.core.util.StrUtil;
-import com.gox.basic.domain.vo.ImportFieldMap;
+import com.gox.basic.domain.TemplatesPreserve;
 import com.gox.basic.domain.vo.ImportParams;
 import com.gox.basic.domain.vo.TableFieldVo;
-import com.gox.basic.service.IFieldsItemService;
+import com.gox.basic.service.ITemplatesPreserveService;
 import com.gox.basic.utils.ExportUtil;
 import com.gox.common.annotation.Log;
 import com.gox.common.core.controller.BaseController;
@@ -13,7 +13,6 @@ import com.gox.common.core.page.TableDataInfo;
 import com.gox.common.enums.BusinessType;
 import com.gox.common.utils.StringUtils;
 import com.gox.common.utils.file.Chunk;
-import com.gox.common.utils.poi.ExcelUtil;
 import com.gox.basic.domain.Metadata;
 import com.gox.basic.service.IMetadataService;
 import io.swagger.annotations.ApiOperation;
@@ -24,7 +23,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -39,7 +37,7 @@ public class MetadataController extends BaseController {
     @Autowired
     private IMetadataService metadataService;
     @Autowired
-    private IFieldsItemService iFieldsItemService;
+    private ITemplatesPreserveService templatesPreserveService;
     /**
      * 查询文书类基本元数据列表
      */
@@ -71,9 +69,10 @@ public class MetadataController extends BaseController {
     @GetMapping("/export")
     public AjaxResult export(Metadata metadata) throws Throwable {
         List<Metadata> list = metadataService.selectMetadataList(metadata);
-        List<TableFieldVo> fieldVos = iFieldsItemService.selectTableFieldByNodeIdAndDeptId(metadata.getNodeId(),metadata.getDeptId());
+        //List<TableFieldVo> fieldVos = iFieldsItemService.selectTableFieldByNodeIdAndDeptId(metadata.getNodeId(),metadata.getDeptId());
+        List<TemplatesPreserve> templates = templatesPreserveService.selectTemplatesPreserveList(new TemplatesPreserve(metadata.getNodeId(),metadata.getDeptId()));
         String defaultN = System.currentTimeMillis()+".xlsx";
-        ExportUtil.exportExcel(list,fieldVos,defaultN);
+        ExportUtil.exportExcel(list,templates,defaultN);
         return AjaxResult.success(defaultN);
     }
 
@@ -114,7 +113,7 @@ public class MetadataController extends BaseController {
     @Log(title = "文书类基本元数据字段模板", businessType = BusinessType.EXPORT)
     @GetMapping("/export/field/{nodeId}/{deptId}")
     public AjaxResult exportFieldExcel(@PathVariable Long nodeId,@PathVariable Long deptId) throws Throwable {
-        List<TableFieldVo> fieldVos = iFieldsItemService.selectTableFieldByNodeIdAndDeptId(nodeId, deptId);
+        List<TemplatesPreserve> fieldVos = templatesPreserveService.selectTemplatesPreserveList(new TemplatesPreserve(nodeId, deptId));
         String defaultN = System.currentTimeMillis()+".xlsx";
         ExportUtil.exportExcel(new ArrayList<>(),fieldVos,defaultN);
         return AjaxResult.success(defaultN);

@@ -648,9 +648,13 @@
             this.getListInner()
             //点击若是案卷 则显示案卷部分
             this.archiveInnerShow = true
-          } else {
+          }
+          else {
             this.archiveInnerShow = false
           }
+        }
+        else{
+          this.archiveInnerShow = false
         }
         this.$refs.mainTable.toggleRowSelection(row)
       },

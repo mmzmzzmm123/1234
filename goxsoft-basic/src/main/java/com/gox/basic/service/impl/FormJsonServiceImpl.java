@@ -11,9 +11,7 @@ import com.gox.common.utils.DateUtils;
 import com.gox.basic.domain.FormJson;
 import com.gox.basic.domain.form.FormDesignerData;
 import com.gox.basic.mapper.FormJsonMapper;
-import com.gox.basic.service.IFormDesignerDataService;
 import com.gox.basic.service.IFormJsonService;
-import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,8 +32,6 @@ import java.util.Random;
 public class FormJsonServiceImpl implements IFormJsonService {
     @Autowired
     private FormJsonMapper formJsonMapper;
-    @Autowired
-    private IFormDesignerDataService formDesignerDataService;
 
     @Autowired
     private ITemplatesPreserveService templatesPreserveService;

@@ -40,7 +40,7 @@ public class MetadataServiceImpl implements IMetadataService {
     @Autowired
     private MetadataMapper metadataMapper;
     @Autowired
-    private IFieldsItemService fieldsItemService;
+    private ITemplatesPreserveService templatesPreserveService;
     @Autowired
     private IArchivalCodeSettingService archivalCodeSettingService;
     @Autowired
@@ -226,7 +226,8 @@ public class MetadataServiceImpl implements IMetadataService {
             return AjaxResult.error();
         }
         List<Metadata> mds = metadataMapper.selectMetadataByIds(ids);
-        List<TableFieldVo> vos = fieldsItemService.selectTableFieldByNodeIdAndDeptId(mds.get(0).getNodeId(),mds.get(0).getDeptId()  );
+        List<TemplatesPreserve>vos = templatesPreserveService.
+                selectTemplatesPreserveList(new TemplatesPreserve(mds.get(0).getNodeId(),mds.get(0).getDeptId()));
         String fn = System.currentTimeMillis()+".xlsx";
         ExportUtil.exportExcel(mds,vos,fn);
         return AjaxResult.success(fn);
@@ -237,7 +238,7 @@ public class MetadataServiceImpl implements IMetadataService {
             return AjaxResult.error();
         }
         List<Metadata> mds = metadataMapper.selectMetadataByIds(ids);
-        List<TableFieldVo> vos = fieldsItemService.selectTableFieldByNodeIdAndDeptId(mds.get(0).getNodeId(),mds.get(0).getDeptId()  );
+        List<TemplatesPreserve> vos = templatesPreserveService.selectTemplatesPreserveList(new TemplatesPreserve(mds.get(0).getNodeId(),mds.get(0).getDeptId()));
         String fn = System.currentTimeMillis()+".xml";
         ExportUtil.exportXml(mds,vos,fn);
         return AjaxResult.success(fn);
@@ -248,7 +249,7 @@ public class MetadataServiceImpl implements IMetadataService {
             return AjaxResult.error();
         }
         List<Metadata> mds = metadataMapper.selectMetadataByIds(ids);
-        List<TableFieldVo> vos = fieldsItemService.selectTableFieldByNodeIdAndDeptId(mds.get(0).getNodeId(),mds.get(0).getDeptId()  );
+        List<TemplatesPreserve> vos = templatesPreserveService.selectTemplatesPreserveList(new TemplatesPreserve(mds.get(0).getNodeId(),mds.get(0).getDeptId() ));
         long t = System.currentTimeMillis();
         String fn = t+".xml";
         ExportUtil.exportXml(mds,vos,fn);
@@ -266,7 +267,7 @@ public class MetadataServiceImpl implements IMetadataService {
             return AjaxResult.error();
         }
         List<Metadata> mds = metadataMapper.selectMetadataByIds(ids);
-        List<TableFieldVo> vos = fieldsItemService.selectTableFieldByNodeIdAndDeptId(mds.get(0).getNodeId(),mds.get(0).getDeptId()  );
+        List<TemplatesPreserve> vos = templatesPreserveService.selectTemplatesPreserveList(new TemplatesPreserve(mds.get(0).getNodeId(),mds.get(0).getDeptId()));
         long t = System.currentTimeMillis();
         String fn = t+".xlsx";
         ExportUtil.exportExcel(mds,vos,fn);
@@ -344,7 +345,7 @@ public class MetadataServiceImpl implements IMetadataService {
         String username = SecurityUtils.getUsername();
         String parent = profile + File.separator + nodeId+File.separator+deptId+File.separator+username;
         String filepath = parent + File.separator+ filename;
-        List<TableFieldVo> list = fieldsItemService.selectTableFieldByNodeIdAndDeptId(nodeId, deptId);
+        List<TemplatesPreserve> list = templatesPreserveService.selectTemplatesPreserveList(new TemplatesPreserve(nodeId, deptId));
         //现数据对应map
         Map<String,String> map2 = new HashMap<>();
         list.forEach(f->map2.put(f.getTableFieldName(),f.getvModel()));
