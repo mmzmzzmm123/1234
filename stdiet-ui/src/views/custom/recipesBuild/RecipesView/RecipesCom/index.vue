@@ -112,8 +112,9 @@
         <template slot-scope="scope">
           <span
             v-if="
-              scope.row.nameSpan.colspan === 1 &&
-              scope.row.nameSpan.rowspan === 1
+              (scope.row.nameSpan.colspan === 1 &&
+                scope.row.nameSpan.rowspan === 1) ||
+              (scope.row.igdType !== '15' && scope.row.igdType !== '14')
             "
           >
             {{ scope.row.igdName }}
@@ -357,7 +358,6 @@ export default {
               }
 
               // console.log(cur);
-
               arr.push({
                 id: cur.id,
                 dishesId: cur.dishesId,
@@ -368,6 +368,7 @@ export default {
                 methods: cur.methods,
                 remark: cur.remark,
                 igdId: igd.id,
+                igdType: igd.type,
                 igdName: igd.name,
                 proteinRatio: igd.proteinRatio,
                 fatRatio: igd.fatRatio,
@@ -400,7 +401,7 @@ export default {
           }
           return arr;
         }, []);
-      // console.log(mData);
+      console.log(mData);
 
       return mData;
     },
@@ -548,7 +549,7 @@ export default {
       this.$refs.remarkDialogRef.showDialog(data);
     },
     handleOnRemarkConfirm(data) {
-      console.log(data);
+      // console.log(data);
       const { id, remark } = data;
       this.updateDishes({
         num: this.num,

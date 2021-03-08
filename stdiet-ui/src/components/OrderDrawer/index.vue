@@ -41,10 +41,7 @@
               >
                 {{ scope.row.reviewStatus === "yes" ? "已审核" : "未审核" }}
               </el-tag>
-              <el-tag
-                v-if="scope.row.type === 'virtual'"
-                disable-transitions
-              >
+              <el-tag v-if="scope.row.type === 'virtual'" disable-transitions>
                 分单
               </el-tag>
             </template>
@@ -55,11 +52,13 @@
             align="center"
             width="160"
           ></el-table-column>
-          <el-table-column
-            label="成交时间"
-            prop="orderTime"
-            align="center"
-          ></el-table-column>
+          <el-table-column label="成交时间" prop="orderTime" align="center"
+            ><template slot-scope="scope">
+              <div v-for="time in scope.row.orderTime.split(' ')" :key="time">
+                {{ time }}
+              </div>
+            </template>
+          </el-table-column>
           <el-table-column
             label="成交金额"
             prop="amount"
@@ -128,7 +127,7 @@ export default {
   components: {
     "edit-order-dialog": OrderEdit,
     "order-detail": OrderDetail,
-    "create-order-dialog": OrderAdd
+    "create-order-dialog": OrderAdd,
   },
   data() {
     return {
