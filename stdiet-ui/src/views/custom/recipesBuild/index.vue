@@ -40,8 +40,11 @@ export default {
     };
   },
   mounted() {
+    this.$store.dispatch("global/init", {});
+    //
     this.init({
       planId: this.planId,
+      name: this.name,
       temId: this.temId,
     }).catch((err) => {
       this.$message.error(err.message);

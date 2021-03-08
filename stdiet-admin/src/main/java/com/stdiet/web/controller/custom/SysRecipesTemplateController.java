@@ -3,6 +3,7 @@ package com.stdiet.web.controller.custom;
 import com.stdiet.common.core.controller.BaseController;
 import com.stdiet.common.core.domain.AjaxResult;
 import com.stdiet.common.core.page.TableDataInfo;
+import com.stdiet.common.utils.StringUtils;
 import com.stdiet.custom.domain.SysRecipesTemplate;
 import com.stdiet.custom.service.ISysRecipesTemplateService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 食谱模板
@@ -46,7 +48,11 @@ public class SysRecipesTemplateController extends BaseController {
     @PreAuthorize("@ss.hasPermi('recipes:template:edit')")
     @PostMapping("/add")
     public AjaxResult add(@RequestBody SysRecipesTemplate sysRecipesTemplate) {
-        return toAjax(iSysRecipesTemplateService.insertRecipsesTemplate(sysRecipesTemplate));
+        Map<String, Long> result = iSysRecipesTemplateService.insertRecipsesTemplate(sysRecipesTemplate);
+        if (StringUtils.isEmpty(result)) {
+            return AjaxResult.error();
+        }
+        return AjaxResult.success(result);
     }
 
     /**

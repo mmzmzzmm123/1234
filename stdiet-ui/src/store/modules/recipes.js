@@ -14,6 +14,7 @@ import { getDicts } from "@/api/system/dict/data";
 
 const oriState = {
   cusId: undefined,
+  name: undefined,
   planId: undefined,
   temId: undefined,
   recipesId: undefined,
@@ -107,6 +108,7 @@ const mutations = {
 
 const actions = {
   async init({ commit, dispatch }, payload) {
+    //
     // console.log(payload);
     const planResponse = await getRecipesPlan(payload.planId);
     const {
@@ -261,14 +263,15 @@ const actions = {
   async saveRecipes({ commit, dispatch, state }, payload) {
     const { recipesData, cusId, planId } = state;
     const params = {
-      cusId,
-      planId,
+      cusId: payload.cusId !== undefined ? payload.cusId : cusId,
+      planId: payload.planId || planId,
       menus: recipesData.map((menu, idx) => ({
         numDay: menu.numDay,
         cusId,
         dishes: menu.dishes.map(dObj => ({
           dishesId: dObj.dishesId,
           type: dObj.type,
+          remark: dObj.remark,
           detail: dObj.igdList.map(igd => ({
             id: igd.id,
             weight: igd.weight,
@@ -282,11 +285,14 @@ const actions = {
     const result = await addRecipesApi(params);
     if (result.code === 200) {
       const recipesId = result.data;
-      commit("updateStateData", { recipesId });
-      dispatch("getRecipesInfo", { recipesId });
+      if (!payload.planId) {
+        // 非保存模板
+        commit("updateStateData", { recipesId });
+        dispatch("getRecipesInfo", { recipesId });
+      }
       payload.callback &&
         payload.callback({
-          name: state.healthyData.name,
+          name: state.name,
           planId: state.planId
         });
     }

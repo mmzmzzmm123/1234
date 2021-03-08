@@ -144,7 +144,7 @@
     <insert id="bashAddDishes" >
         insert into sys_customer_menu_dishes (menu_id, type, dishes_id, remark, detail) values
         <foreach collection="list" separator="," item="item" index="index">
-            (#{item.menuId}, #{item.type}, #{item.dishesId}, #{remark}, #{item.detail, jdbcType=OTHER, typeHandler=com.stdiet.custom.typehandler.ArrayJsonHandler})
+            (#{item.menuId}, #{item.type}, #{item.dishesId}, #{item.remark}, #{item.detail, jdbcType=OTHER, typeHandler=com.stdiet.custom.typehandler.ArrayJsonHandler})
         </foreach>
     </insert>
 

@@ -77,8 +77,9 @@
                   icon="el-icon-delete"
                   class="fun_button"
                   @click="handleOnDelete(scope.row)"
-                  >删除</el-button
                 >
+                  删除
+                </el-button>
               </div>
               <div>
                 <el-button
@@ -87,15 +88,18 @@
                   icon="el-icon-document-copy"
                   class="fun_button"
                   @click="handleOnCopy(scope.row)"
-                  >复制</el-button
                 >
+                  复制
+                </el-button>
                 <el-button
+                  type="primary"
                   size="mini"
                   icon="el-icon-document-copy"
                   class="fun_button"
                   @click="handleOnSetting(scope.row)"
-                  >修改餐类</el-button
                 >
+                  修改餐类
+                </el-button>
               </div>
             </div>
             <div class="pointer_style" slot="reference">
@@ -415,9 +419,6 @@ export default {
     handleParentClick(e) {
       // 校验某天
       this.setCurrentDay({ currentDay: this.num });
-      VueScrollTo.scrollTo(`#recipes${this.num}`, 500, {
-        container: "#recipes_content",
-      });
     },
     spanMethod({ row, column, rowIndex, columnIndex }) {
       if (columnIndex === 0) {
@@ -440,6 +441,9 @@ export default {
       e.stopPropagation();
       // 取消高亮
       this.resetCurrentDay({ currentDay: this.num });
+      VueScrollTo.scrollTo(`#recipes${this.num}`, 500, {
+        container: "#recipes_content",
+      });
     },
     handleOnAdd() {
       // console.log(this.num);
