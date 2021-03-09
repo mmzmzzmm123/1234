@@ -56,7 +56,7 @@ export default {
   },
   methods: {
     uploadFile(){
-      if(this.upload.fileList.length > 0 && this.uploadResult.fileUrl.length != this.upload.fileList.length){
+      if(this.upload.fileList.length > 0 && this.uploadResult.fileUrl.length < this.upload.fileList.length){
         this.$refs.upload.submit();
       }else{
         this.$emit('callbackMethod', this.uploadResult);
@@ -106,19 +106,21 @@ export default {
       }else{
         this.upload.fileList = fileList.pop();
         this.$message.error('文件上传失败，请检查文件格式');
+        this.$emit('changeSubmitFlag', false);
       }
     },
     // 文件上传失败处理
     handleFileFail(err, file, fileList){
       this.$message.error('文件上传失败，请检查文件格式');
       this.upload.fileList = fileList.pop();
+      this.$emit('changeSubmitFlag', false);
     }
   },
   props: {
 
   },
   created() {
-      this.uploadReset();
+      //this.uploadReset();
   },
 
 };
