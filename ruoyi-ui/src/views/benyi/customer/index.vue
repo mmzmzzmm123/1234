@@ -52,6 +52,16 @@
           ></el-option>
         </el-select>
       </el-form-item>
+      <el-form-item label="客户身份" prop="sflx">
+        <el-select v-model="queryParams.sflx" placeholder="请选择客户身份">
+          <el-option
+            v-for="dict in gxOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          ></el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item>
         <el-button
           type="primary"
@@ -134,7 +144,7 @@
       <el-table-column label="其他联系方式" align="center" prop="qt" />
       <el-table-column label="所在省" align="center" prop="sheng" />
       <el-table-column label="所在市" align="center" prop="shi" />
-      <el-table-column label="消费项目" align="center" prop="xfxm" />
+      <el-table-column label="消费项目" align="center" prop="xfxm" sortable="xfxm" />
       <el-table-column label="消费价值" align="center" prop="xfjz" sortable="xfjz" />
       <el-table-column
         label="录入人"
@@ -426,6 +436,9 @@ export default {
     sortChange(column, prop, order) {
       // 可以打印一下该函数的参数就明白了
       // 下面的if判断根据自己的需要些我后台设置的只能识别desc与asc
+      console.log(column);
+      console.log(prop);
+      console.log(order);
       if (column.order != null) {
         this.queryParams.isAsc = "desc";
       } else {
