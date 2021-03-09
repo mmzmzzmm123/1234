@@ -1,11 +1,11 @@
 import request from '@/utils/request'
 
-export function getTableTitle(nodeId, deptId) {
-  return request({
-    url: '/system/json/table-title/' + nodeId + '/' + deptId,
-    method: 'get',
-  })
-}
+// export function getTableTitle(nodeId, deptId) {
+//   return request({
+//     url: '/system/json/table-title/' + nodeId + '/' + deptId,
+//     method: 'get',
+//   })
+// }
 
 // 查询单json存储列表
 export function listJson(query) {

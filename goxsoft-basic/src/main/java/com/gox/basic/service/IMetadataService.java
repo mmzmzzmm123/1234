@@ -7,6 +7,7 @@ import com.gox.basic.domain.Metadata;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.List;
 
@@ -109,4 +110,11 @@ public interface IMetadataService {
 
     AjaxResult importHandle(Long nodeId, Long deptId,Long parentId, String filename, List<ImportFieldMap> maps)
             throws Throwable;
+
+    /**
+     * 插件 普通
+     * @param metadata
+     * @return
+     */
+    AjaxResult insertArchival(Metadata metadata) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, Throwable;
 }

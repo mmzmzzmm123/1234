@@ -315,6 +315,15 @@ public class Metadata extends BaseEntity {
 
     private Long nodeId;
 
+    public Metadata() {
+    }
+
+    public Metadata(Long deptId, Long parentId, Long nodeId) {
+        this.deptId = deptId;
+        this.parentId = parentId;
+        this.nodeId = nodeId;
+    }
+
     public Long getParentId() {
         return parentId;
     }

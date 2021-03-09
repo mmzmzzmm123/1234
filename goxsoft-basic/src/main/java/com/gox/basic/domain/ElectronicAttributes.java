@@ -2,6 +2,7 @@ package com.gox.basic.domain;
 
 import com.gox.common.annotation.Excel;
 import com.gox.common.core.domain.BaseEntity;
+import com.gox.common.plugin.SnowIdUtils;
 import com.gox.common.utils.uuid.SnowflakesTools;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -110,7 +111,7 @@ public class ElectronicAttributes extends BaseEntity {
     private Long metadataId;
 
     public ElectronicAttributes(File file, Long metadataId) throws IOException {
-        this.id = SnowflakesTools.WORKER.nextId();
+        this.id = SnowIdUtils.uniqueLong();
         this.formatInformation = "sajskd";
         this.computerFileName = file.getName();
         this.computerFileSize = String.valueOf(file.length());

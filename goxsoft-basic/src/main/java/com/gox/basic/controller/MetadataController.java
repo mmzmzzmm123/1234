@@ -139,6 +139,41 @@ public class MetadataController extends BaseController {
     }
 
     /**
+     * 插件
+     * @param metadata
+     * @return
+     */
+    @PreAuthorize("@ss.hasPermi('basic:metadata:add')")
+    @Log(title = "文书类基本元数据插件", businessType = BusinessType.INSERT)
+    @PostMapping("archival")
+    public AjaxResult insertArchival(@RequestBody Metadata metadata) throws Throwable {
+        return metadataService.insertArchival(metadata);
+    }
+    @PreAuthorize("@ss.hasPermi('basic:metadata:add')")
+    @Log(title = "文书类基本元数据卷内插件", businessType = BusinessType.INSERT)
+    @PostMapping("inner")
+    public AjaxResult insertArchivalInner(@RequestBody Metadata metadata){
+        return AjaxResult.success();
+    }
+    @PreAuthorize("@ss.hasPermi('basic:metadata:delete')")
+    @Log(title = "文书类基本元数据拆件", businessType = BusinessType.DELETE)
+    @DeleteMapping("archival")
+    public AjaxResult deleteArchival(@RequestBody Metadata metadata){
+        return AjaxResult.success();
+    }
+
+    /**
+     * 拆件卷内
+     * @param metadata
+     * @return
+     */
+    @PreAuthorize("@ss.hasPermi('basic:metadata:delete')")
+    @Log(title = "文书类基本元数据卷内拆件", businessType = BusinessType.DELETE)
+    @DeleteMapping("inner")
+    public AjaxResult deleteArchivalInner(@RequestBody Metadata metadata){
+        return AjaxResult.success();
+    }
+    /**
      * 修改文书类基本元数据
      */
     @PreAuthorize("@ss.hasPermi('basic:metadata:edit')")

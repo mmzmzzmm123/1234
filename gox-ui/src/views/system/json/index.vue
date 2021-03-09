@@ -353,9 +353,7 @@
     },
     mounted() {
       this.rowDrop()
-      this.getDicts("sys_archival_code_setting").then(response => {
-        this.fieldOptions = response.data;
-      });
+
     },
     created() {
 
@@ -506,6 +504,20 @@
           fields.forEach((item,index)=>{
             this.data.push({ label: item.tableFieldName,id:item.id })
           })
+          this.getDicts("sys_archival_code_setting").then(response => {
+            this.fieldOptions=[]
+            let fieldOptions = response.data;
+            console.log(fieldOptions)
+            fields.forEach(item=>{
+              let arr = fieldOptions.filter(i=>i.dictLabel===item.tableFieldName)
+              if(arr.length!==0){
+                this.fieldOptions.push({
+                  dictLabel: item.tableFieldName,
+                  dictValue: item.vModel
+                })
+              }
+            })
+          });
         })
         getSetting(this.nodeId,this.deptId).then(res=>{
           if(res.data){

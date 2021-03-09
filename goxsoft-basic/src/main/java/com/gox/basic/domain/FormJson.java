@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.gox.basic.domain.form.FieldsItem;
 import com.gox.common.annotation.Excel;
 import com.gox.common.core.domain.BaseEntity;
+import com.gox.common.plugin.SnowIdUtils;
 import com.gox.common.utils.uuid.SnowflakesTools;
 import com.gox.basic.domain.form.FormDesignerData;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -27,7 +28,7 @@ import java.util.Random;
 public class FormJson extends BaseEntity {
 
     public FormJson() {
-        setId(SnowflakesTools.WORKER.nextId());
+        setId(SnowIdUtils.uniqueLong());
     }
 
     /**

@@ -39,7 +39,7 @@ public class ExportUtil {
         }
         return list;
     }
-    private static String getValue(String fieldName,Metadata m) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    public static String getValue(String fieldName,Metadata m) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         Method method =m.getClass().getDeclaredMethod("get"+ StrUtil.upperFirst(fieldName));
         Object o = method.invoke(m);
         if (o==null){

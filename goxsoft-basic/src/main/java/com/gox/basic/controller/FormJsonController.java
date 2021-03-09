@@ -8,6 +8,7 @@ import com.gox.common.core.controller.BaseController;
 import com.gox.common.core.domain.AjaxResult;
 import com.gox.common.core.page.TableDataInfo;
 import com.gox.common.enums.BusinessType;
+import com.gox.common.plugin.SnowIdUtils;
 import com.gox.common.utils.StringUtils;
 import com.gox.common.utils.poi.ExcelUtil;
 import com.gox.common.utils.uuid.SnowflakesTools;
@@ -38,7 +39,7 @@ public class FormJsonController extends BaseController {
      */
     @PostMapping("/id")
     public AjaxResult getId() {
-        return AjaxResult.success(SnowflakesTools.WORKER.nextId());
+        return AjaxResult.success(SnowIdUtils.uniqueLong());
     }
 
     /**

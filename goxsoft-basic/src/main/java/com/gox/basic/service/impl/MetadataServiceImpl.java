@@ -1,5 +1,6 @@
 package com.gox.basic.service.impl;
 
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.ZipUtil;
@@ -26,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 /**
@@ -359,6 +361,40 @@ public class MetadataServiceImpl implements IMetadataService {
             md.setParentId(parentId);
         });
         return AjaxResult.success(insertMetadataBatch(res));
+    }
+
+    /**
+     * 插件
+     * step1:获取nodeId deptId 对应所有的元数据
+     * @param metadata
+     * @return
+     */
+    @Override
+    @Transactional
+    public AjaxResult insertArchival(Metadata metadata) throws Throwable {
+        Metadata md = new Metadata(metadata.getDeptId(),metadata.getParentId(),metadata.getNodeId());
+        ArchivalCodeSetting setting = archivalCodeSettingService.selectArchivalCsByNodeIdAndDeptId(metadata.getNodeId(),metadata.getDeptId());
+        String [] fs = setting.getFields();
+        //最后一位档号的字段 一定是数字
+        String field= fs[fs.length-1];
+        Object o = ExportUtil.getValue(field,metadata);
+        if (o==null){
+            return AjaxResult.error("系统异常,获取关键字段失败,请检查输入数据!");
+        }
+        int v = Convert.toInt(o);
+        List<Metadata> mds = selectMetadataList(md);
+        List<Metadata> modifies = new ArrayList<>();
+        insertMetadata(metadata);
+        for (Metadata m : mds) {
+            //关键字段
+            int k = Convert.toInt(ExportUtil.getValue(field,m));
+            //如果 数据库的关键字段大于等于传回来的关键值 则将数据库字段全部加一
+            if (k>=v){
+                ImportUtils.setValue(m,field,k+1);
+                modifies.add(m);
+            }
+        }
+        return AjaxResult.success();
     }
 
 }

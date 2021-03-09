@@ -42,7 +42,15 @@
           size="mini"
           @click="handleAddTemplates"
           v-hasPermi="['system:menu:add']"
-        >新增模板
+        >新增普通模板
+        </el-button>
+        <el-button
+          type="primary"
+          icon="el-icon-plus"
+          size="mini"
+          @click="handleAddArchTemplates"
+          v-hasPermi="['system:menu:add']"
+        >新增案卷模板
         </el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
@@ -356,7 +364,7 @@
         };
         this.resetForm("form");
       },
-      //表单 重置为 模板
+      //表单 重置普通模板
       resetTemplates() {
         getId().then(res => {
           let id = res.data
@@ -378,6 +386,28 @@
         })
 
       },
+      //表单 重置为案卷模板
+      resetArchiTemplates() {
+        getId().then(res => {
+          let id = res.data
+          this.form = {
+            menuId: undefined,
+            parentId: 0,
+            menuName: undefined,
+            icon: undefined,
+            menuType: "M",
+            orderNum: undefined,
+            isFrame: "1",
+            path: '/metadata/' + id,
+            component: 'system/metadata/archives',
+            isCache: "0",
+            visible: "0",
+            status: "0"
+          };
+          this.resetForm("form");
+        })
+
+      },
       /** 搜索按钮操作 */
       handleQuery() {
         this.getList();
@@ -391,6 +421,12 @@
         this.resetTemplates();
         this.getTreeselectA();
         this.title = '新增模板'
+        this.open = true
+      },
+      handleAddArchTemplates(){
+        this.resetArchiTemplates();
+        this.getTreeselectA();
+        this.title = '新增案卷模板'
         this.open = true
       },
       /** 新增按钮操作 */
@@ -419,7 +455,8 @@
       submitForm: function () {
         this.$refs["form"].validate(valid => {
           if (valid) {
-            if (this.title !== '新增模板') {
+            console.log(this.title)
+            if (this.title === '新增菜单') {
               if (this.form.menuId !== undefined) {
                 updateMenu(this.form).then(response => {
                   this.msgSuccess("修改成功");
@@ -433,7 +470,8 @@
                   this.getList();
                 });
               }
-            } else {
+            }
+            else {
               addTemplate(this.form).then(response => {
                 this.msgSuccess("新增成功");
                 this.open = false;
