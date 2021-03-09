@@ -44,9 +44,24 @@
       <el-table :data="planList" v-loading="planLoading" height="80%">
         <el-table-column label="审核状态" align="center" width="80">
           <template slot-scope="scope">
-            <el-tag :type="scope.row.reviewStatus ? 'success' : 'danger'">{{
-              `${scope.row.reviewStatus ? "已审核" : "未审核"}`
-            }}</el-tag>
+            <el-tag
+              :type="
+                scope.row.reviewStatus === 0
+                  ? 'info'
+                  : scope.row.reviewStatus === 2
+                  ? 'success'
+                  : 'danger'
+              "
+              >{{
+                `${
+                  scope.row.reviewStatus === 0
+                    ? "未制作"
+                    : scope.row.reviewStatus === 2
+                    ? "已审核"
+                    : "未审核"
+                }`
+              }}</el-tag
+            >
           </template>
         </el-table-column>
         <el-table-column label="计划" align="center">
@@ -116,7 +131,7 @@ export default {
       listRecipesPlanByCusId(data.id).then((response) => {
         this.planList = response.data;
         this.cusOutId = response.data.reduce((str, cur) => {
-          if (!str && cur.recipesId) {
+          if (!str && cur.recipesId && cur.reviewStatus === 2) {
             str = cur.outId;
           }
           return str;
