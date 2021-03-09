@@ -2,7 +2,7 @@
   <div>
     <div v-for="(item, index) in oldCaseFileList">
       <span style="margin-right: 10px;">
-        {{item.fileName ? (item.fileName.substring(0,15)+"..."): ""}}
+        {{item.fileName.length > 15 ? (item.fileName.substring(0,15)+"...") : item.fileName}}
       </span>
       <el-button style="margin-left: 10px;" type="danger" size="small" @click="removeOldFile(index)">移除该文件</el-button>
     </div>

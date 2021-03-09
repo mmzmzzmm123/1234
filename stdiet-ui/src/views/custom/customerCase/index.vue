@@ -1,14 +1,32 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="案例信息" prop="name">
+      <!--<el-form-item label="案例信息" prop="name">
         <el-input
           v-model.trim="queryParams.name"
-          placeholder="请输入案例名称或关键字"
+          placeholder="请输入案例名称或备注"
           clearable
           size="small"
         />
+      </el-form-item>-->
+      <el-form-item label="案例信息" prop="name">
+        <el-select
+          v-model="keywordArray"
+          multiple
+          filterable
+          allow-create
+          clearable
+          default-first-option
+          placeholder="关键词搜索" style="width: 100%;">
+          <el-option
+            v-for="dict in caseKeyOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue">
+          </el-option>
+        </el-select>
       </el-form-item>
+
       <el-form-item label="客户姓名" prop="customerName">
         <el-input
           v-model.trim="queryParams.customerName"
@@ -149,9 +167,16 @@
             v-model="form.keywordArray"
             multiple
             filterable
+            clearable
             allow-create
             default-first-option
             placeholder="请创建案例关键词，按回车创建，最多20个" style="width: 100%;">
+            <el-option
+              v-for="dict in caseKeyOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue">
+            </el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="案例备注" prop="remark">
@@ -222,6 +247,7 @@
           pageNum: 1,
           pageSize: 10,
           name: null,
+          keyword: null,
           customerName: null
         },
         // 表单参数
@@ -237,7 +263,9 @@
             { required: true, message: "案例关键词不能为空", trigger: "blur" },
           ],
         },
-        submitFlag: false
+        keywordArray:[],
+        submitFlag: false,
+        caseKeyOptions: [],
       };
     },
     components: {
@@ -250,16 +278,20 @@
     },
     created() {
       this.getList();
+      this.getDicts("case_key").then((response) => {
+        this.caseKeyOptions = response.data;
+      });
     },
     methods: {
       /** 查询客户案例管理列表 */
       getList() {
         this.loading = true;
+        this.queryParams.keyword = this.keywordArray.join(",");
         listCustomerCase(this.queryParams).then(response => {
           this.customerCaseList = response.rows;
           this.total = response.total;
           this.loading = false;
-      });
+        });
       },
       // 取消按钮
       cancel() {

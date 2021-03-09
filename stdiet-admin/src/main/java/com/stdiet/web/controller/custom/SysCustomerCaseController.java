@@ -57,6 +57,7 @@ public class SysCustomerCaseController extends BaseController
     public TableDataInfo list(SysCustomerCase sysCustomerCase)
     {
         startPage();
+        sysCustomerCase.setKeywordArray(StringUtils.isNotEmpty(sysCustomerCase.getKeyword()) ? sysCustomerCase.getKeyword().split(",") : null);
         List<SysCustomerCase> list = sysCustomerCaseService.selectSysCustomerCaseList(sysCustomerCase);
         return getDataTable(list);
     }

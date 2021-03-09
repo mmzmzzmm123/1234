@@ -23,16 +23,30 @@
         select id, name, keyword, remark, customer_id, create_time from sys_customer_case
     </sql>
 
+    <sql id="searchKey">
+        <if test="keywordArray != null">
+            <trim prefix="AND (" suffix=")" suffixOverrides="or">
+                <foreach collection="keywordArray"  separator="or" item="typeArray" index="i">
+                    ( scc.keyword like concat('%', #{typeArray}, '%') or scc.name like concat('%', #{typeArray}, '%') or scc.remark like concat('%', #{typeArray}, '%') )
+                </foreach>
+            </trim>
+        </if>
+    </sql>
+
     <select id="selectSysCustomerCaseList" parameterType="SysCustomerCase" resultMap="SysCustomerCaseResult">
         select scc.id, scc.name, scc.keyword, scc.remark, scc.customer_id, scc.create_time,sc.name as customer_name from sys_customer_case scc
         left join sys_customer sc on sc.id = scc.customer_id and sc.del_flag = 0
         where scc.del_flag = 0
-        <if test="name != null  and name != ''">
-            and (scc.name like concat('%', #{name}, '%') OR scc.keyword like concat('%', #{name}, '%') OR scc.remark like concat('%', #{name}, '%'))
-        </if>
+        <!--<if test="name != null  and name != ''">
+            and (scc.name like concat('%', #{name}, '%') OR scc.remark like concat('%', #{name}, '%'))
+        </if>-->
+        <include refid="searchKey">
+            <property name="keywordArray" value="#{keywordArray}"/>
+        </include>
         <if test="customerName != null and customerName != ''">
             and sc.name like concat('%', #{customerName}, '%')
         </if>
+        OR scc.keyword like concat('%', #{name}, '%')
         order by id desc
     </select>
 

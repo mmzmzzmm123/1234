@@ -132,7 +132,7 @@ export default {
       downSigleFile(file.downUrl, file.fileName);
     },
     isImage(name){
-      var idx = name.indexOf('.');
+      var idx = name.lastIndexOf(".");
       if (idx === -1) {
         return false;
       }

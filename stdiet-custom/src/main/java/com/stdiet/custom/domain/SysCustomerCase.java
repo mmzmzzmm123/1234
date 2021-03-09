@@ -28,6 +28,8 @@ public class SysCustomerCase extends BaseEntity
     @Excel(name = "关键词")
     private String keyword;
 
+    private String[] keywordArray;
+
     /** 案例所属客户ID */
     private Long customerId;
 
