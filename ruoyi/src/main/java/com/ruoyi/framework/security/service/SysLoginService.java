@@ -82,15 +82,18 @@ public class SysLoginService {
         Collection<String> keys = redisCache.keys(Constants.LOGIN_TOKEN_KEY + "*");
         List<SysUserOnline> userOnlineList = new ArrayList<SysUserOnline>();
         for (String key : keys) {
-            LoginUser user = redisCache.getCacheObject(key);
-            if (StringUtils.isNotEmpty(username) && StringUtils.isNotNull(user.getUser())) {
-                if (StringUtils.equals(username, user.getUsername())) {
-                    //存在已经登录用户，抛出异常
+            try {
+                LoginUser user = redisCache.getCacheObject(key);
+                if (StringUtils.isNotEmpty(username) && StringUtils.isNotNull(user.getUser())) {
+                    if (StringUtils.equals(username, user.getUsername())) {
+                        //存在已经登录用户，抛出异常
 //                    CustomException alreadyLoginExcep = new CustomException("该账号已在别处登陆", HttpStatus.ALREADY_LOGIN);
 //                    alreadyLoginExcep.setObj(username);
 //                    throw alreadyLoginExcep;
-                    redisCache.deleteObject(key);
+                        redisCache.deleteObject(key);
+                    }
                 }
+            } catch (Exception e) {
             }
         }
 

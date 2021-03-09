@@ -1,127 +1,139 @@
 <template>
   <div class="app-container">
-    <el-form
-      :model="queryParams"
-      ref="queryForm"
-      :inline="true"
-      label-width="88px"
-    >
-      <el-form-item label="客户姓名" prop="name">
-        <el-input
-          v-model="queryParams.name"
-          placeholder="请输入姓名"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="联系电话" prop="lxdh">
-        <el-input
-          v-model="queryParams.lxdh"
-          placeholder="请输入联系电话"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="幼儿园名称" prop="schoolname">
-        <el-input
-          v-model="queryParams.schoolname"
-          placeholder="请输入幼儿园名称"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="所在省" prop="sheng">
-        <el-input
-          v-model="queryParams.sheng"
-          placeholder="请输入所在省"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="客户来源" prop="khly">
-        <el-select v-model="queryParams.khly" placeholder="请选择客户来源">
-          <el-option
-            v-for="dict in lyOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
-          ></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="客户身份" prop="sflx">
-        <el-select v-model="queryParams.sflx" placeholder="请选择客户身份">
-          <el-option
-            v-for="dict in gxOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
-          ></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item>
-        <el-button
-          type="primary"
-          icon="el-icon-search"
-          size="mini"
-          @click="handleQuery"
-          >搜索</el-button
-        >
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
-          >重置</el-button
-        >
-      </el-form-item>
+    <el-form :model="queryParams" ref="queryForm" label-width="70px">
+      <el-row :gutter="10">
+        <el-col :xs="24" :ms="12" :md="5">
+          <el-form-item label="客户姓名" prop="name">
+            <el-input
+              v-model="queryParams.name"
+              placeholder="请输入姓名"
+              clearable
+              size="small"
+              @keyup.enter.native="handleQuery"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :ms="12" :md="5">
+          <el-form-item label="联系电话" prop="lxdh">
+            <el-input
+              v-model="queryParams.lxdh"
+              placeholder="请输入联系电话"
+              clearable
+              size="small"
+              @keyup.enter.native="handleQuery"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :ms="12" :md="5">
+          <el-form-item label="园所名称" prop="schoolname">
+            <el-input
+              v-model="queryParams.schoolname"
+              placeholder="请输入园所名称"
+              clearable
+              size="small"
+              @keyup.enter.native="handleQuery"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :ms="12" :md="5">
+          <el-form-item label="所在省" prop="sheng">
+            <el-input
+              v-model="queryParams.sheng"
+              placeholder="请输入所在省"
+              clearable
+              size="small"
+              @keyup.enter.native="handleQuery"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :ms="12" :md="5">
+          <el-form-item label="客户来源" prop="khly">
+            <el-select v-model="queryParams.khly" placeholder="请选择客户来源">
+              <el-option
+                v-for="dict in lyOptions"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="dict.dictValue"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :ms="12" :md="5">
+          <el-form-item label="客户身份" prop="sflx">
+            <el-select v-model="queryParams.sflx" placeholder="请选择客户身份">
+              <el-option
+                v-for="dict in gxOptions"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="dict.dictValue"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :xs="24" :ms="12" :md="4">
+          <el-form-item class="no-margin">
+            <el-button
+              type="primary"
+              icon="el-icon-search"
+              size="mini"
+              @click="handleQuery"
+              >搜索</el-button
+            >
+            <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+              >重置</el-button
+            >
+          </el-form-item>
+        </el-col>
+      </el-row>
     </el-form>
 
-    <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          type="primary"
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['benyi:customer:add']"
-          >新增</el-button
-        >
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['benyi:customer:edit']"
-          >修改</el-button
-        >
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="danger"
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['benyi:customer:remove']"
-          >删除</el-button
-        >
-      </el-col>
-    </el-row>
+    <div class="mb8 btn-list">
+      <el-button
+        type="primary"
+        icon="el-icon-plus"
+        size="mini"
+        @click="handleAdd"
+        v-hasPermi="['benyi:customer:add']"
+        >新增</el-button
+      >
+      <el-button
+        type="success"
+        icon="el-icon-edit"
+        size="mini"
+        :disabled="single"
+        @click="handleUpdate"
+        v-hasPermi="['benyi:customer:edit']"
+        >修改</el-button
+      >
+      <el-button
+        type="danger"
+        icon="el-icon-delete"
+        size="mini"
+        :disabled="multiple"
+        @click="handleDelete"
+        v-hasPermi="['benyi:customer:remove']"
+        >删除</el-button
+      >
+    </div>
 
     <el-table
       v-loading="loading"
+      border
       :data="customerList"
       @selection-change="handleSelectionChange"
       @sort-change="sortChange"
     >
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="客户姓名" align="center" prop="name" />
-      <el-table-column label="幼儿园名称" align="center" prop="schoolname" />
+      <el-table-column fixed label="客户姓名" align="center" prop="name" />
       <el-table-column
-        label="幼儿园人数"
+        fixed
+        label="园所名称"
+        align="center"
+        prop="schoolname"
+      />
+      <el-table-column
+        label="园所人数"
+        width="100"
         align="center"
         prop="rs"
         sortable="rs"
@@ -141,11 +153,23 @@
       <el-table-column label="联系电话" align="center" prop="lxdh" />
       <el-table-column label="微信号" align="center" prop="wx" />
       <el-table-column label="抖音号" align="center" prop="dy" />
-      <el-table-column label="其他联系方式" align="center" prop="qt" />
+      <el-table-column label="其他联系方式" width="100" align="center" prop="qt" />
       <el-table-column label="所在省" align="center" prop="sheng" />
       <el-table-column label="所在市" align="center" prop="shi" />
-      <el-table-column label="消费项目" align="center" prop="xfxm" sortable="xfxm" />
-      <el-table-column label="消费价值" align="center" prop="xfjz" sortable="xfjz" />
+      <el-table-column
+        label="消费项目"
+        align="center"
+        prop="xfxm"
+        width="110"
+        sortable="xfxm"
+      />
+      <el-table-column
+        label="消费价值"
+        width="110"
+        align="center"
+        prop="xfjz"
+        sortable="xfjz"
+      />
       <el-table-column
         label="录入人"
         align="center"
@@ -154,11 +178,13 @@
       />
       <el-table-column label="录入时间" align="center" prop="createTime" />
       <el-table-column label="过保时间" align="center" prop="gbtime" />
-      <el-table-column label="转换跟进" align="center" prop="zhgj" />
+      <el-table-column label="转换跟进" show-overflow-tooltip align="center" prop="zhgj" />
       <el-table-column
+        fixed="right"
         label="操作"
         align="center"
-        class-name="small-padding fixed-width"
+        width="60"
+        class-name="small-padding fixed-width edit-btns"
       >
         <template slot-scope="scope">
           <el-button
@@ -199,18 +225,18 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="幼儿园名称" prop="schoolname">
+            <el-form-item label="园所名称" prop="schoolname">
               <el-input
                 v-model="form.schoolname"
-                placeholder="请输入幼儿园名称"
+                placeholder="请输入园所名称"
               />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="幼儿园人数" prop="rs">
+            <el-form-item label="园所人数" prop="rs">
               <el-input-number
                 v-model="form.rs"
-                placeholder="请输入幼儿园人数"
+                placeholder="请输入园所人数"
               />
             </el-form-item>
           </el-col>
@@ -402,10 +428,10 @@ export default {
           { required: true, message: "客户姓名不能为空", trigger: "blur" },
         ],
         schoolname: [
-          { required: true, message: "幼儿园名称不能为空", trigger: "blur" },
+          { required: true, message: "园所名称不能为空", trigger: "blur" },
         ],
         lxdh: [
-          { required: true, message: "幼儿园名称不能为空", trigger: "blur" },
+          { required: true, message: "联系电话不能为空", trigger: "blur" },
         ],
         sheng: [
           {
@@ -630,3 +656,20 @@ export default {
   },
 };
 </script>
+<style lang="scss" scoped>
+.el-select {
+  width: 100%;
+}
+.my-date-picker {
+  width: 100%;
+}
+.edit-btns {
+  .el-button {
+    display: block;
+    margin: 0 auto;
+  }
+}
+.no-margin ::v-deep.el-form-item__content {
+  margin: 0 !important;
+}
+</style>
