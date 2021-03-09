@@ -14,10 +14,18 @@
         <el-collapse-item
           v-for="plan in data"
           :key="plan.id"
-          :title="plan.label"
           :name="plan.id"
           :class="plan.id === hitPlanId ? 'collapse_item_hit' : ''"
         >
+          <template slot="title">
+            <div class="title_style">
+              <span>{{ plan.label }}</span>
+              <em
+                class="el-icon-shopping-cart-full icon_style"
+                @click="(e) => handleOnShoppingPlanClick(e, plan)"
+              />
+            </div>
+          </template>
           <div
             v-for="menu in plan.menus"
             :class="`item ${menu.id === curMenuId ? 'sel_item' : ''}`"
@@ -32,9 +40,12 @@
         </el-collapse-item>
       </el-collapse>
     </div>
+
+    <plan-time-dialog ref="planRef" @onConfirm="handleOnTimeConfirm" />
   </el-drawer>
 </template>
 <script>
+import PlanTimeDialog from "./PlanTimeDialog";
 export default {
   name: "planDrawer",
   data() {
@@ -44,6 +55,9 @@ export default {
       curMenuId: 0,
       hitPlanId: 0,
     };
+  },
+  components: {
+    PlanTimeDialog,
   },
   props: ["data", "planId", "menuId"],
   methods: {
@@ -59,9 +73,16 @@ export default {
 
       this.$emit("plan-change", menu);
     },
+    handleOnShoppingPlanClick(e, data) {
+      e.stopPropagation();
+      this.$refs.planRef.showDialog(data.id);
+      this.visible = false;
+    },
+    handleOnTimeConfirm(val) {
+      console.log(val);
+    },
   },
-  computed: {
-  },
+  computed: {},
   watch: {
     planId(val) {
       this.curPlanId = val;
@@ -105,6 +126,19 @@ export default {
     .sel_item {
       background: #409eff;
       color: white;
+    }
+
+    .title_style {
+      display: flex;
+      width: 100%;
+      align-items: center;
+      justify-content: space-between;
+
+      .icon_style {
+        margin-right: 16px;
+        font-size: 16px;
+        padding: 4px 8px;
+      }
     }
   }
 }
