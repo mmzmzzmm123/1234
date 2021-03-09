@@ -1,5 +1,6 @@
 import request from "@/utils/request";
 
+
 export function getRecipesPlans(id) {
   return request({
     url: "/wap/recipes/plans/" + id,

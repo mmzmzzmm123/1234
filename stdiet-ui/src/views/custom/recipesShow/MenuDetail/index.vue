@@ -1,7 +1,10 @@
 <template>
   <div class="menu_detail_wrapper">
     <!-- 营养分析 -->
-    <NutriComputeCom :date="date" :value="value" />
+    <!-- <NutriComputeCom :date="date" :value="value" /> -->
+    <div class="top">
+      <img :src="logo" style="width: auto; height: 32px" alt="logo" />
+    </div>
     <!-- 食谱详细 -->
     <el-card v-for="obj in menus" :key="obj.type" style="margin-top: 12px">
       <div slot="header">
@@ -12,7 +15,7 @@
       </div>
       <div v-for="mObj in obj.values" :key="mObj.id">
         <div class="dishes_item">
-          <div v-if="!mObj.methods" class="simple_dishes">
+          <div v-if="!mObj.methods && !mObj.remark" class="simple_dishes">
             <span>{{ mObj.name }}</span>
             <span class="weight_style">
               <span style="margin-right: 20px">{{ mObj.cusStr }}</span>
@@ -31,14 +34,14 @@
   </div>
 </template>
 <script>
-import NutriComputeCom from "./NutriComputeCom";
+// import NutriComputeCom from "./NutriComputeCom";
 import DishesDetailDialog from "./DishesDetailDialog";
 import { getDicts } from "@/api/custom/recipesShow";
 export default {
   name: "menuDetail",
   props: ["value", "date"],
   components: {
-    NutriComputeCom,
+    // NutriComputeCom,
     DishesDetailDialog,
   },
   created() {
@@ -63,6 +66,7 @@ export default {
   },
   data() {
     return {
+      logo: require("@/assets/logo/st_logo.png"),
       menuTypeTimeDict: {
         2: "10:00 - 10:30",
         4: "15:00 - 15:30",
@@ -113,6 +117,10 @@ export default {
 <style lang="scss" scoped>
 .menu_detail_wrapper {
   padding: 0 12px 12px 12px;
+  .top {
+    text-align: center;
+    padding: 10px 14px;
+  }
 
   .header_style {
     display: flex;
