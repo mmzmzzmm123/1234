@@ -134,12 +134,14 @@ export default {
       }else{
         this.upload.fileList = fileList.pop();
         this.$message.error('文件上传失败，请检查文件格式');
+        this.$emit('changeSubmitFlag', false);
       }
     },
     // 文件上传失败处理
     handleFileFail(err, file, fileList){
       this.$message.error('文件上传失败，请检查文件格式');
       this.upload.fileList = fileList.pop();
+      this.$emit('changeSubmitFlag', false);
     }
   },
   props: {
@@ -153,6 +155,12 @@ export default {
   created() {
 
   },
+  watch : {
+    caseFileList:function(newVal, oldVal) {
+        //console.log(newVal.length);
+        this.oldCaseFileList = newVal;
+    }
+  }
 
 };
 </script>

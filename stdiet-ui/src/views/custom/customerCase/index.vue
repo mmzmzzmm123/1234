@@ -170,8 +170,8 @@
           <span style="margin-left: 10px"> <el-button type="primary" @click="selectCustomer">选择所属客户</el-button></span>
         </el-form-item>
         <el-form-item label="案例文件" prop="file" >
-          <DragUpload v-if="form.id == null || form.id <= 0" @callbackMethod="addOrEditCustomerCase" ref="uploadCaseFile"></DragUpload>
-          <DragUploadEdit v-else @callbackMethod="addOrEditCustomerCase" :caseFileList="form.caseFileList" ref="editUploadCaseFile"></DragUploadEdit>
+          <DragUpload v-show="form.id == null || form.id <= 0" @changeSubmitFlag="changeSubmitFlag" @callbackMethod="addOrEditCustomerCase" ref="uploadCaseFile"></DragUpload>
+          <DragUploadEdit v-show="form.id != null || form.id > 0" @callbackMethod="addOrEditCustomerCase" @changeSubmitFlag="changeSubmitFlag" :caseFileList="form.caseFileList" ref="editUploadCaseFile"></DragUploadEdit>
         </el-form-item>
       </el-form>
       </div>
@@ -264,8 +264,8 @@
       // 取消按钮
       cancel() {
         this.open = false;
-        //this.$refs["uploadCaseFile"].uploadReset();
-        //this.$refs["editUploadCaseFile"].uploadReset();
+        this.$refs["uploadCaseFile"].uploadReset();
+        this.$refs["editUploadCaseFile"].uploadReset();
         this.reset();
       },
       // 表单重置
@@ -363,15 +363,18 @@
           console.log(this.form.caseFileName.length);
           updateCustomerCase(this.form).then(response => {
             if (response.code === 200) {
+              this.$refs["editUploadCaseFile"].uploadReset();
               this.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             }
             this.submitFlag = false;
+
           });
         }else{
           addCustomerCase(this.form).then(response => {
             if (response.code === 200) {
+              this.$refs["uploadCaseFile"].uploadReset();
               this.msgSuccess("新增成功");
               this.open = false;
               this.getList();
@@ -379,6 +382,9 @@
             this.submitFlag = false;
           });
         }
+      },
+      changeSubmitFlag(flag){
+         this.submitFlag = flag;
       },
       selectCustomer(){
         this.$refs['selectCustomerRef'].showDialog("选择案例所属客户");
@@ -405,8 +411,8 @@
           return delCustomerCase(ids);
         }).then(() => {
           this.getList();
-        this.msgSuccess("删除成功");
-      }).catch(function() {});
+          this.msgSuccess("删除成功");
+        }).catch(function() {});
       },
       /** 导出按钮操作 */
       handleExport() {
