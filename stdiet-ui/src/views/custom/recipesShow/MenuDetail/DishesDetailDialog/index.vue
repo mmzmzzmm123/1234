@@ -19,11 +19,17 @@
         </span>
       </div>
     </section>
-    <section class="section_zone">
+    <section class="section_zone" v-if="data.methods">
       <div class="section_title">
         做法<em class="el-icon-dish" style="margin-left: 8px" />
       </div>
-      <div class="methods">{{ data.methods }}</div>
+      <div class="section_content">{{ data.methods }}</div>
+    </section>
+    <section class="section_zone" v-if="data.remark">
+      <div class="section_title">
+        备注<em class="el-icon-warning-outline" style="margin-left: 8px" />
+      </div>
+      <div class="section_content">{{ data.remark }}</div>
     </section>
   </el-dialog>
 </template>
@@ -74,7 +80,7 @@ export default {
     }
   }
 
-  .methods {
+  .section_content {
     padding: 0 8px;
     margin-top: 14px;
   }
