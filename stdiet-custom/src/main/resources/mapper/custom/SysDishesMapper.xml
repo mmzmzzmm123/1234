@@ -7,6 +7,8 @@
     <resultMap type="SysDishes" id="SysDishesResult">
         <result property="id"    column="id"    />
         <result property="name"    column="name"    />
+        <result property="bigClass"    column="big_class"    />
+        <result property="smallClass"    column="small_class"    />
         <result property="type"    column="type"    />
         <result property="isMain"    column="is_main"    />
         <result property="methods"    column="methods"    />
@@ -15,6 +17,10 @@
         <result property="createTime"    column="create_time"    />
         <result property="updateBy"    column="update_by"    />
         <result property="updateTime"    column="update_time"    />
+
+        <!-- 非持久化字段 -->
+        <result property="bigClassName"    column="bigClassName"    />
+        <result property="smallClassName"    column="smallClassName"    />
     </resultMap>
 
     <resultMap type="SysDishesIngredient" id="SysDishesIngredientResult">
@@ -33,7 +39,7 @@
     </resultMap>
 
     <sql id="selectSysDishesVo">
-        select id, name, type, is_main, methods, create_by, create_time, update_by, update_time, review_status from sys_dishes
+        select id, name, big_class, small_class, type, is_main, methods, create_by, create_time, update_by, update_time, review_status from sys_dishes
     </sql>
 
     <select id="selectSysDishesList" parameterType="SysDishes" resultMap="SysDishesResult">
@@ -88,6 +94,8 @@
         insert into sys_dishes
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="name != null">name,</if>
+            <if test="bigClass != null">big_class,</if>
+            <if test="smallClass != null">small_class,</if>
             <if test="type != null">type,</if>
             <if test="isMain != null">is_main,</if>
             <if test="methods != null">methods,</if>
@@ -99,6 +107,8 @@
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="name != null">#{name},</if>
+            <if test="bigClass != null">#{bigClass},</if>
+            <if test="smallClass != null">#{smallClass},</if>
             <if test="type != null">#{type},</if>
             <if test="isMain != null">#{isMain},</if>
             <if test="methods != null">#{methods},</if>
@@ -114,6 +124,8 @@
         update sys_dishes
         <trim prefix="SET" suffixOverrides=",">
             <if test="name != null">name = #{name},</if>
+            <if test="bigClass != null">big_class = #{bigClass},</if>
+            <if test="smallClass != null">small_class = #{smallClass},</if>
             <if test="type != null">type = #{type},</if>
             <if test="isMain != null">is_main = #{isMain},</if>
             <if test="methods != null">methods = #{methods},</if>

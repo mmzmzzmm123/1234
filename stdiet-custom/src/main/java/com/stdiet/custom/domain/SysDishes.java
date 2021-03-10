@@ -29,6 +29,19 @@ public class SysDishes {
     @Excel(name = "菜品名称")
     private String name;
 
+    /** 大类 */
+    @Excel(name = "大类")
+    private Integer bigClass;
+
+    @Excel(name = "大类")
+    private String bigClassName;
+
+    /** 小类 */
+    private Integer smallClass;
+
+    @Excel(name = "小类")
+    private String smallClassName;
+
     /**
      * 菜品类型
      */
@@ -72,7 +85,8 @@ public class SysDishes {
      */
     private String remark;
 
-
     private List<SysDishesIngredient> igdList;
+
+    private Integer[] dishClass;
 
 }
