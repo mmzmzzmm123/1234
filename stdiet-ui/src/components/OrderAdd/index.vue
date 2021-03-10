@@ -670,7 +670,7 @@ export default {
       }
     },
     handleOrderTypeChange() {
-      console.log(this.form.orderTypeList);
+      // console.log(this.form.orderTypeList);
     },
   },
   watch: {

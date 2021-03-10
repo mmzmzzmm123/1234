@@ -636,7 +636,7 @@ export default {
         this.searchOrderTypeArray != null
           ? encodeURIComponent(JSON.stringify(this.searchOrderTypeArray))
           : null;
-      console.log(this.queryParams.searchOrderTypeArray);
+      // console.log(this.queryParams.searchOrderTypeArray);
       //this.dealOrderTypeArray();
       listOrder(this.addDateRange(this.queryParams, this.daterange)).then(
         (response) => {

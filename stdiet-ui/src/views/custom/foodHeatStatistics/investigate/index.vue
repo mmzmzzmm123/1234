@@ -247,7 +247,7 @@
            }
         });
         this.ingredientArray.splice(tagIndex, 1);
-        console.log( JSON.stringify(this.ingredientArray))
+        // console.log( JSON.stringify(this.ingredientArray))
       }
     },
     created() {

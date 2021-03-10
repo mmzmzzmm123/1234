@@ -142,6 +142,8 @@ export default {
       loading: false,
       mFontSize: 12,
       fontSizeOpts: [
+        { value: 8, label: "8" },
+        { value: 10, label: "10" },
         { value: 12, label: "12" },
         { value: 14, label: "14" },
         { value: 16, label: "16" },
@@ -149,17 +151,25 @@ export default {
       ],
     };
   },
+  mounted() {
+    // this.mFontSize = parseInt(localStorage.getItem("fontSize")) || 12;
+    // this.updateFontSize({fontSize:})
+  },
   updated() {
     // console.log(this.data);
+    if (this.fontSize !== this.mFontSize) {
+      this.mFontSize = this.fontSize;
+      // console.log(this.fontSize);
+    }
   },
   props: ["collapse", "data"],
   computed: {
     ...mapState(["recipesId", "reviewStatus", "healthyData", "fontSize"]),
   },
   watch: {
-    fontSize(val) {
-      this.mFontSize = val;
-    },
+    // fontSize(val) {
+    //   this.mFontSize = val;
+    // },
   },
   methods: {
     handleOnSizeChange(fontSize) {

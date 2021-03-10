@@ -569,7 +569,7 @@ export default {
       };
       // console.log(this.form);
       this.resetForm("form");
-      console.log("--"+obj.orderType);
+      // console.log("--"+obj.orderType);
       this.onSaleShow = this.form.orderType == "2";
       this.afterSaleNutriAssShow = this.form.orderType != "2" && this.form.afterSaleCommissOrder == 0;
       this.planOperatorShow = this.form.afterSaleCommissOrder == 0;

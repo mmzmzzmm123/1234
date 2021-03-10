@@ -147,7 +147,7 @@ export default {
         },
         {}
       );
-      console.log(this.shoppingCart);
+      // console.log(this.shoppingCart);
     },
     handleOnBackClick() {
       this.visible = false;
