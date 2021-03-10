@@ -33,7 +33,7 @@ const oriState = {
   templateInfo: undefined,
   copyData: undefined,
   canCopyMenuTypes: [],
-  fontSize: 12
+  fontSize: parseInt(localStorage.getItem("fontSize")) || 12
 };
 
 const mutations = {
@@ -45,6 +45,7 @@ const mutations = {
     );
     if (tarDishes) {
       if (actionType === "replace") {
+        tarDishes.remark = "";
         // 替换菜品,修改类型
         Object.keys(payload.data).forEach(key => {
           tarDishes[key] = payload.data[key];
@@ -69,6 +70,7 @@ const mutations = {
   },
   updateFontSize(state, payload) {
     state.fontSize = payload.fontSize;
+    localStorage.setItem("fontSize", payload.fontSize);
   },
   addRecipesDishes(state, payload) {
     state.recipesData[payload.num].dishes.push(payload.data);
@@ -299,7 +301,7 @@ const actions = {
     // console.log(params);
   },
   async addDishes({ commit, state }, payload) {
-    console.log(payload);
+    // console.log(payload);
     const tarDishesList = state.recipesData[payload.num].dishes.filter(
       obj => obj.type === payload.data.type
     );
@@ -366,6 +368,7 @@ const actions = {
           params.remark = payload.remark;
         } else if (actionType === "replace") {
           params.dishesId = payload.data.dishesId;
+          params.remark = "";
           params.detail = payload.data.igdList.map(igd => ({
             id: igd.id,
             weight: igd.weight,

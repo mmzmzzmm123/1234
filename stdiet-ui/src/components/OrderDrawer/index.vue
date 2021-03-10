@@ -170,7 +170,7 @@ export default {
           }
           return arr;
         }, []);
-        console.log(this.orderList);
+        // console.log(this.orderList);
 
         this.visible = true;
       });

@@ -401,12 +401,18 @@ export default {
           }
           return arr;
         }, []);
-      console.log(mData);
+      // console.log(mData);
 
       return mData;
     },
     ...mapGetters(["typeDict"]),
-    ...mapState(["currentDay", "copyData", "fontSize", "canCopyMenuTypes"]),
+    ...mapState([
+      "currentDay",
+      "copyData",
+      "fontSize",
+      "canCopyMenuTypes",
+      "recipesId",
+    ]),
   },
   methods: {
     cellClassName({ row, column, rowIndex, columnIndex }) {
@@ -470,9 +476,17 @@ export default {
     handleOnPaste(type) {
       // console.log(this.copyData);
       if (this.copyData) {
+        const data = {
+          ...this.copyData,
+          type,
+        };
+        if (!this.recipesId) {
+          // 未生成食谱时拷贝
+          data.id = new Date().getTime();
+        }
         this.addDishes({
           num: this.num,
-          data: { ...this.copyData, type },
+          data,
         }).catch((err) => {
           this.$message.error(err);
         });
@@ -624,6 +638,12 @@ export default {
   color: #595959;
 }
 
+.recipes_cell_8 {
+  font-size: 8px;
+}
+.recipes_cell_10 {
+  font-size: 10px;
+}
 .recipes_cell_12 {
   font-size: 12px;
 }
