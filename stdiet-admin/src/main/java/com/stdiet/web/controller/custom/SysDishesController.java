@@ -90,6 +90,10 @@ public class SysDishesController extends BaseController {
     @Log(title = "菜品", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody SysDishes sysDishes) {
+        if(sysDishes.getDishClass() != null && sysDishes.getDishClass().length == 2){
+            sysDishes.setBigClass(sysDishes.getDishClass()[0]);
+            sysDishes.setSmallClass(sysDishes.getDishClass()[1]);
+        }
         return toAjax(sysDishesService.insertSysDishes(sysDishes));
     }
 
@@ -100,6 +104,10 @@ public class SysDishesController extends BaseController {
     @Log(title = "菜品", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody SysDishes sysDishes) {
+        if(sysDishes.getDishClass() != null && sysDishes.getDishClass().length == 2){
+            sysDishes.setBigClass(sysDishes.getDishClass()[0]);
+            sysDishes.setSmallClass(sysDishes.getDishClass()[1]);
+        }
         return toAjax(sysDishesService.updateSysDishes(sysDishes));
     }
 

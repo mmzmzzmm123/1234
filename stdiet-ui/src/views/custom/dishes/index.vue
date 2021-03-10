@@ -100,7 +100,13 @@
           </el-tag>
         </template>
       </el-table-column>
+
       <el-table-column label="菜品名称" align="center" prop="name" />
+      <el-table-column label="菜品种类" align="center" prop="bigClass" >
+        <template slot-scope="scope">
+         {{dishClassFormat(scope.row)}}
+        </template>
+      </el-table-column>
       <el-table-column label="菜品类型" align="center" prop="type">
         <template slot-scope="scope">
           <autohideinfo :data="typeFormat(scope.row)" />
@@ -174,7 +180,18 @@
                 <el-input v-model="form.name" placeholder="请输入菜品名称" />
               </el-form-item>
             </el-col>
-            <el-col :span="12">
+            <el-col :span="8">
+              <el-form-item label="菜品种类" prop="dishClass">
+                <el-cascader
+                  filterable
+                  v-model="form.dishClass"
+                  :options="dishClassOptions"
+                  :props="{ expandTrigger: 'hover' }"
+                  placeholder="请输入菜品种类"
+                  ></el-cascader>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
               <el-form-item label="菜品类型" prop="type">
                 <el-select
                   v-model="form.type"
@@ -190,7 +207,7 @@
                 </el-select>
               </el-form-item>
             </el-col>
-            <el-col :span="12">
+            <el-col :span="8">
               <el-form-item label="是否主食" prop="isMain">
                 <el-radio-group v-model="form.isMain">
                   <el-radio :label="0">是</el-radio>
@@ -435,6 +452,18 @@ export default {
       cusUnitOptions: [],
       //
       cusWeightOptions: [],
+      dishClassOptions: [],
+      /*
+      * {
+        value: 'zhinan',
+        label: '指南',
+        children: [{
+          value: 'shejiyuanze',
+          label: '设计原则'
+        }]
+      }*/
+      dishClassBigOptions:[],
+      dishClassSmallOptions:[],
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -464,6 +493,13 @@ export default {
     });
     this.getDicts("cus_review_status").then((response) => {
       this.reviewStatusOptions = response.data;
+    });
+    this.getDicts("dish_class_big").then((response) => {
+      this.dishClassBigOptions = response.data;
+      this.getDicts("dish_class_small").then((res) => {
+        this.dishClassSmallOptions = res.data;
+        this.dealDishClassBigAndSmall();
+      });
     });
   },
   methods: {
@@ -501,6 +537,26 @@ export default {
         this.loading = false;
       });
     },
+    //处理菜品大类小类的关系
+    dealDishClassBigAndSmall(){
+      this.dishClassBigOptions.forEach((item, index) => {
+          this.dishClassOptions.push({
+              'value': parseInt(item.dictValue),
+              'label': item.dictLabel,
+              'children': []
+          });
+          if(index == this.dishClassBigOptions.length - 1){
+            this.dishClassSmallOptions.forEach((smallClass, i) => {
+              if(smallClass.remark){
+                this.dishClassOptions[parseInt(smallClass.remark-1)].children.push({
+                  'value': parseInt(smallClass.dictValue),
+                  'label': smallClass.dictLabel
+                });
+              }
+            });
+          }
+      });
+    },
     // 菜品类型字典翻译
     typeFormat(row, column) {
       return !row.type
@@ -519,6 +575,15 @@ export default {
     reviewStatusFormat(row, column) {
       return this.selectDictLabel(this.reviewStatusOptions, row.area);
     },
+    //菜品种类翻译
+    dishClassFormat(row){
+       if(row.bigClass > 0 && row.smallClass > 0){
+         let bigClassName = this.selectDictLabel(this.dishClassBigOptions, row.bigClass);
+         let smallClassName = this.selectDictLabel(this.dishClassSmallOptions, row.smallClass);
+         return bigClassName+"/"+smallClassName;
+       }
+       return "";
+    },
     // 取消按钮
     cancel() {
       this.open = false;
@@ -530,6 +595,7 @@ export default {
         id: null,
         name: null,
         type: [],
+        dishClass:[],
         methods: null,
         createBy: null,
         createTime: null,
@@ -582,6 +648,7 @@ export default {
       const id = row.id || this.ids;
       getDishes(id).then((response) => {
         this.form = response.data;
+        this.form.dishClass = [this.form.bigClass, this.form.smallClass];
         this.form.type = this.form.type ? this.form.type.split(",") : null;
         this.form.igdList.forEach((obj) => {
           this.selIngIds.push(obj.id);
