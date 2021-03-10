@@ -21,6 +21,7 @@
             <div class="title_style">
               <span>{{ plan.label }}</span>
               <em
+                v-show="false"
                 class="el-icon-shopping-cart-full icon_style"
                 @click="(e) => handleOnShoppingPlanClick(e, plan)"
               />

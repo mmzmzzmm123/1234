@@ -7,7 +7,8 @@
         class="icon_btn"
         @click="handleOnPlanClick"
       />
-      <img :src="logo" style="width: auto; height: 32px" alt="logo" />
+      <!-- <img :src="logo" style="width: auto; height: 32px" alt="logo" /> -->
+      <span>{{ curDate }}</span>
       <el-button
         icon="el-icon-user"
         type="text"
@@ -45,6 +46,15 @@ import PlanDrawer from "./PlanDrawer";
 import MenuDetail from "./MenuDetail";
 import dayjs from "dayjs";
 import { getProcessMenuData } from "./utils";
+
+import { createNamespacedHelpers } from "vuex";
+const {
+  mapActions,
+  mapState,
+  mapMutations,
+  mapGetters,
+} = createNamespacedHelpers("recipesShow");
+
 export default {
   name: "recipesShow",
   components: {
@@ -55,7 +65,7 @@ export default {
   props: ["id"],
   data() {
     return {
-      logo: require("@/assets/logo/st_logo.png"),
+      // logo: require("@/assets/logo/st_logo.png"),
       planList: [],
       curPlanId: 0,
       curMenuId: 0,
