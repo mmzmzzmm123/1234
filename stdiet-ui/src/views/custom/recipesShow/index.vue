@@ -79,6 +79,9 @@ export default {
     };
   },
   created() {
+    //
+    this.init();
+    //
     getRecipesPlans(this.id).then((response) => {
       if (response.code === 200) {
         let curPlanId, curMenuId, curDate;
@@ -100,6 +103,7 @@ export default {
                   id: menu.id,
                 };
               }),
+              recipesId: plan.recipesId,
               label: `第${plan.startNumDay} 至 ${plan.endNumDay}天`,
               id: plan.id,
             });
@@ -152,6 +156,7 @@ export default {
       this.curDate = date;
       this.fetchRecipesInfo(id);
     },
+    ...mapActions(["init"]),
   },
   watch: {},
 };

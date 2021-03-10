@@ -3,7 +3,7 @@
     :visible.sync="visible"
     width="80%"
     center
-    title="选择时间段"
+    title="请选择采购天数"
     append-to-body
     class="plan_time_wrapper"
   >
@@ -14,7 +14,7 @@
     </div>
     <div class="seperate_day">
       <el-button @click="handleOnTimeClick(3)">前3天计划</el-button>
-      <el-button @click="handleOnTimeClick(4)">后四天计划</el-button>
+      <el-button @click="handleOnTimeClick(4)">后4天计划</el-button>
     </div>
   </el-dialog>
 </template>
@@ -25,17 +25,21 @@ export default {
     return {
       visible: false,
       recipesId: "",
+      label: "",
     };
   },
+
   methods: {
-    showDialog(recipesId) {
+    showDialog({ recipesId, label }) {
       this.visible = true;
+      this.label = label;
       this.recipesId = recipesId;
     },
     handleOnTimeClick(num) {
       this.visible = false;
       this.$emit("onConfirm", {
         num,
+        label: this.label,
         recipesId: this.recipesId,
       });
     },
@@ -51,8 +55,11 @@ export default {
     margin-top: 10px;
     display: flex;
 
-    & > button {
-      flex: 1;
+    & > button:nth-child(1) {
+      flex: 3;
+    }
+    & > button:nth-child(2) {
+      flex: 4;
     }
   }
 }

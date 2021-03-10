@@ -11,6 +11,8 @@ public class SysRecipesPlanListInfo {
 
     private Long id;
 
+    private Long recipesId;
+
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date startDate;
 

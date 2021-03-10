@@ -36,6 +36,7 @@ public class SysWapController extends BaseController {
 
     /**
      * 获取用户信息
+     *
      * @param outId
      * @return
      */
@@ -46,6 +47,7 @@ public class SysWapController extends BaseController {
 
     /**
      * 获取某天食谱菜品
+     *
      * @param id
      * @return
      */
@@ -56,11 +58,22 @@ public class SysWapController extends BaseController {
 
     /**
      * 系统字典
+     *
      * @param dictType
      * @return
      */
     @GetMapping(value = "/dict/{dictType}")
     public AjaxResult sysDict(@PathVariable String dictType) {
         return AjaxResult.success(iSysDictTypeService.selectDictDataByType(dictType));
+    }
+
+    /**
+     * 获取完整食谱
+     * @param id
+     * @return
+     */
+    @GetMapping(value = "recipes/{id}")
+    public AjaxResult recipesDetail(@PathVariable Long id) {
+        return AjaxResult.success(iSysRecipesService.selectSysRecipesByRecipesId(id));
     }
 }

@@ -234,6 +234,7 @@
         <result property="endDate" column="end_date"/>
         <result property="startNumDay" column="start_num_day"/>
         <result property="endNumDay" column="end_num_day"/>
+        <result property="recipesId" column="recipes_id"/>
         <association property="menus" column="recipes_id" select="selectMenuIds"/>
     </resultMap>
 

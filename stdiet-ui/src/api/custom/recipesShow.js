@@ -1,6 +1,5 @@
 import request from "@/utils/request";
 
-
 export function getRecipesPlans(id) {
   return request({
     url: "/wap/recipes/plans/" + id,
@@ -34,6 +33,16 @@ export function getRecipesMenuInfoApi(id) {
 export function getDicts(id) {
   return request({
     url: "/wap/dict/" + id,
+    method: "get",
+    headers: {
+      isToken: false
+    }
+  });
+}
+
+export function getRecipesFullInfo(id) {
+  return request({
+    url: "/wap/recipes/" + id,
     method: "get",
     headers: {
       isToken: false

@@ -34,35 +34,21 @@
   </div>
 </template>
 <script>
+import { createNamespacedHelpers } from "vuex";
+const {
+  mapActions,
+  mapState,
+  mapMutations,
+  mapGetters,
+} = createNamespacedHelpers("recipesShow");
 // import NutriComputeCom from "./NutriComputeCom";
 import DishesDetailDialog from "./DishesDetailDialog";
-import { getDicts } from "@/api/custom/recipesShow";
 export default {
   name: "menuDetail",
   props: ["value", "date"],
   components: {
     // NutriComputeCom,
     DishesDetailDialog,
-  },
-  created() {
-    getDicts("cus_cus_unit").then((response) => {
-      this.curUnitDict = response.data.reduce((obj, cur) => {
-        obj[cur.dictValue] = cur.dictLabel;
-        return obj;
-      }, {});
-    });
-    getDicts("cus_cus_weight").then((response) => {
-      this.cusWeightDict = response.data.reduce((obj, cur) => {
-        obj[cur.dictValue] = cur.dictLabel;
-        return obj;
-      }, {});
-    });
-    getDicts("cus_dishes_type").then((response) => {
-      this.menuTypeDict = response.data.reduce((obj, cur) => {
-        obj[cur.dictValue] = cur.dictLabel;
-        return obj;
-      }, {});
-    });
   },
   data() {
     return {
@@ -71,9 +57,6 @@ export default {
         2: "10:00 - 10:30",
         4: "15:00 - 15:30",
       },
-      menuTypeDict: {},
-      curUnitDict: {},
-      cusWeightDict: {},
     };
   },
   computed: {
@@ -86,12 +69,12 @@ export default {
         if (!tarMenu.methods && tarMenu.igdList.length === 1) {
           tarMenu = tarMenu.igdList[0];
           tarMenu.cusStr = `${this.cusWeightDict[tarMenu.cusWeight] || ""}${
-            this.curUnitDict[tarMenu.cusUnit] || ""
+            this.cusUnitDict[tarMenu.cusUnit] || ""
           }`;
         } else {
           tarMenu.igdList.forEach((igd) => {
             igd.cusStr = `${this.cusWeightDict[igd.cusWeight] || ""}${
-              this.curUnitDict[igd.cusUnit] || ""
+              this.cusUnitDict[igd.cusUnit] || ""
             }`;
           });
         }
@@ -106,6 +89,7 @@ export default {
       // console.log(mMenus);
       return mMenus;
     },
+    ...mapState(["cusUnitDict", "cusWeightDict", "menuTypeDict"]),
   },
   methods: {
     handleOnDetailClick(data) {
