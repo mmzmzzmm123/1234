@@ -21,7 +21,6 @@
             <div class="title_style">
               <span>{{ plan.label }}</span>
               <em
-                v-show="false"
                 class="el-icon-shopping-cart-full icon_style"
                 @click="(e) => handleOnShoppingPlanClick(e, plan)"
               />
@@ -42,11 +41,15 @@
       </el-collapse>
     </div>
 
+    <!-- 时间选择弹窗 -->
     <plan-time-dialog ref="planRef" @onConfirm="handleOnTimeConfirm" />
+    <!-- 采购计划 -->
+    <shopping-plan-drawer ref="drawerRef" />
   </el-drawer>
 </template>
 <script>
 import PlanTimeDialog from "./PlanTimeDialog";
+import ShoppingPlanDrawer from "./ShoppingPlanDrawer";
 export default {
   name: "planDrawer",
   data() {
@@ -59,6 +62,7 @@ export default {
   },
   components: {
     PlanTimeDialog,
+    ShoppingPlanDrawer,
   },
   props: ["data", "planId", "menuId"],
   methods: {
@@ -74,13 +78,24 @@ export default {
 
       this.$emit("plan-change", menu);
     },
-    handleOnShoppingPlanClick(e, data) {
+    handleOnShoppingPlanClick(e, plan) {
       e.stopPropagation();
-      this.$refs.planRef.showDialog(data.id);
+      // console.log(plan);
+      const { recipesId, menus, label } = plan;
+      if (menus.length === 7) {
+        this.$refs.planRef.showDialog({ recipesId, label });
+      } else {
+        this.$refs.drawerRef.showDrawer({
+          num: menus.length * -1, // 全部计算
+          recipesId,
+          label,
+        });
+      }
       this.visible = false;
     },
-    handleOnTimeConfirm(val) {
-      console.log(val);
+    handleOnTimeConfirm({ num, recipesId, label }) {
+      // console.log(val);
+      this.$refs.drawerRef.showDrawer({ num, recipesId, label });
     },
   },
   computed: {},
