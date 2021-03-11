@@ -3,7 +3,7 @@
     :class="`aspect_pie_chart_wrapper ${className || ''}`"
     :style="{ height: height, width: width }"
   >
-    <div ref="echart" :style="{ height: height, width: '200px' }" />
+    <div ref="echart" :style="{ height: height, width: '100px' }" />
     <div>
       <el-table
         :data="mData"
@@ -14,13 +14,20 @@
         class="small_table"
       >
         <el-table-column label="营养" prop="type" align="center" width="60" />
-        <el-table-column label="蛋白质" prop="p" align="center" width="80" />
-        <el-table-column label="脂肪" prop="f" align="center" width="80" />
-        <el-table-column label="碳水" prop="c" align="center" width="80" />
+        <el-table-column label="蛋白质" prop="p" align="center" width="65" />
+        <el-table-column label="脂肪" prop="f" align="center" width="65" />
+        <el-table-column label="碳水" prop="c" align="center" width="65" />
       </el-table>
       <div class="summary">
-        <div style="font-size: 12px; color: #606266;">总热量约等于</div>
-        <div style="color: #515a6e; font-weight: bold">{{ totalHeat.toFixed(1) }}千卡</div>
+        <div style="font-size: 12px; color: #606266">总热量约等于</div>
+        <div style="color: #515a6e; font-weight: bold">
+          {{ totalHeat.toFixed(1) }}千卡
+        </div>
+      </div>
+      <div style="text-align: right; margin-top: 4px">
+        <el-button size="mini" type="text" @click="backToAll"
+          >查看全部</el-button
+        >
       </div>
     </div>
   </div>
@@ -31,6 +38,8 @@ import echarts from "echarts";
 require("@/utils/echarts/myShine");
 import resize from "@/views/dashboard/mixins/resize";
 import TextInfo from "@/components/TextInfo";
+import { createNamespacedHelpers } from "vuex";
+const { mapMutations } = createNamespacedHelpers("recipes");
 
 export default {
   mixins: [resize],
@@ -108,16 +117,20 @@ export default {
       this.chart = echarts.init(this.$refs.echart, "myShine");
       this.updateChart(this.data.length > 0 ? this.data[0] : {});
     },
+    backToAll() {
+      this.resetCurrentDay({ currentDay: -1 });
+    },
     updateChart(data) {
       this.chart.clear();
       this.chart.setOption({
         title: {
-          text: `${data.name}营养分析`,
+          text: "营养分析",
+          subtext: data.name,
         },
         tooltip: {
           position: "right",
           trigger: "item",
-          appendToBody: true,
+          // appendToBody: true,
           formatter: (params) => {
             const {
               name,
@@ -137,23 +150,25 @@ export default {
           {
             name: data.name,
             type: "pie",
-            radius: [0, 50],
-            center: ["50%", "50%"],
+            radius: [0, 40],
+            center: ["50%", "55%"],
             data: ["p", "f", "c"].map((dim) => ({
               dim,
               value: data[`${dim}Heat`],
               name: this.nameDict[dim],
               oriData: data,
             })),
-            labelLine: {
-              length: 5,
-              length2: 5,
-            },
-            // label: {
-            //   show: true,
-            //   position: "inside",
-            //   color: '#fff'
+            // labelLine: {
+            //   length: 5,
+            //   length2: 5,
             // },
+            label: {
+              show: true,
+              position: "inside",
+              color: "#fff",
+              fontSize: 10,
+              fontWeight: "bold",
+            },
             itemStyle: {
               borderWidth: 1,
               borderColor: "#fff",
@@ -162,6 +177,7 @@ export default {
         ],
       });
     },
+    ...mapMutations(["resetCurrentDay"]),
   },
   watch: {
     data(newVal, oldVal) {

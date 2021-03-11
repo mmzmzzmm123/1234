@@ -76,7 +76,7 @@ export default {
         },
         tooltip: {
           trigger: "axis",
-          appendToBody: true,
+          // appendToBody: true,
           formatter: (params) => {
             // console.log(params);
             const [param] = params;
@@ -115,26 +115,30 @@ export default {
           source,
         },
         grid: {
-          top: 55,
-          left: 20,
+          top: 50,
+          left: 10,
           right: 50,
           bottom: 10,
           containLabel: true,
         },
         xAxis: {
           type: "category",
+          // axisLabel: {
+          //   rotate: 45,
+          // },
         },
         yAxis: {
           type: "value",
-          name: "热量（千卡）",
+          name: "热量/千卡",
           nameTextStyle: {
             color: "#262626",
+            fontSize: 12,
           },
         },
         series: ["pHeat", "fHeat", "cHeat"].map((dim, idx) => ({
           name: dim,
           type: "bar",
-          barWidth: 26,
+          barWidth: 24,
           stack: "bar",
           encode: {
             y: dim,
