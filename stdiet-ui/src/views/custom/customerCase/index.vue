@@ -392,7 +392,7 @@
           return;
         }
         if(this.form.id != null){
-          console.log(this.form.caseFileName.length);
+          // console.log(this.form.caseFileName.length);
           updateCustomerCase(this.form).then(response => {
             if (response.code === 200) {
               this.$refs["editUploadCaseFile"].uploadReset();
