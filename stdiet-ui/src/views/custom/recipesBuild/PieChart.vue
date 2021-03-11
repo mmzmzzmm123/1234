@@ -24,7 +24,10 @@
           {{ totalHeat.toFixed(1) }}千卡
         </div>
       </div>
-      <div style="text-align: right; margin-top: 4px">
+      <div
+        style="text-align: right; margin-top: 4px"
+        v-if="recipesData.length > 1"
+      >
         <el-button size="mini" type="text" @click="backToAll"
           >查看全部</el-button
         >
@@ -39,7 +42,7 @@ require("@/utils/echarts/myShine");
 import resize from "@/views/dashboard/mixins/resize";
 import TextInfo from "@/components/TextInfo";
 import { createNamespacedHelpers } from "vuex";
-const { mapMutations } = createNamespacedHelpers("recipes");
+const { mapMutations, mapState } = createNamespacedHelpers("recipes");
 
 export default {
   mixins: [resize],
@@ -99,6 +102,7 @@ export default {
       // console.log(mData);
       return mData;
     },
+    ...mapState(["recipesData"]),
   },
   mounted() {
     this.$nextTick(() => {

@@ -111,17 +111,30 @@
         label="创建时间"
         align="center"
         prop="createTime"
-        width="166"
-      />
+        width="100"
+      >
+        <template slot-scope="scope">
+          <div v-for="time in scope.row.createTime.split(' ')" :key="time">
+            {{ time }}
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column
         label="进粉时间"
         align="center"
         prop="fansTime"
-        width="120"
+        width="100"
       >
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.fansTime, "{y}-{m}-{d}") }}</span>
         </template>
+      </el-table-column>
+      <el-table-column
+        label="进粉渠道"
+        align="center"
+        prop="fansChannel"
+        :formatter="fansChannelFormat"
+      >
       </el-table-column>
       <el-table-column label="客户姓名" align="center" prop="name" />
       <el-table-column label="手机号" align="center" prop="phone" />
@@ -316,7 +329,7 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="24">
             <el-form-item label="进粉时间" prop="fansTime">
               <el-date-picker
                 v-model="form.fansTime"
@@ -327,6 +340,18 @@
                 :picker-options="fanPickerOptions"
               >
               </el-date-picker>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="进粉渠道" prop="fansChannel">
+              <el-select v-model="form.fansChannel" placeholder="请选择">
+                <el-option
+                  v-for="dict in fansChannelOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="parseInt(dict.dictValue)"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
         </el-form>
@@ -346,7 +371,7 @@
     <!-- 外食热量统计 -->
     <heatStatisticsDrawer ref="heatStatisticsRef"></heatStatisticsDrawer>
     <!-- 食谱计划抽屉 -->
-    <RecipesPlanDrawer ref="recipesPlanDrawerRef"/>
+    <RecipesPlanDrawer ref="recipesPlanDrawerRef" />
   </div>
 </template>
 
@@ -365,7 +390,7 @@ import OrderDrawer from "@/components/OrderDrawer";
 import PhysicalSignsDialog from "@/components/PhysicalSignsDialog";
 import ContractDrawer from "@/components/ContractDrawer";
 import HeatStatisticsDrawer from "@/components/HeatStatisticsDrawer";
-import RecipesPlanDrawer from '@/components/RecipesPlanDrawer'
+import RecipesPlanDrawer from "@/components/RecipesPlanDrawer";
 import { mapGetters } from "vuex";
 
 export default {
@@ -375,7 +400,7 @@ export default {
     "physical-signs-dialog": PhysicalSignsDialog,
     "contract-drawer": ContractDrawer,
     heatStatisticsDrawer: HeatStatisticsDrawer,
-    RecipesPlanDrawer
+    RecipesPlanDrawer,
   },
   data() {
     const userId = store.getters && store.getters.userId;
@@ -395,6 +420,8 @@ export default {
       total: 0,
       // 客户档案表格数据
       customerCenterList: [],
+      //
+      fansChannelOptions: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -450,6 +477,9 @@ export default {
     };
   },
   created() {
+    this.getDicts("customer_fans_channel").then((response) => {
+      this.fansChannelOptions = response.data;
+    });
     this.getList();
   },
   computed: {
@@ -496,6 +526,9 @@ export default {
         row.assistantDietitian
       );
     },
+    fansChannelFormat(row, column) {
+      return this.selectDictLabel(this.fansChannelOptions, row.fansChannel);
+    },
     handleOnOrderClick(row) {
       this.$refs["cusOrderDrawerRef"].showDrawer(row);
     },
@@ -510,7 +543,7 @@ export default {
     },
     handleOnMenuClick(row) {
       // console.log(row);
-      this.$refs['recipesPlanDrawerRef'].showDrawer(row);
+      this.$refs["recipesPlanDrawerRef"].showDrawer(row);
     },
     handleClickHeatStatistics(row) {
       this.$refs["heatStatisticsRef"].showDrawer(row);
@@ -537,6 +570,8 @@ export default {
         afterDietitian: null,
         salesman: null,
         chargePerson: null,
+        fansChannel: 0,
+        fansTime: null,
         followStatus: 0,
         createTime: null,
         createBy: null,

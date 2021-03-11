@@ -13,6 +13,7 @@
         <result property="payDate"    column="pay_date"    />
         <result property="startDate"    column="start_date"    />
         <result property="fansTime" column="fans_time" />
+        <result property="fansChannel" column="fans_channel" />
         <result property="purchaseNum"    column="purchase_num"    />
         <result property="payTotal"    column="pay_total"    />
         <result property="mainDietitian"    column="main_dietitian"    />
@@ -28,7 +29,7 @@
     </resultMap>
 
     <sql id="selectSysCustomerVo">
-        select id, name, phone, email, fans_time, address, pay_date, start_date, purchase_num, pay_total, main_dietitian, assistant_dietitian, after_dietitian, salesman, charge_person, follow_status, create_time, create_by, update_time, update_by from sys_customer
+        select id, name, phone, email, fans_time, fans_channel, address, pay_date, start_date, purchase_num, pay_total, main_dietitian, assistant_dietitian, after_dietitian, salesman, charge_person, follow_status, create_time, create_by, update_time, update_by from sys_customer
     </sql>
 
     <select id="selectSysCustomerList" parameterType="SysCustomer" resultMap="SysCustomerResult">
@@ -50,6 +51,7 @@
             <if test="name != null">name,</if>
             <if test="phone != null">phone,</if>
             <if test="fansTime != null">fans_time,</if>
+            <if test="fansChannel != null">fans_channel,</if>
             <if test="email != null">email,</if>
             <if test="address != null">address,</if>
             <if test="payDate != null">pay_date,</if>
@@ -71,6 +73,7 @@
             <if test="name != null">#{name},</if>
             <if test="phone != null">#{phone},</if>
             <if test="fansTime != null">#{fansTime},</if>
+            <if test="fansChannel != null">#{fansChannel},</if>
             <if test="email != null">#{email},</if>
             <if test="address != null">#{address},</if>
             <if test="payDate != null">#{payDate},</if>
@@ -96,6 +99,7 @@
             <if test="name != null">name = #{name},</if>
             <if test="phone != null">phone = #{phone},</if>
             <if test="fansTime != null">fans_time = #{fansTime},</if>
+            <if test="fansChannel != null">fans_channel = #{fansChannel},</if>
             <if test="email != null">email = #{email},</if>
             <if test="address != null">address = #{address},</if>
             <if test="payDate != null">pay_date = #{payDate},</if>

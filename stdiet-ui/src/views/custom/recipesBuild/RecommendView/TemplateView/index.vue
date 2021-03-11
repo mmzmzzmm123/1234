@@ -1,10 +1,10 @@
 <template>
   <div class="template_view_wrapper">
     <div class="header">
+      <div style="fontWeight: bold">选择模板</div>
       <el-button size="mini" @click="handleOnBackClick">返回</el-button>
     </div>
     <div class="content">
-      <h2>选择模板</h2>
       <!-- 筛选 -->
       <el-form :model="queryParams" ref="queryForm" :inline="true">
         <el-form-item label="模板名称" prop="name">
@@ -116,7 +116,7 @@ export default {
       this.queryParams.pageNum = 1;
       this.getList();
     },
-       /** 重置按钮操作 */
+    /** 重置按钮操作 */
     resetQuery() {
       this.resetForm("queryForm");
       this.handleQuery();
@@ -162,12 +162,13 @@ export default {
   .header {
     height: 32px;
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     align-items: center;
+    margin-bottom: 8px;
   }
   .content {
     height: calc(100% - 32px);
-    padding-top: 12px;
+    overflow: auto;
   }
 }
 </style>
