@@ -244,9 +244,10 @@ export default {
 </script>
 <style lang="scss" scoped>
 .health_view_wrapper {
+  position: relative;
   .remark_btn {
     position: absolute;
-    top: 36px;
+    top: 0;
     right: 16px;
   }
 

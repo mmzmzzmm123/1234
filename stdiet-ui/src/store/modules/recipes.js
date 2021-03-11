@@ -61,6 +61,7 @@ const mutations = {
           payload.cusWeight && (tarIgd.cusWeight = payload.cusWeight);
           payload.cusUnit && (tarIgd.cusUnit = payload.cusUnit);
         }
+        console.log(JSON.parse(JSON.stringify(state.recipesData)));
       } else if (actionType === "delIgd") {
         tarDishes.igdList = tarDishes.igdList.filter(
           igd => igd.id !== payload.igdId

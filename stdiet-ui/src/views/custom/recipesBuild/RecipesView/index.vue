@@ -1,11 +1,7 @@
 <template>
   <div class="recipes_view_wrapper">
-    <RecipesAspectCom :collapse.sync="collapse" :data="analyseData" />
-    <div
-      id="recipes_content"
-      class="recipes_content"
-      :style="`height: calc(100vh - ${collapse ? 62 : 232}px)`"
-    >
+    <RecipesHeaderCom />
+    <div id="recipes_content" class="recipes_content">
       <RecipesCom
         v-for="(item, index) in data"
         :id="`recipes${index}`"
@@ -20,22 +16,16 @@
 </template>
 <script>
 import RecipesCom from "./RecipesCom";
-import RecipesAspectCom from "./RecipesAspectCom";
+import RecipesHeaderCom from "./RecipesHeaderCom";
 export default {
   name: "RecipesView",
   components: {
     RecipesCom,
-    RecipesAspectCom,
+    RecipesHeaderCom,
   },
-  computed: {
-    mCollapse() {
-      return analyseData.length ? this.collapse : false;
-    },
-  },
+  computed: {},
   data() {
-    return {
-      collapse: false,
-    };
+    return {};
   },
   props: ["data", "analyseData", "name", "numRange"],
 };
@@ -46,6 +36,7 @@ export default {
 
   .recipes_content {
     overflow: auto;
+    height: calc(100vh - 48px);
     background: white;
   }
 }

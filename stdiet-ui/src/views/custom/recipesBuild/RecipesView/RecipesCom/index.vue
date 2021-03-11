@@ -11,7 +11,7 @@
       :cell-class-name="cellClassName"
       :style="`outline: ${currentDay === num ? '1px solid #d53950' : 'none'}`"
     >
-      <el-table-column prop="type" :width="100" align="center">
+      <el-table-column prop="type" :width="80" align="center">
         <template slot="header">
           <div class="pointer_style" @click="handleOnResetCurrentDay">
             {{ `第${numDay}天` }}
@@ -477,7 +477,7 @@ export default {
       // console.log(this.copyData);
       if (this.copyData) {
         const data = {
-          ...this.copyData,
+          ...JSON.parse(JSON.stringify(this.copyData)),
           type,
         };
         if (!this.recipesId) {
@@ -617,6 +617,10 @@ export default {
       visibility: visible;
     }
   }
+}
+
+.el-table .cell {
+  line-height: 18px;
 }
 
 .recipes_header {
