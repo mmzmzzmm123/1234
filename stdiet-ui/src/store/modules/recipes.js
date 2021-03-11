@@ -33,7 +33,9 @@ const oriState = {
   templateInfo: undefined,
   copyData: undefined,
   canCopyMenuTypes: [],
-  fontSize: parseInt(localStorage.getItem("fontSize")) || 12
+  fontSize: parseInt(localStorage.getItem("fontSize")) || 12,
+  dishBigClassOptions:[],
+  dishSmallClassOptions:[],
 };
 
 const mutations = {
@@ -137,6 +139,12 @@ const actions = {
     });
     getDicts("cus_dishes_type").then(response => {
       commit("updateStateData", { typeOptions: response.data });
+    });
+    getDicts("dish_class_big").then((response) => {
+      commit("updateStateData", { dishBigClassOptions: response.data });
+    });
+    getDicts("dish_class_small").then((response) => {
+      commit("updateStateData", { dishSmallClassOptions: response.data });
     });
 
     return new Promise((res, rej) => {
@@ -454,6 +462,27 @@ const actions = {
 };
 
 const getters = {
+  dishClassOptions: state => {
+    const dishClass = [];
+    state.dishBigClassOptions.forEach((item, index) => {
+      dishClass.push({
+        'value': parseInt(item.dictValue),
+        'label': item.dictLabel,
+        'children': []
+      });
+      if(index == state.dishBigClassOptions.length - 1){
+        state.dishSmallClassOptions.forEach((smallClass, i) => {
+          if(smallClass.remark){
+            dishClass[parseInt(smallClass.remark-1)].children.push({
+              'value': parseInt(smallClass.dictValue),
+              'label': smallClass.dictLabel
+            });
+          }
+        });
+      }
+    });
+    return dishClass;
+  },
   analyseData: state => {
     if (!state.recipesData.length) {
       return [];
@@ -504,7 +533,18 @@ const getters = {
     state.typeOptions.reduce((obj, cur) => {
       obj[cur.dictValue] = cur.dictLabel;
       return obj;
-    }, {})
+    }, {}),
+  dishBigClassDict: state =>
+    state.dishBigClassOptions.reduce((obj, cur) => {
+      obj[cur.dictValue] = cur.dictLabel;
+      return obj;
+    }, {}),
+  dishSmallClassDict: state =>
+    state.dishSmallClassOptions.reduce((obj, cur) => {
+      obj[cur.dictValue] = cur.dictLabel;
+      return obj;
+  }, {}),
+
 };
 
 export default {

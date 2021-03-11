@@ -71,7 +71,7 @@
             size="mini"
             type="primary"
             @click="handleOnSave"
-            >生成食谱</el-button
+            >生成食谱2</el-button
           >
         </span>
       </div>
