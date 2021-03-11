@@ -5,6 +5,59 @@
     </div>
     <div class="content">
       <h2>选择模板</h2>
+      <!-- 筛选 -->
+      <el-form :model="queryParams" ref="queryForm" :inline="true">
+        <el-form-item label="模板名称" prop="name">
+          <el-input
+            v-model="queryParams.name"
+            placeholder="请输入模板名称"
+            @keydown.enter="handleQuery"
+          />
+        </el-form-item>
+        <el-form-item label="营养师" prop="nutritionistId">
+          <el-select
+            v-model="queryParams.nutritionistId"
+            placeholder="请选择营养师"
+            clearable
+            size="small"
+          >
+            <el-option
+              v-for="dict in nutritionistIdOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="营养师助理" prop="nutriAssisId">
+          <el-select
+            v-model="queryParams.nutriAssisId"
+            placeholder="请选择营养师助理"
+            clearable
+            size="small"
+          >
+            <el-option
+              v-for="dict in nutriAssisIdOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button
+            type="cyan"
+            icon="el-icon-search"
+            size="mini"
+            @click="handleQuery"
+            >搜索</el-button
+          >
+          <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+            >重置</el-button
+          >
+        </el-form-item>
+      </el-form>
+      <!-- 模板列表 -->
       <el-table
         v-loading="loading"
         :data="dataList"
@@ -29,6 +82,7 @@
 </template>
 <script>
 import { listRecipesTemplate } from "@/api/custom/recipesTemplate";
+import { mapState } from "vuex";
 export default {
   name: "TemplateView",
   data() {
@@ -37,6 +91,9 @@ export default {
       dataList: [],
       total: 0,
       queryParams: {
+        name: null,
+        nutritionistId: null,
+        nutriAssisId: null,
         pageNum: 1,
         pageSize: 10,
         reviewStatus: 2,
@@ -44,7 +101,26 @@ export default {
     };
   },
   props: ["view"],
+  computed: {
+    ...mapState({
+      //营养师
+      nutritionistIdOptions: (state) =>
+        state.global.nutritionistIdOptions.slice(1),
+      //营养师助理
+      nutriAssisIdOptions: (state) => state.global.nutriAssisIdOptions.slice(1),
+    }),
+  },
   methods: {
+    /** 搜索按钮操作 */
+    handleQuery() {
+      this.queryParams.pageNum = 1;
+      this.getList();
+    },
+       /** 重置按钮操作 */
+    resetQuery() {
+      this.resetForm("queryForm");
+      this.handleQuery();
+    },
     handleOnBackClick() {
       this.$emit("update:view", 0);
       this.queryParams = {

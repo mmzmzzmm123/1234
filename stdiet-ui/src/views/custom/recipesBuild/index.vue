@@ -10,9 +10,39 @@
       <RecommendView v-else />
     </div>
     <div class="right" v-loading="healthDataLoading">
-      <TemplateInfoView v-if="!!temId" :data="templateInfo" />
-      <HealthyView :data="healthyData" v-else-if="healthyDataType === 0" dev />
-      <BodySignView :data="healthyData" v-else dev />
+      <div class="top" v-if="!!recipesData.length">
+        <BarChart
+          v-if="analyseData.length > 1"
+          :data="analyseData"
+          height="160px"
+          width="100%"
+          :max="
+            healthyData.basicBMR
+              ? parseFloat(
+                  healthyData.basicBMR.substring(
+                    0,
+                    healthyData.basicBMR.indexOf('千卡')
+                  )
+                )
+              : 0
+          "
+        />
+        <PieChart
+          v-if="analyseData.length === 1"
+          :data="analyseData"
+          height="160px"
+          width="100%"
+        />
+      </div>
+      <div class="content">
+        <TemplateInfoView v-if="!!temId" :data="templateInfo" />
+        <HealthyView
+          :data="healthyData"
+          v-else-if="healthyDataType === 0"
+          dev
+        />
+        <BodySignView :data="healthyData" v-else dev />
+      </div>
     </div>
   </div>
 </template>
@@ -30,6 +60,8 @@ import BodySignView from "@/components/BodySignView";
 import RecipesView from "./RecipesView/index";
 import RecommendView from "./RecommendView";
 import TemplateInfoView from "./TemplateInfoView";
+import BarChart from "./BarChart";
+import PieChart from "./PieChart";
 
 export default {
   name: "BuildRecipies",
@@ -55,6 +87,8 @@ export default {
   },
   created() {},
   components: {
+    BarChart,
+    PieChart,
     HealthyView,
     BodySignView,
     RecipesView,
@@ -95,7 +129,15 @@ export default {
     flex: 1;
     height: 100%;
     padding-left: 20px;
-    overflow: auto;
+
+    .top {
+      height: 160px;
+    }
+
+    .content {
+      overflow: auto;
+      height: calc(100% - 160px);
+    }
   }
 }
 </style>
