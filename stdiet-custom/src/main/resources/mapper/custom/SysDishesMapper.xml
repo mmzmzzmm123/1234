@@ -47,6 +47,8 @@
         <where>
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
             <if test="type != null  and type != ''"> and FIND_IN_SET(#{type}, type)</if>
+            <if test="bigClass != null"> and big_class = #{bigClass}</if>
+            <if test="smallClass != null"> and small_class = #{smallClass}</if>
             <if test="reviewStatus != null  and type != ''"> and review_status = #{reviewStatus}</if>
             <if test="isMain != null  and type != ''"> and is_main = #{isMain}</if>
         </where>

@@ -16,6 +16,17 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+      <el-form-item label="菜品种类" prop="dishClass">
+        <el-cascader
+          v-model="dishClassQueryParam"
+          :options="dishClassOptions"
+          :props="{ expandTrigger: 'hover' }"
+          :show-all-levels="true"
+          filterable
+          clearable
+          placeholder="请选择菜品种类"
+        ></el-cascader>
+      </el-form-item>
       <el-form-item label="菜品类型" prop="type">
         <el-select
           v-model="queryParams.type"
@@ -187,7 +198,7 @@
                   v-model="form.dishClass"
                   :options="dishClassOptions"
                   :props="{ expandTrigger: 'hover' }"
-                  placeholder="请输入菜品种类"
+                  placeholder="请选择菜品种类"
                   ></el-cascader>
               </el-form-item>
             </el-col>
@@ -453,15 +464,6 @@ export default {
       //
       cusWeightOptions: [],
       dishClassOptions: [],
-      /*
-      * {
-        value: 'zhinan',
-        label: '指南',
-        children: [{
-          value: 'shejiyuanze',
-          label: '设计原则'
-        }]
-      }*/
       dishClassBigOptions:[],
       dishClassSmallOptions:[],
       // 查询参数
@@ -470,11 +472,15 @@ export default {
         pageSize: 10,
         name: null,
         type: null,
+        bigClass: null,
+        smallClass: null
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {},
+      //菜品种类查询种类
+      dishClassQueryParam:[]
     };
   },
   created() {
@@ -506,6 +512,11 @@ export default {
     /** 查询菜品列表 */
     getList() {
       this.loading = true;
+      if(this.dishClassQueryParam != null && this.dishClassQueryParam.length > 0){
+        this.queryParams.smallClass = this.dishClassQueryParam[1];
+      }else{
+        this.queryParams.smallClass = null;
+      }
       listDishes(this.queryParams).then((response) => {
         this.dishesList = response.rows.map((d) => {
           const recTags = [],
@@ -621,6 +632,7 @@ export default {
     /** 重置按钮操作 */
     resetQuery() {
       this.resetForm("queryForm");
+      this.dishClassQueryParam = [];
       this.handleQuery();
     },
     // 多选框选中数据

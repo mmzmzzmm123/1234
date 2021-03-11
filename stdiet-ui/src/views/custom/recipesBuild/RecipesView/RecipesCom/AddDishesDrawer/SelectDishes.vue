@@ -15,6 +15,17 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+     <el-form-item label="菜品种类" prop="dishClass">
+        <el-cascader
+          filterable
+          clearable
+          v-model="dishClassQueryParam"
+          :options="dishClassOptions"
+          :props="{ expandTrigger: 'hover' }"
+          :show-all-levels="true"
+          placeholder="请选择菜品种类"
+        ></el-cascader>
+      </el-form-item>
       <el-form-item label="菜品类型" prop="type">
         <el-select
           :disabled="lockType"
@@ -54,6 +65,11 @@
       @current-change="handleCurrentChange"
     >
       <el-table-column label="菜品名称" align="center" prop="name" />
+      <el-table-column label="菜品种类" align="center" prop="bigClass">
+        <template slot-scope="scope">
+          <AutoHideMessage :data="dishClassFormat(scope.row)" :maxLength="10"></AutoHideMessage>
+        </template>
+      </el-table-column>
       <el-table-column label="菜品类型" align="center" prop="type">
         <template slot-scope="scope">
           <AutoHideInfo :data="typeFormat(scope.row)" />
@@ -90,9 +106,10 @@
 </template>
 <script>
 import AutoHideInfo from "@/components/AutoHideInfo";
+import AutoHideMessage from "@/components/AutoHideMessage";
 import { listDishes } from "@/api/custom/dishes";
 import { createNamespacedHelpers } from "vuex";
-const { mapState } = createNamespacedHelpers("recipes");
+const { mapState,mapGetters } = createNamespacedHelpers("recipes");
 export default {
   name: "SelectDishes",
   props: [],
@@ -107,15 +124,20 @@ export default {
         pageSize: 10,
         name: null,
         type: null,
+        smallClass: null,
+        bigClass: null,
         reviewStatus: "yes",
       },
+      //菜品种类查询参数
+      dishClassQueryParam:[]
     };
   },
   components: {
-    AutoHideInfo,
+    AutoHideInfo,AutoHideMessage
   },
   computed: {
-    ...mapState(["typeOptions"]),
+    ...mapState(["typeOptions","dishBigClassOptions","dishSmallClassOptions"]),
+    ...mapGetters(["dishClassOptions"]),
   },
   methods: {
     getList({ type }) {
@@ -123,6 +145,11 @@ export default {
       if (type) {
         this.lockType = true;
         this.queryParams.type = type;
+      }
+      if(this.dishClassQueryParam != null && this.dishClassQueryParam.length > 0){
+        this.queryParams.smallClass = this.dishClassQueryParam[1];
+      }else{
+        this.queryParams.smallClass = null;
       }
       this.loading = true;
       listDishes(this.queryParams).then((result) => {
@@ -175,6 +202,7 @@ export default {
     },
     resetQuery() {
       this.resetForm("queryForm");
+      this.dishClassQueryParam = [];
       this.handleQuery();
     },
     typeFormat(row, column) {
@@ -183,6 +211,15 @@ export default {
         : row.type
             .split(",")
             .map((type) => this.selectDictLabel(this.typeOptions, type));
+    },
+    //菜品种类翻译
+    dishClassFormat(row){
+       if(row.bigClass > 0 && row.smallClass > 0){
+         let bigClassName = this.selectDictLabel(this.dishBigClassOptions, row.bigClass);
+         let smallClassName = this.selectDictLabel(this.dishSmallClassOptions, row.smallClass);
+         return bigClassName+"/"+smallClassName;
+       }
+       return "";
     },
   },
 };
