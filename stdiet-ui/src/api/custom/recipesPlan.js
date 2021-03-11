@@ -9,6 +9,14 @@ export function listRecipesPlan(query) {
   });
 }
 
+export function addRecipesPlan(data) {
+  return request({
+    url: "/recipes/recipesPlan/add",
+    method: "post",
+    data
+  });
+}
+
 // 查询食谱计划详细
 export function getRecipesPlan(id) {
   return request({

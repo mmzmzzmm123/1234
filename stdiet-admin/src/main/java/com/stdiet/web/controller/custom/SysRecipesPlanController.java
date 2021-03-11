@@ -1,19 +1,19 @@
 package com.stdiet.web.controller.custom;
 
-import java.util.List;
-
-import com.stdiet.common.utils.StringUtils;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
 import com.stdiet.common.annotation.Log;
 import com.stdiet.common.core.controller.BaseController;
 import com.stdiet.common.core.domain.AjaxResult;
+import com.stdiet.common.core.page.TableDataInfo;
 import com.stdiet.common.enums.BusinessType;
+import com.stdiet.common.utils.StringUtils;
+import com.stdiet.common.utils.poi.ExcelUtil;
 import com.stdiet.custom.domain.SysRecipesPlan;
 import com.stdiet.custom.service.ISysRecipesPlanService;
-import com.stdiet.common.utils.poi.ExcelUtil;
-import com.stdiet.common.core.page.TableDataInfo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * 食谱计划Controller
@@ -23,8 +23,7 @@ import com.stdiet.common.core.page.TableDataInfo;
  */
 @RestController
 @RequestMapping("/recipes/recipesPlan")
-public class SysRecipesPlanController extends BaseController
-{
+public class SysRecipesPlanController extends BaseController {
     @Autowired
     private ISysRecipesPlanService sysRecipesPlanService;
 
@@ -33,16 +32,21 @@ public class SysRecipesPlanController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('recipes:plan:list')")
     @GetMapping("/list")
-    public TableDataInfo list(SysRecipesPlan sysRecipesPlan)
-    {
+    public TableDataInfo list(SysRecipesPlan sysRecipesPlan) {
         startPage();
         List<SysRecipesPlan> list = sysRecipesPlanService.selectPlanListByCondition(sysRecipesPlan);
-        for(SysRecipesPlan plan : list){
-            if(StringUtils.isNotEmpty(plan.getPhone())){
+        for (SysRecipesPlan plan : list) {
+            if (StringUtils.isNotEmpty(plan.getPhone())) {
                 plan.setHidePhone(StringUtils.hiddenPhoneNumber(plan.getPhone()));
             }
         }
         return getDataTable(list);
+    }
+
+    @PreAuthorize("@ss.hasPermi('recipes:plan:add')")
+    @PostMapping("/add")
+    public AjaxResult add(@RequestBody SysRecipesPlan sysRecipesPlan) {
+        return toAjax(sysRecipesPlanService.insertSysRecipesPlan(sysRecipesPlan));
     }
 
     /**
@@ -50,8 +54,7 @@ public class SysRecipesPlanController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('recipes:plan:list')")
     @GetMapping("/getAllPlanByOrderId")
-    public TableDataInfo getAllPlanByOrderId(SysRecipesPlan sysRecipesPlan)
-    {
+    public TableDataInfo getAllPlanByOrderId(SysRecipesPlan sysRecipesPlan) {
         startPage();
         List<SysRecipesPlan> list = sysRecipesPlanService.selectPlanListByOrderId(sysRecipesPlan);
         return getDataTable(list);
@@ -68,8 +71,7 @@ public class SysRecipesPlanController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('recipes:plan:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
-    {
+    public AjaxResult getInfo(@PathVariable("id") Long id) {
         return AjaxResult.success(sysRecipesPlanService.selectSysRecipesPlanById(id));
     }
 
@@ -79,8 +81,7 @@ public class SysRecipesPlanController extends BaseController
     @PreAuthorize("@ss.hasPermi('recipes:plan:edit')")
     @Log(title = "食谱计划", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody SysRecipesPlan sysRecipesPlan)
-    {
+    public AjaxResult edit(@RequestBody SysRecipesPlan sysRecipesPlan) {
         return toAjax(sysRecipesPlanService.updateSysRecipesPlan(sysRecipesPlan));
     }
 
@@ -90,11 +91,10 @@ public class SysRecipesPlanController extends BaseController
     @PreAuthorize("@ss.hasPermi('recipes:plan:export')")
     @Log(title = "食谱计划", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
-    public AjaxResult export(SysRecipesPlan sysRecipesPlan)
-    {
+    public AjaxResult export(SysRecipesPlan sysRecipesPlan) {
         List<SysRecipesPlan> list = sysRecipesPlanService.selectPlanListByCondition(sysRecipesPlan);
-        for(SysRecipesPlan plan : list){
-            if(StringUtils.isNotEmpty(plan.getPhone())){
+        for (SysRecipesPlan plan : list) {
+            if (StringUtils.isNotEmpty(plan.getPhone())) {
                 plan.setHidePhone(StringUtils.hiddenPhoneNumber(plan.getPhone()));
             }
         }

@@ -2,10 +2,12 @@
   <div class="recipes_header_com_wrapper">
     <div class="header_btns" v-loading="loading">
       <section>
+        <div>食谱制作</div>
         <el-button
           size="mini"
           v-if="!!recipesId"
           type="primary"
+          style="margin-left: 12px"
           icon="el-icon-document-copy"
           @click="handleOnTemplateClick"
         >
@@ -103,13 +105,11 @@ export default {
       ],
     };
   },
-  updated() {
-  },
+  updated() {},
   computed: {
     ...mapState(["recipesId", "reviewStatus", "fontSize"]),
   },
-  watch: {
-  },
+  watch: {},
   methods: {
     handleOnSizeChange(fontSize) {
       this.updateFontSize({ fontSize });
