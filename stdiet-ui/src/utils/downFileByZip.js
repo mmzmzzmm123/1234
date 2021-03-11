@@ -142,7 +142,7 @@ export function downFileByBlob(blobData, fileName){
  * base64转blob对象
   */
 export function base64ToBlob(base64) {
-  console.log(base64);
+  // console.log(base64);
   var parts = base64.split(";base64,");
   var contentType = parts[0].split(":")[1];
   var raw = window.atob(parts[1]);
