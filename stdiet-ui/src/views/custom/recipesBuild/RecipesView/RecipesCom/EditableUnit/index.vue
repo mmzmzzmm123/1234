@@ -14,7 +14,9 @@
           :key="item.dictValue"
           :value="item.dictValue"
         >
-          {{ item.dictLabel }}
+          <div style="width: 120px">
+            {{ item.dictLabel }}
+          </div>
         </option>
       </select>
       <select
@@ -149,6 +151,10 @@ export default {
     /*清除ie的默认选择框样式清除，隐藏下拉箭头*/
     select::-ms-expand {
       display: none;
+    }
+
+    option {
+      width: 140px;
     }
   }
 }
