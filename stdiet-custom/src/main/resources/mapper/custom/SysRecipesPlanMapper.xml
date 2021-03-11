@@ -73,7 +73,7 @@
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="orderId != null">order_id,</if>
             <if test="cusId != null">cus_id,</if>
-            <if test="outId != null">out_id,</if>
+            <if test="cusId != null">out_id,</if>
             <if test="startDate != null">start_date,</if>
             <if test="endDate != null">end_date,</if>
             <if test="startNumDay != null">start_num_day,</if>
@@ -93,7 +93,7 @@
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="orderId != null">#{orderId},</if>
             <if test="cusId != null">#{cusId},</if>
-            <if test="outId != null">#{outId},</if>
+            <if test="cusId != null">md5(#{cusId}),</if>
             <if test="startDate != null">#{startDate},</if>
             <if test="endDate != null">#{endDate},</if>
             <if test="startNumDay != null">#{startNumDay},</if>

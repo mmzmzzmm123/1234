@@ -39,6 +39,8 @@ public class SysCustomer extends BaseEntity
     @Excel(name = "进粉日期", width = 30, dateFormat = "yyyy-MM-dd")
     private Date fansTime;
 
+    private Integer fansChannel;
+
     /** 邮箱 */
     @Excel(name = "邮箱")
     private String email;

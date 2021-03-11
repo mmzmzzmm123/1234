@@ -38,6 +38,14 @@
           <el-button icon="el-icon-view" size="mini" @click="handleInnerOpen"
             >查看暂停记录
           </el-button>
+          <el-button
+            size="mini"
+            type="primary"
+            v-if="fansChannel === 1"
+            @click="createOneDay"
+          >
+            生成1天体验计划
+          </el-button>
         </el-col>
       </el-row>
 
@@ -91,12 +99,45 @@
 
       <!-- 暂停记录抽屉 -->
       <PlanPauseDrawer ref="planPauseRef" />
+      <!-- 创建计划 -->
+      <el-dialog
+        title="创建1天体验计划"
+        :visible.sync="open"
+        width="480px"
+        append-to-body
+      >
+        <el-form
+          ref="form"
+          :model="form"
+          :rules="rules"
+          label-width="100px"
+          v-loading="createLoading"
+        >
+          <el-form-item label="开始时间" prop="startDate">
+            <el-date-picker
+              v-model="form.startDate"
+              type="date"
+              placeholder="选择开始时间"
+              format="yyyy-MM-dd"
+              value-format="yyyy-MM-dd"
+              :picker-options="fanPickerOptions"
+            />
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="handleOnCreateConfirm"
+            >确 定</el-button
+          >
+          <el-button @click="cancel">取 消</el-button>
+        </div>
+      </el-dialog>
     </div>
   </el-drawer>
 </template>
 <script>
 import Clipboard from "clipboard";
 import { listRecipesPlanByCusId } from "@/api/custom/recipesPlan";
+import { addRecipesPlan } from "@/api/custom/recipesPlan";
 import PlanPauseDrawer from "./PlanPauseDrawer";
 import VueQr from "vue-qr";
 const logo = require("@/assets/logo/logo_b.png");
@@ -109,26 +150,45 @@ export default {
   data() {
     return {
       logo,
+      open: false,
       visible: false,
+      createLoading: false,
       title: "",
       cusOutId: "",
       copyValue: "",
       planLoading: false,
       planList: [],
+      fansChannel: 0,
+      form: {},
+      rules: {
+        startDate: [
+          { required: true, message: "开始时间不能为空", trigger: "blur" },
+        ],
+      },
+      fanPickerOptions: {
+        disabledDate(time) {
+          return time.getTime() < Date.now();
+        },
+      },
     };
   },
   methods: {
     showDrawer(data) {
-      // console.log(data);
+      console.log(data);
       this.data = data;
       if (!this.data) {
         return;
       }
 
+      this.fansChannel = data.fansChannel;
       this.visible = true;
       this.title = `「${this.data.name}」食谱计划`;
+
+      this.getList();
+    },
+    getList() {
       this.planLoading = true;
-      listRecipesPlanByCusId(data.id).then((response) => {
+      listRecipesPlanByCusId(this.data.id).then((response) => {
         this.planList = response.data;
         this.cusOutId = response.data.reduce((str, cur) => {
           if (!str && cur.recipesId && cur.reviewStatus === 2) {
@@ -143,6 +203,12 @@ export default {
         // console.log(this.planList);
         this.planLoading = false;
       });
+    },
+    reset() {
+      this.form = {
+        startDate: null,
+      };
+      this.resetForm("form");
     },
     handleOnClosed() {
       this.data = undefined;
@@ -164,6 +230,35 @@ export default {
       // console.log(data);
       // const { id, name } = this.data;
       window.open("/recipes/build/" + this.data.name + "/" + data.id, "_blank");
+    },
+    createOneDay() {
+      this.open = true;
+    },
+    handleOnCreateConfirm() {
+      const { id } = this.data;
+      this.createLoading = true;
+      addRecipesPlan({
+        cusId: id,
+        startNumDay: 1,
+        endNumDay: 1,
+        startDate: this.form.startDate,
+        endDate: this.form.startDate,
+      })
+        .then((res) => {
+          if (res.code === 200) {
+            this.$message.success("创建成功");
+            this.getList();
+          }
+          this.createLoading = false;
+          this.open = false;
+        })
+        .catch(() => {
+          this.createLoading = false;
+        });
+    },
+    cancel() {
+      this.open = false;
+      this.reset();
     },
   },
 };
