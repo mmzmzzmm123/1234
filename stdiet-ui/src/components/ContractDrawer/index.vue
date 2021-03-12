@@ -7,9 +7,9 @@
       @closed="handleOnClosed"
       size="40%"
     >
-      <div class="app-container">
-        <el-row :gutter="10" class="mb8">
-          <el-col :span="1.5">
+      <div class="app-container contract_drawer_wrapper">
+        <div class="header">
+          <section>
             <el-button
               type="primary"
               icon="el-icon-plus"
@@ -18,10 +18,18 @@
               @click="handleAdd"
               >创建合同
             </el-button>
-          </el-col>
-        </el-row>
+          </section>
+          <section>
+            <el-button
+              icon="el-icon-refresh"
+              size="mini"
+              @click="fetchContractList"
+              circle
+            />
+          </section>
+        </div>
 
-        <el-table :data="contractList">
+        <el-table :data="contractList" v-loading="loading">
           <el-table-column
             label="合同编号"
             align="center"
@@ -62,7 +70,7 @@
                 >复制
               </el-button>
               <el-popover placement="top" trigger="click">
-                <VueQr :text="copyValue" :logoSrc="logo" size="256"/>
+                <VueQr :text="copyValue" :logoSrc="logo" size="256" />
                 <el-button
                   slot="reference"
                   icon="el-icon-picture-outline"
@@ -126,6 +134,7 @@ export default {
   data() {
     return {
       logo,
+      loading: false,
       visible: false,
       title: "",
       data: undefined,
@@ -140,12 +149,16 @@ export default {
         return;
       }
       this.title = `「${this.data.name}」合同列表`;
-      this.fetchContractList(data.id);
+      this.visible = true;
+      this.fetchContractList();
     },
-    fetchContractList(cusId) {
-      listContract({ customerId: cusId }).then((res) => {
-        this.contractList = res.rows;
-        this.visible = true;
+    fetchContractList() {
+      this.loading = true;
+      listContract({ customerId: this.data.id }).then((res) => {
+        if (res.code === 200) {
+          this.contractList = res.rows;
+        }
+        this.loading = false;
       });
     },
     handleAdd() {
@@ -206,5 +219,13 @@ export default {
 <style  lang="scss" scoped>
 /deep/ :focus {
   outline: 0;
+}
+.contract_drawer_wrapper {
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
 }
 </style>

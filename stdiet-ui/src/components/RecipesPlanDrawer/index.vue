@@ -7,8 +7,8 @@
     size="45%"
   >
     <div class="app-container recipes_plan_drawer_wrapper">
-      <el-row :gutter="10" class="mb8">
-        <el-col :span="1.5">
+      <div class="header">
+        <section>
           <el-button
             v-if="cusOutId"
             type="primary"
@@ -44,10 +44,18 @@
             v-if="fansChannel === 1"
             @click="createOneDay"
           >
-            生成1天体验计划
+            生成7天体验计划
           </el-button>
-        </el-col>
-      </el-row>
+        </section>
+        <section>
+          <el-button
+            icon="el-icon-refresh"
+            size="mini"
+            @click="getList"
+            circle
+          />
+        </section>
+      </div>
 
       <el-table :data="planList" v-loading="planLoading" height="80%">
         <el-table-column label="审核状态" align="center" width="80">
@@ -140,6 +148,7 @@ import { listRecipesPlanByCusId } from "@/api/custom/recipesPlan";
 import { addRecipesPlan } from "@/api/custom/recipesPlan";
 import PlanPauseDrawer from "./PlanPauseDrawer";
 import VueQr from "vue-qr";
+import dayjs from "dayjs";
 const logo = require("@/assets/logo/logo_b.png");
 export default {
   name: "RecipesPlanDrawer",
@@ -167,7 +176,7 @@ export default {
       },
       fanPickerOptions: {
         disabledDate(time) {
-          return time.getTime() < Date.now();
+          return time.getTime() < Date.now() - 24 * 60 * 60 * 1000;
         },
       },
     };
@@ -240,9 +249,9 @@ export default {
       addRecipesPlan({
         cusId: id,
         startNumDay: 1,
-        endNumDay: 1,
+        endNumDay: 7,
         startDate: this.form.startDate,
-        endDate: this.form.startDate,
+        endDate: dayjs(this.form.startDate).add(6, "day").format("YYYY-MM-DD"),
       })
         .then((res) => {
           if (res.code === 200) {
@@ -270,5 +279,12 @@ export default {
 
 .recipes_plan_drawer_wrapper {
   height: calc(100vh - 77px);
+
+  .header {
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
 }
 </style>

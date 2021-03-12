@@ -7,26 +7,45 @@
       @closed="handleOnClosed"
       size="40%"
     >
-      <div class="app-container">
-        <el-row :gutter="10" class="mb8">
-          <el-col :span="1.5">
+      <div class="app-container heat_statisitcs_wrapper">
+        <div class="header">
+          <section>
             <el-button
               icon="el-icon-share"
-              size="small"
+              size="mini"
               title="点击复制链接"
               class="copyBtn"
               type="primary"
               :data-clipboard-text="copyValue"
-              @click="handleCopy()"
-              >外食计算器</el-button
+              @click="handleCopy"
+              >外食计算器
+            </el-button>
+            <el-popover
+              placement="bottom"
+              trigger="click"
+              style="margin: 0 12px"
             >
-          </el-col>
-          <el-popover placement="bottom" trigger="click">
-            <VueQr :text="copyValue" :logoSrc="logo" size="256" />
-            <el-button slot="reference">二维码</el-button>
-          </el-popover>
-        </el-row>
-        <el-table :data="foodHeatStatisticsList">
+              <VueQr :text="copyValue" :logoSrc="logo" size="256" />
+              <el-button
+                slot="reference"
+                size="mini"
+                icon="el-icon-picture-outline"
+                type="primary"
+                >二维码
+              </el-button>
+            </el-popover>
+          </section>
+          <section>
+            <el-button
+              icon="el-icon-refresh"
+              size="mini"
+              @click="fetchHeatList"
+              circle
+            />
+          </section>
+        </div>
+
+        <el-table :data="foodHeatStatisticsList" v-loading="loading">
           <el-table-column
             label="日期"
             align="center"
@@ -127,6 +146,7 @@ export default {
     return {
       logo,
       visible: false,
+      loading: false,
       title: "",
       data: undefined,
       foodHeatStatisticsList: [],
@@ -148,6 +168,7 @@ export default {
         return;
       }
       this.title = `「${this.data.name}」热量统计列表`;
+      this.visible = true;
       this.queryParams.customerId = data.id;
       this.copyValue =
         window.location.origin.replace("manage", "sign") +
@@ -156,10 +177,11 @@ export default {
       this.fetchHeatList();
     },
     fetchHeatList() {
+      this.loading = true;
       listFoodHeatStatistics(this.queryParams).then((response) => {
         this.foodHeatStatisticsList = response.rows;
         this.total = response.total;
-        this.visible = true;
+        this.loading = false;
       });
     },
     handleAdd() {},
@@ -204,5 +226,14 @@ export default {
 <style  lang="scss" scoped>
 /deep/ :focus {
   outline: 0;
+}
+
+.heat_statisitcs_wrapper {
+  .header {
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
 }
 </style>
