@@ -36,22 +36,7 @@
           v-hasPermi="['system:menu:add']"
         >新增
         </el-button>
-        <el-button
-          type="primary"
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAddTemplates"
-          v-hasPermi="['system:menu:add']"
-        >新增普通模板
-        </el-button>
-        <el-button
-          type="primary"
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAddArchTemplates"
-          v-hasPermi="['system:menu:add']"
-        >新增案卷模板
-        </el-button>
+
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
@@ -227,11 +212,10 @@
 </template>
 
 <script>
-  import {listMenu, getMenu, delMenu, addMenu, updateMenu, addTemplate} from '@/api/system/menu'
+  import {listMenu, getMenu, delMenu, addMenu, updateMenu} from '@/api/system/menu'
   import Treeselect from "@riophae/vue-treeselect";
   import "@riophae/vue-treeselect/dist/vue-treeselect.css";
   import IconSelect from "@/components/IconSelect";
-  import {getId} from '@/api/system/json'
 
   export default {
     name: "Menu",
@@ -287,7 +271,7 @@
     methods: {
       // 选择图标
       selected(name) {
-        this.form.icon = name;
+        this.$set(this.form,"icon",name);
       },
       /** 查询菜单列表 */
       getList() {
@@ -314,18 +298,6 @@
           this.menuOptions = [];
           const menu = {menuId: 0, menuName: '主类目', children: []};
           menu.children = this.handleTree(response.data, "menuId");
-          this.menuOptions.push(menu);
-        });
-      },
-      /** 新增模板时 查询菜单下拉树结构 */
-      getTreeselectA() {
-        listMenu().then(response => {
-          this.menuOptions = [];
-          const menu = {menuId: 0, menuName: '主类目', children: []};
-          menu.children = this.handleTree(response.data, "menuId");
-          menu.children = menu.children.filter(item => {
-            return item.menuName !== "系统管理" && item.menuName !== "系统监控" && item.menuName !== "系统工具"
-          })
           this.menuOptions.push(menu);
         });
       },
@@ -364,50 +336,6 @@
         };
         this.resetForm("form");
       },
-      //表单 重置普通模板
-      resetTemplates() {
-        getId().then(res => {
-          let id = res.data
-          this.form = {
-            menuId: undefined,
-            parentId: 0,
-            menuName: undefined,
-            icon: undefined,
-            menuType: "M",
-            orderNum: undefined,
-            isFrame: "1",
-            path: '/metadata/' + id,
-            component: 'system/metadata/index',
-            isCache: "0",
-            visible: "0",
-            status: "0"
-          };
-          this.resetForm("form");
-        })
-
-      },
-      //表单 重置为案卷模板
-      resetArchiTemplates() {
-        getId().then(res => {
-          let id = res.data
-          this.form = {
-            menuId: undefined,
-            parentId: 0,
-            menuName: undefined,
-            icon: undefined,
-            menuType: "M",
-            orderNum: undefined,
-            isFrame: "1",
-            path: '/metadata/' + id,
-            component: 'system/metadata/archives',
-            isCache: "0",
-            visible: "0",
-            status: "0"
-          };
-          this.resetForm("form");
-        })
-
-      },
       /** 搜索按钮操作 */
       handleQuery() {
         this.getList();
@@ -416,18 +344,6 @@
       resetQuery() {
         this.resetForm("queryForm");
         this.handleQuery();
-      },
-      handleAddTemplates() {
-        this.resetTemplates();
-        this.getTreeselectA();
-        this.title = '新增模板'
-        this.open = true
-      },
-      handleAddArchTemplates(){
-        this.resetArchiTemplates();
-        this.getTreeselectA();
-        this.title = '新增案卷模板'
-        this.open = true
       },
       /** 新增按钮操作 */
       handleAdd(row) {
@@ -452,31 +368,21 @@
         });
       },
       /** 提交按钮 */
-      submitForm: function () {
+      submitForm: function() {
         this.$refs["form"].validate(valid => {
           if (valid) {
-            console.log(this.title)
-            if (this.title === '新增菜单') {
-              if (this.form.menuId !== undefined) {
-                updateMenu(this.form).then(response => {
-                  this.msgSuccess("修改成功");
-                  this.open = false;
-                  this.getList();
-                });
-              } else {
-                addMenu(this.form).then(response => {
-                  this.msgSuccess("新增成功");
-                  this.open = false;
-                  this.getList();
-                });
-              }
-            }
-            else {
-              addTemplate(this.form).then(response => {
+            if (this.form.menuId !== undefined) {
+              updateMenu(this.form).then(response => {
+                this.msgSuccess("修改成功");
+                this.open = false;
+                this.getList();
+              });
+            } else {
+              addMenu(this.form).then(response => {
                 this.msgSuccess("新增成功");
                 this.open = false;
                 this.getList();
-              })
+              });
             }
           }
         });

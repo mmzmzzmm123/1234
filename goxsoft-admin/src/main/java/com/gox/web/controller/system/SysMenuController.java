@@ -97,22 +97,6 @@ public class SysMenuController extends BaseController {
         return ajax;
     }
 
-    /**
-     * 新增模板
-     */
-    @PreAuthorize("@ss.hasPermi('system:menu:add')")
-    @Log(title = "模板管理", businessType = BusinessType.INSERT)
-    @PostMapping("/templates")
-    public AjaxResult addTemplates(@Validated @RequestBody SysMenu menu) throws CloneNotSupportedException {
-        if (UserConstants.NOT_UNIQUE.equals(menuService.checkMenuNameUnique(menu))) {
-            return AjaxResult.error("新增菜单'" + menu.getMenuName() + "'失败，菜单名称已存在");
-        } else if (UserConstants.YES_FRAME.equals(menu.getIsFrame())
-                && !StringUtils.startsWithAny(menu.getPath(), Constants.HTTP, Constants.HTTPS)) {
-            return AjaxResult.error("新增菜单'" + menu.getMenuName() + "'失败，地址必须以http(s)://开头");
-        }
-        menu.setCreateBy(SecurityUtils.getUsername());
-        return toAjax(menuService.insertTemplates(menu));
-    }
 
     /**
      * 新增菜单

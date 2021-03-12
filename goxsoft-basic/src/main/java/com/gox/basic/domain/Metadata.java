@@ -18,7 +18,10 @@ import java.util.List;
 @Alias(value = "Metadata")
 public class Metadata extends BaseEntity {
     private static final long serialVersionUID = 1L;
-
+    /**
+     * 是否已归 1--已归档 0--未归档
+     */
+    private transient Long archived;
     /**
      * id
      */
@@ -322,6 +325,14 @@ public class Metadata extends BaseEntity {
         this.deptId = deptId;
         this.parentId = parentId;
         this.nodeId = nodeId;
+    }
+
+    public Long getArchived() {
+        return archived;
+    }
+
+    public void setArchived(Long archived) {
+        this.archived = archived;
     }
 
     public Long getParentId() {

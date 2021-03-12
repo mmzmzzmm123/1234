@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gox.basic.mapper.ManClassifyMapper">
+    
+    <resultMap type="ManClassify" id="ManClassifyResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="sort"    column="sort"    />
+        <result property="parentId"    column="parent_id"    />
+        <result property="parentName"    column="parent_name"    />
+        <result property="type"    column="type"    />
+        <result property="auditType"    column="audit_type"    />
+        <result property="archivalType"    column="archival_type"    />
+        <result property="icon"    column="icon"    />
+        <result property="perms"    column="perms"    />
+        <result property="path"    column="path"    />
+    </resultMap>
+
+    <sql id="selectManClassifyVo">
+        select id, name, sort, parent_id, parent_name, type, audit_type, archival_type, icon, perms, path from man_classify
+    </sql>
+
+    <select id="selectManClassifyList" parameterType="ManClassify" resultMap="ManClassifyResult">
+        <include refid="selectManClassifyVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="sort != null "> and sort = #{sort}</if>
+            <if test="parentId != null "> and parent_id = #{parentId}</if>
+            <if test="parentName != null  and parentName != ''"> and parent_name like concat('%', #{parentName}, '%')</if>
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+            <if test="auditType != null "> and audit_type = #{auditType}</if>
+            <if test="archivalType != null "> and archival_type = #{archivalType}</if>
+            <if test="icon != null  and icon != ''"> and icon = #{icon}</if>
+            <if test="perms != null  and perms != ''"> and perms = #{perms}</if>
+            <if test="path != null  and path != ''"> and path = #{path}</if>
+        </where>
+    </select>
+    
+    <select id="selectManClassifyById" parameterType="Long" resultMap="ManClassifyResult">
+        <include refid="selectManClassifyVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertManClassify" parameterType="ManClassify">
+        insert into man_classify
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="name != null and name != ''">name,</if>
+            <if test="sort != null">sort,</if>
+            <if test="parentId != null">parent_id,</if>
+            <if test="parentName != null">parent_name,</if>
+            <if test="type != null and type != ''">type,</if>
+            <if test="auditType != null">audit_type,</if>
+            <if test="archivalType != null">archival_type,</if>
+            <if test="icon != null">icon,</if>
+            <if test="perms != null">perms,</if>
+            <if test="path != null">path,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="sort != null">#{sort},</if>
+            <if test="parentId != null">#{parentId},</if>
+            <if test="parentName != null">#{parentName},</if>
+            <if test="type != null and type != ''">#{type},</if>
+            <if test="auditType != null">#{auditType},</if>
+            <if test="archivalType != null">#{archivalType},</if>
+            <if test="icon != null">#{icon},</if>
+            <if test="perms != null">#{perms},</if>
+            <if test="path != null">#{path},</if>
+         </trim>
+    </insert>
+
+    <update id="updateManClassify" parameterType="ManClassify">
+        update man_classify
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="sort != null">sort = #{sort},</if>
+            <if test="parentId != null">parent_id = #{parentId},</if>
+            <if test="parentName != null">parent_name = #{parentName},</if>
+            <if test="type != null and type != ''">type = #{type},</if>
+            <if test="auditType != null">audit_type = #{auditType},</if>
+            <if test="archivalType != null">archival_type = #{archivalType},</if>
+            <if test="icon != null">icon = #{icon},</if>
+            <if test="perms != null">perms = #{perms},</if>
+            <if test="path != null">path = #{path},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteManClassifyById" parameterType="Long">
+        delete from man_classify where id = #{id}
+    </delete>
+
+    <delete id="deleteManClassifyByIds" parameterType="String">
+        delete from man_classify where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

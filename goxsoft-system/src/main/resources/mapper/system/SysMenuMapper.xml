@@ -24,11 +24,13 @@
         <result property="updateTime" column="update_time"/>
         <result property="updateBy" column="update_by"/>
         <result property="remark" column="remark"/>
+        <result column="classify_id" property="classifyId" />
+        <result column="data_flag" property="dataFlag" />
     </resultMap>
 
     <sql id="selectMenuVo">
         select menu_id, menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible,
-        status, ifnull(perms,'') as perms, icon, create_time
+        status, ifnull(perms,'') as perms, icon, create_time,classify_id,data_flag
         from sys_menu
     </sql>
 
@@ -44,6 +46,9 @@
             <if test="status != null and status != ''">
                 AND status = #{status}
             </if>
+            <if test="classifyId != null">
+                and classify_id = #{classifyId}
+            </if>
         </where>
         order by parent_id, order_num
     </select>
@@ -51,13 +56,14 @@
     <select id="selectMenuTreeAll" resultMap="SysMenuResult">
         select distinct m.menu_id, m.parent_id, m.menu_name, m.path, m.component, m.visible, m.status,
         ifnull(m.perms,'') as perms, m.is_frame, m.is_cache, m.menu_type, m.icon, m.order_num, m.create_time
+        ,m.data_flag
         from sys_menu m where m.menu_type in ('M', 'C') and m.status = 0
         order by m.parent_id, m.order_num
     </select>
 
     <select id="selectMenuListByUserId" parameterType="SysMenu" resultMap="SysMenuResult">
         select distinct m.menu_id, m.parent_id, m.menu_name, m.path, m.component, m.visible, m.status,
-        ifnull(m.perms,'') as perms, m.is_frame, m.is_cache, m.menu_type, m.icon, m.order_num, m.create_time
+        ifnull(m.perms,'') as perms, m.is_frame, m.is_cache, m.menu_type, m.icon, m.order_num, m.create_time,m.data_flag
         from sys_menu m
         left join sys_role_menu rm on m.menu_id = rm.menu_id
         left join sys_user_role ur on rm.role_id = ur.role_id
@@ -77,7 +83,7 @@
 
     <select id="selectMenuTreeByUserId" parameterType="Long" resultMap="SysMenuResult">
         select distinct m.menu_id, m.parent_id, m.menu_name, m.path, m.component, m.visible, m.status,
-        ifnull(m.perms,'') as perms, m.is_frame, m.is_cache, m.menu_type, m.icon, m.order_num, m.create_time
+        ifnull(m.perms,'') as perms, m.is_frame, m.is_cache, m.menu_type, m.icon, m.order_num, m.create_time,m.data_flag
         from sys_menu m
         left join sys_role_menu rm on m.menu_id = rm.menu_id
         left join sys_user_role ur on rm.role_id = ur.role_id
@@ -154,12 +160,109 @@
         </set>
         where menu_id = #{menuId}
     </update>
+    <update id="updateMenuBatch" parameterType="java.util.ArrayList">
+        update sys_menu
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="menu_name =case" suffix="end,">
+                <foreach collection="list" item="i" index="index">
+                    <if test="i.menuName!=null">
+                        when menu_id=#{i.menuId} then #{i.menuName}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="parent_id =case" suffix="end,">
+                <foreach collection="list" item="i" index="index">
+                    <if test="i.parentId != null">
+                        when menu_id=#{i.menuId}  then #{i.parentId}</if>
+                </foreach>
+            </trim>
+            <trim prefix="order_num =case" suffix="end,">
+                <foreach collection="list" item="i" index="index">
+                    <if test="i.orderNum != null">
+                        when menu_id=#{i.menuId}  then #{i.orderNum}</if>
+                </foreach>
+            </trim>
+            <trim prefix="`path` =case" suffix="end,">
+                <foreach collection="list" item="i" index="index">
+                    <if test="i.path != null">
+                        when menu_id=#{i.menuId}  then #{i.path}</if>
+                </foreach>
+            </trim>
+            <trim prefix="`component` =case" suffix="end,">
+                <foreach collection="list" item="i" index="index">
+                    <if test="i.component != null">
+                        when menu_id=#{i.menuId}  then #{i.component}</if>
+                </foreach>
+            </trim>
+            <trim prefix="`is_frame` =case" suffix="end,">
+                <foreach collection="list" item="i" index="index">
+                    <if test="i.isFrame != null">
+                        when menu_id=#{i.menuId}  then #{i.isFrame}</if>
+                </foreach>
+            </trim>
+            <trim prefix="`is_cache` =case" suffix="end,">
+                <foreach collection="list" item="i" index="index">
+                    <if test="i.isCache != null">
+                        when menu_id=#{i.menuId}  then #{i.isCache}</if>
+                </foreach>
+            </trim>
+            <trim prefix="`menu_type` =case" suffix="end,">
+                <foreach collection="list" item="i" index="index">
+                    <if test="i.menuType != null">
+                        when menu_id=#{i.menuId}  then #{i.menuType}</if>
+                </foreach>
+            </trim>
+            <trim prefix="`visible` =case" suffix="end,">
+                <foreach collection="list" item="i" index="index">
+                    <if test="i.visible != null">
+                        when menu_id=#{i.menuId}  then #{i.visible}</if>
+                </foreach>
+            </trim>
+            <trim prefix="`status` =case" suffix="end,">
+                <foreach collection="list" item="i" index="index">
+                    <if test="i.status != null">
+                        when menu_id=#{i.menuId}  then #{i.status}</if>
+                </foreach>
+            </trim>
+            <trim prefix="`perms` =case" suffix="end,">
+                <foreach collection="list" item="i" index="index">
+                    <if test="i.perms != null">
+                        when menu_id=#{i.menuId}  then #{i.perms}</if>
+                </foreach>
+            </trim>
+            <trim prefix="`icon` =case" suffix="end,">
+                <foreach collection="list" item="i" index="index">
+                    <if test="i.icon != null">
+                        when menu_id=#{i.menuId}  then #{i.icon}</if>
+                </foreach>
+            </trim>
+            <trim prefix="`remark` =case" suffix="end,">
+                <foreach collection="list" item="i" index="index">
+                    <if test="i.remark != null">
+                        when menu_id=#{i.menuId}  then #{i.remark}</if>
+                </foreach>
+            </trim>
+            <trim prefix="`update_by` =case" suffix="end,">
+                <foreach collection="list" item="i" index="index">
+                    <if test="i.updateBy != null">
+                        when menu_id=#{i.menuId}  then #{i.updateBy}</if>
+                </foreach>
+            </trim>
+            update_time=sysdate()
+        </trim>
+
+        WHERE menu_id IN
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item.menuId}
+        </foreach>
+    </update>
 
     <insert id="insertMenu" parameterType="SysMenu">
         insert into sys_menu(
         <if test="menuId != null and menuId != 0">menu_id,</if>
         <if test="parentId != null and parentId != 0">parent_id,</if>
         <if test="menuName != null and menuName != ''">menu_name,</if>
+        <if test="dataFlag != null and dataFlag != ''">data_flag,</if>
         <if test="orderNum != null and orderNum != ''">order_num,</if>
         <if test="path != null and path != ''">path,</if>
         <if test="component != null and component != ''">component,</if>
@@ -171,12 +274,14 @@
         <if test="perms !=null and perms != ''">perms,</if>
         <if test="icon != null and icon != ''">icon,</if>
         <if test="remark != null and remark != ''">remark,</if>
+        <if test="classifyId != null and classifyId != ''">classify_id,</if>
         <if test="createBy != null and createBy != ''">create_by,</if>
         create_time
         )values(
         <if test="menuId != null and menuId != 0">#{menuId},</if>
         <if test="parentId != null and parentId != 0">#{parentId},</if>
         <if test="menuName != null and menuName != ''">#{menuName},</if>
+        <if test="dataFlog != null and dataFlog != ''">#{dataFlog},</if>
         <if test="orderNum != null and orderNum != ''">#{orderNum},</if>
         <if test="path != null and path != ''">#{path},</if>
         <if test="component != null and component != ''">#{component},</if>
@@ -188,13 +293,25 @@
         <if test="perms !=null and perms != ''">#{perms},</if>
         <if test="icon != null and icon != ''">#{icon},</if>
         <if test="remark != null and remark != ''">#{remark},</if>
+        <if test="classifyId != null and classifyId != ''">#{classifyId},</if>
         <if test="createBy != null and createBy != ''">#{createBy},</if>
         sysdate()
         )
+    </insert>
+    <insert id="insertMenuBatch">
+        insert into sys_menu(menu_id, menu_name,data_flag, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible,
+        status, perms, icon,remark,create_time,classify_id)
+        values
+        <foreach open="" close="" collection="list" item="item" separator=",">
+            (#{item.menuId},#{item.menuName},#{item.dataFlag},#{item.parentId},#{item.orderNum},#{item.path},#{item.component},#{item.isFrame},#{item.isCache},#{item.menuType},#{item.visible},
+            #{item.status},#{item.perms},#{item.icon},#{item.remark},sysdate(),#{item.classifyId})
+        </foreach>
     </insert>
 
     <delete id="deleteMenuById" parameterType="Long">
         delete from sys_menu where menu_id = #{menuId}
     </delete>
-
-</mapper> 
+    <delete id="deleteMenuByClassifyId" parameterType="Long" >
+        delete from sys_menu where classify_id = #{classifyId}
+    </delete>
+</mapper>

@@ -8,12 +8,14 @@ import javax.validation.constraints.Size;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.gox.common.core.domain.BaseEntity;
+import org.apache.ibatis.type.Alias;
 
 /**
  * 菜单权限表 sys_menu
  *
  * @author gox
  */
+@Alias("SysMenu")
 public class SysMenu extends BaseEntity implements Cloneable {
     private static final long serialVersionUID = 1L;
 
@@ -86,6 +88,24 @@ public class SysMenu extends BaseEntity implements Cloneable {
      * 菜单图标
      */
     private String icon;
+    private String dataFlag;
+    private Long classifyId;
+
+    public Long getClassifyId() {
+        return classifyId;
+    }
+
+    public void setClassifyId(Long classifyId) {
+        this.classifyId = classifyId;
+    }
+
+    public String getDataFlag() {
+        return dataFlag;
+    }
+
+    public void setDataFlag(String dataFlag) {
+        this.dataFlag = dataFlag;
+    }
 
     /**
      * 子菜单

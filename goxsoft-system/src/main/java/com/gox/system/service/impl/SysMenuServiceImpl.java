@@ -75,7 +75,10 @@ public class SysMenuServiceImpl implements ISysMenuService {
         }
         return menuList;
     }
-
+    @Override
+    public List<SysMenu> selectMenuList(SysMenu menu){
+        return menuMapper.selectMenuList(menu);
+    }
     /**
      * 根据用户ID查询权限
      *
@@ -230,7 +233,7 @@ public class SysMenuServiceImpl implements ISysMenuService {
     @Override
     public boolean checkMenuExistRole(Long menuId) {
         int result = roleMenuMapper.checkMenuExistRole(menuId);
-        return result > 0 ? true : false;
+        return result > 0;
     }
 
     /**
@@ -243,50 +246,19 @@ public class SysMenuServiceImpl implements ISysMenuService {
     public int insertMenu(SysMenu menu) {
         return menuMapper.insertMenu(menu);
     }
-
-    /**
-     * 新增保存模板信息
-     *
-     * @param menu 单个目录信息
-     * @return 结果
-     */
     @Override
-    public int insertTemplates(SysMenu menu) throws CloneNotSupportedException {
-        //模板管理 目录id
-        Long parentId = 2063L;
-        if (menu.getMenuType().equals("M")) {
-            menu.setComponent(null);
-            menu.setPath("#");
-        }
-        menuMapper.insertMenu(menu);
-        Long pid = menu.getParentId();
-        SysMenu menuCopy = (SysMenu) menu.clone();
-        //若父id==0 是最顶级目录 即与数据采集同级
-        if (pid != 0) {
-            List<SysMenu> all = menuMapper.selectMenuList(new SysMenu());
-            String menuName = all.stream().filter(m -> m.getMenuId().equals(pid)).findFirst().orElse(new SysMenu()).getMenuName();
-            //查询出模板管理下的子菜单
-            List<SysMenu> menus = new ArrayList<>();
-            getAllChild(all, menus, parentId);
-            Long nid = menus.stream().filter(m -> m.getMenuName().equals(menuName)).findFirst().orElse(new SysMenu()).getMenuId();
-            if (nid != null) {
-                menuCopy.setParentId(nid);
-            }
-            String c = menuCopy.getMenuType();
-            if (c.equals("C")) {
-                String path = menuCopy.getPath();
-                String id = path.substring(path.lastIndexOf("/") + 1);
-                menuCopy.setComponent("system/json/index");
-                menuCopy.setPath("/templates/" + id);
-            }
-            menuMapper.insertMenu(menuCopy);
-            return 1;
-        }
-        menuCopy.setParentId(parentId);
-        menuMapper.insertMenu(menuCopy);
-        return 1;
+    public int insertMenuBatch(List<SysMenu> menus) {
+        return menuMapper.insertMenuBatch(menus);
     }
-
+    @Override
+    public int updateMenuBatch(List<SysMenu> menus){
+        return menuMapper.updateMenuBatch(menus);
+    }
+    @Override
+    @Transactional(rollbackFor = RuntimeException.class)
+    public int deleteMenuByClassifyId(Long classifyId){
+        return menuMapper.deleteMenuByClassifyId(classifyId);
+    }
     /**
      * 根据提供id 获取所有子菜单
      *
@@ -351,6 +323,18 @@ public class SysMenuServiceImpl implements ISysMenuService {
         // 非外链并且是一级目录（类型为目录）
         if (isMeunFrame(menu)) {
             routerName = StringUtils.EMPTY;
+        }
+        if ("数据采集".equals(menu.getDataFlag())){
+            return "cj"+routerName;
+        }
+        else if ("数据管理".equals(menu.getDataFlag())){
+            return "gl"+routerName;
+        }
+        else if ("鉴定管理".equals(menu.getDataFlag())){
+            return "jd"+routerName;
+        }
+        else if ("模板管理".equals(menu.getDataFlag())){
+            return "mb"+routerName;
         }
         return routerName;
     }

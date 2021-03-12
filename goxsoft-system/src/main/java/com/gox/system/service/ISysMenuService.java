@@ -30,6 +30,8 @@ public interface ISysMenuService {
      */
     public List<SysMenu> selectMenuList(SysMenu menu, Long userId);
 
+    List<SysMenu> selectMenuList(SysMenu menu);
+
     /**
      * 根据用户ID查询权限
      *
@@ -110,7 +112,11 @@ public interface ISysMenuService {
      */
     public int insertMenu(SysMenu menu);
 
-    int insertTemplates(SysMenu menu) throws CloneNotSupportedException;
+    public int insertMenuBatch(List<SysMenu> menus);
+
+    int updateMenuBatch(List<SysMenu> menus);
+
+    int deleteMenuByClassifyId(Long classifyId);
 
     /**
      * 修改保存菜单信息
