@@ -34,8 +34,9 @@ const oriState = {
   copyData: undefined,
   canCopyMenuTypes: [],
   fontSize: parseInt(localStorage.getItem("fontSize")) || 12,
-  dishBigClassOptions:[],
-  dishSmallClassOptions:[],
+  dishBigClassOptions: [],
+  dishSmallClassOptions: [],
+  leftShow: false
 };
 
 const mutations = {
@@ -99,6 +100,9 @@ const mutations = {
       state[key] = payload[key];
     });
   },
+  toggleLeftShow(state, payload) {
+    state.leftShow = !state.leftShow;
+  },
   setDate(state, payload) {
     state.startDate = payload.startDate;
     state.endDate = payload.endDate;
@@ -141,10 +145,10 @@ const actions = {
     getDicts("cus_dishes_type").then(response => {
       commit("updateStateData", { typeOptions: response.data });
     });
-    getDicts("dish_class_big").then((response) => {
+    getDicts("dish_class_big").then(response => {
       commit("updateStateData", { dishBigClassOptions: response.data });
     });
-    getDicts("dish_class_small").then((response) => {
+    getDicts("dish_class_small").then(response => {
       commit("updateStateData", { dishSmallClassOptions: response.data });
     });
 
@@ -467,16 +471,16 @@ const getters = {
     const dishClass = [];
     state.dishBigClassOptions.forEach((item, index) => {
       dishClass.push({
-        'value': parseInt(item.dictValue),
-        'label': item.dictLabel,
-        'children': []
+        value: parseInt(item.dictValue),
+        label: item.dictLabel,
+        children: []
       });
-      if(index == state.dishBigClassOptions.length - 1){
+      if (index == state.dishBigClassOptions.length - 1) {
         state.dishSmallClassOptions.forEach((smallClass, i) => {
-          if(smallClass.remark){
-            dishClass[parseInt(smallClass.remark-1)].children.push({
-              'value': parseInt(smallClass.dictValue),
-              'label': smallClass.dictLabel
+          if (smallClass.remark) {
+            dishClass[parseInt(smallClass.remark - 1)].children.push({
+              value: parseInt(smallClass.dictValue),
+              label: smallClass.dictLabel
             });
           }
         });
@@ -520,6 +524,40 @@ const getters = {
     // console.log(nutriData);
     return nutriData;
   },
+  verifyNotRecData: state =>
+    state.recipesData.reduce((arr, cur, dayIdx) => {
+      cur.dishes.forEach(dObj => {
+        dObj.igdList.forEach(iObj => {
+          (iObj.notRec || "").split(",").forEach(nRec => {
+            if (nRec) {
+              let tarObj = arr.find(obj => obj.name === nRec);
+              if (tarObj) {
+                tarObj.data.push({
+                  igdId: iObj.id,
+                  num: dayIdx,
+                  dishesId: dObj.dishesId,
+                  id: dObj.id
+                });
+              } else {
+                tarObj = {
+                  name: nRec,
+                  data: [
+                    {
+                      igdId: iObj.id,
+                      num: dayIdx,
+                      dishesId: dObj.dishesId,
+                      id: dObj.id
+                    }
+                  ]
+                };
+                arr.push(tarObj);
+              }
+            }
+          });
+        });
+      });
+      return arr;
+    }, []),
   cusUnitDict: state =>
     state.cusUnitOptions.reduce((obj, cur) => {
       obj[cur.dictValue] = cur.dictLabel;
@@ -544,8 +582,7 @@ const getters = {
     state.dishSmallClassOptions.reduce((obj, cur) => {
       obj[cur.dictValue] = cur.dictLabel;
       return obj;
-  }, {}),
-
+    }, {})
 };
 
 export default {

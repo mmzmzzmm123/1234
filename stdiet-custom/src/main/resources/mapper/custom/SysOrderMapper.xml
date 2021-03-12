@@ -141,7 +141,7 @@
                 and (sc.name like concat('%',#{customer},'%') or sc.phone like concat('%',#{customer},'%'))
             </if>
              <if test="cusId != null  and cusId != ''">and cus_id = #{cusId}</if>
-            <if test="phone != null  and phone != ''">and phone = #{phone}</if>
+            <if test="phone != null  and phone != ''">and sc.phone = #{phone}</if>
             <if test="status != null ">and status = #{status}</if>
             <if test="payTypeId != null ">and pay_type_id = #{payTypeId}</if>
             <if test="preSaleId != null ">and pre_sale_id = #{preSaleId}</if>
