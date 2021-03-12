@@ -27,7 +27,7 @@ export default {
   data() {
     return {};
   },
-  props: ["data", "analyseData", "name", "numRange"],
+  props: ["data", "name"],
 };
 </script>
 <style lang="scss" scoped >
