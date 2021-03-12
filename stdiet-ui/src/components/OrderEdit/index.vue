@@ -296,7 +296,7 @@ export default {
           { required: true, message: "客户姓名不能为空", trigger: "blur" },
         ],
         amount: [{ required: true, message: "金额不能为空", trigger: "blur" }],
-        phone: [
+        /*phone: [
           { required: true, message: "手机号不能为空", trigger: "blur" },
           {
             required: true,
@@ -304,7 +304,7 @@ export default {
             pattern: /^[0-9]{5,11}$/,
             message: "手机号格式不正确",
           },
-        ],
+        ],*/
         orderTime: [
           { required: true, message: "成交时间不能为空", trigger: "blur" },
           { required: true, trigger: "blur", validator: checkOrderTime },
@@ -526,7 +526,7 @@ export default {
       this.form = {
         orderId: null,
         customer: null,
-        phone: null,
+        //phone: null,
         amount: null,
         weight: null,
         plannerId,
