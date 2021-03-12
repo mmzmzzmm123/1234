@@ -72,7 +72,7 @@ export default {
 
   .content {
     overflow: auto;
-    height: calc(100% - 160px);
+    height: calc(100vh - 192px);
   }
 }
 </style>
