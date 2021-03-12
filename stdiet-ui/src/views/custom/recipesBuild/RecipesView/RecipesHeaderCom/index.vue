@@ -2,7 +2,12 @@
   <div class="recipes_header_com_wrapper">
     <div class="header_btns" v-loading="loading">
       <section style="display: flex; align-items: center">
-        <em class="el-icon-s-unfold collapse_btn" />
+        <em
+          :class="`${
+            leftShow ? 'el-icon-s-fold' : 'el-icon-s-unfold'
+          } collapse_btn`"
+          @click="toggleLeftShow"
+        />
         <div>食谱制作</div>
         <el-button
           size="mini"
@@ -88,8 +93,6 @@ import TemplateDialog from "@/components/TemplateDialog";
 export default {
   name: "RecipesHeaderCom",
   components: {
-    // BarChart,
-    // PieChart,
     TemplateDialog,
   },
   data() {
@@ -108,7 +111,7 @@ export default {
   },
   updated() {},
   computed: {
-    ...mapState(["recipesId", "reviewStatus", "fontSize"]),
+    ...mapState(["recipesId", "reviewStatus", "fontSize", "leftShow"]),
   },
   watch: {},
   methods: {
@@ -155,7 +158,7 @@ export default {
       });
     },
     ...mapActions(["saveRecipes", "updateReviewStatus"]),
-    ...mapMutations(["updateStateData", "updateFontSize"]),
+    ...mapMutations(["updateStateData", "updateFontSize", "toggleLeftShow"]),
   },
 };
 </script>
@@ -168,7 +171,9 @@ export default {
     padding-bottom: 8px;
 
     .collapse_btn {
-
+      font-size: 18px;
+      padding: 4px;
+      cursor: pointer;
     }
   }
 

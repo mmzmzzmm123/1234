@@ -1,6 +1,13 @@
 <template>
   <div class="recipes_build_wrapper" v-title :data-title="name">
-    <div class="left"></div>
+    <div
+      :class="`left ${leftShow ? 'left_show' : ''}`"
+      :style="`width: ${leftShow ? 260 : 0}px`"
+    >
+      <div v-show="leftShow">
+        <VerifyView />
+      </div>
+    </div>
     <div class="content" v-loading="recipesDataLoading">
       <RecipesView
         v-if="!!recipesData.length"
@@ -25,6 +32,7 @@ const {
 import RecipesView from "./RecipesView";
 import RecommendView from "./RecommendView";
 import InfoView from "./InfoView";
+import VerifyView from "./VerifyView";
 
 export default {
   name: "BuildRecipies",
@@ -53,10 +61,12 @@ export default {
     RecipesView,
     RecommendView,
     InfoView,
+    VerifyView,
   },
   props: ["name", "planId"],
   computed: {
     ...mapState([
+      "leftShow",
       "healthyData",
       "recipesData",
       "recipesDataLoading",
@@ -74,19 +84,27 @@ export default {
   padding: 16px;
   display: flex;
   height: 100vh;
+
   .left {
+    // transition: all 0.5s;
   }
+
+  .left_show {
+    margin-right: 16px;
+    border-right: 1px solid #e6ebf5;
+  }
+
   .content {
-    flex: 4;
+    flex: 1;
     border-right: 1px solid #e6ebf5;
     height: 100%;
     overflow: hidden;
-    padding-right: 20px;
+    padding-right: 16px;
   }
   .right {
-    flex: 1;
+    width: 380px;
     height: 100%;
-    padding-left: 20px;
+    padding-left: 16px;
   }
 }
 </style>

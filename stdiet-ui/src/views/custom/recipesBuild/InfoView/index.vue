@@ -1,6 +1,6 @@
 <template>
   <div class="recipes_build_info_view_wrapper">
-    <div class="top" v-if="!!recipesData.length">
+    <div class="top" v-if="showChart">
       <BarChart
         v-if="analyseData.length > 1"
         :data="analyseData"
@@ -15,7 +15,10 @@
         width="100%"
       />
     </div>
-    <div class="content">
+    <div
+      class="content"
+      :style="`height: calc(100vh - ${showChart ? 192 : 32}px);`"
+    >
       <TemplateInfoView v-if="!!temId" :data="templateInfo" />
       <HealthyView :data="healthyData" v-else-if="healthyDataType === 0" dev />
       <BodySignView :data="healthyData" v-else dev />
@@ -24,11 +27,7 @@
 </template>
 <script>
 import { createNamespacedHelpers } from "vuex";
-const {
-  mapActions,
-  mapState,
-  mapGetters,
-} = createNamespacedHelpers("recipes");
+const { mapActions, mapState, mapGetters } = createNamespacedHelpers("recipes");
 import BarChart from "./BarChart";
 import PieChart from "./PieChart";
 import TemplateInfoView from "./TemplateInfoView";
@@ -54,6 +53,9 @@ export default {
         ? parseFloat(basicBMR.substring(0, basicBMR.indexOf("千卡")))
         : 0;
     },
+    showChart() {
+      return !!this.recipesData.length;
+    },
     ...mapState([
       "recipesData",
       "healthyData",
@@ -72,7 +74,6 @@ export default {
 
   .content {
     overflow: auto;
-    height: calc(100vh - 192px);
   }
 }
 </style>

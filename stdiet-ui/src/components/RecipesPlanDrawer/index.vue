@@ -90,7 +90,7 @@
             {{ `${scope.row.startDate} 至 ${scope.row.endDate}` }}
           </template>
         </el-table-column>
-        <el-table-column label="操作" align="center" width="120">
+        <el-table-column label="操作" align="center" width="160">
           <template slot-scope="scope">
             <el-button
               type="text"
@@ -101,6 +101,13 @@
             >
               {{ `${scope.row.recipesId ? "编辑" : "制作"}` }}
             </el-button>
+            <el-button
+              v-if="scope.row.reviewStatus === 1"
+              type="text"
+              icon="el-icon-delete"
+              @click="handleOnDelete(scope.row)"
+              >删除</el-button
+            >
           </template>
         </el-table-column>
       </el-table>
@@ -134,8 +141,8 @@
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="handleOnCreateConfirm"
-            >确 定</el-button
-          >
+            >确 定
+          </el-button>
           <el-button @click="cancel">取 消</el-button>
         </div>
       </el-dialog>
@@ -145,7 +152,7 @@
 <script>
 import Clipboard from "clipboard";
 import { listRecipesPlanByCusId } from "@/api/custom/recipesPlan";
-import { addRecipesPlan } from "@/api/custom/recipesPlan";
+import { addRecipesPlan, updateRecipesPlan } from "@/api/custom/recipesPlan";
 import PlanPauseDrawer from "./PlanPauseDrawer";
 import VueQr from "vue-qr";
 import dayjs from "dayjs";
@@ -268,6 +275,33 @@ export default {
     cancel() {
       this.open = false;
       this.reset();
+    },
+    handleOnDelete(data) {
+      console.log(data);
+
+      this.$confirm("此操作将删除对计划的食谱, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(() => {
+          updateRecipesPlan({
+            id: data.id,
+            recipesId: 0,
+            reviewStatus: 0,
+          }).then((res) => {
+            if (res.code === 200) {
+              this.$message.success("删除成功");
+              this.getList();
+            }
+          });
+        })
+        .catch(() => {
+          // this.$message({
+          //   type: "info",
+          //   message: "已取消删除",
+          // });
+        });
     },
   },
 };
