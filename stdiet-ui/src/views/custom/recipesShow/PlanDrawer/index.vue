@@ -21,7 +21,7 @@
             <div class="title_style">
               <span>{{ plan.label }}</span>
               <em
-                class="el-icon-shopping-cart-full icon_style"
+                class="el-icon-shopping-cart-full icon_style shopping_cart"
                 @click="(e) => handleOnShoppingPlanClick(e, plan)"
               />
             </div>
@@ -154,6 +154,16 @@ export default {
         margin-right: 16px;
         font-size: 16px;
         padding: 4px 8px;
+      }
+
+      .shopping_cart {
+        display: flex;
+        align-items: center;
+        &::after {
+          margin-left: 2px;
+          content: "采购";
+          font-size: 12px;
+        }
       }
     }
   }
