@@ -1,48 +1,16 @@
 <template>
   <div class="recipes_build_wrapper" v-title :data-title="name">
-    <div class="left" v-loading="recipesDataLoading">
+    <div class="left"></div>
+    <div class="content" v-loading="recipesDataLoading">
       <RecipesView
         v-if="!!recipesData.length"
         :data="recipesData"
         :name="healthyData.name"
-        :analyseData="analyseData"
       />
       <RecommendView v-else />
     </div>
     <div class="right" v-loading="healthDataLoading">
-      <div class="top" v-if="!!recipesData.length">
-        <BarChart
-          v-if="analyseData.length > 1"
-          :data="analyseData"
-          height="160px"
-          width="100%"
-          :max="
-            healthyData.basicBMR
-              ? parseFloat(
-                  healthyData.basicBMR.substring(
-                    0,
-                    healthyData.basicBMR.indexOf('千卡')
-                  )
-                )
-              : 0
-          "
-        />
-        <PieChart
-          v-if="analyseData.length === 1"
-          :data="analyseData"
-          height="160px"
-          width="100%"
-        />
-      </div>
-      <div class="content">
-        <TemplateInfoView v-if="!!temId" :data="templateInfo" />
-        <HealthyView
-          :data="healthyData"
-          v-else-if="healthyDataType === 0"
-          dev
-        />
-        <BodySignView :data="healthyData" v-else dev />
-      </div>
+      <InfoView />
     </div>
   </div>
 </template>
@@ -54,14 +22,9 @@ const {
   mapMutations,
   mapGetters,
 } = createNamespacedHelpers("recipes");
-
-import HealthyView from "@/components/HealthyView";
-import BodySignView from "@/components/BodySignView";
-import RecipesView from "./RecipesView/index";
+import RecipesView from "./RecipesView";
 import RecommendView from "./RecommendView";
-import TemplateInfoView from "./TemplateInfoView";
-import BarChart from "./BarChart";
-import PieChart from "./PieChart";
+import InfoView from "./InfoView";
 
 export default {
   name: "BuildRecipies",
@@ -87,25 +50,18 @@ export default {
   },
   created() {},
   components: {
-    BarChart,
-    PieChart,
-    HealthyView,
-    BodySignView,
     RecipesView,
     RecommendView,
-    TemplateInfoView,
+    InfoView,
   },
   props: ["name", "planId"],
   computed: {
     ...mapState([
       "healthyData",
-      "healthyDataType",
-      "templateInfo",
       "recipesData",
       "recipesDataLoading",
       "healthDataLoading",
     ]),
-    ...mapGetters(["analyseData"]),
   },
   methods: {
     ...mapActions(["init"]),
@@ -119,6 +75,8 @@ export default {
   display: flex;
   height: 100vh;
   .left {
+  }
+  .content {
     flex: 4;
     border-right: 1px solid #e6ebf5;
     height: 100%;
@@ -129,15 +87,6 @@ export default {
     flex: 1;
     height: 100%;
     padding-left: 20px;
-
-    .top {
-      height: 160px;
-    }
-
-    .content {
-      overflow: auto;
-      height: calc(100% - 160px);
-    }
   }
 }
 </style>

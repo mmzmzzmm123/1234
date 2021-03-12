@@ -270,7 +270,7 @@ export const makeFoodTypeArray = [
   { name: "运动饮食", value: "5" }
 ];
 
-export const yesNoDict = { 0: "是", 1: "否" };
+export const yesNoDict = { 0: "否", 1: "是" };
 export const sexDict = { 0: "男", 1: "女" };
 export const positionDict = { 0: "南方", 1: "北方" };
 export const makeFoodTypeDict = { 0: "自己做", 1: "外面吃" };
@@ -409,13 +409,15 @@ export const bloodDataArray = [
 ];
 
 export const moistureDateArray = [
-  { value: "1", name: "1.体质虚弱，免疫力差" },
-  { value: "2", name: "2.畏寒肢冷，自汗，头晕耳鸣" },
-  { value: "3", name: "3.心悸气短，神疲乏力，气短懒言" },
-  { value: "4", name: "4.失眠多梦，健忘，精神恍惚" },
-  { value: "5", name: "5.面色淡白或萎黄，皮肤干燥，毛发枯萎" },
-  { value: "6", name: "6.女性月经量少，延期或闭经" },
-  { value: "7", name: "7.唇甲色淡，舌淡脉虚" }
+  { value: "1", name: "1.头发爱出油,头一天刚洗头第二天就油油的" },
+  { value: "2", name: "2.面部油亮" },
+  { value: "3", name: "3.睡觉流口水" },
+  { value: "4", name: "4.排便粘稠且多便" },
+  { value: "5", name: "5.小肚子大" },
+  { value: "6", name: "6.耳内湿" },
+  { value: "7", name: "7.头重脚轻" },
+  { value: "8", name: "8.头晕没精神，特别疲劳" },
+  { value: "9", name: "9.经常感觉很累很困，怎么都睡不够" }
 ];
 
 const moduleObj = {

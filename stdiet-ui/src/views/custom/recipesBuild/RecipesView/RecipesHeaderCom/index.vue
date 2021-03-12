@@ -1,7 +1,8 @@
 <template>
   <div class="recipes_header_com_wrapper">
     <div class="header_btns" v-loading="loading">
-      <section>
+      <section style="display: flex; align-items: center">
+        <em class="el-icon-s-unfold collapse_btn" />
         <div>食谱制作</div>
         <el-button
           size="mini"
@@ -165,6 +166,10 @@ export default {
     align-items: center;
     justify-content: space-between;
     padding-bottom: 8px;
+
+    .collapse_btn {
+
+    }
   }
 
   .font_size_style {

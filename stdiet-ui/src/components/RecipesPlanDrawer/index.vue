@@ -7,8 +7,8 @@
     size="45%"
   >
     <div class="app-container recipes_plan_drawer_wrapper">
-      <el-row :gutter="10" class="mb8">
-        <el-col :span="1.5">
+      <div class="header">
+        <section>
           <el-button
             v-if="cusOutId"
             type="primary"
@@ -46,8 +46,16 @@
           >
             生成7天体验计划
           </el-button>
-        </el-col>
-      </el-row>
+        </section>
+        <section>
+          <el-button
+            icon="el-icon-refresh"
+            size="mini"
+            @click="getList"
+            circle
+          />
+        </section>
+      </div>
 
       <el-table :data="planList" v-loading="planLoading" height="80%">
         <el-table-column label="审核状态" align="center" width="80">
@@ -271,5 +279,12 @@ export default {
 
 .recipes_plan_drawer_wrapper {
   height: calc(100vh - 77px);
+
+  .header {
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
 }
 </style>

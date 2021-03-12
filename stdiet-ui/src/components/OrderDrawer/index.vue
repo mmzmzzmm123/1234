@@ -7,9 +7,9 @@
       @closed="handleOnClosed"
       size="40%"
     >
-      <div class="app-container">
-        <el-row :gutter="10" class="mb8">
-          <el-col :span="1.5">
+      <div class="app-container order_drawer_wrapper">
+        <div class="header">
+          <section>
             <el-button
               type="primary"
               icon="el-icon-plus"
@@ -18,11 +18,20 @@
               @click="handleAdd"
               >创建订单
             </el-button>
-          </el-col>
-        </el-row>
+          </section>
+          <section>
+            <el-button
+              icon="el-icon-refresh"
+              size="mini"
+              @click="fetchOrderList"
+              circle
+            />
+          </section>
+        </div>
 
         <el-table
           :data="orderList"
+          v-loading="loading"
           row-key="orderId"
           default-expand-all
           :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
@@ -132,6 +141,7 @@ export default {
   data() {
     return {
       visible: false,
+      loading: false,
       title: "",
       data: undefined,
       orderList: [],
@@ -149,10 +159,13 @@ export default {
         return;
       }
       this.title = `「${this.data.name}」订单列表`;
-      this.fetchOrderList(data.id);
+      this.visible = true;
+
+      this.fetchOrderList();
     },
-    fetchOrderList(cusId) {
-      listOrder({ cusId }).then((res) => {
+    fetchOrderList() {
+      this.loading = true;
+      listOrder({ cusId: this.data.id }).then((res) => {
         this.orderList = res.rows.reduce((arr, cur) => {
           const tarOrder = arr.find((ord) => ord.startTime === cur.startTime);
           if (tarOrder) {
@@ -171,8 +184,7 @@ export default {
           return arr;
         }, []);
         // console.log(this.orderList);
-
-        this.visible = true;
+        this.loading = false;
       });
     },
     handleAdd() {
@@ -227,5 +239,13 @@ export default {
 <style  lang="scss" scoped>
 /deep/ :focus {
   outline: 0;
+}
+.order_drawer_wrapper {
+  .header {
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
 }
 </style>
