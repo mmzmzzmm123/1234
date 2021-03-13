@@ -200,7 +200,7 @@ export const familyIllnessHistoryArray = [
   { name: "冠心病", value: "3" },
   { name: "外周血管病", value: "4" },
   { name: "心力衰竭", value: "5" },
-  { name: "冠心病", value: "6" },
+  { name: "糖尿病", value: "6" },
   { name: "肥胖症", value: "7" },
   { name: "慢性肾脏疾病", value: "8" },
   { name: "骨质疏松", value: "9" },
@@ -483,7 +483,9 @@ export function dealHealthy(customerHealthy) {
   customerHealthy.basicBMR += "千卡";
   customerHealthy.notSportHeat += "千卡";
   const lowRecProtein = customerHealthy.tall - 105;
-  customerHealthy.recProtein = `${lowRecProtein * 0.8} - ${lowRecProtein * 1.5}`;
+  customerHealthy.recProtein = `${(lowRecProtein * 0.8).toFixed(1)} - ${(
+    lowRecProtein * 1.5
+  ).toFixed(1)}`;
 
   needAttrName.forEach(name => {
     if (customerHealthy.hasOwnProperty(name)) {
@@ -540,6 +542,15 @@ export function dealHealthy(customerHealthy) {
     }
   });
 
+  if (customerHealthy.hasOwnProperty("physicalSignsId")) {
+    const signs = customerHealthy.otherPhysicalSigns
+      ? [customerHealthy.otherPhysicalSigns]
+      : [];
+    customerHealthy.signList.forEach(obj => {
+      signs.push(obj.name);
+    });
+    customerHealthy.physicalSigns = signs.join(",");
+  }
   if (customerHealthy.hasOwnProperty("tall")) {
     customerHealthy.tall += "cm";
   }
