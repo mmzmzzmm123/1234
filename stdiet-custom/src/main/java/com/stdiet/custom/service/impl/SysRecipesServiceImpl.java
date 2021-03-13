@@ -54,8 +54,8 @@ public class SysRecipesServiceImpl implements ISysRecipesService {
             // 更新食谱计划
             SysRecipesPlan sysRecipesPlan = new SysRecipesPlan();
             sysRecipesPlan.setId(sysRecipes.getPlanId());
+            sysRecipesPlan.setReviewStatus(3);// 设置制作中
             sysRecipesPlan.setRecipesId(sysRecipes.getId());
-            sysRecipesPlan.setReviewStatus(1);
             sysRecipesPlanMapper.updateSysRecipesPlan(sysRecipesPlan);
         }
 

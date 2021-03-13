@@ -302,7 +302,7 @@ const actions = {
       const recipesId = result.data;
       if (!payload.planId) {
         // 非保存模板
-        commit("updateStateData", { recipesId });
+        commit("updateStateData", { recipesId, reviewStatus: 3 });
         dispatch("getRecipesInfo", { recipesId });
       }
       payload.callback &&

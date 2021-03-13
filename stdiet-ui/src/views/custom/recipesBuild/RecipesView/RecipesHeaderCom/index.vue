@@ -37,37 +37,43 @@
             />
           </el-select>
         </span>
-        <el-button size="mini" v-if="!recipesId" @click="handleOnBack"
-          >返回</el-button
-        >
+        <el-button size="mini" v-if="!recipesId" @click="handleOnBack">
+          返回
+        </el-button>
         <el-popover
           placement="bottom"
           trigger="click"
-          title="修改审核状态"
+          title="修改食谱状态"
           style="margin-right: 12px"
-          v-hasPermi="['recipes:plan:review']"
         >
           <div>
             <el-button
               size="mini"
               type="success"
+              v-hasPermi="['recipes:plan:review']"
               @click="hanldeOnReveiwChange(2)"
-              >审核通过</el-button
+              >已审核</el-button
             >
             <el-button
               size="mini"
               type="danger"
               @click="hanldeOnReveiwChange(1)"
-              >未审核通过</el-button
+              >未审核</el-button
+            >
+            <el-button
+              size="mini"
+              type="primary"
+              @click="hanldeOnReveiwChange(3)"
+              >制作中</el-button
             >
           </div>
           <el-button
             slot="reference"
             size="mini"
-            v-if="reviewStatus"
-            :type="reviewStatus === 1 ? 'danger' : 'success'"
+            v-if="!!recipesId"
+            :type="getReviewType(reviewStatus)"
           >
-            {{ reviewStatus === 1 ? "未审核" : "已审核" }}
+            {{ getReviewStatusName(reviewStatus) }}
           </el-button>
         </el-popover>
         <el-button
@@ -156,6 +162,32 @@ export default {
           });
         }
       });
+    },
+    getReviewStatusName(status) {
+      switch (status) {
+        case 1:
+          return "未审核";
+        case 2:
+          return "已审核";
+        case 3:
+          return "制作中";
+        case 0:
+        default:
+          return "未制作";
+      }
+    },
+    getReviewType(status) {
+      switch (status) {
+        case 1:
+          return "danger";
+        case 2:
+          return "success";
+        case 3:
+          return "primary";
+        case 0:
+        default:
+          return "info";
+      }
     },
     ...mapActions(["saveRecipes", "updateReviewStatus"]),
     ...mapMutations(["updateStateData", "updateFontSize", "toggleLeftShow"]),

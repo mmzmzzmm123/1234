@@ -482,6 +482,8 @@ export function dealHealthy(customerHealthy) {
   customerHealthy.notSportHeat = (customerHealthy.basicBMR * 1.3).toFixed(1);
   customerHealthy.basicBMR += "千卡";
   customerHealthy.notSportHeat += "千卡";
+  const lowRecProtein = customerHealthy.tall - 105;
+  customerHealthy.recProtein = `${lowRecProtein * 0.8} - ${lowRecProtein * 1.5}`;
 
   needAttrName.forEach(name => {
     if (customerHealthy.hasOwnProperty(name)) {
