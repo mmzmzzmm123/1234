@@ -90,11 +90,12 @@ export default {
       [{ title: "地域", value: "position" }],
     ];
     if (this.dev) {
-      basicInfo.splice(3, 0, [{ title: "基础代谢BMR", value: "basicBMR" }]);
-      basicInfo.splice(4, 0, [
+      basicInfo.splice(3, 0, [{ title: "推荐蛋白范围", value: "recProtein" }]);
+      basicInfo.splice(4, 0, [{ title: "基础代谢BMR", value: "basicBMR" }]);
+      basicInfo.splice(5, 0, [
         { title: "不运动总热量", value: "notSportHeat" },
       ]);
-      basicInfo.splice(6, 0, [{ title: "备注", value: "remark" }]);
+      basicInfo.splice(basicInfo.length, 0, [{ title: "备注", value: "remark" }]);
     }
 
     return {

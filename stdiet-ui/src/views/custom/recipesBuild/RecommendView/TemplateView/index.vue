@@ -7,11 +7,11 @@
     <div class="content">
       <!-- 筛选 -->
       <el-form :model="queryParams" ref="queryForm" :inline="true">
-        <el-form-item label="模板名称" prop="name">
+        <el-form-item label="搜索内容" prop="name">
           <el-input
             v-model="queryParams.name"
-            placeholder="请输入模板名称"
-            @keydown.enter="handleQuery"
+            placeholder="请输入模板名称或备注"
+            @keydown.enter.native="handleQuery"
           />
         </el-form-item>
         <el-form-item label="营养师" prop="nutritionistId">

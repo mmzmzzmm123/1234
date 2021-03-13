@@ -6,8 +6,12 @@
       :inline="true"
       v-show="showSearch"
     >
-      <el-form-item label="模板名称" prop="name">
-        <el-input v-model="queryParams.name" placeholder="请输入模板名称" />
+      <el-form-item label="搜索内容" prop="name">
+        <el-input
+          v-model="queryParams.name"
+          placeholder="请输入模板名称或备注"
+          @keydown.enter.native="handleQuery"
+        />
       </el-form-item>
       <el-form-item label="营养师" prop="nutritionistId">
         <el-select
@@ -87,24 +91,9 @@
     <el-table v-loading="loading" :data="recipesTemplateList">
       <el-table-column label="审核状态" align="center" width="120">
         <template slot-scope="scope">
-          <el-tag
-            :type="
-              !scope.row.reviewStatus
-                ? 'info'
-                : scope.row.reviewStatus === 1
-                ? 'danger'
-                : 'success'
-            "
-            >{{
-              `${
-                !scope.row.reviewStatus
-                  ? "未制作"
-                  : scope.row.reviewStatus == 1
-                  ? "未审核"
-                  : "已审核"
-              }`
-            }}</el-tag
-          >
+          <el-tag :type="getReviewType(scope.row.reviewStatus)">
+            {{ getReviewStatusName(scope.row.reviewStatus) }}
+          </el-tag>
         </template>
       </el-table-column>
       <el-table-column
@@ -298,6 +287,32 @@ export default {
     resetQuery() {
       this.resetForm("queryForm");
       this.handleQuery();
+    },
+    getReviewStatusName(status) {
+      switch (status) {
+        case 1:
+          return "未审核";
+        case 2:
+          return "已审核";
+        case 3:
+          return "制作中";
+        case 0:
+        default:
+          return "未制作";
+      }
+    },
+    getReviewType(status) {
+      switch (status) {
+        case 1:
+          return "danger";
+        case 2:
+          return "success";
+        case 3:
+          return "";
+        case 0:
+        default:
+          return "info";
+      }
     },
     /** 导出按钮操作 */
     handleExport() {

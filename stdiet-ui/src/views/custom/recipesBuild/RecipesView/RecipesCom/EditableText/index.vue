@@ -9,7 +9,7 @@
       :step="5"
       :value="value"
       @blur="handleOnBlur"
-      @keydown.enter="handleEnterClick"
+      @keydown.enter.native="handleEnterClick"
     />
   </div>
 </template>
