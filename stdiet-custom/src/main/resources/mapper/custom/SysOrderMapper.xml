@@ -385,7 +385,7 @@
     </resultMap>
 
     <select id="getOrderPauseByOrderId" parameterType="Long" resultMap="SysOrderPauseResult">
-        select id, order_id, pause_start_date, pause_end_date, reason, remarks, create_time, create_by, update_time, update_by, del_flag from sys_order_pause sop
+        select id, order_id, pause_start_date, pause_end_date, reason, remarks, create_time, create_by, update_time, update_by, del_flag from sys_recipes_pause sop
         where del_flag = 0 and order_id = #{order_id}
     </select>
 
