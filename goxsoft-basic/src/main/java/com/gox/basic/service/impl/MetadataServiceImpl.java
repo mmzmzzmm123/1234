@@ -112,6 +112,12 @@ public class MetadataServiceImpl implements IMetadataService {
     public int updateMetadata(Metadata metadata) {
         return metadataMapper.updateMetadata(metadata);
     }
+    public int updateMetadataBatch(List<Metadata> metadatas) {
+      if (metadatas.isEmpty()){
+        return 0;
+      }
+      return metadataMapper.updateMetadataBatch(metadatas);
+  }
 
     /**
      * 批量增加

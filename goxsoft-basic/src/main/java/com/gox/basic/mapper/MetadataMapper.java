@@ -2,6 +2,7 @@ package com.gox.basic.mapper;
 
 import com.gox.basic.domain.Metadata;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Collection;
@@ -47,6 +48,7 @@ public interface MetadataMapper {
      * @return 结果
      */
     public int updateMetadata(Metadata metadata);
+    public int updateMetadataBatch(List<Metadata> metadata);
 
     /**
      * 删除文书类基本元数据

@@ -178,7 +178,7 @@ public class MetadataController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('basic:metadata:edit')")
     @Log(title = "文书类基本元数据", businessType = BusinessType.UPDATE)
-    @PutMapping
+    @PutMapping("/edit")
     public AjaxResult edit(@RequestBody Metadata metadata) {
         return toAjax(metadataService.updateMetadata(metadata));
     }
@@ -233,4 +233,17 @@ public class MetadataController extends BaseController {
         return metadataService.importHandle(importParams.getNodeId(),importParams.getDeptId(),
                 importParams.getParentId(),importParams.getFilename(),importParams.getList());
     }
+
+
+  /**
+   * 修改文书类基本元数据
+   */
+  @PreAuthorize("@ss.hasPermi('basic:metadata:edit')")
+  @Log(title = "文书类基本元数据", businessType = BusinessType.UPDATE)
+  @PutMapping("/batchEdit")
+  public AjaxResult batchEdit(@RequestBody List<Metadata> metadata) {
+    System.out.println(metadata);
+    return toAjax(metadataService.updateMetadataBatch(metadata));
+  }
+
 }

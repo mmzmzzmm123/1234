@@ -429,4 +429,253 @@
         </foreach>
     </delete>
 
+  <update id="updateMetadataBatch" >
+    update metadata
+    set
+    aggregation_level= case
+    <foreach collection="list" item="item" index="index">
+        when id = #{item.id} then #{item.aggregationLevel}
+    </foreach>
+    END ,
+    archives_name= case
+    <foreach collection="list" item="item" index="index">
+      when id = #{item.id} then #{item.archivesName}
+    </foreach>
+    END ,
+    archives_identifier= case
+    <foreach collection="list" item="item" index="index">
+      when id = #{item.id} then #{item.archivesIdentifier}
+    </foreach>
+    END ,
+    fonds_name= case
+    <foreach collection="list" item="item" index="index">
+      when id = #{item.id} then #{item.fondsName}
+    </foreach>
+    END ,
+    fonds_constituting_unit_name= case
+    <foreach collection="list" item="item" index="index">
+      when id = #{item.id} then #{item.fondsConstitutingUnitName}
+    </foreach>
+    END ,
+    electronic_record_code= case
+    <foreach collection="list" item="item" index="index">
+      when id = #{item.id} then #{item.electronicRecordCode}
+    </foreach>
+    END ,
+    archival_code= case
+    <foreach collection="list" item="item" index="index">
+      when id = #{item.id} then #{item.archivalCode}
+    </foreach>
+    END ,
+    fonds_identifier= case
+    <foreach collection="list" item="item" index="index">
+      when id = #{item.id} then #{item.fondsIdentifier}
+    </foreach>
+    END ,
+    catalogue_number= case
+    <foreach collection="list" item="item" index="index">
+      when id = #{item.id} then #{item.catalogueNumber}
+    </foreach>
+    END ,
+    year= case
+    <foreach collection="list" item="item" index="index">
+      when id = #{item.id} then #{item.year}
+    </foreach>
+    END ,
+    retention_period= case
+    <foreach collection="list" item="item" index="index">
+      when id = #{item.id} then #{item.retentionPeriod}
+    </foreach>
+    END ,
+    organizational_structure_or_function= case
+    <foreach collection="list" item="item" index="index">
+      when id = #{item.id} then #{item.organizationalStructureOrFunction}
+    </foreach>
+    END ,
+    category_code= case
+    <foreach collection="list" item="item" index="index">
+      when id = #{item.id} then #{item.categoryCode}
+    </foreach>
+    END ,
+    agency_file_number= case
+    <foreach collection="list" item="item" index="index">
+      when id = #{item.id} then #{item.agencyFileNumber}
+    </foreach>
+    END ,
+    archives_file_number= case
+    <foreach collection="list" item="item" index="index">
+      when id = #{item.id} then #{item.archivesFileNumber}
+    </foreach>
+    END ,
+    agency_item_number= case
+    <foreach collection="list" item="item" index="index">
+      when id = #{item.id} then #{item.agencyItemNumber}
+    </foreach>
+    END ,
+    archives_item_number= case
+    <foreach collection="list" item="item" index="index">
+      when id = #{item.id} then #{item.archivesItemNumber}
+    </foreach>
+    END ,
+    document_sequence_number= case
+    <foreach collection="list" item="item" index="index">
+      when id = #{item.id} then #{item.documentSequenceNumber}
+    </foreach>
+    END ,
+    page_number= case
+    <foreach collection="list" item="item" index="index">
+      when id = #{item.id} then #{item.pageNumber}
+    </foreach>
+    END ,
+    content_description= case
+    <foreach collection="list" item="item" index="index">
+      when id = #{item.id} then #{item.contentDescription}
+    </foreach>
+    END ,
+    title= case
+    <foreach collection="list" item="item" index="index">
+      when id = #{item.id} then #{item.title}
+    </foreach>
+    END ,
+    parallel_title= case
+    <foreach collection="list" item="item" index="index">
+      when id = #{item.id} then #{item.parallelTitle}
+    </foreach>
+    END ,
+    alternative_title= case
+    <foreach collection="list" item="item" index="index">
+      when id = #{item.id} then #{item.alternativeTitle}
+    </foreach>
+    END ,
+    other_title_information= case
+    <foreach collection="list" item="item" index="index">
+      when id = #{item.id} then #{item.otherTitleInformation}
+    </foreach>
+    END ,
+    descriptor= case
+    <foreach collection="list" item="item" index="index">
+      when id = #{item.id} then #{item.descriptor}
+    </foreach>
+    END ,
+    keyword= case
+    <foreach collection="list" item="item" index="index">
+      when id = #{item.id} then #{item.keyword}
+    </foreach>
+    END ,
+    personal_name= case
+    <foreach collection="list" item="item" index="index">
+      when id = #{item.id} then #{item.personalName}
+    </foreach>
+    END ,
+    abstract= case
+    <foreach collection="list" item="item" index="index">
+      when id = #{item.id} then #{item.abstract}
+    </foreach>
+    END ,
+    class_code= case
+    <foreach collection="list" item="item" index="index">
+      when id = #{item.id} then #{item.classCode}
+    </foreach>
+    END ,
+    document_number= case
+    <foreach collection="list" item="item" index="index">
+      when id = #{item.id} then #{item.documentNumber}
+    </foreach>
+    END ,
+    author= case
+    <foreach collection="list" item="item" index="index">
+      when id = #{item.id} then #{item.author}
+    </foreach>
+    END ,
+    date= case
+    <foreach collection="list" item="item" index="index">
+      when id = #{item.id} then #{item.date}
+    </foreach>
+    END ,
+    document_type= case
+    <foreach collection="list" item="item" index="index">
+      when id = #{item.id} then #{item.documentType}
+    </foreach>
+    END ,
+    precedence= case
+    <foreach collection="list" item="item" index="index">
+      when id = #{item.id} then #{item.precedence}
+    </foreach>
+    END ,
+    principal_receiver= case
+    <foreach collection="list" item="item" index="index">
+      when id = #{item.id} then #{item.principalReceiver}
+    </foreach>
+    END ,
+    other_receivers= case
+    <foreach collection="list" item="item" index="index">
+      when id = #{item.id} then #{item.otherReceivers}
+    </foreach>
+    END ,
+    security_classification= case
+    <foreach collection="list" item="item" index="index">
+      when id = #{item.id} then #{item.securityClassification}
+    </foreach>
+    END ,
+    secrecy_period= case
+    <foreach collection="list" item="item" index="index">
+      when id = #{item.id} then #{item.secrecyPeriod}
+    </foreach>
+    END ,
+    formal_characteristics= case
+    <foreach collection="list" item="item" index="index">
+      when id = #{item.id} then #{item.formalCharacteristics}
+    </foreach>
+    END ,
+    document_aggregation_type= case
+    <foreach collection="list" item="item" index="index">
+      when id = #{item.id} then #{item.documentAggregationType}
+    </foreach>
+    END ,
+    total_number_of_items= case
+    <foreach collection="list" item="item" index="index">
+      when id = #{item.id} then #{item.totalNumberOfItems}
+    </foreach>
+    END ,
+    total_number_of_pages= case
+    <foreach collection="list" item="item" index="index">
+      when id = #{item.id} then #{item.totalNumberOfPages}
+    </foreach>
+    END ,
+    language= case
+    <foreach collection="list" item="item" index="index">
+      when id = #{item.id} then #{item.language}
+    </foreach>
+    END ,
+    manuscript_type= case
+    <foreach collection="list" item="item" index="index">
+      when id = #{item.id} then #{item.manuscriptType}
+    </foreach>
+    END ,
+    annotation= case
+    <foreach collection="list" item="item" index="index">
+      when id = #{item.id} then #{item.annotation}
+    </foreach>
+    END ,
+    dept_id= case
+    <foreach collection="list" item="item" index="index">
+      when id = #{item.id} then #{item.deptId}
+    </foreach>
+    END ,
+    node_id= case
+    <foreach collection="list" item="item" index="index">
+      when id = #{item.id} then #{item.nodeId}
+    </foreach>
+    END ,
+    parent_id= case
+    <foreach collection="list" item="item" index="index">
+      when id = #{item.id} then #{item.parentId}
+    </foreach>
+    END
+    where id in
+    <foreach collection="list" item="item" index="index"  open="(" separator="," close=")">
+     #{item.id}
+    </foreach>
+  </update>
+
 </mapper>

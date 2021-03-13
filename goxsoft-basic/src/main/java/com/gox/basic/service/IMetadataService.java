@@ -49,6 +49,7 @@ public interface IMetadataService {
      * @return 结果
      */
     public int updateMetadata(Metadata metadata);
+    public int updateMetadataBatch(List<Metadata> metadataBatch);
 
     int insertMetadataBatch(Collection<Metadata> metadata);
 

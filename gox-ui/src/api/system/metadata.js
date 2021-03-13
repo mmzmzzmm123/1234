@@ -1,4 +1,5 @@
 import request from '@/utils/request'
+import {isDimensionStacked} from "echarts/src/data/helper/dataStackHelper";
 
 // 查询文书类基本元数据列表
 export function listMetadata(query) {
@@ -89,4 +90,13 @@ export function importHandleConfirm(data){
     data:data,
   })
 }
+//批量操作
+  export function BatchUpdateMetadata(Metadata){
+    return request({
+      url: '/system/metadata/batchEdit',
+      method: 'put',
+      data: Metadata
+    })
+}
+
 

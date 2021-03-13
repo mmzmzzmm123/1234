@@ -74,6 +74,24 @@
                 </el-dropdown-menu>
               </el-dropdown>
             </el-col>
+
+            <el-col :span="1.5">
+              <el-dropdown>
+                <el-button plain size="mini">
+                  批量处理<i class="el-icon-arrow-down el-icon--right"></i>
+                </el-button>
+                <el-dropdown-menu>
+                  <el-dropdown-item @click.native="batchHandleIncrease">批量增加</el-dropdown-item>
+                  <el-dropdown-item @click.native="handleChooseData">批量修改</el-dropdown-item>
+                  <el-dropdown-item @click.native="batchHandleUpdate">批量替换</el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
+
+            </el-col>
+            <!--批量处理组件-->
+            <replace @updateTableData="getList"  ref="replaceForm"></replace>
+            <increase @updateTableData="getList"  ref="increaseForm"></increase>
+
             <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
           </el-row>
 
@@ -126,8 +144,54 @@
       <uploads :url="uploadUrl">
       </uploads>
     </el-dialog>
-    <InputView v-if="open" :deptid="deptId" :node-id="nodeId" :metadata="metadata" :metadataid="id" :type="type"
-               :formconf="formConf" @close="cancel"/>
+    <InputView v-if="open" :parent-id="queryParamsInner.parentId" :deptid="deptId" :node-id="nodeId"
+               :metadata="metadata" :metadataid="id" :type="type" :formconf="formConf" @close="cancel"/>
+
+
+ <!--   <el-dialog title="批量修改" :visible.sync="BatchEditDialog"  :modal-append-to-body='false'>
+     <el-card class="box-card">
+        <div slot="header" class="clearfix">
+          <el-row style="margin-bottom: 10px">
+            <div>
+              <el-input placeholder="请输入修改内容"  v-model="field">
+                <el-select placeholder="请选择" slot="prepend" v-model="selectField" style="width: 200px">
+                  <el-option v-for="(item,index) in tableTitle" :key="index"
+                             :label="item.tableFieldName" :value="item.id"></el-option>
+                </el-select>
+                <el-button slot="append" @click.native="handleAddChangeData()" size="mini">添加</el-button>
+              </el-input>
+            </div>
+          </el-row>
+          <el-row style="margin-bottom: 10px">
+            <el-checkbox label="替换值是否为空" v-model="checked"></el-checkbox>
+          </el-row>
+          <el-row style="margin-bottom: 10px">
+            <div>
+              <el-button size="medium" style="width: 100px" type="primary" @click.native="deleteChooseDate">删除修改</el-button>
+              <el-button size="medium" style="width: 100px" type="info" @click.native="clearField">清 除</el-button>
+              <el-button size="medium" style="width: 100px" type="warning" @click.native="previewData">预 览</el-button>
+            </div>
+          </el-row>
+        </div>
+
+        <div slot="default">
+          <el-table border :data="changeFieldTable"  @selection-change="handleDeleteOne">
+            <el-table-column type="selection" ></el-table-column>
+            <el-table-column label="字段编码" prop="vModel" align="center"></el-table-column>
+            <el-table-column label="字段名称" prop="tableFieldName" align="center"></el-table-column>
+            <el-table-column label="字段值"  prop="changeValue" align="center"></el-table-column>
+          </el-table>
+        </div>
+      </el-card>
+      <batchModify :selectData="selectData" :tableTitle="tableTitle" :batchEditDialog="BatchEditDialog"></batchModify>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="BatchEditDialog= false">取 消</el-button>
+        <el-button type="primary" @click="handleBatchUpdate">修改</el-button>
+      </span>
+    </el-dialog>-->
+    <batchModify :selectData="selectData" :tableTitle="tableTitle" :BatchEditDialog="BatchEditDialog"
+                 v-on:getList="getList"
+                 v-on:closeBatchModify="closeBatchModify"></batchModify>
   </div>
 </template>
 
@@ -149,6 +213,9 @@
   import {deepClone} from '@/utils'
   import Uploads from '@/views/components/Uploads'
   import { listTemplates } from '@/api/basic/templates'
+  import replace from '@/views/system/metadata/replace'
+  import increase from '@/views/system/metadata/increase'
+  import batchModify from "./batchModify";
 
   var _ = require('lodash')
   export default {
@@ -156,7 +223,10 @@
     components: {
       DeptTree,
       InputView,
-      Uploads
+      Uploads,
+      replace,
+      increase,
+      batchModify
     },
     data() {
       return {
@@ -256,6 +326,10 @@
         },
         // 表单参数
         form: {},
+
+        //批量修改弹窗
+        BatchEditDialog:false,
+        selectData:[],
       };
     },
     created() {
@@ -342,6 +416,7 @@
       },
       // 多选框选中数据
       handleSelectionChange(selection) {
+        this.selectData=selection;
         this.ids = selection.map(item => item.id)
         this.single = selection.length !== 1
         this.multiple = !selection.length
@@ -429,6 +504,26 @@
         }).then(response => {
           this.download(response.msg);
         })
+      },
+      /**打开批量修改窗口**/
+      handleChooseData(){
+        if (this.selectData.length==0){
+          this.$confirm("请选择记录");
+        }else{
+          this.BatchEditDialog=true;
+        }
+      },
+      /** 批量替换按钮操作 */
+      batchHandleUpdate() {
+        this.$refs.replaceForm.open(this.selectData,this.tableTitle);
+      },
+
+      /** 批量增加按钮操作 */
+      batchHandleIncrease() {
+        this.$refs.increaseForm.open(this.selectData,this.tableTitle);
+      },
+      closeBatchModify(){
+        this.BatchEditDialog=false;
       }
     },
     watch: {
