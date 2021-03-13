@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gox.basic.mapper.TransferEntryMapper">
+    
+    <resultMap type="TransferEntry" id="TransferEntryResult">
+        <result property="id"    column="id"    />
+        <result property="docid"    column="docid"    />
+        <result property="entryid"    column="entryid"    />
+        <result property="status"    column="status"    />
+    </resultMap>
+
+    <sql id="selectTransferEntryVo">
+        select id, docid, entryid, status from transfer_entry
+    </sql>
+
+    <select id="selectTransferEntryList" parameterType="TransferEntry" resultMap="TransferEntryResult">
+        <include refid="selectTransferEntryVo"/>
+        <where>  
+            <if test="docid != null "> and docid = #{docid}</if>
+            <if test="entryid != null "> and entryid = #{entryid}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectTransferEntryById" parameterType="Long" resultMap="TransferEntryResult">
+        <include refid="selectTransferEntryVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTransferEntry" parameterType="TransferEntry">
+        insert into transfer_entry
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="docid != null">docid,</if>
+            <if test="entryid != null">entryid,</if>
+            <if test="status != null">status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="docid != null">#{docid},</if>
+            <if test="entryid != null">#{entryid},</if>
+            <if test="status != null">#{status},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTransferEntry" parameterType="TransferEntry">
+        update transfer_entry
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="docid != null">docid = #{docid},</if>
+            <if test="entryid != null">entryid = #{entryid},</if>
+            <if test="status != null">status = #{status},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTransferEntryById" parameterType="Long">
+        delete from transfer_entry where id = #{id}
+    </delete>
+
+    <delete id="deleteTransferEntryByIds" parameterType="String">
+        delete from transfer_entry where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

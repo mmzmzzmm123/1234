@@ -8,6 +8,7 @@ import cn.hutool.poi.excel.ExcelReader;
 import com.gox.basic.domain.*;
 import com.gox.basic.domain.vo.ImportFieldMap;
 import com.gox.basic.domain.vo.TableFieldVo;
+import com.gox.basic.mapper.TransferEntryMapper;
 import com.gox.basic.service.*;
 import com.gox.basic.utils.ExportUtil;
 import com.gox.basic.utils.ImportUtils;
@@ -53,6 +54,8 @@ public class MetadataServiceImpl implements IMetadataService {
     private RedisCache redisCache;
     @Value("${gox.profile}")
     private String profile;
+    @Autowired
+    private TransferEntryMapper transferEntryMapper;
 
     /**
      * 查询文书类基本元数据
@@ -401,6 +404,20 @@ public class MetadataServiceImpl implements IMetadataService {
             }
         }
         return AjaxResult.success();
+    }
+
+
+    @Override
+    public int transfor(String[] entryidData, String transdocid, String state) {
+        for(String entryid:entryidData){
+            TransferEntry transferEntry = new TransferEntry();
+            transferEntry.setDocid(Long.parseLong(transdocid));
+            transferEntry.setEntryid(Long.parseLong(entryid));
+            transferEntry.setStatus(state);//设置条目状态为“待审核”
+            //保存移交条目信息
+            transferEntryMapper.insertTransferEntry(transferEntry);
+        }
+        return entryidData.length;
     }
 
 }

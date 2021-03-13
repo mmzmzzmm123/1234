@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gox.basic.mapper.NodeMapper">
+    
+    <resultMap type="Node" id="NodeResult">
+        <result property="id"    column="id"    />
+        <result property="nextid"    column="nextid"    />
+        <result property="workid"    column="workid"    />
+        <result property="text"    column="text"    />
+        <result property="sort"    column="sort"    />
+        <result property="desci"    column="desci"    />
+        <result property="approvescope"    column="approvescope"    />
+        <result property="rolename"    column="rolename"    />
+        <result property="nexttext"    column="nexttext"    />
+    </resultMap>
+
+    <sql id="selectNodeVo">
+        select id, nextid, workid, text, sort, desci,approvescope,rolename,nexttext from node
+    </sql>
+
+    <select id="selectNodeList" parameterType="Node" resultMap="NodeResult">
+        <include refid="selectNodeVo"/>
+        <where>  
+            <if test="nextid != null  and nextid != ''"> and nextid = #{nextid}</if>
+            <if test="workid != null  and workid != ''"> and workid like concat('%', #{workid}, '%')</if>
+            <if test="text != null  and text != ''"> and text = #{text}</if>
+            <if test="sort != null "> and sort = #{sort}</if>
+            <if test="desci != null  and desci != ''"> and desci = #{desci}</if>
+            <if test="approvescope != null  and approvescope != ''"> and approvescope = #{approvescope}</if>
+            <if test="rolename != null  and rolename != ''"> and rolename = #{rolename}</if>
+            <if test="nexttext != null  and nexttext != ''"> and nexttext = #{nexttext}</if>
+        </where>
+    </select>
+    
+    <select id="selectNodeById" parameterType="Long" resultMap="NodeResult">
+        <include refid="selectNodeVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertNode" parameterType="Node">
+        insert into node
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="nextid != null">nextid,</if>
+            <if test="workid != null">workid,</if>
+            <if test="text != null">text,</if>
+            <if test="sort != null">sort,</if>
+            <if test="desci != null">desci,</if>
+            <if test="approvescope != null">approvescope,</if>
+            <if test="rolename != null">rolename,</if>
+            <if test="nexttext != null">nexttext,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="nextid != null">#{nextid},</if>
+            <if test="workid != null">#{workid},</if>
+            <if test="text != null">#{text},</if>
+            <if test="sort != null">#{sort},</if>
+            <if test="desci != null">#{desci},</if>
+            <if test="approvescope != null">#{approvescope},</if>
+            <if test="rolename != null">#{rolename},</if>
+            <if test="nexttext != null">#{nexttext},</if>
+         </trim>
+    </insert>
+
+    <update id="updateNode" parameterType="Node">
+        update node
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="id != null">id = #{id},</if>
+            <if test="nextid != null">nextid = #{nextid},</if>
+            <if test="workid != null">workid = #{workid},</if>
+            <if test="text != null">text = #{text},</if>
+            <if test="sort != null">sort = #{sort},</if>
+            <if test="desci != null">desci = #{desci},</if>
+            <if test="approvescope != null">approvescope = #{approvescope},</if>
+            <if test="rolename != null">rolename = #{rolename},</if>
+            <if test="nexttext != null">nexttext = #{nexttext},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteNodeById" parameterType="Long">
+        delete from node where id = #{id}
+    </delete>
+
+    <delete id="deleteNodeByIds" parameterType="String">
+        delete from node where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -36,8 +36,6 @@ import java.util.*;
 public class AppTest {
     @Autowired
     private IMetadataService metadataService;
-    @Autowired
-    private IFieldsItemService fieldsItemService;
     @Test
     public void test() throws Exception {
         Selector selector = Selector.open();

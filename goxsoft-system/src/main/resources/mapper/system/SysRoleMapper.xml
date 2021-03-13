@@ -71,6 +71,14 @@
         where u.user_id = #{userId}
     </select>
 
+    <select id="selectRoleListByNodeId" parameterType="Long" resultType="Integer">
+        select r.role_id
+        from sys_role r
+        left join node_role ur on ur.roleid = r.role_id
+        left join node u on u.id = ur.id
+        where u.id = #{nodeId}
+    </select>
+
     <select id="selectRoleById" parameterType="Long" resultMap="SysRoleResult">
         <include refid="selectRoleVo"/>
         where r.role_id = #{roleId}

@@ -42,6 +42,14 @@ public interface ISysRoleService {
      */
     public List<Integer> selectRoleListByUserId(Long userId);
 
+
+    /**
+     * 根据节点ID获取角色选择框列表
+     *
+     * @param nodeId 节点ID
+     * @return 选中角色ID列表
+     */
+    public List<Integer> selectRoleListByNodeId(Long nodeId);
     /**
      * 通过角色ID查询角色
      *

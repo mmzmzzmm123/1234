@@ -2,15 +2,22 @@ package com.gox.basic.controller;
 
 import cn.hutool.core.util.StrUtil;
 import com.gox.basic.domain.TemplatesPreserve;
+import com.gox.basic.domain.Transfer;
 import com.gox.basic.domain.vo.ImportParams;
 import com.gox.basic.domain.vo.TableFieldVo;
 import com.gox.basic.service.ITemplatesPreserveService;
+import com.gox.basic.service.IMetadataTempService;
+import com.gox.basic.service.ITransferService;
 import com.gox.basic.utils.ExportUtil;
 import com.gox.common.annotation.Log;
 import com.gox.common.core.controller.BaseController;
 import com.gox.common.core.domain.AjaxResult;
+import com.gox.common.core.domain.entity.SysUser;
+import com.gox.common.core.domain.model.LoginUser;
 import com.gox.common.core.page.TableDataInfo;
 import com.gox.common.enums.BusinessType;
+import com.gox.common.utils.DateUtils;
+import com.gox.common.utils.ServletUtils;
 import com.gox.common.utils.StringUtils;
 import com.gox.common.utils.file.Chunk;
 import com.gox.basic.domain.Metadata;
@@ -19,7 +26,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
+import com.gox.framework.web.service.TokenService;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -38,6 +45,12 @@ public class MetadataController extends BaseController {
     private IMetadataService metadataService;
     @Autowired
     private ITemplatesPreserveService templatesPreserveService;
+    @Autowired
+    private TokenService tokenService;
+    @Autowired
+    private IMetadataTempService metadataTempService;
+    @Autowired
+    private ITransferService transferService;
     /**
      * 查询文书类基本元数据列表
      */
@@ -246,4 +259,55 @@ public class MetadataController extends BaseController {
     return toAjax(metadataService.updateMetadataBatch(metadata));
   }
 
+
+    /**
+     * 获取移交的信息
+     *
+     * @return 移交信息
+     */
+    @GetMapping("/getUser/{ids}")
+    @PreAuthorize("@ss.hasPermi('basic:metadata:transfer')")
+    public AjaxResult getUser(@PathVariable Long[] ids) {
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+        SysUser user = loginUser.getUser();
+        Transfer transfer =new Transfer();
+        transfer.setTransTime(DateUtils.getNowDate());
+        transfer.setTransuser(user.getUserName());
+        transfer.setTransdep(user.getDept().getDeptName());
+        transfer.setDeptId(user.getDeptId());
+        transfer.setTranscount(ids.length);
+        return AjaxResult.success(transfer);
+    }
+
+    /**
+     * 数据移交
+     * 1.判断是否档号重复，如果档号重复，移交失败，否则，移交成功
+     * 2.将数据采集的移交数据加到临时表，档案管理员审核成功后，再从临时表加到数据管理
+     * 3.修改移交表的状态为“待审核”
+     *
+     */
+    @GetMapping("/transfer/{ids}")
+    public AjaxResult transferMetadata(@PathVariable Long[] entryids){
+
+        String s2 = String.valueOf(entryids);
+        String[] entryidData = s2.split(",");// 1.移交所选数据
+        //先判断档号是否重复
+        //List<Metadata> list = metadataService.selectMetadataList(null);
+        //将数据采集的移交数据加到临时表，档案管理员审核成功后，再从临时表加到数据管理
+//        for (int i = 0; i < entryidData.length; i++) {
+//            Metadata metadata=metadataService.selectMetadataById(Long.parseLong(entryidData[i]));
+//            MetadataTemp temp=new MetadataTemp();
+//
+//            metadataTempService.insertMetadataTemp(temp);
+//        }
+//        String transferid=String.valueOf(transdocid);
+        //将移交信息写入到trnasferEntry表中
+       // int num = metadataService.transfor(entryidData, transferid, TransferEntry.STATUS_AUDIT);
+
+       // if (num > 0) {
+            // return new AjaxResult(true, "移交成功", num);
+       // }
+        // return new AjaxResult(false, "移交失败", null);
+        return null;
+    }
 }

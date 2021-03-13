@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gox.basic.mapper.NodeRoleMapper">
+    
+    <resultMap type="NodeRole" id="NodeRoleResult">
+        <result property="id"    column="id"    />
+        <result property="roleid"    column="roleid"    />
+    </resultMap>
+
+    <sql id="selectNodeRoleVo">
+        select id, roleid from node_role
+    </sql>
+
+    <select id="selectNodeRoleList" parameterType="NodeRole" resultMap="NodeRoleResult">
+        <include refid="selectNodeRoleVo"/>
+        <where>  
+        </where>
+    </select>
+
+    <delete id="deleteNodeRoleByNodeId" parameterType="Long">
+        delete from node_role where id=#{nodeId}
+    </delete>
+
+    <insert id="batchNodeRole">
+        insert into node_role(id, roleid) values
+        <foreach item="item" index="index" collection="list" separator=",">
+            (#{item.id},#{item.roleid})
+        </foreach>
+    </insert>
+    
+    <select id="selectNodeRoleById" parameterType="Long" resultMap="NodeRoleResult">
+        <include refid="selectNodeRoleVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertNodeRole" parameterType="NodeRole">
+        insert into node_role
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="roleid != null">roleid,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="roleid != null">#{roleid},</if>
+         </trim>
+    </insert>
+
+    <update id="updateNodeRole" parameterType="NodeRole">
+        update node_role
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="roleid != null">roleid = #{roleid},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteNodeRoleById" parameterType="Long">
+        delete from node_role where id = #{id}
+    </delete>
+
+    <delete id="deleteNodeRoleByIds" parameterType="String">
+        delete from node_role where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

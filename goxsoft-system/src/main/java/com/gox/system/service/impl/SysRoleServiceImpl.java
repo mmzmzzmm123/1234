@@ -93,6 +93,11 @@ public class SysRoleServiceImpl implements ISysRoleService {
         return roleMapper.selectRoleListByUserId(userId);
     }
 
+    @Override
+    public List<Integer> selectRoleListByNodeId(Long nodeId) {
+        return roleMapper.selectRoleListByNodeId(nodeId);
+    }
+
     /**
      * 通过角色ID查询角色
      *

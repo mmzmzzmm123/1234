@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gox.basic.mapper.WorkMapper">
+    
+    <resultMap type="Work" id="WorkResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="sort"    column="sort"    />
+    </resultMap>
+
+    <sql id="selectWorkVo">
+        select id, name, sort from work
+    </sql>
+
+    <select id="selectWorkList" parameterType="Work" resultMap="WorkResult">
+        <include refid="selectWorkVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="sort != null "> and sort = #{sort}</if>
+        </where>
+    </select>
+    
+    <select id="selectWorkById" parameterType="Long" resultMap="WorkResult">
+        <include refid="selectWorkVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertWork" parameterType="Work">
+        insert into work
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="name != null">name,</if>
+            <if test="sort != null">sort,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="name != null">#{name},</if>
+            <if test="sort != null">#{sort},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWork" parameterType="Work">
+        update work
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="sort != null">sort = #{sort},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWorkById" parameterType="Long">
+        delete from work where id = #{id}
+    </delete>
+
+    <delete id="deleteWorkByIds" parameterType="String">
+        delete from work where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

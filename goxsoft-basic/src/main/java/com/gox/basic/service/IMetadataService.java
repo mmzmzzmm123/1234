@@ -118,4 +118,14 @@ public interface IMetadataService {
      * @return
      */
     AjaxResult insertArchival(Metadata metadata) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, Throwable;
+
+    /**
+     * 数据移交
+     * @param entryidData
+     * @param transferid
+     * @param state
+     * @return
+     */
+
+    public int transfor(String[] entryidData,String transferid,String state);
 }

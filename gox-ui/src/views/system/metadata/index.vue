@@ -54,6 +54,17 @@
               </el-button>
             </el-col>
             <el-col :span="1.5">
+              <el-button
+                type="primary"
+                icon="el-icon-circle-check"
+                size="mini"
+                :disabled="multiple"
+                @click="handleTransfer"
+                v-hasPermi="['system:metadata:transfer']"
+              >移交
+              </el-button>
+            </el-col>
+            <el-col :span="1.5">
               <el-dropdown>
                 <el-button type="primary" size="mini" @click="handleExport">
                   导入导出
@@ -192,6 +203,97 @@
     <batchModify :selectData="selectData" :tableTitle="tableTitle" :BatchEditDialog="BatchEditDialog"
                  v-on:getList="getList"
                  v-on:closeBatchModify="closeBatchModify"></batchModify>
+    <InputView v-if="open" :deptid="deptId" :node-id="nodeId" :metadata="metadata" :metadataid="id" :type="type"
+               :formconf="formConf" @close="cancel"/>
+    <el-dialog :visible.sync="importS" v-if="importS" title="预览" width="75%">
+      <el-row :gutter="20">
+        <el-col :span="6">
+          <el-table v-loading="leftImportLoading" ref="leftTable" :data="leftTableData" style="height:510px ;overflow-y: scroll">
+            <el-table-column
+              prop="src"
+              label="来源"
+              width="140">
+            </el-table-column>
+            <el-table-column
+              label="目的"
+              width="165"
+            >
+              <template slot-scope="scope">
+                <el-select v-model="scope.row.dest" clearable  @change="handleDestChange">
+                  <el-option
+                    v-for="(item,index) in tableFieldsPick"
+                    :key="index"
+                    :label="item.label"
+                    :value="item.value"
+                  ></el-option>
+                </el-select>
+              </template>
+            </el-table-column>
+          </el-table>
+        </el-col>
+        <el-col :span="18">
+          <el-table v-loading="rightImportLoading" ref="rightTable" :key="new Date().getTime()" :data="rightTableData" style="height:510px;overflow-y: scroll">
+            <div v-for="(item,index) in tableFields" :key="index">
+              <el-table-column
+                :label="item.tableFieldName"
+                :width="item.width"
+                sortable="custom"
+                :prop="item.vModel">
+              </el-table-column>
+            </div>
+          </el-table>
+
+        </el-col>
+      </el-row>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitUploadHandle" >确 定</el-button>
+        <el-button @click="cancelUploadHandle">取 消</el-button>
+      </div>
+    </el-dialog>
+
+    		 <!-- 移交对话框 -->
+    <el-dialog :title="title" :visible.sync="open1" width="600px" append-to-body>
+      <el-form ref="form" :model="form" label-width="80px">
+        <el-row>
+          <el-col :span="24">
+            <el-form-item label="移交说明">
+              <el-input v-model="form.remark" type="textarea" placeholder="XX部门移交XX档案"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="移交人" prop="transuser">
+              <el-input v-model="form.transuser" placeholder="移交人" readonly="true"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="数量" prop="transcount">
+               <el-input v-model="form.transcount" placeholder="数量" readonly="true"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="移交部门" prop="transdep">
+              <el-input v-model="form.transdep" placeholder="请输入移交部门" readonly="true"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="移交时间" prop="transTime">
+              <el-input v-model="form.transTime" placeholder="请输入移交时间" readonly="true"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitTransferForm">确 定</el-button>
+        <el-button @click="cancel1">取 消</el-button>
+      </div>
+    </el-dialog>
+
+    <InputView v-if="open" :parent-id="queryParamsInner.parentId" :deptid="deptId" :node-id="nodeId"
+               :metadata="metadata" :metadataid="id" :type="type" :formconf="formConf" @close="cancel"/>
   </div>
 </template>
 
@@ -204,7 +306,8 @@
     exportMetadataItem,
     exportMetadataItemAndEle,
     listMetadata,
-    updateMetadata
+    updateMetadata, uploadHandle,
+    getTransInfo,transfer,addTransfer
   } from '@/api/system/metadata'
   import DeptTree from '@/views/components/deptTree'
   import InputView from '@/views/system/metadata/InputView'
@@ -270,6 +373,9 @@
         title: "",
         // 是否显示弹出层
         open: false,
+        //移交显示弹出层
+        open1:false,
+        entryids:[],
         // 聚合层次字典
         aggregationLevelOptions: [],
         // 查询参数
@@ -457,6 +563,41 @@
         this.metadata = data[0]
         this.type = 'modify'
         this.open = true;
+      },
+       /** 移交按钮操作 */
+      handleTransfer(row) {
+        const ids = row.id || this.ids;
+        this.entryids=ids;
+        console.log(this.entryids);
+        this.open1=true;
+        this.title="移交";
+        getTransInfo(ids).then(response => {
+          this.form = response.data;
+        });
+      },
+      cancel1() {
+      this.open1 = false;
+      this.single = true;
+      },
+      /**提交移交信息 */
+      submitTransferForm() {
+        this.$confirm('是否移交到档案管理员?', '确认信息', {
+          confirmButtonText: '是',
+          cancelButtonText: '否',
+          type: 'warning'
+        }).then(() => {
+          delMetadata(this.entryids);
+          addTransfer(this.form).then(response => {
+              this.msgSuccess("移交成功");
+              this.open1 = false;
+              this.getList();
+            });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消移交'
+          });
+        });
       },
       /** 提交按钮 */
       submitForm() {

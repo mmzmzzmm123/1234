@@ -62,6 +62,22 @@ export function exportMetadataItem(ids) {
   })
 }
 
+//获取移交基本信息
+export function getTransInfo(ids) {
+  return request({
+    url: '/system/metadata/getUser/' +ids,
+    method: 'get'
+  })
+}
+// 新增
+export function addTransfer(data) {
+  return request({
+    url: '/basic/transfer',
+    method: 'post',
+    data: data
+  })
+}
+
 // 导出文书类基本元数据电子文件 id
 export function exportMetadataItemAndEle(ids) {
   return request({

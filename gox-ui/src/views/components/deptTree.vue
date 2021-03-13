@@ -51,6 +51,8 @@
       getTreeselect() {
         treeselect().then(response => {
           this.deptOptions = response.data;
+          console.log(this.deptOptions);
+          console.log(response.data);
           this.cuid = this.selectMinChild(response.data[0])
           this.$nextTick(() => {
             this.$refs.tree.setCurrentKey(this.cuid)
