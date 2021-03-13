@@ -551,6 +551,59 @@ export function dealHealthy(customerHealthy) {
     });
     customerHealthy.physicalSigns = signs.join(",");
   }
+  if (customerHealthy.hasOwnProperty("otherLongEatDrugClassify")) {
+    customerHealthy.longEatDrugClassify += customerHealthy.otherLongEatDrugClassify
+      ? `，${customerHealthy.otherLongEatDrugClassify}`
+      : "";
+  }
+  if (customerHealthy.hasOwnProperty("washVegetablesStyle")) {
+    customerHealthy.washVegetablesStyle += customerHealthy.otherWashVegetablesStyle
+      ? `，${customerHealthy.otherWashVegetablesStyle}`
+      : "";
+  }
+  if (customerHealthy.hasOwnProperty("snacks")) {
+    customerHealthy.snacks += customerHealthy.otherSnacks
+      ? `，${customerHealthy.otherSnacks}`
+      : "";
+  }
+  if (customerHealthy.hasOwnProperty("healthProductsWeekRate")) {
+    customerHealthy.healthProductsWeekRate =
+      customerHealthy.healthProductsDayRate +
+      "次/天，" +
+      customerHealthy.healthProductsWeekRate +
+      "次/周";
+  }
+  if (customerHealthy.hasOwnProperty("drinkWineClassify")) {
+    customerHealthy.drinkWineClassify += customerHealthy.otherWineClassify
+      ? `，${customerHealthy.otherWineClassify}`
+      : "";
+  }
+  if (customerHealthy.hasOwnProperty("otherMotionClassify")) {
+    let motionStr = customerHealthy.aerobicMotionClassify
+      ? `，${customerHealthy.aerobicMotionClassify}`
+      : "";
+    motionStr += customerHealthy.anaerobicMotionClassify
+      ? `，${customerHealthy.anaerobicMotionClassify}`
+      : "";
+    motionStr += customerHealthy.anaerobicAerobicMotionClassify
+      ? `，${customerHealthy.anaerobicAerobicMotionClassify}`
+      : "";
+    motionStr += customerHealthy.otherMotionClassify
+      ? `，${customerHealthy.otherMotionClassify}`
+      : "";
+    customerHealthy.motion = motionStr.replaceAll(",", "，");
+  }
+  if (customerHealthy.hasOwnProperty("motionField")) {
+    customerHealthy.motionField += customerHealthy.otherMotionField
+      ? `，${customerHealthy.otherMotionField}`
+      : "";
+  }
+  if (customerHealthy.hasOwnProperty("defecationNum")) {
+    customerHealthy.defecationNum += "次/天";
+  }
+  if (customerHealthy.hasOwnProperty("motionDuration")) {
+    customerHealthy.motionDuration += "分钟";
+  }
   if (customerHealthy.hasOwnProperty("tall")) {
     customerHealthy.tall += "cm";
   }
