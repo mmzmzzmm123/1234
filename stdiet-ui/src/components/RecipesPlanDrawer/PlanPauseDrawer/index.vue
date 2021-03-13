@@ -137,7 +137,6 @@
               end-placeholder="结束日期"
               format="yyyy-MM-dd"
               value-format="yyyy-MM-dd"
-              :picker-options="orderPickerOptions"
             >
             </el-date-picker>
           </el-form-item>
