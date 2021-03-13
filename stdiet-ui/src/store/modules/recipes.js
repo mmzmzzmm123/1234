@@ -132,6 +132,7 @@ const actions = {
       recipesId,
       reviewStatus,
       temId: payload.temId,
+      name: payload.name,
       planId: payload.planId,
       startNum: startNumDay,
       endNum: endNumDay

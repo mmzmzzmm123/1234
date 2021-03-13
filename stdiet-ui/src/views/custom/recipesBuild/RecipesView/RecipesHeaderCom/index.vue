@@ -128,8 +128,12 @@ export default {
       this.saveRecipes({
         callback: (query) => {
           // console.log(query);
+          let path = "/recipes/build/" + query.name + "/" + query.planId;
+          if (this.$route.query.temId) {
+            path += "?temId=" + this.$route.query.temId;
+          }
           this.$router.replace({
-            path: "/recipes/build/" + query.name + "/" + query.planId,
+            path,
           });
         },
       });
@@ -141,7 +145,8 @@ export default {
       this.updateStateData({ recipesData: [] });
     },
     handleOnTemplateClick() {
-      this.$refs.templateRef.showDialog();
+      // this.$refs.templateRef.showDialog();
+      console.log(this.$route.query);
     },
     handleOnCopy(form) {
       this.loading = true;
