@@ -118,6 +118,7 @@
             <if test="orderId != null">order_id = #{orderId},</if>
             <if test="cusId != null">cus_id = #{cusId},</if>
             <if test="outId != null">out_id = #{outId},</if>
+            <if test="recipesId != null">recipes_id = #{recipesId},</if>
             <if test="startDate != null">start_date = #{startDate},</if>
             <if test="endDate != null">end_date = #{endDate},</if>
             <if test="startNumDay != null">start_num_day = #{startNumDay},</if>
