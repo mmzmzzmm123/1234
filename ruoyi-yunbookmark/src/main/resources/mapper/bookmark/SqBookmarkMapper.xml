@@ -12,11 +12,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="urls"    column="urls"    />
         <result property="description"    column="description"    />
         <result property="image"    column="image"    />
-        <result property="label"    column="Label"    />
+        <result property="label"    column="label"    />
         <result property="menuId"    column="menu_id"    />
         <result property="zcount"    column="zcount"    />
-        <result property="idelete"    column="IDelete"    />
-        <result property="start"    column="Start"    />
+        <result property="idelete"    column="idelete"    />
+        <result property="start"    column="start"    />
         <result property="createTime"    column="create_time"    />
 <!--        <collection property="sqTags"-->
 <!--                    javaType="java.util.ArrayList"-->
@@ -42,11 +42,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="urls != null  and urls != ''"> and urls = #{urls}</if>
             <if test="description != null  and description != ''"> and description = #{description}</if>
             <if test="image != null  and image != ''"> and image = #{image}</if>
-            <if test="label != null  and label != ''"> and Label = #{label}</if>
+            <if test="label != null  and label != ''"> and label = #{label}</if>
             <if test="menuId != null "> and menu_id = #{menuId}</if>
             <if test="zcount != null "> and zcount = #{zcount}</if>
-            <if test="idelete != null "> and IDelete = #{idelete}</if>
-            <if test="start != null "> and Start = #{start}</if>
+            <if test="idelete != null "> and idelete = #{idelete}</if>
+            <if test="start != null "> and start = #{start}</if>
         </where>
     </select>
 
@@ -64,11 +64,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="urls != null">urls,</if>
             <if test="description != null">description,</if>
             <if test="image != null">image,</if>
-            <if test="label != null">Label,</if>
+            <if test="label != null">label,</if>
             <if test="menuId != null">menu_id,</if>
             <if test="zcount != null">zcount,</if>
-            <if test="idelete != null">IDelete,</if>
-            <if test="start != null">Start,</if>
+            <if test="idelete != null">idelete,</if>
+            <if test="start != null">start,</if>
             <if test="createTime != null">create_time,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -96,11 +96,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="urls != null">urls = #{urls},</if>
             <if test="description != null">description = #{description},</if>
             <if test="image != null">image = #{image},</if>
-            <if test="label != null">Label = #{label},</if>
+            <if test="label != null">label = #{label},</if>
             <if test="menuId != null">menu_id = #{menuId},</if>
             <if test="zcount != null">zcount = #{zcount},</if>
-            <if test="idelete != null">IDelete = #{idelete},</if>
-            <if test="start != null">Start = #{start},</if>
+            <if test="idelete != null">idelete = #{idelete},</if>
+            <if test="start != null">start = #{start},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
         </trim>
         where bookmark_id = #{bookmarkId}

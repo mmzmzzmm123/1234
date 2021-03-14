@@ -2,8 +2,8 @@
   <div>
 
 <!--    STYLE="position: relative"-->
-    <div v-for="bm in bookmarkList"  class="bookmark"   @click="winurl(bm.noteId,bm.tiymceUeditor,bm.bookmarkId,bm.url)">
-      <div class="bookmark-item">
+    <div v-for="bm in bookmarkList"  class="bookmark"   @click="winurl(bm.noteId,bm.tiymceUeditor,bm.bookmarkId,bm.url)" @mouseover="enter(bm.bookmarkId)" @mouseleave="leave()" >
+      <div class="bookmark-item" >
          <span class="bookmark-title" v-if="highlighted" v-html="highLight(bm.title,sousuo)"/>
 
         <span class="bookmark-title" v-if="!highlighted">{{bm.title}}</span>
@@ -39,9 +39,14 @@
           </div>
         </div>
       </div>
-<!--      <div style="width: 300px;height: inherit;background-color: red;position: absolute;right: 0px;top: 10px;bottom: 10px">-->
-<!--        2222222222222222222222-->
-<!--      </div>-->
+
+      <!--编辑  -->
+      <div class="editAllBookMark"  v-show="seen&&bm.bookmarkId==current">
+          <el-button type="info" plain size="mini" icon="el-icon-edit"></el-button>
+          <el-button type="info" plain size="mini" icon="el-icon-share"></el-button>
+          <el-button type="info" plain size="mini" icon="el-icon-delete"></el-button>
+          <div style="width: 10px"></div>
+      </div>
     </div>
 
   </div>
@@ -63,6 +68,8 @@
         noteTime:true,
         isBookmarkIcon:false,
         Ueditor:undefined,
+        seen:false,
+        current:0
       }
     },
     mounted(){
@@ -166,6 +173,15 @@
       },
       /**搜索高亮 结束**/
 
+      enter(index){
+        this.seen = true;
+        this.current = index;
+      },
+      leave(){
+        this.seen = false;
+        this.current = null;
+      },
+
     }
   }
 </script>
@@ -246,5 +262,16 @@
     height: 15px;
   }
 
+  .editAllBookMark{
+    width: 200px;
+    height: inherit;
+    position: absolute;
+    right: 0px;
+    top: 10px;
+    bottom: 10px;
+    display:inline-flex;
+    justify-content:flex-end;
+    align-items:center;
+  }
 
 </style>

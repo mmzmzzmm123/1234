@@ -13,13 +13,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="background"    column="background"    />
         <result property="noteCount"    column="note_count"    />
         <result property="noteSort"    column="note_sort"    />
-        <result property="isState"    column="is_state"    />
+        <result property="noteState"    column="note_state"    />
         <result property="readProgress"    column="read_progress"    />
-        <result property="isStar"    column="is_star"    />
-        <result property="isDelete"    column="is_delete"    />
+        <result property="noteStar"    column="note_star"    />
+        <result property="noteDelete"    column="note_delete"    />
         <result property="topFlag"    column="top_flag"    />
-        <result property="isShare"    column="is_share"    />
-        <result property="isEncryption"    column="is_encryption"    />
+        <result property="noteShare"    column="note_share"    />
+        <result property="noteEncryption"    column="note_encryption"    />
         <result property="createTime"    column="create_time"    />
         <result property="updateTime"    column="update_time"    />
         <result property="tiymceUeditor"    column="tiymce_ueditor"    />
@@ -27,7 +27,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 
     <sql id="selectNmNoteVo">
-        select note_id, user_id, title, description, menu_id, background, note_count, note_sort, is_state, read_progress, is_star, is_delete, top_flag, is_share, is_encryption, create_time, update_time,tiymce_ueditor from nm_note
+        select note_id, user_id, title, description, menu_id, background, note_count, note_sort, note_state, read_progress, note_star, note_delete, top_flag, note_share, note_encryption, create_time, update_time,tiymce_ueditor from nm_note
     </sql>
 
     <select id="selectNmNoteList" parameterType="NmNote" resultMap="NmNoteResult">
@@ -41,13 +41,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="background != null  and background != ''"> and background = #{background}</if>
             <if test="noteCount != null "> and note_count = #{noteCount}</if>
             <if test="noteSort != null "> and note_sort = #{noteSort}</if>
-            <if test="isState != null "> and is_state = #{isState}</if>
+            <if test="noteState != null "> and note_state = #{noteState}</if>
             <if test="readProgress != null "> and read_progress = #{readProgress}</if>
-            <if test="isStar != null "> and is_star = #{isStar}</if>
-            <if test="isDelete != null "> and is_delete = #{isDelete}</if>
+            <if test="noteStar != null "> and note_star = #{noteStar}</if>
+            <if test="noteDelete != null "> and note_delete = #{noteDelete}</if>
             <if test="topFlag != null "> and top_flag = #{topFlag}</if>
-            <if test="isShare != null "> and is_share = #{isShare}</if>
-            <if test="isEncryption != null "> and is_encryption = #{isEncryption}</if>
+            <if test="noteShare != null "> and note_share = #{noteShare}</if>
+            <if test="noteEncryption != null "> and note_encryption = #{noteEncryption}</if>
             <if test="tiymceUeditor != null "> and tiymce_ueditor = #{tiymceUeditor}</if>
         </where>
         order by create_time desc
@@ -69,13 +69,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="background != null">background,</if>
             <if test="noteCount != null">note_count,</if>
             <if test="noteSort != null">note_sort,</if>
-            <if test="isState != null">is_state,</if>
+            <if test="noteState != null">note_state,</if>
             <if test="readProgress != null">read_progress,</if>
-            <if test="isStar != null">is_star,</if>
-            <if test="isDelete != null">is_delete,</if>
+            <if test="noteStar != null">note_star,</if>
+            <if test="noteDelete != null">note_delete,</if>
             <if test="topFlag != null">top_flag,</if>
-            <if test="isShare != null">is_share,</if>
-            <if test="isEncryption != null">is_encryption,</if>
+            <if test="noteShare != null">note_share,</if>
+            <if test="noteEncryption != null">note_encryption,</if>
             <if test="createTime != null">create_time,</if>
             <if test="updateTime != null">update_time,</if>
             <if test="tiymceUeditor != null">tiymce_ueditor,</if>
@@ -89,13 +89,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="background != null">#{background},</if>
             <if test="noteCount != null">#{noteCount},</if>
             <if test="noteSort != null">#{noteSort},</if>
-            <if test="isState != null">#{isState},</if>
+            <if test="noteState != null">#{noteState},</if>
             <if test="readProgress != null">#{readProgress},</if>
-            <if test="isStar != null">#{isStar},</if>
-            <if test="isDelete != null">#{isDelete},</if>
+            <if test="noteStar != null">#{noteStar},</if>
+            <if test="noteDelete != null">#{noteDelete},</if>
             <if test="topFlag != null">#{topFlag},</if>
-            <if test="isShare != null">#{isShare},</if>
-            <if test="isEncryption != null">#{isEncryption},</if>
+            <if test="noteShare != null">#{noteShare},</if>
+            <if test="noteEncryption != null">#{noteEncryption},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="updateTime != null">#{updateTime},</if>
             <if test="tiymceUeditor != null">#{tiymceUeditor},</if>
@@ -112,13 +112,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="background != null">background = #{background},</if>
             <if test="noteCount != null">note_count = #{noteCount},</if>
             <if test="noteSort != null">note_sort = #{noteSort},</if>
-            <if test="isState != null">is_state = #{isState},</if>
+            <if test="noteState != null">note_state = #{noteState},</if>
             <if test="readProgress != null">read_progress = #{readProgress},</if>
-            <if test="isStar != null">is_star = #{isStar},</if>
-            <if test="isDelete != null">is_delete = #{isDelete},</if>
+            <if test="noteStar != null">note_star = #{noteStar},</if>
+            <if test="noteDelete != null">note_delete = #{noteDelete},</if>
             <if test="topFlag != null">top_flag = #{topFlag},</if>
-            <if test="isShare != null">is_share = #{isShare},</if>
-            <if test="isEncryption != null">is_encryption = #{isEncryption},</if>
+            <if test="noteShare != null">note_share = #{noteShare},</if>
+            <if test="noteEncryption != null">note_encryption = #{noteEncryption},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
             <if test="tiymceUeditor != null">tiymce_ueditor = #{tiymceUeditor},</if>

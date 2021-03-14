@@ -69,8 +69,8 @@ public class NmNote
 
     /** 便签状态 */
     @Excel(name = "便签状态")
-    @Column(name = "is_state")
-    private Integer isState;
+    @Column(name = "note_state")
+    private Integer noteState;
 
     /** 阅读进度 */
     @Excel(name = "阅读进度")
@@ -79,13 +79,13 @@ public class NmNote
 
     /** 是否星标 */
     @Excel(name = "是否星标")
-    @Column(name = "is_star")
-    private Integer isStar;
+    @Column(name = "note_star")
+    private Integer noteStar;
 
     /** 是否删除 */
     @Excel(name = "是否删除")
-    @Column(name = "is_delete")
-    private Integer isDelete;
+    @Column(name = "note_delete")
+    private Integer noteDelete;
 
     /** 是否置顶 */
     @Excel(name = "是否置顶")
@@ -94,13 +94,13 @@ public class NmNote
 
     /** 是否分享(判断是否可以随意访问) */
     @Excel(name = "是否分享(判断是否可以随意访问)")
-    @Column(name = "is_share")
-    private Integer isShare;
+    @Column(name = "note_share")
+    private Integer noteShare;
 
     /** 是否加密 */
     @Excel(name = "是否加密")
-    @Column(name = "is_encryption")
-    private Integer isEncryption;
+    @Column(name = "note_encryption")
+    private Integer noteEncryption;
 
     /** 创建时间 */
     @Column(name = "create_time")
