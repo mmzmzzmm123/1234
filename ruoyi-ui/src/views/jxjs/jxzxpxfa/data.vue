@@ -8,63 +8,75 @@
       :inline="true"
       v-show="showSearch"
     >
-      <el-form-item label="方案名称" prop="name">
-        <el-input
-          v-model="form.name"
-          placeholder="请输入方案名称"
-          :disabled="true"
-        />
-      </el-form-item>
-      <el-form-item label="方案内容" prop="fanr">
-        <Editor v-model="form.fanr" placeholder="请输入方案内容" />
-      </el-form-item>
-      <el-form-item label="方案文件" prop="fawj">
-        <el-input v-model="form.fawj" v-if="false" />
-        <el-upload
-          class="upload-demo"
-          :action="uploadFileUrl"
-          :headers="headers"
-          :on-preview="handlePreview"
-          :limit="1"
-          :file-list="fileList"
-          :disabled="true"
-        >
-        </el-upload>
-      </el-form-item>
-      <el-form-item label="方案状态" prop="fazt">
-        <el-radio-group v-model="form.fazt" :disabled="true">
-          <el-radio
-            v-for="dict in faztOptions"
-            :key="dict.dictValue"
-            :label="dict.dictValue"
-            >{{ dict.dictLabel }}</el-radio
+      <el-row>
+        <el-form-item label="方案名称" prop="name">
+          <el-input
+            v-model="form.name"
+            placeholder="请输入方案名称"
+            :disabled="true"
+          />
+        </el-form-item>
+      </el-row>
+      <el-row>
+        <el-form-item label="方案内容" prop="fanr">
+          <Editor v-model="form.fanr" placeholder="请输入方案内容" />
+        </el-form-item>
+      </el-row>
+      <el-row>
+        <el-form-item label="方案文件" prop="fawj">
+          <el-input v-model="form.fawj" v-if="false" />
+          <el-upload
+            class="upload-demo"
+            :action="uploadFileUrl"
+            :headers="headers"
+            :on-preview="handlePreview"
+            :limit="1"
+            :file-list="fileList"
+            :disabled="true"
           >
-        </el-radio-group>
-      </el-form-item>
-      <el-form-item label="方案有效时间" prop="fayxkssj">
-        <el-date-picker
-          v-model="form.fayxkssj"
-          type="daterange"
-          range-separator="至"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-          :disabled="true"
-        ></el-date-picker>
-      </el-form-item>
-      <el-form-item label="所属年份" prop="nf">
-        <el-select
-          v-model="form.nf"
-          placeholder="请选择所属年份"
-          :disabled="true"
-        >
-          <el-option
-            v-for="dict in nfOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
-          ></el-option>
-        </el-select>
-      </el-form-item>
+          </el-upload>
+        </el-form-item>
+      </el-row>
+      <el-row>
+        <el-form-item label="方案状态" prop="fazt">
+          <el-radio-group v-model="form.fazt" :disabled="true">
+            <el-radio
+              v-for="dict in faztOptions"
+              :key="dict.dictValue"
+              :label="dict.dictValue"
+              >{{ dict.dictLabel }}</el-radio
+            >
+          </el-radio-group>
+        </el-form-item>
+      </el-row>
+      <el-row>
+        <el-form-item label="方案有效时间" prop="fayxkssj">
+          <el-date-picker
+            v-model="form.fayxkssj"
+            type="daterange"
+            range-separator="至"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+            :disabled="true"
+          ></el-date-picker>
+        </el-form-item>
+      </el-row>
+      <el-row>
+        <el-form-item label="所属年份" prop="nf">
+          <el-select
+            v-model="form.nf"
+            placeholder="请选择所属年份"
+            :disabled="true"
+          >
+            <el-option
+              v-for="dict in nfOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+      </el-row>
       <!-- <el-form-item label="评选学段" prop="pxxd">
         <el-select
           v-model="form.pxxd"
@@ -98,7 +110,7 @@
 </template>
 
 <script>
-import { listJxzxpxfa, getJxzxpxfa } from "@/api/jxjs/jxzxpxfa";
+import { getJxzxpxfa } from "@/api/jxjs/jxzxpxfa";
 
 import { getToken } from "@/utils/auth";
 import Editor from "@/components/Editor";
