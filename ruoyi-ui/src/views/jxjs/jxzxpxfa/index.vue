@@ -333,15 +333,12 @@
               :action="uploadFileUrl"
               :headers="headers"
               :on-preview="handlePreview"
-              :on-remove="handleRemove"
-              :before-remove="beforeRemove"
               :limit="1"
               :on-exceed="handleExceed"
               :file-list="fileList"
               :on-success="handleAvatarSuccess"
               :disabled="true"
             >
-              <el-button size="small" type="primary">选择文件</el-button>
             </el-upload>
           </el-form-item>
           <el-form-item label="方案状态" prop="fazt">
@@ -498,6 +495,7 @@ export default {
         nf: [{ required: true, message: "方案年份不能为空", trigger: "blur" }],
       },
       uploadFileUrl: process.env.VUE_APP_BASE_API + "/common/upload", // 上传的图片服务器地址
+      apiurl: process.env.VUE_APP_BASE_API,
       headers: {
         Authorization: "Bearer " + getToken(),
       },
@@ -525,7 +523,7 @@ export default {
       const id = row.id;
       getJxzxpxfa(id).then((response) => {
         this.form = response.data;
-        console.log(response.data);
+        //console.log(response.data);
         this.open_view = true;
         this.title = "评选方案详情";
         const time = [];
@@ -555,7 +553,8 @@ export default {
       }
     },
     handlePreview(file) {
-      //console.log(file);
+      //console.log(file.url);
+      window.open(this.apiurl + file.url);
     },
     handleExceed(files, fileList) {
       this.$message.warning(
