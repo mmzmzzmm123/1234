@@ -9,21 +9,48 @@
     >
       <el-form-item label="评选方案" prop="faid">
         <el-select v-model="queryParams.faid" placeholder="请选择方案">
-          <el-option v-for="dict in faOptions" :key="dict.id" :label="dict.name" :value="dict.id"></el-option>
+          <el-option
+            v-for="dict in faOptions"
+            :key="dict.id"
+            :label="dict.name"
+            :value="dict.id"
+          ></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="基地校" prop="jdxid">
-        <el-select v-model="queryParams.jdxid" filterable placeholder="请选择基地校">
-          <el-option v-for="item in jdxOptions" :key="item.id" :label="item.jdxmc" :value="item.id"></el-option>
+        <el-select
+          v-model="queryParams.jdxid"
+          filterable
+          placeholder="请选择基地校"
+        >
+          <el-option
+            v-for="item in jdxOptions"
+            :key="item.id"
+            :label="item.jdxmc"
+            :value="item.id"
+          ></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="选择教师" prop="jsid">
-        <el-select v-model="queryParams.jsid" filterable placeholder="请选择教师">
-          <el-option v-for="item in jsOptions" :key="item.id" :label="item.name" :value="item.id"></el-option>
+        <el-select
+          v-model="queryParams.jsid"
+          filterable
+          placeholder="请选择教师"
+        >
+          <el-option
+            v-for="item in jsOptions"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
+          ></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="录取状态" prop="lqzt">
-        <el-select v-model="queryParams.lqzt" filterable placeholder="请选择录取状态">
+        <el-select
+          v-model="queryParams.lqzt"
+          filterable
+          placeholder="请选择录取状态"
+        >
           <el-option
             v-for="item in lqztOptions"
             :key="item.dictValue"
@@ -33,8 +60,16 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+        <el-button
+          type="cyan"
+          icon="el-icon-search"
+          size="mini"
+          @click="handleQuery"
+          >搜索</el-button
+        >
+        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+          >重置</el-button
+        >
       </el-form-item>
     </el-form>
 
@@ -47,7 +82,8 @@
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['jxjs:jdcx:edit']"
-        >确认录取</el-button>
+          >确认录取</el-button
+        >
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -56,7 +92,8 @@
           size="mini"
           @click="handleImport"
           v-hasPermi="['jxjs:jdcx:import']"
-        >成绩导入</el-button>
+          >成绩导入</el-button
+        >
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -65,32 +102,75 @@
           size="mini"
           @click="handleExport"
           v-hasPermi="['jxjs:jxjsjbxx:export']"
-        >导出面试名单</el-button>
+          >导出面试名单</el-button
+        >
       </el-col>
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+      <right-toolbar
+        :showSearch.sync="showSearch"
+        @queryTable="getList"
+      ></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="jdcxList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" :selectable="isShow" />
+    <el-table
+      v-loading="loading"
+      :data="jdcxList"
+      @selection-change="handleSelectionChange"
+    >
+      <el-table-column
+        type="selection"
+        width="55"
+        align="center"
+        :selectable="isShow"
+      />
       <!-- <el-table-column label="编号" align="center" prop="id" /> -->
       <!-- <el-table-column label="方案名称" align="center" prop="faid" :formatter="faFormat" /> -->
       <el-table-column label="方案名称" fixed align="center" prop="faname" />
       <el-table-column label="基地校" fixed align="center" prop="jdxmc" />
       <el-table-column label="教师姓名" fixed align="center" prop="jsname" />
-      <el-table-column label="当前状态" align="center" prop="dqzt" :formatter="dqztFormat" />
-      <el-table-column label="录取状态" align="center" prop="lqzt" :formatter="lqztFormat" />
-      <el-table-column label="区级审核意见" align="center" prop="qjshzt" :formatter="qjshztFormat" />
+      <el-table-column
+        label="当前状态"
+        align="center"
+        prop="dqzt"
+        :formatter="dqztFormat"
+      />
+      <el-table-column
+        label="录取状态"
+        align="center"
+        prop="lqzt"
+        :formatter="lqztFormat"
+      />
+      <el-table-column
+        label="区级审核意见"
+        align="center"
+        prop="qjshzt"
+        :formatter="qjshztFormat"
+      />
       <!-- <el-table-column label="区级审核意见" align="center" prop="qjshyj" :formatter="qjshyjFormat" /> -->
       <el-table-column label="案例分析得分" align="center" prop="alfxdf" />
       <el-table-column label="教案设计得分" align="center" prop="jasjdf" />
       <el-table-column label="钢笔字得分" align="center" prop="gbzdf" />
       <el-table-column label="笔试综合得分" align="center" prop="zhdf" />
       <el-table-column label="基地排序" align="center" prop="jdpx" />
-      <el-table-column label="模拟课堂教学得分" align="center" prop="msjgmnktjxdf" />
+      <el-table-column
+        label="模拟课堂教学得分"
+        align="center"
+        prop="msjgmnktjxdf"
+      />
       <el-table-column label="演讲得分" align="center" prop="yjdf" />
       <el-table-column label="面试综合得分" align="center" prop="zhdf2" />
+      <el-table-column
+        label="等级"
+        align="center"
+        prop="pjdj"
+        :formatter="pjdjFormat"
+      />
 
-      <el-table-column label="操作" fixed="right"  align="center" class-name="small-padding fixed-width">
+      <el-table-column
+        label="操作"
+        fixed="right"
+        align="center"
+        class-name="small-padding fixed-width"
+      >
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -99,13 +179,22 @@
             @click="handleUpdate(scope.row)"
             v-hasPermi="['jxjs:jdcx:edit']"
             v-show="isShow(scope.row)"
-          >确认录取</el-button>
+            >确认录取</el-button
+          >
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-edit"
+            @click="handlePjdj(scope.row)"
+            v-hasPermi="['jxjs:jdcx:edit']"
+            >评价等级</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
 
     <pagination
-      v-show="total>0"
+      v-show="total > 0"
       :total="total"
       :page.sync="queryParams.pageNum"
       :limit.sync="queryParams.pageSize"
@@ -132,9 +221,41 @@
       </div>
     </el-dialog>
 
+    <!-- 添加或修改评价等级 -->
+    <el-dialog
+      :title="title"
+      :visible.sync="open_pjdj"
+      width="500px"
+      append-to-body
+    >
+      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+        <el-form-item label="等级" prop="pjdj">
+          <el-select v-model="form.pjdj" placeholder="请选择等级">
+            <el-option
+              v-for="dict in pjdjOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitForm_pjdj">确 定</el-button>
+        <el-button @click="cancel">取 消</el-button>
+      </div>
+    </el-dialog>
+
     <!-- excel导入对话框lu -->
-    <el-dialog :title="upload.title" :visible.sync="upload.open" width="400px" append-to-body>
-      <el-link type="info" style="font-size:14px" @click="importTemplate">下载模板</el-link>
+    <el-dialog
+      :title="upload.title"
+      :visible.sync="upload.open"
+      width="400px"
+      append-to-body
+    >
+      <el-link type="info" style="font-size: 14px" @click="importTemplate"
+        >下载模板</el-link
+      >
       <el-upload
         ref="upload"
         :limit="1"
@@ -155,13 +276,20 @@
         <div class="el-upload__tip" slot="tip">
           <!-- <el-form-item label="评选方案" prop="faid"> -->
           <el-select v-model="upload.faide" placeholder="请选择方案">
-            <el-option v-for="dict in faOptions" :key="dict.id" :label="dict.name" :value="dict.id"></el-option>
+            <el-option
+              v-for="dict in faOptions"
+              :key="dict.id"
+              :label="dict.name"
+              :value="dict.id"
+            ></el-option>
           </el-select>
           <br />
           <!-- </el-form-item> -->
           <!-- <el-checkbox v-model="upload.updateSupport" />是否更新已经存在的用户数据 -->
         </div>
-        <div class="el-upload__tip" style="color:red" slot="tip">提示：仅允许导入“xls”或“xlsx”格式文件！</div>
+        <div class="el-upload__tip" style="color: red" slot="tip">
+          提示：仅允许导入“xls”或“xlsx”格式文件！
+        </div>
       </el-upload>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitFileForm">确 定</el-button>
@@ -180,7 +308,7 @@ import {
   importMsTemplate,
 } from "@/api/jxjs/jdcx";
 import { listJxzxpxfa } from "@/api/jxjs/jxzxpxfa";
-import { listJxjsjbxx, getJxjsjbxx } from "@/api/jxjs/jxjsjbxx";
+import { listJxjsjbxx, getJxjsjbxx, updateJxjsjbxx } from "@/api/jxjs/jxjsjbxx";
 import { getToken } from "@/utils/auth";
 import { listJdx } from "@/api/jxjs/jdx";
 
@@ -208,12 +336,16 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
+      // 是否显示弹出层
+      open_pjdj: false,
       // 当前状态字典
       dqztOptions: [],
       // 区级审核状态字典
       qjshztOptions: [],
       // 录取状态字典
       lqztOptions: [],
+      // 录取状态字典
+      pjdjOptions: [],
       //方案
       faOptions: [],
       //教师
@@ -264,6 +396,7 @@ export default {
         zhdf2: null,
         lqzt: null,
         jdxid: null,
+        pjdj: null,
       },
       // 查询参数
       queryParams_fa: {
@@ -293,6 +426,9 @@ export default {
     this.getDicts("sys_dm_lqzt").then((response) => {
       this.lqztOptions = response.data;
     });
+    this.getDicts("sys_dm_pjdj").then((response) => {
+      this.pjdjOptions = response.data;
+    });
   },
   methods: {
     getJdxList() {
@@ -301,7 +437,6 @@ export default {
       });
     },
     isShow(row) {
-      console.log(row.dqzt);
       if (row.dqzt == "9" && (row.lqzt == null || row.lqzt == "")) {
         return true;
       } else {
@@ -314,7 +449,6 @@ export default {
       var actions = [];
       var datas = this.faOptions;
       Object.keys(datas).map((key) => {
-        console.log(row.faid);
         if (datas[key].id == "" + row.faid) {
           actions.push(datas[key].name);
           return false;
@@ -350,6 +484,10 @@ export default {
     lqztFormat(row, column) {
       return this.selectDictLabel(this.lqztOptions, row.lqzt);
     },
+    // 评价等级字典翻译
+    pjdjFormat(row, column) {
+      return this.selectDictLabel(this.pjdjOptions, row.pjdj);
+    },
     // 当前状态字典翻译
     dqztFormat(row, column) {
       return this.selectDictLabel(this.dqztOptions, row.dqzt);
@@ -361,6 +499,7 @@ export default {
     // 取消按钮
     cancel() {
       this.open = false;
+      this.open_pjdj = false;
       this.reset();
     },
     // 表单重置
@@ -390,6 +529,7 @@ export default {
         yjdf: null,
         zhdf2: null,
         lqzt: null,
+        pjdj: null,
       };
       this.resetForm("form");
     },
@@ -420,6 +560,16 @@ export default {
         this.title = "面试结果审核";
       });
     },
+    /** 评价等级操作 */
+    handlePjdj(row) {
+      this.reset();
+      const id = row.id;
+      getJdcx(id).then((response) => {
+        this.form = response.data;
+        this.open_pjdj = true;
+        this.title = "评价教师等级";
+      });
+    },
     /** 提交按钮 */
     submitForm() {
       this.$refs["form"].validate((valid) => {
@@ -430,6 +580,23 @@ export default {
               if (response.code === 200) {
                 this.msgSuccess("录取成功");
                 this.open = false;
+                this.getList();
+              }
+            });
+          }
+        }
+      });
+    },
+    /** 评价等级提交按钮 */
+    submitForm_pjdj() {
+      this.$refs["form"].validate((valid) => {
+        if (valid) {
+          if (this.form.id != null) {
+            console.log(this.form);
+            updateJdcx(this.form).then((response) => {
+              if (response.code === 200) {
+                this.msgSuccess("录取成功");
+                this.open_pjdj = false;
                 this.getList();
               }
             });

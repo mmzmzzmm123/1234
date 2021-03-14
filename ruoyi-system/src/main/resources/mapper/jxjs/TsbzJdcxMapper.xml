@@ -31,10 +31,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="zhdf2"    column="zhdf2"    />
         <result property="lqzt"    column="lqzt"    />
         <result property="jdxid"    column="jdxid"    />
+        <result property="pjdj"    column="pjdj"    />
     </resultMap>
 
     <sql id="selectTsbzJdcxVo">
-        select id, faid, jsid,(select jxbh from tsbz_jxjsjbxx where id=jsid) as jxbh, dqzt, createuserid, create_time, jdxshr, jdxshzt, sbly, qjshr, qjshzt, qjshyj, jdpx, alfxdf, jasjdf, gbzdf, zhdf, cjdrcreate_time, msqr, msqrcreate_time, msjgmnktjxdf, yjdf, zhdf2, lqzt from tsbz_jdcx
+        select id, faid, pjdj, jsid,(select jxbh from tsbz_jxjsjbxx where id=jsid) as jxbh, dqzt, createuserid, create_time, jdxshr, jdxshzt, sbly, qjshr, qjshzt, qjshyj, jdpx, alfxdf, jasjdf, gbzdf, zhdf, cjdrcreate_time, msqr, msqrcreate_time, msjgmnktjxdf, yjdf, zhdf2, lqzt from tsbz_jdcx
     </sql>
 
     <select id="selectTsbzJdcxList" parameterType="TsbzJdcx" resultMap="TsbzJdcxResult">
@@ -62,6 +63,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="yjdf != null "> and yjdf = #{yjdf}</if>
             <if test="zhdf2 != null "> and zhdf2 = #{zhdf2}</if>
             <if test="lqzt != null  and lqzt != ''"> and lqzt = #{lqzt}</if>
+            <if test="pjdj != null  and pjdj != ''"> and pjdj = #{pjdj}</if>
         </where>
     </select>
     
@@ -96,6 +98,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="yjdf != null">yjdf,</if>
             <if test="zhdf2 != null">zhdf2,</if>
             <if test="lqzt != null">lqzt,</if>
+            <if test="pjdj != null">pjdj,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="faid != null">#{faid},</if>
@@ -121,6 +124,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="yjdf != null">#{yjdf},</if>
             <if test="zhdf2 != null">#{zhdf2},</if>
             <if test="lqzt != null">#{lqzt},</if>
+            <if test="pjdj != null">#{pjdj},</if>
          </trim>
     </insert>
 
@@ -150,6 +154,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="yjdf != null">yjdf = #{yjdf},</if>
             <if test="zhdf2 != null">zhdf2 = #{zhdf2},</if>
             <if test="lqzt != null">lqzt = #{lqzt},</if>
+            <if test="pjdj != null">lqzt = #{pjdj},</if>
         </trim>
         where id = #{id}
     </update>
@@ -191,6 +196,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="zhdf2 != null "> and a.zhdf2 = #{zhdf2}</if>
             <if test="lqzt != null  and lqzt != ''"> and lqzt = #{lqzt}</if>
             <if test="jdxid != null  and jdxid != ''"> and d.id = #{jdxid}</if>
+            <if test="pjdj != null  and pjdj != ''"> and a.pjdj = #{pjdj}</if>
         </where>
     </select>
     <update id="updateTsbzJdcxforjsfa" parameterType="TsbzJdcx">
@@ -218,6 +224,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="yjdf != null">yjdf = #{yjdf},</if>
             <if test="zhdf2 != null">zhdf2 = #{zhdf2},</if>
             <if test="lqzt != null">lqzt = #{lqzt},</if>
+            <if test="pjdj != null">pjdj = #{pjdj},</if>
         </trim>
         where faid = #{faid} and jsid = (select id from tsbz_jxjsjbxx where jxbh=#{jxbh})
     </update>

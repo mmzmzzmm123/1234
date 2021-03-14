@@ -177,6 +177,8 @@ public class TsbzJdcx extends BaseEntity {
 
     //基地校id
     private String jdxid;
+    // 评价等级
+    private String pjdj;
 
 
     public String getFaname() {
@@ -472,6 +474,15 @@ public class TsbzJdcx extends BaseEntity {
                 .append("lqzt", getLqzt())
                 .append("jdxid", getJdxid())
                 .append("jxbh", getJxbh())
+                .append("pjdj", getPjdj())
                 .toString();
+    }
+
+    public String getPjdj() {
+        return pjdj;
+    }
+
+    public void setPjdj(String pjdj) {
+        this.pjdj = pjdj;
     }
 }
