@@ -42,6 +42,8 @@ public class TsbzJdx extends BaseEntity
     @Excel(name = "基地校年份")
     private String jdxnf;
 
+    private TsbzJxjsjbxx tsbzJxjsjbxx;
+
     public void setId(String id) 
     {
         this.id = id;
@@ -117,6 +119,15 @@ public class TsbzJdx extends BaseEntity
             .append("xxbb", getXxbb())
             .append("jdxnf", getJdxnf())
             .append("createTime", getCreateTime())
+            .append("tsbzJxjsjbxx", getTsbzJxjsjbxx())
             .toString();
+    }
+
+    public TsbzJxjsjbxx getTsbzJxjsjbxx() {
+        return tsbzJxjsjbxx;
+    }
+
+    public void setTsbzJxjsjbxx(TsbzJxjsjbxx tsbzJxjsjbxx) {
+        this.tsbzJxjsjbxx = tsbzJxjsjbxx;
     }
 }

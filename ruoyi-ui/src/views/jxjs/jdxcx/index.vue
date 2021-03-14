@@ -9,17 +9,39 @@
     >
       <el-form-item label="评选方案" prop="faid">
         <el-select v-model="queryParams.faid" placeholder="请选择方案">
-          <el-option v-for="dict in faOptions" :key="dict.id" :label="dict.name" :value="dict.id"></el-option>
+          <el-option
+            v-for="dict in faOptions"
+            :key="dict.id"
+            :label="dict.name"
+            :value="dict.id"
+          ></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="选择教师" prop="jsid">
-        <el-select v-model="queryParams.jsid" filterable placeholder="请选择教师">
-          <el-option v-for="item in jsOptions" :key="item.id" :label="item.name" :value="item.id"></el-option>
+        <el-select
+          v-model="queryParams.jsid"
+          filterable
+          placeholder="请选择教师"
+        >
+          <el-option
+            v-for="item in jsOptions"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
+          ></el-option>
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+        <el-button
+          type="cyan"
+          icon="el-icon-search"
+          size="mini"
+          @click="handleQuery"
+          >搜索</el-button
+        >
+        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+          >重置</el-button
+        >
       </el-form-item>
     </el-form>
 
@@ -29,9 +51,10 @@
           type="primary"
           icon="el-icon-user"
           size="mini"
-          @click="handleAdd"
+          @click="handleAddNew"
           v-hasPermi="['jxjs:jdcx:add']"
-        >选取名单</el-button>
+          >选取名单</el-button
+        >
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -41,7 +64,8 @@
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['jxjs:jdcx:edit']"
-        >修改</el-button>
+          >修改</el-button
+        >
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -51,7 +75,8 @@
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['jxjs:jdcx:remove']"
-        >删除</el-button>
+          >删除</el-button
+        >
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -61,19 +86,32 @@
           :disabled="multiple"
           @click="handleCheck"
           v-hasPermi="['jxjs:jdcx:edit']"
-        >提交</el-button>
+          >提交</el-button
+        >
       </el-col>
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+      <right-toolbar
+        :showSearch.sync="showSearch"
+        @queryTable="getList"
+      ></right-toolbar>
     </el-row>
-
-    <el-table v-loading="loading" :data="jdcxList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" :selectable="isShow" />
+    <!-- //原来代码 -->
+    <el-table
+      v-loading="loading"
+      :data="jdcxList"
+      @selection-change="handleSelectionChange"
+    >
+      <el-table-column
+        type="selection"
+        width="55"
+        align="center"
+        :selectable="isShow"
+      />
       <!-- <el-table-column label="编号" align="center" prop="id" /> -->
-      <el-table-column 
-      label="方案名称" 
-      align="center" 
-      prop="faid" 
-      :formatter="faFormat" 
+      <el-table-column
+        label="方案名称"
+        align="center"
+        prop="faid"
+        :formatter="faFormat"
       >
         <template slot-scope="scope">
           <router-link
@@ -82,13 +120,33 @@
           >
             <span>{{ faFormat(scope.row.faid) }}</span>
           </router-link>
-        </template> 
-      </el-table-column>   
-      <el-table-column label="教师姓名" align="center" prop="jsid" :formatter="jsFormat" />
-      <el-table-column label="当前状态" align="center" prop="dqzt" :formatter="dqztFormat" />
-      <el-table-column label="基地校意见" align="center" prop="jdxshzt" :formatter="jdxshztFormat" />
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="教师姓名"
+        align="center"
+        prop="jsid"
+        :formatter="jsFormat"
+      />
+      <el-table-column
+        label="当前状态"
+        align="center"
+        prop="dqzt"
+        :formatter="dqztFormat"
+      />
+      <el-table-column
+        label="基地校意见"
+        align="center"
+        prop="jdxshzt"
+        :formatter="jdxshztFormat"
+      />
       <el-table-column label="上报理由" align="center" prop="sbly" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="210px">
+      <el-table-column
+        label="操作"
+        align="center"
+        class-name="small-padding fixed-width"
+        width="210px"
+      >
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -97,7 +155,8 @@
             @click="handleCheck(scope.row)"
             v-hasPermi="['jxjs:jdcx:edit']"
             v-show="isShow(scope.row)"
-          >提交</el-button>
+            >提交</el-button
+          >
           <el-button
             size="mini"
             type="text"
@@ -105,7 +164,8 @@
             @click="handleUpdate(scope.row)"
             v-hasPermi="['jxjs:jdcx:edit']"
             v-show="isShow(scope.row)"
-          >修改</el-button>
+            >修改</el-button
+          >
           <el-button
             size="mini"
             type="text"
@@ -113,25 +173,127 @@
             @click="handleDelete(scope.row)"
             v-hasPermi="['jxjs:jdcx:remove']"
             v-show="isShow(scope.row)"
-          >删除</el-button>
+            >删除</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
-
     <pagination
-      v-show="total>0"
+      v-show="total > 0"
       :total="total"
       :page.sync="queryParams.pageNum"
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
     />
 
+    <!-- //添加代码 -->
+    <!-- 添加或修改基地校对话框 -->
+    <el-dialog
+      title="选取名单"
+      :visible.sync="open_jscx"
+      width="900px"
+      append-to-body
+    >
+      <el-form
+        :model="queryParams_jscx"
+        ref="queryForm_jscx"
+        :inline="true"
+        v-show="showSearch"
+        label-width="68px"
+      >
+        <el-form-item label="教师姓名" prop="name">
+          <el-input
+            v-model="queryParams_jscx.name"
+            placeholder="请输入教师姓名"
+            clearable
+            size="small"
+          />
+        </el-form-item>
+        <el-form-item>
+          <el-button
+            type="cyan"
+            icon="el-icon-search"
+            size="mini"
+            @click="handleQuery_jscx"
+            >搜索</el-button
+          >
+          <el-button icon="el-icon-refresh" size="mini" @click="resetQuery_jscx"
+            >重置</el-button
+          >
+          <!-- <el-button
+            type="primary"
+            icon="el-icon-plus"
+            size="mini"
+            @click="handleAdd"
+            >确 定</el-button
+          > -->
+        </el-form-item>
+      </el-form>
+
+      <!-- <el-table v-loading="loading" :data="jdcxList" @selection-change="handleSelectionChange">
+      <el-table-column type="selection" width="55" align="center" :selectable="isShow" /> -->
+
+      <el-table :data="jxjsjbxxList" @selection-change="handleSelectionChange">
+        <el-table-column
+          type="selection"
+          width="55"
+          align="center"
+          :selectable="isShow"
+        />
+        <el-table-column label="姓名" align="center" prop="name" />
+        <el-table-column
+          label="性别"
+          align="center"
+          prop="xb"
+          :formatter="xbFormat"
+        />
+        <el-table-column label="聘任单位名称" align="center" prop="prdwmc" />
+        <el-table-column
+          label="任教学段"
+          align="center"
+          prop="rjxd"
+          :formatter="rjxdFormat"
+        />
+        <el-table-column
+          label="任教学科"
+          align="center"
+          prop="rjxk"
+          :formatter="rjxkFormat"
+        />
+        <el-table-column label="录取年份" align="center" prop="lqnf" />
+      </el-table>
+      
+      <pagination
+        v-show="totalJscx > 0"
+        :total="totalJscx"
+        :page.sync="queryParams_jscx.pageNum"
+        :limit.sync="queryParams_jscx.pageSize"
+        @pagination="getJxjsList"
+      />
+
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="handleCheck">确 定</el-button>
+        <el-button @click="cancel_jscx">取 消</el-button>
+      </div>
+    </el-dialog>
+
+    
+
     <!-- 添加或修改基地区级审核对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="800px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="方案编号" prop="faid">
-          <el-select v-model="form.faid" placeholder="请选择方案" :disabled="true">
-            <el-option v-for="dict in faOptions" :key="dict.id" :label="dict.name" :value="dict.id"></el-option>
+          <el-select
+            v-model="form.faid"
+            placeholder="请选择方案"
+            :disabled="true"
+          >
+            <el-option
+              v-for="dict in faOptions"
+              :key="dict.id"
+              :label="dict.name"
+              :value="dict.id"
+            ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="选择教师" prop="dqzt">
@@ -140,20 +302,29 @@
             v-model="checkAll"
             @change="handleCheckAllChange"
             :disabled="isable"
-          >全选</el-checkbox>
-          <div style="margin: 15px 0;"></div>
-          <el-checkbox-group v-model="checkedJss" @change="handlecheckedJssChange">
+            >全选</el-checkbox
+          >
+          <div style="margin: 15px 0"></div>
+          <el-checkbox-group
+            v-model="checkedJss"
+            @change="handlecheckedJssChange"
+          >
             <el-checkbox
               v-for="js in jss"
               :label="js.id"
               :key="js.id"
               :disabled="isable"
-            >{{js.name}}</el-checkbox>
+              >{{ js.name }}</el-checkbox
+            >
           </el-checkbox-group>
           <el-input v-model="form.dqzt" v-if="false" />
         </el-form-item>
         <el-form-item label="上报理由" prop="sbly">
-          <el-input v-model="form.sbly" type="textarea" placeholder="请输入上报理由" />
+          <el-input
+            v-model="form.sbly"
+            type="textarea"
+            placeholder="请输入上报理由"
+          />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -180,6 +351,7 @@ import { listJxzxpxfa } from "@/api/jxjs/jxzxpxfa";
 import {
   listJxjsjbxx,
   listJxjsjbxxnotjdcx,
+  listJxjsjbxxnotjdx,
   getJxjsjbxx,
 } from "@/api/jxjs/jxjsjbxx";
 
@@ -195,6 +367,8 @@ export default {
       checkedJss: [],
       jss: [],
       isIndeterminate: false,
+      // 是否显示弹出层
+      open_jscx: false,
       // 遮罩层
       loading: true,
       // 选中数组
@@ -207,6 +381,7 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
+      totalJscx: 0,
       // 基地区级审核表格数据
       jdcxList: [],
       // 弹出层标题
@@ -223,6 +398,13 @@ export default {
       faOptions: [],
       //教师
       jsOptions: [],
+      // 查询教师列表
+      jxjsjbxxList: [],
+      // 性别字典
+      xbOptions: [],
+      // 任教学年学科
+      rjxdOptions: [],
+      rjxkOptions: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -248,6 +430,18 @@ export default {
         msjgmnktjxdf: null,
         yjdf: null,
         zhdf2: null,
+      },
+      // 教师查询参数
+      queryParams_jscx: {
+        pageNum: 1,
+        pageSize: 10,
+        name: null,
+        xb: null,
+        prdwid: null,
+        prdwmc: null,
+        jdxid: null,
+        rjxd: null,
+        rjxk: null,
       },
       // 查询参数
       queryParams_fa: {
@@ -275,14 +469,45 @@ export default {
   created() {
     this.getFaList();
     this.getJsList();
+    this.getJxjsList();
     this.getDicts("sys_dm_shzt").then((response) => {
       this.dqztOptions = response.data;
     });
     this.getDicts("sys_dm_shyj").then((response) => {
       this.jdxshztOptions = response.data;
     });
+    this.getDicts("sys_user_sex").then((response) => {
+      this.xbOptions = response.data;
+    });
+    this.getDicts("sys_dm_rjxd").then((response) => {
+      this.rjxdOptions = response.data;
+    });
+    this.getDicts("sys_dm_rjxk").then((response) => {
+      this.rjxkOptions = response.data;
+    });
   },
   methods: {
+    // 任教学段字典翻译
+    rjxdFormat(row, column) {
+      return this.selectDictLabel(this.rjxdOptions, row.rjxd);
+    },
+    // 任教学科字典翻译
+    rjxkFormat(row, column) {
+      return this.selectDictLabel(this.rjxkOptions, row.rjxk);
+    },
+    // 性别字典翻译
+    xbFormat(row, column) {
+      return this.selectDictLabel(this.xbOptions, row.xb);
+    },
+    /** 重置按钮操作 */
+    resetQuery_jscx() {
+      this.resetForm("queryForm_jscx");
+      this.handleQuery_jscx();
+    },
+    // 取消按钮
+    cancel_jscx() {
+      this.open_jscx = false;
+    },
     isShow(row) {
       //console.log(row.dqzt);
       if (row.dqzt == "2" || row.dqzt == "9" || row.dqzt == "8") {
@@ -333,11 +558,23 @@ export default {
         this.jsOptions = response.rows;
       });
     },
+    // /** 查询基地校列表 */
+    // getJxjsList() {
+    //   listJxjsjbxxnotjdx(this.queryParams_jscx).then((response) => {
+    //     this.jxjsjbxxList = response.rows;
+    //   });
+    // },
+    /** 搜索按钮操作 */
+    handleQuery_jscx() {
+      this.queryParams.pageNum = 1;
+      // this.getJxjsList();
+    },
     /** 查询基地区级审核列表 */
     getList() {
       this.loading = true;
       listJdcx(this.queryParams).then((response) => {
         this.jdcxList = response.rows;
+        console.log(response.rows);
         this.total = response.total;
         this.loading = false;
       });
@@ -405,7 +642,8 @@ export default {
       this.multiple = !selection.length;
     },
     /** 新增按钮操作 */
-    handleAdd() {
+    handleAdd(row) {
+      const id = row.id;
       this.reset();
       this.isable = false;
       this.open = true;
@@ -413,6 +651,24 @@ export default {
       listJxjsjbxxnotjdcx(this.queryParams_js).then((response) => {
         this.jss = response.rows;
       });
+    },
+    /** 查询基地区级审核列表 */
+    getJxjsList() {
+      listJxjsjbxxnotjdcx(this.queryParams_js).then((response) => {
+        this.loading = true;
+        this.jxjsjbxxList = response.rows;
+        this.totalJscx = response.total;
+        this.loading = false;
+      });
+    },
+    /** 新增选择s教师按钮 */
+    handleAddNew() {
+      this.reset();
+      this.loading = true;
+      this.isable = false;
+      this.open_jscx = true;
+      this.title = "基地校初选";
+      this.getJxjsList();
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
