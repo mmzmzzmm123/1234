@@ -199,7 +199,7 @@
         <div class="bookmarklist" :style="datalist"  infinite-scroll-distance="10" v-loading="loading" v-if="showbookmark"
              v-infinite-scroll="load"
              infinite-scroll-disabled="disabled" style="overflow:auto;" infinite-scroll-immediate="false">
-    <BookmarkOne @on-windowurl="windowurl" :key="property" :property="property" :highlighted="highlighted" :sousuo="sousuo"  :listloading="listloading" :loading="loading" :bookmarkList="bookmarkList"></BookmarkOne>
+    <BookmarkOne @on-windowurl="windowurl" @on-handleUpdate="handleUpdate" @on-handleDelete="handleDelete" :key="property" :property="property"  :highlighted="highlighted" :sousuo="sousuo"  :listloading="listloading" :loading="loading" :bookmarkList="bookmarkList"></BookmarkOne>
 
           <p v-if="listloading" class="listhint"><i class="el-icon-loading"></i>加载中...</p>
           <p v-if="listnoMore&&!showimg" class="listhint">没有更多了</p>
@@ -312,7 +312,7 @@
   import {listMenuByUserId} from "@/api/bookmark/menu";
   import Treeselect from "@riophae/vue-treeselect";
   import BookmarkOne from "../../../components/BookmarkList";
-  import TinyMceEdit from "../../../views/bookmark/common/NqEdit";
+  import TinyMceEdit from "../common/nqEdit";
   import "@riophae/vue-treeselect/dist/vue-treeselect.css";
   import {
     selectBymenuIdUserID,
@@ -471,6 +471,7 @@
       var routedata = that.$route.query.menuId;
       var sousuo = that.$route.query.sousuo;
       var property = that.$route.query.property;
+      var bookmarkId = that.$route.query.bookmarkId;
       if (routedata == undefined) {
         // that.queryParams.menuId = 1;
       } else {
@@ -648,6 +649,7 @@
 
       /** 修改按钮操作 */
       handleUpdate(bookmarkId) {
+        console.log("handleUpdate："+bookmarkId);
         this.reset();
         const ibookmarkId = bookmarkId || this.ids
         getBookmark(ibookmarkId).then(response => {

@@ -29,12 +29,12 @@
 
     </div>
 
-    <div class="structure">
-      <el-radio v-model="structure" label="0">按原目录导入</el-radio>
-      <el-radio v-model="structure" label="1" disabled>全部导入到一个新目录</el-radio>
-    </div>
-    <el-button type="primary" size="small" @click="submitUpload" plain><i
-    class="el-icon-upload el-icon--right">开始导入书签</i></el-button>
+<!--    <div class="structure">-->
+<!--      <el-radio v-model="structure" label="0">按原目录导入</el-radio>-->
+<!--      <el-radio v-model="structure" label="1" disabled>全部导入到一个新目录</el-radio>-->
+<!--    </div>-->
+<!--    <el-button type="primary" size="small" @click="submitUpload" plain><i-->
+<!--    class="el-icon-upload el-icon&#45;&#45;right">开始导入书签</i></el-button>-->
 
 
 

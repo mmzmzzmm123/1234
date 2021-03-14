@@ -42,9 +42,10 @@
 
       <!--编辑  -->
       <div class="editAllBookMark"  v-show="seen&&bm.bookmarkId==current">
-          <el-button type="info" plain size="mini" icon="el-icon-edit"></el-button>
-          <el-button type="info" plain size="mini" icon="el-icon-share"></el-button>
-          <el-button type="info" plain size="mini" icon="el-icon-delete"></el-button>
+        <el-button type="info" plain size="mini" icon="el-icon-share" ></el-button>
+          <el-button type="info" plain size="mini" icon="el-icon-edit" @click.stop="handleUpdate(bm.bookmarkId)"></el-button>
+          <el-button type="danger" plain size="mini" icon="el-icon-delete" @click.stop="handleDelete(bm.bookmarkId)"></el-button>
+
           <div style="width: 10px"></div>
       </div>
     </div>
@@ -60,7 +61,7 @@
       bookmarkList: Array,
       property: null,
       highlighted: null,//搜索是否高亮
-      sousuo:null
+      sousuo:null,
     },
     data: function () {
       return {
@@ -69,7 +70,7 @@
         isBookmarkIcon:false,
         Ueditor:undefined,
         seen:false,
-        current:0
+        current:0,
       }
     },
     mounted(){
@@ -94,11 +95,19 @@
     },
 
     methods: {
+      /**打开书签**/
       winurl:function(noteId,tiymceueditor,bookmarkId,url) {
-
        this.$emit('on-windowurl', noteId, tiymceueditor,bookmarkId,url);
-      }
-      ,
+      },
+      /**编辑书签**/
+      handleUpdate:function(bookmarkId) {
+        this.$emit('on-handleUpdate', bookmarkId);
+      },
+      /**删除书签**/
+      handleDelete:function(bookmarkId) {
+      this.$emit('on-handleDelete', bookmarkId);
+      },
+      /**渲染模式**/
       showView(e) {
         var that=this;
         switch (e) {
@@ -181,6 +190,10 @@
         this.seen = false;
         this.current = null;
       },
+
+
+      /**编辑**/
+
 
     }
   }

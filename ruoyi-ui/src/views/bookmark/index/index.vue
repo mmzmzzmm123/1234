@@ -26,7 +26,7 @@
             <div class="areaTree">
               <ul id="treeDemo" class="ztree"></ul>
             </div>
-            <div class="reminder">工具箱</div>
+            <div class="reminder" >工具箱</div>
             <div class="aside-title"><i class="el-icon-s-flag" style="color: #569cd5"></i><span>RSS订阅</span></div>
             <div class="aside-title" @click="goUserTagAll"><i class="el-icon-s-management"></i><span>标签管理</span></div>
             <div class="aside-title" @click="gorecycle"><i class="el-icon-delete-solid" style="color: red"></i><span>垃圾桶</span></div>
@@ -34,7 +34,7 @@
             <div class="aside-title"><i class="el-icon-s-comment"></i><span>意见反馈</span></div>
             <div class="aside-title" @click="ceshi"><i class="el-icon-s-comment"></i><span>测试页面</span></div>
 <!--            <div class="aside-title" @click="NqEdit"><i class="el-icon-s-comment"></i><span>NqQuillEdit编辑器</span></div>-->
-            <div class="aside-title " style="margin-bottom: 100px"><i class="el-icon-s-grid"></i><span>工具箱</span></div>
+            <div class="aside-title " style="margin-bottom: 100px" @click="gotool"><i class="el-icon-s-grid"></i><span>工具箱</span></div>
 
           </div>
 
@@ -894,12 +894,16 @@
       /**跳转NqQuillEdit测试页面**/
       NqEdit: function () {
         this.$router.push({
-          path: "/NqEdit",
+          path: "/nqEdit",
         })
-
       },
-
-
+      /** 工具箱**/
+      gotool() {
+        var that = this;
+        that.$router.push({
+          path: "/tool",
+        })
+      },
       editBookmark: function (e) {
         this.reset();
         this.getTreeselect();
@@ -976,7 +980,7 @@
       goUserTagAll() {
         var that = this;
         that.$router.push({
-          path: "/UserTagAll",
+          path: "/userTagAll",
         })
       },
 
