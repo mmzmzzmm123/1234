@@ -129,17 +129,17 @@
         <el-row :gutter="15">
           <el-col :span="12">
             <el-form-item label="教师姓名" prop="name">
-              <el-input v-model="form.name" disabled="true" />
+              <el-input v-model="form.name" :disabled="true" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="进修编号" prop="jxbh">
-              <el-input v-model="form.jxbh" disabled="true" />
+              <el-input v-model="form.jxbh" :disabled="true" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="性别" prop="xb">
-              <el-select v-model="form.xb" disabled="true">
+              <el-select v-model="form.xb" :disabled="true">
                 <el-option
                   v-for="dict in xbOptions"
                   :key="dict.dictValue"
@@ -158,28 +158,28 @@
                 v-model="form.csrq"
                 type="date"
                 value-format="yyyy-MM-dd"
-                disabled="true"
+                :disabled="true"
               ></el-date-picker>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="电子邮件" prop="email">
-              <el-input v-model="form.email" disabled="true" />
+              <el-input v-model="form.email" :disabled="true" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="联系电话" prop="phone">
-              <el-input v-model="form.phone" disabled="true" maxlength="11" />
+              <el-input v-model="form.phone" :disabled="true" maxlength="11" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="邮编" prop="yzbm">
-              <el-input v-model="form.yzbm" disabled="true" />
+              <el-input v-model="form.yzbm" :disabled="true" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="政治面貌" prop="zzmm">
-              <el-select v-model="form.zzmm" disabled="true">
+              <el-select v-model="form.zzmm" :disabled="true">
                 <el-option
                   v-for="dict in zzmmOptions"
                   :key="dict.dictValue"
@@ -191,7 +191,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="民族" prop="mz">
-              <el-select v-model="form.mz" disabled="true">
+              <el-select v-model="form.mz" :disabled="true">
                 <el-option
                   v-for="dict in mzOptions"
                   :key="dict.dictValue"
@@ -208,7 +208,7 @@
           </el-col> -->
           <el-col :span="12">
             <el-form-item label="聘任单位" prop="prdwmc">
-              <el-input v-model="form.prdwmc" disabled="true" />
+              <el-input v-model="form.prdwmc" :disabled="true" />
             </el-form-item>
           </el-col>
           <!-- <el-col :span="12">
@@ -218,7 +218,7 @@
           </el-col> -->
           <el-col :span="12">
             <el-form-item label="任教学段" prop="rjxd">
-              <el-select v-model="form.rjxd" disabled="true">
+              <el-select v-model="form.rjxd" :disabled="true">
                 <el-option
                   v-for="dict in rjxdOptions"
                   :key="dict.dictValue"
@@ -230,7 +230,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="任教学科" prop="rjxk">
-              <el-select v-model="form.rjxk" disabled="true">
+              <el-select v-model="form.rjxk" :disabled="true">
                 <el-option
                   v-for="dict in rjxkOptions"
                   :key="dict.dictValue"
@@ -242,7 +242,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="任教年级" prop="rjnj">
-              <el-select v-model="form.rjnj" disabled="true">
+              <el-select v-model="form.rjnj" :disabled="true">
                 <el-option
                   v-for="dict in rjnjOptions"
                   :key="dict.dictValue"
@@ -254,12 +254,12 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="毕业院校" prop="byyx">
-              <el-input v-model="form.byyx" disabled="true" />
+              <el-input v-model="form.byyx" :disabled="true" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="学历" prop="xl">
-              <el-select v-model="form.xl" disabled="true">
+              <el-select v-model="form.xl" :disabled="true">
                 <el-option
                   v-for="dict in xlOptions"
                   :key="dict.dictValue"
@@ -271,7 +271,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="学位" prop="xw">
-              <el-select v-model="form.xw" disabled="true">
+              <el-select v-model="form.xw" :disabled="true">
                 <el-option
                   v-for="dict in xwOptions"
                   :key="dict.dictValue"
@@ -283,7 +283,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="是否师范生" prop="sfsfs">
-              <el-select v-model="form.sfsfs" disabled="true">
+              <el-select v-model="form.sfsfs" :disabled="true">
                 <el-option
                   v-for="dict in sfsfsOptions"
                   :key="dict.dictValue"
@@ -295,7 +295,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="录取年份" prop="lqnf">
-              <el-select v-model="form.lqnf" disabled="true">
+              <el-select v-model="form.lqnf" :disabled="true">
                 <el-option
                   v-for="dict in lqnfOptions"
                   :key="dict.dictValue"

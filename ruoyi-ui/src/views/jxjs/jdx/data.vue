@@ -203,6 +203,7 @@
     >
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="姓名" align="center" prop="name" />
+      <el-table-column label="进修编号" align="center" prop="jxbh" />
       <el-table-column
         label="性别"
         align="center"

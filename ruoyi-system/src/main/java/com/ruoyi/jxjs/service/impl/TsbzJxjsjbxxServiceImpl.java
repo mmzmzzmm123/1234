@@ -2,7 +2,12 @@ package com.ruoyi.jxjs.service.impl;
 
 import java.util.List;
 
+import com.ruoyi.common.exception.CustomException;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.common.utils.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.jxjs.mapper.TsbzJxjsjbxxMapper;
@@ -17,6 +22,7 @@ import com.ruoyi.jxjs.service.ITsbzJxjsjbxxService;
  */
 @Service
 public class TsbzJxjsjbxxServiceImpl implements ITsbzJxjsjbxxService {
+    private static final Logger log = LoggerFactory.getLogger(TsbzJxjscjServiceImpl.class);
     @Autowired
     private TsbzJxjsjbxxMapper tsbzJxjsjbxxMapper;
 
@@ -29,6 +35,12 @@ public class TsbzJxjsjbxxServiceImpl implements ITsbzJxjsjbxxService {
     @Override
     public TsbzJxjsjbxx selectTsbzJxjsjbxxById(Long id) {
         return tsbzJxjsjbxxMapper.selectTsbzJxjsjbxxById(id);
+    }
+
+    // 通过进修编号查询教师基本信息
+    @Override
+    public TsbzJxjsjbxx selectTsbzJxjsjbxxByJxbh(String jxbh) {
+        return tsbzJxjsjbxxMapper.selectTsbzJxjsjbxxByJxbh(jxbh);
     }
 
     /**
@@ -119,4 +131,100 @@ public class TsbzJxjsjbxxServiceImpl implements ITsbzJxjsjbxxService {
     public int deleteTsbzJxjsjbxxById(Long id) {
         return tsbzJxjsjbxxMapper.deleteTsbzJxjsjbxxById(id);
     }
+
+    // 导入见习教师
+    @Override
+    public String importUser(List<TsbzJxjsjbxx> tsbzJxjsjbxxList, Boolean isUpdateSupport) {
+        if (StringUtils.isNull(tsbzJxjsjbxxList) || tsbzJxjsjbxxList.size() == 0)
+        {
+            throw new CustomException("导入用户数据不能为空！");
+        }
+        int successNum = 0;
+        int failureNum = 0;
+        StringBuilder successMsg = new StringBuilder();
+        StringBuilder failureMsg = new StringBuilder();
+        for (TsbzJxjsjbxx tsbzJxjsjbxx : tsbzJxjsjbxxList)
+        {
+            try
+            {
+                // 验证是否存在这个用户
+                TsbzJxjsjbxx u = tsbzJxjsjbxxMapper.selectTsbzJxjsjbxxByJxbh(tsbzJxjsjbxx.getJxbh());
+                if (StringUtils.isNull(u))
+                {
+                    failureNum++;
+                    failureMsg.append("<br/>" + failureNum + "、账号 " + tsbzJxjsjbxx.getName() + " 导入失败");
+                }
+                else if (isUpdateSupport)
+                {
+                    tsbzJxjsjbxx.setId(u.getId());
+                    tsbzJxjsjbxx.setJdxid(u.getJdxid());
+                    this.updateTsbzJxjsjbxx(tsbzJxjsjbxx);
+                    successNum++;
+                    successMsg.append("<br/>" + successNum + "、账号 " + tsbzJxjsjbxx.getName() + " 更新成功");
+                }
+                else
+                {
+                    failureNum++;
+                    failureMsg.append("<br/>" + failureNum + "、账号 " + tsbzJxjsjbxx.getName() + " 导入失败");
+                }
+            }
+            catch (Exception e)
+            {
+                failureNum++;
+                String msg = "<br/>" + failureNum + "、账号 " + tsbzJxjsjbxx.getName() + " 导入失败：";
+                failureMsg.append(msg + e.getMessage());
+                log.error(msg, e);
+            }
+        }
+        if (failureNum > 0)
+        {
+            failureMsg.insert(0, "很抱歉，导入失败！共 " + failureNum + " 条数据格式不正确，错误如下：");
+            throw new CustomException(failureMsg.toString());
+        }
+        else
+        {
+            successMsg.insert(0, "恭喜您，数据已全部导入成功！共 " + successNum + " 条，数据如下：");
+        }
+        return successMsg.toString();
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -69,7 +69,21 @@
     <el-table v-loading="loading" :data="jdcxList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" :selectable="isShow" />
       <!-- <el-table-column label="编号" align="center" prop="id" /> -->
-      <el-table-column label="方案名称" align="center" prop="faid" :formatter="faFormat" />
+      <el-table-column 
+      label="方案名称" 
+      align="center" 
+      prop="faid" 
+      :formatter="faFormat" 
+      >
+        <template slot-scope="scope">
+          <router-link
+            :to="'/jxjs/jxzxpxfa/data/' + scope.row.faid"
+            class="link-type"
+          >
+            <span>{{ faFormat(scope.row.faid) }}</span>
+          </router-link>
+        </template> 
+      </el-table-column>   
       <el-table-column label="教师姓名" align="center" prop="jsid" :formatter="jsFormat" />
       <el-table-column label="当前状态" align="center" prop="dqzt" :formatter="dqztFormat" />
       <el-table-column label="基地校意见" align="center" prop="jdxshzt" :formatter="jdxshztFormat" />
@@ -163,7 +177,11 @@ import {
 
 import { listJxzxpxfa } from "@/api/jxjs/jxzxpxfa";
 
-import { listJxjsjbxx,listJxjsjbxxnotjdcx, getJxjsjbxx } from "@/api/jxjs/jxjsjbxx";
+import {
+  listJxjsjbxx,
+  listJxjsjbxxnotjdcx,
+  getJxjsjbxx,
+} from "@/api/jxjs/jxjsjbxx";
 
 export default {
   name: "Jdxcx",
@@ -274,12 +292,12 @@ export default {
       }
     },
     // 字典翻译
-    faFormat(row, column) {
+    faFormat(val) {
       // return this.selectDictLabel(this.classOptions, row.classid);
       var actions = [];
       var datas = this.faOptions;
       Object.keys(datas).map((key) => {
-        if (datas[key].id == "" + row.faid) {
+        if (datas[key].id == "" + val) {
           actions.push(datas[key].name);
           return false;
         }

@@ -36,7 +36,7 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="评选学段" prop="pxxd">
+      <!-- <el-form-item label="评选学段" prop="pxxd">
         <el-select
           v-model="queryParams.pxxd"
           placeholder="请选择评选学段"
@@ -65,7 +65,7 @@
             :value="dict.dictValue"
           />
         </el-select>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item>
         <el-button
           type="cyan"
@@ -158,7 +158,7 @@
         </template>
       </el-table-column>
       <el-table-column label="所属年份" align="center" prop="nf" />
-      <el-table-column
+      <!-- <el-table-column
         label="评选学段"
         align="center"
         prop="pxxd"
@@ -169,7 +169,7 @@
         align="center"
         prop="pxxk"
         :formatter="pxxkFormat"
-      />
+      /> -->
       <el-table-column
         label="操作"
         align="center"
@@ -177,6 +177,14 @@
         width="180px"
       >
         <template slot-scope="scope">
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-view"
+            @click="handleView(scope.row)"
+            v-hasPermi="['jxjs:jxzxpxfa:query']"
+            >详情</el-button
+          >
           <el-button
             size="mini"
             type="text"
@@ -273,7 +281,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="评选学段" prop="pxxd">
+        <!-- <el-form-item label="评选学段" prop="pxxd">
           <el-select v-model="form.pxxd" placeholder="请选择评选学段">
             <el-option
               v-for="dict in pxxdOptions"
@@ -292,10 +300,115 @@
               :value="dict.dictValue"
             />
           </el-select>
-        </el-form-item>
+        </el-form-item> -->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button @click="cancel">取 消</el-button>
+      </div>
+    </el-dialog>
+    <!-- 查看方案内容详情页 -->
+    <el-dialog
+      :title="title"
+      :visible.sync="open_view"
+      width="1024px"
+      append-to-body
+    >
+      <el-form ref="form" :model="form" label-width="110px">
+        <el-form ref="form" :model="form" label-width="110px">
+          <el-form-item label="方案名称" prop="name">
+            <el-input
+              v-model="form.name"
+              placeholder="请输入方案名称"
+              :disabled="true"
+            />
+          </el-form-item>
+          <el-form-item label="方案内容" prop="fanr">
+            <Editor v-model="form.fanr" placeholder="请输入方案内容" />
+          </el-form-item>
+          <el-form-item label="方案文件" prop="fawj">
+            <el-input v-model="form.fawj" v-if="false" />
+            <el-upload
+              class="upload-demo"
+              :action="uploadFileUrl"
+              :headers="headers"
+              :on-preview="handlePreview"
+              :on-remove="handleRemove"
+              :before-remove="beforeRemove"
+              :limit="1"
+              :on-exceed="handleExceed"
+              :file-list="fileList"
+              :on-success="handleAvatarSuccess"
+              :disabled="true"
+            >
+              <el-button size="small" type="primary">选择文件</el-button>
+            </el-upload>
+          </el-form-item>
+          <el-form-item label="方案状态" prop="fazt">
+            <el-radio-group v-model="form.fazt" :disabled="true">
+              <el-radio
+                v-for="dict in faztOptions"
+                :key="dict.dictValue"
+                :label="dict.dictValue"
+                >{{ dict.dictLabel }}</el-radio
+              >
+            </el-radio-group>
+          </el-form-item>
+          <el-form-item label="方案有效时间" prop="fayxkssj">
+            <el-date-picker
+              v-model="form.fayxkssj"
+              type="daterange"
+              range-separator="至"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+              :disabled="true"
+            ></el-date-picker>
+          </el-form-item>
+          <el-form-item label="所属年份" prop="nf">
+            <el-select
+              v-model="form.nf"
+              placeholder="请选择所属年份"
+              :disabled="true"
+            >
+              <el-option
+                v-for="dict in nfOptions"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="dict.dictValue"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+          <!-- <el-form-item label="评选学段" prop="pxxd">
+            <el-select
+              v-model="form.pxxd"
+              placeholder="请选择评选学段"
+              :disabled="true"
+            >
+              <el-option
+                v-for="dict in pxxdOptions"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="dict.dictValue"
+              />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="评选学科" prop="pxxk">
+            <el-select
+              v-model="form.pxxk"
+              placeholder="请选择评选学科"
+              :disabled="true"
+            >
+              <el-option
+                v-for="dict in pxxkOptions"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="dict.dictValue"
+              />
+            </el-select>
+          </el-form-item> -->
+        </el-form>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
@@ -342,6 +455,7 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
+      open_view: false,
       //字典
       faztOptions: [],
       nfOptions: [],
@@ -382,12 +496,6 @@ export default {
           { required: true, message: "方案有效时间不能为空", trigger: "blur" },
         ],
         nf: [{ required: true, message: "方案年份不能为空", trigger: "blur" }],
-        pxxd: [
-          { required: true, message: "评选学段不能为空", trigger: "blur" },
-        ],
-        pxxk: [
-          { required: true, message: "评选学课不能为空", trigger: "blur" },
-        ],
       },
       uploadFileUrl: process.env.VUE_APP_BASE_API + "/common/upload", // 上传的图片服务器地址
       headers: {
@@ -411,6 +519,26 @@ export default {
     });
   },
   methods: {
+    /** 详情按钮操作 */
+    handleView(row) {
+      this.reset();
+      const id = row.id;
+      getJxzxpxfa(id).then((response) => {
+        this.form = response.data;
+        console.log(response.data);
+        this.open_view = true;
+        this.title = "评选方案详情";
+        const time = [];
+        time.push(response.data.fayxkssj);
+        time.push(response.data.fayxjssj);
+        this.form.fayxkssj = time;
+        this.fileList.push({
+          name: response.data.wjmc,
+          url: response.data.fawj,
+        });
+      });
+    },
+
     handleAvatarSuccess(res, file) {
       console.log(res, file);
       if (res.code == "200") {
@@ -515,6 +643,7 @@ export default {
     // 取消按钮
     cancel() {
       this.open = false;
+      this.open_view = false;
       this.reset();
     },
     // 表单重置

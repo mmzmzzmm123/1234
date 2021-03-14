@@ -107,13 +107,13 @@ public class TsbzJdcx extends BaseEntity {
 //    @Excel(name = "方案编号", type = Type.IMPORT)
     private Long faid;
 
-    @Excel(name = "方案名称", type = Type.EXPORT)
+    // @Excel(name = "方案名称", type = Type.EXPORT)
     private String faname;
 
     /**
      * 教师编号
      */
-    @Excel(name = "教师编号", type = Type.IMPORT)
+    @Excel(name = "教师编号", type = Type.ALL)
     private Long jsid;
 
     @Excel(name = "基地校", type = Type.EXPORT)
@@ -159,17 +159,17 @@ public class TsbzJdcx extends BaseEntity {
     /**
      * 面试结果模拟课堂教学
      */
-    @Excel(name = "面试结果模拟课堂教学", type = Type.IMPORT)
+    // @Excel(name = "面试结果模拟课堂教学", type = Type.IMPORT)
     private BigDecimal msjgmnktjxdf;
     /**
      * 面试演讲得分
      */
-    @Excel(name = "面试演讲得分", type = Type.IMPORT)
+    // @Excel(name = "面试演讲得分", type = Type.IMPORT)
     private BigDecimal yjdf;
     /**
      * 面试综合得分
      */
-    @Excel(name = "面试综合得分", type = Type.IMPORT)
+    // @Excel(name = "面试综合得分", type = Type.IMPORT)
     private BigDecimal zhdf2;
 
     //基地校id

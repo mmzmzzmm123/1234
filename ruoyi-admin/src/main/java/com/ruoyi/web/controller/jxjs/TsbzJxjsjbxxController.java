@@ -2,6 +2,9 @@ package com.ruoyi.web.controller.jxjs;
 
 import java.util.List;
 
+import com.ruoyi.common.core.domain.model.LoginUser;
+import com.ruoyi.common.utils.ServletUtils;
+import com.ruoyi.framework.web.service.TokenService;
 import com.ruoyi.web.controller.common.SchoolCommonController;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +24,7 @@ import com.ruoyi.jxjs.domain.TsbzJxjsjbxx;
 import com.ruoyi.jxjs.service.ITsbzJxjsjbxxService;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 见习教师基本信息Controller
@@ -35,6 +39,8 @@ public class TsbzJxjsjbxxController extends BaseController {
     private ITsbzJxjsjbxxService tsbzJxjsjbxxService;
     @Autowired
     private SchoolCommonController schoolCommonController;
+    @Autowired
+    private TokenService tokenService;
 
     /**
      * 查询见习教师基本信息列表，没有基地校的教师列表
@@ -83,6 +89,24 @@ public class TsbzJxjsjbxxController extends BaseController {
         startPage();
         List<TsbzJxjsjbxx> list = tsbzJxjsjbxxService.selectTsbzJxjsjbxxList(tsbzJxjsjbxx);
         return getDataTable(list);
+    }
+
+    @Log(title = "用户管理", businessType = BusinessType.IMPORT)
+    @PreAuthorize("@ss.hasPermi('jxjs:jxjsjbxx:import')")
+    @PostMapping("/importData")
+    public AjaxResult importData(MultipartFile file, boolean updateSupport) throws Exception
+    {
+        ExcelUtil<TsbzJxjsjbxx> util = new ExcelUtil<TsbzJxjsjbxx>(TsbzJxjsjbxx.class);
+        List<TsbzJxjsjbxx> userList = util.importExcel(file.getInputStream());
+        String message = tsbzJxjsjbxxService.importUser(userList, updateSupport);
+        return AjaxResult.success(message);
+    }
+
+    @GetMapping("/importTemplate")
+    public AjaxResult importTemplate()
+    {
+        ExcelUtil<TsbzJxjsjbxx> util = new ExcelUtil<TsbzJxjsjbxx>(TsbzJxjsjbxx.class);
+        return util.importTemplateExcel("用户数据");
     }
 
     /**

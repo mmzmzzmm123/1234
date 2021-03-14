@@ -94,7 +94,16 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="方案名称" align="center" prop="faname" />
+      <el-table-column label="方案名称" align="center" prop="faid" :formatter="faFormat" >
+        <template slot-scope="scope">
+          <router-link
+            :to="'/jxjs/jxzxpxfa/data/' + scope.row.faid"
+            class="link-type"
+          >
+            <span>{{ faFormat(scope.row.faid) }}</span>
+          </router-link>
+        </template> 
+      </el-table-column> 
       <el-table-column label="基地校名称" align="center" prop="jdxmc" />
       <el-table-column label="教师姓名" align="center" prop="jsname" />
       <el-table-column
@@ -349,13 +358,12 @@ export default {
       });
     },
     // 字典翻译
-    faFormat(row, column) {
+    faFormat(val) {
       // return this.selectDictLabel(this.classOptions, row.classid);
       var actions = [];
       var datas = this.faOptions;
       Object.keys(datas).map((key) => {
-        console.log(row.faid);
-        if (datas[key].id == "" + row.faid) {
+        if (datas[key].id == "" + val) {
           actions.push(datas[key].name);
           return false;
         }

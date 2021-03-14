@@ -8,6 +8,15 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ruoyi.common.annotation.Excel;
+import com.ruoyi.common.annotation.Excel.ColumnType;
+import com.ruoyi.common.annotation.Excel.Type;
+import com.ruoyi.common.annotation.Excels;
+
 /**
  * 见习教师基本信息对象 tsbz_jxjsjbxx
  *
@@ -20,86 +29,38 @@ public class TsbzJxjsjbxx extends BaseEntity {
     /**
      * 标识
      */
+    @Excel(name = "编号", cellType = ColumnType.NUMERIC, prompt = "编号")
     private Long id;
-
-    /**
-     * 其他系统id
-     */
-    @Excel(name = "其他系统id")
-    private String otherid;
-
-    /**
-     * 姓名
-     */
-    @Excel(name = "姓名")
-    private String name;
 
     /**
      * 进修编号
      */
-    @Excel(name = "进修编号")
+    @Excel(name = "进修编号", type = Type.IMPORT)
     private String jxbh;
 
     /**
-     * 性别
+     * 其他系统id
      */
-    @Excel(name = "用户性别", readConverterExp = "0=男,1=女,2=未知")
-    private String xb;
-
-    /**
-     * 出生日期
-     */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "出生日期", width = 30, dateFormat = "yyyy-MM-dd")
-    private Date csrq;
-
-    /**
-     * 电子邮件
-     */
-    @Excel(name = "电子邮件")
-    private String email;
-
-    /**
-     * 联系电话
-     */
-    @Excel(name = "联系电话")
-    private String phone;
-
-    /**
-     * 邮编
-     */
-    @Excel(name = "邮编")
-    private String yzbm;
-
-    /**
-     * 政治面貌
-     */
-    @Excel(name = "政治面貌")
-    private String zzmm;
-
-    /**
-     * 民族
-     */
-    @Excel(name = "民族")
-    private String mz;
-
-    /**
-     * 聘任单位
-     */
-    @Excel(name = "聘任单位")
-    private String prdwid;
-
-    /**
-     * 聘任单位名称
-     */
-    @Excel(name = "聘任单位名称")
-    private String prdwmc;
+    //@Excel(name = "其他系统id")
+    private String otherid;
 
     /**
      * 基地校
      */
-    @Excel(name = "基地校")
+    @Excel(name = "基地校", type = Type.IMPORT)
     private String jdxid;
+
+    /**
+     * 姓名
+     */
+    @Excel(name = "姓名", type = Type.IMPORT)
+    private String name;
+
+    /**
+     * 聘任单位名称
+     */
+    @Excel(name = "拟聘用单位")
+    private String prdwmc;
 
     /**
      * 任教学段
@@ -120,16 +81,23 @@ public class TsbzJxjsjbxx extends BaseEntity {
     private String rjnj;
 
     /**
-     * 毕业院校
+     * 联系电话
      */
-    @Excel(name = "毕业院校")
-    private String byyx;
+    @Excel(name = "联系电话")
+    private String phone;
 
     /**
-     * 学历
+     * 性别
      */
-    @Excel(name = "学历")
-    private String xl;
+    @Excel(name = "用户性别", readConverterExp = "0=男,1=女,2=未知")
+    private String xb;
+
+    /**
+     * 出生日期
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "出生日期", width = 30, dateFormat = "yyyy-MM-dd")
+    private Date csrq;
 
     /**
      * 学位
@@ -138,15 +106,58 @@ public class TsbzJxjsjbxx extends BaseEntity {
     private String xw;
 
     /**
+     * 毕业院校
+     */
+    @Excel(name = "毕业院校")
+    private String byyx;
+
+
+    /**
+     * 电子邮件
+     */
+    //@Excel(name = "电子邮件")
+    private String email;
+
+    /**
+     * 邮编
+     */
+    //@Excel(name = "邮编")
+    private String yzbm;
+
+    /**
+     * 政治面貌
+     */
+    //@Excel(name = "政治面貌")
+    private String zzmm;
+
+    /**
+     * 民族
+     */
+    //@Excel(name = "民族")
+    private String mz;
+
+    /**
+     * 聘任单位
+     */
+    //@Excel(name = "聘任单位")
+    private String prdwid;
+
+    /**
+     * 学历
+     */
+    //@Excel(name = "学历")
+    private String xl;
+
+    /**
      * 是否师范生
      */
-    @Excel(name = "是否师范生")
+    //@Excel(name = "是否师范生")
     private String sfsfs;
 
     /**
      * 录取年份
      */
-    @Excel(name = "录取年份")
+    //@Excel(name = "录取年份")
     private String lqnf;
 
     private String faid;

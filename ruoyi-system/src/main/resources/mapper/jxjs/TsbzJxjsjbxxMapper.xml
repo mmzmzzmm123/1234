@@ -123,6 +123,11 @@
         where id = #{id}
     </select>
 
+    <select id="selectTsbzJxjsjbxxByJxbh" parameterType="String" resultMap="TsbzJxjsjbxxResult">
+        <include refid="selectTsbzJxjsjbxxVo"/>
+        where jxbh = #{jxbh}
+    </select>
+
     <insert id="insertTsbzJxjsjbxx" parameterType="TsbzJxjsjbxx">
         insert into tsbz_jxjsjbxx
         <trim prefix="(" suffix=")" suffixOverrides=",">

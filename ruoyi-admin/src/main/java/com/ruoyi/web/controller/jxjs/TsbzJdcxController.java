@@ -255,6 +255,7 @@ public class TsbzJdcxController extends BaseController {
     public AjaxResult msimportTemplate() {
 //        ExcelUtil<SysUser> util = new ExcelUtil<SysUser>(SysUser.class);
         ExcelUtil<TsbzJdcx> util = new ExcelUtil<TsbzJdcx>(TsbzJdcx.class);
+        System.out.println(util+"AAAAAAAAAAA");
         return util.importTemplateExcel("面试成绩导入");
     }
 

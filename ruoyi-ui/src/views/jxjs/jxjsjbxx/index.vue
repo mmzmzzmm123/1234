@@ -425,21 +425,11 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <!-- <el-col :span="12">
-            <el-form-item label="聘任单位" prop="prdwid">
-              <el-input v-model="form.prdwid" placeholder="请输入聘任单位" />
-            </el-form-item>
-          </el-col> -->
           <el-col :span="12">
             <el-form-item label="聘任单位" prop="prdwmc">
               <el-input v-model="form.prdwmc" placeholder="请输入聘任单位名称" />
             </el-form-item>
           </el-col>
-          <!-- <el-col :span="12">
-            <el-form-item label="基地校" prop="jdxid">
-              <el-input v-model="form.jdxid" disabled="true" />
-            </el-form-item>
-          </el-col> -->
           <el-col :span="12">
             <el-form-item label="任教学段" prop="rjxd">
               <el-select v-model="form.rjxd" placeholder="请选择任教学段">
