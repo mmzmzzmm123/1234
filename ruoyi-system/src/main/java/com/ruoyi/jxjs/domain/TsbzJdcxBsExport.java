@@ -17,7 +17,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * @author ruoyi
  * @date 2020-08-20
  */
-public class TsbzJdcx extends BaseEntity {
+public class TsbzJdcxBsExport extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
     /**
@@ -116,7 +116,7 @@ public class TsbzJdcx extends BaseEntity {
     //@Excel(name = "教师编号", type = Type.ALL)
     private Long jsid;
 
-    @Excel(name = "教师进修编号", type = Type.ALL)
+    @Excel(name = "教师进修编号", type = Type.EXPORT)
     private String jxbh;
 
     @Excel(name = "基地校", type = Type.EXPORT)
@@ -136,7 +136,7 @@ public class TsbzJdcx extends BaseEntity {
     /**
      * 区级审核状态
      */
-    @Excel(name = "评审状态", type = Type.EXPORT)
+    //@Excel(name = "评审状态", type = Type.EXPORT)
     private String qjshzt;
 
     /**

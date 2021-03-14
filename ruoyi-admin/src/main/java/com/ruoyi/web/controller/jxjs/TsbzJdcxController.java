@@ -1,6 +1,7 @@
 package com.ruoyi.web.controller.jxjs;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -8,6 +9,7 @@ import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.ServletUtils;
+import com.ruoyi.jxjs.domain.TsbzJdcxBsExport;
 import com.ruoyi.jxjs.domain.TsbzJxjsjbxx;
 import com.ruoyi.jxjs.domain.TsbzJxzxmd;
 import com.ruoyi.jxjs.service.ITsbzJxjsjbxxService;
@@ -82,8 +84,29 @@ public class TsbzJdcxController extends BaseController {
         if (!schoolCommonController.isStringEmpty(tsbzJdcx.getQjshzt()) && tsbzJdcx.getQjshzt().equals("1")) {
             //        List<TsbzJdcx> list = tsbzJdcxService.selectTsbzJdcxList(tsbzJdcx);
             List<TsbzJdcx> list = tsbzJdcxService.selectTsbzJdcxExport(tsbzJdcx);
-            ExcelUtil<TsbzJdcx> util = new ExcelUtil<TsbzJdcx>(TsbzJdcx.class);
-            return util.exportExcel(list, "笔试名单");
+            List<TsbzJdcxBsExport> listBsExport = new ArrayList<>();
+            if (list != null && list.size() > 0) {
+                TsbzJdcxBsExport tsbzJdcxBsExport = null;
+                for (int i = 0; i < list.size(); i++) {
+                    tsbzJdcx = list.get(i);
+                    tsbzJdcxBsExport = new TsbzJdcxBsExport();
+                    tsbzJdcxBsExport.setId(tsbzJdcx.getId());
+                    tsbzJdcxBsExport.setJxbh(tsbzJdcx.getJxbh());
+                    tsbzJdcxBsExport.setJdxmc(tsbzJdcx.getJdxmc());
+                    tsbzJdcxBsExport.setJsname(tsbzJdcx.getJsname());
+                    tsbzJdcxBsExport.setXb(tsbzJdcx.getXb());
+                    tsbzJdcxBsExport.setRjxd(tsbzJdcx.getRjxd());
+                    tsbzJdcxBsExport.setRjxk(tsbzJdcx.getRjxk());
+                    tsbzJdcxBsExport.setPhone(tsbzJdcx.getPhone());
+                    tsbzJdcxBsExport.setPrdwmc(tsbzJdcx.getPrdwmc());
+
+                    listBsExport.add(tsbzJdcxBsExport);
+                }
+            }
+            ExcelUtil<TsbzJdcxBsExport> util = new ExcelUtil<TsbzJdcxBsExport>(TsbzJdcxBsExport.class);
+
+            return util.exportExcel(listBsExport, "笔试名单");
+
         } else if (!schoolCommonController.isStringEmpty(tsbzJdcx.getMsqr()) && tsbzJdcx.getMsqr().equals("1")) {
             List<TsbzJdcx> list = tsbzJdcxService.selectTsbzJdcxExport(tsbzJdcx);
             ExcelUtil<TsbzJdcx> util = new ExcelUtil<TsbzJdcx>(TsbzJdcx.class);
@@ -255,7 +278,7 @@ public class TsbzJdcxController extends BaseController {
     public AjaxResult msimportTemplate() {
 //        ExcelUtil<SysUser> util = new ExcelUtil<SysUser>(SysUser.class);
         ExcelUtil<TsbzJdcx> util = new ExcelUtil<TsbzJdcx>(TsbzJdcx.class);
-        System.out.println(util+"AAAAAAAAAAA");
+        System.out.println(util + "AAAAAAAAAAA");
         return util.importTemplateExcel("面试成绩导入");
     }
 
