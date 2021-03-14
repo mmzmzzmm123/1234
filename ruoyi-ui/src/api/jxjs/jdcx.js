@@ -62,7 +62,15 @@ export function checkJdcx(id) {
 // 下载成绩导入模板
 export function importTemplate() {
     return request({
-      url: '/jxjs/jdcx/importTemplate',
-      method: 'get'
+        url: '/jxjs/jdcx/importTemplate',
+        method: 'get'
     })
-  }
+}
+
+// 下载成绩导入模板
+export function importMsTemplate() {
+    return request({
+        url: '/jxjs/jdcx/msimportTemplate',
+        method: 'get'
+    })
+}

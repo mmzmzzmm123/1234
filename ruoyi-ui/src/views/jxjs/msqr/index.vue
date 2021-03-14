@@ -177,7 +177,7 @@ import {
   getJdcx,
   updateJdcx,
   exportJdcx,
-  importTemplate,
+  importMsTemplate,
 } from "@/api/jxjs/jdcx";
 import { listJxzxpxfa } from "@/api/jxjs/jxzxpxfa";
 import { listJxjsjbxx, getJxjsjbxx } from "@/api/jxjs/jxjsjbxx";
@@ -460,7 +460,7 @@ export default {
     },
     /** 下载模板操作 */
     importTemplate() {
-      importTemplate().then((response) => {
+      importMsTemplate().then((response) => {
         this.download(response.msg);
       });
     },

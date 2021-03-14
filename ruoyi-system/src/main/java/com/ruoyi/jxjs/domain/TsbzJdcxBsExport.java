@@ -116,7 +116,7 @@ public class TsbzJdcxBsExport extends BaseEntity {
     //@Excel(name = "教师编号", type = Type.ALL)
     private Long jsid;
 
-    @Excel(name = "教师进修编号", type = Type.EXPORT)
+    @Excel(name = "教师进修编号", type = Type.ALL)
     private String jxbh;
 
     @Excel(name = "基地校", type = Type.EXPORT)

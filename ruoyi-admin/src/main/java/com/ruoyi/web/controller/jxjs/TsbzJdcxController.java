@@ -5,13 +5,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.alibaba.druid.proxy.jdbc.JdbcParameter;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.ServletUtils;
-import com.ruoyi.jxjs.domain.TsbzJdcxBsExport;
-import com.ruoyi.jxjs.domain.TsbzJxjsjbxx;
-import com.ruoyi.jxjs.domain.TsbzJxzxmd;
+import com.ruoyi.jxjs.domain.*;
 import com.ruoyi.jxjs.service.ITsbzJxjsjbxxService;
 import com.ruoyi.jxjs.service.ITsbzJxzxmdService;
 import com.ruoyi.system.service.ISysUserService;
@@ -30,7 +29,6 @@ import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.enums.BusinessType;
-import com.ruoyi.jxjs.domain.TsbzJdcx;
 import com.ruoyi.jxjs.service.ITsbzJdcxService;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
@@ -269,16 +267,13 @@ public class TsbzJdcxController extends BaseController {
 
     @GetMapping("/importTemplate")
     public AjaxResult importTemplate() {
-//        ExcelUtil<SysUser> util = new ExcelUtil<SysUser>(SysUser.class);
-        ExcelUtil<TsbzJdcx> util = new ExcelUtil<TsbzJdcx>(TsbzJdcx.class);
+        ExcelUtil<TsbzJdcxBsExport> util = new ExcelUtil<TsbzJdcxBsExport>(TsbzJdcxBsExport.class);
         return util.importTemplateExcel("笔试成绩导入");
     }
 
     @GetMapping("/msimportTemplate")
     public AjaxResult msimportTemplate() {
-//        ExcelUtil<SysUser> util = new ExcelUtil<SysUser>(SysUser.class);
-        ExcelUtil<TsbzJdcx> util = new ExcelUtil<TsbzJdcx>(TsbzJdcx.class);
-        System.out.println(util + "AAAAAAAAAAA");
+        ExcelUtil<TsbzJdcxMsExport> util = new ExcelUtil<TsbzJdcxMsExport>(TsbzJdcxMsExport.class);
         return util.importTemplateExcel("面试成绩导入");
     }
 

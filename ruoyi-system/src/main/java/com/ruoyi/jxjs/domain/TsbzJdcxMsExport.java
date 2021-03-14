@@ -17,7 +17,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * @author ruoyi
  * @date 2020-08-20
  */
-public class TsbzJdcx extends BaseEntity {
+public class TsbzJdcxMsExport extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
     /**
@@ -116,22 +116,22 @@ public class TsbzJdcx extends BaseEntity {
     //@Excel(name = "教师编号", type = Type.ALL)
     private Long jsid;
 
-    @Excel(name = "教师进修编号", type = Type.ALL)
+    @Excel(name = "教师进修编号", type = Type.IMPORT)
     private String jxbh;
 
-    @Excel(name = "基地校", type = Type.EXPORT)
+    //@Excel(name = "基地校", type = Type.IMPORT)
     private String jdxmc;
     @Excel(name = "教师姓名")
     private String jsname;
-    @Excel(name = "性别", readConverterExp = "1=男,2=女,9=未知", type = Type.EXPORT)
+    //@Excel(name = "性别", readConverterExp = "1=男,2=女,9=未知", type = Type.IMPORT)
     private String xb;
-    @Excel(name = "学段", readConverterExp = "1=学前教育,2=小学,3=普通初中,4=普通高中", type = Type.EXPORT)
+    //@Excel(name = "学段", readConverterExp = "1=学前教育,2=小学,3=普通初中,4=普通高中", type = Type.IMPORT)
     private String rjxd;
-    @Excel(name = "学科", readConverterExp = "11=品德与生活（社会） ,12=思想品德（政治） ,13=语文 ,14=数学 ,15=科学 ,16=物理 ,17=化学 ,18=生物 ,19=历史与社会 ,20=地理 ,21=历史 ,22=体育与健康 ,23=艺术 ,24=音乐 ,25=美术 ,41=英语", type = Type.EXPORT)
+    //@Excel(name = "学科", readConverterExp = "11=品德与生活（社会） ,12=思想品德（政治） ,13=语文 ,14=数学 ,15=科学 ,16=物理 ,17=化学 ,18=生物 ,19=历史与社会 ,20=地理 ,21=历史 ,22=体育与健康 ,23=艺术 ,24=音乐 ,25=美术 ,41=英语", type = Type.EXPORT)
     private String rjxk;
-    @Excel(name = "联系方式", type = Type.EXPORT)
+    //@Excel(name = "联系方式", type = Type.IMPORT)
     private String phone;
-    @Excel(name = "聘任校", type = Type.EXPORT)
+    //@Excel(name = "聘任校", type = Type.IMPORT)
     private String prdwmc;
     /**
      * 区级审核状态
@@ -142,22 +142,22 @@ public class TsbzJdcx extends BaseEntity {
     /**
      * 案例分析得分
      */
-    @Excel(name = "案例分析得分", type = Type.IMPORT)
+    //@Excel(name = "案例分析得分", type = Type.IMPORT)
     private BigDecimal alfxdf;
     /**
      * 教案设计得分
      */
-    @Excel(name = "教案设计得分", type = Type.IMPORT)
+    //@Excel(name = "教案设计得分", type = Type.IMPORT)
     private BigDecimal jasjdf;
     /**
      * 钢笔字得分
      */
-    @Excel(name = "钢笔字得分", type = Type.IMPORT)
+    //@Excel(name = "钢笔字得分", type = Type.IMPORT)
     private BigDecimal gbzdf;
     /**
      * 笔试综合得分
      */
-    @Excel(name = "笔试综合得分", type = Type.IMPORT)
+    //@Excel(name = "笔试综合得分", type = Type.IMPORT)
     private BigDecimal zhdf;
     /**
      * 面试结果模拟课堂教学

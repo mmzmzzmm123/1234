@@ -196,7 +196,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <update id="updateTsbzJdcxforjsfa" parameterType="TsbzJdcx">
         update tsbz_jdcx
         <trim prefix="SET" suffixOverrides=",">
-            <if test="faid != null">faid = #{faid},</if>
             <if test="jsid != null">jsid = #{jsid},</if>
             <if test="dqzt != null">dqzt = #{dqzt},</if>
             <if test="createuserid != null">createuserid = #{createuserid},</if>
