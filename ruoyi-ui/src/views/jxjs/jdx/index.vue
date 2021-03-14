@@ -109,7 +109,7 @@
           size="mini"
           @click="handleImport"
           v-hasPermi="['jxjs:jxjsjbxx:import']"
-          >导入教师</el-button
+          >基地校分配教师</el-button
         >
       </el-col>
       <right-toolbar
@@ -383,7 +383,7 @@
         :limit="1"
         accept=".xlsx, .xls"
         :headers="upload.headers"
-        :action="upload.url + '?updateSupport=' + upload.updateSupport"
+        :action="upload.url"
         :disabled="upload.isUploading"
         :on-progress="handleFileUploadProgress"
         :on-success="handleFileSuccess"
@@ -396,9 +396,6 @@
           <em>点击上传</em>
         </div>
         <div class="el-upload__tip" slot="tip">
-          <el-checkbox
-            v-model="upload.updateSupport"
-          />是否更新已经存在的用户数据
           <el-link type="info" style="font-size: 12px" @click="importTemplate"
             >下载模板</el-link
           >
@@ -468,15 +465,13 @@ export default {
         // 是否显示弹出层（用户导入）
         open: false,
         // 弹出层标题（用户导入）
-        title: "",
+        title: "基地校分配教师",
         // 是否禁用上传
         isUploading: false,
-        // 是否更新已经存在的用户数据
-        updateSupport: 0,
         // 设置上传的请求头部
         headers: { Authorization: "Bearer " + getToken() },
         // 上传的地址
-        url: process.env.VUE_APP_BASE_API + "/jxjs/jxjsjbxx/importTemplate" ,
+        url: process.env.VUE_APP_BASE_API + "/jxjs/jxjsjbxx/importData" ,
       },
       // 查询参数
       queryParams: {
@@ -591,7 +586,7 @@ export default {
     },
     /** 导入按钮操作 */
     handleImport() {
-      this.upload.title = "用户导入";
+      this.upload.title = "基地校分配教师";
       this.upload.open = true;
     },
     /** 下载模板操作 */

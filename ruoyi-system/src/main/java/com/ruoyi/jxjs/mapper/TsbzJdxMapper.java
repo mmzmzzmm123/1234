@@ -20,6 +20,14 @@ public interface TsbzJdxMapper
     public TsbzJdx selectTsbzJdxById(String id);
 
     /**
+     * 查询基地校
+     *
+     * @param jdxmc 基地校名称
+     * @return 基地校
+     */
+    public TsbzJdx selectTsbzJdxByJdxmc(String jdxmc);
+
+    /**
      * 查询基地校列表
      * 
      * @param tsbzJdx 基地校

@@ -6,6 +6,8 @@ import com.ruoyi.common.exception.CustomException;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.jxjs.domain.TsbzJdx;
+import com.ruoyi.jxjs.service.ITsbzJdxService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,8 @@ public class TsbzJxjsjbxxServiceImpl implements ITsbzJxjsjbxxService {
     private static final Logger log = LoggerFactory.getLogger(TsbzJxjscjServiceImpl.class);
     @Autowired
     private TsbzJxjsjbxxMapper tsbzJxjsjbxxMapper;
+    @Autowired
+    private ITsbzJdxService tsbzJdxService;
 
     /**
      * 查询见习教师基本信息
@@ -106,7 +110,7 @@ public class TsbzJxjsjbxxServiceImpl implements ITsbzJxjsjbxxService {
      * @return 结果
      */
     @Override
-    public int clearTsbzJxjsjdx(Long id){
+    public int clearTsbzJxjsjdx(Long id) {
         return tsbzJxjsjbxxMapper.clearTsbzJxjsjdx(id);
     }
 
@@ -135,54 +139,48 @@ public class TsbzJxjsjbxxServiceImpl implements ITsbzJxjsjbxxService {
     // 导入见习教师
     @Override
     public String importUser(List<TsbzJxjsjbxx> tsbzJxjsjbxxList, Boolean isUpdateSupport) {
-        if (StringUtils.isNull(tsbzJxjsjbxxList) || tsbzJxjsjbxxList.size() == 0)
-        {
-            throw new CustomException("导入用户数据不能为空！");
+        if (StringUtils.isNull(tsbzJxjsjbxxList) || tsbzJxjsjbxxList.size() == 0) {
+            throw new CustomException("导入数据不能为空！");
         }
         int successNum = 0;
         int failureNum = 0;
         StringBuilder successMsg = new StringBuilder();
         StringBuilder failureMsg = new StringBuilder();
-        for (TsbzJxjsjbxx tsbzJxjsjbxx : tsbzJxjsjbxxList)
-        {
-            try
-            {
+        for (TsbzJxjsjbxx tsbzJxjsjbxx : tsbzJxjsjbxxList) {
+            try {
                 // 验证是否存在这个用户
                 TsbzJxjsjbxx u = tsbzJxjsjbxxMapper.selectTsbzJxjsjbxxByJxbh(tsbzJxjsjbxx.getJxbh());
-                if (StringUtils.isNull(u))
-                {
+                if (StringUtils.isNull(u)) {
                     failureNum++;
-                    failureMsg.append("<br/>" + failureNum + "、账号 " + tsbzJxjsjbxx.getName() + " 导入失败");
-                }
-                else if (isUpdateSupport)
-                {
-                    tsbzJxjsjbxx.setId(u.getId());
-                    tsbzJxjsjbxx.setJdxid(u.getJdxid());
-                    this.updateTsbzJxjsjbxx(tsbzJxjsjbxx);
-                    successNum++;
-                    successMsg.append("<br/>" + successNum + "、账号 " + tsbzJxjsjbxx.getName() + " 更新成功");
-                }
-                else
-                {
+                    failureMsg.append("<br/>" + failureNum + "、姓名 " + tsbzJxjsjbxx.getName() + " 导入失败");
+                } else if (isUpdateSupport) {
+                    //判断基地校是否存在
+                    TsbzJdx tsbzJdx = tsbzJdxService.selectTsbzJdxByJdxmc(tsbzJxjsjbxx.getJdxid());
+                    if (StringUtils.isNotNull(tsbzJdx)) {
+                        tsbzJxjsjbxx.setId(u.getId());
+                        tsbzJxjsjbxx.setJdxid(tsbzJdx.getId());
+                        this.updateTsbzJxjsjbxx(tsbzJxjsjbxx);
+                        successNum++;
+                        successMsg.append("<br/>" + successNum + "、姓名 " + tsbzJxjsjbxx.getName() + " 更新成功");
+                    } else {
+                        failureNum++;
+                        failureMsg.append("<br/>" + failureNum + "、姓名 " + tsbzJxjsjbxx.getName() + " 导入失败,基地校名称不存在");
+                    }
+                } else {
                     failureNum++;
-                    failureMsg.append("<br/>" + failureNum + "、账号 " + tsbzJxjsjbxx.getName() + " 导入失败");
+                    failureMsg.append("<br/>" + failureNum + "、姓名 " + tsbzJxjsjbxx.getName() + " 导入失败");
                 }
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 failureNum++;
-                String msg = "<br/>" + failureNum + "、账号 " + tsbzJxjsjbxx.getName() + " 导入失败：";
+                String msg = "<br/>" + failureNum + "、姓名 " + tsbzJxjsjbxx.getName() + " 导入失败：";
                 failureMsg.append(msg + e.getMessage());
                 log.error(msg, e);
             }
         }
-        if (failureNum > 0)
-        {
+        if (failureNum > 0) {
             failureMsg.insert(0, "很抱歉，导入失败！共 " + failureNum + " 条数据格式不正确，错误如下：");
             throw new CustomException(failureMsg.toString());
-        }
-        else
-        {
+        } else {
             successMsg.insert(0, "恭喜您，数据已全部导入成功！共 " + successNum + " 条，数据如下：");
         }
         return successMsg.toString();

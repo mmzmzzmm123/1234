@@ -29,7 +29,7 @@ public class TsbzJxjsjbxx extends BaseEntity {
     /**
      * 标识
      */
-    @Excel(name = "编号", cellType = ColumnType.NUMERIC, prompt = "编号")
+    //@Excel(name = "编号", cellType = ColumnType.NUMERIC, prompt = "编号")
     private Long id;
 
     /**
@@ -65,25 +65,25 @@ public class TsbzJxjsjbxx extends BaseEntity {
     /**
      * 任教学段
      */
-    @Excel(name = "任教学段")
+    //@Excel(name = "任教学段")
     private String rjxd;
 
     /**
      * 任教学科
      */
-    @Excel(name = "任教学科")
+    //@Excel(name = "任教学科")
     private String rjxk;
 
     /**
      * 任教年级
      */
-    @Excel(name = "任教年级")
+    //@Excel(name = "任教年级")
     private String rjnj;
 
     /**
      * 联系电话
      */
-    @Excel(name = "联系电话")
+    //@Excel(name = "联系电话")
     private String phone;
 
     /**
@@ -96,19 +96,19 @@ public class TsbzJxjsjbxx extends BaseEntity {
      * 出生日期
      */
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "出生日期", width = 30, dateFormat = "yyyy-MM-dd")
+    //@Excel(name = "出生日期", width = 30, dateFormat = "yyyy-MM-dd")
     private Date csrq;
 
     /**
      * 学位
      */
-    @Excel(name = "学位")
+    //@Excel(name = "学位")
     private String xw;
 
     /**
      * 毕业院校
      */
-    @Excel(name = "毕业院校")
+    //@Excel(name = "毕业院校")
     private String byyx;
 
 

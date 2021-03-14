@@ -36,6 +36,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectTsbzJdxVo"/>
         where id = #{id}
     </select>
+
+    <select id="selectTsbzJdxByJdxmc" parameterType="String" resultMap="TsbzJdxResult">
+        <include refid="selectTsbzJdxVo"/>
+        where jdxmc = #{jdxmc}
+    </select>
         
     <insert id="insertTsbzJdx" parameterType="TsbzJdx">
         insert into tsbz_jdx

@@ -91,14 +91,14 @@ public class TsbzJxjsjbxxController extends BaseController {
         return getDataTable(list);
     }
 
-    @Log(title = "用户管理", businessType = BusinessType.IMPORT)
+    @Log(title = "基地校见习教师分配", businessType = BusinessType.IMPORT)
     @PreAuthorize("@ss.hasPermi('jxjs:jxjsjbxx:import')")
     @PostMapping("/importData")
-    public AjaxResult importData(MultipartFile file, boolean updateSupport) throws Exception
+    public AjaxResult importData(MultipartFile file) throws Exception
     {
         ExcelUtil<TsbzJxjsjbxx> util = new ExcelUtil<TsbzJxjsjbxx>(TsbzJxjsjbxx.class);
-        List<TsbzJxjsjbxx> userList = util.importExcel(file.getInputStream());
-        String message = tsbzJxjsjbxxService.importUser(userList, updateSupport);
+        List<TsbzJxjsjbxx> jxjsList = util.importExcel(file.getInputStream());
+        String message = tsbzJxjsjbxxService.importUser(jxjsList, true);
         return AjaxResult.success(message);
     }
 
