@@ -47,7 +47,7 @@
           </el-popover>
         </template>
       </el-table-column>
-      <el-table-column label="菜品" prop="name" align="center" :width="180">
+      <el-table-column label="菜品" prop="name" align="center">
         <template slot="header">
           <el-tooltip
             class="item"
@@ -108,7 +108,7 @@
           </el-popover>
         </template>
       </el-table-column>
-      <el-table-column label="食材" prop="igdName" align="center" :width="180">
+      <el-table-column label="食材" prop="igdName" align="center">
         <template slot-scope="scope">
           <span
             v-if="
@@ -412,6 +412,7 @@ export default {
       "fontSize",
       "canCopyMenuTypes",
       "recipesId",
+      "notRecIgds",
     ]),
   },
   methods: {
@@ -420,7 +421,11 @@ export default {
       if (!columnIndex) {
         return "recipes_first_col";
       } else {
-        return `recipes_cell recipes_cell_${this.fontSize}`;
+        return `recipes_cell recipes_cell_${this.fontSize} ${
+          columnIndex === 2 && this.notRecIgds.includes(row.igdId)
+            ? "warning_heightlight"
+            : ""
+        }`;
       }
     },
     handleParentClick(e) {
@@ -659,5 +664,10 @@ export default {
 }
 .recipes_cell_18 {
   font-size: 18px;
+}
+
+.warning_heightlight {
+  background: #d66969;
+  color: blue;
 }
 </style>

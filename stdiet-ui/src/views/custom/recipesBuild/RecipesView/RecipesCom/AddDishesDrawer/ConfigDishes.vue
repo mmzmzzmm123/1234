@@ -1,5 +1,5 @@
 <template>
-  <el-form>
+  <el-form @submit.native.prevent>
     <el-form-item label="菜品名">
       <span style="color: #262626; font-size: 16px; font-weight: bold">{{
         name

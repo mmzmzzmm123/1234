@@ -12,12 +12,13 @@
           v-model="queryParams.name"
           placeholder="请输入菜品名称"
           clearable
-          size="small"
+          size="mini"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
       <el-form-item label="菜品种类" prop="dishClass">
         <el-cascader
+          size="mini"
           v-model="dishClassQueryParam"
           :options="dishClassOptions"
           :props="{ expandTrigger: 'hover' }"
@@ -32,7 +33,7 @@
           v-model="queryParams.type"
           placeholder="请选择菜品类型"
           clearable
-          size="small"
+          size="mini"
         >
           <el-option
             v-for="dict in typeOptions"
@@ -113,9 +114,9 @@
       </el-table-column>
 
       <el-table-column label="菜品名称" align="center" prop="name" />
-      <el-table-column label="菜品种类" align="center" prop="bigClass" >
+      <el-table-column label="菜品种类" align="center" prop="bigClass">
         <template slot-scope="scope">
-         {{dishClassFormat(scope.row)}}
+          {{ dishClassFormat(scope.row) }}
         </template>
       </el-table-column>
       <el-table-column label="菜品类型" align="center" prop="type">
@@ -199,7 +200,7 @@
                   :options="dishClassOptions"
                   :props="{ expandTrigger: 'hover' }"
                   placeholder="请选择菜品种类"
-                  ></el-cascader>
+                ></el-cascader>
               </el-form-item>
             </el-col>
             <el-col :span="8">
@@ -464,8 +465,8 @@ export default {
       //
       cusWeightOptions: [],
       dishClassOptions: [],
-      dishClassBigOptions:[],
-      dishClassSmallOptions:[],
+      dishClassBigOptions: [],
+      dishClassSmallOptions: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -473,14 +474,14 @@ export default {
         name: null,
         type: null,
         bigClass: null,
-        smallClass: null
+        smallClass: null,
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {},
       //菜品种类查询种类
-      dishClassQueryParam:[]
+      dishClassQueryParam: [],
     };
   },
   created() {
@@ -512,9 +513,12 @@ export default {
     /** 查询菜品列表 */
     getList() {
       this.loading = true;
-      if(this.dishClassQueryParam != null && this.dishClassQueryParam.length > 0){
+      if (
+        this.dishClassQueryParam != null &&
+        this.dishClassQueryParam.length > 0
+      ) {
         this.queryParams.smallClass = this.dishClassQueryParam[1];
-      }else{
+      } else {
         this.queryParams.smallClass = null;
       }
       listDishes(this.queryParams).then((response) => {
@@ -549,23 +553,25 @@ export default {
       });
     },
     //处理菜品大类小类的关系
-    dealDishClassBigAndSmall(){
+    dealDishClassBigAndSmall() {
       this.dishClassBigOptions.forEach((item, index) => {
-          this.dishClassOptions.push({
-              'value': parseInt(item.dictValue),
-              'label': item.dictLabel,
-              'children': []
+        this.dishClassOptions.push({
+          value: parseInt(item.dictValue),
+          label: item.dictLabel,
+          children: [],
+        });
+        if (index == this.dishClassBigOptions.length - 1) {
+          this.dishClassSmallOptions.forEach((smallClass, i) => {
+            if (smallClass.remark) {
+              this.dishClassOptions[
+                parseInt(smallClass.remark - 1)
+              ].children.push({
+                value: parseInt(smallClass.dictValue),
+                label: smallClass.dictLabel,
+              });
+            }
           });
-          if(index == this.dishClassBigOptions.length - 1){
-            this.dishClassSmallOptions.forEach((smallClass, i) => {
-              if(smallClass.remark){
-                this.dishClassOptions[parseInt(smallClass.remark-1)].children.push({
-                  'value': parseInt(smallClass.dictValue),
-                  'label': smallClass.dictLabel
-                });
-              }
-            });
-          }
+        }
       });
     },
     // 菜品类型字典翻译
@@ -587,13 +593,19 @@ export default {
       return this.selectDictLabel(this.reviewStatusOptions, row.area);
     },
     //菜品种类翻译
-    dishClassFormat(row){
-       if(row.bigClass > 0 && row.smallClass > 0){
-         let bigClassName = this.selectDictLabel(this.dishClassBigOptions, row.bigClass);
-         let smallClassName = this.selectDictLabel(this.dishClassSmallOptions, row.smallClass);
-         return bigClassName+"/"+smallClassName;
-       }
-       return "";
+    dishClassFormat(row) {
+      if (row.bigClass > 0 && row.smallClass > 0) {
+        let bigClassName = this.selectDictLabel(
+          this.dishClassBigOptions,
+          row.bigClass
+        );
+        let smallClassName = this.selectDictLabel(
+          this.dishClassSmallOptions,
+          row.smallClass
+        );
+        return bigClassName + "/" + smallClassName;
+      }
+      return "";
     },
     // 取消按钮
     cancel() {
@@ -606,7 +618,7 @@ export default {
         id: null,
         name: null,
         type: [],
-        dishClass:[],
+        dishClass: [],
         methods: null,
         createBy: null,
         createTime: null,
@@ -834,7 +846,7 @@ export default {
         (arr, cur, idx) => {
           if (idx > 1) {
             if (idx === 6) {
-              arr[6] = arr[3] * 4 + arr[4] * 9 + arr[5] * 4 + ' kcal';
+              arr[6] = arr[3] * 4 + arr[4] * 9 + arr[5] * 4 + " kcal";
             } else {
               arr[idx] = data.reduce((acc, dAcc) => {
                 if (idx === 2) {

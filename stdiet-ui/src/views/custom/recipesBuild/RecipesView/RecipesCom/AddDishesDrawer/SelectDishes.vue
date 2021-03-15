@@ -1,60 +1,71 @@
 <template>
   <div>
-    <el-form
-      :model="queryParams"
-      ref="queryForm"
-      :inline="true"
-      label-width="68px"
-    >
-      <el-form-item label="菜品名称" prop="name">
-        <el-input
-          v-model="queryParams.name"
-          placeholder="请输入菜品名称"
-          clearable
-          size="mini"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-     <el-form-item label="菜品种类" prop="dishClass">
-        <el-cascader
-          filterable
-          clearable
-          v-model="dishClassQueryParam"
-          :options="dishClassOptions"
-          :props="{ expandTrigger: 'hover' }"
-          :show-all-levels="true"
-          placeholder="请选择菜品种类"
-        ></el-cascader>
-      </el-form-item>
-      <el-form-item label="菜品类型" prop="type">
-        <el-select
-          :disabled="lockType"
-          v-model="queryParams.type"
-          placeholder="请选择菜品类型"
-          clearable
-          size="mini"
-        >
-          <el-option
-            v-for="dict in typeOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item>
-        <el-button
-          type="cyan"
-          icon="el-icon-search"
-          size="mini"
-          @click="handleQuery"
-          >搜索
-        </el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
-          >重置
-        </el-button>
-      </el-form-item>
-    </el-form>
+    <el-row :gutter="15">
+      <el-form
+        :model="queryParams"
+        ref="queryForm"
+        :inline="true"
+        label-width="68px"
+        @submit.native.prevent
+      >
+        <el-col :span="6">
+          <el-form-item label="菜品名称" prop="name">
+            <el-input
+              v-model="queryParams.name"
+              placeholder="请输入菜品名称"
+              clearable
+              size="mini"
+              @keyup.enter.native="handleQuery"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="菜品种类" prop="dishClass">
+            <el-cascader
+              filterable
+              clearable
+              size="mini"
+              v-model="dishClassQueryParam"
+              :options="dishClassOptions"
+              :props="{ expandTrigger: 'hover' }"
+              :show-all-levels="true"
+              placeholder="请选择菜品种类"
+            ></el-cascader>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="菜品类型" prop="type">
+            <el-select
+              :disabled="lockType"
+              v-model="queryParams.type"
+              placeholder="请选择菜品类型"
+              clearable
+              size="mini"
+              width="120px"
+            >
+              <el-option
+                v-for="dict in typeOptions"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="dict.dictValue"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-form-item>
+          <el-button
+            type="cyan"
+            icon="el-icon-search"
+            size="mini"
+            @click="handleQuery"
+            >搜索
+          </el-button>
+          <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+            >重置
+          </el-button>
+        </el-form-item>
+      </el-form>
+    </el-row>
 
     <el-table
       v-loading="loading"
@@ -67,7 +78,10 @@
       <el-table-column label="菜品名称" align="center" prop="name" />
       <el-table-column label="菜品种类" align="center" prop="bigClass">
         <template slot-scope="scope">
-          <AutoHideMessage :data="dishClassFormat(scope.row)" :maxLength="10"></AutoHideMessage>
+          <AutoHideMessage
+            :data="dishClassFormat(scope.row)"
+            :maxLength="10"
+          ></AutoHideMessage>
         </template>
       </el-table-column>
       <el-table-column label="菜品类型" align="center" prop="type">
@@ -109,7 +123,7 @@ import AutoHideInfo from "@/components/AutoHideInfo";
 import AutoHideMessage from "@/components/AutoHideMessage";
 import { listDishes } from "@/api/custom/dishes";
 import { createNamespacedHelpers } from "vuex";
-const { mapState,mapGetters } = createNamespacedHelpers("recipes");
+const { mapState, mapGetters } = createNamespacedHelpers("recipes");
 export default {
   name: "SelectDishes",
   props: [],
@@ -129,14 +143,19 @@ export default {
         reviewStatus: "yes",
       },
       //菜品种类查询参数
-      dishClassQueryParam:[]
+      dishClassQueryParam: [],
     };
   },
   components: {
-    AutoHideInfo,AutoHideMessage
+    AutoHideInfo,
+    AutoHideMessage,
   },
   computed: {
-    ...mapState(["typeOptions","dishBigClassOptions","dishSmallClassOptions"]),
+    ...mapState([
+      "typeOptions",
+      "dishBigClassOptions",
+      "dishSmallClassOptions",
+    ]),
     ...mapGetters(["dishClassOptions"]),
   },
   methods: {
@@ -146,9 +165,12 @@ export default {
         this.lockType = true;
         this.queryParams.type = type;
       }
-      if(this.dishClassQueryParam != null && this.dishClassQueryParam.length > 0){
+      if (
+        this.dishClassQueryParam != null &&
+        this.dishClassQueryParam.length > 0
+      ) {
         this.queryParams.smallClass = this.dishClassQueryParam[1];
-      }else{
+      } else {
         this.queryParams.smallClass = null;
       }
       this.loading = true;
@@ -213,13 +235,19 @@ export default {
             .map((type) => this.selectDictLabel(this.typeOptions, type));
     },
     //菜品种类翻译
-    dishClassFormat(row){
-       if(row.bigClass > 0 && row.smallClass > 0){
-         let bigClassName = this.selectDictLabel(this.dishBigClassOptions, row.bigClass);
-         let smallClassName = this.selectDictLabel(this.dishSmallClassOptions, row.smallClass);
-         return bigClassName+"/"+smallClassName;
-       }
-       return "";
+    dishClassFormat(row) {
+      if (row.bigClass > 0 && row.smallClass > 0) {
+        let bigClassName = this.selectDictLabel(
+          this.dishBigClassOptions,
+          row.bigClass
+        );
+        let smallClassName = this.selectDictLabel(
+          this.dishSmallClassOptions,
+          row.smallClass
+        );
+        return bigClassName + "/" + smallClassName;
+      }
+      return "";
     },
   },
 };

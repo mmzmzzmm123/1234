@@ -36,7 +36,10 @@ const oriState = {
   fontSize: parseInt(localStorage.getItem("fontSize")) || 12,
   dishBigClassOptions: [],
   dishSmallClassOptions: [],
-  leftShow: false
+  //
+  leftShow: false,
+  notRecIgds: [],
+  igdTypeOptions: []
 };
 
 const mutations = {
@@ -64,7 +67,7 @@ const mutations = {
           payload.cusWeight && (tarIgd.cusWeight = payload.cusWeight);
           payload.cusUnit && (tarIgd.cusUnit = payload.cusUnit);
         }
-        console.log(JSON.parse(JSON.stringify(state.recipesData)));
+        // console.log(JSON.parse(JSON.stringify(state.recipesData)));
       } else if (actionType === "delIgd") {
         tarDishes.igdList = tarDishes.igdList.filter(
           igd => igd.id !== payload.igdId
@@ -102,6 +105,9 @@ const mutations = {
   },
   toggleLeftShow(state, payload) {
     state.leftShow = !state.leftShow;
+  },
+  setNotRecIgds(state, payload) {
+    state.notRecIgds = payload.data;
   },
   setDate(state, payload) {
     state.startDate = payload.startDate;
@@ -151,6 +157,9 @@ const actions = {
     });
     getDicts("dish_class_small").then(response => {
       commit("updateStateData", { dishSmallClassOptions: response.data });
+    });
+    getDicts("cus_ing_type").then(response => {
+      commit("updateStateData", { igdTypeOptions: response.data });
     });
 
     return new Promise((res, rej) => {
@@ -559,6 +568,19 @@ const getters = {
       });
       return arr;
     }, []),
+  igdTypeDetial: state =>
+    state.recipesData.reduce((obj, cur) => {
+      cur.dishes.forEach(dObj => {
+        dObj.igdList.forEach(iObj => {
+          if (!obj[iObj.type]) {
+            obj[iObj.type] = [{ name: iObj.name, id: iObj.id }];
+          } else if (!obj[iObj.type].some(tObj => tObj.id === iObj.id)) {
+            obj[iObj.type].push({ name: iObj.name, id: iObj.id });
+          }
+        });
+      });
+      return obj;
+    }, {}),
   cusUnitDict: state =>
     state.cusUnitOptions.reduce((obj, cur) => {
       obj[cur.dictValue] = cur.dictLabel;
@@ -581,6 +603,11 @@ const getters = {
     }, {}),
   dishSmallClassDict: state =>
     state.dishSmallClassOptions.reduce((obj, cur) => {
+      obj[cur.dictValue] = cur.dictLabel;
+      return obj;
+    }, {}),
+  igdTypeDict: state =>
+    state.igdTypeOptions.reduce((obj, cur) => {
       obj[cur.dictValue] = cur.dictLabel;
       return obj;
     }, {})
