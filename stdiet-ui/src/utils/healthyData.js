@@ -591,7 +591,7 @@ export function dealHealthy(customerHealthy) {
     motionStr += customerHealthy.otherMotionClassify
       ? `，${customerHealthy.otherMotionClassify}`
       : "";
-    customerHealthy.motion = motionStr.replaceAll(",", "，");
+    customerHealthy.motion = motionStr;
   }
   if (customerHealthy.hasOwnProperty("motionField")) {
     customerHealthy.motionField += customerHealthy.otherMotionField
