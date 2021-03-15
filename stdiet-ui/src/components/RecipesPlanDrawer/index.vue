@@ -60,24 +60,9 @@
       <el-table :data="planList" v-loading="planLoading" height="80%">
         <el-table-column label="审核状态" align="center" width="80">
           <template slot-scope="scope">
-            <el-tag
-              :type="
-                scope.row.reviewStatus === 0
-                  ? 'info'
-                  : scope.row.reviewStatus === 2
-                  ? 'success'
-                  : 'danger'
-              "
-              >{{
-                `${
-                  scope.row.reviewStatus === 0
-                    ? "未制作"
-                    : scope.row.reviewStatus === 2
-                    ? "已审核"
-                    : "未审核"
-                }`
-              }}</el-tag
-            >
+            <el-tag :type="getReviewType(scope.row.reviewStatus)">
+              {{ getReviewStatusName(scope.row.reviewStatus) }}
+            </el-tag>
           </template>
         </el-table-column>
         <el-table-column label="计划" align="center">
@@ -225,6 +210,32 @@ export default {
         startDate: null,
       };
       this.resetForm("form");
+    },
+    getReviewStatusName(status) {
+      switch (status) {
+        case 1:
+          return "未审核";
+        case 2:
+          return "已审核";
+        case 3:
+          return "制作中";
+        case 0:
+        default:
+          return "未制作";
+      }
+    },
+    getReviewType(status) {
+      switch (status) {
+        case 1:
+          return "danger";
+        case 2:
+          return "success";
+        case 3:
+          return "";
+        case 0:
+        default:
+          return "info";
+      }
     },
     handleOnClosed() {
       this.data = undefined;

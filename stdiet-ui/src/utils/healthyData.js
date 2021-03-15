@@ -200,7 +200,7 @@ export const familyIllnessHistoryArray = [
   { name: "冠心病", value: "3" },
   { name: "外周血管病", value: "4" },
   { name: "心力衰竭", value: "5" },
-  { name: "冠心病", value: "6" },
+  { name: "糖尿病", value: "6" },
   { name: "肥胖症", value: "7" },
   { name: "慢性肾脏疾病", value: "8" },
   { name: "骨质疏松", value: "9" },
@@ -482,6 +482,10 @@ export function dealHealthy(customerHealthy) {
   customerHealthy.notSportHeat = (customerHealthy.basicBMR * 1.3).toFixed(1);
   customerHealthy.basicBMR += "千卡";
   customerHealthy.notSportHeat += "千卡";
+  const lowRecProtein = customerHealthy.tall - 105;
+  customerHealthy.recProtein = `${(lowRecProtein * 0.8).toFixed(1)} - ${(
+    lowRecProtein * 1.5
+  ).toFixed(1)}`;
 
   needAttrName.forEach(name => {
     if (customerHealthy.hasOwnProperty(name)) {
@@ -538,6 +542,68 @@ export function dealHealthy(customerHealthy) {
     }
   });
 
+  if (customerHealthy.hasOwnProperty("physicalSignsId")) {
+    const signs = customerHealthy.otherPhysicalSigns
+      ? [customerHealthy.otherPhysicalSigns]
+      : [];
+    customerHealthy.signList.forEach(obj => {
+      signs.push(obj.name);
+    });
+    customerHealthy.physicalSigns = signs.join(",");
+  }
+  if (customerHealthy.hasOwnProperty("otherLongEatDrugClassify")) {
+    customerHealthy.longEatDrugClassify += customerHealthy.otherLongEatDrugClassify
+      ? `，${customerHealthy.otherLongEatDrugClassify}`
+      : "";
+  }
+  if (customerHealthy.hasOwnProperty("washVegetablesStyle")) {
+    customerHealthy.washVegetablesStyle += customerHealthy.otherWashVegetablesStyle
+      ? `，${customerHealthy.otherWashVegetablesStyle}`
+      : "";
+  }
+  if (customerHealthy.hasOwnProperty("snacks")) {
+    customerHealthy.snacks += customerHealthy.otherSnacks
+      ? `，${customerHealthy.otherSnacks}`
+      : "";
+  }
+  if (customerHealthy.hasOwnProperty("healthProductsWeekRate")) {
+    customerHealthy.healthProductsWeekRate =
+      customerHealthy.healthProductsDayRate +
+      "次/天，" +
+      customerHealthy.healthProductsWeekRate +
+      "次/周";
+  }
+  if (customerHealthy.hasOwnProperty("drinkWineClassify")) {
+    customerHealthy.drinkWineClassify += customerHealthy.otherWineClassify
+      ? `，${customerHealthy.otherWineClassify}`
+      : "";
+  }
+  if (customerHealthy.hasOwnProperty("otherMotionClassify")) {
+    let motionStr = customerHealthy.aerobicMotionClassify
+      ? `，${customerHealthy.aerobicMotionClassify}`
+      : "";
+    motionStr += customerHealthy.anaerobicMotionClassify
+      ? `，${customerHealthy.anaerobicMotionClassify}`
+      : "";
+    motionStr += customerHealthy.anaerobicAerobicMotionClassify
+      ? `，${customerHealthy.anaerobicAerobicMotionClassify}`
+      : "";
+    motionStr += customerHealthy.otherMotionClassify
+      ? `，${customerHealthy.otherMotionClassify}`
+      : "";
+    customerHealthy.motion = motionStr;
+  }
+  if (customerHealthy.hasOwnProperty("motionField")) {
+    customerHealthy.motionField += customerHealthy.otherMotionField
+      ? `，${customerHealthy.otherMotionField}`
+      : "";
+  }
+  if (customerHealthy.hasOwnProperty("defecationNum")) {
+    customerHealthy.defecationNum += "次/天";
+  }
+  if (customerHealthy.hasOwnProperty("motionDuration")) {
+    customerHealthy.motionDuration += "分钟";
+  }
   if (customerHealthy.hasOwnProperty("tall")) {
     customerHealthy.tall += "cm";
   }

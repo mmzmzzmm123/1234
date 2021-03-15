@@ -108,24 +108,9 @@
     <el-table v-loading="loading" :data="recipesPlanList">
       <el-table-column label="审核状态" align="center" width="100">
         <template slot-scope="scope">
-          <el-tag
-            :type="
-              !scope.row.reviewStatus
-                ? 'info'
-                : scope.row.reviewStatus === 1
-                ? 'danger'
-                : 'success'
-            "
-            >{{
-              `${
-                !scope.row.reviewStatus
-                  ? "未制作"
-                  : scope.row.reviewStatus == 1
-                  ? "未审核"
-                  : "已审核"
-              }`
-            }}</el-tag
-          >
+          <el-tag :type="getReviewType(scope.row.reviewStatus)">
+            {{ getReviewStatusName(scope.row.reviewStatus) }}
+          </el-tag>
         </template>
       </el-table-column>
       <el-table-column label="客户姓名" align="center" prop="customer" />
@@ -337,6 +322,32 @@ export default {
         delFlag: null,
       };
       this.resetForm("form");
+    },
+    getReviewStatusName(status) {
+      switch (status) {
+        case 1:
+          return "未审核";
+        case 2:
+          return "已审核";
+        case 3:
+          return "制作中";
+        case 0:
+        default:
+          return "未制作";
+      }
+    },
+    getReviewType(status) {
+      switch (status) {
+        case 1:
+          return "danger";
+        case 2:
+          return "success";
+        case 3:
+          return "";
+        case 0:
+        default:
+          return "info";
+      }
     },
     /** 搜索按钮操作 */
     handleQuery() {
