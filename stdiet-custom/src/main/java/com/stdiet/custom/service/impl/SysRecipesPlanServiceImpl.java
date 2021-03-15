@@ -137,7 +137,7 @@ public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService {
             return;
         }
         //判断是否提成单，拆分单中的副单，体验单
-        if(sysOrder.getAfterSaleCommissOrder().intValue() == 1 || ("1".equals(sysOrder.getOrderType()) && sysOrder.getMainOrderId().intValue() == 1) ||
+        if(sysOrder.getAfterSaleCommissOrder().intValue() == 1 || ("1".equals(sysOrder.getOrderType()) && sysOrder.getMainOrderId().intValue() != 0) ||
             "2".equals(sysOrder.getOrderType())){
             System.out.println("---------------------不生成食谱------------------------");
             return;
@@ -198,7 +198,6 @@ public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService {
         }
         //更新
         if(updateList.size() > 0){
-            System.out.println("更新数量："+updateList.size());
             for (SysRecipesPlan plan : updateList) {
                 sysRecipesPlanMapper.updateSysRecipesPlan(plan);
             }
@@ -242,16 +241,18 @@ public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService {
             //判断是否大于服务到期时间
             if (ChronoUnit.DAYS.between(planEndDate, serverEndDate) <= 0) {
                 planEndDate = serverEndDate;
-                breakFlag = false;
             }
             String[] pauseResult = dealPlanPause(planStartDate, planEndDate, pauseList);
-            //开始时间变更为暂停结束之后的日期，因为暂停开始时间与食谱计划开始时间相同
-            if(StringUtils.isNotEmpty(pauseResult[0])){
-                planStartDate = DateUtils.stringToLocalDate(pauseResult[0],"yyyyMMdd");
-                planEndDate = DateUtils.stringToLocalDate(pauseResult[1],"yyyyMMdd");
+            //根据暂停结果返回的数据更新计划开始、结束时间
+            planStartDate = DateUtils.stringToLocalDate(pauseResult[0],"yyyyMMdd");
+            planEndDate = DateUtils.stringToLocalDate(pauseResult[1],"yyyyMMdd");
+            //判断是否大于服务到期时间
+            if (ChronoUnit.DAYS.between(planEndDate, serverEndDate) <= 0) {
+                planEndDate = serverEndDate;
+                breakFlag = false;
             }
-            //加上暂停时间
-            planEndDate = planEndDate.plusDays(Integer.parseInt(pauseResult[2]));
+            //暂停日期
+            sysRecipesPlan.setPauseDate(pauseResult[3]);
             sysRecipesPlan.setStartDate(DateUtils.localDateToDate(planStartDate));
             sysRecipesPlan.setEndDate(DateUtils.localDateToDate(planEndDate));
             sysRecipesPlan.setOrderId(sysOrder.getOrderId());
@@ -259,10 +260,9 @@ public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService {
             sysRecipesPlan.setOutId(Md5Utils.hash(String.valueOf(sysOrder.getCusId())));
             oldStartNumDay += 1;
             sysRecipesPlan.setStartNumDay(oldStartNumDay);
-            oldStartNumDay += 6;
+            long dayNumber = ChronoUnit.DAYS.between(planStartDate, planEndDate);
+            oldStartNumDay +=  dayNumber > 6 ? 6 : dayNumber;
             sysRecipesPlan.setEndNumDay(oldStartNumDay);
-            //暂停日期
-            sysRecipesPlan.setPauseDate(pauseResult[3]);
             //添加暂停范围内的日期
             planList.add(sysRecipesPlan);
         }while (breakFlag);
@@ -285,33 +285,37 @@ public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService {
         if (pauseList != null && pauseList.size() > 0) {
             //每条暂停时间的范围不会重叠，在添加暂停时做了限制
             for (SysOrderPause sysOrderPause : pauseList) {
-                LocalDate pauseStartDate = DateUtils.dateToLocalDate(sysOrderPause.getPauseStartDate());
-                LocalDate pauseEndDate = DateUtils.dateToLocalDate(sysOrderPause.getPauseEndDate());
-                if (ChronoUnit.DAYS.between(pauseEndDate, planStartDate) > 0 || ChronoUnit.DAYS.between(planEndDate, pauseStartDate) > 0) {
-                    continue;
-                }
-                if (ChronoUnit.DAYS.between(pauseStartDate, planStartDate) > 0) {
-                    pauseStartDate = planStartDate;
-                }
-                if (ChronoUnit.DAYS.between(planEndDate, pauseEndDate) > 0) {
-                    pauseEndDate = planEndDate;
-                }
-                //判断暂停记录是否从食谱计划开始时间开始的
-                if(ChronoUnit.DAYS.between(pauseStartDate, planStartDate) == 0){
-                    //记录该条暂停记录结束之后的第一天日期，如果两条记录连着，则取最后暂停结束之后的第一天
-                    if("".equals(result[0]) || result[0].equals(DateUtils.localDateToString(pauseStartDate,"yyyyMMdd"))){
+                while(true){
+                    LocalDate pauseStartDate = DateUtils.dateToLocalDate(sysOrderPause.getPauseStartDate());
+                    LocalDate pauseEndDate = DateUtils.dateToLocalDate(sysOrderPause.getPauseEndDate());
+                    if (ChronoUnit.DAYS.between(pauseEndDate, planStartDate) > 0 || ChronoUnit.DAYS.between(planEndDate, pauseStartDate) > 0) {
+                        break;
+                    }
+                    if (ChronoUnit.DAYS.between(pauseStartDate, planStartDate) > 0) {
+                        pauseStartDate = planStartDate;
+                    }
+                    if (ChronoUnit.DAYS.between(planEndDate, pauseEndDate) > 0) {
+                        pauseEndDate = planEndDate;
+                    }
+                    //判断暂停记录是否从食谱计划开始时间开始的
+                    if(ChronoUnit.DAYS.between(pauseStartDate, planStartDate) == 0){
                         planStartDate = pauseEndDate.plusDays(1);
                         planEndDate = planStartDate.plusDays(6);
-                        result[0] = DateUtils.localDateToString(planStartDate,"yyyyMMdd");
-                        result[1] = DateUtils.localDateToString(planEndDate,"yyyyMMdd");
+                    }else{
+                        planEndDate = planEndDate.plusDays(ChronoUnit.DAYS.between(pauseStartDate, pauseEndDate) + 1);
+                        pauseDateString.addAll(getPauseDateString(pauseStartDate, pauseEndDate));
+                        break;
                     }
-                }else{
-                    pauseDay += ChronoUnit.DAYS.between(pauseStartDate, pauseEndDate) + 1;
-                    pauseDateString.addAll(getPauseDateString(pauseStartDate, pauseEndDate));
                 }
+                /*System.out.println("---------------------------------------");
+                System.out.println(DateUtils.localDateToString(planStartDate, "yyyy-MM-dd"));
+                System.out.println(DateUtils.localDateToString(planEndDate, "yyyy-MM-dd"));
+                System.out.println("---------------------------------------");*/
             }
         }
-        result[2] = pauseDay+"";
+        result[0] = DateUtils.localDateToString(planStartDate,"yyyyMMdd");
+        result[1] = DateUtils.localDateToString(planEndDate,"yyyyMMdd");
+        result[2] = pauseDay + "";
         result[3] = pauseDateString.size() > 0 ? StringUtils.join(pauseDateString,"|") : "";
         return result;
     }
