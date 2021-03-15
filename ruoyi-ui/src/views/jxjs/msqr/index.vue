@@ -169,7 +169,7 @@
         label="操作"
         fixed="right"
         align="center"
-        class-name="small-padding fixed-width"
+        class-name="small-padding fixed-width edit-btns"
       >
         <template slot-scope="scope">
           <el-button
@@ -658,3 +658,11 @@ export default {
   },
 };
 </script>
+<style lang="scss" scoped>
+.edit-btns {
+  .el-button {
+    display: block;
+    margin: 0 auto;
+  }
+}
+</style>
