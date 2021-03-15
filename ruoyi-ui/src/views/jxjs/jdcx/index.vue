@@ -294,6 +294,7 @@ export default {
         msjgmnktjxdf: null,
         yjdf: null,
         zhdf2: null,
+        pjdj: null,
       },
       // 查询参数
       queryParams_fa: {
@@ -321,9 +322,6 @@ export default {
         ],
         qjshzt: [
           { required: true, message: "区级审核状态不能为空", trigger: "blur" },
-        ],
-        qjshyj: [
-          { required: true, message: "区级审核意见不能为空", trigger: "blur" },
         ],
         zhdf: [
           { required: true, message: "综合得分不能为空", trigger: "blur" },
@@ -460,6 +458,7 @@ export default {
         msjgmnktjxdf: null,
         yjdf: null,
         zhdf2: null,
+        pjdj: null,
       };
       this.resetForm("form");
     },

@@ -228,7 +228,7 @@
       width="500px"
       append-to-body
     >
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+      <el-form ref="form" :model="form" label-width="80px">
         <el-form-item label="等级" prop="pjdj">
           <el-select v-model="form.pjdj" placeholder="请选择等级">
             <el-option
@@ -592,10 +592,9 @@ export default {
       this.$refs["form"].validate((valid) => {
         if (valid) {
           if (this.form.id != null) {
-            console.log(this.form);
             updateJdcx(this.form).then((response) => {
               if (response.code === 200) {
-                this.msgSuccess("录取成功");
+                this.msgSuccess("评价成功");
                 this.open_pjdj = false;
                 this.getList();
               }
