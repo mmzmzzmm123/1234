@@ -47,6 +47,17 @@ public class TsbzJyyzlglController extends BaseController {
     }
 
     /**
+     * 查询质量管理（教研员）列表
+     */
+    @PreAuthorize("@ss.hasPermi('jyykhgl:jyyzlgl:list')")
+    @GetMapping("/liststatistics")
+    public TableDataInfo liststatistics(TsbzJyyzlgl tsbzJyyzlgl) {
+        startPage();
+        List<TsbzJyyzlgl> list = tsbzJyyzlglService.selectTsbzJyyzlglList(tsbzJyyzlgl);
+        return getDataTable(list);
+    }
+
+    /**
      * 导出质量管理（教研员）列表
      */
     @PreAuthorize("@ss.hasPermi('jyykhgl:jyyzlgl:export')")

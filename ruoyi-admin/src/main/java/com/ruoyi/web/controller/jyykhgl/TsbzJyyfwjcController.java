@@ -54,6 +54,17 @@ public class TsbzJyyfwjcController extends BaseController {
     }
 
     /**
+     * 查询服务基层（教研员）列表
+     */
+    @PreAuthorize("@ss.hasPermi('jyykhgl:jyyfwjc:list')")
+    @GetMapping("/liststatistics")
+    public TableDataInfo liststatistics(TsbzJyyfwjc tsbzJyyfwjc) {
+        startPage();
+        List<TsbzJyyfwjc> list = tsbzJyyfwjcService.selectTsbzJyyfwjcList(tsbzJyyfwjc);
+        return getDataTable(list);
+    }
+
+    /**
      * 导出服务基层（教研员）列表
      */
     @PreAuthorize("@ss.hasPermi('jyykhgl:jyyfwjc:export')")

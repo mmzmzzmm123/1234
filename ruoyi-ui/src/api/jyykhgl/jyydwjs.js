@@ -9,6 +9,15 @@ export function listJyydwjs(query) {
   })
 }
 
+// 查询队伍建设（教研员）列表
+export function listJyydwjsstatistics(query) {
+  return request({
+    url: '/jyykhgl/jyydwjs/liststatistics',
+    method: 'get',
+    params: query
+  })
+}
+
 // 查询队伍建设（教研员）详细
 export function getJyydwjs(id) {
   return request({

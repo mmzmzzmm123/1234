@@ -224,18 +224,18 @@ public class TsbzJdcxController extends BaseController {
     @PostMapping("/updateAll")
     public AjaxResult updateAll(@RequestBody TsbzJdcx tsbzJdcx) {
         int iCount = 0;
-        for (int i = 0; i <tsbzJdcx.getIds().length; i++) {
-            tsbzJdcx = new TsbzJdcx();
-            tsbzJdcx.setId(tsbzJdcx.getIds()[i]);
-            tsbzJdcx.setQjshzt(tsbzJdcx.getQjshzt());
-            tsbzJdcx.setQjshyj(tsbzJdcx.getQjshyj());
+        TsbzJdcx tsbzJdcxnew = null;
+        for (int i = 0; i < tsbzJdcx.getIds().length; i++) {
+            tsbzJdcxnew = new TsbzJdcx();
+            tsbzJdcxnew.setId(tsbzJdcx.getIds()[i]);
+            tsbzJdcxnew.setQjshzt(tsbzJdcx.getQjshzt());
+            tsbzJdcxnew.setQjshyj(tsbzJdcx.getQjshyj());
             if (tsbzJdcx.getQjshzt() == "0") {
-                tsbzJdcx.setDqzt("8");
-            }else if (tsbzJdcx.getQjshzt() == "1") {
-                tsbzJdcx.setDqzt("9");
+                tsbzJdcxnew.setDqzt("8");
+            } else if (tsbzJdcx.getQjshzt() == "1") {
+                tsbzJdcxnew.setDqzt("9");
             }
-            System.out.println(tsbzJdcx+"AAAAAAAAAAAAAAAAaa");
-            iCount = iCount + tsbzJdcxService.updateTsbzJdcx(tsbzJdcx);
+            iCount = iCount + tsbzJdcxService.updateTsbzJdcx(tsbzJdcxnew);
         }
         return toAjax(iCount);
     }
@@ -270,7 +270,6 @@ public class TsbzJdcxController extends BaseController {
     public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(tsbzJdcxService.deleteTsbzJdcxByIds(ids));
     }
-
 
 
     @Log(title = "分数导入", businessType = BusinessType.IMPORT)

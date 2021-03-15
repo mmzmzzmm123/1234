@@ -148,14 +148,14 @@
         width="180px"
       >
         <template slot-scope="scope">
-          <!-- <el-button
+          <el-button
             size="mini"
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['jxjs:jdcx:edit']"
             >审核</el-button
-          > -->
+          >
           <el-button
             size="mini"
             type="text"
@@ -512,7 +512,7 @@ export default {
         yjdf: null,
         zhdf2: null,
         pjdj: null,
-        ids: null,
+        ids: [],
       };
       this.resetForm("form");
     },
@@ -554,21 +554,29 @@ export default {
     /** 批量提交按钮 */
     submitForm_pl(row) {
       this.form.ids = row.id || this.ids;
-      this.$confirm("是否确认批量区级审核数据项?", "警告", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-      })
-        .then(function () {
-          console.log(this.form);
-          return updateAllJdcx(this.form);
-        })
-        .then(() => {
-          this.getList();
+      // console.log(this.form.ids);
+      updateAllJdcx(this.form).then((response) => {
+        if (response.code === 200) {
+          this.msgSuccess("审核成功");
           this.open_pl = false;
-          this.msgSuccess("回退成功");
-        })
-        .catch(function () {});
+          this.getList();
+        }
+      });
+      // this.$confirm("是否确认批量区级审核数据项?", "警告", {
+      //   confirmButtonText: "确定",
+      //   cancelButtonText: "取消",
+      //   type: "warning",
+      // })
+      //   .then(function () {
+      //     console.log(this.form);
+      //     return updateAllJdcx(this.form);
+      //   })
+      //   .then(() => {
+      //     this.getList();
+      //     this.open_pl = false;
+      //     this.msgSuccess("回退成功");
+      //   })
+      //   .catch(function () {});
     },
     /** 提交按钮 */
     submitForm() {
@@ -583,19 +591,6 @@ export default {
             updateJdcx(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("审核成功");
-                this.open = false;
-                this.getList();
-              }
-            });
-          } else {
-            if (this.form.qjshzt == "0") {
-              this.form.dqzt = "8";
-            } else if (this.form.qjshzt == "1") {
-              this.form.dqzt = "9";
-            }
-            addJdcx(this.form).then((response) => {
-              if (response.code === 200) {
-                this.msgSuccess("新增成功");
                 this.open = false;
                 this.getList();
               }

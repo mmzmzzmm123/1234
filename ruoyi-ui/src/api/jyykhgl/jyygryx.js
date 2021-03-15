@@ -9,6 +9,15 @@ export function listJyygryx(query) {
   })
 }
 
+// 查询个人研修（教研员）列表
+export function listJyygryxstatistics(query) {
+  return request({
+    url: '/jyykhgl/jyygryx/liststatistics',
+    method: 'get',
+    params: query
+  })
+}
+
 // 查询个人研修（教研员）详细
 export function getJyygryx(id) {
   return request({

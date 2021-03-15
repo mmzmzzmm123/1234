@@ -9,6 +9,15 @@ export function listJyyfwjc(query) {
   })
 }
 
+// 查询服务基层（教研员）列表
+export function listJyyfwjcstatistics(query) {
+  return request({
+    url: '/jyykhgl/jyyfwjc/liststatistics',
+    method: 'get',
+    params: query
+  })
+}
+
 // 查询服务基层（教研员）详细
 export function getJyyfwjc(id) {
   return request({

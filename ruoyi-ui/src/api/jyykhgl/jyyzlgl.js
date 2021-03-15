@@ -9,6 +9,15 @@ export function listJyyzlgl(query) {
   })
 }
 
+// 查询质量管理（教研员）列表
+export function listJyyzlglstatistics(query) {
+  return request({
+    url: '/jyykhgl/jyyzlgl/liststatistics',
+    method: 'get',
+    params: query
+  })
+}
+
 // 查询质量管理（教研员）详细
 export function getJyyzlgl(id) {
   return request({

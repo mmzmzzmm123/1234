@@ -9,6 +9,15 @@ export function listJyyqtkh(query) {
   })
 }
 
+// 查询其他考核（教研员）列表
+export function listJyyqtkhstatistics(query) {
+  return request({
+    url: '/jyykhgl/jyyqtkh/liststatistics',
+    method: 'get',
+    params: query
+  })
+}
+
 // 查询其他考核（教研员）详细
 export function getJyyqtkh(id) {
   return request({

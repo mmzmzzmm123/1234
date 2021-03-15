@@ -46,6 +46,17 @@ public class TsbzJyykhrwController extends BaseController {
     }
 
     /**
+     * 查询教研员考核任务列表
+     */
+    @PreAuthorize("@ss.hasPermi('jyykhgl:jyykhrw:list')")
+    @GetMapping("/statistics")
+    public TableDataInfo statistics(TsbzJyykhrw tsbzJyykhrw) {
+        startPage();
+        List<TsbzJyykhrw> list = tsbzJyykhrwService.selectTsbzJyykhrwStatistics(tsbzJyykhrw);
+        return getDataTable(list);
+    }
+
+    /**
      * 导出教研员考核任务列表
      */
     @PreAuthorize("@ss.hasPermi('jyykhgl:jyykhrw:export')")

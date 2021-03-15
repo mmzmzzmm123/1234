@@ -6,6 +6,8 @@
 
     <resultMap type="TsbzJyykhrw" id="TsbzJyykhrwResult">
         <result property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="nickName" column="nick_name"/>
         <result property="rwmc" column="rwmc"/>
         <result property="rwlx" column="rwlx"/>
         <result property="rwnr" column="rwnr"/>
@@ -16,7 +18,8 @@
         <result property="isdel" column="isdel"/>
         <result property="createTime" column="create_time"/>
         <result property="rwsm" column="rwsm"/>
-        <result property="deptId"    column="dept_id"    />
+        <result property="deptId" column="dept_id"/>
+        <result property="wcsl" column="wcsl"/>
     </resultMap>
 
     <sql id="selectTsbzJyykhrwVo">
@@ -27,22 +30,43 @@
     <select id="selectTsbzJyykhrwList" parameterType="TsbzJyykhrw" resultMap="TsbzJyykhrwResult">
         <include refid="selectTsbzJyykhrwVo"/>
         where u.isdel ='N'
-            <if test="rwmc != null  and rwmc != ''">and u.rwmc = #{rwmc}</if>
-            <if test="rwlx != null  and rwlx != ''">and u.rwlx = #{rwlx}</if>
-            <if test="rwnr != null  and rwnr != ''">and u.rwnr = #{rwnr}</if>
-            <if test="khbm != null  and khbm != ''">and u.khbm = #{khbm}</if>
-            <if test="khzq != null  and khzq != ''">and u.khzq = #{khzq}</if>
-            <if test="slyq != null  and slyq != ''">and u.slyq = #{slyq}</if>
-            <if test="fsbx != null  and fsbx != ''">and u.fsbx = #{fsbx}</if>
-            <if test="rwsm != null  and rwsm != ''">and u.rwsm = #{rwsm}</if>
+        <if test="rwmc != null  and rwmc != ''">and u.rwmc = #{rwmc}</if>
+        <if test="rwlx != null  and rwlx != ''">and u.rwlx = #{rwlx}</if>
+        <if test="rwnr != null  and rwnr != ''">and u.rwnr = #{rwnr}</if>
+        <if test="khbm != null  and khbm != ''">and u.khbm = #{khbm}</if>
+        <if test="khzq != null  and khzq != ''">and u.khzq = #{khzq}</if>
+        <if test="slyq != null  and slyq != ''">and u.slyq = #{slyq}</if>
+        <if test="fsbx != null  and fsbx != ''">and u.fsbx = #{fsbx}</if>
+        <if test="rwsm != null  and rwsm != ''">and u.rwsm = #{rwsm}</if>
 
-            <!-- 数据范围过滤 -->
-            ${params.dataScope}
+        <!-- 数据范围过滤 -->
+        ${params.dataScope}
     </select>
 
     <select id="selectTsbzJyykhrwById" parameterType="Long" resultMap="TsbzJyykhrwResult">
         <include refid="selectTsbzJyykhrwVo"/>
         where id = #{id}
+    </select>
+
+    <select id="selectTsbzJyykhrwStatistics" parameterType="TsbzJyykhrw" resultMap="TsbzJyykhrwResult">
+        select u.id, d.user_id, d.nick_name, u.rwmc, u.rwlx, u.rwnr, u.khbm, u.khzq, u.slyq, u.fsbx, u.isdel,
+        u.create_time, u.rwsm, u.dept_id,
+        concat((select count(*) from v_jyykhrwtj where rwid=u.id and create_userid=d.user_id)/slyq*100,'%') as wcsl
+        from sys_user d
+        left join tsbz_jyykhrw u on d.dept_id=u.dept_id
+        where u.isdel ='N'
+        <if test="id != null  and id != ''">and u.id = #{id}</if>
+        <if test="rwmc != null  and rwmc != ''">and u.rwmc = #{rwmc}</if>
+        <if test="rwlx != null  and rwlx != ''">and u.rwlx = #{rwlx}</if>
+        <if test="rwnr != null  and rwnr != ''">and u.rwnr = #{rwnr}</if>
+        <if test="khbm != null  and khbm != ''">and u.khbm = #{khbm}</if>
+        <if test="khzq != null  and khzq != ''">and u.khzq = #{khzq}</if>
+        <if test="slyq != null  and slyq != ''">and u.slyq = #{slyq}</if>
+        <if test="fsbx != null  and fsbx != ''">and u.fsbx = #{fsbx}</if>
+        <if test="rwsm != null  and rwsm != ''">and u.rwsm = #{rwsm}</if>
+
+        <!-- 数据范围过滤 -->
+        ${params.dataScope}
     </select>
 
     <insert id="insertTsbzJyykhrw" parameterType="TsbzJyykhrw" useGeneratedKeys="true" keyProperty="id">

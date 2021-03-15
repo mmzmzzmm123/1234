@@ -47,6 +47,17 @@ public class TsbzJyydyzdController extends BaseController {
     }
 
     /**
+     * 查询调研指导列表
+     */
+    @PreAuthorize("@ss.hasPermi('jyykhgl:jyydyzd:list')")
+    @GetMapping("/liststatistics")
+    public TableDataInfo liststatistics(TsbzJyydyzd tsbzJyydyzd) {
+        startPage();
+        List<TsbzJyydyzd> list = tsbzJyydyzdService.selectTsbzJyydyzdList(tsbzJyydyzd);
+        return getDataTable(list);
+    }
+
+    /**
      * 导出调研指导列表
      */
     @PreAuthorize("@ss.hasPermi('jyykhgl:jyydyzd:export')")

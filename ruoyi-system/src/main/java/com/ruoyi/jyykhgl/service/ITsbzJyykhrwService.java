@@ -28,6 +28,14 @@ public interface ITsbzJyykhrwService {
     public List<TsbzJyykhrw> selectTsbzJyykhrwList(TsbzJyykhrw tsbzJyykhrw);
 
     /**
+     * 查询教研员考核任务列表
+     *
+     * @param tsbzJyykhrw 教研员考核任务
+     * @return 教研员考核任务集合
+     */
+    public List<TsbzJyykhrw> selectTsbzJyykhrwStatistics(TsbzJyykhrw tsbzJyykhrw);
+
+    /**
      * 新增教研员考核任务
      *
      * @param tsbzJyykhrw 教研员考核任务

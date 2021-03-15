@@ -9,6 +9,15 @@ export function listJyydyzd(query) {
   })
 }
 
+// 查询调研指导列表
+export function listJyydyzdstatistics(query) {
+  return request({
+    url: '/jyykhgl/jyydyzd/liststatistics',
+    method: 'get',
+    params: query
+  })
+}
+
 // 查询调研指导详细
 export function getJyydyzd(id) {
   return request({

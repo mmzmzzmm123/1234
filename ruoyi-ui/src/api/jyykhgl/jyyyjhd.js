@@ -9,6 +9,15 @@ export function listJyyyjhd(query) {
   })
 }
 
+// 查询研究活动（教研员）列表
+export function listJyyyjhdstatistics(query) {
+  return request({
+    url: '/jyykhgl/jyyyjhd/liststatistics',
+    method: 'get',
+    params: query
+  })
+}
+
 // 查询研究活动（教研员）详细
 export function getJyyyjhd(id) {
   return request({

@@ -47,6 +47,18 @@ public class TsbzJyyjhzjController extends BaseController {
     }
 
     /**
+     * 查询计划总结（教研员）列表
+     */
+    @PreAuthorize("@ss.hasPermi('jyykhgl:jyyjhzj:list')")
+    @GetMapping("/liststatistics")
+    public TableDataInfo liststatistics(TsbzJyyjhzj tsbzJyyjhzj) {
+        System.out.println(tsbzJyyjhzj.getCreateUserid());
+        startPage();
+        List<TsbzJyyjhzj> list = tsbzJyyjhzjService.selectTsbzJyyjhzjList(tsbzJyyjhzj);
+        return getDataTable(list);
+    }
+
+    /**
      * 导出计划总结（教研员）列表
      */
     @PreAuthorize("@ss.hasPermi('jyykhgl:jyyjhzj:export')")

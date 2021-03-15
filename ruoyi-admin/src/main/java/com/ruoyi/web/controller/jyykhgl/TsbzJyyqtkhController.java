@@ -47,6 +47,17 @@ public class TsbzJyyqtkhController extends BaseController {
     }
 
     /**
+     * 查询其他考核（教研员）列表
+     */
+    @PreAuthorize("@ss.hasPermi('jyykhgl:jyyqtkh:list')")
+    @GetMapping("/liststatistics")
+    public TableDataInfo liststatistics(TsbzJyyqtkh tsbzJyyqtkh) {
+        startPage();
+        List<TsbzJyyqtkh> list = tsbzJyyqtkhService.selectTsbzJyyqtkhList(tsbzJyyqtkh);
+        return getDataTable(list);
+    }
+
+    /**
      * 导出其他考核（教研员）列表
      */
     @PreAuthorize("@ss.hasPermi('jyykhgl:jyyqtkh:export')")
