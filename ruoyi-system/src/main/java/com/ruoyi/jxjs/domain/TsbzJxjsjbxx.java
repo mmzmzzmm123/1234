@@ -385,4 +385,5 @@ public class TsbzJxjsjbxx extends BaseEntity {
                 .append("nf", getNf())
                 .toString();
     }
+
 }
