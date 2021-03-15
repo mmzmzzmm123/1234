@@ -10,7 +10,7 @@
         <el-input
           v-model="queryParams.name"
           placeholder="请输入模板名称或备注"
-          @keydown.enter.native="handleQuery"
+          @keyup.enter.native="handleQuery"
         />
       </el-form-item>
       <el-form-item label="营养师" prop="nutritionistId">

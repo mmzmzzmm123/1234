@@ -145,8 +145,7 @@ export default {
       this.updateStateData({ recipesData: [] });
     },
     handleOnTemplateClick() {
-      // this.$refs.templateRef.showDialog();
-      console.log(this.$route.query);
+      this.$refs.templateRef.showDialog();
     },
     handleOnCopy(form) {
       this.loading = true;
