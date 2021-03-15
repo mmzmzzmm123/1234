@@ -59,6 +59,14 @@ export function checkJdcx(id) {
         method: 'post'
     })
 }
+// 批量更新区级审核
+export function updateAllJdcx(data) {
+    return request({
+        url: '/jxjs/jdcx/updateAll',
+        method: 'post',
+        data: data
+    })
+}
 // 下载成绩导入模板
 export function importTemplate() {
     return request({

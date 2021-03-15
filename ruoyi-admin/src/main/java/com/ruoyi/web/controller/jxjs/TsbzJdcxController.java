@@ -217,6 +217,30 @@ public class TsbzJdcxController extends BaseController {
     }
 
     /**
+     * 批量区级审核
+     */
+    @PreAuthorize("@ss.hasPermi('jxjs:jdcx:edit')")
+    @Log(title = "批量区级审核", businessType = BusinessType.UPDATE)
+    @PostMapping("/updateAll")
+    public AjaxResult updateAll(@RequestBody TsbzJdcx tsbzJdcx) {
+        int iCount = 0;
+        for (int i = 0; i <tsbzJdcx.getIds().length; i++) {
+            tsbzJdcx = new TsbzJdcx();
+            tsbzJdcx.setId(tsbzJdcx.getIds()[i]);
+            tsbzJdcx.setQjshzt(tsbzJdcx.getQjshzt());
+            tsbzJdcx.setQjshyj(tsbzJdcx.getQjshyj());
+            if (tsbzJdcx.getQjshzt() == "0") {
+                tsbzJdcx.setDqzt("8");
+            }else if (tsbzJdcx.getQjshzt() == "1") {
+                tsbzJdcx.setDqzt("9");
+            }
+            System.out.println(tsbzJdcx+"AAAAAAAAAAAAAAAAaa");
+            iCount = iCount + tsbzJdcxService.updateTsbzJdcx(tsbzJdcx);
+        }
+        return toAjax(iCount);
+    }
+
+    /**
      * 提交基地校初级审核
      */
     @PreAuthorize("@ss.hasPermi('jxjs:jdcx:edit')")
@@ -246,6 +270,8 @@ public class TsbzJdcxController extends BaseController {
     public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(tsbzJdcxService.deleteTsbzJdcxByIds(ids));
     }
+
+
 
     @Log(title = "分数导入", businessType = BusinessType.IMPORT)
 //    @PreAuthorize("@ss.hasPermi('system:user:import')")

@@ -73,6 +73,17 @@
       </el-col>
       <el-col :span="1.5">
         <el-button
+          type="success"
+          icon="el-icon-edit"
+          size="mini"
+          :disabled="all"
+          @click="handleUpdate_pl"
+          v-hasPermi="['jxjs:jdcx:edit']"
+          >批量审核</el-button
+        >
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
           type="danger"
           icon="el-icon-delete"
           size="mini"
@@ -94,7 +105,12 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="方案名称" align="center" prop="faid" :formatter="faFormat" >
+      <el-table-column
+        label="方案名称"
+        align="center"
+        prop="faid"
+        :formatter="faFormat"
+      >
         <template slot-scope="scope">
           <router-link
             :to="'/jxjs/jxzxpxfa/data/' + scope.row.faid"
@@ -102,8 +118,8 @@
           >
             <span>{{ faFormat(scope.row.faid) }}</span>
           </router-link>
-        </template> 
-      </el-table-column> 
+        </template>
+      </el-table-column>
       <el-table-column label="基地校名称" align="center" prop="jdxmc" />
       <el-table-column label="教师姓名" align="center" prop="jsname" />
       <el-table-column
@@ -132,14 +148,14 @@
         width="180px"
       >
         <template slot-scope="scope">
-          <el-button
+          <!-- <el-button
             size="mini"
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['jxjs:jdcx:edit']"
             >审核</el-button
-          >
+          > -->
           <el-button
             size="mini"
             type="text"
@@ -214,6 +230,38 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+
+    <!-- 批量审核 -->
+    <el-dialog
+      :title="title"
+      :visible.sync="open_pl"
+      width="500px"
+      append-to-body
+    >
+      <el-form ref="form" :model="form" :rules="rules" label-width="110px">
+        <el-form-item label="区级审核意见" prop="qjshzt">
+          <el-select v-model="form.qjshzt" placeholder="请选择区级审核意见">
+            <el-option
+              v-for="dict in qjshztOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="区级审核建议" prop="qjshyj">
+          <el-input
+            v-model="form.qjshyj"
+            type="textarea"
+            placeholder="请输入审核建议"
+          />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitForm_pl">确 定</el-button>
+        <el-button @click="cancel">取 消</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -224,6 +272,7 @@ import {
   delJdcx,
   addJdcx,
   updateJdcx,
+  updateAllJdcx,
   exportJdcx,
 } from "@/api/jxjs/jdcx";
 
@@ -243,6 +292,7 @@ export default {
       ids: [],
       // 非单个禁用
       single: true,
+      all: true,
       // 非多个禁用
       multiple: true,
       // 显示搜索条件
@@ -255,6 +305,7 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
+      open_pl: false,
       // 当前状态字典
       dqztOptions: [],
       // 基地校审核意见字典
@@ -295,6 +346,7 @@ export default {
         yjdf: null,
         zhdf2: null,
         pjdj: null,
+        ids: null,
       },
       // 查询参数
       queryParams_fa: {
@@ -430,6 +482,7 @@ export default {
     // 取消按钮
     cancel() {
       this.open = false;
+      this.open_pl = false;
       this.reset();
     },
     // 表单重置
@@ -459,6 +512,7 @@ export default {
         yjdf: null,
         zhdf2: null,
         pjdj: null,
+        ids: null,
       };
       this.resetForm("form");
     },
@@ -477,6 +531,7 @@ export default {
     handleSelectionChange(selection) {
       this.ids = selection.map((item) => item.id);
       this.single = selection.length !== 1;
+      this.all = selection.length < 2;
       this.multiple = !selection.length;
     },
     /** 修改按钮操作 */
@@ -488,6 +543,32 @@ export default {
         this.open = true;
         this.title = "见习之星评选区级审核";
       });
+    },
+    /** 批量修改按钮操作 */
+    handleUpdate_pl(row) {
+      this.reset();
+      const id = row.id || this.ids;
+      this.open_pl = true;
+      this.title = "见习之星评选区级批量审核";
+    },
+    /** 批量提交按钮 */
+    submitForm_pl(row) {
+      this.form.ids = row.id || this.ids;
+      this.$confirm("是否确认批量区级审核数据项?", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(function () {
+          console.log(this.form);
+          return updateAllJdcx(this.form);
+        })
+        .then(() => {
+          this.getList();
+          this.open_pl = false;
+          this.msgSuccess("回退成功");
+        })
+        .catch(function () {});
     },
     /** 提交按钮 */
     submitForm() {

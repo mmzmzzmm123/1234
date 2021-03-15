@@ -179,7 +179,7 @@ public class TsbzJdcx extends BaseEntity {
     private String jdxid;
     // 评价等级
     private String pjdj;
-
+    private Long[] ids;
 
     public String getFaname() {
         return faname;
@@ -475,6 +475,7 @@ public class TsbzJdcx extends BaseEntity {
                 .append("jdxid", getJdxid())
                 .append("jxbh", getJxbh())
                 .append("pjdj", getPjdj())
+                .append("ids", getIds())
                 .toString();
     }
 
@@ -484,5 +485,13 @@ public class TsbzJdcx extends BaseEntity {
 
     public void setPjdj(String pjdj) {
         this.pjdj = pjdj;
+    }
+
+    public Long[] getIds() {
+        return ids;
+    }
+
+    public void setIds(Long[] ids) {
+        this.ids = ids;
     }
 }
