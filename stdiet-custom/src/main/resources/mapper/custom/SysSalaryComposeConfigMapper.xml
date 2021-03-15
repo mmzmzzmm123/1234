@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.stdiet.custom.mapper.SysSalaryComposeConfigMapper">
+
+    <resultMap type="SysSalaryComposeConfig" id="SysSalaryComposeConfigResult">
+        <result property="id"    column="id"    />
+        <result property="salaryPostName"    column="salary_post_name"    />
+        <result property="baseSalary"    column="base_salary"    />
+        <result property="postAllowanceRate"    column="post_allowance_rate"    />
+        <result property="overtimeAllowanceRate"    column="overtime_allowance_rate"    />
+        <result property="meritsAllowanceRate"    column="merits_allowance_rate"    />
+        <result property="carAllowanceRate"    column="car_allowance_rate"    />
+        <result property="mealAllowanceRate"    column="meal_allowance_rate"    />
+        <result property="fullAttendanceSalary"    column="full_attendance_salary"    />
+        <result property="houseAllowanceRate"    column="house_allowance_rate"    />
+        <result property="travelAllowanceRate"    column="travel_allowance_rate"    />
+        <result property="skillAllowanceRate"    column="skill_allowance_rate"    />
+        <result property="trainAllowanceRate"    column="train_allowance_rate"    />
+        <result property="departmentAllowanceRate"    column="department_allowance_rate"    />
+        <result property="educationAllowanceRate"    column="education_allowance_rate"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <sql id="selectSysSalaryComposeConfigVo">
+        select id, salary_post_name, base_salary, post_allowance_rate, overtime_allowance_rate, merits_allowance_rate, car_allowance_rate, meal_allowance_rate, full_attendance_salary, house_allowance_rate, travel_allowance_rate, skill_allowance_rate, train_allowance_rate, department_allowance_rate, education_allowance_rate, create_time, create_by, update_time, update_by, del_flag from sys_salary_compose_config
+    </sql>
+
+    <select id="selectSysSalaryComposeConfigList" parameterType="SysSalaryComposeConfig" resultMap="SysSalaryComposeConfigResult">
+        <include refid="selectSysSalaryComposeConfigVo"/> where del_flag = 0
+    </select>
+
+    <select id="selectSysSalaryComposeConfigById" parameterType="Long" resultMap="SysSalaryComposeConfigResult">
+        <include refid="selectSysSalaryComposeConfigVo"/>
+        where id = #{id} and del_flag = 0
+    </select>
+
+    <insert id="insertSysSalaryComposeConfig" parameterType="SysSalaryComposeConfig" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_salary_compose_config
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="salaryPostName != null">salary_post_name,</if>
+            <if test="baseSalary != null">base_salary,</if>
+            <if test="postAllowanceRate != null">post_allowance_rate,</if>
+            <if test="overtimeAllowanceRate != null">overtime_allowance_rate,</if>
+            <if test="meritsAllowanceRate != null">merits_allowance_rate,</if>
+            <if test="carAllowanceRate != null">car_allowance_rate,</if>
+            <if test="mealAllowanceRate != null">meal_allowance_rate,</if>
+            <if test="fullAttendanceSalary != null">full_attendance_salary,</if>
+            <if test="houseAllowanceRate != null">house_allowance_rate,</if>
+            <if test="travelAllowanceRate != null">travel_allowance_rate,</if>
+            <if test="skillAllowanceRate != null">skill_allowance_rate,</if>
+            <if test="trainAllowanceRate != null">train_allowance_rate,</if>
+            <if test="departmentAllowanceRate != null">department_allowance_rate,</if>
+            <if test="educationAllowanceRate != null">education_allowance_rate,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="delFlag != null">del_flag,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="salaryPostName != null">#{salaryPostName},</if>
+            <if test="baseSalary != null">#{baseSalary},</if>
+            <if test="postAllowanceRate != null">#{postAllowanceRate},</if>
+            <if test="overtimeAllowanceRate != null">#{overtimeAllowanceRate},</if>
+            <if test="meritsAllowanceRate != null">#{meritsAllowanceRate},</if>
+            <if test="carAllowanceRate != null">#{carAllowanceRate},</if>
+            <if test="mealAllowanceRate != null">#{mealAllowanceRate},</if>
+            <if test="fullAttendanceSalary != null">#{fullAttendanceSalary},</if>
+            <if test="houseAllowanceRate != null">#{houseAllowanceRate},</if>
+            <if test="travelAllowanceRate != null">#{travelAllowanceRate},</if>
+            <if test="skillAllowanceRate != null">#{skillAllowanceRate},</if>
+            <if test="trainAllowanceRate != null">#{trainAllowanceRate},</if>
+            <if test="departmentAllowanceRate != null">#{departmentAllowanceRate},</if>
+            <if test="educationAllowanceRate != null">#{educationAllowanceRate},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+        </trim>
+    </insert>
+
+    <update id="updateSysSalaryComposeConfig" parameterType="SysSalaryComposeConfig">
+        update sys_salary_compose_config
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="salaryPostName != null">salary_post_name = #{salaryPostName},</if>
+            <if test="baseSalary != null">base_salary = #{baseSalary},</if>
+            <if test="postAllowanceRate != null">post_allowance_rate = #{postAllowanceRate},</if>
+            <if test="overtimeAllowanceRate != null">overtime_allowance_rate = #{overtimeAllowanceRate},</if>
+            <if test="meritsAllowanceRate != null">merits_allowance_rate = #{meritsAllowanceRate},</if>
+            <if test="carAllowanceRate != null">car_allowance_rate = #{carAllowanceRate},</if>
+            <if test="mealAllowanceRate != null">meal_allowance_rate = #{mealAllowanceRate},</if>
+            <if test="fullAttendanceSalary != null">full_attendance_salary = #{fullAttendanceSalary},</if>
+            <if test="houseAllowanceRate != null">house_allowance_rate = #{houseAllowanceRate},</if>
+            <if test="travelAllowanceRate != null">travel_allowance_rate = #{travelAllowanceRate},</if>
+            <if test="skillAllowanceRate != null">skill_allowance_rate = #{skillAllowanceRate},</if>
+            <if test="trainAllowanceRate != null">train_allowance_rate = #{trainAllowanceRate},</if>
+            <if test="departmentAllowanceRate != null">department_allowance_rate = #{departmentAllowanceRate},</if>
+            <if test="educationAllowanceRate != null">education_allowance_rate = #{educationAllowanceRate},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="deleteSysSalaryComposeConfigById" parameterType="Long">
+        update sys_salary_compose_config set del_flag = 1 where id = #{id}
+    </update>
+
+    <update id="deleteSysSalaryComposeConfigByIds" parameterType="String">
+        update sys_salary_compose_config set del_flag = 1 where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+</mapper>
