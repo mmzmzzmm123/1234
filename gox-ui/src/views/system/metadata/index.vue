@@ -656,12 +656,20 @@
       },
       /** 批量替换按钮操作 */
       batchHandleUpdate() {
-        this.$refs.replaceForm.open(this.selectData,this.tableTitle);
+        if (this.selectData.length==0){
+          this.$confirm("请选择记录");
+        }else{
+          this.$refs.replaceForm.open(this.selectData,this.tableTitle);
+        }
       },
 
       /** 批量增加按钮操作 */
       batchHandleIncrease() {
-        this.$refs.increaseForm.open(this.selectData,this.tableTitle);
+        if (this.selectData.length==0){
+          this.$confirm("请选择记录");
+        }else{
+          this.$refs.increaseForm.open(this.selectData,this.tableTitle);
+        }
       },
       closeBatchModify(){
         this.BatchEditDialog=false;
