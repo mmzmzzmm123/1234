@@ -62,9 +62,15 @@ public class NodeServiceImpl implements INodeService
     @Override
     public int insertNode(Node node)
     {
+        List<Node> nodeList=nodeMapper.selectNodeListByWorkId(node.getWorkid());
+        Node node1 = nodeList.get(1);
+        Node node2 = nodeList.get(0);
+        node.setSort(node1.getSort());
+        node.setNextid(node1.getId().toString());
+        node.setNexttext(node1.getText());
         int rows=nodeMapper.insertNode(node);
-       // return nodeMapper.insertNode(node);
-
+        nodeMapper.updateNodeById(node1.getNextid(),node1.getNexttext(),node1.getSort()+1,node1.getDesci(),node1.getId());//更新上一节点
+        nodeMapper.updateNodeById(node.getId().toString(),node.getText(),node2.getSort(),node2.getDesci(),node2.getId());
         return rows;
     }
 

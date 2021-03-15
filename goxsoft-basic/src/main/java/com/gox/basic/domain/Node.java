@@ -117,6 +117,14 @@ public class Node extends BaseEntity
         return workid;
     }
 
+    public Long getSort() {
+        return sort;
+    }
+
+    public void setSort(Long sort) {
+        this.sort = sort;
+    }
+
     public void setWorkid(Long workid) {
         this.workid = workid;
     }
@@ -130,16 +138,8 @@ public class Node extends BaseEntity
     {
         return text;
     }
-    public void setSort(Long sort) 
-    {
-        this.sort = sort;
-    }
 
-    public Long getSort() 
-    {
-        return sort;
-    }
-    public void setDesci(String desci) 
+    public void setDesci(String desci)
     {
         this.desci = desci;
     }
