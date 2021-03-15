@@ -5,7 +5,7 @@
       ref="queryForm"
       :inline="true"
       v-show="showSearch"
-      label-width="68px"
+      label-width="70px"
     >
       <el-form-item label="评选方案" prop="faid">
         <el-select v-model="queryParams.faid" placeholder="请选择方案">
@@ -199,7 +199,7 @@
         ref="queryForm_jscx"
         :inline="true"
         v-show="showSearch"
-        label-width="68px"
+        label-width="70px"
       >
         <el-form-item label="教师姓名" prop="name">
           <el-input
@@ -230,15 +230,15 @@
         </el-form-item>
       </el-form>
 
-      <!-- <el-table v-loading="loading" :data="jdcxList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" :selectable="isShow" /> -->
-
-      <el-table :data="jxjsjbxxList" @selection-change="handleSelectionChange">
+      <el-table
+        :data="jxjsjbxxList"
+        @selection-change="handleSelectionChange_jscx"
+      >
         <el-table-column
           type="selection"
           width="55"
           align="center"
-          :selectable="isShow"
+          :selectable="isShow_jdcx"
         />
         <el-table-column label="姓名" align="center" prop="name" />
         <el-table-column
@@ -262,7 +262,7 @@
         />
         <el-table-column label="录取年份" align="center" prop="lqnf" />
       </el-table>
-      
+
       <pagination
         v-show="totalJscx > 0"
         :total="totalJscx"
@@ -272,54 +272,15 @@
       />
 
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="handleCheck">确 定</el-button>
+        <el-button type="primary" :disabled="single_jscx" @click="submitForm"
+          >确 定</el-button
+        >
         <el-button @click="cancel_jscx">取 消</el-button>
       </div>
-    </el-dialog>
-
-    
-
-    <!-- 添加或修改基地区级审核对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="800px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="方案编号" prop="faid">
-          <el-select
-            v-model="form.faid"
-            placeholder="请选择方案"
-            :disabled="true"
-          >
-            <el-option
-              v-for="dict in faOptions"
-              :key="dict.id"
-              :label="dict.name"
-              :value="dict.id"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="选择教师" prop="dqzt">
-          <el-checkbox
-            :indeterminate="isIndeterminate"
-            v-model="checkAll"
-            @change="handleCheckAllChange"
-            :disabled="isable"
-            >全选</el-checkbox
-          >
-          <div style="margin: 15px 0"></div>
-          <el-checkbox-group
-            v-model="checkedJss"
-            @change="handlecheckedJssChange"
-          >
-            <el-checkbox
-              v-for="js in jss"
-              :label="js.id"
-              :key="js.id"
-              :disabled="isable"
-              >{{ js.name }}</el-checkbox
-            >
-          </el-checkbox-group>
-          <el-input v-model="form.dqzt" v-if="false" />
-        </el-form-item>
+        <br />
         <el-form-item label="上报理由" prop="sbly">
+          <el-input v-model="form.dqzt" v-if="false" />
           <el-input
             v-model="form.sbly"
             type="textarea"
@@ -327,10 +288,6 @@
           />
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
-        <el-button @click="cancel">取 消</el-button>
-      </div>
     </el-dialog>
   </div>
 </template>
@@ -361,12 +318,7 @@ export default {
     return {
       //默认选中方案id
       defaultFaId: "",
-      isable: false,
-      isCheck: true,
-      checkAll: false,
-      checkedJss: [],
-      jss: [],
-      isIndeterminate: false,
+      isAbel: true,
       // 是否显示弹出层
       open_jscx: false,
       // 遮罩层
@@ -377,6 +329,10 @@ export default {
       single: true,
       // 非多个禁用
       multiple: true,
+      // 选中数组
+      jscxids: [],
+      // 非单个禁用
+      single_jscx: true,
       // 显示搜索条件
       showSearch: true,
       // 总条数
@@ -442,6 +398,7 @@ export default {
         jdxid: null,
         rjxd: null,
         rjxk: null,
+        id: null,
       },
       // 查询参数
       queryParams_fa: {
@@ -449,6 +406,8 @@ export default {
       },
       // 查询参数
       queryParams_js: {
+        pageNum: 1,
+        pageSize: 10,
         faid: null,
         nf: null,
       },
@@ -516,6 +475,9 @@ export default {
         return true;
       }
     },
+    isShow_jdcx() {
+      return this.isAbel;
+    },
     // 字典翻译
     faFormat(val) {
       // return this.selectDictLabel(this.classOptions, row.classid);
@@ -567,14 +529,14 @@ export default {
     /** 搜索按钮操作 */
     handleQuery_jscx() {
       this.queryParams.pageNum = 1;
-      // this.getJxjsList();
+      this.getJxjsList();
     },
     /** 查询基地区级审核列表 */
     getList() {
       this.loading = true;
       listJdcx(this.queryParams).then((response) => {
         this.jdcxList = response.rows;
-        console.log(response.rows);
+        // console.log(response.rows);
         this.total = response.total;
         this.loading = false;
       });
@@ -622,7 +584,6 @@ export default {
       this.resetForm("form");
 
       this.form.faid = this.defaultFaId;
-      this.checkedJss = [];
     },
     /** 搜索按钮操作 */
     handleQuery() {
@@ -641,47 +602,49 @@ export default {
       this.single = selection.length !== 1;
       this.multiple = !selection.length;
     },
-    /** 新增按钮操作 */
-    handleAdd(row) {
-      const id = row.id;
-      this.reset();
-      this.isable = false;
-      this.open = true;
-      this.title = "基地校初选";
-      listJxjsjbxxnotjdcx(this.queryParams_js).then((response) => {
-        this.jss = response.rows;
+    // 多选框选中数据
+    handleSelectionChange_jscx(selection) {
+      this.jscxids = selection.map((item) => item.id);
+      this.single_jscx = selection.length !== 1;
+      var cids = "";
+      this.jscxids.forEach((item) => {
+        //当全选被选中的时候，循环遍历源数据，把数据的每一项加入到默认选中的数组去
+        cids = cids + item + ",";
       });
+      //console.log(cids);
+      this.form.dqzt = cids;
     },
     /** 查询基地区级审核列表 */
     getJxjsList() {
-      listJxjsjbxxnotjdcx(this.queryParams_js).then((response) => {
-        this.loading = true;
+      listJxjsjbxxnotjdcx(this.queryParams_jscx).then((response) => {
         this.jxjsjbxxList = response.rows;
         this.totalJscx = response.total;
-        this.loading = false;
       });
     },
     /** 新增选择s教师按钮 */
     handleAddNew() {
       this.reset();
-      this.loading = true;
-      this.isable = false;
       this.open_jscx = true;
       this.title = "基地校初选";
+      this.queryParams_jscx.id = "";
+      this.isAbel = true;
       this.getJxjsList();
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      this.isable = true;
       const id = row.id || this.ids;
       getJdcx(id).then((response) => {
         this.form = response.data;
-        listJxjsjbxx(null).then((response) => {
-          this.jss = response.rows;
+        //console.log(response.data);
+        this.queryParams_jscx.id = response.data.jsid;
+        listJxjsjbxxnotjdcx(this.queryParams_jscx).then((response) => {
+          this.jxjsjbxxList = response.rows;
+          this.totalJscx = response.total;
+          this.single_jscx = false;
+          this.isAbel = false;
         });
-        this.checkedJss.push(response.data.jsid);
-        this.open = true;
+        this.open_jscx = true;
         this.title = "修改基地校初选信息";
       });
     },
@@ -693,7 +656,7 @@ export default {
             updateJdcx(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("修改成功");
-                this.open = false;
+                this.open_jscx = false;
                 this.getList();
               }
             });
@@ -701,7 +664,7 @@ export default {
             addJdcx(this.form).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("新增成功");
-                this.open = false;
+                this.open_jscx = false;
                 this.getList();
               }
             });
@@ -742,40 +705,6 @@ export default {
           this.msgSuccess("提交成功");
         })
         .catch(function () {});
-    },
-    handleCheckAllChange(val) {
-      // this.checkedJss = val ? this.jss : [];
-      // this.isIndeterminate = false;
-      this.checkedJss = [];
-      this.jss.forEach((item) => {
-        //当全选被选中的时候，循环遍历源数据，把数据的每一项加入到默认选中的数组去
-        this.checkedJss.push(item.id);
-      });
-      this.checkedJss = val ? this.checkedJss : []; //三元表达式，如果val的值为true，那么就把当前默认选中的值赋值给自身，这样页面页面上所有的元素就都选中了。如果为false，就是取消全选
-      this.isIndeterminate = false; //官网说这是个样式控制，是来控制，什么时候半选的，要不要都无所谓，看你需求
-
-      //console.log(this.checkedJss);
-      var cids = "";
-      this.checkedJss.forEach((item) => {
-        //当全选被选中的时候，循环遍历源数据，把数据的每一项加入到默认选中的数组去
-        cids = cids + item + ",";
-      });
-      //console.log(cids);
-      this.form.dqzt = cids;
-    },
-    handlecheckedJssChange(value) {
-      let checkedCount = value.length;
-      this.checkAll = checkedCount === this.jss.length;
-      this.isIndeterminate = checkedCount > 0 && checkedCount < this.jss.length;
-
-      console.log(this.isIndeterminate);
-      var cids = "";
-      this.checkedJss.forEach((item) => {
-        //当全选被选中的时候，循环遍历源数据，把数据的每一项加入到默认选中的数组去
-        cids = cids + item + ",";
-      });
-      //console.log(cids);
-      this.form.dqzt = cids;
     },
   },
 };

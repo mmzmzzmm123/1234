@@ -94,6 +94,7 @@
     <select id="selectTsbzJxjsjbxxListnotjdcx" parameterType="TsbzJxjsjbxx" resultMap="TsbzJxjsjbxxResult">
         select id, otherid, name, jxbh, xb, csrq, email, phone, yzbm, zzmm, mz, prdwid, prdwmc, jdxid, rjxd, rjxk, rjnj, byyx, xl, xw, sfsfs, lqnf, create_time
         from tsbz_jxjsjbxx where id not in (select jsid from tsbz_jdcx t1 left join tsbz_jxzxpxfa t2 on t1.faid=t2.id where faid=#{faid} and t2.nf=#{nf})
+        <if test="id != null  and id != ''">and id = #{id}</if>
         <if test="otherid != null  and otherid != ''">and otherid = #{otherid}</if>
         <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
         <if test="jxbh != null  and jxbh != ''">and jxbh = #{jxbh}</if>
