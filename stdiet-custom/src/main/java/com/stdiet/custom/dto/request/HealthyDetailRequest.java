@@ -381,14 +381,17 @@ public class HealthyDetailRequest implements Serializable {
     private String otherPhysicalSigns;
 
     /** 气血数据 */
-    private String bloodData;
+    private String[] bloodData;
+
+    private String bloodDataString;
 
     //备注
     private String remark;
 
     /** 湿气数据 */
-    private String moistureDate;
+    private String[] moistureDate;
 
+    private String moistureDateString;
 
     /** 减脂指导 **/
     private String guidance;

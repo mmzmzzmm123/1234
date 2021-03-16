@@ -180,7 +180,7 @@ public class SysCustomerHealthyServiceImpl implements ISysCustomerHealthyService
             "secondSmoke","workIndustry","workType","defecationNum","defecationTime","defecationShape",
             "defecationSmell","defecationSpeed","defecationColor","motionNum","motionDuration","motionTime",
             "motion","motionField","sleepTime","sleepQuality","sleepDrugFlag","sleepDrug","stayupLateFlag","stayupLateWeekNum",
-            "physicalSigns","moistureDate","bloodData","familyIllnessHistory","operationHistory","nearOperationFlag",
+            "physicalSigns","moistureDateString","bloodDataString","familyIllnessHistory","operationHistory","nearOperationFlag",
             "recoveryeSituation","longEatDrugFlag","longEatDrugClassify","allergyFlag","allergySituation","allergen"
     };
 
@@ -191,27 +191,19 @@ public class SysCustomerHealthyServiceImpl implements ISysCustomerHealthyService
     };
 
     private Map<String,String> getReportData(SysCustomerHealthy sysCustomerHealthy, HealthyDetailRequest healthyDetailRequest){
-        if(StringUtils.isNotEmpty(sysCustomerHealthy.getBloodData())){
-            SysDictData param = new SysDictData();
-            param.setDictType("sys_moisture_data");
-            param.setDictValueList(Arrays.asList(sysCustomerHealthy.getBloodData().split(",")));
-            List<SysDictData> bloodData = selectDictDataByTypeAndValue(param);
+        if(healthyDetailRequest.getBloodData() != null){
             String bloodString = "";
-            for (SysDictData blood : bloodData) {
-                bloodString += blood.getDictValue() + "、" +blood.getDictLabel() + "\n";
+            for (String value : healthyDetailRequest.getBloodData()) {
+                bloodString += value + "\n";
             }
-            healthyDetailRequest.setBloodData(bloodString);
+            healthyDetailRequest.setBloodDataString(bloodString);
         }
-        if(StringUtils.isNotEmpty(sysCustomerHealthy.getMoistureDate())){
-            SysDictData param = new SysDictData();
-            param.setDictType("sys_blood_data");
-            param.setDictValueList(Arrays.asList(sysCustomerHealthy.getBloodData().split(",")));
-            List<SysDictData> moistureData = selectDictDataByTypeAndValue(param);
+        if(healthyDetailRequest.getMoistureDate() != null){
             String moistureString = "";
-            for (SysDictData moisture : moistureData) {
-                moistureString += moisture.getDictValue() + "、" + moisture.getDictLabel() + "\n";
+            for (String value : healthyDetailRequest.getMoistureDate()) {
+                moistureString += value + "\n";
             }
-            healthyDetailRequest.setMoistureDate(moistureString);
+            healthyDetailRequest.setMoistureDateString(moistureString);
         }
         Map<String,String> data = new HashMap<>();
         for (String key : healthyAttrNameAray) {
