@@ -248,7 +248,7 @@ public class AliyunOSSUtils {
 
     /**
      *
-     * @param fileUrl
+     * @param fileUrlList
      * @return
      */
     public static List<String> generatePresignedUrl(List<String> fileUrlList){

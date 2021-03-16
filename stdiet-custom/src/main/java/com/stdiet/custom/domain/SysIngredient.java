@@ -15,8 +15,6 @@ import java.util.Date;
  */
 @Data
 public class SysIngredient {
-    private static final long serialVersionUID = 1L;
-
     /**
      * id
      */
@@ -106,5 +104,10 @@ public class SysIngredient {
     private Long[] recIds;
 
     private Long[] notRecIds;
+
+    /**
+     * 食材信息
+     */
+    private String info;
 
 }

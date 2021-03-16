@@ -60,6 +60,9 @@ public class SysIngredientServiceImpl implements ISysIngredientService {
         insertRecommand(sysIngredient);
         //
         insertNotRecommand(sysIngredient);
+        //
+        
+
         return rows;
     }
 
