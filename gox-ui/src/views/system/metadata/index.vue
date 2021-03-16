@@ -99,6 +99,28 @@
               </el-dropdown>
 
             </el-col>
+            <el-col :span="1.5">
+              <el-button
+                type="danger"
+                icon="el-icon-delete"
+                size="mini"
+                :disabled="single"
+                @click="handleInsert"
+                v-hasPermi="['system:metadata:remove']"
+              >插件
+              </el-button>
+            </el-col>
+            <el-col :span="1.5">
+              <el-button
+                type="danger"
+                icon="el-icon-delete"
+                size="mini"
+                :disabled="single"
+                @click="handleBreak"
+                v-hasPermi="['system:metadata:remove']"
+              >拆件
+              </el-button>
+            </el-col>
             <!--批量处理组件-->
             <replace @updateTableData="getList"  ref="replaceForm"></replace>
             <increase @updateTableData="getList"  ref="increaseForm"></increase>
@@ -155,51 +177,8 @@
       <uploads :url="uploadUrl">
       </uploads>
     </el-dialog>
-    <InputView v-if="open" :parent-id="queryParamsInner.parentId" :deptid="deptId" :node-id="nodeId"
+    <InputView v-if="open" :deptid="deptId" :node-id="nodeId"
                :metadata="metadata" :metadataid="id" :type="type" :formconf="formConf" @close="cancel"/>
-
-
- <!--   <el-dialog title="批量修改" :visible.sync="BatchEditDialog"  :modal-append-to-body='false'>
-     <el-card class="box-card">
-        <div slot="header" class="clearfix">
-          <el-row style="margin-bottom: 10px">
-            <div>
-              <el-input placeholder="请输入修改内容"  v-model="field">
-                <el-select placeholder="请选择" slot="prepend" v-model="selectField" style="width: 200px">
-                  <el-option v-for="(item,index) in tableTitle" :key="index"
-                             :label="item.tableFieldName" :value="item.id"></el-option>
-                </el-select>
-                <el-button slot="append" @click.native="handleAddChangeData()" size="mini">添加</el-button>
-              </el-input>
-            </div>
-          </el-row>
-          <el-row style="margin-bottom: 10px">
-            <el-checkbox label="替换值是否为空" v-model="checked"></el-checkbox>
-          </el-row>
-          <el-row style="margin-bottom: 10px">
-            <div>
-              <el-button size="medium" style="width: 100px" type="primary" @click.native="deleteChooseDate">删除修改</el-button>
-              <el-button size="medium" style="width: 100px" type="info" @click.native="clearField">清 除</el-button>
-              <el-button size="medium" style="width: 100px" type="warning" @click.native="previewData">预 览</el-button>
-            </div>
-          </el-row>
-        </div>
-
-        <div slot="default">
-          <el-table border :data="changeFieldTable"  @selection-change="handleDeleteOne">
-            <el-table-column type="selection" ></el-table-column>
-            <el-table-column label="字段编码" prop="vModel" align="center"></el-table-column>
-            <el-table-column label="字段名称" prop="tableFieldName" align="center"></el-table-column>
-            <el-table-column label="字段值"  prop="changeValue" align="center"></el-table-column>
-          </el-table>
-        </div>
-      </el-card>
-      <batchModify :selectData="selectData" :tableTitle="tableTitle" :batchEditDialog="BatchEditDialog"></batchModify>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="BatchEditDialog= false">取 消</el-button>
-        <el-button type="primary" @click="handleBatchUpdate">修改</el-button>
-      </span>
-    </el-dialog>-->
     <batchModify :selectData="selectData" :tableTitle="tableTitle" :BatchEditDialog="BatchEditDialog"
                  v-on:getList="getList"
                  v-on:closeBatchModify="closeBatchModify"></batchModify>
@@ -292,23 +271,23 @@
       </div>
     </el-dialog>
 
-    <InputView v-if="open" :parent-id="queryParamsInner.parentId" :deptid="deptId" :node-id="nodeId"
-               :metadata="metadata" :metadataid="id" :type="type" :formconf="formConf" @close="cancel"/>
+<!--    <InputView v-if="open" :parent-id="queryParamsInner.parentId" :deptid="deptId" :node-id="nodeId"-->
+<!--               :metadata="metadata" :metadataid="id" :type="type" :formconf="formConf" @close="cancel"/>-->
   </div>
 </template>
 
 <script>
-  import {
-    addMetadata,
-    delMetadata,
-    exportMetadata,
-    exportMetadataField,
-    exportMetadataItem,
-    exportMetadataItemAndEle,
-    listMetadata,
-    updateMetadata, uploadHandle,
-    getTransInfo,transfer,addTransfer
-  } from '@/api/system/metadata'
+import {
+  addMetadata,
+  delMetadata,
+  exportMetadata,
+  exportMetadataField,
+  exportMetadataItem,
+  exportMetadataItemAndEle,
+  listMetadata,
+  updateMetadata, uploadHandle,
+  getTransInfo, transfer, addTransfer, importHandleConfirm
+} from '@/api/system/metadata'
   import DeptTree from '@/views/components/deptTree'
   import InputView from '@/views/system/metadata/InputView'
   import { listJson} from '@/api/system/json'
@@ -333,6 +312,16 @@
     },
     data() {
       return {
+        rightTableData:[],
+        rightImportLoading:false,
+        tableFields:[],
+        tableFieldsPick:[],
+        leftImportLoading: false,
+        leftTableData:[],
+        uploadFileName:'',
+        uploadDisable: true,
+        importPreView:[],
+        importS:false,
         searchFields:[],
         tableTitle: [],
         upload: false,
@@ -447,6 +436,69 @@
     },
 
     methods: {
+      submitUploadHandle(){
+        let data = {
+          nodeId:this.nodeId,
+          deptId:this.deptId,
+          filename:this.uploadFileName,
+          list:this.leftTableData,
+          parentId:this.queryParams.parentId
+        }
+        importHandleConfirm(data).then(res=>{
+          this.$message(res.msg)
+          this.importS=false;
+          this.getList();
+        })
+      },
+      cancelUploadHandle(){
+        this.importS=false
+      },
+      submitUpload(){
+        uploadHandle(this.nodeId,this.deptId,this.uploadFileName)
+          .then(res=>{
+            this.importPreView = res.data
+            this.leftTableData = []
+            let srcField = this.importPreView[0]
+            let destField = this.tableFields.map(item=>item.tableFieldName)
+            srcField.forEach(item=>{
+              let dest = destField.filter(i=>{
+                return i===item
+              })
+              this.leftTableData.push({
+                src:item,
+                dest:dest?dest[0]:''
+              })
+            })
+            this.upload = false
+            this.handleDestChange()
+            this.importS = true
+          })
+
+      },
+      cancelUpload() {
+        this.upload=false
+      },
+      handleDestChange(){
+        this.rightImportLoading = true
+        this.rightTableData=[]
+        for(let i = 1;i<this.importPreView.length;i++){
+          let obj={};
+          for(let j = 0;j<this.importPreView[0].length;j++){
+            //上传字段j
+            let label = this.importPreView[0][j];
+            //匹配字段
+            let value = this.leftTableData.filter(item=>item.src===label)
+            if(value.length>0){
+              let dest = this.tableFields.filter(item=>item.tableFieldName===value[0].dest)
+              if(dest.length>0){
+                obj[dest[0].vModel]=this.importPreView[i][j]
+              }
+            }
+          }
+          this.rightTableData.push(obj)
+        }
+        this.rightImportLoading = false
+      },
       handleExportItem() {
         if (this.ids.length !== 0) {
           exportMetadataItem(this.ids).then(res => {
@@ -662,7 +714,20 @@
           this.$refs.replaceForm.open(this.selectData,this.tableTitle);
         }
       },
-
+      /** 插件 */
+      handleInsert(){
+        if (this.ids.length !== 0){
+          this.$message.error('请选择一条数据')
+          return
+        }
+        let id = this.ids[0]
+        this.metadata = this.metadataList.filter(item =>item.id===id)[0]
+        this.type = 'cj'
+        this.id = this.metadata.id
+        this.open = true;
+      },
+      /** 插件 */
+      handleBreak(){},
       /** 批量增加按钮操作 */
       batchHandleIncrease() {
         if (this.selectData.length==0){

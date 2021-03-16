@@ -1,14 +1,10 @@
 <template>
   <div id="InputView" :loading="loading" style="min-height:75vh;">
     <transition name="el-fade-in-linear">
-      <parser v-if="currentPage===1" :form-conf="firstForm" class="transition-box" @submit="nextPage"
+      <parser v-if="currentPage===1" :form-conf="firstForm" class="transition-box" @archi="getArchi" @submit="nextPage"
               @cancel="returnLastPage" @close="close"/>
     </transition>
     <transition v-if="currentPage===2" name="el-fade-in-linear">
-      <parser v-if="currentPage===2" :form-conf="content" class="transition-box" @submit="nextPage"
-              @cancel="returnLastPage" @close="close"/>
-    </transition>
-    <transition v-if="currentPage===3" name="el-fade-in-linear">
       <div>
         <el-button-group>
           <el-button @click="dialogVisible=true">上传文件</el-button>
@@ -35,8 +31,8 @@
 <script>
 
   import Parser from '@/gene/components/parser/Parser'
-  import {listJson, getId} from '@/api/system/json'
-  import {addMetadata, getMetadata, updateMetadata} from '@/api/system/metadata'
+  import {getId} from '@/api/system/json'
+  import { addMetadata, getArchivalCode, getMetadata, updateMetadata } from '@/api/system/metadata'
   import DocumentView from '@/views/components/documentView'
   import md from '@/views/system/metadata/md'
   import Uploads from '@/views/components/Uploads'
@@ -73,24 +69,6 @@
       md
     },
     computed: {
-      content: {
-        get: function () {
-          if (this.type === 'create') {
-            return this.createContent
-          } else {
-            if (JSON.stringify(this.modifyContent) !== '{}') {
-              setTimeout(() => {
-                return this.modifyContent
-              }, 1000)
-              return this.createContent
-            }
-            return this.modifyContent
-          }
-        },
-        set: function (newValue) {
-          this.modifyContent = newValue
-        }
-      },
       firstForm: {
         get: function () {
           if (this.type === 'create') {
@@ -129,8 +107,6 @@
         files: [],
         fileList: [],
         loadingText: '',
-        createContent: {},
-        modifyContent: {},
         showUpload: true,
         param: {},
         formdata1: {},
@@ -148,13 +124,6 @@
     methods: {
       init() {
         this.loading = true;
-        let query = {id: '', parentName: '文书', node: '内容描述'}
-        listJson(query).then(res => {
-          this.createContent = JSON.parse(res.rows[0].formData)
-          this.modifyContent = this.createContent
-        }).catch(err => {
-          console.log(err)
-        })
         if (this.type === 'create') {
           getId().then(res => {
             this.mdId = res.data
@@ -183,14 +152,19 @@
           }
         })
       },
+      getArchi(data){
+        let metadata = Object.assign(this.formData, data,{id:this.mdId}, { deptId: this.deptid }, { nodeId: this.nodeId }, { parentId: this.parentId })
+        getArchivalCode(metadata).then(res=>{
+          let msg = res.msg
+          console.log(msg)
+        }).catch(err=>{
+          console.log(err)
+        })
+      },
       nextPage(data) {
         if (this.currentPage === 1) {
           this.formdata1 = data
-          this.formData = Object.assign(this.formData, this.formdata1)
-        }
-        if (this.currentPage === 2) {
-          this.formdata2 = data
-          this.formData = Object.assign(this.formData, this.formdata2, {id: this.mdId}, {deptId: this.deptid}, {nodeId: this.nodeId}, {parentId: this.parentId})
+          this.formData = Object.assign(this.formData, this.formdata1, { id: this.mdId }, { deptId: this.deptid }, { nodeId: this.nodeId }, { parentId: this.parentId })
           let obj = this.formData;
           if (obj !== this.formDataC) {
             for (let key in obj) {
@@ -206,17 +180,19 @@
             }
             if (this.type === 'create') {
               addMetadata(obj).then(() => {
-                console.log("创建 文书档案")
+                this.$message.success('添加成功')
+                console.log("创建")
               })
             } else if (this.type === 'modify') {
               updateMetadata(obj).then(() => {
+                this.$message.success('修改成功')
                 console.log("修改文书档案")
               })
             }
           }
-        }
-        if (this.currentPage !== 3) {
-          this.currentPage += 1
+          if (this.currentPage !== 2) {
+            this.currentPage += 1
+          }
         }
       },
       firstCancel() {
@@ -262,8 +238,6 @@
       , currentPage: function (nv, ov) {
         if (nv === 1) {
           this.fillFormData(this.firstForm, this.formData)
-        } else if (nv === 2) {
-          this.fillFormData(this.content, this.formData)
         }
       },
       metadataid: function (nv, ov) {

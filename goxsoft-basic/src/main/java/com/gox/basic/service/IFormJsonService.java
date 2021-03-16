@@ -2,6 +2,7 @@ package com.gox.basic.service;
 
 import com.gox.basic.domain.FormJson;
 import com.gox.basic.domain.TemplatesPreserve;
+import com.gox.basic.domain.vo.TemplatesCopyVo;
 
 import java.util.List;
 
@@ -65,4 +66,6 @@ public interface IFormJsonService {
      * @return 结果
      */
     public int deleteFormJsonById(Long id);
+
+    String copy(TemplatesCopyVo vo);
 }

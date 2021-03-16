@@ -3,6 +3,7 @@ package com.gox.basic.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.gox.basic.domain.vo.TableFieldVo;
+import com.gox.basic.domain.vo.TemplatesCopyVo;
 import com.gox.common.annotation.Log;
 import com.gox.common.core.controller.BaseController;
 import com.gox.common.core.domain.AjaxResult;
@@ -23,7 +24,7 @@ import java.util.List;
 
 
 /**
- * 表单jsonController
+ * 模板管理Controller
  *
  * @author gox
  * @date 2020-12-25
@@ -43,7 +44,7 @@ public class FormJsonController extends BaseController {
     }
 
     /**
-     * 查询表单json列表
+     * 查询模板管理列表
      */
     @PreAuthorize("@ss.hasPermi('basic:json:list')")
     @GetMapping("/list")
@@ -53,12 +54,17 @@ public class FormJsonController extends BaseController {
         return getDataTable(list);
     }
 
-
+    @PreAuthorize("@ss.hasPermi('basic:json:edit')")
+    @Log(title = "模板管理",businessType = BusinessType.UPDATE)
+    @PostMapping("/copy")
+    public AjaxResult copy(@RequestBody TemplatesCopyVo vo){
+        return AjaxResult.success(formJsonService.copy(vo));
+    }
     /**
-     * 导出表单json列表
+     * 导出模板管理列表
      */
     @PreAuthorize("@ss.hasPermi('basic:json:export')")
-    @Log(title = "表单json", businessType = BusinessType.EXPORT)
+    @Log(title = "模板管理", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
     public AjaxResult export(FormJson formJson) {
         List<FormJson> list = formJsonService.selectFormJsonList(formJson);
@@ -67,7 +73,7 @@ public class FormJsonController extends BaseController {
     }
 
     /**
-     * 获取表单json详细信息
+     * 获取模板管理详细信息
      */
     @PreAuthorize("@ss.hasPermi('basic:json:query')")
     @GetMapping(value = "/{id}")
@@ -78,7 +84,7 @@ public class FormJsonController extends BaseController {
     }
 
     /**
-     * 新增表单json
+     * 新增模板管理
      * 修改表单
      */
     @PreAuthorize("@ss.hasPermi('basic:json:add')")
@@ -99,17 +105,17 @@ public class FormJsonController extends BaseController {
     }
 
     @PreAuthorize("@ss.hasPermi('basic:json:edit')")
-    @Log(title = "表单json排序", businessType = BusinessType.UPDATE)
+    @Log(title = "模板管理排序", businessType = BusinessType.UPDATE)
     @PutMapping("/order")
     public AjaxResult editOrder(@RequestBody List<FormJson> formJsons) {
         return toAjax(formJsonService.updateFormOrderBatch(formJsons));
     }
 
     /**
-     * 删除表单json
+     * 删除模板管理
      */
     @PreAuthorize("@ss.hasPermi('basic:json:remove')")
-    @Log(title = "表单json", businessType = BusinessType.DELETE)
+    @Log(title = "模板管理", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(formJsonService.deleteFormJsonByIds(ids));

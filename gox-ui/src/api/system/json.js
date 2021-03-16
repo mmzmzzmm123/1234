@@ -48,7 +48,13 @@ export function getJson(id) {
     method: 'get'
   })
 }
-
+export function copyJson(data){
+  return request({
+    url: '/system/json/copy',
+    method: 'post',
+    data: data
+  })
+}
 // 新增单json存储
 export function addJson(data) {
   return request({

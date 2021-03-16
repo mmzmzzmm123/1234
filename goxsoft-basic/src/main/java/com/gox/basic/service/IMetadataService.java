@@ -4,6 +4,7 @@ import com.gox.basic.domain.vo.ImportFieldMap;
 import com.gox.common.core.domain.AjaxResult;
 import com.gox.common.utils.file.Chunk;
 import com.gox.basic.domain.Metadata;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -118,6 +119,15 @@ public interface IMetadataService {
      * @return
      */
     AjaxResult insertArchival(Metadata metadata) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, Throwable;
+
+    @Transactional
+    AjaxResult insertArchivalJ(Metadata metadata) throws Throwable;
+
+    @Transactional(rollbackFor = Throwable.class)
+    AjaxResult deleteArchival(Metadata metadata, Long nodeId) throws Throwable;
+
+    @Transactional(rollbackFor = Throwable.class)
+    AjaxResult deleteArchivalJ(Metadata metadata, Long nodeId) throws Throwable;
 
     /**
      * 数据移交

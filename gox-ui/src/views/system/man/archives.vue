@@ -9,7 +9,7 @@
         </el-col>
         <el-col :span="20">
           <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="100px">
-            <div v-for="(item, index) in tableTitle" :key="archives" style="display: inline-block">
+            <div v-for="(item, index) in tableTitle" :key="index" style="display: inline-block">
               <el-form-item :label="item.tableFieldName" :prop="item.vModel">
                 <el-input v-model="queryParams[item.vModel]" size="small" @keyup.enter.native="handleQuery" clearable/>
               </el-form-item>
@@ -282,7 +282,7 @@
                 <el-select v-model="scope.row.dest" clearable  @change="handleDestChange">
                   <el-option
                     v-for="(item,index) in tableFieldsPick"
-                    :key="archives"
+                    :key="index"
                     :label="item.label"
                     :value="item.value"
                   ></el-option>
@@ -293,7 +293,7 @@
         </el-col>
         <el-col :span="18">
           <el-table v-loading="rightImportLoading" ref="rightTable" :key="new Date().getTime()" :data="rightTableData" style="height:510px;overflow-y: scroll">
-            <div v-for="(item,index) in tableFields" :key="archives">
+            <div v-for="(item,index) in tableFields" :key="index">
               <el-table-column
                 :label="item.tableFieldName"
                 :width="item.width"

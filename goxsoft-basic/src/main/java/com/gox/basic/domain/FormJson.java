@@ -28,7 +28,12 @@ import java.util.Random;
 public class FormJson extends BaseEntity {
 
     public FormJson() {
-        setId(SnowIdUtils.uniqueLong());
+
+    }
+
+    public FormJson(Long nodeId, Long deptId) {
+        this.nodeId = nodeId;
+        this.deptId = deptId;
     }
 
     /**

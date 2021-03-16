@@ -1,4 +1,4 @@
-import {deepClone} from '@/gene/utils/index'
+import {deepClone} from '@/gene/utils'
 import {listDefinition} from '@/api/system/metadataRule'
 
 const componentChild = {}
@@ -108,7 +108,10 @@ export default {
           this.tip = definitions[0].definition;
         }
       }
-    }
+    },
+    getArchival(){
+
+    },
   },
   created() {
     this.loadData(this.conf.__config__.label)

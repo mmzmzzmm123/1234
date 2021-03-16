@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.sql.SQLException;
 import java.util.*;
 
 /**
@@ -373,10 +374,10 @@ public class MetadataServiceImpl implements IMetadataService {
     }
 
     /**
-     * 插件
-     * step1:获取nodeId deptId 对应所有的元数据
+     * 插件 只针对文件 插卷 不同步
+     * step1:获取nodeId deptId 对应所有的文件元数据
      * @param metadata
-     * @return
+     * @return jieguo
      */
     @Override
     @Transactional
@@ -388,9 +389,13 @@ public class MetadataServiceImpl implements IMetadataService {
         String field= fs[fs.length-1];
         Object o = ExportUtil.getValue(field,metadata);
         if (o==null){
+            LOGGER.error("系统异常,获取关键字段失败,请检查输入数据!");
             return AjaxResult.error("系统异常,获取关键字段失败,请检查输入数据!");
         }
         int v = Convert.toInt(o);
+        ImportUtils.setValue(metadata,field,v+1);
+        String archivalC = metadata.getArchivalCode().substring(0,metadata.getArchivalCode().lastIndexOf("-")+1);
+        metadata.setArchivalCode(archivalC+(v+1));
         List<Metadata> mds = selectMetadataList(md);
         List<Metadata> modifies = new ArrayList<>();
         insertMetadata(metadata);
@@ -399,10 +404,159 @@ public class MetadataServiceImpl implements IMetadataService {
             int k = Convert.toInt(ExportUtil.getValue(field,m));
             //如果 数据库的关键字段大于等于传回来的关键值 则将数据库字段全部加一
             if (k>=v){
+                String ac = metadata.getArchivalCode().substring(0,metadata.getArchivalCode().lastIndexOf("-")+1);
+                metadata.setArchivalCode(ac+(k+1));
                 ImportUtils.setValue(m,field,k+1);
                 modifies.add(m);
             }
         }
+        updateMetadataBatch(modifies);
+        return AjaxResult.success();
+    }
+    /**
+     * 插卷
+     * 同步
+     */
+    @Override
+    @Transactional
+    public AjaxResult insertArchivalJ(Metadata metadata) throws Throwable {
+        Metadata md = new Metadata(metadata.getDeptId(),metadata.getParentId(),metadata.getNodeId());
+        ArchivalCodeSetting setting = archivalCodeSettingService.selectArchivalCsByNodeIdAndDeptId(metadata.getNodeId(),metadata.getDeptId());
+        String [] fs = setting.getFields();
+        //最后一位档号的字段 一定是数字
+        String field= fs[fs.length-1];
+        Object o = ExportUtil.getValue(field,metadata);
+        if (o==null){
+            LOGGER.error("系统异常,获取关键字段失败,请检查输入数据!");
+            return AjaxResult.error("系统异常,获取关键字段失败,请检查输入数据!");
+        }
+
+        int v = Convert.toInt(o);
+        ImportUtils.setValue(metadata,field,v+1);
+        String archivalC = metadata.getArchivalCode().substring(0,metadata.getArchivalCode().lastIndexOf("-")+1);
+        metadata.setArchivalCode(archivalC+(v+1));
+        List<Metadata> mds = selectMetadataList(md);
+        List<Metadata> modifies = new ArrayList<>();
+        insertMetadata(metadata);
+        for (Metadata m : mds) {
+            //关键字段
+            int k = Convert.toInt(ExportUtil.getValue(field,m));
+            //如果 数据库的关键字段大于等于传回来的关键值 则将数据库字段全部加一
+            if (k>=v){
+                String oldAc = m.getArchivalCode();
+                String acode = m.getArchivalCode().substring(0,m.getArchivalCode().lastIndexOf("-")+1)+(k+1);
+                m.setArchivalCode(acode);
+                ImportUtils.setValue(m,field,k+1);
+                modifies.add(m);
+                //卷内文件
+                Metadata mdjn = new Metadata();
+                mdjn.setParentId(m.getId());
+                List<Metadata> mdjns = selectMetadataList(md);
+                for (Metadata jn : mdjns) {
+                    String jnac = jn.getArchivalCode();
+                    String finalAc = jnac.replace(oldAc,acode);
+                    jn.setArchivalCode(finalAc);
+                    modifies.add(jn);
+                }
+            }
+        }
+        updateMetadataBatch(modifies);
+        return AjaxResult.success();
+    }
+
+    /**
+     * 拆件 直接删除 或是拆到未归去
+     *  将现在传回的metadata nodeid修改 并保存
+     *  将之前nodeid的所有数据 满足条件的全部减一
+     * @param metadata 元数据
+     * @param nodeId 节点id
+     * @return 结果
+     * @throws Throwable
+     */
+    @Override
+    @Transactional(rollbackFor = Throwable.class)
+    public AjaxResult deleteArchival(Metadata metadata,Long nodeId) throws Throwable{
+        Metadata md = new Metadata(metadata.getDeptId(),metadata.getParentId(),metadata.getNodeId());
+        ArchivalCodeSetting setting = archivalCodeSettingService.selectArchivalCsByNodeIdAndDeptId(metadata.getNodeId(),metadata.getDeptId());
+        String [] fs = setting.getFields();
+        //最后一位档号的字段 一定是数字
+        String field= fs[fs.length-1];
+        Object o = ExportUtil.getValue(field,metadata);
+        if (o==null){
+            LOGGER.error("系统异常,获取关键字段失败,请检查输入数据!");
+            return AjaxResult.error("系统异常,获取关键字段失败,请检查输入数据!");
+        }
+        int v = Convert.toInt(o);
+        metadata.setArchivalCode("");
+        metadata.setNodeId(nodeId);
+        List<Metadata> mds = selectMetadataList(md);
+        List<Metadata> modifies = new ArrayList<>();
+        updateMetadata(metadata);
+        for (Metadata m : mds) {
+            //关键字段
+            int k = Convert.toInt(ExportUtil.getValue(field,m));
+            //如果 数据库的关键字段大于等于传回来的关键值 则将数据库字段全部加一
+            if (k>=v){
+                String oldAc = m.getArchivalCode();
+                String acode = oldAc.substring(0,oldAc.lastIndexOf("-")+1)+(k-1);
+                m.setArchivalCode(acode);
+                ImportUtils.setValue(m,field,k-1);
+                modifies.add(m);
+            }
+        }
+        updateMetadataBatch(modifies);
+        return AjaxResult.success();
+    }
+
+    /**
+     * 拆卷
+     * @param metadata
+     * @param nodeId
+     * @return
+     * @throws Throwable
+     */
+    @Override
+    @Transactional(rollbackFor = Throwable.class)
+    public AjaxResult deleteArchivalJ(Metadata metadata,Long nodeId) throws Throwable{
+        Metadata md = new Metadata(metadata.getDeptId(),metadata.getParentId(),metadata.getNodeId());
+        ArchivalCodeSetting setting = archivalCodeSettingService.selectArchivalCsByNodeIdAndDeptId(metadata.getNodeId(),metadata.getDeptId());
+        String [] fs = setting.getFields();
+        //最后一位档号的字段 一定是数字
+        String field= fs[fs.length-1];
+        Object o = ExportUtil.getValue(field,metadata);
+        if (o==null){
+            LOGGER.error("系统异常,获取关键字段失败,请检查输入数据!");
+            return AjaxResult.error("系统异常,获取关键字段失败,请检查输入数据!");
+        }
+        int v = Convert.toInt(o);
+        metadata.setArchivalCode("");
+        metadata.setNodeId(nodeId);
+        metadata.setAggregationLevel("文件");
+        List<Metadata> mds = selectMetadataList(md);
+        List<Metadata> modifies = new ArrayList<>();
+        updateMetadata(metadata);
+        for (Metadata m : mds) {
+            //关键字段
+            int k = Convert.toInt(ExportUtil.getValue(field,m));
+            //如果 数据库的关键字段大于等于传回来的关键值 则将数据库字段全部加一
+            if (k>=v){
+                String oldAc = m.getArchivalCode();
+                String acode = oldAc.substring(0,oldAc.lastIndexOf("-")+1)+(k-1);
+                m.setArchivalCode(acode);
+                ImportUtils.setValue(m,field,k-1);
+                modifies.add(m);
+                //卷内文件
+                Metadata mdjn = new Metadata();
+                mdjn.setParentId(m.getId());
+                List<Metadata> mdjns = selectMetadataList(md);
+                for (Metadata jn : mdjns) {
+                    jn.setNodeId(nodeId);
+                    jn.setArchivalCode("");
+                    modifies.add(jn);
+                }
+            }
+        }
+        updateMetadataBatch(modifies);
         return AjaxResult.success();
     }
 
@@ -419,5 +573,4 @@ public class MetadataServiceImpl implements IMetadataService {
         }
         return entryidData.length;
     }
-
 }

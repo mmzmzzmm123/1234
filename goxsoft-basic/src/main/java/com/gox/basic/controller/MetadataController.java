@@ -118,7 +118,17 @@ public class MetadataController extends BaseController {
         }
         return metadataService.exportExcelAndEleByIds(id);
     }
-
+    @PreAuthorize("@ss.hasPermi('basic:metadata:edit')")
+    @PostMapping("/archi")
+    public AjaxResult getArchi(@RequestBody Metadata metadata) throws Exception {
+        String res = metadataService.generateArchivalCode(metadata);
+        if (res.contains("-")){
+            return AjaxResult.success(res);
+        }
+        else {
+            return AjaxResult.error(res);
+        }
+    }
     /**
      * 导出 字段模板
      */

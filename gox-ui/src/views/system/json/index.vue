@@ -35,6 +35,16 @@
           </el-col>
           <el-col :span="1.5">
             <el-button
+              type="primary"
+              icon="el-icon-edit"
+              size="mini"
+              @click="handleCopy"
+              v-hasPermi="['system:json:edit']"
+            >拷贝
+            </el-button>
+          </el-col>
+          <el-col :span="1.5">
+            <el-button
               type="success"
               icon="el-icon-edit"
               size="mini"
@@ -176,6 +186,68 @@
           </el-row>
 
         </el-dialog>
+        <el-dialog :title="copyT" :visible.sync="copyS" v-if="copyS" width="650px" append-to-body>
+          <el-row :gutter="20">
+            <el-form ref="formC" :inline="true" :model="formCopy" :rules="rules" label-width="100px">
+              <el-col :span="12">
+                <el-form-item label="源模板" prop="scid">
+                  <treeselect
+                    @select="selectOption"
+                    v-model="formCopy.scid"
+                    :options="classifyTree"
+                    :normalizer="normalizer"
+                    :show-count="true"
+                    placeholder="选择节点"
+                  />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="目的模板" prop="dcid">
+                  <treeselect
+                    :multiple="true"
+                    v-model="formCopy.dcid"
+                    @select="selectOption"
+                    :options="classifyTree"
+                    :normalizer="normalizer"
+                    :show-count="true"
+                    placeholder="选择节点"
+                  />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item prop="sdid">
+                  <treeselect
+                    v-model="formCopy.sdid"
+                    @select="selectOption"
+                    :options="deptTree"
+                    :normalizer="normalizer"
+                    :show-count="true"
+                    placeholder="选择部门"
+                  />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item prop="ddid">
+                  <treeselect
+                    :multiple="true"
+                    v-model="formCopy.ddid"
+                    @select="selectOption"
+                    :options="deptTree"
+                    :normalizer="normalizer"
+                    :show-count="true"
+                    placeholder="选择部门"
+                  />
+
+                </el-form-item>
+              </el-col>
+            </el-form>
+
+          </el-row>
+          <div slot="footer" class="dialog-footer">
+            <el-button type="primary" @click="submitCopy">确 定</el-button>
+            <el-button @click="cancelCopy">取 消</el-button>
+          </div>
+        </el-dialog>
         <!-- 添加或修改档号设置对话框 -->
         <el-dialog :title="titleAc" :visible.sync="openAc" width="500px" append-to-body>
           <el-form ref="form" :model="settingForm" :rules="settingRules" label-width="80px">
@@ -244,380 +316,461 @@
 </template>
 
 <script>
-  import {
-    listJson,
-    order,
-    delJson,
-    addJson,
-    updateJson,
-    exportJson,
-    getTableField,
-    updateTableField
-  } from '@/api/system/json'
-  import deptTree from '@/views/components/deptTree'
-  import Sortable from 'sortablejs'
-  import { addSetting, getSetting, updateSetting } from '@/api/system/setting'
-  import { listTemplates, updateTemplates, updateTemplatesBatch } from '@/api/basic/templates'
+import { addJson, copyJson, delJson, exportJson, listJson, order, updateJson } from '@/api/system/json'
+import deptTree from '@/views/components/deptTree'
+import Sortable from 'sortablejs'
+import { addSetting, getSetting, updateSetting } from '@/api/system/setting'
+import { listTemplates, updateTemplatesBatch } from '@/api/basic/templates'
+import { listDept } from '@/api/system/dept'
+import { listClassify } from '@/api/system/classify'
+import '@riophae/vue-treeselect/dist/vue-treeselect.css'
+import Treeselect from '@riophae/vue-treeselect'
 
-  export default {
-    name: 'Json',
-    components: {
-      deptTree
-    },
-    data() {
-      return {
-        titleAc:'',
-        openAc:false,
-        forms: new Map(),
-        filterText: '',
-        defaultProps: {
-          children: 'children',
-          label: 'label'
-        },
-        data: [],
-        tableFields: [],
-        //deptId
-        deptId: undefined,
-        nodeId: undefined,
-        // 遮罩层
-        loading: true,
-        // 选中数组
-        ids: [],
-        // 非单个禁用
-        single: true,
-        // 非多个禁用
-        multiple: true,
-        // 显示搜索条件
-        showSearch: false,
-        // 总条数
-        total: 0,
-        // 单json存储表格数据
-        jsonList: [],
-        // 弹出层标题
-        title: '',
-        // 是否显示弹出层
-        open: false,
-        fieldOptions:{},
-        settingForm:{},
-        settingRules: {
-          field1: [
-            {required: true, message: "必须要有3个以上字段", trigger: "blur"}
-          ],
-          field2: [
-            {required: true, message: "必须要有3个以上字段", trigger: "blur"}
-          ],
-          field3: [
-            {required: true, message: "必须要有3个以上字段", trigger: "blur"}
-          ],
-        },
-        // 查询参数
-        queryParams: {
-          pageNum: 1,
-          pageSize: 10,
-          formName: null,
-          formData: null,
-          nodeId: null,
-          deptId: null
-        },
-        // 表单参数
-        form: {},
-        // 表单校验
-        rules: {
-          remark: [
-            {required: true, message: '备注不能为空', trigger: 'blur'}
-          ],
-          formName: [
-            {required: true, message: '表单名字不能为空', trigger: 'blur'}
-          ],
-          width: [
-            {required: true, message: '请输入占位', trigger: 'blur'},
-            {type: 'number', message: '年龄必须为数字值'},
-          ],
-          sort: [
-            {
-              required: true, message: '请输入排序', trigger: 'blur'
-            }
-          ],
-          searchSort: [
-            {
-              required: true, message: '请输入排序', trigger: 'blur'
-            }
-          ]
-          // delFlag: [
-          //   { required: true, message: "删除标志不能为空", trigger: "blur" }
-          // ]
-        }
+export default {
+  name: 'Json',
+  components: {
+    deptTree, Treeselect
+  },
+  data() {
+    return {
+      formCopy: {},
+      sourceId: '',
+      sourceTree: [],
+      props: {
+        children: 'children',
+        label: 'name'
+      },
+      copyT: '',
+      copyS: '',
+      titleAc: '',
+      openAc: false,
+      forms: new Map(),
+      filterText: '',
+      defaultProps: {
+        children: 'children',
+        label: 'label'
+      },
+      data: [],
+      tableFields: [],
+      //deptId
+      deptId: undefined,
+      nodeId: undefined,
+      // 遮罩层
+      loading: true,
+      // 选中数组
+      ids: [],
+      // 非单个禁用
+      single: true,
+      // 非多个禁用
+      multiple: true,
+      // 显示搜索条件
+      showSearch: false,
+      // 总条数
+      total: 0,
+      // 单json存储表格数据
+      jsonList: [],
+      // 弹出层标题
+      title: '',
+      // 是否显示弹出层
+      open: false,
+      fieldOptions: {},
+      settingForm: {},
+      settingRules: {
+        field1: [
+          { required: true, message: '必须要有3个以上字段', trigger: 'blur' }
+        ],
+        field2: [
+          { required: true, message: '必须要有3个以上字段', trigger: 'blur' }
+        ],
+        field3: [
+          { required: true, message: '必须要有3个以上字段', trigger: 'blur' }
+        ]
+      },
+      // 查询参数
+      queryParams: {
+        pageNum: 1,
+        pageSize: 10,
+        formName: null,
+        formData: null,
+        nodeId: null,
+        deptId: null
+      },
+      // 表单参数
+      form: {},
+      deptTree: null,
+      classifyTree: null,
+      // 表单校验
+      rules: {
+        remark: [
+          { required: true, message: '备注不能为空', trigger: 'blur' }
+        ],
+        formName: [
+          { required: true, message: '表单名字不能为空', trigger: 'blur' }
+        ],
+        width: [
+          { required: true, message: '请输入占位', trigger: 'blur' },
+          { type: 'number', message: '年龄必须为数字值' }
+        ],
+        sort: [
+          {
+            required: true, message: '请输入排序', trigger: 'blur'
+          }
+        ],
+        searchSort: [
+          {
+            required: true, message: '请输入排序', trigger: 'blur'
+          }
+        ],
+        scid:[
+          { required: true, message: '不能为空', trigger: 'blur' }
+        ],
+        sdid:[
+          { required: true, message: '不能为空', trigger: 'blur' }
+        ],
+        dcid:[
+          { required: true, message: '不能为空', trigger: 'blur' }
+        ],
+        ddid:[
+          { required: true, message: '不能为空', trigger: 'blur' }
+        ],
+        // delFlag: [
+        //   { required: true, message: "删除标志不能为空", trigger: "blur" }
+        // ]
       }
-    },
-    mounted() {
-      this.rowDrop()
-
-    },
-    created() {
-
-    },
-    watch: {
-      filterText(val) {
-        this.$refs.tree.filter(val)
-        let a = this.data.filter((item) => {
-          if (!val) return true
-          return item.label.indexOf(val) !== -1
+    }
+  },
+  mounted() {
+    this.rowDrop()
+  },
+  created() {
+    this.loadAllClassifyAndDept()
+  },
+  watch: {
+    filterText(val) {
+      this.$refs.tree.filter(val)
+      let a = this.data.filter((item) => {
+        if (!val) return true
+        return item.label.indexOf(val) !== -1
+      })
+      if (a) {
+        this.$nextTick(() => {
+          this.$refs.tree.setCurrentKey(a[0])
         })
-        if (a) {
-          this.$nextTick(() => {
-            this.$refs.tree.setCurrentKey(a[0])
-          })
-          this.handleClick(a[0])
-        }
+        this.handleClick(a[0])
+      }
+    }
+  },
+
+  methods: {
+    selectOption(value, id, type) {
+    },
+    normalizer(node) {
+      if (node.children && !node.children.length) {
+        delete node.children
+      }
+      return {
+        id: node.id,
+        label: node.name,
+        children: node.children
       }
     },
+    submitCopy() {
+      this.$refs.formC.validate((valid)=>{
+        if (valid){
+          copyJson(this.formCopy).then(res=>{
+            this.$message.success('操作成功')
+          })
+        }
+        else{
+          console.log(111)
+        }
+      })
+    },
+    cancelCopy() {
+      this.copyS = false
+    },
+    handleCheckChange(rows) {
 
-    methods: {
-      saveForm() {
+    },
+    handleCheckChange2() {
+    },
+    saveForm() {
+      this.$refs.form.validate((valid) => {
+        if (valid) {
+          this.forms.set(this.form.id, this.form)
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+      let data = []
+      this.forms.forEach(item => {
+        data.push(item)
+      })
+      //提交
+      updateTemplatesBatch(data).then(res => {
+        this.forms = new Map()
+        this.$message.success(res.msg)
+      })
+    },
+    cancelEdit() {
+      this.open = false
+    },
+    handleClick(data) {
+      let f = false
+      //如果不是空的 则为上一个表单 保存进修改map中
+      if (JSON.stringify(this.form) !== '{}') {
         this.$refs.form.validate((valid) => {
           if (valid) {
             this.forms.set(this.form.id, this.form)
           } else {
-            console.log('error submit!!');
-            return false;
+            console.log('error submit!!')
+            return false
           }
         })
-        let data = []
-        this.forms.forEach(item => {
-          data.push(item)
-        })
-        //提交
-        updateTemplatesBatch(data).then(res => {
-          this.forms=new Map()
+        f = true
+      }
+      this.form = {}
+      let formData = this.tableFields.filter(item => {
+        return item.id === data.id
+      })
+      this.form = {
+        id: formData[0].id,
+        tableFieldFlag: formData[0].tableFieldFlag,
+        tableSearchFlag: formData[0].tableSearchFlag,
+        sort: formData[0].sort,
+        searchSort: formData[0].searchSort,
+        width: formData[0].width
+      }
+    },
+    filterNode(value, data) {
+      if (!value) return true
+      if (data.label.indexOf(value) !== -1) {
+        return true
+      }
+    },
+    // 行拖拽
+    rowDrop() {
+      // 此时找到的元素是要拖拽元素的父容器
+      const tbody = document.querySelector('.el-table__body-wrapper tbody')
+      const _this = this
+      Sortable.create(tbody, {
+        //  指定父元素下可被拖拽的子元素
+        draggable: '.el-table__row',
+        onEnd({ newIndex, oldIndex }) {
+          const currRow = _this.jsonList.splice(oldIndex, 1)[0]
+          _this.jsonList.splice(newIndex, 0, currRow)
+          for (let i = 0; i < _this.jsonList.length; i++) {
+            _this.jsonList[i].order = i + 1
+          }
+          order(_this.jsonList).then(res => {
+            _this.$message.success(res.msg)
+          })
+        }
+      })
+    },
+    selectedDept(data) {
+      this.deptId = data
+      this.getList()
+    },
+    handArchivalCode() {
+      this.openAc = true
+      this.titleAc = '档号设置'
+    },
+    submitSettingForm() {
+      this.settingForm['nodeId'] = this.nodeId
+      this.settingForm['deptId'] = this.deptId
+      if (this.settingForm.id) {
+        updateSetting(this.settingForm).then(res => {
           this.$message.success(res.msg)
         })
-      },
-      cancelEdit() {
-        this.open = false
-      },
-      handleClick(data) {
-        let f = false
-        //如果不是空的 则为上一个表单 保存进修改map中
-        if (JSON.stringify(this.form) !== "{}") {
-          this.$refs.form.validate((valid) => {
-            if (valid) {
-              this.forms.set(this.form.id, this.form)
-            } else {
-              console.log('error submit!!');
-              return false;
-            }
-          })
-          f = true
-        }
-        this.form = {}
-        let formData = this.tableFields.filter(item => {
-          return item.id === data.id
-        })
-        this.form = {
-          id: formData[0].id,
-          tableFieldFlag: formData[0].tableFieldFlag,
-          tableSearchFlag:formData[0].tableSearchFlag,
-          sort:formData[0].sort,
-          searchSort:formData[0].searchSort,
-          width: formData[0].width
-        }
-      },
-      filterNode(value, data) {
-        if (!value) return true
-        if (data.label.indexOf(value) !== -1) {
-          return true
-        }
-      },
-      // 行拖拽
-      rowDrop() {
-        // 此时找到的元素是要拖拽元素的父容器
-        const tbody = document.querySelector('.el-table__body-wrapper tbody')
-        const _this = this
-        Sortable.create(tbody, {
-          //  指定父元素下可被拖拽的子元素
-          draggable: '.el-table__row',
-          onEnd({newIndex, oldIndex}) {
-            const currRow = _this.jsonList.splice(oldIndex, 1)[0]
-            _this.jsonList.splice(newIndex, 0, currRow)
-            for (let i = 0; i < _this.jsonList.length; i++) {
-              _this.jsonList[i].order = i + 1
-            }
-            order(_this.jsonList).then(res => {
-              _this.$message.success(res.msg)
-            })
-          }
-        })
-      },
-      selectedDept(data) {
-        this.deptId = data
-        this.getList()
-      },
-      handArchivalCode(){
-        this.openAc = true
-        this.titleAc = '档号设置'
-      },
-      submitSettingForm(){
-        this.settingForm['nodeId']=this.nodeId
-        this.settingForm['deptId'] = this.deptId
-        if (this.settingForm.id){
-          updateSetting(this.settingForm).then(res=>{
-              this.$message.success(res.msg)
-            })
-        }else{
-          addSetting(this.settingForm).then(res=>{
-            this.$message.success(res.msg)
-          })
-        }
-      },
-      cancelSetting(){
-        this.openAc = false
-      },
-      handTableField() {
-        this.title = '修改表格头'
-        this.open = true
-        this.$nextTick(() => {
-          this.$refs.tree.setCurrentKey(this.data[0].id)
-        })
-        this.handleClick(this.tableFields[0])
-      },
-      // filterMethod(query, item) {
-      //   return item.name.indexOf(query) > -1;
-      // },
-      /** 查询单json存储列表 */
-      getList() {
-        this.loading = true
-        this.queryParams.deptId = this.deptId
-        let i = this.$route.fullPath.lastIndexOf('/')
-        this.nodeId = Number(this.$route.fullPath.substring(i + 1))
-        this.queryParams.nodeId = this.nodeId
-        listJson(this.queryParams).then(response => {
-          this.jsonList = response.rows
-          this.total = response.total
-          this.loading = false
-        })
-        listTemplates({nodeId:this.nodeId,deptId:this.deptId}).then(res=>{
-          let fields = res.rows
-          this.tableFields = fields
-          this.data=[]
-          fields.forEach((item,index)=>{
-            this.data.push({ label: item.tableFieldName,id:item.id })
-          })
-          this.getDicts("sys_archival_code_setting").then(response => {
-            this.fieldOptions=[]
-            let fieldOptions = response.data;
-            console.log(fieldOptions)
-            fields.forEach(item=>{
-              let arr = fieldOptions.filter(i=>i.dictLabel===item.tableFieldName)
-              if(arr.length!==0){
-                this.fieldOptions.push({
-                  dictLabel: item.tableFieldName,
-                  dictValue: item.vModel
-                })
-              }
-            })
-          });
-        })
-        getSetting(this.nodeId,this.deptId).then(res=>{
-          if(res.data){
-            this.settingForm = res.data
-          }
-        })
-      },
-      // 取消按钮
-      cancel() {
-        this.open = false
-        this.reset()
-      },
-      // 表单重置
-      reset() {
-        this.form = {
-          id: null,
-          createTime: null,
-          updateTime: null,
-          createBy: null,
-          updateBy: null,
-          remark: null,
-          formName: null,
-          formData: null,
-          delFlag: null
-        }
-        this.resetForm('form')
-      },
-      /** 搜索按钮操作 */
-      handleQuery() {
-        this.queryParams.pageNum = 1
-        this.getList()
-      },
-      /** 重置按钮操作 */
-      resetQuery() {
-        this.resetForm('queryForm')
-        this.handleQuery()
-      },
-      // 多选框选中数据
-      handleSelectionChange(selection) {
-        this.ids = selection.map(item => item.id)
-        this.single = selection.length !== 1
-        this.multiple = !selection.length
-      },
-      /** 新增按钮操作 */
-      handleAdd() {
-        this.$router.push('/tool/build/' + this.deptId + '/' + this.nodeId)
-      },
-      /** 修改按钮操作 */
-      handleUpdate(row) {
-        //this.reset();
-        console.log(row)
-        const id = row.id
-        this.$router.push('/tool/build/' + id)
-      },
-      /** 提交按钮 */
-      submitForm() {
-        this.$refs['form'].validate(valid => {
-          if (valid) {
-            if (this.form.id != null) {
-              updateJson(this.form).then(response => {
-                this.msgSuccess('修改成功')
-                this.open = false
-                this.getList()
-              })
-            } else {
-              addJson(this.form).then(response => {
-                this.msgSuccess('新增成功')
-                this.open = false
-                this.getList()
-              })
-            }
-          }
-        })
-      },
-      /** 删除按钮操作 */
-      handleDelete(row) {
-        const ids = row.id || this.ids
-        this.$confirm('是否确认删除表单单json编号为"' + ids + '"的数据项?', '警告', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(function () {
-          return delJson(ids)
-        }).then(() => {
-          this.getList()
-          this.msgSuccess('删除成功')
-        })
-      },
-      /** 导出按钮操作 */
-      handleExport() {
-        const queryParams = this.queryParams
-        this.$confirm('是否确认导出所有表单json数据项?', '警告', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(function () {
-          return exportJson(queryParams)
-        }).then(response => {
-          this.download(response.msg)
+      } else {
+        addSetting(this.settingForm).then(res => {
+          this.$message.success(res.msg)
         })
       }
+    },
+    cancelSetting() {
+      this.openAc = false
+    },
+    handTableField() {
+      this.title = '修改表格头'
+      this.open = true
+      this.$nextTick(() => {
+        this.$refs.tree.setCurrentKey(this.data[0].id)
+      })
+      this.handleClick(this.tableFields[0])
+    },
+    loadAllClassifyAndDept() {
+      listDept().then(res => {
+        const dept = res.data
+        let deptT = this.handleTree(dept, 'deptId')
+        this.deptTreeModify(deptT)
+        this.deptTree = deptT
+        listClassify().then(re => {
+          const classify = re.rows
+          this.classifyTree = this.handleTree(classify)
+          // let tree = {id:0,name:'aa',children:classifya}
+          // this.findleaf(tree,deptT)
+          // this.sourceTree = tree.children
+        })
+      })
+    },
+    findleaf(root, res) {
+      if (root.children && root.children.length > 0) {
+        root.children.forEach(item => {
+          this.findleaf(item, res)
+        })
+      } else {
+        root.children = res
+      }
+    },
+    deptTreeModify(roots) {
+      roots.forEach(root => {
+        root['name'] = root.deptName
+        root['id'] = root.deptId
+        if (root.children) {
+          this.deptTreeModify(root.children)
+        }
+      })
+    },
+    /** 查询单json存储列表 */
+    getList() {
+      this.loading = true
+      this.queryParams.deptId = this.deptId
+      let i = this.$route.fullPath.lastIndexOf('/')
+      this.nodeId = Number(this.$route.fullPath.substring(i + 1))
+      this.queryParams.nodeId = this.nodeId
+      listJson(this.queryParams).then(response => {
+        this.jsonList = response.rows
+        this.total = response.total
+        this.loading = false
+      })
+      listTemplates({ nodeId: this.nodeId, deptId: this.deptId }).then(res => {
+        let fields = res.rows
+        this.tableFields = fields
+        this.data = []
+        fields.forEach((item, index) => {
+          this.data.push({ label: item.tableFieldName, id: item.id })
+        })
+        this.getDicts('sys_archival_code_setting').then(response => {
+          this.fieldOptions = []
+          let fieldOptions = response.data
+          fields.forEach(item => {
+            let arr = fieldOptions.filter(i => i.dictLabel === item.tableFieldName)
+            if (arr.length !== 0) {
+              this.fieldOptions.push({
+                dictLabel: item.tableFieldName,
+                dictValue: item.vModel
+              })
+            }
+          })
+        })
+      })
+      getSetting(this.nodeId, this.deptId).then(res => {
+        if (res.data) {
+          this.settingForm = res.data
+        }
+      })
+    },
+    // 取消按钮
+    cancel() {
+      this.open = false
+      this.reset()
+    },
+    // 表单重置
+    reset() {
+      this.form = {
+        id: null,
+        createTime: null,
+        updateTime: null,
+        createBy: null,
+        updateBy: null,
+        remark: null,
+        formName: null,
+        formData: null,
+        delFlag: null
+      }
+      this.resetForm('form')
+    },
+    /** 搜索按钮操作 */
+    handleQuery() {
+      this.queryParams.pageNum = 1
+      this.getList()
+    },
+    /** 重置按钮操作 */
+    resetQuery() {
+      this.resetForm('queryForm')
+      this.handleQuery()
+    },
+    // 多选框选中数据
+    handleSelectionChange(selection) {
+      this.ids = selection.map(item => item.id)
+      this.single = selection.length !== 1
+      this.multiple = !selection.length
+    },
+    /** 新增按钮操作 */
+    handleAdd() {
+      this.$router.push('/tool/build/' + this.deptId + '/' + this.nodeId)
+    },
+    handleCopy() {
+      this.copyT = '拷贝模板'
+      this.copyS = true
+    },
+    /** 修改按钮操作 */
+    handleUpdate(row) {
+      //this.reset();
+      const id = row.id
+      this.$router.push('/tool/build/' + id)
+    },
+    /** 提交按钮 */
+    submitForm() {
+      this.$refs['form'].validate(valid => {
+        if (valid) {
+          if (this.form.id != null) {
+            updateJson(this.form).then(response => {
+              this.msgSuccess('修改成功')
+              this.open = false
+              this.getList()
+            })
+          } else {
+            addJson(this.form).then(response => {
+              this.msgSuccess('新增成功')
+              this.open = false
+              this.getList()
+            })
+          }
+        }
+      })
+    },
+    /** 删除按钮操作 */
+    handleDelete(row) {
+      const ids = row.id || this.ids
+      this.$confirm('是否确认删除表单单json编号为"' + ids + '"的数据项?', '警告', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(function() {
+        return delJson(ids)
+      }).then(() => {
+        this.getList()
+        this.msgSuccess('删除成功')
+      })
+    },
+    /** 导出按钮操作 */
+    handleExport() {
+      const queryParams = this.queryParams
+      this.$confirm('是否确认导出所有表单json数据项?', '警告', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(function() {
+        return exportJson(queryParams)
+      }).then(response => {
+        this.download(response.msg)
+      })
     }
   }
+}
 </script>
 

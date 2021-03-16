@@ -54,6 +54,17 @@
               </el-button>
             </el-col>
             <el-col :span="1.5">
+              <el-button
+                type="primary"
+                icon="el-icon-circle-check"
+                size="mini"
+                :disabled="multiple"
+                @click="handleTransfer"
+                v-hasPermi="['system:metadata:transfer']"
+              >移交
+              </el-button>
+            </el-col>
+            <el-col :span="1.5">
               <el-dropdown>
                 <el-button type="primary" size="mini" @click="handleExport">
                   导入导出
@@ -74,6 +85,46 @@
                 </el-dropdown-menu>
               </el-dropdown>
             </el-col>
+
+            <el-col :span="1.5">
+              <el-dropdown>
+                <el-button plain size="mini">
+                  批量处理<i class="el-icon-arrow-down el-icon--right"></i>
+                </el-button>
+                <el-dropdown-menu>
+                  <el-dropdown-item @click.native="batchHandleIncrease">批量增加</el-dropdown-item>
+                  <el-dropdown-item @click.native="handleChooseData">批量修改</el-dropdown-item>
+                  <el-dropdown-item @click.native="batchHandleUpdate">批量替换</el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
+
+            </el-col>
+            <el-col :span="1.5">
+              <el-button
+                type="danger"
+                icon="el-icon-delete"
+                size="mini"
+                :disabled="single"
+                @click="handleInsert"
+                v-hasPermi="['system:metadata:remove']"
+              >插件
+              </el-button>
+            </el-col>
+            <el-col :span="1.5">
+              <el-button
+                type="danger"
+                icon="el-icon-delete"
+                size="mini"
+                :disabled="single"
+                @click="handleBreak"
+                v-hasPermi="['system:metadata:remove']"
+              >拆件
+              </el-button>
+            </el-col>
+            <!--批量处理组件-->
+            <replace @updateTableData="getList"  ref="replaceForm"></replace>
+            <increase @updateTableData="getList"  ref="increaseForm"></increase>
+
             <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
           </el-row>
 
@@ -126,22 +177,117 @@
       <uploads :url="uploadUrl">
       </uploads>
     </el-dialog>
+    <InputView v-if="open" :deptid="deptId" :node-id="nodeId"
+               :metadata="metadata" :metadataid="id" :type="type" :formconf="formConf" @close="cancel"/>
+    <batchModify :selectData="selectData" :tableTitle="tableTitle" :BatchEditDialog="BatchEditDialog"
+                 v-on:getList="getList"
+                 v-on:closeBatchModify="closeBatchModify"></batchModify>
     <InputView v-if="open" :deptid="deptId" :node-id="nodeId" :metadata="metadata" :metadataid="id" :type="type"
                :formconf="formConf" @close="cancel"/>
+    <el-dialog :visible.sync="importS" v-if="importS" title="预览" width="75%">
+      <el-row :gutter="20">
+        <el-col :span="6">
+          <el-table v-loading="leftImportLoading" ref="leftTable" :data="leftTableData" style="height:510px ;overflow-y: scroll">
+            <el-table-column
+              prop="src"
+              label="来源"
+              width="140">
+            </el-table-column>
+            <el-table-column
+              label="目的"
+              width="165"
+            >
+              <template slot-scope="scope">
+                <el-select v-model="scope.row.dest" clearable  @change="handleDestChange">
+                  <el-option
+                    v-for="(item,index) in tableFieldsPick"
+                    :key="index"
+                    :label="item.label"
+                    :value="item.value"
+                  ></el-option>
+                </el-select>
+              </template>
+            </el-table-column>
+          </el-table>
+        </el-col>
+        <el-col :span="18">
+          <el-table v-loading="rightImportLoading" ref="rightTable" :key="new Date().getTime()" :data="rightTableData" style="height:510px;overflow-y: scroll">
+            <div v-for="(item,index) in tableFields" :key="index">
+              <el-table-column
+                :label="item.tableFieldName"
+                :width="item.width"
+                sortable="custom"
+                :prop="item.vModel">
+              </el-table-column>
+            </div>
+          </el-table>
+
+        </el-col>
+      </el-row>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitUploadHandle" >确 定</el-button>
+        <el-button @click="cancelUploadHandle">取 消</el-button>
+      </div>
+    </el-dialog>
+
+    		 <!-- 移交对话框 -->
+    <el-dialog :title="title" :visible.sync="open1" width="600px" append-to-body>
+      <el-form ref="form" :model="form" label-width="80px">
+        <el-row>
+          <el-col :span="24">
+            <el-form-item label="移交说明">
+              <el-input v-model="form.remark" type="textarea" placeholder="XX部门移交XX档案"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="移交人" prop="transuser">
+              <el-input v-model="form.transuser" placeholder="移交人" readonly="true"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="数量" prop="transcount">
+               <el-input v-model="form.transcount" placeholder="数量" readonly="true"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="移交部门" prop="transdep">
+              <el-input v-model="form.transdep" placeholder="请输入移交部门" readonly="true"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="移交时间" prop="transTime">
+              <el-input v-model="form.transTime" placeholder="请输入移交时间" readonly="true"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitTransferForm">确 定</el-button>
+        <el-button @click="cancel1">取 消</el-button>
+      </div>
+    </el-dialog>
+
+<!--    <InputView v-if="open" :parent-id="queryParamsInner.parentId" :deptid="deptId" :node-id="nodeId"-->
+<!--               :metadata="metadata" :metadataid="id" :type="type" :formconf="formConf" @close="cancel"/>-->
   </div>
 </template>
 
 <script>
-  import {
-    addMetadata,
-    delMetadata,
-    exportMetadata,
-    exportMetadataField,
-    exportMetadataItem,
-    exportMetadataItemAndEle,
-    listMetadata,
-    updateMetadata
-  } from '@/api/system/metadata'
+import {
+  addMetadata,
+  delMetadata,
+  exportMetadata,
+  exportMetadataField,
+  exportMetadataItem,
+  exportMetadataItemAndEle,
+  listMetadata,
+  updateMetadata, uploadHandle,
+  getTransInfo, transfer, addTransfer, importHandleConfirm
+} from '@/api/system/metadata'
   import DeptTree from '@/views/components/deptTree'
   import InputView from '@/views/system/metadata/InputView'
   import { listJson} from '@/api/system/json'
@@ -149,6 +295,9 @@
   import {deepClone} from '@/utils'
   import Uploads from '@/views/components/Uploads'
   import { listTemplates } from '@/api/basic/templates'
+  import replace from '@/views/system/metadata/replace'
+  import increase from '@/views/system/metadata/increase'
+  import batchModify from "./batchModify";
 
   var _ = require('lodash')
   export default {
@@ -156,10 +305,23 @@
     components: {
       DeptTree,
       InputView,
-      Uploads
+      Uploads,
+      replace,
+      increase,
+      batchModify
     },
     data() {
       return {
+        rightTableData:[],
+        rightImportLoading:false,
+        tableFields:[],
+        tableFieldsPick:[],
+        leftImportLoading: false,
+        leftTableData:[],
+        uploadFileName:'',
+        uploadDisable: true,
+        importPreView:[],
+        importS:false,
         searchFields:[],
         tableTitle: [],
         upload: false,
@@ -200,6 +362,9 @@
         title: "",
         // 是否显示弹出层
         open: false,
+        //移交显示弹出层
+        open1:false,
+        entryids:[],
         // 聚合层次字典
         aggregationLevelOptions: [],
         // 查询参数
@@ -256,6 +421,10 @@
         },
         // 表单参数
         form: {},
+
+        //批量修改弹窗
+        BatchEditDialog:false,
+        selectData:[],
       };
     },
     created() {
@@ -267,6 +436,69 @@
     },
 
     methods: {
+      submitUploadHandle(){
+        let data = {
+          nodeId:this.nodeId,
+          deptId:this.deptId,
+          filename:this.uploadFileName,
+          list:this.leftTableData,
+          parentId:this.queryParams.parentId
+        }
+        importHandleConfirm(data).then(res=>{
+          this.$message(res.msg)
+          this.importS=false;
+          this.getList();
+        })
+      },
+      cancelUploadHandle(){
+        this.importS=false
+      },
+      submitUpload(){
+        uploadHandle(this.nodeId,this.deptId,this.uploadFileName)
+          .then(res=>{
+            this.importPreView = res.data
+            this.leftTableData = []
+            let srcField = this.importPreView[0]
+            let destField = this.tableFields.map(item=>item.tableFieldName)
+            srcField.forEach(item=>{
+              let dest = destField.filter(i=>{
+                return i===item
+              })
+              this.leftTableData.push({
+                src:item,
+                dest:dest?dest[0]:''
+              })
+            })
+            this.upload = false
+            this.handleDestChange()
+            this.importS = true
+          })
+
+      },
+      cancelUpload() {
+        this.upload=false
+      },
+      handleDestChange(){
+        this.rightImportLoading = true
+        this.rightTableData=[]
+        for(let i = 1;i<this.importPreView.length;i++){
+          let obj={};
+          for(let j = 0;j<this.importPreView[0].length;j++){
+            //上传字段j
+            let label = this.importPreView[0][j];
+            //匹配字段
+            let value = this.leftTableData.filter(item=>item.src===label)
+            if(value.length>0){
+              let dest = this.tableFields.filter(item=>item.tableFieldName===value[0].dest)
+              if(dest.length>0){
+                obj[dest[0].vModel]=this.importPreView[i][j]
+              }
+            }
+          }
+          this.rightTableData.push(obj)
+        }
+        this.rightImportLoading = false
+      },
       handleExportItem() {
         if (this.ids.length !== 0) {
           exportMetadataItem(this.ids).then(res => {
@@ -342,6 +574,7 @@
       },
       // 多选框选中数据
       handleSelectionChange(selection) {
+        this.selectData=selection;
         this.ids = selection.map(item => item.id)
         this.single = selection.length !== 1
         this.multiple = !selection.length
@@ -382,6 +615,41 @@
         this.metadata = data[0]
         this.type = 'modify'
         this.open = true;
+      },
+       /** 移交按钮操作 */
+      handleTransfer(row) {
+        const ids = row.id || this.ids;
+        this.entryids=ids;
+        console.log(this.entryids);
+        this.open1=true;
+        this.title="移交";
+        getTransInfo(ids).then(response => {
+          this.form = response.data;
+        });
+      },
+      cancel1() {
+      this.open1 = false;
+      this.single = true;
+      },
+      /**提交移交信息 */
+      submitTransferForm() {
+        this.$confirm('是否移交到档案管理员?', '确认信息', {
+          confirmButtonText: '是',
+          cancelButtonText: '否',
+          type: 'warning'
+        }).then(() => {
+          delMetadata(this.entryids);
+          addTransfer(this.form).then(response => {
+              this.msgSuccess("移交成功");
+              this.open1 = false;
+              this.getList();
+            });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消移交'
+          });
+        });
       },
       /** 提交按钮 */
       submitForm() {
@@ -429,6 +697,47 @@
         }).then(response => {
           this.download(response.msg);
         })
+      },
+      /**打开批量修改窗口**/
+      handleChooseData(){
+        if (this.selectData.length==0){
+          this.$confirm("请选择记录");
+        }else{
+          this.BatchEditDialog=true;
+        }
+      },
+      /** 批量替换按钮操作 */
+      batchHandleUpdate() {
+        if (this.selectData.length==0){
+          this.$confirm("请选择记录");
+        }else{
+          this.$refs.replaceForm.open(this.selectData,this.tableTitle);
+        }
+      },
+      /** 插件 */
+      handleInsert(){
+        if (this.ids.length !== 0){
+          this.$message.error('请选择一条数据')
+          return
+        }
+        let id = this.ids[0]
+        this.metadata = this.metadataList.filter(item =>item.id===id)[0]
+        this.type = 'cj'
+        this.id = this.metadata.id
+        this.open = true;
+      },
+      /** 插件 */
+      handleBreak(){},
+      /** 批量增加按钮操作 */
+      batchHandleIncrease() {
+        if (this.selectData.length==0){
+          this.$confirm("请选择记录");
+        }else{
+          this.$refs.increaseForm.open(this.selectData,this.tableTitle);
+        }
+      },
+      closeBatchModify(){
+        this.BatchEditDialog=false;
       }
     },
     watch: {

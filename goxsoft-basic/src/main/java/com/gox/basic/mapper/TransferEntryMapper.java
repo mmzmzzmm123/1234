@@ -2,6 +2,7 @@ package com.gox.basic.mapper;
 
 import java.util.List;
 import com.gox.basic.domain.TransferEntry;
+import org.springframework.stereotype.Repository;
 
 /**
  *   Mapper接口
@@ -9,6 +10,7 @@ import com.gox.basic.domain.TransferEntry;
  * @author gox
  * @date 2021-03-09
  */
+@Repository
 public interface TransferEntryMapper 
 {
     /**

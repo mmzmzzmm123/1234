@@ -9,7 +9,13 @@ export function listMetadata(query) {
     params: query
   })
 }
-
+export function getArchivalCode(data){
+  return request({
+    url: '/system/metadata/archi',
+    method: 'post',
+    data: data
+  })
+}
 // 查询文书类基本元数据详细
 export function getMetadata(id) {
   return request({

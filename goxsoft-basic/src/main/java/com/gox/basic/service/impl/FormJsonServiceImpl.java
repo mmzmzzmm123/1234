@@ -1,9 +1,11 @@
 package com.gox.basic.service.impl;
 
+import cn.hutool.core.util.ObjectUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.gox.basic.domain.TemplatesPreserve;
 import com.gox.basic.domain.form.FieldsItem;
+import com.gox.basic.domain.vo.TemplatesCopyVo;
 import com.gox.basic.service.ITemplatesPreserveService;
 import com.gox.common.core.redis.RedisCache;
 import com.gox.common.plugin.SnowIdUtils;
@@ -205,5 +207,21 @@ public class FormJsonServiceImpl implements IFormJsonService {
             return 1;
         }
         return 0;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Throwable.class)
+    public String copy(TemplatesCopyVo vo) {
+        FormJson formJson = new FormJson(vo.getScid(),vo.getSdid());
+        List<FormJson> list = formJsonMapper.selectFormJsonList(formJson);
+        for (FormJson json : list) {
+            for (int i = 0; i < vo.getDcid().length; i++) {
+                FormJson j = ObjectUtil.clone(json);
+                j.setNodeId(vo.getDcid()[i]);
+                j.setDeptId(vo.getDdid()[i]);
+                insertFormJson(j);
+            }
+        }
+        return "";
     }
 }

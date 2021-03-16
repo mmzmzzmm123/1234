@@ -374,21 +374,6 @@ public class Metadata extends BaseEntity {
     public void setMetadataReserve(MetadataReserve metadataReserve) {
         this.metadataReserve = metadataReserve;
     }
-//    /** 知识产权说明 */
-//    @Excel(name = "知识产权说明")
-//    private String intellectualPropertyStatement;
-//
-//    /** 授权对象 */
-//    @Excel(name = "授权对象")
-//    private String authorizedAgent;
-//
-//    /** 授权行为 */
-//    @Excel(name = "授权行为")
-//    private String permissionAssignment;
-//
-//    /** 控制标识 */
-//    @Excel(name = "控制标识")
-//    private String controlIdentifier;
     /**
      * 电子签名
      */
