@@ -25,7 +25,7 @@
             v-if="cusOutId"
             style="margin: 0 12px"
           >
-            <VueQr :text="copyValue" :logoSrc="logo" size="256" />
+            <VueQr :text="copyValue" :logoSrc="logo" :size="256" />
             <el-button
               slot="reference"
               size="mini"
