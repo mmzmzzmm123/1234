@@ -17,11 +17,11 @@ public class SysIngredentFile {
 
     Integer delFlag;
 
-    Long createBy;
+    String createBy;
 
     Date createTime;
 
-    Long updateBy;
+    String updateBy;
 
     Date updateTime;
 }

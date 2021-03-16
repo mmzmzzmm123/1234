@@ -21,7 +21,7 @@
         <result property="notRec" column="not_rec"/>
         <result property="reviewStatus" column="review_status"/>
         <result property="info" column="info"/>
-        <association property="imgFiles" column="id" select="selectIngredentFileById"/>
+        <association property="imgList" column="id" select="selectIngredentFileById"/>
     </resultMap>
 
     <sql id="selectSysIngredientVo">
@@ -126,6 +126,7 @@
             <if test="updateBy != null">update_by,</if>
             <if test="updateTime != null">update_time,</if>
             <if test="reviewStatus != null">review_status,</if>
+            <if test="info != null">info,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="name != null">#{name},</if>
@@ -140,6 +141,7 @@
             <if test="updateBy != null">#{updateBy},</if>
             <if test="updateTime != null">#{updateTime},</if>
             <if test="reviewStatus != null">#{reviewStatus},</if>
+            <if test="info != null">#{info},</if>
         </trim>
     </insert>
 
@@ -194,6 +196,7 @@
             <if test="updateBy != null">update_by = #{updateBy},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
             <if test="reviewStatus != null">review_status = #{reviewStatus},</if>
+            <if test="info != null">info = #{info},</if>
         </trim>
         where id = #{id}
     </update>

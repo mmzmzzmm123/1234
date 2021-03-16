@@ -83,5 +83,5 @@ public interface SysIngredientMapper
      */
     public SysIngredient selectSysIngredientByName(@Param("name") String name);
 
-    int batchInsertIngredientImage(List<SysIngredentFile> ingredentFiles);
+    int batchInsertIngredientImage(List<SysIngredentFile> list);
 }

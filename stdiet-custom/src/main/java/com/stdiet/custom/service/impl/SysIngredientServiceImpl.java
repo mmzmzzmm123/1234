@@ -1,7 +1,9 @@
 package com.stdiet.custom.service.impl;
 
 import com.stdiet.common.utils.DateUtils;
+import com.stdiet.common.utils.SecurityUtils;
 import com.stdiet.common.utils.StringUtils;
+import com.stdiet.custom.domain.SysIngredentFile;
 import com.stdiet.custom.domain.SysIngredient;
 import com.stdiet.custom.domain.SysIngredientNotRec;
 import com.stdiet.custom.domain.SysIngredientRec;
@@ -61,26 +63,34 @@ public class SysIngredientServiceImpl implements ISysIngredientService {
         //
         insertNotRecommand(sysIngredient);
         //
-        
-
+        if (StringUtils.isNotNull(sysIngredient.getImgList())) {
+            List<SysIngredentFile> fileList = sysIngredient.getImgList();
+            for (SysIngredentFile file : fileList) {
+                file.setId(sysIngredient.getId());
+                file.setCreateBy(SecurityUtils.getUsername());
+                file.setCreateTime(DateUtils.getNowDate());
+            }
+            sysIngredientMapper.batchInsertIngredientImage(fileList);
+        }
         return rows;
     }
 
     /**
      * 新增推荐标签
+     *
      * @param ingredient
      */
     public void insertRecommand(SysIngredient ingredient) {
         Long[] recIds = ingredient.getRecIds();
-        if(StringUtils.isNotNull(recIds)) {
+        if (StringUtils.isNotNull(recIds)) {
             List<SysIngredientRec> list = new ArrayList<SysIngredientRec>();
-            for(Long recId: recIds) {
+            for (Long recId : recIds) {
                 SysIngredientRec rec = new SysIngredientRec();
                 rec.setIngredientId(ingredient.getId());
                 rec.setRecommandId(recId);
                 list.add(rec);
             }
-            if(list.size() > 0) {
+            if (list.size() > 0) {
                 sysIngredientMapper.batchIngredientRec(list);
             }
         }
@@ -88,19 +98,20 @@ public class SysIngredientServiceImpl implements ISysIngredientService {
 
     /**
      * 新增不推荐标签
+     *
      * @param ingredient
      */
     public void insertNotRecommand(SysIngredient ingredient) {
         Long[] notRecIds = ingredient.getNotRecIds();
-        if(StringUtils.isNotNull(notRecIds)) {
+        if (StringUtils.isNotNull(notRecIds)) {
             List<SysIngredientNotRec> list = new ArrayList<SysIngredientNotRec>();
-            for(Long recId: notRecIds) {
+            for (Long recId : notRecIds) {
                 SysIngredientNotRec notRec = new SysIngredientNotRec();
                 notRec.setIngredientId(ingredient.getId());
                 notRec.setRecommandId(recId);
                 list.add(notRec);
             }
-            if(list.size() > 0) {
+            if (list.size() > 0) {
                 sysIngredientMapper.batchIngredientNotRec(list);
             }
         }
@@ -151,11 +162,12 @@ public class SysIngredientServiceImpl implements ISysIngredientService {
 
     /**
      * 根据食材名称查询食材信息
+     *
      * @param name
      * @return
      */
     @Override
-    public SysIngredient selectSysIngredientByName(String name){
+    public SysIngredient selectSysIngredientByName(String name) {
         return sysIngredientMapper.selectSysIngredientByName(name);
     }
 }
