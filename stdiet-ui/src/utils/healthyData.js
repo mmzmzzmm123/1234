@@ -598,6 +598,11 @@ export function dealHealthy(customerHealthy) {
       ? `，${customerHealthy.otherMotionField}`
       : "";
   }
+  if (customerHealthy.hasOwnProperty("otherOperationHistory")) {
+    customerHealthy.operationHistory += customerHealthy.otherOperationHistory
+      ? `，${customerHealthy.otherOperationHistory}`
+      : "";
+  }
   if (customerHealthy.hasOwnProperty("defecationNum")) {
     customerHealthy.defecationNum += "次/天";
   }

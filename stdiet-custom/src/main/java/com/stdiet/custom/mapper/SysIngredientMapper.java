@@ -1,6 +1,8 @@
 package com.stdiet.custom.mapper;
 
 import java.util.List;
+
+import com.stdiet.custom.domain.SysIngredentFile;
 import com.stdiet.custom.domain.SysIngredient;
 import com.stdiet.custom.domain.SysIngredientNotRec;
 import com.stdiet.custom.domain.SysIngredientRec;
@@ -80,4 +82,6 @@ public interface SysIngredientMapper
      * @return
      */
     public SysIngredient selectSysIngredientByName(@Param("name") String name);
+
+    int batchInsertIngredientImage(List<SysIngredentFile> ingredentFiles);
 }

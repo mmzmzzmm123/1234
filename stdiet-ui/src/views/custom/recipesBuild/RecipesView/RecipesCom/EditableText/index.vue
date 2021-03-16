@@ -9,7 +9,7 @@
       :step="5"
       :value="value"
       @blur="handleOnBlur"
-      @keydown.enter.native="handleEnterClick"
+      @keydown="handleOnKeydown"
     />
   </div>
 </template>
@@ -43,8 +43,11 @@ export default {
         this.$message.error("数字必须大于0");
       }
     },
-    handleEnterClick(e) {
-      e.target.blur();
+    handleOnKeydown(e) {
+      // console.log(e);
+      if (e.keyCode === 13) {
+        e.target.blur();
+      }
     },
   },
 };

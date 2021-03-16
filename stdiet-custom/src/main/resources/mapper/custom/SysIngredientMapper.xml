@@ -5,21 +5,23 @@
 <mapper namespace="com.stdiet.custom.mapper.SysIngredientMapper">
 
     <resultMap type="SysIngredient" id="SysIngredientResult">
-        <result property="id"    column="id"    />
-        <result property="name"    column="name"    />
-        <result property="type"    column="type"    />
-        <result property="proteinRatio"    column="protein_ratio"    />
-        <result property="fatRatio"    column="fat_ratio"    />
-        <result property="carbonRatio"    column="carbon_ratio"    />
-        <result property="area"    column="area"    />
-        <result property="remark"    column="remark"    />
-        <result property="createBy"    column="create_by"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="updateBy"    column="update_by"    />
-        <result property="updateTime"    column="update_time"    />
-        <result property="rec"    column="rec"    />
-        <result property="notRec"    column="not_rec"    />
-        <result property="reviewStatus"    column="review_status"    />
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="type" column="type"/>
+        <result property="proteinRatio" column="protein_ratio"/>
+        <result property="fatRatio" column="fat_ratio"/>
+        <result property="carbonRatio" column="carbon_ratio"/>
+        <result property="area" column="area"/>
+        <result property="remark" column="remark"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="rec" column="rec"/>
+        <result property="notRec" column="not_rec"/>
+        <result property="reviewStatus" column="review_status"/>
+        <result property="info" column="info"/>
+        <association property="imgFiles" column="id" select="selectIngredentFileById"/>
     </resultMap>
 
     <sql id="selectSysIngredientVo">
@@ -43,44 +45,44 @@
     <sql id="selectSysIngredientByPhyVo">
         SELECT * FROM sys_ingredient igd
         RIGHT JOIN(
-            SELECT * FROM(
-                SELECT DISTINCT(ingredient_id) as id FROM sys_ingredient_rec
-                <where>
-                    <if test="recIds != null">
-                        physical_signs_id in
-                        <foreach collection="recIds" item="item" index="index" open="(" separator="," close=")">
-                            #{item}
-                        </foreach>
-                    </if>
-                </where>
-            ) recId
-            LEFT JOIN (
-                    SELECT ingredient_id as id, GROUP_CONCAT(name SEPARATOR ',') rec FROM(
-                            SELECT physical_signs_id as id, ingredient_id
-                            FROM sys_ingredient_rec
-                    ) rec JOIN sys_physical_signs phy USING(id)
-                    GROUP BY id
-            ) recM USING(id)
-            INNER JOIN (
-                SELECT * FROM(
-                    SELECT DISTINCT(ingredient_id) as id FROM sys_ingredient_not_rec
-                    <where>
-                        <if test="notRecIds != null">
-                            physical_signs_id in
-                            <foreach collection="notRecIds" item="item" index="index" open="(" separator="," close=")">
-                                #{item}
-                            </foreach>
-                        </if>
-                    </where>
-                ) notRecId
-                LEFT JOIN (
-                        SELECT ingredient_id as id, GROUP_CONCAT(name SEPARATOR ',') not_rec FROM(
-                                SELECT physical_signs_id as id, ingredient_id
-                                FROM sys_ingredient_not_rec
-                        ) notRec JOIN sys_physical_signs phy USING(id)
-                        GROUP BY id
-                ) notRecM USING(id)
-            ) notRecT USING(id)
+        SELECT * FROM(
+        SELECT DISTINCT(ingredient_id) as id FROM sys_ingredient_rec
+        <where>
+            <if test="recIds != null">
+                physical_signs_id in
+                <foreach collection="recIds" item="item" index="index" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+        ) recId
+        LEFT JOIN (
+        SELECT ingredient_id as id, GROUP_CONCAT(name SEPARATOR ',') rec FROM(
+        SELECT physical_signs_id as id, ingredient_id
+        FROM sys_ingredient_rec
+        ) rec JOIN sys_physical_signs phy USING(id)
+        GROUP BY id
+        ) recM USING(id)
+        INNER JOIN (
+        SELECT * FROM(
+        SELECT DISTINCT(ingredient_id) as id FROM sys_ingredient_not_rec
+        <where>
+            <if test="notRecIds != null">
+                physical_signs_id in
+                <foreach collection="notRecIds" item="item" index="index" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+        ) notRecId
+        LEFT JOIN (
+        SELECT ingredient_id as id, GROUP_CONCAT(name SEPARATOR ',') not_rec FROM(
+        SELECT physical_signs_id as id, ingredient_id
+        FROM sys_ingredient_not_rec
+        ) notRec JOIN sys_physical_signs phy USING(id)
+        GROUP BY id
+        ) notRecM USING(id)
+        ) notRecT USING(id)
         ) recT USING(id)
     </sql>
 
@@ -97,10 +99,10 @@
             </otherwise>
         </choose>
         <where>
-            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
-            <if test="type != null  and type != ''"> and type = #{type}</if>
-            <if test="area != null  and area != ''"> and area = #{area}</if>
-            <if test="reviewStatus != null and reviewStatus != ''"> and review_status = #{reviewStatus}</if>
+            <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
+            <if test="type != null  and type != ''">and type = #{type}</if>
+            <if test="area != null  and area != ''">and area = #{area}</if>
+            <if test="reviewStatus != null and reviewStatus != ''">and review_status = #{reviewStatus}</if>
         </where>
     </select>
 
@@ -141,14 +143,14 @@
         </trim>
     </insert>
 
-    <insert id="batchIngredientRec" >
+    <insert id="batchIngredientRec">
         insert into sys_ingredient_rec(ingredient_id, physical_signs_id) values
         <foreach collection="list" separator="," item="item" index="index">
             (#{item.ingredientId},#{item.recommandId})
         </foreach>
     </insert>
 
-    <insert id="batchIngredientNotRec" >
+    <insert id="batchIngredientNotRec">
         insert into sys_ingredient_not_rec(ingredient_id, physical_signs_id) values
         <foreach collection="list" separator="," item="item" index="index">
             (#{item.ingredientId},#{item.notRecommandId})
@@ -213,4 +215,28 @@
         where name = #{name} limit 1
     </select>
 
+    <!--    添加食材图片-->
+    <insert id="batchInsertIngredientImage">
+        insert into sys_ingredient_file(igd_id, file_url, file_name, create_by, create_time, update_by, update_time )
+        values
+        <foreach collection="list" separator="," item="item" index="index">
+            (#{item.ingredientId},#{item.fileUrl},#{item.fileName},#{item.createBy},#{item.createTime},#{item.updateBy},#{item.updateTime})
+        </foreach>
+    </insert>
+
+    <resultMap id="SysIngredentFileResult" type="SysIngredentFile">
+        <result property="id" column="id"/>
+        <result property="fileName" column="file_name"/>
+        <result property="fileUrl" column="file_url"/>
+    </resultMap>
+
+    <!--    查找图片-->
+    <select id="selectIngredentFileById" parameterType="Long" resultMap="SysIngredentFileResult">
+        select id, file_url, file_name from sys_ingredent_file where igd_id = #{id} and del_flag = 0
+    </select>
+
+    <!--    删除图片记录-->
+    <update id="deleteIngredentFileById" parameterType="Long">
+        update sys_ingredent_file set del_flag=1 where id=#{id}
+    </update>
 </mapper>
