@@ -141,36 +141,37 @@ public class SysCustomerCaseController extends BaseController
         return getDataTable(list);
     }
 
-    /**
-     * 上传文件到OSS返回URL
-     */
-    @PostMapping("/uploadCaseFile")
-    @PreAuthorize("@ss.hasPermi('custom:customerCase:list')")
-    public AjaxResult uploadCseFile(MultipartFile file) throws Exception {
-        try {
-            if(file == null){
-                return AjaxResult.error("文件不存在");
-            }
-            int fileNameLength = file.getOriginalFilename().length();
-            if (fileNameLength > FileUploadUtils.DEFAULT_FILE_NAME_LENGTH)
-            {
-                throw new FileNameLengthLimitExceededException(FileUploadUtils.DEFAULT_FILE_NAME_LENGTH);
-            }
-            FileUploadUtils.assertAllowed(file, MimeTypeUtils.DEFAULT_ALLOWED_EXTENSION);
-
-            String fileUrl = AliyunOSSUtils.uploadFileInputSteam(AliyunOSSConfig.casePrefix, DateUtils.getDate()+"/"+file.getOriginalFilename(), file);
-
-            AjaxResult ajax = null;
-            if(StringUtils.isNotEmpty(fileUrl)){
-                ajax = AjaxResult.success();
-                ajax.put("fileUrl", fileUrl);
-                ajax.put("fileName", file.getOriginalFilename());
-            }else{
-                ajax = AjaxResult.error("文件上传失败");
-            }
-            return ajax;
-        } catch (Exception e) {
-            return AjaxResult.error("文件上传失败");
-        }
-    }
+//    转移到SysFileUploadController.java
+//    /**
+//     * 上传文件到OSS返回URL
+//     */
+//    @PostMapping("/uploadCaseFile")
+//    @PreAuthorize("@ss.hasPermi('custom:customerCase:list')")
+//    public AjaxResult uploadCseFile(MultipartFile file) throws Exception {
+//        try {
+//            if(file == null){
+//                return AjaxResult.error("文件不存在");
+//            }
+//            int fileNameLength = file.getOriginalFilename().length();
+//            if (fileNameLength > FileUploadUtils.DEFAULT_FILE_NAME_LENGTH)
+//            {
+//                throw new FileNameLengthLimitExceededException(FileUploadUtils.DEFAULT_FILE_NAME_LENGTH);
+//            }
+//            FileUploadUtils.assertAllowed(file, MimeTypeUtils.DEFAULT_ALLOWED_EXTENSION);
+//
+//            String fileUrl = AliyunOSSUtils.uploadFileInputSteam(AliyunOSSConfig.casePrefix, DateUtils.getDate()+"/"+file.getOriginalFilename(), file);
+//
+//            AjaxResult ajax = null;
+//            if(StringUtils.isNotEmpty(fileUrl)){
+//                ajax = AjaxResult.success();
+//                ajax.put("fileUrl", fileUrl);
+//                ajax.put("fileName", file.getOriginalFilename());
+//            }else{
+//                ajax = AjaxResult.error("文件上传失败");
+//            }
+//            return ajax;
+//        } catch (Exception e) {
+//            return AjaxResult.error("文件上传失败");
+//        }
+//    }
 }

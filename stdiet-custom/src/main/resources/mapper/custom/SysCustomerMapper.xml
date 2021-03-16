@@ -37,6 +37,7 @@
         where del_flag = 0
         <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
         <if test="phone != null  and phone != ''"> and phone like concat('%', #{phone}, '%')</if>
+        <if test="fansChannel != null "> and fans_channel = #{fansChannel}</if>
         order by create_time desc
     </select>
 

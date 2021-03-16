@@ -25,16 +25,17 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <!--<el-form-item label="主营养师" prop="mainDietitian">
-        <el-input
-          v-model="queryParams.mainDietitian"
-          placeholder="请输入主营养师"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+      <el-form-item label="进粉渠道" prop="fansChannel">
+        <el-select v-model="queryParams.fansChannel" placeholder="请选择">
+          <el-option
+            v-for="dict in fansChannelOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="parseInt(dict.dictValue)"
+          />
+        </el-select>
       </el-form-item>
-      <el-form-item label="营养师助理" prop="assistantDietitian">
+      <!--<el-form-item label="营养师助理" prop="assistantDietitian">
         <el-input
           v-model="queryParams.assistantDietitian"
           placeholder="请输入营养师助理"
@@ -430,6 +431,7 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
+        fansChannel: null,
         name: null,
         phone: null,
         mainDietitian: null,

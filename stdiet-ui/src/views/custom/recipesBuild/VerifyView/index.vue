@@ -87,7 +87,7 @@ export default {
         this.setNotRecIgds({ data: [] });
       }
 
-      this.selectedIgd = data.id;
+      this.selectedIgd = data.id === this.selectedIgd ? 0 : data.id;
 
       this.setNotRecIgds({ data: [this.selectedIgd] });
     },

@@ -6,6 +6,7 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 食材对象 sys_ingredient
@@ -15,8 +16,6 @@ import java.util.Date;
  */
 @Data
 public class SysIngredient {
-    private static final long serialVersionUID = 1L;
-
     /**
      * id
      */
@@ -106,5 +105,12 @@ public class SysIngredient {
     private Long[] recIds;
 
     private Long[] notRecIds;
+
+    /**
+     * 食材信息
+     */
+    private String info;
+
+    private List<SysIngredentFile> imgList;
 
 }

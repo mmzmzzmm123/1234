@@ -201,7 +201,7 @@
           v-show="dataList.length == 0"
           style="font-size: 20px; text-align: center"
         >
-          <VueQr :text="copyValue" :logoSrc="logo" size="256"/>
+          <VueQr :text="copyValue" :logoSrc="logo" :size="256" />
           <div style="text-align: center; margin-top: 20px">
             <el-button
               icon="el-icon-share"
@@ -689,6 +689,28 @@ export default {
             ? medicalReportNameArray[2]
             : "体检报告（3）"
           : "";
+      detailHealthy.moistureDate = detailHealthy.moistureDate
+        .split(",")
+        .reduce((arr, cur) => {
+          const tarData = healthyData.moistureDateArray.find(
+            (obj) => obj.value === cur
+          );
+          if (tarData) {
+            arr.push(tarData.name);
+          }
+          return arr;
+        }, []);
+      detailHealthy.bloodData = detailHealthy.bloodData
+        .split(",")
+        .reduce((arr, cur) => {
+          const tarData = healthyData.bloodDataArray.find(
+            (obj) => obj.value === cur
+          );
+          if (tarData) {
+            arr.push(tarData.name);
+          }
+          return arr;
+        }, []);
       this.detailHealthy = detailHealthy;
       for (let i = 0; i < this.healthyTitleData.length; i++) {
         let stepArray = [];
