@@ -281,7 +281,7 @@
         <if test="menuId != null and menuId != 0">#{menuId},</if>
         <if test="parentId != null and parentId != 0">#{parentId},</if>
         <if test="menuName != null and menuName != ''">#{menuName},</if>
-        <if test="dataFlog != null and dataFlog != ''">#{dataFlog},</if>
+        <if test="dataFlag != null and dataFlag != ''">#{dataFlag},</if>
         <if test="orderNum != null and orderNum != ''">#{orderNum},</if>
         <if test="path != null and path != ''">#{path},</if>
         <if test="component != null and component != ''">#{component},</if>

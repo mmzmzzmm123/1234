@@ -68,11 +68,33 @@ public interface NodeMapper
      * @param
      * @return   集合
      */
-    @Select("select * from node where workid=#{workid} limit 0,2")
+    @Select("select * from node where workid=#{workid} order by sort desc limit 0,2 ")
     public List<Node> selectNodeListByWorkId(Long workid);
 
 
     @Update(value = "update node set nextid = #{nextid},nexttext=#{nexttext},sort=#{sort},desci=#{desci} where id=#{id}")
     int updateNodeById(@Param("nextid") String nextid,@Param("nexttext") String nexttext,@Param("sort")  Long sort,@Param("desci") String desci,@Param("id") Long id);
+
+
+
+    /**
+     * 查询  列表
+     *
+     * @param
+     * @return   集合
+     */
+    @Select("select * from node where workid=#{workid} order by sort")
+    public List<Node> selectNodeListByid(@Param("workid") Long workid);
+
+
+    /**
+     * 根据节点id数组查找节点
+     * @param id 节点id
+     * @return
+     */
+    @Select(value = "select * from node where id in(#{id})")
+    public List<Node> findByNodeidIn(@Param("id") String[] id);
+
+    //int updateNextText
 
 }

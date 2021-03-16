@@ -1,12 +1,15 @@
 package com.gox.basic.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.gox.common.core.domain.entity.SysDept;
 import com.gox.common.core.domain.entity.SysRole;
 import com.gox.common.core.domain.entity.SysUser;
 import com.gox.common.utils.StringUtils;
 import com.gox.system.service.ISysRoleService;
+import org.springframework.data.redis.connection.StringRedisConnection;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -73,13 +76,14 @@ public class NodeController extends BaseController
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
-        //return AjaxResult.success(nodeService.selectNodeById(id));
         AjaxResult ajax = AjaxResult.success();
         List<SysRole> roles = roleService.selectRoleAll();
         ajax.put("roles", SysUser.isAdmin(id) ? roles : roles.stream().filter(r -> !r.isAdmin()).collect(Collectors.toList()));
         if (StringUtils.isNotNull(id)) {
             ajax.put(AjaxResult.DATA_TAG, nodeService.selectNodeById(id));
             ajax.put("roleIds", roleService.selectRoleListByNodeId(id));
+            ajax.put("qxSet",nodeService.getNexttext(id));
+            ajax.put("qxList", nodeService.getNodeQx(id));
         }
         return ajax;
     }
@@ -109,11 +113,33 @@ public class NodeController extends BaseController
     /**
      * 删除  
      */
+//    @PreAuthorize("@ss.hasPermi('system:node:remove')")
+//    @Log(title = "删除节点", businessType = BusinessType.DELETE)
+//	@DeleteMapping("/{ids}")
+//    public AjaxResult remove(@PathVariable Long[] ids)
+//    {
+//        return toAjax(nodeService.deleteNodeByIds(ids));
+//    }
+
+
+    /**
+     * 删除
+     */
     @PreAuthorize("@ss.hasPermi('system:node:remove')")
     @Log(title = "删除节点", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
+    @DeleteMapping("/{id}")
+    public AjaxResult remove(@PathVariable Long id)
     {
-        return toAjax(nodeService.deleteNodeByIds(ids));
+       // int i=nodeService.deleteNode(id);
+        return toAjax(nodeService.deleteNode(id));
     }
+
+
+    /**
+     * 确认设置节点权限
+     */
+//    @PreAuthorize("@ss.hasPermi('system:node:edit')")
+//    @Log(title = "设置节点权限", businessType = BusinessType.UPDATE)
+//    @PutMapping
+//    public AjaxResult updateQx(@RequestBody Node node){return toAjax(nodeService.updateQxNode(node));}
 }

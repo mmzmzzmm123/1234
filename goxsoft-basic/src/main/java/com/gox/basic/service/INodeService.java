@@ -58,4 +58,31 @@ public interface INodeService
      * @return 结果
      */
     public int deleteNodeById(Long id);
+
+
+    /**
+     * 设置节点权限
+     * @param id
+     * @return
+     */
+    public List<Node> getNodeQx(Long id);
+
+    /**
+     * 查看下一节点集合
+     * @param id
+     * @return
+     */
+    public List<String> getNexttext(Long id);
+
+
+    /**
+     * 设置节点权限
+     *
+     * @param node
+     * @return 结果
+     */
+    public int updateQxNode(Node node);
+
+
+    public int deleteNode(Long id);
 }

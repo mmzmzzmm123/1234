@@ -63,8 +63,8 @@ public class NodeServiceImpl implements INodeService
     public int insertNode(Node node)
     {
         List<Node> nodeList=nodeMapper.selectNodeListByWorkId(node.getWorkid());
-        Node node1 = nodeList.get(1);
-        Node node2 = nodeList.get(0);
+        Node node1 = nodeList.get(0);//结束
+        Node node2 = nodeList.get(1);//档案管理员
         node.setSort(node1.getSort());
         node.setNextid(node1.getId().toString());
         node.setNexttext(node1.getText());
@@ -140,5 +140,88 @@ public class NodeServiceImpl implements INodeService
                 nodeRoleMapper.batchNodeRole(list);
             }
         }
+    }
+
+
+    @Override
+    public List<Node> getNodeQx(Long id) {
+        Node node = nodeMapper.selectNodeById(id);
+        List<Node> list = nodeMapper.selectNodeListByid(node.getWorkid());
+        for(int i=0;i<list.size();i++){
+            if("启动".equals(list.get(i).getText())){
+                list.remove(i);
+            }
+            if("结束".equals(list.get(i).getText())){
+                list.remove(i);
+            }
+        }
+        return list;
+    }
+
+    @Override
+    public List<String> getNexttext(Long id) {
+        List<String> nextTextList=new ArrayList<>();
+        Node node=nodeMapper.selectNodeById(id);
+        nextTextList.add(node.getNexttext());
+        return nextTextList;
+    }
+
+
+    @Override
+    public int updateQxNode(Node node) {
+        Long nodeId = node.getId();
+        int rows = nodeMapper.updateNode(node);
+        // 删除节点与角色关联
+        nodeRoleMapper.deleteNodeRoleByNodeId(nodeId);
+        // 新增节点与角色管理
+        insertNodeRole(node);
+        return rows;
+    }
+
+    @Override
+    public int deleteNode(Long id) {
+        Node node = nodeMapper.selectNodeById(id);
+        //获取工作流中所有节点
+        List<Node> nodes = nodeMapper.selectNodeListByid(node.getWorkid());
+        int j = nodeMapper.deleteNodeById(id);//删除环节
+        nodeRoleMapper.deleteNodeRoleByNodeId(id);//删除环节用户对应数据
+        int orders = 1;
+        for(int i=0;i<nodes.size();i++){//更新相邻环节
+            //获取每一个节点信息
+            Node node1  = nodes.get(i);
+            //判断要删除节点是否等于集合中节点
+            if(node.getId().equals(node1.getId())){
+                continue;
+            }
+            if(!"结束".equals(node1.getText())){
+                //获取删除节点的所有下一级节点id
+                String[] nextIds = node1.getNextid().split(",");
+                //节点的下一节点是被删除的节点
+                if(node1.getNextid().indexOf(node.getId().toString())>-1){
+                    String nextId = (node1.getNextid()==null?"":node1.getNextid()).replace(","+node.getId(),"");
+                    nextId = nextId.replace(node.getId()+",","");
+                    nextId = nextId.replace(node.getId().toString(),"");
+                    node1.setNextid(nextId);
+                }
+                List<Node> nodes2 = nodeMapper.findByNodeidIn(nextIds);
+                String nodeText = "";
+                for(Node node2 : nodes2){
+                    nodeText += ","+node2.getText();
+                }
+                if(!"".equals(nodeText)){
+                    nodeText = nodeText.substring(1);
+                }else{
+                    if(nodes.size()>3){
+                        nodeText = nodes.get(i+2).getText();
+                        node1.setNextid(nodes.get(i+2).getId().toString());
+                    }
+                }
+                node1.setNexttext(nodeText);
+            }
+            node1.setSort(new Long((long)orders));
+            orders++;
+           int a=nodeMapper.updateNode(node1);
+        }
+        return j;
     }
 }

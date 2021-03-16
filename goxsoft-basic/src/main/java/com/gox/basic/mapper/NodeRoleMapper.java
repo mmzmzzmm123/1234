@@ -1,6 +1,8 @@
 package com.gox.basic.mapper;
 
 import java.util.List;
+
+import com.gox.basic.domain.Node;
 import com.gox.basic.domain.NodeRole;
 import com.gox.system.domain.SysUserRole;
 
@@ -76,4 +78,6 @@ public interface NodeRoleMapper
      * @return 结果
      */
     public int deleteNodeRoleByIds(Long[] nodeids);
+
+
 }
