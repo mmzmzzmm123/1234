@@ -153,7 +153,12 @@
       <el-table-column label="联系电话" align="center" prop="lxdh" />
       <el-table-column label="微信号" align="center" prop="wx" />
       <el-table-column label="抖音号" align="center" prop="dy" />
-      <el-table-column label="其他联系方式" width="100" align="center" prop="qt" />
+      <el-table-column
+        label="其他联系方式"
+        width="100"
+        align="center"
+        prop="qt"
+      />
       <el-table-column label="所在省" align="center" prop="sheng" />
       <el-table-column label="所在市" align="center" prop="shi" />
       <el-table-column
@@ -178,7 +183,18 @@
       />
       <el-table-column label="录入时间" align="center" prop="createTime" />
       <el-table-column label="过保时间" align="center" prop="gbtime" />
-      <el-table-column label="转换跟进" show-overflow-tooltip align="center" prop="zhgj" />
+      <el-table-column
+        label="转换跟进"
+        show-overflow-tooltip
+        align="center"
+        prop="zhgj"
+      />
+      <el-table-column
+        label="备注"
+        show-overflow-tooltip
+        align="center"
+        prop="bz"
+      />
       <el-table-column
         fixed="right"
         label="操作"
@@ -234,10 +250,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="园所人数" prop="rs">
-              <el-input-number
-                v-model="form.rs"
-                placeholder="请输入园所人数"
-              />
+              <el-input-number v-model="form.rs" placeholder="请输入园所人数" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -274,14 +287,20 @@
           </el-col>
           <el-col :span="24">
             <el-form-item label="所在省" prop="sheng">
-              <v-distpicker
+              <el-cascader
+                size="large"
+                :options="options"
+                v-model="selectedOptions"
+                @change="handleChange"
+              >
+              </el-cascader>
+              <!-- <v-distpicker
                 v-model="form.sheng"
                 :placeholders="placeholders"
                 :province="diglogForm.province"
                 :city="diglogForm.city"
-                :area="diglogForm.area"
                 @selected="onSelected"
-              ></v-distpicker>
+              ></v-distpicker> -->
               <el-input v-model="form.shengid" v-if="false" />
               <el-input v-model="form.shiid" v-if="false" />
             </el-form-item>
@@ -344,23 +363,23 @@ import {
   updateCustomer,
   exportCustomer,
 } from "@/api/benyi/customer";
-import VDistpicker from "v-distpicker";
 import { listUser } from "@/api/system/user";
+import { provinceAndCityDataPlus, CodeToText } from "element-china-area-data";
 
 export default {
   name: "Customer",
   data() {
     return {
-      placeholders: {
-        province: "请选择省",
-        city: "请选择市",
-        area: "请选择区",
-      },
-      diglogForm: {
-        province: null,
-        city: null,
-        area: null,
-      },
+      options: provinceAndCityDataPlus,
+      selectedOptions: [],
+      // placeholders: {
+      //   province: "请选择省",
+      //   city: "请选择市",
+      // },
+      // diglogForm: {
+      //   province: null,
+      //   city: null,
+      // },
       // 遮罩层
       loading: true,
       // 选中数组
@@ -387,13 +406,13 @@ export default {
         // 当前页
         pageNum: 1,
         // 每页大小
-        pageSize: 10,
+        pageSize: 50,
       },
 
       // 查询参数
       queryParams: {
         pageNum: 1,
-        pageSize: 10,
+        pageSize: 50,
         // desc、asc排序规则
         isAsc: undefined,
         // 需要排序的字段
@@ -453,18 +472,10 @@ export default {
     });
     this.getUserList();
   },
-  components: {
-    //省市区三级联动全局组件
-    VDistpicker,
-  },
   methods: {
     //排序
     sortChange(column, prop, order) {
-      // 可以打印一下该函数的参数就明白了
       // 下面的if判断根据自己的需要些我后台设置的只能识别desc与asc
-      console.log(column);
-      console.log(prop);
-      console.log(order);
       if (column.order != null) {
         this.queryParams.isAsc = "desc";
       } else {
@@ -510,16 +521,21 @@ export default {
         this.loading = false;
       });
     },
-    //所在省市区触发联动方法
-    onSelected(data) {
-      if (data.province.code == undefined || data.city.code == undefined) {
-        this.form.sheng = undefined;
-      } else {
-        this.form.sheng = data.province.value;
-        this.form.shengid = data.province.code;
-        this.form.shi = data.city.value;
-        this.form.shiid = data.city.code;
-      }
+    // 省市二级联动
+    handleChange (val) {
+        // for (let i = 0; i < this.selectedOptions.length; i++) {
+            // console.log(this.selectedOptions[i]);
+            // location+= CodeToText[this.selectedOptions[i]];
+            // this.form.shengid =  this.selectedOptions[i];
+            this.form.shengid = val[0];
+            this.form.shiid = val[1];
+            this.form.sheng = CodeToText[val[0]]+CodeToText[val[1]];
+            
+        
+        //打印区域码所对应的属性值即中文地址
+        // console.log(location);
+        
+        //this.form.sheng = location;
     },
     // 取消按钮
     cancel() {
@@ -553,9 +569,8 @@ export default {
         createTime: undefined,
         gbtime: undefined,
       };
-      this.diglogForm.province = "";
-      this.diglogForm.city = "";
-      this.diglogForm.area = "";
+      // this.diglogForm.province = "";
+      // this.diglogForm.city = "";
       this.resetForm("form");
     },
     /** 搜索按钮操作 */
@@ -582,12 +597,13 @@ export default {
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
+      this.selectedOptions = new Array();
       this.reset();
       const id = row.id || this.ids;
       getCustomer(id).then((response) => {
         this.form = response.data;
-        this.diglogForm.province = response.data.sheng;
-        this.diglogForm.city = response.data.shi;
+        this.selectedOptions.push(response.data.shengid,response.data.shiid);
+        console.log(this.selectedOptions);
         this.open = true;
         this.title = "修改本一-客户关系管理";
       });
