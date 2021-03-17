@@ -100,7 +100,7 @@ export default {
         Weight: "摄入量",
         Rate: "供能比",
       },
-      view: 1,
+      view: 0,
     };
   },
   computed: {
@@ -190,7 +190,7 @@ export default {
                     {
                       type: "text",
                       style: {
-                        text: "总热量",
+                        text: "总热量约",
                         fill: "#606266",
                       },
                     },
@@ -324,7 +324,7 @@ export default {
   .see_all {
     position: absolute;
     bottom: 4px;
-    left: 4px;
+    left: 24px;
     padding: 0;
   }
 
