@@ -49,14 +49,7 @@
       </el-table-column>
       <el-table-column label="菜品" prop="name" align="center">
         <template slot="header">
-          <el-tooltip
-            class="item"
-            effect="dark"
-            content="点击添加菜品"
-            placement="top"
-          >
-            <div class="pointer_style" @click="handleOnAdd">菜品</div>
-          </el-tooltip>
+          <div class="pointer_style" @click="handleOnAdd">菜品</div>
         </template>
         <template slot-scope="scope">
           <el-popover placement="right" trigger="hover" :title="scope.row.name">
