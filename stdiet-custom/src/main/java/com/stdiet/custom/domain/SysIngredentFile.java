@@ -11,17 +11,17 @@ public class SysIngredentFile {
 
     Long igdId;
 
-    String fileUrl;
+    String url;
 
-    String fileName;
+    String name;
 
     Integer delFlag;
 
-    Long createBy;
+    String createBy;
 
     Date createTime;
 
-    Long updateBy;
+    String updateBy;
 
     Date updateTime;
 }

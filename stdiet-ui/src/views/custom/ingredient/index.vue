@@ -245,55 +245,17 @@
     />
 
     <!-- 添加或修改食材对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="620px" append-to-body>
-      <el-row :gutter="15">
+    <el-dialog :title="title" :visible.sync="open" width="720px" append-to-body>
+      <el-row :gutter="8" style="height: 620px; overflow: auto">
         <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-          <el-col :span="12">
+          <el-col :span="8">
             <el-form-item label="食材名称" prop="name" label-width="90px">
-              <el-input v-model="form.name" placeholder="请输入食材名称" />
+              <el-input v-model="form.name" placeholder="请输入名称" />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
-            <el-form-item
-              label="蛋白质比例"
-              prop="proteinRatio"
-              label-width="90px"
-            >
-              <el-input
-                v-model="form.proteinRatio"
-                placeholder="请输入蛋白质比例"
-                style="width: 150px"
-              />
-              /100g
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="脂肪比例" prop="fatRatio" label-width="90px">
-              <el-input
-                v-model="form.fatRatio"
-                placeholder="请输入脂肪比例"
-                style="width: 150px"
-              />
-              /100g
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item
-              label="碳水比例"
-              prop="carbonRatio"
-              label-width="90px"
-            >
-              <el-input
-                v-model="form.carbonRatio"
-                placeholder="请输入碳水比例"
-                style="width: 150px"
-              />
-              /100g
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="食材类别" prop="type" label-width="90px">
-              <el-select v-model="form.type" placeholder="请选择食材类别">
+          <el-col :span="8">
+            <el-form-item label="食材类别" prop="type" label-width="100px">
+              <el-select v-model="form.type" placeholder="请选择类别">
                 <el-option
                   v-for="dict in typeOptions"
                   :key="dict.dictValue"
@@ -303,8 +265,8 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
-            <el-form-item label="地域" prop="area" label-width="90px">
+          <el-col :span="8">
+            <el-form-item label="地域" prop="area" label-width="100px">
               <el-select v-model="form.area" placeholder="请选择地域">
                 <el-option
                   v-for="dict in areaOptions"
@@ -315,8 +277,35 @@
               </el-select>
             </el-form-item>
           </el-col>
+          <el-col :span="8">
+            <el-form-item
+              label="蛋白质/100g"
+              prop="proteinRatio"
+              label-width="100px"
+            >
+              <el-input
+                v-model="form.proteinRatio"
+                placeholder="蛋白质比例"
+                width="80px"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="脂肪/100g" prop="fatRatio" label-width="90px">
+              <el-input v-model="form.fatRatio" placeholder="脂肪比例" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item
+              label="碳水/100g"
+              prop="carbonRatio"
+              label-width="90px"
+            >
+              <el-input v-model="form.carbonRatio" placeholder="碳水比例" />
+            </el-form-item>
+          </el-col>
           <el-col :span="12">
-            <el-form-item label="忌口人群" label-width="90px">
+            <el-form-item label="忌口人群" label-width="76px">
               <el-select
                 v-model="form.notRecIds"
                 multiple
@@ -333,7 +322,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="推荐人群" label-width="90px">
+            <el-form-item label="推荐人群" label-width="76px">
               <el-select
                 v-model="form.recIds"
                 multiple
@@ -349,9 +338,34 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="16">
+            <el-form-item label="食材图片" prop="imgList">
+              <el-upload
+                drag
+                :auto-upload="true"
+                :headers="{ Authorization: 'Bearer ' + token }"
+                :limit="5"
+                :multiple="true"
+                :file-list="form.imgList"
+                :action="actionUrl"
+                accept="image/jpeg,image/png"
+                :on-success="handleOnUploadSuccess"
+                :on-exceed="handleOnUploadExceed"
+                :on-remove="handleOnUploadRemove"
+                list-type="picture"
+              >
+                <em class="el-icon-upload" />
+                <div class="el-upload__text">
+                  将文件拖到此处，或<em>点击上传</em>
+                  <div style="font-size: 12px; color: #8c8c8c">最多可上传5个文件，且每个文件不超过10M</div>
+                </div>
+              </el-upload>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
             <el-form-item label="审核状态" prop="reviewStatus">
               <el-select
+                style="position: absolute"
                 v-model="form.reviewStatus"
                 placeholder="请选择审核状态"
                 clearable
@@ -366,8 +380,19 @@
             </el-form-item>
           </el-col>
           <el-col :span="24">
-            <el-form-item label="备注" prop="remark" label-width="90px">
+            <el-form-item label="介绍" prop="info">
               <el-input
+                :rows="5"
+                v-model="form.info"
+                type="textarea"
+                placeholder="请输入内容"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="备注" prop="remark">
+              <el-input
+                :rows="3"
                 v-model="form.remark"
                 type="textarea"
                 placeholder="请输入内容"
@@ -395,6 +420,8 @@ import {
 } from "@/api/custom/ingredient";
 
 import AutoHideInfo from "@/components/AutoHideInfo";
+import FileUpload from "@/components/FileUpload";
+import { getToken } from "@/utils/auth";
 
 import { listPhysicalSigns } from "@/api/custom/physicalSigns";
 
@@ -402,11 +429,14 @@ export default {
   name: "Ingredient",
   components: {
     autohideinfo: AutoHideInfo,
+    FileUpload,
   },
   data() {
     return {
       // 遮罩层
       loading: true,
+      //
+      actionUrl: process.env.VUE_APP_BASE_API + "/custom/fileUpload/ingredient",
       // 选中数组
       ids: [],
       // 非单个禁用
@@ -431,6 +461,8 @@ export default {
       areaOptions: [],
       //
       physicalSignsOptions: [],
+      //
+      token: getToken(),
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -506,6 +538,7 @@ export default {
         createTime: null,
         updateBy: null,
         updateTime: null,
+        imgList: [],
       };
       this.resetForm("form");
     },
@@ -620,6 +653,34 @@ export default {
     },
     string2Arr(str) {
       return str ? str.split(",") : [];
+    },
+    handleOnUploadSuccess(res, file, fileList) {
+      this.form.imgList = fileList.map((data) => {
+        const { name, url, response } = data;
+        if (response) {
+          return { url: response.fileUrl, name: response.fileName };
+        }
+        return { url, name };
+      });
+      // console.log({
+      //   res,
+      //   file,
+      //   fileList,
+      //   form: this.form,
+      // });
+    },
+    handleOnUploadRemove(file, fileList) {
+      this.form.imgList = fileList.map(({ url, name }) => ({
+        url,
+        name,
+      }));
+      // console.log({ file, fileList, form: this.form });
+    },
+    handleOnUploadExceed(files, fileList) {
+      this.$message({
+        message: "最多可上传5张图片",
+        type: "warning",
+      });
     },
   },
 };

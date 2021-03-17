@@ -1,7 +1,10 @@
 package com.stdiet.custom.service.impl;
 
 import com.stdiet.common.utils.DateUtils;
+import com.stdiet.common.utils.SecurityUtils;
 import com.stdiet.common.utils.StringUtils;
+import com.stdiet.common.utils.oss.AliyunOSSUtils;
+import com.stdiet.custom.domain.SysIngredentFile;
 import com.stdiet.custom.domain.SysIngredient;
 import com.stdiet.custom.domain.SysIngredientNotRec;
 import com.stdiet.custom.domain.SysIngredientRec;
@@ -32,7 +35,16 @@ public class SysIngredientServiceImpl implements ISysIngredientService {
      */
     @Override
     public SysIngredient selectSysIngredientById(Long id) {
-        return sysIngredientMapper.selectSysIngredientById(id);
+        SysIngredient ingredient = sysIngredientMapper.selectSysIngredientById(id);
+        if (StringUtils.isNotNull(ingredient)) {
+            List<SysIngredentFile> imgList = ingredient.getImgList();
+            if (StringUtils.isNotEmpty(imgList)) {
+                for (SysIngredentFile file : imgList) {
+                    file.setUrl(AliyunOSSUtils.generatePresignedUrl(file.getUrl()));
+                }
+            }
+        }
+        return ingredient;
     }
 
     /**
@@ -43,7 +55,18 @@ public class SysIngredientServiceImpl implements ISysIngredientService {
      */
     @Override
     public List<SysIngredient> selectSysIngredientList(SysIngredient sysIngredient) {
-        return sysIngredientMapper.selectSysIngredientList(sysIngredient);
+        List<SysIngredient> ingredients = sysIngredientMapper.selectSysIngredientList(sysIngredient);
+        if (StringUtils.isNotEmpty(ingredients)) {
+            for (SysIngredient ingredient : ingredients) {
+                List<SysIngredentFile> imgList = ingredient.getImgList();
+                if (StringUtils.isNotEmpty(imgList)) {
+                    for (SysIngredentFile file : imgList) {
+                        file.setUrl(AliyunOSSUtils.generatePresignedUrl(file.getUrl()));
+                    }
+                }
+            }
+        }
+        return ingredients;
     }
 
     /**
@@ -61,26 +84,26 @@ public class SysIngredientServiceImpl implements ISysIngredientService {
         //
         insertNotRecommand(sysIngredient);
         //
-        
-
+        insertImageFiles(sysIngredient);
         return rows;
     }
 
     /**
      * 新增推荐标签
+     *
      * @param ingredient
      */
     public void insertRecommand(SysIngredient ingredient) {
         Long[] recIds = ingredient.getRecIds();
-        if(StringUtils.isNotNull(recIds)) {
+        if (StringUtils.isNotNull(recIds)) {
             List<SysIngredientRec> list = new ArrayList<SysIngredientRec>();
-            for(Long recId: recIds) {
+            for (Long recId : recIds) {
                 SysIngredientRec rec = new SysIngredientRec();
                 rec.setIngredientId(ingredient.getId());
                 rec.setRecommandId(recId);
                 list.add(rec);
             }
-            if(list.size() > 0) {
+            if (list.size() > 0) {
                 sysIngredientMapper.batchIngredientRec(list);
             }
         }
@@ -88,23 +111,44 @@ public class SysIngredientServiceImpl implements ISysIngredientService {
 
     /**
      * 新增不推荐标签
+     *
      * @param ingredient
      */
     public void insertNotRecommand(SysIngredient ingredient) {
         Long[] notRecIds = ingredient.getNotRecIds();
-        if(StringUtils.isNotNull(notRecIds)) {
+        if (StringUtils.isNotNull(notRecIds)) {
             List<SysIngredientNotRec> list = new ArrayList<SysIngredientNotRec>();
-            for(Long recId: notRecIds) {
+            for (Long recId : notRecIds) {
                 SysIngredientNotRec notRec = new SysIngredientNotRec();
                 notRec.setIngredientId(ingredient.getId());
                 notRec.setRecommandId(recId);
                 list.add(notRec);
             }
-            if(list.size() > 0) {
+            if (list.size() > 0) {
                 sysIngredientMapper.batchIngredientNotRec(list);
             }
         }
     }
+
+    /**
+     * 新增图片
+     *
+     * @param ingredient
+     */
+    public void insertImageFiles(SysIngredient ingredient) {
+        if (StringUtils.isNotNull(ingredient.getImgList())) {
+            List<SysIngredentFile> fileList = ingredient.getImgList();
+            for (SysIngredentFile file : fileList) {
+                file.setIgdId(ingredient.getId());
+                file.setCreateBy(SecurityUtils.getUsername());
+                file.setCreateTime(DateUtils.getNowDate());
+            }
+            if (fileList.size() > 0) {
+                sysIngredientMapper.batchInsertIngredientImage(fileList);
+            }
+        }
+    }
+
 
     /**
      * 修改食材
@@ -116,10 +160,12 @@ public class SysIngredientServiceImpl implements ISysIngredientService {
     public int updateSysIngredient(SysIngredient sysIngredient) {
         sysIngredient.setUpdateTime(DateUtils.getNowDate());
         Long ingredientId = sysIngredient.getId();
-        sysIngredientMapper.deleteIngredentNotRecByIngredientId(ingredientId);
+        sysIngredientMapper.deleteIngredientNotRecByIngredientId(ingredientId);
         insertNotRecommand(sysIngredient);
-        sysIngredientMapper.deleteIngredentRecByIngredientId(ingredientId);
+        sysIngredientMapper.deleteIngredientRecByIngredientId(ingredientId);
         insertRecommand(sysIngredient);
+        sysIngredientMapper.deleteIngredientImageById(ingredientId);
+        insertImageFiles(sysIngredient);
         return sysIngredientMapper.updateSysIngredient(sysIngredient);
     }
 
@@ -131,8 +177,8 @@ public class SysIngredientServiceImpl implements ISysIngredientService {
      */
     @Override
     public int deleteSysIngredientByIds(Long[] ids) {
-        sysIngredientMapper.deleteIngredentRecByIngredientIds(ids);
-        sysIngredientMapper.deleteIngredentNotRecByIngredientIds(ids);
+        sysIngredientMapper.deleteIngredientRecByIngredientIds(ids);
+        sysIngredientMapper.deleteIngredientNotRecByIngredientIds(ids);
         return sysIngredientMapper.deleteSysIngredientByIds(ids);
     }
 
@@ -144,18 +190,19 @@ public class SysIngredientServiceImpl implements ISysIngredientService {
      */
     @Override
     public int deleteSysIngredientById(Long id) {
-        sysIngredientMapper.deleteIngredentRecByIngredientId(id);
-        sysIngredientMapper.deleteIngredentNotRecByIngredientId(id);
+        sysIngredientMapper.deleteIngredientRecByIngredientId(id);
+        sysIngredientMapper.deleteIngredientNotRecByIngredientId(id);
         return sysIngredientMapper.deleteSysIngredientById(id);
     }
 
     /**
      * 根据食材名称查询食材信息
+     *
      * @param name
      * @return
      */
     @Override
-    public SysIngredient selectSysIngredientByName(String name){
+    public SysIngredient selectSysIngredientByName(String name) {
         return sysIngredientMapper.selectSysIngredientByName(name);
     }
 }

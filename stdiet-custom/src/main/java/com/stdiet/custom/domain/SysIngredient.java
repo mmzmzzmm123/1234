@@ -6,6 +6,7 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 食材对象 sys_ingredient
@@ -109,5 +110,7 @@ public class SysIngredient {
      * 食材信息
      */
     private String info;
+
+    private List<SysIngredentFile> imgList;
 
 }

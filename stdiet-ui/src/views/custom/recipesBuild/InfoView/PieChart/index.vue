@@ -3,8 +3,25 @@
     :class="`aspect_pie_chart_wrapper ${className || ''}`"
     :style="{ height: height, width: width }"
   >
-    <div ref="echart" :style="{ height: height, width: '100px' }" />
-    <div>
+    <div
+      ref="echart"
+      :style="{ height: height, width: !view ? '100px' : '100%' }"
+    />
+    <div class="icon_btns">
+      <el-tooltip effect="dark" content="营养分析" placement="top">
+        <em
+          :class="['iconfont', 'icon-03', { sel_icon: view === 0 }]"
+          @click="handleOnViewChange(0)"
+        />
+      </el-tooltip>
+      <el-tooltip effect="dark" content="热量分析" placement="top">
+        <em
+          :class="['iconfont', 'icon-fenxi', { sel_icon: view === 1 }]"
+          @click="handleOnViewChange(1)"
+        />
+      </el-tooltip>
+    </div>
+    <div v-if="view === 0" class="table_zone">
       <el-table
         :data="mData"
         size="mini"
@@ -24,15 +41,10 @@
           {{ totalHeat.toFixed(1) }}千卡
         </div>
       </div>
-      <div
-        style="text-align: right; margin-top: 4px"
-        v-if="recipesData.length > 1"
-      >
-        <el-button size="mini" type="text" @click="backToAll"
-          >查看全部</el-button
-        >
-      </div>
     </div>
+    <el-button size="mini" type="text" @click="backToAll" class="see_all"
+      >查看全部</el-button
+    >
   </div>
 </template>
 
@@ -76,10 +88,19 @@ export default {
         f: "脂肪",
         c: "碳水",
       },
+      menuDict: {
+        1: "早餐",
+        2: "早加餐",
+        3: "午餐",
+        4: "午加餐",
+        5: "晚餐",
+        6: "晚加餐",
+      },
       typeDict: {
         Weight: "摄入量",
         Rate: "供能比",
       },
+      view: 0,
     };
   },
   computed: {
@@ -119,16 +140,17 @@ export default {
   methods: {
     initChart() {
       this.chart = echarts.init(this.$refs.echart, "myShine");
-      this.updateChart(this.data.length > 0 ? this.data[0] : {});
+      this.updateChart(this.data[0] || {});
     },
     backToAll() {
       this.resetCurrentDay({ currentDay: -1 });
     },
     updateChart(data) {
+      // console.log(data);
       this.chart.clear();
-      this.chart.setOption({
+      const option = {
         title: {
-          text: "营养分析",
+          text: !this.view ? "营养分析" : "热量分析",
           subtext: data.name,
         },
         tooltip: {
@@ -142,26 +164,90 @@ export default {
               percent,
               data: { value, oriData, dim },
             } = params;
-            return [
-              `${marker} ${name}`,
-              `摄入量：${oriData[`${dim}Weight`].toFixed(1)}克`,
-              `摄入热量：${value.toFixed(1)}千卡`,
-              `供能比：${percent}%`,
-            ].join("</br>");
+            return !this.view
+              ? [
+                  `${marker} ${name}`,
+                  `摄入量：${oriData[`${dim}Weight`].toFixed(1)}克`,
+                  `摄入热量：${value.toFixed(1)}千卡`,
+                  `供能比：${percent}%`,
+                ].join("</br>")
+              : [
+                  `${marker} ${name}`,
+                  `热量：${data[`heat${dim}`].toFixed(1)}千卡`,
+                  `供能比：${percent}%`,
+                ].join("</br>");
           },
         },
+        graphic:
+          this.view === 1
+            ? [
+                {
+                  type: "group",
+                  top: 60,
+                  left: 10,
+                  silent: true,
+                  children: [
+                    {
+                      type: "text",
+                      style: {
+                        text: "总热量约",
+                        fill: "#606266",
+                      },
+                    },
+                    {
+                      type: "text",
+                      top: 18,
+                      left: 8,
+                      style: {
+                        text: `${this.totalHeat.toFixed(1)}千卡`,
+                        font: '14px "Microsoft YaHei", sans-serif',
+                      },
+                    },
+                  ],
+                },
+                {
+                  type: "group",
+                  top: 36,
+                  right: 10,
+                  silent: true,
+                  children: Object.keys(this.menuDict).reduce((arr, cur) => {
+                    const tarData = data[`heat${cur}`];
+                    if (tarData) {
+                      arr.push({
+                        type: "text",
+                        top: arr.length * 20,
+                        right: 10,
+                        style: {
+                          text: `${this.menuDict[cur]}：${tarData.toFixed(1)}`,
+                          fill: "#606266",
+                        },
+                      });
+                    }
+                    return arr;
+                  }, []),
+                },
+              ]
+            : [],
         series: [
           {
             name: data.name,
             type: "pie",
-            radius: [0, 40],
+            radius: [0, !this.view ? 40 : 60],
             center: ["50%", "55%"],
-            data: ["p", "f", "c"].map((dim) => ({
-              dim,
-              value: data[`${dim}Heat`],
-              name: this.nameDict[dim],
-              oriData: data,
-            })),
+            data: (!this.view
+              ? Object.keys(this.nameDict)
+              : Object.keys(this.menuDict)
+            ).reduce((arr, dim) => {
+              if (!this.view || data[`heat${dim}`]) {
+                arr.push({
+                  dim,
+                  value: !this.view ? data[`${dim}Heat`] : data[`heat${dim}`],
+                  name: (!this.view ? this.nameDict : this.menuDict)[dim],
+                  oriData: data,
+                });
+              }
+              return arr;
+            }, []),
             // labelLine: {
             //   length: 5,
             //   length2: 5,
@@ -170,7 +256,7 @@ export default {
               show: true,
               position: "inside",
               color: "#fff",
-              fontSize: 10,
+              fontSize: !this.view ? 10 : 12,
               fontWeight: "bold",
             },
             itemStyle: {
@@ -179,7 +265,16 @@ export default {
             },
           },
         ],
+      };
+      console.log(option);
+      this.chart.setOption(option);
+    },
+    handleOnViewChange(view) {
+      this.view = view;
+      this.chart.resize({
+        width: !this.view ? 100 : 364,
       });
+      this.updateChart(this.data[0] || {});
     },
     ...mapMutations(["resetCurrentDay"]),
   },
@@ -195,21 +290,24 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+/deep/ :focus {
+  outline: 0;
+}
+
 .aspect_pie_chart_wrapper {
   width: 100%;
   display: flex;
+  position: relative;
 
   & > div:nth-child(1) {
     // width: 200px
   }
 
-  // & > div:nth-child(2) {
   .small_table {
     .my_cell {
       padding: 2px 0 !important;
     }
   }
-  // }
 
   .summary {
     padding: 2px;
@@ -221,6 +319,32 @@ export default {
       padding: 3px;
       text-align: center;
     }
+  }
+
+  .see_all {
+    position: absolute;
+    bottom: 4px;
+    left: 24px;
+    padding: 0;
+  }
+
+  .icon_btns {
+    position: absolute;
+    right: 0;
+
+    em {
+      display: inline-block;
+      padding: 4px;
+      cursor: pointer;
+    }
+
+    .sel_icon {
+      color: #1890ff;
+    }
+  }
+
+  .table_zone {
+    margin-top: 26px;
   }
 }
 </style>

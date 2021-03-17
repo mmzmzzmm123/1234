@@ -21,7 +21,7 @@
         <result property="notRec" column="not_rec"/>
         <result property="reviewStatus" column="review_status"/>
         <result property="info" column="info"/>
-        <association property="imgFiles" column="id" select="selectIngredentFileById"/>
+        <association property="imgList" column="id" select="selectIngredentFileById"/>
     </resultMap>
 
     <sql id="selectSysIngredientVo">
@@ -126,6 +126,7 @@
             <if test="updateBy != null">update_by,</if>
             <if test="updateTime != null">update_time,</if>
             <if test="reviewStatus != null">review_status,</if>
+            <if test="info != null">info,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="name != null">#{name},</if>
@@ -140,6 +141,7 @@
             <if test="updateBy != null">#{updateBy},</if>
             <if test="updateTime != null">#{updateTime},</if>
             <if test="reviewStatus != null">#{reviewStatus},</if>
+            <if test="info != null">#{info},</if>
         </trim>
     </insert>
 
@@ -157,22 +159,22 @@
         </foreach>
     </insert>
 
-    <delete id="deleteIngredentRecByIngredientId" parameterType="Long">
+    <delete id="deleteIngredientRecByIngredientId" parameterType="Long">
         delete from sys_ingredient_rec where ingredient_id=#{ingredientId}
     </delete>
 
-    <delete id="deleteIngredentNotRecByIngredientId" parameterType="Long">
+    <delete id="deleteIngredientNotRecByIngredientId" parameterType="Long">
         delete from sys_ingredient_not_rec where ingredient_id=#{ingredientId}
     </delete>
 
-    <delete id="deleteIngredentRecByIngredientIds" parameterType="Long">
+    <delete id="deleteIngredientRecByIngredientIds" parameterType="Long">
         delete from sys_ingredient_rec where ingredient_id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>
 
-    <delete id="deleteIngredentNotRecByIngredientIds" parameterType="String">
+    <delete id="deleteIngredientNotRecByIngredientIds" parameterType="String">
         delete from sys_ingredient_not_rec where ingredient_id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
@@ -194,6 +196,7 @@
             <if test="updateBy != null">update_by = #{updateBy},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
             <if test="reviewStatus != null">review_status = #{reviewStatus},</if>
+            <if test="info != null">info = #{info},</if>
         </trim>
         where id = #{id}
     </update>
@@ -217,26 +220,26 @@
 
     <!--    添加食材图片-->
     <insert id="batchInsertIngredientImage">
-        insert into sys_ingredient_file(igd_id, file_url, file_name, create_by, create_time, update_by, update_time )
+        insert into sys_ingredient_file(igd_id, url, name, create_by, create_time, update_by, update_time )
         values
         <foreach collection="list" separator="," item="item" index="index">
-            (#{item.ingredientId},#{item.fileUrl},#{item.fileName},#{item.createBy},#{item.createTime},#{item.updateBy},#{item.updateTime})
+            (#{item.igdId},#{item.url},#{item.name},#{item.createBy},#{item.createTime},#{item.updateBy},#{item.updateTime})
         </foreach>
     </insert>
 
     <resultMap id="SysIngredentFileResult" type="SysIngredentFile">
         <result property="id" column="id"/>
-        <result property="fileName" column="file_name"/>
-        <result property="fileUrl" column="file_url"/>
+        <result property="name" column="name"/>
+        <result property="url" column="url"/>
     </resultMap>
 
     <!--    查找图片-->
     <select id="selectIngredentFileById" parameterType="Long" resultMap="SysIngredentFileResult">
-        select id, file_url, file_name from sys_ingredent_file where igd_id = #{id} and del_flag = 0
+        select id, url, name from sys_ingredient_file where igd_id = #{id} and del_flag = 0
     </select>
 
     <!--    删除图片记录-->
-    <update id="deleteIngredentFileById" parameterType="Long">
-        update sys_ingredent_file set del_flag=1 where id=#{id}
-    </update>
+    <delete id="deleteIngredientImageById" parameterType="Long">
+        delete from sys_ingredient_file where igd_id=#{id}
+    </delete>
 </mapper>
