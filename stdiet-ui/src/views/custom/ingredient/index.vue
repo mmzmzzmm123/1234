@@ -246,7 +246,7 @@
 
     <!-- 添加或修改食材对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="720px" append-to-body>
-      <el-row :gutter="8">
+      <el-row :gutter="8" style="height: 620px; overflow: auto">
         <el-form ref="form" :model="form" :rules="rules" label-width="80px">
           <el-col :span="8">
             <el-form-item label="食材名称" prop="name" label-width="90px">
@@ -338,15 +338,32 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col
-            :span="12"
-            style="position: absolute; left: 100px; top: -70px"
-          >
-            <el-form-item
-              label="审核状态"
-              prop="reviewStatus"
-              label-width="76px"
-            >
+          <el-col :span="16">
+            <el-form-item label="食材图片" prop="imgList">
+              <el-upload
+                drag
+                :auto-upload="true"
+                :headers="{ Authorization: 'Bearer ' + token }"
+                :limit="5"
+                :multiple="true"
+                :file-list="form.imgList"
+                :action="actionUrl"
+                accept="image/jpeg,image/png"
+                :on-success="handleOnUploadSuccess"
+                :on-exceed="handleOnUploadExceed"
+                :on-remove="handleOnUploadRemove"
+                list-type="picture"
+              >
+                <em class="el-icon-upload" />
+                <div class="el-upload__text">
+                  将文件拖到此处，或<em>点击上传</em>
+                  <div style="font-size: 12px; color: #8c8c8c">最多可上传5个文件，且每个文件不超过10M</div>
+                </div>
+              </el-upload>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="审核状态" prop="reviewStatus">
               <el-select
                 style="position: absolute"
                 v-model="form.reviewStatus"
@@ -362,31 +379,8 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="20">
-            <el-form-item label="食材图片" prop="imgList">
-              <el-upload
-                drag
-                :auto-upload="true"
-                :headers="{ Authorization: 'Bearer ' + token }"
-                :limit="5"
-                :multiple="true"
-                :file-list="form.imgList"
-                :action="actionUrl"
-                :on-success="handleOnUploadSuccess"
-                :on-remove="handleOnUploadRemove"
-              >
-                <em class="el-icon-upload" />
-                <div class="el-upload__text">
-                  将文件拖到此处，或<em>点击上传</em>
-                </div>
-                <div class="el-upload__tip" slot="tip">
-                  最多可上传5个文件，且每个文件不超过10M
-                </div>
-              </el-upload>
-            </el-form-item>
-          </el-col>
           <el-col :span="24">
-            <el-form-item label="介绍" prop="info" label-width="90px">
+            <el-form-item label="介绍" prop="info">
               <el-input
                 :rows="5"
                 v-model="form.info"
@@ -396,7 +390,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="24">
-            <el-form-item label="备注" prop="remark" label-width="90px">
+            <el-form-item label="备注" prop="remark">
               <el-input
                 :rows="3"
                 v-model="form.remark"
@@ -660,12 +654,34 @@ export default {
     string2Arr(str) {
       return str ? str.split(",") : [];
     },
-    handleOnUploadSuccess() {
-
+    handleOnUploadSuccess(res, file, fileList) {
+      this.form.imgList = fileList.map((data) => {
+        const { name, url, response } = data;
+        if (response) {
+          return { url: response.fileUrl, name: response.fileName };
+        }
+        return { url, name };
+      });
+      // console.log({
+      //   res,
+      //   file,
+      //   fileList,
+      //   form: this.form,
+      // });
     },
-    handleOnUploadRemove() {
-
-    }
+    handleOnUploadRemove(file, fileList) {
+      this.form.imgList = fileList.map(({ url, name }) => ({
+        url,
+        name,
+      }));
+      // console.log({ file, fileList, form: this.form });
+    },
+    handleOnUploadExceed(files, fileList) {
+      this.$message({
+        message: "最多可上传5张图片",
+        type: "warning",
+      });
+    },
   },
 };
 </script>

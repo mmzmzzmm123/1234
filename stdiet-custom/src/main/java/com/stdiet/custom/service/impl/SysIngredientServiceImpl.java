@@ -66,7 +66,7 @@ public class SysIngredientServiceImpl implements ISysIngredientService {
         if (StringUtils.isNotNull(sysIngredient.getImgList())) {
             List<SysIngredentFile> fileList = sysIngredient.getImgList();
             for (SysIngredentFile file : fileList) {
-                file.setId(sysIngredient.getId());
+                file.setIgdId(sysIngredient.getId());
                 file.setCreateBy(SecurityUtils.getUsername());
                 file.setCreateTime(DateUtils.getNowDate());
             }
