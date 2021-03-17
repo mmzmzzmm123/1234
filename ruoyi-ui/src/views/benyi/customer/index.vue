@@ -543,7 +543,7 @@ export default {
         createTime: undefined,
         gbtime: undefined,
       };
-      this.selectedOptions = ["", ""];
+      this.selectedOptions = new Array();
       this.resetForm("form");
     },
     /** 搜索按钮操作 */
