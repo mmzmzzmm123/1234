@@ -14,6 +14,7 @@ export function getProcessMenuData(menuData) {
         name: cur.name,
         menuId: cur.menuId,
         methods: cur.methods,
+        remark: cur.remark,
         type: cur.type,
         isMain: cur.isMain,
         igdList: cur.igdList.reduce((igdArr, igdData) => {
