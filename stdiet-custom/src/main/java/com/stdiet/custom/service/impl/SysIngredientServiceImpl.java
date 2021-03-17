@@ -3,6 +3,7 @@ package com.stdiet.custom.service.impl;
 import com.stdiet.common.utils.DateUtils;
 import com.stdiet.common.utils.SecurityUtils;
 import com.stdiet.common.utils.StringUtils;
+import com.stdiet.common.utils.oss.AliyunOSSUtils;
 import com.stdiet.custom.domain.SysIngredentFile;
 import com.stdiet.custom.domain.SysIngredient;
 import com.stdiet.custom.domain.SysIngredientNotRec;
@@ -34,7 +35,16 @@ public class SysIngredientServiceImpl implements ISysIngredientService {
      */
     @Override
     public SysIngredient selectSysIngredientById(Long id) {
-        return sysIngredientMapper.selectSysIngredientById(id);
+        SysIngredient ingredient = sysIngredientMapper.selectSysIngredientById(id);
+        if (StringUtils.isNotNull(ingredient)) {
+            List<SysIngredentFile> imgList = ingredient.getImgList();
+            if (StringUtils.isNotEmpty(imgList)) {
+                for (SysIngredentFile file : imgList) {
+                    file.setUrl(AliyunOSSUtils.generatePresignedUrl(file.getUrl()));
+                }
+            }
+        }
+        return ingredient;
     }
 
     /**
@@ -45,7 +55,18 @@ public class SysIngredientServiceImpl implements ISysIngredientService {
      */
     @Override
     public List<SysIngredient> selectSysIngredientList(SysIngredient sysIngredient) {
-        return sysIngredientMapper.selectSysIngredientList(sysIngredient);
+        List<SysIngredient> ingredients = sysIngredientMapper.selectSysIngredientList(sysIngredient);
+        if (StringUtils.isNotEmpty(ingredients)) {
+            for (SysIngredient ingredient : ingredients) {
+                List<SysIngredentFile> imgList = ingredient.getImgList();
+                if (StringUtils.isNotEmpty(imgList)) {
+                    for (SysIngredentFile file : imgList) {
+                        file.setUrl(AliyunOSSUtils.generatePresignedUrl(file.getUrl()));
+                    }
+                }
+            }
+        }
+        return ingredients;
     }
 
     /**
