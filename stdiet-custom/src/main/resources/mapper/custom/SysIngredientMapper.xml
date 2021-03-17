@@ -159,22 +159,22 @@
         </foreach>
     </insert>
 
-    <delete id="deleteIngredentRecByIngredientId" parameterType="Long">
+    <delete id="deleteIngredientRecByIngredientId" parameterType="Long">
         delete from sys_ingredient_rec where ingredient_id=#{ingredientId}
     </delete>
 
-    <delete id="deleteIngredentNotRecByIngredientId" parameterType="Long">
+    <delete id="deleteIngredientNotRecByIngredientId" parameterType="Long">
         delete from sys_ingredient_not_rec where ingredient_id=#{ingredientId}
     </delete>
 
-    <delete id="deleteIngredentRecByIngredientIds" parameterType="Long">
+    <delete id="deleteIngredientRecByIngredientIds" parameterType="Long">
         delete from sys_ingredient_rec where ingredient_id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>
 
-    <delete id="deleteIngredentNotRecByIngredientIds" parameterType="String">
+    <delete id="deleteIngredientNotRecByIngredientIds" parameterType="String">
         delete from sys_ingredient_not_rec where ingredient_id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
@@ -239,7 +239,7 @@
     </select>
 
     <!--    删除图片记录-->
-    <update id="deleteIngredentFileById" parameterType="Long">
-        update sys_ingredent_file set del_flag=1 where id=#{id}
-    </update>
+    <delete id="deleteIngredientImageById" parameterType="Long">
+        delete from sys_ingredient_file where igd_id=#{id}
+    </delete>
 </mapper>
