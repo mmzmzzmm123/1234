@@ -20,134 +20,135 @@ public class ByCustomer extends BaseEntity {
     /**
      * 编号
      */
+    @Excel(name = "客户序号", cellType = Excel.ColumnType.NUMERIC, prompt = "客户编号")
     private Long id;
 
     /**
      * 姓名
      */
-    @Excel(name = "姓名")
+    @Excel(name = "姓名", type = Excel.Type.EXPORT)
     private String name;
 
     /**
      * 身份
      */
-    @Excel(name = "身份")
+    @Excel(name = "身份", type = Excel.Type.EXPORT, readConverterExp = "01=园长,02=投资人,03=园长+投资人,04=家长,05=其他")
     private String sflx;
 
     /**
      * 联系电话
      */
-    @Excel(name = "联系电话")
+    @Excel(name = "联系电话", type = Excel.Type.EXPORT)
     private String lxdh;
 
     /**
      * 微信
      */
-    @Excel(name = "微信")
+    @Excel(name = "微信", type = Excel.Type.EXPORT)
     private String wx;
 
     /**
      * 抖音
      */
-    @Excel(name = "抖音")
+    @Excel(name = "抖音", type = Excel.Type.EXPORT)
     private String dy;
 
     /**
      * 其他
      */
-    @Excel(name = "其他")
+    @Excel(name = "其他", type = Excel.Type.EXPORT)
     private String qt;
 
     /**
      * 幼儿园名称
      */
-    @Excel(name = "幼儿园名称")
+    @Excel(name = "幼儿园名称", type = Excel.Type.EXPORT)
     private String schoolname;
 
     /**
      * 幼儿园人数
      */
-    @Excel(name = "幼儿园人数")
+    @Excel(name = "幼儿园人数", type = Excel.Type.EXPORT)
     private Long rs;
 
     /**
      * 所在省
      */
-    @Excel(name = "所在省")
+    @Excel(name = "所在省", type = Excel.Type.EXPORT)
     private String sheng;
 
     /**
      * 所在省编号
      */
-    @Excel(name = "所在省编号")
+    //@Excel(name = "所在省编号")
     private String shengid;
 
     /**
      * 所在市
      */
-    @Excel(name = "所在市")
+    //@Excel(name = "所在市")
     private String shi;
 
     /**
      * 所在市编号
      */
-    @Excel(name = "所在市编号")
+    //@Excel(name = "所在市编号")
     private String shiid;
 
     /**
      * 客户来源
      */
-    @Excel(name = "客户来源")
+    @Excel(name = "客户来源", type = Excel.Type.EXPORT, readConverterExp = "01=线下教研,02=抖音,03=快手,04=微信群,05=网络,06=来电来访,07=其它")
     private String khly;
 
     /**
      * 创建人
      */
-    @Excel(name = "创建人")
+    //@Excel(name = "创建人", type = Excel.Type.EXPORT, targetAttr = "user_name")
     private Long createUserid;
 
     /**
      * 备注
      */
-    @Excel(name = "备注")
+    @Excel(name = "备注", type = Excel.Type.EXPORT)
     private String bz;
 
     /**
      * 转换跟进
      */
-    @Excel(name = "转换跟进")
+    @Excel(name = "转换跟进", type = Excel.Type.EXPORT)
     private String zhgj;
 
     /**
      * 状态
      */
-    @Excel(name = "状态")
+    //@Excel(name = "状态", type = Excel.Type.EXPORT)
     private String state;
 
     /**
      * 消费项目
      */
-    @Excel(name = "消费项目")
+    @Excel(name = "消费项目", type = Excel.Type.EXPORT)
     private String xfxm;
 
     /**
      * 创建时间gbtime
      */
-    @Excel(name = "开通截至日期", width = 30, dateFormat = "yyyy-MM-dd")
+    @Excel(name = "开通截至日期", width = 30, dateFormat = "yyyy-MM-dd", type = Excel.Type.EXPORT)
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date createTime;
 
     /**
      * 过保时间
      */
-    @Excel(name = "开通截至日期", width = 30, dateFormat = "yyyy-MM-dd")
+    @Excel(name = "开通截至日期", width = 30, dateFormat = "yyyy-MM-dd", type = Excel.Type.EXPORT)
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date gbtime;
 
     /**
      * 消费价值
      */
-    @Excel(name = "消费价值")
+    @Excel(name = "消费价值", type = Excel.Type.EXPORT)
     private Long xfjz;
 
     public void setId(Long id) {

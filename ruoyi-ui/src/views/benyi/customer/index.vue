@@ -114,6 +114,14 @@
         v-hasPermi="['benyi:customer:remove']"
         >删除</el-button
       >
+      <el-button
+        type="warning"
+        icon="el-icon-download"
+        size="mini"
+        @click="handleExport"
+        v-hasPermi="['benyi:customer:export']"
+        >导出</el-button
+      >
     </div>
 
     <el-table
@@ -159,8 +167,7 @@
         align="center"
         prop="qt"
       />
-      <el-table-column label="所在省" align="center" prop="sheng" />
-      <el-table-column label="所在市" align="center" prop="shi" />
+      <el-table-column label="所在省市" align="center" prop="sheng" />
       <el-table-column
         label="消费项目"
         align="center"
@@ -294,15 +301,6 @@
                 @change="handleChange"
               >
               </el-cascader>
-              <!-- <v-distpicker
-                v-model="form.sheng"
-                :placeholders="placeholders"
-                :province="diglogForm.province"
-                :city="diglogForm.city"
-                @selected="onSelected"
-              ></v-distpicker> -->
-              <el-input v-model="form.shengid" v-if="false" />
-              <el-input v-model="form.shiid" v-if="false" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -370,16 +368,9 @@ export default {
   name: "Customer",
   data() {
     return {
+      // 省市二级联动
       options: provinceAndCityDataPlus,
-      selectedOptions: [],
-      // placeholders: {
-      //   province: "请选择省",
-      //   city: "请选择市",
-      // },
-      // diglogForm: {
-      //   province: null,
-      //   city: null,
-      // },
+      selectedOptions: ["", ""],
       // 遮罩层
       loading: true,
       // 选中数组
@@ -452,13 +443,6 @@ export default {
         lxdh: [
           { required: true, message: "联系电话不能为空", trigger: "blur" },
         ],
-        sheng: [
-          {
-            required: true,
-            message: "省市区不能为空",
-            trigger: "blur",
-          },
-        ],
       },
     };
   },
@@ -522,20 +506,10 @@ export default {
       });
     },
     // 省市二级联动
-    handleChange (val) {
-        // for (let i = 0; i < this.selectedOptions.length; i++) {
-            // console.log(this.selectedOptions[i]);
-            // location+= CodeToText[this.selectedOptions[i]];
-            // this.form.shengid =  this.selectedOptions[i];
-            this.form.shengid = val[0];
-            this.form.shiid = val[1];
-            this.form.sheng = CodeToText[val[0]]+CodeToText[val[1]];
-            
-        
-        //打印区域码所对应的属性值即中文地址
-        // console.log(location);
-        
-        //this.form.sheng = location;
+    handleChange(val) {
+      this.form.shengid = val[0];
+      this.form.shiid = val[1];
+      this.form.sheng = CodeToText[val[0]] + CodeToText[val[1]];
     },
     // 取消按钮
     cancel() {
@@ -569,8 +543,7 @@ export default {
         createTime: undefined,
         gbtime: undefined,
       };
-      // this.diglogForm.province = "";
-      // this.diglogForm.city = "";
+      this.selectedOptions = ["", ""];
       this.resetForm("form");
     },
     /** 搜索按钮操作 */
@@ -597,13 +570,12 @@ export default {
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
-      this.selectedOptions = new Array();
       this.reset();
       const id = row.id || this.ids;
       getCustomer(id).then((response) => {
         this.form = response.data;
-        this.selectedOptions.push(response.data.shengid,response.data.shiid);
-        console.log(this.selectedOptions);
+        this.selectedOptions.push(response.data.shengid);
+        this.selectedOptions.push(response.data.shiid);
         this.open = true;
         this.title = "修改本一-客户关系管理";
       });
@@ -653,6 +625,7 @@ export default {
         })
         .catch(function () {});
     },
+
     /** 导出按钮操作 */
     handleExport() {
       const queryParams = this.queryParams;

@@ -57,7 +57,7 @@ public class ByCustomerController extends BaseController {
     public AjaxResult export(ByCustomer byCustomer) {
         List<ByCustomer> list = byCustomerService.selectByCustomerList(byCustomer);
         ExcelUtil<ByCustomer> util = new ExcelUtil<ByCustomer>(ByCustomer.class);
-        return util.exportExcel(list, "customer");
+        return util.exportExcel(list, "客户关系管理-客户列表");
     }
 
     /**

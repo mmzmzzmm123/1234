@@ -44,7 +44,7 @@
             <if test="qt != null  and qt != ''">and qt = #{qt}</if>
             <if test="schoolname != null  and schoolname != ''">and schoolname like concat('%', #{schoolname}, '%')</if>
             <if test="rs != null ">and rs = #{rs}</if>
-            <if test="sheng != null  and sheng != ''">and sheng = #{sheng}</if>
+            <if test="sheng != null  and sheng != ''">and sheng like concat('%', #{sheng}, '%')</if>
             <if test="shengid != null  and shengid != ''">and shengid = #{shengid}</if>
             <if test="shi != null  and shi != ''">and shi = #{shi}</if>
             <if test="shiid != null  and shiid != ''">and shiid = #{shiid}</if>
