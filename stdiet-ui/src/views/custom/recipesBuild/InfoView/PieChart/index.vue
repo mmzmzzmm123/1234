@@ -170,7 +170,7 @@ export default {
                   `摄入量：${oriData[`${dim}Weight`].toFixed(1)}克`,
                   `摄入热量：${value.toFixed(1)}千卡`,
                   `供能比：${percent}%`,
-                ]
+                ].join("</br>")
               : [
                   `${marker} ${name}`,
                   `热量：${data[`heat${dim}`].toFixed(1)}千卡`,
