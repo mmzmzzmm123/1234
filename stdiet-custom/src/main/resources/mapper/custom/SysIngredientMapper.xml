@@ -220,22 +220,22 @@
 
     <!--    添加食材图片-->
     <insert id="batchInsertIngredientImage">
-        insert into sys_ingredient_file(igd_id, file_url, file_name, create_by, create_time, update_by, update_time )
+        insert into sys_ingredient_file(igd_id, url, name, create_by, create_time, update_by, update_time )
         values
         <foreach collection="list" separator="," item="item" index="index">
-            (#{item.ingredientId},#{item.fileUrl},#{item.fileName},#{item.createBy},#{item.createTime},#{item.updateBy},#{item.updateTime})
+            (#{item.igdId},#{item.url},#{item.name},#{item.createBy},#{item.createTime},#{item.updateBy},#{item.updateTime})
         </foreach>
     </insert>
 
     <resultMap id="SysIngredentFileResult" type="SysIngredentFile">
         <result property="id" column="id"/>
-        <result property="fileName" column="file_name"/>
-        <result property="fileUrl" column="file_url"/>
+        <result property="name" column="name"/>
+        <result property="url" column="url"/>
     </resultMap>
 
     <!--    查找图片-->
     <select id="selectIngredentFileById" parameterType="Long" resultMap="SysIngredentFileResult">
-        select id, file_url, file_name from sys_ingredent_file where igd_id = #{id} and del_flag = 0
+        select id, url, name from sys_ingredient_file where igd_id = #{id} and del_flag = 0
     </select>
 
     <!--    删除图片记录-->

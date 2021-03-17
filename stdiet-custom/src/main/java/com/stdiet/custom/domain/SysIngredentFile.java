@@ -11,9 +11,9 @@ public class SysIngredentFile {
 
     Long igdId;
 
-    String fileUrl;
+    String url;
 
-    String fileName;
+    String name;
 
     Integer delFlag;
 
