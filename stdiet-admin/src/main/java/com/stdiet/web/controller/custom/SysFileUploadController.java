@@ -42,6 +42,7 @@ public class SysFileUploadController extends BaseController {
             if (StringUtils.isNotEmpty(fileUrl)) {
                 ajax = AjaxResult.success();
                 ajax.put("fileUrl", fileUrl);
+                ajax.put("previewUrl", AliyunOSSUtils.generatePresignedUrl(fileUrl));
                 ajax.put("fileName", file.getOriginalFilename());
             } else {
                 ajax = AjaxResult.error("文件上传失败");
