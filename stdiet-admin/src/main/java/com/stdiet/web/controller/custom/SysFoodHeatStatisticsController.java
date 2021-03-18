@@ -30,7 +30,6 @@ public class SysFoodHeatStatisticsController extends BaseController
     /**
      * 查询外食热量统计列表
      */
-    @PreAuthorize("@ss.hasPermi('custom:foodHeatStatistics:list')")
     @GetMapping("/list")
     public TableDataInfo list(SysCustomerHeatStatistics sysCustomerHeatStatistics)
     {

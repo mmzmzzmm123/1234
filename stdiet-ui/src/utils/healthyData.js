@@ -473,6 +473,12 @@ const moduleObj = {
 
 //健康信息处理，将数组转为字符串
 export function dealHealthy(customerHealthy) {
+  customerHealthy.bmi = (
+    customerHealthy.weight /
+    2 /
+    (customerHealthy.tall / 100) /
+    (customerHealthy.tall / 100)
+  ).toFixed(1);
   customerHealthy.basicBMR = (
     (10 * customerHealthy.weight) / 2 +
     6.25 * customerHealthy.tall -

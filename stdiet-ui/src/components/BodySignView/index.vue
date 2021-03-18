@@ -104,9 +104,10 @@ export default {
       [{ title: "方便沟通时间", value: "connectTime" }],
     ];
     if (this.dev) {
-      basicInfo.splice(3, 0, [{ title: "蛋白范围", value: "recProtein" }]);
-      basicInfo.splice(4, 0, [{ title: "基础代谢BMR", value: "basicBMR" }]);
-      basicInfo.splice(5, 0, [
+      basicInfo.splice(3, 0, [{ title: "BMI", value: "bmi" }]);
+      basicInfo.splice(4, 0, [{ title: "蛋白范围", value: "recProtein" }]);
+      basicInfo.splice(5, 0, [{ title: "基础代谢BMR", value: "basicBMR" }]);
+      basicInfo.splice(6, 0, [
         { title: "不运动总热量", value: "notSportHeat" },
       ]);
       basicInfo.splice(basicInfo.length, 0, [
