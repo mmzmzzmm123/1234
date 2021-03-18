@@ -40,7 +40,7 @@ public class SysIngredientServiceImpl implements ISysIngredientService {
             List<SysIngredentFile> imgList = ingredient.getImgList();
             if (StringUtils.isNotEmpty(imgList)) {
                 for (SysIngredentFile file : imgList) {
-                    file.setUrl(AliyunOSSUtils.generatePresignedUrl(file.getUrl()));
+                    file.setPreviewUrl(AliyunOSSUtils.generatePresignedUrl(file.getUrl()));
                 }
             }
         }
@@ -61,7 +61,7 @@ public class SysIngredientServiceImpl implements ISysIngredientService {
                 List<SysIngredentFile> imgList = ingredient.getImgList();
                 if (StringUtils.isNotEmpty(imgList)) {
                     for (SysIngredentFile file : imgList) {
-                        file.setUrl(AliyunOSSUtils.generatePresignedUrl(file.getUrl()));
+                        file.setPreviewUrl(AliyunOSSUtils.generatePresignedUrl(file.getUrl()));
                     }
                 }
             }
