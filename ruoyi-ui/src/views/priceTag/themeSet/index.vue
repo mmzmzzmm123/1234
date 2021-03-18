@@ -1,7 +1,7 @@
 <!--
  * @Author: pengyu
  * @Date: 2020-12-12 22:29:27
- * @LastEditTime: 2021-01-10 23:08:36
+ * @LastEditTime: 2021-03-14 12:09:20
  * @LastEditors: Please set LastEditors
  * @Description: 主题设置
  * @FilePath: \RuoYi-Vue\ruoyi-ui\src\views\priceTag\themeSet\index.vue
@@ -48,7 +48,7 @@
             @click="curId=itm.themeId"
             :class="['theme-item-v', curId===itm.themeId?'cur':'']"
           >
-            <el-image :src="getFileUrl(itm.themePicturePath)" fit="contain" :preview-src-list="[getFileUrl(itm.themePicturePath)]"></el-image>
+            <el-image :src="getFileUrl(itm.themePicturePath)" fit="contain"></el-image>
             <div class="name">{{itm.themeName}}</div>
             <el-dropdown v-if="isSuperAdmin" :hide-on-click="true" @command="(cmd)=>handleCommand(cmd,idx,'v')">
               <el-icon class="icon el-icon-s-tools"></el-icon>
