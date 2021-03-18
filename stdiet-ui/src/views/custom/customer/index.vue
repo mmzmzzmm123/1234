@@ -7,24 +7,16 @@
       v-show="showSearch"
       label-width="86px"
     >
-      <el-form-item label="名字" prop="name">
+      <el-form-item label="客户信息" prop="name">
         <el-input
           v-model.trim="queryParams.name"
-          placeholder="请输入名字"
+          placeholder="请输入名字或手机号"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="手机号" prop="phone">
-        <el-input
-          v-model.trim="queryParams.phone"
-          placeholder="请输入手机号"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
+
       <el-form-item label="进粉渠道" prop="fansChannel">
         <el-select v-model="queryParams.fansChannel" placeholder="请选择">
           <el-option
@@ -35,39 +27,51 @@
           />
         </el-select>
       </el-form-item>
-      <!--<el-form-item label="营养师助理" prop="assistantDietitian">
-        <el-input
-          v-model="queryParams.assistantDietitian"
-          placeholder="请输入营养师助理"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+      <el-form-item label="营养师" prop="mainDietitian">
+        <el-select v-model="queryParams.mainDietitian" placeholder="请选择">
+          <el-option
+            v-for="dict in nutritionistIdOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="parseInt(dict.dictValue)"
+          />
+        </el-select>
       </el-form-item>
-      <el-form-item label="售后营养师" prop="afterDietitian">
-        <el-input
-          v-model="queryParams.afterDietitian"
-          placeholder="请输入售后营养师"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+      <el-form-item label="营养师助理" prop="assistantDietitian">
+        <el-select
+          v-model="queryParams.assistantDietitian"
+          placeholder="请选择"
+        >
+          <el-option
+            v-for="dict in nutriAssisIdOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="parseInt(dict.dictValue)"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item label="销售人员" prop="salesman">
-        <el-input
-          v-model="queryParams.salesman"
-          placeholder="请输入销售人员"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>-->
+        <el-select v-model="queryParams.salesman" placeholder="请选择">
+          <el-option
+            v-for="dict in preSaleIdOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="parseInt(dict.dictValue)"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="售后营养师" prop="afterDietitian">
+        <el-select v-model="queryParams.afterDietitian" placeholder="请选择">
+          <el-option
+            v-for="dict in afterSaleIdOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="parseInt(dict.dictValue)"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item>
-        <el-button
-          type="cyan"
-          icon="el-icon-search"
-          size="mini"
-          @click="handleQuery"
+        <el-button type="cyan" icon="el-icon-search" @click="handleQuery"
           >搜索</el-button
         >
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"

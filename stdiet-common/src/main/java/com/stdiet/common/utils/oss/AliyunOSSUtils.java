@@ -3,6 +3,7 @@ package com.stdiet.common.utils.oss;
 import com.aliyun.oss.model.GetObjectRequest;
 import com.aliyun.oss.model.OSSObject;
 import com.stdiet.common.config.AliyunOSSConfig;
+import com.stdiet.common.utils.StringUtils;
 import com.stdiet.common.utils.file.FileUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -233,6 +234,9 @@ public class AliyunOSSUtils {
      * @return
      */
     public static String generatePresignedUrl(String fileUrl){
+        if(StringUtils.isEmpty(fileUrl)) {
+            return null;
+        }
         // 创建OSSClient实例。
         OSS ossClient = getOssClient();
 
