@@ -13,6 +13,8 @@ public class SysIngredentFile {
 
     String url;
 
+    String previewUrl;
+
     String name;
 
     Integer delFlag;
