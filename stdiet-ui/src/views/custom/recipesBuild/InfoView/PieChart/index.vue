@@ -266,7 +266,7 @@ export default {
           },
         ],
       };
-      console.log(option);
+      // console.log(option);
       this.chart.setOption(option);
     },
     handleOnViewChange(view) {

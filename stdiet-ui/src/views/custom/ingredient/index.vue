@@ -357,7 +357,9 @@
                 <em class="el-icon-upload" />
                 <div class="el-upload__text">
                   将文件拖到此处，或<em>点击上传</em>
-                  <div style="font-size: 12px; color: #8c8c8c">最多可上传5个文件，且每个文件不超过10M</div>
+                  <div style="font-size: 12px; color: #8c8c8c">
+                    最多可上传5个文件，且每个文件不超过10M
+                  </div>
                 </div>
               </el-upload>
             </el-form-item>
@@ -598,8 +600,18 @@ export default {
     submitForm() {
       this.$refs["form"].validate((valid) => {
         if (valid) {
-          if (this.form.id != null) {
-            updateIngredient(this.form).then((response) => {
+          const params = JSON.parse(JSON.stringify(this.form));
+          params.imgList = params.imgList.reduce((arr, cur) => {
+            if (cur.url) {
+              arr.push({
+                url: cur.url.substring(0, cur.url.indexOf("?")),
+                name: cur.name,
+              });
+            }
+            return arr;
+          }, []);
+          if (params.id != null) {
+            updateIngredient(params).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("修改成功");
                 this.open = false;
@@ -607,7 +619,7 @@ export default {
               }
             });
           } else {
-            addIngredient(this.form).then((response) => {
+            addIngredient(params).then((response) => {
               if (response.code === 200) {
                 this.msgSuccess("新增成功");
                 this.open = false;
@@ -658,7 +670,7 @@ export default {
       this.form.imgList = fileList.map((data) => {
         const { name, url, response } = data;
         if (response) {
-          return { url: response.fileUrl, name: response.fileName };
+          return { url: response.previewUrl, name: response.fileName };
         }
         return { url, name };
       });
