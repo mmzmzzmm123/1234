@@ -312,6 +312,7 @@ export default {
           ["创建时间", "客户姓名", "手机号"],
           ["调理项目", "性别", "年龄"],
           ["身高(厘米)", "体重(斤)", "地域"],
+          ["BMI", "", ""],
         ],
         [
           ["减脂经历", "减脂遇到的困难", "减脂是否反弹"],
@@ -362,6 +363,7 @@ export default {
           ["createTime", "name", "phone"],
           ["conditioningProject", "sex", "age"],
           ["tall", "weight", "position"],
+          ["bmi", "", ""],
         ],
         [
           ["experience", "difficulty", "rebound"],
@@ -722,6 +724,12 @@ export default {
           }
           return arr;
         }, []);
+      detailHealthy.bmi = (
+        detailHealthy.weight /
+        2 /
+        (detailHealthy.tall / 100) /
+        (detailHealthy.tall / 100)
+      ).toFixed(1);
       this.detailHealthy = detailHealthy;
       for (let i = 0; i < this.healthyTitleData.length; i++) {
         let stepArray = [];
