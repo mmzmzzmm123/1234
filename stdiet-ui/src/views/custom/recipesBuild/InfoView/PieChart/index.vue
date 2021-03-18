@@ -38,7 +38,7 @@
       <div class="summary">
         <div style="font-size: 12px; color: #606266">总热量约等于</div>
         <div style="color: #515a6e; font-weight: bold">
-          {{ totalHeat.toFixed(1) }}千卡
+          {{ data[0] ? data[0].totalHeat.toFixed(1) : 0 }}千卡
         </div>
       </div>
     </div>
@@ -82,7 +82,6 @@ export default {
   data() {
     return {
       chart: null,
-      totalHeat: 0,
       nameDict: {
         p: "蛋白质",
         f: "脂肪",
@@ -107,15 +106,15 @@ export default {
     mData() {
       const [data] = this.data;
       if (!data) {
-        this.totalHeat = 0;
         return [];
       }
-      this.totalHeat = data.cHeat + data.fHeat + data.pHeat;
       const mData = ["Weight", "Rate"].map((t, idx) => ({
         type: this.typeDict[t],
         ...["p", "f", "c"].reduce((obj, cur) => {
           obj[cur] = idx
-            ? `${((data[`${cur}Heat`] / this.totalHeat) * 100).toFixed(2)}%`
+            ? data.totalHeat === 0
+              ? 0
+              : `${((data[`${cur}Heat`] / data.totalHeat) * 100).toFixed(2)}%`
             : `${data[`${cur}Weight`].toFixed(1)}克`;
           return obj;
         }, {}),
@@ -199,7 +198,9 @@ export default {
                       top: 18,
                       left: 8,
                       style: {
-                        text: `${this.totalHeat.toFixed(1)}千卡`,
+                        text: `${
+                          data.totalHeat ? data.totalHeat.toFixed(1) : 0
+                        }千卡`,
                         font: '14px "Microsoft YaHei", sans-serif',
                       },
                     },
