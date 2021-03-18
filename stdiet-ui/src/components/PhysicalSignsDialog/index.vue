@@ -4,8 +4,10 @@
     :title="title"
     append-to-body
     @closed="onClosed"
+    :width="dialogWidth"
   >
-    <div v-if="showFlag">
+    <div style="display:flex;flex-direction:row">
+    <div v-if="showFlag" style="float: left;width: 900px">
       <div
         style="float: right; margin-top: -10px; margin-bottom: 10px"
         v-show="dataList.length > 0"
@@ -100,7 +102,7 @@
           </el-table>
         </div>
         <!-- 其他信息 -->
-        <div style="height: 400px; overflow: auto">
+        <div style="height: 390px; overflow: auto">
           <div
             v-for="(item, index) in dataList.slice(1, 10)"
             style="margin-bottom: 50px"
@@ -217,6 +219,15 @@
         </div>
       </div>
     </div>
+    <div style="width: 200px;" v-show="guidanceShow">
+      <!-- 编辑减脂指导 -->
+      <physicalSigns-guidance
+        ref="physicalSignsGuidanceDialog"
+        @close="editGuidanceShow(false)"
+        @refreshHealthyData="getCustomerHealthyByCusId()"
+      ></physicalSigns-guidance>
+    </div>
+    </div>
     <!-- 编辑 -->
     <physicalSigns-edit
       ref="physicalSignsEditDialog"
@@ -227,11 +238,7 @@
       ref="physicalSignsRemarkDialog"
       @refreshHealthyData="getCustomerHealthyByCusId()"
     ></physicalSigns-remark>
-    <!-- 编辑减脂指导 -->
-    <physicalSigns-guidance
-      ref="physicalSignsGuidanceDialog"
-      @refreshHealthyData="getCustomerHealthyByCusId()"
-    ></physicalSigns-guidance>
+
   </el-dialog>
 </template>
 <script>
@@ -401,6 +408,9 @@ export default {
       ],
       copyValue: "",
       detailHealthy: null,
+      dialogWidth: "950px",
+      guidanceShow : false
+
     };
   },
   methods: {
@@ -457,6 +467,7 @@ export default {
       this.detailHealthy = null;
       //this.enc_id = "";
       this.copyValue = "";
+      this.editGuidanceShow(false);
     },
     //对体征信息进行处理
     getDataListBySignMessage(sign) {
@@ -843,11 +854,16 @@ export default {
       );
     },
     handleEditGuidanceClick() {
+      this.editGuidanceShow(true);
       this.$refs["physicalSignsGuidanceDialog"].showDialog(
         this.data,
         this.healthyData
       );
     },
+    editGuidanceShow(flag){
+      this.guidanceShow = flag;
+      this.dialogWidth = flag ? "1200px" : "950px";
+    }
   },
 };
 </script>

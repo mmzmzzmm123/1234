@@ -1,10 +1,13 @@
 <template>
-  <el-dialog :visible.sync="visible" :title="title" width="500px" append-to-body @closed="onClosed">
+  <!--<el-dialog :visible.sync="visible" :title="title" width="500px" append-to-body @closed="onClosed">-->
+  <div style="margin-left: 20px">
+    <h3 style="width: 200px;">{{title}}</h3>
     <el-form ref="form" :model="form" :rules="rules" label-position="top" label-width="100px">
       <el-form-item label="" prop="guidance" >
         <el-input
+          style="width: 230px"
           type="textarea"
-          :rows="8"
+          :rows="25"
           maxlength="300"
           show-word-limit
           placeholder="请输入减脂指导"
@@ -12,11 +15,12 @@
         </el-input>
       </el-form-item>
     </el-form>
-    <div slot="footer" class="dialog-footer">
+    <div slot="footer" class="dialog-footer" style="float: right">
       <el-button type="primary" @click="submit()">确 定</el-button>
       <el-button @click="onClosed()">取 消</el-button>
     </div>
-  </el-dialog>
+  </div>
+  <!--</el-dialog>-->
 </template>
 <script>
 import { getCustomerPhysicalSignsByCusId } from "@/api/custom/customer";
@@ -51,6 +55,7 @@ export default {
     onClosed() {
       this.visible = false;
       this.data = null;
+      this.$emit('close');
     },
     submit(){
       this.$refs.form.validate((valid) => {
