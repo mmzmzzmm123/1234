@@ -167,7 +167,8 @@
         align="center"
         prop="qt"
       />
-      <el-table-column label="所在省市" align="center" prop="sheng" />
+      <el-table-column label="所在省" align="center" prop="sheng" />
+      <el-table-column label="所在市" align="center" prop="shi" />
       <el-table-column
         label="消费项目"
         align="center"
@@ -509,7 +510,8 @@ export default {
     handleChange(val) {
       this.form.shengid = val[0];
       this.form.shiid = val[1];
-      this.form.sheng = CodeToText[val[0]] + CodeToText[val[1]];
+      this.form.sheng = CodeToText[val[0]];
+      this.form.shi = CodeToText[val[1]];
     },
     // 取消按钮
     cancel() {
