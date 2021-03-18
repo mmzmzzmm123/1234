@@ -132,7 +132,7 @@ public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService {
         }
         SysOrder sysOrder = sysOrderService.selectSysOrderById(orderId);
         //订单为空、金额小于0、订单未审核不进行食谱生成、更新，只对2021年开始的订单进行食谱计划生成，判断订单金额、开始时间、结束时间，为空则直接返回，不重新生成食谱计划
-        if (sysOrder == null || !sysOrder.getReviewStatus().equals("yes") || DateUtils.dateToLocalDate(sysOrder.getOrderTime()).getYear() < 2021
+        if (sysOrder == null || !sysOrder.getReviewStatus().equals("yes") /*|| DateUtils.dateToLocalDate(sysOrder.getOrderTime()).getYear() < 2021*/
                 || sysOrder.getAmount().floatValue() <= 0 || sysOrder.getStartTime() == null || sysOrder.getServerEndTime() == null) {
             return;
         }

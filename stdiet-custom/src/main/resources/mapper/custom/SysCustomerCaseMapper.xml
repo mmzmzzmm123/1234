@@ -43,6 +43,9 @@
         <if test="customerName != null and customerName != ''">
             and sc.name like concat('%', #{customerName}, '%')
         </if>
+        <if test="wxShow != null">
+            and scc.wx_show = #{wxShow}
+        </if>
         order by id desc
     </select>
 

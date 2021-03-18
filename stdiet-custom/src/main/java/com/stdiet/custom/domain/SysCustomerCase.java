@@ -36,6 +36,9 @@ public class SysCustomerCase extends BaseEntity
     @Excel(name = "所属客户")
     private String customerName;
 
+    //是否显示到微信小程序
+    private Integer wxShow;
+
     /** 删除标识 0未删除 1已删除，默认0 */
     private Long delFlag;
 

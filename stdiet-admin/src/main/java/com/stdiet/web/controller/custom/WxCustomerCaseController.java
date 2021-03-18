@@ -33,9 +33,10 @@ public class WxCustomerCaseController extends BaseController{
     {
         startPage();
         sysCustomerCase.setKeywordArray(StringUtils.isNotEmpty(sysCustomerCase.getKeyword()) ? sysCustomerCase.getKeyword().split(",") : null);
+        //sysCustomerCase.setWxShow(1);
         List<SysCustomerCase> list = sysCustomerCaseService.selectSysCustomerCaseList(sysCustomerCase);
-        List<CustomerCaseResponse> resultList = dealSysCustomerCase(list);
-        return getDataTable(resultList);
+        //List<CustomerCaseResponse> resultList = dealSysCustomerCase(list);
+        return getDataTable(list);
     }
 
     /**
