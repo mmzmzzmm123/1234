@@ -592,6 +592,11 @@ export default {
                   ).dictValue
               )
           : [];
+        this.form.imgList = this.form.imgList.map((obj) => ({
+          url: obj.previewUrl,
+          name: obj.name,
+          fileUrl: obj.url,
+        }));
         this.open = true;
         this.title = "修改食材";
       });
@@ -604,7 +609,7 @@ export default {
           params.imgList = params.imgList.reduce((arr, cur) => {
             if (cur.url) {
               arr.push({
-                url: cur.url.substring(0, cur.url.indexOf("?")),
+                url: cur.fileUrl,
                 name: cur.name,
               });
             }
@@ -668,11 +673,15 @@ export default {
     },
     handleOnUploadSuccess(res, file, fileList) {
       this.form.imgList = fileList.map((data) => {
-        const { name, url, response } = data;
+        const { name, url, fileUrl, response } = data;
         if (response) {
-          return { url: response.previewUrl, name: response.fileName };
+          return {
+            url: response.previewUrl,
+            fileUrl: response.fileUrl,
+            name: response.fileName,
+          };
         }
-        return { url, name };
+        return { url, name, fileUrl };
       });
       // console.log({
       //   res,
@@ -682,9 +691,10 @@ export default {
       // });
     },
     handleOnUploadRemove(file, fileList) {
-      this.form.imgList = fileList.map(({ url, name }) => ({
+      this.form.imgList = fileList.map(({ url, fileUrl, name }) => ({
         url,
         name,
+        fileUrl,
       }));
       // console.log({ file, fileList, form: this.form });
     },
