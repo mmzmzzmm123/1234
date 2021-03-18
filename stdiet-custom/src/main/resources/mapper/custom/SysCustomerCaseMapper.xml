@@ -37,16 +37,15 @@
         select scc.id, scc.name, scc.keyword, scc.remark, scc.customer_id, scc.create_time,sc.name as customer_name from sys_customer_case scc
         left join sys_customer sc on sc.id = scc.customer_id and sc.del_flag = 0
         where scc.del_flag = 0
-        <!--<if test="name != null  and name != ''">
-            and (scc.name like concat('%', #{name}, '%') OR scc.remark like concat('%', #{name}, '%'))
-        </if>-->
         <include refid="searchKey">
             <property name="keywordArray" value="#{keywordArray}"/>
         </include>
         <if test="customerName != null and customerName != ''">
             and sc.name like concat('%', #{customerName}, '%')
         </if>
-        OR scc.keyword like concat('%', #{name}, '%')
+        <if test="wxShow != null">
+            and scc.wx_show = #{wxShow}
+        </if>
         order by id desc
     </select>
 
