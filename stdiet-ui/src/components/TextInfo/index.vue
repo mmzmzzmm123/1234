@@ -21,10 +21,15 @@ export default {
       if (
         this.value &&
         typeof this.value === "string" &&
-        this.value.includes("</br>")
+        (this.value.includes("</br>") || this.value.includes("\n"))
       ) {
         this.newLine = true;
-        return this.value.split("</br>");
+        if (this.value.includes("</br>")) {
+          return this.value.split("</br>");
+        } else if (this.value.includes("\n")) {
+          return this.value.split("\n");
+        }
+        return this.value;
       }
       return this.value;
     },
