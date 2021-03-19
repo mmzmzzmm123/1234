@@ -3,6 +3,7 @@ package com.stdiet.custom.service;
 import java.util.List;
 import com.stdiet.custom.domain.SysCustomerCase;
 import com.stdiet.custom.domain.SysCustomerCaseFile;
+import com.stdiet.custom.dto.response.CustomerCaseResponse;
 
 /**
  * 客户案例管理Service接口
@@ -65,5 +66,20 @@ public interface ISysCustomerCaseService {
      * @return
      */
     List<SysCustomerCaseFile> getFileListByCaseId(Long caseId);
+
+    /**
+     * 查询微信小程序上展示的客户案例
+     * @param sysCustomerCase
+     * @return
+     */
+    List<CustomerCaseResponse> getWxCustomerCaseList(SysCustomerCase sysCustomerCase);
+
+    /**
+     * 更新微信展示状态
+     * @param wxShow 是否展示  0不展示 1展示
+     * @param ids id数组
+     * @return
+     */
+    int updateWxShowByIds(Integer wxShow, Long[] ids);
 
 }

@@ -2,6 +2,8 @@ package com.stdiet.custom.mapper;
 
 import java.util.List;
 import com.stdiet.custom.domain.SysCustomerCase;
+import com.stdiet.custom.dto.response.CustomerCaseResponse;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 客户案例管理Mapper接口
@@ -58,4 +60,19 @@ public interface SysCustomerCaseMapper
      * @return 结果
      */
     public int deleteSysCustomerCaseByIds(Long[] ids);
+
+    /**
+     * 查询微信小程序上展示的客户案例
+     * @param sysCustomerCase
+     * @return
+     */
+    public List<CustomerCaseResponse> getWxCustomerCaseList(SysCustomerCase sysCustomerCase);
+
+    /**
+     * 更新微信展示状态
+     * @param wxShow 是否展示  0不展示 1展示
+     * @param ids id数组
+     * @return
+     */
+    public int updateWxShowByIds(@Param("wxShow")Integer wxShow, @Param("array") Long[] ids);
 }

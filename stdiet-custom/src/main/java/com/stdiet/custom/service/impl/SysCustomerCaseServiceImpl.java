@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import com.stdiet.common.utils.DateUtils;
 import com.stdiet.custom.domain.SysCustomerCaseFile;
+import com.stdiet.custom.dto.response.CustomerCaseResponse;
 import com.stdiet.custom.mapper.SysCustomerCaseFileMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -154,7 +155,29 @@ public class SysCustomerCaseServiceImpl implements ISysCustomerCaseService
      * @param caseId
      * @return
      */
+    @Override
     public List<SysCustomerCaseFile> getFileListByCaseId(Long caseId){
         return sysCustomerCaseFileMapper.selectSysCustomerCaseFileListByCaseId(caseId);
+    }
+
+    /**
+     * 查询微信小程序上展示的客户案例
+     * @param sysCustomerCase
+     * @return
+     */
+    @Override
+    public List<CustomerCaseResponse> getWxCustomerCaseList(SysCustomerCase sysCustomerCase){
+        return sysCustomerCaseMapper.getWxCustomerCaseList(sysCustomerCase);
+    }
+
+    /**
+     * 更新微信展示状态
+     * @param wxShow 是否展示  0不展示 1展示
+     * @param ids id数组
+     * @return
+     */
+    @Override
+    public int updateWxShowByIds(Integer wxShow, Long[] ids){
+        return sysCustomerCaseMapper.updateWxShowByIds(wxShow, ids);
     }
 }

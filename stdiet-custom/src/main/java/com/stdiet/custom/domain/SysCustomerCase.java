@@ -20,6 +20,8 @@ public class SysCustomerCase extends BaseEntity
     /** $column.columnComment */
     private Long id;
 
+    private Long[] ids;
+
     /** 案例名称 */
     @Excel(name = "案例名称")
     private String name;
@@ -37,7 +39,7 @@ public class SysCustomerCase extends BaseEntity
     private String customerName;
 
     //是否显示到微信小程序
-    private Integer wxShow;
+    private Boolean wxShow;
 
     /** 删除标识 0未删除 1已删除，默认0 */
     private Long delFlag;
