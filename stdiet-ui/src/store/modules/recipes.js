@@ -517,6 +517,7 @@ const getters = {
             obj.fHeat = obj.fWeight * 9;
             obj.cWeight += (igd.weight / 100) * igd.carbonRatio;
             obj.cHeat = obj.cWeight * 4;
+            obj.totalHeat = obj.pHeat + obj.fHeat + obj.cHeat;
             obj[`heat${cur.type}`] +=
               (igd.weight / 100) * igd.proteinRatio * 4 +
               (igd.weight / 100) * igd.fatRatio * 9 +
@@ -532,16 +533,17 @@ const getters = {
           pHeat: 0,
           fHeat: 0,
           cHeat: 0,
+          totalHeat: 0,
           heat1: 0,
           heat2: 0,
           heat3: 0,
           heat4: 0,
           heat5: 0,
-          heat6: 0,
+          heat6: 0
         }
       )
     );
-    // console.log(nutriData);
+    console.log(nutriData);
     return nutriData;
   },
   verifyNotRecData: state =>
