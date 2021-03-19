@@ -81,7 +81,7 @@
                 :data="form.igdList"
                 border
                 show-summary
-                :cell-style="{ padding: 0 }"
+                :cell-style="{ padding: '2px 0' }"
                 :header-cell-style="{ padding: 0, height: 'unset' }"
                 :summary-method="getSummaries"
               >
@@ -149,7 +149,7 @@
                 </el-table-column>
                 <el-table-column label="操作" align="center">
                   <template slot-scope="scope">
-                    <el-button type="text" @click="handleOnDelete(scope.row)"
+                    <el-button type="text" size="mini" @click="handleOnDelete(scope.row)"
                       >删除</el-button
                     >
                   </template>

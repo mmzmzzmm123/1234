@@ -51,7 +51,6 @@
       :data="ingredientList"
       :cell-style="{ padding: 0 }"
       :header-cell-style="{ padding: 0, height: 'unset' }"
-      @current-change="handleCurrentChange"
     >
       <el-table-column label="食材名称" align="center" prop="name" />
       <el-table-column
@@ -63,6 +62,13 @@
       <el-table-column prop="proteinRatio" label="蛋白质/100g" align="center" />
       <el-table-column prop="fatRatio" label="脂肪/100g" align="center" />
       <el-table-column prop="carbonRatio" label="碳水/100g" align="center" />
+      <el-table-column label="操作" align="center">
+        <template slot-scope="scope">
+          <el-button type="text" size="mini" @click="handleOnSelect(scope.row)"
+            >选用</el-button
+          >
+        </template>
+      </el-table-column>
     </el-table>
 
     <pagination
@@ -123,7 +129,7 @@ export default {
       this.resetForm("queryForm");
       this.handleQuery();
     },
-    handleCurrentChange(data) {
+    handleOnSelect(data) {
       this.$emit("onSelect", data);
     },
   },
