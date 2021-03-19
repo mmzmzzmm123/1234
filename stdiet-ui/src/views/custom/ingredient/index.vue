@@ -352,6 +352,7 @@
                 :on-success="handleOnUploadSuccess"
                 :on-exceed="handleOnUploadExceed"
                 :on-remove="handleOnUploadRemove"
+                :on-preview="handleOnUploadPreview"
                 list-type="picture"
               >
                 <em class="el-icon-upload" />
@@ -408,6 +409,17 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+
+    <!-- 预览弹窗 -->
+    <el-dialog
+      :visible.sync="previewVisible"
+      :title="previewTitle"
+      class="preview_dialog_wrapper"
+    >
+      <div class="preview_content">
+        <img :src="previewUrl" alt="" class="preview_img" />
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -437,6 +449,7 @@ export default {
     return {
       // 遮罩层
       loading: true,
+
       //
       actionUrl: process.env.VUE_APP_BASE_API + "/custom/fileUpload/ingredient",
       // 选中数组
@@ -480,6 +493,10 @@ export default {
       form: {},
       // 表单校验
       rules: {},
+      //
+      previewVisible: false,
+      previewUrl: "",
+      previewTitle: "",
     };
   },
   created() {
@@ -704,6 +721,23 @@ export default {
         type: "warning",
       });
     },
+    handleOnUploadPreview(file) {
+      console.log(file);
+      this.previewTitle = file.name;
+      this.previewVisible = true;
+      this.previewUrl = file.url;
+    },
   },
 };
 </script>
+<style lang="scss" scoped>
+.preview_dialog_wrapper {
+  .preview_content {
+    text-align: center;
+    .preview_img {
+      max-height: 600px;
+      width: auto;
+    }
+  }
+}
+</style>
