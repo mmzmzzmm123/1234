@@ -75,6 +75,15 @@ export function downCaseFile(downUrl) {
   window.location.href = downUrl;
 }
 
+// 修改客户案例微信小程序展示状态
+export function updateWxShow(data) {
+  return request({
+    url: '/custom/customerCase/updateWxShow',
+    method: 'post',
+    data: data
+  })
+}
+
 
 
 

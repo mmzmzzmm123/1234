@@ -5,6 +5,7 @@ import com.stdiet.common.core.domain.AjaxResult;
 import com.stdiet.common.core.page.TableDataInfo;
 import com.stdiet.common.utils.StringUtils;
 import com.stdiet.common.utils.oss.AliyunOSSUtils;
+import com.stdiet.common.utils.sign.AesUtils;
 import com.stdiet.custom.domain.SysCustomerCase;
 import com.stdiet.custom.domain.SysCustomerCaseFile;
 import com.stdiet.custom.dto.response.CustomerCaseResponse;
@@ -33,9 +34,9 @@ public class WxCustomerCaseController extends BaseController{
     {
         startPage();
         sysCustomerCase.setKeywordArray(StringUtils.isNotEmpty(sysCustomerCase.getKeyword()) ? sysCustomerCase.getKeyword().split(",") : null);
-        //sysCustomerCase.setWxShow(1);
-        List<SysCustomerCase> list = sysCustomerCaseService.selectSysCustomerCaseList(sysCustomerCase);
-        //List<CustomerCaseResponse> resultList = dealSysCustomerCase(list);
+        List<CustomerCaseResponse> list = sysCustomerCaseService.getWxCustomerCaseList(sysCustomerCase);
+        //处理ID加密
+        dealIdEnc(list);
         return getDataTable(list);
     }
 
@@ -43,34 +44,33 @@ public class WxCustomerCaseController extends BaseController{
      * 查询客户案例文件列表
      */
     @GetMapping("/getFileByCaseId")
-    public AjaxResult getFileByCaseId(@RequestParam("caseId")Long caseId)
+    public AjaxResult getFileByCaseId(@RequestParam("caseId")String caseId)
     {
+        Long id = StringUtils.isNotEmpty(caseId) ? Long.parseLong(AesUtils.decrypt(caseId, null)) : null;
         CustomerCaseResponse customerCaseResponse = new CustomerCaseResponse();
-        List<SysCustomerCaseFile> list = sysCustomerCaseService.getFileListByCaseId(caseId);
-        List<String> fileUrl = new ArrayList<>();
-        for (SysCustomerCaseFile caseFile : list) {
-            fileUrl.add(caseFile.getFileUrl());
+        customerCaseResponse.setId(caseId);
+        if(id != null){
+            List<SysCustomerCaseFile> list = sysCustomerCaseService.getFileListByCaseId(id);
+            List<String> fileUrl = new ArrayList<>();
+            for (SysCustomerCaseFile caseFile : list) {
+                fileUrl.add(caseFile.getFileUrl());
+            }
+            List<String> downUrlList = AliyunOSSUtils.generatePresignedUrl(fileUrl);
+            customerCaseResponse.setFileList(downUrlList);
+        }else{
+            customerCaseResponse.setFileList(new ArrayList<>());
         }
-        List<String> downUrlList = AliyunOSSUtils.generatePresignedUrl(fileUrl);
-        customerCaseResponse.setFileList(downUrlList);
         return AjaxResult.success(customerCaseResponse);
     }
 
     /**
-     * 处理返回值
+     * 处理返回值的ID加密
      * @param list
      * @return
      */
-    private List<CustomerCaseResponse> dealSysCustomerCase(List<SysCustomerCase> list){
-        List<CustomerCaseResponse> resultList = new ArrayList<>();
-        for (SysCustomerCase customerCase : list) {
-            CustomerCaseResponse customerCaseResponse = new CustomerCaseResponse();
-            customerCaseResponse.setId(customerCase.getId());
-            customerCaseResponse.setKeyword(customerCase.getKeyword());
-            customerCaseResponse.setName(customerCase.getName());
-            customerCaseResponse.setRemark(customerCase.getRemark());
-            resultList.add(customerCaseResponse);
+    private void dealIdEnc(List<CustomerCaseResponse> list){
+        for (CustomerCaseResponse cus : list) {
+           cus.setId(AesUtils.encrypt(cus.getId()+"", null));
         }
-        return resultList;
     }
 }

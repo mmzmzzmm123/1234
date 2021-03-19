@@ -141,6 +141,20 @@ public class SysCustomerCaseController extends BaseController
         return getDataTable(list);
     }
 
+    /**
+     * 修改客户案例是否微信展示状态
+     */
+    //@PreAuthorize("@ss.hasPermi('custom:customerCase:wxShow')")
+    @Log(title = "微信展示状态修改", businessType = BusinessType.UPDATE)
+    @PostMapping("/updateWxShow")
+    public AjaxResult updateWxShow(@RequestBody SysCustomerCase sysCustomerCase)
+    {
+        if(sysCustomerCase.getWxShow() == null || sysCustomerCase.getIds() == null || sysCustomerCase.getIds().length == 0){
+            return AjaxResult.error();
+        }
+        return toAjax(sysCustomerCaseService.updateWxShowByIds(sysCustomerCase.getWxShow() ? 1 : 0, sysCustomerCase.getIds()));
+    }
+
 //    转移到SysFileUploadController.java
 //    /**
 //     * 上传文件到OSS返回URL

@@ -10,6 +10,7 @@
         <result property="keyword"    column="keyword"    />
         <result property="remark"    column="remark"    />
         <result property="customerId"    column="customer_id"    />
+        <result property="wxShow"    column="wx_show"    />
         <result property="createTime"    column="create_time"    />
         <result property="createBy"    column="create_by"    />
         <result property="updateTime"    column="update_time"    />
@@ -19,8 +20,16 @@
         <result property="customerName" column="customer_name"></result>
     </resultMap>
 
+    <resultMap type="com.stdiet.custom.dto.response.CustomerCaseResponse" id="SysCustomerCaseResponseResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="keyword"    column="keyword"    />
+        <result property="remark"    column="remark"    />
+        <result property="wxShow"    column="wx_show"    />
+    </resultMap>
+
     <sql id="selectSysCustomerCaseVo">
-        select id, name, keyword, remark, customer_id, create_time from sys_customer_case
+        select id, name, keyword, remark, customer_id, wx_show, create_time from sys_customer_case
     </sql>
 
     <sql id="searchKey">
@@ -34,7 +43,7 @@
     </sql>
 
     <select id="selectSysCustomerCaseList" parameterType="SysCustomerCase" resultMap="SysCustomerCaseResult">
-        select scc.id, scc.name, scc.keyword, scc.remark, scc.customer_id, scc.create_time,sc.name as customer_name from sys_customer_case scc
+        select scc.id, scc.name, scc.keyword, scc.remark, scc.customer_id, scc.wx_show, scc.create_time,sc.name as customer_name from sys_customer_case scc
         left join sys_customer sc on sc.id = scc.customer_id and sc.del_flag = 0
         where scc.del_flag = 0
         <include refid="searchKey">
@@ -50,7 +59,7 @@
     </select>
 
     <select id="selectSysCustomerCaseById" parameterType="Long" resultMap="SysCustomerCaseResult">
-        select scc.id, scc.name, scc.keyword, scc.remark, scc.customer_id, scc.create_time,sc.name as customer_name from sys_customer_case scc
+        select scc.id, scc.name, scc.keyword, scc.remark, scc.customer_id,  scc.wx_show, scc.create_time,sc.name as customer_name from sys_customer_case scc
         left join sys_customer sc on sc.id = scc.customer_id and sc.del_flag = 0
         where scc.id = #{id} and scc.del_flag = 0
     </select>
@@ -62,6 +71,7 @@
             <if test="keyword != null">keyword,</if>
             <if test="remark != null">remark,</if>
             <if test="customerId != null">customer_id,</if>
+            <if test="wxShow != null">wx_show,</if>
             <if test="createTime != null">create_time,</if>
             <if test="createBy != null">create_by,</if>
             <if test="updateTime != null">update_time,</if>
@@ -73,6 +83,7 @@
             <if test="keyword != null">#{keyword},</if>
             <if test="remark != null">#{remark},</if>
             <if test="customerId != null">#{customerId},</if>
+            <if test="wxShow != null">#{wxShow},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="createBy != null">#{createBy},</if>
             <if test="updateTime != null">#{updateTime},</if>
@@ -88,6 +99,7 @@
             <if test="keyword != null">keyword = #{keyword},</if>
             <if test="remark != null">remark = #{remark},</if>
             <if test="customerId != null">customer_id = #{customerId},</if>
+            <if test="wxShow != null">wx_show = #{wxShow},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
@@ -105,6 +117,24 @@
         update sys_customer_case set del_flag = 1 where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
+        </foreach>
+    </update>
+
+    <!-- 获取在微信小程序上展示的客户案例 -->
+    <select id="getWxCustomerCaseList" parameterType="SysCustomerCase" resultMap="SysCustomerCaseResponseResult">
+        select scc.id, scc.name, scc.keyword, scc.remark, scc.wx_show from sys_customer_case scc
+        where scc.del_flag = 0 and scc.wx_show = 1
+        <include refid="searchKey">
+            <property name="keywordArray" value="#{keywordArray}"/>
+        </include>
+        order by id desc
+    </select>
+
+    <!-- 更新是否在微信小程序上展示 -->
+    <update id="updateWxShowByIds">
+        update sys_customer_case set wx_show = #{wxShow} where del_flag = 0 and id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+        #{id}
         </foreach>
     </update>
 

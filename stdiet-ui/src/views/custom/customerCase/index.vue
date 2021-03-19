@@ -36,6 +36,18 @@
         </el-select>
       </el-form-item>
 
+      <el-form-item label="展示状态" prop="wxShow">
+        <el-select
+          v-model="queryParams.wxShow"
+          placeholder="请选择展示状态"
+          clearable
+          size="small"
+        >
+          <el-option key="false" label="不展示" value="false"/>
+          <el-option key="true" label="展示" value="true"/>
+        </el-select>
+      </el-form-item>
+
       <el-form-item label="客户姓名" prop="customerName">
         <el-input
           v-model.trim="queryParams.customerName"
@@ -139,6 +151,7 @@
         </template>
       </el-table-column>
       <el-table-column label="所属客户" align="center" prop="customerName" />
+      
       <el-table-column label="文件" align="center">
         <template slot-scope="scope">
           <el-button
@@ -159,6 +172,17 @@
           <span>{{
             parseTime(scope.row.createTime, "{y}-{m}-{d} {h}:{i}")
           }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="小程序展示状态" align="center" prop="wxShow" >
+        <template slot-scope="scope">
+          <el-switch
+                v-model="scope.row.wxShow"
+                active-text="展示"
+                inactive-text="不展示"
+                @change="handleWxShow($event, scope.row)"
+                >
+              </el-switch>
         </template>
       </el-table-column>
       <el-table-column
@@ -241,7 +265,7 @@
               placeholder="请输入案例备注"
               v-model.trim="form.remark"
               maxlength="200"
-              rows="4"
+              rows="3"
               show-word-limit
             ></el-input>
           </el-form-item>
@@ -258,6 +282,16 @@
                 >选择所属客户</el-button
               ></span
             >
+          </el-form-item>
+
+          
+          <el-form-item label="展示状态" prop="wxShow">
+              <el-switch
+                v-model="form.wxShow"
+                active-text="小程序展示"
+                inactive-text="小程序不展示">
+              </el-switch>
+              <div>提示：小程序展示的案例需要隐藏客户隐私</div>
           </el-form-item>
           <el-form-item label="案例文件" prop="file">
             <DragUpload
@@ -301,6 +335,7 @@ import {
   updateCustomerCase,
   exportCustomerCase,
   getFileListByCaseId,
+  updateWxShow
 } from "@/api/custom/customerCase";
 import DragUpload from "@/components/FileUpload/DragUpload";
 import DragUploadEdit from "@/components/FileUpload/DragUploadEdit";
@@ -337,6 +372,7 @@ export default {
         pageSize: 10,
         name: null,
         keyword: null,
+        wxShow: null,
         customerName: null,
       },
       // 表单参数
@@ -398,6 +434,7 @@ export default {
         remark: null,
         customerId: null,
         customerName: null,
+        wxShow: false,
         caseFileList: [],
         caseFileUrl: [],
         caseFileName: [],
@@ -437,6 +474,7 @@ export default {
           keywordArray: response.data.keyword.split(","),
           remark: response.data.remark,
           customerId: response.data.customerId,
+          wxShow: response.data.wxShow == 1 ? true : false,
           customerName: response.data.customerName,
           caseFileList: response.data.caseFileList,
           caseFileUrl: [],
@@ -560,6 +598,13 @@ export default {
         })
         .catch(function () {});
     },
+    handleWxShow(newWxshow, row){
+      let param = {
+        ids:[row.id],
+        wxShow: newWxshow
+      };
+      updateWxShow(param);
+    }
   },
 };
 </script>
