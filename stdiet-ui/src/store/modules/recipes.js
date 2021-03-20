@@ -522,6 +522,8 @@ const getters = {
               (igd.weight / 100) * igd.proteinRatio * 4 +
               (igd.weight / 100) * igd.fatRatio * 9 +
               (igd.weight / 100) * igd.carbonRatio * 4;
+            obj[`weight${cur.type}`] += igd.weight;
+            obj.totalWeight += igd.weight;
           });
           return obj;
         },
@@ -533,66 +535,96 @@ const getters = {
           pHeat: 0,
           fHeat: 0,
           cHeat: 0,
+          //
           totalHeat: 0,
           heat1: 0,
           heat2: 0,
           heat3: 0,
           heat4: 0,
           heat5: 0,
-          heat6: 0
+          heat6: 0,
+          //
+          totalWeight: 0,
+          weight1: 0,
+          weight2: 0,
+          weight3: 0,
+          weight4: 0,
+          weight5: 0,
+          weight6: 0
         }
       )
     );
     console.log(nutriData);
     return nutriData;
   },
-  verifyNotRecData: state =>
-    state.recipesData.reduce((arr, cur, dayIdx) => {
+  verifyNotRecData: state => {
+    const data = state.recipesData.reduce((arr, cur, dayIdx) => {
       cur.dishes.forEach(dObj => {
         dObj.igdList.forEach(iObj => {
           (iObj.notRec || "").split(",").forEach(nRec => {
             if (nRec) {
-              let tarObj = arr.find(obj => obj.name === nRec);
+              const tarObj = arr.find(obj => obj.name === nRec);
               if (tarObj) {
-                tarObj.data.push({
-                  igdId: iObj.id,
-                  num: dayIdx,
-                  dishesId: dObj.dishesId,
-                  id: dObj.id
-                });
+                if (!tarObj.igdIds.includes(iObj.id)) {
+                  tarObj.igdIds.push(iObj.id);
+                }
+                const tarIgdObj = tarObj.data.find(obj => obj.id === iObj.id);
+                if (tarIgdObj) {
+                  if (!tarIgdObj.data.some(obj => obj.day === cur.numDay)) {
+                    tarIgdObj.data.push({ num: dayIdx, day: cur.numDay });
+                  }
+                } else {
+                  tarObj.data.push({
+                    name: iObj.name,
+                    id: iObj.id,
+                    data: [{ num: dayIdx, day: cur.numDay }]
+                  });
+                }
               } else {
-                tarObj = {
+                arr.push({
                   name: nRec,
+                  igdIds: [iObj.id],
                   data: [
                     {
-                      igdId: iObj.id,
-                      num: dayIdx,
-                      dishesId: dObj.dishesId,
-                      id: dObj.id
+                      name: iObj.name,
+                      id: iObj.id,
+                      data: [{ num: dayIdx, day: cur.numDay }]
                     }
                   ]
-                };
-                arr.push(tarObj);
+                });
               }
             }
           });
         });
       });
       return arr;
-    }, []),
-  igdTypeDetial: state =>
-    state.recipesData.reduce((obj, cur) => {
+    }, []);
+    // console.log(data);
+    return data;
+  },
+  igdTypeData: state => {
+    const data = state.recipesData.reduce((arr, cur, idx) => {
       cur.dishes.forEach(dObj => {
         dObj.igdList.forEach(iObj => {
-          if (!obj[iObj.type]) {
-            obj[iObj.type] = [{ name: iObj.name, id: iObj.id }];
-          } else if (!obj[iObj.type].some(tObj => tObj.id === iObj.id)) {
-            obj[iObj.type].push({ name: iObj.name, id: iObj.id });
+          let tarObj = arr.find(obj => obj.id === iObj.id);
+          if (!tarObj) {
+            tarObj = {
+              name: iObj.name,
+              id: iObj.id,
+              data: [{ num: idx, day: cur.numDay }]
+            };
+            arr.push(tarObj);
+          } else if (!tarObj.data.some(obj => obj.day === cur.numDay)) {
+            tarObj.data.push({ num: idx, day: cur.numDay });
           }
         });
       });
-      return obj;
-    }, {}),
+      return arr;
+    }, []);
+
+    // console.log(data);
+    return data;
+  },
   cusUnitDict: state =>
     state.cusUnitOptions.reduce((obj, cur) => {
       obj[cur.dictValue] = cur.dictLabel;
