@@ -20,6 +20,16 @@
           @click="handleOnViewChange(1)"
         />
       </el-tooltip>
+      <el-tooltip effect="dark" content="质量分析" placement="top">
+        <em
+          :class="[
+            'iconfont',
+            'icon-canshuiconyouhua-',
+            { sel_icon: view === 2 },
+          ]"
+          @click="handleOnViewChange(2)"
+        />
+      </el-tooltip>
     </div>
     <div v-if="view === 0" class="table_zone">
       <el-table
@@ -80,21 +90,23 @@ export default {
     },
   },
   data() {
+    const nameDict = {
+      p: "蛋白质",
+      f: "脂肪",
+      c: "碳水",
+    };
+    const menuDict = {
+      1: "早餐",
+      2: "早加餐",
+      3: "午餐",
+      4: "午加餐",
+      5: "晚餐",
+      6: "晚加餐",
+    };
     return {
       chart: null,
-      nameDict: {
-        p: "蛋白质",
-        f: "脂肪",
-        c: "碳水",
-      },
-      menuDict: {
-        1: "早餐",
-        2: "早加餐",
-        3: "午餐",
-        4: "午加餐",
-        5: "晚餐",
-        6: "晚加餐",
-      },
+      nameDict,
+      menuDict,
       typeDict: {
         Weight: "摄入量",
         Rate: "供能比",
@@ -122,6 +134,50 @@ export default {
       // console.log(mData);
       return mData;
     },
+    curNameDict() {
+      switch (this.view) {
+        case 0:
+          return this.nameDict;
+        case 1:
+          return this.menuDict;
+        case 2:
+          return this.menuDict;
+      }
+    },
+    curTitle() {
+      switch (this.view) {
+        case 0:
+          return "营养分析";
+        case 1:
+          return "热量分析";
+        case 2:
+          return "质量分析";
+      }
+    },
+    curTotalText() {
+      switch (this.view) {
+        case 1:
+          return "总热量约";
+        case 2:
+          return "总质量";
+      }
+    },
+    curTotalName() {
+      switch (this.view) {
+        case 1:
+          return "totalHeat";
+        case 2:
+          return "totalWeight";
+      }
+    },
+    curUnit() {
+      switch (this.view) {
+        case 1:
+          return "千卡";
+        case 2:
+          return "克";
+      }
+    },
     ...mapState(["recipesData"]),
   },
   mounted() {
@@ -144,12 +200,22 @@ export default {
     backToAll() {
       this.resetCurrentDay({ currentDay: -1 });
     },
+    getDataName(dim) {
+      switch (this.view) {
+        case 0:
+          return `${dim}Heat`;
+        case 1:
+          return `heat${dim}`;
+        case 2:
+          return `weight${dim}`;
+      }
+    },
     updateChart(data) {
-      // console.log(data);
+      console.log(data);
       this.chart.clear();
       const option = {
         title: {
-          text: !this.view ? "营养分析" : "热量分析",
+          text: this.curTitle,
           subtext: data.name,
         },
         tooltip: {
@@ -170,80 +236,84 @@ export default {
                   `摄入热量：${value.toFixed(1)}千卡`,
                   `供能比：${percent}%`,
                 ].join("</br>")
-              : [
+              : this.view === 1
+              ? [
                   `${marker} ${name}`,
                   `热量：${data[`heat${dim}`].toFixed(1)}千卡`,
                   `供能比：${percent}%`,
+                ].join("</br>")
+              : [
+                  `${marker} ${name}`,
+                  `质量：${data[`weight${dim}`].toFixed(1)}克`,
+                  `占比：${percent}%`,
                 ].join("</br>");
           },
         },
-        graphic:
-          this.view === 1
-            ? [
-                {
-                  type: "group",
-                  top: 60,
-                  left: 10,
-                  silent: true,
-                  children: [
-                    {
+        graphic: !this.view
+          ? []
+          : [
+              {
+                type: "group",
+                top: 60,
+                left: 10,
+                silent: true,
+                children: [
+                  {
+                    type: "text",
+                    style: {
+                      text: this.curTotalText,
+                      fill: "#606266",
+                    },
+                  },
+                  {
+                    type: "text",
+                    top: 18,
+                    left: 8,
+                    style: {
+                      text: `${
+                        data[`${this.curTotalName}`]
+                          ? data[`${this.curTotalName}`].toFixed(1)
+                          : 0
+                      } ${this.curUnit}`,
+                      font: '14px "Microsoft YaHei", sans-serif',
+                    },
+                  },
+                ],
+              },
+              {
+                type: "group",
+                top: 36,
+                right: 10,
+                silent: true,
+                children: Object.keys(this.curNameDict).reduce((arr, cur) => {
+                  const tarData = data[this.getDataName(cur)];
+                  if (tarData) {
+                    arr.push({
                       type: "text",
+                      top: arr.length * 20,
+                      right: 10,
                       style: {
-                        text: "总热量约",
+                        text: `${this.curNameDict[cur]}：${tarData.toFixed(1)}`,
                         fill: "#606266",
                       },
-                    },
-                    {
-                      type: "text",
-                      top: 18,
-                      left: 8,
-                      style: {
-                        text: `${
-                          data.totalHeat ? data.totalHeat.toFixed(1) : 0
-                        }千卡`,
-                        font: '14px "Microsoft YaHei", sans-serif',
-                      },
-                    },
-                  ],
-                },
-                {
-                  type: "group",
-                  top: 36,
-                  right: 10,
-                  silent: true,
-                  children: Object.keys(this.menuDict).reduce((arr, cur) => {
-                    const tarData = data[`heat${cur}`];
-                    if (tarData) {
-                      arr.push({
-                        type: "text",
-                        top: arr.length * 20,
-                        right: 10,
-                        style: {
-                          text: `${this.menuDict[cur]}：${tarData.toFixed(1)}`,
-                          fill: "#606266",
-                        },
-                      });
-                    }
-                    return arr;
-                  }, []),
-                },
-              ]
-            : [],
+                    });
+                  }
+                  return arr;
+                }, []),
+              },
+            ],
         series: [
           {
             name: data.name,
             type: "pie",
             radius: [0, !this.view ? 40 : 60],
             center: ["50%", "55%"],
-            data: (!this.view
-              ? Object.keys(this.nameDict)
-              : Object.keys(this.menuDict)
-            ).reduce((arr, dim) => {
+            data: Object.keys(this.curNameDict).reduce((arr, dim) => {
               if (!this.view || data[`heat${dim}`]) {
                 arr.push({
                   dim,
-                  value: !this.view ? data[`${dim}Heat`] : data[`heat${dim}`],
-                  name: (!this.view ? this.nameDict : this.menuDict)[dim],
+                  value: data[this.getDataName(dim)],
+                  name: this.curNameDict[dim],
                   oriData: data,
                 });
               }
