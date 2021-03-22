@@ -1,12 +1,6 @@
 <template>
   <div class="recipes_build_info_view_wrapper">
     <el-tabs v-model="activeName" @tab-click="handleOnTabClick">
-      <el-tab-pane label="食谱分析" name="0" v-if="showChart">
-        <div class="content">
-          <WeaklyAnalyzeCom v-if="analyseData.length > 1" />
-          <DailyAnalyzeCom v-else />
-        </div>
-      </el-tab-pane>
       <el-tab-pane label="模板信息" name="1" v-if="!!temId">
         <div class="content">
           <TemplateInfoView :data="templateInfo" />
@@ -16,6 +10,12 @@
         <div class="content">
           <HealthyView :data="healthyData" v-if="healthyDataType === 0" dev />
           <BodySignView :data="healthyData" v-else dev />
+        </div>
+      </el-tab-pane>
+      <el-tab-pane label="食谱分析" name="0" v-if="showChart">
+        <div class="content">
+          <WeaklyAnalyzeCom v-if="analyseData.length > 1" />
+          <DailyAnalyzeCom v-else />
         </div>
       </el-tab-pane>
     </el-tabs>
@@ -33,7 +33,7 @@ export default {
   name: "InfoView",
   data() {
     const { temId } = this.$route.query;
-    return { temId, activeName: "0" };
+    return { temId, activeName: !!temId ? "1" : "2" };
   },
   components: {
     HealthyView,
@@ -68,6 +68,9 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+/deep/ :focus {
+  outline: 0;
+}
 .recipes_build_info_view_wrapper {
   .content {
     overflow: auto;

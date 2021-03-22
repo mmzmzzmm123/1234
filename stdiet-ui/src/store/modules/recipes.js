@@ -254,21 +254,28 @@ const actions = {
                       const tarDetail = cur.detail.find(
                         obj => obj.id === igdData.id
                       );
-                      if (tarDetail) {
-                        igdArr.push({
-                          id: igdData.id,
-                          name: igdData.name,
-                          carbonRatio: igdData.carbonRatio,
-                          fatRatio: igdData.fatRatio,
-                          proteinRatio: igdData.proteinRatio,
-                          cusUnit: tarDetail.cus_unit,
-                          cusWeight: tarDetail.cus_weight,
-                          weight: parseFloat(tarDetail.weight),
-                          notRec: igdData.notRec,
-                          rec: igdData.rec,
-                          type: igdData.type
-                        });
+                      if (tarDetail && tarDetail.weight === -1) {
+                        return igdArr;
                       }
+                      igdArr.push({
+                        id: igdData.id,
+                        name: igdData.name,
+                        carbonRatio: igdData.carbonRatio,
+                        fatRatio: igdData.fatRatio,
+                        proteinRatio: igdData.proteinRatio,
+                        cusUnit: tarDetail
+                          ? tarDetail.cus_unit
+                          : igdData.cusUnit,
+                        cusWeight: tarDetail
+                          ? tarDetail.cus_weight
+                          : igdData.cusWeight,
+                        weight: parseFloat(
+                          tarDetail ? tarDetail.weight : igdData.weight
+                        ),
+                        notRec: igdData.notRec,
+                        rec: igdData.rec,
+                        type: igdData.type
+                      });
                     }
                     return igdArr;
                   }, [])
@@ -400,17 +407,12 @@ const actions = {
           }));
         } else if (actionType === "delIgd") {
           // 删除某食材
-          params.detail = mTarDishes.igdList.reduce((arr, igd) => {
-            if (igd.id !== payload.igdId) {
-              arr.push({
-                id: igd.id,
-                weight: igd.weight,
-                cus_unit: igd.cusUnit,
-                cus_weight: igd.cusWeight
-              });
-            }
-            return arr;
-          }, []);
+          params.detail = mTarDishes.igdList.map(igd => ({
+            id: igd.id,
+            weight: igd.id === payload.igdId ? -1 : igd.weight,
+            cus_unit: igd.cusUnit,
+            cus_weight: igd.cusWeight
+          }));
         } else if (actionType === "unit" || actionType === "weight") {
           // 修改食材
           params.detail = mTarDishes.igdList.map(igd => {

@@ -1,6 +1,5 @@
 export function getProcessMenuData(menuData) {
-  // const igdPlanData = {};
-
+  // console.log(menuData)
   const menuList = menuData.reduce((arr, cur) => {
     if (
       cur.dishesId > -1 &&
@@ -42,5 +41,6 @@ export function getProcessMenuData(menuData) {
     }
     return arr;
   }, []);
+  // console.log(menuList);
   return menuList;
 }

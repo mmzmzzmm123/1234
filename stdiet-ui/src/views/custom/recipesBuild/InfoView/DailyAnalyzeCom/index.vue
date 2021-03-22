@@ -95,6 +95,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .daily_analyze_com_wrapper {
+  width: 100%;
   position: relative;
   & > div:not(:nth-child(1)) {
     margin-top: 12px;
