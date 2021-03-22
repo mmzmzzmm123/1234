@@ -106,6 +106,24 @@ export default {
       basicInfo,
       healthyInvestigate: [
         {
+          title: "既往病史/用药史评估",
+          content: [
+            { title: "病史体征", value: "physicalSigns" },
+            { title: "湿气数据", value: "moistureDate" },
+            { title: "气血数据", value: "bloodData" },
+            { title: "家族疾病史", value: "familyIllnessHistory" },
+            { title: "手术史", value: "operationHistory" },
+            { title: "近期是否做过手术", value: "nearOperationFlag" },
+            { title: "手术恢复情况", value: "recoveryeSituation" },
+            { title: "是否长期服用药物", value: "longEatDrugFlag" },
+            { title: "长期服用的药物", value: "longEatDrugClassify" },
+            { title: "是否出现过过敏症状", value: "allergyFlag" },
+            { title: "过敏症状", value: "allergySituation" },
+            { title: "过敏源", value: "allergen" },
+            { title: "忌口过敏食物", value: "dishesIngredient" },
+          ],
+        },
+        {
           title: "减脂经历评估",
           content: [
             { title: "减脂经历", value: "experience" },
@@ -198,24 +216,7 @@ export default {
             { title: "熬夜频次", value: "stayupLateWeekNum" },
           ],
         },
-        {
-          title: "既往病史/用药史评估",
-          content: [
-            { title: "病史体征", value: "physicalSigns" },
-            { title: "湿气数据", value: "moistureDate" },
-            { title: "气血数据", value: "bloodData" },
-            { title: "家族疾病史", value: "familyIllnessHistory" },
-            { title: "手术史", value: "operationHistory" },
-            { title: "近期是否做过手术", value: "nearOperationFlag" },
-            { title: "手术恢复情况", value: "recoveryeSituation" },
-            { title: "是否长期服用药物", value: "longEatDrugFlag" },
-            { title: "长期服用的药物", value: "longEatDrugClassify" },
-            { title: "是否出现过过敏症状", value: "allergyFlag" },
-            { title: "过敏症状", value: "allergySituation" },
-            { title: "过敏源", value: "allergen" },
-            { title: "忌口过敏食物", value: "dishesIngredient" },
-          ],
-        },
+
         {
           title: "体检报告",
           content: [

@@ -1,50 +1,46 @@
 <template>
   <div class="recipes_build_info_view_wrapper">
-    <div class="top" v-if="showChart">
-      <BarChart
-        v-if="analyseData.length > 1"
-        :data="analyseData"
-        height="160px"
-        width="100%"
-        :max="max"
-      />
-      <PieChart
-        v-if="analyseData.length === 1"
-        :data="analyseData"
-        height="160px"
-        width="100%"
-      />
-    </div>
-    <div
-      class="content"
-      :style="`height: calc(100vh - ${showChart ? 192 : 32}px);`"
-    >
-      <TemplateInfoView v-if="!!temId" :data="templateInfo" />
-      <HealthyView :data="healthyData" v-else-if="healthyDataType === 0" dev />
-      <BodySignView :data="healthyData" v-else dev />
-    </div>
+    <el-tabs v-model="activeName" @tab-click="handleOnTabClick">
+      <el-tab-pane label="食谱分析" name="0" v-if="showChart">
+        <div class="content">
+          <WeaklyAnalyzeCom v-if="analyseData.length > 1" />
+          <DailyAnalyzeCom v-else />
+        </div>
+      </el-tab-pane>
+      <el-tab-pane label="模板信息" name="1" v-if="!!temId">
+        <div class="content">
+          <TemplateInfoView :data="templateInfo" />
+        </div>
+      </el-tab-pane>
+      <el-tab-pane label="客户信息" name="2" v-else>
+        <div class="content">
+          <HealthyView :data="healthyData" v-if="healthyDataType === 0" dev />
+          <BodySignView :data="healthyData" v-else dev />
+        </div>
+      </el-tab-pane>
+    </el-tabs>
   </div>
 </template>
 <script>
 import { createNamespacedHelpers } from "vuex";
 const { mapActions, mapState, mapGetters } = createNamespacedHelpers("recipes");
-import BarChart from "./BarChart";
-import PieChart from "./PieChart";
 import TemplateInfoView from "./TemplateInfoView";
 import HealthyView from "@/components/HealthyView";
 import BodySignView from "@/components/BodySignView";
+import WeaklyAnalyzeCom from "./WeaklyAnalyzeCom";
+import DailyAnalyzeCom from "./DailyAnalyzeCom";
 export default {
   name: "InfoView",
   data() {
     const { temId } = this.$route.query;
-    return { temId };
+    return { temId, activeName: "0" };
   },
   components: {
-    BarChart,
-    PieChart,
     HealthyView,
     BodySignView,
     TemplateInfoView,
+    WeaklyAnalyzeCom,
+    DailyAnalyzeCom,
   },
   computed: {
     max() {
@@ -64,16 +60,18 @@ export default {
     ]),
     ...mapGetters(["analyseData"]),
   },
+  methods: {
+    handleOnTabClick(tab) {
+      this.activeName = tab.name;
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>
 .recipes_build_info_view_wrapper {
-  .top {
-    height: 160px;
-  }
-
   .content {
     overflow: auto;
+    height: calc(100vh - 88px);
   }
 }
 </style>
