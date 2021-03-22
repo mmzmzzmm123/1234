@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.stdiet.custom.domain.SysCommision;
 import com.stdiet.custom.domain.SysCommissionDayDetail;
+import com.stdiet.custom.domain.SysCustomer;
 import com.stdiet.custom.domain.SysOrder;
 import com.stdiet.custom.dto.request.SysOrderCommision;
 import org.apache.ibatis.annotations.Param;
@@ -77,4 +78,11 @@ public interface SysOrderMapper
      * @return
      */
     List<SysOrder> selectSimpleOrderMessage(SysCommision sysCommision);
+
+    /**
+     * 查询客户订单数量
+     * @param sysCustomer
+     * @return
+     */
+    int getOrderCountByCustomer(SysCustomer sysCustomer);
 }

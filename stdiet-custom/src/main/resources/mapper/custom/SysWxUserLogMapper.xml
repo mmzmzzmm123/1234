@@ -78,7 +78,7 @@
                 </otherwise>
             </choose>
         </where>
-        order by log_time asc
+        order by log_time desc
     </select>
 
     <select id="selectSysWxUserLogById" parameterType="String" resultMap="SysWxUserLogResult">

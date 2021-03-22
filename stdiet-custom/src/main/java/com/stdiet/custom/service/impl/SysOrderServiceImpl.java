@@ -4,6 +4,7 @@ import com.stdiet.common.annotation.Excel;
 import com.stdiet.common.utils.DateUtils;
 import com.stdiet.common.utils.SecurityUtils;
 import com.stdiet.common.utils.StringUtils;
+import com.stdiet.custom.domain.SysCustomer;
 import com.stdiet.custom.domain.SysOrder;
 import com.stdiet.custom.mapper.SysOrderMapper;
 import com.stdiet.custom.service.ISysCommissionDayService;
@@ -325,5 +326,14 @@ public class SysOrderServiceImpl implements ISysOrderService {
         sysOrderPauseService.deletePauseByOrderId(orderIds);
         //删除食谱计划
         sysRecipesPlanService.delRecipesPlanByOrderId(orderIds);
+    }
+
+    /**
+     * 查询客户订单数量
+     * @param sysCustomer
+     * @return
+     */
+    public int getOrderCountByCustomer(SysCustomer sysCustomer){
+        return sysOrderMapper.getOrderCountByCustomer(sysCustomer);
     }
 }

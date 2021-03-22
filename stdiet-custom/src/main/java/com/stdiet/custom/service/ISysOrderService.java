@@ -3,6 +3,8 @@ package com.stdiet.custom.service;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+
+import com.stdiet.custom.domain.SysCustomer;
 import com.stdiet.custom.domain.SysOrder;
 
 /**
@@ -75,4 +77,11 @@ public interface ISysOrderService
      * @return
      */
     int updateOrderServerEndDate(Long orderId, boolean updatePlan);
+
+    /**
+     * 查询客户订单数量
+     * @param sysCustomer
+     * @return
+     */
+    int getOrderCountByCustomer(SysCustomer sysCustomer);
 }
