@@ -5,18 +5,21 @@
       :max="max"
       title="营养统计"
       type="nutrition"
+      width="364px"
       @onClick="handleOnClick"
     />
     <bar-chart
       :data="caloriesSource"
       title="热量统计"
       type="calories"
+      width="364px"
       @onClick="handleOnClick"
     />
     <bar-chart
       :data="weightSource"
       title="质量统计"
       type="weight"
+      width="364px"
       @onClick="handleOnClick"
     />
   </div>
@@ -103,6 +106,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .weakly_analyze_com_wrapper {
+  width: 100%;
   & > div:not(:nth-child(1)) {
     margin-top: 12px;
   }

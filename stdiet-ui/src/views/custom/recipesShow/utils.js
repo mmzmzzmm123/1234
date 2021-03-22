@@ -1,12 +1,12 @@
 export function getProcessMenuData(menuData) {
-  // const igdPlanData = {};
-
+  // console.log(menuData)
   const menuList = menuData.reduce((arr, cur) => {
     if (
       cur.dishesId > -1 &&
       cur.name &&
       cur.igdList.length > 0 &&
-      cur.type !== "0"
+      cur.type !== "0" &&
+      cur.detail.length > 0
     ) {
       arr.push({
         id: cur.id,
@@ -42,5 +42,6 @@ export function getProcessMenuData(menuData) {
     }
     return arr;
   }, []);
+  // console.log(menuList);
   return menuList;
 }

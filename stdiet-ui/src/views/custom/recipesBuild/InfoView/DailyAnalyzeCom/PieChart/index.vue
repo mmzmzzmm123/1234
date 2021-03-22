@@ -70,7 +70,7 @@ export default {
       this.resetCurrentDay({ currentDay: -1 });
     },
     getTooltipArr(params) {
-      console.log(params);
+      // console.log(params);
       let tooltips;
       const { name, marker, percent, value } = params;
       switch (this.type) {
@@ -101,7 +101,7 @@ export default {
       return tooltips.join("</br>");
     },
     updateChart(source) {
-      console.log(source);
+      // console.log(source);
       const total = source.reduce((acc, cur) => acc + cur[1], 0);
       this.chart.clear();
       const option = {
