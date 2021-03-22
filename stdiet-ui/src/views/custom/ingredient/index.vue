@@ -146,6 +146,16 @@
           </el-tag>
         </template>
       </el-table-column>
+      <el-table-column label="图片" align="center" width="100">
+        <template slot-scope="scope">
+          <img
+            width="100"
+            height="auto"
+            :src="scope.row.imgList[0] ? scope.row.imgList[0].previewUrl : ''"
+            :alt="scope.row.imgList[0] ? scope.row.imgList[0].name : ''"
+          />
+        </template>
+      </el-table-column>
       <el-table-column
         label="食材名称"
         align="center"

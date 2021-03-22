@@ -3,7 +3,10 @@ package com.stdiet.custom.controller;
 import java.util.List;
 
 import com.stdiet.common.utils.StringUtils;
+import com.stdiet.custom.domain.SysCustomerPhysicalSigns;
+import com.stdiet.custom.domain.SysPhysicalSigns;
 import com.stdiet.custom.dto.request.HealthyDetailRequest;
+import com.stdiet.custom.service.ISysCustomerPhysicalSignsService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +31,9 @@ public class SysCustomerHealthyController extends BaseController
 {
     @Autowired
     private ISysCustomerHealthyService sysCustomerHealthyService;
+
+    @Autowired
+    private ISysCustomerPhysicalSignsService sysCustomerPhysicalSignsService;
 
     /**
      * 查询客户健康列表
@@ -119,5 +125,15 @@ public class SysCustomerHealthyController extends BaseController
     public AjaxResult generateHealthyReport(@RequestBody  HealthyDetailRequest healthyDetailRequest)
     {
         return sysCustomerHealthyService.generateHealthyReport(healthyDetailRequest);
+    }
+
+    /**
+     * 修改老的体征数据
+     * @param sysPhysicalSigns
+     * @return
+     */
+    @PutMapping("/edit/physical")
+    public AjaxResult editPhysical(@RequestBody SysCustomerPhysicalSigns sysPhysicalSigns) {
+        return toAjax(sysCustomerPhysicalSignsService.updateSysCustomerPhysicalSigns(sysPhysicalSigns));
     }
 }

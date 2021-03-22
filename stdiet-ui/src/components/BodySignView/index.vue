@@ -2,14 +2,14 @@
   <div class="body_sign_view_wrapper">
     <div>
       <h2>{{ this.data.name }}</h2>
-      <!-- <el-button
+      <el-button
         v-if="dev"
         size="mini"
         type="primary"
         class="remark_btn"
         @click="handleOnRemark"
         >修改备注</el-button
-      > -->
+      >
       <div class="msg-info" v-for="(info, idx) in basicInfo" :key="idx">
         <text-info
           v-for="con in info"
@@ -25,7 +25,7 @@
     <el-dialog title="修改备注" :visible.sync="open" width="480px">
       <el-input
         type="textarea"
-        v-model="data.remark"
+        v-model="data.remarks"
         rows="6"
         placeholder="请输入备注信息"
         maxlength="300"
@@ -40,7 +40,7 @@
 </template>
 <script>
 import TextInfo from "@/components/TextInfo";
-import { updateHealthy } from "@/api/custom/healthy";
+import { editPhysicalSigns } from "@/api/custom/healthy";
 
 export default {
   name: "BodySignView",
@@ -111,7 +111,7 @@ export default {
         { title: "不运动总热量", value: "notSportHeat" },
       ]);
       basicInfo.splice(basicInfo.length, 0, [
-        { title: "备注", value: "remark" },
+        { title: "备注", value: "remarks" },
       ]);
     }
     return {
@@ -127,8 +127,8 @@ export default {
       this.open = false;
     },
     submit() {
-      const { id, remark } = this.data;
-      updateHealthy({ id, remark }).then((res) => {
+      const { id, remarks } = this.data;
+      editPhysicalSigns({ id, remarks }).then((res) => {
         if (res.code === 200) {
           this.$message.success("修改成功");
           this.open = false;
