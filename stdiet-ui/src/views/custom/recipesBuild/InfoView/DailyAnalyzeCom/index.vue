@@ -4,18 +4,22 @@
       title="营养统计"
       :data="nutritionSource"
       type="nutrition"
+      width="364px"
+
       :subTitle="subTitle"
     />
     <pie-chart
       title="热量统计"
       :data="caloriesSource"
       type="calories"
+      width="364px"
       :subTitle="subTitle"
     />
     <pie-chart
       title="质量统计"
       :data="weightSource"
       type="weight"
+      width="364px"
       :subTitle="subTitle"
     />
     <el-button size="mini" type="text" @click="backToAll" class="see_all"
