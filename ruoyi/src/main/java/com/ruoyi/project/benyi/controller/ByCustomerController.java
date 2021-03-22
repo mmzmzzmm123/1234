@@ -112,6 +112,15 @@ public class ByCustomerController extends BaseController {
     @Log(title = "本一-客户关系管理", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody ByCustomer byCustomer) {
+        if (byCustomer.getZhgj().equals("") || byCustomer.getZhgj().equals(null))  {
+            byCustomer.setZhgj("无");
+        }
+        if (byCustomer.getBz().equals("") || byCustomer.getBz().equals(null)) {
+            byCustomer.setBz("无");
+        }
+        if (byCustomer.getXfxm().equals("") || byCustomer.getXfxm().equals(null)) {
+            byCustomer.setXfxm("无");
+        }
         return toAjax(byCustomerService.updateByCustomer(byCustomer));
     }
 
