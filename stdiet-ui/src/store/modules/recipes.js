@@ -512,13 +512,13 @@ const getters = {
         (obj, cur) => {
           cur.igdList.forEach(igd => {
             obj.pWeight += (igd.weight / 100) * igd.proteinRatio;
-            obj.pHeat = obj.pWeight * 4;
+            obj.pCalories = obj.pWeight * 4;
             obj.fWeight += (igd.weight / 100) * igd.fatRatio;
-            obj.fHeat = obj.fWeight * 9;
+            obj.fCalories = obj.fWeight * 9;
             obj.cWeight += (igd.weight / 100) * igd.carbonRatio;
-            obj.cHeat = obj.cWeight * 4;
-            obj.totalHeat = obj.pHeat + obj.fHeat + obj.cHeat;
-            obj[`heat${cur.type}`] +=
+            obj.cCalories = obj.cWeight * 4;
+            obj.totalCalories = obj.pCalories + obj.fCalories + obj.cCalories;
+            obj[`calories${cur.type}`] +=
               (igd.weight / 100) * igd.proteinRatio * 4 +
               (igd.weight / 100) * igd.fatRatio * 9 +
               (igd.weight / 100) * igd.carbonRatio * 4;
@@ -532,17 +532,17 @@ const getters = {
           pWeight: 0,
           fWeight: 0,
           cWeight: 0,
-          pHeat: 0,
-          fHeat: 0,
-          cHeat: 0,
+          pCalories: 0,
+          fCalories: 0,
+          cCalories: 0,
           //
-          totalHeat: 0,
-          heat1: 0,
-          heat2: 0,
-          heat3: 0,
-          heat4: 0,
-          heat5: 0,
-          heat6: 0,
+          totalCalories: 0,
+          calories1: 0,
+          calories2: 0,
+          calories3: 0,
+          calories4: 0,
+          calories5: 0,
+          calories6: 0,
           //
           totalWeight: 0,
           weight1: 0,
@@ -554,7 +554,7 @@ const getters = {
         }
       )
     );
-    console.log(nutriData);
+    // console.log(nutriData);
     return nutriData;
   },
   verifyNotRecData: state => {
