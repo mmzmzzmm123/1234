@@ -5,8 +5,7 @@ export function getProcessMenuData(menuData) {
       cur.dishesId > -1 &&
       cur.name &&
       cur.igdList.length > 0 &&
-      cur.type !== "0" &&
-      cur.detail.length > 0
+      cur.type !== "0"
     ) {
       arr.push({
         id: cur.id,

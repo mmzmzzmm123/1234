@@ -15,7 +15,10 @@
       </div>
       <div v-for="mObj in obj.values" :key="mObj.id">
         <div class="dishes_item">
-          <div v-if="!mObj.methods && !mObj.remark" class="simple_dishes">
+          <div
+            v-if="!mObj.methods && !mObj.remark && !mObj.igdList"
+            class="simple_dishes"
+          >
             <span>{{ mObj.name }}</span>
             <span class="weight_style">
               <span style="margin-right: 20px">{{ mObj.cusStr }}</span>
@@ -87,7 +90,7 @@ export default {
         typeName: this.menuTypeDict[type],
         values: mData[type],
       }));
-      // console.log(mMenus);
+      console.log(mMenus);
       return mMenus;
     },
     ...mapState(["cusUnitDict", "cusWeightDict", "menuTypeDict"]),
