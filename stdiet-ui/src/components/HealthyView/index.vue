@@ -36,13 +36,15 @@
           />
           <div v-else>
             <span :style="{ color: '#8c8c8c' }">{{ con.title }}:</span>
-            <el-button
-              v-if="data[con.value]"
-              type="text"
-              size="mini"
-              @click="handleOnPreviewClick(data[con.value])"
-              >查看</el-button
-            >
+            <el-image
+              title="点击大图预览"
+              fit="contain"
+              style="width: auto; height: 80px"
+              :src="`${window.location.origin}${data[con.value]}`"
+              :preview-src-list="[
+                `${window.location.origin}${data[con.value]}`,
+              ]"
+            />
           </div>
         </div>
       </el-collapse-item>
@@ -61,17 +63,6 @@
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submit">确 定</el-button>
         <el-button @click="onClosed">取 消</el-button>
-      </div>
-    </el-dialog>
-
-    <!-- 预览弹窗 -->
-    <el-dialog
-      :visible.sync="previewVisible"
-      title="体检报告"
-      class="preview_dialog_wrapper"
-    >
-      <div class="preview_content">
-        <img :src="previewUrl" alt="" class="preview_img" />
       </div>
     </el-dialog>
   </div>
@@ -125,8 +116,6 @@ export default {
 
     return {
       open: false,
-      previewVisible: false,
-      previewUrl: "",
       basicInfo,
       healthyInvestigate: [
         {
@@ -267,10 +256,6 @@ export default {
           this.open = false;
         }
       });
-    },
-    handleOnPreviewClick(url) {
-      this.previewVisible = true;
-      this.previewUrl = `${window.location.origin}${url}`;
     },
   },
 };
