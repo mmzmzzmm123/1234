@@ -33,6 +33,7 @@
         <result property="getupTime"    column="getup_time"    />
         <result property="connectTime"    column="connect_time"    />
         <result property="remarks"    column="remarks"    />
+        <result property="remark"    column="remark"    />
         <result property="bloodData"    column="blood_data"    />
         <result property="moistureDate"    column="moisture_date"    />
         <result property="vocation"    column="vocation"    />
@@ -43,6 +44,7 @@
         <result property="updateTime"    column="update_time"    />
         <result property="updateBy"    column="update_by"    />
         <result property="comments" column="comments"/>
+        <result property="avoidFood" column="avoid_food" typeHandler="com.stdiet.custom.typehandler.ArrayJsonHandler" />
         <!-- column是传的参数, select是调用的查询 -->
         <association property="signList" column="physical_signs_id" select="getSignByIds"/>
     </resultMap>
@@ -50,7 +52,7 @@
     <sql id="selectSysCustomerPhysicalSigns">
         select scps.id,scps.customer_id,scps.sex, scps.age, scps.tall, scps.weight, scps.physical_signs_id, scps.dishes_ingredient_id, scps.photo, scps.constipation,
         scps.stayLate, scps.motion, scps.make_food_type, scps.make_food_taste, scps.walk, scps.difficulty, scps.weakness, scps.rebound, scps.crux, scps.position,
-        scps.sleep_time, scps.getup_time, scps.connect_time, scps.remarks, scps.blood_data, scps.moisture_date, scps.vocation,
+        scps.sleep_time, scps.getup_time, scps.connect_time, scps.remarks, scps.remark, scps.avoid_food, scps.blood_data, scps.moisture_date, scps.vocation,
         scps.night, scps.experience, scps.comments, scps.create_time, sc.name, sc.phone
         from sys_customer_physical_signs scps
         left join sys_customer sc on scps.customer_id = sc.id
@@ -100,6 +102,7 @@
             <if test="getupTime != null">getup_time,</if>
             <if test="connectTime != null">connect_time,</if>
             <if test="remarks != null">remarks,</if>
+            <if test="remark != null">remark,</if>
             <if test="bloodData != null">blood_data,</if>
             <if test="moistureDate != null">moisture_date,</if>
             <if test="vocation != null">vocation,</if>
@@ -110,6 +113,7 @@
             <if test="createBy != null">create_by,</if>
             <if test="updateTime != null">update_time,</if>
             <if test="updateBy != null">update_by,</if>
+            <if test="avoidFood != null">avoid_food,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="customerId != null">#{customerId},</if>
@@ -135,6 +139,7 @@
             <if test="getupTime != null">#{getupTime},</if>
             <if test="connectTime != null">#{connectTime},</if>
             <if test="remarks != null">#{remarks},</if>
+            <if test="remark != null">#{remark},</if>
             <if test="bloodData != null">#{bloodData},</if>
             <if test="moistureDate != null">#{moistureDate},</if>
             <if test="vocation != null">#{vocation},</if>
@@ -145,6 +150,7 @@
             <if test="createBy != null">#{createBy},</if>
             <if test="updateTime != null">#{updateTime},</if>
             <if test="updateBy != null">#{updateBy},</if>
+            <if test="avoidFood != null">#{avoid_food, jdbcType=OTHER, typeHandler=com.stdiet.custom.typehandler.ArrayJsonHandler},</if>
         </trim>
     </insert>
 
@@ -174,6 +180,7 @@
             <if test="getupTime != null">getup_time = #{getupTime},</if>
             <if test="connectTime != null">connect_time = #{connectTime},</if>
             <if test="remarks != null">remarks = #{remarks},</if>
+            <if test="remark != null">remark = #{remark},</if>
             <if test="bloodData != null">blood_data = #{bloodData},</if>
             <if test="moistureDate != null">moisture_date = #{moistureDate},</if>
             <if test="vocation != null">vocation = #{vocation},</if>
@@ -184,6 +191,7 @@
             <if test="createBy != null">create_by = #{createBy},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
             <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="avoidFood != null">avoid_food = #{avoidFood, jdbcType=OTHER, typeHandler=com.stdiet.custom.typehandler.ArrayJsonHandler},</if>
         </trim>
         where id = #{id}
     </update>

@@ -311,6 +311,9 @@ export default {
     return {};
   },
   computed: {
+    notIds() {
+      return this.avoidFoodIds.concat(this.notRecIgds);
+    },
     mData() {
       if (!this.data.dishes) {
         return [];
@@ -337,8 +340,8 @@ export default {
                 }
                 lastNameHit =
                   arr[arr.length - 1].name === cur.name &&
-                  arr[arr.length - 1].type === cur.type
-                  // arr[arr.length - 1].dishesId === cur.dishesId;
+                  arr[arr.length - 1].type === cur.type;
+                // arr[arr.length - 1].dishesId === cur.dishesId;
                 if (lastNameHit) {
                   let namePos = arr.length - 1;
                   for (let i = namePos; i >= 0; i--) {
@@ -407,6 +410,7 @@ export default {
       "canCopyMenuTypes",
       "recipesId",
       "notRecIgds",
+      "avoidFoodIds",
     ]),
   },
   methods: {
@@ -416,7 +420,7 @@ export default {
         return "recipes_first_col";
       } else {
         return `recipes_cell recipes_cell_${this.fontSize} ${
-          columnIndex === 2 && this.notRecIgds.includes(row.igdId)
+          columnIndex === 2 && this.notIds.includes(row.igdId)
             ? "warning_heightlight"
             : ""
         }`;

@@ -29,8 +29,10 @@ export default {
         } else if (this.value.includes("\n")) {
           return this.value.split("\n");
         }
+        this.newLine = false;
         return this.value;
       }
+      this.newLine = false;
       return this.value;
     },
   },

@@ -2,14 +2,6 @@
   <div class="health_view_wrapper">
     <div>
       <h2>{{ this.data.name }}</h2>
-      <el-button
-        v-if="dev"
-        size="mini"
-        type="primary"
-        class="remark_btn"
-        @click="handleOnRemark"
-        >修改备注</el-button
-      >
       <div class="msg-info" v-for="(info, idx) in basicInfo" :key="idx">
         <text-info
           v-for="i in info"
@@ -19,6 +11,8 @@
           extraclass="text-info-extra"
         />
       </div>
+      <RemarkCom v-if="dev" :value.sync="data.remark" :id="data.id" />
+      <ACFCom v-if="dev" :value.sync="data.avoidFood" :id="data.id" />
     </div>
     <el-collapse>
       <el-collapse-item
@@ -47,27 +41,12 @@
         </div>
       </el-collapse-item>
     </el-collapse>
-
-    <!-- 备注弹窗 -->
-    <el-dialog title="修改备注" :visible.sync="open" width="480px">
-      <el-input
-        type="textarea"
-        v-model="data.remark"
-        rows="6"
-        placeholder="请输入备注信息"
-        maxlength="300"
-        show-word-limit
-      />
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submit">确 定</el-button>
-        <el-button @click="onClosed">取 消</el-button>
-      </div>
-    </el-dialog>
   </div>
 </template>
 <script>
 import TextInfo from "@/components/TextInfo";
-import { updateHealthy } from "@/api/custom/healthy";
+import ACFCom from "./ACFCom";
+import RemarkCom from "./RemarkCom";
 
 export default {
   name: "HealthyView",
@@ -83,6 +62,8 @@ export default {
   },
   components: {
     "text-info": TextInfo,
+    ACFCom,
+    RemarkCom,
   },
   data() {
     const basicInfo = [
@@ -107,13 +88,9 @@ export default {
       basicInfo.splice(6, 0, [
         { title: "不运动总热量", value: "notSportHeat" },
       ]);
-      basicInfo.splice(basicInfo.length, 0, [
-        { title: "备注", value: "remark" },
-      ]);
     }
 
     return {
-      open: false,
       basicInfo,
       healthyInvestigate: [
         {
@@ -242,21 +219,6 @@ export default {
   methods: {
     getImgUrl(path) {
       return `${window.location.origin}${path}`;
-    },
-    handleOnRemark() {
-      this.open = true;
-    },
-    onClosed() {
-      this.open = false;
-    },
-    submit() {
-      const { id, remark } = this.data;
-      updateHealthy({ id, remark }).then((res) => {
-        if (res.code === 200) {
-          this.$message.success("修改成功");
-          this.open = false;
-        }
-      });
     },
   },
 };
