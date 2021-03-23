@@ -4,6 +4,7 @@ import com.itextpdf.io.util.DateTimeUtil;
 import com.stdiet.common.core.controller.BaseController;
 import com.stdiet.common.core.domain.AjaxResult;
 import com.stdiet.common.core.page.TableDataInfo;
+import com.stdiet.common.utils.DateUtils;
 import com.stdiet.common.utils.StringUtils;
 import com.stdiet.common.utils.oss.AliyunOSSUtils;
 import com.stdiet.common.utils.sign.AesUtils;
@@ -17,8 +18,9 @@ import com.stdiet.custom.service.ISysWxUserLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
 
 /**
  * 微信小程序统一Controller
@@ -95,12 +97,7 @@ public class WechatAppletController extends BaseController {
         }else{
             sysWxUserInfoService.insertSysWxUserInfo(sysWxUserInfo);
         }
-        //查询是否下单
-        SysCustomer param = new SysCustomer();
-        param.setPhone(sysWxUserInfo.getPhone());
-        int orderCount = sysOrderService.getOrderCountByCustomer(param);
-        //返回订单数量
-        return AjaxResult.success(orderCount);
+        return AjaxResult.success();
     }
 
     /**
@@ -109,10 +106,34 @@ public class WechatAppletController extends BaseController {
      * @return
      */
     @GetMapping(value = "/getPunchLogs")
-    public TableDataInfo getPunchLogs(SysWxUserLog sysWxUserLog) {
-        startPage();
-        List<WxLogInfo> list = sysWxUserLogService.selectWxLogInfoList(sysWxUserLog);
-        return getDataTable(list);
+    public AjaxResult getPunchLogs(SysWxUserLog sysWxUserLog) {
+        if(StringUtils.isEmpty(sysWxUserLog.getPhone()) && StringUtils.isEmpty(sysWxUserLog.getOpenid())){
+            return  AjaxResult.error(5001, "缺少参数");
+        }
+        //查询是否下单
+        SysCustomer param = new SysCustomer();
+        param.setPhone(sysWxUserLog.getPhone());
+        int orderCount = sysOrderService.getOrderCountByCustomer(param);
+        if(orderCount > 0){
+            Map<String, Object> result = new HashMap<>();
+            //今日是否已打卡
+            boolean isPunch = false;
+            startPage();
+            List<WxLogInfo> list = sysWxUserLogService.getWxLogInfoList(sysWxUserLog);
+            if(list.size() > 0){
+                WxLogInfo lastLog = list.get(0);
+                if(lastLog.getDate() != null && ChronoUnit.DAYS.between(DateUtils.stringToLocalDate(lastLog.getDate(), "yyyy-MM-dd"), LocalDate.now()) == 0) {
+                    isPunch = true;
+                }
+            }
+            Collections.reverse(list);
+            TableDataInfo tableDataInfo = getDataTable(list);
+            result.put("isPunch", isPunch);
+            result.put("tableDataInfo", tableDataInfo);
+            return AjaxResult.success(result);
+        }else{
+            return AjaxResult.error(5002, "未查询到相关订单信息");
+        }
     }
 
     /**
@@ -135,7 +156,7 @@ public class WechatAppletController extends BaseController {
     public AjaxResult addPunchLog(@RequestBody SysWxUserLog sysWxUserLog) {
         // 查询微信用户
         SysWxUserInfo userInfo = StringUtils.isEmpty(sysWxUserLog.getOpenid()) ? null : sysWxUserInfoService.selectSysWxUserInfoById(sysWxUserLog.getOpenid());
-        if (userInfo == null) {
+        if (userInfo == null || StringUtils.isEmpty(userInfo.getPhone())) {
             return AjaxResult.error("不存在客户");
         }
         //查询今日是否已打卡

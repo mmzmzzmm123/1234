@@ -133,6 +133,7 @@
     <update id="updateSysWxUserLog" parameterType="SysWxUserLog">
         update sys_wx_user_log
         <trim prefix="SET" suffixOverrides=",">
+            <if test="openid != null">openid = #{openid},</if>
             <if test="weight != null">weight = #{weight},</if>
             <if test="appid != null">appid = #{appid},</if>
             <if test="phone != null">phone = #{phone},</if>
@@ -151,7 +152,7 @@
             <if test="updateTime != null">update_time = #{updateTime},</if>
             <if test="remark != null">remark = #{remark},</if>
         </trim>
-        where openid = #{openid}
+        where id = #{id}
     </update>
 
     <delete id="deleteSysWxUserLogById" parameterType="String">
@@ -164,5 +165,12 @@
             #{openid}
         </foreach>
     </delete>
+
+    <!-- 根据openid或手机号查询对应打卡记录 -->
+    <select id="getWxLogInfoList" parameterType="SysWxUserLog" resultMap="WxLogInfo">
+        SELECT wxlog.weight,wxlog.log_time,wxlog.sleep_time, wxlog.wakeup_time,wxlog.defecation, wxlog.water, wxlog.sport  FROM sys_wx_user_log wxlog left join sys_wx_user_info wxinfo on wxinfo.openid  = wxlog.openid
+        where wxinfo.openid = #{openid} or wxinfo.phone = #{phone}
+        order by wxlog.log_time desc
+    </select>
 
 </mapper>

@@ -100,5 +100,12 @@ public class SysWxUserLogServiceImpl implements ISysWxUserLogService {
         return sysWxUserLogMapper.checkWxLogInfoCount(openid);
     }
 
-
+    /**
+     * 根据openid和手机号查询打卡记录
+     * @return
+     */
+    @Override
+    public List<WxLogInfo> getWxLogInfoList(SysWxUserLog sysWxUserLog){
+        return sysWxUserLogMapper.getWxLogInfoList(sysWxUserLog);
+    }
 }
