@@ -122,6 +122,15 @@
         v-hasPermi="['benyi:customer:export']"
         >导出</el-button
       >
+      <el-button
+        type="success"
+        icon="el-icon-s-custom"
+        size="mini"
+        :disabled="single"
+        @click="handleUpdate_fp"
+        v-hasPermi="['benyi:customer:edit']"
+        >分配</el-button
+      >
     </div>
 
     <el-table
@@ -191,6 +200,7 @@
       />
       <el-table-column label="录入时间" align="center" prop="createTime" />
       <el-table-column label="过保时间" align="center" prop="gbtime" />
+      <el-table-column label="已分配给" align="center" prop="fpid" :formatter="userByRoleFormat" />
       <el-table-column
         label="转换跟进"
         show-overflow-tooltip
@@ -350,6 +360,30 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+
+    <!-- 添加或修改本一-客户关系管理对话框 -->
+    <el-dialog :title="title" :visible.sync="open_fp" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="100px">
+        <el-row :gutter="15">
+          <el-col :span="12">
+            <el-form-item label="分配给" prop="fpid">
+              <el-select v-model="form.fpid" placeholder="请选择分配给哪个管理员">
+                <el-option
+                  v-for="dict in customerUserOptions"
+                  :key="dict.userId"
+                  :label="dict.nickName"
+                  :value="dict.userId"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button @click="cancel">取 消</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -362,7 +396,7 @@ import {
   updateCustomer,
   exportCustomer,
 } from "@/api/benyi/customer";
-import { listUser } from "@/api/system/user";
+import { listUser, getUserOnlyByRoleId } from "@/api/system/user";
 import { provinceAndCityDataPlus, CodeToText } from "element-china-area-data";
 
 export default {
@@ -386,10 +420,16 @@ export default {
       customerList: [],
       // 弹出层标题
       title: "",
+      // roleId
+      roleId: 108,
       // 是否显示弹出层
       open: false,
+      open_fp: false,
       gxOptions: [],
       lyOptions: [],
+      roleId: 108,
+      // 角色找人选项
+      customerUserOptions: [],
       // 用户选项
       userOptions: [],
 
@@ -400,6 +440,8 @@ export default {
         // 每页大小
         pageSize: 50,
       },
+
+      
 
       // 查询参数
       queryParams: {
@@ -430,6 +472,7 @@ export default {
         xfxm: undefined,
         xfjz: undefined,
         gbtime: undefined,
+        fpid: undefined,
       },
       // 表单参数
       form: {},
@@ -456,6 +499,7 @@ export default {
       this.lyOptions = response.data;
     });
     this.getUserList();
+    this.getUsersByRole();
   },
   methods: {
     //排序
@@ -476,6 +520,24 @@ export default {
       listUser(null).then((response) => {
         this.userOptions = response.rows;
       });
+    },
+    /** 根据roleid查询用户列表 */
+    getUsersByRole() {
+      getUserOnlyByRoleId(this.roleId).then((response) => {
+        this.customerUserOptions = response.data;
+      });
+    },
+    // 通过roleid查询的教师字典翻译
+    userByRoleFormat(row, column) {
+      var actions = [];
+      var datas = this.customerUserOptions;
+      Object.keys(datas).map((key) => {
+        if (datas[key].userId == "" + row.fpid) {
+          actions.push(datas[key].nickName);
+          return false;
+        }
+      });
+      return actions.join("");
     },
     // 教师字典翻译
     userFormat(row, column) {
@@ -516,6 +578,7 @@ export default {
     // 取消按钮
     cancel() {
       this.open = false;
+      this.open_fp = false;
       this.reset();
     },
     // 表单重置
@@ -544,6 +607,7 @@ export default {
         createTime: undefined,
         createTime: undefined,
         gbtime: undefined,
+        fpid: undefined,
       };
       this.selectedOptions = new Array();
       this.resetForm("form");
@@ -582,6 +646,16 @@ export default {
         this.title = "修改本一-客户关系管理";
       });
     },
+    /** 修改按钮操作 */
+    handleUpdate_fp(row) {
+      this.reset();
+      const id = row.id || this.ids;
+      getCustomer(id).then((response) => {
+        this.form = response.data;
+        this.open_fp = true;
+        this.title = "分配客户";
+      });
+    },
     /** 提交按钮 */
     submitForm: function () {
       this.$refs["form"].validate((valid) => {
@@ -591,6 +665,7 @@ export default {
               if (response.code === 200) {
                 this.msgSuccess("修改成功");
                 this.open = false;
+                this.open_fp = false;
                 this.getList();
               }
             });

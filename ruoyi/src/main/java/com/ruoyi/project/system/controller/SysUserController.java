@@ -171,6 +171,18 @@ public class SysUserController extends BaseController {
     }
 
     /**
+     * 根据roleId获取用户信息列表
+     */
+    //@PreAuthorize("@ss.hasPermi('system:user:query')")
+    @GetMapping(value = {"/onlybyroleid/{roleId}"})
+    public AjaxResult getUserOnlyByRoleId(@PathVariable Long roleId) {
+        AjaxResult ajax = AjaxResult.success();
+        List<SysUser> list = userService.selectUserOnlyByRoleId(roleId);
+        ajax.put(AjaxResult.DATA_TAG, list);
+        return ajax;
+    }
+
+    /**
      * 新增用户
      */
     @PreAuthorize("@ss.hasPermi('system:user:add')")

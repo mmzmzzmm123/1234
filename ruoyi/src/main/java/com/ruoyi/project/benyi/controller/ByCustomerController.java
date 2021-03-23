@@ -43,6 +43,7 @@ public class ByCustomerController extends BaseController {
     @PreAuthorize("@ss.hasPermi('benyi:customer:list')")
     @GetMapping("/list")
     public TableDataInfo list(ByCustomer byCustomer) {
+        byCustomer.setCreateUserid(SecurityUtils.getLoginUser().getUser().getUserId());
         startPage();
         List<ByCustomer> list = byCustomerService.selectByCustomerList(byCustomer);
         return getDataTable(list);
@@ -112,15 +113,25 @@ public class ByCustomerController extends BaseController {
     @Log(title = "本一-客户关系管理", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody ByCustomer byCustomer) {
-        if (byCustomer.getZhgj().equals("") || byCustomer.getZhgj().equals(null))  {
+
+        if (byCustomer.getZhgj() != null) {
+            byCustomer.setZhgj(byCustomer.getZhgj());
+        }else {
             byCustomer.setZhgj("无");
         }
-        if (byCustomer.getBz().equals("") || byCustomer.getBz().equals(null)) {
-            byCustomer.setBz("无");
-        }
-        if (byCustomer.getXfxm().equals("") || byCustomer.getXfxm().equals(null)) {
+
+        if (byCustomer.getXfxm() != null) {
+            byCustomer.setXfxm(byCustomer.getXfxm());
+        }else {
             byCustomer.setXfxm("无");
         }
+
+        if (byCustomer.getBz() != null) {
+            byCustomer.setBz(byCustomer.getBz());
+        }else {
+            byCustomer.setBz("无");
+        }
+
         return toAjax(byCustomerService.updateByCustomer(byCustomer));
     }
 

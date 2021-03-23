@@ -60,6 +60,14 @@ public interface ISysUserService
     public List<SysUser> selectUserListByRoleId(SysUser user);
 
     /**
+     * 根据roleId查询用户列表
+     *
+     * @param roleId 用户信息
+     * @return 用户信息集合信息
+     */
+    public List<SysUser> selectUserOnlyByRoleId(Long roleId);
+
+    /**
      * 根据用户ID查询用户所属角色组
      * 
      * @param userName 用户名

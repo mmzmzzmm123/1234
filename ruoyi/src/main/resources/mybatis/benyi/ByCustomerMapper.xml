@@ -20,6 +20,7 @@
         <result property="shiid" column="shiid"/>
         <result property="khly" column="khly"/>
         <result property="createUserid" column="create_userid"/>
+        <result property="fpid" column="fpid"/>
         <result property="bz" column="bz"/>
         <result property="zhgj" column="zhgj"/>
         <result property="state" column="state"/>
@@ -30,7 +31,7 @@
     </resultMap>
 
     <sql id="selectByCustomerVo">
-        select id, name, sflx, lxdh, wx, dy, qt, schoolname, rs, sheng, shengid, shi, shiid, khly, create_userid, bz, zhgj, state, xfxm, xfjz, gbtime, create_time from by_customer
+        select id, name, sflx, lxdh, wx, dy, qt, fpid, schoolname, rs, sheng, shengid, shi, shiid, khly, create_userid, bz, zhgj, state, xfxm, xfjz, gbtime, create_time from by_customer
     </sql>
 
     <select id="selectByCustomerList" parameterType="ByCustomer" resultMap="ByCustomerResult">
@@ -49,7 +50,8 @@
             <if test="shi != null  and shi != ''">and shi = #{shi}</if>
             <if test="shiid != null  and shiid != ''">and shiid = #{shiid}</if>
             <if test="khly != null  and khly != ''">and khly = #{khly}</if>
-            <if test="createUserid != null ">and create_userid = #{createUserid}</if>
+            <if test="createUserid != null ">and create_userid = #{createUserid} or fpid = #{createUserid}</if>
+            <if test="fpid != null ">and fpid = #{fpid}</if>
             <if test="bz != null  and bz != ''">and bz = #{bz}</if>
             <if test="zhgj != null  and zhgj != ''">and zhgj = #{zhgj}</if>
             <if test="state != null  and state != ''">and state = #{state}</if>
@@ -83,6 +85,7 @@
             <if test="shiid != null  and shiid != ''">shiid,</if>
             <if test="khly != null  and khly != ''">khly,</if>
             <if test="createUserid != null ">create_userid,</if>
+            <if test="fpid != null ">fpid,</if>
             <if test="bz != null  and bz != ''">bz,</if>
             <if test="zhgj != null  and zhgj != ''">zhgj,</if>
             <if test="state != null  and state != ''">state,</if>
@@ -107,6 +110,7 @@
             <if test="shiid != null  and shiid != ''">#{shiid},</if>
             <if test="khly != null  and khly != ''">#{khly},</if>
             <if test="createUserid != null ">#{createUserid},</if>
+            <if test="fpid != null ">#{fpid},</if>
             <if test="bz != null  and bz != ''">#{bz},</if>
             <if test="zhgj != null  and zhgj != ''">#{zhgj},</if>
             <if test="state != null  and state != ''">#{state},</if>
@@ -134,6 +138,7 @@
             <if test="shiid != null  and shiid != ''">shiid = #{shiid},</if>
             <if test="khly != null  and khly != ''">khly = #{khly},</if>
             <if test="createUserid != null ">create_userid = #{createUserid},</if>
+            <if test="fpid != null ">fpid = #{fpid},</if>
             <if test="bz != null  and bz != ''">bz = #{bz},</if>
             <if test="zhgj != null  and zhgj != ''">zhgj = #{zhgj},</if>
             <if test="state != null  and state != ''">state = #{state},</if>

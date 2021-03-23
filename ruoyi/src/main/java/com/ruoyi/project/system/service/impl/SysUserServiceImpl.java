@@ -115,6 +115,19 @@ public class SysUserServiceImpl implements ISysUserService {
     }
 
     /**
+     * 根据roleId查询用户列表
+     *
+     * @param roleId 用户信息
+     * @return 用户信息集合信息
+     */
+    @Override
+    public List<SysUser> selectUserOnlyByRoleId(Long roleId) {
+        return userMapper.selectUserOnlyByRoleId(roleId);
+    }
+
+
+
+    /**
      * 查询用户所属角色组
      *
      * @param userName 用户名

@@ -107,6 +107,9 @@ public class ByCustomer extends BaseEntity {
     //@Excel(name = "创建人", type = Excel.Type.EXPORT, targetAttr = "user_name")
     private Long createUserid;
 
+    // 被分配者
+    private Long fpid;
+
     /**
      * 备注
      */
@@ -336,6 +339,7 @@ public class ByCustomer extends BaseEntity {
                 .append("xfjz", getXfjz())
                 .append("createTime", getCreateTime())
                 .append("gbtime", getGbtime())
+                .append("fpid", getFpid())
                 .toString();
     }
 
@@ -354,5 +358,13 @@ public class ByCustomer extends BaseEntity {
 
     public void setGbtime(Date gbtime) {
         this.gbtime = gbtime;
+    }
+
+    public Long getFpid() {
+        return fpid;
+    }
+
+    public void setFpid(Long fpid) {
+        this.fpid = fpid;
     }
 }
