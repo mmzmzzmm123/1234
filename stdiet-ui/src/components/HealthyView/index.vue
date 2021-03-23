@@ -29,10 +29,21 @@
       >
         <div v-for="con in item.content" :key="con.value">
           <text-info
+            v-if="item.title !== '体检报告'"
             :title="con.title"
             :value="data[con.value]"
             extraclass="text-info-extra"
           />
+          <div v-else>
+            <span :style="{ color: '#8c8c8c' }">{{ con.title }}:</span>
+            <el-image
+              title="点击大图预览"
+              fit="contain"
+              style="width: auto; height: 80px"
+              :src="getImgUrl(data[con.value])"
+              :preview-src-list="[getImgUrl(data[con.value])]"
+            />
+          </div>
         </div>
       </el-collapse-item>
     </el-collapse>
@@ -229,6 +240,9 @@ export default {
     };
   },
   methods: {
+    getImgUrl(path) {
+      return `${window.location.origin}${path}`;
+    },
     handleOnRemark() {
       this.open = true;
     },

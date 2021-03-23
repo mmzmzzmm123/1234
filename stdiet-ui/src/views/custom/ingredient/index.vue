@@ -732,7 +732,7 @@ export default {
       });
     },
     handleOnUploadPreview(file) {
-      console.log(file);
+      // console.log(file);
       this.previewTitle = file.name;
       this.previewVisible = true;
       this.previewUrl = file.url;

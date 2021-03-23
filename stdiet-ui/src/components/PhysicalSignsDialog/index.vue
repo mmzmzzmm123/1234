@@ -6,227 +6,210 @@
     @closed="onClosed"
     :width="dialogWidth"
   >
-    <div style="display:flex;flex-direction:row">
-    <div v-if="showFlag" style="float: left;width: 900px">
-      <div
-        style="float: right; margin-top: -10px; margin-bottom: 10px"
-        v-show="dataList.length > 0"
-      >
-        <!-- 只有新版健康评估信息才可修改，旧的体征数据不支持修改 -->
-        <el-button
-          type="info"
-          v-show="dataType == 0"
-          @click="generateReport()"
-          plain
-          >下载报告</el-button
-        >
-        <el-button
-          type="info"
-          v-show="dataType == 0"
-          @click="handleEditGuidanceClick()"
-          plain
-          >减脂指导</el-button
-        >
-        <el-button
-          v-hasPermi="['custom:healthy:edit']"
-          type="info"
-          v-show="dataType == 0"
-          @click="handleEditRemarkClick()"
-          plain
-          >修改备注</el-button
-        >
-        <el-button
-          v-hasPermi="['custom:healthy:edit']"
-          type="warning"
-          v-show="dataType == 0"
-          @click="handleEditHealthyClick()"
-          plain
-          >修改信息</el-button
-        >
-        <el-button
-          type="danger"
-          v-hasPermi="['custom:healthy:remove']"
-          @click="handleDelete()"
-          plain
-          >删除信息</el-button
-        >
-      </div>
-      <!-- 客户健康评估 -->
-      <div v-if="dataList.length > 0 && dataType == 0">
-        <!-- 基础信息 -->
+    <div style="display: flex; flex-direction: row">
+      <div v-if="showFlag" style="float: left; width: 900px">
         <div
-          v-for="(item, index) in dataList.slice(0, 1)"
-          style="margin-bottom: 50px"
-          :key="index"
+          style="float: right; margin-top: -10px; margin-bottom: 10px"
+          v-show="dataList.length > 0"
         >
-          <div>
-            <p class="p_title_1" style="margin-top: 5px">
-              {{ titleArray[index] }}
-            </p>
-            <table-detail-message :data="item"></table-detail-message>
-          </div>
-          <!-- 备注 -->
-          <el-table
-            :data="remarkList"
-            :show-header="false"
-            border
-            :cell-style="remarkColumnStyle"
-            style="width: 100%"
+          <!-- 只有新版健康评估信息才可修改，旧的体征数据不支持修改 -->
+          <el-button
+            type="info"
+            v-show="dataType == 0"
+            @click="generateReport()"
+            plain
+            >下载报告</el-button
           >
-            <el-table-column width="140" prop="remarkTitle"> </el-table-column>
-            <el-table-column prop="remarkValue">
-              <template slot-scope="scope">
-                <auto-hide-message
-                  :data="scope.row.remarkValue"
-                  :maxLength="100"
-              /></template>
-            </el-table-column>
-          </el-table>
-          <!-- 指导 -->
-          <el-table
-            :data="guidanceList"
-            :show-header="false"
-            border
-            :cell-style="remarkColumnStyle"
-            style="width: 100%"
+          <el-button
+            type="info"
+            v-show="dataType == 0"
+            @click="handleEditGuidanceClick()"
+            plain
+            >减脂指导</el-button
           >
-            <el-table-column width="140" prop="guidanceTitle">
-            </el-table-column>
-            <el-table-column prop="guidanceValue">
-              <template slot-scope="scope">
-                <auto-hide-message
-                  :data="scope.row.guidanceValue"
-                  :maxLength="100"
-              /></template>
-            </el-table-column>
-          </el-table>
+          <el-button
+            v-hasPermi="['custom:healthy:edit']"
+            type="info"
+            v-show="dataType == 0"
+            @click="handleEditRemarkClick()"
+            plain
+            >修改备注</el-button
+          >
+          <el-button
+            v-hasPermi="['custom:healthy:edit']"
+            type="warning"
+            v-show="dataType == 0"
+            @click="handleEditHealthyClick()"
+            plain
+            >修改信息</el-button
+          >
+          <el-button
+            type="danger"
+            v-hasPermi="['custom:healthy:remove']"
+            @click="handleDelete()"
+            plain
+            >删除信息</el-button
+          >
         </div>
-        <!-- 其他信息 -->
-        <div style="height: 390px; overflow: auto">
+        <!-- 客户健康评估 -->
+        <div v-if="dataList.length > 0 && dataType == 0">
+          <!-- 基础信息 -->
           <div
-            v-for="(item, index) in dataList.slice(1, 10)"
+            v-for="(item, index) in dataList.slice(0, 1)"
             style="margin-bottom: 50px"
             :key="index"
           >
             <div>
               <p class="p_title_1" style="margin-top: 5px">
-                {{ titleArray[index + 1] }}
+                {{ titleArray[index] }}
               </p>
-              <table-detail-message
-                :data="item"
-                v-if="index != dataList.length - 2"
-              ></table-detail-message>
-              <el-table
-                :show-header="false"
-                v-if="index == dataList.length - 2"
-                :data="item"
-                border
-                :cell-style="columnStyle"
-                style="width: 100%"
-              >
-                <el-table-column width="140" prop="attr_name_one">
-                </el-table-column>
-                <el-table-column prop="value_one">
-                  <template slot-scope="scope">
-                    <auto-hide-message
-                      :data="
-                        scope.row.value_one == null
-                          ? ''
-                          : scope.row.value_one + ''
-                      "
-                      :maxLength="20"
-                    />
-                    <el-button
-                      type="primary"
-                      v-show="scope.row.value_one"
-                      @click="downloadFile(medicalReportPathArray[0])"
-                      >下载</el-button
-                    >
-                  </template>
-                </el-table-column>
-                <el-table-column
-                  width="140"
-                  prop="attr_name_two"
-                ></el-table-column>
-                <el-table-column prop="value_two">
-                  <template slot-scope="scope">
-                    <auto-hide-message
-                      :data="
-                        scope.row.value_two == null
-                          ? ''
-                          : scope.row.value_two + ''
-                      "
-                      :maxLength="20"
-                    />
-                    <el-button
-                      type="primary"
-                      v-show="scope.row.value_two"
-                      @click="downloadFile(medicalReportPathArray[1])"
-                      >下载</el-button
-                    >
-                  </template>
-                </el-table-column>
-                <el-table-column
-                  width="140"
-                  prop="attr_name_three"
-                ></el-table-column>
-                <el-table-column prop="value_three">
-                  <template slot-scope="scope">
-                    <auto-hide-message
-                      :data="
-                        scope.row.value_three == null
-                          ? ''
-                          : scope.row.value_three + ''
-                      "
-                      :maxLength="20"
-                    />
-                    <el-button
-                      type="primary"
-                      v-show="scope.row.value_three"
-                      @click="downloadFile(medicalReportPathArray[2])"
-                      >下载</el-button
-                    >
-                  </template>
-                </el-table-column>
-              </el-table>
+              <table-detail-message :data="item"></table-detail-message>
+            </div>
+            <!-- 备注 -->
+            <el-table
+              :data="remarkList"
+              :show-header="false"
+              border
+              :cell-style="remarkColumnStyle"
+              style="width: 100%"
+            >
+              <el-table-column width="140" prop="remarkTitle">
+              </el-table-column>
+              <el-table-column prop="remarkValue">
+                <template slot-scope="scope">
+                  <auto-hide-message
+                    :data="scope.row.remarkValue"
+                    :maxLength="100"
+                /></template>
+              </el-table-column>
+            </el-table>
+            <!-- 指导 -->
+            <el-table
+              :data="guidanceList"
+              :show-header="false"
+              border
+              :cell-style="remarkColumnStyle"
+              style="width: 100%"
+            >
+              <el-table-column width="140" prop="guidanceTitle">
+              </el-table-column>
+              <el-table-column prop="guidanceValue">
+                <template slot-scope="scope">
+                  <auto-hide-message
+                    :data="scope.row.guidanceValue"
+                    :maxLength="100"
+                /></template>
+              </el-table-column>
+            </el-table>
+          </div>
+          <!-- 其他信息 -->
+          <div style="height: 390px; overflow: auto">
+            <div
+              v-for="(item, index) in dataList.slice(1, 10)"
+              style="margin-bottom: 50px"
+              :key="index"
+            >
+              <div>
+                <p class="p_title_1" style="margin-top: 5px">
+                  {{ titleArray[index + 1] }}
+                </p>
+                <table-detail-message
+                  :data="item"
+                  v-if="index != dataList.length - 2"
+                ></table-detail-message>
+                <el-table
+                  :show-header="false"
+                  v-if="index == dataList.length - 2"
+                  :data="item"
+                  border
+                  :cell-style="columnStyle"
+                  style="width: 100%"
+                >
+                  <el-table-column width="140" prop="attr_name_one">
+                  </el-table-column>
+                  <el-table-column prop="value_one">
+                    <template slot-scope="scope">
+                      <el-image
+                        v-if="scope.row.value_one"
+                        title="点击大图预览"
+                        style="width: auto; height: 80px"
+                        fit="contain"
+                        :src="getImgUrl(0)"
+                        :preview-src-list="[getImgUrl(0)]"
+                      />
+                    </template>
+                  </el-table-column>
+                  <el-table-column
+                    width="140"
+                    prop="attr_name_two"
+                  ></el-table-column>
+                  <el-table-column prop="value_two">
+                    <template slot-scope="scope">
+                      <el-image
+                        v-if="scope.row.value_two"
+                        title="点击大图预览"
+                        fit="contain"
+                        style="width: auto; height: 80px"
+                        :src="getImgUrl(1)"
+                        :preview-src-list="[getImgUrl(1)]"
+                      />
+                    </template>
+                  </el-table-column>
+                  <el-table-column
+                    width="140"
+                    prop="attr_name_three"
+                  ></el-table-column>
+                  <el-table-column prop="value_three">
+                    <template slot-scope="scope">
+                      <el-image
+                        v-if="scope.row.value_three"
+                        title="点击大图预览"
+                        fit="contain"
+                        style="width: auto; height: 80px"
+                        :src="getImgUrl(2)"
+                        :preview-src-list="[getImgUrl(2)]"
+                      />
+                    </template>
+                  </el-table-column>
+                </el-table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- 客户体征 -->
+        <div v-else>
+          <table-detail-message
+            v-show="dataList.length > 0"
+            :data="dataList"
+          ></table-detail-message>
+          <div
+            v-show="dataList.length == 0"
+            style="font-size: 20px; text-align: center"
+          >
+            <VueQr :text="copyValue" :logoSrc="logo" :size="256" />
+            <div style="text-align: center; margin-top: 20px">
+              <el-button
+                icon="el-icon-share"
+                size="small"
+                title="点击复制链接"
+                class="copyBtn"
+                type="primary"
+                :data-clipboard-text="copyValue"
+                @click="handleCopy()"
+                >健康评估表链接
+              </el-button>
             </div>
           </div>
         </div>
       </div>
-      <!-- 客户体征 -->
-      <div v-else>
-        <table-detail-message
-          v-show="dataList.length > 0"
-          :data="dataList"
-        ></table-detail-message>
-        <div
-          v-show="dataList.length == 0"
-          style="font-size: 20px; text-align: center"
-        >
-          <VueQr :text="copyValue" :logoSrc="logo" :size="256" />
-          <div style="text-align: center; margin-top: 20px">
-            <el-button
-              icon="el-icon-share"
-              size="small"
-              title="点击复制链接"
-              class="copyBtn"
-              type="primary"
-              :data-clipboard-text="copyValue"
-              @click="handleCopy()"
-              >健康评估表链接
-            </el-button>
-          </div>
-        </div>
+      <div style="width: 200px" v-show="guidanceShow">
+        <!-- 编辑减脂指导 -->
+        <physicalSigns-guidance
+          ref="physicalSignsGuidanceDialog"
+          @close="editGuidanceShow(false)"
+          @refreshHealthyData="getCustomerHealthyByCusId()"
+        ></physicalSigns-guidance>
       </div>
-    </div>
-    <div style="width: 200px;" v-show="guidanceShow">
-      <!-- 编辑减脂指导 -->
-      <physicalSigns-guidance
-        ref="physicalSignsGuidanceDialog"
-        @close="editGuidanceShow(false)"
-        @refreshHealthyData="getCustomerHealthyByCusId()"
-      ></physicalSigns-guidance>
-    </div>
     </div>
     <!-- 编辑 -->
     <physicalSigns-edit
@@ -238,7 +221,6 @@
       ref="physicalSignsRemarkDialog"
       @refreshHealthyData="getCustomerHealthyByCusId()"
     ></physicalSigns-remark>
-
   </el-dialog>
 </template>
 <script>
@@ -411,11 +393,13 @@ export default {
       copyValue: "",
       detailHealthy: null,
       dialogWidth: "950px",
-      guidanceShow : false
-
+      guidanceShow: false,
     };
   },
   methods: {
+    getImgUrl(idx) {
+      return `${window.location.origin}${this.medicalReportPathArray[idx]}`;
+    },
     // 自定义列背景色
     columnStyle({ row, column, rowIndex, columnIndex }) {
       if (columnIndex % 2 === 0) {
@@ -781,7 +765,9 @@ export default {
       return signList.length > 0 ? signStr.substring(1) : signStr;
     },
     downloadFile(fileName) {
-      this.downloadResource(fileName);
+      // this.downloadResource(fileName);
+      // this.previewVisible = true;
+      // this.previewUrl = `${window.location.origin}${fileName}`;
     },
     generateReport() {
       let data = this.detailHealthy;
@@ -868,15 +854,15 @@ export default {
         this.healthyData
       );
     },
-    editGuidanceShow(flag){
+    editGuidanceShow(flag) {
       this.guidanceShow = flag;
       this.dialogWidth = flag ? "1200px" : "950px";
-    }
+    },
   },
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .margin-top-20 {
   margin-top: 20px;
 }
@@ -884,5 +870,14 @@ export default {
   font-size: 18px;
   font-weight: bold;
   margin-top: 20px;
+}
+.preview_dialog_wrapper {
+  .preview_content {
+    text-align: center;
+    .preview_img {
+      max-height: 600px;
+      width: auto;
+    }
+  }
 }
 </style>
