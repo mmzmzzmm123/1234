@@ -609,6 +609,12 @@ export function dealHealthy(customerHealthy) {
       ? `，${customerHealthy.otherOperationHistory}`
       : "";
   }
+  if (customerHealthy.hasOwnProperty("medicalReport")) {
+    const urls = customerHealthy.medicalReport.split(",");
+    customerHealthy.medicalReport_one = urls[0];
+    customerHealthy.medicalReport_two = urls[1];
+    customerHealthy.medicalReport_three = urls[2];
+  }
   if (customerHealthy.hasOwnProperty("defecationNum")) {
     customerHealthy.defecationNum += "次/天";
   }

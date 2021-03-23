@@ -29,10 +29,21 @@
       >
         <div v-for="con in item.content" :key="con.value">
           <text-info
+            v-if="item.title !== '体检报告'"
             :title="con.title"
             :value="data[con.value]"
             extraclass="text-info-extra"
           />
+          <div v-else>
+            <span :style="{ color: '#8c8c8c' }">{{ con.title }}:</span>
+            <el-button
+              v-if="data[con.value]"
+              type="text"
+              size="mini"
+              @click="handleOnPreviewClick(data[con.value])"
+              >查看</el-button
+            >
+          </div>
         </div>
       </el-collapse-item>
     </el-collapse>
@@ -50,6 +61,17 @@
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submit">确 定</el-button>
         <el-button @click="onClosed">取 消</el-button>
+      </div>
+    </el-dialog>
+
+    <!-- 预览弹窗 -->
+    <el-dialog
+      :visible.sync="previewVisible"
+      title="体检报告"
+      class="preview_dialog_wrapper"
+    >
+      <div class="preview_content">
+        <img :src="previewUrl" alt="" class="preview_img" />
       </div>
     </el-dialog>
   </div>
@@ -103,6 +125,8 @@ export default {
 
     return {
       open: false,
+      previewVisible: false,
+      previewUrl: "",
       basicInfo,
       healthyInvestigate: [
         {
@@ -243,6 +267,10 @@ export default {
           this.open = false;
         }
       });
+    },
+    handleOnPreviewClick(url) {
+      this.previewVisible = true;
+      this.previewUrl = `${window.location.origin}${url}`;
     },
   },
 };

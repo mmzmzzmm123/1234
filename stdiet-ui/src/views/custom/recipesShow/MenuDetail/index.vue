@@ -90,7 +90,7 @@ export default {
         typeName: this.menuTypeDict[type],
         values: mData[type],
       }));
-      console.log(mMenus);
+      // console.log(mMenus);
       return mMenus;
     },
     ...mapState(["cusUnitDict", "cusWeightDict", "menuTypeDict"]),
