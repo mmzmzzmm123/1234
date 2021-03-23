@@ -1,5 +1,7 @@
 package com.stdiet.custom.domain;
 
+import com.alibaba.fastjson.JSONArray;
+import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonArrayFormatVisitor;
 import lombok.Data;
 import com.stdiet.common.annotation.Excel;
 import com.stdiet.common.core.domain.BaseEntity;
@@ -442,4 +444,6 @@ public class SysCustomerHealthy extends BaseEntity
 
     /** 删除标识 0未删除 1已删除。默认0 */
     private Long delFlag;
+
+    private JSONArray avoidFood;
 }

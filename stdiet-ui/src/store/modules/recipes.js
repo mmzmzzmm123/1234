@@ -39,6 +39,7 @@ const oriState = {
   //
   leftShow: false,
   notRecIgds: [],
+  avoidFoodIds: [],
   igdTypeOptions: []
 };
 
@@ -74,6 +75,9 @@ const mutations = {
         );
       }
     }
+  },
+  updateAvoidFoodIds(state, payload) {
+    state.avoidFoodIds = payload.avoidFoodIds;
   },
   updateFontSize(state, payload) {
     state.fontSize = payload.fontSize;
@@ -215,7 +219,8 @@ const actions = {
     commit("updateStateData", {
       healthDataLoading: false,
       healthyDataType,
-      healthyData
+      healthyData,
+      avoidFoodIds: (healthyData.avoidFood || []).map(obj => obj.id)
     });
   },
   async getRecipesInfo({ commit, state }, payload) {
