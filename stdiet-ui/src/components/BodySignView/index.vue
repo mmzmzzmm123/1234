@@ -10,14 +10,14 @@
         extraclass="text-info-extra"
       />
     </div>
-    <RemarkCom2 v-if="dev" :value.sync="data.remark" :id="data.id" />
-    <ACFCOM2 v-if="dev" :value.sync="data.avoidFood" :id="data.id" />
+    <RemarkComT v-if="dev" :value.sync="data.remark" :id="data.id" />
+    <ACFComT v-if="dev" :value.sync="data.avoidFood" :id="data.id" />
   </div>
 </template>
 <script>
 import TextInfo from "@/components/TextInfo";
-import ACFCOM2 from "./ACFCom2";
-import RemarkCom2 from "./RemarkCom2";
+import ACFComT from "./ACFComT";
+import RemarkComT from "./RemarkComT";
 
 export default {
   name: "BodySignView",
@@ -33,8 +33,8 @@ export default {
   },
   components: {
     "text-info": TextInfo,
-    ACFCOM2,
-    RemarkCom2,
+    ACFComT,
+    RemarkComT,
   },
   data() {
     const basicInfo = [
