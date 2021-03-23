@@ -17,10 +17,10 @@ public interface ISysWxUserLogService
     /**
      * 查询微信用户记录
      *
-     * @param openid 微信用户记录ID
+     * @param id 微信用户记录ID
      * @return 微信用户记录
      */
-    public SysWxUserLog selectSysWxUserLogById(String openid);
+    public SysWxUserLog selectSysWxUserLogById(String id);
 
     /**
      * 查询微信用户记录列表
@@ -51,18 +51,18 @@ public interface ISysWxUserLogService
     /**
      * 批量删除微信用户记录
      *
-     * @param openids 需要删除的微信用户记录ID
+     * @param ids 需要删除的微信用户记录ID
      * @return 结果
      */
-    public int deleteSysWxUserLogByIds(String[] openids);
+    public int deleteSysWxUserLogByIds(String[] ids);
 
     /**
      * 删除微信用户记录信息
      *
-     * @param openid 微信用户记录ID
+     * @param id 微信用户记录ID
      * @return 结果
      */
-    public int deleteSysWxUserLogById(String openid);
+    public int deleteSysWxUserLogById(Long id);
 
     public int checkWxLogInfoCount(String openid);
 
@@ -71,4 +71,12 @@ public interface ISysWxUserLogService
      * @return
      */
     public List<WxLogInfo> getWxLogInfoList(SysWxUserLog sysWxUserLog);
+
+    /**
+     * 根据日期和openid查询打卡记录
+     * @param sysWxUserLog
+     * @return
+     */
+    SysWxUserLog selectSysWxUserLogByDateAndOpenId(SysWxUserLog sysWxUserLog);
+
 }

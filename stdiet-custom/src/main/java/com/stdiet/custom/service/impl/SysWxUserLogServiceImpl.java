@@ -25,12 +25,12 @@ public class SysWxUserLogServiceImpl implements ISysWxUserLogService {
     /**
      * 查询微信用户记录
      *
-     * @param openid 微信用户记录ID
+     * @param id 微信用户记录ID
      * @return 微信用户记录
      */
     @Override
-    public SysWxUserLog selectSysWxUserLogById(String openid) {
-        return sysWxUserLogMapper.selectSysWxUserLogById(openid);
+    public SysWxUserLog selectSysWxUserLogById(String id) {
+        return sysWxUserLogMapper.selectSysWxUserLogById(id);
     }
 
     /**
@@ -76,23 +76,23 @@ public class SysWxUserLogServiceImpl implements ISysWxUserLogService {
     /**
      * 批量删除微信用户记录
      *
-     * @param openids 需要删除的微信用户记录ID
+     * @param ids 需要删除的微信用户记录ID
      * @return 结果
      */
     @Override
-    public int deleteSysWxUserLogByIds(String[] openids) {
-        return sysWxUserLogMapper.deleteSysWxUserLogByIds(openids);
+    public int deleteSysWxUserLogByIds(String[] ids) {
+        return sysWxUserLogMapper.deleteSysWxUserLogByIds(ids);
     }
 
     /**
      * 删除微信用户记录信息
      *
-     * @param openid 微信用户记录ID
+     * @param id 微信用户记录ID
      * @return 结果
      */
     @Override
-    public int deleteSysWxUserLogById(String openid) {
-        return sysWxUserLogMapper.deleteSysWxUserLogById(openid);
+    public int deleteSysWxUserLogById(Long id) {
+        return sysWxUserLogMapper.deleteSysWxUserLogById(id);
     }
 
     @Override
@@ -108,4 +108,14 @@ public class SysWxUserLogServiceImpl implements ISysWxUserLogService {
     public List<WxLogInfo> getWxLogInfoList(SysWxUserLog sysWxUserLog){
         return sysWxUserLogMapper.getWxLogInfoList(sysWxUserLog);
     }
+
+    /**
+     * 根据日期和openid查询打卡记录
+     * @param sysWxUserLog
+     * @return
+     */
+    public SysWxUserLog selectSysWxUserLogByDateAndOpenId(SysWxUserLog sysWxUserLog){
+        return sysWxUserLogMapper.selectSysWxUserLogByDateAndOpenId(sysWxUserLog);
+    }
+
 }

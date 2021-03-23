@@ -11,10 +11,10 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="手机号" prop="phone">
+      <el-form-item label="客户信息" prop="phone">
         <el-input
           v-model="queryParams.phone"
-          placeholder="请输入电话"
+          placeholder="请输入姓名或手机号"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
@@ -27,7 +27,7 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
+      <!--<el-col :span="1.5">
         <el-button
           type="primary"
           icon="el-icon-plus"
@@ -36,7 +36,7 @@
           v-hasPermi="['custom:wxUserLog:add']"
         >新增
         </el-button>
-      </el-col>
+      </el-col>-->
 <!--      <el-col :span="1.5">-->
 <!--        <el-button-->
 <!--          type="success"-->
@@ -86,21 +86,21 @@
         </template>
       </el-table-column>
       <el-table-column label="微信应用" align="center" prop="appid" width="120" :formatter="appidFormat"/>
-      <el-table-column label="姓名" align="center" prop="customer"/>
+      <el-table-column label="姓名" align="center" prop="customerName"/>
 
       <el-table-column label="手机号" align="center" prop="phone" width="180"/>
       <el-table-column label="营养师" align="center" prop="nutritionist"/>
-      <el-table-column label="打卡日期" align="center" prop="logTime" width="180">
+      <el-table-column label="打卡日期" align="center" prop="logTime" width="120">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.logTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="睡觉时间" align="center" prop="sleepTime" width="180">
+      <el-table-column label="睡觉时间" align="center" prop="sleepTime" width="120">
         <!--                <template slot-scope="scope">-->
         <!--                  <span>{{ parseTime(scope.row.sleepTime, '{y}-{m}-{d}') }}</span>-->
         <!--                </template>-->
       </el-table-column>
-      <el-table-column label="起床时间" align="center" prop="wakeupTime" width="180">
+      <el-table-column label="起床时间" align="center" prop="wakeupTime" width="120">
         <!--        <template slot-scope="scope">-->
         <!--          <span>{{ parseTime(scope.row.wakeupTime, '{y}-{m}-{d}') }}</span>-->
         <!--        </template>-->
@@ -114,7 +114,6 @@
           <span>{{`${scope.row.water} ml`}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="备注" align="center" prop="remark"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -154,11 +153,7 @@
               <el-input v-model="form.weight" placeholder="请输入体重"/>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
-            <el-form-item label="电话" prop="phone">
-              <el-input v-model="form.phone" placeholder="请输入电话"/>
-            </el-form-item>
-          </el-col>
+        
           <el-col :span="12">
             <el-form-item label="打卡日期" prop="logTime">
               <el-date-picker clearable size="small" style="width: 200px"
@@ -249,18 +244,7 @@
               <el-input v-model="form.water" placeholder="请输入饮水量"/>
             </el-form-item>
           </el-col>
-          <el-col>
-            <el-form-item label="微信应用" prop="appid">
-              <el-select v-model="form.appid" placeholder="请选择微信appid">
-                <el-option
-                  v-for="dict in appidOptions"
-                  :key="dict.dictValue"
-                  :label="dict.dictLabel"
-                  :value="dict.dictValue"
-                ></el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
+          
           <el-col>
             <el-form-item label="备注" prop="remark">
               <el-input v-model="form.remark" type="textarea" placeholder="请输入内容"/>
@@ -441,8 +425,8 @@
       /** 修改按钮操作 */
       handleUpdate(row) {
         this.reset();
-        const openid = row.openid || this.ids
-        getWxUserLog(openid).then(response => {
+        const id = row.id || this.ids
+        getWxUserLog(id).then(response => {
           this.form = response.data;
           this.open = true;
           this.title = "修改微信用户记录";
@@ -475,13 +459,13 @@
       },
       /** 删除按钮操作 */
       handleDelete(row) {
-        const openids = row.openid || this.ids;
-        this.$confirm('是否确认删除微信用户记录编号为"' + openids + '"的数据项?', "警告", {
+        const ids = row.id || this.ids;
+        this.$confirm('是否确认删除微信用户记录编号为"' + ids + '"的数据项?', "警告", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
         }).then(function () {
-          return delWxUserLog(openids);
+          return delWxUserLog(ids);
         }).then(() => {
           this.getList();
           this.msgSuccess("删除成功");
