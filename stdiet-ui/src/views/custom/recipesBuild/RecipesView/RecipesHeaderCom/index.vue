@@ -44,6 +44,7 @@
           placement="bottom"
           trigger="click"
           title="修改食谱状态"
+          v-if="!!recipesId"
           style="margin-right: 12px"
         >
           <div>
@@ -70,7 +71,6 @@
           <el-button
             slot="reference"
             size="mini"
-            v-if="!!recipesId"
             :type="getReviewType(reviewStatus)"
           >
             {{ getReviewStatusName(reviewStatus) }}

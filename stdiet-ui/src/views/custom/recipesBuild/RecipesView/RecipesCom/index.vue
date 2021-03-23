@@ -337,7 +337,8 @@ export default {
                 }
                 lastNameHit =
                   arr[arr.length - 1].name === cur.name &&
-                  arr[arr.length - 1].type === cur.type;
+                  arr[arr.length - 1].type === cur.type
+                  // arr[arr.length - 1].dishesId === cur.dishesId;
                 if (lastNameHit) {
                   let namePos = arr.length - 1;
                   for (let i = namePos; i >= 0; i--) {
