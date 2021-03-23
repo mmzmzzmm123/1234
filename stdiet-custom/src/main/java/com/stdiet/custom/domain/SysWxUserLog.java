@@ -3,6 +3,7 @@ package com.stdiet.custom.domain;
 import java.math.BigDecimal;
 import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.stdiet.common.annotation.Excel;
@@ -14,9 +15,12 @@ import com.stdiet.common.core.domain.BaseEntity;
  * @author wonder
  * @date 2020-11-29
  */
+@Data
 public class SysWxUserLog extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
+
+    private Long id;
 
     /** 微信openid */
     private String openid;
@@ -68,183 +72,18 @@ public class SysWxUserLog extends BaseEntity
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date logTime;
 
-    /** 非持久字段，客户姓名 + 营养师姓名，使用 , 隔开，用于接收sql查询返回字段 */
-    private String customerMessage;
-
     /**
-     * 非持久化字段，营养师
+     * 非持久化字段，客户姓名
      */
     @Excel(name = "姓名")
-    private String customer;
+    private String customerName;
+
+    //营养师ID
+    private Long nutritionistId;
 
     /**
      * 非持久化字段，营养师
      */
     @Excel(name = "营养师")
     private String nutritionist;
-
-    public void setLogTime(Date logTime) {
-        this.logTime = logTime;
-    }
-
-    public Date getLogTime() {
-        return logTime;
-    }
-
-    public void setOpenid(String openid)
-    {
-        this.openid = openid;
-    }
-
-    public String getOpenid()
-    {
-        return openid;
-    }
-    public void setWeight(BigDecimal weight)
-    {
-        this.weight = weight;
-    }
-
-    public BigDecimal getWeight()
-    {
-        return weight;
-    }
-    public void setAppid(String appid)
-    {
-        this.appid = appid;
-    }
-
-    public String getAppid()
-    {
-        return appid;
-    }
-    public void setPhone(String phone)
-    {
-        this.phone = phone;
-    }
-
-    public String getPhone()
-    {
-        return phone;
-    }
-    public void setSleepTime(String sleepTime)
-    {
-        this.sleepTime = sleepTime;
-    }
-
-    public String getSleepTime()
-    {
-        return sleepTime;
-    }
-    public void setWakeupTime(String wakeupTime)
-    {
-        this.wakeupTime = wakeupTime;
-    }
-
-    public String getWakeupTime()
-    {
-        return wakeupTime;
-    }
-    public void setSport(String sport)
-    {
-        this.sport = sport;
-    }
-
-    public String getSport()
-    {
-        return sport;
-    }
-    public void setAvatarUrl(String avatarUrl)
-    {
-        this.avatarUrl = avatarUrl;
-    }
-
-    public String getAvatarUrl()
-    {
-        return avatarUrl;
-    }
-    public void setDiet(String diet)
-    {
-        this.diet = diet;
-    }
-
-    public String getDiet()
-    {
-        return diet;
-    }
-    public void setInsomnia(String insomnia)
-    {
-        this.insomnia = insomnia;
-    }
-
-    public String getInsomnia()
-    {
-        return insomnia;
-    }
-    public void setDefecation(String defecation)
-    {
-        this.defecation = defecation;
-    }
-
-    public String getDefecation()
-    {
-        return defecation;
-    }
-    public void setWater(Long water)
-    {
-        this.water = water;
-    }
-
-    public Long getWater()
-    {
-        return water;
-    }
-
-    public String getCustomerMessage() {
-        return customerMessage;
-    }
-
-    public void setCustomerMessage(String customerMessage) {
-        this.customerMessage = customerMessage;
-    }
-
-    public String getCustomer() {
-        return customer;
-    }
-
-    public void setCustomer(String customer) {
-        this.customer = customer;
-    }
-
-    public String getNutritionist() {
-        return nutritionist;
-    }
-
-    public void setNutritionist(String nutritionist) {
-        this.nutritionist = nutritionist;
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-                .append("openid", getOpenid())
-                .append("weight", getWeight())
-                .append("appid", getAppid())
-                .append("phone", getPhone())
-                .append("sleepTime", getSleepTime())
-                .append("wakeupTime", getWakeupTime())
-                .append("sport", getSport())
-                .append("avatarUrl", getAvatarUrl())
-                .append("diet", getDiet())
-                .append("insomnia", getInsomnia())
-                .append("defecation", getDefecation())
-                .append("water", getWater())
-                .append("createBy", getCreateBy())
-                .append("createTime", getCreateTime())
-                .append("updateBy", getUpdateBy())
-                .append("updateTime", getUpdateTime())
-                .append("remark", getRemark())
-                .append("logTime", getLogTime())
-                .toString();
-    }
 }

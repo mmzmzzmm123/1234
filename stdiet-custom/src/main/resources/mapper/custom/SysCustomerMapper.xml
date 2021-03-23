@@ -35,15 +35,15 @@
     <select id="selectSysCustomerList" parameterType="SysCustomer" resultMap="SysCustomerResult">
         <include refid="selectSysCustomerVo"/>
         where del_flag = 0
-        <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%') or phone like concat('%', #{name}, '%')</if>
+        <if test="name != null  and name != ''"> and (name like concat('%', #{name}, '%') or phone like concat('%', #{name}, '%'))</if>
         <if test="mainDietitian != null  and mainDietitian != ''"> and main_dietitian = #{mainDietitian}</if>
-        <if test="mainDietitian == 0"> and isnull(main_dietitian) or main_dietitian=0</if>
+        <if test="mainDietitian == 0"> and (isnull(main_dietitian) or main_dietitian=0)</if>
         <if test="salesman != null  and salesman != ''"> and salesman = #{salesman}</if>
-        <if test="salesman == 0"> and isnull(salesman) or salesman=0</if>
+        <if test="salesman == 0"> and (isnull(salesman) or salesman=0)</if>
         <if test="afterDietitian != null  and afterDietitian != ''"> and after_dietitian = #{afterDietitian}</if>
-        <if test="afterDietitian == 0"> and isnull(after_dietitian) or after_dietitian=0</if>
+        <if test="afterDietitian == 0"> and (isnull(after_dietitian) or after_dietitian=0)</if>
         <if test="assistantDietitian != null  and assistantDietitian != ''"> and assistant_dietitian = #{assistantDietitian}</if>
-        <if test="assistantDietitian == 0"> and isnull(assistant_dietitian) or assistant_dietitian=0</if>
+        <if test="assistantDietitian == 0"> and (isnull(assistant_dietitian) or assistant_dietitian=0)</if>
         <if test="fansChannel != null "> and fans_channel = #{fansChannel}</if>
         order by create_time desc
     </select>

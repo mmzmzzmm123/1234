@@ -5,6 +5,7 @@
 <mapper namespace="com.stdiet.custom.mapper.SysWxUserLogMapper">
 
     <resultMap type="SysWxUserLog" id="SysWxUserLogResult">
+        <result property="id"    column="id"    />
         <result property="openid" column="openid"/>
         <result property="weight" column="weight"/>
         <result property="appid" column="appid"/>
@@ -25,7 +26,9 @@
         <result property="updateTime" column="update_time"/>
         <result property="remark" column="remark"/>
         <!-- 非持久字段 -->
-        <result property="customerMessage" column="customer_message"></result>
+        <result property="customerName" column="customer_name"></result>
+        <!-- 营养师 -->
+        <result property="nutritionist" column="nutritionist"></result>
     </resultMap>
 
     <resultMap type="com.stdiet.custom.page.WxLogInfo" id="WxLogInfo">
@@ -41,28 +44,30 @@
     </resultMap>
 
     <sql id="selectSysWxUserLogVo">
-        select openid, weight, appid, phone, log_time, sleep_time, wakeup_time, sport, avatar_url, diet, insomnia, defecation, water, create_by, create_time, update_by, update_time, remark from sys_wx_user_log
-    </sql>
-
-    <sql id="selectBaseField">
-        swul.openid, swul.weight, swul.appid, swul.phone, swul.log_time, swul.sleep_time, swul.wakeup_time, swul.sport, swul.avatar_url, swul.diet, swul.insomnia,
-        swul.defecation, swul.water, swul.create_by, swul.create_time, swul.update_by, swul.update_time, swul.remark
+        select id,openid, weight, appid, phone, log_time, sleep_time, wakeup_time, sport, avatar_url, diet, insomnia, defecation, water, create_by, create_time, update_by, update_time, remark from sys_wx_user_log
     </sql>
 
     <select id="checkWxLogInfoCount" parameterType="String" resultType="Integer">
         select count(*) from sys_wx_user_log where to_days(log_time) = to_days(now()) and openid = #{openid}
     </select>
 
+    <!-- 后台查询 -->
     <select id="selectSysWxUserLogList" parameterType="SysWxUserLog" resultMap="SysWxUserLogResult">
-        select <include refid="selectBaseField"></include>,
-        (select CONCAT(IFNULL(so.customer,''),',',IFNULL(su.nick_name,'')) from (select * from sys_order s where s.phone = swul.phone order by order_id desc limit 1) as so
-        left join sys_user su on su.user_id = so.nutritionist_id and su.del_flag = 0) as customer_message
-        from sys_wx_user_log swul
-        <where>
-            <if test="openid != null  and openid != ''">and swul.openid = #{openid}</if>
-            <if test="phone != null  and phone != ''">or swul.phone = #{phone}</if>
-        </where>
-        order by create_time desc
+        SELECT wxlog.id,wxinfo.appid,wxinfo.openid,wxinfo.avatar_url,wxinfo.phone,wxlog.weight,wxlog.log_time,wxlog.sleep_time, wxlog.wakeup_time,wxlog.defecation, wxlog.water, wxlog.insomnia,wxlog.sport,wxlog.diet,wxlog.remark,
+        sc.name as customer_name, su.nick_name as nutritionist
+        FROM sys_wx_user_log wxlog
+        left join sys_wx_user_info wxinfo on wxinfo.openid  = wxlog.openid
+        left join sys_customer sc on sc.phone = wxinfo.phone and sc.del_flag = 0
+        left join sys_user su on su.user_id = sc.main_dietitian and su.del_flag = '0'
+        where wxinfo.phone is not null
+        <if test="phone != null and phone != ''">and (sc.name like concat('%',#{phone},'%') or wxinfo.phone like  concat('%',#{phone},'%') )</if>
+        <if test="appid != null">
+            and wxinfo.appid = #{appid}
+        </if>
+        <if test="nutritionistId != null">
+            and su.user_id = #{nutritionistId}
+        </if>
+        order by wxlog.create_time desc
     </select>
 
     <select id="selectWxLogInfoList" parameterType="SysWxUserLog" resultMap="WxLogInfo">
@@ -83,7 +88,7 @@
 
     <select id="selectSysWxUserLogById" parameterType="String" resultMap="SysWxUserLogResult">
         <include refid="selectSysWxUserLogVo"/>
-        where openid = #{openid}
+        where id = #{id}
     </select>
 
     <insert id="insertSysWxUserLog" parameterType="SysWxUserLog">
@@ -133,6 +138,7 @@
     <update id="updateSysWxUserLog" parameterType="SysWxUserLog">
         update sys_wx_user_log
         <trim prefix="SET" suffixOverrides=",">
+            <if test="openid != null">openid = #{openid},</if>
             <if test="weight != null">weight = #{weight},</if>
             <if test="appid != null">appid = #{appid},</if>
             <if test="phone != null">phone = #{phone},</if>
@@ -151,18 +157,30 @@
             <if test="updateTime != null">update_time = #{updateTime},</if>
             <if test="remark != null">remark = #{remark},</if>
         </trim>
-        where openid = #{openid}
+        where id = #{id}
     </update>
 
-    <delete id="deleteSysWxUserLogById" parameterType="String">
-        delete from sys_wx_user_log where openid = #{openid}
+    <delete id="deleteSysWxUserLogById" parameterType="Long">
+        delete from sys_wx_user_log where id = #{id}
     </delete>
 
     <delete id="deleteSysWxUserLogByIds" parameterType="String">
-        delete from sys_wx_user_log where openid in
-        <foreach item="openid" collection="array" open="(" separator="," close=")">
-            #{openid}
+        delete from sys_wx_user_log where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
         </foreach>
     </delete>
+
+    <!-- 根据openid或手机号查询对应打卡记录 -->
+    <select id="getWxLogInfoList" parameterType="SysWxUserLog" resultMap="WxLogInfo">
+        SELECT wxlog.weight,wxlog.log_time,wxlog.sleep_time, wxlog.wakeup_time,wxlog.defecation, wxlog.water, wxlog.insomnia,wxlog.sport,wxlog.diet
+        FROM sys_wx_user_log wxlog left join sys_wx_user_info wxinfo on wxinfo.openid  = wxlog.openid
+        where wxinfo.openid = #{openid} or wxinfo.phone = #{phone}
+        order by wxlog.log_time desc
+    </select>
+
+    <select id="selectSysWxUserLogByDateAndOpenId"  parameterType="SysWxUserLog" resultMap="SysWxUserLogResult">
+        select id from sys_wx_user_log where to_days(log_time) = to_days(#{logTime}) and openid = #{openid} limit 1
+    </select>
 
 </mapper>

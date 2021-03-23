@@ -14,6 +14,7 @@ import com.stdiet.custom.page.WxLogInfo;
 import com.stdiet.custom.service.ISysOrderService;
 import com.stdiet.custom.service.ISysWxUserInfoService;
 import com.stdiet.custom.service.ISysWxUserLogService;
+import org.aspectj.weaver.loadtime.Aj;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -47,14 +48,8 @@ public class SysWxUserLogController extends BaseController {
         List<SysWxUserLog> list = sysWxUserLogService.selectSysWxUserLogList(sysWxUserLog);
 
         for (SysWxUserLog userLog : list) {
-            if(userLog.getCustomerMessage() != null){
-                String[] message = userLog.getCustomerMessage().split(",");
-                userLog.setCustomer(message[0]);
-                userLog.setNutritionist(message.length > 1 ? message[1] : "");
-            }
             if (StringUtils.isNotEmpty(userLog.getPhone())) {
                 userLog.setPhone(StringUtils.hiddenPhoneNumber(userLog.getPhone()));
-                //userLog.setPhone(userLog.getPhone().replaceAll("(\\d{3})\\d{4}(\\d{4})", "$1****$2"));
             }
         }
 
@@ -69,6 +64,11 @@ public class SysWxUserLogController extends BaseController {
     @GetMapping("/export")
     public AjaxResult export(SysWxUserLog sysWxUserLog) {
         List<SysWxUserLog> list = sysWxUserLogService.selectSysWxUserLogList(sysWxUserLog);
+        for (SysWxUserLog userLog : list) {
+            if (StringUtils.isNotEmpty(userLog.getPhone())) {
+                userLog.setPhone(StringUtils.hiddenPhoneNumber(userLog.getPhone()));
+            }
+        }
         ExcelUtil<SysWxUserLog> util = new ExcelUtil<SysWxUserLog>(SysWxUserLog.class);
         return util.exportExcel(list, "wxUserLog");
     }
@@ -77,9 +77,11 @@ public class SysWxUserLogController extends BaseController {
      * 获取微信用户记录详细信息
      */
     @PreAuthorize("@ss.hasPermi('custom:wxUserLog:query')")
-    @GetMapping(value = "/{openid}")
-    public AjaxResult getInfo(@PathVariable("openid") String openid) {
-        return AjaxResult.success(sysWxUserLogService.selectSysWxUserLogById(openid));
+    @GetMapping(value = "/{id}")
+    public AjaxResult getInfo(@PathVariable("id") String id) {
+        SysWxUserLog sysWxUserLog = sysWxUserLogService.selectSysWxUserLogById(id);
+        System.out.println(sysWxUserLog.getPhone());
+        return AjaxResult.success(sysWxUserLog);
     }
 
     /**
@@ -89,7 +91,9 @@ public class SysWxUserLogController extends BaseController {
     @Log(title = "微信用户记录", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody SysWxUserLog sysWxUserLog) {
-        return toAjax(sysWxUserLogService.insertSysWxUserLog(sysWxUserLog));
+        //暂时不开放后台增加打卡，因为无法获取到openid
+        //return toAjax(sysWxUserLogService.insertSysWxUserLog(sysWxUserLog));
+        return AjaxResult.error("新增打卡功能暂时关闭");
     }
 
     /**
@@ -99,7 +103,15 @@ public class SysWxUserLogController extends BaseController {
     @Log(title = "微信用户记录", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody SysWxUserLog sysWxUserLog) {
-        return toAjax(sysWxUserLogService.updateSysWxUserLog(sysWxUserLog));
+        if( sysWxUserLog != null && StringUtils.isNotEmpty(sysWxUserLog.getOpenid())){
+            SysWxUserLog dateLog = sysWxUserLogService.selectSysWxUserLogByDateAndOpenId(sysWxUserLog);
+            if(dateLog != null && dateLog.getId().intValue() != sysWxUserLog.getId().intValue()){
+                return AjaxResult.error("今日该用户已打卡，无法重复打卡");
+            }
+            return toAjax(sysWxUserLogService.updateSysWxUserLog(sysWxUserLog));
+        }else{
+            return AjaxResult.error("修改失败");
+        }
     }
 
     /**
@@ -107,9 +119,9 @@ public class SysWxUserLogController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('custom:wxUserLog:remove')")
     @Log(title = "微信用户记录", businessType = BusinessType.DELETE)
-    @DeleteMapping("/{openids}")
-    public AjaxResult remove(@PathVariable String[] openids) {
-        return toAjax(sysWxUserLogService.deleteSysWxUserLogByIds(openids));
+    @DeleteMapping("/{ids}")
+    public AjaxResult remove(@PathVariable String[] ids) {
+        return toAjax(sysWxUserLogService.deleteSysWxUserLogByIds(ids));
     }
 
     @GetMapping(value = "/wx/logs/list")
