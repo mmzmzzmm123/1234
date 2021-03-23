@@ -83,7 +83,7 @@
 <script>
 import { listIngredient } from "@/api/custom/ingredient";
 export default {
-  name: "SimpleIngredientListView2",
+  name: "SimpleIngredientListViewT",
   data() {
     return {
       loading: false,

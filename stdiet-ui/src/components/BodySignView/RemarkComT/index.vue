@@ -31,7 +31,7 @@
 import { editPhysicalSigns } from "@/api/custom/healthy";
 
 export default {
-  name: "RemarkCom2",
+  name: "RemarkComT",
   props: ["value", "id"],
   components: {},
   data() {

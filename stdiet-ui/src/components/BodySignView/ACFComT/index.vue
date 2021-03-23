@@ -27,14 +27,14 @@
 <script>
 import { createNamespacedHelpers } from "vuex";
 const { mapMutations } = createNamespacedHelpers("recipes");
-import SimpleIngredientListView from "./SimpleIngredientListView";
+import SimpleIngredientListViewT from "./SimpleIngredientListViewT";
 import { editPhysicalSigns } from "@/api/custom/healthy";
 
 export default {
-  name: "ACFCom2",
+  name: "ACFComT",
   props: ["value", "id"],
   components: {
-    SimpleIngredientListView,
+    SimpleIngredientListViewT,
   },
   data() {
     return {
