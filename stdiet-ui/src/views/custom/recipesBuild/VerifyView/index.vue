@@ -50,7 +50,7 @@ export default {
       this.activeName = tab.name;
     },
     handleOnDayClick(data) {
-      console.log(data);
+      // console.log(data);
       const { id, numDay } = data;
       if (this.selectedIgd !== id) {
         this.selectedIgd = id;

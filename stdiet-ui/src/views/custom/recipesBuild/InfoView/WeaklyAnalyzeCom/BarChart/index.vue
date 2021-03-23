@@ -144,7 +144,7 @@ export default {
           itemHeight: 8,
           pageIconSize: 10,
           textStyle: {
-            fontSize: 10,
+            fontSize: 12,
           },
         },
         tooltip: {
@@ -173,7 +173,7 @@ export default {
           name: this.type === "weight" ? "质量/克" : "热量/千卡",
           nameTextStyle: {
             color: "#262626",
-            fontSize: 10,
+            fontSize: 12,
           },
         },
         series: source[0].slice(1).map((name, idx) => ({

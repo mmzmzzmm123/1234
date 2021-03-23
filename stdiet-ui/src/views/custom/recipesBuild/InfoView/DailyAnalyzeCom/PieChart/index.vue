@@ -113,9 +113,8 @@ export default {
           left: 100,
           itemWidth: 8,
           itemHeight: 8,
-          pageIconSize: 10,
           textStyle: {
-            fontSize: 10,
+            fontSize: 12,
           },
         },
         dataset: {

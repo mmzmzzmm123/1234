@@ -175,7 +175,7 @@ export default {
   },
   methods: {
     showDrawer(data) {
-      console.log(data);
+      // console.log(data);
       this.data = data;
       if (!this.data) {
         return;
@@ -288,7 +288,7 @@ export default {
       this.reset();
     },
     handleOnDelete(data) {
-      console.log(data);
+      // console.log(data);
 
       this.$confirm("此操作将删除对计划的食谱, 是否继续?", "提示", {
         confirmButtonText: "确定",
