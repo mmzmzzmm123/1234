@@ -134,10 +134,8 @@
                         title="点击大图预览"
                         style="width: auto; height: 80px"
                         fit="contain"
-                        :src="`${window.location.origin}${medicalReportPathArray[0]}`"
-                        :preview-src-list="[
-                          `${window.location.origin}${medicalReportPathArray[0]}`,
-                        ]"
+                        :src="getImgUrl(0)"
+                        :preview-src-list="[getImgUrl(0)]"
                       />
                     </template>
                   </el-table-column>
@@ -152,10 +150,8 @@
                         title="点击大图预览"
                         fit="contain"
                         style="width: auto; height: 80px"
-                        :src="`${window.location.origin}${medicalReportPathArray[1]}`"
-                        :preview-src-list="[
-                          `${window.location.origin}${medicalReportPathArray[1]}`,
-                        ]"
+                        :src="getImgUrl(1)"
+                        :preview-src-list="[getImgUrl(1)]"
                       />
                     </template>
                   </el-table-column>
@@ -166,14 +162,12 @@
                   <el-table-column prop="value_three">
                     <template slot-scope="scope">
                       <el-image
-                        v-if="scope.row.value_two"
+                        v-if="scope.row.value_three"
                         title="点击大图预览"
                         fit="contain"
                         style="width: auto; height: 80px"
-                        :src="`${window.location.origin}${medicalReportPathArray[3]}`"
-                        :preview-src-list="[
-                          `${window.location.origin}${medicalReportPathArray[3]}`,
-                        ]"
+                        :src="getImgUrl(2)"
+                        :preview-src-list="[getImgUrl(2)]"
                       />
                     </template>
                   </el-table-column>
@@ -403,6 +397,9 @@ export default {
     };
   },
   methods: {
+    getImgUrl(idx) {
+      return `${window.location.origin}${this.medicalReportPathArray[idx]}`;
+    },
     // 自定义列背景色
     columnStyle({ row, column, rowIndex, columnIndex }) {
       if (columnIndex % 2 === 0) {

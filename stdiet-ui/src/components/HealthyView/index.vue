@@ -40,10 +40,8 @@
               title="点击大图预览"
               fit="contain"
               style="width: auto; height: 80px"
-              :src="`${window.location.origin}${data[con.value]}`"
-              :preview-src-list="[
-                `${window.location.origin}${data[con.value]}`,
-              ]"
+              :src="getImgUrl(data[con.value])"
+              :preview-src-list="[getImgUrl(data[con.value])]"
             />
           </div>
         </div>
@@ -242,6 +240,9 @@ export default {
     };
   },
   methods: {
+    getImgUrl(path) {
+      return `${window.location.origin}${path}`;
+    },
     handleOnRemark() {
       this.open = true;
     },
