@@ -130,7 +130,7 @@ export default {
           {
             type: "group",
             top: 60,
-            left: 10,
+            left: 8,
             silent: true,
             children: [
               {
@@ -156,7 +156,7 @@ export default {
           {
             type: "group",
             top: 36,
-            right: 10,
+            right: 0,
             silent: true,
             children: source.map((item, idx) => {
               const data =
@@ -170,7 +170,7 @@ export default {
                 style: {
                   text: `${item[0]}：${data.toFixed(1)}${
                     this.type === "calories" ? "千卡" : "克"
-                  }`,
+                  }${` (${((item[1] / total) * 100).toFixed(1)}%`})`,
                   fill: "#606266",
                 },
               };
@@ -181,7 +181,7 @@ export default {
           {
             type: "pie",
             radius: [0, 60],
-            center: ["50%", "55%"],
+            center: ["42%", "55%"],
             // labelLine: {
             //   length: 5,
             //   length2: 5,
