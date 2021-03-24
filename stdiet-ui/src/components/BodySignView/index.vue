@@ -10,14 +10,23 @@
         extraclass="text-info-extra"
       />
     </div>
-    <RemarkComT v-if="dev" :value.sync="data.remark" :id="data.id" />
-    <ACFComT v-if="dev" :value.sync="data.avoidFood" :id="data.id" />
+    <RemarkCom
+      v-if="dev"
+      :value.sync="data.remark"
+      @onConfirm="handleOnConfirm"
+    />
+    <ACFCom
+      v-if="dev"
+      :value.sync="data.avoidFood"
+      @onConfirm="handleOnConfirm"
+    />
   </div>
 </template>
 <script>
 import TextInfo from "@/components/TextInfo";
-import ACFComT from "./ACFComT";
-import RemarkComT from "./RemarkComT";
+import ACFCom from "@/components/HealthyView/ACFCom";
+import RemarkCom from "@/components/HealthyView/RemarkCom";
+import { editPhysicalSigns } from "@/api/custom/healthy";
 
 export default {
   name: "BodySignView",
@@ -33,8 +42,8 @@ export default {
   },
   components: {
     "text-info": TextInfo,
-    ACFComT,
-    RemarkComT,
+    ACFCom,
+    RemarkCom,
   },
   data() {
     const basicInfo = [
@@ -89,22 +98,27 @@ export default {
       basicInfo.splice(6, 0, [
         { title: "不运动总热量", value: "notSportHeat" },
       ]);
+      // basicInfo.splice(basicInfo.length, 0, [
+      //   { title: "备注", value: "remark" },
+      // ]);
     }
     return {
       basicInfo,
     };
   },
+  methods: {
+    handleOnConfirm(data) {
+      editPhysicalSigns({ id: this.data.id, ...data }).then((res) => {
+        if (res.code === 200) {
+          this.$message.success("修改成功");
+        }
+      });
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>
 .body_sign_view_wrapper {
-  position: relative;
-
-  .remark_btn {
-    position: absolute;
-    top: 0;
-    right: 16px;
-  }
   .msg-info {
     display: flex;
     margin-bottom: 8px;

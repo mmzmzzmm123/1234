@@ -8,8 +8,16 @@
       </el-tab-pane>
       <el-tab-pane label="客户信息" name="2" v-else>
         <div class="content">
-          <HealthyView :data="healthyData" v-if="healthyDataType === 0" dev />
-          <BodySignView :data="healthyData" v-else dev />
+          <HealthyView
+            dev
+            :data="healthyDataType === 0 ? healthyData : {}"
+            v-show="healthyDataType === 0"
+          />
+          <BodySignView
+            dev
+            :data="healthyDataType === 1 ? healthyData : {}"
+            v-show="healthyDataType === 1"
+          />
         </div>
       </el-tab-pane>
       <el-tab-pane label="食谱分析" name="0" v-if="showChart">
@@ -59,6 +67,11 @@ export default {
       "templateInfo",
     ]),
     ...mapGetters(["analyseData"]),
+  },
+  watch: {
+    healthyData(val) {
+      console.log({ val });
+    },
   },
   methods: {
     handleOnTabClick(tab) {
