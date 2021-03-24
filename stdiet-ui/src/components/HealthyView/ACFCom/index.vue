@@ -33,10 +33,16 @@ const {
   mapGetters,
 } = createNamespacedHelpers("recipes");
 import SimpleIngredientListView from "./SimpleIngredientListView";
-import { updateHealthy } from "@/api/custom/healthy";
 export default {
   name: "ACFCom",
-  props: ["value", "id"],
+  props: {
+    value: {
+      type: Array,
+      default() {
+        return [];
+      },
+    },
+  },
   components: {
     SimpleIngredientListView,
   },
@@ -47,7 +53,7 @@ export default {
   },
   watch: {
     value(val) {
-      this.data = val;
+      this.data = val || [];
     },
   },
   methods: {
@@ -74,11 +80,7 @@ export default {
       this.handleOnHide();
     },
     handleOnHide() {
-      updateHealthy({ id: this.id, avoidFood: this.data }).then((res) => {
-        if (res.code === 200) {
-          this.$message.success("忌口修改成功");
-        }
-      });
+      this.$emit("onConfirm", { avoidFood: this.data });
     },
     ...mapMutations(["updateAvoidFoodIds"]),
   },

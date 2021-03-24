@@ -1,7 +1,7 @@
 <template>
   <div class="health_view_wrapper">
     <div>
-      <h2>{{ this.data.name }}</h2>
+      <h2>{{ data.name }}</h2>
       <div class="msg-info" v-for="(info, idx) in basicInfo" :key="idx">
         <text-info
           v-for="i in info"
@@ -11,8 +11,16 @@
           extraclass="text-info-extra"
         />
       </div>
-      <RemarkCom v-if="dev" :value.sync="data.remark" :id="data.id" />
-      <ACFCom v-if="dev" :value.sync="data.avoidFood" :id="data.id" />
+      <RemarkCom
+        v-if="dev"
+        :value.sync="data.remark"
+        @onConfirm="handleOnConfirm"
+      />
+      <ACFCom
+        v-if="dev"
+        :value.sync="data.avoidFood"
+        @onConfirm="handleOnConfirm"
+      />
     </div>
     <el-collapse>
       <el-collapse-item
@@ -47,6 +55,7 @@
 import TextInfo from "@/components/TextInfo";
 import ACFCom from "./ACFCom";
 import RemarkCom from "./RemarkCom";
+import { updateHealthy } from "@/api/custom/healthy";
 
 export default {
   name: "HealthyView",
@@ -220,18 +229,18 @@ export default {
     getImgUrl(path) {
       return `${window.location.origin}${path}`;
     },
+    handleOnConfirm(data) {
+      updateHealthy({ id: this.data.id, ...data }).then((res) => {
+        if (res.code === 200) {
+          this.$message.success("修改成功");
+        }
+      });
+    },
   },
 };
 </script>
 <style lang="scss" scoped>
 .health_view_wrapper {
-  position: relative;
-  .remark_btn {
-    position: absolute;
-    top: 0;
-    right: 16px;
-  }
-
   .msg-info {
     display: flex;
     margin-bottom: 8px;

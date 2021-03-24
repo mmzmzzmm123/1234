@@ -28,11 +28,14 @@
   </div>
 </template>
 <script>
-import { updateHealthy } from "@/api/custom/healthy";
-
 export default {
   name: "RemarkCom",
-  props: ["value", "id"],
+  props: {
+    value: {
+      type: String,
+      default: "",
+    },
+  },
   components: {},
   data() {
     return {
@@ -42,6 +45,7 @@ export default {
   },
   watch: {
     value(val) {
+      console.log(val);
       this.nData = val;
     },
     nData(val) {
@@ -70,12 +74,7 @@ export default {
   },
   methods: {
     handleOnHide() {
-      // console.log("handleOnHide");
-      updateHealthy({ id: this.id, remark: this.nData }).then((res) => {
-        if (res.code === 200) {
-          this.$message.success("备注修改成功");
-        }
-      });
+      this.$emit("onConfirm", { remark: this.nData });
     },
   },
 };
