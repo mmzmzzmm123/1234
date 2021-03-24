@@ -785,7 +785,8 @@ export default {
           })
           .then((response) => {
             if (response.code == 200 && response.path != null) {
-              this.download(response.path);
+              //文件路径、获取下载文件名称
+              this.download(response.path, response.downReportFileName);
             }
           })
           .catch(function () {});

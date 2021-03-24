@@ -36,14 +36,11 @@
     </select>
 
     <select id="selectSysWxUserInfoListNot" parameterType="SysWxUserInfo" resultMap="SysWxUserInfoResult">
-        select distinct user.openid, user.nick_name, user.appid, user.phone, user.avatar_url, user.sex, user.update_time from sys_wx_user_info user
-        right join sys_order
-        on user.phone = sys_order.phone
-        <where>
-            <if test="appid != null  and appid != ''">and appid = #{appid}</if>
-            <if test="openid != null  and openid != ''">and openid != #{openid}</if>
-        </where>
-        order by update_time desc
+        select distinct wxuser.openid, wxuser.nick_name, wxuser.appid, wxuser.phone, wxuser.avatar_url, wxuser.sex, wxuser.update_time from sys_wx_user_info wxuser
+        where (SELECT COUNT(wxlog.id) FROM sys_wx_user_log wxlog WHERE wxlog.openid = wxuser.openid) > 0
+        <if test="appid != null  and appid != ''">and wxuser.appid = #{appid}</if>
+        <if test="openid != null and openid != ''">and wxuser.openid  <![CDATA[ <> ]]> #{openid} </if>
+        order by wxuser.update_time desc
     </select>
 
     <select id="selectSysWxUserInfoById" parameterType="String" resultMap="SysWxUserInfoResult">
