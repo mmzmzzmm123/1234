@@ -38,10 +38,8 @@
     <select id="selectSysWxUserInfoListNot" parameterType="SysWxUserInfo" resultMap="SysWxUserInfoResult">
         select distinct wxuser.openid, wxuser.nick_name, wxuser.appid, wxuser.phone, wxuser.avatar_url, wxuser.sex, wxuser.update_time from sys_wx_user_info wxuser
         where (SELECT COUNT(wxlog.id) FROM sys_wx_user_log wxlog WHERE wxlog.openid = wxuser.openid) > 0
-        <where>
-            <if test="appid != null  and appid != ''">and wxuser.appid = #{appid}</if>
-            <if test="openid != null  and openid != ''">and wxuser.openid != #{openid}</if>
-        </where>
+        <if test="appid != null  and appid != ''">and wxuser.appid = #{appid}</if>
+        <if test="openid != null and openid != ''">and wxuser.openid  <![CDATA[ <> ]]> #{openid} </if>
         order by wxuser.update_time desc
     </select>
 

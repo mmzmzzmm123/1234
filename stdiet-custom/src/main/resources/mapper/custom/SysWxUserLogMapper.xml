@@ -171,7 +171,7 @@
         </foreach>
     </delete>
 
-    <!-- 根据openid或手机号查询对应打卡记录 -->
+    <!-- 根据openid和手机号查询对应打卡记录 -->
     <select id="getWxLogInfoList" parameterType="SysWxUserLog" resultMap="WxLogInfo">
         SELECT wxlog.weight,wxlog.log_time,wxlog.sleep_time, wxlog.wakeup_time,wxlog.defecation, wxlog.water, wxlog.insomnia,wxlog.sport,wxlog.diet
         FROM sys_wx_user_log wxlog left join sys_wx_user_info wxinfo on wxinfo.openid  = wxlog.openid
@@ -181,6 +181,22 @@
 
     <select id="selectSysWxUserLogByDateAndOpenId"  parameterType="SysWxUserLog" resultMap="SysWxUserLogResult">
         select id from sys_wx_user_log where to_days(log_time) = to_days(#{logTime}) and openid = #{openid} limit 1
+    </select>
+
+    <!-- 根据手机号和openid查询打卡连续天数，只查询前两条 -->
+    <select id="getContinuity" parameterType="SysWxUserLog" resultType="Map">
+        SELECT yearMonth,MIN(log_time) AS minLogTime,MAX(log_time) AS maxLogTime,COUNT(*) AS continuityDayCount FROM
+          (
+            SELECT log_time,yearMonth,(days-date_rank) AS day_cha FROM
+            (
+                SELECT *,row_number() over(PARTITION BY yearMonth ORDER BY log_time) date_rank  FROM
+                (
+                    SELECT log_time,CONCAT(YEAR(log_time),'-',MONTH(log_time)) AS yearMonth,DAY(log_time) AS days
+                    FROM sys_wx_user_log wxlog left join sys_wx_user_info wxinfo on wxinfo.openid  = wxlog.openid
+                    where wxinfo.openid = #{openid} or wxinfo.phone = #{phone}
+                ) AS s ORDER BY s.log_time DESC
+            ) ss
+        ) sss GROUP BY yearMonth,day_cha LIMIT 2
     </select>
 
 </mapper>
