@@ -98,8 +98,8 @@ export function selectDictLabels(datas, value, separator) {
 }
 
 // 通用下载方法（导出Excel,下载之后删除）
-export function download(fileName) {
-  window.location.href = baseURL + "/common/download?fileName=" + encodeURI(fileName) + "&delete=" + true;
+export function download(fileName, downFileName) {
+  window.location.href = baseURL + "/common/download?fileName=" + encodeURI(fileName) + "&delete=" + true + "&downFileName=" + (downFileName != undefined ? encodeURI(downFileName) : "");
 }
 
 // 通用下载本地资源方法

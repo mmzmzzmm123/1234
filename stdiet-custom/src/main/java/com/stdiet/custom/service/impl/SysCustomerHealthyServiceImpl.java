@@ -38,6 +38,8 @@ public class SysCustomerHealthyServiceImpl implements ISysCustomerHealthyService
     @Autowired
     private ISysCustomerService sysCustomerService;
 
+    public static final String reportDownFileNameFormat = "%s超重%s斤%s";
+
     /**
      * 查询客户健康
      *
@@ -164,8 +166,10 @@ public class SysCustomerHealthyServiceImpl implements ISysCustomerHealthyService
         //查询客户健康信息
         SysCustomerHealthy sysCustomerHealthy = selectSysCustomerHealthyById(healthyDetailRequest.getId());
         if(sysCustomerHealthy != null){
-            ajaxResult = PdfUtils.generatePdfFile(templatePath, filePath, getReportData(sysCustomerHealthy, healthyDetailRequest));
+            Map<String, String> reportData = getReportData(sysCustomerHealthy, healthyDetailRequest);
+            ajaxResult = PdfUtils.generatePdfFile(templatePath, filePath, reportData);
             ajaxResult.put("path", fileName);
+            ajaxResult.put("downReportFileName", reportData.get("downReportFileName")+".pdf");
         }
         return ajaxResult;
     }
@@ -235,6 +239,11 @@ public class SysCustomerHealthyServiceImpl implements ISysCustomerHealthyService
         }
         data.put("company","深圳胜唐体控有限公司");
         data.put("date", DateUtils.getDate());
+
+        //文件下载时的名称，名字+超重几斤+病史体征
+        String sign = StringUtils.isEmpty(healthyDetailRequest.getPhysicalSigns()) ? "" : healthyDetailRequest.getPhysicalSigns().replace("，","").replace(",","").replace("/", "");
+        String downReportFileName = String.format(reportDownFileNameFormat, healthyDetailRequest.getName(), nutritionalCalories.getOverWeight() > 0 ? nutritionalCalories.getOverWeight().toString() : "0", sign);
+        data.put("downReportFileName", downReportFileName);
         return data;
     }
 

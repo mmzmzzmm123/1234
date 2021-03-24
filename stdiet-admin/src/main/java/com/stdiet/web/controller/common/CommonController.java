@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.net.URLDecoder;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -46,12 +47,18 @@ public class CommonController {
      * @param delete   是否删除
      */
     @GetMapping("common/download")
-    public void fileDownload(String fileName, Boolean delete, HttpServletResponse response, HttpServletRequest request) {
+    public void fileDownload(String fileName, Boolean delete, String downFileName,HttpServletResponse response, HttpServletRequest request) {
         try {
+            if(StringUtils.isEmpty(fileName)){
+                return;
+            }
+            //解码
+            fileName = URLDecoder.decode(fileName, "UTF-8");
+            downFileName = StringUtils.isEmpty(downFileName) ? null : URLDecoder.decode(downFileName, "UTF-8");
             if (!FileUtils.isValidFilename(fileName)) {
                 throw new Exception(StringUtils.format("文件名称({})非法，不允许下载。 ", fileName));
             }
-            String realFileName = System.currentTimeMillis() + fileName.substring(fileName.indexOf("_") + 1);
+            String realFileName = (downFileName != null && downFileName.length() <= 200) ? downFileName : System.currentTimeMillis() + fileName.substring(fileName.indexOf("_") + 1);
             String filePath = RuoYiConfig.getDownloadPath() + fileName;
 
             response.setCharacterEncoding("utf-8");
