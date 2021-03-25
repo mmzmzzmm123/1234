@@ -504,6 +504,8 @@ export default {
         igdId: data.igdId,
         weight,
         actionType: "weight",
+      }).catch((err) => {
+        this.$message.error(err);
       });
     },
     handleOnCustomUnitChange(data, { cusWeight, cusUnit }) {
@@ -517,6 +519,8 @@ export default {
         cusWeight,
         cusUnit,
         actionType: "unit",
+      }).catch((err) => {
+        this.$message.error(err);
       });
     },
     handleOnDishesConfirm({ type, data }) {
@@ -547,6 +551,8 @@ export default {
         id,
         type,
         actionType: "menuType",
+      }).catch((err) => {
+        this.$message.error(err);
       });
     },
     handleOnMenuTypeClick(data) {
@@ -560,6 +566,8 @@ export default {
         id,
         igdId,
         actionType: "delIgd",
+      }).catch((err) => {
+        this.$message.error(err);
       });
     },
     handleOnEditRemark(data) {
@@ -573,6 +581,8 @@ export default {
         id,
         remark,
         actionType: "remark",
+      }).catch((err) => {
+        this.$message.error(err);
       });
     },
     ...mapActions([

@@ -103,6 +103,7 @@
             <if test="type != null  and type != ''">and type = #{type}</if>
             <if test="area != null  and area != ''">and area = #{area}</if>
             <if test="reviewStatus != null and reviewStatus != ''">and review_status = #{reviewStatus}</if>
+            <if test="true">and del_flag=0</if>
         </where>
     </select>
 
@@ -167,19 +168,19 @@
         delete from sys_ingredient_not_rec where ingredient_id=#{ingredientId}
     </delete>
 
-    <delete id="deleteIngredientRecByIngredientIds" parameterType="Long">
-        delete from sys_ingredient_rec where ingredient_id in
-        <foreach item="id" collection="array" open="(" separator="," close=")">
-            #{id}
-        </foreach>
-    </delete>
+    <!--    <delete id="deleteIngredientRecByIngredientIds" parameterType="Long">-->
+    <!--        delete from sys_ingredient_rec where ingredient_id in-->
+    <!--        <foreach item="id" collection="array" open="(" separator="," close=")">-->
+    <!--            #{id}-->
+    <!--        </foreach>-->
+    <!--    </delete>-->
 
-    <delete id="deleteIngredientNotRecByIngredientIds" parameterType="String">
-        delete from sys_ingredient_not_rec where ingredient_id in
-        <foreach item="id" collection="array" open="(" separator="," close=")">
-            #{id}
-        </foreach>
-    </delete>
+    <!--    <delete id="deleteIngredientNotRecByIngredientIds" parameterType="String">-->
+    <!--        delete from sys_ingredient_not_rec where ingredient_id in-->
+    <!--        <foreach item="id" collection="array" open="(" separator="," close=")">-->
+    <!--            #{id}-->
+    <!--        </foreach>-->
+    <!--    </delete>-->
 
     <update id="updateSysIngredient" parameterType="SysIngredient">
         update sys_ingredient
@@ -201,16 +202,9 @@
         where id = #{id}
     </update>
 
-    <delete id="deleteSysIngredientById" parameterType="Long">
-        delete from sys_ingredient where id = #{id}
-    </delete>
-
-    <delete id="deleteSysIngredientByIds" parameterType="String">
-        delete from sys_ingredient where id in
-        <foreach item="id" collection="array" open="(" separator="," close=")">
-            #{id}
-        </foreach>
-    </delete>
+    <update id="deleteSysIngredientById" parameterType="Long">
+        update sys_ingredient set del_flag=1 where id = #{id}
+    </update>
 
     <!-- 根据食材名称查询食材 -->
     <select id="selectSysIngredientByName" parameterType="String" resultMap="SysIngredientResult">

@@ -5,37 +5,37 @@
 <mapper namespace="com.stdiet.custom.mapper.SysDishesMapper">
 
     <resultMap type="SysDishes" id="SysDishesResult">
-        <result property="id"    column="id"    />
-        <result property="name"    column="name"    />
-        <result property="bigClass"    column="big_class"    />
-        <result property="smallClass"    column="small_class"    />
-        <result property="type"    column="type"    />
-        <result property="isMain"    column="is_main"    />
-        <result property="methods"    column="methods"    />
-        <result property="reviewStatus" column="review_status" />
-        <result property="createBy"    column="create_by"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="updateBy"    column="update_by"    />
-        <result property="updateTime"    column="update_time"    />
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="bigClass" column="big_class"/>
+        <result property="smallClass" column="small_class"/>
+        <result property="type" column="type"/>
+        <result property="isMain" column="is_main"/>
+        <result property="methods" column="methods"/>
+        <result property="reviewStatus" column="review_status"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
 
         <!-- 非持久化字段 -->
-        <result property="bigClassName"    column="bigClassName"    />
-        <result property="smallClassName"    column="smallClassName"    />
+        <result property="bigClassName" column="bigClassName"/>
+        <result property="smallClassName" column="smallClassName"/>
     </resultMap>
 
     <resultMap type="SysDishesIngredient" id="SysDishesIngredientResult">
-        <result property="id"    column="id"    />
-        <result property="name"    column="name"    />
-        <result property="type"    column="type"    />
-        <result property="proteinRatio"    column="protein_ratio"    />
-        <result property="fatRatio"    column="fat_ratio"    />
-        <result property="carbonRatio"    column="carbon_ratio"    />
-        <result property="area"    column="area"    />
-        <result property="rec"    column="rec"    />
-        <result property="notRec"    column="not_rec"    />
-        <result property="cusWeight"    column="cus_weight"    />
-        <result property="cusUnit"    column="cus_unit"    />
-        <result property="weight"    column="weight"    />
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="type" column="type"/>
+        <result property="proteinRatio" column="protein_ratio"/>
+        <result property="fatRatio" column="fat_ratio"/>
+        <result property="carbonRatio" column="carbon_ratio"/>
+        <result property="area" column="area"/>
+        <result property="rec" column="rec"/>
+        <result property="notRec" column="not_rec"/>
+        <result property="cusWeight" column="cus_weight"/>
+        <result property="cusUnit" column="cus_unit"/>
+        <result property="weight" column="weight"/>
     </resultMap>
 
     <sql id="selectSysDishesVo">
@@ -45,12 +45,13 @@
     <select id="selectSysDishesList" parameterType="SysDishes" resultMap="SysDishesResult">
         <include refid="selectSysDishesVo"/>
         <where>
-            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
-            <if test="type != null  and type != ''"> and FIND_IN_SET(#{type}, type)</if>
-            <if test="bigClass != null"> and big_class = #{bigClass}</if>
-            <if test="smallClass != null"> and small_class = #{smallClass}</if>
-            <if test="reviewStatus != null  and type != ''"> and review_status = #{reviewStatus}</if>
-            <if test="isMain != null  and type != ''"> and is_main = #{isMain}</if>
+            <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
+            <if test="type != null  and type != ''">and FIND_IN_SET(#{type}, type)</if>
+            <if test="bigClass != null">and big_class = #{bigClass}</if>
+            <if test="smallClass != null">and small_class = #{smallClass}</if>
+            <if test="reviewStatus != null  and type != ''">and review_status = #{reviewStatus}</if>
+            <if test="isMain != null  and type != ''">and is_main = #{isMain}</if>
+            <if test="true">and del_flag=0</if>
         </where>
         order by id desc
     </select>
@@ -82,7 +83,7 @@
     </sql>
 
     <select id="selectSysIngreditentsById" parameterType="Long" resultMap="SysDishesIngredientResult">
-        <include refid="selectSysIngreditentsByIdVo" >
+        <include refid="selectSysIngreditentsByIdVo">
             <property name="id" value="#{id}"/>
         </include>
     </select>
@@ -140,16 +141,16 @@
         where id = #{id}
     </update>
 
-    <delete id="deleteSysDishesById" parameterType="Long">
-        delete from sys_dishes where id = #{id}
-    </delete>
+    <update id="deleteSysDishesById" parameterType="Long">
+        update sys_dishes set del_flag=1 where id = #{id}
+    </update>
 
-    <delete id="deleteSysDishesByIds" parameterType="String">
-        delete from sys_dishes where id in
-        <foreach item="id" collection="array" open="(" separator="," close=")">
-            #{id}
-        </foreach>
-    </delete>
+    <!--    <delete id="deleteSysDishesByIds" parameterType="String">-->
+    <!--        delete from sys_dishes where id in-->
+    <!--        <foreach item="id" collection="array" open="(" separator="," close=")">-->
+    <!--            #{id}-->
+    <!--        </foreach>-->
+    <!--    </delete>-->
 
     <delete id="deleteIngredientById" parameterType="Long">
         delete from sys_dishes_ingredient where dishes_id = #{id}
@@ -163,7 +164,8 @@
     </delete>
 
     <insert id="bashInsertDishesIngredent">
-        insert into sys_dishes_ingredient(dishes_id, ingredient_id, ingredient_weight, cus_unit, cus_weight, remark) values
+        insert into sys_dishes_ingredient(dishes_id, ingredient_id, ingredient_weight, cus_unit, cus_weight, remark)
+        values
         <foreach collection="list" separator="," item="item" index="index">
             (#{item.dishesId}, #{item.ingredientId}, #{item.weight}, #{item.cusUnit}, #{item.cusWeight}, #{item.remark})
         </foreach>

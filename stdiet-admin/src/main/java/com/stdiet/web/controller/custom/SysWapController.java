@@ -11,6 +11,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
 @RestController
 @RequestMapping("/wap")
 public class SysWapController extends BaseController {
@@ -69,11 +73,17 @@ public class SysWapController extends BaseController {
 
     /**
      * 获取完整食谱
+     *
      * @param id
      * @return
      */
-    @GetMapping(value = "recipes/{id}")
+    @GetMapping(value = "/recipes/{id}")
     public AjaxResult recipesDetail(@PathVariable Long id) {
         return AjaxResult.success(iSysRecipesService.selectSysRecipesByRecipesId(id));
     }
+
+//    @GetMapping(value = "/qrcode")
+//    public void qrcodeRediredt(String group, HttpServletRequest request, HttpServletResponse response) throws IOException {
+//        response.sendRedirect("https://weibo.com/u/1913360251");
+//    }
 }

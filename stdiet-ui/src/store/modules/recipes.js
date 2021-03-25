@@ -437,6 +437,8 @@ const actions = {
         const result = await updateDishesDetailApi(params);
         if (result.code === 200) {
           commit("updateRecipesDishesDetail", payload);
+        } else {
+          return new Promise((res, rej) => rej(result.msg));
         }
       }
     } else {
