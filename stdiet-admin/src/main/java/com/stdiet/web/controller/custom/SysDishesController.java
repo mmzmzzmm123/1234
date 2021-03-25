@@ -116,8 +116,8 @@ public class SysDishesController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('custom:dishes:remove')")
     @Log(title = "菜品", businessType = BusinessType.DELETE)
-    @DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids) {
-        return toAjax(sysDishesService.deleteSysDishesByIds(ids));
+    @DeleteMapping("/{id}")
+    public AjaxResult remove(@PathVariable Long id) {
+        return toAjax(sysDishesService.deleteSysDishesById(id));
     }
 }

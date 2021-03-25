@@ -53,7 +53,7 @@ public interface ISysDishesService
      * @param ids 需要删除的菜品ID
      * @return 结果
      */
-    public int deleteSysDishesByIds(Long[] ids);
+//    public int deleteSysDishesByIds(Long[] ids);
 
     /**
      * 删除菜品信息
