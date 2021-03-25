@@ -568,13 +568,15 @@ export default {
       detailHealthy.secondSmoke = detailHealthy.secondSmoke == 1 ? "是" : "否";
       let smokeRateString = "";
       if (detailHealthy.smokeRate != null) {
-        detailHealthy.smokeRate.split(",").forEach(function (item, index) {
-          smokeRateString +=
-            (smokeRateString != "" ? "，" : "") +
-            healthyData["smokeRateArray"][index] +
-            item +
-            healthyData["smokeRateUnitArray"][index];
-        });
+        (detailHealthy.smokeRate || "")
+          .split(",")
+          .forEach(function (item, index) {
+            smokeRateString +=
+              (smokeRateString != "" ? "，" : "") +
+              healthyData["smokeRateArray"][index] +
+              item +
+              healthyData["smokeRateUnitArray"][index];
+          });
       }
       detailHealthy.smokeRate = smokeRateString;
       detailHealthy.defecationNum = detailHealthy.defecationNum + "次/天";
@@ -686,7 +688,7 @@ export default {
             ? medicalReportNameArray[2]
             : "体检报告（3）"
           : "";
-      detailHealthy.moistureDate = detailHealthy.moistureDate
+      detailHealthy.moistureDate = (detailHealthy.moistureDate || "")
         .split(",")
         .reduce((arr, cur) => {
           const tarData = healthyData.moistureDateArray.find(
@@ -697,7 +699,7 @@ export default {
           }
           return arr;
         }, []);
-      detailHealthy.bloodData = detailHealthy.bloodData
+      detailHealthy.bloodData = (detailHealthy.bloodData || "")
         .split(",")
         .reduce((arr, cur) => {
           const tarData = healthyData.bloodDataArray.find(
