@@ -61,7 +61,7 @@ public interface SysIngredientMapper {
      * @param ids 需要删除的数据ID
      * @return 结果
      */
-    int deleteSysIngredientByIds(Long[] ids);
+//    int deleteSysIngredientByIds(Long[] ids);
 
     int batchIngredientRec(List<SysIngredientRec> ingredientRecList);
 
@@ -71,9 +71,9 @@ public interface SysIngredientMapper {
 
     int deleteIngredientNotRecByIngredientId(Long notRecId);
 
-    int deleteIngredientRecByIngredientIds(Long[] id);
+//    int deleteIngredientRecByIngredientIds(Long[] id);
 
-    int deleteIngredientNotRecByIngredientIds(Long[] id);
+//    int deleteIngredientNotRecByIngredientIds(Long[] id);
 
     /**
      * 根据食材名称查询食材信息

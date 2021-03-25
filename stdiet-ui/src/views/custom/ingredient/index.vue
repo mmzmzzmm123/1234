@@ -664,14 +664,13 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const ids = row.id || this.ids;
-      this.$confirm('是否确认删除食材编号为"' + ids + '"的数据项?', "警告", {
+      this.$confirm("是否确认删除食材「" + row.name + "」的数据项?", "警告", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
       })
         .then(function () {
-          return delIngredient(ids);
+          return delIngredient(row.id);
         })
         .then(() => {
           this.getList();

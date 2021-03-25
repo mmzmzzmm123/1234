@@ -3,7 +3,16 @@
     <!-- 营养分析 -->
     <!-- <NutriComputeCom :date="date" :value="value" /> -->
     <div class="top">
-      <img :src="logo" style="width: auto; height: 32px" alt="logo" />
+      <img
+        class="logo"
+        :src="logo"
+        style="width: auto; height: 32px"
+        alt="logo"
+      />
+      <em
+        class="el-icon-shopping-cart-full icon_style shopping_cart"
+        @click="handleOnShoppingPlanClick"
+      />
     </div>
     <!-- 食谱详细 -->
     <el-card v-for="obj in menus" :key="obj.type" style="margin-top: 12px">
@@ -34,6 +43,8 @@
     </el-card>
     <!-- 复杂菜品展示 -->
     <DishesDetailDialog ref="detailDialogRef" />
+    <!-- 当天采购计划 -->
+    <TodayShoppingPlanDrawer ref="shoppingPlanRef" />
   </div>
 </template>
 <script>
@@ -46,12 +57,14 @@ const {
 } = createNamespacedHelpers("recipesShow");
 // import NutriComputeCom from "./NutriComputeCom";
 import DishesDetailDialog from "./DishesDetailDialog";
+import TodayShoppingPlanDrawer from "../PlanDrawer/ShoppingPlanDrawer";
 export default {
   name: "menuDetail",
   props: ["value", "date"],
   components: {
     // NutriComputeCom,
     DishesDetailDialog,
+    TodayShoppingPlanDrawer,
   },
   data() {
     return {
@@ -99,6 +112,17 @@ export default {
     handleOnDetailClick(data) {
       this.$refs["detailDialogRef"].showDialog(data);
     },
+    handleOnShoppingPlanClick() {
+      this.$refs["shoppingPlanRef"].showDrawer({
+        num: -1,
+        data: [
+          {
+            dishes: this.value,
+          },
+        ],
+        label: this.date,
+      });
+    },
   },
 };
 </script>
@@ -106,8 +130,27 @@ export default {
 .menu_detail_wrapper {
   padding: 0 12px 12px 12px;
   .top {
-    text-align: center;
-    padding: 10px 14px;
+    height: 50px;
+    position: relative;
+    .logo {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .shopping_cart {
+      position: absolute;
+      right: 5px;
+      top: 10px;
+      display: flex;
+      align-items: center;
+      &::after {
+        margin-left: 2px;
+        content: "采购";
+        font-size: 12px;
+      }
+    }
   }
 
   .header_style {

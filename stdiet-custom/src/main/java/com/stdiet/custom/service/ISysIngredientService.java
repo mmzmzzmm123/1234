@@ -49,7 +49,7 @@ public interface ISysIngredientService
      * @param ids 需要删除的食材ID
      * @return 结果
      */
-    public int deleteSysIngredientByIds(Long[] ids);
+//    public int deleteSysIngredientByIds(Long[] ids);
 
     /**
      * 删除食材信息

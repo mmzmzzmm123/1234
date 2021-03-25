@@ -74,17 +74,19 @@ export default {
     };
   },
   methods: {
-    showDrawer(data) {
-      // console.log(data);
-      const { recipesId, num, label } = data;
+    showDrawer(obj) {
+      const { recipesId, num, label, data } = obj;
+      console.log(obj);
       this.label = label;
       // num < 0 全部计算
       this.title = `${
         num === 3 ? "前3" : num === 4 ? "后4" : Math.abs(num)
       }天采购计划`;
       this.visible = true;
-      if (this.recipes[recipesId]) {
-        this.processShoppingCart(num, recipesId);
+      if (data) {
+        this.processShoppingCart(num, data);
+      } else if (this.recipes[recipesId]) {
+        this.processShoppingCart(num, this.recipes[recipesId]);
       } else {
         this.loading = true;
         this.fetchFullRecipes({
@@ -92,61 +94,56 @@ export default {
         }).then(() => {
           this.loading = false;
           setTimeout(() => {
-            this.processShoppingCart(num, recipesId);
+            this.processShoppingCart(num, this.recipes[recipesId]);
           }, 0);
         });
       }
     },
-    processShoppingCart(num, recipesId) {
-      this.shoppingCart = (this.recipes[recipesId] || []).reduce(
-        (obj, cur, idx) => {
-          if (
-            num < 0 || // 全部计算
-            num === 7 ||
-            (num === 3 && num > idx) ||
-            (num === 4 && idx > 2)
-          ) {
-            cur.dishes.forEach((dObj) => {
-              dObj.igdList.forEach((iObj) => {
-                const tarTypeName = this.idgTypeDict[iObj.type];
-                const tarObj = obj[tarTypeName];
-                if (tarObj) {
-                  const tarIObj = tarObj.find(
-                    (zObj) => zObj.name === iObj.name
-                  );
-                  if (tarIObj) {
-                    tarIObj.weight += this.igdUnitDict[iObj.name]
-                      ? iObj.cusWeight
-                      : iObj.weight;
-                  } else {
-                    tarObj.push({
-                      type: iObj.type,
-                      name: iObj.name,
-                      weight: this.igdUnitDict[iObj.name]
-                        ? iObj.cusWeight
-                        : iObj.weight,
-                      unit: this.igdUnitDict[iObj.name] || "g",
-                    });
-                  }
+    processShoppingCart(num, data = []) {
+      this.shoppingCart = data.reduce((obj, cur, idx) => {
+        if (
+          num < 0 || // 全部计算
+          num === 7 ||
+          (num === 3 && num > idx) ||
+          (num === 4 && idx > 2)
+        ) {
+          cur.dishes.forEach((dObj) => {
+            dObj.igdList.forEach((iObj) => {
+              const tarTypeName = this.idgTypeDict[iObj.type];
+              const tarObj = obj[tarTypeName];
+              if (tarObj) {
+                const tarIObj = tarObj.find((zObj) => zObj.name === iObj.name);
+                if (tarIObj) {
+                  tarIObj.weight += this.igdUnitDict[iObj.name]
+                    ? iObj.cusWeight
+                    : iObj.weight;
                 } else {
-                  obj[tarTypeName] = [
-                    {
-                      type: iObj.type,
-                      name: iObj.name,
-                      weight: this.igdUnitDict[iObj.name]
-                        ? iObj.cusWeight
-                        : iObj.weight,
-                      unit: this.igdUnitDict[iObj.name] || "g",
-                    },
-                  ];
+                  tarObj.push({
+                    type: iObj.type,
+                    name: iObj.name,
+                    weight: this.igdUnitDict[iObj.name]
+                      ? iObj.cusWeight
+                      : iObj.weight,
+                    unit: this.igdUnitDict[iObj.name] || "g",
+                  });
                 }
-              });
+              } else {
+                obj[tarTypeName] = [
+                  {
+                    type: iObj.type,
+                    name: iObj.name,
+                    weight: this.igdUnitDict[iObj.name]
+                      ? iObj.cusWeight
+                      : iObj.weight,
+                    unit: this.igdUnitDict[iObj.name] || "g",
+                  },
+                ];
+              }
             });
-          }
-          return obj;
-        },
-        {}
-      );
+          });
+        }
+        return obj;
+      }, {});
       // console.log(this.shoppingCart);
     },
     handleOnBackClick() {

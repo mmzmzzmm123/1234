@@ -107,11 +107,11 @@ public class SysDishesServiceImpl implements ISysDishesService {
      * @param ids 需要删除的菜品ID
      * @return 结果
      */
-    @Override
-    public int deleteSysDishesByIds(Long[] ids) {
-        sysDishesMapper.deleteIngredientByIds(ids);
-        return sysDishesMapper.deleteSysDishesByIds(ids);
-    }
+//    @Override
+//    public int deleteSysDishesByIds(Long[] ids) {
+//        sysDishesMapper.deleteIngredientByIds(ids);
+//        return sysDishesMapper.deleteSysDishesByIds(ids);
+//    }
 
     /**
      * 删除菜品信息
@@ -121,7 +121,7 @@ public class SysDishesServiceImpl implements ISysDishesService {
      */
     @Override
     public int deleteSysDishesById(Long id) {
-        sysDishesMapper.deleteIngredientById(id);
+//        sysDishesMapper.deleteIngredientById(id);
         return sysDishesMapper.deleteSysDishesById(id);
     }
 

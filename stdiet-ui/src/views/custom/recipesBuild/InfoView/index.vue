@@ -68,11 +68,6 @@ export default {
     ]),
     ...mapGetters(["analyseData"]),
   },
-  watch: {
-    healthyData(val) {
-      console.log({ val });
-    },
-  },
   methods: {
     handleOnTabClick(tab) {
       this.activeName = tab.name;

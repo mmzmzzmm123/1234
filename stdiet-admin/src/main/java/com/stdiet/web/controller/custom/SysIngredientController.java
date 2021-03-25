@@ -98,9 +98,9 @@ public class SysIngredientController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('custom:ingredient:remove')")
     @Log(title = "食材", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
+	@DeleteMapping("/{id}")
+    public AjaxResult remove(@PathVariable Long id)
     {
-        return toAjax(sysIngredientService.deleteSysIngredientByIds(ids));
+        return toAjax(sysIngredientService.deleteSysIngredientById(id));
     }
 }

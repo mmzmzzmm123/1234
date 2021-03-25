@@ -169,18 +169,18 @@ public class SysIngredientServiceImpl implements ISysIngredientService {
         return sysIngredientMapper.updateSysIngredient(sysIngredient);
     }
 
-    /**
-     * 批量删除食材
-     *
-     * @param ids 需要删除的食材ID
-     * @return 结果
-     */
-    @Override
-    public int deleteSysIngredientByIds(Long[] ids) {
-        sysIngredientMapper.deleteIngredientRecByIngredientIds(ids);
-        sysIngredientMapper.deleteIngredientNotRecByIngredientIds(ids);
-        return sysIngredientMapper.deleteSysIngredientByIds(ids);
-    }
+//    /**
+//     * 批量删除食材
+//     *
+//     * @param ids 需要删除的食材ID
+//     * @return 结果
+//     */
+//    @Override
+//    public int deleteSysIngredientByIds(Long[] ids) {
+//        sysIngredientMapper.deleteIngredientRecByIngredientIds(ids);
+//        sysIngredientMapper.deleteIngredientNotRecByIngredientIds(ids);
+//        return sysIngredientMapper.deleteSysIngredientByIds(ids);
+//    }
 
     /**
      * 删除食材信息
@@ -190,8 +190,8 @@ public class SysIngredientServiceImpl implements ISysIngredientService {
      */
     @Override
     public int deleteSysIngredientById(Long id) {
-        sysIngredientMapper.deleteIngredientRecByIngredientId(id);
-        sysIngredientMapper.deleteIngredientNotRecByIngredientId(id);
+//        sysIngredientMapper.deleteIngredientRecByIngredientId(id);
+//        sysIngredientMapper.deleteIngredientNotRecByIngredientId(id);
         return sysIngredientMapper.deleteSysIngredientById(id);
     }
 
