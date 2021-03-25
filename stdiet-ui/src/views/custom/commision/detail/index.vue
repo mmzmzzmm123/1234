@@ -180,7 +180,7 @@ export default {
         pageSize: 10,
         userId: null,
         postId: null,
-        reviewStatus: "yes"
+        reviewStatus: null
       },
     };
   },

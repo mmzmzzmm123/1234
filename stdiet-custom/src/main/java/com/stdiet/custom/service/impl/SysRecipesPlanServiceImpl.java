@@ -136,9 +136,9 @@ public class SysRecipesPlanServiceImpl implements ISysRecipesPlanService {
                 || sysOrder.getAmount().floatValue() <= 0 || sysOrder.getStartTime() == null || sysOrder.getServerEndTime() == null) {
             return;
         }
-        //判断是否提成单，拆分单中的副单，体验单
+        //判断是否提成单，拆分单中的副单，体验单,定金单
         if(sysOrder.getAfterSaleCommissOrder().intValue() == 1 || ("1".equals(sysOrder.getOrderType()) && sysOrder.getMainOrderId().intValue() != 0) ||
-            "2".equals(sysOrder.getOrderType())){
+            "2".equals(sysOrder.getOrderType()) || "1".equals(sysOrder.getOrderMoneyType())){
             System.out.println("---------------------不生成食谱------------------------");
             return;
         }

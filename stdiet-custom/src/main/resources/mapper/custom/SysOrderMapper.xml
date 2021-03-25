@@ -47,6 +47,7 @@
         <result property="orderMoneyType"    column="order_money_type"    />
         <result property="mainOrderId"    column="main_order_id"    />
         <result property="afterSaleCommissOrder"    column="after_sale_commiss_order"    />
+        <result property="commissStartTime"    column="commiss_start_time"    />
         <result property="delFlag"    column="del_flag"    />
 
         <!-- 非持久化字段 -->
@@ -219,6 +220,7 @@
             <if test="orderMoneyType != null">order_money_type,</if>
             <if test="mainOrderId != null">main_order_id,</if>
             <if test="afterSaleCommissOrder != null">after_sale_commiss_order,</if>
+            <if test="commissStartTime != null">commiss_start_time,</if>
             <if test="delFlag != null">del_flag,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -259,6 +261,7 @@
             <if test="orderMoneyType != null">#{orderMoneyType},</if>
             <if test="mainOrderId != null">#{mainOrderId},</if>
             <if test="afterSaleCommissOrder != null">#{afterSaleCommissOrder},</if>
+            <if test="commissStartTime != null">#{commissStartTime},</if>
             <if test="delFlag != null">#{delFlag},</if>
         </trim>
     </insert>
@@ -303,6 +306,7 @@
             <if test="orderMoneyType != null">order_money_type = #{orderMoneyType},</if>
             <if test="mainOrderId != null">main_order_id = #{mainOrderId},</if>
             <if test="afterSaleCommissOrder != null">after_sale_commiss_order = #{afterSaleCommissOrder},</if>
+            <if test="commissStartTime != null">commiss_start_time = #{commissStartTime},</if>
             <if test="delFlag != null">del_flag = #{delFlag},</if>
         </trim>
         where order_id = #{orderId}
@@ -362,6 +366,7 @@
         <result property="orderMoneyType"    column="order_money_type"    />
         <result property="mainOrderId"    column="main_order_id"    />
         <result property="afterSaleCommissOrder"    column="after_sale_commiss_order"    />
+        <result property="commissStartTime"    column="commiss_start_time"    />
         <result property="delFlag"    column="del_flag"    />
 
         <!-- 非持久化字段 -->
@@ -389,9 +394,9 @@
         where del_flag = 0 and order_id = #{order_id}
     </select>
 
-    <!-- 查询2021年开始的已审核的订单信息（用于计算提成） -->
+    <!-- 查询2021年开始的已审核的订单信息（用于计算提成,请勿随意改动） -->
     <select id="selectSimpleOrderMessage" resultMap="SysOrderResultExtended" parameterType="SysCommision">
-      select o.order_id,o.order_time,o.start_time,o.customer,o.review_status,o.amount,o.serve_time_id,o.give_serve_day,o.after_sale_id,su_sale.nick_name as afterSale_name,o.nutritionist_id,su_nutritionist.nick_name as nutritionist_name
+      select o.order_id,o.order_time,o.commiss_start_time,o.server_end_time,o.customer,o.review_status,o.amount,o.serve_time_id,o.give_serve_day,o.after_sale_id,su_sale.nick_name as afterSale_name,o.nutritionist_id,su_nutritionist.nick_name as nutritionist_name
       from sys_order o
       left join sys_user su_sale on su_sale.user_id = o.after_sale_id and su_sale.del_flag = 0
       left join sys_user su_nutritionist on su_nutritionist.user_id = o.nutritionist_id and su_nutritionist.del_flag = 0
