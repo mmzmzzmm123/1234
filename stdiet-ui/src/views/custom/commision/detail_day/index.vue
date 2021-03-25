@@ -266,7 +266,7 @@ export default {
         pageSize: 20,
         userId: null,
         postId: null,
-        reviewStatus: "yes",
+        reviewStatus: null,
       },
       sendCommissionPlanTable: false,
       sendCommissionPlan: {},

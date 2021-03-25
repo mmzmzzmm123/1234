@@ -17,7 +17,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAdjusters;
 import java.util.Date;
 import java.util.List;
 
@@ -75,7 +77,8 @@ public class SysOrderServiceImpl implements ISysOrderService {
         Date orderTime = DateUtils.getNowDate();
         sysOrder.setCreateTime(orderTime);
         sysOrder.setCreateBy(SecurityUtils.getUsername());
-        //sysOrder.setOrderTime(orderTime);
+        //新增订单时，食谱开始时间和提成计算开始时间保持一致
+        sysOrder.setCommissStartTime(sysOrder.getStartTime());
         //计算服务到期时间
         setOrderServerEndDate(sysOrder);
         sysOrder.setOrderId(Long.parseLong(DateUtils.parseDateToStr(DateUtils.YYYYMMDDHHMMSS, orderTime)));
@@ -203,6 +206,19 @@ public class SysOrderServiceImpl implements ISysOrderService {
             sysOrder.setPlannerAssisId(null);
             sysOrder.setOperatorId(null);
             sysOrder.setOperatorAssisId(null);
+        }
+        LocalDate oldStartDate = oldSysOrder.getStartTime() != null ? DateUtils.dateToLocalDate(oldSysOrder.getStartTime()) : null;
+        LocalDate nowStartDate = sysOrder.getStartTime() != null ? DateUtils.dateToLocalDate(sysOrder.getStartTime()) : null;
+        //判断修改的开始时间是否为上个月时间，为上个月时间则不修改提成开始时间
+        if (oldStartDate != null && nowStartDate != null
+                && ChronoUnit.DAYS.between(oldStartDate, nowStartDate) != 0) {
+            //本月第一天
+            LocalDate monthStart = LocalDate.now().with(TemporalAdjusters.firstDayOfMonth());
+            //System.out.println(monthStart.toString());
+            //旧的开始时间和新的开始时间都要需要大于本月第一天
+            if(ChronoUnit.DAYS.between(monthStart, oldStartDate) >= 0 && ChronoUnit.DAYS.between(monthStart, nowStartDate) >= 0){
+                sysOrder.setCommissStartTime(sysOrder.getStartTime());
+            }
         }
         //更新订单
         int row = sysOrderMapper.updateSysOrder(sysOrder);

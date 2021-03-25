@@ -255,6 +255,11 @@ public class SysOrder extends BaseEntity {
     /** 售后二开提成单, 0非提成单 1提成单 */
     private Integer afterSaleCommissOrder;
 
+    /** 提成计算开始时间，与食谱计划开始时间区分开 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    //@Excel(name = "提成计算开始时间，与食谱计划开始时间区分开", width = 30, dateFormat = "yyyy-MM-dd")
+    private Date commissStartTime;
+
     /** 删除标记 */
     private Integer delFlag;
 

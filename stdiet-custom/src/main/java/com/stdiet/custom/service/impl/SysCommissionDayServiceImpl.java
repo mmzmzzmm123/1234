@@ -108,14 +108,6 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
      * 根据用户ID统计出该用户在该月所有订单的服务数量、服务总天数、服务订单总额、暂停总天数
      * **/
     public void dealServerOrderCommissionDetail(List<SysOrderCommisionDayDetail> orderDetailList, SysCommissionDayDetail sysCommissionDayDetail){
-        /*System.out.println("------------------开始--------------");
-        if(orderDetailList != null){
-            for(SysOrderCommisionDayDetail sysOrderCommisionDayDetail : orderDetailList){
-                System.out.println("姓名："+sysOrderCommisionDayDetail.getName() + "  总天数："+sysOrderCommisionDayDetail.getServerDay()
-                        +" 每天金额："+sysOrderCommisionDayDetail.getDayMoney() + " 一月服务天数："+sysOrderCommisionDayDetail.getEveryYearMonthServerDay().get("20211")
-                        +" 一月对应金额："+ sysOrderCommisionDayDetail.getEveryYearMonthServerMoney().get("20211"));
-            }
-        }*/
         //总提成
         BigDecimal totalCommissionAmount = new BigDecimal(0);
         //已发放提成
@@ -135,7 +127,6 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
                 }
                 commissionMonthSet.addAll(sysOrderCommisionDayDetail.getEveryYearMonthServerMoney().keySet());
             }
-            //System.out.println("总提成："+sysCommissionDayDetail.getNickName()+"-"+orderAmount.get("20211"));
             //获取提成比例以及计算提成
             Map<String, Float> rateMap = getRateByAmount(sysCommissionDayDetail.getUserId(), sysCommissionDayDetail.getPostId(), orderAmount);
 
@@ -170,7 +161,6 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
                     sendDetailList.add(map);
                 }
                 i++;
-
             }
         }
         sysCommissionDayDetail.setTotalCommissionAmount(totalCommissionAmount);
@@ -239,8 +229,8 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
         //整理出每个用户对应的订单List
         Map<Long, List<SysOrderCommisionDayDetail>> userOrderResultMap = new HashMap<>();
         for (SysOrder sysOrder : orderList) {
-            //开始时间为空、售后人员ID为空、营养师ID都为空、订单金额为空，都视为异常订单
-            if(sysOrder.getOrderTime() == null || sysOrder.getStartTime() == null || sysOrder.getServeTimeId() == null
+            //提成开始时间为空、售后人员ID为空、营养师ID都为空、订单金额为空，都视为异常订单
+            if(sysOrder.getOrderTime() == null || sysOrder.getCommissStartTime() == null || sysOrder.getServeTimeId() == null
                     || (sysOrder.getAfterSaleId() == null && sysOrder.getNutritionistId() == null)
                     || sysOrder.getAmount() == null){
                 //System.out.println("客户："+ sysOrder.getCustomer() +",营养师："+sysOrder.getNutritionist() + ",售后" + sysOrder.getAfterSale());
@@ -275,8 +265,8 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
      * 统计每笔订单的服务开始时间、结束时间、每年每月服务天数、服务金额、服务暂停天数等信息
      * */
     public SysOrderCommisionDayDetail statisticsOrderMessage(SysOrder sysOrder){
-        //服务开始时间(客户建档时间)
-        LocalDate serverStartDate = DateUtils.dateToLocalDate(sysOrder.getStartTime());
+        //提成计算开始时间（与食谱计划开始时间可能不同）
+        LocalDate serverStartDate = DateUtils.dateToLocalDate(sysOrder.getCommissStartTime());
         //订单总服务月数
         int serverMonth = sysOrder.getServeTimeId().intValue()/30;
         //服务天数(不满一个月的零头)
