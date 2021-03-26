@@ -2,12 +2,14 @@ package com.stdiet.custom.mapper;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 import com.stdiet.custom.domain.SysCommision;
 import com.stdiet.custom.domain.SysCommissionDayDetail;
 import com.stdiet.custom.domain.SysCustomer;
 import com.stdiet.custom.domain.SysOrder;
 import com.stdiet.custom.dto.request.SysOrderCommision;
+import com.stdiet.custom.dto.response.EveryMonthTotalAmount;
 import org.apache.ibatis.annotations.Param;
 
 /**
@@ -85,4 +87,17 @@ public interface SysOrderMapper
      * @return
      */
     int getOrderCountByCustomer(SysCustomer sysCustomer);
+
+    /**
+     * 查询每年每月的总金额
+     * @return
+     */
+    List<EveryMonthTotalAmount> getTotalAmountByUserId(SysCommision sysCommision);
+
+    /**
+     * 获取订单数量（按天提成计算）
+     * @param sysCommision
+     * @return
+     */
+    int selectSimpleOrderMessageCount(SysCommision sysCommision);
 }

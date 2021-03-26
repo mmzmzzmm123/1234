@@ -3,9 +3,12 @@ package com.stdiet.custom.service;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
+import com.stdiet.custom.domain.SysCommision;
 import com.stdiet.custom.domain.SysCustomer;
 import com.stdiet.custom.domain.SysOrder;
+import com.stdiet.custom.dto.response.EveryMonthTotalAmount;
 
 /**
  * 销售订单Service接口
@@ -84,4 +87,17 @@ public interface ISysOrderService
      * @return
      */
     int getOrderCountByCustomer(SysCustomer sysCustomer);
+
+    /**
+     * 查询每年每月的总金额
+     * @return
+     */
+    List<EveryMonthTotalAmount> getTotalAmountByUserId(SysCommision sysCommision);
+
+    /**
+     * 获取订单数量（按天提成计算）
+     * @param sysCommision
+     * @return
+     */
+    int selectSimpleOrderMessageCount(SysCommision sysCommision);
 }

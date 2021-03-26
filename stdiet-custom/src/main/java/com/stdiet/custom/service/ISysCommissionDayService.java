@@ -1,5 +1,6 @@
 package com.stdiet.custom.service;
 
+import com.stdiet.common.core.domain.AjaxResult;
 import com.stdiet.custom.domain.SysCommision;
 import com.stdiet.custom.domain.SysCommissionDayDetail;
 import com.stdiet.custom.domain.SysOrder;
@@ -32,5 +33,10 @@ public interface ISysCommissionDayService {
      * @return
      */
     LocalDate getServerEndDate(SysOrder sysOrder);
+
+    /**
+     * 计算订单提成详情
+     */
+    AjaxResult calculateOrderCommissionDetail(SysCommision sysCommision);
 
 }
