@@ -164,7 +164,7 @@ export default {
                   : item[1];
               return {
                 type: "text",
-                top: idx * 20,
+                top: idx * 24,
                 right: 10,
                 style: {
                   text: `${item[0]}：${data.toFixed(1)}${
