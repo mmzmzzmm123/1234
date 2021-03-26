@@ -165,6 +165,14 @@
               <editor v-model="form.noticeContent" :min-height="192"/>
             </el-form-item>
           </el-col>
+          <el-col :span="24">
+            <el-form-item label="上传附件" prop="field101fileList" required>
+              <el-upload ref="field101fileList" :file-list="field101fileList" :action="field101Action"
+                :before-upload="upload" enctype="multipart/form-data" :headers="token" :on-success="uploadSuccess">
+                <el-button size="small" type="primary" icon="el-icon-upload">点击上传</el-button>
+              </el-upload>
+            </el-form-item>
+          </el-col>
         </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -178,6 +186,7 @@
 <script>
 import { listNotice, getNotice, delNotice, addNotice, updateNotice, exportNotice } from "@/api/system/notice";
 import Editor from '@/components/Editor';
+import { getToken } from '@/utils/auth'
 
 export default {
   name: "Notice",
@@ -186,6 +195,8 @@ export default {
   },
   data() {
     return {
+      field101Action: 'http://10.179.25.97:8080/common/upload',
+      field101fileList: [],
       // 遮罩层
       loading: true,
       // 选中数组
@@ -225,9 +236,18 @@ export default {
         ],
         noticeType: [
           { required: true, message: "公告类型不能为空", trigger: "change" }
+        ],
+        field101fileList:[
+          {required: true, message: "必须上传复件",}
         ]
       }
     };
+  },
+  computed: {
+    // 计算属性的 getter
+    token: function () {
+       return {'Authorization': 'Bearer ' + getToken() }// 让每个请求携带自定义token 请根据实际情况自行修改
+    }
   },
   created() {
     this.getList();
@@ -239,6 +259,22 @@ export default {
     });
   },
   methods: {
+    uploadSuccess(res, file, fileList){
+      if(res.code == 200){
+        this.msgSuccess("文件上传成功");
+        // console.log("上传文件的URL",res.fileUrl);
+        const resFileList = fileList.map(v=>({
+          fileName:v.name,
+          fileUrl:v.response.fileUrl
+        }))
+        this.form.annexName = resFileList.map(v=>v.fileName).join(',');
+        this.form.annexAddress = resFileList.map(v=>v.fileUrl).join(',');
+        this.form.field101fileList = resFileList;
+      }
+    },
+    upload(file) {
+      // console.log("上传的文件名",file.name);
+    },
     /** 查询公告列表 */
     getList() {
       this.loading = true;
@@ -268,7 +304,8 @@ export default {
         noticeTitle: undefined,
         noticeType: undefined,
         noticeContent: undefined,
-        status: "0"
+        status: "0",
+        field101fileList:[]
       };
       this.resetForm("form");
     },
@@ -306,6 +343,7 @@ export default {
     },
     /** 提交按钮 */
     submitForm: function() {
+      console.log('this.form:: ',this.form);
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.noticeId != undefined) {
