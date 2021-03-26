@@ -229,7 +229,7 @@ export default {
         }
         recipesDom.style.overflow = "visible";
         html2canvans(recipesDom, {
-          scale: 1.5,
+          scale: 2,
           height: recipesDom.scrollHeight,
         }).then((canvas) => {
           const { name } = this.healthyData;
@@ -244,6 +244,7 @@ export default {
           recipesDom.style.overflow = "auto";
 
           this.downloading = false;
+          this.$message.success("食谱导出成功");
         });
       });
     },
