@@ -33,7 +33,7 @@
         FROM sys_order
         WHERE ${column} IS NOT NULL AND ${column} &lt;&gt; 0 AND del_flag = 0
         <if test="reviewStatus != null and reviewStatus != ''">
-            AND review_status = #{reviewStatus}
+            AND review_status = ${reviewStatus}
         </if>
         <if test="beginTime != null and beginTime != ''">AND date_format(order_time,'%y%m%d') &gt;=
             date_format(${beginTime},'%y%m%d')
