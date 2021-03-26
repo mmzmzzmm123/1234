@@ -63,6 +63,7 @@ export default {
   data() {
     return {
       visible: false,
+      label: '',
       loading: false,
       title: "",
       logo: require("@/assets/logo/st_logo.png"),
@@ -96,7 +97,7 @@ export default {
       }
     },
     processShoppingCart(num, data = []) {
-      console.log(data);
+      // console.log(data);
       this.shoppingCart = data.reduce((obj, cur, idx) => {
         if (
           num < 0 || // 全部计算
@@ -141,7 +142,7 @@ export default {
         }
         return obj;
       }, {});
-      console.log(this.shoppingCart);
+      // console.log(this.shoppingCart);
     },
     handleOnBackClick() {
       this.visible = false;

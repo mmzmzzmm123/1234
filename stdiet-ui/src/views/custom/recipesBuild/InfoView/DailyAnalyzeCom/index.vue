@@ -5,7 +5,6 @@
       :data="nutritionSource"
       type="nutrition"
       width="364px"
-
       :subTitle="subTitle"
     />
     <pie-chart
@@ -65,13 +64,25 @@ export default {
         ["晚餐", data.calories5],
       ];
       if (data.calories2) {
-        source.push(["早加餐", data.calories2]);
+        const tarIdx = source.findIndex((obj) => obj[0] === "早餐");
+        source.splice(tarIdx > -1 ? tarIdx + 1 : source.length, 0, [
+          "早加餐",
+          data.calories2,
+        ]);
       }
       if (data.calories4) {
-        source.push(["午加餐", data.calories4]);
+        const tarIdx = source.findIndex((obj) => obj[0] === "午餐");
+        source.splice(tarIdx > -1 ? tarIdx + 1 : source.length, 0, [
+          "午加餐",
+          data.calories4,
+        ]);
       }
       if (data.calories6) {
-        source.push(["晚加餐", data.calories6]);
+        const tarIdx = source.findIndex((obj) => obj[0] === "晚餐");
+        source.splice(tarIdx > -1 ? tarIdx + 1 : source.length, 0, [
+          "晚加餐",
+          data.calories6,
+        ]);
       }
       return source;
     },
@@ -83,13 +94,25 @@ export default {
         ["晚餐", data.weight5],
       ];
       if (data.weight2) {
-        source.push(["早加餐", data.weight2]);
+        const tarIdx = source.findIndex((obj) => obj[0] === "早餐");
+        source.splice(tarIdx > -1 ? tarIdx + 1 : source.length, 0, [
+          "早加餐",
+          data.weight2,
+        ]);
       }
       if (data.weight4) {
-        source.push(["午加餐", data.weight4]);
+        const tarIdx = source.findIndex((obj) => obj[0] === "午餐");
+        source.splice(tarIdx > -1 ? tarIdx + 1 : source.length, 0, [
+          "午加餐",
+          data.weight4,
+        ]);
       }
       if (data.weight6) {
-        source.push(["晚加餐", data.weight6]);
+        const tarIdx = source.findIndex((obj) => obj[0] === "晚餐");
+        source.splice(tarIdx > -1 ? tarIdx + 1 : source.length, 0, [
+          "晚加餐",
+          data.weight6,
+        ]);
       }
       return source;
     },
