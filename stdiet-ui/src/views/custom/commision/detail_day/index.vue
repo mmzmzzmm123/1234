@@ -157,6 +157,11 @@
             @click="openFormDialog('查看发放计划', scope.row)"
             >查看发放计划</el-button
           >
+          <el-button
+            type="text"
+            @click="handleDetailClick(scope.row)"
+            >查看订单详情</el-button
+          >
         </template>
       </el-table-column>
 
@@ -205,7 +210,11 @@
         </el-table-column>
       </el-table>
     </el-dialog>
+
+    <OrdercommissDetail ref="ordercommissDetailRef"></OrdercommissDetail>
   </div>
+
+  
 </template>
 
 <style>
@@ -225,6 +234,8 @@ import { detailDayCommision, exportDayCommision } from "@/api/custom/commision";
 import { getOptions } from "@/api/custom/global";
 
 import dayjs from "dayjs";
+
+import OrdercommissDetail from "@/components/OrdercommissDetail";
 
 export default {
   name: "CommisionDayDetail",
@@ -266,12 +277,15 @@ export default {
         pageSize: 20,
         userId: null,
         postId: null,
-        reviewStatus: null,
+        reviewStatus: "yes",
       },
       sendCommissionPlanTable: false,
       sendCommissionPlan: {},
       fixLength: 2,
     };
+  },
+  components: {
+    OrdercommissDetail
   },
   created() {
     this.getList();
@@ -398,6 +412,14 @@ export default {
       this.sendCommissionPlan.list = row.sendDetailList;
       this.sendCommissionPlan.total = row.totalNotSentCommissionAmount;
       this.sendCommissionPlanTable = true;
+    },
+    handleDetailClick(row) {
+      // console.log(row);
+      const dateRange = [
+        dayjs(this.month).startOf("month").format("YYYY-MM-DD"),
+        dayjs(this.month).endOf("month").format("YYYY-MM-DD"),
+      ];
+      this.$refs["ordercommissDetailRef"].showDrawer(this.addDateRange({'name': row.nickName, 'userId': row.userId, 'reviewStatus': this.queryParams.reviewStatus}, dateRange));
     },
     getSummaries(param) {
       //param 是固定的对象，里面包含 columns与 data参数的对象 {columns: Array[4], data: Array[5]},包含了表格的所有的列与数据信息
