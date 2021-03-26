@@ -229,7 +229,7 @@ export default {
         }
         recipesDom.style.overflow = "visible";
         html2canvans(recipesDom, {
-          scale: 2,
+          scale: 1.5,
           height: recipesDom.scrollHeight,
         }).then((canvas) => {
           const { name } = this.healthyData;
