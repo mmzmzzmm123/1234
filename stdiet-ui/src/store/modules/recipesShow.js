@@ -5,7 +5,8 @@ const oriState = {
   cusUnitDict: {},
   cusWeightDict: {},
   menuTypeDict: {},
-  idgTypeDict: {}
+  idgTypeDict: {},
+  igdUnitDict: {}
 };
 
 const mutations = {
@@ -54,6 +55,13 @@ const actions = {
         return obj;
       }, {});
       commit("updateStateData", { idgTypeDict });
+    });
+    getDicts("sys_ingredient_unit").then(response => {
+      const igdUnitDict = response.data.reduce((obj, cur) => {
+        obj[cur.dictLabel] = cur.dictValue;
+        return obj;
+      }, {});
+      commit("updateStateData", { igdUnitDict });
     });
   },
   async fetchFullRecipes({ commit, dispatch }, payload) {

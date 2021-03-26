@@ -8,7 +8,7 @@
         <VerifyView />
       </div>
     </div>
-    <div class="content" v-loading="recipesDataLoading">
+    <div class="content" v-loading="recipesDataLoading" id="center_content">
       <RecipesView
         v-if="!!recipesData.length"
         :data="recipesData"

@@ -83,7 +83,11 @@ export default {
           obj[cur.type] = [];
         }
         let tarMenu = cur;
-        if (!tarMenu.methods && tarMenu.igdList.length === 1) {
+        if (
+          !tarMenu.methods &&
+          !tarMenu.remark &&
+          tarMenu.igdList.length === 1
+        ) {
           tarMenu = tarMenu.igdList[0];
           tarMenu.cusStr = `${this.cusWeightDict[tarMenu.cusWeight] || ""}${
             this.cusUnitDict[tarMenu.cusUnit] || ""

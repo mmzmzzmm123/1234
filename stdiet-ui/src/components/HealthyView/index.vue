@@ -39,6 +39,7 @@
           <div v-else>
             <span :style="{ color: '#8c8c8c' }">{{ con.title }}:</span>
             <el-image
+              v-if="data[con.value]"
               title="点击大图预览"
               fit="contain"
               style="width: auto; height: 80px"

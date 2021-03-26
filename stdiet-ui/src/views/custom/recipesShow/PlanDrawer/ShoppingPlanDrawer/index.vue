@@ -63,20 +63,17 @@ export default {
   data() {
     return {
       visible: false,
+      label: '',
       loading: false,
       title: "",
       logo: require("@/assets/logo/st_logo.png"),
       shoppingCart: {},
-      igdUnitDict: {
-        鸡蛋: "个",
-        牛奶: "盒",
-      },
     };
   },
   methods: {
     showDrawer(obj) {
       const { recipesId, num, label, data } = obj;
-      console.log(obj);
+      // console.log(obj);
       this.label = label;
       // num < 0 全部计算
       this.title = `${
@@ -100,6 +97,7 @@ export default {
       }
     },
     processShoppingCart(num, data = []) {
+      // console.log(data);
       this.shoppingCart = data.reduce((obj, cur, idx) => {
         if (
           num < 0 || // 全部计算
@@ -115,14 +113,14 @@ export default {
                 const tarIObj = tarObj.find((zObj) => zObj.name === iObj.name);
                 if (tarIObj) {
                   tarIObj.weight += this.igdUnitDict[iObj.name]
-                    ? iObj.cusWeight
+                    ? parseInt(iObj.cusWeight)
                     : iObj.weight;
                 } else {
                   tarObj.push({
                     type: iObj.type,
                     name: iObj.name,
                     weight: this.igdUnitDict[iObj.name]
-                      ? iObj.cusWeight
+                      ? parseInt(iObj.cusWeight)
                       : iObj.weight,
                     unit: this.igdUnitDict[iObj.name] || "g",
                   });
@@ -133,7 +131,7 @@ export default {
                     type: iObj.type,
                     name: iObj.name,
                     weight: this.igdUnitDict[iObj.name]
-                      ? iObj.cusWeight
+                      ? parseInt(iObj.cusWeight)
                       : iObj.weight,
                     unit: this.igdUnitDict[iObj.name] || "g",
                   },
@@ -153,7 +151,7 @@ export default {
     ...mapActions(["fetchFullRecipes"]),
   },
   computed: {
-    ...mapState(["recipes", "idgTypeDict"]),
+    ...mapState(["recipes", "idgTypeDict", "igdUnitDict"]),
   },
 };
 </script>

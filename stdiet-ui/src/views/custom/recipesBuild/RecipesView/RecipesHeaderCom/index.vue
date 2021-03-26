@@ -19,6 +19,17 @@
         >
           另存为模板
         </el-button>
+        <el-button
+          size="mini"
+          type="primary"
+          style="margin-left: 12px"
+          icon="el-icon-download"
+          @click="handleOnExportImg"
+          v-loading="downloading"
+          :disabled="downloading"
+        >
+          导出图片
+        </el-button>
       </section>
       <section>
         <span class="font_size_style">
@@ -96,6 +107,7 @@ const { mapActions, mapState, mapMutations } = createNamespacedHelpers(
   "recipes"
 );
 import TemplateDialog from "@/components/TemplateDialog";
+import html2canvans from "html2canvas";
 export default {
   name: "RecipesHeaderCom",
   components: {
@@ -104,6 +116,7 @@ export default {
   data() {
     return {
       loading: false,
+      downloading: false,
       nFontSize: 0,
       fontSizeOpts: [
         { value: 8, label: "8" },
@@ -117,7 +130,14 @@ export default {
   },
   updated() {},
   computed: {
-    ...mapState(["recipesId", "reviewStatus", "fontSize", "leftShow"]),
+    ...mapState([
+      "recipesId",
+      "reviewStatus",
+      "fontSize",
+      "leftShow",
+      "healthyData",
+      "recipesData",
+    ]),
   },
   watch: {},
   methods: {
@@ -193,12 +213,47 @@ export default {
           return "info";
       }
     },
+    handleOnExportImg() {
+      this.downloading = true;
+      this.$nextTick(() => {
+        const centerContentDom = document.getElementById("center_content");
+        if (!centerContentDom) {
+          this.downloading = false;
+          return;
+        }
+        centerContentDom.style.overflow = "visible";
+        const recipesDom = document.getElementById("recipes_content");
+        if (!recipesDom) {
+          this.downloading = false;
+          return;
+        }
+        recipesDom.style.overflow = "visible";
+        html2canvans(recipesDom, {
+          scale: 1.5,
+          height: recipesDom.scrollHeight,
+        }).then((canvas) => {
+          const { name } = this.healthyData;
+          const startNum = this.recipesData[0].numDay;
+          const endNum = this.recipesData[this.recipesData.length - 1].numDay;
+          const link = document.createElement("a");
+          link.download = `${name}_第${startNum}至${endNum}天.jpeg`;
+          link.href = canvas.toDataURL();
+          link.click();
+
+          centerContentDom.style.overflow = "auto";
+          recipesDom.style.overflow = "auto";
+
+          this.downloading = false;
+          this.$message.success("食谱导出成功");
+        });
+      });
+    },
     ...mapActions(["saveRecipes", "updateReviewStatus"]),
     ...mapMutations(["updateStateData", "updateFontSize", "toggleLeftShow"]),
   },
 };
 </script>
-<style rel="stylesheet/scss" lang="scss" scope>
+<style  lang="scss" scoped>
 .recipes_header_com_wrapper {
   .header_btns {
     display: flex;
@@ -218,6 +273,15 @@ export default {
     align-items: center;
     font-size: 12px;
     margin-right: 12px;
+  }
+
+  /deep/ .el-loading-spinner {
+    margin-top: -10px;
+  }
+
+  /deep/.el-loading-spinner .circular {
+    width: 20px;
+    height: 20px;
   }
 }
 </style>
