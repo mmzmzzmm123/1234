@@ -66,6 +66,23 @@ export const constantRoutes = [
       }
     ]
   },
+  // {
+  //   path: 'science',
+  //   component: Layout,
+  //   name:'科技部',
+  //   children: [
+  //     {
+  //       path: '/science/index',
+  //       component: (resolve) => require(['@/views/science/index'], resolve),
+  //       name: '科技部',
+  //       meta: { title: '科技部', icon: 'system' }
+  //     },
+  //     {
+  //       path:'',
+  //       redirect:'/science/index'
+  //     }
+  //   ]
+  // },
   {
     path: '/user',
     component: Layout,
