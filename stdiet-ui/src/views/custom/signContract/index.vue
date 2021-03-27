@@ -321,6 +321,12 @@
           {label: '10个月', value: 300},
           {label: '11个月', value: 330},
           {label: '12个月', value: 360},
+          {label: '13个月', value: 390},
+          {label: '14个月', value: 420},
+          {label: '15个月', value: 450},
+          {label: '16个月', value: 480},
+          {label: '17个月', value: 510},
+          {label: '18个月', value: 540},
         ],
         rules: {
           signName: [
