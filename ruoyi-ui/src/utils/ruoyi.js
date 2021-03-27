@@ -96,9 +96,9 @@ export function selectDictLabels(datas, value, separator) {
 	return actions.join('').substring(0, actions.join('').length - 1);
 }
 
-// 通用下载方法
-export function download(fileName) {
-	window.location.href = baseURL + "/common/download?fileName=" + encodeURI(fileName) + "&delete=" + true;
+// 通用下载方法
+export function download(fileName, realName) {
+	window.location.href = baseURL + "/common/download?fileName=" + encodeURI(fileName) + "&realName=" + realName;
 }
 
 // 字符串格式化(%s )
