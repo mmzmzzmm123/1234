@@ -62,4 +62,10 @@ public class SysCommision extends BaseEntity {
 
     //订单审核状态
     private String reviewStatus;
+
+    //服务开始时间，用于计算该时间段的提成
+    private String serverScopeStartTime;
+
+    //服务结束时间，用于计算该时间段的提成
+    private String serverScopeEndTime;
 }

@@ -157,11 +157,11 @@
             @click="openFormDialog('查看发放计划', scope.row)"
             >查看发放计划</el-button
           >
-          <el-button
+          <!--<el-button
             type="text"
             @click="handleDetailClick(scope.row)"
             >查看订单详情</el-button
-          >
+          >-->
         </template>
       </el-table-column>
 
@@ -419,7 +419,7 @@ export default {
         dayjs(this.month).startOf("month").format("YYYY-MM-DD"),
         dayjs(this.month).endOf("month").format("YYYY-MM-DD"),
       ];
-      this.$refs["ordercommissDetailRef"].showDrawer(this.addDateRange({'name': row.nickName, 'userId': row.userId, 'reviewStatus': this.queryParams.reviewStatus}, dateRange));
+      this.$refs["ordercommissDetailRef"].showDrawer(this.addDateRange({'yearMonth': dayjs(this.month).endOf("month").format("YYYY-MM-DD"),'name': row.nickName, 'userId': row.userId, 'reviewStatus': this.queryParams.reviewStatus}, dateRange));
     },
     getSummaries(param) {
       //param 是固定的对象，里面包含 columns与 data参数的对象 {columns: Array[4], data: Array[5]},包含了表格的所有的列与数据信息

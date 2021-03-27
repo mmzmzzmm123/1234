@@ -3,6 +3,7 @@ package com.stdiet.custom.service.impl;
 import com.alibaba.fastjson.JSONArray;
 import com.stdiet.common.core.domain.AjaxResult;
 import com.stdiet.common.utils.DateUtils;
+import com.stdiet.common.utils.StringUtils;
 import com.stdiet.custom.domain.*;
 import com.stdiet.custom.dto.request.SysOrderCommision;
 import com.stdiet.custom.dto.response.EveryMonthTotalAmount;
@@ -138,7 +139,14 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
         }
         //获取每个月的提成比例以及计算提成
         Map<String, Float> rateMap = getRateByAmount(userId, postId, everyMonthTotalAmountMap);
+        //总服务金额
+        BigDecimal totalServerAmount = BigDecimal.valueOf(0);
+        //总提成金额
         BigDecimal totalCommission = BigDecimal.valueOf(0);
+        //已发放提成金额
+        BigDecimal totalSendCommission = BigDecimal.valueOf(0);
+        //未发放提成金额
+        BigDecimal totalNotSendCommission = BigDecimal.valueOf(0);
         //根据用户ID获取对应订单列表
         List<SysOrderCommisionDayDetail> orderDetailList = orderUserMap.get(userId);
         for(SysOrderCommisionDayDetail sysOrderCommisionDayDetail : orderDetailList){
@@ -147,18 +155,42 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
             sysOrderCommisionDayDetail.setCommissionRate(rateMap.get(yearMonth));
             //计算该笔订单总提成
             sysOrderCommisionDayDetail.setOrderCommission(getMoney(sysOrderCommisionDayDetail.getOrderAmount().doubleValue() * sysOrderCommisionDayDetail.getCommissionRate() / 100D));
+            //每年每月提成
             Map<String, BigDecimal> everyYearMonthServerCommission = new TreeMap<>(new MyComparator());
+            //每年每月提成是否发放状态
+            Map<String, Boolean> everyYearMonthCommissionSendFlag = new TreeMap<>(new MyComparator());
+            //当前订单的提成总和
+            BigDecimal currentOrderCommission = BigDecimal.valueOf(0);
             for (String everyMonth : sysOrderCommisionDayDetail.getEveryYearMonthServerMoney().keySet()) {
-                everyYearMonthServerCommission.put(everyMonth, getMoney(sysOrderCommisionDayDetail.getEveryYearMonthServerMoney().get(everyMonth).doubleValue() * sysOrderCommisionDayDetail.getCommissionRate() / 100D));
+                if(everyMonth.equals(sysOrderCommisionDayDetail.getServerEndDate().getYear()+""+sysOrderCommisionDayDetail.getServerEndDate().getMonth().getValue())){
+                    //最后一个月的提成直接相减，避免误差
+                    everyYearMonthServerCommission.put(everyMonth, sysOrderCommisionDayDetail.getOrderCommission().subtract(currentOrderCommission));
+                }else{
+                    everyYearMonthServerCommission.put(everyMonth, getMoney(sysOrderCommisionDayDetail.getEveryYearMonthServerMoney().get(everyMonth).doubleValue() * sysOrderCommisionDayDetail.getCommissionRate() / 100D));
+                }
+                //判断是否已发放
+                if(isSendCommissionByYearMonth(everyMonth)){
+                    everyYearMonthCommissionSendFlag.put(everyMonth, true);
+                    totalSendCommission = totalSendCommission.add(everyYearMonthServerCommission.get(everyMonth));
+                }else{
+                    everyYearMonthCommissionSendFlag.put(everyMonth, false);
+                    totalNotSendCommission = totalNotSendCommission.add(everyYearMonthServerCommission.get(everyMonth));
+                }
+                currentOrderCommission = currentOrderCommission.add(everyYearMonthServerCommission.get(everyMonth));
             }
             sysOrderCommisionDayDetail.setEveryYearMonthServerCommission(everyYearMonthServerCommission);
+            sysOrderCommisionDayDetail.setEveryYearMonthCommissionSendFlag(everyYearMonthCommissionSendFlag);
             totalCommission = totalCommission.add(sysOrderCommisionDayDetail.getOrderCommission());
+            totalServerAmount = totalServerAmount.add(sysOrderCommisionDayDetail.getOrderAmount());
         }
         result = AjaxResult.success();
         int total = sysOrderMapper.selectSimpleOrderMessageCount(sysCommision);
         result.put("total", total);
         result.put("list", orderDetailList);
+        result.put("totalServerAmount", totalServerAmount);
         result.put("totalCommission", totalCommission);
+        result.put("totalSendCommission", totalSendCommission);
+        result.put("totalNotSendCommission", totalNotSendCommission);
         return result;
     }
 
@@ -296,7 +328,7 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
                 continue;
             }
             //对每笔订单进行处理，统计出该比订单在每年每月对应的服务天数、金额、暂停天数等
-            SysOrderCommisionDayDetail sysOrderCommisionDayDetail = statisticsOrderMessage(sysOrder);
+            SysOrderCommisionDayDetail sysOrderCommisionDayDetail = statisticsOrderMessage(sysOrder, sysCommision.getServerScopeStartTime(), sysCommision.getServerScopeEndTime());
             if(sysOrder.getAfterSaleId() != null && sysOrder.getAfterSaleId() > 0L){
                 addUserOrderResultMap(sysOrder.getAfterSaleId(), sysOrderCommisionDayDetail, userOrderResultMap);
             }
@@ -323,7 +355,7 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
     /**
      * 统计每笔订单的服务开始时间、结束时间、每年每月服务天数、服务金额、服务暂停天数等信息
      * */
-    public SysOrderCommisionDayDetail statisticsOrderMessage(SysOrder sysOrder){
+    public SysOrderCommisionDayDetail statisticsOrderMessage(SysOrder sysOrder, String serverScopeStartTime, String serverScopeEndTime){
         //提成计算开始时间（与食谱计划开始时间可能不同）
         LocalDate serverStartDate = DateUtils.dateToLocalDate(sysOrder.getCommissStartTime());
         //订单总服务月数
@@ -349,9 +381,10 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
         //每天对应金额
         BigDecimal dayMoney = getMoney(orderAmount.doubleValue()/serverDay);
         //每年每月对于金额
-        Map<String, BigDecimal> everyYearMonthServerMoney = getEveryMonthServerMoney(everyYearMonthServerDay, orderAmount, dayMoney);
+        Map<String, BigDecimal> everyYearMonthServerMoney = getEveryMonthServerMoney(everyYearMonthServerDay, orderAmount, dayMoney, serverEndDate);
 
         SysOrderCommisionDayDetail sysOrderCommisionDayDetail = new SysOrderCommisionDayDetail();
+        sysOrderCommisionDayDetail.setOrderId(sysOrder.getOrderId());
         sysOrderCommisionDayDetail.setOrderTime(DateUtils.dateToLocalDateTime(sysOrder.getOrderTime()));
         sysOrderCommisionDayDetail.setName(sysOrder.getCustomer());
         sysOrderCommisionDayDetail.setServerStartDate(serverStartDate);
@@ -366,7 +399,48 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
         sysOrderCommisionDayDetail.setEveryYearMonthServerDay(everyYearMonthServerDay);
         sysOrderCommisionDayDetail.setEveryYearMonthServerMoney(everyYearMonthServerMoney);
 
+        if(StringUtils.isNotEmpty(serverScopeStartTime) && StringUtils.isNotEmpty(serverScopeEndTime)){
+            LocalDate realStartTime = DateUtils.stringToLocalDate(serverScopeStartTime, "yyyy-MM-dd");
+            LocalDate realEndTime = DateUtils.stringToLocalDate(serverScopeEndTime, "yyyy-MM-dd");
+            //计算该时间范围内的暂停时间
+            Map<String, Integer> realEveryYearMonthPauseDay = getRealEveryYearMonthPauseDay(sysOrder.getOrderPauseList(), serverStartDate, serverEndDate, realStartTime, realEndTime);
+            //暂停总天数
+            int realPauseTotalDay = getTotalByMap(realEveryYearMonthPauseDay);
+            //计算每年每月服务天数
+            Map<String, Integer> realEveryYearMonthServerDay = getRealEveryYearMonthDayCount(serverStartDate, serverEndDate, realStartTime, realEndTime, everyYearMonthPauseDay);
+            //服务总天数
+            int realServerDay = getTotalByMap(realEveryYearMonthServerDay);
+            //每年每月对于金额
+            Map<String, BigDecimal> realEveryYearMonthServerMoney = getEveryMonthServerMoney(realEveryYearMonthServerDay, orderAmount, dayMoney, serverEndDate);
+            //服务时间范围内暂停天数
+            sysOrderCommisionDayDetail.setPauseTotalDay(realPauseTotalDay);
+            sysOrderCommisionDayDetail.setEveryYearMonthPauseDay(realEveryYearMonthPauseDay);
+            sysOrderCommisionDayDetail.setServerDay(realServerDay);
+            sysOrderCommisionDayDetail.setEveryYearMonthServerDay(realEveryYearMonthServerDay);
+            sysOrderCommisionDayDetail.setEveryYearMonthServerMoney(realEveryYearMonthServerMoney);
+            sysOrderCommisionDayDetail.setOrderAmount(getBigDecimalTotalByMap(realEveryYearMonthServerMoney));
+        }
         return sysOrderCommisionDayDetail;
+    }
+
+    /**
+     * 获取真正服务时间范围内的每年每月暂停天数
+     * @Param list 暂停记录集合
+     * */
+    public Map<String, Integer> getRealEveryYearMonthPauseDay(List<SysOrderPause> list, LocalDate serverStartDate, LocalDate serverEndDate, LocalDate realStartDate, LocalDate realEndDate){
+        Map<String, Integer> pauseMap = new TreeMap<>(new MyComparator());
+        if(ChronoUnit.DAYS.between(realEndDate, serverStartDate) > 0 || ChronoUnit.DAYS.between(serverEndDate, realStartDate) > 0){
+            return pauseMap;
+        }
+        //更新服务开始时间
+        if(ChronoUnit.DAYS.between(serverStartDate,realStartDate) > 0){
+            serverStartDate =  realStartDate;
+        }
+        //更新服务结束时间
+        if(ChronoUnit.DAYS.between(realEndDate,serverEndDate) > 0){
+            serverEndDate =  realEndDate;
+        }
+        return getEveryYearMonthPauseDay(list, serverStartDate, serverEndDate);
     }
 
     /**
@@ -424,6 +498,17 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
     }
 
     /**
+     * 获取Map<String, BigDecimal>集合中BigDecimal的总和
+     * */
+    public BigDecimal getBigDecimalTotalByMap(Map<String, BigDecimal> map){
+        BigDecimal totalBigDecimal = BigDecimal.valueOf(0);
+        for(String key : map.keySet()){
+            totalBigDecimal = totalBigDecimal.add(map.get(key));
+        }
+        return totalBigDecimal;
+    }
+
+    /**
      * 获取订单服务时间范围中每年每月服务天数，减去当月暂停天数
      * @Param server_start_date 服务开始时间
      * @Param server_end_date   服务到期时间
@@ -438,27 +523,50 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
      * @Param everyMonthServerDay 每年每月服务天数
      * @Param orderMoney 订单总额
      * @Param dayMoney 每天对于金额
+     * @Param serverEndTime 订单服务结束时间
      * */
-    public Map<String, BigDecimal> getEveryMonthServerMoney(Map<String, Integer> everyMonthServerDay, BigDecimal orderMoney, BigDecimal dayMoney){
+    public Map<String, BigDecimal> getEveryMonthServerMoney(Map<String, Integer> everyMonthServerDay, BigDecimal orderMoney, BigDecimal dayMoney, LocalDate serverEndTime){
         Map<String, BigDecimal > everyMonthServerMoney = new TreeMap<>(new MyComparator());
         Set<String> keySet = everyMonthServerDay.keySet();
         int i = 1;
-        double totalMoney = 0.0;
+        BigDecimal total = BigDecimal.valueOf(0);
         for(String key : keySet){
-            if(i++ != keySet.size()){
-                everyMonthServerMoney.put(key, getMoney(everyMonthServerDay.get(key) * dayMoney.doubleValue()));
-                totalMoney += everyMonthServerMoney.get(key).doubleValue();
+            //System.out.println(serverEndTime.getYear()+""+serverEndTime.getMonth().getValue());
+            //判断是否为最后一个月
+            if(key.equals(serverEndTime.getYear()+""+serverEndTime.getMonth().getValue())){
+                System.out.println(key);
+                //由于小数保留问题，最后一个月的金额等于总额减去前几个月金额，避免总数不一致
+                everyMonthServerMoney.put(key, orderMoney.subtract(total));
             }else{
-                //由于小数点只保留一位，最后一个月的金额等于总额减去前几个月金额，避免总数不一致
-                everyMonthServerMoney.put(key, getMoney(orderMoney.doubleValue() - totalMoney));
+                everyMonthServerMoney.put(key, getMoney(everyMonthServerDay.get(key) * dayMoney.doubleValue()));
+                total = total.add(everyMonthServerMoney.get(key));
             }
         }
         return everyMonthServerMoney;
     }
 
+    /**
+     * 根据订单服务开始日期、订单服务结束日期、营养师或售后实际开始时间、营养师或售后实际结束时间，统计出实际时间范围内每年每月对应的天数
+     * */
+    public Map<String, Integer> getRealEveryYearMonthDayCount(LocalDate startDate, LocalDate endDate, LocalDate realStartDate, LocalDate realEndDate, Map<String, Integer> lessDayMap){
+        Map<String, Integer> everyYearMonthServerDay = new TreeMap<>(new MyComparator());
+        if(ChronoUnit.DAYS.between(realEndDate, startDate) > 0 || ChronoUnit.DAYS.between(endDate, realStartDate) > 0){
+            return everyYearMonthServerDay;
+        }
+        //更新服务开始时间
+        if(ChronoUnit.DAYS.between(startDate,realStartDate) > 0){
+            startDate =  realStartDate;
+        }
+        //更新服务结束时间
+        if(ChronoUnit.DAYS.between(realEndDate,endDate) > 0){
+            endDate =  realEndDate;
+        }
+        return getEveryYearMonthDayCount(startDate, endDate, lessDayMap);
+    }
+
 
     /**
-     * 根据开始日期、结束日期统计出时间范围内每年每月对应的天数
+     * 根据订单开始日期、订单结束日期统计出时间范围内每年每月对应的天数
      * */
     public Map<String, Integer> getEveryYearMonthDayCount(LocalDate startDate, LocalDate endDate, Map<String, Integer> lessDayMap){
         Map<String, Integer> everyYearMonthServerDay = new TreeMap<>(new MyComparator());
@@ -468,8 +576,8 @@ public class SysCommissionDayServiceImpl implements ISysCommissionDayService {
         LocalDate everyMonthLastDate = everyMonthFirstDate.with(TemporalAdjusters.lastDayOfMonth());
         int day = 0;
         boolean breakFlag = false;
-        //写100防止死循环
-        for(int i = 0; i < 100; i++){
+        //写1000防止死循环
+        for(int i = 0; i < 1000; i++){
             if(ChronoUnit.DAYS.between(everyMonthLastDate, endDate) > 0){
                 day = Period.between(everyMonthFirstDate, everyMonthLastDate).getDays() + 1;
             }else{
