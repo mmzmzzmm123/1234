@@ -42,11 +42,17 @@ public class SysOrderCommisionDayDetail extends BaseEntity {
     /**赠送天数*/
     private Integer giveDay;
 
-    /**订单金额*/
+    /**订单金额或服务订单金额*/
     private BigDecimal orderAmount;
 
     /**订单总提成**/
     private BigDecimal orderCommission;
+
+    //已发放提成
+    private BigDecimal hasSendOrderCommission;
+
+    //未发放提成
+    private BigDecimal notHasSendOrderCommission;
 
     /**服务天数*/
     private Integer serverDay;

@@ -157,11 +157,11 @@
             @click="openFormDialog('查看发放计划', scope.row)"
             >查看发放计划</el-button
           >
-          <!--<el-button
+          <el-button
             type="text"
             @click="handleDetailClick(scope.row)"
             >查看订单详情</el-button
-          >-->
+          >
         </template>
       </el-table-column>
 
@@ -186,6 +186,7 @@
         :data="sendCommissionPlan.list"
         show-summary
         :summary-method="getSummaries"
+        style="height:400px;overflow: auto"
       >
         <el-table-column
           property="nickName"
@@ -214,7 +215,7 @@
     <OrdercommissDetail ref="ordercommissDetailRef"></OrdercommissDetail>
   </div>
 
-  
+
 </template>
 
 <style>
