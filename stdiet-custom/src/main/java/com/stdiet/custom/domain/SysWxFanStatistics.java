@@ -63,4 +63,12 @@ public class SysWxFanStatistics extends BaseEntity
 
     //排序参数，null或者0：按照id倒序 1：按照组别ID、id顺序正序
     private Integer sortFlag;
+
+    //进粉开始时间
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date fanStartTime;
+
+    //进粉结束时间
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date fanEndTime;
 }

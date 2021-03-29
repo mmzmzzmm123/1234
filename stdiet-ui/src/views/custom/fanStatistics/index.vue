@@ -8,14 +8,17 @@
       label-width="68px"
     >
       <el-form-item label="进粉日期" prop="fanTime">
+        
         <el-date-picker
-          clearable
-          style="width: 200px"
-          v-model="queryParams.fanTime"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="选择日期"
-        >
+                v-model="fanTimeScope"
+                type="daterange"
+                range-separator="至"
+                start-placeholder="进粉开始日期"
+                end-placeholder="进粉结束日期"
+                format="yyyy-MM-dd"
+                value-format="yyyy-MM-dd"
+                :picker-options="fanTimePickerOptions"
+              >
         </el-date-picker>
       </el-form-item>
       <el-form-item label="销售" prop="userId" label-width="68px">
@@ -188,6 +191,7 @@
             type="date"
             value-format="yyyy-MM-dd"
             placeholder="选择日期"
+            :picker-options="fanTimePickerOptions"
           >
           </el-date-picker>
         </el-form-item>
@@ -318,7 +322,6 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        fanTime: nowDate,
         userId: null,
         accountId: null,
       },
@@ -343,6 +346,12 @@ export default {
           { required: true, trigger: "blur", message: "请输入进粉数量" },
         ],
       },
+      fanTimeScope: [nowDate, nowDate],
+      fanTimePickerOptions: {
+        disabledDate(time) {
+          return time.getTime() > dayjs()
+        },
+      }
     };
   },
   created() {
@@ -361,6 +370,8 @@ export default {
     /** 查询进粉统计列表 */
     getList() {
       this.loading = true;
+      this.queryParams.fanStartTime = this.fanTimeScope && this.fanTimeScope.length > 0 ? this.fanTimeScope[0] : null;
+      this.queryParams.fanEndTime = this.fanTimeScope && this.fanTimeScope.length > 0 ? this.fanTimeScope[1] : null;
       listFanStatistics(this.queryParams).then((response) => {
         this.fanStatisticsList = response.rows;
         this.totalFanNum = 0;
@@ -394,6 +405,7 @@ export default {
       };
       this.wxList = [];
       this.showWxFlag = false;
+      this.fanTimeScope = [nowDate,nowDate];
       this.resetForm("form");
     },
     editFormReset() {
