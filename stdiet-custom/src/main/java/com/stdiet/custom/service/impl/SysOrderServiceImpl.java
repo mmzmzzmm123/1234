@@ -4,8 +4,10 @@ import com.stdiet.common.annotation.Excel;
 import com.stdiet.common.utils.DateUtils;
 import com.stdiet.common.utils.SecurityUtils;
 import com.stdiet.common.utils.StringUtils;
+import com.stdiet.custom.domain.SysCommision;
 import com.stdiet.custom.domain.SysCustomer;
 import com.stdiet.custom.domain.SysOrder;
+import com.stdiet.custom.dto.response.EveryMonthTotalAmount;
 import com.stdiet.custom.mapper.SysOrderMapper;
 import com.stdiet.custom.service.ISysCommissionDayService;
 import com.stdiet.custom.service.ISysOrderPauseService;
@@ -22,6 +24,7 @@ import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 销售订单Service业务层处理
@@ -349,7 +352,26 @@ public class SysOrderServiceImpl implements ISysOrderService {
      * @param sysCustomer
      * @return
      */
+    @Override
     public int getOrderCountByCustomer(SysCustomer sysCustomer){
         return sysOrderMapper.getOrderCountByCustomer(sysCustomer);
+    }
+
+    /**
+     * 查询每年每月的总金额
+     * @return
+     */
+    @Override
+    public List<EveryMonthTotalAmount> getTotalAmountByUserId(SysCommision sysCommision){
+        return sysOrderMapper.getTotalAmountByUserId(sysCommision);
+    }
+
+    /**
+     * 获取订单数量（按天提成计算）
+     * @param sysCommision
+     * @return
+     */
+    public int selectSimpleOrderMessageCount(SysCommision sysCommision){
+        return sysOrderMapper.selectSimpleOrderMessageCount(sysCommision);
     }
 }

@@ -400,17 +400,68 @@
       from sys_order o
       left join sys_user su_sale on su_sale.user_id = o.after_sale_id and su_sale.del_flag = 0
       left join sys_user su_nutritionist on su_nutritionist.user_id = o.nutritionist_id and su_nutritionist.del_flag = 0
-      where o.order_time >= '2021-01-01' and o.del_flag = 0
+      where o.order_time >= '2021-01-01' and o.del_flag = 0 and (su_sale.user_id is not null OR su_nutritionist.user_id is not null)
+      and o.amount is not null
         <if test="reviewStatus != null and reviewStatus != ''">
             and review_status = #{reviewStatus}
         </if>
-      <if test="userId != null">
+      <if test="userId != null"><!-- 限于营养师、售后不可能同一个的情况下 -->
           and (su_sale.user_id = #{userId} or su_nutritionist.user_id = #{userId})
       </if>
       <if test="endTime != null and endTime != ''">
           AND DATE_FORMAT(o.order_time,'%Y-%m-%d') &lt;= #{endTime}
       </if>
+        <if test="serverScopeEndTime != null and serverScopeEndTime != ''">
+            AND  #{serverScopeEndTime} >= DATE_FORMAT(o.commiss_start_time,'%Y-%m-%d')
+        </if>
       order by o.order_time desc
+    </select>
+
+    <!-- 查询2021年开始的已审核的订单信息的总条数（用于计算提成,请勿随意改动） -->
+    <select id="selectSimpleOrderMessageCount" resultType="int" parameterType="SysCommision">
+        select count(o.order_id) as orderCount
+        from sys_order o
+        left join sys_user su_sale on su_sale.user_id = o.after_sale_id and su_sale.del_flag = 0
+        left join sys_user su_nutritionist on su_nutritionist.user_id = o.nutritionist_id and su_nutritionist.del_flag = 0
+        where o.order_time >= '2021-01-01' and o.del_flag = 0 and (su_sale.user_id is not null OR su_nutritionist.user_id is not null)
+        and o.amount is not null
+        <if test="reviewStatus != null and reviewStatus != ''">
+            and review_status = #{reviewStatus}
+        </if>
+        <if test="userId != null"><!-- 限于营养师、售后不可能同一个的情况下 -->
+            and (su_sale.user_id = #{userId} or su_nutritionist.user_id = #{userId})
+        </if>
+        <if test="endTime != null and endTime != ''">
+            AND DATE_FORMAT(o.order_time,'%Y-%m-%d') &lt;= #{endTime}
+        </if>
+        <if test="serverScopeEndTime != null and serverScopeEndTime != ''">
+            AND  #{serverScopeEndTime} >= DATE_FORMAT(o.commiss_start_time,'%Y-%m-%d')
+        </if>
+        order by o.order_time desc
+    </select>
+
+    <!-- 查询售后、营养师的每个月服务总金额 -->
+    <select id="getTotalAmountByUserId" parameterType="SysCommision" resultType="com.stdiet.custom.dto.response.EveryMonthTotalAmount">
+        SELECT s.yearMonth,SUM(s.amount) AS totalAmount FROM
+        (
+          SELECT CONCAT(YEAR(o.order_time),'',MONTH(o.order_time)) AS yearMonth,o.amount
+          FROM sys_order o
+          LEFT JOIN sys_user su_sale ON su_sale.user_id = o.after_sale_id AND su_sale.del_flag = 0
+          LEFT JOIN sys_user su_nutritionist ON su_nutritionist.user_id = o.nutritionist_id AND su_nutritionist.del_flag = 0
+          where o.order_time >= '2021-01-01' and o.del_flag = 0 and (su_sale.user_id is not null OR su_nutritionist.user_id is not null)
+          and o.amount is not null
+          <if test="reviewStatus != null and reviewStatus != ''">
+            and o.review_status = #{reviewStatus}
+          </if>
+          <if test="userId != null"><!-- 限于营养师、售后不可能同一个的情况下 -->
+            and (su_sale.user_id = #{userId} or su_nutritionist.user_id = #{userId})
+          </if>
+          <if test="endTime != null and endTime != ''">
+            AND DATE_FORMAT(o.order_time,'%Y-%m-%d') &lt;= #{endTime}
+          </if>
+          ORDER BY o.order_time ASC
+        ) s
+        GROUP BY s.yearMonth
     </select>
 
     <!-- 根据客户信息查询客户的订单列表数量 -->

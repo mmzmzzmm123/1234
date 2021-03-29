@@ -5,8 +5,11 @@ import java.math.RoundingMode;
 import java.util.List;
 
 import com.stdiet.custom.domain.SysCommissionDayDetail;
+import com.stdiet.custom.domain.SysOrder;
+import com.stdiet.custom.domain.SysOrderCommisionDayDetail;
 import com.stdiet.custom.dto.request.SysOrderCommision;
 import com.stdiet.custom.service.ISysCommissionDayService;
+import com.stdiet.custom.service.ISysOrderService;
 import com.stdiet.framework.web.domain.server.Sys;
 import com.stdiet.system.domain.CusSalesman;
 import com.stdiet.system.service.ISysUserService;
@@ -197,6 +200,16 @@ public class SysCommisionController extends BaseController {
     public TableDataInfo getDetailDay(SysCommision sysCommision) {
         startPage();
         return getDataTable(sysCommissionDayService.calculateCommissionByDay(sysCommision));
+    }
+
+    /**
+     * 根据用户ID查询该用户按天计算提成的详情
+     * */
+    @PreAuthorize("@ss.hasPermi('commisionDay:detail:list')")
+    @GetMapping("/orderDetailDay")
+    public AjaxResult getOrderCommissionDetailDay(SysCommision sysCommision) {
+        startPage();
+        return sysCommissionDayService.calculateOrderCommissionDetail(sysCommision);
     }
 
     /**

@@ -137,6 +137,7 @@
               end-placeholder="结束日期"
               format="yyyy-MM-dd"
               value-format="yyyy-MM-dd"
+              :picker-options="orderPickerOptions"
             >
             </el-date-picker>
           </el-form-item>
@@ -233,7 +234,8 @@ export default {
       },
       orderPickerOptions: {
         disabledDate(time) {
-          return time.getTime() < Date.now() - 24 * 60 * 60 * 1000;
+          //不能添加上月日期的暂停，会影响提成计算
+          return time.getTime() < dayjs().startOf('month').valueOf()
         },
       },
     };
