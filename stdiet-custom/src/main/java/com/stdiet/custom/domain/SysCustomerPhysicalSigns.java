@@ -1,6 +1,7 @@
 package com.stdiet.custom.domain;
 
 import com.alibaba.fastjson.JSONArray;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.stdiet.common.annotation.Excel;
 import lombok.Data;
 
@@ -224,6 +225,7 @@ public class SysCustomerPhysicalSigns {
 
     private JSONArray avoidFood;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private Date createTime;
 
     private Date updateTime;

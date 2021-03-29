@@ -16,22 +16,21 @@
           <el-button
             type="info"
             v-show="dataType == 0"
-            @click="generateReport()"
+            @click="generateReport"
             plain
             >下载报告</el-button
           >
           <el-button
             type="info"
             v-show="dataType == 0"
-            @click="handleEditGuidanceClick()"
+            @click="handleEditGuidanceClick"
             plain
             >减脂指导</el-button
           >
           <el-button
             v-hasPermi="['custom:healthy:edit']"
             type="info"
-            v-show="dataType == 0"
-            @click="handleEditRemarkClick()"
+            @click="handleEditRemarkClick"
             plain
             >修改备注</el-button
           >
@@ -39,14 +38,14 @@
             v-hasPermi="['custom:healthy:edit']"
             type="warning"
             v-show="dataType == 0"
-            @click="handleEditHealthyClick()"
+            @click="handleEditHealthyClick"
             plain
             >修改信息</el-button
           >
           <el-button
             type="danger"
             v-hasPermi="['custom:healthy:remove']"
-            @click="handleDelete()"
+            @click="handleDelete"
             plain
             >删除信息</el-button
           >
@@ -177,28 +176,39 @@
           </div>
         </div>
         <!-- 客户体征 -->
-        <div v-else>
-          <table-detail-message
-            v-show="dataList.length > 0"
-            :data="dataList"
-          ></table-detail-message>
-          <div
-            v-show="dataList.length == 0"
-            style="font-size: 20px; text-align: center"
+        <div v-else-if="dataList.length > 0 && dataType === 1">
+          <table-detail-message v-show="dataList.length > 0" :data="dataList" />
+          <!-- 备注 -->
+          <el-table
+            :data="remarkList"
+            :show-header="false"
+            border
+            :cell-style="remarkColumnStyle"
+            style="width: 100%"
           >
-            <VueQr :text="copyValue" :logoSrc="logo" :size="256" />
-            <div style="text-align: center; margin-top: 20px">
-              <el-button
-                icon="el-icon-share"
-                size="small"
-                title="点击复制链接"
-                class="copyBtn"
-                type="primary"
-                :data-clipboard-text="copyValue"
-                @click="handleCopy()"
-                >健康评估表链接
-              </el-button>
-            </div>
+            <el-table-column width="140" prop="remarkTitle"> </el-table-column>
+            <el-table-column prop="remarkValue">
+              <template slot-scope="scope">
+                <auto-hide-message
+                  :data="scope.row.remarkValue"
+                  :maxLength="100"
+              /></template>
+            </el-table-column>
+          </el-table>
+        </div>
+        <div v-else style="font-size: 20px; text-align: center">
+          <VueQr :text="copyValue" :logoSrc="logo" :size="256" />
+          <div style="text-align: center; margin-top: 20px">
+            <el-button
+              icon="el-icon-share"
+              size="small"
+              title="点击复制链接"
+              class="copyBtn"
+              type="primary"
+              :data-clipboard-text="copyValue"
+              @click="handleCopy()"
+              >健康评估表链接
+            </el-button>
           </div>
         </div>
       </div>
@@ -207,19 +217,19 @@
         <physicalSigns-guidance
           ref="physicalSignsGuidanceDialog"
           @close="editGuidanceShow(false)"
-          @refreshHealthyData="getCustomerHealthyByCusId()"
+          @refreshHealthyData="getCustomerHealthyByCusId"
         ></physicalSigns-guidance>
       </div>
     </div>
     <!-- 编辑 -->
     <physicalSigns-edit
       ref="physicalSignsEditDialog"
-      @refreshHealthyData="getCustomerHealthyByCusId()"
+      @refreshHealthyData="getCustomerHealthyByCusId"
     ></physicalSigns-edit>
     <!-- 编辑备注 -->
     <physicalSigns-remark
       ref="physicalSignsRemarkDialog"
-      @refreshHealthyData="getCustomerHealthyByCusId()"
+      @refreshHealthyData="getCustomerHealthyByCusId"
     ></physicalSigns-remark>
   </el-dialog>
 </template>
@@ -433,9 +443,10 @@ export default {
         if (res.data.customerHealthy) {
           //判断是体征还是健康评估
           this.dataType = res.data.type;
+          this.healthyData = res.data.customerHealthy;
+          this.dataList = [];
+          this.remarkList[0].remarkValue = this.healthyData.remark;
           if (this.dataType == 0) {
-            this.healthyData = Object.assign({}, res.data.customerHealthy);
-            this.remarkList[0].remarkValue = this.healthyData.remark;
             this.guidanceList[0].guidanceValue = this.healthyData.guidance;
             this.getDataListByHealthyMessage(res.data.customerHealthy);
           } else {
@@ -847,7 +858,8 @@ export default {
     handleEditRemarkClick() {
       this.$refs["physicalSignsRemarkDialog"].showDialog(
         this.data,
-        this.healthyData
+        this.healthyData,
+        this.dataType
       );
     },
     handleEditGuidanceClick() {

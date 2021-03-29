@@ -49,3 +49,14 @@ export function getRecipesFullInfo(id) {
     }
   });
 }
+
+export function getPlanPause(id) {
+  return request({
+    url: "/wap/recipes/plan/pause/" + id,
+    method: "get",
+    headers: {
+      isToken: false
+    }
+  });
+}
+

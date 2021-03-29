@@ -166,20 +166,26 @@ export default {
     fetchOrderList() {
       this.loading = true;
       listOrder({ cusId: this.data.id }).then((res) => {
-        this.orderList = res.rows.reduce((arr, cur) => {
+        this.orderList = res.rows.reduce((arr, cur, idx) => {
           const tarOrder = arr.find((ord) => ord.startTime === cur.startTime);
           if (tarOrder) {
             if (!tarOrder.children) {
               const firstObj = JSON.parse(JSON.stringify(tarOrder));
               tarOrder.children = [{ ...firstObj, type: "main" }];
             }
-            tarOrder.amount += cur.afterSaleCommissOrder == 0 ? cur.amount : 0;
             tarOrder.orderId += cur.orderId;
             tarOrder.type = "virtual";
             tarOrder.children.push({ ...cur, type: "main" });
           } else {
             cur.type = "main";
             arr.push(cur);
+          }
+          if (idx === res.rows.length - 1 && arr.children) {
+            arr.forEach((obj) => {
+              obj.amount = arr.children.reduce((a, c) => {
+                return a + c.afterSaleCommissOrder === 0 ? c.amount : 0;
+              }, 0);
+            });
           }
           return arr;
         }, []);
