@@ -18,6 +18,9 @@ public class SysOrderCommisionDayDetail extends BaseEntity {
 
     private static final long serialVersionUID = 1L;
 
+    /**订单ID*/
+    private Long orderId;
+
     /**订单成交时间*/
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime orderTime;
@@ -39,11 +42,17 @@ public class SysOrderCommisionDayDetail extends BaseEntity {
     /**赠送天数*/
     private Integer giveDay;
 
-    /**订单金额*/
+    /**订单金额或服务订单金额*/
     private BigDecimal orderAmount;
 
     /**订单总提成**/
     private BigDecimal orderCommission;
+
+    //已发放提成
+    private BigDecimal hasSendOrderCommission;
+
+    //未发放提成
+    private BigDecimal notHasSendOrderCommission;
 
     /**服务天数*/
     private Integer serverDay;
@@ -65,6 +74,9 @@ public class SysOrderCommisionDayDetail extends BaseEntity {
 
     /**每年每月对应提成*/
     private Map<String, BigDecimal> everyYearMonthServerCommission;
+
+    /**每年每月的提成是否发放**/
+    private Map<String, Boolean> everyYearMonthCommissionSendFlag;
 
     //该笔订单成交的当月的总成交额，用于确定提成比例
     private BigDecimal monthOrderTotalAmount;

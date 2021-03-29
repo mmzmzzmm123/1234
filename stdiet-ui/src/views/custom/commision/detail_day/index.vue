@@ -186,6 +186,7 @@
         :data="sendCommissionPlan.list"
         show-summary
         :summary-method="getSummaries"
+        style="height:400px;overflow: auto"
       >
         <el-table-column
           property="nickName"
@@ -214,7 +215,7 @@
     <OrdercommissDetail ref="ordercommissDetailRef"></OrdercommissDetail>
   </div>
 
-  
+
 </template>
 
 <style>
@@ -419,7 +420,7 @@ export default {
         dayjs(this.month).startOf("month").format("YYYY-MM-DD"),
         dayjs(this.month).endOf("month").format("YYYY-MM-DD"),
       ];
-      this.$refs["ordercommissDetailRef"].showDrawer(this.addDateRange({'name': row.nickName, 'userId': row.userId, 'reviewStatus': this.queryParams.reviewStatus}, dateRange));
+      this.$refs["ordercommissDetailRef"].showDrawer(this.addDateRange({'yearMonth': dayjs(this.month).endOf("month").format("YYYY-MM-DD"),'name': row.nickName, 'userId': row.userId, 'reviewStatus': this.queryParams.reviewStatus}, dateRange));
     },
     getSummaries(param) {
       //param 是固定的对象，里面包含 columns与 data参数的对象 {columns: Array[4], data: Array[5]},包含了表格的所有的列与数据信息
