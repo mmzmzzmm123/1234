@@ -2,6 +2,8 @@ package com.stdiet.web.controller.custom;
 
 import com.stdiet.common.core.controller.BaseController;
 import com.stdiet.common.core.domain.AjaxResult;
+import com.stdiet.custom.domain.SysOrderPause;
+import com.stdiet.custom.service.ISysOrderPauseService;
 import com.stdiet.custom.service.ISysRecipesService;
 import com.stdiet.custom.service.ISysWapServices;
 import com.stdiet.system.service.ISysDictTypeService;
@@ -11,9 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/wap")
@@ -27,6 +27,9 @@ public class SysWapController extends BaseController {
     @Autowired
     ISysDictTypeService iSysDictTypeService;
 
+    @Autowired
+    ISysOrderPauseService iSysOrderPauseService;
+
     /**
      * 客户食谱详情
      *
@@ -36,6 +39,17 @@ public class SysWapController extends BaseController {
     @GetMapping(value = "/recipes/plans/{outId}")
     public AjaxResult detail(@PathVariable String outId) {
         return AjaxResult.success(iSysWapServices.getRecipesPlanListInfo(outId));
+    }
+
+    @GetMapping(value = "/recipes/plan/pause/{outId}")
+    public AjaxResult planPauses(@PathVariable String outId) {
+        SysOrderPause sysOrderPause = new SysOrderPause();
+        sysOrderPause.setOutId(outId);
+        List<SysOrderPause> list = iSysOrderPauseService.selectSysOrderPauseList(sysOrderPause);
+        for (SysOrderPause pause : list) {
+            pause.setCusId(null);
+        }
+        return AjaxResult.success(list);
     }
 
     /**

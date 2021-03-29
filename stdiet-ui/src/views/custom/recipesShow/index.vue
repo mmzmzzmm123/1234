@@ -39,6 +39,7 @@ import {
   getRecipesPlans,
   getHealthyInfo,
   getRecipesMenuInfoApi,
+  getPlanPause,
 } from "@/api/custom/recipesShow";
 import { dealHealthy } from "@/utils/healthyData";
 import UserInfoDrawer from "./UserInfoDrawer";
@@ -76,64 +77,86 @@ export default {
         data: {},
       },
       menuData: [],
+      pauseDays: [],
     };
   },
-  created() {
+  async created() {
     //
     this.init();
     //
-    getRecipesPlans(this.id).then((response) => {
-      if (response.code === 200) {
-        let curPlanId, curMenuId, curDate;
-        const toDay = dayjs().format("YYYY-MM-DD");
-        this.planList = response.data.reduce((arr, plan) => {
-          if (plan.menus) {
-            arr.push({
-              menus: plan.menus.map((menu, idx) => {
-                const date = dayjs(plan.startDate)
-                  .add(idx, "day")
-                  .format("YYYY-MM-DD");
-                if (toDay === date) {
-                  curPlanId = plan.id;
-                  curMenuId = menu.id;
-                  curDate = date;
-                }
-                return {
-                  date,
-                  id: menu.id,
-                };
-              }),
-              recipesId: plan.recipesId,
-              label: `第${plan.startNumDay} 至 ${plan.endNumDay}天`,
-              id: plan.id,
-            });
-          }
-          return arr;
-        }, []);
-        if (!curMenuId) {
-          curMenuId = this.planList[0].menus[0].id;
-          curPlanId = this.planList[0].id;
-          curDate = this.planList[0].menus[0].date;
+    const planPauseRes = await getPlanPause(this.id);
+    // console.log(planPauseRes.data);
+    if (planPauseRes.code === 200) {
+      this.pauseDays = planPauseRes.data.reduce((arr, cur) => {
+        let startDate = cur.pauseStartDate;
+        while (dayjs(startDate) <= dayjs(cur.pauseEndDate)) {
+          arr.push(startDate);
+          startDate = dayjs(startDate).add(1, "days").format("YYYY-MM-DD");
         }
-        this.curMenuId = curMenuId;
-        this.curPlanId = curPlanId;
-        this.curDate = curDate;
+        return arr;
+      }, []);
+      // console.log(this.pauseDays);
+    }
 
-        // console.log({
-        //   planList: this.planList,
-        // });
+    const plansRes = await getRecipesPlans(this.id);
 
-        this.fetchRecipesInfo(this.curMenuId);
+    if (plansRes.code === 200) {
+      let curPlanId, curMenuId, curDate;
+      const toDay = dayjs().format("YYYY-MM-DD");
+      this.planList = plansRes.data.reduce((arr, plan) => {
+        if (plan.menus) {
+          let tmpDate = dayjs(plan.startDate).subtract(1, "days");
+          arr.push({
+            menus: plan.menus.map((menu) => {
+              tmpDate = tmpDate.add(1, "days");
+              // 跳过暂停日子
+              while (
+                this.pauseDays.includes(tmpDate.clone().format("YYYY-MM-DD"))
+              ) {
+                tmpDate = tmpDate.add(1, "days");
+              }
+
+              const date = tmpDate.format("YYYY-MM-DD");
+              if (toDay === date) {
+                curPlanId = plan.id;
+                curMenuId = menu.id;
+                curDate = date;
+              }
+              return {
+                date,
+                id: menu.id,
+              };
+            }),
+            recipesId: plan.recipesId,
+            label: `第${plan.startNumDay} 至 ${plan.endNumDay}天`,
+            id: plan.id,
+          });
+        }
+        return arr;
+      }, []);
+      if (!curMenuId) {
+        curMenuId = this.planList[0].menus[0].id;
+        curPlanId = this.planList[0].id;
+        curDate = this.planList[0].menus[0].date;
       }
-    });
-    getHealthyInfo(this.id).then((response) => {
-      if (response.code === 200) {
-        this.healthyData = {
-          type: response.data.type,
-          data: dealHealthy(response.data.customerHealthy),
-        };
-      }
-    });
+      this.curMenuId = curMenuId;
+      this.curPlanId = curPlanId;
+      this.curDate = curDate;
+
+      // console.log({
+      //   planList: this.planList,
+      // });
+
+      this.fetchRecipesInfo(this.curMenuId);
+    }
+
+    const healthyRes = await getHealthyInfo(this.id);
+    if (healthyRes.code === 200) {
+      this.healthyData = {
+        type: healthyRes.data.type,
+        data: dealHealthy(healthyRes.data.customerHealthy),
+      };
+    }
   },
   methods: {
     handleOnPlanClick() {

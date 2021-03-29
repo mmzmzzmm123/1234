@@ -29,6 +29,8 @@ public class SysOrderPause {
 
     private Long cusId;
 
+    private String outId;
+
     /**
      * 服务暂停开始时间
      */
