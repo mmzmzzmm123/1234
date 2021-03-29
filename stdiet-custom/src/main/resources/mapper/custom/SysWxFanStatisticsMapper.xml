@@ -42,7 +42,9 @@
 
     <select id="selectSysWxFanStatisticsList" parameterType="SysWxFanStatistics" resultMap="SysWxFanStatisticsResult">
         <include refid="selectSysWxFanStatisticsVoExtended"/> where swfs.del_flag = 0
-        <if test="fanTime != null ">and swfs.fan_time = #{fanTime}</if>
+        <if test="fanStartTime != null and fanEndTime != null">
+            and swfs.fan_time >= #{fanStartTime} and #{fanEndTime} >= swfs.fan_time
+        </if>
         <if test="userId != null">and su.user_id = #{userId}</if>
         <if test="accountId != null">and swd.account_id = #{accountId}</if>
         <if test="sortFlag == null or sortFlag == 0">
@@ -60,7 +62,9 @@
         left join sys_wx_distribution swd on swd.wechat_account = swfs.wx_id and swd.del_flag = 0
         left join sys_user su on su.user_id = swd.user_id and su.del_flag = 0
         where swfs.del_flag = 0
-        <if test="fanTime != null ">and swfs.fan_time = #{fanTime}</if>
+        <if test="fanStartTime != null and fanEndTime != null">
+            and swfs.fan_time >= #{fanStartTime} and #{fanEndTime} >= swfs.fan_time
+        </if>
         <if test="userId != null">and su.user_id = #{userId}</if>
         <if test="accountId != null">and swd.account_id = #{accountId}</if>
     </select>
