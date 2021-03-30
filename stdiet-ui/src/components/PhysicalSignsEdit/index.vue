@@ -153,13 +153,7 @@ export default {
       let healthy = Object.assign({}, customerHealthyData);
       if (data && customerHealthyData) {
         this.healthyData["arrayName"].forEach((item) => {
-          if (item === "bloodData" || item === "moistureDate") {
-            healthy[item] = healthy[item].map((str) =>
-              str.substring(0, str.indexOf("."))
-            );
-          } else {
-            healthy[item] = (healthy[item] || "").split(",");
-          }
+          healthy[item] = (healthy[item] || "").split(",");
         });
         this.form = healthy;
         this.visible = true;
