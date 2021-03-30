@@ -205,6 +205,7 @@ export default {
           }
           return str;
         }, "");
+        console.log(response.data);
         this.copyValue =
           window.location.origin.replace("manage", "sign") +
           "/recipes/detail/" +
