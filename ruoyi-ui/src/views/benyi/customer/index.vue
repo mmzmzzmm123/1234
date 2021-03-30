@@ -178,6 +178,7 @@
       />
       <el-table-column label="所在省" align="center" prop="sheng" />
       <el-table-column label="所在市" align="center" prop="shi" />
+      <el-table-column label="所在区县" align="center" prop="shi" />
       <el-table-column
         label="消费项目"
         align="center"
@@ -305,13 +306,17 @@
           </el-col>
           <el-col :span="24">
             <el-form-item label="所在省" prop="sheng">
-              <el-cascader
-                size="large"
-                :options="options"
-                v-model="selectedOptions"
-                @change="handleChange"
-              >
-              </el-cascader>
+              <v-distpicker
+                v-model="form.sheng"
+                :placeholders="placeholders"
+                :province="diglogForm.province"
+                :city="diglogForm.city"
+                :area="diglogForm.area"
+                @selected="onSelected"
+              ></v-distpicker>
+              <el-input v-model="form.shengid" v-if="false" />
+              <el-input v-model="form.shiid" v-if="false" />
+              <el-input v-model="form.quxianid" v-if="false" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -397,15 +402,22 @@ import {
   exportCustomer,
 } from "@/api/benyi/customer";
 import { listUser, getUserOnlyByRoleId } from "@/api/system/user";
-import { provinceAndCityDataPlus, CodeToText } from "element-china-area-data";
-
+//导入省市区三级联动库
+import VDistpicker from "v-distpicker";
 export default {
   name: "Customer",
   data() {
     return {
-      // 省市二级联动
-      options: provinceAndCityDataPlus,
-      selectedOptions: ["", ""],
+      placeholders: {
+        province: "请选择省",
+        city: "请选择市",
+        area: "请选择区"
+      },
+      diglogForm: {
+        province: null,
+        city: null,
+        area: null
+      },
       // 遮罩层
       loading: true,
       // 选中数组
@@ -462,7 +474,9 @@ export default {
         sheng: undefined,
         shengid: undefined,
         shi: undefined,
-        // shiid: undefined,
+        shiid: undefined,
+        quxian: undefined,
+        quxianid: undefined,
         khly: undefined,
         createUserid: undefined,
         createTime: undefined,
@@ -500,6 +514,10 @@ export default {
     });
     this.getUserList();
     this.getUsersByRole();
+  },
+  components: {
+    //省市区三级联动全局组件
+    VDistpicker
   },
   methods: {
     //排序
@@ -568,13 +586,7 @@ export default {
         this.loading = false;
       });
     },
-    // 省市二级联动
-    handleChange(val) {
-      this.form.shengid = val[0];
-      this.form.shiid = val[1];
-      this.form.sheng = CodeToText[val[0]];
-      this.form.shi = CodeToText[val[1]];
-    },
+    
     // 取消按钮
     cancel() {
       this.open = false;
@@ -597,6 +609,8 @@ export default {
         shengid: undefined,
         shi: undefined,
         shiid: undefined,
+        quxian: undefined,
+        quxianid: undefined,
         khly: undefined,
         createUserid: undefined,
         bz: undefined,
@@ -609,7 +623,9 @@ export default {
         gbtime: undefined,
         fpid: undefined,
       };
-      this.selectedOptions = new Array();
+      this.diglogForm.province = "";
+      this.diglogForm.city = "";
+      this.diglogForm.area = "";
       this.resetForm("form");
     },
     /** 搜索按钮操作 */
@@ -640,8 +656,6 @@ export default {
       const id = row.id || this.ids;
       getCustomer(id).then((response) => {
         this.form = response.data;
-        this.selectedOptions.push(response.data.shengid);
-        this.selectedOptions.push(response.data.shiid);
         this.open = true;
         this.title = "修改本一-客户关系管理";
       });
@@ -652,6 +666,9 @@ export default {
       const id = row.id || this.ids;
       getCustomer(id).then((response) => {
         this.form = response.data;
+        this.diglogForm.province = response.data.sheng;
+        this.diglogForm.city = response.data.shi;
+        this.diglogForm.area = response.data.quxian;
         this.open_fp = true;
         this.title = "分配客户";
       });
@@ -719,6 +736,24 @@ export default {
         })
         .catch(function () {});
     },
+    //所在省市区触发联动方法
+    onSelected(data) {
+      //console.log(data);
+      if (
+        data.province.code == undefined ||
+        data.city.code == undefined ||
+        data.area.code == undefined
+      ) {
+        this.form.sheng = undefined;
+      } else {
+        this.form.sheng = data.province.value;
+        this.form.shengid = data.province.code;
+        this.form.shi = data.city.value;
+        this.form.shiid = data.city.code;
+        this.form.quxian = data.area.value;
+        this.form.quxianid = data.area.code;
+      }
+    }
   },
 };
 </script>
