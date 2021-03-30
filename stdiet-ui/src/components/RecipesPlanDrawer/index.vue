@@ -205,11 +205,12 @@ export default {
           }
           return str;
         }, "");
+        // console.log(response.data);
         this.copyValue =
           window.location.origin.replace("manage", "sign") +
           "/recipes/detail/" +
           this.cusOutId;
-        console.log(this.planList);
+        // console.log(this.planList);
         this.planLoading = false;
       });
     },
@@ -323,7 +324,7 @@ export default {
         });
     },
     handleOnSendChange(val, data) {
-      console.log({ val, data });
+      // console.log({ val, data });
       const { id } = data;
       if (data.reviewStatus === 2) {
         updateRecipesPlan({
