@@ -180,16 +180,20 @@ export default {
             cur.type = "main";
             arr.push(cur);
           }
-          if (idx === res.rows.length - 1 && arr.children) {
+          if (idx === res.rows.length - 1) {
             arr.forEach((obj) => {
-              obj.amount = arr.children.reduce((a, c) => {
-                return a + c.afterSaleCommissOrder === 0 ? c.amount : 0;
-              }, 0);
+              console.log({ obj });
+              if (obj.children) {
+                obj.amount = obj.children.reduce(
+                  (a, c) => a + (c.afterSaleCommissOrder === 0 ? c.amount : 0),
+                  0
+                );
+              }
             });
           }
           return arr;
         }, []);
-        // console.log(this.orderList);
+        console.log(this.orderList);
         this.loading = false;
       });
     },
