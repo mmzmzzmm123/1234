@@ -96,6 +96,18 @@ public class ByCustomer extends BaseEntity {
     private String shiid;
 
     /**
+     * 所在区县名称
+     */
+    //@Excel(name = "所在区县")
+    private String quxian;
+
+    /**
+     * 所在区县编号
+     */
+    //@Excel(name = "所在区县编号")
+    private String quxianid;
+
+    /**
      * 客户来源
      */
     @Excel(name = "客户来源", type = Excel.Type.EXPORT, readConverterExp = "01=线下教研,02=抖音,03=快手,04=微信群,05=网络,06=来电来访,07=其它")
@@ -328,6 +340,8 @@ public class ByCustomer extends BaseEntity {
                 .append("rs", getRs())
                 .append("sheng", getSheng())
                 .append("shengid", getShengid())
+                .append("quxian", getQuxian())
+                .append("quxianid", getQuxianid())
                 .append("shi", getShi())
                 .append("shiid", getShiid())
                 .append("khly", getKhly())
@@ -366,5 +380,21 @@ public class ByCustomer extends BaseEntity {
 
     public void setFpid(Long fpid) {
         this.fpid = fpid;
+    }
+
+    public String getQuxian() {
+        return quxian;
+    }
+
+    public void setQuxian(String quxian) {
+        this.quxian = quxian;
+    }
+
+    public String getQuxianid() {
+        return quxianid;
+    }
+
+    public void setQuxianid(String quxianid) {
+        this.quxianid = quxianid;
     }
 }

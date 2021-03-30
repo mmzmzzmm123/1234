@@ -18,6 +18,8 @@
         <result property="shengid" column="shengid"/>
         <result property="shi" column="shi"/>
         <result property="shiid" column="shiid"/>
+        <result property="quxian" column="quxian"/>
+        <result property="quxianid" column="quxianid"/>
         <result property="khly" column="khly"/>
         <result property="createUserid" column="create_userid"/>
         <result property="fpid" column="fpid"/>
@@ -31,7 +33,7 @@
     </resultMap>
 
     <sql id="selectByCustomerVo">
-        select id, name, sflx, lxdh, wx, dy, qt, fpid, schoolname, rs, sheng, shengid, shi, shiid, khly, create_userid, bz, zhgj, state, xfxm, xfjz, gbtime, create_time from by_customer
+        select id, name, sflx, lxdh, wx, dy, qt, fpid, schoolname, rs, sheng, shengid, shi, shiid,quxian, quxianid, khly, create_userid, bz, zhgj, state, xfxm, xfjz, gbtime, create_time from by_customer
     </sql>
 
     <select id="selectByCustomerList" parameterType="ByCustomer" resultMap="ByCustomerResult">
@@ -49,6 +51,8 @@
             <if test="shengid != null  and shengid != ''">and shengid = #{shengid}</if>
             <if test="shi != null  and shi != ''">and shi = #{shi}</if>
             <if test="shiid != null  and shiid != ''">and shiid = #{shiid}</if>
+            <if test="quxian != null  and quxian != ''">and quxian = #{quxian}</if>
+            <if test="quxianid != null  and quxianid != ''">and quxianid = #{quxianid}</if>
             <if test="khly != null  and khly != ''">and khly = #{khly}</if>
             <if test="createUserid != null ">and create_userid = #{createUserid} or fpid = #{createUserid}</if>
             <if test="fpid != null ">and fpid = #{fpid}</if>
@@ -83,6 +87,8 @@
             <if test="shengid != null  and shengid != ''">shengid,</if>
             <if test="shi != null  and shi != ''">shi,</if>
             <if test="shiid != null  and shiid != ''">shiid,</if>
+            <if test="quxian != null  and quxian != ''">quxian,</if>
+            <if test="quxianid != null  and quxianid != ''">quxianid,</if>
             <if test="khly != null  and khly != ''">khly,</if>
             <if test="createUserid != null ">create_userid,</if>
             <if test="fpid != null ">fpid,</if>
@@ -108,6 +114,8 @@
             <if test="shengid != null  and shengid != ''">#{shengid},</if>
             <if test="shi != null  and shi != ''">#{shi},</if>
             <if test="shiid != null  and shiid != ''">#{shiid},</if>
+            <if test="quxian != null  and quxian != ''">#{quxian},</if>
+            <if test="quxianid != null  and quxianid != ''">#{quxianid},</if>
             <if test="khly != null  and khly != ''">#{khly},</if>
             <if test="createUserid != null ">#{createUserid},</if>
             <if test="fpid != null ">#{fpid},</if>
@@ -136,6 +144,8 @@
             <if test="shengid != null  and shengid != ''">shengid = #{shengid},</if>
             <if test="shi != null  and shi != ''">shi = #{shi},</if>
             <if test="shiid != null  and shiid != ''">shiid = #{shiid},</if>
+            <if test="quxian != null  and quxian != ''">quxian = #{quxian},</if>
+            <if test="quxianid != null  and quxianid != ''">quxianid = #{quxianid},</if>
             <if test="khly != null  and khly != ''">khly = #{khly},</if>
             <if test="createUserid != null ">create_userid = #{createUserid},</if>
             <if test="fpid != null ">fpid = #{fpid},</if>
