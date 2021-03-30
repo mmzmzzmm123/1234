@@ -61,12 +61,12 @@ public class SysOrderController extends OrderBaseController {
             if (StringUtils.isNotEmpty(order.getPhone())) {
                 order.setPhone(StringUtils.hiddenPhoneNumber(order.getPhone()));
             }
-            //根据服务时长、赠送天数计算服务天数
+            /*//根据服务时长、赠送天数计算服务天数
             int month = order.getServeTimeId() != null ? order.getServeTimeId().intValue() / 30 : 0;
             if (order.getStartTime() != null && order.getServerEndTime() != null && order.getServeTimeId() != null && month > 0) {
                 long serverDay = ChronoUnit.DAYS.between(DateUtils.dateToLocalDate(order.getStartTime()), DateUtils.dateToLocalDate(order.getStartTime()).plusMonths(month).plusDays(order.getGiveServeDay() == null ? 0 : order.getGiveServeDay())) + 1;
                 order.setServerDay(Integer.parseInt(serverDay + ""));
-            }
+            }*/
         }
         return getOrderDataTable(list, totalAmount);
     }
@@ -97,6 +97,9 @@ public class SysOrderController extends OrderBaseController {
         List<SysUser> userList = userService.selectAllUser();
         for (SysOrder order : list) {
             initUserNickNameAndOrderType(userList,order);
+            if (StringUtils.isNotEmpty(order.getPhone())) {
+                order.setPhone(StringUtils.hiddenPhoneNumber(order.getPhone()));
+            }
         }
         ExcelUtil<SysOrder> util = new ExcelUtil<SysOrder>(SysOrder.class);
         return util.exportExcel(list, "order");

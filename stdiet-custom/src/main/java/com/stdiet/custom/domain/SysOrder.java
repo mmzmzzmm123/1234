@@ -23,8 +23,15 @@ public class SysOrder extends BaseEntity {
     /**
      * 编号
      */
-    @Excel(name = "编号")
+    //@Excel(name = "编号")
     private Long orderId;
+
+    /**
+     * 成交日期
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "成交时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
+    private Date orderTime;
 
     private Long cusId;
 
@@ -171,7 +178,7 @@ public class SysOrder extends BaseEntity {
     /**
      * 推荐人
      */
-    @Excel(name = "推荐人")
+    //@Excel(name = "推荐人")
     private String recommender;
 
     /**
@@ -190,13 +197,6 @@ public class SysOrder extends BaseEntity {
 
     @Excel(name = "审核状态", dictType = "cus_review_status")
     private String reviewStatus;
-
-    /**
-     * 成交日期
-     */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @Excel(name = "成交时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
-    private Date orderTime;
 
     /**
      * 调理项目id
@@ -226,7 +226,7 @@ public class SysOrder extends BaseEntity {
     /**
      * 服务天数
      */
-    @Excel(name = "服务天数", width = 30)
+    //@Excel(name = "服务天数", width = 30)
     private Integer serverDay;
 
     /**
