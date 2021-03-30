@@ -443,7 +443,9 @@ export default {
         if (res.data.customerHealthy) {
           //判断是体征还是健康评估
           this.dataType = res.data.type;
-          this.healthyData = res.data.customerHealthy;
+          this.healthyData = JSON.parse(
+            JSON.stringify(res.data.customerHealthy)
+          );
           this.dataList = [];
           this.remarkList[0].remarkValue = this.healthyData.remark;
           if (this.dataType == 0) {
