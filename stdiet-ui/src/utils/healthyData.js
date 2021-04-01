@@ -552,7 +552,7 @@ export function dealHealthy(customerHealthy) {
     const signs = customerHealthy.otherPhysicalSigns
       ? [customerHealthy.otherPhysicalSigns]
       : [];
-    customerHealthy.signList.forEach(obj => {
+    (customerHealthy.signList || []).forEach(obj => {
       signs.push(obj.name);
     });
     customerHealthy.physicalSigns = signs.join(",");
