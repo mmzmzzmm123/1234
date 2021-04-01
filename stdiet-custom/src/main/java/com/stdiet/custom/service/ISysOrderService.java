@@ -1,6 +1,7 @@
 package com.stdiet.custom.service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -9,6 +10,7 @@ import com.stdiet.custom.domain.SysCommision;
 import com.stdiet.custom.domain.SysCustomer;
 import com.stdiet.custom.domain.SysOrder;
 import com.stdiet.custom.dto.response.EveryMonthTotalAmount;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 销售订单Service接口
@@ -74,12 +76,11 @@ public interface ISysOrderService
     public BigDecimal selectAllOrderAmount(SysOrder sysOrder);
 
     /**
-     * 根据订单ID更新该订单的服务到期时间，异步更新食谱计划
-     * @param orderId  订单ID
-     * @param updatePlan 是否更新食谱
+     * 暂停记录发生变更的时候需要更新该用户对应所有订单的开始时间、结束时间
+     * @param cusId
      * @return
      */
-    int updateOrderServerEndDate(Long orderId, boolean updatePlan);
+    int updateOrderServerStartEndDate(Long cusId);
 
     /**
      * 查询客户订单数量
@@ -100,4 +101,17 @@ public interface ISysOrderService
      * @return
      */
     int selectSimpleOrderMessageCount(SysCommision sysCommision);
+
+    /**
+     * 更新订单的开始时间以及提成计算开始时间
+     * @param sysOrder
+     * @param date
+     */
+    void updateOrderStartTime(SysOrder sysOrder, LocalDate date);
+
+    /**
+     * 根据客户ID查询对应所有订单
+     * @return
+     */
+    List<SysOrder> getAllOrderByCusId(Long cusId);
 }

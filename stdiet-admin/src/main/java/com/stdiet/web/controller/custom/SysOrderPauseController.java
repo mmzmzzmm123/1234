@@ -80,11 +80,12 @@ public class SysOrderPauseController extends BaseController
         if(count > 0){
             return AjaxResult.error("时间范围重叠，请检查时间");
         }
-        long orderId = sysOrderPauseService.selectNearMainOrderIdByCusId(sysOrderPause.getCusId());
+        //取消获取订单ID，后续为了兼容之前订单暂停，获取暂停列表都使用客户ID加上订单ID获取
+        /*long orderId = sysOrderPauseService.selectNearMainOrderIdByCusId(sysOrderPause.getCusId());
         if(orderId < 0) {
             return AjaxResult.error("找不到对应的订单信息");
-        }
-        sysOrderPause.setOrderId(orderId);
+        }*/
+        //sysOrderPause.setOrderId(orderId);
         return toAjax(sysOrderPauseService.insertSysOrderPause(sysOrderPause));
     }
 

@@ -190,8 +190,6 @@ public class SysOrderServiceImpl implements ISysOrderService {
     public int updateSysOrder(SysOrder sysOrder) {
         //获取旧订单对象
         SysOrder oldSysOrder = sysOrderMapper.selectSysOrderById(sysOrder.getOrderId());
-        //计算服务到期时间
-        setOrderServerEndDate(sysOrder);
         sysOrder.setUpdateBy(SecurityUtils.getUsername());
         sysOrder.setUpdateTime(DateUtils.getNowDate());
         //体验单
@@ -210,25 +208,12 @@ public class SysOrderServiceImpl implements ISysOrderService {
             sysOrder.setOperatorId(null);
             sysOrder.setOperatorAssisId(null);
         }
-        LocalDate oldStartDate = oldSysOrder.getStartTime() != null ? DateUtils.dateToLocalDate(oldSysOrder.getStartTime()) : null;
-        LocalDate nowStartDate = sysOrder.getStartTime() != null ? DateUtils.dateToLocalDate(sysOrder.getStartTime()) : null;
-        //判断修改的开始时间是否为上个月时间，为上个月时间则不修改提成开始时间
-        if (oldStartDate != null && nowStartDate != null
-                && ChronoUnit.DAYS.between(oldStartDate, nowStartDate) != 0) {
-            //本月第一天
-            LocalDate monthStart = LocalDate.now().with(TemporalAdjusters.firstDayOfMonth());
-            //System.out.println(monthStart.toString());
-            //旧的开始时间和新的开始时间都要需要大于本月第一天
-            if(ChronoUnit.DAYS.between(monthStart, oldStartDate) >= 0 && ChronoUnit.DAYS.between(monthStart, nowStartDate) >= 0){
-                sysOrder.setCommissStartTime(sysOrder.getStartTime());
-            }
-        }
         //更新订单
         int row = sysOrderMapper.updateSysOrder(sysOrder);
         // 审核后的订单才生成食谱
         if (row > 0 && isNeedRegenerateRecipesPlan(oldSysOrder, sysOrder)) {
-            //异步更新食谱计划
-            sysRecipesPlanService.regenerateRecipesPlan(sysOrder.getOrderId());
+            //异步更新客户所有订单的服务时间范围以及生成食谱计划
+            updateOrderServerStartEndDate(sysOrder.getCusId());
         }
         return row;
     }
@@ -301,26 +286,43 @@ public class SysOrderServiceImpl implements ISysOrderService {
     }
 
     /**
-     * 根据订单ID更新该订单的服务到期时间，异步更新食谱计划
-     *
-     * @param orderId    订单ID
-     * @param updatePlan 是否更新食谱
+     * 客户增加、修改、删除暂停记录、新增订单、修改订单订单的相关时间，需要更新该用户对应所有订单的开始时间、结束时间
+     * @param cusId
      * @return
      */
     @Override
-    public int updateOrderServerEndDate(Long orderId, boolean updatePlan) {
+    public int updateOrderServerStartEndDate(Long cusId){
         int row = 0;
-        //更新订单服务到期时间
-        SysOrder sysOrder = selectSysOrderById(orderId);
-        if (sysOrder != null) {
-            //设置服务到期时间
-            setOrderServerEndDate(sysOrder);
-            sysOrder.setUpdateTime(new Date());
-            row = updateSysOrder(sysOrder);
-            if (row > 0) {
-                //异步更新食谱计划
-                sysRecipesPlanService.regenerateRecipesPlan(sysOrder.getOrderId());
+        //查询该用户的所有订单
+        List<SysOrder> orderList = getAllOrderByCusId(cusId);
+        if(orderList != null && orderList.size() > 0){
+            LocalDate lastServerEndTime = null;
+            for (SysOrder sysOrder : orderList) {
+                LocalDate newStartTime = null;
+                //判断是否提成单，拆分单中的副单，体验单,定金单
+                if(sysOrder.getAfterSaleCommissOrder().intValue() == 1 || ("1".equals(sysOrder.getOrderType()) && sysOrder.getMainOrderId().intValue() != 0) ||
+                        "2".equals(sysOrder.getOrderType()) || "1".equals(sysOrder.getOrderMoneyType())){
+                    continue;
+                }
+                //判断前一个订单的结束时间是否大于第二个订单的
+                if(lastServerEndTime != null && ChronoUnit.DAYS.between(DateUtils.dateToLocalDate(sysOrder.getStartTime()), lastServerEndTime) >= 0){
+                    newStartTime = lastServerEndTime.plusDays(1);
+                    //本月第一天
+                    LocalDate monthStart = LocalDate.now().with(TemporalAdjusters.firstDayOfMonth());
+                    //旧的开始时间和新的开始时间都要需要大于本月第一天
+                    if(ChronoUnit.DAYS.between(monthStart, DateUtils.dateToLocalDate(sysOrder.getStartTime())) >= 0 && ChronoUnit.DAYS.between(monthStart, newStartTime) >= 0){
+                        sysOrder.setCommissStartTime(DateUtils.localDateToDate(newStartTime));
+                    }
+                    sysOrder.setStartTime(DateUtils.localDateToDate(newStartTime));
+                }
+                //设置服务到期时间
+                setOrderServerEndDate(sysOrder);
+                sysOrder.setUpdateTime(new Date());
+                row = updateSysOrder(sysOrder);
+                lastServerEndTime = DateUtils.dateToLocalDate(sysOrder.getServerEndTime());
             }
+            //异步更新食谱计划
+            sysRecipesPlanService.regenerateRecipesPlan(cusId);
         }
         return row;
     }
@@ -373,5 +375,35 @@ public class SysOrderServiceImpl implements ISysOrderService {
      */
     public int selectSimpleOrderMessageCount(SysCommision sysCommision){
         return sysOrderMapper.selectSimpleOrderMessageCount(sysCommision);
+    }
+
+    /**
+     *
+     * @return
+     */
+    @Override
+    public void updateOrderStartTime(SysOrder sysOrder, LocalDate nowStartDate){
+        LocalDate oldStartDate = sysOrder.getStartTime() != null ? DateUtils.dateToLocalDate(sysOrder.getStartTime()) : null;
+        if (oldStartDate != null && nowStartDate != null
+                && ChronoUnit.DAYS.between(oldStartDate, nowStartDate) != 0) {
+            SysOrder newOrder = new SysOrder();
+            newOrder.setStartTime(DateUtils.localDateToDate(nowStartDate));
+            newOrder.setOrderId(sysOrder.getOrderId());
+            newOrder.setUpdateTime(new Date());
+            //本月第一天
+            LocalDate monthStart = LocalDate.now().with(TemporalAdjusters.firstDayOfMonth());
+            //旧的开始时间和新的开始时间都要需要大于本月第一天
+            if(ChronoUnit.DAYS.between(monthStart, oldStartDate) >= 0 && ChronoUnit.DAYS.between(monthStart, nowStartDate) >= 0){
+                sysOrder.setCommissStartTime(sysOrder.getStartTime());
+            }
+        }
+    }
+
+    /**
+     * 根据客户ID查询对应所有订单
+     * @return
+     */
+    public List<SysOrder> getAllOrderByCusId(Long cusId){
+        return sysOrderMapper.getAllOrderByCusId(cusId);
     }
 }

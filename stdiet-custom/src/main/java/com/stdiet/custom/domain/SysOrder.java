@@ -232,7 +232,7 @@ public class SysOrder extends BaseEntity {
     /**
      * 订单暂停记录 非持久化字段
      * */
-    private List<SysOrderPause> orderPauseList;
+    //private List<SysOrderPause> orderPauseList;
 
     //查询参数
     private Integer amountFlag;

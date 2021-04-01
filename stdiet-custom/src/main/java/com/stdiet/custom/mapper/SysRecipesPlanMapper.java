@@ -87,7 +87,7 @@ public interface SysRecipesPlanMapper
      * @param customerId
      * @return
      */
-    SysRecipesPlan getLastDayRecipesPlan(@Param("customerId")Long customerId);
+    SysRecipesPlan getLastDayRecipesPlan(@Param("customerId")Long customerId, @Param("orderId")Long orderId);
 
     /**
      * 根据订单ID查询食谱计划

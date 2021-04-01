@@ -100,4 +100,10 @@ public interface SysOrderMapper
      * @return
      */
     int selectSimpleOrderMessageCount(SysCommision sysCommision);
+
+    /**
+     * 根据客户ID查询对应所有订单
+     * @return
+     */
+    List<SysOrder> getAllOrderByCusId(@Param("cusId") Long cusId);
 }

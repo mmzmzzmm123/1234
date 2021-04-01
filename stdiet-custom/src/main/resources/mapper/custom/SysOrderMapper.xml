@@ -372,7 +372,7 @@
         <!-- 非持久化字段 -->
         <result property="afterSale" column="afterSale_name"></result><!-- 售后名称  -->
         <result property="nutritionist" column="nutritionist_name"></result><!-- 营养师名称 -->
-        <association property="orderPauseList" column="order_id" select="getOrderPauseByOrderId"/>
+        <!--<association property="orderPauseList" column="order_id" select="getOrderPauseByOrderId"/>-->
     </resultMap>
 
     <resultMap type="SysOrderPause" id="SysOrderPauseResult">
@@ -474,6 +474,11 @@
         <if test="id != null">
             and sc.id = #{id}
         </if>
+    </select>
+
+    <!-- 根据客户ID查询该客户下所有订单 -->
+    <select id="getAllOrderByCusId" parameterType="Long" resultMap="SysOrderResult">
+        select * from sys_order where del_flag = 0 and cus_id = #{cusId} order by order_id asc
     </select>
 
 </mapper>
