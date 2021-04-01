@@ -82,4 +82,11 @@ public interface SysOrderPauseMapper
      * @return
      */
     List<SysOrderPause> getPauseListByOrderId(@Param("orderId")Long orderId);
+
+    /**
+     * 根据客户ID、订单ID查询暂停记录
+     * @param sysOrderPause
+     * @return
+     */
+    List<SysOrderPause> getPauseListByCusIdAndOrderId(SysOrderPause sysOrderPause);
 }

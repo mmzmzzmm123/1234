@@ -67,7 +67,7 @@ public class SysOrderPauseServiceImpl implements ISysOrderPauseService
         sysOrderPause.setCreateTime(DateUtils.getNowDate());
         if(sysOrderPauseMapper.insertSysOrderPause(sysOrderPause) > 0){
             //修改订单服务到期时间
-            return sysOrderService.updateOrderServerEndDate(sysOrderPause.getOrderId(), true);
+            return sysOrderService.updateOrderServerStartEndDate(sysOrderPause.getCusId());
         }
         return 0;
     }
@@ -83,7 +83,7 @@ public class SysOrderPauseServiceImpl implements ISysOrderPauseService
     {
         sysOrderPause.setUpdateTime(DateUtils.getNowDate());
         if(sysOrderPauseMapper.updateSysOrderPause(sysOrderPause) > 0){
-            return sysOrderService.updateOrderServerEndDate(sysOrderPause.getOrderId(), true);
+            return sysOrderService.updateOrderServerStartEndDate(sysOrderPause.getCusId());
         }
         return 0;
     }
@@ -98,8 +98,8 @@ public class SysOrderPauseServiceImpl implements ISysOrderPauseService
     public int deleteSysOrderPauseByIds(Long[] ids)
     {
         SysOrderPause sysOrderPause = selectSysOrderPauseById(ids[0]);
-        if(sysOrderPause != null && sysOrderPauseMapper.deleteSysOrderPauseByIds(ids) > 0){
-            return sysOrderService.updateOrderServerEndDate(sysOrderPause.getOrderId(), true);
+        if(sysOrderPauseMapper.deleteSysOrderPauseByIds(ids) > 0){
+            return sysOrderService.updateOrderServerStartEndDate(sysOrderPause.getCusId());
         }
         return 0;
     }
@@ -115,7 +115,7 @@ public class SysOrderPauseServiceImpl implements ISysOrderPauseService
     {
         SysOrderPause sysOrderPause = selectSysOrderPauseById(id);
         if(sysOrderPause != null && sysOrderPauseMapper.deleteSysOrderPauseById(id) > 0){
-            return sysOrderService.updateOrderServerEndDate(sysOrderPause.getOrderId(), true);
+            return sysOrderService.updateOrderServerStartEndDate(sysOrderPause.getCusId());
         }
         return 0;
     }
@@ -153,5 +153,10 @@ public class SysOrderPauseServiceImpl implements ISysOrderPauseService
     @Override
     public long selectNearMainOrderIdByCusId(Long cusId) {
         return sysOrderPauseMapper.selectNearMainOrderIdByCusId(cusId);
+    }
+
+    @Override
+    public List<SysOrderPause> getPauseListByCusIdAndOrderId(SysOrderPause sysOrderPauses){
+        return sysOrderPauseMapper.getPauseListByCusIdAndOrderId(sysOrderPauses);
     }
 }

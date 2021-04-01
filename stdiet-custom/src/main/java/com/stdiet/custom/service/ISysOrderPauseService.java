@@ -81,4 +81,6 @@ public interface ISysOrderPauseService
     List<SysOrderPause> getPauseListByOrderId(Long orderId);
 
     long selectNearMainOrderIdByCusId(Long cusId);
+
+    List<SysOrderPause> getPauseListByCusIdAndOrderId(SysOrderPause sysOrderPause);
 }

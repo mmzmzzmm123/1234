@@ -62,10 +62,10 @@
         where id = #{id} and del_flag = 0
     </select>
 
-    <!-- 根据用户ID查询是否存在该用户最后一天食谱 -->
+    <!-- 根据用户ID查询是否存在该用户该订单之前的最后一条食谱 -->
     <select id="getLastDayRecipesPlan"  resultMap="SysRecipesPlanResult" parameterType="Long">
         <include refid="selectSysRecipesPlanVo"/>
-        where cus_id = #{customerId} and del_flag = 0 order by end_num_day DESC limit 1
+        where cus_id = #{customerId} and del_flag = 0 and #{orderId} > order_id order by end_num_day DESC limit 1
     </select>
 
     <insert id="insertSysRecipesPlan" parameterType="SysRecipesPlan" useGeneratedKeys="true" keyProperty="id">

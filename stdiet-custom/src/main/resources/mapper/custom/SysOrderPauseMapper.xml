@@ -144,4 +144,18 @@
         where sop.del_flag = 0 and sop.order_id = #{orderId} order by sop.pause_start_date asc
     </select>
 
+    <!-- 根据客户ID或订单ID获取暂停记录，客户ID、订单ID不能都为空 -->
+    <select id="getPauseListByCusIdAndOrderId" parameterType="SysOrderPause" resultMap="SysOrderPauseResult">
+        <include refid="selectSysOrderPauseVo"></include>
+        where sop.del_flag = 0
+        <if test="cusId != null and orderId == null">
+            and sop.cus_id = #{cusId}
+        </if>
+        <if test="cusId == null and orderId != null">
+            and sop.order_id = #{orderId}
+        </if>
+        <if test="cusId != null and orderId != null">
+            and (sop.cus_id = #{cusId} or sop.order_id = #{orderId})
+        </if>
+    </select>
 </mapper>

@@ -2,10 +2,8 @@ package com.stdiet.custom.service;
 
 import java.util.List;
 
-import com.stdiet.custom.domain.SysOrder;
 import com.stdiet.custom.domain.SysRecipesPlan;
 import com.stdiet.custom.domain.SysRecipesPlanListInfo;
-import org.springframework.core.annotation.Order;
 
 /**
  * 食谱计划Service接口
@@ -65,10 +63,10 @@ public interface ISysRecipesPlanService
 
     /**
      * 订单发生更新时(开始时间、服务时长、赠送时长)，重新生成食谱计划
-     * @param orderId 订单ID
+     * @param cusId 客户ID
      * @return 结果
      */
-    public void regenerateRecipesPlan(Long orderId);
+    public void regenerateRecipesPlan(Long cusId);
 
     /**
      * 根据订单ID删除所有食谱安排计划
@@ -104,7 +102,7 @@ public interface ISysRecipesPlanService
      * @param customerId
      * @return
      */
-    SysRecipesPlan getLastDayRecipesPlan(Long customerId);
+    SysRecipesPlan getLastDayRecipesPlan(Long customerId, Long orderId);
 
     /**
      * 通过outId查询食谱计划简要
